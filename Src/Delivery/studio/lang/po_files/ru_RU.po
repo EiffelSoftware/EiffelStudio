@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-12-02 17:01+0300\n"
+"PO-Revision-Date: 2016-12-06 18:57+0300\n"
 "Last-Translator: Alexander Kogtenkov <kwaxer@mail.ru>\n"
 "Language-Team: Eiffel Software and others <support@eiffel.com>\n"
 "Language: ru\n"
@@ -4709,6 +4709,11 @@ msgctxt "code_analyzer.violation"
 msgid "Attribute '"
 msgstr "Атрибут '"
 
+#. Source code: Result := locale.formatted_string (locale.translation ("Attribute '$1' is no longer supported for this element."), [an_attribute])
+#: conf_interface_names.e:844
+msgid "Attribute '$1' is no longer supported for this element."
+msgstr "Атрибут '$1' больше не поддерживается для этого элемента."
+
 #. Source code: do Result := translation_in_context ("Attribute can be made constant", once "code_analyzer") end
 #: ca_names.e:130
 msgctxt "code_analyzer"
@@ -7223,12 +7228,12 @@ msgid "Cannot find complete dynamic type of an expanded type."
 msgstr "Не удаётся найти полный динамический тип развёрнутого типа."
 
 #. Source code: e_parse_incorrect_build_mult: STRING_32 do Result := locale.translation ("Cannot have multiple build specifications in one condition.") end
-#: conf_interface_names.e:1054
+#: conf_interface_names.e:1058
 msgid "Cannot have multiple build specifications in one condition."
 msgstr "Нельзя указывать несколько спецификаций сборки в одном условии."
 
 #. Source code: e_parse_incorrect_platform_mult: STRING_32 do Result := locale.translation ("Cannot have multiple platform specifications in one condition.") end
-#: conf_interface_names.e:1046
+#: conf_interface_names.e:1050
 msgid "Cannot have multiple platform specifications in one condition."
 msgstr "Нельзя указывать несколько спецификаций платформы в одном условии."
 
@@ -7370,7 +7375,7 @@ msgid "Capability"
 msgstr "Возможности"
 
 #. Source code: ("[
-#: conf_interface_names.e:1246
+#: conf_interface_names.e:1250
 msgctxt "configuration"
 msgid ""
 "Capability \"$1\" of current target has value \"$3\" insufficient for "
@@ -7386,7 +7391,7 @@ msgstr ""
 "\tФайл: $6"
 
 #. Source code: ("[
-#: conf_interface_names.e:1263
+#: conf_interface_names.e:1267
 msgctxt "configuration"
 msgid ""
 "Capability \"$1\" of dependent target has value \"$2\" insufficient for "
@@ -7412,7 +7417,7 @@ msgstr ""
 "\tФайл: $5"
 
 #. Source code: ("[
-#: conf_interface_names.e:1221
+#: conf_interface_names.e:1225
 msgctxt "configuration"
 msgid ""
 "Capability \"$1\" of supplier target has value \"$2\" insuffient for client "
@@ -8139,7 +8144,7 @@ msgid "Class naming convention violated"
 msgstr "Нарушено соглашение об именовании классов"
 
 #. Source code: ("[
-#: conf_interface_names.e:1181
+#: conf_interface_names.e:1185
 msgctxt "configuration"
 msgid ""
 "Class option \"$1\" has value \"$2\" insufficient for its cluster value "
@@ -18205,7 +18210,7 @@ msgid "External editor not defined"
 msgstr "Внешний редактор не задан"
 
 #. Source code: e_parse_external_outside_target_element: STRING_32 do Result := locale.translation ("External element found outside a target element.") end
-#: conf_interface_names.e:1111
+#: conf_interface_names.e:1115
 msgid "External element found outside a target element."
 msgstr "Внешний элемент вне элемента задания."
 
@@ -18294,7 +18299,7 @@ msgid "Failures"
 msgstr "Неудачи"
 
 #. Source code: boolean_false: STRING_32 do Result := locale.translation ("False") end
-#: conf_interface_names.e:1289
+#: conf_interface_names.e:1293
 msgid "False"
 msgstr "Нет"
 
@@ -20460,7 +20465,7 @@ msgid "Group metrics by unit"
 msgstr "Группировать метрики по единицам измерения"
 
 #. Source code: ("[
-#: conf_interface_names.e:1202
+#: conf_interface_names.e:1206
 msgctxt "configuration"
 msgid ""
 "Group option \"$1\" has value \"$2\" insufficient for value \"$4\" of a "
@@ -21273,22 +21278,22 @@ msgid "Inconsistent hash code redeclaration"
 msgstr "Несогласованное переопределение `hash_code'"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Incorrect class name $1 in visible clause ."), [a_class])
-#: conf_interface_names.e:1031
+#: conf_interface_names.e:1035
 msgid "Incorrect class name $1 in visible clause ."
 msgstr "Неверное имя класса $1 в разделе видимости."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Incorrect feature name $1 in visible clause ."), [a_feature])
-#: conf_interface_names.e:1027
+#: conf_interface_names.e:1031
 msgid "Incorrect feature name $1 in visible clause ."
 msgstr "Неверное имя компонента $1 в разделе видимости."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Incorrect system tag $1 invalid UUID specified."), [a_name])
-#: conf_interface_names.e:859
+#: conf_interface_names.e:863
 msgid "Incorrect system tag $1 invalid UUID specified."
 msgstr "Неверный элемент system \"$1\": указан недопустимый UUID."
 
 #. Source code: e_parse_incorrect_system_no_name: STRING_32 do Result := locale.translation ("Incorrect system tag, no name specified.") end
-#: conf_interface_names.e:851
+#: conf_interface_names.e:855
 msgid "Incorrect system tag, no name specified."
 msgstr "Неверный элемент system: не указано имя."
 
@@ -22027,32 +22032,32 @@ msgid "Invalid UUID: $1"
 msgstr "Некорректный UUID: $1"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid action tag $1."), [an_action])
-#: conf_interface_names.e:899
+#: conf_interface_names.e:903
 msgid "Invalid action tag $1."
 msgstr "Неверный тег action \"$1\"."
 
 #. Source code: Result := locale.translation ("Invalid action tag.")
-#: conf_interface_names.e:907
+#: conf_interface_names.e:911
 msgid "Invalid action tag."
 msgstr "Неверный тег action."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid assembly name $1."), [a_group])
-#: conf_interface_names.e:951
+#: conf_interface_names.e:955
 msgid "Invalid assembly name $1."
 msgstr "Неверное имя сборки $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid assembly tag $1 no location specified."), [an_assembly])
-#: conf_interface_names.e:955
+#: conf_interface_names.e:959
 msgid "Invalid assembly tag $1 no location specified."
 msgstr "Неверный элемент assembly \"$1\": не указан атрибут location."
 
 #. Source code: e_parse_incorrect_assembly_no_name: STRING_32 do Result := locale.translation ("Invalid assembly tag no name specified.") end
-#: conf_interface_names.e:948
+#: conf_interface_names.e:952
 msgid "Invalid assembly tag no name specified."
 msgstr "Неверный элемент assembly: не указано имя."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid assembly tag there is already a group with the name $1."), [a_group])
-#: conf_interface_names.e:959
+#: conf_interface_names.e:963
 msgid "Invalid assembly tag there is already a group with the name $1."
 msgstr "Неверный тег assembly: уже есть группа с именем $1."
 
@@ -22067,7 +22072,7 @@ msgid "Invalid attribute '$1'"
 msgstr "Недопустимый атрибут \"$1\""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid build $1."), [a_build])
-#: conf_interface_names.e:1059
+#: conf_interface_names.e:1063
 msgid "Invalid build $1."
 msgstr "Неверная сборка $1."
 
@@ -22081,67 +22086,67 @@ msgstr ""
 "\n"
 
 #. Source code: e_parse_incorrect_class_opt: STRING_32 do Result := locale.translation ("Invalid class_option tag.") end
-#: conf_interface_names.e:1012
+#: conf_interface_names.e:1016
 msgid "Invalid class_option tag."
 msgstr "Неверный тег class_option."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid cluster name $1."), [a_group])
-#: conf_interface_names.e:965
+#: conf_interface_names.e:969
 msgid "Invalid cluster name $1."
 msgstr "Неверное имя кластера $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid cluster tag $1 no location specified."), [a_cluster])
-#: conf_interface_names.e:969
+#: conf_interface_names.e:973
 msgid "Invalid cluster tag $1 no location specified."
 msgstr "Неверный элемент cluster \"$1\": не указан атрибут location."
 
 #. Source code: e_parse_incorrect_cluster_no_name: STRING_32 do Result := locale.translation ("Invalid cluster tag no name specified.") end
-#: conf_interface_names.e:962
+#: conf_interface_names.e:966
 msgid "Invalid cluster tag no name specified."
 msgstr "Неверный элемент cluster: не указано имя."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid cluster tag there is already a group with the name $1."), [a_group])
-#: conf_interface_names.e:973
+#: conf_interface_names.e:977
 msgid "Invalid cluster tag there is already a group with the name $1."
 msgstr "Неверный тег cluster: уже есть группа с именем $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid concurrency condition $1."), [a_concurrency])
-#: conf_interface_names.e:1065
+#: conf_interface_names.e:1069
 msgid "Invalid concurrency condition $1."
 msgstr "Неверное условие параллельности $1."
 
 #. Source code: e_parse_incorrect_condition: STRING_32 do Result := locale.translation ("Invalid condition tag.") end
-#: conf_interface_names.e:1044
+#: conf_interface_names.e:1048
 msgid "Invalid condition tag."
 msgstr "Неверный тег condition."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid content: $1"), [a_content])
-#: conf_interface_names.e:848
+#: conf_interface_names.e:852
 msgid "Invalid content: $1"
 msgstr "Недопустимое содержимое: $1"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid debug tag $1."), [a_debug])
-#: conf_interface_names.e:993
+#: conf_interface_names.e:997
 msgid "Invalid debug tag $1."
 msgstr "Неверный тег debug \"$1\"."
 
 #. Source code: e_parse_incorrect_debug_no_name: STRING_32 do Result := locale.translation ("Invalid debug tag.") end
-#: conf_interface_names.e:990
+#: conf_interface_names.e:994
 msgid "Invalid debug tag."
 msgstr "Неверный тег debug."
 
 #. Source code: e_parse_incorrect_description: STRING_32 do Result := locale.translation ("Invalid description tag.") end
-#: conf_interface_names.e:1104
+#: conf_interface_names.e:1108
 msgid "Invalid description tag."
 msgstr "Неверный тег описания."
 
 #. Source code: e_parse_incorrect_external: STRING_32 do Result := locale.translation ("Invalid external tag.") end
-#: conf_interface_names.e:895
+#: conf_interface_names.e:899
 msgid "Invalid external tag."
 msgstr "Неверный тег external."
 
 #. Source code: e_parse_incorrect_file_rule: STRING_32 do Result := locale.translation ("Invalid file_rule tag.") end
-#: conf_interface_names.e:893
+#: conf_interface_names.e:897
 msgid "Invalid file_rule tag."
 msgstr "Неверный тег file_rule."
 
@@ -22156,37 +22161,37 @@ msgid "Invalid item"
 msgstr "Неверный элемент"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid library name $1."), [a_group])
-#: conf_interface_names.e:919
+#: conf_interface_names.e:923
 msgid "Invalid library name $1."
 msgstr "Неверное имя библиотеки $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid library tag $1."), [a_library])
-#: conf_interface_names.e:923
+#: conf_interface_names.e:927
 msgid "Invalid library tag $1."
 msgstr "Неверный тег library \"$1\"."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid library tag there is already a group with the name $1."), [a_group])
-#: conf_interface_names.e:927
+#: conf_interface_names.e:931
 msgid "Invalid library tag there is already a group with the name $1."
 msgstr "Неверный тег library: уже есть группа с именем $1."
 
 #. Source code: e_parse_incorrect_library_no_name: STRING_32 do Result := locale.translation ("Invalid library tag.") end
-#: conf_interface_names.e:916
+#: conf_interface_names.e:920
 msgid "Invalid library tag."
 msgstr "Неверный тег library."
 
 #. Source code: e_parse_incorrect_mapping: STRING_32 do Result := locale.translation ("Invalid mapping tag.") end
-#: conf_interface_names.e:1102
+#: conf_interface_names.e:1106
 msgid "Invalid mapping tag."
 msgstr "Неверный тег mapping."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid maximum version number in version condition: "), [a_version])
-#: conf_interface_names.e:1076
+#: conf_interface_names.e:1080
 msgid "Invalid maximum version number in version condition: "
 msgstr "Недопустимое число максимальной версии в условии версии: "
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid minimum version number in version condition: "), [a_version])
-#: conf_interface_names.e:1072
+#: conf_interface_names.e:1076
 msgid "Invalid minimum version number in version condition: "
 msgstr "Недопустимое число минимальной версии в условии версии: "
 
@@ -22196,32 +22201,32 @@ msgid "Invalid or empty value for '$1'"
 msgstr "Недопустимое или пустое значение для '$1'"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid override name $1."), [a_group])
-#: conf_interface_names.e:979
+#: conf_interface_names.e:983
 msgid "Invalid override name $1."
 msgstr "Неверное имя переопределения $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid override tag $1 no location specified."), [an_override])
-#: conf_interface_names.e:983
+#: conf_interface_names.e:987
 msgid "Invalid override tag $1 no location specified."
 msgstr "Неверный элемент override $1: не указан атрибут location."
 
 #. Source code: e_parse_incorrect_override_no_name: STRING_32 do Result := locale.translation ("Invalid override tag no name specified.") end
-#: conf_interface_names.e:976
+#: conf_interface_names.e:980
 msgid "Invalid override tag no name specified."
 msgstr "Неверный элемент override: не указано имя."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid override tag there is already a group with the name $1."), [a_group])
-#: conf_interface_names.e:987
+#: conf_interface_names.e:991
 msgid "Invalid override tag there is already a group with the name $1."
 msgstr "Неверный тег override: уже есть группа с именем $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid overrides tag in group $1."), [a_group])
-#: conf_interface_names.e:1041
+#: conf_interface_names.e:1045
 msgid "Invalid overrides tag in group $1."
 msgstr "Неверный элемент override в группе $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid platform $1."), [a_platform])
-#: conf_interface_names.e:1051
+#: conf_interface_names.e:1055
 msgid "Invalid platform $1."
 msgstr "Недопустимая платформа $1."
 
@@ -22231,12 +22236,12 @@ msgid "Invalid platform argument"
 msgstr "Недопустимое значение аргумента платформы."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid precompile name $1."), [a_group])
-#: conf_interface_names.e:933
+#: conf_interface_names.e:937
 msgid "Invalid precompile name $1."
 msgstr "Неверное имя прекомпилированной библиотеки $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid precompile tag $1, there is already another precompile specified $2."), [a_precompile, an_other_precompile])
-#: conf_interface_names.e:945
+#: conf_interface_names.e:949
 msgid ""
 "Invalid precompile tag $1, there is already another precompile specified $2."
 msgstr ""
@@ -22244,83 +22249,83 @@ msgstr ""
 "\"$2\"."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid precompile tag $1."), [a_precompile])
-#: conf_interface_names.e:937
+#: conf_interface_names.e:941
 msgid "Invalid precompile tag $1."
 msgstr "Неверный тег precompile $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid precompile tag there is already a group with the name $1."), [a_group])
-#: conf_interface_names.e:941
+#: conf_interface_names.e:945
 msgid "Invalid precompile tag there is already a group with the name $1."
 msgstr "Неверный тег precompile: уже есть группа с именем $1."
 
 #. Source code: e_parse_incorrect_precompile_no_name: STRING_32 do Result := locale.translation ("Invalid precompile tag.") end
-#: conf_interface_names.e:930
+#: conf_interface_names.e:934
 msgid "Invalid precompile tag."
 msgstr "Неверный тег precompile."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" (error position: $3): $2."), [regexp, description, position])
-#: conf_interface_names.e:1127
+#: conf_interface_names.e:1131
 msgid "Invalid regular expression \"$1\" (error position: $3): $2."
 msgstr "Недопустимое регулярное выражение «$1» (позиция ошибки: $3): $2."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" (error position: $4) in %"$2%": $3."), [regexp, file, description, position])
-#: conf_interface_names.e:1119
+#: conf_interface_names.e:1123
 msgid "Invalid regular expression \"$1\" (error position: $4) in \"$2\": $3."
 msgstr ""
 "Недопустимое регулярное выражение «$1» (позиция ошибки: $4) в «$2»: $3."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" in %"$2%"."), [regexp, file])
-#: conf_interface_names.e:1122
+#: conf_interface_names.e:1126
 msgid "Invalid regular expression \"$1\" in \"$2\"."
 msgstr "Недопустимое регулярное выражение «$1» в «$2»."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" in %"$2%": $3."), [regexp, file, description])
-#: conf_interface_names.e:1117
+#: conf_interface_names.e:1121
 msgid "Invalid regular expression \"$1\" in \"$2\": $3."
 msgstr "Недопустимое регулярное выражение «$1» в «$2»: $3."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%": $2."), [regexp, description])
-#: conf_interface_names.e:1125
+#: conf_interface_names.e:1129
 msgid "Invalid regular expression \"$1\": $2."
 msgstr "Недопустимое регулярное выражение «$1»: $2."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid regular expression: %"$1%"."), [regexp])
-#: conf_interface_names.e:1130
+#: conf_interface_names.e:1134
 msgid "Invalid regular expression: \"$1\"."
 msgstr "Недопустимое регулярное выражение: «$1»."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid renaming tag, no new name specified for $1."), [an_old])
-#: conf_interface_names.e:1005
+#: conf_interface_names.e:1009
 msgid "Invalid renaming tag, no new name specified for $1."
 msgstr "Неверный элемент renaming: не указано новое имя для \"$1\"."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid renaming tag, no old name specified for $1."), [a_new])
-#: conf_interface_names.e:1009
+#: conf_interface_names.e:1013
 msgid "Invalid renaming tag, no old name specified for $1."
 msgstr "Неверный элемент renaming: не указано старое имя для \"$1\"."
 
 #. Source code: e_parse_incorrect_renaming_no_name: STRING_32 do Result := locale.translation ("Invalid renaming tag.") end
-#: conf_interface_names.e:1002
+#: conf_interface_names.e:1006
 msgid "Invalid renaming tag."
 msgstr "Неверный тег renaming."
 
 #. Source code: e_parse_incorrect_root_class: STRING_32 do Result := locale.translation ("Invalid root class.") end
-#: conf_interface_names.e:880
+#: conf_interface_names.e:884
 msgid "Invalid root class."
 msgstr "Недопустимый корневой класс."
 
 #. Source code: e_parse_incorrect_root_cluster: STRING_32 do Result := locale.translation ("Invalid root cluster.") end
-#: conf_interface_names.e:879
+#: conf_interface_names.e:883
 msgid "Invalid root cluster."
 msgstr "Недопустимый корневой кластер."
 
 #. Source code: e_parse_incorrect_root_feature: STRING_32 do Result := locale.translation ("Invalid root procedure.") end
-#: conf_interface_names.e:881
+#: conf_interface_names.e:885
 msgid "Invalid root procedure."
 msgstr "Недопустимая корневая процедура."
 
 #. Source code: e_parse_incorrect_root: STRING_32 do Result := locale.translation ("Invalid root tag.") end
-#: conf_interface_names.e:878
+#: conf_interface_names.e:882
 msgid "Invalid root tag."
 msgstr "Недопустимый корневой тег."
 
@@ -22331,12 +22336,12 @@ msgid "Invalid rule name"
 msgstr "Недопустимое имя правила"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid setting tag $1."), [a_setting])
-#: conf_interface_names.e:886
+#: conf_interface_names.e:890
 msgid "Invalid setting tag $1."
 msgstr "Неверный тег setting $1."
 
 #. Source code: e_parse_incorrect_setting_no_name: STRING_32 do Result := locale.translation ("Invalid setting tag, no name specified.") end
-#: conf_interface_names.e:883
+#: conf_interface_names.e:887
 msgid "Invalid setting tag, no name specified."
 msgstr "Неверный элемент setting: не указано имя."
 
@@ -22347,7 +22352,7 @@ msgid "Invalid settings for rule \"$1\""
 msgstr "Недопустимые настройки правила «$1»"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid system name $1."), [a_system])
-#: conf_interface_names.e:854
+#: conf_interface_names.e:858
 msgid "Invalid system name $1."
 msgstr "Неверное имя системы $1."
 
@@ -22367,7 +22372,7 @@ msgid "Invalid tag/tag position '$1'"
 msgstr "Неверный тег/положение тега \"$1\"."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid target name $1."), [a_target])
-#: conf_interface_names.e:874
+#: conf_interface_names.e:878
 msgid "Invalid target name $1."
 msgstr "Неверное имя задания $1."
 
@@ -22377,22 +22382,22 @@ msgid "Invalid target, select the target you want: "
 msgstr "Неверное задание, выберите задание, которое хотите:"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid uses tag in group $1."), [a_group])
-#: conf_interface_names.e:1036
+#: conf_interface_names.e:1040
 msgid "Invalid uses tag in group $1."
 msgstr "Неверный тег/положение тега \"$1\"."
 
 #. Source code: e_parse_incorrect_root_all: STRING_32 do Result := locale.translation ("Invalid value for all_classes attribute in root tag.") end
-#: conf_interface_names.e:877
+#: conf_interface_names.e:881
 msgid "Invalid value for all_classes attribute in root tag."
 msgstr "Недопустимое значение атрибута all_classes в элементе root."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid value for configuration option %"$1%": %"$2%""), [option_name, option_value])
-#: conf_interface_names.e:1172
+#: conf_interface_names.e:1176
 msgid "Invalid value for configuration option \"$1\": \"$2\""
 msgstr "Недопустимое значение опции конфигурации \"$1\": \"$2\""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid value for configuration option %"$1%": %"$2%" (Expected values: $3)"), [option_name, option_value, e])
-#: conf_interface_names.e:1170
+#: conf_interface_names.e:1174
 msgid ""
 "Invalid value for configuration option \"$1\": \"$2\" (Expected values: $3)"
 msgstr ""
@@ -22400,37 +22405,37 @@ msgstr ""
 "$3)"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid value for setting $1."), [a_setting])
-#: conf_interface_names.e:890
+#: conf_interface_names.e:894
 msgid "Invalid value for setting $1."
 msgstr "Недопустимое значение установки \"$1\"."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid variable tag $1."), [a_variable])
-#: conf_interface_names.e:913
+#: conf_interface_names.e:917
 msgid "Invalid variable tag $1."
 msgstr "Неверный тег variable $1."
 
 #. Source code: e_parse_incorrect_variable_no_name: STRING_32 do Result := locale.translation ("Invalid variable tag.") end
-#: conf_interface_names.e:910
+#: conf_interface_names.e:914
 msgid "Invalid variable tag."
 msgstr "Неверный тег variable."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid version type $1 in version condition."), [a_type])
-#: conf_interface_names.e:1085
+#: conf_interface_names.e:1089
 msgid "Invalid version type $1 in version condition."
 msgstr "Недопустимый тип версии $1 в условии версии."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid visible tag on $1."), [a_parent])
-#: conf_interface_names.e:1023
+#: conf_interface_names.e:1027
 msgid "Invalid visible tag on $1."
 msgstr "Неверный тег/положение тега \"$1\"."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid warning tag $1."), [a_warning])
-#: conf_interface_names.e:999
+#: conf_interface_names.e:1003
 msgid "Invalid warning tag $1."
 msgstr "Неверный тег warning $1."
 
 #. Source code: e_parse_incorrect_warning_no_name: STRING_32 do Result := locale.translation ("Invalid warning tag.") end
-#: conf_interface_names.e:996
+#: conf_interface_names.e:1000
 msgid "Invalid warning tag."
 msgstr "Неверный тег warning."
 
@@ -23241,7 +23246,7 @@ msgid "Library Target"
 msgstr "Задание библиотеки"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("[
-#: conf_interface_names.e:1016
+#: conf_interface_names.e:1020
 msgid "Library option \"$1\" cannot be overridden outside the library."
 msgstr "Опция библиотеки \"$1\" не может быть переопределена вне библитеки."
 
@@ -24677,7 +24682,7 @@ msgid "Minimum nested branches and loops threshold"
 msgstr "Минимальный порог вложенных ветвлений и циклов"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Minimum version cannot be greater than maximum version in version condition $1."), [a_type])
-#: conf_interface_names.e:1089
+#: conf_interface_names.e:1093
 msgid ""
 "Minimum version cannot be greater than maximum version in version condition "
 "$1."
@@ -24710,7 +24715,7 @@ msgid "Missing argument semicolon"
 msgstr "Пропущенная точка с запятой в аргументах"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Missing attribute '$1'"), [an_attribute])
-#: conf_interface_names.e:844
+#: conf_interface_names.e:848
 msgid "Missing attribute '$1'"
 msgstr "Отсутствует атрибут '$1'"
 
@@ -24825,12 +24830,12 @@ msgid "Missing library argument."
 msgstr "Пропущен аргумент библиотеки."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Missing name for configuration option %"$1%""), [option])
-#: conf_interface_names.e:1139
+#: conf_interface_names.e:1143
 msgid "Missing name for configuration option \"$1\""
 msgstr "Пропущено имя опции конфигурации \"$1\""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Missing parent target: $1 in target $2"), [a_parent, a_target])
-#: conf_interface_names.e:869
+#: conf_interface_names.e:873
 msgid "Missing parent target: $1 in target $2"
 msgstr "Нет родительского задания $1 в задании $2"
 
@@ -24875,7 +24880,7 @@ msgid "Missing type in local declaration list: {1}"
 msgstr "Пропущен тип в списке определения локальных переменных: {1}"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Missing value for configuration option %"$1%""), [option])
-#: conf_interface_names.e:1145
+#: conf_interface_names.e:1149
 msgid "Missing value for configuration option \"$1\""
 msgstr "Пропущено значение опции конфигурации \"$1\""
 
@@ -25072,12 +25077,12 @@ msgid ""
 msgstr "Перемещение папки в своего потомка невозможно."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Multiple note elements under $1."), [a_name])
-#: conf_interface_names.e:1108
+#: conf_interface_names.e:1112
 msgid "Multiple note elements under $1."
 msgstr "Несколько элементов note в $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Multiple targets with name $1."), [a_target])
-#: conf_interface_names.e:864
+#: conf_interface_names.e:868
 msgid "Multiple targets with name $1."
 msgstr "Несколько заданий с именем $1."
 
@@ -25706,12 +25711,12 @@ msgid "No metric is selected."
 msgstr "Никаой метрики не выбрано."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("No minimum or maximum version in version condition $1 specified."), [a_version])
-#: conf_interface_names.e:1081
+#: conf_interface_names.e:1085
 msgid "No minimum or maximum version in version condition $1 specified."
 msgstr "Не указана минимальная или максимальная версии в условии версии $1."
 
 #. Source code: e_parse_incorrect_custom_no_name: STRING_32 do Result := locale.translation ("No name attribute in custom condition.") end
-#: conf_interface_names.e:1092
+#: conf_interface_names.e:1096
 msgid "No name attribute in custom condition."
 msgstr "Отсутствует атрибут name в пользовательском условии."
 
@@ -25799,18 +25804,18 @@ msgstr ""
 "имеет процедуру создания без аргументов."
 
 #. Source code: e_parse_incorrect_dotnet: STRING_32 do Result := locale.translation ("No valid value specified in .NET condition.") end
-#: conf_interface_names.e:1067
+#: conf_interface_names.e:1071
 msgid "No valid value specified in .NET condition."
 msgstr "Не указано допустимое значение в условии .NET."
 
 #. Source code: e_parse_incorrect_dynamic_runtime: STRING_32 do Result := locale.translation ("No valid value specified in dynamic runtime condition.") end
-#: conf_interface_names.e:1068
+#: conf_interface_names.e:1072
 msgid "No valid value specified in dynamic runtime condition."
 msgstr ""
 "Не указано допустимое значение в условии динамической системы выполнения."
 
 #. Source code: e_parse_incorrect_multithreaded : STRING_32 do Result := locale.translation ("No valid value specified in multithreaded condition.") end
-#: conf_interface_names.e:1062
+#: conf_interface_names.e:1066
 msgid "No valid value specified in multithreaded condition."
 msgstr "Не указано допустимое значение в условии многопоточности."
 
@@ -25828,17 +25833,17 @@ msgstr ""
 "Опции: "
 
 #. Source code: e_parse_incorrect_build_none: STRING_32 do Result := locale.translation ("No value or excluded-value specified in build condition.") end
-#: conf_interface_names.e:1056
+#: conf_interface_names.e:1060
 msgid "No value or excluded-value specified in build condition."
 msgstr "Нет атрибута value или excluded_value в условии сборки."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("No value or excluded-value specified in custom condition $1."), [a_custom])
-#: conf_interface_names.e:1095
+#: conf_interface_names.e:1099
 msgid "No value or excluded-value specified in custom condition $1."
 msgstr "Нет атрибута value или excluded_value в пользовательском условии $1."
 
 #. Source code: e_parse_incorrect_platform_none: STRING_32 do Result := locale.translation ("No value or excluded-value specified in platform condition.") end
-#: conf_interface_names.e:1048
+#: conf_interface_names.e:1052
 msgid "No value or excluded-value specified in platform condition."
 msgstr "Нет атрибута value или excluded_value в условии платформы."
 
@@ -25862,7 +25867,7 @@ msgstr ""
 "$1."
 
 #. Source code: e_parse_incorrect_version_no_type: STRING_32 do Result := locale.translation ("No version type specified in version condition.") end
-#: conf_interface_names.e:1078
+#: conf_interface_names.e:1082
 msgid "No version type specified in version condition."
 msgstr "Тип версии не указан в условии версии."
 
@@ -25877,7 +25882,7 @@ msgid "Non Critical"
 msgstr "Некритический"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Non boolean value for succeed attribute of action $1."), [an_action])
-#: conf_interface_names.e:903
+#: conf_interface_names.e:907
 msgid "Non boolean value for succeed attribute of action $1."
 msgstr "Не булевское значение атрибута succeed действия $1."
 
@@ -34267,7 +34272,7 @@ msgid "Target used if system is used as a library."
 msgstr "Задание, используемое, если система используется как библиотека."
 
 #. Source code: e_parse_incorrect_target_no_name: STRING_32 do Result := locale.translation ("Target without a name specified.") end
-#: conf_interface_names.e:871
+#: conf_interface_names.e:875
 msgid "Target without a name specified."
 msgstr "Свойство указано без имени."
 
@@ -36711,7 +36716,7 @@ msgid "Trigger zoom out editor's font."
 msgstr "Включить уменьшение шрифта редактора."
 
 #. Source code: boolean_true: STRING_32 do Result := locale.translation ("True") end
-#: conf_interface_names.e:1287
+#: conf_interface_names.e:1291
 msgid "True"
 msgstr "Да"
 
@@ -37573,7 +37578,7 @@ msgid "Unknown cluster name"
 msgstr "Неизвестное имя кластера"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Unknown configuration option %"$1%""), [option_name])
-#: conf_interface_names.e:1151
+#: conf_interface_names.e:1155
 msgid "Unknown configuration option \"$1\""
 msgstr "Неизвестная опция конфигурации \"$1\""
 
@@ -38703,7 +38708,7 @@ msgid "Value \"$2\" of attribute \"$1\" is invalid. An integer is expected."
 msgstr "Значение \"$2\" атрибута \"$1\" недопустимо. Ожидается целое число."
 
 #. Source code: e_parse_incorrect_build_conflict: STRING_32 do Result := locale.translation ("Value and exclude attribute in build condition cannot appear at the same time.") end
-#: conf_interface_names.e:1055
+#: conf_interface_names.e:1059
 msgid ""
 "Value and exclude attribute in build condition cannot appear at the same "
 "time."
@@ -38712,7 +38717,7 @@ msgstr ""
 "сборки."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Value and exclude attribute in custom condition $1 cannot appear at the same time."), [a_custom])
-#: conf_interface_names.e:1099
+#: conf_interface_names.e:1103
 msgid ""
 "Value and exclude attribute in custom condition $1 cannot appear at the same "
 "time."
@@ -38721,7 +38726,7 @@ msgstr ""
 "пользовательском условии $1."
 
 #. Source code: e_parse_incorrect_platform_conflict: STRING_32 do Result := locale.translation ("Value and exclude attribute in platform condition cannot appear at the same time.") end
-#: conf_interface_names.e:1047
+#: conf_interface_names.e:1051
 msgid ""
 "Value and exclude attribute in platform condition cannot appear at the same "
 "time."

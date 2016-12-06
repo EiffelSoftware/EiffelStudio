@@ -3,10 +3,7 @@
 	<target name="zlib">
 		<root all_classes="true"/>
 		<option warning="true">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<setting name="console_application" value="true"/>
-		
 		<external_include location="$(ISE_LIBRARY)\unstable\library\compression\zlib\spec\include">
 			<condition>
 				<platform value="windows"/>

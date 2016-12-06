@@ -217,6 +217,7 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 #else
 #define eif_builtin_PLATFORM_is_dotnet					EIF_FALSE
 #endif
+#define eif_builtin_PLATFORM_is_64_bits					EIF_IS_64_BITS
 #define eif_builtin_PLATFORM_boolean_bytes 				sizeof(EIF_BOOLEAN)
 #define eif_builtin_PLATFORM_character_bytes 			sizeof(EIF_CHARACTER_8)
 #define eif_builtin_PLATFORM_wide_character_bytes 		sizeof(EIF_CHARACTER_32)

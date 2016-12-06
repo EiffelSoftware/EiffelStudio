@@ -72,8 +72,9 @@ feature {CONF_VISITABLE} -- Visitor
 				end
 					-- Perform checks in the context of supplied target.
 				target := t
-				if attached t.extends as parent then
+				if not is_precompile and then attached t.extends as parent then
 						-- Recurse to parent.
+						-- Unless a precompile is checked.
 					old_condition := condition
 					condition := Void
 					process_target (parent)
@@ -112,43 +113,65 @@ feature {CONF_VISITABLE} -- Visitor
 		local
 			old_condition: like condition
 		do
-				-- Check usage of the library in the current target.
-			check_group (a_library, target)
-				-- Check library.
-			if attached a_library.library_target as t then
-				old_condition := condition
-				condition := a_library.internal_conditions
-				process_target (t)
-				condition := old_condition
+			if not is_precompile then
+					-- Check usage of the library in the current target.
+				check_group (a_library, target)
+					-- Check library.
+				if attached a_library.library_target as t then
+					old_condition := condition
+					condition := a_library.internal_conditions
+					process_target (t)
+					condition := old_condition
+				end
 			end
 		end
 
 	process_precompile (a_precompile: CONF_PRECOMPILE)
 			-- <Precursor>
+		local
+			old_condition: like condition
 		do
-			process_library (a_precompile)
+			if not is_precompile then
+					-- Check usage of the library in the current target.
+				check_group (a_precompile, target)
+					-- Check library.
+				if attached a_precompile.library_target as t then
+					old_condition := condition
+					condition := a_precompile.internal_conditions
+					is_precompile := True
+					process_target (t)
+					is_precompile := False
+					condition := old_condition
+				end
+			end
 		end
 
 	process_assembly (an_assembly: CONF_ASSEMBLY)
 			-- <Precursor>
 		do
-				-- Check usage of the assembly in the current target.
- 			check_group (an_assembly, target)
+			if not is_precompile then
+					-- Check usage of the assembly in the current target.
+	 			check_group (an_assembly, target)
+	 		end
 		end
 
 	process_cluster (a_cluster: CONF_CLUSTER)
 			-- <Precursor>
 		do
-				-- Check usage of the cluster in the current target.
-			check_group (a_cluster, target)
-				-- Check cluster.
-			check_cluster (a_cluster, target)
+			if not is_precompile then
+					-- Check usage of the cluster in the current target.
+				check_group (a_cluster, target)
+					-- Check cluster.
+				check_cluster (a_cluster, target)
+			end
 		end
 
 	process_override (an_override: CONF_OVERRIDE)
 			-- <Precursor>
 		do
-			process_cluster (an_override)
+			if not is_precompile then
+				process_cluster (an_override)
+			end
 		end
 
 feature {NONE} -- Traversal
@@ -173,6 +196,9 @@ feature {NONE} -- Traversal
 
 	condition: detachable CONF_CONDITION_LIST
 			-- Condition associated with the current target `target` (if any).
+
+	is_precompile: BOOLEAN
+			-- Does current target belong to a precompile?
 
 	check_cluster (cluster: CONF_CLUSTER; t: CONF_TARGET)
 			-- Check that options of classes in `cluster' satisfy validity rules against target `t' and report errors using `o' if not.

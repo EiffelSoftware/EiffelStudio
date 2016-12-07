@@ -494,6 +494,19 @@ feature -- Status setting
 			end
 		end
 
+	update_capabilities
+			-- Update capabilities for all elements a target `t` depends on
+			-- to the target's settings.
+		do
+			if attached target as t then
+				if not system.compiler_profile.is_capability_strict then
+						-- Update options to use target's settings.
+					(create {CONF_CAPABILITY_SETTER}.make (t)).do_nothing
+				end
+				is_void_safe := t.options.void_safety_capability.root_index /= {CONF_TARGET_OPTION}.void_safety_index_none
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	retrieve_config
@@ -783,11 +796,6 @@ feature {NONE} -- Implementation
 				if error_handler.has_error then
 					error_handler.raise_error
 				end
-				if not system.compiler_profile.is_capability_strict then
-						-- Update options to use target's settings.
-					(create {CONF_CAPABILITY_SETTER}.make (t)).do_nothing
-				end
-				is_void_safe := t.options.void_safety_capability.root_index /= {CONF_TARGET_OPTION}.void_safety_index_none
 			end
 		end
 

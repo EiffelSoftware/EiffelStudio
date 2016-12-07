@@ -1389,6 +1389,8 @@ end
 					-- before! (Dino, that's an allusion to you, -- FRED)
 				original_body_index_table.copy (body_index_table)
 				Degree_1.wipe_out
+					-- Use target's settings for compilation.
+				lace.update_capabilities
 			end
 		end
 

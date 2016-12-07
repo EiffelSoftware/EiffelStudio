@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (t: CONF_TARGET; o: CONF_ERROR_OBSERVER)
+	make (t: CONF_TARGET; report_indirect_errors: BOOLEAN; o: CONF_ERROR_OBSERVER)
 			-- Check target `t` for validity rules violations and
 			-- report errors (if any) to observer `o`.
 			-- Force settings on suppliers if `f` is True.
@@ -39,6 +39,7 @@ feature {NONE} -- Creation
 			root_options: CONF_TARGET_OPTION
 		do
 			observer := o
+			are_indirect_errors_reported := report_indirect_errors
 			root_target := t
 			root_options := root_target.options
 			root_catcall_detection_index := root_options.catcall_safety_capability.root_index
@@ -47,6 +48,7 @@ feature {NONE} -- Creation
 			target := t
 			create targets.make_map (1)
 			condition := Void
+			report_error := agent o.report_error
 			process_target (t)
 		end
 
@@ -112,6 +114,7 @@ feature {CONF_VISITABLE} -- Visitor
 			-- <Precursor>
 		local
 			old_condition: like condition
+			old_report_error: like report_error
 		do
 			if not is_precompile then
 					-- Check usage of the library in the current target.
@@ -120,7 +123,15 @@ feature {CONF_VISITABLE} -- Visitor
 				if attached a_library.library_target as t then
 					old_condition := condition
 					condition := a_library.internal_conditions
+					is_precompile := attached {CONF_PRECOMPILE} a_library
+					old_report_error := report_error
+					if not are_indirect_errors_reported then
+							-- Report warnings instead of errors.
+						report_error := agent observer.report_warning
+					end
 					process_target (t)
+					report_error := old_report_error
+					is_precompile := False
 					condition := old_condition
 				end
 			end
@@ -128,22 +139,8 @@ feature {CONF_VISITABLE} -- Visitor
 
 	process_precompile (a_precompile: CONF_PRECOMPILE)
 			-- <Precursor>
-		local
-			old_condition: like condition
 		do
-			if not is_precompile then
-					-- Check usage of the library in the current target.
-				check_group (a_precompile, target)
-					-- Check library.
-				if attached a_precompile.library_target as t then
-					old_condition := condition
-					condition := a_precompile.internal_conditions
-					is_precompile := True
-					process_target (t)
-					is_precompile := False
-					condition := old_condition
-				end
-			end
+			process_library (a_precompile)
 		end
 
 	process_assembly (an_assembly: CONF_ASSEMBLY)
@@ -199,6 +196,14 @@ feature {NONE} -- Traversal
 
 	is_precompile: BOOLEAN
 			-- Does current target belong to a precompile?
+
+	report_error: PROCEDURE [CONF_ERROR]
+			-- An agent to be used for reporting errors.
+			-- The actual behavior may be reporting errors or warnings.
+
+	are_indirect_errors_reported: BOOLEAN
+			-- Should issues in indirect ECFs be reported as errors?
+			-- If not, they are reported as warnings.
 
 	check_cluster (cluster: CONF_CLUSTER; t: CONF_TARGET)
 			-- Check that options of classes in `cluster' satisfy validity rules against target `t' and report errors using `o' if not.

@@ -400,6 +400,7 @@ feature -- Initialization
 	initialize_completion_possibilities (a_completion_possibilities: like sorted_names)
 			-- Initialize `sorted_names'  to completion possiblities.
 		do
+			code_template_label.set_text (interface_names.l_show_templates)
 			sorted_names := Void
 			template_sorted_names := Void
 			across  a_completion_possibilities as ic loop
@@ -1235,6 +1236,7 @@ feature {NONE} -- Implementation
 				option_bar_box.hide
 --				option_bar_box_tpl.show
 				code_template_label.set_text (interface_names.l_show_features)
+				code_template_label.refresh_now
 				apply_template_completion_list
 				show
 			else
@@ -1242,6 +1244,7 @@ feature {NONE} -- Implementation
 				option_bar_box.show
 --				option_bar_box_tpl.hide
 				code_template_label.set_text (interface_names.l_show_templates)
+				code_template_label.refresh_now
 				build_full_list
 				resize_column_to_window_width
 				show

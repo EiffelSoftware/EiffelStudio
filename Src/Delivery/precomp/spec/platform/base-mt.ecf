@@ -3,8 +3,8 @@
 	<target name="base-mt">
 		<root all_classes="true"/>
 		<capability>
-			<concurrency support="none" use="thread"/>
-			<void_safety support="none"/>
+			<concurrency use="thread"/>
+			<void_safety use="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 	</target>

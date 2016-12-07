@@ -4,8 +4,8 @@
 		<root all_classes="true"/>
 		<setting name="console_application" value="true"/>
 		<capability>
-			<concurrency support="none" use="thread"/>
-			<void_safety support="none"/>
+			<concurrency use="thread"/>
+			<void_safety use="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 	</target>

@@ -48,6 +48,8 @@ feature {NONE} -- Initialization
 
 	make_namespace_and_schema (a_namespace: detachable READABLE_STRING_GENERAL; a_schema: READABLE_STRING_GENERAL)
 			-- Create with `a_namespace' and `a_schema'.
+		require
+			a_schema_set: a_schema /= Void
 		do
 			if a_namespace = Void then
 				namespace := Void

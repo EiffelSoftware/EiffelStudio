@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" name="test">
+	<target name="test">
+		<root class="TEST" feature="make"/>
+		<setting name="console_application" value="true"/>
+		<setting name="concurrency" value="scoop"/>
+		<precompile name="pre-foo" location="precomp-scoop.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="foo" location="foo.ecf"/>
+		<cluster name="root_cluster" location="$CLUSTER\"/>
+	</target>
+
+	<target name="test_thread">
+		<root class="TEST" feature="make"/>
+		<setting name="console_application" value="true"/>
+		<setting name="concurrency" value="thread"/>
+		<precompile name="pre-foo_thread" location="precomp-thread.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="foo" location="foo.ecf"/>
+		<cluster name="root_cluster" location="$CLUSTER\"/>
+	</target>
+</system>

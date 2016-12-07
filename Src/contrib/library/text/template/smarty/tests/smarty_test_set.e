@@ -143,6 +143,28 @@ feature -- Test routines
 			end
 		end
 
+	test_custom_counter
+		local
+			t: TEMPLATE_TEXT
+		do
+			create t.make_from_text ("[
+			{assign name="counter" value="0"/}{assign name="counter" expression="$cell.item"/}{assign name="step" expression="$len.item"/}
+			{sum left="$cell.item" right="$step"}counter{/sum}counter={$counter/}
+			{sum left="$counter" right="$step"}counter{/sum}counter={$counter/}
+			{sum left="$counter" right="$step"}counter{/sum}counter={$counter/}
+			]")
+			t.add_value (create {CELL [INTEGER_64]}.put (123), "cell")
+			t.add_value (create {CELL [INTEGER_64]}.put (1), "len")
+			template_context.add_template_custom_action (create {TEMPLATE_SUM_ACTION}, "sum")
+			t.get_structure
+			t.get_output
+			if attached t.output as o then
+				assert("output", o.same_string ("%Ncounter=124%Ncounter=125%Ncounter=126"))
+			else
+				assert("output set" , False)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	append_data_to_string (d: ANY; a_offset: INTEGER; a_result: STRING)

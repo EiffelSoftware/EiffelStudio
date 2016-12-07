@@ -10,7 +10,7 @@
 		<setting name="console_application" value="true"/>
 		<capability>
 			<concurrency use="none"/>
-			<void_safety support="none"/>
+			<void_safety support="all"/>
 		</capability>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>

@@ -997,6 +997,9 @@ end
 				test_system.check_for_testing_configuration (l_target)
 
 					-- Use target's settings for compilation.
+					-- This should be done before any class options are set (test#config049),
+					-- but only once per compilation so that updated options are not
+					-- used for capability checks.
 				lace.update_capabilities
 
 					-- let the configuration system build "everything"

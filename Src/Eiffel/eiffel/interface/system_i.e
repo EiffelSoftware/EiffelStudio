@@ -996,6 +996,9 @@ end
 					-- Check for testing library in current config
 				test_system.check_for_testing_configuration (l_target)
 
+					-- Use target's settings for compilation.
+				lace.update_capabilities
+
 					-- let the configuration system build "everything"
 				l_state := universe.conf_state_from_target (l_target)
 				if universe.target /= Void then
@@ -1389,8 +1392,6 @@ end
 					-- before! (Dino, that's an allusion to you, -- FRED)
 				original_body_index_table.copy (body_index_table)
 				Degree_1.wipe_out
-					-- Use target's settings for compilation.
-				lace.update_capabilities
 			end
 		end
 

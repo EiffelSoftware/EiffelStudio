@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-12-06 18:57+0300\n"
+"PO-Revision-Date: 2016-12-08 08:51+0300\n"
 "Last-Translator: Alexander Kogtenkov <kwaxer@mail.ru>\n"
 "Language-Team: Eiffel Software and others <support@eiffel.com>\n"
 "Language: ru\n"
@@ -22379,7 +22379,7 @@ msgstr "Неверное имя задания $1."
 #. Source code: invalid_target: STRING_32 							do Result := locale.translation ("Invalid target, select the target you want: ") end
 #: ewb_names.e:38
 msgid "Invalid target, select the target you want: "
-msgstr "Неверное задание, выберите задание, которое хотите:"
+msgstr "Задание указано неверно, выберите задание: "
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid uses tag in group $1."), [a_group])
 #: conf_interface_names.e:1040
@@ -30692,7 +30692,7 @@ msgstr "Выберите необходимую информацию и сфор
 #. Source code: select_the_target_you_want: STRING_32 				do Result := locale.translation ("Select the target you want (0 to quit): ") end
 #: ewb_names.e:37
 msgid "Select the target you want (0 to quit): "
-msgstr "Выберите задание, которое хотите (0 для выхода): "
+msgstr "Выберите задание (0 для выхода): "
 
 #. Source code: t_contract_select_mode: STRING_32 				do Result := locale.translation ("Select the type of contracts to edit") end
 #: interface_names.e:2619

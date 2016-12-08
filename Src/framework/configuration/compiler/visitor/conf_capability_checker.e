@@ -69,12 +69,12 @@ feature {CONF_VISITABLE} -- Visitor
 				targets.force (t)
 				old_target := target
 					-- Check usage of a parent target or of a library target in the current target.
-				if t /= root_target then
+				if t /= root_target and then not is_precompile then
 					check_target (t, old_target)
 				end
 					-- Perform checks in the context of supplied target.
 				target := t
-				if not is_precompile and then attached t.extends as parent then
+				if attached t.extends as parent then
 						-- Recurse to parent.
 						-- Unless a precompile is checked.
 					old_condition := condition
@@ -82,29 +82,31 @@ feature {CONF_VISITABLE} -- Visitor
 					process_target (parent)
 					condition := old_condition
 				end
-					-- Check rule 4.
-				if not t.options.catcall_safety_capability.is_custom_root_valid then
-					observer.report_error (create {CONF_ERROR_ROOT_OPTION}.make
-						(t,
-						conf_interface_names.option_catcall_detection_value [t.options.catcall_safety_capability.custom_root_index],
-						conf_interface_names.option_catcall_detection_value [t.options.catcall_safety_capability.value.index],
-						conf_interface_names.option_catcall_detection_name))
+				if not is_precompile then
+						-- Check rule 4.
+					if not t.options.catcall_safety_capability.is_custom_root_valid then
+						observer.report_error (create {CONF_ERROR_ROOT_OPTION}.make
+							(t,
+							conf_interface_names.option_catcall_detection_value [t.options.catcall_safety_capability.custom_root_index],
+							conf_interface_names.option_catcall_detection_value [t.options.catcall_safety_capability.value.index],
+							conf_interface_names.option_catcall_detection_name))
+					end
+					if not t.options.concurrency_capability.is_custom_root_valid then
+						observer.report_error (create {CONF_ERROR_ROOT_OPTION}.make
+							(t,
+							conf_interface_names.option_concurrency_value [t.options.concurrency_capability.custom_root_index],
+							conf_interface_names.option_concurrency_value [t.options.concurrency_capability.value.index],
+							conf_interface_names.option_concurrency_name))
+					end
+					if not t.options.void_safety_capability.is_custom_root_valid then
+						observer.report_error (create {CONF_ERROR_ROOT_OPTION}.make
+							(t,
+							conf_interface_names.option_void_safety_value [t.options.void_safety_capability.custom_root_index],
+							conf_interface_names.option_void_safety_value [t.options.void_safety_capability.value.index],
+							conf_interface_names.option_void_safety_name))
+					end
 				end
-				if not t.options.concurrency_capability.is_custom_root_valid then
-					observer.report_error (create {CONF_ERROR_ROOT_OPTION}.make
-						(t,
-						conf_interface_names.option_concurrency_value [t.options.concurrency_capability.custom_root_index],
-						conf_interface_names.option_concurrency_value [t.options.concurrency_capability.value.index],
-						conf_interface_names.option_concurrency_name))
-				end
-				if not t.options.void_safety_capability.is_custom_root_valid then
-					observer.report_error (create {CONF_ERROR_ROOT_OPTION}.make
-						(t,
-						conf_interface_names.option_void_safety_value [t.options.void_safety_capability.custom_root_index],
-						conf_interface_names.option_void_safety_value [t.options.void_safety_capability.value.index],
-						conf_interface_names.option_void_safety_name))
-				end
-					-- Check groups.
+					-- Check groups and recurse to libraries.
 				Precursor (t)
 				target := old_target
 			end
@@ -115,25 +117,29 @@ feature {CONF_VISITABLE} -- Visitor
 		local
 			old_condition: like condition
 			old_report_error: like report_error
+			old_is_precompile: BOOLEAN
 		do
 			if not is_precompile then
 					-- Check usage of the library in the current target.
 				check_group (a_library, target)
-					-- Check library.
-				if attached a_library.library_target as t then
-					old_condition := condition
-					condition := a_library.internal_conditions
+			end
+				-- Check library recursively.
+			if attached a_library.library_target as t then
+				old_condition := condition
+				condition := a_library.internal_conditions
+				old_is_precompile := is_precompile
+				if not old_is_precompile then
 					is_precompile := attached {CONF_PRECOMPILE} a_library
-					old_report_error := report_error
-					if not are_indirect_errors_reported then
-							-- Report warnings instead of errors.
-						report_error := agent observer.report_warning
-					end
-					process_target (t)
-					report_error := old_report_error
-					is_precompile := False
-					condition := old_condition
 				end
+				old_report_error := report_error
+				if not are_indirect_errors_reported then
+						-- Report warnings instead of errors.
+					report_error := agent observer.report_warning
+				end
+				process_target (t)
+				report_error := old_report_error
+				is_precompile := old_is_precompile
+				condition := old_condition
 			end
 		end
 

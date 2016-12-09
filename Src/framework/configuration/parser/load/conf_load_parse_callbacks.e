@@ -862,8 +862,10 @@ feature {NONE} -- Implementation attribute processing
 									if l_value.is_boolean then
 											-- SCOOP is not supported in old projects.
 										if l_value.to_boolean then
+											l_current_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_thread)
 											l_current_target.changeable_internal_options.concurrency_capability.put_root_index ({CONF_TARGET_OPTION}.concurrency_index_thread)
 										else
+											l_current_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_none)
 											l_current_target.changeable_internal_options.concurrency_capability.put_root_index ({CONF_TARGET_OPTION}.concurrency_index_none)
 										end
 									else
@@ -1611,7 +1613,8 @@ feature {NONE} -- Implementation attribute processing
 					if l_current_option.catcall_detection.is_valid_item (l_catcall_detection) then
 						if attached l_target_option then
 								-- Starting from 16.11 catcall detection cannot be specified for anything except targets.
-							l_current_option.catcall_detection.put (l_catcall_detection)
+							l_target_option.catcall_safety_capability.value.put (l_catcall_detection)
+							l_target_option.catcall_safety_capability.put_root (l_catcall_detection)
 						else
 							set_parse_warning_message (conf_interface_names.e_parse_unsupported_attribute (o_catcall_detection))
 						end
@@ -1623,9 +1626,11 @@ feature {NONE} -- Implementation attribute processing
 						if attached l_target_option then
 								-- Starting from 16.11 catcall detection cannot be specified for anything except targets.
 							if l_catcall_detection.to_boolean then
-								l_current_option.catcall_detection.put_index ({CONF_OPTION}.catcall_detection_index_all)
+								l_target_option.catcall_safety_capability.value.put_index ({CONF_OPTION}.catcall_detection_index_all)
+								l_target_option.catcall_safety_capability.put_root_index ({CONF_OPTION}.catcall_detection_index_all)
 							else
-								l_current_option.catcall_detection.put_index ({CONF_OPTION}.catcall_detection_index_none)
+								l_target_option.catcall_safety_capability.value.put_index ({CONF_OPTION}.catcall_detection_index_none)
+								l_target_option.catcall_safety_capability.put_root_index ({CONF_OPTION}.catcall_detection_index_none)
 							end
 						else
 							set_parse_warning_message (conf_interface_names.e_parse_unsupported_attribute (o_catcall_detection))
@@ -1661,30 +1666,32 @@ feature {NONE} -- Implementation attribute processing
 					if l_current_option.void_safety.is_valid_item (l_void_safety) then
 						if attached l_target_option then
 								-- Starting from 16.11 void safety cannot be specified for anything except targets.
-							l_current_option.void_safety.put (l_void_safety)
+							l_target_option.void_safety_capability.value.put (l_void_safety)
+							l_target_option.void_safety_capability.put_root (l_void_safety)
+							if includes_this_or_before (namespace_1_10_0) then
+									-- Adapt indexes to earlier namespace.
+								inspect
+									l_current_option.void_safety.index
+								when
+									{CONF_OPTION}.void_safety_index_none,
+									{CONF_OPTION}.void_safety_index_initialization
+								then
+										-- Use as is.
+								when {CONF_OPTION}.void_safety_index_all then
+										-- Use lower void-safety setting.
+									if attached l_target_option then
+											-- Starting from 16.11 void safety cannot be specified for anything except targets.
+											-- The warning is already reported, no need for Else_part.
+										l_target_option.void_safety_capability.value.put_index ({CONF_OPTION}.void_safety_index_transitional)
+										l_target_option.void_safety_capability.put_root_index ({CONF_OPTION}.void_safety_index_transitional)
+									end
+								else
+										-- Report unknown value.
+									set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_void_safety))
+								end
+							end
 						else
 							set_parse_warning_message (conf_interface_names.e_parse_unsupported_attribute (o_void_safety))
-						end
-						if includes_this_or_before (namespace_1_10_0) then
-								-- Adapt indexes to earlier namespace.
-							inspect
-								l_current_option.void_safety.index
-							when
-								{CONF_OPTION}.void_safety_index_none,
-								{CONF_OPTION}.void_safety_index_initialization
-							then
-									-- Use as is.
-							when {CONF_OPTION}.void_safety_index_all then
-									-- Use lower void-safety setting.
-								if attached l_target_option then
-										-- Starting from 16.11 void safety cannot be specified for anything except targets.
-										-- The warning is already reported, no need for Else_part.
-									l_current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_transitional)
-								end
-							else
-									-- Report unknown value.
-								set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_void_safety))
-							end
 						end
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_void_safety))
@@ -1704,12 +1711,15 @@ feature {NONE} -- Implementation attribute processing
 								-- Starting from 16.11 void safety cannot be specified for anything except targets.
 							if includes_this_or_before (namespace_1_4_0) then
 								if l_is_void_safe.to_boolean then
-									l_current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_transitional)
+									l_target_option.void_safety_capability.value.put_index ({CONF_OPTION}.void_safety_index_transitional)
+									l_target_option.void_safety_capability.put_root_index ({CONF_OPTION}.void_safety_index_transitional)
 								else
-									l_current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_none)
+									l_target_option.void_safety_capability.value.put_index ({CONF_OPTION}.void_safety_index_none)
+									l_target_option.void_safety_capability.put_root_index ({CONF_OPTION}.void_safety_index_none)
 								end
 							elseif l_is_void_safe.to_boolean then
-								l_current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_all)
+								l_target_option.void_safety_capability.value.put_index ({CONF_OPTION}.void_safety_index_all)
+								l_target_option.void_safety_capability.put_root_index ({CONF_OPTION}.void_safety_index_all)
 							end
 						else
 							set_parse_warning_message (conf_interface_names.e_parse_unsupported_attribute ("is_void_safe"))

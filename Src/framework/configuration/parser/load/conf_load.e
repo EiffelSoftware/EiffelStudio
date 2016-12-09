@@ -285,11 +285,7 @@ feature {NONE} -- Implementation
 			create l_callback.make_with_file (a_file)
 			parse_file (a_file, l_callback)
 			if attached l_callback.last_redirected_location as l_new_location then
-
-				p := conf_location_value_to_path (l_new_location)
-				last_redirected_location := p.absolute_path_in ((create {PATH}.make_from_string (a_file)).parent)
-
---				last_redirected_location := (create {PATH}.make_from_string (l_new_location)).absolute_path_in ((create {PATH}.make_from_string (a_file)).parent)
+				last_redirected_location := conf_redirection_location_for_file (l_new_location, a_file)
 			end
 			if l_callback.is_error then
 				is_error := True
@@ -348,8 +344,7 @@ feature {NONE} -- Redirection
 
 				-- On linux, replace \ by /
 				-- (see `{CONF_LOCATION}.update_path_to_unix')
-			p := conf_location_value_to_path (a_new_location)
-			p := p.absolute_path_in ((create {PATH}.make_from_string (a_file)).parent)
+			p := conf_redirection_location_for_file (a_new_location, a_file)
 
 			if across a_redirections as c some p.is_same_file_as (c.item) end then
 					--| `a_new_location' already appears in the redirection chain
@@ -406,6 +401,13 @@ feature {NONE} -- Implementation
 				s.replace_substring_all ({STRING_32} "\", {STRING_32} "/")
 				create Result.make_from_string (s)
 			end
+		end
+
+	conf_redirection_location_for_file (a_new_location: READABLE_STRING_GENERAL; a_file_location: READABLE_STRING_GENERAL): PATH
+			-- Resolved redirection location `a_new_location` related to file `a_file_location`.
+		do
+			Result := conf_location_value_to_path (a_new_location)
+			Result := Result.absolute_path_in ((create {PATH}.make_from_string (a_file_location)).parent)
 		end
 
 	factory: CONF_PARSE_FACTORY

@@ -1045,7 +1045,9 @@ feature {NONE} -- Implementation
 
 				-- Default to SCOOP application.
 				-- Set only capability part, root setting will default to it.
-			l_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_scoop)
+			if l_target.changeable_internal_options.concurrency_capability.value.index /= {CONF_TARGET_OPTION}.concurrency_index_scoop then
+				l_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_scoop)
+			end
 
 				-- Add libraries to target.
 			if a_libraries /= Void then
@@ -1065,7 +1067,7 @@ feature {NONE} -- Implementation
 			l_target.add_cluster (l_factory.new_cluster (a_target_name, l_directory_location, l_target))
 
 				-- Add base library.
-			l_target.add_library (l_factory.new_library ("base", "$ISE_LIBRARY/library/base/base-safe.ecf", l_target))
+			l_target.add_library (l_factory.new_library ("base", "$ISE_LIBRARY/library/base/base.ecf", l_target))
 
 			if l_target.precompile = Void then
 					-- No precompile is set, add base as precompile.

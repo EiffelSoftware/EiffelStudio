@@ -715,6 +715,11 @@ feature {NONE} -- Choice options
 					-- TODO: replace pixmap with pixel buffer and use drawable to avoid cloning.
 				if is_default_capability then
 					property_group.put_at_position (conf_pixmaps.project_settings_default_icon.twin, 1, row, 1, 1)
+						-- Update default icon depending on the state of a default button.
+					on_toggle
+						(agent property_group.put_at_position (conf_pixmaps.project_settings_default_highlighted_icon.twin, 1, row, 1, 1),
+						agent property_group.put_at_position (conf_pixmaps.project_settings_default_icon.twin, 1, row, 1, 1),
+						default_capability)
 				end
 					-- Indicate whether an value is checked.
 				if capability.is_capable (i.target_index.as_natural_8) then
@@ -804,7 +809,7 @@ feature {NONE} -- Choice options
 				o.put_root_index (o.root_index)
 			end
 				-- Update default marks.
-			show_default_root_option (o, group)
+			show_default_root_option (False, o, group)
 				-- Enable or disable radio buttons depending on whether the corresponding capability is supported.
 				-- Mark a current root option.
 			from
@@ -841,7 +846,7 @@ feature {NONE} -- Choice options
 				-- Update current root index.
 			o.unset_root
 				-- Update default marks.
-			show_default_root_option (o, group)
+			show_default_root_option (True, o, group)
 				-- Disable all radio-buttons.
 			from
 				r := group.rows
@@ -858,7 +863,7 @@ feature {NONE} -- Choice options
 			end
 		end
 
-	show_default_root_option (o: CONF_ORDERED_CAPABILITY; group: EV_TABLE)
+	show_default_root_option (is_highlighted: BOOLEAN; o: CONF_ORDERED_CAPABILITY; group: EV_TABLE)
 			-- Update a mark that indicates a default root option of `o' in associated group `group'.
 		local
 			r: INTEGER
@@ -875,17 +880,20 @@ feature {NONE} -- Choice options
 			loop
 					-- We cannot put anything to a cell if it contains an item.
 				if attached group.item_at_position (3, r) as m then
-					if r /= default_row then
-							-- Remove only non-default mark.
-							-- TODO: replace pixmap with pixel buffer and use drawable to avoid cloning.
-						group.prune (m)
-					end
-				else
-					if r = default_row then
-							-- Put a default mark.
-							-- TODO: replace pixmap with pixel buffer and use drawable to avoid cloning.
-						group.put_at_position (conf_pixmaps.project_settings_default_icon.twin, 3, r, 1, 1)
-					end
+						-- Remove only non-default mark.
+						-- TODO: replace pixmap with pixel buffer and use drawable to avoid cloning.
+					group.prune (m)
+				end
+				if r = default_row then
+						-- Put a default mark.
+						-- TODO: replace pixmap with pixel buffer and use drawable to avoid cloning.
+					group.put_at_position (
+						(if is_highlighted then
+							conf_pixmaps.project_settings_default_highlighted_icon
+						else
+							conf_pixmaps.project_settings_default_icon
+						end).twin,
+						3, r, 1, 1)
 				end
 				r := r + 1
 				index := index - 1
@@ -1086,10 +1094,10 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			refresh_current := agent show_properties_target_general (a_target)
 			lock_update
 
-			initialize_tabs (a_target)
+			initialize_properties
 
 			current_target := a_target
-			properties.reset
+
 			add_general_properties
 
 			unlock_update

@@ -280,7 +280,6 @@ feature {NONE} -- Implementation
 			l_callback: CONF_LOAD_UUID_CALLBACKS
 			l_err: CONF_ERROR_UUID
 			redir: detachable ARRAYED_LIST [PATH]
-			p: PATH
 		do
 			create l_callback.make_with_file (a_file)
 			parse_file (a_file, l_callback)

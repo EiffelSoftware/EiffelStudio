@@ -80,6 +80,9 @@ feature -- Access
 	last_redirection: detachable CONF_REDIRECTION
 			-- Last retrieved redirection.
 
+	last_redirected_location: detachable PATH
+			-- Last redirected location.
+
 	last_uuid: detachable UUID
 			-- The last retrieved uuid.
 
@@ -92,6 +95,7 @@ feature -- Basic operation
 		do
 			last_system := Void
 			last_redirection := Void
+			last_redirected_location := Void
 			last_warnings := Void
 			last_error := Void
 			recursive_retrieve_configuration (a_file, Void, Void)
@@ -104,6 +108,8 @@ feature -- Basic operation
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty
 		do
+			last_redirection := Void
+			last_redirected_location := Void
 			last_uuid := Void
 			last_warnings := Void
 			last_error := Void
@@ -159,6 +165,7 @@ feature {NONE} -- Implementation
 				if attached l_callback.last_redirection as l_redirection then
 					if last_redirection = Void then
 						last_redirection := l_redirection
+						last_redirected_location := l_redirection.file_path
 					end
 						-- This means that `a_file' is a redirection, let's follow the new location
 						-- if `l_redirection.redirection_location' is an absolute path, it will be used as is
@@ -273,9 +280,17 @@ feature {NONE} -- Implementation
 			l_callback: CONF_LOAD_UUID_CALLBACKS
 			l_err: CONF_ERROR_UUID
 			redir: detachable ARRAYED_LIST [PATH]
+			p: PATH
 		do
 			create l_callback.make_with_file (a_file)
 			parse_file (a_file, l_callback)
+			if attached l_callback.last_redirected_location as l_new_location then
+
+				p := conf_location_value_to_path (l_new_location)
+				last_redirected_location := p.absolute_path_in ((create {PATH}.make_from_string (a_file)).parent)
+
+--				last_redirected_location := (create {PATH}.make_from_string (l_new_location)).absolute_path_in ((create {PATH}.make_from_string (a_file)).parent)
+			end
 			if l_callback.is_error then
 				is_error := True
 				last_error := l_callback.last_error
@@ -283,7 +298,7 @@ feature {NONE} -- Implementation
 				last_uuid := l_callback.last_uuid
 				if l_callback.last_uuid = Void then
 							--| The uuid attribute is not set, which is accepted
-					if attached l_callback.last_location as l_new_location then
+					if attached l_callback.last_redirected_location as l_new_location then
 							--| `a_file' is a redirection
 							--| then check the ecf at the `l_new_location'
 						redir := a_redirections
@@ -461,9 +476,9 @@ feature {NONE} -- Implementation
 				-- add warnings
 			is_warning := is_warning or a_callback.is_warning
 			if attached last_warnings as l_curr_last_warnings then
-				if 
-					attached a_callback.last_warning as l_last_warnings and then 
-					not l_last_warnings.is_empty 
+				if
+					attached a_callback.last_warning as l_last_warnings and then
+					not l_last_warnings.is_empty
 				then
 					l_curr_last_warnings.append (l_last_warnings)
 				end

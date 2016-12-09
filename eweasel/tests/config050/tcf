@@ -1,0 +1,19 @@
+test_name 	 config-redirection-uuid-warning
+test_description Redirection from one ECF into another one should not trigger a warning.
+
+copy_sub	library.ecf $TEST library.ecf
+copy_raw	test.e $CLUSTER test.e
+
+copy_sub	Ace1.ecf $TEST Ace
+compile_melted
+compile_result	ok
+
+copy_sub	Ace2.ecf $TEST Ace
+compile_melted
+compile_result	ok
+
+copy_sub	Ace1.ecf $TEST Ace
+compile_melted
+compile_result	ok
+
+test_end

@@ -2109,6 +2109,7 @@ test	capability-library-inheritance		config046 tcf pass config capability
 test	capability-precompile-inheritance	config047 tcf pass config capability
 test	capability-precompile-propagation	config048 tcf pass config capability
 test	capability-library-project-setting	config049 tcf pass config capability
+test	config-redirection-uuid-warning		config050 tcf fail config
 
 -- Lace
 

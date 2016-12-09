@@ -1396,6 +1396,8 @@ end
 				original_body_index_table.copy (body_index_table)
 				Degree_1.wipe_out
 			end
+				-- Update capability settings used during compilation.
+			lace.update_capability_root
 		end
 
 feature -- ANY.default_rescue routine id

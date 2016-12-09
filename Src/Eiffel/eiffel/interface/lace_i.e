@@ -503,6 +503,13 @@ feature -- Status setting
 						-- Update options to use target's settings.
 					(create {CONF_CAPABILITY_SETTER}.make (t)).do_nothing
 				end
+			end
+		end
+
+	update_capability_root
+			-- Update capability settings used at every compilation.
+		do
+			if attached target as t then
 				is_void_safe := t.options.void_safety_capability.root_index /= {CONF_TARGET_OPTION}.void_safety_index_none
 			end
 		end

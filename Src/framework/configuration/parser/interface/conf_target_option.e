@@ -112,7 +112,7 @@ feature -- Merging
 		do
 			Precursor (other)
 				-- Merge concurency capability.
-			concurrency.set_safely (other.concurrency)
+			concurrency_capability.set_safely (other.concurrency_capability)
 				-- Merge CAT-call and void safety: only root settings need to be merged because capabilities are merged by precursor.
 			catcall_safety_capability.set_safely_root (other.catcall_safety_capability)
 			void_safety_capability.set_safely_root (other.void_safety_capability)

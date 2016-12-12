@@ -21,7 +21,6 @@
 			</condition>
 		</file_rule>
 		<option warning="true" namespace="EiffelSoftware.Framework">
-			<assertions supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>

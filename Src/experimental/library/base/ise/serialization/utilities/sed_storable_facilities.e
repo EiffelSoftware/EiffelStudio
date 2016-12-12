@@ -110,10 +110,14 @@ feature -- Serialization routines
 				a_reader.read_natural_32
 			when eiffel_session_store then l_deserializer := session_deserializer (a_reader)
 			when eiffel_basic_store then l_deserializer := basic_deserializer (a_reader)
-			when eiffel_independent_store then l_deserializer := independent_deserializer (a_reader)
 			when eiffel_recoverable_store then l_deserializer := recoverable_deserializer (a_reader)
+			when eiffel_independent_store then
+					-- Obsolete type.
+				create l_retrieved_errors.make (1)
+				l_retrieved_errors.extend ((create {SED_ERROR_FACTORY}).new_obsolete_storable_type)
+				retrieved_errors := l_retrieved_errors
 			else
-					-- Unknown type
+					-- Unknown type.
 				create l_retrieved_errors.make (1)
 				l_retrieved_errors.extend ((create {SED_ERROR_FACTORY}).new_unknown_storable_type)
 				retrieved_errors := l_retrieved_errors
@@ -255,29 +259,6 @@ feature {NONE} -- Data
 			create Result.make (a_reader)
 		ensure
 			basic_deserializer_not_void: Result /= Void
-		end
-
-	independent_deserializer (a_reader: SED_READER_WRITER): SED_INDEPENDENT_DESERIALIZER
-			-- New instance of `session' based on `a_reader'.
-		require
-			a_reader_not_void: a_reader /= Void
-			a_reader_ready: a_reader.is_ready_for_reading
-		do
-			Result := internal_independent_deserializer (a_reader)
-			Result.set_deserializer (a_reader)
-		ensure
-			independent_deserializer_not_void: Result /= Void
-		end
-
-	internal_independent_deserializer (a_reader: SED_READER_WRITER): SED_INDEPENDENT_DESERIALIZER
-			-- New instance of `session' based on `a_reader'.
-		require
-			a_reader_not_void: a_reader /= Void
-			a_reader_ready: a_reader.is_ready_for_reading
-		once
-			create Result.make (a_reader)
-		ensure
-			independent_deserializer_not_void: Result /= Void
 		end
 
 	internal_recoverable_deserializer (a_reader: SED_READER_WRITER): SED_RECOVERABLE_DESERIALIZER

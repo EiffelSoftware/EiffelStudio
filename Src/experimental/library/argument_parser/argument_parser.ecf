@@ -21,7 +21,6 @@
 			</condition>
 		</file_rule>
 		<option namespace="EiffelSoftware.Framework">
-			<assertions supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<cluster name="obsolete_arg_parser" location=".\" recursive="true">

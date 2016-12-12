@@ -73,7 +73,7 @@ feature -- Access
 			subtree_function := Void
 			expand_actions.wipe_out
 			remove_expandable
-			last_subtree_function_call_time := 0
+			last_subtree_function_call_time := Void
 			subtree_function_timeout := 0
 		end
 
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			create {EV_TREE_NODE_IMP} implementation.make
 		end
 
-	last_subtree_function_call_time: INTEGER
+	last_subtree_function_call_time: detachable DATE_TIME
 			-- Time in milliseconds at which `subtree_function' was last called.
 
 	subtree_function_item: detachable LINEAR [EV_TREE_NODE]
@@ -139,19 +139,24 @@ feature {NONE} -- Implementation
 		require
 			not_destroyed: not is_destroyed
 		local
-			now: INTEGER
+			l_previous_time: DATE_TIME
+			l_current_time: DATE_TIME
+			l_force: BOOLEAN
 		do
 			if attached subtree_function as l_subtree_function then
-				time_msec ($now)
-				check
-					linear_time: now >= last_subtree_function_call_time
+				l_previous_time := last_subtree_function_call_time
+				if l_previous_time = Void then
+					create l_previous_time.make_now
+					last_subtree_function_call_time := l_previous_time
+					l_current_time := l_previous_time
+					l_force := True
+				else
+					create l_current_time.make_now
 				end
-				if
-					now - last_subtree_function_call_time >= subtree_function_timeout or
-					last_subtree_function_call_time = 0
-				then
+
+				if l_force or (l_current_time.relative_duration (l_previous_time).fine_seconds_count >= (subtree_function_timeout / 1000)) then
 					Result := l_subtree_function.item (Void)
-					last_subtree_function_call_time := now
+					last_subtree_function_call_time := l_current_time
 				end
 			end
 		end
@@ -189,23 +194,6 @@ feature {NONE} -- Implementation
 			remove_expandable
 		end
 
-	time_msec (now: TYPED_POINTER [INTEGER])
-		external
-			"C inline use <sys/types.h>, <time.h>, <sys/timeb.h>"
-		alias
-			"[
-				{
-					struct timeb tb;
-					static time_t beginning = 0;
-					if (!beginning) {
-						beginning = time (NULL);
-					}
-					ftime (&tb);
-					*$now = (EIF_INTEGER) (((tb.time - beginning) * 1000) + tb.millitm);
-				}
-			]"
-		end
-
 	ensure_expandable
 			-- Ensure `Current' is displayed as expandable.
 		require
@@ -223,7 +211,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

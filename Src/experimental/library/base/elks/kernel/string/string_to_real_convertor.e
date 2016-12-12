@@ -108,7 +108,7 @@ feature -- Status reporting
 			Result := is_part_of_double
 		end
 
-	parsed_double: DOUBLE
+	parsed_double: REAL_64
 			-- Parsed double value
 		do
 			if has_negative_exponent then
@@ -124,7 +124,7 @@ feature -- Status reporting
 			end
 		end
 
-	parsed_real: REAL
+	parsed_real: REAL_32
 			-- Parsed real value
 		do
 			Result := parsed_double.truncated_to_real
@@ -361,9 +361,9 @@ feature -- Parse
 
 feature{NONE} -- Implementation
 
-	natural_part: DOUBLE
-	fractional_part: DOUBLE
-	fractional_divider: DOUBLE
+	natural_part: REAL_64
+	fractional_part: REAL_64
+	fractional_divider: REAL_64
 	exponent: INTEGER
 	is_negative: BOOLEAN
 	has_negative_exponent: BOOLEAN

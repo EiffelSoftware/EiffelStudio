@@ -94,13 +94,13 @@ feature -- Output
 			end
 		end
 
-	put_real, putreal (r: REAL)
+	put_real, putreal (r: REAL_32)
 			-- Write binary value of `r' at current position.
 		do
 			file_prb (file_pointer, r)
 		end
 
-	put_double, putdouble (d: DOUBLE)
+	put_double, putdouble (d: REAL_64)
 			-- Write binary value `d' at current position.
 		do
 			file_pdb (file_pointer, d)
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			"eif_file_gib"
 		end
 
-	file_grb (file: POINTER): REAL
+	file_grb (file: POINTER): REAL_32
 			-- Read a real from `file'
 		external
 			"C signature (FILE *): EIF_REAL_32 use %"eif_file.h%""
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 			"eif_file_grb"
 		end
 
-	file_gdb (file: POINTER): DOUBLE
+	file_gdb (file: POINTER): REAL_64
 			-- Read a double from `file'
 		external
 			"C signature (FILE *): EIF_REAL_64 use %"eif_file.h%""
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 			"eif_file_pib"
 		end
 
-	file_prb (file: POINTER; r: REAL)
+	file_prb (file: POINTER; r: REAL_32)
 			-- Put `r' to end of `file'.
 		external
 			"C signature (FILE *, EIF_REAL_32) use %"eif_file.h%""
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 			"eif_file_prb"
 		end
 
-	file_pdb (file: POINTER; d: DOUBLE)
+	file_pdb (file: POINTER; d: REAL_64)
 			-- Put `d' to end of `file'.
 		external
 			"C signature (FILE *, EIF_REAL_64) use %"eif_file.h%""

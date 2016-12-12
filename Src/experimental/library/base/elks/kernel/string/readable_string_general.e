@@ -401,7 +401,7 @@ feature -- Status report
 				--
 				-- 2. The numerical value represented by 'Current'
 				--	is within the range that can be represented
-				--	by an instance of type REAL.
+				--	by an instance of type REAL_32.
 		end
 
 	is_double, is_real_64: BOOLEAN
@@ -433,7 +433,7 @@ feature -- Status report
 				--
 				-- 2. The numerical value represented by 'Current'
 				--	is within the range that can be represented
-				--	by an instance of type DOUBLE.
+				--	by an instance of type REAL_64.
 		end
 
 	is_boolean: BOOLEAN
@@ -1019,7 +1019,7 @@ feature -- Conversion
 			Result := l_convertor.parsed_natural_64
 		end
 
-	to_real, to_real_32: REAL
+	to_real, to_real_32: REAL_32
 			-- Real value;
 			-- for example, when applied to "123.0", will yield 123.0
 		require
@@ -1028,7 +1028,7 @@ feature -- Conversion
 			Result := to_double.truncated_to_real
 		end
 
-	to_double, to_real_64: DOUBLE
+	to_double, to_real_64: REAL_64
 			-- "Double" value;
 			-- for example, when applied to "123.0", will yield 123.0 (double)
 		require

@@ -104,14 +104,14 @@ feature -- Output
 			end
 		end
 
-	put_real, putreal (r: REAL)
+	put_real, putreal (r: REAL_32)
 			-- Write binary value of `r' at current position.
 		do
 			internal_managed_pointer.put_real_32 (r, 0)
 			put_managed_pointer (internal_managed_pointer, 0, {PLATFORM}.real_32_bytes)
 		end
 
-	put_double, putdouble (d: DOUBLE)
+	put_double, putdouble (d: REAL_64)
 			-- Write binary value `d' at current position.
 		do
 			internal_managed_pointer.put_real_64 (d, 0)

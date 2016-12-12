@@ -11,11 +11,12 @@
 		<option namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<capability>
-			<concurrency support="thread"/>
-		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" readonly="true"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf">
+			<condition>
+				<concurrency value="thread"/>
+			</condition>
+		</library>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="true">
 			<condition>
@@ -30,6 +31,12 @@
 			<file_rule>
 				<exclude>/mswin$</exclude>
 			</file_rule>
+			<file_rule>
+				<exclude>/thread/ev_thread_worker.e$</exclude>
+				<condition>
+					<concurrency excluded_value="thread"/>
+				</condition>
+			</file_rule>
 		</cluster>
 		<cluster name="independent_mswin" location="independent\" recursive="true">
 			<condition>
@@ -39,6 +46,12 @@
 			</option>
 			<file_rule>
 				<exclude>/gtk$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>/thread/ev_thread_worker.e$</exclude>
+				<condition>
+					<concurrency excluded_value="thread"/>
+				</condition>
 			</file_rule>
 		</cluster>
 		<cluster name="windows_dotnet" location="windows\dotnet\" recursive="true">

@@ -584,14 +584,14 @@ feature {NONE} -- Implementation
 				end
 
 			when {REFLECTOR_CONSTANTS}.real_32_type then
-				if attached {SPECIAL [REAL]} an_object as l_spec_real_32 then
+				if attached {SPECIAL [REAL_32]} an_object as l_spec_real_32 then
 					encode_special_real_32 (l_spec_real_32)
 				else
 					check l_spec_real_32_not_void: False end
 				end
 
 			when {REFLECTOR_CONSTANTS}.real_64_type then
-				if attached {SPECIAL [DOUBLE]} an_object as l_spec_real_64 then
+				if attached {SPECIAL [REAL_64]} an_object as l_spec_real_64 then
 					encode_special_real_64 (l_spec_real_64)
 				else
 					check l_spec_real_64_not_void: False end
@@ -836,7 +836,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	frozen encode_special_real_32 (a_spec: SPECIAL [REAL])
+	frozen encode_special_real_32 (a_spec: SPECIAL [REAL_32])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -856,7 +856,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	frozen encode_special_real_64 (a_spec: SPECIAL [DOUBLE])
+	frozen encode_special_real_64 (a_spec: SPECIAL [REAL_64])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void

@@ -261,7 +261,9 @@ feature {NONE} -- Implementation
 
 	selector_to_agent_map: HASH_TABLE [HASH_TABLE [ROUTINE, POINTER], POINTER]
 			-- Maps to store an eiffel agent per selector for a class
-		once ("PROCESS")
+			--| Fixme: Should we make it per process instead? If so it requires some more
+			--| work to make this code SCOOP compliant and not loosing too much performance.
+		once
 			create Result.make (10000)
 		end
 
@@ -334,7 +336,7 @@ feature {OBJC_CLASS} -- Externals, to be able to call the superclass or previous
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

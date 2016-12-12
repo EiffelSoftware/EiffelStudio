@@ -28,7 +28,9 @@ feature {NONE} -- Creating a Timer
 				l_user_info := a_user_info.item
 			end
 			callback := a_callback
-			callback_item := callbacks_class.create_instance.item
+			separate callbacks_class as l_callback_class do
+				callback_item := l_callback_class.create_instance.item
+			end
 			callback_marshal.register_object_for_item (current, callback_item)
 			make_from_pointer ({NS_TIMER_API}.scheduled_timer_with_time_interval_target_selector_user_info_repeats (a_ti, callback_item, selector, l_user_info, a_yes_or_no))
 		end
@@ -42,7 +44,9 @@ feature {NONE} -- Creating a Timer
 				l_user_info := a_user_info.item
 			end
 			callback := a_callback
-			callback_item := callbacks_class.create_instance.item
+			separate callbacks_class as l_callback_class do
+				callback_item := l_callback_class.create_instance.item
+			end
 			callback_marshal.register_object_for_item (current, callback_item)
 			make_from_pointer ({NS_TIMER_API}.timer_with_time_interval_target_selector_user_info_repeats (a_ti, callback_item, selector, l_user_info, a_yes_or_no))
 		end
@@ -103,13 +107,16 @@ feature -- Information About a Timer
 
 feature {NONE} -- Implementation
 
-	callbacks_class: OBJC_CLASS
+	callbacks_class: separate OBJC_CLASS
 			-- Create a new Objective-C object with one method and use this as a callback.
+		local
+			l_class: OBJC_CLASS
 		once ("PROCESS")
-			create Result.make_with_name ("EiffelWrapperTimerCallback")
-			Result.set_superclass (create {OBJC_CLASS}.make_with_name ("NSObject"))
-			Result.add_method ("callbackMethod:", agent call_observer)
-			Result.register
+			create l_class.make_with_name ("EiffelWrapperTimerCallback")
+			l_class.set_superclass (create {OBJC_CLASS}.make_with_name ("NSObject"))
+			l_class.add_method ("callbackMethod:", agent call_observer)
+			l_class.register
+			Result := l_class
 		end
 
 	selector: POINTER
@@ -132,7 +139,7 @@ feature {NONE} -- Implementation
 	callback_item: POINTER
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

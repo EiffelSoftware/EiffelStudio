@@ -1534,13 +1534,13 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 
 			create l_list.make (1)
 			create l_basic_type.make
-			l_basic_type.set_type (({REAL}).to_cil.type_handle)
+			l_basic_type.set_type (({REAL_32}).to_cil.type_handle)
 			l_list.extend (l_basic_type)
 			Result.put (l_list, "REAL_32")
 
 			create l_list.make (1)
 			create l_basic_type.make
-			l_basic_type.set_type (({DOUBLE}).to_cil.type_handle)
+			l_basic_type.set_type (({REAL_64}).to_cil.type_handle)
 			l_list.extend (l_basic_type)
 			Result.put (l_list, "REAL_64")
 
@@ -1582,8 +1582,8 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 			Result.set_item (({POINTER}).to_cil, Pointer_type)
 			Result.set_item (({CHARACTER_8}).to_cil, character_8_type)
 			Result.set_item (({BOOLEAN}).to_cil, Boolean_type)
-			Result.set_item (({REAL}).to_cil, real_32_type)
-			Result.set_item (({DOUBLE}).to_cil, real_64_type)
+			Result.set_item (({REAL_32}).to_cil, real_32_type)
+			Result.set_item (({REAL_64}).to_cil, real_64_type)
 			Result.set_item (({NATURAL_8}).to_cil, natural_8_type)
 			Result.set_item (({NATURAL_16}).to_cil, natural_16_type)
 			Result.set_item (({NATURAL_32}).to_cil, natural_32_type)

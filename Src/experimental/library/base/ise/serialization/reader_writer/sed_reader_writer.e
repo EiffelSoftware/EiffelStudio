@@ -209,14 +209,14 @@ feature -- Access
 		deferred
 		end
 
-	read_real_32: REAL
+	read_real_32: REAL_32
 			-- Read next real_32
 		require
 			is_ready: is_ready_for_reading
 		deferred
 		end
 
-	read_real_64: DOUBLE
+	read_real_64: REAL_64
 			-- Read next real_64
 		require
 			is_ready: is_ready_for_reading
@@ -413,14 +413,14 @@ feature -- Element change
 		deferred
 		end
 
-	write_real_32 (v: REAL)
+	write_real_32 (v: REAL_32)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
 		deferred
 		end
 
-	write_real_64 (v: DOUBLE)
+	write_real_64 (v: REAL_64)
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing

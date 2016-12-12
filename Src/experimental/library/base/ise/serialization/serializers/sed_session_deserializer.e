@@ -646,8 +646,8 @@ feature {NONE} -- Implementation
 			when {REFLECTOR_CONSTANTS}.integer_32_type then create {SPECIAL [INTEGER]} Result.make_empty (a_count)
 			when {REFLECTOR_CONSTANTS}.integer_64_type then create {SPECIAL [INTEGER_64]} Result.make_empty (a_count)
 
-			when {REFLECTOR_CONSTANTS}.real_32_type then create {SPECIAL [REAL]} Result.make_empty (a_count)
-			when {REFLECTOR_CONSTANTS}.real_64_type then create {SPECIAL [DOUBLE]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.real_32_type then create {SPECIAL [REAL_32]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.real_64_type then create {SPECIAL [REAL_64]} Result.make_empty (a_count)
 
 			when {REFLECTOR_CONSTANTS}.pointer_type then create {SPECIAL [POINTER]} Result.make_empty (a_count)
 			else
@@ -746,14 +746,14 @@ feature {NONE} -- Implementation
 				end
 
 			when {REFLECTOR_CONSTANTS}.real_32_type then
-				if attached {SPECIAL [REAL]} an_obj as l_spec_real_32 then
+				if attached {SPECIAL [REAL_32]} an_obj as l_spec_real_32 then
 					decode_special_real_32 (l_spec_real_32, nb)
 				else
 					check l_spec_real_32_not_void: False end
 				end
 
 			when {REFLECTOR_CONSTANTS}.real_64_type then
-				if attached {SPECIAL [DOUBLE]} an_obj as l_spec_real_64 then
+				if attached {SPECIAL [REAL_64]} an_obj as l_spec_real_64 then
 					decode_special_real_64 (l_spec_real_64, nb)
 				else
 					check l_spec_real_64_not_void: False end
@@ -974,8 +974,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	frozen decode_special_real_32 (a_spec: SPECIAL [REAL]; a_count: INTEGER)
-			-- Decode SPECIAL [REAL].
+	frozen decode_special_real_32 (a_spec: SPECIAL [REAL_32]; a_count: INTEGER)
+			-- Decode SPECIAL [REAL_32].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
@@ -992,8 +992,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	frozen decode_special_real_64 (a_spec: SPECIAL [DOUBLE]; a_count: INTEGER)
-			-- Decode SPECIAL [DOUBLE].
+	frozen decode_special_real_64 (a_spec: SPECIAL [REAL_64]; a_count: INTEGER)
+			-- Decode SPECIAL [REAL_64].
 		require
 			a_spec_not_void: a_spec /= Void
 		local

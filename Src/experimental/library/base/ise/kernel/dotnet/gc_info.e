@@ -89,37 +89,37 @@ feature -- Access
 			-- cycles, in centi-seconds,
 			-- for `type' before last call to `update'
 
-	cpu_time: DOUBLE
+	cpu_time: REAL_64
 			-- Amount of CPU time, in seconds, spent in cycle,
 			-- for `type' before last call to `update'
 
-	cpu_time_average: DOUBLE
+	cpu_time_average: REAL_64
 			-- Average amount of CPU time spent in cycle,
 			-- in seconds, for `type' before last call to `update'
 
-	cpu_interval_time: DOUBLE
+	cpu_interval_time: REAL_64
 			-- Amount of CPU time elapsed since between last
 			-- and penultimate cycles for `type' before
 			-- last call to `update'
 
-	cpu_interval_time_average: DOUBLE
+	cpu_interval_time_average: REAL_64
 			-- Average amount of CPU time between two cycles,
 			-- for `type' before last call to `update'
 
-	sys_time: DOUBLE
+	sys_time: REAL_64
 			-- Amount of kernel time, in seconds, spent in cycle,
 			-- for `type' before last call to `update'
 
-	sys_time_average: DOUBLE
+	sys_time_average: REAL_64
 			-- Average amount of kernel time spent in cycle,
 			-- for `type' before last call to `update'
 
-	sys_interval_time: DOUBLE
+	sys_interval_time: REAL_64
 			-- Amount of kernel time elapsed since between
 			-- the last and the penultimate cycle,
 			-- for `type' before last call to `update'
 
-	sys_interval_time_average: DOUBLE
+	sys_interval_time_average: REAL_64
 			-- Average amount of kernel time between two cycles,
 			-- for `type' before last call to `update'
 
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	gc_infod (field: INTEGER): DOUBLE
+	gc_infod (field: INTEGER): REAL_64
 			-- Read GC accounting structure, field by field.
 		do
 			check

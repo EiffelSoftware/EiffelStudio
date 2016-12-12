@@ -12,13 +12,20 @@ class
 
 inherit
 	HASHABLE
-		undefine
+		redefine
 			out
 		end
 
 	COMPARABLE
 		undefine
-			is_equal, out
+			is_equal
+		redefine
+			out
+		end
+
+	DEBUG_OUTPUT
+		undefine
+			out
 		end
 
 create
@@ -251,6 +258,11 @@ feature -- Conversion
 			result_is_valid_uuid: is_valid_uuid (Result)
 		end
 
+	debug_output: STRING
+		do
+			Result := out
+		end
+
 feature {NONE} -- Implementation
 
 	hex_to_natural_8 (a_char: CHARACTER_32): NATURAL_8
@@ -275,7 +287,7 @@ feature {NONE} -- Implementation
 			-- UUID separator character
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

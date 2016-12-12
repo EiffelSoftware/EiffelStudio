@@ -11,9 +11,6 @@
 		</file_rule>
 		<option warning="true">
 		</option>
-		<capability>
-			<concurrency support="thread"/>
-		</capability>
 		<external_include location="$(ISE_LIBRARY)/library/objc_base/Clib"/>
 		<external_include location="$(ISE_LIBRARY)/library/cocoa/Clib"/>
 		<external_cflag value="-ObjC"/>

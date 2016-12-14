@@ -113,7 +113,7 @@ feature -- Basic operation
 			last_uuid := Void
 			last_warnings := Void
 			last_error := Void
-			recursive_retrieve_uuid (a_file, Void)
+			recursive_retrieve_uuid (a_file, Void, Void)
 		ensure
 			no_error_implies_last_uuid_not_void: not is_error implies last_uuid /= Void
 		end
@@ -270,16 +270,18 @@ feature {NONE} -- Implementation
 			no_error_implies_last_system_not_void: not is_error implies last_system /= Void
 		end
 
-	recursive_retrieve_uuid (a_file: READABLE_STRING_32; a_redirections: detachable ARRAYED_LIST [PATH])
+	recursive_retrieve_uuid (a_file: READABLE_STRING_32; a_redirections: detachable ARRAYED_LIST [PATH]; a_previous_redirection: detachable TUPLE [file: READABLE_STRING_32; uuid: UUID])
 			-- Retrieve the uuid of the configuration in `a_file' and make it available in `last_uuid',
 			-- it might occur during an ecf redirection process.
 			-- `a_redirections' is used to keep track of potential cycle in redirection.
+			-- `a_previous_redirection' is used to carry the file+uuid of previous redirected file
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty
 		local
 			l_callback: CONF_LOAD_UUID_CALLBACKS
 			l_err: CONF_ERROR_UUID
 			redir: detachable ARRAYED_LIST [PATH]
+			l_previous: detachable TUPLE [file: READABLE_STRING_32; uuid: UUID]
 		do
 			create l_callback.make_with_file (a_file)
 			parse_file (a_file, l_callback)
@@ -290,9 +292,53 @@ feature {NONE} -- Implementation
 				is_error := True
 				last_error := l_callback.last_error
 			elseif not is_error then
-				last_uuid := l_callback.last_uuid
-				if l_callback.last_uuid = Void then
-							--| The uuid attribute is not set, which is accepted
+				if attached l_callback.last_uuid as l_new_location_uuid then
+						--| `a_file' has a UUID, then let's check if it is already in a redirection chain, and if ever
+						--| a UUID was previously set. If this is the case, if UUIDs are not the same
+						--| report UUID mismatch error
+					last_uuid := l_new_location_uuid
+					if
+						a_previous_redirection /= Void and then a_previous_redirection.uuid /~ l_new_location_uuid
+					then
+							--| The previously recorded UUID and the UUID from the `a_file' does not match -> report error
+						is_error := True
+						create {CONF_ERROR_UUID_MISMATCH_IN_REDIRECTION} last_error.make (a_previous_redirection.file, a_file, a_previous_redirection.uuid, l_new_location_uuid)
+					else
+						if a_previous_redirection /= Void then
+								--| Update previous redirection with new uuid, so that caller gets new data
+								--| when the recursive redirection instructions are done
+								--| note that `a_previous_redirection.uuid' should already be the same as `l_new_location_uuid'
+								--| but let's assign it again, just in case.
+							check a_previous_redirection.uuid ~ l_new_location_uuid end
+							a_previous_redirection.file := a_file
+							l_previous := a_previous_redirection
+						else
+								--| There was no previous data for redirection
+								--| this means, either this is the first redirection in the chain
+								--| or the previous redirection did not set the UUID value (which is optional)
+							l_previous := [a_file, l_new_location_uuid]
+						end
+					end
+				else
+						--| The uuid attribute is not set, which is accepted
+					last_uuid := Void
+					if a_previous_redirection /= Void then
+							--| `a_file' does not have any UUID value
+							--| and previous redirection had a UUID value
+							--| follow the redirection and keep UUID from `a_previous_redirection'
+							--| example:
+							--|    [redirection a.ecf with UUID /= Void ]  ->  [redirection b.ecf with UUID = Void]
+							--| then keep previous file+uuid record.
+						l_previous := a_previous_redirection
+					else
+							--| `a_file' does not have any UUID, and no previous redirection has any UUID
+							--| example:
+							--|    [redirection a.ecf with UUID = Void ]  ->  [redirection b.ecf with UUID = Void]
+							--| then do not record the file and uuid.
+						l_previous := Void
+					end
+				end
+				if not is_error then
 					if attached l_callback.last_redirected_location as l_new_location then
 							--| `a_file' is a redirection
 							--| then check the ecf at the `l_new_location'
@@ -301,8 +347,10 @@ feature {NONE} -- Implementation
 							create redir.make (1)
 						end
 						if is_following_redirection then
-							retrieve_redirected_uuid (a_file, l_new_location, redir)
+							retrieve_redirected_uuid (a_file, l_new_location, redir, l_previous)
 						end
+					elseif l_previous /= Void then
+						last_uuid := l_previous.uuid
 					else
 							--| No UUID found
 						is_error := True
@@ -357,7 +405,7 @@ feature {NONE} -- Redirection
 			end
 		end
 
-	retrieve_redirected_uuid (a_file: READABLE_STRING_32; a_new_location: READABLE_STRING_GENERAL; a_redirections: ARRAYED_LIST [PATH])
+	retrieve_redirected_uuid (a_file: READABLE_STRING_32; a_new_location: READABLE_STRING_GENERAL; a_redirections: ARRAYED_LIST [PATH]; a_previous_redirection: detachable TUPLE [file: READABLE_STRING_32; uuid: UUID])
 			-- Retrieve the uuid of the configuration in `a_file' and make it available in `last_uuid',
 			-- knowing that `a_file' describes a redirection to `a_new_location'.
 			-- `a_redirections' is used to keep track of potential cycle in redirection.
@@ -380,7 +428,7 @@ feature {NONE} -- Redirection
 			else
 					--| Follow the redirection until a UUID is set.
 				a_redirections.extend (p)
-				recursive_retrieve_uuid (p.name, a_redirections)
+				recursive_retrieve_uuid (p.name, a_redirections, a_previous_redirection)
 			end
 		end
 

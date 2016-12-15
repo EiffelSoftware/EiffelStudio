@@ -467,7 +467,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 	upload_temporary_files_cj (a_form: ESA_INTERACTION_FORM_VIEW)
 			-- Handle temporary and uploaded files from an CJ template with attachment extensions.
 		local

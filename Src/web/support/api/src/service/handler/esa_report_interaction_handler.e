@@ -64,21 +64,50 @@ feature -- HTTP Methods
 
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
 		do
+			if attached current_media_type (req) as l_type then
+					-- Logged in users will have access to their reports interactions
+					-- and if they have a responsible or admin role they will be able to see
+					-- all the interactions/attachments
+					-- Anonynomus Users
+					-- They only have access to public interactions and attachments.
+				process_report_interaction (req, res, l_type,  current_user_name (req))
+			end
+		end
+
+feature -- Report Interaction
+
+	process_report_interaction (req: WSF_REQUEST; res: WSF_RESPONSE; a_type: READABLE_STRING_32; a_user: detachable READABLE_STRING_32)
+			-- Compute the report interaction `comment' or `attachment' if any.
+		local
+			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
+		do
+			create l_rhf
 			if
 				attached req.http_host as l_host and then
 				attached req.path_parameter ("id") as l_id and then
 				attached req.path_parameter ("name") as l_name
 			then
-				log.write_information (generator+".do_get Processing request download file:" + l_name.as_string.value )
-				compute_response_get_txt (req, res, api_service.attachments_content (l_id.as_string.integer_value))
+				if api_service.is_attachment_visible (a_user, l_id.as_string.integer_value) then
+					log.write_information (generator+".do_get Processing request download file:" + l_name.as_string.value )
+					compute_response_get_txt (req, res, api_service.attachments_content (l_id.as_string.integer_value))
+				else
+					-- 401
+					l_rhf.new_representation_handler (esa_config, a_type, media_type_variants (req)).new_response_unauthorized (req, res)
+				end
 			elseif
 				attached {WSF_STRING} req.path_parameter ("id") as l_id and then
-				retrieve_id (l_id) > 0
+					retrieve_id (l_id) > 0
 			then
-				log.write_information (generator+".do_get Processing request download content for interaction :" + l_id.out)
-				compute_response_get_txt (req, res, api_service.interaction_content (retrieve_id (l_id) ))
+				if api_service.is_interaction_visible (a_user, retrieve_id (l_id) ) then
+					log.write_information (generator+".do_get Processing request download content for interaction :" + l_id.out)
+					compute_response_get_txt (req, res, api_service.interaction_content (retrieve_id (l_id) ))
+				else
+					-- 401
+					l_rhf.new_representation_handler (esa_config, a_type, media_type_variants (req)).new_response_unauthorized (req, res)
+				end
 			end
 		end
+
 
 feature -- Response	
 

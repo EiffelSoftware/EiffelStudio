@@ -1041,12 +1041,27 @@ CREATE PROCEDURE [dbo].[IsProblemReportInteractionVisible]
 AS
 
 DECLARE @Number INT
+DECLARE @RoleID INT
 
-SELECT @Number = Number
-FROM ProblemReports
-WHERE ProblemReports.ReportID = (SELECT ReportID FROM ProblemReportInteractions WHERE InteractionID = @InteractionID)
+SELECT @RoleID = RoleID
+FROM Memberships
+WHERE Username = @Username
 
-EXEC IsProblemReportVisible @Username, @Number
+IF @RoleID = 2 or @RoleID = 4
+BEGIN
+	SELECT 1
+END
+ELSE
+BEGIN
+		-- if the ROLEID is not 2 or 4 we check for Private = 0 
+		-- Reports Interactions with Private = 1 are only visible for users with roleID 2 or 4.
+	SELECT @Number = Number
+	FROM ProblemReports
+	WHERE ProblemReports.ReportID = (SELECT ReportID FROM ProblemReportInteractions WHERE InteractionID = @InteractionID and Private = 0)
+
+		-- And then we check if the report is visible for the current user.
+	EXEC IsProblemReportVisible @Username, @Number
+END
 GO
 /****** Object:  StoredProcedure [dbo].[RemoveProblemReportInteractionAttachment]    Script Date: 12/14/2016 08:11:34 ******/
 SET ANSI_NULLS OFF
@@ -4697,7 +4712,7 @@ FROM ProblemReportInteractionAttachments
 JOIN ProblemReportInteractions  pri ON pri.InteractionID = ProblemReportInteractionAttachments.InteractionID
 where ProblemReportInteractionAttachments.InteractionID =@InteractionID  and pri.Private = 0
 GO
-/****** Object:  StoredProcedure [dbo].[IsProblemReportInteractionVisibleGuest]    Script Date: 12/14/2016 08:11:35 ******/
+/****** Object:  StoredProcedure [dbo].[IsProblemReportInteractionVisibleGuest]  ]    Script Date: 14/12/2016 9:37:27******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4712,17 +4727,17 @@ CREATE PROCEDURE [dbo].[IsProblemReportInteractionVisibleGuest]
 
 AS
 
-DECLARE @Count INT
-
+DECLARE @ReportID INT 
 BEGIN
-	SELECT @Count = COUNT(*)
+		-- Check if the report interaction is visible
+		-- Private = 0
+	SELECT @ReportID = ProblemReportInteractions.ReportID 
 	FROM ProblemReportInteractions
 	WHERE (InteractionID = @InteractionID) AND (Private = 0)
-	IF @Count > 0
-		SELECT 1
-	ELSE
-		SELECT 0
 END
+	-- Check if the report is visible for Guest Users.
+EXEC IsProblemReportVisibleGuest @ReportID
+GO
 GO
 /****** Object:  StoredProcedure [dbo].[GetEmailTokenAge]    Script Date: 12/14/2016 08:11:35 ******/
 SET ANSI_NULLS ON
@@ -5176,7 +5191,7 @@ AS
     INSERT INTO ContactsTemporary(FirstName, LastName, Email, Newsletter) Values (@FirstName, @LastName, @Email, @Newsletter)
   END
 GO
-/****** Object:  StoredProcedure [dbo].[IsProblemReportInteractionAttachmentVisibleGuest]    Script Date: 12/14/2016 08:11:35 ******/
+/****** Object:  StoredProcedure [dbo].[IsProblemReportInteractionAttachmentVisibleGuest]    Script Date: 14/12/2016 9:47:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -5188,7 +5203,6 @@ GO
 -- =============================================
 CREATE PROCEDURE [dbo].[IsProblemReportInteractionAttachmentVisibleGuest]
 
-@Username VARCHAR(50),
 @AttachmentID INT
 
 AS
@@ -5199,8 +5213,10 @@ SELECT @InteractionID = InteractionID
 FROM ProblemReportInteractionAttachments
 WHERE AttachmentID = @AttachmentID
 
-EXEC IsProblemReportInteractionVisibleGuest @InteractionID
+EXEC [dbo].[IsProblemReportInteractionVisibleGuest] @InteractionID
 GO
+
+
 /****** Object:  StoredProcedure [dbo].[GetDownloadExpirationTokenAge]    Script Date: 12/14/2016 08:11:35 ******/
 SET ANSI_NULLS ON
 GO
@@ -5569,7 +5585,7 @@ AND ((Memberships.Username = @Username) OR (@Username = ''))
 AND ((Contacts.FirstName = @FirstName) OR (@FirstName = ''))
 AND ((Contacts.LastName = @LastName) OR (@LastName = ''))
 AND ((@SearchWithResponsible = 0) OR (ProblemReportResponsibles.ResponsibleID IN (SELECT ResponsibleID FROM @ResponsiblesTable)))
-GO
+
 /****** Object:  Default [DF_Memberships_RoleID]    Script Date: 12/14/2016 08:11:35 ******/
 ALTER TABLE [dbo].[Memberships] ADD  CONSTRAINT [DF_Memberships_RoleID]  DEFAULT (1) FOR [RoleID]
 GO

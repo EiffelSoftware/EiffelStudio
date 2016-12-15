@@ -1655,7 +1655,7 @@ feature -- Status Report
 			post_execution
 		end
 
-	interaction_visible (a_username: STRING; a_interaction_id: INTEGER): BOOLEAN
+	interaction_visible (a_username: READABLE_STRING_32; a_interaction_id: INTEGER): BOOLEAN
 			-- Can user with username `a_username' see interaction `a_interaction_id'?
 		require
 			attached_username: a_username /= Void

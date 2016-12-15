@@ -807,6 +807,35 @@ feature -- Status Report
 			post_data_provider_execution
 		end
 
+	is_interaction_visible (a_username: detachable READABLE_STRING_32; a_interaction_id: INTEGER): BOOLEAN
+			-- Is a given interaction  `interaction_id' visible ?
+			-- if the username is void means `Guest user'.
+		do
+			if attached a_username then
+				log.write_debug (generator + ".is_interaction_visible for username:" + a_username + " interaction:" + a_interaction_id.out )
+				Result := data_provider.interaction_visible (a_username, a_interaction_id)
+				post_data_provider_execution
+			else
+				log.write_debug (generator + ".is_interaction_visible_guest for interaction:" + a_interaction_id.out )
+				Result := data_provider.interaction_visible_guest (a_interaction_id)
+				post_data_provider_execution
+			end
+		end
+
+	is_attachment_visible (a_username: detachable READABLE_STRING_32; a_attachment_id: INTEGER): BOOLEAN
+			-- Is a given attachement `a_attachment_id' visible?
+			-- if the username is void it means 'Guest users'.
+		do
+			if attached a_username then
+				log.write_debug (generator + ".is_attachment_visible for user:" + a_username + " attachment:" + a_attachment_id.out )
+				Result := data_provider.attachment_visible (a_username, a_attachment_id)
+				post_data_provider_execution
+			else
+				log.write_debug (generator + ".is_attachment_visible guest  attachmebt:" + a_attachment_id.out )
+				Result := data_provider.attachment_visible_guest (a_attachment_id)
+				post_data_provider_execution
+			end
+		end
 
 	activation_valid (a_email, a_token: READABLE_STRING_32): BOOLEAN
 			-- Is activation for user with email `a_email' using token `a_token' valid?
@@ -821,7 +850,6 @@ feature -- Status Report
 				log.write_error (generator + ".activation_valid " + last_error_message)
 			end
 		end
-
 
 	user_token_new_email (a_token: READABLE_STRING_32; a_user: READABLE_STRING_32): TUPLE [age:INTEGER; email:detachable STRING_32]
 			-- A token `a_token' is valid if it exist for the given user `a_user' and is not expired (24 hours since his request).

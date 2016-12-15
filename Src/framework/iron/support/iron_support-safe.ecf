@@ -10,7 +10,7 @@
 		<option warning="true">
 		</option>
 		<capability>
-			<concurrency support="none"/>
+			<concurrency support="thread"/>
 			
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>

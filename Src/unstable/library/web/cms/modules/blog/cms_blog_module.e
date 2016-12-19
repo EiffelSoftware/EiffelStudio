@@ -189,7 +189,7 @@ feature -- Hooks
 					loop
 						n := l_blog_api.full_blog_node (ic.item)
 						a_export_parameters.log (n.content_type + " #" + n.id.out)
-						p := a_export_parameters.location.extended ("nodes").extended (n.content_type).extended (n.id.out)
+						p := a_export_parameters.location.extended ("nodes").extended (n.content_type).extended (n.id.out).appended_with_extension ("json")
 						create d.make_with_path (p.parent)
 						if not d.exists then
 							d.recursive_create_dir

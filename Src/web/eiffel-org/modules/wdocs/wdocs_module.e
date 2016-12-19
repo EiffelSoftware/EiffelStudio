@@ -174,8 +174,14 @@ feature -- Router
 			create h.make (agent handle_static_documentation (a_api, ?, ?))
 			a_router.handle ("/doc-static/version/{version_id}{/vars}", h, a_router.methods_get)
 
+			create h.make (agent handle_admin (a_api, ?, ?))
+			a_router.handle ("/admin/module/" + name, h, a_router.methods_get)
+
 			create h.make (agent handle_clear_cache (a_api, ?, ?))
 			a_router.handle ("/admin/module/" + name + "/clear-cache", h, a_router.methods_get)
+
+			create h.make (agent handle_update_doc (a_api, ?, ?))
+			a_router.handle ("/admin/module/" + name + "/update", h, a_router.methods_get)
 		end
 
 feature -- Hooks configuration
@@ -307,9 +313,13 @@ feature -- Hooks
 			lnk: CMS_LOCAL_LINK
 		do
 			if a_response.has_permissions (<<"admin wdocs", "clear wdocs cache">>) then
-				create lnk.make ("Clear Doc cache", "admin/module/" + name + "/clear-cache")
+				create lnk.make ("Clear cache", "admin/module/" + name + "/clear-cache")
 				lnk.add_query_parameter (a_response.location, "destination")
-				a_menu_system.management_menu.extend (lnk)
+				a_menu_system.management_menu.extend_into (lnk, "Docs", "admin/module/wdocs")
+
+				create lnk.make ("Update", "admin/module/" + name + "/update")
+				lnk.add_query_parameter (a_response.location, "destination")
+				a_menu_system.management_menu.extend_into (lnk, "Docs", "admin/module/wdocs")
 			end
 		end
 
@@ -772,6 +782,23 @@ feature -- Hook
 
 feature -- Handler		
 
+	handle_admin (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+		do
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			if req.is_get_request_method then
+				if r.has_permissions (<<"admin wdocs">>) then
+					r.set_main_content ("Manage WDocs ... (not yet implemented)")
+				else
+					create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				end
+			else
+				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
+			end
+			r.execute
+		end
+
 	handle_clear_cache (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
@@ -800,6 +827,34 @@ feature -- Handler
 					end
 
 					r.set_main_content ("Documentation cache: cleared.")
+					if attached {WSF_STRING} req.query_parameter ("destination") as p_dest then
+						r.set_redirection (p_dest.url_encoded_value)
+					end
+				else
+					create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				end
+			else
+				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
+			end
+			r.execute
+		end
+
+	handle_update_doc (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+			s: STRING
+		do
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			if req.is_get_request_method then
+				if r.has_permissions (<<"admin wdocs", "update wdocs">>) then
+					if attached wdocs_api as l_wdocs_api then
+						l_wdocs_api.update
+						s := "Documentation: updated."
+						s.append ("<p>Now, you should <a href=%"" + r.url ("admin/module/" + name + "/clear-cache", Void) + "%">clear the cache</a>.</p>")
+					else
+						s := "Documentation not updated, contact the webmaster."
+					end
+					r.set_main_content (s)
 					if attached {WSF_STRING} req.query_parameter ("destination") as p_dest then
 						r.set_redirection (p_dest.url_encoded_value)
 					end

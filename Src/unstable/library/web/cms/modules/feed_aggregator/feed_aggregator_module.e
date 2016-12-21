@@ -92,7 +92,8 @@ feature -- Handle
 
 	handle_feed_aggregation	(a_api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			r: CMS_RESPONSE
+			m: WSF_PAGE_RESPONSE
+			r: detachable CMS_RESPONSE
 			s: STRING
 			nb: INTEGER
 		do
@@ -101,49 +102,66 @@ feature -- Handle
 			else
 				nb := -1
 			end
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_api)
 			if attached {WSF_STRING} req.path_parameter ("feed_id") as p_feed_id then
 				if attached feed_aggregation (p_feed_id.value) as l_agg then
-					create s.make_empty
-					s.append ("<h1>")
-					s.append (r.html_encoded (l_agg.name))
-					s.append ("</h1>")
-					if attached l_agg.included_categories as l_categories then
-						s.append ("<span class=%"category%">")
-						across
-							l_categories as cats_ic
-						loop
-							s.append (" [")
-							s.append (r.html_encoded (cats_ic.item))
-							s.append ("]")
+					if attached {WSF_STRING} req.query_parameter ("view") as p_view and then p_view.same_string ("embedded") then
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_api)
+						if attached feed_to_html (p_feed_id.value, nb, True, r) as l_html then
+							r := Void
+							create m.make_with_body (l_html)
+							m.header.put_content_type_text_html
+							res.send (m)
+						else
+							create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, a_api)
+							r.execute
 						end
-						s.append ("</span>")
-					end
-					if attached l_agg.description as l_desc and then l_desc.is_valid_as_string_8 then
-						s.append ("<div class=%"description%">")
-						s.append (l_desc.as_string_8)
-						s.append ("</div>")
-					end
-					s.append ("<ul>")
-					across
-						l_agg.locations as ic
-					loop
-						s.append ("<li><a href=%"")
-						s.append (ic.item)
-						s.append ("%">")
-						s.append (ic.item)
-						s.append ("</a></li>")
-					end
-					s.append ("</ul>")
+					else
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_api)
+						create s.make_empty
+						s.append ("<h1>")
+						s.append (r.html_encoded (l_agg.name))
+						s.append ("</h1>")
+						if attached l_agg.included_categories as l_categories then
+							s.append ("<span class=%"category%">")
+							across
+								l_categories as cats_ic
+							loop
+								s.append (" [")
+								s.append (r.html_encoded (cats_ic.item))
+								s.append ("]")
+							end
+							s.append ("</span>")
+						end
+						if attached l_agg.description as l_desc and then l_desc.is_valid_as_string_8 then
+							s.append ("<div class=%"description%">")
+							s.append (l_desc.as_string_8)
+							s.append ("</div>")
+						end
+						s.append ("<ul>")
+						across
+							l_agg.locations as ic
+						loop
+							s.append ("<li><a href=%"")
+							s.append (ic.item)
+							s.append ("%">")
+							s.append (ic.item)
+							s.append ("</a></li>")
+						end
+						s.append ("</ul>")
 
-					if attached feed_to_html (p_feed_id.value, nb, True, r) as l_html then
-						s.append (l_html)
+						if attached feed_to_html (p_feed_id.value, nb, True, r) as l_html then
+							s.append (l_html)
+						end
+
+						r.set_main_content (s)
+						r.execute
 					end
-					r.set_main_content (s)
 				else
 					create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, a_api)
+					r.execute
 				end
 			else
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_api)
 				if attached feed_aggregator_api as l_feed_agg_api then
 					create s.make_empty
 					across
@@ -175,8 +193,8 @@ feature -- Handle
 				else
 					create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, a_api)
 				end
+				r.execute
 			end
-			r.execute
 		end
 
 feature -- Hooks configuration
@@ -231,7 +249,7 @@ feature -- Hook
 			end
 			Result := res
 		end
-		
+
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 			-- Get block object identified by `a_block_id' and associate with `a_response'.
 		local

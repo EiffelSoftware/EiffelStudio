@@ -1,9 +1,8 @@
 {if isset="$page.region_content"}{$page.region_content/}{/if}
 <section class="rss-block">
 	<ul>
-{unless isempty="$page.region_feed_news"}<li><h2>News</h2>{$page.region_feed_news/}</li>{/unless}
-{unless isempty="$page.region_feed_forum"}<li><h2>Forum</h2>{$page.region_feed_forum/}</li>{/unless}
-{unless isempty="$page.region_feed_updates"}<li><h2>Recent Updates</h2>{$page.region_feed_updates/}</li>{/unless}
+<li><h2>News</h2><div class="roccms-load" data-href="/feed_aggregation/news?view=embedded&size=7"></div></li>
+<li><h2>Forum</h2><div class="roccms-load" data-href="/feed_aggregation/forum?view=embedded&size=7"></div></li>
 <li><h2>Facebook</h2>{literal}
 <div id="fb-root"></div>
 <script>

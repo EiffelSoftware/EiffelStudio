@@ -105,7 +105,4 @@ feature -- Default
 			Result := nature_standalone
 		end
 
-
 end
-
-

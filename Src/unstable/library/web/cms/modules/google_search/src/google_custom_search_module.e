@@ -50,7 +50,7 @@ feature -- Router
 		do
 			create m.make_trailing_slash_ignored ("/gcse", create {WSF_URI_AGENT_HANDLER}.make (agent handle_search (a_api, ?, ?)))
 			a_router.map (m, a_router.methods_head_get)
-		end
+		end			
 
 feature -- Recaptcha
 

@@ -10,6 +10,9 @@ class
 
 inherit
 	BASE_PROCESS
+		redefine
+			wait_for_exit_with_timeout
+		end
 
 	PROCESS_UTILITY
 		export
@@ -110,11 +113,7 @@ feature -- Control
 		end
 
 	wait_for_exit_with_timeout (timeout: INTEGER)
-			-- Wait launched process to exit for at most `timeout' milliseconds.
-			-- Check `has_exited' after to see if launched process has exited.
-		require
-			process_launched: launched
-			a_timeout_positive: timeout > 0
+			-- <Precursor>
 		local
 			w: INTEGER
 		do
@@ -448,7 +447,7 @@ feature {NONE} -- Implementation
 			-- Child process.
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

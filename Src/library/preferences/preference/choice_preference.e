@@ -103,6 +103,7 @@ feature -- Change
 			internal_value := l_value
 			if
 				attached splitted_strings (a_value.to_string_32) as l_parts and then
+				not l_parts.is_empty and then
 				(l_parts.count > 1 or not l_parts.first.is_empty)
 			then
 				i := 1

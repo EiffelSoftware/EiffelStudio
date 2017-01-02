@@ -12,7 +12,8 @@ inherit
 	PROCESS
 		redefine
 			check_exit,
-			launch
+			launch,
+			wait_for_exit_with_timeout
 		select
 			put_string
 		end
@@ -36,7 +37,8 @@ inherit
 			initialize_child_process,
 			launch,
 			make,
-			wait_for_exit
+			wait_for_exit,
+			wait_for_exit_with_timeout
 		end
 
 	EXCEPTIONS
@@ -61,6 +63,7 @@ feature {NONE} -- Initialization
 feature  -- Control
 
 	launch
+			-- <Precursor>
 		do
 				-- For repeated launch, we must ensure all listening threads, if any have terminated.
 			if timer.has_started then
@@ -70,11 +73,13 @@ feature  -- Control
 		end
 
 	wait_for_exit
+			-- <Precursor>
 		do
 			timer.wait (0).do_nothing
 		end
 
 	wait_for_exit_with_timeout (a_timeout: INTEGER)
+			-- <Precursor>
 		do
 			is_last_wait_timeout := not timer.wait (a_timeout)
 		end
@@ -290,7 +295,7 @@ feature{NONE} -- Error recovery
 			-- Is pipe used for reading broken?
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

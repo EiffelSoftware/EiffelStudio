@@ -264,6 +264,46 @@ feature -- Control
 			process_exited: has_exited
 		end
 
+	wait_for_exit_with_timeout (timeout: INTEGER)
+			-- Wait launched process to exit for at most `timeout' milliseconds.
+			-- Check `has_exited' after to see if launched process has exited.
+			-- Note: child processes of launched process are not guaranteed to have exited
+			-- even if `has_exited' is `True` after `wait_for_exit_with_timeout`.
+		require
+			process_launched: launched
+			timeout_positive: timeout > 0
+		local
+			sleep_time: INTEGER_64
+			sleep_count: INTEGER
+			time_interval: INTEGER
+		do
+				-- This is an OS-independent version.
+				-- A better one can be provided by a redeclaration.
+			if timeout > 1_000 then
+					-- Use fixed time interval for long timeouts.
+				time_interval := 200
+			else
+					-- Use proportional  time interval for short timeouts.
+				time_interval := timeout // 10
+					-- Make sure time intervals are not too short.
+				if time_interval < 20 then
+					time_interval := 20
+				end
+			end
+				-- Compute a number of iterations.
+			sleep_count := timeout // time_interval + 1
+				-- Normalize `sleep_time` to use nanoseconds.
+			sleep_time := time_interval * 1_000_000
+			from
+			until
+				has_exited or sleep_count = 0
+			loop
+				execution_environment.sleep (sleep_time)
+				check_exit
+				sleep_count := sleep_count - 1
+			end
+		end
+
 	close
 			-- Close handles associated with child process.
 			-- The process may continue running.
@@ -911,8 +951,16 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
+feature {NONE} --
+
+	execution_environment: EXECUTION_ENVIRONMENT
+			-- Execution controller.
+		once
+			create Result
+		end
+
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

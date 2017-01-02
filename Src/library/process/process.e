@@ -115,20 +115,6 @@ feature -- IO redirection
 			error_handler_set: error_handler = Void
 		end
 
-feature -- Control
-
-	wait_for_exit_with_timeout (a_timeout: INTEGER)
-			-- Wait launched process to exit for at most `a_timeout' milliseconds.
-			-- Check `has_exited' after to see if launched process has exited.
-			-- Note: child processes of launched process are not guaranteed to have exited even `wait_for_exit_with_timeout' returns
-			-- with True.
-		require
-			thread_capable: {PLATFORM}.is_thread_capable
-			process_launched: launched
-			a_timeout_positive: a_timeout > 0
-		deferred
-		end
-
 feature -- Status setting
 
 	set_buffer_size (size: INTEGER)
@@ -243,7 +229,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

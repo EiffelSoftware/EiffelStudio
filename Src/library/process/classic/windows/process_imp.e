@@ -12,7 +12,8 @@ inherit
 	PROCESS
 		redefine
 			check_exit,
-			launch
+			launch,
+			wait_for_exit_with_timeout
 		select
 			put_string
 		end
@@ -288,7 +289,7 @@ feature{NONE} -- Implementation
 			-- Handles used to read and write file.
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

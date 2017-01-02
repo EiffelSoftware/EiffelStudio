@@ -10,6 +10,9 @@ class
 
 inherit
 	BASE_PROCESS
+		redefine
+			wait_for_exit_with_timeout
+		end
 
 create
 	make,
@@ -143,8 +146,7 @@ feature -- Control
 		end
 
 	wait_for_exit_with_timeout (a_timeout: INTEGER)
-			-- Wait launched process to exit for at most `a_timeout' milliseconds.
-			-- Check `has_exited' after to see if launched process has exited.
+			-- <Precursor>
 		do
 			is_last_wait_timeout := not child_process.wait_for_exit (a_timeout)
 			check_exit

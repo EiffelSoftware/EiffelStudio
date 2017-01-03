@@ -53,12 +53,23 @@ feature -- HTTP Methods
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
 			create l_rhf
-			if attached current_media_type (req) as l_type then
-				log.write_information (generator+".do_get Processing request media_type:" + l_type)
-				l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).responsible_page (req, res, api_service.responsibles)
+			if
+				attached current_user_name (req) as l_user and then
+			  	attached  api_service.role (l_user) as l_role and then
+				(l_role.is_administrator or else l_role.is_responsible)
+			then
+					-- Logged in user
+				if attached current_media_type (req) as l_type then
+					log.write_information (generator+".do_get Processing request media_type:" + l_type)
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).responsible_page (req, res, api_service.responsibles)
+				else
+					log.write_information (generator+".do_get Processing request not acceptable" )
+					l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).responsible_page (req, res, Void)
+				end
 			else
-				log.write_information (generator+".do_get Processing request not acceptable" )
-				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).responsible_page (req, res, Void)
+					-- Guest user
+				log.write_information (generator+".do_get Processing request unauthorized" )
+				l_rhf.new_representation_handler (esa_config, {HTTP_MIME_TYPES}.text_html, media_type_variants (req)).new_response_unauthorized (req, res)
 			end
 		end
 

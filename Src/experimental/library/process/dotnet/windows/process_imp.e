@@ -12,7 +12,8 @@ inherit
 	PROCESS
 		redefine
 			check_exit,
-			launch
+			launch,
+			wait_for_exit_with_timeout
 		select
 			put_string
 		end

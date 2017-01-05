@@ -35,25 +35,25 @@ feature -- Basic operations
 	model_from_xml (node: XML_ELEMENT): detachable EG_ITEM
 			-- Create an EG_ITEM from `node' if possible.
 		local
-			node_name, source_name, target_name: STRING
+			l_node_name, l_source_name, l_target_name: STRING
 			a_source, a_target: detachable EG_LINKABLE
-			l_attribute: detachable XML_ATTRIBUTE
 		do
-			node_name := node.name
-			if node_name.is_equal ("ELLIPSE_NODE") then
+			l_node_name := node.name
+			if l_node_name.is_equal ("ELLIPSE_NODE") then
 				create {EG_NODE} Result
-			elseif node_name.is_equal ("EG_SIMPLE_CLUSTER") then
+			elseif l_node_name.is_equal ("EG_SIMPLE_CLUSTER") then
 				create {EG_CLUSTER} Result
-			elseif node_name.is_equal ("EG_SIMPLE_LINK") then
-				l_attribute := node.attribute_by_name ("SOURCE")
-				check l_attribute /= Void end -- FIXME: Implied by ...?
-				source_name := l_attribute.value
-
-				l_attribute := node.attribute_by_name ("TARGET")
-				check l_attribute /= Void end -- FIXME: Implied by ...?
-				target_name := l_attribute.value
-
-				if attached source_name as l_source_name and then attached target_name as l_target_name and then attached world as l_world then
+			elseif l_node_name.is_equal ("EG_SIMPLE_LINK") then
+				if attached node.attribute_by_name ("SOURCE") as l_attribute then
+					l_source_name := l_attribute.value
+				end
+				if attached node.attribute_by_name ("TARGET") as l_attribute then
+					l_target_name := l_attribute.value
+				end
+				if
+					l_source_name /= Void and then l_target_name /= Void and then
+					attached world as l_world
+				then
 					a_source := linkable_with_name (l_source_name)
 					if attached a_source as l_source then
 						a_target := linkable_with_name (l_target_name)

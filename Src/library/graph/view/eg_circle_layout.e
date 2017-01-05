@@ -107,8 +107,11 @@ feature {NONE} -- Implementation
 					l_link.set_port_position ((cosine (angle) * level_radius).truncated_to_integer + center_x, (sine (angle) * level_radius).truncated_to_integer + center_y)
 				else
 					l_cluster := l_link.cluster
-					check l_cluster /= Void end -- FIXME: Implied by ...?
-					l_link.set_port_position ((cosine (angle) * level_radius).truncated_to_integer + l_cluster.port_x, (sine (angle) * level_radius).truncated_to_integer + l_cluster.port_y)
+					if l_cluster /= Void then
+						l_link.set_port_position ((cosine (angle) * level_radius).truncated_to_integer + l_cluster.port_x, (sine (angle) * level_radius).truncated_to_integer + l_cluster.port_y)
+					else
+						check link_has_cluster: False end
+					end
 				end
 				angle := angle + d_angle
 				i := i + 1
@@ -116,7 +119,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

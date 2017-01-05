@@ -174,7 +174,6 @@ feature {NONE} -- Implementation, Close event
 			-- The user wants to close the window
 		local
 			question_dialog: EV_CONFIRMATION_DIALOG
-			l_app: detachable EV_APPLICATION
 		do
 			create question_dialog.make_with_text (Label_confirm_close_window)
 			question_dialog.show_modal_to_window (Current)
@@ -184,9 +183,11 @@ feature {NONE} -- Implementation, Close event
 				destroy;
 
 					-- End the application
-				l_app := (create {EV_ENVIRONMENT}).application
-				check l_app /= Void end -- Implied by application is running
-				l_app.destroy
+				if attached (create {EV_ENVIRONMENT}).application as l_app then
+					l_app.destroy
+				else
+					check application_is_running: False end
+				end
 			end
 		end
 

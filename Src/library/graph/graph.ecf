@@ -11,9 +11,6 @@
 		<option namespace="EiffelSoftware.Library.Graph">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<capability>
-			<void_safety support="transitional"/>
-		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf"/>

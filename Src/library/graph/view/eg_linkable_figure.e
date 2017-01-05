@@ -296,16 +296,16 @@ feature {EG_CLUSTER_FIGURE, EG_FIGURE_WORLD} -- Element change
 			-- set `cluster' to `a_cluster' without adding `Current' to `a_cluster'.
 		require
 			ready: attached world
-		local
-			l_world: like world
 		do
-			l_world := world
-			check l_world /= Void end -- Implied by precondition `ready'
-			if a_cluster = Void then
-				l_world.root_cluster.extend (Current)
-				l_world.extend (Current)
+			if attached world as l_world then
+				if a_cluster = Void then
+					l_world.root_cluster.extend (Current)
+					l_world.extend (Current)
+				else
+					l_world.root_cluster.prune_all (Current)
+				end
 			else
-				l_world.root_cluster.prune_all (Current)
+				check ready: False end -- Implied by precondition `ready'
 			end
 			if attached cluster as l_cluster then
 				l_cluster.prune_all (Current)
@@ -396,7 +396,7 @@ invariant
 	links_not_void: links /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -405,9 +405,6 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class EG_LINKABLE_FIGURE
 

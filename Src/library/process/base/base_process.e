@@ -25,6 +25,9 @@
 deferred class
 	BASE_PROCESS
 
+inherit
+	SHARED_EXECUTION_ENVIRONMENT
+
 feature {NONE} -- Initialization
 
 	make (executable_name: READABLE_STRING_GENERAL; argument_list: detachable ITERABLE [READABLE_STRING_GENERAL]; work_directory: detachable READABLE_STRING_GENERAL)
@@ -949,14 +952,6 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			result_attached: Result /= Void
-		end
-
-feature {NONE} --
-
-	execution_environment: EXECUTION_ENVIRONMENT
-			-- Execution controller.
-		once
-			create Result
 		end
 
 note

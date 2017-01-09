@@ -2,14 +2,16 @@ note
 	description: "Objects that creates simple links, simple clusters and ellipse nodes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-09-29 06:26:59 +0200 (mar., 29 sept. 2009) $"
+	revision: "$Revision: 80947 $"
 
 class
 	MA_FIGURE_FACTORY
 
 inherit
 	EG_FIGURE_FACTORY
+
+	REFACTORING_HELPER
 
 feature -- Basic operations
 
@@ -60,17 +62,19 @@ feature -- Basic operations
 --					end
 --				end
 --			end
+			to_implement (generator + ".model_from_xml: Not yet implemented!")
+			;(create {EXCEPTIONS}).die (-1)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

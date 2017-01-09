@@ -2,8 +2,8 @@ note
 	description: "Represent a reference between OBJECT_NODEs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-09-29 06:26:59 +0200 (mar., 29 sept. 2009) $"
+	revision: "$Revision: 80947 $"
 
 class
 	MA_REFERENCE_LINK
@@ -105,43 +105,50 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			an_angle: DOUBLE
 			source_size: EV_RECTANGLE
 			l_model: like model
+			l_source: like source
+			l_target: like target
 		do
 			l_model := model
-			check attached l_model end -- FIXME: Implied by ...?
-			if not l_model.is_reflexive then
-				if attached source as l_source and then attached target as l_target then
-					p1 := line.point_array.item (0)
-					p2 := line.point_array.item (1)
-
-					p1.set (l_source.port_x, l_source.port_y)
-					p2.set (l_target.port_x, l_target.port_y)
-
-					an_angle := line_angle (p1.x_precise, p1.y_precise, p2.x_precise, p2.y_precise)
-					l_source.update_edge_point (p1, an_angle)
-					an_angle := pi + an_angle
-					l_target.update_edge_point (p2, an_angle)
-				elseif attached source as l_source_2 then
-					p1 := line.point_array.item (0)
-					p1.set (l_source_2.port_x, l_source_2.port_y)
-					l_source_2.update_edge_point (p1, 0)
-				elseif attached target as l_target_2 then
-					p2 := line.point_array.item (1)
-					p2.set (l_target_2.port_x, l_target_2.port_y)
-					l_target_2.update_edge_point (p2, 0)
-				end
-
-				line.invalidate
-				line.center_invalidate
-				if is_label_shown then
-					name_label.set_point_position (line.x, line.y)
-				end
+			if l_model = Void then
+				check has_model: False end
 			else
-				if attached source as l_source_3 then
-					source_size := l_source_3.size
-					reflexive.set_x_y (source_size.right + reflexive.radius1, source_size.top + source_size.height // 2)
-				end
-				if is_label_shown then
-					name_label.set_point_position (reflexive.x + reflexive.radius1, reflexive.y)
+				l_source := source
+				if not l_model.is_reflexive then
+					l_target := target
+					if l_source /= Void and l_target /= Void then
+						p1 := line.point_array.item (0)
+						p2 := line.point_array.item (1)
+
+						p1.set (l_source.port_x, l_source.port_y)
+						p2.set (l_target.port_x, l_target.port_y)
+
+						an_angle := line_angle (p1.x_precise, p1.y_precise, p2.x_precise, p2.y_precise)
+						l_source.update_edge_point (p1, an_angle)
+						an_angle := pi + an_angle
+						l_target.update_edge_point (p2, an_angle)
+					elseif l_source /= Void then
+						p1 := line.point_array.item (0)
+						p1.set (l_source.port_x, l_source.port_y)
+						l_source.update_edge_point (p1, 0)
+					elseif l_target /= Void then
+						p2 := line.point_array.item (1)
+						p2.set (l_target.port_x, l_target.port_y)
+						l_target.update_edge_point (p2, 0)
+					end
+
+					line.invalidate
+					line.center_invalidate
+					if is_label_shown then
+						name_label.set_point_position (line.x, line.y)
+					end
+				else
+					if l_source /= Void then
+						source_size := l_source.size
+						reflexive.set_x_y (source_size.right + reflexive.radius1, source_size.top + source_size.height // 2)
+					end
+					if is_label_shown then
+						name_label.set_point_position (reflexive.x + reflexive.radius1, reflexive.y)
+					end
 				end
 			end
 			is_update_required := False
@@ -185,14 +192,14 @@ invariant
 	line_not_void: line /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -3,8 +3,8 @@
 				 %Class want to use the singletons it contains should inherit this class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-09-29 06:26:59 +0200 (mar., 29 sept. 2009) $"
+	revision: "$Revision: 80947 $"
 
 class
 	MA_SINGLETON_FACTORY
@@ -69,20 +69,6 @@ feature  -- Singletons
 			system_util_not_void: Result /= Void
 		end
 
-	main_window: MA_WINDOW
-			-- MEMORY_TOOL_WINDOW instance
-		require
-			set: is_main_window_set
-		local
-			l_item: detachable MA_WINDOW
-		do
-			l_item := internal_main_window.item
-			check attached l_item end -- Implied by precondition
-			Result := l_item
-		ensure
-			result_not_void: Result /= Void
-		end
-
 	internal: INTERNAL
 			-- INTERNAL instance
 		once
@@ -105,34 +91,6 @@ feature  -- Singletons
 			create Result
 		ensure
 			icons_not_void: Result /= Void
-		end
-
-feature -- Query
-
-	is_main_window_set: BOOLEAN
-			-- If main window instance has been set?
-		do
-			Result := attached internal_main_window.item
-		end
-
-feature {MA_WINDOW} -- Access
-
-	set_main_window (a_window: like main_window)
-			-- Set main_window instance
-		require
-			a_window_not_void: a_window /= Void
-		do
-			internal_main_window.put (a_window)
-		ensure
-			a_window_set: a_window = internal_main_window.item
-		end
-
-feature -- States Report
-
-	main_window_not_void: BOOLEAN
-			-- Is main_windows Void ?
-		do
-			Result := internal_main_window /= Void
 		end
 
 feature -- Cursors
@@ -201,12 +159,6 @@ feature -- Colors
 
 feature {NONE} -- misc
 
-	internal_main_window: CELL [detachable MA_WINDOW]
-			-- MAIN_WINDOW instance's cell.
-		once
-			create Result.put (Void)
-		end
-
 	internal_filter: CELL [detachable MA_FILTER_SINGLETON]
 			-- MA_FILTER_SINGLETON instance's cell.
 		once
@@ -231,18 +183,15 @@ feature {NONE} -- misc
 			Result := ["*.emf", "Eiffel Memory Analyzer Filter (*.emf)"]
 		end
 
-invariant
-	internal_main_window_not_void: internal_main_window /= Void
-
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

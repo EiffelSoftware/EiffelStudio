@@ -1,7 +1,7 @@
 note
 	description: "Objects represent mappings of addresses. [referrer, referee]"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2013-05-21 01:15:17 +0200 (mar., 21 mai 2013) $"
+	revision: "$Revision: 92557 $"
 
 class
 	MA_REFERENCES_TABLE [G -> HASHABLE, H -> HASHABLE]
@@ -67,14 +67,16 @@ feature -- Element change
 		local
 			l_hash: detachable like references_by_referee
 		do
-			if not relations.has_key (a_referee) then
+			if
+				relations.has_key (a_referee) and then
+				attached relations.found_item as h
+			then
+				l_hash := h
+			else
 				create l_hash.make (20)
 					-- Here we prevent extending pairs exsited or with equivalent key and value.
 				relations.force (l_hash, a_referee)
-			else
-				l_hash := relations.found_item
 			end
-			check l_hash /= Void end -- Implied by previous if clause
 			l_hash.force ([a_referee, data], a_referrer)
 		end
 
@@ -85,12 +87,11 @@ feature -- Removal
 		require
 			a_referrer_not_void: a_referrer /= Void
 			a_referee_not_void: a_referee /= Void
-		local
-			l_hash: detachable like references_by_referee
 		do
-			if relations.has_key (a_referee) then
-				l_hash := relations.found_item
-				check l_hash /= Void end -- Implied by `has_key'
+			if
+				relations.has_key (a_referee) and then
+				attached relations.found_item as l_hash
+			then
 				l_hash.remove (a_referrer)
 				if l_hash.is_empty then
 					relations.remove (a_referee)
@@ -103,14 +104,14 @@ feature {NONE} -- Implementation
 	relations: HASH_TABLE [like references_by_referee, H];
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

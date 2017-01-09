@@ -2,8 +2,8 @@ note
 	description: "Draw history of the memory useage."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-06-09 01:14:24 +0200 (mar., 09 juin 2009) $"
+	revision: "$Revision: 79142 $"
 
 class
 	MA_DRAW_HISTORY
@@ -15,6 +15,12 @@ inherit
 		export
 			{NONE} all
 		end
+
+	MA_SHARED_MAIN_WINDOW
+		export
+			{NONE} all
+		end
+
 create
 	make_default
 
@@ -45,7 +51,9 @@ feature -- Command
 			-- Update the graph, because size may changed.
 		do
 			internal_pixmap.clear
-			internal_pixmap.set_size (main_window.gc_graphs.width, main_window.gc_graphs.height)
+			if attached main_window as l_main_window then
+				internal_pixmap.set_size (l_main_window.gc_graphs.width, l_main_window.gc_graphs.height)
+			end
 			draw_history_grid
 			-- draw used line
 			draw_history_graph_line (graph_used_history, graph_used_color, line_used_width)
@@ -217,14 +225,14 @@ invariant
 	graph_overhead_history_not_void: graph_overhead_history /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

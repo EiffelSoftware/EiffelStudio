@@ -5,8 +5,8 @@ note
 		%we care."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-11-30 20:22:04 +0100 (ven., 30 nov. 2012) $"
+	revision: "$Revision: 90041 $"
 
 class
 	MA_WINDOW
@@ -24,6 +24,15 @@ inherit
 			copy,
 			default_create
 		end
+
+	MA_SHARED_MAIN_WINDOW
+		export
+			{NONE} all
+		undefine
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -38,17 +47,14 @@ feature {NONE} -- Initialization
 
 			create_all_widgets
 			create_object_routes_panel_objects
+			create timer
 
 			create analyze_gc.make
-			create analyze_object_gra.make_with_drawable (object_drawing)
+--			create analyze_object_gra.make_with_drawable (object_drawing)
 			create analyze_object_snap.make_with_grid (object_grid)
 			create analyze_route_searcher.make (analyze_object_snap, route_results_panel)
-			create timer
-			create increase_detector.make (memory_spot_1, memory_spot_2, increased_object_result)
 
 			default_create
-		ensure
---			dir_set: icon
 		end
 
 	user_initialization
@@ -60,8 +66,9 @@ feature {NONE} -- Initialization
 		do
 			set_main_window (Current)
 
-			attached_timer.actions.extend (agent timer_event)
-			attached_timer.set_interval (refresh_interval)
+			timer.actions.extend (agent timer_event)
+			timer.set_interval (refresh_interval)
+
 			main_book.drop_actions.extend (agent main_book_drop_pebble)
 			main_book.drop_actions.set_veto_pebble_function (agent main_book_dropable)
 
@@ -83,8 +90,8 @@ feature {NONE} -- Initialization
 
 			search_route_button.select_actions.extend (agent search_route)
 		ensure then
-			main_window_set: main_window_not_void
-			timer_action_set: attached_timer.actions.count > 0
+			main_window_set: is_main_window_set
+			timer_action_set: attached timer as t and then t.actions.count > 0
 			notebook_drop_action_set: main_book.drop_actions.count > 0
 			update_interval_set_normal: refresh_interval = refresh_interval_normal
 			auto_refresh_button_selected: auto_refresh.is_selected
@@ -138,9 +145,10 @@ feature -- Redefine
 	destroy
 			-- Destroy window, clear singleton.
 		do
-			attached_timer.set_interval (0)
-			attached_timer.actions.wipe_out
-			timer := Void
+			timer.set_interval (0)
+			timer.actions.wipe_out
+			timer.destroy
+
 			main_book.drop_actions.wipe_out
 			filter_setting.drop_actions.wipe_out
 			show_actions.wipe_out
@@ -199,14 +207,14 @@ feature {NONE} -- Implementation for agents
 			-- Enable or disable auto refresh memory graph.
 		do
 			if auto_refresh.is_selected then
-				attached_timer.set_interval (refresh_interval)
+				timer.set_interval (refresh_interval)
 				auto_refresh.set_tooltip ("Auto refresh enabled")
 			else
-				attached_timer.set_interval (0)
+				timer.set_interval (0)
 				auto_refresh.set_tooltip ("Auto refresh disabled")
 			end
 		ensure then
-			timer_state_changed: old attached_timer.interval /= attached_timer.interval
+			timer_state_changed: old (timer.interval) /= timer.interval
 			auto_refresh_tooltip_changed: old auto_refresh.tooltip /= auto_refresh.tooltip
 		end
 
@@ -228,25 +236,26 @@ feature {NONE} -- Implementation for agents
 	auto_refresh_change_speed
 			-- Change the refresh speed.
 		do
-			if attached_timer.interval /= 0 then
+			if timer.interval /= 0 then
 				inspect refresh_interval
 					when refresh_interval_low then
 						refresh_interval := refresh_interval_normal
-						attached_timer.set_interval (refresh_interval)
+						timer.set_interval (refresh_interval)
 						refresh_speed.set_tooltip ("Refresh speed is normal")
 					when refresh_interval_normal then
 						refresh_interval := refresh_interval_hi
-						attached_timer.set_interval (refresh_interval)
+						timer.set_interval (refresh_interval)
 						refresh_speed.set_tooltip ("Refresh speed is hi")
 					when refresh_interval_hi then
 						refresh_interval := refresh_interval_low
-						attached_timer.set_interval (refresh_interval)
+						timer.set_interval (refresh_interval)
 						refresh_speed.set_tooltip ("Refresh speed is low")
+					else
 				end
 			end
 		ensure then
-			refresh_speed_toollip_changed: attached_timer.interval /= 0 implies old refresh_speed.tooltip /= refresh_speed.tooltip
-			timer_interval_changed: attached_timer.interval /= 0 implies old attached_timer.interval /= attached_timer.interval
+			refresh_speed_toollip_changed: timer.interval /= 0 implies old refresh_speed.tooltip /= refresh_speed.tooltip
+			timer_interval_changed: timer.interval /= 0 implies old (timer.interval) /= timer.interval
 		end
 
 	arrange_circle_clicked
@@ -422,13 +431,33 @@ feature {NONE} -- Implementation for agents
 feature {NONE} -- Implementation
 
 	increase_detector: MA_MEMORY_CHANGE_MEDIATOR
-			-- The meidator response for detect, save systems states.
+			-- The mediator response for detect, save systems states.
+		do
+			Result := increase_detector
+			if Result = Void then
+				create Result.make (memory_spot_1, memory_spot_2, increased_object_result, Current)
+				internal_increase_detector := Result
+			end
+		end
+
+	internal_increase_detector: detachable like increase_detector
+			-- Cached `increase_detector`.
 
 	analyze_gc: MA_GC_INFO_MEDIATOR
 			-- The mediator response for show histogram, history.
 
 	analyze_object_gra: MA_OBJECT_GRAPH_MEDIATOR
 			-- The mediator response for show, modify object graphs.
+		do
+			Result := internal_analyze_object_gra
+			if Result = Void then
+				create Result.make_with_drawable (object_drawing, Current)
+				internal_analyze_object_gra := Result
+			end
+		end
+
+	internal_analyze_object_gra: detachable like analyze_object_gra
+			-- cached version of `analyze_object_gra`.
 
 	analyze_object_snap: MA_OBJECT_SNAPSHOT_MEDIATOR
 			-- The mediator repsonse for show all the objects in the MEMORY's objects map.
@@ -436,22 +465,8 @@ feature {NONE} -- Implementation
 	analyze_route_searcher: MA_ROUTE_TO_ONCE_SEARCHER
 			-- Searcher for routes to once object.
 
-	timer: detachable EV_TIMEOUT
+	timer: EV_TIMEOUT
 			-- The timer used for update histogram and history.
-
-	attached_timer: EV_TIMEOUT
-			-- Attached `timer'
-		require
-			set: attached timer
-		local
-			l_result: like timer
-		do
-			l_result := timer
-			check attached l_result end -- Implied by precondition
-			Result := l_result
-		ensure
-			not_void: attached Result
-		end
 
 	refresh_interval: INTEGER
 			-- The time of interval between refersh.
@@ -482,7 +497,7 @@ invariant
 	main_book_has_tab_states_compare: main_book.has (tab_states_compare)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

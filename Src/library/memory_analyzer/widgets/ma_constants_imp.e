@@ -2,8 +2,8 @@ note
 	description: "Objects that provide access to constants loaded from files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2013-01-29 02:14:10 +0100 (mar., 29 janv. 2013) $"
+	revision: "$Revision: 91071 $"
 
 class
 	MA_CONSTANTS_IMP
@@ -443,20 +443,21 @@ feature -- Access
 			Result := initialized_cell.item
 		end
 
-	string_constant_by_name (a_name: STRING): STRING
+	string_constant_by_name (a_name: STRING): detachable STRING
 			-- `Result' is STRING
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
-			has_constant (a_name)
+--			has_constant (a_name)
 		local
 			l_item: detachable STRING
 		do
-			l_item := all_constants.item (a_name)
-			check l_item /= Void end -- Implied by precondition `has_constant'
-			Result := l_item.twin
-		ensure
-			Result_not_void: Result /= Void
+			Result := all_constants.item (a_name)
+			if Result /= Void then
+				Result := Result.twin
+			end
+--		ensure
+--			Result_not_void: Result /= Void
 		end
 
 	integer_constant_by_name (a_name: STRING): INTEGER
@@ -464,19 +465,20 @@ feature -- Access
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
-			has_constant (a_name)
+			has_constant: has_constant (a_name)
 		local
 			l_string: STRING
 			l_item: detachable STRING
 		do
 			l_item := all_constants.item (a_name)
-			check l_item /= Void end -- Implied by precondition `has_constant'
-			l_string := l_item.twin
-			check
-				is_integer: l_string.is_integer
+			if l_item /= Void then
+				check
+					is_integer: l_item.is_integer
+				end
+				Result := l_item.to_integer
+			else
+				check has_constant: False end -- Implied by precondition `has_constant'
 			end
-
-			Result := l_string.to_integer
 		end
 
 	has_constant (a_name: STRING): BOOLEAN
@@ -580,14 +582,14 @@ invariant
 	all_constants_not_void: all_constants /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class MA_CONSTANTS_IMP

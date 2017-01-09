@@ -2,8 +2,8 @@ note
 	description: "Objects that used for draw graphics whihch are the datas about memory useage."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-09-29 06:26:59 +0200 (mar., 29 sept. 2009) $"
+	revision: "$Revision: 80947 $"
 
 deferred class
 	MA_DRAW_STATISTIC

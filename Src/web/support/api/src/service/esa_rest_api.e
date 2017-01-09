@@ -71,6 +71,7 @@ feature -- Configure Resources Routes
 			create l_root_handler.make (esa_config)
 			create l_methods
 			l_methods.enable_get
+			router.handle ("", l_root_handler, l_methods)
 			router.handle ("/", l_root_handler, l_methods)
 		end
 

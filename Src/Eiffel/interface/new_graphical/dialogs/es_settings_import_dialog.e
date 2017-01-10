@@ -78,6 +78,8 @@ feature {NONE} -- Initialization
 			but_check: EV_CHECK_BUTTON
 			but: EV_BUTTON
 			tg_but: EV_TOGGLE_BUTTON
+			align_lst: ARRAYED_LIST [EV_WIDGET]
+			w: INTEGER
 		do
 			create vbox
 			vbox.set_border_width (layout_constants.default_border_size)
@@ -101,6 +103,7 @@ feature {NONE} -- Initialization
 				-- Installed Versions
 			create cb
 			versions_combo := cb
+			cb.disable_edit
 			vb.extend (cb)
 			vb.disable_item_expand (cb)
 
@@ -114,13 +117,16 @@ feature {NONE} -- Initialization
 			l_advanced_box.hide
 			vb.extend (l_advanced_box)
 			vb.disable_item_expand (l_advanced_box)
-				-- Preferences
+
+			create align_lst.make (5)
+
+					-- Preferences
 			create hb
 			hb.set_padding_width (layout_constants.tiny_padding_size)
 			l_advanced_box.extend (hb); l_advanced_box.disable_item_expand (hb)
 			create but_check.make_with_text ("Preferences")
-			but_check.set_minimum_width (100)
 			but_check.enable_select
+			align_lst.extend (but_check)
 			hb.extend (but_check); hb.disable_item_expand (but_check)
 			preferences_cb := but_check
 			create tf; tf.disable_edit; hb.extend (tf)
@@ -132,8 +138,8 @@ feature {NONE} -- Initialization
 			l_advanced_box.extend (hb); l_advanced_box.disable_item_expand (hb)
 			create but_check.make_with_text ("UI layout settings")
 			but_check.set_tooltip ("UI layout settings (tools configuration, ...)")
-			but_check.set_minimum_width (100)
 			but_check.enable_select
+			align_lst.extend (but_check)
 			hb.extend (but_check); hb.disable_item_expand (but_check)
 			ui_layout_cb := but_check
 			create tf; tf.disable_edit; hb.extend (tf)
@@ -145,8 +151,8 @@ feature {NONE} -- Initialization
 			l_advanced_box.extend (hb); l_advanced_box.disable_item_expand (hb)
 			create but_check.make_with_text ("Configuration Files")
 			but_check.set_tooltip ("Overriding files from $ISE_EIFFEL/studio .")
-			but_check.set_minimum_width (100)
 			but_check.enable_select
+			align_lst.extend (but_check)
 			hb.extend (but_check); hb.disable_item_expand (but_check)
 			studio_config_cb := but_check
 			create tf; tf.disable_edit; hb.extend (tf)
@@ -158,8 +164,8 @@ feature {NONE} -- Initialization
 			l_advanced_box.extend (hb); l_advanced_box.disable_item_expand (hb)
 			create but_check.make_with_text ("Templates")
 			but_check.set_tooltip ("User templates.")
-			but_check.set_minimum_width (100)
 			but_check.enable_select
+			align_lst.extend (but_check)
 			hb.extend (but_check); hb.disable_item_expand (but_check)
 			templates_cb := but_check
 			create tf; tf.disable_edit; hb.extend (tf)
@@ -171,8 +177,8 @@ feature {NONE} -- Initialization
 			l_advanced_box.extend (hb); l_advanced_box.disable_item_expand (hb)
 			create but_check.make_with_text ("*.ini files")
 			but_check.set_tooltip (".ini files such as external commands.")
-			but_check.set_minimum_width (100)
 			but_check.enable_select
+			align_lst.extend (but_check)
 			hb.extend (but_check); hb.disable_item_expand (but_check)
 			ini_files_cb := but_check
 			create tf; tf.disable_edit; hb.extend (tf)
@@ -185,9 +191,21 @@ feature {NONE} -- Initialization
 			hb.extend (create {EV_CELL})
 			create tg_but.make_with_text (interface_names.b_edit_settings)
 			tg_but.set_tooltip (interface_names.l_edit_custom_settings)
-			tg_but.set_minimum_width (100)
+			tg_but.set_minimum_width (tg_but.width.max (100))
 			hb.extend (tg_but); hb.disable_item_expand (tg_but)
 			tg_but.select_actions.extend (agent on_custom_edit (tg_but))
+
+				-- Align check button
+			across
+				align_lst as ic
+			loop
+				w := w.max (ic.item.width)
+			end
+			across
+				align_lst as ic
+			loop
+				ic.item.set_minimum_width (w)
+			end
 
 				-- End of l_advanced_box
 			advanced_box := l_advanced_box
@@ -223,8 +241,6 @@ feature {NONE} -- Initialization
 			hb.extend (but)
 			hb.disable_item_expand (but)
 			layout_constants.set_default_size_for_button (but)
-
---			hb.extend (create {EV_CELL})
 
 			vbox.extend (hb)
 			vbox.disable_item_expand (hb)
@@ -465,6 +481,7 @@ feature -- Event
 			selected_version_name := Void
 			if is_eiffel_layout_defined then
 				l_curr_version := eiffel_layout.version_name
+				versions_combo.enable_edit
 				versions_combo.wipe_out
 				across
 					eiffel_layout.installed_version_names as ic
@@ -483,6 +500,7 @@ feature -- Event
 				if l_prev_version_list_item /= Void then
 					l_prev_version_list_item.enable_select
 				end
+				versions_combo.disable_edit
 			end
 		end
 
@@ -756,7 +774,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

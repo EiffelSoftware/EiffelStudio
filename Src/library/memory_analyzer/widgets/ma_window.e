@@ -5,8 +5,8 @@ note
 		%we care."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2012-11-30 20:22:04 +0100 (ven., 30 nov. 2012) $"
-	revision: "$Revision: 90041 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MA_WINDOW

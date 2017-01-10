@@ -2,8 +2,8 @@ note
 	description: "Same as EV_GRID_LABEL_ITEM using a different name so that we can ignore those objects from the list of displayed objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2015-01-22 15:31:42 +0100 (jeu., 22 janv. 2015) $"
-	revision: "$Revision: 96514 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MA_GRID_LABEL_ITEM

@@ -2,8 +2,8 @@ note
 	description: "Objects that provide access to constants loaded from files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2013-01-29 02:14:10 +0100 (mar., 29 janv. 2013) $"
-	revision: "$Revision: 91071 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MA_CONSTANTS_IMP

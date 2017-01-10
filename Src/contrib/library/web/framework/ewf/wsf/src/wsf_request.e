@@ -841,6 +841,8 @@ feature -- Access: CGI meta parameters - 1.1
 				pi := path_info
 				if pi.is_empty then
 					l_result := ""
+				elseif pi.count = 1 and then pi[1] = '/' then
+					l_result := "/"
 				else
 					r := request_uri
 					i := r.index_of ('?', 1)

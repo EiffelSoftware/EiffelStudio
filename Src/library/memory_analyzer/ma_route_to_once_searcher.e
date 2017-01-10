@@ -2,8 +2,8 @@ note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2013-05-21 01:15:17 +0200 (mar., 21 mai 2013) $"
-	revision: "$Revision: 92557 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MA_ROUTE_TO_ONCE_SEARCHER

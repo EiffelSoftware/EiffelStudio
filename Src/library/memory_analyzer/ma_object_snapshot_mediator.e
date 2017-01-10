@@ -2,8 +2,8 @@ note
 	description: "Objects that show the whole system's memory objects in a grid."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2015-12-17 14:34:17 +0100 (jeu., 17 déc. 2015) $"
-	revision: "$Revision: 98279 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MA_OBJECT_SNAPSHOT_MEDIATOR

@@ -3,8 +3,8 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Benno Baumgartner"
-	date: "$Date: 2010-04-30 19:24:51 +0200 (ven., 30 avr. 2010) $"
-	revision: "$Revision: 83019 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MA_WORLD_CELL

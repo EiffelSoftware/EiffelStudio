@@ -11,29 +11,31 @@ note
 
 class
 	MA_GC_INFO_MEDIATOR
-	
+
 inherit
 	MA_SINGLETON_FACTORY
-
-	MA_SHARED_MAIN_WINDOW
 
 create
 	make
 
 feature {NONE} --Intialization
 
-	make
+	make (a_main_window: like main_window)
 			-- Creation method.
 		do
+			main_window := a_main_window
 			eiffel_mem_info := system_util.memory.memory_statistics ({MEM_CONST}.eiffel_memory)
 			c_mem_info := system_util.memory.memory_statistics ({MEM_CONST}.c_memory)
 			total_mem_info := system_util.memory.memory_statistics ({MEM_CONST}.total_memory)
 
 			create histogram_graph.make_default
-			create history_graph_eiffel.make_default
-			create history_graph_c.make_default
-			create history_graph_total.make_default
+			create history_graph_eiffel.make_default (a_main_window)
+			create history_graph_c.make_default (a_main_window)
+			create history_graph_total.make_default (a_main_window)
 		end
+
+	main_window: MA_WINDOW
+			-- Main memory analyzer window.
 
 feature -- Command
 

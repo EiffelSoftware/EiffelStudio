@@ -2,8 +2,8 @@ note
 	description: "Save memory states at differents point and analyze the difference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2013-05-21 06:17:12 +0200 (mar., 21 mai 2013) $"
-	revision: "$Revision: 92560 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MA_MEMORY_CHANGE_MEDIATOR
@@ -88,21 +88,20 @@ feature -- Command
 	adjust_split_vertical
 			-- Adjust the split area (which ia at the top area)'s position.
 		do
-			if attached main_window as l_main_window then
-				l_main_window.split_incre.set_split_position ((l_main_window.split_incre.width / 2).ceiling)
-			end
+			main_window.split_incre.set_split_position ((main_window.split_incre.width / 2).ceiling)
 		end
 
 	adjust_split_horizontal
 			-- Adjust the split area (which ia at the bottom area)'s position.
+		local
+			l_main_window: like main_window
 		do
-			if attached main_window as l_main_window then
-				l_main_window.split_incre_horizontal.set_split_position (
-						l_main_window.split_incre_horizontal.minimum_split_position
-						+ l_main_window.memory_spot_1.row_count * l_main_window.memory_spot_1.row_height
-						+ l_main_window.memory_spot_1.header.height
-					)
-			end
+			l_main_window := main_window
+			l_main_window.split_incre_horizontal.set_split_position (
+					l_main_window.split_incre_horizontal.minimum_split_position
+					+ l_main_window.memory_spot_1.row_count * l_main_window.memory_spot_1.row_height
+					+ l_main_window.memory_spot_1.header.height
+				)
 		end
 
 	adjust_column_width (a_column_index: INTEGER; a_grid: EV_GRID)

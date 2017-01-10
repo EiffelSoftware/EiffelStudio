@@ -1,9 +1,9 @@
 note
-	description: "Draw history of the memory useage."
+	description: "Draw history of the memory usage."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2009-06-09 01:14:24 +0200 (mar., 09 juin 2009) $"
-	revision: "$Revision: 79142 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MA_DRAW_HISTORY
@@ -16,19 +16,15 @@ inherit
 			{NONE} all
 		end
 
-	MA_SHARED_MAIN_WINDOW
-		export
-			{NONE} all
-		end
-
 create
 	make_default
 
 feature {NONE} -- Initlization
 
-	make_default
+	make_default (a_main_window: like main_window)
 			-- Creation method
 		do
+			main_window := a_main_window
 			graph_height := 80
 			graph_width := 400
 			bottom_interval := 20
@@ -37,6 +33,9 @@ feature {NONE} -- Initlization
 			create graph_used_history.make (100)
 			create graph_overhead_history.make (100)
 		end
+
+	main_window: MA_WINDOW
+ 			-- MA_WINDOW instance
 
 feature -- Command
 

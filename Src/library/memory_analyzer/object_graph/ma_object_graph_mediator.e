@@ -2,8 +2,8 @@ note
 	description: "Analyze the objects in the memory on a graph"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2013-01-26 09:00:13 +0100 (sam., 26 janv. 2013) $"
-	revision: "$Revision: 90981 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MA_OBJECT_GRAPH_MEDIATOR

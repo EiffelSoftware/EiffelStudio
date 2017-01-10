@@ -2,8 +2,8 @@ note
 	description: "Objects that creates simple links, simple clusters and ellipse nodes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2009-09-29 06:26:59 +0200 (mar., 29 sept. 2009) $"
-	revision: "$Revision: 80947 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MA_FIGURE_FACTORY
@@ -63,7 +63,9 @@ feature -- Basic operations
 --				end
 --			end
 			to_implement (generator + ".model_from_xml: Not yet implemented!")
-			;(create {EXCEPTIONS}).die (-1)
+			check False then
+					-- Not yet implemented.
+			end
 		end
 
 note

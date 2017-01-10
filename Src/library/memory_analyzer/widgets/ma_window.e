@@ -49,8 +49,8 @@ feature {NONE} -- Initialization
 			create_object_routes_panel_objects
 			create timer
 
-			create analyze_gc.make
---			create analyze_object_gra.make_with_drawable (object_drawing)
+				-- note: `analyze_gc` and `analyze_object_gra` are built on demand.
+
 			create analyze_object_snap.make_with_grid (object_grid)
 			create analyze_route_searcher.make (analyze_object_snap, route_results_panel)
 
@@ -64,8 +64,6 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
-			set_main_window (Current)
-
 			timer.actions.extend (agent timer_event)
 			timer.set_interval (refresh_interval)
 
@@ -90,7 +88,6 @@ feature {NONE} -- Initialization
 
 			search_route_button.select_actions.extend (agent search_route)
 		ensure then
-			main_window_set: is_main_window_set
 			timer_action_set: attached timer as t and then t.actions.count > 0
 			notebook_drop_action_set: main_book.drop_actions.count > 0
 			update_interval_set_normal: refresh_interval = refresh_interval_normal
@@ -445,6 +442,16 @@ feature {NONE} -- Implementation
 
 	analyze_gc: MA_GC_INFO_MEDIATOR
 			-- The mediator response for show histogram, history.
+		do
+			Result := internal_analyze_gc
+			if Result = Void then
+				create Result.make (Current)
+				internal_analyze_gc := Result
+			end
+		end
+
+	internal_analyze_gc: detachable like analyze_gc
+			-- cached version of `analyze_gc`.
 
 	analyze_object_gra: MA_OBJECT_GRAPH_MEDIATOR
 			-- The mediator response for show, modify object graphs.

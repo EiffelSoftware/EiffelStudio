@@ -2,8 +2,8 @@ note
 	description: "a ARRAYED_LIST with STOREABLE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2008-12-29 21:27:11 +0100 (lun., 29 déc. 2008) $"
-	revision: "$Revision: 76420 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MA_ARRAYED_LIST_STORABLE [G]

@@ -5,8 +5,8 @@ note
 																			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2009-09-29 06:26:59 +0200 (mar., 29 sept. 2009) $"
-	revision: "$Revision: 80947 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MA_FILTER_SINGLETON

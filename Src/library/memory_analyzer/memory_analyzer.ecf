@@ -21,9 +21,4 @@
 		<cluster name="stone" location="stone\" recursive="true"/>
 		<cluster name="widgets" location="widgets\" recursive="true"/>
 	</target>
-	<target name="mem" extends="memory_analyzer">
-		<capability>
-			<void_safety support="none" use="none"/>
-		</capability>
-	</target>
 </system>

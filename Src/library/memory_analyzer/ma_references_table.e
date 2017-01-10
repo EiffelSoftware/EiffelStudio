@@ -1,7 +1,7 @@
 note
 	description: "Objects represent mappings of addresses. [referrer, referee]"
-	date: "$Date: 2013-05-21 01:15:17 +0200 (mar., 21 mai 2013) $"
-	revision: "$Revision: 92557 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MA_REFERENCES_TABLE [G -> HASHABLE, H -> HASHABLE]

@@ -5,8 +5,8 @@ note
 																							]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2012-04-06 04:44:38 +0200 (ven., 06 avr. 2012) $"
-	revision: "$Revision: 88505 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MA_MEMORY_STATE_MANAGER

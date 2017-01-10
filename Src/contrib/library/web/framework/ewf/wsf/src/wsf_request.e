@@ -838,49 +838,53 @@ feature -- Access: CGI meta parameters - 1.1
 		do
 			l_result := internal_percent_encoded_path_info
 			if l_result = Void then
-				r := request_uri
-				i := r.index_of ('?', 1)
-				if i > 0 then
-					l_result := r.substring (1, i - 1)
-				else
-					l_result := r.string
-				end
 				pi := path_info
-				i := 0
-				if pi.is_valid_as_string_8 then
-					i := l_result.substring_index (pi.to_string_8, 1)
+				if pi.is_empty then
+					l_result := ""
+				else
+					r := request_uri
+					i := r.index_of ('?', 1)
 					if i > 0 then
-							-- Path info is included in REQUEST_URI
-							-- so let's get the percent encoded path info from request uri.
-						l_result := l_result.substring (i, l_result.count)
-					end
-				end
-					--| here "i = 0" means request_uri does not start with `path_info',
-					--| thus let's compute it from `script_name'.
-				if i = 0 and attached script_name as s then
-					if l_result.starts_with (s) then
-						l_result := l_result.substring (s.count + 1, l_result.count)
+						l_result := r.substring (1, i - 1)
 					else
-							--| Handle Rewrite url engine, to have clean path
-						from
-							i := 1
-							m := l_result.count
-							n := s.count
-						until
-							i > m or i > n or l_result[i] /= s[i]
-						loop
-							if l_result[i] = '/' then
-								spos := i
-							end
-							i := i + 1
+						l_result := r.string
+					end
+					i := 0
+					if pi.is_valid_as_string_8 then
+						i := l_result.substring_index (pi.to_string_8, 1)
+						if i > 0 then
+								-- Path info is included in REQUEST_URI
+								-- so let's get the percent encoded path info from request uri.
+							l_result := l_result.substring (i, l_result.count)
 						end
-						if i > 1 then
-							if l_result[i-1] = '/' then
-								i := i -1
-							elseif spos > 0 then
-								i := spos
+					end
+						--| here "i = 0" means request_uri does not start with `path_info',
+						--| thus let's compute it from `script_name'.
+					if i = 0 and attached script_name as s then
+						if l_result.starts_with (s) then
+							l_result := l_result.substring (s.count + 1, l_result.count)
+						else
+								--| Handle Rewrite url engine, to have clean path
+							from
+								i := 1
+								m := l_result.count
+								n := s.count
+							until
+								i > m or i > n or l_result[i] /= s[i]
+							loop
+								if l_result[i] = '/' then
+									spos := i
+								end
+								i := i + 1
 							end
-							l_result := l_result.substring (i, m)
+							if i > 1 then
+								if l_result[i-1] = '/' then
+									i := i -1
+								elseif spos > 0 then
+									i := spos
+								end
+								l_result := l_result.substring (i, m)
+							end
 						end
 					end
 				end

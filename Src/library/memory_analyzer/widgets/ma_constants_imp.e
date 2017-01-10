@@ -435,7 +435,7 @@ feature -- Access
 feature -- Access
 
 --| FIXME `constant_by_name' and `has_constant' `constants_initialized' are only required until the complete change to
---| constants is complete. They are required for the pixmaps at the moment.
+--| constant s is complete. They are required for the pixmaps at the moment.
 
 	constants_initialized: BOOLEAN
 			-- Have constants been initialized from file?
@@ -448,7 +448,7 @@ feature -- Access
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
---			has_constant (a_name)
+			has_constant (a_name)
 		local
 			l_item: detachable STRING
 		do
@@ -456,8 +456,8 @@ feature -- Access
 			if Result /= Void then
 				Result := Result.twin
 			end
---		ensure
---			Result_not_void: Result /= Void
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	integer_constant_by_name (a_name: STRING): INTEGER

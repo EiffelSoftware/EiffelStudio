@@ -25,14 +25,6 @@ inherit
 			default_create
 		end
 
-	MA_SHARED_MAIN_WINDOW
-		export
-			{NONE} all
-		undefine
-			copy,
-			default_create
-		end
-
 create
 	make
 

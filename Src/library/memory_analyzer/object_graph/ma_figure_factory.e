@@ -60,8 +60,11 @@ feature -- Basic operations
 --					end
 --				end
 --			end
-			to_implement (generator + ".model_from_xml: Not yet implemented!")
-			;(create {EXCEPTIONS}).die (-1)
+			check implemented: False then
+				to_implement (generator + ".model_from_xml: Not yet implemented!")
+			end
+		ensure then
+			not_implemented: False
 		end
 
 note

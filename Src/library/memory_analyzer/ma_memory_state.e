@@ -8,9 +8,6 @@ note
 class
 	MA_MEMORY_STATE
 
-inherit
-	REFACTORING_HELPER
-
 create
 	make_with_memory_map
 

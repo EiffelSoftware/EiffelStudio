@@ -41,8 +41,6 @@ feature -- Basic operations
 			l_result: detachable like model_from_xml
 		do
 			check not_implemented: False end
-			check attached l_result end -- Satisfy void-safe compiler
-			Result := l_result
 --			node_name := node.name
 --			if node_name.is_equal ("ELLIPSE_NODE") then
 --				create {EG_NODE} Result

@@ -173,9 +173,7 @@ feature -- Command
 			graph.add_node (l_last_drawn_node)
 
 			fig := world.figure_from_model (l_last_drawn_node)
-			if fig = Void then
-				check has_l_last_drawn_node: False end -- Implied by `l_last_drawn_node' has been just added
-			else
+			if fig /= Void then
 				fig.set_point_position (ax, ay)
 
 				-- Make new node figure a drop target
@@ -187,6 +185,8 @@ feature -- Command
 	--			fig.set_pebble (create {NODE_STONE}.make (last_drawn_node))
 
 				fig.pointer_button_release_actions.extend (agent on_select_node)
+			else
+				check has_l_last_drawn_node: False end -- Implied by `l_last_drawn_node' has been just added
 			end
 
 			l_tuple := [a_object, l_last_drawn_node]

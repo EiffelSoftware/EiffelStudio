@@ -14,6 +14,7 @@ class
 inherit
 	MA_WINDOW_IMP
 		redefine
+			create_interface_objects,
 			destroy
 		end
 
@@ -37,6 +38,11 @@ feature {NONE} -- Initialization
 		do
 			icons.set_pixmap_directory (a_dir)
 
+			default_create
+		end
+
+	create_interface_objects
+		do
 			create_all_widgets
 			create_object_routes_panel_objects
 			create timer
@@ -46,7 +52,8 @@ feature {NONE} -- Initialization
 			create analyze_object_snap.make_with_grid (object_grid)
 			create analyze_route_searcher.make (analyze_object_snap, route_results_panel)
 
-			default_create
+
+			Precursor
 		end
 
 	user_initialization

@@ -125,10 +125,10 @@ feature -- Command
 				l_count := l_new_table.item_for_iteration.as_natural_64
 
 				if finding_route_to_once then
-					if l_map = Void then
-						check has_l_map: False end  -- Implied by `finding_route_to_once' and code in this "from" part.
-					else
+					if l_map /= Void then
 						add_to_reference_table (l_new_table.key_for_iteration, l_map)
+					else
+						check has_l_map: False end  -- Implied by `finding_route_to_once' and code in this "from" part.
 					end
 				end
 
@@ -242,9 +242,7 @@ feature {NONE} -- Implementation
 			l_grid_data: like grid_data
 		do
 			l_grid_data := grid_data
-			if l_grid_data = Void then
-				check grid_data_set: False end -- implied by preconditions
-			else
+			if l_grid_data /= Void then
 				inspect
 					sorted_column
 					when 1 then create l_agent_sorter.make (agent sort_on_type_name)
@@ -259,6 +257,8 @@ feature {NONE} -- Implementation
 						-- Perform update action.
 					a_update_action.call (Void)
 				end
+			else
+				check grid_data_set: False end -- implied by preconditions
 			end
 		end
 
@@ -267,7 +267,6 @@ feature {NONE} -- Implementation
 		require
 			grid_data_not_void: grid_data /= Void
 		local
-			l_data: like grid_data
 			l_row_data: like row_data
 			l_item, l_other_item: MA_GRID_LABEL_ITEM
 			i, l_delta: INTEGER
@@ -276,67 +275,66 @@ feature {NONE} -- Implementation
 			l_row: EV_GRID_ROW
 			l_grid: like object_grid
 		do
-			from
-				l_data := grid_data
-				if l_data = Void then
-					check grid_data_not_void: False end
-					create l_data.make (0)
-				end
-				l_grid := object_grid
-				grid_util.grid_remove_and_clear_all_rows (l_grid)
-				i := 1
-				l_data.start
-			until
-				l_data.after
-			loop
-				l_row_data := l_data.item_for_iteration
-				if not filter.filter_class (l_row_data.type_name) then
-					l_str := l_row_data.type_name
-					check
-						l_str_not_void: l_str /= Void
-					end
-
-						-- Set type name
-					create l_item.make_with_text (l_str)
-					l_item.set_pixmap (icons.object_grid_class_icon)
-					l_grid.set_item (1, i, l_item)
-
-						-- Set count
-					l_count := l_row_data.number_of_objects
-					create l_item.make_with_text (l_count.out)
-					l_grid.set_item (2, i, l_item)
-					if l_count >= 1 then
-						l_row := l_grid.row (i)
-						l_row.ensure_expandable
-						l_row.expand_actions.extend (agent on_expand_actions_for_type (l_row_data.type_id, l_row))
-					end
-
-						-- Set delta
-					l_delta := l_row_data.variation_since_last_time
-					if l_delta /= 0 then
-						create l_item.make_with_text (l_delta.out)
-						if l_delta > 0 then
-							l_item.set_foreground_color (increased_color)
-						else
-							l_item.set_foreground_color (decreased_color)
+			if attached grid_data as l_data then
+				from
+					l_grid := object_grid
+					grid_util.grid_remove_and_clear_all_rows (l_grid)
+					i := 1
+					l_data.start
+				until
+					l_data.after
+				loop
+					l_row_data := l_data.item_for_iteration
+					if not filter.filter_class (l_row_data.type_name) then
+						l_str := l_row_data.type_name
+						check
+							l_str_not_void: l_str /= Void
 						end
-						l_grid.set_item (3, i, l_item)
+
+							-- Set type name
+						create l_item.make_with_text (l_str)
+						l_item.set_pixmap (icons.object_grid_class_icon)
+						l_grid.set_item (1, i, l_item)
+
+							-- Set count
+						l_count := l_row_data.number_of_objects
+						create l_item.make_with_text (l_count.out)
+						l_grid.set_item (2, i, l_item)
+						if l_count >= 1 then
+							l_row := l_grid.row (i)
+							l_row.ensure_expandable
+							l_row.expand_actions.extend (agent on_expand_actions_for_type (l_row_data.type_id, l_row))
+						end
+
+							-- Set delta
+						l_delta := l_row_data.variation_since_last_time
+						if l_delta /= 0 then
+							create l_item.make_with_text (l_delta.out)
+							if l_delta > 0 then
+								l_item.set_foreground_color (increased_color)
+							else
+								l_item.set_foreground_color (decreased_color)
+							end
+							l_grid.set_item (3, i, l_item)
+						end
+
+							-- Physical size
+						create l_item.make_with_text ("Click to compute")
+						l_grid.set_item (4, i, l_item)
+							-- Average size
+						create l_other_item.make_with_text ("Click to compute")
+						l_grid.set_item (5, i, l_other_item)
+
+							-- Action to compute the sizes.
+						l_item.pointer_button_press_actions.extend (agent compute_size_action (?, ?, ?, ?, ?, ?, ?, ?, l_item, l_other_item, l_row_data.type_id))
+						l_other_item.pointer_button_press_actions.extend (agent compute_size_action (?, ?, ?, ?, ?, ?, ?, ?, l_item, l_other_item, l_row_data.type_id))
+
+						i := i + 1
 					end
-
-						-- Physical size
-					create l_item.make_with_text ("Click to compute")
-					l_grid.set_item (4, i, l_item)
-						-- Average size
-					create l_other_item.make_with_text ("Click to compute")
-					l_grid.set_item (5, i, l_other_item)
-
-						-- Action to compute the sizes.
-					l_item.pointer_button_press_actions.extend (agent compute_size_action (?, ?, ?, ?, ?, ?, ?, ?, l_item, l_other_item, l_row_data.type_id))
-					l_other_item.pointer_button_press_actions.extend (agent compute_size_action (?, ?, ?, ?, ?, ?, ?, ?, l_item, l_other_item, l_row_data.type_id))
-
-					i := i + 1
+					l_data.forth
 				end
-				l_data.forth
+			else
+				check grid_data_not_void: False end -- Implied by precondition
 			end
 				-- We launch a collection, so that no bad information is displayed
 				-- for referers.
@@ -689,9 +687,11 @@ feature {NONE} -- Fields
 	row_data: TUPLE [type_name: STRING; number_of_objects: NATURAL_64; variation_since_last_time: INTEGER; type_id: INTEGER]
 			-- Type for the data inserted in `output_grid'
 			-- It is [type_name, number_of_objects, variation_since_last_time, type_id].
+		require
+			callable: False
 		do
 				-- Should not be used, except for anchor type
-			;(create {EXCEPTIONS}).die (-1)
+			check False then end
 		end
 
 	object_grid: EV_GRID

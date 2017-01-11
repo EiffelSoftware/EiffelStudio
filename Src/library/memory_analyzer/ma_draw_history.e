@@ -50,9 +50,7 @@ feature -- Command
 			-- Update the graph, because size may changed.
 		do
 			internal_pixmap.clear
-			if attached main_window as l_main_window then
-				internal_pixmap.set_size (l_main_window.gc_graphs.width, l_main_window.gc_graphs.height)
-			end
+			internal_pixmap.set_size (main_window.gc_graphs.width, main_window.gc_graphs.height)
 			draw_history_grid
 			-- draw used line
 			draw_history_graph_line (graph_used_history, graph_used_color, line_used_width)

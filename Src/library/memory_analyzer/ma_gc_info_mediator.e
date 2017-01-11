@@ -42,65 +42,66 @@ feature -- Command
 	show_statistics
 			-- show garbage collection datas to the window
 			-- Update `output_text' with current memory usage.
+		local
+			l_main_window: like main_window
 		do			-- show GC_INFO's content which is used by show_mem_info
 			-- the information of full collector
-			if attached main_window as l_main_window then
-				l_main_window.collected_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).collected.out)
-				l_main_window.collected_average_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).collected_average.out)
-				l_main_window.cycle_count_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).cycle_count.out)
-				l_main_window.memory_used_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).memory_used.out)
 
-				l_main_window.cpu_interval_time_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).cpu_interval_time.out)
-				l_main_window.cpu_interval_time_average_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).cpu_interval_time_average.out)
-				l_main_window.cpu_time_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).cpu_time.out)
-				l_main_window.cpu_time_average_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).cpu_time_average.out)
+			l_main_window := main_window
 
-				l_main_window.real_interval_time_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).real_interval_time.out)
-				l_main_window.real_interval_time_average_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).real_interval_time_average.out)
-				l_main_window.real_time_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).real_time.out)
-				l_main_window.real_time_average_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).real_time_average .out)
+			l_main_window.collected_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).collected.out)
+			l_main_window.collected_average_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).collected_average.out)
+			l_main_window.cycle_count_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).cycle_count.out)
+			l_main_window.memory_used_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).memory_used.out)
 
-				l_main_window.system_interval_time_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).sys_interval_time.out)
-				l_main_window.system_interval_time_average_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).sys_interval_time_average.out)
-				l_main_window.system_time_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).sys_time.out)
-				l_main_window.system_time_average_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).sys_time_average.out)
+			l_main_window.cpu_interval_time_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).cpu_interval_time.out)
+			l_main_window.cpu_interval_time_average_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).cpu_interval_time_average.out)
+			l_main_window.cpu_time_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).cpu_time.out)
+			l_main_window.cpu_time_average_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).cpu_time_average.out)
 
-				-- the information of incremental collector
-				l_main_window.collected_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).collected.out)
-				l_main_window.collected_average_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).collected_average.out)
-				l_main_window.cycle_count_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).cycle_count.out)
-				l_main_window.memory_used_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).memory_used.out)
+			l_main_window.real_interval_time_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).real_interval_time.out)
+			l_main_window.real_interval_time_average_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).real_interval_time_average.out)
+			l_main_window.real_time_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).real_time.out)
+			l_main_window.real_time_average_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).real_time_average .out)
 
-				l_main_window.cpu_interval_time_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).cpu_interval_time.out)
-				l_main_window.cpu_interval_time_average_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).cpu_interval_time_average.out)
-				l_main_window.cpu_time_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).cpu_time.out)
-				l_main_window.cpu_time_average_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).cpu_time_average.out)
+			l_main_window.system_interval_time_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).sys_interval_time.out)
+			l_main_window.system_interval_time_average_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).sys_interval_time_average.out)
+			l_main_window.system_time_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).sys_time.out)
+			l_main_window.system_time_average_full.set_text (memory.gc_statistics ({MEMORY}.full_collector).sys_time_average.out)
 
-				l_main_window.real_interval_time_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).real_interval_time.out)
-				l_main_window.real_interval_time_average_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).real_interval_time_average.out)
-				l_main_window.real_time_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).real_time.out)
-				l_main_window.real_time_average_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).real_time_average .out)
+			-- the information of incremental collector
+			l_main_window.collected_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).collected.out)
+			l_main_window.collected_average_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).collected_average.out)
+			l_main_window.cycle_count_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).cycle_count.out)
+			l_main_window.memory_used_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).memory_used.out)
 
-				l_main_window.system_interval_time_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).sys_interval_time.out)
-				l_main_window.system_interval_time_average_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).sys_interval_time_average.out)
-				l_main_window.system_time_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).sys_time.out)
-				l_main_window.system_time_average_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).sys_time_average.out)
+			l_main_window.cpu_interval_time_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).cpu_interval_time.out)
+			l_main_window.cpu_interval_time_average_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).cpu_interval_time_average.out)
+			l_main_window.cpu_time_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).cpu_time.out)
+			l_main_window.cpu_time_average_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).cpu_time_average.out)
 
-				-- other informations
-				l_main_window.chunk_size_other.set_text (memory.chunk_size.out)
-				l_main_window.largest_coalesced_block_other.set_text (memory.largest_coalesced_block.out)
-				l_main_window.coalesce_period_other.set_text (memory.coalesce_period.out)
+			l_main_window.real_interval_time_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).real_interval_time.out)
+			l_main_window.real_interval_time_average_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).real_interval_time_average.out)
+			l_main_window.real_time_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).real_time.out)
+			l_main_window.real_time_average_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).real_time_average .out)
 
-				l_main_window.scavenge_zone_size_other.set_text (memory.scavenge_zone_size.out)
-				l_main_window.collection_period_other.set_text (memory.collection_period.out)
-				l_main_window.tenure_other.set_text (memory.tenure.out)
+			l_main_window.system_interval_time_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).sys_interval_time.out)
+			l_main_window.system_interval_time_average_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).sys_interval_time_average.out)
+			l_main_window.system_time_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).sys_time.out)
+			l_main_window.system_time_average_incre.set_text (memory.gc_statistics ({MEMORY}.incremental_collector).sys_time_average.out)
 
-				l_main_window.memory_threshold_other.set_text (memory.memory_threshold.out)
-				l_main_window.generation_object_limit_other.set_text (memory.generation_object_limit.out)
-				l_main_window.max_memory_other.set_text (memory.max_mem.out)
-			else
-				check main_window_set: False end
-			end
+			-- other informations
+			l_main_window.chunk_size_other.set_text (memory.chunk_size.out)
+			l_main_window.largest_coalesced_block_other.set_text (memory.largest_coalesced_block.out)
+			l_main_window.coalesce_period_other.set_text (memory.coalesce_period.out)
+
+			l_main_window.scavenge_zone_size_other.set_text (memory.scavenge_zone_size.out)
+			l_main_window.collection_period_other.set_text (memory.collection_period.out)
+			l_main_window.tenure_other.set_text (memory.tenure.out)
+
+			l_main_window.memory_threshold_other.set_text (memory.memory_threshold.out)
+			l_main_window.generation_object_limit_other.set_text (memory.generation_object_limit.out)
+			l_main_window.max_memory_other.set_text (memory.max_mem.out)
 		end
 
 feature -- Implementation for agents	
@@ -139,15 +140,16 @@ feature -- Implementation for agents
 
 	redraw_history
 			-- Redraw history (right side graph).
+		local
+			l_main_window: like main_window
 		do
-			if attached main_window as l_main_window then
-				l_main_window.eiffel_history.draw_pixmap (0, 0, history_graph_eiffel.pixmap)
-				debug ("larry")
-					io.put_string ("%N redraw in MA_GC_INFO_MEDIATOR: pixmap width/height is: " + history_graph_eiffel.pixmap.width.out + " " + history_graph_eiffel.pixmap.height.out)
-				end
-				l_main_window.c_history.draw_pixmap (0, 0, history_graph_c.pixmap)
-				l_main_window.total_history.draw_pixmap (0, 0, history_graph_total.pixmap)
+			l_main_window := main_window
+			l_main_window.eiffel_history.draw_pixmap (0, 0, history_graph_eiffel.pixmap)
+			debug ("larry")
+				io.put_string ("%N redraw in MA_GC_INFO_MEDIATOR: pixmap width/height is: " + history_graph_eiffel.pixmap.width.out + " " + history_graph_eiffel.pixmap.height.out)
 			end
+			l_main_window.c_history.draw_pixmap (0, 0, history_graph_c.pixmap)
+			l_main_window.total_history.draw_pixmap (0, 0, history_graph_total.pixmap)
 		end
 
 	redraw
@@ -175,9 +177,7 @@ feature {NONE} -- Implementaion for draw graphics
 		do
 			histogram_graph.draw_graph (eiffel_mem_info.used / eiffel_mem_info.total, eiffel_mem_info.overhead / eiffel_mem_info.total)
 			histogram_graph.draw_text ("   "+eiffel_mem_info.used.out + "/%N    " + eiffel_mem_info.total.out)
-			if attached main_window as l_main_window then
-				l_main_window.eiffel_histogram.draw_pixmap (0, 0, histogram_graph.pixmap)
-			end
+			main_window.eiffel_histogram.draw_pixmap (0, 0, histogram_graph.pixmap)
 		end
 
 	draw_c_histogram
@@ -185,9 +185,7 @@ feature {NONE} -- Implementaion for draw graphics
 		do
 			histogram_graph.draw_graph (c_mem_info.used / c_mem_info.total,c_mem_info.overhead / c_mem_info.total)
 			histogram_graph.draw_text ("   "+c_mem_info.used.out + "/%N    " + c_mem_info.total.out)
-			if attached main_window as l_main_window then
-				l_main_window.c_histogram.draw_pixmap (0, 0, histogram_graph.pixmap)
-			end
+			main_window.c_histogram.draw_pixmap (0, 0, histogram_graph.pixmap)
 		end
 
 	draw_total_histogram
@@ -195,9 +193,7 @@ feature {NONE} -- Implementaion for draw graphics
 		do
 			histogram_graph.draw_graph (total_mem_info.used / total_mem_info.total,total_mem_info.overhead / total_mem_info.total)
 			histogram_graph.draw_text ("   "+total_mem_info.used.out + "/%N    " + total_mem_info.total.out)
-			if attached main_window as l_main_window then
-				l_main_window.total_histogram.draw_pixmap (0, 0, histogram_graph.pixmap)
-			end
+			main_window.total_histogram.draw_pixmap (0, 0, histogram_graph.pixmap)
 		end
 
 	draw_graph
@@ -211,13 +207,9 @@ feature {NONE} -- Implementaion for draw graphics
 			history_graph_c.draw_graph (c_mem_info.used / c_mem_info.total, c_mem_info.overhead / c_mem_info.total)
 			history_graph_total.draw_graph (total_mem_info.used / total_mem_info.total, total_mem_info.overhead / total_mem_info.total)
 
-			if attached main_window as l_main_window then
-				l_main_window.eiffel_history.draw_pixmap (0, 0, history_graph_eiffel.pixmap)
-				l_main_window.c_history.draw_pixmap (0, 0, history_graph_c.pixmap)
-				l_main_window.total_history.draw_pixmap (0, 0, history_graph_total.pixmap)
-			else
-				check main_window_set: False end
-			end
+			main_window.eiffel_history.draw_pixmap (0, 0, history_graph_eiffel.pixmap)
+			main_window.c_history.draw_pixmap (0, 0, history_graph_c.pixmap)
+			main_window.total_history.draw_pixmap (0, 0, history_graph_total.pixmap)
 
 			-- If the data changed, draw the new histogram.
 			if

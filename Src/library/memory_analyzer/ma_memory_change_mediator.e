@@ -94,13 +94,12 @@ feature -- Command
 	adjust_split_horizontal
 			-- Adjust the split area (which ia at the bottom area)'s position.
 		local
-			l_main_window: like main_window
+			l_memory_spot_1: EV_GRID
 		do
-			l_main_window := main_window
-			l_main_window.split_incre_horizontal.set_split_position (
-					l_main_window.split_incre_horizontal.minimum_split_position
-					+ l_main_window.memory_spot_1.row_count * l_main_window.memory_spot_1.row_height
-					+ l_main_window.memory_spot_1.header.height
+			l_memory_spot_1 := main_window.memory_spot_1
+			main_window.split_incre_horizontal.set_split_position (
+					main_window.split_incre_horizontal.minimum_split_position
+					+ l_memory_spot_1.row_count * l_memory_spot_1.row_height + l_memory_spot_1.header.height
 				)
 		end
 
@@ -311,9 +310,7 @@ feature {NONE} -- Implemention
 			l_grid_data_increased: like grid_data_increased
 		do
 			l_grid_data_increased := grid_data_increased
-			if l_grid_data_increased = Void then
-				check grid_data_increased_set: False end -- Implied by precondition
-			else
+			if l_grid_data_increased /= Void then
 				inspect
 					sorted_column
 				when 1 then
@@ -323,6 +320,8 @@ feature {NONE} -- Implemention
 				end
 				create l_sorter.make (l_agent_sorter)
 				l_sorter.sort (l_grid_data_increased)
+			else
+				check grid_data_increased_set: False end -- Implied by precondition
 			end
 		end
 
@@ -380,8 +379,7 @@ feature {NONE} -- Implemention
 		require
 			callable: False
 		do
-			check False end -- Anchor type only
-			;(create {EXCEPTIONS}).die (-1)
+			check False then end -- Anchor type only
 		end
 
 	grid_from_state, grid_to_state: EV_GRID -- Two grid show states.

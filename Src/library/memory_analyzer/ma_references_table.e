@@ -67,10 +67,7 @@ feature -- Element change
 		local
 			l_hash: detachable like references_by_referee
 		do
-			if
-				relations.has_key (a_referee) and then
-				attached relations.found_item as h
-			then
+			if attached relations.item (a_referee) as h then
 				l_hash := h
 			else
 				create l_hash.make (20)
@@ -89,8 +86,7 @@ feature -- Removal
 			a_referee_not_void: a_referee /= Void
 		do
 			if
-				relations.has_key (a_referee) and then
-				attached relations.found_item as l_hash
+				attached relations.item (a_referee) as l_hash
 			then
 				l_hash.remove (a_referrer)
 				if l_hash.is_empty then

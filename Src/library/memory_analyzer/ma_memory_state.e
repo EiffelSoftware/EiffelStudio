@@ -164,9 +164,11 @@ feature {NONE} -- Implementation
 
 	state: TUPLE [type_name: STRING; count_in_system: INTEGER]
 			-- [type_name_of_type, number of instances of type_name_of_type present in system]
+		require
+			callable: False
 		do
 				-- Used as anchor type!
-			;(create {EXCEPTIONS}).die (-1)
+			check False then end
 		end
 
 	objects_states: ARRAYED_LIST [like state];

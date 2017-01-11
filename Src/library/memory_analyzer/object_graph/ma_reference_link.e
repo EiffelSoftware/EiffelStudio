@@ -109,9 +109,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			l_target: like target
 		do
 			l_model := model
-			if l_model = Void then
-				check has_model: False end
-			else
+			if l_model /= Void then
 				l_source := source
 				if not l_model.is_reflexive then
 					l_target := target
@@ -150,6 +148,8 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 						name_label.set_point_position (reflexive.x + reflexive.radius1, reflexive.y)
 					end
 				end
+			else
+				check has_model: False end
 			end
 			is_update_required := False
 		end

@@ -10,7 +10,6 @@
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
-		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>

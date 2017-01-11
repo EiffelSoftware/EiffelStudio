@@ -5,12 +5,12 @@
         {
             "id": "eiffelstudio_ent",
             "name": "EiffelStudio",
-            "version": "16.05 Enterprise Evaluation Edition",
+            "version": "17.01 Enterprise Evaluation Edition",
             "release": "Official Release",
-            "date": "Spring 2016",
-            "sub_directory": "16.05",
-            "number": "16.05",
-            "build" : "Build_98969",
+            "date": "Winter 2017",
+            "sub_directory": "17.01",
+            "number": "17.01",
+            "build" : "Build_99700",
             "icon": "eiffelstudio_ent.png",
             "public": "true",
             "for_evaluation": "true",
@@ -23,94 +23,94 @@
             "download": [
                 {
                     "platform": "freebsd-x86-64",
-                    "filename": "Eiffel_16.05_ent_98969-freebsd-x86-64.tar.bz2",
-					"size": "98556368",
-                    "hash": "df142ca7b53cc44031a1350ab1b66dc423b0243ffff265775d3d8f39f0065fd4",
+                    "filename": "Eiffel_17.01_ent_99700-freebsd-x86-64.tar.bz2",
+					"size": "100324681",
+                    "hash": "01b26dfbff7f65e70aeb85fb1cebacd6bf359c2fa63aeeab2319900b9aeb51be",
                     "cdkey": "20127-34313-42484-47101-92036-56490"
                 },
                 {
                     "platform": "freebsd-x86",
-                    "filename": "Eiffel_16.05_ent_98969-freebsd-x86.tar.bz2",
-					"size": "89854885",
-                    "hash": "617fc8a54b0e7b835c7c77f6916d57a3389786385a1e142fe86673c254cbb3a0",
+                    "filename": "Eiffel_17.01_ent_99700-freebsd-x86.tar.bz2",
+					"size": "98793724",
+                    "hash": "9653c04871fbd9cf41333157d4086c8d4e8475dd96332ab0704a1ebdacacf1a4",
                     "cdkey": "20127-34313-42484-47101-92036-56490"
                 },
                 {
                     "platform": "linux-armv6",
-                    "filename": "Eiffel_16.05_ent_98969-linux-armv6.tar.bz2",
-					"size": "96584281",
-                    "hash": "3d6937a8a9f987915f2c8950b8e8977a25a0fa700f262fe197e50fbb66f479b4",
+                    "filename": "Eiffel_17.01_ent_99700-linux-armv6.tar.bz2",
+					"size": "97507823",
+                    "hash": "13722534c6e42b3ab845083a2814d4faa47fd93aad82058425832fae1335bd43",
                     "cdkey": "20127-34313-42484-47101-92036-56490"
                 },
 
                 {
                     "platform": "linux-x86-64",
-                    "filename": "Eiffel_16.05_ent_98969-linux-x86-64.tar.bz2",
-					"size": "105905061",
-                    "hash": "765c87cf221b42822444ce1cdfca7c015da63751626e2128e7414a7365df9222",
+                    "filename": "Eiffel_17.01_ent_99700-linux-x86-64.tar.bz2",
+					"size": "106858463",
+                    "hash": "81a6b7fd014646d9685f11e7e96cc5ee320f5ccf1f674eec13c7fef9683a395d",
                     "cdkey": "20127-34313-42484-47101-92036-56490"
                 },
                 {
                     "platform": "linux-x86",
-                    "filename": "Eiffel_16.05_ent_98969-linux-x86.tar.bz2",
-					"size": "93160091",
-                    "hash": "6d17e7f33e26c11382599a86d06e441d4579ad035fc4b694e82fec20c04f9941",
+                    "filename": "Eiffel_17.01_ent_99700-linux-x86.tar.bz2",
+					"size": "94143249",
+                    "hash": "74f5ba30af52ce20f515afbf2b4f69c756e55df63f91c3475238e447f8c63d8e",
                     "cdkey": "20127-34313-42484-47101-92036-56490"
                 },
                 {
                     "platform": "macosx-x86-64",
-                    "filename": "Eiffel_16.05_ent_98969-macosx-x86-64.tar.bz2",
-					"size": "91288123",
-                    "hash": "7bb9f151770d838956aa071c672f085e55b76b2672ccda265dfdd470420b8dd6",
+                    "filename": "Eiffel_17.01_ent_99700-macosx-x86-64.tar.bz2",
+					"size": "91973000",
+                    "hash": "573b92e536ed12d788d4e57677b0d22ca0aa108751ad47c86df9bf6b22e18417",
                     "cdkey": "20127-34313-42484-47101-92036-56490"
                 },
                 {
                     "platform": "openbsd-x86-64",
-                    "filename": "Eiffel_16.05_ent_98969-openbsd-x86-64.tar.bz2",
-					"size": "102741820",
-                    "hash": "2e7ff1317906615209f860ec4b277f2fd20e4b7af2ac7a02f97f133385e9bfa4",
+                    "filename": "Eiffel_17.01_ent_99700-openbsd-x86-64.tar.bz2",
+					"size": "113811213",
+                    "hash": "622d5a01dfc2178e66c875a216ae8e4d161147bad97adf05bd398de47bbc2b8c",
                     "cdkey": "20127-34313-42484-47101-92036-56490"
                 },
                 {
                     "platform": "solaris-sparc-64",
-                    "filename": "Eiffel_16.05_ent_98969-solaris-sparc-64.tar.bz2",
-					"size": "112653901",
-                    "hash": "4ae1b7668412871c6808eebc18152ee72811fe5eef15568be51b4c092ff55a32",
+                    "filename": "Eiffel_17.01_ent_99700-solaris-sparc-64.tar.bz2",
+					"size": "114090820",
+                    "hash": "d0eddc1308487510f97494762e6f60f739e21b135bb9f49e25f6d70c64a4025e",
                     "cdkey": "20127-34313-42484-47101-92036-56490"
                 },
                 {
                     "platform": "solaris-sparc",
-                    "filename": "Eiffel_16.05_ent_98969-solaris-sparc.tar.bz2",
-					"size": "92717056",
-                    "hash": "ce9e5edfca90877a71e863159cddc0964795e5e0af8e96b899c13b6b250cbc22",
+                    "filename": "Eiffel_17.01_ent_99700-solaris-sparc.tar.bz2",
+					"size": "112058660",
+                    "hash": "f81b011de435e837ab5e1c8fc9f8a788fdf56f7465851a66f478cb37af66b797",
                     "cdkey": "20127-34313-42484-47101-92036-56490"
                 },
                 {
                     "platform": "solaris-x86-64",
-                    "filename": "Eiffel_16.05_ent_98969-solaris-x86-64.tar.bz2",
-					"size": "96248971",
-                    "hash": "4feaecae471b61199218f998cb2630d8fbcaac78aa17a07afec604e5235df2df",
+                    "filename": "Eiffel_17.01_ent_99700-solaris-x86-64.tar.bz2",
+					"size": "96946176",
+                    "hash": "b65e63d534dc7c94258abc29f108fccb1b34b683b50b67e30fdf6e612344d787",
                     "cdkey": "20127-34313-42484-47101-92036-56490"
                 },
                 {
                     "platform": "solaris-x86",
-                    "filename": "Eiffel_16.05_ent_98969-solaris-x86.tar.bz2",
-					"size": "86857140",
-                    "hash": "48ad521086f7cbdd076952ea2ed5e583d3296c1365009e80371a68a508819024",
+                    "filename": "Eiffel_17.01_ent_99700-solaris-x86.tar.bz2",
+					"size": "87560371",
+                    "hash": "76792a52ba67907934248f2b3b46fb0ff70f1ec854f91ecd8a33135223c7ade6",
                     "cdkey": "20127-34313-42484-47101-92036-56490"
                 },
                 {
                     "platform": "win64",
-                    "filename": "Eiffel_16.05_ent_98969-win64.msi",
-					"size": "145941848",
-                    "hash": "98dbfd84ef363e2307fe17f2b3eb2aa02d4144394caeb8fa9c0de9e9e59f98ee",
+                    "filename": "Eiffel_17.01_ent_99700-win64.msi",
+					"size": "147128556",
+                    "hash": "dd081608691163025fd53cc096353b967edebc837bc482acf768c13115006b14",
                     "cdkey": "20127-34313-42484-47101-92036-56490"
                 },
                 {
                     "platform": "windows",
-                    "filename": "Eiffel_16.05_ent_98969-windows.msi",
-					"size": "132825316",
-                    "hash": "bc17e9058e33d3c2783531df21972275db83e28e46e46a3173320e164d075d23",
+                    "filename": "Eiffel_17.01_ent_99700-windows.msi",
+					"size": "133766148",
+                    "hash": "c2a48b6f634a3a4cbbc234aaec34224d6cf1431f3fd178b7219824db2de307af",
                     "cdkey": "20127-34313-42484-47101-92036-56490"
                 }
             ]

@@ -11,6 +11,8 @@ inherit
 
 	ARGUMENTS
 
+	JSON_PARSER_ACCESS
+
 feature -- Logger
 
 
@@ -83,7 +85,7 @@ feature {NONE} -- JSON
 			create Result
 			if attached json_file_from (a_path) as json_file then
 			 l_parser := new_json_parser (json_file)
-			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			 if  attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_parsed and then
 			     attached {JSON_OBJECT} jv.item ("logger") as l_logger and then
 			     attached {JSON_STRING} l_logger.item ("backup_count") as l_count and then
 			     attached {JSON_STRING} l_logger.item ("level") as l_level then

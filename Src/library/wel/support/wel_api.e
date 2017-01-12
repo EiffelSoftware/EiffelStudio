@@ -407,6 +407,32 @@ feature -- File Drop Handling
 			"DragQueryFile ((HDROP) $hdrop, (UINT) $ifile, (LPTSTR) $buffer_pointer, (UINT) $buffer_size)"
 		end
 
+feature -- File input/output
+
+	cwin_create_file (name: POINTER; desired_access: NATURAL_32; shared_mode: NATURAL_32; security_attributes: POINTER; creation_disposition: NATURAL_32; flags_and_attributes: NATURAL_32; template_handle: POINTER): POINTER
+			-- SDK CreateFile.
+		external
+			"C [macro <winbase.h>] (LPCTSTR, DWORD, DWORD, LPSECURITY_ATTRIBUTES, DWORD, DWORD, HANDLE): HANDLE"
+		alias
+			"CreateFile"
+		end
+
+	cwin_read_file (file_handle: POINTER; buffer: POINTER; number_of_bytes_to_read: NATURAL_32; number_of_bytes_read: TYPED_POINTER [NATURAL_32]; overlapped: POINTER): BOOLEAN
+			-- SDK ReadFile.
+		external
+			"C [macro <winbase.h>] (HANDLE, LPVOID, DWORD, LPDWORD, LPOVERLAPPED): BOOL"
+		alias
+			"ReadFile"
+		end
+
+	cwin_write_file (file_handle: POINTER; buffer: POINTER; number_of_bytes_to_write: NATURAL_32; number_of_bytes_written: TYPED_POINTER [NATURAL_32]; overlapped: POINTER): BOOLEAN
+			-- SDK WriteFile.
+		external
+			"C [macro <winbase.h>] (HANDLE, LPCVOID, DWORD, LPDWORD, LPOVERLAPPED): BOOL"
+		alias
+			"WriteFile"
+		end
+
 feature -- Processes
 
 	create_process (a_name, a_command_line, a_sec_attributes1, a_sec_attributes2: POINTER;

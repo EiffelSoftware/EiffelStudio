@@ -227,9 +227,6 @@ feature -- Access
 	std_input, std_output, std_error: POINTER
 			-- Handle used to read input and output from child.
 
-	child_input, child_output, child_error: POINTER
-			-- Input/output given to child.
-
 	is_std_input_open: BOOLEAN
 			-- Is std input open?
 
@@ -247,6 +244,11 @@ feature -- Access
 
 	error_file_name: READABLE_STRING_GENERAL
 			-- Name if any of error file
+
+feature {NONE} -- Access
+
+	child_input, child_output, child_error: POINTER
+			-- Input/output given to child and closed immediately after that.
 
 feature -- Handle operation
 

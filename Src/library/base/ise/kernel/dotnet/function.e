@@ -28,7 +28,7 @@ feature -- Access
 	last_result: detachable RESULT_TYPE
 			-- Result of last call, if any.
 
-	item (args: detachable OPEN_ARGS): RESULT_TYPE
+	item alias "()" (args: detachable OPEN_ARGS): RESULT_TYPE
 			-- Result of calling function with `args' as operands.
 		require
 			valid_operands: valid_operands (args)
@@ -106,7 +106,7 @@ feature -- Removal
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -116,4 +116,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class FUNCTION
+end

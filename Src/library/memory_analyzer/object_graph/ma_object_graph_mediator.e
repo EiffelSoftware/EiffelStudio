@@ -16,13 +16,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_drawable (a_drawable: EV_FRAME)
+	make_with_drawable (a_drawable: EV_FRAME; a_main_window: like main_window)
 			-- Create function.
 		require
 			a_drawable_not_void: a_drawable /= Void
 			a_drawable_not_destroyed: not a_drawable.is_destroyed
 			a_drawable_not_full: a_drawable.extendible
 		do
+			main_window := a_main_window
 			object_drawing:= a_drawable
 
 			create graph
@@ -42,6 +43,8 @@ feature {NONE} -- Initialization
 			create grid_layout.make_with_world (world)
 		end
 
+	main_window: MA_WINDOW
+
 feature -- Command
 
 	arrange_in_grid
@@ -60,7 +63,7 @@ feature -- Command
 			end
 		end
 
-	find_draw_node_by_object (a_object: ANY): EG_NODE
+	find_draw_node_by_object (a_object: ANY): detachable EG_NODE
 			-- Find in `objects_already_draw' return a EG_NODE which corresponding to object.
 		require
 			a_object_not_void : a_object /= Void
@@ -71,20 +74,18 @@ feature -- Command
 			from
 				objects_already_draw.start
 			until
-				l_result /= Void or objects_already_draw.after
+				Result /= Void or objects_already_draw.after
 			loop
 				l_obj_with_node := objects_already_draw.item_for_iteration
 					-- Test the address.
 				if l_obj_with_node.obj = a_object then
-					l_result := l_obj_with_node.node
+					Result := l_obj_with_node.node
 					check
-						result_not_void: l_result /= Void
+						result_not_void: Result /= Void
 					end
 				end
 				objects_already_draw.forth
 			end
-			check attached l_result end -- FIXME: Implied by ...?
-			Result := l_result
 		ensure
 			result_not_void : Result /= Void
 		end
@@ -172,18 +173,22 @@ feature -- Command
 			graph.add_node (l_last_drawn_node)
 
 			fig := world.figure_from_model (l_last_drawn_node)
-			check attached fig end -- Implied by `l_last_drawn_node' has been just added
-			fig.set_point_position (ax, ay)
+			if fig /= Void then
+				fig.set_point_position (ax, ay)
 
-			-- Make new node figure a drop target
-			fig.set_accept_cursor (accept_node)
-			fig.set_deny_cursor (deny_node)
---			fig.drop_actions.extend (agent on_link_drop (?, last_drawn_node))
+				-- Make new node figure a drop target
+				fig.set_accept_cursor (accept_node)
+				fig.set_deny_cursor (deny_node)
+	--			fig.drop_actions.extend (agent on_link_drop (?, last_drawn_node))
 
-			-- Make new node figure pickable
---			fig.set_pebble (create {NODE_STONE}.make (last_drawn_node))
+				-- Make new node figure pickable
+	--			fig.set_pebble (create {NODE_STONE}.make (last_drawn_node))
 
-			fig.pointer_button_release_actions.extend (agent on_select_node)
+				fig.pointer_button_release_actions.extend (agent on_select_node)
+			else
+				check has_l_last_drawn_node: False end -- Implied by `l_last_drawn_node' has been just added
+			end
+
 			l_tuple := [a_object, l_last_drawn_node]
 			check
 				a_object /= Void
@@ -191,7 +196,9 @@ feature -- Command
 			end
 			world.update
 			-- Put the object and the node into the hashtable
-			objects_already_draw.force (l_tuple, fig)
+			if fig /= Void then
+				objects_already_draw.force (l_tuple, fig)
+			end
 		end
 
 	on_select_node (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
@@ -241,47 +248,49 @@ feature -- Implementation for agents
 			l_refers: SPECIAL [ANY]
 			l_int,refer_count: INTEGER
 			l_link_node: EG_NODE
-			l_linkable: EG_LINKABLE
 			l_info_dlg: EV_INFORMATION_DIALOG
 			l_item: detachable TUPLE [obj: ANY; node: EG_NODE]
-			l_last_drawn_node: like last_drawn_node
 		do
 			l_nodes := world.selected_figures
 			if l_nodes.count > 0 then
 				l_node := l_nodes.first
 				l_item := objects_already_draw.item (l_node)
-				check attached l_item end -- FIXME: Implied by ...?
-				l_object :=	l_item.obj
-				l_refers := memory.referers (l_object)
-				from
-					l_int := 0
-					refer_count := l_refers.count
-				until
-					l_int = refer_count
-				loop
-					if object_already_draw(l_refers.item (l_int))  then
-						-- add link to two already drawed object
-						l_link_node := find_draw_node_by_object(l_refers.item (l_int))
-						l_item := objects_already_draw.item (l_node)
-						check attached l_item end -- FIXME: Implied by ...?
-						l_linkable := l_item.node
-						check
-							l_linkable /= Void
+				if l_item /= Void then
+					l_object :=	l_item.obj
+					l_refers := memory.referers (l_object)
+					from
+						l_int := 0
+						refer_count := l_refers.count
+					until
+						l_int = refer_count
+					loop
+						if object_already_draw (l_refers.item (l_int))  then
+							-- add link to two already drawed object
+							l_link_node := find_draw_node_by_object (l_refers.item (l_int))
+							l_item := objects_already_draw.item (l_node)
+							if
+								l_link_node /= Void and
+								l_item /= Void and then attached l_item.node as l_linkable
+							then
+								add_link (l_linkable, l_link_node)
+							else
+								check has_already_been_drawn: False end
+							end
+						else
+							add_node_random_pos(l_refers.item (l_int))
+							l_item := objects_already_draw.item (l_node)
+							if l_item /= Void and then attached l_item.node as l_linkable then
+								if attached last_drawn_node as l_last_drawn_node then
+									add_link (l_linkable, l_last_drawn_node)
+								else
+									check has_last_drawn_node: False end
+								end
+							else
+								check has_already_been_drawn: False end
+							end
 						end
-						add_link (l_linkable, l_link_node )
-					else
-						add_node_random_pos(l_refers.item (l_int))
-						l_item := objects_already_draw.item (l_node)
-						check attached l_item end -- FIXME: Implied by ...?
-						l_linkable := l_item.node
-						check
-							l_linkable /= Void
-						end
-						l_last_drawn_node := last_drawn_node
-						check attached l_last_drawn_node end -- FIXME: Implied by ...?
-						add_link (l_linkable, l_last_drawn_node)
+						l_int := l_int + 1
 					end
-					l_int := l_int + 1
 				end
 			else
 				create l_info_dlg.make_with_text ("Please select a node first.")
@@ -486,7 +495,7 @@ invariant
 	objects_already_draw_has_no_void_item: True-- No Void items in `objects_already_draw'
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

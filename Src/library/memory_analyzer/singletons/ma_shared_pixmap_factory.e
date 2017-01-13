@@ -33,11 +33,16 @@ feature
 				else
 						-- Initialize the pathname & load the file
 					create Result
-					full_path := pixmap_path.extended (fn + Pixmap_suffix)
+					if attached pixmap_path as p then
+						full_path := p.extended (fn + Pixmap_suffix)
+					else
+							-- Try with current directory ...
+						create full_path.make_from_string (fn + Pixmap_suffix)
+					end
 					Result.set_with_named_path (full_path)
 				end
 			else
-				if not attached full_path then
+				if full_path = Void then
 					create full_path.make_from_string ("<no file name available>")
 				end
 				create warning_dialog.make_with_text (
@@ -77,12 +82,9 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	pixmap_path: PATH
-			-- Path containing all of the Studio pixmaps
+	pixmap_path: detachable PATH
+			-- Path containing all of the Studio pixmaps.
 		deferred
-		ensure
-			result_not_void: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
 	image_matrix: EV_PIXMAP
@@ -101,7 +103,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -19,13 +19,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER)
+	make (n: INTEGER; a_main_window: like main_window)
 			-- creation method
 		do
+			main_window := a_main_window
 			create memory_states.make (1)
-
 		end
 
+	main_window: MA_WINDOW
+			-- Main Window.
 
 feature -- Access
 
@@ -81,8 +83,6 @@ feature -- Open/Save States
 
 	open_states
 			-- Retreive the states from a disk file.
-		require
-			main_window_not_void: main_window /= Void
 		local
 			l_dialog: EV_FILE_OPEN_DIALOG
 		do
@@ -125,7 +125,7 @@ invariant
 	memory_states_not_void: memory_states /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

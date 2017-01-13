@@ -1,0 +1,17 @@
+package websocket
+
+project
+	web_socket_client = "client/web_socket_client.ecf"
+	websocket_server = "server/websocket_server.ecf"
+
+note
+	title: Websocket
+	description: Websocket client and server component.
+	collection:EWF
+	tags: http,ws,websocket,web,socket,stream,EWF
+	copyright: 1984-2016 Jocelyn Fiat, Javier Velilla, Eiffel Software and others
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: "github" https://github.com/EiffelWebFramework/EWF/tree/master/library/network/websocket
+	link[doc]: "Documentation" https://github.com/EiffelWebFramework/EWF/tree/master/library/network/websocket/README.md
+end

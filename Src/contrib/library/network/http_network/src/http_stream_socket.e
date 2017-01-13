@@ -207,8 +207,6 @@ feature -- Output
 
 	put_character_noexception (c: CHARACTER)
 			-- Write character `c' to socket.
-		require
-			extendible: extendible
 		do
 			socket_buffer.put_character (c, 0)
 			put_managed_pointer_noexception (socket_buffer, 0, character_8_bytes)
@@ -226,8 +224,6 @@ feature -- Output
 
 	put_readable_string_8 (s: READABLE_STRING_8)
 			-- Write readable string `s' to socket.
-		require
-			extendible: extendible
 		local
 			ext: C_STRING
 		do
@@ -246,26 +242,6 @@ feature -- Status report
 			peek_stream_noexception (1)
 			Result := last_string.count = 1
 		end
-
-	set_bytes_sent (nb: INTEGER)
-			-- Set `bytes_sent` to `nb`;
-		do
-			bytes_sent := nb
-		end
-
-	report_error (m: READABLE_STRING_8)
-			-- Report error, and set `socket_error` to `m`.
-		do
-			socket_error := m
-		end		
-
-feature -- Extension
-
-	socket: HTTP_STREAM_SOCKET
-			-- Associated socket.
-		do
-			Result := Current
-		end		
 
 note
 	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"

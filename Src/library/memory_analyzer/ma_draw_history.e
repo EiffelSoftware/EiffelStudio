@@ -1,5 +1,5 @@
 note
-	description: "Draw history of the memory useage."
+	description: "Draw history of the memory usage."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -15,14 +15,16 @@ inherit
 		export
 			{NONE} all
 		end
+
 create
 	make_default
 
 feature {NONE} -- Initlization
 
-	make_default
+	make_default (a_main_window: like main_window)
 			-- Creation method
 		do
+			main_window := a_main_window
 			graph_height := 80
 			graph_width := 400
 			bottom_interval := 20
@@ -31,6 +33,9 @@ feature {NONE} -- Initlization
 			create graph_used_history.make (100)
 			create graph_overhead_history.make (100)
 		end
+
+	main_window: MA_WINDOW
+ 			-- MA_WINDOW instance
 
 feature -- Command
 
@@ -217,14 +222,14 @@ invariant
 	graph_overhead_history_not_void: graph_overhead_history /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

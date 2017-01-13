@@ -49,12 +49,10 @@ feature -- Measurrment
 			-- after routine found_type, return the count of founded item
 		require
 			founded_type_not_void: founded_type /= Void
-		local
-			l_item_founded: like item_founded
 		do
-			l_item_founded := item_founded
-			check l_item_founded /= Void end -- Implied by precondition
-			Result := l_item_founded.count_in_system
+			if attached item_founded as l_item_founded then
+				Result := l_item_founded.count_in_system
+			end
 		end
 
 	memory_used_eiffel: INTEGER
@@ -163,26 +161,25 @@ feature {NONE} -- Implementation
 
 	state: TUPLE [type_name: STRING; count_in_system: INTEGER]
 			-- [type_name_of_type, number of instances of type_name_of_type present in system]
-		local
-			l_result: detachable like state
+		require
+			callable: False
 		do
-			check False end -- Anchor type only
-			check l_result /= void end -- Satisfy void-safe compiler
-			Result := l_result
+				-- Used as anchor type!
+			check False then end
 		end
 
 	objects_states: ARRAYED_LIST [like state];
 			-- the count the objects, first argument is type name, second argument is the object instances count
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

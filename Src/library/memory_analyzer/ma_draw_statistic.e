@@ -1,5 +1,5 @@
 note
-	description: "Objects that used for draw graphics whihch are the datas about memory useage."
+	description: "Objects that used for draw graphics whihch are the datas about memory usage."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

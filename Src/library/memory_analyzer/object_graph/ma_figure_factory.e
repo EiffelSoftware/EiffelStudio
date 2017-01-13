@@ -11,6 +11,8 @@ class
 inherit
 	EG_FIGURE_FACTORY
 
+	REFACTORING_HELPER
+
 feature -- Basic operations
 
 	new_node_figure (a_node: EG_NODE): EG_LINKABLE_FIGURE
@@ -39,8 +41,6 @@ feature -- Basic operations
 			l_result: detachable like model_from_xml
 		do
 			check not_implemented: False end
-			check attached l_result end -- Satisfy void-safe compiler
-			Result := l_result
 --			node_name := node.name
 --			if node_name.is_equal ("ELLIPSE_NODE") then
 --				create {EG_NODE} Result
@@ -60,17 +60,22 @@ feature -- Basic operations
 --					end
 --				end
 --			end
+			check implemented: False then
+				to_implement (generator + ".model_from_xml: Not yet implemented!")
+			end
+		ensure then
+			not_implemented: False
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

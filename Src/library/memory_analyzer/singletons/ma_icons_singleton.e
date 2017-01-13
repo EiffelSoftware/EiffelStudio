@@ -38,7 +38,10 @@ feature {NONE} -- Implementation
 			l_result: like internal_pixmap_path
 		do
 			l_result := internal_pixmap_path
-			check attached l_result end -- FIXME: Implied by ...?
+			if l_result = Void then
+				create l_result.make_current
+				internal_pixmap_path := l_result
+			end
 			Result := l_result
 		end
 
@@ -263,7 +266,7 @@ feature {NONE} -- Icons' Names
 			-- Icon names
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

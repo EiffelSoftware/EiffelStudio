@@ -8,7 +8,7 @@ It provides simple routine to perform http requests, and get response.
 	- Eiffel cURL library
 		- cURL dynamic libraries in the PATH or the current directory (.dll or .so)
 	- Eiffel Net library 
-		- and optionally Eiffel NetSSL library to support https://
+		- and optionally Eiffel NetSSL library to support `https://...`
 
 This means on Windows, do not forget to copy the libcurl.dll (and related) either in the same directory of the executable, or ensure the .dll are in the PATH environment.
 
@@ -29,12 +29,12 @@ It is possible to exclude the libcurl implementation xor the Eiffel Net implemen
 
 For the net implementation (using EiffelNet), if you need https:// support, you need to enabled the ssl support with the custom variables :
 ```
-		<variable name="netssl_http_client_enabled" value="True"/>
+		<variable name="ssl_enabled" value="True"/>
 ```
 	* By default, SSL is not included (mostly because it is sometime a pain to get the needed dynamic libraries .dll or .so)
 
 ## Usage
-* To build code that is portable across the libcurl or net implementation of http_client library, use the DEFAULT_HTTP_CLIENT
+* To build code that is portable across the libcurl or net implementation of `http_client` library, use the `DEFAULT_HTTP_CLIENT`
 
 ```
 	cl: DEFAULT_HTTP_CLIENT
@@ -51,6 +51,6 @@ For the net implementation (using EiffelNet), if you need https:// support, you 
 ```
 
 ## Examples
-* See the tests/test-safe.ecf project to see how to use.
+* See the `tests/test-safe.ecf` project to see how to use.
 * Examples will come in the future.
 

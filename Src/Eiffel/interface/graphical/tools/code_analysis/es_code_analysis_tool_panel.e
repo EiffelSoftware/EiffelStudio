@@ -1,6 +1,5 @@
-note
-	description:
-		"Graphical panel for Code Analysis tool"
+﻿note
+	description: "Graphical panel for Code Analysis tool"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -155,14 +154,14 @@ feature {NONE} -- Initialization
 			l_box.extend (create {EV_LABEL}.make_with_text (ca_names.tool_text_filter))
 			l_box.disable_item_expand (l_box.last)
 			create text_filter
-			text_filter.key_release_actions.force_extend (agent on_update_visiblity)
+			text_filter.key_release_actions.extend (agent (k: EV_KEY) do on_update_visiblity end)
 			text_filter.set_minimum_width_in_characters (10)
 			l_box.extend (text_filter)
 			l_box.disable_item_expand (text_filter)
 			create l_clear_filter.make
 			l_clear_filter.set_pixmap (stock_mini_pixmaps.general_delete_icon)
-			l_clear_filter.pointer_button_press_actions.force_extend (
-				agent
+			l_clear_filter.pointer_button_press_actions.extend (
+				agent (x, y, b: INTEGER_32; xt, yt, p: REAL_64; xs, ys: INTEGER_32)
 					do
 						text_filter.set_text ("")
 						on_update_visiblity
@@ -889,7 +888,7 @@ feature {NONE} -- Constants
 	last_column: INTEGER = 6
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

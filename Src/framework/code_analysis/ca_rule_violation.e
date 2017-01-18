@@ -1,6 +1,6 @@
-note
+﻿note
 	description: "Represents a rule violation."
-	author: "Stefan Zurfluh"
+	author: "Stefan Zurfluh", "Eiffel Software"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,9 +9,7 @@ class
 
 inherit
 	COMPARABLE
-		rename
-			out as csv_line
-		redefine csv_line end
+		redefine out end
 
 create
 	make_with_rule
@@ -55,10 +53,10 @@ feature -- Properties
 			-- Fix "strategies". Empty if there is no fix available for this rule
 			-- violation.
 
-feature -- Inherited from {COMPARABLE}
+feature -- Comparison
 
 	is_less alias "<" (a_other: like Current): BOOLEAN
-			-- Shall `Current' be "before" `a_other'. (For sorting, for example.)
+			-- <Precursor>
 		do
 			if attached location as l_location and then attached a_other.location as l_other_location then
 				if l_location.line = l_other_location.line then
@@ -72,9 +70,9 @@ feature -- Inherited from {COMPARABLE}
 feature {CA_RULE} -- Setting violation properties
 
 	set_affected_class (a_class: attached CLASS_C)
-			-- Sets the class that this violations refers to to 'a_class'. This is only
-			-- needed when 'a_class' differs from '{CA_RULE}.checking_class' of the rule at
-			-- the time this violation is created. (See 'make_with_rule'.)
+			-- Sets the class that this violations refers to to `a_class`.
+			-- This is only needed when `a_class` differs from `{CA_RULE}.checking_class`
+			-- of the rule at the time this violation is created. (See `make_with_rule`.)
 		do
 			affected_class := a_class
 		end
@@ -87,37 +85,82 @@ feature {CA_RULE} -- Setting violation properties
 
 feature -- String representation
 
-	csv_line: STRING
-			-- String representation of `Current' as a CSV line.
+	add_csv_line (csv: CA_CSV_WRITER)
+			-- Add violation data to `csv`.
 		local
 			l_yankee: YANK_STRING_WINDOW
+		do
+			csv.put_string (rule.severity.name)
+			csv.put_string (affected_class.name)
+			if attached location as l then
+				csv.put_integer_32 (l.line)
+				csv.put_integer_32 (l.position)
+			else
+				csv.put_empty
+				csv.put_empty
+			end
+			csv.put_string (rule.title)
+				-- Format description.
+			create l_yankee.make
+			format_violation_description (l_yankee)
+			csv.put_string (l_yankee.stored_output)
+			csv.put_string (rule.id)
+			csv.put_integer_32 (rule.severity_score.value)
+			csv.put_new_line
+		end
+
+	out: like {ANY}.out
+			-- <Precursor>
 		do
 			create Result.make_from_string (rule.severity.name)
 			Result.append_character (';')
 			Result.append (affected_class.name)
 			Result.append_character (';')
-			if location /= Void then
-				Result.append (location.line.out)
-				Result.append (", ")
-				Result.append (location.column.out)
+			if attached location as l then
+				Result.append_integer (l.line)
+				Result.append_character (';')
+				Result.append_integer (l.column)
+			else
+				Result.append_character (';')
 			end
 			Result.append_character (';')
 			Result.append (rule.title)
-			Result.append (";%"")
-
-			create l_yankee.make
-			format_violation_description (l_yankee)
-				-- Replace new lines by blanks for CSV compatibility.
-			l_yankee.stored_output.replace_substring_all ("%N", " ")
-				-- Replace double quotes by two double quotes in a row
-				-- for CSV compatibility.
-			l_yankee.stored_output.replace_substring_all ("%"", "%"%"")
-
-			Result.append (l_yankee.stored_output)
-			Result.append ("%";")
+			Result.append_character (';')
 			Result.append (rule.id)
 			Result.append_character (';')
-			Result.append (rule.severity_score.value.out)
+			Result.append_integer (rule.severity_score.value)
 		end
+
+;note
+	copyright:	"Copyright (c) 2014-2017, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

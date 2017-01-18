@@ -1,5 +1,5 @@
-note
-	description: "THE Code Analyzer."
+﻿note
+	description: "The Code Analyzer."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,74 +23,74 @@ feature {NONE} -- Initialization
 			create rules.make_caseless (100) -- Rule IDs should be case insensitive.
 
 				-- Adding the rules.
-			add_rule (create {CA_SELF_ASSIGNMENT_RULE}.make)
-			add_rule (create {CA_UNUSED_ARGUMENT_RULE}.make)
-			add_rule (create {CA_NPATH_RULE}.make (settings.preference_manager))
-			add_rule (create {CA_EMPTY_IF_RULE}.make)
-			add_rule (create {CA_FEATURE_NEVER_CALLED_RULE}.make)
-			add_rule (create {CA_CQ_SEPARATION_RULE}.make)
-			add_rule (create {CA_UNNEEDED_OT_LOCAL_RULE}.make)
-			add_rule (create {CA_UNNEEDED_OBJECT_TEST_RULE}.make) -- Needs type info.
-			add_rule (create {CA_NESTED_COMPLEXITY_RULE}.make (settings.preference_manager))
-			add_rule (create {CA_MANY_ARGUMENTS_RULE}.make (settings.preference_manager))
-			add_rule (create {CA_CREATION_PROC_EXPORTED_RULE}.make)
-			add_rule (create {CA_VARIABLE_NOT_READ_RULE}.make)
-			add_rule (create {CA_SEMICOLON_ARGUMENTS_RULE}.make)
-			add_rule (create {CA_VERY_LONG_ROUTINE_RULE}.make (settings.preference_manager))
-			add_rule (create {CA_VERY_BIG_CLASS_RULE}.make (settings.preference_manager))
-			add_rule (create {CA_FEATURE_SECTION_COMMENT_RULE}.make)
-			add_rule (create {CA_FEATURE_NOT_COMMENTED_RULE}.make)
-			add_rule (create {CA_BOOLEAN_RESULT_RULE}.make)
-			add_rule (create {CA_BOOLEAN_COMPARISON_RULE}.make)
-			add_rule (create {CA_VERY_SHORT_IDENTIFIER_RULE}.make (settings.preference_manager))
-			add_rule (create {CA_VERY_LONG_IDENTIFIER_RULE}.make (settings.preference_manager))
-			add_rule (create {CA_MISSING_IS_EQUAL_RULE}.make)
-			add_rule (create {CA_SIMPLIFIABLE_BOOLEAN_RULE}.make)
-			add_rule (create {CA_SELF_COMPARISON_RULE}.make)
-			add_rule (create {CA_TODO_RULE}.make)
-			add_rule (create {CA_WRONG_LOOP_ITERATION_RULE}.make)
-			add_rule (create {CA_INSPECT_INSTRUCTIONS_RULE}.make (settings.preference_manager))
-			add_rule (create {CA_ATTRIBUTE_TO_LOCAL_RULE}.make)
-			add_rule (create {CA_EMPTY_EFFECTIVE_ROUTINE_RULE}.make)
-			add_rule (create {CA_IF_ELSE_NOT_EQUAL_RULE}.make)
-			add_rule (create {CA_SHORT_CIRCUIT_IF_RULE}.make)
-			add_rule (create {CA_ITERABLE_LOOP_RULE}.make) -- Needs type info.
-			add_rule (create {CA_COUNT_EQUALS_ZERO_RULE}.make) -- Needs type info.
-			add_rule (create {CA_DEEPLY_NESTED_IF_RULE}.make (settings.preference_manager))
-			add_rule (create {CA_UNNEEDED_HELPER_VARIABLE_RULE}.make (settings.preference_manager))
-			add_rule (create {CA_UNNEEDED_PARENTHESES_RULE}.make)
-			add_rule (create {CA_CLASS_NAMING_CONVENTION_RULE}.make)
-			add_rule (create {CA_FEATURE_NAMING_CONVENTION_RULE}.make)
-			add_rule (create {CA_LOCAL_NAMING_CONVENTION_RULE}.make (settings.preference_manager))
 			add_rule (create {CA_ARGUMENT_NAMING_CONVENTION_RULE}.make (settings.preference_manager))
-			add_rule (create {CA_UNNECESSARY_SIGN_OPERATOR_RULE}.make)
-			add_rule (create {CA_EMPTY_UNCOMMENTED_ROUTINE_RULE}.make)
-			add_rule (create {CA_UNNEEDED_ACCESSOR_FUNCTION_RULE}.make)
-			add_rule (create {CA_MERGEABLE_FEATURE_CLAUSES_RULE}.make)
-			add_rule (create {CA_EMPTY_RESCUE_CLAUSE_RULE}.make)
-			add_rule (create {CA_INSPECT_NO_WHEN_RULE}.make)
-			add_rule (create {CA_EXPLICIT_REDUNDANT_INHERITANCE_RULE}.make)
-			add_rule (create {CA_UNDESIRABLE_COMMENT_CONTENT_RULE}.make (settings.preference_manager))
-			add_rule (create {CA_INHERIT_FROM_ANY_RULE}.make)
-			add_rule (create {CA_DOUBLE_NEGATION_RULE}.make)
-			add_rule (create {CA_EMPTY_LOOP_RULE}.make)
-			add_rule (create {CA_MISSING_CREATION_PROC_WITHOUT_ARGS_RULE}.make)
-			add_rule (create {CA_COMMENT_NOT_WELL_PHRASED_RULE}.make)
-			add_rule (create {CA_OBJECT_CREATION_WITHIN_LOOP_RULE}.make)
-			add_rule (create {CA_EMPTY_CREATION_PROC_RULE}.make)
-			add_rule (create {CA_VOID_CHECK_USING_IS_EQUAL_RULE}.make)
-			add_rule (create {CA_COMPARISON_OF_OBJECT_REFS_RULE}.make)
 			add_rule (create {CA_ATTRIBUTE_CAN_BE_CONSTANT_RULE}.make)
-			add_rule (create {CA_LOOP_INVARIANT_COMPUTATION_RULE}.make)
-			add_rule (create {CA_UNREACHABLE_CODE_RULE}.make)
-			add_rule (create {CA_OBJECT_TEST_FAILING_RULE}.make_with_defaults)
-			add_rule (create {CA_USELESS_CONTRACT_RULE}.make)
-			add_rule (create {CA_REAL_NAN_COMPARISON_RULE}.make)
-			add_rule (create {CA_LOCAL_USED_FOR_RESULT_RULE}.make)
-			add_rule (create {CA_MERGEABLE_CONDITIONALS_RULE}.make)
-			add_rule (create {CA_GENERIC_PARAMETER_TOO_LONG_RULE}.make_with_defaults)
+			add_rule (create {CA_ATTRIBUTE_TO_LOCAL_RULE}.make)
+			add_rule (create {CA_BOOLEAN_COMPARISON_RULE}.make)
+			add_rule (create {CA_BOOLEAN_RESULT_RULE}.make)
+			add_rule (create {CA_CLASS_NAMING_CONVENTION_RULE}.make)
+			add_rule (create {CA_COMMENT_NOT_WELL_PHRASED_RULE}.make)
+			add_rule (create {CA_COMPARISON_OF_OBJECT_REFS_RULE}.make)
+			add_rule (create {CA_COUNT_EQUALS_ZERO_RULE}.make) -- Needs type info.
+			add_rule (create {CA_CQ_SEPARATION_RULE}.make)
+			add_rule (create {CA_CREATION_PROC_EXPORTED_RULE}.make)
+			add_rule (create {CA_DEEPLY_NESTED_IF_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_DOUBLE_NEGATION_RULE}.make)
+			add_rule (create {CA_EMPTY_CREATION_PROC_RULE}.make)
+			add_rule (create {CA_EMPTY_EFFECTIVE_ROUTINE_RULE}.make)
+			add_rule (create {CA_EMPTY_IF_RULE}.make)
+			add_rule (create {CA_EMPTY_LOOP_RULE}.make)
+			add_rule (create {CA_EMPTY_RESCUE_CLAUSE_RULE}.make)
+			add_rule (create {CA_EMPTY_UNCOMMENTED_ROUTINE_RULE}.make)
+			add_rule (create {CA_EXPLICIT_REDUNDANT_INHERITANCE_RULE}.make)
 			add_rule (create {CA_EXPORT_CAN_BE_RESTRICTED_RULE}.make)
+			add_rule (create {CA_FEATURE_NAMING_CONVENTION_RULE}.make)
+			add_rule (create {CA_FEATURE_NEVER_CALLED_RULE}.make)
+			add_rule (create {CA_FEATURE_NOT_COMMENTED_RULE}.make)
+			add_rule (create {CA_FEATURE_SECTION_COMMENT_RULE}.make)
+			add_rule (create {CA_GENERIC_PARAMETER_TOO_LONG_RULE}.make_with_defaults)
+			add_rule (create {CA_IF_ELSE_NOT_EQUAL_RULE}.make)
+			add_rule (create {CA_INHERIT_FROM_ANY_RULE}.make)
+			add_rule (create {CA_INSPECT_INSTRUCTIONS_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_INSPECT_NO_WHEN_RULE}.make)
+			add_rule (create {CA_ITERABLE_LOOP_RULE}.make) -- Needs type info.
+			add_rule (create {CA_LOCAL_NAMING_CONVENTION_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_LOCAL_USED_FOR_RESULT_RULE}.make)
+			add_rule (create {CA_LOOP_INVARIANT_COMPUTATION_RULE}.make)
+			add_rule (create {CA_MANY_ARGUMENTS_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_MERGEABLE_CONDITIONALS_RULE}.make)
+			add_rule (create {CA_MERGEABLE_FEATURE_CLAUSES_RULE}.make)
+			add_rule (create {CA_MISSING_CREATION_PROC_WITHOUT_ARGS_RULE}.make)
+			add_rule (create {CA_MISSING_IS_EQUAL_RULE}.make)
+			add_rule (create {CA_NESTED_COMPLEXITY_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_NPATH_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_OBJECT_CREATION_WITHIN_LOOP_RULE}.make)
 			add_rule (create {CA_OBJECT_TEST_ALWAYS_SUCCEEDS_RULE}.make)
+			add_rule (create {CA_OBJECT_TEST_FAILING_RULE}.make_with_defaults)
+			add_rule (create {CA_REAL_NAN_COMPARISON_RULE}.make)
+			add_rule (create {CA_SELF_ASSIGNMENT_RULE}.make)
+			add_rule (create {CA_SELF_COMPARISON_RULE}.make)
+			add_rule (create {CA_SEMICOLON_ARGUMENTS_RULE}.make)
+			add_rule (create {CA_SHORT_CIRCUIT_IF_RULE}.make)
+			add_rule (create {CA_SIMPLIFIABLE_BOOLEAN_RULE}.make)
+			add_rule (create {CA_TODO_RULE}.make)
+			add_rule (create {CA_UNDESIRABLE_COMMENT_CONTENT_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_UNNECESSARY_SIGN_OPERATOR_RULE}.make)
+			add_rule (create {CA_UNNEEDED_ACCESSOR_FUNCTION_RULE}.make)
+			add_rule (create {CA_UNNEEDED_HELPER_VARIABLE_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_UNNEEDED_OBJECT_TEST_RULE}.make) -- Needs type info.
+			add_rule (create {CA_UNNEEDED_OT_LOCAL_RULE}.make)
+			add_rule (create {CA_UNNEEDED_PARENTHESES_RULE}.make)
+			add_rule (create {CA_UNREACHABLE_CODE_RULE}.make)
+			add_rule (create {CA_UNUSED_ARGUMENT_RULE}.make)
+			add_rule (create {CA_USELESS_CONTRACT_RULE}.make)
+			add_rule (create {CA_VARIABLE_NOT_READ_RULE}.make)
+			add_rule (create {CA_VERY_BIG_CLASS_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_VERY_LONG_IDENTIFIER_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_VERY_LONG_ROUTINE_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_VERY_SHORT_IDENTIFIER_RULE}.make (settings.preference_manager))
+			add_rule (create {CA_VOID_CHECK_USING_IS_EQUAL_RULE}.make)
+			add_rule (create {CA_WRONG_LOOP_ITERATION_RULE}.make)
 
 			settings.initialize_rule_settings (rules)
 
@@ -160,17 +160,6 @@ feature -- Analysis interface
 					l_task.step
 				end
 			end
-		end
-
-	is_rule_checkable (a_rule: attached CA_RULE): BOOLEAN
-			-- Will `a_rule' be checked based on the current preferences and based on the current
-			-- checking scope?
-		do
-			Result := a_rule.is_enabled.value
-						and then (system_wide_check or else (not a_rule.is_system_wide))
-						and then is_severity_enabled (a_rule.severity)
-
-						-- TODO Check if ignoredby or checkonly lists.
 		end
 
 	clear_classes_to_analyze
@@ -252,7 +241,6 @@ feature -- Analysis interface
 			end
 		end
 
-
 	force_preferences (a_preferences: LIST [TUPLE [rule_id: READABLE_STRING_GENERAL; preference_name: STRING; preference_value: READABLE_STRING_GENERAL]])
 			-- Forcefully set the preferences in `a_preferences' to the specified values,
 			-- overwriting the current ones.
@@ -282,14 +270,44 @@ feature -- Analysis interface
 			end
 		end
 
+feature {NONE} -- Status report
+
+	is_rule_checkable (a_rule: CA_RULE): BOOLEAN
+			-- Will `a_rule' be checked based on the current preferences and based on the current
+			-- checking scope?
+		do
+			Result := a_rule.is_enabled.value
+						and then (system_wide_check or else (not a_rule.is_system_wide))
+						and then is_severity_enabled (a_rule.severity)
+
+						-- TODO Check if ignoredby or checkonly lists.
+		end
 
 feature -- Properties
 
 	is_running: BOOLEAN
 			-- Is code analysis running?
 
+	rule_violations: detachable HASH_TABLE [SORTED_TWO_WAY_LIST [CA_RULE_VIOLATION], CLASS_C]
+			-- All found violations from the last analysis.
+
+	preferences: PREFERENCES
+			-- Code Analysis preferences.
+		do Result := settings.preferences end
+
+	class_list: ITERABLE [CLASS_C]
+			-- List of classes that have been added.
+		do Result := classes_to_analyze end
+
+feature {NONE} -- Access
+
 	rules: STRING_TABLE [CA_RULE]
 		-- Table containing the rules that will be used for analysis. Rules are indexed by ID.
+
+	settings: CA_SETTINGS
+			-- The settings manager for Code Analysis.
+
+feature {NONE} -- Modification
 
 	add_rule (a_rule: CA_RULE)
 			-- Adds `a_rule' to the rules list.
@@ -301,25 +319,10 @@ feature -- Properties
 			added: rules.has (a_rule.id)
 		end
 
-	rule_violations: detachable HASH_TABLE [SORTED_TWO_WAY_LIST [CA_RULE_VIOLATION], CLASS_C]
-			-- All found violations from the last analysis.
-
-	settings: CA_SETTINGS
-			-- The settings manager for Code Analysis.
-
-	preferences: PREFERENCES
-			-- Code Analysis preferences.
-		do Result := settings.preferences end
-
-	class_list: ITERABLE [CLASS_C]
-			-- List of classes that have been added.
-		do Result := classes_to_analyze end
-
 feature {NONE} -- Implementation
 
 	csv_file_name: STRING = "last_analysis_result.csv"
-
-	csv_header: STRING = "Severity;Class;Location;Title;Description;Rule ID;Severity Score"
+			-- CSV file name used to store results of the analysis.
 
 	analysis_completed (a_exceptions: detachable ITERABLE [TUPLE [detachable EXCEPTION, CLASS_C]])
 			-- Will be called when the analysis task has finished. `a_exceptions'
@@ -327,7 +330,19 @@ feature {NONE} -- Implementation
 		local
 			l_csv_writer: CA_CSV_WRITER
 		do
-			create l_csv_writer.make (eiffel_project.project_location.target_path.extended (csv_file_name), csv_header)
+			create l_csv_writer.make (eiffel_project.project_location.target_path.extended (csv_file_name))
+				-- Write the header.
+			l_csv_writer.put_strings (<<
+				{STRING_32} "Severity",
+				{STRING_32} "Class",
+				{STRING_32} "Line",
+				{STRING_32} "Column",
+				{STRING_32} "Title",
+				{STRING_32} "Description",
+				{STRING_32} "Rule ID",
+				{STRING_32} "Severity Score"
+			>>)
+			l_csv_writer.put_new_line
 
 			across rules as l_rules loop
 				across l_rules.item.violations as l_v loop
@@ -338,7 +353,7 @@ feature {NONE} -- Implementation
 							-- Add the violation.
 						rule_violations.at (l_v.item.affected_class).extend (l_v.item)
 							-- Log it.
-						l_csv_writer.add_line (l_v.item.csv_line)
+						l_v.item.add_csv_line (l_csv_writer)
 					end
 				end
 			end
@@ -401,7 +416,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_severity_enabled (a_severity: attached CA_RULE_SEVERITY): BOOLEAN
+	is_severity_enabled (a_severity: CA_RULE_SEVERITY): BOOLEAN
+			-- Is severity `a_severity` enabled?
 		do
 			Result := (attached {CA_HINT} a_severity and settings.are_hints_enabled.value)
 				or else (attached {CA_SUGGESTION} a_severity and settings.are_suggestions_enabled.value)
@@ -491,5 +507,37 @@ feature {NONE} -- Class-wide Options (From Indexing Clauses)
 
 invariant
 	--	law_of_non_contradiction: one class must not be both a library_class and a nonlibrary_class
+
+note
+	copyright:	"Copyright (c) 2014-2017, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

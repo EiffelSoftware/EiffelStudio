@@ -1116,6 +1116,22 @@ e := "{
 			t.structure.process (gen)
 			assert ("o", not o.is_empty)
 			assert ("as e", o.same_string (e))
+
+			create t.make_from_string ("[
+Test [https://eiffel.org|Eiffel Community].
+			]")
+
+e := "{
+<p>Test <a href="https://eiffel.org" class="wiki_ext_link">Eiffel Community</a>.</p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
 		end
 
 	test_bracket_text_without_url

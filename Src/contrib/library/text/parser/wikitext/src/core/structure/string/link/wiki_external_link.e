@@ -3,6 +3,7 @@ note
 			Summary description for {WIKI_EXTERNAL_LINK}.
 
 			[http://www.example.com Example site]
+			[http://www.example.com|Example site]
 			[mailto:me@address.com Email me]
 			[file://.... the local file]
 
@@ -36,7 +37,7 @@ feature {NONE} -- Initialization
 				n := s.count
 				p := 1 + 1 -- skip first "["
 			until
-				p > n or s.item (p).is_space
+				p > n or s.item (p).is_space or s.item (p) = '|'
 			loop
 				p := p + 1
 			end
@@ -95,7 +96,7 @@ feature -- Status report
 				s := l_url.head (i - 1)
 				Result := across s as ic all ic.item.is_alpha_numeric end
 				if Result then
-						-- This should not be usefull to check, since `make' is extracting 
+						-- This should not be usefull to check, since `make' is extracting
 						-- the `url', thanks to the first whitespace.
 						-- But in case, someone update the `url' in a different manner.!
 					check l_url.valid_index (i + 1) end
@@ -114,7 +115,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2017, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

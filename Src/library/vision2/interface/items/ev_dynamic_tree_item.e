@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 		end
 
 	last_subtree_function_call_time: detachable DATE_TIME
-			-- Time in milliseconds at which `subtree_function' was last called.
+			-- Time when `subtree_function' was last called.
 
 	subtree_function_item: detachable LINEAR [EV_TREE_NODE]
 			-- Call `subtree_function' if it is defined and has not been called in the last

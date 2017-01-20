@@ -82,13 +82,15 @@ feature {CA_RULE_VIOLATION} -- formatted rule checking output
 		deferred
 		end
 
+feature {CA_CODE_ANALYZER, CA_RULE_VIOLATION} -- Properties the user can change
+
+	severity: CA_RULE_SEVERITY
+			-- The severity of violations of this rule.
+
 feature -- Properties the user can change
 
 	is_enabled: BOOLEAN_PREFERENCE
 			-- Is the rule enabled?
-
-	severity: CA_RULE_SEVERITY
-			-- The severity of violations of this rule.
 
 	severity_score: INTEGER_PREFERENCE
 			-- The severity score.

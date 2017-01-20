@@ -1,9 +1,9 @@
 note
 	description: "[
-				   Checks a set of (standard) rules (see {CA_STANDARD_RULE}). The rules have to
-				   register their AST visitor agents here.
-		          ]"
-	author: "Stefan Zurfluh"
+		Checks a set of (standard) rules (see {CA_STANDARD_RULE}). The rules have to
+		register their AST visitor agents here.
+	]"
+	author: "Stefan Zurfluh", "Eiffel Software"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,6 +29,7 @@ inherit
 			process_symbol_stub_as,
 			process_keyword_stub_as
 		redefine
+			process_access_feat_as,
 			process_access_id_as,
 			process_assign_as,
 			process_assigner_call_as,
@@ -83,6 +84,8 @@ feature {NONE} -- Initialization
 			-- Creates all the lists of agents that will be called when visiting
 			-- certain AST nodes.
 		do
+			create access_feat_pre_actions
+			create access_feat_post_actions
 			create access_id_pre_actions
 			create access_id_post_actions
 			create assign_pre_actions
@@ -158,6 +161,16 @@ feature {NONE} -- Initialization
 		end
 
 feature {CA_STANDARD_RULE} -- Adding agents
+
+	add_access_feat_pre_action (a_action: attached PROCEDURE [ACCESS_FEAT_AS])
+		do
+			access_feat_pre_actions.extend (a_action)
+		end
+
+	add_access_feat_post_action (a_action: attached PROCEDURE [ACCESS_FEAT_AS])
+		do
+			access_feat_post_actions.extend (a_action)
+		end
 
 	add_access_id_pre_action (a_action: attached PROCEDURE [ACCESS_ID_AS])
 		do
@@ -520,6 +533,8 @@ feature {CA_STANDARD_RULE} -- Adding agents
 
 feature {NONE} -- Agent lists
 
+	access_feat_pre_actions, access_feat_post_actions: ACTION_SEQUENCE [TUPLE [ACCESS_FEAT_AS]]
+
 	access_id_pre_actions, access_id_post_actions: ACTION_SEQUENCE [TUPLE [ACCESS_ID_AS]]
 
 	assign_pre_actions, assign_post_actions: ACTION_SEQUENCE [TUPLE [ASSIGN_AS]]
@@ -608,6 +623,13 @@ feature {CA_RULE_CHECKING_TASK} -- Execution Commands
 		end
 
 feature {NONE} -- Processing
+
+	process_access_feat_as (a_id: ACCESS_FEAT_AS)
+		do
+			access_feat_pre_actions.call ([a_id])
+			Precursor (a_id)
+			access_feat_post_actions.call ([a_id])
+		end
 
 	process_access_id_as (a_id: ACCESS_ID_AS)
 		do
@@ -878,4 +900,37 @@ feature {NONE} -- Implementation
 				Result := l_service
 			end
 		end
+
+note
+	copyright:	"Copyright (c) 2014-2017, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+
 end

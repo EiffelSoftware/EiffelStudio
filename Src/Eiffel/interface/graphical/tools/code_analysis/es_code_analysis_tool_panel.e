@@ -491,7 +491,7 @@ feature {NONE} -- Basic operations
 				raise_default_exception_dialog (create {EV_DIALOG}, l_exception.data.ex)
 			elseif attached {CA_RULE_VIOLATION_EVENT} a_row.parent_row_root.data as l_event_item then
 				if attached l_event_item.location as l_loc then
-					create {COMPILED_LINE_STONE} l_stone.make_with_line (l_event_item.affected_class, l_loc.line, True)
+					create {COMPILED_LINE_STONE} l_stone.make_with_line_and_column (l_event_item.affected_class, l_loc.line, l_loc.column)
 				else
 					create {CLASSC_STONE} l_stone.make (l_event_item.affected_class)
 				end
@@ -591,9 +591,9 @@ feature {NONE} -- Basic operations
 
 					-- Location
 				if attached l_viol.location as l_loc then
-					create l_pos_token.make (l_viol.location.line.out + ", " + l_viol.location.column.max (1).out)
+					create l_pos_token.make (l_loc.line.out + ", " + l_loc.column.out)
 					l_pos_token.set_is_clickable (True)
-					l_pos_token.set_pebble (create {COMPILED_LINE_STONE}.make_with_line (l_viol.affected_class, l_viol.location.line, True))
+					l_pos_token.set_pebble (create {COMPILED_LINE_STONE}.make_with_line_and_column (l_viol.affected_class, l_loc.line, l_loc.column))
 				else -- No location attached.
 					create l_pos_token.make ("")
 				end

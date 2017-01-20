@@ -103,7 +103,8 @@ __NOTOC__
 == three.2 ==
 == three.3 ==
 =And the last one=
-== with spaces in text héhé==
+== with spaces in text==
+== summer:été==
 end
 }")
 			l_expected_output := "{
@@ -134,6 +135,8 @@ end
 <a name="And_the_last_one"></a><h1>And the last one</h1>
 
 <a name="with_spaces_in_text"></a><h2>with spaces in text</h2>
+
+<a name="summer:%C3%A9t%C3%A9"></a><h2>summer:été</h2>
 <p>end</p>
 </div>
 
@@ -708,6 +711,24 @@ begin `FOO.bar and not ending backtick end
 
 			t.structure.process (new_xhtml_generator (o))
 			assert ("o", o.same_string ("<p>begin `FOO.bar and not ending backtick end</p>%N"))
+
+			create t.make_from_string ("[
+begin `foo <bar> qwe` end
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("<p>begin <code class=%"inline%">foo &lt;bar&gt; qwe</code> end</p>%N"))
+
+			create t.make_from_string ("[
+begin `foo <bar>`
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("<p>begin <code class=%"inline%">foo &lt;bar&gt;</code></p>%N"))
 		end
 
 	test_code_single_backtik_with_lt_char

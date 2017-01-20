@@ -335,6 +335,13 @@ feature -- Basic operation
 								multiline_level := multiline_level - 1
 							end
 						end
+					else
+							-- Single backtik
+							-- Search until end of line!
+						tmp := index_of_char_before_end_of_line (a_text, '`', i + 1)
+						if tmp > 0 then
+							i := tmp
+						end
 					end
 				when '<' then
 						--| Builtin tags
@@ -528,7 +535,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2017, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

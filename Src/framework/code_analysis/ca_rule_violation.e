@@ -27,10 +27,19 @@ feature {NONE} -- Initialization
 			create fixes.make
 		end
 
-feature -- Properties
+feature -- Access
 
 	rule: CA_RULE
 			-- The rule that is violated.
+
+	severity: like {CA_RULE}.severity
+			-- Severity of the violation.
+		do
+			Result := severity_value
+			if not attached Result then
+				Result := rule.severity
+			end
+		end
 
 	long_description_info: LINKED_LIST [ANY]
 			-- Objects associated with this violation (often used for
@@ -67,7 +76,12 @@ feature -- Comparison
 			end
 		end
 
-feature {CA_RULE} -- Setting violation properties
+feature {NONE} -- Access
+
+	severity_value: detachable like severity
+			-- Custom severity that may be different from `rule.severity`.
+
+feature {CA_RULE} -- Modification
 
 	set_affected_class (a_class: attached CLASS_C)
 			-- Sets the class that this violations refers to to `a_class`.
@@ -83,6 +97,14 @@ feature {CA_RULE} -- Setting violation properties
 			location := a_location
 		end
 
+	set_severity (s: like severity)
+			-- Set `severity` to `s`.
+		do
+			severity_value := s
+		ensure
+			severity_set: severity = s
+		end
+
 feature -- String representation
 
 	add_csv_line (csv: CA_CSV_WRITER)
@@ -90,7 +112,7 @@ feature -- String representation
 		local
 			l_yankee: YANK_STRING_WINDOW
 		do
-			csv.put_string (rule.severity.name)
+			csv.put_string (severity.name)
 			csv.put_string (affected_class.name)
 			if attached location as l then
 				csv.put_integer_32 (l.line)
@@ -112,7 +134,7 @@ feature -- String representation
 	out: like {ANY}.out
 			-- <Precursor>
 		do
-			create Result.make_from_string (rule.severity.name)
+			create Result.make_from_string (severity.name)
 			Result.append_character (';')
 			Result.append (affected_class.name)
 			Result.append_character (';')

@@ -722,6 +722,11 @@ feature -- Rules
 	explicit_redundant_inheritance_description: STRING_32
 		do Result := locale.translation ("Explicitly duplicated inheritance links are redundant if there is no renaming, redefining, or change of export status. One should be removed.") end
 
+	obsolete_feature_call_title: STRING_32
+		do Result := locale.translation_in_context ("Obsolete feature call",  once "code_analyzer") end
+
+	obsolete_feature_call_description: STRING_32
+		do Result := locale.translation_in_context ("The code calls an obsolete feature that is going to be removed in the future. The code should be updated to avoid calling this feature.",  once "code_analyzer") end
 
 feature -- Preferences
 

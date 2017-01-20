@@ -523,6 +523,13 @@ feature -- Rule Violations
 	explicit_redundant_inheritance_violation_3: STRING_32
 			do Result := locale.translation ("', with no renaming, redefining or change of export status. This is redundant, and the duplicate links should be removed.") end
 
+	obsolete_feature_call_violation: STRING_32
+		do
+			Result := locale.translation_in_context ("[
+				Obsolete feature {1} of class {2} is called from class {3}: "{4}"
+			]", "code_analyzer.violation")
+		end
+
 	error: STRING_32
 		do Result := translation_in_context ("An error occurred when analyzing this class.", once "code_analyzer.violation") end
 

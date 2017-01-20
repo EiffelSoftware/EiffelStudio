@@ -36,7 +36,7 @@ inherit
 feature -- Element settings
 
 	set_block_size (a_size: INTEGER)
-			-- Set `block_size' woth `a_size'
+			-- Set `block_size' with `a_size'.
 		require
 			valid_size: a_size > 0
 		do
@@ -46,7 +46,7 @@ feature -- Element settings
 		end
 
 	set_environment_variables (a_env_vars: like environment_variables)
-			-- Set `environment_variables' with `a_env_vars'
+			-- Set `environment_variables' with `a_env_vars'.
 		do
 			environment_variables := a_env_vars
 		ensure
@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 			-- Output block size.
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

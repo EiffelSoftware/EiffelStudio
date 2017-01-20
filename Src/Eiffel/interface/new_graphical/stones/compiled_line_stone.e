@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represents a line of a compiled class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,8 @@ inherit
 		end
 
 create
-	make_with_line
+	make_with_line,
+	make_with_line_and_column
 
 feature{NONE} -- Initialization
 
@@ -37,8 +38,20 @@ feature{NONE} -- Initialization
 			set_line_number (a_line_number)
 		end
 
+	make_with_line_and_column (c: like e_class; line, column: INTEGER)
+			-- Initialize `class_i` with `c`, `line_number` with `line', `column_number` with `column`.
+		require
+			c_attached: attached c
+			line_positive: line > 0
+			column_positive: column > 0
+		do
+			make (c)
+			set_line_number (line)
+			set_column_number (column)
+		end
+
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Clickable editor for Eiffel Code.
 			All text areas in EiffelStudio but the main editor use direct instance of this class.
@@ -312,6 +312,20 @@ feature -- Initialization
 			selection_cursor_positioned: not cursor.token.is_new_line implies selection_cursor.y_in_lines = l_line
 		end
 
+	set_cursor (row, column: INTEGER)
+			-- Set cursor to line `row` at character position `column`.
+		require
+			row_large_enough: row > 0
+			row_small_enough: row <= number_of_lines
+			column_large_enough: column > 0
+		do
+			cursor.set_from_character_pos (column, row, Current)
+			selection_cursor.set_from_character_pos (column, row, Current)
+		ensure
+			cursor_positioned: cursor.y_in_lines = row
+			selection_cursor_positioned: not cursor.token.is_new_line implies selection_cursor.y_in_lines = row
+		end
+
 feature -- Load Text handling
 
 	process_new_line
@@ -550,7 +564,7 @@ feature {NONE} -- Private Constants
 	from_text: INTEGER = 2;
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -581,4 +595,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CLICKABLE_TEXT
+end

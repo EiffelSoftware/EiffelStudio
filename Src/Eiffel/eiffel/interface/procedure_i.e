@@ -65,10 +65,10 @@ feature -- Settings
 			obsolete_message_id_set: obsolete_message_id = v
 		end
 
-feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Status report
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Modification
 
 	set_obsolete_message (s: STRING)
-			-- Assign `s' to `obsolete_message'
+			-- Assign `s' to `obsolete_message'.
 		require
 			s_not_void: s /= Void
 		local
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

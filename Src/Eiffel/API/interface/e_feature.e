@@ -1286,6 +1286,12 @@ feature {FEATURE_I} -- Setting
 			written_feature_id_set: written_feature_id = v
 		end
 
+	set_obsolete_message (s: STRING)
+			-- Assign `s' to `obsolete_message'
+		do
+			obsolete_message := s;
+		end
+
 invariant
 	associated_class_not_void: is_valid implies associated_class /= Void
 	written_class_not_void: is_valid implies written_class /= Void
@@ -1293,7 +1299,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -190,12 +190,6 @@ feature {FEATURE_I} -- Setting
 			has_postcondition := b;
 		end;
 
-	set_obsolete_message (s: STRING)
-			-- Assign `s' to `obsolete_message'
-		do
-			obsolete_message := s;
-		end;
-
 	set_inline_agent_nr (nr: INTEGER)
 			-- Assign `nr' to `inline_agent_nr'
 		do
@@ -238,7 +232,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

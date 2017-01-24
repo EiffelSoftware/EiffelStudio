@@ -8,9 +8,8 @@
 		<option warning="true" namespace="EiffelSoftware.Helpers">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<setting name="msil_generation" value="false"/>
 		<capability>
-			<void_safety support="transitional"/>
+			<void_safety support="all"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>

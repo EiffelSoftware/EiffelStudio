@@ -60,6 +60,7 @@ feature -- Access
 	full_option_name: STRING = "full"
 	safe_option_name: STRING = "safe"
 	platform_option_name: STRING = "platform"
+	capabilty_option_name: STRING = "capability"
 			-- Name of command line options that can be used to initialize Current
 
 	command_line: STRING
@@ -437,9 +438,6 @@ feature -- Capabilities
 			-- Capability option value to check code against library capabilities instead of current compilation settings.
 
 feature {NONE} -- Capabilities
-
-	capabilty_option_name: STRING = "capability"
-			-- Name of the option to control capabilities processing.
 
 	capability_mask: NATURAL_32 = 0b111_0000_0000
 			-- A mask for capability flags.

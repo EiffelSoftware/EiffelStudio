@@ -160,6 +160,11 @@ feature {NONE} -- Initialization
 			create real_post_actions
 		end
 
+feature -- Status Report
+
+	last_run_successful: BOOLEAN
+			-- Was last run successful?
+
 feature {CA_STANDARD_RULE} -- Adding agents
 
 	add_access_feat_pre_action (a_action: attached PROCEDURE [ACCESS_FEAT_AS])
@@ -272,7 +277,8 @@ feature {CA_STANDARD_RULE} -- Adding agents
 			bin_ne_post_actions.extend (a_action)
 		end
 
-	add_body_pre_action (a_action: attached PROCEDURE [BODY_AS])		do
+	add_body_pre_action (a_action: attached PROCEDURE [BODY_AS])
+		do
 			body_pre_actions.extend (a_action)
 		end
 
@@ -882,23 +888,6 @@ feature {NONE} -- Processing
 			real_pre_actions.call ([a_real])
 			Precursor (a_real)
 			real_post_actions.call ([a_real])
-		end
-
-feature -- Results
-
-	last_run_successful: BOOLEAN
-
-feature {NONE} -- Implementation
-
-	frozen rota: detachable ROTA_S
-			-- Access to rota service
-		local
-			l_service_consumer: SERVICE_CONSUMER [ROTA_S]
-		do
-			create l_service_consumer
-			if attached l_service_consumer.service as l_service and then l_service.is_interface_usable then
-				Result := l_service
-			end
 		end
 
 note

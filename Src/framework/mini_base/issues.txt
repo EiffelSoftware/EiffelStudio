@@ -1,0 +1,2 @@
+If SPECIAL is not generic, it crashes.
+If TYPED_POINTER is not expanded, it fails.

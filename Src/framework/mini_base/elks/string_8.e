@@ -32,7 +32,8 @@ create
 
 convert
 	to_cil: {SYSTEM_STRING},
-	make_from_cil ({SYSTEM_STRING})
+	make_from_cil ({SYSTEM_STRING}),
+	as_string_32: {STRING_32}
 
 feature {NONE} -- Initialization
 
@@ -59,6 +60,12 @@ feature -- Access
 			-- <Precursor>
 		do
 			create Result.make
+		end
+
+	as_string_32: STRING_32
+			-- Convert `Current' as a STRING_32.
+		do
+			create Result.make (0)
 		end
 
 feature -- Comparison

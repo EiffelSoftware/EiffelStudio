@@ -2069,12 +2069,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	platform_is_windows: BOOLEAN
-			-- Is the current platform Windows?
-		once
-			Result := (create {PLATFORM_CONSTANTS}).is_windows
-		end
-
 feature {NONE} -- Implementation
 
 	is_sorted (positions: ARRAY [EB_CLICKABLE_POSITION]): BOOLEAN

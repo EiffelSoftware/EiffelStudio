@@ -17,11 +17,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_PLATFORM_CONSTANTS
-		export
-			{NONE} all
-		end
-
 	EB_CONSTANTS
 		export
 			{NONE} all
@@ -190,7 +185,7 @@ feature -- Status setting
 		require
 			valid_title: a_title /= Void
 		do
-			if 
+			if
 				minimized_title = Void
 				or else not a_title.same_string (minimized_title)
 			then
@@ -485,7 +480,7 @@ invariant
 	lock_level_nonnegative: lock_level >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

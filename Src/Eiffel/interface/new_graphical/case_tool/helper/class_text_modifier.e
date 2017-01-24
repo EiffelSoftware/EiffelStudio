@@ -210,7 +210,7 @@ feature -- Status setting
 					is_unix_file := (text.count = 1) or else (text.item (text.count - 1) /= '%R')
 				else
 						-- Text is messed up, we use the platform default
-					is_unix_file := (create {PLATFORM_CONSTANTS}).is_unix
+					is_unix_file := {PLATFORM}.is_unix
 				end
 				text.prune_all ('%R')
 			end

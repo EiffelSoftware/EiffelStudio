@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 				contents.replace_substring_all ("%R", "")
 				new_file.put_string (contents)
 				char := contents.item (contents.count)
-				if Platform_constants.is_unix and
+				if {PLATFORM}.is_unix and
 					then char /= '%N' and
 					then char /= '%R'
 						-- Add a carriage return like vi if there's none at
@@ -226,7 +226,7 @@ feature {NONE} -- Private attributes
 			-- Location of the project to build.
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

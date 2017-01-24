@@ -55,11 +55,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_PLATFORM_CONSTANTS
-		export
-			{NONE} all
-		end
-
 	EB_SHARED_MANAGERS
 
 	SHARED_WORKBENCH
@@ -268,7 +263,7 @@ feature -- Execution
 				end
 				if ok then
 					create wpath.make_from_string (wd)
-					if platform_constants.is_windows then
+					if {PLATFORM}.is_windows then
 						cmdexe := Execution_environment.item ("COMSPEC")
 						if cmdexe /= Void then
 								-- This allows the use of `dir' etc.
@@ -711,7 +706,7 @@ feature {NONE} -- Implementation
 			-- External commands edtitor
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

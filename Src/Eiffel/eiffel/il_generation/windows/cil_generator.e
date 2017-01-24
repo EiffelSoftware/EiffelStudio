@@ -179,7 +179,7 @@ feature -- Generation
 					cil_generator.set_window_application
 				end
 
-				if not platform_constants.is_64_bits or System.force_32bits then
+				if not {PLATFORM}.is_64_bits or System.force_32bits then
 					cil_generator.set_32bits
 				end
 
@@ -1160,7 +1160,7 @@ invariant
 	system_exists: System /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

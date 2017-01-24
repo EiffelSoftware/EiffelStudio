@@ -25,7 +25,7 @@ feature -- Command
 			create l_layout
 			set_eiffel_layout (l_layout)
 
-			create l_setup.initialize (True, not {PLATFORM_CONSTANTS}.is_64_bits)
+			create l_setup.initialize (True, not {PLATFORM}.is_64_bits)
 			Result := l_setup.found_c_config /= Void
 		end
 
@@ -140,7 +140,7 @@ feature -- Command
 			l_list.extend ("/VERBOSE")
 			l_list.extend ("/NOENTRY")
 			l_list.extend ("/DLL")
-			if {PLATFORM_CONSTANTS}.is_64_bits then
+			if {PLATFORM}.is_64_bits then
 				l_list.extend ("/MACHINE:X64")
 			else
 				l_list.extend ("/MACHINE:X86")

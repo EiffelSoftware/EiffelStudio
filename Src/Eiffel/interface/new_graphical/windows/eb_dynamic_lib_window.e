@@ -32,7 +32,10 @@ inherit
 			{NONE} all
 		end
 
-	PLATFORM_CONSTANTS
+	PLATFORM
+		export
+			{NONE} all
+		end
 
 	EB_FILE_DIALOG_CONSTANTS
 		export
@@ -1805,7 +1808,7 @@ invariant
 	graphical_synchronization_ok: exports_list.count = exports.count
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

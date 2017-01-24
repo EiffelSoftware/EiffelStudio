@@ -1631,7 +1631,7 @@ feature {NONE} -- Implementation
 				io.put_string("%Tget_replacement%N")
 			end
 
-			if ({PLATFORM_CONSTANTS}.is_64_bits and force_32bit) and then word.is_case_insensitive_equal (once "ISE_PLATFORM") then
+			if ({PLATFORM}.is_64_bits and force_32bit) and then word.is_case_insensitive_equal (once "ISE_PLATFORM") then
 					-- Replace ISE_PLAFORM to 32bit builds on x64 platforms
 				Result := once "windows"
 			else

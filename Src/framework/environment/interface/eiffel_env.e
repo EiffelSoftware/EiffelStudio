@@ -188,7 +188,7 @@ feature -- Status update
 
 			l_is_valid := True
 
-			if {PLATFORM_CONSTANTS}.is_unix then
+			if {PLATFORM}.is_unix then
 					-- On Unix platforms, if not ISE_EIFFEL is defined then it's probably the Unix layout.
 				l_value := get_environment_32 ({EIFFEL_CONSTANTS}.ise_eiffel_env)
 				is_unix_layout := (l_value = Void) or else l_value.is_empty
@@ -2374,7 +2374,7 @@ feature {NONE} -- Helper
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1069,7 +1069,7 @@ feature {NONE} -- Implementation
 					Error_handler.insert_error (vd15)
 				end
 			else
-				system.set_32bits (not platform_constants.is_64_bits)
+				system.set_32bits (not {PLATFORM}.is_64_bits)
 			end
 
 			l_s := l_settings.item (s_dead_code_removal)
@@ -1585,7 +1585,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

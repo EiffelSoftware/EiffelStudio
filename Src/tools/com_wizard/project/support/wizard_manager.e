@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			l_path.append (";")
 			l_path.append (eiffel_layout.bin_path.name)
 			env.put (l_path, "PATH")
-			create l_setup.initialize (smart_checking, not {PLATFORM_CONSTANTS}.is_64_bits)
+			create l_setup.initialize (smart_checking, not {PLATFORM}.is_64_bits)
 			if l_setup.found_c_config = Void then
 					-- patrickr 09/25/2006 Don't abort as they user may have setup the path already,
 					-- a warning would be nice

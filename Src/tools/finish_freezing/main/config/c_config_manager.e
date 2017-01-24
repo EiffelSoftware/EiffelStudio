@@ -17,7 +17,7 @@ feature -- Initialization
 			-- Initializes configuration manager given `for_32bit'
 		do
 			for_32bit := a_for_32bit
-			initialize_configs (a_for_32bit or not {PLATFORM_CONSTANTS}.is_64_bits)
+			initialize_configs (a_for_32bit or not {PLATFORM}.is_64_bits)
 		ensure
 			for_32bit_set: for_32bit = a_for_32bit
 		end
@@ -179,13 +179,13 @@ feature {NONE} -- Access
 			-- Visual Studio configuration for x64/x86 platforms.
 			--|Be sure to place deprecated configurations after all valid configurations!
 		require
-			a_use_32bit_for_x86: not a_use_32bit implies {PLATFORM_CONSTANTS}.is_64_bits
+			a_use_32bit_for_x86: not a_use_32bit implies {PLATFORM}.is_64_bits
 		local
 			l_32_bits: BOOLEAN
 			l_configs: ARRAYED_LIST [C_CONFIG]
 			l_c_config: C_CONFIG
 		do
-			l_32_bits := not {PLATFORM_CONSTANTS}.is_64_bits or else a_use_32bit
+			l_32_bits := not {PLATFORM}.is_64_bits or else a_use_32bit
 
 			create compatibility_configs.make_caseless (2)
 			create configs.make (10)

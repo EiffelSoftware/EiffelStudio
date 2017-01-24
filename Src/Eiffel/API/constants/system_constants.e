@@ -8,8 +8,6 @@ note
 class SYSTEM_CONSTANTS
 
 inherit
-	SHARED_PLATFORM_CONSTANTS
-
 	PRODUCT_NAMES
 
 	EIFFEL_LAYOUT
@@ -53,11 +51,11 @@ feature {NONE}
 	Driver: STRING
 			-- Name of `driver' executable used to execute melted code.
 		once
-			if {PLATFORM_CONSTANTS}.is_windows then
+			if {PLATFORM}.is_windows then
 				create Result.make (15)
 				Result.append (eiffel_layout.Eiffel_c_compiler)
 				Result.append ("\driver.exe")
-			elseif {PLATFORM_CONSTANTS}.is_vms then
+			elseif {PLATFORM}.is_vms then
 				Result := "driver.exe"
 			else
 				Result := "driver"
@@ -109,9 +107,9 @@ feature {NONE}
 	Preobj: STRING
 			-- Name of C library used in precompiled library.
 		once
-			if {PLATFORM_CONSTANTS}.is_windows then
+			if {PLATFORM}.is_windows then
 				Result := "precomp.lib"
-			elseif {PLATFORM_CONSTANTS}.is_unix then
+			elseif {PLATFORM}.is_unix then
 				Result := "preobj.o"
 			else
 				Result := "preobj.olb"
@@ -222,7 +220,7 @@ feature {AUXILIARY_FILES} -- Versioning
 			-- displayed on About dialog
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

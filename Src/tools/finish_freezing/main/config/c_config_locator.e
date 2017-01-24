@@ -125,12 +125,12 @@ feature -- Basic operations
 			reset
 			has_checked := True
 
-			create l_manager.make (not {PLATFORM_CONSTANTS}.is_64_bits)
+			create l_manager.make (not {PLATFORM}.is_64_bits)
 			l_config := l_manager.best_configuration (Void)
 			if l_config /= Void then
 				internal_c_configuration := l_config
 
-			elseif {PLATFORM_CONSTANTS}.is_64_bits then
+			elseif {PLATFORM}.is_64_bits then
 					-- In a 64bit environment we need to check both 64 and 32 bit configurations to ensure the user did not install a compiler
 					-- by mistake.
 

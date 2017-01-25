@@ -8,9 +8,9 @@ note
 
 class
 	GB_SUPPORTED_EVENTS
-	
+
 feature -- Access
-	
+
 	action_sequences_list: ARRAYED_LIST [STRING]
 			-- All action sequence classes in Vision2.
 			-- All action sequences in interface are inherited through
@@ -20,7 +20,7 @@ feature -- Access
 			Result.extend ("EV_APPLICATION_ACTION_SEQUENCES")
 			Result.extend ("EV_CHECKABLE_LIST_ACTION_SEQUENCES")
 			Result.extend ("EV_BUTTON_ACTION_SEQUENCES")
-			Result.extend ("EV_DRAWING_AREA_ACTION_SEQUENCES")
+			Result.extend ("EV_DRAWABLE_ACTION_SEQUENCES")
 			Result.extend ("EV_GAUGE_ACTION_SEQUENCES")
 			Result.extend ("EV_ITEM_ACTION_SEQUENCES")
 			Result.extend ("EV_LIST_ITEM_ACTION_SEQUENCES")
@@ -30,7 +30,6 @@ feature -- Access
 			Result.extend ("EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES")
 			Result.extend ("EV_MULTI_COLUMN_LIST_ROW_ACTION_SEQUENCES")
 			Result.extend ("EV_NOTEBOOK_ACTION_SEQUENCES")
-			Result.extend ("EV_PIXMAP_ACTION_SEQUENCES")
 			Result.extend ("EV_STANDARD_DIALOG_ACTION_SEQUENCES")
 			Result.extend ("EV_TEXT_COMPONENT_ACTION_SEQUENCES")
 			Result.extend ("EV_TEXT_FIELD_ACTION_SEQUENCES")
@@ -41,7 +40,7 @@ feature -- Access
 			Result.extend ("EV_WINDOW_ACTION_SEQUENCES")
 			Result.extend ("EV_TITLED_WINDOW_ACTION_SEQUENCES")
 		ensure
-			Result_ok: Result /= Void and Result.count = 23
+			Result_ok: Result /= Void and Result.count = 22
 		end
 
 feature {NONE} -- Implementation
@@ -56,7 +55,7 @@ feature {NONE} -- Implementation
 			gb_ev_pick_and_dropable_action_sequences: GB_EV_PICK_AND_DROPABLE_ACTION_SEQUENCES
 			gb_ev_widget_action_sequences: GB_EV_WIDGET_ACTION_SEQUENCES
 			gb_ev_container_action_sequences: GB_EV_CONTAINER_ACTION_SEQUENCES
-			gb_ev_drawing_area_action_sequences: GB_EV_DRAWING_AREA_ACTION_SEQUENCES
+			gb_ev_drawable_area_action_sequences: GB_EV_DRAWABLE_ACTION_SEQUENCES
 			gb_ev_item_action_sequences: GB_EV_ITEM_ACTION_SEQUENCES
 			gb_ev_list_item_action_sequences: GB_EV_LIST_ITEM_ACTION_SEQUENCES
 			gb_ev_list_item_list_action_sequences: GB_EV_LIST_ITEM_LIST_ACTION_SEQUENCES
@@ -65,7 +64,6 @@ feature {NONE} -- Implementation
 			gb_ev_multi_column_list_action_sequences: GB_EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES
 			gb_ev_multi_column_list_row_action_sequences: GB_EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES
 			gb_ev_notebook_action_sequences: GB_EV_NOTEBOOK_ACTION_SEQUENCES
-			gb_ev_pixmap_action_sequences: GB_EV_PIXMAP_ACTION_SEQUENCES
 			gb_ev_standard_dialog_action_sequences: GB_EV_STANDARD_DIALOG_ACTION_SEQUENCES
 			gb_ev_text_component_action_sequences: GB_EV_TEXT_COMPONENT_ACTION_SEQUENCES
 			gb_ev_text_field_action_sequences: GB_EV_TEXT_FIELD_ACTION_SEQUENCES
@@ -75,7 +73,6 @@ feature {NONE} -- Implementation
 			gb_ev_window_action_sequences: GB_EV_WINDOW_ACTION_SEQUENCES
 			gb_ev_titled_window_action_sequences: GB_EV_TITLED_WINDOW_ACTION_SEQUENCES
 			gb_ev_checkable_list_action_sequences: GB_EV_CHECKABLE_LIST_ACTION_SEQUENCES
-			
 			gb_ev_column_action_sequence: GB_EV_COLUMN_ACTION_SEQUENCE
 			gb_ev_geometry_action_sequence: GB_EV_GEOMETRY_ACTION_SEQUENCE
 			gb_ev_key_action_sequence: GB_EV_KEY_ACTION_SEQUENCE
@@ -87,10 +84,9 @@ feature {NONE} -- Implementation
 			gb_ev_multi_column_list_row_select_action_sequence: GB_EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
 			gb_ev_notify_action_sequence: GB_EV_NOTIFY_ACTION_SEQUENCE
 			gb_ev_value_change_action_sequence: GB_EV_VALUE_CHANGE_ACTION_SEQUENCE
-			
-		do		
+		do
 		end
-		
+
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

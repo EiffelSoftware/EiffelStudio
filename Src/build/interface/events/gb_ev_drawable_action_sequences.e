@@ -1,5 +1,5 @@
 note
-	description: "Objects that represent EV_DRAWING_AREA_ACTION_SEQUENCES."
+	description: "Objects that represent EV_DRAWABLE_ACTION_SEQUENCES."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 class
-	GB_EV_DRAWING_AREA_ACTION_SEQUENCES
+	GB_EV_DRAWABLE_ACTION_SEQUENCES
 
 inherit
 
@@ -43,18 +43,16 @@ feature -- Access
 			-- action sequence and all arguments in `string_handler'. If no `adding' then `remove_only_added' `action_sequence'.
 		local
 			geometry_sequence: GB_EV_GEOMETRY_ACTION_SEQUENCE
-			drawing_area: EV_DRAWING_AREA
 		do
-			drawing_area ?= object
-			check
-				drawing_area_not_void: drawing_area /= Void
-			end
-			if action_sequence.same_string ("expose_actions") then
+			if
+				attached {EV_DRAWABLE_ACTION_SEQUENCES} object as l_widget_with_expose_actions and then
+				action_sequence.same_string ("expose_actions")
+			then
 				if adding then
 					geometry_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_GEOMETRY_ACTION_SEQUENCE"))
-					drawing_area.expose_actions.extend (geometry_sequence.display_agent (action_sequence, string_handler))
+					l_widget_with_expose_actions.expose_actions.extend (geometry_sequence.display_agent (action_sequence, string_handler))
 				else
-					remove_only_added (drawing_area.expose_actions)
+					remove_only_added (l_widget_with_expose_actions.expose_actions)
 				end
 			end
 		end
@@ -92,5 +90,5 @@ note
 		]"
 
 
-end -- class GB_EV_DRAWING_AREA_ACTION_SEQUENCES
+end -- class GB_EV_DRAWABLE_ACTION_SEQUENCES
 

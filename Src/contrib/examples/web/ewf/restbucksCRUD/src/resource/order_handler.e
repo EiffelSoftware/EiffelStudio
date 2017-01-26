@@ -295,10 +295,8 @@ feature -- HTTP Methods
 			if attached {JSON_VALUE} json.value (l_order) as jv then
 				l_msg := jv.representation
 				h.put_content_length (l_msg.count)
-				if attached req.http_host as host then
-					l_location := "http://" + host + req.request_uri + "/" + l_order.id
-					h.put_location (l_location)
-				end
+				l_location := req.absolute_script_url (req.request_uri + "/" + l_order.id)
+				h.put_location (l_location)
 				if attached req.request_time as time then
 					h.put_utc_date (time)
 				end
@@ -398,6 +396,6 @@ feature {NONE} -- Implementation Repository Layer
 		end
 
 note
-	copyright: "2011-2015, Javier Velilla and others"
+	copyright: "2011-2017, Javier Velilla and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

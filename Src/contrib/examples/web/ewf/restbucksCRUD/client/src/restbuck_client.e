@@ -15,13 +15,13 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		local
-			h: LIBCURL_HTTP_CLIENT
+			h: DEFAULT_HTTP_CLIENT
 			sess: HTTP_CLIENT_SESSION
 			resp : detachable HTTP_CLIENT_RESPONSE
 			l_location : detachable READABLE_STRING_8
 			body : STRING
 		do
-			create h.make
+			create h
 			sess := h.new_session ("http://127.0.0.1:9090")
 -- Uncomment the following 2 lines, if you use fiddler2 web debugging tool
 --			sess.set_is_debug (True)

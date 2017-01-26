@@ -16,11 +16,12 @@ feature {NONE} -- Initialization
 	make
 		do
 			set_service_option ("port", 9090)
+			import_service_options (create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI}.make_from_file ("server.ini"))
 			make_and_launch
 		end
 
 note
-	copyright: "2011-2015, Javier Velilla and others"
+	copyright: "2011-2017, Javier Velilla and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

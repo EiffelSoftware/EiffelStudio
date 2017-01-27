@@ -1380,6 +1380,8 @@ feature -- Helpers: cms link
 feature -- Helpers: html links		
 
 	user_html_link (u: CMS_USER): STRING
+		require
+			u_with_name: not u.name.is_whitespace
 		do
 			Result := link (u.name, "user/" + u.id.out, Void)
 		end
@@ -1481,6 +1483,6 @@ feature {NONE} -- Execution
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -38,7 +38,7 @@ feature -- Access
 			password: Result /= Void implies (Result.hashed_password /= Void and Result.password = Void)
 		end
 
-	user_by_name (a_name: like {CMS_USER}.name): detachable CMS_USER
+	user_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- User with name `a_name', if any.
 		require
 			 a_name /= Void and then not a_name.is_empty
@@ -48,11 +48,11 @@ feature -- Access
 			password: Result /= Void implies (Result.hashed_password /= Void and Result.password = Void)
 		end
 
-	user_by_email (a_email: like {CMS_USER}.email): detachable CMS_USER
+	user_by_email (a_email: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- User with name `a_email', if any.
 		deferred
 		ensure
-			same_email: Result /= Void implies a_email ~ Result.email
+			same_email: Result /= Void implies (attached Result.email as r_email and then a_email.same_string (r_email))
 			password: Result /= Void implies (Result.hashed_password /= Void and Result.password = Void)
 		end
 
@@ -284,6 +284,6 @@ feature -- New Temp User
 
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

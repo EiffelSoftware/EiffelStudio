@@ -10,9 +10,6 @@ class
 
 inherit
 	CMS_MODULE_API
-		redefine
-			initialize
-		end
 
 	REFACTORING_HELPER
 
@@ -26,30 +23,6 @@ feature {NONE} -- Initialization
 			node_storage := a_node_storage
 			make (a_api)
 --			error_handler.add_synchronization (a_node_storage.error_handler)
-		end
-
-	initialize
-			-- <Precursor>
-		do
-			Precursor
-			initialize_node_types
-		end
-
-	initialize_node_types
-			-- Initialize content type system.
-		local
-			ct: CMS_PAGE_NODE_TYPE
-		do
-				-- Initialize node content types.			
-			create ct
-				--| For now, add all available formats to content type `ct'.
-			across
-				cms_api.formats as ic
-			loop
-				ct.extend_format (ic.item)
-			end
-			add_node_type (ct)
-			add_node_type_webform_manager (create {CMS_PAGE_NODE_TYPE_WEBFORM_MANAGER}.make (ct, Current))
 		end
 
 feature {CMS_MODULE} -- Access nodes storage.
@@ -301,45 +274,9 @@ feature -- Access: Node
 			expected_type: across Result as ic all ic.item.content_type.same_string (a_node_type.name) end
 		end
 
-feature -- Access: page/book outline
-
-	children (a_node: CMS_NODE): detachable LIST [CMS_NODE]
-			-- Children of node `a_node'.
-			-- note: this is the partial version of the nodes.
+	nodes_of_type_with_title (a_node_type: CMS_CONTENT_TYPE; a_title: READABLE_STRING_GENERAL): LIST [CMS_NODE]
 		do
-			Result := node_storage.children (a_node)
-		end
-
-	available_parents_for_node (a_node: CMS_NODE): LIST [CMS_NODE]
-			-- Potential parent nodes for node `a_node'.
-			-- Ensure no cycle exists.
-		do
-			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
-			across node_storage.available_parents_for_node (a_node) as ic loop
-				check distinct: not a_node.same_node (ic.item) end
-				if not is_node_a_parent_of (a_node, ic.item) then
-					Result.force (ic.item)
-				end
-			end
-		ensure
-			no_cycle: across Result as c all not is_node_a_parent_of (a_node, c.item) end
-		end
-
-	is_node_a_parent_of (a_node: CMS_NODE; a_child: CMS_NODE): BOOLEAN
-			-- Is `a_node' a direct or indirect parent of node `a_child'?
-		require
-			distinct_nodes: not a_node.same_node (a_child)
-		do
-			if
-				attached {CMS_PAGE} full_node (a_child) as l_child_page and then
-				attached l_child_page.parent as l_parent
-			then
-				if l_parent.same_node (a_node) then
-					Result := True
-				else
-					Result := is_node_a_parent_of (a_node, l_parent)
-				end
-			end
+			Result := node_storage.nodes_of_type_with_title (a_node_type, a_title)
 		end
 
 feature -- Permission Scope: Node

@@ -13,7 +13,8 @@ inherit
 
 	CMS_NODE_STORAGE_I
 		redefine
-			nodes_of_type
+			nodes_of_type,
+			nodes_of_type_with_title
 		end
 
 	CMS_STORAGE_SQL_I
@@ -277,53 +278,27 @@ feature -- Access
 			sql_finalize
 		end
 
-feature -- Access: outline
-
-	children (a_node: CMS_NODE): detachable LIST [CMS_NODE]
-			-- <Precursor>
+	nodes_of_type_with_title (a_node_type: CMS_CONTENT_TYPE; a_title: READABLE_STRING_GENERAL): LIST [CMS_NODE]
+			-- List of nodes of type `a_node_type' with title `a_title`.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".children")
+			write_information_log (generator + ".nodes_of_type_with_title")
+			create l_parameters.make (2)
+			l_parameters.put (a_node_type.name, "node_type")
+			l_parameters.put (a_title, "title")
 
 			from
-				create l_parameters.make (1)
-				l_parameters.put (a_node.id, "nid")
-				sql_query (sql_select_children_of_node, l_parameters)
+				sql_query (sql_select_nodes_of_type_with_title, l_parameters)
 				sql_start
 			until
 				sql_after
 			loop
 				if attached fetch_node as l_node then
-					Result.force (l_node)
-				end
-				sql_forth
-			end
-			sql_finalize
-		end
-
-	available_parents_for_node (a_node: CMS_NODE): LIST [CMS_NODE]
-			-- <Precursor>
-		local
-			l_parameters: STRING_TABLE [detachable ANY]
-		do
-			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
-
-			error_handler.reset
-			write_information_log (generator + ".available_parents_for_node")
-
-			from
-				create l_parameters.make (1)
-				l_parameters.put (a_node.id, "nid")
-				sql_query (sql_select_available_parents_for_node, l_parameters)
-				sql_start
-			until
-				sql_after
-			loop
-				if attached fetch_node as l_node then
+					check expected_node_type: l_node.content_type.same_string (a_node_type.name) end
 					Result.force (l_node)
 				end
 				sql_forth
@@ -377,7 +352,7 @@ feature -- Change: Node
 			sql_modify (sql_delete_node, l_parameters)
 			sql_finalize
 
-				-- we remove node_revisions and pages.
+				-- we remove node_revisions and potential extended nodes.
 				-- Check: maybe we need a transaction.
 			sql_modify (sql_delete_node_revisions, l_parameters)
 			sql_finalize
@@ -516,6 +491,10 @@ feature {NONE} -- Queries
 			-- SQL Query to retrieve all nodes of type :node_type.
 			--| note: {CMS_NODE_API}.trashed = -1		
 
+	sql_select_nodes_of_type_with_title: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE status != -1 AND type=:node_type AND title=:title;"
+			-- SQL Query to retrieve all nodes of type :node_type with title :title.
+			--| note: {CMS_NODE_API}.trashed = -1
+
 	sql_select_node_revisions: STRING = "SELECT nodes.nid, node_revisions.revision, nodes.type, node_revisions.title, node_revisions.summary, node_revisions.content, node_revisions.format, node_revisions.author, nodes.publish, nodes.created, node_revisions.changed, node_revisions.status FROM nodes INNER JOIN node_revisions ON nodes.nid = node_revisions.nid WHERE nodes.nid = :nid AND node_revisions.revision < :revision ORDER BY node_revisions.revision DESC;"
 			-- SQL query to get node revisions (missing the latest one).
 
@@ -557,21 +536,7 @@ feature {NONE} -- Queries
 	Sql_last_insert_node_revision: STRING = "SELECT MAX(revision) FROM node_revisions;"
 	Sql_last_insert_node_revision_for_nid: STRING = "SELECT MAX(revision) FROM node_revisions WHERE nid=:nid;"
 
-	sql_select_available_parents_for_node : STRING = "[
-			SELECT node.nid, node.revision, node.type, title, summary, content, format, author, publish, created, changed, status 
-			FROM nodes node LEFT JOIN page_nodes pn ON node.nid = pn.nid AND node.nid != :nid 
-			WHERE node.nid != :nid AND pn.parent != :nid AND node.status != -1 GROUP BY node.nid, node.revision;
-		]"
-
-	sql_select_children_of_node: STRING = "[
-			SELECT node.nid, node.revision, node.type, title, summary, content, format, author, publish, created, changed, status
-			FROM nodes node LEFT JOIN page_nodes pn ON node.nid = pn.nid
-			WHERE pn.parent = :nid AND node.status != -1 GROUP BY node.nid, node.revision;
-		]"
-
 	sql_delete_node_revisions: STRING = "DELETE FROM node_revisions WHERE nid=:nid;"
-
-
 
 feature {NONE} -- Implementation
 

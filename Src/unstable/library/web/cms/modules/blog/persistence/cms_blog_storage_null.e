@@ -44,4 +44,10 @@ feature -- Access
 		do
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 		end
+
+	blogs_from_user_with_title (a_user: CMS_USER; a_title: READABLE_STRING_GENERAL): LIST [CMS_NODE]
+			-- List of blogs from `a_user' with title `a_title` and ordered by creation date.
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+		end
 end

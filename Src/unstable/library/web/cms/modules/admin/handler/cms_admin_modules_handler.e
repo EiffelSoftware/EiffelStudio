@@ -283,7 +283,7 @@ feature -- Execution
 							fd.report_error ("Installation failed for module " + m.name)
 						end
 					else
-						fd.report_error ("Can not find associated module" + ic.item.as_string.url_encoded_value)
+						fd.report_error ("Can not find associated module " + ic.item.as_string.url_encoded_value)
 					end
 				end
 			else

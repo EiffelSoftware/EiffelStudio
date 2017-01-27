@@ -122,6 +122,7 @@ feature -- HTTP Methods
 					if
 						l_node /= Void and then
 						l_rev > 0 and then
+						l_rev < l_node.revision and then
 						node_api.has_permission_for_action_on_node ("view revisions", l_node, api.user)
 					then
 						l_node := node_api.revision_node (l_nid, l_rev)
@@ -322,7 +323,12 @@ feature {NONE} -- Trash:Restore
 							b.append ("<a href=%"")
 							b.append (r.url (node_api.node_path (n) + "?revision=" + n.revision.out, Void))
 							b.append ("%">")
-
+							if n.revision = l_node.revision then
+								b.append ("Current ")
+							else
+								b.append ("Revision")
+							end
+							b.append (" #")
 							b.append (n.revision.out)
 							b.append (" : ")
 							b.append (n.modification_date.out)
@@ -330,6 +336,11 @@ feature {NONE} -- Trash:Restore
 							if attached n.author as l_author then
 								b.append (" by ")
 								b.append (r.link (l_author.name, "user/" + l_author.id.out, Void))
+							end
+							if node_api.has_permission_for_action_on_node ("edit revisions", l_node, api.user) then
+								b.append (" (<a href=%"")
+								b.append (r.url (node_api.node_path (n) + "/edit?revision=" + n.revision.out, Void))
+								b.append ("%">edit</a>)")
 							end
 							b.append ("</li>")
 						end

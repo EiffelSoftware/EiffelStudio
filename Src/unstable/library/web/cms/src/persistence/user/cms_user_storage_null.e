@@ -30,7 +30,7 @@ feature -- Access: user
 		do
 		end
 
-	user_by_email (a_email: like {CMS_USER}.email): detachable CMS_USER
+	user_by_email (a_email: READABLE_STRING_GENERAL): detachable CMS_USER
 		do
 		end
 
@@ -204,6 +204,6 @@ feature -- Temp Users
 		do
 		end
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -43,18 +43,16 @@ feature -- Access
 
 			create l_parameters.make (3)
 			l_parameters.put (a_content.identifier, "content_id")
-			sql_query (sql_select_comments_for_content, l_parameters)
-			if not has_error then
-				from
-					sql_start
-				until
-					sql_after
-				loop
-					if attached fetch_comment as obj then
-						Result.force (obj)
-					end
-					sql_forth
+			from
+				sql_query (sql_select_comments_for_content, l_parameters)
+				sql_start
+			until
+				sql_after
+			loop
+				if attached fetch_comment as obj then
+					Result.force (obj)
 				end
+				sql_forth
 			end
 			sql_finalize
 		end

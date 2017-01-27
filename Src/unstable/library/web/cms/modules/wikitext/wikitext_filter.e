@@ -45,6 +45,7 @@ feature -- Conversion
 			else
 				l_wikitext := adapted_text (a_text)
 			end
+			l_wikitext.prune_all ('%R') -- FIXME: remove later once the wikitext parser handle "%R" and empty line.
 			create wk.make_from_string (l_wikitext)
 			if attached wk.structure as st then
 				create html.make (l_wikitext.count)
@@ -53,11 +54,6 @@ feature -- Conversion
 				vis.code_aliases.extend ("e")
 				st.process (vis)
 				a_text.set_count (0)
---				if attached {STRING_8} a_text as s8 then
---					s8.wipe_out
---				elseif attached {STRING_32} a_text as s32 then
---					s32.wipe_out
---				end
 				if attached {STRING_32} a_text as a_unicode_text then
 					a_text.append (utf.utf_8_string_8_to_string_32 (html))
 				else

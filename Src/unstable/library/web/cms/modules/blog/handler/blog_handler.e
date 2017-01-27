@@ -1,6 +1,6 @@
 note
-	description: "Request handler related to /blogs and /blogs/{page}. Displays all posts in the blog."
-	author: "Dario Bösch <daboesch@student.ethz.ch>"
+	description: "Request handler related to /blogs and /blogs/?page={page}. Displays all posts in the blog."
+	contributor: "Dario Bösch <daboesch@student.ethz.ch>"
 	date: "$Date$"
 	revision: "$9661667$"
 
@@ -69,7 +69,8 @@ feature -- HTTP Methods
 			l_page: CMS_RESPONSE
 		do
 				-- Read page number from path parameter.
-			page_number := page_number_path_parameter (req)
+			page_number := page_number_parameter (req)
+			entries_per_page := size_parameter (req)
 
 				-- Responding with `main_content_html (l_page)'.
 			create {GENERIC_VIEW_CMS_RESPONSE} l_page.make (req, res, api)
@@ -94,6 +95,19 @@ feature -- Query
 			Result := entries_per_page < total_entries
 		end
 
+	size_parameter (req: WSF_REQUEST): NATURAL_32
+			-- Page size value from req, otherwise use default.
+		do
+			if
+				attached {WSF_STRING} req.query_parameter ("size") as p_size and then
+				p_size.is_integer
+			then
+				Result := p_size.integer_value.to_natural_32
+			else
+				Result := blog_api.default_entries_count_per_page
+			end
+		end
+
 	pages_count: NATURAL_32
 			-- Number of pages needed to display all posts.
 		require
@@ -105,14 +119,14 @@ feature -- Query
 			Result := tmp.ceiling.to_natural_32
 		end
 
-	page_number_path_parameter (req: WSF_REQUEST): NATURAL_32
-			-- Page number from path /blogs/{page}.
+	page_number_parameter (req: WSF_REQUEST): NATURAL_32
+			-- Page number from path /blogs/?page={page}.
 			-- Unsigned integer since negative pages are not allowed.
 		local
-			s: STRING
+			s: READABLE_STRING_32
 		do
 			Result := 1 -- default if not get variable is set
-			if attached {WSF_STRING} req.path_parameter ("page") as p_page then
+			if attached {WSF_STRING} req.query_parameter ("page") as p_page then
 				s := p_page.value
 				if s.is_natural_32 then
 					if s.to_natural_32 > 1 then
@@ -206,7 +220,7 @@ feature -- HTML Output
 		do
 			if attached n.author as l_author then
 				a_output.append ("by ")
-				a_output.append ("<a class=%"blog_user_link%" href=%"/blogs/user/" + l_author.id.out + "%">" + html_encoded (l_author.name) + "</a>")
+				a_output.append ("<a class=%"blog_user_link%" href=%"/blog/" + l_author.id.out + "%">" + html_encoded (l_author.name) + "</a>")
 			end
 		end
 
@@ -251,7 +265,7 @@ feature -- HTML Output
 					-- If exist older posts show link to next page
 				if page_number < pages_count then
 					tmp := page_number + 1
-					a_output.append (" <a class=%"blog_older_posts%" href=%"" + base_path + "/page/" + tmp.out + "%"><< Older Posts</a> ")
+					a_output.append (" <a class=%"blog_older_posts%" href=%"" + base_path + "?page=" + tmp.out + "&size=" + entries_per_page.out + "%"><< Older Posts</a> ")
 				end
 
 				-- Delimiter
@@ -262,7 +276,7 @@ feature -- HTML Output
 				-- If exist newer posts show link to previous page
 				if page_number > 1 then
 					tmp := page_number -1
-					a_output.append (" <a class=%"blog_newer_posts%" href=%"" + base_path + "/page/" + tmp.out + "%">Newer Posts >></a> ")
+					a_output.append (" <a class=%"blog_newer_posts%" href=%"" + base_path + "?page=" + tmp.out + "&size=" + entries_per_page.out + "%">Newer Posts >></a> ")
 				end
 
 				a_output.append ("</div>")

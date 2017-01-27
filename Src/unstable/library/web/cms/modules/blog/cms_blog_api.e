@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 				create {CMS_BLOG_STORAGE_NULL} blog_storage.make
 			end
 
-			entries_per_page := 6
+			default_entries_count_per_page := 8 -- Default FIXME: find a way to make it customizable.
 		end
 
 feature {CMS_API_ACCESS, CMS_MODULE, CMS_API} -- Restricted access		
@@ -54,7 +54,7 @@ feature {CMS_MODULE} -- Access nodes storage.
 
 feature -- Configuration of blog handlers
 
-	entries_per_page : NATURAL_32
+	default_entries_count_per_page : NATURAL_32
 			-- The numbers of posts that are shown on one page. If there are more post a pagination is generated
 
 feature -- Access node

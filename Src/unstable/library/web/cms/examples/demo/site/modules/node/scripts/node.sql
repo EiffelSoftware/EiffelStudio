@@ -28,10 +28,3 @@ CREATE TABLE node_revisions (
 	CONSTRAINT Unique_nid_revision PRIMARY KEY (nid,revision)
 );
 
-CREATE TABLE page_nodes(
-	`nid` INTEGER NOT NULL,
-	`revision` INTEGER NOT NULL,
-	`parent` INTEGER,
-	CONSTRAINT PK_nid_revision PRIMARY KEY (nid,revision)
-);
-

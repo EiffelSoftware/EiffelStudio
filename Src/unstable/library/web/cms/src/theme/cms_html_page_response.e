@@ -57,14 +57,14 @@ feature {WSF_RESPONSE} -- Output
 				h.put_content_length (s.count)
 			end
 			if not h.has_content_type then
-				h.put_content_type_text_html
+				h.put_content_type_with_charset ({HTTP_MIME_TYPES}.text_html, "utf-8")
 			end
 			res.put_header_text (h.string)
 			res.put_string (s)
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

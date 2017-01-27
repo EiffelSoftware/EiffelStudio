@@ -54,7 +54,7 @@ feature -- Execution
 			l_response: CMS_RESPONSE
 			s: STRING
 			f: CMS_FORM
-			l_exportation_parameters: CMS_EXPORT_PARAMETERS
+			l_exportation: CMS_EXPORT_CONTEXT
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} l_response.make (req, res, api)
 			f := exportation_web_form (l_response)
@@ -65,15 +65,15 @@ feature -- Execution
 			then
 				if attached fd.string_item ("op") as l_op and then l_op.same_string (text_export_all_data) then
 					if attached fd.string_item ("folder") as l_folder then
-						create l_exportation_parameters.make (api.site_location.extended ("export").extended (l_folder))
+						create l_exportation.make (api.site_location.extended ("export").extended (l_folder))
 					else
-						create l_exportation_parameters.make (api.site_location.extended ("export").extended ((create {DATE_TIME}.make_now_utc).formatted_out ("yyyy-[0]mm-[0]dd---hh24-[0]mi-[0]ss")))
+						create l_exportation.make (api.site_location.extended ("export").extended ((create {DATE_TIME}.make_now_utc).formatted_out ("yyyy-[0]mm-[0]dd---hh24-[0]mi-[0]ss")))
 					end
-					api.hooks.invoke_export_to (Void, l_exportation_parameters, l_response)
+					api.hooks.invoke_export_to (Void, l_exportation, l_response)
 					l_response.add_notice_message ("All data exported (if allowed)!")
 					create s.make_empty
 					across
-						l_exportation_parameters.logs as ic
+						l_exportation.logs as ic
 					loop
 						s.append (ic.item)
 						s.append ("<br/>")

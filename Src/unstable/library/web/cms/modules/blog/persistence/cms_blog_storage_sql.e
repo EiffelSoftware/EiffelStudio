@@ -105,11 +105,38 @@ feature -- Access
 			write_information_log (generator + ".blogs_from_user_limited")
 
 			from
-				create l_parameters.make (2)
+				create l_parameters.make (3)
 				l_parameters.put (a_limit, "limit")
 				l_parameters.put (a_offset, "offset")
 				l_parameters.put (a_user.id, "user")
 				sql_query (sql_blogs_from_user_limited, l_parameters)
+				sql_start
+			until
+				sql_after
+			loop
+				if attached fetch_node as l_node then
+					Result.force (l_node)
+				end
+				sql_forth
+			end
+			sql_finalize
+		end
+
+	blogs_from_user_with_title (a_user: CMS_USER; a_title: READABLE_STRING_GENERAL): LIST [CMS_NODE]
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+
+			error_handler.reset
+			write_information_log (generator + ".blogs_from_user_with_title")
+
+			from
+				create l_parameters.make (2)
+				l_parameters.put (a_user.id, "user")
+				l_parameters.put (a_title, "title")
+				sql_query (sql_blogs_from_user_with_title, l_parameters)
 				sql_start
 			until
 				sql_after
@@ -136,10 +163,12 @@ feature {NONE} -- Queries
 			-- SQL Query to retrieve all nodes that are from the type "blog" ordered by descending creation date.
 
 	sql_blogs_limited: STRING = "SELECT * FROM nodes WHERE status != -1 AND type = %"blog%" ORDER BY created DESC LIMIT :limit OFFSET :offset ;"
-			--- SQL Query to retrieve all node of type "blog" limited by limit and starting at offset
+			--- SQL Query to retrieve all nodes of type "blog" limited by limit and starting at offset
 
 	sql_blogs_from_user_limited: STRING = "SELECT * FROM nodes WHERE status != -1 AND type = %"blog%" AND author = :user ORDER BY created DESC LIMIT :limit OFFSET :offset ;"
-			--- SQL Query to retrieve all node of type "blog" from author with id limited by limit + offset
+			--- SQL Query to retrieve all nodes of type "blog" from author with id limited by limit + offset
 
+	sql_blogs_from_user_with_title: STRING = "SELECT * FROM nodes WHERE status != -1 AND type = %"blog%" AND author = :user AND title = :title ORDER BY created DESC;"
+			--- SQL Query to retrieve all nodes of type "blog" from author with title .
 
 end

@@ -351,16 +351,82 @@ feature -- Output
 					end
 					a_output.append ("</p>")
 				end
-			elseif attached a_node.content as l_content then
-				a_output.append ("<p class=%"content%">")
-				if attached cms_api.format (a_node.format) as f then
+			else
+				if attached a_node.content as l_content then
+					a_output.append ("<p class=%"content%">")
+					if attached cms_api.format (a_node.format) as f then
+						append_formatted_content_to (l_content, f, a_output)
+					else
+						append_formatted_content_to (l_content, cms_api.formats.default_format, a_output)
+					end
+					a_output.append ("</p>")
+				end
+
+				append_comments_as_html_to (a_node, a_output, a_response)
+
+			end
+			a_output.append ("</div>")
+		end
+
+	append_comments_as_html_to (a_node: G; a_output: STRING; a_response: detachable CMS_RESPONSE)
+		do
+			if attached {CMS_COMMENTS_API} cms_api.module_api ({CMS_COMMENTS_MODULE}) as l_comments_api then
+				if attached l_comments_api.comments_for (a_node) as l_comments and then not l_comments.is_empty then
+					a_output.append ("<div class=%"comments-box%"><div class=%"title%">Comments</div><ul class=%"comments%">")
+					across
+						l_comments as ic
+					loop
+						append_comment_as_html_to (ic.item, a_output, a_response)
+					end
+					a_output.append ("</ul></div>")
+				end
+			end
+		end
+
+	append_comment_as_html_to (a_comment: CMS_COMMENT; a_output: STRING; a_response: detachable CMS_RESPONSE)
+		local
+			l_ago: DATE_TIME_AGO_CONVERTER
+		do
+			a_output.append ("<li class=%"comment%">")
+			if attached a_comment.author as l_author then
+				a_output.append ("<span class=%"author%">")
+				a_output.append (cms_api.html_encoded (l_author.name))
+				a_output.append ("</span>")
+			elseif attached a_comment.author_name as l_author_name then
+				a_output.append ("<span class=%"author%">")
+				a_output.append (cms_api.html_encoded (l_author_name))
+				a_output.append ("</span>")
+			end
+			if attached a_comment.creation_date as dt then
+				a_output.append (" <span class=%"info%">(")
+				create l_ago.make
+				a_output.append (l_ago.smart_date_duration (dt))
+				a_output.append (" ")
+				a_output.append (l_ago.short_date (dt))
+				a_output.append (")</span>")
+			end
+			if attached a_comment.content as l_content then
+				a_output.append ("<div class=%"content%">")
+				if
+					attached a_comment.format as l_format and then
+					attached cms_api.format (l_format) as f
+				then
 					append_formatted_content_to (l_content, f, a_output)
 				else
 					append_formatted_content_to (l_content, cms_api.formats.default_format, a_output)
 				end
-				a_output.append ("</p>")
+				a_output.append ("</div>")
 			end
-			a_output.append ("</div>")
+			if attached a_comment.items as lst and then not lst.is_empty then
+				a_output.append ("<ul class=%"comments%">")
+				across
+					lst as ic
+				loop
+					append_comment_as_html_to (ic.item, a_output, a_response)
+				end
+				a_output.append ("</ul>")
+			end
+			a_output.append ("</li>")
 		end
 
 end

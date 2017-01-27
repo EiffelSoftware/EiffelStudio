@@ -11,11 +11,15 @@ class
 inherit
 	CMS_EXPORT_JSON_UTILITIES
 
+	CMS_API_ACCESS
+
 feature -- Access
 
-	node_to_json (n: CMS_NODE): JSON_OBJECT
+	node_to_json (n: CMS_NODE; a_node_api: CMS_NODE_API): JSON_OBJECT
 		local
-			jo,j_author: JSON_OBJECT
+			jo: JSON_OBJECT
+			ja: JSON_ARRAY
+			jterm: JSON_OBJECT
 		do
 			create Result.make_empty
 			Result.put_string (n.content_type, "type")
@@ -27,10 +31,7 @@ feature -- Access
 			put_date_into_json (n.publication_date, "publication_date", Result)
 			Result.put_integer (n.status, "status")
 			if attached n.author as u then
-				create j_author.make
-				j_author.put_integer (u.id, "uid")
-				j_author.put_string (u.name, "name")
-				Result.put (j_author, "author")
+				Result.put (user_to_json (u), "author")
 			end
 			create jo.make_empty
 			if attached n.format as l_format then
@@ -44,12 +45,41 @@ feature -- Access
 			end
 			Result.put (jo, "data")
 			if attached n.link as lnk then
-				create jo.make_empty
-				jo.put_string (lnk.title, "title")
-				jo.put_string (lnk.location, "location")
-				jo.put_integer (lnk.weight, "weight")
-				Result.put (jo, "link")
+				Result.put (link_to_json (lnk), "link")
 			end
+
+			if attached {CMS_TAXONOMY_API} a_node_api.cms_api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxonomy_api then
+				if
+					attached l_taxonomy_api.terms_of_content (n, Void) as l_tags and then
+					not l_tags.is_empty
+				then
+					create ja.make (l_tags.count)
+					across
+						l_tags as ic
+					loop
+						create jterm.make_with_capacity (2)
+						jterm.put_integer (ic.item.id, "id")
+						jterm.put_string (ic.item.text, "text")
+						ja.extend (jterm)
+					end
+					Result.put (ja, "tags")
+				end
+			end
+		end
+
+	user_to_json (u: CMS_USER): JSON_OBJECT
+		do
+			create Result.make
+			Result.put_integer (u.id, "uid")
+			Result.put_string (u.name, "name")
+		end
+
+	link_to_json (lnk: CMS_LOCAL_LINK): JSON_OBJECT
+		do
+			create Result.make_empty
+			Result.put_string (lnk.title, "title")
+			Result.put_string (lnk.location, "location")
+			Result.put_integer (lnk.weight, "weight")
 		end
 
 end

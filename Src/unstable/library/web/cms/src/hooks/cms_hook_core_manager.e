@@ -234,7 +234,7 @@ feature -- Hook: export
 			subscribe_to_hook (h, {CMS_HOOK_EXPORT})
 		end
 
-	invoke_export_to (a_export_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_export_parameters: CMS_EXPORT_PARAMETERS; a_response: CMS_RESPONSE)
+	invoke_export_to (a_export_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_export_parameters: CMS_EXPORT_CONTEXT; a_response: CMS_RESPONSE)
 			-- Invoke response alter hook for response `a_response'.		
 		local
 			d: DIRECTORY
@@ -254,7 +254,36 @@ feature -- Hook: export
 			end
 		end
 
+feature -- Hook: import
+
+	subscribe_to_import_hook (h: CMS_HOOK_IMPORT)
+			-- Add `h' as subscriber of import hooks CMS_HOOK_IMPORT.		
+		do
+			subscribe_to_hook (h, {CMS_HOOK_IMPORT})
+		end
+
+	invoke_import_from (a_import_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_import_ctx: CMS_IMPORT_CONTEXT; a_response: CMS_RESPONSE)
+			-- Invoke response alter hook for response `a_response'.		
+		local
+			d: DIRECTORY
+		do
+			if attached subscribers ({CMS_HOOK_IMPORT}) as lst then
+				create d.make_with_path (a_import_ctx.location)
+				if not d.exists then
+					d.recursive_create_dir
+				end
+				across
+					lst as ic
+				loop
+					if attached {CMS_HOOK_IMPORT} ic.item as h then
+						h.import_from (a_import_id_list, a_import_ctx, a_response)
+					end
+				end
+			end
+		end
+
+
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -7,13 +7,13 @@ class
 	CMS_API
 
 inherit
-	ANY
+	CMS_HOOK_EXPORT
+	CMS_API_EXPORT_IMP
+
+	CMS_HOOK_IMPORT
+	CMS_API_IMPORT_IMP
 
 	CMS_ENCODERS
-
-	CMS_HOOK_EXPORT
-
-	CMS_EXPORT_JSON_UTILITIES
 
 	REFACTORING_HELPER
 
@@ -503,7 +503,14 @@ feature {NONE} -- Hooks
 			end
 		end
 
-feature -- Query: API
+feature {NONE} -- Access: API
+
+	cms_api: CMS_API
+		do
+			Result := Current
+		end
+
+feature -- Access: API
 
 	user_api: CMS_USER_API
 			-- API to access user related data.
@@ -524,6 +531,7 @@ feature -- Hooks
 			-- Register hooks associated with the cms core.
 		do
 			a_hooks.subscribe_to_export_hook (Current)
+			a_hooks.subscribe_to_import_hook (Current)
 		end
 
 feature -- Path aliases	
@@ -618,7 +626,7 @@ feature {NONE}-- Implementation
 			-- Error handler.
 
 	internal_user_api: detachable like user_api
-			-- Cached value for `user_api'.
+			-- Cached value for `user_api`.
 
 feature -- Environment/ theme
 
@@ -802,112 +810,6 @@ feature -- Environment/ modules and theme
 			Result := module_configuration_by_name (a_module.name, a_name)
 		end
 
-feature -- Hook	
-
-	export_to (a_export_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_export_parameters: CMS_EXPORT_PARAMETERS; a_response: CMS_RESPONSE)
-			-- <Precursor>.
-		local
-			p: PATH
-			d: DIRECTORY
-			ja: JSON_ARRAY
-			jobj,jo,j: JSON_OBJECT
-			f: PLAIN_TEXT_FILE
-			u: CMS_USER
-		do
-			if attached a_response.has_permissions (<<"admin export", "export core">>) then
-				if a_export_id_list = Void then -- Include everything
-					p := a_export_parameters.location.extended ("core")
-					create d.make_with_path (p)
-					if not d.exists then
-						d.recursive_create_dir
-					end
-
-						-- path_aliases export.
-					a_export_parameters.log ("Exporting path_aliases")
-					create jo.make_empty
-					across storage.path_aliases as ic loop
-						jo.put_string (ic.item, ic.key)
-					end
-					create f.make_with_path (p.extended ("path_aliases.json"))
-					f.create_read_write
-					f.put_string (json_to_string (jo))
-					f.close
-
-						-- custom_values export.					
-					if attached storage.custom_values as lst then
-						a_export_parameters.log ("Exporting custom_values")
-						create ja.make_empty
-						across
-							lst as ic
-						loop
-							create j.make_empty
-							if attached ic.item.type as l_type then
-								j.put_string (l_type, "type")
-							end
-							j.put_string (ic.item.name, "name")
-							if attached ic.item.type as l_value then
-								j.put_string (l_value, "value")
-							end
-							ja.extend (j)
-						end
-						create f.make_with_path (p.extended ("custom_values.json"))
-						f.create_read_write
-						f.put_string (json_to_string (ja))
-						f.close
-					end
-
-						-- users export.
-					a_export_parameters.log ("Exporting users")
-					create jo.make_empty
-
-					create jobj.make_empty
-					across user_api.recent_users (create {CMS_DATA_QUERY_PARAMETERS}.make (0, user_api.users_count.as_natural_32)) as ic loop
-						u := ic.item
-						create j.make_empty
-						j.put_string (u.name, "name")
-						j.put_integer (u.status, "status")
-						put_string_into_json (u.email, "email", j)
-						put_string_into_json (u.password, "password", j)
-						put_string_into_json (u.hashed_password, "hashed_password", j)
-						put_date_into_json (u.creation_date, "creation_date", j)
-						put_date_into_json (u.last_login_date, "last_login_date", j)
-						if attached u.roles as l_roles then
-							create ja.make (l_roles.count)
-							across
-								l_roles as roles_ic
-							loop
-								ja.extend (create {JSON_STRING}.make_from_string_32 ({STRING_32} " %"" + roles_ic.item.name + {STRING_32} "%" #" + roles_ic.item.id.out))
-							end
-							j.put (ja, "roles")
-						end
-						jobj.put (j, u.id.out)
-					end
-					jo.put (jobj, "users")
-
-					create jobj.make_empty
-					across user_api.roles as ic loop
-						create j.make_empty
-						j.put_string (ic.item.name, "name")
-						if attached ic.item.permissions as l_perms then
-							create ja.make (l_perms.count)
-							across
-								l_perms as perms_ic
-							loop
-								ja.extend (create {JSON_STRING}.make_from_string (perms_ic.item))
-							end
-							j.put (ja, "permissions")
-						end
-						jobj.put (j, ic.item.id.out)
-					end
-					jo.put (jobj, "roles")
-					create f.make_with_path (p.extended ("users.json"))
-					f.create_read_write
-					f.put_string (json_to_string (jo))
-					f.close
-				end
-			end
-		end
-
 feature -- Access: active user
 
 	user_is_authenticated: BOOLEAN
@@ -1016,7 +918,7 @@ feature {NONE} -- Implementation: current user
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end
 

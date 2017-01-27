@@ -77,7 +77,7 @@ feature -- Access: user
 			sql_finalize
 		end
 
-	user_by_name (a_name: like {CMS_USER}.name): detachable CMS_USER
+	user_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- User for the given name `a_name', if any.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -95,7 +95,7 @@ feature -- Access: user
 			sql_finalize
 		end
 
-	user_by_email (a_email: like {CMS_USER}.email): detachable CMS_USER
+	user_by_email (a_email: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- User for the given email `a_email', if any.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -1347,6 +1347,6 @@ feature {NONE} -- SQL select
 
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -30,7 +30,15 @@ feature -- Execution
 						location.ends_with_general ("/edit") and then
 						node_api.has_permission_for_action_on_node ("edit", l_node, user)
 					then
-						edit_node (l_node, l_type, b)
+						if
+							attached {WSF_STRING} request.query_parameter ("revision") as p_rev and then
+							p_rev.value.is_integer_64 and then
+							attached node_api.revision_node (l_node.id, p_rev.value.to_integer_64) as l_rev_node
+						then
+							edit_node (l_rev_node, l_type, l_rev_node.revision < l_node.revision, b)
+						else
+							edit_node (l_node, l_type, False, b)
+						end
 					elseif
 						location.ends_with_general ("/delete") and then
 						node_api.has_permission_for_action_on_node ("delete", l_node, user)
@@ -118,12 +126,15 @@ feature {NONE} -- Create a new node
 		end
 
 
-	edit_node (a_node: CMS_NODE; a_type: CMS_NODE_TYPE [CMS_NODE]; b: STRING_8)
+	edit_node (a_node: CMS_NODE; a_type: CMS_NODE_TYPE [CMS_NODE]; is_old_revision: BOOLEAN; b: STRING_8)
 		local
 			f: like new_edit_form
 			fd: detachable WSF_FORM_DATA
 		do
 			f := new_edit_form (A_node, url (location, Void), "edit-" + a_type.name, a_type)
+			if is_old_revision then
+				add_warning_message ("You are editing old revision #" + a_node.revision.out + " !")
+			end
 			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.validation_actions.extend (agent edit_form_validate (?, b))
@@ -135,6 +146,7 @@ feature {NONE} -- Create a new node
 				add_to_menu (node_local_link (a_node, translation ("View", Void)), primary_tabs)
 				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void), node_api.node_path (a_node) + "/edit"), primary_tabs)
 				add_to_menu (create {CMS_LOCAL_LINK}.make ("Delete", node_api.node_path (a_node) + "/delete"), primary_tabs)
+				add_to_menu (create {CMS_LOCAL_LINK}.make ("Revisions", node_api.node_path (a_node) + "/revision"), primary_tabs)
 			end
 
 			if attached redirection as l_location then

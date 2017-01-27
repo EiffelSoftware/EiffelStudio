@@ -599,7 +599,7 @@ feature -- Handler
 					end
 				elseif attached {WSF_STRING} req.form_parameter ("username") as l_username then
 					if
-						attached {CMS_USER} l_user_api.user_by_name (l_username) as l_user and then
+						attached {CMS_USER} l_user_api.user_by_name (l_username.value) as l_user and then
 						attached l_user.email as l_user_email
 					then
 							-- User exist create a new token and send a new email.

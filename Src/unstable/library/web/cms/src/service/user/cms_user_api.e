@@ -22,13 +22,13 @@ feature -- Access: user
 			Result := storage.user_by_id (a_id)
 		end
 
-	user_by_name (a_username: READABLE_STRING_32): detachable CMS_USER
+	user_by_name (a_username: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- User by name `a_user_name', if any.
 		do
 			Result := storage.user_by_name (a_username)
 		end
 
-	user_by_email (a_email: READABLE_STRING_32): detachable CMS_USER
+	user_by_email (a_email: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- User by email `a_email', if any.
 		do
 			Result := storage.user_by_email (a_email)
@@ -407,6 +407,6 @@ feature -- Change Temp User
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

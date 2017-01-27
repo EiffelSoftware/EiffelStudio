@@ -58,6 +58,7 @@ feature -- Access: router
 
 			l_admin_cache_handler: CMS_ADMIN_CACHE_HANDLER
 			l_admin_export_handler: CMS_ADMIN_EXPORT_HANDLER
+			l_admin_import_handler: CMS_ADMIN_IMPORT_HANDLER
 
 			l_uri_mapping: WSF_URI_MAPPING
 		do
@@ -89,6 +90,10 @@ feature -- Access: router
 			create l_admin_export_handler.make (a_api)
 			create l_uri_mapping.make_trailing_slash_ignored ("/admin/export", l_admin_export_handler)
 			a_router.map (l_uri_mapping, a_router.methods_get_post)
+			
+			create l_admin_import_handler.make (a_api)
+			create l_uri_mapping.make_trailing_slash_ignored ("/admin/import", l_admin_import_handler)
+			a_router.map (l_uri_mapping, a_router.methods_get_post)
 
 			create l_user_handler.make (a_api)
 			a_router.handle ("/admin/add/user", l_user_handler, a_router.methods_get_post)
@@ -118,7 +123,9 @@ feature -- Security
 			Result.force ("admin core caches")
 			Result.force ("clear blocks cache")
 			Result.force ("admin export")
+			Result.force ("admin import")
 			Result.force ("export core")
+			Result.force ("import core")
 		end
 
 feature -- Hooks
@@ -154,6 +161,9 @@ feature -- Hooks
 
 					-- Per module export permission!
 				create lnk.make ("Export", "admin/export")
+				admin_lnk.extend (lnk)
+					-- Per module import permission!
+				create lnk.make ("Import", "admin/import")
 				admin_lnk.extend (lnk)
 			end
 		end

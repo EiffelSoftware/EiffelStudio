@@ -78,6 +78,9 @@ feature {NONE} -- Initialization
 					then
 						location_parameter := s.as_lower
 						a_parameters.remove
+					elseif s.starts_with_general ("align=") then
+						location_parameter := s.substring (s.index_of ('=', 1) + 1 ,s.count).as_lower
+						a_parameters.remove
 					elseif
 						s.is_case_insensitive_equal_general ("baseline")
 						or s.is_case_insensitive_equal_general ("middle")
@@ -99,19 +102,35 @@ feature {NONE} -- Initialization
 					elseif s.is_case_insensitive_equal_general ("border") then
 						has_border := True
 						a_parameters.remove
-					elseif s.ends_with_general ("px") then
-						s := s.substring (1, s.count - 2)
-						width_parameter := Void
-						height_parameter := Void
-						across
-							s.split ('x') as s_ic
-						loop
-							if width_parameter = Void then
-								width_parameter := s_ic.item
-							elseif height_parameter = Void then
-								height_parameter := s_ic.item
-							else
+					elseif s.starts_with_general ("width=") then
+						width_parameter := s.substring (s.index_of ('=', 1) + 1 ,s.count).as_lower
+						a_parameters.remove
+					elseif s.starts_with_general ("height=") then
+						height_parameter := s.substring (s.index_of ('=', 1) + 1 ,s.count).as_lower
+						a_parameters.remove
+					elseif s.ends_with_general ("px") or else s.is_integer then
+						if s.is_integer then
+								-- Keep `s` as it is.
+						else
+							s := s.substring (1, s.count - 2)
+						end
+						if s.has ('x') then
+							width_parameter := Void
+							height_parameter := Void
+							across
+								s.split ('x') as s_ic
+							loop
+								if width_parameter = Void then
+									width_parameter := s_ic.item
+								elseif height_parameter = Void then
+									height_parameter := s_ic.item
+								else
+								end
 							end
+						elseif width_parameter = Void then
+							width_parameter := s.as_lower
+						elseif height_parameter = Void then
+							height_parameter := s.as_lower
 						end
 						if attached width_parameter as w and then w.is_empty then
 							width_parameter := Void
@@ -121,7 +140,7 @@ feature {NONE} -- Initialization
 						upright_parameter := "0.75"
 						a_parameters.remove
 					elseif s.starts_with_general ("upright=") then
-						upright_parameter := s.substring (8, s.count)
+						upright_parameter := s.substring (s.index_of ('=', 1) + 1 ,s.count)
 						a_parameters.remove
 					else
 						if text.is_empty then

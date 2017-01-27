@@ -30,13 +30,13 @@ feature{NONE} -- Initialization
 	make (a_title: READABLE_STRING_32)
 			-- Create current node with `a_title'.
 		local
-			l_time: DATE_TIME
+			now: DATE_TIME
 		do
-			create l_time.make_now_utc
+			create now.make_now_utc
 			set_title (a_title)
-			set_creation_date (l_time)
-			set_modification_date (l_time)
-			set_publication_date (l_time)
+			set_creation_date (now)
+			set_modification_date (now)
+			set_publication_date (now)
 			mark_not_published
 		ensure
 			title_set: title = a_title

@@ -147,6 +147,12 @@ feature -- Commit
 			node_api.save_node (a_page)
 		end
 
+	import_page (a_page: CMS_PAGE)
+			-- Save `a_page` without changing the modification date.
+		do
+			node_api.import_node (a_page)
+		end
+
 feature {CMS_MODULE} -- Access nodes storage.
 
 	page_storage: CMS_PAGE_STORAGE_I

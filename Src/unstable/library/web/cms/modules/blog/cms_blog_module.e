@@ -290,7 +290,7 @@ feature -- Hooks
 														a_import_ctx.log (l_node_type.name + " %"" + fp.utf_8_name + "%" skipped (already exists for user #" + l_author.id.out + ")!")
 													else
 														a_import_ctx.log (l_node_type.name + " %"" + fp.utf_8_name + "%" imported for user #" + l_author.id.out + ".")
-														l_blog_api.save_blog (l_entity)
+														l_blog_api.import_blog (l_entity)
 														apply_taxonomy_to_node (j, l_entity, l_blog_api.cms_api)
 														if attached {CMS_LOCAL_LINK} l_entity.link as l_link then
 															loc := l_node_api.node_path (l_entity)
@@ -315,6 +315,8 @@ feature -- Hooks
 							end
 						end
 					end
+				else
+					a_import_ctx.log ("Importing [" + l_node_type.name + "] NOT ALLOWED!")
 				end
 			end
 		end

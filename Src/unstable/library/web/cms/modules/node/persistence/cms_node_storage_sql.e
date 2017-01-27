@@ -340,10 +340,8 @@ feature -- Change: Node
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [ANY]
-			l_time: DATE_TIME
 		do
 			sql_begin_transaction
-			create l_time.make_now_utc
 			write_information_log (generator + ".delete_node_base {" + a_node.id.out + "}")
 
 			error_handler.reset
@@ -391,9 +389,7 @@ feature {NONE} -- Implementation
 			l_copy_parameters: STRING_TABLE [detachable ANY]
 			l_parameters: STRING_TABLE [detachable ANY]
 			l_rev: like last_inserted_node_revision
-			now: DATE_TIME
 		do
-			create now.make_now_utc
 			error_handler.reset
 
 			write_information_log (generator + ".store_node")
@@ -404,7 +400,7 @@ feature {NONE} -- Implementation
 			l_parameters.put (a_node.content, "content")
 			l_parameters.put (a_node.format, "format")
 			l_parameters.put (a_node.publication_date, "publish")
-			l_parameters.put (now, "changed")
+			l_parameters.put (a_node.modification_date, "changed")
 			l_parameters.put (a_node.status, "status")
 			if attached a_node.author as l_author then
 				check valid_author: l_author.has_id end
@@ -436,10 +432,6 @@ feature {NONE} -- Implementation
 					l_parameters.put (a_node.revision, "revision")
 					sql_modify (sql_update_node, l_parameters)
 					sql_finalize
-
-					if not error_handler.has_error then
-						a_node.set_modification_date (now)
-					end
 				end
 			else
 					-- Store new node
@@ -450,7 +442,6 @@ feature {NONE} -- Implementation
 				sql_finalize
 
 				if not error_handler.has_error then
-					a_node.set_modification_date (now)
 					a_node.set_id (last_inserted_node_id)
 					a_node.set_revision (l_rev) -- New object.
 --					check a_node.revision = last_inserted_node_revision (a_node) end
@@ -510,7 +501,7 @@ feature {NONE} -- Queries
 
 	sql_select_node_by_id_and_revision: STRING = "SELECT nodes.nid, node_revisions.revision, nodes.type, node_revisions.title, node_revisions.summary, node_revisions.content, node_revisions.format, node_revisions.author, nodes.publish, nodes.created, node_revisions.changed, node_revisions.status FROM nodes INNER JOIN node_revisions ON nodes.nid = node_revisions.nid WHERE nodes.nid = :nid AND node_revisions.revision = :revision ORDER BY node_revisions.revision DESC;"
 
-	sql_select_recent_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes ORDER BY nid DESC, publish DESC LIMIT :size OFFSET :offset ;"
+	sql_select_recent_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes ORDER BY changed DESC, publish DESC LIMIT :size OFFSET :offset ;"
 
 	sql_select_recent_node_changes_before: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE changed <= :date ORDER BY changed DESC, nid DESC LIMIT :size OFFSET :offset ;"
 

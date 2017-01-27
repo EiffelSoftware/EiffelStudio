@@ -295,7 +295,7 @@ feature -- Hooks
 															l_parentable_list.extend ([l_entity, l_parent])
 															l_entity.set_parent (Void)
 														end
-														l_page_api.save_page (l_entity)
+														l_page_api.import_page (l_entity)
 														apply_taxonomy_to_node (j, l_entity, l_page_api.cms_api)
 														l_new_pages.force (l_entity, l_node_api.node_path (l_entity))
 														a_import_ctx.log (l_node_type.name + " %"" + fp.utf_8_name + "%" imported as "+ l_entity.id.out +" for user #" + l_author.id.out + ".")
@@ -329,12 +329,14 @@ feature -- Hooks
 							update_page_parent (l_entity, ic.item.parent, l_new_pages)
 							if attached l_entity.parent as l_parent then
 								a_import_ctx.log (l_node_type.name + " #" + l_entity.id.out + " assigned to parent #" + l_parent.id.out)
-								l_page_api.save_page (l_entity)
+								l_page_api.import_page (l_entity)
 							else
 								a_import_ctx.log (l_node_type.name + " #" + l_entity.id.out + " : unable to find parent!")
 							end
 						end
 					end
+				else
+					a_import_ctx.log ("Importing [" + l_node_type.name + "] NOT ALLOWED!")
 				end
 			end
 		end

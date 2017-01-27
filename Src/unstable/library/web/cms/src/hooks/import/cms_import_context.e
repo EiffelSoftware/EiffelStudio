@@ -15,14 +15,22 @@ feature {NONE} -- Initialization
 
 	make (a_location: PATH)
 		do
-			location := a_location
+			location := a_location.absolute_path.canonical_path
 			create logs.make (10)
 		end
 
 feature -- Access
 
 	location: PATH
-			-- Location of import folder.		
+			-- Location of import folder.
+
+	location_exists: BOOLEAN
+			-- Does location of import folder exist?
+		local
+			ut: FILE_UTILITIES
+		do
+			Result := ut.directory_path_exists (location)
+		end
 
 feature -- Logs
 

@@ -91,10 +91,13 @@ feature -- HTTP Methods
 						s.append ("%">")
 						s.append (l_response.link (lnk.title, lnk.location, Void))
 						if not n.is_published then
-							s.append (" <em>(not-published)</em>")
+							s.append (" <span class=%"info%">(not-published)</span>")
 						elseif n.is_trashed then
-							s.append (" <em>(trashed)</em>")
+							s.append (" <span class=%"info%">(trashed)</span>")
 						end
+						s.append (" <span class=%"info%"> ("+ api.formatted_date_time_ago (n.modification_date) +")</span>")
+						s.append (" <span class=%"info%"> #"+ n.id.out +"</span>")
+
 						debug
 							if attached node_api.node_type (n.content_type) as ct then
 								s.append ("<span class=%"description%">")

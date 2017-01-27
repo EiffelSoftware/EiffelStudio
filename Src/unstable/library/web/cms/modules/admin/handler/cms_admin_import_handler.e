@@ -67,25 +67,26 @@ feature -- Execution
 				if attached fd.string_item ("op") as l_op and then l_op.same_string (text_import_all_data) then
 					if attached fd.string_item ("folder") as l_folder then
 						create p.make_from_string (l_folder)
-						if p.is_absolute then
-							create l_importation.make (p)
+						create l_importation.make (api.site_location.extended (import_folder_name).extended (l_folder))
+						if l_importation.location_exists then
+							l_response.add_notice_message ("Import all data (if permitted)!")
+							api.hooks.invoke_import_from (Void, l_importation, l_response)
+							create s.make_empty
+							across
+								l_importation.logs as ic
+							loop
+								s.append (ic.item)
+								s.append ("<br/>")
+								s.append_character ('%N')
+							end
+							l_response.add_notice_message (s)
 						else
-							create l_importation.make (api.site_location.extended ("import").extended (l_folder))
+							l_response.add_error_message ("Specified import folder is not found!")
+							fd.report_invalid_field ("folder", "Folder not found!")
 						end
 					else
-						create l_importation.make (api.site_location.extended ("import").extended ("default"))
+						fd.report_error ("Invalid form data!")
 					end
-					api.hooks.invoke_import_from (Void, l_importation, l_response)
-					l_response.add_notice_message ("All data imported (if allowed)!")
-					create s.make_empty
-					across
-						l_importation.logs as ic
-					loop
-						s.append (ic.item)
-						s.append ("<br/>")
-						s.append_character ('%N')
-					end
-					l_response.add_notice_message (s)
 				else
 					fd.report_error ("Invalid form data!")
 				end
@@ -107,14 +108,16 @@ feature -- Widget
 			Result.extend_raw_text ("Import CMS data from ")
 			create f_name.make_with_text ("folder", "default")
 			f_name.set_label ("Import folder name")
-			f_name.set_description ("Folder name under 'imports' folder.")
+			f_name.set_description ("Folder name under '" + a_response.html_encoded (import_folder_name) + "' folder.")
 			f_name.set_is_required (True)
 			Result.extend (f_name)
 			create but.make_with_text ("op", text_import_all_data)
 			Result.extend (but)
 		end
 
-feature -- Interface text.		
+feature -- Interface text.
+
+	import_folder_name: STRING_32 = "import"
 
 	text_import_all_data: STRING_32 = "Import all data"
 

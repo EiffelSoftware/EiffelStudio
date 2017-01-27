@@ -336,6 +336,16 @@ feature -- Internationalization (i18n)
 			Result := l_formatter.formatted_string (a_text, args)
 		end
 
+	formatted_date_time_ago (dt: DATE_TIME): STRING_32
+			-- Output date `dt` using time ago duration.
+		local
+			ago: DATE_TIME_AGO_CONVERTER
+		do
+			create ago.make
+			create Result.make (10)
+			Result.append_string_general (ago.smart_date_duration (dt))
+		end
+
 feature -- Emails
 
 	new_email (a_to_address: READABLE_STRING_8; a_subject: READABLE_STRING_8; a_content: READABLE_STRING_8): CMS_EMAIL

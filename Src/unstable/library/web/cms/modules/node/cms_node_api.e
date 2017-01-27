@@ -299,6 +299,18 @@ feature -- Change: Node
 
 	save_node (a_node: CMS_NODE)
 			-- Save `a_node'.
+		local
+			now: DATE_TIME
+		do
+			reset_error
+			create now.make_now_utc
+			a_node.set_modification_date (now)
+			node_storage.save_node (a_node)
+			error_handler.append (node_storage.error_handler)
+		end
+
+	import_node (a_node: CMS_NODE)
+			-- Same as `save_node` but keep modification_date unchanged.
 		do
 			reset_error
 			node_storage.save_node (a_node)
@@ -324,14 +336,6 @@ feature -- Change: Node
 				node_storage.delete_node (a_node)
 				error_handler.append (node_storage.error_handler)
 			end
-		end
-
-	update_node (a_node: CMS_NODE)
-			-- Update node `a_node' data.
-		do
-			reset_error
-			node_storage.update_node (a_node)
-			error_handler.append (node_storage.error_handler)
 		end
 
 	trash_node (a_node: CMS_NODE)

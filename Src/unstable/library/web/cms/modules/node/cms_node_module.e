@@ -38,7 +38,6 @@ feature {NONE} -- Initialization
 			version := "1.0"
 			description := "Service to manage content based on 'node'"
 			package := "core"
-
 				-- Optional dependencies, mainly for information.
 			put_dependency ({CMS_RECENT_CHANGES_MODULE}, False)
 			put_dependency ({CMS_TAXONOMY_MODULE}, False)
@@ -209,6 +208,7 @@ feature -- Hooks
 			a_hooks.subscribe_to_menu_system_alter_hook (Current)
 			a_hooks.subscribe_to_block_hook (Current)
 			a_hooks.subscribe_to_response_alter_hook (Current)
+--			a_hooks.subscribe_to_export_hook (Current)
 
 				-- Module specific hook, if available.
 			a_hooks.subscribe_to_hook (Current, {CMS_RECENT_CHANGES_HOOK})

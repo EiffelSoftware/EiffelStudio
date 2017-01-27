@@ -126,6 +126,12 @@ feature -- Commit
 			node_api.save_node (a_blog)
 		end
 
+	import_blog (a_blog: CMS_BLOG)
+			-- Same as `save_blog` but keep modification_date unchanged.
+		do
+			node_api.import_node (a_blog)
+		end
+
 feature {NONE} -- Helpers
 
 	nodes_to_blogs (a_nodes: LIST [CMS_NODE]): ARRAYED_LIST [CMS_BLOG]

@@ -9,6 +9,9 @@ ul.cms-nodes li {
 ul.cms-nodes li:first-child {
   border-top: none;
 }
+ul.cms-nodes li span.author, ul.cms-nodes li span.info {
+  float: right;
+}
 ul.cms-nodes li.cms_type_page a::before {
   content: "[page] ";
 }

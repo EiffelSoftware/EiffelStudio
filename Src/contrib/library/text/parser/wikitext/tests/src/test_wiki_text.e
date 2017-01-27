@@ -1,4 +1,4 @@
-class
+﻿class
 	TEST_WIKI_TEXT
 
 inherit
@@ -104,7 +104,7 @@ __NOTOC__
 == three.3 ==
 =And the last one=
 == with spaces in text==
-== summer:�t�==
+== summer:été==
 end
 }")
 			l_expected_output := "{
@@ -136,7 +136,7 @@ end
 
 <a name="with_spaces_in_text"></a><h2>with spaces in text</h2>
 
-<a name="summer:%C3%A9t%C3%A9"></a><h2>summer:�t�</h2>
+<a name="summer:%C3%A9t%C3%A9"></a><h2>summer:été</h2>
 <p>end</p>
 </div>
 
@@ -241,7 +241,7 @@ end
 			vis := new_xhtml_generator (o)
 			assert ("valid anchor name", same_output (vis.anchor_name ("A text with spaces", True), "A_text_with_spaces"))
 			assert ("valid anchor name", same_output (vis.anchor_name ("unexpected # char", True), "unexpected_%%23_char"))
-			assert ("valid anchor name", same_output (vis.anchor_name ("summer=�t�", True), "summer=%%C3%%A9t%%C3%%A9"))
+			assert ("valid anchor name", same_output (vis.anchor_name ("summer=été", True), "summer=%%C3%%A9t%%C3%%A9"))
 		end
 
 	test_html
@@ -270,8 +270,59 @@ end
 			o: STRING
 			l_expected_output: STRING
 		do
-			create t.make_from_string ("This is a first line.%NThen the second line.%N%NNext paragraph, line 1.%Nline 2.%Nend.")
+			create t.make_from_string ("[
+This is a first line.
+Then the second line.
+
+Next paragraph, line 1.
+line 2.
+end.
+]")
 			l_expected_output := "[
+<p>This is a first line.Then the second line.</p>
+<p>Next paragraph, line 1.line 2.end.</p>
+
+]"
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", same_output (o, l_expected_output))
+		end
+			
+	test_paragraph_with_cr
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			l_expected_output: STRING
+		do	
+			create t.make_from_string ("This is a first line.%R%NThen the second line.%R%N%R%NNext paragraph, line 1.%R%Nline 2.%R%Nend.%R%N")
+			l_expected_output := "<p>This is a first line.%RThen the second line.%R</p>%N<p>Next paragraph, line 1.%Rline 2.%Rend.%R</p>%N"
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", same_output (o, l_expected_output))
+		end
+
+	test_paragraph_in_section
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			l_expected_output: STRING
+		do
+			create t.make_from_string ("[
+== Test ==
+This is a first line.
+Then the second line.
+
+Next paragraph, line 1.
+line 2.
+end.
+]")
+			l_expected_output := "[
+			
+<a name="Test"></a><h2>Test</h2>
 <p>This is a first line.Then the second line.</p>
 <p>Next paragraph, line 1.line 2.end.</p>
 
@@ -1243,6 +1294,61 @@ e := "{
 			t.structure.process (gen)
 			assert ("o", not o.is_empty)
 			assert ("as e", o.same_string (e))
+		end
+
+	test_image_details
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+See [[Image:http://abs.path.to/image.png|align=right|width=100px|This is a description]]
+			]")
+
+e := "{
+<p>See <div style="text-align: right"><img src="http://abs.path.to/image.png" border="0" width="100px"/>This is a description</div></p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
+	test_unicode
+		local
+			txt,e32: STRING_32
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+			utf: UTF_CONVERTER
+		do
+			txt := {STRING_32} "begin%N* Zhōng Fú 中孚 end"
+
+			create t.make_from_string (utf.utf_32_string_to_utf_8_string_8 (txt))
+
+e32 := {STRING_32} "{
+<p>begin</p>
+<ul><li> Zhōng Fú 中孚 end</li>
+</ul>
+
+}"
+e := utf.utf_32_string_to_utf_8_string_8 (e32)
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+			txt := utf.utf_8_string_8_to_string_32 (o)
+			assert ("as e32", txt.same_string (e32))
 		end
 
 feature {NONE} -- Implementation

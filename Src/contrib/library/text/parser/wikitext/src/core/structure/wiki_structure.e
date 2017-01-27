@@ -268,7 +268,15 @@ feature -- Basic operation
 						w_block := Void
 						is_start_of_line := True
 						l_line := a_text.substring (b, l_eol)
-						if l_line.is_empty then
+-- Remove any '%R' in text...
+--						if not l_line.is_empty and then l_line[l_line.count] = '%R' then
+--							l_line := l_line.substring (1, l_line.count - 1)
+--						end
+
+						if
+							l_line.is_empty
+							or (l_line.count = 1 and then l_line[1] = '%R')
+						then
 							w_box := new_paragraph (w_psec)
 --							add_element_to (w_box, w_line)
 						else

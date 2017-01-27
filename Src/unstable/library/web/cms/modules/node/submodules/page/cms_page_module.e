@@ -286,7 +286,7 @@ feature -- Hooks
 															-- Page Already exists!
 															-- FIXME/TODO
 														l_entity := l_pages.first
-														a_import_ctx.log (l_node_type.name + " %"" + fp.utf_8_name + "%" skipped (already exists for user #" + l_author.id.out + ")!")
+														a_import_ctx.log (l_node_type.name + " from %"" + fp.utf_8_name + "%" SKIPPED (already exists for user #" + l_author.id.out + ")!")
 													else
 														if
 															attached l_entity.parent as l_parent and then
@@ -298,7 +298,7 @@ feature -- Hooks
 														l_page_api.import_page (l_entity)
 														apply_taxonomy_to_node (j, l_entity, l_page_api.cms_api)
 														l_new_pages.force (l_entity, l_node_api.node_path (l_entity))
-														a_import_ctx.log (l_node_type.name + " %"" + fp.utf_8_name + "%" imported as "+ l_entity.id.out +" for user #" + l_author.id.out + ".")
+														a_import_ctx.log (l_node_type.name + " #" + l_entity.id.out + " imported from %"" + fp.utf_8_name + "%" for user #" + l_author.id.out + ".")
 														if attached {CMS_LOCAL_LINK} l_entity.link as l_link then
 															loc := l_node_api.node_path (l_entity)
 															if not l_link.location.starts_with_general ("node/") then

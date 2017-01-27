@@ -111,7 +111,7 @@ feature -- Import
 				if
 					a_response.has_permissions (<<"import files">>)
 				then
-					a_import_ctx.log ("Importing files roles...")
+					a_import_ctx.log ("Importing files ...")
 						-- From "core" location
 					p := a_import_ctx.location.extended ("files")
 					if attached files_from_location (p, True) as l_files then

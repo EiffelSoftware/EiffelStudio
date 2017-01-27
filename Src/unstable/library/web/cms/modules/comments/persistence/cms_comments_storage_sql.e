@@ -88,6 +88,8 @@ feature -- Change
 
 			if attached a_comment.parent as p then
 				l_parameters.put (p.id, "parent")
+			else
+				l_parameters.put (0, "parent")
 			end
 
 			if attached a_comment.entity as l_entity then
@@ -102,8 +104,10 @@ feature -- Change
 			if a_comment.has_id then
 				l_parameters.put (a_comment.id, "cid")
 				sql_modify (sql_update_comment, l_parameters)
+				sql_finalize
 			else
 				sql_insert (sql_insert_comment, l_parameters)
+				sql_finalize
 				if not has_error then
 					a_comment.set_id (last_inserted_comment_id)
 				end
@@ -113,7 +117,6 @@ feature -- Change
 			else
 				sql_commit_transaction
 			end
-			sql_finalize
 		end
 
 feature {NONE} -- Implementation

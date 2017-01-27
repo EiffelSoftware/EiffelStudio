@@ -287,9 +287,9 @@ feature -- Hooks
 															-- Blog Already exists!
 															-- FIXME/TODO
 														l_entity := l_blogs.first
-														a_import_ctx.log (l_node_type.name + " %"" + fp.utf_8_name + "%" skipped (already exists for user #" + l_author.id.out + ")!")
+														a_import_ctx.log (l_node_type.name + " %"" + fp.utf_8_name + "%" SKIPPED (already exists for user #" + l_author.id.out + ")!")
 													else
-														a_import_ctx.log (l_node_type.name + " %"" + fp.utf_8_name + "%" imported for user #" + l_author.id.out + ".")
+														a_import_ctx.log (l_node_type.name + " #" + l_entity.id.out + " imported from %"" + fp.utf_8_name + "%" for user #" + l_author.id.out + ".")
 														l_blog_api.import_blog (l_entity)
 														apply_taxonomy_to_node (j, l_entity, l_blog_api.cms_api)
 														if attached {CMS_LOCAL_LINK} l_entity.link as l_link then

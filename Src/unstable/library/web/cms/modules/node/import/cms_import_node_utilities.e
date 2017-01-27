@@ -27,40 +27,24 @@ feature -- Comments helpers
 		local
 			s: STRING
 			jp: JSON_PARSER
-			f: RAW_FILE
 			l_comment: CMS_COMMENT
 			l_log: STRING_8
 		do
 			if attached {CMS_COMMENTS_API} api.module_api ({CMS_COMMENTS_MODULE}) as l_comments_api then
-				create f.make_with_path (fn)
-				if f.exists and then f.is_access_readable then
-					f.open_read
-					from
-						create s.make (0)
-					until
-						f.exhausted or f.end_of_file
-					loop
-						f.read_stream (1_024)
-						s.append (f.last_string)
-					end
-					f.close
-					create jp.make_with_string (s)
-					jp.parse_content
-					if jp.is_valid and then attached jp.parsed_json_value as j_comments then
-						if attached json_to_comments (j_comments, a_entity, l_comments_api) as l_comments then
-							across
-								l_comments as ic
-							loop
-								l_comment := ic.item
-								l_comments_api.save_recursively_comment (l_comment)
-								l_log := "comment #" + l_comment.id.out + " (count="+ l_comment.count.out +") %"" + f.path.utf_8_name + "%" imported"
-								l_log.append (" into " + a_entity.content_type)
-								if attached a_entity.identifier as l_id then
-									l_log.append (" #" + l_id)
-								end
-								l_log.append (" .")
-								a_import_ctx.log (l_log)
+				if attached json_value_from_location (fn) as j_comments then
+					if attached json_to_comments (j_comments, a_entity, l_comments_api) as l_comments then
+						across
+							l_comments as ic
+						loop
+							l_comment := ic.item
+							l_comments_api.save_recursively_comment (l_comment)
+							l_log := "comment #" + l_comment.id.out + " (count="+ l_comment.count.out +") imported from %"" + fn.utf_8_name + "%""
+							l_log.append (" into " + a_entity.content_type)
+							if attached a_entity.identifier as l_id then
+								l_log.append (" #" + l_id.out)
 							end
+							l_log.append (" .")
+							a_import_ctx.log (l_log)
 						end
 					end
 				end

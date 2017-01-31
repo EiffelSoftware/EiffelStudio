@@ -1830,6 +1830,7 @@ test	conversion-in-assigner-command		exec361 tcf pass execution assigner convers
 test	formal-generic-tuple-constraint		exec362 tcf pass execution parenthesis_alias conversion tuple conformance formal generic constraint
 test	formal-generic-tuple-unfolding		exec363 tcf pass execution parenthesis_alias conversion tuple conformance formal generic constraint
 test	void-safe-like-argument		exec364 tcf pass execution attached_types anchored_type
+test	once-manifest-string-extended-ascii exec365 tcf pass execution
 
 -- Once specific
 

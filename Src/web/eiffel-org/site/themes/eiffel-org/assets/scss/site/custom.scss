@@ -77,12 +77,12 @@ a.link-platforms {
 }
 div.cms-node {
 	.info {
-		display: none;
-		&.node-blog {
-		  display: block;
-		  font-size: smaller;
-		  color: #777;
-		  font-style: italic;
+		display: block;
+		font-size: smaller;
+		color: #777;
+		font-style: italic;
+		&.node-page {
+			display: none;
 	    }
 	}
 }

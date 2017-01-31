@@ -1152,14 +1152,14 @@ a.link-platforms:hover {
 
 /* line 79, ../scss/site/custom.scss */
 div.cms-node .info {
-  display: none;
-}
-/* line 81, ../scss/site/custom.scss */
-div.cms-node .info.node-blog {
   display: block;
   font-size: smaller;
   color: #777;
   font-style: italic;
+}
+/* line 84, ../scss/site/custom.scss */
+div.cms-node .info.node-page {
+  display: none;
 }
 
 /* line 1, ../scss/site/eiffel_org_nodes.scss */

@@ -75,15 +75,16 @@ a.link-platforms {
 	border: solid 1px red;
 	padding: 5px 2px 5px 2px;
 }
-div.cms-node {
-	.info {
-		display: block;
-		font-size: smaller;
-		color: #777;
-		font-style: italic;
-		&.node-page {
-			display: none;
-	    }
-	}
+
+div.node-blog .info {
+  display: block;
+  font-size: smaller;
+  color: #777;
+  font-style: italic;
+}
+
+/* Hide author and date for CMS pages */
+div.node-page .info {
+  display: none;
 }
 

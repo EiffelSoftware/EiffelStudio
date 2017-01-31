@@ -1151,14 +1151,16 @@ a.link-platforms:hover {
 }
 
 /* line 79, ../scss/site/custom.scss */
-div.cms-node .info {
+div.node-blog .info {
   display: block;
   font-size: smaller;
   color: #777;
   font-style: italic;
 }
-/* line 84, ../scss/site/custom.scss */
-div.cms-node .info.node-page {
+
+/* Hide author and date for CMS pages */
+/* line 87, ../scss/site/custom.scss */
+div.node-page .info {
   display: none;
 }
 

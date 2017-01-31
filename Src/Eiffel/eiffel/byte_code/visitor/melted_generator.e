@@ -1793,7 +1793,7 @@ feature {NONE} -- Visitors
 				ba.append_integer (l_value_32.count * 4)
 				ba.append_raw_string_32 (l_value_32)
 			else
-				l_value := a_node.value
+				l_value := a_node.value_8
 					-- Bytes to read
 				ba.append_integer (l_value.count)
 				ba.append_raw_string (l_value)
@@ -2638,7 +2638,7 @@ feature {NONE} -- SCOOP
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

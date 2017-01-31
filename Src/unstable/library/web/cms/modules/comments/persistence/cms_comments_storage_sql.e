@@ -86,7 +86,7 @@ feature -- Change
 			l_parameters.put (a_comment.modification_date, "changed")
 			l_parameters.put (a_comment.status, "status")
 
-			if attached a_comment.parent as p then
+			if attached a_comment.parent as p and then p.has_id then
 				l_parameters.put (p.id, "parent")
 			else
 				l_parameters.put (0, "parent")
@@ -180,11 +180,11 @@ feature {NONE} -- Queries
 
 	Sql_last_inserted_comment_id: STRING = "SELECT MAX(cid) FROM comments;"
 
-	sql_select_comment_by_id: STRING = "SELECT cid,content,format,author,author_name,created,changed,status,parent,entity,entity_type FROM comments WHERE cid=:cid;"
+	sql_select_comment_by_id: STRING = "SELECT cid, content, format, author, author_name, created, changed, status, parent, entity, entity_type FROM comments WHERE cid=:cid ;"
 
-	sql_select_comments_for_content: STRING = "SELECT cid,content,format,author,author_name,created,changed,status,parent,entity,entity_type FROM comments WHERE entity=:content_id;"
+	sql_select_comments_for_content: STRING = "SELECT cid, content, format, author, author_name, created, changed, status, parent, entity, entity_type FROM comments WHERE entity=:content_id ;"
 
-	sql_insert_comment: STRING = "INSERT INTO comments (content,format,author,author_name,created,changed,status,parent,entity,entity_type) VALUES (:content,:format,:author,:author_name,:created,:changed,:status,:parent,:entity,:entity_type);"
-	sql_update_comment: STRING = "UPDATE comments SET content=:content,format=:format,author=:author,author_name=:author_name,created=:created,changed=:changed,status=:status,parent=:parent,entity=:entity,entity_type=:entity_type WHERE cid=:cid ;"
+	sql_insert_comment: STRING = "INSERT INTO comments (content, format, author, author_name, created, changed, status, parent, entity, entity_type) VALUES (:content, :format, :author, :author_name, :created, :changed, :status, :parent, :entity, :entity_type) ;"
+	sql_update_comment: STRING = "UPDATE comments SET content=:content, format=:format, author=:author, author_name=:author_name, created=:created, changed=:changed, status=:status, parent=:parent, entity=:entity, entity_type=:entity_type WHERE cid=:cid ;"
 
 end

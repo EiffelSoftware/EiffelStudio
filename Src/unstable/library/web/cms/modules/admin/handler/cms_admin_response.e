@@ -29,6 +29,7 @@ feature -- Process
 			l_admin_links.force (["core", <<"view logs">>, local_link ("Logs", "admin/logs"), "View logs"])
 			l_admin_links.force (["support", <<"admin cache">>, local_link ("Cache", "admin/cache"), "Clear caches"])
 			l_admin_links.force (["support", <<"admin export">>, local_link ("Export", "admin/export"), "Export CMS contents, and modules contents."])
+			l_admin_links.force (["support", <<"admin import">>, local_link ("Export", "admin/import"), "Import CMS contents, and modules contents."])
 			create categories.make_caseless (3)
 			across
 				l_admin_links as ic

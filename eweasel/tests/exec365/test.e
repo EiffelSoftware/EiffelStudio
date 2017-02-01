@@ -10,14 +10,14 @@ feature {NONE} -- Creation
 		local
 			s: STRING_8
 		do
-			s := "Â£"
+			s := "£"
 			if s.count /= 1 then
 				io.put_string ("Not OK, string should only have one character.")
 				io.put_new_line
 			end
 
-			s := "abcÂ£de"
-			s.replace_substring_all (once "Â£" , "xx")
+			s := "abc£de"
+			s.replace_substring_all (once "£" , "xx")
 
 			if not s.same_string ("abcxxde") then
 				io.put_string ("Not OK, wrong substitution")

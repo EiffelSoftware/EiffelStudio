@@ -28,7 +28,9 @@ feature {NONE} -- Initialization
 			l_node := custom_node ("Content", "Summary", "Title")
 			storage.new_user (default_user)
 			storage.new_user (custom_user ("u2", "p2", "e2"))
-			l_node.set_author (storage.user_by_email (default_user.email))
+			if attached default_user.email as l_email then
+				l_node.set_author (storage.user_by_email (l_email))
+			end
 --			storage.new_node (l_node)
 --			if attached {CMS_NODE} storage.node_by_id (1) as ll_node then
 --				storage.update_node_title (2,ll_node.id, "New Title")

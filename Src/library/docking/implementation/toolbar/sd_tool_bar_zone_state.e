@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "Store tool bar zone state."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

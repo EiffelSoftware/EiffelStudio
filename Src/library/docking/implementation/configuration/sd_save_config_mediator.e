@@ -168,7 +168,7 @@ feature -- Save inner container data.
 					end
 				end
 			else
-				check real_has_place_holder: internal_docking_manager.zones.place_holder_content.state.is_zone_attached end
+				check real_has_place_holder: attached internal_docking_manager.zones.place_holder_content.state.zone end
 
 				-- If following check violated, it normally means when you saving tools' layout, there are BOTH editor type zones and editor place holder visible.
 				-- So docking library don't know how to separate tool area and editor area.
@@ -342,8 +342,7 @@ feature {NONE} -- Implementation
 		do
 			a_config_data.set_is_split_area (False)
 			a_config_data.add_title (internal_shared.editor_place_holder_content_name)
-			-- FIXIT: this line maybe have problem if we changed the name of SD_DOCKING_STATE.
-			a_config_data.set_state ("SD_DOCKING_STATE")
+			a_config_data.set_state (({SD_DOCKING_STATE}).name)
 			a_config_data.set_direction ({SD_ENUMERATION}.top)
 			a_config_data.set_width (1)
 			a_config_data.set_height (1)
@@ -465,7 +464,6 @@ feature {NONE} -- Implementation
 			l_tool_bar_data: SD_TOOL_BAR_DATA
 			l_float_tool_bars: ARRAYED_LIST [SD_FLOATING_TOOL_BAR_ZONE]
 			l_float_tool_bars_item: SD_FLOATING_TOOL_BAR_ZONE
-			l_tool_bar_zone: SD_TOOL_BAR_ZONE
 			l_tool_bar_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
 			l_tool_bar_contents_item: SD_TOOL_BAR_CONTENT
 		do
@@ -482,7 +480,7 @@ feature {NONE} -- Implementation
 			l_tool_bar_data := save_one_tool_bar_data ({SD_ENUMERATION}.right)
 			a_tool_bar_data.extend (l_tool_bar_data)
 
-			-- Floating tool bars data
+				-- Floating tool bars data
 			l_float_tool_bars := internal_docking_manager.tool_bar_manager.floating_tool_bars
 			from
 				l_float_tool_bars.start
@@ -490,15 +488,18 @@ feature {NONE} -- Implementation
 				l_float_tool_bars.after
 			loop
 				l_float_tool_bars_item := l_float_tool_bars.item
-				l_tool_bar_zone := l_float_tool_bars_item.zone
-				create l_tool_bar_data.make
-				l_tool_bar_data.set_floating (True)
-				l_tool_bar_data.set_title (l_tool_bar_zone.content.unique_title)
-				l_tool_bar_data.set_screen_x_y (l_float_tool_bars_item.screen_x, l_float_tool_bars_item.screen_y)
-				l_tool_bar_zone.assistant.save_items_layout (Void)
-				l_tool_bar_data.set_last_state (l_tool_bar_zone.assistant.last_state)
-				l_tool_bar_data.set_visible (l_tool_bar_zone.content.is_visible)
-				a_tool_bar_data.extend (l_tool_bar_data)
+				if attached l_float_tool_bars_item.zone as l_tool_bar_zone then
+					create l_tool_bar_data.make
+					l_tool_bar_data.set_floating (True)
+					if attached l_tool_bar_zone.content as c then
+						l_tool_bar_data.set_title (c.unique_title)
+						l_tool_bar_data.set_visible (c.is_visible)
+					end
+					l_tool_bar_data.set_screen_x_y (l_float_tool_bars_item.screen_x, l_float_tool_bars_item.screen_y)
+					l_tool_bar_zone.assistant.save_items_layout (Void)
+					l_tool_bar_data.set_last_state (l_tool_bar_zone.assistant.last_state)
+					a_tool_bar_data.extend (l_tool_bar_data)
+				end
 				l_float_tool_bars.forth
 			end
 
@@ -558,7 +559,9 @@ feature {NONE} -- Implementation
 					loop
 						l_zone := l_tool_bars.item_for_iteration
 						l_zone.assistant.save_items_layout (Void)
-						l_row_data.extend ([l_zone.content.unique_title, l_zone.position, l_zone.assistant.last_state])
+						if attached l_zone.content as c then
+							l_row_data.extend ([c.unique_title, l_zone.position, l_zone.assistant.last_state])
+						end
 						l_tool_bars.forth
 					end
 				else
@@ -656,7 +659,7 @@ feature {NONE} -- Implementation attributes
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,15 +1,15 @@
 note
 	description: "[
-				Manager which communicate between client programmer and whole docking library.
+		Manager which communicate between client programmer and whole docking library.
 				
-				The SD_DOCKING_MANAGER is the key (and the most important one) for client
-				programmers to comunicate with docking library. Almost all importantant features
-				are listed in SD_DOCKING_MANAGER, such as extend/remove a docking content 
-				(which is a docking unit)
+		The SD_DOCKING_MANAGER is the key (and the most important one) for client
+		programmers to comunicate with docking library. Almost all importantant features
+		are listed in SD_DOCKING_MANAGER, such as extend/remove a docking content 
+		(which is a docking unit)
 				
-				Internally, docking manger create left, right, top, bottom areas for toolbars 
-				and docking panels.
-																								]"
+		Internally, docking manger create left, right, top, bottom areas for toolbars 
+		and docking panels.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 		local
 			l_checker: SD_DEPENDENCY_CHECKER
 			l_list: ARRAYED_LIST [SD_DOCKING_MANAGER_HOLDER]
+			l_left, l_right, l_top, l_bottom: like internal_auto_hide_panel_bottom
 		do
 			create internal_shared
 			create tab_drop_actions
@@ -51,17 +52,38 @@ feature {NONE} -- Initialization
 			main_window := a_window
 
 			init_widget_structure
-			create l_list.make (20)
-			init_auto_hide_panel (l_list)
+
+			create l_left.make ({SD_ENUMERATION}.left)
+			internal_auto_hide_panel_left := l_left
+			create l_right.make ({SD_ENUMERATION}.right)
+			internal_auto_hide_panel_right := l_right
+			create l_top.make ({SD_ENUMERATION}.top)
+			internal_auto_hide_panel_top := l_top
+			create l_bottom.make ({SD_ENUMERATION}.bottom)
+			internal_auto_hide_panel_bottom := l_bottom
 
 			create contents
+			create inner_containers.make (1)
 
+			create agents.make (Current)
+			create query.make (Current)
+			create command.make (Current)
+			create property.make (Current)
+			create zones.make (Current)
+
+			create tool_bar_manager.make (Current)
+
+			tool_bar_manager.add_actions
+
+			create l_list.make (20)
+			l_list.extend (tool_bar_manager)
+			init_managers (l_list)
 			init_inner_container (l_list)
 
-			create tool_bar_manager.make
-			l_list.extend (tool_bar_manager)
-
-			init_managers (l_list)
+			main_container.left_bar.extend (l_left)
+			main_container.right_bar.extend (l_right)
+			main_container.top_bar.extend (l_top)
+			main_container.bottom_bar.extend (l_bottom)
 
 			contents.extend (zones.place_holder_content)
 
@@ -111,41 +133,14 @@ feature {NONE} -- Initialization
 		require
 			not_void: a_list /= Void
 		do
-			create agents.make
-			a_list.extend (agents)
-			create query
-			a_list.extend (query)
-			create command.make
-			a_list.extend (command)
-			create property.make
-			a_list.extend (property)
-			create zones.make
-			a_list.extend (zones)
-		end
+			agents.add_actions
+			command.add_actions
 
-	init_auto_hide_panel (a_list: ARRAYED_LIST [SD_DOCKING_MANAGER_HOLDER])
-			-- Insert auto hide panels
-		require
-			not_void: a_list /= Void
-		local
-			l_left, l_right, l_top, l_bottom: like internal_auto_hide_panel_bottom
-		do
-			create l_left.make ({SD_ENUMERATION}.left)
-			a_list.extend (l_left)
-			internal_auto_hide_panel_left := l_left
-			create l_right.make ({SD_ENUMERATION}.right)
-			a_list.extend (l_right)
-			internal_auto_hide_panel_right := l_right
-			create l_top.make ({SD_ENUMERATION}.top)
-			a_list.extend (l_top)
-			internal_auto_hide_panel_top := l_top
-			create l_bottom.make ({SD_ENUMERATION}.bottom)
-			a_list.extend (l_bottom)
-			internal_auto_hide_panel_bottom := l_bottom
-			main_container.left_bar.extend (l_left)
-			main_container.right_bar.extend (l_right)
-			main_container.top_bar.extend (l_top)
-			main_container.bottom_bar.extend (l_bottom)
+			a_list.extend (agents)
+			a_list.extend (query)
+			a_list.extend (command)
+			a_list.extend (property)
+			a_list.extend (zones)
 		end
 
 	init_inner_container (a_list: ARRAYED_LIST [SD_DOCKING_MANAGER_HOLDER])
@@ -155,11 +150,10 @@ feature {NONE} -- Initialization
 		local
 			l_inner_container: SD_MULTI_DOCK_AREA
 		do
-			create l_inner_container.make
+			create l_inner_container.make (Current)
 			a_list.extend (l_inner_container)
 			fixed_area.extend (l_inner_container)
 			l_inner_container.set_minimum_size (0, 0)
-			create inner_containers.make (1)
 			inner_containers.extend (l_inner_container)
 		end
 
@@ -611,7 +605,6 @@ feature -- Command
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
 			l_notebooks: ARRAYED_LIST [SD_NOTEBOOK]
-			l_top, l_bottom, l_left, l_right: like internal_auto_hide_panel_top
 		do
 			internal_shared.docking_manager_list.prune_all (Current)
 			property.destroy
@@ -646,25 +639,17 @@ feature -- Command
 				l_floating_zones.forth
 			end
 
-			l_top := internal_auto_hide_panel_top
-			if l_top /= Void then
-				l_top.destroy
-				internal_auto_hide_panel_top := Void
+			if not internal_auto_hide_panel_top.is_destroyed then
+				internal_auto_hide_panel_top.destroy
 			end
-			l_bottom := internal_auto_hide_panel_bottom
-			if l_bottom /= Void then
-				l_bottom.destroy
-				internal_auto_hide_panel_bottom := Void
+			if not internal_auto_hide_panel_bottom.is_destroyed then
+				internal_auto_hide_panel_bottom.destroy
 			end
-			l_left := internal_auto_hide_panel_left
-			if l_left /= Void then
-				l_left.destroy
-				internal_auto_hide_panel_left := Void
+			if not internal_auto_hide_panel_left.is_destroyed then
+				internal_auto_hide_panel_left.destroy
 			end
-			l_right := internal_auto_hide_panel_right
-			if l_right /= Void then
-				l_right.destroy
-				internal_auto_hide_panel_right := Void
+			if not internal_auto_hide_panel_right.is_destroyed then
+				internal_auto_hide_panel_right.destroy
 			end
 
 			from
@@ -773,7 +758,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_DOCKING_MANAGER_QUERY, SD_DOCKING_MANAGER
 	internal_auto_hide_panel_left,
 	internal_auto_hide_panel_right,
 	internal_auto_hide_panel_top,
-	internal_auto_hide_panel_bottom: detachable SD_AUTO_HIDE_PANEL
+	internal_auto_hide_panel_bottom: SD_AUTO_HIDE_PANEL
 			-- Auto hide panels
 
 feature -- Obsolete
@@ -971,7 +956,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -980,10 +965,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

@@ -49,16 +49,20 @@ feature -- Command
 			set: menu_function = a_menu_function
 		end
 
-	set_popup_widget (a_widget: like popup_widget)
+	set_popup_widget (a_widget: attached like popup_widget)
 			-- Set `popup_widget' with `a_widget'
 		require
 			not_void: a_widget /= Void
 		do
 			popup_widget := a_widget
 			popup.wipe_out
-			popup.extend (a_widget)
+			if attached a_widget then
+				popup.extend (a_widget)
+			end
 		ensure
-			set: popup_widget = a_widget and popup.has (a_widget)
+			popup_widget_set: popup_widget = a_widget
+			has_if_attached: attached a_widget implies popup.has (a_widget)
+			is_empty_if_detached: not attached a_widget implies popup.is_empty
 		end
 
 	set_popup_widget_function (a_popup_widget_function: like popup_widget_function)
@@ -228,7 +232,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -237,6 +241,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

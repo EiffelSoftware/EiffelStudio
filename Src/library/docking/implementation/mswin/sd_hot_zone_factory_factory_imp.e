@@ -13,7 +13,7 @@ inherit
 
 feature -- Hot zone factory
 
-	hot_zone_factory: SD_HOT_ZONE_ABSTRACT_FACTORY
+	hot_zone_factory (m: SD_DOCKER_MEDIATOR): SD_HOT_ZONE_ABSTRACT_FACTORY
 			-- <Precursor>
 		local
 			l_version: WEL_WINDOWS_VERSION
@@ -24,25 +24,25 @@ feature -- Hot zone factory
 			create l_version
 			create {SD_SYSTEM_SETTER_IMP} l_system
 			if l_version.is_windows_2000_compatible and then not l_system.is_remote_desktop then
-				create {SD_HOT_ZONE_TRIANGLE_FACTORY} Result
+				create {SD_HOT_ZONE_TRIANGLE_FACTORY} Result.make (m)
 			else
-				create {SD_HOT_ZONE_OLD_FACTORY} Result
+				create {SD_HOT_ZONE_OLD_FACTORY} Result.make (m)
 				create l_shared
 				l_line_drawer := l_shared.feedback.line_drawer
 				l_line_drawer.reset_screen
 			end
 		end
+
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
 
 end

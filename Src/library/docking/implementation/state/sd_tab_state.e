@@ -9,7 +9,7 @@ class
 	SD_TAB_STATE
 
 inherit
-	SD_STATE
+	SD_STATE_WITH_CONTENT
 		export
 			{SD_TAB_STATE_ASSISTANT} internal_content, change_state, top_split_position
 		redefine
@@ -48,7 +48,6 @@ feature {NONE} -- Initlization
 			a_content_not_void: a_content /= Void
 			a_content_parent_void: a_content.user_widget.parent = Void
 			a_target_zone_not_void: a_target_zone /= Void
-			a_target_zone_parent_not_void: a_target_zone.parent /= Void
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		local
@@ -56,9 +55,6 @@ feature {NONE} -- Initlization
 			l_target_zone_tab_state: SD_TAB_STATE
 			l_old_split_position: INTEGER
 			l_old_parent_split: BOOLEAN
-			l_main_area_widget: detachable EV_WIDGET
-			l_target_zone_parent: detachable EV_CONTAINER
-			l_main_area: detachable SD_MULTI_DOCK_AREA
 		do
 			init_common (a_content, a_direction)
 			if a_target_zone.is_parent_split then
@@ -79,13 +75,14 @@ feature {NONE} -- Initlization
 			-- We should copy maximized informations from `a_target_zone'
 			if a_target_zone.is_maximized then
 				tab_zone.set_max (True)
-				l_main_area_widget := a_target_zone.main_area_widget
-				check l_main_area_widget /= Void end -- Implied by `a_target_zone.is_maximized'
-				l_target_zone_parent := a_target_zone.internal_parent
-				check l_target_zone_parent /= Void end -- Implied by `a_target_zone.is_maximized'
-				l_main_area := a_target_zone.main_area
-				check l_main_area /= Void end -- Implied by `a_target_zone.is_maximized'
-				tab_zone.set_widget_main_area (l_main_area_widget, l_main_area, l_target_zone_parent, a_target_zone.internal_parent_split_position)
+				if
+					attached a_target_zone.main_area_widget as l_main_area_widget and then
+					attached a_target_zone.internal_parent as l_target_zone_parent and then
+					attached a_target_zone.main_area as l_main_area
+				then
+					tab_zone.set_widget_main_area
+						(l_main_area_widget, l_main_area, l_target_zone_parent, a_target_zone.internal_parent_split_position)
+				end
 			end
 
 			create l_target_zone_tab_state.make_with_tab_zone (a_target_zone.content, tab_zone, direction)
@@ -222,8 +219,7 @@ feature {NONE} -- Initlization
 	init_common_end
 			-- Initlization of common parts when all others initialized
 		do
-			create assistant.make (docking_manager)
-			assistant.init (Current)
+			create assistant.make (docking_manager, Current)
 		end
 
 feature  -- States report
@@ -243,81 +239,81 @@ feature -- Redefine
 			l_docking_state: SD_DOCKING_STATE
 			l_tab_state: SD_TAB_STATE
 			l_tab_zone: detachable SD_TAB_ZONE
-			l_titles: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_selected_index: INTEGER
 		do
 			direction := a_data.direction
-			l_titles := a_data.titles
-			check l_titles /= Void end -- Implied by precondition `more_than_one_title'
 			l_selected_index := a_data.selected_tab_index
 			create internal_shared
-			from
-				l_titles.start
-				create l_contents.make (l_titles.count)
-			until
-				l_titles.after
-			loop
-				l_content := docking_manager.query.content_by_title_for_restore (l_titles.item)
-				if l_content /= Void then
-					l_contents.extend (l_content)
-				end
-				l_titles.forth
-			end
-
-			if not l_contents.is_empty then
-				internal_content := l_contents.first
-			else
-				internal_content := Void
-			end
-
-			if l_contents.count = 1 then
-				Precursor {SD_STATE} (a_data, a_container)
-				create l_docking_state.make_for_tab_zone (l_contents.first, a_container, a_data.direction)
-				l_contents.first.change_state (l_docking_state)
-				l_docking_state.set_direction (a_data.direction)
-			elseif l_contents.count > 1 then
+			if attached a_data.titles as l_titles then
 				from
-					l_contents.start
+					l_titles.start
+					create l_contents.make (l_titles.count)
 				until
-					l_contents.after
+					l_titles.after
 				loop
-					l_content := l_contents.item
-					if l_tab_zone = Void then
-						check l_contents.isfirst end
-						create l_tab_state.make_for_restore (l_contents.twin, a_container, a_data.direction)
-						l_tab_zone := l_tab_state.zone
-					else
-						create l_tab_state.make_for_restore_internal (l_content, l_tab_zone, a_data.direction)
+					l_content := docking_manager.query.content_by_title_for_restore (l_titles.item)
+					if l_content /= Void then
+						l_contents.extend (l_content)
 					end
-					l_content.change_state (l_tab_state)
-					l_content.set_visible (True)
-
-					l_contents.forth
-				end
-			end
-
-			-- At least found one content?
-			if internal_content /= Void then
-				if
-					attached {SD_TAB_ZONE} content.state.zone as l_state_tab_zone and then
-					l_state_tab_zone.contents.count >= l_selected_index
-				then
-					l_state_tab_zone.select_item (l_state_tab_zone.contents.i_th (l_selected_index), False)
-				else
-					-- `content.state.zone' maybe void (zone is docking zone), because `l_content' can't be found					
+					l_titles.forth
 				end
 
-				if a_data.is_minimized then
-					restore_minimize
+				if not l_contents.is_empty then
+					internal_content := l_contents.first
 				end
 
-				is_set_width_after_restore := True
-				is_set_height_after_restore := True
+				if l_contents.count = 1 then
+					Precursor (a_data, a_container)
+					create l_docking_state.make_for_tab_zone (l_contents.first, a_container, a_data.direction)
+					l_contents.first.change_state (l_docking_state)
+					l_docking_state.set_direction (a_data.direction)
+				elseif l_contents.count > 1 then
+					from
+						l_contents.start
+					until
+						l_contents.after
+					loop
+						l_content := l_contents.item
+						if l_tab_zone = Void then
+							check l_contents.isfirst end
+							create l_tab_state.make_for_restore (l_contents.twin, a_container, a_data.direction)
+							l_tab_zone := l_tab_state.zone
+						else
+							create l_tab_state.make_for_restore_internal (l_content, l_tab_zone, a_data.direction)
+						end
+						l_content.change_state (l_tab_state)
+						l_content.set_visible (True)
 
-				if content.state.is_zone_attached and then attached content.state.zone as l_zone then
-					update_floating_zone_visible (l_zone, a_data.is_visible)
-				else
-					check False end -- `zone' was set by previsous `make_for_restore'
+						l_contents.forth
+					end
+				end
+					-- At least found one content?
+				if not l_contents.is_empty then
+					if
+						attached {SD_TAB_ZONE} content.state.zone as l_state_tab_zone and then
+						l_state_tab_zone.contents.count >= l_selected_index
+					then
+						l_state_tab_zone.select_item (l_state_tab_zone.contents.i_th (l_selected_index), False)
+					else
+						-- `content.state.zone' maybe void (zone is docking zone), because `l_content' can't be found					
+					end
+
+					if a_data.is_minimized then
+						restore_minimize
+					end
+
+					is_set_width_after_restore := True
+					is_set_height_after_restore := True
+
+					if attached content.state.zone as l_zone then
+						update_floating_zone_visible (l_zone, a_data.is_visible)
+					else
+						check False end -- `zone' was set by previsous `make_for_restore'
+					end
+				end
+			else
+				check
+					from_precondition_more_than_one_title: False
 				end
 			end
 
@@ -355,7 +351,7 @@ feature -- Redefine
 			l_width_height: INTEGER
 		do
 			docking_manager.command.lock_update (zone, False)
-			Precursor {SD_STATE} (a_direction)
+			Precursor (a_direction)
 			-- We must do it before the widget off-screen on GTK
 			l_width_height := width_height_by_direction
 			docking_manager.zones.prune_zone (tab_zone)
@@ -397,8 +393,7 @@ feature -- Redefine
 			if l_parent /= Void then
 				assistant.update_last_content_state (l_parent)
 			end
-			create l_state_void.make
-			l_state_void.set_content (content)
+			create l_state_void.make (content, docking_manager)
 			change_state (l_state_void)
 			docking_manager.command.remove_empty_split_area
 			docking_manager.command.unlock_update
@@ -486,8 +481,11 @@ feature -- Redefine
 					l_content.change_state (l_tab_state)
 					l_contents.back
 				end
-				check l_tab_state /= Void end -- Implied by `tab_zone.contents' must has contents, so `l_tab_state' must be created
-				l_tab_state.select_tab (content, True)
+				if attached l_tab_state then
+					l_tab_state.select_tab (content, True)
+				else
+					check l_tab_state /= Void end -- Implied by `tab_zone.contents' must has contents, so `l_tab_state' must be created
+				end
 			else
 				assistant.move_tab_to_zone (a_target_zone, a_index)
 			end
@@ -523,9 +521,8 @@ feature -- Redefine
 			l_state: SD_STATE_VOID
 		do
 			close
-			create l_state.make
-			l_state.set_content (content)
-			-- See comments in `close', it's possible the {SD_TAB_ZONE} doesn't have any content when closing all tools
+			create l_state.make (content, docking_manager)
+				-- See comments in `close', it's possible the {SD_TAB_ZONE} doesn't have any content when closing all tools.
 			if not zone.contents.is_empty then
 				l_state.set_relative (zone.contents.last)
 			end
@@ -541,8 +538,7 @@ feature -- Redefine
 				-- Current was SD_TAB_STATE before open_config (SD_CONFIG_MEDIATOR),
 				-- after open_config, client programmers will call this fucntion sometimes.
 				-- We use default void state behavior here.				
-				create l_state_void.make
-				l_state_void.set_content (content)
+				create l_state_void.make (content, docking_manager)
 				change_state (l_state_void)
 				l_state_void.show
 			end
@@ -625,7 +621,7 @@ feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 				is_set_width_after_restore := False
 			end
 
-			Precursor {SD_STATE}(a_int)
+			Precursor (a_int)
 		ensure then
 			flag_cleared: is_set_width_after_restore = False
 		end
@@ -653,7 +649,7 @@ feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 				is_set_height_after_restore := False
 			end
 
-			Precursor {SD_STATE}(a_int)
+			Precursor (a_int)
 		ensure then
 			flag_cleared: is_set_height_after_restore = False
 		end
@@ -752,7 +748,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -761,10 +757,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

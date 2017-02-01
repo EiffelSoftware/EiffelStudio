@@ -13,6 +13,17 @@ inherit
 
 	SD_DOCKING_MANAGER_HOLDER
 
+create
+	make
+
+feature {NONE} -- Creation
+
+	make (a_docking_manager: SD_DOCKING_MANAGER)
+			-- Associate new object with `a_docking_manager'.
+		do
+			docking_manager := a_docking_manager
+		end
+
 feature -- Querys
 
 	auto_hide_panel (a_direction: INTEGER): SD_AUTO_HIDE_PANEL
@@ -20,21 +31,20 @@ feature -- Querys
 		require
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
-		local
-			l_result: detachable like auto_hide_panel
 		do
-			if a_direction = {SD_ENUMERATION}.bottom then
-				l_result := docking_manager.internal_auto_hide_panel_bottom
-			elseif a_direction = {SD_ENUMERATION}.top then
-				l_result := docking_manager.internal_auto_hide_panel_top
-			elseif a_direction = {SD_ENUMERATION}.left then
-				l_result := docking_manager.internal_auto_hide_panel_left
-			elseif a_direction = {SD_ENUMERATION}.right then
-				l_result := docking_manager.internal_auto_hide_panel_right
+			inspect a_direction
+			when {SD_ENUMERATION}.bottom then
+				Result := docking_manager.internal_auto_hide_panel_bottom
+			when {SD_ENUMERATION}.top then
+				Result := docking_manager.internal_auto_hide_panel_top
+			when {SD_ENUMERATION}.left then
+				Result := docking_manager.internal_auto_hide_panel_left
+			when {SD_ENUMERATION}.right then
+				Result := docking_manager.internal_auto_hide_panel_right
 			end
-
-			check l_result /= Void end -- Implied by `internal_docking_manager' not destroyed
-			Result := l_result
+			if not attached Result then
+				create Result.make (a_direction)
+			end
 		ensure
 			not_void: Result /= Void
 		end
@@ -357,16 +367,8 @@ feature -- Querys
 
 	golbal_accelerators: SEQUENCE [EV_ACCELERATOR]
 			-- Golbal accelerators
-		local
-			l_result: detachable like golbal_accelerators
 		do
-			if attached {EV_TITLED_WINDOW} docking_manager.main_window as l_titled_window then
-				l_result := l_titled_window.accelerators
-			else
-				check False end -- Implied by main window must be {EV_TITLED_WINDOW}
-			end
-			check l_result /= Void end -- Implied by previous if clause
-			Result := l_result
+			Result := docking_manager.main_window.accelerators
 		end
 
 	find_window_by_widget (a_widget: EV_WIDGET): EV_WINDOW
@@ -375,16 +377,12 @@ feature -- Querys
 			a_zone_not_void: a_widget /= Void
 		local
 			l_main_container: SD_MULTI_DOCK_AREA
-			l_result: detachable like find_window_by_zone
 		do
 			l_main_container := docking_manager.query.inner_container_by_widget (a_widget)
-			if l_main_container.parent_floating_zone = Void then
-				l_result := docking_manager.main_window
-			else
-				l_result := l_main_container.parent_floating_zone
+			Result := l_main_container.parent_floating_zone
+			if not attached Result then
+				Result := docking_manager.main_window
 			end
-			check l_result /= Void end -- Implied by zone is in main window or floating zone
-			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
@@ -395,16 +393,12 @@ feature -- Querys
 			a_zone_not_void: a_zone /= Void
 		local
 			l_main_container: SD_MULTI_DOCK_AREA
-			l_result: detachable like find_window_by_zone
 		do
 			l_main_container := docking_manager.query.inner_container (a_zone)
-			if l_main_container.parent_floating_zone = Void then
-				l_result := docking_manager.main_window
-			else
-				l_result := l_main_container.parent_floating_zone
+			Result := l_main_container.parent_floating_zone
+			if not attached Result then
+				Result := docking_manager.main_window
 			end
-			check l_result /= Void end -- Implied by zone is in main window or floating zone
-			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
@@ -449,12 +443,9 @@ feature -- Querys
 			not_void: a_content /= Void
 		local
 			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
-			l_zone: detachable SD_ZONE
 			l_container: SD_MULTI_DOCK_AREA
 		do
-			if a_content.state.is_zone_attached then
-				l_zone := a_content.state.zone
-				check l_zone /= Void end -- Implied by `is_zone_attached'
+			if attached a_content.state.zone as l_zone then
 				from
 					l_floating_zones := floating_zones
 					l_floating_zones.start
@@ -479,7 +470,7 @@ feature -- Querys
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_content: SD_CONTENT
 			c1, c2: like docking_manager.contents.new_cursor
-			l_title: STRING_GENERAL
+			l_title: READABLE_STRING_GENERAL
 		do
 			l_contents := docking_manager.contents
 			c1 := l_contents.new_cursor
@@ -741,7 +732,7 @@ feature {NONE} -- Implemnetation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -750,10 +741,5 @@ feature {NONE} -- Implemnetation
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

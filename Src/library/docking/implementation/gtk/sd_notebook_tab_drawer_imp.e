@@ -1,7 +1,5 @@
 note
-	description: "[
-					Gtk implementation to draw native looking notebook tabs.
-					]"
+	description: "Gtk implementation to draw native looking notebook tabs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -40,10 +38,10 @@ create
 
 feature {NONE} -- Initlialization
 
-	make
-			-- Creation method
+	make (a_tab: SD_NOTEBOOK_TAB)
+			-- <Precursor>
 		do
-			Precursor {SD_NOTEBOOK_TAB_DRAWER_I}
+			Precursor (a_tab)
 
 				-- Make user not break the invariant from EV_ANY_I
 			set_state_flag (base_make_called_flag, True)
@@ -376,7 +374,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -385,6 +383,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

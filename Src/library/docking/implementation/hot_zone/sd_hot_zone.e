@@ -1,8 +1,8 @@
 note
 	description: "[
-			SD_HOT_ZONE that draw feedback rectangle or triangle feedbacks (or transparent feedback or ...)
-			 when user dragging a window for docking.
-																						]"
+		SD_HOT_ZONE that draw feedback rectangle or triangle feedbacks (or transparent feedback or ...)
+		when user dragging a window for docking.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -51,26 +51,6 @@ feature -- Commands
 		deferred
 		end
 
-feature -- Query
-
-	zone: SD_ZONE
-			-- Attached `internal_zone'
-		require
-			set: is_zone_set
-		local
-			l_zone: like internal_zone
-		do
-			l_zone := internal_zone
-			check l_zone /= Void end -- Implied by precondition `set'
-			Result := l_zone
-		end
-
-	is_zone_set: BOOLEAN
-			-- If `internal_zone' attached?
-		do
-			Result := internal_zone /= Void
-		end
-
 feature {NONE} -- Implementations
 
 	need_clear: BOOLEAN
@@ -79,30 +59,23 @@ feature {NONE} -- Implementations
 	internal_shared: SD_SHARED
 			-- All singletons
 
-	internal_zone: detachable SD_ZONE
-			-- SD_ZONE which `Current' managed
-
 	internal_mediator: SD_DOCKER_MEDIATOR
 			-- Docker mediator which Current is managed by
+
 invariant
 
 	internal_shared_not_void: internal_shared /= Void
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

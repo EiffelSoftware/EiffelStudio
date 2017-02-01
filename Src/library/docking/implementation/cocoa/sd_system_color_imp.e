@@ -112,14 +112,6 @@ feature -- Font
 			Result := l_drawing_area.font
 		end
 
-feature -- HoT zone factory
-
-	hot_zone_factory: SD_HOT_ZONE_OLD_FACTORY
-			-- Hot zone factory which will be used on Cocoa.
-		do
-			create Result
-		end
-
 feature {NONE} -- Cocoa text_aa colors.
 
 	normal_color: EV_COLOR
@@ -160,7 +152,7 @@ feature {NONE} -- Cocoa text_aa colors.
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -169,10 +161,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

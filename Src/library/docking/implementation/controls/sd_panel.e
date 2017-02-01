@@ -81,27 +81,27 @@ feature   -- Access
 			Result := internal_title_bar
 		end
 
-	user_widget: like internal_user_widget assign set_user_widget
-			-- Client programmer's widget
-		do
-			Result := internal_user_widget
+	user_widget: detachable EV_WIDGET assign set_user_widget
+			-- Client programmer's widget.
+		note
+			option: stable
+		attribute
 		end
 
-	set_user_widget (a_widget: like internal_user_widget)
-			-- Set client programmer's widget
-		require
-			a_widget_not_void: a_widget /= Void
+	set_user_widget (a_widget: attached like user_widget)
+			-- Set client programmer's widget.
 		do
-			internal_user_widget := a_widget
+			user_widget := a_widget
 			internal_border_box.wipe_out
-			if attached a_widget.parent as l_parent then
-				l_parent.prune (a_widget)
+			if attached a_widget then
+				if attached a_widget.parent as l_parent then
+					l_parent.prune (a_widget)
+				end
+				internal_border_box.extend (a_widget)
 			end
-			internal_border_box.extend (a_widget)
-
 		ensure
-			contain_right_number_widget: internal_border_box.count = 1
-			contain_user_wiget: internal_border_box.has (a_widget)
+			contain_right_number_widget: attached a_widget implies internal_border_box.count = 1
+			contain_user_wiget: attached a_widget implies internal_border_box.has (a_widget)
 		end
 
 	set_mini_toolbar (a_widget: EV_WIDGET)
@@ -114,9 +114,6 @@ feature {NONE} -- Two widgets
 
 	internal_title_bar: SD_TITLE_BAR
 			-- Title bar which above at top
-
-	internal_user_widget: detachable EV_WIDGET
-			-- SD_CONTENT's user_widget
 
 feature -- Basic operation
 
@@ -280,19 +277,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

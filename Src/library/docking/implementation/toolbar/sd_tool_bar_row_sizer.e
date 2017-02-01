@@ -1,7 +1,5 @@
 note
-	description: "[
-					Objects that manage tool bar sizes for a SD_TOOL_BAR_ROW
-																			]"
+	description: "Objects that manage tool bar sizes for a SD_TOOL_BAR_ROW."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -19,19 +17,21 @@ feature {NONE}  -- Initlization
 			-- Creation method
 		require
 			not_void: a_tool_bar_row /= Void
---			ready: (create {SD_SHARED}).tool_bar_docker_mediator_cell.item /= Void
-		local
-			l_shared: SD_SHARED
-			l_mediator: detachable like internal_mediator
 		do
 			internal_tool_bar_row := a_tool_bar_row
-			create l_shared
-
-			l_mediator := l_shared.tool_bar_docker_mediator_cell.item
---			check l_mediator /= Void end -- Implied by precondition `ready'
-			internal_mediator := l_mediator
 		ensure
 			set: internal_tool_bar_row = a_tool_bar_row
+		end
+
+feature {SD_TOOL_BAR_ROW_POSITIONER} -- Initialization
+
+	set_mediator
+			-- Initialize `internal_mediator'.
+		local
+			l_shared: SD_SHARED
+		do
+			create l_shared
+			internal_mediator := l_shared.tool_bar_docker_mediator_cell.item
 		end
 
 feature -- Command
@@ -722,15 +722,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
 
 end

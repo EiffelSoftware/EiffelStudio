@@ -10,13 +10,15 @@ deferred class
 
 feature {NONE} -- Initlization
 
-	make
-			-- Creation method
+	make (a_tab: SD_NOTEBOOK_TAB)
+			-- Associate drawer with initial tab `a_tab'.
+			-- The tab can be changed with `set_drawing_area'.
 		do
 			create internal_shared
 			is_draw_pixmap := True
 			text := ""
 			create pixmap
+			set_drawing_area (a_tab)
 		end
 
 feature -- Command
@@ -61,11 +63,11 @@ feature -- Command
 feature -- Key setting
 
 	set_drawing_area (a_tab: SD_NOTEBOOK_TAB)
-			-- Set `internal_tab' with `a_tab'
+			-- Set `tab' to `a_tab'.
 		require
 			not_void: a_tab /= Void
 		do
-			internal_tab := a_tab
+			tab := a_tab
 		ensure
 			set: tab = a_tab
 		end
@@ -386,17 +388,20 @@ feature {NONE} -- Implementation
 			-- Draw `buffer_pixmap' to `internal_drawing_area'
 			-- Call `start_draw' before call this function
 		require
-			not_void: buffer_pixmap /= Void
-			not_void: tab.parent /= Void
-		local
-			l_buffer_pixmap: like buffer_pixmap
-			l_parent: detachable SD_NOTEBOOK_TAB_BOX
+			buffer_pixmap_attached: attached buffer_pixmap
+			tab_parent_attached: tab.parent /= Void
 		do
-			l_buffer_pixmap := buffer_pixmap
-			check l_buffer_pixmap /= Void end -- Implied by precondition `not_void'
-			l_parent := tab.parent
-			check l_parent /= Void end -- Implied by precondition `not_void'
-			l_parent.draw_sub_pixmap (tab.x, 0, l_buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, tab.width, tab.height))
+			if
+				attached buffer_pixmap as l_buffer_pixmap and then
+				attached tab.parent as l_parent
+			then
+				l_parent.draw_sub_pixmap (tab.x, 0, l_buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, tab.width, tab.height))
+			else
+				check
+					from_precondition_buffer_pixmap_attached: attached buffer_pixmap
+					from_precondition_tab_parent_attached: attached tab.parent
+				end
+			end
 		end
 
 	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER)
@@ -425,21 +430,7 @@ feature {NONE} -- Implementation
 			-- close button background expand size
 
 	tab: SD_NOTEBOOK_TAB
-			-- Attached `internal_tab'
-		require
-			set: internal_tab /= Void
-		local
-			l_result: like internal_tab
-		do
-			l_result := internal_tab
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
-	internal_tab: detachable SD_NOTEBOOK_TAB
-			-- Drawing area to draw tab
+			-- Drawing area to draw tab.
 
 	internal_shared: SD_SHARED
 			-- ALl singletons
@@ -449,7 +440,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -458,10 +449,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

@@ -98,14 +98,6 @@ feature -- Font
 			Result := l_drawing_area.font
 		end
 
-feature -- HoT zone factory
-
-	hot_zone_factory: SD_HOT_ZONE_OLD_FACTORY
-			-- Hot zone factory which will be used on GTK.
-		do
-			create Result
-		end
-
 feature {NONE} -- GTK text_aa colors.
 
 	normal_color: EV_COLOR
@@ -165,7 +157,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

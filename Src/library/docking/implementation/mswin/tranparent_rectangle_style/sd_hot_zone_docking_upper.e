@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "SD_HOT_ZONE for SD_DOCKING_ZONE_UPPER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

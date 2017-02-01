@@ -25,8 +25,6 @@ feature -- Comments helpers
 
 	import_comments_file_for_entity (fn: PATH; a_entity: CMS_CONTENT; api: CMS_API; a_import_ctx: CMS_IMPORT_CONTEXT)
 		local
-			s: STRING
-			jp: JSON_PARSER
 			l_comment: CMS_COMMENT
 			l_log: STRING_8
 		do

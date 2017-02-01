@@ -63,7 +63,9 @@ feature -- Test routines
 		do
 			u := default_user
 			storage.new_user (u)
-			assert ("Not void",  attached storage.user_by_email (u.email))
+			if attached u.email as l_email then
+				assert ("Not void",  attached storage.user_by_email (l_email))
+			end
 			assert ("Not void",  attached storage.user_by_id (2))
 			assert ("Not void",  attached storage.user_by_id (2) as l_user and then l_user.id = 2 and then l_user.name ~ u.name)
 			assert ("Not void",  attached storage.user_by_name (u.name))

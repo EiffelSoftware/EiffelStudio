@@ -354,7 +354,7 @@ feature -- Access: User interface
 			l_result := internal_docking_content
 			if l_result = Void then
 				if is_tool_instantiated then
-					create Result.make_with_widget (panel.widget, content_id)
+					create Result.make_with_widget (panel.widget, content_id, window.docking_manager)
 				else
 					create l_label.make_with_text ("Uh Oh!")
 						-- Note: This action is a mild hack for cases where Uh Oh! is not replaced. When shown the
@@ -369,7 +369,7 @@ feature -- Access: User interface
 						end)
 
 					l_label.set_font ((create {ES_SHARED_FONTS_AND_COLORS}).fonts.prompt_sub_title_font)
-					create Result.make_with_widget (l_label, content_id)
+					create Result.make_with_widget (l_label, content_id, window.docking_manager)
 				end
 				Result.set_long_title (edition_title)
 				Result.set_short_title (edition_title)
@@ -725,7 +725,7 @@ invariant
 		internal_docking_content.user_widget /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

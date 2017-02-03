@@ -134,29 +134,24 @@ feature {NONE} -- Initialization: User interface
 								l_item_error.column = l_other_error.column and then
 								l_item_error.file_name ~ l_other_error.file_name)
 					end))
+
+				-- Register observer on preference 'expand_n_errors'.			
+			preferences.error_list_tool_data.expand_n_errors_preferences.change_actions.extend (agent on_preference_expand_n_errors)
 		end
 
 	on_after_initialized
 			-- <Precursor>
 		do
+
 				-- Enable copying to clipboard
 			enable_copy_to_clipboard
 
 				-- Bind redirecting pick and drop actions
 			stone_director.bind (grid_events, Current)
 
-				-- Hook up events for session data
-			if attached session_manager.service then
-				session_data.session_connection.connect_events (Current)
-				if attached {BOOLEAN_REF} session_data.value_or_default (expand_errors_session_id, False) as l_expand then
-					is_expanding_errors := l_expand.item
-					if is_expanding_errors then
-						expand_errors_button.enable_select
-					else
-						expand_errors_button.disable_select
-					end
-				end
-			end
+				-- Configure expand errors based con preferece
+				-- 'tools.error_list.expand_n_errors'
+			set_expand_error_options
 
 				-- Set UI based on initial state
 			update_content_applicable_navigation_buttons
@@ -193,6 +188,13 @@ feature {NONE} -- Access
 
 	last_tooltip_item: detachable EV_GRID_ITEM
 			-- Last item that brings up tooltip
+
+	expand_n_errors: BOOLEAN
+			-- 	Expand the first N errors.
+			--| with N=1.
+
+	show_n_errors: INTEGER
+			-- First N errors to expand.
 
 feature {NONE} -- Access: Help
 
@@ -674,6 +676,11 @@ feature {NONE} -- Basic operations
 					is_expanding_all_errors := True
 					a_row.expand
 					is_expanding_all_errors := l_expanded
+				elseif expand_n_errors and then show_n_errors > 0 then
+					l_expanded := expand_n_errors
+					a_row.expand
+					show_n_errors := show_n_errors - 1
+					expand_n_errors :=  l_expanded
 				elseif a_row.is_expanded then
 					a_row.collapse
 				end
@@ -1338,9 +1345,6 @@ feature {NONE} -- Action handlers
 			if is_expanding_errors /= l_expand then
 				is_expanding_all_errors := l_expand
 				is_expanding_errors := l_expand
-				if attached session_manager.service as service then
-					service.retrieve (False).set_value (l_expand, expand_errors_session_id)
-				end
 
 					-- Set applicable grid items and open/closed because on expanded status
 				l_grid := grid_events
@@ -1580,6 +1584,41 @@ feature {NONE} -- Factory
 			end
 		end
 
+feature {NONE} -- Preference Handler
+
+	on_preference_expand_n_errors
+			-- Specifies if errors in the Error List tool should be expanded automatically, to show the verbose error information. <0: auto expand all, 0: disabled, and >0: enabled ... expand N first errors..
+		do
+			set_expand_error_options
+		end
+
+
+	set_expand_error_options
+			-- Configure expand error options based on user preference
+			-- 'tools.error_list.expand_n_errors'.
+		do
+			if preferences.error_list_tool_data.expand_n_errors < 0 then
+					-- Expand all
+				is_expanding_errors := True
+				expand_errors_button.enable_select
+				expand_n_errors := False
+			elseif preferences.error_list_tool_data.expand_n_errors > 0  then
+					-- Expand the N first errors.
+				is_expanding_errors := False
+				expand_n_errors := True
+				show_n_errors :=  preferences.error_list_tool_data.expand_n_errors
+				expand_errors_button.disable_select
+			else
+					-- Expand disabled
+				expand_n_errors := False
+				is_expanding_errors :=False
+				show_n_errors := 0
+				expand_errors_button.disable_select
+			end
+
+		end
+
+
 feature {NONE} -- Constants
 
 	error_column: INTEGER = 1
@@ -1603,7 +1642,7 @@ invariant
 	item_count_matches_error_and_warning_count: error_count + warning_count = item_count
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -104,6 +104,13 @@ feature -- Change: user
 		deferred
 		end
 
+	update_username (a_user: CMS_USER; a_new_username: READABLE_STRING_32)
+			-- Update username of `a_user' to `a_new_username`.
+		require
+			has_id: a_user.has_id
+		deferred
+		end
+
 	update_user (a_user: CMS_USER)
 			-- Save user `a_user'.
 		require

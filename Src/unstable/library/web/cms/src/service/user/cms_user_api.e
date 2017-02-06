@@ -14,6 +14,34 @@ inherit
 create
 	make
 
+feature -- Validation
+
+	is_valid_username (a_name: READABLE_STRING_32): BOOLEAN
+		local
+			c: CHARACTER_32
+		do
+			if a_name.is_empty or a_name.is_whitespace then
+				Result := False
+			elseif a_name[1].is_space then
+				Result := False
+			elseif a_name[a_name.count].is_space then
+				Result := False
+			else
+				Result := True
+				across
+					a_name as ic
+				until
+					not Result
+				loop
+					c := ic.item
+					if c.is_alpha_numeric or c = '-' or c = '_' then
+					else
+						Result := False
+					end
+				end
+			end
+		end
+
 feature -- Access: user
 
 	user_by_id (a_id: like {CMS_USER}.id): detachable CMS_USER
@@ -75,6 +103,18 @@ feature -- Change User
 			else
 				error_handler.add_custom_error (0, "bad new user request", "Missing password or email to create new user!")
 			end
+		end
+
+	update_username (a_user: CMS_USER; a_new_username: READABLE_STRING_32)
+			-- Update username of `a_user' to `a_new_username'.
+		require
+			has_id: a_user.has_id
+			valid_user_name: is_valid_username (a_new_username)
+			user_by_name (a_new_username) = Void
+		do
+			reset_error
+			storage.update_username (a_user, a_new_username)
+			error_handler.append (storage.error_handler)
 		end
 
 	update_user (a_user: CMS_USER)

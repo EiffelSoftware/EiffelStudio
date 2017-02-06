@@ -62,6 +62,7 @@ feature -- Access
 			Result.force ("account reject")
 			Result.force ("account reactivate")
 			Result.force ("admin registration")
+			Result.force ("change own username")
 		end
 
 feature -- Access: docs
@@ -242,7 +243,6 @@ feature -- Handler
 			r: CMS_RESPONSE
 			l_user: detachable CMS_USER
 			b: STRING
-			f: CMS_FORM
 			lnk: CMS_LOCAL_LINK
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
@@ -264,11 +264,18 @@ feature -- Handler
 			lnk.set_weight (2)
 			r.add_to_primary_tabs (lnk)
 
-			f := new_change_password_form (r)
-			f.append_to_html (r.wsf_theme, b)
-
-			f := new_change_email_form (r)
-			f.append_to_html (r.wsf_theme, b)
+			if
+				r.has_permission ("change own username") and then
+				attached new_change_username_form (r) as f
+			then
+				f.append_to_html (r.wsf_theme, b)
+			end
+			if attached new_change_password_form (r) as f then
+				f.append_to_html (r.wsf_theme, b)
+			end
+			if attached new_change_email_form (r) as f then
+				f.append_to_html (r.wsf_theme, b)
+			end
 
 			r.set_main_content (b)
 
@@ -721,6 +728,29 @@ feature -- Handler
 								f := new_change_email_form (r)
 								r.set_main_content (f.to_html (r.wsf_theme))
 							end
+						elseif l_fieldname.is_case_insensitive_equal ("username") then
+							if api.has_permission ("change own username") then
+								f := new_change_username_form (r)
+								f.process (r)
+								if
+									attached f.last_data as fd and then
+									not fd.has_error and then
+									attached fd.string_item ("new_username") as l_new_username
+								then
+									check api.user_api.is_valid_username (l_new_username) end
+									check api.user_api.user_by_name (l_new_username) = Void end
+
+									l_user_api.update_username (l_user, l_new_username)
+									r.add_success_message ("Username updated.")
+									r.set_redirection ("account/")
+									r.set_redirection_delay (3)
+								else
+									r.add_error_message ("Invalid form data!")
+									r.set_main_content (f.to_html (r.wsf_theme))
+								end
+							else
+								r.add_error_message ("You are not allowed to change your username!")
+							end
 						else
 							r.add_error_message ("You can not change %"" + l_fieldname + "%" information!")
 						end
@@ -733,6 +763,11 @@ feature -- Handler
 					elseif l_fieldname.is_case_insensitive_equal_general ("email") then
 						f := new_change_email_form (r)
 						f.append_to_html (r.wsf_theme, b)
+					elseif l_fieldname.is_case_insensitive_equal_general ("new_username") then
+						if api.has_permission ("change own username") then
+							f := new_change_username_form (r)
+							f.append_to_html (r.wsf_theme, b)
+						end
 					end
 					r.set_main_content (b)
 				end
@@ -850,6 +885,37 @@ feature -- Handler
 			elseif a_block_id.is_case_insensitive_equal_general ("reset_password") and then loc.starts_with ("account/reset-password") then
 				get_block_view_reset_password (a_block_id, a_response)
 			end
+		end
+
+	new_change_username_form (a_response: CMS_RESPONSE): CMS_FORM
+		local
+			fs: WSF_FORM_FIELD_SET
+			txt: WSF_FORM_TEXT_INPUT
+		do
+			create Result.make (a_response.url ("account/change/username", Void), "change-username-form")
+			create fs.make
+			fs.set_legend ("Change username")
+			Result.extend (fs)
+
+			create txt.make ("new_username")
+			txt.set_label ("Username")
+			txt.set_validation_action (agent (fd: WSF_FORM_DATA; api: CMS_API)
+					do
+						if
+							attached fd.string_item ("new_username") as l_new and then
+							api.user_api.is_valid_username (l_new)
+						then
+							if api.user_api.user_by_name (l_new) /= Void then
+								fd.report_invalid_field ("new_username", "Username is already taken!")
+							end
+						else
+							fd.report_invalid_field ("new_username", "Invalid username!")
+						end
+					end (?, a_response.api)
+				)
+			txt.enable_required
+			fs.extend (txt)
+			fs.extend_html_text ("<button type=%"submit%">Confirm</button>")
 		end
 
 	new_change_password_form (a_response: CMS_RESPONSE): CMS_FORM

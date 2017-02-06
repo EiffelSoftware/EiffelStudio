@@ -65,11 +65,14 @@ feature -- Change: user
 			a_user.set_id (1)
 		end
 
+	update_username (a_user: CMS_USER; a_new_username: READABLE_STRING_32)
+		do
+		end
+
 	update_user (a_user: CMS_USER)
 			-- Update user `a_user'.
 		do
 		end
-
 
 	delete_user (a_user: CMS_USER)
 			-- Delete user `a_user'.

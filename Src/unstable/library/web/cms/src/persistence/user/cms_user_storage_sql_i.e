@@ -242,6 +242,58 @@ feature -- Change: user
 			end
 		end
 
+	update_username (a_user: CMS_USER; a_new_username: READABLE_STRING_32)
+			-- Update username of `a_user' to `a_new_username`.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+			l_password_salt, l_password_hash: detachable READABLE_STRING_8
+			l_security: SECURITY_PROVIDER
+		do
+			error_handler.reset
+			if attached a_user.password as l_password then
+					-- New password!
+				create l_security
+				l_password_salt := l_security.salt
+				l_password_hash := l_security.password_hash (l_password, l_password_salt)
+			else
+					-- Existing hashed password
+				l_password_hash := a_user.hashed_password
+				l_password_salt := user_salt (a_user.name)
+			end
+			if
+				l_password_hash /= Void and l_password_salt /= Void and
+				attached a_user.email as l_email
+			then
+				sql_begin_transaction
+
+				write_information_log (generator + ".update_user")
+				create l_parameters.make (7)
+				l_parameters.put (a_user.id, "uid")
+				l_parameters.put (a_new_username, "name")
+				l_parameters.put (l_password_hash, "password")
+				l_parameters.put (l_password_salt, "salt")
+				l_parameters.put (l_email, "email")
+				l_parameters.put (a_user.status, "status")
+				l_parameters.put (a_user.last_login_date, "signed")
+
+				sql_modify (sql_update_user, l_parameters)
+				sql_finalize
+				if not error_handler.has_error then
+					a_user.set_name (a_new_username)
+					update_user_roles (a_user)
+				end
+				if not error_handler.has_error then
+					sql_commit_transaction
+				else
+					sql_rollback_transaction
+				end
+				sql_finalize
+			else
+					-- set error
+				error_handler.add_custom_error (-1, "bad request" , "Missing password or email")
+			end
+		end
+
 	update_user (a_user: CMS_USER)
 			-- Save user `a_user'.
 		local

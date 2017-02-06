@@ -227,7 +227,7 @@ feature -- Form
 		end
 
 	new_edit_form (a_user: detachable CMS_USER; a_url: READABLE_STRING_8; a_name: STRING): CMS_FORM
-			-- Create a web form named `a_name' for uSER `a_YSER' (if set), using form action url `a_url'.
+			-- Create a web form named `a_name' for user `a_user' (if set), using form action url `a_url'.
 		local
 			f: CMS_FORM
 			th: WSF_FORM_HIDDEN_INPUT
@@ -308,8 +308,6 @@ feature -- Form
 
 			Result := f
 		end
-
-
 
 	populate_form (a_form: WSF_FORM; a_user: detachable CMS_USER)
 			-- Fill the web form `a_form' with data from `a_node' if set,

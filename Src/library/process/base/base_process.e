@@ -109,6 +109,20 @@ feature -- IO redirection
 			input_file_name_set: input_file_name ~ ""
 		end
 
+	redirect_output_to_stream
+			-- Redirect output stream of the process to its parent's stream
+			-- so you can use `read_output_stream' to read data from the process.
+		require
+			process_not_running: not is_running
+		do
+			output_direction := {BASE_REDIRECTION}.to_stream
+			output_file_name := Void
+		ensure
+			output_redirected_to_stream:
+				output_direction = {BASE_REDIRECTION}.to_stream
+			output_file_name_unset: output_file_name = Void
+		end
+
 	redirect_output_to_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Redirect output stream of process to a file
 			-- with name `a_file_name'.
@@ -140,6 +154,20 @@ feature -- IO redirection
 			output_file_name_set: attached output_file_name as l_file_name and then l_file_name.is_empty
 		end
 
+	redirect_error_to_stream
+			-- Redirect error stream of the process to its parent's stream
+			-- so you can use `read_error_stream' to read data from the process.
+		require
+			process_not_running: not is_running
+		do
+			error_direction := {BASE_REDIRECTION}.to_stream
+			error_file_name := Void
+		ensure
+			error_redirected_to_stream:
+				error_direction = {BASE_REDIRECTION}.to_stream
+			error_file_name_unset: error_file_name = Void
+		end
+
 	redirect_error_to_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Redirect the error stream of process to a file.
 		require
@@ -152,7 +180,8 @@ feature -- IO redirection
 			error_direction := {BASE_REDIRECTION}.to_file
 			create error_file_name.make_from_string_general (a_file_name)
 		ensure
-			error_redirected_to_file: error_direction = {BASE_REDIRECTION}.to_file
+			error_redirected_to_file:
+				error_direction = {BASE_REDIRECTION}.to_file
 			error_file_set: attached error_file_name as fn and then fn.same_string_general (a_file_name)
 		end
 
@@ -350,6 +379,50 @@ feature -- Interprocess data transmission
 
 	has_input_error: BOOLEAN
 			-- Was there an error when calling `put_string'?
+		attribute
+		end
+
+	read_output_to_special (buffer: SPECIAL [NATURAL_8])
+			-- Wait for and read data from the process standard output into `buffer` with a maximum of `buffer.count` bytes
+			-- and update `buffer.count` with the number of actually read bytes that can range between `0` and `old buffer.count`.
+			-- Report result in `has_output_stream_error`.
+		require
+			output_redirect_to_stream: output_direction = {BASE_REDIRECTION}.to_stream
+			process_launched: launched
+		deferred
+		ensure
+			buffer_count_in_range: buffer.count <= old buffer.count
+		end
+
+	has_output_stream_error: BOOLEAN
+			-- Was there an error when calling `read_output_to_special'?
+		attribute
+		end
+
+	has_output_stream_closed: BOOLEAN
+			-- Was standard output of the process closed?
+		attribute
+		end
+
+	read_error_to_special (buffer: SPECIAL [NATURAL_8])
+			-- Wait for and read data from the process standard error into `buffer` with a maximum of `buffer.count` bytes
+			-- and update `buffer.count` with the number of actually read bytes that can range between `0` and `old buffer.count`.
+			-- Report result in `has_error_stream_error`.
+		require
+			error_redirect_to_stream: error_direction = {BASE_REDIRECTION}.to_stream
+			process_launched: launched
+		deferred
+		ensure
+			buffer_count_in_range: buffer.count <= old buffer.count
+		end
+
+	has_error_stream_error: BOOLEAN
+			-- Was there an error when calling `read_error_to_special'?
+		attribute
+		end
+
+	has_error_stream_closed: BOOLEAN
+			-- Was standard error of the process closed?
 		attribute
 		end
 
@@ -747,6 +820,7 @@ feature -- Validation checking
 		do
 			Result :=
 				a_output_direction = {BASE_REDIRECTION}.to_file or
+				a_output_direction = {BASE_REDIRECTION}.to_stream or
 				a_output_direction = {BASE_REDIRECTION}.no_redirection
 		end
 
@@ -755,6 +829,7 @@ feature -- Validation checking
 		do
 			Result :=
 				a_error_direction = {BASE_REDIRECTION}.to_file or
+				a_error_direction = {BASE_REDIRECTION}.to_stream or
 				a_error_direction = {BASE_REDIRECTION}.no_redirection or
 				(not platform.is_dotnet) and then a_error_direction = {BASE_REDIRECTION}.to_same_as_output
 		end

@@ -86,7 +86,6 @@ feature {NONE} -- Initialization
 							Result.append_string_general (a)
 						end
 					end
-					args.forth
 				end
 			end
 		end
@@ -195,6 +194,76 @@ feature -- Interprocess data transmission
 				has_input_error := False
 				if attached child_process.standard_input as w then
 					w.write_string (s)
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	read_output_to_special (buffer: SPECIAL [NATURAL_8])
+			-- <Precursor>
+		local
+			number_of_bytes_read: INTEGER_32
+			retried: BOOLEAN
+		do
+			if retried then
+				has_output_stream_error := True
+					-- Update `buffer.count` with actual bytes read.
+				buffer.keep_head (number_of_bytes_read)
+			else
+				has_output_stream_error := False
+				if
+					attached child_process.standard_output as r and then
+					attached r.base_stream as s
+				then
+					number_of_bytes_read := s.read (buffer.native_array, 0, buffer.count)
+					if number_of_bytes_read > 0 then
+							-- Update `buffer.count` with actual bytes read.
+						buffer.keep_head (number_of_bytes_read)
+					elseif number_of_bytes_read = 0 then
+						has_output_stream_closed := True
+							-- Update `buffer.count` with actual bytes read.
+						buffer.wipe_out
+						check
+							buffer_is_empty: buffer.count = 0
+						end
+					end
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	read_error_to_special (buffer: SPECIAL [NATURAL_8])
+			-- <Precursor>
+		local
+			number_of_bytes_read: INTEGER_32
+			retried: BOOLEAN
+		do
+			if retried then
+				has_error_stream_error := True
+					-- Update `buffer.count` with actual bytes read.
+				buffer.keep_head (number_of_bytes_read)
+			else
+				has_error_stream_error := False
+				if
+					attached child_process.standard_error as r and then
+					attached r.base_stream as s
+				then
+					number_of_bytes_read := s.read (buffer.native_array, 0, buffer.count)
+					if number_of_bytes_read > 0 then
+							-- Update `buffer.count` with actual bytes read.
+						buffer.keep_head (number_of_bytes_read)
+					elseif number_of_bytes_read = 0 then
+						has_error_stream_closed := True
+							-- Update `buffer.count` with actual bytes read.
+						buffer.wipe_out
+						check
+							buffer_is_empty: buffer.count = 0
+						end
+					end
 				end
 			end
 		rescue
@@ -482,7 +551,7 @@ feature {NONE} -- Implementation
 			-- Argument list of `executable'
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

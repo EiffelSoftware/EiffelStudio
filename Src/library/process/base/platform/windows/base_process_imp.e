@@ -195,6 +195,58 @@ feature -- Interprocess data transmission
 			end
 		end
 
+	read_output_to_special (buffer: SPECIAL [NATURAL_8])
+			-- <Precursor>
+		local
+			number_of_bytes_read: NATURAL_32
+		do
+			if {WEL_API}.cwin_read_file (child_process.std_output, $buffer, buffer.count.as_natural_32, $number_of_bytes_read, default_pointer) then
+					-- There was no error.
+				has_output_stream_error := False
+					-- Update `buffer.count` with actual bytes read.
+				buffer.keep_head (number_of_bytes_read.as_integer_32)
+			elseif {WEL_API}.get_last_error = {WEL_WINDOWS_ERROR_MESSAGES}.error_broken_pipe_value then
+					-- The other end of the pipe has been closed.
+				has_output_stream_closed := True
+				has_output_stream_error := False
+					-- Update `buffer.count` with actual bytes read.
+				buffer.keep_head (number_of_bytes_read.as_integer_32)
+			else
+				has_output_stream_error := True
+					-- Update `buffer.count` with actual bytes read.
+				buffer.wipe_out
+				check
+					buffer_is_empty: buffer.count = 0
+				end
+			end
+		end
+
+	read_error_to_special (buffer: SPECIAL [NATURAL_8])
+			-- <Precursor>
+		local
+			number_of_bytes_read: NATURAL_32
+		do
+			if {WEL_API}.cwin_read_file (child_process.std_error, $buffer, buffer.count.as_natural_32, $number_of_bytes_read, default_pointer) then
+					-- There was no error.
+				has_error_stream_error := False
+					-- Update `buffer.count` with actual bytes read.
+				buffer.keep_head (number_of_bytes_read.as_integer_32)
+			elseif {WEL_API}.get_last_error = {WEL_WINDOWS_ERROR_MESSAGES}.error_broken_pipe_value then
+					-- The other end of the pipe has been closed.
+				has_error_stream_closed := True
+				has_error_stream_error := False
+					-- Update `buffer.count` with actual bytes read.
+				buffer.keep_head (number_of_bytes_read.as_integer_32)
+			else
+				has_error_stream_error := True
+					-- Update `buffer.count` with actual bytes read.
+				buffer.wipe_out
+				check
+					buffer_is_empty: buffer.count = 0
+				end
+			end
+		end
+
 feature {NONE} -- Interprocess data transmission
 
 	input_file_handle: FILE_HANDLE

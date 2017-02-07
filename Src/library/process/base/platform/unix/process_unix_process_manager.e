@@ -326,7 +326,7 @@ feature {BASE_PROCESS_IMP} -- Process management
 
 	read_output_stream (buf_size: INTEGER)
 			-- Read at most `buf_size' bytes of data from output pipe.
-			-- Set data in `lasT_outp
+			-- Set data in `last_output`.
 		require
 			buf_size_positive: buf_size > 0
 		do
@@ -335,6 +335,24 @@ feature {BASE_PROCESS_IMP} -- Process management
 				last_output := l_out_pipe.last_string
 			else
 				last_output := Void
+			end
+		end
+
+	read_output_to_special (buffer: SPECIAL [NATURAL_8])
+			-- Read data from the output stream to `buffer`.
+			-- Maximum number if bytes to read is `buffer.count`.
+			-- Update `buffer.count` with actually read bytes.
+		do
+			if attached shared_output_unnamed_pipe as p then
+				p.read_to_special (buffer)
+				has_output_stream_error := not p.last_read_successful
+			else
+				has_output_stream_error := True
+					-- Update `buffer.count` with actual bytes read.
+				buffer.wipe_out
+				check
+					buffer_is_empty: buffer.count = 0
+				end
 			end
 		end
 
@@ -349,6 +367,24 @@ feature {BASE_PROCESS_IMP} -- Process management
 				last_error := l_err_pipe.last_string
 			else
 				last_error := Void
+			end
+		end
+
+	read_error_to_special (buffer: SPECIAL [NATURAL_8])
+			-- Read data from the error stream to `buffer`.
+			-- Maximum number if bytes to read is `buffer.count`.
+			-- Update `buffer.count` with actually read bytes.
+		do
+			if attached shared_error_unnamed_pipe as p then
+				p.read_to_special (buffer)
+				has_error_stream_error := not p.last_read_successful
+			else
+				has_error_stream_error := True
+					-- Update `buffer.count` with actual bytes read.
+				buffer.wipe_out
+				check
+					buffer_is_empty: buffer.count = 0
+				end
 			end
 		end
 
@@ -367,6 +403,12 @@ feature {BASE_PROCESS_IMP} -- Process management
 
 	has_write_error: BOOLEAN
 			-- Has last write operation to `shared_input_unnamed_pipe' ended with an error?
+
+	has_output_stream_error: BOOLEAN
+			-- Has last read operation from `shared_output_unnamed_pipe' ended with an error?
+
+	has_error_stream_error: BOOLEAN
+			-- Has last read operation from `shared_error_unnamed_pipe' ended with an error?
 
 	last_output: detachable STRING
 			-- Last read data from output pipe
@@ -717,7 +759,7 @@ invariant
 	valid_stderr_descriptor: valid_file_descriptor (Stderr_descriptor)
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

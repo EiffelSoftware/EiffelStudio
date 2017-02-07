@@ -115,32 +115,59 @@ feature -- Access
 
 feature {CMS_API} -- API Access		
 
-	enabled_modules: CMS_MODULE_COLLECTION
+	frozen fill_enabled_modules (api: CMS_API)
 			-- List of enabled modules.
 		local
+			l_enabled_modules: CMS_MODULE_COLLECTION
+			l_modules_to_remove: CMS_MODULE_COLLECTION
 			l_module: CMS_MODULE
+			l_core: CMS_CORE_MODULE
 		do
-			create Result.make (modules.count)
+			l_enabled_modules := api.enabled_modules
+
+				-- Include required CORE module
+			create l_core.make
+			l_core.enable
+			l_enabled_modules.extend (l_core)
+
+				-- Includes other modules.
 			across
 				modules as ic
 			loop
 				l_module := ic.item
 				update_module_status_from_configuration (l_module)
+				if not l_module.is_enabled then
+					if
+						api.is_module_enabled (l_module) -- Check from storage!
+					then
+						l_module.enable
+					end
+				end
 				if l_module.is_enabled then
-					Result.extend (l_module)
+					l_enabled_modules.extend (l_module)
 				end
 			end
 			across
-				Result as ic
+				l_enabled_modules as ic
 			loop
 				l_module := ic.item
-				update_module_status_within (l_module, Result)
-				if not l_module.is_enabled then
-					Result.remove (l_module)
+				update_module_status_within (l_module, l_enabled_modules)
+				if not l_module.is_enabled then -- Check from storage!
+					if l_modules_to_remove = Void then
+						create l_modules_to_remove.make (1)
+					end
+					l_modules_to_remove.extend (l_module)
+				end
+			end
+			if l_modules_to_remove /= Void then
+				across
+					l_modules_to_remove as ic
+				loop
+					l_enabled_modules.remove (ic.item)
 				end
 			end
 		ensure
-			only_enabled_modules: across Result as ic all ic.item.is_enabled end
+			only_enabled_modules: across api.enabled_modules as ic all ic.item.is_enabled end
 		end
 
 feature {CMS_MODULE, CMS_API, CMS_SETUP_ACCESS} -- Restricted access
@@ -184,11 +211,11 @@ feature {NONE} -- Implementation: update
 			b: BOOLEAN
 			dft: BOOLEAN
 		do
-				-- By default enabled.
-			if false and attached text_item ("modules.*") as l_mod_status then
+				-- By default, keep previous status.
+			if attached text_item ("modules.*") as l_mod_status then
 				dft := l_mod_status.is_case_insensitive_equal_general ("on")
 			else
-				dft := True
+				dft := m.is_enabled
 			end
 			if attached text_item ("modules." + m.name) as l_mod_status then
 				b := l_mod_status.is_case_insensitive_equal_general ("on")
@@ -430,6 +457,6 @@ feature -- Element change
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

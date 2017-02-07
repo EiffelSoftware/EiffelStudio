@@ -111,6 +111,9 @@ feature -- Export
 						u := ic.item
 						create j.make_empty
 						j.put_string (u.name, "name")
+						if attached u.profile_name as pn then
+							j.put_string (pn, "profile_name")
+						end
 						j.put_integer (u.status, "status")
 						put_string_into_json (u.email, "email", j)
 						put_string_into_json (u.password, "password", j)

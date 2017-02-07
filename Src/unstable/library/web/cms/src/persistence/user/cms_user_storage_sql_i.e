@@ -261,22 +261,18 @@ feature -- Change: user
 				l_password_salt := user_salt (a_user.name)
 			end
 			if
-				l_password_hash /= Void and l_password_salt /= Void and
-				attached a_user.email as l_email
+				l_password_hash /= Void and l_password_salt /= Void
 			then
 				sql_begin_transaction
 
-				write_information_log (generator + ".update_user")
-				create l_parameters.make (7)
+				write_information_log (generator + ".update_username")
+				create l_parameters.make (4)
 				l_parameters.put (a_user.id, "uid")
 				l_parameters.put (a_new_username, "name")
 				l_parameters.put (l_password_hash, "password")
 				l_parameters.put (l_password_salt, "salt")
-				l_parameters.put (l_email, "email")
-				l_parameters.put (a_user.status, "status")
-				l_parameters.put (a_user.last_login_date, "signed")
 
-				sql_modify (sql_update_user, l_parameters)
+				sql_modify (sql_update_user_name, l_parameters)
 				sql_finalize
 				if not error_handler.has_error then
 					a_user.set_name (a_new_username)
@@ -319,7 +315,7 @@ feature -- Change: user
 				sql_begin_transaction
 
 				write_information_log (generator + ".update_user")
-				create l_parameters.make (7)
+				create l_parameters.make (8)
 				l_parameters.put (a_user.id, "uid")
 				l_parameters.put (a_user.name, "name")
 				l_parameters.put (l_password_hash, "password")
@@ -327,6 +323,7 @@ feature -- Change: user
 				l_parameters.put (l_email, "email")
 				l_parameters.put (a_user.status, "status")
 				l_parameters.put (a_user.last_login_date, "signed")
+				l_parameters.put (a_user.profile_name, "profile_name")
 
 				sql_modify (sql_update_user, l_parameters)
 				sql_finalize
@@ -870,7 +867,7 @@ feature {NONE} -- Implementation: User
 		end
 
 	fetch_user: detachable CMS_USER
-			-- Fetch user from fields: 1:uid, 2:name, 3:password, 4:salt, 5:email, 6:status, 7:created, 8:signed.
+			-- Fetch user from fields: 1:uid, 2:name, 3:password, 4:salt, 5:email, 6:status, 7:created, 8:signed, 9:profile_name.
 		local
 			l_id: INTEGER_64
 			l_name: detachable READABLE_STRING_32
@@ -904,6 +901,9 @@ feature {NONE} -- Implementation: User
 				end
 				if attached sql_read_date_time (8) as l_signed_date then
 					Result.set_last_login_date (l_signed_date)
+				end
+				if attached sql_read_string_32 (9) as l_prof_name then
+					Result.set_profile_name (l_prof_name)
 				end
 			else
 				check expected_valid_user: False end
@@ -940,29 +940,32 @@ feature {NONE} -- Sql Queries: USER
 	select_users_count: STRING = "SELECT count(*) FROM users;"
 			-- Number of users.
 
-	select_users: STRING = "SELECT * FROM users;"
+	select_users: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users;"
 			-- List of users.
 
-	select_user_by_id: STRING = "SELECT * FROM users WHERE uid =:uid;"
+	select_user_by_id: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users WHERE uid =:uid;"
 			-- Retrieve user by id if exists.
 
-	select_user_by_name: STRING = "SELECT * FROM users WHERE name =:name;"
+	select_user_by_name: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users WHERE name =:name;"
 			-- Retrieve user by name if exists.
 
-	sql_select_recent_users: STRING = "SELECT uid, name, password, salt, email, status, created, signed FROM users ORDER BY uid DESC, created DESC LIMIT :rows OFFSET :offset;"
+	sql_select_recent_users: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users ORDER BY uid DESC, created DESC LIMIT :rows OFFSET :offset;"
 			-- Retrieve recent users
 
-	select_user_by_email: STRING = "SELECT uid, name, password, salt, email, status, created, signed FROM users WHERE email =:email;"
+	select_user_by_email: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users WHERE email =:email;"
 			-- Retrieve user by email if exists.
 
 	select_salt_by_username: STRING = "SELECT salt FROM users WHERE name =:name;"
 			-- Retrieve salt by username if exists.
 
-	sql_insert_user: STRING = "INSERT INTO users (name, password, salt, email, created, status) VALUES (:name, :password, :salt, :email, :created, :status);"
+	sql_insert_user: STRING = "INSERT INTO users (name, password, salt, email, created, status, profile_name) VALUES (:name, :password, :salt, :email, :created, :status, :profile_name);"
 			-- SQL Insert to add a new user.
 
-	sql_update_user: STRING = "UPDATE users SET name=:name, password=:password, salt=:salt, email=:email, status=:status, signed=:signed WHERE uid=:uid;"
+	sql_update_user: STRING = "UPDATE users SET name=:name, password=:password, salt=:salt, email=:email, status=:status, signed=:signed, profile_name=:profile_name WHERE uid=:uid;"
 			-- SQL update to update an existing user.
+
+	sql_update_user_name: STRING = "UPDATE users SET name=:name, password=:password, salt=:salt WHERE uid=:uid;"
+			-- SQL update to update `name` for an existing user.
 
 	sql_delete_user: STRING = "DELETE FROM users WHERE uid=:uid;"
 
@@ -1023,7 +1026,7 @@ feature {NONE} -- Sql Queries: USER ACTIVATION
 	sql_select_userid_activation: STRING = "SELECT uid FROM users_activations WHERE token = :token;"
 			-- Retrieve userid given the activation token.
 
-	select_user_by_activation_token: STRING = "SELECT u.* FROM users as u JOIN users_activations as ua ON ua.uid = u.uid and ua.token = :token;"
+	select_user_by_activation_token: STRING = "SELECT u.uid, u.name, u.password, u.salt, u.email, u.status, u.created, u.signed, u.profile_name FROM users as u JOIN users_activations as ua ON ua.uid = u.uid and ua.token = :token;"
 			-- Retrieve user by activation token if exist.
 
 	sql_remove_activation: STRING = "DELETE FROM users_activations WHERE token = :token;"
@@ -1037,7 +1040,7 @@ feature {NONE} -- User Password Recovery
 	sql_remove_password: STRING = "DELETE FROM users_password_recovery WHERE token = :token;"
 			-- Retrieve password if exist.
 
-	select_user_by_password_token: STRING = "SELECT u.* FROM users as u JOIN users_password_recovery as ua ON ua.uid = u.uid and ua.token = :token;"
+	select_user_by_password_token: STRING = "SELECT u.uid, u.name, u.password, u.salt, u.email, u.status, u.created, u.signed, u.profile_name FROM users as u JOIN users_password_recovery as ua ON ua.uid = u.uid and ua.token = :token;"
 			-- Retrieve user by password token if exist.
 
 feature -- Acess: Temp users

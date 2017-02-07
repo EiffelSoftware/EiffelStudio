@@ -91,9 +91,11 @@ feature -- HTTP Methods
 
 					if api.is_module_installed (l_module) then
 						s.append (" was successfully installed.")
-					else
+					elseif l_module.is_enabled then
 						s.append (" could not be installed!")
 						s.append (" <span class=%"error%">[ERROR]</span>")
+					else
+						s.append (" is not enabled!")
 					end
 					s.append ("</li>%N")
 				end
@@ -105,6 +107,6 @@ feature -- HTTP Methods
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

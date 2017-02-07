@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			package := "authentication"
 			create root_dir.make_current
 			cache_duration := 0
+			enable -- Is enabled by default
 		end
 
 feature -- Access

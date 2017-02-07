@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			Precursor
 			version := "1.0"
 			description := "Service to manage cookie based authentication"
+			enable -- Enabled by default
 		end
 
 feature -- Access

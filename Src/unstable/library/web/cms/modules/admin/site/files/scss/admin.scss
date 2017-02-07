@@ -54,6 +54,16 @@ ul.cms-permissions {
 	}
 }
 
-
+form#modules_collection {
+	thead td {
+		font-weight: bold;
+	}
+	tr {
+		border-bottom: dotted 1px #ccc;
+	}
+	td {
+		padding: 3px;
+	}
+}
 
 

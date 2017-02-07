@@ -50,6 +50,7 @@ feature -- Execution
 			lnk: CMS_LOCAL_LINK
 			s: STRING
 			l_role: CMS_USER_ROLE
+			ago: DATE_TIME_AGO_CONVERTER
 		do
 			a_response.set_value (a_user, "user")
 			create lnk.make (a_response.translation ("View", Void), "admin/user/" + a_user.id.out)
@@ -78,6 +79,17 @@ feature -- Execution
 			if attached a_user.email as l_email then
 				s.append ("<p>Email: ")
 				s.append (l_email)
+				s.append ("</p>")
+			end
+			if attached a_user.profile_name as l_prof_name then
+				s.append ("<p>Profile name: ")
+				s.append (html_encoded (l_prof_name))
+				s.append ("</p>")
+			end
+			if attached a_user.last_login_date as dt then
+				s.append ("<p>Last signed: ")
+				create ago.make
+				s.append (ago.smart_date_duration (dt))
 				s.append ("</p>")
 			end
 

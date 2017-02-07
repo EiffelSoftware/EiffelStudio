@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {CMS_USER_STORAGE_NULL}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

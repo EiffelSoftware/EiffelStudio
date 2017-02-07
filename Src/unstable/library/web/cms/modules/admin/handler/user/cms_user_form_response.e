@@ -325,6 +325,7 @@ feature -- Form
 				fs.set_legend ("Basic User Account Information")
 				fs.extend_html_text ("<div><string><label>User name </label></strong><br></div>")
 				fs.extend_html_text (a_user.name)
+
 				if attached a_user.email as l_email then
 					create fe.make_with_text ("email", l_email)
 				else
@@ -333,6 +334,15 @@ feature -- Form
 				fe.set_label ("Email")
 				fe.enable_required
 				fs.extend (fe)
+
+				if attached a_user.profile_name as l_profile_name then
+					create ti.make_with_text ("profile_name", l_profile_name)
+				else
+					create ti.make_with_text ("profile_name", "")
+				end
+				ti.set_label ("Profile name")
+				fs.extend (ti)
+
 				a_form.extend (fs)
 				a_form.extend_html_text ("<br/>")
 				create ts.make ("op")
@@ -371,6 +381,11 @@ feature -- Form
 				fe.set_label ("Email")
 				fe.enable_required
 				fs.extend (fe)
+
+				create ti.make ("profile_name")
+				ti.set_label ("Profile name")
+				fs.extend (ti)
+
 				a_form.extend (fs)
 				a_form.extend_html_text ("<br/>")
 				create ts.make ("op")
@@ -469,6 +484,15 @@ feature -- Form
 								end
 							end
 							if not a_form_data.has_error then
+								if
+									attached a_form_data.string_item ("profile_name") as l_prof_name and then
+									not l_prof_name.is_whitespace
+								then
+									a_user.set_profile_name (l_prof_name)
+								else
+									a_user.set_profile_name (Void)
+								end
+
 								api.user_api.update_user (a_user)
 								add_success_message ("Updated basic info")
 							end
@@ -528,6 +552,5 @@ feature -- Generation
 			end
 			Result := l_token + url_encoded (u.name) + u.creation_date.out
 		end
-
 
 end

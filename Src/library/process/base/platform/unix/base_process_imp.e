@@ -133,6 +133,26 @@ feature -- Interprocess data transmission
 			has_input_error := child_process.has_write_error
 		end
 
+	read_output_to_special (buffer: SPECIAL [NATURAL_8])
+			-- <Precursor>
+		do
+			if buffer.count > 0 then
+				child_process.read_output_to_special (buffer)
+				has_output_stream_error := child_process.has_output_stream_error
+				has_output_stream_closed := buffer.count = 0
+			end
+		end
+
+	read_error_to_special (buffer: SPECIAL [NATURAL_8])
+			-- <Precursor>
+		do
+			if buffer.count > 0 then
+				child_process.read_error_to_special (buffer)
+				has_error_stream_error := child_process.has_error_stream_error
+				has_error_stream_closed := buffer.count = 0
+			end
+		end
+
 feature -- Status report
 
 	exit_code: INTEGER
@@ -242,7 +262,7 @@ feature {NONE} -- Implementation
 			-- Child process.
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

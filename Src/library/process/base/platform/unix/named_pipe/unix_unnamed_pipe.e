@@ -335,7 +335,7 @@ feature -- Input
 	read_stream_non_block (nb_char: INTEGER)
 		local
 			count: INTEGER
-			mp: detachable MANAGED_POINTER
+			mp: MANAGED_POINTER
 			l_last_string: like last_string
 		do
 			last_read_successful := True
@@ -351,7 +351,24 @@ feature -- Input
 					last_read_successful := False
 				end
 			end
-			mp := Void
+		end
+
+	read_to_special (buffer: SPECIAL [NATURAL_8])
+			-- Read data from the current stream to `buffer`.
+			-- Maximum number if bytes to read is `buffer.count`.
+			-- Update `buffer.count` with actually read bytes.
+			-- Report result in `last_read_successful`.
+		local
+			count: INTEGER
+		do
+			last_read_successful := True
+			count := read (read_descriptor, $buffer, buffer.count)
+			if count >= 0 then
+				buffer.keep_head (count)
+			else
+				buffer.wipe_out
+				last_read_successful := False
+			end
 		end
 
 	read_line
@@ -685,7 +702,7 @@ invariant
 	current_platform_not_void: current_platform /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

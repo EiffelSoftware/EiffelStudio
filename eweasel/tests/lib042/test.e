@@ -26,7 +26,7 @@ feature {NONE} -- Creation
 				p := base_factory.process_launcher (command, arguments (<<output_option, "0">>), Void)
 				p.redirect_output_to_stream
 				launch (p)
-				p.read_output (buffer)
+				p.read_output_to_special (buffer)
 				if p.has_output_stream_error then
 					exit ("Error reading output stream.")
 				elseif not p.has_output_stream_closed then
@@ -42,7 +42,7 @@ feature {NONE} -- Creation
 				p := base_factory.process_launcher (command, arguments (<<output_option, n.out>>), Void)
 				p.redirect_output_to_stream
 				launch (p)
-				read (agent p.read_output, agent p.has_output_stream_closed, agent p.has_output_stream_error, n)
+				read (agent p.read_output_to_special, agent p.has_output_stream_closed, agent p.has_output_stream_error, n)
 				report (p)
 
 					-- Test #3: read more  than buffer size.
@@ -51,7 +51,7 @@ feature {NONE} -- Creation
 				p := base_factory.process_launcher (command, arguments (<<output_option, n.out>>), Void)
 				p.redirect_output_to_stream
 				launch (p)
-				read (agent p.read_output, agent p.has_output_stream_closed, agent p.has_output_stream_error, n)
+				read (agent p.read_output_to_special, agent p.has_output_stream_closed, agent p.has_output_stream_error, n)
 				report (p)
 
 					-- Tests for standard error.
@@ -62,7 +62,7 @@ feature {NONE} -- Creation
 				p := base_factory.process_launcher (command, arguments (<<error_option, "0">>), Void)
 				p.redirect_error_to_stream
 				launch (p)
-				p.read_error (buffer)
+				p.read_error_to_special (buffer)
 				if p.has_error_stream_error then
 					exit ("Error reading error stream.")
 				elseif not p.has_error_stream_closed then
@@ -78,7 +78,7 @@ feature {NONE} -- Creation
 				p := base_factory.process_launcher (command, arguments (<<error_option, n.out>>), Void)
 				p.redirect_error_to_stream
 				launch (p)
-				read (agent p.read_error, agent p.has_error_stream_closed, agent p.has_error_stream_error, n)
+				read (agent p.read_error_to_special, agent p.has_error_stream_closed, agent p.has_error_stream_error, n)
 				report (p)
 
 					-- Test #3: read more  than buffer size.
@@ -87,7 +87,7 @@ feature {NONE} -- Creation
 				p := base_factory.process_launcher (command, arguments (<<error_option, n.out>>), Void)
 				p.redirect_error_to_stream
 				launch (p)
-				read (agent p.read_error, agent p.has_error_stream_closed, agent p.has_error_stream_error, n)
+				read (agent p.read_error_to_special, agent p.has_error_stream_closed, agent p.has_error_stream_error, n)
 				report (p)
 
 					-- Tests for standard error redirected to standard output.
@@ -101,7 +101,7 @@ feature {NONE} -- Creation
 					p.redirect_output_to_stream
 					p.redirect_error_to_same_as_output
 					launch (p)
-					p.read_output (buffer)
+					p.read_output_to_special (buffer)
 					if p.has_output_stream_error then
 						exit ("Error reading output stream.")
 					elseif not p.has_output_stream_closed then
@@ -118,7 +118,7 @@ feature {NONE} -- Creation
 					p.redirect_output_to_stream
 					p.redirect_error_to_same_as_output
 					launch (p)
-					read (agent p.read_output, agent p.has_output_stream_closed, agent p.has_output_stream_error, n)
+					read (agent p.read_output_to_special, agent p.has_output_stream_closed, agent p.has_output_stream_error, n)
 					report (p)
 
 						-- Test #3: read more  than buffer size.
@@ -128,7 +128,7 @@ feature {NONE} -- Creation
 					p.redirect_output_to_stream
 					p.redirect_error_to_same_as_output
 					launch (p)
-					read (agent p.read_output, agent p.has_output_stream_closed, agent p.has_output_stream_error, n)
+					read (agent p.read_output_to_special, agent p.has_output_stream_closed, agent p.has_output_stream_error, n)
 					report (p)
 
 				end

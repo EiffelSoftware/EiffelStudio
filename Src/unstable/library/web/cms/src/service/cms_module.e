@@ -92,10 +92,24 @@ feature {CMS_API} -- Access: API
 
 feature {CMS_API} -- Module management
 
+	installed_version (api: CMS_API): detachable READABLE_STRING_32
+		require
+			is_installed (api)
+		do
+			Result := api.storage.custom_value ("is_installed", "module-" + name)
+		end
+
 	is_installed (api: CMS_API): BOOLEAN
 			-- Is Current module installed?
+		local
+			v: detachable READABLE_STRING_32
 		do
-			if attached api.storage.custom_value ("is_initialized", "module-" + name) as v then
+			v := api.storage.custom_value ("is_installed", "module-" + name)
+			if v = Void then
+					-- Kept for backward compabilitiy
+				v := api.storage.custom_value ("is_initialized", "module-" + name)
+			end
+			if v /= Void then
 				if v.is_case_insensitive_equal_general (version) then
 					Result := True
 				elseif v.is_case_insensitive_equal_general ("yes") then
@@ -112,18 +126,58 @@ feature {CMS_API} -- Module management
 			end
 		end
 
+	is_enabled_in_storage (api: CMS_API): BOOLEAN
+			-- Is Current module installed?
+		local
+			v: detachable READABLE_STRING_32
+		do
+			v := api.storage.custom_value ("is_enabled", "module-" + name)
+			if v /= Void then
+				if v.is_case_insensitive_equal_general (version) then
+					Result := True
+				elseif v.is_case_insensitive_equal_general ("yes") then
+						-- Backward compatibility.
+					Result := True
+				elseif v.is_case_insensitive_equal_general ("no") then
+						-- Probably a module that was installed, but now uninstalled.
+					Result := False
+				else
+						-- Maybe a different version is installed.
+						-- For now, let's assume this is installed.
+					Result := True
+				end
+			end
+		end
+
+	update_status_in_storage (a_is_enabled: BOOLEAN; api: CMS_API)
+			-- Is Current module installed?
+		do
+			if a_is_enabled then
+				api.storage.set_custom_value ("is_enabled", version, "module-" + name)
+				enable
+			else
+				api.storage.unset_custom_value ("is_enabled", "module-" + name)
+				disable
+			end
+		end
+
 	install (api: CMS_API)
 		require
 			is_not_installed: not is_installed (api)
 		do
-			api.storage.set_custom_value ("is_initialized", version, "module-" + name)
+			api.storage.set_custom_value ("is_installed", version, "module-" + name)
+			if is_enabled then
+				api.storage.set_custom_value ("is_enabled", version, "module-" + name)
+			else
+				api.storage.unset_custom_value ("is_enabled", "module-" + name)
+			end
 		end
 
 	uninstall (api: CMS_API)
 		require
 			is_installed: is_installed (api)
 		do
-			api.storage.set_custom_value ("is_initialized", "no", "module-" + name)
+			api.storage.set_custom_value ("is_installed", "no", "module-" + name)
 		end
 
 feature -- Router
@@ -195,6 +249,6 @@ invariant
 	version_set: not version.is_whitespace
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

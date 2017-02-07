@@ -9,6 +9,9 @@
 				<label>Email:</label>  {$user.email/}
 			</div>
 			<div>	
+				<label>Profile name:</label>  {$user.profile_name/}
+			</div>
+			<div>	
 				<label>Creation Date:</label>  {$user.creation_date/} (UTC)
 			</div>
 			<div>	

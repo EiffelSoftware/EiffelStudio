@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			version := "1.0"
 			description := "Service to Administrate CMS (users, modules, etc)"
 			package := "core"
+			enable -- Is enabled by default
 		end
 
 feature -- Access
@@ -90,7 +91,7 @@ feature -- Access: router
 			create l_admin_export_handler.make (a_api)
 			create l_uri_mapping.make_trailing_slash_ignored ("/admin/export", l_admin_export_handler)
 			a_router.map (l_uri_mapping, a_router.methods_get_post)
-			
+
 			create l_admin_import_handler.make (a_api)
 			create l_uri_mapping.make_trailing_slash_ignored ("/admin/import", l_admin_import_handler)
 			a_router.map (l_uri_mapping, a_router.methods_get_post)

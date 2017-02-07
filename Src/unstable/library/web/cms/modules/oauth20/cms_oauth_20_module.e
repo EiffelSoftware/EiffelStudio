@@ -84,13 +84,13 @@ feature {CMS_API} -- Module management
 				-- Schema
 			if attached api.storage.as_sql_storage as l_sql_storage then
 					--| Schema
-				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("oauth2_consumers.sql")), Void)
+				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("install.sql")), Void)
 
 				if l_sql_storage.has_error then
 					api.logger.put_error ("Could not initialize database for module [" + name + "]", generating_type)
 				else
 						-- TODO workaround.
-					l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("oauth2_consumers_initialize.sql")), Void)
+					l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("data.sql")), Void)
 					if l_sql_storage.has_error then
 						api.logger.put_error ("Could not initialize oauth2_consumers for module [" + name + "]", generating_type)
 					else

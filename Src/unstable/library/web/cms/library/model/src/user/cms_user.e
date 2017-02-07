@@ -9,7 +9,6 @@ class
 	CMS_USER
 
 inherit
-
 	DEBUG_OUTPUT
 
 create
@@ -56,6 +55,9 @@ feature -- Access
 	name: READABLE_STRING_32
 			-- User name.
 
+	profile_name: detachable READABLE_STRING_32
+			-- Optional profile name.
+
 	password: detachable READABLE_STRING_32
 			-- User password (plain text password).
 
@@ -94,16 +96,16 @@ feature -- Roles
 
 feature -- Access: data			
 
-	data: detachable STRING_TABLE [detachable ANY]
-			-- Additional data.
-
-	data_item (k: READABLE_STRING_GENERAL): detachable ANY
+	item (k: READABLE_STRING_GENERAL): detachable ANY assign put
 			-- Additional item data associated with key `k'.
 		do
-			if attached data as l_data then
-				Result := l_data.item (k)
+			if attached items as tb then
+				Result := tb.item (k)
 			end
 		end
+
+	items: detachable STRING_TABLE [detachable ANY]
+			-- Additional data.
 
 feature -- Status report
 
@@ -158,6 +160,14 @@ feature -- Change element
 			name_set: name = n
 		end
 
+	set_profile_name (pn: like profile_name)
+			-- Set `profile_name' with `pn'.
+		do
+			profile_name := pn
+		ensure
+			profile_name_set: profile_name = pn
+		end
+
 	set_password (a_password: like password)
 			-- Set `password' with `a_password'.
 		do
@@ -204,26 +214,26 @@ feature -- Element change: roles
 			roles := lst
 		end
 
-feature -- Change element: data		
+feature -- Change element: data
 
-	set_data_item (k: READABLE_STRING_GENERAL; d: like data_item)
+	put (d: like item; k: READABLE_STRING_GENERAL)
 			-- Associate data item `d' with key `k'.
 		local
-			l_data: like data
+			tb: like items
 		do
-			l_data := data
-			if l_data = Void then
-				create l_data.make (1)
-				data := l_data
+			tb := items
+			if tb = Void then
+				create tb.make (1)
+				items := tb
 			end
-			l_data.force (d, k)
+			tb.force (d, k)
 		end
 
-	remove_data_item (k: READABLE_STRING_GENERAL)
+	remove (k: READABLE_STRING_GENERAL)
 			-- Remove data item associated with key `k'.	
 		do
-			if attached data as l_data then
-				l_data.remove (k)
+			if attached items as tb then
+				tb.remove (k)
 			end
 		end
 
@@ -277,6 +287,6 @@ invariant
 	id_or_name_set: id > 0 or else not name.is_whitespace
 
 note
-	copyright: "2011-2016, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

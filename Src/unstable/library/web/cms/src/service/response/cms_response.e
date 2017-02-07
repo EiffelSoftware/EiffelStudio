@@ -1127,7 +1127,8 @@ feature -- Generation
 			add_to_primary_menu (lnk)
 			api.hooks.invoke_menu_system_alter (menu_system, Current)
 
-			if api.enabled_modules.count = 0 then
+			if api.enabled_modules.count = 1 then
+					-- It is the required CMS_CORE_MODULE!
 				add_to_primary_menu (create {CMS_LOCAL_LINK}.make ("Install", "admin/install"))
 			end
 
@@ -1261,6 +1262,7 @@ feature -- Generation
 			page.register_variable (request.is_https, "is_https")
 			if attached user as l_user then
 				page.register_variable (l_user.name, "user")
+				page.register_variable (user_profile_name (l_user), "user_profile_name")
 			end
 			if attached title as l_title then
 				page.register_variable (l_title, "site_title")
@@ -1373,17 +1375,28 @@ feature -- Helpers: cms link
 			if a_opt_title /= Void then
 				create Result.make (a_opt_title, user_url (u))
 			else
-				create Result.make (u.name, user_url (u))
+				create Result.make (user_profile_name (u), user_url (u))
 			end
 		end
 
-feature -- Helpers: html links		
+feature -- Helpers: html links
+
+	user_profile_name (u: CMS_USER): READABLE_STRING_32
+		do
+			if attached u.profile_name as pn and then not pn.is_whitespace then
+				Result := pn
+			elseif not u.name.is_whitespace then
+				Result := u.name
+			else
+				Result := {STRING_32} "user #" + u.id.out
+			end
+		end
 
 	user_html_link (u: CMS_USER): STRING
 		require
 			u_with_name: not u.name.is_whitespace
 		do
-			Result := link (u.name, "user/" + u.id.out, Void)
+			Result := link (user_profile_name (u), "user/" + u.id.out, Void)
 		end
 
 feature -- Helpers: URLs	

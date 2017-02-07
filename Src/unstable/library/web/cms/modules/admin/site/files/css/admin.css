@@ -1,34 +1,54 @@
 ul.cms-users {
   list-style-type: none;
   padding: 3px 3px 3px 3px;
-  border: solid 1px #ccc; }
-  ul.cms-users li {
-    border-top: dotted 1px #ccc; }
-    ul.cms-users li:first-child {
-      border-top: none; }
-  ul.cms-users li.cms_user a::before {
-    content: "[users] "; }
+  border: solid 1px #ccc;
+}
+ul.cms-users li {
+  border-top: dotted 1px #ccc;
+}
+ul.cms-users li:first-child {
+  border-top: none;
+}
+ul.cms-users li.cms_user a::before {
+  content: "[users] ";
+}
 
 ul.cms-roles {
   list-style-type: none;
   padding: 3px 3px 3px 3px;
-  border: solid 1px #ccc; }
-  ul.cms-roles li {
-    border-top: dotted 1px #ccc; }
-    ul.cms-roles li:first-child {
-      border-top: none; }
-  ul.cms-roles li.cms_role a::before {
-    content: "[roles] "; }
+  border: solid 1px #ccc;
+}
+ul.cms-roles li {
+  border-top: dotted 1px #ccc;
+}
+ul.cms-roles li:first-child {
+  border-top: none;
+}
+ul.cms-roles li.cms_role a::before {
+  content: "[roles] ";
+}
 
 ul.cms-permissions {
   list-style-type: none;
   padding: 3px 3px 3px 3px;
-  border: solid 1px #ccc; }
-  ul.cms-permissions li {
-    border-top: dotted 1px #ccc; }
-    ul.cms-permissions li:first-child {
-      border-top: none; }
-  ul.cms-permissions li.cms_permission a::before {
-    content: "[permission] "; }
+  border: solid 1px #ccc;
+}
+ul.cms-permissions li {
+  border-top: dotted 1px #ccc;
+}
+ul.cms-permissions li:first-child {
+  border-top: none;
+}
+ul.cms-permissions li.cms_permission a::before {
+  content: "[permission] ";
+}
 
-/*# sourceMappingURL=admin.css.map */
+form#modules_collection thead td {
+  font-weight: bold;
+}
+form#modules_collection tr {
+  border-bottom: dotted 1px #ccc;
+}
+form#modules_collection td {
+  padding: 3px;
+}

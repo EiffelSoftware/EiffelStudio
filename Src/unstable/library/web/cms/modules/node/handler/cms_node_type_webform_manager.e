@@ -263,7 +263,7 @@ feature -- Forms ...
 
 feature -- Output
 
-	append_content_as_html_to (a_node: G; is_teaser: BOOLEAN; a_output: STRING; a_response: detachable CMS_RESPONSE)
+	append_content_as_html_to (a_node: G; is_teaser: BOOLEAN; a_output: STRING; a_response: CMS_RESPONSE)
 			-- <Precursor>
 		local
 			lnk: detachable CMS_LOCAL_LINK
@@ -275,7 +275,6 @@ feature -- Output
 				-- Show tabs only if a user is authenticated.
 			if
 				not is_teaser and then
-				a_response /= Void and then
 				attached a_response.user as l_user
 			then
 				lnk := a_node.link
@@ -322,7 +321,7 @@ feature -- Output
 			a_output.append ("<div class=%"info%"> ")
 			if attached a_node.author as l_author then
 				a_output.append (" by ")
-				a_output.append (l_node_api.html_encoded (l_author.name))
+				a_output.append (a_response.html_encoded (a_response.user_profile_name (l_author)))
 			end
 			if attached a_node.modification_date as l_modified then
 				a_output.append (" (modified: ")
@@ -333,7 +332,6 @@ feature -- Output
 			a_output.append ("</div>")
 
 			if
-				a_response /= Void and then
 				attached {CMS_TAXONOMY_API} cms_api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxonomy_api
 			then
 				l_taxonomy_api.append_taxonomy_to_xhtml (a_node, a_response, a_output)
@@ -368,7 +366,7 @@ feature -- Output
 			a_output.append ("</div>")
 		end
 
-	append_comments_as_html_to (a_node: G; a_output: STRING; a_response: detachable CMS_RESPONSE)
+	append_comments_as_html_to (a_node: G; a_output: STRING; a_response: CMS_RESPONSE)
 		do
 			if attached {CMS_COMMENTS_API} cms_api.module_api ({CMS_COMMENTS_MODULE}) as l_comments_api then
 				if attached l_comments_api.comments_for (a_node) as l_comments and then not l_comments.is_empty then
@@ -383,14 +381,14 @@ feature -- Output
 			end
 		end
 
-	append_comment_as_html_to (a_comment: CMS_COMMENT; a_output: STRING; a_response: detachable CMS_RESPONSE)
+	append_comment_as_html_to (a_comment: CMS_COMMENT; a_output: STRING; a_response: CMS_RESPONSE)
 		local
 			l_ago: DATE_TIME_AGO_CONVERTER
 		do
 			a_output.append ("<li class=%"comment%">")
 			if attached a_comment.author as l_author then
 				a_output.append ("<span class=%"author%">")
-				a_output.append (cms_api.html_encoded (l_author.name))
+				a_output.append (a_response.html_encoded (a_response.user_profile_name (l_author)))
 				a_output.append ("</span>")
 			elseif attached a_comment.author_name as l_author_name then
 				a_output.append ("<span class=%"author%">")

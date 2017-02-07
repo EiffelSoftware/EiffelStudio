@@ -57,8 +57,9 @@ feature {NONE} -- Initialize
 			end
 
 				-- Keep enable modules list.
-			l_enabled_modules := setup.enabled_modules
+			create l_enabled_modules.make (setup.modules.count)
 			enabled_modules := l_enabled_modules
+			setup.fill_enabled_modules (Current)
 
 				-- Complete storage setup.
 			storage.set_api (Current)
@@ -72,6 +73,11 @@ feature {NONE} -- Initialize
 					-- or the reverse, or merge installation and initialization
 					-- and leave the responsability to the module to know
 					-- if this is installed or not...
+				if attached {CMS_CORE_MODULE} l_module as l_core_module then
+					if not l_core_module.is_installed (Current) then
+						l_core_module.install (Current)
+					end
+				end
 --				if not l_module.is_installed (Current) then
 --					l_module.install (Current)
 --				end
@@ -119,7 +125,7 @@ feature {NONE} -- Initialize
 			formats.extend (f)
 		end
 
-feature {CMS_ACCESS} -- Installation		
+feature {CMS_ACCESS} -- Module management		
 
 	install_all_modules
 			-- Install CMS or uninstalled module which are enabled.
@@ -134,11 +140,18 @@ feature {CMS_ACCESS} -- Installation
 					-- or the reverse, or merge installation and initialization
 					-- and leave the responsability to the module to know
 					-- if this is installed or not...
-				if not l_module.is_installed (Current) then
+				if l_module.is_enabled and not l_module.is_installed (Current) then
 					install_module (l_module)
 				end
 			end
 		end
+
+ 	installed_module_version (m: CMS_MODULE): detachable READABLE_STRING_32
+ 		require
+ 			module_installed: is_module_installed (m)
+ 		do
+ 			Result := m.installed_version (Current)
+ 		end
 
 	install_module (m: CMS_MODULE)
 			-- Install module `m'.
@@ -157,6 +170,22 @@ feature {CMS_ACCESS} -- Installation
 			module_installed: is_module_installed (m)
 		do
 			m.uninstall (Current)
+		end
+
+	enable_module (m: CMS_MODULE)
+			-- Enable module `m'.
+		do
+			m.update_status_in_storage (True, Current)
+		ensure
+			module_enabled: is_module_enabled (m)
+		end
+
+	disable_module (m: CMS_MODULE)
+			-- Disable module `m'.
+		do
+			m.update_status_in_storage (False, Current)
+		ensure
+			module_disabled: not is_module_enabled (m)
 		end
 
 feature -- Access
@@ -431,18 +460,33 @@ feature -- Query: module
 			Result := a_module.is_installed (Current)
 		end
 
+	is_module_enabled (a_module: CMS_MODULE): BOOLEAN
+		do
+			Result := a_module.is_enabled or a_module.is_enabled_in_storage (Current)
+		end
+
 	enabled_modules: CMS_MODULE_COLLECTION
 
 	module (a_type: TYPE [CMS_MODULE]): detachable CMS_MODULE
 			-- Enabled module typed `a_type', if any.
 			--| usage: if attached module ({FOO_MODULE}) as mod then ...
 		do
-			Result := setup.modules.item (a_type)
+			Result := installed_module (a_type)
 			if Result /= Void and then not Result.is_enabled then
 				Result := Void
 			end
 		ensure
 			Result /= Void implies (Result.is_enabled) -- and a_type.is_conforming_to (Result.generating_type))
+		end
+
+	installed_module (a_type: TYPE [CMS_MODULE]): detachable CMS_MODULE
+			-- Module typed `a_type', if any.
+			-- It may not be enabled!
+			--| usage: if attached module ({FOO_MODULE}) as mod then ...
+		do
+			Result := setup.modules.item (a_type)
+		ensure
+--FIXME			Result /= Void implies (Result.is_enabled) -- and a_type.is_conforming_to (Result.generating_type))
 		end
 
 	module_api (a_type: TYPE [CMS_MODULE]): detachable CMS_MODULE_API

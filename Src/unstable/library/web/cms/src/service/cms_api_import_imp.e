@@ -203,6 +203,10 @@ feature -- Import
 				if attached json_string_8_item (j, "email") as l_email then
 					Result.set_email (l_email)
 				end
+				if attached json_string_8_item (j, "profile_name") as l_profile_name then
+					Result.set_profile_name (l_profile_name)
+				end
+
 				if attached {JSON_ARRAY} j.item ("roles") as j_roles then
 					create l_roles.make (j_roles.count)
 					across

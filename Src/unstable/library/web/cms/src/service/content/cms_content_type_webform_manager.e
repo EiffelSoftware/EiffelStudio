@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Conversion		
 
-	append_content_as_html_to (a_content: G; is_teaser: BOOLEAN; a_output: STRING; a_response: detachable CMS_RESPONSE)
+	append_content_as_html_to (a_content: G; is_teaser: BOOLEAN; a_output: STRING; a_response: CMS_RESPONSE)
 			-- Append `a_content' as html to `a_output', and adapt output according to `is_teaser' (full output, or teaser).
 			-- In the context of optional `a_response'.
 		deferred
@@ -49,6 +49,6 @@ feature -- Conversion
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

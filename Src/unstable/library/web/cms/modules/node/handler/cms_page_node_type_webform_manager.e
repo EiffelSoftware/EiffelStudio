@@ -150,7 +150,7 @@ feature -- Forms ...
 
 feature -- Output
 
-	append_content_as_html_to (a_node: CMS_PAGE; is_teaser: BOOLEAN; a_output: STRING; a_response: detachable CMS_RESPONSE)
+	append_content_as_html_to (a_node: CMS_PAGE; is_teaser: BOOLEAN; a_output: STRING; a_response: CMS_RESPONSE)
 			-- <Precursor>
 		local
 			l_node_api: CMS_NODE_API

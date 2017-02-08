@@ -74,7 +74,9 @@
 
 	</target>
 	<target name="demo_standalone_scoop_ssl" extends="demo_standalone_scoop">
-		<setting name="concurrency" value="scoop"/>
+		<capability>
+			<concurrency support="scoop" use="scoop"/>
+		</capability>
 		<variable name="httpd_ssl_enabled" value="true"/>
 		<variable name="libcurl_http_client_disabled" value="true"/>
 		<variable name="net_http_client_disabled" value="false"/>

@@ -47,6 +47,9 @@ ul.horizontal li {
   padding: 5px;
   font-style: italic;
 }
+#content .preview {
+  border: solid 1px red;
+}
 
 .sidebar {
   padding: 5px;

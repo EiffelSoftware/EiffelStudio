@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			get_theme
 			create menu_system.make
 			initialize_block_region_settings
-			obsolete_register_hooks
 		end
 
 	initialize_site_url
@@ -63,22 +62,6 @@ feature {NONE} -- Initialization
 		ensure
 			site_url_set: site_url /= Void
 			site_url_ends_with_slash: site_url.ends_with_general ("/")
-		end
-
-	obsolete_register_hooks
-			-- Obsolete code to initialize hooks.
-			-- Dangerous, since those hooks would be available only under CMS_RESPONSE context.
-		local
-			l_module: CMS_MODULE
-			l_enabled_modules: CMS_MODULE_COLLECTION
-		do
-			l_enabled_modules := api.enabled_modules
-			across
-				l_enabled_modules as ic
-			loop
-				l_module := ic.item
-				l_module.register_hooks (Current)
-			end
 		end
 
 feature -- Access
@@ -365,12 +348,6 @@ feature -- Element change
 	set_main_content (s: like main_content)
 		do
 			main_content := s
-		end
-
-	add_variable (a_element: ANY; a_key:READABLE_STRING_32)
-		obsolete "Use `set_value' [Aug/2015]"
-		do
-			set_value (a_element, a_key)
 		end
 
 	set_value (v: detachable ANY; k: READABLE_STRING_GENERAL)

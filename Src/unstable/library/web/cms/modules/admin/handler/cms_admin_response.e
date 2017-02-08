@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {CMS_ADMIN_RESPONSE}."
+	description: "Response for the /admin request."
 	date: "$Date$"
 	revision: "$Revision$"
 

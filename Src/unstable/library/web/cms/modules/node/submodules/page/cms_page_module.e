@@ -101,7 +101,7 @@ feature {CMS_API} -- Module management
 		do
 				-- Schema
 			if attached a_api.storage.as_sql_storage as l_sql_storage then
-				if attached a_api.module ({CMS_NODE_MODULE}) as l_node_module then
+				if attached a_api.installed_module ({CMS_NODE_MODULE}) as l_node_module then
 					l_sql_storage.sql_execute_file_script (a_api.module_resource_location (l_node_module, (create {PATH}.make_from_string ("scripts")).extended (name).appended_with_extension ("sql")), Void)
 				end
 				if l_sql_storage.has_error then

@@ -51,16 +51,12 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	hot_zone_factory: SD_HOT_ZONE_ABSTRACT_FACTORY
+	hot_zone_factory: detachable SD_HOT_ZONE_ABSTRACT_FACTORY
 			-- Factory for different style hot zones.
 		require
 			set: is_hot_zone_factory_set
-		local
-			l_result: detachable like hot_zone_factory
 		do
-			l_result := hot_zone_factory_cell.item
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
+			Result := hot_zone_factory_cell.item
 		ensure
 			not_void: Result /= Void
 		end
@@ -102,23 +98,18 @@ feature -- Access
 		end
 
 	tool_bar_font: EV_FONT
-			-- Tool bar font
-		require
-			set: is_tool_bar_font_set
-		local
-			l_item: detachable like tool_bar_font
+			-- Tool bar font.
 		do
-			l_item := sizes.tool_bar_font_cell.item
-			check l_item /= Void end -- Implied by precondition `is_tool_bar_font_set'
-			Result := l_item
+			Result := sizes.tool_bar_font
 		ensure
 			not_void: Result /= Void
 		end
 
-	notebook_tab_drawer: SD_NOTEBOOK_TAB_DRAWER_I
-			-- Drawer for notebook tabs
+	notebook_tab_drawer (a_tab: SD_NOTEBOOK_TAB): SD_NOTEBOOK_TAB_DRAWER_I
+			-- Drawer for notebook tabs with initial tab `a_tab'.
+			-- The tab needs to be changed by calling {SD_NOTEBOOK_TAB_DRAWER_I}.set_drawing_area.
 		once
-			create {SD_NOTEBOOK_TAB_DRAWER_IMP} Result.make
+			create {SD_NOTEBOOK_TAB_DRAWER_IMP} Result.make (a_tab)
 		end
 
 	tool_bar_drawer: SD_TOOL_BAR_DRAWER
@@ -250,12 +241,6 @@ feature -- Status report
 			-- Is `hot_zone_factory' has been set?
 		do
 			Result := hot_zone_factory_cell.item /= Void
-		end
-
-	is_tool_bar_font_set: BOOLEAN
-			-- Is tool bar singleton cell has been set?
-		do
-			Result := sizes.tool_bar_font_cell.item /= Void
 		end
 
 feature -- Status setting
@@ -480,10 +465,10 @@ feature -- Constants
 	Auto_hide_panel_lightness: REAL = 0.5
 			-- Auto hide panel lightness value. Used by SD_AUTO_HIDE_PANEL.			
 
-	Auto_hide_panel_size: INTEGER
+	auto_hide_panel_size: INTEGER
 			-- Width of auto hide panel.
 		do
-			Result := sizes.auto_hide_panel_size_cell.item
+			Result := sizes.auto_hide_panel_size
 		end
 
 	Auto_hide_panel_gap_size: INTEGER = 4
@@ -498,20 +483,20 @@ feature -- Constants
 	title_bar_height: INTEGER
 			-- Size of zone's title bar.
 		do
-			Result := sizes.title_bar_height_cell.item
+			Result := sizes.title_bar_height
 		end
 
-	Notebook_tab_height: INTEGER
+	notebook_tab_height: INTEGER
 			-- Notebook tab height.
 		do
-			Result := sizes.notebook_tab_height_cell.item
+			Result := sizes.notebook_tab_height
 		end
 
-	Notebook_tab_maximum_size: INTEGER
+	notebook_tab_maximum_size: INTEGER
 			-- Maximum size of a notebook tab.
 			-- If the title on the tab would exceed this size, it is cropped.
 		do
-			Result := sizes.notebook_tab_maximum_size_cell.item
+			Result := sizes.notebook_tab_maximum_size
 		end
 
 	tab_zone_upper_minimum_height: INTEGER
@@ -523,27 +508,27 @@ feature -- Constants
 	zone_minimum_width: INTEGER
 			-- Minimum width of a zone.
 		do
-			Result := sizes.zone_minimum_width_cell.item
+			Result := sizes.zone_minimum_width
 		end
 
 	zone_minimum_height: INTEGER
 			-- Minimum height of a zone.
 		do
-			Result := sizes.zone_minimum_height_cell.item
+			Result := sizes.zone_minimum_height
 		end
 
-	Tool_bar_size: INTEGER
+	tool_bar_size: INTEGER
 			-- Size of tool bar. When horizontal the size is height. When vertical the size is width.
 			-- Note: SD_WIDGET_TOOL_BAR's size may bigger than this size when font size is very small.
 			-- For example, on Linux Desktop when using font Scans 8.
 		do
-			Result := sizes.tool_bar_size_cell.item
+			Result := sizes.tool_bar_size
 		end
 
 	Tool_bar_border_width: INTEGER
-			-- Tool bar border width
+			-- Tool bar border width.
 		do
-			Result := sizes.tool_bar_border_width_cell.item
+			Result := sizes.tool_bar_border_width
 		end
 
 	Tool_bar_hidden_item_dialog_max_width: INTEGER = 400
@@ -588,7 +573,7 @@ feature -- Constants
 	title_bar_text_start_y: INTEGER
 			-- When title bar drawing text, start y position.
 		do
-			Result := sizes.title_bar_text_start_y_cell.item
+			Result := sizes.title_bar_text_start_y
 		end
 
 	Padding_width: INTEGER = 4
@@ -606,13 +591,8 @@ feature -- Constants
 	Auto_hide_tab_stub_show_delay: INTEGER = 1000
 			-- Auto hide tab stub delay time in milliseconds.
 
-	Editor_place_holder_content_name: STRING_32
+	Editor_place_holder_content_name: STRING_32 = "docking manager editor place holder"
 			-- Content name for `place_holder_content' in SD_DOCKING_MANAGER_ZONES.
-		once
-			Result := "docking manager editor place holder"
-		ensure
-			Result_not_void: Result /= Void
-		end
 
 feature {SD_DOCKING_MANAGER, SD_TOOL_BAR_DRAGGING_AGENTS, SD_TOOL_BAR_DOCKER_MEDIATOR, SD_SIZES,
 		SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE, SD_TITLE_BAR, SD_NOTEBOOK, SD_AUTO_HIDE_PANEL, SD_WIDGET_FACTORY,
@@ -795,7 +775,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

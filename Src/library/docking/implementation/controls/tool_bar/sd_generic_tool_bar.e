@@ -23,13 +23,9 @@ feature -- Docking query
 		deferred
 		end
 
-	content: SD_TOOL_BAR_CONTENT
-			-- Related tool bar content
-		require
-			set: is_content_attached
+	content: detachable SD_TOOL_BAR_CONTENT
+			-- Related tool bar content.
 		deferred
-		ensure
-			not_void: Result /= Void
 		end
 
 	items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
@@ -61,11 +57,6 @@ feature -- Docking query
 
 	is_item_position_valid (a_screen_x, a_screen_y: INTEGER_32): BOOLEAN
 			-- If `a_screen_x' and `a_screen_y' within tool bar items area?
-		deferred
-		end
-
-	is_content_attached: BOOLEAN
-			-- If `content' has been set?
 		deferred
 		end
 
@@ -369,7 +360,7 @@ feature {SD_WIDGET_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

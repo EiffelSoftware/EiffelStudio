@@ -25,8 +25,8 @@ feature {NONE} -- Initialization
 			internal_docking_manager := a_docking_manager
 
 			create cleaner.make (a_docking_manager)
-			create editor_helper
-			editor_helper.set_open_config_mediator (Current)
+			create editor_helper.make (Current)
+--			editor_helper.set_open_config_mediator (Current)
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -67,7 +67,6 @@ feature -- Open inner container data
 			internal_docking_manager.command.recover_normal_state
 
 			internal_docking_manager.command.resize (True)
-			internal_docking_manager.property.set_is_opening_config (True)
 
 			debug ("to_implement")
 				(create {REFACTORING_HELPER}).to_implement ("Use FILE_UTILITIES to deal with `a_file' when available in a library.")
@@ -81,6 +80,7 @@ feature -- Open inner container data
 				l_top_parent := editor_top_parent_for_restore
 				if l_top_parent /= Void then
 					internal_docking_manager.command.lock_update (Void, True)
+					internal_docking_manager.property.set_is_opening_config (True)
 
 					cleaner.clean_up_all_editors
 					check not l_top_parent.full end
@@ -244,11 +244,9 @@ feature -- Query
 					l_file.open_read
 					create l_reader.make (l_file)
 					l_reader.set_for_reading
-					if l_reader.is_ready_for_reading then
-						create l_facility
-						if attached {SD_CONFIG_DATA} l_facility.retrieved (l_reader, True) as l_result then
-							Result := l_result
-						end
+					create l_facility
+					if attached {SD_CONFIG_DATA} l_facility.retrieved (l_reader, True) as l_result then
+						Result := l_result
 					end
 				end
 			end
@@ -408,10 +406,9 @@ feature {NONE} -- Implementation
 					end
 				end
 
-				if Result = internal_docking_manager.query.inner_container_main then
-				-- If the l_top_parent is top SD_MULTI_DOCK_AREA
-					l_result := Result
-					check l_result /= Void end -- Implied by `inner_container_main' not void
+				l_result := internal_docking_manager.query.inner_container_main
+				if Result = l_result then
+						-- If the l_top_parent is top SD_MULTI_DOCK_AREA.
 					l_result.wipe_out
 					create l_temp_split_area
 					l_result.extend (l_temp_split_area)
@@ -421,14 +418,15 @@ feature {NONE} -- Implementation
 						l_left_zones := internal_docking_manager.query.all_zones_in_widget (l_first)
 					else
 						check False end -- Implied by docking widget must not has empty child
+						create l_left_zones.make (0)
 					end
 
 					if attached l_top_split_area.second as l_second then
 						l_right_zones := internal_docking_manager.query.all_zones_in_widget (l_second)
 					else
 						check False end -- Implied by docking widget must not has empty child
+						create l_right_zones.make (0)
 					end
-					check l_left_zones /= Void and l_right_zones /= Void end -- Implied by previous if clauses
 					if is_all_tools (l_left_zones) or  is_all_tools (l_right_zones) then
 						create l_temp_split_area
 						if is_all_tools (l_left_zones) then
@@ -564,14 +562,21 @@ feature {NONE} -- Implementation
 			l_internal: INTERNAL
 			l_type_id: INTEGER
 		do
-			if not a_config_data.is_split_area then -- If it's a zone.
+			if not a_config_data.is_split_area then
+					-- If it's a zone.
+				debug ("fixme")
+						-- TODO: Replace indirect object creation with the direct one.
+					(create {REFACTORING_HELPER}).fixme
+						("Creation of SD_STATE_WITH_CONTENT objects shouold be done directly %
+						%to avoid potential void-safety violations if not all attached attributes are properly set.")
+				end
 				create l_internal
 				if attached a_config_data.state as l_state then
 					l_type_id := l_internal.dynamic_type_from_string (l_state)
 				end
 
 				check a_type_exist: l_type_id /= -1 end
-				if attached {SD_STATE} l_internal.new_instance_of (l_type_id) as l_state then
+				if attached {SD_STATE_WITH_CONTENT} l_internal.new_instance_of (l_type_id) as l_state then
 					l_state.set_docking_manager (internal_docking_manager)
 
 					if attached a_config_data.titles as l_titles and then not l_titles.is_empty
@@ -587,29 +592,26 @@ feature {NONE} -- Implementation
 						l_state.restore (a_config_data, a_container)
 					end
 
-					-- We should check if we really restored content.
-					if l_state.is_content_set then
-						l_state.set_last_floating_height (a_config_data.height)
-						l_state.set_last_floating_width (a_config_data.width)
-						if not a_config_data.is_visible and l_state.content /= internal_docking_manager.zones.place_holder_content then
-							l_state.content.hide
-						end
-						if a_config_data.is_minimized then
-							-- l_state.zone will be void. We should query zone indirectly.
-							if attached {EV_WIDGET} l_state.content.state.zone as lt_widget then
-								if attached {SD_MIDDLE_CONTAINER} lt_widget.parent as l_parent and then l_parent.is_minimized then
-									-- Maybe parent not full now, Current is the first child of parent, parent will fill another child immediately.
-									-- check full: l_parent.full end
-									if attached {EV_WIDGET} l_state.content.state.zone as lt_widget_2 then
-										l_parent.disable_item_expand (lt_widget_2)
-									else
-										check not_possible: False end
-									end
+						-- We should check if we really restored content.
+					l_state.set_last_floating_height (a_config_data.height)
+					l_state.set_last_floating_width (a_config_data.width)
+					if not a_config_data.is_visible and l_state.content /= internal_docking_manager.zones.place_holder_content then
+						l_state.content.hide
+					end
+					if a_config_data.is_minimized then
+						-- l_state.zone will be void. We should query zone indirectly.
+						if attached {EV_WIDGET} l_state.content.state.zone as lt_widget then
+							if attached {SD_MIDDLE_CONTAINER} lt_widget.parent as l_parent and then l_parent.is_minimized then
+								-- Maybe parent not full now, Current is the first child of parent, parent will fill another child immediately.
+								-- check full: l_parent.full end
+								if attached {EV_WIDGET} l_state.content.state.zone as lt_widget_2 then
+									l_parent.disable_item_expand (lt_widget_2)
+								else
+									check not_possible: False end
 								end
-
-							else
-								check not_possible: False end
 							end
+						else
+							check not_possible: False end
 						end
 					end
 				end
@@ -780,7 +782,6 @@ feature {NONE} -- Implementation
 			l_tool_bar: SD_TOOL_BAR_ZONE
 			l_content: SD_TOOL_BAR_CONTENT
 			l_state: detachable SD_TOOL_BAR_ZONE_STATE
-			l_title: detachable STRING_32
 			l_internal_docking_manager: like internal_docking_manager
 			l_tool_bar_manager: like internal_docking_manager.tool_bar_manager
 		do
@@ -809,30 +810,33 @@ feature {NONE} -- Implementation
 			loop
 				l_data := a_tool_bar_data.item
 				check is_floating_tool_bar_data: l_data.is_floating end
-				l_title := l_data.title
-				check l_title /= Void end -- Implied by check `is_floating_tool_bar_data'
-				l_content := l_tool_bar_manager.content_by_title (l_title)
+				if attached l_data.title as l_title then
+					l_content := l_tool_bar_manager.content_by_title (l_title)
 
-				-- Reset texts if original docking vertically
-				if attached l_content.zone as l_zone then
-					l_zone.change_direction (True)
-				end
+					-- Reset texts if original docking vertically
+					if attached l_content.zone as l_zone then
+						l_zone.change_direction (True)
+					end
 
-				create l_tool_bar.make (False, l_internal_docking_manager, False)
-				l_tool_bar.extend (l_content)
-				l_state := l_data.last_state
-				if l_state /= Void then
-					l_tool_bar.assistant.set_last_state (l_state)
-				end
-				if l_state /= Void and then l_state.items_layout /= Void then
-					l_tool_bar.assistant.open_items_layout
-				end
+					create l_tool_bar.make (False, False, l_content, l_internal_docking_manager)
+					l_state := l_data.last_state
+					if l_state /= Void then
+						l_tool_bar.assistant.set_last_state (l_state)
+						if l_state.items_layout /= Void then
+							l_tool_bar.assistant.open_items_layout
+						end
+					end
 
-				l_tool_bar.float (l_data.screen_x, l_data.screen_y, l_data.is_visible)
-				l_content.set_visible (l_data.is_visible)
+					l_tool_bar.float (l_data.screen_x, l_data.screen_y, l_data.is_visible)
+					l_content.set_visible (l_data.is_visible)
 
-				if l_state /= Void and then attached l_state.floating_group_info as l_info then
-					l_tool_bar.attached_floating_tool_bar.assistant.position_groups (l_info)
+					if
+						attached l_state and then
+						attached l_state.floating_group_info as l_info and then
+						attached l_tool_bar.floating_tool_bar as b
+					then
+						b.assistant.position_groups (l_info)
+					end
 				end
 				a_tool_bar_data.forth
 			end
@@ -858,11 +862,10 @@ feature {NONE} -- Implementation
 					end
 
 					if attached {SD_TOOL_BAR_ZONE_STATE} l_data.last_state as l_state_2 then
-						create l_tool_bar.make (l_state_2.is_vertical, l_internal_docking_manager, False)
+						create l_tool_bar.make (l_state_2.is_vertical, False, l_content, l_internal_docking_manager)
 					else
-						create l_tool_bar.make (False, l_internal_docking_manager, False)
+						create l_tool_bar.make (False, False, l_content, l_internal_docking_manager)
 					end
-					l_tool_bar.extend (l_content)
 					l_content.set_zone (l_tool_bar)
 					l_content.set_visible (False)
 					l_state := l_data.last_state
@@ -919,12 +922,11 @@ feature {NONE} -- Implementation
 					l_content := l_tool_bar_manager.content_by_title (l_string)
 					check l_content_not_void: l_content /= Void end
 					l_content.set_visible (True)
-					create l_tool_bar_zone.make (False, internal_docking_manager, False)
+					create l_tool_bar_zone.make (False, False, l_content, internal_docking_manager)
 
 					if attached {SD_TOOL_BAR_ZONE_STATE} l_row_item.state as l_state then
 						l_tool_bar_zone.assistant.set_last_state (l_state)
 
-						l_tool_bar_zone.extend (l_content)
 						if l_state.items_layout /= Void then
 							l_tool_bar_zone.assistant.open_items_layout
 						end
@@ -1007,7 +1009,6 @@ feature {SD_EDITOR_CONFIG_HELPER} -- Internals
 			-- Open maximized tool data.
 		local
 			l_maximized_tools: LIST [READABLE_STRING_GENERAL]
-			l_zone: detachable SD_ZONE
 		do
 			if a_config_data /= Void then
 				from
@@ -1018,11 +1019,9 @@ feature {SD_EDITOR_CONFIG_HELPER} -- Internals
 				loop
 					if
 						attached  internal_docking_manager.query.content_by_title (l_maximized_tools.item) as l_content and then
-						l_content.state.is_zone_attached
+						attached l_content.state.zone as z
 					then
-						l_zone := l_content.state.zone
-						check l_zone /= Void end -- Implied by `is_zone_attached'
-						if not l_zone.is_maximized then
+						if not z.is_maximized then
 							l_content.state.on_normal_max_window
 						end
 					end

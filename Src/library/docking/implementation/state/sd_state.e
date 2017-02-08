@@ -15,30 +15,6 @@ inherit
 
 feature -- Properties
 
-	content: SD_CONTENT
-			-- Attached `internal_content'
-		require
-			set: is_content_set
-		local
-			l_result: like internal_content
-		do
-			l_result := internal_content
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		end
-
-	is_content_set: BOOLEAN
-			-- If `internal_content' attached?
-		do
-			Result := internal_content /= Void
-		end
-
-	extend (a_content: like internal_content)
-			-- Set `internal_content'
-		do
-			internal_content := a_content
-		end
-
 	direction: INTEGER
 			-- Dock top or dock bottom or dock left or dock right? One emueration from {SD_DOCKING_MANAGER}
 
@@ -77,9 +53,7 @@ feature -- Properties
 		end
 
 	zone: detachable SD_ZONE
-			-- Zone which is managed by `Current'
-		require
-			ready: is_zone_attached
+			-- Zone which is managed by `Current' (if any).
 		deferred
 		end
 
@@ -98,22 +72,6 @@ feature -- Properties
 		do
 		end
 
-feature {SD_OPEN_CONFIG_MEDIATOR, SD_CONTENT}  -- Restore
-
-	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER)
-			-- `titles' is content name
-			--
-			-- `a_container' is zone parent
-		require
-			more_than_one_title: attached a_data.titles as lr_titles and then content_count_valid (lr_titles)
-			a_container_not_void: a_container /= Void
-			a_container_not_full: not a_container.full
-			a_direction_valid: a_data.direction = {SD_ENUMERATION}.top or a_data.direction = {SD_ENUMERATION}.bottom
-				or a_data.direction = {SD_ENUMERATION}.left or a_data.direction = {SD_ENUMERATION}.right
-		do
-			content.set_visible (True)
-		end
-
 feature -- Commands
 
 	record_state
@@ -128,25 +86,6 @@ feature -- Commands
 		deferred
 		end
 
-	set_focus (a_content: SD_CONTENT)
-			-- Set focus
-		require
-			has_content: has (a_content)
-		do
-			if is_zone_attached and then attached zone as l_zone then
-				l_zone.on_focus_in (a_content)
-				docking_manager.property.set_last_focus_content (content)
-			end
-			if attached {EV_WIDGET} zone as lt_widget then
-				if is_zone_attached and then not lt_widget.is_displayed then
-					-- Maybe current is hidden, we restore zones normal state in that dock area.
-					docking_manager.command.recover_normal_state_in_dock_area_of (zone)
-				end
-			else
-				check not_possible: False end
-			end
-		end
-
 	show
 			-- Handle show zone
 		do
@@ -155,41 +94,6 @@ feature -- Commands
 	hide
 			-- Handle hide zone
 		do
-		end
-
-	close
-			-- Handle close zone
-		local
-			l_state: SD_STATE_VOID
-		do
-			if is_zone_attached then
-				if attached {EV_WIDGET} zone as lt_widget then
-					docking_manager.command.lock_update (lt_widget, False)
-				else
-					check not_possible: False end
-				end
-			else
-				docking_manager.command.lock_update (Void, True)
-			end
-
-			if is_zone_attached then
-				docking_manager.command.recover_normal_state_in_dock_area_of (zone)
-			end
-
-			if content /= docking_manager.zones.place_holder_content then
-				add_place_holder
-			end
-
-			if is_zone_attached and then attached zone as l_zone then
-				l_zone.close
-			end
-			docking_manager.zones.prune_zone_by_content (content)
-			docking_manager.command.remove_empty_split_area
-			docking_manager.command.update_title_bar
-			docking_manager.command.unlock_update
-			create l_state.make
-			l_state.set_content (content)
-			change_state (l_state)
 		end
 
 	stick (a_direction: INTEGER)
@@ -206,10 +110,8 @@ feature -- Commands
 	minimize
 			-- Minimize if possible
 		do
-			if is_zone_attached then
-				if attached {SD_UPPER_ZONE} zone as l_zone then
-					l_zone.minimize
-				end
+			if attached {SD_UPPER_ZONE} zone as z then
+				z.minimize
 			end
 		end
 
@@ -246,27 +148,12 @@ feature -- Commands
 		do
 		end
 
-	auto_hide_tab_with (a_target_content: SD_CONTENT)
-			-- When `a_tartget_content' is auto hide state, `content''s auto hide tab dock at side of
-			-- `a_target_content' auto hide tab
-		require
-			a_target_content_not_void: a_target_content /= Void
-		local
-			l_auto_hide_state: SD_AUTO_HIDE_STATE
-		do
-			content.set_visible (True)
-			docking_manager.command.lock_update (Void, True)
-			create l_auto_hide_state.make_with_friend (content, a_target_content)
-			content.change_state (l_auto_hide_state)
-			docking_manager.command.unlock_update
-		end
-
 	on_normal_max_window
 			-- Handle normal\max zone
 		require
-			set: is_zone_attached
+			set: attached zone
 		do
-			if is_zone_attached and then attached zone as l_zone then
+			if attached zone as l_zone then
 				l_zone.on_normal_max_window
 			end
 		end
@@ -344,21 +231,7 @@ feature {SD_CONTENT} -- SD_CONTENT called functions.
 		do
 		end
 
-feature {SD_AUTO_HIDE_STATE} -- Internal calls
-
-	change_state (a_state: SD_STATE)
-			-- Changed `content' state to `a_state'
-		require
-			a_state_not_void: a_state /= Void
-		do
-			content.change_state (a_state)
-			a_state.set_last_floating_height (last_floating_height)
-			a_state.set_last_floating_width (last_floating_width)
-		ensure
-			changed: content.state = a_state
-		end
-
-feature  -- States report
+feature  -- Status report
 
 	value: INTEGER
 			-- State value, see {SD_ENUMERATION} -- State
@@ -367,18 +240,9 @@ feature  -- States report
 			valid: (create {SD_ENUMERATION}).is_state_valid (Result)
 		end
 
-	has (a_content: SD_CONTENT): BOOLEAN
-			-- If Current has `a_content'?
-		require
-			a_content_not_void: a_content /= Void
-		do
-			Result := internal_content = a_content
-		end
-
 	content_void: BOOLEAN
 			-- If current a_content void?
-		do
-			Result := internal_content = Void
+		deferred
 		end
 
 	content_count_valid (a_titles: ARRAYED_LIST [READABLE_STRING_GENERAL]): BOOLEAN
@@ -399,12 +263,6 @@ feature  -- States report
 			end
 		end
 
-	is_zone_attached: BOOLEAN
-			-- If `zone' attached ?
-		do
-			Result := True
-		end
-
 feature {NONE} -- Implementation
 
 	add_place_holder
@@ -413,8 +271,8 @@ feature {NONE} -- Implementation
 		local
 			l_mutli_dock_area: SD_MULTI_DOCK_AREA
 		do
-			-- If it's a eidtor zone, and it's the last editor zone, then we put the SD_PLACE_HOLDER_ZONE in.
-			if is_zone_attached and then attached zone as l_zone then -- Maybe it's auto hide state, zone = Void.
+				-- If it's a eidtor zone, and it's the last editor zone, then we put the SD_PLACE_HOLDER_ZONE in.
+			if attached zone as l_zone then -- Maybe it's auto hide state, zone = Void.
 				l_mutli_dock_area := docking_manager.query.inner_container (l_zone)
 				if l_mutli_dock_area.editor_zone_count = 1 and l_zone.content.type = {SD_ENUMERATION}.editor then
 					check not_has: not docking_manager.has_content (docking_manager.zones.place_holder_content) end
@@ -431,8 +289,8 @@ feature {NONE} -- Implementation
 		local
 			l_mutli_dock_area: SD_MULTI_DOCK_AREA
 		do
-			-- If it's a eidtor zone, and it's the last editor zone, then we put the SD_PLACE_HOLDER_ZONE in.
-			if is_zone_attached and then attached zone as l_zone and then l_zone.type = {SD_ENUMERATION}.editor then
+				-- If it's a eidtor zone, and it's the last editor zone, then we put the SD_PLACE_HOLDER_ZONE in.
+			if attached zone as l_zone and then l_zone.type = {SD_ENUMERATION}.editor then
 				l_mutli_dock_area := docking_manager.query.inner_container (l_zone)
 				if l_mutli_dock_area.editor_zone_count > 1 and then docking_manager.has_content (docking_manager.zones.place_holder_content) then
 					docking_manager.zones.place_holder_content.close
@@ -508,14 +366,6 @@ feature {NONE} -- Implementation
 			result_valid: Result >= a_spliter.minimum_split_position and Result <= a_spliter.maximum_split_position
 		end
 
-	restore_minimize
-			-- Restore minimize state
-		do
-			if attached {SD_UPPER_ZONE} content.state.zone as l_upper_zone then
-				l_upper_zone.minimize_for_restore
-			end
-		end
-
 	update_floating_zone_visible (a_zone: SD_ZONE; a_show_floating: BOOLEAN)
 			-- When `restore' for docking and tab state, we should update parent floating zone visible
 		require
@@ -533,20 +383,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	call_show_actions
-			-- Call content's show actions if possible
-		require
-			exists: content.state.zone /= Void
-			displayed: attached {EV_WIDGET} content.state.zone as lt_widget implies lt_widget.is_displayed
-		do
-			if not docking_manager.property.is_opening_config then
-				content.show_actions.call (Void)
-			end
-		end
-
-	internal_content: detachable SD_CONTENT
-			-- Content managed by `Current'
-
 	internal_shared: SD_SHARED
 			-- All singletons
 
@@ -563,7 +399,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -572,10 +408,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

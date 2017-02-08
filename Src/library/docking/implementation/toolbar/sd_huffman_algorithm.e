@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "[
 		Tool bar items grouping algorithm. Huffman alogrithm.
 		This class has no relationship with SD_TOOL_BAR_GROUP_INFO.

@@ -9,7 +9,7 @@ class
 	SD_STATE_VOID
 			--FIXIT: Rename to SD_INITIAL_STATE?
 inherit
-	SD_STATE
+	SD_STATE_WITH_CONTENT
 		redefine
 			dock_at_top_level,
 			change_zone_split_area,
@@ -19,8 +19,7 @@ inherit
 			move_to_docking_zone,
 			show,
 			restore,
-			close,
-			is_zone_attached
+			close
 		end
 
 create
@@ -28,14 +27,18 @@ create
 
 feature {NONE}  -- Initlization
 
-	make
+	make (a_content: SD_CONTENT; a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method
 		do
+			internal_content := a_content
+			docking_manager := a_docking_manager
 			direction := {SD_ENUMERATION}.left
 			create internal_shared
-			last_floating_height := internal_shared.default_floating_window_height
-			last_floating_width := internal_shared.default_floating_window_width
+			last_floating_height := {SD_SHARED}.default_floating_window_height
+			last_floating_width := {SD_SHARED}.default_floating_window_width
 			initialized := True
+		ensure
+			content_set: content = a_content
 		end
 
 feature -- Command
@@ -67,12 +70,6 @@ feature -- Redefine
 	zone: detachable SD_ZONE
 			-- <Precursor>
 		do
-		end
-
-	is_zone_attached: BOOLEAN
-			-- <Precursor>
-		do
-			Result := False
 		end
 
 	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER)
@@ -213,13 +210,10 @@ feature -- Redefine
 			l_new_state: detachable SD_AUTO_HIDE_STATE
 			retried: BOOLEAN
 			l_dock_area: detachable SD_MULTI_DOCK_AREA
-			l_zone, l_new_zone: detachable SD_ZONE
 		do
 			if attached relative as l_relative and then (not retried and l_relative.is_visible) then
-				if l_relative.state.is_zone_attached then
-					l_zone := l_relative.state.zone
-					check l_zone /= Void end -- Implied by `is_zone_attached'
-					l_dock_area := docking_manager.query.inner_container_include_hidden (l_zone)
+				if attached l_relative.state.zone as z then
+					l_dock_area := docking_manager.query.inner_container_include_hidden (z)
 				end
 
 				if l_dock_area /= Void then
@@ -245,9 +239,8 @@ feature -- Redefine
 				float (internal_shared.default_screen_x, internal_shared.default_screen_y)
 			end
 
-			if content /= Void and then content.state.is_zone_attached then
-				l_new_zone := content.state.zone
-				if l_new_zone /= Void and then attached {EV_WIDGET} l_new_zone as lt_widget then
+			if content /= Void and then attached content.state.zone as z then
+				if attached {EV_WIDGET} z as lt_widget then
 					-- Implied by `is_zone_attached'
 					if lt_widget.is_displayed then
 						call_show_actions
@@ -324,7 +317,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -333,10 +326,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

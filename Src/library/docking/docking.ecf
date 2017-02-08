@@ -17,7 +17,7 @@
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<capability>
-			<void_safety support="transitional"/>
+			<void_safety support="all"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="cocoa" location="$ISE_LIBRARY\library\cocoa\cocoa.ecf" readonly="false">

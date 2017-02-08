@@ -73,15 +73,15 @@ feature {NONE} -- Initialization
 
 
 			create catalog_grid
-			create catalog_content.make_with_widget (catalog_grid, Names.t_catalog)
+			create catalog_content.make_with_widget (catalog_grid, Names.t_catalog, docking_manager)
 
 			create standard_status_bar
 			create standard_status_label
 			create main_container
 
-			create logs_tool.make (Names.t_logs)
-			create info_tool.make (Names.t_info)
-			create console_tool.make (Names.t_console)
+			create logs_tool.make (Names.t_logs, docking_manager)
+			create info_tool.make (Names.t_info, docking_manager)
+			create console_tool.make (Names.t_console, docking_manager)
 		end
 
 	initialize

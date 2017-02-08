@@ -30,9 +30,10 @@ create
 
 feature {NONE} -- Initlization
 
-	make
-			-- Creation method
+	make (a_docking_manager: SD_DOCKING_MANAGER)
+			-- Associate new object with `a_docking_manager'.
 		do
+			docking_manager := a_docking_manager
 			create internal_shared
 			create all_spliters_data.make (5)
 			default_create
@@ -106,16 +107,18 @@ feature -- Command
 			a_widget_not_void: a_widget /= Void
 			not_empty: a_data_name /= Void and then not a_data_name.is_empty
 			data_saved: (attached {SD_MIDDLE_CONTAINER} a_widget as lt_widget) implies has_spliter_data (a_data_name)
-		local
-			l_data: detachable like spliters_data
 		do
 			if attached {SD_MIDDLE_CONTAINER} a_widget as l_split then
-				l_data := all_spliters_data.item (a_data_name)
-				check l_data /= Void end -- Implied by precondition `data_saved'
-				l_data.start
-				restore_spliter_position_imp (l_split, l_data)
-				-- Remove data with `a_name'
-				all_spliters_data.remove (a_data_name)
+				if attached all_spliters_data.item (a_data_name) as l_data then
+					l_data.start
+					restore_spliter_position_imp (l_split, l_data)
+					-- Remove data with `a_name'
+					all_spliters_data.remove (a_data_name)
+				else
+					check
+						from_precondition_data_saved: False
+					end
+				end
 			end
 		ensure
 			data_cleared: (attached {SD_MIDDLE_CONTAINER} a_widget as lt_widget_2) implies not has_spliter_data (a_data_name)
@@ -208,7 +211,7 @@ feature -- Query
 			-- All editor zones top level parent
 			-- If Result Void means widget structure corrupted
 		require
-			has_editor: editor_zone_count > 0 or has_place_holder_zone
+--TODO			has_editor: editor_zone_count > 0 or has_place_holder_zone
 		local
 			l_zone: SD_ZONE
 			l_parent, l_last_parent: detachable EV_CONTAINER
@@ -591,7 +594,7 @@ feature {NONE} -- Implementation
 		end
 
 	change_parent_to_normal_container (a_middle_container: SD_MIDDLE_CONTAINER): SD_MIDDLE_CONTAINER
-			-- Change `a_middle_container' to normal container
+			-- Change `a_middle_container' to normal container.
 		require
 			not_void: a_middle_container /= Void
 			minimized: a_middle_container.is_minimized
@@ -621,14 +624,19 @@ feature {NONE} -- Implementation
 			end
 
 			l_split_position := a_middle_container.split_position
-			check l_parent /= Void end -- Impied by current is displaying in main window
-			l_parent.prune (a_middle_container)
+			if attached l_parent then
+				l_parent.prune (a_middle_container)
+			end
 			a_middle_container.wipe_out
-			l_parent.extend (Result)
-			check l_first /= Void end -- Implied by docking widget structure is full-two-fork-tree
-			check l_second /= Void end -- Implied by docking widget structure is full-two-fork-tree
-			Result.extend (l_first)
-			Result.extend (l_second)
+			if attached l_parent then
+				l_parent.extend (Result)
+			end
+			if attached l_first then
+				Result.extend (l_first)
+			end
+			if attached l_second then
+				Result.extend (l_second)
+			end
 
 			if l_parent_middle_container /= Void then
 				l_parent_middle_container.set_split_position (l_parent_split_position)
@@ -895,7 +903,7 @@ feature {NONE} -- Implementation attributes
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -904,10 +912,5 @@ feature {NONE} -- Implementation attributes
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

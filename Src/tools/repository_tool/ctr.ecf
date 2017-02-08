@@ -81,7 +81,7 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="repository_tool_test_compilation_unix" extends="repository_tool_unix">
+	<target name="repository_tool_test_compilation_unix" extends="repository_tool">
 		<description>Compiling UNIX version on other platforms than Unices</description>
 		<setting name="platform" value="unix"/>
 	</target>

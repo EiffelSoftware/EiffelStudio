@@ -72,9 +72,7 @@ feature {NONE} -- Initialization
 			create internal_shared_zone
 			create internal_vertical_box
 			create internal_title_bar.make
-			create internal_inner_container.make
-
-			init
+			create internal_inner_container.make (a_docking_manager)
 
 			make_popup_window
 
@@ -638,7 +636,7 @@ feature {NONE} -- Agents
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -647,10 +645,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

@@ -28,12 +28,12 @@ feature {NONE}  -- Initlization
 			not_void: a_tab_zone /= Void
 		do
 			create internal_shared
-			internal_zone := a_tab_zone
+			zone := a_tab_zone
 			internal_mediator := a_docker_mediator
 			set_rectangle (create {EV_RECTANGLE}.make (a_tab_zone.screen_x, a_tab_zone.screen_y, a_tab_zone.width, a_tab_zone.height))
 		ensure
-			set: internal_zone = a_tab_zone
-			set: internal_mediator = a_docker_mediator
+			zone_set: zone = a_tab_zone
+			mediator_set: internal_mediator = a_docker_mediator
 		end
 
 feature -- Redefine
@@ -54,7 +54,7 @@ feature -- Redefine
 					debug ("docking")
 						print ("%NSD_HOT_ZONE_TAB apply_change move_to_tab_zone index is " + internal_tab_area.key_for_iteration.out)
 					end
-					if attached {SD_TAB_ZONE} internal_zone as l_tab_zone then
+					if attached {SD_TAB_ZONE} zone as l_tab_zone then
 						l_caller.state.move_to_tab_zone (l_tab_zone, internal_tab_area.key_for_iteration)
 					else
 						check must_be_tab_zone: False end
@@ -64,19 +64,19 @@ feature -- Redefine
 			end
 			if not Result then
 				if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.top)
+					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.top)
 					Result := True
 				elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.bottom)
+					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.bottom)
 					Result := True
 				elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.left)
+					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.left)
 					Result := True
 				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.right)
+					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.right)
 					Result := True
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) and internal_mediator.is_dockable then
-					if attached {SD_TAB_ZONE} internal_zone as l_tab_zone then
+					if attached {SD_TAB_ZONE} zone as l_tab_zone then
 						l_caller.state.move_to_tab_zone (l_tab_zone, 1)
 					else
 						check must_be_tab_zone: False end
@@ -123,7 +123,7 @@ feature -- Redefine
 			l_tab_area: like internal_tab_area
 		do
 			Precursor {SD_HOT_ZONE_OLD_DOCKING} (a_rect)
-			if attached {SD_TAB_ZONE} internal_zone as l_tab_zone then
+			if attached {SD_TAB_ZONE} zone as l_tab_zone then
 				l_tabs := l_tab_zone.tabs_shown
 				from
 					l_tabs.start
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -165,10 +165,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "Objecs that use layered windows to feedback display indicators"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_pixel_buffer: like pixel_buffer; a_parent_window: EV_WINDOW)
+	make (a_pixel_buffer: attached like pixel_buffer; a_parent_window: EV_WINDOW)
 			-- Creation method.
 		require
 			not_void: a_pixel_buffer /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initlization
 			set: pixel_buffer = a_pixel_buffer
 		end
 
-	make_for_splash (a_pixel_buffer: like pixel_buffer)
+	make_for_splash (a_pixel_buffer: attached like pixel_buffer)
 			-- Creation method for splash screen.
 		require
 			not_void: a_pixel_buffer /= Void
@@ -132,6 +132,5 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

@@ -9,7 +9,7 @@ class
 	SD_DOCKING_STATE
 
 inherit
-	SD_STATE
+	SD_STATE_WITH_CONTENT
 		redefine
 			stick,
 			float,
@@ -131,24 +131,21 @@ feature -- Redefine
 
 	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER)
 			-- <Precursor>
-		local
-			l_content: detachable SD_CONTENT
-			l_titles: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
 		do
-			create internal_shared
-			l_titles := a_data.titles
-			check l_titles /= Void end -- Implied by precondition `more_than_one_title'
-			l_titles.start
-			l_content := docking_manager.query.content_by_title_for_restore (l_titles.item)
-
-			-- If we don't find SD_CONTENT, ignore it
-			if l_content /= Void then
-				internal_content := l_content
-				Precursor {SD_STATE} (a_data, a_container)
-				make (l_content, {SD_ENUMERATION}.left, 1)
-				a_container.extend (zone)
-				change_state (Current)
-				direction := a_data.direction
+			-- create internal_shared
+			if attached a_data.titles as l_titles then
+				l_titles.start
+					-- If we don't find SD_CONTENT, ignore it.
+				if attached docking_manager.query.content_by_title_for_restore (l_titles.item) as l_content then
+					internal_content := l_content
+					Precursor (a_data, a_container)
+					make (l_content, {SD_ENUMERATION}.left, 1)
+					a_container.extend (zone)
+					change_state (Current)
+					direction := a_data.direction
+				end
+			else
+				check from_precondition_more_than_one_title: False end
 			end
 
 			if a_data.is_minimized then
@@ -157,9 +154,9 @@ feature -- Redefine
 
 			-- When SD_OPEN_CONFIG_MEDIATOR.open_inner_container_data, `zone' maybe void
 			-- since Current is initialized by {INTERNAL}.new_instance_of
-			if is_zone_attached and then zone /= Void then
+--			if is_zone_attached and then zone /= Void then
 				update_floating_zone_visible (zone, a_data.is_visible)
-			end
+--			end
 			initialized := True
 		end
 
@@ -293,7 +290,7 @@ feature -- Redefine
 			l_width_height: INTEGER
 		do
 			docking_manager.command.lock_update (zone, False)
-			Precursor {SD_STATE} (a_direction)
+			Precursor (a_direction)
 			-- We must do it before the widget off-screen on GTK
 			l_width_height := width_height_by_direction
 			-- Change current content's zone to a SD_AUTO_HIDE_ZONE
@@ -411,16 +408,14 @@ feature -- Redefine
 	auto_hide_tab_with (a_target_content: SD_CONTENT)
 			-- <Precursor>
 		do
-			if is_zone_attached then
-				docking_manager.command.lock_update (zone, False)
-				docking_manager.command.recover_normal_state
-				docking_manager.command.remove_auto_hide_zones (False)
-				docking_manager.zones.prune_zone (zone)
-				docking_manager.command.remove_empty_split_area
-				docking_manager.command.update_title_bar
-				docking_manager.command.unlock_update
-			end
-			Precursor {SD_STATE} (a_target_content)
+			docking_manager.command.lock_update (zone, False)
+			docking_manager.command.recover_normal_state
+			docking_manager.command.remove_auto_hide_zones (False)
+			docking_manager.zones.prune_zone (zone)
+			docking_manager.command.remove_empty_split_area
+			docking_manager.command.update_title_bar
+			docking_manager.command.unlock_update
+			Precursor (a_target_content)
 		end
 
 	show
@@ -429,7 +424,6 @@ feature -- Redefine
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
 			l_state_void: SD_STATE_VOID
 			l_platform: PLATFORM
-			l_floating_zone: detachable SD_FLOATING_ZONE
 			l_is_main_container: BOOLEAN
 			l_old_screen_x, l_old_screen_y: INTEGER
 		do
@@ -442,26 +436,28 @@ feature -- Redefine
 			show_all_split_parent (zone)
 			docking_manager.command.resize (False)
 
-			if not l_is_main_container then
-				l_floating_zone := l_multi_dock_area.parent_floating_zone
-				check l_floating_zone /= Void end -- Implied by not `l_is_main_container'
-				create l_platform
-				if not l_platform.is_windows then
-					-- On GTK, windows size will not be remembered after hide
-					l_floating_zone.set_width (last_floating_width)
-					l_floating_zone.set_height (last_floating_height)
-					-- On GTK, screen y is not correct after shown sometimes, see bug#12375
-					-- We have to set it again later.
-					l_old_screen_y := l_floating_zone.screen_y
-					l_old_screen_x := l_floating_zone.screen_x
+			if attached l_multi_dock_area then
+				if not l_is_main_container then
+					if attached l_multi_dock_area.parent_floating_zone as l_floating_zone then
+						create l_platform
+						if not l_platform.is_windows then
+							-- On GTK, windows size will not be remembered after hide
+							l_floating_zone.set_width (last_floating_width)
+							l_floating_zone.set_height (last_floating_height)
+							-- On GTK, screen y is not correct after shown sometimes, see bug#12375
+							-- We have to set it again later.
+							l_old_screen_y := l_floating_zone.screen_y
+							l_old_screen_x := l_floating_zone.screen_x
+						end
+						l_floating_zone.show
+						if not l_platform.is_windows then
+							l_floating_zone.set_position (l_old_screen_x, l_old_screen_y)
+						end
+					end
+					l_multi_dock_area.update_title_bar
+				else
+					l_multi_dock_area.update_middle_container
 				end
-				l_floating_zone.show
-				if not l_platform.is_windows then
-					l_floating_zone.set_position (l_old_screen_x, l_old_screen_y)
-				end
-				l_multi_dock_area.update_title_bar
-			else
-				l_multi_dock_area.update_middle_container
 			end
 
 			if zone.is_displayed then
@@ -469,8 +465,7 @@ feature -- Redefine
 			else
 				-- `parent_floating_zone' doesn't exist on screen anymore, it was destroyed when open_config (from SD_CONFIG_MEDIATOR),
 				-- and current content doesn't have layout information restored when open_config, so let it use SD_STATE_VOID's default behavior.
-				create l_state_void.make
-				l_state_void.set_content (content)
+				create l_state_void.make (content, docking_manager)
 				change_state (l_state_void)
 				l_state_void.show
 			end
@@ -478,24 +473,22 @@ feature -- Redefine
 
 	hide
 			-- <Precursor>
-		local
-			l_first, l_second: detachable EV_WIDGET
 		do
-			Precursor {SD_STATE}
+			Precursor
 			if not zone.is_displayed or zone.is_maximized then
 				docking_manager.command.recover_normal_state_in_dock_area_of (zone)
 			end
 
 			zone.hide
-			if attached {EV_SPLIT_AREA} zone.parent as l_spliter and then l_spliter.is_displayed then
-				if l_spliter.full then
-					l_first := l_spliter.first
-					l_second := l_spliter.second
-					check l_first /= Void and l_second /= Void end -- Implied by `full'
-					if (not l_first.is_displayed) and (not l_second.is_displayed) then
-						l_spliter.hide
-					end
-				end
+			if
+				attached {EV_SPLIT_AREA} zone.parent as l_spliter and then
+				l_spliter.is_displayed and then
+				attached l_spliter.first as l_first and then
+				attached l_spliter.second as l_second and then
+				not l_first.is_displayed and then
+				not l_second.is_displayed
+			then
+				l_spliter.hide
 			end
 
 			if attached {SD_MULTI_DOCK_AREA} docking_manager.query.inner_container (zone) as l_multi_dock_area then
@@ -597,13 +590,13 @@ feature {NONE} -- Implementation
 				end
 
 				check l_target_zone_parent /= Void and then not l_target_zone_parent.full end
-				-- Then, insert current zone to new split area base on  `a_direction'
+					-- Then, insert current zone to new split area base on  `a_direction'.
 				if a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom then
 					create {SD_VERTICAL_SPLIT_AREA} l_new_split_area
-				elseif a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
+				else
+					check a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right end
 					create {SD_HORIZONTAL_SPLIT_AREA} l_new_split_area
 				end
-				check l_new_split_area /= Void end -- Implied by only four directions
 				if a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.left then
 					l_new_split_area.set_first (zone)
 					l_new_split_area.set_second (lt_widget)
@@ -611,7 +604,9 @@ feature {NONE} -- Implementation
 					l_new_split_area.set_first (lt_widget)
 					l_new_split_area.set_second (zone)
 				end
-				l_target_zone_parent.extend (l_new_split_area)
+				if attached l_target_zone_parent then
+					l_target_zone_parent.extend (l_new_split_area)
+				end
 
 				if l_target_zone_parent_spliter /= Void and then (l_target_zone_parent_spliter.full and
 					 l_target_zone_parent_spliter.minimum_split_position <= l_target_zone_parent_split_position and
@@ -655,12 +650,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-invariant
-	internal_zone_not_void: initialized implies is_zone_attached
-
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -669,10 +661,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

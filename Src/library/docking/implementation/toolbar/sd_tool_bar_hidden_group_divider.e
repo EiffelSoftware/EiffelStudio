@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "[
 		When show hidden SD_TOOL_BAR_ITEMs by SD_TOOL_BAR_HIDDEN_ITEM_DIALOG,
 		We use this class to make sure items grouping looks nice.

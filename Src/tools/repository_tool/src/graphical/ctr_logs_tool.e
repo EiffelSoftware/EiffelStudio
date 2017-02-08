@@ -22,10 +22,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING)
+	make (a_name: STRING; a_docking_manager: SD_DOCKING_MANAGER)
 		do
 			create {ARRAYED_LIST [like current_views.item]} current_views.make (1)
-			Precursor (a_name)
+			Precursor (a_name, a_docking_manager)
 		end
 
 	build_interface (a_container: EV_CONTAINER)

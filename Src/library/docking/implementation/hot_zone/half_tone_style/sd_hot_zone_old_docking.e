@@ -10,9 +10,6 @@ class
 
 inherit
 	SD_HOT_ZONE
-		redefine
-			internal_zone
-		end
 
 create
 	make
@@ -24,14 +21,19 @@ feature {NONE} -- Initlization
 		require
 			a_zone_not_void: a_zone /= Void
 		do
-			internal_zone := a_zone
+			zone := a_zone
 			internal_mediator := a_docker_mediator
 			create internal_shared
 			set_rectangle (create {EV_RECTANGLE}.make (a_zone.screen_x, a_zone.screen_y, a_zone.width, a_zone.height))
 		ensure
-			set: internal_zone = a_zone
-			set: internal_mediator = a_docker_mediator
+			zone_set: zone = a_zone
+			mediator_set: internal_mediator = a_docker_mediator
 		end
+
+feature -- Access
+
+	zone: SD_ZONE
+			-- SD_ZONE which `Current' manages.
 
 feature -- Redefine
 
@@ -51,7 +53,7 @@ feature -- Redefine
 			if l_in_five_hot_area and a_dockable then
 
 				Result := True
-				if attached {EV_WIDGET} internal_zone as lt_widget then
+				if attached {EV_WIDGET} zone as lt_widget then
 					l_half_height := (lt_widget.height * 0.5).ceiling
 					l_half_width := (lt_widget.width * 0.5).ceiling
 					if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
@@ -112,18 +114,17 @@ feature -- Redefine
 			not_void: a_pointer_style /= Void
 		local
 			l_platform: PLATFORM
-			l_window: EV_WINDOW
 		do
 			create l_platform
 			if l_platform.is_windows then
 				internal_mediator.docking_manager.main_window.set_pointer_style (a_pointer_style)
 			else
-				l_window := internal_mediator.caller_top_window
-
-				if attached {SD_FLOATING_ZONE} l_window as lt_floating_zone then
-					lt_floating_zone.set_pointer_style_for_border (a_pointer_style)
+				if attached internal_mediator.caller_top_window as l_window then
+					if attached {SD_FLOATING_ZONE} l_window as lt_floating_zone then
+						lt_floating_zone.set_pointer_style_for_border (a_pointer_style)
+					end
+					l_window.set_pointer_style (a_pointer_style)
 				end
-				l_window.set_pointer_style (a_pointer_style)
 			end
 		end
 
@@ -142,15 +143,15 @@ feature -- Redefine
 				Result := True
 
 				if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.top)
+					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.top)
 				elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.bottom)
+					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.bottom)
 				elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.left)
+					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.left)
 				elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-					l_caller.state.change_zone_split_area (internal_zone, {SD_ENUMERATION}.right)
+					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.right)
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-					if attached {SD_DOCKING_ZONE} internal_zone as l_docking_zone then
+					if attached {SD_DOCKING_ZONE} zone as l_docking_zone then
 						l_caller.state.move_to_docking_zone (l_docking_zone, False)
 					else
 						check must_be_docking_zone: False end
@@ -208,9 +209,6 @@ feature {NONE} -- Implementation
 				and internal_rectangle_left /= Void and internal_rectangle_right /= Void
 		end
 
-	internal_zone: SD_ZONE
-			-- Caller
-
 	internal_rectangle_left, internal_rectangle_right, internal_rectangle_top, internal_rectangle_bottom, internal_rectangle_center: EV_RECTANGLE
 			-- Five rectangle areas which allow user dock a window in this zone
 
@@ -221,7 +219,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -230,11 +228,6 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end
 

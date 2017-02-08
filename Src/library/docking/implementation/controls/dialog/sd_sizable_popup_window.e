@@ -12,6 +12,9 @@ inherit
 	SD_WINDOW
 		rename
 			extend as extend_sizeable_popup_window
+		redefine
+			create_interface_objects,
+			initialize
 		end
 
 create
@@ -22,30 +25,30 @@ feature {NONE} -- Initialization
 	make
 			-- Creation method
 		do
-			init
 			default_create
 			extend_sizeable_popup_window (internal_border_box)
 		end
 
-	init
-			-- Initilaize
+	create_interface_objects
+			-- <Precursor>
+		do
+			Precursor
+			create {EV_VERTICAL_BOX} internal_border_box
+			create {EV_CELL} internal_padding_box
+			create internal_shared
+		end
+
+	initialize
+			-- <Precursor>
 		local
 			l_styles: EV_STOCK_PIXMAPS
 		do
-			init_border_box
-
-			create {EV_CELL} internal_padding_box
+			Precursor
 			internal_border_box.extend (internal_padding_box)
 			create l_styles
 			internal_padding_box.set_pointer_style (l_styles.standard_cursor)
 
-			create internal_shared
-		end
-
-	init_border_box
-			-- Initialize `internal_border_box'
-		do
-			create {EV_VERTICAL_BOX} internal_border_box
+				-- Initialize `internal_border_box'
 			internal_border_box.set_border_width (internal_border_width)
 			internal_border_box.pointer_motion_actions.extend (agent on_border_box_pointer_motion)
 			internal_border_box.pointer_button_press_actions.extend (agent on_border_pointer_press)
@@ -338,7 +341,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -347,6 +350,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

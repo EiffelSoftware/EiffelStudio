@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "Dialog that contain mini tool bar when not enough space shown in SD_TITLE_BAR."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,7 +45,7 @@ feature {NONE}  -- Initlization
 			if attached l_env.application as l_app then
 				l_app.focus_in_actions.extend (app_focus_in_agent)
 			else
-				check False end -- Implied by application is running
+				check application_is_running: False end -- Implied by application is running
 			end
 		end
 
@@ -69,7 +69,7 @@ feature {NONE}  -- Initlization
 				if attached l_env.application as l_app then
 					l_app.focus_in_actions.prune_all (app_focus_in_agent)
 				else
-					check False end -- Implied by application is running
+					check application_is_running: False end -- Implied by application is running
 				end
 			end
 		end

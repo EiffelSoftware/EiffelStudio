@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "SD_ZONE which dockable SD_ZONE should inherited, used by SD_DOCKER_MEDIATOR"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

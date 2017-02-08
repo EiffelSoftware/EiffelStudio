@@ -1,7 +1,5 @@
 note
-	description: "[
-					Sepcial docking layout helper for editor stuffs
-																					]"
+	description: "Sepcial docking layout helper for editor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -13,17 +11,18 @@ class
 inherit
 	SD_ACCESS
 
-feature -- Command
+create
+	make
 
-	set_open_config_mediator (a_open_config_manager: SD_OPEN_CONFIG_MEDIATOR)
-			-- Set `open_config_manager'
-		require
-			a_open_config_manager_not_void: a_open_config_manager /= Void
+feature {NONE} -- Creation
+
+	make (m: SD_OPEN_CONFIG_MEDIATOR)
+			-- Create a new helper with mediator `m'.
 		do
-			internal_open_config_manager := a_open_config_manager
-		ensure
-			set: internal_open_config_manager = a_open_config_manager
+			open_config_manager := m
 		end
+
+feature -- Command
 
 	remember_editors_state (a_config_data: SD_CONFIG_DATA)
 			-- Remeber editors state before execute operations like {SD_OPEN_CONFIG_MEDITOR}.`open_tools_config'
@@ -215,12 +214,9 @@ feature -- Query
 
 	has_place_holder (a_top_container: EV_CONTAINER): BOOLEAN
 			-- If `a_top_container' has place holder widget?
-		local
-			l_state: SD_STATE
 		do
-			l_state := internal_docking_manager.zones.place_holder_content.state
-			if l_state.is_zone_attached then
-				if attached {EV_WIDGET} l_state.zone as lt_widget then
+			if attached internal_docking_manager.zones.place_holder_content.state.zone as z then
+				if attached {EV_WIDGET} z as lt_widget then
 					Result := a_top_container.has_recursive (lt_widget)
 				end
 			end
@@ -270,21 +266,7 @@ feature {NONE} -- Implementation
 		end
 
 	open_config_manager: SD_OPEN_CONFIG_MEDIATOR
-			-- Docking data open config manager
-		require
-			set: internal_open_config_manager /= Void
-		local
-			l_result: like internal_open_config_manager
-		do
-			l_result := internal_open_config_manager
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
-	internal_open_config_manager: detachable like open_config_manager
-			-- Docking data open config manager
+			-- Docking data open config manager.
 
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager
@@ -296,7 +278,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -305,10 +287,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

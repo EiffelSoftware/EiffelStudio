@@ -48,14 +48,13 @@ create
 
 feature{NONE} -- Initlization
 
-	make
-			-- Creation method
+	make  (a_tab: SD_NOTEBOOK_TAB)
+			-- <Precursor>
 		do
-			Precursor {SD_NOTEBOOK_TAB_DRAWER_I}
+			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_tab)
 			init_theme
-			ev_application.theme_changed_actions.extend (agent init_theme)
-
 			create child_cell -- Only for making void safe compiler happy
+			ev_application.theme_changed_actions.extend (agent init_theme)
 		end
 
 	init_theme
@@ -78,9 +77,8 @@ feature{NONE} -- Initlization
 					check False end -- Implied by design of Vision2
 				end
 			else
-				check False end -- Implied by design of Vision2
+				create {SD_CLASSIC_THEME_DRAWER} l_theme_drawer
 			end
-			check l_theme_drawer /= Void end -- Implied by previous if clause
 			theme_drawer := l_theme_drawer
 		end
 
@@ -622,7 +620,7 @@ feature {NONE} -- Attributes
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -631,6 +629,5 @@ feature {NONE} -- Attributes
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

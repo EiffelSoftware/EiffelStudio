@@ -1,13 +1,13 @@
 note
 	description: "[
-					A place holder zone.
-					Normally used for place holder for editors zones.											
-					When there is no type_editor zone in docking manager,
-					This zone is the place holder for eidtors zones, when
-					added new editor zones to docking manager, this zone's 
-					location is the	default location for editor zones.
-					Used docking library internally.
-																			]"
+		A place holder zone.
+		Normally used for place holder for editors zones.											
+		When there is no type_editor zone in docking manager,
+		This zone is the place holder for eidtors zones, when
+		added new editor zones to docking manager, this zone's 
+		location is the	default location for editor zones.
+		Used docking library internally.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -39,12 +39,13 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_content: SD_CONTENT)
-			-- Creation method
+	make (a_content: SD_CONTENT; a_docking_manager: SD_DOCKING_MANAGER)
+			-- Associate new object with `a_content' and `a_docking_manager'.
 		require
 			not_void: a_content /= Void
 			only_for_place_holder_zone: a_content.unique_title.is_equal ((create {SD_SHARED}).editor_place_holder_content_name)
 		do
+			docking_manager := a_docking_manager
 			create internal_shared
 			internal_content := a_content
 			create {EV_CELL_IMP} implementation_upper_zone.make -- Make void safe compiler happy, not used
@@ -150,15 +151,13 @@ feature {SD_DOCKING_MANAGER_COMMAND} -- Internal command
 			wipe_out
 			extend_cell (l_border)
 		ensure
-			set: internal_docking_manager = a_manager
+			set: docking_manager = a_manager
 		end
 
 	clear_for_minimized_area
 			-- Cleanup
 		do
 			clear_docking_manager
-		ensure
-			cleared: internal_docking_manager = Void
 		end
 
 feature -- Query
@@ -224,6 +223,4 @@ feature {NONE} -- Implementation
 			Customer support http://support.eiffel.com
 		]"
 
-
 end
-

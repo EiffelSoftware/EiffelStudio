@@ -271,6 +271,9 @@ feature -- Handler
 			then
 				f.append_to_html (r.wsf_theme, b)
 			end
+			if attached new_change_profile_name_form (r) as f then
+				f.append_to_html (r.wsf_theme, b)
+			end
 			if attached new_change_password_form (r) as f then
 				f.append_to_html (r.wsf_theme, b)
 			end
@@ -729,6 +732,24 @@ feature -- Handler
 								f := new_change_email_form (r)
 								r.set_main_content (f.to_html (r.wsf_theme))
 							end
+						elseif l_fieldname.is_case_insensitive_equal ("profile_name") then
+							f := new_change_profile_name_form (r)
+							f.process (r)
+							if
+								attached f.last_data as fd and then
+								not fd.has_error and then
+								attached fd.string_item ("new_profile_name") as l_new_profile_name
+							then
+								check api.user_api.is_valid_profile_name (l_new_profile_name) end
+								l_user.set_profile_name (l_new_profile_name)
+								l_user_api.update_user (l_user)
+								r.add_success_message ("Profile name updated.")
+								r.set_redirection ("account/")
+								r.set_redirection_delay (3)
+							else
+								r.add_error_message ("Invalid form data!")
+								r.set_main_content (f.to_html (r.wsf_theme))
+							end
 						elseif l_fieldname.is_case_insensitive_equal ("username") then
 							if api.has_permission ("change own username") then
 								f := new_change_username_form (r)
@@ -911,6 +932,35 @@ feature -- Handler
 							end
 						else
 							fd.report_invalid_field ("new_username", "Invalid username!")
+						end
+					end (?, a_response.api)
+				)
+			txt.enable_required
+			fs.extend (txt)
+			fs.extend_html_text ("<button type=%"submit%">Confirm</button>")
+		end
+
+	new_change_profile_name_form (a_response: CMS_RESPONSE): CMS_FORM
+		local
+			fs: WSF_FORM_FIELD_SET
+			txt: WSF_FORM_TEXT_INPUT
+		do
+			create Result.make (a_response.url ("account/change/profile_name", Void), "change-profile-name-form")
+			create fs.make
+			fs.set_legend ("Change profile name (i.e the name displayed on pages)")
+			Result.extend (fs)
+
+			create txt.make ("new_profile_name")
+			txt.set_label ("Profile name")
+			txt.set_validation_action (agent (fd: WSF_FORM_DATA; api: CMS_API)
+					do
+						if
+							attached fd.string_item ("new_profile_name") as l_new and then
+							api.user_api.is_valid_profile_name (l_new)
+						then
+								-- Ok
+						else
+							fd.report_invalid_field ("new_profile_name", "Invalid profile name!")
 						end
 					end (?, a_response.api)
 				)

@@ -27,9 +27,10 @@ feature -- Process
 			l_admin_links.force (["core", <<"admin roles">>, local_link ("Roles", "admin/roles"), "View/Edit/Add Roles"])
 			l_admin_links.force (["core", <<"admin modules">>, local_link ("Modules", "admin/modules"), "(un)Install modules"])
 			l_admin_links.force (["core", <<"view logs">>, local_link ("Logs", "admin/logs"), "View logs"])
+			l_admin_links.force (["core", <<"admin path_alias">>, local_link ("Path Alias", "admin/path_alias"), "Manage path aliases"])
 			l_admin_links.force (["support", <<"admin cache">>, local_link ("Cache", "admin/cache"), "Clear caches"])
 			l_admin_links.force (["support", <<"admin export">>, local_link ("Export", "admin/export"), "Export CMS contents, and modules contents."])
-			l_admin_links.force (["support", <<"admin import">>, local_link ("Export", "admin/import"), "Import CMS contents, and modules contents."])
+			l_admin_links.force (["support", <<"admin import">>, local_link ("Import", "admin/import"), "Import CMS contents, and modules contents."])
 			create categories.make_caseless (3)
 			across
 				l_admin_links as ic

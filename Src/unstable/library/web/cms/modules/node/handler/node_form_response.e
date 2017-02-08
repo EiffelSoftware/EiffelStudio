@@ -253,7 +253,8 @@ feature -- Form
 			l_preview: BOOLEAN
 			l_node: detachable CMS_NODE
 			s: STRING
-			l_path_alias: detachable READABLE_STRING_8
+			l_node_path: READABLE_STRING_8
+			l_path_alias, l_existing_path_alias: detachable READABLE_STRING_8
 		do
 			fixme ("Refactor code per operacion: Preview, Save")
 			l_preview := attached {WSF_STRING} fd.item ("op") as l_op and then l_op.same_string ("Preview")
@@ -301,14 +302,34 @@ feature -- Form
 					add_success_message ("Node #" + l_node.id.out + " saved.")
 				end
 
-				if
-					attached fd.string_item ("path_alias") as f_path_alias and then
-					not f_path_alias.is_empty
-				then
+				if attached fd.string_item ("path_alias") as f_path_alias then
+					l_node_path := node_api.node_path (l_node)
 					l_path_alias := percent_encoder.partial_encoded_string (f_path_alias, <<'/'>>)
-						-- Path alias, are always from the root of the cms.
-					api.set_path_alias (node_api.node_path (l_node), l_path_alias, False)
-					l_node.set_link (create {CMS_LOCAL_LINK}.make (l_node.title, l_path_alias))
+					l_existing_path_alias := api.location_alias (l_node_path)
+					if
+						l_existing_path_alias /= Void and then
+						l_path_alias.same_string (l_existing_path_alias)
+					then
+							-- Same path alias
+						l_node.set_link (create {CMS_LOCAL_LINK}.make (l_node.title, l_path_alias))
+					elseif l_existing_path_alias /= Void and then l_path_alias.is_whitespace then
+							-- Reset to builtin alias.
+						if api.has_permission ("edit path_alias") then
+							api.set_path_alias (l_node_path, l_node_path, True)
+						else
+							add_error_message ("Permission denied to reset path alias on node #" + l_node.id.out + "!")
+						end
+						l_node.set_link (node_api.node_link (l_node))
+					else
+						if api.has_permission ("edit path_alias") then
+								-- Path alias, are always from the root of the cms.
+							api.set_path_alias (l_node_path, l_path_alias, True)
+							l_node.set_link (create {CMS_LOCAL_LINK}.make (l_node.title, l_path_alias))
+						else
+							add_error_message ("Permission denied to set path alias on node #" + l_node.id.out + "!")
+							l_node.set_link (node_api.node_link (l_node))
+						end
+					end
 				else
 					l_node.set_link (node_api.node_link (l_node))
 				end

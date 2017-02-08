@@ -153,7 +153,7 @@ feature -- URL aliases
 			sql_finalize
 		end
 
-	sql_select_all_path_alias: STRING = "SELECT source, alias, lang FROM path_aliases;"
+	sql_select_all_path_alias: STRING = "SELECT source, alias, lang FROM path_aliases ORDER BY pid DESC;"
 			-- SQL select all path aliases.
 
 	sql_select_path_alias: STRING = "SELECT source FROM path_aliases WHERE alias=:alias ;"
@@ -411,6 +411,6 @@ feature -- Misc
 
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

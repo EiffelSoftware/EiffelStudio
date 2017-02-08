@@ -151,6 +151,10 @@ feature -- Forms ...
 						end
 					end(?, response, a_node)
 				)
+			if not cms_api.has_permission ("edit path_alias") then
+					-- FIXME: should we have an input field or just a raw text?
+				ti.set_is_readonly (True)
+			end
 			if
 				attached f.fields_by_name ("title") as l_title_fields and then
 				attached l_title_fields.first as l_title_field

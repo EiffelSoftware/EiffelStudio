@@ -191,15 +191,6 @@ feature -- Router
 
 feature -- Hooks configuration
 
-	register_hooks (a_response: CMS_RESPONSE)
-		obsolete
-			"!UNSAFE!: it is highly recommended to update this module and use setup_hooks [Dec/2015]."
-		require
-			is_enabled: is_enabled
-		do
-			setup_hooks (a_response.api.hooks)
-		end
-
 	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
 			-- Module hooks configuration.
 		require

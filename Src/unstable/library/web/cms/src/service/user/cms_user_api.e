@@ -42,6 +42,32 @@ feature -- Validation
 			end
 		end
 
+	is_valid_profile_name (a_name: READABLE_STRING_32): BOOLEAN
+		local
+			c: CHARACTER_32
+		do
+			if a_name.is_empty or a_name.is_whitespace then
+				Result := False
+			elseif a_name[1].is_space then
+				Result := False
+			elseif a_name[a_name.count].is_space then
+				Result := False
+			else
+				Result := True
+				across
+					a_name as ic
+				until
+					not Result
+				loop
+					c := ic.item
+					if c.is_alpha_numeric or c = '-' or c = '_' or c.is_space or c = '%'' then
+					else
+						Result := False
+					end
+				end
+			end
+		end
+
 feature -- Access: user
 
 	user_by_id (a_id: like {CMS_USER}.id): detachable CMS_USER

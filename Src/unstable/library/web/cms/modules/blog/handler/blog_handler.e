@@ -158,7 +158,7 @@ feature -- HTML Output
 			lnk: CMS_LOCAL_LINK
 		do
 				-- Output the title. If more than one page, also output the current page number
-			append_page_title_html_to (a_output)
+			append_page_title_html_to (page, a_output)
 
 				-- Get the posts from the current page (given by page number and entries per page)
 				-- Start list of posts
@@ -174,7 +174,7 @@ feature -- HTML Output
 				append_creation_date_html_to (n, a_output)
 
 					-- Output the author of the post
-				append_author_html_to (n, a_output)
+				append_author_html_to (n, page, a_output)
 
 					-- Output the title of the post as a link (to the detail page)
 				append_title_html_to (n, page, a_output)
@@ -192,7 +192,7 @@ feature -- HTML Output
 			append_pagination_html_to (a_output)
 		end
 
-	append_page_title_html_to (a_output: STRING)
+	append_page_title_html_to (a_page: CMS_RESPONSE; a_output: STRING)
 			-- Append the title of the page as a html string to `a_output'.
 			-- It shows the current page number.
 		do
@@ -215,12 +215,12 @@ feature -- HTML Output
 			end
 		end
 
-	append_author_html_to (n: CMS_NODE; a_output: STRING)
+	append_author_html_to (n: CMS_NODE; a_page: CMS_RESPONSE; a_output: STRING)
 			-- Append to `a_output', the author of node `n' as html link to author's posts.
 		do
 			if attached n.author as l_author then
 				a_output.append ("by ")
-				a_output.append ("<a class=%"blog_user_link%" href=%"/blog/" + l_author.id.out + "%">" + html_encoded (l_author.name) + "</a>")
+				a_output.append ("<a class=%"blog_user_link%" href=%"/blog/" + l_author.id.out + "%">" + html_encoded (a_page.user_profile_name (l_author)) + "</a>")
 			end
 		end
 

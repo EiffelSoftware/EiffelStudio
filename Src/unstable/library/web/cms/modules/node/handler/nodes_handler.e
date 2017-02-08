@@ -123,7 +123,7 @@ feature -- HTTP Methods
 				s.append (" | ")
 			end
 			if attached l_response.user as u and then l_response.has_permission ("view own trash") then
-				s.append (l_response.link ("Your-trash", "trash?user=" + l_response.url_encoded (u.name), Void))
+				s.append (l_response.link ("Your-trash", "trash?user=" + u.id.out, Void))
 				s.append (" | ")
 			end
 

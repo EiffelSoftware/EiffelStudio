@@ -51,7 +51,11 @@ feature -- HTTP Methods
 			create {GENERIC_VIEW_CMS_RESPONSE} l_page.make (req, res, api)
 			if attached {WSF_STRING} req.query_parameter ("user") as p_username then
 				l_username := p_username.value
-				l_trash_owner := api.user_api.user_by_name (l_username)
+				if l_username.is_integer_64 then
+					l_trash_owner := api.user_api.user_by_id (l_username.to_integer_64)
+				else
+					l_trash_owner := api.user_api.user_by_name (l_username)
+				end
 			end
 			if
 				(l_trash_owner /= Void and then l_page.has_permissions (<<"view any trash", "view own trash">>))
@@ -59,7 +63,7 @@ feature -- HTTP Methods
 			then
 					-- NOTE: for development purposes we have the following hardcode output.
 				if l_trash_owner /= Void then
-					create s.make_from_string ("<p>Trash for user " + l_page.html_encoded (l_trash_owner.name) + "</p>")
+					create s.make_from_string ("<p>Trash for user " + l_page.html_encoded (l_page.user_profile_name (l_trash_owner)) + "</p>")
 				else
 					create s.make_from_string ("<p>Trash</p>")
 				end

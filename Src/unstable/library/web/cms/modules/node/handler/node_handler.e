@@ -335,7 +335,7 @@ feature {NONE} -- Trash:Restore
 							b.append ("</a>")
 							if attached n.author as l_author then
 								b.append (" by ")
-								b.append (r.link (l_author.name, "user/" + l_author.id.out, Void))
+								b.append (r.link (r.user_profile_name (l_author), "user/" + l_author.id.out, Void))
 							end
 							if node_api.has_permission_for_action_on_node ("edit revisions", l_node, api.user) then
 								b.append (" (<a href=%"")

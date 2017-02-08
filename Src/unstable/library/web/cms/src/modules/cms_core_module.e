@@ -10,7 +10,8 @@ inherit
 	CMS_MODULE
 		redefine
 			initialize,
-			install
+			install,
+			permissions
 		end
 
 create
@@ -100,6 +101,20 @@ feature -- Router
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
 		do
+		end
+
+feature -- Security
+
+	permissions: LIST [READABLE_STRING_8]
+			-- List of permission ids, used by this module, and declared.
+		do
+			Result := Precursor
+			Result.force ("install modules")
+			Result.force ("view logs")
+			Result.force ("export core")
+			Result.force ("import core")
+			Result.force ("admin path_alias")
+			Result.force ("edit path_alias")
 		end
 
 note

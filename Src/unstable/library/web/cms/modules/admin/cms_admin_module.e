@@ -60,6 +60,7 @@ feature -- Access: router
 			l_admin_cache_handler: CMS_ADMIN_CACHE_HANDLER
 			l_admin_export_handler: CMS_ADMIN_EXPORT_HANDLER
 			l_admin_import_handler: CMS_ADMIN_IMPORT_HANDLER
+			l_admin_path_alias_handler: CMS_ADMIN_PATH_ALIAS_HANDLER
 
 			l_uri_mapping: WSF_URI_MAPPING
 		do
@@ -82,6 +83,10 @@ feature -- Access: router
 			create l_admin_logs_handler.make (a_api)
 			create l_uri_mapping.make_trailing_slash_ignored ("/admin/logs", l_admin_logs_handler)
 			a_router.map (l_uri_mapping, a_router.methods_get)
+
+			create l_admin_path_alias_handler.make (a_api)
+			create l_uri_mapping.make_trailing_slash_ignored ("/admin/path_alias", l_admin_path_alias_handler)
+			a_router.map (l_uri_mapping, a_router.methods_get_post)
 
 
 			create l_admin_cache_handler.make (a_api)
@@ -119,14 +124,10 @@ feature -- Security
 			Result.force ("admin users")
 			Result.force ("admin roles")
 			Result.force ("admin modules")
-			Result.force ("install modules")
-			Result.force ("view logs")
 			Result.force ("admin core caches")
 			Result.force ("clear blocks cache")
 			Result.force ("admin export")
 			Result.force ("admin import")
-			Result.force ("export core")
-			Result.force ("import core")
 		end
 
 feature -- Hooks

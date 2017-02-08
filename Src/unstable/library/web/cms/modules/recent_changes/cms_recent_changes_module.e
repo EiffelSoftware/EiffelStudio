@@ -346,7 +346,7 @@ feature -- Handler
 					l_content.append ("</td>")
 					l_content.append ("<td class=%"user%">")
 					if attached ch.author as u then
-						l_content.append (r.link (u.name, "user/" + u.id.out, Void))
+						l_content.append (r.link (r.user_profile_name (u), "user/" + u.id.out, Void))
 					elseif attached ch.author_name as un then
 						l_content.append (r.html_encoded (un))
 					end

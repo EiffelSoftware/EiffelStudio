@@ -114,12 +114,12 @@ feature -- Query
 
 feature -- HTML Output
 
-	append_page_title_html_to (a_output: STRING)
+	append_page_title_html_to (a_page: CMS_RESPONSE; a_output: STRING)
 			-- Returns the title of the page as a html string. It shows the current page number and the name of the current user
 		do
 			a_output.append ("<h2>Posts from ")
 			if attached user as l_user then
-				a_output.append (html_encoded (l_user.name))
+				a_output.append (html_encoded (a_page.user_profile_name (l_user)))
 			else
 				a_output.append ("unknown user")
 			end

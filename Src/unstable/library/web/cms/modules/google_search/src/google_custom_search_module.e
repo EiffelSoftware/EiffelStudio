@@ -50,12 +50,12 @@ feature -- Router
 		do
 			create m.make_trailing_slash_ignored ("/gcse", create {WSF_URI_AGENT_HANDLER}.make (agent handle_search (a_api, ?, ?)))
 			a_router.map (m, a_router.methods_head_get)
-		end			
+		end
 
-feature -- Recaptcha
+feature -- GCSE Keys
 
 	gcse_secret_key (api: CMS_API): detachable READABLE_STRING_8
-			-- Get recaptcha security key.
+			-- Get google custom search security key.
 		local
 			utf: UTF_CONVERTER
 		do
@@ -70,7 +70,7 @@ feature -- Recaptcha
 		end
 
 	gcse_cx_key (api: CMS_API): detachable READABLE_STRING_8
-			-- Get recaptcha security key.
+			-- Get google custom search cx key.
 		local
 			utf: UTF_CONVERTER
 		do
@@ -103,6 +103,7 @@ feature -- Handler
 					attached gcse_cx_key (api) as l_cx and then
 					attached gcse_secret_key (api) as l_key
 				then
+					r.set_value (l_query.value, "cms_search_query")
 					create l_parameters.make (l_key, l_cx, l_query.url_encoded_value )
 					if
 						attached {WSF_STRING} req.query_parameter ("start") as l_index and then

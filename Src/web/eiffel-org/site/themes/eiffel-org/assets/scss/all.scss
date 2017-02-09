@@ -304,14 +304,12 @@
 		font-size: 12px;
 		line-height: 18px;
 	}
-	&:after{
-		background: url(../images/ico-search.png) no-repeat;
+	input[type="image"]{
 		width: 16px;
 		height: 16px;
 		position: absolute;
 		top: 6px;
 		left: 5px;
-		content: '';
 	}
 }
 .search-form.parent-focus{

@@ -26,7 +26,8 @@
 									</ul>
 								</nav>
 								<form class="search-form" method="GET" action="{$site_url/}gcse"> 
-									<input type="text" name="q" size="25" maxlength="255" value="{htmlentities}{$cms_search_query/}{/htmlentities}" placeholder=""/>
+								<input type="image" alt="Search" class="btn" src="{$site_url/}theme/images/ico-search.png"/>
+								<input type="text" name="q" size="25" maxlength="255" value="{htmlentities}{$cms_search_query/}{/htmlentities}" placeholder=""/>
 								</form>
 							</div>
 						</div>

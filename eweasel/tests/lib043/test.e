@@ -26,9 +26,9 @@ feature {NONE} -- Creation
 			from
 				keys.finish
 			loop
-				keys.back
 				if c.key = keys.item_for_iteration then
 					keys.remove
+					keys.back
 				end
 			end
 			io.put_string (if keys.is_empty then "OK" else "Failed" end)

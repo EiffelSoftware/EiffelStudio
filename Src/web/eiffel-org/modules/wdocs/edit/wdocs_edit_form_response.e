@@ -274,8 +274,9 @@ feature -- Form
 			l_page: detachable WIKI_BOOK_PAGE
 			l_link_title_value, l_title_value, l_source_value: detachable READABLE_STRING_8
 			l_content: detachable READABLE_STRING_8
+			l_md_text: WDOCS_METADATA_WIKI_TEXT
 			l_changed: BOOLEAN
-			l_meta_link_title, l_meta_uuid: detachable READABLE_STRING_32
+			l_meta_title, l_meta_link_title, l_meta_uuid: detachable READABLE_STRING_32
 			s: STRING
 			e: CMS_EMAIL
 			fn: STRING_32
@@ -317,6 +318,7 @@ feature -- Form
 					end
 				else
 					if pg /= Void then
+						l_meta_title := pg.metadata ("title")
 						l_meta_link_title := pg.metadata ("link_title")
 						l_meta_uuid := pg.metadata ("uuid")
 						l_path := pg.path
@@ -336,9 +338,18 @@ feature -- Form
 					if l_source_value /= Void then
 						l_changed := l_content = Void or else not l_content.same_string (l_source_value)
 						l_page.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (l_source_value))
+						create l_md_text.make_with_text (l_source_value)
+						l_meta_title := l_md_text.item ("title")
 					end
 					if not l_page.title.same_string (l_title_value) then
 						l_page.set_title (l_title_value)
+							-- The "title" field was changed, it has priority over eventual changed wiki title property from content!
+						l_page.set_metadata (l_title_value, "title")
+						l_changed := True
+					elseif l_meta_title /= Void and then not l_page.title.same_string (l_meta_title) then
+						l_page.set_title (l_meta_title)
+							-- The "title" metadata was changed, but not the title field.
+						l_page.set_metadata (l_meta_title, "title")
 						l_changed := True
 					end
 					if l_meta_link_title = Void or else l_meta_link_title.is_whitespace then

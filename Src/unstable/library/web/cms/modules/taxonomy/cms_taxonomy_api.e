@@ -318,7 +318,7 @@ feature -- Web forms
 									s.append_character (',')
 									s.append_character (' ')
 								end
-								if ic.item.text.has (' ') then
+								if ic.item.text.has (',') then
 									s.append_character ('"')
 									s.append (t.text)
 									s.append_character ('"')

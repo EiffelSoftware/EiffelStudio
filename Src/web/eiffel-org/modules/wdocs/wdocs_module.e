@@ -27,6 +27,8 @@ inherit
 
 	CMS_RECENT_CHANGES_HOOK
 
+	CMS_SITEMAP_HOOK
+
 	CMS_HOOK_CACHE
 
 	WDOCS_MODULE_HELPER
@@ -57,6 +59,9 @@ feature {NONE} -- Initialization
 			documentation_dir := l_root_dir.extended ("data").extended ("documentation")
 			default_version_id := "current"
 			cache_duration := 0
+
+			add_dependency ({CMS_RECENT_CHANGES_MODULE})
+			add_dependency ({CMS_SITEMAP_MODULE})
 		end
 
 feature -- Access
@@ -194,6 +199,7 @@ feature -- Hooks configuration
 				-- Module specific hook, if available.
 			a_hooks.subscribe_to_hook (Current, {CMS_RECENT_CHANGES_HOOK})
 			a_hooks.subscribe_to_hook (Current, {CMS_TAXONOMY_HOOK})
+			a_hooks.subscribe_to_hook (Current, {CMS_SITEMAP_HOOK})
 
 			a_hooks.subscribe_to_cache_hook (Current)
 		end
@@ -441,6 +447,52 @@ feature -- Hooks
 				Result := l_tpl_block
 			else
 				create {CMS_CONTENT_BLOCK} Result.make_raw (a_block_id, Void, "", Void)
+			end
+		end
+
+feature -- Hook/sitemap
+
+	populate_sitemap (a_sitemap: CMS_SITEMAP)
+			-- Populate `a_sitemap`.
+		local
+			i: CMS_SITEMAP_ITEM
+			l_title: detachable READABLE_STRING_32
+			dt: detachable DATE_TIME
+			loc: STRING
+		do
+			if attached wdocs_api as l_wdocs_api then
+				if
+					attached l_wdocs_api.manager (Void) as mng and then
+					attached mng.book_names as l_book_names
+				then
+					across
+						l_book_names as bk_ic
+					loop
+						if attached mng.book (bk_ic.item) as l_book then
+							across
+								l_book.pages as ic
+							loop
+								if attached {WIKI_BOOK_PAGE} ic.item as wp then
+									l_title := wp.metadata ("link_title")
+									if l_title = Void then
+										l_title := wp.title
+									end
+									if attached wp.path as p then
+										dt := file_date (p)
+									else
+										create dt.make_now_utc
+									end
+									loc := mng.wiki_page_uri_path (wp, bk_ic.item, Void)
+									if loc.starts_with ("/") then
+										loc.remove_head (1)
+									end
+									create i.make (create {CMS_LOCAL_LINK}.make (l_title, loc), dt)
+									a_sitemap.force (i)
+								end
+							end
+						end
+					end
+				end
 			end
 		end
 

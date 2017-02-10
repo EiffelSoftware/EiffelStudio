@@ -25,6 +25,8 @@ inherit
 
 	CMS_RECENT_CHANGES_HOOK
 
+	CMS_SITEMAP_HOOK
+
 	CMS_TAXONOMY_HOOK
 
 create
@@ -40,6 +42,7 @@ feature {NONE} -- Initialization
 			package := "core"
 				-- Optional dependencies, mainly for information.
 			put_dependency ({CMS_RECENT_CHANGES_MODULE}, False)
+			put_dependency ({CMS_SITEMAP_MODULE}, False)
 			put_dependency ({CMS_TAXONOMY_MODULE}, False)
 		end
 
@@ -212,6 +215,7 @@ feature -- Hooks
 
 				-- Module specific hook, if available.
 			a_hooks.subscribe_to_hook (Current, {CMS_RECENT_CHANGES_HOOK})
+			a_hooks.subscribe_to_hook (Current, {CMS_SITEMAP_HOOK})
 			a_hooks.subscribe_to_hook (Current, {CMS_TAXONOMY_HOOK})
 		end
 
@@ -384,6 +388,23 @@ feature -- Hooks
 					l_info_to_remove as ic
 				loop
 					a_contents.taxonomy_info.prune_all (ic.item)
+				end
+			end
+		end
+
+	populate_sitemap (a_sitemap: CMS_SITEMAP)
+			-- Populate `a_sitemap`.
+		local
+			i: CMS_SITEMAP_ITEM
+			n: CMS_NODE
+		do
+			if attached node_api as l_node_api then
+				across
+					l_node_api.nodes as ic -- FIXME: do not load all nodes at once!
+				loop
+					n := ic.item
+					create i.make (l_node_api.node_link (n), n.modification_date)
+					a_sitemap.force (i)
 				end
 			end
 		end

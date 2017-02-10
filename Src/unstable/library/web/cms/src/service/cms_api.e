@@ -792,14 +792,14 @@ feature -- Environment/ module
 	module_resource_location (a_module: CMS_MODULE; a_resource: PATH): PATH
 			-- Location of resource `a_resource' for `a_module'.
 		do
-				--| site/modules/$modname/$a_name.json
+				--| site/modules/$modname/$a_resource
 			Result := module_resource_location_by_name (a_module.name, a_resource)
 		end
 
 	module_resource_location_by_name (a_module_name: READABLE_STRING_GENERAL; a_resource: PATH): PATH
 			-- Location of resource `a_resource' for `a_module'.
 		do
-				--| site/modules/$modname/$a_name.json
+				--| site/modules/$modname/$a_resource
 			Result := module_location_by_name (a_module_name).extended_path (a_resource)
 		end
 

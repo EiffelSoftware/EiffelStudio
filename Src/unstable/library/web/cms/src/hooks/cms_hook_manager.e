@@ -28,6 +28,8 @@ feature -- Change
 
 	subscribe_to_hook (h: CMS_HOOK; a_hook_type: TYPE [CMS_HOOK])
 			-- Subscribe `h' to hooks identified by `a_hook_type'.
+		require
+			h_is_expected_hook: a_hook_type.attempted (h) = h
 		local
 			lst: detachable LIST [CMS_HOOK]
 		do
@@ -49,7 +51,7 @@ invariant
 	all_subscribers /= Void
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end
 

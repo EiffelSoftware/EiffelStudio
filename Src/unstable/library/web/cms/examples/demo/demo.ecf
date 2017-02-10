@@ -36,6 +36,7 @@
 		<library name="cms_openid_module" location="..\..\modules\openid\openid.ecf" readonly="false"/>
 		<library name="cms_recent_changes_module" location="..\..\modules\recent_changes\recent_changes.ecf" readonly="false"/>
 		<library name="cms_seo_module" location="..\..\modules\seo\seo.ecf" readonly="false"/>
+		<library name="cms_sitemap_module" location="..\..\modules\sitemap\sitemap.ecf" readonly="false"/>
 		<library name="cms_session_auth_module" location="..\..\modules\session_auth\cms_session_auth.ecf" readonly="false"/>
 		<library name="cms_taxnomy_module" location="..\..\modules\taxonomy\taxonomy.ecf" readonly="false"/>
 		<library name="cms_wikitext_module" location="..\..\modules\wikitext\wikitext.ecf" readonly="false"/>

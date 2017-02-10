@@ -52,7 +52,7 @@ feature -- CMS modules
 			a_setup.register_module (create {CMS_OAUTH_20_MODULE}.make)
 			a_setup.register_module (create {CMS_OPENID_MODULE}.make)
 			a_setup.register_module (create {CMS_SESSION_AUTH_MODULE}.make)
-			
+
 				-- User
 
 				-- Nodes
@@ -68,6 +68,7 @@ feature -- CMS modules
 
 				-- Misc
 			a_setup.register_module (create {CMS_SEO_MODULE}.make)
+			a_setup.register_module (create {CMS_SITEMAP_MODULE}.make)
 			a_setup.register_module (create {CMS_COMMENTS_MODULE}.make)
 
 				-- Taxonomy

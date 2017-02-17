@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			checks_library_classes := True
 			checks_nonlibrary_classes := True
 			default_severity_score := 50
-			create {CA_WARNING} severity
+			severity := severity_warning
 			create violations.make
 		end
 
@@ -82,10 +82,30 @@ feature {CA_RULE_VIOLATION} -- formatted rule checking output
 		deferred
 		end
 
-feature {CA_CODE_ANALYZER, CA_RULE_VIOLATION} -- Properties the user can change
+feature {CA_CODE_ANALYZER, CA_RULE_VIOLATION} -- Properties a user can change
 
 	severity: CA_RULE_SEVERITY
 			-- The severity of violations of this rule.
+
+feature {NONE} -- Severity levels
+
+	severity_error: CA_ERROR
+			-- Severity of error level.
+		once
+			create Result
+		end
+
+	severity_warning: CA_WARNING
+			-- Severity of warning level.
+		once
+			create Result
+		end
+
+	severity_suggestion: CA_SUGGESTION
+			-- Severity of suggestion level.
+		once
+			create Result
+		end
 
 feature -- Properties the user can change
 

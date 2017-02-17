@@ -2,9 +2,10 @@ test_name 	 ca-obsolete-feature-call
 test_description Obsolete feature calls should be detected.
 
 copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
 copy_raw	test.e $CLUSTER test.e
 
 analyze_code rule "CA069"
-analyze_code_result violation "TEST CA069:10 CA069:11 CA069:12 CA069:13 CA069:14 CA069:15 CA069:16"
+analyze_code_result violation "TEST CA069:19 CA069:20 CA069:21 CA069:22 CA069:23 CA069:24 CA069:25 CA069:26 CA069:27 CA069:28 CA069:29 CA069:30 CA069:31 CA069:32 CA069:33 CA069:34 CA069:35 CA069:36 CA069:37 CA069:107"
 
 test_end

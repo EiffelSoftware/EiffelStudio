@@ -32,6 +32,7 @@ feature {NONE} -- Creation
 			;(agent proc).do_nothing
 			;(agent do proc end).do_nothing
 			;($attr).do_nothing
+			;($proc).do_nothing
 			{TEST}.extn
 			create value.proc
 			;(create {TEST}.proc).do_nothing

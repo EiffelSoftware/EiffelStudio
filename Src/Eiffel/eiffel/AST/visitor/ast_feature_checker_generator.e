@@ -1238,7 +1238,6 @@ feature {NONE} -- Implementation
 			l_vuar1: VUAR1
 			l_vuex: VUEX
 			l_vkcn3: VKCN3
-			l_obs_warn: OBS_FEAT_WARN
 			l_vape: VAPE
 			l_is_in_creation_expression, l_is_target_of_creation_instruction: BOOLEAN
 			l_feature_name: ID_AS
@@ -1986,28 +1985,7 @@ feature {NONE} -- Implementation
 								l_vuex.set_location (l_feature_name)
 								error_handler.insert_error (l_vuex)
 							end
-							if
-								l_feature.is_obsolete
-									-- If the obsolete call is in an obsolete class,
-									-- no message is displayed
-								and then not l_context_current_class.is_obsolete
-									-- The current feature is whether the invariant or
-									-- a non obsolete feature
-								and then (current_feature = Void or else
-									not current_feature.is_obsolete)
-									-- Inherited code is checked in parent class.
-								and then not is_inherited
-									-- Warning not disabled
-								and then l_context_current_class.is_warning_enabled (w_obsolete_feature)
-							then
-								create l_obs_warn.make_with_class (l_context_current_class)
-								if current_feature /= Void then
-									l_obs_warn.set_feature (current_feature)
-								end
-								l_obs_warn.set_obsolete_class (l_last_constrained.base_class)
-								l_obs_warn.set_obsolete_feature (l_feature)
-								error_handler.insert_warning (l_obs_warn)
-							end
+							check_obsolescence (l_feature, l_last_class)
 							if
 								not System.do_not_check_vape and then is_checking_precondition and then
 								not l_is_in_creation_expression and then
@@ -4175,7 +4153,6 @@ feature {NONE} -- Visitor
 		local
 			l_vrle3: VRLE3
 			l_veen2a: VEEN2A
-			l_type: TYPE_A
 			l_typed_pointer: TYPED_POINTER_A
 		do
 			reset_byte_node
@@ -4193,10 +4170,9 @@ feature {NONE} -- Visitor
 				l_veen2a.set_location (l_as.start_location)
 				error_handler.insert_error (l_veen2a)
 			end
-			l_type := current_feature.type
-			create l_typed_pointer.make_typed (l_type)
-			last_type := l_typed_pointer
-			instantiator.dispatch (last_type, context.current_class)
+			create l_typed_pointer.make_typed (current_feature.type)
+			set_type (l_typed_pointer, l_as)
+			instantiator.dispatch (l_typed_pointer, context.current_class)
 			if is_byte_node_enabled then
 				create {HECTOR_B} last_byte_node.make_with_type (create {RESULT_B}, l_typed_pointer)
 			end
@@ -4207,8 +4183,8 @@ feature {NONE} -- Visitor
 			l_typed_pointer: TYPED_POINTER_A
 		do
 			create l_typed_pointer.make_typed (context.current_class_type)
-			last_type := l_typed_pointer
-			instantiator.dispatch (last_type, context.current_class)
+			set_type (l_typed_pointer, l_as)
+			instantiator.dispatch (l_typed_pointer, context.current_class)
 			if is_byte_node_enabled then
 				create {HECTOR_B} last_byte_node.make_with_type (create {CURRENT_B}, l_typed_pointer)
 			end
@@ -4261,7 +4237,7 @@ feature {NONE} -- Visitor
 				l_type := l_feature.arguments.i_th (l_arg_pos)
 				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
 				create l_typed_pointer.make_typed (l_type)
-				last_type := l_typed_pointer
+				set_type (l_typed_pointer, l_as)
 				if l_needs_byte_node then
 					create l_argument
 					l_argument.set_position (l_arg_pos)
@@ -4287,7 +4263,7 @@ feature {NONE} -- Visitor
 					if l_type.is_known then
 						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
 						create l_typed_pointer.make_typed (l_type)
-						last_type := l_typed_pointer
+						set_type (l_typed_pointer, l_as)
 						if l_needs_byte_node then
 							create l_local
 							l_local.set_position (l_local_info.position)
@@ -4322,7 +4298,7 @@ feature {NONE} -- Visitor
 						l_type := l_local_info.type
 						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
 						create l_typed_pointer.make_typed (l_type)
-						last_type := l_typed_pointer
+						set_type (l_typed_pointer, l_as)
 						if l_needs_byte_node then
 							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index, l_type)
 							create {HECTOR_B} last_byte_node.make_with_type (l_local, l_typed_pointer)
@@ -4357,7 +4333,7 @@ feature {NONE} -- Visitor
 							elseif l_feature.is_attribute then
 								l_type := l_feature.type.actual_type
 								create l_typed_pointer.make_typed (l_type)
-								last_type := l_typed_pointer
+								set_type (l_typed_pointer, l_as)
 							else
 								set_type (Pointer_type, l_as)
 							end
@@ -4380,6 +4356,7 @@ feature {NONE} -- Visitor
 								end
 								if not is_inherited then
 									set_routine_ids (l_feature.rout_id_set, l_as)
+									check_obsolescence (l_feature, context.current_class)
 								end
 							end
 						end
@@ -4774,6 +4751,7 @@ feature {NONE} -- Visitor
 						if not is_inherited then
 							l_as.set_class_id (l_last_class.class_id)
 							set_routine_ids (l_prefix_feature.rout_id_set, l_as)
+							check_obsolescence (l_prefix_feature, l_last_class)
 						end
 
 							-- Validate the feature used as prefix operator.
@@ -5155,7 +5133,7 @@ feature {NONE} -- Visitor
 									therefore_l_right_constrained_not_void: l_right_constrained /= Void
 									not_inherited: not is_inherited
 								end
-								l_left_id := l_right_constrained.base_class.class_id
+								l_class := l_right_constrained.base_class
 								check not_is_inherited: not is_inherited end
 								if l_target_conv_info.has_depend_unit then
 									context.supplier_ids.extend (l_target_conv_info.depend_unit)
@@ -5166,9 +5144,11 @@ feature {NONE} -- Visitor
 									l_left_expr := l_target_conv_info.byte_node (l_left_expr)
 								end
 							else
-								l_left_id := l_left_constrained.base_class.class_id
+								l_class := l_left_constrained.base_class
 								l_target_type := l_left_type
 							end
+
+							l_left_id := l_class.class_id
 
 							if not l_target_type.is_attached and then is_void_safe_call then
 								error_handler.insert_error (create {VUTA2}.make (context, l_target_type, l_as.operator_location))
@@ -5178,6 +5158,7 @@ feature {NONE} -- Visitor
 									-- Set type informations
 								set_routine_ids (last_alias_feature.rout_id_set, l_as)
 								l_as.set_class_id (l_left_id)
+								check_obsolescence (last_alias_feature, l_class)
 								if context.current_class.is_catcall_detection_enabled then
 									create l_arg_types.make (1)
 									l_arg_types.extend (l_right_type)
@@ -11881,8 +11862,37 @@ feature {NONE} -- Type recording
 			last_type := t
 		end
 
+feature {NONE} -- Checks for obsolete features
+
+	check_obsolescence (f: FEATURE_I; c: CLASS_C)
+			-- Check that feature `f` from type `t` is obsolete and report a warning if so.
+		local
+			obsolete_warning: OBS_FEAT_WARN
+		do
+			if
+					-- Report a warning if the feature is obsolete.
+				f.is_obsolete
+					-- Unless current class is obsolete.
+				and then not context.current_class.is_obsolete
+					-- Or unless current feature is obsolete.
+				and then (attached current_feature as cf implies not cf.is_obsolete)
+					-- Provided that the code is not inherited (obsolescence is reported for immediate code).
+				and then not is_inherited
+					-- And the warning is not disabled.
+				and then context.current_class.is_warning_enabled (w_obsolete_feature)
+			then
+				create obsolete_warning.make_with_class (context.current_class)
+				if attached current_feature as cf then
+					obsolete_warning.set_feature (cf)
+				end
+				obsolete_warning.set_obsolete_class (c)
+				obsolete_warning.set_obsolete_feature (f)
+				error_handler.insert_warning (obsolete_warning)
+			end
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

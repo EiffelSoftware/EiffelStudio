@@ -1,10 +1,9 @@
 class A feature
 
-	item: like Current
-			-- An obsolete function.
+	make
+			-- An obsolete procedure.
 		obsolete "Inherited."
 		do
-			Result := Current
 		end
 
 end

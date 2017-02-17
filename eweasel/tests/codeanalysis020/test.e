@@ -3,7 +3,7 @@ class TEST
 inherit
 	A
 		redefine
-			item
+			make
 		end
 
 create
@@ -35,6 +35,7 @@ feature {NONE} -- Creation
 			{TEST}.extn
 			create value.proc
 			;(create {TEST}.proc).do_nothing
+			Precursor
 		end
 
 feature {TEST} -- Access
@@ -104,7 +105,7 @@ feature {TEST} -- Access
 	item: like Current
 			-- Current object.
 		do
-			Result := Precursor
+			Result := Current
 		end
 
 end

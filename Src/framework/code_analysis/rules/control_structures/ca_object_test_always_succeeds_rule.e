@@ -32,6 +32,7 @@ feature {NONE} -- Implementation
 	register_actions (a_checker: attached CA_ALL_RULES_CHECKER)
 		do
 			a_checker.add_feature_pre_action (agent pre_process_feature)
+			a_checker.add_feature_post_action (agent (f: FEATURE_AS) do current_feature := Void end)
 			a_checker.add_bin_ne_pre_action (agent pre_process_bin_ne)
 			a_checker.add_object_test_pre_action (agent pre_process_object_test)
 		end
@@ -141,7 +142,7 @@ feature {NONE} -- Implementation
 			Result := (l_conf.void_safety.index = l_conf.void_safety_index_all)
 		end
 
-	current_feature: attached FEATURE_I
+	current_feature: FEATURE_I
 		-- The feature we are currently in.
 
 feature -- Properties

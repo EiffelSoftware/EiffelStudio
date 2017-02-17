@@ -28,7 +28,7 @@ test	ca-079-001						codeanalysis016 tcf pass code_analysis
 test	ca-088-001						codeanalysis017 tcf pass code_analysis
 test	ca-089-001						codeanalysis018 tcf pass code_analysis
 test	ca-unread-variable-leftover				codeanalysis019 tcf pass code_analysis ca020
-test	ca-obsolete-feature-call			codeanalysis020 tcf pass code_analysis ca069
+test	ca-obsolete-feature-call			codeanalysis020 tcf fail code_analysis ca069
 
 -- EiffelTime tests
 
@@ -563,7 +563,7 @@ test	missing-vjar-error-2		valid285 tcf pass validity anchored_type system-valid
 test	parenthesis-alias-tuple-vuar	valid286 tcf pass validity parenthesis_alias conversion tuple conformance
 test	conversion-on-separate-target	valid287 tcf fail validity conversion scoop
 test	wrong-type-for-manifest-array-in-across	valid288 tcf pass validity manifest-array across
-test	obsolete-feature-call-with-body	valid289 tcf pass validity warning attribute
+test	obsolete-feature-call-with-body	valid289 tcf fail validity warning attribute
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

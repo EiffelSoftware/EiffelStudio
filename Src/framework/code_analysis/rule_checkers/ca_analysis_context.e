@@ -36,13 +36,24 @@ feature {CA_RULE, CA_RULE_VIOLATION} -- Current Rule Checking Context
 			end
 		end
 
-	node_type (a_node: AST_EIFFEL; a_feature: FEATURE_I): detachable TYPE_A
-			-- Type of the AST node `a_node' from feature `a_feature'.
+	node_type (a_node: AST_EIFFEL; a_feature: detachable FEATURE_I): detachable TYPE_A
+			-- Type of the AST node `a_node' from feature `a_feature' or from the current class invariant if `a_feature` is `Void`.
 		local
-			l_class_id: INTEGER
+			class_id: INTEGER
+			routine_id: INTEGER
 		do
-			l_class_id := a_feature.written_class.class_id
-			Result := node_types [[a_node.index, l_class_id, a_feature.rout_id_set.first, l_class_id]]
+			if attached a_feature then
+					-- Regular feature.
+				class_id := a_feature.written_class.class_id
+				routine_id := a_feature.rout_id_set.first
+			elseif attached checking_class as c then
+					-- Class invariant.
+				class_id := c.class_id
+				routine_id := if attached c.invariant_feature as f then f.rout_id_set.first else 0 end
+			end
+			if routine_id /= 0 then
+				Result := node_types [[a_node.index, class_id, routine_id, class_id]]
+			end
 		end
 
 feature {NONE} -- Current Rule Checking Context

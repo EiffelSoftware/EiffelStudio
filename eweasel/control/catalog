@@ -30,6 +30,7 @@ test	ca-089-001						codeanalysis018 tcf pass code_analysis
 test	ca-unread-variable-leftover				codeanalysis019 tcf pass code_analysis ca020
 test	ca-obsolete-feature-call			codeanalysis020 tcf fail code_analysis ca069
 test	ca-obsolete-assigner-query			codeanalysis021 tcf fail code_analysis ca069
+test	ca-obsolete-assigner-command			codeanalysis022 tcf fail code_analysis ca069
 
 -- EiffelTime tests
 

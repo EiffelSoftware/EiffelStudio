@@ -18,7 +18,7 @@ inherit
 		redefine
 			create_interface_objects, initialize, is_in_default_state
 		end
-			
+
 	CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -32,7 +32,7 @@ feature {NONE}-- Initialization
 			Precursor {EV_TITLED_WINDOW}
 			initialize_constants
 
-			
+
 				-- Build widget structure.
 			set_menu_bar (l_ev_menu_bar_1)
 			l_ev_menu_bar_1.extend (l_ev_menu_2)
@@ -279,7 +279,7 @@ feature {NONE}-- Initialization
 			set_title ("Eweasel")
 
 			set_all_attributes_using_constants
-			
+
 				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -288,11 +288,11 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
-		
+
 	frozen create_interface_objects
 			-- Create objects
 		do
-			
+
 				-- Create all widgets.
 			create l_ev_menu_bar_1
 			create l_ev_menu_2
@@ -536,7 +536,7 @@ feature {NONE} -- Constant setting
 					font_constant_set_procedures.item.call ([f])
 				end
 				font_constant_set_procedures.forth
-			end	
+			end
 		end
 
 	frozen set_attributes_using_color_constants
@@ -569,19 +569,19 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-	
-	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]]
-	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_32]]
-	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
-	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
-	pixmap_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_PIXMAP]]]
-	pixmap_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_PIXMAP]]
-	integer_interval_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
-	integer_interval_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER_INTERVAL]]]
-	font_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_FONT]]]
-	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_FONT]]
-	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
-	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_COLOR]]
+
+	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [READABLE_STRING_GENERAL]]
+	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [STRING_32]]
+	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [INTEGER]]
+	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [INTEGER]]
+	pixmap_constant_set_procedures: ARRAYED_LIST [PROCEDURE [EV_PIXMAP]]
+	pixmap_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [EV_PIXMAP]]
+	integer_interval_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [INTEGER]]
+	integer_interval_constant_set_procedures: ARRAYED_LIST [PROCEDURE [INTEGER_INTERVAL]]
+	font_constant_set_procedures: ARRAYED_LIST [PROCEDURE [EV_FONT]]
+	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [EV_FONT]]
+	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [EV_COLOR]]
+	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [EV_COLOR]]
 
 	frozen integer_from_integer (an_integer: INTEGER): INTEGER
 			-- Return `an_integer', used for creation of

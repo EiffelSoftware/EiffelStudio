@@ -1,7 +1,7 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
+	keywords: "Eiffel test"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -31,6 +31,7 @@ feature
 	Copy_sub_keyword: 		STRING = "copy_sub"
 	Copy_file_keyword:		STRING = "copy_file"
 	Cpu_limit_keyword: 		STRING = "cpu_limit"
+	Define_date_keyword: 		STRING = "define_date"
 	Define_directory_keyword: 	STRING = "define_directory"
 	Define_file_keyword: 		STRING = "define_file"
 	Define_keyword: 		STRING = "define"
@@ -58,7 +59,7 @@ feature
 
 note
 	copyright: "[
-			Copyright (c) 1984-2011, University of Southern California and contributors.
+			Copyright (c) 1984-2017, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
@@ -81,6 +82,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

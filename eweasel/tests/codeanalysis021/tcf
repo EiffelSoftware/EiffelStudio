@@ -1,0 +1,10 @@
+test_name 	 ca-obsolete-assigner-query
+test_description Obsolete feature calls should be detected in assigner commands. See also test#codeanalysis020.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+analyze_code rule "CA069"
+analyze_code_result violation "TEST CA069:10 CA069:11 CA069:12 CA069:17 CA069:19"
+
+test_end

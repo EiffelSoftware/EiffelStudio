@@ -1,8 +1,7 @@
 note
 	description: "An Eiffel test environment"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "93/07/16"
+	status: "See notice at end of class."
 
 class EW_TEST_ENVIRONMENT
 
@@ -197,6 +196,23 @@ feature  -- Properties
 			Result := table.item (var);
 		end;
 
+	replaced_variable (var: STRING): STRING
+			-- Find proper argument if possible.
+			-- If not found, Result is the orignal argument `var`.
+		require
+			var_attached: attached var /= Void
+			var_not_empty: not var.is_empty
+		do
+			if var.count > 1 and then var.starts_with ("$") then
+				Result := value (var.substring (2, var.count))
+			end
+			if not attached Result then
+				Result := var
+			end
+		ensure
+			result_attached: attached Result
+		end
+
 	max_c_processes: INTEGER
 			-- Maximum number of processes to use for
 			-- one test for any required C compilations
@@ -238,8 +254,10 @@ feature {NONE} -- Implementation
 			-- that have been defined
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2017, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 			]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
@@ -262,6 +280,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

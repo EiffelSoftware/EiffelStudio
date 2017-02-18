@@ -1,9 +1,7 @@
 note
-	description: "Summary description for {TEST_FACTORY_63}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	keywords: "Eiffel test"
 
 class
 	EW_EQA_TEST_FACTORY
@@ -48,29 +46,7 @@ feature -- Command
 		require
 			not_void: a_var /= Void and then not a_var.is_empty
 		do
-			Result := replace_environments (environment, a_var)
-		ensure
-			not_void: Result /= Void
-		end
-
-	replace_environments (a_env: EW_TEST_ENVIRONMENT; a_var: STRING): STRING
-			-- Find proper arugment if possible
-			-- If not found, Result is orignal argument
-		require
-			not_void: a_var /= Void and then not a_var.is_empty
-		local
-			l_temp: STRING
-		do
-			if a_var.starts_with ("$") and then a_var.count > 1 then
-				l_temp := a_env.value (a_var.substring (2, a_var.count))
-				if l_temp /= Void then
-					Result := l_temp
-				else
-					Result := a_var
-				end
-			else
-				Result := a_var
-			end
+			Result := environment.replaced_variable (a_var)
 		ensure
 			not_void: Result /= Void
 		end
@@ -78,7 +54,6 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	environment_cell: CELL [EW_TEST_ENVIRONMENT]
-			--
 		once
 			create Result.put (Void)
 		ensure
@@ -86,7 +61,6 @@ feature {NONE} -- Implementation
 		end
 
 	eweasel_test_cell: CELL [EW_EIFFEL_EWEASEL_TEST]
-			--
 		once
 			create Result.put (Void)
 		ensure
@@ -94,10 +68,12 @@ feature {NONE} -- Implementation
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2017, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -118,11 +94,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
-
-
-
-
-
 
 end

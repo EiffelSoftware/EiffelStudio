@@ -1,8 +1,7 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	keywords: "Eiffel test"
 
 deferred class EW_COPY_INST
 
@@ -53,16 +52,13 @@ feature
 			-- instructions of `test'.
 			-- Set `execute_ok' to indicate whether successful.
 		local
-			src_name, dest_name: STRING;
-			src, dir, dest: like new_file;
+			src_name, dest_name: STRING
+			src, dir, dest: like new_file
 			before_date, after_date: INTEGER
 			orig_date, final_date: INTEGER
-
-			l_factory: EW_EQA_TEST_FACTORY
 		do
-			create l_factory
-			dest_directory := l_factory.replace_environments (test.environment, dest_directory)
-			source_file := l_factory.replace_environments (test.environment, source_file)
+			dest_directory := test.environment.replaced_variable (dest_directory)
+			source_file := test.environment.replaced_variable (source_file)
 
 			execute_ok := False;
 			if use_source_environment_variable then
@@ -252,10 +248,12 @@ feature {NONE}
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2017, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -276,11 +274,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
-
-
-
-
-
 
 end

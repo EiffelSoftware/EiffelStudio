@@ -85,19 +85,19 @@ feature {TEST} -- Modification
 
 	put_boolean (b: BOOLEAN)
 			-- An obsolete assigner.
-		obsolete "Boolean."
+		obsolete "Boolean. [$(YESTERDAY)]"
 		do
 		end
 
 	put (t: TEST)
 			-- An obsolete assigner.
-		obsolete "Object."
+		obsolete "Object. [$(YESTERDAY)]"
 		do
 		end
 
 	put_to (t1, t2: TEST)
 			-- An obsolete assigner.
-		obsolete "Indexed."
+		obsolete "Indexed. [$(YESTERDAY)]"
 		do
 		end
 

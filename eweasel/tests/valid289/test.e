@@ -43,62 +43,62 @@ feature {TEST} -- Access
 
 	proc
 			-- An obsolete procedure.
-		obsolete "Internal."
+		obsolete "Internal. [$(YESTERDAY)]"
 		do
 		end
 
 	extn
 			-- An obsolete procedure.
-		obsolete "External."
+		obsolete "External. [$(YESTERDAY)]"
 		external "C inline"
 			alias "return;"
 		end
 
 	attr: TEST
 			-- An obsolete attribute.
-		obsolete "Attribute."
+		obsolete "Attribute. [$(YESTERDAY)]"
 		attribute
 			Result := Current
 		end
 
 	prefix "+": TEST
 			-- An obsolete prefix feature.
-		obsolete "Prefix."
+		obsolete "Prefix. [$(YESTERDAY)]"
 		do
 			Result := Current
 		end
 
 	infix "+" (other: TEST): TEST
 			-- An obsolete infix feature.
-		obsolete "Infix."
+		obsolete "Infix. [$(YESTERDAY)]"
 		do
 			Result := Current
 		end
 
 	negation alias "-": TEST
 			-- An obsolete unary feature.
-		obsolete "Unary."
+		obsolete "Unary. [$(YESTERDAY)]"
 		do
 			Result := Current
 		end
 
 	difference alias "-" (other: TEST): TEST
 			-- An obsolete binary feature.
-		obsolete "Binary."
+		obsolete "Binary. [$(YESTERDAY)]"
 		do
 			Result := Current
 		end
 
 	access alias "[]" (other: TEST): TEST
 			-- An obsolete bracket feature.
-		obsolete "Bracket."
+		obsolete "Bracket. [$(YESTERDAY)]"
 		do
 			Result := Current
 		end
 
 	call alias "()" (other: TEST): TEST
 			-- An obsolete parenthesis feature.
-		obsolete "Parenthesis."
+		obsolete "Parenthesis. [$(YESTERDAY)]"
 		do
 			Result := Current
 		end

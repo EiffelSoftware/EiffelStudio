@@ -7,9 +7,10 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<capability>
-			<concurrency support="none"/>
+			<concurrency support="thread"/>
 			<void_safety support="none"/>
 		</capability>
+		<variable name="eqa" value="true"/>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="eweasel" location="$EWEASEL\source\eweasel.ecf"/>

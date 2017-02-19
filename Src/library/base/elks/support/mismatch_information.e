@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Original values of the attributes of a mismatched object."
 	instructions: "[
 		This object will contain the original values of the attributes
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 	set_callback_pointers
 			-- Sets call-back pointers in the run-time
 		once
-			set_mismatch_information_access (Current, $clear_all, $internal_put, $set_string_versions)
+			set_mismatch_information_access (Current, $wipe_out, $internal_put, $set_string_versions)
 		end
 
 feature {NONE} -- Externals
@@ -181,7 +181,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

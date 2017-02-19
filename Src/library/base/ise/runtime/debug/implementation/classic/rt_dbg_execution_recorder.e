@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Execution recorder"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -322,7 +322,7 @@ feature -- Event
 			debug ("RT_DBG_RECORD")
 				dtrace_indent (dep);
 				dtrace ("leave_feature (")
-				dtrace (ref.generating_type + " <" + ($ref).out + ">")
+				dtrace (ref.generating_type.name + " <" + ($ref).out + ">")
 				dtrace (", " + cid.out + ", " + fid.out + ", " + dep.out + "). %N")
 			end
 
@@ -875,7 +875,7 @@ feature -- Replay operation
 			from
 				r := replayed_call
 			until
-				r = Void 
+				r = Void
 				or else r.replayed_position_is_first
 				or else prev = r -- In case replayed_call is always the same.
 			loop
@@ -1109,7 +1109,7 @@ feature -- Measurement
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

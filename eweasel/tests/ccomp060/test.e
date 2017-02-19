@@ -11,11 +11,11 @@ feature
 		do
 			print (f (1))
 			io.put_new_line
-			print ({NATURAL_32} #? 1)
+			print ({NATURAL_32} / 1)
 			io.put_new_line
 			print (g (1) = x)
 			io.put_new_line
-			print (({X} #? 1) = x)
+			print (({X} / 1) = x)
 			io.put_new_line
 		end
 

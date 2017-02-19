@@ -12,11 +12,11 @@ create
 feature
 	make_b
 		do
-			print (generating_type + ":make_b%N")
+			print (generating_type.name + ":make_b%N")
 		end
 	f_b
 		do
-			print (generating_type + ":f_b%N")
+			print (generating_type.name + ":f_b%N")
 		end
 
 end

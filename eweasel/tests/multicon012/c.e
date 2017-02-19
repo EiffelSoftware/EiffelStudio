@@ -17,12 +17,12 @@ create
 feature
 	make_c
 		do
-			print (generating_type + ":make_c%N")
+			print (generating_type.name + ":make_c%N")
 		end
 
 	f_c
 		do
-			print (generating_type + ":f_c%N")
+			print (generating_type.name + ":f_c%N")
 		end
 
 end

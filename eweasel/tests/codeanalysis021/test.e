@@ -23,63 +23,63 @@ feature {TEST} -- Access
 
 	func: TEST assign put
 			-- An obsolete function.
-		obsolete "Internal."
+		obsolete "Internal. [$(YESTERDAY)]"
 		do
 			Result := Current
 		end
 
 	extn: BOOLEAN assign put_boolean
 			-- An obsolete function.
-		obsolete "External."
+		obsolete "External. [$(YESTERDAY)]"
 		external "C inline"
 			alias "return 1;"
 		end
 
 	attr: TEST assign put
 			-- An obsolete attribute.
-		obsolete "Attribute."
+		obsolete "Attribute. [$(YESTERDAY)]"
 		attribute
 			Result := Current
 		end
 
 	prefix "+": TEST assign put
 			-- An obsolete prefix feature.
-		obsolete "Prefix."
+		obsolete "Prefix. [$(YESTERDAY)]"
 		do
 			Result := Current
 		end
 
 	infix "+" (other: TEST): TEST assign put_to
 			-- An obsolete infix feature.
-		obsolete "Infix."
+		obsolete "Infix. [$(YESTERDAY)]"
 		do
 			Result := Current
 		end
 
 	negation alias "-": TEST assign put
 			-- An obsolete unary feature.
-		obsolete "Unary."
+		obsolete "Unary. [$(YESTERDAY)]"
 		do
 			Result := Current
 		end
 
 	difference alias "-" (other: TEST): TEST assign put_to
 			-- An obsolete binary feature.
-		obsolete "Binary."
+		obsolete "Binary. [$(YESTERDAY)]"
 		do
 			Result := Current
 		end
 
 	access alias "[]" (other: TEST): TEST assign put_to
 			-- An obsolete bracket feature.
-		obsolete "Bracket."
+		obsolete "Bracket. [$(YESTERDAY)]"
 		do
 			Result := Current
 		end
 
 	call alias "()" (other: TEST): TEST assign put_to
 			-- An obsolete parenthesis feature.
-		obsolete "Parenthesis."
+		obsolete "Parenthesis. [$(YESTERDAY)]"
 		do
 			Result := Current
 		end

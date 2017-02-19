@@ -2,7 +2,7 @@ class A feature
 
 	make
 			-- An obsolete procedure.
-		obsolete "Inherited."
+		obsolete "Inherited. [$(YESTERDAY)]"
 		do
 		end
 

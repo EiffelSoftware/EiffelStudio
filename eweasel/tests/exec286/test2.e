@@ -6,7 +6,7 @@ feature
 	f
 		require
 			toot: side_effect (create {LINKED_LIST [G]}.make)
-			titi: ({detachable G}) #? (" ") /= Void
+			titi: ({detachable G}) / (" ") /= Void
 		do
 			io.put_string ("TEST2.f")
 			io.put_new_line

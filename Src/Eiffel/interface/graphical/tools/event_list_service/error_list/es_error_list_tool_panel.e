@@ -1232,7 +1232,7 @@ feature {NONE} -- Action handlers
 			if not is_expanding_all_errors then
 				grid_events.selected_rows.do_all (agent {EV_GRID_ROW}.disable_select)
 				a_row.enable_select
-				if a_row.subrow_count > 0 then
+				if a_row.subrow_count > 0 and then a_row.subrow (1).is_displayed then
 						-- Ensure the row is visible.
 					a_row.subrow (1).ensure_visible
 				end

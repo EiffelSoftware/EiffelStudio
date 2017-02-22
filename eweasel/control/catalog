@@ -1194,7 +1194,7 @@ test	object-test-on-expanded-crash melt106  tcf pass melting execution object_te
 test	type-invalid-in-melted-mode		melt107 tcf pass execution melting
 test	melted-natural-8-interval-conversion	melt108 tcf pass executon melting conversion
 test	melted-basic-conversion-assignment	melt109 tcf pass executon melting conversion
-test	melted-character_32-is_character_8	melt110 tcf fail executon melting
+test	melted-character_32-is_character_8	melt110 tcf pass executon melting
 
 -- Freezing
 

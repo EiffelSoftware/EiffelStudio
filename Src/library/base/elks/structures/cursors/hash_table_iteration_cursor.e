@@ -1,10 +1,8 @@
 ﻿note
-	description: "Concrete of an external iteration cursor for {HASH_TABLE}."
+	description: "An external iteration cursor for {HASH_TABLE}."
 	library: "EiffelBase: Library of reusable components for Eiffel."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,6 +15,7 @@ inherit
 			target_index as iteration_position
 		redefine
 			after,
+			cursor_index,
 			forth,
 			item,
 			target
@@ -39,6 +38,32 @@ feature -- Access
 			-- Key at current cursor position
 		do
 			Result := target.keys [iteration_position]
+		end
+
+	cursor_index: INTEGER
+			-- <Precursor>
+		local
+			p: like iteration_position
+		do
+			if is_reversed then
+				from
+					p := target.keys.count
+				until
+					p = iteration_position
+				loop
+					p := target.previous_iteration_position (p)
+					Result := Result + 1
+				end
+			else
+				from
+					p := -1
+				until
+					p = iteration_position
+				loop
+					p := target.next_iteration_position (p)
+					Result := Result + 1
+				end
+			end
 		end
 
 feature -- Status report
@@ -90,7 +115,7 @@ feature {ITERABLE, ITERATION_CURSOR} -- Access
 			-- <Precursor>
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

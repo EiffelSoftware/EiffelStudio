@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			file: PLAIN_TEXT_FILE
 		do
 			if not constants_initialized then
-				create file.make (file_name)
+				create file.make_with_name (file_name)
 				if file.exists then
 					file.open_read
 					file.readstream (file.count)
@@ -94,52 +94,6 @@ feature -- Access
 			Result := initialized_cell.item
 		end
 
-	string_constant_by_name (a_name: STRING): STRING
-			-- `Result' is STRING
-		require
-			initialized: constants_initialized
-			name_valid: a_name /= Void and not a_name.is_empty
-			has_constant (a_name)
-		local
-			l_result: detachable like string_constant_by_name
-		do
-			l_result := all_constants.item (a_name)
-			check l_result /= Void end -- Implied by design of EiffelBuild
-			Result := l_result.twin
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-	integer_constant_by_name (a_name: STRING): INTEGER
-			-- `Result' is STRING
-		require
-			initialized: constants_initialized
-			name_valid: a_name /= Void and not a_name.is_empty
-			has_constant (a_name)
-		local
-			l_string: STRING
-			l_item: detachable STRING
-		do
-			l_item := all_constants.item (a_name)
-			check l_item /= Void end -- Implied by design of EiffelBuild
-			
-			l_string := l_item.twin
-			check
-				is_integer: l_string.is_integer
-			end
-
-			Result := l_string.to_integer
-		end
-
-	has_constant (a_name: STRING): BOOLEAN
-			-- Does constant `a_name' exist?
-		require
-			initialized: constants_initialized
-			name_valid: a_name /= Void and not a_name.is_empty
-		do
-			Result := all_constants.item (a_name) /= Void
-		end
-
 feature {NONE} -- Implementation
 
 	initialized_cell: CELL [BOOLEAN]
@@ -154,18 +108,18 @@ feature {NONE} -- Implementation
 			create Result.make (4)
 		end
 
-	file_name: STRING
+	file_name: READABLE_STRING_32
 			-- File name from which constants must be loaded.
 		do
 			Result := file_name_cell.item
 		end
 
-	file_name_cell: CELL [STRING]
+	file_name_cell: CELL [READABLE_STRING_32]
 		once
-			create Result.put ("constants.txt")
+			create Result.put ({STRING_32} "constants.txt")
 		end
 
-	set_file_name (a_file_name: STRING)
+	set_file_name (a_file_name: READABLE_STRING_32)
 			-- Assign `a_file_name' to `file_name'.
 		do
 			file_name_cell.put (a_file_name)
@@ -227,7 +181,7 @@ feature {NONE} -- Implementation
 			no_characters_lost: old content.count = Result.count + content.count
 		end
 
-	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING)
+	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING_32)
 			-- Set image of `a_pixmap' from file, `a_file_name'.
 			-- If `a_file_name' does not exist, do nothing.
 		require
@@ -236,7 +190,7 @@ feature {NONE} -- Implementation
 		local
 			l_file: RAW_FILE
 		do
-			create l_file.make (a_file_name)
+			create l_file.make_with_name (a_file_name)
 			if l_file.exists then
 				a_pixmap.set_with_named_file (a_file_name)
 			end
@@ -246,14 +200,14 @@ invariant
 	all_constants_not_void: all_constants /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
-		]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+	]"
 
 end

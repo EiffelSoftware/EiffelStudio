@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
 			create pointer_double_press_actions
-
+			
 			default_create
 		end
 
@@ -94,8 +94,8 @@ feature {NONE} -- Initialization
 	init_pointer_double_press_actions
 			-- Initialize pointer double press actions
 		do
-			pointer_double_press_actions_horizontal_box.extend (agent (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) do on_pointer_double_press end)
-			drawing_area.pointer_double_press_actions.extend (agent (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) do on_pointer_double_press end)
+			pointer_double_press_actions_horizontal_box.force_extend (agent on_pointer_double_press)
+			drawing_area.pointer_double_press_actions.force_extend (agent on_pointer_double_press)
 		end
 
 feature -- Command
@@ -184,14 +184,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
 		]"
 
 

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Used by SD_NOTEBOOK_TAB_AREA, to hold SD_NOTEBOOK_HIDE_TAB_LABELs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,6 +13,7 @@ inherit
 		redefine
 			show
 		end
+
 create
 	make
 
@@ -107,15 +108,13 @@ feature {NONE} -- Implementation agents
 			-- Handle `internal_text_box' key press
 		local
 			l_stop: BOOLEAN
-			l_selected_tab: SD_NOTEBOOK_TAB
 		do
 			inspect
 				a_key.code
 			when {EV_KEY_CONSTANTS}.Key_escape then
 				destroy
 			when {EV_KEY_CONSTANTS}.Key_enter then
-				if has_selected_item then
-					l_selected_tab := find_tab_by_label (current_focus_label)
+				if attached current_focus_label as l_label and then attached find_tab_by_label (l_label) as l_selected_tab then
 					select_content (internal_notebook.content_by_tab (l_selected_tab))
 					l_stop := True
 				end
@@ -127,36 +126,21 @@ feature {NONE} -- Implementation agents
 				internal_tool_bar.set_focus
 				focus_first
 			else
-
 			end
 		end
 
-	current_focus_label: SD_TOOL_BAR_FONT_BUTTON
-			-- Current focused label
-		require
-			has_selected: has_selected_item
-		local
-			l_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
-			l_result: detachable like current_focus_label
+	current_focus_label: detachable SD_TOOL_BAR_FONT_BUTTON
+			-- Current focused label or `Void' if none.
 		do
-			from
-				l_items := internal_tool_bar.items
-				l_items.start
-			until
-				l_result /= Void
-				or l_items.after --| We could drop this check, since we are sure l_result /= Void
+			across
+				internal_tool_bar.items as c
 			loop
 				if
-					attached {SD_TOOL_BAR_FONT_BUTTON} l_items.item as l_toggle_button and then
+					attached {SD_TOOL_BAR_FONT_BUTTON} c.item as l_toggle_button and then
 					l_toggle_button.is_selected
 				then
-					l_result := l_toggle_button
+					Result := l_toggle_button
 				end
-				l_items.forth
-			end
-			check l_result /= Void then
-				-- Implied by precondition `has_selected'
-				Result := l_result
 			end
 		end
 
@@ -197,60 +181,57 @@ feature {NONE} -- Implementation agents
 
 	on_search_text_change
 			-- Handle `internal_text_box' text change
-		require
-			set: text_finder /= Void
 		local
 			l_search_result: ARRAYED_LIST [INTEGER]
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_passed_first: BOOLEAN
-			l_text_finder: like text_finder
 		do
-			l_text_finder := text_finder
-			check l_text_finder /= Void end -- Implied by precondition `set'
-			internal_tool_bar.wipe_out
+			if attached text_finder as l_text_finder then
+				internal_tool_bar.wipe_out
 
-			-- For Windows, if `internal_tool_bar' items changed, drawing will not be cleared by {EV_DRAWING_AREA}, so clear it here
-			-- For GTK platforms, it works fine without following clearing codes. Vision2 EV_DRAWING_AREA Windows implementation bug ?
-			internal_tool_bar.clear_rectangle (0, 0, internal_tool_bar.width, internal_tool_bar.height)
+				-- For Windows, if `internal_tool_bar' items changed, drawing will not be cleared by {EV_DRAWING_AREA}, so clear it here
+				-- For GTK platforms, it works fine without following clearing codes. Vision2 EV_DRAWING_AREA Windows implementation bug ?
+				internal_tool_bar.clear_rectangle (0, 0, internal_tool_bar.width, internal_tool_bar.height)
 
-			if internal_text_box.text.is_equal ("") then
-				from
-					items_and_tabs.start
-				until
-					items_and_tabs.after
-				loop
-					internal_tool_bar.extend (items_and_tabs.item.tool_bar_item)
-					items_and_tabs.forth
-				end
-			else
-				l_text_finder.search (internal_text_box.text)
-				l_search_result := l_text_finder.found_indexs_in_texts
-				l_search_result.compare_objects
-				from
-					items_and_tabs.start
-				until
-					items_and_tabs.after
-				loop
-					check attached {SD_TOOL_BAR_FONT_BUTTON} items_and_tabs.item.tool_bar_item as l_label then
-						if l_search_result.has (items_and_tabs.index) then
-							internal_tool_bar.extend (items_and_tabs.item.tool_bar_item)
-							if not l_passed_first then
-								l_label.enable_select
-								l_passed_first := True
+				if internal_text_box.text.is_equal ("") then
+					from
+						items_and_tabs.start
+					until
+						items_and_tabs.after
+					loop
+						internal_tool_bar.extend (items_and_tabs.item.tool_bar_item)
+						items_and_tabs.forth
+					end
+				else
+					l_text_finder.search (internal_text_box.text)
+					l_search_result := l_text_finder.found_indexs_in_texts
+					l_search_result.compare_objects
+					from
+						items_and_tabs.start
+					until
+						items_and_tabs.after
+					loop
+						check attached {SD_TOOL_BAR_FONT_BUTTON} items_and_tabs.item.tool_bar_item as l_label then
+							if l_search_result.has (items_and_tabs.index) then
+								internal_tool_bar.extend (items_and_tabs.item.tool_bar_item)
+								if not l_passed_first then
+									l_label.enable_select
+									l_passed_first := True
+								end
 							end
 						end
+						items_and_tabs.forth
 					end
-					items_and_tabs.forth
 				end
-			end
-			disable_select_all_item
-			l_items := internal_tool_bar.items
-			if l_items.count > 0 and l_items.first /= Void then
-				check attached {SD_TOOL_BAR_FONT_BUTTON} l_items.first as l_label then
-					l_label.enable_hot
+				disable_select_all_item
+				l_items := internal_tool_bar.items
+				if l_items.count > 0 and l_items.first /= Void then
+					check attached {SD_TOOL_BAR_FONT_BUTTON} l_items.first as l_label then
+						l_label.enable_hot
+					end
 				end
+				update_size
 			end
-			update_size
 		end
 
 	focus_first
@@ -322,7 +303,6 @@ feature {NONE} -- Implementation agents
 	on_tool_bar_key_press (a_key: EV_KEY)
 			-- Handle `internal_label_box' tab key press
 		local
-			l_label: SD_TOOL_BAR_ITEM
 			l_text: STRING_32
 			l_item: detachable SD_TOOL_BAR_TOGGLE_BUTTON
 		do
@@ -332,8 +312,9 @@ feature {NONE} -- Implementation agents
 				internal_text_box.set_focus
 				disable_select_all_item
 			when {EV_KEY_CONSTANTS}.Key_enter then
-				l_label := current_focus_label
-				on_label_selected (index_of (l_label))
+				if attached current_focus_label as l_label then
+					on_label_selected (index_of (l_label))
+				end
 				destroy
 			when {EV_KEY_CONSTANTS}.Key_escape then
 				destroy
@@ -454,33 +435,25 @@ feature {NONE} -- Implementation functions
 			internal_tool_bar.extend (l_tab_indicator)
 
 			items_and_tabs.extend ([l_tab_indicator, a_tab])
-			l_tab_indicator.pointer_button_press_actions.extend (agent (a_total_count, a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) do on_label_selected (a_total_count) end (items_and_tabs.count, ?, ?, ?, ?, ?, ?, ?, ?))
+			l_tab_indicator.pointer_button_press_actions.force_extend (agent on_label_selected (items_and_tabs.count))
 		ensure
 --			extended: old internal_label_box.count = internal_label_box.count - 1
 		end
 
-	find_tab_by_label (a_label: SD_TOOL_BAR_ITEM): SD_NOTEBOOK_TAB
-			-- Find a tab by `a_label'
+	find_tab_by_label (a_label: SD_TOOL_BAR_ITEM): detachable SD_NOTEBOOK_TAB
+			-- A tab corresponding to `a_label' or `Void' if none.
 		require
 			a_label_not_void: a_label /= Void
-			has: internal_tool_bar.has (a_label)
-		local
-			l_result: detachable like find_tab_by_label
 		do
-			from
-				items_and_tabs.start
+			across
+				items_and_tabs as c
 			until
-				items_and_tabs.after or l_result /= Void
+				attached Result
 			loop
-				if items_and_tabs.item.tool_bar_item = a_label then
-					l_result := items_and_tabs.item.notebook_tab
+				if c.item.tool_bar_item = a_label then
+					Result := c.item.notebook_tab
 				end
-				items_and_tabs.forth
 			end
-			check l_result /= Void end -- Implied by precondition `has'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
 		end
 
 	index_of (a_item: SD_TOOL_BAR_ITEM): INTEGER
@@ -503,24 +476,6 @@ feature {NONE} -- Implementation functions
 					l_found := True
 				end
 
-				l_items.forth
-			end
-		end
-
-	has_selected_item: BOOLEAN
-			-- Do at least one item has been selected?
-		local
-			l_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
-		do
-			from
-				l_items := internal_tool_bar.items
-				l_items.start
-			until
-				l_items.after or Result
-			loop
-				check attached {SD_TOOL_BAR_FONT_BUTTON} l_items.item as l_toggle_button then
-					Result := l_toggle_button.is_selected
-				end
 				l_items.forth
 			end
 		end
@@ -613,10 +568,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

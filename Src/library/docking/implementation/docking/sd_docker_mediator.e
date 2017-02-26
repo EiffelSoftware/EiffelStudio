@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Manager that control SD_DOCKER_SOURCE(s) and SD_HOT_ZONE(s)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,9 +35,6 @@ feature {NONE} -- Initlization
 			docking_manager := a_docking_manager
 			docking_manager.command.recover_normal_state
 
-			create {SD_HOT_ZONE_FACTORY_FACTORY_IMP} l_factory
-			internal_shared.set_hot_zone_factory (l_factory.hot_zone_factory)
-
 			create hot_zones
 			caller := a_caller
 
@@ -52,7 +49,9 @@ feature {NONE} -- Initlization
 			is_dockable := True
 			internal_shared.setter.before_enable_capture
 
-			internal_shared.hot_zone_factory.set_docker_mediator (Current)
+			create {SD_HOT_ZONE_FACTORY_FACTORY_IMP} l_factory
+			internal_shared.set_hot_zone_factory (l_factory.hot_zone_factory (Current))
+
 			docking_manager.property.set_docker_mediator (Current)
 		ensure
 			set: caller = a_caller
@@ -78,15 +77,14 @@ feature -- Query
 	caller: SD_ZONE
 			-- Zone which call this mediator
 
-	caller_top_window: EV_WINDOW
-			-- Caller's top window
+	caller_top_window: detachable EV_WINDOW
+			-- Caller's top window.
 		require
 			not_void: caller /= Void
 		local
 			l_env: EV_ENVIRONMENT
 			l_windows: LINEAR [EV_WINDOW]
 			l_window: EV_WINDOW
-			l_last_top_window: like last_top_window
 		do
 			if last_top_window = Void then
 				create l_env
@@ -122,11 +120,7 @@ feature -- Query
 				end
 			end
 
-			l_last_top_window := last_top_window
-			check l_last_top_window /= Void end -- Implied by previous if clause
-			Result := l_last_top_window
-		ensure
-			not_void: Result /= Void
+			Result := last_top_window
 		end
 
 feature -- Hanlde pointer events
@@ -184,15 +178,12 @@ feature -- Hanlde pointer events
 			end
 			clear_up
 
-			if attached hot_zones as l_hot_zones then
-				from
-					l_hot_zones.start
-				until
-					l_hot_zones.after or changed
-				loop
-					changed := l_hot_zones.item.apply_change (a_screen_x, a_screen_y)
-					l_hot_zones.forth
-				end
+			across
+				hot_zones as c
+			until
+				changed
+			loop
+				changed := c.item.apply_change (a_screen_x, a_screen_y)
 			end
 
 			if not changed and attached {SD_FLOATING_ZONE} caller as l_floating_zone then
@@ -218,7 +209,6 @@ feature -- Hanlde pointer events
 			is_tracing: is_tracing
 		local
 			l_drawed: BOOLEAN
-			l_hot_zones: like hot_zones
 		do
 			debug ("docking")
 				print ("%N SD_DOCKER_MEDIATOR on_pointer_motion screen_x, screen_y: " + a_screen_x.out + " " + a_screen_y.out)
@@ -227,23 +217,12 @@ feature -- Hanlde pointer events
 			if screen_x /= a_screen_x or screen_y /= a_screen_y then
 				screen_x := a_screen_x
 				screen_y := a_screen_y
-
-				from
-					l_hot_zones := hot_zones
-					check l_hot_zones /= Void end -- Implied by `is_tracing'
-					l_hot_zones := l_hot_zones.twin
-					l_hot_zones.start
+				across
+					hot_zones as c
 				until
-					l_hot_zones.after or l_drawed
+					l_drawed
 				loop
-					l_drawed := l_hot_zones.item.update_for_feedback (a_screen_x, a_screen_y, is_dockable)
-					l_hot_zones.forth
-					debug ("docking")
-						print ("%N SD_DOCKER_MEDIATOR on_pointer_motion")
-					end
-				end
-				debug ("docking")
-					print ("%N SD_DOCKER_MEDIATOR on_pointer_motion step 2")
+					l_drawed := c.item.update_for_feedback (a_screen_x, a_screen_y, is_dockable)
 				end
 				if is_dockable then
 					on_pointer_motion_for_indicator (a_screen_x, a_screen_y)
@@ -390,37 +369,21 @@ feature {NONE} -- Implementation functions
 
 	clear_all_indicator
 			-- Clear all indicators
-		local
-			l_hot_zones: like hot_zones
 		do
-			l_hot_zones := hot_zones
-			if l_hot_zones /= Void then
-				from
-					l_hot_zones.start
-				until
-					l_hot_zones.after
-				loop
-					l_hot_zones.item.clear_indicator
-					l_hot_zones.forth
-				end
+			across
+				hot_zones as c
+			loop
+				c.item.clear_indicator
 			end
 		end
 
 	build_all_indicator
-			-- Build all indicators
-		local
-			l_hot_zones: like hot_zones
+			-- Build all indicators.
 		do
-			l_hot_zones := hot_zones
-			if l_hot_zones /= Void then
-				from
-					l_hot_zones.start
-				until
-					l_hot_zones.after
-				loop
-					l_hot_zones.item.build_indicator
-					l_hot_zones.forth
-				end
+			across
+				hot_zones as c
+			loop
+				c.item.build_indicator
 			end
 		end
 
@@ -436,7 +399,9 @@ feature {NONE} -- Implementation functions
 			hot_zones := l_hot_zones
 			generate_hot_zones_imp (l_zone_list)
 
-			l_hot_zones.extend (internal_shared.hot_zone_factory.hot_zone_main (caller, docking_manager))
+			if attached internal_shared.hot_zone_factory as f then
+				l_hot_zones.extend (f.hot_zone_main (caller, docking_manager))
+			end
 			debug ("docking")
 				io.put_string ("%N SD_DOCKER_MEDIATOR hot zone main added.")
 			end
@@ -507,16 +472,9 @@ feature {NONE} -- Implementation functions
 		require
 			a_zone_not_void: a_zone /= Void
 			a_source_not_void: a_source /= Void
-			set: hot_zones /= Void
-		local
-			l_hot_zones: like hot_zones
 		do
-			if not (attached {SD_FLOATING_ZONE} a_zone) then
-				if a_zone.type = caller.type then
-					l_hot_zones := hot_zones
-					check l_hot_zones /= Void end -- Implied by precondition `set'
-					a_source.add_hot_zones (Current, l_hot_zones)
-				end
+			if not attached {SD_FLOATING_ZONE} a_zone and then a_zone.type = caller.type then
+				a_source.add_hot_zones (Current, hot_zones)
 			end
 		end
 
@@ -526,41 +484,30 @@ feature {NONE} -- Implementation functions
 			is_tracing: is_tracing
 		local
 			l_drawed: BOOLEAN
-			l_hot_zones: like hot_zones
 		do
-			from
-				l_hot_zones := hot_zones
-				check l_hot_zones /= Void end -- Implied by `is_tracing'
-				l_hot_zones := l_hot_zones.twin
-				l_hot_zones.start
+			across
+				hot_zones as c
 			until
-				l_hot_zones.after or l_drawed
+				l_drawed
 			loop
-				l_drawed := l_hot_zones.item.update_for_indicator (a_screen_x, a_screen_y)
-				l_hot_zones.forth
-			end
-
-			if not l_hot_zones.after then
-				l_drawed := l_hot_zones.last.update_for_indicator (a_screen_x, a_screen_y)
+				if c.item.update_for_indicator (a_screen_x, a_screen_y) then
+					l_drawed := True
+					if not c.is_last then
+						hot_zones.last.update_for_indicator (a_screen_x, a_screen_y).do_nothing
+					end
+				end
 			end
 		end
 
 	on_pointer_motion_for_clear_indicator (a_screen_x, a_screen_y: INTEGER)
-			-- Handle pointer motion for clear docking indicator
+			-- Handle pointer motion for clear docking indicator.
 		require
 			is_tracing: is_tracing
-		local
-			l_hot_zones: like hot_zones
 		do
-			from
-				l_hot_zones := hot_zones
-				check l_hot_zones /= Void end -- Implied by `is_tracing'
-				l_hot_zones.start
-			until
-				l_hot_zones.after
+			across
+				hot_zones as c
 			loop
-				l_hot_zones.item.update_for_indicator_clear (a_screen_x, a_screen_y)
-				l_hot_zones.forth
+				c.item.update_for_indicator_clear (a_screen_x, a_screen_y)
 			end
 		end
 
@@ -599,7 +546,7 @@ feature {NONE} -- Implementation functions
 
 feature {NONE} -- Implementation attributes
 
-	hot_zones: detachable ACTIVE_LIST [SD_HOT_ZONE]
+	hot_zones: ACTIVE_LIST [SD_HOT_ZONE]
 			-- Hot zones
 
 	internal_shared: SD_SHARED
@@ -624,7 +571,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

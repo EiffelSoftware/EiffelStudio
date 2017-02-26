@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Contents that have a tool bar items that client programmer want to managed by docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -107,13 +107,13 @@ feature -- Command
 			if not is_visible then
 				if attached zone as l_zone then
 					l_zone.show
-					if l_zone.is_floating then
-						l_zone.attached_floating_tool_bar.show
+					if attached l_zone.floating_tool_bar as b then
+						b.show
 					else
 						if l_zone.assistant.last_state.is_docking_state_recorded then
 							l_zone.assistant.dock_last_state_for_hide
-						elseif is_added then
-							manager.set_top (Current, {SD_ENUMERATION}.top)
+						elseif attached manager as m then
+							m.set_top (Current, {SD_ENUMERATION}.top)
 						end
 					end
 				end
@@ -130,8 +130,8 @@ feature -- Command
 		do
 			if is_visible then
 				if attached zone as l_zone then
-					if l_zone.is_floating then
-						l_zone.attached_floating_tool_bar.hide
+					if attached l_zone.floating_tool_bar as b then
+						b.hide
 					else
 						l_row := l_zone.row
 						if l_row /= Void then
@@ -145,7 +145,9 @@ feature -- Command
 					l_zone.hide
 				end
 				is_visible := False
-				manager.docking_manager.command.resize (True)
+				if attached manager as m then
+					m.docking_manager.command.resize (True)
+				end
 			end
 		end
 
@@ -155,9 +157,9 @@ feature -- Command
 			not_destroyed: not is_destroyed
 		do
 			destroy_container
-			if is_added then
-				manager.contents.start
-				manager.contents.prune (Current)
+			if attached manager as m then
+				m.contents.start
+				m.contents.prune (Current)
 			end
 		end
 
@@ -185,7 +187,13 @@ feature -- Command
 			end
 			destroy_container
 
-			manager.set_top (Current, a_direction)
+			if attached manager as m then
+				m.set_top (Current, a_direction)
+			else
+				check
+					from_precondition_added: False
+				end
+			end
 
 			is_visible := True
 		ensure
@@ -206,7 +214,13 @@ feature -- Command
 			end
 			destroy_container
 
-			manager.set_top_with (Current, a_target_content)
+			if attached manager as m then
+				m.set_top_with (Current, a_target_content)
+			else
+				check
+					from_precondition_added: False
+				end
+			end
 
 			is_visible := True
 		ensure
@@ -449,7 +463,7 @@ feature -- Query
 	is_added: BOOLEAN
 			-- If Current added to a tool bar manager?
 		do
-			Result := internal_manager /= Void
+			Result := manager /= Void
 		end
 
 	is_destroyed: BOOLEAN
@@ -699,29 +713,15 @@ feature {SD_ACCESS}  -- Internal issues
 			set: zone = a_zone
 		end
 
-	manager: attached like internal_manager
-			-- Attached `internal_manager'
-		require
-			set: is_added
-		local
-			l_result: like internal_manager
-		do
-			l_result := internal_manager
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
-	internal_manager: detachable SD_TOOL_BAR_MANAGER
-			-- Manager which manage Current
+	manager: detachable SD_TOOL_BAR_MANAGER
+			-- Manager which manages `Current' (if any).
 
 	set_manager (a_manager: detachable SD_TOOL_BAR_MANAGER)
-			-- Set `internal_manager'
+			-- Set `manager' to `a_manager'.
 		do
-			internal_manager := a_manager
+			manager := a_manager
 		ensure
-			set: internal_manager = a_manager
+			set: manager = a_manager
 		end
 
 	set_visible (a_bool: BOOLEAN)
@@ -739,10 +739,10 @@ feature {NONE} -- Implementation
 		do
 			if attached zone as l_zone then
 				l_zone.destroy_parent_containers
-				if l_zone.is_floating then
-					l_zone.attached_floating_tool_bar.destroy
-					if is_added then
-						manager.floating_tool_bars.prune_all (l_zone.attached_floating_tool_bar)
+				if attached l_zone.floating_tool_bar as b then
+					b.destroy
+					if attached manager as m then
+						m.floating_tool_bars.prune_all (b)
 					end
 				end
 				l_zone.destroy
@@ -760,7 +760,7 @@ invariant
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -769,10 +769,5 @@ invariant
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

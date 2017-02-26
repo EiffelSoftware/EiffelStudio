@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tool bar for docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -311,9 +311,9 @@ feature -- Query
 		local
 			l_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 		do
-			if is_content_attached then
+			if attached content as c then
 				from
-					l_items := content.items
+					l_items := c.items
 					l_items.start
 					create Result.make (l_items.count)
 				until
@@ -832,27 +832,20 @@ feature {NONE} -- Agents
 
 feature {SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 
-	set_content (a_content: like content)
+	set_content (a_content: SD_TOOL_BAR_CONTENT)
 			-- <Precursor>
 		do
-			internal_content := a_content
+			content := a_content
 		end
 
 	clear_content
 			-- <Precursor>
 		do
-			internal_content := Void
+			content := Void
 		end
 
-	content: SD_TOOL_BAR_CONTENT
+	content: detachable SD_TOOL_BAR_CONTENT
 			-- <Precursor>
-		local
-			l_result: like internal_content
-		do
-			l_result := internal_content
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		end
 
 	redraw_item (a_item: like item_type)
 			-- Redraw `a_item'
@@ -961,7 +954,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -970,6 +963,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Title bar on the top of SD_ZONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -86,7 +86,7 @@ feature {NONE} -- Initlization
 			normal_max.select_actions.extend (agent on_normal_max)
 			close.select_actions.extend (agent on_close)
 
-			internal_title.pointer_double_press_actions.extend (agent (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) do on_normal_max end)
+			internal_title.pointer_double_press_actions.force_extend (agent on_normal_max)
 
 			internal_tool_bar.extend (stick)
 			internal_tool_bar.extend (normal_max)
@@ -236,7 +236,7 @@ feature -- Command
 			internal_update_fixed_size
 
 			-- `a_widget' will not have resize actions since it was in EV_FIXED
-			--	a_widget.resize_actions.extend (agent (x, y, w, h: INTEGER) do update_fixed_size end)
+			--	a_widget.resize_actions.force_extend (agent update_fixed_size)
 		ensure
 			set: internal_custom_widget = a_widget
 		end
@@ -697,35 +697,21 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_agent /= Void
 		do
-			if attached last_color_setting_agent as l_agent then
-				application.remove_idle_action (l_agent)
+			if environment_i.is_application_processor and then attached environment_i.application as a then
+				if attached last_color_setting_agent as l_agent then
+					a.remove_idle_action (l_agent)
+				end
+				last_color_setting_agent := a_agent
+				a.do_once_on_idle (a_agent)
+			else
+				last_color_setting_agent := a_agent
 			end
-			last_color_setting_agent := a_agent
-			application.do_once_on_idle (a_agent)
 		ensure
 			set: last_color_setting_agent = a_agent
 		end
 
 	last_color_setting_agent: detachable PROCEDURE
 			--	Last agent, possibly one of `enable_focus_color_imp', `enable_non_focus_active_color_imp' and `disable_focus_color_imp'
-
-	application: EV_APPLICATION
-			-- Application instance
-		require
-			ready: attached (create {EV_ENVIRONMENT}).application
-		local
-			l_env: EV_ENVIRONMENT
-			l_result: detachable like application
-		once
-			create l_env
-			if attached l_env.application as l_app then
-				l_result := l_app
-			end
-			check l_result /= Void end -- Implied by precondition `ready'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
 
 	add_refresh_title_in_idle_action
 			-- call `internal_title'.refresh in idle actions
@@ -776,11 +762,6 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end
 

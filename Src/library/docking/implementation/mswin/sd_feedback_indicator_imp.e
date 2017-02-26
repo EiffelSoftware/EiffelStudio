@@ -1,7 +1,5 @@
-note
+﻿note
 	description: "Summary description for {SD_FEEDBACK_INDICATOR_IMP}."
-	date: "$Date$"
-	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -68,7 +66,7 @@ feature -- Command
 			timer := l_timer
 			l_timer.set_interval (timer_interval)
 
-			l_timer.actions.extend (agent on_timer)
+			l_timer.actions.extend (agent on_timer (l_timer))
 			create l_routine
 			if l_routine.is_terminal_service then
 				-- We disable fading effect in remote desktop
@@ -83,18 +81,17 @@ feature -- Command
 	clear
 			-- Disappear with fading effect
 		local
-			l_timer_2: like timer
+			l_timer: like timer
 		do
-			if attached timer as l_timer then
-				if not l_timer.is_destroyed then
-					l_timer.destroy
-				end
+			l_timer := timer
+			if attached l_timer and then not l_timer.is_destroyed then
+				l_timer.destroy
 			end
 
-			create l_timer_2
-			timer := l_timer_2
-			l_timer_2.actions.extend (agent on_timer_for_close)
-			l_timer_2.set_interval (timer_interval)
+			create l_timer
+			timer := l_timer
+			l_timer.actions.extend (agent on_timer_for_close (l_timer))
+			l_timer.set_interval (timer_interval)
 		end
 
 	set_position (a_screen_x, a_screen_y: INTEGER)
@@ -104,14 +101,14 @@ feature -- Command
 		end
 
 	set_pixel_buffer (a_pixel_buffer: like pixel_buffer)
-			-- Set `pixel_buffer'
-		local
-			l_wel_bitmap: like wel_bitmap
+			-- Set `pixel_buffer' to `a_pixel_buffer'.
 		do
 			if a_pixel_buffer /= pixel_buffer then
-				if should_destroy_bitmap then
-					l_wel_bitmap := wel_bitmap
-					check l_wel_bitmap /= Void end -- Implied by `should_destroy_bitmap'
+				if
+					should_destroy_bitmap and then
+					attached wel_bitmap as l_wel_bitmap and then
+					not l_wel_bitmap.reference_tracked
+				then
 					l_wel_bitmap.delete
 				end
 				pixel_buffer := a_pixel_buffer
@@ -133,39 +130,31 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	rgba_dib: WEL_BITMAP
-			-- Load a image which has RGBA DIB data
+	rgba_dib: detachable WEL_BITMAP
+			-- Load a image which has RGBA DIB data (if possible).
 		require
 			set: attached pixel_buffer
-		local
-			l_result: detachable like rgba_dib
-			l_pixel_buffer: like pixel_buffer
 		do
-			l_pixel_buffer := pixel_buffer
-			check
-				l_pixel_buffer /= Void and then -- Implied by precondition `set'
+			if
+				attached pixel_buffer as l_pixel_buffer and then -- Implied by precondition `set'
 				attached {EV_PIXEL_BUFFER_IMP} l_pixel_buffer.implementation as l_imp
 			then
 				if attached l_imp.gdip_bitmap as l_gdip_bitmap then
-					l_result := l_gdip_bitmap.new_bitmap
+					Result := l_gdip_bitmap.new_bitmap
 					should_destroy_bitmap := True
 				elseif attached l_imp.pixmap as l_pixmap then
-					-- User not have GDI+
-					-- It only works in 32 color depth
-
-					check attached {EV_PIXMAP_IMP} l_pixmap.implementation as l_pixmap_imp then
-						create l_result.make_by_bitmap (l_pixmap_imp.get_bitmap)
+						-- User does not have GDI+.
+						-- It only works in 32 color depth.
+					if attached {EV_PIXMAP_IMP} l_pixmap.implementation as l_pixmap_imp then
+						create Result.make_by_bitmap (l_pixmap_imp.get_bitmap)
 					end
 					should_destroy_bitmap := False
 				else
 					check False end -- Implied by gdip_bitmap and pixmap cannot be void at same time
 				end
-
-				check l_result /= Void end -- Implied by previous if clause
-				Result := l_result
 			end
 		ensure
-			exists: Result /= Void and then Result.exists
+			exists: attached Result implies Result.exists
 		end
 
 	should_destroy_bitmap: BOOLEAN
@@ -173,83 +162,78 @@ feature {NONE} -- Implementation
 			-- If we load rgba_dib from EV_PIXEL_BUFFER we should destroy WEL_BITMAP
 
 	update_layered_window_rgba (a_alpha: INTEGER)
-			-- Call `c_updatelayerwindow' with `a_alpha'
+			-- Call `c_updatelayerwindow' with `a_alpha'.
 		require
 			valid: 0 <= a_alpha and a_alpha <= 255
 			ready: attached wel_bitmap and attached pixel_buffer
 		local
 			l_window: WEL_WINDOW
 			l_result: INTEGER
-			-- Destination DC
+				-- Destination DC
 			l_dc: WEL_WINDOW_DC
 			l_point: WEL_POINT
 			l_size: WEL_SIZE
-			-- Source
+				-- Source
 			l_dc_src: WEL_MEMORY_DC
 			l_point_src: WEL_POINT
-			-- Misc
+				-- Misc
 			l_err: WEL_ERROR
-			l_wel_bitmap: like wel_bitmap
-			l_pixel_buffer: like pixel_buffer
 		do
-			l_window := Current
+			if
+				attached wel_bitmap as l_wel_bitmap and then
+				attached pixel_buffer as l_pixel_buffer
+			then
+				l_window := Current
 
-			-- Prepare destination DC
-			create l_dc.make (l_window)
+				-- Prepare destination DC
+				create l_dc.make (l_window)
 
-			l_dc.get
-			check l_dc /= Void end
+				l_dc.get
+				check l_dc /= Void end
 
-			create l_point.make (screen_x, screen_y)
+				create l_point.make (screen_x, screen_y)
 
-			-- Prepare source DC
-			l_pixel_buffer := pixel_buffer
-			check l_pixel_buffer /= Void end -- Implied by precondition `ready'
-			create l_size.make (l_pixel_buffer.width, l_pixel_buffer.height)
+					-- Prepare source DC
+				create l_size.make (l_pixel_buffer.width, l_pixel_buffer.height)
 
-			create l_dc_src.make_by_dc (l_dc)
-			l_wel_bitmap := wel_bitmap
-			check l_wel_bitmap /= Void end -- Implied by precondition `ready'
-			l_dc_src.select_bitmap (l_wel_bitmap)
-			check l_dc_src.exists end
+				create l_dc_src.make_by_dc (l_dc)
+				l_dc_src.select_bitmap (l_wel_bitmap)
+				check l_dc_src.exists end
 
-			create l_point_src.make (0, 0)
+				create l_point_src.make (0, 0)
 
-			create l_err
-			l_err.reset_last_error_code
-			-- Call updateLayeredWindow function
-			check l_window.exists end
-			check l_dc.exists end
-			check l_point.exists end
-			check l_size.exists end
-			check l_dc_src.exists end
-			check l_point_src.exists end
+				create l_err
+				l_err.reset_last_error_code
+					-- Call UpdateLayeredWindow function.
+				check l_window.exists end
+				check l_dc.exists end
+				check l_point.exists end
+				check l_size.exists end
+				check l_dc_src.exists end
+				check l_point_src.exists end
 
-			c_updatelayerwindow (l_window.item, l_dc.item, l_point.item, l_size.item, l_dc_src.item, l_point_src.item, a_alpha, $l_result)
+				c_updatelayerwindow (l_window.item, l_dc.item, l_point.item, l_size.item, l_dc_src.item, l_point_src.item, a_alpha, $l_result)
 
-			-- In MSDN, "UpdateLayeredWindow Function" page, it says
-			-- if fails, the return value is 0
-			if l_result = 0 then
-				if l_err.last_error_code /= 0 then
+				-- In MSDN, "UpdateLayeredWindow Function" page, it says
+				-- if fails, the return value is 0.
+				if l_result = 0 and then l_err.last_error_code /= 0 then
 					l_err.display_last_error
 				end
+
+				l_dc.unselect_all
+				l_dc.delete
+
+				l_dc_src.delete
+			else
+				check
+					from_precondition_ready: False
+				end
 			end
-
-			l_dc.unselect_all
-			l_dc.delete
-
-			l_dc_src.delete
 		end
 
-	on_timer
-			-- Handle`timer' actions
-		require
-			set: attached timer
-		local
-			l_timer: like timer
+	on_timer (t: attached like timer)
+			-- Handle timer `t' actions.
 		do
-			l_timer := timer
-			check l_timer /= Void end	-- Implied by precondition `set'
 			alpha := alpha + alpha_step
 			if not (alpha <= 255) then
 				alpha := 255
@@ -257,35 +241,29 @@ feature {NONE} -- Implementation
 			if exists then
 				update_layered_window_rgba (alpha)
 			else
-				l_timer.destroy
+				t.destroy
 			end
 			if alpha >= 255 then
-				l_timer.destroy
+				t.destroy
 			end
 		ensure
-			destroy: alpha >= 255 implies (attached timer as le_timer and then le_timer.is_destroyed)
+			destroy: alpha >= 255 implies t.is_destroyed
 		end
 
-	on_timer_for_close
-			-- Handle `timer' actions for close
-		require
-			set: attached timer
-		local
-			l_timer: like timer
+	on_timer_for_close (t: attached like timer)
+			-- Handle timer `t' actions for close.
 		do
 			alpha := alpha - alpha_step
-			if not (alpha >= 0) then
+			if alpha <= 0 then
 				alpha := 0
 			end
-			l_timer := timer
-			check l_timer /= Void end -- Implied by precondition `set'
 			if exists then
 				update_layered_window_rgba (alpha)
 			else
-				l_timer.destroy
+				t.destroy
 			end
 			if alpha <= 0 then
-				l_timer.destroy
+				t.destroy
 				destroy
 			end
 		end
@@ -375,7 +353,7 @@ feature {NONE} -- Externals
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -384,4 +362,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

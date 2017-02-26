@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "SD_HOT_ZONEs for SD_TAB_ZONE_UPPERs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -50,7 +50,6 @@ feature {NONE} -- Redefine
 			-- <Precursor>
 		local
 			l_caller: SD_ZONE
-			l_tab_zone: like tab_zone_of
 		do
 			l_caller := internal_mediator.caller
 			if internal_mediator.is_dockable then
@@ -67,14 +66,10 @@ feature {NONE} -- Redefine
 					l_caller.state.change_zone_split_area (zone, {SD_ENUMERATION}.right)
 					Result := True
 				elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-					l_tab_zone := tab_zone_of (zone)
-					check l_tab_zone /= Void end -- Implied by curernt is hot zone of tab zone					
-					l_caller.state.move_to_tab_zone (l_tab_zone, l_tab_zone.contents.count + 1)
+					l_caller.state.move_to_tab_zone (zone, zone.contents.count + 1)
 					Result := True
 				else
 					from
-						l_tab_zone := tab_zone_of (zone)
-						check l_tab_zone /= Void end -- Implied by curernt is hot zone of tab zone						
 						internal_tab_area.start
 					until
 						internal_tab_area.after or Result
@@ -84,7 +79,7 @@ feature {NONE} -- Redefine
 							debug ("docking")
 								print ("%NSD_HOT_ZONE_TAB apply_change move_to_tab_zone index is " + internal_tab_area.key_for_iteration.out)
 							end
-							l_caller.state.move_to_tab_zone (l_tab_zone, internal_tab_area.key_for_iteration)
+							l_caller.state.move_to_tab_zone (zone, internal_tab_area.key_for_iteration)
 						end
 						internal_tab_area.forth
 					end
@@ -94,19 +89,14 @@ feature {NONE} -- Redefine
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

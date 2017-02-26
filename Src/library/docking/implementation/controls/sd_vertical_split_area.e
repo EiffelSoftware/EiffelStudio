@@ -41,11 +41,12 @@ feature {NONE} -- Implementation
 			-- The bug is: It will always set split position when left button released.
 			--             And it not care about whether if user is dragging the spliter.
 			-- So we disable "set split position to 0.5 when double presses" on GTK.
-			if l_platform.is_windows then
-				pointer_double_press_actions.extend (agent (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) do set_half end)
+			if l_platfoRm.is_windows then
+				pointer_double_press_actions.force_extend (agent set_half)
 			end
-			pointer_button_release_actions.extend (agent (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) do update_proportion end)
-			resize_actions.extend (agent (x, y, w, h: INTEGER) do remember_top_resize_split_area (Current) end)
+
+			pointer_button_release_actions.force_extend (agent update_proportion)
+			resize_actions.force_extend (agent remember_top_resize_split_area (Current))
 		end
 
 	set_half
@@ -78,7 +79,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

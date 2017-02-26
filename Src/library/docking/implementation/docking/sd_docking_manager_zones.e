@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Manager that help docking manager manage all zones."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,31 +12,20 @@ inherit
 	SD_ACCESS
 
 	SD_DOCKING_MANAGER_HOLDER
-		redefine
-			set_docking_manager
-		end
 
 create
 	make
 
 feature {NONE}  -- Initlization
 
-	make
-			-- Creation method
+	make (a_docking_manager: SD_DOCKING_MANAGER)
+			-- Associate new object with `a_docking_manager'.
 		do
+			docking_manager := a_docking_manager
 			create zones
-			init_place_holder
-		end
-
-	init_place_holder
-			-- Init `place_holder_content'
-		local
-			l_shared: SD_SHARED
-		do
-			create l_shared
 			create place_holder_widget
-			create place_holder_content.make_with_widget (place_holder_widget, l_shared.Editor_place_holder_content_name)
-			place_holder_content.set_type ({SD_ENUMERATION}.place_holder)
+			create place_holder_content.make_placeholder_with_original_widget
+				(place_holder_widget, {SD_SHARED}.Editor_place_holder_content_name, a_docking_manager)
 		end
 
 feature -- Zones managements
@@ -285,15 +274,6 @@ feature -- Zones managements
 			end
 		end
 
-feature -- Command
-
-	set_docking_manager (a_docking_manager: detachable SD_DOCKING_MANAGER)
-			-- <Precursor>
-		do
-			Precursor {SD_DOCKING_MANAGER_HOLDER} (a_docking_manager)
-			place_holder_content.set_docking_manager (docking_manager)
-		end
-
 feature -- Query
 
 	place_holder_content: SD_CONTENT
@@ -317,7 +297,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -326,10 +306,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

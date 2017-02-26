@@ -1,13 +1,13 @@
-note
+﻿note
 	description: "[
-					A place holder zone.
-					Normally used for place holder for editors zones.											
-					When there is no type_editor zone in docking manager,
-					This zone is the place holder for eidtors zones, when
-					added new editor zones to docking manager, this zone's 
-					location is the	default location for editor zones.
-					Used docking library internally.
-																			]"
+		A place holder zone.
+		Normally used for place holder for editors zones.											
+		When there is no type_editor zone in docking manager,
+		This zone is the place holder for eidtors zones, when
+		added new editor zones to docking manager, this zone's 
+		location is the	default location for editor zones.
+		Used docking library internally.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -39,12 +39,13 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_content: SD_CONTENT)
-			-- Creation method
+	make (a_content: SD_CONTENT; a_docking_manager: SD_DOCKING_MANAGER)
+			-- Associate new object with `a_content' and `a_docking_manager'.
 		require
 			not_void: a_content /= Void
 			only_for_place_holder_zone: a_content.unique_title.is_equal ((create {SD_SHARED}).editor_place_holder_content_name)
 		do
+			docking_manager := a_docking_manager
 			create internal_shared
 			internal_content := a_content
 			create {EV_CELL_IMP} implementation_upper_zone.make -- Make void safe compiler happy, not used
@@ -120,7 +121,7 @@ feature {SD_DOCKING_MANAGER_COMMAND} -- Internal command
 			create l_tool_bar.make
 			create l_button.make
 			l_button.set_text (internal_shared.interface_names.editor_area)
-			l_button.pointer_button_press_actions.extend (agent (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) do docking_manager.command.restore_editor_area_for_minimized end)
+			l_button.pointer_button_press_actions.force_extend (agent (docking_manager.command).restore_editor_area_for_minimized)
 			l_button.set_pixel_buffer (internal_shared.icons.editor_area)
 			l_tool_bar.extend (l_button)
 			create l_border.make
@@ -150,15 +151,13 @@ feature {SD_DOCKING_MANAGER_COMMAND} -- Internal command
 			wipe_out
 			extend_cell (l_border)
 		ensure
-			set: internal_docking_manager = a_manager
+			set: docking_manager = a_manager
 		end
 
 	clear_for_minimized_area
 			-- Cleanup
 		do
 			clear_docking_manager
-		ensure
-			cleared: internal_docking_manager = Void
 		end
 
 feature -- Query
@@ -224,6 +223,4 @@ feature {NONE} -- Implementation
 			Customer support http://support.eiffel.com
 		]"
 
-
 end
-

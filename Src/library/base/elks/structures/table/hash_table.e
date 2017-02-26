@@ -679,15 +679,18 @@ feature {HASH_TABLE_ITERATION_CURSOR} -- Cursor movement
 			l_deleted_marks: like deleted_marks
 			l_table_size: INTEGER
 		do
-			Result := a_position + 1
 			l_deleted_marks := deleted_marks
 			l_table_size := content.count
 			from
+				Result := a_position + 1
 			until
 				Result >= l_table_size or else not l_deleted_marks.item (Result)
 			loop
 				Result := Result + 1
 			end
+		ensure
+			is_increased: Result > a_position
+			is_below_upper_bound: Result <= keys.count
 		end
 
 	previous_iteration_position (a_position: like iteration_position): like iteration_position
@@ -703,10 +706,13 @@ feature {HASH_TABLE_ITERATION_CURSOR} -- Cursor movement
 			from
 				Result := a_position - 1
 			until
-				Result <= 0 or else not l_deleted_marks.item (Result)
+				Result <= -1 or else not l_deleted_marks.item (Result)
 			loop
 				Result := Result - 1
 			end
+		ensure
+			is_decreased: Result < a_position
+			is_above_lower_bound: Result >= -1
 		end
 
 feature -- Element change
@@ -1746,7 +1752,7 @@ note
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

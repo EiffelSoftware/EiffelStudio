@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Assistants that manage a SD_FLOATING_TOOL_BAR_ZONE position item issues."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,17 +11,18 @@ class
 inherit
 	SD_ACCESS
 
-feature -- Commands
+create
+	make
 
-	set_floating_zone (a_floating_zone: SD_FLOATING_TOOL_BAR_ZONE)
-			-- Creation method
-		require
-			not_void: a_floating_zone /= Void
+feature {NONE} -- Creation
+
+	make (a_floating_zone: SD_FLOATING_TOOL_BAR_ZONE)
+			-- Associate assistant with `a_floating_zone'.
 		do
-			internal_zone := a_floating_zone
-		ensure
-			set: zone = a_floating_zone
+			zone := a_floating_zone
 		end
+
+feature -- Commands
 
 	position_groups (a_groups_info: SD_TOOL_BAR_GROUP_INFO)
 			-- Position tool_bar items by a_group_info
@@ -33,7 +34,9 @@ feature -- Commands
 			end
 			if zone.content.items_except_sep (False).count > 0 then
 				position_groups_imp (a_groups_info)
-				zone.zone.assistant.last_state.set_floating_group_info (a_groups_info)
+				if attached zone.zone as z then
+					z.assistant.last_state.set_floating_group_info (a_groups_info)
+				end
 			end
 		end
 
@@ -44,7 +47,9 @@ feature -- Commands
 
 			debug ("docking")
 				print ("%N  SD_FLAOTING_TOOL_BAR_ZONE_ASSISTANT Untitled dialog zone set size: " + zone.minimum_width.out + ", " + zone.minimum_height.out)
-				print ("%N                  zone's tool bar minimum size: " + zone.tool_bar.minimum_width.out + ", " + zone.tool_bar.minimum_height.out)
+				if attached zone.tool_bar as b then
+					print ("%N                  zone's tool bar minimum size: " + b.minimum_width.out + ", " + b.minimum_height.out)
+				end
 			end
 		end
 
@@ -54,8 +59,6 @@ feature {NONE} -- Implementation functions
 			-- Position tool_bar items by a_group_info
 		require
 			not_void: a_groups_info /= Void
-		local
-			l_item: detachable SD_TOOL_BAR_GROUP_INFO
 		do
 			debug ("docking")
 				print ("%N SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT position_groups_imp START")
@@ -69,24 +72,24 @@ feature {NONE} -- Implementation functions
 				debug ("docking")
 					print ("%N                                a_groups_info.index: " + a_groups_info.index.out)
 				end
-				if not a_groups_info.has_sub_info then
+				if attached a_groups_info.sub_grouping.item (a_groups_info.index) as l_item then
+					position_sub_level_items (l_item, a_groups_info.index)
+					debug ("docking")
+						print ("%N                                has sub group info")
+					end
+				else
 					if a_groups_info.is_new_group then
 						position_top_level_items (a_groups_info.item)
 					end
 					debug ("docking")
 						print ("%N                                not has sub group info")
 					end
-				else
-					l_item := a_groups_info.sub_grouping.item (a_groups_info.index)
-					check l_item /= Void end -- Implied by `has_sub_info'
-					position_sub_level_items (l_item, a_groups_info.index)
-					debug ("docking")
-						print ("%N                                has sub group info")
-					end
 				end
 				a_groups_info.forth
 			end
-			zone.tool_bar.compute_minimum_size
+			if attached zone.tool_bar as b then
+				b.compute_minimum_size
+			end
 			to_minmum_size
 			debug ("docking")
 				print ("%N SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT position_groups_imp END")
@@ -189,29 +192,12 @@ feature {NONE} -- Implementation functions
 
 feature {NONE} -- Implementation attributes
 
---	last_resize: PROCEDURE [SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT, TUPLE]
---			-- Last resize idle action.
-
-	zone: attached like internal_zone
-			-- Attached `internal_zone'
-		require
-			set: internal_zone /= Void
-		local
-			l_result: like internal_zone
-		do
-			l_result := internal_zone
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
-	internal_zone: detachable SD_FLOATING_TOOL_BAR_ZONE
-			-- Floating zone which items positioned by Current
+	zone: SD_FLOATING_TOOL_BAR_ZONE
+			-- Floating zone which items positioned by Current.
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -220,6 +206,5 @@ feature {NONE} -- Implementation attributes
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

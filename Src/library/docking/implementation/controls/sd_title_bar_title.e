@@ -24,14 +24,16 @@ feature {NONE} -- Initlization
 			create drag_actions
 			default_create
 
-			expose_actions.extend (agent(x, y, w, h: INTEGER) do on_expose end)
+			expose_actions.force_extend (agent on_expose)
 			pointer_button_press_actions.extend (agent on_pointer_press)
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_leave_actions.extend (agent on_pointer_leave)
 			pointer_motion_actions.extend (agent on_pointer_motion)
 
 			-- Because on Linux, pointer leave actions will not be called after pointer double pressed, so we clear the data manually.
-			pointer_double_press_actions.extend (agent (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) do first_press_position := Void end)
+			pointer_double_press_actions.force_extend (agent do
+																first_press_position := Void
+															end)
 		end
 
 feature -- Properties
@@ -274,7 +276,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

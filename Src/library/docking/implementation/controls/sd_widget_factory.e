@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Factory with responsibility for create docking library widgets base on different style."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -54,77 +54,73 @@ feature -- Factory method
 		require
 			a_style_valid: style_valid (a_style)
 			a_type_valid: a_zone_type = {SD_ENUMERATION}.docking or a_zone_type = {SD_ENUMERATION}.auto_hide or a_zone_type = {SD_ENUMERATION}.tab
-		local
-			l_result: detachable like title_bar
 		do
-			if internal_style = style_all_same  then
-				create l_result.make
-			elseif internal_style = style_different then
-				if a_zone_type = {SD_ENUMERATION}.auto_hide or a_zone_type = {SD_ENUMERATION}.docking then
-					create l_result.make
-				end
+			if internal_style = style_different then
 				if a_zone_type = {SD_ENUMERATION}.tab then
 					if a_style = {SD_ENUMERATION}.editor then
-						create {SD_TITLE_BAR} l_result.make
-						l_result.hide
-					elseif a_style = {SD_ENUMERATION}.tool then
-						create l_result.make
+						create {SD_TITLE_BAR} Result.make
+						Result.hide
+					else
+						check
+							from_precondition_a_style_valid: a_style = {SD_ENUMERATION}.tool
+						end
+						create Result.make
 					end
+				else
+					check from_precondition_a_type_valid:
+						a_zone_type = {SD_ENUMERATION}.auto_hide or a_zone_type = {SD_ENUMERATION}.docking
+					end
+					create Result.make
 				end
+			else
+				check valid_internal_style: internal_style = style_all_same end
+				create Result.make
 			end
-			check l_result /= Void end  -- Implied by only two kind of styles
-			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
 
 	docking_zone (a_content: SD_CONTENT): SD_DOCKING_ZONE
-			-- Docking zone
+			-- Docking zone.
 		local
-			l_result: detachable like docking_zone
 			l_place_holder_zone: SD_PLACE_HOLDER_ZONE
 		do
 			if internal_style = style_all_same then
-				create {SD_DOCKING_ZONE_NORMAL} l_result.make (a_content)
+				create {SD_DOCKING_ZONE_NORMAL} Result.make (a_content)
 			else
 				check internal_style = style_different end -- Implied by only two kinds of styles
 				if a_content.type = {SD_ENUMERATION}.tool then
-					create {SD_DOCKING_ZONE_NORMAL} l_result.make (a_content)
+					create {SD_DOCKING_ZONE_NORMAL} Result.make (a_content)
 				elseif a_content.type = {SD_ENUMERATION}.editor then
-					l_result := create {SD_DOCKING_ZONE_UPPER}.make (a_content)
-				elseif a_content.type = {SD_ENUMERATION}.place_holder then
-					create l_place_holder_zone.make (a_content)
+					create {SD_DOCKING_ZONE_UPPER} Result.make (a_content)
+				else
+					check a_content.type = {SD_ENUMERATION}.place_holder end
+					create l_place_holder_zone.make (a_content, a_content.docking_manager)
 					if a_content.is_docking_manager_attached then
 						l_place_holder_zone.set_docking_manager (a_content.docking_manager)
 					end
-					l_result := l_place_holder_zone
+					Result := l_place_holder_zone
 				end
 			end
-
-			check l_result /= Void end -- Implied by kinds of zones are fixed
-			Result := l_result
 		end
 
 	tab_zone (a_content: SD_CONTENT): SD_TAB_ZONE
 			-- Tab zone
 		require
 			a_content_not_void: a_content /= Void
-		local
-			l_result: detachable like tab_zone
 		do
-			if internal_style = style_all_same then
-				create l_result.make (a_content)
-			elseif internal_style = style_different then
+			if internal_style = style_different then
 			    check style_valid: style_valid (a_content.type) end
-				if a_content.type = {SD_ENUMERATION}.tool then
-					create l_result.make (a_content)
-				elseif a_content.type = {SD_ENUMERATION}.editor then
-					l_result := create {SD_TAB_ZONE_UPPER}.make (a_content)
+				if a_content.type = {SD_ENUMERATION}.editor then
+					create {SD_TAB_ZONE_UPPER} Result.make (a_content)
+				else
+					check a_content.type = {SD_ENUMERATION}.tool end
+					create Result.make (a_content)
 				end
+			else
+				check internal_style = style_all_same end
+				create Result.make (a_content)
 			end
-
-			check l_result /= Void end -- Implied by only two kinds of type and styles
-			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
@@ -231,6 +227,7 @@ feature -- Enumeration
 
 	style_all_same: INTEGER = 1
 			-- Look and feel which all the same
+
 	style_different: INTEGER = 2;
 			-- Look and feel which different
 
@@ -241,7 +238,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -250,10 +247,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Docking manager commands."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,31 +17,29 @@ inherit
 	SD_ACCESS
 
 	SD_DOCKING_MANAGER_HOLDER
-		redefine
-			set_docking_manager
-		end
 
 create
 	make
 
 feature {NONE}  -- Initlization
 
-	make
-			-- Creation method
+	make (a_docking_manager: SD_DOCKING_MANAGER)
+			-- Associate new object with `a_docking_manager'.
 		do
+			docking_manager := a_docking_manager
 			create locked_windows.make (10)
 			create internal_shared
 		end
 
-	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			-- <Precursor>
+feature {SD_DOCKING_MANAGER} -- Initialization
+
+	add_actions
+			-- Register required actions.
 		local
 			l_acc: EV_ACCELERATOR
 			l_key: EV_KEY
 		do
-			precursor {SD_DOCKING_MANAGER_HOLDER} (a_docking_manager)
-
-			-- Initialize zone navigation accelerator key
+				-- Initialize zone navigation accelerator key.
 			create l_key.make_with_code (internal_shared.zone_navigation_accelerator_key)
 
 			create l_acc.make_with_key_combination (l_key, internal_shared.zone_navigation_accelerator_ctrl, internal_shared.zone_navigation_accelerator_alt, internal_shared.zone_navigation_accelerator_shift)
@@ -51,7 +49,7 @@ feature {NONE}  -- Initlization
 				l_window.accelerators.extend (l_acc)
 			end
 
-			-- We must set another accelerator, otherwise shift+ctrl+tab will not invoke actions
+				-- We must set another accelerator, otherwise shift+ctrl+tab will not invoke actions
 			create l_acc.make_with_key_combination (l_key, True, False, True)
 			l_acc.actions.extend (agent on_zone_navigation (True))
 			if attached {EV_TITLED_WINDOW} docking_manager.main_window as l_window_2 then
@@ -318,12 +316,11 @@ feature -- Commands
 		end
 
 	restore_editor_area_for_minimized
-			-- Restore editors area to normal
+			-- Restore editors area to normal.
 		local
 			l_main_area: SD_MULTI_DOCK_AREA
 			l_parent: detachable EV_CONTAINER
 			l_minimized_editor_area: like minimized_editor_area
-			l_orignal_whole_item_for_minimized: like orignal_whole_item_for_minimized
 		do
 			l_minimized_editor_area := minimized_editor_area
 			if l_minimized_editor_area /= Void then
@@ -340,19 +337,20 @@ feature -- Commands
 
 					lt_upper_zone.clear_for_minimized_area
 				end
-				check not_void: l_parent /= Void end -- Implied by `minimized_editor_area' must be {SD_PLACE_HOLDER_ZONE} and has parent
-				l_parent.prune (l_minimized_editor_area)
-				l_orignal_whole_item_for_minimized := orignal_whole_item_for_minimized
-				check l_orignal_whole_item_for_minimized /= Void end-- Implied by `l_orignal_whole_item_for_minimized' and `minimized_editor_area' both not void at same time
-				l_parent.extend (l_orignal_whole_item_for_minimized)
-				if is_minimize_orignally then
-					if attached {EV_BOX} l_parent as lt_box then
-						lt_box.disable_item_expand (l_orignal_whole_item_for_minimized)
+				if attached l_parent then
+					l_parent.prune (l_minimized_editor_area)
+					if attached orignal_whole_item_for_minimized as l_orignal_whole_item_for_minimized then
+						l_parent.extend (l_orignal_whole_item_for_minimized)
+						if is_minimize_orignally and then attached {EV_BOX} l_parent as lt_box then
+							lt_box.disable_item_expand (l_orignal_whole_item_for_minimized)
+						end
 					end
 				end
 
 				docking_manager.command.resize (True)
-				l_main_area.restore_spliter_position (l_parent, generating_type + ".minimized")
+				if attached l_parent then
+					l_main_area.restore_spliter_position (l_parent, generating_type + ".minimized")
+				end
 
 				orignal_whole_item_for_minimized := Void
 				minimized_editor_area := Void
@@ -452,14 +450,15 @@ feature -- Commands
 					-- Only editor zone in container main area now. Nothing to do
 				else
 					l_orignal_editor_parent := l_editor_parent.parent
-					check l_orignal_editor_parent /= Void end -- Implied by editor is existing in main window
 					orignal_editor_parent := l_orignal_editor_parent
 
 					l_orignal_whole_item := l_editor_area.item
 					orignal_whole_item := l_orignal_whole_item
 					l_editor_area.save_spliter_position (l_orignal_whole_item, generating_type + ".maximize_editor_area")
 
-					l_orignal_editor_parent.prune (l_editor_parent)
+					if attached l_orignal_editor_parent then
+						l_orignal_editor_parent.prune (l_editor_parent)
+					end
 
 					l_editor_area.wipe_out
 					l_editor_area.extend (l_editor_parent)
@@ -493,7 +492,7 @@ feature -- Commands
 				l_orignal_editor_parent.extend (l_editor_area)
 
 				l_orignal_whole_item := orignal_whole_item
-				check l_orignal_whole_item /= Void end -- Implied by `orignal_editor_parent' and `orignal_whole_item' attached at same time
+				check l_orignal_whole_item /= Void then end -- Implied by `orignal_editor_parent' and `orignal_whole_item' attached at same time
 				l_main_area.extend (l_orignal_whole_item)
 
 				docking_manager.command.resize (True)
@@ -650,36 +649,43 @@ feature {NONE}  -- Implementation
 			a_zone_not_void_when_not_main_window: not a_main_window implies a_widget /= Void
 		local
 			l_lock_window: EV_WINDOW
-			l_item: detachable EV_WINDOW
 			l_last: detachable EV_WINDOW
 		do
 			if lock_call_time = 0 then
 				if a_main_window then
 					locked_windows.extend (docking_manager.main_window, 0)
 				else
-					check a_widget /= Void end -- Implied by precondition `a_zone_not_void_when_not_main_window'
-					locked_windows.extend (docking_manager.query.find_window_by_widget (a_widget), 0)
+					if attached a_widget then
+						locked_windows.extend (docking_manager.query.find_window_by_widget (a_widget), 0)
+					else
+						check attached a_widget end -- Implied by precondition `a_zone_not_void_when_not_main_window'
+					end
 				end
-				l_item := locked_windows.item (0)
-				check l_item /= Void end -- Implied by `lock_call_time = 0', there must be a window stored
-				l_item.lock_update
+				if attached locked_windows.item (0) as w then
+					w.lock_update
+				else
+					check False end -- Implied by `lock_call_time = 0', there must be a window stored
+				end
 			else
 				if a_main_window then
 					l_lock_window := docking_manager.main_window
 				else
-					check a_widget /= Void end -- Implied by precondition `a_zone_not_void_when_not_main_window'
-					l_lock_window := docking_manager.query.find_window_by_widget (a_widget)
+					if attached a_widget then
+						l_lock_window := docking_manager.query.find_window_by_widget (a_widget)
+					else
+						check attached a_widget end -- Implied by precondition `a_zone_not_void_when_not_main_window'
+						l_lock_window := docking_manager.main_window
+					end
 				end
-				from
-					locked_windows.start
-				until
-					locked_windows.after
+				across
+					locked_windows as c
 				loop
-					l_last := locked_windows.item_for_iteration
+					l_last := c.item
 				end
-				check l_last /= Void end	-- Implied by
 				if  l_lock_window /= l_last then
-					l_last.unlock_update
+					if attached l_last then
+						l_last.unlock_update
+					end
 					locked_windows.extend (l_lock_window, lock_call_time)
 					l_lock_window.lock_update
 				end
@@ -689,42 +695,32 @@ feature {NONE}  -- Implementation
 	unlock_update_internal
 			-- Unlock window update
 		local
-			l_item: detachable EV_WINDOW
 			l_last: detachable EV_WINDOW
 		do
 			if lock_call_time = 0 then
-				from
-					locked_windows.start
-				until
-					locked_windows.after
+				across
+					locked_windows as c
 				loop
-					l_last := locked_windows.item_for_iteration
-					locked_windows.forth
+					l_last := c.item
 				end
-				check l_last /= Void end -- Implied by `lock_call_time = 0', there is a window stored
-				if not l_last.is_destroyed then
+				if attached l_last and then not l_last.is_destroyed then
 					l_last.unlock_update
 				end
 				locked_windows.remove (0)
 				remove_empty_split_area
 				check no_windows_in_locked_window: locked_windows.count = 0 end
 			else
-				if locked_windows.has (lock_call_time) then
-					l_item := locked_windows.item (lock_call_time)
-					check l_item /= Void end -- Implied by `has'
+				if attached locked_windows.item (lock_call_time) as l_item then
 					if not l_item.is_destroyed then
 						l_item.unlock_update
 					end
 					locked_windows.remove (lock_call_time)
-					from
-						locked_windows.start
-					until
-						locked_windows.after
+					across
+						locked_windows as c
 					loop
-						l_last := locked_windows.item_for_iteration
+						l_last := c.item
 					end
-					check l_last /= Void end -- Implied by `has (lock_call_time)', so at least one window stored
-					if not l_last.is_destroyed then
+					if attached l_last and then not l_last.is_destroyed then
 						l_last.lock_update
 					end
 				end
@@ -779,7 +775,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -788,10 +784,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

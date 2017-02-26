@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Resize bar at side of SD_AUTO_HIDE_ZONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -59,32 +59,15 @@ feature -- Command
 		require
 			a_source_not_void: a_source /= Void
 		do
-			internal_resize_source := a_source
+			resize_source := a_source
 		ensure
 			a_source_set: resize_source = a_source
 		end
 
 feature -- Query
 
-	resize_source: attached like internal_resize_source
-			-- Attached `internal_resize_source'
-		require
-			set: is_resize_source_set
-		local
-			l_result: like internal_resize_source
-		do
-			l_result := internal_resize_source
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
-	is_resize_source_set: BOOLEAN
-			-- If `internal_resize_source' has been set?
-		do
-			Result := attached internal_resize_source
-		end
+	resize_source: detachable SD_RESIZE_SOURCE
+			-- The resizable window.
 
 feature {NONE} -- Agents
 
@@ -98,7 +81,9 @@ feature {NONE} -- Agents
 					resizing := True
 					create l_screen_boundary
 					screen_boundary := l_screen_boundary
-					resize_source.start_resize_operation (Current, l_screen_boundary)
+					if attached resize_source as s then
+						s.start_resize_operation (Current, l_screen_boundary)
+					end
 					debug ("docking")
 						io.put_string ("%N start position: " + a_screen_x.out + ", " + a_screen_y.out)
 					end
@@ -139,19 +124,14 @@ feature {NONE} -- Agents
 
 	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Handle the resize window action
-		require
-			not_void: resizing implies screen_boundary /= Void
 		local
-			l_scr_boundary: like screen_boundary
 			l_left, l_right, l_top, l_bottom: INTEGER
 		do
-			if resizing then
+			if resizing and then attached screen_boundary as l_scr_boundary then
 				-- Clear the graph last drawn
 
 				clear_graph_last_drawn
 
-				l_scr_boundary := screen_boundary
-				check l_scr_boundary /= Void end -- Impied by precondition `not_void'
 				if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
 					l_left := l_scr_boundary.left
 					l_right := l_scr_boundary.right
@@ -188,14 +168,16 @@ feature {NONE} -- Agents
 				disable_capture
 				internal_shared.setter.after_disable_capture
 
-				if direction = {SD_ENUMERATION}.left then
-					resize_source.end_resize_operation (Current, last_screen_pointer_position  - old_screen_x)
-				elseif direction = {SD_ENUMERATION}.right then
-					resize_source.end_resize_operation (Current, old_screen_x - last_screen_pointer_position)
-				elseif direction = {SD_ENUMERATION}.top then
-					resize_source.end_resize_operation (Current, last_screen_pointer_position - old_screen_y)
-				elseif direction = {SD_ENUMERATION}.bottom then
-					resize_source.end_resize_operation (Current, old_screen_y - last_screen_pointer_position)
+				if attached resize_source as s then
+					if direction = {SD_ENUMERATION}.left then
+						s.end_resize_operation (Current, last_screen_pointer_position  - old_screen_x)
+					elseif direction = {SD_ENUMERATION}.right then
+						s.end_resize_operation (Current, old_screen_x - last_screen_pointer_position)
+					elseif direction = {SD_ENUMERATION}.top then
+						s.end_resize_operation (Current, last_screen_pointer_position - old_screen_y)
+					elseif direction = {SD_ENUMERATION}.bottom then
+						s.end_resize_operation (Current, old_screen_y - last_screen_pointer_position)
+					end
 				end
 			end
 		end
@@ -232,16 +214,13 @@ feature {NONE}  -- Implemenetation
 	resizing: BOOLEAN
 			-- Is user press pointer button and then we resizing?
 
-	internal_resize_source: detachable SD_RESIZE_SOURCE
-			-- The resizable window
-
 invariant
 
 	internal_shared_not_void: internal_shared /= Void
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -250,10 +229,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

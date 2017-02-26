@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "SD_STATE that manage SD_FLOATING_ZONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,8 +16,6 @@ inherit
 			stick,
 			move_to_docking_zone,
 			move_to_tab_zone,
-			content_void,
-			change_state,
 			record_state
 		end
 
@@ -190,17 +188,6 @@ feature -- Redefine
 			docking_manager.command.unlock_update
 		end
 
-	change_state (a_state: SD_STATE)
-			-- <Precursor>
-		do
-			content.change_state (a_state)
-			a_state.set_last_floating_height (internal_zone.height)
-			a_state.set_last_floating_width (internal_zone.width)
-		ensure then
-			set: a_state.last_floating_height = last_floating_height
-			set: a_state.last_floating_width = last_floating_width
-		end
-
 	record_state
 			-- <Precursor>
 		do
@@ -336,7 +323,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -345,10 +332,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

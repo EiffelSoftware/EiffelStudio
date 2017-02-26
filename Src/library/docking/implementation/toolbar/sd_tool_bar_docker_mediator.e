@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Manager that control SD_TOOL_BAR_ZONE and SD_TOOL_BAR_HOT_ZONE when user drag a SD_TOOL_BAR_ZONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,23 @@ feature {NONE} -- Initialization
 			-- Creation method
 		require
 			a_caller_not_void: a_caller /= Void
+		local
+			tc, bc: EV_VERTICAL_BOX
+			lc, rc: EV_HORIZONTAL_BOX
+			tx, ty, tw, th: INTEGER
+			bx, by, bw, bh: INTEGER
+			lx, ly, lw, lh: INTEGER
+			rx, ry, rw, rh: INTEGER
 		do
+			tc := a_docking_manager.tool_bar_container.top
+			tx := tc.screen_x; ty := tc.screen_y; tw := tc.width; th := tc.height
+			bc := a_docking_manager.tool_bar_container.bottom
+			bx := bc.screen_x; by := bc.screen_y; bw := bc.width; bh := bc.height
+			lc := a_docking_manager.tool_bar_container.left
+			lx := lc.screen_x; ly := lc.screen_y; lw := lc.width; lh := lc.height
+			rc := a_docking_manager.tool_bar_container.right
+			rx := rc.screen_x; ry := rc.screen_y; rw := rc.width; rh := rc.height
+
 			create internal_shared
 			create cancel_actions
 
@@ -33,19 +49,14 @@ feature {NONE} -- Initialization
 
 			caller := a_caller
 
-			create internal_top_hot_zone.make (docking_manager.tool_bar_container.top, False)
-			create internal_bottom_hot_zone.make (docking_manager.tool_bar_container.bottom, False)
-			create internal_left_hot_zone.make (docking_manager.tool_bar_container.left, True)
-			create internal_right_hot_zone.make (docking_manager.tool_bar_container.right, True)
+			create internal_top_hot_zone.make (tx, ty, tw, th, tc, False, Current, a_docking_manager)
+			create internal_bottom_hot_zone.make (bx, by, bw, bh, bc, False, Current, a_docking_manager)
+			create internal_left_hot_zone.make (lx, ly, lw, lh, lc, True, Current, a_docking_manager)
+			create internal_right_hot_zone.make (rx, ry, rw, rh, rc, True, Current, a_docking_manager)
 
 			init_key_actions
 
 			internal_shared.set_tool_bar_docker_mediator (Current)
-
-			internal_top_hot_zone.set_tool_bar_mediator (Current)
-			internal_bottom_hot_zone.set_tool_bar_mediator (Current)
-			internal_left_hot_zone.set_tool_bar_mediator (Current)
-			internal_right_hot_zone.set_tool_bar_mediator (Current)
 
 			internal_top_hot_zone.start_drag
 			internal_bottom_hot_zone.start_drag
@@ -511,19 +522,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

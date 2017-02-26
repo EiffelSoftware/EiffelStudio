@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "Tabbed editor manager for one window of EiffelStudio"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_EDITORS_MANAGER
@@ -1555,7 +1555,7 @@ feature {NONE} -- Implementation
 			a_unique_title_not_void: a_unique_title /= Void
 			a_editor_not_void: a_editor /= Void
 		do
-			create Result.make_with_widget_title_pixmap (a_editor.widget, Pixmaps.icon_pixmaps.general_document_icon , a_unique_title)
+			create Result.make_with_widget_title_pixmap (a_editor.widget, Pixmaps.icon_pixmaps.general_document_icon , a_unique_title, docking_manager)
 
 			register_action (Result.drop_actions, agent on_drop (?, a_editor))
 			if veto_pebble_function_internal = Void then
@@ -1588,7 +1588,7 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_unique_title /= Void
 		do
-			create Result.make_with_widget_title_pixmap (create {EV_CELL}, Pixmaps.icon_pixmaps.general_document_icon , a_unique_title)
+			create Result.make_with_widget_title_pixmap (create {EV_CELL}, Pixmaps.icon_pixmaps.general_document_icon , a_unique_title, docking_manager)
 			create {EB_FAKE_SMART_EDITOR} last_created_editor.make (Result)
 			last_created_editor.set_docking_content (Result)
 
@@ -1670,7 +1670,7 @@ feature {NONE} -- Implementation
 			a_editor_not_void: a_editor /= Void
 		local
 			retried: BOOLEAN
-			tmp_name: detachable PATH
+			tmp_name: PATH
 			tmp_file: RAW_FILE
 			l_encoding: ENCODING
 			l_stream: STRING
@@ -1814,7 +1814,7 @@ feature {NONE} -- Implementation
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

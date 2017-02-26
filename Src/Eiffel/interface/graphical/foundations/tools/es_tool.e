@@ -1,20 +1,20 @@
-note
+﻿note
 	description: "[
 		A shim for EiffelStudio tools, providing access to information required without having to actually initialize the tool.
 		
 		Note: Descendant shim implementation are created dynamically as such:
-              (A) No creation routine should be used, so please mark `default_create' as a non exported creation routine.
-              (B) All initialization of the shim should be done by redefining `initialize', where `window' will be available
-                  as an attached entity carrying the hosted development window, as will the `edition' number.
-              (C) Recycle memory management is handled automatically so there is no need to call `recycle' on this shim or on
-                  the created tool panel.
-                  
-       (See: ES_SHELL_TOOLS.new_tool ... to see how tool is instantiated.)
+			(A) No creation routine should be used, so please mark `default_create' as a non exported creation routine.
+			(B) All initialization of the shim should be done by redefining `initialize', where `window' will be available
+			    as an attached entity carrying the hosted development window, as will the `edition' number.
+			(C) Recycle memory management is handled automatically so there is no need to call `recycle' on this shim or on
+			    the created tool panel.
+		
+		(See: ES_SHELL_TOOLS.new_tool ... to see how tool is instantiated.)
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class
 	ES_TOOL [G -> EB_TOOL]
@@ -168,7 +168,7 @@ feature -- Access
 				Result.append (title)
 				Result.append (" #" + edition.out)
 			else
-				Result := title.as_attached
+				Result := title
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -354,7 +354,7 @@ feature -- Access: User interface
 			l_result := internal_docking_content
 			if l_result = Void then
 				if is_tool_instantiated then
-					create Result.make_with_widget (panel.widget, content_id)
+					create Result.make_with_widget (panel.widget, content_id, window.docking_manager)
 				else
 					create l_label.make_with_text ("Uh Oh!")
 						-- Note: This action is a mild hack for cases where Uh Oh! is not replaced. When shown the
@@ -369,7 +369,7 @@ feature -- Access: User interface
 						end)
 
 					l_label.set_font ((create {ES_SHARED_FONTS_AND_COLORS}).fonts.prompt_sub_title_font)
-					create Result.make_with_widget (l_label, content_id)
+					create Result.make_with_widget (l_label, content_id, window.docking_manager)
 				end
 				Result.set_long_title (edition_title)
 				Result.set_short_title (edition_title)
@@ -725,7 +725,7 @@ invariant
 		internal_docking_content.user_widget /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

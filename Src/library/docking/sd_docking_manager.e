@@ -80,9 +80,13 @@ feature {NONE} -- Initialization
 			init_managers (l_list)
 			init_inner_container (l_list)
 
+			l_left.set_docking_manager (Current)
 			main_container.left_bar.extend (l_left)
+			l_right.set_docking_manager (Current)
 			main_container.right_bar.extend (l_right)
+			l_top.set_docking_manager (Current)
 			main_container.top_bar.extend (l_top)
+			l_bottom.set_docking_manager (Current)
 			main_container.bottom_bar.extend (l_bottom)
 
 			contents.extend (zones.place_holder_content)
@@ -956,7 +960,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

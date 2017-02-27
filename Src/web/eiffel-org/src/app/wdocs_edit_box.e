@@ -46,6 +46,14 @@ feature {NONE} -- Initialization
 			cbut: EV_CHECK_BUTTON
 			consts: EV_LAYOUT_CONSTANTS
 		do
+				-- Create object
+			create source_text
+			create preview_check_button
+			create save_button
+			create apply_button
+			create cancel_button
+
+				-- Initialize
 			create consts
 			create box
 			widget := box
@@ -88,9 +96,8 @@ feature {NONE} -- Initialization
 			hb.extend (but)
 
 				-- Source/text
-			create src
+			src := source_text
 			box.extend (src)
-			source_text := src
 			src.change_actions.extend (agent on_text_changed)
 			src.key_press_actions.extend (agent on_key_pressed)
 
@@ -105,27 +112,33 @@ feature {NONE} -- Initialization
 			hb.extend (but)
 			but.set_minimum_width (consts.default_button_width)
 
-			create but.make_with_text_and_action ("Cancel", agent on_cancel_operation)
+			but := cancel_button
+			but.set_text ("Cancel")
+			but.select_actions.extend (agent on_cancel_operation)
+
+
 			if not is_embedded then
 				hb.extend (but)
 			end
 			but.set_minimum_width (consts.default_button_width)
-			cancel_button := but
 
-			create but.make_with_text_and_action ("Apply", agent on_apply_operation)
+			but := apply_button
+			but.set_text ("Apply")
+			but.select_actions.extend (agent on_apply_operation)
+
 			hb.extend (but)
 			but.set_minimum_width (consts.default_button_width)
-			apply_button := but
 
-			create but.make_with_text_and_action ("Save", agent on_save_operation)
+			but := save_button
+			but.set_text ("Save")
+			but.select_actions.extend (agent on_save_operation)
 			hb.extend (but)
 			but.set_minimum_width (consts.default_button_width)
-			save_button := but
 
-			create cbut.make_with_text ("Preview ?")
+			cbut := preview_check_button
+			cbut.set_text ("Preview ?")
 			cbut.select_actions.extend (agent on_preview_selected (cbut))
 			hb.extend (cbut)
-			preview_check_button := cbut
 			cbut.enable_select
 		end
 

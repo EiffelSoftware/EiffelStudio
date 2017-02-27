@@ -57,14 +57,28 @@ feature {NONE} -- Initialization
 		local
 			l_docking_manager: like docking_manager
 			l_tool_bar: SD_TOOL_BAR_CONTENT
+			type_selector: ER_TYPE_SELECTOR
+			layout_constructor: ER_LAYOUT_CONSTRUCTOR -- FIXME: remove this and only use {ER_SHARED_SINGLETON}.layout_constructor_list ?
+			size_definition_editor: ER_SIZE_DEFINITION_EDITOR
+			object_editor: ER_OBJECT_EDITOR
+			output_tool: ER_OUTPUT_TOOL
 		do
 			create l_docking_manager.make (Current, Current)
 			docking_manager := l_docking_manager
-			type_selector.attach_to_docking_manager (l_docking_manager)
-			layout_constructor.attach_to_docking_manager (l_docking_manager)
-			object_editor.attach_to_docking_manager (l_docking_manager)
-			size_definition_editor.attach_to_docking_manager (l_docking_manager)
-			output_tool.attach_to_docking_manager (l_docking_manager)
+
+			create type_selector.make (l_docking_manager)
+
+			create layout_constructor.make (l_docking_manager)
+
+			create object_editor.make (l_docking_manager)
+			shared_singleton.object_editor_cell.put (object_editor)
+
+			create size_definition_editor.make (l_docking_manager)
+			shared_singleton.put_size_definition (size_definition_editor)
+
+			create output_tool.make (l_docking_manager)
+			shared_singleton.put_output_tool (output_tool)
+
 			l_tool_bar := build_tool_bar
 			l_docking_manager.tool_bar_manager.contents.extend (l_tool_bar)
 			l_tool_bar.set_top ({SD_ENUMERATION}.top)
@@ -86,14 +100,6 @@ feature {NONE} -- Initialization
 				-- Proceed with vision2 objects creation.
 			create shared_singleton
 
-			create type_selector.make
-
-			create layout_constructor.make
-
-			create object_editor.make
-
-			shared_singleton.object_editor_cell.put (object_editor)
-
 			create l_project_info.make
 			shared_singleton.project_info_cell.put (l_project_info)
 
@@ -103,11 +109,6 @@ feature {NONE} -- Initialization
 			create gen_code_command.make
 			create recent_project_command.make (recent_projects)
 			create new_ribbon_command.make
-
-			create size_definition_editor.make
-			shared_singleton.size_definition_cell.put (size_definition_editor)
-
-			create output_tool.make
 
 			create using_application_mode_command.make (using_application_mode)
 		end
@@ -254,22 +255,6 @@ feature {ER_UICC_MANAGER, ER_GENERATE_CODE_COMMAND} -- Implementation
 			end
 		end
 
-	type_selector: ER_TYPE_SELECTOR
-			-- Type selector tool
-
-	layout_constructor: ER_LAYOUT_CONSTRUCTOR
-			-- Layout constructor tool
-			-- FIXME: remove this and only use {ER_SHARED_SINGLETON}.layout_constructor_list ?
-
-	object_editor: ER_OBJECT_EDITOR
-			-- Object editor tool
-
-	size_definition_editor: ER_SIZE_DEFINITION_EDITOR
-			-- Size definition editor tool
-
-	output_tool: ER_OUTPUT_TOOL
-			-- Output tool
-
 	shared_singleton: ER_SHARED_TOOLS
 			-- shared singleton
 
@@ -301,7 +286,7 @@ feature -- Query
 	docking_manager: detachable SD_DOCKING_MANAGER
 			-- Docking manager
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-					Type selector tool
-					It provides various kinds of ribbon items for users to right-click pick
-						]"
+			Type selector tool
+			It provides various kinds of ribbon items for users to right-click pick
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,30 +14,24 @@ create
 
 feature {NONE} -- Initialization
 
-	make
-			-- Creation method
+	make (m: SD_DOCKING_MANAGER)
+			-- Creation method.
 		do
 			create helper
 			create constants
 			build_ui
-			build_docking_content
-		end
 
-	build_docking_content
-			-- Build docking content
-		do
-			create content.make_with_widget (widget, "ER_TYPE_SELECTOR")
+			create content.make_with_widget (widget, "ER_TYPE_SELECTOR", m)
 			content.set_long_title ("Type Selector")
 			content.set_short_title ("Type Selector")
+			m.contents.extend (content)
+			content.set_top ({SD_ENUMERATION}.left)
 		end
 
 	build_ui
 			-- Build GUI
 		local
---			l_tree_item_app: EV_TREE_ITEM
---			l_tree_item_commands: EV_TREE_ITEM
 			l_tree_item_view: EV_TREE_ITEM
---			l_command: EV_TREE_ITEM
 
 			l_ribbon: EV_TREE_ITEM
 			l_context_popup: EV_TREE_ITEM
@@ -68,7 +62,7 @@ feature {NONE} -- Initialization
 			create l_ribbon.make_with_text (constants.ribbon)
 			l_ribbon.set_pebble (constants.ribbon)
 			l_tree_item_view.extend (l_ribbon)
---Uncomment following lines when the ribbon features supported
+
 			create l_ribbon_application_menu.make_with_text (constants.ribbon_application_menu)
 			l_ribbon_application_menu.set_pebble (constants.ribbon_application_menu)
 
@@ -90,9 +84,9 @@ feature {NONE} -- Initialization
 			l_ribbon_quick_access_toolbar.set_pebble (constants.ribbon_quick_access_toolbar)
 
 			create l_ribbon_size_definitions.make_with_text (constants.ribbon_size_definitions)
---			l_ribbon_size_definitions.set_pebble (constants.ribbon_size_definitions)
+
 			create l_ribbon_tabs.make_with_text (constants.ribbon_tabs)
---			l_ribbon_tabs.set_pebble (constants.ribbon_tabs)
+
 			l_ribbon.extend (l_ribbon_application_menu)
 			l_ribbon.extend (l_ribbon_contextual_tabs)
 			l_ribbon.extend (l_ribbon_help_button)
@@ -110,7 +104,6 @@ feature {NONE} -- Initialization
 
 			create l_tab_scaling_policy.make_with_text (constants.tab_scaling_policy)
 			l_tab.extend (l_tab_scaling_policy)
---			l_tab_scaling_policy.set_pebble (constants.tab_scaling_policy)
 
 			-- Context popup
 			create l_context_popup.make_with_text (constants.context_popup)
@@ -140,32 +133,18 @@ feature {NONE} -- Initialization
 			helper.expand_all (widget)
 		end
 
-feature -- Command
-
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Attach to docking manager
-		require
-			not_void: a_docking_manager /= Void
-		do
-			a_docking_manager.contents.extend (content)
-			content.set_top ({SD_ENUMERATION}.left)
-		end
-
 feature {NONE} -- Implementation
 
 	extend_all_buttons (a_parent: EV_TREE_ITEM)
 			-- Expand all tree items
 		require
 			not_void: a_parent /= Void
---			valid: a_parent.text.is_equal ((create {ER_XML_CONSTANTS}).group)
 		local
 			l_button: EV_TREE_ITEM
 			l_toggle_button: EV_TREE_ITEM
 			l_check_box: EV_TREE_ITEM
 			l_combo_box: EV_TREE_ITEM
 			l_control_group: EV_TREE_ITEM
---			l_dropdown_button: EV_TREE_ITEM
---			l_dropdown_color_picker: EV_TREE_ITEM
 			l_dropdown_gallery: EV_TREE_ITEM
 --			l_font_control: EV_TREE_ITEM
 			l_in_ribbon_gallery: EV_TREE_ITEM
@@ -243,8 +222,9 @@ feature {NONE} -- Implementation
 
 	constants: ER_XML_CONSTANTS
 			-- Constants
+
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

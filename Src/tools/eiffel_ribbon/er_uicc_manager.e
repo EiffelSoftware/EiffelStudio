@@ -193,12 +193,12 @@ feature -- Command
 			l_singleton: ER_SHARED_TOOLS
 		do
 			create l_singleton
-			if attached l_singleton.main_window_cell.item as l_main_window then
+			if attached l_singleton.output_tool as t then
 				if a_is_tabbed then
 					a_string.replace_substring_all ({STRING_32} "%R", {STRING_32} "")
 					a_string.replace_substring_all ({STRING_32} "%N", {STRING_32} "%N%T")
 				end
-				l_main_window.output_tool.append_output (a_string)
+				t.append_output (a_string)
 			end
 		end
 
@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 			-- Name of the various tools used to generate the ribbon code.
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

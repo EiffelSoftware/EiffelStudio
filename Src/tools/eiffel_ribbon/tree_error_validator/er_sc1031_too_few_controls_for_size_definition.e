@@ -1,7 +1,5 @@
-note
-	description: "[
-		Group contains too few controls for the chosen SizeDefinition
-	]"
+﻿note
+	description: "Group contains too few controls for the chosen SizeDefinition."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -152,7 +150,7 @@ feature -- Helper
 		do
 			create Result.make (10)
 			create l_shared
-			if attached l_shared.size_definition_cell.item as l_size_def_tool then
+			if attached l_shared.size_definition as l_size_def_tool then
 				l_writer := l_size_def_tool.size_definition_writer
 				if not l_writer.is_empty then
 					l_root_size_def := l_writer.root_xml_for_saving
@@ -193,7 +191,7 @@ feature -- Helper
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

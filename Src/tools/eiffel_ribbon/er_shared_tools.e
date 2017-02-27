@@ -1,12 +1,42 @@
-note
-	description: "[
-					Shared singletons in EiffelRibbon tool
-				]"
+﻿note
+	description: "Shared singletons in EiffelRibbon tool."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	ER_SHARED_TOOLS
+
+feature -- Access
+
+	output_tool: detachable ER_OUTPUT_TOOL
+			-- Shared output tool.
+		do
+			Result := output_tool_cell.item
+		end
+
+	size_definition: detachable ER_SIZE_DEFINITION_EDITOR
+			-- Shared size definition editor.
+		do
+			Result := size_definition_cell.item
+		end
+
+feature -- Modification
+
+	put_output_tool (t: ER_OUTPUT_TOOL)
+			-- Set `output_tool` to `t`.
+		do
+			output_tool_cell.replace (t)
+		ensure
+			output_tool = t
+		end
+
+	put_size_definition (e: ER_SIZE_DEFINITION_EDITOR)
+			-- Set `size_definition` to `e`.
+		do
+			size_definition_cell.put (e)
+		ensure
+			size_definition = e
+		end
 
 feature -- Query
 
@@ -34,12 +64,6 @@ feature -- Query
 			create Result.put (void)
 		end
 
-	size_definition_cell: CELL [detachable ER_SIZE_DEFINITION_EDITOR]
-			-- Size definition editor tool singleton
-		once
-			create Result.put (void)
-		end
-
 	main_window_cell: CELL [detachable ER_MAIN_WINDOW]
 			-- Main window singleton cell
 		once ("PROCESS")
@@ -61,8 +85,22 @@ feature -- Query
 			create Result.make (20)
 		end
 
+feature {NONE} -- Storage
+
+	output_tool_cell: CELL [detachable ER_OUTPUT_TOOL]
+			-- Output tool singleton.
+		once
+			create Result.put (Void)
+		end
+
+	size_definition_cell: CELL [detachable ER_SIZE_DEFINITION_EDITOR]
+			-- Size definition editor tool singleton
+		once
+			create Result.put (void)
+		end
+
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

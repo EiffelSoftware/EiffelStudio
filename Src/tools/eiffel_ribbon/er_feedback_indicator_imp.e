@@ -1,7 +1,5 @@
-note
-	description: "[
-		ER_FEEDBACK_INDICATOR implementatin
-	]"
+﻿note
+	description: "ER_FEEDBACK_INDICATOR implementatinю"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,47 +27,37 @@ feature {NONE} -- Implementation
 	alpha_step_new: INTEGER
 			-- Alpha step value used in this class
 
-	on_timer
+	on_timer (t: attached like timer)
 			-- <Precursor>
 		do
 			if counter > 3 then
 				alpha_step_new := 255
-			elseif (counter // 2) = 0 then
-				alpha_step_new := (255 - alpha - 1)
+			elseif counter // 2 = 0 then
+				alpha_step_new := 255 - alpha - 1
 			else
 				alpha_step_new := 1 - alpha
 			end
 			counter := counter + 1
 
-			on_timer_imp
-		end
-
-	counter: INTEGER
-			-- Couter for `on_timer'
-
-	on_timer_imp
-			-- Implementaion for `on_timer'
-		local
-			l_timer: like timer
-		do
-			l_timer := timer
-			check l_timer /= Void end	-- Implied by precondition `set'
 			alpha := alpha + alpha_step_new
-			if not (alpha <= 255) then
+			if alpha > 255 then
 				alpha := 255
 			end
 			if exists then
 				update_layered_window_rgba (alpha)
 			else
-				l_timer.destroy
+				t.destroy
 			end
 			if alpha >= 255 then
-				l_timer.destroy
+				t.destroy
 			end
 		end
 
-note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	counter: INTEGER
+			-- Couter for `on_timer'.
+
+;note
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

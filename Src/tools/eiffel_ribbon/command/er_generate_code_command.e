@@ -1,7 +1,5 @@
-note
-	description: "[
-					Command to generate ribbon codes
-	]"
+﻿note
+	description: "Command to generate ribbon codes."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -30,17 +28,19 @@ feature -- Command
 		local
 			l_warning: EV_WARNING_DIALOG
 			l_code_generator: like code_generator
+			l_output_tool: ER_OUTPUT_TOOL
 		do
-			-- First clear output
-			if attached shared_singleton.main_window_cell.item as l_main_window_1 then
-				l_main_window_1.output_tool.wipe_out
+				-- First clear output.
+			l_output_tool := shared_singleton.output_tool
+			if attached l_output_tool then
+				l_output_tool.wipe_out
 			end
 
-			-- Must use local here, since `is_uicc_available' will initialize `uicc_full_path'
+				-- Must use local here, since `is_uicc_available' will initialize `uicc_full_path'.
 			l_code_generator := code_generator
 			if l_code_generator.is_uicc_available then
-				if attached shared_singleton.main_window_cell.item as l_main_window then
-					l_main_window.output_tool.show
+				if attached l_output_tool then
+					l_output_tool.show
 				end
 				l_code_generator.generate_all_codes
 			else
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			-- Main window related
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

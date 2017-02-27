@@ -44,25 +44,41 @@ feature -- Access
 			-- <Precursor>
 		local
 			p: like iteration_position
+			n: like step
+			i: like iteration_position
 		do
+			i := iteration_position
+			n := 1
 			if is_reversed then
 				from
 					p := target.keys.count
 				until
-					p = iteration_position
+					p <= i
 				loop
 					p := target.previous_iteration_position (p)
-					Result := Result + 1
+					n := n - 1
+					if n = 0 then
+						Result := Result + 1
+						n := step
+					end
 				end
 			else
 				from
 					p := -1
 				until
-					p = iteration_position
+					p >= i
 				loop
 					p := target.next_iteration_position (p)
-					Result := Result + 1
+					n := n - 1
+					if n = 0 then
+						Result := Result + 1
+						n := step
+					end
 				end
+			end
+			if 0 < n and then n < step then
+					-- `iteration_position` is `before` or `after`, so the cursor index has to be increased.
+				Result := Result + 1
 			end
 		end
 

@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "[
-					Command to create a new ribbon (a new layout constructor)
-			]"
+			Command to create a new ribbon (a new layout constructor)
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -31,12 +31,11 @@ feature -- Command
 		local
 			layout_constructor: ER_LAYOUT_CONSTRUCTOR
 		do
-			if attached main_window as l_win then
-				if attached l_win.docking_manager as l_dock then
-					create layout_constructor.make
-
-					layout_constructor.attach_to_docking_manager (l_dock)
-				end
+			if
+				attached main_window as l_win and then
+				attached l_win.docking_manager as l_dock
+			then
+				create layout_constructor.make (l_dock)
 			end
 		end
 
@@ -64,7 +63,7 @@ feature {NONE} -- Implementation
 			-- Tool's main window
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

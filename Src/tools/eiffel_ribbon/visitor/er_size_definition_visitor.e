@@ -1,7 +1,5 @@
-note
-	description: "[
-					Size definition vistor when using DLL
-			]"
+﻿note
+	description: "Size definition vistor when using DLL."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,7 +27,7 @@ feature -- Command
 		do
 			if a_ribbon_size_definitions.name.same_string (constants.ribbon_size_definitions) then
 				create l_singleton
-				l_size_definition_tool := l_singleton.size_definition_cell.item
+				l_size_definition_tool := l_singleton.size_definition
 				if l_size_definition_tool /= Void then
 					from
 						l_writer := l_size_definition_tool.size_definition_writer
@@ -66,7 +64,7 @@ feature -- Command
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -59,8 +59,6 @@ feature {NONE} -- Initialization
 		do
 			build_wdocs_manager
 			create wdocs_browser.make ("http://localhost")
-			create wdocs_control.make (wdocs_manager)
-			wdocs_control.set_associated_window (Current)
 		end
 
 	user_initialization
@@ -77,62 +75,50 @@ feature {NONE} -- Initialization
 			l_docking_data_path: PATH
 			ut: FILE_UTILITIES
 			b: BOOLEAN
+			l_sd_manager: like sd_manager
+			l_wctrl: like wdocs_control
 		do
 			set_size (800, 600)
 
-			create sd_manager.make (Current, Current)
-			if attached sd_manager as l_sd_manager then
-				l_control_content := wdocs_control.sd_content
-				wdocs_control.initialize_edit_tool
+			create l_sd_manager.make (Current, Current)
+			create l_wctrl.make (wdocs_manager, Current, l_sd_manager)
+			wdocs_control := l_wctrl
 
-				create l_browser_content.make_with_widget (wdocs_browser, "Browser")
-				l_browser_content.set_long_title ("Browser")
+			l_control_content := l_wctrl.sd_content
+			l_wctrl.initialize_edit_tool
 
-				l_sd_manager.contents.extend (l_browser_content)
-				l_sd_manager.contents.extend (l_control_content)
-				if attached wdocs_control.edit_tool as l_edit_tool then
-					l_sd_manager.contents.extend (l_edit_tool.sd_content)
-				end
+			create l_browser_content.make_with_widget (wdocs_browser, "Browser", l_sd_manager)
+			l_browser_content.set_long_title ("Browser")
 
-				l_sd_manager.close_editor_place_holder
-
-				l_docking_data_path := sd_manager_config_path
-				if not reset_layout_requested and then ut.file_path_exists (l_docking_data_path) then
-					b := l_sd_manager.open_config_with_path (l_docking_data_path)
-				end
-				if not b then
-					l_browser_content.set_top ({SD_ENUMERATION}.right)
-					l_control_content.set_relative (l_browser_content, {SD_ENUMERATION}.left)
-	--				l_browser_content.set_split_proportion (0.30)
-
-					resize_actions.extend_kamikaze (agent (ix,iy,iw,ih: INTEGER; i_content: SD_CONTENT)
-							do
-								i_content.set_split_proportion (0.20)
-							end(?,?,?,?,l_browser_content)
-						)
-				end
-				l_control_content.update_mini_tool_bar_size
-			else
-				create vb
-				extend (vb)
-				vb.set_border_width (3)
-				vb.set_padding_width (3)
-
-				create sp
-				vb.extend (sp)
-				sp.set_first (wdocs_control)
-				sp.set_second (wdocs_browser)
-				sp.resize_actions.extend_kamikaze (agent (ix,iy,iw,ih: INTEGER; isp: EV_SPLIT_AREA)
-						do
-							isp.set_split_position ((180).max (isp.minimum_split_position))
-						end(?,?,?,?,sp)
-					)
+			l_sd_manager.contents.extend (l_browser_content)
+			l_sd_manager.contents.extend (l_control_content)
+			if attached l_wctrl.edit_tool as l_edit_tool then
+				l_sd_manager.contents.extend (l_edit_tool.sd_content)
 			end
 
-			wdocs_control.wiki_page_select_actions.extend (agent open_wiki_page)
-			wdocs_control.url_requested_actions.extend (agent open_url)
+			l_sd_manager.close_editor_place_holder
 
-			wdocs_control.refresh_now
+			l_docking_data_path := sd_manager_config_path
+			if not reset_layout_requested and then ut.file_path_exists (l_docking_data_path) then
+				b := l_sd_manager.open_config_with_path (l_docking_data_path)
+			end
+			if not b then
+				l_browser_content.set_top ({SD_ENUMERATION}.right)
+				l_control_content.set_relative (l_browser_content, {SD_ENUMERATION}.left)
+--				l_browser_content.set_split_proportion (0.30)
+
+				resize_actions.extend_kamikaze (agent (ix,iy,iw,ih: INTEGER; i_content: SD_CONTENT)
+						do
+							i_content.set_split_proportion (0.20)
+						end(?,?,?,?,l_browser_content)
+					)
+			end
+			l_control_content.update_mini_tool_bar_size
+
+			l_wctrl.wiki_page_select_actions.extend (agent open_wiki_page)
+			l_wctrl.url_requested_actions.extend (agent open_url)
+
+			l_wctrl.refresh_now
 		end
 
 	is_in_default_state: BOOLEAN
@@ -179,7 +165,7 @@ feature -- Basic operation
 			l_url: READABLE_STRING_8
 		do
 			create lnk.make ("[[" + wp.title + "]]")
-			if attached wdocs_control.wdocs_manager.link_to_wiki_url (lnk, wp) as u then
+			if attached wdocs_control as wctrl and then attached wctrl.wdocs_manager.link_to_wiki_url (lnk, wp) as u then
 				l_url := u
 			elseif attached {WIKI_BOOK_PAGE} wp as l_book_page then
 				l_url := "/book/" + l_book_page.parent_key + "/" + l_book_page.key
@@ -201,7 +187,7 @@ feature -- Basic operation
 	on_web_service_ready
 		do
 			update_wdocs_manager
-			check wdocs_control.wdocs_manager.server_url ~ wdocs_manager.server_url end
+			check attached wdocs_control as wctrl and then wctrl.wdocs_manager.server_url ~ wdocs_manager.server_url end
 			wdocs_browser.set_home_url ("http://localhost:" + port_number.out)
 			wdocs_browser.open_home
 		end
@@ -239,7 +225,7 @@ feature {NONE} -- Implementation
 		end
 
 	wdocs_browser: WDOCS_BROWSER
-	wdocs_control: WDOCS_CONTROL
+	wdocs_control: detachable WDOCS_CONTROL
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"

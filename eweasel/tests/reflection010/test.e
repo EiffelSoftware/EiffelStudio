@@ -16,9 +16,9 @@ feature {ANY} -- Initialization
 			report (({CELL [TEST]}).generic_parameter_type (1).type_id, 4)
 			report (({CELL [attached TEST]}).generic_parameter_type (1).type_id, 5)
 			report (({CELL [detachable TEST]}).generic_parameter_type (1).type_id, 6)
-			report (reflector.field_type_of_type (1, ({CELL [TEST]}).type_id), 7)
-			report (reflector.field_type_of_type (1, ({CELL [attached TEST]}).type_id), 8)
-			report (reflector.field_type_of_type (1, ({CELL [detachable TEST]}).type_id), 9)
+			report (reflector.field_static_type_of_type (1, ({CELL [TEST]}).type_id), 7)
+			report (reflector.field_static_type_of_type (1, ({CELL [attached TEST]}).type_id), 8)
+			report (reflector.field_static_type_of_type (1, ({CELL [detachable TEST]}).type_id), 9)
 		end
 
 feature {NONE} -- Output

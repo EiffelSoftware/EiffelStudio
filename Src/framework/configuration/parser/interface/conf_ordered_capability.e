@@ -206,7 +206,7 @@ feature -- Modification
 					custom_root_index = old custom_root_index
 			new_root_value:
 				(not old is_root_set and then old root_index /= other.root_index) implies
-					(is_root_set and custom_root_index = other.root_index)
+					custom_root_index = other.custom_root_index
 		end
 
 feature -- Output
@@ -235,7 +235,7 @@ invariant
 	is_valid_custom_root_index: is_root_set implies is_valid_index (custom_root_index)
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

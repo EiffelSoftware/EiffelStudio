@@ -68,6 +68,20 @@ feature -- Validation
 			end
 		end
 
+feature -- Query
+
+	user_display_name (u: CMS_USER): READABLE_STRING_32
+			-- Display name for user `u`.
+		do
+			if attached u.profile_name as pn and then not pn.is_whitespace then
+				Result := pn
+			elseif not u.name.is_whitespace then
+				Result := u.name
+			else
+				Result := {STRING_32} "user #" + u.id.out
+			end
+		end
+
 feature -- Access: user
 
 	user_by_id (a_id: like {CMS_USER}.id): detachable CMS_USER

@@ -66,6 +66,7 @@ feature -- HTTP Methods
 			s_pager: STRING
 			l_count: INTEGER
 			user_api: CMS_USER_API
+			l_display_name: READABLE_STRING_32
 		do
 				-- At the moment the template are hardcoded, but we can
 				-- get them from the configuration file and load them into
@@ -81,9 +82,9 @@ feature -- HTTP Methods
 
 				create s.make_empty
 				if l_count > 1 then
-					l_response.set_title ("Listing " + l_count.out + " Users")
+					l_response.set_title ("Listing " + l_count.out + " users")
 				else
-					l_response.set_title ("Listing " + l_count.out + " User")
+					l_response.set_title ("A single user")
 				end
 
 				create s_pager.make_empty
@@ -106,7 +107,13 @@ feature -- HTTP Methods
 						s.append ("<a href=%"")
 						s.append (req.absolute_script_url ("/admin/user/"+u.id.out))
 						s.append ("%">")
-						s.append (html_encoded (u.name))
+						l_display_name := user_api.user_display_name (u)
+						s.append (html_encoded (l_display_name))
+						if not l_display_name.same_string (u.name) then
+							s.append (" [")
+							s.append (html_encoded (u.name))
+							s.append ("]")
+						end
 						s.append ("</a>")
 						if attached user_api.user_roles (u) as l_roles and then not l_roles.is_empty then
 							s.append (" <span class=%"cms_roles%">(")

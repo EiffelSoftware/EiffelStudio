@@ -150,13 +150,13 @@ feature -- Access
 						Result.force ("restore own " + l_type_name)
 
 						Result.force ("view unpublished " + l_type_name)
-
 						Result.force ("view revisions own " + l_type_name)
 
 						Result.force ("export " + l_type_name)
 					end
 				end
 				Result.force ("view trash")
+				Result.force ("view own trash")
 			end
 		end
 
@@ -195,6 +195,7 @@ feature -- Access: router
 			create l_nodes_handler.make (a_api, a_node_api)
 			create l_uri_mapping.make_trailing_slash_ignored ("/nodes", l_nodes_handler)
 			a_router.map (l_uri_mapping, a_router.methods_get)
+			a_router.handle ("/nodes/{type}", l_nodes_handler, a_router.methods_get)
 
 				-- Trash
 			create l_trash_handler.make (a_api, a_node_api)

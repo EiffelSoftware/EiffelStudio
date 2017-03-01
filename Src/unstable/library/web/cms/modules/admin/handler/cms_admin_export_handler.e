@@ -41,11 +41,15 @@ feature -- Execution
 			s: STRING
 			f: CMS_FORM
 		do
-			create {GENERIC_VIEW_CMS_RESPONSE} l_response.make (req, res, api)
-			f := exportation_web_form (l_response)
-			create s.make_empty
-			f.append_to_html (l_response.wsf_theme, s)
-			l_response.set_main_content (s)
+			if api.has_permission ("admin export") then
+				create {GENERIC_VIEW_CMS_RESPONSE} l_response.make (req, res, api)
+				f := exportation_web_form (l_response)
+				create s.make_empty
+				f.append_to_html (l_response.wsf_theme, s)
+				l_response.set_main_content (s)
+			else
+				create {FORBIDDEN_ERROR_CMS_RESPONSE} l_response.make (req, res, api)
+			end
 			l_response.execute
 		end
 
@@ -56,37 +60,41 @@ feature -- Execution
 			f: CMS_FORM
 			l_exportation: CMS_EXPORT_CONTEXT
 		do
-			create {GENERIC_VIEW_CMS_RESPONSE} l_response.make (req, res, api)
-			f := exportation_web_form (l_response)
-			f.process (l_response)
-			if
-				attached f.last_data as fd and then
-				fd.is_valid
-			then
-				if attached fd.string_item ("op") as l_op and then l_op.same_string (text_export_all_data) then
-					if attached fd.string_item ("folder") as l_folder then
-						create l_exportation.make (api.site_location.extended ("export").extended (l_folder))
+			if api.has_permission ("admin export") then
+				create {GENERIC_VIEW_CMS_RESPONSE} l_response.make (req, res, api)
+				f := exportation_web_form (l_response)
+				f.process (l_response)
+				if
+					attached f.last_data as fd and then
+					fd.is_valid
+				then
+					if attached fd.string_item ("op") as l_op and then l_op.same_string (text_export_all_data) then
+						if attached fd.string_item ("folder") as l_folder then
+							create l_exportation.make (api.site_location.extended ("export").extended (l_folder))
+						else
+							create l_exportation.make (api.site_location.extended ("export").extended ((create {DATE_TIME}.make_now_utc).formatted_out ("yyyy-[0]mm-[0]dd---hh24-[0]mi-[0]ss")))
+						end
+						api.hooks.invoke_export_to (Void, l_exportation, l_response)
+						l_response.add_notice_message ("All data exported (if allowed)!")
+						create s.make_empty
+						across
+							l_exportation.logs as ic
+						loop
+							s.append (ic.item)
+							s.append ("<br/>")
+							s.append_character ('%N')
+						end
+						l_response.add_notice_message (s)
 					else
-						create l_exportation.make (api.site_location.extended ("export").extended ((create {DATE_TIME}.make_now_utc).formatted_out ("yyyy-[0]mm-[0]dd---hh24-[0]mi-[0]ss")))
+						fd.report_error ("Invalid form data!")
 					end
-					api.hooks.invoke_export_to (Void, l_exportation, l_response)
-					l_response.add_notice_message ("All data exported (if allowed)!")
-					create s.make_empty
-					across
-						l_exportation.logs as ic
-					loop
-						s.append (ic.item)
-						s.append ("<br/>")
-						s.append_character ('%N')
-					end
-					l_response.add_notice_message (s)
-				else
-					fd.report_error ("Invalid form data!")
 				end
+				create s.make_empty
+				f.append_to_html (l_response.wsf_theme, s)
+				l_response.set_main_content (s)
+			else
+				create {FORBIDDEN_ERROR_CMS_RESPONSE} l_response.make (req, res, api)
 			end
-			create s.make_empty
-			f.append_to_html (l_response.wsf_theme, s)
-			l_response.set_main_content (s)
 			l_response.execute
 		end
 

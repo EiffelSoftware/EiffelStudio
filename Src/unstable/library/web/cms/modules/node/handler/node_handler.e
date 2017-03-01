@@ -174,18 +174,20 @@ feature -- HTTP Methods
 					l_op.value.same_string ("Delete")
 				then
 					do_delete (req, res)
-				elseif
-					attached {WSF_STRING} req.form_parameter ("op") as l_op and then
-					l_op.value.same_string ("Restore")
-				then
-					do_restore (req, res)
+				else
+					send_bad_request (req, res)
 				end
 			elseif req.percent_encoded_path_info.ends_with ("/trash") then
-				if
-					attached {WSF_STRING} req.form_parameter ("op") as l_op and then
-					l_op.value.same_string ("Trash")
-				then
-					do_trash (req, res)
+				if attached {WSF_STRING} req.form_parameter ("op") as l_op then
+					if l_op.is_case_insensitive_equal ("Trash") then
+						do_trash (req, res)
+					elseif l_op.is_case_insensitive_equal ("Restore") then
+						do_restore (req, res)
+					else
+						send_bad_request (req, res)
+					end
+				else
+					send_bad_request (req, res)
 				end
 			elseif req.percent_encoded_path_info.starts_with ("/node/add/") then
 				create edit_response.make (req, res, api, node_api)
@@ -205,6 +207,14 @@ feature -- HTTP Methods
 			to_implement ("REST API")
 			send_not_implemented ("REST API not yet implemented", req, res)
 		end
+
+	process_node_creation (req: WSF_REQUEST; res: WSF_RESPONSE; a_user: CMS_USER)
+		do
+			to_implement ("REST API")
+			send_not_implemented ("REST API not yet implemented", req, res)
+		end
+
+feature {NONE} -- Trash:Restore
 
 	do_trash (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Trash a node, soft delete.
@@ -232,14 +242,6 @@ feature -- HTTP Methods
 				send_access_denied (req, res)
 			end
 		end
-
-	process_node_creation (req: WSF_REQUEST; res: WSF_RESPONSE; a_user: CMS_USER)
-		do
-			to_implement ("REST API")
-			send_not_implemented ("REST API not yet implemented", req, res)
-		end
-
-feature {NONE} -- Trash:Restore
 
 	do_delete (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Delete a node from the database.
@@ -283,7 +285,7 @@ feature {NONE} -- Trash:Restore
 					then
 						if node_api.has_permission_for_action_on_node ("restore", l_node, l_user) then
 							node_api.restore_node (l_node)
-							res.send (create {CMS_REDIRECTION_RESPONSE_MESSAGE}.make (req.absolute_script_url ("")))
+							res.send (create {CMS_REDIRECTION_RESPONSE_MESSAGE}.make (req.absolute_script_url ("/" + node_api.node_path (l_node))))
 						else
 							send_access_denied (req, res)
 								-- send_not_authorized ?

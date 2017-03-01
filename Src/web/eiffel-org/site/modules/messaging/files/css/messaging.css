@@ -1,0 +1,4 @@
+.messaging-box fieldset {
+  overflow: scroll;
+  height: 250px;
+}

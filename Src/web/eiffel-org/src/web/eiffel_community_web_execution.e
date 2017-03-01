@@ -94,6 +94,7 @@ feature -- CMS setup
 			a_setup.register_module (create {CMS_TASK_LIST_MODULE}.make)
 
 				-- Others...
+			a_setup.register_module (create {CMS_MESSAGING_MODULE}.make)
 			debug
 				create {CMS_DEBUG_MODULE} m.make
 				m.enable

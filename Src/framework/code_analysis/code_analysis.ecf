@@ -31,6 +31,7 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</library>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="code_analysis" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/tests$</exclude>

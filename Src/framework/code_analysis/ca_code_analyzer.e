@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			add_rule (create {CA_OBJECT_CREATION_WITHIN_LOOP_RULE}.make)
 			add_rule (create {CA_OBJECT_TEST_ALWAYS_SUCCEEDS_RULE}.make)
 			add_rule (create {CA_OBJECT_TEST_FAILING_RULE}.make_with_defaults)
-			add_rule (create {CA_OBSOLETE_FEATURE_CALL_RULE}.make)
+			add_rule (create {CA_OBSOLETE_FEATURE_CALL_RULE}.make (settings.preference_manager))
 			add_rule (create {CA_REAL_NAN_COMPARISON_RULE}.make)
 			add_rule (create {CA_SELF_ASSIGNMENT_RULE}.make)
 			add_rule (create {CA_SELF_COMPARISON_RULE}.make)

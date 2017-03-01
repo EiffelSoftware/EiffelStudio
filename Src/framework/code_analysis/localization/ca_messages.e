@@ -523,11 +523,24 @@ feature -- Rule Violations
 	explicit_redundant_inheritance_violation_3: STRING_32
 			do Result := locale.translation ("', with no renaming, redefining or change of export status. This is redundant, and the duplicate links should be removed.") end
 
+	obsolete_feature_call_title: STRING_32
+		do
+			Result := locale.translation_in_context ("Call to obsolete feature {1}: {2}", "code_analyzer.violation")
+		end
+
 	obsolete_feature_call_violation: STRING_32
 		do
-			Result := locale.translation_in_context ("[
-				Obsolete feature {1} of class {2} is called from class {3}: "{4}"
-			]", "code_analyzer.violation")
+			Result := locale.translation_in_context ("Obsolete feature {1} of class {2} is called from {3} of class {4}:{5}", "code_analyzer.violation")
+		end
+
+	obsolete_feature_invalid_date: STRING_32
+		do
+			Result := locale.translation_in_context ("Obsolete message date is absent or unreadable. It should appear in the end of the message in brackets, e.g., [2017-05-31]. Default value is used.", once "code_analyzer.violation")
+		end
+
+	obsolete_feature_call_expires_in (n: INTEGER): STRING_32
+		do
+			Result := locale.plural_translation_in_context ("The obsolete feature call has to be removed in a day.", "The obsolete feature call has to be removed in {1} days.",  once "code_analyzer.violation", n)
 		end
 
 	error: STRING_32

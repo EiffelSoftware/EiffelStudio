@@ -283,8 +283,6 @@ feature -- Status report
 
 	is_item_visible (a_item: EV_GRID_ROW): BOOLEAN
 			-- Is `a_item' visible?
-		local
-			l_text: STRING_32
 		do
 			Result := True
 			if attached {CA_EXCEPTION_EVENT} a_item.data as l_exception then
@@ -299,16 +297,7 @@ feature -- Status report
 				elseif is_hint_event (l_viol) and not show_hints then
 					Result := False
 				else
-					l_text := text_filter.text.as_lower
-					if
-						not l_text.is_empty and then
-						not l_viol.title.as_lower.has_substring (l_text) and then
-						not l_viol.rule_id.as_lower.has_substring (l_text) and then
-						not l_viol.affected_class.name.as_lower.has_substring (l_text) and then
-						not l_viol.violation_description.as_lower.has_substring (l_text)
-					then
-						Result := False
-					end
+					Result := l_viol.has_text (text_filter.text)
 				end
 			end
 		end
@@ -571,13 +560,14 @@ feature {NONE} -- Basic operations
 
 					-- Info
 				create l_message_gen.make
-				l_message_gen.add (l_viol.title)
+				l_viol.add_title (l_message_gen)
 				l_editor_item := create_clickable_grid_item (l_message_gen.last_line, True)
 				l_editor_item.pointer_button_release_actions.extend (agent show_fixes_context_menu (l_viol.data.fixes, a_row, ?, ?, ?, ?, ?, ?, ?, ?))
 				a_row.set_height (l_editor_item.required_height_for_text_and_component)
 				a_row.set_item (description_column, l_editor_item)
 
 				create l_label.make_with_text (l_viol.rule_id)
+				l_label.set_tooltip (l_viol.rule_title)
 				a_row.set_item (rule_id_column, l_label)
 
 				create l_label.make_with_text (l_viol.severity_score.out)

@@ -12,19 +12,38 @@ inherit
 		redefine out end
 
 create
-	make_with_rule
+	make_with_rule,
+	make_formatted
 
 feature {NONE} -- Initialization
 
-	make_with_rule (a_rule: attached CA_RULE)
-			-- Initializes a violation of rule `a_rule'.
+	make_with_rule (r: CA_RULE)
+			-- Initializes a violation of rule `r`.
 		do
-			rule := a_rule
+			rule := r
 				-- This is just the default. The rule may set the affected class otherwise
 				-- if needed.
-			affected_class := a_rule.current_context.checking_class
+			affected_class := r.current_context.checking_class
 			create long_description_info.make
 			create fixes.make
+				-- Use a plain rule title by default.
+			title_generator := agent (t: TEXT_FORMATTER) do t.add (rule.title) end
+				-- Just delegate to the rule by default. The rule knows about its violations.
+			description_generator := agent rule.format_violation_description (Current, ?)
+		ensure
+			rule_set: rule = r
+		end
+
+	make_formatted (title, description: PROCEDURE [TEXT_FORMATTER]; r: CA_RULE)
+			-- Associate a rule violation with rule `r` and violation description `description`.
+		do
+			make_with_rule (r)
+			title_generator := title
+			description_generator := description
+		ensure
+			title_generator_set: title_generator = title
+			description_generator_set: description_generator = description
+			rule_set: rule = r
 		end
 
 feature -- Access
@@ -45,12 +64,11 @@ feature -- Access
 			-- Objects associated with this violation (often used for
 			-- specific information (e. g. affected variable name, etc.).
 
-	format_violation_description (a_formatter: TEXT_FORMATTER)
-			-- Formats a description of `Current'.
-		do
-				-- Just delegate to rule. The rule knows about its violations.
-			rule.format_violation_description (Current, a_formatter)
-		end
+	title_generator: PROCEDURE [TEXT_FORMATTER]
+			-- A generator of a title.
+
+	description_generator: PROCEDURE [TEXT_FORMATTER]
+			-- A generator of a description.
 
 	affected_class: detachable CLASS_C
 			-- Affected class.
@@ -61,6 +79,20 @@ feature -- Access
 	fixes: LINKED_LIST [CA_FIX]
 			-- Fix "strategies". Empty if there is no fix available for this rule
 			-- violation.
+
+feature -- Output
+
+	add_title (t: TEXT_FORMATTER)
+			-- Add a formatted title of the violation to `t`.
+		do
+			title_generator (t)
+		end
+
+	format_violation_description (a_formatter: TEXT_FORMATTER)
+			-- Formats a description of `Current'.
+		do
+			description_generator (a_formatter)
+		end
 
 feature -- Comparison
 

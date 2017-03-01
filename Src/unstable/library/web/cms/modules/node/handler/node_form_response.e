@@ -227,22 +227,23 @@ feature -- Form
 		do
 			l_preview := attached {WSF_STRING} fd.item ("op") as l_op and then l_op.same_string ("Preview")
 			if l_preview then
-				b.append ("<strong>Preview</strong><div class=%"preview%">")
+				b.append ("<div class=%"preview-container%"><strong>Preview</strong><div class=%"preview%">")
 				if attached fd.string_item ("format") as s_format and then attached api.format (s_format) as f_format then
 					l_format := f_format
 				end
 				if attached fd.string_item ("title") as l_title then
 					b.append ("<strong>Title:</strong><div class=%"title%">" + html_encoded (l_title) + "</div>")
 				end
-				if attached fd.string_item ("body") as l_body then
-					b.append ("<strong>Body:</strong><div class=%"body%">")
+				if attached fd.string_item ("content") as l_content then
+					b.append ("<strong>Content:</strong><div class=%"content%">")
 					if l_format /= Void then
-						b.append (l_format.formatted_output (l_body))
+						b.append (l_format.formatted_output (l_content))
 					else
-						b.append (html_encoded (l_body))
+						b.append (html_encoded (l_content))
 					end
 					b.append ("</div>")
 				end
+				b.append ("</div>")
 				b.append ("</div>")
 			end
 		end

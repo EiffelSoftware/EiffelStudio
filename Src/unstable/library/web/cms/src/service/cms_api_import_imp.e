@@ -218,6 +218,7 @@ feature -- Import
 	json_to_user (j: JSON_OBJECT): detachable CMS_USER
 		local
 			l_roles: ARRAYED_LIST [CMS_USER_ROLE]
+			s: STRING_32
 		do
 			if attached json_string_item (j, "name") as l_name and then not l_name.is_whitespace then
 				create Result.make (l_name)
@@ -227,6 +228,20 @@ feature -- Import
 				end
 				if attached json_string_8_item (j, "profile_name") as l_profile_name then
 					Result.set_profile_name (l_profile_name)
+				else
+					create s.make_empty
+					if attached json_string_8_item (j, "profile_firstname") as l_profile_firstname then
+						s.append (l_profile_firstname)
+					end
+					if attached json_string_8_item (j, "profile_lastname") as l_profile_lastname then
+						if not s.is_empty then
+							s.append_character (' ')
+						end
+						s.append (l_profile_lastname)
+					end
+					if not s.is_empty then
+						Result.set_profile_name (s)
+					end
 				end
 
 				if attached {JSON_ARRAY} j.item ("roles") as j_roles then

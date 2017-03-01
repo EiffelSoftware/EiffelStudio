@@ -196,6 +196,11 @@ feature -- Change element
 			email_set: email = a_email
 		end
 
+	set_creation_date (dt: like creation_date)
+		do
+			creation_date := dt
+		end
+
 	set_last_login_date (dt: like last_login_date)
 		do
 			last_login_date := dt

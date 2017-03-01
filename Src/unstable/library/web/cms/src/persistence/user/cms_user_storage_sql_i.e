@@ -899,6 +899,9 @@ feature {NONE} -- Implementation: User
 				if attached sql_read_integer_32 (6) as l_status then
 					Result.set_status (l_status)
 				end
+				if attached sql_read_date_time (7) as l_creation_date then
+					Result.set_creation_date (l_creation_date)
+				end
 				if attached sql_read_date_time (8) as l_signed_date then
 					Result.set_last_login_date (l_signed_date)
 				end

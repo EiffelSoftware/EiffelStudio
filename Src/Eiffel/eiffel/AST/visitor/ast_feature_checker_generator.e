@@ -1985,7 +1985,7 @@ feature {NONE} -- Implementation
 								l_vuex.set_location (l_feature_name)
 								error_handler.insert_error (l_vuex)
 							end
-							check_obsolescence (l_feature, l_last_class)
+							check_obsolescence (l_feature, l_last_class, a_name)
 							if
 								not System.do_not_check_vape and then is_checking_precondition and then
 								not l_is_in_creation_expression and then
@@ -4356,7 +4356,7 @@ feature {NONE} -- Visitor
 								end
 								if not is_inherited then
 									set_routine_ids (l_feature.rout_id_set, l_as)
-									check_obsolescence (l_feature, context.current_class)
+									check_obsolescence (l_feature, context.current_class, l_as.feature_name.start_location)
 								end
 							end
 						end
@@ -4751,7 +4751,7 @@ feature {NONE} -- Visitor
 						if not is_inherited then
 							l_as.set_class_id (l_last_class.class_id)
 							set_routine_ids (l_prefix_feature.rout_id_set, l_as)
-							check_obsolescence (l_prefix_feature, l_last_class)
+							check_obsolescence (l_prefix_feature, l_last_class, l_as.start_location)
 						end
 
 							-- Validate the feature used as prefix operator.
@@ -5158,7 +5158,7 @@ feature {NONE} -- Visitor
 									-- Set type informations
 								set_routine_ids (last_alias_feature.rout_id_set, l_as)
 								l_as.set_class_id (l_left_id)
-								check_obsolescence (last_alias_feature, l_class)
+								check_obsolescence (last_alias_feature, l_class, l_as.right.start_location)
 								if context.current_class.is_catcall_detection_enabled then
 									create l_arg_types.make (1)
 									l_arg_types.extend (l_right_type)
@@ -11864,7 +11864,7 @@ feature {NONE} -- Type recording
 
 feature {NONE} -- Checks for obsolete features
 
-	check_obsolescence (f: FEATURE_I; c: CLASS_C)
+	check_obsolescence (f: FEATURE_I; c: CLASS_C; l: LOCATION_AS)
 			-- Check that feature `f` from type `t` is obsolete and report a warning if so.
 		local
 			obsolete_warning: OBS_FEAT_WARN
@@ -11887,6 +11887,9 @@ feature {NONE} -- Checks for obsolete features
 				end
 				obsolete_warning.set_obsolete_class (c)
 				obsolete_warning.set_obsolete_feature (f)
+				if attached l then
+					obsolete_warning.set_location (l)
+				end
 				error_handler.insert_warning (obsolete_warning)
 			end
 		end

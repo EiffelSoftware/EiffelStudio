@@ -79,8 +79,8 @@ feature -- Access
 			Result := data.location
 		end
 
-	title: STRING_32
-			-- Title of the rule violation.
+	rule_title: STRING_32
+			-- Title of the rule.
 		do
 			Result := data.rule.title
 		ensure
@@ -121,6 +121,14 @@ feature -- Access
 	frozen priority: INTEGER_8
 			-- <Precursor>
 
+feature -- Output
+
+	add_title (t: TEXT_FORMATTER)
+			-- Add a formatted title of the violation to `t`.
+		do
+			data.add_title (t)
+		end
+
 feature -- Status report
 
 	is_invalidated: BOOLEAN
@@ -130,6 +138,23 @@ feature -- Status report
 			-- <Precursor>
 		do
 			Result := data /= Void
+		end
+
+	has_text (s: READABLE_STRING_32): BOOLEAN
+			-- Does this violation have a text `s`?
+		local
+			t: READABLE_STRING_32
+		do
+			if s.is_empty then
+				Result := True
+			else
+				t := s.as_lower
+				Result :=
+					data.rule.title.as_lower.has_substring (t) or else
+					rule_id.as_lower.has_substring (t) or else
+					affected_class.name.as_lower.has_substring (t) or else
+					violation_description.as_lower.has_substring (t)
+			end
 		end
 
 feature -- Element change

@@ -5,12 +5,25 @@ ul.cms-users {
 }
 ul.cms-users li {
   border-top: dotted 1px #ccc;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
 }
 ul.cms-users li:first-child {
   border-top: none;
 }
-ul.cms-users li.cms_user a::before {
+ul.cms-users li span {
+  flex-grow: 1;
+  flex-basis: 20px;
+  padding-left: 2px;
+  text-align: left;
+}
+ul.cms-users li span.identifier a::before {
   content: "[user] ";
+}
+ul.cms-users li span.roles {
+  color: #090;
+  font-weight: bold;
 }
 
 ul.cms-roles {

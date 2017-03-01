@@ -124,6 +124,7 @@ feature -- Security
 			Result.force ("admin users")
 			Result.force ("admin roles")
 			Result.force ("admin modules")
+			Result.force ("admin cache")
 			Result.force ("admin core caches")
 			Result.force ("clear blocks cache")
 			Result.force ("admin export")
@@ -159,13 +160,16 @@ feature -- Hooks
 
 					-- Per module cache permission!
 				create lnk.make ("Cache", "admin/cache")
+				lnk.set_permission_arguments (<<"admin cache">>)
 				admin_lnk.extend (lnk)
 
 					-- Per module export permission!
 				create lnk.make ("Export", "admin/export")
+				lnk.set_permission_arguments (<<"admin export">>)
 				admin_lnk.extend (lnk)
 					-- Per module import permission!
 				create lnk.make ("Import", "admin/import")
+				lnk.set_permission_arguments (<<"admin import">>)
 				admin_lnk.extend (lnk)
 			end
 		end

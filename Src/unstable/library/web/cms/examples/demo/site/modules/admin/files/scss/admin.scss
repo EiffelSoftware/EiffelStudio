@@ -12,7 +12,7 @@ ul.cms-users {
 	}
 
 	li.cms_user a::before {
-		content: "[users] ";
+		content: "[user] ";
 	}
 }
 
@@ -31,7 +31,7 @@ ul.cms-roles {
 	}
 
 	li.cms_role a::before {
-		content: "[roles] ";
+		content: "[role] ";
 	}
 }
 

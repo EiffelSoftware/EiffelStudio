@@ -92,7 +92,15 @@ feature -- Status reports
 		do
 			Result := status = {CMS_NODE_API}.published
 		ensure
-			Result implies not is_trashed
+			Result implies not is_trashed and not is_not_published
+		end
+
+	is_not_published: BOOLEAN
+			-- Is Current not published?
+		do
+			Result := status = {CMS_NODE_API}.not_published
+		ensure
+			Result implies not is_published
 		end
 
 	is_trashed: BOOLEAN

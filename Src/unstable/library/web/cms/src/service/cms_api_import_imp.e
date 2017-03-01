@@ -160,7 +160,7 @@ feature -- Import
 
 	import_json_user (j_user: JSON_OBJECT; a_import_ctx: CMS_IMPORT_CONTEXT)
 		local
-			l_user_by_name, l_user_by_email: detachable CMS_USER
+			l_user_by_name, l_user_by_email, l_user: detachable CMS_USER
 		do
 			if attached json_to_user (j_user) as u then
 				l_user_by_name := user_api.user_by_name (u.name)
@@ -170,6 +170,28 @@ feature -- Import
 				if l_user_by_name /= Void or l_user_by_email /= Void then
 					a_import_ctx.log ("Skip user %"" + u.name + "%": already exists!")
 						-- Already exists!
+					if l_user_by_email /= Void then
+						l_user := l_user_by_email
+						if
+							l_user_by_name /= Void and then
+							l_user_by_name.same_as (l_user)
+						then
+								-- Two different accounts exists!
+							a_import_ctx.log ("Two different accounts already exists for username %"" + u.name + "%" !")
+						end
+					else
+						l_user := l_user_by_name
+					end
+						-- Check if new information are now available.
+					if
+						l_user /= Void and then
+						l_user.profile_name = Void and then
+					 	attached u.profile_name as l_new_prof_name and then
+					 	not l_new_prof_name.is_whitespace
+					then
+						l_user.set_profile_name (l_new_prof_name)
+						user_api.update_user (l_user)
+					end
 				else
 					user_api.new_user (u)
 					a_import_ctx.log ("New user %"" + u.name + "%" -> " + u.id.out + " .")

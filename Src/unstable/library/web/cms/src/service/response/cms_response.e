@@ -24,44 +24,16 @@ feature {NONE} -- Initialization
 			response := res
 			create header.make
 			create values.make (3)
+			site_url := a_api.site_url
+			base_url := a_api.base_url
 			initialize
 		end
 
 	initialize
 		do
-			initialize_site_url
 			get_theme
 			create menu_system.make
 			initialize_block_region_settings
-		end
-
-	initialize_site_url
-				-- Initialize site and base url.
-		local
-			l_url: detachable STRING_8
-			i,j: INTEGER
-		do
-				--| WARNING: do not use `absolute_url' and `url', since it relies on site_url and base_url.
-			if attached setup.site_url as l_site_url and then not l_site_url.is_empty then
-				create l_url.make_from_string (l_site_url)
-			else
-				l_url := request.absolute_script_url ("/")
-			end
-			check is_not_empty: not l_url.is_empty end
-			if l_url [l_url.count] /= '/' then
-				l_url.append_character ('/')
-			end
-			site_url := l_url
-			i := l_url.substring_index ("://", 1)
-			if i > 0 then
-				j := l_url.index_of ('/', i + 3)
-				if j > 0 then
-					base_url := l_url.substring (j, l_url.count)
-				end
-			end
-		ensure
-			site_url_set: site_url /= Void
-			site_url_ends_with_slash: site_url.ends_with_general ("/")
 		end
 
 feature -- Access
@@ -236,13 +208,7 @@ feature -- Permission
 	user_has_permissions (a_user: detachable CMS_USER; a_permission_list: ITERABLE [READABLE_STRING_GENERAL]): BOOLEAN
 			-- Does `a_user' has any of the permissions `a_permission_list' ?
 		do
-			across
-				a_permission_list as ic
-			until
-				Result
-			loop
-				Result := user_has_permission (a_user, ic.item)
-			end
+			Result := api.user_has_permissions (a_user, a_permission_list)
 		end
 
 feature -- Head customization
@@ -1088,6 +1054,17 @@ feature -- Cache managment
 			end
 		end
 
+feature -- Response builtin variables
+
+	builtin_variables: STRING_TABLE [detachable ANY]
+			-- builtin variables value indexed by name.
+		do
+			Result := api.builtin_variables
+			Result ["site_url"] := site_url
+			Result ["host"] := site_url -- FIXME: check and remove if unused.
+			Result ["is_https"] := request.is_https
+		end
+
 feature -- Generation
 
 	prepare (page: CMS_HTML_PAGE)
@@ -1233,14 +1210,17 @@ feature -- Generation
 				end
 			end
 
+				-- Fill with CMS builtin variables.
+			across
+				builtin_variables as ic
+			loop
+				page.register_variable (ic.item, ic.key)
+			end
+
 				-- Variables
 			page.register_variable (absolute_url ("", Void), "site_url")
 			page.register_variable (absolute_url ("", Void), "host") -- Same as `site_url'.
 			page.register_variable (request.is_https, "is_https")
-			if attached user as l_user then
-				page.register_variable (l_user.name, "user")
-				page.register_variable (user_profile_name (l_user), "user_profile_name")
-			end
 			if attached title as l_title then
 				page.register_variable (l_title, "site_title")
 			else
@@ -1358,15 +1338,9 @@ feature -- Helpers: cms link
 
 feature -- Helpers: html links
 
-	user_profile_name (u: CMS_USER): READABLE_STRING_32
+	user_profile_name, user_display_name (u: CMS_USER): READABLE_STRING_32
 		do
-			if attached u.profile_name as pn and then not pn.is_whitespace then
-				Result := pn
-			elseif not u.name.is_whitespace then
-				Result := u.name
-			else
-				Result := {STRING_32} "user #" + u.id.out
-			end
+			Result := api.user_api.user_display_name (u)
 		end
 
 	user_html_link (u: CMS_USER): STRING

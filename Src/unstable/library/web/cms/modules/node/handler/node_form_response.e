@@ -159,7 +159,6 @@ feature {NONE} -- Create a new node
 			end
 		end
 
-
 	delete_node (a_node: CMS_NODE; a_type: CMS_NODE_TYPE [CMS_NODE]; b: STRING_8)
 		local
 			f: like new_edit_form
@@ -187,7 +186,7 @@ feature {NONE} -- Create a new node
 					f.append_to_html (wsf_theme, b)
 				end
 			else
-				--
+				b.append ("ERROR: node is not in the trash!")
 			end
 		end
 
@@ -254,7 +253,7 @@ feature -- Form
 			l_node: detachable CMS_NODE
 			s: STRING
 			l_node_path: READABLE_STRING_8
-			l_path_alias, l_existing_path_alias: detachable READABLE_STRING_8
+			l_path_alias, l_existing_path_alias, l_auto_path_alias: detachable READABLE_STRING_8
 		do
 			fixme ("Refactor code per operacion: Preview, Save")
 			l_preview := attached {WSF_STRING} fd.item ("op") as l_op and then l_op.same_string ("Preview")
@@ -302,10 +301,13 @@ feature -- Form
 					add_success_message ("Node #" + l_node.id.out + " saved.")
 				end
 
+					-- Path aliase
+				l_node_path := node_api.node_path (l_node)
+				l_existing_path_alias := api.location_alias (l_node_path)
+
+				l_auto_path_alias := node_api.path_alias_uri_suggestion (l_node, a_type)
 				if attached fd.string_item ("path_alias") as f_path_alias then
-					l_node_path := node_api.node_path (l_node)
 					l_path_alias := percent_encoder.partial_encoded_string (f_path_alias, <<'/'>>)
-					l_existing_path_alias := api.location_alias (l_node_path)
 					if
 						l_existing_path_alias /= Void and then
 						l_path_alias.same_string (l_existing_path_alias)
@@ -315,7 +317,10 @@ feature -- Form
 					elseif l_existing_path_alias /= Void and then l_path_alias.is_whitespace then
 							-- Reset to builtin alias.
 						if api.has_permission ("edit path_alias") then
-							api.set_path_alias (l_node_path, l_node_path, True)
+							api.set_path_alias (l_node_path, l_auto_path_alias, True)
+						elseif l_existing_path_alias.same_string (l_node_path) then
+								-- not aliased! Use default.
+							api.set_path_alias (l_node_path, l_auto_path_alias, True)
 						else
 							add_error_message ("Permission denied to reset path alias on node #" + l_node.id.out + "!")
 						end
@@ -330,6 +335,12 @@ feature -- Form
 							l_node.set_link (node_api.node_link (l_node))
 						end
 					end
+				elseif l_existing_path_alias /= Void then
+					l_node.set_link (create {CMS_LOCAL_LINK}.make (l_node.title, l_existing_path_alias))
+				elseif l_auto_path_alias /= Void then
+						-- Use auto path alias
+					api.set_path_alias (l_node_path, l_auto_path_alias, True)
+					l_node.set_link (create {CMS_LOCAL_LINK}.make (l_node.title, l_auto_path_alias))
 				else
 					l_node.set_link (node_api.node_link (l_node))
 				end
@@ -381,7 +392,7 @@ feature -- Form
 			create f.make (a_url, a_name)
 
 			f.extend_html_text ("<br/>")
-			f.extend_html_text ("<legend>Are you sure you want to delete?</legend>")
+			f.extend_html_text ("<legend>Are you sure you want to delete? (impossible to undo)</legend>")
 
 				-- TODO check if we need to check for has_permissions!!
 			if
@@ -400,46 +411,42 @@ feature -- Form
 				ts.set_formmethod ("GET")
 				f.extend (ts)
 			end
-			f.extend_html_text ("<br/>")
-			f.extend_html_text ("<legend>Do you want to restore the current node?</legend>")
-			if
-				a_node /= Void and then
-				a_node.id > 0
-			then
-				create ts.make ("op")
-				ts.set_default_value ("Restore")
-				ts.set_formaction ("/node/"+a_node.id.out+"/delete")
-				ts.set_formmethod ("POST")
-				fixme ("[
-					ts.set_default_value (translation ("Restore"))
-					]")
-				f.extend (ts)
-			end
 			Result := f
 		end
 
-
-	new_trash_form (a_node: detachable CMS_NODE; a_url: READABLE_STRING_8; a_name: STRING; a_node_type: CMS_NODE_TYPE [CMS_NODE]): CMS_FORM
-			-- Create a web form named `a_name' for node `a_node' (if set), using form action url `a_url', and for type of node `a_node_type'.
+	new_trash_form (a_node: CMS_NODE; a_url: READABLE_STRING_8; a_name: STRING; a_node_type: CMS_NODE_TYPE [CMS_NODE]): CMS_FORM
+			-- Create a web form named `a_name' for node `a_node', using form action url `a_url', and for type of node `a_node_type'.
 		local
 			f: CMS_FORM
 			ts: WSF_FORM_SUBMIT_INPUT
 		do
 			create f.make (a_url, a_name)
+			f.set_method_post
 
 			f.extend_html_text ("<br/>")
-			f.extend_html_text ("<legend>Are you sure you want to trash the current node?</legend>")
-			if
-				a_node /= Void and then
-				a_node.id > 0
-			then
+			if a_node.is_trashed then
+				f.extend_html_text ("<legend>Are you sure you want to restore the current node?</legend>")
 				create ts.make ("op")
-				ts.set_default_value ("Trash")
+				ts.set_default_value ("Restore")
+				ts.set_formaction ("/node/" + a_node.id.out + "/trash")
+				ts.set_formmethod ("POST")
 				fixme ("[
 					ts.set_default_value (translation ("Trash"))
 					]")
-				f.extend (ts)
+			else
+				f.extend_html_text ("<legend>Are you sure you want to trash the current node?</legend>")
+				create ts.make ("op")
+				ts.set_default_value ("Trash")
+				ts.set_formaction ("/node/" + a_node.id.out + "/trash")
+				ts.set_formmethod ("POST")
+
+				fixme ("[
+					ts.set_default_value (translation ("Trash"))
+					]")
+
 			end
+
+			f.extend (ts)
 			Result := f
 		end
 

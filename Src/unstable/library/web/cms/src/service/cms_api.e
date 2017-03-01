@@ -44,6 +44,9 @@ feature {NONE} -- Initialize
 			l_enabled_modules: CMS_MODULE_COLLECTION
 			l_uninstalled_mods: detachable ARRAYED_LIST [CMS_MODULE]
 		do
+				-- Initialize site_url
+			initialize_site_url
+
 				-- Initialize formats.
 			initialize_formats
 				-- Initialize contents.
@@ -99,6 +102,35 @@ feature {NONE} -- Initialize
 			end
 				-- Initialize hooks system
 			setup_hooks
+		end
+
+	initialize_site_url
+				-- Initialize site and base url.
+		local
+			l_url: detachable STRING_8
+			i,j: INTEGER
+		do
+				--| WARNING: do not use `absolute_url' and `url', since it relies on site_url and base_url.
+			if attached setup.site_url as l_site_url and then not l_site_url.is_empty then
+				create l_url.make_from_string (l_site_url)
+			else
+				l_url := request.absolute_script_url ("/")
+			end
+			check is_not_empty: not l_url.is_empty end
+			if l_url [l_url.count] /= '/' then
+				l_url.append_character ('/')
+			end
+			site_url := l_url
+			i := l_url.substring_index ("://", 1)
+			if i > 0 then
+				j := l_url.index_of ('/', i + 3)
+				if j > 0 then
+					base_url := l_url.substring (j, l_url.count)
+				end
+			end
+		ensure
+			site_url_set: site_url /= Void
+			site_url_ends_with_slash: site_url.ends_with_general ("/")
 		end
 
 	initialize_content_types
@@ -198,6 +230,16 @@ feature -- Access
 
 	storage: CMS_STORAGE
 			-- Default persistence storage.	
+
+feature -- Access: url			
+
+	site_url: IMMUTABLE_STRING_8
+			-- Site url
+
+	base_url: detachable IMMUTABLE_STRING_8
+			-- Base url if any.
+			--| Usually it is Void, but it could be
+			--|  /project/demo/
 
 feature -- Settings
 
@@ -400,6 +442,8 @@ feature -- Emails
 			setup.mailer.safe_process_email (e)
 			if setup.mailer.has_error then
 				error_handler.add_custom_error (0, "Mailer error", "Error occurred while processing email.")
+			else
+				e.set_is_sent (True)
 			end
 		end
 
@@ -442,7 +486,13 @@ feature -- Permissions system
 			-- Anonymous or user `user' has permission for `a_permission'?
 			--| `a_permission' could be for instance "create page".
 		do
-			Result := user_api.user_has_permission (user, a_permission)
+			Result := user_has_permission (user, a_permission)
+		end
+
+	has_permissions (a_permission_list: ITERABLE [READABLE_STRING_GENERAL]): BOOLEAN
+			-- Anonymous or user `user' has any of the permissions `a_permission_list`?
+		do
+			Result := user_has_permissions (user, a_permission_list)
 		end
 
 	user_has_permission (a_user: detachable CMS_USER; a_permission: detachable READABLE_STRING_GENERAL): BOOLEAN
@@ -450,6 +500,18 @@ feature -- Permissions system
 			--| `a_permission' could be for instance "create page".
 		do
 			Result := user_api.user_has_permission (a_user, a_permission)
+		end
+
+	user_has_permissions (a_user: detachable CMS_USER; a_permission_list: ITERABLE [READABLE_STRING_GENERAL]): BOOLEAN
+			-- Does `a_user' has any of the permissions `a_permission_list' ?
+		do
+			across
+				a_permission_list as ic
+			until
+				Result
+			loop
+				Result := user_has_permission (a_user, ic.item)
+			end
 		end
 
 feature -- Query: module
@@ -903,6 +965,24 @@ feature -- Access: active user
 		do
 			a_user.set_last_login_date_now
 			user_api.update_user (a_user)
+		end
+
+feature -- Site builtin variables
+
+	builtin_variables: STRING_TABLE [detachable ANY]
+			-- Builtin variables , value indexed by name.
+		do
+			create Result.make (7)
+
+			Result["site_url"] := site_url
+			Result["site_email"] := setup.site_email
+			Result["site_name"] := setup.site_name
+			if attached user as l_user then
+				Result["active_user"] := l_user
+				Result["user"] := l_user.name
+				Result["user_id"] := l_user.id
+				Result["user_profile_name"] := user_api.user_display_name (l_user)
+			end
 		end
 
 feature -- Request utilities		

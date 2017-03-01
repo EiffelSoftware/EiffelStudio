@@ -107,10 +107,14 @@ feature -- Forms ...
 	populate_form_with_path_alias (response: NODE_RESPONSE; f: CMS_FORM; a_node: detachable CMS_NODE)
 		local
 			ti: WSF_FORM_TEXT_INPUT
+			thi: WSF_FORM_HIDDEN_INPUT
 			l_uri: detachable READABLE_STRING_8
 			l_iri: detachable READABLE_STRING_32
+			l_auto_path_alias: READABLE_STRING_8
 		do
 				-- Path alias		
+			l_auto_path_alias := node_api.path_alias_uri_suggestion (a_node, content_type)
+
 			create ti.make ("path_alias")
 			ti.set_label ("Path")
 			ti.set_pattern ("^([A-Za-z0-9-_+ ]).+")
@@ -119,13 +123,19 @@ feature -- Forms ...
 			if a_node /= Void and then a_node.has_id then
 				if attached a_node.link as lnk then
 					l_uri := lnk.location
+					if l_uri.same_string (node_api.node_path (a_node)) then
+						l_uri := ""
+					end
 				else
 					l_iri := percent_encoder.percent_decoded_string (response.api.location_alias (response.node_api.node_path (a_node)))
 					l_uri := l_iri.to_string_8
 				end
-				ti.set_text_value (l_uri)
-				ti.set_description ("Optionally specify an alternative URL path by which this content can be accessed. For example, type 'about' when writing an about page. Use a relative path or the URL alias won't work.")
+				ti.set_description ("Optionally specify an alternative URL path by which this content can be accessed.<br/>%NFor example, type 'about' when writing an about page. Use a relative path or the URL alias won't work.")
+			else
+				l_uri := ""
 			end
+			ti.set_text_value (l_uri)
+			ti.set_placeholder (l_auto_path_alias)
 			ti.set_validation_action (agent (fd: WSF_FORM_DATA; ia_response: NODE_RESPONSE; ia_node: detachable CMS_NODE)
 					do
 						if
@@ -163,6 +173,11 @@ feature -- Forms ...
 			else
 				f.extend (ti)
 			end
+				-- Auto path alias / suggestion
+			create thi.make ("auto_path_alias")
+			thi.set_text_value (l_auto_path_alias)
+			thi.set_is_readonly (True)
+			f.insert_after (thi, ti)
 		end
 
 	update_node	(response: NODE_RESPONSE; fd: WSF_FORM_DATA; a_node: CMS_NODE)
@@ -291,8 +306,11 @@ feature -- Output
 				a_response.add_to_primary_tabs (lnk)
 
 				if a_node.status = {CMS_NODE_API}.trashed then
-					create lnk.make ("Delete", l_node_api.node_path (a_node) + "/delete")
+					create lnk.make ("Restore", l_node_api.node_path (a_node) + "/trash")
 					lnk.set_weight (2)
+					a_response.add_to_primary_tabs (lnk)
+					create lnk.make ("Delete", l_node_api.node_path (a_node) + "/delete")
+					lnk.set_weight (3)
 					a_response.add_to_primary_tabs (lnk)
 				elseif a_node.has_id then
 						-- Node in {{CMS_NODE_API}.published} or {CMS_NODE_API}.not_published} status.
@@ -320,7 +338,17 @@ feature -- Output
 			if is_teaser then
 				a_output.append (" cms-teaser")
 			end
-			a_output.append ("cms-node node-" + a_node.content_type + "%">")
+			a_output.append ("cms-node node-" + a_node.content_type)
+			if a_node.is_published then
+				a_output.append (" cms-status-published")
+			elseif a_node.is_trashed then
+				a_output.append (" cms-status-trashed")
+			elseif a_node.is_not_published then
+				a_output.append (" cms-status-unpublished")
+			else
+				a_output.append (" cms-status-" + a_node.status.out)
+			end
+			a_output.append ("%">")
 
 			a_output.append ("<div class=%"info%"> ")
 			if attached a_node.author as l_author then
@@ -430,6 +458,4 @@ feature -- Output
 			end
 			a_output.append ("</li>")
 		end
-
 end
-

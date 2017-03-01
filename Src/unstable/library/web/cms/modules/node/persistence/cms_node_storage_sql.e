@@ -13,6 +13,7 @@ inherit
 
 	CMS_NODE_STORAGE_I
 		redefine
+			nodes_of_type_count,
 			nodes_of_type,
 			nodes_of_type_with_title
 		end
@@ -32,6 +33,22 @@ feature -- Access
 			error_handler.reset
 			write_information_log (generator + ".nodes_count")
 			sql_query (sql_select_nodes_count, Void)
+			if not has_error and not sql_after then
+				Result := sql_read_natural_64 (1)
+			end
+			sql_finalize
+		end
+
+	nodes_of_type_count (a_node_type: CMS_CONTENT_TYPE): NATURAL_64
+			-- Count of nodes of type `a_node_type`.
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			error_handler.reset
+
+			create l_parameters.make (1)
+			l_parameters.force (a_node_type.name, "node_type")
+			sql_query (sql_select_nodes_of_type_count, l_parameters)
 			if not has_error and not sql_after then
 				Result := sql_read_natural_64 (1)
 			end
@@ -133,6 +150,31 @@ feature -- Access
 				l_parameters.put (a_count, "size")
 				l_parameters.put (a_lower, "offset")
 				sql_query (sql_select_recent_nodes, l_parameters)
+				sql_start
+			until
+				sql_after
+			loop
+				if attached fetch_node as l_node then
+					Result.force (l_node)
+				end
+				sql_forth
+			end
+			sql_finalize
+		end
+
+	recent_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
+			-- Recent `a_count` nodes of type `a_node_type` with an offset of `lower`.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+			error_handler.reset
+			from
+				create l_parameters.make (3)
+				l_parameters.put (a_node_type.name, "node_type")
+				l_parameters.put (a_count, "size")
+				l_parameters.put (a_lower, "offset")
+				sql_query (sql_select_recent_nodes_of_type, l_parameters)
 				sql_start
 			until
 				sql_after
@@ -270,7 +312,7 @@ feature -- Access
 				sql_after
 			loop
 				if attached fetch_node as l_node then
-					check expected_node_type: l_node.content_type.same_string (a_node_type.name) end
+					check expected_node_type: l_node.is_typed_as (a_node_type.name) end
 					Result.force (l_node)
 				end
 				sql_forth
@@ -474,6 +516,10 @@ feature {NONE} -- Queries
 			-- Nodes count (Published and not Published)
 			--| note: {CMS_NODE_API}.trashed = -1
 
+	sql_select_nodes_of_type_count: STRING = "SELECT count(*) FROM nodes WHERE type=:node_type AND status != -1 ;"
+			-- Nodes of type `:node_type` count (Published and not Published)
+			--| note: {CMS_NODE_API}.trashed = -1
+
 	sql_select_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE status != -1 ;"
 			-- SQL Query to retrieve all nodes.
 			--| note: {CMS_NODE_API}.trashed = -1
@@ -502,6 +548,8 @@ feature {NONE} -- Queries
 	sql_select_node_by_id_and_revision: STRING = "SELECT nodes.nid, node_revisions.revision, nodes.type, node_revisions.title, node_revisions.summary, node_revisions.content, node_revisions.format, node_revisions.author, nodes.publish, nodes.created, node_revisions.changed, node_revisions.status FROM nodes INNER JOIN node_revisions ON nodes.nid = node_revisions.nid WHERE nodes.nid = :nid AND node_revisions.revision = :revision ORDER BY node_revisions.revision DESC;"
 
 	sql_select_recent_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes ORDER BY changed DESC, publish DESC LIMIT :size OFFSET :offset ;"
+
+	sql_select_recent_nodes_of_type: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE type=:node_type ORDER BY changed DESC, publish DESC LIMIT :size OFFSET :offset ;"
 
 	sql_select_recent_node_changes_before: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE changed <= :date ORDER BY changed DESC, nid DESC LIMIT :size OFFSET :offset ;"
 

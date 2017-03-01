@@ -10,7 +10,7 @@ ul.cms-users li:first-child {
   border-top: none;
 }
 ul.cms-users li.cms_user a::before {
-  content: "[users] ";
+  content: "[user] ";
 }
 
 ul.cms-roles {
@@ -25,7 +25,7 @@ ul.cms-roles li:first-child {
   border-top: none;
 }
 ul.cms-roles li.cms_role a::before {
-  content: "[roles] ";
+  content: "[role] ";
 }
 
 ul.cms-permissions {

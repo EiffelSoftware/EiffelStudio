@@ -100,6 +100,13 @@ feature -- Access
 		deferred
 		end
 
+	recent_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
+			-- Recent `a_count` nodes of type `a_node_type` with an offset of `lower`.
+		deferred
+		ensure
+			across Result as ic all ic.item.is_typed_as (a_node_type.name) end
+		end
+
 	recent_node_changes_before (a_lower: INTEGER; a_count: INTEGER; a_date: DATE_TIME): LIST [CMS_NODE]
 			-- List of recent changes, before `a_date', according to `params' settings.
 		deferred
@@ -120,6 +127,12 @@ feature -- Access
 		deferred
 		end
 
+	nodes_of_type_count (a_node_type: CMS_CONTENT_TYPE): NATURAL_64
+			-- Count of nodes of type `a_node_type`.
+		do
+			Result := nodes_of_type (a_node_type).count.to_natural_64
+		end
+
 	nodes_of_type (a_node_type: CMS_CONTENT_TYPE): LIST [CMS_NODE]
 			-- List of nodes of type `a_node_type'.
 			--| Redefine to optimize!
@@ -137,7 +150,7 @@ feature -- Access
 				end
 			end
 		ensure
-			expected_type: across Result as ic all ic.item.content_type.same_string (a_node_type.name) end
+			expected_type: across Result as ic all ic.item.is_typed_as (a_node_type.name) end
 		end
 
 	nodes_of_type_with_title (a_node_type: CMS_CONTENT_TYPE; a_title: READABLE_STRING_GENERAL): LIST [CMS_NODE]

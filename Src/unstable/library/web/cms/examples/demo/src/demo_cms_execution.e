@@ -84,6 +84,7 @@ feature -- CMS modules
 			a_setup.register_module (create {FEED_AGGREGATOR_MODULE}.make)
 
 				-- Miscellanious
+			a_setup.register_module (create {CMS_MESSAGING_MODULE}.make)
 			a_setup.register_module (create {GOOGLE_CUSTOM_SEARCH_MODULE}.make)
 			a_setup.register_module (create {CMS_CUSTOM_BLOCK_MODULE}.make)
 			a_setup.register_module (create {CMS_DEBUG_MODULE}.make)

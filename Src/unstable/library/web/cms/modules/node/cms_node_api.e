@@ -153,6 +153,11 @@ feature -- Access: Node
 			Result := node_storage.nodes_count
 		end
 
+	nodes_of_type_count (a_content_type: CMS_CONTENT_TYPE): NATURAL_64
+		do
+			Result := node_storage.nodes_of_type_count (a_content_type)
+		end
+
 	nodes: LIST [CMS_NODE]
 			-- List of nodes.
 		do
@@ -177,6 +182,12 @@ feature -- Access: Node
 			-- List of most recent nodes according to `params.offset' and `params.size'.
 		do
 			Result := node_storage.recent_nodes (params.offset.to_integer_32, params.size.to_integer_32)
+		end
+
+	recent_nodes_of_type (a_content_type: CMS_CONTENT_TYPE; params: CMS_DATA_QUERY_PARAMETERS): ITERABLE [CMS_NODE]
+			-- Most recent `a_content_type` nodes according to `params.offset' and `params.size'.
+		do
+			Result := node_storage.recent_nodes_of_type (a_content_type, params.offset.to_integer_32, params.size.to_integer_32)
 		end
 
 	recent_node_changes_before (params: CMS_DATA_QUERY_PARAMETERS; a_date: DATE_TIME): ITERABLE [CMS_NODE]
@@ -354,6 +365,85 @@ feature -- Change: Node
 			reset_error
 			node_storage.restore_node (a_node)
 			error_handler.append (node_storage.error_handler)
+		end
+
+feature -- path_alias suggestion
+
+	path_alias_uri_suggestion (a_node: detachable CMS_NODE; a_content_type: CMS_CONTENT_TYPE): STRING
+		local
+			dt: DATE_TIME
+			uri: URI
+		do
+			create uri.make_from_string ("/")
+			uri.add_unencoded_path_segment (a_content_type.name)
+			if a_node /= Void then
+				dt := a_node.creation_date
+			else
+				create dt.make_now_utc
+			end
+			if attached cms_api.user as u and then not cms_api.user_api.is_admin_user (u) then
+				uri.add_unencoded_path_segment (cms_api.user_api.user_display_name (u))
+			end
+			uri.add_unencoded_path_segment (dt.year.out)
+			if dt.month <= 9 then
+				uri.add_unencoded_path_segment ("0" + dt.month.out)
+			else
+				uri.add_unencoded_path_segment (dt.month.out)
+			end
+			if a_node /= Void and then attached a_node.title as l_title then
+				uri.add_unencoded_path_segment (safe_path_alias_uri_segment_text (l_title))
+			else
+				uri.add_unencoded_path_segment ("")
+			end
+
+			Result := uri.string
+		end
+
+	safe_path_alias_uri_segment_text (s: READABLE_STRING_GENERAL): STRING_32
+		local
+			i,n: INTEGER
+			c, prev: CHARACTER_32
+			l_words: ITERABLE [READABLE_STRING_GENERAL]
+			w: STRING_32
+		do
+			l_words := << "a", "an", "as", "at", "before", "but", "by", "for", "from", "is", "in", "into", "like", "of", "off", "on", "onto", "per", "since", "than", "the", "this", "that", "to", "up", "via", "with" >>
+			from
+				i := 1
+				n :=  s.count
+				create Result.make (n)
+				create w.make_empty
+			until
+				i > n
+			loop
+				c := s[i].as_lower
+				if c.is_alpha_numeric then
+					w.append_character (c)
+					prev := c
+				else
+					if w.is_empty then
+							-- Ignore
+					else
+						if across l_words as ic some w.same_string_general (ic.item) end then
+								-- Ignore
+							w.wipe_out
+						else
+							if not Result.is_empty then
+								Result.append_character ('-')
+							end
+							Result.append (w)
+							w.wipe_out
+						end
+					end
+				end
+				i := i + 1
+			end
+			if not w.is_empty then
+				if not Result.is_empty then
+					Result.append_character ('-')
+				end
+				Result.append (w)
+				w.wipe_out
+			end
 		end
 
 feature -- Node status

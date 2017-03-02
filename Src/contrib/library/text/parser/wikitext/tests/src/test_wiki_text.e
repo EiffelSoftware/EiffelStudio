@@ -4,7 +4,7 @@
 inherit
 	EQA_TEST_SET
 
-	WIKI_TEMPLATE_RESOLVER
+	TEST_WIKI_TEXT_I
 		undefine
 			default_create
 		end
@@ -289,13 +289,13 @@ end.
 			t.structure.process (new_xhtml_generator (o))
 			assert ("o", same_output (o, l_expected_output))
 		end
-			
+
 	test_paragraph_with_cr
 		local
 			t: WIKI_CONTENT_TEXT
 			o: STRING
 			l_expected_output: STRING
-		do	
+		do
 			create t.make_from_string ("This is a first line.%R%NThen the second line.%R%N%R%NNext paragraph, line 1.%R%Nline 2.%R%Nend.%R%N")
 			l_expected_output := "<p>This is a first line.%RThen the second line.%R</p>%N<p>Next paragraph, line 1.%Rline 2.%Rend.%R</p>%N"
 
@@ -429,6 +429,89 @@ text=bar
 		end
 
 	test_table
+		local
+			t: WIKI_CONTENT_TEXT
+			e,o: STRING
+		do
+			create t.make_from_string ("[
+{| class="my-table"
+|+ class="my-caption"|a table
+|-
+!style="text-align:left;"|Name
+!Quantity
+!Note
+|-
+|First
+|10
+|a comment
+|-
+|Second
+|4
+|another comment
+|-
+|Third
+|1
+|a last comment
+|- class="total"
+!Total
+|15
+|
+|}
+			]")
+
+			e := "{
+<p><table class="my-table"><caption class="my-caption">a table</caption>
+<tr><th style="text-align:left;">Name</th><th>Quantity</th><th>Note</th></tr>
+<tr><td>First</td><td>10</td><td>a comment</td></tr>
+<tr><td>Second</td><td>4</td><td>another comment</td></tr>
+<tr><td>Third</td><td>1</td><td>a last comment</td></tr>
+<tr class="total"><th>Total</th><td>15</td><td></td></tr>
+</table></p>
+
+}"
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", not o.is_empty)
+			assert ("expected", o.same_string (e))
+		end
+
+	test_table_inlined
+		local
+			t: WIKI_CONTENT_TEXT
+			e,o: STRING
+		do
+			create t.make_from_string ("[
+{|
+!Name!!Quantity!!Note
+|-
+|First||10||a comment
+|-
+|Second||4||another comment
+|-
+|Third||1||a last comment
+|-
+!Total||15!!...
+|}
+			]")
+
+			e := "{
+<p><table><tr><th>Name</th><th>Quantity</th><th>Note</th></tr>
+<tr><td>First</td><td>10</td><td>a comment</td></tr>
+<tr><td>Second</td><td>4</td><td>another comment</td></tr>
+<tr><td>Third</td><td>1</td><td>a last comment</td></tr>
+<tr><th>Total</th><td>15</td><th>...</th></tr>
+</table></p>
+
+}"
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", not o.is_empty)
+			assert ("expected", o.same_string (e))
+		end
+
+	test_table_with_wiki_content
 		local
 			t: WIKI_CONTENT_TEXT
 			o: STRING
@@ -1008,42 +1091,6 @@ e := "{
 			assert ("as e", o.same_string (e))
 		end
 
-	test_list_definition_2
-		local
-			t: WIKI_CONTENT_TEXT
-			o: STRING
-			e: STRING
-			gen: like new_xhtml_generator
-		do
-			-- FIXME: does not support yet:
-			--	; Term
-			--	: description line 1
-			--	: description line 2
-
-			create t.make_from_string ("[
-'''Definitions'''
-; Term
-: description line 1
-: description line 2
-			]")
-
-e := "{
-<p><strong>Definitions</strong></p>
-<dl><dt> Term</dt>
-<dd> description line 1</dd>
-<dd> description line 2</dd>
-</dl>
-
-}"
-
-			create o.make_empty
-
-			gen := new_xhtml_generator (o)
-			t.structure.process (gen)
-			assert ("o", not o.is_empty)
-			assert ("as e", o.same_string (e)) -- FIXME: failure! see https://en.wikipedia.org/wiki/Help:List
-		end
-
 	test_list_mixed
 		local
 			t: WIKI_CONTENT_TEXT
@@ -1096,44 +1143,6 @@ e := "{
 			assert ("o", not o.is_empty)
 			assert ("as e", o.same_string (e))
 		end
-
-	test_list_mixed_def
-			-- See https://en.wikipedia.org/wiki/Help:List
-		local
-			t: WIKI_CONTENT_TEXT
-			o: STRING
-			e: STRING
-			gen: like new_xhtml_generator
-		do
-			create t.make_from_string ("[
-'''Mixed list and def'''
-* Def
-*; Term: description 1
-*; Term2: description 2
-* end
-			]")
-
-e := "{
-<p><strong>Mixed list and def</strong></p>
-<ul><li> Def</li>
-<dl><dt> Term</dt>
-<dd> description 1</dd>
-<dt> Term</dt>
-<dd> description 1</dd>
-</dl>
-<li> end</li>
-</ul>
-
-}"
-
-			create o.make_empty
-
-			gen := new_xhtml_generator (o)
-			t.structure.process (gen)
-			assert ("o", not o.is_empty)
-			assert ("as e", o.same_string (e)) -- FAILURE !!! see https://en.wikipedia.org/wiki/Help:List
-		end
-
 
 	test_tag_div
 		local
@@ -1320,6 +1329,30 @@ e := "{
 			assert ("as e", o.same_string (e))
 		end
 
+	test_link
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+See [http://www.eiffel.org/ The Eiffel web site]
+			]")
+
+e := "{
+<p>See <a href="http://www.eiffel.org/" class="wiki_ext_link">The Eiffel web site</a></p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
 	test_unicode
 		local
 			txt,e32: STRING_32
@@ -1350,52 +1383,5 @@ e := utf.utf_32_string_to_utf_8_string_8 (e32)
 			txt := utf.utf_8_string_8_to_string_32 (o)
 			assert ("as e32", txt.same_string (e32))
 		end
-
-feature {NONE} -- Implementation
-
-	same_output (s1, s2: READABLE_STRING_8): BOOLEAN
-		local
-			t1, t2: STRING
-			lst1, lst2: LIST [READABLE_STRING_8]
-		do
-			lst1 := s1.split ('%N')
-			lst2 := s2.split ('%N')
-			if lst1.count = lst2.count then
-				Result := True
-				from
-					lst1.start
-					lst2.start
-				until
-					not Result or lst1.after or lst2.after
-				loop
-					t1 := lst1.item
-					t2 := lst2.item
-					t1.right_adjust
-					t2.right_adjust
-					Result := t1.same_string (t2)
-					lst1.forth
-					lst2.forth
-				end
-			end
-		end
-
-	new_xhtml_generator (o: STRING): WIKI_XHTML_GENERATOR
-		do
-			create Result.make (o)
-			Result.set_template_resolver (Current)
-		end
-
-feature -- Resolver
-
-	content (a_template: WIKI_TEMPLATE; a_page: detachable WIKI_PAGE): detachable STRING
-			-- Template content for `a_template' in the context of `a_page' if any.
-		do
-			if a_template.name.is_case_insensitive_equal_general ("rule") then
-				Result := "Template#" + a_template.name + "%Nname={{{name}}} %Ntext={{{text}}}%N"
-			else
-				Result := "Template#" + a_template.name + "%N1={{{1}}} %N2={{{2}}} %N3={{{3}}}%N"
-			end
-		end
-
 
 end

@@ -940,15 +940,19 @@ feature -- Table
 
 	visit_table (a_table: WIKI_TABLE)
 		do
-			if attached a_table.style as st then
+			if attached a_table.style as st and then not st.is_whitespace then
 				output ("<table " + st + ">")
 			else
 				output ("<table>")
 			end
-			if attached a_table.caption as l_caption then
-				output ("<caption>")
+			if attached a_table.caption as l_caption and then not l_caption.is_whitespace then
+				if attached a_table.caption_style as st and then not st.is_whitespace then
+					output ("<caption " + st + ">")
+				else
+					output ("<caption>")
+				end
 				l_caption.process (Current)
-				output ("</caption>")
+				output ("</caption>%N")
 			end
 
 			visit_composite (a_table)
@@ -958,9 +962,13 @@ feature -- Table
 
 	visit_table_row (a_row: WIKI_TABLE_ROW)
 		do
-			output ("<tr>")
+			if attached a_row.style as st and then not st.is_whitespace then
+				output ("<tr " + st + ">")
+			else
+				output ("<tr>")
+			end
 			visit_composite (a_row)
-			output ("</tr>")
+			output ("</tr>%N")
 		end
 
 	visit_table_header_cell (a_cell: WIKI_TABLE_HEADER_CELL)
@@ -970,8 +978,10 @@ feature -- Table
 				across
 					lst as ic
 				loop
-					output (" ")
-					output (ic.item)
+					if not ic.item.is_whitespace then
+						output (" ")
+						output (ic.item)
+					end
 				end
 				output (">")
 			else
@@ -988,8 +998,10 @@ feature -- Table
 				across
 					lst as ic
 				loop
-					output (" ")
-					output (ic.item)
+					if not ic.item.is_whitespace then
+						output (" ")
+						output (ic.item)
+					end
 				end
 				output (">")
 			else
@@ -1161,7 +1173,7 @@ feature -- Implementation
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2017, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

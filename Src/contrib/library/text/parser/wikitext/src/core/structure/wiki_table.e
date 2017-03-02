@@ -53,6 +53,9 @@ feature -- Access
 	caption: detachable WIKI_STRING
 			-- |+
 
+	caption_style: detachable STRING
+			-- Optional caption style (relevant if `caption` is set).
+
 	style: detachable STRING
 			-- Table style  {| style |-
 
@@ -68,11 +71,11 @@ feature -- Change
 
 	set_text (t: STRING)
 		local
-			i,n,p: INTEGER
+			i,n,p,q: INTEGER
 			r: detachable WIKI_TABLE_ROW
 			cl: detachable WIKI_TABLE_CELL
-			s: STRING
-			l_is_header_cell: BOOLEAN
+			s,tmp: STRING
+			l_was_header_cell, l_is_header_cell: BOOLEAN
 			l_was_sep: BOOLEAN
 			l_style,l_caption: detachable STRING
 			l_modifier: detachable STRING
@@ -150,22 +153,36 @@ feature -- Change
 					i := i + 1
 					s.extend (t[i])
 				elseif safe_character (t, i) = '|' and safe_character (t, i + 1) = '+' then
-					p := t.index_of ('|', i + 1)
+						-- There should not be any row for now!
+					check r = Void end
+					p := t.index_of ('%N', i + 1)
 					if p > 0 then
+						q := t.index_of ('|', i + 1)
+						if q > i + 1 and q < p  then
+							tmp := t.substring (i + 2, q - 1)
+							tmp.left_adjust
+							tmp.right_adjust
+							caption_style := tmp
+						else
+							q := i + 1
+						end
 						if l_caption = Void then
-							l_caption := t.substring (i + 2, p - 1)
+							l_caption := t.substring (q + 1, p - 1)
 							l_caption.left_adjust
 						else
-							l_caption.append (t.substring (i + 2, p - 1))
+							l_caption.append (t.substring (q + 1, p - 1))
 						end
 						l_caption.right_adjust
 						create caption.make (l_caption)
 						i := p - 1
 					else
+						-- syntax error!
 						s.extend (t[i])
 					end
 				elseif safe_character (t, i) = '|' or safe_character (t, i) = '!' then
 					if l_style = Void then
+						s.left_adjust
+						s.right_adjust
 						l_style := s
 						create style.make_from_string (s)
 						create s.make_empty
@@ -175,6 +192,9 @@ feature -- Change
 						check safe_character (t, i) = '|' end
 						if r /= Void then
 								-- Previous row handling
+							if s.item (s.count) = '%N' then
+								s.remove_tail (1)
+							end
 							if l_is_header_cell then
 								create {WIKI_TABLE_HEADER_CELL} cl.make (s)
 							else
@@ -184,26 +204,39 @@ feature -- Change
 						else
 							check s.is_whitespace end
 						end
+
 							-- New row
 						create s.make_empty
 						create r.make
+						p := t.index_of ('%N', i + 1)
+						if p > 0 then
+							tmp := t.substring (i + 2, p - 1)
+							tmp.left_adjust
+							tmp.right_adjust
+							r.set_style (tmp)
+							i := p - 1
+						end
 						add_element (r)
 						l_is_header_cell := False
 						l_was_sep := True
 						i := i + 1
 					else
+						l_was_header_cell := l_is_header_cell
 						l_is_header_cell := safe_character (t, i) = '!'
 						if
 							safe_character (t, i - 1) = '%N'
 							or safe_character (t, i - 1) = '|'
+							or (l_is_header_cell and safe_character (t, i - 1) = '!')
 						then
 							l_is_sep := True
 						elseif
 							safe_character (t, i + 1) = '|'
+							or (l_is_header_cell and safe_character (t, i + 1) = '!')
 						then
 							l_is_sep := True
 							i := i + 1
 						else
+							l_is_header_cell := l_was_header_cell
 							l_is_sep := False
 						end
 						if l_is_sep then
@@ -214,7 +247,10 @@ feature -- Change
 								add_element (r)
 							elseif not s.is_empty then
 								if not l_was_sep then
-									if l_is_header_cell then
+									if s.item (s.count) = '%N' then
+										s.remove_tail (1)
+									end
+									if l_was_header_cell then
 										create {WIKI_TABLE_HEADER_CELL} cl.make (s)
 									else
 										create cl.make (s)
@@ -248,7 +284,15 @@ feature -- Change
 					create r.make
 					add_element (r)
 				end
-				create cl.make (s)
+				if s.item (s.count) = '%N' then
+					s.remove_tail (1)
+				end
+				if l_is_header_cell then
+					create {WIKI_TABLE_HEADER_CELL} cl.make (s)
+				else
+					create cl.make (s)
+				end
+
 				r.add_element (cl)
 				create s.make_empty
 			end
@@ -262,7 +306,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2017, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

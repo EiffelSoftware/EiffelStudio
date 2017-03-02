@@ -108,7 +108,9 @@ __NOTOC__
 end
 }")
 			l_expected_output := "{
-<div class="wikipage"><p>begin</p>
+<div class="wikipage"><p>begin
+
+</p>
 
 <a name="One"></a><h1>One</h1>
 
@@ -137,7 +139,8 @@ end
 <a name="with_spaces_in_text"></a><h2>with spaces in text</h2>
 
 <a name="summer:%C3%A9t%C3%A9"></a><h2>summer:été</h2>
-<p>end</p>
+<p>end
+</p>
 </div>
 
 }"
@@ -176,6 +179,7 @@ end
 }")
 			l_expected_output := "{
 <div class="wikipage"><p>begin
+
 <ol class="wiki-toc"><a name="toc"></a><span class="title">Contents</span>
 	<li><a href="#One">One</a></li>
 	<ol>
@@ -195,6 +199,7 @@ end
 		<li><a href="#three.3">three.3</a></li>
 	</ol>
 </ol>
+
 </p>
 
 <a name="One"></a><h1>One</h1>
@@ -218,7 +223,8 @@ end
 <a name="three.2"></a><h2>three.2</h2>
 
 <a name="three.3"></a><h2>three.3</h2>
-<p>end</p>
+<p>end
+</p>
 </div>
 
 }"
@@ -254,7 +260,9 @@ end
 			l_expected_output := "[
 
 <a name="test"></a><h1>test</h1>
-<p><div>toto</div>end</p>
+<p><div>toto</div>
+end
+</p>
 
 ]"
 
@@ -279,8 +287,13 @@ line 2.
 end.
 ]")
 			l_expected_output := "[
-<p>This is a first line.Then the second line.</p>
-<p>Next paragraph, line 1.line 2.end.</p>
+<p>This is a first line.
+Then the second line.
+</p>
+<p>Next paragraph, line 1.
+line 2.
+end.
+</p>
 
 ]"
 
@@ -297,7 +310,7 @@ end.
 			l_expected_output: STRING
 		do
 			create t.make_from_string ("This is a first line.%R%NThen the second line.%R%N%R%NNext paragraph, line 1.%R%Nline 2.%R%Nend.%R%N")
-			l_expected_output := "<p>This is a first line.%RThen the second line.%R</p>%N<p>Next paragraph, line 1.%Rline 2.%Rend.%R</p>%N"
+			l_expected_output := "<p>This is a first line.%R%NThen the second line.%R%N</p>%N<p>Next paragraph, line 1.%R%Nline 2.%R%Nend.%R%N</p>%N"
 
 			create o.make_empty
 
@@ -323,8 +336,13 @@ end.
 			l_expected_output := "[
 			
 <a name="Test"></a><h2>Test</h2>
-<p>This is a first line.Then the second line.</p>
-<p>Next paragraph, line 1.line 2.end.</p>
+<p>This is a first line.
+Then the second line.
+</p>
+<p>Next paragraph, line 1.
+line 2.
+end.
+</p>
 
 ]"
 
@@ -354,6 +372,7 @@ end.
 1= <a href="Breakpoint commands" class="wiki_link wiki_notfound">Breakpoint commands</a>, <a href="Breakpoint information command" class="wiki_link wiki_notfound">Breakpoint information command</a>  
 2={{{2}}} 
 3={{{3}}}
+
 </p>
 
 <a name="end"></a><h2>end</h2>
@@ -386,6 +405,7 @@ end.
 1= <a href="Breakpoint commands" class="wiki_link wiki_notfound">Breakpoint commands</a>  
 2= <a href="Breakpoint information command" class="wiki_link wiki_notfound">Breakpoint information command</a>  
 3={{{3}}}
+
 </p>
 
 <a name="end"></a><h2>end</h2>
@@ -416,6 +436,7 @@ end.
 <p>Template#Rule
 name=foo
 text=bar
+
 </p>
 
 <a name="end"></a><h2>end</h2>
@@ -466,7 +487,8 @@ text=bar
 <tr><td>Second</td><td>4</td><td>another comment</td></tr>
 <tr><td>Third</td><td>1</td><td>a last comment</td></tr>
 <tr class="total"><th>Total</th><td>15</td><td></td></tr>
-</table></p>
+</table>
+</p>
 
 }"
 			create o.make_empty
@@ -501,7 +523,8 @@ text=bar
 <tr><td>Second</td><td>4</td><td>another comment</td></tr>
 <tr><td>Third</td><td>1</td><td>a last comment</td></tr>
 <tr><th>Total</th><td>15</td><th>...</th></tr>
-</table></p>
+</table>
+</p>
 
 }"
 			create o.make_empty
@@ -548,10 +571,12 @@ end
 }")
 
 e := "{
-<p>begin</p>
+<p>begin
+</p>
 <pre>   abc
    def
-   ghi </pre><p>end</p>
+   ghi </pre><p>end
+</p>
 
 }"
 
@@ -580,6 +605,7 @@ e := "{
 <p><code lang="eiffel">class FOO [BAR]
 feature
 end</code><br/>
+
 </p>
 
 }"
@@ -599,7 +625,7 @@ end</code><br/>
 			e: STRING
 		do
 			create t.make_from_string ("[
-The creation procedure 
+The creation procedure
 <code>
     make (s, e: G)
 </code>
@@ -607,8 +633,11 @@ takes ...
 			]")
 
 e := "{
-<p>The creation procedure <code>    make (s, e: G)</code><br/>
-takes ...</p>
+<p>The creation procedure
+<code>    make (s, e: G)</code><br/>
+
+takes ...
+</p>
 
 }"
 
@@ -633,6 +662,7 @@ takes ...</p>
 
 			e := "{
 <p><code>&lt;foo&gt;bar&lt;/foo&gt;</code><br/>
+
 </p>
 
 }"
@@ -666,6 +696,7 @@ feature
 		do
 		end
 end</code><br/>
+
 </p>
 
 }"
@@ -690,7 +721,7 @@ begin/
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin/this is a ''test'' with link as [[Foobar|FooBar link]]/end</p>%N"))
+			assert ("o", o.same_string ("<p>begin/%Nthis is a ''test'' with link as [[Foobar|FooBar link]]%N/end%N</p>%N"))
 
 			create t.make_from_string ("[
 begin/
@@ -705,7 +736,7 @@ this is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin/%Nthis is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]%Nthis is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]%Nthis is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]%N/end</p>%N"))
+			assert ("o", o.same_string ("<p>begin/%N%Nthis is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]%Nthis is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]%Nthis is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]%N%N/end%N</p>%N"))
 
 			create t.make_from_string ("[
 begin/
@@ -716,7 +747,7 @@ begin/
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin/this is an inline &lt;code&gt;foo.bar + test&lt;/code&gt;/end</p>%N"))
+			assert ("o", o.same_string ("<p>begin/%Nthis is an inline &lt;code&gt;foo.bar + test&lt;/code&gt;%N/end%N</p>%N"))
 
 			create t.make_from_string ("[
 begin/
@@ -733,7 +764,7 @@ begin/
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin/this is a block%N&lt;code&gt;%N	class FOO%N	feature%N	end%N&lt;/code&gt;%N/end</p>%N"))
+			assert ("o", o.same_string ("<p>begin/%Nthis is a block%N&lt;code&gt;%N	class FOO%N	feature%N	end%N&lt;/code&gt;%N%N/end%N</p>%N"))
 
 			create t.make_from_string ("[
 begin/
@@ -750,7 +781,7 @@ begin/
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin/this is a block%N```%N	class FOO%N	feature%N	end%N```%N/end</p>%N"))
+			assert ("o", o.same_string ("<p>begin/%Nthis is a block%N```%N	class FOO%N	feature%N	end%N```%N%N/end%N</p>%N"))
 
 		end
 
@@ -772,7 +803,7 @@ end
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin<code lang=%"text%">class FOO%Nfeature%Nend</code><br/>%Nend</p>%N"))
+			assert ("o", o.same_string ("<p>begin%N<code lang=%"text%">class FOO%Nfeature%Nend</code><br/>%N%Nend%N</p>%N"))
 
 
 
@@ -789,7 +820,7 @@ end
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin<code lang=%"eiffel%">class FOO%Nfeature%Nend</code><br/>%Nend</p>%N"))
+			assert ("o", o.same_string ("<p>begin%N<code lang=%"eiffel%">class FOO%Nfeature%Nend</code><br/>%N%Nend%N</p>%N"))
 
 			create t.make_from_string ("[
 begin
@@ -804,7 +835,7 @@ end
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin<code lang=%"eiffel%">class FOO &lt;foo&gt;&lt;/bar&gt;%Nfeature%Nend</code><br/>%Nend</p>%N"))
+			assert ("o", o.same_string ("<p>begin%N<code lang=%"eiffel%">class FOO &lt;foo&gt;&lt;/bar&gt;%Nfeature%Nend</code><br/>%N%Nend%N</p>%N"))
 
 			create t.make_from_string ("[
 begin
@@ -819,7 +850,7 @@ end
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin<code lang=%"xml%">&lt;code lang=%"eiffel%"&gt;%N%Tclass FOOBAR%N&lt;/code&gt;</code><br/>%Nend</p>%N"))
+			assert ("o", o.same_string ("<p>begin%N<code lang=%"xml%">&lt;code lang=%"eiffel%"&gt;%N%Tclass FOOBAR%N&lt;/code&gt;</code><br/>%N%Nend%N</p>%N"))
 
 		end
 
@@ -835,7 +866,7 @@ begin `FOO.bar` end
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin <code class=%"inline%">FOO.bar</code> end</p>%N"))
+			assert ("o", o.same_string ("<p>begin <code class=%"inline%">FOO.bar</code> end%N</p>%N"))
 
 			create t.make_from_string ("[
 begin `FOO.bar and not ending backtick end
@@ -844,7 +875,7 @@ begin `FOO.bar and not ending backtick end
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin `FOO.bar and not ending backtick end</p>%N"))
+			assert ("o", o.same_string ("<p>begin `FOO.bar and not ending backtick end%N</p>%N"))
 
 			create t.make_from_string ("[
 begin `foo <bar> qwe` end
@@ -853,7 +884,7 @@ begin `foo <bar> qwe` end
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin <code class=%"inline%">foo &lt;bar&gt; qwe</code> end</p>%N"))
+			assert ("o", o.same_string ("<p>begin <code class=%"inline%">foo &lt;bar&gt; qwe</code> end%N</p>%N"))
 
 			create t.make_from_string ("[
 begin `foo <bar>`
@@ -862,7 +893,7 @@ begin `foo <bar>`
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin <code class=%"inline%">foo &lt;bar&gt;</code></p>%N"))
+			assert ("o", o.same_string ("<p>begin <code class=%"inline%">foo &lt;bar&gt;</code>%N</p>%N"))
 		end
 
 	test_code_single_backtik_with_lt_char
@@ -882,8 +913,12 @@ end
 
 			t.structure.process (new_xhtml_generator (o))
 			assert ("o", o.same_string ("{
-<p>begin<code class="inline">foobar</code> operations <code class="inline">&lt;</code> or <code class="inline">&gt;</code> or <code class="inline">&lt;=&gt;</code> <code class="inline">blabla</code> .</p>
-<p><code class="inline">foo bar</code>end</p>
+<p>begin
+<code class="inline">foobar</code> operations <code class="inline">&lt;</code> or <code class="inline">&gt;</code> or <code class="inline">&lt;=&gt;</code> <code class="inline">blabla</code> .
+</p>
+<p><code class="inline">foo bar</code>
+end
+</p>
 
 }"
 						)
@@ -905,7 +940,10 @@ end
 
 			t.structure.process (new_xhtml_generator (o))
 			assert ("o", o.same_string ("{
-<p>beginTest `abc' a`n`d.end</p>
+<p>begin
+Test `abc' a`n`d.
+end
+</p>
 
 }")
 				)
@@ -920,7 +958,10 @@ end
 
 			t.structure.process (new_xhtml_generator (o))
 			assert ("o", o.same_string ("{
-<p>beginTest `abc' and <code class="inline">\</code> and a\b\c.end</p>
+<p>begin
+Test `abc' and <code class="inline">\</code> and a\b\c.
+end
+</p>
 
 }")
 				)
@@ -938,7 +979,7 @@ begin `` `FOO.bar' `` end
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin <code class=%"inline%"> `FOO.bar' </code> end</p>%N"))
+			assert ("o", o.same_string ("<p>begin <code class=%"inline%"> `FOO.bar' </code> end%N</p>%N"))
 		end
 
 
@@ -961,6 +1002,7 @@ e := "{
 <p><mycode lang="eiffel">class FOO [BAR]
 feature
 end</mycode><br/>
+
 </p>
 
 }"
@@ -995,7 +1037,8 @@ end</mycode><br/>
 			]")
 
 e := "{
-<p><strong>List</strong></p>
+<p><strong>List</strong>
+</p>
 <ul><li> this </li>
 <li> is</li>
 <li> a</li>
@@ -1033,7 +1076,8 @@ e := "{
 			]")
 
 e := "{
-<p><strong>Numbered lists</strong></p>
+<p><strong>Numbered lists</strong>
+</p>
 <ol><li> list</li>
 <li> with<ol><li> sub item</li>
 <li> sub item</li>
@@ -1072,7 +1116,8 @@ e := "{
 			]")
 
 e := "{
-<p><strong>Definitions</strong></p>
+<p><strong>Definitions</strong>
+</p>
 <dl><dt> abc</dt>
 <dd> first letters</dd>
 <dt> pi</dt>
@@ -1117,7 +1162,8 @@ e := "{
 			]")
 
 e := "{
-<p><strong>Mixed list</strong></p>
+<p><strong>Mixed list</strong>
+</p>
 <ol><li> Letters<ul><li> a</li>
 <li> b</li>
 <li> c</li>
@@ -1161,9 +1207,11 @@ end
 			]")
 
 e := "{
-<p><strong>Test</strong><div><strong>class</strong> FOO [BAR]
+<p><strong>Test</strong>
+<div><strong>class</strong> FOO [BAR]
 feature
-end</div></p>
+end</div>
+</p>
 
 }"
 
@@ -1187,7 +1235,8 @@ Test [https://eiffel.org Eiffel Community].
 			]")
 
 e := "{
-<p>Test <a href="https://eiffel.org" class="wiki_ext_link">Eiffel Community</a>.</p>
+<p>Test <a href="https://eiffel.org" class="wiki_ext_link">Eiffel Community</a>.
+</p>
 
 }"
 
@@ -1203,7 +1252,8 @@ Test [https://eiffel.org|Eiffel Community].
 			]")
 
 e := "{
-<p>Test <a href="https://eiffel.org" class="wiki_ext_link">Eiffel Community</a>.</p>
+<p>Test <a href="https://eiffel.org" class="wiki_ext_link">Eiffel Community</a>.
+</p>
 
 }"
 
@@ -1227,7 +1277,8 @@ Test PROCEDURE [FOO] class.
 			]")
 
 e := "{
-<p>Test PROCEDURE [FOO] class.</p>
+<p>Test PROCEDURE [FOO] class.
+</p>
 
 }"
 
@@ -1269,7 +1320,8 @@ test [[#anchor|anchor link]]
 			]")
 
 e := "{
-<p>test <a href="#anchor" class="wiki_link">anchor link</a></p>
+<p>test <a href="#anchor" class="wiki_link">anchor link</a>
+</p>
 
 }"
 
@@ -1293,7 +1345,8 @@ See [[Image:http://abs.path.to/image.png]]
 			]")
 
 e := "{
-<p>See <img src="http://abs.path.to/image.png" border="0"/></p>
+<p>See <img src="http://abs.path.to/image.png" border="0"/>
+</p>
 
 }"
 
@@ -1317,7 +1370,8 @@ See [[Image:http://abs.path.to/image.png|align=right|width=100px|This is a descr
 			]")
 
 e := "{
-<p>See <div style="text-align: right"><img src="http://abs.path.to/image.png" border="0" width="100px"/>This is a description</div></p>
+<p>See <div style="text-align: right"><img src="http://abs.path.to/image.png" border="0" width="100px"/>This is a description</div>
+</p>
 
 }"
 
@@ -1341,7 +1395,8 @@ See [http://www.eiffel.org/ The Eiffel web site]
 			]")
 
 e := "{
-<p>See <a href="http://www.eiffel.org/" class="wiki_ext_link">The Eiffel web site</a></p>
+<p>See <a href="http://www.eiffel.org/" class="wiki_ext_link">The Eiffel web site</a>
+</p>
 
 }"
 
@@ -1367,7 +1422,8 @@ e := "{
 			create t.make_from_string (utf.utf_32_string_to_utf_8_string_8 (txt))
 
 e32 := {STRING_32} "{
-<p>begin</p>
+<p>begin
+</p>
 <ul><li> Zhōng Fú 中孚 end</li>
 </ul>
 

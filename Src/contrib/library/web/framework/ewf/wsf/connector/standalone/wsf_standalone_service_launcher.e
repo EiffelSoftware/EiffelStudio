@@ -9,7 +9,7 @@ note
 				port: numeric such as 8099 (or equivalent string as "8099")
 				base: base_url (very specific to standalone server)
 				
-				max_concurrent_connections: set one, for single threaded behavior
+				max_concurrent_connections: set to 1, for single threaded behavior
 				max_tcp_clients: max number of open tcp connection
 				
 				socket_timeout: connection timeout
@@ -106,7 +106,8 @@ feature {NONE} -- Initialization
 				port_number := opts.option_integer_value ("port", port_number)
 
 				if opts.option_boolean_value ("force_single_threaded", False) then
-					force_single_threaded
+						-- Obsolete: keep for backward compatibility with obsolete Nino connector.
+					set_max_concurrent_connections (1)
 				end
 				max_concurrent_connections := opts.option_integer_value ("max_concurrent_connections", max_concurrent_connections)
 				max_tcp_clients := opts.option_integer_value ("max_tcp_clients", max_tcp_clients)
@@ -139,9 +140,23 @@ feature {NONE} -- Initialization
 
 	force_single_threaded
 			-- Set `single_threaded' to True.
+		obsolete
+			"Use set_max_concurrent_connections (1) [Feb/2017]"
 		do
-			max_concurrent_connections := 1
+			set_max_concurrent_connections (1)
+		ensure
+			single_threaded: single_threaded
  		end
+
+	set_max_concurrent_connections (v: like max_concurrent_connections)
+			-- Set `max_concurrent_connections` to `v`.
+		require
+			v_positive_or_zero: v >= 0
+		do
+			max_concurrent_connections := v
+		ensure
+			max_concurrent_connections_set : max_concurrent_connections = v
+		end
 
 feature -- Execution
 
@@ -162,7 +177,7 @@ feature -- Execution
 
 	launch
 			-- <Precursor/>
-			-- using `port_number', `base_url', `verbose' and `single_threaded'
+			-- using associated settings/configuration.
 		local
 			conn: like connector
 		do
@@ -219,11 +234,13 @@ feature {NONE} -- Implementation
 			-- Help defining the verbosity.
 			-- The higher, the more output.
 
-	max_concurrent_connections: INTEGER
+	max_concurrent_connections: INTEGER assign set_max_concurrent_connections
 
 	single_threaded: BOOLEAN
+		obsolete
+			"Use max_concurrent_connections <= 1 [Feb/2017]"
 		do
-			Result := max_concurrent_connections = 0
+			Result := max_concurrent_connections <= 1
 		end
 
 	max_tcp_clients: INTEGER

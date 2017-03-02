@@ -6,6 +6,7 @@
 									<li><a href="{$site_url/}documentation">documentation</a></li>
 									<li><a href="{$site_url/}resources">resources</a></li>
 									<li><a href="{$site_url/}contribute">contribute</a></li>
+									<li><a href="{$site_url/}blogs">blogs</a></li>
 									<li><a href="{$site_url/}downloads">download</a></li>
 								</ul>
 							</nav>

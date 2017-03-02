@@ -1299,22 +1299,22 @@ table.eiffel_org_nodes tbody td {
   margin-right: 10px;
   width: 490px;
   font-family: "museo_sans500", Arial, Helvetica, sans-serif;
-  font-size: 19px;
+  font-size: 18px;
   text-transform: uppercase;
   padding: 54px 0 0;
-  width: 617.5px;
+  width: 660px;
 }
 /* line 101, ../scss/all.scss */
 #nav ul {
   margin: 0 -11px;
-  text-align: right;
+  text-align: left;
   letter-spacing: 1px;
 }
 /* line 107, ../scss/all.scss */
 #nav ul li {
   display: inline-block;
   vertical-align: top;
-  margin: 0 7px 0 5px;
+  margin: 0 3px 0 4px;
   position: relative;
   font-size: 15px;
 }

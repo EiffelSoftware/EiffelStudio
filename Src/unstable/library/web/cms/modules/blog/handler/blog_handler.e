@@ -179,6 +179,9 @@ feature -- HTML Output
 					-- Output the title of the post as a link (to the detail page)
 				append_title_html_to (n, page, a_output)
 
+					-- Output associated tags.
+				append_taxonomy_html_to (n, page, a_output)
+
 					-- Output the summary of the post and a more link to the detail page
 				append_summary_html_to (n, page, a_output)
 
@@ -240,7 +243,7 @@ feature -- HTML Output
 		local
 			lnk: CMS_LOCAL_LINK
 		do
-			if attached n.summary as l_summary then
+			if attached n.summary as l_summary and then not l_summary.is_whitespace then
 				lnk := blog_api.node_api.node_link (n)
 				a_output.append ("<p class=%"blog_list_summary%">")
 				if attached api.format (n.format) as f then
@@ -251,6 +254,14 @@ feature -- HTML Output
 				a_output.append ("<br />")
 				a_output.append (page.link ("See more...", lnk.location, Void))
 				a_output.append ("</p>")
+			end
+		end
+
+	append_taxonomy_html_to (n: CMS_NODE; page: CMS_RESPONSE; a_output: STRING_8)
+			-- returns a html string with the summary of the node and a link to the detail page
+		do
+			if attached {CMS_TAXONOMY_API} api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxo_api then
+				l_taxo_api.append_taxonomy_to_xhtml (n, page, a_output)
 			end
 		end
 

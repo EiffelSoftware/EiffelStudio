@@ -53,8 +53,10 @@ feature -- Access
 			-- Max number of concurrent connections.
 
 	force_single_threaded: BOOLEAN assign set_force_single_threaded
+		obsolete
+			"Use directly `max_concurrent_connections = 1` [Feb/2017]"
 		do
-			Result := max_concurrent_connections = 0
+			Result := max_concurrent_connections <= 1
 		end
 
 	is_verbose: BOOLEAN assign set_is_verbose
@@ -198,16 +200,18 @@ feature -- Element change
 
 	set_force_single_threaded (v: like force_single_threaded)
 			-- Force server to handle incoming request in a single thread.
-			-- i.e set max_concurrent_connections to 0!
+			-- i.e set max_concurrent_connections to 1!
 		obsolete
-			"Use set_max_concurrent_connections (0) [June/2016]"
+			"Use set_max_concurrent_connections (1) [June/2016]"
 		do
 			if v then
-				set_max_concurrent_connections (0)
+				set_max_concurrent_connections (1)
+			else
+				set_max_concurrent_connections (default_max_concurrent_connections)
 			end
-			--|Missing postcondition
-			--| force_single_thread_set: v implies max_concurrent_connections = 0	
-			--| not_single_thread: not v implies max_concurrent_connections > 0	
+		ensure
+			force_single_threaded_set: v implies max_concurrent_connections <= 1	
+			not_single_threaded: not v implies max_concurrent_connections > 1	
 		end
 
 	set_is_verbose (b: BOOLEAN)

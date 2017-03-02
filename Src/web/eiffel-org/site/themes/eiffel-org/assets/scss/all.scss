@@ -934,6 +934,9 @@ code, eiffel {
 	display: block;
 	font-family: monospace;
 	white-space: pre-wrap;
+	tab-size: 4;
+	-moz-tab-size: 4; /* Code for Firefox */
+	-o-tab-size: 4; /* Code for Opera 10.6-12.1 */
 
 	border: solid 1px #ccc;
 	background-color: #fff;

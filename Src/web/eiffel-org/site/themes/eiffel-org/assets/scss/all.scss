@@ -94,20 +94,20 @@
 #nav{
 	@include grid(6);
 	font-family: $museo-sans500;
-	font-size: $base-font-size + 3;
+	font-size: $base-font-size + 2;
 	text-transform: uppercase;
 	padding: 54px 0 0;
-	@include grid-width(7.5);
+	@include grid-width(8);
 	ul{
 		@extend %clearfix;
 		@extend %listreset;
 		margin: 0 -11px;
-		text-align: right;
+		text-align: left;
 		letter-spacing: 1px;
 		li{
 			display: inline-block;
 			vertical-align: top;
-			margin: 0 7px 0 5px;
+			margin: 0 3px 0 4px;
 			position: relative;
 			font-size: $base-font-size - 1;
 			a { 

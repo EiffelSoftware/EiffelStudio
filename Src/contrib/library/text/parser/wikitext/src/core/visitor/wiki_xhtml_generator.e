@@ -592,6 +592,10 @@ feature -- Processing
 				end
 				if in_pre_block then
 					set_next_output_require_newline
+				elseif list_level = 0 then
+						-- new line, but not a break <br/> !
+						-- but not in list item.
+					output ("%N")
 				end
 			end
 		end

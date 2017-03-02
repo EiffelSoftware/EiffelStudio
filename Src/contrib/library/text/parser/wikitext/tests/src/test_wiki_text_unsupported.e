@@ -31,7 +31,8 @@ feature -- Tests
 			]")
 
 e := "{
-<p><strong>Definitions</strong></p>
+<p><strong>Definitions</strong>
+</p>
 <dl><dt> Term</dt>
 <dd> description line 1</dd>
 <dd> description line 2</dd>
@@ -64,7 +65,8 @@ e := "{
 			]")
 
 e := "{
-<p><strong>Mixed list and def</strong></p>
+<p><strong>Mixed list and def</strong>
+</p>
 <ul><li> Def</li>
 <dl><dt> Term</dt>
 <dd> description 1</dd>

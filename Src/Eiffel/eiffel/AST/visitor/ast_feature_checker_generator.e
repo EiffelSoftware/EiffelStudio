@@ -1617,6 +1617,8 @@ feature {NONE} -- Implementation
 							error_handler.insert_error (l_vsta2)
 							reset_types
 						elseif attached old_assigner_source then
+								-- Check if the assigner query is obsolete.
+							check_obsolescence (l_feature, l_last_class, a_name)
 								-- Transform a query into an assigner command call if necessary.
 							process_assigner_command (l_last_type, l_last_constrained, l_feature)
 							if not attached last_assigner_command as target_assigner then

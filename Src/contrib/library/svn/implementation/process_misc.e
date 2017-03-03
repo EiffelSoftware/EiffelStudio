@@ -38,26 +38,28 @@ feature
 				create err_spec.make_filled (0, 1024)
 
 				p.launch
+				if p.launched then
+					from
+					until
+						p.has_output_stream_error
+					loop
+						p.read_output_to_special (res_spec)
+						append_special_of_natural_8_to_string_8 (res_spec, res)
+					end
 
-				from
-				until
-					p.has_output_stream_error
-				loop
-					p.read_output_to_special (res_spec)
-					append_special_of_natural_8_to_string_8 (res_spec, res)
+					from
+					until
+						p.has_error_stream_error
+					loop
+						p.read_error_to_special (err_spec)
+						append_special_of_natural_8_to_string_8 (err_spec, err)
+					end
+
+					p.wait_for_exit
+					create Result.make (p.exit_code, res, err)
+				else
+					last_error := 1
 				end
-
-				from
-				until
-					p.has_error_stream_error
-				loop
-					p.read_error_to_special (err_spec)
-					append_special_of_natural_8_to_string_8 (err_spec, err)
-				end
-
-				p.wait_for_exit
-
-				create Result.make (p.exit_code, res, err)
 			else
 				last_error := 1
 			end

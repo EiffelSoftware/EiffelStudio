@@ -57,7 +57,7 @@ feature -- Access
 				sql_query (sql_select_blogs_order_created_desc, Void)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -84,7 +84,7 @@ feature -- Access
 				sql_query (sql_blogs_limited, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -112,7 +112,7 @@ feature -- Access
 				sql_query (sql_blogs_from_user_limited, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -139,7 +139,7 @@ feature -- Access
 				sql_query (sql_blogs_from_user_with_title, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)

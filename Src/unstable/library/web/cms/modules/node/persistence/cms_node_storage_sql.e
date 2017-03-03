@@ -67,7 +67,7 @@ feature -- Access
 				sql_query (sql_select_nodes, Void)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -95,7 +95,7 @@ feature -- Access
 				sql_query (sql_select_node_revisions, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -125,7 +125,7 @@ feature -- Access
 				end
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -152,7 +152,7 @@ feature -- Access
 				sql_query (sql_select_recent_nodes, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -177,7 +177,7 @@ feature -- Access
 				sql_query (sql_select_recent_nodes_of_type, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -203,7 +203,7 @@ feature -- Access
 				sql_query (sql_select_recent_published_nodes_of_type, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -232,7 +232,7 @@ feature -- Access
 				sql_query (sql_select_recent_node_changes_before, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -335,7 +335,7 @@ feature -- Access
 				sql_query (sql_select_nodes_of_type, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					check expected_node_type: l_node.is_typed_as (a_node_type.name) end
@@ -363,7 +363,7 @@ feature -- Access
 				sql_query (sql_select_nodes_of_type_with_title, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					check expected_node_type: l_node.content_type.same_string (a_node_type.name) end

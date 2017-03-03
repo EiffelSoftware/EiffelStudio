@@ -145,7 +145,11 @@ feature -- Operation
 					last_sqlite_result_cursor := st.execute_new
 				end
 			else
-				error_handler.add_custom_error (1, "invalid query", "query compilation failed!")
+				if attached st.last_exception as e then
+					error_handler.add_custom_error (1, "invalid query", {STRING_32} "query compilation failed! [" + e.tag + "]")
+				else
+					error_handler.add_custom_error (1, "invalid query", "query compilation failed!")
+				end
 			end
 			debug ("roc_storage")
 				print ("< sql_query (" +a_sql_statement + ").%N")

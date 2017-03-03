@@ -43,7 +43,7 @@ feature -- Access
 				sql_query (sql_select_terms, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_term as l_term then
 					Result.force (create {CMS_VOCABULARY}.make_from_term (l_term))
@@ -93,7 +93,7 @@ feature -- Access
 --				sql_query (sql_select_terms_with_range, l_parameters)			
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_term as l_term then
 					Result.force (l_term)

@@ -28,9 +28,9 @@ test	ca-079-001						codeanalysis016 tcf pass code_analysis
 test	ca-088-001						codeanalysis017 tcf pass code_analysis
 test	ca-089-001						codeanalysis018 tcf pass code_analysis
 test	ca-unread-variable-leftover				codeanalysis019 tcf pass code_analysis ca020
-test	ca-obsolete-feature-call			codeanalysis020 tcf fail code_analysis ca069
-test	ca-obsolete-assigner-query			codeanalysis021 tcf fail code_analysis ca069
-test	ca-obsolete-assigner-command			codeanalysis022 tcf fail code_analysis ca069
+test	ca-obsolete-feature-call			codeanalysis020 tcf pass code_analysis ca069 obsolete_call
+test	ca-obsolete-assigner-query			codeanalysis021 tcf pass code_analysis ca069 obsolete_call
+test	ca-obsolete-assigner-command			codeanalysis022 tcf pass code_analysis ca069 obsolete_call
 
 -- EiffelTime tests
 
@@ -261,7 +261,7 @@ test	loop-variant-syntax		syntax049 tcf pass syntax loop variant
 test	assigner-on-creation-expression	syntax050 tcf pass syntax assigner
 test	external-dll-name		syntax051 tcf pass syntax external
 test	attached_tuple_element		syntax052 tcf pass syntax tuple attached
-test	obsolete-inline-agent		syntax053 tcf fail syntax agents
+test	obsolete-inline-agent		syntax053 tcf fail syntax agents obsolete_call
 test	invalid-manifest-type-char-constant	syntax054 tcf pass syntax
 test	note-syntax				syntax055 tcf pass syntax
 test	attached-syntax				syntax056 tcf pass syntax attached
@@ -565,7 +565,7 @@ test	missing-vjar-error-2		valid285 tcf pass validity anchored_type system-valid
 test	parenthesis-alias-tuple-vuar	valid286 tcf pass validity parenthesis_alias conversion tuple conformance
 test	conversion-on-separate-target	valid287 tcf fail validity conversion scoop
 test	wrong-type-for-manifest-array-in-across	valid288 tcf pass validity manifest-array across
-test	obsolete-feature-call-with-body	valid289 tcf fail validity warning attribute
+test	obsolete-feature-call-with-body	valid289 tcf fail validity warning attribute obsolete_call
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

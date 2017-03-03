@@ -187,6 +187,32 @@ feature -- Access
 			sql_finalize
 		end
 
+	recent_published_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+			error_handler.reset
+			from
+				create l_parameters.make (4)
+				l_parameters.put (a_node_type.name, "node_type")
+				l_parameters.put (a_count, "size")
+				l_parameters.put (a_lower, "offset")
+				l_parameters.put ({CMS_NODE_API}.published, "status")
+				sql_query (sql_select_recent_published_nodes_of_type, l_parameters)
+				sql_start
+			until
+				sql_after
+			loop
+				if attached fetch_node as l_node then
+					Result.force (l_node)
+				end
+				sql_forth
+			end
+			sql_finalize
+		end
+
 	recent_node_changes_before (a_lower: INTEGER; a_count: INTEGER; a_date: DATE_TIME): LIST [CMS_NODE]
 			-- List of recent changes, before `a_date', according to `params' settings.
 		local
@@ -578,6 +604,12 @@ feature {NONE} -- Queries nodes
 			--
 		once
 			Result := sql_select_all_from_nodes + " WHERE type=:node_type ORDER BY changed DESC, publish DESC LIMIT :size OFFSET :offset ;"
+		end
+
+	sql_select_recent_published_nodes_of_type: STRING
+			-- published nodes order by publication_date.
+		once
+			Result := sql_select_all_from_nodes + " WHERE type=:node_type AND status=:status ORDER BY publish DESC, changed DESC LIMIT :size OFFSET :offset ;"
 		end
 
 	sql_select_recent_node_changes_before: STRING

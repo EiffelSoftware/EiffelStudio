@@ -196,6 +196,7 @@ feature -- Access: router
 			create l_uri_mapping.make_trailing_slash_ignored ("/nodes", l_nodes_handler)
 			a_router.map (l_uri_mapping, a_router.methods_get)
 			a_router.handle ("/nodes/{type}", l_nodes_handler, a_router.methods_get)
+			a_router.handle ("/nodes/{type}/feed", l_nodes_handler, a_router.methods_get)
 
 				-- Trash
 			create l_trash_handler.make (a_api, a_node_api)

@@ -56,9 +56,99 @@ feature -- HTTP Methods
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		local
+			l_content_type: detachable CMS_CONTENT_TYPE
+		do
+			if attached {WSF_STRING} req.path_parameter ("type") as p_node_type and then attached api.content_type (p_node_type.value) as ct then
+				l_content_type := api.content_type (p_node_type.value)
+			end
+			if l_content_type /= Void and then req.path_info.ends_with_general ("/feed") then
+				do_nodes_feed (l_content_type, req, res)
+			else
+				do_nodes_html (l_content_type, req, res)
+			end
+		end
+
+	do_nodes_feed (a_content_type: CMS_CONTENT_TYPE; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			l_feed: FEED
+			l_feed_item: FEED_ITEM
+			l_params: CMS_DATA_QUERY_PARAMETERS
+			n: CMS_NODE
+			pg, nb: NATURAL_64
+			l_size: NATURAL_64
+			l_exhausted: BOOLEAN
+			lnk: FEED_LINK
+			mesg: CMS_CUSTOM_RESPONSE_MESSAGE
+			l_payload: STRING
+		do
+			create l_feed.make (a_content_type.name)
+			l_feed.set_date (create {DATE_TIME}.make_now_utc)
+
+			if attached {WSF_STRING} req.query_parameter ("size") as p_size and then p_size.is_integer then
+				l_size := p_size.integer_value.to_natural_64
+			else
+				l_size := 25
+			end
+
+			from
+				nb := 0
+				pg := 0
+			until
+				nb = l_size or l_exhausted
+			loop
+				create l_params.make (1 + (pg * 25), 25)
+				if attached node_api.recent_published_nodes_of_type (a_content_type, l_params) as lst then
+					l_exhausted := True
+					across
+						lst as ic
+					until
+						nb = l_size
+					loop
+						l_exhausted := False
+						n := ic.item
+						if n.is_published then
+							create l_feed_item.make (n.title)
+							if attached n.author as u then
+								l_feed_item.set_author (create {FEED_AUTHOR}.make (api.user_api.user_display_name (u)))
+							end
+							l_feed_item.set_date (n.publication_date)
+							create lnk.make (req.absolute_script_url ("/" + node_api.node_link (n).location))
+							l_feed_item.links.force (lnk, "")
+							if attached n.summary as l_summary and then not l_summary.is_whitespace then
+								l_feed_item.set_description (l_summary)
+	--						elseif attached n.content as l_content then
+	--							l_feed_item.set_content (l_content, Void)
+							end
+							if attached {CMS_TAXONOMY_API} api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxonomy_api then
+								if attached l_taxonomy_api.terms_of_content (n, Void) as coll then
+									across
+										coll as coll_ic
+									loop
+										l_feed_item.set_category (coll_ic.item.text)
+									end
+								end
+							end
+							nb := nb + 1
+							l_feed.extend (l_feed_item)
+						end
+					end
+				else
+					l_exhausted := True
+				end
+				pg := pg + 1
+			end
+
+			create l_payload.make (2_048)
+			l_feed.accept (create {ATOM_FEED_GENERATOR}.make (l_payload))
+			create mesg.make ({HTTP_STATUS_CODE}.ok)
+			mesg.set_payload (l_payload)
+			res.send (mesg)
+		end
+
+	do_nodes_html (a_content_type: detachable CMS_CONTENT_TYPE; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
 			l_response: CMS_RESPONSE
 			s: STRING
-			l_content_type: detachable CMS_CONTENT_TYPE
 			n: CMS_NODE
 			lnk: CMS_LOCAL_LINK
 			l_page_helper: CMS_PAGINATION_GENERATOR
@@ -68,13 +158,9 @@ feature -- HTTP Methods
 			l_include_trashed: BOOLEAN
 			lst: detachable ITERABLE [CMS_NODE]
 		do
-				-- At the moment the template are hardcoded, but we can
-				-- get them from the configuration file and load them into
-				-- the setup class.
-			if attached {WSF_STRING} req.path_parameter ("type") as p_node_type and then attached api.content_type (p_node_type.value) as ct then
-				l_content_type := api.content_type (p_node_type.value)
-			end
-
+			-- At the moment the template are hardcoded, but we can
+			-- get them from the configuration file and load them into
+			-- the setup class.
 			create {GENERIC_VIEW_CMS_RESPONSE} l_response.make (req, res, api)
 
 			create s.make_empty
@@ -83,7 +169,7 @@ feature -- HTTP Methods
 			loop
 				if attached {CMS_NODE_TYPE [CMS_NODE]} ic.item as l_note_type then
 					create lnk.make (l_note_type.name, "nodes/" + l_note_type.name)
-					if l_note_type = l_content_type then
+					if l_note_type = a_content_type then
 						lnk.set_is_active (True)
 					end
 					l_response.add_to_primary_tabs (lnk)
@@ -91,14 +177,14 @@ feature -- HTTP Methods
 			end
 
 			create s_pager.make_empty
-			if l_content_type /= Void then
-				l_count := node_api.nodes_of_type_count (l_content_type)
+			if a_content_type /= Void then
+				l_count := node_api.nodes_of_type_count (a_content_type)
 				if l_count > 1 then
-					l_response.set_title ("Listing " + l_count.out + " " + l_content_type.name + " nodes")
+					l_response.set_title ("Listing " + l_count.out + " " + a_content_type.name + " nodes")
 				else
-					l_response.set_title ("Listing " + l_count.out + " " + l_content_type.name + " node")
+					l_response.set_title ("Listing " + l_count.out + " " + a_content_type.name + " node")
 				end
-				create l_page_helper.make ("nodes/" + l_content_type.name + "/?page={page}&size={size}", l_count, 25) -- FIXME: Make this default page size a global CMS settings
+				create l_page_helper.make ("nodes/" + a_content_type.name + "/?page={page}&size={size}", l_count, 25) -- FIXME: Make this default page size a global CMS settings
 			else
 				l_count := node_api.nodes_count
 				if l_count > 1 then
@@ -117,8 +203,8 @@ feature -- HTTP Methods
 				end
 			end
 
-			if l_content_type /= Void then
-				lst := node_api.recent_nodes_of_type (l_content_type, create {CMS_DATA_QUERY_PARAMETERS}.make (l_page_helper.current_page_offset, l_page_helper.page_size))
+			if a_content_type /= Void then
+				lst := node_api.recent_nodes_of_type (a_content_type, create {CMS_DATA_QUERY_PARAMETERS}.make (l_page_helper.current_page_offset, l_page_helper.page_size))
 			else
 				lst := node_api.recent_nodes (create {CMS_DATA_QUERY_PARAMETERS}.make (l_page_helper.current_page_offset, l_page_helper.page_size))
 			end

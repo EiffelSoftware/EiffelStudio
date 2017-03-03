@@ -10,12 +10,9 @@
 		</file_rule>
 		<option warning="true" namespace="EiffelSoftware.Library">
 		</option>
-		<capability>
-			<concurrency support="thread" use="thread"/>
-		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
-		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
 		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf"/>

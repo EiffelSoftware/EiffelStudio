@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A code analysis violation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,8 +33,6 @@ feature {NONE} -- Initialization
 
 	make_empty
 		do
-				-- We do this because this field is (virtually) an enum.
-			type := unknown_violation_type
 		end
 
 	make_with_everything (a_class_name: STRING; a_line_number: INTEGER; a_rule_id, a_type, a_message: STRING)
@@ -125,7 +123,7 @@ feature -- Comparison
 				(other.class_name = Void or else class_name.same_string (other.class_name)) and
 				(other.line_number = 0 or else line_number.is_equal (other.line_number)) and
 				(other.rule_id = Void or else rule_id.is_equal (other.rule_id)) and
-				(other.type = Unknown_violation_type or else type.same_string (other.type)) and
+				(other.type = Void or else type.same_string (other.type)) and
 				(other.message = Void or else message.same_string (other.message))
 		end
 

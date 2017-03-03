@@ -1,7 +1,7 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
+	keywords: "Eiffel test"
 	date: "$Date$"
 
 class
@@ -9,9 +9,9 @@ class
 
 inherit
 
-	EW_TEST_INSTRUCTION;
-
-	EW_STRING_UTILITIES;
+	EW_CODE_ANALYSIS_CONSTANTS
+	EW_STRING_UTILITIES
+	EW_TEST_INSTRUCTION
 
 feature -- Instruction
 
@@ -21,8 +21,8 @@ feature -- Instruction
 			-- initialization was successful.
 		local
 			l_args: LIST [STRING]
-			l_phrases: LIST [STRING];
-			l_analysis_result: EW_CODE_ANALYSIS_RESULT;
+			l_phrases: LIST [STRING]
+			l_analysis_result: EW_CODE_ANALYSIS_RESULT
 			l_have_violations: BOOLEAN
 			l_compilation_finished: BOOLEAN
 		do
@@ -34,8 +34,8 @@ feature -- Instruction
 			l_compilation_finished := True
 			l_args := broken_into_arguments (a_args_line)
 			if l_args.is_empty then
-				init_ok := False;
-				failure_explanation := "no arguments present";
+				init_ok := False
+				failure_explanation := "no arguments present"
 			end
 			from
 				l_args.start
@@ -46,17 +46,17 @@ feature -- Instruction
 						-- Do nothing, the analysis clean flag will be set at the end in any case.
 
 					if l_args.count /= 1 then -- if this is not the only argument
-						init_ok := False;
-						create failure_explanation.make (0);
-						failure_explanation.append ("The " + Ok_result + " argument is only allowed alone.");
-						failure_explanation.append (l_args.item);
+						init_ok := False
+						create failure_explanation.make (0)
+						failure_explanation.append ("The " + Ok_result + " argument is only allowed alone.")
+						failure_explanation.append (l_args.item)
 					end
 				elseif equal (l_args.item, Violation_result) or equal (l_args.item, Violations_result) then
 					l_have_violations := True
 					l_args.forth
 					if l_args.after then
-						init_ok := False;
-						failure_explanation := "no class/constraint lists specified for code analysis violation";
+						init_ok := False
+						failure_explanation := "no class/constraint lists specified for code analysis violation"
 					else
 						l_phrases := l_args.item.split (Phrase_separator)
 						from
@@ -64,7 +64,7 @@ feature -- Instruction
 						until
 							l_phrases.after or not init_ok
 						loop
-							process_violation_phrase (l_phrases.item, l_analysis_result);
+							process_violation_phrase (l_phrases.item, l_analysis_result)
 							l_phrases.forth
 						end
 					end
@@ -88,10 +88,10 @@ feature -- Instruction
 				elseif equal (l_args.item, Preference_warning_result) then
 					l_analysis_result.set_preference_warning
 				else
-					init_ok := False;
-					create failure_explanation.make (0);
-					failure_explanation.append ("unknown keyword: ");
-					failure_explanation.append (l_args.item);
+					init_ok := False
+					create failure_explanation.make (0)
+					failure_explanation.append ("unknown keyword: ")
+					failure_explanation.append (l_args.item)
 				end
 				if not l_args.after then
 					l_args.forth
@@ -108,7 +108,7 @@ feature -- Instruction
 				-- syntax or validity error when it is added.
 				-- But sort it anyway, just to be safe
 			l_analysis_result.sort
-			expected_analysis_result := l_analysis_result;
+			expected_analysis_result := l_analysis_result
 		end
 
 	execute (test: EW_EIFFEL_EWEASEL_TEST)
@@ -122,125 +122,134 @@ feature -- Instruction
 				l_analysis_result := l_result
 			end
 			if l_analysis_result = Void then
-				execute_ok := False;
-				create failure_explanation.make (0);
-				failure_explanation.append ("no pending code analysis to check");
+				execute_ok := False
+				create failure_explanation.make (0)
+				failure_explanation.append ("no pending code analysis to check")
 			else
 					-- Make sure violations are sorted.
 					-- They might not be sorted even
 					-- though they are sorted lists because items
 					-- may be added before all key fields are set
 				l_analysis_result.sort
-				execute_ok := l_analysis_result.matches (expected_analysis_result);
+				execute_ok := l_analysis_result.matches (expected_analysis_result)
 				if not execute_ok then
-					create failure_explanation.make (0);
-					failure_explanation.append ("actual code analysis result does not match expected result%N");
-					failure_explanation.append ("Actual result:%N");
-					failure_explanation.append (l_analysis_result.summary);
-					failure_explanation.append ("%NExpected result:%N");
-					failure_explanation.append (expected_analysis_result.summary);
-				end;
-				test.set_e_compilation_result (Void);
+					create failure_explanation.make (0)
+					failure_explanation.append ("actual code analysis result does not match expected result%N")
+					failure_explanation.append ("Actual result:%N")
+					failure_explanation.append (l_analysis_result.summary)
+					failure_explanation.append ("%NExpected result:%N")
+					failure_explanation.append (expected_analysis_result.summary)
+				end
+				test.set_e_compilation_result (Void)
 			end
-		end;
+		end
 
-	init_ok: BOOLEAN;
+	init_ok: BOOLEAN
 		-- Was last call to `initialize' successful?
 
-	execute_ok: BOOLEAN;
+	execute_ok: BOOLEAN
 	-- Was last call to `execute' successful?
 
 feature {NONE} -- Implementation
 
-	expected_analysis_result: EW_CODE_ANALYSIS_RESULT;
-		-- Result expected from code analysis
+	expected_analysis_result: EW_CODE_ANALYSIS_RESULT
+		-- Result expected from code analysis.
 
 	process_violation_phrase (a_phrase: STRING; a_analysis_result: EW_CODE_ANALYSIS_RESULT)
-			-- Modify `a_analsis_result' to reflect presence of validity a_phrase `a_phrase'
+			-- Modify `a_analsis_result' to reflect presence of validity a_phrase `a_phrase'.
 		require
-			phrase_not_void: a_phrase /= Void;
-			analysis_result_not_void: a_analysis_result /= Void;
+			phrase_not_void: a_phrase /= Void
+			analysis_result_not_void: a_analysis_result /= Void
 		local
-			l_words: LIST [STRING];
-			l_count: INTEGER;
-			l_cname: STRING;
-			l_rule_id: STRING
+			l_cname: STRING
 			l_line_number: INTEGER
 			l_split_strings: LIST [STRING]
-			l_viol: EW_CODE_ANALYSIS_VIOLATION;
+			l_viol: EW_CODE_ANALYSIS_VIOLATION
+			l_type: STRING
 		do
-			l_words := broken_into_words (a_phrase);
-			l_count := l_words.count;
-			if l_count < 2 then
-				init_ok := False;
-				create failure_explanation.make (0);
-				failure_explanation.append ("validity error a_phrase has less than 2 arguments: ");
-				failure_explanation.append (a_phrase);
-			else
-
-				from
-					l_words.start;
-					l_cname := real_class_name (l_words.item);
-					l_words.forth;
-				until
-					l_words.after
-				loop
-					l_split_strings := l_words.item.split (':')
-					if l_split_strings.count = 1 then
-						l_rule_id := l_split_strings.at (1)
-						l_line_number := 0 -- Undefined
-					elseif l_split_strings.count = 2 then
-						l_rule_id := l_split_strings.at (1)
-						l_line_number := l_split_strings.at (2).to_integer
+			across
+				broken_into_words (a_phrase) as w
+			from
+				if not w.after then
+					l_cname := real_class_name (w.item)
+				end
+				w.forth
+				if w.after then
+					init_ok := False
+					create failure_explanation.make (0)
+					failure_explanation.append ("validity error a_phrase has less than 2 arguments: ")
+					failure_explanation.append (a_phrase)
+				end
+			loop
+				l_split_strings := w.item.split ('-')
+				if l_split_strings.count = 2 then
+						-- There is a violation type.
+					l_type := l_split_strings [2]
+					init_ok := is_valid_violation_type (l_type)
+				else
+						-- Violation type should not be specified.
+					init_ok := l_split_strings.count = 1
+				end
+				l_split_strings := l_split_strings [1].split (':')
+				if l_split_strings.count = 2 then
+						-- There is a line number.
+					if l_split_strings [2].is_natural_32 and then l_split_strings [2].is_integer then
+						l_line_number := l_split_strings [2].to_integer
 					else
-						init_ok := False;
-						create failure_explanation.make (0);
-						failure_explanation.append ("more than one colon in a rule violation specification: ");
-						failure_explanation.append (l_words.item);
+						init_ok := False
 					end
+				else
+						-- There should be no other parts separated by ':'.
+					init_ok := l_split_strings.count = 1
+				end
+				if init_ok then
 					create l_viol.make_empty
 					l_viol.set_class_name (l_cname)
 					l_viol.set_line_number (l_line_number)
-					l_viol.set_rule_id (l_rule_id)
+					l_viol.set_type (l_type)
+					l_viol.set_rule_id (l_split_strings [1])
 					a_analysis_result.add_violation (l_viol)
-					l_words.forth;
-				end;
+				else
+					create failure_explanation.make (0)
+					failure_explanation.append ("invalid rule violation specification (supported format: rule[:line][-type] where type is one of Error, Warning, Suggestion, Hint): ")
+					failure_explanation.append (w.item)
+				end
 			end
 		end
 
 	real_class_name (cname: STRING): STRING
 			-- Actual class name to be used in expected
-			-- compile result
+			-- compile result.
 		do
 			if equal (cname, No_class_name) then
-				create Result.make (0);
+				create Result.make (0)
 				-- Use empty string for real class name
 			else
-				Result := cname;
-			end;
-		end;
+				Result := cname
+			end
+		end
 
-	No_class_name: STRING = "NONE";
+	no_class_name: STRING = "NONE"
 
-	Phrase_separator: CHARACTER = ';';
+	phrase_separator: CHARACTER = ';'
 
-	Ok_result: STRING = "ok"
+	ok_result: STRING = "ok"
 
-	Rule_warning_result: STRING = "rule_warning"
+	rule_warning_result: STRING = "rule_warning"
 
-	Preference_warning_result: STRING = "preference_warning"
+	preference_warning_result: STRING = "preference_warning"
 
-	Class_warning_result: STRING = "class_warning"
+	class_warning_result: STRING = "class_warning"
 
-	Argument_warning_result: STRING = "argument_warning"
+	argument_warning_result: STRING = "argument_warning"
 
-	Violation_result: STRING = "violation"
+	violation_result: STRING = "violation"
 
-	Violations_result: STRING = "violations"
+	violations_result: STRING = "violations"
 
 note
 	copyright: "[
-		Copyright (c) 1984-2015, University of Southern California and contributors.
+		Copyright (c) 1984-2017, University of Southern California and contributors.
 		All rights reserved.
 	]"
 	license: "Your use of this work is governed under the terms of the GNU General Public License version 2"

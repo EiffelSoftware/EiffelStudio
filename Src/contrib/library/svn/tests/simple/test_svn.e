@@ -7,6 +7,9 @@ note
 class
 	TEST_SVN
 
+inherit
+	SHARED_EXECUTION_ENVIRONMENT
+
 create
 	make
 
@@ -114,8 +117,21 @@ feature {NONE} -- Initialization
 			-- Cleanup
 			create d.make_with_path (p)
 			if d.exists then
+				safe_delete (d)
+			end
+		end
+
+	safe_delete (d: DIRECTORY)
+		local
+			retried: INTEGER
+		do
+			if retried <= 1 then
 				d.recursive_delete
 			end
+		rescue
+			retried := retried + 1
+			execution_environment.sleep (100_000_000);
+			retry
 		end
 
 	test_remote
@@ -138,8 +154,15 @@ feature -- Test
 		end
 
 	test_statuses
+		local
+			l_src: READABLE_STRING_GENERAL
 		do
-			if attached svn.statuses ("c:\_dev\trunk\Src\scripts", True, False, False, Void) as lst then
+			if attached execution_environment.item ("EIFFEL_SRC") as env_src then
+				l_src := env_src
+			else
+				l_src := execution_environment.current_working_path.name
+			end
+			if attached svn.statuses (l_src, True, False, False, Void) as lst then
 				from
 					lst.start
 				until

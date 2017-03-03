@@ -72,13 +72,13 @@ feature -- Access
 feature {NONE} -- Queries
 
 	sql_select_available_parents_for_node : STRING = "[
-			SELECT node.nid, node.revision, node.type, title, summary, content, format, author, publish, created, changed, status
+			SELECT node.nid, node.revision, node.type, title, summary, content, format, author, editor, publish, created, changed, status
 			FROM nodes node LEFT JOIN page_nodes pn ON node.nid = pn.nid AND node.nid != :nid
 			WHERE node.nid != :nid AND pn.parent != :nid AND node.status != -1 GROUP BY node.nid, node.revision;
 		]"
 
 	sql_select_children_of_node: STRING = "[
-			SELECT node.nid, node.revision, node.type, title, summary, content, format, author, publish, created, changed, status
+			SELECT node.nid, node.revision, node.type, title, summary, content, format, author, editor, publish, created, changed, status
 			FROM nodes node LEFT JOIN page_nodes pn ON node.nid = pn.nid
 			WHERE pn.parent = :nid AND node.status != -1 GROUP BY node.nid, node.revision;
 		]"

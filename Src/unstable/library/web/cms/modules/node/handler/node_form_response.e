@@ -471,6 +471,7 @@ feature -- Form
 				Result := a_content_type.new_node (a_node)
 			end
 			Result.set_author (user)
+			Result.set_editor (user)
 		end
 
 	apply_form_data_to_node (a_content_type: CMS_NODE_TYPE [CMS_NODE]; a_form_data: WSF_FORM_DATA; a_node: CMS_NODE)

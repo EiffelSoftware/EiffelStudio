@@ -28,7 +28,7 @@ feature{NONE} -- Initialization
 		end
 
 	make (a_title: READABLE_STRING_32)
-			-- Create current node with `a_title'.
+			-- Create current node with `a_title`.
 		local
 			now: DATE_TIME
 		do
@@ -45,7 +45,7 @@ feature{NONE} -- Initialization
 feature -- Conversion
 
 	import_node (a_node: CMS_NODE)
-			-- Import `a_node' into current node.
+			-- Import `a_node` into current node.
 		do
 			set_id (a_node.id)
 			set_revision (a_node.revision)
@@ -54,6 +54,7 @@ feature -- Conversion
 			set_modification_date (a_node.modification_date)
 			set_publication_date (a_node.publication_date)
 			set_author (a_node.author)
+			set_editor (a_node.editor)
 			set_content (
 						a_node.content,
 						a_node.summary,
@@ -144,7 +145,10 @@ feature -- Access: date
 feature -- Access: author			
 
 	author: detachable CMS_USER
-			-- Author of current node.
+			-- Author of current node (i.e creator).
+
+	editor: detachable CMS_USER
+			-- Last user that modified Current node.
 
 feature -- status report
 
@@ -155,7 +159,7 @@ feature -- status report
 		end
 
 	same_node (a_node: CMS_NODE): BOOLEAN
-			-- Is `a_node' same node as Current?
+			-- Is `a_node` same node as Current?
 		do
 				-- FIXME: if we introduce notion of revision, update this part!
 			Result := Current = a_node or id = a_node.id
@@ -182,8 +186,8 @@ feature -- Status report
 feature -- Element change
 
 	set_content (a_content: like content; a_summary: like summary; a_format: like format)
-			-- Set `content', `summary' and `format' to `a_content', `a_summary' and `a_format'.
-			-- The `format' is associated with both `content' and `summary'
+			-- Set `content`, `summary` and `format` to `a_content`, `a_summary` and `a_format`.
+			-- The `format` is associated with both `content` and `summary`
 		deferred
 		ensure
 			content_assigned: content = a_content
@@ -192,7 +196,7 @@ feature -- Element change
 		end
 
 	set_title (a_title: like title)
-			-- Assign `title' with `a_title'.
+			-- Assign `title` with `a_title`.
 		do
 			title := a_title
 			if attached link as lnk then
@@ -203,7 +207,7 @@ feature -- Element change
 		end
 
 	set_modification_date (a_modification_date: like modification_date)
-			-- Assign `modification_date' with `a_modification_date'.
+			-- Assign `modification_date` with `a_modification_date`.
 		do
 			modification_date := a_modification_date
 		ensure
@@ -211,7 +215,7 @@ feature -- Element change
 		end
 
 	set_creation_date (a_creation_date: like creation_date)
-			-- Assign `creation_date' with `a_creation_date'.
+			-- Assign `creation_date` with `a_creation_date`.
 		do
 			creation_date := a_creation_date
 		ensure
@@ -219,7 +223,7 @@ feature -- Element change
 		end
 
 	set_publication_date (a_publication_date: like publication_date)
-			-- Assign `publication_date' with `a_publication_date'.
+			-- Assign `publication_date` with `a_publication_date`.
 		do
 			publication_date := a_publication_date
 			publication_date_output := publication_date.formatted_out ("yyyy/[0]mm/[0]dd")
@@ -228,7 +232,7 @@ feature -- Element change
 		end
 
 	set_id (a_id: like id)
-			-- Assign `id' with `a_id'.
+			-- Assign `id` with `a_id`.
 		do
 			id := a_id
 		ensure
@@ -236,7 +240,7 @@ feature -- Element change
 		end
 
 	set_revision (a_revision: like revision)
-			-- Assign `revision' with `a_revision'.
+			-- Assign `revision` with `a_revision`.
 		do
 			revision := a_revision
 		ensure
@@ -244,15 +248,23 @@ feature -- Element change
 		end
 
 	set_author (u: like author)
-			-- Assign 'author' with `u'
+			-- Assign `author` with `u`
 		do
 			author := u
 		ensure
 			auther_set: author = u
 		end
 
+	set_editor (u: like editor)
+			-- Assign `last_editor` with `u`
+		do
+			editor := u
+		ensure
+			last_editor_set: editor = u
+		end
+
 	set_link (a_link: like link)
-			-- Set `link' to `a_link'.
+			-- Set `link` to `a_link`.
 		do
 			link := a_link
 		end
@@ -286,7 +298,7 @@ feature -- Status change
 feature {CMS_NODE_STORAGE_I} -- Access: status change.
 
 	set_status (a_status: like status)
-			-- Assign `status' with `a_status'.
+			-- Assign `status` with `a_status`.
 		do
 			status := a_status
 		ensure

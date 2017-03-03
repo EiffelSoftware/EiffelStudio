@@ -333,11 +333,20 @@ feature {NONE} -- Trash:Restore
 							b.append (" #")
 							b.append (n.revision.out)
 							b.append (" : ")
-							b.append (n.modification_date.out)
+							b.append (api.formatted_date_time_yyyy_mm_dd__hh_min_ss (n.modification_date))
 							b.append ("</a>")
-							if attached n.author as l_author then
-								b.append (" by ")
+							if attached n.editor as l_editor then
+								if n.revision = 1 then
+									b.append (" created by ")
+								else
+									b.append (" edited by ")
+								end
+								b.append (r.link (r.user_profile_name (l_editor), "user/" + l_editor.id.out, Void))
+							end
+							if attached n.author as l_author and then not l_author.same_as (n.editor) then
+								b.append (" (owner: ")
 								b.append (r.link (r.user_profile_name (l_author), "user/" + l_author.id.out, Void))
+								b.append (")")
 							end
 							if node_api.has_permission_for_action_on_node ("edit revisions", l_node, api.user) then
 								b.append (" (<a href=%"")

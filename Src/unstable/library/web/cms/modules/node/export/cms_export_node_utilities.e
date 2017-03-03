@@ -33,6 +33,9 @@ feature -- Access
 			if attached n.author as u then
 				Result.put (user_to_json (u), "author")
 			end
+			if attached n.editor as u then
+				Result.put (user_to_json (u), "editor")
+			end
 			create jo.make_empty
 			if attached n.format as l_format then
 				jo.put_string (l_format, "format")

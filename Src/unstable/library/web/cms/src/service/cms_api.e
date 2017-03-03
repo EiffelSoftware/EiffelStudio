@@ -417,6 +417,55 @@ feature -- Internationalization (i18n)
 			Result.append_string_general (ago.smart_date_duration (dt))
 		end
 
+	formatted_date_time_yyyy_mm_dd (dt: DATE_TIME): STRING_8
+			-- Output date `dt` using YYYY-MM-DD
+		local
+			i: INTEGER
+		do
+			create Result.make (10)
+			Result.append_integer (dt.year)
+			Result.append_character ('-')
+			i := dt.month
+			if i <= 9 then
+				Result.append_character ('0')
+			end
+			Result.append_integer (i)
+			Result.append_character ('-')
+			i := dt.day
+			if i <= 9 then
+				Result.append_character ('0')
+			end
+			Result.append_integer (i)
+		end
+
+	formatted_date_time_yyyy_mm_dd__hh_min_ss (dt: DATE_TIME): STRING_8
+			-- Output date `dt` using YYYY-MM-DD h:min:sec
+		local
+			i: INTEGER
+		do
+			create Result.make (19)
+			Result.append (formatted_date_time_yyyy_mm_dd (dt))
+			Result.append_character (' ')
+			i := dt.hour
+			if i <= 9 then
+				Result.append_character ('0')
+			end
+			Result.append_integer (i)
+			Result.append_character (':')
+			i := dt.minute
+			if i <= 9 then
+				Result.append_character ('0')
+			end
+			Result.append_integer (i)
+			Result.append_character (':')
+			i := dt.second
+			if i <= 9 then
+				Result.append_character ('0')
+			end
+			Result.append_integer (i)
+
+		end
+
 feature -- Emails
 
 	new_email (a_to_address: READABLE_STRING_8; a_subject: READABLE_STRING_8; a_content: READABLE_STRING_8): CMS_EMAIL

@@ -8,6 +8,7 @@ CREATE TABLE nodes (
 	`content`	TEXT,
 	`format`	VARCHAR(128),
 	`author`	INTEGER,
+	`editor`	INTEGER,
 	`publish`	DATETIME,
 	`created`	DATETIME NOT NULL,
 	`changed`	DATETIME NOT NULL,
@@ -23,6 +24,7 @@ CREATE TABLE node_revisions (
 	`content`	TEXT,
 	`format`	VARCHAR(128),
 	`author`	INTEGER,
+	`editor`	INTEGER,
 	`changed`	DATETIME NOT NULL,
 	`status`	INTEGER,
 	CONSTRAINT Unique_nid_revision PRIMARY KEY (nid,revision)

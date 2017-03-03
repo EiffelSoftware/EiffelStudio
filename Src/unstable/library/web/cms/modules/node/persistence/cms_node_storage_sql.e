@@ -435,7 +435,7 @@ feature {NONE} -- Implementation
 			error_handler.reset
 
 			write_information_log (generator + ".store_node")
-			create l_parameters.make (9)
+			create l_parameters.make (10)
 			l_parameters.put (a_node.content_type, "type")
 			l_parameters.put (a_node.title, "title")
 			l_parameters.put (a_node.summary, "summary")
@@ -450,6 +450,13 @@ feature {NONE} -- Implementation
 			else
 				l_parameters.put (0, "author")
 			end
+			if attached a_node.editor as l_editor then
+				check valid_editor: l_editor.has_id end
+				l_parameters.put (l_editor.id, "editor")
+			else
+				l_parameters.put (0, "editor")
+			end
+
 			sql_begin_transaction
 
 			if a_node.has_id then
@@ -510,7 +517,7 @@ feature -- Helpers
 			extended_load (a_node)
 		end
 
-feature {NONE} -- Queries
+feature {NONE} -- Queries nodes
 
 	sql_select_nodes_count: STRING = "SELECT count(*) FROM nodes WHERE status != -1 ;"
 			-- Nodes count (Published and not Published)
@@ -520,43 +527,86 @@ feature {NONE} -- Queries
 			-- Nodes of type `:node_type` count (Published and not Published)
 			--| note: {CMS_NODE_API}.trashed = -1
 
-	sql_select_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE status != -1 ;"
+	sql_select_nodes: STRING
 			-- SQL Query to retrieve all nodes.
 			--| note: {CMS_NODE_API}.trashed = -1
+		once
+			Result := sql_select_all_from_nodes + " WHERE status != -1 ;"
+		end
 
-	sql_select_nodes_of_type: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE status != -1 AND type=:node_type ;"
+	sql_select_nodes_of_type: STRING
 			-- SQL Query to retrieve all nodes of type :node_type.
 			--| note: {CMS_NODE_API}.trashed = -1		
+		once
+			Result := sql_select_all_from_nodes + " WHERE status != -1 AND type=:node_type ;"
+		end
 
-	sql_select_nodes_of_type_with_title: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE status != -1 AND type=:node_type AND title=:title;"
+	sql_select_nodes_of_type_with_title: STRING
 			-- SQL Query to retrieve all nodes of type :node_type with title :title.
 			--| note: {CMS_NODE_API}.trashed = -1
+		once
+			Result := sql_select_all_from_nodes + " WHERE status != -1 AND type=:node_type AND title=:title;"
+		end
 
-	sql_select_node_revisions: STRING = "SELECT nodes.nid, node_revisions.revision, nodes.type, node_revisions.title, node_revisions.summary, node_revisions.content, node_revisions.format, node_revisions.author, nodes.publish, nodes.created, node_revisions.changed, node_revisions.status FROM nodes INNER JOIN node_revisions ON nodes.nid = node_revisions.nid WHERE nodes.nid = :nid AND node_revisions.revision < :revision ORDER BY node_revisions.revision DESC;"
-			-- SQL query to get node revisions (missing the latest one).
-
-	sql_select_trash_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE status = -1 ;"
+	sql_select_trash_nodes: STRING
 			-- SQL Query to retrieve all trahsed nodes.
 			--| note: {CMS_NODE_API}.trashed = -1		
+		once
+			Result := sql_select_all_from_nodes + " WHERE status = -1 ;"
+		end
 
-	sql_select_trash_nodes_by_author: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE status = -1 and author = :author ;"
+	sql_select_trash_nodes_by_author: STRING
 			-- SQL Query to retrieve all nodes by a given author.
 			--| note: {CMS_NODE_API}.trashed = -1				
+		once
+			Result := sql_select_all_from_nodes + " WHERE status = -1 and author = :author ;"
+		end
 
-	sql_select_node_by_id: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE nid =:nid ORDER BY revision DESC, publish DESC LIMIT 1;"
+	sql_select_node_by_id: STRING
+			--
+		once
+			Result := sql_select_all_from_nodes + " WHERE nid =:nid ORDER BY revision DESC, publish DESC LIMIT 1;"
+		end
 
-	sql_select_node_by_id_and_revision: STRING = "SELECT nodes.nid, node_revisions.revision, nodes.type, node_revisions.title, node_revisions.summary, node_revisions.content, node_revisions.format, node_revisions.author, nodes.publish, nodes.created, node_revisions.changed, node_revisions.status FROM nodes INNER JOIN node_revisions ON nodes.nid = node_revisions.nid WHERE nodes.nid = :nid AND node_revisions.revision = :revision ORDER BY node_revisions.revision DESC;"
+	sql_select_recent_nodes: STRING
+			--
+		once
+			Result := sql_select_all_from_nodes + " ORDER BY changed DESC, publish DESC LIMIT :size OFFSET :offset ;"
+		end
 
-	sql_select_recent_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes ORDER BY changed DESC, publish DESC LIMIT :size OFFSET :offset ;"
+	sql_select_recent_nodes_of_type: STRING
+			--
+		once
+			Result := sql_select_all_from_nodes + " WHERE type=:node_type ORDER BY changed DESC, publish DESC LIMIT :size OFFSET :offset ;"
+		end
 
-	sql_select_recent_nodes_of_type: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE type=:node_type ORDER BY changed DESC, publish DESC LIMIT :size OFFSET :offset ;"
+	sql_select_recent_node_changes_before: STRING
+			--
+		once
+			Result := sql_select_all_from_nodes + " WHERE changed <= :date ORDER BY changed DESC, nid DESC LIMIT :size OFFSET :offset ;"
+		end
 
-	sql_select_recent_node_changes_before: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE changed <= :date ORDER BY changed DESC, nid DESC LIMIT :size OFFSET :offset ;"
+feature {NONE} -- Queries node revisions
 
-	sql_insert_node: STRING = "INSERT INTO nodes (revision, type, title, summary, content, format, publish, created, changed, status, author) VALUES (:revision, :type, :title, :summary, :content, :format, :publish, :created, :changed, :status, :author);"
+	sql_select_node_revisions: STRING = "SELECT nodes.nid, node_revisions.revision, nodes.type, node_revisions.title, node_revisions.summary, node_revisions.content, node_revisions.format, node_revisions.author, node_revisions.editor, nodes.publish, nodes.created, node_revisions.changed, node_revisions.status FROM nodes INNER JOIN node_revisions ON nodes.nid = node_revisions.nid WHERE nodes.nid = :nid AND node_revisions.revision < :revision ORDER BY node_revisions.revision DESC;"
+			-- SQL query to get node revisions (missing the latest one).
+
+	sql_select_node_by_id_and_revision: STRING = "SELECT nodes.nid, node_revisions.revision, nodes.type, node_revisions.title, node_revisions.summary, node_revisions.content, node_revisions.format, node_revisions.author, node_revisions.editor, node_revisions.editor, nodes.publish, nodes.created, node_revisions.changed, node_revisions.status FROM nodes INNER JOIN node_revisions ON nodes.nid = node_revisions.nid WHERE nodes.nid = :nid AND node_revisions.revision = :revision ORDER BY node_revisions.revision DESC;"
+			--
+	sql_copy_node_to_revision: STRING = "INSERT INTO node_revisions (nid, revision, title, summary, content, format, author, editor, changed, status) SELECT nid, revision, title, summary, content, format, author, editor, changed, status FROM nodes WHERE nid=:nid;"
+
+	Sql_last_insert_node_revision: STRING = "SELECT MAX(revision) FROM node_revisions;"
+	Sql_last_insert_node_revision_for_nid: STRING = "SELECT MAX(revision) FROM node_revisions WHERE nid=:nid;"
+
+	sql_delete_node_revisions: STRING = "DELETE FROM node_revisions WHERE nid=:nid;"
+
+
+feature {NONE} -- Queries insert and update
+
+	sql_insert_node: STRING = "INSERT INTO nodes (revision, type, title, summary, content, format, publish, created, changed, status, author, editor) VALUES (:revision, :type, :title, :summary, :content, :format, :publish, :created, :changed, :status, :author, :editor);"
 			-- SQL Insert to add a new node.
 
-	sql_update_node : STRING = "UPDATE nodes SET revision=:revision, type=:type, title=:title, summary=:summary, content=:content, format=:format, publish=:publish, changed=:changed, status=:status, author=:author WHERE nid=:nid;"
+	sql_update_node : STRING = "UPDATE nodes SET revision=:revision, type=:type, title=:title, summary=:summary, content=:content, format=:format, publish=:publish, changed=:changed, status=:status, author=:author, editor=:editor WHERE nid=:nid;"
 			-- SQL update node.
 
 	sql_trash_node: STRING = "UPDATE nodes SET changed=:changed, status =:status WHERE nid=:nid"
@@ -570,14 +620,9 @@ feature {NONE} -- Queries
 
 	sql_last_insert_node_id: STRING = "SELECT MAX(nid) FROM nodes;"
 
-	sql_copy_node_to_revision: STRING = "INSERT INTO node_revisions (nid, revision, title, summary, content, format, author, changed, status) SELECT nid, revision, title, summary, content, format, author, changed, status FROM nodes WHERE nid=:nid;"
-
-	Sql_last_insert_node_revision: STRING = "SELECT MAX(revision) FROM node_revisions;"
-	Sql_last_insert_node_revision_for_nid: STRING = "SELECT MAX(revision) FROM node_revisions WHERE nid=:nid;"
-
-	sql_delete_node_revisions: STRING = "DELETE FROM node_revisions WHERE nid=:nid;"
-
 feature {NONE} -- Implementation
+
+	sql_select_all_from_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, editor, publish, created, changed, status FROM nodes "
 
 	fetch_node: detachable CMS_PARTIAL_NODE
 		do
@@ -605,16 +650,19 @@ feature {NONE} -- Implementation
 				if attached sql_read_integer_64 (8) as l_author_id then
 					Result.set_author (create {CMS_PARTIAL_USER}.make_with_id (l_author_id))
 				end
-				if attached sql_read_date_time (9) as l_publication_date then
+				if attached sql_read_integer_64 (9) as l_editor_id then
+					Result.set_editor (create {CMS_PARTIAL_USER}.make_with_id (l_editor_id))
+				end
+				if attached sql_read_date_time (10) as l_publication_date then
 					Result.set_publication_date (l_publication_date)
 				end
-				if attached sql_read_date_time (10) as l_creation_date then
+				if attached sql_read_date_time (11) as l_creation_date then
 					Result.set_creation_date (l_creation_date)
 				end
-				if attached sql_read_date_time (11) as l_modif_date then
+				if attached sql_read_date_time (12) as l_modif_date then
 					Result.set_modification_date (l_modif_date)
 				end
-				if attached sql_read_integer_32 (12) as l_status then
+				if attached sql_read_integer_32 (13) as l_status then
 					Result.set_status (l_status)
 				end
 			end

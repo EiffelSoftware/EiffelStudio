@@ -275,7 +275,11 @@ feature -- Hooks
 											if l_entity.is_published then
 												if l_entity.author = Void then
 														-- FIXME!!!
-													l_entity.set_author (l_page_api.cms_api.user)
+													if attached l_entity.editor as l_editor then
+														l_entity.set_author (l_editor)
+													else
+														l_entity.set_author (l_page_api.cms_api.user)
+													end
 													a_import_ctx.log (l_node_type.name + " %"" + fp.utf_8_name + "%" WARNING (Author is unknown!)")
 												end
 												if attached l_entity.author as l_author then

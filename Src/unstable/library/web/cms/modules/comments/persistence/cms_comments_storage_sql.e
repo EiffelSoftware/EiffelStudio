@@ -47,7 +47,7 @@ feature -- Access
 				sql_query (sql_select_comments_for_content, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_comment as obj then
 					Result.force (obj)

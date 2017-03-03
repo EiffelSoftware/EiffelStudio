@@ -566,7 +566,7 @@ feature -- Access: roles and permissions
 				sql_query (select_role_permissions_by_role_id, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached sql_read_string (1) as l_permission then
 					Result.force (l_permission)
@@ -590,7 +590,7 @@ feature -- Access: roles and permissions
 				sql_query (select_role_permissions, Void)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached sql_read_string (1) as l_permission then
 					Result.force (l_permission)
@@ -1157,7 +1157,7 @@ feature -- Acess: Temp users
 				sql_query (sql_select_temp_recent_users, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_temp_user as l_user then
 					Result.force (l_user)

@@ -255,7 +255,7 @@ feature -- Logs
 				sql_query (l_sql, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_log as l_log then
 					Result.force (l_log)

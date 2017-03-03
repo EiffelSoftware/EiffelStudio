@@ -7,11 +7,9 @@
 			"size": 5,
 			"locations": {
 				"bm": "https://bertrandmeyer.com/feed/",
-				"blog": "https://room.eiffel.com/blog/feed",
-				"article": "https://room.eiffel.com/article/feed",
-				"library": "https://room.eiffel.com/library/feed"
+				"blog": "https://www.eiffel.org/nodes/blog/feed"
 			}
-			, "categories": ["Eiffel"]
+			, "categories": {"bm": ["Eiffel"]}
 			,"option_description": "enabled"
 		},
 		"forum": {
@@ -30,11 +28,9 @@
 			"size": 25,
 			"locations": {
 				"bm": "https://bertrandmeyer.com/feed/",
-				"blog": "https://room.eiffel.com/blog/feed",
-				"article": "https://room.eiffel.com/article/feed",
-				"library": "https://room.eiffel.com/library/feed"
+				"blog": "https://www.eiffel.org/nodes/blog/feed"
 			}
-			, "categories": ["Eiffel"]
+			, "bm_categories": ["Eiffel"]
 			,"option_description": "enabled"
 		},
 		"forum_page": {

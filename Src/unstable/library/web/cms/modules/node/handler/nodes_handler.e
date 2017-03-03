@@ -96,7 +96,7 @@ feature -- HTTP Methods
 			until
 				nb = l_size or l_exhausted
 			loop
-				create l_params.make (1 + (pg * 25), 25)
+				create l_params.make (pg * 25, 25)
 				if attached node_api.recent_published_nodes_of_type (a_content_type, l_params) as lst then
 					l_exhausted := True
 					across

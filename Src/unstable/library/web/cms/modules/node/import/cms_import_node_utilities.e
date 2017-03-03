@@ -85,6 +85,10 @@ feature -- Conversion
 				if attached {JSON_OBJECT} j.item ("author") as j_author then
 					l_node.set_author (json_to_user (j_author, a_node_api))
 				end
+				if attached {JSON_OBJECT} j.item ("editor") as j_editor then
+					l_node.set_editor (json_to_user (j_editor, a_node_api))
+				end
+
 				if attached {JSON_OBJECT} j.item ("data") as j_data then
 					l_node.set_all_content (json_string_item (j_data, "content"), json_string_item (j_data, "summary"), json_string_8_item (j_data, "format"))
 				end

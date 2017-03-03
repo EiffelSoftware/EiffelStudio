@@ -201,9 +201,9 @@ feature -- Forms ...
 				s := l_summary
 			end
 
-			if attached fd.string_item ("format") as s_format and then attached response.api.format (s_format) as f_format then
+			if attached fd.string_item ("format") as s_format and then attached cms_api.format (s_format) as f_format then
 				f := f_format
-			elseif a_node /= Void and then attached a_node.format as s_format and then attached response.api.format (s_format) as f_format then
+			elseif a_node /= Void and then attached a_node.format as s_format and then attached cms_api.format (s_format) as f_format then
 				f := f_format
 			else
 				f := cms_api.formats.default_format
@@ -214,8 +214,13 @@ feature -- Forms ...
 				a_node.set_content (b, s, f.name)
 			end
 
-			-- Update author
-			a_node.set_author (response.user)
+			-- Update editor, author
+			a_node.set_editor (cms_api.user)
+			if a_node.author = Void then
+				a_node.set_author (cms_api.user)
+			else
+					-- Keep existing author as creator!
+			end
 		end
 
 	new_node (response: NODE_RESPONSE; fd: WSF_FORM_DATA; a_node: detachable CMS_NODE): G
@@ -253,7 +258,8 @@ feature -- Forms ...
 					l_node := content_type.new_node_with_title ("...", Void)
 				end
 			end
-			l_node.set_author (response.user)
+			l_node.set_author (cms_api.user)
+			l_node.set_editor (cms_api.user)
 
 				--Summary
 			if attached fd.string_item ("summary") as l_summary then

@@ -107,6 +107,14 @@ feature -- Access
 			across Result as ic all ic.item.is_typed_as (a_node_type.name) end
 		end
 
+	recent_published_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_lower: INTEGER; a_count: INTEGER): ITERABLE [CMS_NODE]
+			-- Recent published `a_count` nodes of type `a_node_type` with an offset of `lower`
+		deferred
+		ensure
+			expected_type: across Result as ic all ic.item.is_typed_as (a_node_type.name) end
+			published: across Result as ic all ic.item.is_published end
+		end
+
 	recent_node_changes_before (a_lower: INTEGER; a_count: INTEGER; a_date: DATE_TIME): LIST [CMS_NODE]
 			-- List of recent changes, before `a_date', according to `params' settings.
 		deferred

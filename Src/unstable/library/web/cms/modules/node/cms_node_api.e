@@ -190,6 +190,12 @@ feature -- Access: Node
 			Result := node_storage.recent_nodes_of_type (a_content_type, params.offset.to_integer_32, params.size.to_integer_32)
 		end
 
+	recent_published_nodes_of_type (a_content_type: CMS_CONTENT_TYPE; params: CMS_DATA_QUERY_PARAMETERS): ITERABLE [CMS_NODE]
+			-- Most recent published `a_content_type` nodes according to `params.offset' and `params.size', and order by publication_date.
+		do
+			Result := node_storage.recent_published_nodes_of_type (a_content_type, params.offset.to_integer_32, params.size.to_integer_32)
+		end
+
 	recent_node_changes_before (params: CMS_DATA_QUERY_PARAMETERS; a_date: DATE_TIME): ITERABLE [CMS_NODE]
 			-- List of recent changes, before `a_date', according to `params' settings.
 		do

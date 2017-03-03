@@ -31,6 +31,7 @@ test	ca-unread-variable-leftover				codeanalysis019 tcf pass code_analysis ca020
 test	ca-obsolete-feature-call			codeanalysis020 tcf pass code_analysis ca069 obsolete_call
 test	ca-obsolete-assigner-query			codeanalysis021 tcf pass code_analysis ca069 obsolete_call
 test	ca-obsolete-assigner-command			codeanalysis022 tcf pass code_analysis ca069 obsolete_call
+test	ca-obsolete-feature-call-date			codeanalysis023 tcf pass code_analysis ca069 obsolete_call
 
 -- EiffelTime tests
 

@@ -135,10 +135,13 @@ feature -- Hooks
 			f_user: WSF_FORM_CHECKBOX_INPUT
 			f_set: WSF_FORM_FIELD_SET
 			l_params: CMS_DATA_QUERY_PARAMETERS
+			l_step: NATURAL_32
+			l_name: READABLE_STRING_32
 			nb: INTEGER
 			i: INTEGER
 		do
 			create f.make (a_response.url ("messaging", Void), "messaging-form")
+
 			if attached api.user as l_current_user then
 				nb := api.user_api.users_count
 				from
@@ -146,10 +149,11 @@ feature -- Hooks
 					f_set.set_legend ("Select users")
 					f.extend (f_set)
 					i := 0
+					l_step := 10
 				until
 					i > nb
 				loop
-					create l_params.make (i.to_natural_64, 25)
+					create l_params.make (i.to_natural_64, l_step)
 					if attached api.user_api.recent_users (l_params) as l_users then
 						across
 							l_users as ic
@@ -157,12 +161,17 @@ feature -- Hooks
 							if l_current_user.id = ic.item.id then
 							else
 								create f_user.make_with_value ("users[]", ic.item.id.out)
-								f_user.set_title (api.user_api.user_display_name (ic.item))
+								l_name := api.user_api.user_display_name (ic.item)
+								if l_name.same_string (ic.item.name) then
+									f_user.set_title (l_name)
+								else
+									f_user.set_title (l_name + " (" + ic.item.name + ")")
+								end
 								f_set.extend (f_user)
 							end
 						end
 					end
-					i := i + 25
+					i := i + l_step.to_integer_32
 				end
 
 				create f_name.make ("title")
@@ -182,6 +191,31 @@ feature -- Hooks
 				create f_submit.make_with_text ("submit-op", "Send")
 				f.extend (f_submit)
 			end
+			f.extend_html_text ("[
+<script>
+var lastChecked = null;
+
+$(document).ready(function() {
+    var $chkboxes = $('input[name="users\[\]"]');
+    $chkboxes.click(function(e) {
+        if(!lastChecked) {
+            lastChecked = this;
+            return;
+        }
+
+        if(e.shiftKey) {
+            var start = $chkboxes.index(this);
+            var end = $chkboxes.index(lastChecked);
+
+            $chkboxes.slice(Math.min(start,end), Math.max(start,end)+ 1).prop('checked', lastChecked.checked);
+
+        }
+
+        lastChecked = this;
+    });
+});
+</script>
+			]")			
 			Result := f
 		end
 
@@ -321,61 +355,5 @@ feature {NONE} -- Contact Message
 			end
 			Result := smt.string
 		end
-
---	email_html_message (a_message_id: READABLE_STRING_8; a_response: CMS_RESPONSE; a_html_encoded_values: STRING_TABLE [READABLE_STRING_8]): STRING
---			-- html message related to `a_message_id'.
---		local
---			res: PATH
---			p: detachable PATH
---			tpl: CMS_SMARTY_TEMPLATE_BLOCK
---			exp: CMS_STRING_EXPANDER [STRING_8]
---		do
---			write_debug_log (generator + ".email_html_message for [" + a_message_id + " ]")
-
---			create res.make_from_string ("templates")
---			res := res.extended ("email_").appended (a_message_id).appended_with_extension ("tpl")
---			p := a_response.api.module_theme_resource_location (Current, res)
---			if p /= Void then
---				if attached p.entry as e then
---					create tpl.make (a_message_id, Void, p.parent, e)
---					write_debug_log (generator + ".email_html_message from smarty template:" + tpl.out)
---				else
---					create tpl.make (a_message_id, Void, p.parent, p)
---					write_debug_log (generator + ".email_html_message from smarty template:" + tpl.out)
---				end
---				across
---					a_html_encoded_values as ic
---				loop
---					tpl.set_value (ic.item, ic.key)
---				end
---				Result := tpl.to_html (a_response.theme)
---			else
---				if a_message_id.is_case_insensitive_equal_general ("message") then
---					create Result.make_from_string (messaging_message_template)
---				elseif a_message_id.is_case_insensitive_equal_general ("notification") then
---					create Result.make_from_string (messaging_notification_message_template)
---				else
---					create Result.make_from_string (a_message_id)
---					across
---						a_html_encoded_values as ic
---					loop
---						Result.append ("<li>")
---						Result.append (html_encoded (ic.key))
---						Result.append (": ")
---						Result.append (ic.item) -- Already html encoded.
---						Result.append ("</li>%N")
---					end
---				end
-
---				create exp.make
---				across
---					a_html_encoded_values as ic
---				loop
---					exp.put (ic.item, ic.key)
---				end
---				exp.expand_string (Result)
---				write_debug_log (generator + ".email_html_message using built-in message:" + Result)
---			end
---		end
 
 end

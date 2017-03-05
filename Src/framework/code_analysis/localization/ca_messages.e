@@ -533,14 +533,37 @@ feature -- Rule Violations
 			Result := locale.translation_in_context ("Obsolete feature {1} of class {2} is called from {3} of class {4}:{5}", "code_analyzer.violation")
 		end
 
-	obsolete_feature_invalid_date: STRING_32
+	obsolete_feature_invalid_date_title (feature_count: INTEGER): STRING_32
 		do
-			Result := locale.translation_in_context ("Obsolete message date is absent or unreadable. It should appear in the end of the message in brackets, e.g., [2017-05-31]. Default value is used.", once "code_analyzer.violation")
+			Result := locale.plural_translation_in_context
+				("Obsolete message date for feature {1} is absent or unreadable.",
+				"Obsolete message date for features {1} is absent or unreadable.",
+				once "code_analyzer.violation",
+				feature_count)
+		end
+
+	obsolete_feature_invalid_date_violation: STRING_32
+		do
+			Result := locale.translation_in_context ("Obsolete message date should appear at the end of the message in brackets. The default value [{1}] is used.", once "code_analyzer.violation")
 		end
 
 	obsolete_feature_call_expires_in (n: INTEGER): STRING_32
 		do
 			Result := locale.plural_translation_in_context ("The obsolete feature call has to be removed in a day.", "The obsolete feature call has to be removed in {1} days.",  once "code_analyzer.violation", n)
+		end
+
+	obsolete_feature_title (feature_count: INTEGER): STRING_32
+		do
+			Result := locale.plural_translation_in_context
+				("A feature {1} is obsolete.",
+				"Features {1} are obsolete.",
+				once "code_analyzer.violation",
+				feature_count)
+		end
+
+	obsolete_feature_violation: STRING_32
+		do
+			Result := locale.translation_in_context ("Obsolete features should be removed.", "code_analyzer.violation")
 		end
 
 	error: STRING_32

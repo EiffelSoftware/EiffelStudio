@@ -169,9 +169,9 @@ feature -- Hash Code
 
 feature {CA_CODE_ANALYZER} -- Preferences
 
-	full_preference_name (a_preference_name: STRING): STRING
+	frozen full_preference_name (a_preference_name: STRING): STRING
 		do
-			Result := preference_namespace + a_preference_name
+			Result := full_rule_preference_name (a_preference_name, name)
 		end
 
 feature -- Preferences
@@ -193,28 +193,8 @@ feature -- Preferences
 
 feature {NONE} -- Preferences
 
-	frozen preference_namespace: STRING
-			-- Every rule has a separate sub namespace so that in the preferences dialog,
-			-- the rule will have its own folder.
-		do
-			Result := "rule." + name + "."
-		end
-
 	option_name_severity: STRING = "severity"
 			-- A name of a severity option.
-
-	frozen is_integer_string_within_bounds (a_value: attached READABLE_STRING_GENERAL; a_lower, a_upper: INTEGER): BOOLEAN
-			-- Is the integer string `a_value' within the interval [`a_lower', `a_upper']?
-		require
-			is_integer: a_value.is_integer
-		local
-			int: INTEGER
-		do
-			int := a_value.to_integer
-			if int >= a_lower and int <= a_upper then
-				Result := True
-			end
-		end
 
 invariant
 	checks_some_classes: checks_library_classes or checks_nonlibrary_classes

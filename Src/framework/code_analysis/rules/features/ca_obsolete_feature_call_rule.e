@@ -11,10 +11,13 @@ class
 	CA_OBSOLETE_FEATURE_CALL_RULE
 
 inherit
+	CA_OBSOLETE_FEATURE
+		redefine
+			make
+		end
+
 	CA_STANDARD_RULE
-
 	DATE_VALIDITY_CHECKER
-
 	INTERNAL_COMPILER_STRING_EXPORTER
 
 create
@@ -24,15 +27,9 @@ feature {NONE} -- Initialization
 
 	make (m: PREFERENCE_MANAGER)
 			-- Initialize rule using preferences from `m`.
-		local
-			l_factory: BASIC_PREFERENCE_FACTORY
 		do
 			make_with_defaults
-			create l_factory
-			feature_call_expiration := l_factory.new_integer_preference_value (m,
-				preference_option_name_feature_call_expiration, default_feature_call_expiration)
-			feature_call_expiration.set_default_value (default_feature_call_expiration.out)
-			feature_call_expiration.set_validation_agent (agent is_integer_string_within_bounds (?, 1, {like {DATE_DURATION}.days_count}.max_value))
+			Precursor (m)
 		end
 
 	register_actions (c: CA_ALL_RULES_CHECKER)
@@ -106,23 +103,6 @@ feature {NONE} -- State
 
 	checker: CA_ALL_RULES_CHECKER
 			-- Code analysis iterator.
-
-feature {NONE} -- Preferences
-
-	preference_option_name_feature_call_expiration: STRING
-			-- A name of a call expiration option within the corresponding preference namespace.
-		do
-			Result := full_preference_name (option_name_feature_call_expiration)
-		end
-
-	option_name_feature_call_expiration: STRING = "call_expiration"
-			-- A name of a call expiration option.
-
-	default_feature_call_expiration: INTEGER = 366
-			-- The default call expiration period necessary to trigger a rule violation.
-
-	feature_call_expiration: INTEGER_PREFERENCE
-			-- The call expiration necessary tol trigger a rule violation.
 
 feature {NONE} -- Rule Checking
 
@@ -243,7 +223,6 @@ feature {NONE} -- Rule Checking
 							caller_class: CLASS_C;
 							callee_message: READABLE_STRING_32;
 							days: INTEGER;
-							has_date: BOOLEAN;
 							t: TEXT_FORMATTER)
 						local
 							affected: ITERABLE [PROCEDURE [TEXT_FORMATTER]]
@@ -280,80 +259,15 @@ feature {NONE} -- Rule Checking
 									message.element (agent {TEXT_FORMATTER}.add_int (days))
 								>>)
 							end
-							if not has_date then
-								t.add_new_line
-								t.add (ca_messages.obsolete_feature_invalid_date)
-							end
-						end (f.e_feature, c, feature_names, current_context.checking_class, u.utf_8_string_8_to_string_32 (m), expires_in, attached stamp, ?),
+						end (f.e_feature, c, feature_names, current_context.checking_class, u.utf_8_string_8_to_string_32 (m), expires_in, ?),
 						Current)
 					violation.set_location (call.first_token (current_context.matchlist))
-					violation.long_description_info.extend (c.lace_class)
-					violation.long_description_info.extend (f.e_feature)
-					violation.long_description_info.extend (obsolete_message)
-					violation.long_description_info.extend (stamp)
-					violation.long_description_info.extend (expires_in)
 					if attached violation_severity then
 						violation.set_severity (violation_severity)
 					end
 					violations.extend (violation)
 				end
 			end
-		end
-
-	date (m: STRING): detachable TUPLE [message: STRING; date: DATE]
-			-- Date specified in the message `m` if any.
-			-- If a date is extracted, the message without date information is returned.
-		local
-			i, j: like {STRING}.count
-			c: CHARACTER
-			date_string: STRING
-		do
-				-- Look for a trailing ']'.
-			from
-				i := m.count
-			until
-				i <= 0 or else m [i] = ']'
-			loop
-				c := m [i]
-				if c.is_space or else c.is_punctuation or else not c.is_printable then
-						-- Advance to the next character.
-					i := i - 1
-				else
-						-- Stop iteration.
-					i := 0
-				end
-			end
-			from
-				j := i
-			until
-				j <= 1 or else attached date_string
-			loop
-				j := j - 1
-				if m [j] = '[' then
-					date_string := m.substring (j + 1, i - 1)
-				end
-			end
-			if attached date_string and then date_valid (date_string, date_code) then
-					-- Remove date string from the message.
-				from
-					j := j - 1
-				until
-					j <= 1 or else not m [j].is_space
-				loop
-					j := j - 1
-				end
-				Result := [m.substring (1, j), create {DATE}.make_from_string (date_string, date_code)]
-			end
-		end
-
-	date_code: STRING = "yyyy-mm-dd"
-			-- Expected string code.
-
-	default_date: DATE
-			-- Date to be used when none is specified explicitly.
-		once
-				-- A safe default corresponds to the release of the compiler with checks for obsolete messages.
-			create Result.make (2017, 7, 1)
 		end
 
 feature {NONE} -- Formatting

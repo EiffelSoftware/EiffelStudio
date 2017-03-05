@@ -8352,30 +8352,20 @@ feature {NONE} -- Visitor
 			l_interval: INTERVAL_B
 			l_next_interval: INTERVAL_B
 			l_tmp: BYTE_LIST [INTERVAL_B]
-			i, j, nb: INTEGER
 			l_case: CASE_B
-			l_list: BYTE_LIST [BYTE_NODE]
 			l_is_empty: BOOLEAN
-			l_inspect_control: like inspect_control
 		do
 			if not is_byte_node_enabled then
-				l_inspect_control := inspect_control
-				if l_inspect_control /= Void then
+				if attached inspect_control as l_inspect_control then
+					across
+						l_as.interval as interval_cursor
 					from
-						nb := l_as.interval.count
-						i := nb
-						j := nb + 1
-					until
-						i <= 0
-					loop
-						l_as.interval.i_th (i).process (Current)
-						if l_inspect_control.last_interval_byte_node /= Void then
-							j := j - 1
-						end
-						i := i - 1
-					end
-					if j > nb then
 						l_is_empty := True
+					loop
+						interval_cursor.item.process (Current)
+						if l_inspect_control.last_interval_byte_node /= Void then
+							l_is_empty := False
+						end
 					end
 				end
 				if l_as.compound /= Void then
@@ -8383,23 +8373,17 @@ feature {NONE} -- Visitor
 				end
 			else
 						-- Collect all intervals in an array
+				across
+					l_as.interval as interval_cursor
 				from
-					nb := l_as.interval.count
-					i := nb
-					j := nb + 1
-					create l_intervals.make (1, i)
-				until
-					i <= 0
+					create l_intervals.make_empty
 				loop
-					l_as.interval.i_th (i).process (Current)
-					l_interval ?= last_byte_node
-					if l_interval /= Void then
-						j := j - 1
-						l_intervals.put (l_interval, j)
+					interval_cursor.item.process (Current)
+					if attached {INTERVAL_B} last_byte_node as interval_byte_code then
+						l_intervals.force (interval_byte_code, l_intervals.upper + 1)
 					end
-					i := i - 1
 				end
-				if j > nb then
+				if l_intervals.is_empty then
 					l_is_empty := True
 					if l_as.compound /= Void then
 						process_compound (l_as.compound)
@@ -8407,23 +8391,18 @@ feature {NONE} -- Visitor
 					end
 				else
 						-- Array of intervals is not empty
-					if j > 1 then
-							-- Remove voids
-						fixme ("Replace the following instruction with a call to ARRAY.resize as soon as it allows to shrink.")
-						l_intervals := l_intervals.subarray (j, nb)
-					end
 						-- Sort an array
 					l_intervals.sort
 						-- Copy intervals to `l_tmp' merging adjacent intervals
+					across
+						l_intervals as interval_cursor
 					from
-						create l_tmp.make (nb - j + 1)
-						l_interval := l_intervals.item (j)
+						create l_tmp.make (l_intervals.count)
+						l_interval := interval_cursor.item
 						l_tmp.extend (l_interval)
-						j := j + 1
-					until
-						j > nb
+						interval_cursor.forth
 					loop
-						l_next_interval := l_intervals.item (j)
+						l_next_interval := interval_cursor.item
 						if l_interval.upper.is_next (l_next_interval.lower) then
 								-- Merge intervals
 							l_interval.set_upper (l_next_interval.upper)
@@ -8432,14 +8411,14 @@ feature {NONE} -- Visitor
 							l_interval := l_next_interval
 							l_tmp.extend (l_interval)
 						end
-						j := j + 1
 					end
 					create l_case
 					l_case.set_interval (l_tmp)
 					if l_as.compound /= Void then
 						process_compound (l_as.compound)
-						l_list ?= last_byte_node
-						l_case.set_compound (l_list)
+						if attached {BYTE_LIST [BYTE_NODE]} last_byte_node as l_list then
+							l_case.set_compound (l_list)
+						end
 					end
 					l_case.set_line_number (l_as.interval.start_location.line)
 				end

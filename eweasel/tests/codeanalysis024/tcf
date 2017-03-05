@@ -1,0 +1,34 @@
+test_name 	 ca-obsolete-feature-date
+test_description Obsolete feature should be reported with different severity levels (if at all) depending on the specified date.
+
+copy_sub	Ace $TEST Ace
+
+	-- 4 years ago: error.
+define_date     DATE -1461
+copy_sub	test.e $CLUSTER test.e
+
+analyze_code rule "CA070"
+analyze_code_result violation "TEST CA070:10-Error"
+
+	-- 1 years and 1 day ago: warning.
+define_date     DATE -367
+copy_sub	test.e $CLUSTER test.e
+
+analyze_code rule "CA070"
+analyze_code_result violation "TEST CA070:10-Warning"
+
+	-- Yerterday: nothing.
+define_date     DATE -1
+copy_sub	test.e $CLUSTER test.e
+
+analyze_code rule "CA070"
+analyze_code_result ok
+
+	-- In a month: nothing.
+define_date     DATE 31
+copy_sub	test.e $CLUSTER test.e
+
+analyze_code rule "CA070"
+analyze_code_result ok
+
+test_end

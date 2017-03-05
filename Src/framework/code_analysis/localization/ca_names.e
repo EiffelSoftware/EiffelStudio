@@ -728,6 +728,12 @@ feature -- Rules
 	obsolete_feature_call_description: STRING_32
 		do Result := locale.translation_in_context ("The code calls an obsolete feature that is going to be removed in the future. The code should be updated to avoid calling this feature.",  once "code_analyzer") end
 
+	obsolete_feature_title: STRING_32
+		do Result := locale.translation_in_context ("Obsolete feature",  once "code_analyzer") end
+
+	obsolete_feature_description: STRING_32
+		do Result := locale.translation_in_context ("Obsolete feature should be removed.",  once "code_analyzer") end
+
 feature -- Preferences
 
 	preference_translation_namespace: STRING = "code_analysis.preference"

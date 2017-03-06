@@ -160,6 +160,8 @@ feature -- HTML Output
 				-- Output the title. If more than one page, also output the current page number
 			append_page_title_html_to (page, a_output)
 
+			append_user_related_html_to (page, a_output)
+
 				-- Get the posts from the current page (given by page number and entries per page)
 				-- Start list of posts
 			a_output.append ("<ul class=%"cms_blog_nodes%">%N")
@@ -198,12 +200,23 @@ feature -- HTML Output
 	append_page_title_html_to (a_page: CMS_RESPONSE; a_output: STRING)
 			-- Append the title of the page as a html string to `a_output'.
 			-- It shows the current page number.
+		local
+			l_title: STRING
 		do
-			a_output.append ("<h2>Blog")
+			create l_title.make_from_string ("Blog entries")
 			if multiple_pages_needed then
-				a_output.append (" (Page " + page_number.out + " of " + pages_count.out + ")")
+				l_title.append (" (Page " + page_number.out + " of " + pages_count.out + ")")
 			end
-			a_output.append ("</h2>")
+			a_page.set_title (l_title)
+--			a_output.append ("<h2>" + l_title + "</h2>")
+		end
+
+	append_user_related_html_to (a_page: CMS_RESPONSE; a_output: STRING)
+		do
+			if attached api.user as u and api.has_permission ("create blog") then
+				a_page.add_to_primary_tabs (a_page.local_link ("Create a new blog entry", "node/add/blog"))
+				a_page.add_to_primary_tabs (a_page.local_link ("View your blog entries", "blog/" + u.id.out))
+			end
 		end
 
 	append_creation_date_html_to (n: CMS_NODE; a_output: STRING)

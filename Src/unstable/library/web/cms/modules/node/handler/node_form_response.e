@@ -111,12 +111,16 @@ feature {NONE} -- Create a new node
 				end
 
 				if l_node.has_id then
-					set_title ("Edit " + html_encoded (a_type.title) + " #" + l_node.id.out)
+					set_title ("Edit " + html_encoded (a_type.title) + " item #" + l_node.id.out)
 					add_to_menu (node_local_link (l_node, translation ("View", Void)), primary_tabs)
 					add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void), node_api.node_path (l_node) + "/edit"), primary_tabs)
 				else
-					set_title ("New " + html_encoded (a_type.title))
+					set_title ("Create a new " + html_encoded (a_type.title) + " item")
 				end
+				if attached a_type.description as desc then
+					f.prepend (create {WSF_WIDGET_TEXT}.make_with_text ("<span class=%"description%">" + api.html_encoded (desc) + "</span>"))
+				end
+
 				f.append_to_html (wsf_theme, b)
 			else
 				b.append ("<h1>")
@@ -305,7 +309,6 @@ feature -- Form
 					-- Path aliase
 				l_node_path := node_api.node_path (l_node)
 				l_existing_path_alias := api.location_alias (l_node_path)
-
 				l_auto_path_alias := node_api.path_alias_uri_suggestion (l_node, a_type)
 				if attached fd.string_item ("path_alias") as f_path_alias then
 					l_path_alias := percent_encoder.partial_encoded_string (f_path_alias, <<'/'>>)
@@ -321,7 +324,9 @@ feature -- Form
 							api.set_path_alias (l_node_path, l_auto_path_alias, True)
 						elseif l_existing_path_alias.same_string (l_node_path) then
 								-- not aliased! Use default.
-							api.set_path_alias (l_node_path, l_auto_path_alias, True)
+							if a_type.is_path_alias_required then
+								api.set_path_alias (l_node_path, l_auto_path_alias, True)
+							end
 						else
 							add_error_message ("Permission denied to reset path alias on node #" + l_node.id.out + "!")
 						end
@@ -336,9 +341,9 @@ feature -- Form
 							l_node.set_link (node_api.node_link (l_node))
 						end
 					end
-				elseif l_existing_path_alias /= Void then
+				elseif l_existing_path_alias /= Void and then not l_existing_path_alias.same_string (l_node_path) then
 					l_node.set_link (create {CMS_LOCAL_LINK}.make (l_node.title, l_existing_path_alias))
-				elseif l_auto_path_alias /= Void then
+				elseif a_type.is_path_alias_required and l_auto_path_alias /= Void then
 						-- Use auto path alias
 					api.set_path_alias (l_node_path, l_auto_path_alias, True)
 					l_node.set_link (create {CMS_LOCAL_LINK}.make (l_node.title, l_auto_path_alias))

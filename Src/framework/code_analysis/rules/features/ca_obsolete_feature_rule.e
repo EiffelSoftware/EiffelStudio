@@ -93,7 +93,7 @@ feature {NONE} -- Preferences
 	preference_option_name_feature_expiration: STRING
 			-- A name of a call expiration option within the corresponding preference namespace.
 		do
-			Result := full_preference_name (option_name_feature_call_expiration)
+			Result := full_preference_name (option_name_feature_expiration)
 		end
 
 	option_name_feature_expiration: STRING = "expiration"

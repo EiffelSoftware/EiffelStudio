@@ -11,6 +11,7 @@
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="esa_client" location="..\esa_client.ecf" readonly="false"/>
+		<library name="gobo_time" location="$ISE_LIBRARY\library\gobo\gobo_time.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<cluster name="tests" location=".\" recursive="true">
 			<file_rule>

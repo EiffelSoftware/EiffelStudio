@@ -610,17 +610,34 @@ feature {NONE} -- Implementation
 	reload_docking_layout (text_widget: detachable EV_TEXT)
 		local
 			l_succeed: BOOLEAN
+			p: PATH
 		do
 			if dev_window.eb_debugger_manager.debug_mode_forced then
-				if text_widget /= Void then
-					text_widget.append_text ("- Loading layout for debug mode ...")
+				p := eiffel_layout.user_docking_debug_file_name (dev_window.window_id)
+				if dev_window.docking_manager.is_file_path_readable (p) then
+					if text_widget /= Void then
+						text_widget.append_text ("- Loading layout for debug mode ...")
+					end
+					l_succeed := dev_window.docking_manager.open_config_with_path (p)
+				else
+					if text_widget /= Void then
+						text_widget.append_text ("- Previous layout for debug mode was not found ...")
+					end
+					l_succeed := True
 				end
-				l_succeed := dev_window.docking_manager.open_config_with_path (eiffel_layout.user_docking_debug_file_name (dev_window.window_id))
 			else
-				if text_widget /= Void then
-					text_widget.append_text ("- Loading layout for standard mode ...")
+				p := eiffel_layout.user_docking_standard_file_name (dev_window.window_id)
+				if dev_window.docking_manager.is_file_path_readable (p) then
+					if text_widget /= Void then
+						text_widget.append_text ("- Loading layout for standard mode ...")
+					end
+					l_succeed := dev_window.docking_manager.open_config_with_path (p)
+				else
+					if text_widget /= Void then
+						text_widget.append_text ("- Previous layout for standard mode was not found ...")
+					end
+					l_succeed := True
 				end
-				l_succeed := dev_window.docking_manager.open_config_with_path (eiffel_layout.user_docking_standard_file_name (dev_window.window_id))
 			end
 			if l_succeed then
 				if text_widget /= Void then

@@ -26,7 +26,16 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	available_formats: ARRAYED_LIST [CONTENT_FORMAT]
-			-- Available formats for Current type.		
+			-- Available formats for Current type.	
+
+feature -- Setting			
+
+	is_path_alias_required: BOOLEAN
+			-- Is path alias required for Current node type?
+			-- By default: False.
+			-- (i.e always set a path alias, instead of default /node/{id})
+		do
+		end
 
 feature -- Factory
 

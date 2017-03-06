@@ -22,6 +22,7 @@ inherit
 			posts,
 			total_entries,
 			append_page_title_html_to,
+			append_user_related_html_to,
 			base_path
 		end
 
@@ -116,18 +117,29 @@ feature -- HTML Output
 
 	append_page_title_html_to (a_page: CMS_RESPONSE; a_output: STRING)
 			-- Returns the title of the page as a html string. It shows the current page number and the name of the current user
+		local
+			l_title: STRING
 		do
-			a_output.append ("<h2>Posts from ")
+			create l_title.make_from_string ("Blog entries from ")
 			if attached user as l_user then
-				a_output.append (html_encoded (a_page.user_profile_name (l_user)))
+				l_title.append (html_encoded (a_page.user_profile_name (l_user)))
 			else
-				a_output.append ("unknown user")
+				l_title.append ("unknown user")
 			end
 			if multiple_pages_needed then
-				a_output.append (" (Page " + page_number.out + " of " + pages_count.out + ")")
+				l_title.append (" (Page " + page_number.out + " of " + pages_count.out + ")")
 					-- Get the posts from the current page (limited by entries per page)
 			end
-			a_output.append ("</h2>")
+			a_page.set_title (l_title)
+--			a_output.append ("<h2>" + l_title + "</h2>")
+		end
+
+	append_user_related_html_to (a_page: CMS_RESPONSE; a_output: STRING)
+		do
+			if attached api.user as u and api.has_permission ("create blog") then
+				a_page.add_to_primary_tabs (a_page.local_link ("Create a new blog entry", "node/add/blog"))
+			end
+			a_page.add_to_primary_tabs (a_page.local_link ("View all blog entries", "blogs/"))
 		end
 
 	base_path : STRING

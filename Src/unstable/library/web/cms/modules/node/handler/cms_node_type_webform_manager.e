@@ -106,6 +106,8 @@ feature -- Forms ...
 
 	populate_form_with_path_alias (response: NODE_RESPONSE; f: CMS_FORM; a_node: detachable CMS_NODE)
 		local
+			w: detachable WSF_WIDGET
+			div: WSF_FORM_DIV
 			ti: WSF_FORM_TEXT_INPUT
 			thi: WSF_FORM_HIDDEN_INPUT
 			l_uri: detachable READABLE_STRING_8
@@ -115,11 +117,6 @@ feature -- Forms ...
 				-- Path alias		
 			l_auto_path_alias := node_api.path_alias_uri_suggestion (a_node, content_type)
 
-			create ti.make ("path_alias")
-			ti.set_label ("Path")
-			ti.set_pattern ("^([A-Za-z0-9-_+ ]).+")
-			ti.set_description ("Path alias pattern: ^([A-Za-z0-9-_+ ]).+  For example resource/page1 ")
-			ti.set_size (70)
 			if a_node /= Void and then a_node.has_id then
 				if attached a_node.link as lnk then
 					l_uri := lnk.location
@@ -130,54 +127,87 @@ feature -- Forms ...
 					l_iri := percent_encoder.percent_decoded_string (response.api.location_alias (response.node_api.node_path (a_node)))
 					l_uri := l_iri.to_string_8
 				end
-				ti.set_description ("Optionally specify an alternative URL path by which this content can be accessed.<br/>%NFor example, type 'about' when writing an about page. Use a relative path or the URL alias won't work.")
 			else
 				l_uri := ""
 			end
-			ti.set_text_value (l_uri)
-			ti.set_placeholder (l_auto_path_alias)
-			ti.set_validation_action (agent (fd: WSF_FORM_DATA; ia_response: NODE_RESPONSE; ia_node: detachable CMS_NODE)
-					do
-						if
-							attached fd.string_item ("path_alias") as f_path_alias
-						then
-							if ia_response.api.is_valid_path_alias (f_path_alias) then
-									-- Ok.
-							elseif f_path_alias.is_empty then
-									-- Ok
-							elseif f_path_alias.starts_with_general ("/") then
-								fd.report_invalid_field ("path_alias", "Path alias should not start with a slash '/' .")
-							elseif f_path_alias.has_substring ("://") then
-								fd.report_invalid_field ("path_alias", "Path alias should not be absolute url .")
-							else
-									-- TODO: implement full path alias validation
-							end
+
+			if cms_api.has_permission ("edit path_alias") then
+				create ti.make ("path_alias")
+				ti.set_label ("Path")
+				ti.set_pattern ("^([A-Za-z0-9-_+ ]).+")
+				ti.set_description ("Path alias pattern: ^([A-Za-z0-9-_+ ]).+  For example resource/page1 ")
+				ti.set_size (70)
+
+				if a_node /= Void and then a_node.has_id then
+					ti.set_description ("Optionally specify an alternative URL path by which this content can be accessed.<br/>%NFor example, type 'about' when writing an about page. Use a relative path or the URL alias won't work.")
+				end
+
+				ti.set_text_value (l_uri)
+				ti.set_placeholder (l_auto_path_alias)
+				ti.set_validation_action (agent (fd: WSF_FORM_DATA; ia_response: NODE_RESPONSE; ia_node: detachable CMS_NODE)
+						do
 							if
-								attached ia_response.api.source_of_path_alias (f_path_alias) as l_aliased_location and then
-								((ia_node /= Void and then ia_node.has_id) implies not l_aliased_location.same_string (ia_response.node_api.node_path (ia_node)))
+								attached fd.string_item ("path_alias") as f_path_alias
 							then
-								fd.report_invalid_field ("path_alias", "Path is already aliased to location %"" + ia_response.link (Void, l_aliased_location, Void) + "%" !")
+								if ia_response.api.is_valid_path_alias (f_path_alias) then
+										-- Ok.
+								elseif f_path_alias.is_empty then
+										-- Ok
+								elseif f_path_alias.starts_with_general ("/") then
+									fd.report_invalid_field ("path_alias", "Path alias should not start with a slash '/' .")
+								elseif f_path_alias.has_substring ("://") then
+									fd.report_invalid_field ("path_alias", "Path alias should not be absolute url .")
+								else
+										-- TODO: implement full path alias validation
+								end
+								if
+									attached ia_response.api.source_of_path_alias (f_path_alias) as l_aliased_location and then
+									((ia_node /= Void and then ia_node.has_id) implies not l_aliased_location.same_string (ia_response.node_api.node_path (ia_node)))
+								then
+									fd.report_invalid_field ("path_alias", "Path is already aliased to location %"" + ia_response.link (Void, l_aliased_location, Void) + "%" !")
+								end
 							end
-						end
-					end(?, response, a_node)
-				)
-			if not cms_api.has_permission ("edit path_alias") then
+						end(?, response, a_node)
+					)
+				w := ti
+			elseif a_node /= Void and then a_node.has_id and then l_uri /= Void and then not l_uri.is_whitespace then
 					-- FIXME: should we have an input field or just a raw text?
-				ti.set_is_readonly (True)
+--				ti.set_is_readonly (True)
+				create div.make
+				div.add_css_class ("path-alias")
+				div.extend_html_text ("<strong><label>Path</label></strong> = ")
+				div.extend_html_text ("<a href=%""+ cms_api.site_url + l_uri +"%">" + l_uri + "</a>")
+				w := div
+			elseif content_type.is_path_alias_required and then l_auto_path_alias /= Void and then not l_auto_path_alias.is_whitespace then
+				create div.make
+				div.extend_html_text ("<strong><label>Path</label></strong> = ")
+				if a_node /= Void and then a_node.has_id then
+					div.extend_html_text ("<a href=%""+ cms_api.site_url + l_auto_path_alias +"%">" + l_auto_path_alias + "</a>")
+				else
+					div.extend_html_text ("<span>"+ cms_api.site_url + "</span>")
+--					if a_node /= Void and then a_node.has_id then
+--						div.extend_html_text ("<span>" + l_auto_path_alias + "</span>")
+--					else
+						div.extend_html_text ("<span>" + l_auto_path_alias + " ...</span>")
+--					end
+				end
+				w := div
 			end
-			if
-				attached f.fields_by_name ("title") as l_title_fields and then
-				attached l_title_fields.first as l_title_field
-			then
-				f.insert_after (ti, l_title_field)
-			else
-				f.extend (ti)
+			if w /= Void then
+				if
+					attached f.fields_by_name ("title") as l_title_fields and then
+					attached l_title_fields.first as l_title_field
+				then
+					f.insert_after (w, l_title_field)
+				else
+					f.extend (w)
+				end
+					-- Auto path alias / suggestion
+				create thi.make ("auto_path_alias")
+				thi.set_text_value (l_auto_path_alias)
+				thi.set_is_readonly (True)
+				f.insert_before (thi, w)
 			end
-				-- Auto path alias / suggestion
-			create thi.make ("auto_path_alias")
-			thi.set_text_value (l_auto_path_alias)
-			thi.set_is_readonly (True)
-			f.insert_after (thi, ti)
 		end
 
 	update_node	(response: NODE_RESPONSE; fd: WSF_FORM_DATA; a_node: CMS_NODE)

@@ -8,6 +8,9 @@ class
 
 inherit
 	CMS_NODE_TYPE [CMS_BLOG]
+		redefine
+			is_path_alias_required
+		end
 
 feature -- Access
 
@@ -19,6 +22,11 @@ feature -- Access
 
 	description: STRING_32 = "Content published as a blog post."
 			-- Optional description
+
+feature -- Setting			
+
+	is_path_alias_required: BOOLEAN = True
+			-- <Precursor>.
 
 feature -- Factory
 

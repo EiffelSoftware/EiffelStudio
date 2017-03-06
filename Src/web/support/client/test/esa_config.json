@@ -1,4 +1,4 @@
 {
-	"connection.timeout": 300,
+	"connection.timeout": 30,
 	"service.root": "http://localhost:9999"
 }

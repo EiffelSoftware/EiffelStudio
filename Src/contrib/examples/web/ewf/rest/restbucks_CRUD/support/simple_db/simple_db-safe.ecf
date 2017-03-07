@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="1A6B9D12-25F5-4BB8-98C0-DB6FDE9CCE18" message="Obsolete: use simple_db.ecf !" location="simple_db.ecf">
+</redirection>

@@ -31,14 +31,5 @@ feature {NONE} -- Initialization
 			import_service_options (create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI}.make_from_file ("debug.ini"))
 		end
 
---	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
---		local
---			dbg: WSF_DEBUG_HANDLER
---		do
---			res.put_error ("OH NO uri=" + req.request_uri + "%N")
---			create dbg.make
---			dbg.execute_starts_with ("", req, res)
---		end
-
 end
 

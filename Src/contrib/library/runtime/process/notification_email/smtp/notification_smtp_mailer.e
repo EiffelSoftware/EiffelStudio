@@ -21,8 +21,21 @@ create
 feature {NONE} -- Initialization
 
 	make (a_smtp_server: READABLE_STRING_8)
+			-- Create with smtp setting `user:password@hostname:port".
+		local
+			p,q: INTEGER
 		do
-			make_with_user (a_smtp_server, Void, Void)
+			p := a_smtp_server.index_of ('@', 1)
+			if p > 0 then
+				q := a_smtp_server.index_of (':', 1)
+				if q < p then
+					make_with_user (a_smtp_server.substring (p + 1, a_smtp_server.count), a_smtp_server.substring (1,  q -1), a_smtp_server.substring (q + 1,  p -1))
+				else
+					make_with_user (a_smtp_server.substring (p + 1, a_smtp_server.count), a_smtp_server.substring (1,  p -1), Void)
+				end
+			else
+				make_with_user (a_smtp_server, Void, Void)
+			end
 		end
 
 	make_with_user (a_smtp_server: READABLE_STRING_8; a_user: detachable READABLE_STRING_8; a_password: detachable READABLE_STRING_8)

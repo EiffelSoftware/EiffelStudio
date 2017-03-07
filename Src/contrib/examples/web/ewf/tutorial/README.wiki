@@ -1,4 +1,4 @@
-= Eiffel Web Framework =
+= EiffelWeb Framework =
 
 == Why would you use the Eiffel Web Framework ? ==
 
@@ -7,28 +7,28 @@ To write once and run on any web server, on any platforms thanks to the notion o
 
 == What is a connector? ==
 
-A connector is the layer between the underlying httpd server, and your application based on EWF.
-Currently, 4 connectors are available within EWF (but others are available outside).
-*­ CGI: the common CGI application (apache, iis, ...)
+A connector is the layer between the underlying httpd server, and your application based on EiffelWeb.
+Currently, 4 connectors are available within EiffelWeb (but others are available outside).
+* CGI: the common CGI application (apache, iis, ...)
 * FastCGI: on any server supporting libfcgi handling (apache, iis, ...)
-* Standalone: a standalone Eiffel Web server, it can be run anywhere easily, and debug simply with EiffelStudio's debugger. It supports all concurrency modes, and require EiffelStudio >= 15.05.
+* Standalone: a standalone Eiffel Web server, it can be run anywhere easily, and debug simply with EiffelStudio's debugger. It supports all concurrency modes, and require EiffelStudio >= 16.05
 
-Supporting a new connector is fairly simple, it just has to support the simple EWSGI specification which is really small. Then EWF will bring the power on top of it.
+Supporting a new connector is fairly simple, it just has to support the simple EWSGI specification which is really small. Then EiffelWeb will bring the power on top of it.
 
-So you can build your application and be sure you will be able to run it ... anywhere thanks to the conceіpt of connectors.
+So you can build your application and be sure you will be able to run it ... anywhere thanks to the concept of connectors.
 
 == EWSGI specification ==
 
-EWF relies on a small core specification, named EWSGI (Eiffel Web Servєr Gateway Interface). 
+EiffelWeb relies on a small core specification, named EWSGI (Eiffel Web Server Gateway Interface). 
 It is very limited on purpose to allow building new connector very easily.
 
-For now, you just need to know EWF is compliant with EWSGI specification.
+For now, you just need to know EiffelWeb is compliant with EWSGI specification.
 
 = Tutorial =
 
 Now let's discover the Eiffel Web Framework with this tutorial:
 
-# [[step_1.wiki|Step #1]]: You will learn first, how to get and install EWF.
+# [[step_1.wiki|Step #1]]: You will learn first, how to get and install EiffelWeb.
 # [[step_2.wiki|Step #2]]: build a simple Hello World application
 # [[step_3.wiki|Step #3]]: use the parameter to build dynamic service
 # [[step_4.wiki|Step #4]]: And you will learn how to dispatch URL

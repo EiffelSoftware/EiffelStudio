@@ -460,7 +460,7 @@ feature -- Execution
 				create h.make
 				h.put_content_type_text_plain
 				create s.make_empty
-				s.append ("Directory index: Access denied%N")
+				s.append ("Directory index %"" + uri + "%": Access denied%N")
 				res.set_status_code ({HTTP_STATUS_CODE}.forbidden)
 				h.put_content_length (s.count)
 				res.put_header_lines (h)
@@ -642,7 +642,7 @@ feature {NONE} -- implementation: date time
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

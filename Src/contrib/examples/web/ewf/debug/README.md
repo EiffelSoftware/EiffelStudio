@@ -1,0 +1,1 @@
+This example is a simple service that analyze the request and return a formatted output of the request data (query parameters, form parameters, environment variables, and so on). It could be used to debug client, or to experiment the EiffelWeb behavior on various connectors (standalone, apache, iis, ...).

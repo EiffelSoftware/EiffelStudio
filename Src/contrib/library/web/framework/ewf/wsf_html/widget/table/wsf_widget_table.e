@@ -15,6 +15,8 @@ inherit
 
 	WSF_WITH_CSS_STYLE
 
+	WSF_WITH_HTML_ATTRIBUTE
+
 	ITERABLE [WSF_WIDGET_TABLE_ITEM]
 
 create
@@ -230,6 +232,7 @@ feature -- Conversion
 			append_css_id_to (a_html)
 			append_css_class_to (a_html, Void)
 			append_css_style_to (a_html)
+			append_html_attributes_to (a_html)
 			a_html.append (">")
 
 			if has_title then

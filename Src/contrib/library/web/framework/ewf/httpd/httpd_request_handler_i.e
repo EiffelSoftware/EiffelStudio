@@ -172,7 +172,7 @@ feature -- Status change
 			has_error := True
 			if m /= Void and then is_verbose then
 				log (m.as_string_8, debug_level)
-			end
+			end			
 		end
 
 	reset_error
@@ -592,7 +592,6 @@ feature -- Output
 		ensure
 			logger_set: logger = a_logger
 		end
-
 
 	log_with_separation_line (m: STRING; a_level: INTEGER)
 			-- Log message `m'.

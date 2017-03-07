@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {WSF_WIDGET_TABLE}."
-	author: ""
+	description: "Summary description for {WSF_WIDGET_AGENT_TABLE}."
 	date: "$Date$"
 	revision: "$Revision$"
 

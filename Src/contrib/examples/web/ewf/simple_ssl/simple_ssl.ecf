@@ -8,22 +8,20 @@
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" syntax="transitional">
-			<assertions/>
+		<option warning="true">
 		</option>
 		<setting name="console_application" value="true"/>
-		
 		<variable name="ssl_enabled" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="http" location="..\..\..\..\library\network\protocol\http\http.ecf"/>
-		<library name="wsf" location="..\..\..\..\library\web\framework\ewf\wsf\wsf.ecf"/>
-		<library name="wsf_standalone" location="..\..\..\..\library\web\framework\ewf\wsf\connector\standalone.ecf"/>
+		<library name="http" location="../../../../library/network/protocol/http/http.ecf"/>
+		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf.ecf"/>
+		<library name="wsf_standalone" location="../../../../library/web/framework/ewf/wsf/connector/standalone.ecf"/>
 		<cluster name="simple" location=".\" recursive="true"/>
 	</target>
 	<target name="simple_ssl_st" extends="simple_ssl">
 		<description>Simple EiffelWeb standalone server with SSL support (Single threaded, thus no concurrent connection.)</description>
 		<capability>
-			<concurrency support="none" use="none"/>
+			<concurrency use="none"/>
 		</capability>
 	</target>
 </system>

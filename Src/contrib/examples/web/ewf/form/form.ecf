@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="form" uuid="1F7BD03F-AC70-42DD-8451-F8B19051641C">
+	<target name="common" abstract="true">
+		<file_rule>
+			<exclude>/.svn$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="http" location="../../../../library/network/protocol/http/http.ecf"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
+		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf.ecf"/>
+		<library name="wsf_html" location="../../../../library/web/framework/ewf/wsf_html/wsf_html.ecf"/>
+	</target>
+	<target name="form_standalone" extends="common">
+		<root class="APPLICATION" feature="make_and_launch"/>
+		<option debug="false" warning="true">
+			<debug name="dbglog" enabled="true"/>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<library name="default_standalone" location="../../../../library/web/framework/ewf/wsf/default/standalone.ecf"/>
+		<cluster name="src" location=".\" recursive="true"/>
+	</target>
+	<target name="form_standalone_mt" extends="form_standalone">
+		<capability>
+			<concurrency use="thread"/>
+		</capability>
+	</target>
+	<target name="form_standalone_st" extends="form_standalone">
+		<capability>
+			<concurrency use="none"/>
+		</capability>
+	</target>
+	<target name="form_cgi" extends="common">
+		<root class="APPLICATION" feature="make_and_launch"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<library name="default_cgi" location="../../../../library/web/framework/ewf/wsf/default/cgi.ecf"/>
+		<cluster name="src" location=".\" recursive="true"/>
+	</target>
+	<target name="form_libfcgi" extends="common">
+		<root class="APPLICATION" feature="make_and_launch"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<library name="default_libfcgi" location="../../../../library/web/framework/ewf/wsf/default/libfcgi.ecf"/>
+		<cluster name="src" location=".\" recursive="true"/>
+	</target>
+</system>

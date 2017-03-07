@@ -70,7 +70,6 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		local
 			l_browser_box: EV_VERTICAL_BOX
-			l_server_box: EV_VERTICAL_BOX
 			l_hor_box: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
 		do

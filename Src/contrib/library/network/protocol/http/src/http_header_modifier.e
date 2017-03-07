@@ -374,6 +374,7 @@ feature -- Content-type helpers
 	put_content_type_text_css				do put_content_type ({HTTP_MIME_TYPES}.text_css) end
 	put_content_type_text_csv				do put_content_type ({HTTP_MIME_TYPES}.text_csv) end
 	put_content_type_text_html				do put_content_type ({HTTP_MIME_TYPES}.text_html) end
+	put_content_type_utf_8_text_html		do put_content_type_with_charset ({HTTP_MIME_TYPES}.text_html, "utf-8") end
 	put_content_type_text_javascript		do put_content_type ({HTTP_MIME_TYPES}.text_javascript) end
 	put_content_type_text_json				do put_content_type ({HTTP_MIME_TYPES}.text_json) end
 	put_content_type_text_plain				do put_content_type ({HTTP_MIME_TYPES}.text_plain) end
@@ -517,7 +518,7 @@ feature -- Others
 			dt.second_add (a_seconds)
 			put_expires_date (dt)
 			put_cache_control ("max-age=" + a_seconds.out)
-		end			
+		end
 
 	put_expires_string (a_expires: STRING)
 			-- Put "Expires" header with `a_expires' string value
@@ -682,7 +683,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

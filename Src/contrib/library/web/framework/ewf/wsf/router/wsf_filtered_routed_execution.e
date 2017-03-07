@@ -43,8 +43,6 @@ feature {NONE} -- Initialize
 
 	initialize_filtered_router
 			-- Initialize `router` and `filter`.
-		local
-			f: like filter
 		do
 			initialize_router
 			initialize_filter

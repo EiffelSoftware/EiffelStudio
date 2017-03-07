@@ -5,14 +5,20 @@ note
 	revision    : "$Revision$"
 
 class
-	WSF_FORM_DIV
+	WSF_WIDGET_DIV
 
 inherit
-	WSF_FORM_ITEM
+	WSF_WIDGET
 
-	WSF_FORM_COMPOSITE
+	WSF_WIDGET_COMPOSITE
 
 	WSF_WITH_CSS_ID
+
+	WSF_WITH_CSS_CLASS
+
+	WSF_WITH_CSS_STYLE
+
+	WSF_WITH_HTML_ATTRIBUTE
 
 create
 	make,
@@ -71,14 +77,14 @@ feature -- Conversion
 			append_css_class_to (a_html, Void)
 			append_css_id_to (a_html)
 			append_css_style_to (a_html)
-
-			a_html.append (">%N")
+			append_html_attributes_to (a_html)
+			a_html.append (">")
 			across
 				items as c
 			loop
 				c.item.append_to_html (a_theme, a_html)
 			end
-			a_html.append ("%N</div>%N")
+			a_html.append ("</div>%N")
 		end
 
 end

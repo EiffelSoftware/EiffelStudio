@@ -68,47 +68,85 @@ feature -- Handler
 		local
 			r: CMS_RESPONSE
 			mesg: CMS_CUSTOM_RESPONSE_MESSAGE
-			l_xml: STRING
 			l_cache: CMS_FILE_STRING_8_CACHE
+			l_not_modified: BOOLEAN
+			l_sitemap_xml: detachable STRING
+			l_last_modified: detachable DATE_TIME
+			d: HTTP_DATE
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			create l_cache.make (api.files_location.extended ("modules").extended ("sitemap").extended ("sitemap.xml"))
 			if
 				l_cache.exists and then
-				not l_cache.expired (Void, 7*24*60*60) and then
-				attached l_cache.item as l_cached_xml
+				not l_cache.expired (Void, 24*60*60) -- 1 day
 			then
-				create mesg.make ({HTTP_STATUS_CODE}.ok)
-				mesg.header.put_content_type ("application/xml")
-				mesg.set_payload (l_cached_xml)
-				res.send (mesg)
-			elseif attached sitemap (r) as l_sitemap then
-				create l_xml.make (1_024)
-				l_xml.append ("<?xml version=%"1.0%" encoding=%"utf-8%"?>%N")
-				l_xml.append ("<?xml-stylesheet type=%"text/xsl%" href=%"" + r.absolute_url ("/module/" + name + "/files/sitemap.xsl", Void) + "%"?>%N")
-				l_xml.append ("<urlset xmlns=%"http://www.sitemaps.org/schemas/sitemap/0.9%">%N")
+				l_last_modified := l_cache.cache_date_time
+				if attached req.http_if_modified_since as l_http_if_modified_since then
+					create d.make_from_string (l_http_if_modified_since)
+					if not d.has_error then
+						if d.date_time >= l_last_modified then
+								-- Not Modified!
+							l_not_modified := True
+						end
+					end
+				end
+
+				if l_not_modified then
+					res.set_status_code ({HTTP_STATUS_CODE}.not_modified)
+					res.header.put_content_type ("application/xml")
+					res.header.put_last_modified (l_last_modified)
+					res.flush
+				else
+					l_sitemap_xml := l_cache.item
+				end
+			else
+				create l_last_modified.make_now_utc
+			end
+			if l_not_modified then
+					-- response sent!
+			else
+				if l_sitemap_xml = Void then
+					l_sitemap_xml := new_sitemap_xml (r)
+					if l_sitemap_xml /= Void then
+						l_cache.put (l_sitemap_xml)
+					else
+						l_cache.delete
+					end
+				end
+				if l_sitemap_xml /= Void then
+					create mesg.make ({HTTP_STATUS_CODE}.ok)
+					mesg.header.put_content_type ("application/xml")
+					mesg.header.put_header ("Accept-Ranges: bytes")
+					mesg.header.put_header ("Vary: Accept-Encoding,User-Agent")
+					mesg.header.put_last_modified (l_last_modified)
+	--				mesg.header.put_cache_control ("max-age=" + (24*60*60).out)
+					mesg.set_payload (l_sitemap_xml)
+					res.send (mesg)
+				else
+					create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
+					r.execute
+				end
+			end
+		end
+
+	new_sitemap_xml (r: CMS_RESPONSE): detachable STRING
+		do
+			if attached sitemap (r) as l_sitemap then
+				create Result.make (1_024)
+				Result.append ("<?xml version=%"1.0%" encoding=%"utf-8%"?>%N")
+				Result.append ("<?xml-stylesheet type=%"text/xsl%" href=%"" + r.absolute_url ("/module/" + name + "/files/sitemap.xsl", Void) + "%"?>%N")
+				Result.append ("<urlset xmlns=%"http://www.sitemaps.org/schemas/sitemap/0.9%">%N")
 				across
 					l_sitemap as ic
 				loop
-					l_xml.append ("  <url>%N")
-					l_xml.append ("    <loc>" + r.absolute_url (ic.item.link.location, Void) + "</loc>%N")
-					l_xml.append ("    <lastmod>"); append_date_output (ic.item.date, l_xml); l_xml.append ("</lastmod>%N")
-					l_xml.append ("    <changefreq>" + ic.item.change_frequency + "</changefreq>%N")
-					l_xml.append ("    <priority>" + ic.item.priority.out + "</priority>%N")
-					l_xml.append ("  </url>%N")
+					Result.append ("  <url>%N")
+					Result.append ("    <loc>" + r.absolute_url (ic.item.link.location, Void) + "</loc>%N")
+					Result.append ("    <lastmod>"); append_date_output (ic.item.date, Result); Result.append ("</lastmod>%N")
+					Result.append ("    <changefreq>" + ic.item.change_frequency + "</changefreq>%N")
+					Result.append ("    <priority>" + ic.item.priority.out + "</priority>%N")
+					Result.append ("  </url>%N")
 				end
-				l_xml.append ("</urlset>%N")
-				l_cache.put (l_xml)
-
-				create mesg.make ({HTTP_STATUS_CODE}.ok)
-				mesg.header.put_content_type ("application/xml")
-				mesg.header.put_header ("Accept-Ranges: bytes")
-				mesg.header.put_header ("Vary: Accept-Encoding,User-Agent")
-				mesg.set_payload (l_xml)
-				res.send (mesg)
-			else
-				create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
-				r.execute
+				Result.append ("</urlset>%N")
 			end
 		end
 

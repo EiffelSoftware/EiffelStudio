@@ -41,7 +41,6 @@ feature -- Storage
 			-- Store `a_email'.
 		local
 			retried: BOOLEAN
-			l_close_needed: BOOLEAN
 			f,w: RAW_FILE
 			dt: DATE_TIME
 			p: PATH
@@ -65,11 +64,9 @@ feature -- Storage
 				end
 				fn.append_integer (dt.minute)
 				fn.append_character ('m')
-				if dt.second < 10 then
+				if dt.fine_second < 10.0 then
 					fn.append_character ('0')
 				end
-				fn.append_integer (dt.second)
-				fn.append_character ('s')
 				fn.append (dt.fine_second.out)
 
 				p := p.extended (fn)

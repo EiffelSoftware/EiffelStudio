@@ -112,17 +112,21 @@ feature -- Access
 					-- and file storage.
 				if attached text_item ("mailer.output") as l_output then
 					if l_output.is_case_insensitive_equal ("@stderr") then
-						f := io.error
+						create {NOTIFICATION_STORAGE_MAILER} l_storage_mailer.make (create {NOTIFICATION_EMAIL_FILE_STORAGE}.make (io.error))
 					elseif l_output.is_case_insensitive_equal ("@stdout") then
-						f := io.output
+						create {NOTIFICATION_STORAGE_MAILER} l_storage_mailer.make (create {NOTIFICATION_EMAIL_FILE_STORAGE}.make (io.output))
 					else
 						create {RAW_FILE} f.make_with_name (l_output)
-						if not f.exists then
-							f.create_read_write
-							f.close
+						if f.is_directory then
+							create {NOTIFICATION_STORAGE_MAILER} l_storage_mailer.make (create {NOTIFICATION_EMAIL_DIRECTORY_STORAGE}.make (f.path))
+						else
+							if not f.exists then
+								f.create_read_write
+								f.close
+							end
+							create {NOTIFICATION_STORAGE_MAILER} l_storage_mailer.make (create {NOTIFICATION_EMAIL_FILE_STORAGE}.make (f))
 						end
 					end
-					create {NOTIFICATION_STORAGE_MAILER} l_storage_mailer.make (create {NOTIFICATION_EMAIL_FILE_STORAGE}.make (f))
 					if l_mailer /= Void then
 						create l_chain.make (l_mailer)
 						l_chain.set_next (l_storage_mailer)
@@ -179,6 +183,6 @@ feature -- Element change
 
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

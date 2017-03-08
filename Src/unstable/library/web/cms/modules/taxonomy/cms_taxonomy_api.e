@@ -295,7 +295,7 @@ feature -- Web forms
 					w_div.extend (w_voc_set)
 
 					if voc.is_tags then
-						w_voc_set.extend_text ("<strong><label>" + cms_api.html_encoded (cms_api.translation (voc.name, Void)) + "</label></strong>")
+						w_voc_set.extend_html_text ("<strong><label>" + cms_api.html_encoded (cms_api.translation (voc.name, Void)) + "</label></strong>")
 --						set_legend (cms_api.translation (voc.name, Void))
 
 						create ti.make ({STRING_32} "taxonomy_" + voc.id.out)
@@ -337,10 +337,10 @@ feature -- Web forms
 						if not voc.terms.is_empty then
 							if voc.multiple_terms_allowed then
 								if attached voc.description as l_desc then
-									w_voc_set.extend_text ("<strong><label>" + cms_api.html_encoded (l_desc) + "</label></strong>")
+									w_voc_set.extend_html_text ("<strong><label>" + cms_api.html_encoded (l_desc) + "</label></strong>")
 --									w_voc_set.set_legend (cms_api.html_encoded (l_desc))
 								else
-									w_voc_set.extend_text ("<strong><label>" + cms_api.html_encoded (voc.name) + "</label></strong>")
+									w_voc_set.extend_html_text ("<strong><label>" + cms_api.html_encoded (voc.name) + "</label></strong>")
 --									w_voc_set.set_legend (cms_api.html_encoded (voc.name))
 								end
 								across
@@ -366,7 +366,7 @@ feature -- Web forms
 								else
 									w_select.set_description (cms_api.html_encoded (voc.name))
 								end
-								w_voc_set.extend_text ("<strong><label>" + cms_api.html_encoded (voc.name) + "</label></strong>")
+								w_voc_set.extend_html_text ("<strong><label>" + cms_api.html_encoded (voc.name) + "</label></strong>")
 --								w_voc_set.set_legend (cms_api.html_encoded (voc.name))
 
 								across

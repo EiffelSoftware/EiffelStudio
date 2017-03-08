@@ -194,16 +194,36 @@ feature -- Access
 						if ctx.has_form_data then
 							l_form_data := ctx.form_parameters
 							if l_upload_data = Void and l_upload_filename = Void then
-									-- Send as form-urlencoded
-								headers.extend ("application/x-www-form-urlencoded", "Content-Type")
-								l_upload_data := ctx.form_parameters_to_url_encoded_string
-								headers.force (l_upload_data.count.out, "Content-Length")
+								if
+									attached headers.item ("Content-Type") as l_ct
+								then
+									if l_ct.starts_with ("application/x-www-form-urlencoded") then
+										l_upload_data := ctx.form_parameters_to_url_encoded_string
+									elseif l_ct.starts_with ("multipart/form-data") then
+											-- create form using multipart/form-data encoding
+										l_boundary := new_mime_boundary (l_form_data)
+										headers.extend ("multipart/form-data; boundary=" + l_boundary, "Content-Type")
+										l_upload_data := form_date_and_uploaded_files_to_mime_string (l_form_data, l_upload_filename, l_boundary)
+									else
+											-- not supported !
+											-- Send as form-urlencoded
+										headers.extend ("application/x-www-form-urlencoded", "Content-Type")
+										l_upload_data := ctx.form_parameters_to_url_encoded_string
+									end
+								else
+										-- Send as form-urlencoded
+									headers.extend ("application/x-www-form-urlencoded", "Content-Type")
+									l_upload_data := ctx.form_parameters_to_url_encoded_string
+								end
+								headers.extend (l_upload_data.count.out, "Content-Length")
 								if l_is_chunked_transfer_encoding then
 										-- Discard chunked transfer encoding
 									headers.remove ("Transfer-Encoding")
 									l_is_chunked_transfer_encoding := False
 								end
 							elseif l_form_data /= Void then
+								check l_upload_data = Void end
+
 									-- create form using multipart/form-data encoding
 								l_boundary := new_mime_boundary (l_form_data)
 								headers.extend ("multipart/form-data; boundary=" + l_boundary, "Content-Type")
@@ -400,9 +420,9 @@ feature -- Access
 								end
 
 									-- follow redirect
-								if 
+								if
 									is_redirection_http_status (Result.status) and
-									l_location /= Void 
+									l_location /= Void
 								then
 									if Result.redirections_count < max_redirects then
 										initialize (l_location, ctx)
@@ -906,7 +926,7 @@ feature {NONE} -- Helpers
 
 invariant
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

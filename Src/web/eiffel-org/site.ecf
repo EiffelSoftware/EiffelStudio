@@ -81,7 +81,7 @@
 	<target name="eiffel_community_site_cgi" extends="eiffel_community_site_common">
 		<root class="EIFFEL_COMMUNITY_WEB" feature="make_and_launch"/>
 		<capability>
-			<concurrency support="none" use="thread"/>
+			<concurrency support="scoop" use="thread"/>
 		</capability>
 		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
@@ -95,7 +95,7 @@
 	<target name="eiffel_community_site_libfcgi" extends="eiffel_community_site_common">
 		<root class="EIFFEL_COMMUNITY_WEB" feature="make_and_launch"/>
 		<capability>
-			<concurrency support="none" use="thread"/>
+			<concurrency support="scoop" use="thread"/>
 		</capability>
 		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
@@ -110,7 +110,7 @@
 	</target>
 	<target name="eiffel_community_site_mt" extends="eiffel_community_site">
 		<capability>
-			<concurrency support="thread" use="thread"/>
+			<concurrency support="scoop" use="thread"/>
 		</capability>
 	</target>
 </system>

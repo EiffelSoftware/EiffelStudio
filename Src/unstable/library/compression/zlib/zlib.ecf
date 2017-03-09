@@ -4,12 +4,12 @@
 		<root all_classes="true"/>
 		<option warning="true">
 		</option>
-		<external_include location="$(ISE_LIBRARY)\unstable\library\compression\zlib\spec\include">
+		<external_include location="$(ISE_LIBRARY)\C_library\zlib">	
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</external_include>
-		<external_object location="$(ISE_LIBRARY)\unstable\library\compression\zlib\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\zlibstat.lib">
+		<external_object location="$(ISE_LIBRARY)\C_library\zlib\spec\\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\zlib.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>

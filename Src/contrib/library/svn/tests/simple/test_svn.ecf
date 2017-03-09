@@ -18,4 +18,14 @@
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<cluster name="tests" location=".\" recursive="true"/>
 	</target>
+	<target name="test_svn_mt" extends="test_svn">
+		<capability>
+			<concurrency use="thread"/>
+		</capability>
+	</target>
+	<target name="test_svn_st" extends="test_svn">
+		<capability>
+			<concurrency use="none"/>
+		</capability>
+	</target>
 </system>

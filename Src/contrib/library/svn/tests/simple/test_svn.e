@@ -18,7 +18,12 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			create {SVN_ENGINE} svn.make_with_executable_path ("C:\apps\dev\SlikSvn\bin\svn.exe")
+			if {PLATFORM}.is_windows then
+				create {SVN_ENGINE} svn.make_with_executable_path ("C:\apps\dev\SlikSvn\bin\svn.exe")
+			else
+				create {SVN_ENGINE} svn.make_with_executable_path ("/usr/bin/svn")
+			end
+
 
 			test_working_copy
 			test_remote

@@ -41,7 +41,7 @@ feature
 				if p.launched then
 					from
 					until
-						p.has_output_stream_error
+						p.has_output_stream_closed or p.has_output_stream_error
 					loop
 						p.read_output_to_special (res_spec)
 						append_special_of_natural_8_to_string_8 (res_spec, res)
@@ -49,7 +49,7 @@ feature
 
 					from
 					until
-						p.has_error_stream_error
+						p.has_error_stream_closed or p.has_error_stream_error
 					loop
 						p.read_error_to_special (err_spec)
 						append_special_of_natural_8_to_string_8 (err_spec, err)

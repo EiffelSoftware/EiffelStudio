@@ -77,6 +77,8 @@ package ZLib.Streams is
    --  !!! When the Need_Header is False ZLib-Ada is using undocumented
    --  ZLib 1.1.4 functionality to do not create/wait for ZLib headers.
 
+   function Is_Open (Stream : Stream_Type) return Boolean;
+
    procedure Close (Stream : in out Stream_Type);
 
 private

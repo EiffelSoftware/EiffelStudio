@@ -58,6 +58,57 @@ feature -- Access
 
 feature -- Query
 
+	available_versions (a_check_existence: BOOLEAN): LIST [READABLE_STRING_32]
+			-- Available versions.
+		local
+			f: PLAIN_TEXT_FILE
+			utf: UTF_CONVERTER
+			ut: FILE_UTILITIES
+			p: PATH
+			d: DIRECTORY
+			s: STRING_32
+		do
+			create {ARRAYED_LIST [READABLE_STRING_32]} Result.make (5)
+			create f.make_with_path (settings.documentation_dir.extended ("versions"))
+			if f.exists and then f.is_access_readable then
+				f.open_read
+				from
+				until
+					f.end_of_file or f.exhausted
+				loop
+					f.read_line_thread_aware
+					s := utf.utf_8_string_8_to_string_32 (f.last_string)
+					s.left_adjust
+					s.right_adjust
+					if
+						not s.is_whitespace and then
+						(not a_check_existence or else ut.directory_path_exists (settings.documentation_dir.extended (s)))
+					then
+						Result.force (s)
+					end
+				end
+				f.close
+			else
+				create d.make_with_path (settings.documentation_dir)
+				if d.exists then
+					across
+						d.entries as ic
+					loop
+						p := ic.item
+						if p.is_current_symbol or p.is_parent_symbol then
+						elseif not p.name.starts_with_general (".") then
+							Result.force (p.name)
+						end
+					end
+				end
+			end
+			if Result.is_empty then
+				Result.force (default_version_id.as_string_32)
+			end
+		end
+
+feature -- Query
+
 	manager (a_version_id: detachable READABLE_STRING_GENERAL): WDOCS_MANAGER
 			-- Wikidocs manager for version `a_version_id'.
 		local

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="simple_db" uuid="1A6B9D12-25F5-4BB8-98C0-DB6FDE9CCE18" library_target="simple_db">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="simple_db" uuid="1A6B9D12-25F5-4BB8-98C0-DB6FDE9CCE18" library_target="simple_db">
 	<target name="simple_db">
 		<root all_classes="true"/>
 		<option warning="true">

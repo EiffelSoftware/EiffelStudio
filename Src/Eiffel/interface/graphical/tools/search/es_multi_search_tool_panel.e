@@ -1,9 +1,9 @@
-note
-	description	: "Tool to search and replace a string in groups, classes or editor"
+﻿note
+	description: "Tool to search and replace a string in groups, classes or editor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ES_MULTI_SEARCH_TOOL_PANEL
@@ -1554,7 +1554,7 @@ feature -- Custom search scope
 				l_item.set_accept_cursor (Cursors.cur_class)
 				l_item.set_deny_cursor (Cursors.cur_x_class)
 				l_item.set_configurable_target_menu_mode
-				l_item.pointer_button_press_actions.force_extend (agent pointer_press_action (l_item, ?, ?, ?, ?, ?, ?, ?, ?))
+				l_item.pointer_button_press_actions.extend (agent pointer_press_action (l_item, ?, ?, ?, ?, ?, ?, ?, ?))
 				l_item.set_configurable_target_menu_handler (agent (develop_window.menus.context_menu_factory).search_scope_menu)
 				force_new_search
 			end
@@ -2101,7 +2101,7 @@ invariant
 	multi_search_performer_not_void: multi_search_performer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -2132,4 +2132,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_MULTI_SEARCH_TOOL
+end

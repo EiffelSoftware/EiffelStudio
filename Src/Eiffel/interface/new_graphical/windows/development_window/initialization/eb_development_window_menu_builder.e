@@ -1153,11 +1153,11 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			insert_show_tool_menu_item (Result, {ES_FEATURE_RELATION_TOOL})
 			insert_show_tool_menu_item (Result, {ES_DEPENDENCY_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
-			if (create {SERVICE_CONSUMER [OUTPUT_MANAGER_S]}).is_service_available then
+			if attached (create {SERVICE_CONSUMER [OUTPUT_MANAGER_S]}).service then
 				insert_show_tool_menu_item (Result, {ES_OUTPUTS_TOOL})
 			end
 			insert_show_tool_menu_item (Result, {ES_CONSOLE_TOOL})
-			if (create {SERVICE_CONSUMER [EVENT_LIST_S]}).is_service_available then
+			if attached (create {SERVICE_CONSUMER [EVENT_LIST_S]}).service then
 				Result.extend (create {EV_MENU_SEPARATOR})
 				insert_show_tool_menu_item (Result, {ES_ERROR_LIST_TOOL})
 			end
@@ -1173,7 +1173,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			Result.extend (create {EV_MENU_SEPARATOR})
 			insert_show_tool_menu_item (Result, {ES_WINDOWS_TOOL})
 			insert_show_tool_menu_item (Result, {ES_FAVORITES_TOOL})
-			if (create {SERVICE_CONSUMER [TEST_SUITE_S]}).is_service_available then
+			if attached (create {SERVICE_CONSUMER [TEST_SUITE_S]}).service then
 				Result.extend (create {EV_MENU_SEPARATOR})
 				insert_show_tool_menu_item (Result, {ES_TESTING_TOOL})
 				insert_show_tool_menu_item (Result, {ES_TESTING_RESULTS_TOOL})
@@ -1581,7 +1581,7 @@ feature -- Docking library menu items
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

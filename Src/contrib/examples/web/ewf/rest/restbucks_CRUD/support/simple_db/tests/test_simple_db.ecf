@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="test_simple_db" uuid="2A955961-2B7F-4075-BD05-F75225D8A711">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="test_simple_db" uuid="2A955961-2B7F-4075-BD05-F75225D8A711">
 	<target name="test_simple_db">
-		<file_rule>
-			<exclude>/\.svn$</exclude>
-			<exclude>/\.git$</exclude>
-			<exclude>/EIFGENs$</exclude>
-		</file_rule>
 		<root class="ANY" feature="default_create"/>
-		<option warning="true" void_safety="all">
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="true">
 		</option>
-		<setting name="concurrency" value="scoop"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf"/>
-		<library name="simple_db" location="..\simple_db-safe.ecf" readonly="False"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>
+		<library name="simple_db" location="..\simple_db.ecf" readonly="false"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<cluster name="tests" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/.*json.*\.e$</exclude>
@@ -30,7 +29,8 @@
 		</cluster>
 	</target>
 	<target name="test_simple_db_st" extends="test_simple_db">
-		<setting name="concurrency" value="none"/>
+		<capability>
+			<concurrency support="none" use="none"/>
+		</capability>
 	</target>
 </system>
-

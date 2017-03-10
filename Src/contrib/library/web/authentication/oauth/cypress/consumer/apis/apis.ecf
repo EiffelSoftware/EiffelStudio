@@ -3,14 +3,13 @@
 	<target name="apis">
 		<root all_classes="true"/>
 		<file_rule>
+			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
-			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true">
 		</option>
 		<setting name="console_application" value="true"/>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cypress_consumer" location="..\..\consumer.ecf" readonly="false"/>
 		<cluster name="apis" location=".\" recursive="true">

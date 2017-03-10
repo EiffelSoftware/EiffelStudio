@@ -331,9 +331,9 @@ feature -- Hooks
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 		do
-			Result := <<"wdocs-tree", "wdocs-cards">>
+			Result := <<"wdocs-tree", "wdocs-versions", "wdocs-cards">>
 			debug ("wdocs")
-				Result := <<"wdocs-tree", "wdocs-page-info", "wdocs-cards">>
+				Result := <<"wdocs-tree", "wdocs-versions", "wdocs-page-info", "wdocs-cards">>
 			end
 		end
 
@@ -376,6 +376,8 @@ feature -- Hooks
 						then
 							a_response.add_block (wdocs_cards_block (a_block_id, a_response, mng), "content")
 						end
+					elseif a_block_id.same_string_general ("wdocs-versions") then
+						a_response.add_block (wdocs_versions_block (a_block_id, a_response), "sidebar_first")
 					elseif a_block_id.same_string_general ("wdocs-page-info") then
 						if
 							l_book_name /= Void and then l_page_name /= Void and then
@@ -416,6 +418,60 @@ feature -- Hooks
 					end
 				end
 			end
+		end
+
+	wdocs_versions_block (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE): CMS_BLOCK
+		local
+			m: CMS_MENU
+			mlnk,lnk: CMS_LOCAL_LINK
+			s, loc: detachable STRING
+			l_curr_version: READABLE_STRING_GENERAL
+			i: INTEGER
+		do
+			if
+				attached wdocs_api as l_wdocs_api and then
+				attached l_wdocs_api.available_versions (False) as l_versions
+			then
+				loc := a_response.location
+
+				create m.make_with_title (a_block_id, "Versions ...", l_versions.count)
+				create mlnk.make ("Versions ...", loc)
+				m.extend (mlnk)
+				mlnk.set_expanded (True)
+				if loc.starts_with_general ("doc/") then
+					if loc.starts_with_general ("doc/version/") then
+						i := loc.index_of ('/', 13)
+						if i > 0 then
+							l_curr_version := loc.substring (13, i - 1)
+							s := loc.substring (i, loc.count)
+						end
+					else
+						s := loc.substring (4, loc.count)
+					end
+				end
+				if s /= Void then
+					across
+						l_versions as ic
+					loop
+						if default_version_id.is_case_insensitive_equal (ic.item) then
+							create lnk.make ("Default", "doc" + s)
+						else
+							create lnk.make (ic.item, "doc/version/" + ic.item.out + s)
+							if l_curr_version /= Void and then l_curr_version.is_case_insensitive_equal (ic.item) then
+								lnk.set_is_active (True)
+							end
+						end
+						mlnk.add_link (lnk)
+					end
+				end
+			end
+			if m /= Void then
+				create {CMS_MENU_BLOCK} Result.make (m)
+			else
+				create {CMS_CONTENT_BLOCK} Result.make_raw ("wdocs-version", Void, "", Void)
+			end
+			Result.set_title (Void)
+--			Result.set_weight (-99)
 		end
 
 	wdocs_cards_block (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE; a_manager: WDOCS_MANAGER): CMS_BLOCK

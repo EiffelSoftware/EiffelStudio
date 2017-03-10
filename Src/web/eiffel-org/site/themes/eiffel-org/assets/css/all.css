@@ -665,6 +665,34 @@ table {
   width: 98%;
 }
 
+/* line 240, ../scss/site/docs.scss */
+#wdocs-versions.menu {
+  padding: 0px;
+  margin: 5px 0 0 0;
+  background-color: white;
+  border: solid 1px #999;
+}
+/* line 245, ../scss/site/docs.scss */
+#wdocs-versions.menu ul {
+  padding: 0 0 0 20px;
+  margin: 0px;
+  list-style-type: none;
+}
+/* line 249, ../scss/site/docs.scss */
+#wdocs-versions.menu ul li > ul {
+  padding: 10px;
+  background-color: white;
+  border: solid 1px #999;
+  display: none;
+  font-size: smaller;
+}
+/* line 256, ../scss/site/docs.scss */
+#wdocs-versions.menu ul li:hover > ul {
+  position: absolute;
+  display: block;
+  z-index: 99;
+}
+
 /* line 1, ../scss/base/base-reset.scss */
 body {
   margin: 0;

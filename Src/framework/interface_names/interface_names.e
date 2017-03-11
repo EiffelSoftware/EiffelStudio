@@ -207,7 +207,7 @@ feature -- Button texts
 	b_append: STRING_32							do Result := locale.translation("Append") end
 	b_ignore: STRING_32							do Result := locale.translation("Ignore") end
 	b_import: STRING_32							do Result := locale.translation ("Import") end
-	
+
 	b_force_exit: STRING_32						do Result := locale.translation("Force Exit") end
 
 	b_error: STRING_32							do Result := locale.translation("Error") end
@@ -1537,6 +1537,8 @@ feature -- Label texts
 	l_Constant_features: STRING_32		do Result := locale.translation("Constants")	end
 	l_only_classes_in_same_cluster: STRING_32			do Result := locale.translation("Only classes in same cluster")	end
 	l_only_eiffel_class_file_allowed: STRING_32			do Result := locale.translation("Only Eiffel class file allowed")	end
+	l_no_suitable_classes_for_files: STRING_32 do Result := locale.translation_in_context ("No classes matching specified files are found.", "editor") end
+	l_dropping_files_without_project: STRING_32 do Result := locale.translation_in_context ("Dropping Eiffel files to the editor works for open projects only.", "editor") end
 	l_open: STRING_32					do Result := locale.translation("Open")	end
 	l_Open_a_project: STRING_32			do Result := locale.translation("Open a project")	end
 	l_Open_project: STRING_32 			do Result := locale.translation("Open project")	end
@@ -2944,7 +2946,7 @@ feature -- String escape
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

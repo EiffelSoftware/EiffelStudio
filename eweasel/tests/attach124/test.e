@@ -21,7 +21,7 @@ feature {NONE} -- Creation
 			a := Current
 		end
 
-feature -- Creation
+feature {NONE} -- Initialization
 
 	set_a
 			-- Set attribute `a` with a side effect of initializing
@@ -39,12 +39,15 @@ feature -- Creation
 			retry
 		end
 
-feature -- Access
+feature {TEST} -- Access
 
 	a: TEST
 			-- An attribute to be initialized at creation.
 
+feature {NONE} -- Access
+
 	f: TEST
+			-- A once function returning an incompletely initialized object.
 		once
 			Result := Current
 		end

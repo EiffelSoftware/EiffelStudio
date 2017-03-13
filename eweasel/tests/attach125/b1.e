@@ -9,13 +9,13 @@ feature {NONE} -- Creation
 	make (t: TEST)
 			-- Initialize `y` using `t`.
 		do
-			y := t
+			q := t
 		end
 
 feature -- Access
 
-	x: INTEGER
-	y: detachable TEST
-	z: INTEGER
+	p: INTEGER
+	q: detachable TEST
+	r: INTEGER
 
 end

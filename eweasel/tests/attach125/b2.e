@@ -13,8 +13,8 @@ feature {NONE} -- Creation
 
 feature -- Access
 
-	x: INTEGER
-	y: INTEGER
-	z: INTEGER
+	p: INTEGER
+	q: INTEGER
+	r: INTEGER
 
 end

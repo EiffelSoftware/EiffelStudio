@@ -10,8 +10,8 @@ feature {NONE} -- Creation
 			-- Run test.
 		do
 			set_a
-			if attached f.y.y as y then
-				io.put_string (y.a.out)
+			if attached f.y.q as t then
+				io.put_string (t.a.out)
 			end
 		end
 

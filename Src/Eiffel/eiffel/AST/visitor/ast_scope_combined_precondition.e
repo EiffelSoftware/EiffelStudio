@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Detector of argument scopes for combined precondition."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,18 +45,16 @@ feature {NONE} -- Creation
 			assertion_info: INH_ASSERT_INFO
 			body_index: INTEGER
 			precursor_feature: FEATURE_AS
-			routine_body: ROUTINE_AS
 			i: INTEGER
 			k: AST_INITIALIZATION_KEEPER
 		do
 			make_assertion (c)
 			n := f.argument_count
-			if current_class.has_stable_attribute then
+			if c.has_stable_attributes then
 				m := c.attributes.count
 			end
-			if n = 0 and then m = 0 then
-					-- Nothing to do as there are no arguments and stable attributes.
-			else
+			if n /= 0 or else m /= 0 then
+					-- There are arguments ot stable attributes.
 				assert_id_set := f.assert_id_set
 				if assert_id_set /= Void and then assert_id_set.has_precondition then
 					create arguments.make (n)
@@ -83,9 +81,11 @@ feature {NONE} -- Creation
 								precursor_feature_attached: precursor_feature /= Void
 							end
 							argument_list := precursor_feature.body.arguments
-							routine_body ?= precursor_feature.body.content
-							check routine_body_attached: routine_body /= Void end
-							routine_body.precondition.process (Current)
+							if attached {ROUTINE_AS} precursor_feature.body.content as routine_body then
+								routine_body.precondition.process (Current)
+							else
+								check has_routine_body: False end
+							end
 							arguments.keeper.save_sibling
 							if k /= Void then
 								k.save_sibling
@@ -101,29 +101,29 @@ feature {NONE} -- Creation
 							precursor_feature_attached: precursor_feature /= Void
 						end
 						argument_list := precursor_feature.body.arguments
-						routine_body ?= precursor_feature.body.content
-						check routine_body_attached: routine_body /= Void end
-						routine_body.precondition.process (Current)
+						if attached {ROUTINE_AS} precursor_feature.body.content as routine_body then
+							routine_body.precondition.process (Current)
+						else
+							check has_routine_body: False end
+						end
 						arguments.keeper.save_sibling
 						if k /= Void then
 							k.save_sibling
 						end
 					end
 					arguments.keeper.leave_realm
-					if k /= Void then
-						k.leave_realm
-					end
 					from
 						i := n
 					until
 						i <= 0
 					loop
 						if arguments.keeper.is_attached (i) then
-							c.add_argument_instruction_scope (f.arguments.argument_names.item (i - 1))
+							c.add_argument_instruction_scope (f.arguments.argument_names [i - 1])
 						end
 						i := i - 1
 					end
 					if k /= Void then
+						k.leave_realm
 						from
 							i := m
 						until
@@ -142,6 +142,7 @@ feature {NONE} -- Creation
 feature {AST_EIFFEL} -- Visitor pattern
 
 	process_bool_as (a: BOOL_AS)
+			-- <Precursor>
 		local
 			i: INTEGER_32
 			f: FEATURE_I
@@ -173,11 +174,13 @@ feature {AST_EIFFEL} -- Visitor pattern
 		end
 
 	process_require_as (a: REQUIRE_AS)
+			-- <Precursor>
 		do
 			process_eiffel_list (a.assertions)
 		end
 
 	process_require_else_as (a: REQUIRE_ELSE_AS)
+			-- <Precursor>
 		do
 			process_eiffel_list (a.assertions)
 		end
@@ -185,22 +188,22 @@ feature {AST_EIFFEL} -- Visitor pattern
 feature {NONE} -- Context
 
 	current_class: CLASS_C
-			-- Class for which the precondition is evaluated
+			-- Class for which the precondition is evaluated.
 		do
 			Result := context.current_class
 		end
 
 	written_class: CLASS_C
-			-- Class where the code being processed is written
+			-- Class where the code being processed is written.
 
 	argument_list: EIFFEL_LIST [TYPE_DEC_AS]
-			-- List of current arguments
+			-- List of current arguments.
 
 	arguments: AST_ARGUMENT_SCOPE_TRACKER
-			-- Attached due to CAPs arguments indexed by their position
+			-- Attached due to CAPs arguments indexed by their position.
 
 	attributes: AST_ATTRIBUTE_INITIALIZATION_TRACKER
-			-- Initialized due to CAPs attributes indexed by their position in the skeleton of the original class
+			-- Initialized due to CAPs attributes indexed by their position in the skeleton of the original class.
 
 	add_access_scope (a: ACCESS_INV_AS)
 			-- Add scope for `a' if this is a recognized variable.
@@ -286,7 +289,7 @@ feature {NONE} -- Context
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -62,26 +62,26 @@ feature -- Access
 			-- Current analyzed class.
 
 	current_class_type: LIKE_CURRENT
-			-- Actual type of `current_class'
+			-- Actual type of `current_class'.
 
 	written_class: CLASS_C
 			-- Class where the code is originally written.
 			-- (Used for checking inherited code in current context.)
 
 	iterable_class: CLASS_C
-			-- Class ITERABLE used to process Loop Iteration part
+			-- Class ITERABLE used to process Loop Iteration part.
 
 	iteration_cursor_class: CLASS_C
-			-- Class ITERATION_CURSOR used to process Loop Iteration part
+			-- Class ITERATION_CURSOR used to process Loop Iteration part.
 
 	current_feature: FEATURE_I
 			-- Current analyzed feature.
 
 	locals: HASH_TABLE [LOCAL_INFO, INTEGER]
-			-- Current local variables of the analyzed feature
+			-- Current local variables of the analyzed feature.
 
 	supplier_ids: FEATURE_DEPENDANCE
-			-- Supplier units
+			-- Supplier units.
 
 	hidden_local_counter: COUNTER
 			-- Counter for managing hidden locals needed for object test where user does not specify
@@ -112,10 +112,10 @@ feature -- Access
 		end
 
 	inline_agent_counter: COUNTER
-			-- counter for managing the inline agents that are enclosed in the current feature
+			-- Counter for managing the inline agents that are enclosed in the current feature.
 
 	current_inline_agent_body: BODY_AS
-			-- Body of the current processec inline agent. Is only valid if the current feature is an inline agent
+			-- Body of the current processec inline agent. Is only valid if the current feature is an inline agent.
 
 	old_inline_agents: HASH_TABLE [FEATURE_I, INTEGER]
 			-- If the processed feature was already present, this table gives a mapping from
@@ -130,19 +130,19 @@ feature -- Access
 		end
 
 	used_argument_names: SEARCH_TABLE [INTEGER]
-			-- Argument names that are already used by enclosing features
+			-- Argument names that are already used by enclosing features.
 
 	used_local_names: SEARCH_TABLE [INTEGER]
-			-- Local names that are already used by enclosing features
+			-- Local names that are already used by enclosing features.
 
 	set_used_argument_names (table: like used_argument_names)
-			-- Set the used argument names
+			-- Set the used argument names.
 		do
 			used_argument_names := table
 		end
 
 	set_used_local_names (table: like used_local_names)
-			-- Set the used local names
+			-- Set the used local names.
 		do
 			used_local_names := table
 		end
@@ -194,18 +194,18 @@ feature -- Modification
 feature {NONE} -- Local scopes
 
 	object_test_locals: HASH_TABLE [LOCAL_INFO, ID_AS]
-			-- Types of object-test locals indexes by their name id
+			-- Types of object-test locals indexes by their name id.
 
 	result_id: INTEGER_32 = 0x7fffffff
-			-- Name ID that is used for the special entity "Result"
+			-- Name ID that is used for the special entity "Result".
 
 	old_id: INTEGER_32 = 0x7ffffffe
-			-- Name ID that is used to mark the scope of an old expression
+			-- Name ID that is used to mark the scope of an old expression.
 
 feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 
 	next_object_test_local_position: INTEGER
-			-- Position of a next object test local
+			-- Position of a next object test local.
 		do
 			Result := object_test_locals.count + 1
 		end
@@ -221,7 +221,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 
 	object_test_local (id: INTEGER_32): detachable LOCAL_INFO
 			-- Information about object-test local of name `id' if such
-			-- a local is currently in scope or `Void' otherwise
+			-- a local is currently in scope or `Void' otherwise.
 		local
 			i: INTEGER
 			l: INTEGER
@@ -259,7 +259,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 		end
 
 	unchecked_object_test_local (id: ID_AS): detachable LOCAL_INFO
-			-- Information about object-test local of name `id' (if any) regardless of current scope
+			-- Information about object-test local of name `id' (if any) regardless of current scope.
 		require
 			id_attached: id /= Void
 		do
@@ -315,29 +315,29 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: status rep
 feature {AST_CONTEXT} -- Local scopes
 
 	scopes: ARRAYED_LIST [INTEGER_32]
-			-- Currently active scopes identified by entity name ID
+			-- Currently active scopes identified by entity name ID.
 
 	scope_count: INTEGER
-			-- Number of active scopes
+			-- Number of active scopes.
 		do
 			Result := scopes.count
 		end
 
 	object_test_scopes: ARRAYED_LIST [ID_AS]
-			-- Currently active scopes of object test locals
+			-- Currently active scopes of object test locals.
 
 feature {AST_CREATION_PROCEDURE_CHECKER, AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT, AST_SCOPE_COMBINED_PRECONDITION} -- Attribute positions
 
 	attributes: HASH_TABLE [INTEGER_32, INTEGER_32]
-			-- Attribute indecies indexed by their feature ID
+			-- Attribute indecies indexed by their feature ID.
 
 	attribute_initialization: AST_ATTRIBUTE_INITIALIZATION_TRACKER
-			-- Tracker of initialized stable attributes
+			-- Tracker of initialized stable attributes.
 
 feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Scope state
 
 	scope: INTEGER
-			-- Current scope ID
+			-- Current scope ID.
 		do
 				-- For simplicity the current number of local scopes is used.
 			Result := scope_count
@@ -395,10 +395,10 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Scope state
 		end
 
 	local_initialization: AST_LOCAL_INITIALIZATION_TRACKER
-			-- Tracker of initialized locals
+			-- Tracker of initialized locals.
 
 	local_scope: AST_LOCAL_SCOPE_TRACKER
-			-- Tracker of scopes of non-void locals
+			-- Tracker of scopes of non-void locals.
 
 	local_scopes: TUPLE [local_initialization: like local_initialization; local_scope: like local_scope]
 			-- Scopes that can be saved before calling `init_local_scopes' and restored by calling `set_local_scopes'.
@@ -423,7 +423,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Scope state
 feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modification
 
 	add_old_expression_scope
-			-- Add a scope of an old expression
+			-- Add a scope of an old expression.
 		do
 			scopes.extend (old_id)
 		end
@@ -666,10 +666,10 @@ feature -- Status report
 
 	is_ignoring_export: BOOLEAN
 			-- Do we ignore export validity for feature access ?
-			-- Useful for expression evaluation
+			-- Useful for expression evaluation.
 
 	last_conversion_info: CONVERSION_INFO
-			-- Information about last conversion
+			-- Information about last conversion.
 
 feature -- Setting
 
@@ -712,7 +712,7 @@ feature -- Setting
 			loop
 				a := s [i]
 				attributes.put (i, a.feature_id)
-				if not a.type_i.is_attached and then a_class.feature_of_rout_id (a.rout_id).is_stable then
+				if not a.type_i.is_attached and then a_class.feature_of_feature_id (a.feature_id).is_stable then
 					has_stable_attributes := True
 				end
 				i := i - 1
@@ -768,7 +768,7 @@ feature -- Setting
 	init_error (e: FEATURE_ERROR)
 			-- Initialize `e'.
 		require
-			good_argument: not (e = Void)
+			e_attached: attached e
 		do
 			e.set_class (current_class)
 			e.set_written_class (written_class)
@@ -882,7 +882,7 @@ feature -- Setting
 		end
 
 	init_invariant_byte_code (b: INVARIANT_B)
-			-- Initialize class invariant byte code `b'
+			-- Initialize class invariant byte code `b'.
 		local
 			i: LOCAL_INFO
 			l: ARRAY [TYPE_A]
@@ -901,7 +901,7 @@ feature -- Setting
 		end
 
 	set_current_inline_agent_body (body: like current_inline_agent_body)
-			-- Sets the current inline agent body
+			-- Set current inline agent body to `body`.
 		do
 			current_inline_agent_body := body
 		end
@@ -999,7 +999,7 @@ feature -- Managing the type stack
 feature	-- Saving contexts
 
 	save: AST_CONTEXT
-			-- Returns a saved context
+			-- Make a copy of the current context and return it.
 		require
 			current_class_attached: current_class /= Void
 		do
@@ -1015,13 +1015,15 @@ feature	-- Saving contexts
 		end
 
 	restore (context: AST_CONTEXT)
-			-- Restores a given context
+			-- Restore a given context.
 		do
 			copy (context)
 		end
 
-feature {NONE} --Internals
+feature {NONE} -- Internals
+
 	old_inline_agents_int:  HASH_TABLE [FEATURE_I, INTEGER]
+			-- Storage for `old_inline_agents`.
 
 invariant
 	locals_attached: locals /= Void

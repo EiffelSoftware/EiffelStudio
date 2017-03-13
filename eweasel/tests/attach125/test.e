@@ -9,9 +9,9 @@ feature {NONE} -- Creation
 	make
 			-- Run test.
 		do
-			set_a
+			set
 			if attached f.y.q as t then
-				io.put_string (t.a.out)
+				io.put_string (t.item.out)
 			end
 		end
 
@@ -20,21 +20,21 @@ feature {NONE} -- Creation
 			-- and before it is completely initialized.
 		do
 			check not attached f then end
-			a := Current
+			item := Current
 		end
 
 feature -- Creation
 
-	set_a
-			-- Set attribute `a` with a side effect of initializing
+	set
+			-- Set attribute `item` with a side effect of initializing
 			-- a once function `f` with an incompleetely initialized object.
 		local
 			is_retried: BOOLEAN
 		do
 			if is_retried then
-				a := Current
+				item := Current
 			else
-				create a.make_uninitialized
+				create item.make_uninitialized
 			end
 		rescue
 			is_retried := True
@@ -43,7 +43,7 @@ feature -- Creation
 
 feature -- Access
 
-	a: TEST
+	item: TEST
 			-- An attribute to be initialized at creation.
 
 	f: A

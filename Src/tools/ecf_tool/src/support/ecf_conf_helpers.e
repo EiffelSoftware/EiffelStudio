@@ -211,9 +211,9 @@ feature {NONE} -- Access
 		do
 			if a_schema /= Void then
 				if a_namespace /= Void then
-					create Result.make_namespace_and_schema (a_namespace.as_string_32, a_schema.as_string_32)
+					create Result.make_namespace_and_schema (a_namespace, a_schema)
 				else
-					create Result.make_namespace_and_schema (Void, a_schema.as_string_32)
+					create Result.make_namespace_and_schema (Void, a_schema)
 				end
 			else
 				create Result.make

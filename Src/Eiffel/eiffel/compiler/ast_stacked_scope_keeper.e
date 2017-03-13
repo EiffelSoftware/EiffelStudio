@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Keeper for non-void entity scopes that uses stacks to track voidness status."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -113,6 +113,8 @@ feature {AST_CONTEXT} -- Modification: nesting
 			has_siblings: has_siblings
 		end
 
+feature {AST_CONTEXT, AST_VISITOR} -- Modification: nesting
+
 	leave_realm
 			-- Leave a complex instruction and
 			-- promote scope information to the outer compound.
@@ -202,7 +204,7 @@ invariant
 	same_level: outer_scopes.count = inner_scopes.count
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

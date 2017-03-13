@@ -3592,7 +3592,11 @@ feature {NONE} -- Visitor
 
 					-- Check if some arguments are attached because of an inherited precondition.
 					-- Avoid doing it when there are no inherited preconditions.
-				if is_void_safe_conformance and then
+					-- Strict void safety: no variables change their attachment status because of inherited preconditions.
+					-- Soft void safety: variables may change attachment status because of inherited preconditions.
+				if
+					is_void_safe_conformance and then
+					not is_void_safe_construct and then
 					not (f.has_precondition and then f.assert_id_set = Void)
 				then
 					create precondition_scope.make (f, context)

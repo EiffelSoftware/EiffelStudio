@@ -681,6 +681,7 @@ feature -- Setting
 		local
 			s: GENERIC_SKELETON
 			i: INTEGER
+			a: ATTR_DESC
 		do
 			current_class := a_class
 			is_void_safe_call := a_class.lace_class.is_void_safe_call
@@ -705,10 +706,15 @@ feature -- Setting
 					i := s.count
 				end
 				create attributes.make (i)
+				has_stable_attributes := False
 			until
 				i <= 0
 			loop
-				attributes.put (i, s [i].feature_id)
+				a := s [i]
+				attributes.put (i, a.feature_id)
+				if not a.type_i.is_attached and then a_class.feature_of_rout_id (a.rout_id).is_stable then
+					has_stable_attributes := True
+				end
 				i := i - 1
 			end
 		ensure
@@ -917,6 +923,9 @@ feature -- Settings: void safety
 	is_void_safe_construct: BOOLEAN
 			-- Should only mode-independent void-safety constructs be taken into account?
 
+	has_stable_attributes: BOOLEAN
+			-- Does current class have stable attributes?
+
 feature -- Iteration classes
 
 	find_iteration_classes (c: CLASS_C)
@@ -954,6 +963,7 @@ feature -- Managing the type stack
 			current_class := Void
 			current_class_type := Void
 			attributes.wipe_out
+			has_stable_attributes := False
 			clear_feature_context
 		end
 
@@ -1018,7 +1028,7 @@ invariant
 	object_test_locals_attached: object_test_locals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

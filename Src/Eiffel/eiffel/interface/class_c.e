@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of a compiled class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -416,23 +416,6 @@ feature -- Status report
 					p.forth
 				end
 			end
-		end
-
-	has_stable_attribute: BOOLEAN
-			-- Does class contain any stable attribute?
-		do
-			Result :=
-				attached skeleton as s and then
-				s.there_exists (
-					agent (a: ATTR_DESC): BOOLEAN
-						local
-							f: FEATURE_I
-						do
-							f := feature_of_rout_id (a.rout_id)
-							check f /= Void end
-							Result := f.is_attribute and then f.is_stable
-						end
-				)
 		end
 
 feature -- Action
@@ -5288,7 +5271,7 @@ invariant
 	-- has_ast: has_ast
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -5319,4 +5302,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CLASS_C
+end

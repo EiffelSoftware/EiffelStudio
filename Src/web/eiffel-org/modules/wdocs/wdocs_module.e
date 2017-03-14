@@ -1523,6 +1523,8 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 					end
 					if l_book_id /= Void then
 						Result := [pg, l_book_id, mng]
+					elseif pg.is_index_page then
+						Result := [pg, "", mng] -- Main doc index page!
 					end
 				end
 			end

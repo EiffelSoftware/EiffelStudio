@@ -241,10 +241,15 @@ feature -- Access: cache system
 						if i > 0 then
 							l_curr_version := loc.substring (13, i - 1)
 							s := loc.substring (i, loc.count)
+						else
+							l_curr_version := loc.substring (13, loc.count)
+							s := ""
 						end
 					else
 						s := loc.substring (4, loc.count)
 					end
+				elseif loc.same_string_general ("documentation") or loc.same_string_general ("documentation/") then
+					s := ""
 				end
 				if s /= Void then
 					a_output.append ("<ul class=%"wdocs-versions%">")
@@ -328,6 +333,8 @@ feature -- Query: wiki
 						Result := mnger.page_by_uuid (a_wiki_id, a_bookid)
 					end
 				end
+			elseif a_wiki_id /= Void and then a_wiki_id.same_string ("Documentation") then
+				Result := mnger.index_page
 			end
 			if
 				Result /= Void

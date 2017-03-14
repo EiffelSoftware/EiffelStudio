@@ -99,3 +99,38 @@
   font-size: 2em;
   vertical-align: middle;
 }
+
+ul.wdocs-versions {
+  float: right;
+  display: inline-block;
+  font-size: 80%;
+  list-style-type: none;
+  font-style: italic;
+  margin: 0;
+}
+ul.wdocs-versions li {
+  padding: 2px;
+  margin-right: 3px;
+  display: inline-block;
+  border: none;
+}
+ul.wdocs-versions li a:hover {
+  text-decoration: underline;
+}
+ul.wdocs-versions li.active {
+  font-weight: bold;
+}
+ul.wdocs-versions li > ul {
+  padding: 10px;
+  background-color: white;
+  border: solid 1px #999;
+  display: none;
+}
+ul.wdocs-versions li:hover > ul {
+  position: absolute;
+  display: block;
+  z-index: 99;
+}
+ul.wdocs-versions li:hover > ul li {
+  display: block;
+}

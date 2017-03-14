@@ -216,6 +216,59 @@ feature -- Access: cache system
 			cache_for_book_cms_menu (a_version_id, a_book_name).delete
 		end
 
+	append_available_versions_to_xhtml (pg: like new_wiki_page; a_version_id: READABLE_STRING_GENERAL; a_response: CMS_RESPONSE; a_output: STRING_8)
+		local
+			s, loc: detachable STRING
+			l_curr_version: READABLE_STRING_GENERAL
+			i: INTEGER
+		do
+			if attached available_versions (False) as l_versions and then not l_versions.is_empty then
+				loc := a_response.location
+				if loc.starts_with_general ("doc/") then
+					if loc.starts_with_general ("doc/version/") then
+						i := loc.index_of ('/', 13)
+						if i > 0 then
+							l_curr_version := loc.substring (13, i - 1)
+							s := loc.substring (i, loc.count)
+						end
+					else
+						s := loc.substring (4, loc.count)
+					end
+				end
+				if s /= Void then
+					a_output.append ("<ul class=%"wdocs-versions%">")
+					a_output.append (cms_api.translation ("Versions", Void))
+					a_output.append (": ")
+
+					a_output.append ("<li class=%"active%">")
+					if a_version_id.is_case_insensitive_equal (default_version_id) then
+						a_response.append_link_to_html (a_version_id + " (default)", "doc/version/" + a_version_id.out + s, Void, a_output)
+					else
+						a_response.append_link_to_html (a_version_id, "doc/version/" + a_version_id.out + s, Void, a_output)
+					end
+					a_output.append ("</li>")
+					a_output.append ("<li>...<ul>")
+					across
+						l_versions as ic
+					loop
+						if a_version_id.is_case_insensitive_equal (ic.item) then
+								-- Already handled
+						else
+							a_output.append ("<li>")
+							if default_version_id.is_case_insensitive_equal (ic.item) then
+								a_response.append_link_to_html (ic.item + " (default)", "doc/version/" + ic.item.out + s, Void, a_output)
+							else
+								a_response.append_link_to_html (ic.item, "doc/version/" + ic.item.out + s, Void, a_output)
+							end
+							a_output.append ("</li>")
+						end
+					end
+					a_output.append ("</ul></li>")
+					a_output.append ("</ul>%N")
+				end
+			end
+		end
+
 feature -- Query: wiki
 
 	wiki_text (pg: like new_wiki_page): detachable READABLE_STRING_8

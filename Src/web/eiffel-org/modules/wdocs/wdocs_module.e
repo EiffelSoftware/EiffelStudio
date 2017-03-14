@@ -138,6 +138,7 @@ feature -- Router
 			-- Router configuration.
 		local
 			h: WSF_URI_TEMPLATE_AGENT_HANDLER
+			h_uri: WSF_URI_AGENT_HANDLER
 		do
 			create h.make (agent handle_wikipage_by_uuid (a_api, ?, ?))
 			a_router.handle ("/doc/uuid/{wikipage_uuid}", h, a_router.methods_get)
@@ -147,9 +148,12 @@ feature -- Router
 			a_router.handle ("/doc/eis/{eis_id}", h, a_router.methods_get)
 			a_router.handle ("/doc/version/{version_id}/eis/{eis_id}", h, a_router.methods_get)
 
+			create h_uri.make (agent handle_documentation (a_api, ?, ?))
+			a_router.handle ("/documentation", h_uri, a_router.methods_get)
+			a_router.handle ("/doc", h_uri, a_router.methods_get)
+			a_router.handle ("/doc/", h_uri, a_router.methods_get)
+
 			create h.make (agent handle_documentation (a_api, ?, ?))
-			a_router.handle ("/documentation", h, a_router.methods_get)
-			a_router.handle ("/doc/", h, a_router.methods_get)
 			a_router.handle ("/doc/version/{version_id}/", h, a_router.methods_get)
 			a_router.handle ("/doc/version/{version_id}/{bookid}", h, a_router.methods_get)
 			a_router.handle ("/doc/{bookid}", h, a_router.methods_get)
@@ -331,9 +335,9 @@ feature -- Hooks
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 		do
-			Result := <<"wdocs-tree", "wdocs-versions", "wdocs-cards">>
+			Result := <<"wdocs-tree", "?wdocs-versions", "wdocs-cards">>
 			debug ("wdocs")
-				Result := <<"wdocs-tree", "wdocs-versions", "wdocs-page-info", "wdocs-cards">>
+				Result := <<"wdocs-tree", "?wdocs-versions", "wdocs-page-info", "wdocs-cards">>
 			end
 		end
 
@@ -1425,7 +1429,8 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 				else
 					l_title := pg.title
 				end
-				r.set_title (l_title)
+--				r.set_title (l_title)
+				r.set_title (Void)
 				r.values.force (l_title, "wiki_page_name")
 				if attached {WSF_STRING} req.query_parameter ("source") as s_source and then not s_source.is_case_insensitive_equal ("no") then
 					if attached pg.path as l_path then
@@ -1614,8 +1619,13 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 				l_xhtml.append ("<div class=%"cache-info%">cached: " + l_cache.cache_date_time.out + "</div>")
 			else
 				create l_xhtml.make_empty
-				if attached wdocs_api as l_wdocs_api and then attached {CMS_TAXONOMY_API} l_wdocs_api.cms_api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxonomy_api and then attached a_wiki_page.metadata ("uuid") as l_uuid then
-					l_taxonomy_api.append_taxonomy_to_xhtml (create {CMS_WDOCS_CONTENT}.make (a_wiki_page, l_uuid), a_response, l_xhtml)
+				if attached wdocs_api as l_wdocs_api then
+					if attached l_wdocs_api.available_versions (False) as l_versions then
+						l_wdocs_api.append_available_versions_to_xhtml (a_wiki_page, l_version_id, a_response, l_xhtml)
+					end
+					if attached {CMS_TAXONOMY_API} l_wdocs_api.cms_api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxonomy_api and then attached a_wiki_page.metadata ("uuid") as l_uuid then
+						l_taxonomy_api.append_taxonomy_to_xhtml (create {CMS_WDOCS_CONTENT}.make (a_wiki_page, l_uuid), a_response, l_xhtml)
+					end
 				end
 				if attached a_wiki_page.text.content as l_wiki_content then
 					l_xhtml.append (wiki_to_xhtml (wdocs_api, a_page_title, l_wiki_content, a_wiki_page, a_manager))

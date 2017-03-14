@@ -68,44 +68,55 @@ feature -- Query
 			d: DIRECTORY
 			s: STRING_32
 		do
-			create {ARRAYED_LIST [READABLE_STRING_32]} Result.make (5)
-			create f.make_with_path (settings.documentation_dir.extended ("versions"))
-			if f.exists and then f.is_access_readable then
-				f.open_read
-				from
-				until
-					f.end_of_file or f.exhausted
-				loop
-					f.read_line_thread_aware
-					s := utf.utf_8_string_8_to_string_32 (f.last_string)
-					s.left_adjust
-					s.right_adjust
-					if
-						not s.is_whitespace and then
-						(not a_check_existence or else ut.directory_path_exists (settings.documentation_dir.extended (s)))
-					then
-						Result.force (s)
-					end
-				end
-				f.close
+			if attached internal_available_versions as l_versions then
+				Result := l_versions
 			else
-				create d.make_with_path (settings.documentation_dir)
-				if d.exists then
-					across
-						d.entries as ic
+				create {ARRAYED_LIST [READABLE_STRING_32]} Result.make (5)
+				internal_available_versions := Result
+
+				create f.make_with_path (settings.documentation_dir.extended ("versions"))
+				if f.exists and then f.is_access_readable then
+					f.open_read
+					from
+					until
+						f.end_of_file or f.exhausted
 					loop
-						p := ic.item
-						if p.is_current_symbol or p.is_parent_symbol then
-						elseif not p.name.starts_with_general (".") then
-							Result.force (p.name)
+						f.read_line_thread_aware
+						s := utf.utf_8_string_8_to_string_32 (f.last_string)
+						s.left_adjust
+						s.right_adjust
+						if
+							not s.is_whitespace and then
+							(not a_check_existence or else ut.directory_path_exists (settings.documentation_dir.extended (s)))
+						then
+							Result.force (s)
+						end
+					end
+					f.close
+				else
+					create d.make_with_path (settings.documentation_dir)
+					if d.exists then
+						across
+							d.entries as ic
+						loop
+							p := ic.item
+							if p.is_current_symbol or p.is_parent_symbol then
+							elseif not p.name.starts_with_general (".") then
+								Result.force (p.name)
+							end
 						end
 					end
 				end
-			end
-			if Result.is_empty then
-				Result.force (default_version_id.as_string_32)
+				if Result.is_empty then
+					Result.force (default_version_id.as_string_32)
+				end
 			end
 		end
+
+feature {NONE} -- Query
+
+	internal_available_versions: detachable like available_versions
+			-- cached version of `available_versions`.
 
 feature -- Query
 
@@ -237,17 +248,15 @@ feature -- Access: cache system
 				end
 				if s /= Void then
 					a_output.append ("<ul class=%"wdocs-versions%">")
-					a_output.append (cms_api.translation ("Versions", Void))
-					a_output.append (": ")
-
+					a_output.append (cms_api.translation ("Version", Void))
 					a_output.append ("<li class=%"active%">")
 					if a_version_id.is_case_insensitive_equal (default_version_id) then
-						a_response.append_link_to_html (a_version_id + " (default)", "doc/version/" + a_version_id.out + s, Void, a_output)
+						a_response.append_link_to_html ("Default", "doc" + s, Void, a_output)
 					else
 						a_response.append_link_to_html (a_version_id, "doc/version/" + a_version_id.out + s, Void, a_output)
 					end
 					a_output.append ("</li>")
-					a_output.append ("<li>...<ul>")
+					a_output.append ("<li><a href=%"#%">other...</a><ul>")
 					across
 						l_versions as ic
 					loop
@@ -256,7 +265,7 @@ feature -- Access: cache system
 						else
 							a_output.append ("<li>")
 							if default_version_id.is_case_insensitive_equal (ic.item) then
-								a_response.append_link_to_html (ic.item + " (default)", "doc/version/" + ic.item.out + s, Void, a_output)
+								a_response.append_link_to_html ({STRING_32} "default (" + ic.item + ")", "doc" + s, Void, a_output)
 							else
 								a_response.append_link_to_html (ic.item, "doc/version/" + ic.item.out + s, Void, a_output)
 							end

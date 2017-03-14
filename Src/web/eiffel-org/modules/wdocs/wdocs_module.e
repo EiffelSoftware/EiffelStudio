@@ -1619,10 +1619,13 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 				l_xhtml.append ("<div class=%"cache-info%">cached: " + l_cache.cache_date_time.out + "</div>")
 			else
 				create l_xhtml.make_empty
+				if not l_version_id.is_case_insensitive_equal (default_version_id) then
+					l_xhtml.append ("<ul class=%"message%"><li class=%"warning%">This is not the latest version of the documentation. ")
+					a_response.append_link_to_html ("Recommended Version", a_manager.wiki_page_uri_path (a_wiki_page, a_book_name, Void), Void, l_xhtml)
+					l_xhtml.append ("</li></ul>")
+				end
 				if attached wdocs_api as l_wdocs_api then
-					if attached l_wdocs_api.available_versions (False) as l_versions then
-						l_wdocs_api.append_available_versions_to_xhtml (a_wiki_page, l_version_id, a_response, l_xhtml)
-					end
+					l_wdocs_api.append_available_versions_to_xhtml (a_wiki_page, l_version_id, a_response, l_xhtml)
 					if attached {CMS_TAXONOMY_API} l_wdocs_api.cms_api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxonomy_api and then attached a_wiki_page.metadata ("uuid") as l_uuid then
 						l_taxonomy_api.append_taxonomy_to_xhtml (create {CMS_WDOCS_CONTENT}.make (a_wiki_page, l_uuid), a_response, l_xhtml)
 					end

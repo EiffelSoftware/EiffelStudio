@@ -100,6 +100,21 @@
   vertical-align: middle;
 }
 
+div#content.doc ul.message {
+  list-style-type: none;
+}
+div#content.doc ul.message li.warning {
+  padding: 5px;
+  border-left: solid 4px #ffd200;
+  background-color: #ffc;
+}
+div#content.doc ul.message li.warning a {
+  border: solid 1px #ccc;
+  padding: 2px;
+  background-color: #eee;
+  display: inline-block;
+}
+
 ul.wdocs-versions {
   float: right;
   display: inline-block;
@@ -108,9 +123,12 @@ ul.wdocs-versions {
   font-style: italic;
   margin: 0;
 }
+ul.wdocs-versions > li:not(:last-child) {
+  border-right: solid 1px #ccc;
+}
 ul.wdocs-versions li {
-  padding: 2px;
-  margin-right: 3px;
+  padding: 0 6px 0 2px;
+  margin: 0 2px 0 2px;
   display: inline-block;
   border: none;
 }

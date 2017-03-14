@@ -104,6 +104,23 @@
 	}
 }
 
+div#content.doc {
+	ul.message {
+		list-style-type: none;
+		li.warning {
+			padding: 5px;
+			border-left: solid 4px #ffd200;
+			background-color: #ffc;
+			a {
+				border: solid 1px #ccc;
+				padding: 2px;
+				background-color: #eee;
+				display: inline-block;
+			}
+		}
+	}
+}
+
 ul.wdocs-versions {
 	float: right;
 	display: inline-block;
@@ -111,12 +128,14 @@ ul.wdocs-versions {
 	list-style-type: none;
 	font-style: italic;
 	margin: 0;
+
+	&>li:not(:last-child) { border-right: solid 1px #ccc; } 
 	li {
 		a:hover {
 			text-decoration: underline;
 		}
-		padding: 2px;
-		margin-right: 3px;
+		padding: 0 6px 0 2px;
+		margin: 0 2px 0 2px;
 		display: inline-block;
 		border: none;
 		&.active {

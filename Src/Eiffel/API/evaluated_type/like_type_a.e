@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of an anchored type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,53 +13,71 @@ inherit
 		undefine
 			same_as
 		redefine
-			actual_type, annotation_flags,
-			deep_actual_type, deanchored_form_marks_free, context_free_type,
-			conformance_type,
-			convert_to,
-			has_associated_class,
-			has_like_current,
+			actual_type,
+			adapted_in,
+			annotation_flags,
+			as_attachment_mark_free,
+			as_same_variant_bits,
 			associated_class_type,
-			has_associated_class_type,
-			has_like,
-			good_generics,
+			c_type,
+			conformance_type,
+			context_free_type,
+			convert_to,
+			deanchored_form_marks_free,
+			deep_actual_type,
+			description,
+			description_with_detachable_type,
 			error_generics,
 			formal_instantiated_in,
+			generate_cid,
+			generate_cid_array,
+			generate_cid_init,
+			generate_gen_type_il,
+			generated_id,
+			generics,
+			good_generics,
+			has_associated_class,
+			has_associated_class_type,
+			has_like,
+			has_like_current,
+			has_reference,
+			heaviest,
 			instantiated_in,
-			is_class_valid,
-			is_explicit,
+			instantiation_in,
+			internal_generic_derivation,
+			internal_is_valid_for_class,
+			internal_same_generic_derivation_as,
 			is_attached,
 			is_basic,
-			is_expanded,
+			is_class_valid,
 			is_ephemeral,
+			is_expanded,
+			is_explicit,
 			is_external,
+			is_frozen,
+			is_generated_as_single_type,
 			is_implicitly_attached,
 			is_initialization_required,
 			is_like,
 			is_loose,
 			is_none,
+			is_optimized_as_frozen,
 			is_reference,
 			is_separate,
-			internal_is_valid_for_class,
+			is_variant,
+			make_type_byte_code,
+			maximum_interval_value,
 			meta_type,
+			minimum_interval_value,
 			recomputed_in,
 			set_attached_mark,
 			set_detachable_mark,
+			set_frozen_mark,
 			set_is_implicitly_attached,
-			set_separate_mark,
-			unset_is_implicitly_attached,
 			set_is_implicitly_frozen,
-			description, description_with_detachable_type,
-			c_type,
-			generics,
-			generated_id,
-			generate_cid, generate_cid_array, generate_cid_init,
-			make_type_byte_code, generate_gen_type_il,
-			maximum_interval_value, minimum_interval_value, is_optimized_as_frozen,
-			is_generated_as_single_type, heaviest, instantiation_in, adapted_in,
-			internal_generic_derivation, internal_same_generic_derivation_as,
-			skeleton_adapted_in, set_frozen_mark, is_frozen, is_variant,
-			as_same_variant_bits, as_attachment_mark_free
+			set_separate_mark,
+			skeleton_adapted_in,
+			unset_is_implicitly_attached
 		end
 
 feature -- Properties
@@ -156,6 +174,12 @@ feature -- Status report
 			-- Is current actual type a reference one?
 		do
 			Result := attached actual_type as a and then a.is_reference
+		end
+
+	has_reference: BOOLEAN
+			-- <Precursor>
+		do
+			Result := attached conformance_type as t implies t.has_reference
 		end
 
 	is_expanded: BOOLEAN
@@ -547,10 +571,12 @@ feature -- Generic conformance
 				-- Unlike {TYPE_A}, and similarely as {FORMAL_A}, we actually need to know if
 				-- the type is declared with a mark and if it is which one. When there are no
 				-- mark at runtime, we will use the mark of the anchor.
-			if has_attached_mark then
-				Result := {SHARED_GEN_CONF_LEVEL}.attached_type
-			elseif has_detachable_mark then
-				Result := {SHARED_GEN_CONF_LEVEL}.detachable_type
+			if lace.is_void_safe then
+				if has_attached_mark then
+					Result := {SHARED_GEN_CONF_LEVEL}.attached_type
+				elseif has_detachable_mark then
+					Result := {SHARED_GEN_CONF_LEVEL}.detachable_type
+				end
 			end
 
 			if system.is_scoop and then has_separate_mark then
@@ -668,7 +694,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -4,9 +4,6 @@
 		<root all_classes="true"/>
 		<option warning="true">
 		</option>
-		<capability>
-			<concurrency support="none"/>
-		</capability>
 		<library name="abel_core" location="$ISE_LIBRARY\unstable\library\persistency\abel\core\core.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL.ecf"/>

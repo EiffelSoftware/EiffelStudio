@@ -229,7 +229,7 @@ feature {PS_ABEL_EXPORT} -- Utilities
 			from
 				Result := ""
 			loop
-				if attached args.item (index.item) as object then
+				if attached {ANY} args.item (index.item) as object then
 					if attached {READABLE_STRING_GENERAL} object then
 						Result.append ("'" + object.out + "'")
 					else

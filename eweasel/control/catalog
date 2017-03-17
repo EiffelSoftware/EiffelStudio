@@ -2867,6 +2867,7 @@ test	object-test-incomplete-void-safety	attach123 tcf pass attached_types void_s
 test	targeted-unqualified-once-function	attach124 tcf fail void_safe targeted validity
 test	targeted-unqualified-once-expanded	attach125 tcf fail void_safe targeted validity
 test	targeted-unqualified-once-indirect	attach126 tcf fail void_safe targeted validity
+test	targeted-creation-expanded-argument	attach127 tcf fail void_safe targeted validity expanded
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

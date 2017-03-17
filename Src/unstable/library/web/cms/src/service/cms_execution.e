@@ -18,7 +18,9 @@ inherit
 			create_router, router,
 			execute_default,
 			filter_execute,
-			initialize
+			initialize,
+			initialize_router,
+			initialize_filter
 		end
 
 	WSF_NO_PROXY_POLICY
@@ -59,11 +61,24 @@ feature {NONE} -- Initialization
 
 				-- CMS Initialization
 
-				-- initialize_router
-				-- initialize_filter: expanded here, for void-safety concern.
+				-- for void-safety concern.
+			create {WSF_MAINTENANCE_FILTER} filter
+		end
+
+	initialize_router
+			-- Initialize `router`.
+		do
+			create_router
+				-- router setup is delayed toi `initialize_execution`.
+			-- setup_router
+		end
+
+	initialize_filter
+			-- Initialize `filter`.
+		do
 			create_filter
-			initialize_router
-			setup_filter
+				-- filter setup is delayed toi `initialize_execution`.
+			-- setup_filter
 		end
 
 	initialize_modules
@@ -202,6 +217,8 @@ feature -- Request execution
 			-- Initialize CMS execution.
 		do
 			request.set_uploaded_file_path (api.temp_location)
+			setup_filter
+			setup_router
 		end
 
 	execute

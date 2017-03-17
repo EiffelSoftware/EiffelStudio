@@ -1,5 +1,5 @@
-note
-	description: "Description of an attribute in an instance of CLASS_TYPE"
+﻿note
+	description: "Description of an attribute in an instance of CLASS_TYPE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -240,7 +240,7 @@ feature -- Code generation
 invariant
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -17,7 +17,8 @@ feature {NONE} -- Creation
 			-- Raise an exception after registering a new object in a once function
 			-- and before it is completely initialized.
 		do
-			check not attached f then end
+				-- No qualified calls can be made, only reference comparison and boolean tests.
+			check f = Void then end
 			a := Current
 		end
 

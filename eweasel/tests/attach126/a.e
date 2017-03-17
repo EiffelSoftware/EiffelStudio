@@ -9,7 +9,8 @@ feature {NONE} -- Creation
 	make (value: TEST)
 			-- Raise an exception after registering `value` in a once function.
 		do
-			check not attached f (value) then end
+				-- No qualified calls can be made, only reference comparison and boolean tests.
+			check f (value) = Void then end
 		end
 
 feature -- Access

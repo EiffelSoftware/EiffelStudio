@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Actual type for simple types."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,39 +13,41 @@ inherit
 		undefine
 			c_type
 		redefine
+			description,
+			description_with_detachable_type,
+			element_type,
+			error_generics,
+			generate_cecil_value,
+			generic_derivation,
+			generic_il_type_name,
+			good_generics,
+			has_reference,
 			instantiation_of,
-			meta_type, is_basic, reference_type,
-			good_generics, internal_is_valid_for_class, error_generics,
-			description, description_with_detachable_type,
-			generic_il_type_name, internal_generic_derivation, generic_derivation,
-			internal_same_generic_derivation_as, generate_cecil_value,
-			sk_value, element_type, make, is_processor_attachable_to
+			internal_generic_derivation,
+			internal_is_valid_for_class,
+			internal_same_generic_derivation_as,
+			is_basic,
+			is_processor_attachable_to,
+			make,
+			meta_type,
+			reference_type,
+			sk_value
 		end
 
 feature {NONE} -- Initialization
 
 	make (a_class_id: INTEGER)
-		local
-			l_class: like base_class
+			-- Create a type descriptor object with given class ID `a_class_id`.
 		do
 			class_id := a_class_id
-			l_class := system.class_of_id (a_class_id)
 				-- A basic type has always its base class expanded.
 			set_expanded_class_mark
-		end
-
-feature -- Access
-
-	generic_derivation: CL_TYPE_A
-			-- <Precursor>
-		do
-			Result := internal_generic_derivation (0)
 		end
 
 feature -- FIXME
 
 	associated_reference_class_type: CLASS_TYPE
-			-- Reference class type of Current
+			-- Reference class type of Current.
 		do
 				-- We can safely use `Void' here because basic types are not generic.
 				-- FIXME: Manu: check that it works fine for TYPED_POINTER_A.
@@ -57,45 +59,57 @@ feature -- FIXME
 feature -- Status Report
 
 	is_basic: BOOLEAN = True
-			-- Is the current actual type a basic one ?
+			-- Is the current actual type a basic one?
+
+	has_reference: BOOLEAN = False
+			-- <Precursor>
 
 feature -- Access
 
+	generic_derivation: CL_TYPE_A
+			-- <Precursor>
+		do
+			Result := internal_generic_derivation (0)
+		end
+
 	description: ATTR_DESC
-			-- Type description for skeleton
+			-- Type description for skeleton.
 		do
 			Result := c_type.new_attribute_description
 		end
 
 	description_with_detachable_type: ATTR_DESC
-			-- Type description for skeleton
+			-- Type description for skeleton.
 		do
 			Result := c_type.new_attribute_description
 		end
 
 	element_type: INTEGER_8
+			-- <Precursor>
 		do
 			Result := c_type.element_type
 		end
 
 	sk_value (a_context_type: TYPE_A): NATURAL_32
+			-- <Precursor>
 		do
 			Result := c_type.sk_value
 		end
 
 	meta_type: BASIC_A
-			-- Associated meta type
+			-- Associated meta type.
 		do
 			Result := Current
 		end
 
 	good_generics: BOOLEAN
-			-- Has the current type the right number of generic types ?
+			-- Has the current type the right number of generic types?
 		do
 			Result := True
 		end
 
 	error_generics: VTUG
+			-- <Precursor>
 		do
 		end
 
@@ -150,6 +164,7 @@ feature -- C code generation
 		end
 
 	generate_cecil_value (buffer: GENERATION_BUFFER; a_context_type: TYPE_A)
+			-- <Precursor>
 		do
 			c_type.generate_sk_value (buffer)
 		end
@@ -157,7 +172,7 @@ feature -- C code generation
 feature {TYPE_A} -- Helpers
 
 	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
-			-- The associated class is still in the system
+			-- The associated class is still in the system.
 		do
 			Result := True
 		end
@@ -177,6 +192,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER): BOOLEAN
+			-- <Precursor>
 		do
 			if a_level = 0 and not system.il_generation then
 				if attached {CL_TYPE_A} other as l_type then
@@ -199,16 +215,16 @@ feature -- Comparison
 			Result := True
 		end
 
-feature {COMPILER_EXPORTER}
+feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a descendant one
 
 	instantiation_of (type: TYPE_A; a_class_id: INTEGER): TYPE_A
-			-- Insatiation of `type' in s simple type
+			-- Insatiation of `type' in s simple type.
 		do
 			Result := type.actual_type
 		end
 
 	reference_type: CL_TYPE_A
-			-- Reference counterpart of an expanded type
+			-- Reference counterpart of an expanded type.
 		do
 			create Result.make (class_id)
 			Result.set_expanded_class_mark
@@ -221,7 +237,7 @@ invariant
 	is_base_class_expanded: class_declaration_mark = expanded_mark
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -252,4 +268,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class BASIC_A
+end

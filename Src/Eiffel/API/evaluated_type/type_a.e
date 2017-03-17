@@ -67,7 +67,7 @@ feature -- Generic conformance
 		do
 				-- Only if a type is not expanded do we need to generate the
 				-- attached annotation since by default expanded implies attached.
-			if is_attached and not is_expanded then
+			if lace.is_void_safe and then is_attached and then not is_expanded then
 				Result := {SHARED_GEN_CONF_LEVEL}.attached_type
 			end
 
@@ -505,6 +505,13 @@ feature -- Properties
 			-- Is current actual type a reference one?
 		do
 			Result := not is_expanded
+		end
+
+	has_reference: BOOLEAN
+			-- Can values of this type reference other objects?
+		do
+				-- It is safe to assume there is a reference.
+			Result := True
 		end
 
 	is_true_expanded: BOOLEAN
@@ -2088,7 +2095,7 @@ invariant
 	separate_mark_consistency: not is_expanded implies (has_separate_mark implies is_separate)
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

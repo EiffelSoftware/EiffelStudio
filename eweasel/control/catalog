@@ -2864,10 +2864,10 @@ test	unsafe-attached-locals-as-detachable	attach120 tcf pass attached_types void
 test	uninitialized-agent-with-wrong-creation attach121 tcf pass attached_types void_safe creation attribute validity
 test	object-test-on-local-variable		attach122 tcf pass attached_types void_safe object_test local
 test	object-test-incomplete-void-safety	attach123 tcf pass attached_types void_safe object_test validity
-test	targeted-unqualified-once-function	attach124 tcf fail void_safe targeted validity
-test	targeted-unqualified-once-expanded	attach125 tcf fail void_safe targeted validity
-test	targeted-unqualified-once-indirect	attach126 tcf fail void_safe targeted validity
-test	targeted-creation-expanded-argument	attach127 tcf fail void_safe targeted validity expanded
+test	targeted-unqualified-once-function	attach124 tcf pass void_safe targeted validity
+test	targeted-unqualified-once-expanded	attach125 tcf pass void_safe targeted validity
+test	targeted-unqualified-once-indirect	attach126 tcf pass void_safe targeted validity
+test	targeted-creation-expanded-argument	attach127 tcf pass void_safe targeted validity expanded
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

@@ -7,7 +7,7 @@ create
 feature {NONE} -- Creation
 
 	make (value: TEST)
-			-- Make a qualified call on `value`.
+			-- Set `item` to `value`.
 		do
 			item := value
 		end

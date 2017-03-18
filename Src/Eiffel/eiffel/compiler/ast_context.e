@@ -700,22 +700,25 @@ feature -- Setting
 				current_class_type.set_frozen_mark
 			end
 			set_written_class (Void)
-			from
-				s := a_class.skeleton
-				if s /= Void then
-					i := s.count
+				-- TODO: Instead of making the following check, it is better to split `{AST_CONTEXT}` into 2 classes: one for degree 4 and one for degree 3.
+			if a_class.degree_4_processed then
+				from
+					s := a_class.skeleton
+					if s /= Void then
+						i := s.count
+					end
+					create attributes.make (i)
+					has_stable_attributes := False
+				until
+					i <= 0
+				loop
+					a := s [i]
+					attributes.put (i, a.feature_id)
+					if not a.type_i.is_attached and then a_class.feature_of_feature_id (a.feature_id).is_stable then
+						has_stable_attributes := True
+					end
+					i := i - 1
 				end
-				create attributes.make (i)
-				has_stable_attributes := False
-			until
-				i <= 0
-			loop
-				a := s [i]
-				attributes.put (i, a.feature_id)
-				if not a.type_i.is_attached and then a_class.feature_of_feature_id (a.feature_id).is_stable then
-					has_stable_attributes := True
-				end
-				i := i - 1
 			end
 		ensure
 			current_class_set: current_class = a_class

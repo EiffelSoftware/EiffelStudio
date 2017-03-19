@@ -4861,10 +4861,6 @@ feature {DEGREE_4, NAMED_TUPLE_TYPE_A, TYPE_A_CHECKER} -- Degree 4
 			removed: not degree_4_needed
 		end
 
-	degree_4_needed: BOOLEAN
-			-- Does current class need to be
-			-- processed in Degree 4?
-
 	expanded_modified: BOOLEAN
 			-- Has the expanded status of current
 			-- class been modified?
@@ -4913,6 +4909,10 @@ feature {DEGREE_4, NAMED_TUPLE_TYPE_A, TYPE_A_CHECKER} -- Degree 4
 		end
 
 feature {DEGREE_4, NAMED_TUPLE_TYPE_A, TYPE_A_CHECKER, AST_CONTEXT} -- Degree 4
+
+	degree_4_needed: BOOLEAN
+			-- Does current class need to be
+			-- processed in Degree 4?
 
 	degree_4_processed: BOOLEAN
 			-- Has current class been processed in

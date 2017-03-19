@@ -701,7 +701,7 @@ feature -- Setting
 			end
 			set_written_class (Void)
 				-- TODO: Instead of making the following check, it is better to split `{AST_CONTEXT}` into 2 classes: one for degree 4 and one for degree 3.
-			if a_class.degree_4_processed then
+			if a_class.degree_4_needed implies a_class.degree_4_processed then
 				from
 					s := a_class.skeleton
 					if s /= Void then

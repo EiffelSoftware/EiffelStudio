@@ -1,7 +1,7 @@
 note
 	description: "PRINT_JSON_VISITOR Generates the JSON-String for a JSON_VALUE"
 	author: "jvelilla"
-	date: "2008/08/24"
+	date: "$Date$"
 	revision: "0.1"
 
 class

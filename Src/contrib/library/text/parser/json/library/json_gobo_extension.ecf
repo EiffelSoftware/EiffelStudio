@@ -7,7 +7,7 @@
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="false" warning="true" is_obsolete_routine_type="true" namespace="EJSON.Library">
+		<option namespace="EJSON.Library">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>

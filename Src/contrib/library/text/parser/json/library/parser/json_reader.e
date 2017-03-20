@@ -1,7 +1,7 @@
 note
 	description: "Objects that ..."
 	author: "jvelilla"
-	date: "2008/08/24"
+	date: "$Date$"
 	revision: "0.1"
 
 class

@@ -56,5 +56,6 @@ fi
 
 remtrace zlib
 cd $2/C_library/zlib
-make -f Makefile.unix                                                 
+sh ./configure
+make
 cd $2

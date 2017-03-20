@@ -13,10 +13,10 @@ class
 	JSON_STRING
 
 inherit
-
 	JSON_VALUE
 		redefine
-			is_equal
+			is_equal,
+			is_string
 		end
 
 create
@@ -107,6 +107,11 @@ feature -- Access
 
 	item: STRING
 			-- Contents with escaped entities if any
+
+feature -- Status report			
+
+	is_string: BOOLEAN = True
+			-- <Precursor>
 
 feature -- Conversion
 
@@ -501,6 +506,6 @@ invariant
 	item_not_void: item /= Void
 
 note
-	copyright: "2010-2014, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2017, Javier Velilla and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

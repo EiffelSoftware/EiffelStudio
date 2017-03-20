@@ -3,8 +3,8 @@ note
 	pattern: "Iterator visitor"
 	author: "Jocelyn Fiat"
 	license: "MIT (see http://www.opensource.org/licenses/mit-license.php)"
-	date: "2013/08/01"
-	revision: "Revision 0.1"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	JSON_ITERATOR

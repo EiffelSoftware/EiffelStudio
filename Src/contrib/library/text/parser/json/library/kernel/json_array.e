@@ -15,8 +15,10 @@ class
 	JSON_ARRAY
 
 inherit
-
 	JSON_VALUE
+		redefine
+			is_array
+		end
 
 	ITERABLE [JSON_VALUE]
 
@@ -47,6 +49,11 @@ feature {NONE} -- Initialization
 		do
 			make (10)
 		end
+
+feature -- Status report			
+
+	is_array: BOOLEAN = True
+			-- <Precursor>
 
 feature -- Access
 
@@ -187,6 +194,6 @@ invariant
 	items_not_void: items /= Void
 
 note
-	copyright: "2010-2014, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2017, Javier Velilla and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

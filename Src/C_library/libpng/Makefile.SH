@@ -1,10 +1,10 @@
 case $CONFIG in
 '')
-        if test ! -f config.sh; then
-                (echo "Can't find config.sh."; exit 1)
-        fi 2>/dev/null
-        . ./config.sh
-        ;;
+	if test ! -f config.sh; then
+		(echo "Can't find config.sh."; exit 1)
+	fi 2>/dev/null
+	. ./config.sh
+	;;
 esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
@@ -19,5 +19,4 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 
 
 main::
-        echo libpng
-
+	echo libpng

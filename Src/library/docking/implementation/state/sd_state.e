@@ -13,10 +13,12 @@ inherit
 
 	SD_DOCKING_MANAGER_HOLDER
 
+	DEBUG_OUTPUT
+
 feature -- Properties
 
 	direction: INTEGER
-			-- Dock top or dock bottom or dock left or dock right? One emueration from {SD_DOCKING_MANAGER}
+			-- Dock top or dock bottom or dock left or dock right? One enumeration from {SD_DOCKING_MANAGER}
 
 	set_direction (a_direction: INTEGER)
 			-- Set `direction'
@@ -391,6 +393,27 @@ feature -- Contract support
 	initialized: BOOLEAN
 			-- If ready to be used?
 
+feature -- Status report
+
+	debug_output: STRING_32
+		do
+			create Result.make_empty
+			Result.append_string_general ("dir=")
+			inspect
+				direction
+			when {SD_ENUMERATION}.top then
+				Result.append_string_general ("top")
+			when {SD_ENUMERATION}.left then
+				Result.append_string_general ("left")
+			when {SD_ENUMERATION}.bottom then
+				Result.append_string_general ("bottom")
+			when {SD_ENUMERATION}.right then
+				Result.append_string_general ("right")
+			else
+				Result.append_integer (direction)
+			end
+		end
+
 invariant
 
 	internal_shared_not_void: initialized implies internal_shared /= Void
@@ -399,7 +422,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

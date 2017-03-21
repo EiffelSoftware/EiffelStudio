@@ -19,7 +19,8 @@ inherit
 			move_to_docking_zone,
 			show,
 			restore,
-			close
+			close,
+			debug_output
 		end
 
 create
@@ -56,6 +57,17 @@ feature -- Command
 			end
 		ensure
 			set: content = a_content
+		end
+
+feature -- Status report
+
+	debug_output: STRING_32
+		do
+			Result := Precursor
+			if attached relative as rel then
+				Result.append_string (" rel=")
+				Result.append_string (rel.debug_output)
+			end
 		end
 
 feature  -- States report
@@ -317,7 +329,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

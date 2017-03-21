@@ -118,6 +118,7 @@ feature -- Command
 			l_save_cmd: EB_SAVE_FILE_COMMAND
 			l_save_as_cmd: EB_SAVE_FILE_AS_COMMAND
 			l_save_all_cmd: EB_SAVE_ALL_FILE_COMMAND
+			l_restore_tab_cmd: EB_RESTORE_CLOSE_TAB_EDITOR_COMMAND
 
 			l_shell_cmd: EB_OPEN_SHELL_COMMAND
 			l_print_cmd: EB_PRINT_COMMAND
@@ -190,6 +191,11 @@ feature -- Command
 			auto_recycle (l_new_tab_cmd)
 			l_dev_commands.set_new_tab_cmd (l_new_tab_cmd)
 			l_dev_commands.toolbarable_commands.extend (l_dev_commands.new_tab_cmd)
+
+			create l_restore_tab_cmd.make (develop_window)
+			auto_recycle (l_restore_tab_cmd)
+			l_dev_commands.set_restore_tab_cmd (l_restore_tab_cmd)
+			l_dev_commands.toolbarable_commands.extend (l_dev_commands.restore_tab_cmd)
 
 			create l_save_cmd.make (develop_window)
 			auto_recycle (l_save_cmd)
@@ -1103,7 +1109,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

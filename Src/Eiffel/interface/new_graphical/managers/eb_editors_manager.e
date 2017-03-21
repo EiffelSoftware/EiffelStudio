@@ -59,6 +59,7 @@ feature {NONE} -- Initialization
 
 			create editors_internal.make (0)
 			create fake_editors.make (0)
+			create recently_closed_editors.make (0)
 
 				-- Action sequences
 			create editor_switched_actions
@@ -66,6 +67,7 @@ feature {NONE} -- Initialization
 			create editor_closed_actions
 
 			editor_switched_actions.extend (agent on_editor_switched)
+			editor_closed_actions.extend (agent on_editor_closed)
 
 			create editor_number_factory.make
 			build_observer_lists
@@ -86,6 +88,7 @@ feature {NONE} -- Initialization
 			end
 			docking_manager.zones.place_holder_widget.file_drop_actions.extend (agent on_file_drop)
 		ensure
+			recently_closed_editors_not_void: recently_closed_editors /= Void
 			editors_internal_not_void: editors_internal /= Void
 			editors_not_empty: not editors_internal.is_empty
 			docking_manager_attached: docking_manager = a_dev_win.docking_manager
@@ -396,6 +399,22 @@ feature -- Access
 			end
 		end
 
+	last_recently_closed_editor: detachable EB_SMART_EDITOR
+			-- last recently closed editor.
+
+	restore_last_recently_closed_editor
+			-- last closed editor.
+		local
+			l_editor: EB_SMART_EDITOR
+		do
+			if not recently_closed_editors.is_empty then
+				l_editor := recently_closed_editors.last.twin
+				last_recently_closed_editor := l_editor
+				recently_closed_editors.prune_all (recently_closed_editors.last)
+			end
+		end
+
+
 feature {NONE} -- Access
 
 	docking_manager: SD_DOCKING_MANAGER
@@ -436,6 +455,14 @@ feature {NONE} -- Action handlers
 			if Result then
 				Result := default_veto_func (a_stone, a_content)
 			end
+		end
+
+	on_editor_closed (a_editor: EB_SMART_EDITOR)
+			-- Editor is closed
+		require
+			a_editor_attached: a_editor /= Void
+		do
+			recently_closed_editors.force (a_editor.twin)
 		end
 
 feature -- Status report
@@ -1037,6 +1064,20 @@ feature -- Memory management
 				end
 				l_editors.wipe_out
 			end
+			if recently_closed_editors /= Void then
+				from
+					l_editors := recently_closed_editors
+					l_editors.start
+				until
+					l_editors.after
+				loop
+					if not l_editors.item.is_recycled then
+						l_editors.item.recycle
+					end
+					l_editors.forth
+				end
+				l_editors.wipe_out
+			end
 			editor_created_actions.wipe_out
 			editor_closed_actions.wipe_out
 			editor_switched_actions.wipe_out
@@ -1056,6 +1097,7 @@ feature -- Memory management
 			development_window := Void
 			docking_manager := Void
 			fake_editors := Void
+			recently_closed_editors := Void
 			last_created_editor := Void
 			veto_pebble_function_internal := Void
 			editor_number_factory := Void
@@ -1068,6 +1110,9 @@ feature {NONE} -- Access
 
 	editors_internal: ARRAYED_LIST [like current_editor]
 			-- Actual list of editors.
+
+	recently_closed_editors: ARRAYED_LIST [like current_editor]
+			-- Actual list of recently closed editors.	
 
 feature {NONE} -- Observer
 

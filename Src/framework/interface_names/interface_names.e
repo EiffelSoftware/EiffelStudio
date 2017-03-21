@@ -104,6 +104,8 @@ feature -- Button texts
 	b_put_two_handle_left: STRING_32				do Result := locale.translation("Put two handles left")	end
 	b_remind_me_later: STRING_32				do Result := locale.translation("Remind me later")	end
 
+	b_Restore_tab: STRING_32 						do Result := locale.translation("Restore Tab")	end
+
 	b_Replace: STRING_32							do Result := locale.translation("Replace")	end
 	b_Replace_all: STRING_32						do Result := locale.translation("Replace all")	end
 	b_Recursive_functions: STRING_32				do Result := locale.translation("Recursive Functions")	end
@@ -998,6 +1000,9 @@ feature -- Menu mnenomics
 	m_Tools: STRING_32					do Result := locale.translation("&Tools")	end
 	m_Tools_layout: STRING_32			do Result := locale.translation("&Tools Layout")	end
 	m_Unify_stone: STRING_32				do Result := locale.translation("Lin&k Context Tool")	end
+
+	f_Restore_tab: STRING_32 				do Result := locale.translation("Restore Tab")	end
+	m_Restore_tab: STRING_32					do Result := locale.translation("Restore Ta&b")	end
 
 	m_When_hits: STRING_32				do Result := locale.translation("When Hits ...")	end
 

@@ -1191,7 +1191,7 @@ test	melted-tuple-expression-order melt099 tcf fail used_to_pass execution melti
 test	melted-creation-constrained-generic melt100 tcf fail execution melting generic
 test	melted-once-creation-of-generic	melt101 tcf fail execution melting generic
 test	melted-special-creation-crash-2	melt102  tcf pass melting execution special
-test	melted-on-character-32	melt103  tcf fail used_to_pass melting execution
+test	melted-on-character-32	melt103  tcf pass melting execution
 test	melted-address-expression	melt104  tcf pass melting execution
 test	melted-address-current	melt105  tcf pass melting execution
 test	object-test-on-expanded-crash melt106  tcf pass melting execution object_test expanded

@@ -241,11 +241,15 @@ feature -- Query
 				create l_file.make_with_path (a_file)
 				if l_file.exists then
 					l_file.open_read
-					create l_reader.make (l_file)
-					l_reader.set_for_reading
-					create l_facility
-					if attached {SD_CONFIG_DATA} l_facility.retrieved (l_reader, True) as l_result then
-						Result := l_result
+					if l_file.readable then
+						create l_reader.make (l_file)
+						l_reader.set_for_reading
+						create l_facility
+						if attached {SD_CONFIG_DATA} l_facility.retrieved (l_reader, True) as l_result then
+							Result := l_result
+						end
+					else
+							-- May be empty..						
 					end
 				end
 			end
@@ -516,22 +520,20 @@ feature {NONE} -- Implementation
 			-- Set all contents not visible
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_content: SD_CONTENT
 		do
-			from
-				l_contents := internal_docking_manager.contents
-				l_contents.start
-			until
-				l_contents.after
+			across
+				internal_docking_manager.contents as ic
 			loop
+				l_content := ic.item
 				if editor_helper.is_top_container_recorded then
 					-- We are restoring tools config
-					if l_contents.item.type /= {SD_ENUMERATION}.editor then
-						l_contents.item.set_visible (False)
+					if l_content.type /= {SD_ENUMERATION}.editor then
+						l_content.set_visible (False)
 					end
 				else
-					l_contents.item.set_visible (False)
+					l_content.set_visible (False)
 				end
-				l_contents.forth
 			end
 		end
 

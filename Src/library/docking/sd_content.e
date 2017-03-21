@@ -21,6 +21,8 @@ inherit
 			set_docking_manager
 		end
 
+	DEBUG_OUTPUT
+
 create
 	make_with_widget,
 	make_with_widget_title_pixmap
@@ -260,6 +262,26 @@ feature -- Access
 			Result := state.value
 		ensure
 			valid: (create {SD_ENUMERATION}).is_state_valid (Result)
+		end
+
+feature -- Status report
+
+	debug_output: STRING_32
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			create Result.make_empty
+			if type = {SD_ENUMERATION}.editor then
+				Result.append_string_general ("Editor")
+			elseif type = {SD_ENUMERATION}.tool then
+				Result.append_string_general ("Tool")
+			elseif type = {SD_ENUMERATION}.place_holder then
+				Result.append_string_general ("Place")
+			else
+			 	Result.append_string_general ("Content?")
+			 	Result.append_integer (type)
+			end
+			Result.append_string_general (" #")
+			Result.append (internal_unique_title)
 		end
 
 feature -- Settings
@@ -980,7 +1002,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

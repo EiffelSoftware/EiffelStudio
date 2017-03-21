@@ -1,0 +1,203 @@
+note
+	description: "Command to restore a recently closed tab"
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	EB_RESTORE_CLOSE_TAB_EDITOR_COMMAND
+
+inherit
+	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+		redefine
+			tooltext,
+			new_sd_toolbar_item,
+			new_mini_sd_toolbar_item
+		end
+
+	EB_DEVELOPMENT_WINDOW_COMMAND
+		rename
+			target as development_window,
+			make as make_old
+		end
+
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
+	EB_SHARED_WINDOW_MANAGER
+
+	EB_CONSTANTS
+
+create
+	make
+
+feature -- Initialization
+
+	make (dev_window: EB_DEVELOPMENT_WINDOW)
+			-- Creation method.
+		require
+			dev_window_attached: dev_window /= Void
+		local
+			l_shortcut: SHORTCUT_PREFERENCE
+		do
+			development_window := dev_window
+			l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("restore_tab")
+			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+			set_referred_shortcut (l_shortcut)
+			accelerator.actions.extend (agent execute)
+			enable_sensitive
+		ensure
+			development_window_attached: development_window = dev_window
+		end
+
+	execute
+			-- Create new tab.
+		do
+			restoring_closed_tab := True
+			editors_manager.restore_last_recently_closed_editor
+			if attached editors_manager.last_recently_closed_editor as l_editor then
+				execute_with_stone_content (l_editor.stone, Void)
+			end
+			restoring_closed_tab := False
+		end
+
+	execute_with_stone (a_stone: ANY)
+			-- Execute with `a_stone'.
+		do
+			execute_with_stone_content (a_stone, Void)
+		end
+
+	execute_with_stone_content (a_stone: ANY; a_content: SD_CONTENT)
+			-- Create a new tab which stone is `a_stone' and create at side of `a_content' if exists.
+		local
+			l_editor : EB_SMART_EDITOR
+		do
+			if is_sensitive then
+				if 	editors_manager.stone_acceptable (a_stone) or restoring_closed_tab then
+					l_editor := editors_manager.editor_with_stone (a_stone)
+					if l_editor = Void and a_content = Void then
+						editors_manager.create_editor
+						editors_manager.select_editor (editors_manager.last_created_editor, True)
+					elseif l_editor = Void and a_content /= Void then
+						editors_manager.create_editor_beside_content (a_stone, a_content, False)
+						editors_manager.select_editor (editors_manager.last_created_editor, True)
+					else
+						editors_manager.select_editor (l_editor, True)
+					end
+					if attached {STONE} a_stone as l_stone then
+						development_window.set_stone (l_stone)
+					end
+					development_window.address_manager.on_new_tab_command
+				end
+			end
+		end
+
+feature -- Items
+
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
+			-- New toolbar item for dockable toolbar.
+		do
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}(display_text)
+			Result.drop_actions.extend (agent execute_with_stone)
+			Result.drop_actions.set_veto_pebble_function (agent editors_manager.stone_acceptable)
+		end
+
+	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON
+			-- New mini toolbar item.
+		do
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
+			Result.drop_actions.extend (agent execute_with_stone)
+			Result.drop_actions.set_veto_pebble_function (agent editors_manager.stone_acceptable)
+		end
+
+feature {NONE} -- Implementation
+
+	menu_name: STRING_GENERAL
+			-- Name as it appears in the menu (with & symbol).
+		do
+			Result := interface_names.m_restore_tab
+		end
+
+	pixmap: EV_PIXMAP
+			-- Pixmap representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.new_document_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.new_document_icon_buffer
+		end
+
+	tooltip: STRING_GENERAL
+			-- Tooltip for the toolbar button.
+		do
+			Result := interface_names.f_restore_tab
+		end
+
+	tooltext: STRING_GENERAL
+			-- Text for the toolbar button.
+		do
+			Result := interface_names.b_restore_tab
+		end
+
+	description: STRING_GENERAL
+			-- Description for this command.
+		do
+			Result := interface_names.f_restore_tab
+		end
+
+	name: STRING_GENERAL
+			-- Name of the command. Used to store the command in the
+			-- preferences.
+		do
+			Result := "Restore_tab"
+		end
+
+feature {NONE} -- Implementation
+
+	restoring_closed_tab: BOOLEAN
+			-- Restoring a recently closed tab?
+
+	editors_manager: EB_EDITORS_MANAGER
+			-- Editors manager.
+		do
+			Result := development_window.editors_manager
+		end
+
+
+note
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+end

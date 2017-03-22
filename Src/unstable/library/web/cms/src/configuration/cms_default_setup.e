@@ -117,7 +117,7 @@ feature -- Access
 						create {NOTIFICATION_STORAGE_MAILER} l_storage_mailer.make (create {NOTIFICATION_EMAIL_FILE_STORAGE}.make (io.output))
 					else
 						create {RAW_FILE} f.make_with_name (l_output)
-						if f.is_directory then
+						if f.exists and then f.is_directory then
 							create {NOTIFICATION_STORAGE_MAILER} l_storage_mailer.make (create {NOTIFICATION_EMAIL_DIRECTORY_STORAGE}.make (f.path))
 						else
 							if not f.exists then

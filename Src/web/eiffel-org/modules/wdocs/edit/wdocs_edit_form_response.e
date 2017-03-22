@@ -78,6 +78,11 @@ feature -- Execution
 				location.ends_with_general ("/edit") and then
 				has_permission ({WDOCS_EDIT_MODULE}.perm_edit_wdocs_page)
 			then
+				if mng.version_id.is_case_insensitive_equal (wdocs_api.default_version_id) then
+					add_notice_message ("You are editing default version [" + api.html_encoded (mng.version_id) + "].")
+				else
+					add_warning_message ("You are editing version [" + api.html_encoded (mng.version_id) + "], which is NOT the default version [" + api.html_encoded (wdocs_api.default_version_id) + "]!")
+				end
 				if pg /= Void then
 					set_title (formatted_string (translation ("Edit %"$1%"", Void), [pg.title]))
 					add_to_primary_tabs (create {CMS_LOCAL_LINK}.make ("View", view_location))

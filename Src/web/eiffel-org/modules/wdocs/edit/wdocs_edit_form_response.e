@@ -412,7 +412,8 @@ feature -- Form
 							end
 
 							l_mesg_title := "Updated doc page %"" + l_page.title + "%""
-							create l_mesg_text.make_from_string ("Doc page %"" + l_page.title + "%" was updated")
+							l_mesg_title.append (" (version:" + utf_8_string (a_manager.version_id) + ")")
+							create l_mesg_text.make_from_string ("Documentation page %"" + l_page.title + "%" was updated")
 							if attached user as u then
 								l_mesg_text.append (" (by ")
 								l_mesg_text.append (utf_8_string (api.user_api.user_display_name (u)))
@@ -421,8 +422,9 @@ feature -- Form
 								l_mesg_title.append (" by ")
 								l_mesg_title.append (utf_8_string (api.user_api.user_display_name (u)))
 							end
-							l_mesg_text.append (".%N")
-							l_mesg_text.append ("Page location: " + api.site_url + view_location + " .%N")
+							l_mesg_text.append (".%N%N")
+							l_mesg_text.append ("- Version: " + api.html_encoded (a_manager.version_id) + "%N")
+							l_mesg_text.append ("- Page location: " + api.site_url + view_location + "%N")
 							l_mesg_text.append ("%N%N")
 
 							-- FIXME: hardcoded link to admin wdocs clear-cache ! change that.
@@ -432,8 +434,10 @@ feature -- Form
 							add_success_message ("Doc page saved.")
 
 							if l_diff_text /= Void and then not l_diff_text.is_whitespace then
+								l_mesg_text.append ("Unified diff:%N%N")
 								l_mesg_text.append (l_diff_text)
 							elseif l_content /= Void then
+								l_mesg_text.append ("Content:%N%N")
 								l_mesg_text.append (l_content)
 							end
 							e := api.new_email (api.setup.site_email, l_mesg_title, l_mesg_text)

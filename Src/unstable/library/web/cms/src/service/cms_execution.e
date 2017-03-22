@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 		do
 			create_filter
 				-- filter setup is delayed toi `initialize_execution`.
-			-- setup_filter
+			setup_filter
 		end
 
 	initialize_modules
@@ -217,7 +217,6 @@ feature -- Request execution
 			-- Initialize CMS execution.
 		do
 			request.set_uploaded_file_path (api.temp_location)
-			setup_filter
 			setup_router
 		end
 
@@ -233,6 +232,7 @@ feature -- Request execution
 		do
 			res.put_header_line ("Date: " + (create {HTTP_DATE}.make_now_utc).string)
 			res.put_header_line ("X-EWF-Server: CMS_v1.0")
+
 			Precursor (req, res)
 		end
 
@@ -282,8 +282,6 @@ feature -- Filters
 	setup_filter
 			-- Setup `filter'.
 		do
-			api.logger.put_debug (generator + ".setup_filter", Void)
-			append_filter (Current)
 		end
 
 feature -- Execution

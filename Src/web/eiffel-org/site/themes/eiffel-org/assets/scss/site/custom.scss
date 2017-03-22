@@ -70,11 +70,24 @@ a.link-platforms {
 	}
 }
 
-#message li.error {
-	background-color: #f99;
-	border: solid 1px red;
-	padding: 5px 2px 5px 2px;
+#message li {
+	margin-bottom: 2px;
+	padding: 5px 2px 5px 3px;
+	&.error {
+		background-color: #ffcbba;
+		border-left: solid 4px #f00;
+	}
+	&.warning {
+		background-color: #ffc;
+		border-left: solid 4px #ffd200;
+	}
+
+	&.notice {
+		background-color: #cff2ee;
+		border-left: solid 4px #77ff77;
+	}
 }
+
 
 div.node-blog .info {
   display: block;

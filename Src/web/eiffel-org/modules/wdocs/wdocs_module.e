@@ -1622,7 +1622,7 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 			else
 				create l_xhtml.make_empty
 				if not l_version_id.is_case_insensitive_equal (default_version_id) then
-					l_xhtml.append ("<ul class=%"message%"><li class=%"warning%">This is not the latest version of the documentation. ")
+					l_xhtml.append ("<ul class=%"message%"><li class=%"warning%">This is not the current version of the documentation. ")
 					a_response.append_link_to_html ("Recommended Version", a_manager.wiki_page_uri_path (a_wiki_page, a_book_name, Void), Void, l_xhtml)
 					l_xhtml.append ("</li></ul>")
 				end

@@ -1172,13 +1172,27 @@ a.link-platforms:hover {
 }
 
 /* line 73, ../scss/site/custom.scss */
+#message li {
+  margin-bottom: 2px;
+  padding: 5px 2px 5px 3px;
+}
+/* line 76, ../scss/site/custom.scss */
 #message li.error {
-  background-color: #f99;
-  border: solid 1px red;
-  padding: 5px 2px 5px 2px;
+  background-color: #ffcbba;
+  border-left: solid 4px #f00;
+}
+/* line 80, ../scss/site/custom.scss */
+#message li.warning {
+  background-color: #ffc;
+  border-left: solid 4px #ffd200;
+}
+/* line 85, ../scss/site/custom.scss */
+#message li.notice {
+  background-color: #cff2ee;
+  border-left: solid 4px #77ff77;
 }
 
-/* line 79, ../scss/site/custom.scss */
+/* line 92, ../scss/site/custom.scss */
 div.node-blog .info {
   display: block;
   font-size: smaller;
@@ -1187,7 +1201,7 @@ div.node-blog .info {
 }
 
 /* Hide author and date for CMS pages */
-/* line 87, ../scss/site/custom.scss */
+/* line 100, ../scss/site/custom.scss */
 div.node-page .info {
   display: none;
 }

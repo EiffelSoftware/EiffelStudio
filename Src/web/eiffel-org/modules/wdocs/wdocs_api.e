@@ -58,20 +58,34 @@ feature -- Access
 
 feature -- Query
 
-	available_versions (a_check_existence: BOOLEAN): LIST [READABLE_STRING_32]
+	label_of_version (a_version_id: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+			-- optional label for `a_version_id`.
+		do
+			Result := available_versions (False).item (a_version_id)
+			if
+				Result = Void and then
+				a_version_id.is_case_insensitive_equal (default_version_id)
+			then
+				Result := "current"
+			end
+		end
+
+	available_versions (a_check_existence: BOOLEAN): STRING_TABLE [detachable READABLE_STRING_32]
 			-- Available versions.
 		local
 			f: PLAIN_TEXT_FILE
 			utf: UTF_CONVERTER
 			ut: FILE_UTILITIES
+			i: INTEGER
 			p: PATH
 			d: DIRECTORY
-			s: STRING_32
+			s,lab,v: detachable STRING_32
 		do
 			if attached internal_available_versions as l_versions then
 				Result := l_versions
 			else
-				create {ARRAYED_LIST [READABLE_STRING_32]} Result.make (5)
+				create Result.make_equal_caseless (3)
+
 				internal_available_versions := Result
 
 				create f.make_with_path (settings.documentation_dir.extended ("versions"))
@@ -83,13 +97,24 @@ feature -- Query
 					loop
 						f.read_line_thread_aware
 						s := utf.utf_8_string_8_to_string_32 (f.last_string)
-						s.left_adjust
-						s.right_adjust
+						i := s.index_of (':', 1)
+						if i > 0 then
+							lab := s.substring (i + 1, s.count)
+							v := s
+							v.keep_head (i - 1)
+							lab.left_adjust
+							lab.right_adjust
+						else
+							v := s
+							lab := Void
+						end
+						v.left_adjust
+						v.right_adjust
 						if
-							not s.is_whitespace and then
-							(not a_check_existence or else ut.directory_path_exists (settings.documentation_dir.extended (s)))
+							not v.is_whitespace and then
+							(not a_check_existence or else ut.directory_path_exists (settings.documentation_dir.extended (v)))
 						then
-							Result.force (s)
+							Result.force (lab, v)
 						end
 					end
 					f.close
@@ -102,13 +127,13 @@ feature -- Query
 							p := ic.item
 							if p.is_current_symbol or p.is_parent_symbol then
 							elseif not p.name.starts_with_general (".") then
-								Result.force (p.name)
+								Result.force (Void, p.name)
 							end
 						end
 					end
 				end
 				if Result.is_empty then
-					Result.force (default_version_id.as_string_32)
+					Result.force ("current", default_version_id.as_string_32)
 				end
 			end
 		end
@@ -229,7 +254,8 @@ feature -- Access: cache system
 
 	append_available_versions_to_xhtml (pg: like new_wiki_page; a_version_id: READABLE_STRING_GENERAL; a_response: CMS_RESPONSE; a_output: STRING_8)
 		local
-			s, loc: detachable STRING
+			s, loc, uri: detachable STRING
+			lab: detachable READABLE_STRING_32
 			l_curr_version: READABLE_STRING_GENERAL
 			i: INTEGER
 		do
@@ -255,25 +281,45 @@ feature -- Access: cache system
 					a_output.append ("<ul class=%"wdocs-versions%">")
 					a_output.append (cms_api.translation ("Version", Void))
 					a_output.append ("<li class=%"active%">")
+					lab := l_versions.item (a_version_id)
 					if a_version_id.is_case_insensitive_equal (default_version_id) then
-						a_response.append_link_to_html ("Default", "doc" + s, Void, a_output)
+						if lab = Void then
+							lab := "current"
+						end
+						uri := "doc" + s
 					else
-						a_response.append_link_to_html (a_version_id, "doc/version/" + a_version_id.out + s, Void, a_output)
+						uri := "doc/version/" + a_version_id.out + s
 					end
+					if lab /= Void then
+						a_response.append_link_to_html (a_version_id + " (" + a_response.html_encoded (lab) + ")", uri, Void, a_output)
+					else
+						a_response.append_link_to_html (a_version_id, uri, Void, a_output)
+					end
+
 					a_output.append ("</li>")
 					a_output.append ("<li><a href=%"#%">other...</a><ul>")
 					across
 						l_versions as ic
 					loop
-						if a_version_id.is_case_insensitive_equal (ic.item) then
+						if a_version_id.is_case_insensitive_equal (ic.key) then
 								-- Already handled
 						else
+							lab := ic.item
 							a_output.append ("<li>")
-							if default_version_id.is_case_insensitive_equal (ic.item) then
-								a_response.append_link_to_html ({STRING_32} "default (" + ic.item + ")", "doc" + s, Void, a_output)
+							if default_version_id.is_case_insensitive_equal (ic.key) then
+								if lab = Void then
+									lab := "current"
+								end
+								uri := "doc" + s
 							else
-								a_response.append_link_to_html (ic.item, "doc/version/" + ic.item.out + s, Void, a_output)
+								uri := "doc/version/" + ic.key.out + s
 							end
+							if lab /= Void then
+								a_response.append_link_to_html (ic.key + " (" + a_response.html_encoded (lab) + ")", uri, Void, a_output)
+							else
+								a_response.append_link_to_html (ic.key, uri, Void, a_output)
+							end
+
 							a_output.append ("</li>")
 						end
 					end

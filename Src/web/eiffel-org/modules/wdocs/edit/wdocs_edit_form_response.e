@@ -55,6 +55,7 @@ feature -- Execution
 			f: like new_edit_form
 			new_pg,pg: detachable WIKI_BOOK_PAGE
 			mng: WDOCS_MANAGER
+			lab: detachable READABLE_STRING_32
 			l_bookid: detachable READABLE_STRING_GENERAL
 			l_text: STRING
 			l_preview: BOOLEAN
@@ -78,10 +79,14 @@ feature -- Execution
 				location.ends_with_general ("/edit") and then
 				has_permission ({WDOCS_EDIT_MODULE}.perm_edit_wdocs_page)
 			then
+				lab := wdocs_api.label_of_version (wdocs_api.default_version_id)
+				if lab = Void then
+					lab := "current"
+				end
 				if mng.version_id.is_case_insensitive_equal (wdocs_api.default_version_id) then
-					add_notice_message ("You are editing default version [" + api.html_encoded (mng.version_id) + "].")
+					add_notice_message ("You are editing " + api.html_encoded (lab) + " version [" + api.html_encoded (mng.version_id) + "].")
 				else
-					add_warning_message ("You are editing version [" + api.html_encoded (mng.version_id) + "], which is NOT the default version [" + api.html_encoded (wdocs_api.default_version_id) + "]!")
+					add_warning_message ("You are editing version [" + api.html_encoded (mng.version_id) + "], which is NOT the " + api.html_encoded (lab) + " version [" + api.html_encoded (wdocs_api.default_version_id) + "]!")
 				end
 				if pg /= Void then
 					set_title (formatted_string (translation ("Edit %"$1%"", Void), [pg.title]))

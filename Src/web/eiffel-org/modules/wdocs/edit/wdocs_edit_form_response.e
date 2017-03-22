@@ -283,6 +283,8 @@ feature -- Form
 			l_changed: BOOLEAN
 			l_meta_title, l_meta_link_title, l_meta_uuid: detachable READABLE_STRING_32
 			s: STRING
+			l_diff: DIFF_TEXT
+			l_diff_text: detachable STRING
 			l_mesg_text, l_mesg_title: STRING
 			e: CMS_EMAIL
 			fn: STRING_32
@@ -401,6 +403,14 @@ feature -- Form
 							fd.report_error ("Error: could not save doc page!")
 							add_error_message ("Error: could not save doc page!")
 						else
+							if l_source_value /= Void and l_content /= Void then
+								create l_diff
+								l_diff.set_text (l_content, l_source_value)
+								l_diff.compute_diff
+								l_diff_text := l_diff.unified
+								add_notice_message (l_diff_text)
+							end
+
 							l_mesg_title := "Updated doc page %"" + l_page.title + "%""
 							create l_mesg_text.make_from_string ("Doc page %"" + l_page.title + "%" was updated")
 							if attached user as u then
@@ -412,7 +422,7 @@ feature -- Form
 								l_mesg_title.append (utf_8_string (api.user_api.user_display_name (u)))
 							end
 							l_mesg_text.append (".%N")
-							l_mesg_text.append ("Page location: " + view_location + " .%N")
+							l_mesg_text.append ("Page location: " + api.site_url + view_location + " .%N")
 							l_mesg_text.append ("%N%N")
 
 							-- FIXME: hardcoded link to admin wdocs clear-cache ! change that.
@@ -421,7 +431,9 @@ feature -- Form
 							api.log ("wdocs", "Doc page changed", 0, create {CMS_LOCAL_LINK}.make (l_page.title, location))
 							add_success_message ("Doc page saved.")
 
-							if l_content /= Void then
+							if l_diff_text /= Void and then not l_diff_text.is_whitespace then
+								l_mesg_text.append (l_diff_text)
+							elseif l_content /= Void then
 								l_mesg_text.append (l_content)
 							end
 							e := api.new_email (api.setup.site_email, l_mesg_title, l_mesg_text)

@@ -3,9 +3,9 @@
 	<target name="wdocs_module">
 		<root all_classes="true"/>
 		<file_rule>
+			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
-			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true">
 		</option>
@@ -16,6 +16,7 @@
 		<library name="cms_recent_changes_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\recent_changes\recent_changes.ecf" readonly="false"/>
 		<library name="cms_sitemap_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\sitemap\sitemap.ecf" readonly="false"/>
 		<library name="cms_taxonomy_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\taxonomy\taxonomy.ecf" readonly="false"/>
+		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.ecf"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>
 		<library name="svn" location="$ISE_LIBRARY\contrib\library\svn\svn.ecf"/>
@@ -32,13 +33,13 @@
 			<file_rule>
 				<exclude>/fs_storage$</exclude>
 			</file_rule>
-			<cluster name="fs_storage" location="$|fs_storage">
-				<cluster name="fs_svn_layer" location="$|svn">
+			<cluster name="fs_storage" location="$|fs_storage\">
+				<cluster name="fs_svn_layer" location="$|svn\">
 					<condition>
 						<custom name="wdocs_fs_storage" excluded_value="no_svn"/>
 					</condition>
 				</cluster>
-				<cluster name="fs_simple_layer" location="$|simple">
+				<cluster name="fs_simple_layer" location="$|simple\">
 					<condition>
 						<custom name="wdocs_fs_storage" value="no_svn"/>
 					</condition>

@@ -130,7 +130,7 @@ ul.wdocs-versions {
 	margin: 0;
 
 	&>li:not(:last-child) { border-right: solid 1px #ccc; } 
-	li {
+	&>li {
 		a:hover {
 			text-decoration: underline;
 		}
@@ -138,17 +138,18 @@ ul.wdocs-versions {
 		margin: 0 2px 0 2px;
 		display: inline-block;
 		border: none;
-		&.active {
-			font-weight: bold;
-		}
 	}
-	li>ul {
+	li.active {
+		font-weight: bold;
+	}
+	&>li>ul {
 		padding: 10px;
 		background-color: white;
 		border: solid 1px #999;
 		display: none;
+		font-weight: normal;
 	}
-	li:hover>ul {
+	&>li:hover>ul {
 		position: absolute;
 		display: block;
 		z-index: 99;

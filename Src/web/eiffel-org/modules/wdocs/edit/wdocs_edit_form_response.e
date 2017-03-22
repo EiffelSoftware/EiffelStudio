@@ -283,6 +283,7 @@ feature -- Form
 			l_changed: BOOLEAN
 			l_meta_title, l_meta_link_title, l_meta_uuid: detachable READABLE_STRING_32
 			s: STRING
+			l_mesg_text, l_mesg_title: STRING
 			e: CMS_EMAIL
 			fn: STRING_32
 			ctx: WDOCS_CHANGE_CONTEXT
@@ -397,29 +398,34 @@ feature -- Form
 
 						wdocs_api.save_wiki_page (l_page, pg, l_source_value, l_path, a_bookid, a_manager, ctx)
 						if wdocs_api.has_error then
-							fd.report_error ("Error: could not save wiki page!")
-							add_error_message ("Error: could not save wiki page!")
+							fd.report_error ("Error: could not save doc page!")
+							add_error_message ("Error: could not save doc page!")
 						else
-							create s.make_from_string ("Wiki page %"" + l_page.title + "%" was updated")
+							l_mesg_title := "Updated doc page %"" + l_page.title + "%""
+							create l_mesg_text.make_from_string ("Doc page %"" + l_page.title + "%" was updated")
 							if attached user as u then
-								s.append (" (by ")
-								s.append (utf_8_string (u.name))
-								s.append (")")
+								l_mesg_text.append (" (by ")
+								l_mesg_text.append (utf_8_string (api.user_api.user_display_name (u)))
+								l_mesg_text.append (")")
+
+								l_mesg_title.append (" by ")
+								l_mesg_title.append (utf_8_string (api.user_api.user_display_name (u)))
 							end
-							s.append (".")
+							l_mesg_text.append (".%N")
+							l_mesg_text.append ("Page location: " + view_location + " .%N")
+							l_mesg_text.append ("%N%N")
 
 							-- FIXME: hardcoded link to admin wdocs clear-cache ! change that.
 							add_warning_message ("You may need to " + link ("clear the cache", "admin/module/wdocs/clear-cache?destination=" + url_encoded (view_location), Void) + ".")
 
-							api.log ("wdocs", "Wiki page changed", 0, create {CMS_LOCAL_LINK}.make (l_page.title, location))
-							add_success_message ("Wiki doc saved.")
+							api.log ("wdocs", "Doc page changed", 0, create {CMS_LOCAL_LINK}.make (l_page.title, location))
+							add_success_message ("Doc page saved.")
 
 							if l_content /= Void then
-								e := api.new_email (api.setup.site_email, "Updated wiki page %"" + l_page.title + "%"", s + l_content)
-							else
-								e := api.new_email (api.setup.site_email, "Updated wiki page %"" + l_page.title + "%"", s)
+								l_mesg_text.append (l_content)
 							end
-							b.append (s)
+							e := api.new_email (api.setup.site_email, l_mesg_title, l_mesg_text)
+							b.append (l_mesg_text)
 							b.append_character ('%N')
 							api.process_email (e)
 --							set_redirection (view_location)

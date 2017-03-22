@@ -255,7 +255,7 @@ feature -- Access: cache system
 	append_available_versions_to_xhtml (pg: like new_wiki_page; a_version_id: READABLE_STRING_GENERAL; a_response: CMS_RESPONSE; a_output: STRING_8)
 		local
 			s, loc, uri: detachable STRING
-			lab: detachable READABLE_STRING_32
+			l_link_title, lab: detachable READABLE_STRING_32
 			l_curr_version: READABLE_STRING_GENERAL
 			i: INTEGER
 		do
@@ -291,37 +291,38 @@ feature -- Access: cache system
 						uri := "doc/version/" + a_version_id.out + s
 					end
 					if lab /= Void then
-						a_response.append_link_to_html (a_version_id + " (" + a_response.html_encoded (lab) + ")", uri, Void, a_output)
+						l_link_title := a_version_id + " (" + lab + ")"
 					else
-						a_response.append_link_to_html (a_version_id, uri, Void, a_output)
+						l_link_title := a_version_id
 					end
+					a_response.append_link_to_html (l_link_title + " ...", uri, Void, a_output)
 
-					a_output.append ("</li>")
-					a_output.append ("<li><a href=%"#%">other...</a><ul>")
+					a_output.append ("<ul class=%"popup-menu%">")
 					across
 						l_versions as ic
 					loop
+						lab := ic.item
 						if a_version_id.is_case_insensitive_equal (ic.key) then
-								-- Already handled
+							a_output.append ("<li class=%"active%">")
 						else
-							lab := ic.item
 							a_output.append ("<li>")
-							if default_version_id.is_case_insensitive_equal (ic.key) then
-								if lab = Void then
-									lab := "current"
-								end
-								uri := "doc" + s
-							else
-								uri := "doc/version/" + ic.key.out + s
-							end
-							if lab /= Void then
-								a_response.append_link_to_html (ic.key + " (" + a_response.html_encoded (lab) + ")", uri, Void, a_output)
-							else
-								a_response.append_link_to_html (ic.key, uri, Void, a_output)
-							end
-
-							a_output.append ("</li>")
 						end
+						if default_version_id.is_case_insensitive_equal (ic.key) then
+							if lab = Void then
+								lab := "current"
+							end
+							uri := "doc" + s
+						else
+							uri := "doc/version/" + ic.key.out + s
+						end
+						if lab /= Void then
+							l_link_title := ic.key + " (" + lab + ")"
+						else
+							l_link_title := ic.key
+						end
+						a_response.append_link_to_html (l_link_title, uri, Void, a_output)
+
+						a_output.append ("</li>")
 					end
 					a_output.append ("</ul></li>")
 					a_output.append ("</ul>%N")

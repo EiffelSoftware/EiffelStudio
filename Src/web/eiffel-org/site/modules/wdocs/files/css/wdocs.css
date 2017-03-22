@@ -126,29 +126,30 @@ ul.wdocs-versions {
 ul.wdocs-versions > li:not(:last-child) {
   border-right: solid 1px #ccc;
 }
-ul.wdocs-versions li {
+ul.wdocs-versions > li {
   padding: 0 6px 0 2px;
   margin: 0 2px 0 2px;
   display: inline-block;
   border: none;
 }
-ul.wdocs-versions li a:hover {
+ul.wdocs-versions > li a:hover {
   text-decoration: underline;
 }
 ul.wdocs-versions li.active {
   font-weight: bold;
 }
-ul.wdocs-versions li > ul {
+ul.wdocs-versions > li > ul {
   padding: 10px;
   background-color: white;
   border: solid 1px #999;
   display: none;
+  font-weight: normal;
 }
-ul.wdocs-versions li:hover > ul {
+ul.wdocs-versions > li:hover > ul {
   position: absolute;
   display: block;
   z-index: 99;
 }
-ul.wdocs-versions li:hover > ul li {
+ul.wdocs-versions > li:hover > ul li {
   display: block;
 }

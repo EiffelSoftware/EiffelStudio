@@ -255,7 +255,7 @@ feature -- Access: cache system
 	append_available_versions_to_xhtml (pg: like new_wiki_page; a_version_id: READABLE_STRING_GENERAL; a_response: CMS_RESPONSE; a_output: STRING_8)
 		local
 			s, loc, uri: detachable STRING
-			l_link_title, lab: detachable READABLE_STRING_32
+			l_link_title, lab: detachable READABLE_STRING_GENERAL
 			l_curr_version: READABLE_STRING_GENERAL
 			i: INTEGER
 		do
@@ -316,7 +316,7 @@ feature -- Access: cache system
 							uri := "doc/version/" + ic.key.out + s
 						end
 						if lab /= Void then
-							l_link_title := ic.key + " (" + lab + ")"
+							l_link_title := ic.key.to_string_32 + " (" + lab + ")"
 						else
 							l_link_title := ic.key
 						end

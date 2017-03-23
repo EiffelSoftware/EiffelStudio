@@ -813,6 +813,12 @@ feature -- Environment/ theme
 			Result := setup.files_location
 		end
 
+	cache_location: PATH
+			-- CMS public files location.
+		do
+			Result := setup.cache_location
+		end
+
 	theme_location: PATH
 			-- Active theme location.
 		do
@@ -829,7 +835,12 @@ feature -- Environment/ theme
 			Result := theme_location.extended ("assets")
 		end
 
-feature -- Environment/ module		
+feature -- Environment/ module	
+
+	module_configuration (a_module: CMS_MODULE; a_name: detachable READABLE_STRING_GENERAL): detachable CONFIG_READER
+		do
+			Result := module_configuration_by_name (a_module.name, a_name)
+		end
 
 	module_configuration_by_name (a_module_name: READABLE_STRING_GENERAL; a_name: detachable READABLE_STRING_GENERAL): detachable CONFIG_READER
 			-- Configuration reader for `a_module', and if `a_name' is set, using name `a_name'.
@@ -968,11 +979,6 @@ feature -- Environment/ modules and theme
 			-- Location for overriden files associated with `a_module_name'.
 		do
 			Result := theme_location.extended ("modules").extended (a_module_name)
-		end
-
-	module_configuration (a_module: CMS_MODULE; a_name: detachable READABLE_STRING_GENERAL): detachable CONFIG_READER
-		do
-			Result := module_configuration_by_name (a_module.name, a_name)
 		end
 
 feature -- Access: active user

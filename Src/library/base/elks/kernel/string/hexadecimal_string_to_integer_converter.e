@@ -18,7 +18,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Initialize
+			-- Initialize.
 		do
 			reset (type_no_limitation)
 			create leading_separators.make_from_string (" ")
@@ -232,16 +232,15 @@ feature -- Parse
 						elseif c >= 'A' and c <= 'F' then
 							part2 := (c.code - 55).to_natural_64
 						end
+						l_state := 3
 						if
 							conversion_type /= type_no_limitation and then
 							overflow_checker.will_overflow (part1, part2, conversion_type, sign)
 						then
 							internal_overflowed := True
-							part1 := temp_p1
-							part2 := temp_p2
+							part2 := 0
 							l_state := 6
 						end
-						l_state := 3
 					elseif c = '#' then
 						l_state := 1
 					elseif c = 'x' or c = 'X' then
@@ -257,16 +256,15 @@ feature -- Parse
 						elseif c >= 'A' and c <= 'F' then
 							part2 := (c.code - 55).to_natural_64
 						end
+						l_state := 3
 						if
 							conversion_type /= type_no_limitation and then
 							overflow_checker.will_overflow (part1, part2, conversion_type, sign)
 						then
 							internal_overflowed := True
-							part1 := temp_p1
-							part2 := temp_p2
+							part2 := 0
 							l_state := 6
 						end
-						l_state := 3
 					end
 				when 3 then
 						-- Let's find another digit or end of integer.
@@ -297,8 +295,10 @@ feature -- Parse
 					end
 				when 4 then
 						-- Consume remaining separators.
-					if trailing_separators_acceptable and then trailing_separators.has (c) then
-					else
+					if
+						not trailing_separators_acceptable or else
+						not trailing_separators.has (c)
+					then
 						l_state := 5
 					end
 				end
@@ -317,20 +317,19 @@ feature -- Status Report
 	is_part_of_integer: BOOLEAN
 			-- Is character sequence that has been parsed so far a valid start part of an integer?
 		do
-			Result := ((last_state = 0) or (last_state = 1) or
-					  (last_state = 2) or (last_state = 3)) and
-					  (not internal_overflowed)
+			Result := (last_state = 0 or last_state = 1 or last_state = 2 or last_state = 3) and
+					  not internal_overflowed
 		end
 
 	is_integral_integer: BOOLEAN
 			-- Is character sequence that has been parsed so far a valid integral integer?
 		do
-			Result := ((last_state = 2) or (last_state = 3)) and
-					  (not internal_overflowed)
+			Result := (last_state = 2 or last_state = 3) and
+					  not internal_overflowed
 		end
 
 	parsed_integer_8: INTEGER_8
-			-- INTEGER_8 representation of parsed string
+			-- INTEGER_8 representation of parsed string.
 		do
 			if sign = 1 then
 				Result := - (part1 * 16 + part2).as_integer_8
@@ -340,7 +339,7 @@ feature -- Status Report
 		end
 
 	parsed_integer_16: INTEGER_16
-			-- INTEGER_16 representation of parsed string
+			-- INTEGER_16 representation of parsed string.
 		do
 			if sign = 1 then
 				Result := - (part1 * 16 + part2).as_integer_16
@@ -350,7 +349,7 @@ feature -- Status Report
 		end
 
 	parsed_integer_32, parsed_integer: INTEGER
-			-- INTEGER representation of parsed string
+			-- INTEGER representation of parsed string.
 		do
 			if sign = 1 then
 				Result := - (part1 * 16 + part2).as_integer_32
@@ -360,7 +359,7 @@ feature -- Status Report
 		end
 
 	parsed_integer_64: INTEGER_64
-			-- INTEGER_64 representation of parsed string
+			-- INTEGER_64 representation of parsed string.
 		do
 			if sign = 1 then
 				Result := - (part1 * 16 + part2).as_integer_64
@@ -370,25 +369,25 @@ feature -- Status Report
 		end
 
 	parsed_natural_8: NATURAL_8
-			-- NATURAL_8 representation of parsed string
+			-- NATURAL_8 representation of parsed string.
 		do
 			Result := (part1 * 16 + part2).as_natural_8
 		end
 
 	parsed_natural_16: NATURAL_16
-			-- NATURAL_16 representation of parsed string
+			-- NATURAL_16 representation of parsed string.
 		do
 			Result := (part1 * 16 + part2).as_natural_16
 		end
 
 	parsed_natural_32, parsed_natural: NATURAL_32
-			-- NATURAL_32 representation of parsed string
+			-- NATURAL_32 representation of parsed string.
 		do
 			Result := (part1 * 16 + part2).as_natural_32
 		end
 
 	parsed_natural_64: NATURAL_64
-			-- NATURAL_64 representation of parsed string
+			-- NATURAL_64 representation of parsed string.
 		do
 			Result := part1 * 16 + part2
 		end
@@ -396,23 +395,23 @@ feature -- Status Report
 feature {NONE} -- Attributes
 
 	internal_lookahead: CHARACTER
-			-- Lookahead to decide to which state to jump on certain charaters
+			-- Lookahead to decide to which state to jump on certain charaters.
 
 	internal_overflowed: BOOLEAN
-			-- Internal overflow bit
+			-- Internal overflow bit.
 
 	overflow_checker: INTEGER_OVERFLOW_CHECKER
-			-- Overflow checker
+			-- Overflow checker.
 		once
 			create Result.make
 		ensure
 			overflow_checker_not_void: Result /= Void
 		end
 
-	part1, part2: like max_natural_type;
-			-- Naturals used for conversion	
+	part1, part2: like max_natural_type
+			-- Naturals used for conversion.
 
-note
+;note
 	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

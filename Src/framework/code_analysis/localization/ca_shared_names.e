@@ -1,6 +1,6 @@
-note
+﻿note
 	description: "Provides shared access to name and message strings for the Code Analyzer."
-	author: "Stefan Zurfluh"
+	author: "Stefan Zurfluh", "Eiffel Software"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for ENVIRONMENT_ARGUMENTS."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -183,16 +183,13 @@ feature {NONE} -- Implementation
 			c: CHARACTER_32
 			l_flags: detachable STRING_32
 			s: STRING_32
-			exec: EXECUTION_ENVIRONMENT
 			l_in_quote: BOOLEAN
-			l_args: like internal_environment_arguments
 		do
-			l_args := internal_environment_arguments
-			if l_args = Void then
-				create l_args.make (0)
-				internal_environment_arguments := l_args
-				exec := execution_environment
-				l_flags := exec.item (arguments_environment_name)
+			Result := internal_environment_arguments
+			if not attached Result then
+				create Result.make (0)
+				internal_environment_arguments := Result
+				l_flags := execution_environment.item (arguments_environment_name)
 				if l_flags /= Void and then not l_flags.is_whitespace then
 					from
 						i := 1
@@ -214,7 +211,7 @@ feature {NONE} -- Implementation
 								l_in_quote := True
 							when ' ', '%T' then
 								if not s.is_empty then
-									l_args.extend (create {IMMUTABLE_STRING_32}.make_from_string (s))
+									Result.extend (create {IMMUTABLE_STRING_32}.make_from_string (s))
 									s.wipe_out
 								end
 							else
@@ -227,11 +224,10 @@ feature {NONE} -- Implementation
 							-- Quote was not terminated, we simply ignore everything after
 							-- the last non-closed quote.
 					elseif not s.is_empty then
-						l_args.extend (create {IMMUTABLE_STRING_32}.make_from_string (s))
+						Result.extend (create {IMMUTABLE_STRING_32}.make_from_string (s))
 					end
 				end
 			end
-			Result := l_args
 		ensure
 			environment_arguments_set: Result /= Void
 		end
@@ -249,7 +245,7 @@ invariant
 				argument_count > base_arguments.argument_count
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Indexable data structure sorters"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,14 +45,11 @@ feature -- Status report
 			-- Is `a_container' sorted in decreasing order?
 		require
 			valid_container: is_sortable_container (a_container)
-		local
-			a_comparator: REVERSE_PART_COMPARATOR [G]
 		do
 			if a_container.is_empty then
 				Result := True
 			else
-				create a_comparator.make (comparator)
-				Result := sorted_with_comparator (a_container, a_comparator)
+				Result := sorted_with_comparator (a_container, create {REVERSE_PART_COMPARATOR [G]}.make (comparator))
 			end
 		end
 
@@ -142,12 +139,9 @@ feature -- Sort
 			-- Sort `a_container' in decreasing order.
 		require
 			valid_container: is_sortable_container (a_container)
-		local
-			a_comparator: REVERSE_PART_COMPARATOR [G]
 		do
 			if not a_container.is_empty then
-				create a_comparator.make (comparator)
-				sort_with_comparator (a_container, a_comparator)
+				sort_with_comparator (a_container, create {REVERSE_PART_COMPARATOR [G]}.make (comparator))
 			end
 		ensure
 			sorted: reverse_sorted (a_container)
@@ -218,7 +212,7 @@ invariant
 	comparator_not_void: comparator /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

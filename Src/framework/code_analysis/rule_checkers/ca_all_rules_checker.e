@@ -185,6 +185,9 @@ feature {NONE} -- Initialization
 
 feature {CA_RULE} -- State
 
+	is_assign: BOOLEAN
+			-- Is target of an assignment or a creation instruction being processed?
+
 	is_assigner_call: BOOLEAN
 			-- Is current call an assigner call?
 
@@ -780,11 +783,15 @@ feature {NONE} -- Processing
 			agent_routine_post_action.call (a)
 		end
 
-	process_assign_as (a_assign: ASSIGN_AS)
+	process_assign_as (a: ASSIGN_AS)
+			-- <Precursor>
 		do
-			assign_pre_actions.call ([a_assign])
-			Precursor (a_assign)
-			assign_post_actions.call ([a_assign])
+			assign_pre_actions.call (a)
+			is_assign := True
+			a.target.process (Current)
+			is_assign := False
+			a.source.process (Current)
+			assign_post_actions.call (a)
 		end
 
 	process_assigner_call_as (a: ASSIGNER_CALL_AS)
@@ -905,11 +912,16 @@ feature {NONE} -- Processing
 			create_creation_post_actions.call ([a_create_creation])
 		end
 
-	process_creation_as (a_creation: CREATION_AS)
+	process_creation_as (a: CREATION_AS)
+			-- <Precursor>
 		do
-			creation_pre_actions.call ([a_creation])
-			Precursor (a_creation)
-			creation_post_actions.call ([a_creation])
+			creation_pre_actions.call (a)
+			is_assign := True
+			a.target.process (Current)
+			is_assign := False
+			safe_process (a.type)
+			safe_process (a.call)
+			creation_post_actions.call (a)
 		end
 
 	process_do_as (a_do: DO_AS)

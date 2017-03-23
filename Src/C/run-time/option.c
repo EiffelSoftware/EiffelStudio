@@ -379,7 +379,7 @@ rt_public void check_options_start(EIF_CONTEXT struct eif_opt *opt, EIF_TYPE_IND
           				/* Dtype of the Eiffel class */
 {
 	/* Check whether the class `dtype' has E-TRACE or E-PROFILE
-	 * options in `opt' and dispatch to the finctions `start_trace()'
+	 * options in `opt' and dispatch to the functions `start_trace()'
 	 * and `start_profile()' if necessary.
 	 * This function is directly called by RTSA in WORKBENCH mode; it is
 	 * called explicitly from the interpreter as soon as it determines that

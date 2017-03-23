@@ -1,0 +1,13 @@
+test_name	 library-hexadecimal-to-natural
+test_description Conversion from a negative hexadecimal to a natural does not detect overflow.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

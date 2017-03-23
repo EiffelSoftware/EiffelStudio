@@ -16,7 +16,8 @@ feature {NONE} -- Creation
 		local
 			value: TEST
 		do
-			attr := Current
+			attr := Current -- No warning here: it's OK to assign to obsolete attributes.
+			create attr.make -- No warning here: it's OK to use obsolete attributes as targets of creation.
 			proc
 			Current.proc
 			extn

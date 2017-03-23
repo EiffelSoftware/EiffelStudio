@@ -1,6 +1,6 @@
 ﻿note
 	description: "Message strings for the Code Analyzer"
-	author: "Stefan Zurfluh"
+	author: "Stefan Zurfluh", "Eiffel Software"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -109,7 +109,9 @@ feature {NONE} -- Rule Checking
 	process_access (a: ACCESS_FEAT_AS)
 			-- Check if `a` is an obsolete call and report violation accordingly.
 		do
-			process_call (a.routine_ids.first, a.class_id, a)
+			if not checker.is_assign then
+				process_call (a.routine_ids.first, a.class_id, a)
+			end
 		end
 
 	process_address (a: ADDRESS_AS)

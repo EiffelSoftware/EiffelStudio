@@ -10073,7 +10073,7 @@ feature {NONE} -- Agents
 
 	compute_routine (
 			a_feature: FEATURE_I; a_is_query, a_has_args: BOOLEAN; cid : INTEGER; a_target_type: TYPE_A;
-			a_feat_type: TYPE_A; an_agent: ROUTINE_CREATION_AS; an_access: ACCESS_B; a_target_node: BYTE_NODE)
+			a_feat_type: TYPE_A; an_agent: ROUTINE_CREATION_AS; an_access: ACCESS_B; a_target_node: EXPR_B)
 			-- Type of routine object.
 		require
 			a_target_type_not_void: a_target_type /= Void
@@ -10097,7 +10097,6 @@ feature {NONE} -- Agents
 			l_parameters_node: BYTE_LIST [PARAMETER_B]
 			l_expr: EXPR_B
 			l_array_of_opens: ARRAY_CONST_B
-			l_operand_node: OPERAND_B
 			l_is_qualified_call: BOOLEAN
 		do
 				-- When the agent is a qualified call, we need to remove the anchors because otherwise
@@ -10290,15 +10289,14 @@ feature {NONE} -- Agents
 				create l_expressions.make_filled (l_closed_count)
 				l_expressions.start
 
-				if a_target_node /= Void then
+				if
+					attached a_target_node and then
+					not attached {OPERAND_B} a_target_node
+				then
 						-- A target was specified, we need to check if it is an open argument or not
 						-- by simply checking that its byte node is not an instance of OPERAND_B.
-					l_expr ?= a_target_node
-					l_operand_node ?= l_expr
-					if l_operand_node = Void then
-						l_expressions.replace (l_expr)
-						l_expressions.forth
-					end
+					l_expressions.replace (a_target_node)
+					l_expressions.forth
 				end
 
 				if l_parameters_node /= Void then
@@ -10309,8 +10307,7 @@ feature {NONE} -- Agents
 						l_parameters_node.after
 					loop
 						l_expr := l_parameters_node.item.expression
-						l_operand_node ?= l_expr
-						if l_operand_node = Void then
+						if not attached {OPERAND_B} l_expr then
 								-- Closed operands, we insert its expression.
 							l_expressions.replace (l_expr)
 							l_expressions.forth
@@ -10426,7 +10423,6 @@ feature {NONE} -- Agents
 			l_tuple_node: TUPLE_CONST_B
 			l_closed_args: BYTE_LIST [EXPR_B]
 			l_agent_type: GEN_TYPE_A
-			l_operand: OPERAND_B
 			l_target: EXPR_B
 			l_cur_class: EIFFEL_CLASS_C
 			l_enclosing_feature: FEATURE_I
@@ -10485,9 +10481,8 @@ feature {NONE} -- Agents
 
 			if l_target_closed then
 				create l_closed_args.make (2)
-				l_operand ?= a_target
-				if a_target = Void or l_operand /= Void then
-					create {CURRENT_B}l_target
+				if a_target = Void or attached {OPERAND_B} a_target then
+					create {CURRENT_B} l_target
 				else
 					l_target := a_target
 				end
@@ -11522,10 +11517,7 @@ feature {NONE} -- Implementation: catcall check
 			l_target_types: ARRAYED_LIST [TYPE_A]
 			i, nb: INTEGER
 			l_rout_id_set: ROUT_ID_SET
-			l_type_feat: TYPE_FEATURE_I
 			l_needs_formal_check, l_compiler_limitation, l_fail_if_constraint_not_met: BOOLEAN
-			l_formal_dec: FORMAL_CONSTRAINT_AS
-			l_cl_type: CL_TYPE_A
 			l_classes: ARRAYED_LIST [CLASS_C]
 		do
 			if a_type.is_frozen or a_type.is_like_current then
@@ -11590,8 +11582,7 @@ feature {NONE} -- Implementation: catcall check
 										i > nb or l_compiler_limitation
 									loop
 										l_rout_id_set := l_descendant_class.formal_rout_id_set_at_position (i)
-										l_type_feat ?= l_parent_class.feature_of_rout_id_set (l_rout_id_set)
-										if l_type_feat /= Void then
+										if attached {TYPE_FEATURE_I} l_parent_class.feature_of_rout_id_set (l_rout_id_set) as l_type_feat then
 											l_constraint_type := l_parent_type.generics.i_th (l_type_feat.position)
 											if l_constraint_type.is_variant then
 												l_fail_if_constraint_not_met := True
@@ -11600,11 +11591,9 @@ feature {NONE} -- Implementation: catcall check
 										else
 												-- We cannot find a definition for the new formal, we simply use its
 												-- constraint, at least if it is not a multiconstraint.
-											l_formal_dec ?= l_descendant_class.generics.i_th (i)
-											if l_formal_dec /= Void and then not l_formal_dec.has_multi_constraints then
+											if attached {FORMAL_CONSTRAINT_AS} l_descendant_class.generics.i_th (i) as l_formal_dec and then not l_formal_dec.has_multi_constraints then
 												l_constraint_type := l_formal_dec.constraint_type (l_descendant_class).type
-												l_cl_type ?= l_constraint_type
-												if l_cl_type /= Void then
+												if attached {CL_TYPE_A} l_constraint_type as l_cl_type then
 													-- l_cl_type.set_variant_mark
 													l_needs_formal_check := l_needs_formal_check or l_cl_type.has_formal_generic
 												else

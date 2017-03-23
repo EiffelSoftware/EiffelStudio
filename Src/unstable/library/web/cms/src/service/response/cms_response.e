@@ -496,7 +496,7 @@ feature -- Block management
 				nb_secs.is_integer
 			then
 				if attached block_region_preference (a_block_id, "none") as l_region and then not l_region.same_string_general ("none") then
-					create l_cache.make (api.files_location.extended (".cache").extended ("blocks").extended (a_block_id).appended_with_extension ("html"))
+					create l_cache.make (api.cache_location.extended ("blocks").extended (a_block_id).appended_with_extension ("html"))
 					if
 						l_cache.exists and then
 						not l_cache.expired (Void, nb_secs.to_integer)
@@ -517,7 +517,7 @@ feature -- Block management
 			dir: DIRECTORY
 			l_cache: CMS_FILE_STRING_8_CACHE
 		do
-			p := api.files_location.extended (".cache").extended ("blocks")
+			p := api.cache_location.extended ("blocks")
 			if a_block_id_list /= Void then
 				across
 					a_block_id_list as ic

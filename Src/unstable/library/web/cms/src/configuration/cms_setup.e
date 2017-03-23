@@ -77,6 +77,13 @@ feature {NONE} -- Initialization
 				temp_location := site_location.extended ("temp")
 			end
 
+				-- Location for cache folder
+			if attached text_item ("cache-dir") as l_cache_dir then
+				create cache_location.make_from_string (l_cache_dir)
+			else
+				cache_location := temp_location.extended ("cache")
+			end
+
 				-- Location for modules folders.
 			if attached text_item ("modules-dir") as l_modules_dir then
 				create modules_location.make_from_string (l_modules_dir)
@@ -353,7 +360,10 @@ feature -- Access: Theme
 			-- (Mainly for uploaded file).
 
 	files_location: PATH
-			-- Path to public "files" dir.			
+			-- Path to public "files" dir.
+
+	cache_location: PATH
+			-- Path to internal cache dir.
 
 	modules_location: PATH
 			-- Path to modules.	

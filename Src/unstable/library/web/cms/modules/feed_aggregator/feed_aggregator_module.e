@@ -219,7 +219,7 @@ feature -- Hook
 			if a_response.has_permissions (<<permission__clear_feed_cache, permission__manage_feed_aggregator>>) then
 				if a_cache_id_list = Void then
 						-- Clear all cache.
-					p := a_response.api.files_location.extended (".cache").extended (name)
+					p := a_response.api.cache_location.extended (name)
 					create dir.make_with_path (p)
 					if dir.exists then
 						dir.recursive_delete

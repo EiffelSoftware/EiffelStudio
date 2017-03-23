@@ -212,18 +212,46 @@ feature -- Hook: cache
 
 	invoke_clear_cache (a_cache_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_response: CMS_RESPONSE)
 			-- Invoke cache hook for identifiers `a_cache_id_list'.
+		local
+			retried: BOOLEAN
 		do
-			if attached subscribers ({CMS_HOOK_CACHE}) as lst then
-				across
-					lst as c
-				loop
-					if attached {CMS_HOOK_CACHE} c.item as h then
-						h.clear_cache (a_cache_id_list, a_response)
+			if not retried then
+				if attached subscribers ({CMS_HOOK_CACHE}) as lst then
+					across
+						lst as c
+					loop
+						if attached {CMS_HOOK_CACHE} c.item as h then
+							safe_call_clear_cache_on_hook (h, a_cache_id_list, a_response)
+						end
 					end
+					a_response.clear_cache (a_cache_id_list)
 				end
-
-				a_response.clear_cache (a_cache_id_list)
+			else
+				a_response.add_error_message ("Error occurred while clearing cache.")
 			end
+		rescue
+			retried := True
+			retry
+		end
+
+feature {NONE} -- Hook: cache		
+
+	safe_call_clear_cache_on_hook (a_hook: CMS_HOOK_CACHE; a_cache_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_response: CMS_RESPONSE)
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				a_hook.clear_cache (a_cache_id_list, a_response)
+			else
+				if attached {CMS_MODULE} a_hook as mod then
+					a_response.add_error_message ("Exception occurred for `clear_cache` [" + mod.name + "]")
+				else
+					a_response.add_error_message ("Exception occurred for `clear_cache`")
+				end
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature -- Hook: export

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Decoding of arbitrary objects graphs between sessions of programs
 		containing the same types or potentially different types (which can
@@ -522,10 +522,11 @@ feature {NONE} -- Implementation
 				until
 					i > nb
 				loop
-					if attached object_references.item (i) as l_obj then
-						if not is_object_valid (l_obj, True) then
-							add_error (error_factory.new_invalid_object_error (l_obj))
-						end
+					if
+						attached object_references.item (i) as l_obj and then
+						not is_object_valid (l_obj, True)
+					then
+						add_error (error_factory.new_invalid_object_error (l_obj))
 					end
 					i := i + 1
 				end
@@ -569,7 +570,7 @@ feature {NONE} -- Implementation
 		local
 			l_reflected_object: like reflected_object
 			l_reflector: like reflector
-			l_dtype, i, nb: INTEGER
+			i, nb: INTEGER
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -578,7 +579,6 @@ feature {NONE} -- Implementation
 					l_reflected_object := reflected_object
 					l_reflector := reflector
 					l_reflected_object.set_object (an_obj)
-					l_dtype := l_reflected_object.dynamic_type
 					i := 1
 					nb := l_reflected_object.field_count
 					Result := True
@@ -643,7 +643,6 @@ feature {NONE} -- Implementation
 						end
 					else
 						l_check_for_non_void := False
-						l_has_mismatch := False
 					end
 					if l_field_info = Void then
 						l_new_offset := new_attribute_offset (l_dtype, i)
@@ -819,7 +818,7 @@ feature {NONE} -- Cleaning
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

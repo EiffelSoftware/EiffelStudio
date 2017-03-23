@@ -229,7 +229,7 @@ feature -- Event
 			end
 			monitor_record_count
 			create r.make (Current, ref, cid, fid, dep)
-			increment_records_count (+1)
+			increment_records_count (1)
 
 --| We do not use it anymore, however, we might need to reuse it, with external calls
 --| need to check/test this. Since we don't have hands on what the external could do on the Eiffel objects
@@ -545,41 +545,41 @@ feature -- Replay
 			debug ("RT_DBG_REPLAY")
 				print ("replay_to_point (" + a_id + ") -start-%N")
 			end
-			if attached replayed_call as l_curr then
-				--| Current replayed call exists
-				if attached {like callstack_record_by_id} callstack_record_by_id (a_id) as l_req then
+			if
+					--| Current replayed call exists
+				attached replayed_call as l_curr and then
 					--| a_id correspond to an existing call
+				attached {like callstack_record_by_id} callstack_record_by_id (a_id) as l_req and then
 					--| now find the associated replayable call (with rt_information_available)
-					if attached {like callstack_record} l_req.associated_replayable_call as l_next then
-						d1 := l_curr.depth
-						d2 := l_next.depth
-						if d2 > d1 then
-								--| Go forth in the stack
-							from
-							until
-								d1 >= d2
-							loop
-								replay_forth
-								d1 := d1 + 1
-								check valid_replayed_depth: is_call_at_depth (replayed_call, d1) end
-							end
-							check valid_replayed_depth: is_call_at_depth (replayed_call, d2) end
-						elseif d2 < d1 then
-								--| Go back in the stack
-							from
-							until
-								d1 <= d2
-							loop
-								replay_back
-								d1 := d1 - 1
-								check valid_replayed_depth: is_call_at_depth (replayed_call, d1) end
-							end
-							check valid_replayed_depth: is_call_at_depth (replayed_call, d2) end
-						end
-
-						Result := True
+				attached {like callstack_record} l_req.associated_replayable_call as l_next
+			then
+				d1 := l_curr.depth
+				d2 := l_next.depth
+				if d2 > d1 then
+						--| Go forth in the stack
+					from
+					until
+						d1 >= d2
+					loop
+						replay_forth
+						d1 := d1 + 1
+						check valid_replayed_depth: is_call_at_depth (replayed_call, d1) end
 					end
+					check valid_replayed_depth: is_call_at_depth (replayed_call, d2) end
+				elseif d2 < d1 then
+						--| Go back in the stack
+					from
+					until
+						d1 <= d2
+					loop
+						replay_back
+						d1 := d1 - 1
+						check valid_replayed_depth: is_call_at_depth (replayed_call, d1) end
+					end
+					check valid_replayed_depth: is_call_at_depth (replayed_call, d2) end
 				end
+
+				Result := True
 			end
 
 			debug ("RT_DBG_REPLAY")
@@ -762,8 +762,8 @@ feature -- Replay operation
 							debug ("RT_DBG_REPLAY")
 								print ("replay_back -> " + l_records.item_for_iteration.debug_output + " %N")
 							end
-							if attached {RT_DBG_VALUE_RECORD} l_records.item_for_iteration as ot_rec then
-								if attached {RT_DBG_VALUE_RECORD} ot_rec.current_value_record as val then
+							if attached l_records.item_for_iteration as ot_rec then
+								if attached ot_rec.current_value_record as val then
 									chgs.extend ([ot_rec, val])
 									ot_rec.restore (val)
 								else
@@ -814,7 +814,6 @@ feature -- Replay operation
 						create rs.make
 						replay_stack := rs
 					end
-					n := r
 				until
 					done
 				loop
@@ -830,8 +829,8 @@ feature -- Replay operation
 							debug ("RT_DBG_REPLAY")
 								print ("replay_left -> " + ot_records.item_for_iteration.debug_output + " %N")
 							end
-							if attached {RT_DBG_VALUE_RECORD} ot_records.item_for_iteration as ot_rec then
-								if attached {RT_DBG_VALUE_RECORD} ot_rec.current_value_record as val then
+							if attached ot_records.item_for_iteration as ot_rec then
+								if attached ot_rec.current_value_record as val then
 									chgs.extend ([ot_rec, val])
 									ot_rec.restore (val)
 								else
@@ -1046,7 +1045,7 @@ feature -- Replay operation
 				from
 					r := replayed_call
 				until
-					rs.count = 0
+					rs.is_empty
 				loop
 						--| pop last entry
 					rs.finish

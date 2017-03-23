@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "References to special objects, for direct access to arrays and strings"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -11,11 +11,6 @@ class TO_SPECIAL [T]
 create
 	make_empty_area,
 	make_filled_area
-
-feature -- Access
-
-	area: SPECIAL [T]
-			-- Special data zone
 
 feature {NONE} -- Initialization
 
@@ -46,8 +41,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	area: SPECIAL [T]
+			-- Special data zone.
+
 	item alias "[]", at alias "@" (i: INTEGER): T assign put
-			-- Entry at index `i', if in index interval
+			-- Entry at index `i', if in index interval.
 		require
 			valid_index: valid_index (i)
 		do
@@ -77,7 +75,7 @@ feature -- Element change
 feature {NONE} -- Element change
 
 	set_area (other: like area)
-			-- Make `other' the new `area'
+			-- Make `other' the new `area'.
 		do
 			area := other
 		ensure
@@ -85,7 +83,7 @@ feature {NONE} -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

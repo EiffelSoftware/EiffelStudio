@@ -44,7 +44,7 @@ feature -- Measurement
 
 	index_set: INTEGER_INTERVAL
 			-- Range of acceptable indexes.
-		obsolete "Use `lower' and `upper' instead."
+		obsolete "Use `lower' and `upper' instead. [2017-05-31]"
 		do
 			create Result.make (lower, upper)
 		ensure
@@ -67,7 +67,7 @@ invariant
 	consistent_boundaries: upper < lower implies upper = lower - 1
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

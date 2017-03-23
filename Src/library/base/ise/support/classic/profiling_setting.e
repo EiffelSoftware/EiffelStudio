@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description: "[
 			Objects that manage the Eiffel profiler. You can start and
@@ -27,10 +27,8 @@ feature -- Initialization
 	make
 			-- Compute value of `is_profiler_enabled' for all instances of
 			-- Current class.
-		local
-			tmp: BOOLEAN
 		do
-			tmp := is_profiler_enabled
+			is_profiler_enabled.do_nothing
 		end
 
 feature -- Status report
@@ -95,14 +93,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

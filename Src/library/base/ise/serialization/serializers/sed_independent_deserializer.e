@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Decoding of arbitrary objects graphs between sessions of programs %
 		%containing the same types. It basically takes care of potential reordering %
 		%of attributes from one system to the other."
@@ -187,11 +187,7 @@ feature {NONE} -- Implementation
 
 				-- Compare count of attributes
 			nb := l_deser.read_compressed_natural_32.to_integer_32
-			if nb /= reflector.persistent_field_count_of_type (a_dtype) then
-					-- Stored type has a different number of attributes than the type
-					-- from the retrieving system.
-				add_error (error_factory.new_attribute_count_mismatch (a_dtype, nb))
-			else
+			if nb = reflector.persistent_field_count_of_type (a_dtype) then
 				from
 					i := 1
 					l_map := attributes_map (a_dtype)
@@ -209,10 +205,10 @@ feature {NONE} -- Implementation
 					if l_dtype >= 0 then
 						if attached l_map.item (l_name) as l_item then
 							l_attribute_type := l_item.dtype
-							if l_attribute_type /= l_dtype then
-								add_error (error_factory.new_attribute_mismatch (a_dtype, l_name, l_attribute_type, l_dtype))
-							else
+							if l_attribute_type = l_dtype then
 								l_mapping.extend (l_item.position)
+							else
+								add_error (error_factory.new_attribute_mismatch (a_dtype, l_name, l_attribute_type, l_dtype))
 							end
 						else
 							add_error (error_factory.new_missing_attribute_error (a_dtype, l_name))
@@ -232,6 +228,10 @@ feature {NONE} -- Implementation
 						a.put (l_mapping, a_dtype)
 					end
 				end
+			else
+					-- Stored type has a different number of attributes than the type
+					-- from the retrieving system.
+				add_error (error_factory.new_attribute_count_mismatch (a_dtype, nb))
 			end
 		end
 
@@ -274,7 +274,7 @@ feature {NONE} -- Cleaning
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Encoding of arbitrary objects graphs within a session of a same program.
 		
@@ -57,7 +57,7 @@ feature -- Status report
 	is_traversing_mode_set: BOOLEAN
 			-- Is traversing mode set?
 		do
-			Result := (traversable /= Void)
+			Result := traversable /= Void
 		end
 
 	is_root_object_set: BOOLEAN
@@ -910,7 +910,7 @@ feature {NONE} -- Implementation
 			l_ser := serializer
 			nb := a_spec.count
 			l_ser.write_compressed_integer_32 (nb)
-			
+
 			if version >= {SED_VERSIONS}.version_7_3 then
 					-- Check if there are any references with copy semantics
 				from
@@ -974,7 +974,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

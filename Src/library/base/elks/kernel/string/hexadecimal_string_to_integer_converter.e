@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Convertor to do hexadecimal string to integer/natural conversion"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -60,13 +60,13 @@ feature -- Status Reporting
 	overflowed: BOOLEAN
 			-- Is integer parsed so far overflowed?
 		do
-			Result := (internal_overflowed and then sign = 0)
+			Result := internal_overflowed and then sign = 0
 		end
 
 	underflowed: BOOLEAN
 			-- Is integer parsed so far underflowed?
 		do
-			Result := (internal_overflowed and then sign = 1)
+			Result := internal_overflowed and then sign = 1
 		end
 
 	parse_successful: BOOLEAN
@@ -74,7 +74,7 @@ feature -- Status Reporting
 			-- it doesn't mean that we have got an valid integer.
 			-- You need to check `is_integral_integer' or `is_part_of_integer'.
 		do
-			Result := (last_state /= 5) and (last_state /= 6)
+			Result := last_state /= 5 and last_state /= 6
 		end
 
 feature -- Reset
@@ -232,13 +232,14 @@ feature -- Parse
 						elseif c >= 'A' and c <= 'F' then
 							part2 := (c.code - 55).to_natural_64
 						end
-						if conversion_type /= type_no_limitation then
-							if overflow_checker.will_overflow (part1, part2, conversion_type, sign) then
-								internal_overflowed := True
-								part1 := temp_p1
-								part2 := temp_p2
-								l_state := 6
-							end
+						if
+							conversion_type /= type_no_limitation and then
+							overflow_checker.will_overflow (part1, part2, conversion_type, sign)
+						then
+							internal_overflowed := True
+							part1 := temp_p1
+							part2 := temp_p2
+							l_state := 6
 						end
 						l_state := 3
 					elseif c = '#' then
@@ -256,13 +257,14 @@ feature -- Parse
 						elseif c >= 'A' and c <= 'F' then
 							part2 := (c.code - 55).to_natural_64
 						end
-						if conversion_type /= type_no_limitation then
-							if overflow_checker.will_overflow (part1, part2, conversion_type, sign) then
-								internal_overflowed := True
-								part1 := temp_p1
-								part2 := temp_p2
-								l_state := 6
-							end
+						if
+							conversion_type /= type_no_limitation and then
+							overflow_checker.will_overflow (part1, part2, conversion_type, sign)
+						then
+							internal_overflowed := True
+							part1 := temp_p1
+							part2 := temp_p2
+							l_state := 6
 						end
 						l_state := 3
 					end
@@ -411,7 +413,7 @@ feature {NONE} -- Attributes
 			-- Naturals used for conversion	
 
 note
-	copyright: "Copyright (c) 1986-2012, ITPassion Ltd, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

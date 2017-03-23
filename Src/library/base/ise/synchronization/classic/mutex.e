@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Mutex synchronization object, allows threads to access global %
 		%data through critical sections. Mutexes are recursive."
@@ -42,7 +42,7 @@ feature -- Status report
 	is_set: BOOLEAN
 			-- Is mutex initialized?
 		do
-			Result := (mutex_pointer /= default_pointer)
+			Result := mutex_pointer /= default_pointer
 		end
 
 feature -- Status setting
@@ -92,7 +92,7 @@ feature -- Obsolete
 	trylock, has_locked: BOOLEAN
 			-- Has client been successful in locking mutex without waiting?
 		obsolete
-			"Use try_lock instead"
+			"Use try_lock instead. [2017-05-31]"
 		require
 			is_set: is_set
 		do
@@ -104,15 +104,14 @@ feature {NONE} -- Removal
 	dispose
 			-- Called by the garbage collector when the mutex is
 			-- collected.
-		local
-			l_null: POINTER
 		do
-			if is_set then
-					-- We can only destroy a mutex that was not locked
-					-- yet, or if locked that we own the lock.
-				if owner = l_null or else owner = current_thread_id then
-					destroy
-				end
+				-- We can only destroy a mutex that was not locked
+				-- yet, or if locked that we own the lock.
+			if
+				is_set and then
+				(owner = default_pointer or else owner = current_thread_id)
+			then
+				destroy
 			end
 		end
 
@@ -149,7 +148,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

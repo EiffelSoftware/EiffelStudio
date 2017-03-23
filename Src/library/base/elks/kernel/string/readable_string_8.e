@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 			-- Create new instance from contents of `c_string',
 			-- a string created by some C function
 		obsolete
-			"Use `make_from_c' instead."
+			"Use `make_from_c' instead. [2017-05-31]"
 		require
 			c_string_exists: c_string /= default_pointer
 		do
@@ -157,7 +157,7 @@ feature -- Access
 	item_code (i: INTEGER): INTEGER
 			-- Numeric code of character at position `i'.
 		obsolete
-			"For consistency with Unicode string handling, use `code (i)' instead."
+			"For consistency with Unicode string handling, use `code (i)' instead. [2017-05-31]"
 		require
 			index_small_enough: i <= count
 			index_large_enough: i > 0
@@ -521,7 +521,7 @@ feature -- Status report
 				loop
 					i := i + 1
 				end
-				Result := (i < nb)
+				Result := i < nb
 			end
 		ensure
 			false_if_empty: count = 0 implies not Result
@@ -853,7 +853,7 @@ invariant
 	area_not_void: area /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

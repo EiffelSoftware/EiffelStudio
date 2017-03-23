@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Common ancestors to all STRING classes."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -48,7 +48,7 @@ feature {STRING_HANDLER} -- Settings
 	set_internal_hash_code (v: like internal_hash_code)
 			-- Set `internal_hash_code' with `v'.
 		obsolete
-			"Use `reset_hash_codes` instead."
+			"Use `reset_hash_codes` instead. [2017-05-31]"
 		require
 			v_nonnegative: v >= 0
 		do
@@ -91,13 +91,12 @@ feature -- Element change
 			argument_not_void: s /= Void
 			compatible_strings: is_string_8 implies s.is_valid_as_string_8
 		local
-			l_count, l_s_count, l_new_size: INTEGER
+			l_s_count, l_new_size: INTEGER
 			i: INTEGER
 		do
 			l_s_count := s.count
 			if l_s_count > 0 then
-				l_count := count
-				l_new_size := l_s_count + l_count
+				l_new_size := l_s_count + count
 				if l_new_size > capacity then
 					resize (l_new_size)
 				end
@@ -126,13 +125,12 @@ feature -- Element change
 			end_index_valid: end_index <= s.count
 			valid_bounds: start_index <= end_index + 1
 		local
-			l_count, l_s_count, l_new_size: INTEGER
+			l_s_count, l_new_size: INTEGER
 			i: INTEGER
 		do
 			l_s_count := end_index - start_index + 1
 			if l_s_count > 0 then
-				l_count := count
-				l_new_size := l_s_count + l_count
+				l_new_size := l_s_count + count
 				if l_new_size > capacity then
 					resize (l_new_size)
 				end
@@ -269,7 +267,7 @@ feature -- Element change
 		ensure
 			valid_count: count <= old count
 			new_count: not is_empty implies not item (1).is_space
-			kept: elks_checking implies Current ~ ((old twin).substring (old count - count + 1, old count))
+			kept: elks_checking implies Current ~ (old twin).substring (old count - count + 1, old count)
 			only_spaces_removed_before: elks_checking implies (old twin).is_substring_whitespace (1, (old twin).substring_index (Current, 1) - 1)
 		end
 
@@ -279,7 +277,7 @@ feature -- Element change
 		ensure
 			valid_count: count <= old count
 			new_count: not is_empty implies not item (count).is_space
-			kept: elks_checking implies Current ~ ((old twin).substring (1, count))
+			kept: elks_checking implies Current ~ (old twin).substring (1, count)
 			only_spaces_removed_after: elks_checking implies (old twin).is_substring_whitespace ((old twin).substring_index (Current, 1) + count, old count)
 		end
 
@@ -329,7 +327,7 @@ invariant
 	mutable: not is_immutable
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

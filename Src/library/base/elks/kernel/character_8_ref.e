@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "References to objects containing a character value"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ feature -- Access
 	code: INTEGER
 			-- Associated integer value
 		obsolete
-			"Use `natural_32_code' instead."
+			"Use `natural_32_code' instead. [2017-05-31]"
 		do
 			Result := item.code
 		ensure
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 	is_space_flag: NATURAL_8 = 0x80;
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

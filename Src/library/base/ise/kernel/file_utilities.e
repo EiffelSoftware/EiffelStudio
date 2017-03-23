@@ -188,7 +188,6 @@ feature -- Directory operations
 				if d.exists and then d.is_readable then
 					d.open_read
 					from
-						create f.make_with_name ({STRING_32} ".")
 						create Result.make (0)
 						d.readentry
 					until
@@ -359,20 +358,14 @@ feature -- File operations
 
 	rename_file (old_name, new_name: READABLE_STRING_GENERAL)
 			-- Rename file named `old_name' to `new_name'.
-		local
-			f: RAW_FILE
 		do
-			create f.make_with_name (old_name)
-			f.rename_file (new_name)
+			(create {RAW_FILE}.make_with_name (old_name)).rename_file (new_name)
 		end
 
 	rename_file_path (old_path, new_path: PATH)
 			-- Rename file named `old_path' to `new_path'.
-		local
-			f: RAW_FILE
 		do
-			create f.make_with_path (old_path)
-			f.rename_path (new_path)
+			(create {RAW_FILE}.make_with_path (old_path)).rename_path (new_path)
 		end
 
 	file_exists (n: READABLE_STRING_GENERAL): BOOLEAN
@@ -406,7 +399,7 @@ feature -- File operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

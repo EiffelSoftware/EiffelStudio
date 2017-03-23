@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Files, viewed as persistent sequences of bytes"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -110,7 +110,7 @@ feature -- Output
 			-- Put `data' of length `size' pointed by `p' at
 			-- current position.
 		obsolete
-			"Use `put_managed_pointer' instead."
+			"Use `put_managed_pointer' instead. [2017-05-31]"
 		require
 			p_not_null: p /= default_pointer
 			extendible: extendible
@@ -203,7 +203,7 @@ feature -- Input
 			-- or until end of file.
 			-- Make result available in `p'.
 		obsolete
-			"Use `read_to_managed_pointer' instead."
+			"Use `read_to_managed_pointer' instead. [2017-05-31]"
 		require
 			p_not_null: p /= default_pointer
 			is_readable: file_readable
@@ -232,15 +232,12 @@ feature {NONE} -- Implementation
 
 	integer_buffer: MANAGED_POINTER
 			-- Buffer used to read INTEGER_64, INTEGER_16, INTEGER_8
-		local
-			r: detachable MANAGED_POINTER
 		do
-			r := internal_integer_buffer
-			if r = Void then
-				create r.make (16)
-				internal_integer_buffer := r
+			Result := internal_integer_buffer
+			if Result = Void then
+				create Result.make (16)
+				internal_integer_buffer := Result
 			end
-			Result := r
 		end
 
 	internal_integer_buffer: detachable MANAGED_POINTER
@@ -334,7 +331,7 @@ invariant
 	not_plain_text: not is_plain_text
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Platform-dependent properties."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -182,7 +182,7 @@ feature -- Obsoletes
 	character_bytes: INTEGER
 			-- Number of bytes in a value of type `CHARACTER_8'
 		obsolete
-			"Use `character_8_bytes' instead."
+			"Use `character_8_bytes' instead. [2017-05-31]"
 		external
 			"built_in static"
 		end
@@ -190,7 +190,7 @@ feature -- Obsoletes
 	wide_character_bytes: INTEGER
 			-- Number of bytes in a value of type `CHARACTER_32'
 		obsolete
-			"Use `character_32_bytes' instead."
+			"Use `character_32_bytes' instead. [2017-05-31]"
 		external
 			"built_in static"
 		end
@@ -198,7 +198,7 @@ feature -- Obsoletes
 	integer_bytes: INTEGER
 			-- Number of bytes in a value of type `INTEGER_32'
 		obsolete
-			"Use `integer_32_bytes' instead."
+			"Use `integer_32_bytes' instead. [2017-05-31]"
 		external
 			"built_in static"
 		end
@@ -206,7 +206,7 @@ feature -- Obsoletes
 	real_bytes: INTEGER
 			-- Number of bytes in a value of type `REAL_32'
 		obsolete
-			"Use `real_32_bytes' instead."
+			"Use `real_32_bytes' instead. [2017-05-31]"
 		external
 			"built_in static"
 		end
@@ -214,7 +214,7 @@ feature -- Obsoletes
 	double_bytes: INTEGER
 			-- Number of bytes in a value of type `REAL_64'
 		obsolete
-			"Use `real_64_bytes' instead."
+			"Use `real_64_bytes' instead. [2017-05-31]"
 		external
 			"built_in static"
 		end
@@ -222,7 +222,7 @@ feature -- Obsoletes
 	character_bits: INTEGER
 			-- Number of bits in a value of type `CHARACTER_8'
 		obsolete
-			"Use `character_8_bits' instead."
+			"Use `character_8_bits' instead. [2017-05-31]"
 		do
 			Result := 8
 		end
@@ -230,7 +230,7 @@ feature -- Obsoletes
 	integer_bits: INTEGER
 			-- Number of bits in a value of type `INTEGER_32'
 		obsolete
-			"Use `integer_32_bits' instead."
+			"Use `integer_32_bits' instead. [2017-05-31]"
 		do
 			Result := 32
 		end
@@ -238,7 +238,7 @@ feature -- Obsoletes
 	real_bits: INTEGER
 			-- Number of bits in a value of type `REAL_32'
 		obsolete
-			"Use `real_32_bits' instead."
+			"Use `real_32_bits' instead. [2017-05-31]"
 		do
 			Result := 32
 		end
@@ -246,7 +246,7 @@ feature -- Obsoletes
 	double_bits: INTEGER
 			-- Number of bits in a value of type `REAL_64'
 		obsolete
-			"Use `real_64_bits' instead."
+			"Use `real_64_bits' instead. [2017-05-31]"
 		do
 			Result := 64
 		end
@@ -254,7 +254,7 @@ feature -- Obsoletes
 	maximum_character_code: INTEGER
 			-- Largest supported code for CHARACTER_8 values
 		obsolete
-			"Use `{CHARACTER}.max_value' instead."
+			"Use `{CHARACTER}.max_value' instead. [2017-05-31]"
 		do
 			Result := {CHARACTER}.max_value
 		ensure
@@ -264,7 +264,7 @@ feature -- Obsoletes
 	maximum_integer: INTEGER
 			-- Largest supported value of type INTEGER_32
 		obsolete
-			"Use `{INTEGER}.max_value' instead."
+			"Use `{INTEGER}.max_value' instead. [2017-05-31]"
 		do
 			Result := {INTEGER}.max_value
 		ensure
@@ -274,7 +274,7 @@ feature -- Obsoletes
 	minimum_character_code: INTEGER
 			-- Smallest supported code for CHARACTER_8 values
 		obsolete
-			"Use `{CHARACTER}.min_value' instead."
+			"Use `{CHARACTER}.min_value' instead. [2017-05-31]"
 		do
 			Result := {CHARACTER}.min_value
 		ensure
@@ -284,7 +284,7 @@ feature -- Obsoletes
 	minimum_integer: INTEGER
 			-- Smallest supported value of type INTEGER_32
 		obsolete
-			"Use `{INTEGER}.min_value' instead."
+			"Use `{INTEGER}.min_value' instead. [2017-05-31]"
 		do
 			Result := {INTEGER}.min_value
 		ensure
@@ -292,7 +292,7 @@ feature -- Obsoletes
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

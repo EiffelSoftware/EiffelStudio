@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Access to internal object properties.
 			This class may be used as ancestor by classes needing its facilities.
@@ -204,7 +204,7 @@ feature -- Access
 			-- Class name associated with the `i'-th
 			-- expanded field of `object'
 		obsolete
-			"Use `class_name_of_type (field_static_type_of_type (i, dynamic_type (object)))' instead."
+			"Use `class_name_of_type (field_static_type_of_type (i, dynamic_type (object)))' instead. [2017-05-31]"
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
@@ -639,7 +639,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

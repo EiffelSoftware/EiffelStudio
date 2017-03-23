@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Call record"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -90,20 +90,9 @@ feature -- Properties
 			-- Does `value_records' has local values ?
 		require
 			is_flat: is_flat
-		local
-			c: CURSOR
 		do
 			if attached value_records as vals then
-				c := vals.cursor
-				from
-					vals.start
-				until
-					vals.after or Result
-				loop
-					Result := vals.item.is_local_record
-					vals.forth
-				end
-				vals.go_to (c)
+				Result := across vals as c some c.item.is_local_record end
 			end
 		end
 
@@ -119,8 +108,8 @@ feature -- Measure
 	same_object_type (ref: detachable ANY): BOOLEAN
 			-- Is `ref' representing the same value as `object' ?
 		do
-			if attached ref as r then
-				Result := attached object as o and then o.same_type (r)
+			if attached ref then
+				Result := attached object as o and then o.same_type (ref)
 			else
 				Result := object = Void
 			end
@@ -177,26 +166,12 @@ feature -- Status
 			-- Is Current record closed ?
 
 	call_records_closed: BOOLEAN
-			-- Is call_records entries closed ?
+			-- Is call_records entries closed?
 		require
 			is_not_closed: not is_closed
-		local
-			curs: CURSOR
-			c: like Current
 		do
-			if attached call_records as l_calls and then l_calls.count > 0 then
-				curs := l_calls.cursor
-				from
-					Result := True
-					l_calls.finish
-				until
-					l_calls.before or not Result
-				loop
-					c := l_calls.item
-					Result := c.is_closed
-					l_calls.back
-				end
-				l_calls.go_to (curs)
+			if attached call_records as l_calls then
+				Result := across l_calls.new_cursor.reversed as c all c.item.is_closed end
 			else
 				Result := True
 			end
@@ -261,7 +236,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			end
 			crecs.force (c)
 			crecs.finish
-			crecs.move (+1) --| point `after' when not replaying
+			crecs.move (1) --| point `after' when not replaying
 			register_call_step
 			if depth = 0 then
 				depth := c.depth - 1
@@ -293,9 +268,9 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			v.set_breakable_info (last_position.twin)
 			l_value_records.force (v)
 			l_value_records.finish
-			l_value_records.move (+1) --| point `after' when not replaying
+			l_value_records.move (1) --| point `after' when not replaying
 			register_value_step
-			recorder.increment_records_count (+1)
+			recorder.increment_records_count (1)
 		ensure
 			in_records: attached value_records as vr and then vr.has (v) and then vr.after
 		end
@@ -335,23 +310,17 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 		require
 			is_not_closed: not is_closed
 		local
-			curs: CURSOR
 			c: like Current
 		do
-			if attached call_records as l_calls and then l_calls.count > 0 then
-				curs := l_calls.cursor
-				from
-					l_calls.finish
-				until
-					l_calls.before
+			if attached call_records as l_calls then
+				across
+					l_calls.new_cursor.reversed as i
 				loop
-					c := l_calls.item
+					c := i.item
 					if not c.is_closed then
 						c.deep_close
 					end
-					l_calls.back
 				end
-				l_calls.go_to (curs)
 			end
 		ensure
 			call_records_closed: call_records_closed
@@ -512,11 +481,11 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 				end
 			end
 
-			if vals /= value_records then
-				wipe_out_value_records
-			else
+			if vals = value_records then
 				object := Void
 				n := n - 1
+			else
+				wipe_out_value_records
 			end
 			recorder.increment_records_count (n)
 		ensure
@@ -716,14 +685,15 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			else
 				i := a_id.to_integer_32
 			end
-			if attached call_records as crecs then
-				if crecs.valid_index (i) then
-					r := crecs.i_th (i)
-					if sub_id = Void then
-						Result := r
-					else
-						Result := r.call_by_id (sub_id)
-					end
+			if
+				attached call_records as crecs and then
+				crecs.valid_index (i)
+			then
+				r := crecs.i_th (i)
+				if sub_id = Void then
+					Result := r
+				else
+					Result := r.call_by_id (sub_id)
 				end
 			end
 			debug ("RT_DBG_REPLAY")
@@ -809,7 +779,11 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			l_calls := call_records
 			c := 0
 			v := 0
-			if a_level /= 0 then
+			if a_level = 0 then
+				if l_calls /= Void then
+					c := l_calls.count
+				end
+			else
 				l_steps := steps
 				if l_steps.count > 0 and then attached {CURSOR} l_steps.cursor as steps_cursor then
 					create at_subs.make_empty
@@ -837,7 +811,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 --									if l_steps.index = i then
 --										subs.append_character ('!')
 --									end
-									l_values.move (+1)
+									l_values.move (1)
 								end
 							end
 							v := v + 1
@@ -849,7 +823,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 									at_subs.append_character ('!')
 								end
 								at_subs.append_string (l_calls.item.to_string (a_level - 1))
-								l_calls.move (+1)
+								l_calls.move (1)
 							end
 							c := c + 1
 						end
@@ -864,13 +838,6 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 						check c = l_calls.count end
 					end
 					l_steps.go_to (steps_cursor)
-				end
-			else
-				if l_values /= Void then
-					v := l_values.count
-				end
-				if l_calls /= Void then
-					c := l_calls.count
 				end
 			end
 			if c > 0 then
@@ -1008,24 +975,24 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 				debug_display_steps
 			end
 			if l_steps.before then
-				l_steps.move (+1) --| Revert the step left which was acted as step back
+				l_steps.move (1) --| Revert the step left which was acted as step back
 			else
 				if not l_steps.after then
 					if l_steps.item then
 						check value_records_attached: value_records /= Void end
 						if attached value_records as vrecs then
 							check not vrecs.after end
-							vrecs.move (+1)
+							vrecs.move (1)
 						end
 					else
 						check call_records_attached: call_records /= Void end
 						if attached call_records as crecs then
 							check not crecs.after end
-							crecs.move (+1)
+							crecs.move (1)
 						end
 					end
 				end
-				l_steps.move (+1)
+				l_steps.move (1)
 			end
 			debug ("RT_DBG_REPLAY")
 				dtrace_indent (depth); dtrace ("revert_left_step -end-%N")
@@ -1075,7 +1042,7 @@ feature {NONE} -- Steps implementation
 			l_steps := steps
 			l_steps.force (b)
 			l_steps.finish
-			l_steps.move (+1)
+			l_steps.move (1)
 		ensure
 			steps_is_after: steps.after
 		end
@@ -1083,7 +1050,7 @@ feature {NONE} -- Steps implementation
 feature -- debug
 
 	debug_display_steps
-			-- Display `steps' for debugging purpose
+			-- Display `steps' for debugging purpose.
 		local
 			l_steps: like steps
 			i: INTEGER
@@ -1129,7 +1096,7 @@ feature -- debug
 							print ("None")
 						else
 							print (l_values.item.to_string)
-							l_values.move (+1)
+							l_values.move (1)
 						end
 					else
 						c := c + 1
@@ -1138,7 +1105,7 @@ feature -- debug
 							print ("None")
 						else
 							print (l_calls.item.to_string (0))
-							l_calls.move (+1)
+							l_calls.move (1)
 						end
 					end
 					if i = l_steps.index then
@@ -1158,18 +1125,16 @@ feature -- debug
 		end
 
 	debug_output: STRING
-			-- Debug output as string representation
+			-- Debug output as string representation.
 		local
 			tn: STRING
 		do
 			tn := reflector.type_name_of_type (class_type_id)
 			if attached object as o and then attached {STRING} o.generating_type as otn then
-				if tn = Void or else otn /~ tn then
-					if tn /= Void then
-						tn := otn + " from " + tn
-					else
-						tn := otn
-					end
+				if tn = Void then
+					tn := otn
+				elseif otn /~ tn then
+					tn := otn + " from " + tn
 				end
 			end
 			if tn = Void then
@@ -1205,7 +1170,7 @@ invariant
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

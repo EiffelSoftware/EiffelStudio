@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Common routine for RT_EXTENSION classes"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -49,7 +49,7 @@ feature -- Evaluation helper
 	equal_sign_evaluation (a,b: detachable ANY): BOOLEAN
 			-- Return the evaluation of `a = b'
 		do
-			Result := (a = b)
+			Result := a = b
 		end
 
 feature -- Object storage Access
@@ -109,8 +109,6 @@ feature -- Object storage Access
 			retry
 		end
 
-feature -- Object storage Access
-
 	object_runtime_info (r: detachable ANY): STRING
 			-- Representation of the internal information for object `r'.
 			--| Semi-colon separated information
@@ -150,7 +148,7 @@ feature -- Object storage Access
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Implementation of the STORABLE mechanism with streams."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -32,11 +32,6 @@ feature -- Initialization
 			create last_string.make_empty
 		end
 
-feature -- Status report
-
-	support_storable: BOOLEAN = True
-			-- Can medium be used to store an Eiffel structure?
-
 feature -- Access
 
 	item: POINTER
@@ -48,7 +43,7 @@ feature -- Access
 	buffer: POINTER
 			-- C buffer correspond to the Eiffel STREAM
 		obsolete
-			"Use `item' instead to directly access stored/retrieved data"
+			"Use `item' instead to directly access stored/retrieved data. [2017-05-31]"
 		do
 			Result := internal_buffer_access
 		end
@@ -196,6 +191,9 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Status report
+
+	support_storable: BOOLEAN = True
+			-- Can medium be used to store an Eiffel structure?
 
 	exists: BOOLEAN = True
 			-- Stream exists in any cases.
@@ -429,7 +427,7 @@ feature {NONE} -- Not exported
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

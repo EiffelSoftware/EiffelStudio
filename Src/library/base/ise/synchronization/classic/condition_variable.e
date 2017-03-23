@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Condition variables allow threads to synchronize based on the content of a shared data, whereas
 		mutexes only synchronize access to the data. In other words, a condition variable is a
@@ -73,7 +73,7 @@ feature -- Access
 	is_set: BOOLEAN
 			-- Is condition variable initialized?
 		do
-			Result := (cond_pointer /= default_pointer)
+			Result := cond_pointer /= default_pointer
 		end
 
 feature -- Status setting
@@ -111,7 +111,7 @@ feature -- Status setting
 			a_mutex_not_void: a_mutex /= Void
 			timeout_positive: a_timeout_ms >= 0
 		do
-			Result := (eif_thr_cond_wait_with_timeout (cond_pointer, a_mutex.mutex_pointer, a_timeout_ms) = 1)
+			Result := eif_thr_cond_wait_with_timeout (cond_pointer, a_mutex.mutex_pointer, a_timeout_ms) = 1
 		end
 
 	destroy
@@ -178,7 +178,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

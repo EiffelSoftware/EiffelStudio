@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
 		Commonly used input and output mechanisms.
 		This class may be used as either ancestor or supplier
 		by classes needing its facilities.
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -47,14 +47,11 @@ feature -- Access
 			-- if `default_output' is Void.
 			--| Useful if a class inherits from STD_FILES and
 			--| and a `putint' is applied without standard setting.
-		local
-			r: detachable PLAIN_TEXT_FILE
 		do
-			r := default_output
-			if r = Void then
-				r := output
+			Result := default_output
+			if Result = Void then
+				Result := output
 			end
-			Result := r
 		end
 
 feature -- Status report
@@ -363,7 +360,7 @@ feature -- Input
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

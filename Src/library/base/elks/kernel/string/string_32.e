@@ -177,7 +177,7 @@ feature -- Initialization
 	remake (n: INTEGER)
 			-- Allocate space for at least `n' characters.
 		obsolete
-			"Use `make' instead"
+			"Use `make' instead. [2017-05-31]"
 		require
 			non_negative_size: n >= 0
 		do
@@ -204,7 +204,7 @@ feature -- Access
 	item_code (i: INTEGER): INTEGER
 			-- Character at position `i'
 		obsolete
-			"Due to potential truncation it is recommended to use `code (i)' instead."
+			"Due to potential truncation it is recommended to use `code (i)' instead. [2017-05-31]"
 		do
 			Result := area.item (i - 1).natural_32_code.as_integer_32
 		end
@@ -250,20 +250,20 @@ feature -- Element change
 			other_not_void: other /= Void
 			valid_start_pos: other.valid_index (start_pos)
 			valid_end_pos: other.valid_index (end_pos)
-			valid_bounds: (start_pos <= end_pos) or (start_pos = end_pos + 1)
+			valid_bounds: start_pos <= end_pos or start_pos = end_pos + 1
 			valid_index_pos: valid_index (index_pos)
-			enough_space: (count - index_pos) >= (end_pos - start_pos)
+			enough_space: count - index_pos >= end_pos - start_pos
 		local
 			l_other_area, l_area: like area
 		do
 			if end_pos >= start_pos then
 				l_other_area := other.area
 				l_area := area
-				if l_area /= l_other_area then
-					l_area.copy_data (l_other_area, start_pos - 1, index_pos - 1,
+				if l_area = l_other_area then
+					l_area.overlapping_move (start_pos - 1, index_pos - 1,
 						end_pos - start_pos + 1)
 				else
-					l_area.overlapping_move (start_pos - 1, index_pos - 1,
+					l_area.copy_data (l_other_area, start_pos - 1, index_pos - 1,
 						end_pos - start_pos + 1)
 				end
 				reset_hash_codes
@@ -470,7 +470,7 @@ feature -- Element change
 	replace_character (c: CHARACTER_32)
 			-- Replace every character with `c'.
 		obsolete
-			"ELKS 2001: use `fill_with' instead'"
+			"ELKS 2001: use `fill_with' instead'. [2017-05-31]"
 		do
 			fill_with (c)
 		ensure
@@ -1181,7 +1181,7 @@ feature -- Element change
 	insert (s: READABLE_STRING_32; i: INTEGER)
 			-- Add `s' to left of position `i' in current string.
 		obsolete
-			"ELKS 2001: use `insert_string' instead"
+			"ELKS 2001: use `insert_string' instead. [2017-05-31]"
 		require
 			string_exists: s /= Void
 			index_small_enough: i <= count + 1
@@ -1420,7 +1420,7 @@ feature -- Removal
 	clear_all
 			-- Reset all characters.
 		obsolete
-			"Use `wipe_out' instead."
+			"Use `wipe_out' instead. [2017-05-31]"
 		do
 			count := 0
 			reset_hash_codes
@@ -1806,7 +1806,7 @@ invariant
 	compare_character: not object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

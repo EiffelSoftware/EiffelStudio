@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Equivalent of HASH_TABLE [NATURAL_32, ANY], since this type cannot be written
 		as ANY does not inherit from HASHABLE
@@ -53,14 +53,12 @@ feature -- Access
 			stop: INTEGER
 			l_keys: like keys
 			l_indexes: like indexes_map
-			l_deleted_marks: like deleted_marks
 			l_key: POINTER
 		do
 			from
 				l_key := $an_obj
 				l_keys := keys
 				l_indexes := indexes_map
-				l_deleted_marks := deleted_marks
 				l_capacity := table_capacity
 				stop := l_capacity
 				hash_value := hash_code_of (l_key)
@@ -122,7 +120,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

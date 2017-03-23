@@ -1,6 +1,6 @@
-note
+﻿note
 	description: "Asynchronous task that checks a set of classes using a list of rules."
-	author: "Stefan Zurfluh"
+	author: "Stefan Zurfluh", "Eiffel Software"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,11 +8,9 @@ class
 	CA_RULE_CHECKING_TASK
 
 inherit
-	ROTA_TIMED_TASK_I
-
 	CA_SHARED_NAMES
-
 	EXCEPTION_MANAGER_FACTORY
+	ROTA_TIMED_TASK_I
 
 create
 	make
@@ -91,35 +89,39 @@ feature -- From ROTA
 
 	step
 			-- <Precursor>
+		local
+			is_retried: BOOLEAN
 		do
-				-- Gather type information
-			type_recorder.clear
-			type_recorder.analyze_class (classes.item)
-			context.set_node_types (type_recorder.node_types)
-			context.set_checking_class (classes.item)
+			if not is_retried then
+					-- Gather type information
+				type_recorder.clear
+				type_recorder.analyze_class (classes.item)
+				context.set_node_types (type_recorder.node_types)
+				context.set_checking_class (classes.item)
 
-			across rules as l_rules loop
-					-- If rule is non-standard then it will not be checked by l_rules_checker.
-					-- We will have the rule check the current class here:
-				if
-					l_rules.item.is_enabled.value
-					and then attached {CA_CFG_RULE} l_rules.item as l_cfg_rule
-				then
-					l_cfg_rule.check_class (classes.item)
+				across rules as l_rules loop
+						-- If rule is non-standard then it will not be checked by l_rules_checker.
+						-- We will have the rule check the current class here:
+					if
+						l_rules.item.is_enabled.value
+						and then attached {CA_CFG_RULE} l_rules.item as l_cfg_rule
+					then
+						l_cfg_rule.check_class (classes.item)
+					end
 				end
-			end
 
-				-- Status output.
-			if output_actions /= Void then
-				output_actions.call ([ca_messages.analyzing_class (classes.item.name)])
-			end
+					-- Status output.
+				if output_actions /= Void then
+					output_actions.call ([ca_messages.analyzing_class (classes.item.name)])
+				end
 
-			rules_checker.run_on_class (classes.item)
+				rules_checker.run_on_class (classes.item)
 
-			classes.forth
-			has_next_step := not classes.after
-			if not has_next_step then
-				completed_action.call ([exceptions])
+				classes.forth
+				has_next_step := not classes.after
+				if not has_next_step then
+					completed_action.call ([exceptions])
+				end
 			end
 		rescue
 				-- Instant error output.
@@ -133,6 +135,7 @@ feature -- From ROTA
 			if not has_next_step then
 				completed_action.call ([exceptions])
 			end
+			is_retried := True
 			retry
 		end
 

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 				A COMPARATOR used to compare any strings in a safe way
 				
@@ -63,11 +63,11 @@ feature -- Status report
 					v_ch := v.item (i)
 				end
 
-				if u_ch /= v_ch then
+				if u_ch = v_ch then
+					i := i + 1
+				else
 					Result := u_ch < v_ch
 					done := True
-				else
-					i := i + 1
 				end
 			end
 			if not done then
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

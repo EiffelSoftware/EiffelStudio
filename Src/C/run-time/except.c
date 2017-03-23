@@ -4225,7 +4225,7 @@ rt_public void init_emnger (void)
 #endif
 	eif_disable_tracing(); /* Disable tracing to not clobber the output. */
 	(egc_init_exception_manager)(except_mnger);
-	if (!tr_status) {
+	if (tr_status) {
 			/* Resume tracing if it was previously enabled. */
 		eif_enable_tracing();
 	}

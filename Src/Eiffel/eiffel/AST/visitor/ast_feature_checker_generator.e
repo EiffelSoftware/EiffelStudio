@@ -174,8 +174,6 @@ feature -- Type checking
 			-- Type check `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
-		local
-			rout_as: ROUTINE_AS
 		do
 			set_is_replicated (a_replicated_in_current_class)
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
@@ -212,18 +210,17 @@ feature -- Type checking
 				a_feature.body.process (Current)
 			end
 
-			if a_feature.real_body /= Void then
-				rout_as ?= a_feature.real_body.content
-				if rout_as /= Void then
-					if break_point_slot_count > 0 then
-							--| FIXME(jfiat:2007/01/26):
-							--| It occurs `break_point_slot_count' = 0 at this point
-							--| but just before we set rout_as.number_of_breakpoint_slots
-							--| had been set to non zero value
-							--| Check why we have this kind of issue.
-						rout_as.set_number_of_breakpoint_slots (break_point_slot_count)
-					end
-				end
+			if
+				attached a_feature.real_body as b and then
+				attached {ROUTINE_AS} b.content as rout_as and then
+				break_point_slot_count > 0
+			then
+					--| FIXME(jfiat:2007/01/26):
+					--| It occurs `break_point_slot_count' = 0 at this point
+					--| but just before we set rout_as.number_of_breakpoint_slots
+					--| had been set to non zero value
+					--| Check why we have this kind of issue.
+				rout_as.set_number_of_breakpoint_slots (break_point_slot_count)
 			end
 			check_creation
 		end
@@ -283,49 +280,49 @@ feature -- Type checking
 			a_procedure_not_void: a_procedure /= Void
 			a_node_not_void: a_node /= Void
 		local
-			l_routine: ROUTINE_AS
 			l_id_list: IDENTIFIER_LIST
 			l_feat_tbl: FEATURE_TABLE
 			l_vrle1: VRLE1
 			l_vpir: VPIR1
 			l_local_name_id: INTEGER
 		do
-			l_routine ?= a_node.content
-			if l_routine /= Void then
-				if l_routine.locals /= Void and not l_routine.locals.is_empty then
+			if
+				attached {ROUTINE_AS} a_node.content as l_routine and then
+				l_routine.locals /= Void and then
+				not l_routine.locals.is_empty
+			then
+				from
+					l_feat_tbl := context.current_class.feature_table
+					l_routine.locals.start
+				until
+					l_routine.locals.after
+				loop
 					from
-						l_feat_tbl := context.current_class.feature_table
-						l_routine.locals.start
+						l_id_list := l_routine.locals.item.id_list
+						l_id_list.start
 					until
-						l_routine.locals.after
+						l_id_list.after
 					loop
-						from
-							l_id_list := l_routine.locals.item.id_list
-							l_id_list.start
-						until
-							l_id_list.after
-						loop
-							l_local_name_id := l_id_list.item
-							if not is_inherited and then l_feat_tbl.has_id (l_local_name_id) then
-									-- The local name is a feature name of the
-									-- current analyzed class.
-								create l_vrle1
-								context.init_error (l_vrle1)
-								l_vrle1.set_local_name (l_local_name_id)
-								l_vrle1.set_location (l_routine.locals.item.start_location)
-								error_handler.insert_error (l_vrle1)
-							elseif context.is_name_used (l_local_name_id) then
-								create l_vpir
-								context.init_error (l_vpir)
-								l_vpir.set_entity_name (l_local_name_id)
-								l_vpir.set_class (context.current_class)
-								l_vpir.set_feature (context.current_feature)
-								error_handler.insert_error (l_vpir)
-							end
-							l_id_list.forth
+						l_local_name_id := l_id_list.item
+						if not is_inherited and then l_feat_tbl.has_id (l_local_name_id) then
+								-- The local name is a feature name of the
+								-- current analyzed class.
+							create l_vrle1
+							context.init_error (l_vrle1)
+							l_vrle1.set_local_name (l_local_name_id)
+							l_vrle1.set_location (l_routine.locals.item.start_location)
+							error_handler.insert_error (l_vrle1)
+						elseif context.is_name_used (l_local_name_id) then
+							create l_vpir
+							context.init_error (l_vpir)
+							l_vpir.set_entity_name (l_local_name_id)
+							l_vpir.set_class (context.current_class)
+							l_vpir.set_feature (context.current_feature)
+							error_handler.insert_error (l_vpir)
 						end
-						l_routine.locals.forth
+						l_id_list.forth
 					end
+					l_routine.locals.forth
 				end
 			end
 		end
@@ -1109,14 +1106,12 @@ feature {NONE} -- Implementation
 	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS)
 		local
 			l_creation: CREATION_EXPR_B
-			l_creation_type: CL_TYPE_A
 			l_ca_b: CUSTOM_ATTRIBUTE_B
 		do
 			check dotnet_generation: system.il_generation end
 			is_checking_cas := True
 			l_as.creation_expr.process (Current)
-			l_creation_type ?= last_type
-			if l_creation_type /= Void then
+			if attached {CL_TYPE_A} last_type as l_creation_type then
 				if l_creation_type.has_like or else l_creation_type.has_formal_generic then
 					fixme ("Generate an error here as it should be a valid type")
 				end
@@ -1234,7 +1229,6 @@ feature {NONE} -- Implementation
 			l_last_class: CLASS_C
 			l_context_current_class: CLASS_C
 			l_access: ACCESS_B
-			l_ext: EXTERNAL_B
 			l_vuar1: VUAR1
 			l_vuex: VUEX
 			l_vkcn3: VKCN3
@@ -1294,7 +1288,6 @@ feature {NONE} -- Implementation
 			l_is_target_of_creation_instruction := is_target_of_creation_instruction
 			l_is_in_assignment := is_in_assignment
 			is_in_creation_expression := False
-			is_target_of_creation_instruction := False
 			is_last_access_tuple_access := False
 
 				-- Reset assigner call flag
@@ -2092,8 +2085,7 @@ feature {NONE} -- Implementation
 										l_access := l_feature.access_for_feature (l_generated_result_type, l_cl_type_i, False, False)
 											-- Strange situation where Precursor is an external, then we do as if
 											-- it was a static call.
-										l_ext ?= l_access
-										if l_ext /= Void then
+										if attached {EXTERNAL_B} l_access as l_ext then
 											l_ext.enable_static_call
 										end
 									else
@@ -2113,8 +2105,7 @@ feature {NONE} -- Implementation
 										check not l_last_constrained.is_formal end
 										l_access.set_multi_constraint_static (l_last_constrained)
 									end
-									l_ext ?= l_access
-									if l_ext /= Void then
+									if attached {EXTERNAL_B} l_access as l_ext then
 										l_ext.enable_static_call
 									end
 								end
@@ -2651,16 +2642,16 @@ feature {NONE} -- Visitor
 	process_built_in_as (l_as: BUILT_IN_AS)
 			-- Process `l_as'.
 		local
-			l_external: EXTERNAL_I
 			l_feature_as: FEATURE_AS
 			l_feature_checker: AST_FEATURE_CHECKER_GENERATOR
 			old_local_scopes: like context.local_scopes
 		do
 			if is_byte_node_enabled then
-				l_external ?= current_feature
 					-- If associated feature is not an external anymore, it means that it was interpreted
 					-- by our compiler as a real `built_in'.
-				if l_external = Void then
+				if attached {EXTERNAL_I} current_feature as l_external then
+					create {EXT_BYTE_CODE} last_byte_node.make (l_external.external_name_id)
+				else
 					l_feature_as := l_as.body
 					if l_feature_as /= Void and then l_feature_as.body.content /= Void then
 							-- Save old local scopes.
@@ -2677,8 +2668,6 @@ feature {NONE} -- Visitor
  							-- No implementation is provided, let's assume empty body.
 						create {STD_BYTE_CODE} last_byte_node
 					end
-				else
-					create {EXT_BYTE_CODE} last_byte_node.make (l_external.external_name_id)
 				end
 			end
 		end
@@ -4587,8 +4576,6 @@ feature {NONE} -- Visitor
 			l_depend_unit: DEPEND_UNIT
 			l_vwoe: VWOE
 			l_vuex: VUEX
-			l_manifest: MANIFEST_INTEGER_A
-			l_value: ATOMIC_AS
 			l_needs_byte_node: BOOLEAN
 			l_expr: EXPR_B
 			l_access: ACCESS_B
@@ -4788,9 +4775,7 @@ feature {NONE} -- Visitor
 									-- that `-128' is of type INTEGER_8. We will have to wait for ETL3
 									-- to tell us what we need to do. The current behavior preserve
 									-- compatibility with older version of Eiffel (5.4 and earlier).
-								l_manifest ?= l_last_constrained
-								l_value ?= l_as.expr
-								if l_value /= Void and l_manifest /= Void then
+								if attached {ATOMIC_AS} l_as.expr as l_value and attached {MANIFEST_INTEGER_A} l_last_constrained as l_manifest then
 									l_prefix_feature_type := l_last_constrained
 								else
 										-- Usual case
@@ -11865,6 +11850,10 @@ feature {NONE} -- Checks for obsolete features
 				and then not is_inherited
 					-- And the warning is not disabled.
 				and then context.current_class.is_warning_enabled (w_obsolete_feature)
+					-- And this is not a target of an assignment.
+				and then not is_in_assignment
+					-- Or of a creation instruction.
+				and then not is_target_of_creation_instruction
 			then
 				create obsolete_warning.make_with_class (context.current_class)
 				if attached current_feature as cf then

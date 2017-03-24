@@ -433,7 +433,7 @@ feature -- Form
 							l_mesg_text.append ("%N%N")
 
 							-- FIXME: hardcoded link to admin wdocs clear-cache ! change that.
-							add_warning_message ("You may need to " + link ("clear the cache", "admin/module/wdocs/clear-cache?destination=" + url_encoded (view_location), Void) + ".")
+							add_warning_message ("You may need to " + link ("clear the cache", api.administration_path_location ("module/wdocs/clear-cache?destination=" + url_encoded (view_location)), Void) + ".")
 
 							api.log ("wdocs", "Doc page changed", 0, create {CMS_LOCAL_LINK}.make (l_page.title, location))
 							add_success_message ("Doc page saved.")
@@ -473,7 +473,7 @@ feature -- Form
 
 			if pg /= Void then
 				create th.make ("wiki_location")
-				th.set_text_value (location)
+				th.set_text_value (location.as_string_32)
 				f.extend (th)
 			end
 

@@ -1,45 +1,50 @@
 note
-
 	description: "Demo class for binary search trees."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
-class 
-	BINARY_SEARCH_TREE_DEMO 
+class
+	BINARY_SEARCH_TREE_DEMO
 
 inherit
 	TOP_DEMO
 		redefine
-			cycle, execute, fill_menu
+			cycle,
+			execute,
+			fill_menu,
+			make
 		end
 
 create
 	make
 
-
-feature -- Creation
+feature {NONE} -- Creation
 
 	make
-			-- Initialize and execute demonstration
+			-- Initialize and execute demonstration.
 		do
-			create driver.make
+			Precursor
 			driver.new_menu ("%N%N* BINARY SEARCH TREE DEMO *%N%N[XX] shows current node%N")
 			fill_menu
 			create tree_root.make (0)
 			cycle
 		end
 
-feature -- Attributes
+feature {NONE} -- Attributes
 
 	put, has: INTEGER
+			-- Command code.
 
 	show, quit: INTEGER
+			-- Command code.
 
 	tree_root: BINARY_SEARCH_TREE [INTEGER]
+			-- Structure to operate on.
 
-feature -- Implementation
+feature {NONE} -- Basic operations
 
 	cycle
+			-- <Precursor>
 		local
 			new_command: INTEGER
 		do
@@ -61,14 +66,14 @@ feature -- Implementation
 		end
 
 	tree_trace (t: BINARY_SEARCH_TREE [INTEGER]; i: INTEGER)
-			-- Display t, indented by i positions
+			-- Display `t`, indented by `i` positions.
 		require
 			tree_not_void: t /= Void
 		local
 			j: INTEGER
 		do
-			if t.has_right then
-				tree_trace (t.right_child, i + 3)
+			if attached t.right_child as c then
+				tree_trace (c, i + 3)
 			end
 			from
 				j := 1
@@ -80,8 +85,8 @@ feature -- Implementation
 			end
 			driver.putint (t.item.item)
 			driver.new_line
-			if t.has_left then
-				tree_trace (t.left_child, i + 3)
+			if attached t.left_child as c then
+				tree_trace (c, i + 3)
 			end
 		end
 
@@ -121,21 +126,22 @@ feature -- Implementation
 		end
 
 	get_element: INTEGER
+			-- Read a value.
 		do
-			Result := driver.get_integer ("item");
+			Result := driver.get_integer ("item")
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class BINARY_SEARCH_TREE_DEMO
-
+end

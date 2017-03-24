@@ -160,7 +160,7 @@ feature -- Settings: router
 			l_api.logger.put_debug (generator + ".setup_router_for_administration", Void)
 
 				-- Configure root of api handler.
-			l_router.set_base_url (l_api.administration_path (""))
+			l_router.set_base_url (l_api.administration_path (Void))
 
 				-- Include routes from modules.
 			across

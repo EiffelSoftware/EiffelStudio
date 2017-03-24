@@ -256,11 +256,15 @@ feature -- Access: url
 	administration_path (a_relative_path: detachable READABLE_STRING_8): STRING_8
 		do
 			create Result.make_from_string (setup.administration_base_path)
-			if a_relative_path /= Void and then not a_relative_path.is_empty then
-				if a_relative_path[1] /= '/' then
+			if a_relative_path /= Void then
+				if a_relative_path.is_empty then
 					Result.append_character ('/')
+				else
+					if a_relative_path[1] /= '/' then
+						Result.append_character ('/')
+					end
+					Result.append (a_relative_path)
 				end
-				Result.append (a_relative_path)
 			end
 		end
 
@@ -270,8 +274,14 @@ feature -- Access: url
 		do
 			create Result.make_from_string (administration_base_path_location)
 			if a_relative_location /= Void then
-				Result.append_character ('/')
-				Result.append (a_relative_location)
+				if a_relative_location.is_empty then
+					Result.append_character ('/')
+				else
+					if a_relative_location[1] /= '/' then
+						Result.append_character ('/')
+					end
+					Result.append (a_relative_location)
+				end
 			end
 		end
 
@@ -282,9 +292,11 @@ feature {NONE} -- Url implementation.
 
 feature -- CMS links
 
-	administration_link (a_title: READABLE_STRING_GENERAL; a_location: READABLE_STRING_8): CMS_LOCAL_LINK
+	administration_link (a_title: READABLE_STRING_GENERAL; a_relative_location: detachable READABLE_STRING_8): CMS_LOCAL_LINK
+		require
+			no_first_slash: a_relative_location = Void or else not a_relative_location.starts_with_general ("/")
 		do
-			Result := local_link (a_title, administration_path_location (a_location))
+			Result := local_link (a_title, administration_path_location (a_relative_location))
 		end
 
 	local_link (a_title: READABLE_STRING_GENERAL; a_location: READABLE_STRING_8): CMS_LOCAL_LINK

@@ -105,7 +105,7 @@ feature -- HTTP Methods
 					s.append ("</li>%N")
 				end
 				s.append ("</ul>")
-				s.append ("<div>Back to the " + r.link ("Administration", api.administration_path (""), Void) + " ...</div>")
+				s.append ("<div>Back to the " + r.link ("Administration", api.administration_path (Void), Void) + " ...</div>")
 				r.set_main_content (s)
 			end
 			r.set_title (r.translation ("CMS Installation ...", Void))

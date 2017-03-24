@@ -679,10 +679,10 @@ feature {NONE} -- Implementation
 				if attached sql_read_string (7) as l_format then
 					Result.set_format (l_format)
 				end
-				if attached sql_read_integer_64 (8) as l_author_id then
+				if attached sql_read_integer_64 (8) as l_author_id and then l_author_id > 0 then
 					Result.set_author (create {CMS_PARTIAL_USER}.make_with_id (l_author_id))
 				end
-				if attached sql_read_integer_64 (9) as l_editor_id then
+				if attached sql_read_integer_64 (9) as l_editor_id and then l_editor_id > 0 then
 					Result.set_editor (create {CMS_PARTIAL_USER}.make_with_id (l_editor_id))
 				end
 				if attached sql_read_date_time (10) as l_publication_date then

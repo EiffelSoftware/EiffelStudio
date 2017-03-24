@@ -75,7 +75,7 @@ feature -- Handler
 			d: HTTP_DATE
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			create l_cache.make (api.cache_location.extended ("modules").extended (name).extended ("sitemap.xml"))
+			create l_cache.make (api.cache_location.extended (name).extended ("sitemap.xml"))
 			if
 				l_cache.exists and then
 				not l_cache.expired (Void, 24*60*60) -- 1 day

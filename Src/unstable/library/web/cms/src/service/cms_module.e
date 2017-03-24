@@ -7,9 +7,9 @@ deferred class
 	CMS_MODULE
 
 inherit
-	REFACTORING_HELPER
-
 	CMS_ENCODERS
+
+	REFACTORING_HELPER
 
 feature -- Access
 
@@ -80,7 +80,7 @@ feature -- Status
 	is_initialized: BOOLEAN
 			-- Is Current module initialized?		
 
-feature {CMS_API} -- Access: API
+feature {CMS_API, CMS_MODULE_ADMINISTRATION} -- Access: API
 
 	module_api: detachable CMS_MODULE_API
 			-- Eventual module api.
@@ -180,33 +180,6 @@ feature {CMS_API} -- Module management
 			api.storage.set_custom_value ("is_installed", "no", "module-" + name)
 		end
 
-feature -- Router
-
-	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
-			-- Setup url dispatching for Current module.
-		require
-			is_initialized: is_initialized
-		deferred
-		end
-
-feature -- Hooks configuration
-
-	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
-			-- Module hooks configuration.
-		require
-			is_enabled: is_enabled
-		do
-		end
-
-feature -- Filter
-
-	filters (a_api: CMS_API): detachable LIST [WSF_FILTER]
-			-- Optional list of filter for Current module.
-		require
-			is_enabled: is_enabled
-		do
-		end
-
 feature -- Settings
 
 	enable
@@ -225,12 +198,39 @@ feature -- Settings
 			module_disbaled: not is_enabled
 		end
 
-feature -- Hooks
+feature -- Filter
+
+	filters (a_api: CMS_API): detachable LIST [WSF_FILTER]
+			-- Optional list of filter for Current module.
+		require
+			is_enabled: is_enabled
+		do
+		end
+
+feature -- Router
+
+	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
+			-- Setup url dispatching for Current module.
+		require
+			is_initialized: is_initialized
+		deferred
+		end
+
+feature -- Hooks configuration
+
+	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
+			-- Module hooks configuration.
+		require
+			is_enabled: is_enabled
+		do
+		end
+
+feature -- Help
 
 	help_text (a_path: STRING): STRING
 		do
 			debug ("refactor_fixme")
-				to_implement ("Add the corresponing implementation.")
+				to_implement ("Add the corresponding implementation.")
 			end
 			create Result.make_empty
 		end

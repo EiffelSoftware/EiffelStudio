@@ -91,7 +91,7 @@ feature -- HTTP Methods
 					u := ic.item
 					s.append ("<li class=%"cms_role%">")
 					s.append ("<a href=%"")
-					s.append (req.absolute_script_url ("/admin/role/" + u.id.out))
+					s.append (req.absolute_script_url (api.administration_path ("/role/") + u.id.out))
 					s.append ("%">")
 					s.append (html_encoded (u.name))
 					s.append ("</a>")
@@ -101,7 +101,7 @@ feature -- HTTP Methods
 			end
 
 			if l_response.has_permission ("admin roles") then
-				s.append (l_response.link ("Add Role", "admin/add/role", Void))
+				s.append (l_response.link ("Add Role", api.administration_path_location ("add/role"), Void))
 			end
 
 

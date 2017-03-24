@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Access
 
-	setup:  CMS_SETUP
+	api: CMS_API
 
 	site_url: IMMUTABLE_STRING_8
 			-- Absolute URL for Current CMS site.
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

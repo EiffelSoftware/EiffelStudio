@@ -263,7 +263,7 @@ feature -- User roles.
 	role_permissions: HASH_TABLE [LIST [READABLE_STRING_8], STRING_8]
 			-- Possible known permissions indexed by modules.
 		local
-			lst, l_used_permissions: LIST [READABLE_STRING_8]
+			lst, l_full_lst, l_used_permissions: LIST [READABLE_STRING_8]
 		do
 			create Result.make (cms_api.enabled_modules.count + 1)
 
@@ -272,6 +272,28 @@ feature -- User roles.
 				cms_api.enabled_modules as ic
 			loop
 				lst := ic.item.permissions
+				if attached {CMS_ADMINISTRABLE} ic.item as adm then
+					create {ARRAYED_LIST [READABLE_STRING_8]} l_full_lst.make (lst.count)
+					l_full_lst.compare_objects
+						-- l_full_lst.append (lst)
+					across
+						lst as lst_ic
+					loop
+						if not l_full_lst.has (lst_ic.item) then
+							l_full_lst.extend (lst_ic.item)
+						end
+					end
+						-- l_full_lst.append (adm.module_administration.permissions)
+					lst := adm.module_administration.permissions
+					across
+						lst as lst_ic
+					loop
+						if not l_full_lst.has (lst_ic.item) then
+							l_full_lst.extend (lst_ic.item)
+						end
+					end
+					lst := l_full_lst
+				end
 				Result.force (lst, ic.item.name)
 				across
 					lst as p_ic

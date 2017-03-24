@@ -118,7 +118,7 @@ feature -- HTTP Methods
 						else
 							l_page.add_success_message ("Term creation succeed.")
 							s.append ("<div>View term: ")
-							s.append (l_page.link (t.text, "admin/taxonomy/term/" + t.id.out, Void))
+							s.append (l_page.link (t.text, api.administration_path_location ("taxonomy/term/" + t.id.out), Void))
 							s.append ("</div>")
 
 							if

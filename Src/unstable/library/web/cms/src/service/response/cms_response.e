@@ -30,10 +30,19 @@ feature {NONE} -- Initialization
 		end
 
 	initialize
+		local
+			s: READABLE_STRING_8
 		do
 			get_theme
 			create menu_system.make
 			initialize_block_region_settings
+
+			s := request.percent_encoded_path_info
+			if not s.is_empty and then s[1] = '/' then
+				create location.make_from_string (s.substring (2, s.count))
+			else
+				create location.make_from_string (s)
+			end
 		end
 
 feature -- Access
@@ -47,6 +56,14 @@ feature -- Access
 	header: WSF_HEADER
 
 	main_content: detachable STRING_8
+
+feature -- Settings
+
+	is_administration_mode: BOOLEAN
+			-- Is administration mode?
+		do
+			Result := api.is_administration_mode
+		end
 
 feature -- Access: metadata
 
@@ -76,15 +93,8 @@ feature -- Access: metadata
 
 feature -- Access: query
 
-	location: STRING_8
+	location: IMMUTABLE_STRING_8
 			-- Associated cms local location.
-		do
-			create Result.make_from_string (request.percent_encoded_path_info)
-			if not Result.is_empty and then Result[1] = '/' then
-				Result.remove_head (1)
-			end
-		end
-
 
 feature -- API
 
@@ -496,7 +506,7 @@ feature -- Block management
 				nb_secs.is_integer
 			then
 				if attached block_region_preference (a_block_id, "none") as l_region and then not l_region.same_string_general ("none") then
-					create l_cache.make (api.cache_location.extended ("blocks").extended (a_block_id).appended_with_extension ("html"))
+					create l_cache.make (api.cache_location.extended ("_blocks").extended (a_block_id).appended_with_extension ("html"))
 					if
 						l_cache.exists and then
 						not l_cache.expired (Void, nb_secs.to_integer)
@@ -517,7 +527,7 @@ feature -- Block management
 			dir: DIRECTORY
 			l_cache: CMS_FILE_STRING_8_CACHE
 		do
-			p := api.cache_location.extended ("blocks")
+			p := api.cache_location.extended ("_blocks")
 			if a_block_id_list /= Void then
 				across
 					a_block_id_list as ic
@@ -535,6 +545,7 @@ feature -- Block management
 				create dir.make_with_path (p)
 				dir.recursive_delete
 			end
+			add_notice_message ("Blocks cache cleared.")
 		end
 
 feature {CMS_HOOK_CORE_MANAGER} -- Block management: internal
@@ -1002,9 +1013,9 @@ feature -- Theme
 				create l_info.make_default
 			end
 			if l_info.engine.is_case_insensitive_equal_general ("smarty") then
-				create {SMARTY_CMS_THEME} theme.make (setup, l_info, site_url)
+				create {SMARTY_CMS_THEME} theme.make (api, l_info, site_url)
 			else
-				create {MISSING_CMS_THEME} theme.make (setup, l_info, site_url)
+				create {MISSING_CMS_THEME} theme.make (api, l_info, site_url)
 				status_code := {HTTP_STATUS_CODE}.service_unavailable
 				to_implement ("Check how to add the Retry-after, http://tools.ietf.org/html/rfc7231#section-6.6.4 and http://tools.ietf.org/html/rfc7231#section-7.1.3")
 			end
@@ -1083,7 +1094,7 @@ feature -- Generation
 
 			if api.enabled_modules.count = 1 then
 					-- It is the required CMS_CORE_MODULE!
-				add_to_primary_menu (create {CMS_LOCAL_LINK}.make ("Install", "admin/install"))
+				add_to_primary_menu (api.administration_link ("Install", "install"))
 			end
 
 				-- Blocks
@@ -1322,32 +1333,33 @@ feature -- Generation
 
 feature -- Helpers: cms link
 
+	administration_link (a_title: READABLE_STRING_GENERAL; a_location: READABLE_STRING_8): CMS_LOCAL_LINK
+		do
+			Result := api.administration_link (a_title, a_location)
+		end
+
 	local_link (a_title: READABLE_STRING_GENERAL; a_location: READABLE_STRING_8): CMS_LOCAL_LINK
 		do
-			create Result.make (a_title, a_location)
+			Result := api.local_link (a_title, a_location)
 		end
 
 	user_local_link (u: CMS_USER; a_opt_title: detachable READABLE_STRING_GENERAL): CMS_LOCAL_LINK
 		do
-			if a_opt_title /= Void then
-				create Result.make (a_opt_title, user_url (u))
-			else
-				create Result.make (user_profile_name (u), user_url (u))
-			end
+			Result := api.user_local_link (u, a_opt_title)
 		end
 
 feature -- Helpers: html links
 
 	user_profile_name, user_display_name (u: CMS_USER): READABLE_STRING_32
 		do
-			Result := api.user_api.user_display_name (u)
+			Result := api.user_display_name (u)
 		end
 
 	user_html_link (u: CMS_USER): STRING
 		require
 			u_with_name: not u.name.is_whitespace
 		do
-			Result := link (user_profile_name (u), "user/" + u.id.out, Void)
+			Result := api.user_html_link (u)
 		end
 
 feature -- Helpers: URLs	
@@ -1359,7 +1371,7 @@ feature -- Helpers: URLs
 			--|  - query: string		=> append "?query"
 			--|  - fragment: string		=> append "#fragment"
 		do
-			Result := absolute_url (a_location, opts)
+			Result := api.location_absolute_url (a_location, opts)
 		end
 
 	location_url (a_location: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING
@@ -1369,14 +1381,14 @@ feature -- Helpers: URLs
 			--|  - query: string		=> append "?query"
 			--|  - fragment: string		=> append "#fragment"
 		do
-			Result := url (a_location, opts)
+			Result := api.location_url (a_location, opts)
 		end
 
 	user_url (u: CMS_USER): like url
 		require
 			u_with_id: u.has_id
 		do
-			Result := location_url ("user/" + u.id.out, Void)
+			Result := api.user_url (u)
 		end
 
 feature -- Execution

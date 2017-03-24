@@ -204,10 +204,10 @@ feature -- Execution
 
 			create l_mods_to_install.make (0)
 			across
-				a_response.api.setup.modules as ic
+				api.setup.modules as ic
 			loop
 				mod := ic.item
-				if not a_response.api.is_module_installed (mod) then
+				if not api.is_module_installed (mod) then
 					l_mods_to_install.extend (mod)
 				else
 					create l_extra.make_empty
@@ -286,10 +286,10 @@ feature -- Execution
 			create Result.make (a_response.url (a_response.location, Void), "modules_collection")
 			create l_mods_to_install.make (0)
 			across
-				a_response.api.setup.modules as ic
+				api.setup.modules as ic
 			loop
 				mod := ic.item
-				if not a_response.api.is_module_installed (mod) then
+				if not api.is_module_installed (mod) then
 					l_mods_to_install.extend (mod)
 				end
 			end

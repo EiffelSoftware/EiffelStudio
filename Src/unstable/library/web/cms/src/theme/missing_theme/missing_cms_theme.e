@@ -18,13 +18,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_setup: like setup; a_info: like information; abs_site_url: READABLE_STRING_8)
+	make (a_api: like api; a_info: like information; abs_site_url: READABLE_STRING_8)
 		do
-			setup := a_setup
+			api := a_api
 			information := a_info
 			set_site_url (abs_site_url)
 		ensure
-			setup_set: setup = a_setup
+			api_set: api = a_api
 		end
 
 feature -- Access
@@ -49,4 +49,7 @@ feature -- Access
 			to_implement ("Add a better response message, maybe using smarty template")
 			Result := "Service Unavailable"
 		end
+note
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

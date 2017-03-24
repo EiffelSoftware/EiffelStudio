@@ -1,6 +1,7 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class FORMATTING
 
 inherit
@@ -9,7 +10,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Creation
 
 	make
 		do
@@ -135,7 +136,7 @@ feature -- Initialization
 			d : DOUBLE
 			fd : FORMAT_DOUBLE
 		do
-			d := random.double_i_th (item) 
+			d := random.double_i_th (item)
 			io.putstring ("Unformatted                : ")
 			io.putdouble (d)
 			io.new_line
@@ -191,7 +192,7 @@ feature -- Input
 	get_number
 		do
 			io.putstring ("Enter a number between 1 and 100: ")
-			
+
 			from
 				io.read_line
 			until
@@ -211,19 +212,19 @@ feature -- Implementation
 			create Result.make
 		end
 
-	item: INTEGER;
+	item: INTEGER
 
-note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+;note
+	date: "$Date$";
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-end -- FORMATTING
-
+end

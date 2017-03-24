@@ -3,33 +3,36 @@
 	description: "Drivers for basic data structure demos"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
-class 
-	DEMO_DRIVER 
+class
+	DEMO_DRIVER
 
 create
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make
-			-- Create arrays to store menus. 
+			-- Create arrays to store menus.
 		do
 			create menu_entry.make_empty
 			create menu_help.make_empty
 			create menu_tag.make_empty
 			create menu_flag.make_filled (False, 1, Max_Number_of_Entries)
+			comment := "No name"
 			build_line
 		end
 
 feature -- Constant attributes
 
-	Max_height_of_menu_column: INTEGER = 10 
-	Max_Number_of_Entries: INTEGER = 40 
-	Max_Length_of_an_Entry: INTEGER = 75 
-	Max_Length_of_a_tag: INTEGER = 2 
+	Max_Number_of_Entries: INTEGER = 40
+			-- Maximum number of entries in a menu.
+
+	Max_Length_of_an_Entry: INTEGER = 75
+			-- Maximum length of a menu entry.
+
+	Max_Length_of_a_tag: INTEGER = 2
+			-- Maximum length of a tag.
 
 feature -- Other attributes
 
@@ -39,7 +42,7 @@ feature -- Other attributes
 	menu_flag: ARRAY [BOOLEAN]
 	line: STRING
 	comment: STRING
-	menu_size: INTEGER 
+	menu_size: INTEGER
 	last_entry: INTEGER
 	menu_height: INTEGER
 	choice: INTEGER
@@ -53,19 +56,19 @@ feature -- Output
 		do
 			io.put_string (s)
 		end
-		
+
 	new_line
 			-- Write line feed at end of default output.
 		do
 			io.new_line
 		end
-		
+
 	putint (i: INTEGER)
 			-- Write `i' at end of default output.
 		do
 			io.put_integer (i)
 		end
-		
+
 	putbool (b: BOOLEAN)
 			-- Write `b' at end of default output.
 		do
@@ -90,7 +93,7 @@ feature -- Routines
 			menu_size := 0
 		end
 
-	add_entry (entry: STRING ; help: STRING)
+	add_entry (entry: STRING; help: STRING)
 			-- Add an entry to the menu; assign its index to last_entry.
 			-- The first argument is the name of the entry. If it
 			-- contains upper case letters, they will be used as
@@ -101,23 +104,23 @@ feature -- Routines
 			-- The string given by the second argument should
 			-- explain what the entry does .
 		require
-			not_too_many_entries: menu_size < Max_Number_of_Entries 
-			name_not_void: entry /= Void 
+			not_too_many_entries: menu_size < Max_Number_of_Entries
+			name_not_void: entry /= Void
 			real_help: help /= Void
 		do
-			menu_size := menu_size + 1 
+			menu_size := menu_size + 1
 			entry.keep_head (Max_Length_of_an_Entry)
-			menu_entry.force (entry, menu_size) 
-			menu_help.force (help, menu_size) 
-			menu_tag.force (get_tag (entry), menu_size) 
+			menu_entry.force (entry, menu_size)
+			menu_help.force (help, menu_size)
+			menu_tag.force (get_tag (entry), menu_size)
 			last_entry := menu_size
 		end
 
 	get_tag (entry: STRING): STRING
-			-- Tag of entry, i.e. upper case letters
+			-- Tag of entry, i.e. upper case letters.
 		local
-			length: INTEGER 
-			char: CHARACTER 
+			length: INTEGER
+			char: CHARACTER
 			i: INTEGER
 		do
 			from
@@ -129,7 +132,7 @@ feature -- Routines
 			loop
 				char := entry.item (i)
 				if char.is_upper then
-					Result.extend (char) 
+					Result.extend (char)
 				end
 				i := i + 1
 			end
@@ -138,7 +141,7 @@ feature -- Routines
 	print_menu
 			-- Print menu.
 		local
-			i: INTEGER 
+			i: INTEGER
 		do
 			io.putstring (line)
 			io.new_line
@@ -165,7 +168,7 @@ feature -- Routines
 		end
 
 	print_entry (n: INTEGER)
-			-- Print `n'-th menu item. 
+			-- Print `n'-th menu item.
 		local
 			i, length: INTEGER
 			entry: STRING
@@ -177,33 +180,33 @@ feature -- Routines
 			until
 				i > length
 			loop
-				io.putchar (entry.item (i)) 
+				io.putchar (entry.item (i))
 				i := i + 1
 			end
 		end
 
 	complete_menu
-			-- Add help command to menu
+			-- Add help command to menu.
 		do
-			menu_size := menu_size + 1 
-			menu_entry.force ("?  Help", menu_size) 
-			menu_help.force ("Sorry, no further help available", menu_size) 
-			menu_tag.force ("?", menu_size) 
+			menu_size := menu_size + 1
+			menu_entry.force ("?  Help", menu_size)
+			menu_help.force ("Sorry, no further help available", menu_size)
+			menu_tag.force ("?", menu_size)
 		end
 
 	get_choice: INTEGER
 			-- Once the menu has been completely defined using
 			-- new_menu and add_menu routines, get_choice gets
 			-- the user input. The result is the number of
-			-- the entry as it has been entered by add_menu 
-			-- (first entered returns number 1, ...) .
+			-- the entry as it has been entered by add_menu
+			-- (first entered returns number 1, ...).
 		do
 			io.putstring ("%NCOMMAND: ")
-			choice := read_choice 
+			choice := read_choice
 			if choice = menu_size then
 				print_menu
 				io.putstring ("%NHELP: ")
-				choice := read_choice 
+				choice := read_choice
 				show_help
 				choice := get_choice
 			end
@@ -241,12 +244,12 @@ feature -- Routines
 		end
 
 	get_string (what_is_it: STRING): STRING
-			-- Get a user string input for stdin. 
-			-- 'what_is_it' is the name of the requested value. 
+			-- Get a user string input for stdin.
+			-- 'what_is_it' is the name of the requested value.
 		do
-			io.putstring("Please enter parameter %'") 
-			io.putstring(what_is_it) 
-			io.putstring("%' ") 
+			io.putstring("Please enter parameter %'")
+			io.putstring(what_is_it)
+			io.putstring("%' ")
 			io.readline
 			Result := io.laststring
 		end
@@ -271,9 +274,9 @@ feature -- Routines
 		end
 
 	read_choice: INTEGER
-			-- Menu item corresponding to user's input
+			-- Menu item corresponding to user's input.
 		local
-			recognized_entry, number_char_read, i: INTEGER
+			number_char_read, i: INTEGER
 			tag: STRING
 			char: CHARACTER
 			bad_char: BOOLEAN
@@ -285,12 +288,12 @@ feature -- Routines
 			loop
 				menu_flag.put (true, i)
 				i := i + 1
-			end 
+			end
 			from
-				recognized_entry := 0
-				number_char_read := 0
+				-- Result := 0
+				-- number_char_read := 0
 			until
-				recognized_entry > 0
+				Result > 0
 			loop
 				io.readchar
 				char := io.lastchar
@@ -299,25 +302,26 @@ feature -- Routines
 					char := char.upper
 				end
 				from
-					bad_char := true; i := 1
+					bad_char := True
+					i := 1
 				until
-					i > menu_size or recognized_entry > 0
+					i > menu_size or Result > 0
 				loop
 					if menu_flag.item (i) then
 						tag := menu_tag.item (i)
 						if tag.item (number_char_read) = char then
-							bad_char := false
+							bad_char := False
 							if tag.count = number_char_read then
-								recognized_entry := i
+								Result := i
 							end
 						else
-							menu_flag.put (false, i)
+							menu_flag.put (False, i)
 						end
 					end
 					i := i + 1
 				end
 				if bad_char then
-					io.readline; tag := io.laststring
+					io.readline
 					number_char_read := 0
 					signal_error ("Bad choice. Try again: ")
 					from
@@ -325,20 +329,18 @@ feature -- Routines
 					until
 						i > menu_size
 					loop
-						menu_flag.put (true, i)
+						menu_flag.put (True, i)
 						i := i + 1
 					end
 				end
 			end
 			io.readline
-			tag := io.laststring
-			Result := recognized_entry
 		end
 
 	start_result
 			-- No default action.
 		do
-		end 
+		end
 
 	end_result
 			-- No default action.
@@ -346,7 +348,9 @@ feature -- Routines
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -356,4 +360,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class DEMO_DRIVER
+end

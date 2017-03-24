@@ -1,7 +1,8 @@
 note
-
-	description: "Demo class for sets implemented as sorted lists %
-		% Only one routine to display the set is added."
+	description: "[
+			Demo class for sets implemented as sorted lists.
+			Only one routine to display the set is added.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -16,7 +17,7 @@ create
 create {MSLS}
 	make_sublist
 
-feature
+feature -- Output
 
 	display
 		do
@@ -33,16 +34,16 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class MSLS
-
+end

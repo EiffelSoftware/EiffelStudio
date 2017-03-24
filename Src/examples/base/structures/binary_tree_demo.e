@@ -3,24 +3,27 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
-class 
-	BINARY_TREE_DEMO 
+class
+	BINARY_TREE_DEMO
 
 inherit
 	TOP_DEMO
-		redefine 
-			cycle, fill_menu, execute
+		redefine
+			cycle,
+			fill_menu,
+			execute,
+			make
 		end
 
 create
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make
-			-- Initialize and execute demonstration
+			-- Initialize and execute demonstration.
 		do
-			create driver.make
+			Precursor
 			driver.new_menu ("%N%N* BINARY TREE DEMO *%N%N[XX] shows current node%N")
 			fill_menu
 			create tree_root.make (0)
@@ -28,22 +31,26 @@ feature -- Creation
 			cycle
 		end
 
-feature -- Attributes
+feature {NONE} -- Attributes
 
-	root, left, right, parent: INTEGER
-	put, child_status: INTEGER
-	add_left, add_right: INTEGER
-	remove_left_child, remove_right_child: INTEGER
-	child_put_left, child_put_right: INTEGER
+	root, left, right, parent,
+	put, child_status,
+	add_left, add_right,
+	remove_left_child, remove_right_child,
+	child_put_left, child_put_right,
 	show, quit: INTEGER
+			-- Command code.
 
 	tree_root: BINARY_TREE [INTEGER]
+			-- Structure to operate on.
 
 	active: BINARY_TREE [INTEGER]
+			-- Current position in the structure.
 
-feature -- Implementation
+feature {NONE} -- Basic operations
 
 	cycle
+			-- <Precursor>
 		local
 			new_command: INTEGER
 		do
@@ -65,14 +72,14 @@ feature -- Implementation
 		end
 
 	tree_trace (t: BINARY_TREE [INTEGER]; i: INTEGER)
-			-- Display t, indented by i positions
+			-- Display `t`, indented by `i` positions.
 		require
 			tree_not_void: t /= Void
 		local
 			j: INTEGER
 		do
-			if t.has_left then
-				tree_trace (t.left_child, i + 3)
+			if attached t.left_child as c then
+				tree_trace (c, i + 3)
 			end
 			from
 				j := 1
@@ -92,8 +99,8 @@ feature -- Implementation
 				driver.putstring (" ")
 			end
 			driver.new_line
-			if t.has_right then
-				tree_trace (t.right_child, i + 3)
+			if attached t.right_child as c then
+				tree_trace (c, i + 3)
 			end
 		end
 
@@ -133,29 +140,29 @@ feature -- Implementation
 
 	execute (new_command: INTEGER)
 			-- Execute command corresponding to user's request.
-		require else 
+		require else
 			valid_command: new_command >= child_put_left and new_command <= quit
 		local
 			new : like active
 		do
 				--| parse and perform action
 			if new_command = left then
-				if active.has_left then
-					active := active.left_child
+				if attached active.left_child as c then
+					active := c
 				else
 					driver.signal_error ("Cannot execute: no left child.")
-				end 
+				end
 			elseif new_command = right then
-				if active.has_right then
-					active := active.right_child
+				if attached active.right_child as c then
+					active := c
 				else
 					driver.signal_error ("Cannot execute: no right child.")
 				end
 			elseif new_command = root then
 				active := tree_root
 			elseif new_command = parent then
-				if active.parent /= Void then
-					active := active.parent
+				if attached active.parent as p then
+					active := p
 				else
 					driver.signal_error ("Cannot execute: no parent.")
 				end
@@ -175,7 +182,7 @@ feature -- Implementation
 			elseif new_command = add_left then
 				create new.make (driver.get_integer ("item"))
 				active.put_left_child (new)
-			elseif new_command = add_right then 
+			elseif new_command = add_right then
 				create new.make (driver.get_integer ("item"))
 				active.put_right_child (new)
 			elseif new_command = put then
@@ -204,16 +211,16 @@ feature -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class BINARY_TREE_DEMO
-
+end

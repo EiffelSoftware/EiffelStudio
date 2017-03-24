@@ -1,33 +1,44 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class SORT_DEMO
 
 inherit
 
 	TOP_DEMO
-		redefine 
-			cycle, execute, fill_menu
+		redefine
+			cycle,
+			execute,
+			fill_menu,
+			make
 		end
 
 create
 	make
 
-feature
-
-	put, remove, forth, back, start, finish, remove_all,
-	search, search_before, search_after, quit: INTEGER
-
-	l: SORTED_TWO_WAY_LIST [INTEGER]
+feature {NONE} -- Creation
 
 	make
+			-- Create sort demo.
 		do
+			Precursor
 			create l.make
-			create driver.make
 			driver.new_menu ("SORTED LIST DEMO%N%N[XX] shows element at cursor position%N")
 			fill_menu
 			cycle
-		end 
+		end
+
+feature -- Access: commands
+
+	put, remove, forth, back, start, finish, remove_all,
+	search, search_before, search_after, quit: INTEGER
+			-- Command code.
+
+	l: SORTED_TWO_WAY_LIST [INTEGER]
+			-- Sorted list.
+
+feature -- Basic operations
 
 	cycle
 			-- Basic user interaction process.
@@ -44,9 +55,9 @@ feature
 				execute (command)
 				trace
 				command := driver.get_choice
-			end 
+			end
 			driver.exit
-		end 
+		end
 
 	fill_menu
 			-- Fill menu items with text.
@@ -74,11 +85,12 @@ feature
 			driver.add_entry ("QU (QUit)", "Terminate this session")
 			quit := driver.last_entry
 			driver.complete_menu
-		end 
+		end
 
 	get_comparable: INTEGER
+			-- Read a value.
 		do
-			Result :=  (driver.get_integer ("item"))
+			Result :=  driver.get_integer ("item")
 		end
 
 	execute (new_command: INTEGER)
@@ -124,20 +136,22 @@ feature
 			elseif new_command = finish then
 				l.finish
 			end
-		end 
+		end
 
 	space
+			-- Output a whitespace.
 		do
 			driver.putstring (" ")
-		end 
+		end
 
 	put_comp
+			-- Output an item.
 		do
 			driver.putint (l.item)
 		end
 
 	trace
-				-- Ouput the state of the sorted list
+				-- Ouput the state of the sorted list.
 		local
 			position : INTEGER
 			c : CURSOR
@@ -160,10 +174,10 @@ feature
 					driver.putstring ("]")
 				else
 					put_comp
-				end 
+				end
 				space
 				l.forth
-			end 
+			end
 			l.go_to (c)
 			if l.after and not l.is_empty then
 				driver.putstring ("[]")
@@ -171,21 +185,21 @@ feature
 			else
 				driver.putstring ("")
 				driver.new_line
-			end 
+			end
 			driver.end_result
-		end 
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class SORT_DEMO
-
+end

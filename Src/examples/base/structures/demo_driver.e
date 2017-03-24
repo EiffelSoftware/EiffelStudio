@@ -86,9 +86,6 @@ feature -- Routines
 			-- Create a new menu with new_comment as banner.
 		do
 			comment := new_comment
-			if comment = Void then
-				comment := "No name"
-			end
 			choice := 1
 			menu_size := 0
 		end

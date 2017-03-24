@@ -17,6 +17,8 @@ inherit
 			permissions
 		end
 
+	CMS_ADMINISTRABLE
+
 	CMS_HOOK_BLOCK
 
 	CMS_HOOK_AUTO_REGISTER
@@ -28,8 +30,6 @@ inherit
 	CMS_RECENT_CHANGES_HOOK
 
 	CMS_SITEMAP_HOOK
-
-	CMS_HOOK_CACHE
 
 	WDOCS_MODULE_HELPER
 		undefine
@@ -73,6 +73,14 @@ feature -- Access
 		do
 			Result := Precursor
 			Result.force ("clear wdocs cache")
+		end
+
+feature -- Administration
+
+	administration: WDOCS_MODULE_ADMINISTRATION
+			-- <Precursor>
+		do
+			create Result.make (Current)
 		end
 
 feature {CMS_API} -- Module Initialization			
@@ -183,14 +191,6 @@ feature -- Router
 			create h.make (agent handle_static_documentation (a_api, ?, ?))
 			a_router.handle ("/doc-static/version/{version_id}{/vars}", h, a_router.methods_get)
 
-			create h.make (agent handle_admin (a_api, ?, ?))
-			a_router.handle ("/admin/module/" + name, h, a_router.methods_get)
-
-			create h.make (agent handle_clear_cache (a_api, ?, ?))
-			a_router.handle ("/admin/module/" + name + "/clear-cache", h, a_router.methods_get)
-
-			create h.make (agent handle_update_doc (a_api, ?, ?))
-			a_router.handle ("/admin/module/" + name + "/update", h, a_router.methods_get)
 		end
 
 feature -- Hooks configuration
@@ -204,8 +204,6 @@ feature -- Hooks configuration
 			a_hooks.subscribe_to_hook (Current, {CMS_RECENT_CHANGES_HOOK})
 			a_hooks.subscribe_to_hook (Current, {CMS_TAXONOMY_HOOK})
 			a_hooks.subscribe_to_hook (Current, {CMS_SITEMAP_HOOK})
-
-			a_hooks.subscribe_to_cache_hook (Current)
 		end
 
 feature {NONE} -- Config
@@ -295,21 +293,6 @@ feature -- Access: docs
 
 feature -- Hooks
 
-	clear_cache (a_cache_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_response: CMS_RESPONSE)
-			-- <Precursor>.
-		do
-			if a_response.has_permission ("clear wdocs cache") then
-				if a_cache_id_list = Void and attached manager (Void) as mng then
-					mng.refresh_data
-					across
-						mng.book_names as ic
-					loop
-						reset_cached_wdocs_cms_menu (mng.version_id, ic.item, mng)
-					end
-				end
-			end
-		end
-
 	response_alter (a_response: CMS_RESPONSE)
 		do
 			a_response.add_javascript_url (a_response.url ("/module/" + name + "/files/js/wdocs.js", Void))
@@ -321,15 +304,18 @@ feature -- Hooks
 			-- for related response `a_response'.
 		local
 			lnk: CMS_LOCAL_LINK
+			l_docs_admin_loc: READABLE_STRING_8
 		do
 			if a_response.has_permissions (<<"admin wdocs", "clear wdocs cache">>) then
-				create lnk.make ("Clear cache", "admin/module/" + name + "/clear-cache")
-				lnk.add_query_parameter (a_response.location, "destination")
-				a_menu_system.management_menu.extend_into (lnk, "Docs", "admin/module/wdocs")
+				l_docs_admin_loc := a_response.api.administration_path_location ("module/" + name)
 
-				create lnk.make ("Update", "admin/module/" + name + "/update")
+				lnk := a_response.administration_link ("Clear cache", "module/" + name + "/clear-cache")
 				lnk.add_query_parameter (a_response.location, "destination")
-				a_menu_system.management_menu.extend_into (lnk, "Docs", "admin/module/wdocs")
+				a_menu_system.management_menu.extend_into (lnk, "Docs", l_docs_admin_loc)
+
+				lnk := a_response.administration_link ("Update", "module/" + name + "/update")
+				lnk.add_query_parameter (a_response.location, "destination")
+				a_menu_system.management_menu.extend_into (lnk, "Docs", l_docs_admin_loc)
 			end
 		end
 
@@ -459,6 +445,7 @@ feature -- Hook/sitemap
 			l_title: detachable READABLE_STRING_32
 			dt: detachable DATE_TIME
 			loc: STRING
+			ut: FILE_UTILITIES
 		do
 			if attached wdocs_api as l_wdocs_api then
 				if
@@ -477,7 +464,7 @@ feature -- Hook/sitemap
 									if l_title = Void then
 										l_title := wp.title
 									end
-									if attached wp.path as p then
+									if attached wp.path as p and then ut.file_path_exists (p) then
 										dt := file_date (p)
 									else
 										create dt.make_now_utc
@@ -600,13 +587,6 @@ feature {NONE} -- Implementation
 			end
 			if l_page /= Void then
 				wdocs_append_pages_to_link (a_version_id, l_book_name, a_current_page_name, a_book.top_pages, Result, is_full, mng)
-			end
-		end
-
-	reset_cached_wdocs_cms_menu (a_version_id: READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER)
-		do
-			if attached wdocs_api as l_wdocs_api then
-				l_wdocs_api.reset_cms_menu_cache_for (a_version_id, a_book_name)
 			end
 		end
 
@@ -833,91 +813,6 @@ feature -- Hook
 		end
 
 feature -- Handler		
-
-	handle_admin (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			if req.is_get_request_method then
-				if r.has_permissions (<<"admin wdocs">>) then
-					r.set_main_content ("Manage WDocs ... (not yet implemented)")
-				else
-					create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-				end
-			else
-				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
-			end
-			r.execute
-		end
-
-	handle_clear_cache (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-			l_version: detachable READABLE_STRING_GENERAL
-			mng: like manager
-		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			if req.is_get_request_method then
-				if r.has_permissions (<<"admin wdocs", "clear wdocs cache">>) then
-					if attached {WSF_STRING} req.path_parameter ("version") as p_version then
-						l_version := p_version.value
-					end
-					mng := manager (l_version)
-					if l_version = Void then
-						l_version := mng.version_id
-					end
-
-						-- Clear wiki catalog
-					mng.refresh_data
-
-						-- Clear cms menu
-					across
-						mng.book_names as ic
-					loop
-						reset_cached_wdocs_cms_menu (l_version, ic.item, mng)
-					end
-
-					r.set_main_content ("Documentation cache: cleared.")
-					if attached {WSF_STRING} req.query_parameter ("destination") as p_dest then
-						r.set_redirection (p_dest.url_encoded_value)
-					end
-				else
-					create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-				end
-			else
-				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
-			end
-			r.execute
-		end
-
-	handle_update_doc (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-			s: STRING
-		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			if req.is_get_request_method then
-				if r.has_permissions (<<"admin wdocs", "update wdocs">>) then
-					if attached wdocs_api as l_wdocs_api then
-						l_wdocs_api.update
-						s := "Documentation: updated."
-						s.append ("<p>Now, you should <a href=%"" + r.url ("admin/module/" + name + "/clear-cache", Void) + "%">clear the cache</a>.</p>")
-					else
-						s := "Documentation not updated, contact the webmaster."
-					end
-					r.set_main_content (s)
-					if attached {WSF_STRING} req.query_parameter ("destination") as p_dest then
-						r.set_redirection (p_dest.url_encoded_value)
-					end
-				else
-					create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-				end
-			else
-				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
-			end
-			r.execute
-		end
 
 	handle_documentation (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local

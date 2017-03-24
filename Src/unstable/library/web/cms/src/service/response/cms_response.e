@@ -1333,9 +1333,11 @@ feature -- Generation
 
 feature -- Helpers: cms link
 
-	administration_link (a_title: READABLE_STRING_GENERAL; a_location: READABLE_STRING_8): CMS_LOCAL_LINK
+	administration_link (a_title: READABLE_STRING_GENERAL; a_relative_location: detachable READABLE_STRING_8): CMS_LOCAL_LINK
+		require
+			no_first_slash: a_relative_location = Void or else not a_relative_location.starts_with_general ("/")
 		do
-			Result := api.administration_link (a_title, a_location)
+			Result := api.administration_link (a_title, a_relative_location)
 		end
 
 	local_link (a_title: READABLE_STRING_GENERAL; a_location: READABLE_STRING_8): CMS_LOCAL_LINK

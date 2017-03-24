@@ -13,17 +13,16 @@ inherit
 		redefine
 			initialize,
 			setup_hooks,
-			permissions,
 			feed_aggregator_api
 		end
+
+	CMS_ADMINISTRABLE
 
 	CMS_HOOK_BLOCK
 
 	CMS_HOOK_RESPONSE_ALTER
 
 	CMS_HOOK_MENU_SYSTEM_ALTER
-
-	CMS_HOOK_CACHE
 
 create
 	make
@@ -42,16 +41,12 @@ feature -- Access
 
 	name: STRING = "feed_aggregator"
 
-	permissions: LIST [READABLE_STRING_8]
-			-- List of permission ids, used by this module, and declared.
-		do
-			Result := Precursor
-			Result.force (permission__manage_feed_aggregator)
-			Result.force (permission__clear_feed_cache)
-		end
+feature {CMS_EXECUTION} -- Administration
 
-	permission__manage_feed_aggregator: STRING = "manage feed aggregator"
-	permission__clear_feed_cache: STRING = "clear feed cache"
+	administration: FEED_AGGREGATOR_MODULE_ADMINISTRATION
+		do
+			create Result.make (Current)
+		end
 
 feature {CMS_API} -- Module Initialization			
 
@@ -74,21 +69,12 @@ feature -- Access: router
 		local
 			h: WSF_URI_TEMPLATE_HANDLER
 		do
-			a_router.handle ("/admin/feed_aggregator/", create {WSF_URI_AGENT_HANDLER}.make (agent handle_feed_aggregator_admin (a_api, ?, ?)), a_router.methods_head_get_post)
 			create {WSF_URI_TEMPLATE_AGENT_HANDLER} h.make (agent handle_feed_aggregation (a_api, ?, ?))
 			a_router.handle ("/feed_aggregation/", h, a_router.methods_head_get)
 			a_router.handle ("/feed_aggregation/{feed_id}", h, a_router.methods_head_get)
 		end
 
 feature -- Handle
-
-	handle_feed_aggregator_admin (a_api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			nyi: NOT_IMPLEMENTED_ERROR_CMS_RESPONSE
-		do
-			create nyi.make (req, res, a_api)
-			nyi.execute
-		end
 
 	handle_feed_aggregation	(a_api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
@@ -205,28 +191,9 @@ feature -- Hooks configuration
 			a_hooks.subscribe_to_block_hook (Current)
 			a_hooks.subscribe_to_response_alter_hook (Current)
 			a_hooks.subscribe_to_menu_system_alter_hook (Current)
-			a_hooks.subscribe_to_cache_hook (Current)
 		end
 
 feature -- Hook
-
-	clear_cache (a_cache_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_response: CMS_RESPONSE)
-			-- <Precursor>.
-		local
-			p: PATH
-			dir: DIRECTORY
-		do
-			if a_response.has_permissions (<<permission__clear_feed_cache, permission__manage_feed_aggregator>>) then
-				if a_cache_id_list = Void then
-						-- Clear all cache.
-					p := a_response.api.cache_location.extended (name)
-					create dir.make_with_path (p)
-					if dir.exists then
-						dir.recursive_delete
-					end
-				end
-			end
-		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 			-- List of block names, managed by current object.
@@ -300,7 +267,7 @@ feature -- Hook
 		do
 			if attached feed_aggregator_api as l_feed_api then
 				if attached l_feed_api.aggregation (a_feed_id) as l_agg then
-					create l_cache.make (a_response.api.files_location.extended (".cache").extended (name).extended ("feed__" + a_feed_id + "__" + a_count.out + "_" + with_feed_info.out))
+					create l_cache.make (l_feed_api.cms_api.cache_location.extended (name).extended ("feed__" + a_feed_id + "__" + a_count.out + "_" + with_feed_info.out))
 					Result := l_cache.item
 					if Result = Void or l_cache.expired (Void, l_agg.expiration) then
 
@@ -368,9 +335,6 @@ feature -- Hook
 		do
 			if a_response.is_authenticated then
 				a_menu_system.navigation_menu.extend (create {CMS_LOCAL_LINK}.make ("Feeds", "feed_aggregation/"))
-				if a_response.has_permission (permission__manage_feed_aggregator) then
-					a_menu_system.management_menu.extend_into (create {CMS_LOCAL_LINK}.make ("Feeds (admin)", "admin/feed_aggregator/"), "Admin", "admin")
-				end
 			end
 		end
 

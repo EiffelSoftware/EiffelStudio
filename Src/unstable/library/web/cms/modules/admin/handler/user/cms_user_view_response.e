@@ -53,17 +53,17 @@ feature -- Execution
 			ago: DATE_TIME_AGO_CONVERTER
 		do
 			a_response.set_value (a_user, "user")
-			create lnk.make (a_response.translation ("View", Void), "admin/user/" + a_user.id.out)
+			lnk := api.administration_link (a_response.translation ("View", Void), "user/" + a_user.id.out)
 			lnk.set_is_active (True)
 			lnk.set_weight (1)
 			a_response.add_to_primary_tabs (lnk)
-			create lnk.make (a_response.translation ("Edit", Void), "admin/user/" + a_user.id.out  + "/edit")
+			lnk := api.administration_link (a_response.translation ("Edit", Void), "user/" + a_user.id.out  + "/edit")
 			lnk.set_permission_arguments (<<"manage admin", "manage users", "manage own user">>)
 			lnk.set_weight (2)
 			a_response.add_to_primary_tabs (lnk)
 
 			if a_user /= Void and then a_user.id > 0 then
-				create lnk.make (a_response.translation ("Delete", Void), "admin/user/" + a_user.id.out  + "/delete")
+				lnk := api.administration_link (a_response.translation ("Delete", Void), "user/" + a_user.id.out  + "/delete")
 				lnk.set_weight (3)
 				a_response.add_to_primary_tabs (lnk)
 			end
@@ -102,7 +102,7 @@ feature -- Execution
 				across l_roles as ic loop
 					l_role := ic.item
 					s.append ("<li>")
-					s.append (link (l_role.name, "admin/role/" + l_role.id.out, Void))
+					s.append (link (l_role.name, api.administration_path_location ("role/" + l_role.id.out), Void))
 					s.append ("</li>")
 					if request.query_parameter ("debug") /= Void then
 						s.append ("<h5>Permissions:</h5>")

@@ -89,7 +89,7 @@ feature -- HTTP Methods
 				end
 
 				create s_pager.make_empty
-				create l_page_helper.make ("admin/users/?page={page}&size={size}", user_api.users_count.as_natural_64, 25) -- FIXME: Make this default page size a global CMS settings
+				create l_page_helper.make (api.administration_path_location ("users/?page={page}&size={size}"), user_api.users_count.as_natural_64, 25) -- FIXME: Make this default page size a global CMS settings
 				l_page_helper.get_setting_from_request (req)
 				if l_page_helper.has_upper_limit and then l_page_helper.pages_count > 1 then
 					l_page_helper.append_to_html (l_response, s_pager)
@@ -107,7 +107,7 @@ feature -- HTTP Methods
 						u := ic.item
 						s.append ("<li class=%"user%">")
 						s.append ("<span class=%"identifier%"><a href=%"")
-						s.append (req.absolute_script_url ("/admin/user/"+u.id.out))
+						s.append (req.absolute_script_url (api.administration_path ("/user/" + u.id.out)))
 						s.append ("%">")
 						l_display_name := user_api.user_display_name (u)
 						s.append (html_encoded (l_display_name))
@@ -151,7 +151,7 @@ feature -- HTTP Methods
 				s.append (s_pager)
 
 				if l_response.has_permission ("manage " + {CMS_ADMIN_MODULE}.name) then
-					s.append (l_response.link ("Add User", "admin/add/user", Void))
+					s.append (api.link ("Add User", api.administration_path_location ("add/user"), Void))
 				end
 
 				l_response.set_main_content (s)

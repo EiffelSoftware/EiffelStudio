@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			site_url := l_url
 
 				-- Site name
-			site_name := text_item_or_default ("site.name", "Another Eiffel ROC Website")
+			site_name := text_item_or_default ("site.name", "Your ROC CMS")
 
 				-- Website email used to send email.
 				-- used as real "From:" email.
@@ -99,13 +99,23 @@ feature {NONE} -- Initialization
 			end
 
 				-- Selected theme's name
-			theme_name := text_item_or_default ("theme", "default")
+			site_theme_name := text_item_or_default ("theme", "default")
+			set_theme (site_theme_name)
 
-			debug ("refactor_fixme")
-				fixme ("Review export clause for configuration and environment")
+				-- Administration
+			l_url := string_8_item ("administration.base_path")
+			if l_url /= Void and then not l_url.is_empty then
+				if l_url [l_url.count] = '/' then
+					l_url := l_url.substring (1, l_url.count - 1)
+				end
+				if l_url [1] /= '/' then
+					l_url := "/" + l_url
+				end
+				create administration_base_path.make_from_string (l_url)
+			else
+				create administration_base_path.make_from_string (default_administration_base_path)
 			end
-
-			theme_location := themes_location.extended (theme_name)
+			administration_theme_name := text_item_or_default ("administration.theme", theme_name) -- TODO: Default to builtin theme?
 		end
 
 feature -- Access
@@ -303,10 +313,36 @@ feature -- Access: Site
 			-- Optional path defining the front page.
 			-- By default "" or "/".
 
+	administration_base_path: IMMUTABLE_STRING_8
+			-- Administration base url, default=`default_administration_base_path`.
+
+feature {NONE} -- Constants
+
+	default_administration_base_path: STRING = "/admin"
+
 feature -- Settings
 
 	is_debug: BOOLEAN
 			-- Is debug mode enabled?
+
+	set_administration_mode
+			-- Switch to administration mode.
+			--| 	- Change theme
+			--| 	- ..
+		do
+			if is_theme_valid (administration_theme_name) then
+				set_theme (administration_theme_name)
+			else
+					-- Keep previous theme!
+			end
+		end
+
+	set_theme (a_name: READABLE_STRING_GENERAL)
+			-- Set theme to `a_name`.
+		do
+			theme_name := a_name.as_string_32
+			theme_location := themes_location.extended (theme_name)
+		end
 
 feature -- Query
 
@@ -350,7 +386,7 @@ feature -- Query
 			end
 		end
 
-feature -- Access: Theme
+feature -- Access: directory
 
 	site_location: PATH
 			-- Path to CMS site root dir.
@@ -371,8 +407,18 @@ feature -- Access: Theme
 	themes_location: PATH
 			-- Path to themes.
 
+feature -- Access: theme
+
 	theme_location: PATH
 			-- Path to a active theme.
+
+	is_theme_valid (a_theme_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Does `a_theme_name` exists?
+		local
+			fu: FILE_UTILITIES
+		do
+			Result := fu.directory_path_exists (themes_location.extended (a_theme_name))
+		end
 
 	theme_information_location: PATH
 			-- Active theme informations.
@@ -382,6 +428,14 @@ feature -- Access: Theme
 
 	theme_name: READABLE_STRING_32
 			-- theme name.
+
+	site_theme_name: READABLE_STRING_32
+			-- Site theme name.
+
+	administration_theme_name: READABLE_STRING_32
+			-- Administration theme name.
+			-- Default: same as site theme.
+			-- TODO: change to builtin "admin" theme?
 
 feature -- Access
 

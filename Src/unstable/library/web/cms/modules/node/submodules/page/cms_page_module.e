@@ -69,12 +69,14 @@ feature {CMS_API} -- Module Initialization
 							p1.set_title ("Welcome")
 							p1.set_content ("Welcome, you are using the ROC Eiffel CMS", Void, Void) -- Use default format
 							p1.set_author (u)
+							p1.set_editor (u)
 							l_sql_node_storage.save_node (p1)
 
 							p2 := ct.new_node (Void)
 							p2.set_title ("A new page example")
 							p2.set_content ("This is the content of a page", Void, Void) -- Use default format
 							p2.set_author (u)
+							p2.set_editor (u)
 							p2.set_parent (p1)
 							l_sql_node_storage.save_node (p2)
 						end

@@ -15,6 +15,8 @@ inherit
 
 	CMS_ENCODERS
 
+	CMS_URL_UTILITIES
+
 	REFACTORING_HELPER
 
 create
@@ -43,9 +45,14 @@ feature {NONE} -- Initialize
 			l_module: CMS_MODULE
 			l_enabled_modules: CMS_MODULE_COLLECTION
 			l_uninstalled_mods: detachable ARRAYED_LIST [CMS_MODULE]
+			s: IMMUTABLE_STRING_8
 		do
 				-- Initialize site_url
 			initialize_site_url
+
+				-- Administration backend
+			s := setup.administration_base_path
+			administration_base_path_location := s.shared_substring (2, s.count)
 
 				-- Initialize formats.
 			initialize_formats
@@ -100,8 +107,8 @@ feature {NONE} -- Initialize
 					l_enabled_modules.remove (ic.item)
 				end
 			end
-				-- Initialize hooks system
-			setup_hooks
+
+				-- hooks initialization, is done after site/admin switch.
 		end
 
 	initialize_site_url
@@ -233,15 +240,120 @@ feature -- Access
 
 feature -- Access: url			
 
-	site_url: IMMUTABLE_STRING_8
-			-- Site url
-
 	base_url: detachable IMMUTABLE_STRING_8
 			-- Base url if any.
 			--| Usually it is Void, but it could be
 			--|  /project/demo/
 
+	site_url: IMMUTABLE_STRING_8
+			-- Site url
+
+	is_administration_request (req: WSF_REQUEST): BOOLEAN
+		do
+			Result := req.percent_encoded_path_info.starts_with_general (setup.administration_base_path)
+		end
+
+	administration_path (a_relative_path: detachable READABLE_STRING_8): STRING_8
+		do
+			create Result.make_from_string (setup.administration_base_path)
+			if a_relative_path /= Void and then not a_relative_path.is_empty then
+				if a_relative_path[1] /= '/' then
+					Result.append_character ('/')
+				end
+				Result.append (a_relative_path)
+			end
+		end
+
+	administration_path_location (a_relative_location: detachable READABLE_STRING_8): STRING_8
+		require
+			no_first_slash: a_relative_location = Void or else not a_relative_location.starts_with_general ("/")
+		do
+			create Result.make_from_string (administration_base_path_location)
+			if a_relative_location /= Void then
+				Result.append_character ('/')
+				Result.append (a_relative_location)
+			end
+		end
+
+feature {NONE} -- Url implementation.		
+
+	administration_base_path_location: IMMUTABLE_STRING_8
+			-- Administration path without first slash!
+
+feature -- CMS links
+
+	administration_link (a_title: READABLE_STRING_GENERAL; a_location: READABLE_STRING_8): CMS_LOCAL_LINK
+		do
+			Result := local_link (a_title, administration_path_location (a_location))
+		end
+
+	local_link (a_title: READABLE_STRING_GENERAL; a_location: READABLE_STRING_8): CMS_LOCAL_LINK
+		do
+			create Result.make (a_title, a_location)
+		end
+
+	user_local_link (u: CMS_USER; a_opt_title: detachable READABLE_STRING_GENERAL): CMS_LOCAL_LINK
+		do
+			if a_opt_title /= Void then
+				create Result.make (a_opt_title, user_url (u))
+			else
+				create Result.make (user_display_name (u), user_url (u))
+			end
+		end
+
+	user_html_link (u: CMS_USER): STRING
+		require
+			u_with_name: not u.name.is_whitespace
+		do
+			Result := link (user_display_name (u), "user/" + u.id.out, Void)
+		end
+
+feature -- Helpers: URLs	
+
+	location_absolute_url (a_location: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING
+			-- Absolute URL for `a_location'.
+			--| Options `opts' could be
+			--|  - absolute: True|False	=> return absolute url
+			--|  - query: string		=> append "?query"
+			--|  - fragment: string		=> append "#fragment"
+		do
+			Result := absolute_url (a_location, opts)
+		end
+
+	location_url (a_location: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING
+			-- URL for `a_location'.
+			--| Options `opts' could be
+			--|  - absolute: True|False	=> return absolute url
+			--|  - query: string		=> append "?query"
+			--|  - fragment: string		=> append "#fragment"
+		do
+			Result := url (a_location, opts)
+		end
+
+	user_url (u: CMS_USER): like url
+		require
+			u_with_id: u.has_id
+		do
+			Result := location_url ("user/" + u.id.out, Void)
+		end
+
+feature -- Helpers: html links
+
+	user_display_name (u: CMS_USER): READABLE_STRING_32
+		do
+			Result := user_api.user_display_name (u)
+		end
+
 feature -- Settings
+
+	switch_to_administration_mode
+		do
+			setup.set_administration_mode
+			is_administration_mode := True
+		end
+
+	is_administration_mode: BOOLEAN
+			-- Is administration mode?
 
 	is_debug: BOOLEAN
 			-- Is debug mode enabled?
@@ -646,13 +758,13 @@ feature -- Hooks
 	hooks: CMS_HOOK_CORE_MANAGER
 			-- Manager handling hook subscriptions.
 
-feature {NONE} -- Hooks
+feature {CMS_EXECUTION} -- Hooks
 
 	setup_hooks
 			-- Set up CMS hooks.
 			--| Each module has to opportunity to subscribe to various hooks.
 		local
-			l_module: CMS_MODULE
+			l_module: detachable CMS_MODULE
 			l_hooks: like hooks
 		do
 			l_hooks := hooks
@@ -661,10 +773,19 @@ feature {NONE} -- Hooks
 				enabled_modules as ic
 			loop
 				l_module := ic.item
-				if attached {CMS_HOOK_AUTO_REGISTER} l_module as l_auto then
-					l_auto.auto_subscribe_to_hooks (l_hooks)
+				if is_administration_mode then
+					if attached {CMS_ADMINISTRABLE} l_module as adm then
+						l_module := adm.module_administration
+					else
+						l_module := Void
+					end
 				end
-				l_module.setup_hooks (l_hooks)
+				if l_module /= Void then
+					if attached {CMS_HOOK_AUTO_REGISTER} l_module as l_auto then
+						l_auto.auto_subscribe_to_hooks (l_hooks)
+					end
+					l_module.setup_hooks (l_hooks)
+				end
 			end
 		end
 
@@ -695,8 +816,10 @@ feature -- Hooks
 	setup_core_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
 			-- Register hooks associated with the cms core.
 		do
-			a_hooks.subscribe_to_export_hook (Current)
-			a_hooks.subscribe_to_import_hook (Current)
+			if is_administration_mode then
+				a_hooks.subscribe_to_export_hook (Current)
+				a_hooks.subscribe_to_import_hook (Current)
+			end
 		end
 
 feature -- Path aliases	
@@ -814,7 +937,7 @@ feature -- Environment/ theme
 		end
 
 	cache_location: PATH
-			-- CMS public files location.
+			-- CMS internal cache location.
 		do
 			Result := setup.cache_location
 		end
@@ -823,6 +946,11 @@ feature -- Environment/ theme
 			-- Active theme location.
 		do
 			Result := setup.theme_location
+		end
+
+	theme_name: READABLE_STRING_32
+		do
+			Result := setup.theme_name
 		end
 
 	theme_assets_location: PATH
@@ -835,7 +963,7 @@ feature -- Environment/ theme
 			Result := theme_location.extended ("assets")
 		end
 
-feature -- Environment/ module	
+feature -- Environment/ module		
 
 	module_configuration (a_module: CMS_MODULE; a_name: detachable READABLE_STRING_GENERAL): detachable CONFIG_READER
 		do

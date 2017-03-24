@@ -19,8 +19,7 @@ inherit
 			execute_default,
 			filter_execute,
 			initialize,
-			initialize_router,
-			initialize_filter
+			initialize_router
 		end
 
 	WSF_NO_PROXY_POLICY
@@ -57,10 +56,7 @@ feature {NONE} -- Initialization
 
 	initialize_cms
 		do
-			write_debug_log (generator + ".initialize_cms")
-
 				-- CMS Initialization
-
 				-- for void-safety concern.
 			create {WSF_MAINTENANCE_FILTER} filter
 		end
@@ -69,16 +65,7 @@ feature {NONE} -- Initialization
 			-- Initialize `router`.
 		do
 			create_router
-				-- router setup is delayed toi `initialize_execution`.
-			-- setup_router
-		end
-
-	initialize_filter
-			-- Initialize `filter`.
-		do
-			create_filter
-				-- filter setup is delayed toi `initialize_execution`.
-			setup_filter
+			-- setup_router: delayed to `initialize_execution`.
 		end
 
 	initialize_modules
@@ -108,7 +95,7 @@ feature -- Access
 		end
 
 	modules: CMS_MODULE_COLLECTION
-			-- Configurator of possible modules.		
+			-- Declared modules.
 
 feature -- CMS setup
 
@@ -139,14 +126,15 @@ feature -- Settings: router
 			l_router: like router
 			l_module: CMS_MODULE
 		do
-			api.logger.put_debug (generator + ".setup_router", Void)
-				-- Configure root of api handler.
+			l_api := api
+			l_api.logger.put_debug (generator + ".setup_router", Void)
 
 			l_router := router
+
+				-- Configure root of api handler.
 			configure_api_root (l_router)
 
 				-- Include routes from modules.
-			l_api := api
 			across
 				modules as ic
 			loop
@@ -157,6 +145,37 @@ feature -- Settings: router
 			end
 				-- Configure files handler.
 			configure_api_file_handler (l_router)
+		end
+
+	setup_router_for_administration
+			-- <Precursor>
+		local
+			l_api: like api
+			l_router: like router
+			l_module: CMS_MODULE
+		do
+			l_api := api
+			l_router := router
+
+			l_api.logger.put_debug (generator + ".setup_router_for_administration", Void)
+
+				-- Configure root of api handler.
+			l_router.set_base_url (l_api.administration_path (""))
+
+				-- Include routes from modules.
+			across
+				modules as ic
+			loop
+				l_module := ic.item
+				if
+					l_module.is_initialized and then
+					attached {CMS_ADMINISTRABLE} l_module as l_administration and then
+					attached l_administration.module_administration as adm
+				then
+					adm.setup_router (l_router, l_api)
+				end
+			end
+			map_uri ("/install", create {CMS_ADMIN_INSTALL_HANDLER}.make (api), l_router.methods_head_get)
 		end
 
 	configure_api_root (a_router: WSF_ROUTER)
@@ -171,8 +190,6 @@ feature -- Settings: router
 			a_router.handle ("/", l_root_handler, l_methods)
 			a_router.handle ("", l_root_handler, l_methods)
 			map_uri_agent ("/favicon.ico", agent handle_favicon, a_router.methods_head_get)
-
-			map_uri ("/admin/install", create {CMS_ADMIN_INSTALL_HANDLER}.make (api), a_router.methods_head_get)
 		end
 
 	configure_api_file_handler (a_router: WSF_ROUTER)
@@ -217,7 +234,26 @@ feature -- Request execution
 			-- Initialize CMS execution.
 		do
 			request.set_uploaded_file_path (api.temp_location)
+			if api.is_administration_request (request) then
+				initialize_administration_execution
+			else
+				initialize_site_execution
+			end
+		end
+
+	initialize_site_execution
+			-- Initialize for site execution.
+		do
+			api.setup_hooks
 			setup_router
+		end
+
+	initialize_administration_execution
+			-- Initialize for administration execution.	
+		do
+			api.switch_to_administration_mode
+			api.setup_hooks
+			setup_router_for_administration
 		end
 
 	execute

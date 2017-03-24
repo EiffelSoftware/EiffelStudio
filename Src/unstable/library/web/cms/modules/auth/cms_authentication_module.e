@@ -13,6 +13,8 @@ inherit
 			permissions
 		end
 
+	CMS_ADMINISTRABLE
+
 	CMS_HOOK_AUTO_REGISTER
 
 	CMS_HOOK_RESPONSE_ALTER
@@ -62,8 +64,14 @@ feature -- Access
 			Result.force ("account activate")
 			Result.force ("account reject")
 			Result.force ("account reactivate")
-			Result.force ("admin registration")
 			Result.force ("change own username")
+		end
+
+feature {CMS_EXECUTION} -- Administration
+
+	administration: CMS_AUTHENTICATION_MODULE_ADMINISTRATION
+		do
+			create Result.make (Current)
 		end
 
 feature -- Access: docs
@@ -91,7 +99,6 @@ feature -- Router
 			-- <Precursor>
 		do
 			configure_web (a_api, a_router)
-			configure_web_admin (a_api, a_router)
 		end
 
 	configure_web (a_api: CMS_API; a_router: WSF_ROUTER)
@@ -114,13 +121,6 @@ feature -- Router
 			a_router.handle ("/account/new-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_new_password(a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/reset-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_reset_password(a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/change/{field}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_change_field (a_api, ?, ?)), a_router.methods_get_post)
-		end
-
-
-	configure_web_admin (a_api: CMS_API; a_router: WSF_ROUTER)
-			-- Configure router mapping for admin web interface.
-		do
-			a_router.handle ("/admin/pending-registrations/", create {WSF_URI_AGENT_HANDLER}.make (agent handle_admin_pending_registrations (?, ?, a_api)), a_router.methods_get)
 		end
 
 feature -- Hooks configuration
@@ -194,9 +194,10 @@ feature -- Hooks configuration
 			a_menu_system.primary_menu.extend (lnk)
 
 				 -- Add the link to the taxonomy to the main menu
-			if a_response.has_permission ("admin registration") then
-				create lnk.make ("Registration", "admin/pending-registrations/")
-				a_menu_system.management_menu.extend_into (lnk, "Admin", "admin")
+			if a_response.has_permission ("access admin") then
+				create lnk.make ("Administration", a_response.api.administration_path_location (Void))
+				lnk.set_weight (999)
+				a_menu_system.navigation_menu.extend (lnk)
 			end
 		end
 
@@ -795,97 +796,6 @@ feature -- Handler
 				end
 			end
 			r.execute
-		end
-
-	handle_admin_pending_registrations (req: WSF_REQUEST; res: WSF_RESPONSE; api: CMS_API)
-		local
-			l_response: CMS_RESPONSE
-			s: STRING
-			u: CMS_TEMP_USER
-			l_page_helper: CMS_PAGINATION_GENERATOR
-			s_pager: STRING
-			l_count: INTEGER
-			l_user_api: CMS_USER_API
-		do
-				-- At the moment the template are hardcoded, but we can
-				-- get them from the configuration file and load them into
-				-- the setup class.
-
-			create {FORBIDDEN_ERROR_CMS_RESPONSE} l_response.make (req, res, api)
-			if
-				l_response.has_permission ("admin registration")
-			then
-				l_user_api := api.user_api
-
-				l_count := l_user_api.temp_users_count
-
-				create {GENERIC_VIEW_CMS_RESPONSE} l_response.make (req, res, api)
-
-				create s.make_empty
-				if l_count > 1 then
-					l_response.set_title ("Listing " + l_count.out + " Pending Registrations")
-				else
-					l_response.set_title ("Listing " + l_count.out + " Pending Registration")
-				end
-
-				create s_pager.make_empty
-				create l_page_helper.make ("admin/pending-registrations/?page={page}&size={size}", l_user_api.temp_users_count.as_natural_64, 25) -- FIXME: Make this default page size a global CMS settings
-				l_page_helper.get_setting_from_request (req)
-				if l_page_helper.has_upper_limit and then l_page_helper.pages_count > 1 then
-					l_page_helper.append_to_html (l_response, s_pager)
-					if l_page_helper.page_size > 25 then
-						s.append (s_pager)
-					end
-				end
-
-				if attached l_user_api.temp_recent_users (create {CMS_DATA_QUERY_PARAMETERS}.make (l_page_helper.current_page_offset, l_page_helper.page_size)) as lst then
-					s.append ("<ul class=%"cms-temp-users%">%N")
-					across
-						lst as ic
-					loop
-						u := ic.item
-						s.append ("<li class=%"cms_temp_user%">")
-						s.append ("User:" + html_encoded (u.name))
-						s.append ("<ul class=%"cms_temp_user_details%">")
-						if attached u.personal_information as l_information then
-							s.append ("<li class=%"cms_temp_user_detail_information%">")
-							s.append (html_encoded (l_information))
-							s.append ("</li>%N")
-						end
-						if attached u.email as l_email then
-							s.append ("<li class=%"cms_temp_user_detail_email%">")
-							s.append (l_email)
-							s.append ("</li>%N")
-						end
-						if attached l_user_api.token_by_temp_user_id (u.id) as l_token then
-							s.append ("<li>")
-							s.append ("<a href=%"")
-							s.append (req.absolute_script_url ("/account/activate/" + l_token))
-							s.append ("%">")
-							s.append (html_encoded ("Activate"))
-							s.append ("</a>")
-							s.append ("</li>%N")
-							s.append ("<li>")
-							s.append ("<a href=%"")
-							s.append (req.absolute_script_url ("/account/reject/" + l_token))
-							s.append ("%">")
-							s.append (html_encoded ("Reject"))
-							s.append ("</a>")
-							s.append ("</li>%N")
-						end
-						s.append ("</ul>%N")
-						s.append ("</li>%N")
-					end
-					s.append ("</ul>%N")
-				end
-					-- Again the pager at the bottom, if needed
-				s.append (s_pager)
-
-				l_response.set_main_content (s)
-				l_response.execute
-			else
-				l_response.execute
-			end
 		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]

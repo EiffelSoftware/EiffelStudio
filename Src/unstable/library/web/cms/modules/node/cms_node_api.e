@@ -250,7 +250,7 @@ feature -- Access: Node
 
 				-- Update partial user if needed.
 			if Result /= Void then
-				if attached {CMS_PARTIAL_USER} Result.author as l_partial_author then
+				if attached {CMS_PARTIAL_USER} Result.author as l_partial_author and then l_partial_author.has_id then
 					if attached cms_api.user_api.user_by_id (l_partial_author.id) as l_author then
 						Result.set_author (l_author)
 					else
@@ -259,7 +259,7 @@ feature -- Access: Node
 						end
 					end
 				end
-				if attached {CMS_PARTIAL_USER} Result.editor as l_partial_editor then
+				if attached {CMS_PARTIAL_USER} Result.editor as l_partial_editor and then l_partial_editor.has_id then
 					if attached cms_api.user_api.user_by_id (l_partial_editor.id) as l_editor then
 						Result.set_editor (l_editor)
 					else

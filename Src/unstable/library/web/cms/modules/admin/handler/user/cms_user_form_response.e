@@ -72,9 +72,9 @@ feature -- Process Edit
 				fd := f.last_data
 			end
 			if a_user.has_id then
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("View", Void),"admin/user/" + a_user.id.out), primary_tabs)
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void),"admin/user/" + a_user.id.out + "/edit"), primary_tabs)
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Delete", Void),"admin/user/" + a_user.id.out + "/delete"), primary_tabs)
+				add_to_menu (api.administration_link (translation ("View", Void), "user/" + a_user.id.out), primary_tabs)
+				add_to_menu (api.administration_link (translation ("Edit", Void), "user/" + a_user.id.out + "/edit"), primary_tabs)
+				add_to_menu (api.administration_link (translation ("Delete", Void), "user/" + a_user.id.out + "/delete"), primary_tabs)
 			end
 			if attached redirection as l_location then
 				-- FIXME: Hack for now
@@ -103,9 +103,9 @@ feature -- Process Delete
 				fd := f.last_data
 			end
 			if a_user.has_id then
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("View", Void),"admin/user/" + a_user.id.out ), primary_tabs)
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void),"admin/user/" + a_user.id.out + "/edit"), primary_tabs)
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Delete", Void),"admin/user/" + a_user.id.out + "/delete"), primary_tabs)
+				add_to_menu (api.administration_link (translation ("View", Void),"user/" + a_user.id.out ), primary_tabs)
+				add_to_menu (api.administration_link (translation ("Edit", Void),"user/" + a_user.id.out + "/edit"), primary_tabs)
+				add_to_menu (api.administration_link (translation ("Delete", Void),"user/" + a_user.id.out + "/delete"), primary_tabs)
 			end
 			if attached redirection as l_location then
 				-- FIXME: Hack for now
@@ -180,7 +180,7 @@ feature -- Form
 				if a_user /= Void then
 					l_user := a_user
 					if l_user.has_id then
-						create {CMS_LOCAL_LINK} lnk.make (translation ("View", Void),"admin/user/" + l_user.id.out )
+						lnk := api.administration_link (translation ("View", Void),"user/" + l_user.id.out)
 						change_user (fd, a_user)
 						s := "modified"
 						set_redirection (lnk.location)
@@ -302,7 +302,7 @@ feature -- Form
 				create ts.make ("op")
 				ts.set_default_value ("Cancel")
 				ts.set_formmethod ("GET")
-				ts.set_formaction ("/admin/user/" + a_user.id.out)
+				ts.set_formaction (api.administration_path ("/user/" + a_user.id.out))
 				f.extend (ts)
 			end
 

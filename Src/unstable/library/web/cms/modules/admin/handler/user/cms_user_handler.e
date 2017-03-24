@@ -86,11 +86,11 @@ feature -- HTTP Methods
 			create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
 			if r.has_permission ("admin users") then
 				if req.percent_encoded_path_info.ends_with_general ("/edit") then
-					check valid_url: req.percent_encoded_path_info.starts_with_general ("/admin/user/") end
+					check valid_url: req.percent_encoded_path_info.starts_with_general (api.administration_path ("/user/")) end
 					create edit_response.make (req, res, api)
 					edit_response.execute
 				elseif req.percent_encoded_path_info.ends_with_general ("/delete")  then
-					check valid_url: req.percent_encoded_path_info.starts_with_general ("/admin/user/") end
+					check valid_url: req.percent_encoded_path_info.starts_with_general (api.administration_path ("/user/")) end
 					create edit_response.make (req, res, api)
 					edit_response.execute
 				else
@@ -192,7 +192,7 @@ feature {NONE} -- New User
 		local
 			edit_response: CMS_USER_FORM_RESPONSE
 		do
-			if req.percent_encoded_path_info.starts_with ("/admin/add/user") then
+			if req.percent_encoded_path_info.starts_with (api.administration_path ("/add/user")) then
 				create edit_response.make (req, res, api)
 				edit_response.execute
 			else

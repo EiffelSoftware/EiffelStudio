@@ -253,6 +253,26 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := open_project_dialog_height_preference.value
 		end
 
+	last_saved_basic_project_directory: detachable PATH
+			-- Last projects location used during in the create new basic project wizard,
+			-- if users decided to remember it.
+		do
+			Result := last_saved_basic_project_directory_preference.value
+			if Result.is_empty then
+				Result := Void
+			end
+		end
+
+	set_last_saved_basic_project_directory (p: detachable PATH)
+			-- Remember `p` as the last projects location for the create new basic project wizard.
+		do
+			if p = Void then
+				last_saved_basic_project_directory_preference.set_value (create {PATH}.make_empty)
+			else
+				last_saved_basic_project_directory_preference.set_value (p)
+			end
+		end
+
 feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 
 	confirm_on_terminate_freezing_preference: BOOLEAN_PREFERENCE
@@ -383,6 +403,8 @@ feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 	open_project_dialog_height_preference: INTEGER_PREFERENCE
 	discard_target_scope_customized_formatter_preference: BOOLEAN_PREFERENCE
 
+	last_saved_basic_project_directory_preference: PATH_PREFERENCE
+
 feature -- Preference strings
 
 	confirm_on_terminate_freezing_string: STRING = "interface.dialogs.confirm_on_terminate_freezing"
@@ -451,6 +473,8 @@ feature -- Preference strings
 	open_project_dialog_width_preference_string: STRING = "interface.dialogs.open_project_dialog_width"
 	open_project_dialog_height_preference_string: STRING = "interface.dialogs.open_project_dialog_height"
 	discard_target_scope_customized_formatter_string: STRING = "interface.dialogs.discard_target_scope_customized_formatter"
+
+	last_saved_basic_project_directory_string: STRING = "interface.dialogs.last_saved_basic_project_directory"
 
 feature {NONE} -- Implementation
 
@@ -523,6 +547,8 @@ feature {NONE} -- Implementation
 			open_project_dialog_width_preference := l_manager.new_integer_preference_value (l_manager, open_project_dialog_width_preference_string, 500)
 			open_project_dialog_height_preference := l_manager.new_integer_preference_value (l_manager, open_project_dialog_height_preference_string, 300)
 			discard_target_scope_customized_formatter_preference := l_manager.new_boolean_preference_value (l_manager, discard_target_scope_customized_formatter_string, True)
+
+			last_saved_basic_project_directory_preference := l_manager.new_path_preference_value (l_manager, last_saved_basic_project_directory_string, create {PATH}.make_empty)
 		end
 
 	preferences: PREFERENCES
@@ -569,8 +595,10 @@ invariant
 	open_project_dialog_width_preference_not_void: open_project_dialog_width_preference /= Void
 	open_project_dialog_height_preference_not_void: open_project_dialog_height_preference /= Void
 
+	last_saved_basic_project_directory_preference_not_void: last_saved_basic_project_directory_preference /= Void
+
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

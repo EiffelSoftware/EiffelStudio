@@ -1,4 +1,4 @@
-note 
+﻿note
 	description: "Demonstration of PRIMES, RANDOM, FIBONACCI"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ class COUNTABLES
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Creation
 
 	make
 		do
@@ -21,7 +21,11 @@ feature -- Initialization
 			fibonacci_demo
 		end
 
+feature -- Access
+
 	c : COUNTABLE [INTEGER]
+
+feature -- Basic operations
 
 	prime_demo
 		do
@@ -34,7 +38,7 @@ feature -- Initialization
 	random_demo
 		local
 			r: RANDOM
-		do 
+		do
 			io.putstring ("%NRandom Demo%N")
 			create {RANDOM} c.make
 			display_first_ten
@@ -76,13 +80,13 @@ feature -- Output
 				i := i + 1
 			end
 		end
-	
+
 	has_test
 		local
 			i : INTEGER
 		do
-			from 
-				i := 2 
+			from
+				i := 2
 			until
 				i > 5
 			loop
@@ -94,20 +98,16 @@ feature -- Output
 				i := i + 1
 			end
 		end
-				
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class COUNTABLES
-
-
+end

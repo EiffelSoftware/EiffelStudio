@@ -210,6 +210,7 @@
 	<PREF NAME="interface.dialogs.last_saved_exception_directory" DESCRIPTION="Directory of last exception saved." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_saved_save_file_as_directory" DESCRIPTION="Directory of last save file as saved." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_saved_profile_result_directory" DESCRIPTION="Directory of last profile result saved." HIDDEN="True"><STRING></STRING></PREF>
+	<PREF NAME="interface.dialogs.last_saved_basic_project_directory" DESCRIPTION="Directory rememberd to be reused for the next basic project creation." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_imported_metric_definition_directory" DESCRIPTION="Directory of last imported metric definition." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.project_settings_width" DESCRIPTION="Width of the project settings dialog." HIDDEN="True"><INTEGER>700</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.project_settings_height" DESCRIPTION="Height of the project settings dialog." HIDDEN="True"><INTEGER>600</INTEGER></PREF>

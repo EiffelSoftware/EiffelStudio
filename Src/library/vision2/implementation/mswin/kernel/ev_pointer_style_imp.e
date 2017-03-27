@@ -211,7 +211,7 @@ feature -- Query
 
 feature -- Duplication
 
-	copy_from_pointer_style (a_pointer_style: like interface)
+	copy_from_pointer_style (a_pointer_style: attached like interface)
 			-- Copy attributes of `a_pointer_style' to `Current.
 		local
 			a_pointer_style_imp: detachable like Current
@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

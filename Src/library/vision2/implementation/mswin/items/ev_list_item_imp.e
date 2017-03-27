@@ -58,7 +58,7 @@ create
 
 feature -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create the widget with `par' as parent.
 		do
 			assign_interface (an_interface)
@@ -477,7 +477,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_LIST_ITEM note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -36,7 +36,7 @@ create
 
 feature {EV_ANY} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create the widget with `par' as parent.
 		do
 			assign_interface (an_interface)
@@ -787,7 +787,7 @@ invariant
 	hash_code_valid: is_initialized implies ((not is_parented and hash_code = 0) or (is_parented and then hash_code > 0))
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

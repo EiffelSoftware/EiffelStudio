@@ -42,7 +42,7 @@ feature {EV_ANY, EV_ANY_I} -- Initialization
 
 feature {EV_ANY} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create underlying native toolkit objects.
 			-- Every descendant should exactly one a creation procedure `make'.
 			-- Must call `base_make'.
@@ -248,7 +248,7 @@ invariant
 	base_make_called: is_usable implies base_make_called
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

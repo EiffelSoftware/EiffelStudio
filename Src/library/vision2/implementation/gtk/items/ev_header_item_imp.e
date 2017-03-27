@@ -44,7 +44,7 @@ feature -- Initialization
 			Result := False
 		end
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create the tree item.
 		do
 			assign_interface (an_interface)
@@ -449,7 +449,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of `Current'.
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

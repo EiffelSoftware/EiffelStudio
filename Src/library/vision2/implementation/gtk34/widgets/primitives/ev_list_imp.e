@@ -37,7 +37,7 @@ create
 
 feature -- Initialize
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create a list widget with `par' as parent.
 			-- By default, a list allow only one selection.
 		do

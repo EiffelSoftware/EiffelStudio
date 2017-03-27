@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create a gtk text view.
 		do
 			assign_interface (an_interface)

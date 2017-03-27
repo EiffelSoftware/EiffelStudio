@@ -58,7 +58,7 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Connect interface and initialize `c_object'.
 		do
 			assign_interface (an_interface)

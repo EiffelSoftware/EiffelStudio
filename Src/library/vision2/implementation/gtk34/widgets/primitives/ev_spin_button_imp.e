@@ -46,7 +46,7 @@ create
 
 feature {NONE} -- Implementation
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create the spin button.
 		do
 			assign_interface (an_interface)

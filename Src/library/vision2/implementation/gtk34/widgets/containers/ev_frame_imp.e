@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			Result := True
 		end
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create frame.
 		do
 			assign_interface (an_interface)

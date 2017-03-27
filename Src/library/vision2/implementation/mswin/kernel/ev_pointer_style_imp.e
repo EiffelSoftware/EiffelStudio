@@ -213,13 +213,13 @@ feature -- Duplication
 
 	copy_from_pointer_style (a_pointer_style: attached like interface)
 			-- Copy attributes of `a_pointer_style' to `Current.
-		local
-			a_pointer_style_imp: detachable like Current
 		do
 				-- Copy wel_cursor from `a_pointer_style'
-			a_pointer_style_imp ?= a_pointer_style.implementation
-			check a_pointer_style_imp /= Void then end
-			wel_cursor := a_pointer_style_imp.wel_cursor.twin
+			if attached {like Current} a_pointer_style.implementation as l_pointer_style_imp then
+				wel_cursor := l_pointer_style_imp.wel_cursor.twin
+			else
+				check is_pointer_style_imp: False end
+			end
 		end
 
 feature {NONE} -- Implementation

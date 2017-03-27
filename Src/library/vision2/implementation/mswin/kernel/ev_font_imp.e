@@ -196,20 +196,21 @@ feature -- Element change
 			-- internally, the previous charset is still used, and preforming this
 			-- redefinition fixes the char_set issue and is also faster.
 		local
-			font_imp: detachable EV_FONT_IMP
 			log_font: WEL_LOG_FONT
 			new_wel_font: WEL_FONT
 			l_preferred_families: like preferred_families
 		do
-			font_imp ?= other.implementation
-			check font_imp /= Void then end
-			log_font := font_imp.wel_font.log_font
-			create new_wel_font.make_indirect (log_font)
-			set_by_wel_font (new_wel_font)
+			if attached {EV_FONT_IMP} other.implementation as font_imp then
+				log_font := font_imp.wel_font.log_font
+				create new_wel_font.make_indirect (log_font)
+				set_by_wel_font (new_wel_font)
 
-				-- Dispose of `log_font' as it is only required
-				-- temporarily to create the WEL_FONT.
-			log_font.dispose
+					-- Dispose of `log_font' as it is only required
+					-- temporarily to create the WEL_FONT.
+				log_font.dispose
+			else
+				check other_is_font_imp: False end
+			end
 
 				-- Make sure that `preferred_families' is copied over correctly.
 			l_preferred_families := other.preferred_families

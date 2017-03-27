@@ -125,7 +125,7 @@ feature -- Query
 
 feature -- Duplication
 
-	copy_from_pointer_style (a_pointer_style: like interface)
+	copy_from_pointer_style (a_pointer_style: attached like interface)
 			-- Copy attributes of `a_pointer_style' to `Current.
 		do
 		end

@@ -253,6 +253,7 @@ feature -- String parsing
 				when 3 then
 						-- Consume remaining separators.
 					if trailing_separators_acceptable and then trailing_separators.has (c) then
+							-- Keep the same state.
 					else
 						l_state := 4
 					end

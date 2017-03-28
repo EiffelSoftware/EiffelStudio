@@ -249,7 +249,6 @@ feature {NONE} -- Implementation
 			l_ser: like serializer
 			l_object_indexes: like object_indexes
 			i, nb: INTEGER
-			l_dtype: INTEGER
 			l_obj: separate ANY
 			l_area: SPECIAL [separate ANY]
 		do
@@ -272,11 +271,8 @@ feature {NONE} -- Implementation
 				l_reflected_object.set_object (l_obj)
 				i := i + 1
 
-					-- Get object data.
-				l_dtype := l_reflected_object.dynamic_type
-
 					-- Write object dtype.
-				l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
+				l_ser.write_compressed_natural_32 (l_reflected_object.dynamic_type.to_natural_32)
 
 					-- Write object reference ID.
 				l_ser.write_compressed_natural_32 (l_object_indexes.index (l_obj))

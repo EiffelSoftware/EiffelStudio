@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description: "[
 		Facilities for adapting the exception handling mechanism.
@@ -224,7 +224,7 @@ feature -- Status setting
 			{ENVIRONMENT}.exit (code)
 		end
 
-	new_die (code: INTEGER) obsolete "Use ``die''"
+	new_die (code: INTEGER) obsolete "Use `die`. [2017-05-31]"
 			-- Terminate execution with exit status `code',
 			-- without triggering an exception.
 		do
@@ -254,14 +254,14 @@ feature -- Status setting
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

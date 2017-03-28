@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Find out if two paths corresponds to exactly the same file."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -26,12 +26,8 @@ feature -- Comparison
 			a_path1_not_empty: not a_path1.is_empty
 			a_path2_not_void: a_path2 /= Void
 			a_path2_not_empty: not a_path2.is_empty
-		local
-			l_p1, l_p2: PATH
 		do
-			create l_p1.make_from_string (a_path1)
-			create l_p2.make_from_string (a_path2)
-			Result := l_p1.is_same_file_as (l_p2)
+			Result := (create {PATH}.make_from_string (a_path1)).is_same_file_as (create {PATH}.make_from_string (a_path2))
 		end
 
 note

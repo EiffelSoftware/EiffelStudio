@@ -1,8 +1,6 @@
-note
+﻿note
 	description: "References to objects containing a real value"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -237,9 +235,9 @@ feature -- Conversion
 	rounded: INTEGER_32
 			-- Rounded integral value
 		do
-			Result := sign * ((abs + 0.5).floor)
+			Result := sign * (abs + 0.5).floor
 		ensure
-			definition: Result = sign * ((abs + 0.5).floor)
+			definition: Result = sign * (abs + 0.5).floor
 		end
 
 	ceiling_real_32: REAL_32
@@ -263,9 +261,9 @@ feature -- Conversion
 	rounded_real_32: REAL_32
 			-- Rounded integral value
 		do
-			Result := sign * ((abs + {REAL_32} 0.5).floor_real_32)
+			Result := sign * (abs + {REAL_32} 0.5).floor_real_32
 		ensure
-			definition: Result = sign * ((abs + {REAL_32} 0.5).floor_real_32)
+			definition: Result = sign * (abs + {REAL_32} 0.5).floor_real_32
 		end
 
 feature -- Basic operations
@@ -276,7 +274,7 @@ feature -- Basic operations
 			Result := abs_ref.item
 		ensure
 			non_negative: Result >= 0.0
-			same_absolute_value: (Result = item) or (Result = -item)
+			same_absolute_value: Result = item or Result = - item
 		end
 
 	plus alias "+" (other: like Current): like Current
@@ -347,10 +345,20 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			result_exists: Result /= Void
-			same_absolute_value: (Result ~ Current) or (Result ~ -Current)
+			same_absolute_value: Result ~ Current or Result ~ -Current
 		end
 
 invariant
 	sign_times_abs: not item.is_nan implies sign * abs = item
 
+note
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

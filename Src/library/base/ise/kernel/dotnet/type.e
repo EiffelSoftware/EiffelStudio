@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of an Eiffel type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -242,7 +242,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"[070813] Use 'name + other' instead (or 'out + other' during the transition period)."
+			"Use 'name + other' instead (or 'out + other' during the transition period). [2017-05-31]"
 		require
 			argument_not_void: other /= Void
 		do
@@ -260,7 +260,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"[070813] Use 'name.same_string (other)' instead (or 'out.same_string (other)' during the transition period)."
+			"Use 'name.same_string (other)' instead (or 'out.same_string (other)' during the transition period). [2017-05-31]"
 		require
 			other_not_void: other /= Void
 		do
@@ -276,7 +276,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"[070813] Use 'name.is_case_insensitive_equal (other)' instead (or 'out.is_case_insensitive_equal (other)' during the transition period)."
+			"Use 'name.is_case_insensitive_equal (other)' instead (or 'out.is_case_insensitive_equal (other)' during the transition period). [2017-05-31]"
 		require
 			other_not_void: other /= Void
 		do
@@ -291,7 +291,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"[070813] Use 'name.as_lower' instead (or 'out.as_lower' during the transition period)."
+			"Use 'name.as_lower' instead (or 'out.as_lower' during the transition period). [2017-05-31]"
 		do
 			create Result.make_from_string (name)
 			Result.to_lower
@@ -306,7 +306,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"[070813] Use 'name.as_upper' instead (or 'out.as_upper' during the transition period)."
+			"Use 'name.as_upper' instead (or 'out.as_upper' during the transition period). [2017-05-31]"
 		do
 			create Result.make_from_string (name)
 			Result.to_upper
@@ -317,7 +317,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 
 	to_string_8: STRING_8
 		obsolete
-			"Use `name' instead (or `out' during the transition period)."
+			"Use `name' instead (or `out' during the transition period). [2017-05-31]"
 		do
 			create Result.make_from_string (name)
 		ensure
@@ -327,7 +327,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 	to_string_32: STRING_32
 			-- Name of type
 		obsolete
-			"[080717] Use 'name' instead (or 'out' during the transition period)."
+			"Use 'name' instead (or 'out' during the transition period). [2017-05-31]"
 		do
 			create Result.make_from_string_general (name)
 		ensure
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

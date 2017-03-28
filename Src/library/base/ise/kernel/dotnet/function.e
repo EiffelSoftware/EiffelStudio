@@ -86,7 +86,7 @@ feature -- Obsolete
 	eval (args: detachable OPEN_ARGS): RESULT_TYPE
 			-- Result of evaluating function for `args'.
 		obsolete
-			"Please use `item' instead"
+			"Please use `item' instead. [2017-05-31]"
 		require
 			valid_operands: valid_operands (args)
 			callable: callable

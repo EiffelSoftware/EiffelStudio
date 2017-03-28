@@ -167,13 +167,18 @@ feature -- Command
 			-- Select `a_widget' and show it
 		require
 			has: has (a_content)
+		local
+			w: detachable EV_WIDGET
 		do
 			if selected_item /= a_content then
 				docking_manager.command.lock_update (Current, False)
-				if attached a_content.user_widget.parent as l_parent then
-					l_parent.prune (a_content.user_widget)
+				if a_content.is_user_widget_set then
+					w := a_content.user_widget
+					if attached w.parent as l_parent then
+						l_parent.prune (w)
+					end
+					internal_cell.replace (w)
 				end
-				internal_cell.replace (a_content.user_widget)
 				docking_manager.command.unlock_update
 			end
 			notify_tab (tab_by_content (a_content), a_focus)
@@ -256,14 +261,14 @@ feature -- Command
 
 			if l_orignal_selected = a_content then
 				-- We are closing a selected content, we should select the one at orignal index
-				if not internal_contents.valid_index (l_orignal_index) then
-					internal_contents.back
-				else
+				if internal_contents.valid_index (l_orignal_index) then
 					internal_contents.go_i_th (l_orignal_index)
+				else
+					internal_contents.back
 				end
-
-				select_item (internal_contents.item, a_focus)
-
+				if not internal_contents.off then
+					select_item (internal_contents.item, a_focus)
+				end
 				if a_focus then
 					selection_actions.call (Void)
 				end
@@ -816,7 +821,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

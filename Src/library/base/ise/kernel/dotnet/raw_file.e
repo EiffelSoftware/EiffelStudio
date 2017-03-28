@@ -1,9 +1,6 @@
-note
-
-	description:
-		"Files, viewed as persistent sequences of bytes"
+﻿note
+	description: "Files, viewed as persistent sequences of bytes"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -123,7 +120,7 @@ feature -- Output
 			-- Put `data' of length `size' pointed by `p' at
 			-- current position.
 		obsolete
-			"Use put_managed_pointer instead."
+			"Use put_managed_pointer instead. [2017-05-31]"
 		local
 			i: INTEGER
 		do
@@ -303,7 +300,7 @@ feature -- Input
 			-- or until end of file.
 			-- Make result available in `p'.
 		obsolete
-			"Use read_to_managed_pointer instead."
+			"Use read_to_managed_pointer instead. [2017-05-31]"
 		local
 			i, l_i, l_read: INTEGER
 		do
@@ -374,7 +371,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

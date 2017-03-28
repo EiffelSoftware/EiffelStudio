@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Semaphore synchronization object, allows threads to access global %
 		%data through critical sections."
@@ -48,20 +48,16 @@ feature -- Status setting
 			-- that becomes possible.
 		require
 			valid_semaphore: is_set
-		local
-			dummy_boolean: BOOLEAN
 		do
-			dummy_boolean := semaphore.wait_one
+			semaphore.wait_one.do_nothing
 		end
 
 	post
 			-- Increment semaphore count.
 		require
 			valid_semaphore: is_set
-		local
-			dummy_count: INTEGER
 		do
-			dummy_count := semaphore.release
+			semaphore.release.do_nothing
 		end
 
 	destroy
@@ -81,7 +77,7 @@ feature -- Obsolete
 			-- Has client been successful in decrementing semaphore
 			-- count without waiting?
 		obsolete
-			"Use try_wait instead"
+			"Use try_wait instead. [2017-05-31]"
 		require
 			valid_semaphore: is_set
 		do
@@ -101,10 +97,8 @@ feature {CONDITION_VARIABLE} -- Implementation
 			-- Increment semaphore count by `nb'.
 		require
 			nb > 0
-		local
-			dummy_count: INTEGER
 		do
-			dummy_count := semaphore.release (nb)
+			semaphore.release (nb).do_nothing
 		end
 
 feature {NONE} -- Implementation
@@ -113,7 +107,7 @@ feature {NONE} -- Implementation
 			-- .NET reference to the mutex.
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,11 +1,9 @@
-note
-
+﻿note
 	description: "[
 		Commonly used console input and output mechanisms. 
 		This class may be used as ancestor by classes needing its facilities.
 		]"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -192,8 +190,6 @@ feature -- Input
 					end
 					if c = 13 and then p = 10 then
 							-- Discard end of line in the form "%R%N".
-						c := p -- l_stream.read_byte
-						p_fetched := False
 						done := True
 					elseif c = 10 then
 							-- Discard end of line in the form "%N".
@@ -251,7 +247,7 @@ feature {NONE} -- Inapplicable
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -261,8 +257,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-end -- class CONSOLE
-
-
+end

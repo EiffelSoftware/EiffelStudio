@@ -249,13 +249,13 @@ feature -- Comparison
 		local
 			l_other_count: INTEGER
 		do
-			if other /= Current then
+			if other = Current then
+				Result := True
+			else
 				l_other_count := other.count
 				if count = l_other_count then
 					Result := same_items (other, 0, 0, l_other_count)
 				end
-			else
-				Result := True
 			end
 		end
 
@@ -653,7 +653,7 @@ feature -- Removal
 	clear_all
 			-- Reset all items to default values.
 		obsolete
-			"Because of the new precondition, it is recommended to use `fill_with' instead."
+			"Because of the new precondition, it is recommended to use `fill_with' instead. [2017-05-31]"
 		require
 			has_default: ({T}).has_default
 		do
@@ -828,7 +828,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

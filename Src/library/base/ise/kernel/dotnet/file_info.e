@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Internal file information"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -174,7 +174,7 @@ feature -- Access
 			-- File name as a STRING_8 instance. The value might be truncated
 			-- from the original name used to create the current FILE instance.
 		obsolete
-			"Use `file_entry' to ensure that filenames are not truncated."
+			"Use `file_entry' to ensure that filenames are not truncated. [2017-05-31]"
 		do
 			if attached internal_file_name as l_name then
 				Result := l_name.as_string_8
@@ -344,11 +344,12 @@ feature -- Status report
 			perm: FILE_IO_PERMISSION
 			retried: BOOLEAN
 		do
-			if not retried then
-				if attached internal_file as l_file then
-					create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.read, l_file.full_name)
-					perm.demand
-				end
+			if
+				not retried and then
+				attached internal_file as l_file
+			then
+				create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.read, l_file.full_name)
+				perm.demand
 			end
 			Result := not retried
 		rescue
@@ -364,11 +365,12 @@ feature -- Status report
 			perm: FILE_IO_PERMISSION
 			retried: BOOLEAN
 		do
-			if not retried then
-				if attached internal_file as l_file then
-					create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.write, l_file.full_name)
-					perm.demand
-				end
+			if
+				not retried and then
+				attached internal_file as l_file
+			then
+				create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.write, l_file.full_name)
+				perm.demand
 			end
 			Result := not retried
 		rescue
@@ -417,7 +419,7 @@ feature -- Conversion
 	to_unix_file_info: UNIX_FILE_INFO
 			-- Convert current to old format UNIX_FILE_INFO for backward compatibility.
 		obsolete
-			"Use `FILE_INFO' as type instead of `UNIX_FILE_INFO'."
+			"Use `FILE_INFO' as type instead of `UNIX_FILE_INFO'. [2017-05-31]"
 		do
 			create Result.make
 			if attached internal_file_name as l_name then
@@ -430,11 +432,8 @@ feature -- Element change
 	update (f_name: READABLE_STRING_GENERAL)
 			-- Update information buffer: fill it in with information
 			-- from the inode of `f_name'.
-		local
-			fi: SYSTEM_FILE_INFO
 		do
-			create fi.make (f_name.to_cil)
-			fast_update (f_name, fi)
+			fast_update (f_name, create {SYSTEM_FILE_INFO}.make (f_name.to_cil))
 		end
 
 	set_is_following_symlinks (v: BOOLEAN)
@@ -489,7 +488,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -499,4 +498,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class FILE_INFO
+end

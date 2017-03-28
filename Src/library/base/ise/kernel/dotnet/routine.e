@@ -160,7 +160,7 @@ feature -- Status report
 			if args = Void or open_map = Void then
 					-- Void operands are only allowed
 					-- if object has no open operands.
-				Result := (open_map = Void)
+				Result := open_map = Void
 			elseif attached open_map as l_open_map and then args.generating_type.generic_parameter_count >= l_open_map.count then
 				from
 					Result := True
@@ -292,7 +292,7 @@ feature -- Obsolete
 	adapt_from (other: like Current)
 			-- Adapt from `other'. Useful in descendants.
 		obsolete
-			"Please use `adapt' instead (it's also a creation procedure)"
+			"Please use `adapt' instead (it's also a creation procedure). [2017-05-31]"
 		require
 			other_exists: other /= Void
 			conforming: conforms_to (other)
@@ -332,7 +332,6 @@ feature {ROUTINE} -- Implementation
 		local
 			closed_idx, operand_idx, l_closed_count, l_open_count, l_next_open, l_omap_pos: INTEGER
 			l_internal: like internal_operands
-			l_target_closed: BOOLEAN
 		do
 			is_inline_agent := a_is_inline_agent
 			check attached {METHOD_BASE}.get_method_from_handle (handle) as l_rout then
@@ -350,14 +349,13 @@ feature {ROUTINE} -- Implementation
 			end
 
 			if is_inline_agent then
-				l_target_closed := True
 				target_object := Void
 				create l_internal.make (l_open_count + l_closed_count)
 				closed_idx := 1
 				operand_idx := 1
 			else
-				l_target_closed := not (l_open_count > 0 and then omap.item (1) = 1)
-				if l_target_closed then
+				if not (l_open_count > 0 and then omap.item (1) = 1) then
+						-- Target is closed.
 					target_object := closed_args.fast_item (1)
 					closed_idx := 2
 				else
@@ -489,28 +487,28 @@ feature -- Obsolete
 
 	arguments: detachable OPEN_ARGS
 		obsolete
-			"use operands"
+			"Use `operands`. [2017-05-31]"
 		do
 			Result := operands
 		end
 
 	set_arguments (args: detachable OPEN_ARGS)
 		obsolete
-			"use set_operands"
+			"Use `set_operands`. [2017-05-31]"
 		do
 			set_operands (args)
 		end
 
 	valid_arguments (args: detachable OPEN_ARGS): BOOLEAN
 		obsolete
-			"use valid_operands"
+			"Use valid_operands. [2017-05-31]"
 		do
 			Result := valid_operands (args)
 		end
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

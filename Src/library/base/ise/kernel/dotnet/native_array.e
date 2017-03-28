@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Sequences of values, all of the same type or of a conforming one,
 		accessible through integer indices in a contiguous interval.
@@ -30,12 +30,8 @@ feature -- Access
 
 	item, at alias "@" (i: INTEGER): G
 			-- Entry at index `i', if in index interval
-		local
-			r: detachable G
 		do
-			check attached r as l_result then
-				Result := l_result
-			end
+			check attached Result then end
 		end
 
 feature -- Measurement

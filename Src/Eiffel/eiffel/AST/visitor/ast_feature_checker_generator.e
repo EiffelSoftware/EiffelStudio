@@ -1037,6 +1037,7 @@ feature {NONE} -- Roundtrip
 				context.init_attribute_scopes
 				create l_feature_checker
 				l_feature_checker.init (context)
+				l_feature_checker.set_type_recorder (type_recorder)
 				context.set_current_inline_agent_body (l_as.body)
 				l_feature_checker.check_body (l_feature, l_as.body, is_byte_node_enabled, is_inherited, is_replicated, True)
 
@@ -2659,6 +2660,7 @@ feature {NONE} -- Visitor
 							-- Only interprets the `built_in' implementation if this is not an attribute.
 						create l_feature_checker
 						l_feature_checker.init (context)
+						l_feature_checker.set_type_recorder (type_recorder)
 						l_feature_checker.check_body (current_feature, l_feature_as.body, True, False, False, False)
 						last_byte_node := l_feature_checker.last_byte_node
 						l_as.set_body (l_feature_as)

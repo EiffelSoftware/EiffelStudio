@@ -19,7 +19,8 @@ inherit
 		redefine
 			type,
 			state,
-			child_zone_count
+			child_zone_count,
+			has_content
 		end
 
 	SD_DOCKER_SOURCE
@@ -254,6 +255,17 @@ feature -- Query
 			check must_contain: has_recursive (Result) end
 		ensure
 			not_void: Result /= Void
+		end
+
+	has_content: BOOLEAN
+			-- Has a content?
+		do
+			if
+				internal_inner_container.readable and then
+				attached {SD_ZONE} internal_inner_container.item as l_zone
+			then
+				Result := l_zone.has_content
+			end
 		end
 
 	content: SD_CONTENT
@@ -636,7 +648,7 @@ feature {NONE} -- Agents
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -188,9 +188,16 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
+	has_content: BOOLEAN
+			-- Has content?
+		do
+			Result := True
+		end
+
 	content: SD_CONTENT
 			-- Content which `Current' holds
 		require
+			has_content: has_content
 			valid: is_floating_zone implies child_zone_count = 1
 		deferred
 		ensure
@@ -260,7 +267,9 @@ feature {SD_DOCKING_MANAGER_ZONES} -- Focus out
 					check False end -- Implied by not `is_main_inner_container'
 				end
 			end
-			content.focus_out_actions.call (Void)
+			if has_content then
+				content.focus_out_actions.call (Void)
+			end
 		end
 
 feature {SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS, SD_CONTENT, SD_STATE, SD_FLOATING_ZONE}  -- Focus in
@@ -322,7 +331,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

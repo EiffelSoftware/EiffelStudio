@@ -111,7 +111,7 @@ feature -- Zones managements
 				Result /= Void
 			loop
 				Result := zones.item
-				if Result.content /= a_content then
+				if not Result.has_content or else Result.content /= a_content then
 					Result := Void
 				end
 				zones.forth
@@ -297,7 +297,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -13,18 +13,30 @@ inherit
 		redefine
 			extend,
 			set_last_floating_width,
-			set_last_floating_height
+			set_last_floating_height,
+			has_content
 		end
 
 feature -- Query
 
+	has_content: BOOLEAN
+			-- Has content?
+		do
+			Result := count > 0
+		end
+
 	content: SD_CONTENT
 			-- <Precursor>
+		local
+			i: INTEGER
 		do
-			if internal_notebook.selected_item_index /= 0 then
-				Result := contents.i_th (internal_notebook.selected_item_index)
+			i := internal_notebook.selected_item_index
+			if i /= 0 and then contents.valid_index (i) then
+				Result := contents.i_th (i)
 			else
-				Result := last_content
+				check has_content: has_content then
+					Result := last_content
+				end
 			end
 		ensure then
 			not_void: Result /= Void
@@ -43,9 +55,9 @@ feature -- Query
 		end
 
 	last_content: SD_CONTENT
-			-- Last content when there is only one widget
+			-- Last content when there is at least one widget
 		require
---			only_one_content: only_one_content
+			only_one_content: count > 0
 		local
 			l_contents: like contents
 		do
@@ -218,7 +230,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

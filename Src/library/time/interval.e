@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Intervals between absolute values"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -89,41 +89,41 @@ feature -- Comparison
 		require
 			other_exists: other /= Void
 		do
-			Result := (start_bound.max (other.start_bound)) <=
-				(end_bound.min (other.end_bound))
+			Result := start_bound.max (other.start_bound) <=
+				end_bound.min (other.end_bound)
 		end
 
 	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current interval strictly before `other'?
 		do
-			Result := (start_bound < other.start_bound) and then
-				(end_bound < other.end_bound)
+			Result := start_bound < other.start_bound and then
+				end_bound < other.end_bound
 		end
 
 	is_less_equal alias "<=" (other: like Current): BOOLEAN
 			-- Is current interval before `other'?
 		do
-			Result := (Current < other) or else (is_equal (other))
+			Result := Current < other or else is_equal (other)
 		end
 
 	is_greater alias ">" (other: like Current): BOOLEAN
 			-- Is current interval after `other'?
 		do
-			Result := (other < Current)
+			Result := other < Current
 		end
 
 
 	is_greater_equal alias ">=" (other: like Current): BOOLEAN
 			-- Is current interval after `other'?
 		do
-			Result := (other <= Current)
+			Result := other <= Current
 		end
 
 	is_strict_included_by (other: like Current): BOOLEAN
 			-- Is current interval strictly included by `other'?
 		do
-			Result := (start_bound > other.start_bound) and then
-				(end_bound < other.end_bound)
+			Result := start_bound > other.start_bound and then
+				end_bound < other.end_bound
 		end
 
 	strict_includes (other: like Current): BOOLEAN
@@ -135,8 +135,8 @@ feature -- Comparison
 	is_included_by (other: like Current): BOOLEAN
 			-- Is current interval included by `other'?
 		do
-			Result := (start_bound >= other.start_bound) and then
-				(end_bound <= other.end_bound)
+			Result := start_bound >= other.start_bound and then
+				end_bound <= other.end_bound
 		end
 
 	includes (other: like Current): BOOLEAN
@@ -150,9 +150,9 @@ feature -- Comparison
 		require
 			other_exists: other /= Void
 		do
-			Result := (end_bound >= other.start_bound)
-				and then (start_bound <= other.start_bound)
-				and then (end_bound < other.end_bound)
+			Result := end_bound >= other.start_bound
+				and then start_bound <= other.start_bound
+				and then end_bound < other.end_bound
 		ensure
 			result_defition: Result = (strict_before (other.end_bound) and
 				has (other.start_bound))
@@ -206,10 +206,10 @@ feature -- Status report
 		require
 			exists: v /= Void
 		do
-			Result := (start_bound <= v) and then (end_bound >= v)
+			Result := start_bound <= v and then end_bound >= v
 		ensure
-			result_definition: Result xor not ((start_bound <= v) and then
-				(end_bound >= v))
+			result_definition: Result xor not (start_bound <= v and then
+				end_bound >= v)
 		end
 
 	strict_before (v: G): BOOLEAN
@@ -217,9 +217,9 @@ feature -- Status report
 		require
 			exists: v /= Void
 		do
-			Result := (end_bound < v)
+			Result := end_bound < v
 		ensure
-			result_definition: Result xor (not (end_bound < v))
+			result_definition: Result = (end_bound < v)
 		end
 
 	strict_after (v: G): BOOLEAN
@@ -227,7 +227,7 @@ feature -- Status report
 		require
 			exists: v /= Void
 		do
-			Result := (start_bound > v)
+			Result := start_bound > v
 		ensure
 			result_definition: Result = (start_bound > v)
 		end
@@ -237,7 +237,7 @@ feature -- Status report
 		require
 			exists: v /= Void
 		do
-			Result := (end_bound <= v)
+			Result := end_bound <= v
 		ensure
 			result_definition: Result = (end_bound <= v)
 		end
@@ -247,7 +247,7 @@ feature -- Status report
 		require
 			exists: v /= Void
 		do
-			Result := (start_bound >= v)
+			Result := start_bound >= v
 		ensure
 			result_definition: Result = (start_bound >= v)
 		end
@@ -331,11 +331,11 @@ feature -- Output
 	out: STRING
 			-- Printable representation of the current interval
 		do
-			Result := ("[");
-			Result.append (start_bound.out);
-			Result.append (" - ");
-			Result.append (end_bound.out);
-			Result.extend (']');
+			Result := "["
+			Result.append (start_bound.out)
+			Result.append (" - ")
+			Result.append (end_bound.out)
+			Result.extend (']')
 		end
 
 invariant
@@ -349,7 +349,7 @@ invariant
 	between_bound: after (start_bound) and before (end_bound)
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

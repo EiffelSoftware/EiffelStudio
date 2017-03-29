@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "DATE/TIME to STRING conversion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class DATE_TIME_CODE_STRING	inherit
+class DATE_TIME_CODE_STRING inherit
 
 	FIND_SEPARATOR_FACILITY
 
@@ -20,7 +20,6 @@ feature -- Creation
 		require
 			s_exists: s /= Void
 		local
-			code: DATE_TIME_CODE
 			i, pos1, pos2: INTEGER
 			date_constants: DATE_CONSTANTS
 			l_substrgs: like extracted_substrings
@@ -28,7 +27,6 @@ feature -- Creation
 		do
 			create value.make (20)
 			pos1 := 1
-			pos2 := 1
 			create date_constants
 			days := date_constants.days_text.twin
 			months := date_constants.months_text.twin
@@ -43,8 +41,7 @@ feature -- Creation
 				l_substrg := l_substrgs.substrg
 				l_substrg.to_lower
 				if l_substrg.count > 0 then
-					create code.make (l_substrg)
-					value.put (code, i)
+					value.put (create {DATE_TIME_CODE}.make (l_substrg), i)
 					i := i + 1
 				end
 				l_substrg2 := l_substrgs.substrg2
@@ -158,9 +155,7 @@ feature -- Interface
 			l_substrg, l_substrg2: STRING
 		do
 			pos1 := 1
-			pos2 := 1
-
-			if s.count = 0 then
+			if s.is_empty then
 				Result := False
 			else
 				Result := True
@@ -170,7 +165,7 @@ feature -- Interface
 				i := 1
 			until
 				pos1 > s.count
-				or Result = False
+				or not Result
 			loop
 				code := value.item (i)
 				if code = Void then
@@ -210,7 +205,7 @@ feature -- Interface
 						i := i + 1
 						if code /= Void then
 							l_substrg2 := l_substrgs.substrg2
-							Result := Result and (pos2 /= s.count) and
+							Result := Result and pos2 /= s.count and
 								l_substrg2.same_string (code.value)
 						end
 					end
@@ -332,8 +327,7 @@ feature -- Interface
 					end
 					Result.append (int.out)
 				when {DATE_TIME_CODE}.fractional_second_numeric_type_code then
-					double := time.fractional_second * 10 ^ (l_item.count_max)
-					int := double.rounded
+					int := (time.fractional_second * 10 ^ l_item.count_max).rounded
 					l_tmp := int.out
 					if l_tmp.count < l_item.count_max then
 						Result.append (create {STRING}.make_filled ('0', l_item.count_max - l_tmp.count))
@@ -361,11 +355,8 @@ feature -- Interface
 				-- Create the output of `date' according to the code string.
 		require
 			date_exists: date /= Void
-		local
-			date_time: DATE_TIME
 		do
-			create date_time.make_by_date (date)
-			Result := create_string (date_time)
+			Result := create_string (create {DATE_TIME}.make_by_date (date))
 		ensure
 			string_exists: Result /= Void
 			string_correspond: correspond (Result)
@@ -394,7 +385,6 @@ feature -- Interface
 			s_correspond: correspond (s)
 			valid: is_value_valid (s)
 		local
-			i: INTEGER
 			l_parser: like parser
 			l_day_text: detachable STRING
 		do
@@ -404,8 +394,8 @@ feature -- Interface
 					l_parser.hour, l_parser.minute, l_parser.fine_second)
 			l_day_text := l_parser.day_text
 			if l_day_text /= Void then
-				i := Result.date.day_of_the_week
-				right_day_text := l_day_text.same_string (days.item (i))
+				right_day_text := l_day_text.same_string
+					(days.item (Result.date.day_of_the_week))
 			end
 		ensure
 			date_time_exists: Result /= Void
@@ -520,18 +510,16 @@ feature -- Interface
 		require
 			not_void: value /= Void
 		local
-			l_item, code: detachable DATE_TIME_CODE
 			i, type: INTEGER
 			has_day, has_month, has_year: BOOLEAN
 		do
 			from
 				i := 1
-				l_item := value.item (i)
+
 			until
-				l_item = Void
+				not attached value.item (i) as l_item
 			loop
-				code := l_item.twin
-				type := code.type
+				type := l_item.type
 				if separators_used then
 					inspect
 						type
@@ -558,7 +546,6 @@ feature -- Interface
 					end
 				end
 				i := i + 1
-				l_item := value.item (i)
 			end
 			Result := has_day and has_month and has_year
 		end
@@ -569,18 +556,15 @@ feature -- Interface
 		require
 			not_void: value /= Void
 		local
-			l_item, code: detachable DATE_TIME_CODE
 			i, type: INTEGER
 			has_hour_12, has_hour_24, has_minute, has_second: BOOLEAN
 		do
 			from
 				i := 1
-				l_item := value.item (i)
 			until
-				l_item = Void
+				not attached value.item (i) as l_item
 			loop
-				code := l_item.twin
-				type := code.type
+				type := l_item.type
 				if separators_used then
 					inspect
 						type
@@ -612,7 +596,6 @@ feature -- Interface
 					end
 				end
 				i := i + 1
-				l_item := value.item (i)
 			end
 			Result := (has_hour_24 or has_hour_12) and has_minute and has_second
 				--| Technically `has_hour_12' should be or'd with a 'has_meridiem' so that all time values can be specified
@@ -633,20 +616,17 @@ feature {NONE} -- Implementation
 			-- Build a new one if necessary.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
-		local
-			l_parser: like internal_parser
 		do
-			l_parser := internal_parser
-			if l_parser = Void or else not equal (l_parser.source_string, s) then
-				create l_parser.make (value)
-				l_parser.set_day_array (days)
-				l_parser.set_month_array (months)
-				l_parser.set_base_century (base_century)
-				l_parser.set_source_string (s)
-				l_parser.parse
-				internal_parser := l_parser
+			Result := internal_parser
+			if not attached Result or else not equal (Result.source_string, s) then
+				create Result.make (value)
+				Result.set_day_array (days)
+				Result.set_month_array (months)
+				Result.set_base_century (base_century)
+				Result.set_source_string (s)
+				Result.parse
+				internal_parser := Result
 			end
-			Result := l_parser
 		ensure
 			parser_not_void: Result /= Void
 		end
@@ -655,7 +635,7 @@ feature {NONE} -- Implementation
 			-- Cached instance of date-time string parser
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

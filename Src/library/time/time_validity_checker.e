@@ -50,9 +50,9 @@ feature -- Preconditions
 			m := minute
 			s := second
 			compact_time := l_c_t
-			Result := (h >= 0 and h < Hours_in_day and
+			Result := h >= 0 and h < Hours_in_day and
 				m >= 0 and m < Minutes_in_hour and
-				s >= 0 and s < Seconds_in_minute)
+				s >= 0 and s < Seconds_in_minute
 		end
 
 	is_correct_time (h, m: INTEGER; s: DOUBLE;
@@ -78,14 +78,14 @@ feature -- Preconditions
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

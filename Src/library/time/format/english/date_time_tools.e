@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "English settings"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 inherit
 	DATE_TIME_LANGUAGE_CONSTANTS
 
-feature
+feature -- Languge-dependent constants
 
 	name: STRING = "English"
 
@@ -90,14 +90,14 @@ feature
 	default_format_string: STRING = "[0]mm/[0]dd/yyyy hh12:[0]mi:[0]ss.ff3 AM";
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

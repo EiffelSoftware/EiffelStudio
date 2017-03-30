@@ -799,9 +799,11 @@ feature -- Links
 				across
 					l_params as ic
 				loop
-					output (" ")
-						-- No check if this is valid xhtml or not ... it is up to the wiki source.
-					output (ic.item)
+					if not ic.item.is_whitespace then
+						output (" ")
+							-- No check if this is valid xhtml or not ... it is up to the wiki source.
+						output (ic.item)
+					end
 				end
 			end
 			output (">")
@@ -837,9 +839,11 @@ feature -- Links
 					across
 						l_params as ic
 					loop
-						output (" ")
-							-- No check if this is valid xhtml or not ... it is up to the wiki source.
-						output (ic.item)
+						if not ic.item.is_whitespace then
+							output (" ")
+								-- No check if this is valid xhtml or not ... it is up to the wiki source.
+							output (ic.item)
+						end
 					end
 				end
 				output (">")

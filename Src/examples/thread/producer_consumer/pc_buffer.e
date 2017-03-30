@@ -1,4 +1,4 @@
-note
+﻿note
     description: ""
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -11,15 +11,33 @@ class
 create
 	make
 
-feature
+feature {NONE} -- Creation
+
+	make (size, i: INTEGER; finish: BOOLEAN_REF)
+			-- Initialize customizable parameters
+			-- and internal structures.
+		do
+			finished := finish
+			it := i
+			buffer_size := size - 1
+			create monitor.make
+			create notfull.make
+			create notempty.make
+			create data.make_filled (0, 0, buffer_size)
+		end
+
+feature -- Synchronization
+
 	monitor: MUTEX
 			-- Monitor lock.
 
-	finished : BOOLEAN_REF
-			-- Shared boolean for exiting program.
-
 	notfull, notempty: CONDITION_VARIABLE
 			-- Condition for buffer not empty or not full.
+
+feature -- Access
+
+	finished : BOOLEAN_REF
+			-- Shared boolean for exiting program.
 
 	num_full: INTEGER
 			-- index of last inserted element.
@@ -35,19 +53,6 @@ feature
 
 	data: ARRAY [INTEGER]
 			-- Physical buffer of elements.
-
-	make (size, i: INTEGER; finish: BOOLEAN_REF)
-			-- Initialize customizable parameters
-			-- and internal structures.
-		do
-			finished := finish
-			it := i
-			buffer_size := size - 1
-			create monitor.make
-			create notfull.make
-			create notempty.make
-			create data.make_filled (0, 0, buffer_size)
-		end
 
 	get (id: INTEGER)
 			-- Get an element from the buffer.	
@@ -81,6 +86,8 @@ feature
 			monitor.unlock
 		end
 
+feature -- Modification
+
 	put (d: INTEGER; id: INTEGER)
 			-- Put an element in the buffer.
 			-- `wait' is nested in a loop for the same reason as
@@ -110,6 +117,8 @@ feature
 			end
 			monitor.unlock
 		end
+
+feature -- Output
 
 	check_display
 			-- Check whether we display the buffer for the
@@ -152,8 +161,9 @@ feature
 			end
 			io.put_string ("***********************%N")
 		end
+
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -163,6 +173,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
 end
-

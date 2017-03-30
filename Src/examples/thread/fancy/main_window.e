@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Main window of fancy application, which contains two subwindows. One draws rectangles, the %
 		%other one draws ovals."
 	legal: "See notice at end of class."
@@ -46,7 +46,7 @@ create
 
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- Creation
 
 	make
 			-- Create the main window of resource bench.
@@ -138,20 +138,15 @@ feature {NONE} -- Behavior
 			-- Execute the command correpsonding to `menu_id'.
 		require else
 			about_box_not_void: about_box /= Void
-		local
-			rect_demo: RECTANGLE_DEMO_WINDOW
-			oval_demo: OVAL_DEMO_WINDOW
 		do
 			inspect
 				a_menu_id
-
 			when Cmd_win_rect then
-				create rect_demo.make (display_mutex)
+				;(create {RECTANGLE_DEMO_WINDOW}.make (display_mutex)).do_nothing
 			when Cmd_win_oval then
-				create oval_demo.make (display_mutex)
+				;(create {OVAL_DEMO_WINDOW}.make (display_mutex)).do_nothing
 			when Cmd_help_about then
 				about_box.activate
-
 			when Cmd_win_exit then
 				if closeable then
 					do_exit (Current)
@@ -268,7 +263,7 @@ feature {NONE} -- Implementation
 			-- Show the standard dialog box.
 		do
 			msg_box.question_message_box (Current, "Do you want to exit?", "Exit")
-			if (msg_box.message_box_result = Idyes) then
+			if msg_box.message_box_result = Idyes then
 				stop_all_threads
 				Result := True
 			else
@@ -300,7 +295,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -310,6 +305,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class MAIN_WINDOW
-
+end

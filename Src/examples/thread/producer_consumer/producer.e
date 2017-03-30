@@ -1,5 +1,4 @@
-note
-    description: ""
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
     date: "$Date$";
@@ -17,7 +16,7 @@ inherit
 create
 	make
 
-feature	-- Initialization
+feature {NONE} -- Initialization
 
 	make (buf: PC_BUFFER; i: INTEGER; finish: BOOLEAN_REF)
 			-- Initialize parameters, set proxies,  and launch thread.
@@ -65,7 +64,7 @@ feature -- Thread execution
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -75,6 +74,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class PRODUCER
-
+end

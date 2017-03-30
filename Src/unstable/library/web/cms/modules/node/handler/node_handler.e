@@ -139,9 +139,7 @@ feature -- HTTP Methods
 					elseif l_node = Void then
 						send_not_found (req, res)
 					else
-						if
-							l_rev > 0 and l_is_published
-						then
+						if l_is_published then
 							create view_response.make (req, res, api, node_api)
 							view_response.set_node (l_node)
 							view_response.set_revision (l_rev)
@@ -149,7 +147,9 @@ feature -- HTTP Methods
 						elseif
 							attached api.user as l_user and then
 							(	node_api.is_author_of_node (l_user, l_node)
-								or else api.user_has_permission (l_user, "view unpublished " + l_node.content_type)
+								or else (
+									api.user_has_permission (l_user, "view unpublished " + l_node.content_type)
+								)
 							)
 						then
 							create view_response.make (req, res, api, node_api)

@@ -56,12 +56,12 @@ feature -- CMS setup
 				-- Content
 			a_setup.register_module (create {CMS_NODE_MODULE}.make)
 			a_setup.register_module (create {CMS_PAGE_MODULE}.make)
-			a_setup.register_module (create {EMBEDDED_VIDEO_MODULE}.make)
 			a_setup.register_module (create {CMS_BLOG_MODULE}.make)
 			a_setup.register_module (create {CMS_COMMENTS_MODULE}.make)
 
 				-- Filter
 			a_setup.register_module (create {WIKITEXT_MODULE}.make)
+			a_setup.register_module (create {EMBEDDED_VIDEO_MODULE}.make)
 
 				-- Files
 			a_setup.register_module (create {CMS_FILES_MODULE}.make)

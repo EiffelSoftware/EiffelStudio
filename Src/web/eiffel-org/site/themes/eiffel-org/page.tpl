@@ -12,6 +12,7 @@
 				</header>
 				<main id="main">
 					{assign name="doc_page_type" value="doc"/}
+					{assign name="blog_page_type" value="blog"/}
 					{assign name="true_value" value="true"/}
 					{assign name="space_value" value=" "/}
 					{assign name="l_css_classes" value=""/}
@@ -47,6 +48,9 @@
 								{if isset="$page.region_content"}{$page.region_content/}{/if}
 							{/unless}
 						{/unless}
+						{if condition="$page.type ~ $blog_page_type"}
+							{include file="3rd/node-disqus.tpl"/}
+						{/if}
 						</div>
 					</div>
 					{if condition="$has_second_sidebar ~ $true_value"}	

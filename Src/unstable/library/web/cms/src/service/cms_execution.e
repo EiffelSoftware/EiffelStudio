@@ -281,11 +281,12 @@ feature -- Filters
 			l_module: CMS_MODULE
 			l_api: like api
 		do
-			api.logger.put_debug (generator + ".create_filter", Void)
+			l_api := api
+			l_api.logger.put_debug (generator + ".create_filter", Void)
 			l_filter := Void
 
 				-- Maintenance
-			create {WSF_MAINTENANCE_FILTER} f
+			create {CMS_MAINTENANCE_FILTER} f.make (Void, l_api)
 			f.set_next (l_filter)
 			l_filter := f
 
@@ -295,7 +296,6 @@ feature -- Filters
 --			l_filter := f
 
 				-- Include filters from modules
-			l_api := api
 			across
 				modules as ic
 			loop

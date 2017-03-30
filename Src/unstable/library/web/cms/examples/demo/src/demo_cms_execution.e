@@ -76,6 +76,7 @@ feature -- CMS modules
 
 				-- Wiki
 			a_setup.register_module (create {WIKITEXT_MODULE}.make)
+			a_setup.register_module (create {EMBEDDED_VIDEO_MODULE}.make)
 
 				-- Recent changes
 			a_setup.register_module (create {CMS_RECENT_CHANGES_MODULE}.make)

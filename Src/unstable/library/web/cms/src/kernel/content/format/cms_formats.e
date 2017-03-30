@@ -36,7 +36,32 @@ feature -- Access
 			end
 		end
 
+	is_empty: BOOLEAN
+		do
+			Result := count = 0
+		end
+
+	count: INTEGER
+		do
+			Result := items.count
+		end
+
 feature -- Element change
+
+	remove (a_name: READABLE_STRING_GENERAL)
+		do
+			from
+				items.start
+			until
+				items.after
+			loop
+				if a_name.is_case_insensitive_equal (items.item.name) then
+					items.remove
+				else
+					items.forth
+				end
+			end
+		end
 
 	extend (f: CMS_FORMAT)
 			-- Add format `f' to available formats.
@@ -44,6 +69,12 @@ feature -- Element change
 			items.force (f)
 		ensure
 			has_format: item (f.name) = f
+		end
+
+	wipe_out
+			-- Wipe out the items.
+		do
+			items.wipe_out
 		end
 
 feature -- Access
@@ -79,7 +110,7 @@ invariant
 	items /= Void
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

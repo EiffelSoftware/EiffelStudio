@@ -54,10 +54,11 @@ feature {NONE} -- Initialize
 			s := setup.administration_base_path
 			administration_base_path_location := s.shared_substring (2, s.count)
 
-				-- Initialize formats.
-			initialize_formats
 				-- Initialize contents.
 			initialize_content_types
+
+				-- Initialize filters and formats.
+			initialize_content_filters_and_formats
 
 				-- Initialize storage.
 			if attached setup.storage (error_handler) as l_storage then
@@ -109,6 +110,7 @@ feature {NONE} -- Initialize
 			end
 
 				-- hooks initialization, is done after site/admin switch.
+				-- See `initialize_execution`
 		end
 
 	initialize_site_url
@@ -147,21 +149,157 @@ feature {NONE} -- Initialize
 			create content_type_webform_managers.make (1)
 		end
 
-	initialize_formats
-			-- Initialize content formats.
+	initialize_content_filters_and_formats
+			-- Initialize content filters and formats.
 		local
-			f: CMS_FORMAT
+			l_filters: like content_filters
 		do
+				-- Initialize built-in content filters
+			create l_filters.make (4)
+			content_filters := l_filters
+			l_filters.extend (create {HTML_TO_TEXT_CONTENT_FILTER})
+			l_filters.extend (create {LINE_BREAK_TO_HTML_CONTENT_FILTER})
+			l_filters.extend (create {URL_CONTENT_FILTER})
+			l_filters.extend (create {HTML_CONTENT_FILTER})
+
+
 				-- Initialize built-in formats
 			create formats.make (4)
-			create f.make_from_format (create {PLAIN_TEXT_CONTENT_FORMAT})
-			formats.extend (f)
-			create f.make_from_format (create {FILTERED_HTML_CONTENT_FORMAT})
-			formats.extend (f)
-			create f.make_from_format (create {FULL_HTML_CONTENT_FORMAT})
-			formats.extend (f)
-			create f.make ("cms_editor", "CMS HTML content")
-			formats.extend (f)
+		end
+
+	setup_formats
+			-- Initialize content filters and formats.
+		local
+			l_formats: like formats
+		do
+			load_formats
+			l_formats := formats
+			if l_formats.count = 0 then
+					-- Setup built-in formats
+
+					-- plain_text: html_to_text + line_break_converter
+				l_formats.extend (new_format ("plain_text", "Plain text", <<{HTML_TO_TEXT_CONTENT_FILTER}.name, {LINE_BREAK_TO_HTML_CONTENT_FILTER}.name>>))
+
+					-- full_html: url
+				l_formats.extend (new_format ("full_html", "Full HTML", <<{URL_CONTENT_FILTER}.name>>))
+
+					-- filtered_html: url + html_filter + line_break_converter
+				l_formats.extend (new_format ("filtered_html", "Filtered HTML", <<{URL_CONTENT_FILTER}.name, {HTML_CONTENT_FILTER}.name, {LINE_BREAK_TO_HTML_CONTENT_FILTER}.name>>))
+
+					-- CMS Editor!
+				l_formats.extend (new_format ("cms_editor", "CMS HTML content", Void))
+
+				save_formats
+			end
+		end
+
+feature {CMS_API_ACCESS} -- CMS Formats management
+
+	load_formats
+		local
+			f: CMS_FORMAT
+			jp: JSON_PARSER
+			s: STRING_32
+			l_name, l_title: READABLE_STRING_8
+		do
+			formats.wipe_out
+			if
+				attached storage.custom_value ("cms.formats", "api-formats") as v_formats and then
+				v_formats.is_valid_as_string_8
+			then
+				create jp.make_with_string (v_formats.to_string_8)
+				jp.parse_content
+				if jp.is_parsed and then jp.is_valid and then attached jp.parsed_json_object as j_formats then
+						-- { "plain_text": { "title": "Plain text", "filters": "plain_text+foobar+toto"}, ...}
+					across
+						j_formats as ic
+					loop
+						if attached {JSON_OBJECT} ic.item as j_format then
+							l_name := ic.key.unescaped_string_8
+							if attached {JSON_STRING} j_format.item ("title") as j_title then
+								l_title := j_title.unescaped_string_8
+							else
+								l_title := l_name
+							end
+							if attached {JSON_STRING} j_format.item ("filters") as j_filters then
+								s := j_filters.unescaped_string_32
+								f := new_format (l_name, l_title, s.split ('+'))
+							else
+								f := new_format (l_name, l_title, Void)
+							end
+							formats.extend (f)
+							if attached {JSON_STRING} j_format.item ("types") as j_types then
+								s := j_types.unescaped_string_32
+								across
+									s.split ('+') as s_ic
+								loop
+									if attached content_type (s_ic.item) as ct then
+										ct.extend_format (f)
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+
+	save_formats
+			-- Save `formats`.
+		local
+			f: CMS_FORMAT
+			jp: JSON_PARSER
+			cfg: JSON_CONFIG
+			j,ji: JSON_OBJECT
+			s: STRING_32
+			l_name, l_title: READABLE_STRING_8
+			ct: CMS_CONTENT_TYPE
+		do
+				-- { "plain_text": { "title": "Plain text", "filters": "plain_text+foobar+toto"}, ...}
+			create j.make_empty
+			across
+				formats as ic
+			loop
+				f := ic.item
+				create ji.make
+				ji.put_string (f.title, "title")
+
+				create s.make_empty
+				across
+					f.filters as f_ic
+				loop
+					if not s.is_empty then
+						s.append ("+")
+					end
+					s.append (f_ic.item.name)
+				end
+				ji.put_string (s, "filters")
+
+				create s.make_empty
+				across
+					content_types as ct_ic
+				loop
+					ct := ct_ic.item
+					if ct.has_format (f.name) then
+						if not s.is_empty then
+							s.append ("+")
+						end
+						s.append (ct.name)
+					end
+				end
+				ji.put_string (s, "types")
+
+				j.put (ji, f.name)
+			end
+			storage.set_custom_value ("cms.formats", j.representation, "api-formats")
+		end
+
+feature -- Execution initialization
+
+	initialize_execution
+		do
+			setup_hooks
+			setup_formats
 		end
 
 feature {CMS_ACCESS} -- Module management		
@@ -437,15 +575,33 @@ feature -- Content type webform
 			end
 		end
 
-feature -- Formats
+feature -- Filters and Formats
+
+	content_filters: CMS_CONTENT_FILTERS
+			-- Available content filters.
 
 	formats: CMS_FORMATS
 			-- Available content formats.
 
-	format (a_format_name: detachable READABLE_STRING_GENERAL): detachable CONTENT_FORMAT
+	format (a_format_name: detachable READABLE_STRING_GENERAL): detachable CMS_FORMAT
 			-- Content format name `a_format_name' if any.
 		do
 			Result := formats.item (a_format_name)
+		end
+
+	new_format (a_name: READABLE_STRING_8; a_title: READABLE_STRING_8; a_filter_names: detachable ITERABLE [READABLE_STRING_GENERAL]): CMS_FORMAT
+			-- New cms content format named `a_name`, with `a_title`, and composed from `a_filter_names`.
+		do
+			create Result.make (a_name, a_title)
+			if a_filter_names /= Void then
+				across
+					a_filter_names as ic
+				loop
+					if attached content_filters.item (ic.item) as f then
+						Result.add_filter (f)
+					end
+				end
+			end
 		end
 
 feature -- Status Report

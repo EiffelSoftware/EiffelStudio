@@ -39,18 +39,12 @@ feature {CMS_API} -- Module Initialization
 
 	initialize (api: CMS_API)
 			-- <Precursor>
-		local
-			f: CMS_FORMAT
 		do
 			Precursor (api)
 
-			create f.make_from_format (create {WIKITEXT_FORMAT})
-			api.formats.extend (f)
-				-- FIXME!!!
-			across
-				api.content_types as ic
-			loop
-				ic.item.extend_format (f)
+			api.content_filters.extend (create {WIKITEXT_FILTER})
+			if api.format ({WIKITEXT_FORMAT}.name) = Void then
+				api.formats.extend (api.new_format ("wikitext", "Wikitext rendered as HTML", <<{WIKITEXT_FILTER}.name>>))
 			end
 		end
 

@@ -135,7 +135,7 @@ feature {NONE} -- Implementation: routes
 						r.add_warning_message ("Error with block [login]")
 					end
 				end
-				r.set_value ("Basic Auth", "optional_content_type")
+				r.set_optional_content_type ("Basic Auth")
 			end
 			r.execute
 		end

@@ -109,7 +109,7 @@ feature -- Execution
 				if l_op.same_string ("Install modules") then
 					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 
-					if attached api.setup.string_8_item ("admin.installation_access") as l_access then
+					if attached api.setup.string_8_item ("administration.installation_access") as l_access then
 						if l_access.is_case_insensitive_equal ("none") then
 							l_denied := True
 						elseif l_access.is_case_insensitive_equal ("permission") then

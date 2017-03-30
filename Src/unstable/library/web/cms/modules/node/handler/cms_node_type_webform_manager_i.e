@@ -83,9 +83,11 @@ feature -- Output
 		local
 			s: STRING
 		do
-			create s.make_empty
-			a_response.set_value (a_node, "node")
 			a_response.set_title (a_node.title)
+
+			a_response.set_value (a_node, "node")
+			a_response.set_value (a_node.content_type, "optional_content_type")
+			create s.make_empty
 			append_content_as_html_to (a_node, False, s, a_response)
 			a_response.set_main_content (s)
 		end

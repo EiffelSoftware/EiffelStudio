@@ -48,6 +48,7 @@ feature -- Execution
 				end
 			end
 			if l_node /= Void then
+				set_optional_content_type (l_node.content_type)
 				if
 					attached node_api.node_type_for (l_node) as l_content_type and then
 					attached node_api.node_type_webform_manager (l_content_type) as l_manager

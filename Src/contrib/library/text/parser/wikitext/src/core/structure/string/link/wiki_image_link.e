@@ -179,7 +179,7 @@ feature -- Query
 
 	has_parameter (a_name: READABLE_STRING_GENERAL): BOOLEAN
 		obsolete
-			"Do not use has_parameter anymore [2014/July]"
+			"Do not use has_parameter anymore [01-07-2014]"
 		do
 			if attached parameters as lst then
 				across
@@ -205,7 +205,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2017, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

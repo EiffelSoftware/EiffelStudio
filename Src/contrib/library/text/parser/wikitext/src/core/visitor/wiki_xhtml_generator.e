@@ -794,7 +794,17 @@ feature -- Links
 
 	visit_external_link (a_link: WIKI_EXTERNAL_LINK)
 		do
-			output ("<a href=%"" + a_link.url + "%" class=%"wiki_ext_link%">")
+			output ("<a href=%"" + a_link.url + "%" class=%"wiki_ext_link%"")
+			if attached a_link.parameters as l_params then
+				across
+					l_params as ic
+				loop
+					output (" ")
+						-- No check if this is valid xhtml or not ... it is up to the wiki source.
+					output (ic.item)
+				end
+			end
+			output (">")
 			a_link.text.process (Current)
 			output ("</a>")
 		end
@@ -802,7 +812,7 @@ feature -- Links
 	visit_link (a_link: WIKI_LINK)
 		local
 			l_css_class: STRING
-			l_url: STRING
+			l_url: detachable STRING
 		do
 			create l_css_class.make_from_string ("wiki_link")
 			if a_link.name.is_whitespace then
@@ -811,9 +821,6 @@ feature -- Links
 				else
 					l_url := ""
 				end
-				output ("<a href=%"" + l_url + "%" class=%"" + l_css_class + "%">")
-				a_link.text.process (Current)
-				output ("</a>")
 			elseif
 				attached link_resolver as r and then
 				attached r.wiki_url (a_link, current_page) as u
@@ -823,7 +830,19 @@ feature -- Links
 				else
 					l_url := u
 				end
-				output ("<a href=%"" + l_url + "%" class=%"" + l_css_class + "%">")
+			end
+			if l_url /= Void then
+				output ("<a href=%"" + l_url + "%" class=%"" + l_css_class + "%"")
+				if attached a_link.parameters as l_params then
+					across
+						l_params as ic
+					loop
+						output (" ")
+							-- No check if this is valid xhtml or not ... it is up to the wiki source.
+						output (ic.item)
+					end
+				end
+				output (">")
 				a_link.text.process (Current)
 				output ("</a>")
 			else

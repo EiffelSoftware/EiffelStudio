@@ -4,6 +4,7 @@ note
 
 			[http://www.example.com Example site]
 			[http://www.example.com|Example site]
+			[http://www.example.com|param1|param2|Example site]
 			[mailto:me@address.com Email me]
 			[file://.... the local file]
 
@@ -30,7 +31,7 @@ feature {NONE} -- Initialization
 			ends_with_bracket: s.ends_with ("]")
 			valid_wiki_link: s.count > 0
 		local
-			p, n: INTEGER
+			i, p, n: INTEGER
 			l_text: detachable READABLE_STRING_8
 		do
 			from
@@ -55,7 +56,18 @@ feature {NONE} -- Initialization
 			if l_text = Void then
 				text := wiki_raw_string (url)
 			else
-				text := wiki_raw_string (l_text)
+				i := l_text.last_index_of ('|', l_text.count)
+				if i > 0 then
+					text := wiki_raw_string (l_text.substring (i + 1, l_text.count))
+					l_text := l_text.head (i - 1)
+					across
+						l_text.split ('|') as ic
+					loop
+						add_parameter (ic.item)
+					end
+				else
+					text := wiki_raw_string (l_text)
+				end
 			end
 		end
 
@@ -64,6 +76,8 @@ feature -- Access
 	url: STRING
 
 	text: WIKI_STRING_ITEM
+
+	parameters: detachable ARRAYED_LIST [READABLE_STRING_8]
 
 feature -- Status report
 
@@ -105,6 +119,22 @@ feature -- Status report
 			else
 				Result := False
 			end
+		end
+
+feature -- Element change
+
+	add_parameter (p: READABLE_STRING_8)
+		local
+			lst: like parameters
+		do
+			lst := parameters
+			if lst = Void then
+				create lst.make (1)
+				parameters := lst
+			end
+			lst.force (p)
+		ensure
+			parameters /= Void
 		end
 
 feature -- Visitor

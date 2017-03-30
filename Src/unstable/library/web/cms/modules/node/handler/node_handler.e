@@ -84,6 +84,8 @@ feature -- HTTP Methods
 			l_nid, l_rev: INTEGER_64
 			edit_response: NODE_FORM_RESPONSE
 			view_response: NODE_VIEW_RESPONSE
+			l_is_published: BOOLEAN
+			l_is_denied: BOOLEAN
 		do
 			if req.percent_encoded_path_info.ends_with ("/edit") then
 				check valid_url: req.percent_encoded_path_info.starts_with ("/node/") end
@@ -119,19 +121,26 @@ feature -- HTTP Methods
 						l_rev := p_rev.value.to_integer_64
 					end
 					l_node := node_api.node (l_nid)
-					if
-						l_node /= Void and then
-						l_rev > 0 and then
-						l_rev < l_node.revision and then
-						node_api.has_permission_for_action_on_node ("view revisions", l_node, api.user)
-					then
-						l_node := node_api.revision_node (l_nid, l_rev)
+					if l_node /= Void then
+						l_is_published := l_node.is_published
+						if
+							l_rev > 0 and then
+							l_rev < l_node.revision
+						then
+							if node_api.has_permission_for_action_on_node ("view revisions", l_node, api.user) then
+								l_node := node_api.revision_node (l_nid, l_rev)
+							else
+								l_is_denied := True
+							end
+						end
 					end
-					if l_node = Void then
+					if l_is_denied then
+						send_access_denied (req, res)
+					elseif l_node = Void then
 						send_not_found (req, res)
 					else
 						if
-							l_rev > 0 or else l_node.is_published
+							l_rev > 0 and l_is_published
 						then
 							create view_response.make (req, res, api, node_api)
 							view_response.set_node (l_node)
@@ -148,7 +157,7 @@ feature -- HTTP Methods
 							view_response.set_revision (l_rev)
 							view_response.execute
 						else
-							send_access_denied (req, res)
+							send_access_denied_to_unpublished_node (req, res, l_node)
 						end
 					end
 				else
@@ -391,6 +400,17 @@ feature -- Error
 			end
 			l_page.execute
 		end
+
+	send_access_denied_to_unpublished_node (req: WSF_REQUEST; res: WSF_RESPONSE; a_node: CMS_NODE)
+			-- Forbidden response.
+		local
+			r: CMS_RESPONSE
+		do
+			create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
+			r.set_main_content ("This content is NOT published!")
+			r.execute
+		end
+
 
 feature {NONE} -- Node
 

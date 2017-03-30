@@ -254,15 +254,25 @@ feature -- Form
 
 	edit_form_submit (fd: WSF_FORM_DATA; a_node: detachable CMS_NODE; a_type: CMS_NODE_TYPE [CMS_NODE]; b: STRING)
 		local
-			l_preview: BOOLEAN
+			l_preview, l_op_save, l_op_publish, l_op_unpublish: BOOLEAN
 			l_node: detachable CMS_NODE
 			s: STRING
 			l_node_path: READABLE_STRING_8
 			l_path_alias, l_existing_path_alias, l_auto_path_alias: detachable READABLE_STRING_8
 		do
-			fixme ("Refactor code per operacion: Preview, Save")
-			l_preview := attached {WSF_STRING} fd.item ("op") as l_op and then l_op.same_string ("Preview")
+			-- Potential operations : Preview, Save/Publish/UnPublish")
+			l_preview := attached {WSF_STRING} fd.item ("op") as l_op and then l_op.same_string (preview_submit_label)
 			if not l_preview then
+				l_op_save := True
+				if attached {WSF_STRING} fd.item ("op") as l_op then
+					if l_op.same_string (publish_submit_label) then
+						l_op_publish := True
+					elseif l_op.same_string (unpublish_submit_label) then
+						l_op_unpublish := True
+					else
+						check l_op.same_string (save_submit_label) end
+					end
+				end
 				debug ("cms")
 					across
 						fd as c
@@ -289,8 +299,13 @@ feature -- Form
 				end
 
 				fixme ("for now, publishing is not implemented, so let's assume any node saved is published.") -- FIXME
-				l_node.mark_published
-
+				if l_op_publish then
+					l_node.mark_published
+				elseif l_op_unpublish then
+					l_node.mark_not_published
+				else
+						-- Default status
+				end
 				node_api.save_node (l_node)
 				if attached user as u then
 					api.log ("node",
@@ -362,6 +377,7 @@ feature -- Form
 			f: CMS_FORM
 			ts: WSF_FORM_SUBMIT_INPUT
 			th: WSF_FORM_HIDDEN_INPUT
+			div: WSF_WIDGET_DIV
 		do
 			create f.make (a_url, a_name)
 			create th.make ("node-id")
@@ -375,17 +391,49 @@ feature -- Form
 			populate_form (a_node_type, f, a_node)
 
 			f.extend_html_text ("<br/>")
-			create ts.make ("op")
-			ts.set_default_value ("Save")
-			f.extend (ts)
+
+			create div.make
+			div.add_css_class ("css-editing-buttons")
+			f.extend (div)
 
 			create ts.make ("op")
-			ts.set_default_value ("Preview")
-			f.extend (ts)
+			ts.set_default_value (preview_submit_label)
+			ts.set_description ("Preview without saving.")
+			div.extend (ts)
 
+			if a_node = Void then
+				create ts.make ("op")
+				ts.set_default_value (save_submit_label)
+				div.extend (ts)
+
+				create ts.make ("op")
+				ts.set_default_value (publish_submit_label)
+				ts.set_description ("Save and mark published.")
+				div.extend (ts)
+			else
+				if a_node.is_published then
+					create ts.make ("op")
+					ts.set_default_value (save_submit_label)
+					ts.set_description ("Save and keep published.")
+					div.extend (ts)
+
+					create ts.make ("op")
+					ts.set_default_value (unpublish_submit_label)
+					ts.set_description ("Save and mark unpublished.")
+					div.extend (ts)
+				else
+					create ts.make ("op")
+					ts.set_default_value (save_submit_label)
+					div.extend (ts)
+
+					create ts.make ("op")
+					ts.set_default_value (publish_submit_label)
+					ts.set_description ("Save and mark published.")
+					div.extend (ts)
+				end
+			end
 			Result := f
 		end
-
 
 	new_delete_form (a_node: detachable CMS_NODE; a_url: READABLE_STRING_8; a_name: STRING; a_node_type: CMS_NODE_TYPE [CMS_NODE]): CMS_FORM
 			-- Create a web form named `a_name' for node `a_node' (if set), using form action url `a_url', and for type of node `a_node_type'.
@@ -486,5 +534,12 @@ feature -- Form
 				wf.update_node (Current, a_form_data, a_node)
 			end
 		end
+
+feature -- Labels
+
+	save_submit_label: STRING = "Save"
+	publish_submit_label: STRING = "Publish"
+	unpublish_submit_label: STRING = "Unpublish"
+	preview_submit_label: STRING = "Preview"
 
 end

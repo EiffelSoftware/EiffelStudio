@@ -156,6 +156,7 @@ feature -- HTML Output
 		local
 			n: CMS_NODE
 			lnk: CMS_LOCAL_LINK
+			l_hide: BOOLEAN
 		do
 				-- Output the title. If more than one page, also output the current page number
 			append_page_title_html_to (page, a_output)
@@ -169,25 +170,42 @@ feature -- HTML Output
 				posts as ic
 			loop
 				n := ic.item
-				lnk := blog_api.node_api.node_link (n)
-				a_output.append ("<li class=%"cms_type_"+ n.content_type +"%">")
+				l_hide := not n.is_published
+				if l_hide then
+					if
+						attached api.user as u
+					then
+						if api.user_api.is_admin_user (u) then
+							l_hide := False
+						else
+							l_hide := not u.same_as (n.author)
+						end
+					end
+				end
+				if not l_hide then
+					lnk := blog_api.node_api.node_link (n)
+					a_output.append ("<li class=%"cms_type_"+ n.content_type +"%">")
 
-					-- Output the creation date
-				append_creation_date_html_to (n, a_output)
+					if not n.is_published then
+						a_output.append ("<div class=%"warning%">This entry is not yet published!</div>")
+					end
+						-- Output the creation date
+					append_creation_date_html_to (n, a_output)
 
-					-- Output the author of the post
-				append_author_html_to (n, page, a_output)
+						-- Output the author of the post
+					append_author_html_to (n, page, a_output)
 
-					-- Output the title of the post as a link (to the detail page)
-				append_title_html_to (n, page, a_output)
+						-- Output the title of the post as a link (to the detail page)
+					append_title_html_to (n, page, a_output)
 
-					-- Output associated tags.
-				append_taxonomy_html_to (n, page, a_output)
+						-- Output associated tags.
+					append_taxonomy_html_to (n, page, a_output)
 
-					-- Output the summary of the post and a more link to the detail page
-				append_summary_html_to (n, page, a_output)
+						-- Output the summary of the post and a more link to the detail page
+					append_summary_html_to (n, page, a_output)
 
-				a_output.append ("</li>%N")
+					a_output.append ("</li>%N")
+				end
 			end
 
 				-- End of post list

@@ -337,7 +337,7 @@ feature -- Hooks
 			mng: like manager
 		do
 			if
-				attached {READABLE_STRING_GENERAL} a_response.values.item ("optional_content_type") as l_type and then
+				attached {READABLE_STRING_GENERAL} a_response.optional_content_type as l_type and then
 				l_type.is_case_insensitive_equal ("doc")
 			then
 				if a_block_id /= Void then
@@ -849,7 +849,7 @@ feature -- Handler
 					wp := l_book.root_page
 				end
 
-				r.set_value ("doc", "optional_content_type")
+				r.set_optional_content_type ("doc")
 				r.set_title (l_bookid)
 				r.values.force (l_bookid, "wiki_book_name")
 				if l_toc or wp = Void then
@@ -882,7 +882,7 @@ feature -- Handler
 				if wp /= Void then
 					send_wikipage (wp, mnger, "", api, req, res)
 				else
-					r.set_value ("doc", "optional_content_type")
+					r.set_optional_content_type ("doc")
 					r.set_title (Void) --"Documentation")
 					r.set_main_content (b)
 					r.execute
@@ -1243,7 +1243,7 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 				create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
 			end
 
-			r.set_value ("doc", "optional_content_type")
+			r.set_optional_content_type ("doc")
 			r.values.force (a_manager.version_id, "wiki_version_id")
 			if a_bookid /= Void then
 				r.values.force (a_bookid, "wiki_book_name")

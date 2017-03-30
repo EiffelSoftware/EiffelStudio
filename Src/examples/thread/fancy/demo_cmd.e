@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract class for commands that draws figures in a window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			display_mutex_set: display_mutex = a_mutex
 		end
 
-feature -- Threads
+feature -- Threads: access
 
 	display_mutex: MUTEX
 			-- Since display is a bottleneck on Windows, serialization
@@ -48,16 +48,13 @@ feature -- Threads
 	thread_continue: BOOLEAN_REF
 			-- Flag, which indicates if the thread must continue.
 
-feature -- Threads
+feature -- Threads: commands
 
 	execute
 			-- Draw rectangles, until window closed.
-		local
-			l_msg: WEL_MSG
 		do
 				-- Rebuilt the shared client window from C.
 			from
-				create l_msg.make
 			until
 				not is_thread_continue
 			loop
@@ -67,19 +64,21 @@ feature -- Threads
 			end
 		end
 
-	is_thread_continue: BOOLEAN
-			-- Must the thread continue?
-		do
-			mutex_continue.lock
-			Result := thread_continue.item
-			mutex_continue.unlock
-		end
-
 	stop
 			-- Tell the thread to stop.
 		do
 			mutex_continue.lock
 			thread_continue.set_item (False)
+			mutex_continue.unlock
+		end
+
+feature -- Status report
+
+	is_thread_continue: BOOLEAN
+			-- Must the thread continue?
+		do
+			mutex_continue.lock
+			Result := thread_continue.item
 			mutex_continue.unlock
 		end
 
@@ -141,7 +140,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -151,6 +150,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class DEMO_CMD
-
+end

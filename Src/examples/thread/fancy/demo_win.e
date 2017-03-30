@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Ancestor to windows that draw figures."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -87,10 +87,11 @@ feature -- Redefined features
 	on_size (a_size_type, a_width, a_height: INTEGER)
 			-- Reposition windows in the main window.
 		do
-			if (a_size_type /= Size_minimized) then
-				if attached client_window as win then
-					win.move_and_resize (2, 2, a_width - 5, a_height -4, True)
-				end
+			if
+				a_size_type /= Size_minimized and then
+				attached client_window as win
+			then
+				win.move_and_resize (2, 2, a_width - 5, a_height -4, True)
 			end
 		end
 
@@ -119,7 +120,7 @@ feature -- Redefined features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -129,6 +130,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class DEMO_WIN
-
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Class defining thread attributes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -76,7 +76,7 @@ feature -- Obsolete: Not applicable
 			-- Set scheduling policy to `policy'.  Possible values are:
 			-- default_policy, other, fifo and round_robin.
 		obsolete
-			"Removed because calls where not portable."
+			"Removed because calls where not portable. [2017-05-31]"
 		require
 			valid_policy: (policy >= default_policy) and (policy <= round_robin)
 		do
@@ -88,46 +88,46 @@ feature -- Obsolete: Not applicable
 			-- on the C level. You can always `join' a thread, even if it was
 			-- created detached. This only affects the C join().
 		obsolete
-			"Removed because now threads are always started detached."
+			"Removed because now threads are always started detached. [2017-05-31]"
 		do
 		end
 
 	scheduling_policy: INTEGER
 		obsolete
-			"Removed because calls where not portable."
+			"Removed because calls where not portable. [2017-05-31]"
 		do
 		end
 
 	detached: BOOLEAN
 		obsolete
-			"Removed because calls where not portable."
+			"Removed because calls where not portable. [2017-05-31]"
 		do
 		end
 
 	default_policy: INTEGER
 		obsolete
-			"Removed because calls where not portable."
+			"Removed because calls where not portable. [2017-05-31]"
 		do
 			Result := 0
 		end
 
 	other: INTEGER
 		obsolete
-			"Removed because calls where not portable."
+			"Removed because calls where not portable. [2017-05-31]"
 		do
 			Result := 1
 		end
 
 	fifo: INTEGER
 		obsolete
-			"Removed because calls where not portable."
+			"Removed because calls where not portable. [2017-05-31]"
 		do
 			Result := 2
 		end
 
 	round_robin: INTEGER
 		obsolete
-			"Removed because calls where not portable."
+			"Removed because calls where not portable. [2017-05-31]"
 		do
 			Result := 3
 		end
@@ -136,7 +136,7 @@ invariant
 	priority_bounded: min_priority <= priority and priority <= max_priority
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

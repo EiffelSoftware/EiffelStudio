@@ -36,6 +36,7 @@ feature -- Security
 			Result.force ("clear blocks cache")
 			Result.force ("admin export")
 			Result.force ("admin import")
+			Result.force ("admin formats")
 		end
 
 feature {NONE} -- Router/administration
@@ -48,6 +49,7 @@ feature {NONE} -- Router/administration
 			l_modules_handler: CMS_ADMIN_MODULES_HANDLER
 			l_users_handler: CMS_ADMIN_USERS_HANDLER
 			l_roles_handler: CMS_ADMIN_ROLES_HANDLER
+			l_formats_handler: CMS_ADMIN_FORMATS_HANDLER
 
 			l_user_handler: CMS_USER_HANDLER
 			l_role_handler:	CMS_ROLE_HANDLER
@@ -57,6 +59,7 @@ feature {NONE} -- Router/administration
 			l_admin_export_handler: CMS_ADMIN_EXPORT_HANDLER
 			l_admin_import_handler: CMS_ADMIN_IMPORT_HANDLER
 			l_admin_path_alias_handler: CMS_ADMIN_PATH_ALIAS_HANDLER
+
 
 			l_uri_mapping: WSF_URI_MAPPING
 		do
@@ -75,6 +78,13 @@ feature {NONE} -- Router/administration
 			create l_roles_handler.make (a_api)
 			create l_uri_mapping.make_trailing_slash_ignored ("/roles", l_roles_handler)
 			a_router.map (l_uri_mapping, a_router.methods_get_post)
+
+			create l_formats_handler.make (a_api)
+			create l_uri_mapping.make_trailing_slash_ignored ("/formats", l_formats_handler)
+			a_router.map (l_uri_mapping, a_router.methods_get_post)
+			create l_uri_mapping.make_trailing_slash_ignored ("/formats", l_formats_handler)
+			a_router.handle ("/formats/{format-id}", l_formats_handler, a_router.methods_get_post)
+			a_router.handle ("/formats/{format-id}/add", l_formats_handler, a_router.methods_get_post)
 
 			create l_admin_logs_handler.make (a_api)
 			create l_uri_mapping.make_trailing_slash_ignored ("/logs", l_admin_logs_handler)
@@ -108,6 +118,7 @@ feature {NONE} -- Router/administration
 			a_router.handle ("/role/{id}", l_role_handler, a_router.methods_get)
 			a_router.handle ("/role/{id}/edit", l_role_handler, a_router.methods_get_post)
 			a_router.handle ("/role/{id}/delete", l_role_handler, a_router.methods_get_post)
+
 		end
 
 feature -- Hooks
@@ -137,6 +148,10 @@ feature -- Hooks
 
 				create lnk.make ("Module", l_api.administration_path_location ("modules"))
 				lnk.set_permission_arguments (<<"manage module">>)
+				admin_lnk.extend (lnk)
+
+				create lnk.make ("Formats", l_api.administration_path_location ("formats"))
+				lnk.set_permission_arguments (<<"admin formats">>)
 				admin_lnk.extend (lnk)
 
 					-- Per module cache permission!

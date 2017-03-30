@@ -265,7 +265,7 @@ feature -- Hooks
 			if r.is_authenticated then
 				r.add_error_message ("You are already signed in!")
 			else
-				r.set_value ("Login", "optional_content_type")
+				r.set_optional_content_type ("Login")
 			end
 			r.execute
 		end

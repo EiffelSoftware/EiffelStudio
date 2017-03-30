@@ -155,6 +155,13 @@ feature -- Access: CMS
 	values: CMS_VALUE_TABLE
 			-- Associated values indexed by string name.
 
+feature -- Specific values
+
+	optional_content_type: detachable ANY
+		do
+			Result := values.item ("optional_content_type")
+		end
+
 feature -- User access
 
 	is_authenticated: BOOLEAN
@@ -324,6 +331,11 @@ feature -- Element change
 	set_main_content (s: like main_content)
 		do
 			main_content := s
+		end
+
+	set_optional_content_type (a_content_type: detachable ANY)
+		do
+			set_value (a_content_type, "optional_content_type")
 		end
 
 	set_value (v: detachable ANY; k: READABLE_STRING_GENERAL)
@@ -1434,7 +1446,7 @@ feature {NONE} -- Execution
 				end
 			end
 
-			if attached {READABLE_STRING_GENERAL} values.item ("optional_content_type") as l_type then
+			if attached {READABLE_STRING_GENERAL} optional_content_type as l_type then
 				create cms_page.make_typed (utf.utf_32_string_to_utf_8_string_8 (l_type))
 			else
 				create cms_page.make

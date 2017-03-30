@@ -60,12 +60,6 @@ feature {CMS_API} -- Module Initialization
 
 				node_api := l_node_api
 					-- Depends on {CMS_NODE_MODULE}
-					--| For now, add all available formats to content type `ct'.
-				across
-					api.formats as ic
-				loop
-					ct.extend_format (ic.item)
-				end
 				l_node_api.add_node_type (ct)
 				l_node_api.add_node_type_webform_manager (create {CMS_BLOG_NODE_TYPE_WEBFORM_MANAGER}.make (ct, l_node_api))
 			end

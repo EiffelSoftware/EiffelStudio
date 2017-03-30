@@ -54,12 +54,6 @@ feature {NONE} -- Initialization
 				-- Initialize node content types.			
 			create ct
 			page_content_type := ct
-				--| For now, add all available formats to content type `ct'.
-			across
-				cms_api.formats as ic
-			loop
-				ct.extend_format (ic.item)
-			end
 			node_api.add_node_type (ct)
 			node_api.add_node_type_webform_manager (create {CMS_PAGE_NODE_TYPE_WEBFORM_MANAGER}.make (ct, Current))
 		end

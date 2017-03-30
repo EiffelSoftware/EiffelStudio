@@ -248,11 +248,8 @@ feature {CMS_API_ACCESS} -- CMS Formats management
 			-- Save `formats`.
 		local
 			f: CMS_FORMAT
-			jp: JSON_PARSER
-			cfg: JSON_CONFIG
 			j,ji: JSON_OBJECT
 			s: STRING_32
-			l_name, l_title: READABLE_STRING_8
 			ct: CMS_CONTENT_TYPE
 		do
 				-- { "plain_text": { "title": "Plain text", "filters": "plain_text+foobar+toto"}, ...}

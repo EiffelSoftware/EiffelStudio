@@ -193,7 +193,9 @@ feature -- Zones managements
 			if attached {EV_CONTAINER} a_zone as l_container then
 				-- Maybe we are moving from {SD_AUTO_HIDE_STATE} to {SD_DOCKING_STATE}
 				-- {SD_CONTENT}.user_widget's parent already changed, no need to prune later
-				l_has_child := l_container.has_recursive (a_zone.content.user_widget)
+				if a_zone.has_content then
+					l_has_child := l_container.has_recursive (a_zone.content.user_widget)
+				end
 			end
 
 			if attached {EV_WIDGET} a_zone as lt_widget then
@@ -208,7 +210,11 @@ feature -- Zones managements
 			zones.start
 			zones.prune (a_zone)
 
-			if l_has_child and then attached {EV_CONTAINER} a_zone.content.user_widget.parent as l_parent then
+			if
+				l_has_child and then
+				a_zone.has_content and then
+				attached {EV_CONTAINER} a_zone.content.user_widget.parent as l_parent
+			then
 				l_parent.prune (a_zone.content.user_widget)
 			end
 		ensure
@@ -220,19 +226,26 @@ feature -- Zones managements
 		require
 			has_content: has_content (a_content)
 		local
+			l_zones: like zones
+			l_zone: SD_ZONE
 			l_pruned: BOOLEAN
 		do
 			from
-				zones.start
+				l_zones := zones
+				l_zones.start
 			until
-				zones.after or l_pruned
+				l_zones.after or l_pruned
 			loop
-				if zones.item.content = a_content then
-					prune_zone (zones.item)
+				l_zone := l_zones.item
+				if
+					l_zone.has_content and then
+					l_zone.content = a_content
+				then
+					prune_zone (l_zone)
 					l_pruned := True
 				end
 				if not l_pruned then
-					zones.forth
+					l_zones.forth
 				end
 			end
 		end

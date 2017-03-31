@@ -268,18 +268,16 @@ feature {NONE}  -- Implementation
 			   	out_thread := l_out_thread
 			end
 				-- Start a error listening thread is necessory	
-			if error_direction /= {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output then
-				if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream then
-					create l_err_thread.make (Current)
-					l_err_thread.launch
-					err_thread := l_err_thread
-				end
+			if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream then
+				create l_err_thread.make (Current)
+				l_err_thread.launch
+				err_thread := l_err_thread
 			end
 					-- Start a timer for process status acquiring.
 			timer.start
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Concurrent access
 
 	in_thread: detachable PROCESS_INPUT_LISTENER_THREAD
 	out_thread: detachable PROCESS_OUTPUT_LISTENER_THREAD

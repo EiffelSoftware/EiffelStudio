@@ -1,5 +1,5 @@
-note
-	description: "Unix-specific operating system services for process"
+﻿note
+	description: "Unix-specific operating system services for process."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -13,7 +13,7 @@ inherit
 			meaning as signal_meaning
 		end
 
-feature -- File descriptor operations
+feature -- File descriptor status
 
 	valid_file_descriptor (fd: INTEGER): BOOLEAN
 			-- Is `fd' in the range of valid file descriptors?
@@ -116,7 +116,7 @@ feature -- Process operations
 			arguments_exist: args /= Void
 		local
 			k, count, lower: INTEGER
-			arguments, arg_copy, null_ptr: POINTER
+			arguments: POINTER
 			ns: NATIVE_STRING
 		do
 			count := args.count
@@ -129,11 +129,12 @@ feature -- Process operations
 				k > count
 			loop
 				ns.set_string (args.item (lower + k - 1))
-				arg_copy := str_dup (ns.item)
-				unix_set_arg_value (arguments, k - 1, arg_copy)
+					-- Memory is going to be freed by "execv"/"execve".
+					-- Therefore there is no need to free memory allocated by "strdup".
+				unix_set_arg_value (arguments, k - 1, str_dup (ns.item))
 				k := k + 1
 			end
-			unix_set_arg_value (arguments, count, null_ptr)
+			unix_set_arg_value (arguments, count, default_pointer)
 
 			create ns.make (prog_file)
 			unix_exec_process (ns.item, arguments, env_ptr, close_nonstd_files)
@@ -372,7 +373,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -381,8 +382,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

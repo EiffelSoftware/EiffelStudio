@@ -1,5 +1,5 @@
-note
-	description: "A Unix process launcher with IO redirection capability"
+﻿note
+	description: "A Unix process launcher with IO redirection capability."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -45,10 +45,10 @@ inherit
 
 	RT_DEBUGGER
 
-create
+create {PROCESS_UNIX_OS}
 	make
 
-feature {PROCESS_UNIX_OS} -- Creation
+feature {NONE} -- Creation
 
 	make (fname: READABLE_STRING_GENERAL; args: detachable LIST [READABLE_STRING_GENERAL]; a_working_dir: detachable READABLE_STRING_GENERAL)
 			-- Create a process object which represents an
@@ -260,7 +260,6 @@ feature {BASE_PROCESS_IMP} -- Process management
         local
             ee: EXECUTION_ENVIRONMENT
             cur_dir: detachable PATH
-            exceptions: EXCEPTIONS
             l_debug_state: like debug_state
             l_working_directory: like working_directory
             l_arguments: like arguments_for_exec
@@ -306,8 +305,7 @@ feature {BASE_PROCESS_IMP} -- Process management
             end
         rescue
             if process_id = 0 then
-                create exceptions
-                exceptions.die (1)
+                ;(create {EXCEPTIONS}).die (1)
             end
 			set_debug_state (l_debug_state)
         end
@@ -607,7 +605,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Input-output
 
 	in_file: detachable RAW_FILE
 			-- File to be used by child process for standard input
@@ -630,7 +628,7 @@ feature {NONE} -- Implementation
 	Stderr_descriptor: INTEGER = 2
 			-- File descriptor for standard error
 
-feature {NONE} -- Implementation
+feature {NONE} -- Access
 
 	environment_table_as_pointer (a_envs: detachable HASH_TABLE [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL]): POINTER
 			-- {POINTER} representation of `environment_variable_table'.
@@ -645,28 +643,22 @@ feature {NONE} -- Implementation
 		do
 			if a_envs /= Void and then not a_envs.is_empty then
 					-- Estimate the number of environment variables that will be stored.
-				from
-					a_envs.start
-				until
-					a_envs.after
+				across
+					a_envs as c
 				loop
-					if a_envs.key_for_iteration /= Void and then a_envs.item_for_iteration /= Void then
+					if attached c.key and then attached c.item then
 						nb := nb + 1
 					end
-					a_envs.forth
 				end
 					-- We allocate `Result', then use a MANAGED_POINTER to fill its content.
 				Result := Result.memory_alloc ((nb + 1) * {PLATFORM}.pointer_bytes)
 				create l_ptr.share_from_pointer (Result, (nb + 1) * {PLATFORM}.pointer_bytes)
-				from
-					a_envs.start
-					i := 0
-				until
-					a_envs.after
+				across
+					a_envs as c
 				loop
 					if
-						attached a_envs.key_for_iteration as l_key and then
-						attached a_envs.item_for_iteration as l_value
+						attached c.key as l_key and then
+						attached c.item as l_value
 					then
 						create l_str.make (l_key.count + l_value.count + 1)
 						l_str.append_string_general (l_key)
@@ -682,7 +674,6 @@ feature {NONE} -- Implementation
 
 						i := i + 1
 					end
-					a_envs.forth
 				end
 				l_ptr.put_pointer (default_pointer, i * {PLATFORM}.pointer_bytes)
 			end
@@ -768,8 +759,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

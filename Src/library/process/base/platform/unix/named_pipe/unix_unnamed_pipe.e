@@ -548,20 +548,18 @@ feature -- Output
 			write_block (write_descriptor, p.item + start_pos, nb_bytes)
 		end
 
-feature -- Input
+feature {NONE} -- Input-output
 
 	read_block (fildes: INTEGER; buf: POINTER; size: INTEGER)
 			-- Read `size' byte of data into `buf' from `fildes'.
 		local
-			read_count, count: INTEGER
+			count: INTEGER
 			size_left: INTEGER
 			pos: INTEGER
 			done: BOOLEAN
 			retried_count: INTEGER
 		do
 			from
-				read_count := 0
-				count := 0
 				size_left := size
 				pos := 0
 				done := False
@@ -594,15 +592,13 @@ feature -- Input
 	write_block (fildes: INTEGER; buf: POINTER; size: INTEGER)
 			-- Write `size' byte of data stored in `buf' to `fildes'.
 		local
-			write_count, count: INTEGER
+			count: INTEGER
 			size_left: INTEGER
 			pos: INTEGER
 			done: BOOLEAN
 			retried_count: INTEGER
 		do
 			from
-				write_count := 0
-				count := 0
 				size_left := size
 				pos := 0
 				done := False

@@ -23,7 +23,7 @@ create
 	make,
 	make_with_command_line
 
-feature {NONE} -- Initialization
+feature {NONE} -- Creation
 
 	make (executable_name: READABLE_STRING_GENERAL; argument_list: detachable ITERABLE [READABLE_STRING_GENERAL]; work_directory: detachable READABLE_STRING_GENERAL)
 		do
@@ -320,10 +320,11 @@ feature {NONE} -- Termination
 			l_prc_result: INTEGER
 		do
 			last_termination_successful := {WEL_API}.get_exit_code_process (handle, $l_prc_result)
-			if last_termination_successful then
-				if l_prc_result = {WEL_API}.still_active then
-					last_termination_successful := {WEL_API}.terminate_process (handle, 0)
-				end
+			if
+				last_termination_successful and then
+				l_prc_result = {WEL_API}.still_active
+			then
+				last_termination_successful := {WEL_API}.terminate_process (handle, 0)
 			end
 		end
 
@@ -342,31 +343,25 @@ feature {NONE} -- Termination
 					-- If debug privilege not enabled, we try to open process with all possible rights.
 				handle := cwin_open_process (cwin_process_all_access, False, pid)
 			end
-			if handle /= default_pointer then
+			if handle = default_pointer then
+				last_termination_successful := False
+			else
 				try_terminate_process (handle)
 				{WEL_API}.close_handle (handle).do_nothing
-			else
-				last_termination_successful := False
 			end
 		end
 
 	direct_subprocess_list (parent_id: INTEGER): LIST [INTEGER]
 			-- List of direct subprocess ids of process indicated by id `parent_id'.
-		local
-			p_tbl: LINKED_LIST [TUPLE [parent_id: INTEGER; process_id: INTEGER]]
 		do
-			create {LINKED_LIST [INTEGER]}Result.make
-			p_tbl := process_id_pair_list
-			if p_tbl /= Void then
-				from
-					p_tbl.start
-				until
-					p_tbl.after
+			create {ARRAYED_LIST [INTEGER]}Result.make (0)
+			if attached process_id_pair_list as p_tbl then
+				across
+					p_tbl as p
 				loop
-					if p_tbl.item.parent_id = parent_id then
-						Result.extend (p_tbl.item.process_id)
+					if p.item.parent_id = parent_id then
+						Result.extend (p.item.process_id)
 					end
-					p_tbl.forth
 				end
 			end
 		ensure
@@ -429,10 +424,11 @@ feature {NONE} -- Termination
 					end
 				end
 			end
-			if l_success or else not abort_termination_when_failed then
-				if is_self then
-					terminate_process_by_id (pid)
-				end
+			if
+				(l_success or else not abort_termination_when_failed) and then
+				is_self
+			then
+				terminate_process_by_id (pid)
 			end
 		end
 
@@ -493,7 +489,7 @@ feature {NONE} -- Termination
 	debug_privilege_enabled: BOOLEAN
 			-- Is debug privilege enabled?
 
-feature {NONE} -- Implementation
+feature {NONE} -- Access
 
 	child_process: WEL_PROCESS
 			-- Child process.

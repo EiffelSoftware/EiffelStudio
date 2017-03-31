@@ -2,7 +2,6 @@ note
 	description: "[
 				Root class for ecf integration builder
 			]"
-	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,6 +12,8 @@ inherit
 	LOCALIZED_PRINTER
 
 	SHARED_EXECUTION_ENVIRONMENT
+
+	CONF_ACCESS
 
 create
 	make
@@ -50,9 +51,7 @@ feature {NONE} -- Initialization
 			end
 
 			excluded_directories := args.excluded_directories
-			generate (dirs, args.output_ecf, agent (ia_p: PATH): BOOLEAN do Result := ia_p.name.ends_with ("-safe.ecf") end, args)
---										agent (ia_p: PATH): BOOLEAN do Result := ia_p.name.ends_with ("-safe.ecf") end,
---										tb)
+			generate (dirs, args.output_ecf, agent (ia_p: PATH): BOOLEAN do Result := ia_p.name.ends_with (".ecf") end, args)
 
 
 			if not warnings.is_empty then
@@ -107,12 +106,17 @@ feature {NONE} -- Initialization
 			p: PATH
 --			root_p_name,
 			p_name: READABLE_STRING_32
-			s: STRING_8
 			utf: UTF_CONVERTER
 			output: PLAIN_TEXT_FILE
 			nb: INTEGER
 			l_name: READABLE_STRING_8
 			l_names: STRING_TABLE [INTEGER]
+			conf_fac: CONF_PARSE_FACTORY
+			conf: CONF_SYSTEM
+			tgt: CONF_TARGET
+			conf_lib: CONF_LIBRARY
+			uuidgen: UUID_GENERATOR
+			l_desc: STRING_32
 		do
 			tb := new_ecf_table
 			if not dirs.is_empty then
@@ -132,25 +136,36 @@ feature {NONE} -- Initialization
 			end
 --			root_p_name := args.root_directory.canonical_path.name
 
-			create s.make (1024)
+			create conf_fac
+			create uuidgen
+			conf := conf_fac.new_system_with_file_name (a_output.name, "all", uuidgen.generate_uuid)
+			tgt := conf_fac.new_target ("all", conf)
+			tgt.set_root (conf_fac.new_root (Void, Void, Void, True))
+			conf.add_target (tgt)
+
+			conf.set_library_target (tgt)
+			create l_desc.make_from_string_general ("All libraries from:%N")
+			across
+				dirs as ic
+			loop
+				l_desc.append_string_general (" - ")
+				l_desc.append (ic.item.name)
+				l_desc.append_string_general ("%N")
+			end
+			conf.set_description (l_desc)
+
 			create l_names.make (tb.count)
-			s.append ("%N")
---			s.append ("%T%T<library name=%"base%" location=%"$ISE_LIBRARY/library/base/base-safe.ecf%" />%N")
---			l_names.force (1, "base")
 			across
 				tb as c
 			loop
-				if attached c.item.library_target as c_library_target then
-
+				if
+					not c.item.is_redirection and then
+					attached c.item.library_target as c_library_target
+				then
 					create p.make_from_string (c.key)
 					p := p.canonical_path
---					p_name := p.name
-					p_name := relative_path (p, a_output).name
---					if p.name.starts_with (root_p_name) then
---						p_name := p_name.substring (root_p_name.count + 1 + 1, p_name.count)
---					end
+					p_name := relative_path (p, a_output.parent).name
 
-					s.append ("%T%T<library name=%"")
 					l_name := c_library_target
 					if attached c.item.name as c_name then
 						l_name := c_name
@@ -159,19 +174,19 @@ feature {NONE} -- Initialization
 					else
 --						l_name := "unknown"
 					end
-					s.append (l_name)
 					if l_names.has (l_name) then
 						nb := l_names.item (l_name)
-						s.append ("-" + nb.out)
 						nb := nb + 1
 					else
 						nb := 1
 					end
 					l_names.force (nb, l_name)
-					s.append ("%"")
-					s.append (" location=%"")
-					utf.string_32_into_utf_8_string_8 (p_name, s)
-					s.append ("%" readonly=%"false%"/>%N")
+					if nb = 1 then
+						conf_lib := conf_fac.new_library (l_name, utf.string_32_to_utf_8_string_8 (p_name), tgt)
+					else
+						conf_lib := conf_fac.new_library (l_name + "-" + nb.out, utf.string_32_to_utf_8_string_8 (p_name), tgt)
+					end
+					tgt.add_library (conf_lib)
 				else
 
 				end
@@ -179,40 +194,10 @@ feature {NONE} -- Initialization
 
 			create output.make_with_path (a_output)
 			if not output.exists or else output.is_access_writable then
-				output.open_write
-				output.put_string ("[
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="all" uuid="1172C52C-6979-4293-8F01-80FADA5A2B69">
-	<description>Integration project including many lib</description>
-	<target name="all">
-		<root all_classes="true"/>
-		<file_rule>
-			<exclude>/.git$</exclude>
-			<exclude>/EIFGENs$</exclude>
-			<exclude>/.svn$</exclude>
-		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
-		</option>
-
-				]")
-				output.put_string (s)
-				output.put_string ("[
-	</target>
-	<target name="all_windows" extends="all">
-		<description>Compiling as Windows , on other platforms than Windows</description>
-		<root all_classes="true"/>
-		<setting name="platform" value="windows"/>
-	</target>
-	<target name="all_unix" extends="all">
-		<description>Compiling as UNIX , on other platforms than Unix</description>
-		<root all_classes="true"/>
-		<setting name="platform" value="unix"/>
-	</target>
-</system>
-]")
-				output.close
+				conf.set_file_name (a_output.name)
+				conf.store
 			end
-	end
+		end
 
 feature -- Access
 
@@ -314,7 +299,7 @@ feature {NONE} -- Implementation
 				create Result.make_empty
 					-- Remove filename
 				b_lst.finish
-				if not b_lst.after then
+				if not b_lst.before then
 					b_lst.remove
 				end
 					-- put the ..
@@ -328,15 +313,16 @@ feature {NONE} -- Implementation
 				loop
 					Result := Result.extended_path (c.item)
 				end
-
 			end
 		end
 
-	path_details (fn: READABLE_STRING_GENERAL): detachable TUPLE [name, uuid, library_target: detachable READABLE_STRING_8; segments: like segments_from_string; dir, file: READABLE_STRING_GENERAL]
+	path_details (fn: READABLE_STRING_GENERAL): detachable TUPLE [name, uuid, library_target: detachable READABLE_STRING_8; segments: like segments_from_string; dir, file: READABLE_STRING_GENERAL; is_redirection: BOOLEAN]
 		local
 			f: RAW_FILE
 			n,p: INTEGER
+			l_line: STRING
 			l_uuid, l_name, l_library_target: detachable READABLE_STRING_8
+			l_is_redir: BOOLEAN
 			l_dir: detachable READABLE_STRING_GENERAL
 			l_file: detachable READABLE_STRING_GENERAL
 			c_slash, c_bslash: NATURAL_32
@@ -369,7 +355,11 @@ feature {NONE} -- Implementation
 					until
 						f.exhausted or (l_uuid /= Void and l_name /= Void and l_library_target /= Void)
 					loop
-						if l_uuid = Void and then attached f.last_string as l_line then
+						l_line := f.last_string
+						if l_name = Void and then l_line.substring_index ("<redirection ", 1) > 0 then
+							l_is_redir := True
+						end
+						if l_uuid = Void then
 							p := l_line.substring_index ("uuid=%"", 1)
 							if p > 0 then
 								n := l_line.index_of ('"', p + 6)
@@ -378,7 +368,7 @@ feature {NONE} -- Implementation
 								end
 							end
 						end
-						if l_name = Void and then attached f.last_string as l_line then
+						if l_name = Void then
 							p := l_line.substring_index ("name=%"", 1)
 							if p > 0 then
 								n := l_line.index_of ('"', p + 6)
@@ -387,7 +377,7 @@ feature {NONE} -- Implementation
 								end
 							end
 						end
-						if l_library_target = Void and then attached f.last_string as l_line then
+						if l_library_target = Void then
 							p := l_line.substring_index ("library_target=%"", 1)
 							if p > 0 then
 								n := l_line.index_of ('"', p + 6)
@@ -413,7 +403,7 @@ feature {NONE} -- Implementation
 						report_warning ("No library_target in %"" + fn.to_string_8 + "%"")
 					end
 				end
-				Result := [l_name, l_uuid, l_library_target, segments_from_string (l_dir), l_dir, l_file]
+				Result := [l_name, l_uuid, l_library_target, segments_from_string (l_dir), l_dir, l_file, l_is_redir]
 			end
 		end
 
@@ -451,7 +441,7 @@ feature {NONE} -- Path manipulation
 					lst_1.start
 					lst_2.start
 				until
-					lst_1.after or lst_2.after
+					lst_1.off or lst_2.off
 				loop
 					if lst_1.item.same_string (lst_2.item) then
 						Result := Result  + 1
@@ -470,9 +460,9 @@ feature {NONE} -- Path manipulation
 			across
 				lst as curs
 			loop
-				if 
+				if
 					not s.is_empty and then
-					not s.ends_with ("/") 
+					not s.ends_with ("/")
 				then
 					s.append ("/")
 				end
@@ -530,7 +520,7 @@ feature {NONE} -- Path manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

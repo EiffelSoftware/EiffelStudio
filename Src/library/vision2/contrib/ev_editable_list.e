@@ -77,7 +77,7 @@ feature -- Status setting
 			-- Set field at row index 'widget_row' and column index 'widget_column' with
 			-- value of `saved text' after an edit has been unsuccessful
 		obsolete
-			"use `set_with_previous_text' instead"
+			"use `set_with_previous_text' instead [2003-10-09]"
 		do
 			set_with_previous_text
 		end
@@ -637,7 +637,7 @@ invariant
 	editable_columns_not_void: editable_columns /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

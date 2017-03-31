@@ -19,7 +19,7 @@ inherit
 create
 	make
 
-feature{NONE} -- Implementation
+feature {NONE} -- Creation
 
 	make
 			-- Initialize instance.
@@ -169,7 +169,7 @@ feature -- Status reporting
 		do
 			if not internal_has_exited then
 				check_process_state
-				internal_has_exited := not (last_process_result = {WEL_API}.still_active)
+				internal_has_exited := last_process_result /= {WEL_API}.still_active
 			end
 			 Result := internal_has_exited
 		end
@@ -316,7 +316,7 @@ feature -- Handle operation
 			end
 		end
 
-feature
+feature -- Initialization
 
 	startup_info: WEL_STARTUP_INFO
 			-- Process startup information
@@ -406,7 +406,7 @@ feature
 			Result.add_flag (Startf_use_show_window)
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Low-level access
 
 	internal_has_exited: BOOLEAN
 			-- Internal status indicating whether process has exited
@@ -444,7 +444,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

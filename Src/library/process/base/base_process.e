@@ -28,7 +28,7 @@ deferred class
 inherit
 	SHARED_EXECUTION_ENVIRONMENT
 
-feature {NONE} -- Initialization
+feature {NONE} -- Creation
 
 	make (executable_name: READABLE_STRING_GENERAL; argument_list: detachable ITERABLE [READABLE_STRING_GENERAL]; work_directory: detachable READABLE_STRING_GENERAL)
 			-- Create process object with `executable_name' as executable with arguments `argument_list'
@@ -540,22 +540,19 @@ feature -- Status setting
 				create l_tbl.make (20)
 				environment_variable_table := l_tbl
 			end
-			from
-				a_table.start
-			until
-				a_table.after
+			across
+				a_table as t
 			loop
-				if a_table.key_for_iteration /= Void and then a_table.item_for_iteration /= Void then
-					l_tbl.force (a_table.item_for_iteration.string, a_table.key_for_iteration)
+				if attached t.key as k and then attached t.item as i then
+					l_tbl.force (i.string, k)
 				end
-				a_table.forth
 			end
 		end
 
 	set_environment_variable_use_unicode (b: BOOLEAN)
 			-- Set `is_environment_variable_unicode' with `b'.
 		obsolete
-			"Do not use as it has no effect."
+			"Do not use as it has no effect. [2017-05-31]"
 		require
 			process_not_running: not is_running
 		do
@@ -751,7 +748,7 @@ feature -- Status report
 	is_running: BOOLEAN
 			-- Is process running?
 		do
-			Result := (launched and then not has_exited)
+			Result := launched and then not has_exited
 		end
 
 	has_exited: BOOLEAN
@@ -796,7 +793,7 @@ feature -- Status report
 			-- Does `environment_variable_table' use Unicode?
 			-- Only has effect on Windows.
 		obsolete
-			"Do not use since it has no effect."
+			"Do not use since it has no effect. [2017-05-31]"
 		do
 		end
 
@@ -864,7 +861,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	initialize_parameter
 			-- Initialize parameters.
@@ -946,12 +943,13 @@ feature {NONE} -- Implementation
 								l_should_process := False
 							end
 						end
-						if l_should_process then
-							if l_char = '%'' then
-								l_in_simple := False
-								l_was_closing_quote := True
-								l_should_process := False
-							end
+						if
+							l_should_process and then
+							l_char = '%''
+						then
+							l_in_simple := False
+							l_was_closing_quote := True
+							l_should_process := False
 						end
 					elseif l_in_quote then
 						if l_was_backslash then
@@ -960,12 +958,13 @@ feature {NONE} -- Implementation
 							l_current_word.put (l_char, l_current_word.count)
 							l_should_process := False
 						end
-						if l_should_process then
-							if l_char = '"' then
-								l_in_quote := False
-								l_was_closing_quote := True
-								l_should_process := False
-							end
+						if
+							l_should_process and then
+							l_char = '"'
+						then
+							l_in_quote := False
+							l_was_closing_quote := True
+							l_should_process := False
 						end
 					end
 					if l_should_process then

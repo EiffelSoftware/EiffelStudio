@@ -1,5 +1,5 @@
 note
-	description: "An unnamed Unix pipe used for interprocess communication"
+	description: "An unnamed Unix pipe used for interprocess communication."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -16,10 +16,10 @@ inherit
 
 	DISPOSABLE
 
-create
+create {PROCESS_UNIX_OS}
 	make
 
-feature {PROCESS_UNIX_OS} -- Creation
+feature {NONE} -- Creation
 
 	make (read_fd, write_fd: INTEGER)
 			-- Create a pipe object which represents the
@@ -29,8 +29,8 @@ feature {PROCESS_UNIX_OS} -- Creation
 			valid_read_desc: read_fd >= 0
 			valid_write_desc: write_fd >= 0
 		do
-			read_descriptor := read_fd;
-			write_descriptor := write_fd;
+			read_descriptor := read_fd
+			write_descriptor := write_fd
 		ensure
 			read_desc_set: read_descriptor = read_fd
 			write_desc_set: write_descriptor = write_fd
@@ -98,14 +98,14 @@ feature {NONE} -- Implementation
 			-- File descriptor which is not in valid range
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

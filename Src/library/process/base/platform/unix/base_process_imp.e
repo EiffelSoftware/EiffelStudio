@@ -256,7 +256,7 @@ feature {NONE} -- Termination
 			force_terminated := True
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Access
 
 	child_process: PROCESS_UNIX_PROCESS_MANAGER
 			-- Child process.

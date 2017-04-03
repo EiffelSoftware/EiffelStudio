@@ -37,7 +37,6 @@ feature {NONE} -- Implementation
 		local
 			j, pos: INTEGER
 			ch: CHARACTER
-			tmp_strg: STRING
 			sep_found: BOOLEAN
 		do
 			Result := s.count + 1

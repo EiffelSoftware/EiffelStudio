@@ -222,7 +222,6 @@ feature -- Interface
 			date: DATE
 			time: TIME
 			int, i, type: INTEGER
-			double: DOUBLE
 			l_tmp: STRING
 			l_item: detachable DATE_TIME_CODE
 		do

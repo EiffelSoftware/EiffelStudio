@@ -181,7 +181,7 @@ feature -- Menu
 			create l_shared
 			if attached l_shared.title_bar_area_menu_items_agent as l_agent then
 				l_zone := zone_under_pointer_of_all_managers
-				if l_zone /= Void then
+				if l_zone /= Void and then l_zone.has_content then
 					l_content := l_zone.content
 					Result.append (l_agent.item ([l_content]))
 				end
@@ -238,7 +238,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

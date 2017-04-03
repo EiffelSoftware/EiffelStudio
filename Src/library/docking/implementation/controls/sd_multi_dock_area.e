@@ -302,7 +302,10 @@ feature {NONE} -- Implementation
 			until
 				a_list.after or not Result
 			loop
-				if a_list.item.content.type /= {SD_ENUMERATION}.editor then
+				if
+					a_list.item.has_content and then
+					a_list.item.content.type /= {SD_ENUMERATION}.editor
+				then
 					Result := False
 				end
 				a_list.forth
@@ -320,7 +323,10 @@ feature {NONE} -- Implementation
 			until
 				a_list.after or Result
 			loop
-				if a_list.item.content.type = {SD_ENUMERATION}.editor then
+				if
+					a_list.item.has_content and then
+					a_list.item.content.type = {SD_ENUMERATION}.editor
+				then
 					Result := True
 				end
 				a_list.forth
@@ -339,7 +345,10 @@ feature {NONE} -- Implementation
 	 		until
 	 			a_list.after or not Result
 	 		loop
-	 			if a_list.item.content.type /= {SD_ENUMERATION}.tool then
+	 			if
+	 				a_list.item.has_content and then
+	 				a_list.item.content.type /= {SD_ENUMERATION}.tool
+	 			then
 	 				Result := False
 	 			end
 	 			a_list.forth
@@ -361,6 +370,7 @@ feature {NONE} -- Implementation
 			-- Find editor place holder zone in `zones'
 		local
 			l_zones: like zones
+			z: SD_ZONE
 		do
 			from
 				l_zones := zones
@@ -368,8 +378,12 @@ feature {NONE} -- Implementation
 			until
 				l_zones.after or Result /= Void
 			loop
-				if l_zones.item.content.type = {SD_ENUMERATION}.place_holder then
-					if attached {like editor_place_holder} l_zones.item as r then
+				z := l_zones.item
+				if
+					z.has_content and then
+					z.content.type = {SD_ENUMERATION}.place_holder
+				then
+					if attached {like editor_place_holder} z as r then
 						Result := r
 					end
 				end
@@ -614,7 +628,7 @@ feature {NONE} -- Implementation
 			l_first := a_middle_container.first
 			l_second := a_middle_container.second
 
-			save_spliter_position (a_middle_container, generating_type + ".change_parent_to_normal_container")
+			save_spliter_position (a_middle_container, generating_type.name + ".change_parent_to_normal_container")
 
 			if attached {SD_VERTICAL_BOX} a_middle_container then
 				create {SD_VERTICAL_SPLIT_AREA} Result
@@ -642,7 +656,7 @@ feature {NONE} -- Implementation
 				l_parent_middle_container.set_split_position (l_parent_split_position)
 			end
 
-			restore_spliter_position (Result, generating_type + ".change_parent_to_normal_container")
+			restore_spliter_position (Result, generating_type.name + ".change_parent_to_normal_container")
 
 			if l_split_position >= Result.minimum_split_position and l_split_position <= Result.maximum_split_position then
 				Result.set_split_position (l_split_position)
@@ -673,7 +687,7 @@ feature {NONE} -- Implementation
 			l_first := a_middle_container.first
 			l_second := a_middle_container.second
 
-			save_spliter_position (a_middle_container, generating_type + ".change_parent_to_minimized_container")
+			save_spliter_position (a_middle_container, generating_type.name + ".change_parent_to_minimized_container")
 
 			if attached {EV_VERTICAL_SPLIT_AREA} a_middle_container then
 				create {SD_VERTICAL_BOX} Result.make
@@ -700,7 +714,7 @@ feature {NONE} -- Implementation
 				l_parent_middle_container.set_split_position (l_parent_split_position)
 			end
 
-			restore_spliter_position (Result, generating_type + ".change_parent_to_minimized_container")
+			restore_spliter_position (Result, generating_type.name + ".change_parent_to_minimized_container")
 
 			Result.set_split_position (l_split_position)
 
@@ -786,7 +800,7 @@ feature {NONE} -- Implementation
 
 				if attached {SD_MIDDLE_CONTAINER} l_widget as w then
 					l_widget_split := w
-					save_spliter_position (l_widget_split, generating_type + ".up_spliter_level")
+					save_spliter_position (l_widget_split, generating_type.name + ".up_spliter_level")
 				end
 
 				l_parent.prune (a_split_area)
@@ -808,7 +822,7 @@ feature {NONE} -- Implementation
 				end
 
 				if l_widget_split /= Void then
-					restore_spliter_position (l_widget_split, generating_type + ".up_spliter_level")
+					restore_spliter_position (l_widget_split, generating_type.name + ".up_spliter_level")
 				end
 			end
 		ensure
@@ -903,7 +917,7 @@ feature {NONE} -- Implementation attributes
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -152,7 +152,10 @@ feature -- Commands
 			until
 				l_zones_snapshot.after
 			loop
-				if attached {SD_AUTO_HIDE_ZONE} l_zones_snapshot.item as l_auto_hide_zone then
+				if
+					attached {SD_AUTO_HIDE_ZONE} l_zones_snapshot.item as l_auto_hide_zone and then
+					l_auto_hide_zone.has_content
+				then
 					if not a_animation then
 						docking_manager.zones.zones.prune (l_auto_hide_zone)
 						l_auto_hide_zone.content.state.record_state
@@ -349,7 +352,7 @@ feature -- Commands
 
 				docking_manager.command.resize (True)
 				if attached l_parent then
-					l_main_area.restore_spliter_position (l_parent, generating_type + ".minimized")
+					l_main_area.restore_spliter_position (l_parent, generating_type.name + ".minimized")
 				end
 
 				orignal_whole_item_for_minimized := Void
@@ -392,7 +395,7 @@ feature -- Commands
 						if l_parent_parent /= Void then
 							orignal_whole_item_for_minimized := l_editor_parent
 
-							l_editor_area.save_spliter_position (l_parent_parent, generating_type + ".minimized")
+							l_editor_area.save_spliter_position (l_parent_parent, generating_type.name + ".minimized")
 
 							if attached {EV_BOX} l_parent_parent as lt_parent_parent then
 								is_minimize_orignally := True
@@ -454,7 +457,7 @@ feature -- Commands
 
 					l_orignal_whole_item := l_editor_area.item
 					orignal_whole_item := l_orignal_whole_item
-					l_editor_area.save_spliter_position (l_orignal_whole_item, generating_type + ".maximize_editor_area")
+					l_editor_area.save_spliter_position (l_orignal_whole_item, generating_type.name + ".maximize_editor_area")
 
 					if attached l_orignal_editor_parent then
 						l_orignal_editor_parent.prune (l_editor_parent)
@@ -503,7 +506,7 @@ feature -- Commands
 					l_only_one_editor_zone.enable_maximize_minimize_buttons
 				end
 
-				l_main_area.restore_spliter_position (l_orignal_whole_item, generating_type + ".maximize_editor_area")
+				l_main_area.restore_spliter_position (l_orignal_whole_item, generating_type.name + ".maximize_editor_area")
 
 				orignal_editor_parent := Void
 				orignal_whole_item := Void
@@ -775,7 +778,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

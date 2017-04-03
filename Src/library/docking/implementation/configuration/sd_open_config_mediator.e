@@ -519,7 +519,6 @@ feature {NONE} -- Implementation
 	set_all_visible
 			-- Set all contents not visible
 		local
-			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_content: SD_CONTENT
 		do
 			across

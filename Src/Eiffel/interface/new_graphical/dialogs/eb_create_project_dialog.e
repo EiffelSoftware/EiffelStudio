@@ -425,15 +425,18 @@ feature {NONE} -- Implementation
 			label.align_text_left
 			vb.extend (label)
 
-			create cb.make_with_text (Interface_names.l_remember_project_location)
-			cb.set_tooltip (Interface_names.f_remember_project_location_tooltip)
-			last_saved_location_checkbox := cb
-			if preferences.dialog_data.last_saved_basic_project_directory /= Void then
-				cb.enable_select
-			else
-				cb.disable_select
+			if ask_for_system_name then
+					-- Remember location, only for project creation.
+				create cb.make_with_text (Interface_names.l_remember_project_location)
+				cb.set_tooltip (Interface_names.f_remember_project_location_tooltip)
+				last_saved_location_checkbox := cb
+				if preferences.dialog_data.last_saved_basic_project_directory /= Void then
+					cb.enable_select
+				else
+					cb.disable_select
+				end
+				vb.extend (cb)
 			end
-			vb.extend (cb)
 
 			project_directory_frame.extend (vb)
 

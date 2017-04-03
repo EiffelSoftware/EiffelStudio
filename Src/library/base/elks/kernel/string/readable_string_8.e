@@ -105,6 +105,26 @@ feature {NONE} -- Initialization
 			c_string_provider.read_substring_into_character_8_area (area, 1, l_count)
 		end
 
+	make_from_c_substring (c_string: POINTER; start_pos, end_pos: INTEGER)
+			-- Initialize from substring of `c_string',
+			-- between `start_pos' and `end_pos',
+			-- `c_string' created by some C function.
+		require
+			c_string_exists: c_string /= default_pointer
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+		local
+			l_count: INTEGER
+		do
+			l_count := end_pos - start_pos + 1
+			c_string_provider.set_shared_from_pointer_and_count (c_string + (start_pos - 1), l_count)
+			create area.make_filled ('%/000/', l_count + 1)
+			count := l_count
+			internal_hash_code := 0
+			internal_case_insensitive_hash_code := 0
+			c_string_provider.read_substring_into_character_8_area (area, 1, l_count)
+		end
+
 	make_from_c_pointer (c_string: POINTER)
 			-- Create new instance from contents of `c_string',
 			-- a string created by some C function

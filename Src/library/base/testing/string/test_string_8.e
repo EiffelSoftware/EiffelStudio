@@ -1093,6 +1093,112 @@ feature -- Tests
 			check_boolean ("make_from_c", s.is_empty)
 		end
 
+	test_make_from_c_substring
+		local
+			l_ptr: MANAGED_POINTER
+			s: STRING_8
+		do
+				-- Creation `make_from_c_substring`
+			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create s.make_from_c_substring (l_ptr.item, 2, 5)
+			check_boolean ("make_from_c_substring", s.is_equal ("1234"))
+
+			create s.make_from_c_substring (l_ptr.item, 2, 2)
+			check_boolean ("make_from_c_substring", s.is_equal ("1"))
+
+			create s.make_from_c_substring (l_ptr.item, 3, 7)
+			check_boolean ("make_from_c_substring", s.is_equal ("23456"))
+
+			create s.make_from_c_substring (l_ptr.item, 1, 8)
+			check_boolean ("make_from_c_substring", s.is_equal ("0123456%U"))
+
+
+			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create s.make_from_c_substring (l_ptr.item, 2, 8)
+			check_boolean ("make_from_c_substring", s.is_equal ("0123456"))
+
+			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 0, 52, 53, 54, 0 >>)
+			create s.make_from_c_substring (l_ptr.item, 1, 10)
+			check_boolean ("make_from_c_substring", s.is_equal ("%U0123%U456%U"))
+
+				-- Procedure `make_from_c_substring`
+			s := "abcdef"
+			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			s.make_from_c_substring (l_ptr.item, 2, 5)
+			check_boolean ("make_from_c_substring", s.is_equal ("1234"))
+
+			s := "abcdef"
+			s.make_from_c_substring (l_ptr.item, 3, 7)
+			check_boolean ("make_from_c_substring", s.is_equal ("23456"))
+
+			s := "abcdef"
+			s.make_from_c_substring (l_ptr.item, 1, 8)
+			check_boolean ("make_from_c_substring", s.is_equal ("0123456%U"))
+
+
+			s := "abcdef"
+			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			s.make_from_c_substring (l_ptr.item, 2, 8)
+			check_boolean ("make_from_c_substring", s.is_equal ("0123456"))
+
+			s := "abcdef"
+			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 0, 52, 53, 54, 0 >>)
+			s.make_from_c_substring (l_ptr.item, 1, 10)
+			check_boolean ("make_from_c_substring", s.is_equal ("%U0123%U456%U"))
+		end
+
+	test_make_from_c_and_count
+		local
+			l_ptr: MANAGED_POINTER
+			s: STRING_8
+		do
+				-- Creation `make_from_c_and_count`
+			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create s.make_from_c_and_count (l_ptr.item, 3)
+			check_boolean ("make_from_c_and_count", s.is_equal ("012"))
+
+			create s.make_from_c_and_count (l_ptr.item, 7)
+			check_boolean ("make_from_c_and_count", s.is_equal ("0123456"))
+
+			create s.make_from_c_and_count (l_ptr.item, 8)
+			check_boolean ("make_from_c_and_count", s.is_equal ("0123456%U"))
+
+
+			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create s.make_from_c_and_count (l_ptr.item, 9)
+			check_boolean ("make_from_c_and_count", s.is_equal ("%U0123456%U"))
+
+			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 0, 52, 53, 54, 0 >>)
+			create s.make_from_c_and_count (l_ptr.item, 10)
+			check_boolean ("make_from_c_and_count", s.is_equal ("%U0123%U456%U"))
+
+				-- Procedure `make_from_c_and_count`
+			s := "abcdef"
+			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			s.make_from_c_and_count (l_ptr.item, 3)
+			check_boolean ("make_from_c_and_count", s.is_equal ("012"))
+
+			s := "abcdef"
+			s.make_from_c_and_count (l_ptr.item, 7)
+			check_boolean ("make_from_c_and_count", s.is_equal ("0123456"))
+
+			s := "abcdef"
+			s.make_from_c_and_count (l_ptr.item, 8)
+			check_boolean ("make_from_c_and_count", s.is_equal ("0123456%U"))
+
+
+			s := "abcdef"
+			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			s.make_from_c_and_count (l_ptr.item, 9)
+			check_boolean ("make_from_c_and_count", s.is_equal ("%U0123456%U"))
+
+			s := "abcdef"
+			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 0, 52, 53, 54, 0 >>)
+			s.make_from_c_and_count (l_ptr.item, 10)
+			check_boolean ("make_from_c_and_count", s.is_equal ("%U0123%U456%U"))
+
+		end
+
 	test_make_from_string
 		local
 			s, p: STRING_8
@@ -2473,5 +2579,15 @@ feature -- Tests
 
 
 
+note
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end
 

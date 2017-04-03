@@ -15,7 +15,8 @@ class
 inherit
 	READABLE_STRING_8
 		export
-			{ANY} make, make_empty, make_filled, make_from_c, make_from_string, fill_character
+			{ANY} make, make_empty, make_filled, make_from_c, make_from_c_substring,
+					make_from_string, fill_character
 		redefine
 			area
 		end
@@ -84,6 +85,7 @@ create
 	make_filled,
 	make_from_string,
 	make_from_c,
+	make_from_c_substring,
 	make_from_c_pointer,
 	make_from_cil,
 	make_from_separate
@@ -135,7 +137,8 @@ feature -- Initialization
 
 	from_c_substring (c_string: POINTER; start_pos, end_pos: INTEGER)
 			-- Reset contents of string from substring of `c_string',
-			-- a string created by some C function.
+			-- between `start_pos' and `end_pos',
+			-- and `c_string' created by some C function.
 		require
 			c_string_exists: c_string /= default_pointer
 			start_position_big_enough: start_pos >= 1

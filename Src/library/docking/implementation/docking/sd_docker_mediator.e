@@ -519,7 +519,7 @@ feature {NONE} -- Implementation functions
 			-- This feature copied from {EVS_HELPERS}
 		require
 			a_widget_attached: a_widget /= Void
-			a_widget_is_parented: a_widget.has_parent or (({EV_WINDOW}) #? a_widget /= Void)
+			a_widget_is_parented: a_widget.has_parent or (({EV_WINDOW}).attempted (a_widget) /= Void)
 			not_a_widget_is_destroyed: not a_widget.is_destroyed
 		local
 			l_stop_looking: BOOLEAN
@@ -571,7 +571,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -273,7 +273,8 @@ feature -- Query
 		do
 			check
 				internal_inner_container.readable and then
-				attached {SD_ZONE} internal_inner_container.item as l_zone
+				attached {SD_ZONE} internal_inner_container.item as l_zone and then
+				l_zone.has_content
 			then
 				-- Implied by preconditon `valid'
 				Result := l_zone.content
@@ -567,6 +568,7 @@ feature {NONE} -- Agents
 			-- Handle close request
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
+			z: SD_ZONE
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
 			create l_zones.make (1)
@@ -576,7 +578,8 @@ feature {NONE} -- Agents
 			until
 				l_zones.after
 			loop
-				if attached {SD_MULTI_CONTENT_ZONE} l_zones.item as l_multi_zone then
+				z := l_zones.item
+				if attached {SD_MULTI_CONTENT_ZONE} z as l_multi_zone then
 					l_contents := l_multi_zone.contents.twin
 					from
 						l_contents.start
@@ -586,8 +589,8 @@ feature {NONE} -- Agents
 						l_contents.item.close_request_actions.call (Void)
 						l_contents.forth
 					end
-				else
-					l_zones.item.content.close_request_actions.call (Void)
+				elseif z.has_content then
+					z.content.close_request_actions.call (Void)
 				end
 
 				l_zones.forth

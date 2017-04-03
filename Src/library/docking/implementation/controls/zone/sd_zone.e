@@ -141,9 +141,11 @@ feature -- Command
 		require
 			vaild: a_width >= 0
 		do
-			content.state.set_last_floating_width (a_width)
+			if has_content then
+				content.state.set_last_floating_width (a_width)
+			end
 		ensure
-			set: content.state.last_floating_width = a_width
+			set: has_content implies content.state.last_floating_width = a_width
 		end
 
 	set_last_floating_height (a_height: INTEGER)
@@ -151,9 +153,11 @@ feature -- Command
 		require
 			valid: a_height >= 0
 		do
-			content.state.set_last_floating_height (a_height)
+			if has_content then
+				content.state.set_last_floating_height (a_height)
+			end
 		ensure
-			set: content.state.last_floating_height = a_height
+			set: has_content implies content.state.last_floating_height = a_height
 		end
 
 	update_mini_tool_bar_size
@@ -191,6 +195,7 @@ feature -- Query
 	has_content: BOOLEAN
 			-- Has content?
 		do
+				-- To redefine.
 			Result := True
 		end
 
@@ -319,7 +324,9 @@ feature {NONE} -- Implementation
 	on_close_request
 			-- Handle close request actions
 		do
-			content.close_request_actions.call (Void)
+			if has_content then
+				content.close_request_actions.call (Void)
+			end
 		end
 
 	internal_shared: SD_SHARED

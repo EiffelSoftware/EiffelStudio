@@ -1147,58 +1147,6 @@ feature -- Tests
 			check_boolean ("make_from_c_substring", s.is_equal ("%U0123%U456%U"))
 		end
 
-	test_make_from_c_and_count
-		local
-			l_ptr: MANAGED_POINTER
-			s: STRING_8
-		do
-				-- Creation `make_from_c_and_count`
-			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
-			create s.make_from_c_and_count (l_ptr.item, 3)
-			check_boolean ("make_from_c_and_count", s.is_equal ("012"))
-
-			create s.make_from_c_and_count (l_ptr.item, 7)
-			check_boolean ("make_from_c_and_count", s.is_equal ("0123456"))
-
-			create s.make_from_c_and_count (l_ptr.item, 8)
-			check_boolean ("make_from_c_and_count", s.is_equal ("0123456%U"))
-
-
-			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
-			create s.make_from_c_and_count (l_ptr.item, 9)
-			check_boolean ("make_from_c_and_count", s.is_equal ("%U0123456%U"))
-
-			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 0, 52, 53, 54, 0 >>)
-			create s.make_from_c_and_count (l_ptr.item, 10)
-			check_boolean ("make_from_c_and_count", s.is_equal ("%U0123%U456%U"))
-
-				-- Procedure `make_from_c_and_count`
-			s := "abcdef"
-			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
-			s.make_from_c_and_count (l_ptr.item, 3)
-			check_boolean ("make_from_c_and_count", s.is_equal ("012"))
-
-			s := "abcdef"
-			s.make_from_c_and_count (l_ptr.item, 7)
-			check_boolean ("make_from_c_and_count", s.is_equal ("0123456"))
-
-			s := "abcdef"
-			s.make_from_c_and_count (l_ptr.item, 8)
-			check_boolean ("make_from_c_and_count", s.is_equal ("0123456%U"))
-
-
-			s := "abcdef"
-			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
-			s.make_from_c_and_count (l_ptr.item, 9)
-			check_boolean ("make_from_c_and_count", s.is_equal ("%U0123456%U"))
-
-			s := "abcdef"
-			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 0, 52, 53, 54, 0 >>)
-			s.make_from_c_and_count (l_ptr.item, 10)
-			check_boolean ("make_from_c_and_count", s.is_equal ("%U0123%U456%U"))
-
-		end
-
 	test_make_from_string
 		local
 			s, p: STRING_8

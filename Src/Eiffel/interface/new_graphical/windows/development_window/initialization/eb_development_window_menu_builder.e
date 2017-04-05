@@ -1092,6 +1092,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 		do
 			create Result.make_with_text (develop_window.Interface_names.m_Editor_area)
 
+
 			l_new_menu_item := develop_window.commands.maximize_editor_area_command.new_menu_item
 			Result.extend (l_new_menu_item)
 			auto_recycle (l_new_menu_item)
@@ -1511,6 +1512,13 @@ feature -- Docking library menu items
 				l_new_menu_item := l_last_development_window.commands.restore_editors_command.new_menu_item
 				Result.extend (l_new_menu_item)
 				auto_recycle (l_new_menu_item)
+
+					-- Separator --------------------------------------
+				Result.extend (create {EV_MENU_SEPARATOR})
+				l_new_menu_item := l_last_development_window.commands.restore_tab_cmd.new_menu_item
+				Result.extend (l_new_menu_item)
+				auto_recycle (l_new_menu_item)
+
 			end
 		end
 

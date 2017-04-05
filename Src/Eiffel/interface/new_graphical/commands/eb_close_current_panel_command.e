@@ -11,14 +11,16 @@ class
 inherit
 	EB_CLOSE_PANEL_COMMAND
 		redefine
-			new_menu_item
+			new_menu_item,
+			shortcut_string
 		end
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
 		rename
 			target as develop_window
 		redefine
-			make
+			make,
+			shortcut_string
 		end
 
 create
@@ -33,7 +35,7 @@ feature {NONE} -- Creation method
 			l_shortcut: SHORTCUT_PREFERENCE
 		do
 			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}(a_develop_window)
-
+	
 			create l_preference
 			l_shortcut := l_preference.preferences.misc_shortcut_data.Shortcuts.item ("close_focusing_docking_tool_or_editor")
 			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
@@ -56,6 +58,12 @@ feature -- Query
 		do
 			Result := Precursor
 			Result.set_pixmap (pixmaps.icon_pixmaps.tab_close_icon)
+		end
+
+	shortcut_string: STRING_GENERAL
+			-- <Precurosr>
+		do
+			Result := "Ctrl+F4"
 		end
 
 feature -- Command
@@ -88,7 +96,7 @@ feature -- Command
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

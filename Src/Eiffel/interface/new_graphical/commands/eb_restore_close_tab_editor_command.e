@@ -1,6 +1,5 @@
 note
 	description: "Command to restore a recently closed tab"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,8 +7,10 @@ class
 	EB_RESTORE_CLOSE_TAB_EDITOR_COMMAND
 
 inherit
+
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
+			shortcut_string,
 			tooltext,
 			new_sd_toolbar_item,
 			new_mini_sd_toolbar_item
@@ -17,16 +18,14 @@ inherit
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
 		rename
-			target as development_window,
-			make as make_old
+			target as development_window
+		redefine
+			make,
+			shortcut_string
 		end
+
 
 	EB_SHARED_PREFERENCES
-		export
-			{NONE} all
-		end
-
-	EB_SHARED_WINDOW_MANAGER
 
 	EB_CONSTANTS
 
@@ -37,8 +36,6 @@ feature -- Initialization
 
 	make (dev_window: EB_DEVELOPMENT_WINDOW)
 			-- Creation method.
-		require
-			dev_window_attached: dev_window /= Void
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
 		do
@@ -48,8 +45,6 @@ feature -- Initialization
 			set_referred_shortcut (l_shortcut)
 			accelerator.actions.extend (agent execute)
 			enable_sensitive
-		ensure
-			development_window_attached: development_window = dev_window
 		end
 
 	execute
@@ -112,12 +107,26 @@ feature -- Items
 			Result.drop_actions.set_veto_pebble_function (agent editors_manager.stone_acceptable)
 		end
 
+
+
 feature {NONE} -- Implementation
 
 	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := interface_names.m_restore_tab
+		end
+
+	tooltip: STRING_GENERAL
+			-- Tooltip for the toolbar button.
+		do
+			Result := interface_names.f_restore_tab
+		end
+
+	shortcut_string: STRING_GENERAL
+			-- <Precurosr>
+		do
+			Result := "Ctrl+Shift+T"
 		end
 
 	pixmap: EV_PIXMAP
@@ -129,13 +138,7 @@ feature {NONE} -- Implementation
 	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
-			Result := pixmaps.icon_pixmaps.new_document_icon_buffer
-		end
-
-	tooltip: STRING_GENERAL
-			-- Tooltip for the toolbar button.
-		do
-			Result := interface_names.f_restore_tab
+			Result := pixmaps.icon_pixmaps.class_normal_icon
 		end
 
 	tooltext: STRING_GENERAL

@@ -1001,8 +1001,8 @@ feature -- Menu mnenomics
 	m_Tools_layout: STRING_32			do Result := locale.translation("&Tools Layout")	end
 	m_Unify_stone: STRING_32				do Result := locale.translation("Lin&k Context Tool")	end
 
-	f_Restore_tab: STRING_32 				do Result := locale.translation("Restore Tab")	end
-	m_Restore_tab: STRING_32					do Result := locale.translation("Restore Ta&b")	end
+	f_Restore_tab: STRING_32 				do Result := locale.translation("Open last closed tab")	end
+	m_Restore_tab: STRING_32					do Result := locale.translation("Open last closed tab")	end
 
 	m_When_hits: STRING_32				do Result := locale.translation("When Hits ...")	end
 

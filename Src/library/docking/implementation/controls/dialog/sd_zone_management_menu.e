@@ -26,7 +26,7 @@ feature {NONE}  -- Initlization
 			create internal_shared
 			create internal_close
 			internal_close.set_pixmap (internal_shared.icons.close_context_tool_bar)
-			internal_close.set_text (internal_shared.interface_names.menu_close)
+			internal_close.set_text (internal_shared.interface_names.menu_close + "%TCtrl+F4")
 			items.extend (internal_close)
 			create internal_close_others
 			internal_close_others.set_pixmap (internal_shared.icons.close_others)
@@ -110,7 +110,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

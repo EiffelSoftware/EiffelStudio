@@ -1487,7 +1487,7 @@ test	scoop-across-iteration-loop			scoop077 tcf pass scoop multithreaded executi
 test	scoop-creation-class-invariant			scoop078 tcf fail scoop multithreaded execution invariant assertion
 test	scoop-creation-exception-access			scoop079 tcf fail scoop multithreaded execution creation exception
 test	scoop-separate-call-class-invariant		scoop080 tcf fail scoop multithreaded execution invariant assertion 
-test	scoop-recursive-precondition			scoop081 tcf fail scoop multithreaded execution precondition assertion
+test	scoop-recursive-precondition			scoop081 tcf pass scoop multithreaded execution precondition assertion
 
 test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreaded deadlock
 test	deadlock-simple-asymmetric-cycle		deadlock002 tcf manual scoop multithreaded deadlock

@@ -2,7 +2,7 @@
 	description:	"Representation of a SCOOP processor."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
+	copyright:	"Copyright (c) 2010-2017, Eiffel Software.",
 				"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
@@ -115,8 +115,9 @@ rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_proces
 		self->is_dirty = EIF_FALSE;
 		self->is_impersonation_allowed = EIF_TRUE;
 		self->result_notify_proxy = &self->result_notify;
-			/* Only the root processor's creation procedure is initially "logged". */
+			/* Only the root processor's creation procedure is initially "logged" and "called". */
 		self->is_creation_procedure_logged = is_root_processor;
+		self->nstcall_value = is_root_processor? 1 : -1;
 
 			/* Initialize the embedded vector structs.
 			 * As no memory allocation happens, we don't have to care about errors. */
@@ -311,12 +312,15 @@ rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_p
 		} else {
 
 				/* Execute the call. */
-			is_successful = rt_try_execute_scoop_call (call);
+			is_successful = rt_try_execute_scoop_call (call, self->nstcall_value);
 
 				/* Mark the current region as dirty if the call fails. */
 			if (!is_successful) {
 				self->is_dirty = EIF_TRUE;
 			}
+				/* Mark that a creation procedure has been called. */
+				/* The mark is correct even if this was a regular feature call. */
+			self->nstcall_value = 1;
 
 			if (l_is_synchronous) {
 					/* Return the previously acquired locks. */

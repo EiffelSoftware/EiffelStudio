@@ -1484,9 +1484,9 @@ test	scoop-controlled-object-test			scoop074 tcf pass scoop multithreaded object
 test	scoop-temporary-pointer-variable		scoop075 tcf pass scoop multithreaded execution
 test	scoop-callback-region-adoption			scoop076 tcf pass scoop multithreaded execution
 test	scoop-across-iteration-loop			scoop077 tcf pass scoop multithreaded execution across iteration loop validity
-test	scoop-creation-class-invariant			scoop078 tcf fail scoop multithreaded execution invariant assertion
+test	scoop-creation-class-invariant			scoop078 tcf pass scoop multithreaded execution invariant assertion
 test	scoop-creation-exception-access			scoop079 tcf fail scoop multithreaded execution creation exception
-test	scoop-separate-call-class-invariant		scoop080 tcf fail scoop multithreaded execution invariant assertion 
+test	scoop-separate-call-class-invariant		scoop080 tcf pass scoop multithreaded execution invariant assertion 
 test	scoop-recursive-precondition			scoop081 tcf pass scoop multithreaded execution precondition assertion
 
 test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreaded deadlock

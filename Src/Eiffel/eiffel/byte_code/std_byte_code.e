@@ -1177,25 +1177,6 @@ end
 			if Context.origin_has_precondition then
 				have_assert := attached precondition or else inh_assert.has_precondition
 			end
-			if has_wait_condition then
-					-- There are wait conditions.
-					-- If they fail, the precondition needs to be re-eveluated.
-					-- The generated code looks like
-					--    for (;;) {
-					--       int has_wait_condition = 0
-					--       ... // Allocate request chain (see below).
-					--       ... // Evaluate preconditions and set has_wait_condition if wait conditions are involved.
-					--       if (!has_wait_condition) break;
-					--       RTCK; // Remove a stack item pushed when entering a precondition.
-					--       RTS_SRF (Current); // Free request chain to let the scheduler reschedule this call.
-					--    }
-					--    RTCF; // Raise exception
-				buf.put_new_line
-				buf.put_string ("for (;;) {")
-				buf.indent
-				buf.put_new_line
-				buf.put_string ("int has_wait_condition = 0;")
-			end
 			workbench_mode := context.workbench_mode
 				-- Preconditions are always generated in workbench mode.
 				-- In finalized mode they are generated if requested by user
@@ -1205,14 +1186,37 @@ end
 				(workbench_mode or else context.system.keep_assertions or else has_wait_condition)
 			then
 				buf.put_new_line
-					-- The precondition is checked on demand only.
-				if context.has_request_chain then
+				if has_wait_condition then
 						-- The precondition has to be checked all the time if there is a wait condition.
-					buf.put_string ("if (uarg || (RTAL & CK_REQUIRE) || RTAC) {")
+					buf.put_string (if workbench_mode or else context.system.keep_assertions then
+							-- If there is no wait condition, the precondition may still need to be checked if assertion monitoring is enabled.
+						"if (uarg || (RTAL & CK_REQUIRE) || RTAC) {"
+					else
+						"if (uarg) {"
+					end)
+					buf.indent
+						-- There are wait conditions.
+						-- If they fail, the precondition needs to be re-eveluated.
+						-- The generated code looks like
+						--    for (;;) {
+						--       int has_wait_condition = 0
+						--       ... // Allocate request chain (see below).
+						--       ... // Evaluate preconditions and set has_wait_condition if wait conditions are involved.
+						--       if (!has_wait_condition) break;
+						--       RTCK; // Remove a stack item pushed when entering a precondition.
+						--       RTS_SRF (Current); // Free request chain to let the scheduler reschedule this call.
+						--    }
+						--    RTCF; // Raise exception
+					buf.put_new_line
+					buf.put_string ("for (;;) {")
+					buf.indent
+					buf.put_new_line
+					buf.put_string ("int has_wait_condition = 0;")
 				else
+						-- The precondition is checked on demand only.
 					buf.put_string ("if ((RTAL & CK_REQUIRE) || RTAC) {")
+					buf.indent
 				end
-				buf.indent
 
 				if inh_assert.has_precondition then
 					inh_assert.generate_precondition

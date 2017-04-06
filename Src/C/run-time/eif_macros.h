@@ -2,7 +2,7 @@
 	description: "Macros used by C code at run time."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2015, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2017, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1400,12 +1400,13 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 /*
  * Separate call arguments:
- * RTS_AC(n,t,a) - allocate container a that can hold n arguments for target t
- * RTS_AA(v,f,t,n,a) - register argument v corresponding to field f of type t at position n
+ * RTS_AC(n,t) - allocate a container that can hold n arguments for target t
+ * RTS_AA(v,f,t,n) - register argument v corresponding to field f of type t at position n
  */
 #define RTS_AC(n,t) \
 	{ \
 		l_scoop_call_data = malloc (sizeof (struct eif_scoop_call_data) + sizeof (EIF_TYPED_VALUE) * (size_t) (n) - sizeof (EIF_TYPED_VALUE)); \
+		l_scoop_call_data -> is_assertion = in_assertion; \
 		l_scoop_call_data -> target = (t); \
 		l_scoop_call_data -> count = (n); \
 		l_scoop_call_data -> is_synchronous = EIF_FALSE; \

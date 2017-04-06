@@ -343,7 +343,7 @@ feature
 					-- generated directly by a call to `print_register'.
 					-- Otherwise, we have to generate it now.
 				l_type := real_type (target.type)
-				message_target.generate_call (system.is_scoop and then l_type.is_separate, False, register, reg)
+				message_target.generate_call (system.is_scoop and then l_type.is_separate, False, False, register, reg)
 			end
 		end
 
@@ -378,7 +378,7 @@ feature {REGISTRABLE} -- C code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Byte code for creation expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,15 +28,6 @@ feature -- Visitor
 			-- Process current element.
 		do
 			v.process_creation_expr_b (Current)
-		end
-
-feature -- Access
-
-	parameters: BYTE_LIST [PARAMETER_B]
-		do
-			if call /= Void then
-				Result := call.parameters
-			end
 		end
 
 feature -- Register
@@ -218,19 +209,27 @@ feature -- Status report
 			Result := call /= Void and then call.routine_id = system.special_make_empty_rout_id
 		end
 
-feature -- Access
-
 	is_active: BOOLEAN
 			-- Shall an active region be created if the creation type is separate?
+
+	is_creation_instruction: BOOLEAN
+			-- Is expression used to model creation instruction?
+
+feature -- Access
+
+	parameters: BYTE_LIST [PARAMETER_B]
+			-- <Precursor>
+		do
+			if call /= Void then
+				Result := call.parameters
+			end
+		end
 
 	info: CREATE_INFO
 			-- Creation info for creation the right type
 
 	call: CALL_ACCESS_B
 			-- Call after creation expression: can be Void.
-
-	is_creation_instruction: BOOLEAN
-			-- Is expression used to model creation instruction?
 
 	line_number: INTEGER
 			-- Line number where construct begins in the Eiffel source.
@@ -302,11 +301,8 @@ feature -- Comparisons
 
 	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
-		local
-			creation_expr_b: CREATION_EXPR_B
 		do
-			creation_expr_b ?= other
-			Result := creation_expr_b /= Void
+			Result := attached {CREATION_EXPR_B} other
 		end
 
 feature -- Type info
@@ -321,11 +317,10 @@ feature -- Generation
 		local
 			buf: GENERATION_BUFFER
 			t: TYPE_A
-			l_class_type: SPECIAL_CLASS_TYPE
-			parameter: PARAMETER_BL
 			l_is_make_filled: BOOLEAN
 			l_generate_call: BOOLEAN
 			l_is_separate: BOOLEAN
+			p: PARAMETER_B
 		do
 			buf := buffer
 			generate_line_info
@@ -347,24 +342,28 @@ feature -- Generation
 				check
 					is_special_type: type.has_associated_class_type (context.context_class_type.type)
 				end
-				l_class_type ?= type.associated_class_type (context.context_class_type.type)
-				check
-					l_class_type_not_void: l_class_type /= Void
-				end
-				if attached call as l_call then
-					l_call.parameters.first.generate
-					if l_is_make_filled then
-						l_call.parameters.i_th (2).generate
-						parameter ?= l_call.parameters.i_th (2)
-					else
-						parameter ?= l_call.parameters.first
+				if attached {SPECIAL_CLASS_TYPE} type.associated_class_type (context.context_class_type.type) as l_class_type then
+					if attached call as l_call then
+						l_call.parameters.first.generate
+						if l_is_make_filled then
+							l_call.parameters [2].generate
+							p := l_call.parameters [2]
+						else
+							p := l_call.parameters.first
+						end
+					end
+					info.generate_start (buf)
+					info.generate_gen_type_conversion (0)
+					if attached {PARAMETER_BL} p as parameter then
+						l_class_type.generate_creation (buf, info, register, parameter, l_is_make_filled, is_special_make_empty, True)
+					end
+					info.generate_end (buf)
+					l_generate_call := l_is_make_filled
+				else
+					check
+						is_special_class_type: False
 					end
 				end
-				info.generate_start (buf)
-				info.generate_gen_type_conversion (0)
-				l_class_type.generate_creation (buf, info, register, parameter, l_is_make_filled, is_special_make_empty, True)
-				info.generate_end (buf)
-				l_generate_call := l_is_make_filled
 			else
 				info.generate_start (buf)
 				info.generate_gen_type_conversion (0)
@@ -395,7 +394,7 @@ feature -- Generation
 					c.generate_parameters (register)
 				end
 					-- Call a creation procedure
-				c.generate_call (l_is_separate, l_is_separate and is_active, Void, register)
+				c.generate_call (l_is_separate, l_is_separate and is_active, True, Void, register)
 				c.set_parent (Void)
 				generate_frozen_debugger_hook_nested
 			end
@@ -404,6 +403,7 @@ feature -- Generation
 feature -- Inlining
 
 	size: INTEGER
+			-- <Precursor>
 		do
 				-- Inlining will not be done if the feature
 				-- has a creation instruction
@@ -424,7 +424,7 @@ feature {BYTE_NODE_VISITOR} -- Assertion support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

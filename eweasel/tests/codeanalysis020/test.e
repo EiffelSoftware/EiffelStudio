@@ -8,11 +8,11 @@ inherit
 
 create
 	make,
-	make_from_a,
+	from_boolean,
 	proc
 
 convert
-	make_from_a ({A}),
+	from_boolean ({BOOLEAN}),
 	to_boolean: {BOOLEAN}
 
 feature {NONE} -- Creation
@@ -21,6 +21,8 @@ feature {NONE} -- Creation
 		local
 			value: TEST
 			b: BOOLEAN
+			array_test: ARRAY [TEST]
+			array_boolean: ARRAY [BOOLEAN]
 		do
 			attr := Current -- No warning here: it's OK to assign to obsolete attributes.
 			create attr.make -- No warning here: it's OK to use obsolete attributes as targets of creation.
@@ -44,20 +46,21 @@ feature {NONE} -- Creation
 			create value.proc
 			;(create {TEST}.proc).do_nothing
 			Precursor
-			value := a
-			b := Current
-		end
-
-feature {NONE} -- Access
-
-	a: A
-		do
-			Result := Current
+			value := b
+			b := value
+			array_test := <<b>>
+			array_boolean := <<value>>
+			;(value = b).do_nothing
+			;(b = value).do_nothing
+			;(value * b).do_nothing
+			;(b and value).do_nothing
+			product (b).do_nothing
+			b.conjuncted (value).do_nothing
 		end
 
 feature {TEST} -- Test
 
-	make_from_a (other: A)
+	from_boolean (other: BOOLEAN)
 			-- An obsolete procedure.
 		obsolete "Conversion procedure. [$(YESTERDAY)]"
 		do
@@ -131,8 +134,16 @@ feature {TEST} -- Test
 		do
 		end
 
+feature {TEST} -- Basic operations
+
 	item: like Current
 			-- Current object.
+		do
+			Result := Current
+		end
+
+	product alias "*" (other: TEST): TEST
+			-- A binary operation.
 		do
 			Result := Current
 		end

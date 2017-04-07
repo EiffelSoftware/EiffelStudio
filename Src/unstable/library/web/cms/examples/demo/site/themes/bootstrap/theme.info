@@ -4,6 +4,7 @@ author=jvelilla
 version=0.1
 regions[page_top] = Top
 regions[header] = Header
+regions[search] = Search
 regions[content] = Content
 regions[highlighted] = Highlighted
 regions[help] = Help

@@ -29,7 +29,7 @@
 		<library name="cms_email_service" location="..\..\library\email\email.ecf" readonly="false"/>
 		<library name="cms_feed_aggregator_module" location="..\..\modules\feed_aggregator\feed_aggregator.ecf" readonly="false"/>
 		<library name="cms_files_module" location="..\..\modules\files\files.ecf" readonly="false"/>
-		<library name="cms_google_search_module" location="..\..\modules\google_search\google_search.ecf" readonly="false" use_application_options="true"/>
+		<library name="cms_google_search_20_module" location="..\..\modules\google_search_20\google_search_20"/>
 		<library name="cms_messaging_module" location="..\..\modules\messaging\messaging.ecf"/>
 		<library name="cms_model" location="..\..\library\model\cms_model.ecf" readonly="false"/>
 		<library name="cms_node_module" location="..\..\modules\node\node.ecf" readonly="false"/>
@@ -40,8 +40,9 @@
 		<library name="cms_sitemap_module" location="..\..\modules\sitemap\sitemap.ecf" readonly="false"/>
 		<library name="cms_session_auth_module" location="..\..\modules\session_auth\cms_session_auth.ecf" readonly="false"/>
 		<library name="cms_taxnomy_module" location="..\..\modules\taxonomy\taxonomy.ecf" readonly="false"/>
-		<library name="embedded_video_module" location="..\..\modules\embedded_video\embedded_video.ecf" readonly="false"/>
 		<library name="cms_wikitext_module" location="..\..\modules\wikitext\wikitext.ecf" readonly="false"/>
+		<library name="embedded_video_module" location="..\..\modules\embedded_video\embedded_video.ecf" readonly="false"/>
+		<library name="masquerade_auth_module" location="..\..\dev_modules\masquerade_auth\masquerade_auth.ecf" readonly="false"/>
 		<library name="persistence_sqlite3" location="..\..\library\persistence\sqlite3\sqlite3.ecf" readonly="false"/>
 		<!--
 			 By default, commented, since it depends on specific environment settings.

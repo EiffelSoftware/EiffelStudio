@@ -1503,7 +1503,7 @@ feature {NONE} -- Implementation
 												if l_conv_info.has_depend_unit then
 													context.supplier_ids.extend (l_conv_info.depend_unit)
 												end
-												l_argument := old_assigner_source.converted_expression (create {PARENT_CONVERSION_INFO}.make (l_conv_info))
+												l_argument := converted_expression (old_assigner_source, l_conv_info)
 													-- Make sure the source of the assigner instruction is updated.
 												assigner_source := l_argument
 													-- Generate conversion byte node only if we are not checking
@@ -1863,8 +1863,8 @@ feature {NONE} -- Implementation
 												if l_conv_info.has_depend_unit then
 													context.supplier_ids.extend (l_conv_info.depend_unit)
 												end
-												l_argument := l_parameters.i_th (i).converted_expression (create {PARENT_CONVERSION_INFO}.make (l_conv_info))
-												l_parameters.put_i_th (l_argument, i)
+												l_argument := converted_expression (l_parameters [i], l_conv_info)
+												l_parameters [i] := l_argument
 												if attached old_assigner_source and then i = 1 then
 														-- Make sure the source of the assigner instruction is updated.
 													assigner_source := l_argument
@@ -2380,7 +2380,7 @@ feature {NONE} -- Visitor
 									if l_context.last_conversion_info.has_depend_unit then
 										context.supplier_ids.extend (l_context.last_conversion_info.depend_unit)
 									end
-									l_as.expressions.put_i_th (l_as.expressions.i_th (i).converted_expression (create {PARENT_CONVERSION_INFO}.make (l_context.last_conversion_info)), i)
+									l_as.expressions [i] := converted_expression (l_as.expressions [i], l_context.last_conversion_info)
 									if is_byte_node_enabled and not is_checking_cas then
 										l_list.put_i_th (l_context.last_conversion_info.byte_node (
 											l_list.i_th (i)), i)
@@ -5131,7 +5131,7 @@ feature {NONE} -- Visitor
 								if l_target_conv_info.has_depend_unit then
 									context.supplier_ids.extend (l_target_conv_info.depend_unit)
 								end
-								l_as.set_left (l_as.left.converted_expression (create {PARENT_CONVERSION_INFO}.make (l_target_conv_info)))
+								l_as.set_left (converted_expression (l_as.left, l_target_conv_info))
 								l_target_type := l_target_conv_info.target_type
 								if l_needs_byte_node then
 									l_left_expr := l_target_conv_info.byte_node (l_left_expr)
@@ -5166,7 +5166,7 @@ feature {NONE} -- Visitor
 								if last_infix_argument_conversion_info.has_depend_unit then
 									context.supplier_ids.extend (last_infix_argument_conversion_info.depend_unit)
 								end
-								l_as.set_right (l_as.right.converted_expression (create {PARENT_CONVERSION_INFO}.make (last_infix_argument_conversion_info)))
+								l_as.set_right (converted_expression (l_as.right, last_infix_argument_conversion_info))
 								if l_needs_byte_node then
 									l_right_expr ?= last_infix_argument_conversion_info.byte_node (l_right_expr)
 								end
@@ -5397,7 +5397,7 @@ feature {NONE} -- Visitor
 							if l_conv_info.has_depend_unit then
 								context.supplier_ids.extend (l_conv_info.depend_unit)
 							end
-							l_as.set_right (l_as.right.converted_expression (create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
+							l_as.set_right (converted_expression (l_as.right, l_conv_info))
 							if l_needs_byte_node then
 								l_right_expr := l_conv_info.byte_node (l_right_expr)
 							end
@@ -5407,7 +5407,7 @@ feature {NONE} -- Visitor
 							if l_conv_info.has_depend_unit then
 								context.supplier_ids.extend (l_conv_info.depend_unit)
 							end
-							l_as.set_left (l_as.left.converted_expression (create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
+							l_as.set_left (converted_expression (l_as.left, l_conv_info))
 							if l_needs_byte_node then
 									l_left_expr := l_conv_info.byte_node (l_left_expr)
 							end
@@ -5867,7 +5867,7 @@ feature {NONE} -- Visitor
 						not is_inherited and then
 						is_type_compatible.conversion_info /= Void
 					then
-						l_as.set_source (l_as.source.converted_expression (create {PARENT_CONVERSION_INFO}.make (is_type_compatible.conversion_info)))
+						l_as.set_source (converted_expression (l_as.source, is_type_compatible.conversion_info))
 					end
 				end
 
@@ -9684,7 +9684,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation: overloading
+feature {NONE} -- Overloading
 
 	overloaded_feature (
 			a_type: TYPE_A; a_last_class: CLASS_C; a_arg_types: ARRAYED_LIST [TYPE_A];
@@ -11795,6 +11795,25 @@ feature {NONE} -- Separateness
 				is_controlled := False
 				set_type (Void, n)
 			end
+		end
+
+feature {NONE} -- Conversion
+
+	converted_expression (e: EXPR_AS; i: CONVERSION_INFO): EXPR_AS
+			-- An expression converted from `e` using conversion information `i`.
+		local
+			p: PARENT_CONVERSION_INFO
+		do
+			create p.make (i)
+			if
+				not is_inherited and then
+				not p.is_null_conversion and then
+				attached system.class_of_id (p.class_id) as c and then
+				attached c.feature_of_rout_id (p.routine_id) as f
+			then
+				check_obsolescence (f, c, e.start_location)
+			end
+			Result := e.converted_expression (p)
 		end
 
 feature -- Type recording

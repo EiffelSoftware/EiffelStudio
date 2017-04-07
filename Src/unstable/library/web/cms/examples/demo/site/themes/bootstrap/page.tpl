@@ -37,17 +37,14 @@
           {$page.primary_nav/}
       {/if}
     </div> 
+	{if isset="$page.regions.search"}
 	<!-- Page search -->
 	<div class="row">
 		<div class="col-md-2 col-md-offset-9">
-			<form action="{$site_url/}gcse" class="search-form" id="gcse_search_form">
-				<div class="form-group has-feedback">
-					<input type="search" class="form-control" name="q" id="gcse_search" placeholder="search" value="{htmlentities}{$cms_search_query/}{/htmlentities}" >
-					<span class="glyphicon glyphicon-search form-control-feedback"></span>
-				</div>
-			</form>
+			{$page.regions.search/}
 		</div>
 	</div>
+	{/if}
     <!-- General Page Content -->
     <div id='content' class='row-fluid'>
 		<!-- Left Sidebar sidebar_first -->

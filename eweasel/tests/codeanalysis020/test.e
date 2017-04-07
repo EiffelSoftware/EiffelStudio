@@ -8,13 +8,19 @@ inherit
 
 create
 	make,
+	make_from_a,
 	proc
+
+convert
+	make_from_a ({A}),
+	to_boolean: {BOOLEAN}
 
 feature {NONE} -- Creation
 
 	make
 		local
 			value: TEST
+			b: BOOLEAN
 		do
 			attr := Current -- No warning here: it's OK to assign to obsolete attributes.
 			create attr.make -- No warning here: it's OK to use obsolete attributes as targets of creation.
@@ -38,9 +44,24 @@ feature {NONE} -- Creation
 			create value.proc
 			;(create {TEST}.proc).do_nothing
 			Precursor
+			value := a
+			b := Current
 		end
 
-feature {TEST} -- Access
+feature {NONE} -- Access
+
+	a: A
+		do
+			Result := Current
+		end
+
+feature {TEST} -- Test
+
+	make_from_a (other: A)
+			-- An obsolete procedure.
+		obsolete "Conversion procedure. [$(YESTERDAY)]"
+		do
+		end
 
 	proc
 			-- An obsolete procedure.
@@ -102,6 +123,12 @@ feature {TEST} -- Access
 		obsolete "Parenthesis. [$(YESTERDAY)]"
 		do
 			Result := Current
+		end
+
+	to_boolean: BOOLEAN
+			-- An obsolete conversion function.
+		obsolete "Conversion function. [$(YESTERDAY)]"
+		do
 		end
 
 	item: like Current

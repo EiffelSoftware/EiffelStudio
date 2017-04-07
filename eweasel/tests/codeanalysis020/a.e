@@ -1,4 +1,4 @@
-class A feature
+class A feature {NONE} -- Test
 
 	make
 			-- An obsolete procedure.

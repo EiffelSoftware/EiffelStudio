@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 			c.add_address_pre_action (agent process_address)
 			c.add_binary_pre_action (agent process_binary)
 			c.add_bracket_pre_action (agent process_bracket)
+			c.add_converted_expr_pre_action (agent process_converted_expr)
 			c.add_parameter_list_pre_action (agent process_parameters)
 			c.add_precursor_pre_action (agent process_precursor)
 			c.add_routine_agent_pre_action (agent process_routine_agent)
@@ -138,6 +139,14 @@ feature {NONE} -- Rule Checking
 			process_call (a.routine_ids.first, a.class_id, a.lbracket_symbol)
 		end
 
+	process_converted_expr (a: CONVERTED_EXPR_AS)
+			-- Check if `a` is an obsolete call and report violation accordingly.
+		do
+			if attached {PARENT_CONVERSION_INFO} a.data as i and then not i.is_null_conversion then
+				process_call (i.routine_id, i.class_id, a)
+			end
+		end
+
 	process_parameters (a: PARAMETER_LIST_AS)
 			-- Check if `a` is an obsolete call and report violation accordingly.
 		do
@@ -169,7 +178,7 @@ feature {NONE} -- Rule Checking
 		end
 
 	process_call (routine_id: like {ROUT_ID_SET}.first; class_id: like {CLASS_C}.class_id; call: AST_EIFFEL)
-			-- Process a call to a feature of `routine_id` from class `class_id` at location `location`.
+			-- Process a call to a feature of `routine_id` from class `class_id` at location `call`.
 		local
 			violation: CA_RULE_VIOLATION
 			u: UTF_CONVERTER

@@ -1282,8 +1282,6 @@ feature -- Removal
 	remove_head (n: INTEGER)
 			-- Remove first `n' characters;
 			-- if `n' > `count', remove all.
-		require
-			n_non_negative: n >= 0
 		do
 			if n > count then
 				count := 0
@@ -1291,17 +1289,11 @@ feature -- Removal
 			else
 				keep_tail (count - n)
 			end
-		ensure
-			removed: elks_checking implies Current ~ (old substring (n.min (count) + 1, count))
 		end
 
 	remove_substring (start_index, end_index: INTEGER)
 			-- Remove all characters from `start_index'
 			-- to `end_index' inclusive.
-		require
-			valid_start_index: 1 <= start_index
-			valid_end_index: end_index <= count
-			meaningful_interval: start_index <= end_index + 1
 		local
 			l_count, nb_removed: INTEGER
 		do
@@ -1312,15 +1304,11 @@ feature -- Removal
 				count := l_count - nb_removed
 				reset_hash_codes
 			end
-		ensure
-			removed: elks_checking implies Current ~ (old substring (1, start_index - 1) + old substring (end_index + 1, count))
 		end
 
 	remove_tail (n: INTEGER)
 			-- Remove last `n' characters;
 			-- if `n' > `count', remove all.
-		require
-			n_non_negative: n >= 0
 		local
 			l_count: INTEGER
 		do
@@ -1331,8 +1319,6 @@ feature -- Removal
 			else
 				keep_head (l_count - n)
 			end
-		ensure
-			removed: elks_checking implies Current ~ (old substring (1, count - n.min (count)))
 		end
 
 	prune (c: CHARACTER_32)
@@ -1412,9 +1398,6 @@ feature -- Removal
 		do
 			count := 0
 			reset_hash_codes
-		ensure then
-			is_empty: count = 0
-			same_capacity: capacity = old capacity
 		end
 
 	clear_all

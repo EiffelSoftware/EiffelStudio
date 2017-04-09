@@ -204,9 +204,9 @@ feature {NONE} -- ECMA mapping helper
 			Result.put ("CHARACTER_8_REF", "CHARACTER_REF")
 			Result.put ("CHARACTER_32", "WIDE_CHARACTER")
 			Result.put ("CHARACTER_32_REF", "WIDE_CHARACTER_REF")
-			Result.put ("REAL_32", "REAL_32")
+			Result.put ("REAL_32", "REAL")
 			Result.put ("REAL_32_REF", "REAL_REF")
-			Result.put ("REAL_64", "REAL_64")
+			Result.put ("REAL_64", "DOUBLE")
 			Result.put ("REAL_64_REF", "DOUBLE_REF")
 		ensure
 			pre_ecma_type_mapping_not_void: Result /= Void

@@ -22,13 +22,6 @@ inherit
 
 	CMS_HOOK_BLOCK_HELPER
 
-	SHARED_EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		end
-
-	REFACTORING_HELPER
-
 	SHARED_LOGGER
 
 create

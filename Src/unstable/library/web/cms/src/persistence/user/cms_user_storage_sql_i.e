@@ -1246,7 +1246,7 @@ feature -- New Temp User
   				sql_begin_transaction
 
   				write_information_log (generator  + ".new_user_from_temp_user")
-  				create l_parameters.make (4)
+  				create l_parameters.make (6)
   				l_parameters.put (a_user.name, "name")
   				l_parameters.put (l_password_hash, "password")
   				l_parameters.put (l_password_salt, "salt")

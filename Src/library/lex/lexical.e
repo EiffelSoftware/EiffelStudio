@@ -520,7 +520,7 @@ feature -- Output
 feature -- Obsolete
 
 	go_on
-			obsolete "Use ``get_token'' directly"
+			obsolete "Use `get_token' directly [2017-05-31]"
 		do
 			from
 				get_token

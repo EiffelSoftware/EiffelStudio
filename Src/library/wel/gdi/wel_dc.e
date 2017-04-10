@@ -1881,7 +1881,7 @@ feature -- Obsolete
 
 	set_bk_color (color: WEL_COLOR_REF)
 		obsolete
-			"Use ``set_background_color''"
+			"Use `set_background_color' [2017-05-31]"
 		require
 			exists: exists
 			color_not_void: color /= Void
@@ -1891,7 +1891,7 @@ feature -- Obsolete
 
 	poly_line (points: ARRAY [INTEGER])
 		obsolete
-			"Use ``polyline''"
+			"Use `polyline' [2017-05-31]"
 		require
 			exists: exists
 			points_not_void: points /= Void
@@ -1902,7 +1902,7 @@ feature -- Obsolete
 
 	save (a_bitmap: WEL_BITMAP; file: READABLE_STRING_GENERAL)
 		obsolete
-			"Use `save_bitmap_into' instead."
+			"Use `save_bitmap_into' instead. [2017-05-31]"
 		require
 			exists: exists
 			a_bitmap_not_void: a_bitmap /= Void

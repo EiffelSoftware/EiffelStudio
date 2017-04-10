@@ -241,7 +241,6 @@ feature -- Access: Temp Users
 			password: Result /= Void implies (Result.hashed_password /= Void and Result.password = Void)
 		end
 
-
 	temp_user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
 			-- User with activation token `a_token', if any.
 		deferred
@@ -254,19 +253,15 @@ feature -- Access: Temp Users
 		deferred
 		end
 
-
 	token_by_temp_user_id (a_id: like {CMS_USER}.id): detachable STRING
 			-- Retrieve activation token for user identified with id `a_id', if any.
 		deferred
 		end
 
-
 feature -- New Temp User
 
-	new_user_from_temp_user (a_user: CMS_TEMP_USER)
-  			-- new user from temporal user `a_user'
-  		require
-  			no_id: not a_user.has_id
+	new_user_from_temp_user (a_temp_user: CMS_TEMP_USER)
+  			-- new user from temporal user `a_temp_user'
   		deferred
   		end
 
@@ -275,17 +270,17 @@ feature -- New Temp User
 		deferred
 		end
 
-	new_temp_user (a_user: CMS_TEMP_USER)
-			-- New temp user `a_user'.
+	new_temp_user (a_temp_user: CMS_TEMP_USER)
+			-- New temp user `a_temp_user'.
 		require
-			no_id: not a_user.has_id
+			no_id: not a_temp_user.has_id
 		deferred
 		end
 
-	delete_temp_user (a_user: CMS_TEMP_USER)
-			-- Delete user `a_user'.
+	delete_temp_user (a_temp_user: CMS_TEMP_USER)
+			-- Delete user `a_temp_user'.
 		require
-			has_id: a_user.has_id
+			has_id: a_temp_user.has_id
 		deferred
 		end
 

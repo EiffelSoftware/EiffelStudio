@@ -446,9 +446,8 @@ feature -- Handler
 			l_ir: INTERNAL_SERVER_ERROR_CMS_RESPONSE
 			es: CMS_AUTHENTICATION_EMAIL_SERVICE
 		do
-			l_user_api := api.user_api
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			if r.has_permission ("account activate") then
+			if api.has_permission ("account activate") then
+				l_user_api := api.user_api
 				if attached {WSF_STRING} req.path_parameter ("token") as l_token then
 					if attached {CMS_TEMP_USER} l_user_api.temp_user_by_activation_token (l_token.value) as l_user then
 
@@ -461,6 +460,8 @@ feature -- Handler
 						l_user.mark_active
 						l_user_api.new_user_from_temp_user (l_user)
 
+
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 						if
 							not l_user_api.has_error and then
 							attached l_user_api.user_by_name (l_user.name) as l_new_user
@@ -480,9 +481,13 @@ feature -- Handler
 								-- Failure!!!
 							r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
 							r.set_main_content ("<p>ERROR: User activation failed for <i>" + html_encoded (l_user.name) + "</i>!</p>")
+							if attached l_user_api.error_handler.as_single_error as err then
+								r.add_error_message (html_encoded (err.string_representation))
+							end
 						end
-					else
-							-- the token does not exist, or it was already used.
+					else							-- the token does not exist, or it was already used.
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+
 						r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 						r.set_main_content ("<p>The token <i>" + l_token.value + "</i> is not valid " + r.link ("Reactivate Account", "account/reactivate", Void) + "</p>")
 					end

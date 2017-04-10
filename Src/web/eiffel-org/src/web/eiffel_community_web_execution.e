@@ -76,7 +76,7 @@ feature -- CMS setup
 			a_setup.register_module (create {CMS_CUSTOM_BLOCK_MODULE}.make)
 
 				-- Google Custom Search Engine
-			a_setup.register_module (create {GOOGLE_CUSTOM_SEARCH_MODULE}.make)
+			a_setup.register_module (create {GOOGLE_CUSTOM_SEARCH_MODULE_20}.make)
 
 				-- Wiki docs
 			create wdocs.make

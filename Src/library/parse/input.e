@@ -115,7 +115,7 @@ feature  -- Status setting
 feature  -- Input
 
 	get_token
-			-- Make next token accessible with ``token''
+			-- Make next token accessible with `token'
 		require
 			analyzer_not_void: analyzer /= Void
 		local

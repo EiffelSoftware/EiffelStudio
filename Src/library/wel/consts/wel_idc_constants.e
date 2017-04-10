@@ -110,12 +110,12 @@ feature -- Access
 
 feature -- Obsolete
 
-	Idc_size: POINTER obsolete "Use ``Idc_sizeall''"
+	Idc_size: POINTER obsolete "Use `Idc_sizeall' [2017-05-31]"
 		do
 			Result := Idc_sizeall
 		end
 
-	Idc_icon: POINTER obsolete "Use ``Idc_arrow''"
+	Idc_icon: POINTER obsolete "Use `Idc_arrow' [2017-05-31]"
 		do
 			Result := Idc_arrow
 		end

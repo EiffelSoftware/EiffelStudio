@@ -835,8 +835,9 @@ feature -- Notifications
 
 feature -- Obsolete
 
-	default_char_format: WEL_CHARACTER_FORMAT obsolete
-			"Use ``default_character_format''"
+	default_char_format: WEL_CHARACTER_FORMAT 
+		obsolete
+			"Use `default_character_format' [2017-05-31]"
 		require
 			exists: exists
 		do
@@ -845,8 +846,9 @@ feature -- Obsolete
 			result_not_void: Result /= Void
 		end
 
-	current_selection_char_format: WEL_CHARACTER_FORMAT obsolete
-			"Use ``current_selection_character_format''"
+	current_selection_char_format: WEL_CHARACTER_FORMAT 
+		obsolete
+			"Use `current_selection_character_format' [2017-05-31]"
 		require
 			exists: exists
 		do

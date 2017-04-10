@@ -85,7 +85,7 @@ feature -- Obsolete
 
 	position_in_line: INTEGER
 		obsolete
-			"Use ``column_number'' instead"
+			"Use `column_number' instead [2017-05-31]"
 		do
 			Result := column_number
 		end

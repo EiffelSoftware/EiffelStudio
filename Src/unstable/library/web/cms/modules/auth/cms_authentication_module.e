@@ -445,42 +445,45 @@ feature -- Handler
 			l_user_api: CMS_USER_API
 			l_ir: INTERNAL_SERVER_ERROR_CMS_RESPONSE
 			es: CMS_AUTHENTICATION_EMAIL_SERVICE
+			l_temp_id: INTEGER_64
 		do
 			if api.has_permission ("account activate") then
 				l_user_api := api.user_api
 				if attached {WSF_STRING} req.path_parameter ("token") as l_token then
-					if attached {CMS_TEMP_USER} l_user_api.temp_user_by_activation_token (l_token.value) as l_user then
+					if attached {CMS_TEMP_USER} l_user_api.temp_user_by_activation_token (l_token.value) as l_temp_user then
 
 						-- TODO copy the personal information
 						--! to CMS_USER_PROFILE and persist data
 						--! check also CMS_USER.data_items
 
-							-- Valid user_id
-						l_user.set_id (0)
-						l_user.mark_active
-						l_user_api.new_user_from_temp_user (l_user)
+						l_temp_id := l_temp_user.id
 
+							-- Valid user_id
+						l_temp_user.set_id (0)
+						l_temp_user.mark_active
+						l_user_api.new_user_from_temp_user (l_temp_user)
 
 						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 						if
 							not l_user_api.has_error and then
-							attached l_user_api.user_by_name (l_user.name) as l_new_user
+							attached l_user_api.user_by_name (l_temp_user.name) as l_new_user
 						then
 								-- Delete temporal User
-							l_user_api.delete_temp_user (l_user)
+							l_temp_user.set_id (l_temp_id)
+							l_user_api.delete_temp_user (l_temp_user)
 							l_user_api.remove_activation (l_token.value)
 
-							r.set_main_content ("<p> The account <i>" + html_encoded (l_user.name) + "</i> has been activated</p>")
+							r.set_main_content ("<p> The account <i>" + html_encoded (l_new_user.name) + "</i> has been activated</p>")
 								-- Send Email
-							if attached l_user.email as l_email then
+							if attached l_new_user.email as l_email then
 								create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
 								write_debug_log (generator + ".handle register: send_contact_activation_confirmation_email")
-								es.send_contact_activation_confirmation_email (l_email, l_user, req.absolute_script_url (""))
+								es.send_contact_activation_confirmation_email (l_email, l_new_user, req.absolute_script_url (""))
 							end
 						else
 								-- Failure!!!
 							r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
-							r.set_main_content ("<p>ERROR: User activation failed for <i>" + html_encoded (l_user.name) + "</i>!</p>")
+							r.set_main_content ("<p>ERROR: User activation failed for <i>" + html_encoded (l_temp_user.name) + "</i>!</p>")
 							if attached l_user_api.error_handler.as_single_error as err then
 								r.add_error_message (html_encoded (err.string_representation))
 							end

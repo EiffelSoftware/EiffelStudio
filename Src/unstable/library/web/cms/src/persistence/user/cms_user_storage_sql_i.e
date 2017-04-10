@@ -1232,34 +1232,31 @@ feature {NONE} -- Implementation: User
 
 feature -- New Temp User
 
-	new_user_from_temp_user (a_user: CMS_TEMP_USER)
+	new_user_from_temp_user (a_temp_user: CMS_TEMP_USER)
 			-- <Precursor>
   		local
   			l_parameters: STRING_TABLE [detachable ANY]
   		do
   			error_handler.reset
   			if
-  				attached a_user.hashed_password as l_password_hash and then
-  				attached a_user.email as l_email and then
-  				attached a_user.salt as l_password_salt
+  				attached a_temp_user.hashed_password as l_password_hash and then
+  				attached a_temp_user.email as l_email and then
+  				attached a_temp_user.salt as l_password_salt
   			then
   					-- FIXME: store the personal_information in profile!
   				sql_begin_transaction
 
   				write_information_log (generator  + ".new_user_from_temp_user")
   				create l_parameters.make (7)
-  				l_parameters.put (a_user.name, "name")
+  				l_parameters.put (a_temp_user.name, "name")
   				l_parameters.put (l_password_hash, "password")
   				l_parameters.put (l_password_salt, "salt")
   				l_parameters.put (l_email, "email")
   				l_parameters.put (create {DATE_TIME}.make_now_utc, "created")
-  				l_parameters.put (a_user.status, "status")
-  				l_parameters.put (a_user.profile_name, "profile_name")
+  				l_parameters.put (a_temp_user.status, "status")
+  				l_parameters.put (a_temp_user.profile_name, "profile_name")
 
   				sql_insert (sql_insert_user, l_parameters)
-  				if not error_handler.has_error then
-  					a_user.set_id (last_inserted_user_id)
-  				end
   				if not error_handler.has_error then
   					sql_commit_transaction
   				else
@@ -1272,8 +1269,8 @@ feature -- New Temp User
   			end
   		end
 
-	new_temp_user (a_user: CMS_TEMP_USER)
-			-- Add a new temp_user `a_user'.
+	new_temp_user (a_temp_user: CMS_TEMP_USER)
+			-- Add a new temp_user `a_temp_user'.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 			l_password_salt, l_password_hash: STRING
@@ -1281,9 +1278,9 @@ feature -- New Temp User
 		do
 			error_handler.reset
 			if
-				attached a_user.password as l_password and then
-				attached a_user.email as l_email and then
-				attached a_user.personal_information as l_personal_information
+				attached a_temp_user.password as l_password and then
+				attached a_temp_user.email as l_email and then
+				attached a_temp_user.personal_information as l_personal_information
 			then
 
 				create l_security
@@ -1292,7 +1289,7 @@ feature -- New Temp User
 
 				write_information_log (generator + ".new_temp_user")
 				create l_parameters.make (4)
-				l_parameters.put (a_user.name, "name")
+				l_parameters.put (a_temp_user.name, "name")
 				l_parameters.put (l_password_hash, "password")
 				l_parameters.put (l_password_salt, "salt")
 				l_parameters.put (l_email, "email")
@@ -1301,7 +1298,7 @@ feature -- New Temp User
 				sql_begin_transaction
 				sql_insert (sql_insert_temp_user, l_parameters)
 				if not error_handler.has_error then
-					a_user.set_id (last_inserted_temp_user_id)
+					a_temp_user.set_id (last_inserted_temp_user_id)
 					sql_commit_transaction
 				else
 					sql_rollback_transaction
@@ -1330,8 +1327,8 @@ feature -- Remove Activation
 			sql_finalize
 		end
 
-	delete_temp_user (a_user: CMS_TEMP_USER)
-			-- Delete user `a_user'.
+	delete_temp_user (a_temp_user: CMS_TEMP_USER)
+			-- Delete user `a_temp_user'.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
@@ -1339,7 +1336,7 @@ feature -- Remove Activation
 			sql_begin_transaction
 			write_information_log (generator + ".delete_temp_user")
 			create l_parameters.make (1)
-			l_parameters.put (a_user.id, "uid")
+			l_parameters.put (a_temp_user.id, "uid")
 			sql_modify (sql_delete_temp_user, l_parameters)
 			sql_commit_transaction
 			sql_finalize

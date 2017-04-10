@@ -4,6 +4,7 @@ author=jfiat
 version=0.1
 ;template_dir=.
 regions[header] = Header
+regions[search] = Search
 regions[content] = Content
 regions[footer] = Footer
 regions[sidebar_first] = first sidebar

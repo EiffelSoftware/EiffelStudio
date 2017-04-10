@@ -217,13 +217,14 @@ feature -- Change: user
 				l_password_hash := l_security.password_hash (l_password, l_password_salt)
 
 				write_information_log (generator + ".new_user")
-				create l_parameters.make (4)
+				create l_parameters.make (7)
 				l_parameters.put (a_user.name, "name")
 				l_parameters.put (l_password_hash, "password")
 				l_parameters.put (l_password_salt, "salt")
 				l_parameters.put (l_email, "email")
 				l_parameters.put (create {DATE_TIME}.make_now_utc, "created")
 				l_parameters.put (a_user.status, "status")
+  				l_parameters.put (a_user.profile_name, "profile_name")
 
 				sql_insert (sql_insert_user, l_parameters)
 				if not error_handler.has_error then
@@ -1246,13 +1247,14 @@ feature -- New Temp User
   				sql_begin_transaction
 
   				write_information_log (generator  + ".new_user_from_temp_user")
-  				create l_parameters.make (6)
+  				create l_parameters.make (7)
   				l_parameters.put (a_user.name, "name")
   				l_parameters.put (l_password_hash, "password")
   				l_parameters.put (l_password_salt, "salt")
   				l_parameters.put (l_email, "email")
   				l_parameters.put (create {DATE_TIME}.make_now_utc, "created")
   				l_parameters.put (a_user.status, "status")
+  				l_parameters.put (a_user.profile_name, "profile_name")
 
   				sql_insert (sql_insert_user, l_parameters)
   				if not error_handler.has_error then

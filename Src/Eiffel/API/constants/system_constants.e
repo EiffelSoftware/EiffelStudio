@@ -208,12 +208,12 @@ feature {AUXILIARY_FILES} -- Versioning
 			-- We use `0000' because it is replaced by the actual svn revision number
 			-- when doing a delivery.
 		do
-			Result := 100110
+			Result := 0000
 		end
 
 	Version_tag: INTEGER = 0x026
 
-	Version_info: STRING = "Revision: 100110 , Compilation: 04-Fri-07 12:01:26,41 , Builder: jfiat";
+	Version_info: STRING = "";
 			-- Information on the version
 			-- Default: ""
 			-- This can be used by developper to add specific information

@@ -115,9 +115,11 @@ feature -- Router
 			a_router.handle ("/" + roc_login_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_login(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/" + roc_logout_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/roc-register", create {WSF_URI_AGENT_HANDLER}.make (agent handle_register(a_api, ?, ?)), a_router.methods_get_post)
+
 			a_router.handle ("/account/activate/{token}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_activation(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/reject/{token}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_reject(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/reactivate", create {WSF_URI_AGENT_HANDLER}.make (agent handle_reactivation(a_api, ?, ?)), a_router.methods_get_post)
+
 			a_router.handle ("/account/new-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_new_password(a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/reset-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_reset_password(a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/change/{field}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_change_field (a_api, ?, ?)), a_router.methods_get_post)
@@ -454,20 +456,30 @@ feature -- Handler
 						--! to CMS_USER_PROFILE and persist data
 						--! check also CMS_USER.data_items
 
-							-- Delete temporal User
-						l_user_api.delete_temp_user (l_user)
-
 							-- Valid user_id
 						l_user.set_id (0)
 						l_user.mark_active
 						l_user_api.new_user_from_temp_user (l_user)
-						l_user_api.remove_activation (l_token.value)
-						r.set_main_content ("<p> The account <i>" + html_encoded (l_user.name) + "</i> has been activated</p>")
-							-- Send Email
-						if attached l_user.email as l_email then
-							create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
-							write_debug_log (generator + ".handle register: send_contact_activation_confirmation_email")
-							es.send_contact_activation_confirmation_email (l_email, l_user, req.absolute_script_url (""))
+
+						if
+							not l_user_api.has_error and then
+							attached l_user_api.user_by_name (l_user.name) as l_new_user
+						then
+								-- Delete temporal User
+							l_user_api.delete_temp_user (l_user)
+							l_user_api.remove_activation (l_token.value)
+
+							r.set_main_content ("<p> The account <i>" + html_encoded (l_user.name) + "</i> has been activated</p>")
+								-- Send Email
+							if attached l_user.email as l_email then
+								create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
+								write_debug_log (generator + ".handle register: send_contact_activation_confirmation_email")
+								es.send_contact_activation_confirmation_email (l_email, l_user, req.absolute_script_url (""))
+							end
+						else
+								-- Failure!!!
+							r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
+							r.set_main_content ("<p>ERROR: User activation failed for <i>" + html_encoded (l_user.name) + "</i>!</p>")
 						end
 					else
 							-- the token does not exist, or it was already used.
@@ -481,7 +493,7 @@ feature -- Handler
 				end
 			else
 				create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-					r.execute
+				r.execute
 			end
 		end
 

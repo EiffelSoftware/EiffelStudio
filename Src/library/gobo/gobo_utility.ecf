@@ -15,7 +15,7 @@
 			<exclude>/se$</exclude>
 			<exclude>/ve$</exclude>
 		</file_rule>
-		<option is_obsolete_routine_type="true" namespace="Gobo.Library">
+		<option namespace="Gobo.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>

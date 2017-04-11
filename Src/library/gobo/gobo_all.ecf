@@ -15,7 +15,7 @@
 			<exclude>/se$</exclude>
 			<exclude>/ve$</exclude>
 		</file_rule>
-		<option full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional" namespace="Gobo.Library">
+		<option full_class_checking="false" syntax="transitional" namespace="Gobo.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<capability>

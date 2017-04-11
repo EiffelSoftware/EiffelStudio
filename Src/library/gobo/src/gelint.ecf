@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="gelint" uuid="93B988A1-DC2A-4A9F-9FA6-79018729B79B">
 	<target name="gelint">
 		<root class="GELINT" feature="execute"/>
-		<option warning="true" is_obsolete_routine_type="true">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="address_expression" value="false"/>
@@ -31,6 +31,6 @@
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_tools" location="$ISE_LIBRARY\library\gobo\gobo_tools.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
-		<cluster name="gelint" location="$ISE_LIBRARY\contrib\library\gobo\src\gelint\" recursive="true"/>
+		<cluster name="gelint" location="$ISE_LIBRARY\contrib\library\gobo\tool\gelint\src\" recursive="true"/>
 	</target>
 </system>

@@ -101,7 +101,7 @@ feature {NONE} -- Create a new node
 		do
 			if attached a_type.new_node (Void) as l_node then
 					-- create new node
-				f := new_edit_form (l_node, url (location, Void), "edit-" + a_type.name, a_type)
+				f := new_edit_form (l_node, request_url (Void), "edit-" + a_type.name, a_type)
 				api.hooks.invoke_form_alter (f, fd, Current)
 				if request.is_post_request_method then
 					f.validation_actions.extend (agent edit_form_validate (?, b))
@@ -135,7 +135,7 @@ feature {NONE} -- Create a new node
 			f: like new_edit_form
 			fd: detachable WSF_FORM_DATA
 		do
-			f := new_edit_form (A_node, url (location, Void), "edit-" + a_type.name, a_type)
+			f := new_edit_form (a_node, request_url (Void), "edit-" + a_type.name, a_type)
 			if is_old_revision then
 				add_warning_message ("You are editing old revision #" + a_node.revision.out + " !")
 			end
@@ -169,7 +169,7 @@ feature {NONE} -- Create a new node
 			fd: detachable WSF_FORM_DATA
 		do
 			if a_node.is_trashed then
-				f := new_delete_form (a_node, url (location, Void), "delete-" + a_type.name, a_type)
+				f := new_delete_form (a_node, request_url (Void), "delete-" + a_type.name, a_type)
 				api.hooks.invoke_form_alter (f, fd, Current)
 				if request.is_post_request_method then
 					f.process (Current)
@@ -200,7 +200,7 @@ feature {NONE} -- Create a new node
 			f: like new_edit_form
 			fd: detachable WSF_FORM_DATA
 		do
-			f := new_trash_form (a_node, url (location, Void), "trash-" + a_type.name, a_type)
+			f := new_trash_form (a_node, request_url (Void), "trash-" + a_type.name, a_type)
 			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.process (Current)

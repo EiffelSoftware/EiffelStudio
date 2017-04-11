@@ -113,7 +113,7 @@ feature -- Widget
 			f_name: WSF_FORM_TEXT_INPUT
 			but: WSF_FORM_SUBMIT_INPUT
 		do
-			create Result.make (a_response.url (a_response.location, Void), "import_all_data")
+			create Result.make (a_response.request_url (Void), "import_all_data")
 			Result.extend_raw_text ("Import CMS data from ")
 			create f_name.make_with_text ("folder", "default")
 			f_name.set_label ("Import folder name")

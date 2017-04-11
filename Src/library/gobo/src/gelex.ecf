@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="gelex" uuid="FB9986DA-78AA-44AC-9D72-55079FA74CA1">
 	<target name="gelex">
 		<root class="GELEX" feature="execute"/>
-		<option warning="true" is_obsolete_routine_type="true">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="address_expression" value="false"/>
@@ -31,6 +31,6 @@
 		<library name="gobo_pattern" location="$ISE_LIBRARY\library\gobo\gobo_pattern.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
-		<cluster name="gelex" location="$ISE_LIBRARY\contrib\library\gobo\src\gelex\" recursive="true"/>
+		<cluster name="gelex" location="$ISE_LIBRARY\contrib\library\gobo\tool\gelex\src\" recursive="true"/>
 	</target>
 </system>

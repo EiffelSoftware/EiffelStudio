@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="geyacc" uuid="24C23C51-AEA2-4C8A-B454-901AAF40F0FF">
 	<target name="geyacc">
 		<root class="GEYACC" feature="execute"/>
-		<option warning="true" is_obsolete_routine_type="true">
+		<option warning="true">
 			<assertions/>
 		</option>
 		<setting name="address_expression" value="false"/>
@@ -29,6 +29,6 @@
 		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
-		<cluster name="geyacc" location="$ISE_LIBRARY\contrib\library\gobo\src\geyacc\"/>
+		<cluster name="geyacc" location="$ISE_LIBRARY\contrib\library\gobo\tool\geyacc\src\"/>
 	</target>
 </system>

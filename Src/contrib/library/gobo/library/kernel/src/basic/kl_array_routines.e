@@ -5,7 +5,7 @@ note
 		"Routines that ought to be in class ARRAY"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -87,10 +87,8 @@ feature -- Status report
 			a_array_not_void: a_array /= Void
 		local
 			i, nb: INTEGER
-			l_array: detachable ARRAY [detachable G]
 		do
-			l_array ?= a_array
-			if l_array /= Void then
+			if attached {ARRAY [detachable G]} a_array as l_array then
 				from
 					i := l_array.lower
 					nb := l_array.upper
@@ -187,11 +185,27 @@ feature -- Resizing
 			an_array_not_void: an_array /= Void
 			valid_min_index: min_index <= an_array.lower
 			valid_max_index: max_index >= an_array.upper
+			has_default: ({G}).has_default
+		do
+			resize_with_default (an_array, ({G}).default, min_index, max_index)
+		ensure
+			lower_set: an_array.lower = min_index
+			upper_set: an_array.upper = max_index
+		end
+
+	resize_with_default (an_array: ARRAY [G]; a_default_value: G; min_index, max_index: INTEGER)
+			-- Rearrange array so that it can accommodate
+			-- indices down to `min_index' and up to `max_index'.
+			-- Do not lose any previously entered item.
+		require
+			an_array_not_void: an_array /= Void
+			valid_min_index: min_index <= an_array.lower
+			valid_max_index: max_index >= an_array.upper
 		do
 				-- If "`min_index' = `max_index' + 1", this means that the
 				-- array was already empty. No need to resize in that case.
 			if min_index <= max_index then
-				an_array.conservative_resize (min_index, max_index)
+				an_array.conservative_resize_with_default (a_default_value, min_index, max_index)
 			end
 		ensure
 			lower_set: an_array.lower = min_index

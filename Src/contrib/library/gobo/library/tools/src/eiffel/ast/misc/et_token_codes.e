@@ -5,7 +5,7 @@ note
 		"Eiffel token and symbol codes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,25 +14,25 @@ class ET_TOKEN_CODES
 
 feature -- Keyword and symbol codes
 
-	infix_and_code: CHARACTER = '%/71/'
-	infix_implies_code: CHARACTER = '%/72/'
-	infix_or_code: CHARACTER = '%/73/'
-	infix_xor_code: CHARACTER = '%/74/'
-	infix_div_code: CHARACTER = '%/75/'
-	infix_divide_code: CHARACTER = '%/76/'
-	infix_ge_code: CHARACTER = '%/77/'
-	infix_gt_code: CHARACTER = '%/78/'
-	infix_le_code: CHARACTER = '%/79/'
-	infix_lt_code: CHARACTER = '%/80/'
-	infix_minus_code: CHARACTER = '%/81/'
-	infix_mod_code: CHARACTER = '%/82/'
-	infix_plus_code: CHARACTER = '%/83/'
-	infix_power_code: CHARACTER = '%/84/'
-	infix_times_code: CHARACTER = '%/85/'
-	infix_freeop_code: CHARACTER = '%/86/'
-	infix_and_then_code: CHARACTER = '%/87/'
-	infix_or_else_code: CHARACTER = '%/88/'
-	infix_dotdot_code: CHARACTER = '%/89/'
+	infix_div_code: CHARACTER = '%/71/'
+	infix_divide_code: CHARACTER = '%/72/'
+	infix_ge_code: CHARACTER = '%/73/'
+	infix_gt_code: CHARACTER = '%/74/'
+	infix_le_code: CHARACTER = '%/75/'
+	infix_lt_code: CHARACTER = '%/76/'
+	infix_minus_code: CHARACTER = '%/77/'
+	infix_mod_code: CHARACTER = '%/78/'
+	infix_plus_code: CHARACTER = '%/79/'
+	infix_power_code: CHARACTER = '%/80/'
+	infix_times_code: CHARACTER = '%/81/'
+	infix_freeop_code: CHARACTER = '%/82/'
+	infix_dotdot_code: CHARACTER = '%/83/'
+	infix_and_code: CHARACTER = '%/84/'
+	infix_implies_code: CHARACTER = '%/85/'
+	infix_or_code: CHARACTER = '%/86/'
+	infix_xor_code: CHARACTER = '%/87/'
+	infix_and_then_code: CHARACTER = '%/88/'
+	infix_or_else_code: CHARACTER = '%/89/'
 	min_infix_code: CHARACTER = '%/71/'
 	max_infix_code: CHARACTER = '%/89/'
 			-- Infix operator codes
@@ -44,6 +44,10 @@ feature -- Keyword and symbol codes
 	min_prefix_code: CHARACTER = '%/91/'
 	max_prefix_code: CHARACTER = '%/94/'
 			-- Prefix operator codes
+
+	min_keyword_code: CHARACTER = '%/84/'
+	max_keyword_code: CHARACTER = '%/91/'
+			-- Keyword operator codes
 
 	alias_bracket_code: CHARACTER = '%/100/'
 	alias_parenthesis_code: CHARACTER = '%/99/'
@@ -144,7 +148,7 @@ feature -- Built-in codes
 
 	builtin_not_builtin: INTEGER = 0
 	builtin_unknown: INTEGER = 1
-	builtin_capacity: INTEGER = 100
+	builtin_capacity: INTEGER = 1000
 
 	builtin_feature (a_class_code, a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature
@@ -159,20 +163,71 @@ feature -- Built-in codes
 		end
 
 	builtin_any_class: INTEGER = 1
-	builtin_any_twin: INTEGER = 1
-	builtin_any_standard_copy: INTEGER = 2
-	builtin_any_standard_is_equal: INTEGER = 3
-	builtin_any_same_type: INTEGER = 4
-	builtin_any_generating_type: INTEGER = 5
-	builtin_any_generator: INTEGER = 6
-	builtin_any_conforms_to: INTEGER = 7
-	builtin_any_is_deep_equal: INTEGER = 8
-	builtin_any_tagged_out: INTEGER = 9
-	builtin_any_standard_twin: INTEGER = 10
-	builtin_any_deep_twin: INTEGER = 11
-	builtin_any_copy: INTEGER = 12
-	builtin_any_is_equal: INTEGER = 13
 			-- Codes for built-in features from class "ANY"
+
+	builtin_any_conforms_to: INTEGER = 1
+	builtin_any_deep_twin: INTEGER = 2
+	builtin_any_generating_type: INTEGER = 3
+	builtin_any_generator: INTEGER = 4
+	builtin_any_is_deep_equal: INTEGER = 5
+	builtin_any_is_equal: INTEGER = 6
+	builtin_any_same_type: INTEGER = 7
+	builtin_any_standard_is_equal: INTEGER = 8
+	builtin_any_standard_twin: INTEGER = 9
+	builtin_any_tagged_out: INTEGER = 10
+	builtin_any_twin: INTEGER = 11
+			-- Codes for built-in functions from class "ANY"
+
+	builtin_any_copy: INTEGER = 12
+	builtin_any_standard_copy: INTEGER = 13
+			-- Codes for built-in procedures from class "ANY"
+
+	builtin_arguments_32_feature (a_feature_code: INTEGER): INTEGER
+			-- Full code for built-in feature from class "ARGUMENTS_32"
+		do
+			Result := builtin_arguments_32_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_arguments_32_class: INTEGER = 17
+			-- Codes for built-in features from class "ARGUMENTS_32"
+
+	builtin_arguments_32_argument_count: INTEGER = 1
+	builtin_arguments_32_i_th_argument_pointer: INTEGER = 2
+	builtin_arguments_32_i_th_argument_string: INTEGER = 3
+			-- Codes for built-in functions from class "ARGUMENTS_32"
+
+	builtin_boolean_feature (a_feature_code: INTEGER): INTEGER
+			-- Full code for built-in feature from class "BOOLEAN"
+		do
+			Result := builtin_boolean_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_boolean_class: INTEGER = 5
+			-- Codes for built-in features from class "BOOLEAN"
+
+	builtin_boolean_and: INTEGER = 1
+	builtin_boolean_and_then: INTEGER = 2
+	builtin_boolean_implies: INTEGER = 3
+	builtin_boolean_not: INTEGER = 5
+	builtin_boolean_or: INTEGER = 6
+	builtin_boolean_or_else: INTEGER = 7
+	builtin_boolean_xor: INTEGER = 8
+			-- Codes for built-in functions from class "BOOLEAN"
+
+	builtin_boolean_ref_feature (a_feature_code: INTEGER): INTEGER
+			-- Full code for built-in feature from class "BOOLEAN_REF"
+		do
+			Result := builtin_boolean_ref_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_boolean_ref_class: INTEGER = 45
+			-- Codes for built-in features from class "BOOLEAN_REF"
+
+	builtin_boolean_ref_item: INTEGER = 1
+			-- Codes for built-in functions from class "BOOLEAN_REF"
+
+	builtin_boolean_ref_set_item: INTEGER = 2
+			-- Codes for built-in procedures from class "BOOLEAN_REF"
 
 	builtin_special_feature (a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature from class "SPECIAL"
@@ -181,17 +236,21 @@ feature -- Built-in codes
 		end
 
 	builtin_special_class: INTEGER = 2
-	builtin_special_make_empty: INTEGER = 1
-	builtin_special_item: INTEGER = 2
-	builtin_special_put: INTEGER = 3
-	builtin_special_capacity: INTEGER = 4
-	builtin_special_count: INTEGER = 5
-	builtin_special_element_size: INTEGER = 6
-	builtin_special_aliased_resized_area: INTEGER = 7
-	builtin_special_base_address: INTEGER = 8
-	builtin_special_set_count: INTEGER = 9
-	builtin_special_extend: INTEGER = 10
 			-- Codes for built-in features from class "SPECIAL"
+
+	builtin_special_aliased_resized_area: INTEGER = 1
+	builtin_special_base_address: INTEGER = 2
+	builtin_special_capacity: INTEGER = 3
+	builtin_special_count: INTEGER = 4
+	builtin_special_element_size: INTEGER = 5
+	builtin_special_item: INTEGER = 6
+			-- Codes for built-in functions from class "SPECIAL"
+
+	builtin_special_extend: INTEGER = 7
+	builtin_special_make_empty: INTEGER = 8
+	builtin_special_put: INTEGER = 9
+	builtin_special_set_count: INTEGER = 10
+			-- Codes for built-in procedures from class "SPECIAL"
 
 	builtin_character_8_class: INTEGER = 3
 	builtin_character_32_class: INTEGER = 4
@@ -202,24 +261,6 @@ feature -- Built-in codes
 	builtin_character_to_character_8: INTEGER = 5
 	builtin_character_to_character_32: INTEGER = 6
 			-- Codes for built-in features from class "CHARACTER" and related classes
-
-	builtin_boolean_feature (a_feature_code: INTEGER): INTEGER
-			-- Full code for built-in feature from class "BOOLEAN" and related classes
-		do
-			Result := builtin_boolean_class * builtin_capacity + a_feature_code
-		end
-
-	builtin_boolean_class: INTEGER = 5
-	builtin_boolean_item: INTEGER = 1
-	builtin_boolean_set_item: INTEGER = 2
-	builtin_boolean_and: INTEGER = 3
-	builtin_boolean_or: INTEGER = 4
-	builtin_boolean_xor: INTEGER = 5
-	builtin_boolean_not: INTEGER = 6
-	builtin_boolean_and_then: INTEGER = 7
-	builtin_boolean_or_else: INTEGER = 8
-	builtin_boolean_implies: INTEGER = 9
-			-- Codes for built-in features from class "BOOLEAN" and related classes
 
 	builtin_integer_8_class: INTEGER = 6
 	builtin_integer_16_class: INTEGER = 7
@@ -308,17 +349,6 @@ feature -- Built-in codes
 	builtin_pointer_is_default_pointer: INTEGER = 7
 			-- Codes for built-in features from class "POINTER" and related classes
 
-	builtin_arguments_32_feature (a_feature_code: INTEGER): INTEGER
-			-- Full code for built-in feature from class "ARGUMENTS_32"
-		do
-			Result := builtin_arguments_32_class * builtin_capacity + a_feature_code
-		end
-
-	builtin_arguments_32_class: INTEGER = 17
-	builtin_arguments_32_argument_count: INTEGER = 1
-	builtin_arguments_32_i_th_argument_pointer: INTEGER = 2
-	builtin_arguments_32_i_th_argument_string: INTEGER = 3
-
 	builtin_platform_feature (a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature from class "PLATFORM"
 		do
@@ -350,8 +380,11 @@ feature -- Built-in codes
 		end
 
 	builtin_procedure_class: INTEGER = 19
-	builtin_procedure_call: INTEGER = 1
 			-- Codes for built-in features from class "PROCEDURE"
+
+	builtin_procedure_call: INTEGER = 1
+	builtin_procedure_fast_call: INTEGER = 2
+			-- Codes for built-in procedures from class "PROCEDURE"
 
 	builtin_function_feature (a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature from class "FUNCTION"
@@ -360,9 +393,11 @@ feature -- Built-in codes
 		end
 
 	builtin_function_class: INTEGER = 20
-	builtin_function_item: INTEGER = 1
-	builtin_function_call: INTEGER = 2
 			-- Codes for built-in features from class "FUNCTION"
+
+	builtin_function_fast_item: INTEGER = 1
+	builtin_function_item: INTEGER = 2
+			-- Codes for built-in functions from class "FUNCTION"
 
 	builtin_type_feature (a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature from class "TYPE"
@@ -371,53 +406,16 @@ feature -- Built-in codes
 		end
 
 	builtin_type_class: INTEGER = 21
-	builtin_type_base_class_name: INTEGER = 1
-	builtin_type_boolean_field: INTEGER = 2
-	builtin_type_character_8_field: INTEGER = 3
-	builtin_type_character_32_field: INTEGER = 4
-	builtin_type_default: INTEGER = 5
-	builtin_type_field: INTEGER = 6
-	builtin_type_field_count: INTEGER = 7
-	builtin_type_field_name: INTEGER = 8
-	builtin_type_field_static_type: INTEGER = 9
-	builtin_type_field_type: INTEGER = 10
-	builtin_type_generating_type: INTEGER = 11
-	builtin_type_generic_parameter_type: INTEGER = 12
-	builtin_type_generic_parameter_count: INTEGER = 13
-	builtin_type_has_default: INTEGER = 14
-	builtin_type_integer_8_field: INTEGER = 15
-	builtin_type_integer_16_field: INTEGER = 16
-	builtin_type_integer_32_field: INTEGER = 17
-	builtin_type_integer_64_field: INTEGER = 18
-	builtin_type_is_expanded: INTEGER = 19
-	builtin_type_name: INTEGER = 20
-	builtin_type_natural_8_field: INTEGER = 21
-	builtin_type_natural_16_field: INTEGER = 22
-	builtin_type_natural_32_field: INTEGER = 23
-	builtin_type_natural_64_field: INTEGER = 24
-	builtin_type_pointer_field: INTEGER = 25
-	builtin_type_real_32_field: INTEGER = 26
-	builtin_type_real_64_field: INTEGER = 27
-	builtin_type_runtime_name: INTEGER = 28
-	builtin_type_set_boolean_field: INTEGER = 29
-	builtin_type_set_character_8_field: INTEGER = 30
-	builtin_type_set_character_32_field: INTEGER = 31
-	builtin_type_set_integer_8_field: INTEGER = 32
-	builtin_type_set_integer_16_field: INTEGER = 33
-	builtin_type_set_integer_32_field: INTEGER = 34
-	builtin_type_set_integer_64_field: INTEGER = 35
-	builtin_type_set_natural_8_field: INTEGER = 36
-	builtin_type_set_natural_16_field: INTEGER = 37
-	builtin_type_set_natural_32_field: INTEGER = 38
-	builtin_type_set_natural_64_field: INTEGER = 39
-	builtin_type_set_pointer_field: INTEGER = 40
-	builtin_type_set_real_32_field: INTEGER = 41
-	builtin_type_set_real_64_field: INTEGER = 42
-	builtin_type_set_reference_field: INTEGER = 43
-	builtin_type_type_id: INTEGER = 44
-	builtin_type_new_instance: INTEGER = 45
-	builtin_type_new_special_any_instance: INTEGER = 46
-			-- Codes for built-in features from class "TYPE"
+	builtin_type_default: INTEGER = 1
+	builtin_type_generic_parameter_type: INTEGER = 2
+	builtin_type_generic_parameter_count: INTEGER = 3
+	builtin_type_has_default: INTEGER = 4
+	builtin_type_is_attached: INTEGER = 5
+	builtin_type_is_deferred: INTEGER = 6
+	builtin_type_is_expanded: INTEGER = 7
+	builtin_type_runtime_name: INTEGER = 8
+	builtin_type_type_id: INTEGER = 9
+			-- Codes for built-in functions from class "TYPE"
 
 	builtin_identified_feature (a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature from class "IDENTIFIED" and related classes
@@ -438,6 +436,8 @@ feature -- Built-in codes
 		end
 
 	builtin_tuple_class: INTEGER = 23
+			-- Codes for built-in features from class "TUPLE"
+
 	builtin_tuple_boolean_item: INTEGER = 1
 	builtin_tuple_character_8_item: INTEGER = 2
 	builtin_tuple_character_32_item: INTEGER = 3
@@ -453,26 +453,28 @@ feature -- Built-in codes
 	builtin_tuple_natural_64_item: INTEGER = 13
 	builtin_tuple_object_comparison: INTEGER = 14
 	builtin_tuple_pointer_item: INTEGER = 15
-	builtin_tuple_put_boolean: INTEGER = 16
-	builtin_tuple_put_character_8: INTEGER = 17
-	builtin_tuple_put_character_32: INTEGER = 18
-	builtin_tuple_put_integer_8: INTEGER = 19
-	builtin_tuple_put_integer_16: INTEGER = 20
-	builtin_tuple_put_integer_32: INTEGER = 21
-	builtin_tuple_put_integer_64: INTEGER = 22
-	builtin_tuple_put_natural_8: INTEGER = 23
-	builtin_tuple_put_natural_16: INTEGER = 24
-	builtin_tuple_put_natural_32: INTEGER = 25
-	builtin_tuple_put_natural_64: INTEGER = 26
-	builtin_tuple_put_pointer: INTEGER = 27
-	builtin_tuple_put_real_32: INTEGER = 28
-	builtin_tuple_put_real_64: INTEGER = 29
-	builtin_tuple_put_reference: INTEGER = 30
-	builtin_tuple_real_32_item: INTEGER = 31
-	builtin_tuple_real_64_item: INTEGER = 32
+	builtin_tuple_real_32_item: INTEGER = 16
+	builtin_tuple_real_64_item: INTEGER = 17
+			-- Codes for built-in functions from class "TUPLE"
+
+	builtin_tuple_put_boolean: INTEGER = 18
+	builtin_tuple_put_character_8: INTEGER = 19
+	builtin_tuple_put_character_32: INTEGER = 20
+	builtin_tuple_put_integer_8: INTEGER = 21
+	builtin_tuple_put_integer_16: INTEGER = 22
+	builtin_tuple_put_integer_32: INTEGER = 23
+	builtin_tuple_put_integer_64: INTEGER = 24
+	builtin_tuple_put_natural_8: INTEGER = 25
+	builtin_tuple_put_natural_16: INTEGER = 26
+	builtin_tuple_put_natural_32: INTEGER = 27
+	builtin_tuple_put_natural_64: INTEGER = 28
+	builtin_tuple_put_pointer: INTEGER = 29
+	builtin_tuple_put_real_32: INTEGER = 30
+	builtin_tuple_put_real_64: INTEGER = 31
+	builtin_tuple_put_reference: INTEGER = 32
 	builtin_tuple_reference_item: INTEGER = 33
 	builtin_tuple_set_object_comparison: INTEGER = 34
-			-- Codes for built-in features from class "TUPLE"
+			-- Codes for built-in procedures from class "TUPLE"
 
 	builtin_memory_feature (a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature from class "MEMORY"
@@ -484,17 +486,6 @@ feature -- Built-in codes
 	builtin_memory_find_referers: INTEGER = 1
 	builtin_memory_free: INTEGER = 2
 			-- Codes for built-in features from class "MEMORY"
-
-	builtin_internal_feature (a_feature_code: INTEGER): INTEGER
-			-- Full code for built-in feature from class "INTERNAL"
-		do
-			Result := builtin_internal_class * builtin_capacity + a_feature_code
-		end
-
-	builtin_internal_class: INTEGER = 25
-	builtin_internal_type_of_type: INTEGER = 1
-	builtin_internal_max_type_id: INTEGER = 2
-			-- Codes for built-in features from class "INTERNAL"
 
 	builtin_exception_manager_factory_feature (a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature from class "EXCEPTION_MANAGER_FACTORY"
@@ -551,5 +542,127 @@ feature -- Built-in codes
 	builtin_com_failure_character_size: INTEGER = 6
 	builtin_com_failure_cwin_local_free: INTEGER = 7
 			-- Codes for built-in features from class "COM_FAILURE"
+
+	builtin_ise_runtime_feature (a_feature_code: INTEGER): INTEGER
+			-- Full code for built-in feature from class "ISE_RUNTIME"
+		do
+			Result := builtin_ise_runtime_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_ise_runtime_class: INTEGER = 30
+			-- Code for built-in features from class "ISE_RUNTIME"
+
+	builtin_ise_runtime_attached_type: INTEGER = 1
+	builtin_ise_runtime_boolean_field: INTEGER = 2
+	builtin_ise_runtime_boolean_field_at: INTEGER = 3
+	builtin_ise_runtime_character_8_field: INTEGER = 4
+	builtin_ise_runtime_character_8_field_at: INTEGER = 5
+	builtin_ise_runtime_character_32_field: INTEGER = 6
+	builtin_ise_runtime_character_32_field_at: INTEGER = 7
+	builtin_ise_runtime_check_assert: INTEGER = 8
+	builtin_ise_runtime_compiler_version: INTEGER = 9
+	builtin_ise_runtime_detachable_type: INTEGER = 10
+	builtin_ise_runtime_dynamic_type: INTEGER = 11
+	builtin_ise_runtime_dynamic_type_at_offset: INTEGER = 12
+	builtin_ise_runtime_eif_gen_param_id: INTEGER = 13
+	builtin_ise_runtime_field_count_of_type: INTEGER = 14
+	builtin_ise_runtime_field_name_of_type: INTEGER = 15
+	builtin_ise_runtime_field_offset_of_type: INTEGER = 16
+	builtin_ise_runtime_field_static_type_of_type: INTEGER = 17
+	builtin_ise_runtime_field_type_of_type: INTEGER = 18
+	builtin_ise_runtime_generating_type_of_type: INTEGER = 19
+	builtin_ise_runtime_generator_of_type: INTEGER = 20
+	builtin_ise_runtime_generic_parameter_count: INTEGER = 21
+	builtin_ise_runtime_in_assertion: INTEGER = 22
+	builtin_ise_runtime_integer_8_field: INTEGER = 23
+	builtin_ise_runtime_integer_8_field_at: INTEGER = 24
+	builtin_ise_runtime_integer_16_field: INTEGER = 25
+	builtin_ise_runtime_integer_16_field_at: INTEGER = 26
+	builtin_ise_runtime_integer_32_field: INTEGER = 27
+	builtin_ise_runtime_integer_32_field_at: INTEGER = 28
+	builtin_ise_runtime_integer_64_field: INTEGER = 29
+	builtin_ise_runtime_integer_64_field_at: INTEGER = 30
+	builtin_ise_runtime_is_attached_type: INTEGER = 31
+	builtin_ise_runtime_is_copy_semantics_field: INTEGER = 32
+	builtin_ise_runtime_is_expanded: INTEGER = 33
+	builtin_ise_runtime_is_field_expanded_of_type: INTEGER = 34
+	builtin_ise_runtime_is_field_transient_of_type: INTEGER = 35
+	builtin_ise_runtime_is_object_marked: INTEGER = 36
+	builtin_ise_runtime_is_special: INTEGER = 37
+	builtin_ise_runtime_is_special_copy_semantics_item: INTEGER = 38
+	builtin_ise_runtime_is_special_of_expanded: INTEGER = 39
+	builtin_ise_runtime_is_special_of_reference: INTEGER = 40
+	builtin_ise_runtime_is_special_of_reference_or_basic_type: INTEGER = 41
+	builtin_ise_runtime_is_special_of_reference_type: INTEGER = 42
+	builtin_ise_runtime_is_tuple: INTEGER = 43
+	builtin_ise_runtime_is_tuple_type: INTEGER = 44
+	builtin_ise_runtime_natural_8_field: INTEGER = 45
+	builtin_ise_runtime_natural_8_field_at: INTEGER = 46
+	builtin_ise_runtime_natural_16_field: INTEGER = 47
+	builtin_ise_runtime_natural_16_field_at: INTEGER = 48
+	builtin_ise_runtime_natural_32_field: INTEGER = 49
+	builtin_ise_runtime_natural_32_field_at: INTEGER = 50
+	builtin_ise_runtime_natural_64_field: INTEGER = 51
+	builtin_ise_runtime_natural_64_field_at: INTEGER = 52
+	builtin_ise_runtime_new_instance_of: INTEGER = 53
+	builtin_ise_runtime_new_special_of_reference_instance_of: INTEGER = 54
+	builtin_ise_runtime_new_tuple_instance_of: INTEGER = 55
+	builtin_ise_runtime_new_type_instance_of: INTEGER = 56
+	builtin_ise_runtime_object_size: INTEGER = 57
+	builtin_ise_runtime_once_objects: INTEGER = 58
+	builtin_ise_runtime_persistent_field_count_of_type: INTEGER = 59
+	builtin_ise_runtime_pointer_field: INTEGER = 60
+	builtin_ise_runtime_pointer_field_at: INTEGER = 61
+	builtin_ise_runtime_pre_ecma_mapping_status: INTEGER = 62
+	builtin_ise_runtime_raw_reference_field_at: INTEGER = 63
+	builtin_ise_runtime_raw_reference_field_at_offset: INTEGER = 64
+	builtin_ise_runtime_real_32_field: INTEGER = 65
+	builtin_ise_runtime_real_32_field_at: INTEGER = 66
+	builtin_ise_runtime_real_64_field: INTEGER = 67
+	builtin_ise_runtime_real_64_field_at: INTEGER = 68
+	builtin_ise_runtime_reference_field: INTEGER = 69
+	builtin_ise_runtime_reference_field_at: INTEGER = 70
+	builtin_ise_runtime_reference_field_at_offset: INTEGER = 71
+	builtin_ise_runtime_storable_version_of_type: INTEGER = 72
+	builtin_ise_runtime_type_conforms_to: INTEGER = 73
+	builtin_ise_runtime_type_id_from_name: INTEGER = 74
+			-- Codes for built-in functions from class "ISE_RUNTIME"
+
+	builtin_ise_runtime_lock_marking: INTEGER = 75
+	builtin_ise_runtime_mark_object: INTEGER = 76
+	builtin_ise_runtime_set_boolean_field: INTEGER = 77
+	builtin_ise_runtime_set_boolean_field_at: INTEGER = 78
+	builtin_ise_runtime_set_character_8_field: INTEGER = 79
+	builtin_ise_runtime_set_character_8_field_at: INTEGER = 80
+	builtin_ise_runtime_set_character_32_field: INTEGER = 81
+	builtin_ise_runtime_set_character_32_field_at: INTEGER = 82
+	builtin_ise_runtime_set_integer_8_field: INTEGER = 83
+	builtin_ise_runtime_set_integer_8_field_at: INTEGER = 84
+	builtin_ise_runtime_set_integer_16_field: INTEGER = 85
+	builtin_ise_runtime_set_integer_16_field_at: INTEGER = 86
+	builtin_ise_runtime_set_integer_32_field: INTEGER = 87
+	builtin_ise_runtime_set_integer_32_field_at: INTEGER = 88
+	builtin_ise_runtime_set_integer_64_field: INTEGER = 89
+	builtin_ise_runtime_set_integer_64_field_at: INTEGER = 90
+	builtin_ise_runtime_set_natural_8_field: INTEGER = 91
+	builtin_ise_runtime_set_natural_8_field_at: INTEGER = 92
+	builtin_ise_runtime_set_natural_16_field: INTEGER = 93
+	builtin_ise_runtime_set_natural_16_field_at: INTEGER = 94
+	builtin_ise_runtime_set_natural_32_field: INTEGER = 95
+	builtin_ise_runtime_set_natural_32_field_at: INTEGER = 96
+	builtin_ise_runtime_set_natural_64_field: INTEGER = 97
+	builtin_ise_runtime_set_natural_64_field_at: INTEGER = 98
+	builtin_ise_runtime_set_pointer_field: INTEGER = 99
+	builtin_ise_runtime_set_pointer_field_at: INTEGER = 100
+	builtin_ise_runtime_set_pre_ecma_mapping: INTEGER = 101
+	builtin_ise_runtime_set_real_32_field: INTEGER = 102
+	builtin_ise_runtime_set_real_32_field_at: INTEGER = 103
+	builtin_ise_runtime_set_real_64_field: INTEGER = 104
+	builtin_ise_runtime_set_real_64_field_at: INTEGER = 105
+	builtin_ise_runtime_set_reference_field: INTEGER = 106
+	builtin_ise_runtime_set_reference_field_at: INTEGER = 107
+	builtin_ise_runtime_unlock_marking: INTEGER = 108
+	builtin_ise_runtime_unmark_object: INTEGER = 109
+			-- Codes for built-in procedures from class "ISE_RUNTIME"
 
 end

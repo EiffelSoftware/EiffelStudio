@@ -5,7 +5,7 @@ note
 		"Eiffel expression type finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,6 +60,7 @@ inherit
 			process_once_function_inline_agent,
 			process_once_manifest_string,
 			process_once_procedure_inline_agent,
+			process_parenthesis_expression,
 			process_parenthesized_expression,
 			process_precursor_expression,
 			process_prefix_expression,
@@ -146,7 +147,6 @@ feature -- Basic operations
 			current_context := a_context
 			old_target_type := current_target_type
 			current_target_type := a_target_type
-			current_universe_impl.resolve_unfolded_tuple_actual_parameters
 			a_expression.process (Current)
 			current_target_type := old_target_type
 			current_context := old_context
@@ -202,7 +202,6 @@ feature -- Basic operations
 			current_context := a_context
 			old_target_type := current_target_type
 			current_target_type := a_target_type
-			current_universe_impl.resolve_unfolded_tuple_actual_parameters
 			a_expression.process (Current)
 			current_target_type := old_target_type
 			current_context := old_context
@@ -269,7 +268,6 @@ feature -- Basic operations
 			in_assertion := True
 			old_in_precondition := in_precondition
 			in_precondition := True
-			current_universe_impl.resolve_unfolded_tuple_actual_parameters
 			a_expression.process (Current)
 			in_assertion := old_in_assertion
 			in_precondition := old_in_precondition
@@ -335,7 +333,6 @@ feature -- Basic operations
 			in_assertion := True
 			old_in_postcondition := in_postcondition
 			in_postcondition := True
-			current_universe_impl.resolve_unfolded_tuple_actual_parameters
 			a_expression.process (Current)
 			in_assertion := old_in_assertion
 			in_postcondition := old_in_postcondition
@@ -396,7 +393,6 @@ feature -- Basic operations
 			in_assertion := True
 			old_in_invariant := in_invariant
 			in_invariant := True
-			current_universe_impl.resolve_unfolded_tuple_actual_parameters
 			a_expression.process (Current)
 			in_assertion := old_in_assertion
 			in_invariant := old_in_invariant
@@ -3136,8 +3132,16 @@ feature {ET_AST_NODE} -- Processing
 				find_object_test_local_type (an_identifier, current_context)
 			elseif an_identifier.is_across_cursor then
 				find_across_cursor_type (an_identifier, current_context)
-			elseif not an_identifier.is_instruction then
+			elseif an_identifier.is_feature_name then
 				find_unqualified_call_expression_type (an_identifier, current_context)
+			else
+					-- Internal error: invalid kind of identifier.
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			end
 		end
 
@@ -3225,6 +3229,12 @@ feature {ET_AST_NODE} -- Processing
 			find_once_procedure_inline_agent_type (an_expression, current_context)
 		end
 
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			find_qualified_call_expression_type (an_expression, current_context)
+		end
+
 	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)
 			-- Process `an_expression'.
 		do
@@ -3234,7 +3244,11 @@ feature {ET_AST_NODE} -- Processing
 	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION)
 			-- Process `an_expression'.
 		do
-			find_precursor_expression_type (an_expression, current_context)
+			if attached an_expression.parenthesis_call as l_parenthesis_call then
+				find_qualified_call_expression_type (l_parenthesis_call, current_context)
+			else
+				find_precursor_expression_type (an_expression, current_context)
+			end
 		end
 
 	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION)
@@ -3246,7 +3260,11 @@ feature {ET_AST_NODE} -- Processing
 	process_qualified_call_expression (an_expression: ET_QUALIFIED_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		do
-			find_qualified_call_expression_type (an_expression, current_context)
+			if attached an_expression.parenthesis_call as l_parenthesis_call then
+				find_qualified_call_expression_type (l_parenthesis_call, current_context)
+			else
+				find_qualified_call_expression_type (an_expression, current_context)
+			end
 		end
 
 	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
@@ -3288,7 +3306,11 @@ feature {ET_AST_NODE} -- Processing
 	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		do
-			find_static_call_expression_type (an_expression, current_context)
+			if attached an_expression.parenthesis_call as l_parenthesis_call then
+				find_qualified_call_expression_type (l_parenthesis_call, current_context)
+			else
+				find_static_call_expression_type (an_expression, current_context)
+			end
 		end
 
 	process_strip_expression (an_expression: ET_STRIP_EXPRESSION)
@@ -3318,7 +3340,11 @@ feature {ET_AST_NODE} -- Processing
 	process_unqualified_call_expression (an_expression: ET_UNQUALIFIED_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		do
-			find_unqualified_call_expression_type (an_expression, current_context)
+			if attached an_expression.parenthesis_call as l_parenthesis_call then
+				find_qualified_call_expression_type (l_parenthesis_call, current_context)
+			else
+				find_unqualified_call_expression_type (an_expression, current_context)
+			end
 		end
 
 	process_verbatim_string (a_string: ET_VERBATIM_STRING)

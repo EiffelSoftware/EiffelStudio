@@ -5,7 +5,7 @@ note
 		"Eiffel AST comment finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,6 @@ inherit
 			process_braced_class_name,
 			process_braced_type,
 			process_braced_type_list,
-			process_bracket_argument_list,
 			process_bracket_expression,
 			process_break,
 			process_c1_character_constant,
@@ -161,9 +160,12 @@ inherit
 			process_once_procedure,
 			process_once_procedure_inline_agent,
 			process_parent,
-			process_parent_semicolon,
-			process_parenthesized_expression,
+			process_parent_clause_list,
 			process_parent_list,
+			process_parent_semicolon,
+			process_parenthesis_expression,
+			process_parenthesis_instruction,
+			process_parenthesized_expression,
 			process_postconditions,
 			process_preconditions,
 			process_precursor_expression,
@@ -195,6 +197,7 @@ inherit
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
 			process_unfolded_empty_tuple_actual_parameters,
+			process_unfolded_tuple_actual_argument_list,
 			process_unfolded_tuple_actual_parameters,
 			process_unique_attribute,
 			process_unqualified_call_expression,
@@ -225,6 +228,7 @@ feature -- Basic operations
 			-- and recursively in its sub-nodes, in the order they would appear
 			-- in a printed text. Do not take into account comments that appear
 			-- in nodes listed in `excluded_nodes'.
+			-- Do nothing if `comment_ignored' is True.
 		require
 			a_node_not_void: a_node /= Void
 			a_list_not_void: a_list /= Void
@@ -233,10 +237,12 @@ feature -- Basic operations
 		local
 			old_list: DS_ARRAYED_LIST [ET_BREAK]
 		do
-			old_list := comment_list
-			comment_list := a_list
-			a_node.process (Current)
-			comment_list := old_list
+			if not comments_ignored then
+				old_list := comment_list
+				comment_list := a_list
+				a_node.process (Current)
+				comment_list := old_list
+			end
 		ensure
 			no_void_comment: not a_list.has_void
 			all_comments: a_list.for_all (agent {ET_BREAK}.has_comment)
@@ -264,6 +270,17 @@ feature -- Excluded nodes
 			excluded_nodes.wipe_out
 		ensure
 			no_excluded_nodes: excluded_nodes.is_empty
+		end
+
+	comments_ignored: BOOLEAN
+			-- Should all comments be ignored?
+
+	set_comments_ignored (b: BOOLEAN)
+			-- Set `comments_ignored' to `b'.
+		do
+			comments_ignored := b
+		ensure
+			comments_ignored_set: comments_ignored = b
 		end
 
 feature {ET_AST_NODE} -- Processing
@@ -478,14 +495,6 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_braced_type_list (a_list: ET_BRACED_TYPE_LIST)
-			-- Process `a_list'.
-		do
-			if not excluded_nodes.has (a_list) then
-				precursor (a_list)
-			end
-		end
-
-	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST)
 			-- Process `a_list'.
 		do
 			if not excluded_nodes.has (a_list) then
@@ -1438,19 +1447,11 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_parent_semicolon (a_parent: ET_PARENT_SEMICOLON)
-			-- Process `a_parent'.
+	process_parent_clause_list (a_list: ET_PARENT_CLAUSE_LIST)
+			-- Process `a_list'.
 		do
-			if not excluded_nodes.has (a_parent) then
-				precursor (a_parent)
-			end
-		end
-
-	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)
-			-- Process `an_expression'.
-		do
-			if not excluded_nodes.has (an_expression) then
-				precursor (an_expression)
+			if not excluded_nodes.has (a_list) then
+				precursor (a_list)
 			end
 		end
 
@@ -1459,6 +1460,38 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (a_list) then
 				precursor (a_list)
+			end
+		end
+
+	process_parent_semicolon (a_parent: ET_PARENT_SEMICOLON)
+			-- Process `a_parent'.
+		do
+			if not excluded_nodes.has (a_parent) then
+				precursor (a_parent)
+			end
+		end
+
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			if not excluded_nodes.has (an_expression) then
+				precursor (an_expression)
+			end
+		end
+
+	process_parenthesis_instruction (an_instruction: ET_PARENTHESIS_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			if not excluded_nodes.has (an_instruction) then
+				precursor (an_instruction)
+			end
+		end
+
+	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			if not excluded_nodes.has (an_expression) then
+				precursor (an_expression)
 			end
 		end
 
@@ -1705,6 +1738,14 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_unfolded_empty_tuple_actual_parameters (a_list: ET_UNFOLDED_EMPTY_TUPLE_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+		do
+			if not excluded_nodes.has (a_list) then
+				precursor (a_list)
+			end
+		end
+
+	process_unfolded_tuple_actual_argument_list (a_list: ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST)
 			-- Process `a_list'.
 		do
 			if not excluded_nodes.has (a_list) then

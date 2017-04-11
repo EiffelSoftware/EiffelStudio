@@ -5,7 +5,7 @@ note
 		"Assertion routines"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ deferred class TS_ASSERTION_ROUTINES
 inherit
 
 	ANY
+
+	EXCEPTION_MANAGER_FACTORY
+		export {NONE} all end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
 		export {NONE} all end
@@ -802,7 +805,7 @@ feature {TS_TEST_HANDLER} -- Files
 
 feature {TS_TEST_HANDLER} -- Containers
 
-	assert_arrays_same (a_tag: STRING; expected, actual: ARRAY [ANY])
+	assert_arrays_same (a_tag: STRING; expected, actual: ARRAY [detachable ANY])
 			-- Assert that `expected' and `actual' have the same items
 			-- in the same order (use '=' for item comparison).
 		require
@@ -814,7 +817,7 @@ feature {TS_TEST_HANDLER} -- Containers
 			i1, i2: INTEGER
 			new_tag: STRING
 			a_message: detachable STRING
-			expected_item, actual_item: ANY
+			expected_item, actual_item: detachable ANY
 		do
 			assertions.add_assertion
 			if expected.count /= actual.count then
@@ -855,7 +858,7 @@ feature {TS_TEST_HANDLER} -- Containers
 			end
 		end
 
-	check_arrays_same (a_tag: STRING; expected, actual: ARRAY [ANY])
+	check_arrays_same (a_tag: STRING; expected, actual: ARRAY [detachable ANY])
 			-- Check that `expected' and `actual' have the same items
 			-- in the same order (use '=' for item comparison).
 			-- Violation of this assertion is not fatal.
@@ -872,7 +875,7 @@ feature {TS_TEST_HANDLER} -- Containers
 			assertions.set_exception_on_error (l_fatal)
 		end
 
-	assert_arrays_equal (a_tag: STRING; expected, actual: ARRAY [ANY])
+	assert_arrays_equal (a_tag: STRING; expected, actual: ARRAY [detachable ANY])
 			-- Assert that `expected' and `actual' have the same items
 			-- in the same order (use `equal' for item comparison).
 		require
@@ -884,7 +887,7 @@ feature {TS_TEST_HANDLER} -- Containers
 			i1, i2: INTEGER
 			new_tag: STRING
 			a_message: detachable STRING
-			expected_item, actual_item: ANY
+			expected_item, actual_item: detachable ANY
 		do
 			assertions.add_assertion
 			if expected.count /= actual.count then
@@ -1012,6 +1015,144 @@ feature {TS_TEST_HANDLER} -- Containers
 			assertions.set_exception_on_error (l_fatal)
 		end
 
+feature {TS_TEST_HANDLER} -- Exception
+
+	assert_exception (a_tag: STRING; a_routine: ROUTINE)
+			-- Assert that the execution of `a_routine' raises an exception.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_routine_not_void: a_routine /= Void
+		local
+			l_message: STRING
+		do
+			assertions.add_assertion
+			if not attached raised_exception (a_routine) then
+				l_message := assert_strings_equal_message (a_tag, "Exception", "No exception")
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
+			end
+		end
+
+	check_exception (a_tag: STRING; a_routine: ROUTINE)
+			-- Check that the execution of `a_routine' raises an exception.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_routine_not_void: a_routine /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_exception (a_tag, a_routine)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
+	assert_no_exception (a_tag: STRING; a_routine: ROUTINE)
+			-- Assert that the execution of `a_routine' raises no exception.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_routine_not_void: a_routine /= Void
+		local
+			l_message: STRING
+		do
+			assertions.add_assertion
+			if attached raised_exception (a_routine) as l_exception then
+				l_message := assert_strings_equal_message (a_tag, "No exception", l_exception.generating_type)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
+			end
+		end
+
+	check_no_exception (a_tag: STRING; a_routine: ROUTINE)
+			-- Check that the execution of `a_routine' raises no exception.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_routine_not_void: a_routine /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_no_exception (a_tag, a_routine)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
+	assert_developer_exception_with_name (a_tag: STRING; a_exception_name: STRING; a_routine: ROUTINE)
+			-- Assert that the execution of `a_routine' raises a developer exception
+			-- with name `a_exception_name'.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_exception_name_not_void: a_exception_name /= Void
+			a_routine_not_void: a_routine /= Void
+		local
+			l_message: STRING
+		do
+			assertions.add_assertion
+			if not attached raised_exception (a_routine) as l_exception then
+				l_message := assert_strings_equal_message (a_tag, ({DEVELOPER_EXCEPTION}).name, "No exception")
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			elseif not attached {DEVELOPER_EXCEPTION} l_exception as l_developer_exception then
+				l_message := assert_strings_equal_message (a_tag, ({DEVELOPER_EXCEPTION}).name, l_exception.generating_type)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			elseif not attached l_developer_exception.description as l_description then
+				l_message := assert_strings_equal_message (a_tag, a_exception_name, "No exception name")
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			elseif l_description.as_string_8 /~ a_exception_name then
+				l_message := assert_strings_equal_message (a_tag, a_exception_name, l_description.as_string_8)
+				logger.report_failure (a_tag, l_message)
+				assertions.report_error (l_message)
+			else
+				logger.report_success (a_tag)
+			end
+		end
+
+	check_developer_exception_with_name (a_tag: STRING; a_exception_name: STRING; a_routine: ROUTINE)
+			-- Check that the execution of `a_routine' raises a developer exception
+			-- with name `a_exception_name'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_exception_name_not_void: a_exception_name /= Void
+			a_routine_not_void: a_routine /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_developer_exception_with_name (a_tag, a_exception_name, a_routine)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
+feature {NONE} -- Exception (Implementation)
+
+	raised_exception (a_routine: ROUTINE): detachable EXCEPTION
+			-- Exception raised by the execution of `a_routine', if any
+		require
+			a_routine_not_void: a_routine /= Void
+		local
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				a_routine.call ([])
+			elseif attached exception_manager.last_exception as l_exception then
+				Result := l_exception.original
+			end
+		rescue
+			if not l_retried then
+				l_retried := True
+				retry
+			end
+		end
+
 feature {TS_TEST_HANDLER} -- Execution
 
 	assert_execute (a_shell_command: STRING)
@@ -1102,7 +1243,7 @@ feature {TS_TEST_HANDLER} -- Execution
 
 feature {NONE} -- Messages
 
-	void_or_out (an_any: ANY): detachable STRING
+	void_or_out (an_any: detachable ANY): detachable STRING
 			-- Return `an_any.out' or Void if `an_any' is Void.
 		do
 			if an_any /= Void then

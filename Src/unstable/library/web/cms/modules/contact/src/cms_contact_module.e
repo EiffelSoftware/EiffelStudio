@@ -186,7 +186,7 @@ feature -- Hooks
 							l_tpl_block.set_value (l_recaptcha_site_key, "recaptcha_site_key")
 						end
 						a_response.add_block (l_tpl_block, "content")
-						a_response.add_style (a_response.url ("/module/" + name + "/files/css/contact.css", Void), Void)
+						a_response.add_style (a_response.module_resource_url (Current, "/files/css/contact.css", Void), Void)
 					else
 						debug ("cms")
 							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -200,7 +200,7 @@ feature -- Hooks
 		local
 			f: CMS_FORM
 		do
-			a_response.add_style (a_response.url ("/module/" + name + "/files/css/contact.css", Void), Void)
+			a_response.add_style (a_response.module_resource_url (Current, "/files/css/contact.css", Void), Void)
 			if attached smarty_template_block (Current, "contact", api) as l_tpl_block then
 				if attached recaptcha_site_key (api) as l_recaptcha_site_key then
 					l_tpl_block.set_value (l_recaptcha_site_key, "recaptcha_site_key")
@@ -281,7 +281,7 @@ feature -- Hooks
 		do
 			write_information_log (generator + ".handle_post_contact")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.add_style (r.url ("/module/" + name + "/files/css/contact.css", Void), Void)
+			r.add_style (r.module_resource_url (Current, "/files/css/contact.css", Void), Void)
 			r.values.force (False, "has_error")
 
 			create vars.make_caseless (5)

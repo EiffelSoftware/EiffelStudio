@@ -25,7 +25,10 @@ feature {NONE} -- Initialization
 			create header.make
 			create values.make (3)
 			site_url := a_api.site_url
-			base_url := a_api.base_url
+			if attached a_api.base_url as l_base_url then
+				base_url := l_base_url
+			end
+			base_path := a_api.base_path
 			initialize
 		end
 
@@ -124,8 +127,8 @@ feature -- URL utilities
 			if attached setup.front_page_path as l_front_page_path then
 				Result := l_front_page_path.same_string (l_path_info)
 			else
-				if attached base_url as l_base_url then
-					Result := l_path_info.same_string (l_base_url)
+				if base_path.same_string (l_path_info) then
+					Result := True
 				else
 					Result := l_path_info.is_empty or else l_path_info.same_string ("/")
 				end
@@ -134,11 +137,17 @@ feature -- URL utilities
 
 	site_url: IMMUTABLE_STRING_8
 			-- Absolute site url.
+			-- Always ends with '/'
 
 	base_url: detachable IMMUTABLE_STRING_8
 			-- Base url if any.
 			--| Usually it is Void, but it could be
 			--|  /project/demo/
+
+	base_path: IMMUTABLE_STRING_8
+			-- Base path, default to "/".
+			-- Always ends with '/'
+			-- Could be /project/demo/
 
 feature -- Access: CMS
 
@@ -1242,6 +1251,7 @@ feature -- Generation
 
 				-- Variables
 			page.register_variable (absolute_url ("", Void), "site_url")
+			page.register_variable (base_path, "base_path")
 			page.register_variable (absolute_url ("", Void), "host") -- Same as `site_url'.
 			page.register_variable (request.is_https, "is_https")
 			if attached title as l_title then
@@ -1253,6 +1263,8 @@ feature -- Generation
 			page.set_is_https (request.is_https)
 
 				-- Variables/Misc
+			page.register_variable (is_administration_mode, "is_administration_mode")
+			page.register_variable (api.theme_path, "theme_path")
 
 -- FIXME: logo .. could be a settings of theme, managed by admin front-end/database.
 --			if attached logo_location as l_logo then
@@ -1396,6 +1408,14 @@ feature -- Helpers: URLs
 			--|  - fragment: string		=> append "#fragment"
 		do
 			Result := api.location_url (a_location, opts)
+		end
+
+	module_resource_url (a_module: CMS_MODULE; a_path: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING_8
+			-- Url for resource `a_path` associated with module `a_module`.
+		require
+			a_valid_valid: a_path.is_empty or else a_path.starts_with ("/")
+		do
+			Result := url ("/module/" + a_module.name + a_path, opts)
 		end
 
 	user_url (u: CMS_USER): like url

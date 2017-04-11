@@ -147,7 +147,7 @@ feature -- Hooks
 
 	response_alter (a_response: CMS_RESPONSE)
 		do
-			a_response.add_style (a_response.url ("/module/" + name + "/files/css/taxonomy.css", Void), Void)
+			a_response.add_style (a_response.module_resource_url (Current, "/files/css/taxonomy.css", Void), Void)
 		end
 
 end

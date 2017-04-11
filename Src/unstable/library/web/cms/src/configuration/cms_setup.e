@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 			end
 
 				-- Selected theme's name
-			site_theme_name := text_item_or_default ("theme", "default")
+			site_theme_name := text_item_or_default ("site.theme", "default")
 			set_theme (site_theme_name)
 
 				-- Administration
@@ -325,6 +325,18 @@ feature -- Settings
 	is_debug: BOOLEAN
 			-- Is debug mode enabled?
 
+	set_site_mode
+			-- Switch to site mode.
+			--| 	- Change theme
+			--| 	- ..
+		do
+			if is_theme_valid (site_theme_name) then
+				set_theme (site_theme_name)
+			else
+					-- Keep previous theme!
+			end
+		end
+
 	set_administration_mode
 			-- Switch to administration mode.
 			--| 	- Change theme
@@ -341,7 +353,7 @@ feature -- Settings
 			-- Set theme to `a_name`.
 		do
 			theme_name := a_name.as_string_32
-			theme_location := themes_location.extended (theme_name)
+			theme_location := theme_location_for (theme_name)
 		end
 
 feature -- Query
@@ -417,7 +429,7 @@ feature -- Access: theme
 		local
 			fu: FILE_UTILITIES
 		do
-			Result := fu.directory_path_exists (themes_location.extended (a_theme_name))
+			Result := fu.directory_path_exists (theme_location_for (a_theme_name))
 		end
 
 	theme_information_location: PATH
@@ -436,6 +448,12 @@ feature -- Access: theme
 			-- Administration theme name.
 			-- Default: same as site theme.
 			-- TODO: change to builtin "admin" theme?
+
+	theme_location_for (a_theme_name: READABLE_STRING_GENERAL): PATH
+			-- Theme directory location for theme `a_theme_name`.
+		do
+			Result := themes_location.extended (a_theme_name)
+		end
 
 feature -- Access
 

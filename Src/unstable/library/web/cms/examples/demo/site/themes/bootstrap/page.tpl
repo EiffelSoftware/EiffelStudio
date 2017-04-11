@@ -4,11 +4,11 @@
   <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- EWF CMS -->
-	<link rel="stylesheet" href="{$site_url/}theme/css/style.css">
+	<link rel="stylesheet" href="{$theme_path/}css/style.css">
  
 	<!-- jQuery dep -->
-	<script src="{$site_url/}theme/js/jquery-1.10.2.min.js"></script>
-	<script src="{$site_url/}theme/js/popup_search.js"></script>
+	<script src="{$theme_path/}js/jquery-1.10.2.min.js"></script>
+	<script src="{$theme_path/}js/popup_search.js"></script>
 
 {if isset="$head"}{$head/}{/if}
 {if isset="$styles"}{$styles/}{/if}

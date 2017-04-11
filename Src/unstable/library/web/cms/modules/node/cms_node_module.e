@@ -224,7 +224,7 @@ feature -- Hooks
 	response_alter (a_response: CMS_RESPONSE)
 			-- <Precursor>
 		do
-			a_response.add_style (a_response.url ("/module/" + name + "/files/css/node.css", Void), Void)
+			a_response.add_style (a_response.module_resource_url (Current, "/files/css/node.css", Void), Void)
 		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]

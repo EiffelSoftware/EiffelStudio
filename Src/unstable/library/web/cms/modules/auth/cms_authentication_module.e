@@ -1157,7 +1157,7 @@ feature -- Response Alter
 	response_alter (a_response: CMS_RESPONSE)
 		do
 			a_response.add_javascript_url ("https://www.google.com/recaptcha/api.js")
-			a_response.add_style (a_response.url ("/module/" + name + "/files/css/auth.css", Void), Void)
+			a_response.add_style (a_response.module_resource_url (Current, "/files/css/auth.css", Void), Void)
 		end
 
 feature {NONE} -- Implementation

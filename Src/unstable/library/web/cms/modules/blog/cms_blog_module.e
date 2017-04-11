@@ -139,7 +139,7 @@ feature -- Hooks
 
 	response_alter (a_response: CMS_RESPONSE)
 		do
-			a_response.add_style (a_response.url ("/module/" + name + "/files/css/blog.css", Void), Void)
+			a_response.add_style (a_response.module_resource_url (Current, "/files/css/blog.css", Void), Void)
 		end
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)

@@ -116,6 +116,7 @@ feature {NONE} -- Initialize
 	initialize_site_url
 				-- Initialize site and base url.
 		local
+			l_base_url: detachable READABLE_STRING_8
 			l_url: detachable STRING_8
 			i,j: INTEGER
 		do
@@ -134,12 +135,23 @@ feature {NONE} -- Initialize
 			if i > 0 then
 				j := l_url.index_of ('/', i + 3)
 				if j > 0 then
-					base_url := l_url.substring (j, l_url.count)
+					l_base_url := l_url.substring (j, l_url.count)
 				end
+			end
+			if l_base_url /= Void then
+				base_url := l_base_url
+				if l_base_url.ends_with_general ("/") then
+					create base_path.make_from_string (l_base_url)
+				else
+					create base_path.make_from_string (l_base_url + "/")
+				end
+			else
+				create base_path.make_from_string ("/")
 			end
 		ensure
 			site_url_set: site_url /= Void
 			site_url_ends_with_slash: site_url.ends_with_general ("/")
+			base_path_set: base_path /= Void and then base_path.ends_with_general ("/")
 		end
 
 	initialize_content_types
@@ -380,6 +392,9 @@ feature -- Access: url
 			--| Usually it is Void, but it could be
 			--|  /project/demo/
 
+	base_path: IMMUTABLE_STRING_8
+			-- Base path, default to "/"
+
 	site_url: IMMUTABLE_STRING_8
 			-- Site url
 
@@ -493,10 +508,20 @@ feature -- Helpers: html links
 
 feature -- Settings
 
+	switch_to_site_mode
+		do
+			if is_administration_mode then
+				setup.set_site_mode
+				is_administration_mode := False
+			end
+		end
+
 	switch_to_administration_mode
 		do
-			setup.set_administration_mode
-			is_administration_mode := True
+			if not is_administration_mode then
+				setup.set_administration_mode
+				is_administration_mode := True
+			end
 		end
 
 	is_administration_mode: BOOLEAN
@@ -1101,6 +1126,14 @@ feature -- Environment/ theme
 			Result := setup.files_location
 		end
 
+	files_path: STRING_8
+		do
+			create Result.make_from_string (base_path)
+			Result.append ("files/")
+		ensure
+			ends_with_slash: Result.ends_with ("/")
+		end
+
 	cache_location: PATH
 			-- CMS internal cache location.
 		do
@@ -1118,14 +1151,42 @@ feature -- Environment/ theme
 			Result := setup.theme_name
 		end
 
+	theme_path: STRING_8
+			-- URL path to the theme.
+		do
+			Result := theme_path_for (theme_name)
+		ensure
+			ends_with_slash: Result.ends_with ("/")
+		end
+
 	theme_assets_location: PATH
 			-- assets (js, css, images, etc).
 		do
-			debug ("refactor_fixme")
-				fixme ("Check if we really need it")
-			end
 				-- Check how to get this path from the CMS_THEME information.
 			Result := theme_location.extended ("assets")
+		end
+
+feature -- Theming path helpers		
+
+	theme_location_for (a_theme_name: READABLE_STRING_GENERAL): PATH
+		do
+			Result := setup.theme_location_for (a_theme_name)
+		end
+		
+	theme_path_for (a_theme_name: READABLE_STRING_GENERAL): STRING_8
+			-- URL path to the theme `a_theme_name`.
+		do
+			create Result.make_from_string (base_path)
+			Result.append ("theme/")
+			Result.append (url_encoded (a_theme_name))
+			Result.append_character ('/')
+		ensure
+			ends_with_slash: Result.ends_with ("/")
+		end
+
+	theme_assets_location_for (a_theme_name: READABLE_STRING_GENERAL): PATH
+		do
+			Result := theme_location_for (a_theme_name).extended ("assets")
 		end
 
 feature -- Environment/ module		

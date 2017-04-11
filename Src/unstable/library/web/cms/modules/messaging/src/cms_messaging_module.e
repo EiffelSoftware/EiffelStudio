@@ -109,7 +109,7 @@ feature -- Hooks
 		local
 			f: CMS_FORM
 		do
-			a_response.add_style (a_response.url ("/module/" + name + "/files/css/messaging.css", Void), Void)
+			a_response.add_style (a_response.module_resource_url (Current, "/files/css/messaging.css", Void), Void)
 -- TODO: use template to overwrite/customize			
 --			if attached smarty_template_block (Current, "messaging", api) as l_tpl_block then
 --				across
@@ -215,7 +215,7 @@ $(document).ready(function() {
     });
 });
 </script>
-			]")			
+			]")
 			Result := f
 		end
 
@@ -249,7 +249,7 @@ $(document).ready(function() {
 		do
 			if api.has_permission ("message any user") then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-				r.add_style (r.url ("/module/" + name + "/files/css/messaging.css", Void), Void)
+				r.add_style (r.module_resource_url (Current, "/files/css/messaging.css", Void), Void)
 
 				create s.make_empty
 

@@ -195,16 +195,17 @@ feature -- Settings: router
 	configure_api_file_handler (a_router: WSF_ROUTER)
 		local
 			fhdl: WSF_FILE_SYSTEM_HANDLER
+			themehdl: CMS_THEME_FILE_SYSTEM_HANDLER
 		do
 			api.logger.put_information (generator + ".configure_api_file_handler", Void)
 
-			create fhdl.make_hidden_with_path (api.theme_assets_location)
-			fhdl.disable_index
-			fhdl.set_not_found_handler (agent (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
+			create themehdl.make (api)
+			themehdl.set_not_found_handler (agent (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
 				do
 					execute_default (ia_req, ia_res)
 				end)
-			a_router.handle ("/theme/", fhdl, router.methods_GET)
+				-- See CMS_API.api.theme_path_for (...) for the hardcoded "/theme/" path.
+			a_router.handle ("/theme/{theme_id}{/vars}", themehdl, router.methods_GET)
 
 				-- "/files/.."
 			create fhdl.make_hidden_with_path (api.files_location)
@@ -213,7 +214,7 @@ feature -- Settings: router
 				do
 					execute_default (ia_req, ia_res)
 				end)
-			a_router.handle ("/files/", fhdl, router.methods_GET)
+			a_router.handle (api.files_path, fhdl, router.methods_GET)
 
 				-- files folder from specific module.
 			a_router.handle ("/module/{modname}/files{/vars}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_module_files), a_router.methods_get)
@@ -244,6 +245,7 @@ feature -- Request execution
 	initialize_site_execution
 			-- Initialize for site execution.
 		do
+			api.switch_to_site_mode
 			api.initialize_execution
 			setup_router
 		end

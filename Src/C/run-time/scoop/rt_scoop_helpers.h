@@ -43,7 +43,7 @@
 /* Forward declaration */
 struct eif_scoop_call_data;
 
-EIF_BOOLEAN rt_try_execute_scoop_call (struct eif_scoop_call_data *call); /* Execute 'call' and return EIF_FALSE if an exception happened. */
+EIF_BOOLEAN rt_try_execute_scoop_call (struct eif_scoop_call_data *call, int nstcall_value); /* Execute 'call' and return EIF_FALSE if an exception happened. */
 
 void rt_set_processor_id (EIF_SCP_PID pid, rt_global_context_t* rt_globals); /* Associate processor of ID `pid' with the current thread. */
 void rt_unset_processor_id (rt_global_context_t* rt_globals);	/* Dissociate processor from the current thread. */

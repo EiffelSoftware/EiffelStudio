@@ -4,9 +4,9 @@ note
 
 		"ECF file generators from Xace files"
 
-	remark: "Generate ECF version 1.5"
+	remark: "Generate ECF version 1.15"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -367,22 +367,20 @@ feature {NONE} -- Output
 				a_file.put_character ('%"')
 			end
 				-- void_safety
-			if an_option.is_void_safety_declared then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<option")
-					l_option_attribute_printed := True
-				end
-				a_file.put_string (" void_safety=%"")
-				if an_option.void_safety.same_string (options.none_value) then
-					a_file.put_string ("none")
-				elseif an_option.void_safety.same_string (options.on_demand_value) then
-					a_file.put_string ("initialization")
-				else
-					a_file.put_string ("all")
-				end
-				a_file.put_character ('%"')
+			if not l_option_attribute_printed then
+				print_indentation (indent, a_file)
+				a_file.put_string ("<option")
+				l_option_attribute_printed := True
 			end
+			a_file.put_string (" void_safety=%"")
+			if an_option.void_safety.same_string (options.none_value) then
+				a_file.put_string ("none")
+			elseif an_option.void_safety.same_string (options.on_demand_value) then
+				a_file.put_string ("initialization")
+			else
+				a_file.put_string ("all")
+			end
+			a_file.put_character ('%"')
 				-- debug
 			if an_option.is_debug_tag_declared then
 				l_cursor := an_option.debug_tag.new_cursor
@@ -937,6 +935,9 @@ feature {NONE} -- Output
 					a_file.put_string (" readonly=%"true%"")
 				end
 				an_option := a_cluster.options
+				if an_option = Void then
+					create an_option.make
+				end
 				a_class_options := a_cluster.class_options
 				subclusters := a_cluster.subclusters
 				if an_option = Void and a_class_options = Void and subclusters = Void then
@@ -1046,11 +1047,13 @@ feature {NONE} -- Output
 			an_option: detachable ET_XACE_OPTIONS
 			subclusters: detachable ET_XACE_CLUSTERS
 			a_class_options: detachable DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
+			l_condition_16_05: BOOLEAN
 		do
 			if (not is_shallow or else not a_cluster.is_mounted) and then not a_cluster.is_fully_abstract then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<override name=%"")
 				print_quote_escaped_string (a_cluster.prefixed_name, a_file)
+				l_condition_16_05 := a_cluster.name.has_substring ("16_05")
 				a_file.put_string ("%" location=%"")
 				a_parent := a_cluster.parent
 				if a_parent /= Void then
@@ -1075,9 +1078,12 @@ feature {NONE} -- Output
 					a_file.put_string (" readonly=%"true%"")
 				end
 				an_option := a_cluster.options
+				if an_option = Void then
+					create an_option.make
+				end
 				a_class_options := a_cluster.class_options
 				subclusters := a_cluster.subclusters
-				if an_option = Void and a_class_options = Void and subclusters = Void then
+				if an_option = Void and a_class_options = Void and subclusters = Void and not l_condition_16_05 then
 					a_file.put_line ("/>")
 				else
 					if an_option /= Void and then an_option.is_prefix_option_declared and then attached an_option.declared_prefix_option as l_declared_prefix_option then
@@ -1089,6 +1095,20 @@ feature {NONE} -- Output
 					if an_option /= Void then
 						print_file_rules (an_option, indent + 1, a_file)
 						print_options (an_option, indent + 1, a_file)
+					end
+					if l_condition_16_05 then
+						print_indentation (indent + 1, a_file)
+						a_file.put_line ("<file_rule>")
+						print_indentation (indent + 2, a_file)
+						a_file.put_line ("<exclude>/.*\.e$</exclude>")
+						print_indentation (indent + 2, a_file)
+						a_file.put_line ("<condition>")
+						print_indentation (indent + 3, a_file)
+						a_file.put_line ("<version type=%"compiler%" min=%"16.05.9.9053%"/>")
+						print_indentation (indent + 2, a_file)
+						a_file.put_line ("</condition>")
+						print_indentation (indent + 1, a_file)
+						a_file.put_line ("</file_rule>")
 					end
 					if a_class_options /= Void then
 						a_class_options.do_all (agent print_class_options (?, indent + 1, a_file))
@@ -1571,10 +1591,10 @@ feature {NONE} -- Output
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			a_file.put_string ("xmlns=%"http://www.eiffel.com/developers/xml/configuration-1-5-0%" ")
+			a_file.put_string ("xmlns=%"http://www.eiffel.com/developers/xml/configuration-1-15-0%" ")
 			a_file.put_string ("xmlns:xsi=%"http://www.w3.org/2001/XMLSchema-instance%" ")
-			a_file.put_string ("xsi:schemaLocation=%"http://www.eiffel.com/developers/xml/configuration-1-5-0 ")
-			a_file.put_string ("http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd%"")
+			a_file.put_string ("xsi:schemaLocation=%"http://www.eiffel.com/developers/xml/configuration-1-15-0 ")
+			a_file.put_string ("http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd%"")
 		end
 
 feature {NONE} -- Escaped

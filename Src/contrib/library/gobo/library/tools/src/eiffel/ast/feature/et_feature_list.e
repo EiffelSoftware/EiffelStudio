@@ -5,7 +5,7 @@ note
 		"Eiffel lists of features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -338,9 +338,100 @@ feature -- Basic operations
 			no_void_item: not a_list.has_void
 		end
 
+	add_features_exported_to (a_client: ET_CLASS; a_list: DS_ARRAYED_LIST [ET_FEATURE])
+			-- Add to `a_list' the features which are exported to `a_client'.
+		require
+			a_client_not_void: a_client /= Void
+			a_list_not_void: a_list /= Void
+			no_void_feature: not a_list.has_void
+		local
+			i: INTEGER
+			l_feature: ET_FEATURE
+		do
+			from
+				i := count - 1
+			until
+				i < 0
+			loop
+				l_feature := storage.item (i)
+				if l_feature.is_exported_to (a_client) then
+					a_list.force_last (l_feature)
+				end
+				i := i - 1
+			end
+		ensure
+			no_void_feature: not a_list.has_void
+		end
+
+	add_user_defined_features_exported_to (a_client: ET_CLASS; a_list: DS_ARRAYED_LIST [ET_FEATURE])
+			-- Add to `a_list' the features which are exported to `a_client',
+			-- unless they are inherited features declared in "ANY".
+		require
+			a_client_not_void: a_client /= Void
+			a_list_not_void: a_list /= Void
+			no_void_feature: not a_list.has_void
+		local
+			i, nb: INTEGER
+			l_feature: ET_FEATURE
+		do
+			from
+				i := count - 1
+				nb := count - declared_count
+			until
+				i < nb
+			loop
+				l_feature := storage.item (i)
+				if l_feature.is_exported_to (a_client) then
+					a_list.force_last (l_feature)
+				end
+				i := i - 1
+			end
+			from
+			until
+				i < 0
+			loop
+				l_feature := storage.item (i)
+				if not l_feature.implementation_class.is_any_class then
+					if l_feature.is_exported_to (a_client) then
+						a_list.force_last (l_feature)
+					end
+				end
+				i := i - 1
+			end
+		ensure
+			no_void_feature: not a_list.has_void
+		end
+
+	add_declared_features_exported_to (a_client: ET_CLASS; a_list: DS_ARRAYED_LIST [ET_FEATURE])
+			-- Add to `a_list' the features declared in the corresponding class
+			-- which are exported to `a_client'.
+		require
+			a_client_not_void: a_client /= Void
+			a_list_not_void: a_list /= Void
+			no_void_feature: not a_list.has_void
+		local
+			i, nb: INTEGER
+			l_feature: ET_FEATURE
+		do
+			from
+				i := count - 1
+				nb := count - declared_count
+			until
+				i < nb
+			loop
+				l_feature := storage.item (i)
+				if l_feature.is_exported_to (a_client) then
+					a_list.force_last (l_feature)
+				end
+				i := i - 1
+			end
+		ensure
+			no_void_feature: not a_list.has_void
+		end
+
 feature -- Iteration
 
-	do_declared (an_action: PROCEDURE [ANY, TUPLE [like item]])
+	do_declared (an_action: PROCEDURE [like item])
 			-- Apply `an_action' to every feature declared in the
 			-- corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -360,7 +451,7 @@ feature -- Iteration
 			end
 		end
 
-	do_declared_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_declared_until (an_action: PROCEDURE [like item]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature declared in the
 			-- corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -392,7 +483,7 @@ feature -- Iteration
 			end
 		end
 
-	do_declared_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN])
+	do_declared_if (an_action: PROCEDURE [like item]; a_test: FUNCTION [like item, BOOLEAN])
 			-- Apply `an_action' to every feature declared in the corresponding
 			-- class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
@@ -417,7 +508,7 @@ feature -- Iteration
 			end
 		end
 
-	do_declared_if_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_declared_if_until (an_action: PROCEDURE [like item]; a_test: FUNCTION [like item, BOOLEAN]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature declared in the corresponding
 			-- class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
@@ -454,7 +545,7 @@ feature -- Iteration
 			end
 		end
 
-	do_inherited (an_action: PROCEDURE [ANY, TUPLE [like item]])
+	do_inherited (an_action: PROCEDURE [like item])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -474,7 +565,7 @@ feature -- Iteration
 			end
 		end
 
-	do_inherited_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_inherited_until (an_action: PROCEDURE [like item]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -506,7 +597,7 @@ feature -- Iteration
 			end
 		end
 
-	do_inherited_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN])
+	do_inherited_if (an_action: PROCEDURE [like item]; a_test: FUNCTION [like item, BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -531,7 +622,7 @@ feature -- Iteration
 			end
 		end
 
-	do_inherited_if_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_inherited_if_until (an_action: PROCEDURE [like item]; a_test: FUNCTION [like item, BOOLEAN]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -568,7 +659,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
+	features_do_all (an_action: PROCEDURE [ET_FEATURE])
 			-- Apply `an_action' to every feature, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -586,7 +677,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_until (an_action: PROCEDURE [ET_FEATURE]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 			--
@@ -616,7 +707,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
+	features_do_if (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN])
 			-- Apply `an_action' to every feature that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
 		require
@@ -639,7 +730,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_if_until (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
 			--
@@ -674,7 +765,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_declared (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
+	features_do_declared (an_action: PROCEDURE [ET_FEATURE])
 			-- Apply `an_action' to every feature declared in the
 			-- corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -694,7 +785,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_declared_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_declared_until (an_action: PROCEDURE [ET_FEATURE]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature declared in the
 			-- corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -726,7 +817,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_declared_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
+	features_do_declared_if (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN])
 			-- Apply `an_action' to every feature declared in the corresponding
 			-- class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
@@ -751,7 +842,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_declared_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_declared_if_until (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature declared in the corresponding
 			-- class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
@@ -788,7 +879,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_inherited (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
+	features_do_inherited (an_action: PROCEDURE [ET_FEATURE])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -808,7 +899,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_inherited_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_inherited_until (an_action: PROCEDURE [ET_FEATURE]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -840,7 +931,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_inherited_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
+	features_do_inherited_if (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
@@ -865,7 +956,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_inherited_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_inherited_if_until (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)

@@ -6,7 +6,7 @@
 		"Invoking the stand-alone evaluator"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xpath_stand_alone_invoke">
   <chapterinfo>
     <copyright>
-      <year>2004</year>
+      <year>2004-2016</year>
       <holder>Colin Adams and others</holder>
     </copyright>
     <author>
@@ -23,7 +23,7 @@
       <surname>Adams</surname>
     </author>
     <email>colin@colina.demon.co.uk</email>
-    <date>Tuesday, April 13th, 2004</date>
+    <date>27 December 2016</date>
   </chapterinfo>
   <title>Invoking the stand-alone XPath evaluator</title>
   <para>
@@ -34,19 +34,19 @@
    (or equivalently, from a host language of your own devising), follow the following steps:
    <itemizedlist>
      <listitem>
-       <para><ulink url="#xpath_stand_alone_invoke_create_evaluator">Create an instance of <classname>XM_XPATH_EVALUATOR</classname></ulink></para>
+       <para><link linkend="invoking#xpath_stand_alone_invoke_create_evaluator">Create an instance of <classname>XM_XPATH_EVALUATOR</classname></link></para>
      </listitem>
      <listitem>
-       <para><ulink url="#xpath_stand_alone_invoke_static_context">Build a static context.</ulink></para>
+       <para><link linkend="invoking#xpath_stand_alone_invoke_static_context">Build a static context.</link></para>
      </listitem>
      <listitem>
-       <para><ulink url="#xpath_stand_alone_invoke_evaluate">Call <featurename>evaluate</featurename> on the evaluator.</ulink></para>
+       <para><link linkend="invoking#xpath_stand_alone_invoke_evaluate">Call <featurename>evaluate</featurename> on the evaluator.</link></para>
      </listitem>
      <listitem>
-       <para><ulink url="#xpath_stand_alone_invoke_check_errors">Check for evaluation errors.</ulink></para>
+       <para><link linkend="invoking#xpath_stand_alone_invoke_check_errors">Check for evaluation errors.</link></para>
      </listitem>
      <listitem>
-       <para><ulink url="#xpath_stand_alone_invoke_results">Retrieving the results.</ulink></para>
+       <para><link linkend="invoking#xpath_stand_alone_invoke_results">Retrieving the results.</link></para>
      </listitem>
    </itemizedlist>
   </para> 
@@ -112,7 +112,6 @@
 	  booleans, for instance).
 	  </para>
 	  <para>Having built your static context, you may then declare variables, if you wish.</para>
-	  <para>See also<link linkend="tailoring_static_context">Tailoring the static context</link>.</para>
 	</listitem>
       </itemizedlist>
     </para>

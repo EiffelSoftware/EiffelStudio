@@ -5,7 +5,7 @@ note
 		"Eiffel precursor validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,6 @@ inherit
 			process_assignment,
 			process_assignment_attempt,
 			process_bang_instruction,
-			process_bracket_argument_list,
 			process_bracket_expression,
 			process_call_agent,
 			process_check_instruction,
@@ -67,6 +66,8 @@ inherit
 			process_once_function_inline_agent,
 			process_once_procedure,
 			process_once_procedure_inline_agent,
+			process_parenthesis_expression,
+			process_parenthesis_instruction,
 			process_parenthesized_expression,
 			process_precursor_expression,
 			process_precursor_instruction,
@@ -76,6 +77,7 @@ inherit
 			process_static_call_expression,
 			process_static_call_instruction,
 			process_tagged_assertion,
+			process_unfolded_tuple_actual_argument_list,
 			process_unqualified_call_expression,
 			process_unqualified_call_instruction,
 			process_when_part,
@@ -132,10 +134,12 @@ feature {NONE} -- Precursor validity
 			a_precursor_feature: ET_FEATURE
 			an_effective: detachable ET_PARENT_FEATURE
 			a_deferred: detachable ET_PARENT_FEATURE
-			a_parents: detachable ET_PARENT_LIST
+			a_parents: detachable ET_PARENT_CLAUSE_LIST
+			l_parent_list: ET_PARENT_LIST
 			a_parent_found: BOOLEAN
 			a_feature: ET_FEATURE
 			i, nb: INTEGER
+			j, nb2: INTEGER
 		do
 			a_parent_name := a_precursor.parent_name
 			if a_parent_name /= Void then
@@ -212,7 +216,7 @@ feature {NONE} -- Precursor validity
 								error_handler.report_vdpr3b_error (current_class, a_precursor, a_feature, a_deferred)
 							end
 						else
-							a_parents := current_class.parent_clause
+							a_parents := current_class.parent_clauses
 							if a_parents = Void then
 								if not a_class.is_any_class then
 									set_fatal_error
@@ -225,12 +229,19 @@ feature {NONE} -- Precursor validity
 							else
 								nb := a_parents.count
 								from i := 1 until i > nb loop
-									if a_parents.parent (i).type.base_class = a_class then
-										a_parent_found := True
-										i := nb + 1 -- Jump out of the loop.
-									else
-										i := i + 1
+									l_parent_list := a_parents.item (i)
+									nb2 := l_parent_list.count
+									from j := 1 until j > nb2 loop
+										if l_parent_list.parent (j).type.base_class = a_class then
+											a_parent_found := True
+												-- Jump out of the loop.
+											j := nb2 + 1
+											i := nb
+										else
+											j := j + 1
+										end
 									end
+									i := i + 1
 								end
 								if a_parent_found then
 									a_feature := current_feature.flattened_feature
@@ -417,18 +428,6 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_call.arguments as an_arguments then
 					process_actual_argument_list (an_arguments)
 				end
-			end
-		end
-
-	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST)
-			-- Process `a_list'.
-		local
-			i, nb: INTEGER
-		do
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				a_list.actual_argument (i).process (Current)
-				i := i + 1
 			end
 		end
 
@@ -753,6 +752,22 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			if attached an_expression.arguments as an_arguments then
+				process_actual_argument_list (an_arguments)
+			end
+		end
+
+	process_parenthesis_instruction (an_instruction: ET_PARENTHESIS_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			if attached an_instruction.arguments as an_arguments then
+				process_actual_argument_list (an_arguments)
+			end
+		end
+
 	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)
 			-- Process `an_expression'.
 		do
@@ -822,6 +837,14 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if attached an_assertion.expression as an_expression then
 				an_expression.process (Current)
+			end
+		end
+
+	process_unfolded_tuple_actual_argument_list (a_list: ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST)
+			-- Process `a_list'.
+		do
+			if attached a_list.actual_arguments as l_actual_arguments then
+				l_actual_arguments.process (Current)
 			end
 		end
 

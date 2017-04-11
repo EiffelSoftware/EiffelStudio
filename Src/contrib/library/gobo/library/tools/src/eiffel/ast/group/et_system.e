@@ -5,7 +5,7 @@ note
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,8 @@ inherit
 			preparse_recursive,
 			parse_all_recursive,
 			set_none_type,
-			default_read_only_value
+			default_read_only_value,
+			kind_name
 		end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
@@ -53,7 +54,6 @@ feature {NONE} -- Initialization
 			console_application_mode := True
 			alias_transition_mode := True
 			unknown_builtin_reported := True
-			qualified_anchored_types_enabled := True
 			qualified_anchored_types_cycle_detection_enabled := False
 			create null_processor.make
 			eiffel_preparser := null_processor
@@ -99,6 +99,12 @@ feature -- Access
 
 	ast_factory: ET_AST_FACTORY
 			-- Abstract Syntax Tree factory
+
+	kind_name: STRING
+			-- Name of the kind of universe (e.g. "library", "assembly", etc.)
+		once
+			Result := "system"
+		end
 
 feature -- Kernel types
 
@@ -519,11 +525,6 @@ feature -- Parser status report
 			-- (possibly with wildcards)? Otherwise they are considered as
 			-- group names.
 
-	qualified_anchored_types_enabled: BOOLEAN
-			-- Are types of the form 'like a.b' or 'like {A}.b'
-			-- (also known as qualified anchored types or remote
-			-- anchored types) accepted?
-
 	qualified_anchored_types_cycle_detection_enabled: BOOLEAN
 			-- Should an error be reported (VTAT-2) when the type of
 			-- the anchor appearing in a qualified anchored type
@@ -636,14 +637,6 @@ feature -- Parser setting
 			use_cluster_dependence_pathnames := b
 		ensure
 			use_cluster_dependence_pathnames_set: use_cluster_dependence_pathnames = b
-		end
-
-	set_qualified_anchored_types_enabled (b: BOOLEAN)
-			-- Set `qualified_anchored_types_enabled' to `b'.
-		do
-			qualified_anchored_types_enabled := b
-		ensure
-			qualified_anchored_types_enabled_set: qualified_anchored_types_enabled = b
 		end
 
 	set_qualified_anchored_types_cycle_detection_enabled (b: BOOLEAN)
@@ -924,7 +917,7 @@ feature -- SCM mappings
 			end
 		end
 
-	scm_read_mapping_builder: detachable FUNCTION [ANY, TUPLE [ET_CLUSTER], detachable ET_CLUSTER_SCM_READ_MAPPING]
+	scm_read_mapping_builder: detachable FUNCTION [ET_CLUSTER, detachable ET_CLUSTER_SCM_READ_MAPPING]
 			-- Function which is able to build a SCM read mapping for a given cluster
 
 	set_scm_read_mapping_builder (a_builder: like scm_read_mapping_builder)
@@ -958,7 +951,7 @@ feature -- SCM mappings
 			end
 		end
 
-	scm_write_mapping_builder: detachable FUNCTION [ANY, TUPLE [ET_CLUSTER], detachable ET_CLUSTER_SCM_WRITE_MAPPING]
+	scm_write_mapping_builder: detachable FUNCTION [ET_CLUSTER, detachable ET_CLUSTER_SCM_WRITE_MAPPING]
 			-- Function which is able to build a SCM write mapping for a given cluster
 
 	set_scm_write_mapping_builder (a_builder: like scm_write_mapping_builder)
@@ -1489,7 +1482,7 @@ feature -- Stop
 			end
 		end
 
-	stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN]
+	stop_request: detachable FUNCTION [BOOLEAN]
 			-- Agent used to figure out whether there has been
 			-- a request to interrupt the current operation;
 			-- No interruption if Void

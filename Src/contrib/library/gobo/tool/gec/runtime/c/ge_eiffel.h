@@ -16,6 +16,23 @@
 #pragma once
 #endif
 
+/* Class name mapping as defined in the FreeELKS library. */
+#ifndef EIF_INTEGER
+#define EIF_INTEGER EIF_INTEGER_32
+#endif
+#ifndef EIF_CHARACTER
+#define EIF_CHARACTER EIF_CHARACTER_8
+#endif
+#ifndef EIF_REAL
+#define EIF_REAL EIF_REAL_32
+#endif
+#ifndef EIF_DOUBLE
+#define EIF_DOUBLE EIF_REAL_64
+#endif
+#ifndef GE_ms
+#define GE_ms(s,c) GE_ms8((s),(c))
+#endif
+
 #if defined(__USE_POSIX) || defined(__unix__) || defined(_POSIX_C_SOURCE)
 #include <unistd.h>
 #endif
@@ -34,6 +51,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include <stddef.h>
 
 /* Platform definition */
 /* Unix definition */
@@ -109,11 +127,40 @@ typedef __int64 intptr_t;
 typedef int intptr_t;
 #endif
 #endif
+#ifndef _UINTPTR_T_DEFINED
+#define _UINTPTR_T_DEFINED
+#ifdef _WIN64
+  typedef unsigned __int64 uintptr_t;
+#else
+  typedef unsigned int uintptr_t;
+#endif
+#endif
 #endif
 
+/* C type for underlying integer type identifying object's dynamic type. */
+typedef uint16_t	EIF_TYPE_INDEX;
+
+/*
+ * Abstraction representing an Eiffel type.
+ * It is made of a compiler type-id,
+ * and of some annotations (attached/detachable/separate/variant/frozen).
+ */
+typedef struct eif_type {
+	EIF_TYPE_INDEX id;
+	EIF_TYPE_INDEX annotations;
+} EIF_TYPE;
+
+/*
+ * Since EIF_TYPE and EIF_ENCODED_TYPE have the same size, the encoded version
+ * is basically a memcpy version of the EIF_TYPE representation.
+ * It is used to provide backward compatibility to most Eiffel and
+ * C APIs manipulating types as an INTEGER.
+ */
+typedef int32_t	EIF_ENCODED_TYPE;
+typedef EIF_ENCODED_TYPE	EIF_TYPE_ID;
+#define EIF_NO_TYPE (EIF_TYPE_ID)(-1)
+
 /* Basic Eiffel types */
-typedef struct {int id;} EIF_ANY;
-typedef EIF_ANY* EIF_REFERENCE;
 typedef char EIF_BOOLEAN;
 typedef unsigned char EIF_CHARACTER_8;
 typedef uint32_t EIF_CHARACTER_32;
@@ -128,6 +175,10 @@ typedef uint64_t EIF_NATURAL_64;
 typedef void* EIF_POINTER;
 typedef float EIF_REAL_32;
 typedef double EIF_REAL_64;
+typedef struct {EIF_TYPE_INDEX id; uint16_t flags;} EIF_ANY;
+typedef EIF_ANY* EIF_REFERENCE;
+typedef struct {EIF_TYPE_INDEX id; uint16_t flags; EIF_REFERENCE area; EIF_INTEGER count;} EIF_STRING;
+typedef struct {EIF_TYPE_INDEX id; uint16_t flags; uint32_t offset; EIF_INTEGER count; EIF_INTEGER capacity;} EIF_SPECIAL;
 
 #ifdef EIF_WINDOWS
 typedef wchar_t EIF_NATIVE_CHAR;
@@ -164,13 +215,16 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #endif
 #endif
 
-extern EIF_REFERENCE GE_ms8(const char *s, EIF_INTEGER_32 c);
-#define GE_str8(s) GE_ms8((s),strlen(s))
-
 #ifdef _MSC_VER /* MSVC */
 /* MSVC does not support ISO C 99's 'snprintf' from stdio.h */
 #define snprintf(a,b,c,d) sprintf(a,c,d)
 #endif
+
+/*
+ * Gobo compiler version.
+ * Starts with 6080 (looks like GOBO) followed by 5 digits.
+ */
+#define GE_compiler_version() 608000001
 
 /*
 	Interoperability with ISE.
@@ -178,10 +232,6 @@ extern EIF_REFERENCE GE_ms8(const char *s, EIF_INTEGER_32 c);
 #define RTI64C(x) GE_int64(x)
 #define EIF_OBJECT EIF_REFERENCE
 #define EIF_OBJ EIF_OBJECT
-#define EIF_INTEGER EIF_INTEGER_32
-#define EIF_CHARACTER EIF_CHARACTER_8
-#define EIF_REAL EIF_REAL_32
-#define EIF_DOUBLE EIF_REAL_64
 /* Function pointer call to make sure all arguments are correctly pushed onto stack. */
 /* FUNCTION_CAST is for standard C calls. */
 /* FUNCTION_CAST_TYPE is for non-standard C calls. */
@@ -192,9 +242,8 @@ extern EIF_REFERENCE GE_ms8(const char *s, EIF_INTEGER_32 c);
 #define rt_public				/* default C scope */
 #define rt_private static		/* static outside a block means private */
 #define rt_shared				/* data shared between modules, but not public */
-typedef int32_t EIF_TYPE_ID;
-#define EIF_NO_TYPE (EIF_TYPE_ID)(-1)
-typedef uint16_t EIF_TYPE_INDEX;
+typedef intptr_t	rt_int_ptr;
+typedef uintptr_t	rt_uint_ptr;
 #define RTMS(s) GE_str8(s)
 #define RTMS_EX(s,c) GE_ms8((s),(c))
 

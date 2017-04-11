@@ -5,7 +5,7 @@ note
 		"Eiffel parent validity second pass checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,15 +53,22 @@ feature -- Validity checking
 			a_class_preparsed: a_class.is_preparsed
 		local
 			i, nb: INTEGER
+			j, nb2: INTEGER
+			l_parent_list: ET_PARENT_LIST
 			old_class: ET_CLASS
 		do
 			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
-			if attached current_class.parent_clause as a_parents then
-				nb := a_parents.count
+			if attached current_class.parent_clauses as l_parents then
+				nb := l_parents.count
 				from i := 1 until i > nb loop
-					a_parents.parent (i).type.process (Current)
+					l_parent_list := l_parents.item (i)
+					nb2 := l_parent_list.count
+					from j := 1 until j > nb2 loop
+						l_parent_list.parent (j).type.process (Current)
+						j := j + 1
+					end
 					i := i + 1
 				end
 			end
@@ -91,6 +98,7 @@ feature {NONE} -- Parent validity
 		do
 			a_class := a_type.base_class
 			if a_class.is_generic and then attached a_class.formal_parameters as a_formals then
+				a_type.resolve_unfolded_tuple_actual_parameters_1 (current_universe)
 				an_actuals := a_type.actual_parameters
 				if an_actuals = Void or else an_actuals.count /= a_formals.count then
 						-- Error already reported during first pass of

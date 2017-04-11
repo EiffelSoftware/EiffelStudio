@@ -22,34 +22,34 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all"/>
 
-		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf" readonly="true">
+		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf" readonly="true">
 			<condition>
 				<custom name="GOBO_EIFFEL" excluded_value="ge"/>
 			</condition>
 		</library>
 
-		<library name="free_elks" location="$GOBO/library/free_elks/library.ecf" readonly="true">
+		<library name="free_elks" location="../free_elks/library.ecf" readonly="true">
 			<condition>
 				<custom name="GOBO_EIFFEL" value="ge"/>
 			</condition>
 		</library>
 
 
-		<library name="kernel" location="$GOBO/library/kernel/library.ecf" readonly="true"/>
+		<library name="kernel" location="../kernel/library.ecf" readonly="true"/>
 
-		<library name="lexical" location="$GOBO/library/lexical/library.ecf" readonly="true"/>
+		<library name="lexical" location="../lexical/library.ecf" readonly="true"/>
 
-		<library name="lexical_skl" location="$GOBO/library/lexical/library_skl.ecf" readonly="true"/>
+		<library name="lexical_skl" location="../lexical/library_skl.ecf" readonly="true"/>
 
-		<library name="parse_skl" location="$GOBO/library/parse/library_skl.ecf" readonly="true"/>
+		<library name="parse_skl" location="../parse/library_skl.ecf" readonly="true"/>
 
-		<library name="structure" location="$GOBO/library/structure/library.ecf" readonly="true"/>
+		<library name="structure" location="../structure/library.ecf" readonly="true"/>
 
-		<library name="test_skl" location="$GOBO/library/test/library_skl.ecf" readonly="true"/>
+		<library name="test_skl" location="../test/library_skl.ecf" readonly="true"/>
 
-		<library name="tools" location="$GOBO/library/tools/library.ecf" readonly="true"/>
+		<library name="tools" location="../tools/library.ecf" readonly="true"/>
 		
-		<library name="utility" location="$GOBO/library/utility/library.ecf" readonly="true"/>
+		<library name="utility" location="../utility/library.ecf" readonly="true"/>
 
 		<cluster name="test" location="./src/" recursive="true">
 			<file_rule>

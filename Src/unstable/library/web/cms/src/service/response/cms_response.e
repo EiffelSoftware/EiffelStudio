@@ -99,6 +99,12 @@ feature -- Access: query
 	location: IMMUTABLE_STRING_8
 			-- Associated cms local location.
 
+	request_url (opts: detachable CMS_API_OPTIONS): STRING_8
+			-- Current request location as a url.
+		do
+			Result := url (location, opts)
+		end
+
 feature -- API
 
 	api: CMS_API

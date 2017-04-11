@@ -89,7 +89,7 @@ feature -- Widget
 		local
 			but: WSF_FORM_SUBMIT_INPUT
 		do
-			create Result.make (a_response.url (a_response.location, Void), "form_clear_cache")
+			create Result.make (a_response.request_url (Void), "form_clear_cache")
 			create but.make_with_text ("op", text_clear_all_caches)
 			Result.extend (but)
 		end

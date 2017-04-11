@@ -105,7 +105,7 @@ feature -- Widget
 			f_name: WSF_FORM_TEXT_INPUT
 			but: WSF_FORM_SUBMIT_INPUT
 		do
-			create Result.make (a_response.url (a_response.location, Void), "export_all_data")
+			create Result.make (a_response.request_url (Void), "export_all_data")
 			Result.extend_raw_text ("Export CMS data to ")
 			create f_name.make_with_text ("folder", (create {DATE_TIME}.make_now_utc).formatted_out ("yyyy-[0]mm-[0]dd---hh24-[0]mi-[0]ss"))
 			f_name.set_label ("Export folder name")

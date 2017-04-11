@@ -380,7 +380,7 @@ feature -- Handler
 				if ch /= Void then
 					if l_until_date /= Void then
 						l_content.append (" <a href=%"")
-						l_content.append (r.url (r.location, Void))
+						l_content.append (r.request_url (Void))
 						l_content.append ("?size=" + l_size.out + "%">&lt;&lt;</a> ")
 					end
 
@@ -394,7 +394,7 @@ feature -- Handler
 							l_query.append (l_filter_source)
 						end
 						l_content.append ("<a href=%"")
-						l_content.append (r.url (r.location, create {CMS_API_OPTIONS}.make_from_manifest (<<["query", l_query]>>)))
+						l_content.append (r.request_url (create {CMS_API_OPTIONS}.make_from_manifest (<<["query", l_query]>>)))
 						l_content.append ("%">See more ...</a>")
 					end
 				end

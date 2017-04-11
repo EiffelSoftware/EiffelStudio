@@ -119,7 +119,7 @@ feature {NONE} -- Implementation: routes
 				r.set_main_content (r.link ("Logout", "account/roc-logout", Void))
 			else
 				if attached smarty_template_login_block (req, Current, "login", api) as l_tpl_block then
-					r.add_javascript_url (r.url ("module/" + name + "/files/js/roc_basic_auth.js", Void))
+					r.add_javascript_url (r.module_resource_url (Current, "/files/js/roc_basic_auth.js", Void))
 
 					create vals.make (1)
 						-- add the variable to the block
@@ -159,7 +159,7 @@ feature -- Hooks
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		do
 			if a_block_id.is_case_insensitive_equal_general ("login") then
-				a_response.add_javascript_url (a_response.url ("module/" + name + "/files/js/roc_basic_auth.js", Void))
+				a_response.add_javascript_url (a_response.module_resource_url (Current, "/files/js/roc_basic_auth.js", Void))
 				get_block_view_login (a_block_id, a_response)
 			end
 		end

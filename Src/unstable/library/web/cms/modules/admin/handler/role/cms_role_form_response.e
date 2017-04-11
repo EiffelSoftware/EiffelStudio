@@ -63,7 +63,7 @@ feature -- Process Edit
 			fd: detachable WSF_FORM_DATA
 		do
 			create b.make_empty
-			f := new_edit_form (a_role, url (request.percent_encoded_path_info, Void), "edit-user")
+			f := new_edit_form (a_role, request_url (Void), "edit-user")
 			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.validation_actions.extend (agent edit_form_validate(?,a_role, b))
@@ -96,7 +96,7 @@ feature -- Process Delete
 			fd: detachable WSF_FORM_DATA
 		do
 			create b.make_empty
-			f := new_delete_form (a_role, url (request.percent_encoded_path_info, Void), "edit-user")
+			f := new_delete_form (a_role, request_url (Void), "edit-user")
 			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.process (Current)
@@ -128,7 +128,7 @@ feature -- Process New
 			l_role: detachable CMS_USER_ROLE
 		do
 			create b.make_empty
-			f := new_edit_form (l_role, url (request.percent_encoded_path_info, Void), "create-role")
+			f := new_edit_form (l_role, request_url (Void), "create-role")
 			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.validation_actions.extend (agent new_form_validate(?, b))

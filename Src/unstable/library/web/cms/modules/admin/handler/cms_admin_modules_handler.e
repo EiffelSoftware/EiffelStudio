@@ -188,7 +188,7 @@ feature -- Execution
 			l_mods_to_install: ARRAYED_LIST [CMS_MODULE]
 			l_extra: STRING
 		do
-			create Result.make (a_response.url (a_response.location, Void), "modules_collection")
+			create Result.make (a_response.request_url (Void), "modules_collection")
 			create w_tb.make
 			w_tb.add_css_class ("modules_table")
 			create w_row.make (5)
@@ -283,7 +283,7 @@ feature -- Execution
 
 			l_mods_to_install: ARRAYED_LIST [CMS_MODULE]
 		do
-			create Result.make (a_response.url (a_response.location, Void), "modules_collection")
+			create Result.make (a_response.request_url (Void), "modules_collection")
 			create l_mods_to_install.make (0)
 			across
 				api.setup.modules as ic

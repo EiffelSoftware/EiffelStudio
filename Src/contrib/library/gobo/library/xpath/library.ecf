@@ -12,7 +12,7 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" is_obsolete_routine_type="true">
+		<option warning="true">
 		</option>
 
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true">

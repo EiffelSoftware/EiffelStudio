@@ -67,7 +67,7 @@ feature -- Comparison
 			Result := action.is_equal (other.action)
 		end
 
-	less_than (u, v: G): BOOLEAN
+	attached_less_than (u, v: G): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := action.item ([u ,v])
@@ -77,7 +77,7 @@ invariant
 	action_not_void: action /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

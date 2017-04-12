@@ -122,7 +122,7 @@ feature -- Object storage Access
 				Result.append (r.generator)
 				Result.append (";")
 				Result.append ("type_name=")
-				Result.append (r.generating_type)
+				Result.append (r.generating_type.name)
 				Result.append (";")
 
 				create int

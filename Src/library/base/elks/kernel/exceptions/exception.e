@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Ancestor of all exception classes.
 	]"
@@ -232,7 +232,7 @@ feature -- Output
 		local
 			t: detachable STRING_32
 		do
-			Result := generating_type
+			Result := generating_type.name
 			t := trace
 			if t /= Void then
 				Result.append_character ('%N')

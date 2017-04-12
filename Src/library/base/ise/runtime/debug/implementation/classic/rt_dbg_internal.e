@@ -790,7 +790,7 @@ feature -- Testing
 				s := "----------------------------------%N"
 				s.append ("Loc #" + loc_pos.out + "(stack depth=" + dep.out + ")")
 				if val /= Void then
-					s.append (": should be " + val.generating_type)
+					s.append (": should be " + val.generating_type.name)
 				end
 				s.append ("%N")
 				print (s)
@@ -824,7 +824,7 @@ feature -- Testing
 				s := "----------------------------------%N"
 				s.append ("SetLoc #" + loc_pos.out + "(stack depth=" + dep.out + ")")
 				if val /= Void then
-					s.append (": value " + val.generating_type)
+					s.append (": value " + val.generating_type.name)
 				else
 					s.append (": value Void")
 				end

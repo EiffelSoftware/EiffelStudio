@@ -223,7 +223,7 @@ feature -- Event
 			debug ("RT_DBG_RECORD")
 				dtrace_indent (dep);
 				dtrace ("enter_feature (")
-				dtrace (ref.generating_type)
+				dtrace (ref.generating_type.name)
 				dtrace (", " + cid.out + ", " + fid.out + ", " + dep.out + ")");
 				dtrace (" [[" + record_count.out + "]]%N")
 			end
@@ -246,7 +246,7 @@ feature -- Event
 						print ("Warning: enter mismatch !!!%N")
 						print (" top: depth=" + r.depth.out + " ->" + r.debug_output + "%N")
 						print (" now: depth=" + dep.out)
-						print (" obj=" + ref.generating_type)
+						print (" obj=" + ref.generating_type.name)
 						print (" cid=" + cid.out)
 						print (" fid=" + fid.out)
 						print ("%N")
@@ -281,7 +281,7 @@ feature -- Event
 			debug ("RT_DBG_RECORD")
 				dtrace_indent (dep);
 				dtrace ("enter_rescue (")
-				dtrace (ref.generating_type)
+				dtrace (ref.generating_type.name)
 				dtrace (", " + dep.out + ")");
 				dtrace (" [[" + record_count.out + "]]%N")
 			end
@@ -345,7 +345,7 @@ feature -- Event
 							print ("Warning: leave mismatch !!!%N")
 							print (" top: depth=" + r.depth.out + " ->" + r.debug_output + "%N")
 							print (" now: depth=" + dep.out)
-							print (" obj=" + ref.generating_type)
+							print (" obj=" + ref.generating_type.name)
 							print (" cid=" + cid.out)
 							print (" fid=" + fid.out)
 							print ("%N")

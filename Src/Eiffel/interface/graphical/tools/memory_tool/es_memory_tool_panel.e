@@ -33,9 +33,6 @@ feature {NONE} -- Initialization
 
 	on_after_initialized
 			-- Use to perform additional creation initializations, after the UI has been created.
-		local
-			l_bool: BOOLEAN_REF
-			l_filter: STRING_GENERAL
 		do
 			Precursor
 
@@ -47,21 +44,18 @@ feature {NONE} -- Initialization
 			stone_director.bind (memory_map_grid, Current)
 
 				-- Set button states based on session data
-			if session_manager.is_service_available then
-				l_bool ?= window_session_data.value_or_default (show_memory_usage_session_id, False)
-				if l_bool.item then
+			if attached develop_window_session_data as w_session_data then
+				if attached {BOOLEAN_REF} w_session_data.value_or_default (show_memory_usage_session_id, False) as b_ref and then b_ref.item then
 					show_memory_usage_button.enable_select
 					on_toggle_memory_stats
 				end
 
-				l_bool ?= window_session_data.value_or_default (show_deltas_only_session_id, True)
-				if l_bool.item then
+				if attached {BOOLEAN_REF} w_session_data.value_or_default (show_deltas_only_session_id, True) as b_ref and then b_ref.item then
 					show_deltas_button.enable_select
 					on_toogle_show_deltas
 				end
 
-				l_filter ?= window_session_data.value (filter_session_id)
-				if l_filter /= Void then
+				if attached {READABLE_STRING_GENERAL} w_session_data.value (filter_session_id) as l_filter then
 					filter_combo.set_text (l_filter)
 					on_filter_changed
 				end
@@ -1174,9 +1168,9 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
 		do
-			if session_manager.is_service_available then
+			if attached develop_window_session_data as w_session_data then
 					-- Set session data
-				window_session_data.set_value (show_deltas_button.is_selected, show_deltas_only_session_id)
+				w_session_data.set_value (show_deltas_button.is_selected, show_deltas_only_session_id)
 			end
 
 				-- Refilter
@@ -1190,9 +1184,9 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
 		do
-			if session_manager.is_service_available then
+			if attached develop_window_session_data as w_session_data then
 					-- Set session data
-				window_session_data.set_value (show_memory_usage_button.is_selected, show_memory_usage_session_id)
+				w_session_data.set_value (show_memory_usage_button.is_selected, show_memory_usage_session_id)
 			end
 
 			if show_memory_usage_button.is_selected then
@@ -1259,9 +1253,9 @@ feature {NONE} -- Action handlers
 			-- Called when the filter combo box text changes.
 			-- Note: Connected to `filter_combo'.
 		do
-			if session_manager.is_service_available then
+			if attached develop_window_session_data as w_session_data then
 					-- Set session data
-				window_session_data.set_value (filter_combo.text, filter_session_id)
+				w_session_data.set_value (filter_combo.text, filter_session_id)
 			end
 
 			filter_update_timer.set_interval (0)
@@ -1600,7 +1594,7 @@ invariant
 	filter_update_timer_attached: is_initialized and not is_recycled implies filter_update_timer /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

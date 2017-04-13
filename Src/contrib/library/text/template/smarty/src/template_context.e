@@ -174,7 +174,7 @@ feature -- Specific custom actions
 
 	template_custom_actions: HASH_TABLE [FUNCTION [STRING, STRING_TABLE [STRING], STRING], STRING]
 		obsolete
-			"Use template_custom_action_items [Dec/2016]"
+			"Use template_custom_action_items [2016-12-01]"
 		attribute
 		end
 
@@ -201,7 +201,7 @@ feature -- Caching
 
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, and Eiffel Software"
+	copyright: "2011-2017, Jocelyn Fiat, and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

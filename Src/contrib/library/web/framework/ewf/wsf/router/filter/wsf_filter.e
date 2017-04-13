@@ -29,6 +29,8 @@ feature -- Element change
 
 	set_next (a_next: like next)
 			-- Set `next' to `a_next'
+		require
+			a_next_is_not_current: a_next /= Current
 		do
 			next := a_next
 		ensure

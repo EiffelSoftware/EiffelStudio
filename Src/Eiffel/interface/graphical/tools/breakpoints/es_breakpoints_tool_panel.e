@@ -185,8 +185,8 @@ feature {NONE} -- Initialization
 			enable_sorting
 
 				-- Set button states based on session data
-			if session_manager.is_service_available then
-				if attached {STRING} window_session_data.value (columns_sorting_data_session_id) as s then
+			if attached develop_window_session_data as w_session_data then
+				if attached {STRING} w_session_data.value (columns_sorting_data_session_id) as s then
 					grid_wrapper.set_sorting_status (grid_wrapper.sorted_columns_from_string (s))
 				end
 			end
@@ -344,9 +344,9 @@ feature {NONE} -- Sort handling
 			not_a_column_list_is_empty: not a_column_list.is_empty
 			a_comparator_attached: a_comparator /= Void
 		do
-			if session_manager.is_service_available then
+			if attached develop_window_session_data as w_session_data then
 					-- Set session data
-				window_session_data.set_value (grid_wrapper.string_representation_of_sorted_columns, columns_sorting_data_session_id)
+				w_session_data.set_value (grid_wrapper.string_representation_of_sorted_columns, columns_sorting_data_session_id)
 			end
 
 				-- Repopulate grid
@@ -1427,7 +1427,7 @@ feature {NONE} -- Implementation, cosmetic
 			-- Row highlight background color.
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

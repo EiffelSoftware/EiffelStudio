@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Encapsulation of STATSTG structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,16 +31,16 @@ create
 
 feature -- Access
 
-	name: STRING
-			-- name
+	name: READABLE_STRING_32
+			-- Name.
 		local
 			l_string: WEL_STRING
 		do
 			create l_string.make_by_pointer (c_name (item))
-			Result := l_string.string.as_string_8_conversion
+			Result := l_string.string
 		end
 
-	is_same_name (other_name: STRING): BOOLEAN
+	is_same_name (other_name: READABLE_STRING_GENERAL): BOOLEAN
 		require
 			valid_other_name: other_name /= Void
 		local
@@ -218,15 +218,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class ECOM_STATSTG
-
+end

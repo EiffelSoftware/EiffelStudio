@@ -11,13 +11,13 @@ feature
 
 	default_create
 		do
-			item := {G}
-			item_det := {detachable G}
-			item_att := {attached G}
+			item := ({G}).name_32
+			item_det := ({detachable G}).name_32
+			item_att := ({attached G}).name_32
 		end
 
-	item: STRING
-	item_det: STRING
-	item_att: STRING
+	item: STRING_32
+	item_det: STRING_32
+	item_att: STRING_32
 
 end

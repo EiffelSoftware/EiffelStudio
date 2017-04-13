@@ -13,7 +13,7 @@ create
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Creation
 
 	make
 			-- Create Task Scheduler.
@@ -22,51 +22,55 @@ feature -- Initialization
 			run
 		end
 
+feature {NONE} -- Execution
+
 	run
 			-- Run task Scheduler.
 		local
 			a_string: STRING
 			retried: BOOLEAN
 		do
-			from
-				menu
-				io.read_line
-			until
-				io.last_string.item (1) = 'q'
-			loop
-				inspect
-					io.last_string.item (1)
-				when 'n', 'N' then
-					io.putstring ("What is the task name?")
-					io.put_new_line
+			if not retried then
+				from
+					menu
 					io.read_line
-					a_string := io.last_string
-					create_new_task (a_string)
-					save_task
+				until
+					io.last_string.item (1) = 'q'
+				loop
+					inspect
+						io.last_string.item (1)
+					when 'n', 'N' then
+						io.putstring ("What is the task name?")
+						io.put_new_line
+						io.read_line
+						a_string := io.last_string
+						create_new_task (a_string)
+						save_task
 
-				when 's', 'S' then
-					io.putstring ("What is the task Comment?")
-					io.put_new_line
-					io.readline
-					a_string := io.last_string
-					a_task.set_comment (a_string)
-					save_task
+					when 's', 'S' then
+						io.putstring ("What is the task Comment?")
+						io.put_new_line
+						io.readline
+						a_string := io.last_string
+						a_task.set_comment (a_string)
+						save_task
 
-				when 'c', 'C' then
-					io.put_string (task_comment)
-					io.put_new_line
+					when 'c', 'C' then
+						io.put_string (task_comment)
+						io.put_new_line
 
-				when 'a', 'A' then
-					io.put_string (task_account_info)
-					io.put_new_line
+					when 'a', 'A' then
+						io.put_string (task_account_info)
+						io.put_new_line
 
-				when 'e', 'E' then
-					edit_task
+					when 'e', 'E' then
+						edit_task
 
-				else
+					else
+					end
+					menu
+					io.read_line
 				end
-				menu
-				io.read_line
 			end
 		rescue
 			io.put_string (meaning (exception) + " " + tag_name)
@@ -153,7 +157,7 @@ feature -- Basic Operations
 		require
 			non_void_task_scheduler: task_scheduler /= Void
 			non_void_name: a_task_name /= Void
-			valid_name: not a_task_name.empty
+			valid_name: not a_task_name.is_empty
 		local
 			retried: BOOLEAN
 			a_clsid_ctask, a_iid_itask: ECOM_GUID
@@ -171,7 +175,7 @@ feature -- Basic Operations
 			end
 		rescue
 			if is_developer_exception then
-				if (hresult = -2147024816) then
+				if hresult = -2147024816 then
 					task_scheduler.activate (a_task_name, a_iid_itask, a_task_cell)
 					create a_task.make_from_other (a_task_cell.item)
 				end
@@ -240,7 +244,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -250,6 +254,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class TASK_SCHEDULER
-
+end

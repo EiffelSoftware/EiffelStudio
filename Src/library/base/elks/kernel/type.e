@@ -64,6 +64,7 @@ feature -- Access
 	name: IMMUTABLE_STRING_8
 			-- Name of Eiffel type represented by `Current', using Eiffel style guidelines
 			-- as specified in OOSC2 (e.g. COMPARABLE, HASH_TABLE [FOO, BAR], ...)
+			-- Consider using `name_32` instead.
 		do
 			Result := internal_name
 			if not attached Result then
@@ -221,7 +222,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"Use 'name_32 + other' or 'name + other' instead. [2017-05-31]"
+			"Use 'name_32 + other' instead. [2017-05-31]"
 		require
 			argument_not_void: other /= Void
 		do
@@ -239,7 +240,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"Use 'name_32.same_string (other)' or 'name.same_string (other)' instead. [2017-05-31]"
+			"Use 'name_32.same_string (other)' instead. [2017-05-31]"
 		require
 			other_not_void: other /= Void
 		do
@@ -255,7 +256,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"Use 'name_32.is_case_insensitive_equal (other)' or 'name.is_case_insensitive_equal (other)' instead. [2017-05-31]"
+			"Use 'name_32.is_case_insensitive_equal (other)' instead. [2017-05-31]"
 		require
 			other_not_void: other /= Void
 		do
@@ -270,7 +271,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"Use 'name_32.as_lower' or 'name.as_lower' instead. [2017-05-31]"
+			"Use 'name_32.as_lower' instead. [2017-05-31]"
 		do
 			create Result.make_from_string (name)
 			Result.to_lower
@@ -285,7 +286,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"Use 'name_32.as_upper' or 'name.as_upper' instead. [2017-05-31]"
+			"Use 'name_32.as_upper' instead. [2017-05-31]"
 		do
 			create Result.make_from_string (name)
 			Result.to_upper
@@ -296,7 +297,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 
 	to_string_8: STRING_8
 		obsolete
-			"Use `name_32' or `name' instead. [2017-05-31]"
+			"Use `name_32' instead. [2017-05-31]"
 		do
 			create Result.make_from_string (name)
 		ensure

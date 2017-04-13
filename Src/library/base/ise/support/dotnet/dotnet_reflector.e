@@ -363,10 +363,20 @@ feature -- Access
 	type_name (object: ANY): STRING
 			-- Name of `object''s generating type (type of which `object'
 			-- is a direct instance).
+			-- Consider using `type_name_32`.
 		require
 			object_not_void: object /= Void
 		do
-			Result := object.generating_type
+			Result := object.generating_type.name
+		end
+
+	type_name_32 (object: ANY): STRING_32
+			-- Name of `object''s generating type (type of which `object'
+			-- is a direct instance).
+		require
+			object_not_void: object /= Void
+		do
+			Result := object.generating_type.name_32
 		end
 
 	type_name_of_type (type_id: INTEGER): STRING
@@ -382,6 +392,22 @@ feature -- Access
 				Result := l_name
 			else
 				Result := "Unknown Type"
+			end
+		end
+
+	type_name_32_of_type (type_id: INTEGER): STRING_32
+			-- Name of `type_id''s generating type (type of which `type_id'
+			-- is a direct instance).
+		require
+			type_id_nonnegative: type_id >= 0
+		do
+			if
+				attached pure_implementation_type (type_id) as l_rt_class_type and then
+				attached l_rt_class_type.type_name as l_name
+			then
+				Result := l_name
+			else
+				Result := {STRING_32} "Unknown Type"
 			end
 		end
 

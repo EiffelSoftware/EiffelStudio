@@ -23,10 +23,6 @@ feature {NONE} -- Initialization
 				s := [i, s]
 				i := i - 1
 			end
-			io.put_string (t.generating_type)
-			io.put_new_line
-			io.put_string (s.generating_type)
-			io.put_new_line
 		end
 
 end

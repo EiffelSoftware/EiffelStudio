@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "COM Currency Structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 	make_from_pointer,
 	make_from_decimal
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 		do
@@ -44,8 +44,6 @@ feature -- Initialization
 			ccom_currency_from_decimal (dec_value.item, item)
 		end
 
-feature {NONE} -- Initialization
-
 	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
@@ -58,7 +56,7 @@ feature  -- Access
 			-- High 32 bits of currency.
 		do
 			Result := ccom_currency_high_bits(item)
-		end 
+		end
 
 	low_bits: INTEGER
 			-- Low 32 bits of currency.
@@ -87,7 +85,7 @@ feature -- status report
 		do
 			Result := (low_bits = other.low_bits) and (high_bits = other.high_bits)
 		end
-	
+
 	divisible (other: ECOM_CURRENCY): BOOLEAN
 			-- Is divisible by `other'?
 		do
@@ -105,7 +103,7 @@ feature -- Measurement
 	structure_size: INTEGER
 			-- Size of CY (CURRENCY) structure.
 		do
-			Result := c_size_of_currency 
+			Result := c_size_of_currency
 		end
 
 feature -- Conversion
@@ -122,7 +120,7 @@ feature -- Conversion
 		end
 
 	ceiled_integer_portion: ECOM_CURRENCY
-			-- Integer portion of currency value. The first negative 
+			-- Integer portion of currency value. The first negative
 			-- integer >= to the value is returned if the value is negative.
 		do
 			create Result.make
@@ -132,7 +130,7 @@ feature -- Conversion
 		end
 
 	truncated_to_integer_portion: ECOM_CURRENCY
-			-- Integer portion of a currency value. The first negative integer 
+			-- Integer portion of a currency value. The first negative integer
 			-- <= to the value is returned if the value is negative.
 		do
 			create Result.make
@@ -168,7 +166,7 @@ feature -- Element Change
 			high_bits_set: high_bits = an_integer
 		end
 
-	set_low_bits (an_integer: INTEGER) 
+	set_low_bits (an_integer: INTEGER)
 			-- Set 'low_bits' with 'an_integer'.
 		do
 			ccom_currency_set_low_bits(item, an_integer)
@@ -177,14 +175,14 @@ feature -- Element Change
 		end
 
 feature -- Basic operations
-	
+
 	opposite alias "-": ECOM_CURRENCY
 			-- Negative value of currency
 		do
 			create Result.make
 			ccom_currency_negative (item, Result.item)
-		end 
-	
+		end
+
 	minus alias "-" (other: ECOM_CURRENCY): ECOM_CURRENCY
 			-- Subtract with `other'
 		do
@@ -197,7 +195,7 @@ feature -- Basic operations
 		do
 			create Result.make
 			ccom_currency_add (item, other.item, Result.item)
-		end 
+		end
 
 	product alias "*" (other: ECOM_CURRENCY): ECOM_CURRENCY
 			-- Multiply by `other'
@@ -214,7 +212,7 @@ feature -- Basic operations
 		ensure
 			valid_result: Result /= Void
 		end
-	
+
 	quotient alias "/" (other: ECOM_CURRENCY): ECOM_CURRENCY
 		-- Division by 'other'
 		do
@@ -258,7 +256,7 @@ feature {NONE} -- Externals
 		external
 			"C [macro %"E_Currency.h%"](CY *, EIF_INTEGER, CY*)"
 		end
-		
+
 	ccom_currency_negative (a_ptr, b_ptr: POINTER)
 		external
 			"C [macro %"E_Currency.h%"](CY *, CY *)"
@@ -300,7 +298,7 @@ feature {NONE} -- Externals
 		end
 
 	c_size_of_currency: INTEGER
-		external 
+		external
 			"C [macro <wtypes.h>]"
 		alias
 			"sizeof(CY)"
@@ -315,7 +313,7 @@ feature {NONE} -- Externals
 		external
 			"C [macro %"E_Currency.h%"](CY *, CY *, CY *)"
 		end
-	
+
 	ccom_currency_multiply_by_4bytes_integer (ptr_1:POINTER; ptr_2: INTEGER; ptr_3: POINTER)
 		external
 			"C [macro %"E_Currency.h%"](CY *, long, CY *)"
@@ -327,18 +325,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class ECOM_CURRENCY
-
+end

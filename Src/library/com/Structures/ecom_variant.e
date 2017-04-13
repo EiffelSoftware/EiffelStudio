@@ -73,7 +73,7 @@ convert
 	make_from_string_array ({ECOM_ARRAY [STRING]}),
 	make_from_decimal_array ({ECOM_ARRAY [ECOM_DECIMAL]})
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Create new variant.

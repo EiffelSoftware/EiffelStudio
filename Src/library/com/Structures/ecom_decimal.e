@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			make_by_pointer (a_pointer)
 		end
 
-feature -- Initialiazation
+feature {NONE} -- Initialiazation
 
 	make
 		do

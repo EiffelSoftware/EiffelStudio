@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "COM Decimal Structure.  Wrapping COM DECIMAL type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,7 +8,7 @@ note
 class
 	ECOM_DECIMAL
 
-inherit	
+inherit
 	ECOM_STRUCTURE
 		rename
 			make as structure_make
@@ -86,13 +86,13 @@ feature -- status report
 	divisible (other: ECOM_DECIMAL): BOOLEAN
 			-- Is divisible by `other'?
 		do
-			Result := not (other = zero)
+			Result := other /= zero
 		end
 
 	exponentiable (other: ECOM_DECIMAL): BOOLEAN
 			-- Is exponentiable by `other'?
 		do
-			Result := false
+			Result := False
 		end
 
 feature -- Measurement
@@ -100,7 +100,7 @@ feature -- Measurement
 	structure_size: INTEGER
 			-- Size of DECIMAL (DECIMAL) structure
 		do
-			Result := c_size_of_decimal 
+			Result := c_size_of_decimal
 		end
 
 feature -- Conversion
@@ -118,7 +118,7 @@ feature -- Conversion
 		end
 
 	ceiled_integer_portion: ECOM_DECIMAL
-			-- Integer portion of decimal value. 
+			-- Integer portion of decimal value.
 			-- The first negative integer >= to the value is returned if the value is negative.
 		require
 			valid_item: item /= default_pointer
@@ -130,7 +130,7 @@ feature -- Conversion
 		end
 
 	truncated_to_integer_portion: ECOM_DECIMAL
-			-- Integer portion of a decimal value. The first negative integer 
+			-- Integer portion of a decimal value. The first negative integer
 			-- <= to the value is returned if the value is negative.
 		require
 			valid_item: item /= default_pointer
@@ -159,7 +159,7 @@ feature -- Conversion
 		end
 
 feature -- Basic operations
-	
+
 	opposite alias "-": like Current
 			-- Negative value of decimal
 		require else
@@ -167,8 +167,8 @@ feature -- Basic operations
 		do
 			create Result.make
 			ccom_decimal_negative (item, Result.item)
-		end 
-	
+		end
+
 	minus alias "-" (other: like Current): like Current
 			-- Subtract with `other'
 		require else
@@ -185,7 +185,7 @@ feature -- Basic operations
 		do
 			create Result.make
 			ccom_decimal_add (item, other.item, Result.item)
-		end 
+		end
 
 	product alias "*" (other: like Current): like Current
 			-- Multiply by `other'
@@ -257,7 +257,7 @@ feature {NONE} -- Externals
 		external
 			"C [macro %"E_Decimal.h%"](DECIMAL *, EIF_INTEGER, DECIMAL *)"
 		end
-		
+
 	ccom_decimal_negative (a_ptr, b_ptr: POINTER)
 		external
 			"C [macro %"E_Decimal.h%"](DECIMAL *, DECIMAL *)"
@@ -279,7 +279,7 @@ feature {NONE} -- Externals
 		end
 
 	c_size_of_decimal: INTEGER
-		external 
+		external
 			"C [macro <wtypes.h>]"
 		alias
 			"sizeof(DECIMAL)"
@@ -294,25 +294,21 @@ feature {NONE} -- Externals
 		external
 			"C [macro %"E_Decimal.h%"](DECIMAL *, DECIMAL *, DECIMAL *)"
 		end
-	
+
 	ccom_decimal_subtract (ptr_1, ptr_2, ptr_3: POINTER)
 		external
 			"C [macro %"E_Decimal.h%"] (DECIMAL *, DECIMAL *, DECIMAL *)"
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class ECOM_DECIMAL
-
+end

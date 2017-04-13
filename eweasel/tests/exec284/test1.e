@@ -21,11 +21,11 @@ feature
 
 feature {NONE} -- Helper
 
-	generating_type_of (g: G): STRING
+	generating_type_of (g: G): STRING_32
 		require
 			g_attached: g /= Void
 		do
-			Result := g.generating_type
+			Result := g.generating_type.name_32
 		ensure
 			result_attached: Result /= Void
 		end

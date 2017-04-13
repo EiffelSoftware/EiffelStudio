@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "ECOM_HRESULT"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -52,12 +52,12 @@ feature -- Access
 			Result := cwin_hresult_severity_bit (item)
 		end
 
-	message: STRING
+	message: STRING_32
 			-- Human-readable string.
 		local
 			error_messages: WEL_WINDOWS_ERROR_MESSAGES
 		do
-			Result := ccom_format_message (formatter, item)
+			Result := ccom_format_message (formatter, item).as_string_32
 			if Result.count > 10 then
 				Result.keep_tail (Result.count - 10)
 			end
@@ -66,7 +66,7 @@ feature -- Access
 
 			if Result.is_empty then
 				create error_messages
-				Result := error_messages.error_message (error_code).as_string_8_conversion
+				Result := error_messages.error_message (error_code)
 			end
 			if Result = Void then
 				create Result.make (0)
@@ -88,7 +88,7 @@ feature -- Element change
 	set_succeeded
 			-- Set severity bit to indicate succeeded
 		do
-			item := (cwin_hresult_make_hresult (0, facility_code, error_code))
+			item := cwin_hresult_make_hresult (0, facility_code, error_code)
 		end
 
 	set_failed
@@ -123,7 +123,7 @@ feature -- Status report
 	succeeded: BOOLEAN
 			-- Does hresult correspond to success?
 		do
-			Result := (severity_bit = 0)
+			Result := severity_bit = 0
 		end
 
 feature {NONE} -- Externals
@@ -167,18 +167,14 @@ invariant
 	valid_severity_value: severity_bit = 0 or severity_bit = 1
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end
-

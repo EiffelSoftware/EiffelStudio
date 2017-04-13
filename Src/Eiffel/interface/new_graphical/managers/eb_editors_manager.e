@@ -628,6 +628,25 @@ feature -- Editor observer
 			end
 		end
 
+	remove_cursor_observer (a_cursor_observer: TEXT_OBSERVER)
+			-- Remove observer for all editors.
+		require
+			a_cursor_observer_attached: a_cursor_observer /= Void
+		local
+			l_editors: ARRAYED_LIST [like current_editor]
+		do
+			l_editors := editors
+			from
+				l_editors.start
+			until
+				l_editors.after
+			loop
+				l_editors.item.text_displayed.remove_observer (a_cursor_observer)
+				cursor_observer_list_internal.prune_all (a_cursor_observer)
+				l_editors.forth
+			end
+		end
+
 feature -- Element change
 
 	create_editor

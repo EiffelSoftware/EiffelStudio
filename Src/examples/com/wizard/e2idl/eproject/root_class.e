@@ -10,21 +10,20 @@ create
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Output a welcome message.
 			--| (Automatically generated.)
 		do
-
-		end;
+		end
 
 feature -- Access
 
-	string_manipulator: STRING_MANIPULATOR;
+	string_manipulator: STRING_MANIPULATOR
 
-note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+;note
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -34,6 +33,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class ROOT_CLASS
-
+end

@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Wrapper around BSTR."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,14 +14,11 @@ create
 
 feature -- Access
 
-	string: STRING
-			-- Convert to STRING
-		local
-			l_string: WEL_STRING
+	string: detachable STRING_32
+			-- Convert to string.
 		do
 			if item /= default_pointer then
-				create l_string.share_from_pointer_and_count (item, count * character_32_bytes)
-				Result := l_string.string.as_string_8_conversion
+				Result := (create {WEL_STRING}.share_from_pointer_and_count (item, count * character_32_bytes)).string
 			end
 		end
 
@@ -60,8 +56,8 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -84,11 +80,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class ECOM_BSTR
+end

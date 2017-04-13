@@ -19,7 +19,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	WEL_OFN_CONSTANTS
 		export
 			{NONE} all
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 			when Cmd_file_open then
 				open_file_dialog.activate (Current)
 				if open_file_dialog.selected then
-					create child.make (Current, open_file_dialog.file_name)
+					create child.make (Current, open_file_dialog.file_path)
 				end
 			when Cmd_file_close then
 				if has_active_window then

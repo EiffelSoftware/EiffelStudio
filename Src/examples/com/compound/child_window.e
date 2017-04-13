@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Child window of frame window containing an OLE compound file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -73,9 +73,9 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (p: WEL_MDI_FRAME_WINDOW; name: READABLE_STRING_GENERAL)
+	make (p: WEL_MDI_FRAME_WINDOW; file_name: PATH)
 			-- Create MDI child window with parent `p' and
 			-- title `name', then build associated tree view.
 		local
@@ -83,14 +83,12 @@ feature -- Initialization
 			tvitem: WEL_TREE_VIEW_ITEM
 			tvinss: WEL_TREE_VIEW_INSERT_STRUCT
 			retried: BOOLEAN
-			file_name: PATH
 		do
 			if not retried then
 				create tvitem_table.make (5)
-				create file_name.make_from_string (name)
 				if is_compound_file_path (file_name) then
 					create storage.make_open_file_path (file_name, Stgm_share_deny_write)
-					mdi_child_window_make (p, name)
+					mdi_child_window_make (p, file_name.name)
 					create tree_view.make (Current, 0, 0, width, height, Tree_view_id)
 					create tvitem.make
 					create tvinss.make
@@ -135,7 +133,7 @@ feature -- Initialization
 			-- `elements' is used for efficiency.
 		local
 			substorage: ECOM_STORAGE
-			tex: STRING
+			tex: STRING_32
 			elements: ECOM_ENUM_STATSTG
 			statstg: ECOM_STATSTG
 			tvitem: WEL_TREE_VIEW_ITEM
@@ -145,7 +143,6 @@ feature -- Initialization
 				elements := stor.elements
 				elements.reset
 				statstg := elements.next_item
-				create tex.make (0)
 			until
 				statstg = Void
 			loop
@@ -203,26 +200,19 @@ feature -- Message Processing
 	on_notify (control_id: INTEGER; info: WEL_NMHDR)
 			-- Notifications processing
 		local
-			stor: ECOM_STORAGE
-			name: STRING
-			stream: ECOM_STREAM
 			stream_display: STREAM_DISPLAY_WINDOW
 			retried: BOOLEAN
 			mess_box: WEL_MSG_BOX
    		do
-			if not retried then
-				if control_id = Tree_view_id and then info.code = -3 and not tree_view.selected_item.text.is_equal (Root_item_title) then
-					stor ?= tvitem_table.item (tree_view.selected_item.lparam).item (1)
-					check
-						non_void_storage: stor /= Void
-					end
-					name ?= tvitem_table.item (tree_view.selected_item.lparam).item (2)
-					check
-						non_void_name: name /= Void
-					end
-					stream := stor.retrieved_stream (name, Stgm_share_exclusive)
-					create stream_display.make (stream)
-				end
+			if
+				not retried and then
+				control_id = Tree_view_id and then
+				info.code = -3 and not
+				tree_view.selected_item.text.is_equal (Root_item_title) and
+				attached {ECOM_STORAGE} tvitem_table.item (tree_view.selected_item.lparam).item (1) as stor and
+				attached {READABLE_STRING_GENERAL} tvitem_table.item (tree_view.selected_item.lparam).item (2) as name
+			then
+				create stream_display.make (stor.retrieved_stream (name, Stgm_share_exclusive))
 			end
 		rescue
 			create mess_box.make
@@ -272,7 +262,7 @@ feature {NONE} -- Implementation
 			-- Root storage displayed name
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -282,6 +272,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class CHILD_WINDOW
-
+end

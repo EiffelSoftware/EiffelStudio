@@ -212,7 +212,7 @@ feature -- Output
 			-- New string containing terse printable representation
 			-- of current object
 		do
-			Result := generating_type
+			Result := generating_type.name
 			Result.append_character ('%N')
 			if attached trace as l_t then
 				Result.append_string (l_t.as_string_8)

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "String Manipulator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 	make_from_other,
 	make_from_pointer
 
-feature
+feature -- Modification
 
 	my_replace_substring (s: STRING; start_pos: INTEGER; end_pos: INTEGER)
 			-- Replace substring with preconditions.
@@ -25,7 +25,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -35,6 +35,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- MY_STRING_MANIPULATOR
-
+end

@@ -327,6 +327,18 @@ feature {NONE} -- Access
 			result_is_interface_usable: Result.is_interface_usable
 		end
 
+ 	frozen develop_window_session_data: detachable SESSION_I
+			-- Provides access to the hosted window session data
+		do
+			if
+				attached develop_window as w
+			then
+				Result := develop_window.session_data
+			end
+		ensure
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
+
 	frozen window_session_data: SESSION_I
 			-- Provides access to the hosted window session data
 		require
@@ -1116,7 +1128,7 @@ invariant
     not_is_initialized: is_initializing implies not is_initialized
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "COM VARIANT structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -1371,11 +1371,11 @@ feature -- Element change
 		local
 			a_ptr: POINTER
 		do
-			if not (a_value.item = Void) then
-				if (a_value.item.item = default_pointer) and then attached {ECOM_STUB} a_value.item as l_stub then
+			if attached a_value.item as i then
+				if i.item = default_pointer and then attached {ECOM_STUB} i as l_stub then
 					l_stub.create_item
 				end
-				a_ptr := a_value.item.item
+				a_ptr := i.item
 			end
 			ccom_set_iunknown_reference (item, a_ptr)
 		end
@@ -1719,39 +1719,39 @@ feature -- Output
 	out: STRING
 			-- Printable representation of  value.
 		do
-			if (variable_type = Vt_bool) then
+			if variable_type = Vt_bool then
 				Result:= boolean_value.out
-			elseif (variable_type = Vt_i1) then
+			elseif variable_type = Vt_i1 then
 				create Result.make (6)
 				Result.append_character ('%Q')
 				Result.append (character_value.out)
 				Result.append_character ('%'')
-			elseif (variable_type = Vt_i2) then
+			elseif variable_type = Vt_i2 then
 				Result := integer2.out
-			elseif (variable_type = Vt_i4) then
+			elseif variable_type = Vt_i4 then
 				Result := integer4.out
-			elseif (variable_type = Vt_int) then
+			elseif variable_type = Vt_int then
 				Result := integer_value.out
-			elseif (variable_type = Vt_r4) then
+			elseif variable_type = Vt_r4 then
 				Result := real_value.out
-			elseif (variable_type = Vt_r8) then
+			elseif variable_type = Vt_r8 then
 				Result := double_value.out
-			elseif (variable_type = Vt_bstr) then
+			elseif variable_type = Vt_bstr then
 				create Result.make (100)
 				Result.append_character ('%"')
 				if string_value /= Void then
 					Result.append (string_value.out)
 				end
 				Result.append_character ('%"')
-			elseif (variable_type = Vt_ui1) then
+			elseif variable_type = Vt_ui1 then
 				Result := unsigned_character_value.out
-			elseif (variable_type = Vt_uint) then
+			elseif variable_type = Vt_uint then
 				Result := unsigned_integer.out
-			elseif (variable_type = Vt_ui2) then
+			elseif variable_type = Vt_ui2 then
 				Result := unsigned_integer2.out
-			elseif (variable_type = Vt_ui4) then
+			elseif variable_type = Vt_ui4 then
 				Result := unsigned_integer4.out
-			elseif (variable_type = Vt_date) then
+			elseif variable_type = Vt_date then
 				if date_value /= Void then
 					Result.append (date_value.out)
 				end
@@ -2570,7 +2570,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -2580,8 +2580,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class ECOM_VARIANT
-
+end

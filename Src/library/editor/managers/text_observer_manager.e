@@ -93,7 +93,7 @@ feature -- Operations
 		end
 
 	remove_observer (a_text_observer: TEXT_OBSERVER)
-		-- Remove the observer 'an_text_observer' from the list.
+			-- Remove the observer 'an_text_observer' from the list.
 		require
 			not_in_loop: not is_notifying
 		local
@@ -136,6 +136,19 @@ feature -- Operations
 					lines_observer_list.remove
 				else
 					lines_observer_list.forth
+				end
+			end
+			from
+				cursor_observer_list.start
+				found := False
+			until
+				cursor_observer_list.after or found
+			loop
+ 				if cursor_observer_list.item = a_text_observer then
+					found := True
+					cursor_observer_list.remove
+				else
+					cursor_observer_list.forth
 				end
 			end
 		end
@@ -441,14 +454,14 @@ feature {TEXT_PANEL} -- Implementation
 		-- List of editor observers.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

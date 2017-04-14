@@ -195,7 +195,7 @@ feature {NONE} -- Rule Checking
 			if
 				not is_obsolete_class and then
 				not is_obsolete_feature and then
-				class_id /= 0 and then
+				system.has_class_of_id (class_id) and then
 				attached system.class_of_id (class_id) as c and then
 				c.has_feature_table and then
 				routine_id > 0 and then

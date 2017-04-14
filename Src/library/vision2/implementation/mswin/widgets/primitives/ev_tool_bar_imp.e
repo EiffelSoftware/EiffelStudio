@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EiffelVision toolbar, mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -1149,7 +1149,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			-- Called when `w' has been added to `Current'.
 		require
 			w_not_void: w /= Void
-			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
+			w_correct_type: attached {EV_TOOL_BAR_ITEM} w
 		local
 			r: detachable EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
@@ -1166,7 +1166,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			-- Called when `w' has been added to `Current'.
 		require
 			w_not_void: w /= Void
-			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
+			w_correct_type: attached {EV_TOOL_BAR_ITEM} w
 		local
 			button_imp: detachable EV_TOOL_BAR_ITEM_IMP
 		do
@@ -1183,7 +1183,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			-- Called when `w' has been removed from `Current'.
 		require
 			w_not_void: w /= Void
-			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
+			w_correct_type: attached {EV_TOOL_BAR_ITEM} w
 		local
 			r: detachable EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
@@ -1198,7 +1198,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			-- Called when `w' has been added to `Current'.
 		require
 			item_not_void: w /= Void
-			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
+			w_correct_type: attached {EV_TOOL_BAR_ITEM} w
 		local
 			t: detachable EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 		do
@@ -1328,4 +1328,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_TOOL_BAR_IMP
+end

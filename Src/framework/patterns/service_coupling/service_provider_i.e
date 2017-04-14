@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Base interface for all classes exposing a means to query for a service.
 		
@@ -16,7 +16,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class
 	SERVICE_PROVIDER_I
@@ -33,11 +33,11 @@ feature -- Query
 		deferred
 		ensure
 			result_sited: Result /= Void implies Result.site = Current
-			result_compatiable: Result /= Void implies a_type.attempt (Result) /= Void
+			result_compatiable: Result /= Void implies attached (a_type / Result)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -68,4 +68,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {SERVICE_PROVIDER_I}
+end

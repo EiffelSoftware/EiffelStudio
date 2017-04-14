@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Global service container and service provider.
 		
@@ -8,7 +8,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	SERVICE_HEAP
@@ -68,7 +68,7 @@ feature -- Extension
 			a_type_attached: a_type /= Void
 			a_service_attached: a_service /= Void
 			not_is_service_proffered: not is_service_proffered (a_type)
-			a_service_conforms_to_a_type: (a_type #? a_service) /= Void
+			a_service_conforms_to_a_type: attached (a_type / a_service)
 		do
 			provider_register (a_type, a_service, False)
 		ensure
@@ -109,7 +109,7 @@ feature -- Removal
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -140,4 +140,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {SERVICE_HEAP}
+end

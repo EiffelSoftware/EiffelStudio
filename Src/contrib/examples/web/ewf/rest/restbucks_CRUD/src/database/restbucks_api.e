@@ -87,7 +87,7 @@ feature -- Access: order status
 		end
 
 	Order_states : ARRAY [STRING]
-			-- List of valid status states
+			-- List of valid status states.
 		once
 			Result := <<
 							status_unset,

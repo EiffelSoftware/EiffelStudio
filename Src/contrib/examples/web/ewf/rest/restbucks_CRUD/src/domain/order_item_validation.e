@@ -27,7 +27,7 @@ feature -- Access
 		end
 
 	Milk_types: ARRAY [STRING]
-			-- List of valid Milk types
+			-- List of valid Milk types.
 		once
 			Result := <<"skim", "semi", "whole">>
 		end

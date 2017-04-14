@@ -38,7 +38,7 @@ feature -- Element change
 			v: READABLE_STRING_8
 		do
 			if a_text /= Void then
-				v := html_encoded_string (a_text.to_string_32)
+				v := html_encoded_string (a_text)
 				across
 					options as o
 				loop
@@ -69,7 +69,7 @@ feature -- Element change
 			v: READABLE_STRING_8
 		do
 			if a_text /= Void then
-				v := html_encoded_string (a_text.to_string_32)
+				v := html_encoded_string (a_text)
 				across
 					options as o
 				loop

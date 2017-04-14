@@ -166,7 +166,8 @@ feature -- Basic Operation
 			if is_verbose then
 				log ("%NReceive <====================", debug_level)
 				if attached req.raw_header_data as rhd then
-					log (rhd, debug_level)
+					check raw_header_is_valid_as_string_8: rhd.is_valid_as_string_8 end
+					log (rhd.to_string_8, debug_level)
 				end
 			end
 			if
@@ -189,7 +190,8 @@ feature -- Basic Operation
 					end
 						-- Sending the server's opening handshake
 					create l_sha1.make
-					l_sha1.update_from_string (l_ws_key + magic_guid)
+					check l_ws_key_is_valid_as_string_8: l_ws_key.is_valid_as_string_8 end
+					l_sha1.update_from_string (l_ws_key.to_string_8 + magic_guid)
 					l_key := Base64_encoder.encoded_string (digest (l_sha1))
 					res.header.add_header_key_value ("Upgrade", "websocket")
 					res.header.add_header_key_value ("Connection", "Upgrade")
@@ -795,7 +797,7 @@ feature {NONE} -- Debug
 
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -126,17 +126,10 @@ feature -- Helper
 			Result := value.same_string_general (a_other)
 		end
 
-	is_case_insensitive_equal (a_other: READABLE_STRING_8): BOOLEAN
+	is_case_insensitive_equal (a_other: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `a_other' represent the same case insensitive string as `Current'?
-		local
-			v: like value
 		do
-			v := value
-			if v = a_other then
-				Result := True
-			elseif v.is_valid_as_string_8 then
-				Result := v.is_case_insensitive_equal (a_other)
-			end
+			Result := value.is_case_insensitive_equal_general (a_other)
 		end
 
 feature -- Conversion
@@ -154,7 +147,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

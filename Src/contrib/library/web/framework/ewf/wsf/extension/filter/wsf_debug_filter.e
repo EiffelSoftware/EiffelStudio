@@ -69,7 +69,7 @@ feature -- Basic operations
 						s.append (c.item.url_encoded_name)
 						s.append_character (' ')
 						s.append_character ('{')
-						s.append (c.item.generating_type)
+						s.append (c.item.generating_type.name)
 						s.append_character ('}')
 						s.append_character ('=')
 						s.append (c.item.debug_output.as_string_8)
@@ -80,7 +80,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

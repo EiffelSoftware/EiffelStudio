@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="D3EE5B55-6F2E-4247-8C94-E7CFC4C5B648" message="Obsolete: use echo.ecf !" location="echo.ecf">
-</redirection>

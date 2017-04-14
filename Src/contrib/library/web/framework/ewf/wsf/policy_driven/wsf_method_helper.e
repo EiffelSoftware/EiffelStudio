@@ -108,13 +108,11 @@ feature -- Basic operations
 				handle_precondition_failed (req, res)
 			else
 				if attached req.http_if_unmodified_since as l_if_unmodified_since then
-					if l_if_unmodified_since.is_string_8 then
-						create l_date.make_from_string (l_if_unmodified_since.as_string_8)
-						if not l_date.has_error then
-							if a_handler.modified_since (req, l_date.date_time) then
-								handle_precondition_failed (req, res)
-								l_failed := True
-							end
+					create l_date.make_from_string (l_if_unmodified_since)
+					if not l_date.has_error then
+						if a_handler.modified_since (req, l_date.date_time) then
+							handle_precondition_failed (req, res)
+							l_failed := True
 						end
 					end
 				end
@@ -128,13 +126,11 @@ feature -- Basic operations
 						handle_if_none_match_failed (req, res, a_handler)
 					else
 						if attached req.http_if_modified_since as l_if_modified_since then
-							if l_if_modified_since.is_string_8 then
-								create l_date.make_from_string (l_if_modified_since.as_string_8)
-								if not l_date.has_error then
-									if not a_handler.modified_since (req, l_date.date_time) then
-										handle_not_modified (req, res, a_handler)
-										l_failed := True
-									end
+							create l_date.make_from_string (l_if_modified_since)
+							if not l_date.has_error then
+								if not a_handler.modified_since (req, l_date.date_time) then
+									handle_not_modified (req, res, a_handler)
+									l_failed := True
 								end
 							end
 						end
@@ -408,7 +404,7 @@ feature -- Error reporting
 				if req.is_content_type_accepted ({HTTP_MIME_TYPES}.text_html) then
 					s := "<html lang=%"en%"><head>"
 					s.append ("<title>")
-					s.append (html_encoder.encoded_string (req.request_uri))
+					s.append (html_encoder.general_encoded_string (req.request_uri))
 					s.append ("Error " + a_status_code.out + " (" + l_msg + ")")
 					s.append ("</title>%N")
 					s.append ("[
@@ -434,7 +430,7 @@ feature -- Error reporting
 					s.append ("</div>")
 					s.append ("The current location for this resource is <a href=%"" + a_locations.first.string + "%">here</a>")
 					s.append ("Error " + a_status_code.out + " (" + l_msg + ")</div>")
-					s.append ("<div id=%"message%">Error " + a_status_code.out + " (" + l_msg + "): <code>" + html_encoder.encoded_string (req.request_uri) + "</code></div>")
+					s.append ("<div id=%"message%">Error " + a_status_code.out + " (" + l_msg + "): <code>" + html_encoder.general_encoded_string (req.request_uri) + "</code></div>")
 					s.append ("<div id=%"footer%"></div>")
 					s.append ("</body>%N")
 					s.append ("</html>%N")
@@ -587,7 +583,7 @@ feature -- Error reporting
 		end
 
 note
-	copyright: "2011-2014, Colin Adams, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2017, Colin Adams, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

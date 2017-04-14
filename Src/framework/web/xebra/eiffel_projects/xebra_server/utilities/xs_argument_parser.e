@@ -37,7 +37,7 @@ feature -- Access
 		do
 			Result := value
 		ensure
-			not_Result_is_detached_or_empty: Result /= Void and then not Result.is_empty
+			not_result_is_detached_or_empty: Result /= Void and then not Result.is_empty
 		end
 
 	debug_level: INTEGER
@@ -95,7 +95,7 @@ feature {NONE} -- Access: Usage
 			Result := {XU_CONSTANTS}.Version
 		end
 
-	copyright: STRING = "Copyright Eiffel Software 2009-2016. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 2009-2017. All Rights Reserved."
 			-- <Precursor>
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]

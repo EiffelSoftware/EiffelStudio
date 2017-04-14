@@ -715,13 +715,15 @@ feature {NONE}  -- Implementation
 			has: internal_tabs.has (a_tab_2) and internal_tab_box.has (a_tab_2)
 		local
 			l_index_1, l_index_2: INTEGER
-			l_index_1_valid, l_index_2_valid: BOOLEAN
 		do
 			l_index_1 := internal_tab_box.index_of (a_tab_1)
 			l_index_2 := internal_tab_box.index_of (a_tab_2)
-			l_index_1_valid := l_index_1 <= internal_tabs.count and l_index_1 /= 0
-			l_index_1_valid := l_index_2 <= internal_tabs.count and l_index_2 /= 0
-			if l_index_1_valid and l_index_2_valid then
+			if
+				l_index_1 <= internal_tabs.count and
+				l_index_1 /= 0 and
+				l_index_2 <= internal_tabs.count and
+				l_index_2 /= 0
+			then
 				internal_tabs.go_i_th (l_index_1)
 				internal_tabs.swap (l_index_2)
 

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Argument parser that requires a single or can accept mutliple loose arguments."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -82,7 +82,6 @@ feature {NONE} -- Query
 		local
 			l_suffix: STRING_32
 			l_arg: STRING_32
-			l_args: STRING_32
 		do
 			l_suffix := Precursor {ARGUMENT_BASE_PARSER} (a_group, a_show_non_switch, a_non_switch_required, a_add_appurtenances, a_src_group)
 
@@ -96,8 +95,10 @@ feature {NONE} -- Query
 					Result.append_character ('[')
 				end
 				l_arg := non_switched_argument_name_arg
-				l_args := l_arg + " [" + l_arg + ", ...]"
-				Result.append (l_args)
+				Result.append (l_arg)
+				Result.append ({STRING_32} " [")
+				Result.append (l_arg)
+				Result.append ({STRING_32} ", ...]")
 				if not a_non_switch_required then
 					Result.append_character (']')
 				end
@@ -131,25 +132,23 @@ feature {NONE} -- Validation
 			-- <Precursor>
 		local
 			l_check_non_switched_arguments: BOOLEAN
-			l_cursor: CURSOR
 		do
 			Precursor (a_groups)
 
 			l_check_non_switched_arguments := a_groups.is_empty
 			if not l_check_non_switched_arguments then
 					-- There are groups so check if non-switch arguments are used.
-				l_cursor := a_groups.cursor
-				from a_groups.start until a_groups.after or l_check_non_switched_arguments loop
-					l_check_non_switched_arguments := a_groups.item.is_allowing_non_switched_arguments
-					a_groups.forth
-				end
-				a_groups.go_to (l_cursor)
+				l_check_non_switched_arguments :=
+					across a_groups as g some g.item.is_allowing_non_switched_arguments end
 			end
 
-			if l_check_non_switched_arguments then
-				if not has_non_switched_argument and then is_non_switch_argument_required and not is_help_usage_displayed then
-					add_template_error (e_missing_non_switched_argument, [non_switched_argument_type.as_lower])
-				end
+			if
+				l_check_non_switched_arguments and then
+				not has_non_switched_argument and then
+				is_non_switch_argument_required and not
+				is_help_usage_displayed
+			then
+				add_template_error (e_missing_non_switched_argument, [non_switched_argument_type.as_lower])
 			end
 		end
 
@@ -164,8 +163,8 @@ invariant
 	is_allowing_non_switched_arguments: is_allowing_non_switched_arguments
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

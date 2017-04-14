@@ -26,10 +26,12 @@ feature {NONE} -- Initialization
 				output_path := l_parser.output_path
 				is_statistic_requested := l_parser.has_statistic
 				read_unicode_data (l_file)
-				if unicode_data /= Void or has_error then
-					process_properties (l_parser.property_template)
+				if attached unicode_data as l_unicode_data then
+					process_properties (l_parser.property_template, l_unicode_data)
+				elseif has_error then
+					io.error.put_string (l_file + ": error occured!%N")
 				else
-					io.error.put_string (l_file + " has not unicode character data in it.%N")
+					io.error.put_string (l_file + " has no unicode character data in it.%N")
 				end
 			end
 		end
@@ -59,7 +61,7 @@ feature -- Status Report
 feature -- Basic operations
 
 	read_unicode_data (a_file: READABLE_STRING_32)
-			-- Read the Unicode data `a_file' and store it into `
+			-- Read the Unicode data `a_file' and store it into `unicode_data` and `unicode_table`.
 		local
 			l_input: PLAIN_TEXT_FILE
 			l_list: like unicode_data
@@ -132,12 +134,12 @@ feature -- Basic operations
 			retry
 		end
 
-	process_properties (a_template_file: READABLE_STRING_32)
+	process_properties (a_template_file: READABLE_STRING_32; a_unicode_data: attached like unicode_data)
 			-- Using `a_file' representing the Unicode standard for lower and upper tables,
 			-- generate Eiffel code for CHARACTER_32 that will let you perform the operation
 			-- `to_lower' and `to_upper'. We only perform simple case folding.
 		require
-			unicode_data_set: unicode_data /= Void
+			a_unicode_data_set: a_unicode_data /= Void
 		local
 			l_input, l_output: PLAIN_TEXT_FILE
 			l_lowers, l_uppers, l_titles: like extract_case_ranges
@@ -147,79 +149,75 @@ feature -- Basic operations
 			l_filename: PATH
 		do
 				-- We generate the various mapping. Those mappings are sparse.
-			if attached unicode_data as l_unicode_data then
-				l_lowers := extract_case_ranges ("lower", l_unicode_data, agent {UNICODE_CHARACTER_DATA}.has_lower_code, agent {UNICODE_CHARACTER_DATA}.lower_code)
-				l_uppers := extract_case_ranges ("upper", l_unicode_data, agent {UNICODE_CHARACTER_DATA}.has_upper_code, agent {UNICODE_CHARACTER_DATA}.upper_code)
-				l_titles := extract_case_ranges ("title", l_unicode_data, agent {UNICODE_CHARACTER_DATA}.has_title_code, agent {UNICODE_CHARACTER_DATA}.title_code)
-				l_properties := extract_case_ranges ("property", l_unicode_data, agent {UNICODE_CHARACTER_DATA}.has_property, agent {UNICODE_CHARACTER_DATA}.property_flags)
+			l_lowers := extract_case_ranges ("lower", a_unicode_data, agent {UNICODE_CHARACTER_DATA}.has_lower_code, agent {UNICODE_CHARACTER_DATA}.lower_code)
+			l_uppers := extract_case_ranges ("upper", a_unicode_data, agent {UNICODE_CHARACTER_DATA}.has_upper_code, agent {UNICODE_CHARACTER_DATA}.upper_code)
+			l_titles := extract_case_ranges ("title", a_unicode_data, agent {UNICODE_CHARACTER_DATA}.has_title_code, agent {UNICODE_CHARACTER_DATA}.title_code)
+			l_properties := extract_case_ranges ("property", a_unicode_data, agent {UNICODE_CHARACTER_DATA}.has_property, agent {UNICODE_CHARACTER_DATA}.property_flags)
 
-					-- We have noticed that the table for upper and title cases are very similar.
-					-- As of Unicode 6.2.0, there were really 9 differences (i.e. 3 characters) that
-					-- had a different title case than the upper case. Instead of regenerating
-					-- almost the same data twice, we collect the differences that will be used
-					-- to generate the title tables using the upper data and the override.
-				l_diffs := mismatches (l_uppers, l_titles)
+				-- We have noticed that the table for upper and title cases are very similar.
+				-- As of Unicode 6.2.0, there were really 9 differences (i.e. 3 characters) that
+				-- had a different title case than the upper case. Instead of regenerating
+				-- almost the same data twice, we collect the differences that will be used
+				-- to generate the title tables using the upper data and the override.
+			l_diffs := mismatches (l_uppers, l_titles)
 
-					-- Generate the code to build the tables in `l_tables'.
-				create l_tables.make (5120)
-				generate_case_ranges (l_tables, l_lowers, to_lower_table_name, True)
-				generate_case_ranges (l_tables, l_uppers, to_upper_table_name, True)
-				if l_diffs = Void then
-					generate_case_ranges (l_tables, l_titles, to_title_table_name, True)
-				end
-				generate_case_ranges (l_tables, l_properties, property_table_name, False)
-
-
-					-- Let's generate our class now.
-				create l_input.make_with_name (a_template_file)
-				l_input.open_read
-				l_input.read_stream (l_input.count)
-				l_class := l_input.last_string
-				l_input.close
-
-				if attached output_path as l_path and then not l_path.is_empty then
-					create l_filename.make_from_string (l_path)
-					create l_output.make_with_path (l_filename.extended (character_32_property_filename))
-				else
-					create l_output.make_with_name (character_32_property_filename)
-				end
-				l_output.open_write
-
-				l_class.replace_substring_all (tables_marker, l_tables)
-
-				create l_filter.make (10)
-				generate_filter (l_filter, l_lowers, to_lower_table_name, 4, True)
-				l_class.replace_substring_all (to_lower_helper_marker, l_filter)
-
-				create l_filter.make (10)
-				generate_filter (l_filter, l_uppers, to_upper_table_name, 4, True)
-				l_class.replace_substring_all (to_upper_helper_marker, l_filter)
-
-					-- Special cases for `title' case where if there are not too many
-					-- differences we simply generate an override.it de
-				if l_diffs /= Void then
-					create l_filter.make (10)
-					l_simplified_diffs := title_fix_up (l_diffs)
-					if l_simplified_diffs = l_diffs then
-						generate_override (l_filter, l_diffs, "l_code", 4)
-					else
-						generate_override (l_filter, l_simplified_diffs, "Result.natural_32_code", 4)
-					end
-				else
-					create l_filter.make (10)
-					generate_filter (l_filter, l_titles, to_title_table_name, 4, True)
-				end
-				l_class.replace_substring_all (to_title_helper_marker, l_filter)
-
-				create l_filter.make (10)
-				generate_filter (l_filter, l_properties, property_table_name, 3, False)
-				l_class.replace_substring_all (property_helper_marker, l_filter)
-				l_output.put_string (l_class)
-
-				l_output.close
-			else
-				check unicode_data_set: False end
+				-- Generate the code to build the tables in `l_tables'.
+			create l_tables.make (5120)
+			generate_case_ranges (l_tables, l_lowers, to_lower_table_name, True)
+			generate_case_ranges (l_tables, l_uppers, to_upper_table_name, True)
+			if l_diffs = Void then
+				generate_case_ranges (l_tables, l_titles, to_title_table_name, True)
 			end
+			generate_case_ranges (l_tables, l_properties, property_table_name, False)
+
+
+				-- Let's generate our class now.
+			create l_input.make_with_name (a_template_file)
+			l_input.open_read
+			l_input.read_stream (l_input.count)
+			l_class := l_input.last_string
+			l_input.close
+
+			if attached output_path as l_path and then not l_path.is_empty then
+				create l_filename.make_from_string (l_path)
+				create l_output.make_with_path (l_filename.extended (character_32_property_filename))
+			else
+				create l_output.make_with_name (character_32_property_filename)
+			end
+			l_output.open_write
+
+			l_class.replace_substring_all (tables_marker, l_tables)
+
+			create l_filter.make (10)
+			generate_filter (l_filter, l_lowers, to_lower_table_name, 4, True)
+			l_class.replace_substring_all (to_lower_helper_marker, l_filter)
+
+			create l_filter.make (10)
+			generate_filter (l_filter, l_uppers, to_upper_table_name, 4, True)
+			l_class.replace_substring_all (to_upper_helper_marker, l_filter)
+
+				-- Special cases for `title' case where if there are not too many
+				-- differences we simply generate an override.it de
+			if l_diffs /= Void then
+				create l_filter.make (10)
+				l_simplified_diffs := title_fix_up (l_diffs)
+				if l_simplified_diffs = l_diffs then
+					generate_override (l_filter, l_diffs, "l_code", 4)
+				else
+					generate_override (l_filter, l_simplified_diffs, "Result.natural_32_code", 4)
+				end
+			else
+				create l_filter.make (10)
+				generate_filter (l_filter, l_titles, to_title_table_name, 4, True)
+			end
+			l_class.replace_substring_all (to_title_helper_marker, l_filter)
+
+			create l_filter.make (10)
+			generate_filter (l_filter, l_properties, property_table_name, 3, False)
+			l_class.replace_substring_all (property_helper_marker, l_filter)
+			l_output.put_string (l_class)
+
+			l_output.close
 		end
 
 	extract_case_ranges (

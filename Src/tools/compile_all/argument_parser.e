@@ -54,7 +54,7 @@ feature {NONE} -- Access
 			Result.append ((create {EIFFEL_CONSTANTS}).two_digit_minimum_minor_version)
 		end
 
-	copyright: STRING_32 = "Copyright Eiffel Software 2006-2016. All Rights Reserved."
+	copyright: STRING_32 = "Copyright Eiffel Software 2006-2017. All Rights Reserved."
 			-- <Precursor>
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
@@ -453,7 +453,7 @@ feature {NONE} -- Switch names
 	;
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

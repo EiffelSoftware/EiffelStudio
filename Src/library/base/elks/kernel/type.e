@@ -43,8 +43,8 @@ convert
 		--    generating_type: STRING
 		-- becomes:
 		--    generating_type: TYPE [like Current]
-	to_string_8: {STRING_8, STRING_GENERAL, READABLE_STRING_GENERAL, READABLE_STRING_8},
-	to_string_32: {STRING_32, READABLE_STRING_32}
+	to_string_8: {STRING_8, READABLE_STRING_8},
+	to_string_32: {STRING_32, READABLE_STRING_32, STRING_GENERAL, READABLE_STRING_GENERAL}
 
 feature -- Access
 
@@ -317,11 +317,11 @@ feature -- Features from STRING needed here for the transition period (see conve
 feature {NONE} -- Implementation: Access
 
 	internal_name_32: detachable IMMUTABLE_STRING_32
-			-- Storage for once per object `name'.
+			-- Storage for once per object `name_32`.
 		note option: stable, transient attribute end
 
 	internal_name: detachable IMMUTABLE_STRING_8
-			-- Storage for once per object `name'.
+			-- Storage for once per object `name`.
 		note option: stable, transient attribute end
 
 feature {NONE} -- Implementation
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 
 note
 	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

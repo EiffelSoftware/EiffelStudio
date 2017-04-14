@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		An event list service {EVENT_LIST_S} tool to show all errors and warning event items in a single list in the EiffelStudio UI
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	ES_ERROR_LIST_TOOL_PANEL
@@ -370,7 +370,7 @@ feature {NONE} -- Query
 		require
 			a_row_attached: a_row /= Void
 			not_a_row_is_destroyed: not a_row.is_destroyed
-			a_row_data_set: ({EVENT_LIST_ITEM_I}) #? a_row.data /= Void
+			a_row_data_set: attached {EVENT_LIST_ITEM_I} a_row.data
 		local
 			l_event_item: EVENT_LIST_ITEM_I
 			l_error: ERROR
@@ -883,7 +883,7 @@ feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation
 							Result := is_error_event (a_item) and then
 								(event_context_stone (a_item) /= Void or
 									-- C compiler errors have not context stone so we need to account for this.
-								({C_COMPILER_ERROR}) #? a_item.data /= Void)
+								attached {C_COMPILER_ERROR} a_item.data)
 						end)
 				end
 			end
@@ -901,7 +901,7 @@ feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation
 							Result := is_error_event (a_item) and then
 								(event_context_stone (a_item) /= Void or
 									-- C compiler errors have not context stone so we need to account for this.
-								({C_COMPILER_ERROR}) #? a_item.data /= Void)
+								attached {C_COMPILER_ERROR} a_item.data)
 						end)
 				end
 			end

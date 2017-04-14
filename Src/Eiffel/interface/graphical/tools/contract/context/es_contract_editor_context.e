@@ -131,7 +131,7 @@ feature {NONE} -- Status report
 		do
 			Result := attached {G} a_stone as l_g
 		ensure then
-			is_class_stone: Result implies ({detachable G}) #? a_stone /= Void
+			is_class_stone: Result implies attached {G} a_stone
 		end
 
 feature -- Query
@@ -253,7 +253,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -239,7 +239,7 @@ feature {NONE} -- Factory
 			a_lines_attached: a_lines /= Void
 			a_item_attached: a_item /= Void
 			a_item_is_parented: a_item.is_parented
-			a_item_data_unattached_or_is_tool_tip: a_item.data = Void or else (({EB_EDITOR_TOKEN_TOOLTIP}) #? a_item.data) /= Void
+			a_item_data_unattached_or_is_tool_tip: a_item.data = Void or else attached {EB_EDITOR_TOKEN_TOOLTIP} a_item.data
 		local
 			l_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 		do
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

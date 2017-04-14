@@ -1,11 +1,8 @@
-note
-
-	description:
-		"Non-deterministic finite state automata"
-	legal: "See notice at end of class.";
-
-	status: "See notice at end of class.";
-	date: "$Date$";
+﻿note
+	description: "Non-deterministic finite state automata"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class NDFA inherit
@@ -129,7 +126,6 @@ feature -- Transformation
 						else
 							old_move := set
 							e_set := epsilon_closure (set)
-							check e_set_attached: e_set /= Void end
 							search_in_tree (e_set)
 							if new_set then
 								dstates.set_state
@@ -239,12 +235,12 @@ feature {NONE} -- Implementation
 			-- Change the value of "set_position" and set it
 			-- to the position of set in sets_list.
 		require
-			set_no_void: set /= Void;
+			set_no_void: set /= Void
 			set_no_empty: not set.is_empty
 			set_tree_attached: set_tree /= Void
 		local
 			index, last_index: INTEGER;
-			current_tree, new_tree, child: detachable FIXED_TREE [INTEGER]
+			current_tree, child: detachable FIXED_TREE [INTEGER]
 		do
 			debug ("lex_output")
 				set.print
@@ -269,8 +265,8 @@ feature {NONE} -- Implementation
 					current_tree.child_go_i_th (index)
 					child := current_tree.child
 					if child /= Void and then child.arity = 0 then
-						create new_tree.make_filled (nb_states, 0)
-						current_tree.replace_child (new_tree)
+						current_tree.replace_child
+							(create {FIXED_TREE [INTEGER]}.make_filled (nb_states, 0))
 					end
 					current_tree := current_tree.child
 					index := set.next (index)
@@ -320,7 +316,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

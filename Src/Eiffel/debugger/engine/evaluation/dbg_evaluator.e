@@ -1,13 +1,12 @@
-note
+﻿note
 	description : "Objects used to evaluate concrete feature ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
-deferred
-class
+deferred class
 	DBG_EVALUATOR
 
 inherit
@@ -485,7 +484,7 @@ feature -- Concrete evaluation
 				l_addr := a_target.value_address
 			end
 			debug ("debugger_trace_eval")
-				print (generating_type + ".evaluate_routine :%N")
+				localized_print (generating_type.name_32 + {STRING_32} ".evaluate_routine :%N")
 				print ("%Taddr="); print (l_addr.output); print ("%N")
 				if a_target /= Void then
 					print ("%Ttarget=not Void : [")
@@ -735,7 +734,7 @@ invariant
 	dbg_handler_attached: dbg_error_handler /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -391,7 +391,11 @@ feature -- Basic operation
 		do
 			if attached path_details (fn.name) as l_info then
 				l_rn := root_directory.name
-				l_rn.replace_substring_all ("\", "/")
+				if {PLATFORM}.is_windows then
+					l_rn.replace_substring_all ("/", "\")
+				else
+					l_rn.replace_substring_all ("\", "/")
+				end
 
 				create f.make_with_path (fn)
 				debug
@@ -1058,7 +1062,7 @@ feature {NONE} -- Path manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -346,7 +346,7 @@ feature -- Helper
 	is_request_method (m: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `m' the Current request_method?
 		do
-			Result := request_method.is_case_insensitive_equal (m.as_string_8)
+			Result := m.is_case_insensitive_equal (request_method)
 		end
 
 	is_put_request_method: BOOLEAN
@@ -691,7 +691,7 @@ feature -- Access: CGI Meta variables
 		do
 			meta_variables_table.force (new_string_value (a_name, a_value), a_name)
 		ensure
-			param_set: attached {WSF_STRING} meta_variable (a_name) as val and then val.url_encoded_value.same_string (a_value)
+			param_set: attached {WSF_STRING} meta_variable (a_name) as val and then a_value.same_string_general (val.url_encoded_value)
 		end
 
 	unset_meta_variable (a_name: READABLE_STRING_GENERAL)
@@ -2110,7 +2110,7 @@ invariant
 	wgi_request.content_type /= Void implies content_type /= Void
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -12,8 +12,6 @@ inherit
 feature {NONE} -- Initialization
 
 	make (a_location: PATH)
-		local
-			d: DIRECTORY
 		do
 			location := a_location
 			ensure_directory_exists (a_location)
@@ -67,7 +65,6 @@ feature -- Access
 
 	save (a_entry_type: TYPE [detachable ANY]; a_entry: detachable ANY; cl_entry_id: CELL [detachable READABLE_STRING_GENERAL])
 		local
-			f: RAW_FILE
 			l_id: detachable READABLE_STRING_GENERAL
 			p: PATH
 		do

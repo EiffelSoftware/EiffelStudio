@@ -89,10 +89,10 @@ feature -- Basic operation
 			create ret.make_from_string (return_url)
 			create tb.make (5)
 			if attached values as q_lst then
-				if attached item_by_name ("openid.claimed_id", q_lst) as q_claimed_id then
-					l_claimed_id := q_claimed_id.as_string_8
-				elseif attached item_by_name ("openid.identity", q_lst) as l_id then
-					l_claimed_id := l_id
+				if attached item_by_name ("openid.claimed_id", q_lst) as q_claimed_id and then q_claimed_id.is_valid_as_string_8 then
+					l_claimed_id := q_claimed_id.to_string_8
+				elseif attached item_by_name ("openid.identity", q_lst) as l_id and then l_id.is_valid_as_string_8 then
+					l_claimed_id := l_id.to_string_8
 				end
 				identity := l_claimed_id
 				tb.force (item_by_name ("openid.assoc_handle", q_lst), "openid.assoc_handle")
@@ -117,7 +117,7 @@ feature -- Basic operation
 
 				if
 					attached item_by_name ("openid.return_to", q_lst) as q_return_to and then
-					not return_url.same_string (q_return_to)
+					not return_url.same_string_general (q_return_to)
 				then
 					-- The return_to url must match the url of current request.
 					-- I'm assuing that noone will set the returnUrl to something that doesn't make sense.
@@ -217,7 +217,7 @@ feature -- Basic operation
 							if s.same_string ({STRING_32} "ns.ax") and v.same_string ({STRING_32} "http://openid.net/srv/ax/1.0") then
 								l_alias := "ax."
 							else
-								if v.same_string ("http://openid.net/srv/ax/1.0") then
+								if v.same_string_general ("http://openid.net/srv/ax/1.0") then
 									l_alias := s.substring (("ns.").count + 1, s.count).to_string_8 + "."
 								end
 							end
@@ -235,8 +235,8 @@ feature -- Basic operation
 					loop
 						s := c.item
 						if
-							s.starts_with (k_value)
-							or s.starts_with (k_type)
+							s.starts_with_general (k_value)
+							or s.starts_with_general (k_type)
 						then
 							ax_keys.force ("openid." + s)
 						end
@@ -251,17 +251,17 @@ feature -- Basic operation
 					loop
 						s := c.item
 						if attached item_by_name (s, lst) as v then
-							if s.starts_with (k_value) then
+							if s.starts_with_general (k_value) then
 								k := s.substring (k_value.count + 1, s.count)
 								i := k.index_of ('.', 1)
 								if i > 1 then
 									k.keep_head (i - 1)
 								end
 								if attached item_by_name (k_type + k, lst) as l_type then
-									if l_type.starts_with ("http://axschema.org/") then
+									if l_type.starts_with_general ("http://axschema.org/") then
 										check ("http://axschema.org/").count = 20 end
 										attributes.force (v, l_type.substring (21, l_type.count))
-									elseif l_type.starts_with ("http://schema.openid.net/") then
+									elseif l_type.starts_with_general ("http://schema.openid.net/") then
 										check ("http://schema.openid.net/").count = 25 end
 										attributes.force (v, l_type.substring (26, l_type.count))
 									else

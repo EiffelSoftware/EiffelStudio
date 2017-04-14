@@ -10,17 +10,19 @@ class
 inherit
 	WSF_FORM_SELECTABLE_ITEM
 
+	SHARED_HTML_ENCODER
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_value: like value; a_text: detachable like text)
+	make (a_value: READABLE_STRING_GENERAL; a_text: detachable like text)
 			-- Initialize `Current'.
 		do
-			value := a_value
+			value := a_value.as_string_32
 			if a_text = Void then
-				text := a_value
+				text := html_encoder.general_encoded_string (a_value)
 			else
 				text := a_text
 			end
@@ -30,9 +32,9 @@ feature -- Status
 
 	is_selected: BOOLEAN
 
-	is_same_value (v: READABLE_STRING_32): BOOLEAN
+	is_same_value (v: READABLE_STRING_GENERAL): BOOLEAN
 		do
-			Result := value.same_string (v)
+			Result := value.same_string_general (v)
 		end
 
 	is_same_text (v: like text): BOOLEAN

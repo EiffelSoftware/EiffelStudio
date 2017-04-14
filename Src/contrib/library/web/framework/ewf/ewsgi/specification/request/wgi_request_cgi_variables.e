@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 		require
 			a_value_not_is_empty: a_value /= Void
 		do
-			a_output.append (a_name)
+			a_output.append_string_general (a_name)
 			a_output.append_character ('=')
 			a_output.append_string_general (a_value)
 			a_output.append_character ('%N')
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 	append_variable_to_debug_output (a_name: READABLE_STRING_8; a_value: detachable READABLE_STRING_GENERAL; a_output: STRING_32)
 		do
 			if a_value /= Void then
-				a_output.append (a_name)
+				a_output.append_string_general (a_name)
 				a_output.append_character ('=')
 				a_output.append_string_general (a_value)
 				a_output.append_character ('%N')
@@ -354,7 +354,7 @@ invariant
 	request_method_set: not request_method.is_empty
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

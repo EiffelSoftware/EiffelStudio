@@ -70,7 +70,7 @@ feature -- Query
 			end
 		end
 
-	string_representation: STRING_32
+	string_representation: READABLE_STRING_32
 			-- String representation of Current
 			-- if possible
 			-- note: unicode value.
@@ -89,7 +89,7 @@ feature -- Helper
 			result_true_only_for_string: Result implies is_string
 		end
 
-	is_case_insensitive_equal (a_other: READABLE_STRING_8): BOOLEAN
+	is_case_insensitive_equal (a_other: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `a_other' represent the same case insensitive string as `Current'?
 		do
 			if is_string then
@@ -130,7 +130,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

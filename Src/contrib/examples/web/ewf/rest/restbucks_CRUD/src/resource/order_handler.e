@@ -334,7 +334,6 @@ feature {NONE} -- Conversion
 
 	order_to_json (obj: ORDER): JSON_OBJECT
 		local
-			j_order: JSON_OBJECT
 			j_item: JSON_OBJECT
 			ja: JSON_ARRAY
 		do

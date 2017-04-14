@@ -12,7 +12,7 @@ feature -- Status report
 		deferred
 		end
 
-	is_same_value (v: READABLE_STRING_32): BOOLEAN
+	is_same_value (v: READABLE_STRING_GENERAL): BOOLEAN
 		deferred
 		end
 

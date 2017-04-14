@@ -158,7 +158,7 @@ feature -- Access
 		deferred
 		end
 
-	matching_etag (req: WSF_REQUEST; a_etag: READABLE_STRING_32; a_strong: BOOLEAN): BOOLEAN
+	matching_etag (req: WSF_REQUEST; a_etag: READABLE_STRING_GENERAL; a_strong: BOOLEAN): BOOLEAN
 			-- Is `a_etag' a match for resource requested in `req'?
 			-- If `a_strong' then the strong comparison function must be used.
 		require

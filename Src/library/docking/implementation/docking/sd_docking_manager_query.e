@@ -79,13 +79,11 @@ feature -- Querys
 			-- {SD_CONTENT} under mouse pointer
 			-- Result void if not found
 		local
-			l_widget: detachable EV_WIDGET
-			l_screen: EV_SCREEN
+			l_widget: EV_WIDGET
 			l_zones: ARRAYED_LIST [SD_ZONE]
 			l_item: SD_ZONE
 		do
-			create l_screen
-			l_widget := l_screen.widget_at_mouse_pointer
+			l_widget := (create {EV_SCREEN}).widget_at_mouse_pointer
 			if l_widget /= Void then
 				from
 					l_zones := docking_manager.zones.zones
@@ -135,7 +133,6 @@ feature -- Querys
 			a_unique_title_not_void: a_unique_title /= Void
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_callback: detachable FUNCTION [READABLE_STRING_GENERAL, SD_CONTENT]
 		do
 			from
 				l_contents := docking_manager.contents
@@ -156,13 +153,13 @@ feature -- Querys
 				l_contents.forth
 			end
 
-			if Result = Void then
-					-- Try a registed callback on the docking manager
-				l_callback := docking_manager.restoration_callback
-				if l_callback /= Void then
-						-- Check callback
-					Result := l_callback.item ([a_unique_title])
-				end
+			if
+				not attached Result and then
+				attached docking_manager.restoration_callback as l_callback
+			then
+					-- Try a registed callback on the docking manager.
+					-- Check callback.
+				Result := l_callback (a_unique_title)
 			end
 
 			if Result = Void then
@@ -178,16 +175,11 @@ feature -- Querys
 			-- SD_MULTI_DOCK_AREA which has `a_widget'
 		require
 			a_zone_not_void: a_widget /= Void
-		local
-			l_result: detachable like inner_container_by_widget
 		do
-			l_result := internal_inner_container (a_widget)
-
-			if l_result = Void then
-				l_result := inner_container_main
+			Result := internal_inner_container (a_widget)
+			if not attached Result then
+				Result := inner_container_main
 			end
-
-			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
@@ -196,20 +188,13 @@ feature -- Querys
 			-- SD_MULTI_DOCK_AREA which has `a_zone'
 		require
 			a_zone_not_void: a_zone /= Void
-		local
-			l_result: detachable like inner_container
 		do
 			if attached {EV_WIDGET} a_zone as lt_widget then
-				l_result := internal_inner_container (lt_widget)
-			else
-				check not_possible: False end
+				Result := internal_inner_container (lt_widget)
 			end
-
-			if l_result = Void then
-				l_result := inner_container_main
+			if not attached Result then
+				Result := inner_container_main
 			end
-			check l_result /= Void end -- Implied by previous if clause
-			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
@@ -223,7 +208,7 @@ feature -- Querys
 			if attached {EV_WIDGET} a_zone as lt_widget then
 				Result := internal_inner_container (lt_widget)
 				if Result = Void then
-					-- Maybe `a_zone' is hidden, because there is a zone maximized in that dock area.
+						-- Maybe `a_zone' is hidden, because there is a zone maximized in that dock area.
 					Result := maximized_inner_container (lt_widget)
 				end
 				if Result = Void then
@@ -385,14 +370,11 @@ feature -- Querys
 		end
 
 	find_window_by_zone (a_zone: SD_ZONE): EV_WINDOW
-			-- Find a window which can lock_update
+			-- Find a window which can lock_update.
 		require
 			a_zone_not_void: a_zone /= Void
-		local
-			l_main_container: SD_MULTI_DOCK_AREA
 		do
-			l_main_container := docking_manager.query.inner_container (a_zone)
-			Result := l_main_container.parent_floating_zone
+			Result := docking_manager.query.inner_container (a_zone).parent_floating_zone
 			if not attached Result then
 				Result := docking_manager.main_window
 			end
@@ -561,7 +543,7 @@ feature -- Querys
 				end
 				l_zones.forth
 			end
-			if not (l_count = 1) then
+			if l_count /= 1 then
 				Result := Void
 			end
 		ensure
@@ -596,10 +578,10 @@ feature -- Querys
 			l_tool, l_editor: BOOLEAN
 		do
 			if a_caller.child_zone_count = 1 and then a_caller.content /= Void then
-				if (a_caller.content.type = {SD_ENUMERATION}.tool and not docking_manager.is_locked) then
+				if a_caller.content.type = {SD_ENUMERATION}.tool and not docking_manager.is_locked then
 					l_tool := True
 				end
-				if (a_caller.content.type = {SD_ENUMERATION}.editor and not docking_manager.is_editor_locked) then
+				if a_caller.content.type = {SD_ENUMERATION}.editor and not docking_manager.is_editor_locked then
 					l_editor := True
 				end
 			end
@@ -618,16 +600,11 @@ feature -- Querys
 			-- If `a_widget' in main window?
 		do
 			if attached {EV_WIDGET} a_tool_bar as lt_widget then
-				Result := docking_manager.tool_bar_container.top.has_recursive (lt_widget)
-				if not Result then
-					Result := docking_manager.tool_bar_container.bottom.has_recursive (lt_widget)
-				end
-				if not Result then
-					Result := docking_manager.tool_bar_container.left.has_recursive (lt_widget)
-				end
-				if not Result then
-					Result := docking_manager.tool_bar_container.right.has_recursive (lt_widget)
-				end
+				Result :=
+					docking_manager.tool_bar_container.top.has_recursive (lt_widget) or else
+					docking_manager.tool_bar_container.bottom.has_recursive (lt_widget) or else
+					docking_manager.tool_bar_container.left.has_recursive (lt_widget) or else
+					docking_manager.tool_bar_container.right.has_recursive (lt_widget)
 			else
 				check not_possible: False end
 			end
@@ -635,15 +612,12 @@ feature -- Querys
 
 	restore_whole_editor_area_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- When whole editor area restored automatically, actions will be invoked
-		local
-			l_actions: like internal_restore_whole_editor_area_actions
 		do
-			l_actions := internal_restore_whole_editor_area_actions
-			if l_actions = Void then
-				create l_actions
-				internal_restore_whole_editor_area_actions := l_actions
+			Result := internal_restore_whole_editor_area_actions
+			if not attached Result then
+				create Result
+				internal_restore_whole_editor_area_actions := Result
 			end
-			Result := l_actions
 		ensure
 			not_void: Result /= Void
 		end
@@ -652,16 +626,13 @@ feature -- Querys
 			-- When whole editor area restored automatically, actions will be invoked
 
 	restore_whole_editor_area_for_minimized_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- When whole editor area restored automatically for minimized editor area, actions will be invoked
-		local
-			l_actions: like internal_restore_whole_editor_area_for_minimized_actions
+			-- When whole editor area restored automatically for minimized editor area, actions will be invoked.
 		do
-			l_actions := internal_restore_whole_editor_area_for_minimized_actions
-			if l_actions = Void then
-				create l_actions
-				internal_restore_whole_editor_area_for_minimized_actions := l_actions
+			Result := internal_restore_whole_editor_area_for_minimized_actions
+			if not attached Result then
+				create Result
+				internal_restore_whole_editor_area_for_minimized_actions := Result
 			end
-			Result := l_actions
 		ensure
 			not_void: Result /= Void
 		end

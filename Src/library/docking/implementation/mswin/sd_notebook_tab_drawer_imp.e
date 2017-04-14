@@ -175,8 +175,6 @@ feature{NONE} -- Implementation
 
 	draw_xp_selected_tab (a_bitmap_dc: WEL_DC; a_bitmap: WEL_BITMAP; a_info: SD_NOTEBOOK_TAB_INFO; a_wel_rect: WEL_RECT; a_brush: WEL_BRUSH)
 			-- Use theme manager to draw selected tab
-		local
-			l_helper: WEL_BITMAP_HELPER
 		do
 			if a_info.is_tab_before then
 				if a_info.is_tab_after then
@@ -198,9 +196,8 @@ feature{NONE} -- Implementation
 
 			if not is_top_side_tab then
 				a_bitmap_dc.unselect_bitmap
-				-- We need to mirror bitmaps, because Windows XP theme manager only support draw top tabs
-				create l_helper
-				l_helper.mirror_image (a_bitmap)
+					-- We need to mirror bitmaps, because Windows XP theme manager only support draw top tabs.
+				;(create {WEL_BITMAP_HELPER}).mirror_image (a_bitmap)
 				a_bitmap_dc.select_bitmap (a_bitmap)
 			end
 		end
@@ -366,7 +363,6 @@ feature{NONE} -- Implementation
 
 			l_wel_rect: WEL_RECT
 			l_brush: WEL_BRUSH
-			l_helper: WEL_BITMAP_HELPER
 			l_buffer_pixmap: like buffer_pixmap
 		do
 			start_draw
@@ -395,8 +391,7 @@ feature{NONE} -- Implementation
 						if theme_data /= default_pointer and then not is_top_side_tab then
 							-- We need to mirror bitmaps, because Windows XP theme manager only support draw top tabs
 							l_buffer_dc.unselect_bitmap
-							create l_helper
-							l_helper.mirror_image (l_buffer_bitmap)
+							;(create {WEL_BITMAP_HELPER}).mirror_image (l_buffer_bitmap)
 							l_buffer_dc.select_bitmap (l_buffer_bitmap)
 						end
 					else
@@ -491,30 +486,29 @@ feature{NONE} -- Implementation
 	draw_close_button (a_drawable: EV_DRAWABLE; a_close_pixmap: EV_PIXMAP)
 			-- <Precursor>
 		local
-			l_brush: WEL_BRUSH
 			l_rect: WEL_RECT
 			l_vision_rect: EV_RECTANGLE
 		do
-			if (tab.is_hot or tab.is_selected)and is_top_side_tab then
+			if (tab.is_hot or tab.is_selected) and is_top_side_tab then
 				if attached {EV_PIXMAP_IMP_DRAWABLE} a_drawable.implementation as l_imp then
-					create l_brush.make_solid (l_imp.dc.background_color)
 					l_vision_rect := close_rectangle
 
 					create l_rect.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right, l_vision_rect.bottom)
 
-					-- Draw hot state background
-					if tab.is_pointer_in_close_area then
-						if attached tool_bar_drawer_imp as l_tool_bar_drawer_imp then
-							if tab.is_pointer_pressed then
-								l_tool_bar_drawer_imp.draw_button_background (l_imp.dc, l_rect, {SD_TOOL_BAR_ITEM_STATE}.pressed, {WEL_THEME_PART_CONSTANTS}.tp_button)
-							else
-								l_tool_bar_drawer_imp.draw_button_background (l_imp.dc, l_rect, {SD_TOOL_BAR_ITEM_STATE}.hot, {WEL_THEME_PART_CONSTANTS}.tp_button)
-							end
+						-- Draw hot state background.
+					if
+						tab.is_pointer_in_close_area and then
+						attached tool_bar_drawer_imp as l_tool_bar_drawer_imp
+					then
+						if tab.is_pointer_pressed then
+							l_tool_bar_drawer_imp.draw_button_background (l_imp.dc, l_rect, {SD_TOOL_BAR_ITEM_STATE}.pressed, {WEL_THEME_PART_CONSTANTS}.tp_button)
+						else
+							l_tool_bar_drawer_imp.draw_button_background (l_imp.dc, l_rect, {SD_TOOL_BAR_ITEM_STATE}.hot, {WEL_THEME_PART_CONSTANTS}.tp_button)
 						end
 					end
 				end
 
-				-- We draw close button
+					-- We draw close button.
 				if tab.is_pointer_pressed and tab.is_pointer_in_close_area then
 					a_drawable.draw_pixmap (start_x_close + 1, start_y_close, a_close_pixmap)
 				else
@@ -525,12 +519,9 @@ feature{NONE} -- Implementation
 
 	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER)
 			-- <Precursor>
-		local
-			l_font: EV_FONT
 		do
 			a_pixmap.set_foreground_color (internal_shared.tab_text_color)
-			l_font := internal_shared.tool_bar_font
-			a_pixmap.set_font (l_font)
+			a_pixmap.set_font (internal_shared.tool_bar_font)
 			if is_top_side_tab then
 				-- Draw pixmap
 				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
@@ -620,7 +611,7 @@ feature {NONE} -- Attributes
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

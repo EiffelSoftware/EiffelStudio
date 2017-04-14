@@ -41,6 +41,7 @@ inherit
 			{SD_DOCKING_STATE, SD_STATE_VOID} set_width, set_height
 			{SD_DOCKING_MANAGER_COMMAND} hide
 			{SD_HOT_ZONE} set_pointer_style_for_border
+			{SD_WIDGET_CLEANER} destroy
 		redefine
 			hide,
 			screen_y,
@@ -565,13 +566,12 @@ feature {NONE} -- Agents
 		end
 
 	on_close
-			-- Handle close request
+			-- Handle close request.
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
 			z: SD_ZONE
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
-			create l_zones.make (1)
 			l_zones := all_zones
 			from
 				l_zones.start

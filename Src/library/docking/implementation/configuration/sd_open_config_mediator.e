@@ -177,9 +177,9 @@ feature -- Open inner container data
 feature -- Obsolete
 
 	open_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
-			-- Open all docking library data from `a_file'
+			-- Open all docking library data from `a_file'.
 		obsolete
-			"Use open_config_with_path instead"
+			"Use open_config_with_path instead. [2017-05-31]"
 		require
 			a_file_not_void: a_file /= Void
 		do
@@ -187,9 +187,9 @@ feature -- Obsolete
 		end
 
 	open_editors_config (a_file: READABLE_STRING_GENERAL)
-			-- Open main window eidtor config data
+			-- Open main window eidtor config data.
 		obsolete
-			"Use open_editors_config_with_path instead"
+			"Use open_editors_config_with_path instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 		do
@@ -197,10 +197,10 @@ feature -- Obsolete
 		end
 
 	open_tools_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
-			-- Open tools config, except all editors
+			-- Open tools config, except all editors.
 			-- Not same as normal `open_config', it doesn't clear editors related things.
 		obsolete
-			"Use open_tools_config_with_path instead"
+			"Use open_tools_config_with_path instead. [2017-05-31]"
 		do
 			Result := open_tools_config_with_path (create {PATH}.make_from_string (a_file))
 		end
@@ -208,7 +208,7 @@ feature -- Obsolete
 	open_maximized_tool_data (a_file: READABLE_STRING_GENERAL)
 			-- Open maximized tool data.
 		obsolete
-			"Use open_maximized_tool_data_with_path instead"
+			"Use open_maximized_tool_data_with_path instead. [2017-05-31]"
 		require
 			a_file_not_void: a_file /= Void
 		do
@@ -218,7 +218,7 @@ feature -- Obsolete
 	open_tool_bar_item_data (a_file: READABLE_STRING_GENERAL)
 			-- Restore SD_TOOL_BAR_RESIZABLE_ITEM's width.
 		obsolete
-			"Use open_tool_bar_item_data_with_path instead"
+			"Use open_tool_bar_item_data_with_path instead. [2017-05-31]"
 		require
 			a_file_not_void: a_file /= Void
 		do
@@ -264,7 +264,7 @@ feature -- Query
 	config_data_from_file (a_file: READABLE_STRING_GENERAL): detachable SD_CONFIG_DATA
 			-- Config data readed from `a_file'
 		obsolete
-			"Use config_data_from_path instead"
+			"Use config_data_from_path instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 		do
@@ -879,6 +879,7 @@ feature {NONE} -- Implementation
 			l_tool_bar_zone: SD_TOOL_BAR_ZONE
 			l_string: READABLE_STRING_GENERAL
 			l_tool_bar_manager: like internal_docking_manager.tool_bar_manager
+			l_state: SD_TOOL_BAR_ZONE_STATE
 		do
 			l_tool_bar_manager := internal_docking_manager.tool_bar_manager
 			l_tool_bar_container := l_tool_bar_manager.tool_bar_container (a_direction)
@@ -909,28 +910,25 @@ feature {NONE} -- Implementation
 					l_content.set_visible (True)
 					create l_tool_bar_zone.make (False, False, l_content, internal_docking_manager)
 
-					if attached {SD_TOOL_BAR_ZONE_STATE} l_row_item.state as l_state then
-						l_tool_bar_zone.assistant.set_last_state (l_state)
+					l_state := l_row_item.state
+					l_tool_bar_zone.assistant.set_last_state (l_state)
 
-						if l_state.items_layout /= Void then
-							l_tool_bar_zone.assistant.open_items_layout
-						end
-
-						-- Use this function to set all SD_TOOL_BAR_ITEM wrap states.
-						l_tool_bar_zone.change_direction (True)
-
-						l_tool_bar_row.extend (l_tool_bar_zone)
-						l_tool_bar_row.record_state
-						if attached {EV_WIDGET} l_tool_bar_zone.tool_bar as lt_widget then
-							l_tool_bar_row.set_item_position_relative (lt_widget, l_row_item.pos)
-						else
-							check not_possible: False end
-						end
-
-						l_tool_bar_zone.assistant.record_docking_state
-					else
-						check False end -- Implied by row item state must be {SD_TOOL_BAR_ZONE_STATE}
+					if l_state.items_layout /= Void then
+						l_tool_bar_zone.assistant.open_items_layout
 					end
+
+					-- Use this function to set all SD_TOOL_BAR_ITEM wrap states.
+					l_tool_bar_zone.change_direction (True)
+
+					l_tool_bar_row.extend (l_tool_bar_zone)
+					l_tool_bar_row.record_state
+					if attached {EV_WIDGET} l_tool_bar_zone.tool_bar as lt_widget then
+						l_tool_bar_row.set_item_position_relative (lt_widget, l_row_item.pos)
+					else
+						check not_possible: False end
+					end
+
+					l_tool_bar_zone.assistant.record_docking_state
 
 					l_row.forth
 				end

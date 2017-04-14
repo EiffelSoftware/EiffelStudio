@@ -137,25 +137,14 @@ feature -- Menu
 			-- Right click menu for editor tab area
 		require
 			not_void: a_notebook /= Void
-		local
-			l_items: SD_ZONE_MANAGEMENT_MENU
-			l_shared: SD_SHARED
-			l_content: detachable SD_CONTENT
-			l_agent: detachable FUNCTION [SD_CONTENT, ARRAYED_LIST [EV_MENU_ITEM]]
 		do
 			create Result
 
-			create l_items.make (a_notebook)
-			Result.append (l_items.items)
+			Result.append ((create {SD_ZONE_MANAGEMENT_MENU}.make (a_notebook)).items)
 
-			create l_shared
-			l_agent := l_shared.notebook_tab_area_menu_items_agent
-			if l_agent /= Void then
-				l_content := a_notebook.selected_item
-				if l_content /= Void then
-					if attached l_agent.item ([l_content]) as l_result then
-						Result.append (l_result)
-					end
+			if attached (create {SD_SHARED}).notebook_tab_area_menu_items_agent as l_agent then
+				if attached a_notebook.selected_item as l_content then
+					Result.append (l_agent (l_content))
 				end
 			elseif not notebook_tab_area_menu_items.is_empty then
 				notebook_tab_area_menu_items.do_all (agent (a_item: EV_MENU_ITEM)
@@ -173,7 +162,6 @@ feature -- Menu
 	title_area_menu: EV_MENU
 			-- Right click menu for {SD_CONTENT}'s title bar area
 		local
-			l_content: SD_CONTENT
 			l_shared: SD_SHARED
 			l_zone: detachable SD_ZONE
 		do
@@ -182,8 +170,7 @@ feature -- Menu
 			if attached l_shared.title_bar_area_menu_items_agent as l_agent then
 				l_zone := zone_under_pointer_of_all_managers
 				if l_zone /= Void and then l_zone.has_content then
-					l_content := l_zone.content
-					Result.append (l_agent.item ([l_content]))
+					Result.append (l_agent (l_zone.content))
 				end
 			elseif not title_bar_area_menu_items.is_empty then
 				title_bar_area_menu_items.do_all (agent (a_item: EV_MENU_ITEM)
@@ -199,37 +186,31 @@ feature -- Menu
 feature {NONE} -- Implementation
 
 	zone_under_pointer_of_all_managers: detachable SD_ZONE
-			-- Find {SD_ZONE} under current pointer position
+			-- Find {SD_ZONE} under current pointer position.
 		local
 			l_list: ARRAYED_LIST [SD_DOCKING_MANAGER]
-			l_item: SD_DOCKING_MANAGER
-			l_shared: SD_SHARED
 		do
 			from
-				create l_shared
-				l_list := l_shared.docking_manager_list
+				l_list := (create {SD_SHARED}).docking_manager_list
 				l_list.start
 			until
 				l_list.after or Result /= Void
 			loop
-				l_item := l_list.item
-
-				Result := l_item.query.zone_under_pointer
-
+				Result := l_list.item.query.zone_under_pointer
 				l_list.forth
 			end
 		end
 
 	internal_style: INTEGER
-			-- One value from style enumeration
+			-- One value from style enumeration.
 
 feature -- Enumeration
 
 	style_all_same: INTEGER = 1
-			-- Look and feel which all the same
+			-- Look and feel which all the same.
 
 	style_different: INTEGER = 2;
-			-- Look and feel which different
+			-- Look and feel which different.
 
 invariant
 

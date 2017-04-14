@@ -94,14 +94,14 @@ feature {NONE} -- Initialization
 			-- `a_unique_title' is the unique title for Current	
 		require
 			a_widget_not_void: a_widget /= Void
-		local
-			l_stock: EV_STOCK_PIXMAPS
+		-- local
+			-- TODO: l_stock: EV_STOCK_PIXMAPS
 		do
 			create internal_shared
-			create l_stock
+			-- TODO: create l_stock
 			make_tool_with_original_widget_title_pixmap (a_widget,
 			create {EV_PIXMAP},
---TODO			l_stock.default_window_icon,
+			--TODO			l_stock.default_window_icon,
 			a_unique_title, a_docking_manager)
 		ensure
 			internal_type = {SD_ENUMERATION}.tool

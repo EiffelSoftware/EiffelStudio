@@ -1,7 +1,5 @@
 ﻿note
-	description: "[
-		SD_HOT_ZONE with an attached content.
-	]"
+	description: "SD_HOT_ZONE with an attached content."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -152,53 +150,43 @@ feature {NONE} -- Implementation functions
 			a_rect_not_void: a_rect /= Void
 		local
 			l_shared: like internal_shared
-			l_icons: SD_ICONS_SINGLETON
-			l_rect: like internal_rectangle
 			l_top_rect, l_bottom_rect: EV_RECTANGLE
 		do
-			l_rect := a_rect
 			l_shared := internal_shared
-			l_icons := l_shared.icons
-
 			if a_rect = internal_rectangle_left then
-				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle.left, internal_rectangle.top, (internal_rectangle.width* 0.5).ceiling, internal_rectangle.height )
+				l_shared.feedback.draw_transparency_rectangle (internal_rectangle.left, internal_rectangle.top, (internal_rectangle.width* 0.5).ceiling, internal_rectangle.height )
 			elseif a_rect = internal_rectangle_right then
-				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle.right - (internal_rectangle.width * 0.5).ceiling, internal_rectangle.top, (internal_rectangle.width* 0.5).ceiling, internal_rectangle.height )
+				l_shared.feedback.draw_transparency_rectangle (internal_rectangle.right - (internal_rectangle.width * 0.5).ceiling, internal_rectangle.top, (internal_rectangle.width* 0.5).ceiling, internal_rectangle.height )
 			elseif a_rect = internal_rectangle_top then
-				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.top, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
+				l_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.top, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
 			elseif a_rect = internal_rectangle_bottom then
-				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.bottom - (internal_rectangle.height * 0.5).ceiling, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
+				l_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.bottom - (internal_rectangle.height * 0.5).ceiling, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
 			elseif a_rect = internal_rectangle_center or a_rect = internal_rectangle_title_area then
-				create l_top_rect.make (internal_rectangle.left, internal_rectangle.top, internal_rectangle.width, internal_rectangle.height - internal_shared.title_bar_height)
-				create l_bottom_rect.make (internal_rectangle.left + internal_shared.title_bar_height, internal_rectangle.bottom - internal_shared.title_bar_height, internal_shared.title_bar_height * 3, internal_shared.title_bar_height)
-				internal_shared.feedback.draw_transparency_rectangle_for_tab (l_top_rect, l_bottom_rect)
+				create l_top_rect.make (internal_rectangle.left, internal_rectangle.top, internal_rectangle.width, internal_rectangle.height - l_shared.title_bar_height)
+				create l_bottom_rect.make (internal_rectangle.left + l_shared.title_bar_height, internal_rectangle.bottom - l_shared.title_bar_height, l_shared.title_bar_height * 3, l_shared.title_bar_height)
+				l_shared.feedback.draw_transparency_rectangle_for_tab (l_top_rect, l_bottom_rect)
 			end
 		end
 
 	draw_drag_window_indicator (a_screen_x, a_screen_y: INTEGER)
 			-- Draw dragged window feedback which represent window position
 		local
-			l_shared: like internal_shared
 			l_icons: SD_ICONS_SINGLETON
-			l_x, l_y: INTEGER
 		do
-			l_shared := internal_shared
-			l_icons := l_shared.icons
+			l_icons := internal_shared.icons
 			check rect_not_void: internal_rectangle /= Void end
-			l_x := internal_rectangle.left + internal_rectangle.width // 2 - internal_shared.icons.arrow_indicator_center.width // 2
-			l_y := internal_rectangle.top + internal_rectangle.height // 2 - internal_shared.icons.arrow_indicator_center.height // 2
 			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
-				internal_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_center_lightening_up)
+				internal_indicator.set_pixel_buffer (l_icons.arrow_indicator_center_lightening_up)
 			elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
-				internal_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_center_lightening_down)
+				internal_indicator.set_pixel_buffer (l_icons.arrow_indicator_center_lightening_down)
 			elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-				internal_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_center_lightening_left)
+				internal_indicator.set_pixel_buffer (l_icons.arrow_indicator_center_lightening_left)
 			elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
-				internal_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_center_lightening_right)
+				internal_indicator.set_pixel_buffer (l_icons.arrow_indicator_center_lightening_right)
 			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-				internal_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_center_lightening_center)
+				internal_indicator.set_pixel_buffer (l_icons.arrow_indicator_center_lightening_center)
 			else
-				internal_indicator.set_pixel_buffer (internal_shared.icons.arrow_indicator_center)
+				internal_indicator.set_pixel_buffer (l_icons.arrow_indicator_center)
 			end
 		end
 
@@ -234,7 +222,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

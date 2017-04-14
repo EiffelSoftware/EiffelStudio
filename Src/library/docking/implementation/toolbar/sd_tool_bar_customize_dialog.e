@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A dialog box that allows the user to customize a toolbar%
 				  %Call `customize' each time a toolbar must be edited"
 	legal: "See notice at end of class."
@@ -16,14 +16,11 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Creation
 
 	make
 			-- Creation method
-		local
-			l_constants: EV_LAYOUT_CONSTANTS
 		do
-			create l_constants
 			create internal_shared
 			create final_toolbar.make (20)
 
@@ -154,6 +151,8 @@ feature -- Initialization
 			set_default_push_button (ok_button)
 		end
 
+feature -- Initialization
+
 	customize_toolbar (a_parent: EV_WINDOW; text_displayed: BOOLEAN; text_important: BOOLEAN; toolbar: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
 			-- Reload the dialog box with available buttons found in `toolbar'
 			-- and set `is_text_displayed' to `text_displayed'
@@ -193,7 +192,7 @@ feature -- Result
 			if attached {SD_CUSTOMIZABLE_LIST_ITEM} a_stone as an_item then
 				if attached {SD_TOOL_BAR_SEPARATOR} an_item.data as l_separator then
 					Result := True
-				elseif attached {SD_TOOL_BAR_ITEM} an_item.data as l_tool_bar_item and attached all_items as l_all_items then
+				elseif attached an_item.data as l_tool_bar_item and attached all_items as l_all_items then
 					Result := l_all_items.has (l_tool_bar_item)
 				end
 			end
@@ -257,7 +256,7 @@ feature {NONE} -- Button actions
 					-- Copy the content of current_list to final_toolbar
 				cur := current_list.customizable_item
 				if cur /= Void then
-					if attached {SD_TOOL_BAR_ITEM} cur.data as cmd then
+					if attached cur.data as cmd then
 						cmd.enable_displayed
 						final_toolbar.extend (cmd)
 					else
@@ -276,7 +275,7 @@ feature {NONE} -- Button actions
 					-- Copy the content of pool_list to final_toolbar
 				cur := pool_list.customizable_item
 				if cur /= Void then
-					if attached {SD_TOOL_BAR_ITEM} cur.data as cmd then
+					if attached cur.data as cmd then
 						cmd.disable_displayed
 						final_toolbar.extend (cmd)
 					else
@@ -333,7 +332,7 @@ feature {NONE} -- Button actions
 			if sel /= Void then
 				current_list.start
 				current_list.prune (sel)
-				if (not sel.is_separator) then
+				if not sel.is_separator then
 					sel2 := pool_list.customizable_selected_item
 					if  sel2 /= Void then
 						pool_list.start
@@ -389,18 +388,18 @@ feature {NONE} -- Button actions
 feature {NONE} -- Actions performed by agents like graying buttons
 
 	moving: BOOLEAN
-			-- flag set when moving an item up or down to avoid graying buttons unnecessarily
+			-- Flag set when moving an item up or down to avoid graying buttons unnecessarily.
 
 	on_pool_select
-			-- Called when the user clicks the pool list
+			-- Called when the user clicks the pool list.
 		do
-			if (not add_button.is_sensitive) then
+			if not add_button.is_sensitive then
 				add_button.enable_sensitive
 			end
 		end
 
 	on_pool_deselect
-			-- Called when the user deselects an item of the pool list
+			-- Called when the user deselects an item of the pool list.
 		do
 			if add_button.is_sensitive then
 				add_button.disable_sensitive
@@ -410,7 +409,7 @@ feature {NONE} -- Actions performed by agents like graying buttons
 	on_current_select
 			-- Called when the user clicks the current list
 		do
-			if (not remove_button.is_sensitive) then
+			if not remove_button.is_sensitive then
 				remove_button.enable_sensitive
 				up_button.enable_sensitive
 				down_button.enable_sensitive
@@ -542,7 +541,7 @@ feature {NONE} -- Internal data
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -552,6 +551,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-end -- class SD_TOOL_BAR_CUSTOMIZE_DIALOG
+end

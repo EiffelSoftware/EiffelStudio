@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "SD_ZONE that contains mulit SD_CONTENTs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -176,11 +176,8 @@ feature -- Command
 		require
 			not_void: a_content /= Void
 			has: has (a_content)
-		local
-			l_tab: SD_NOTEBOOK_TAB
 		do
-			l_tab := internal_notebook.tab_by_content (a_content)
-			l_tab.set_tool_tip (a_tooltip)
+			internal_notebook.tab_by_content (a_content).set_tool_tip (a_tooltip)
 		end
 
 feature {SD_OPEN_CONFIG_MEDIATOR} -- Save config
@@ -239,10 +236,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

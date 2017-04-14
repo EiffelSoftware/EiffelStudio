@@ -40,13 +40,10 @@ feature {NONE} -- Initialization
 
 	initialize
 			-- <Precursor>
-		local
-			l_styles: EV_STOCK_PIXMAPS
 		do
 			Precursor
 			internal_border_box.extend (internal_padding_box)
-			create l_styles
-			internal_padding_box.set_pointer_style (l_styles.standard_cursor)
+			internal_padding_box.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
 
 				-- Initialize `internal_border_box'
 			internal_border_box.set_border_width (internal_border_width)
@@ -256,25 +253,25 @@ feature {NONE} -- Implementation
 	is_border_left (a_x: INTEGER): BOOLEAN
 			-- If `a_x' at border left side?
 		do
-			Result := (0 <= a_x and a_x <= internal_border_width * border_width_factor)
+			Result := 0 <= a_x and a_x <= internal_border_width * border_width_factor
 		end
 
 	is_border_right (a_x: INTEGER): BOOLEAN
 			-- If `a_x' at border right side?	
 		do
-			Result := ((internal_border_box.width - internal_border_width * border_width_factor) <= a_x and a_x <= internal_border_box.width)
+			Result := (internal_border_box.width - internal_border_width * border_width_factor) <= a_x and a_x <= internal_border_box.width
 		end
 
 	is_border_top (a_y: INTEGER): BOOLEAN
 			-- If `a_y' at border top side?
 		do
-			Result := (0 <= a_y and a_y <= internal_border_width * border_width_factor)
+			Result := 0 <= a_y and a_y <= internal_border_width * border_width_factor
 		end
 
 	is_border_bottom (a_y: INTEGER): BOOLEAN
 			-- If `a_y' at border bottom side?
 		do
-			Result := ((internal_border_box.height - internal_border_width * border_width_factor) <= a_y and a_y <= internal_border_box.height)
+			Result := (internal_border_box.height - internal_border_width * border_width_factor) <= a_y and a_y <= internal_border_box.height
 		end
 
 	on_border_pointer_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
@@ -292,15 +289,12 @@ feature {NONE} -- Implementation
 		end
 
 	on_border_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer release actions
-		local
-			l_stock_pixmaps: EV_STOCK_PIXMAPS
+			-- Handle pointer release actions.
 		do
 			if internal_border_box.has_capture then
 				internal_border_box.disable_capture
 				internal_shared.setter.after_disable_capture
-				create l_stock_pixmaps
-				internal_padding_box.set_pointer_style (l_stock_pixmaps.standard_cursor)
+				internal_padding_box.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
 			end
 		end
 
@@ -321,11 +315,8 @@ feature {NONE} -- Implementation
 
 	internal_border_width: INTEGER
 			-- Border width
-		local
-			l_platform: PLATFORM
 		once
-			create l_platform
-			if l_platform.is_windows then
+			if {PLATFORM}.is_windows then
 				Result := 2
 			else
 				Result := 3
@@ -341,7 +332,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

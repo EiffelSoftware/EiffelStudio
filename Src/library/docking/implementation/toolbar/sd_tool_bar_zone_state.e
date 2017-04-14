@@ -91,28 +91,21 @@ feature -- Properties which record floating informations
 
 	screen_x: INTEGER
 			-- `internal_screen_x'
-		local
-			l_screen: EV_SCREEN
 		do
 			if is_screen_position_set then
 				Result := internal_screen_x
 			else
-				create l_screen
-				Result := l_screen.pointer_position.x
+				Result := (create {EV_SCREEN}).pointer_position.x
 			end
-
 		end
 
 	screen_y: INTEGER
 			-- 'internal_screen_y'
-		local
-			l_screen: EV_SCREEN
 		do
 			if is_screen_position_set then
 				Result := internal_screen_y
 			else
-				create l_screen
-				Result := l_screen.pointer_position.y
+				Result := (create {EV_SCREEN}).pointer_position.y
 			end
 		end
 
@@ -123,7 +116,7 @@ feature -- Properties which record floating informations
 			is_screen_position_set := True
 		ensure
 			set: internal_screen_x = a_screen_x
-			set: is_screen_position_set = True
+			set: is_screen_position_set
 		end
 
 	set_screen_y (a_screen_y: INTEGER)
@@ -133,7 +126,7 @@ feature -- Properties which record floating informations
 			is_screen_position_set := True
 		ensure
 			set: internal_screen_y = a_screen_y
-			set: is_screen_position_set = True
+			set: is_screen_position_set
 		end
 
 	floating_group_info: detachable SD_TOOL_BAR_GROUP_INFO
@@ -217,7 +210,7 @@ feature {NONE} -- Implementation
 			-- If already setted `internal_screen_x' and `internal_screen_y'?
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -226,6 +219,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

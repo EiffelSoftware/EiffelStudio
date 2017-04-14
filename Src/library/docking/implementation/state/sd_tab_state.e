@@ -157,7 +157,6 @@ feature {NONE} -- Initlization
 			not_full: a_container /= Void and then not a_container.full
 			direction_valid: (create {SD_ENUMERATION}).is_direction_valid (a_direction)
 		local
-			l_tab_state: SD_TAB_STATE
 			l_content: SD_CONTENT
 		do
 			init_common (a_contents.first, a_direction)
@@ -179,7 +178,7 @@ feature {NONE} -- Initlization
 				if a_contents.isfirst then
 					l_content.change_state (Current)
 				else
-					create l_tab_state.make_for_restore_internal (l_content, tab_zone, a_direction)
+					;(create {SD_TAB_STATE}.make_for_restore_internal (l_content, tab_zone, a_direction)).do_nothing
 					l_content.change_state (Current)
 				end
 
@@ -381,8 +380,7 @@ feature -- Redefine
 	close
 			-- <Precursor>
 		local
-			l_parent: detachable EV_CONTAINER
-			l_state_void: SD_STATE_VOID
+			l_parent: EV_CONTAINER
 		do
 			docking_manager.command.lock_update (zone, False)
 			l_parent := tab_zone.parent
@@ -393,8 +391,7 @@ feature -- Redefine
 			if l_parent /= Void then
 				assistant.update_last_content_state (l_parent)
 			end
-			create l_state_void.make (content, docking_manager)
-			change_state (l_state_void)
+			change_state (create {SD_STATE_VOID}.make (content, docking_manager))
 			docking_manager.command.remove_empty_split_area
 			docking_manager.command.unlock_update
 		end
@@ -623,7 +620,7 @@ feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 
 			Precursor (a_int)
 		ensure then
-			flag_cleared: is_set_width_after_restore = False
+			flag_cleared: not is_set_width_after_restore
 		end
 
 	set_last_floating_height (a_int: INTEGER)
@@ -651,7 +648,7 @@ feature {SD_OPEN_CONFIG_MEDIATOR, SD_STATE} -- Redefine
 
 			Precursor (a_int)
 		ensure then
-			flag_cleared: is_set_height_after_restore = False
+			flag_cleared: not is_set_height_after_restore
 		end
 
 	is_set_width_after_restore, is_set_height_after_restore: BOOLEAN
@@ -699,9 +696,7 @@ feature -- Query
 		do
 			if attached {EV_SPLIT_AREA} a_multi_dock_area.item as l_container then
 				if zone.is_drag_title_bar then
-					if attached {EV_WIDGET} zone as l_widget then
-						Result := l_container.has (l_widget)
-					end
+					Result := l_container.has (zone)
 				else
 					if attached {SD_DOCKING_ZONE} l_container.first as l_first_docking_zone then
 						Result := l_first_docking_zone.content = internal_content
@@ -748,7 +743,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

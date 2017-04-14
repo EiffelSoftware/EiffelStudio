@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Toolbar button for SD_TOOL_BAR."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,8 +25,8 @@ feature {NONE} -- Initlization
 			state := {SD_TOOL_BAR_ITEM_STATE}.normal
 			is_sensitive_internal := True
 			is_displayed := True
-			description := generating_type
-			name := generating_type
+			description := generating_type.name_32
+			name := generating_type.name_32
 			create select_actions
 			create pointer_button_press_actions
 			create internal_shared
@@ -85,7 +85,7 @@ feature -- Command
 			is_sensitive_internal := True
 			update
 		ensure
-			set: is_sensitive_internal = True
+			set: is_sensitive_internal
 		end
 
 	disable_sensitive
@@ -94,7 +94,7 @@ feature -- Command
 			is_sensitive_internal := False
 			update
 		ensure
-			set: is_sensitive_internal = False
+			set: not is_sensitive_internal
 		end
 
 feature -- Query
@@ -437,7 +437,7 @@ feature -- Obsolete
 	remove_tooltip
 			-- Remove `tooltip'
 		obsolete
-			"Use set_tooltip (Void) instead"
+			"Use set_tooltip (Void) instead. [2017-05-31]"
 		do
 			tooltip := Void
 		ensure
@@ -450,7 +450,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

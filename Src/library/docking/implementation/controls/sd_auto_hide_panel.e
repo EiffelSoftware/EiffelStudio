@@ -513,7 +513,6 @@ feature {NONE} -- Implementation functions
 		local
 			l_spacer: SD_AUTO_HIDE_SEPARATOR
 			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
-			l_helper: SD_COLOR_HELPER
 		do
 			if not internal_ignore_added_action then
 				a_stub.set_auto_hide_panel (Current)
@@ -526,7 +525,6 @@ feature {NONE} -- Implementation functions
 				-- Add spacer
 				create l_spacer
 				l_spacer.set_minimum_size (spacer_size, spacer_size)
-				create l_helper
 				l_spacer.set_background_color (background_color)
 				extend (l_spacer)
 				disable_item_expand (l_spacer)

@@ -37,7 +37,7 @@ inherit
 create
 	make
 
-feature -- Initlization
+feature {NONE} -- Initlization
 
 	make (a_content: SD_CONTENT)
 			-- Creation method
@@ -210,7 +210,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

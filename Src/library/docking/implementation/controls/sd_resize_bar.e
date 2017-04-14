@@ -21,8 +21,6 @@ feature {NONE} -- Initialization
 		require
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
-		local
-			l_background_color: EV_GRID
 		do
 			create internal_shared
 
@@ -46,8 +44,7 @@ feature {NONE} -- Initialization
 			end
 
 			expose_actions.extend (agent on_expose_action)
-			create l_background_color
-			set_background_color (l_background_color.non_focused_selection_color)
+			set_background_color ((create {EV_GRID}).non_focused_selection_color)
 		ensure
 			a_direction_set: a_direction = direction
 		end
@@ -220,7 +217,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

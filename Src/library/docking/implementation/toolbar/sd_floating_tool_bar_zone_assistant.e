@@ -115,8 +115,7 @@ feature {NONE} -- Implementation functions
 				a_group_indexs.forth
 			end
 			if l_first_item /= Void then
-				l_separator := Void
-				-- There should be a separator behind, otherwise this is the last tool bar item
+					-- There should be a separator behind, otherwise this is the last tool bar item
 				l_separator := zone.content.separator_before_item (l_first_item)
 				if l_separator /= Void then
 					l_separator.set_wrap (True)
@@ -197,7 +196,7 @@ feature {NONE} -- Implementation attributes
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

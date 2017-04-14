@@ -25,12 +25,9 @@ feature {NONE} -- Initlization
 feature -- Access
 
 	default_background_color: EV_COLOR
-			-- Default background color
-		local
-			l_stock_colors: EV_STOCK_COLORS
+			-- Default background color.
 		do
-			create l_stock_colors
-			Result := l_stock_colors.default_background_color
+			Result := (create {EV_STOCK_COLORS}).default_background_color
 		end
 
 	mdi_back_ground_color: EV_COLOR
@@ -85,31 +82,22 @@ feature -- Access
 
 	focused_title_text_color: EV_COLOR
 			-- Focused title text color
-		local
-			l_grid: EV_GRID
 		do
-			create l_grid
-			Result := l_grid.focused_selection_text_color
+			Result := (create {EV_GRID}).focused_selection_text_color
 		end
 
 	button_text_color: EV_COLOR
 			-- Button text color
-		local
-			l_grid: EV_GRID
 		do
-			create l_grid
-			Result := l_grid.foreground_color
+			Result := (create {EV_GRID}).foreground_color
 		end
 
 feature -- Font
 
 	tool_bar_font: EV_FONT
 			-- Redefine.
-		local
-			l_drawing_area: EV_DRAWING_AREA
 		do
-			create l_drawing_area
-			Result := l_drawing_area.font
+			Result := (create {EV_DRAWING_AREA}).font
 		end
 
 feature {NONE} -- Cocoa text_aa colors.
@@ -152,7 +140,7 @@ feature {NONE} -- Cocoa text_aa colors.
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

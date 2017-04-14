@@ -22,13 +22,10 @@ feature {NONE} -- Initlization
 		require
 			not_void: a_content /= Void
 		local
-			l_items: LIST [SD_TOOL_BAR_ITEM]
 			l_group_count: INTEGER
 		do
 			l_group_count := a_content.groups_count (False)
 			content := a_content
-			l_items := a_content.items_visible
-
 			create algorithm.make (l_group_count, init_group_width (a_content.items_visible))
 			create internal_refined_grouping.make
 			init_grouping_infos
@@ -155,28 +152,26 @@ feature -- Query
 			valid: a_width > 0
 		local
 			l_list : ARRAYED_LIST [SD_TOOL_BAR_GROUP_INFO]
-			l_result: detachable like best_grouping_by_width_to_right
 		do
 			from
 				last_group_index := group_infos.count
 				l_list := group_infos.linear_representation
 				l_list.finish
 			until
-				l_list.before or l_result /= Void
+				l_list.before or attached Result
 			loop
 				if (not l_list.item.has_any_sub_info and a_width < l_list.item.maximum_width) or
 					(l_list.item.has_any_sub_info and a_width < l_list.item.maximum_width_sub) then
-					l_result := l_list.item
+					Result := l_list.item
 				else
 					last_group_index := last_group_index - 1
 					l_list.back
 				end
 			end
-			if l_result = Void then
-				l_result := l_list.first
+			if not attached Result then
+				Result := l_list.first
 				last_group_index := 1
 			end
-			Result := l_result
 		ensure
 			not_void: Result /= Void
 			valid: last_group_index >= 1 and last_group_index <= group_infos.count
@@ -189,28 +184,26 @@ feature -- Query
 			valid: a_width > 0
 		local
 			l_list : ARRAYED_LIST [SD_TOOL_BAR_GROUP_INFO]
-			l_result: detachable like best_grouping_by_width_to_left
 		do
 			from
 				last_group_index := 1
 				l_list := group_infos.linear_representation
 				l_list.start
 			until
-				l_list.after or l_result /= Void
+				l_list.after or attached Result
 			loop
 				if (not l_list.item.has_any_sub_info and a_width > l_list.item.maximum_width) or
 					(l_list.item.has_any_sub_info and a_width > l_list.item.maximum_width_sub) then
-					l_result := l_list.item
+					Result := l_list.item
 				else
 					last_group_index := last_group_index + 1
 					l_list.forth
 				end
 			end
-			if l_result = Void then
-				l_result := l_list.last
+			if not attached Result then
+				Result := l_list.last
 				last_group_index := l_list.count
 			end
-			Result := l_result
 		ensure
 			not_void: Result /= Void
 			valid: last_group_index >= 1 and last_group_index <= group_infos.count
@@ -438,7 +431,7 @@ feature {NONE} -- Implementation
 		do
 			l_snapshot := a_group_info.deep_twin
 			l_snapshot.start
-			Result := not (l_snapshot.count = 1 and l_snapshot.is_new_group = True)
+			Result := not (l_snapshot.count = 1 and l_snapshot.is_new_group)
 		end
 
 	group_infos: HASH_TABLE [SD_TOOL_BAR_GROUP_INFO, INTEGER]
@@ -457,7 +450,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

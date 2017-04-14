@@ -125,10 +125,8 @@ feature -- Command
 
 	prune (a_zone: SD_TOOL_BAR_ZONE)
 			-- <Precursor>
-		local
-			l_result: INTEGER
 		do
-			l_result := a_zone.assistant.expand_size (a_zone.maximize_size)
+			a_zone.assistant.expand_size (a_zone.maximize_size).do_nothing
 			if attached {EV_WIDGET} a_zone.tool_bar as lt_widget then
 				prune_fixed (lt_widget)
 			else
@@ -146,15 +144,12 @@ feature -- Command
 
 	on_pointer_motion (a_screen_position: INTEGER)
 			-- When user dragging, handle pointer motion
-		local
-			l_relative_position: INTEGER
 		do
-			-- We have to check if `internal_positioner' is dragging for GTK since key press actions may
-			-- not be called immediately
-			-- See bug#13196	
+				-- We have to check if `internal_positioner' is dragging for GTK since key press actions may
+				-- not be called immediately
+				-- See bug#13196	
 			if internal_positioner.is_dragging then
-				l_relative_position := to_relative_position (a_screen_position)
-				internal_positioner.on_pointer_motion (l_relative_position)
+				internal_positioner.on_pointer_motion (to_relative_position (a_screen_position))
 			end
 		end
 
@@ -372,7 +367,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

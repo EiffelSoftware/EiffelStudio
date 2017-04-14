@@ -272,14 +272,12 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 		end
 
 	on_delay_timer
-			-- Handle `delay_timer' actions
+			-- Handle `delay_timer' actions.
 		local
-			l_screen: EV_SCREEN
 			l_rect: EV_RECTANGLE
 			l_point: EV_COORDINATE
 		do
-			create l_screen
-			l_point := l_screen.pointer_position
+			l_point := (create {EV_SCREEN}).pointer_position
 			create l_rect.make (screen_x, screen_y, width, height)
 			if l_rect.has_x_y (l_point.x, l_point.y) then
 				-- If pointer still in current area
@@ -442,7 +440,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

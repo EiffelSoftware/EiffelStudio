@@ -162,7 +162,7 @@ feature -- Command
 				check positive: l_height > 0 end
 				l_group_count := group_count_by_height (l_height)
 				if attached (create {EV_ENVIRONMENT}).application as l_app then
-					l_has_lock_window := (l_app.locked_window /= Void)
+					l_has_lock_window := l_app.locked_window /= Void
 				else
 					check False end -- Implied by current application is running
 				end
@@ -483,13 +483,11 @@ feature {NONE} -- Implementation
 			ready: is_tool_bar_zone_set
 		local
 			l_dialog: SD_TOOL_BAR_HIDDEN_ITEM_DIALOG
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_helper: SD_POSITION_HELPER
 			l_rect: EV_RECTANGLE
 		do
 			if attached zone as l_zone then
-				create l_items.make (1)
-				create l_dialog.make (l_items, l_zone)
+				create l_dialog.make (create {ARRAYED_LIST [SD_TOOL_BAR_ITEM]}.make (1), l_zone)
 				create l_helper.make
 				l_rect := internal_title_bar.custom_rectangle
 				l_helper.set_tool_bar_floating_dialog_position (l_dialog, l_rect.x, l_rect.y, l_rect.width, l_rect.height)
@@ -506,7 +504,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

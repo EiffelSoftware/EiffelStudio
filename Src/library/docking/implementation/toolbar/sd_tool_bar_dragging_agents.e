@@ -53,7 +53,7 @@ feature -- Agent
 			end
 		ensure
 			pointer_press_set: not is_destroyed implies
-								(a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) implies internal_pointer_pressed = True)
+								(a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) implies internal_pointer_pressed)
 			docker_mediaot_void: not is_destroyed implies
 								(a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) implies internal_docker_mediator = Void)
 		end
@@ -72,7 +72,7 @@ feature -- Agent
 			end
 		ensure
 			pointer_press_set: not is_destroyed implies
-								(a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) implies internal_pointer_pressed = False)
+								(a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) implies not internal_pointer_pressed)
 			docker_mediator_void: not is_destroyed implies
 								(a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) implies internal_docker_mediator = Void)
 		end
@@ -183,8 +183,6 @@ feature {NONE} -- Implementation functions
 
 	on_cancel
 			-- Handle user cancel dragging events
-		local
-			l_pixmaps: EV_STOCK_PIXMAPS
 		do
 			if not is_destroyed then
 				zone.tool_bar.disable_capture
@@ -192,8 +190,7 @@ feature {NONE} -- Implementation functions
 				internal_pointer_pressed := False
 				internal_docker_mediator := Void
 				internal_shared.set_tool_bar_docker_mediator (Void)
-				create l_pixmaps
-				zone.tool_bar.set_pointer_style (l_pixmaps.standard_cursor)
+				zone.tool_bar.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
 			end
 		ensure
 			disable_capture: not is_destroyed implies not zone.tool_bar.has_capture
@@ -263,7 +260,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

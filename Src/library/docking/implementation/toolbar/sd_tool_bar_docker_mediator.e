@@ -225,24 +225,22 @@ feature {NONE} -- Implementation functions
 
 	on_motion_in_four_side (a_screen_x, a_screen_y: INTEGER; a_offset_x, a_offset_y: INTEGER): BOOLEAN
 			-- Handle pointer in four tool bar area.
-		local
-			l_changed: BOOLEAN
 		do
 			if internal_left_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y) then
 				-- For left vertical bar, we should first check if it's in horizontal easy drag area.
 				-- Otherwise, user can't drag to the top of the horizontal tool bar area easily.
 				if not is_horizontal_easy_drag_area (a_screen_x) then
-					l_changed := internal_left_hot_zone.on_pointer_motion (a_screen_x, a_screen_y)
+					internal_left_hot_zone.on_pointer_motion (a_screen_x, a_screen_y).do_nothing
 				end
 				Result := True
 			elseif internal_right_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y)	then
-				l_changed := internal_right_hot_zone.on_pointer_motion (a_screen_x, a_screen_y)
+				internal_right_hot_zone.on_pointer_motion (a_screen_x, a_screen_y).do_nothing
 				Result := True
 			elseif internal_top_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y - a_offset_y) then
-				l_changed := internal_top_hot_zone.on_pointer_motion (a_screen_x, a_screen_y)
+				internal_top_hot_zone.on_pointer_motion (a_screen_x, a_screen_y).do_nothing
 				Result := True
 			elseif internal_bottom_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y - a_offset_y) then
-				l_changed := internal_bottom_hot_zone.on_pointer_motion (a_screen_x, a_screen_y)
+				internal_bottom_hot_zone.on_pointer_motion (a_screen_x, a_screen_y).do_nothing
 				Result := True
 			end
 			if Result and then attached caller.row as l_row then
@@ -371,17 +369,16 @@ feature {NONE} -- Implementation functions
 					if attached l_env.application as l_application then
 						l_application.do_once_on_idle (agent
 																local
-																	l_screen: EV_SCREEN
 																	l_position: EV_COORDINATE
 																do
-																	if caller /= Void and then
+																	if
+																		caller /= Void and then
 																		caller.tool_bar /= Void and then
-																		not caller.tool_bar.is_destroyed then
+																		not caller.tool_bar.is_destroyed
+																	then
 																		caller.tool_bar.enable_capture
-
-																		-- Set floating tool bar to current pointer position.
-																		create l_screen
-																		l_position := l_screen.pointer_position
+																			-- Set floating tool bar to current pointer position.
+																		l_position := (create {EV_SCREEN}).pointer_position
 																		on_pointer_motion (l_position.x, l_position.y)
 																	end
 																end
@@ -428,15 +425,11 @@ feature {NONE} -- Implementation functions
 			l_top_container: EV_CONTAINER
 		do
 			if not caller.is_floating and not caller.is_vertical then
-					l_top_container := docking_manager.top_container
-				if a_screen_x >= l_top_container.screen_x - easy_drag_offset and
-					a_screen_x <= l_top_container.screen_x + easy_drag_offset then
-					Result := True
-				else
-					Result := False
-				end
+				l_top_container := docking_manager.top_container
+				Result :=
+					a_screen_x >= l_top_container.screen_x - easy_drag_offset and
+					a_screen_x <= l_top_container.screen_x + easy_drag_offset
 			end
-
 		end
 
 	is_vertical_easy_drag_area (a_screen_y: INTEGER): BOOLEAN
@@ -444,14 +437,11 @@ feature {NONE} -- Implementation functions
 		local
 			l_main_container: SD_MAIN_CONTAINER
 		do
-			l_main_container := docking_manager.main_container
 			if not caller.is_floating and caller.is_vertical then
-				if a_screen_y - offset_y >= l_main_container.left_bar.screen_y - easy_drag_offset and
-					a_screen_y - offset_y <= l_main_container.left_bar.screen_y then
-					Result := True
-				else
-					Result := False
-				end
+				l_main_container := docking_manager.main_container
+				Result :=
+					a_screen_y - offset_y >= l_main_container.left_bar.screen_y - easy_drag_offset and
+					a_screen_y - offset_y <= l_main_container.left_bar.screen_y
 			end
 		end
 
@@ -522,7 +512,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

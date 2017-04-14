@@ -352,7 +352,7 @@ feature -- Commands
 
 				docking_manager.command.resize (True)
 				if attached l_parent then
-					l_main_area.restore_spliter_position (l_parent, generating_type.name + ".minimized")
+					l_main_area.restore_spliter_position (l_parent, generating_type.name_32 + {STRING_32} ".minimized")
 				end
 
 				orignal_whole_item_for_minimized := Void
@@ -395,7 +395,7 @@ feature -- Commands
 						if l_parent_parent /= Void then
 							orignal_whole_item_for_minimized := l_editor_parent
 
-							l_editor_area.save_spliter_position (l_parent_parent, generating_type.name + ".minimized")
+							l_editor_area.save_spliter_position (l_parent_parent, generating_type.name_32 + {STRING_32} ".minimized")
 
 							if attached {EV_BOX} l_parent_parent as lt_parent_parent then
 								is_minimize_orignally := True
@@ -457,7 +457,7 @@ feature -- Commands
 
 					l_orignal_whole_item := l_editor_area.item
 					orignal_whole_item := l_orignal_whole_item
-					l_editor_area.save_spliter_position (l_orignal_whole_item, generating_type.name + ".maximize_editor_area")
+					l_editor_area.save_spliter_position (l_orignal_whole_item, generating_type.name_32 + {STRING_32} ".maximize_editor_area")
 
 					if attached l_orignal_editor_parent then
 						l_orignal_editor_parent.prune (l_editor_parent)
@@ -506,7 +506,7 @@ feature -- Commands
 					l_only_one_editor_zone.enable_maximize_minimize_buttons
 				end
 
-				l_main_area.restore_spliter_position (l_orignal_whole_item, generating_type.name + ".maximize_editor_area")
+				l_main_area.restore_spliter_position (l_orignal_whole_item, generating_type.name_32 + {STRING_32} ".maximize_editor_area")
 
 				orignal_editor_parent := Void
 				orignal_whole_item := Void

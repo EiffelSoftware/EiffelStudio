@@ -78,7 +78,6 @@ feature {SD_TAB_STATE}  -- Implementation functions
 		local
 			l_new_split_area: EV_SPLIT_AREA
 			l_target_zone_parent: detachable EV_CONTAINER
-			l_old_zone_parent_type: READABLE_STRING_GENERAL
 			l_target_zone_parent_split_position: INTEGER
 			l_target_zone_parent_spliter: detachable EV_SPLIT_AREA
 		do
@@ -88,9 +87,8 @@ feature {SD_TAB_STATE}  -- Implementation functions
 				check not_possible: False end
 			end
 
-			-- First, remove current internal_zone from old parent split area	
+				-- First, remove current internal_zone from old parent split area.
 			if attached state.tab_zone.parent as l_parent then
-				l_old_zone_parent_type := l_parent.generating_type
 				l_parent.prune (state.tab_zone)
 			end
 
@@ -264,7 +262,7 @@ feature {SD_TAB_STATE}  -- Implementation functions
 			if a_multi_dock_area.full then
 
 				l_old_stuff := a_multi_dock_area.item
-				a_multi_dock_area.save_spliter_position (l_old_stuff, generating_type)
+				a_multi_dock_area.save_spliter_position (l_old_stuff, generating_type.name_32)
 				a_multi_dock_area.prune (l_old_stuff)
 			end
 
@@ -291,7 +289,7 @@ feature {SD_TAB_STATE}  -- Implementation functions
 				l_new_container.set_split_position (state.top_split_position (state.direction, l_new_container))
 			end
 			if l_old_stuff /= Void then
-				a_multi_dock_area.restore_spliter_position (l_old_stuff, generating_type)
+				a_multi_dock_area.restore_spliter_position (l_old_stuff, generating_type.name_32)
 			end
 		ensure
 			docked: is_top_has_zone (a_multi_dock_area)
@@ -423,7 +421,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

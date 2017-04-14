@@ -165,7 +165,7 @@ feature -- Hanlde pointer events
 			cancel_actions.call (Void)
 			clear_up
 		ensure
-			not_tracing: is_tracing = False
+			not_tracing: not is_tracing
 		end
 
 	end_tracing_pointer (a_screen_x, a_screen_y: INTEGER)
@@ -194,7 +194,7 @@ feature -- Hanlde pointer events
 			end
 
 		ensure
-			not_tracing: is_tracing = False
+			not_tracing: not is_tracing
 		end
 
 	is_tracing_pointer: BOOLEAN

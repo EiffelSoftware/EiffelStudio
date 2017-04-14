@@ -383,9 +383,8 @@ feature  -- Agents
 			not_destroyed: not is_destroyed
 		local
 			l_screen_x, l_screen_y: INTEGER
-			l_screen: EV_SCREEN
 			l_position: EV_COORDINATE
-			l_widget: detachable EV_WIDGET
+			l_widget: EV_WIDGET
 		do
 				-- When set_capture, if pointer moving at area outside captured widget,
 				-- the `a_target' parameter in {EV_APPLICATION}.pnd_motion_actions is void
@@ -394,8 +393,7 @@ feature  -- Agents
 				l_widget := w
 			end
 
-			create l_screen
-			l_position := l_screen.pointer_position
+			l_position := (create {EV_SCREEN}).pointer_position
 
 			l_screen_x := l_position.x
 			l_screen_y := l_position.y
@@ -430,12 +428,10 @@ feature  -- Agents
 			not_destroyed: not is_destroyed
 			vaild: (create {SD_ENUMERATION}).is_direction_valid (a_direction)
 		local
-			l_panel: SD_AUTO_HIDE_PANEL
 			l_stubs: ARRAYED_LIST [SD_TAB_STUB]
 			l_stub: SD_TAB_STUB
 		do
-			l_panel := docking_manager.query.auto_hide_panel (a_direction)
-			l_stubs := l_panel.tab_stubs
+			l_stubs := docking_manager.query.auto_hide_panel (a_direction).tab_stubs
 
 			from
 				l_stubs.start
@@ -581,10 +577,10 @@ feature {SD_DEBUG_ACCESS} -- For debug
 			not_destroyed: not is_destroyed
 		do
 			if attached {SD_DOCKING_ZONE} a_container as l_docking_zone then
-				io.put_string ("%N " + a_indent + a_container.generating_type + " " + l_docking_zone.content.unique_title)
+				io.put_string ("%N " + a_indent + a_container.generating_type.name_32.as_string_8 + " " + l_docking_zone.content.unique_title)
 			else
 				if a_container /= Void then
-					io.put_string ("%N " + a_indent + a_container.generating_type)
+					io.put_string ("%N " + a_indent + a_container.generating_type.name_32.as_string_8)
 				else
 					io.put_string ("%N " + a_indent + "Void")
 				end
@@ -608,7 +604,7 @@ feature {NONE}  -- Implementation
 			not_void: a_child /= Void
 		do
 			if attached a_child.parent as l_parent then
-				Result := (a_parent = l_parent)
+				Result := a_parent = l_parent
 				if not Result then
 					Result := is_parent_recursive (a_parent, l_parent)
 				end

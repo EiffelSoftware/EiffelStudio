@@ -74,14 +74,12 @@ feature -- Command
 		local
 			l_snapshot: like internal_hidden_items
 			l_snapshot_item: SD_TOOL_BAR_ITEM
-			l_old_size: INTEGER
 			l_stop: BOOLEAN
 			l_last_result: INTEGER
 			l_item_after: detachable SD_TOOL_BAR_ITEM
 		do
 			if internal_hidden_items.count /= 0 then
 				from
-					l_old_size := attached_zone.size
 					l_snapshot := internal_hidden_items.twin
 					l_snapshot.finish
 				until
@@ -193,7 +191,6 @@ feature -- Command
 		local
 			l_dialog: SD_TOOL_BAR_HIDDEN_ITEM_DIALOG
 			l_helper: SD_POSITION_HELPER
-			l_indicator_size: INTEGER
 		do
 			if
 				attached attached_zone.row as l_row and then
@@ -201,15 +198,10 @@ feature -- Command
 			then
 				create l_dialog.make (l_all_hiden_items, attached_zone)
 				create l_helper.make
-				if attached_zone.is_vertical then
-					l_indicator_size := attached_zone.tail_indicator.rectangle.height
-				else
-					l_indicator_size := attached_zone.tail_indicator.width
-				end
 				if not attached_zone.is_vertical then
-					l_helper.set_tool_bar_hidden_dialog_position (l_dialog, attached_zone.hidden_dialog_position.x, attached_zone.hidden_dialog_position.y, attached_zone.tail_indicator.width)
-				else
 					l_helper.set_tool_bar_hidden_dialog_vertical_position (l_dialog, attached_zone.hidden_dialog_position.x, attached_zone.hidden_dialog_position.y, attached_zone.tail_indicator.rectangle.height)
+				else
+					l_helper.set_tool_bar_hidden_dialog_position (l_dialog, attached_zone.hidden_dialog_position.x, attached_zone.hidden_dialog_position.y, attached_zone.tail_indicator.width)
 				end
 				l_dialog.show
 			end
@@ -379,9 +371,7 @@ feature -- Command
 						-- See bug#13972
 						-- SD_TOOL_BAR_SEPARATOR is ignored
 					from
-						check l_content /= Void end -- Implied by previous loop
 						l_content_items := l_content.items
-						check l_all_items /= Void end -- Implied by previous loop
 						l_all_items.start
 					until
 						l_all_items.after
@@ -503,14 +493,12 @@ feature -- Query
 		local
 			l_snapshot: like internal_hidden_items
 			l_snapshot_item: SD_TOOL_BAR_ITEM
-			l_old_size: INTEGER
 			l_stop: BOOLEAN
 			l_last_result: INTEGER
 			l_item_after: detachable SD_TOOL_BAR_ITEM
 		do
 			if internal_hidden_items.count /= 0 then
 				from
-					l_old_size := attached_zone.size
 					l_snapshot := internal_hidden_items.twin
 					l_snapshot.finish
 				until
@@ -618,7 +606,7 @@ feature -- Query
 				until
 					l_items.after
 				loop
-					Result := not (l_items.item.name.same_string_general (a_name))
+					Result := not l_items.item.name.same_string_general (a_name)
 					l_items.forth
 				end
 			end
@@ -696,7 +684,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

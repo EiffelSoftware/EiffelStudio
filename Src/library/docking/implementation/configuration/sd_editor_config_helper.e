@@ -29,7 +29,6 @@ feature -- Command
 		local
 			l_only_one_item: EV_WIDGET
 			l_temp_split: SD_VERTICAL_SPLIT_AREA
-			l_cleaner: SD_WIDGET_CLEANER
 		do
 			internal_docking_manager.query.set_opening_tools_layout (True)
 
@@ -43,11 +42,10 @@ feature -- Command
 
 			if not has_place_holder (internal_docking_manager.query.inner_container_main) then
 				if internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
-					-- Editor is missing now
-					-- Reset tools layout to have place holder zone
-					-- Otherwise following `real_has_place_holder_zone' check would fail
-					create l_cleaner.make (internal_docking_manager)
-					l_cleaner.reset_all_to_default (True)
+						-- Editor is missing now.
+						-- Reset tools layout to have place holder zone.
+						-- Otherwise following `real_has_place_holder_zone' check would fail.
+					;(create {SD_WIDGET_CLEANER}.make (internal_docking_manager)).reset_all_to_default (True)
 
 					was_place_holder_exists := True
 				else
@@ -70,7 +68,7 @@ feature -- Command
 						end
 					end
 					if attached top_container as l_top_container then
-						internal_docking_manager.query.inner_container_main.save_spliter_position (l_top_container, generating_type)
+						internal_docking_manager.query.inner_container_main.save_spliter_position (l_top_container, generating_type.name_32)
 					else
 						check not_possible: False end
 					end
@@ -134,7 +132,7 @@ feature -- Command
 
 					end
 					if attached top_container as l_top_container then
-						internal_docking_manager.query.inner_container_main.restore_spliter_position (l_top_container, generating_type)
+						internal_docking_manager.query.inner_container_main.restore_spliter_position (l_top_container, generating_type.name_32)
 					else
 						check not_possible: False end
 					end
@@ -228,7 +226,7 @@ feature -- Query
 	is_editor_state_valid: BOOLEAN
 			-- If editor state valid?
 		do
-			Result := (was_place_holder_exists = real_has_place_holder_zone)
+			Result := was_place_holder_exists = real_has_place_holder_zone
 		end
 
 feature {NONE} -- Implementation
@@ -278,7 +276,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

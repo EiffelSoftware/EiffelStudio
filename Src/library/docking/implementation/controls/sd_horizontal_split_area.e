@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
 			Same as EV_HORIZONTAL_SPLIT_AREA, except that when double click it'll set it's proportion to 50%.
 			A decorator.
-																										]"
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -42,11 +42,17 @@ feature {NONE} -- Implementation
 			--             And it not care about whether if user is dragging the spliter.			
 			-- So we disable "set split position to 0.5 when double presses" on GTK.
 			if l_platform.is_windows then
-				pointer_double_press_actions.force_extend (agent set_half)
+				pointer_double_press_actions.extend
+					(agent (a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32)
+						do set_half end)
 			end
 
-			pointer_button_release_actions.force_extend (agent update_proportion)
-			resize_actions.force_extend (agent remember_top_resize_split_area (Current))
+			pointer_button_release_actions.extend
+				(agent (a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32)
+					do update_proportion end)
+			resize_actions.extend
+				(agent (a_x, a_y, a_width, a_height: INTEGER_32)
+					do remember_top_resize_split_area (Current) end)
 		end
 
 	set_half
@@ -79,14 +85,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

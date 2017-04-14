@@ -41,18 +41,15 @@ feature -- Query
 
 	area_managed: EV_RECTANGLE
 			-- Managed area. Different from `area', it's bigger
-		local
-			l_area: EV_RECTANGLE
 		do
-			l_area := area.twin
+			Result := area.twin
 			if internal_vertical then
-				l_area.set_left (l_area.left - internal_shared.tool_bar_size)
-				l_area.set_right (l_area.right + internal_shared.tool_bar_size)
+				Result.set_left (Result.left - internal_shared.tool_bar_size)
+				Result.set_right (Result.right + internal_shared.tool_bar_size)
 			else
-				l_area.set_top (l_area.top - internal_shared.tool_bar_size)
-				l_area.set_bottom (l_area.bottom + internal_shared.tool_bar_size)
+				Result.set_top (Result.top - internal_shared.tool_bar_size)
+				Result.set_bottom (Result.bottom + internal_shared.tool_bar_size)
 			end
-			Result := l_area
 		ensure
 			not_void: Result /= Void
 		end
@@ -318,7 +315,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

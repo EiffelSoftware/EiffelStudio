@@ -30,11 +30,8 @@ feature {SD_TOOL_BAR_ROW} -- Initialization
 
 	set_mediator
 			-- Initialize `internal_mediator'.
-		local
-			l_shared: SD_SHARED
 		do
-			create l_shared
-			internal_mediator := l_shared.tool_bar_docker_mediator_cell.item
+			internal_mediator := (create {SD_SHARED}).tool_bar_docker_mediator_cell.item
 			sizer.set_mediator
 		end
 
@@ -244,12 +241,9 @@ feature -- Command
 		end
 
 	start_drag
-			-- Do prepare works when user start dragging
-		local
-			l_shared: SD_SHARED
+			-- Do prepare works when user start dragging.
 		do
-			create l_shared
-			internal_mediator := l_shared.tool_bar_docker_mediator_cell.item
+			internal_mediator := (create {SD_SHARED}).tool_bar_docker_mediator_cell.item
 			sizer.start_drag_prepare
 			record_positions_and_sizes (True)
 			positions_and_sizes_try := zones_last_states (True)
@@ -559,8 +553,8 @@ feature {NONE}  -- Implementation
 						print ("%N                            l_last_position: " + l_last_position.out)
 						print ("%N                            a_position: " + a_position.out)
 					end
-					if (l_zone_last_position + l_zone_last_size >= l_last_position)	then
-						-- There is position conflict
+					if l_zone_last_position + l_zone_last_size >= l_last_position then
+							-- There is position conflict.
 						l_temp := positions_and_sizes_try.i_th (l_zones.index)
 						l_temp.pos := l_last_position - l_zone_last_size - 1
 					end
@@ -801,7 +795,7 @@ feature {NONE}  -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

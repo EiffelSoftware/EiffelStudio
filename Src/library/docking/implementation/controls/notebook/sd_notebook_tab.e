@@ -76,7 +76,7 @@ feature -- Command
 			on_expose_with_width (a_width)
 			is_enough_space := False
 		ensure
-			set: is_enough_space = False
+			set: not is_enough_space
 		end
 
 	set_enough_space
@@ -87,7 +87,7 @@ feature -- Command
 			is_enough_space := True
 			update_minmum_size
 		ensure
-			set: is_enough_space = True
+			set: is_enough_space
 		end
 
 	is_enough_space: BOOLEAN
@@ -165,7 +165,7 @@ feature -- Query
 	prefered_size: INTEGER
 			-- If current is displayed, size should take
 		obsolete
-			"Use `preferred_size' instead."
+			"Use `preferred_size' instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -454,7 +454,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			not_destroyed: not is_destroyed
 		do
 			if rectangle.has_x_y (a_x, a_y) and then attached parent as p then
-				if attached tool_tip as l_tool_tip and then not (p.tooltip.same_string (l_tool_tip)) then
+				if attached tool_tip as l_tool_tip and then not p.tooltip.same_string (l_tool_tip) then
 					p.set_tooltip (l_tool_tip)
 				elseif tool_tip = Void then
 					p.remove_tooltip
@@ -545,7 +545,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			is_close_button_pressed := False
 			on_expose
 		ensure
-			set: is_hot = True
+			set: is_hot
 		end
 
 	on_pointer_leave
@@ -557,7 +557,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			is_pointer_in_close_area := False
 			on_expose
 		ensure
-			set: is_hot = False
+			set: not is_hot
 		end
 
 feature {SD_NOTEBOOK_TAB_DRAWER_IMP, SD_NOTEBOOK_TAB_BOX} -- Internal command

@@ -51,8 +51,6 @@ feature {NONE}  -- Initlization
 			-- Creation method
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
-		local
-			l_helper: SD_COLOR_HELPER
 		do
 
 			create internal_shared
@@ -66,7 +64,6 @@ feature {NONE}  -- Initlization
 			create internal_tabs.make (1)
 
 			create internal_tab_box.make (docking_manager)
-			create l_helper
 
 			create internal_border_for_tab_area.make
 			create {EV_HORIZONTAL_BOX} internal_border_box
@@ -541,15 +538,12 @@ feature -- Query
 
 	tab_bar_right_blank_area_double_click_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Double click action on tab bar right blank area
-		local
-			l_actions: like internal_tab_bar_right_blank_area_double_click_actions
 		do
-			l_actions := internal_tab_bar_right_blank_area_double_click_actions
-			if not attached l_actions then
-				create l_actions
-				internal_tab_bar_right_blank_area_double_click_actions := l_actions
+			Result := internal_tab_bar_right_blank_area_double_click_actions
+			if not attached Result then
+				create Result
+				internal_tab_bar_right_blank_area_double_click_actions := Result
 			end
-			Result := l_actions
 		end
 
 	tab_drag_actions: ACTION_SEQUENCE [ TUPLE [SD_CONTENT, INTEGER, INTEGER, INTEGER, INTEGER]]
@@ -588,12 +582,8 @@ feature {SD_NOTEBOOK_HIDE_TAB_DIALOG} -- Internal commands
 			-- Handle hidden item list select actions
 		require
 			not_void: a_content /= Void
-		local
-			l_tab: SD_NOTEBOOK_TAB
 		do
-			l_tab := tab_by_content (a_content)
-
-			on_tab_selected (l_tab)
+			on_tab_selected (tab_by_content (a_content))
 		end
 
 feature {NONE}  -- Implementation

@@ -76,16 +76,9 @@ feature -- Command
 				l_floating_zones.after
 			loop
 				l_item := l_floating_zones.item
-
 				internal_docking_manager.inner_containers.start
 				internal_docking_manager.inner_containers.prune (l_item.inner_container)
-
-				if attached {EV_WIDGET} l_item as lt_widget then
-					lt_widget.destroy
-				else
-					check not_possible: False end
-				end
-
+				l_item.destroy
 				l_floating_zones.forth
 			end
 		end

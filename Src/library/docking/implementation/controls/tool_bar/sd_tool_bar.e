@@ -535,7 +535,6 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_GENERIC_TOOL_BAR, SD_SIZES
 			-- <Precursor>
 		local
 			l_items: ARRAYED_LIST [like item_type]
-			l_rect: EV_RECTANGLE
 			l_item: like item_type
 		do
 			if width /= 0 and height /= 0 then
@@ -548,8 +547,7 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_GENERIC_TOOL_BAR, SD_SIZES
 					-- item's tool bar query maybe Void, because it's hidden when not enough space to display
 					l_item := l_items.item
 					if l_item.is_need_redraw and l_item.tool_bar /= Void then
-						l_rect := l_item.rectangle
-						drawer.start_draw (l_rect)
+						drawer.start_draw (l_item.rectangle)
 						redraw_item (l_item)
 						drawer.end_draw
 						l_item.disable_redraw
@@ -614,14 +612,12 @@ feature {NONE} -- Agents
 		local
 			l_items: like internal_items
 			l_item: like item_type
-			l_platform: PLATFORM
 			l_capture_enabled: BOOLEAN
 		do
 			-- Special handing for GTK
 			-- Because on GTK, pointer leave actions doesn't have same behavior as Windows implementation
 			-- This will cause `pointer_entered' flag not same between Windows and Gtk after pressed at SD_TOOL_BAR_RESIZABLE_ITEM end area
-			create l_platform
-			if not l_platform.is_windows then
+			if not {PLATFORM}.is_windows then
 				l_capture_enabled := has_capture
 			end
 
@@ -743,7 +739,7 @@ feature {NONE} -- Agents
 		do
 			pointer_entered := True
 		ensure
-			set: pointer_entered = True
+			set: pointer_entered
 		end
 
 	on_pointer_leave
@@ -769,18 +765,16 @@ feature {NONE} -- Agents
 			end
 			pointer_entered := False
 		ensure
-			set: pointer_entered = False
+			set: not pointer_entered
 		end
 
 	on_drop_action (a_any: ANY)
 			-- Handle drop actions
 		local
-			l_screen: EV_SCREEN
-			l_item: detachable like item_type
+			l_item: like item_type
 			l_pointer_position: EV_COORDINATE
 		do
-			create l_screen
-			l_pointer_position := l_screen.pointer_position
+			l_pointer_position := (create {EV_SCREEN}).pointer_position
 			l_item := item_at_position (l_pointer_position.x, l_pointer_position.y)
 			if l_item /= Void then
 				l_item.drop_actions.call ([a_any])
@@ -788,21 +782,19 @@ feature {NONE} -- Agents
 		end
 
 	on_veto_pebble_function (a_any: ANY): BOOLEAN
-			-- Handle veto pebble function
+			-- Handle veto pebble function.
 		local
-			l_screen: EV_SCREEN
-			l_item: detachable like item_type
 			l_pointer_position: EV_COORDINATE
 		do
 				-- We do not accept any stone if we are hidden.
 			if is_displayed then
-				create l_screen
-				l_pointer_position := l_screen.pointer_position
-				if is_item_position_valid (l_pointer_position.x, l_pointer_position.y)  then
-					l_item := item_at_position (l_pointer_position.x, l_pointer_position.y)
-					if l_item /= Void and then l_item.is_sensitive then
-						Result := l_item.drop_actions.accepts_pebble (a_any)
-					end
+				l_pointer_position := (create {EV_SCREEN}).pointer_position
+				if
+					is_item_position_valid (l_pointer_position.x, l_pointer_position.y) and then
+					attached item_at_position (l_pointer_position.x, l_pointer_position.y) as l_item and then
+					l_item.is_sensitive
+				then
+					Result := l_item.drop_actions.accepts_pebble (a_any)
 				end
 			end
 		end
@@ -811,11 +803,9 @@ feature {NONE} -- Agents
 			-- Handle pebble function event
 		local
 			l_item: detachable like item_type
-			l_screen: EV_SCREEN
 			l_position: EV_COORDINATE
 		do
-			create l_screen
-			l_position := l_screen.pointer_position
+			l_position := (create {EV_SCREEN}).pointer_position
 			if is_item_position_valid (l_position.x, l_position.y) then
 				l_item := item_at_position (l_position.x, l_position.y)
 			end
@@ -854,10 +844,8 @@ feature {SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 		local
 			l_argu: SD_TOOL_BAR_DRAWER_ARGUMENTS
 			l_coordinate: EV_COORDINATE
-			l_rectangle: EV_RECTANGLE
 		do
 			if not attached {SD_TOOL_BAR_WIDGET_ITEM} a_item then
-				l_rectangle := a_item.rectangle
 				create l_argu.make
 				l_argu.set_item (a_item)
 				create l_coordinate
@@ -954,7 +942,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

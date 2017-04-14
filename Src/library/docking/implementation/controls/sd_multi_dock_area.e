@@ -81,7 +81,7 @@ feature -- Command
 			not_has_empty_split_area:
 		end
 
-	save_spliter_position (a_widget: EV_WIDGET; a_data_name: STRING)
+	save_spliter_position (a_widget: EV_WIDGET; a_data_name: READABLE_STRING_32)
 			-- Save a_widget split position recursively if a_widget is SD_MIDDLE_CONTAINER
 			-- Pre order
 			-- Post order is not possible. Because set parent split are split positin will take ecffect to its child
@@ -97,16 +97,16 @@ feature -- Command
 				save_spliter_position_imp (l_split, l_data)
 			end
 		ensure
-			data_saved: (attached {SD_MIDDLE_CONTAINER} a_widget as lt_widget) implies has_spliter_data (a_data_name)
+			data_saved: attached {SD_MIDDLE_CONTAINER} a_widget as lt_widget implies has_spliter_data (a_data_name)
 		end
 
-	restore_spliter_position (a_widget: EV_WIDGET; a_data_name: STRING)
+	restore_spliter_position (a_widget: EV_WIDGET; a_data_name: READABLE_STRING_32)
 			-- Restore a_widget split postion which saved by save_spliter_position
 			-- `a_data_name' is the name when calling `save_spliter_position'
 		require
 			a_widget_not_void: a_widget /= Void
 			not_empty: a_data_name /= Void and then not a_data_name.is_empty
-			data_saved: (attached {SD_MIDDLE_CONTAINER} a_widget as lt_widget) implies has_spliter_data (a_data_name)
+			data_saved: attached {SD_MIDDLE_CONTAINER} a_widget as lt_widget implies has_spliter_data (a_data_name)
 		do
 			if attached {SD_MIDDLE_CONTAINER} a_widget as l_split then
 				if attached all_spliters_data.item (a_data_name) as l_data then
@@ -121,7 +121,7 @@ feature -- Command
 				end
 			end
 		ensure
-			data_cleared: (attached {SD_MIDDLE_CONTAINER} a_widget as lt_widget_2) implies not has_spliter_data (a_data_name)
+			data_cleared: attached {SD_MIDDLE_CONTAINER} a_widget as lt_widget_2 implies not has_spliter_data (a_data_name)
 		end
 
 	update_middle_container
@@ -145,25 +145,24 @@ feature -- Command
 
 	update_visible
 			-- Update container visible
-		local
-			l_is_all_invisible: BOOLEAN
 		do
-			if readable then
-				if attached {SD_MIDDLE_CONTAINER} item as l_item then
-					l_is_all_invisible := update_visible_imp (l_item)
-				end
+			if
+				readable and then
+				attached {SD_MIDDLE_CONTAINER} item as l_item
+			then
+				update_visible_imp (l_item).do_nothing
 			end
 		end
 
 	recover_normal_for_only_one
 			-- If there is only one minimized zone, we restore it
 		do
-			if readable then
-				if attached {SD_UPPER_ZONE} item as l_zone_upper then
-					if l_zone_upper.is_minimized then
-						l_zone_upper.on_minimize
-					end
-				end
+			if
+				readable and then
+				attached {SD_UPPER_ZONE} item as l_zone_upper and then
+				l_zone_upper.is_minimized
+			then
+				l_zone_upper.on_minimize
 			end
 		end
 
@@ -280,7 +279,7 @@ feature -- Query
 			is_all_editors: is_all_editors (Result)
 		end
 
-	has_spliter_data (a_name: STRING): BOOLEAN
+	has_spliter_data (a_name: READABLE_STRING_32): BOOLEAN
 			-- Does `all_spliters_data' has data which key is `a_name' ?
 		require
 			not_empty: a_name /= Void and then not a_name.is_empty
@@ -483,12 +482,10 @@ feature {NONE} -- Implementation
 			not_void: a_middle_container /= Void
 			parent_not_void: a_middle_container.parent /= Void
 		local
-			l_widget: detachable EV_WIDGET
+			l_widget: EV_WIDGET
 			l_left_all_minimized, l_right_all_minimized: BOOLEAN
-			l_is_in_first: BOOLEAN
-			l_new_parent: SD_MIDDLE_CONTAINER
 		do
-			-- Update all middle container in first widget
+				-- Update all middle container in first widget.
 			l_widget := a_middle_container.first
 			if
 				attached {SD_MIDDLE_CONTAINER} l_widget as l_middle_container and
@@ -529,10 +526,9 @@ feature {NONE} -- Implementation
 
 				Result := l_left_all_minimized and l_right_all_minimized
 
-				if attached {SD_MIDDLE_CONTAINER} a_middle_container as l_parent then
+				if attached a_middle_container as l_parent then
 					if l_left_all_minimized or l_right_all_minimized then
 						-- Current should be a minimized container
-						l_is_in_first := l_parent.first = a_middle_container
 						if attached l_parent.first as l_first and attached l_parent.second as l_second then
 							if not l_parent.is_minimized then
 								-- If one child is hidden, then the splitter bar is hidden by EV_VERTICAL_SPLIT_AREA/EV_HORIZONTAL_SPLIT_AREA automatically, we don't need to change it.	
@@ -553,7 +549,7 @@ feature {NONE} -- Implementation
 					else
 						-- Current should be a normal spliter area
 						if l_parent.is_minimized and not l_left_all_minimized and not l_right_all_minimized then
-							l_new_parent := change_parent_to_normal_container (l_parent)
+							change_parent_to_normal_container (l_parent).do_nothing
 						end
 					end
 				end
@@ -628,7 +624,7 @@ feature {NONE} -- Implementation
 			l_first := a_middle_container.first
 			l_second := a_middle_container.second
 
-			save_spliter_position (a_middle_container, generating_type.name + ".change_parent_to_normal_container")
+			save_spliter_position (a_middle_container, generating_type.name_32 + {STRING_32} ".change_parent_to_normal_container")
 
 			if attached {SD_VERTICAL_BOX} a_middle_container then
 				create {SD_VERTICAL_SPLIT_AREA} Result
@@ -656,7 +652,7 @@ feature {NONE} -- Implementation
 				l_parent_middle_container.set_split_position (l_parent_split_position)
 			end
 
-			restore_spliter_position (Result, generating_type.name + ".change_parent_to_normal_container")
+			restore_spliter_position (Result, generating_type.name_32 + {STRING_32} ".change_parent_to_normal_container")
 
 			if l_split_position >= Result.minimum_split_position and l_split_position <= Result.maximum_split_position then
 				Result.set_split_position (l_split_position)
@@ -687,7 +683,7 @@ feature {NONE} -- Implementation
 			l_first := a_middle_container.first
 			l_second := a_middle_container.second
 
-			save_spliter_position (a_middle_container, generating_type.name + ".change_parent_to_minimized_container")
+			save_spliter_position (a_middle_container, generating_type.name_32 + {STRING_32} ".change_parent_to_minimized_container")
 
 			if attached {EV_VERTICAL_SPLIT_AREA} a_middle_container then
 				create {SD_VERTICAL_BOX} Result.make
@@ -714,7 +710,7 @@ feature {NONE} -- Implementation
 				l_parent_middle_container.set_split_position (l_parent_split_position)
 			end
 
-			restore_spliter_position (Result, generating_type.name + ".change_parent_to_minimized_container")
+			restore_spliter_position (Result, generating_type.name_32 + {STRING_32} ".change_parent_to_minimized_container")
 
 			Result.set_split_position (l_split_position)
 
@@ -800,7 +796,7 @@ feature {NONE} -- Implementation
 
 				if attached {SD_MIDDLE_CONTAINER} l_widget as w then
 					l_widget_split := w
-					save_spliter_position (l_widget_split, generating_type.name + ".up_spliter_level")
+					save_spliter_position (l_widget_split, generating_type.name_32 + {STRING_32} ".up_spliter_level")
 				end
 
 				l_parent.prune (a_split_area)
@@ -822,7 +818,7 @@ feature {NONE} -- Implementation
 				end
 
 				if l_widget_split /= Void then
-					restore_spliter_position (l_widget_split, generating_type.name + ".up_spliter_level")
+					restore_spliter_position (l_widget_split, generating_type.name_32 + {STRING_32} ".up_spliter_level")
 				end
 			end
 		ensure
@@ -900,7 +896,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation attributes
 
-	all_spliters_data: HASH_TABLE [ARRAYED_LIST [INTEGER], STRING]
+	all_spliters_data: HASH_TABLE [ARRAYED_LIST [INTEGER], READABLE_STRING_32]
 			-- All spliters data
 			-- First argument is real type
 			-- Second argument is data name which is used for finding data when `restore_spliter_data'
@@ -913,7 +909,7 @@ feature {NONE} -- Implementation attributes
 		end
 
 	internal_shared: SD_SHARED
-			-- All singletons
+			-- All singletons.
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

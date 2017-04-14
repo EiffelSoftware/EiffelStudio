@@ -15,30 +15,24 @@ feature -- Access
 
 	icons: SD_ICONS_SINGLETON
 			-- SD_ICONS_SINGLETON instance.
-		local
-			l_result: detachable like icons
 		do
-			l_result := internal_icons_cell.item
-			if l_result = Void then
-				create {SD_DEFAULT_ICONS} l_result.make
-				internal_icons_cell.put (l_result)
+			Result := internal_icons_cell.item
+			if not attached Result then
+				create {SD_DEFAULT_ICONS} Result.make
+				internal_icons_cell.put (Result)
 			end
-			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
 
 	interface_names: SD_INTERFACE_NAMES
 			-- All interface names
-		local
-			l_result: detachable like interface_names
 		do
-			l_result := internal_interface_names_cell.item
-			if l_result = Void then
-				create {SD_DEFAULT_INTERFACE_NAMES} l_result
-				internal_interface_names_cell.put (l_result)
+			Result := internal_interface_names_cell.item
+			if not attached Result then
+				create {SD_DEFAULT_INTERFACE_NAMES} Result
+				internal_interface_names_cell.put (Result)
 			end
-			Result := l_result
 		ensure
 			not_void: Result /= Void
 		end
@@ -775,7 +769,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

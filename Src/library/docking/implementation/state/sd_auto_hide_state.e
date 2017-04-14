@@ -504,13 +504,13 @@ feature {SD_AUTO_HIDE_ANIMATION} -- Internal features
 			valid: a_width_height >= 0
 		do
 			if direction  = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
-				if (a_width_height <= (docking_manager.fixed_area.width * 0.8).ceiling) then
+				if a_width_height <= (docking_manager.fixed_area.width * 0.8).ceiling then
 					Result := a_width_height
 				else
 					Result := (docking_manager.fixed_area.width * 0.8).ceiling
 				end
 			else
-				if (a_width_height <= (docking_manager.fixed_area.height * 0.8).ceiling) then
+				if a_width_height <= (docking_manager.fixed_area.height * 0.8).ceiling then
 					Result := a_width_height
 				else
 					Result := (docking_manager.fixed_area.height * 0.8).ceiling
@@ -553,7 +553,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

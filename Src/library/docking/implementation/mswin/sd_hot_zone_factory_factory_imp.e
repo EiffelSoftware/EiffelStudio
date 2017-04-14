@@ -17,8 +17,6 @@ feature -- Hot zone factory
 			-- <Precursor>
 		local
 			l_version: WEL_WINDOWS_VERSION
-			l_shared: SD_SHARED
-			l_line_drawer: SD_LINE_DRAWER
 			l_system: SD_SYSTEM_SETTER
 		do
 			create l_version
@@ -27,15 +25,13 @@ feature -- Hot zone factory
 				create {SD_HOT_ZONE_TRIANGLE_FACTORY} Result.make (m)
 			else
 				create {SD_HOT_ZONE_OLD_FACTORY} Result.make (m)
-				create l_shared
-				l_line_drawer := l_shared.feedback.line_drawer
-				l_line_drawer.reset_screen
+				(create {SD_SHARED}).feedback.line_drawer.reset_screen
 			end
 		end
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

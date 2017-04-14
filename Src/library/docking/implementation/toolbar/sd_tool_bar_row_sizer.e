@@ -27,11 +27,8 @@ feature {SD_TOOL_BAR_ROW_POSITIONER} -- Initialization
 
 	set_mediator
 			-- Initialize `internal_mediator'.
-		local
-			l_shared: SD_SHARED
 		do
-			create l_shared
-			internal_mediator := l_shared.tool_bar_docker_mediator_cell.item
+			internal_mediator := (create {SD_SHARED}).tool_bar_docker_mediator_cell.item
 		end
 
 feature -- Command
@@ -42,8 +39,6 @@ feature -- Command
 			ready: (create {SD_SHARED}).tool_bar_docker_mediator_cell.item /= Void
 		local
 			l_tool_bars: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
-			l_shared: SD_SHARED
-			l_mediator: detachable like internal_mediator
 			l_sizes: like all_sizes
 		do
 			from
@@ -57,10 +52,7 @@ feature -- Command
 				l_sizes.extend (l_tool_bars.item_for_iteration.size)
 				l_tool_bars.forth
 			end
-			create l_shared
-			l_mediator := l_shared.tool_bar_docker_mediator_cell.item
-			check l_mediator /= Void end -- Implied by precondition `ready'
-			internal_mediator := l_mediator
+			internal_mediator := (create {SD_SHARED}).tool_bar_docker_mediator_cell.item
 		end
 
 	end_drag_clean
@@ -264,7 +256,6 @@ feature -- Query
 			-- Space that not enough, so have to reduce tool bars size
 			-- If space is enough, Result will negative, means size we can expand
 		local
-			l_all_size: INTEGER
 			l_tool_bars: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_row_max_size: INTEGER
 		do
@@ -278,8 +269,7 @@ feature -- Query
 				l_tool_bars.forth
 			end
 			if a_dragging_state then
-				l_all_size := internal_tool_bar_row.size
-				Result := l_row_max_size - l_all_size
+				Result := l_row_max_size - internal_tool_bar_row.size
 			else
 				Result := l_row_max_size - a_new_size
 			end
@@ -302,23 +292,17 @@ feature -- Query
 		end
 
 	size_of (a_index: INTEGER): INTEGER
-			-- Size of SD_TOOL_BAR_ZONE which index is `a_index'
+			-- Size of SD_TOOL_BAR_ZONE which index is `a_index'.
 		require
 			valid: valid_index (a_index)
-		local
-			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 		do
-			l_zones := internal_tool_bar_row.zones
-			Result := l_zones.at (a_index).size
+			Result := internal_tool_bar_row.zones [a_index].size
 		end
 
 	valid_index (a_index: INTEGER): BOOLEAN
 			-- If `a_index' valid?
-		local
-			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 		do
-			l_zones := internal_tool_bar_row.zones
-			Result := a_index > 0 and a_index <= l_zones.count
+			Result := a_index > 0 and a_index <= internal_tool_bar_row.zones.count
 		end
 
 feature {NONE} -- Implementation for `try_solve_no_space_left'
@@ -447,6 +431,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_left'
 
 				if a_hot_index = a_possible_positions.count and then (l_size_to_expand_right - l_total_expanded_size_right) >= 0 then
 					l_total_expanded_size_right := l_total_expanded_size_right + l_mediator.caller.assistant.expand_size (l_size_to_expand_right - l_total_expanded_size_right)
+					l_total_expanded_size_right.do_nothing
 				end
 			else
 				check False end -- Implied by precondition `not_void'
@@ -722,7 +707,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

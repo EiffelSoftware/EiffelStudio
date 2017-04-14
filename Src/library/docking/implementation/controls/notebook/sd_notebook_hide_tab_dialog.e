@@ -106,8 +106,6 @@ feature {NONE} -- Implementation agents
 
 	on_text_key_press (a_key: EV_KEY)
 			-- Handle `internal_text_box' key press
-		local
-			l_stop: BOOLEAN
 		do
 			inspect
 				a_key.code
@@ -116,7 +114,6 @@ feature {NONE} -- Implementation agents
 			when {EV_KEY_CONSTANTS}.Key_enter then
 				if attached current_focus_label as l_label and then attached find_tab_by_label (l_label) as l_selected_tab then
 					select_content (internal_notebook.content_by_tab (l_selected_tab))
-					l_stop := True
 				end
 				destroy
 			when {EV_KEY_CONSTANTS}.Key_down then
@@ -367,13 +364,11 @@ feature {NONE} -- Implementation functions
 			-- Update current size base on current minmum size
 		local
 			l_max_height: INTEGER
-			l_screen: EV_SCREEN
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_item_height: INTEGER
 			l_item_count: INTEGER
 		do
-			create l_screen
-			l_max_height := (l_screen.height * max_screen_height_proportion).ceiling
+			l_max_height := ((create {EV_SCREEN}).height * max_screen_height_proportion).ceiling
 			internal_tool_bar.compute_minimum_size
 			internal_scroll_area.set_item_height (internal_tool_bar.minimum_height)
 			if minimum_height + internal_tool_bar.minimum_height  <= l_max_height then
@@ -435,7 +430,10 @@ feature {NONE} -- Implementation functions
 			internal_tool_bar.extend (l_tab_indicator)
 
 			items_and_tabs.extend ([l_tab_indicator, a_tab])
-			l_tab_indicator.pointer_button_press_actions.force_extend (agent on_label_selected (items_and_tabs.count))
+			l_tab_indicator.pointer_button_press_actions.extend
+					(agent (a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32; a_count: INTEGER_32)
+						do on_label_selected (a_count) end
+						(?, ?, ?, ?, ?, ?, ?, ?, items_and_tabs.count))
 		ensure
 --			extended: old internal_label_box.count = internal_label_box.count - 1
 		end
@@ -559,7 +557,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

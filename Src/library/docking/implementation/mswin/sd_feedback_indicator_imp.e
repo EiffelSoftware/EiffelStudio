@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			-- Handle timer `t' actions.
 		do
 			alpha := alpha + alpha_step
-			if not (alpha <= 255) then
+			if alpha > 255 then
 				alpha := 255
 			end
 			if exists then
@@ -353,7 +353,7 @@ feature {NONE} -- Externals
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -231,7 +231,7 @@ feature -- Redefine
 					l_old_stuff := a_multi_dock_area.item
 					if attached {EV_SPLIT_AREA} l_old_stuff as spl then
 						l_old_spliter := spl
-						a_multi_dock_area.save_spliter_position (l_old_spliter, generating_type)
+						a_multi_dock_area.save_spliter_position (l_old_spliter, generating_type.name_32)
 					end
 					a_multi_dock_area.prune (l_old_stuff)
 				end
@@ -258,7 +258,7 @@ feature -- Redefine
 					l_new_container.set_split_position (top_split_position (direction, l_new_container))
 				end
 				if l_old_spliter /= Void then
-					a_multi_dock_area.restore_spliter_position (l_old_spliter, generating_type)
+					a_multi_dock_area.restore_spliter_position (l_old_spliter, generating_type.name_32)
 				end
 				docking_manager.command.remove_empty_split_area
 				docking_manager.command.update_title_bar
@@ -344,11 +344,7 @@ feature -- Redefine
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				if attached {EV_WIDGET} zone as lt_widget then
-					docking_manager.command.lock_update (lt_widget, False)
-				else
-					check not_possible: False end
-				end
+				docking_manager.command.lock_update (zone, False)
 
 				record_state
 				if attached zone.parent as l_parent then
@@ -491,7 +487,7 @@ feature -- Redefine
 				l_spliter.hide
 			end
 
-			if attached {SD_MULTI_DOCK_AREA} docking_manager.query.inner_container (zone) as l_multi_dock_area then
+			if attached docking_manager.query.inner_container (zone) as l_multi_dock_area then
 				if not docking_manager.query.is_main_inner_container (l_multi_dock_area) then
 					l_multi_dock_area.update_title_bar
 				else
@@ -652,7 +648,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

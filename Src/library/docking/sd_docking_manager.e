@@ -41,7 +41,6 @@ feature {NONE} -- Initialization
 			a_container_not_full: not a_container.full
 			a_widnow_valid: window_valid (a_window)
 		local
-			l_checker: SD_DEPENDENCY_CHECKER
 			l_list: ARRAYED_LIST [SD_DOCKING_MANAGER_HOLDER]
 			l_left, l_right, l_top, l_bottom: like internal_auto_hide_panel_bottom
 		do
@@ -101,8 +100,7 @@ feature {NONE} -- Initialization
 				internal_shared.set_show_tab_stub_text (True)
 			end
 
-			create {SD_DEPENDENCY_CHECKER_IMP} l_checker
-			l_checker.check_dependency (main_window)
+			;(create {SD_DEPENDENCY_CHECKER_IMP}).check_dependency (main_window)
 
 			internal_shared.add_docking_manager (Current)
 
@@ -320,11 +318,8 @@ feature -- Command
 		require
 			a_file_not_void: a_file /= Void
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			Result := l_config.save_config_with_path (a_file)
+			Result := (create {SD_SAVE_CONFIG_MEDIATOR}.make (Current)).save_config_with_path (a_file)
 		end
 
 	save_editors_data_with_path (a_file: PATH): BOOLEAN
@@ -332,11 +327,8 @@ feature -- Command
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			Result := l_config.save_editors_config_with_path (a_file)
+			Result := (create {SD_SAVE_CONFIG_MEDIATOR}.make (Current)).save_editors_config_with_path (a_file)
 		end
 
 	save_tools_data_with_path (a_file: PATH): BOOLEAN
@@ -344,11 +336,8 @@ feature -- Command
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			Result := l_config.save_tools_config_with_path (a_file)
+			Result := (create {SD_SAVE_CONFIG_MEDIATOR}.make (Current)).save_tools_config_with_path (a_file)
 		end
 
 	save_tools_data_with_name_and_path (a_file: PATH; a_name: READABLE_STRING_GENERAL): BOOLEAN
@@ -356,11 +345,8 @@ feature -- Command
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			Result := l_config.save_tools_config_with_name_and_path (a_file, a_name)
+			Result := (create {SD_SAVE_CONFIG_MEDIATOR}.make (Current)).save_tools_config_with_name_and_path (a_file, a_name)
 		end
 
 	open_config_with_path (a_file: PATH): BOOLEAN
@@ -372,22 +358,16 @@ feature -- Command
 			a_file_not_void: a_file /= Void
 			a_file_readable: is_file_path_readable (a_file)
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			Result := l_config.open_config_with_path (a_file)
+			Result := (create {SD_OPEN_CONFIG_MEDIATOR}.make (Current)).open_config_with_path (a_file)
 		end
 
 	open_editors_config_with_path (a_file: PATH)
 			-- Open main window editors' layout configuration data previously stored in `a_file'
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			l_config.open_editors_config_with_path (a_file)
+			;(create {SD_OPEN_CONFIG_MEDIATOR}.make (Current)).open_editors_config_with_path (a_file)
 		end
 
 	open_tools_config_with_path (a_file: PATH): BOOLEAN
@@ -398,33 +378,24 @@ feature -- Command
 			-- See bug#14309
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			Result := l_config.open_tools_config_with_path (a_file)
+			Result := (create {SD_OPEN_CONFIG_MEDIATOR}.make (Current)).open_tools_config_with_path (a_file)
 		end
 
 	open_maximized_tool_config_with_path (a_file: PATH)
 			-- Open tool's maximization statues configuration data previously stored in `a_file'
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			l_config.open_maximized_tool_data_with_path (a_file)
+			;(create {SD_OPEN_CONFIG_MEDIATOR}.make (Current)).open_maximized_tool_data_with_path (a_file)
 		end
 
 	open_tool_bar_item_config_with_path (a_file: PATH)
 			-- Open tool bar items' layout configuration data previously stored in `a_file'
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			l_config.open_tool_bar_item_data_with_path (a_file)
+			;(create {SD_OPEN_CONFIG_MEDIATOR}.make (Current)).open_tool_bar_item_data_with_path (a_file)
 		end
 
 	set_main_area_background_color (a_color: EV_COLOR)
@@ -475,7 +446,7 @@ feature -- Command
 		do
 			is_locked := True
 		ensure
-			locked: is_locked = True
+			locked: is_locked
 		end
 
 	unlock
@@ -485,7 +456,7 @@ feature -- Command
 		do
 			is_locked := False
 		ensure
-			unlocked: is_locked = False
+			unlocked: not is_locked
 		end
 
 	lock_editor
@@ -495,7 +466,7 @@ feature -- Command
 		do
 			is_editor_locked := True
 		ensure
-			locked: is_editor_locked = True
+			locked: is_editor_locked
 		end
 
 	unlock_editor
@@ -505,7 +476,7 @@ feature -- Command
 		do
 			is_editor_locked := False
 		ensure
-			unlocked: is_editor_locked = False
+			unlocked: not is_editor_locked
 		end
 
 	maximize_editor_area
@@ -770,59 +741,51 @@ feature -- Obsolete
 	save_config (a_file: READABLE_STRING_GENERAL)
 			-- Save current docking config
 		obsolete
-			"Use save_data instead"
+			"Use save_data instead. [2017-05-31]"
 		require
 			a_file_not_void: a_file /= Void
 			not_destroyed: not is_destroyed
-		local
-			l_result: BOOLEAN
 		do
-			l_result := save_data (a_file)
+			save_data (a_file).do_nothing
 		end
 
 	save_editors_config (a_file: READABLE_STRING_GENERAL)
 			-- Save main window editor config
 		obsolete
-			"Use save_editors_data instead"
+			"Use save_editors_data instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
-		local
-			l_result: BOOLEAN
 		do
-			l_result := save_editors_data (a_file)
+			save_editors_data (a_file).do_nothing
 		end
 
 	save_tools_config (a_file: READABLE_STRING_GENERAL)
 			-- Save tools config
 		obsolete
-			"Use save_tools_data instead"
+			"Use save_tools_data instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
-		local
-			l_result: BOOLEAN
 		do
-			l_result := save_tools_data (a_file)
+			save_tools_data (a_file).do_nothing
 		end
 
 	save_tools_config_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL)
 			-- Save tools config
 		obsolete
-			"Use save_tools_data_with_name instead"
+			"Use save_tools_data_with_name instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
-		local
-			l_result: BOOLEAN
 		do
-			l_result := save_tools_data_with_name (a_file, a_name)
+			save_tools_data_with_name (a_file, a_name).do_nothing
 		end
 
 	is_title_unique (a_title: READABLE_STRING_GENERAL): BOOLEAN
 			-- If `a_title' unique in all contents `unique_title's ?
 		obsolete
-			"Use is_unique_title_free_to_use instead"
+			"Use is_unique_title_free_to_use instead. [2017-05-31]"
 		require
 			a_title: a_title /= Void
 			not_destroyed: not is_destroyed
@@ -833,7 +796,7 @@ feature -- Obsolete
 	save_data (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save current docking config data (including tools' data and editors' data) into `a_file'
 		obsolete
-			"Use save_data_with_path instead"
+			"Use save_data_with_path instead. [2017-05-31]"
 		require
 			a_file_not_void: a_file /= Void
 			not_destroyed: not is_destroyed
@@ -844,7 +807,7 @@ feature -- Obsolete
 	save_editors_data (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save main window's editor layout configuration data into `a_file'
 		obsolete
-			"Use save_editors_data_with_path instead"
+			"Use save_editors_data_with_path instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
@@ -855,7 +818,7 @@ feature -- Obsolete
 	save_tools_data (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save tools' layout configuration data into `a_file'
 		obsolete
-			"Use save_tools_data_with_path instead"
+			"Use save_tools_data_with_path instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
@@ -866,7 +829,7 @@ feature -- Obsolete
 	save_tools_data_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save tools' layout configuration data into a file named `a_file' and store `a_name' into the data
 		obsolete
-			"Use save_tools_data_with_name_and_path instead"
+			"Use save_tools_data_with_name_and_path instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
@@ -880,7 +843,7 @@ feature -- Obsolete
 			-- Result False means the operation failed, maybe due to `a_file' not exist, or
 			-- data in `a_file' corrupted.
 		obsolete
-			"Use open_config_with_path instead"
+			"Use open_config_with_path instead. [2017-05-31]"
 		require
 			a_file_not_void: a_file /= Void
 			a_file_readable: is_file_readable (a_file)
@@ -892,7 +855,7 @@ feature -- Obsolete
 	open_editors_config (a_file: READABLE_STRING_GENERAL)
 			-- Open main window editors' layout configuration data previously stored in `a_file'
 		obsolete
-			"Use open_editors_config_with_path instead"
+			"Use open_editors_config_with_path instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -906,7 +869,7 @@ feature -- Obsolete
 			-- Note: If window is minimized, EV_SPLIT_AREA split bar position can't be restored correctly
 			-- See bug#14309
 		obsolete
-			"Use open_tools_config_with_path instead"
+			"Use open_tools_config_with_path instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -916,7 +879,7 @@ feature -- Obsolete
 	open_maximized_tool_config (a_file: READABLE_STRING_GENERAL)
 			-- Open tool's maximization statues configuration data previously stored in `a_file'
 		obsolete
-			"Use open_maximized_tool_config_with_path instead"
+			"Use open_maximized_tool_config_with_path instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -926,7 +889,7 @@ feature -- Obsolete
 	open_tool_bar_item_config (a_file: READABLE_STRING_GENERAL)
 			-- Open tool bar items' layout configuration data previously stored in `a_file'
 		obsolete
-			"Use open_tool_bar_item_config_with_path instead"
+			"Use open_tool_bar_item_config_with_path instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -936,7 +899,7 @@ feature -- Obsolete
 	is_file_readable (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `a_file_name' exist and readable?
 		obsolete
-			"Use is_file_path_readable instead"
+			"Use is_file_path_readable instead. [2017-05-31]"
 		do
 			Result := is_file_path_readable (create {PATH}.make_from_string (a_file_name))
 		end
@@ -944,7 +907,7 @@ feature -- Obsolete
 	is_config_data_valid (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
 			 -- Is config data in `a_file_name' valid?
 		obsolete
-			"Use is_config_data_path_valid instead"
+			"Use is_config_data_path_valid instead. [2017-05-31]"
 		do
 			Result := is_config_data_path_valid (create {PATH}.make_from_string (a_file_name))
 		end

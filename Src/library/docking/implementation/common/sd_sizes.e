@@ -44,14 +44,12 @@ feature {NONE} -- Implementation
 	update_tool_bar_font_sizes
 			-- Update `Tool_bar_font_cell' and related singletons.
 		local
-			l_color: SD_SYSTEM_COLOR
 			l_tool_bar_font: EV_FONT
 			l_tool_bar_font_height: INTEGER
 			l_title_bar_height: INTEGER
 			l_tool_bar_border_width: INTEGER
 		do
-			create {SD_SYSTEM_COLOR_IMP} l_color.make
-			l_tool_bar_font := l_color.tool_bar_font
+			l_tool_bar_font := (create {SD_SYSTEM_COLOR_IMP}.make).tool_bar_font
 			tool_bar_font := l_tool_bar_font
 
 			l_tool_bar_font_height := l_tool_bar_font.height
@@ -183,7 +181,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

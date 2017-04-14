@@ -92,13 +92,9 @@ feature -- Command
 		require
 			a_container_not_void: a_container /= Void
 			a_container_not_full: not a_container.full
-		local
-			l_docking_state: SD_DOCKING_STATE
 		do
 			a_container.extend (Current)
-
-			create l_docking_state.make_for_place_holder_zone (content, Current)
-
+			;(create {SD_DOCKING_STATE}.make_for_place_holder_zone (content, Current)).do_nothing
 			if not docking_manager.contents.has (content) then
 				docking_manager.contents.extend (content)
 			end
@@ -121,7 +117,9 @@ feature {SD_DOCKING_MANAGER_COMMAND} -- Internal command
 			create l_tool_bar.make
 			create l_button.make
 			l_button.set_text (internal_shared.interface_names.editor_area)
-			l_button.pointer_button_press_actions.force_extend (agent (docking_manager.command).restore_editor_area_for_minimized)
+			l_button.pointer_button_press_actions.extend
+				(agent (a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32)
+					do (docking_manager.command).restore_editor_area_for_minimized end)
 			l_button.set_pixel_buffer (internal_shared.icons.editor_area)
 			l_tool_bar.extend (l_button)
 			create l_border.make
@@ -169,16 +167,13 @@ feature -- Query
 		end
 
 	title: STRING_32
-			-- Title
-		local
-			l_shared: SD_SHARED
+			-- Title.
 		do
-			create l_shared
-			Result := l_shared.editor_place_holder_content_name
+			Result := (create {SD_SHARED}).editor_place_holder_content_name
 		end
 
 	title_area: EV_RECTANGLE
-			-- Place holder content has zero sized title area
+			-- Place holder content has zero sized title area.
 		do
 			create Result
 		end
@@ -213,7 +208,7 @@ feature {NONE} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

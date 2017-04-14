@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "System color on Windows."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -57,11 +57,8 @@ feature -- Querys
 
 	default_background_color: EV_COLOR
 			-- <Precursor>
-		local
-			l_colors: EV_STOCK_COLORS
 		do
-			create l_colors
-			Result := l_colors.default_background_color
+			Result := (create {EV_STOCK_COLORS}).default_background_color
 		end
 
 	active_border_color: EV_COLOR
@@ -149,19 +146,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

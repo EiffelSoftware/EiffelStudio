@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that draw feedback when user dragging a window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,9 +11,10 @@ class
 create
 	make
 
-feature
+feature {NONE} -- Creation
+
 	make
-			-- Creation method
+			-- Creation method.
 		do
 			create internal_shared
 			create feedback_rect.make
@@ -221,7 +222,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -230,10 +231,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

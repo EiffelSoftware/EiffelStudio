@@ -71,11 +71,8 @@ feature {NONE}  -- Initlization
 			-- Creation method for right-click menu
 		require
 			not_void: a_tool_bar /= Void
-		local
-			l_list: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
-			create l_list.make (1)
-			make (l_list, a_tool_bar)
+			make (create {ARRAYED_LIST [SD_TOOL_BAR_ITEM]}.make (1), a_tool_bar)
 		end
 
 	init_grouping (a_hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
@@ -271,7 +268,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -197,7 +197,7 @@ feature -- Command
 
 			is_visible := True
 		ensure
-			visible: is_visible = True
+			visible: is_visible
 		end
 
 	set_top_with (a_target_content: SD_TOOL_BAR_CONTENT)
@@ -224,7 +224,7 @@ feature -- Command
 
 			is_visible := True
 		ensure
-			visible: is_visible = True
+			visible: is_visible
 		end
 
 	refresh
@@ -344,7 +344,7 @@ feature -- Query
 					-- At least two sepators at the end.
 					Result := Result - 1
 				end
-			elseif l_last_is_separator = True and l_items.count = 1 then
+			elseif l_last_is_separator and l_items.count = 1 then
 				-- Only one separator
 				Result := 0
 			elseif l_items.count = 0 then
@@ -399,28 +399,22 @@ feature -- Query
 
 	show_request_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to perform when show requested
-		local
-			l_result: like internal_show_request_actions
 		do
-			l_result := internal_show_request_actions
-			if l_result = Void then
-				create l_result
-				internal_show_request_actions := l_result
+			Result := internal_show_request_actions
+			if not attached Result then
+				create Result
+				internal_show_request_actions := Result
 			end
-			Result := l_result
 		end
 
 	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions to perfrom when close requested
-		local
-			l_result: like internal_close_request_actions
+			-- Actions to perfrom when close requested.
 		do
-			l_result := internal_close_request_actions
-			if l_result = Void then
-				create l_result
-				internal_close_request_actions := l_result
+			Result := internal_close_request_actions
+			if not attached Result then
+				create Result
+				internal_close_request_actions := Result
 			end
-			Result := l_result
 		end
 
 	item_count_except_sep (a_include_invisible: BOOLEAN): INTEGER
@@ -513,33 +507,33 @@ feature -- Query
 feature -- Obsolete
 
 	item_count_except_separator: INTEGER
-			-- Item count except SD_TOOL_BAR_SEPARATOR
+			-- Item count except SD_TOOL_BAR_SEPARATOR.
 		obsolete
-			"Use item_count_except_sep instead."
+			"Use item_count_except_sep instead. [2017-05-31]"
 		do
 			Result := item_count_except_sep (True)
 		end
 
 	group (a_group_index: INTEGER_32): like group_items
-			-- Group items except hidden items
+			-- Group items except hidden items.
 		obsolete
-			"Use group_items instead."
+			"Use group_items instead. [2017-05-31]"
 		do
 			Result := group_items (a_group_index, True)
 		end
 
 	group_count: INTEGER
-			-- Group count, group is buttons before one separater
+			-- Group count, group is buttons before one separater.
 		obsolete
-			"Use groups_count instead."
+			"Use groups_count instead. [2017-05-31]"
 		do
 			Result := groups_count (True)
 		end
 
 	items_except_separator: like items_except_sep
-			-- `items' except SD_TOOL_BAR_SEPARATOR
+			-- `items' except SD_TOOL_BAR_SEPARATOR.
 		obsolete
-			"Use items_except_sep instead."
+			"Use items_except_sep instead. [2017-05-31]"
 		do
 			Result := items_except_sep (True)
 		end
@@ -760,7 +754,7 @@ invariant
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

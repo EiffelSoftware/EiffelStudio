@@ -154,17 +154,14 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	popup: EV_POPUP_WINDOW
-			-- Lazy creator of `popup_imp'
-		local
-			l_popup_imp: like popup_imp
+			-- Lazy creator of `popup_imp'.
 		do
-			l_popup_imp := popup_imp
-			if l_popup_imp = Void then
-				create l_popup_imp
-				popup_imp := l_popup_imp
-				l_popup_imp.focus_out_actions.extend (agent l_popup_imp.hide)
+			Result := popup_imp
+			if not attached Result then
+				create Result
+				popup_imp := Result
+				Result.focus_out_actions.extend (agent Result.hide)
 			end
-			Result := l_popup_imp
 		ensure
 			not_void: Result /= Void
 		end

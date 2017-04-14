@@ -132,13 +132,10 @@ feature -- Redefine
 
 	stick (a_direction: INTEGER)
 			-- <Precursor>
-		local
-			l_auto_hide_state: SD_AUTO_HIDE_STATE
 		do
 			content.set_visible (True)
 			docking_manager.command.lock_update (Void, True)
-			create l_auto_hide_state.make (content, a_direction)
-			change_state (l_auto_hide_state)
+			change_state (create {SD_AUTO_HIDE_STATE}.make (content, a_direction))
 			docking_manager.command.unlock_update
 		ensure then
 			state_changed: content.state /= Current
@@ -219,9 +216,8 @@ feature -- Redefine
 	show
 			-- <Precursor>
 		local
-			l_new_state: detachable SD_AUTO_HIDE_STATE
 			retried: BOOLEAN
-			l_dock_area: detachable SD_MULTI_DOCK_AREA
+			l_dock_area: SD_MULTI_DOCK_AREA
 		do
 			if attached relative as l_relative and then (not retried and l_relative.is_visible) then
 				if attached l_relative.state.zone as z then
@@ -244,8 +240,7 @@ feature -- Redefine
 					move_to_docking_zone (l_docking_zone, False)
 				end
 				if attached {SD_AUTO_HIDE_STATE} l_relative.state as l_auto_hide_state then
-					create l_new_state.make_with_friend (content, l_relative)
-					change_state (l_new_state)
+					change_state (create {SD_AUTO_HIDE_STATE}.make_with_friend (content, l_relative))
 				end
 			else
 				float (internal_shared.default_screen_x, internal_shared.default_screen_y)

@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 feature -- Save inner container data.
 
 	save_config_with_name_and_path (a_file: PATH; a_name: READABLE_STRING_GENERAL): BOOLEAN
-			-- Save all docking library data to `a_file' with `a_name'
+			-- Save all docking library data to `a_file' with `a_name'.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_not_void: a_name /= Void
@@ -141,7 +141,7 @@ feature -- Save inner container data.
 		end
 
 	save_tools_config_with_name_and_path (a_file: PATH; a_name: READABLE_STRING_GENERAL): BOOLEAN
-			-- Save tools config to `a_file' with `a_name'
+			-- Save tools config to `a_file' with `a_name'.
 		require
 			not_called: top_container = Void
 			a_file_not_void: a_file /= Void
@@ -195,7 +195,7 @@ feature -- Obsolete
 	save_config_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save all docking library data to `a_file' with `a_name'
 		obsolete
-			"Use save_config_with_name_and_path instead"
+			"Use save_config_with_name_and_path instead. [2017-05-31]"
 		require
 			a_file_not_void: a_file /= Void
 			a_file_not_void: a_name /= Void
@@ -206,7 +206,7 @@ feature -- Obsolete
 	save_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save all docking library data to `a_file'.
 		obsolete
-			"Use save_config_with_path instead"
+			"Use save_config_with_path instead. [2017-05-31]"
 		require
 			a_file_not_void: a_file /= Void
 		do
@@ -216,7 +216,7 @@ feature -- Obsolete
 	save_editors_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save main window editor config data.
 		obsolete
-			"Use save_editors_config_with_path instead"
+			"Use save_editors_config_with_path instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 		do
@@ -228,7 +228,7 @@ feature -- Obsolete
 	save_tools_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save tools config, except all editors.
 		obsolete
-			"Use save_tools_config_with_path instead"
+			"Use save_tools_config_with_path instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 		do
@@ -236,9 +236,9 @@ feature -- Obsolete
 		end
 
 	save_tools_config_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
-			-- Save tools config to `a_file' with `a_name'
+			-- Save tools config to `a_file' with `a_name'.
 		obsolete
-			"Use save_tools_config_with_name_and_path instead"
+			"Use save_tools_config_with_name_and_path instead. [2017-05-31]"
 		require
 			not_called: top_container = Void
 			a_file_not_void: a_file /= Void
@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 					if attached {SD_ZONE} a_widget as l_zone then
 						a_config_data.set_is_split_area (False)
 						l_zone.save_content_title (a_config_data)
-						a_config_data.set_state (l_zone.content.state.generating_type)
+						a_config_data.set_state (l_zone.content.state.generating_type.name_32)
 						a_config_data.set_direction (l_zone.content.state.direction)
 						if attached {EV_WIDGET} l_zone as lt_widget then
 							a_config_data.set_visible (lt_widget.is_displayed)
@@ -626,17 +626,14 @@ feature {NONE} -- Implementation
 			a_config_data_not_void: a_config_data /= Void
 			a_file_not_void: a_file /= Void
 		local
-			l_file: detachable RAW_FILE
-			l_facility: SED_STORABLE_FACILITIES
-			l_writer: SED_MEDIUM_READER_WRITER
+			l_file: RAW_FILE
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
 				create l_file.make_with_path (a_file)
 				l_file.create_read_write
-				create l_writer.make (l_file)
-				create l_facility
-				l_facility.store (a_config_data, l_writer)
+				;(create {SED_STORABLE_FACILITIES}).store
+					(a_config_data, create {SED_MEDIUM_READER_WRITER}.make (l_file))
 				l_file.close
 				Result := True
 			end
@@ -659,7 +656,7 @@ feature {NONE} -- Implementation attributes
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -69,7 +69,6 @@ feature {NONE} -- Initialization
 			end
 			internal_tool_bar_dot_drawer := l_drawer
 			create bar_dot.make_with_size (3, 3)
-			check l_drawer /= Void end -- Implied by previous if clause
 			l_drawer.draw (bar_dot)
 
 			create drag_area_rectangle
@@ -491,12 +490,8 @@ feature -- Query
 			-- Attached `internal_content'
 		require
 			set: internal_content /= Void
-		local
-			l_result: like internal_content
 		do
-			l_result := internal_content
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
+			Result := internal_content
 		ensure
 			not_void: Result /= Void
 		end
@@ -842,7 +837,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

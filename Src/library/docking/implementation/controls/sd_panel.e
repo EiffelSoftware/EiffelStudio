@@ -93,12 +93,10 @@ feature   -- Access
 		do
 			user_widget := a_widget
 			internal_border_box.wipe_out
-			if attached a_widget then
-				if attached a_widget.parent as l_parent then
-					l_parent.prune (a_widget)
-				end
-				internal_border_box.extend (a_widget)
+			if attached a_widget.parent as l_parent then
+				l_parent.prune (a_widget)
 			end
+			internal_border_box.extend (a_widget)
 		ensure
 			contain_right_number_widget: attached a_widget implies internal_border_box.count = 1
 			contain_user_wiget: attached a_widget implies internal_border_box.has (a_widget)
@@ -155,61 +153,48 @@ feature -- Actions
 
 	close_request_actions: attached like internal_close_request_actions
 			-- `internal_close_request_actions'
-		local
-			l_actions: like internal_close_request_actions
 		do
-			l_actions := internal_close_request_actions
-			if l_actions = Void then
-				create l_actions
-				internal_close_request_actions := l_actions
+			Result := internal_close_request_actions
+			if not attached Result then
+				create Result
+				internal_close_request_actions := Result
 			end
-			Result := l_actions
 		ensure
 			not_void: Result /= Void
 		end
 
 	stick_actions: attached like internal_stick_actions
 			-- `internal_stick_actions'
-		local
-			l_actions: like internal_stick_actions
 		do
-			l_actions := internal_stick_actions
-			if l_actions = Void then
-				create l_actions
-				internal_stick_actions := l_actions
+			Result := internal_stick_actions
+			if not attached Result then
+				create Result
+				internal_stick_actions := Result
 			end
-			Result := l_actions
 		ensure
 			not_void: Result /= Void
 		end
 
 	drag_actions: attached like internal_drag_actions
 			-- `internal_drag_actions'
-		local
-			l_actions: like internal_drag_actions
 		do
-			l_actions := internal_drag_actions
-			if l_actions = Void then
-				create l_actions
-				internal_drag_actions := l_actions
+			Result := internal_drag_actions
+			if not attached Result then
+				create Result
+				internal_drag_actions := Result
 			end
-			Result := l_actions
 		ensure
 			not_void: Result /= Void
 		end
 
 	normal_max_action: attached like internal_normal_max_action
 			-- `internal_normal_max_action'
-		local
-			l_actions: like internal_normal_max_action
 		do
-			l_actions := internal_normal_max_action
-			if l_actions = Void then
-				create l_actions
-				internal_normal_max_action := l_actions
+			Result := internal_normal_max_action
+			if not attached Result then
+				create Result
+				internal_normal_max_action := Result
 			end
-			check l_actions /= Void end -- Implied by previous if clause
-			Result := l_actions
 		ensure
 			not_void: Result /= Void
 		end
@@ -277,7 +262,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

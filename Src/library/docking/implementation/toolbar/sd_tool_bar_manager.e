@@ -285,11 +285,9 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 			main_window_not_has:
 		local
 			l_tool_bar_row: SD_TOOL_BAR_ROW
-			l_container: EV_CONTAINER
 		do
 			create l_tool_bar_row.make (docking_manager, False)
-			l_container := tool_bar_container (a_direction)
-			l_container.extend (l_tool_bar_row)
+			tool_bar_container (a_direction).extend (l_tool_bar_row)
 			set_top_imp (a_content, l_tool_bar_row)
 		end
 
@@ -598,7 +596,6 @@ feature {NONE} -- Implementation
 			not_destroyed: not is_destroyed
 		local
 			l_menu_item: EV_CHECK_MENU_ITEM
-			l_separator: EV_MENU_SEPARATOR
 			l_custom_dialog: SD_TOOL_BAR_HIDDEN_ITEM_DIALOG
 			l_string: READABLE_STRING_GENERAL
 			l_contents: like contents
@@ -633,8 +630,7 @@ feature {NONE} -- Implementation
 				l_contents.forth
 			end
 
-			create l_separator
-			Result.extend (l_separator)
+			Result.extend (create {EV_MENU_SEPARATOR})
 			-- Customize menu items
 
 			from
@@ -690,7 +686,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

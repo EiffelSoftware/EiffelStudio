@@ -35,14 +35,14 @@ feature {NONE} -- Initlization
 		do
 			docking_manager := a_docking_manager
 			create internal_shared
-			create all_spliters_data.make (5)
+			create all_spliters_data.make_equal (5)
 			default_create
 		end
 
 feature -- Command
 
 	update_title_bar
-			-- If `Current' parent is a SD_FLOATING_ZONE, update title bar
+			-- If `Current' parent is a SD_FLOATING_ZONE, update title bar.
 		do
 			if attached parent_floating_zone as l_floating_zone then
 				l_floating_zone.update_title_bar
@@ -60,7 +60,7 @@ feature -- Command
 		end
 
 	set_parent_floating_zone (a_floating_zone: SD_FLOATING_ZONE)
-			-- Set `parent_floating_zone'
+			-- Set `parent_floating_zone'.
 		require
 			a_floating_zone_not_void: a_floating_zone /= Void
 		do
@@ -70,21 +70,22 @@ feature -- Command
 		end
 
 	remove_empty_split_area
-			-- Remove all empty split area in `inner_container' recursively
+			-- Remove all empty split area in `inner_container' recursively.
 		do
-			if readable then
-				if attached {SD_MIDDLE_CONTAINER} item as l_item then
-					remove_empty_split_area_imp (l_item)
-				end
+			if
+				readable and then
+				attached {SD_MIDDLE_CONTAINER} item as l_item
+			then
+				remove_empty_split_area_imp (l_item)
 			end
 		ensure
 			not_has_empty_split_area:
 		end
 
 	save_spliter_position (a_widget: EV_WIDGET; a_data_name: READABLE_STRING_32)
-			-- Save a_widget split position recursively if a_widget is SD_MIDDLE_CONTAINER
-			-- Pre order
-			-- Post order is not possible. Because set parent split are split positin will take ecffect to its child
+			-- Save a_widget split position recursively if a_widget is SD_MIDDLE_CONTAINER.
+			-- Pre order.
+			-- Post order is not possible. Because set parent split are split positin will take ecffect to its child.
 		require
 			a_widget_not_void: a_widget /= Void
 			not_empty: a_data_name /= Void and then not a_data_name.is_empty
@@ -102,7 +103,7 @@ feature -- Command
 
 	restore_spliter_position (a_widget: EV_WIDGET; a_data_name: READABLE_STRING_32)
 			-- Restore a_widget split postion which saved by save_spliter_position
-			-- `a_data_name' is the name when calling `save_spliter_position'
+			-- `a_data_name' is the name when calling `save_spliter_position'.
 		require
 			a_widget_not_void: a_widget /= Void
 			not_empty: a_data_name /= Void and then not a_data_name.is_empty
@@ -125,26 +126,22 @@ feature -- Command
 		end
 
 	update_middle_container
-			-- Update all middle containers, if it's minimized then use horizontal/vertical box, otherwise use real spliter area
-		local
-			l_is_all_minimized: BOOLEAN
+			-- Update all middle containers, if it's minimized then use horizontal/vertical box, otherwise use real spliter area.
 		do
-			if not docking_manager.property.is_opening_config then
-				if readable then
-					if attached {SD_MIDDLE_CONTAINER} item as l_item then
-						l_is_all_minimized := update_middle_container_imp (l_item)
-						if l_is_all_minimized then
-							-- All zone are minimized, we should do nothing
-						end
-					else
-						recover_normal_for_only_one
-					end
+			if
+				not docking_manager.property.is_opening_config and then
+				readable
+			then
+				if attached {SD_MIDDLE_CONTAINER} item as l_item then
+					update_middle_container_imp (l_item).do_nothing
+				else
+					recover_normal_for_only_one
 				end
 			end
 		end
 
 	update_visible
-			-- Update container visible
+			-- Update container visible.
 		do
 			if
 				readable and then
@@ -155,7 +152,7 @@ feature -- Command
 		end
 
 	recover_normal_for_only_one
-			-- If there is only one minimized zone, we restore it
+			-- If there is only one minimized zone, we restore it.
 		do
 			if
 				readable and then
@@ -169,7 +166,7 @@ feature -- Command
 feature -- Query
 
 	has_zone (a_zone: SD_ZONE): BOOLEAN
-			-- Does `a_zone' in `Current' recursively
+			-- Does `a_zone' in `Current' recursively.
 		require
 			a_zone_not_void: a_zone /= Void
 		do
@@ -177,7 +174,7 @@ feature -- Query
 		end
 
 	zones: ARRAYED_LIST [SD_ZONE]
-			-- All zones in Current
+			-- All zones in Current.
 		do
 			create Result.make (1)
 			if readable	then
@@ -186,7 +183,7 @@ feature -- Query
 		end
 
 	parent_floating_zone: detachable SD_FLOATING_ZONE
-			-- If `Current' is in a SD_FLOATING_ZONE, this is parent. Otherwise it should be Void
+			-- If `Current' is in a SD_FLOATING_ZONE, this is parent. Otherwise it should be Void.
 
 	editor_zone_count: INTEGER
 			-- If current have eidtor zone?
@@ -207,13 +204,13 @@ feature -- Query
 		end
 
 	editor_parent: detachable EV_CONTAINER
-			-- All editor zones top level parent
-			-- If Result Void means widget structure corrupted
+			-- All editor zones top level parent.
+			-- If Result Void means widget structure corrupted.
 		require
 --TODO			has_editor: editor_zone_count > 0 or has_place_holder_zone
 		local
 			l_zone: SD_ZONE
-			l_parent, l_last_parent: detachable EV_CONTAINER
+			l_parent, l_last_parent: EV_CONTAINER
 			l_list, l_all_editors: ARRAYED_LIST [SD_ZONE]
 		do
 			if has_place_holder_zone then
@@ -258,7 +255,7 @@ feature -- Query
 		end
 
 	all_editors: ARRAYED_LIST [SD_ZONE]
-			-- One editor in Current
+			-- One editor in Current.
 		local
 			l_zones: like zones
 		do
@@ -280,7 +277,7 @@ feature -- Query
 		end
 
 	has_spliter_data (a_name: READABLE_STRING_32): BOOLEAN
-			-- Does `all_spliters_data' has data which key is `a_name' ?
+			-- Does `all_spliters_data' has data which key is `a_name'?
 		require
 			not_empty: a_name /= Void and then not a_name.is_empty
 		do
@@ -355,18 +352,15 @@ feature {NONE} -- Implementation
 	 	end
 
 	editor_place_holder_parent: detachable EV_CONTAINER
-			-- Editor place holder parent, if exists
-		local
-			l_place_holder: detachable SD_PLACE_HOLDER_ZONE
+			-- Editor place holder parent, if exists.
 		do
-			l_place_holder := editor_place_holder
-			if l_place_holder /= Void then
+			if attached editor_place_holder as l_place_holder then
 				Result := l_place_holder.parent
 			end
 		end
 
 	editor_place_holder: detachable SD_PLACE_HOLDER_ZONE
-			-- Find editor place holder zone in `zones'
+			-- Find editor place holder zone in `zones'.
 		local
 			l_zones: like zones
 			z: SD_ZONE
@@ -380,11 +374,10 @@ feature {NONE} -- Implementation
 				z := l_zones.item
 				if
 					z.has_content and then
-					z.content.type = {SD_ENUMERATION}.place_holder
+					z.content.type = {SD_ENUMERATION}.place_holder and then
+					attached {like editor_place_holder} z as r
 				then
-					if attached {like editor_place_holder} z as r then
-						Result := r
-					end
+					Result := r
 				end
 				l_zones.forth
 			end
@@ -393,7 +386,7 @@ feature {NONE} -- Implementation
 		end
 
 	set_all_title_bar (a_widget: EV_WIDGET)
-	 		-- Set all SD_ZONE's title bar in `Current'
+	 		-- Set all SD_ZONE's title bar in `Current'.
 	 	require
 	 		a_widget_not_void: a_widget /= Void
 	 	do
@@ -428,9 +421,9 @@ feature {NONE} -- Implementation
 	 	end
 
 	update_visible_imp (a_middle_container: SD_MIDDLE_CONTAINER): BOOLEAN
-			-- Postorder traversal
-			-- If all contained widgets are invisible container, then Result is True
-			-- Otherwise Result is False
+			-- Postorder traversal.
+			-- If all contained widgets are invisible container, then Result is True.
+			-- Otherwise Result is False.
 		require
 			not_void: a_middle_container /= Void
 			parent_not_void: a_middle_container.parent /= Void
@@ -475,9 +468,9 @@ feature {NONE} -- Implementation
 		end
 
 	update_middle_container_imp (a_middle_container: SD_MIDDLE_CONTAINER): BOOLEAN
-			-- Postorder traversal
-			-- If all contained widgets are minimized container, then Result is True
-			-- Otherwise Result is False
+			-- Postorder traversal.
+			-- If all contained widgets are minimized container, then Result is True.
+			-- Otherwise Result is False.
 		require
 			not_void: a_middle_container /= Void
 			parent_not_void: a_middle_container.parent /= Void
@@ -561,7 +554,7 @@ feature {NONE} -- Implementation
 		end
 
 	disable_item_expand (a_middle_container: SD_MIDDLE_CONTAINER; a_disable_first, a_disable_second: BOOLEAN)
-			-- Disable item expand
+			-- Disable item expand.
 		require
 			not_void: a_middle_container /= Void
 			full: a_middle_container.count = 2
@@ -720,9 +713,9 @@ feature {NONE} -- Implementation
 		end
 
 	remove_empty_split_area_imp (a_split_area: SD_MIDDLE_CONTAINER)
-			-- Remove all empty split area in `inner_container' recursively, postorder traversal
-			-- The structure is a two-fork tree
-			-- Stop at SD_ZONE level
+			-- Remove all empty split area in `inner_container' recursively, postorder traversal.
+			-- The structure is a two-fork tree.
+			-- Stop at SD_ZONE level.
 		require
 			a_split_area_not_void: a_split_area /= Void
 			a_split_area_parent_not_void: a_split_area.parent /= Void
@@ -765,7 +758,7 @@ feature {NONE} -- Implementation
 		end
 
 	up_spliter_level (a_split_area: SD_MIDDLE_CONTAINER; a_first: BOOLEAN)
-			-- If SD_MIDDLE_CONTAINER not full, then prune it from its parent, insert only one child widget to parent
+			-- If SD_MIDDLE_CONTAINER not full, then prune it from its parent, insert only one child widget to parent.
 		require
 			a_split_area_not_void: a_split_area /= Void
 		local
@@ -827,8 +820,8 @@ feature {NONE} -- Implementation
 		end
 
 	save_spliter_position_imp (a_spliter: SD_MIDDLE_CONTAINER; a_data: like spliters_data)
-			-- Save spliter position before prune it
-			-- Post order
+			-- Save spliter position before prune it.
+			-- Post order.
 		require
 			a_spliter_not_void: a_spliter /= Void
 			not_void: a_data /= Void
@@ -850,7 +843,7 @@ feature {NONE} -- Implementation
 		end
 
 	restore_spliter_position_imp (a_spliter: SD_MIDDLE_CONTAINER; a_data: like spliters_data)
-			-- Restore spliter position, pre order
+			-- Restore spliter position, pre order.
 		require
 			a_spliter_not_void: a_spliter /= Void
 			not_void: a_data /= Void
@@ -862,8 +855,6 @@ feature {NONE} -- Implementation
 				debug ("docking")
 					io.put_string ("%N SD_MULIT_DOCK_AREA spliter position: open " + l_spliter_position.out)
 				end
-
---				check attached {SD_MIDDLE_CONTAINER} spliters.item [1] as l_old_spliter and then l_old_spliter = a_spliter end
 
 				check a_spliter.full end
 
@@ -896,16 +887,20 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation attributes
 
-	all_spliters_data: HASH_TABLE [ARRAYED_LIST [INTEGER], READABLE_STRING_32]
-			-- All spliters data
-			-- First argument is real type
-			-- Second argument is data name which is used for finding data when `restore_spliter_data'
+	all_spliters_data: STRING_TABLE [ARRAYED_LIST [INTEGER]]
+			-- All spliters data.
+			-- First argument is real type.
+			-- Second argument is data name which is used for finding data when `restore_spliter_data'.
 
 	spliters_data: ARRAYED_LIST [INTEGER]
-			-- Split bars' positions saved which used for save/restore spliter positions
+			-- Split bars' positions saved which used for save/restore spliter positions.
+		require
+			not_called: False
 		do
-			check False end -- Anchor type only
-			create Result.make (0)
+			check
+				from_precondition: False
+			then
+			end
 		end
 
 	internal_shared: SD_SHARED

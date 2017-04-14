@@ -1,11 +1,9 @@
-note
+﻿note
 
-	description:
-		"Lexical analyzers"
-	legal: "See notice at end of class.";
-
-	status: "See notice at end of class.";
-	date: "$Date$";
+	description: "Lexical analyzers."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class LEXICAL inherit
@@ -16,7 +14,7 @@ create
 
 	make, make_new
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Set up lexical analyzer for retrieval.
@@ -33,7 +31,7 @@ feature -- Initialization
 	make_new
 			-- Set up a new lexical analyzer
 		obsolete
-			"Use make instead."
+			"Use make instead. [2017-05-31]"
 		do
 			make
 			initialize
@@ -520,7 +518,7 @@ feature -- Output
 feature -- Obsolete
 
 	go_on
-			obsolete "Use `get_token' directly [2017-05-31]"
+			obsolete "Use `get_token' directly. [2017-05-31]"
 		do
 			from
 				get_token
@@ -632,7 +630,7 @@ feature {NONE} -- Implementation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -642,6 +640,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class LEXICAL
-
-
+end

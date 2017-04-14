@@ -42,8 +42,8 @@ convert
 		--    generating_type: STRING
 		-- becomes:
 		--    generating_type: TYPE [like Current]
-	to_string_8: {STRING_8, STRING_GENERAL, READABLE_STRING_GENERAL, READABLE_STRING_8},
-	to_string_32: {STRING_32, READABLE_STRING_32},
+	to_string_8: {STRING_8, READABLE_STRING_8},
+	to_string_32: {STRING_32, READABLE_STRING_32, STRING_GENERAL, READABLE_STRING_GENERAL},
 	to_cil: {SYSTEM_TYPE}
 
 feature -- Access
@@ -58,7 +58,7 @@ feature -- Access
 				internal_name_32 := Result
 			end
 		ensure
-			name_not_void: Result /= Void
+			name_32_attached: attached Result
 		end
 
 	name: IMMUTABLE_STRING_8
@@ -212,12 +212,23 @@ feature -- Conversion
 			adapted: Result ~ g
 		end
 
-	attempt alias "#?" (obj: detachable separate ANY): detachable G
-			-- Result of assignment attempt of `obj' to entity of type G
+	attempted alias "/" (obj: detachable separate ANY): detachable G
+			-- If possible, `obj' understood as an object of type `G';
+			-- If not, default detachable value of type `G'..
 		do
 			if attached {G} obj as l_g then
 				Result := l_g
 			end
+		ensure
+			assigned_or_void: Result = obj or Result = default_detachable_value
+		end
+
+	attempt alias "#?" (obj: detachable separate ANY): detachable G
+			-- Result of assignment attempt of `obj' to entity of type G
+		obsolete
+			"Use `attempted' or its operator alias `/'. [2017-05-31]"
+		do
+			Result := attempted (obj)
 		ensure
 			assigned_or_void: Result = obj or Result = default_detachable_value
 		end
@@ -255,7 +266,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"Use 'name_32 + other'. [2017-05-31]"
+			"Use 'name_32 + other' instead. [2017-05-31]"
 		require
 			argument_not_void: other /= Void
 		do
@@ -273,7 +284,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"Use 'name_32.same_string (other)'. [2017-05-31]"
+			"Use 'name_32.same_string (other)' instead. [2017-05-31]"
 		require
 			other_not_void: other /= Void
 		do
@@ -304,7 +315,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"Use 'name_32.as_lower'. [2017-05-31]"
+			"Use 'name_32.as_lower' instead. [2017-05-31]"
 		do
 			create Result.make_from_string (name)
 			Result.to_lower
@@ -330,7 +341,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 
 	to_string_8: STRING_8
 		obsolete
-			"Use `name_32'. [2017-05-31]"
+			"Use `name_32' instead. [2017-05-31]"
 		do
 			create Result.make_from_string (name)
 		ensure
@@ -342,7 +353,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 		obsolete
 			"Use 'name_32' instead. [2017-05-31]"
 		do
-			create Result.make_from_string_general (name)
+			create Result.make_from_string (name_32)
 		ensure
 			to_string_32_not_void: Result /= Void
 		end
@@ -350,7 +361,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 feature {NONE} -- Implementation: Access
 
 	internal_name_32: detachable IMMUTABLE_STRING_32
-			-- Storage for once per object `name`.
+			-- Storage for once per object `name_32`.
 		note option: stable, transient attribute end
 
 	internal_name: detachable IMMUTABLE_STRING_8
@@ -384,8 +395,8 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

@@ -102,16 +102,12 @@ feature {NONE} -- Status report
 	is_stone_usable_internal (a_stone: attached like stone): BOOLEAN
 			-- <Precursor>
 		do
-			Result := Precursor {ES_CONTRACT_EDITOR_CONTEXT} (a_stone)
-			if Result then
-				if attached {FEATURE_STONE} a_stone as l_stone then
-					Result := attached {E_ROUTINE} l_stone.e_feature as l_routine
-				else
-					Result := False
-				end
-			end
+			Result :=
+				Precursor (a_stone) and then
+				attached {FEATURE_STONE} a_stone as l_stone and then
+				attached {E_ROUTINE} l_stone.e_feature
 		ensure then
-			is_feature_stone: Result implies ({detachable E_ROUTINE}) #? (({attached FEATURE_STONE}) #? a_stone).e_feature /= Void
+			is_feature_stone: Result implies attached {FEATURE_STONE} a_stone as s and then attached {E_ROUTINE} s.e_feature
 		end
 
 feature {NONE} -- Query
@@ -152,7 +148,7 @@ feature {NONE} -- Factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

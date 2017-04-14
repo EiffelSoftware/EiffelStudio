@@ -385,7 +385,8 @@ feature -- Basic operation
 			l_rn: STRING_32
 			l_ecf: STRING_32
 			l_origin_location: IMMUTABLE_STRING_32
-			l_old_content, l_new_content: STRING_32
+			l_old_content, l_new_content: STRING_8
+			l_is_crlf_eol: BOOLEAN
 			u: FILE_UTILITIES
 			utf: UTF_CONVERTER
 		do
@@ -406,6 +407,7 @@ feature -- Basic operation
 					until
 						f.exhausted
 					loop
+						l_is_crlf_eol := f.last_string.ends_with ("%R")
 						create l_line.make_from_string_general (f.last_string)
 						l_old_content.append (f.last_string)
 						l_old_content.append_character ('%N')
@@ -458,6 +460,9 @@ feature -- Basic operation
 							end
 						end
 						l_new_content.append (utf.string_32_to_utf_8_string_8 (l_line))
+						if l_is_crlf_eol then
+							l_new_content.append_character ('%R')
+						end
 						l_new_content.append_character ('%N')
 						f.read_line
 					end
@@ -494,7 +499,7 @@ feature -- Basic operation
 								else
 									if not is_simulation then
 										f.open_write
-										f.put_string (l_new_content.as_string_8)
+										f.put_string (l_new_content)
 										f.close
 									end
 									report_progress ({STRING_32} "Updated %"" + f.path.name + {STRING_32} "%"")

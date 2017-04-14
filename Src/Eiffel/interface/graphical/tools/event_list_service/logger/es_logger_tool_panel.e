@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		Tool panel to display logged event list items.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	ES_LOGGER_TOOL_PANEL
@@ -64,7 +64,7 @@ feature {NONE} -- Query
 	is_appliable_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
 			-- Determines if event `a_event_item' can be shown with the current event list tool
 		do
-			Result := a_event_item.type = {EVENT_LIST_ITEM_TYPES}.log and then (({EVENT_LIST_LOG_ITEM_I}) #? a_event_item) /= Void
+			Result := a_event_item.type = {EVENT_LIST_ITEM_TYPES}.log and then attached {EVENT_LIST_LOG_ITEM_I} a_event_item
 		end
 
 feature {NONE} -- Basic operations
@@ -200,7 +200,7 @@ feature {NONE} -- Constants
 	message_column: INTEGER = 3
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

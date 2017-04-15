@@ -64,7 +64,7 @@ feature -- Status report
 		end
 
 invariant
-	consistent_boundaries: upper < lower implies upper = lower - 1
+	consistent_boundaries: lower <= upper + 1
 
 note
 	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
@@ -78,6 +78,3 @@ note
 		]"
 
 end
-
-
-

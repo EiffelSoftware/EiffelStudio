@@ -868,7 +868,7 @@ feature {NONE} -- Implementation
 	empty_area: BOOLEAN
 			-- Is `area' empty?
 		do
-			Result := area = Void or else area.capacity = 0
+			Result := area.capacity = 0
 		end
 
 invariant

@@ -3,8 +3,8 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Etienne AMODEO"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2016-10-20 16:16:43 +0200 (jeu., 20 oct. 2016) $"
+	revision: "$Revision: 99321 $"
 
 class
 	EB_CLICK_AND_COMPLETE_TOOL
@@ -269,7 +269,7 @@ feature -- Analysis preparation
 					l_templates.forth
 				end
 				if attached completion_possibilities as l_completion_possibilities then
-						-- Note: this happens when the target object has no exported feature.
+						-- Note: this happens when the target object has no exported features.
 						--		 (should the `completion_possibilities` be empty instead of Void?)
 					completion_possibilities := l_completion_possibilities.subarray (1, cp_index - 1)
 					completion_possibilities.sort
@@ -339,7 +339,12 @@ feature -- Basic Operations
 						if line = Void then
 							check is_eiffel_line: False end
 						elseif a_position >= invariant_index then
-							feat := described_feature (token, line, Void)
+							if attached described_access_id (token, line, ft) as tu then
+								feat := tu.feat
+								create {FEATURE_STONE} Result.make (feat)
+							else
+								feat := Void
+							end
 						elseif click_possible (token) then
 							if attached feature_containing (token, line) as l_content then
 								ft := l_content.feat_as
@@ -351,13 +356,17 @@ feature -- Basic Operations
 									local_part,
 									signature_part
 								then
-									feat := described_feature (token, line, ft)
+									if attached described_access_id (token, line, ft) as loc then
+										feat := loc.feat
+										if attached loc.ast as l_ast then
+											create {ACCESS_ID_STONE} Result.make (loc.feat, loc.ast)
+										else
+											create {FEATURE_STONE} Result.make (feat)
+										end
+									end
 								else
 								end
 							end
-						end
-						if feat /= Void then
-							create {FEATURE_STONE} Result.make (feat)
 						end
 					end
 				end

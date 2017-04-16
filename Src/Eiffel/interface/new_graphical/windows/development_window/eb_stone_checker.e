@@ -2,8 +2,8 @@ note
 	description: "Stone checker used by EB_DEVELOPMENT_WINDOW."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date		: "$Date: 2016-09-06 12:41:34 +0200 (mar., 06 sept. 2016) $"
+	revision	: "$Revision: 99123 $"
 
 class
 	EB_STONE_CHECKER
@@ -173,7 +173,11 @@ feature {NONE} -- Implementation functions
 						-- we attempt to scroll to the feature without asking to save the file
 						-- except if it is during a resynchronization, in which case we do not scroll at all.
 					if not develop_window.is_text_loaded and then not develop_window.during_synchronization then
-						develop_window.scroll_to_feature (l_feature_stone.e_feature, l_new_class_stone.class_i)
+						if attached {ACCESS_ID_STONE} l_feature_stone as l_access_id_stone then
+							develop_window.scroll_to_ast (l_access_id_stone.ast, l_access_id_stone.class_i, False)
+						else
+							develop_window.scroll_to_feature (l_feature_stone.e_feature, l_new_class_stone.class_i)
+						end
 						develop_window.set_feature_stone_already_processed (True)
 					else
 						develop_window.set_feature_stone_already_processed (False)

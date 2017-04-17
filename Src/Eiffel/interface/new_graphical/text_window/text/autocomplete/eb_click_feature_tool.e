@@ -96,7 +96,9 @@ feature -- Basic operation
 						local_part,
 						signature_part
 					then
-						feat := described_feature (token, line, ft)
+						if attached described_access_id (token, line, ft) as tu then
+							feat := tu.feat
+						end
 					else
 					end
 				end

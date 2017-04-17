@@ -97,7 +97,7 @@ feature -- Process
 			process_basic_text (text)
 		end
 
-	process_local_text (text: READABLE_STRING_GENERAL)
+	process_local_text (a_ast: detachable AST_EIFFEL; text: READABLE_STRING_GENERAL)
 			-- Process string text `t'.
 		require
 			text_not_void: text /= Void
@@ -431,7 +431,7 @@ feature -- Text operator
 	add_local (s: READABLE_STRING_GENERAL)
 			-- Add `s' as a local.
 		do
-			process_local_text (s)
+			process_local_text (Void, s)
 		end
 
 	add_natural_32 (i: NATURAL_32)
@@ -661,7 +661,7 @@ feature {NONE} -- Implementation
 			-- Internal context group
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

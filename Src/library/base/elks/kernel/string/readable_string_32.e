@@ -635,7 +635,7 @@ feature {READABLE_STRING_32} -- Duplication
 				standard_copy (other)
 					-- Note: <= is needed as all Eiffel string should have an
 					-- extra character to insert null character at the end.
-				if old_area = other.area or else old_area.count <= count then
+				if old_area = Void or else old_area = other.area or else old_area.count <= count then
 						-- Prevent copying of large `area' if only a few characters are actually used.
 					area := area.resized_area (count + 1)
 				else

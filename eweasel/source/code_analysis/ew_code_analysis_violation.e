@@ -50,39 +50,40 @@ feature -- Properties
 
 		-- All of these can in principle be Void if unknown.
 
-	class_name: STRING
-			-- Class in which the violation occurred
+	class_name: detachable STRING
+			-- Class in which the violation occurred.
 
 	line_number: INTEGER
-			-- Line number on which the violation occurred
+			-- Line number on which the violation occurred.
 
-	rule_id: STRING
-			-- ID of the violated rule
+	rule_id: detachable STRING
+			-- ID of the violated rule.
 
-	type: STRING
-			-- Type of the violation (hint, suggestion, warning or error)
+	type: detachable STRING
+			-- Type of the violation (hint, suggestion, warning or error).
 
-	message: STRING
-			-- Message of the violation
+	message: detachable STRING
+			-- Message of the violation.
 
 	summary: STRING
 		do
-			create Result.make (0);
-			Result.append_string (type);
-			if not equal (class_name, "") then
-				Result.append (" in class ");
-				Result.append_string (class_name);
+			create Result.make (0)
+			Result.append_string (type)
+			if attached class_name and then not class_name.is_empty then
+				Result.append (" in class ")
+				Result.append_string (class_name)
 				if line_number /= 0 then
-					Result.append (" at line " + line_number.out);
+					Result.append (" at line ")
+					Result.append_integer (line_number)
 				end
-			end;
-			Result.append (". ");
+			end
+			Result.append (". ")
 			Result.append_string (rule_id)
 			if rule_id /= Void and then not rule_id.is_empty and message /= Void and then not message.is_empty then
 				Result.append (": ")
 			end
 			Result.append_string (message)
-		end;
+		end
 
 feature -- Modification
 
@@ -120,28 +121,35 @@ feature -- Comparison
 			-- equals to those in `Current'?
 		do
 			Result :=
-				(other.class_name = Void or else class_name.same_string (other.class_name)) and
-				(other.line_number = 0 or else line_number.is_equal (other.line_number)) and
-				(other.rule_id = Void or else rule_id.is_equal (other.rule_id)) and
-				(other.type = Void or else type.same_string (other.type)) and
-				(other.message = Void or else message.same_string (other.message))
+				(not attached other.class_name or else is_string_equal_safe (class_name, other.class_name)) and
+				(other.line_number = 0 or else line_number = other.line_number) and
+				(not attached other.rule_id or else is_string_equal_safe (rule_id, other.rule_id)) and
+				(not attached other.type or else is_string_equal_safe (type, other.type)) and
+				(not attached other.message or else is_string_equal_safe (message, other.message))
 		end
 
 	is_equal (other: like Current): BOOLEAN
 		do
-			Result := is_string_equal_safe (class_name, other.class_name) and line_number.is_equal (other.line_number) and is_string_equal_safe (rule_id, other.rule_id) and is_string_equal_safe (type, other.type) and is_string_equal_safe (message, other.message)
+			Result :=
+				is_string_equal_safe (class_name, other.class_name) and
+				line_number = other.line_number and
+				is_string_equal_safe (rule_id, other.rule_id) and
+				is_string_equal_safe (type, other.type) and
+				is_string_equal_safe (message, other.message)
 		end
 
 	is_less alias "<" (other: like Current): BOOLEAN
 		do
-			if not equal (rule_id, other.rule_id) then
+			if not is_string_equal_safe (rule_id, other.rule_id) then
 				Result := is_string_less_safe (rule_id, other.rule_id)
+			elseif not is_string_equal_safe (class_name, other.class_name) then
+				Result := is_string_less_safe (class_name, other.class_name)
+			elseif line_number /= other.line_number then
+				Result := line_number < other.line_number
+			elseif not is_string_equal_safe (type, other.type) then
+				Result := is_string_less_safe (type, other.type)
 			else
-				if not equal (class_name, other.class_name) then
-					Result := is_string_less_safe (class_name, other.class_name)
-				else
-					Result := line_number < other.line_number
-				end
+				Result := is_string_less_safe (message, other.message)
 			end
 		end
 
@@ -153,28 +161,28 @@ feature {NONE} -- Implementation
 		do
 				-- Void is less than any other value, but if both strings are Void we want to
 				-- to return False (as the first string is not *strictly* less than the second).
-			if not attached a_smaller_string and attached a_greater_string then
-					-- The first is Void, the second is not.
-				Result := True
-			elseif not attached a_smaller_string or not attached a_greater_string then
-					-- Both are Void (equal), or only the second is Void.
-					-- In both cases, the result is false.
-				Result := False
-			else
+			if attached a_smaller_string and attached a_greater_string then
 					-- Both are attached.
+					-- Use string comparison.
 				Result := a_smaller_string.is_less (a_greater_string)
+			else
+					-- One of the strings or both are void.
+					-- The only case when the first is less than the second is when the second is attached.
+					-- (In this case the first is Void.)
+				Result := attached a_greater_string
 			end
 		end
 
 	is_string_equal_safe (a_first, a_second: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_first' the same string as `a_second' (or are they both detached)?
 		do
-			if a_first = Void and a_second = Void then
-				Result := True
-			elseif a_first = Void or a_second = Void then
-				Result := False
-			else
+			if attached a_first and attached a_second then
+					-- Use string equality.
 				Result := a_first.same_string (a_second)
+			else
+					-- One of values is Void.
+					-- The values are equal when the second is also Void.
+				Result := a_first = a_second
 			end
 		end
 

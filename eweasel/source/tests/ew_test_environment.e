@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "An Eiffel test environment"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,13 +21,11 @@ inherit
 
 	EW_SHARED_OBJECTS
 
-	ANY
-
 create
 
 	make
 
-feature  -- Creation
+feature {NONE} -- Creation
 
 	make (n: INTEGER)
 			-- Create an environment which can hold at least
@@ -200,7 +198,7 @@ feature  -- Properties
 			-- Find proper argument if possible.
 			-- If not found, Result is the orignal argument `var`.
 		require
-			var_attached: attached var /= Void
+			var_attached: attached var
 			var_not_empty: not var.is_empty
 		do
 			if var.count > 1 and then var.starts_with ("$") then

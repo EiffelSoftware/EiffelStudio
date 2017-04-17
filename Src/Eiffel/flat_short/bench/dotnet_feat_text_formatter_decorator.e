@@ -249,10 +249,10 @@ feature -- Element change
 			else
 				if l_is_str then
 					text_formatter.process_symbol_text (ti_double_quote)
-					text_formatter.process_local_text (dotnet_name_of_current_feature)
+					text_formatter.process_local_text (Void, dotnet_name_of_current_feature)
 					text_formatter.process_symbol_text (ti_double_quote)
 				else
-					text_formatter.process_local_text (dotnet_name_of_current_feature)
+					text_formatter.process_local_text (Void, dotnet_name_of_current_feature)
 				end
 			end
 			if
@@ -266,7 +266,7 @@ feature -- Element change
 				if l_feature /= Void then
 					text_formatter.add_feature (l_feature, name_of_current_feature)
 				else
-					text_formatter.process_local_text (name_of_current_feature)
+					text_formatter.process_local_text (Void, name_of_current_feature)
 				end
 			end
 			put_signature
@@ -489,7 +489,7 @@ feature {NONE} -- Element Change
 						text_formatter.add_indents (4)
 						l_char_count := 0
 					end
-					text_formatter.process_local_text (l_c_arg.eiffel_name)
+					text_formatter.process_local_text (Void, l_c_arg.eiffel_name)
 					text_formatter.add_char (':')
 					text_formatter.add_space
 
@@ -804,7 +804,7 @@ invariant
 	do_flat: not is_short
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

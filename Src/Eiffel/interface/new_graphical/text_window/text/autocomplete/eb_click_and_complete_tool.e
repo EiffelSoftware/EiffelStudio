@@ -339,7 +339,12 @@ feature -- Basic Operations
 						if line = Void then
 							check is_eiffel_line: False end
 						elseif a_position >= invariant_index then
-							feat := described_feature (token, line, Void)
+							if attached described_access_id (token, line, ft) as tu then
+								feat := tu.feat
+								create {FEATURE_STONE} Result.make (feat)
+							else
+								feat := Void
+							end
 						elseif click_possible (token) then
 							if attached feature_containing (token, line) as l_content then
 								ft := l_content.feat_as
@@ -351,13 +356,17 @@ feature -- Basic Operations
 									local_part,
 									signature_part
 								then
-									feat := described_feature (token, line, ft)
+									if attached described_access_id (token, line, ft) as loc then
+										feat := loc.feat
+										if attached loc.ast as l_ast then
+											create {ACCESS_ID_STONE} Result.make (loc.feat.written_class, loc.ast)
+										else
+											create {FEATURE_STONE} Result.make (feat)
+										end
+									end
 								else
 								end
 							end
-						end
-						if feat /= Void then
-							create {FEATURE_STONE} Result.make (feat)
 						end
 					end
 				end
@@ -829,7 +838,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

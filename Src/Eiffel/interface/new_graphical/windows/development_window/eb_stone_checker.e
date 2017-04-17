@@ -173,7 +173,12 @@ feature {NONE} -- Implementation functions
 						-- we attempt to scroll to the feature without asking to save the file
 						-- except if it is during a resynchronization, in which case we do not scroll at all.
 					if not develop_window.is_text_loaded and then not develop_window.during_synchronization then
-						develop_window.scroll_to_feature (l_feature_stone.e_feature, l_new_class_stone.class_i)
+							-- TODO: maybe time to implement scroll_to_stone [2017-04-15].
+						if attached {ACCESS_ID_STONE} l_feature_stone as l_access_id_stone then
+							develop_window.scroll_to_ast (l_access_id_stone.ast, l_access_id_stone.class_i, False)
+						else
+							develop_window.scroll_to_feature (l_feature_stone.e_feature, l_new_class_stone.class_i)
+						end
 						develop_window.set_feature_stone_already_processed (True)
 					else
 						develop_window.set_feature_stone_already_processed (False)
@@ -1402,7 +1407,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

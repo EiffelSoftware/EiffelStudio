@@ -9,6 +9,7 @@ class
 	SD_TAB_STATE
 
 inherit
+	SD_SHARED
 	SD_STATE_WITH_CONTENT
 		export
 			{SD_TAB_STATE_ASSISTANT} internal_content, change_state, top_split_position
@@ -63,7 +64,7 @@ feature {NONE} -- Initlization
 			end
 			l_parent := a_target_zone.parent
 			docking_manager.zones.prune_zone (a_target_zone)
-			tab_zone := internal_shared.widget_factory.tab_zone (a_content)
+			tab_zone := widget_factory.tab_zone (a_content)
 			docking_manager.zones.add_zone (tab_zone)
 
 			-- Sometimes, `l_parent' maybe void, don't know the reason yet
@@ -161,7 +162,7 @@ feature {NONE} -- Initlization
 		do
 			init_common (a_contents.first, a_direction)
 
-			tab_zone := internal_shared.widget_factory.tab_zone (a_contents.item)
+			tab_zone := widget_factory.tab_zone (a_contents.item)
 			docking_manager.zones.add_zone (tab_zone)
 
 			a_container.extend (tab_zone)
@@ -175,12 +176,10 @@ feature {NONE} -- Initlization
 				a_contents.after
 			loop
 				l_content := a_contents.item
-				if a_contents.isfirst then
-					l_content.change_state (Current)
-				else
+				if not a_contents.isfirst then
 					;(create {SD_TAB_STATE}.make_for_restore_internal (l_content, tab_zone, a_direction)).do_nothing
-					l_content.change_state (Current)
 				end
+				l_content.change_state (Current)
 
 				a_contents.forth
 			end
@@ -203,7 +202,6 @@ feature {NONE} -- Initlization
 		require
 			not_void: a_content /= Void
 		do
-			create internal_shared
 			internal_content := a_content
 			set_docking_manager (a_content.docking_manager)
 			direction := a_direction
@@ -242,7 +240,6 @@ feature -- Redefine
 		do
 			direction := a_data.direction
 			l_selected_index := a_data.selected_tab_index
-			create internal_shared
 			if attached a_data.titles as l_titles then
 				from
 					l_titles.start

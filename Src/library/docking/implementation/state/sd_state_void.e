@@ -9,6 +9,8 @@ class
 	SD_STATE_VOID
 			--FIXIT: Rename to SD_INITIAL_STATE?
 inherit
+	SD_SHARED
+
 	SD_STATE_WITH_CONTENT
 		redefine
 			dock_at_top_level,
@@ -34,7 +36,6 @@ feature {NONE}  -- Initlization
 			internal_content := a_content
 			docking_manager := a_docking_manager
 			direction := {SD_ENUMERATION}.left
-			create internal_shared
 			last_floating_height := {SD_SHARED}.default_floating_window_height
 			last_floating_width := {SD_SHARED}.default_floating_window_width
 			initialized := True
@@ -99,9 +100,9 @@ feature -- Redefine
 			content.set_visible (True)
 			docking_manager.command.lock_update (Void, True)
 			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
-				create l_docking_state.make (content, direction, (docking_manager.query.container_rectangle.width * internal_shared.default_docking_width_rate).ceiling)
+				create l_docking_state.make (content, direction, (docking_manager.query.container_rectangle.width * {SD_SHARED}.default_docking_width_rate).ceiling)
 			else
-				create l_docking_state.make (content, direction, (docking_manager.query.container_rectangle.height * internal_shared.default_docking_height_rate).ceiling)
+				create l_docking_state.make (content, direction, (docking_manager.query.container_rectangle.height * {SD_SHARED}.default_docking_height_rate).ceiling)
 			end
 			l_docking_state.set_docking_manager (docking_manager)
 			l_docking_state.dock_at_top_level (a_multi_dock_area)
@@ -147,7 +148,6 @@ feature -- Redefine
 			l_docking_state: SD_DOCKING_STATE
 			l_floating_state: SD_FLOATING_STATE
 			l_env: EV_ENVIRONMENT
-			l_platform: PLATFORM
 		do
 			content.set_visible (True)
 			docking_manager.command.lock_update (Void, True)
@@ -157,17 +157,17 @@ feature -- Redefine
 			change_state (l_docking_state)
 			l_floating_state.set_size (last_floating_width, last_floating_height)
 
-			create l_platform
-			if not l_platform.is_windows then
-				-- Similar to {SD_DOCKING_STATE}.show, we have to do something special for GTK.
-				-- See bug#14105
-				if attached {SD_FLOATING_ZONE} l_floating_state.zone as l_floating_zone then
-					create l_env
-					if attached l_env.application as l_app then
-						l_app.do_once_on_idle (agent set_size_in_idle (last_floating_width, last_floating_height, l_floating_zone))
-					else
-						check False end -- Implied by application is running
-					end
+			if
+				not {PLATFORM}.is_windows and then
+					-- Similar to {SD_DOCKING_STATE}.show, we have to do something special for GTK.
+					-- See bug#14105.
+				attached {SD_FLOATING_ZONE} l_floating_state.zone as l_floating_zone
+			then
+				create l_env
+				if attached l_env.application as l_app then
+					l_app.do_once_on_idle (agent set_size_in_idle (last_floating_width, last_floating_height, l_floating_zone))
+				else
+					check False end -- Implied by application is running
 				end
 			end
 
@@ -243,7 +243,7 @@ feature -- Redefine
 					change_state (create {SD_AUTO_HIDE_STATE}.make_with_friend (content, l_relative))
 				end
 			else
-				float (internal_shared.default_screen_x, internal_shared.default_screen_y)
+				float (default_screen_x, default_screen_y)
 			end
 
 			if content /= Void and then attached content.state.zone as z then

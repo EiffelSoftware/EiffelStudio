@@ -258,10 +258,11 @@ feature  -- Status report
 	is_dock_at_top (a_multi_dock_area: SD_MULTI_DOCK_AREA): BOOLEAN
 			-- If `zone' dock at top level of `a_multi_dock_area'?
 		do
-			if attached {EV_WIDGET} zone as l_widget then
-				if attached {EV_CONTAINER} a_multi_dock_area.item as l_container then
-					Result := l_container.has (l_widget)
-				end
+			if
+				attached {EV_WIDGET} zone as l_widget and then
+				attached {EV_CONTAINER} a_multi_dock_area.item as l_container
+			then
+				Result := l_container.has (l_widget)
 			end
 		end
 
@@ -319,7 +320,7 @@ feature {NONE} -- Implementation
 					Result := width_height
 				else
 					if l_main_rect.height /= 0 then
-						Result := (l_main_rect.height * internal_shared.default_docking_height_rate).ceiling
+						Result := (l_main_rect.height * {SD_SHARED}.default_docking_height_rate).ceiling
 					else
 						Result := a_spliter.minimum_split_position
 					end
@@ -329,7 +330,7 @@ feature {NONE} -- Implementation
 					Result := l_main_rect.height -width_height
 				else
 					if l_main_rect.height /= 0 then
-						Result := (l_main_rect.height * (1 - internal_shared.default_docking_height_rate)).ceiling
+						Result := (l_main_rect.height * (1 - {SD_SHARED}.default_docking_height_rate)).ceiling
 					else
 						Result := a_spliter.maximum_split_position
 					end
@@ -339,7 +340,7 @@ feature {NONE} -- Implementation
 					Result :=width_height
 				else
 					if l_main_rect.width /= 0 then
-						Result := (l_main_rect.width * internal_shared.default_docking_width_rate).ceiling
+						Result := (l_main_rect.width * {SD_SHARED}.default_docking_width_rate).ceiling
 					else
 						Result := a_spliter.minimum_split_position
 					end
@@ -349,7 +350,7 @@ feature {NONE} -- Implementation
 					Result :=  l_main_rect.width -width_height
 				else
 					if l_main_rect.width /= 0 then
-						Result := (l_main_rect.width * (1 - internal_shared.default_docking_width_rate)).ceiling
+						Result := (l_main_rect.width * (1 - {SD_SHARED}.default_docking_width_rate)).ceiling
 					else
 						Result := a_spliter.maximum_split_position
 					end
@@ -369,24 +370,23 @@ feature {NONE} -- Implementation
 		end
 
 	update_floating_zone_visible (a_zone: SD_ZONE; a_show_floating: BOOLEAN)
-			-- When `restore' for docking and tab state, we should update parent floating zone visible
+			-- When `restore' for docking and tab state, we should update parent floating zone visible.
 		require
 			not_void: a_zone /= Void
 		local
 			l_inner_container: SD_MULTI_DOCK_AREA
-			l_parent_floating_zone: detachable SD_FLOATING_ZONE
+			l_parent_floating_zone: SD_FLOATING_ZONE
 		do
 			l_inner_container := docking_manager.query.inner_container (a_zone)
 			l_parent_floating_zone := l_inner_container.parent_floating_zone
-			if l_parent_floating_zone /= Void and then not l_parent_floating_zone.is_displayed then
-				if a_show_floating then
-					l_parent_floating_zone.show
-				end
+			if
+				attached l_parent_floating_zone and then
+				not l_parent_floating_zone.is_displayed and then
+				a_show_floating
+			then
+				l_parent_floating_zone.show
 			end
 		end
-
-	internal_shared: SD_SHARED
-			-- All singletons
 
 feature -- Contract support
 
@@ -416,7 +416,6 @@ feature -- Status report
 
 invariant
 
-	internal_shared_not_void: initialized implies internal_shared /= Void
 	last_floating_height_valid: initialized implies last_floating_height >= 0
 	last_floating_width_valid: initialized implies last_floating_width >= 0
 

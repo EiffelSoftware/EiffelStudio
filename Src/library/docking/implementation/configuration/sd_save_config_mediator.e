@@ -577,16 +577,12 @@ feature {NONE} -- Implementation
 	save_editor_minimized_data (a_config_data: SD_CONFIG_DATA)
 			-- If only one editor zone, save if it's minimized.
 		local
-			l_editor_zone: detachable SD_UPPER_ZONE
+			l_editor_zone: SD_UPPER_ZONE
 		do
 			l_editor_zone := internal_docking_manager.query.only_one_editor_zone
 			if l_editor_zone /= Void then
 				a_config_data.set_is_one_editor_zone (True)
-				if l_editor_zone.is_minimized then
-					a_config_data.set_is_editor_minimized (True)
-				else
-					a_config_data.set_is_editor_minimized (False)
-				end
+				a_config_data.set_is_editor_minimized (l_editor_zone.is_minimized)
 			else
 				a_config_data.set_is_one_editor_zone (False)
 			end

@@ -87,12 +87,11 @@ feature -- Open inner container data
 						open_inner_container_data (l_data, l_top_parent)
 					end
 
-					if attached {EV_SPLIT_AREA} l_top_parent as l_split_area then
-						if l_split_area.first /= Void then
-							if attached {EV_SPLIT_AREA} l_split_area.first as l_split_area_2 then
-								open_inner_container_data_split_position (l_data, l_split_area_2)
-							end
-						end
+					if
+						attached {EV_SPLIT_AREA} l_top_parent as l_split_area and then
+						attached {EV_SPLIT_AREA} l_split_area.first as l_split_area_2
+					then
+						open_inner_container_data_split_position (l_data, l_split_area_2)
 					end
 
 					l_place_holder_content := internal_docking_manager.zones.place_holder_content
@@ -462,7 +461,7 @@ feature {NONE} -- Implementation
 	is_all_tools (a_zones: detachable ARRAYED_LIST [SD_ZONE]): BOOLEAN
 			-- Does `a_zones' contain only tools?
 		do
-			Result := attached a_zones implies across a_zones as z all z.item.type /= {SD_ENUMERATION}.tool end
+			Result := attached a_zones implies across a_zones as z all z.item.type = {SD_ENUMERATION}.tool end
 		end
 
 	open_all_inner_containers_data (a_config_data: SD_CONFIG_DATA)
@@ -507,10 +506,8 @@ feature {NONE} -- Implementation
 					l_multi_dock_area := l_floating_state.inner_container
 					internal_docking_manager.inner_containers.extend (l_multi_dock_area)
 				end
-				if l_multi_dock_area.readable then
-					if attached {EV_SPLIT_AREA} l_multi_dock_area.item as l_split then
-						open_inner_container_data_split_position (l_data_item, l_split)
-					end
+				if l_multi_dock_area.readable and then attached {EV_SPLIT_AREA} l_multi_dock_area.item as l_split then
+					open_inner_container_data_split_position (l_data_item, l_split)
 				end
 				l_data.forth
 			end
@@ -655,23 +652,27 @@ feature {NONE} -- Implementation
 		do
 			if a_config_data.is_split_area then
 				if
-					 a_split.full then
-					-- a_split may be not full, because when restore client programer may not
-					-- supply SD_CONTENT which existed when last saving config.
-					if 0 <= a_config_data.split_proportion and a_config_data.split_proportion <= 1 then
-						a_split.set_proportion (a_config_data.split_proportion)
-					end
+						-- `a_split` may be not full, because when restore client programer may not
+						-- supply SD_CONTENT which existed when last saving config.
+					 a_split.full and then
+					0 <= a_config_data.split_proportion and a_config_data.split_proportion <= 1
+				then
+					a_split.set_proportion (a_config_data.split_proportion)
 				end
 
-				if attached a_config_data.children_left as l_left and then l_left.is_split_area then
-					if attached {EV_SPLIT_AREA} a_split.first as l_split then
-						open_inner_container_data_split_position (l_left, l_split)
-					end
+				if
+					attached a_config_data.children_left as l_left and then
+					l_left.is_split_area and then
+					attached {EV_SPLIT_AREA} a_split.first as l_split
+				then
+					open_inner_container_data_split_position (l_left, l_split)
 				end
-				if attached a_config_data.children_right as l_right and then l_right.is_split_area then
-					if attached {EV_SPLIT_AREA} a_split.second as l_split_2 then
-						open_inner_container_data_split_position (l_right, l_split_2)
-					end
+				if
+					attached a_config_data.children_right as l_right and then
+					l_right.is_split_area and then
+					attached {EV_SPLIT_AREA} a_split.second as l_split
+				then
+					open_inner_container_data_split_position (l_right, l_split)
 				end
 			end
 		end
@@ -766,7 +767,7 @@ feature {NONE} -- Implementation
 			l_data: SD_TOOL_BAR_DATA
 			l_tool_bar: SD_TOOL_BAR_ZONE
 			l_content: SD_TOOL_BAR_CONTENT
-			l_state: detachable SD_TOOL_BAR_ZONE_STATE
+			l_state: SD_TOOL_BAR_ZONE_STATE
 			l_internal_docking_manager: like internal_docking_manager
 			l_tool_bar_manager: like internal_docking_manager.tool_bar_manager
 		do
@@ -846,7 +847,7 @@ feature {NONE} -- Implementation
 						l_zone.change_direction (True)
 					end
 
-					if attached {SD_TOOL_BAR_ZONE_STATE} l_data.last_state as l_state_2 then
+					if attached l_data.last_state as l_state_2 then
 						create l_tool_bar.make (l_state_2.is_vertical, False, l_content, l_internal_docking_manager)
 					else
 						create l_tool_bar.make (False, False, l_content, l_internal_docking_manager)
@@ -854,8 +855,8 @@ feature {NONE} -- Implementation
 					l_content.set_zone (l_tool_bar)
 					l_content.set_visible (False)
 					l_state := l_data.last_state
-					if attached {SD_TOOL_BAR_ZONE_STATE} l_state as l_state_3 and then l_state_3.is_docking_state_recorded then
-						l_tool_bar.assistant.set_last_state (l_state_3)
+					if attached l_state and then l_state.is_docking_state_recorded then
+						l_tool_bar.assistant.set_last_state (l_state)
 					end
 				end
 
@@ -1002,11 +1003,10 @@ feature {SD_EDITOR_CONFIG_HELPER} -- Internals
 				loop
 					if
 						attached  internal_docking_manager.query.content_by_title (l_maximized_tools.item) as l_content and then
-						attached l_content.state.zone as z
+						attached l_content.state.zone as z and then
+						not z.is_maximized
 					then
-						if not z.is_maximized then
-							l_content.state.on_normal_max_window
-						end
+						l_content.state.on_normal_max_window
 					end
 					l_maximized_tools.forth
 				end

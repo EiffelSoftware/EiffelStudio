@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Utility functions for working with {ES_TOOL} instances.
 	]"
@@ -46,7 +46,8 @@ feature -- Query
 			if a_tool.is_multiple_edition then
 				l_edition := a_tool.edition
 				if l_edition > 1 then
-					Result.append (":" + l_edition.out)
+					Result.append_character (':')
+					Result.append_natural_8 (l_edition)
 				end
 			end
 		ensure
@@ -68,7 +69,6 @@ feature -- Query
 			l_edition: STRING_32
 			l_internal: INTERNAL
 			l_id: INTEGER
-			l_tool_type: TYPE [ES_TOOL [EB_TOOL]]
 		do
 			l_pos := a_tool_id.index_of (':', 1)
 			if l_pos > 1 then
@@ -84,21 +84,20 @@ feature -- Query
 			l_type := l_type.as_upper
 			if l_internal.is_valid_type_string (l_type) then
 				l_id := l_internal.dynamic_type_from_string (l_type)
-				if l_id > 0 then
-						-- Set type
-					l_tool_type ?= l_internal.type_of_type (l_id)
-					if l_tool_type /= Void then
-						Result := [l_tool_type, {NATURAL_8} 0]
+				if
+					l_id > 0 and then
+					attached {TYPE [ES_TOOL [EB_TOOL]]} l_internal.type_of_type (l_id) as l_tool_type
+				then
+					Result := [l_tool_type, {NATURAL_8} 0]
 
-							-- Set edition
-						if l_edition = Void then
-							Result.edition := 1
-						elseif l_edition.is_natural_8 then
-							Result.edition := l_edition.to_natural_8
-						else
-								-- Invalid edition, therefore nothing can be returned.
-							Result := Void
-						end
+						-- Set edition
+					if l_edition = Void then
+						Result.edition := 1
+					elseif l_edition.is_natural_8 then
+						Result.edition := l_edition.to_natural_8
+					else
+							-- Invalid edition, therefore nothing can be returned.
+						check not attached Result end
 					end
 				end
 			end

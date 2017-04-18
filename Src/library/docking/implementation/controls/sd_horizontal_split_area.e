@@ -32,16 +32,13 @@ feature {NONE} -- Implementation
 
 	initialize
 			-- <Precursor>
-		local
-			l_platform: PLATFORM
 		do
 			Precursor {EV_HORIZONTAL_SPLIT_AREA}
-			create l_platform
 			-- Because GTK have a bug when press on a split area.
 			-- The bug is: It will always set split position when left button released.
 			--             And it not care about whether if user is dragging the spliter.			
 			-- So we disable "set split position to 0.5 when double presses" on GTK.
-			if l_platform.is_windows then
+			if {PLATFORM}.is_windows then
 				pointer_double_press_actions.extend
 					(agent (a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32)
 						do set_half end)

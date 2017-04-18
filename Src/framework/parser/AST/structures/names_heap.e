@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Correspondance between names and integers.
 		The structure is very efficient for accessing from an integer
@@ -67,9 +67,11 @@ feature -- Access
 			-- Access `i'-th element in UTF-32.
 		require
 			valid_index: valid_index (i)
+		local
+			u: UTF_CONVERTER
 		do
 			if i > 0 then
-				Result := encoding_converter.utf8_to_utf32 (area.item (i))
+				Result := u.utf_8_string_8_to_string_32 (area [i])
 			end
 		ensure
 			Result_not_void: i > 0 implies Result /= Void
@@ -420,7 +422,7 @@ invariant
 	found_item_positive: found_item >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -451,4 +453,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class NAMES_HEAP
+end

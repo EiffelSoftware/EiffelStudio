@@ -22,7 +22,7 @@ feature -- Redefine
 	file_to_read: RAW_FILE
 			-- File for sending data
 		once
-			create Result.make ("eiffel_tower.jpg")
+			create Result.make_with_name ("eiffel_tower.jpg")
 			Result.open_read
 			Result.start
 		ensure

@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Fixes violations of rule #48 ('Attribute can be made constant')."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -38,8 +37,10 @@ feature {NONE} -- Implementation
 feature {NONE} -- Visitor
 
 	execute (a_class: attached CLASS_AS)
+		local
+			u: UTF_CONVERTER
 		do
-			attribute_to_change.body.append_text({STRING_32} " = " + constant_value, matchlist)
+			attribute_to_change.body.append_text (" = " + u.string_32_to_utf_8_string_8 (constant_value), matchlist)
 			process_ast_node (a_class)
 		end
 

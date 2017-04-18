@@ -190,12 +190,13 @@ feature -- Zones managements
 		local
 			l_has_child: BOOLEAN
 		do
-			if attached {EV_CONTAINER} a_zone as l_container then
-				-- Maybe we are moving from {SD_AUTO_HIDE_STATE} to {SD_DOCKING_STATE}
-				-- {SD_CONTENT}.user_widget's parent already changed, no need to prune later
-				if a_zone.has_content then
-					l_has_child := l_container.has_recursive (a_zone.content.user_widget)
-				end
+			if
+				attached {EV_CONTAINER} a_zone as l_container and then
+					-- Maybe we are moving from {SD_AUTO_HIDE_STATE} to {SD_DOCKING_STATE}
+					-- {SD_CONTENT}.user_widget's parent already changed, no need to prune later
+				a_zone.has_content
+			then
+				l_has_child := l_container.has_recursive (a_zone.content.user_widget)
 			end
 
 			if attached {EV_WIDGET} a_zone as lt_widget then
@@ -206,14 +207,14 @@ feature -- Zones managements
 				check not_possible: False end
 			end
 
-			-- FIXIT: call prune_all from ACTIVE_LIST contract broken?
+				-- FIXME: call prune_all from ACTIVE_LIST contract broken?
 			zones.start
 			zones.prune (a_zone)
 
 			if
 				l_has_child and then
 				a_zone.has_content and then
-				attached {EV_CONTAINER} a_zone.content.user_widget.parent as l_parent
+				attached a_zone.content.user_widget.parent as l_parent
 			then
 				l_parent.prune (a_zone.content.user_widget)
 			end
@@ -241,10 +242,11 @@ feature -- Zones managements
 					l_zone.has_content and then
 					l_zone.content = a_content
 				then
+						-- `zones` is modified by the next call.
 					prune_zone (l_zone)
 					l_pruned := True
-				end
-				if not l_pruned then
+				else
+						-- It is safe to advance only when `zones` is not modified.
 					l_zones.forth
 				end
 			end

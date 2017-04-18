@@ -41,14 +41,13 @@ feature {NONE} -- Initlization
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		do
-			create internal_shared
 			internal_content := a_content
 			set_docking_manager (a_content.docking_manager)
 			direction := a_direction
 			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
-				width_height := (docking_manager.fixed_area.width * internal_shared.default_docking_width_rate).ceiling
+				width_height := (docking_manager.fixed_area.width * {SD_SHARED}.default_docking_width_rate).ceiling
 			else
-				width_height := (docking_manager.fixed_area.height * internal_shared.default_docking_height_rate).ceiling
+				width_height := (docking_manager.fixed_area.height * {SD_SHARED}.default_docking_height_rate).ceiling
 			end
 			auto_hide_panel := docking_manager.query.auto_hide_panel (a_direction)
 
@@ -236,9 +235,9 @@ feature -- Redefine
 		do
 			docking_manager.command.lock_update (Void, True)
 			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
-				create l_docking_state.make (content, direction, (docking_manager.query.container_rectangle.width * internal_shared.default_docking_width_rate).ceiling)
+				create l_docking_state.make (content, direction, (docking_manager.query.container_rectangle.width * {SD_SHARED}.default_docking_width_rate).ceiling)
 			else
-				create l_docking_state.make (content, direction, (docking_manager.query.container_rectangle.height * internal_shared.default_docking_height_rate).ceiling)
+				create l_docking_state.make (content, direction, (docking_manager.query.container_rectangle.height * {SD_SHARED}.default_docking_height_rate).ceiling)
 			end
 			l_docking_state.dock_at_top_level (a_multi_dock_area)
 			change_state (l_docking_state)
@@ -544,7 +543,6 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Implementation
 invariant
 
 	internal_content_not_void: initialized implies internal_content /= Void
-	internal_shared_not_void: initialized implies internal_shared /= Void
 	tab_stub_not_void: initialized implies tab_stub /= Void
 	auto_hide_panel_not_void: initialized implies auto_hide_panel /= Void
 	animation_not_void: initialized implies animation /= Void

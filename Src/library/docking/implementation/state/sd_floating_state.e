@@ -29,7 +29,6 @@ feature {NONE} -- Initlization
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
 		do
-			create internal_shared
 			set_docking_manager (a_docking_manager)
 			create internal_zone.make (a_docking_manager)
 			internal_zone.set_position (a_screen_x, a_screen_y)

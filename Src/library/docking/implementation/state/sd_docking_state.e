@@ -9,6 +9,7 @@ class
 	SD_DOCKING_STATE
 
 inherit
+	SD_SHARED
 	SD_STATE_WITH_CONTENT
 		redefine
 			stick,
@@ -44,7 +45,7 @@ feature {NONE} -- Initlization
 			a_content_attached: a_content.is_docking_manager_attached
 		do
 			make_common (a_content, a_direction, a_width_height)
-			zone := internal_shared.widget_factory.docking_zone (a_content)
+			zone := widget_factory.docking_zone (a_content)
 			docking_manager.zones.add_zone (zone)
 			initialized := True
 		ensure
@@ -97,7 +98,6 @@ feature {NONE} -- Initlization
 			a_content_not_void: a_content /= Void
 			a_content_attached: a_content.is_docking_manager_attached
 		do
-			create internal_shared
 			set_docking_manager (a_content.docking_manager)
 			direction := a_direction
 			width_height := a_width_height
@@ -139,10 +139,9 @@ feature -- Redefine
 				if attached docking_manager.query.content_by_title_for_restore (l_titles.item) as l_content then
 					internal_content := l_content
 					Precursor (a_data, a_container)
-					make (l_content, {SD_ENUMERATION}.left, 1)
+					make (l_content, a_data.direction, 1)
 					a_container.extend (zone)
 					change_state (Current)
-					direction := a_data.direction
 				end
 			else
 				check from_precondition_more_than_one_title: False end

@@ -9,6 +9,12 @@ class
 	SD_TOOL_BAR
 
 inherit
+	DEBUG_OUTPUT
+		undefine
+			default_create,
+			copy
+		end
+
 	SD_GENERIC_TOOL_BAR
 		undefine
 			default_create,
@@ -156,11 +162,12 @@ feature -- Command
 				l_item := l_items.item
 				if l_items.index = l_items.count or l_item.is_wrap then
 					-- Minimum width only make sence in this case.
-					if attached {SD_TOOL_BAR_SEPARATOR} l_item then
-						-- It's a separator, we should calculate the item before
-						if l_item_before /= Void then
-							l_item := l_item_before
-						end
+					if
+						attached {SD_TOOL_BAR_SEPARATOR} l_item and then
+							-- It's a separator, we should calculate the item before
+						attached l_item_before
+					then
+						l_item := l_item_before
 					end
 					if l_minimum_width < l_item.rectangle.right then
 						l_minimum_width := l_item.rectangle.right
@@ -650,28 +657,28 @@ feature {NONE} -- Agents
 			debug ("docking")
 				print ("%NSD_TOOL_BAR on_pointer_press")
 			end
-			-- We only handle press/release occurring in the widget (i.e. we ignore the one outside of the widget).		
-			-- Otherwise it will cause bug#12549
-			if a_screen_x >= screen_x and a_screen_x <= screen_x + width and
-				a_screen_y >= screen_y  and a_screen_y <= screen_y + height then
-
-				if a_button = {EV_POINTER_CONSTANTS}.left then
-					enable_capture
-					from
-						l_items := items
-						l_items.start
-					until
-						l_items.after
-					loop
-						l_item := l_items.item
-						l_item.on_pointer_press (a_x, a_y)
-						if l_item.is_need_redraw then
-							drawer.start_draw (l_item.rectangle)
-							redraw_item (l_item)
-							drawer.end_draw
-						end
-						l_items.forth
+				-- We only handle press/release occurring in the widget (i.e. we ignore the one outside of the widget).		
+				-- Otherwise it will cause bug#12549
+			if
+				a_screen_x >= screen_x and a_screen_x <= screen_x + width and
+				a_screen_y >= screen_y  and a_screen_y <= screen_y + height and then
+				a_button = {EV_POINTER_CONSTANTS}.left
+			then
+				enable_capture
+				from
+					l_items := items
+					l_items.start
+				until
+					l_items.after
+				loop
+					l_item := l_items.item
+					l_item.on_pointer_press (a_x, a_y)
+					if l_item.is_need_redraw then
+						drawer.start_draw (l_item.rectangle)
+						redraw_item (l_item)
+						drawer.end_draw
 					end
+					l_items.forth
 				end
 			end
 		end
@@ -693,40 +700,40 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer release actions
+			-- Handle pointer release actions.
 		local
 			l_items: like internal_items
 			l_item: like item_type
 		do
 			if a_button = {EV_POINTER_CONSTANTS}.left then
-				-- Reset state value and disable capture should not care about the pointer position. Otherwise capture will still enabled if end user released the pointer button outside current
+					-- Reset state value and disable capture should not care about the pointer position. Otherwise capture will still enabled if end user released the pointer button outside current.
 				disable_capture
 				internal_pointer_pressed := False
 			end
 
-			-- We only handle press/release occurring in the widget (i.e. we ignore the one outside of the widget)	
-			-- Otherwise it will cause bug#12549	
-			if a_screen_x >= screen_x and a_screen_x <= screen_x + width and
-				a_screen_y >= screen_y  and a_screen_y <= screen_y + height then
-
-				if a_button = {EV_POINTER_CONSTANTS}.left then
-					from
-						l_items := items
-						l_items.start
-					until
-						l_items.after
-					loop
-						l_item := l_items.item
-						l_item.on_pointer_release (a_x, a_y)
-						if l_item.is_displayed and then l_item.is_need_redraw and then (attached l_item.tool_bar as l_tool_bar and then not l_tool_bar.is_destroyed) then
+				-- We only handle press/release occurring in the widget (i.e. we ignore the one outside of the widget).
+				-- Otherwise it will cause bug#12549.
+			if
+				a_screen_x >= screen_x and a_screen_x <= screen_x + width and
+				a_screen_y >= screen_y  and a_screen_y <= screen_y + height and then
+				a_button = {EV_POINTER_CONSTANTS}.left
+			then
+				from
+					l_items := items
+					l_items.start
+				until
+					l_items.after
+				loop
+					l_item := l_items.item
+					l_item.on_pointer_release (a_x, a_y)
+					if l_item.is_displayed and then l_item.is_need_redraw and then (attached l_item.tool_bar as l_tool_bar and then not l_tool_bar.is_destroyed) then
 							--| FIXME According to LarryL, if l_item.is_displayed is False, then the toolbar is Void, this appears to not be the case in
 							--| some circumstances so the protection has been added
-							drawer.start_draw (l_item.rectangle)
-							redraw_item (l_item)
-							drawer.end_draw
-						end
-						l_items.forth
+						drawer.start_draw (l_item.rectangle)
+						redraw_item (l_item)
+						drawer.end_draw
 					end
+					l_items.forth
 				end
 			end
 		end
@@ -911,9 +918,6 @@ feature {SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 			end
 		end
 
-	internal_content: detachable SD_TOOL_BAR_CONTENT
-			-- Instance holder for `content'
-
 	pointer_entered: BOOLEAN
 			-- Has pointer enter actions been called?
 			-- The reason why have this flag see `on_pointer_enter''s comments.
@@ -933,7 +937,20 @@ feature {SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 	is_content_attached: BOOLEAN
 			-- <Precursor>
 		do
-			Result := attached internal_content
+			Result := attached content
+		end
+
+feature {NONE} -- Output
+
+	debug_output: STRING_32
+		do
+			Result := {STRING_32} "SD_TOOL_BAR: "
+			Result.append
+				(if attached content as c then
+					c.title
+				else
+					{STRING_32} "no content"
+				end)
 		end
 
 invariant

@@ -29,7 +29,7 @@ feature {NONE}-- Initialization
 			set_title ("Display window")
 
 			set_all_attributes_using_constants
-			
+
 				-- Connect events.
 				-- Close the application when an interface close
 				-- request is received on `Current'. i.e. the cross is clicked.
@@ -38,9 +38,9 @@ feature {NONE}-- Initialization
 				-- Call `user_initialization'.
 			user_initialization
 		end
-		
+
 	create_interface_objects
-			-- Create objects
+			-- Create objects.
 		do
 
 			create string_constant_set_procedures.make (10)
@@ -170,7 +170,7 @@ feature {NONE} -- Constant setting
 					font_constant_set_procedures.item.call ([f])
 				end
 				font_constant_set_procedures.forth
-			end	
+			end
 		end
 
 	set_attributes_using_color_constants
@@ -203,7 +203,7 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-	
+
 	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [STRING_GENERAL]]
 	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [INTEGER]]

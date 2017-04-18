@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- Implementation
 
 	main_window: detachable MAIN_WINDOW
-		-- Main window of `Current'
+		-- Main window of `Current'.
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"

@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 					-- Get all locals.
 				across l_locals as l_local_dec loop
 					across l_local_dec.item.id_list as l_id loop
-						all_locals.extend (l_id.item, l_local_dec.item.item_name (l_local_dec.item.id_list.index_of (l_id.item, 1)))
+						all_locals.extend (l_id.item, l_local_dec.item.item_name_32 (l_local_dec.item.id_list.index_of (l_id.item, 1)))
 					end
 				end
 
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	all_locals: HASH_TABLE [INTEGER, STRING]
+	all_locals: STRING_TABLE [INTEGER]
 
 	process_assign_as (a_assign: attached ASSIGN_AS)
 		do
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 						can_have_violations
 						and then attached {EXPR_CALL_AS} a_assign.source as l_expr_call
 						and then attached {ACCESS_ID_AS} l_expr_call.call as l_access
-						and then all_locals.has (l_access.access_name_8)
+						and then all_locals.has (l_access.access_name_32)
 					then
 						violating_assignment := a_assign
 					end
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 				l_violation.long_description_info.extend (l_access.access_name_32)
 
 				if attached {FEATURE_I} current_context.checking_class.feature_named_32 (a_feature.feature_name.name_32) as l_feature_i then
-					create l_fix.make_with_feature_type_and_index (current_context.checking_class, a_feature, current_context.node_type (l_access, l_feature_i), all_locals.at (l_access.access_name_32), l_access)
+					create l_fix.make_with_feature_type_and_index (current_context.checking_class, a_feature, current_context.node_type (l_access, l_feature_i), all_locals [l_access.access_name_32], l_access)
 				end
 
 			end

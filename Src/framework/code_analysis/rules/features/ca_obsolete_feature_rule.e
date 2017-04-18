@@ -116,7 +116,7 @@ feature {NONE} -- Rule Checking
 			violation: CA_RULE_VIOLATION
 		do
 			if attached r.obsolete_message as m then
-				stamp := date (m.value_32)
+				stamp := date (m.value)
 				if attached stamp then
 					d := stamp.date
 				else

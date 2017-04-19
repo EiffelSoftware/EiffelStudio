@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Command class that handles both menu-commands and toolbar-commands"
 	status: "See notice at end of class."
 	author: "Andreas Leitner"
@@ -14,19 +14,14 @@ inherit
 feature
 
 	execute (argument: ANY)
-		local
-			mi: WEL_COMMAND_MESSAGE
 		do
-			
-			main_window ?= argument
-			mi ?= message_information
-
-			check
-				valid_argument: argument /= Void
-				valid_message_information: mi /= Void
+			if attached {like main_window} argument as w then
+				main_window := w
 			end
-
-			if mi.from_menu or mi.from_control then
+			if
+				attached {WEL_COMMAND_MESSAGE} message_information as mi and then
+				(mi.from_menu or mi.from_control)
+			then
 				execute_messages (mi.id)
 			end
 		end
@@ -51,22 +46,22 @@ feature
 			Result := main_window.main_menu.item_checked (command_id)
 		end
 
-	
+
 feature {NONE}
 
 	main_window: WEX_MAIN_WINDOW
-	
+
 	execute_messages (command_id: INTEGER)
 			-- redefine this routine and place your custom message handling routiens there
 		do
 		end
 
-
-end -- class COMMAND_CMD
+end
 
 --|-------------------------------------------------------------------------
 --| WEX, Windows Eiffel library eXtension
 --| Copyright (C) 1998  Robin van Ommeren, Andreas Leitner
+--| Copyright (C) 2017  Eiffel Software, Alexander Kogtenkov
 --| See the file forum.txt included in this package for licensing info.
 --|
 --| Comments, Questions, Additions to this library? please contact:

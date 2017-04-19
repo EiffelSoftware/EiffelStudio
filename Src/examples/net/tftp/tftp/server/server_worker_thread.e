@@ -296,7 +296,7 @@ feature
 			l_file: like file
 		do
 			Result := ERR_NO_ERROR
-			create l_file.make (filename)
+			create l_file.make_with_name (filename)
 			if l_file.exists and then not frontend.allow_overwrite (remote_address) then
 				file := Void
 				Result := ERR_FILE_EXISTS
@@ -311,7 +311,7 @@ feature
 			l_file: like file
 		do
 			Result := ERR_NO_ERROR;
-			create l_file.make (filename)
+			create l_file.make_with_name (filename)
 			if not l_file.exists then
 				Result := ERR_FILE_NOT_FOUND
 				file := Void

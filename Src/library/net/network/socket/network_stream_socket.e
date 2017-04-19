@@ -244,7 +244,7 @@ feature -- Status report
 	maxium_seg_size: INTEGER
 			-- Maximum segment size
 		obsolete
-			"Use `maximum_seg_size' instead."
+			"Use `maximum_seg_size' instead [2017-05-31]."
 		require
 			socket_exists: exists
 		do
@@ -308,7 +308,7 @@ feature -- Status setting
 		end;
 
 	set_linger (flag: BOOLEAN; time: INTEGER)
-		obsolete "Use `set_linger_on'/`set_linger_off' instead."
+		obsolete "Use `set_linger_on'/`set_linger_off' instead [2017-05-31]."
 			-- Switch lingering on/off (depending on `flag') and set linger
 			-- time to `time'.
 		require

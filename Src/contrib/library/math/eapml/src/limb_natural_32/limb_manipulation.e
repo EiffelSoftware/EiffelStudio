@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {LIMB_MANIPULATION}."
 	author: "Colin LeMahieu"
 	date: "$Date$"
@@ -108,11 +108,12 @@ feature
 			if r1 < m then
 				q1 := q1 - 1
 				r1 := r1 + d
-				if r1 >= d then
-					if r1 < m then
-						q1 := q1 - 1
-						r1 := r1 + d
-					end
+				if
+					r1 >= d and then
+					r1 < m
+				then
+					q1 := q1 - 1
+					r1 := r1 + d
 				end
 			end
 			r1 := r1 - m
@@ -123,11 +124,12 @@ feature
 			if r0 < m then
 				q0 := q0 - 1
 				r0 := r0 + d
-				if r0 >= d then
-					if r0 < m then
-						q0 := q0 - 1
-						r0 := r0 + d
-					end
+				if
+					r0 >= d and then
+					r0 < m
+				then
+					q0 := q0 - 1
+					r0 := r0 + d
 				end
 			end
 			r0 := r0 - m

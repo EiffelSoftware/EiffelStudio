@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {INTEGER_X_RANDOM}."
 	author: "Colin LeMahieu"
 	date: "$Date$"
@@ -71,7 +71,7 @@ feature
 				end
 			end
 			count := leading_zeros (np [nlast])
-			nbits := size * limb_bits - (count) - pow2.to_integer
+			nbits := size * limb_bits - count - pow2.to_integer
 			if nbits = 0 then
 				target.count := 0
 			else

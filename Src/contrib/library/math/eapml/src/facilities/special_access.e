@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {NUMBER_ACCESS}."
 	author: "Colin LeMahieu"
 	date: "$Date$"
@@ -156,7 +156,6 @@ feature
 						loop
 							pi := pi + 1
 							t := powtab_mem_ptr_offset
-							powtab_mem_ptr_offset := powtab_mem_ptr_offset + 2 * n
 							sqr_n (powtab_mem_ptr, t, p, p_offset, n)
 							n := n * 2
 							n := n - (powtab_mem_ptr [t + n - 1] = 0).to_integer
@@ -185,7 +184,6 @@ feature
 			i: INTEGER
 			frac: CELL [NATURAL_32]
 			digit: CELL [NATURAL_32]
-			junk: NATURAL_32
 			chars_per_limb_l: INTEGER
 			big_base_l: NATURAL_32
 			big_base_inverted_l: NATURAL_32
@@ -214,7 +212,7 @@ feature
 			until
 				op1_count <= 1
 			loop
-				junk := preinv_divrem_1 (rp, rp_offset, 1, rp, rp_offset + 1, op1_count, big_base_l, big_base_inverted_l, normalization_steps)
+				preinv_divrem_1 (rp, rp_offset, 1, rp, rp_offset + 1, op1_count, big_base_l, big_base_inverted_l, normalization_steps).do_nothing
 				op1_count := op1_count - (rp [rp_offset + op1_count] = 0).to_integer
 				frac.put (rp [rp_offset] + 1)
 				s := s - chars_per_limb_l

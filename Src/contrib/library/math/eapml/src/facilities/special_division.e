@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {NUMBER_DIVISION}."
 	author: "Colin LeMahieu"
 	date: "$Date$"
@@ -244,7 +244,7 @@ feature
 				end
 				ls := s |>> shift
 				l := ls - c
-				l := (l * inverse)
+				l := l * inverse
 				target [target_offset + i] := l
 			else
 				l := s * inverse
@@ -334,8 +334,7 @@ feature
 							q.put (q.item - 1)
 							sub_ddmmss (n1, n0, n1.item, n0.item, 0, d0)
 							r.put (r.item + d1)
-							if r.item >= d1 then
-							else
+							if r.item < d1 then
 								continue := False
 							end
 						else
@@ -471,7 +470,7 @@ feature
 			n2 := nh
 			n10 := nl
 			nmask := limb_highbit_to_mask (n10)
-			nadj := n10 + (nmask.bit_and (d))
+			nadj := n10 + nmask.bit_and (d)
 			umul_ppmm (xh, xl, di, n2 - nmask)
 			add_ssaaaa (xh, xl, xh.item, xl.item, n2, nadj)
 			q1 := xh.item.bit_not
@@ -709,12 +708,13 @@ feature
 			dx := op2 [op2_offset + op2_count - 1]
 			d1 := op2 [op2_offset + op2_count - 2]
 			n0 := op1 [op1_offset + op2_count - 1]
-			if n0 >= dx then
-				if n0 > dx or cmp (op1, op1_offset, op2, op2_offset, op2_count - 1) >= 0 then
-					sub_n (op1, op1_offset, op1, op1_offset, op2, op2_offset, op2_count, carry)
-					junk := carry.item
-					most_significant_q_limb := 1
-				end
+			if
+				n0 >= dx and then
+				n0 > dx or cmp (op1, op1_offset, op2, op2_offset, op2_count - 1) >= 0
+			then
+				sub_n (op1, op1_offset, op1, op1_offset, op2, op2_offset, op2_count, carry)
+				junk := carry.item
+				most_significant_q_limb := 1
 			end
 			dxinv := limb_inverse (dx)
 			from
@@ -925,7 +925,7 @@ feature
 				d2p_offset := 0
 				lshift (d2p, d2p_offset, denominator, denominator_offset + in, qn, cnt, carry)
 				junk := carry.item
-				d2p [d2p_offset] := d2p [d2p_offset].bit_or ((denominator [denominator_offset + in - 1]) |>> (limb_bits - cnt))
+				d2p [d2p_offset] := d2p [d2p_offset].bit_or (denominator [denominator_offset + in - 1] |>> (limb_bits - cnt))
 				create n2p.make_filled (0, 2 * qn + 1)
 				n2p_offset := 0
 				lshift (n2p, n2p_offset, numerator, numerator_offset + numerator_count - 2 * qn, 2 * qn, cnt, carry)
@@ -934,7 +934,7 @@ feature
 					n2p [n2p_offset + 2 * qn] := cy
 					n2p_offset := n2p_offset + 1
 				else
-					n2p [n2p_offset] := n2p [n2p_offset].bit_or ((numerator [numerator_offset + numerator_count - 2 * qn - 1]) |>> (limb_bits - cnt))
+					n2p [n2p_offset] := n2p [n2p_offset].bit_or (numerator [numerator_offset + numerator_count - 2 * qn - 1] |>> (limb_bits - cnt))
 				end
 			else
 				cnt := 0
@@ -987,17 +987,15 @@ feature
 		end
 
 	tdiv_qr_internal_divide (target: SPECIAL [NATURAL_32]; target_offset: INTEGER_32; numerator: SPECIAL [NATURAL_32]; numerator_offset: INTEGER_32; denominator: SPECIAL [NATURAL_32]; denominator_offset: INTEGER_32; qn: INTEGER_32)
-		local
-			junk: NATURAL_32
 		do
 			if qn = 1 then
 				tdiv_qr_internal_divide_1 (target, target_offset, numerator, numerator_offset, denominator, denominator_offset)
 			elseif qn = 2 then
-				junk := divrem_2 (target, target_offset, numerator, numerator_offset, 4, denominator, denominator_offset)
+				divrem_2 (target, target_offset, numerator, numerator_offset, 4, denominator, denominator_offset).do_nothing
 			elseif qn < 3 * 32 then
-				junk := sb_divrem_mn (target, target_offset, numerator, numerator_offset, 2 * qn, denominator, denominator_offset, qn)
+				sb_divrem_mn (target, target_offset, numerator, numerator_offset, 2 * qn, denominator, denominator_offset, qn).do_nothing
 			else
-				junk := dc_divrem_n (target, target_offset, numerator, numerator_offset, denominator, denominator_offset, qn)
+				dc_divrem_n (target, target_offset, numerator, numerator_offset, denominator, denominator_offset, qn).do_nothing
 			end
 		end
 

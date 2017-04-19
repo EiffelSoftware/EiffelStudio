@@ -59,7 +59,7 @@ feature
 
 			create l_medium.make (soc1)
 			l_medium.set_for_writing
-			independent_store (our_list, l_medium, True)
+			store (our_list, l_medium)
 			l_medium.set_for_reading
 			if attached {OUR_MESSAGE} retrieved (l_medium, True) as our_new_list then
 				from

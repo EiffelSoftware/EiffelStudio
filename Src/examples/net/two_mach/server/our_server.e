@@ -74,7 +74,7 @@ feature
 
 					our_new_list.extend ("%N I'm back.%N")
 					l_medium.set_for_writing
-					independent_store (our_new_list, l_medium, True)
+					store (our_new_list, l_medium)
 				else
 					io.put_string ("Failed retrieving list.")
 					io.new_line

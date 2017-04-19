@@ -1,24 +1,19 @@
-note
+﻿note
 	description:
 		"[
-		Decimal number parsers, whose BNF syntax follows:
-		sign ::= '+' | '-'
-		digit ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
-		indicator ::= 'e' | 'E' 
-		digits ::= digit [digit]... 
-		point ::= '.' | ',' 
-		decimal-part ::= digits point [digits] | [point] digits 
-		exponent-part ::= indicator [sign] digits 
-		infinity ::= 'Infinity' | 'Inf' 
-		nan ::= 'NaN' | 'sNaN' 
-		numeric-value ::= decimal-part [exponent-part] | infinity 
-		numeric-string ::= [sign] numeric-value | nan
+			Decimal number parsers, whose BNF syntax follows:
+			sign ::= '+' | '-'
+			digit ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+			indicator ::= 'e' | 'E' 
+			digits ::= digit [digit]... 
+			point ::= '.' | ',' 
+			decimal-part ::= digits point [digits] | [point] digits 
+			exponent-part ::= indicator [sign] digits 
+			infinity ::= 'Infinity' | 'Inf' 
+			nan ::= 'NaN' | 'sNaN' 
+			numeric-value ::= decimal-part [exponent-part] | infinity 
+			numeric-string ::= [sign] numeric-value | nan
 		]"
-	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
-	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class DCM_MA_DECIMAL_TEXT_PARSER
 
@@ -278,7 +273,7 @@ feature {DECIMAL} -- Basic operations
 				if c = '-' then
 					sign := -1
 				else
-					sign := +1
+					sign := 1
 				end
 				state := State_sign
 			when 'n', 'N' then
@@ -528,9 +523,9 @@ feature {DECIMAL} -- Basic operations
 				i := i + 1
 				j := j + 1
 			end
-			Result := (i > i_end and then j > t.count)
+			Result := i > i_end and then j > t.count
 		ensure
-			definition: Result = (s.substring (i_begin, i_end).as_lower.is_equal (t.as_lower))
+			definition: Result = s.substring (i_begin, i_end).as_lower.is_equal (t.as_lower)
 		end
 
 feature -- Constants
@@ -581,14 +576,17 @@ invariant
 
 	decimal_point_is_comma_implies_has_fractional_part: decimal_point_is_comma implies has_point
 
-
 note
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
 	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
-	license: "MIT license"
+	copyright: "Copyright (c) 2017 Eiffel Software."
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 	details: "[
 			Originally developed by Paul G. Crismer as part of Gobo. 
 			Revised by Jocelyn Fiat for void safety.
+			Revised by Alexander Kogtenkov.
 		]"
 
 end

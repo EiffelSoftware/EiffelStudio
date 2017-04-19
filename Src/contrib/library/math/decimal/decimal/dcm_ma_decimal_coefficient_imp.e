@@ -1,11 +1,6 @@
-note
+﻿note
 	description:
 		"Simple implementation of coefficients using a native array of characters"
-	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
-	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class DCM_MA_DECIMAL_COEFFICIENT_IMP
 
@@ -109,12 +104,10 @@ feature -- Element change
 		local
 			i, k: INTEGER
 			c: CHARACTER
-			l_digits: like digits
 		do
 			if s.count > capacity then
 				grow (s.count)
 			end
-			l_digits := digits
 			from
 				i := coefficient_end
 				k := 0
@@ -124,7 +117,7 @@ feature -- Element change
 				c := s.item (i)
 				inspect c
 				when '0' .. '9' then
-					put ((c.code - ('0').code), k)
+					put (c.code - ('0').code, k)
 					k := k + 1
 				else
 						-- Do nothing.
@@ -294,8 +287,8 @@ feature -- Basic operations
 				variant
 					index + 1
 				end
-					-- found no equal item
-				Result := (index < lower)
+					-- Found no equal item.
+				Result := index < lower
 			end
 		end
 
@@ -359,7 +352,6 @@ feature -- Basic operations
 		local
 			carry: INTEGER
 			index: INTEGER
-			digit: INTEGER
 			l_digits, l_other_digits: like digits
 		do
 			from
@@ -371,8 +363,7 @@ feature -- Basic operations
 				index = count
 			loop
 				carry := carry + l_digits.item (index) + l_other_digits.item (index)
-				digit := carry \\ 10
-				l_digits.put (digit.to_integer_8, index)
+				l_digits.put ((carry \\ 10).to_integer_8, index)
 				carry := carry // 10
 				index := index + 1
 			end
@@ -449,7 +440,6 @@ feature -- Basic operations
 		local
 			carry: INTEGER
 			index: INTEGER
-			digit: INTEGER
 			l_digits: like digits
 			start: INTEGER
 			l_count: INTEGER
@@ -464,16 +454,15 @@ feature -- Basic operations
 				index >= l_count
 			loop
 				carry := carry + l_digits.item (index)
-				digit := carry \\ 10
-				l_digits.put (digit.to_integer_8, index - start)
+				l_digits.put ((carry \\ 10).to_integer_8, index - start)
 				carry := carry // 10
 				index := index + 1
 			end
-			if carry /= 0 then
+			if carry = 0 then
+				set_count (digits_count)
+			else
 				l_digits.put (carry.to_integer_8, index - start)
 				set_count (digits_count + 1)
-			else
-				set_count (digits_count)
 			end
 		end
 
@@ -570,14 +559,17 @@ invariant
 
 	digits_not_void: digits /= Void
 
-
 note
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
 	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
-	license: "MIT license"
+	copyright: "Copyright (c) 2017 Eiffel Software."
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 	details: "[
 			Originally developed by Paul G. Crismer as part of Gobo. 
 			Revised by Jocelyn Fiat for void safety.
+			Revised by Alexander Kogtenkov.
 		]"
 
 end

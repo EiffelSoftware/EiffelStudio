@@ -85,11 +85,11 @@ feature {RECORD_COMMAND} -- Element change
 			statement_recorder := a_recorder
 			if attached a_recorder then
 				l_writer.put_string ("Recording started for file ")
-				l_writer.put_string (a_recorder.writer.name)
+				l_writer.put_string (a_recorder.writer.path.name.as_string_8)
 				l_writer.new_line
 			elseif attached l_old_recorder then
 				l_writer.put_string ("Recording stopped for file ")
-				l_writer.put_string (l_old_recorder.writer.name)
+				l_writer.put_string (l_old_recorder.writer.path.name.as_string_8)
 				l_writer.new_line
 			end
 		ensure
@@ -199,10 +199,10 @@ feature -- Basic operations: Output
 			-- `e': The exception object to report.
 		do
 			io.put_string ("Error: ")
-			io.error.put_string (e.meaning)
+			io.error.put_string (e.tag.as_string_32)
 			io.error.new_line
-			if attached e.message as l_message and then not l_message.is_empty then
-				io.error.put_string (l_message)
+			if attached e.description as l_message and then not l_message.is_empty then
+				io.error.put_string (l_message.as_string_8)
 				io.error.new_line
 			end
 			io.error.new_line

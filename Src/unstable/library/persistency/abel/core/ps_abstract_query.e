@@ -243,7 +243,7 @@ feature {PS_ABEL_EXPORT} -- Testing support
 	stable_cursor: ITERATION_CURSOR [RESULT_TYPE]
 			-- A cursor which won't be generated anew each time.
 		obsolete
-			"Store the cursor at client side"
+			"Store the cursor at client side [2017-05-31]."
 		attribute
 		end
 

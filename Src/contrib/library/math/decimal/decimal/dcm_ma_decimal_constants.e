@@ -1,11 +1,6 @@
-note
+﻿note
 	description:
 		"Access to decimal math constants and shared context"
-	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
-	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class DCM_MA_DECIMAL_CONSTANTS
 
@@ -16,7 +11,7 @@ inherit
 feature -- Access
 
 	zero: DECIMAL
-			-- Neutral element for "+" and "-"
+			-- Neutral element for "+" and "-".
 		once
 			create Result.make (1)
 			Result := Result.zero
@@ -25,7 +20,7 @@ feature -- Access
 		end
 
 	negative_zero: DECIMAL
-			-- Negative zero
+			-- Negative zero.
 		once
 			Result := zero.negative_zero
 		ensure
@@ -33,7 +28,7 @@ feature -- Access
 		end
 
 	one: DECIMAL
-			-- Neutral element for "*" and "/"
+			-- Neutral element for "*" and "/".
 		once
 			Result := zero.one
 		ensure
@@ -41,7 +36,7 @@ feature -- Access
 		end
 
 	minus_one: DECIMAL
-			-- Minus one
+			-- Minus one.
 		once
 			Result := zero.minus_one
 		ensure
@@ -49,7 +44,7 @@ feature -- Access
 		end
 
 	infinity: DECIMAL
-			-- Infinity
+			-- Infinity.
 		once
 			Result := zero.infinity
 		ensure
@@ -57,7 +52,7 @@ feature -- Access
 		end
 
 	negative_infinity: DECIMAL
-			-- Negative infinity
+			-- Negative infinity.
 		once
 			Result := zero.negative_infinity
 		ensure
@@ -65,7 +60,7 @@ feature -- Access
 		end
 
 	not_a_number: DECIMAL
-			-- Not a Number
+			-- Not a Number.
 		once
 			Result := zero.nan
 		ensure
@@ -73,7 +68,7 @@ feature -- Access
 		end
 
 	signaling_not_a_number: DECIMAL
-			-- Signaling Not a Number
+			-- Signaling Not a Number.
 		once
 			Result := zero.snan
 		ensure
@@ -81,23 +76,17 @@ feature -- Access
 		end
 
 	minimum_integer: DECIMAL
-			-- Minimum value convertible to integer
-		local
-			ctx: DCM_MA_DECIMAL_CONTEXT
+			-- Minimum value convertible to integer.
 		once
-			create ctx.make_double_extended
-			create Result.make_from_string_ctx ({INTEGER}.min_value.out, ctx)
+			create Result.make_from_string_ctx ({INTEGER}.min_value.out, create {DCM_MA_DECIMAL_CONTEXT}.make_double_extended)
 		ensure
 			minimum_integer_not_void: Result /= Void
 		end
 
 	maximum_integer: DECIMAL
-			-- Maximum value convertible to integer
-		local
-			ctx: DCM_MA_DECIMAL_CONTEXT
+			-- Maximum value convertible to integer.
 		once
-			create ctx.make_double_extended
-			create Result.make_from_string_ctx ({INTEGER}.max_value.out, ctx)
+			create Result.make_from_string_ctx ({INTEGER}.max_value.out, create {DCM_MA_DECIMAL_CONTEXT}.make_double_extended)
 		ensure
 			maximum_integer_not_void: Result /= Void
 		end
@@ -105,10 +94,14 @@ feature -- Access
 note
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
 	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
-	license: "MIT license"
+	copyright: "Copyright (c) 2017 Eiffel Software."
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 	details: "[
 			Originally developed by Paul G. Crismer as part of Gobo. 
 			Revised by Jocelyn Fiat for void safety.
+			Revised by Alexander Kogtenkov.
 		]"
 
 end

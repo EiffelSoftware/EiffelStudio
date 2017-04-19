@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "This class represents the cdaudio MCI device."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -56,7 +56,7 @@ feature -- Access
 			a_valid_position: a_position <= number_of_tracks
 		local
 			seek_parms: WEX_MCI_SEEK_PARMS
-		do 
+		do
 			create seek_parms.make (parent, a_position)
 			seek_device (seek_parms, Mci_to)
 		end
@@ -67,7 +67,7 @@ feature -- Access
 			not_opened: not opened
 		local
 			open_parms: WEX_MCI_OPEN_PARMS
-		do 
+		do
 			create open_parms.make (parent, device_name)
 			open_device (open_parms, Mci_open_type)
 		end
@@ -76,7 +76,7 @@ feature -- Access
 			-- Open the cdaudio device shared.
 		local
 			open_parms: WEX_MCI_OPEN_PARMS
-		do 
+		do
 			create open_parms.make (parent, device_name)
 			open_device (open_parms, Mci_open_type +
 				Mci_open_shareable)
@@ -88,7 +88,7 @@ feature -- Access
 			opened: opened
 		local
 			set_parms: WEX_MCI_SET_PARMS
-		do 
+		do
 			create set_parms.make (parent)
 			set_parms.set_time_format (Mci_format_tmsf)
 			set_device (set_parms, Mci_set_time_format)
@@ -109,12 +109,12 @@ feature -- Access
 			to_pos: INTEGER
 		do
 			from_pos := cwin_mci_make_tmsf (track, 0, 0, 0)
-			to_pos := cwin_mci_make_tmsf (track + 1, 0, 0, 0) 
+			to_pos := cwin_mci_make_tmsf (track + 1, 0, 0, 0)
 			create play_parms.make (parent, from_pos, to_pos)
-			if not (track = number_of_tracks) then
-				play_device (play_parms, Mci_from + Mci_to)
-			else
+			if track = number_of_tracks then
 				play_device (play_parms, Mci_from)
+			else
+				play_device (play_parms, Mci_from + Mci_to)
 			end
 		end
 
@@ -130,7 +130,7 @@ feature -- Access
 			play_parms: WEX_MCI_PLAY_PARMS
 			from_pos: INTEGER
 		do
-			from_pos := cwin_mci_make_tmsf (track, 0, 0, 0) 
+			from_pos := cwin_mci_make_tmsf (track, 0, 0, 0)
 			create play_parms.make (parent, from_pos, 0)
 			play_device (play_parms, Mci_from)
 		end
@@ -143,11 +143,12 @@ feature {NONE} -- Implementation
 			Result := "cdaudio"
 		end
 
-end -- class WEX_MCI_CD_AUDIO
+end
 
 --|-------------------------------------------------------------------------
 --| WEX, Windows Eiffel library eXtension
 --| Copyright (C) 1998  Robin van Ommeren, Andreas Leitner
+--| Copyright (C) 2017  Eiffel Software, Alexander Kogtenkov
 --| See the file forum.txt included in this package for licensing info.
 --|
 --| Comments, Questions, Additions to this library? please contact:

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "This class represents the waveaudio MCI device."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -46,7 +46,7 @@ create
 
 feature -- Basic operations
 
-	open (file: STRING)
+	open (file: PATH)
 			-- Open a Mci device to play an audio file `file'.
 		require
 			not_opened: not opened
@@ -56,7 +56,7 @@ feature -- Basic operations
 			open_parms: WEX_MCI_WAVE_OPEN_PARMS
 		do
 			create open_parms.make (parent, device_name)
-			open_parms.set_element_name (file)
+			open_parms.set_element_name (file.utf_8_name)
 			open_device (open_parms, Mci_open_element +
 				Mci_open_type)
 		end
@@ -419,11 +419,12 @@ feature {NONE} -- Implementation
 			Result := "waveaudio"
 		end
 
-end -- class WEX_MCI_WAVE_AUDIO
+end
 
 --|-------------------------------------------------------------------------
 --| WEX, Windows Eiffel library eXtension
 --| Copyright (C) 1998  Robin van Ommeren, Andreas Leitner
+--| Copyright (C) 2017  Eiffel Software, Alexander Kogtenkov
 --| See the file forum.txt included in this package for licensing info.
 --|
 --| Comments, Questions, Additions to this library? please contact:

@@ -56,7 +56,7 @@ feature {NONE} -- Behavior
 					if splash.valid then
 						splash.pop_up
 					else
-						information_message_box ("Select valid bitmap first!", "Splash")
+						(create {WEL_MSG_BOX}.make).information_message_box (Current, "Select valid bitmap first!", "Splash")
 					end
 				end
 			elseif control_id = 111 then
@@ -68,12 +68,12 @@ feature {NONE} -- Behavior
 					if cd_device.media_present then
 						cd_device.play
 						if not cd_device.playing and then not cd_device.is_audio_track(1) then
-							information_message_box ("Cannot play first track?", "WEX CD Audio")
+							(create {WEL_MSG_BOX}.make).information_message_box (Current, "Cannot play first track?", "WEX CD Audio")
 							-- TODO Check next track
 						end
 					end
 				else
-					information_message_box ("Could not open CD", "WEX CD Audio")
+					(create {WEL_MSG_BOX}.make).information_message_box (Current, "Could not open CD", "WEX CD Audio")
 				end
 			elseif control_id = 102 then
 				if splash.popped_up then
@@ -82,12 +82,12 @@ feature {NONE} -- Behavior
 			elseif control_id = 103 then
 				file_dialog.activate (current)
 				if file_dialog.selected then
-					splash.set_bitmap (file_dialog.file_name)
+					splash.set_bitmap (file_dialog.file_path)
  				end
 			elseif control_id = 104 then
 				file_dialog.activate (Current)
 				if file_dialog.selected then
-					splash_video.set_video(file_dialog.file_name)
+					splash_video.set_video(file_dialog.file_path)
 					if splash_video.valid then
 						if video_region_check.checked then
 							create a_region.make_elliptic (0, 0, splash_video.width, splash_video.height)
@@ -97,14 +97,14 @@ feature {NONE} -- Behavior
 						splash_video.set_window_region (a_region, False)
 						splash_video.pop_up
 					else
-						information_message_box ("Select valid video please!", "Video")
+						(create {WEL_MSG_BOX}.make).information_message_box (Current, "Select valid video please!", "Video")
 					end
 				end
 			elseif control_id = 108 then
 				file_dialog.activate (Current)
 				if file_dialog.selected then
 					stop_any_playing_midi
-					midi_device.open (file_dialog.file_name)
+					midi_device.open (file_dialog.file_path)
 					if midi_device.opened then
 						midi_device.play
 					end
@@ -120,7 +120,7 @@ feature {NONE} -- Behavior
 						end
 						wave_device.close
 					end
-					wave_device.open (file_dialog.file_name)
+					wave_device.open (file_dialog.file_path)
 					if wave_device.opened then
 						wave_device.play
 					end
@@ -206,11 +206,12 @@ feature {NONE} -- Behavior
 			create Result.make (Current)
 		end
 
-end -- class MAIN_WINDOW
+end
 
 --|-------------------------------------------------------------------------
 --| WEX, Windows Eiffel library eXtension
 --| Copyright (C) 1998  Robin van Ommeren, Andreas Leitner
+--| Copyright (C) 2017  Eiffel Software, Alexander Kogtenkov
 --| See the file forum.txt included in this package for licensing info.
 --|
 --| Comments, Questions, Additions to this library? please contact:

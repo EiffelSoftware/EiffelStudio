@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {INTEGER_X_NUMBER_THEORY}."
 	author: "Colin LeMahieu"
 	date: "$Date$"
@@ -594,7 +594,7 @@ feature
 						end
 						if sh /= 0 then
 							sh := sh - 1
-							c := (c |<< 1) + ((ep [ep_offset + i] |>> sh).bit_and (1))
+							c := (c |<< 1) + (ep [ep_offset + i] |>> sh).bit_and (1)
 						else
 							i := i - 1
 							sh := limb_bits - 1
@@ -820,13 +820,12 @@ feature
 				from
 					d := 3
 					r := 1
-					q := d
 				until
 					Result or r = 0
 				loop
 					q := t // d
 					r := t - q * d
-					Result := (q < d)
+					Result := q < d
 					d := d + 2
 				end
 			end
@@ -867,10 +866,11 @@ feature
 					op1 := n2
 				end
 			end
-			if not done then
-				if not op1.as_natural_32.bit_test (0) then
-					done := True
-				end
+			if
+				not done and then
+				not op1.as_natural_32.bit_test (0)
+			then
+				done := True
 			end
 			if not done then
 				r := preinv_mod_1 (op1.item, 0, op1.count, pp, pp_inverted)

@@ -81,14 +81,8 @@ feature
 				c := str [str_offset]
 				str_offset := str_offset + 1
 			end
-			if base = 0 then
-				if digit_value.text_to_number (c.code.to_natural_8) >= 10 then
-					(create {INTEGER_X_STRING_EXCEPTION}).raise
-				end
-			else
-				if digit_value.text_to_number (c.code.to_natural_8) >= base then
-					(create {INTEGER_X_STRING_EXCEPTION}).raise
-				end
+			if digit_value.text_to_number (c.code.to_natural_8) >= if base = 0 then 10 else base end then
+				(create {INTEGER_X_STRING_EXCEPTION}).raise
 			end
 			if base = 0 then
 				base := 10

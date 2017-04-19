@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {INTEGER_X_LOGIC}."
 	author: "Colin LeMahieu"
 	date: "$Date$"
@@ -196,7 +196,7 @@ feature
 			if dsize >= 0 then
 				if limb_index < dsize then
 					dlimb := dp [dp_offset + limb_index]
-					dlimb := dlimb.bit_and (((1) |<< (bit_index \\ limb_bits)).bit_not.to_natural_32)
+					dlimb := dlimb.bit_and ((1 |<< (bit_index \\ limb_bits)).bit_not.to_natural_32)
 					dp [dp_offset + limb_index] := dlimb
 					if dlimb = 0 and limb_index = dsize - 1 then
 						from
@@ -220,16 +220,16 @@ feature
 				end
 				if limb_index > zero_bound then
 					if limb_index < dsize then
-						dp [dp_offset + limb_index] := dp [dp_offset + limb_index].bit_or (((1) |<< (bit_index \\ limb_bits)).to_natural_32)
+						dp [dp_offset + limb_index] := dp [dp_offset + limb_index].bit_or ((1 |<< (bit_index \\ limb_bits)).to_natural_32)
 					else
 						op.resize (limb_index + 1)
 						dp := op.item
 						dp.fill_with (0, dp_offset + dsize, dp_offset + dsize + (limb_index - dsize) - 1)
-						dp [dp_offset + limb_index] := ((1) |<< (bit_index \\ (limb_bits))).to_natural_32
+						dp [dp_offset + limb_index] := (1 |<< (bit_index \\ (limb_bits))).to_natural_32
 						op.count := - (limb_index + 1)
 					end
 				elseif limb_index = zero_bound then
-					dp [dp_offset + limb_index] := (dp [dp_offset + limb_index] - 1).bit_or (((1) |<< (bit_index \\ limb_bits)).to_natural_32)
+					dp [dp_offset + limb_index] := (dp [dp_offset + limb_index] - 1).bit_or ((1 |<< (bit_index \\ limb_bits)).to_natural_32)
 					if dp [dp_offset + limb_index] = 0 then
 						from
 							i := limb_index + 1
@@ -559,7 +559,7 @@ feature
 			else
 				limb := op.item [p]
 				if size >= 0 then
-					limb := limb.bit_or (((1) |<< (starting_bit \\ (4 |<< 3))).to_natural_32)
+					limb := limb.bit_or ((1 |<< (starting_bit \\ (4 |<< 3))).to_natural_32)
 					from
 					until
 						limb /= (0).to_natural_32.bit_not or done
@@ -567,7 +567,7 @@ feature
 						p := p + 1
 						if p = u_end then
 							done := true
-							Result := (abs_size * 4 |<< 3)
+							Result := abs_size * 4 |<< 3
 						else
 							limb := op.item [p]
 						end
@@ -589,7 +589,7 @@ feature
 					if not done then
 						limb := limb - 1
 					end
-					limb := limb.bit_and (((0).to_natural_32.bit_not |<< (starting_bit \\ (4 |<< 3))))
+					limb := limb.bit_and (({NATURAL_32} 0).bit_not |<< (starting_bit \\ (4 |<< 3)))
 					if limb = 0 then
 						p := p + 1
 						if p = u_end then
@@ -753,7 +753,7 @@ feature
 							n := n - 1
 						end
 					end
-					op.item [dp + limb_index] := ((1) |<< (bit_index \\ limb_bits)).to_natural_32
+					op.item [dp + limb_index] := (1 |<< (bit_index \\ limb_bits)).to_natural_32
 					op.count := limb_index + 1
 				end
 			else
@@ -768,7 +768,7 @@ feature
 				if limb_index > zero_bound then
 					if limb_index < dsize then
 						dlimb := op.item [dp + limb_index]
-						dlimb := dlimb.bit_and (((1) |<< (bit_index \\ limb_bits)).bit_not.to_natural_32)
+						dlimb := dlimb.bit_and ((1 |<< (bit_index \\ limb_bits)).bit_not.to_natural_32)
 						op.item [dp + limb_index] := dlimb
 						if dlimb = 0 and limb_index = dsize - 1 then
 							from
@@ -806,8 +806,8 @@ feature
 				else
 					p := dp + limb_index
 					x := op.item [p]
-					op.item [p] := x - ((1) |<< (bit_index \\ limb_bits)).to_natural_32
-					if x < ((1) |<< (bit_index \\ limb_bits)).to_natural_32 then
+					op.item [p] := x - (1 |<< (bit_index \\ limb_bits)).to_natural_32
+					if x < (1 |<< (bit_index \\ limb_bits)).to_natural_32 then
 						from
 							p := p + 1
 							last_p := op.item [p]

@@ -48,15 +48,13 @@ feature
 			vsize := v.count.abs
 			if usize = 0 then
 				g.count := vsize
-				if g = v then
-				else
+				if g /= v then
 					g.resize (vsize)
 					g.item.copy_data (vp, 0, 0, vsize)
 				end
 			elseif vsize = 0 then
 				g.count := usize
-				if g = u then
-				else
+				if g /= u then
 					g.resize (usize)
 					g.item.copy_data (up, up_offset, 0, usize)
 				end

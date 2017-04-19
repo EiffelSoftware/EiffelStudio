@@ -41,7 +41,7 @@ feature {NONE} -- Creation
 	make_with_referencing_file (a_path: READABLE_STRING_GENERAL)
 			-- Initializes and returns an NS_IMAGE instance and associates it with the specified file.
 		obsolete
-			"Use `make_with_referencing_file_path' instead."
+			"Use `make_with_referencing_file_path' instead [2017-05-31]."
 		do
 			make_from_pointer ({NS_IMAGE_API}.alloc)
 			item := {NS_IMAGE_API}.init_by_referencing_file (item, (create {NS_STRING}.make_with_string(a_path)).item)
@@ -335,7 +335,7 @@ feature {NS_IMAGE_CONSTANTS} -- Named Images
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

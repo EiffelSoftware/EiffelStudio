@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Store emails in specific folder."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,7 +41,7 @@ feature -- Storage
 			-- Store `a_email'.
 		local
 			retried: BOOLEAN
-			f,w: RAW_FILE
+			w: RAW_FILE
 			dt: DATE_TIME
 			p: PATH
 			fn: STRING
@@ -72,8 +72,7 @@ feature -- Storage
 				p := p.extended (fn)
 
 				from
-					create f.make_with_path (p)
-					w := new_file_opened_for_writing (f)
+					w := new_file_opened_for_writing (create {RAW_FILE}.make_with_path (p))
 				until
 					w /= Void or i > 100
 				loop
@@ -113,14 +112,15 @@ feature -- Storage
 		local
 			retried: BOOLEAN
 		do
-			if not retried then
-				if not f.exists then
-					f.open_write
-					if f.is_open_write then
-						Result := f
-					elseif not f.is_closed then
-						f.close
-					end
+			if
+				not retried and then
+				not f.exists
+			then
+				f.open_write
+				if f.is_open_write then
+					Result := f
+				elseif not f.is_closed then
+					f.close
 				end
 			end
 		ensure

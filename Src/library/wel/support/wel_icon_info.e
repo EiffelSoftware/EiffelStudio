@@ -265,37 +265,37 @@ feature --  Measurement
 feature -- Obsolete
 
 	fIcon: BOOLEAN
-		obsolete "use `is_icon' instead"
+		obsolete "use `is_icon' instead [2017-05-31]."
 		do
 			Result := is_icon
 		end
 
 	xHotspot: INTEGER
-		obsolete "use `x_hotspot' instead"
+		obsolete "use `x_hotspot' instead [2017-05-31]."
 		do
 			Result := x_hotspot
 		end
 
 	yHotspot: INTEGER
-		obsolete "use `y_hotspot' instead"
+		obsolete "use `y_hotspot' instead [2017-05-31]."
 		do
 			Result := y_hotspot
 		end
 
 	set_xHotspot (xvalue: INTEGER)
-		obsolete "use `set_x_hotspot' instead"
+		obsolete "use `set_x_hotspot' instead [2017-05-31]."
 		do
 			set_x_hotspot (xvalue)
 		end
 
 	set_yHotspot (yvalue: INTEGER)
-		obsolete "use `set_y_hotspot' instead"
+		obsolete "use `set_y_hotspot' instead [2017-05-31]."
 		do
 			set_y_hotspot (yvalue)
 		end
 
 	set_fIcon (a_is_icon: BOOLEAN)
-		obsolete "use `set_is_icon' instead"
+		obsolete "use `set_is_icon' instead [2017-05-31]."
 		do
 			set_is_icon (a_is_icon)
 		end
@@ -433,7 +433,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

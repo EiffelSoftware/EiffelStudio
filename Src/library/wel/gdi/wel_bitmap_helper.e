@@ -97,7 +97,7 @@ feature -- Query
 	info_of_bitmap (a_bitmap: WEL_BITMAP): WEL_BITMAP_INFO
 			-- Create a Result base on `a_bitmap'
 		obsolete
-			"Use `create {WEL_BITMAP_INFO}.make_by_dc instead (a_dc, a_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)'."
+			"Use `create {WEL_BITMAP_INFO}.make_by_dc instead (a_dc, a_bitmap, {WEL_DIB_COLORS_CONSTANTS}.dib_rgb_colors)' [2017-05-31]."
 		require
 			a_bitmap_not_void: a_bitmap /= Void
 			a_bitmap_exits: a_bitmap.exists
@@ -148,7 +148,7 @@ feature -- Brush Query
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

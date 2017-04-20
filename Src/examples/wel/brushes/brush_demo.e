@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			brush: WEL_BRUSH
 			row, column: INTEGER
 		once
-			create Result.make (std_colors.count,
+			create Result.make_filled (({WEL_BRUSH}).default ,std_colors.count,
 				std_hatch_styles.count)
 			from
 				row := 1

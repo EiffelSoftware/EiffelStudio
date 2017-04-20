@@ -50,8 +50,8 @@ feature {NONE} -- Initialization
 			rect: WEL_RECT
 			i: INTEGER
 		do
-			create buttons.make (1, 4)
-			create flash_rects.make (1, 4)
+			create buttons.make_filled (({WEL_PUSH_BUTTON}).default, 1, 4)
+			create flash_rects.make_filled (({WEL_RECT}).default, 1, 4)
 			create blue_brush.make_hatch (Hs_horizontal, Blue)
 			create green_brush.make_hatch (Hs_vertical, Green)
 			create yellow_brush.make_hatch (Hs_fdiagonal, Yellow)

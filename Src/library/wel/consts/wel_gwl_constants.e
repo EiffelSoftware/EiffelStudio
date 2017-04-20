@@ -41,7 +41,7 @@ feature -- For dialogs
 		alias
 			"DWLP_DLGPROC"
 		end
-		
+
 	frozen Dwlp_user: INTEGER
 		external
 			"C inline use %"wel.h%""
@@ -53,34 +53,34 @@ feature -- Obsolete
 
 	frozen dwl_msgresult: INTEGER
 		obsolete
-			"Use `dwlp_msgresult' instead"
+			"Use `dwlp_msgresult' instead [2017-05-31]."
 		do
 			Result := 0
 		end
-		
+
 	frozen dwl_dlgproc: INTEGER
 		obsolete
-			"Use `dwlp_dlgproc' instead"
+			"Use `dwlp_dlgproc' instead [2017-05-31]."
 		do
 			Result := 4
 		end
 
 	frozen dwl_user: INTEGER
 		obsolete
-			"Use `dwlp_user' instead"
+			"Use `dwlp_user' instead [2017-05-31]."
 		do
 			Result := 8
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

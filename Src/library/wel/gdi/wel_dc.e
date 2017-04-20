@@ -1687,7 +1687,7 @@ feature -- Basic operations
 	save_bitmap (a_bitmap: WEL_BITMAP; file: READABLE_STRING_GENERAL)
 			-- Save `a_bitmap' in `file'.
 		obsolete
-			"Use `save_bitmap_into' instead."
+			"Use `save_bitmap_into' instead [2017-05-31]."
 		require
 			exists: exists
 			a_bitmap_not_void: a_bitmap /= Void
@@ -2604,7 +2604,7 @@ invariant
 	valid_background_mode: exists implies is_opaque /= is_transparent
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

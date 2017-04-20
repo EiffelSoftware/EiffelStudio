@@ -46,10 +46,10 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create virtual_dcs.make (1, virtual_dcs_count)
-			create virtual_bitmaps.make (1, virtual_dcs_count)
-			create brushes.make (1, max_color)
-			create pens.make (1, max_color)
+			create virtual_dcs.make_filled (({WEL_MEMORY_DC}).default, 1, virtual_dcs_count)
+			create virtual_bitmaps.make_filled (({WEL_BITMAP}).default, 1, virtual_dcs_count)
+			create brushes.make_filled (({WEL_BRUSH}).default,1, max_color)
+			create pens.make_filled (({WEL_PEN}).default, 1, max_color)
 			make_top ("3D Demo")
 			resize (400, 300)
 			show
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			end
 			create l_palette.make (log_pal)
 			palette := l_palette
-			create colors.make (1, max_color)
+			create colors.make_filled (({WEL_COLOR_REF}).default, 1, max_color)
 			from
 				ind := 1
 			until
@@ -238,8 +238,8 @@ feature {NONE} -- Implementation
 			poly_coord: ARRAY [INTEGER]
 			projected_point: PROJECTION
 		do
-			create coord.make (1, 1)
-			create poly_coord.make (1, 6)
+			create coord.make_filled (({PROJECTION}).default, 1, 1)
+			create poly_coord.make_filled (({INTEGER}).default, 1, 6)
 			from
 				ind := 1
 			until

@@ -2103,7 +2103,7 @@ feature -- Registration
 			l_object_id := internal_object_id
 				-- If object was already registered, no need to create a new entry.
 			if l_object_id = 0 then
-				l_object_id := eif_object_id (Current)
+				l_object_id := eif_current_object_id
 				internal_object_id := l_object_id
 			end
 			l_old_data := {WEL_API}.set_window_long (item, Gwlp_userdata, cwel_integer_to_pointer (l_object_id))
@@ -2122,7 +2122,7 @@ feature -- Registration
 				l_data := {WEL_API}.get_window_long (item, gwlp_userdata)
 				if l_data /= null then
 					l_object_id := l_data.to_integer_32
-					Result := l_object_id = internal_object_id and then eif_id_object (l_object_id) = Current
+					Result := l_object_id = internal_object_id and then eif_is_object_id_of_current (l_object_id)
 				end
 			end
 		end

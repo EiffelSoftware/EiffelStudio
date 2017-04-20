@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Notification mailer based on STMP protocol.
 
@@ -57,15 +57,12 @@ feature {NONE} -- Initialization
 
 	initialize
 			-- Initialize service.
-		local
-			l_address_factory: INET_ADDRESS_FACTORY
 		do
 			if attached username as u then
 				create smtp_protocol.make (smtp_host, u)
 			else
 					-- Get local host name needed in creation of SMTP_PROTOCOL.
-				create l_address_factory
-				create smtp_protocol.make (smtp_host, l_address_factory.create_localhost.host_name)
+				create smtp_protocol.make (smtp_host, (create {INET_ADDRESS_FACTORY}).create_localhost.host_name)
 			end
 			if smtp_port > 0 then
 				smtp_protocol.set_default_port (smtp_port)
@@ -98,9 +95,7 @@ feature -- Basic operation
 		local
 			l_email: EMAIL
 			h: STRING
-			k,v: STRING
 			i: INTEGER
-			hdate: HTTP_DATE
 		do
 			create l_email.make_with_entry (a_email.from_address, addresses_to_header_line_value (a_email.to_addresses))
 			if attached a_email.reply_to_address as l_reply_to then
@@ -117,8 +112,7 @@ feature -- Basic operation
 			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, a_email.subject)
 
 			create h.make_empty
-			create hdate.make_from_date_time (a_email.date)
-			hdate.append_to_rfc1123_string (h)
+			;(create {HTTP_DATE}.make_from_date_time (a_email.date)).append_to_rfc1123_string (h)
 			l_email.add_header_entry ("Date", h)
 
 			if attached a_email.additional_header_lines as lst then
@@ -128,9 +122,7 @@ feature -- Basic operation
 					h := ic.item
 					i := h.index_of (':', 1)
 					if i > 0 then
-						k := h.head (i - 1)
-						v := h.substring (i + 1, h.count)
-						l_email.add_header_entry (k, v)
+						l_email.add_header_entry (h.head (i - 1), h.substring (i + 1, h.count))
 					else
 						check is_header_line: False end
 					end
@@ -181,7 +173,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "Stone representing an eiffel feature, local or argument stone."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -115,8 +115,6 @@ feature -- dragging
 	synchronized_stone: CLASSI_STONE
 			-- Clone of `Current' after a recompilation
 			-- (May be Void if not valid anymore)
-		local
-			fok: BOOLEAN
 		do
 			if e_class /= Void then
 				create {ACCESS_ID_STONE} Result.make (e_class, ast)

@@ -1,0 +1,13 @@
+test_name	retrieve-old-routine
+test_description Trying to retrieve a storable made with a version of EiffelStudio where agents had an extra generic argument would fail instead of being simply accepted (ignoring the extra generic parameter).
+ 
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	storable_test.e $CLUSTER storable_test.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+test_end

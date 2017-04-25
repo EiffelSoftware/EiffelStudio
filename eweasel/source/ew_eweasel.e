@@ -40,7 +40,7 @@ feature  -- Creation
 			end
 		end
 
-feature {NONE} -- Commands
+feature -- Commands
 
 	execute
 			-- Execute
@@ -56,7 +56,7 @@ feature -- Access
 	environment: EW_TEST_ENVIRONMENT
 			-- Initial environment for test suite
 
-feature {NONE} -- Status
+feature -- Status
 
 	args_ok: BOOLEAN
 			-- Were command line arguments valid?

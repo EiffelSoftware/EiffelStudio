@@ -3,8 +3,8 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test"
-	date: "$date: $"
-	revision: "$revision: $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EW_SYSTEM_EXECUTION
 
@@ -21,7 +21,7 @@ inherit
 create
 	make
 
-feature
+feature {NONE} -- Creation
 
 	make (prog: STRING; args: LINKED_LIST [STRING]; env_vars: HASH_TABLE [STRING, STRING]; execute_cmd, dir, inf, outf, savef: STRING)
 			-- Start a new process to execute `prog' with
@@ -44,7 +44,7 @@ feature
 			create real_args.make
 			if {PLATFORM}.is_windows then
 					-- On Windows we need the /c arguments to the DOS command.
-				real_args.extend ("/c ")
+				real_args.extend ("/c")
 			end
 			real_args.extend (execute_cmd)
 			real_args.extend (dir)
@@ -82,10 +82,10 @@ feature {NONE} -- Constant strings
 
 note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2017, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
-	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
+		]"
+	license: "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
 

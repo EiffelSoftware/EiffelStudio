@@ -72,8 +72,11 @@ feature -- Evaluation: Access
 			then
 				if attached {DUMP_VALUE_BASIC} l_value as v then
 					dmvb := v
-				elseif not l_value.is_void then
-					dmvb := value.to_basic
+				elseif
+					not l_value.is_void and then
+					attached {DUMP_VALUE_BASIC} l_value.to_basic as v
+				then
+					dmvb := v
 				end
 				if dmvb /= Void then
 					Result := dmvb.is_type_boolean and then dmvb.value_boolean

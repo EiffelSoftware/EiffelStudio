@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Evaluation: Access			
 
-	value: DUMP_VALUE
+	value: detachable DUMP_VALUE
 			-- Result value from evaluation
 
 	static_class: CLASS_C
@@ -63,12 +63,17 @@ feature -- Evaluation: Access
 			-- return its value
 			-- otherwise return False .
 		local
-			dmvb: DUMP_VALUE_BASIC
+			dmvb: detachable DUMP_VALUE_BASIC
 		do
-			if attached dynamic_class as dc and then dc.is_basic then
-				dmvb ?= value
-				if dmvb = Void and then not value.is_void then
-					dmvb ?= value.to_basic
+			if
+				attached value as l_value and then
+				attached dynamic_class as dc and then
+				dc.is_basic
+			then
+				if attached {DUMP_VALUE_BASIC} l_value as v then
+					dmvb := v
+				elseif not l_value.is_void then
+					dmvb := value.to_basic
 				end
 				if dmvb /= Void then
 					Result := dmvb.is_type_boolean and then dmvb.value_boolean
@@ -364,7 +369,7 @@ invariant
 	expression_attached: expression /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

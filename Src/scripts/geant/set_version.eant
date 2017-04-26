@@ -27,7 +27,7 @@
 		<argument name="A_filename" />
 		<echo message="Set version of ${A_filename} from ${A_dir}" />
 
-		<exec executable="sed --version"  accept_errors="true" exit_code_variable="return_code" if="${is_windows}"/>
+		<exec executable="sed --version > nul"  accept_errors="true" exit_code_variable="return_code" if="${is_windows}"/>
 		<exec executable="sed -n -f /dev/null &lt; /dev/null"  accept_errors="true" exit_code_variable="return_code" unless="${is_windows}" />		
 		<echo message="Warning: sed is not found, thus the revision number won't be updated." unless="${return_code}=0" />
 		<local name="sed_available" value="true" if="${return_code}=0" />

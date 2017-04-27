@@ -1210,6 +1210,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 		local
 			l_menu_item: EV_MENU_ITEM
 			l_about_cmd: EB_ABOUT_COMMAND
+			l_license_cmd: EB_LICENSE_COMMAND
 			l_menu_sep: EV_MENU_SEPARATOR
 			l_help_menu: EV_MENU
 		do
@@ -1239,6 +1240,14 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				-- Add the separator
 			create l_menu_sep
 			l_help_menu.extend (l_menu_sep)
+
+				-- License
+			create l_license_cmd
+			if l_license_cmd.is_available then
+				create l_menu_item.make_with_text (develop_window.Interface_names.m_license)
+				register_action (l_menu_item.select_actions, agent l_license_cmd.execute)
+				l_help_menu.extend (l_menu_item)
+			end
 
 				-- About
 			create l_menu_item.make_with_text (develop_window.Interface_names.m_About)

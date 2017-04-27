@@ -1043,6 +1043,7 @@ feature -- Context menu
 	m_import_metrics_from_file: STRING_32 do Result := locale.translation("Import/Export metrics from file") end
 	m_input_domain: STRING_32			do Result := locale.translation("&Input domain") end
 	m_library: STRING_32					do Result := locale.translation ("Library") end
+	m_license: STRING_32					do Result := locale.translation ("License") end
 	m_move_down: STRING_32				do Result := locale.translation ("Move down") end
 	m_move_up: STRING_32					do Result := locale.translation ("Move up") end
 	m_new_metric: STRING_32				do Result := locale.translation ("New metric") end
@@ -2269,6 +2270,11 @@ feature -- Title part
 		once
 			Result := locale.formatted_string (locale.translation ("About $1"), [workbench_name])
 		end
+	t_License: STRING_32
+		once
+			Result := locale.formatted_string (locale.translation ("License for $1"), [workbench_name])
+		end
+
 	t_acknowledge_change: STRING_32				do Result := locale.translation("Acknowledge selected affected items.") end
 	t_Add_eis_entry: STRING_32					do Result := locale.translation("Add a new entry in the list.")	end
 	t_Add_search_scope: STRING_32				do Result := locale.translation("Add Search Scope")	end

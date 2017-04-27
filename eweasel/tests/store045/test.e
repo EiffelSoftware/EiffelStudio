@@ -26,8 +26,8 @@ feature -- Initialization
 			if argument_count = 0 then
 				l_obj := (create {STORABLE_TEST}.make)
 				store_object (l_obj, "stored")
-				l_expected_successful_retrieval := recoverable_types.count
 			end
+			l_expected_successful_retrieval := recoverable_types.count
 			l_objects := retrieved_recoverable_objects ("stored")
 			if l_objects.count /= l_expected_successful_retrieval then
 				io.put_string ("Got " + l_objects.count.out + " successful retrieval when " + l_expected_successful_retrieval.out + " should have succeeded%N")

@@ -8,7 +8,7 @@ feature -- Make
 
 	make is
 		do
-			print ("Creation of " + generating_type + "%N")
+			print ("Creation of " + generating_type.name + "%N")
 		end
 
 

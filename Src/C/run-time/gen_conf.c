@@ -254,7 +254,6 @@ rt_private EIF_TYPE rt_thd_gen_param (EIF_TYPE_INDEX , uint32);
 rt_private EIF_TYPE_INDEX rt_thd_typeof_array_of (EIF_TYPE);
 rt_private EIF_TYPE_INDEX rt_thd_typeof_type_of (EIF_TYPE);
 rt_private EIF_TYPE_INDEX *rt_thd_gen_cid (EIF_TYPE, int);
-rt_private EIF_TYPE_INDEX rt_thd_gen_id_from_cid (EIF_TYPE_INDEX *, EIF_TYPE_INDEX *, int);
 rt_private int rt_thd_gen_conf2 (EIF_TYPE, EIF_TYPE);
 rt_private char *rt_thd_typename(EIF_TYPE);
 rt_private EIF_REFERENCE rt_thd_typename_of_type(EIF_TYPE);
@@ -395,18 +394,6 @@ rt_shared EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE a_dftype, int use_old_annotation
 }
 /*------------------------------------------------------------------*/
 
-rt_shared EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *a_cidarr, EIF_TYPE_INDEX *dtype_map, int count)
-{
-	EIF_TYPE_INDEX   result;
-
-	EIFMTX_LOCK;
-	result = rt_thd_gen_id_from_cid (a_cidarr, dtype_map, count);
-	EIFMTX_UNLOCK;
-
-	return result;
-}
-/*------------------------------------------------------------------*/
-
 rt_public int eif_gen_conf2 (EIF_TYPE source_type, EIF_TYPE target_type)
 {
 	int result;
@@ -455,7 +442,6 @@ rt_public char * eif_typename_of_type (EIF_TYPE ftype)
 #define eif_typeof_array_of       rt_thd_typeof_array_of
 #define rt_typeof_type_of        rt_thd_typeof_type_of
 #define eif_gen_cid               rt_thd_gen_cid
-#define eif_gen_id_from_cid       rt_thd_gen_id_from_cid
 #define eif_gen_conf2             rt_thd_gen_conf2
 #define eif_typename              rt_thd_typename
 #define eif_typename_of_type      rt_thd_typename_of_type
@@ -1055,50 +1041,6 @@ rt_shared EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE a_dftype, int use_old_annotation
 
 	return gdp->gen_seq;
 }
-/*------------------------------------------------------------------*/
-/* Create an id from a type array 'a_cidarr'. If 'dtype_map' is not   */
-/* NULL, use it to map old to new dtypes ('retrieve')               */
-/* Format:                                                          */
-/* First entry: count                                               */
-/* Then 'count' type ids, then TERMINATOR                           */
-/*------------------------------------------------------------------*/
-
-rt_shared EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *a_cidarr, EIF_TYPE_INDEX *dtype_map, int count)
-{
-	EIF_TYPE_INDEX i, dtype;
-
-	REQUIRE ("Valid cid array", a_cidarr);
-	REQUIRE ("Valid cid array count", count > 1);
-	REQUIRE ("Valid cid array terminator", a_cidarr [count] == TERMINATOR);
-
-	if (dtype_map) {
-			/* We need to map old dtypes to new dtypes */
-		for (i = 0; i < count; i++) {
-			dtype = a_cidarr [i];
-
-				/* Read annotation if any. */
-			while (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(dtype)) {
-				i++;
-				dtype = a_cidarr [i];
-			}
-
-			if (dtype <= MAX_DTYPE) {
-				a_cidarr [i] = dtype_map[dtype];
-			} else if (dtype == TUPLE_TYPE) {
-					/* We simply skip number of generic
-					 * parameters of the tuple as they are not really used
-					 * and only update TUPLE dynamic type */
-				i = i + TUPLE_OFFSET;
-				a_cidarr [i]  = dtype_map [a_cidarr [i]];
-			} else if (dtype == FORMAL_TYPE) {
-					/* We skip formal position. */
-				i++;
-			}
-		}
-	}
-	return eif_compound_id (0, a_cidarr).id;
-}
-
 /*------------------------------------------------------------------*/
 /* Conformance test. Does `source_type' conform to `target_type'?   */
 /* This only applies to instantiated type.                          */

@@ -26,7 +26,7 @@ feature {NONE} -- Helper
 		require
 			g_attached: g /= Void
 		do
-			Result := g.generating_type
+			Result := g.generating_type.name
 		ensure
 			result_attached: Result /= Void
 		end

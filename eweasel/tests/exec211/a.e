@@ -12,9 +12,9 @@ feature -- Duplication
 	copy (other: like Current)
 		do
 			value := other.value + 1
-			io.put_string (generating_type)
+			io.put_string (generating_type.name)
 			io.put_string (" := ")
-			io.put_string (other.generating_type)
+			io.put_string (other.generating_type.name)
 			io.put_string (" (")
 			io.put_integer (value)
 			io.put_string (")")

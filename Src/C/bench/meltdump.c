@@ -896,13 +896,13 @@ static BODY_INDEX rbody_index (void) {
 }
 /*------------------------------------------------------------------*/
 
-static  void    rseq (int scount)
+static  void    rseq (int a_count)
 
 {
 	int     i;
 	char    c;
 
-	i = scount;
+	i = a_count;
 
 	while (i--)
 	{

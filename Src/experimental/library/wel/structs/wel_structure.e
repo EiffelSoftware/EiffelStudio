@@ -113,7 +113,7 @@ feature {NONE} -- Externals
 	c_calloc (a_num, a_size: INTEGER): POINTER
 			-- C calloc
 		obsolete
-			"Use `memory_calloc' from POINTER class instead."
+			"Use `memory_calloc' from POINTER class instead [2017-05-31]."
 		do
 			Result := Result.memory_calloc (a_num, a_size)
 		end
@@ -121,7 +121,7 @@ feature {NONE} -- Externals
 	c_free (ptr: POINTER)
 			-- C free
 		obsolete
-			"Use ptr.`memory_free' from POINTER class instead."
+			"Use ptr.`memory_free' from POINTER class instead [2017-05-31]."
 		do
 			ptr.memory_free
 		end
@@ -129,7 +129,7 @@ feature {NONE} -- Externals
 	c_memcpy (destination, source: POINTER; count: INTEGER)
 			-- C memcpy
 		obsolete
-			"Use destination.`memory_copy' (source, count) from POINTER class instead."
+			"Use destination.`memory_copy' (source, count) from POINTER class instead [2017-05-31]."
 		do
 			destination.memory_copy (source, count)
 		end
@@ -137,7 +137,7 @@ feature {NONE} -- Externals
 	c_enomem
 			-- Raise a "No more memory" exception.
 		obsolete
-			"Use facility of EXCEPTIONS class instead to raise %"No more memory%" exception"
+			"Use facility of EXCEPTIONS class instead to raise %"No more memory%" exception [2017-05-31]."
 		do
 			(create {EXCEPTIONS}).raise ("No more memory")
 		end
@@ -145,20 +145,20 @@ feature {NONE} -- Externals
 	c_memset (destination: POINTER; filling_char: CHARACTER; count: INTEGER)
 			-- C function
 		obsolete
-			"Use `memory_set' from POINTER class instead."
+			"Use `memory_set' from POINTER class instead [2017-05-31]."
 		do
 			destination.memory_set (filling_char.code, count)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

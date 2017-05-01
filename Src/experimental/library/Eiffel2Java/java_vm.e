@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			create default_vm_args.make
 			default_vm_args.set_version ({JAVA_VM_INIT_ARGS}.Jni_version_1_4)
 
-			create l_options.make (1, 1)
+			create l_options.make_filled (({JAVA_VM_OPTION}).default, 1, 1)
 			create l_option.make
 			l_option.set_option_string ("-Djava.class.path=" + class_path)
 			l_options.put (l_option, 1)
@@ -163,7 +163,7 @@ feature {NONE} -- externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

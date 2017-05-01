@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		An extended version of {ARGUMENT_TERMINAL_SOURCE} that aguments the terminal command line
 		arguments with a value take from an environment variable.
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_var_name: READABLE_STRING_8)
+	make (a_var_name: READABLE_STRING_32)
 			-- Initializes an argument source with an environment variable.
 			--
 			-- `a_var_name': Name of the environment variable, see `variable_name'.
@@ -64,8 +64,8 @@ invariant
 	not_arguments_environment_name_is_empty: not arguments_environment_name.is_empty
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

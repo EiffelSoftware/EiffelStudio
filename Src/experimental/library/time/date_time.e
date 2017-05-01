@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Absolute temporal values composed of a date and a time"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -173,11 +173,9 @@ feature -- Initialization
 			c_exists: code /= Void
 			date_time_valid: date_time_valid (s, code)
 		local
-			code_string: DATE_TIME_CODE_STRING
 			date_time: DATE_TIME
 		do
-			create code_string.make (code)
-			date_time := code_string.create_date_time (s)
+			date_time := (create {DATE_TIME_CODE_STRING}.make (code)).create_date_time (s)
 			make_by_date_time (date_time.date, date_time.time)
 		end
 
@@ -385,7 +383,7 @@ feature -- Basic operations
 			total_hour: INTEGER
 		do
 			total_hour := hour + h
-			if (total_hour < 0 or else total_hour >= Hours_in_day) then
+			if total_hour < 0 or else total_hour >= Hours_in_day then
 				time.set_hour (mod (total_hour, Hours_in_day))
 				day_add (div (total_hour, Hours_in_day))
 			else
@@ -399,7 +397,7 @@ feature -- Basic operations
 			total_minute: INTEGER
 		do
 			total_minute := minute + m
-			if (total_minute < 0 or else total_minute >= Minutes_in_hour) then
+			if total_minute < 0 or else total_minute >= Minutes_in_hour then
 				time.set_minute (mod (total_minute, Minutes_in_hour))
 				hour_add (div (total_minute, Minutes_in_hour))
 			else
@@ -413,7 +411,7 @@ feature -- Basic operations
 			total_second: INTEGER
 		do
 			total_second := second + s
-			if (total_second < 0 or else total_second >= Seconds_in_minute) then
+			if total_second < 0 or else total_second >= Seconds_in_minute then
 				time.set_second (mod (total_second, Seconds_in_minute))
 				minute_add (div (total_second, Seconds_in_minute))
 			else
@@ -428,7 +426,7 @@ feature -- Basic operations
 			total_second: DOUBLE
 		do
 			total_second := time.fine_second + s
-			if (total_second < 0 or else total_second >= Seconds_in_minute) then
+			if total_second < 0 or else total_second >= Seconds_in_minute then
 				time.set_fine_second (total_second - div (total_second.floor,
 					Seconds_in_minute) * Seconds_in_minute)
 				minute_add (div (total_second.floor, Seconds_in_minute))
@@ -451,15 +449,12 @@ feature -- Output
 			-- With "standard" form: `s'
 		require
 			s_exists: s /= Void
-		local
-			code: DATE_TIME_CODE_STRING
 		do
-			create code.make (s)
-			Result := code.create_string (Current)
+			Result := (create {DATE_TIME_CODE_STRING}.make (s)).create_string (Current)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -469,7 +464,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DATE_TIME
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that with responsibility for save all docking library config."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 feature -- Save inner container data.
 
 	save_config_with_name_and_path (a_file: PATH; a_name: READABLE_STRING_GENERAL): BOOLEAN
-			-- Save all docking library data to `a_file' with `a_name'
+			-- Save all docking library data to `a_file' with `a_name'.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_not_void: a_name /= Void
@@ -141,7 +141,7 @@ feature -- Save inner container data.
 		end
 
 	save_tools_config_with_name_and_path (a_file: PATH; a_name: READABLE_STRING_GENERAL): BOOLEAN
-			-- Save tools config to `a_file' with `a_name'
+			-- Save tools config to `a_file' with `a_name'.
 		require
 			not_called: top_container = Void
 			a_file_not_void: a_file /= Void
@@ -168,7 +168,7 @@ feature -- Save inner container data.
 					end
 				end
 			else
-				check real_has_place_holder: internal_docking_manager.zones.place_holder_content.state.is_zone_attached end
+				check real_has_place_holder: attached internal_docking_manager.zones.place_holder_content.state.zone end
 
 				-- If following check violated, it normally means when you saving tools' layout, there are BOTH editor type zones and editor place holder visible.
 				-- So docking library don't know how to separate tool area and editor area.
@@ -195,7 +195,7 @@ feature -- Obsolete
 	save_config_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save all docking library data to `a_file' with `a_name'
 		obsolete
-			"Use save_config_with_name_and_path instead"
+			"Use save_config_with_name_and_path instead. [2017-05-31]"
 		require
 			a_file_not_void: a_file /= Void
 			a_file_not_void: a_name /= Void
@@ -206,7 +206,7 @@ feature -- Obsolete
 	save_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save all docking library data to `a_file'.
 		obsolete
-			"Use save_config_with_path instead"
+			"Use save_config_with_path instead. [2017-05-31]"
 		require
 			a_file_not_void: a_file /= Void
 		do
@@ -216,7 +216,7 @@ feature -- Obsolete
 	save_editors_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save main window editor config data.
 		obsolete
-			"Use save_editors_config_with_path instead"
+			"Use save_editors_config_with_path instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 		do
@@ -228,7 +228,7 @@ feature -- Obsolete
 	save_tools_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save tools config, except all editors.
 		obsolete
-			"Use save_tools_config_with_path instead"
+			"Use save_tools_config_with_path instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 		do
@@ -236,9 +236,9 @@ feature -- Obsolete
 		end
 
 	save_tools_config_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
-			-- Save tools config to `a_file' with `a_name'
+			-- Save tools config to `a_file' with `a_name'.
 		obsolete
-			"Use save_tools_config_with_name_and_path instead"
+			"Use save_tools_config_with_name_and_path instead. [2017-05-31]"
 		require
 			not_called: top_container = Void
 			a_file_not_void: a_file /= Void
@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 					if attached {SD_ZONE} a_widget as l_zone then
 						a_config_data.set_is_split_area (False)
 						l_zone.save_content_title (a_config_data)
-						a_config_data.set_state (l_zone.content.state.generating_type)
+						a_config_data.set_state (l_zone.content.state.generating_type.name_32)
 						a_config_data.set_direction (l_zone.content.state.direction)
 						if attached {EV_WIDGET} l_zone as lt_widget then
 							a_config_data.set_visible (lt_widget.is_displayed)
@@ -342,8 +342,7 @@ feature {NONE} -- Implementation
 		do
 			a_config_data.set_is_split_area (False)
 			a_config_data.add_title (internal_shared.editor_place_holder_content_name)
-			-- FIXIT: this line maybe have problem if we changed the name of SD_DOCKING_STATE.
-			a_config_data.set_state ("SD_DOCKING_STATE")
+			a_config_data.set_state (({SD_DOCKING_STATE}).name)
 			a_config_data.set_direction ({SD_ENUMERATION}.top)
 			a_config_data.set_width (1)
 			a_config_data.set_height (1)
@@ -465,7 +464,6 @@ feature {NONE} -- Implementation
 			l_tool_bar_data: SD_TOOL_BAR_DATA
 			l_float_tool_bars: ARRAYED_LIST [SD_FLOATING_TOOL_BAR_ZONE]
 			l_float_tool_bars_item: SD_FLOATING_TOOL_BAR_ZONE
-			l_tool_bar_zone: SD_TOOL_BAR_ZONE
 			l_tool_bar_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
 			l_tool_bar_contents_item: SD_TOOL_BAR_CONTENT
 		do
@@ -482,7 +480,7 @@ feature {NONE} -- Implementation
 			l_tool_bar_data := save_one_tool_bar_data ({SD_ENUMERATION}.right)
 			a_tool_bar_data.extend (l_tool_bar_data)
 
-			-- Floating tool bars data
+				-- Floating tool bars data
 			l_float_tool_bars := internal_docking_manager.tool_bar_manager.floating_tool_bars
 			from
 				l_float_tool_bars.start
@@ -490,15 +488,18 @@ feature {NONE} -- Implementation
 				l_float_tool_bars.after
 			loop
 				l_float_tool_bars_item := l_float_tool_bars.item
-				l_tool_bar_zone := l_float_tool_bars_item.zone
-				create l_tool_bar_data.make
-				l_tool_bar_data.set_floating (True)
-				l_tool_bar_data.set_title (l_tool_bar_zone.content.unique_title)
-				l_tool_bar_data.set_screen_x_y (l_float_tool_bars_item.screen_x, l_float_tool_bars_item.screen_y)
-				l_tool_bar_zone.assistant.save_items_layout (Void)
-				l_tool_bar_data.set_last_state (l_tool_bar_zone.assistant.last_state)
-				l_tool_bar_data.set_visible (l_tool_bar_zone.content.is_visible)
-				a_tool_bar_data.extend (l_tool_bar_data)
+				if attached l_float_tool_bars_item.zone as l_tool_bar_zone then
+					create l_tool_bar_data.make
+					l_tool_bar_data.set_floating (True)
+					if attached l_tool_bar_zone.content as c then
+						l_tool_bar_data.set_title (c.unique_title)
+						l_tool_bar_data.set_visible (c.is_visible)
+					end
+					l_tool_bar_data.set_screen_x_y (l_float_tool_bars_item.screen_x, l_float_tool_bars_item.screen_y)
+					l_tool_bar_zone.assistant.save_items_layout (Void)
+					l_tool_bar_data.set_last_state (l_tool_bar_zone.assistant.last_state)
+					a_tool_bar_data.extend (l_tool_bar_data)
+				end
 				l_float_tool_bars.forth
 			end
 
@@ -558,7 +559,9 @@ feature {NONE} -- Implementation
 					loop
 						l_zone := l_tool_bars.item_for_iteration
 						l_zone.assistant.save_items_layout (Void)
-						l_row_data.extend ([l_zone.content.unique_title, l_zone.position, l_zone.assistant.last_state])
+						if attached l_zone.content as c then
+							l_row_data.extend ([c.unique_title, l_zone.position, l_zone.assistant.last_state])
+						end
 						l_tool_bars.forth
 					end
 				else
@@ -574,16 +577,12 @@ feature {NONE} -- Implementation
 	save_editor_minimized_data (a_config_data: SD_CONFIG_DATA)
 			-- If only one editor zone, save if it's minimized.
 		local
-			l_editor_zone: detachable SD_UPPER_ZONE
+			l_editor_zone: SD_UPPER_ZONE
 		do
 			l_editor_zone := internal_docking_manager.query.only_one_editor_zone
 			if l_editor_zone /= Void then
 				a_config_data.set_is_one_editor_zone (True)
-				if l_editor_zone.is_minimized then
-					a_config_data.set_is_editor_minimized (True)
-				else
-					a_config_data.set_is_editor_minimized (False)
-				end
+				a_config_data.set_is_editor_minimized (l_editor_zone.is_minimized)
 			else
 				a_config_data.set_is_one_editor_zone (False)
 			end
@@ -623,17 +622,14 @@ feature {NONE} -- Implementation
 			a_config_data_not_void: a_config_data /= Void
 			a_file_not_void: a_file /= Void
 		local
-			l_file: detachable RAW_FILE
-			l_facility: SED_STORABLE_FACILITIES
-			l_writer: SED_MEDIUM_READER_WRITER
+			l_file: RAW_FILE
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
 				create l_file.make_with_path (a_file)
 				l_file.create_read_write
-				create l_writer.make (l_file)
-				create l_facility
-				l_facility.store (a_config_data, l_writer)
+				;(create {SED_STORABLE_FACILITIES}).store
+					(a_config_data, create {SED_MEDIUM_READER_WRITER}.make (l_file))
 				l_file.close
 				Result := True
 			end
@@ -656,7 +652,7 @@ feature {NONE} -- Implementation attributes
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -274,7 +274,7 @@ feature{NONE} -- Implementation
 			timer.start
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Standard input-output redirection
 
 	out_thread: detachable PROCESS_OUTPUT_LISTENER_THREAD
 	err_thread: detachable PROCESS_ERROR_LISTENER_THREAD

@@ -25,7 +25,10 @@
 deferred class
 	BASE_PROCESS
 
-feature {NONE} -- Initialization
+inherit
+	SHARED_EXECUTION_ENVIRONMENT
+
+feature {NONE} -- Creation
 
 	make (executable_name: READABLE_STRING_GENERAL; argument_list: detachable ITERABLE [READABLE_STRING_GENERAL]; work_directory: detachable READABLE_STRING_GENERAL)
 			-- Create process object with `executable_name' as executable with arguments `argument_list'
@@ -106,6 +109,20 @@ feature -- IO redirection
 			input_file_name_set: input_file_name ~ ""
 		end
 
+	redirect_output_to_stream
+			-- Redirect output stream of the process to its parent's stream
+			-- so you can use `read_output_stream' to read data from the process.
+		require
+			process_not_running: not is_running
+		do
+			output_direction := {BASE_REDIRECTION}.to_stream
+			output_file_name := Void
+		ensure
+			output_redirected_to_stream:
+				output_direction = {BASE_REDIRECTION}.to_stream
+			output_file_name_unset: output_file_name = Void
+		end
+
 	redirect_output_to_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Redirect output stream of process to a file
 			-- with name `a_file_name'.
@@ -137,6 +154,20 @@ feature -- IO redirection
 			output_file_name_set: attached output_file_name as l_file_name and then l_file_name.is_empty
 		end
 
+	redirect_error_to_stream
+			-- Redirect error stream of the process to its parent's stream
+			-- so you can use `read_error_stream' to read data from the process.
+		require
+			process_not_running: not is_running
+		do
+			error_direction := {BASE_REDIRECTION}.to_stream
+			error_file_name := Void
+		ensure
+			error_redirected_to_stream:
+				error_direction = {BASE_REDIRECTION}.to_stream
+			error_file_name_unset: error_file_name = Void
+		end
+
 	redirect_error_to_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Redirect the error stream of process to a file.
 		require
@@ -149,7 +180,8 @@ feature -- IO redirection
 			error_direction := {BASE_REDIRECTION}.to_file
 			create error_file_name.make_from_string_general (a_file_name)
 		ensure
-			error_redirected_to_file: error_direction = {BASE_REDIRECTION}.to_file
+			error_redirected_to_file:
+				error_direction = {BASE_REDIRECTION}.to_file
 			error_file_set: attached error_file_name as fn and then fn.same_string_general (a_file_name)
 		end
 
@@ -350,6 +382,50 @@ feature -- Interprocess data transmission
 		attribute
 		end
 
+	read_output_to_special (buffer: SPECIAL [NATURAL_8])
+			-- Wait for and read data from the process standard output into `buffer` with a maximum of `buffer.count` bytes
+			-- and update `buffer.count` with the number of actually read bytes that can range between `0` and `old buffer.count`.
+			-- Report result in `has_output_stream_error`.
+		require
+			output_redirect_to_stream: output_direction = {BASE_REDIRECTION}.to_stream
+			process_launched: launched
+		deferred
+		ensure
+			buffer_count_in_range: buffer.count <= old buffer.count
+		end
+
+	has_output_stream_error: BOOLEAN
+			-- Was there an error when calling `read_output_to_special'?
+		attribute
+		end
+
+	has_output_stream_closed: BOOLEAN
+			-- Was standard output of the process closed?
+		attribute
+		end
+
+	read_error_to_special (buffer: SPECIAL [NATURAL_8])
+			-- Wait for and read data from the process standard error into `buffer` with a maximum of `buffer.count` bytes
+			-- and update `buffer.count` with the number of actually read bytes that can range between `0` and `old buffer.count`.
+			-- Report result in `has_error_stream_error`.
+		require
+			error_redirect_to_stream: error_direction = {BASE_REDIRECTION}.to_stream
+			process_launched: launched
+		deferred
+		ensure
+			buffer_count_in_range: buffer.count <= old buffer.count
+		end
+
+	has_error_stream_error: BOOLEAN
+			-- Was there an error when calling `read_error_to_special'?
+		attribute
+		end
+
+	has_error_stream_closed: BOOLEAN
+			-- Was standard error of the process closed?
+		attribute
+		end
+
 feature {NONE} -- Status update
 
 	check_exit
@@ -464,22 +540,19 @@ feature -- Status setting
 				create l_tbl.make (20)
 				environment_variable_table := l_tbl
 			end
-			from
-				a_table.start
-			until
-				a_table.after
+			across
+				a_table as t
 			loop
-				if a_table.key_for_iteration /= Void and then a_table.item_for_iteration /= Void then
-					l_tbl.force (a_table.item_for_iteration.string, a_table.key_for_iteration)
+				if attached t.key as k and then attached t.item as i then
+					l_tbl.force (i.string, k)
 				end
-				a_table.forth
 			end
 		end
 
 	set_environment_variable_use_unicode (b: BOOLEAN)
 			-- Set `is_environment_variable_unicode' with `b'.
 		obsolete
-			"Do not use as it has no effect."
+			"Do not use as it has no effect. [2017-05-31]"
 		require
 			process_not_running: not is_running
 		do
@@ -675,7 +748,7 @@ feature -- Status report
 	is_running: BOOLEAN
 			-- Is process running?
 		do
-			Result := (launched and then not has_exited)
+			Result := launched and then not has_exited
 		end
 
 	has_exited: BOOLEAN
@@ -720,7 +793,7 @@ feature -- Status report
 			-- Does `environment_variable_table' use Unicode?
 			-- Only has effect on Windows.
 		obsolete
-			"Do not use since it has no effect."
+			"Do not use since it has no effect. [2017-05-31]"
 		do
 		end
 
@@ -744,6 +817,7 @@ feature -- Validation checking
 		do
 			Result :=
 				a_output_direction = {BASE_REDIRECTION}.to_file or
+				a_output_direction = {BASE_REDIRECTION}.to_stream or
 				a_output_direction = {BASE_REDIRECTION}.no_redirection
 		end
 
@@ -752,6 +826,7 @@ feature -- Validation checking
 		do
 			Result :=
 				a_error_direction = {BASE_REDIRECTION}.to_file or
+				a_error_direction = {BASE_REDIRECTION}.to_stream or
 				a_error_direction = {BASE_REDIRECTION}.no_redirection or
 				(not platform.is_dotnet) and then a_error_direction = {BASE_REDIRECTION}.to_same_as_output
 		end
@@ -786,7 +861,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	initialize_parameter
 			-- Initialize parameters.
@@ -868,12 +943,13 @@ feature {NONE} -- Implementation
 								l_should_process := False
 							end
 						end
-						if l_should_process then
-							if l_char = '%'' then
-								l_in_simple := False
-								l_was_closing_quote := True
-								l_should_process := False
-							end
+						if
+							l_should_process and then
+							l_char = '%''
+						then
+							l_in_simple := False
+							l_was_closing_quote := True
+							l_should_process := False
 						end
 					elseif l_in_quote then
 						if l_was_backslash then
@@ -882,12 +958,13 @@ feature {NONE} -- Implementation
 							l_current_word.put (l_char, l_current_word.count)
 							l_should_process := False
 						end
-						if l_should_process then
-							if l_char = '"' then
-								l_in_quote := False
-								l_was_closing_quote := True
-								l_should_process := False
-							end
+						if
+							l_should_process and then
+							l_char = '"'
+						then
+							l_in_quote := False
+							l_was_closing_quote := True
+							l_should_process := False
 						end
 					end
 					if l_should_process then
@@ -949,14 +1026,6 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			result_attached: Result /= Void
-		end
-
-feature {NONE} --
-
-	execution_environment: EXECUTION_ENVIRONMENT
-			-- Execution controller.
-		once
-			create Result
 		end
 
 note

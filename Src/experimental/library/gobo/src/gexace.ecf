@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="gexace" uuid="A9419CD0-E1C6-4559-A5DB-9B664B50F5E2">
 	<target name="gexace">
 		<root class="GEXACE" feature="make"/>
-		<option warning="true" is_obsolete_routine_type="true">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="address_expression" value="false"/>
@@ -30,6 +30,6 @@
 		<library name="gobo_tools" location="$ISE_LIBRARY\library\gobo\gobo_tools.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
 		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
-		<cluster name="gexace" location="$ISE_LIBRARY\contrib\library\gobo\src\gexace\"/>
+		<cluster name="gexace" location="$ISE_LIBRARY\contrib\library\gobo\tool\gexace\src\"/>
 	</target>
 </system>

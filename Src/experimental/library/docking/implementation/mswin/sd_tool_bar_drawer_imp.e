@@ -190,11 +190,11 @@ feature -- Redefine
 							-- Draw the background as a whole without separator
 							draw_button_background (l_buffered_dc, l_rect, l_item.state, {WEL_THEME_PART_CONSTANTS}.tp_button)
 						else
-							-- Draw dropdown area which cover the whole background
+								-- Draw dropdown area which cover the whole background.
 							create l_rect_2.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right, l_vision_rect.bottom)
-							draw_button_background (l_buffered_dc, l_rect, l_item.state, {WEL_THEME_PART_CONSTANTS}.tp_button)
+							draw_button_background (l_buffered_dc, l_rect_2, l_item.state, {WEL_THEME_PART_CONSTANTS}.tp_button)
 
-							-- Draw front area, overwrite the front
+								-- Draw front area, overwrite the front.
 							create l_rect.make (l_vision_rect.left, l_vision_rect.top, l_vision_rect.right - l_popup_button.dropdrown_width - l_popup_button.gap // 2, l_vision_rect.bottom)
 							draw_button_background (l_buffered_dc, l_rect, l_item.state, {WEL_THEME_PART_CONSTANTS}.tp_splitbutton)
 						end
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 					draw_pixmap_real (a_dc_to_draw, a_arguments)
 				end
 			end
-			if attached {SD_TOOL_BAR_POPUP_BUTTON} (a_arguments.item) as l_popup_button then
+			if attached {SD_TOOL_BAR_POPUP_BUTTON} a_arguments.item as l_popup_button then
 				if (create {WEL_GDIP_STARTER}).is_gdi_plus_installed then
 					draw_pixel_buffer_for_dropdown_button (a_dc_to_draw, a_arguments)
 				else
@@ -368,7 +368,6 @@ feature {NONE} -- Implementation
 			use_gdip: is_use_gdip (a_arguments)
 		local
 			l_coordinate: EV_COORDINATE
-			l_pixmap_coordinate: like pixmap_coordinate
 			l_graphics: WEL_GDIP_GRAPHICS
 			l_dest_rect, l_src_rect: WEL_RECT
 		do
@@ -378,8 +377,7 @@ feature {NONE} -- Implementation
 			then
 				if not l_button.is_sensitive then
 					arguments := a_arguments
-					l_pixmap_coordinate := l_button.pixmap_position
-					pixmap_coordinate := l_pixmap_coordinate
+					pixmap_coordinate := l_button.pixmap_position
 					desaturation_pixel_buffer (l_pixel_buffer, a_dc_to_draw)
 				else
 					create l_graphics.make_from_dc (a_dc_to_draw)
@@ -441,7 +439,7 @@ feature {NONE} -- Implementation
 					l_coordinate := l_button.pixmap_position
 
 					if l_button.is_sensitive then
-						l_is_src_bitmap_32bits := (l_wel_bitmap.log_bitmap.bits_pixel = 32)
+						l_is_src_bitmap_32bits := l_wel_bitmap.log_bitmap.bits_pixel = 32
 						if l_is_src_bitmap_32bits and then (l_wel_bitmap.is_made_by_dib or l_wel_bitmap.ppv_bits /= default_pointer) then
 							create l_source_bitmap_dc.make_by_dc (a_dc_to_draw)
 							l_source_bitmap_dc.select_bitmap (l_wel_bitmap)
@@ -449,7 +447,7 @@ feature {NONE} -- Implementation
 							create l_blend_function.make
 							l_result := a_dc_to_draw.alpha_blend (l_coordinate.x, l_coordinate.y, l_wel_bitmap.width, l_wel_bitmap.height, l_source_bitmap_dc, 0, 0, l_wel_bitmap.width, l_wel_bitmap.height, l_blend_function)
 							check
-								successed: l_result = True
+								successed: l_result
 							end
 							check
 								not_shared: not l_blend_function.shared
@@ -737,7 +735,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -9,7 +9,7 @@ deferred class
 	ARGUMENT_BASE_PARSER
 
 obsolete
-	"Use the new library with Unicode argument support at $ISE_LIBRARY/library/runtime/process/arg_parser."
+	"Use the new library with Unicode argument support at $ISE_LIBRARY/library/runtime/process/arg_parser. [2012-12-20]"
 
 feature {NONE} -- Initialization
 
@@ -2149,14 +2149,14 @@ feature {NONE} -- Internationalization
 
 	e_unreconized_switch_error: STRING
 		obsolete
-			"Use e_unrecognized_switch_error which corrects the typo [2011-nov-23]"
+			"Use e_unrecognized_switch_error which corrects the typo [2011-11-23]"
 		once
 			Result := e_unrecognized_switch_error
 		end
 
 	e_switch_group_unreconized_error: STRING
 		obsolete
-			"Use e_switch_group_unrecognized_error which corrects the typo [2011-nov-23]"
+			"Use e_switch_group_unrecognized_error which corrects the typo [2011-11-23]"
 		once
 			Result := e_switch_group_unrecognized_error
 		end

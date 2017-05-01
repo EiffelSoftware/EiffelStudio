@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		EiffelVision widget, mswindows implementation.
 
@@ -1597,19 +1597,19 @@ feature {NONE} -- Implementation
 					i := 0
 					l_max_length := 255
 					create l_string.make_empty (l_max_length)
-					create l_file_list.make_filled (l_filecount)
+					create l_file_list.make (l_filecount)
 				until
 					i = l_filecount
 				loop
 					l_chars_copied := {WEL_API}.drag_query_file (wparam, i, l_string.item, l_max_length)
-					l_file_list.put_i_th (l_string.substring (1, l_chars_copied), l_filecount - i)
+					l_file_list.extend (l_string.substring (1, l_chars_copied))
 					i := i + 1
 				end
 				if file_drop_actions_internal /= Void then
-					file_drop_actions.call ([l_file_list])
+					file_drop_actions.call (l_file_list)
 				end
 				if application_imp.file_drop_actions_internal /= Void then
-					application_imp.file_drop_actions.call ([attached_interface, l_file_list])
+					application_imp.file_drop_actions.call (attached_interface, l_file_list)
 				end
 			end
 		end
@@ -1667,7 +1667,7 @@ feature -- Feature that should be directly implemented by externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

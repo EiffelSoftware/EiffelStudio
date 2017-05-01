@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create a row with one empty column.
 		do
 			assign_interface (an_interface)

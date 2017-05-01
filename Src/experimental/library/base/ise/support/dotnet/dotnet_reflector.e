@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Access to internal object properties.
 			This class may be used as ancestor by classes needing its facilities.
@@ -132,7 +132,7 @@ feature -- Creation
 				Result := l_result
 				Result.make_empty (count)
 			end
-			l_assert := {ISE_RUNTIME}.check_assert (l_assert)
+			{ISE_RUNTIME}.check_assert (l_assert).do_nothing
 		ensure
 			special_type: is_special (Result)
 			dynamic_type_set: dynamic_type (Result) = type_id
@@ -363,10 +363,20 @@ feature -- Access
 	type_name (object: ANY): STRING
 			-- Name of `object''s generating type (type of which `object'
 			-- is a direct instance).
+			-- Consider using `type_name_32`.
 		require
 			object_not_void: object /= Void
 		do
-			Result := object.generating_type
+			Result := object.generating_type.name
+		end
+
+	type_name_32 (object: ANY): STRING_32
+			-- Name of `object''s generating type (type of which `object'
+			-- is a direct instance).
+		require
+			object_not_void: object /= Void
+		do
+			Result := object.generating_type.name_32
 		end
 
 	type_name_of_type (type_id: INTEGER): STRING
@@ -382,6 +392,22 @@ feature -- Access
 				Result := l_name
 			else
 				Result := "Unknown Type"
+			end
+		end
+
+	type_name_32_of_type (type_id: INTEGER): STRING_32
+			-- Name of `type_id''s generating type (type of which `type_id'
+			-- is a direct instance).
+		require
+			type_id_nonnegative: type_id >= 0
+		do
+			if
+				attached pure_implementation_type (type_id) as l_rt_class_type and then
+				attached l_rt_class_type.type_name as l_name
+			then
+				Result := l_name
+			else
+				Result := {STRING_32} "Unknown Type"
 			end
 		end
 
@@ -819,18 +845,15 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 			-- returns the corresponding implementation type.
 		require
 			type_id_nonnegative: type_id >= 0
-		local
-			l_result: detachable RT_CLASS_TYPE
 		do
-			l_result := id_to_eiffel_implementation_type.item (type_id)
-			if l_result = Void then
-				l_result := id_to_eiffel_type.item (type_id)
-				l_result := internal_pure_implementation_type (l_result)
-				if l_result /= Void then
-					id_to_eiffel_implementation_type.put (l_result, type_id)
+			Result := id_to_eiffel_implementation_type.item (type_id)
+			if not attached Result then
+				Result := id_to_eiffel_type.item (type_id)
+				Result := internal_pure_implementation_type (Result)
+				if attached Result then
+					id_to_eiffel_implementation_type.put (Result, type_id)
 				end
 			end
-			Result := l_result
 		end
 
 	internal_pure_implementation_type (a_class_type: detachable RT_CLASS_TYPE): detachable RT_CLASS_TYPE
@@ -1028,7 +1051,7 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 			l_type_name: STRING_32
 			l_start_pos, l_end_pos, i: INTEGER
 			l_types: NATIVE_ARRAY [detachable RT_TYPE]
-			l_found, l_is_attached: BOOLEAN
+			l_found: BOOLEAN
 			l_class_type_name: STRING_32
 			nb: INTEGER
 			l_mark: CHARACTER_32
@@ -1051,22 +1074,20 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 				if l_mark = '!' or l_mark = '?' then
 					l_class_type_name.remove_head (1)
 					l_class_type_name.left_adjust
-					l_is_attached := l_mark = '!'
-				elseif (nb >= 10 and l_class_type_name.substring_index ("attached", 1) = 1) then
+				elseif nb >= 10 and l_class_type_name.substring_index ("attached", 1) = 1 then
 						-- Remove `attached' and the white character after it.
 					l_class_type_name.remove_head (9)
 					l_class_type_name.left_adjust
-					l_is_attached := True
-				elseif (nb >= 12 and l_class_type_name.substring_index ("detachable", 1) = 1) then
+				elseif nb >= 12 and l_class_type_name.substring_index ("detachable", 1) = 1 then
 						-- Remove `attached' and the white character after it.					
 					l_class_type_name.remove_head (11)
 					l_class_type_name.left_adjust
-				elseif (nb >= 10 and l_class_type_name.substring_index ("expanded", 1) = 1) then
+				elseif nb >= 10 and l_class_type_name.substring_index ("expanded", 1) = 1 then
 						-- Remove `expanded' and the white character after it.					
 					l_class_type_name.remove_head (9)
 					l_class_type_name.left_adjust
 					l_is_expanded := True
-				elseif (nb >= 11 and l_class_type_name.substring_index ("reference", 1) = 1) then
+				elseif nb >= 11 and l_class_type_name.substring_index ("reference", 1) = 1 then
 						-- Remove `expanded' and the white character after it.					
 					l_class_type_name.remove_head (10)
 					l_class_type_name.left_adjust
@@ -1240,11 +1261,9 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 			-- to the `add_assembly_load' event.
 		local
 			i, nb: INTEGER
-			l_handler: ASSEMBLY_LOAD_EVENT_HANDLER
 		once
 			if attached {APP_DOMAIN}.current_domain as l_domain then
-				create l_handler.make (Current, $assembly_load_event)
-				l_domain.add_assembly_load (l_handler)
+				l_domain.add_assembly_load (create {ASSEMBLY_LOAD_EVENT_HANDLER}.make (Current, $assembly_load_event))
 				if attached l_domain.get_assemblies as l_assemblies then
 					from
 						nb := l_assemblies.count
@@ -1790,16 +1809,12 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 	tuple_native_array_field_info: detachable FIELD_INFO
 			-- Info about `native_array' of TUPLE.
 		local
-			l_tuple: TUPLE
-			l_tuple_type_id: INTEGER
 			allm: detachable NATIVE_ARRAY [detachable MEMBER_INFO]
 			i, nb: INTEGER
 			l_cv_f_name: detachable SYSTEM_STRING
 			l_type: detachable SYSTEM_TYPE
 		once
-			create l_tuple
-			l_tuple_type_id := dynamic_type (l_tuple)
-			if attached id_to_eiffel_type.item (l_tuple_type_id) as l_rt_type then
+			if attached id_to_eiffel_type.item (dynamic_type (create {TUPLE})) as l_rt_type then
 				l_type := l_rt_type.dotnet_type
 				if l_type /= Void then
 					l_type := implementation_type (l_type)
@@ -1827,7 +1842,7 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

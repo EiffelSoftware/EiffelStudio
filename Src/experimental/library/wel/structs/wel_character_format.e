@@ -83,7 +83,7 @@ feature -- Access
 
 	height: INTEGER
 			-- Character height
-		obsolete "Use height in twips instead."
+		obsolete "Use height in twips instead [2017-05-31]."
 		require
 			exists: exists
 		do
@@ -245,7 +245,7 @@ feature -- Element change
 
 	set_height (a_height: INTEGER)
 			-- Set `height' with `a_height' (height specified in points).
-		Obsolete "Use `set_height_in_points' instead"
+		Obsolete "Use `set_height_in_points' instead [2017-05-31]."
 		require
 			exists: exists
 		do
@@ -622,7 +622,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

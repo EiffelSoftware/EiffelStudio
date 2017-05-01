@@ -61,9 +61,6 @@ feature {EG_GRAPH} -- Element change.
 
 	set_graph (a_graph: detachable like graph)
 			-- Set `graph' to `a_graph'.
---		require
---			a_graph_not_void: a_graph /= Void
---			graph_void: graph = Void
 		do
 			graph := a_graph
 		ensure
@@ -87,7 +84,7 @@ invariant
 	name_change_actions_not_void: name_change_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Read/Write synchronization object, allows multiple reader threads to have %
 		%access to a resource, and only one writer thread."
 	legal: "See notice at end of class."
@@ -30,7 +30,7 @@ feature -- Access
 	is_set: BOOLEAN
 			-- Is read/write lock initialized?
 		do
-			Result := (item /= default_pointer)
+			Result := item /= default_pointer
 		end
 
 feature -- Status setting
@@ -83,7 +83,7 @@ feature -- Obsolete
 	release_reader_lock, release_writer_lock
 			-- Unlock Reader or Writer lock.
 		obsolete
-			"Use `release_read_lock' or `release_write_lock'."
+			"Use `release_read_lock' or `release_write_lock'. [2017-05-31]"
 		require
 			is_set: is_set
 		do
@@ -134,7 +134,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

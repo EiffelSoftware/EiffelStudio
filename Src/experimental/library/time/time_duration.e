@@ -170,7 +170,7 @@ feature -- Status report
 	is_positive: BOOLEAN
 			-- Is duration positive?
 		do
-			Result := (hour > 0 or minute > 0 or fine_second > 0)
+			Result := hour > 0 or minute > 0 or fine_second > 0
 		end
 
 feature -- Element Change
@@ -306,14 +306,14 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

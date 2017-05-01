@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Container that contained by SD_TOOL_BAR_CONTAINER. And it contain a EV_FIXED."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -57,12 +57,8 @@ feature {NONE} -- Initialization
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
 			-- can be added here.
-		local
-			l_helper: SD_COLOR_HELPER
 		do
 			create internal_shared
-			create l_helper
-
 			set_background_color (internal_shared.non_focused_color_lightness)
 		end
 
@@ -133,14 +129,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

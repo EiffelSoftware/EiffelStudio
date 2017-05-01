@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-					All icons used in the docking library. 
-					Client programmer may inherit this class if you want to use your own icons.
-																								]"
+			All icons used in the docking library. 
+			Client programmer may inherit this class if you want to use your own icons.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -15,11 +15,8 @@ feature -- Initlization
 
 	init
 			-- Initlization
-		local
-			l_shared: SD_SHARED
 		do
-			create l_shared
-			l_shared.set_icons (Current)
+			;(create {SD_SHARED}).set_icons (Current)
 		end
 
 feature -- Icons
@@ -388,14 +385,14 @@ feature -- Editor icons
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

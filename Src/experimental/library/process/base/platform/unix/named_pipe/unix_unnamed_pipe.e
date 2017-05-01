@@ -335,7 +335,7 @@ feature -- Input
 	read_stream_non_block (nb_char: INTEGER)
 		local
 			count: INTEGER
-			mp: detachable MANAGED_POINTER
+			mp: MANAGED_POINTER
 			l_last_string: like last_string
 		do
 			last_read_successful := True
@@ -351,7 +351,24 @@ feature -- Input
 					last_read_successful := False
 				end
 			end
-			mp := Void
+		end
+
+	read_to_special (buffer: SPECIAL [NATURAL_8])
+			-- Read data from the current stream to `buffer`.
+			-- Maximum number if bytes to read is `buffer.count`.
+			-- Update `buffer.count` with actually read bytes.
+			-- Report result in `last_read_successful`.
+		local
+			count: INTEGER
+		do
+			last_read_successful := True
+			count := read (read_descriptor, $buffer, buffer.count)
+			if count >= 0 then
+				buffer.keep_head (count)
+			else
+				buffer.wipe_out
+				last_read_successful := False
+			end
 		end
 
 	read_line
@@ -531,20 +548,18 @@ feature -- Output
 			write_block (write_descriptor, p.item + start_pos, nb_bytes)
 		end
 
-feature -- Input
+feature {NONE} -- Input-output
 
 	read_block (fildes: INTEGER; buf: POINTER; size: INTEGER)
 			-- Read `size' byte of data into `buf' from `fildes'.
 		local
-			read_count, count: INTEGER
+			count: INTEGER
 			size_left: INTEGER
 			pos: INTEGER
 			done: BOOLEAN
 			retried_count: INTEGER
 		do
 			from
-				read_count := 0
-				count := 0
 				size_left := size
 				pos := 0
 				done := False
@@ -577,15 +592,13 @@ feature -- Input
 	write_block (fildes: INTEGER; buf: POINTER; size: INTEGER)
 			-- Write `size' byte of data stored in `buf' to `fildes'.
 		local
-			write_count, count: INTEGER
+			count: INTEGER
 			size_left: INTEGER
 			pos: INTEGER
 			done: BOOLEAN
 			retried_count: INTEGER
 		do
 			from
-				write_count := 0
-				count := 0
 				size_left := size
 				pos := 0
 				done := False
@@ -685,7 +698,7 @@ invariant
 	current_platform_not_void: current_platform /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

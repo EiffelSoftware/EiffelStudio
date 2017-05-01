@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects help SD_DOCKING_MANAGER with agents issues."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,28 +19,22 @@ inherit
 	SD_ACCESS
 
 	SD_DOCKING_MANAGER_HOLDER
-		redefine
-			set_docking_manager
-		end
+
 create
 	make
 
 feature {NONE}  -- Initlization
 
-	make
-			-- Creation method
+	make (a_docking_manager: SD_DOCKING_MANAGER)
+			-- Associate new object with `a_docking_manager'.
 		do
+			docking_manager := a_docking_manager
 			main_window_focus_out := agent on_main_window_focus_out
 			main_window_focus_in := agent on_main_window_focus_in
 			pnd_motion_actions_handler := agent on_pnd_motions
 			pick_actions_handler := agent on_pick_actions
 			drop_actions_handler := agent on_drop_actions
 			theme_changed_handler := agent on_theme_changed
-			ev_application.pnd_motion_actions.extend (pnd_motion_actions_handler)
-			ev_application.pick_actions.extend (pick_actions_handler)
-			ev_application.drop_actions.extend (drop_actions_handler)
-			ev_application.theme_changed_actions.extend (theme_changed_handler)
-
 			create internal_shared
 
 			widget_pointer_press_handler := agent on_widget_pointer_press
@@ -49,11 +43,15 @@ feature {NONE}  -- Initlization
 			top_level_window_focus_in := agent on_top_level_window_focus_in
 		end
 
-	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			-- <Precursor>
-		do
-			Precursor {SD_DOCKING_MANAGER_HOLDER} (a_docking_manager)
+feature {SD_DOCKING_MANAGER} -- Initialization
 
+	add_actions
+			-- Register required actions.
+		do
+			ev_application.pnd_motion_actions.extend (pnd_motion_actions_handler)
+			ev_application.pick_actions.extend (pick_actions_handler)
+			ev_application.drop_actions.extend (drop_actions_handler)
+			ev_application.theme_changed_actions.extend (theme_changed_handler)
 			docking_manager.main_window.focus_out_actions.extend (main_window_focus_out)
 			docking_manager.main_window.focus_in_actions.extend (main_window_focus_in)
 		end
@@ -254,8 +252,6 @@ feature  -- Agents
 			not_void: a_content /= Void
 		do
 			a_content.clear_docking_manager
-		ensure
-			set: a_content.docking_manager = Void
 		end
 
 	on_main_window_focus_out
@@ -387,9 +383,8 @@ feature  -- Agents
 			not_destroyed: not is_destroyed
 		local
 			l_screen_x, l_screen_y: INTEGER
-			l_screen: EV_SCREEN
 			l_position: EV_COORDINATE
-			l_widget: detachable EV_WIDGET
+			l_widget: EV_WIDGET
 		do
 				-- When set_capture, if pointer moving at area outside captured widget,
 				-- the `a_target' parameter in {EV_APPLICATION}.pnd_motion_actions is void
@@ -398,8 +393,7 @@ feature  -- Agents
 				l_widget := w
 			end
 
-			create l_screen
-			l_position := l_screen.pointer_position
+			l_position := (create {EV_SCREEN}).pointer_position
 
 			l_screen_x := l_position.x
 			l_screen_y := l_position.y
@@ -434,12 +428,10 @@ feature  -- Agents
 			not_destroyed: not is_destroyed
 			vaild: (create {SD_ENUMERATION}).is_direction_valid (a_direction)
 		local
-			l_panel: SD_AUTO_HIDE_PANEL
 			l_stubs: ARRAYED_LIST [SD_TAB_STUB]
 			l_stub: SD_TAB_STUB
 		do
-			l_panel := docking_manager.query.auto_hide_panel (a_direction)
-			l_stubs := l_panel.tab_stubs
+			l_stubs := docking_manager.query.auto_hide_panel (a_direction).tab_stubs
 
 			from
 				l_stubs.start
@@ -585,10 +577,10 @@ feature {SD_DEBUG_ACCESS} -- For debug
 			not_destroyed: not is_destroyed
 		do
 			if attached {SD_DOCKING_ZONE} a_container as l_docking_zone then
-				io.put_string ("%N " + a_indent + a_container.generating_type + " " + l_docking_zone.content.unique_title)
+				io.put_string ("%N " + a_indent + a_container.generating_type.name_32.as_string_8 + " " + l_docking_zone.content.unique_title)
 			else
 				if a_container /= Void then
-					io.put_string ("%N " + a_indent + a_container.generating_type)
+					io.put_string ("%N " + a_indent + a_container.generating_type.name_32.as_string_8)
 				else
 					io.put_string ("%N " + a_indent + "Void")
 				end
@@ -612,7 +604,7 @@ feature {NONE}  -- Implementation
 			not_void: a_child /= Void
 		do
 			if attached a_child.parent as l_parent then
-				Result := (a_parent = l_parent)
+				Result := a_parent = l_parent
 				if not Result then
 					Result := is_parent_recursive (a_parent, l_parent)
 				end
@@ -654,7 +646,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

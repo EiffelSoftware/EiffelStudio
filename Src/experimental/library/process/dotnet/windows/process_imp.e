@@ -321,7 +321,7 @@ feature{NONE} -- Implementation
 			timer.start
 		end
 
-feature{NONE} -- Implementation
+feature{NONE} -- Access
 
 	out_thread: detachable PROCESS_OUTPUT_LISTENER_THREAD
 	err_thread: detachable PROCESS_ERROR_LISTENER_THREAD
@@ -339,7 +339,7 @@ feature{NONE} -- Implementation
 			-- Buffer used to read error from process	
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -34,7 +34,7 @@
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_tools" location="$ISE_LIBRARY\library\gobo\gobo_tools.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
-		<cluster name="gec" location="$ISE_LIBRARY\contrib\library\gobo\src\gec\" recursive="true"/>
+		<cluster name="gec" location="$ISE_LIBRARY\contrib\library\gobo\tool\gec\src" recursive="true"/>
 		<override name="ecf_support" location="$ISE_LIBRARY\library\gobo\src\ecf_support\" recursive="true"/>
 	</target>
 </system>

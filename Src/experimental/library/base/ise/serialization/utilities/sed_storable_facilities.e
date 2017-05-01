@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Serialize and deserialize objects to and from SED_READER_WRITER instances."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -50,7 +50,7 @@ feature -- Serialization routines
 			-- Serialization of `an_object' using `a_writer'.
 			-- Object stored can only be retrieved by programs having the same set of types.
 		obsolete
-			"Use `store' instead."
+			"Use `store' instead. [2017-05-31]"
 		require
 			an_object_not_void: an_object /= Void
 			a_writer_not_void: a_writer /= Void
@@ -145,7 +145,7 @@ feature -- Serialization routines
 	retrieved_error: detachable SED_ERROR
 			-- Error set from last call to `retrieved'.
 		obsolete
-			"Use `retrieved_errors' directly."
+			"Use `retrieved_errors' directly. [2017-05-31]"
 		do
 			if attached retrieved_errors as l_errors and then not l_errors.is_empty then
 				Result := l_errors.last
@@ -307,7 +307,7 @@ feature {NONE} -- Data
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

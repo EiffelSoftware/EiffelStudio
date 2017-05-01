@@ -233,7 +233,7 @@ feature -- Status report
 			Result := implementation = Void
 		end;
 
-	is_destroyed: BOOLEAN obsolete "Use ``destroyed''"
+	is_destroyed: BOOLEAN obsolete "Use `destroyed' [2017-05-31]"
 			-- Is current implementation destroyed?
 		do
 			Result := destroyed

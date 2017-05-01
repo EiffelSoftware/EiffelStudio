@@ -1,9 +1,7 @@
-note
+﻿note
 
-	description:
-		"General mechanisms for building lexical analyzers"
+	description: "General mechanisms for building lexical analyzers"
 	legal: "See notice at end of class.";
-
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -24,7 +22,7 @@ create
 
 	make, make_extended
 
-feature  -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Set up the analyzer.
@@ -199,7 +197,12 @@ feature -- Element change
 			last_created_tool := last_created_tool + 1;
 			l_tools.finish;
 			l_tools.put_right (fa);
-			if bb /= ee then
+			if bb = ee then
+				create c_name.make (3);
+				c_name.extend ('%'');
+				c_name.append (readable_form (b));
+				c_name.extend ('%'')
+			else
 				create c_name.make (8);
 				c_name.extend ('%'');
 				c_name.append (readable_form (b));
@@ -208,12 +211,7 @@ feature -- Element change
 				c_name.extend ('%'');
 				c_name.append (readable_form (e));
 				c_name.extend ('%'')
-			else
-				create c_name.make (3);
-				c_name.extend ('%'');
-				c_name.append (readable_form (b));
-				c_name.extend ('%'')
-			end;
+			end
 			l_tool_names.finish;
 			l_tool_names.put_right (c_name)
 		end;
@@ -296,36 +294,34 @@ feature -- Element change
 			r_exists: r >= 1 and r <= last_created_tool;
 			r_simple_category: attached tool_list as rl_tools and then rl_tools.i_th (r).nb_states = 2
 		local
-			new: PDFA;
-			cc: INTEGER;
+			new: PDFA
 			c_name: STRING
 			l_tools: like tool_list
 			l_tool_names: like tool_names
 		do
 			l_tools := tool_list
 			check l_tools_attached: l_tools /= Void end
-			l_tools.go_i_th (r);
-			create new.make (l_tools.item.nb_states, last_character_code);
-			new.include (l_tools.item, 0);
-			cc := c.code;
-			new.delete_transition (1, cc, 2);
+			l_tools.go_i_th (r)
+			create new.make (l_tools.item.nb_states, last_character_code)
+			new.include (l_tools.item, 0)
+			new.delete_transition (1, c.code, 2)
 			if not case_sensitive then
 				new.remove_case_sensitiveness
-			end;
-			last_created_tool := last_created_tool + 1;
-			l_tools.finish;
-			l_tools.put_right (new);
-			create c_name.make (0);
+			end
+			last_created_tool := last_created_tool + 1
+			l_tools.finish
+			l_tools.put_right (new)
+			create c_name.make (0)
 			l_tool_names := tool_names
-			l_tool_names.go_i_th (r);
-			c_name.append (l_tool_names.item);
-			c_name.extend ('-');
-			c_name.extend ('%'');
-			c_name.extend (c);
-			c_name.extend ('%'');
-			l_tool_names.finish;
+			l_tool_names.go_i_th (r)
+			c_name.append (l_tool_names.item)
+			c_name.extend ('-')
+			c_name.extend ('%'')
+			c_name.extend (c)
+			c_name.extend ('%'')
+			l_tool_names.finish
 			l_tool_names.put_right (c_name)
-		end;
+		end
 
 	append (p, s: INTEGER)
 			-- Create regular expression `p'`s':
@@ -335,132 +331,127 @@ feature -- Element change
 			p_in_tool: p >= 1 and p <= last_created_tool;
 			s_in_tool: s >= 1 and s <= last_created_tool
 		local
-			new: PDFA;
-			c_name: STRING;
-			p_length, s_length, length: INTEGER
+			new: PDFA
+			c_name: STRING
+			p_length: INTEGER
 			l_tools: like tool_list
 			l_tool_names: like tool_names
 		do
 			l_tools := tool_list
 			l_tool_names := tool_names
 
-			l_tools.go_i_th (p);
-			p_length := l_tools.item.nb_states;
-			l_tools.go_i_th (s);
-			s_length := l_tools.item.nb_states;
-			length := p_length + s_length;
-			create new.make (length, last_character_code);
-			new.include (l_tools.item, p_length);
-			l_tools.go_i_th (p);
-			new.include (l_tools.item, 0);
-			new.set_e_transition (p_length, p_length + 1);
+			l_tools.go_i_th (p)
+			p_length := l_tools.item.nb_states
+			l_tools.go_i_th (s)
+			create new.make (p_length + l_tools.item.nb_states, last_character_code)
+			new.include (l_tools.item, p_length)
+			l_tools.go_i_th (p)
+			new.include (l_tools.item, 0)
+			new.set_e_transition (p_length, p_length + 1)
 			if not case_sensitive then
 				new.remove_case_sensitiveness
-			end;
-			last_created_tool := last_created_tool + 1;
-			l_tools.finish;
-			l_tools.put_right (new);
-			create c_name.make (0);
-			l_tool_names.go_i_th (p);
-			c_name.append (l_tool_names.item);
-			c_name.extend (' ');
-			l_tool_names.go_i_th (s);
-			c_name.append (l_tool_names.item);
-			l_tool_names.finish;
+			end
+			last_created_tool := last_created_tool + 1
+			l_tools.finish
+			l_tools.put_right (new)
+			create c_name.make (0)
+			l_tool_names.go_i_th (p)
+			c_name.append (l_tool_names.item)
+			c_name.extend (' ')
+			l_tool_names.go_i_th (s)
+			c_name.append (l_tool_names.item)
+			l_tool_names.finish
 			l_tool_names.put_right (c_name)
-		end;
+		end
 
 	append_optional (p, s: INTEGER)
 			-- Create regular expression `p'[`s']:
 			-- `s' optionally appended to `p'.
 		require
-			not_frozen: not lexical_frozen;
-			p_in_tool: p >= 1 and p <= last_created_tool;
+			not_frozen: not lexical_frozen
+			p_in_tool: p >= 1 and p <= last_created_tool
 			s_in_tool: s >= 1 and s <= last_created_tool
 		local
-			new: PDFA;
-			c_name: STRING;
-			p_length, s_length, length: INTEGER
+			new: PDFA
+			c_name: STRING
+			p_length, length: INTEGER
 			l_tools: like tool_list
 			l_tool_names: like tool_names
 		do
 			l_tools := tool_list
 			l_tool_names := tool_names
 
-			l_tools.go_i_th (p);
-			p_length := l_tools.item.nb_states;
-			l_tools.go_i_th (s);
-			s_length := l_tools.item.nb_states;
-			length := p_length + s_length;
-			create new.make (length, last_character_code);
-			new.include (l_tools.item, p_length);
-			l_tools.go_i_th (p);
-			new.include (l_tools.item, 0);
-			new.set_e_transition (p_length, p_length + 1);
-			new.set_e_transition (p_length, length);
+			l_tools.go_i_th (p)
+			p_length := l_tools.item.nb_states
+			l_tools.go_i_th (s)
+			length := p_length + l_tools.item.nb_states
+			create new.make (length, last_character_code)
+			new.include (l_tools.item, p_length)
+			l_tools.go_i_th (p)
+			new.include (l_tools.item, 0)
+			new.set_e_transition (p_length, p_length + 1)
+			new.set_e_transition (p_length, length)
 			if not case_sensitive then
 				new.remove_case_sensitiveness
-			end;
-			last_created_tool := last_created_tool + 1;
-			l_tools.finish;
-			l_tools.put_right (new);
-			create c_name.make (0);
-			l_tool_names.go_i_th (p);
-			c_name.append (l_tool_names.item);
-			c_name.extend (' ');
-			c_name.extend ('[');
-			l_tool_names.go_i_th (s);
-			c_name.append (l_tool_names.item);
-			c_name.extend (']');
-			l_tool_names.finish;
+			end
+			last_created_tool := last_created_tool + 1
+			l_tools.finish
+			l_tools.put_right (new)
+			create c_name.make (0)
+			l_tool_names.go_i_th (p)
+			c_name.append (l_tool_names.item)
+			c_name.extend (' ')
+			c_name.extend ('[')
+			l_tool_names.go_i_th (s)
+			c_name.append (l_tool_names.item)
+			c_name.extend (']')
+			l_tool_names.finish
 			l_tool_names.put_right (c_name)
-		end;
+		end
 
 	prepend_optional (p, s: INTEGER)
 			-- Create regular expression [`p']`s':
 			-- `s' appended to optional `p'.
 		require
 			not_frozen: not lexical_frozen;
-			p_in_tool: p >= 1 and p <= last_created_tool;
+			p_in_tool: p >= 1 and p <= last_created_tool
 			s_in_tool: s >= 1 and s <= last_created_tool
 		local
-			new: PDFA;
-			c_name: STRING;
-			p_length, s_length, length: INTEGER
+			new: PDFA
+			c_name: STRING
+			p_length: INTEGER
 			l_tools: like tool_list
 			l_tool_names: like tool_names
 		do
 			l_tools := tool_list
 			l_tool_names := tool_names
 
-			l_tools.go_i_th (p);
-			p_length := l_tools.item.nb_states;
-			l_tools.go_i_th (s);
-			s_length := l_tools.item.nb_states;
-			length := p_length + s_length;
-			create new.make (length, last_character_code);
-			new.include (l_tools.item, p_length);
-			l_tools.go_i_th (p);
-			new.include (l_tools.item, 0);
-			new.set_e_transition (1, p_length + 1);
-			new.set_e_transition (p_length, p_length + 1);
+			l_tools.go_i_th (p)
+			p_length := l_tools.item.nb_states
+			l_tools.go_i_th (s)
+			create new.make (p_length + l_tools.item.nb_states, last_character_code)
+			new.include (l_tools.item, p_length)
+			l_tools.go_i_th (p)
+			new.include (l_tools.item, 0)
+			new.set_e_transition (1, p_length + 1)
+			new.set_e_transition (p_length, p_length + 1)
 			if not case_sensitive then
 				new.remove_case_sensitiveness
-			end;
-			last_created_tool := last_created_tool + 1;
-			l_tools.finish;
-			l_tools.put_right (new);
-			create c_name.make (0);
-			c_name.extend ('[');
-			l_tool_names.go_i_th (p);
-			c_name.append (l_tool_names.item);
-			c_name.extend (']');
-			c_name.extend (' ');
-			l_tool_names.go_i_th (s);
-			c_name.append (l_tool_names.item);
-			l_tool_names.finish;
+			end
+			last_created_tool := last_created_tool + 1
+			l_tools.finish
+			l_tools.put_right (new)
+			create c_name.make (0)
+			c_name.extend ('[')
+			l_tool_names.go_i_th (p)
+			c_name.append (l_tool_names.item)
+			c_name.extend (']')
+			c_name.extend (' ')
+			l_tool_names.go_i_th (s)
+			c_name.append (l_tool_names.item)
+			l_tool_names.finish
 			l_tool_names.put_right (c_name)
-		end;
+		end
 
 	case_insensitive (c: INTEGER)
 			-- Create regular expression ~(`c'):
@@ -932,12 +923,10 @@ feature -- Element change
 			--| Do not check if `s' is recognized by `exp'.
 			--| This is done when the dfa is built.
 		require
-			not_frozen: not lexical_frozen;
+			not_frozen: not lexical_frozen
 			exp_selected: attached token_type_list as rl_token_types and then rl_token_types.has(exp)
 			selected_tools: selected_tools /= Void
 		local
-			u, l: STRING;
-			index: INTEGER
 			l_selected_tools: like selected_tools
 			l_token_types: like token_type_list
 			l_tools: like tool_list
@@ -950,19 +939,16 @@ feature -- Element change
 				l_selected_tools_attached: l_selected_tools /= Void
 				l_token_types_attached: l_token_types /= Void
 			then
-				index := l_token_types.index_of (exp, 1);
-				l_tools.go_i_th (l_selected_tools.i_th (index));
-				l_tools.item.add_keyword (s.twin);
-				last_declared_keyword := last_declared_keyword + 1;
+				l_tools.go_i_th (l_selected_tools [l_token_types.index_of (exp, 1)])
+				l_tools.item.add_keyword (s.twin)
+				last_declared_keyword := last_declared_keyword + 1
 				if not keywords_case_sensitive then
-					l := s.as_lower
-					l_tools.item.add_keyword (l);
-					u := s.as_upper
-					l_tools.item.add_keyword (u);
+					l_tools.item.add_keyword (s.as_lower)
+					l_tools.item.add_keyword (s.as_upper)
 					last_declared_keyword := last_declared_keyword + 2
 				end
 			end
-		end;
+		end
 
 	select_tool (i: INTEGER)
 			-- Select the `i'_th tool for inclusion in the main
@@ -1185,7 +1171,6 @@ feature {NONE} -- Implementation
 			fa: PDFA
 			l_selected_tools: like selected_tools
 			l_token_types: like token_type_list
-			l_tool_names: like tool_names
 			l_tools: like tool_list
 		do
 			nb_states := nb_states + 1;
@@ -1215,8 +1200,7 @@ feature {NONE} -- Implementation
 						io.put_string (" Tool selected: ");
 						io.put_integer (l_selected_tools.item);
 						io.put_string (" Description: ");
-						l_tool_names := tool_names
-						io.put_string (l_tool_names.i_th (l_selected_tools.item));
+						io.put_string (tool_names.i_th (l_selected_tools.item));
 						io.put_string (" Token type associated: ");
 						io.put_integer (l_token_types.item);
 						io.new_line
@@ -1369,24 +1353,24 @@ feature {NONE} -- Implementation
 				until
 					i = kwd.count + 1
 				loop
-					l.put_right (l_categories.item (kwd.item (i).code));
-					l.forth;
+					l.put_right (l_categories.item (kwd.item (i).code))
+					l.forth
 					i := i + 1
-				end;
+				end
 
-				l_tokens := l_dfa.possible_tokens (l);
+				l_tokens := l_dfa.possible_tokens (l)
 				if l_tokens /= Void then
 					from
 						i := l_tokens.lower
 					until
 						Result or i > l_tokens.upper
 					loop
-						Result := (l_tokens.item (i) = token_type);
+						Result := l_tokens [i] = token_type
 						i := i + 1
 					end
 				end
 			end
-		end;
+		end
 
 	dfa_set_final (s, new_final: INTEGER)
 			-- Set the attribute `final' of state `s' to `new_final'.
@@ -1449,20 +1433,15 @@ feature {NONE} -- Implementation
 			-- recognized by the corresponding tool.
 		local
 			message: STRING
-			l_tools_names: like tool_names
-			l_name: detachable STRING
 		do
-			create message.make (0);
-			message.append ("Warning: ");
-			message.append (k);
-			message.append (" is not recognized by ");
-			l_tools_names := tool_names
-			l_name := l_tools_names.i_th (t)
-			check l_name_attached: l_name /= Void end
-			message.append (l_name);
-			message.extend ('.');
+			create message.make (0)
+			message.append ("Warning: ")
+			message.append (k)
+			message.append (" is not recognized by ")
+			message.append (tool_names [t])
+			message.extend ('.')
 			error_list.add_message (message)
-		end;
+		end
 
 invariant
 	analyzer_attached: initialized implies analyzer /= Void
@@ -1470,7 +1449,7 @@ invariant
 	consistent: dfa /= Void implies categories_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1480,9 +1459,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class LEX_BUILDER
-
-
+end

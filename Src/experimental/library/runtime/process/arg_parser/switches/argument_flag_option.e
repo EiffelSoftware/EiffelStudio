@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Represents a user passed argument option for flag arguments."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,33 +40,26 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	flags: ARRAYED_LIST [CHARACTER_32]
-			-- Available flags
+			-- Available flags.
 
 feature -- Status report
 
 	is_case_sensitive: BOOLEAN
-			-- Indicates if flags are case sensitive
+			-- Indicates if flags are case sensitive.
 
 feature -- Query
 
 	has_flag (a_flag: CHARACTER): BOOLEAN
-			-- Determines if `a_flag' was set
-		local
-			c: CHARACTER
+			-- Determines if `a_flag' was set.
 		do
 			if has_value then
-				c := a_flag
 				Result := flags.has (a_flag)
-				if not Result and then not is_case_sensitive then
-					c := a_flag
-					if c.is_alpha then
-						if c.is_lower then
-							c := c.as_upper
+				if not Result and then not is_case_sensitive and then a_flag.is_alpha then
+					Result := flags.has (if a_flag.is_lower then
+							a_flag.as_upper
 						else
-							c := c.as_lower
-						end
-						Result := flags.has (c)
-					end
+							a_flag.as_lower
+						end)
 				end
 			end
 		ensure
@@ -80,7 +73,7 @@ invariant
 	flags_contains_printable_items: across flags as l_flag all switch.is_character_printable (l_flag.item) end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

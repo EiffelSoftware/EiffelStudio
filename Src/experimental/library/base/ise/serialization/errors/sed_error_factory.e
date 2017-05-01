@@ -1,5 +1,5 @@
-note
-	description: "Objects that provide instances of SED_ERROR"
+﻿note
+	description: "Objects that provide instances of {SED_ERROR}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Julian Rogers"
@@ -30,7 +30,7 @@ feature -- Access
 			l_msg: STRING_32
 		do
 			create l_msg.make_from_string_general ("An exception of type {")
-			l_msg.append (a_exception.generating_type)
+			l_msg.append (a_exception.generating_type.name_32)
 			if attached a_exception.description as l_message then
 				l_msg.append_string_general ("} with message %"")
 				l_msg.append_string_general (l_message)
@@ -59,7 +59,7 @@ feature -- Access
 	new_invalid_object_error (a_obj: ANY): SED_ERROR
 			-- Object `a_obj' was retrieved but is not valid.
 		do
-			create Result.make_with_string ("Invalid retrieved object of type " + a_obj.generating_type.name)
+			create Result.make_with_string ({STRING_32} "Invalid retrieved object of type " + a_obj.generating_type.name_32)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -67,7 +67,7 @@ feature -- Access
 	new_object_mismatch_error (a_obj: ANY): SED_ERROR
 			-- Object `a_obj' was retrieved but its content is still mismatched.
 		do
-			create Result.make_with_string ("Unfixable object of type " + a_obj.generating_type.name)
+			create Result.make_with_string ({STRING_32} "Unfixable object of type " + a_obj.generating_type.name_32)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

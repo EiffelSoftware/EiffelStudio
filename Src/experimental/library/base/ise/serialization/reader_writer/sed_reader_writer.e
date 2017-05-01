@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Ancestor for reading/writing basic known entities from and to a particular %
 		%location specified in concrete descendants of current."
 	legal: "See notice at end of class."
@@ -70,11 +70,8 @@ feature -- Access
 			-- Read next 8-bits character
 		require
 			is_ready: is_ready_for_reading
-		local
-			l_nat8: NATURAL_8
 		do
-			l_nat8 := read_natural_8
-			Result := l_nat8.to_character_8
+			Result := read_natural_8.to_character_8
 		end
 
 	read_character_32: CHARACTER_32
@@ -146,11 +143,8 @@ feature -- Access
 			-- Read next boolean
 		require
 			is_ready: is_ready_for_reading
-		local
-			l_nat: NATURAL_8
 		do
-			l_nat := read_natural_8
-			Result := l_nat = 1
+			Result := read_natural_8 = 1
 		end
 
 	read_natural_8: NATURAL_8
@@ -259,18 +253,18 @@ feature -- Access
 			elseif l_nat8 & 0xC0 = 0x80 then
 					-- Values between 128 and 16382
 				Result := ((l_nat8.as_natural_32 & 0x0000003F) |<< 8) |
-					(read_natural_8.as_natural_32)
+					read_natural_8.as_natural_32
 			elseif l_nat8 & 0xE0 = 0xC0 then
 					-- Values between 16383 and 2097150
 				Result := ((l_nat8.as_natural_32 & 0x0000001F) |<< 16) |
 					(read_natural_8.as_natural_32 |<< 8) |
-					(read_natural_8.as_natural_32)
+					read_natural_8.as_natural_32
 			elseif l_nat8 & 0xF0 = 0xE0 then
 					-- Values between 2097151 and 268435454
 				Result := ((l_nat8.as_natural_32 & 0x0000000F) |<< 24) |
 					(read_natural_8.as_natural_32 |<< 16) |
 					(read_natural_8.as_natural_32 |<< 8) |
-					(read_natural_8.as_natural_32)
+					read_natural_8.as_natural_32
 			else
 					-- Values between 268435455 and 4294967295
 				Result := read_natural_32
@@ -337,7 +331,7 @@ feature -- Element change
 	write_immutable_string_8 (v: IMMUTABLE_STRING_8)
 			-- Write `v'.
 		obsolete
-			"Use `write_string_8' instead."
+			"Use `write_string_8' instead. [2017-05-31]"
 		require
 			is_ready: is_ready_for_writing
 			v_not_void: v /= Void
@@ -490,14 +484,14 @@ feature -- Element change
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

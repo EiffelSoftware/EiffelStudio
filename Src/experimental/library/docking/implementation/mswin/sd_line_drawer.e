@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Draw half-tone lines (include rectangles) on windows."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -162,14 +162,13 @@ feature {NONE} -- Implementation
 		require
 			valid: a_width > 0 and a_height > 0
 		local
-			l_pixmap: EV_PIXMAP
 			l_x,l_y: INTEGER
 			l_white, l_black: EV_COLOR
 			l_black_or_white: BOOLEAN
 		do
 			create l_white.make_with_rgb (1, 1, 1)
 			create l_black.make_with_rgb (0, 0, 0)
-			create l_pixmap.make_with_size (a_width, a_height)
+			create Result.make_with_size (a_width, a_height)
 			from
 				l_x := 0
 			until
@@ -181,11 +180,11 @@ feature {NONE} -- Implementation
 					l_y > a_height
 				loop
 					if l_black_or_white then
-						l_pixmap.set_foreground_color (l_white)
+						Result.set_foreground_color (l_white)
 					else
-						l_pixmap.set_foreground_color (l_black)
+						Result.set_foreground_color (l_black)
 					end
-					l_pixmap.draw_point (l_x, l_y)
+					Result.draw_point (l_x, l_y)
 					l_y := l_y + 1
 					l_black_or_white := not l_black_or_white
 				end
@@ -194,7 +193,6 @@ feature {NONE} -- Implementation
 					l_black_or_white := not l_black_or_white
 				end
 			end
-			Result := l_pixmap
 		ensure
 			not_void: Result /= Void
 		end
@@ -225,12 +223,9 @@ feature {NONE} -- Implementation
 feature {NONE}  -- Implementation
 
  	half_tone_brush: WEL_BRUSH
-			-- Create the brush to draw resize bar feedback
-		local
-			l_helper: WEL_BITMAP_HELPER
+			-- Create the brush to draw resize bar feedback.
 		do
-			create l_helper
-			Result := l_helper.half_tone_brush
+			Result := (create {WEL_BITMAP_HELPER}).half_tone_brush
 		ensure
 			not_void: Result /= Void
 		end
@@ -243,14 +238,14 @@ feature {NONE}  -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

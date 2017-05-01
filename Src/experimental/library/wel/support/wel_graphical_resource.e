@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 	make_by_file (file_name: READABLE_STRING_GENERAL)
 			-- Load an icon file named `file_name'.
 		obsolete
-			"Use `make_by_path' instead."
+			"Use `make_by_path' instead [2017-05-31]."
 		require
 			file_name_not_void: file_name /= Void
 		do
@@ -197,7 +197,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

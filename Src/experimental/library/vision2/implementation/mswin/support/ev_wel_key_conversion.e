@@ -17,7 +17,7 @@ inherit
 feature -- Conversion
 
 	key_code_to_wel (a_key_code: INTEGER): INTEGER
-			-- Corresponding WEL code for ``a_key_code''.
+			-- Corresponding WEL code for `a_key_code'.
 		require
 			a_key_code_valid: valid_key_code (a_key_code)
 		do
@@ -25,7 +25,7 @@ feature -- Conversion
 		end
 
 	key_code_from_wel (a_wel_code: INTEGER): INTEGER
-			-- Corresponding key code for ``a_wel_code''.
+			-- Corresponding key code for `a_wel_code'.
 		require
 			a_wel_code_valid: valid_wel_code (a_wel_code)
 		do
@@ -35,7 +35,7 @@ feature -- Conversion
 feature -- Contract support
 
 	valid_wel_code (a_wel_code: INTEGER): BOOLEAN
-			-- Is ``a_wel_code'' valid?
+			-- Is `a_wel_code' valid?
 		do
 			Result := wel_to_v2_table.has (a_wel_code)
 		end

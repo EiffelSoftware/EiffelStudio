@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Absolute times"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -152,11 +152,9 @@ feature -- Initialization
 			c_exists: code /= Void
 			time_valid: time_valid (s, code)
 		local
-			code_string: DATE_TIME_CODE_STRING
 			time: TIME
 		do
-			create code_string.make (code)
-			time := code_string.create_time (s)
+			time := (create {DATE_TIME_CODE_STRING}.make (code)).create_time (s)
 			make_fine (time.hour, time.minute, time.fine_second)
 		end
 
@@ -248,7 +246,7 @@ feature -- Basic operations
 			total_second: INTEGER
 		do
 			total_second := second + s
-			if (total_second < 0 or else total_second >= Seconds_in_minute) then
+			if total_second < 0 or else total_second >= Seconds_in_minute then
 				set_fine_second (mod (total_second, Seconds_in_minute) +
 					fractional_second)
 				minute_add (div (total_second, Seconds_in_minute))
@@ -264,7 +262,7 @@ feature -- Basic operations
 			total_second: DOUBLE
 		do
 			total_second:= fine_second + f
-			if (total_second < 0 or else total_second >= Seconds_in_minute) then
+			if total_second < 0 or else total_second >= Seconds_in_minute then
 				set_fine_second (total_second - div (total_second.floor,
 					Seconds_in_minute) * Seconds_in_minute)
 				minute_add (div (total_second.floor, Seconds_in_minute))
@@ -279,7 +277,7 @@ feature -- Basic operations
 			total_minute: INTEGER
 		do
 			total_minute := minute + m
-			if (total_minute < 0 or else total_minute >= minutes_in_hour) then
+			if total_minute < 0 or else total_minute >= minutes_in_hour then
 				set_minute (mod (total_minute, minutes_in_hour))
 				hour_add (div (total_minute, minutes_in_hour))
 			else
@@ -371,11 +369,8 @@ feature -- Output
 			-- Form: `s'
 		require
 			s_exists: s /= Void
-		local
-			code: DATE_TIME_CODE_STRING
 		do
-			create code.make (s)
-			Result := code.create_time_string (Current)
+			Result := (create {DATE_TIME_CODE_STRING}.make (s)).create_time_string (Current)
 		end
 
 invariant
@@ -390,20 +385,14 @@ invariant
 	hour_small_enough: hour < hours_in_day
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class TIME
-
-
-
+end

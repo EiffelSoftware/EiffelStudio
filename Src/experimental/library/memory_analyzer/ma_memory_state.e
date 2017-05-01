@@ -49,12 +49,10 @@ feature -- Measurrment
 			-- after routine found_type, return the count of founded item
 		require
 			founded_type_not_void: founded_type /= Void
-		local
-			l_item_founded: like item_founded
 		do
-			l_item_founded := item_founded
-			check l_item_founded /= Void end -- Implied by precondition
-			Result := l_item_founded.count_in_system
+			if attached item_founded as l_item_founded then
+				Result := l_item_founded.count_in_system
+			end
 		end
 
 	memory_used_eiffel: INTEGER
@@ -112,21 +110,20 @@ feature -- Compare
 		local
 			l_count_change: INTEGER
 		do
-			from
-				create Result.make (10)
-				objects_states.start
-			until
-				objects_states.after
+			create Result.make (10)
+			across
+				objects_states as ic
 			loop
-				if a_state.found_type (objects_states.item.type_name) then
-					l_count_change := a_state.item_found_count - objects_states.item.count_in_system
-					if l_count_change /= 0 then
-						Result.extend ([objects_states.item.type_name, l_count_change])
+				if attached ic.item as l_item then
+					if a_state.found_type (l_item.type_name) then
+						l_count_change := a_state.item_found_count - l_item.count_in_system
+						if l_count_change /= 0 then
+							Result.extend ([l_item.type_name, l_count_change])
+						end
+					else
+						Result.extend ([l_item.type_name, - l_item.count_in_system])
 					end
-				else
-					Result.extend ([objects_states.item.type_name, - objects_states.item.count_in_system])
 				end
-				objects_states.forth
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -163,26 +160,25 @@ feature {NONE} -- Implementation
 
 	state: TUPLE [type_name: STRING; count_in_system: INTEGER]
 			-- [type_name_of_type, number of instances of type_name_of_type present in system]
-		local
-			l_result: detachable like state
+		require
+			callable: False
 		do
-			check False end -- Anchor type only
-			check l_result /= void end -- Satisfy void-safe compiler
-			Result := l_result
+				-- Used as anchor type!
+			check False then end
 		end
 
 	objects_states: ARRAYED_LIST [like state];
 			-- the count the objects, first argument is type name, second argument is the object instances count
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -18,7 +18,7 @@ create
 	make,
 	make_with_command_line
 
-feature {NONE} -- Initialization
+feature {NONE} -- Creation
 
 	make (executable_path: READABLE_STRING_GENERAL; argument_list: detachable ITERABLE [READABLE_STRING_GENERAL]; work_directory: detachable READABLE_STRING_GENERAL)
 		do
@@ -86,7 +86,6 @@ feature {NONE} -- Initialization
 							Result.append_string_general (a)
 						end
 					end
-					args.forth
 				end
 			end
 		end
@@ -98,12 +97,13 @@ feature -- Control
 		local
 			retried: BOOLEAN
 		do
-			if not retried then
-				if not has_exited then
-					child_process.kill
-					last_termination_successful := True
-					force_terminated := True
-				end
+			if
+				not retried and then
+				not has_exited
+			then
+				child_process.kill
+				last_termination_successful := True
+				force_terminated := True
 			end
 		rescue
 			last_termination_successful := False
@@ -118,17 +118,18 @@ feature -- Control
 			retried: BOOLEAN
 			l_prc: SYSTEM_DLL_PROCESS
 		do
-			if not retried then
-				if not has_exited then
-					create l_prc.make
-					l_prc.enter_debug_mode
-					terminate_sub_tree (id, False)
-					l_prc.leave_debug_mode
-					if last_termination_successful or else not abort_termination_when_failed then
-						child_process.kill
-						last_termination_successful := True
-						force_terminated := True
-					end
+			if
+				not retried and then
+				not has_exited
+			then
+				create l_prc.make
+				l_prc.enter_debug_mode
+				terminate_sub_tree (id, False)
+				l_prc.leave_debug_mode
+				if last_termination_successful or else not abort_termination_when_failed then
+					child_process.kill
+					last_termination_successful := True
+					force_terminated := True
 				end
 			end
 		rescue
@@ -202,6 +203,76 @@ feature -- Interprocess data transmission
 			retry
 		end
 
+	read_output_to_special (buffer: SPECIAL [NATURAL_8])
+			-- <Precursor>
+		local
+			number_of_bytes_read: INTEGER_32
+			retried: BOOLEAN
+		do
+			if retried then
+				has_output_stream_error := True
+					-- Update `buffer.count` with actual bytes read.
+				buffer.keep_head (number_of_bytes_read)
+			else
+				has_output_stream_error := False
+				if
+					attached child_process.standard_output as r and then
+					attached r.base_stream as s
+				then
+					number_of_bytes_read := s.read (buffer.native_array, 0, buffer.count)
+					if number_of_bytes_read > 0 then
+							-- Update `buffer.count` with actual bytes read.
+						buffer.keep_head (number_of_bytes_read)
+					elseif number_of_bytes_read = 0 then
+						has_output_stream_closed := True
+							-- Update `buffer.count` with actual bytes read.
+						buffer.wipe_out
+						check
+							buffer_is_empty: buffer.count = 0
+						end
+					end
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	read_error_to_special (buffer: SPECIAL [NATURAL_8])
+			-- <Precursor>
+		local
+			number_of_bytes_read: INTEGER_32
+			retried: BOOLEAN
+		do
+			if retried then
+				has_error_stream_error := True
+					-- Update `buffer.count` with actual bytes read.
+				buffer.keep_head (number_of_bytes_read)
+			else
+				has_error_stream_error := False
+				if
+					attached child_process.standard_error as r and then
+					attached r.base_stream as s
+				then
+					number_of_bytes_read := s.read (buffer.native_array, 0, buffer.count)
+					if number_of_bytes_read > 0 then
+							-- Update `buffer.count` with actual bytes read.
+						buffer.keep_head (number_of_bytes_read)
+					elseif number_of_bytes_read = 0 then
+						has_error_stream_closed := True
+							-- Update `buffer.count` with actual bytes read.
+						buffer.wipe_out
+						check
+							buffer_is_empty: buffer.count = 0
+						end
+					end
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 feature -- Status report
 
 	exit_code: INTEGER
@@ -262,22 +333,18 @@ feature {NONE} -- Implementation
 			if l_environ_tbl /= Void and then not l_environ_tbl.is_empty and then attached Result.environment_variables as l_environ_dic then
 				-- Clear previous environment table to replace with new one.
 				l_environ_dic.clear
-
-				from
-					l_environ_tbl.start
-				until
-					l_environ_tbl.after
+				across
+					l_environ_tbl as e
 				loop
-					if l_environ_tbl.key_for_iteration /= Void and then l_environ_tbl.item_for_iteration /= Void then
-						l_key := l_environ_tbl.key_for_iteration.to_cil
-						l_value := l_environ_tbl.item_for_iteration.to_cil
+					if attached e.key as k and then attached e.item as i then
+						l_key := k.to_cil
+						l_value := i.to_cil
 						if l_environ_dic.contains_key (l_key) then
 								-- Remove previous variable for key `l_key', in case we have duplication
 							l_environ_dic.remove (l_key)
 						end
 						l_environ_dic.add (l_key, l_value)
 					end
-					l_environ_tbl.forth
 				end
 			end
 		end
@@ -361,14 +428,15 @@ feature {NONE} -- Termination
 					end
 				end
 			end
-			if l_success or else not abort_termination_when_failed then
-				if is_self then
-					l_prc := process_by_id (pid)
-					if l_prc /= Void then
-						try_terminate_process (l_prc)
-					else
-						last_termination_successful := True
-					end
+			if
+				(l_success or else not abort_termination_when_failed) and then
+				is_self
+			then
+				l_prc := process_by_id (pid)
+				if l_prc /= Void then
+					try_terminate_process (l_prc)
+				else
+					last_termination_successful := True
 				end
 			end
 		end
@@ -389,21 +457,15 @@ feature {NONE} -- Termination
 
 	direct_subprocess_list (parent_id: INTEGER): LIST [INTEGER]
 			-- List of direct subprocess ids of process indicated by id `parent_id'.
-		local
-			p_tbl: like process_id_pair_list
 		do
 			create {LINKED_LIST [INTEGER]}Result.make
-			p_tbl := process_id_pair_list
-			if p_tbl /= Void then
-				from
-					p_tbl.start
-				until
-					p_tbl.after
+			if attached process_id_pair_list as p_tbl then
+				across
+					p_tbl as p
 				loop
-					if p_tbl.item.parent_id = parent_id then
-						Result.extend (p_tbl.item.pid)
+					if p.item.parent_id = parent_id then
+						Result.extend (p.item.pid)
 					end
-					p_tbl.forth
 				end
 			end
 		ensure
@@ -439,13 +501,10 @@ feature {NONE} -- Termination
 					i := i + 1
 				end
 					-- Find out parent process id for each process in `l_prc_name_id_tbl'.
-				from
-					l_prc_name_id_tbl.start
-				until
-					l_prc_name_id_tbl.after
+				across
+					l_prc_name_id_tbl as p
 				loop
-					Result.extend ([parent_process_id (l_prc_name_id_tbl.key_for_iteration), l_prc_name_id_tbl.item_for_iteration])
-					l_prc_name_id_tbl.forth
+					Result.extend ([parent_process_id (p.key), p.item])
 				end
 			end
 		end
@@ -461,7 +520,7 @@ feature {NONE} -- Termination
 			Result := l_performance_counter.raw_value.as_integer_32
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Access
 
 	child_process: SYSTEM_DLL_PROCESS
 			-- Child process.
@@ -482,7 +541,7 @@ feature {NONE} -- Implementation
 			-- Argument list of `executable'
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

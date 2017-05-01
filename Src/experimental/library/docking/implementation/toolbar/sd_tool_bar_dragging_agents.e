@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Agents for SD_TOOL_BAR_ZONE dragging issues."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,12 +16,13 @@ create
 
 feature {NONE}  -- Initlization
 
-	make
+	make (a_docking_manager: SD_DOCKING_MANAGER; a_tool_bar_zone: SD_TOOL_BAR_ZONE)
 			-- Creation method
 		do
+			zone := a_tool_bar_zone
+			set_docking_manager (a_docking_manager)
 			default_create
 			create internal_shared
-
 			init_actions
 		end
 
@@ -30,20 +31,8 @@ feature {NONE}  -- Initlization
 		do
 			on_pointer_motion_agent := agent on_pointer_motion
 			on_pointer_release_agent := agent on_pointer_release
-		end
-
-feature -- Command
-
-	set_tool_bar_zone (a_tool_bar_zone: SD_TOOL_BAR_ZONE)
-			-- Set `zone' with `a_tool_bar_zone'
-		require
-			not_void: a_tool_bar_zone /= Void
-		do
-			internal_zone := a_tool_bar_zone
 			zone.tool_bar.pointer_motion_actions.extend (on_pointer_motion_agent)
 			zone.tool_bar.pointer_button_release_actions.extend (on_pointer_release_agent)
-		ensure
-			set: zone = a_tool_bar_zone
 		end
 
 feature -- Agent
@@ -64,7 +53,7 @@ feature -- Agent
 			end
 		ensure
 			pointer_press_set: not is_destroyed implies
-								(a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) implies internal_pointer_pressed = True)
+								(a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) implies internal_pointer_pressed)
 			docker_mediaot_void: not is_destroyed implies
 								(a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) implies internal_docker_mediator = Void)
 		end
@@ -83,7 +72,7 @@ feature -- Agent
 			end
 		ensure
 			pointer_press_set: not is_destroyed implies
-								(a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) implies internal_pointer_pressed = False)
+								(a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) implies not internal_pointer_pressed)
 			docker_mediator_void: not is_destroyed implies
 								(a_button = {EV_POINTER_CONSTANTS}.left and is_in_drag_area (a_screen_x, a_screen_y) implies internal_docker_mediator = Void)
 		end
@@ -118,9 +107,9 @@ feature -- Agent
 						internal_docker_mediator := l_mediator
 						l_mediator.start_drag (a_screen_x, a_screen_y)
 
-						if zone.is_floating then
-							l_offset_x := a_screen_x - zone.attached_floating_tool_bar.screen_x
-							l_offset_y := a_screen_y - zone.attached_floating_tool_bar.screen_y
+						if attached zone.floating_tool_bar as b then
+							l_offset_x := a_screen_x - b.screen_x
+							l_offset_y := a_screen_y - b.screen_y
 						else
 							l_offset_x := a_screen_x - zone.tool_bar.screen_x
 							l_offset_y := a_screen_y - zone.tool_bar.screen_y
@@ -165,8 +154,8 @@ feature -- Query
 			l_in_docking_gripper_area, l_in_floating_tool_bar: BOOLEAN
 		do
 			l_in_docking_gripper_area := zone.drag_area_rectangle.has_x_y (a_screen_x - zone.tool_bar.screen_x, a_screen_y - zone.tool_bar.screen_y)
-			if zone.is_floating then
-				l_in_floating_tool_bar := zone.attached_floating_tool_bar.internal_title_bar.drag_rectangle.has_x_y (a_screen_x, a_screen_y)
+			if attached zone.floating_tool_bar as b then
+				l_in_floating_tool_bar := b.internal_title_bar.drag_rectangle.has_x_y (a_screen_x, a_screen_y)
 			end
 			debug ("docking")
 				print ("%N SD_TOOL_BAR_DRAGGING_AGENTS is_in_drag_area: l_in_docking_gripper_area " + l_in_docking_gripper_area.out + "; l_in_floating_tool_bar " + l_in_floating_tool_bar.out)
@@ -194,8 +183,6 @@ feature {NONE} -- Implementation functions
 
 	on_cancel
 			-- Handle user cancel dragging events
-		local
-			l_pixmaps: EV_STOCK_PIXMAPS
 		do
 			if not is_destroyed then
 				zone.tool_bar.disable_capture
@@ -203,8 +190,7 @@ feature {NONE} -- Implementation functions
 				internal_pointer_pressed := False
 				internal_docker_mediator := Void
 				internal_shared.set_tool_bar_docker_mediator (Void)
-				create l_pixmaps
-				zone.tool_bar.set_pointer_style (l_pixmaps.standard_cursor)
+				zone.tool_bar.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
 			end
 		ensure
 			disable_capture: not is_destroyed implies not zone.tool_bar.has_capture
@@ -256,22 +242,8 @@ feature {NONE} -- Implementation attributes
 	internal_shared: SD_SHARED
 			-- All singletons
 
-	zone: attached like internal_zone
-			-- Attached `internal_zone'
-		require
-			set: internal_zone /= Void
-		local
-			l_result: like internal_zone
-		do
-			l_result := internal_zone
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
-	internal_zone: detachable SD_TOOL_BAR_ZONE
-			-- Tool bar zone current belong to	
+	zone: SD_TOOL_BAR_ZONE
+			-- Tool bar zone current belong to.
 
 	internal_docker_mediator: detachable SD_TOOL_BAR_DOCKER_MEDIATOR
 			-- Docker mediator
@@ -288,14 +260,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

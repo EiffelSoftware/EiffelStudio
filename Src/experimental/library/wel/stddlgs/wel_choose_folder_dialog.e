@@ -56,7 +56,7 @@ feature -- Access
 			-- Selected folder name
 			-- Empty if no folder was selected.
 		obsolete
-			"Use `folder_path' instead."
+			"Use `folder_path' instead [2017-05-31]."
 		do
 			Result := str_folder_name.string
 		end
@@ -76,7 +76,7 @@ feature -- Access
 			-- Display name of selected folder
 			-- Empty if no folder was selected.
 		obsolete
-			"Use `folder_path' instead."
+			"Use `folder_path' instead [2017-05-31]."
 		do
 			Result := folder_name
 		end
@@ -90,7 +90,7 @@ feature -- Access
 	starting_folder: STRING_32
 			-- Initial folder name
 		obsolete
-			"Use `starting_path' instead."
+			"Use `starting_path' instead [2017-05-31]."
 		do
 			Result := starting_path.name
 		end
@@ -143,7 +143,7 @@ feature -- Element Change
 	set_starting_folder (a_folder_name: READABLE_STRING_GENERAL)
 			-- Set the initial folder name
 		obsolete
-			"Use `set_starting_path' instead."
+			"Use `set_starting_path' instead [2017-05-31]."
 		require
 			valid_folder_name: a_folder_name /= Void and then not a_folder_name.is_empty
 		do
@@ -320,7 +320,7 @@ feature {NONE} -- External
 			end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

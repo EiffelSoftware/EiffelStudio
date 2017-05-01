@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Cocoa SD_TOOL_BAR_DRAWER implementation."
 	author: "Daniel Furrer"
 	date: "$Date$"
@@ -168,7 +168,6 @@ feature {NONE} -- Implementation
 		local
 			l_text_vision_rect: EV_RECTANGLE
 			l_string: NS_ATTRIBUTED_STRING
-			l_rect: NS_RECT
 		do
 			if
 				attached {SD_TOOL_BAR_BUTTON} a_arguments.item as l_button and then attached l_button.text as l_text  and then l_button.tool_bar /= Void and then
@@ -178,7 +177,7 @@ feature {NONE} -- Implementation
 				--da.draw_text_top_left (l_text_vision_rect.x, l_text_vision_rect.y, l_button.text)
 
 				create l_string.make_with_string (create {NS_STRING}.make_with_string(l_text))
-				l_rect := l_button_cell.draw_title (l_string, create {NS_RECT}.make_rect (l_text_vision_rect.x, l_text_vision_rect.y, l_text_vision_rect.width, l_text_vision_rect.height), l_view)
+				l_button_cell.draw_title (l_string, create {NS_RECT}.make_rect (l_text_vision_rect.x, l_text_vision_rect.y, l_text_vision_rect.width, l_text_vision_rect.height), l_view).do_nothing
 			end
 		end
 
@@ -199,7 +198,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -208,4 +207,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

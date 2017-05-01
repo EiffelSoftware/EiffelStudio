@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tool bar separator for SD_TOOL_BAR_SEPARATOR."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ feature {NONE} -- Initlization
 			is_sensitive_internal := True
 			is_displayed := True
 			description := l_shared.interface_names.separator
-			name := generating_type
+			name := generating_type.name_32
 			pixmap := l_shared.icons.tool_bar_separator_icon
 		end
 
@@ -104,7 +104,7 @@ feature {SD_TOOL_BAR} -- Pick and drop issues.
 		end
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -113,6 +113,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

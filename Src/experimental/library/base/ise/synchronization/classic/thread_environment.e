@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Information about the current thread execution"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,13 +21,13 @@ feature -- Access
 	get_current_id: POINTER
 			-- Returns a pointer to the thread-id of the thread.
 		obsolete
-			"Use `current_thread_id' instead."
+			"Use `current_thread_id' instead. [2017-05-31]"
 		do
 			Result := current_thread_id
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

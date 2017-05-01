@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A content which has client programmer's widgets managed by docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,13 +21,52 @@ inherit
 			set_docking_manager
 		end
 
+	DEBUG_OUTPUT
+
 create
-	make_with_widget_title_pixmap,
-	make_with_widget
+	make_with_widget,
+	make_with_widget_title_pixmap
+
+create {SD_DOCKING_MANAGER_ZONES}
+	make_placeholder_with_original_widget
 
 feature {NONE} -- Initialization
 
-	make_with_widget_title_pixmap (a_widget: EV_WIDGET; a_pixmap: EV_PIXMAP; a_unique_title: READABLE_STRING_GENERAL)
+	make_tool_with_original_widget_title_pixmap (a_widget: EV_WIDGET; a_pixmap: EV_PIXMAP; a_unique_title: READABLE_STRING_32; a_docking_manager: SD_DOCKING_MANAGER)
+			-- Creation method
+			-- `a_widget' is the main widget displayed in Current, without size adjusted for docking.
+			-- `a_pixmap' is the icon displayed in auto hide tab, notebook tab
+			-- `a_unique_title' is the unique title for Current
+		require
+			a_widget_not_void: a_widget /= Void
+			a_pixmap_not_void: a_pixmap /= Void
+			a_unique_title_not_void: a_unique_title /= Void
+		do
+			docking_manager := a_docking_manager
+			create internal_shared
+
+			internal_user_widget := a_widget
+			internal_unique_title := a_unique_title
+			pixmap := a_pixmap
+
+			internal_type := {SD_ENUMERATION}.tool
+
+			long_title := {STRING_32} ""
+			short_title := {STRING_32} ""
+			is_visible := False
+
+			create {SD_STATE_VOID} internal_state.make (Current, a_docking_manager)
+		ensure
+			a_widget_set: a_widget = internal_user_widget
+			a_title_set: internal_unique_title /= Void
+			a_pixmap_set: a_pixmap = pixmap
+			state_not_void: is_state_set
+			a_unique_title_set: internal_unique_title = a_unique_title
+			long_title_not_void: long_title /= Void
+			short_title_not_void: short_title /= Void
+		end
+
+	make_with_widget_title_pixmap (a_widget: EV_WIDGET; a_pixmap: EV_PIXMAP; a_unique_title: READABLE_STRING_32; a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method
 			-- `a_widget' is the main widget displayed in Current
 			-- `a_pixmap' is the icon displayed in auto hide tab, notebook tab
@@ -36,47 +75,46 @@ feature {NONE} -- Initialization
 			a_widget_not_void: a_widget /= Void
 			a_pixmap_not_void: a_pixmap /= Void
 			a_unique_title_not_void: a_unique_title /= Void
-		local
-			l_state: SD_STATE_VOID
 		do
-			create internal_shared
-
-			internal_user_widget := a_widget
-			user_widget.set_minimum_size (0, 0)
-			internal_unique_title := a_unique_title.as_string_32
-			internal_pixmap := a_pixmap
-
-			create l_state.make
-			internal_state := l_state
-			internal_type := {SD_ENUMERATION}.tool
-
-			long_title := ""
-			short_title := ""
-			is_visible := False
-
-			l_state.set_content (Current)
+			make_tool_with_original_widget_title_pixmap (a_widget, a_pixmap, a_unique_title, a_docking_manager)
+			a_widget.set_minimum_size (0, 0)
 		ensure
-			a_widget_set: a_widget = internal_user_widget
+			a_widget_set: a_widget = user_widget
 			a_title_set: internal_unique_title /= Void
-			a_pixmap_set: a_pixmap = internal_pixmap
+			a_pixmap_set: a_pixmap = pixmap
 			state_not_void: is_state_set
-			a_unique_title_set: internal_unique_title.same_string_general (a_unique_title)
+			a_unique_title_set: internal_unique_title = a_unique_title
 			long_title_not_void: long_title /= Void
 			short_title_not_void: short_title /= Void
 		end
 
-	make_with_widget (a_widget: EV_WIDGET; a_unique_title: READABLE_STRING_GENERAL)
+	make_with_widget (a_widget: EV_WIDGET; a_unique_title: READABLE_STRING_32; a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method
 			-- `a_widget' is the main widget displayed in Current
 			-- `a_unique_title' is the unique title for Current	
 		require
 			a_widget_not_void: a_widget /= Void
-		local
-			l_stock: EV_STOCK_PIXMAPS
+		-- local
+			-- TODO: l_stock: EV_STOCK_PIXMAPS
 		do
 			create internal_shared
-			create l_stock
-			make_with_widget_title_pixmap (a_widget, l_stock.default_window_icon, a_unique_title)
+			-- TODO: create l_stock
+			make_tool_with_original_widget_title_pixmap (a_widget,
+			create {EV_PIXMAP},
+			--TODO			l_stock.default_window_icon,
+			a_unique_title, a_docking_manager)
+		ensure
+			internal_type = {SD_ENUMERATION}.tool
+		end
+
+	make_placeholder_with_original_widget (a_widget: EV_WIDGET; a_unique_title: READABLE_STRING_32; a_docking_manager: SD_DOCKING_MANAGER)
+		require
+			a_widget_not_void: a_widget /= Void
+		do
+			make_with_widget (a_widget, a_unique_title, a_docking_manager)
+			internal_type := {SD_ENUMERATION}.place_holder
+		ensure
+			internal_type = {SD_ENUMERATION}.place_holder
 		end
 
 feature -- Access
@@ -101,7 +139,7 @@ feature -- Access
 			result_valid: Result = internal_user_widget
 		end
 
-	unique_title: like internal_unique_title
+	unique_title: READABLE_STRING_32
 			-- Client programmer's widget's unique_title
 			-- Using for save/open docking layouts, normally it should not be changed after set
 		do
@@ -118,14 +156,9 @@ feature -- Access
 			-- Client programmer's widget's short title
 			-- The short title is used in all tabs where are not enough spaces
 
-	pixmap: like internal_pixmap
-			-- Client programmer's widget's pixmap
-			-- The icon showing on content notebook tab and auto hide tab if Gdi+ not available on Windows
-		do
-			Result := internal_pixmap
-		ensure
-			result_valid: Result = internal_pixmap
-		end
+	pixmap: EV_PIXMAP
+			-- Client programmer's widget's pixmap.
+			-- The icon showing on content notebook tab and auto hide tab if Gdi+ not available on Windows.
 
 	description: detachable STRING_32
 			-- When show zone navigation dialog (by `ctrl+tab'), we use this description string if exists
@@ -195,7 +228,7 @@ feature -- Access
 					l_contents.after or not Result
 				loop
 					if l_contents.item /= Current then
-						if l_contents.item.unique_title.as_string_32.is_equal (l_title32) then
+						if l_contents.item.unique_title.is_equal (l_title32) then
 							Result := False
 						end
 					end
@@ -229,6 +262,26 @@ feature -- Access
 			Result := state.value
 		ensure
 			valid: (create {SD_ENUMERATION}).is_state_valid (Result)
+		end
+
+feature -- Status report
+
+	debug_output: STRING_32
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			create Result.make_empty
+			if type = {SD_ENUMERATION}.editor then
+				Result.append_string_general ("Editor")
+			elseif type = {SD_ENUMERATION}.tool then
+				Result.append_string_general ("Tool")
+			elseif type = {SD_ENUMERATION}.place_holder then
+				Result.append_string_general ("Place")
+			else
+			 	Result.append_string_general ("Content?")
+			 	Result.append_integer (type)
+			end
+			Result.append_string_general (" #")
+			Result.append (internal_unique_title)
 		end
 
 feature -- Settings
@@ -267,15 +320,15 @@ feature -- Settings
 			set: unique_title.same_string_general (a_unique_title)
 		end
 
-	set_pixmap (a_pixmap: like internal_pixmap)
+	set_pixmap (a_pixmap: like pixmap)
 			-- Set the pixmap which shown on auto hide tab stub or notebook tab
 		require
 			a_pixmap_not_void: a_pixmap /= Void
 		do
-			internal_pixmap := a_pixmap
+			pixmap := a_pixmap
 			state.change_pixmap (a_pixmap, Current)
 		ensure
-			a_pixmap_set: a_pixmap = internal_pixmap
+			a_pixmap_set: a_pixmap = pixmap
 		end
 
 	set_description (a_description: like description)
@@ -319,7 +372,7 @@ feature -- Settings
 			a_buffer_set: a_buffer = internal_pixel_buffer
 		end
 
-	set_mini_toolbar (a_bar: like internal_mini_toolbar)
+	set_mini_toolbar (a_bar: attached like internal_mini_toolbar)
 			-- Set mini toolbar with `a_bar'
 		require
 			a_bar_not_void: a_bar /= Void
@@ -650,13 +703,9 @@ feature -- Command
 			state.close
 			if is_docking_manager_attached then
 				internal_clear_docking_manager_property
-
 				docking_manager.contents.start
 				docking_manager.contents.prune (Current)
-				internal_docking_manager := Void
 			end
-		ensure
-			detached: not is_docking_manager_attached
 		end
 
 	hide
@@ -696,13 +745,9 @@ feature -- Command
 		require
 			not_destroyed: not is_destroyed
 			docking_manager_attached: is_docking_manager_attached
-		local
-			l_zone: detachable SD_ZONE
 		do
-			if state.is_zone_attached then
-				l_zone := state.zone
-				check l_zone /= Void end -- Implied by `is_zone_attached'
-				l_zone.update_mini_tool_bar_size
+			if attached state.zone as z then
+				z.update_mini_tool_bar_size
 			end
 		end
 
@@ -771,13 +816,9 @@ feature -- States report
 
 	target_content_shown (a_target_content: SD_CONTENT): BOOLEAN
 			-- If `a_target_content' shown ?
-		local
-			l_zone: detachable SD_ZONE
 		do
-			if a_target_content.state.is_zone_attached then
-				l_zone := a_target_content.state.zone
-				check l_zone /= Void end -- Implied by `is_zone_attached'
-				if attached {EV_WIDGET} l_zone as lt_widget then
+			if attached a_target_content.state.zone as z then
+				if attached {EV_WIDGET} z as lt_widget then
 					Result := lt_widget.parent /= Void
 				else
 					check not_possible: False end
@@ -787,13 +828,9 @@ feature -- States report
 
 	target_content_zone_parent_exist (a_target_content: SD_CONTENT): BOOLEAN
 			-- Is `a_target_content''s zone parent not void and exists ?
-		local
-			l_zone: detachable SD_ZONE
 		do
-			if a_target_content.state.is_zone_attached then
-				l_zone := a_target_content.state.zone
-				check l_zone /= Void end -- Implied by `is_zone_attached
-				if attached {EV_WIDGET} l_zone as lt_widget then
+			if attached a_target_content.state.zone as z then
+				if attached {EV_WIDGET} z as lt_widget then
 					Result := lt_widget.parent /= Void
 				else
 					check not_possible: False end
@@ -826,7 +863,7 @@ feature -- States report
 
 feature {SD_ACCESS} -- State
 
-	state: SD_STATE
+	state: SD_STATE_WITH_CONTENT
 			-- Current docking state
 		require
 			set: is_state_set
@@ -869,7 +906,7 @@ feature {SD_STATE} -- implementation
 
 feature {SD_STATE, SD_DOCKING_MANAGER, SD_TAB_STATE_ASSISTANT, SD_OPEN_CONFIG_MEDIATOR} -- Change the SD_STATE base on the states
 
-	change_state (a_state: SD_STATE)
+	change_state (a_state: SD_STATE_WITH_CONTENT)
 			-- Change current docking state object
 			-- State pattern
 		require
@@ -890,8 +927,8 @@ feature {SD_STATE, SD_OPEN_CONFIG_MEDIATOR}
 			if is_user_widget_set and then not user_widget.is_displayed then
 				user_widget.show
 			end
-			if state.is_zone_attached then
-				if attached {EV_WIDGET} state.zone as lt_widget then
+			if attached state.zone as z then
+				if attached {EV_WIDGET} z as lt_widget then
 					if not lt_widget.is_destroyed and then not lt_widget.is_displayed then
 						lt_widget.show
 					end
@@ -916,11 +953,8 @@ feature {NONE}  -- Implementation
 	internal_user_widget: detachable like user_widget
 			-- Client programmer's main widget managed by Current
 
-	internal_unique_title: STRING_32
+	internal_unique_title: READABLE_STRING_32
 			-- internal_user_widget's internal_unique_title
-
-	internal_pixmap: EV_PIXMAP
-			-- internal_pixmap at auto hide tab stub or notebook tab
 
 	internal_pixel_buffer: detachable EV_PIXEL_BUFFER
 			-- The pixel buffer at auto hide tab stub or notebook tab
@@ -968,7 +1002,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,10 +1,9 @@
-note
+﻿note
 
 	description:
 		"Constructs whose specimens are sequences of specimens %
 		%of a specified base construct, delimited by a specified separator"
 	legal: "See notice at end of class.";
-
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -80,19 +79,16 @@ feature {NONE} -- Implementation
 	separator_code: INTEGER
 			-- Code of the keyword-separator; -1 if none
 			-- (according to lexical code)
-		local
-			separator_not_keyword: EXCEPTIONS
 		do
 			if separator /= Void then
 				Result := document.keyword_code (separator);
 				if Result = -1 then
-					create separator_not_keyword;
-					separator_not_keyword.raise( "separator_not_keyword" );
+					;(create {EXCEPTIONS}).raise( "separator_not_keyword" )
 				end
 			else
 				Result := -1
 			end
-		end;
+		end
 
 	commit_on_separator : BOOLEAN
 			-- Is one element of the sequence and a separator enough to
@@ -245,7 +241,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -255,8 +251,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class REPETITION
-
+end

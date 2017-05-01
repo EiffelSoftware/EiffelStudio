@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 				Iterator on DIRECTORY
 				
@@ -31,41 +31,42 @@ feature -- Visitor
 			l_dirs: ARRAYED_LIST [PATH]
 		do
 			create d.make_with_path (dn)
-			if d.is_readable then
-				if attached d.entries as l_entries then
-					create l_dirs.make (l_entries.count)
-					across
-						l_entries as c
-					loop
-						p := c.item
-						if not path_excluded (p) then
-							if not directory_excluded (p) then
-								fp := d.path.extended_path (p)
-								if u.directory_path_exists (fp) then
-									l_dirs.force (p)
-								end
+			if
+				d.is_readable and then
+				attached d.entries as l_entries
+			then
+				create l_dirs.make (l_entries.count)
+				across
+					l_entries as c
+				loop
+					p := c.item
+					if not path_excluded (p) then
+						if not directory_excluded (p) then
+							fp := d.path.extended_path (p)
+							if u.directory_path_exists (fp) then
+								l_dirs.force (p)
 							end
-							if not file_excluded (p) then
-								fp := d.path.extended_path (p)
-								if u.file_path_exists (fp) then
-									process_file (fp)
-								end
+						end
+						if not file_excluded (p) then
+							fp := d.path.extended_path (p)
+							if u.file_path_exists (fp) then
+								process_file (fp)
 							end
 						end
 					end
+				end
 
-					across
-						l_dirs as c
-					loop
-						check not_excluded: not directory_excluded (c.item) end
-						process_directory (d.path.extended_path (c.item))
-					end
+				across
+					l_dirs as c
+				loop
+					check not_excluded: not directory_excluded (c.item) end
+					process_directory (d.path.extended_path (c.item))
 				end
 			end
 		end
 
 	process_file (fn: PATH)
-			-- Visit file `fn'
+			-- Visit file `fn'.
 		do
 		end
 
@@ -99,7 +100,7 @@ feature -- Status
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

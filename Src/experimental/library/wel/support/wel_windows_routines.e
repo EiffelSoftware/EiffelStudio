@@ -174,7 +174,7 @@ feature -- Status report
 		end
 
 	key_state (virtual_key: INTEGER): BOOLEAN
-		obsolete "Use key_down or key_locked instead"
+		obsolete "Use key_down or key_locked instead [2017-05-31]."
 		do
 		end
 
@@ -332,7 +332,7 @@ feature {NONE} -- Externals
 
 	cwin_get_key_state (virtual_key: INTEGER): BOOLEAN
 			-- SDK GetKeyState
-		obsolete "Use cwel_key_down or cwel_key_locked"
+		obsolete "Use cwel_key_down or cwel_key_locked [2017-05-31]."
 		do
 		end
 
@@ -471,7 +471,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -75,7 +75,7 @@ feature -- Access
 	default_start_directory: STRING_32
 			-- Default start directory for browsing dialog.
 		obsolete
-			"Use `default_start_path' instead."
+			"Use `default_start_path' instead. [2012-11-17]"
 		do
 			create Result.make_from_string (default_start_path.name)
 		end
@@ -88,7 +88,7 @@ feature -- Status
 	text, path: STRING_32
 			-- Current path set by user.
 		obsolete
-			"Use `file_path.name' instead."
+			"Use `file_path.name' instead. [2012-11-17]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -122,7 +122,7 @@ feature -- Settings
 	set_text, set_path (p: READABLE_STRING_GENERAL)
 			-- Assign `p' to `path'.
 		obsolete
-			"Use `set_file_path' instead."
+			"Use `set_file_path' instead. [2012-11-17]"
 		require
 			not_destroyed: not is_destroyed
 			p_not_void: p /= Void
@@ -154,7 +154,7 @@ feature -- Settings
 	set_browse_for_file (filter: READABLE_STRING_GENERAL)
 			-- Force file browsing dialog to appear when user
 			-- click on `browse_button'.
-		obsolete "Please use `set_browse_for_open_file' or `set_browse_for_save_file' ."
+		obsolete "Please use `set_browse_for_open_file' or `set_browse_for_save_file'. [2012-11-17]"
 		do
 			set_browse_for_open_file (filter)
 		end
@@ -198,7 +198,7 @@ feature -- Settings
 	set_default_start_directory (t: STRING_32)
 			-- Set Default start directory for browsing dialog
 		obsolete
-			"Use `set_default_start_path' instead."
+			"Use `set_default_start_path' instead. [2012-11-17]"
 		do
 			create default_start_path.make_from_string (t)
 		end
@@ -372,7 +372,7 @@ invariant
 	browse_button_not_void: browse_button /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

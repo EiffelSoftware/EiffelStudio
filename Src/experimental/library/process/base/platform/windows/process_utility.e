@@ -1,8 +1,7 @@
-note
-	description: "Process utilities to go through all processes running on current system"
+﻿note
+	description: "Process utilities to go through all processes running on current system."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -36,7 +35,7 @@ feature -- Access
 					from
 						cwin_process32_first (toolhelp_handle, ptr, $entry, $succ)
 					until
-						succ = False
+						not succ
 					loop
 						cwin_get_process_id_and_parent_id (entry, $pid1, $pid2)
 						Result.extend ([pid2, pid1])
@@ -347,7 +346,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -103,7 +103,8 @@ inherit
 			text_substring as wel_text_substring,
 			has_capture as wel_has_capture,
 			text_length as wel_text_length,
-			list_shown as is_list_shown
+			list_shown as is_list_shown,
+			set_text as wel_set_text
 		export
 			{EV_INTERNAL_COMBO_FIELD_IMP} edit_item
 			{EV_INTERNAL_COMBO_BOX_IMP} combo_item
@@ -161,7 +162,7 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			assign_interface (an_interface)
@@ -450,6 +451,14 @@ feature -- Basic operation
 		do
 			create wel_str.make (txt)
 			{WEL_API}.send_message (edit_item, Em_replacesel, to_wparam (0), wel_str.item)
+		end
+
+feature -- Element change
+
+	set_text (a_text: READABLE_STRING_GENERAL)
+			-- <Precursor>
+		do
+			wel_set_text (a_text)
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Pixmap handling
@@ -1149,7 +1158,7 @@ invariant
 	text_field_not_void: text_field /= Void implies is_editable
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

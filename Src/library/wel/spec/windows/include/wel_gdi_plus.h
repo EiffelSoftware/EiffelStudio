@@ -25,6 +25,7 @@ extern "C" {
 #define _GDIPLUS_H
 
 #include "wel.h"
+#include <ole2.h>
 
 typedef void GpBitmap;
 typedef void GpMetafile;

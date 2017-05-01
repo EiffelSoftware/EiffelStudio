@@ -2,7 +2,6 @@
 #define __PE_WRITER_H_
 
 #include "eif_eiffel.h"
-#include <windows.h>
 
 #ifdef __cplusplus
 extern "C" {

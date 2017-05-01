@@ -51,8 +51,6 @@
 #include "request.h"	/* for typedef struct{...} Request */
 
 #ifdef EIF_WINDOWS
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
 #include "uu.h"
 #endif
 

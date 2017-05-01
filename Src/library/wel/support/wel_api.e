@@ -695,7 +695,7 @@ feature -- Printing
 			-- The GetDefaultPrinter function retrieves the printer name
 			-- of the default printer for the current user on the local computer.
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"[
 				EIF_BOOLEAN result = EIF_TEST(GetDefaultPrinter((LPTSTR) $a_name, (LPDWORD) $a_name_length));
@@ -788,7 +788,7 @@ feature -- API
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

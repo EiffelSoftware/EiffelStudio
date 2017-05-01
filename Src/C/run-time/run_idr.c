@@ -66,6 +66,8 @@ doc:<file name="run_idr.c" header="rt_run_idr.h" version="$Id$" summary="IDR = I
 #include "rt_run_idr.h"
 #ifdef EIF_OS2
 #include <io.h>
+#elif defined(EIF_WINDOWS)
+#include <winsock2.h>
 #endif
 #include "eif_size.h"	/* Needed for R64SIZ */
 #include "rt_malloc.h"

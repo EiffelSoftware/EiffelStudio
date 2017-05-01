@@ -9,7 +9,7 @@ class
 	VS_CONFIG
 
 inherit
-	MSCL_CONFIG
+	MSC_REG_CONFIG
 
 create
 	make
@@ -41,7 +41,7 @@ feature {NONE} -- Access
 			-- Key value name for install location
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

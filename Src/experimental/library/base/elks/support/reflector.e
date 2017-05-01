@@ -84,7 +84,7 @@ feature -- Creation
 			Result := c_new_instance_of (type_id)
 		ensure
 			not_special_type: not attached {SPECIAL [detachable ANY]} Result
-			dynamic_type_set: Result.generating_type.type_id = type_id
+			dynamic_type_set: attached_type (Result.generating_type.type_id) = attached_type (type_id)
 		end
 
 	new_special_any_instance (type_id, count: INTEGER): SPECIAL [detachable ANY]

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "When Docking Manager is locked, use this one instead of SD_DOCKER_MANAGER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,6 +31,7 @@ feature {NONE} -- Initlization
 			docking_manager := a_docking_manager
 			create cancel_actions
 			create internal_shared
+			create hot_zones
 		end
 
 feature -- Hanlde pointer events
@@ -110,7 +111,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

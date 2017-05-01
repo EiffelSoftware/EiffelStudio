@@ -104,7 +104,7 @@ feature -- Basic operations
 
 feature -- Obsolete
 
-	new_frame obsolete "Use ``end_page''"
+	new_frame obsolete "Use `end_page' [2017-05-31]"
 		require
 			exists: exists
 		do

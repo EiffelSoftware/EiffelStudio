@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-					A tool bar container that is a row when at top/bottom or column at
-					left/right tool bar area. It contain SD_TOOL_BAR_ZONE.
-																						]"
+		A tool bar container that is a row when at top/bottom or column at
+		left/right tool bar area. It contain SD_TOOL_BAR_ZONE.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -26,6 +26,7 @@ inherit
 			{SD_TOOL_BAR_ZONE, SD_GENERIC_TOOL_BAR} set_item_size, width, screen_x
 			{SD_TOOL_BAR_HOT_ZONE, SD_TOOL_BAR_CONTENT} destroy
 		redefine
+			create_implementation,
 			destroy
 		end
 
@@ -49,22 +50,28 @@ create
 feature {NONE} -- Initialization
 
 	make (a_manager: SD_DOCKING_MANAGER; a_vertical: BOOLEAN)
-			-- Creation method
+			-- Creation method.
 		require
 			not_void: a_manager /= Void
 		do
 			create internal_shared
 			create internal_zones.make (10)
-			create internal_positioner.make
 
 			is_vertical := a_vertical
 			set_docking_manager (a_manager)
 
 			default_create
-			internal_positioner.set_tool_bar_row (Current)
 		ensure
 			set: docking_manager = a_manager
 			set: is_vertical = a_vertical
+		end
+
+	create_implementation
+			-- <Precursor>
+		do
+			Precursor
+			create internal_positioner.make (Current)
+			internal_positioner.set_mediator
 		end
 
 feature -- Command
@@ -118,10 +125,8 @@ feature -- Command
 
 	prune (a_zone: SD_TOOL_BAR_ZONE)
 			-- <Precursor>
-		local
-			l_result: INTEGER
 		do
-			l_result := a_zone.assistant.expand_size (a_zone.maximize_size)
+			a_zone.assistant.expand_size (a_zone.maximize_size).do_nothing
 			if attached {EV_WIDGET} a_zone.tool_bar as lt_widget then
 				prune_fixed (lt_widget)
 			else
@@ -139,15 +144,12 @@ feature -- Command
 
 	on_pointer_motion (a_screen_position: INTEGER)
 			-- When user dragging, handle pointer motion
-		local
-			l_relative_position: INTEGER
 		do
-			-- We have to check if `internal_positioner' is dragging for GTK since key press actions may
-			-- not be called immediately
-			-- See bug#13196	
+				-- We have to check if `internal_positioner' is dragging for GTK since key press actions may
+				-- not be called immediately
+				-- See bug#13196	
 			if internal_positioner.is_dragging then
-				l_relative_position := to_relative_position (a_screen_position)
-				internal_positioner.on_pointer_motion (l_relative_position)
+				internal_positioner.on_pointer_motion (to_relative_position (a_screen_position))
 			end
 		end
 
@@ -365,7 +367,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -374,10 +376,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

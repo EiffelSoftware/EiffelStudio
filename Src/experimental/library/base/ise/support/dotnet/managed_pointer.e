@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		To easily manage allocation and release of allocated C memory, and
 		to perform insertion of basic elements. Byte order is by default
@@ -300,7 +300,7 @@ feature -- Access: Platform specific
 
 	read_real (pos: INTEGER): REAL_32
 			-- Read REAL_32 at position `pos'.
-		obsolete "Use read_real_32 instead."
+		obsolete "Use read_real_32 instead. [2017-05-31]"
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_32_bytes) <= count
@@ -323,7 +323,7 @@ feature -- Access: Platform specific
 
 	read_double (pos: INTEGER): REAL_64
 			-- Read REAL_64 at position `pos'.
-		obsolete "Use read_real_64 instead."
+		obsolete "Use read_real_64 instead. [2017-05-31]"
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_64_bytes) <= count
@@ -558,7 +558,7 @@ feature -- Element change: Platform specific
 
 	put_real (r: REAL_32; pos: INTEGER)
 			-- Insert `r' at position `pos'.
-		obsolete "Use put_real_32 instead."
+		obsolete "Use put_real_32 instead. [2017-05-31]"
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_32_bytes) <= count
@@ -585,7 +585,7 @@ feature -- Element change: Platform specific
 
 	put_double (d: REAL_64; pos: INTEGER)
 			-- Insert `d' at position `pos'.
-		obsolete "Use put_real_64 instead."
+		obsolete "Use put_real_64 instead. [2017-05-31]"
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_64_bytes) <= count
@@ -1290,7 +1290,7 @@ invariant
 	valid_count: count >= 0
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

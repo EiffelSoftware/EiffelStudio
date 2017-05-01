@@ -7,7 +7,7 @@
 
 class TIME_SET inherit
 
-	ARRAY [NUMERIC]
+	ARRAY [detachable NUMERIC]
 		rename
 			make as make_array,
 			put as put_array,
@@ -25,7 +25,7 @@ feature -- Initialization
 		require
 			positive: n > 0
 		do
-			make_array (1, 2 * n)
+			make_filled (Void, 1, 2 * n)
 			last := 0
 		end
 
@@ -73,14 +73,14 @@ invariant
 	last_small_enough: last <= count
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class TIME_SET
+end

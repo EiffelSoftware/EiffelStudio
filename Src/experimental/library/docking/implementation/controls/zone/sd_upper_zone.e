@@ -95,7 +95,7 @@ feature -- Command
 									l_first := True
 								end
 								if attached {SD_ZONE} Current as lt_zone and l_other /= Void then
-									docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".recover_normal_size_from_minimize")
+									docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type.name_32 + {STRING_32} ".recover_normal_size_from_minimize")
 								else
 									check not_possible: False end
 								end
@@ -124,7 +124,7 @@ feature -- Command
 
 								if l_other /= Void then
 									if attached {SD_ZONE} Current as lt_zone_2 then
-										docking_manager.query.inner_container (lt_zone_2).restore_spliter_position (l_other, generating_type + ".recover_normal_size_from_minimize")
+										docking_manager.query.inner_container (lt_zone_2).restore_spliter_position (l_other, generating_type.name_32 + {STRING_32} ".recover_normal_size_from_minimize")
 									else
 										check not_possible: False end
 									end
@@ -265,7 +265,7 @@ feature -- Command
 							if l_parent.first = Current then
 								l_other := l_parent.second
 								if attached l_other then
-									docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".minimize")
+									docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type.name_32 + {STRING_32} ".minimize")
 								end
 								l_parent.wipe_out
 								l_box := minimized_container (l_parent)
@@ -279,7 +279,7 @@ feature -- Command
 							else
 								l_other := l_parent.first
 								if attached l_other then
-									docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".minimize")
+									docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type.name_32 + {STRING_32} ".minimize")
 								end
 								l_parent.wipe_out
 								l_box := minimized_container (l_parent)
@@ -324,7 +324,7 @@ feature -- Command
 			docking_manager.command.resize (True)
 			if l_other /= Void then
 				if attached {SD_ZONE} Current as lt_zone_3 then
-					docking_manager.query.inner_container (lt_zone_3).restore_spliter_position (l_other, generating_type + ".minimize")
+					docking_manager.query.inner_container (lt_zone_3).restore_spliter_position (l_other, generating_type.name_32 + {STRING_32} ".minimize")
 				else
 					check not_possible: False end
 				end
@@ -512,7 +512,7 @@ feature {NONE} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

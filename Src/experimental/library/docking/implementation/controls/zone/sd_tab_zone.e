@@ -372,13 +372,17 @@ feature {NONE} -- Agents for docker
 		local
 			l_content: SD_CONTENT
 		do
-			l_content := contents.i_th (internal_notebook.selected_item_index)
-			internal_title_bar.set_title (l_content.long_title)
-			update_mini_tool_bar (l_content)
-			if not l_content.focus_in_actions.is_empty and then docking_manager.property.last_focus_content /= l_content then
-				l_content.focus_in_actions.call (Void)
+			if contents.valid_index (internal_notebook.selected_item_index) then
+				l_content := contents.i_th (internal_notebook.selected_item_index)
+				internal_title_bar.set_title (l_content.long_title)
+				update_mini_tool_bar (l_content)
+				if not l_content.focus_in_actions.is_empty and then docking_manager.property.last_focus_content /= l_content then
+					l_content.focus_in_actions.call (Void)
+				end
+				docking_manager.property.set_last_focus_content (l_content)
+			else
+					-- No valid tab selection!!
 			end
-			docking_manager.property.set_last_focus_content (l_content)
 		ensure
 --			title_bar_content_right: not internal_diable_on_select_tab implies internal_title_bar.title.is_equal (contents.i_th (internal_notebook.selected_item_index).long_title)
 --			mini_tool_bar_added: not internal_diable_on_select_tab implies (contents.i_th (internal_notebook.selected_item_index).mini_toolbar /= Void implies
@@ -480,7 +484,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

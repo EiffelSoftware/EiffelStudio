@@ -23,7 +23,9 @@ feature -- Access
 			create exec
 				-- First obtain the value of the CLASSPATH environment
 				-- variable
-			class_path := exec.get ("CLASSPATH")
+			if attached exec.item ("CLASSPATH") as l_item then
+				class_path := l_item.as_string_8
+			end
 			if class_path = Void then
 					-- Default to current directory
 				class_path := "."
@@ -45,7 +47,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

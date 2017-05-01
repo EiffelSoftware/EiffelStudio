@@ -1,5 +1,5 @@
-note
-	description: "A Unix process launcher with IO redirection capability"
+﻿note
+	description: "A Unix process launcher with IO redirection capability."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -45,10 +45,10 @@ inherit
 
 	RT_DEBUGGER
 
-create
+create {PROCESS_UNIX_OS}
 	make
 
-feature {PROCESS_UNIX_OS} -- Creation
+feature {NONE} -- Creation
 
 	make (fname: READABLE_STRING_GENERAL; args: detachable LIST [READABLE_STRING_GENERAL]; a_working_dir: detachable READABLE_STRING_GENERAL)
 			-- Create a process object which represents an
@@ -260,7 +260,6 @@ feature {BASE_PROCESS_IMP} -- Process management
         local
             ee: EXECUTION_ENVIRONMENT
             cur_dir: detachable PATH
-            exceptions: EXCEPTIONS
             l_debug_state: like debug_state
             l_working_directory: like working_directory
             l_arguments: like arguments_for_exec
@@ -306,8 +305,7 @@ feature {BASE_PROCESS_IMP} -- Process management
             end
         rescue
             if process_id = 0 then
-                create exceptions
-                exceptions.die (1)
+                ;(create {EXCEPTIONS}).die (1)
             end
 			set_debug_state (l_debug_state)
         end
@@ -326,7 +324,7 @@ feature {BASE_PROCESS_IMP} -- Process management
 
 	read_output_stream (buf_size: INTEGER)
 			-- Read at most `buf_size' bytes of data from output pipe.
-			-- Set data in `lasT_outp
+			-- Set data in `last_output`.
 		require
 			buf_size_positive: buf_size > 0
 		do
@@ -335,6 +333,24 @@ feature {BASE_PROCESS_IMP} -- Process management
 				last_output := l_out_pipe.last_string
 			else
 				last_output := Void
+			end
+		end
+
+	read_output_to_special (buffer: SPECIAL [NATURAL_8])
+			-- Read data from the output stream to `buffer`.
+			-- Maximum number if bytes to read is `buffer.count`.
+			-- Update `buffer.count` with actually read bytes.
+		do
+			if attached shared_output_unnamed_pipe as p then
+				p.read_to_special (buffer)
+				has_output_stream_error := not p.last_read_successful
+			else
+				has_output_stream_error := True
+					-- Update `buffer.count` with actual bytes read.
+				buffer.wipe_out
+				check
+					buffer_is_empty: buffer.count = 0
+				end
 			end
 		end
 
@@ -349,6 +365,24 @@ feature {BASE_PROCESS_IMP} -- Process management
 				last_error := l_err_pipe.last_string
 			else
 				last_error := Void
+			end
+		end
+
+	read_error_to_special (buffer: SPECIAL [NATURAL_8])
+			-- Read data from the error stream to `buffer`.
+			-- Maximum number if bytes to read is `buffer.count`.
+			-- Update `buffer.count` with actually read bytes.
+		do
+			if attached shared_error_unnamed_pipe as p then
+				p.read_to_special (buffer)
+				has_error_stream_error := not p.last_read_successful
+			else
+				has_error_stream_error := True
+					-- Update `buffer.count` with actual bytes read.
+				buffer.wipe_out
+				check
+					buffer_is_empty: buffer.count = 0
+				end
 			end
 		end
 
@@ -367,6 +401,12 @@ feature {BASE_PROCESS_IMP} -- Process management
 
 	has_write_error: BOOLEAN
 			-- Has last write operation to `shared_input_unnamed_pipe' ended with an error?
+
+	has_output_stream_error: BOOLEAN
+			-- Has last read operation from `shared_output_unnamed_pipe' ended with an error?
+
+	has_error_stream_error: BOOLEAN
+			-- Has last read operation from `shared_error_unnamed_pipe' ended with an error?
 
 	last_output: detachable STRING
 			-- Last read data from output pipe
@@ -565,7 +605,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Input-output
 
 	in_file: detachable RAW_FILE
 			-- File to be used by child process for standard input
@@ -588,7 +628,7 @@ feature {NONE} -- Implementation
 	Stderr_descriptor: INTEGER = 2
 			-- File descriptor for standard error
 
-feature {NONE} -- Implementation
+feature {NONE} -- Access
 
 	environment_table_as_pointer (a_envs: detachable HASH_TABLE [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL]): POINTER
 			-- {POINTER} representation of `environment_variable_table'.
@@ -603,28 +643,22 @@ feature {NONE} -- Implementation
 		do
 			if a_envs /= Void and then not a_envs.is_empty then
 					-- Estimate the number of environment variables that will be stored.
-				from
-					a_envs.start
-				until
-					a_envs.after
+				across
+					a_envs as c
 				loop
-					if a_envs.key_for_iteration /= Void and then a_envs.item_for_iteration /= Void then
+					if attached c.key and then attached c.item then
 						nb := nb + 1
 					end
-					a_envs.forth
 				end
 					-- We allocate `Result', then use a MANAGED_POINTER to fill its content.
 				Result := Result.memory_alloc ((nb + 1) * {PLATFORM}.pointer_bytes)
 				create l_ptr.share_from_pointer (Result, (nb + 1) * {PLATFORM}.pointer_bytes)
-				from
-					a_envs.start
-					i := 0
-				until
-					a_envs.after
+				across
+					a_envs as c
 				loop
 					if
-						attached a_envs.key_for_iteration as l_key and then
-						attached a_envs.item_for_iteration as l_value
+						attached c.key as l_key and then
+						attached c.item as l_value
 					then
 						create l_str.make (l_key.count + l_value.count + 1)
 						l_str.append_string_general (l_key)
@@ -640,7 +674,6 @@ feature {NONE} -- Implementation
 
 						i := i + 1
 					end
-					a_envs.forth
 				end
 				l_ptr.put_pointer (default_pointer, i * {PLATFORM}.pointer_bytes)
 			end
@@ -717,7 +750,7 @@ invariant
 	valid_stderr_descriptor: valid_file_descriptor (Stderr_descriptor)
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -726,8 +759,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

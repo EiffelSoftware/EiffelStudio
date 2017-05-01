@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create an empty drawing area.
 		do
 			assign_interface (an_interface)

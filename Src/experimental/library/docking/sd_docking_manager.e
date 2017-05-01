@@ -1,15 +1,15 @@
-note
+﻿note
 	description: "[
-				Manager which communicate between client programmer and whole docking library.
+		Manager which communicate between client programmer and whole docking library.
 				
-				The SD_DOCKING_MANAGER is the key (and the most important one) for client
-				programmers to comunicate with docking library. Almost all importantant features
-				are listed in SD_DOCKING_MANAGER, such as extend/remove a docking content 
-				(which is a docking unit)
+		The SD_DOCKING_MANAGER is the key (and the most important one) for client
+		programmers to comunicate with docking library. Almost all importantant features
+		are listed in SD_DOCKING_MANAGER, such as extend/remove a docking content 
+		(which is a docking unit)
 				
-				Internally, docking manger create left, right, top, bottom areas for toolbars 
-				and docking panels.
-																								]"
+		Internally, docking manger create left, right, top, bottom areas for toolbars 
+		and docking panels.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -41,8 +41,8 @@ feature {NONE} -- Initialization
 			a_container_not_full: not a_container.full
 			a_widnow_valid: window_valid (a_window)
 		local
-			l_checker: SD_DEPENDENCY_CHECKER
 			l_list: ARRAYED_LIST [SD_DOCKING_MANAGER_HOLDER]
+			l_left, l_right, l_top, l_bottom: like internal_auto_hide_panel_bottom
 		do
 			create internal_shared
 			create tab_drop_actions
@@ -51,17 +51,42 @@ feature {NONE} -- Initialization
 			main_window := a_window
 
 			init_widget_structure
-			create l_list.make (20)
-			init_auto_hide_panel (l_list)
+
+			create l_left.make ({SD_ENUMERATION}.left)
+			internal_auto_hide_panel_left := l_left
+			create l_right.make ({SD_ENUMERATION}.right)
+			internal_auto_hide_panel_right := l_right
+			create l_top.make ({SD_ENUMERATION}.top)
+			internal_auto_hide_panel_top := l_top
+			create l_bottom.make ({SD_ENUMERATION}.bottom)
+			internal_auto_hide_panel_bottom := l_bottom
 
 			create contents
+			create inner_containers.make (1)
 
+			create agents.make (Current)
+			create query.make (Current)
+			create command.make (Current)
+			create property.make (Current)
+			create zones.make (Current)
+
+			create tool_bar_manager.make (Current)
+
+			tool_bar_manager.add_actions
+
+			create l_list.make (20)
+			l_list.extend (tool_bar_manager)
+			init_managers (l_list)
 			init_inner_container (l_list)
 
-			create tool_bar_manager.make
-			l_list.extend (tool_bar_manager)
-
-			init_managers (l_list)
+			l_left.set_docking_manager (Current)
+			main_container.left_bar.extend (l_left)
+			l_right.set_docking_manager (Current)
+			main_container.right_bar.extend (l_right)
+			l_top.set_docking_manager (Current)
+			main_container.top_bar.extend (l_top)
+			l_bottom.set_docking_manager (Current)
+			main_container.bottom_bar.extend (l_bottom)
 
 			contents.extend (zones.place_holder_content)
 
@@ -75,8 +100,7 @@ feature {NONE} -- Initialization
 				internal_shared.set_show_tab_stub_text (True)
 			end
 
-			create {SD_DEPENDENCY_CHECKER_IMP} l_checker
-			l_checker.check_dependency (main_window)
+			;(create {SD_DEPENDENCY_CHECKER_IMP}).check_dependency (main_window)
 
 			internal_shared.add_docking_manager (Current)
 
@@ -111,41 +135,14 @@ feature {NONE} -- Initialization
 		require
 			not_void: a_list /= Void
 		do
-			create agents.make
-			a_list.extend (agents)
-			create query
-			a_list.extend (query)
-			create command.make
-			a_list.extend (command)
-			create property.make
-			a_list.extend (property)
-			create zones.make
-			a_list.extend (zones)
-		end
+			agents.add_actions
+			command.add_actions
 
-	init_auto_hide_panel (a_list: ARRAYED_LIST [SD_DOCKING_MANAGER_HOLDER])
-			-- Insert auto hide panels
-		require
-			not_void: a_list /= Void
-		local
-			l_left, l_right, l_top, l_bottom: like internal_auto_hide_panel_bottom
-		do
-			create l_left.make ({SD_ENUMERATION}.left)
-			a_list.extend (l_left)
-			internal_auto_hide_panel_left := l_left
-			create l_right.make ({SD_ENUMERATION}.right)
-			a_list.extend (l_right)
-			internal_auto_hide_panel_right := l_right
-			create l_top.make ({SD_ENUMERATION}.top)
-			a_list.extend (l_top)
-			internal_auto_hide_panel_top := l_top
-			create l_bottom.make ({SD_ENUMERATION}.bottom)
-			a_list.extend (l_bottom)
-			internal_auto_hide_panel_bottom := l_bottom
-			main_container.left_bar.extend (l_left)
-			main_container.right_bar.extend (l_right)
-			main_container.top_bar.extend (l_top)
-			main_container.bottom_bar.extend (l_bottom)
+			a_list.extend (agents)
+			a_list.extend (query)
+			a_list.extend (command)
+			a_list.extend (property)
+			a_list.extend (zones)
 		end
 
 	init_inner_container (a_list: ARRAYED_LIST [SD_DOCKING_MANAGER_HOLDER])
@@ -155,11 +152,10 @@ feature {NONE} -- Initialization
 		local
 			l_inner_container: SD_MULTI_DOCK_AREA
 		do
-			create l_inner_container.make
+			create l_inner_container.make (Current)
 			a_list.extend (l_inner_container)
 			fixed_area.extend (l_inner_container)
 			l_inner_container.set_minimum_size (0, 0)
-			create inner_containers.make (1)
 			inner_containers.extend (l_inner_container)
 		end
 
@@ -322,11 +318,8 @@ feature -- Command
 		require
 			a_file_not_void: a_file /= Void
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			Result := l_config.save_config_with_path (a_file)
+			Result := (create {SD_SAVE_CONFIG_MEDIATOR}.make (Current)).save_config_with_path (a_file)
 		end
 
 	save_editors_data_with_path (a_file: PATH): BOOLEAN
@@ -334,11 +327,8 @@ feature -- Command
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			Result := l_config.save_editors_config_with_path (a_file)
+			Result := (create {SD_SAVE_CONFIG_MEDIATOR}.make (Current)).save_editors_config_with_path (a_file)
 		end
 
 	save_tools_data_with_path (a_file: PATH): BOOLEAN
@@ -346,11 +336,8 @@ feature -- Command
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			Result := l_config.save_tools_config_with_path (a_file)
+			Result := (create {SD_SAVE_CONFIG_MEDIATOR}.make (Current)).save_tools_config_with_path (a_file)
 		end
 
 	save_tools_data_with_name_and_path (a_file: PATH; a_name: READABLE_STRING_GENERAL): BOOLEAN
@@ -358,11 +345,8 @@ feature -- Command
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_SAVE_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			Result := l_config.save_tools_config_with_name_and_path (a_file, a_name)
+			Result := (create {SD_SAVE_CONFIG_MEDIATOR}.make (Current)).save_tools_config_with_name_and_path (a_file, a_name)
 		end
 
 	open_config_with_path (a_file: PATH): BOOLEAN
@@ -374,22 +358,16 @@ feature -- Command
 			a_file_not_void: a_file /= Void
 			a_file_readable: is_file_path_readable (a_file)
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			Result := l_config.open_config_with_path (a_file)
+			Result := (create {SD_OPEN_CONFIG_MEDIATOR}.make (Current)).open_config_with_path (a_file)
 		end
 
 	open_editors_config_with_path (a_file: PATH)
 			-- Open main window editors' layout configuration data previously stored in `a_file'
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			l_config.open_editors_config_with_path (a_file)
+			;(create {SD_OPEN_CONFIG_MEDIATOR}.make (Current)).open_editors_config_with_path (a_file)
 		end
 
 	open_tools_config_with_path (a_file: PATH): BOOLEAN
@@ -400,33 +378,24 @@ feature -- Command
 			-- See bug#14309
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			Result := l_config.open_tools_config_with_path (a_file)
+			Result := (create {SD_OPEN_CONFIG_MEDIATOR}.make (Current)).open_tools_config_with_path (a_file)
 		end
 
 	open_maximized_tool_config_with_path (a_file: PATH)
 			-- Open tool's maximization statues configuration data previously stored in `a_file'
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			l_config.open_maximized_tool_data_with_path (a_file)
+			;(create {SD_OPEN_CONFIG_MEDIATOR}.make (Current)).open_maximized_tool_data_with_path (a_file)
 		end
 
 	open_tool_bar_item_config_with_path (a_file: PATH)
 			-- Open tool bar items' layout configuration data previously stored in `a_file'
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_config: SD_OPEN_CONFIG_MEDIATOR
 		do
-			create l_config.make (Current)
-			l_config.open_tool_bar_item_data_with_path (a_file)
+			;(create {SD_OPEN_CONFIG_MEDIATOR}.make (Current)).open_tool_bar_item_data_with_path (a_file)
 		end
 
 	set_main_area_background_color (a_color: EV_COLOR)
@@ -477,7 +446,7 @@ feature -- Command
 		do
 			is_locked := True
 		ensure
-			locked: is_locked = True
+			locked: is_locked
 		end
 
 	unlock
@@ -487,7 +456,7 @@ feature -- Command
 		do
 			is_locked := False
 		ensure
-			unlocked: is_locked = False
+			unlocked: not is_locked
 		end
 
 	lock_editor
@@ -497,7 +466,7 @@ feature -- Command
 		do
 			is_editor_locked := True
 		ensure
-			locked: is_editor_locked = True
+			locked: is_editor_locked
 		end
 
 	unlock_editor
@@ -507,7 +476,7 @@ feature -- Command
 		do
 			is_editor_locked := False
 		ensure
-			unlocked: is_editor_locked = False
+			unlocked: not is_editor_locked
 		end
 
 	maximize_editor_area
@@ -611,7 +580,6 @@ feature -- Command
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
 			l_notebooks: ARRAYED_LIST [SD_NOTEBOOK]
-			l_top, l_bottom, l_left, l_right: like internal_auto_hide_panel_top
 		do
 			internal_shared.docking_manager_list.prune_all (Current)
 			property.destroy
@@ -646,25 +614,17 @@ feature -- Command
 				l_floating_zones.forth
 			end
 
-			l_top := internal_auto_hide_panel_top
-			if l_top /= Void then
-				l_top.destroy
-				internal_auto_hide_panel_top := Void
+			if not internal_auto_hide_panel_top.is_destroyed then
+				internal_auto_hide_panel_top.destroy
 			end
-			l_bottom := internal_auto_hide_panel_bottom
-			if l_bottom /= Void then
-				l_bottom.destroy
-				internal_auto_hide_panel_bottom := Void
+			if not internal_auto_hide_panel_bottom.is_destroyed then
+				internal_auto_hide_panel_bottom.destroy
 			end
-			l_left := internal_auto_hide_panel_left
-			if l_left /= Void then
-				l_left.destroy
-				internal_auto_hide_panel_left := Void
+			if not internal_auto_hide_panel_left.is_destroyed then
+				internal_auto_hide_panel_left.destroy
 			end
-			l_right := internal_auto_hide_panel_right
-			if l_right /= Void then
-				l_right.destroy
-				internal_auto_hide_panel_right := Void
+			if not internal_auto_hide_panel_right.is_destroyed then
+				internal_auto_hide_panel_right.destroy
 			end
 
 			from
@@ -773,7 +733,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_DOCKING_MANAGER_QUERY, SD_DOCKING_MANAGER
 	internal_auto_hide_panel_left,
 	internal_auto_hide_panel_right,
 	internal_auto_hide_panel_top,
-	internal_auto_hide_panel_bottom: detachable SD_AUTO_HIDE_PANEL
+	internal_auto_hide_panel_bottom: SD_AUTO_HIDE_PANEL
 			-- Auto hide panels
 
 feature -- Obsolete
@@ -781,59 +741,51 @@ feature -- Obsolete
 	save_config (a_file: READABLE_STRING_GENERAL)
 			-- Save current docking config
 		obsolete
-			"Use save_data instead"
+			"Use save_data instead. [2017-05-31]"
 		require
 			a_file_not_void: a_file /= Void
 			not_destroyed: not is_destroyed
-		local
-			l_result: BOOLEAN
 		do
-			l_result := save_data (a_file)
+			save_data (a_file).do_nothing
 		end
 
 	save_editors_config (a_file: READABLE_STRING_GENERAL)
 			-- Save main window editor config
 		obsolete
-			"Use save_editors_data instead"
+			"Use save_editors_data instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
-		local
-			l_result: BOOLEAN
 		do
-			l_result := save_editors_data (a_file)
+			save_editors_data (a_file).do_nothing
 		end
 
 	save_tools_config (a_file: READABLE_STRING_GENERAL)
 			-- Save tools config
 		obsolete
-			"Use save_tools_data instead"
+			"Use save_tools_data instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
-		local
-			l_result: BOOLEAN
 		do
-			l_result := save_tools_data (a_file)
+			save_tools_data (a_file).do_nothing
 		end
 
 	save_tools_config_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL)
 			-- Save tools config
 		obsolete
-			"Use save_tools_data_with_name instead"
+			"Use save_tools_data_with_name instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
-		local
-			l_result: BOOLEAN
 		do
-			l_result := save_tools_data_with_name (a_file, a_name)
+			save_tools_data_with_name (a_file, a_name).do_nothing
 		end
 
 	is_title_unique (a_title: READABLE_STRING_GENERAL): BOOLEAN
 			-- If `a_title' unique in all contents `unique_title's ?
 		obsolete
-			"Use is_unique_title_free_to_use instead"
+			"Use is_unique_title_free_to_use instead. [2017-05-31]"
 		require
 			a_title: a_title /= Void
 			not_destroyed: not is_destroyed
@@ -844,7 +796,7 @@ feature -- Obsolete
 	save_data (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save current docking config data (including tools' data and editors' data) into `a_file'
 		obsolete
-			"Use save_data_with_path instead"
+			"Use save_data_with_path instead. [2017-05-31]"
 		require
 			a_file_not_void: a_file /= Void
 			not_destroyed: not is_destroyed
@@ -855,7 +807,7 @@ feature -- Obsolete
 	save_editors_data (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save main window's editor layout configuration data into `a_file'
 		obsolete
-			"Use save_editors_data_with_path instead"
+			"Use save_editors_data_with_path instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
@@ -866,7 +818,7 @@ feature -- Obsolete
 	save_tools_data (a_file: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save tools' layout configuration data into `a_file'
 		obsolete
-			"Use save_tools_data_with_path instead"
+			"Use save_tools_data_with_path instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
@@ -877,7 +829,7 @@ feature -- Obsolete
 	save_tools_data_with_name (a_file: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Save tools' layout configuration data into a file named `a_file' and store `a_name' into the data
 		obsolete
-			"Use save_tools_data_with_name_and_path instead"
+			"Use save_tools_data_with_name_and_path instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 			not_destroyed: not is_destroyed
@@ -891,7 +843,7 @@ feature -- Obsolete
 			-- Result False means the operation failed, maybe due to `a_file' not exist, or
 			-- data in `a_file' corrupted.
 		obsolete
-			"Use open_config_with_path instead"
+			"Use open_config_with_path instead. [2017-05-31]"
 		require
 			a_file_not_void: a_file /= Void
 			a_file_readable: is_file_readable (a_file)
@@ -903,7 +855,7 @@ feature -- Obsolete
 	open_editors_config (a_file: READABLE_STRING_GENERAL)
 			-- Open main window editors' layout configuration data previously stored in `a_file'
 		obsolete
-			"Use open_editors_config_with_path instead"
+			"Use open_editors_config_with_path instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -917,7 +869,7 @@ feature -- Obsolete
 			-- Note: If window is minimized, EV_SPLIT_AREA split bar position can't be restored correctly
 			-- See bug#14309
 		obsolete
-			"Use open_tools_config_with_path instead"
+			"Use open_tools_config_with_path instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -927,7 +879,7 @@ feature -- Obsolete
 	open_maximized_tool_config (a_file: READABLE_STRING_GENERAL)
 			-- Open tool's maximization statues configuration data previously stored in `a_file'
 		obsolete
-			"Use open_maximized_tool_config_with_path instead"
+			"Use open_maximized_tool_config_with_path instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -937,7 +889,7 @@ feature -- Obsolete
 	open_tool_bar_item_config (a_file: READABLE_STRING_GENERAL)
 			-- Open tool bar items' layout configuration data previously stored in `a_file'
 		obsolete
-			"Use open_tool_bar_item_config_with_path instead"
+			"Use open_tool_bar_item_config_with_path instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -947,7 +899,7 @@ feature -- Obsolete
 	is_file_readable (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `a_file_name' exist and readable?
 		obsolete
-			"Use is_file_path_readable instead"
+			"Use is_file_path_readable instead. [2017-05-31]"
 		do
 			Result := is_file_path_readable (create {PATH}.make_from_string (a_file_name))
 		end
@@ -955,7 +907,7 @@ feature -- Obsolete
 	is_config_data_valid (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
 			 -- Is config data in `a_file_name' valid?
 		obsolete
-			"Use is_config_data_path_valid instead"
+			"Use is_config_data_path_valid instead. [2017-05-31]"
 		do
 			Result := is_config_data_path_valid (create {PATH}.make_from_string (a_file_name))
 		end
@@ -971,7 +923,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -980,10 +932,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

@@ -249,7 +249,7 @@ feature -- Access
 feature -- Contract support
 
 	valid_key_code (a_code: INTEGER): BOOLEAN
-			-- Is ``a_code'' a valid key code?
+			-- Is `a_code' a valid key code?
 		do
 			Result := a_code >= Key_0 and then a_code <= Key_menu
 		end

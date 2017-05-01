@@ -227,7 +227,7 @@ feature -- Access
 		obsolete
 			"Use `key_value' with an empty string instead, if `subkey' is Void or empty. %
 			%Otherwise open manually the subkey represented by `subkey' and then call `key_value' %
-			%with an empty string."
+			%with an empty string [2017-05-31]."
 		require
 			key_possible: valid_value_for_hkey(key)
 		local
@@ -373,7 +373,7 @@ feature -- Basic Actions
 			-- Find the names of the key values within the
 			-- key referenced by 'key'.
 		obsolete
-			"Use `enumerate_values' instead."
+			"Use `enumerate_values' instead [2017-05-31]."
 		local
 			i: INTEGER
 			s: detachable READABLE_STRING_GENERAL
@@ -622,7 +622,7 @@ feature {NONE} -- External constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

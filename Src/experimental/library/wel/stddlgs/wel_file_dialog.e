@@ -62,7 +62,7 @@ feature -- Access
 	file_name: STRING_32
 			-- File name selected (including path).
 		obsolete
-			"Use `file_path' instead."
+			"Use `file_path' instead [2017-05-31]."
 		do
 			Result := str_file_name.string
 		ensure
@@ -80,7 +80,7 @@ feature -- Access
 	multiple_file_names: LIST [STRING_32]
 			-- return the full path name of all selected files.
 		obsolete
-			"Use `multiple_file_paths' instead."
+			"Use `multiple_file_paths' instead [2017-05-31]."
 		require
 			multiple_files_flag_set: has_flag ({WEL_OFN_CONSTANTS}.Ofn_allowmultiselect)
 		local
@@ -254,7 +254,7 @@ feature -- Element change
 			-- Set `file_name' with `a_file' and initialize
 			-- the file name edit control.
 		obsolete
-			"Use `set_file_path' instead."
+			"Use `set_file_path' instead [2017-05-31]."
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_file_name_count_ok: a_file_name.count <= Max_file_name_length
@@ -364,7 +364,7 @@ feature -- Element change
 	set_initial_directory (directory: READABLE_STRING_GENERAL)
 			-- Set the initial directory with `directory'.
 		obsolete
-			"Use `set_initialial_path' instead."
+			"Use `set_initialial_path' instead [2017-05-31]."
 		require
 			directory_not_void: directory /= Void
 		do
@@ -387,7 +387,7 @@ feature -- Element change
 	set_initial_directory_as_current
 			-- Set the initial directory as the current one.
 		obsolete
-			"Use `set_initial_path_as_current' instead."
+			"Use `set_initial_path_as_current' instead [2017-05-31]."
 		do
 			cwel_open_file_name_set_lpstrinitialdir (item, default_pointer)
 		end
@@ -621,7 +621,7 @@ invariant
 	str_title_exists: str_title.exists
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

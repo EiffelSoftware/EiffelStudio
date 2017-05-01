@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 				l_force := - center_attraction / l_distance
 				create Result.make (l_force * (px - center_x), l_force * (py - center_y))
 			else
-				create Result
+				create Result.make (0, 0)
 			end
 		end
 
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 			l_weight: DOUBLE
 		do
 			from
-				create Result
+				create Result.make (0, 0)
 				i := 1
 				l_links := a_node.links
 				nb := l_links.count
@@ -81,10 +81,14 @@ feature {NONE} -- Implementation
 					else
 						l_other := l_item.source
 					end
-					check l_other /= Void end -- FXIME: Implied by ...?
-					if l_other.is_show_requested then
+					if
+						l_other /= Void and then
+						l_other.is_show_requested
+					then
 						l_weight := stiffness * link_stiffness (l_item)
 						Result.set (Result.x - l_weight * (px - l_other.port_x), Result.y - l_weight * (py - l_other.port_y))
+					else
+						check l_other /= Void end
 					end
 				end
 				i := i + 1
@@ -105,7 +109,7 @@ feature {NONE} -- Implementation
 				l_force := electrical_repulsion / (l_distance ^ 3)
 				create Result.make (l_force * (px - opx) * an_other.mass, l_force * (py - opy) * an_other.mass)
 			else
-				create Result
+				create Result.make (0, 0)
 			end
 		end
 

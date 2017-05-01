@@ -276,23 +276,23 @@ feature -- Implementation
 
 feature -- Duplication
 
-	copy_from_pointer_style (a_pointer_style: like interface)
+	copy_from_pointer_style (a_pointer_style: attached like interface)
 			-- Copy attributes of `a_pointer_style' to `Current'
-		local
-			l_pointer_style_imp: detachable like Current
 		do
-			l_pointer_style_imp ?= a_pointer_style.implementation
-			check l_pointer_style_imp /= Void then end
-			if l_pointer_style_imp.gdk_pixbuf /= default_pointer then
-				set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pointer_style_imp.gdk_pixbuf))
+			if attached {like Current} a_pointer_style.implementation as l_pointer_style_imp then
+				if l_pointer_style_imp.gdk_pixbuf /= default_pointer then
+					set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pointer_style_imp.gdk_pixbuf))
+				end
+				predefined_cursor_code := l_pointer_style_imp.predefined_cursor_code
+			else
+				check is_pointer_style_imp: False end
 			end
-			predefined_cursor_code := l_pointer_style_imp.predefined_cursor_code
 		end
 
 feature {EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 
 	predefined_cursor_code: INTEGER;
-		-- Predefined cursor code used for selecting platform cursors.
+			-- Predefined cursor code used for selecting platform cursors.
 
 feature {NONE} -- Implementation
 
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

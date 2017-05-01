@@ -2,8 +2,6 @@
 	description: "Manipulate Windows handle to file"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -73,10 +71,10 @@ feature -- Factory
 		do
 			if cwin_create_pipe ($l_read, $l_temp, default_pointer, 0) then
 				if duplicate_handle (l_temp, $l_write) then
-					if {WEL_API}.close_handle (l_temp) /= 0 then
-						Result := [l_read, l_write]
-					else
+					if {WEL_API}.close_handle (l_temp) = 0 then
 						display_error
+					else
+						Result := [l_read, l_write]
 					end
 				else
 					display_error
@@ -94,10 +92,10 @@ feature -- Factory
 		do
 			if cwin_create_pipe ($l_temp, $l_write, default_pointer, 0) then
 				if duplicate_handle (l_temp, $l_read) then
-					if {WEL_API}.close_handle (l_temp) /= 0 then
-						Result := [l_read, l_write]
-					else
+					if {WEL_API}.close_handle (l_temp) = 0 then
 						display_error
+					else
+						Result := [l_read, l_write]
 					end
 				else
 					display_error
@@ -292,7 +290,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

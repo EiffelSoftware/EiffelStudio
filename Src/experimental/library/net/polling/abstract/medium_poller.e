@@ -320,7 +320,7 @@ feature -- commands to be executed
 		obsolete
 			"[
 				It is a read only structure for backward compatibility, use `put_read_command' and
-				`remove_read_command' to modify its content.
+				`remove_read_command' to modify its content [2017-05-31].
 			]"
 		do
 			Result := internal_read_command_list.linear_representation.to_array
@@ -332,7 +332,7 @@ feature -- commands to be executed
 		obsolete
 			"[
 				It is a read only structure for backward compatibility, use `put_write_command' and
-				`remove_write_command' to modify its content.
+				`remove_write_command' to modify its content [2017-05-31] .
 			]"
 		do
 			Result := internal_write_command_list.linear_representation.to_array
@@ -344,7 +344,7 @@ feature -- commands to be executed
 		obsolete
 			"[
 				It is a read only structure for backward compatibility, use `put_exception_command' and
-				`remove_exception_command' to modify its content.
+				`remove_exception_command' to modify its content [2017-05-31].
 			]"
 		do
 			Result := internal_exception_command_list.linear_representation.to_array
@@ -490,7 +490,7 @@ feature {NONE} -- Implementation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

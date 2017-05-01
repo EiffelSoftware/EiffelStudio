@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Obsolete
 
-	show_drop_down obsolete "Use ``show_list''"
+	show_drop_down obsolete "Use `show_list' [2017-05-31]"
 		require
 			exists: exists
 		do
@@ -70,7 +70,7 @@ feature -- Obsolete
 			list_shown: list_shown
 		end
 
-	hide_drop_down obsolete "Use ``hide_list''"
+	hide_drop_down obsolete "Use `hide_list' [2017-05-31]"
 		require
 			exists: exists
 		do
@@ -79,7 +79,7 @@ feature -- Obsolete
 			list_not_shown: not list_shown
 		end
 
-	dropped_down: BOOLEAN obsolete "Use ``list_shown''"
+	dropped_down: BOOLEAN obsolete "Use `list_shown' [2017-05-31]"
 		require
 			exists: exists
 		do

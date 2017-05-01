@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "When a content is floating, objects to hold content(s)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,8 @@ inherit
 		redefine
 			type,
 			state,
-			child_zone_count
+			child_zone_count,
+			has_content
 		end
 
 	SD_DOCKER_SOURCE
@@ -40,6 +41,7 @@ inherit
 			{SD_DOCKING_STATE, SD_STATE_VOID} set_width, set_height
 			{SD_DOCKING_MANAGER_COMMAND} hide
 			{SD_HOT_ZONE} set_pointer_style_for_border
+			{SD_WIDGET_CLEANER} destroy
 		redefine
 			hide,
 			screen_y,
@@ -72,9 +74,7 @@ feature {NONE} -- Initialization
 			create internal_shared_zone
 			create internal_vertical_box
 			create internal_title_bar.make
-			create internal_inner_container.make
-
-			init
+			create internal_inner_container.make (a_docking_manager)
 
 			make_popup_window
 
@@ -258,12 +258,24 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
+	has_content: BOOLEAN
+			-- Has a content?
+		do
+			if
+				internal_inner_container.readable and then
+				attached {SD_ZONE} internal_inner_container.item as l_zone
+			then
+				Result := l_zone.has_content
+			end
+		end
+
 	content: SD_CONTENT
 			-- <Precursor>
 		do
 			check
 				internal_inner_container.readable and then
-				attached {SD_ZONE} internal_inner_container.item as l_zone
+				attached {SD_ZONE} internal_inner_container.item as l_zone and then
+				l_zone.has_content
 			then
 				-- Implied by preconditon `valid'
 				Result := l_zone.content
@@ -554,19 +566,20 @@ feature {NONE} -- Agents
 		end
 
 	on_close
-			-- Handle close request
+			-- Handle close request.
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
+			z: SD_ZONE
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
-			create l_zones.make (1)
 			l_zones := all_zones
 			from
 				l_zones.start
 			until
 				l_zones.after
 			loop
-				if attached {SD_MULTI_CONTENT_ZONE} l_zones.item as l_multi_zone then
+				z := l_zones.item
+				if attached {SD_MULTI_CONTENT_ZONE} z as l_multi_zone then
 					l_contents := l_multi_zone.contents.twin
 					from
 						l_contents.start
@@ -576,8 +589,8 @@ feature {NONE} -- Agents
 						l_contents.item.close_request_actions.call (Void)
 						l_contents.forth
 					end
-				else
-					l_zones.item.content.close_request_actions.call (Void)
+				elseif z.has_content then
+					z.content.close_request_actions.call (Void)
 				end
 
 				l_zones.forth
@@ -638,7 +651,7 @@ feature {NONE} -- Agents
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -647,10 +660,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

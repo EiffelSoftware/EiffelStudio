@@ -15,7 +15,7 @@ inherit
 feature -- Conversion
 
 	key_code_to_gtk (a_key_code: INTEGER): NATURAL_32
-			-- Corresponding GTK code for ``a_key_code''.
+			-- Corresponding GTK code for `a_key_code'.
 		require
 			a_key_code_valid: valid_key_code (a_key_code)
 		do
@@ -23,7 +23,7 @@ feature -- Conversion
 		end
 
 	key_code_from_gtk (a_gtk_code: NATURAL_32): INTEGER
-			-- Corresponding key code for ``a_gtk_code''.
+			-- Corresponding key code for `a_gtk_code'.
 		require
 			a_gtk_code_valid: valid_gtk_code (a_gtk_code)
 		do
@@ -33,7 +33,7 @@ feature -- Conversion
 feature -- Contract support
 
 	valid_gtk_code (a_gtk_code: NATURAL_32): BOOLEAN
-			-- Is ``a_gtk_code'' valid?
+			-- Is `a_gtk_code' valid?
 		do
 			Result := gtk_to_v2_table.has (a_gtk_code)
 		end

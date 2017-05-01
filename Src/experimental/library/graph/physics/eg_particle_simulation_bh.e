@@ -90,26 +90,20 @@ feature {NONE} -- Implementation
 	theta_count: INTEGER
 			-- Number of times theta was below 1.0
 
-	n_body_force_solver (a_particle: like particle_type): G
+	n_body_force_solver (a_particle: like particle_type): detachable G
 			-- Solve n_nody_force O(log n) best case O(n) worste case
-		local
-			l_result: detachable like n_body_force_solver
 		do
 			last_theta_average := 0.0
 			theta_count := 0
 			if attached quad_tree as l_quad_tree then
-				l_result := traverse_tree (l_quad_tree, a_particle)
-			else
-				check False end -- FIXME: Implied by ...
+				Result := traverse_tree (l_quad_tree, a_particle)
 			end
-			check l_result /= Void end -- Implied by previsous if cluase and postcondition of `traverse_tree'
-			Result := l_result
 			if theta_count > 0 then
 				last_theta_average := last_theta_average / theta_count
 			end
 		end
 
-	traverse_tree (node: EG_QUAD_TREE; a_particle: like particle_type): G
+	traverse_tree (node: EG_QUAD_TREE; a_particle: like particle_type): detachable G
 			-- Traverse `node' and calculate force with `a_particle'.
 		require
 			not_void: node /= Void
@@ -117,21 +111,21 @@ feature {NONE} -- Implementation
 			r: DOUBLE
 			d: INTEGER
 			prop: DOUBLE
-			cmp: detachable EG_PARTICLE
 			region: EV_RECTANGLE
 			childe: detachable EG_QUAD_TREE
-			l_result: detachable like traverse_tree
+--			l_result: detachable like traverse_tree
 			l_particle: detachable EG_PARTICLE
 		do
 			if node.is_leaf then
 				l_particle := node.particle
-				check l_particle /= Void end -- Implied by `is_leaf'
-				l_result := n_body_force (a_particle, l_particle)
-			else
-				cmp := node.center_of_mass_particle
+				if l_particle /= Void then
+					Result := n_body_force (a_particle, l_particle)
+				else
+					check is_leaf: False end
+				end
+			elseif attached node.center_of_mass_particle as cmp then
 				region := node.region
 					-- Distance to center of mass
-				check cmp /= Void end --FIXME: Implied by ...
 				r := distance (a_particle.x, a_particle.y, cmp.x, cmp.y)
 					-- size of the cell
 				d := region.width.max (region.height)
@@ -144,43 +138,52 @@ feature {NONE} -- Implementation
 				end
 				if prop < theta then
 						-- Approximate
-					l_result := n_body_force (a_particle, cmp)
+					Result := n_body_force (a_particle, cmp)
 				else
 						-- Inspect children
 					childe := node.childe_ne
 					if attached childe as l_childe then
-						l_result := traverse_tree (l_childe, a_particle)
+						Result := traverse_tree (l_childe, a_particle)
 					end
 					childe := node.childe_nw
-					if attached childe as l_childe_2 then
-						if l_result = Void then
-							l_result := traverse_tree (l_childe_2, a_particle)
+					if
+						attached childe as l_childe_2 and then
+						attached traverse_tree (l_childe_2, a_particle) as num
+					then
+						if Result = Void then
+							Result := num
 						else
-							l_result := l_result + traverse_tree (l_childe_2, a_particle)
+							Result := Result + num
 						end
 					end
 					childe := node.childe_se
-					if attached childe as l_childe_3 then
-						if l_result = Void then
-							l_result := traverse_tree (l_childe_3, a_particle)
+					if
+						attached childe as l_childe_3 and then
+						attached traverse_tree (l_childe_3, a_particle) as num
+					then
+						if Result = Void then
+							Result := num
 						else
-							l_result := l_result + traverse_tree (l_childe_3, a_particle)
+							Result := Result + num
 						end
 					end
 					childe := node.childe_sw
-					if attached childe as l_childe_4 then
-						if l_result = Void then
-							l_result := traverse_tree (l_childe_4, a_particle)
+					if
+						attached childe as l_childe_4 and then
+						attached traverse_tree (l_childe_4, a_particle) as num
+					then
+						if Result = Void then
+							Result := num
 						else
-							l_result := l_result + traverse_tree (l_childe_4, a_particle)
+							Result := Result + num
 						end
 					end
 				end
+			else
+				check node_has_center_of_mass_particle: False end
 			end
-			check l_result /= Void end -- FIXME: Implied by ...
-			Result := l_result
-		ensure
-			Result_exists: Result /= Void
+--		ensure
+--			Result_exists: Result /= Void
 		end
 
 	build_quad_tree
@@ -240,7 +243,7 @@ invariant
 	quad_tree_exists: quad_tree /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

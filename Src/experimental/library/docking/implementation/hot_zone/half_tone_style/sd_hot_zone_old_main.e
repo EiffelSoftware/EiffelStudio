@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "SD_HOT_ZONE for SD_MULTI_DOCKING_AREA."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -145,24 +145,20 @@ feature  -- Redefine
 			not_void: a_pointer_style /= Void
 		local
 			l_platform: PLATFORM
-			l_window: EV_WINDOW
 			l_main_window: EV_WINDOW
 		do
 			create l_platform
 			if l_platform.is_windows then
 				l_main_window :=  internal_mediator.docking_manager.main_window
-				-- Have to check if `main_window' destroyed, see bug#13201
+					-- Have to check if `main_window' destroyed, see bug#13201.
 				if not l_main_window.is_destroyed then
 					l_main_window.set_pointer_style (a_pointer_style)
 				end
 			else
-				l_window := internal_mediator.caller_top_window
-
-				if attached {SD_FLOATING_ZONE} l_window as lt_floating_zone then
-					lt_floating_zone.set_pointer_style_for_border (a_pointer_style)
-				end
-				-- Have to check if `l_window' attached, see bug#13201
-				if l_window /= Void then
+				if attached internal_mediator.caller_top_window as l_window then
+					if attached {SD_FLOATING_ZONE} l_window as lt_floating_zone then
+						lt_floating_zone.set_pointer_style_for_border (a_pointer_style)
+					end
 					l_window.set_pointer_style (a_pointer_style)
 				end
 			end
@@ -209,7 +205,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -218,11 +214,6 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end
 

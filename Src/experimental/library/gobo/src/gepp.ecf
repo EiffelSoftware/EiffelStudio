@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="gepp" uuid="936CBD2F-6620-45C0-B495-99502A194696">
 	<target name="gepp">
 		<root class="GEPP" feature="execute"/>
-		<option warning="true" is_obsolete_routine_type="true">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="address_expression" value="false"/>
@@ -29,7 +29,7 @@
 		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
-		<cluster name="gepp" location="$ISE_LIBRARY\contrib\library\gobo\src\gepp\"/>
+		<cluster name="gepp" location="$ISE_LIBRARY\contrib\library\gobo\tool\gepp\src\"/>
 		<cluster name="gepp_override" location="$ISE_LIBRARY\library\gobo\override\generated\src\gepp\"/>
 	</target>
 </system>

@@ -983,7 +983,7 @@ feature -- Obsolete
 	draw_image_with_src_rect_dest_rect (a_image: WEL_GDIP_IMAGE; a_dest_rect, a_src_rect: WEL_RECT)
 			-- Draw `a_image' at `a_dest_rect' from `a_src_dest'
 		obsolete
-			"Use draw_image_with_dest_rect_src_rect instead"
+			"Use draw_image_with_dest_rect_src_rect instead [2017-05-31]."
 		require
 			not_void: a_image /= Void
 			a_image_exists: a_image.exists
@@ -996,7 +996,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

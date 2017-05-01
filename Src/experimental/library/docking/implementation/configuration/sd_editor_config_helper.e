@@ -1,7 +1,5 @@
-note
-	description: "[
-					Sepcial docking layout helper for editor stuffs
-																					]"
+﻿note
+	description: "Sepcial docking layout helper for editor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -13,24 +11,24 @@ class
 inherit
 	SD_ACCESS
 
-feature -- Command
+create
+	make
 
-	set_open_config_mediator (a_open_config_manager: SD_OPEN_CONFIG_MEDIATOR)
-			-- Set `open_config_manager'
-		require
-			a_open_config_manager_not_void: a_open_config_manager /= Void
+feature {NONE} -- Creation
+
+	make (m: SD_OPEN_CONFIG_MEDIATOR)
+			-- Create a new helper with mediator `m'.
 		do
-			internal_open_config_manager := a_open_config_manager
-		ensure
-			set: internal_open_config_manager = a_open_config_manager
+			open_config_manager := m
 		end
+
+feature -- Command
 
 	remember_editors_state (a_config_data: SD_CONFIG_DATA)
 			-- Remeber editors state before execute operations like {SD_OPEN_CONFIG_MEDITOR}.`open_tools_config'
 		local
 			l_only_one_item: EV_WIDGET
 			l_temp_split: SD_VERTICAL_SPLIT_AREA
-			l_cleaner: SD_WIDGET_CLEANER
 		do
 			internal_docking_manager.query.set_opening_tools_layout (True)
 
@@ -44,11 +42,10 @@ feature -- Command
 
 			if not has_place_holder (internal_docking_manager.query.inner_container_main) then
 				if internal_docking_manager.has_content (internal_docking_manager.zones.place_holder_content) then
-					-- Editor is missing now
-					-- Reset tools layout to have place holder zone
-					-- Otherwise following `real_has_place_holder_zone' check would fail
-					create l_cleaner.make (internal_docking_manager)
-					l_cleaner.reset_all_to_default (True)
+						-- Editor is missing now.
+						-- Reset tools layout to have place holder zone.
+						-- Otherwise following `real_has_place_holder_zone' check would fail.
+					;(create {SD_WIDGET_CLEANER}.make (internal_docking_manager)).reset_all_to_default (True)
 
 					was_place_holder_exists := True
 				else
@@ -71,7 +68,7 @@ feature -- Command
 						end
 					end
 					if attached top_container as l_top_container then
-						internal_docking_manager.query.inner_container_main.save_spliter_position (l_top_container, generating_type)
+						internal_docking_manager.query.inner_container_main.save_spliter_position (l_top_container, generating_type.name_32)
 					else
 						check not_possible: False end
 					end
@@ -135,7 +132,7 @@ feature -- Command
 
 					end
 					if attached top_container as l_top_container then
-						internal_docking_manager.query.inner_container_main.restore_spliter_position (l_top_container, generating_type)
+						internal_docking_manager.query.inner_container_main.restore_spliter_position (l_top_container, generating_type.name_32)
 					else
 						check not_possible: False end
 					end
@@ -215,12 +212,9 @@ feature -- Query
 
 	has_place_holder (a_top_container: EV_CONTAINER): BOOLEAN
 			-- If `a_top_container' has place holder widget?
-		local
-			l_state: SD_STATE
 		do
-			l_state := internal_docking_manager.zones.place_holder_content.state
-			if l_state.is_zone_attached then
-				if attached {EV_WIDGET} l_state.zone as lt_widget then
+			if attached internal_docking_manager.zones.place_holder_content.state.zone as z then
+				if attached {EV_WIDGET} z as lt_widget then
 					Result := a_top_container.has_recursive (lt_widget)
 				end
 			end
@@ -232,7 +226,7 @@ feature -- Query
 	is_editor_state_valid: BOOLEAN
 			-- If editor state valid?
 		do
-			Result := (was_place_holder_exists = real_has_place_holder_zone)
+			Result := was_place_holder_exists = real_has_place_holder_zone
 		end
 
 feature {NONE} -- Implementation
@@ -270,21 +264,7 @@ feature {NONE} -- Implementation
 		end
 
 	open_config_manager: SD_OPEN_CONFIG_MEDIATOR
-			-- Docking data open config manager
-		require
-			set: internal_open_config_manager /= Void
-		local
-			l_result: like internal_open_config_manager
-		do
-			l_result := internal_open_config_manager
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
-	internal_open_config_manager: detachable like open_config_manager
-			-- Docking data open config manager
+			-- Docking data open config manager.
 
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager
@@ -296,7 +276,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -305,10 +285,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

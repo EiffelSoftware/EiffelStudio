@@ -38,12 +38,12 @@ feature -- Basic operations
 
 feature -- Obsolete
 
-	init obsolete "Use ``start''"
+	init obsolete "Use `start' [2017-05-31]"
 		do
 			start
 		end
 
-	status: BOOLEAN obsolete "Use ``found''"
+	status: BOOLEAN obsolete "Use `found' [2017-05-31]"
 		do
 			Result := found
 		end

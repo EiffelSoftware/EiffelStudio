@@ -1,10 +1,9 @@
-note
+﻿note
 	description:
 		"Mutex synchronization object, allows threads to access global %
 		%data through critical sections."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -50,10 +49,8 @@ feature -- Status setting
 			-- Lock mutex, waiting if necessary until that becomes possible.
 		require
 			is_set: is_set
-		local
-			l_lock_succeed: BOOLEAN
 		do
-			l_lock_succeed := mutex_imp.wait_one
+			mutex_imp.wait_one.do_nothing
 			owner := current_thread_id
 		end
 
@@ -93,7 +90,7 @@ feature -- Obsolete
 	trylock, has_locked: BOOLEAN
 			-- Has client been successful in locking mutex without waiting?
 		obsolete
-			"Use try_lock instead"
+			"Use try_lock instead. [2017-05-31]"
 		require
 			is_set: is_set
 		do
@@ -106,7 +103,7 @@ feature {NONE} -- Implementation
 			-- .NET reference to the mutex.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

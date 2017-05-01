@@ -125,8 +125,11 @@ feature -- Command
 				l_count := l_new_table.item_for_iteration.as_natural_64
 
 				if finding_route_to_once then
-					check attached l_map end -- Implied by `finding_route_to_once'
-					add_to_reference_table (l_new_table.key_for_iteration, l_map)
+					if l_map /= Void then
+						add_to_reference_table (l_new_table.key_for_iteration, l_map)
+					else
+						check has_l_map: False end  -- Implied by `finding_route_to_once' and code in this "from" part.
+					end
 				end
 
 					-- Compute `l_delta' now.
@@ -232,27 +235,30 @@ feature {NONE} -- Implementation
 			-- Sort `grid_data' according to `sorted_column' and `sorting_order'.
 			-- If sorting occurs, call `a_update_action'.
 		require
-			grid_data_not_void: grid_data /= Void
+			grid_data_set: grid_data /= Void
 		local
 			l_sorter: QUICK_SORTER [like row_data]
 			l_agent_sorter: detachable AGENT_EQUALITY_TESTER [like row_data]
 			l_grid_data: like grid_data
 		do
-			inspect
-				sorted_column
-				when 1 then create l_agent_sorter.make (agent sort_on_type_name)
-				when 2 then create l_agent_sorter.make (agent sort_on_count)
-				when 3 then create l_agent_sorter.make (agent sort_on_delta)
-				when 4, 5 then
-					-- No sorting can be performed on sizes as it will slow down the grid usage.
-			end
-			if l_agent_sorter /= Void then
-				create l_sorter.make (l_agent_sorter)
-				l_grid_data := grid_data
-				check attached l_grid_data end -- Implied by precondition
-				l_sorter.sort (l_grid_data)
-					-- Perform update action.
-				a_update_action.call (Void)
+			l_grid_data := grid_data
+			if l_grid_data /= Void then
+				inspect
+					sorted_column
+					when 1 then create l_agent_sorter.make (agent sort_on_type_name)
+					when 2 then create l_agent_sorter.make (agent sort_on_count)
+					when 3 then create l_agent_sorter.make (agent sort_on_delta)
+					when 4, 5 then
+						-- No sorting can be performed on sizes as it will slow down the grid usage.
+				end
+				if l_agent_sorter /= Void then
+					create l_sorter.make (l_agent_sorter)
+					l_sorter.sort (l_grid_data)
+						-- Perform update action.
+					a_update_action.call (Void)
+				end
+			else
+				check grid_data_set: False end -- implied by precondition
 			end
 		end
 
@@ -261,7 +267,6 @@ feature {NONE} -- Implementation
 		require
 			grid_data_not_void: grid_data /= Void
 		local
-			l_data: like grid_data
 			l_row_data: like row_data
 			l_item, l_other_item: MA_GRID_LABEL_ITEM
 			i, l_delta: INTEGER
@@ -270,64 +275,66 @@ feature {NONE} -- Implementation
 			l_row: EV_GRID_ROW
 			l_grid: like object_grid
 		do
-			from
-				l_data := grid_data
-				l_grid := object_grid
-				grid_util.grid_remove_and_clear_all_rows (l_grid)
-				i := 1
-				check attached l_data end -- Implied by precondition `grid_data_not_void'
-				l_data.start
-			until
-				l_data.after
-			loop
-				l_row_data := l_data.item_for_iteration
-				if not filter.filter_class (l_row_data.type_name) then
-					l_str := l_row_data.type_name
-					check
-						l_str_not_void: l_str /= Void
-					end
-
-						-- Set type name
-					create l_item.make_with_text (l_str)
-					l_item.set_pixmap (icons.object_grid_class_icon)
-					l_grid.set_item (1, i, l_item)
-
-						-- Set count
-					l_count := l_row_data.number_of_objects
-					create l_item.make_with_text (l_count.out)
-					l_grid.set_item (2, i, l_item)
-					if l_count >= 1 then
-						l_row := l_grid.row (i)
-						l_row.ensure_expandable
-						l_row.expand_actions.extend (agent on_expand_actions_for_type (l_row_data.type_id, l_row))
-					end
-
-						-- Set delta
-					l_delta := l_row_data.variation_since_last_time
-					if l_delta /= 0 then
-						create l_item.make_with_text (l_delta.out)
-						if l_delta > 0 then
-							l_item.set_foreground_color (increased_color)
-						else
-							l_item.set_foreground_color (decreased_color)
+			if attached grid_data as l_data then
+				from
+					l_grid := object_grid
+					grid_util.grid_remove_and_clear_all_rows (l_grid)
+					i := 1
+					l_data.start
+				until
+					l_data.after
+				loop
+					l_row_data := l_data.item_for_iteration
+					if not filter.filter_class (l_row_data.type_name) then
+						l_str := l_row_data.type_name
+						check
+							l_str_not_void: l_str /= Void
 						end
-						l_grid.set_item (3, i, l_item)
+
+							-- Set type name
+						create l_item.make_with_text (l_str)
+						l_item.set_pixmap (icons.object_grid_class_icon)
+						l_grid.set_item (1, i, l_item)
+
+							-- Set count
+						l_count := l_row_data.number_of_objects
+						create l_item.make_with_text (l_count.out)
+						l_grid.set_item (2, i, l_item)
+						if l_count >= 1 then
+							l_row := l_grid.row (i)
+							l_row.ensure_expandable
+							l_row.expand_actions.extend (agent on_expand_actions_for_type (l_row_data.type_id, l_row))
+						end
+
+							-- Set delta
+						l_delta := l_row_data.variation_since_last_time
+						if l_delta /= 0 then
+							create l_item.make_with_text (l_delta.out)
+							if l_delta > 0 then
+								l_item.set_foreground_color (increased_color)
+							else
+								l_item.set_foreground_color (decreased_color)
+							end
+							l_grid.set_item (3, i, l_item)
+						end
+
+							-- Physical size
+						create l_item.make_with_text ("Click to compute")
+						l_grid.set_item (4, i, l_item)
+							-- Average size
+						create l_other_item.make_with_text ("Click to compute")
+						l_grid.set_item (5, i, l_other_item)
+
+							-- Action to compute the sizes.
+						l_item.pointer_button_press_actions.extend (agent compute_size_action (?, ?, ?, ?, ?, ?, ?, ?, l_item, l_other_item, l_row_data.type_id))
+						l_other_item.pointer_button_press_actions.extend (agent compute_size_action (?, ?, ?, ?, ?, ?, ?, ?, l_item, l_other_item, l_row_data.type_id))
+
+						i := i + 1
 					end
-
-						-- Physical size
-					create l_item.make_with_text ("Click to compute")
-					l_grid.set_item (4, i, l_item)
-						-- Average size
-					create l_other_item.make_with_text ("Click to compute")
-					l_grid.set_item (5, i, l_other_item)
-
-						-- Action to compute the sizes.
-					l_item.pointer_button_press_actions.extend (agent compute_size_action (?, ?, ?, ?, ?, ?, ?, ?, l_item, l_other_item, l_row_data.type_id))
-					l_other_item.pointer_button_press_actions.extend (agent compute_size_action (?, ?, ?, ?, ?, ?, ?, ?, l_item, l_other_item, l_row_data.type_id))
-
-					i := i + 1
+					l_data.forth
 				end
-				l_data.forth
+			else
+				check grid_data_not_void: False end -- Implied by precondition
 			end
 				-- We launch a collection, so that no bad information is displayed
 				-- for referers.
@@ -499,102 +506,106 @@ feature {NONE} -- Implementation
 		require
 			tables_created: reference_table /= Void and name_table /= Void
 			a_map_not_void: a_map /= Void
-			has: a_map.has (a_object_id)
-			set: attached object_table
-			set: attached name_table
-			set: attached reference_table
+			has_type_name_for_object_id: a_map.has (a_object_id)
+			object_table_set: attached object_table
+			name_table_set: attached name_table
+			reference_table_set: attached reference_table
 		local
 			l_name, l_field_name: STRING
 			l_int: INTERNAL
-			l_objects_of_type: detachable ARRAYED_LIST [ANY]
 			l_index: NATURAL
 			l_item: ANY
 			l_referee: detachable ANY
 			l_field_count: INTEGER
 			i: INTEGER
-			l_object_table: like object_table
-			l_name_table: like name_table
-			l_reference_table: like reference_table
 		do
 			create l_int
 			l_name := l_int.type_name_of_type (a_object_id)
-			l_objects_of_type := a_map.item (a_object_id)
-			check attached l_objects_of_type end -- Implied by precondition `has'
-			l_object_table := object_table
-			check attached l_object_table end -- Implied by precondition `set'
-			l_reference_table := reference_table
-			check attached l_reference_table end -- Implied by precondition `set'						
-
-			from
-				l_objects_of_type.start
-			until
-				l_objects_of_type.after
-			loop
-				l_item := l_objects_of_type.item
-				l_index := l_object_table.index (l_item)
-				if last_selected_object /= Void and then l_item = last_selected_object then
-					selected_index := l_index
-					last_selected_object := Void
-				end
-					--| Fixme: we don't know whether it is an once object or not.
-				l_name_table := name_table
-				check attached l_name_table end -- Implied by precondition `set'
-				l_name_table.put (l_name, l_index)
-				check
-					not l_name_table.conflict
-				end
-				if attached {SPECIAL [detachable ANY]} l_item as l_special then
-					l_field_name := once "(special_field)"
+			if
+				attached a_map.item (a_object_id) as l_objects_of_type
+			then
+				if
+					attached reference_table as l_reference_table and then
+					attached object_table as l_object_table
+				then
 					from
-						i := l_special.lower
+						l_objects_of_type.start
 					until
-						i > l_special.upper
+						l_objects_of_type.after
 					loop
-						l_referee := l_special.item (i)
-						if l_referee /= Void then
-							l_reference_table.extend (l_index, l_object_table.index (l_referee), l_field_name)
+						l_item := l_objects_of_type.item
+						l_index := l_object_table.index (l_item)
+						if attached last_selected_object as l_last_selected_object and then l_item = l_last_selected_object then
+							selected_index := l_index
+							last_selected_object := Void
 						end
-						i := i + 1
-					end
-				elseif attached {TUPLE} l_item as l_tuple then
-					l_field_name := once "(tuple_field)"
-					from
-						i := l_tuple.lower
-					until
-						i > l_tuple.upper
-					loop
-						if attached l_tuple.item (i) as r then
-							l_reference_table.extend (l_index, l_object_table.index (r), l_field_name)
+							--| Fixme: we don't know whether it is an once object or not.
+						if attached name_table as l_name_table then
+							l_name_table.put (l_name, l_index)
+							check
+								not l_name_table.conflict
+							end
+						else
+							check name_table_set: False end
 						end
-						i := i + 1
+						if attached {SPECIAL [detachable ANY]} l_item as l_special then
+							l_field_name := once "(special_field)"
+							from
+								i := l_special.lower
+							until
+								i > l_special.upper
+							loop
+								l_referee := l_special.item (i)
+								if l_referee /= Void then
+									l_reference_table.extend (l_index, l_object_table.index (l_referee), l_field_name)
+								end
+								i := i + 1
+							end
+						elseif attached {TUPLE} l_item as l_tuple then
+							l_field_name := once "(tuple_field)"
+							from
+								i := l_tuple.lower
+							until
+								i > l_tuple.upper
+							loop
+								if attached l_tuple.item (i) as r then
+									l_reference_table.extend (l_index, l_object_table.index (r), l_field_name)
+								end
+								i := i + 1
+							end
+						else
+							from
+								l_field_count := l_int.field_count_of_type (a_object_id)
+								i := 1
+							until
+								i > l_field_count or l_item = Current
+							loop
+								l_referee := l_int.field (i, l_item)
+								if l_referee /= Void then
+									l_field_name := l_int.field_name (i, l_item)
+									l_reference_table.extend (l_index, l_object_table.index (l_referee), l_field_name)
+								end
+								i := i + 1
+							end
+						end
+						l_objects_of_type.forth
 					end
 				else
-					from
-						l_field_count := l_int.field_count_of_type (a_object_id)
-						i := 1
-					until
-						i > l_field_count or l_item = Current
-					loop
-						l_referee := l_int.field (i, l_item)
-						if l_referee /= Void then
-							l_field_name := l_int.field_name (i, l_item)
-							l_reference_table.extend (l_index, l_object_table.index (l_referee), l_field_name)
-						end
-						i := i + 1
-					end
+					check reference_table_set: reference_table /= Void end -- Implied by precondition `reference_table_set'
+					check object_table_set: object_table /= Void end -- Implied by precondition `object_table_set'
 				end
-				l_objects_of_type.forth
+			else
+				check has_type_name_for_object_id: False end -- Implied by precondition
 			end
 		end
 
 	build_once_object_table
 			-- Record once object in `once_object_table'.
 		require
-			set: attached object_table
+			object_table_set: attached object_table
 		local
 			l_obj: like once_objects
 			i: INTEGER
-			l_item: ANY
 			l_index: like selected_index
 			l_int: INTERNAL
 			l_once_object_table: like once_object_table
@@ -603,20 +614,22 @@ feature {NONE} -- Implementation
 			create l_int
 			create l_once_object_table.make (100)
 			once_object_table := l_once_object_table
-			l_obj := once_objects
-			from
-				i := l_obj.lower
-			until
-				i > l_obj.upper
-			loop
-				l_item := l_obj.item (i)
-				if l_item /= Void then
-					l_object_table := object_table
-					check attached l_object_table end -- Implied by precondition `set'
-					l_index := l_object_table.index (l_item)
-					l_once_object_table.force (l_index, l_index)
+			l_object_table := object_table
+			if l_object_table /= Void then
+				l_obj := once_objects
+				from
+					i := l_obj.lower
+				until
+					i > l_obj.upper
+				loop
+					if attached l_obj.item (i) as l_item then
+						l_index := l_object_table.index (l_item)
+						l_once_object_table.force (l_index, l_index)
+					end
+					i := i + 1
 				end
-				i := i + 1
+			else
+				check object_table_set: False end -- Implied by precondition.
 			end
 		end
 
@@ -676,12 +689,11 @@ feature {NONE} -- Fields
 	row_data: TUPLE [type_name: STRING; number_of_objects: NATURAL_64; variation_since_last_time: INTEGER; type_id: INTEGER]
 			-- Type for the data inserted in `output_grid'
 			-- It is [type_name, number_of_objects, variation_since_last_time, type_id].
-		local
-			l_result: detachable like row_data
+		require
+			callable: False
 		do
-			check False end -- Anchor type only
-			check attached l_result end -- Satisfy void-safe compiler
-			Result := l_result
+				-- Should not be used, except for anchor type
+			check False then end
 		end
 
 	object_grid: EV_GRID
@@ -817,7 +829,7 @@ invariant
 	object_grid_not_void: object_grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -826,8 +838,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

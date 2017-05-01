@@ -118,7 +118,7 @@ feature -- Status report
 	arguments_name_32: detachable ARRAY [STRING_32]
 			-- Argument names of stored procedure
 
-	arguments_type: detachable ARRAY [ANY]
+	arguments_type: detachable ARRAY [detachable ANY]
 			-- Argument types of stored procedure
 
 feature -- Basic operations
@@ -418,6 +418,8 @@ feature {NONE} -- Implementation
 						s.append_string_general (", ")
 						s.append_string_general (default_decimal_scale.out)
 						s.append_string_general (")")
+					elseif l_obj = Void then
+							-- Argument type should not be Void.
 					else
 						if l_all_types.is_registered (l_obj) then
 							s.append_string_general (l_all_types.db_type (l_obj).sql_name)
@@ -529,7 +531,7 @@ feature {NONE} -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

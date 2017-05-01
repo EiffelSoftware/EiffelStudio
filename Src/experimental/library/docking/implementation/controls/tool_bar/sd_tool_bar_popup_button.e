@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Toolbar button for SD_TOOL_BAR which popup a widget after end user pressed."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,7 +49,7 @@ feature -- Command
 			set: menu_function = a_menu_function
 		end
 
-	set_popup_widget (a_widget: like popup_widget)
+	set_popup_widget (a_widget: attached like popup_widget)
 			-- Set `popup_widget' with `a_widget'
 		require
 			not_void: a_widget /= Void
@@ -58,7 +58,9 @@ feature -- Command
 			popup.wipe_out
 			popup.extend (a_widget)
 		ensure
-			set: popup_widget = a_widget and popup.has (a_widget)
+			popup_widget_set: popup_widget = a_widget
+			has_if_attached: attached a_widget implies popup.has (a_widget)
+			is_empty_if_detached: not attached a_widget implies popup.is_empty
 		end
 
 	set_popup_widget_function (a_popup_widget_function: like popup_widget_function)
@@ -152,17 +154,14 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	popup: EV_POPUP_WINDOW
-			-- Lazy creator of `popup_imp'
-		local
-			l_popup_imp: like popup_imp
+			-- Lazy creator of `popup_imp'.
 		do
-			l_popup_imp := popup_imp
-			if l_popup_imp = Void then
-				create l_popup_imp
-				popup_imp := l_popup_imp
-				l_popup_imp.focus_out_actions.extend (agent l_popup_imp.hide)
+			Result := popup_imp
+			if not attached Result then
+				create Result
+				popup_imp := Result
+				Result.focus_out_actions.extend (agent Result.hide)
 			end
-			Result := l_popup_imp
 		ensure
 			not_void: Result /= Void
 		end
@@ -228,7 +227,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -237,6 +236,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

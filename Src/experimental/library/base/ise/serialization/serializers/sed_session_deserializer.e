@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Decoding of arbitrary objects graphs within a session of a same program."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -48,7 +48,7 @@ feature -- Status report
 	error: detachable SED_ERROR
 			-- Last error encountered during retrieval
 		obsolete
-			"Use `errors' directly to find out errors encountered during retrieval."
+			"Use `errors' directly to find out errors encountered during retrieval. [2017-05-31]"
 		do
 			if attached errors as l_errors and then not l_errors.is_empty then
 				Result := l_errors.last
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation: Settings
 	set_error (a_error: SED_ERROR)
 			-- Assign `a_error' to `error'.
 		obsolete
-			"Use `add_error' instead."
+			"Use `add_error' instead. [2017-05-31]"
 		do
 			add_error (a_error)
 		ensure
@@ -295,7 +295,6 @@ feature {NONE} -- Implementation
 			l_mem: like memory
 			l_is_collecting: BOOLEAN
 			l_nat32: NATURAL_32
-			l_ref_id: INTEGER
 			l_dtype, l_old_dtype: INTEGER
 			i, nb: INTEGER
 			l_obj: ANY
@@ -329,8 +328,7 @@ feature {NONE} -- Implementation
 						check
 							l_nat32_valid: l_nat32 > 0 and l_nat32 < {INTEGER}.max_value.as_natural_32
 						end
-						l_ref_id := l_nat32.to_integer_32
-						check valid_id: l_ref_id = i + 1 end
+						check valid_id: l_nat32.to_integer_32 = i + 1 end
 
 							-- Read object flags
 						if l_deser.read_natural_8 = is_special_flag then
@@ -449,7 +447,6 @@ feature {NONE} -- Implementation
 			l_reflected_object: like reflected_object
 			l_obj: detachable ANY
 			l_nat32: NATURAL_32
-			l_index: INTEGER
 		do
 			l_deser := deserializer
 			l_reflected_object := reflected_object
@@ -459,9 +456,8 @@ feature {NONE} -- Implementation
 			check
 				l_nat32_valid: l_nat32 < {INTEGER}.max_value.as_natural_32
 			end
-			l_index := l_nat32.to_integer_32
 
-			l_obj := object_references.item (l_index)
+			l_obj := object_references.item (l_nat32.to_integer_32)
 			l_reflected_object.set_object (l_obj)
 
 			if l_reflected_object.is_special then
@@ -1096,7 +1092,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

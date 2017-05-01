@@ -82,7 +82,7 @@ feature -- Conversion
 	to_integer: INTEGER
 			-- Converts `item' to an integer.
 		obsolete
-			"Use `item' instead to ensure portability between 32 and 64 bits version of Windows."
+			"Use `item' instead to ensure portability between 32 and 64 bits version of Windows [2017-05-31]."
 		do
 			Result := item.to_integer_32
 		ensure
@@ -124,14 +124,14 @@ feature {WEL_ANY} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

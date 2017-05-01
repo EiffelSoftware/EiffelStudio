@@ -13,8 +13,7 @@ inherit
 	EG_VECTOR [G]
 
 create
-	make,
-	default_create
+	make
 
 feature -- Initialization
 
@@ -29,46 +28,23 @@ feature -- Initialization
 
 feature -- Access
 
-	x: detachable G
+	x: G
 			-- X position of `Current'.
 
-	y: detachable G
+	y: G
 			-- Y position of `Current'.
 
-	attached_x: G
-			-- Attached `x'
-		require
-			set: attached x
-		local
-			l_x: like x
-		do
-			l_x := x
-			check l_x /= Void end -- Implied by precondition `set'
-			Result := l_x
-		end
-
-	attached_y: G
-			-- Attached `y'
-		require
-			set: attached y
-		local
-			l_y: like y
-		do
-			l_y := y
-			check l_y /= Void end -- Implied by precondition `set'
-			Result := l_y
-		end
 
 	one: like Current
 			-- Neutral element for "*" and "/"
 		do
-			create Result.make (attached_x.one, attached_y.one)
+			create Result.make (x.one, y.one)
 		end
 
 	zero: like Current
 			-- Neutral element for "+" and "-"
 		do
-			create Result.make (attached_x.zero, attached_y.zero)
+			create Result.make (x.zero, y.zero)
 		end
 
 feature -- Status report
@@ -96,13 +72,13 @@ feature -- Basic operations
 	plus alias "+" (other: like Current): like Current
 			-- Sum with `other' (commutative).
 		do
-			create Result.make (attached_x + other.attached_x, attached_y + other.attached_y)
+			create Result.make (x + other.x, y + other.y)
 		end
 
 	minus alias "-" (other: like Current): like Current
 			-- Result of subtracting `other'
 		do
-			create Result.make (attached_x - other.attached_x, attached_y - other.attached_y)
+			create Result.make (x - other.x, y - other.y)
 		end
 
 	product alias "*" (other: like Current): like Current
@@ -124,19 +100,19 @@ feature -- Basic operations
 	identity alias "+": like Current
 			-- Unary plus
 		do
-			create Result.make (attached_x, attached_y)
+			create Result.make (x, y)
 		end
 
 	opposite alias "-": like Current
 			-- Unary minus
 		do
-			create Result.make (-attached_x, -attached_y)
+			create Result.make (-x, -y)
 		end
 
 	scalar_product alias "|*" (other: G): like Current
 			-- Scalar product between `Current' and other.
 		do
-			create Result.make (attached_x * other, attached_y * other)
+			create Result.make (x * other, y * other)
 		end
 
 note

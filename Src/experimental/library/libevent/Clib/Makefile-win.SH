@@ -6,9 +6,9 @@ CC = $cc
 OUTPUT_CMD = $output_cmd
 CFLAGS = -I"$rt_include" -I..$(DIR)spec$(DIR)include -I. \
 	-Ilibevent$(DIR)include$(DIR)event2 -Ilibevent$(DIR)include -Ilibevent -Ilibevent$(DIR)WIN32-Code
-JCFLAGS = $(CFLAGS) $ccflags $optimize
-JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
-JILCFLAGS = $(CFLAGS) $mtccflags $optimize -DEIF_IL_DLL
+JCFLAGS = $(CFLAGS) $optimize $ccflags 
+JMTCFLAGS = $(CFLAGS) $optimize $mtccflags 
+JILCFLAGS = $(CFLAGS) $optimize $mtccflags  -DEIF_IL_DLL
 LN = copy
 MV = $mv
 RM = $del

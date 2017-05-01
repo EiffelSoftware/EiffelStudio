@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Semaphore synchronization object, allows threads to access global %
 		%data through critical sections."
@@ -34,7 +34,7 @@ feature -- Access
 	is_set: BOOLEAN
 			-- Is semaphore initialized?
 		do
-			Result := (sem_pointer /= default_pointer)
+			Result := sem_pointer /= default_pointer
 		end
 
 feature -- Status setting
@@ -82,7 +82,7 @@ feature -- Obsolete
 			-- Has client been successful in decrementing semaphore
 			-- count without waiting?
 		obsolete
-			"Use try_wait instead"
+			"Use `try_wait` instead. [2017-05-31]"
 		require
 			valid_semaphore: is_set
 		do
@@ -133,7 +133,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

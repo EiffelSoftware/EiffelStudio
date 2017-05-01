@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Arguments for SD_TOOL_BAR_DRAWER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -64,7 +64,6 @@ feature -- Query
 	is_valid: BOOLEAN
 			-- If Current valid?
 		local
-			l_argument_valid: BOOLEAN
 			l_tool_bar: like tool_bar
 			l_item: like item
 			l_position: like position
@@ -73,23 +72,20 @@ feature -- Query
 			l_item := item
 			l_position := position
 			if l_tool_bar /= Void and l_item /= Void and l_position /= Void then
-				l_argument_valid := l_position.x >= 0 and l_position.y >= 0 and l_tool_bar.has (l_item)
-				Result := l_argument_valid
+				Result := l_position.x >= 0 and l_position.y >= 0 and l_tool_bar.has (l_item)
 			end
 		end
 
-
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
 
 end

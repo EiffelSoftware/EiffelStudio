@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 			Result := True
 		end
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create the tool-bar.
 		do
 			assign_interface (an_interface)

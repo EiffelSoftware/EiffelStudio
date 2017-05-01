@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 	initial_time_interval: INTEGER = 250
 			-- Initial time interval in milliseconds used to check process status	
 
-feature {NONE} -- Implementation
+feature {NONE} -- Initializartion
 
 	initialize_parameter
 			-- <Precursor>

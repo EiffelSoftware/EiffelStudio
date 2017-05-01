@@ -83,7 +83,7 @@ feature -- Vertical text alignement
 		alias
 			"VTA_BASELINE"
 		end
-		
+
 	Vta_center: INTEGER
 			-- The reference point is aligned vertically with the center of the bounding rectangle.
 		external
@@ -106,16 +106,16 @@ feature -- Status report
 				c = Ta_bottom or else
 				c = Ta_baseline
 		end
-		
+
 	valid_text_alignement_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid text alignment constant?
 		obsolete
-			"Use valid_text_alignment_constant instead."
+			"Use valid_text_alignment_constant instead [2017-05-31]."
 		do
 			Result := valid_text_alignment_constant (c)
 		end
-		
-		
+
+
 	valid_htext_alignment_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid text alignment constant for horizontal positioning?
 		do
@@ -123,7 +123,7 @@ feature -- Status report
 				c = Ta_right or else
 				c = Ta_center
 		end
-		
+
 	valid_vtext_alignment_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid text alignment constant for vertical positioning?
 		do
@@ -133,14 +133,14 @@ feature -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -27,12 +27,9 @@ feature -- Creation
 
 	default_create
 			-- Create instance of TUPLE.
-		local
-			l_count: INTEGER
 		do
 			native_array := dummy_array
-			l_count := {ISE_RUNTIME}.generic_parameter_count (Current)
-			create native_array.make (l_count + 1)
+			create native_array.make ({ISE_RUNTIME}.generic_parameter_count (Current) + 1)
 		ensure then
 			non_void_native_array: native_array /= Void
 		end
@@ -40,7 +37,7 @@ feature -- Creation
 	make
 			-- Create instance of TUPLE
 		obsolete
-			"Use no creation procedure to create a TUPLE instance"
+			"Use no creation procedure to create a TUPLE instance. [2017-05-31]"
 		do
 			default_create
 		end
@@ -584,7 +581,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index) = boolean_code)
+			Result := generic_typecode (index) = boolean_code
 		end
 
 	is_character_8_item, is_character_item (index: INTEGER): BOOLEAN
@@ -592,7 +589,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index) = character_8_code)
+			Result := generic_typecode (index) = character_8_code
 		end
 
 	is_character_32_item, is_wide_character_item (index: INTEGER): BOOLEAN
@@ -600,7 +597,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index) = character_32_code)
+			Result := generic_typecode (index) = character_32_code
 		end
 
 	is_double_item (index: INTEGER): BOOLEAN
@@ -608,7 +605,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index) = real_64_code)
+			Result := generic_typecode (index) = real_64_code
 		end
 
 	is_natural_8_item (index: INTEGER): BOOLEAN
@@ -616,7 +613,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index) = natural_8_code)
+			Result := generic_typecode (index) = natural_8_code
 		end
 
 	is_natural_16_item (index: INTEGER): BOOLEAN
@@ -624,7 +621,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index) = natural_16_code)
+			Result := generic_typecode (index) = natural_16_code
 		end
 
 	is_natural_32_item (index: INTEGER): BOOLEAN
@@ -632,7 +629,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index) = natural_32_code)
+			Result := generic_typecode (index) = natural_32_code
 		end
 
 	is_natural_64_item (index: INTEGER): BOOLEAN
@@ -640,7 +637,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index) = natural_64_code)
+			Result := generic_typecode (index) = natural_64_code
 		end
 
 	is_integer_8_item (index: INTEGER): BOOLEAN
@@ -648,7 +645,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index) = integer_8_code)
+			Result := generic_typecode (index) = integer_8_code
 		end
 
 	is_integer_16_item (index: INTEGER): BOOLEAN
@@ -656,7 +653,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index) = integer_16_code)
+			Result := generic_typecode (index) = integer_16_code
 		end
 
 	is_integer_item, is_integer_32_item (index: INTEGER): BOOLEAN
@@ -664,7 +661,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index) = integer_32_code)
+			Result := generic_typecode (index) = integer_32_code
 		end
 
 	is_integer_64_item (index: INTEGER): BOOLEAN
@@ -672,7 +669,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index) = integer_64_code)
+			Result := generic_typecode (index) = integer_64_code
 		end
 
 	is_pointer_item (index: INTEGER): BOOLEAN
@@ -680,7 +677,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index) = pointer_code)
+			Result := generic_typecode (index) = pointer_code
 		end
 
 	is_real_item (index: INTEGER): BOOLEAN
@@ -688,7 +685,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index) = real_32_code)
+			Result := generic_typecode (index) = real_32_code
 		end
 
 	is_reference_item (index: INTEGER): BOOLEAN
@@ -696,13 +693,13 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index) = reference_code)
+			Result := generic_typecode (index) = reference_code
 		end
 
 	is_numeric_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' a number?
 		obsolete
-			"Use the precise type query instead."
+			"Use the precise type query instead. [2017-05-31]"
 		require
 			valid_index: valid_index (index)
 		local
@@ -725,7 +722,7 @@ feature -- Type queries
 		do
 			Result := is_tuple_uniform (any_code)
 		ensure
-			yes_if_empty: (count = 0) implies Result
+			yes_if_empty: count = 0 implies Result
 		end
 
 	is_uniform_boolean: BOOLEAN
@@ -733,7 +730,7 @@ feature -- Type queries
 		do
 			Result := is_tuple_uniform (boolean_code)
 		ensure
-			yes_if_empty: (count = 0) implies Result
+			yes_if_empty: count = 0 implies Result
 		end
 
 	is_uniform_character_8, is_uniform_character: BOOLEAN
@@ -741,7 +738,7 @@ feature -- Type queries
 		do
 			Result := is_tuple_uniform (character_8_code)
 		ensure
-			yes_if_empty: (count = 0) implies Result
+			yes_if_empty: count = 0 implies Result
 		end
 
 	is_uniform_character_32, is_uniform_wide_character: BOOLEAN
@@ -749,7 +746,7 @@ feature -- Type queries
 		do
 			Result := is_tuple_uniform (character_32_code)
 		ensure
-			yes_if_empty: (count = 0) implies Result
+			yes_if_empty: count = 0 implies Result
 		end
 
 	is_uniform_double: BOOLEAN
@@ -757,7 +754,7 @@ feature -- Type queries
 		do
 			Result := is_tuple_uniform (real_64_code)
 		ensure
-			yes_if_empty: (count = 0) implies Result
+			yes_if_empty: count = 0 implies Result
 		end
 
 	is_uniform_natural_8: BOOLEAN
@@ -765,7 +762,7 @@ feature -- Type queries
 		do
 			Result := is_tuple_uniform (natural_8_code)
 		ensure
-			yes_if_empty: (count = 0) implies Result
+			yes_if_empty: count = 0 implies Result
 		end
 
 	is_uniform_natural_16: BOOLEAN
@@ -773,7 +770,7 @@ feature -- Type queries
 		do
 			Result := is_tuple_uniform (natural_16_code)
 		ensure
-			yes_if_empty: (count = 0) implies Result
+			yes_if_empty: count = 0 implies Result
 		end
 
 	is_uniform_natural_32: BOOLEAN
@@ -781,7 +778,7 @@ feature -- Type queries
 		do
 			Result := is_tuple_uniform (natural_32_code)
 		ensure
-			yes_if_empty: (count = 0) implies Result
+			yes_if_empty: count = 0 implies Result
 		end
 
 	is_uniform_natural_64: BOOLEAN
@@ -789,7 +786,7 @@ feature -- Type queries
 		do
 			Result := is_tuple_uniform (natural_64_code)
 		ensure
-			yes_if_empty: (count = 0) implies Result
+			yes_if_empty: count = 0 implies Result
 		end
 
 	is_uniform_integer_8: BOOLEAN
@@ -797,7 +794,7 @@ feature -- Type queries
 		do
 			Result := is_tuple_uniform (integer_8_code)
 		ensure
-			yes_if_empty: (count = 0) implies Result
+			yes_if_empty: count = 0 implies Result
 		end
 
 	is_uniform_integer_16: BOOLEAN
@@ -805,7 +802,7 @@ feature -- Type queries
 		do
 			Result := is_tuple_uniform (integer_16_code)
 		ensure
-			yes_if_empty: (count = 0) implies Result
+			yes_if_empty: count = 0 implies Result
 		end
 
 	is_uniform_integer, is_uniform_integer_32: BOOLEAN
@@ -813,7 +810,7 @@ feature -- Type queries
 		do
 			Result := is_tuple_uniform (integer_32_code)
 		ensure
-			yes_if_empty: (count = 0) implies Result
+			yes_if_empty: count = 0 implies Result
 		end
 
 	is_uniform_integer_64: BOOLEAN
@@ -821,7 +818,7 @@ feature -- Type queries
 		do
 			Result := is_tuple_uniform (integer_64_code)
 		ensure
-			yes_if_empty: (count = 0) implies Result
+			yes_if_empty: count = 0 implies Result
 		end
 
 	is_uniform_pointer: BOOLEAN
@@ -829,7 +826,7 @@ feature -- Type queries
 		do
 			Result := is_tuple_uniform (pointer_code)
 		ensure
-			yes_if_empty: (count = 0) implies Result
+			yes_if_empty: count = 0 implies Result
 		end
 
 	is_uniform_real: BOOLEAN
@@ -837,7 +834,7 @@ feature -- Type queries
 		do
 			Result := is_tuple_uniform (real_32_code)
 		ensure
-			yes_if_empty: (count = 0) implies Result
+			yes_if_empty: count = 0 implies Result
 		end
 
 	is_uniform_reference: BOOLEAN
@@ -845,7 +842,7 @@ feature -- Type queries
 		do
 			Result := is_tuple_uniform (reference_code)
 		ensure
-			yes_if_empty: (count = 0) implies Result
+			yes_if_empty: count = 0 implies Result
 		end
 
 feature -- Access
@@ -902,10 +899,11 @@ feature -- Access
 				l_type_string.append_character (']')
 				create l_reflector
 				l_type_id := l_reflector.dynamic_type_from_string (l_type_string)
-				if l_type_id >= 0 then
-					if attached {like plus} l_reflector.new_tuple_from_special (l_type_id, l_items) as res then
-						Result := res
-					end
+				if
+					l_type_id >= 0 and then
+					attached {like plus} l_reflector.new_tuple_from_special (l_type_id, l_items) as res
+				then
+					Result := res
 				else
 						--| It may be that the maximum tuple capacity was reached.
 						--| better return Void than a truncated tuple.
@@ -924,7 +922,7 @@ feature -- Type conversion queries
 	convertible_to_double: BOOLEAN
 			-- Is current convertible to an array of doubles?
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		local
 			i, cnt: INTEGER
 			tcode: like item_code
@@ -955,7 +953,7 @@ feature -- Type conversion queries
 	convertible_to_real: BOOLEAN
 			-- Is current convertible to an array of reals?
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		local
 			i, cnt: INTEGER
 			tcode: like item_code
@@ -988,7 +986,7 @@ feature -- Conversion
 	arrayed: ARRAY [detachable separate ANY]
 			-- Items of Current as array
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		local
 			i, cnt: INTEGER
 		do
@@ -1013,7 +1011,7 @@ feature -- Conversion
 	boolean_arrayed: ARRAY [BOOLEAN]
 			-- Items of Current as array
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		require
 			is_uniform_boolean: is_uniform_boolean
 		local
@@ -1038,7 +1036,7 @@ feature -- Conversion
 	character_8_arrayed, character_arrayed: ARRAY [CHARACTER_8]
 			-- Items of Current as array
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		require
 			is_uniform_character_8: is_uniform_character_8
 		local
@@ -1063,7 +1061,7 @@ feature -- Conversion
 	double_arrayed: ARRAY [REAL_64]
 			-- Items of Current as array
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		require
 			convertible: convertible_to_double
 		local
@@ -1088,7 +1086,7 @@ feature -- Conversion
 	integer_arrayed: ARRAY [INTEGER]
 			-- Items of Current as array
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		require
 			is_uniform_integer: is_uniform_integer
 		local
@@ -1113,7 +1111,7 @@ feature -- Conversion
 	pointer_arrayed: ARRAY [POINTER]
 			-- Items of Current as array
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		require
 			is_uniform_pointer: is_uniform_pointer
 		local
@@ -1138,7 +1136,7 @@ feature -- Conversion
 	real_arrayed: ARRAY [REAL_32]
 			-- Items of Current as array
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		require
 			convertible: convertible_to_real
 		local
@@ -1165,7 +1163,7 @@ feature -- Conversion
 			-- NOTE: Items with a type not cconforming to
 			--       type STRING are set to Void.
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		local
 			i, cnt: INTEGER
 		do
@@ -1357,7 +1355,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

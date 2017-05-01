@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "Default icons for Smart Docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date       : "$Date$"
-	revision   : "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	SD_DEFAULT_ICONS
@@ -31,16 +31,9 @@ feature {NONE} -- Initlization
 	make
 			-- Creation method
 		do
-			create internal_shared
 		end
 
 feature -- Implementation
-
-	sd_shared: SD_SHARED
-			-- All shared singletons.
-		do
-			create Result
-		end
 
 	unstick: EV_PIXMAP
 			-- <Precursor>
@@ -152,14 +145,12 @@ feature -- Implementation
 			-- <Precursor>
 		local
 			l_orignal: EV_PIXMAP
-			l_colors: EV_STOCK_COLORS
 			l_font: EV_FONT
 		do
 			l_orignal := icons_10_10 .tool_bar_hidden_dropdown_small_icon
 			Result := l_orignal.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, l_orignal.width, l_orignal.height))
 
-			create l_colors
-			Result.set_background_color (l_colors.default_background_color)
+			Result.set_background_color ((create {EV_STOCK_COLORS}).default_background_color)
 
 			if a_hide_number < 10 then
 				Result.set_size (18, 16)
@@ -280,11 +271,8 @@ feature -- Implementation
 
 	tool_bar_customize_dialog: EV_PIXMAP
 			-- <Precursor>
-		local
-			l_stock: EV_STOCK_PIXMAPS
 		once
-			create l_stock
-			Result := l_stock.default_window_icon
+			Result := (create {EV_STOCK_PIXMAPS}).default_window_icon
 		end
 
 	drag_pointer_up: EV_POINTER_STYLE
@@ -467,26 +455,16 @@ feature -- Editor icons
 			Result := icons_16_16.editor_area_icon_buffer
 		end
 
-feature {NONE}  -- Implementation
-
-	internal_shared: SD_SHARED
-			-- All singletons
-
-invariant
-
-	internal_shared_not_void: internal_shared /= Void
-
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
 
 end

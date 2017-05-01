@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-						Widget item on SD_TOOL_BAR.
-						Actually it's a place holder for a EV_WIDGET object.
-																			]"
+			Widget item on SD_TOOL_BAR.
+			Actually it's a place holder for a EV_WIDGET object.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -24,14 +24,11 @@ feature {NONE} -- Initlization
 		require
 			not_void: a_widget /= Void
 			parent_void: a_widget.parent = Void
-		local
-			l_shared: SD_SHARED
 		do
 			widget := a_widget
 			description := "Widget item"
-			name := generating_type
-			create l_shared
-			pixmap := l_shared.icons.tool_bar_widget_item_icon
+			name := generating_type.name_32
+			pixmap := (create {SD_SHARED}).icons.tool_bar_widget_item_icon
 			is_displayed := True
 		ensure
 			set: widget = a_widget
@@ -179,7 +176,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -188,6 +185,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

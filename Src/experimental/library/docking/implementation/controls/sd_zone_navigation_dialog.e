@@ -587,11 +587,9 @@ feature {NONE} -- Implementation command
 			-- Selected item index
 		local
 			l_selected: like selected_label
-			l_all_items: like all_items_in_part
 		do
 			l_selected := selected_label
-			l_all_items := all_items_in_part (is_seleted_label_in_files)
-			Result := l_all_items.index_of (l_selected, 1)
+			Result := all_items_in_part (is_seleted_label_in_files).index_of (l_selected, 1)
 		ensure
 			valid: Result /= 0
 		end
@@ -1040,7 +1038,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

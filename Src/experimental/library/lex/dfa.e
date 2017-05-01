@@ -36,7 +36,7 @@ feature -- Access
 		end;
 
 	possible_tokens (l: LINKED_LIST [INTEGER]): detachable ARRAY [INTEGER]
-			-- Attribute ``final_array'' of the state reached in Current after
+			-- Attribute `final_array' of the state reached in Current after
 			-- making transitions from state to state on the
 			-- inputs listed in `l'; empty if not recognized
 		local

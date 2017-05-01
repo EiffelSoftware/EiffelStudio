@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		To easily manage allocation and release of allocated C memory, and
 		to perform insertion of basic elements. Byte order is by default
@@ -293,7 +293,7 @@ feature -- Access: Platform specific
 
 	read_real (pos: INTEGER): REAL_32
 			-- Read REAL_32 at position `pos'.
-		obsolete "Use read_real_32 instead."
+		obsolete "Use read_real_32 instead. [2017-05-31]"
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_32_bytes) <= count
@@ -312,7 +312,7 @@ feature -- Access: Platform specific
 
 	read_double (pos: INTEGER): REAL_64
 			-- Read REAL_64 at position `pos'.
-		obsolete "Use read_real_64 instead."
+		obsolete "Use read_real_64 instead. [2017-05-31]"
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_64_bytes) <= count
@@ -521,7 +521,7 @@ feature -- Element change: Platform specific
 
 	put_real (r: REAL_32; pos: INTEGER)
 			-- Insert `r' at position `pos'.
-		obsolete "Use put_real_32 instead."
+		obsolete "Use put_real_32 instead. [2017-05-31]"
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_32_bytes) <= count
@@ -544,7 +544,7 @@ feature -- Element change: Platform specific
 
 	put_double (d: REAL_64; pos: INTEGER)
 			-- Insert `d' at position `pos'.
-		obsolete "Use put_real_64 instead."
+		obsolete "Use put_real_64 instead. [2017-05-31]"
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_64_bytes) <= count
@@ -629,14 +629,13 @@ feature -- Access: Little-endian format
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + natural_16_bytes) <= count
 		local
-			l_high, l_low: NATURAL_16
+			l_low: NATURAL_16
 		do
 			if is_little_endian then
 				Result := read_natural_16 (pos)
 			else
 				l_low := {NATURAL_16} 0x00FF & read_natural_8 (pos)
-				l_high := read_natural_8 (pos + natural_8_bytes)
-				Result := (l_high.to_natural_16 |<< 8) | l_low
+				Result := (read_natural_8 (pos + natural_8_bytes).to_natural_16 |<< 8) | l_low
 			end
 		end
 
@@ -1234,7 +1233,7 @@ invariant
 	valid_count: count >= 0
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -9,11 +9,6 @@
 				<platform value="windows"/>
 			</condition>
 		</external_include>
-		<external_cflag value="-D_WINSOCKAPI_">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</external_cflag>
 		<external_object location="-lzmq">
 			<condition>
 				<platform excluded_value="windows"/>

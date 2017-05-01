@@ -9,7 +9,7 @@ class
 	WSDK_CONFIG
 
 inherit
-	MSCL_CONFIG
+	MSC_REG_CONFIG
 		redefine
 			batch_file_arguments, batch_file_options
 		end
@@ -105,7 +105,7 @@ feature {NONE} -- Access
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

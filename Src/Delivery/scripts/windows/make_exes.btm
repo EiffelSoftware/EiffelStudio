@@ -172,6 +172,9 @@ endiff
 
 remtrace Recompile finish_freezing
 cdd %EIFFEL_SRC\tools\finish_freezing
+cd Clib
+default_make 
+cd ..
 clean_project
 finalize finish_freezing.ecf finish_freezing
 cleanup_eiffel finish_freezing finish_freezing.exe

@@ -114,6 +114,7 @@ feature {NONE} -- Basic operations
 			l_pair: like parse_variable_name_value_pair
 			l_appliable: like applicable_variables
 			retry_count: INTEGER
+			l_table: HASH_TABLE [STRING_32, STRING_32]
 		do
 			l_result := internal_variables_via_evaluation
 			if l_result /= Void then
@@ -145,6 +146,14 @@ feature {NONE} -- Basic operations
 
 						create l_process_factory
 						l_launcher := l_process_factory.process_launcher_with_command_line (l_cmd, Void)
+
+							-- Some Microsoft scripts reuse the value of VSINSTALLDIR instead of starting fresh.
+							-- We make sure to remove this before executing our scripts.
+						l_table := (create {EXECUTION_ENVIRONMENT}).starting_environment
+						if l_table.has ("VSINSTALLDIR") then
+							l_table.remove ("VSINSTALLDIR")
+						end
+						l_launcher.set_environment_variable_table (l_table)
 						l_launcher.set_hidden (True)
 						l_launcher.set_separate_console (True)
 						l_launcher.launch
@@ -401,7 +410,7 @@ invariant
 	batch_options_attached: batch_options /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

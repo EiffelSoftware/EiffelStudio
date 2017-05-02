@@ -1787,7 +1787,7 @@ feature -- Cecil generation
 				buffer.put_character ('{')
 				buffer.put_string (once "(int32) ")
 				buffer.put_integer (associated_class.visible_table_size)
-				buffer.put_string (once ", sizeof(char *(*)()), cl")
+				buffer.put_string (once ", sizeof(char *(*)()), (char **) cl")
 				buffer.put_integer (associated_class.class_id)
 				buffer.put_string (once ", (char *) cr")
 				buffer.put_integer (type_id)
@@ -1795,7 +1795,6 @@ feature -- Cecil generation
 			else
 				buffer.put_string (once "{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
 			end
-			buffer.put_new_line
 		end
 
 feature -- Byte code generation
@@ -2035,7 +2034,7 @@ invariant
 	valid_implementation_id: System.il_generation implies implementation_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

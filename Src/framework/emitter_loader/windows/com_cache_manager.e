@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 	c_initialize (ap: POINTER): INTEGER
 			-- initialize COM object
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature ():EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature ():EIF_INTEGER use <ole2.h>, %"metadata_consumer.h%""
 		alias
 			"initialize"
 		end
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 	c_initialize_with_path (ap:POINTER; ap2: POINTER): INTEGER
 			-- initialize COM object with alternative ISE_EIFFEL path ?
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR):EIF_INTEGER use <ole2.h>, %"metadata_consumer.h%""
 		alias
 			"initialize_with_path"
 		end
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 	c_is_initalized (ap:POINTER; aret_val: POINTER): INTEGER
 			-- was the last operation successful?
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (VARIANT_BOOL*):EIF_INTEGER use <ole2.h>, %"metadata_consumer.h%""
 		alias
 			"is_initialized"
 		end
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 	c_is_successful (ap:POINTER; aret_val: POINTER): INTEGER
 			-- was the last operation successful?
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (VARIANT_BOOL*):EIF_INTEGER use <ole2.h>, %"metadata_consumer.h%""
 		alias
 			"is_successful"
 		end
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 	c_last_error_message (ap:POINTER; aret_val: POINTER): INTEGER
 			-- last error message of a failed operation
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (LPWSTR*):EIF_INTEGER use <ole2.h>, %"metadata_consumer.h%""
 		alias
 			"last_error_message"
 		end
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 			-- Consume an assembly into the EAC from at least `a_name'
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, BSTR, BSTR, BSTR, VARIANT_BOOL): EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, BSTR, BSTR, BSTR, VARIANT_BOOL): EIF_INTEGER use <ole2.h>, %"metadata_consumer.h%""
 		alias
 			"consume_assembly"
 		end
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 	c_consume_assembly_from_path (ap, a_path: POINTER; a_info_only: BOOLEAN; a_references: POINTER): INTEGER
 			-- Consume referenced assembly `a_path' an all of its dependacies into EAC
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, VARIANT_BOOL, BSTR): EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, VARIANT_BOOL, BSTR): EIF_INTEGER use <ole2.h>, %"metadata_consumer.h%""
 		alias
 			"consume_assembly_from_path"
 		end
@@ -209,13 +209,13 @@ feature {NONE} -- Implementation
 	c_unload (ap: POINTER): INTEGER
 			-- -- retrieve the assembly information from a assembly
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature ():EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature ():EIF_INTEGER use <ole2.h>, %"metadata_consumer.h%""
 		alias
 			"unload"
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -228,22 +228,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class COM_CACHE_MANAGER

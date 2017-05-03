@@ -1406,6 +1406,7 @@ test	thread-crashes-on-die		thread021	tcf pass multithreaded
 if UNIX test	thread-hangs-on-fork	thread022	tcf pass multithreaded
 test	root-thread-exit-continues		thread023	tcf pass multithreaded
 test	multiple-thread-gc-crash		thread024	tcf pass multithreaded
+test	thread-terminated-attribute-renaming	thread025	tcf fail multithreaded
 
 -- SCOOP
 test	scoop-access-smoke				scoop001 tcf pass scoop multithreaded execution

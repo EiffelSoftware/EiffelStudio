@@ -71,13 +71,13 @@ feature {NONE} -- Implementation
 	key_press (a_key: EV_KEY)
 			-- A key press event has occurred on the test widget. Output details.
 		do
-			output.append_text ("Key press event occurred. Key : " + a_key.out + "%N")
+			output.append_text ({STRING_32} "Key press event occurred. Key : " + a_key.text + "%N")
 		end
 
 	key_release (a_key: EV_KEY)
 			-- A key release event has occurred on the test widget. Output details.
 		do
-			output.append_text ("Key release event occurred. Key : " + a_key.out + "%N")
+			output.append_text ({STRING_32} "Key release event occurred. Key : " + a_key.text + "%N")
 		end
 
 	key_press_string (s: STRING_32)

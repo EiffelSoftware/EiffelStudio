@@ -93,7 +93,6 @@ feature {NONE} -- Initialization
 			primitives: ARRAY [EV_WIDGET]
 			containers: ARRAY [EV_WIDGET]
 			counter: INTEGER
-			pixmap: EV_PIXMAP
 		do
 			create tree_item.make_with_text ("Widgets")
 			widget_tree.extend (tree_item)
@@ -158,8 +157,7 @@ feature {NONE} -- Initialization
 				widget := primitives.item (counter)
 				create tree_item2.make_with_text (widget.generator)
 				tree_item1.extend (tree_item2)
-				pixmap ?= widget
-				if pixmap /= Void then
+				if attached {EV_PIXMAP} widget as pixmap then
 					pixmap.set_with_named_file ("bm_About.png")
 				end
 				tree_item2.select_actions.extend (agent test_widget (widget))
@@ -190,63 +188,50 @@ feature {NONE} -- Initialization
 				-- We must now check the types that `widget' conforms to,
 				-- in order to set up the required controls.
 
-			container ?= widget
-			if container /= Void then
+			if attached {EV_CONTAINER} widget as container then
 				create container_control.make (test_holder, container, output)
 			end
-			sensitive ?= widget
-			if sensitive /= Void then
+			if attached {EV_SENSITIVE} widget as sensitive then
 				create sensitive_control.make (test_holder, sensitive, output)
 			end
-			colorizable ?= widget
-			if colorizable /= Void then
+			if attached {EV_COLORIZABLE} widget as colorizable then
 				create colorizable_control.make (test_holder, colorizable, output)
 			end
-			textable ?= widget
-			if textable /= Void then
+			if attached {EV_TEXTABLE} widget as textable then
 				create textable_control.make (test_holder, textable, output)
 			end
 
-			text_alignable ?= widget
-			if text_alignable /= Void then
+			if attached {EV_TEXT_ALIGNABLE} widget as text_alignable then
 				create text_alignable_control.make (test_holder, text_alignable, output)
 			end
 
-			text_component ?= widget
-			if text_component /= Void then
+			if attached {EV_TEXT_COMPONENT} widget as text_component then
 				create text_component_control.make (test_holder, text_component, output)
 			end
 
-			button ?= widget
-			if button /= Void then
+			if attached {EV_BUTTON} widget as button then
 				button.select_actions.extend (agent output.append_text ("Button selected%N"))
 			end
 
-			drawable ?= widget
-			if drawable /= Void then
+			if attached {EV_DRAWABLE} widget as drawable then
 				create drawable_control.make (test_holder, drawable, output)
 			end
 
-			pixmapable ?= widget
-			if pixmapable /= Void then
+			if attached {EV_PIXMAPABLE} widget as pixmapable then
 				create pixmapable_control.make (test_holder, pixmapable, output)
 			end
 
-			selectable ?= widget
-			deselectable ?= widget
-			if deselectable /= Void then
+			if attached {EV_DESELECTABLE} widget as deselectable then
 				create deselectable_control.make (test_holder, deselectable, output)
-			elseif selectable /= Void then
+			elseif attached {EV_SELECTABLE} widget as selectable then
 				create selectable_control.make (test_holder, selectable, output)
 			end
 
-			gauge ?= widget
-			if gauge /= Void then
+			if attached {EV_GAUGE} widget as gauge then
 				create gauge_control.make (test_holder, gauge, output)
 			end
 
-			item_list ?= widget
-			if item_list /= Void then
+			if attached {EV_ITEM_LIST [EV_ITEM]} widget as item_list then
 				create item_list_control.make (test_holder, item_list, output)
 			end
 		end
@@ -290,7 +275,7 @@ feature -- Access
 
 	text_field: EV_TEXT_FIELD
 
-	button, button1: EV_BUTTON
+	button1: EV_BUTTON
 
 	file_menu, help_menu: EV_MENU
 
@@ -328,33 +313,9 @@ feature {NONE} -- Implementation
 
 		-- The different properties and types that
 		-- we need to use.
-	textable: EV_TEXTABLE
-
-	text_component: EV_TEXT_COMPONENT
-
-	sensitive: EV_SENSITIVE
-
-	colorizable: EV_COLORIZABLE
-
 	text_component_text_field: EV_TEXT_FIELD
 
-	selectable: EV_SELECTABLE
-
-	deselectable: EV_DESELECTABLE
-
-	drawable: EV_DRAWABLE
-
-	pixmapable: EV_PIXMAPABLE
-
-	gauge: EV_GAUGE
-
-	container: EV_CONTAINER
-
 	textable_text_field: EV_TEXT_FIELD
-
-	text_alignable: EV_TEXT_ALIGNABLE
-
-	item_list: EV_ITEM_LIST [EV_ITEM]
 
 	bspinr, bsping, bspinb, fspinr, fsping, fspinb: EV_SPIN_BUTTON
 

@@ -99,65 +99,65 @@ feature {NONE} -- Implementation
 			drawable.draw_text (x_pos, y_pos, "Text")
 			move_coordinates
 		end
-		
+
 	draw_point
 			-- Draw a point on `drawable'.
 		do
 			drawable.draw_point (x_pos, y_pos)
 			move_coordinates
 		end
-		
+
 	draw_segment
 			-- Draw a segment on `drawable'.
 		do
 			drawable.draw_segment (x_pos, y_pos, 0, 0)
 			move_coordinates
 		end
-		
+
 	draw_straight_line
 			-- Draw a straight line on `drawable'.
 		do
 			drawable.draw_straight_line (x_pos, y_pos, 0, 0)
 			move_coordinates
 		end
-		
+
 	draw_pixmap
 			-- Draw a pixmap on `drawable'.
 		do
 			drawable.draw_pixmap (x_pos, y_pos, pixmap)
 			move_coordinates
 		end
-		
+
 	draw_arc
 			-- Draw an arc on `drawable'.
 		do
 			drawable.draw_arc (x_pos, y_pos, 100, 100, 0, 4)
 			move_coordinates
 		end
-		
+
 	draw_rectangle
 			-- Draw a rectangle on `drawable'.
 		do
 			drawable.draw_rectangle (x_pos, y_pos, 80, 80)
 			move_coordinates
 		end
-		
+
 	draw_ellipse
 			-- Draw an ellipse on `drawable'.
 		do
 			drawable.draw_ellipse (x_pos, y_pos, 80, 50)
 			move_coordinates
 		end
-		
+
 	draw_polyline
 			-- Draw a polyline on `drawable'.
 		local
 			coor: EV_COORDINATE
 			points: ARRAY [EV_COORDINATE]
 		do
-			create points.make (1, 5)
 			create coor.set (10 + x_pos, 15 + y_pos)
-			points.force (coor, 1)
+			create points.make_filled (coor, 1, 5)
+
 			create coor.set (45 + x_pos, 2 + y_pos)
 			points.force (coor, 2)
 			create coor.set (30 + x_pos, 50 + y_pos)
@@ -169,37 +169,37 @@ feature {NONE} -- Implementation
 			drawable.draw_polyline (points, True)
 			move_coordinates
 		end
-		
+
 	draw_pie_slice
 			-- Draw a pie slice on `drawable'.
 		do
 			drawable.draw_pie_slice (x_pos, y_pos, 100, 100, 0, 4)
 			move_coordinates
-		end	
-		
+		end
+
 	fill_rectangle
 			-- Fill a rectangle on `drawable'.
 		do
 			drawable.fill_rectangle (x_pos, y_pos, 80, 80)
 			move_coordinates
 		end
-		
+
 	fill_ellipse
 			-- Fill an ellipse on `drawable'.
 		do
 			drawable.fill_ellipse (x_pos, y_pos, 80, 50)
 			move_coordinates
 		end
-		
+
 	fill_polygon
 			-- Fill a polygon on `drawable'.
 		local
 			coor: EV_COORDINATE
 			points: ARRAY [EV_COORDINATE]
 		do
-			create points.make (1, 5)
 			create coor.set (10 + x_pos, 15 + y_pos)
-			points.force (coor, 1)
+			create points.make_filled (coor, 1, 5)
+
 			create coor.set (45 + x_pos, 2 + y_pos)
 			points.force (coor, 2)
 			create coor.set (30 + x_pos, 50 + y_pos)
@@ -211,13 +211,13 @@ feature {NONE} -- Implementation
 			drawable.fill_polygon (points)
 			move_coordinates
 		end
-		
+
 	fill_pie_slice
 			-- Fill a pie slice on `drawable'.
 		do
 			drawable.fill_pie_slice (x_pos, y_pos, 100, 100, 0, 4)
 			move_coordinates
-		end	
+		end
 
 	toggle_line_style
 			-- Update the line style used for drawings.
@@ -230,13 +230,13 @@ feature {NONE} -- Implementation
 				drawable.enable_dashed_line_style
 			end
 		end
-		
+
 	set_line_width (value: INTEGER)
 			-- Assign `value' to the line width of `drawable'.
 		do
 			drawable.set_line_width (value)
 		end
-		
+
 	move_coordinates
 			-- Update coordinates for drawing location.
 		do
@@ -249,8 +249,8 @@ feature {NONE} -- Implementation
 				yvel := 0 - yvel
 			end
 		end
-		
-		
+
+
 		-- The coordinates on velocities for the drawings.
 	x_pos, y_pos, xvel, yvel: INTEGER
 

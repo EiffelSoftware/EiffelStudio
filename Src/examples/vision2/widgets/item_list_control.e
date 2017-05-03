@@ -7,7 +7,7 @@ note
 
 class
 	ITEM_LIST_CONTROL
-	
+
 inherit
 	EV_FRAME
 
@@ -41,13 +41,13 @@ feature {NONE} -- Initialization
 			vertical_box.extend (extendible_label)
 			create count_label
 			vertical_box.extend (count_label)
-			
+
 			update_information
 			box.extend (Current)
 		end
-		
+
 feature {NONE} -- Implementation
-		
+
 	new_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW
 			-- A new instance of a multi column list row.
 		do
@@ -56,13 +56,13 @@ feature {NONE} -- Implementation
 			Result.extend ("Column 2")
 			Result.extend ("Column 3")
 		end
-		
+
 	new_tool_bar_item: EV_TOOL_BAR_BUTTON
 			-- A new instance of a tool bar button.
 		do
 			create Result.make_with_text ("Button " + item_list.count.out)
 		end
-		
+
 	new_tree_item: EV_TREE_ITEM
 			-- A new instance of a tree item.
 		local
@@ -84,37 +84,37 @@ feature {NONE} -- Implementation
 			-- An `item_list' if an EV_MULTI_COLUMN_LIST.
 			-- Void otherwise
 		do
-			Result ?= item_list
+			Result := {EV_MULTI_COLUMN_LIST} / item_list
 		end
-		
+
 	new_list_item: EV_LIST_ITEM
 			-- A new instance of an EV_LIST_ITEM.
 		do
 			create Result.make_with_text ("List item " + item_list.count.out)
 		end
-	
+
 	list: EV_LIST
 			-- An `item_list' if an EV_LIST.
 		do
-			Result ?= item_list
+			Result := {EV_LIST} / item_list
 		end
-		
+
 	combo_box: EV_COMBO_BOX
 			-- An `item_list' if an EV_COMBO_BOX.
 		do
-			Result ?= item_list
+			Result := {EV_COMBO_BOX} / item_list
 		end
-		
+
 	tool_bar: EV_TOOL_BAR
 			-- An `item_list' if an EV_TOOL_BAR.
 		do
-			Result ?= item_list
+			Result := {EV_TOOL_BAR} / item_list
 		end
-		
+
 	tree: EV_TREE
 			-- An `item_list' if an EV_TREE.
 		do
-			Result ?= item_list
+			Result := {EV_TREE} / item_list
 		end
 
 	extend_container
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			end
 			update_information
 		end
-		
+
 	update_information
 			-- Update queries about item lists.
 		do
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 	is_empty_label: EV_LABEL
 	extendible_label: EV_LABEL
 	count_label: EV_LABEL;
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

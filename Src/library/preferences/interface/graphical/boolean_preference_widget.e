@@ -117,15 +117,8 @@ feature {NONE} -- Implementation
 
 	value_from_displayed: BOOLEAN
 			-- Value from what have been displayed.
-		local
-			l_str: STRING_32
 		do
-			l_str := change_item_widget.text
-			if attached last_displayed_true as ldt and then l_str.is_equal (ldt.as_string_32) then
-				Result := True
-			else
-				Result := False
-			end
+			Result := attached last_displayed_true as ldt and then change_item_widget.text.is_equal (ldt.as_string_32)
 		end
 
 	displayed_true, displayed_false: detachable STRING_32
@@ -133,7 +126,7 @@ feature {NONE} -- Implementation
 	last_displayed_true, last_displayed_false: detachable STRING_32;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

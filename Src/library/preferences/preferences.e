@@ -296,7 +296,7 @@ feature -- Access
 	error_message: detachable STRING_8
 			-- Message explaining why `Current' could not be initialized.
 		obsolete
-			"Use `error_message_32' instead."
+			"Use `error_message_32` instead [2017-05-31]."
 		require
 			error_message_is_valid_as_string_8: error_message_is_valid_as_string_8
 		do
@@ -413,7 +413,7 @@ feature -- Preference
 		end
 
 	get_resource (a_name: STRING): detachable PREFERENCE
-		obsolete "[060113] use get_preference instead of get_resource"
+		obsolete "use `get_preference` [2017-05-31]"
 		do
 			Result := get_preference (a_name)
 		end
@@ -432,7 +432,7 @@ feature -- Preference
 		end
 
 	get_resource_value_direct (a_name: READABLE_STRING_GENERAL): like get_preference_value_direct
-		obsolete "[060113] use get_preference_value_direct instead of get_resource_value_direct"
+		obsolete "use `get_preference_value_direct` [2017-05-31]"
 		do
 			Result := get_preference_value_direct (a_name)
 		end
@@ -455,7 +455,7 @@ feature -- Preference
 		end
 
 	has_resource (a_name: STRING): BOOLEAN
-		obsolete "[060113] use has_preference instead of has_resource"
+		obsolete "use `has_preference` [2017-05-31]"
 		do
 			Result := has_preference (a_name)
 		end
@@ -490,13 +490,13 @@ feature -- Preference
 		end
 
 	save_resource (a_preference: PREFERENCE)
-		obsolete "[060113] use save_preference instead of save_resource"
+		obsolete "use `save_preference` [2017-05-31]"
 		do
 			save_preference (a_preference)
 		end
 
 	save_resources
-		obsolete "[060113] use save_preferences instead of save_resources"
+		obsolete "use `save_preferences` [2017-05-31]"
 		do
 			save_preferences
 		end
@@ -543,7 +543,7 @@ feature {PREFERENCE_EXPORTER} -- Implementation
 			-- Preferences part of Current.
 
 	resources: like preferences
-		obsolete "[060113] use preferences instead of resources"
+		obsolete "use `preferences` [2017-05-31]"
 		do
 			Result := preferences
 		end
@@ -719,7 +719,7 @@ invariant
 	has_preferences_storage: preferences_storage /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

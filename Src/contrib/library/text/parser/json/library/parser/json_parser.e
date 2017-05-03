@@ -35,7 +35,7 @@ feature {NONE} -- Initialize
 	make_parser (a_json: STRING)
 			-- Initialize.
 		obsolete
-			"Use `make_with_string' [sept/2014]."
+			"Use `make_with_string' [2017-05-31]."
 		do
 			make_with_string (a_json)
 		end
@@ -72,7 +72,7 @@ feature -- Status report
 	current_errors: STRING
 			-- Current errors as string
 		obsolete
-			"USe errors_as_string [sept/2014]"
+			"Use errors_as_string [2017-05-31]"
 		do
 			Result := errors_as_string
 		end
@@ -158,7 +158,7 @@ feature -- Obsolete commands
 			-- Parse JSON data `representation'
 			-- start ::= object | array
 		obsolete
-			"Use `parse_content' and `parsed_json_value'  [sept/2014]."
+			"Use `parse_content' and `parsed_json_value'  [2017-05-31]."
 		do
 			parse_content
 			if is_parsed then
@@ -170,7 +170,7 @@ feature -- Obsolete commands
 			-- Parse JSON data `representation'
 			-- start ::= object | array
 		obsolete
-			"Use `parse_content' and `parsed_json_value'  [nov/2014]."
+			"Use `parse_content' and `parsed_json_value'  [2017-05-31]."
 		do
 			parse_content
 			if is_parsed and then attached {JSON_OBJECT} parsed_json_value as jo then
@@ -181,7 +181,7 @@ feature -- Obsolete commands
 	parse: detachable JSON_VALUE
 			-- Next JSON value from current position on `representation'.
 		obsolete
-			"Use restricted `next_parsed_json_value' [sept/2014]."
+			"Use restricted `next_parsed_json_value' [2017-05-31]."
 		do
 			Result := next_parsed_json_value
 			is_parsed := is_valid
@@ -420,8 +420,8 @@ feature {NONE} -- Implementation: parsing
 				end
 			end
 			if is_valid_number (sb) then
-				if sb.is_integer then
-					create Result.make_integer (sb.to_integer)
+				if sb.is_integer_64 then
+					create Result.make_integer (sb.to_integer_64)
 					is_integer := True
 				elseif sb.is_double and not is_integer then
 					create Result.make_real (sb.to_double)
@@ -674,6 +674,6 @@ feature {NONE} -- Constants
 	null_id: STRING = "null"
 
 note
-	copyright: "2010-2015, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2017, Javier Velilla and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

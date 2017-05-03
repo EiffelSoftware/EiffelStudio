@@ -607,11 +607,9 @@ feature {NONE} -- Implementation
 			l_obj: like once_objects
 			i: INTEGER
 			l_index: like selected_index
-			l_int: INTERNAL
 			l_once_object_table: like once_object_table
 			l_object_table: like object_table
 		do
-			create l_int
 			create l_once_object_table.make (100)
 			once_object_table := l_once_object_table
 			l_object_table := object_table

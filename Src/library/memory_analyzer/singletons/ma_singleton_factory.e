@@ -97,10 +97,7 @@ feature -- Cursors
 
 	accept_node: EV_POINTER_STYLE
 			-- Icon used when picking
-		local
-			pix: EV_PIXMAP
 		once
-			create pix
 			create Result.make_with_pixmap (icons.eiffel_pebble_icon, 8, 8)
 		ensure
 			accept_node_not_void: Result /= Void
@@ -108,10 +105,7 @@ feature -- Cursors
 
 	deny_node: EV_POINTER_STYLE
 			-- Icon used when picking
-		local
-			pix: EV_PIXMAP
 		once
-			create pix
 			create Result.make_with_pixmap (icons.eiffel_pebble_x_icon, 8, 8)
 		ensure
 			deny_node_not_void: Result /= Void
@@ -130,10 +124,7 @@ feature -- Cursors
 
 	deny_node_class: EV_POINTER_STYLE
 			-- Icon used when picking
-		local
-			pix: EV_PIXMAP
 		once
-			create pix
 			create Result.make_with_pixmap (icons.object_grid_class_x_icon, 8, 8)
 		ensure
 			deny_node_class: Result /= Void

@@ -114,12 +114,12 @@ feature {NONE} -- Implementation
 				end
 				area.fill_rectangle (0, 0, change_item_widget.width, change_item_widget.height)
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
-				area.draw_text_top_left (5, 1, preference.string_value)
+				area.draw_text_top_left (5, 1, preference.value)
 			else
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
 				area.fill_rectangle (0, 0, change_item_widget.width, change_item_widget.height)
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-				area.draw_text_top_left (5, 1, preference.string_value)
+				area.draw_text_top_left (5, 1, preference.value)
 			end
 		end
 

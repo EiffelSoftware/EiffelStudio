@@ -1387,12 +1387,14 @@ rt_public int eif_pthread_cond_wait_with_timeout (EIF_COND_TYPE *condvar, EIF_MU
 					condvar->num_wake--;
 					condvar->num_waiting--;
 					Result = T_OK;
+	                (void) eif_pthread_cs_unlock(condvar->csection);
 					break;
 				} else {
 					wake = 1;
 				}
 			} else if (Result == T_TIMEDOUT) {
 				condvar->num_waiting--;
+	            (void) eif_pthread_cs_unlock(condvar->csection);
 				break;
 			}
 			(void) eif_pthread_cs_unlock(condvar->csection);
@@ -1404,7 +1406,6 @@ rt_public int eif_pthread_cond_wait_with_timeout (EIF_COND_TYPE *condvar, EIF_MU
 		}
 	}
 
-	(void) eif_pthread_cs_unlock(condvar->csection);
 	eif_pthread_mutex_lock(mutex);
 #else
 	struct timespec tspec = rt_timeout_to_timespec(timeout);

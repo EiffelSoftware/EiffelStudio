@@ -114,14 +114,14 @@ feature -- Obsolete query
 
 	include_max_age: BOOLEAN
 		obsolete
-			"Use `max_age > 0' [April-2016]"
+			"Use `max_age > 0' [2017-05-31]"
 		do
 			Result := max_age > 0
 		end
 
 	include_expires: BOOLEAN
 		obsolete
-			"Use `expires /= Void' [April-2016]"
+			"Use `expires /= Void' [2017-05-31]"
 		do
 			Result := expiration /= Void
 		end
@@ -133,7 +133,7 @@ feature -- Obsolete element change
  			-- Set `expires to void'
  			-- Set-Cookie will include only Max-Age attribute and not Expires.
   		obsolete
-  			"Uset `set_max_age' and `unset_*' features to add or remove the attributes from the response header [April-2016]"
+  			"Uset `set_max_age' and `unset_*' features to add or remove the attributes from the response header [2017-05-31]"
   		do
  			max_age := 1
  			expiration := Void
@@ -147,7 +147,7 @@ feature -- Obsolete element change
  			-- Set `expiration to a default date'
   			-- Set-Cookie will include only Expires attribute and not Max_Age.
   		obsolete
-  			"Use `set_expiration' and `unset_*' features to add or remove the attribute from the response header [April-2016]"
+  			"Use `set_expiration' and `unset_*' features to add or remove the attribute from the response header [2017-05-31]"
   		do
  			max_age := -1
  			set_expiration_date (create {DATE_TIME}.make_now_utc)
@@ -343,7 +343,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

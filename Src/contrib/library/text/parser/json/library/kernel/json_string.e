@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 	make_with_escaped_json (a_escaped_string: READABLE_STRING_8)
 			-- Initialize with `a_escaped_string' already JSON escaped.
 		obsolete
-			"Use `make_from_escaped_json_string' Sept/2014"
+			"Use `make_from_escaped_json_string' [2017-05-31]"
 		require
 			a_escaped_string_not_void: a_escaped_string /= Void
 		do
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 	make_json (s: READABLE_STRING_8)
 			-- Initialize.
 		obsolete
-			"Use `make_from_string' Sept/2014"
+			"Use `make_from_string' [2017-05-31]"
 		require
 			item_not_void: s /= Void
 		do
@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 	make_json_from_string_32 (s: READABLE_STRING_32)
 			-- Initialize from STRING_32 `s'.
 		obsolete
-			"Use `make_from_string_32' Sept/2014"
+			"Use `make_from_string_32' [2017-05-31]"
 		require
 			item_not_void: s /= Void
 		do

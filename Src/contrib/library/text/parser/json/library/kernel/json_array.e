@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 	make_array
 			-- Initialize JSON Array
 		obsolete
-			"Use `make' Sept/2014"
+			"Use `make' [2017-05-31]"
 		do
 			make (10)
 		end

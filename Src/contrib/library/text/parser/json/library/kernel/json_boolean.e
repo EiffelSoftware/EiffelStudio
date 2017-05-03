@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 	make_boolean (a_item: BOOLEAN)
 			-- Initialize.
 		obsolete
-			"Use `make' Sept/2014"
+			"Use `make' [2017-05-31]"
 		do
 			make (a_item)
 		end
@@ -82,6 +82,6 @@ feature -- Status report
 		end
 
 note
-	copyright: "2010-2014, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2017, Javier Velilla and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

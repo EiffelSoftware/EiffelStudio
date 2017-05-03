@@ -104,7 +104,7 @@ feature -- Access
 		do
 			if not retried then
 				if attached text_item ("mailer.smtp") as l_smtp then
-					create {NOTIFICATION_SMTP_MAILER} l_mailer.make (l_smtp)
+					create {NOTIFICATION_SMTP_MAILER} l_mailer.make (l_smtp.as_string_8_conversion)
 				elseif attached text_item ("mailer.sendmail") as l_sendmail then
 					create {NOTIFICATION_SENDMAIL_MAILER} l_mailer.make_with_location (l_sendmail)
 				end

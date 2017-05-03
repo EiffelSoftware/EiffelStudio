@@ -45,7 +45,7 @@ feature {NONE} -- Factory: obsolete
 	template_block (a_module: CMS_MODULE; a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE): detachable CMS_SMARTY_TEMPLATE_BLOCK
 			-- Smarty content block for `a_block_id' in the context of `a_module' and `a_response'.
 		obsolete
-			"Use smarty_template_block [Feb/2016]"
+			"Use smarty_template_block [2017-05-31]"
 		do
 			Result := smarty_template_block (a_module, a_block_id, a_response.api)
 		end
@@ -54,12 +54,12 @@ feature {NONE} -- Factory: obsolete
 			-- Smarty content block for `a_block_id' in the context of `a_module' and `a_response',
 			-- With additional `a_values'.
 		obsolete
-			"Use smarty_template_block_with_values [Feb/2016]"
+			"Use smarty_template_block_with_values [2017-05-31]"
 		do
 			Result := smarty_template_block_with_values (a_module, a_block_id, a_response.api, a_values)
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -280,7 +280,7 @@ feature {CMS_API_ACCESS} -- CMS Formats management
 					if not s.is_empty then
 						s.append ("+")
 					end
-					s.append (f_ic.item.name)
+					s.append_string_general (f_ic.item.name)
 				end
 				ji.put_string (s, "filters")
 
@@ -293,7 +293,7 @@ feature {CMS_API_ACCESS} -- CMS Formats management
 						if not s.is_empty then
 							s.append ("+")
 						end
-						s.append (ct.name)
+						s.append_string_general (ct.name)
 					end
 				end
 				ji.put_string (s, "types")
@@ -1172,7 +1172,7 @@ feature -- Theming path helpers
 		do
 			Result := setup.theme_location_for (a_theme_name)
 		end
-		
+
 	theme_path_for (a_theme_name: READABLE_STRING_GENERAL): STRING_8
 			-- URL path to the theme `a_theme_name`.
 		do

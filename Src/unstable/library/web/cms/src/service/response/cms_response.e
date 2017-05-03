@@ -399,7 +399,7 @@ feature -- Menu
 
 	main_menu: CMS_MENU
 		obsolete
-			"Use `primary_menu' [Nov/2014]"
+			"Use `primary_menu' [2017-05-31]"
 		do
 			Result := primary_menu
 		end
@@ -460,7 +460,7 @@ feature -- Blocks initialization
 	block_region_preference (a_block_id: READABLE_STRING_8; a_default_region: READABLE_STRING_8): READABLE_STRING_8
 			-- Region associated with `a_block_id' in configuration, if any.
 		do
-			Result := setup.text_item_or_default ("blocks." + a_block_id + ".region", a_default_region)
+			Result := setup.text_item_or_default ("blocks." + a_block_id + ".region", a_default_region).as_string_8_conversion
 		end
 
 feature -- Block management
@@ -909,7 +909,7 @@ feature -- Hooks
 	hooks: CMS_HOOK_CORE_MANAGER
 			-- Manager handling hook subscriptions.
 		obsolete
-			"Use api.hooks [dec/2015]"
+			"Use api.hooks [2017-05-31]"
 		do
 			Result := api.hooks
 		end
@@ -918,7 +918,7 @@ feature -- Menu: change
 
 	add_to_main_menu (lnk: CMS_LINK)
 		obsolete
-			"use add_to_primary_menu [Nov/2014]"
+			"use add_to_primary_menu [2017-05-31]"
 		do
 			add_to_primary_menu (lnk)
 		end

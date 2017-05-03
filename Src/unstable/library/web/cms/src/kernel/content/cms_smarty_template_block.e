@@ -161,13 +161,15 @@ feature -- Conversion
 feature -- Debug
 
 	out: STRING
+		local
+			utf: UTF_CONVERTER
 		do
 			create Result.make_from_string (generator)
 			Result.append ("%Nname:")
 			Result.append (name)
 			if attached title as l_title then
 				Result.append ("%N%Ttitle:")
-				Result.append (l_title)
+				Result.append (utf.string_32_to_utf_8_string_8 (l_title))
 			end
 			Result.append ("%Nlocation:")
 			Result.append (location.out)
@@ -190,6 +192,6 @@ feature -- Debug
 			Result.append ("%N}")
 		end
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

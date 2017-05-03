@@ -54,7 +54,7 @@ feature -- Access
 
 	force_single_threaded: BOOLEAN assign set_force_single_threaded
 		obsolete
-			"Use directly `max_concurrent_connections = 1` [Feb/2017]"
+			"Use directly `max_concurrent_connections = 1` [2017-05-31]"
 		do
 			Result := max_concurrent_connections <= 1
 		end
@@ -202,7 +202,7 @@ feature -- Element change
 			-- Force server to handle incoming request in a single thread.
 			-- i.e set max_concurrent_connections to 1!
 		obsolete
-			"Use set_max_concurrent_connections (1) [June/2016]"
+			"Use set_max_concurrent_connections (1) [2017-05-31]"
 		do
 			if v then
 				set_max_concurrent_connections (1)
@@ -210,8 +210,8 @@ feature -- Element change
 				set_max_concurrent_connections (default_max_concurrent_connections)
 			end
 		ensure
-			force_single_threaded_set: v implies max_concurrent_connections <= 1	
-			not_single_threaded: not v implies max_concurrent_connections > 1	
+			force_single_threaded_set: v implies max_concurrent_connections <= 1
+			not_single_threaded: not v implies max_concurrent_connections > 1
 		end
 
 	set_is_verbose (b: BOOLEAN)
@@ -340,7 +340,7 @@ feature -- SSL Helpers
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -77,7 +77,7 @@ feature -- Mapping
 	map_with_request_methods (a_mapping: WSF_ROUTER_MAPPING; rqst_methods: detachable WSF_REQUEST_METHODS)
 			-- Map `a_mapping' for request methods `rqst_methods'.
 		obsolete
-			"Use directly `map' [June/2015]"
+			"Use directly `map' [2017-05-31]"
 		require
 			a_mapping_attached: a_mapping /= Void
 		do
@@ -135,7 +135,7 @@ feature -- Mapping handler
 			-- Map the mapping created by factory `f' for resource `a_resource'	
 			-- and only for request methods `rqst_methods'
 		obsolete
-			"Use directly `handle' [June/2015]"
+			"Use directly `handle' [2017-05-31]"
 		require
 			a_resource_attached: a_resource /= Void
 			f_attached: f /= Void
@@ -166,7 +166,7 @@ feature -- Basic operations
 			-- And return the associated handler if mapping found and handler executed.
 			--| Violates CQS
 		obsolete
-			"Use `dispatch' [2013-mar-21]"
+			"Use `dispatch' [2017-05-31]"
 		require
 			req_attached: req /= Void
 			res_attached: res /= Void
@@ -601,7 +601,7 @@ invariant
 	pre_execution_actions_attached: pre_execution_actions /= Void
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

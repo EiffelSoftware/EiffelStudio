@@ -95,10 +95,20 @@ ren EiffelStudio %STUDIO_NAME%
 
 copy %INSTALL_DIR\releases\gpl_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
 copy %INSTALL_DIR\releases\gpl_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+iff exist %INSTALL_DIR\releases\gpl_version\LICENSE then
+	copy %INSTALL_DIR\releases\gpl_version\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
+else
+	remtrace Missing GPL license text
+endiff
 7z a -t7z %INSTALL_DIR\setups\gpl\%STUDIO_NAME%_gpl_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
 
 copy %INSTALL_DIR\releases\enterprise_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
 copy %INSTALL_DIR\releases\enterprise_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+iff exist %INSTALL_DIR\releases\enterprise_version\LICENSE then
+	copy %INSTALL_DIR\releases\enterprise_version\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
+else
+	remtrace Missing Enterprise license text
+endiff
 7z a -t7z %INSTALL_DIR\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
 
 remtrace Restoring the layout to its original state

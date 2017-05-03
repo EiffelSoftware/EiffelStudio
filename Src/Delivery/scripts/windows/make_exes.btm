@@ -119,6 +119,9 @@ iff defined BUILD_ENTERPRISE_ONLY then
 		CANCEL
 	endiff
 	move ecb.exe %INSTALL_DIR\releases\enterprise_version
+
+	exprtfile -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/scripts/licensing/eiffelstudio/enterprise.txt > %INSTALL_DIR\releases\enterprise_version\LICENSE
+
 else
 	iff not defined NO_NEW_EC then
 		remtrace GPL edition
@@ -144,6 +147,8 @@ else
 		endiff
 		move ecb.exe %INSTALL_DIR\releases\gpl_version
 
+		exprtfile -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/scripts/licensing/eiffelstudio/gpl.txt > %INSTALL_DIR\releases\gpl_version\LICENSE
+
 		remtrace Enterprise edition for EiffelStudio
 		cdd %EIFFEL_SRC\Eiffel\API\constants
 		sed -e "s/Version_type_name:\ STRING\ =\ \"GPL\ Edition\"/Version_type_name:\ STRING\ =\ \"Enterprise\ Edition\"/g" system_constants.e >> new_system_constants.e
@@ -167,6 +172,8 @@ else
 			CANCEL
 		endiff
 		move ecb.exe %INSTALL_DIR\releases\enterprise_version
+
+		exprtfile -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/scripts/licensing/eiffelstudio/enterprise.txt > %INSTALL_DIR\releases\enterprise_version\LICENSE
 	endiff
 endiff
 

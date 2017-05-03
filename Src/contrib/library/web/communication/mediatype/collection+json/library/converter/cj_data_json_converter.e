@@ -64,20 +64,20 @@ feature {NONE} -- Implementation
 
 	prompt_key: JSON_STRING
 		once
-			create Result.make_json ("prompt")
+			create Result.make_from_string ("prompt")
 		end
 
 	name_key: JSON_STRING
 		once
-			create Result.make_json ("name")
+			create Result.make_from_string ("name")
 		end
 
 	value_key: JSON_STRING
 		once
-			create Result.make_json ("value")
+			create Result.make_from_string ("value")
 		end
 
 note
-	copyright: "2011-2013, Javier Velilla, Jocelyn Fiat and others"
+	copyright: "2011-2017, Javier Velilla, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end -- class JSON_DATA_CONVERTER

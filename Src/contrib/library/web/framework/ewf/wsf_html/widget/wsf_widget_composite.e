@@ -184,7 +184,7 @@ feature -- Change
 		end
 
 	extend_text (t: READABLE_STRING_8)
-		obsolete "Use extend_html_text (..) 2013-Sept-06"
+		obsolete "Use extend_html_text (..) [2017-05-31]"
 		do
 			extend_html_text (t)
 		end

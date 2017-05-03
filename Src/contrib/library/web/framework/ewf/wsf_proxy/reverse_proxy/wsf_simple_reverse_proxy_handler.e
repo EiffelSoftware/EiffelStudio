@@ -111,9 +111,9 @@ feature -- Execution
 						i := l_raw_header.substring_index ("%R%N", 1)
 						if i > 0 then
 								-- Skip the first status line.
-							create h.make_from_raw_header_data (l_raw_header.substring (i + 2, l_raw_header.count))
+							create h.make_from_raw_header_data (l_raw_header.substring (i + 2, l_raw_header.count).as_string_8_conversion) -- NOTE: it is string 8 per nature.
 						else
-							create h.make_from_raw_header_data (l_raw_header)
+							create h.make_from_raw_header_data (l_raw_header.as_string_8_conversion)
 						end
 						if attached l_remote_uri.host as l_remote_host then
 							if l_remote_uri.port > 0 then

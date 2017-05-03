@@ -23,7 +23,7 @@ feature -- Mapping helper: uri template
 	map_uri_template_with_request_methods (a_tpl: READABLE_STRING_8; h: WSF_URI_TEMPLATE_HANDLER; rqst_methods: detachable WSF_REQUEST_METHODS)
 			-- Map `h' as handler for `a_tpl' for request methods `rqst_methods'.
 		obsolete
-			"Use directly `map_uri_template' [June/2015]"
+			"Use directly `map_uri_template' [2017-05-31]"
 		require
 			a_tpl_attached: a_tpl /= Void
 			h_attached: h /= Void
@@ -54,7 +54,7 @@ feature -- Mapping helper: uri template agent
 	map_uri_template_agent_with_request_methods (a_tpl: READABLE_STRING_8; proc: PROCEDURE [TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
 			-- Map `proc' as handler for `a_tpl' for request methods `rqst_methods'.
 		obsolete
-			"Use directly `map_uri_template_agent' [June/2015]"
+			"Use directly `map_uri_template_agent' [2017-05-31]"
 		require
 			a_tpl_attached: a_tpl /= Void
 			proc_attached: proc /= Void
@@ -72,7 +72,7 @@ feature -- Mapping helper: uri template agent
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

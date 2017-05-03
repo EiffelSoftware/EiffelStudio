@@ -24,7 +24,7 @@ feature -- Mapping helper: starts_with
 
 	map_starts_with_request_methods (a_uri: READABLE_STRING_8; h: WSF_STARTS_WITH_CONTEXT_HANDLER [C]; rqst_methods: detachable WSF_REQUEST_METHODS)
 		obsolete
-			"Use directly `map_starts_with' [June-2015]"
+			"Use directly `map_starts_with' [2017-05-31]"
 		require
 			a_uri_attached: a_uri /= Void
 			h_attached: h /= Void
@@ -44,7 +44,7 @@ feature -- Mapping helper: starts_with agent
 
 	map_starts_with_agent_with_request_methods (a_uri: READABLE_STRING_8; proc: PROCEDURE [TUPLE [start_path: READABLE_STRING_8; ctx: C; req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
 		obsolete
-			"Use directly `map_starts_with_agent' [June-2015]"
+			"Use directly `map_starts_with_agent' [2017-05-31]"
 		require
 			a_uri_attached: a_uri /= Void
 			proc_attached: proc /= Void
@@ -53,7 +53,7 @@ feature -- Mapping helper: starts_with agent
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

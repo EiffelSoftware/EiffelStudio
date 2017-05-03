@@ -69,7 +69,7 @@ feature -- Access
 
 	frozen string_values: like values
 		obsolete
-			"Use `values' [2012-May-31]"
+			"Use `values' [2017-05-31]"
 		do
 			Result := values
 		end
@@ -81,7 +81,7 @@ feature -- Access
 
 	frozen first_string_value: WSF_STRING
 		obsolete
-			"Use `first_value' [2012-May-31]"
+			"Use `first_value' [2017-05-31]"
 		do
 			Result := first_value
 		end
@@ -179,7 +179,7 @@ invariant
 	string_values_not_empty: values.count >= 1
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

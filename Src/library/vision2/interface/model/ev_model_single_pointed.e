@@ -91,7 +91,7 @@ feature -- Status setting
 	set_point (a_point: EV_COORDINATE)
 			-- Set position of `point' to position of `a_point'.
 		obsolete
-			"Use set_point_position"
+			"Use set_point_position [2017-05-31]"
 		require
 			a_point_not_void: a_point /= Void
 		do

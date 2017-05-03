@@ -12,7 +12,7 @@ class
 	EV_FIGURE_GROUP
 
 obsolete
-	"Use EV_MODEL_GROUP instead."
+	"Use EV_MODEL_GROUP instead. [2017-05-31]"
 
 inherit
 	EV_FIGURE

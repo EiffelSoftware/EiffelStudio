@@ -30,7 +30,7 @@ feature {EV_POINTER_STYLE} -- Initlization
 	init_from_cursor (a_cursor: EV_CURSOR)
 			-- Initialize from `a_cursor'
 		obsolete
-			"USE EV_POINTER_STYLE directly now. [2010-10-02]"
+			"Use EV_POINTER_STYLE directly now. [2017-05-31]"
 		deferred
 		end
 

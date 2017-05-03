@@ -526,7 +526,7 @@ feature -- Obsolete
 	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE)
 			-- Draw `a_pixel_buffer' to current at `a_rect'.
 		obsolete
-			"Use draw_pixel_buffer_with_x_y instead"
+			"Use draw_pixel_buffer_with_x_y instead [2017-05-31]"
 		local
 			l_pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
 		do

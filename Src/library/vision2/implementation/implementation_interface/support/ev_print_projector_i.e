@@ -11,7 +11,7 @@ deferred class
 	EV_PRINT_PROJECTOR_I
 
 obsolete
-	"Use EV_MODEL_PRINT_PROJECTOR_I instead."
+	"Use EV_MODEL_PRINT_PROJECTOR_I instead. [2017-05-31]"
 
 inherit
 

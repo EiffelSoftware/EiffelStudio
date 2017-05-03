@@ -42,7 +42,7 @@ feature -- Access
 
 	filter: STRING_32
 			-- Filter currently applied to file list.
-		obsolete "Use `filters' instead"
+		obsolete "Use `filters' instead [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -129,7 +129,7 @@ feature -- Element change
 
 	set_filter (a_filter: READABLE_STRING_GENERAL)
 			-- Set `a_filter' as new filter.
-		obsolete "Use `filters.extend ([%"*.`a_filter'%", %"Files of type ('a_filter')%"])' instead."
+		obsolete "Use `filters.extend ([%"*.`a_filter'%", %"Files of type ('a_filter')%"])' instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 			a_filter_not_void: a_filter /= Void

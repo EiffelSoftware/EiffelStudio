@@ -28,7 +28,7 @@ feature -- Basic operations
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		obsolete
-			"Use `action' directly."
+			"Use `action' directly. [2017-05-31]"
 		do
 			action.call (Void)
 		end
@@ -38,7 +38,7 @@ feature -- Element change
 	force_extend (action: PROCEDURE)
 			-- Extend without type checking.
 		obsolete
-			"Use `extend' instead and provide the right type of agent."
+			"Use `extend' instead and provide the right type of agent. [2017-05-31]"
 		do
 			extend (agent wrapper (action))
 		end

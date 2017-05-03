@@ -22,7 +22,7 @@ feature -- Access
 	grid_label_item: detachable EV_GRID_LABEL_ITEM
 			-- Associated EV_GRID_LABEL_ITEM to which the properties of `Current' are applied.
 		obsolete
-			"Use the argument given during the call back to your layout procedure instead."
+			"Use the argument given during the call back to your layout procedure instead. [2017-05-31]"
 		do
 		end
 

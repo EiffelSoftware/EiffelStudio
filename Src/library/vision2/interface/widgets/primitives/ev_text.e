@@ -209,7 +209,7 @@ feature -- Contract support
 
 	last_line_not_empty: BOOLEAN
 			-- Has last line at least one character?
-		obsolete "Use `not line (line_count).is_empty'"
+		obsolete "Use `not line (line_count).is_empty' [2017-05-31]"
 		do
 			Result := not line (line_count).is_empty
 		end

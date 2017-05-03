@@ -31,7 +31,7 @@ feature -- Access
 
 	item_by_data (some_data: ANY): detachable like item
 			-- First item with `some_data'.
-		obsolete "Use `retrieve_item_by_data (some_data, True)' instead. [2002-07-27]"
+		obsolete "Use `retrieve_item_by_data (some_data, True)' instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 			data_not_void: some_data /= Void

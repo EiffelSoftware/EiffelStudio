@@ -26,7 +26,7 @@ feature -- Event handling
 	ok_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when user clicks Save.
 		obsolete
-			"This has been replaced by save_actions"
+			"This has been replaced by save_actions [2017-05-31]"
 		do
 			Result := save_actions
 		ensure

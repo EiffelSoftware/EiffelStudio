@@ -11,7 +11,7 @@ note
 class
 	EV_OPTION_BUTTON
 
-obsolete "Very limited. Just call show on an EV_MENU when an EV_BUTTON is selected and add custom behaviour."
+obsolete "Very limited. Just call show on an EV_MENU when an EV_BUTTON is selected and add custom behaviour. [2017-05-31]"
 
 inherit
 	EV_BUTTON

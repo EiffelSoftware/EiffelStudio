@@ -25,7 +25,7 @@ feature -- Event handling
 	ok_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when user clicks Print.
 		obsolete
-			"This has been replaced by print_actions"
+			"This has been replaced by print_actions [2017-05-31]"
 		do
 			Result := print_actions
 		ensure

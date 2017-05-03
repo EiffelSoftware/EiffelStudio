@@ -130,7 +130,7 @@ feature -- Visitor
 			s.append_string_general ("@")
 			s.append_string (a_link.relation)
 			s.append_string (" -> ")
-			s.append_string (a_link.href)
+			s.append_string_general (a_link.href)
 			append_text (s)
 		end
 

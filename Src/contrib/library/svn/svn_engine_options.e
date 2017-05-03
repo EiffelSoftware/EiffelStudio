@@ -7,7 +7,7 @@ class
 	SVN_ENGINE_OPTIONS
 
 obsolete
-	"Use SVN_OPTIONS directly [2015-sept]."
+	"Use SVN_OPTIONS directly [2015-10-01]."
 
 inherit
 	SVN_OPTIONS

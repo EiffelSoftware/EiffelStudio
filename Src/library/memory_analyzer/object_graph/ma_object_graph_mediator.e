@@ -424,7 +424,7 @@ feature {NONE} -- Low Level Logic Implementation
 		local
 			l_type_key: INTEGER
 			l_data: detachable ARRAYED_LIST[ANY]
-			l_row_index, i: INTEGER
+			l_row_index: INTEGER
 			l_item: ANY
 		do
 			l_type_key:= object_finder.find_key_for_type (a_type_name)
@@ -433,7 +433,6 @@ feature {NONE} -- Low Level Logic Implementation
 			if l_data /= Void then
 				from
 					l_data.start
-					i := l_row_index + 1
 				until
 					l_data.after
 				loop

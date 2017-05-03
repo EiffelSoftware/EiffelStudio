@@ -239,7 +239,7 @@ feature -- Status report
 	out: STRING
 			-- <Precursor>
 		obsolete
-			"Use `text' instead."
+			"Use `text' instead. [2017-05-31]"
 		do
 			Result := text.as_string_8_conversion
 		end

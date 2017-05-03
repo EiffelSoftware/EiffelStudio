@@ -66,7 +66,7 @@ feature -- Commands
 	save_to_named_file (a_filename: READABLE_STRING_GENERAL)
 			-- Save `Current' to `a_filename'.
 		obsolete
-			"Use `save_to_named_path' instead."
+			"Use `save_to_named_path' instead. [2017-05-31]"
 		do
 			save_to_named_path (create {PATH}.make_from_string (a_filename))
 		end

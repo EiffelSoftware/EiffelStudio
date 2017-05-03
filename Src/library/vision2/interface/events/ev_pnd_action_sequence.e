@@ -112,7 +112,7 @@ feature -- Element change
 	set_item_name (an_item: PROCEDURE [ANY]; a_name: READABLE_STRING_GENERAL)
 			-- Acociate `a_name' with `an_item'.
 		obsolete
-			"Removed because did nothing useful."
+			"Removed because did nothing useful. [2017-05-31]"
 		do
 		end
 

@@ -11,7 +11,7 @@ class
 	EV_PIXMAP_PROJECTOR
 
 obsolete
-	"Use EV_MODEL_PIXMAP_PROJECTOR instead."
+	"Use EV_MODEL_PIXMAP_PROJECTOR instead. [2017-05-31]"
 
 inherit
 	EV_WIDGET_PROJECTOR

@@ -455,7 +455,7 @@ feature -- Status setting
 	save_to_named_file (a_filename: READABLE_STRING_GENERAL)
 			-- Save `text' and formatting of `Current' to file `a_filename' in RTF format.
 		obsolete
-			"Use `save_to_named_path' instead."
+			"Use `save_to_named_path' instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 			filename_not_void: a_filename /= Void
@@ -471,7 +471,7 @@ feature -- Status setting
 	set_with_named_file (a_filename: READABLE_STRING_GENERAL)
 			-- Set `text' and formatting of `Current' from file `a_filename' in RTF format.
 		obsolete
-			"Use `set_with_named_path' instead."
+			"Use `set_with_named_path' instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 			filename_not_void: a_filename /= Void

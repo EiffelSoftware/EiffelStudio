@@ -108,7 +108,7 @@ feature -- Access
 					l_name := l_name_attrib.value
 					if
 						not attached l_model.name as l_model_name
-						or else not l_model_name.same_string (l_name)
+						or else not l_model_name.same_string_general (l_name)
 					then
 						l_model.set_name (l_name)
 					end
@@ -266,7 +266,7 @@ invariant
 	name_label_not_void: name_label /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

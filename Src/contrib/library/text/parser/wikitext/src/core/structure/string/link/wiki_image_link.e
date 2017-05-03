@@ -179,7 +179,7 @@ feature -- Query
 
 	has_parameter (a_name: READABLE_STRING_GENERAL): BOOLEAN
 		obsolete
-			"Do not use has_parameter anymore [01-07-2014]"
+			"Do not use has_parameter anymore [2017-05-31]"
 		do
 			if attached parameters as lst then
 				across

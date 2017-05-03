@@ -46,6 +46,9 @@ chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
 chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
+if [ -f licensing/eiffelstudio/gpl.txt ]; then
+	cp licensing/eiffelstudio/gpl.txt $INSTALL_DIR/LICENSE
+fi
 
 remtrace Building GPL CD image
 pax -w -f Eiffel_17.05_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel_17.05
@@ -59,6 +62,9 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
+	if [ -f licensing/eiffelstudio/enterprise.txt ]; then
+		cp licensing/eiffelstudio/enterprise.txt $INSTALL_DIR/LICENSE
+	fi
 
 	remtrace copying CD key validator
 	move bin/setup $INSTALL_DIR/register

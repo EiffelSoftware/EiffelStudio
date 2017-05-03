@@ -118,7 +118,7 @@ feature -- Access
 	header_named_value (a_name: READABLE_STRING_8): like item
 			-- First header item found for `a_name' if any	
 		obsolete
-			"Use `item' [2014-03]"
+			"Use `item' [2017-05-31]"
 		do
 			Result := item (a_name)
 		end

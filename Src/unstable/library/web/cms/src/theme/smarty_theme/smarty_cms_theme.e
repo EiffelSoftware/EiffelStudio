@@ -94,11 +94,11 @@ feature -- Conversion
 			l_table_inspector: detachable STRING_TABLE_OF_STRING_INSPECTOR
 		do
 			prepare (page)
-			create l_page_inspector.register (page.generating_type)
+			create l_page_inspector.register (page.generating_type.name)
 
 			if attached {CMS_RESPONSE} page.variables.item ("cms") as l_cms then
 				if attached l_cms.regions as l_regions then
-					create l_regions_inspector.register (l_regions.generating_type)
+					create l_regions_inspector.register (l_regions.generating_type.name)
 				end
 			end
 

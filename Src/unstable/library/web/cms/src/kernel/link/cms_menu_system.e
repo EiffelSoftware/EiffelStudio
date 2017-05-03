@@ -46,7 +46,7 @@ feature -- Access
 
 	main_menu: CMS_MENU
 		obsolete
-			"Use `primary_menu' [Nov/2014]"
+			"Use `primary_menu' [2017-05-31]"
 		do
 			Result := primary_menu
 		end
@@ -101,4 +101,7 @@ feature {NONE} -- Implementation
 
 	items: STRING_TABLE [CMS_MENU]
 
+;note
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

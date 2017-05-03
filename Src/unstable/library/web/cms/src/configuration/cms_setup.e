@@ -17,6 +17,7 @@ feature {NONE} -- Initialization
 		local
 			l_url: like site_url
 			s, l_email: detachable READABLE_STRING_8
+			utf: UTF_CONVERTER
 		do
 			site_location := environment.path
 
@@ -49,7 +50,7 @@ feature {NONE} -- Initialization
 				l_email := string_8_item_or_default ("mailer.from", "webmaster")
 			end
 			if l_email.has ('<') then
-				l_email := site_name + " <" + l_email + ">"
+				l_email := utf.string_32_to_utf_8_string_8 (site_name) + " <" + l_email + ">"
 			end
 			site_email := l_email
 
@@ -125,7 +126,7 @@ feature -- Access
 
 	layout: CMS_ENVIRONMENT
 			-- CMS environment.
-		obsolete "use `environment' [april-2015]"
+		obsolete "use `environment' [2017-05-31]"
 		do
 			Result := environment
 		end

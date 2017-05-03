@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 						if l_item_name.starts_with_general ("\\") then
 							i := l_item_name.index_of ('\', 3)
 							if i > 0 then
-								set_hostname (l_item_name.substring (3, i - 1))
+								set_hostname (l_item_name.substring (3, i - 1).to_string_8) -- FIXME: handle unicode hostname?
 								l_item_name := l_item_name.substring (i + 1, l_item_name.count)
 							else
 								check invalid_root_value: False end
@@ -230,26 +230,23 @@ feature -- Access
             --      / path-absolute
             --      / path-rootless
             --      / path-empty
-		local
-			s: STRING_8
 		do
-			create s.make (10)
+			create Result.make (10)
 			if attached authority as l_authority then
-				s.append_character ('/')
-				s.append_character ('/')
-				s.append (l_authority)
+				Result.append_character ('/')
+				Result.append_character ('/')
+				Result.append (l_authority)
 			elseif is_absolute then
-				s.append_character ('/')
-				s.append_character ('/')
+				Result.append_character ('/')
+				Result.append_character ('/')
 			end
-			s.append (path)
-			Result := s
+			Result.append (path)
 		end
 
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

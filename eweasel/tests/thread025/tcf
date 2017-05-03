@@ -6,24 +6,24 @@ copy_sub	Ace	$TEST Ace
 copy_raw	a1.e	$CLUSTER a.e
 copy_raw	test1.e	$CLUSTER test.e
 
---compile_frozen
---compile_result	ok
---c_compile_work
---c_compile_result	ok
---execute_work	NONE	exec_output_w
---execute_result	ok
---compare		exec_output_w output
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result	ok
+execute_work	NONE	exec_output_w
+execute_result	ok
+compare		exec_output_w output
 
 copy_raw	a2.e	$CLUSTER a.e
 copy_raw	test2.e	$CLUSTER test.e
 
---compile_frozen
---compile_result	ok
---c_compile_work
---c_compile_result	ok
---execute_work	NONE	exec_output_w
---execute_result	ok
---compare		exec_output_w output
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result	ok
+execute_work	NONE	exec_output_w
+execute_result	ok
+compare		exec_output_w output
 
 copy_raw	a3.e	$CLUSTER a.e
 copy_raw	test3.e	$CLUSTER test.e

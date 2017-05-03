@@ -80,7 +80,7 @@ feature -- Access
 	Shortcut_keys: ARRAY [INTEGER]
 			-- All key codes that are acceptable for use in shortcut preferences.
 		once
-			create Result.make (1, 89)
+			create Result.make_filled (0, 1, 89)
 			Result.compare_objects
 			Result.put (Key_0, 1)
 			Result.put (Key_1, 2)
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 	str_false: STRING = "False";
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

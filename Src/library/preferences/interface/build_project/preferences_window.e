@@ -12,7 +12,7 @@ note
 class
 	PREFERENCES_WINDOW
 
-obsolete "[090514] You should use PREFERENCES_GRID_DIALOG or PREFERENCES_GRID_CONTROL to embed pref into existing UI"
+obsolete "Use PREFERENCES_GRID_DIALOG or PREFERENCES_GRID_CONTROL to embed pref into existing UI [2017-05-31]"
 
 inherit
 	PREFERENCES_WINDOW_IMP

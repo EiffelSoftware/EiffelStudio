@@ -80,7 +80,7 @@ feature {NONE} -- Basic operations
 			-- Call `a_agent'
 		require
 			a_routine_attached: a_routine /= Void
-			no_open_args: (attached {TUPLE} a_routine.empty_operands as l_args) and then l_args.count = 0
+			no_open_args: a_routine.open_count = 0
 		local
 			l_rescued: BOOLEAN
 		do
@@ -157,7 +157,7 @@ feature {NONE} -- Events
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

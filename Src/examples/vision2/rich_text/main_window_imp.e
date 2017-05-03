@@ -14,7 +14,7 @@ inherit
 		redefine
 			initialize, is_in_default_state
 		end
-			
+
 	CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -28,21 +28,21 @@ feature {NONE}-- Initialization
 
 	initialize
 			-- Initialize `Current'.
-		local 
+		local
 			l_ev_menu_bar_1: EV_MENU_BAR
 			l_ev_menu_separator_1: EV_MENU_SEPARATOR
 			l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
-			l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3, 
+			l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3,
 			l_ev_tool_bar_separator_4: EV_TOOL_BAR_SEPARATOR
 			l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5: EV_LABEL
-			l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5, l_ev_cell_6, 
+			l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5, l_ev_cell_6,
 			l_ev_cell_7, l_ev_cell_8, l_ev_cell_9: EV_CELL
 			l_ev_horizontal_separator_1, l_ev_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
 			l_ev_frame_1, l_ev_frame_2: EV_FRAME
 		do
 			Precursor {EV_TITLED_WINDOW}
 			initialize_constants
-			
+
 				-- Create all widgets.
 			create l_ev_menu_bar_1
 			create file_menu
@@ -54,7 +54,6 @@ feature {NONE}-- Initialization
 			create options_menu
 			create word_wrapping_menu_item
 			create show_paragraph_toolbar
-			create show_tab_control_menu_item
 			create main_vertical_box
 			create l_ev_horizontal_box_1
 			create font_selection
@@ -110,7 +109,7 @@ feature {NONE}-- Initialization
 			create save_progress
 			create l_ev_frame_2
 			create caret_position_label
-			
+
 				-- Build_widget_structure.
 			set_menu_bar (l_ev_menu_bar_1)
 			l_ev_menu_bar_1.extend (file_menu)
@@ -122,7 +121,6 @@ feature {NONE}-- Initialization
 			l_ev_menu_bar_1.extend (options_menu)
 			options_menu.extend (word_wrapping_menu_item)
 			options_menu.extend (show_paragraph_toolbar)
-			options_menu.extend (show_tab_control_menu_item)
 			extend (main_vertical_box)
 			main_vertical_box.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (font_selection)
@@ -178,7 +176,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_4.extend (save_progress)
 			l_ev_horizontal_box_3.extend (l_ev_frame_2)
 			l_ev_frame_2.extend (caret_position_label)
-			
+
 			set_minimum_width (window_width)
 			set_minimum_height (window_height)
 			set_title ("Rich Text Example")
@@ -192,7 +190,6 @@ feature {NONE}-- Initialization
 			word_wrapping_menu_item.set_text ("Word Wrapping")
 			show_paragraph_toolbar.enable_select
 			show_paragraph_toolbar.set_text ("Paragraph Toolbar")
-			show_tab_control_menu_item.set_text ("Tab Control Bar")
 			main_vertical_box.set_padding_width (tiny_padding)
 			main_vertical_box.disable_item_expand (l_ev_horizontal_box_1)
 			main_vertical_box.disable_item_expand (paragraph_toolbar_holder)
@@ -272,7 +269,7 @@ feature {NONE}-- Initialization
 			save_progress.hide
 			l_ev_frame_2.set_minimum_width (caret_position_status_bar_width)
 			l_ev_frame_2.set_style (1)
-			
+
 				--Connect events.
 			open_menu_item.select_actions.extend (agent open_file)
 			save_menu_item.select_actions.extend (agent save_file)
@@ -280,7 +277,6 @@ feature {NONE}-- Initialization
 			exit_menu_item.select_actions.extend (agent exit)
 			word_wrapping_menu_item.select_actions.extend (agent word_wrapping_toggled)
 			show_paragraph_toolbar.select_actions.extend (agent show_paragraph_toolbar_selected)
-			show_tab_control_menu_item.select_actions.extend (agent show_tab_control_toggled)
 			font_selection.select_actions.extend (agent font_selected)
 			size_selection.select_actions.extend (agent font_size_selected)
 			size_selection.return_actions.extend (agent font_size_selected)
@@ -311,12 +307,12 @@ feature -- Access
 
 	file_menu, options_menu: EV_MENU
 	open_menu_item, save_menu_item, save_as_menu_item, exit_menu_item: EV_MENU_ITEM
-	word_wrapping_menu_item, show_paragraph_toolbar, show_tab_control_menu_item: EV_CHECK_MENU_ITEM
+	word_wrapping_menu_item, show_paragraph_toolbar: EV_CHECK_MENU_ITEM
 	main_vertical_box, paragraph_toolbar_holder, tab_control_holder: EV_VERTICAL_BOX
 	font_selection, size_selection: EV_COMBO_BOX
 	color_toolbar, background_color_toolbar, format_toolbar, paragraph_toolbar: EV_TOOL_BAR
 	color_button, background_color_button, save_button: EV_TOOL_BAR_BUTTON
-	bold_button, italic_button, underlined_button, striked_through_button, left_alignment_button, 
+	bold_button, italic_button, underlined_button, striked_through_button, left_alignment_button,
 	center_alignment_button, right_alignment_button, justified_button: EV_TOOL_BAR_TOGGLE_BUTTON
 	vertical_offset, left_margin, right_margin, top_spacing, bottom_spacing: EV_SPIN_BUTTON
 	rich_text: EV_RICH_TEXT
@@ -332,132 +328,127 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 	open_file
 			-- Called by `select_actions' of `open_menu_item'.
 		deferred
 		end
-	
+
 	save_file
 			-- Called by `select_actions' of `save_menu_item'.
 		deferred
 		end
-	
+
 	save_file_as
 			-- Called by `select_actions' of `save_as_menu_item'.
 		deferred
 		end
-	
+
 	exit
 			-- Called by `select_actions' of `exit_menu_item'.
 		deferred
 		end
-	
+
 	word_wrapping_toggled
 			-- Called by `select_actions' of `word_wrapping_menu_item'.
 		deferred
 		end
-	
+
 	show_paragraph_toolbar_selected
 			-- Called by `select_actions' of `show_paragraph_toolbar'.
 		deferred
 		end
-	
-	show_tab_control_toggled
-			-- Called by `select_actions' of `show_tab_control_menu_item'.
-		deferred
-		end
-	
+
 	font_selected
 			-- Called by `select_actions' of `font_selection'.
 		deferred
 		end
-	
+
 	font_size_selected
 			-- Called by `select_actions' of `size_selection'.
 		deferred
 		end
-	
+
 	color_selected
 			-- Called by `select_actions' of `color_button'.
 		deferred
 		end
-	
+
 	background_color_selected
 			-- Called by `select_actions' of `background_color_button'.
 		deferred
 		end
-	
+
 	bold_selected
 			-- Called by `select_actions' of `bold_button'.
 		deferred
 		end
-	
+
 	italic_selected
 			-- Called by `select_actions' of `italic_button'.
 		deferred
 		end
-	
+
 	underline_selected
 			-- Called by `select_actions' of `underlined_button'.
 		deferred
 		end
-	
+
 	strike_through_selected
 			-- Called by `select_actions' of `striked_through_button'.
 		deferred
 		end
-	
+
 	offset_changed (a_value: INTEGER)
 			-- Called by `change_actions' of `vertical_offset'.
 		deferred
 		end
-	
+
 	left_alignment_selected
 			-- Called by `select_actions' of `left_alignment_button'.
 		deferred
 		end
-	
+
 	center_alignment_selected
 			-- Called by `select_actions' of `center_alignment_button'.
 		deferred
 		end
-	
+
 	right_alignment_selected
 			-- Called by `select_actions' of `right_alignment_button'.
 		deferred
 		end
-	
+
 	justified_selected
 			-- Called by `select_actions' of `justified_button'.
 		deferred
 		end
-	
+
 	left_margin_changed (a_value: INTEGER)
 			-- Called by `change_actions' of `left_margin'.
 		deferred
 		end
-	
+
 	right_margin_changed (a_value: INTEGER)
 			-- Called by `change_actions' of `right_margin'.
 		deferred
 		end
-	
+
 	top_spacing_changed (a_value: INTEGER)
 			-- Called by `change_actions' of `top_spacing'.
 		deferred
 		end
-	
+
 	bottom_spacing_changed (a_value: INTEGER)
 			-- Called by `change_actions' of `bottom_spacing'.
 		deferred
 		end
-	
+
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

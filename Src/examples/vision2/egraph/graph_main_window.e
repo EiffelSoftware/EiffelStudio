@@ -674,7 +674,7 @@ feature {NONE} -- Implementation
 			Result := time.millisecond_now + time.second_now * 1000 + time.minute_now * 60000
 		end
 
-	accept_node: EV_CURSOR
+	accept_node: EV_POINTER_STYLE
 		local
 			pix: EV_PIXMAP
 		once
@@ -683,7 +683,7 @@ feature {NONE} -- Implementation
 			create Result.make_with_pixmap (pix, 8, 8)
 		end
 
-	deny_node: EV_CURSOR
+	deny_node: EV_POINTER_STYLE
 		local
 			pix: EV_PIXMAP
 		once

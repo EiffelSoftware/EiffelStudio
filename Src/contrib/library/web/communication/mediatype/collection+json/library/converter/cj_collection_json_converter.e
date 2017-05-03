@@ -129,45 +129,45 @@ feature {NONE} -- Implementation
 
 	collection_key: JSON_STRING
 		once
-			create Result.make_json ("collection")
+			create Result.make_from_string ("collection")
 		end
 
 	version_key: JSON_STRING
 		once
-			create Result.make_json ("version")
+			create Result.make_from_string ("version")
 		end
 
 	href_key: JSON_STRING
 		once
-			create Result.make_json ("href")
+			create Result.make_from_string ("href")
 		end
 
 	links_key: JSON_STRING
 		once
-			create Result.make_json ("links")
+			create Result.make_from_string ("links")
 		end
 
 	items_key: JSON_STRING
 		once
-			create Result.make_json ("items")
+			create Result.make_from_string ("items")
 		end
 
 	queries_key: JSON_STRING
 		once
-			create Result.make_json ("queries")
+			create Result.make_from_string ("queries")
 		end
 
 	template_key: JSON_STRING
 		once
-			create Result.make_json ("template")
+			create Result.make_from_string ("template")
 		end
 
 	error_key: JSON_STRING
 		once
-			create Result.make_json ("error")
+			create Result.make_from_string ("error")
 		end
 
 note
-	copyright: "2011-2012, Javier Velilla, Jocelyn Fiat and others"
+	copyright: "2011-2017, Javier Velilla, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

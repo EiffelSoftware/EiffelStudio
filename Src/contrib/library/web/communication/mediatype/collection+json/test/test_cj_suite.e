@@ -283,9 +283,9 @@ feature -- Implementation
 
 	file_reader: JSON_FILE_READER
 
-	json_file_from (fn: STRING): detachable STRING
+	json_file_from (fn: READABLE_STRING_GENERAL): detachable STRING
 		do
-			Result := file_reader.read_json_from (test_dir + fn)
+			Result := file_reader.read_json_from (test_dir + fn.to_string_32)
 			assert ("File contains json data", Result /= Void)
 		ensure
 			Result /= Void
@@ -293,7 +293,7 @@ feature -- Implementation
 
 	new_json_parser (a_string: STRING): JSON_PARSER
 		do
-			create Result.make_parser (a_string)
+			create Result.make_with_string (a_string)
 		end
 
 	json_value_from_file (json_file: STRING): detachable JSON_VALUE
@@ -301,17 +301,20 @@ feature -- Implementation
 			p: like new_json_parser
 		do
 			p := new_json_parser (json_file)
-			Result := p.parse_json
+			p.parse_content
 			check
 				json_is_parsed: p.is_parsed
 			end
+			if p.is_parsed then
+				Result := p.parsed_json_value
+			end
 		end
 
-	test_dir: STRING
+	test_dir: STRING_32
 		local
 			i: INTEGER
 		do
-			Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+			Result := (create {EXECUTION_ENVIRONMENT}).current_working_path.name
 			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
 			from
 				i := 5

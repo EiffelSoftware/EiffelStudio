@@ -10,7 +10,7 @@
   			   		 <div class="vote-float">
 							<form  action="{$site_url/}{$resource_path/}/{$module_item/}/{$wish.id/}/like" id="wish" method="POST" itemprop="vote">
 								<input type="hidden" name="wishid" value="{$wish.id/}">
-								<button class='vote-button vote-btn-blue' type="submit" ><img src="{$site_url/}theme/images/like.png" width="52" height="52" alt="Like"></button>
+								<button class='vote-button vote-btn-blue' type="submit" ><img src="{$theme_path/}images/like.png" width="52" height="52" alt="Like"></button>
 							</form>
 				    </div>
 				</div>
@@ -18,7 +18,7 @@
  				    <div class="vote-float">
  				    		<form  action="{$site_url/}{$resource_path/}/{$module_item/}/{$wish.id/}/not_like" id="wish" method="POST" itemprop="vote">
 							<input type="hidden" name="wishid" value="{$wish.id/}">
-							<button class='vote-button vote-btn-blue' type="submit" ><img src="{$site_url/}theme/images/notlike.png" width="52" height="52" alt="Not Like"></button>
+							<button class='vote-button vote-btn-blue' type="submit" ><img src="{$theme_path/}images/notlike.png" width="52" height="52" alt="Not Like"></button>
 						</form>
 		
 				    </div>
@@ -30,7 +30,7 @@
 				    	{if condition="$do_like"}
 							<form  action="{$site_url/}{$resource_path/}/{$module_item/}/{$wish.id/}/like" id="wish" method="POST" itemprop="vote">
 								<input type="hidden" name="wishid" value="{$wish.id/}">
-								<button class='vote-button vote-btn-blue' type="submit" ><img src="{$site_url/}theme/images/like.png" width="52" height="52" alt="Like"></button>
+								<button class='vote-button vote-btn-blue' type="submit" ><img src="{$theme_path/}images/like.png" width="52" height="52" alt="Like"></button>
 							</form>
 						{/if}
 				    </div>
@@ -41,7 +41,7 @@
 					{if condition="$do_not_like"}
 						<form  action="{$site_url/}{$resource_path/}/{$module_item/}/{$wish.id/}/not_like" id="wish" method="POST" itemprop="vote">
 							<input type="hidden" name="wishid" value="{$wish.id/}">
-							<button class='vote-button vote-btn-blue' type="submit" ><img src="{$site_url/}theme/images/notlike.png" width="52" height="52" alt="Not Like"></button>
+							<button class='vote-button vote-btn-blue' type="submit" ><img src="{$theme_path/}images/notlike.png" width="52" height="52" alt="Not Like"></button>
 						</form>
 					{/if}
 				 </div>

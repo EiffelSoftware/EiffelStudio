@@ -5,7 +5,7 @@
 <li><a href="{$bookurl/}">
 	<h2>{$root_page.title/}</h2>
 	{unless isempty="$root_page.metadata_table.description"}
-	<img src="{$site_url/}theme/images/small21.png" width="52" height="52" alt="Book">
+	<img src="{$theme_path/}images/small21.png" width="52" height="52" alt="Book">
 	<p>
 	{$root_page.metadata_table.description/}
 	</p>

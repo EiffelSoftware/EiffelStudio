@@ -1,4 +1,6 @@
-<form class="search-form" method="GET" action="{$site_url/}gcse20"> 
-	<input type="image" alt="Search" class="btn" src="{$site_url/}theme/images/ico-search.png"/>
-	<input type="text" name="q" size="25" maxlength="255" value="{htmlentities}{$cms_search_query/}{/htmlentities}" />
+<form action="{$site_url/}gcse20" class="search-form" id="search-form">
+	<div class="form-group has-feedback">
+		<input type="search" class="form-control" name="q" id="search-query" placeholder="search" value="{htmlentities}{$cms_search_query/}{/htmlentities}" >
+		<span class="glyphicon glyphicon-search form-control-feedback"></span>
+	</div>
 </form>

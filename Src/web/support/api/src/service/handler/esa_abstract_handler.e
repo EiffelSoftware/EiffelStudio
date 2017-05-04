@@ -40,6 +40,11 @@ feature -- Access
 			Result := esa_config.email_service
 		end
 
+	email_notification_service: ESA_NOTIFICATION_EMAIL_SERVICE
+		do
+			Result := esa_config.email_notification_service
+		end
+
 	cookie_service: ESA_COOKIE_SESSION_SERVICE
 		do
 			create Result.make ((create {JSON_CONFIGURATION}).cookie_session_remember_me(esa_config.layout.application_config_path))

@@ -31,8 +31,8 @@ feature {NONE} -- Initialization
 	make_inlined (s: STRING)
 			-- [[Image:title|string]]
 		do
-			make (s)
 			set_inlined (True)
+			make (s)
 		end
 
 	make (s: STRING)
@@ -45,7 +45,6 @@ feature {NONE} -- Initialization
 			if t.as_lower.starts_with ("image:") then
 				name := t.substring (("image:").count + 1, t.count)
 			end
-			set_inlined (False)
 
 			if attached {WIKI_STRING} text as ws and then not ws.is_empty then
 				add_parameter (ws.text)
@@ -80,6 +79,9 @@ feature {NONE} -- Initialization
 						a_parameters.remove
 					elseif s.starts_with_general ("align=") then
 						location_parameter := s.substring (s.index_of ('=', 1) + 1 ,s.count).as_lower
+						a_parameters.remove
+					elseif s.starts_with_general ("alt=") then
+						alt_parameter := s.substring (s.index_of ('=', 1) + 1 ,s.count)
 						a_parameters.remove
 					elseif
 						s.is_case_insensitive_equal_general ("baseline")
@@ -143,13 +145,28 @@ feature {NONE} -- Initialization
 						upright_parameter := s.substring (s.index_of ('=', 1) + 1 ,s.count)
 						a_parameters.remove
 					else
-						if text.is_empty then
+						if alt_parameter = Void then
+							alt_parameter := s
+							a_parameters.remove
+						elseif text.is_empty then
 							create {WIKI_STRING} text.make (s)
 							a_parameters.remove
 						else
 							a_parameters.forth
 						end
 					end
+				end
+			end
+			if
+				has_frame or has_thumb_parameter
+				or location_parameter /= Void
+			then
+				inlined := False
+			else
+				inlined := True
+				if attached {WIKI_STRING} text as ws then
+						-- See code, it is a WIKI_STRING.
+					alt_parameter := ws.text
 				end
 			end
 		end
@@ -161,6 +178,8 @@ feature -- Query
 	has_frame: BOOLEAN
 
 	has_border: BOOLEAN
+
+	alt_parameter: detachable READABLE_STRING_8
 
 	location_parameter: detachable READABLE_STRING_8
 

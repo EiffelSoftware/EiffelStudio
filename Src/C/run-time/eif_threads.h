@@ -55,8 +55,8 @@
 
 #define eif_thr_yield()
 #define eif_thr_join_all()
-#define eif_thr_wait(term)
-#define eif_thr_wait_with_timeout(term,tms) EIF_FALSE
+#define eif_thr_wait(current_obj,get_terminated_func)
+#define eif_thr_wait_with_timeout(current_obj,get_terminated_func,tms) EIF_FALSE
 #define eif_thr_join(term)
 
 #define eif_thr_thread_id() NULL
@@ -66,10 +66,10 @@
 #define eif_thr_default_priority() 0
 #define eif_thr_min_priority() 0
 #define eif_thr_max_priority() 0
-#define eif_thr_create_with_attr(current_obj, init_func, attr)
-#define eif_thr_create_with_attr_new(current_obj, init_func, log_id, is_proc, attr)
+#define eif_thr_create_with_attr(current_obj, init_func, set_terminated_func, attr)
+#define eif_thr_create_with_attr_new(current_obj, init_func, set_terminated_func, log_id, is_proc, attr)
 /* Obsolete `eif_thr_create_with_args' but maintained to make it easy to switch between runtime versions. */
-#define eif_thr_create_with_args(current_obj, init_func, priority, policy, detach)
+#define eif_thr_create_with_args(current_obj, init_func, set_terminated_func, priority, policy, detach)
 #define eif_thr_create(current_object, init_func)
 
 #define eif_thr_sem_create(count) NULL
@@ -95,7 +95,7 @@
 #define eif_thr_cond_signal(a_cond_ptr)
 #define eif_thr_cond_wait(a_cond_ptr,a_mutex_ptr)
 #define eif_thr_cond_wait_with_timeout(a_cond_ptr,a_mutex_ptr,a_timeout) 0
-#define eif_thr_cond_destroy(a_mutex_ptr)
+#define eif_thr_cond_destroy(a_cond_ptr)
 
 #if !defined(EIF_WINDOWS) && !defined(VXWORKS)
 /* Forking, only support on Unix platform on which `fork' is supported. */
@@ -183,13 +183,13 @@ RT_LNK void eif_thr_exit(void);
 RT_LNK void eif_thr_yield(void);
 RT_LNK void eif_thr_join_all(void);
 RT_LNK void eif_thr_join(EIF_POINTER);
-RT_LNK void eif_thr_wait(EIF_OBJECT);
-RT_LNK EIF_BOOLEAN eif_thr_wait_with_timeout(EIF_OBJECT, EIF_NATURAL_64);
-RT_LNK void eif_thr_create_with_attr(EIF_OBJECT, EIF_PROCEDURE, EIF_THR_ATTR_TYPE *);
-RT_LNK void eif_thr_create_with_attr_new(EIF_OBJECT, EIF_PROCEDURE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_THR_ATTR_TYPE *);
+RT_LNK void eif_thr_wait(EIF_OBJECT, EIF_BOOLEAN_FUNCTION);
+RT_LNK EIF_BOOLEAN eif_thr_wait_with_timeout(EIF_OBJECT, EIF_BOOLEAN_FUNCTION, EIF_NATURAL_64);
+RT_LNK void eif_thr_create_with_attr(EIF_OBJECT, EIF_PROCEDURE, EIF_PROCEDURE, EIF_THR_ATTR_TYPE *);
+RT_LNK void eif_thr_create_with_attr_new(EIF_OBJECT, EIF_PROCEDURE, EIF_PROCEDURE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_THR_ATTR_TYPE *);
 /* Obsolete `eif_thr_create_with_args' but maintained to make it easy to switch between runtime versions. */
-#define eif_thr_create_with_args(current_obj, init_func, priority, policy, detach)	\
-	eif_thr_create_with_attr(current_obj,init_func, NULL);
+#define eif_thr_create_with_args(current_obj, init_func, set_terminated_func, priority, policy, detach)	\
+	eif_thr_create_with_attr((current_obj),(init_func),(set_terminated_func), NULL);
 RT_LNK EIF_INTEGER eif_thr_default_priority(void);
 RT_LNK EIF_INTEGER eif_thr_min_priority(void);
 RT_LNK EIF_INTEGER eif_thr_max_priority(void);

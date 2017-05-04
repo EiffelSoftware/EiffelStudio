@@ -50,7 +50,7 @@ feature -- Access
 		--  Current index.
 
 	size: INTEGER
-		-- Page Size	
+		-- Page Size.	
 
 	pages: INTEGER
 		-- Number of pages.
@@ -68,7 +68,7 @@ feature -- Access
 		-- Possible list of report problem  priorities.
 
 	severities: detachable LIST [REPORT_SEVERITY]
-		-- Possible list of report problem severities
+		-- Possible list of report problem severities.
 
 	user: detachable ANY
 		-- Current logged in user or Guest.

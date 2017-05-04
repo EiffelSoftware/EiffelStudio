@@ -136,8 +136,8 @@ feature -- HTTP Methods
 			   attached a_register.question as l_question then
 			   Result := api_service.add_user (l_first_name, l_last_name, l_email, l_user_name, l_password, l_answer, l_token, l_question)
 			   if Result then
-					email_service.send_post_registration_email (l_email, l_token, a_host)
-					Result := email_service.successful
+					email_notification_service.send_post_registration_email (l_email, l_token, a_host)
+					Result := email_notification_service.successful
 			   else
 				   	a_register.add_error ("User Creation", "Could not create user: Username/Email address already registered.")
 			   end

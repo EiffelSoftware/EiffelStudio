@@ -89,12 +89,12 @@ feature -- HTTP Methods
 						api_service.update_password (l_email, l_token)
 						if attached api_service.user_from_email (l_email) as l_tuple then
 								--  detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING] then
-							email_service.send_password_reset (l_email, message_content (l_token, l_tuple), req.absolute_script_url (""))
-
-							if email_service.successful then
+--							email_service.send_password_reset (l_email, message_content (l_token, l_tuple), req.absolute_script_url (""))
+							email_notification_service.send_password_reset (l_email, message_content (l_token, l_tuple), req.absolute_script_url (""))
+							if email_notification_service.successful then
 								l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).post_reminder_page (req, res, l_email)
 							else
-								l_error := email_service.last_error_message
+								l_error := email_notification_service.last_error_message
 								l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).reminder_page (req, res, l_error)
 							end
 						else

@@ -85,11 +85,11 @@ feature -- HTTP Methods
 					   	l_token := (create {SECURITY_PROVIDER}).token
 					   	api_service.change_user_email (l_user, l_new_email, l_token)
 					   	if api_service.successful then
-						  	email_service.send_email_change_email (ll_email, l_token, req.absolute_script_url (""))
-						  	if email_service.successful then
+							email_notification_service.send_email_change_email (ll_email, l_token, req.absolute_script_url (""))
+						  	if email_notification_service.successful then
 							  	l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).post_email_change_page (req, res)
 							else
-								l_email.add_error ("Send Email", email_service.last_error_message)
+								l_email.add_error ("Send Email", email_notification_service.last_error_message)
 								l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).change_email (req, res, l_email)
 							end
 						else

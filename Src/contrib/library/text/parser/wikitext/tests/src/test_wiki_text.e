@@ -1382,6 +1382,31 @@ e := "{
 			assert ("as e", o.same_string (e))
 		end
 
+	test_image_inlined
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+See [[Image:http://abs.path.to/image.png|width=100px|This is a description|This is a title]]
+			]")
+
+e := "{
+<p>See <img src="http://abs.path.to/image.png" border="0" width="100px" alt="This is a title"/>
+</p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
 	test_image_details
 		local
 			t: WIKI_CONTENT_TEXT
@@ -1394,7 +1419,57 @@ See [[Image:http://abs.path.to/image.png|align=right|width=100px|This is a descr
 			]")
 
 e := "{
-<p>See <div style="text-align: right"><img src="http://abs.path.to/image.png" border="0" width="100px"/>This is a description</div>
+<p>See <div class="wiki_image" style="text-align: right"><img src="http://abs.path.to/image.png" border="0" width="100px" alt="This is a description"/></div>
+</p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
+	test_image_details_with_alt
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+See [[Image:http://abs.path.to/image.png|align=right|width=100px|alt=Alternate text|This is a description]]
+			]")
+
+e := "{
+<p>See <div class="wiki_image" style="text-align: right"><img src="http://abs.path.to/image.png" border="0" width="100px" alt="Alternate text"/></div>
+</p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
+	test_image_details_with_frame
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+See [[Image:http://abs.path.to/image.png|align=right|frame|width=100px|alt=Alternate text|This is a description]]
+			]")
+
+e := "{
+<p>See <div class="wiki_image wiki_frame" style="text-align: right"><img src="http://abs.path.to/image.png" border="0" width="100px" alt="Alternate text"/><div class="wiki_caption">This is a description</div></div>
 </p>
 
 }"

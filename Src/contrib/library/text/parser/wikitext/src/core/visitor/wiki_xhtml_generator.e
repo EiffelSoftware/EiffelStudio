@@ -884,8 +884,16 @@ feature -- Links
 			if l_url = Void then
 				l_url := l_lnk_name
 			end
-			if attached a_link.location_parameter as l_location then
-				output ("<div style=%"text-align: "+ l_location +"%">")
+			if not a_link.inlined then
+				output ("<div class=%"wiki_image")
+				if a_link.has_frame or a_link.has_thumb_parameter or a_link.has_border then
+					output (" wiki_frame")
+				end
+				output ("%"")
+				if attached a_link.location_parameter as l_location then
+					output (" style=%"text-align: "+ l_location +"%"")
+				end
+				output (">")
 			end
 			if l_wiki_url /= Void then
 				output ("<a href=%"" + l_wiki_url + "%">")
@@ -901,22 +909,31 @@ feature -- Links
 				output (h)
 				output ("%"")
 			end
+			if attached a_link.alt_parameter as l_alt then
+				output (" alt=%"")
+				output (l_alt)
+				output ("%"")
+			end
 			output ("/>")
 			if l_wiki_url /= Void then
 				output ("</a>")
 			end
 			if not a_link.inlined then
-				output ("<br/>")
-			end
-
-			if not attached {WIKI_RAW_STRING} a_link.text then
-				a_link.text.process (Current)
-			end
-			if a_link.location_parameter /= Void then
-				output ("</div>")
+				if a_link.has_frame or a_link.has_thumb_parameter then
+					if not a_link.text.is_empty then
+						output ("<div class=%"wiki_caption%">")
+						if attached {WIKI_RAW_STRING} a_link.text as l_raw then
+							visit_raw_string (l_raw)
+						else
+							a_link.text.process (Current)
+						end
+						output ("</div>")
+					end
+				end
 			end
 			if not a_link.inlined then
-				set_next_output_require_newline
+				output ("</div>")
+--				set_next_output_require_newline
 			end
 		end
 

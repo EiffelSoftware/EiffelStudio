@@ -130,9 +130,13 @@ feature {NONE} -- Implementation
 			s: STRING
 			exec: EXECUTION_ENVIRONMENT
 			l_in_quote: BOOLEAN
+			utf: UTF_CONVERTER
 		once
 			create exec
-			l_flags := exec.get (arguments_environment_name)
+			if attached exec.item (arguments_environment_name) as l_unicode_flags then
+					-- For this obsolete library, let's use UTF-8 to convert to STRING_8.
+				l_flags := utf.string_32_to_utf_8_string_8 (l_unicode_flags)
+			end
 			if l_flags /= Void then
 				l_flags.right_adjust --| To exclude flag with only whitespace
 			end
@@ -197,8 +201,8 @@ invariant
 		)
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

@@ -2149,14 +2149,14 @@ feature {NONE} -- Internationalization
 
 	e_unreconized_switch_error: STRING
 		obsolete
-			"Use e_unrecognized_switch_error which corrects the typo [2011-11-23]"
+			"Use e_unrecognized_switch_error which corrects the typo [2017-05-31]"
 		once
 			Result := e_unrecognized_switch_error
 		end
 
 	e_switch_group_unreconized_error: STRING
 		obsolete
-			"Use e_switch_group_unrecognized_error which corrects the typo [2011-11-23]"
+			"Use e_switch_group_unrecognized_error which corrects the typo [2017-05-31]"
 		once
 			Result := e_switch_group_unrecognized_error
 		end
@@ -2216,8 +2216,8 @@ invariant
 	is_successful_means_has_parsed: is_successful implies has_parsed
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

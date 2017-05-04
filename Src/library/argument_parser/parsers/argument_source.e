@@ -37,7 +37,7 @@ feature -- Access
 				end
 			end
 			if l_result = Void or else l_result.is_empty then
-				l_result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+				l_result := (create {EXECUTION_ENVIRONMENT}).current_working_path.utf_8_name
 			end
 			create {STRING} Result.make_from_string (l_result)
 		ensure
@@ -72,8 +72,8 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

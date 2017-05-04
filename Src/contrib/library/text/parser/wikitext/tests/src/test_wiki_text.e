@@ -1394,7 +1394,7 @@ See [[Image:http://abs.path.to/image.png|width=100px|This is a description|This 
 			]")
 
 e := "{
-<p>See <img src="http://abs.path.to/image.png" border="0" width="100px" alt="This is a title"/>
+<p>See <img src="http://abs.path.to/image.png" border="0" width="100px" alt="This is a description"/>
 </p>
 
 }"
@@ -1419,7 +1419,7 @@ See [[Image:http://abs.path.to/image.png|align=right|width=100px|This is a descr
 			]")
 
 e := "{
-<p>See <div class="wiki_image" style="text-align: right"><img src="http://abs.path.to/image.png" border="0" width="100px" alt="This is a description"/></div>
+<p>See <div class="wiki_image" style="text-align: right"><img src="http://abs.path.to/image.png" border="0" width="100px"/><div class="wiki_caption">This is a description</div></div>
 </p>
 
 }"
@@ -1444,7 +1444,7 @@ See [[Image:http://abs.path.to/image.png|align=right|width=100px|alt=Alternate t
 			]")
 
 e := "{
-<p>See <div class="wiki_image" style="text-align: right"><img src="http://abs.path.to/image.png" border="0" width="100px" alt="Alternate text"/></div>
+<p>See <div class="wiki_image" style="text-align: right"><img src="http://abs.path.to/image.png" border="0" width="100px" alt="Alternate text"/><div class="wiki_caption">This is a description</div></div>
 </p>
 
 }"

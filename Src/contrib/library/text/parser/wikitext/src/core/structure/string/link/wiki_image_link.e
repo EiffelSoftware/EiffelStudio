@@ -145,10 +145,7 @@ feature {NONE} -- Initialization
 						upright_parameter := s.substring (s.index_of ('=', 1) + 1 ,s.count)
 						a_parameters.remove
 					else
-						if alt_parameter = Void then
-							alt_parameter := s
-							a_parameters.remove
-						elseif text.is_empty then
+						if text.is_empty then
 							create {WIKI_STRING} text.make (s)
 							a_parameters.remove
 						else

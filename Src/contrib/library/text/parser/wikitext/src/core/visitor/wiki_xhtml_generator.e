@@ -919,16 +919,14 @@ feature -- Links
 				output ("</a>")
 			end
 			if not a_link.inlined then
-				if a_link.has_frame or a_link.has_thumb_parameter then
-					if not a_link.text.is_empty then
-						output ("<div class=%"wiki_caption%">")
-						if attached {WIKI_RAW_STRING} a_link.text as l_raw then
-							visit_raw_string (l_raw)
-						else
-							a_link.text.process (Current)
-						end
-						output ("</div>")
+				if not a_link.text.is_empty then
+					output ("<div class=%"wiki_caption%">")
+					if attached {WIKI_RAW_STRING} a_link.text as l_raw then
+						visit_raw_string (l_raw)
+					else
+						a_link.text.process (Current)
 					end
+					output ("</div>")
 				end
 			end
 			if not a_link.inlined then

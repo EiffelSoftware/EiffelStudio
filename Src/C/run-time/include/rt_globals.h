@@ -77,6 +77,7 @@ typedef struct tag_rt_thr_context rt_thr_context;
 struct tag_rt_thr_context {
 	EIF_OBJECT current;				/* Root object of Thread creator. */
 	EIF_PROCEDURE routine;			/* routine `execute' of thread. */
+	EIF_PROCEDURE set_terminated_func;	/* routine `set_terminated' of thread. */
 	EIF_MUTEX_TYPE *children_mutex;	/* Mutex for `join_all'. */
 	volatile int n_children;		/* Number of direct thread children. */
 	volatile int is_alive;			/* Is Current thread still alive? */

@@ -160,7 +160,7 @@ feature -- Access
 	item: CHARACTER
 			-- Character current points on
 		obsolete
-			"Use wide_item instead"
+			"Use wide_item instead [2017-05-31]"
 		do
 			Result := wide_item.to_character_8
 		end
@@ -703,7 +703,7 @@ feature -- Cursor movement
 	char_is_blank (char: CHARACTER_32): BOOLEAN
 			-- Is `char' a blank space or a tabulation?
 		obsolete
-			"Use {CHARACTER_32}.is_space instead."
+			"Use {CHARACTER_32}.is_space instead. [2017-05-31]"
 		do
 			Result := is_space (char)
 		end
@@ -810,7 +810,7 @@ invariant
 	text_not_void					: text /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -85,7 +85,6 @@ feature {NONE} -- Initialization
 	create_order (sess: HTTP_CLIENT_SESSION) : HTTP_CLIENT_RESPONSE
 		local
 			s: READABLE_STRING_8
-			j: JSON_PARSER
 			context : HTTP_CLIENT_REQUEST_CONTEXT
 		do
 			s := "[

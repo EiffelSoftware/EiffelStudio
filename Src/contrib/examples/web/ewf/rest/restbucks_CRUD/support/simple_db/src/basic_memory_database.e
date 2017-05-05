@@ -19,8 +19,6 @@ create
 feature {NONE} -- Initialization
 
 	make
-		local
-			b: SED_MEMORY_READER_WRITER
 		do
 			create collections.make (0)
 		end
@@ -86,8 +84,6 @@ feature {NONE} -- Implementation
 	next_identifier (a_entry_type: TYPE [detachable ANY]): STRING_8
 		local
 			i: INTEGER
-			f: RAW_FILE
-			s: STRING
 			tb: detachable STRING_TABLE [detachable ANY]
 		do
 			tb := collections.item (a_entry_type)

@@ -2,7 +2,7 @@
 	"database": {
 		"datasource": {
 			"driver": "SQL Server Native Client 10.0",
-			"environment": "test"
+			"environment": "production"
 		},
 		"environments": {
 			"test": {
@@ -12,7 +12,7 @@
 				"connection_string":"Server=SQLSERVER;Database=DEV_DATABASE;Uid=XXX;Pwd=YYY;"
 				 },
 			"production": {
-				"connection_string":"Server=SQLSERVER;Database=LIVE_DATABASE;Uid=XXX;Pwd=YYY;"
+				"connection_string":"Server=SQLSERVER;Database=sql.ise;Uid=Eiffel2;Pwd=Eiffel2;"
 			}
 		}
 	},

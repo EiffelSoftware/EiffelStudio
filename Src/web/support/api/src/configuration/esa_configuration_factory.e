@@ -19,7 +19,6 @@ feature -- Factory
 			-- or default.
 		local
 			l_layout: APPLICATION_LAYOUT
-			l_email_service: ESA_EMAIL_SERVICE
 			l_notification_service: ESA_NOTIFICATION_EMAIL_SERVICE
 			l_database: DATABASE_CONNECTION
 			l_api_service: ESA_API_SERVICE
@@ -33,18 +32,17 @@ feature -- Factory
 				end
 				log.write_information (generator + ".esa_config " + l_layout.path.name.out)
 
-				create l_email_service.make ((create {JSON_CONFIGURATION}).new_smtp_configuration(l_layout.application_config_path))
 				create l_notification_service.make ((create {JSON_CONFIGURATION}).new_smtp_configuration(l_layout.application_config_path))
 
 				if attached (create {JSON_CONFIGURATION}).new_database_configuration (l_layout.application_config_path) as l_database_config then
 					create {DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string)
 					create l_api_service.make_with_database (l_database)
-					create Result.make (l_database, l_api_service, l_email_service, l_notification_service, l_layout)
+					create Result.make (l_database, l_api_service, l_notification_service, l_layout)
 					set_successful
 				else
 					create {DATABASE_CONNECTION_NULL} l_database.make_common
 					create l_api_service.make_with_database (l_database)
-					create Result.make (l_database, l_api_service, l_email_service, l_notification_service,  l_layout)
+					create Result.make (l_database, l_api_service, l_notification_service,  l_layout)
 					set_last_error ("Database Connections", generator + ".esa_config")
 					log.write_error (generator + ".esa_config Error database connection" )
 				end
@@ -54,12 +52,11 @@ feature -- Factory
 				else
 					create l_layout.make_default
 				end
-				create l_email_service.make ((create {JSON_CONFIGURATION}).new_smtp_configuration(l_layout.application_config_path))
 				create l_notification_service.make ((create {JSON_CONFIGURATION}).new_smtp_configuration(l_layout.application_config_path))
 
 				create {DATABASE_CONNECTION_NULL} l_database.make_common
 				create l_api_service.make_with_database (l_database)
-				create Result.make (l_database, l_api_service, l_email_service, l_notification_service, l_layout)
+				create Result.make (l_database, l_api_service, l_notification_service, l_layout)
 			end
 		rescue
 			set_last_error_from_exception ("Database Connection execution")
@@ -71,7 +68,6 @@ feature -- Factory
 	esa_config_test (a_dir: detachable STRING): ESA_CONFIG
 		local
 			l_layout: APPLICATION_LAYOUT
-			l_email_service: ESA_EMAIL_SERVICE
 			l_notification_service: ESA_NOTIFICATION_EMAIL_SERVICE
 			l_database: DATABASE_CONNECTION
 			l_api_service: ESA_API_SERVICE
@@ -85,19 +81,18 @@ feature -- Factory
 					create l_layout.make_default
 				end
 
-				create l_email_service.make ((create {JSON_CONFIGURATION}).new_smtp_configuration(l_layout.application_config_path))
 				create l_notification_service.make ((create {JSON_CONFIGURATION}).new_smtp_configuration(l_layout.application_config_path))
 
 
 				if attached (create {JSON_CONFIGURATION}).new_database_configuration_test (l_layout.application_config_path) as l_database_config then
 					create {DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string)
 					create l_api_service.make_with_database (l_database)
-					create Result.make (l_database, l_api_service, l_email_service, l_notification_service, l_layout)
+					create Result.make (l_database, l_api_service, l_notification_service, l_layout)
 					set_successful
 				else
 					create {DATABASE_CONNECTION_NULL} l_database.make_common
 					create l_api_service.make_with_database (l_database)
-					create Result.make (l_database, l_api_service, l_email_service, l_notification_service, l_layout)
+					create Result.make (l_database, l_api_service, l_notification_service, l_layout)
 					set_last_error ("Database Connections", generator+".esa_config")
 				end
 			else
@@ -106,12 +101,11 @@ feature -- Factory
 				else
 					create l_layout.make_default
 				end
-				create l_email_service.make ((create {JSON_CONFIGURATION}).new_smtp_configuration(l_layout.application_config_path))
 				create l_notification_service.make ((create {JSON_CONFIGURATION}).new_smtp_configuration(l_layout.application_config_path))
 
 				create {DATABASE_CONNECTION_NULL} l_database.make_common
 				create l_api_service.make_with_database (l_database)
-				create Result.make (l_database, l_api_service, l_email_service, l_notification_service, l_layout)
+				create Result.make (l_database, l_api_service, l_notification_service, l_layout)
 			end
 		rescue
 			set_last_error_from_exception ("Database Connection execution")

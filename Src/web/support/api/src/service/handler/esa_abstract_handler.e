@@ -34,12 +34,6 @@ feature -- Access
 			Result := esa_config.api_service
 		end
 
-	email_service: ESA_EMAIL_SERVICE
-			-- Email Service.
-		do
-			Result := esa_config.email_service
-		end
-
 	email_notification_service: ESA_NOTIFICATION_EMAIL_SERVICE
 		do
 			Result := esa_config.email_notification_service

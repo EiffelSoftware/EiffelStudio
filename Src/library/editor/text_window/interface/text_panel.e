@@ -1172,7 +1172,6 @@ feature {NONE} -- Scroll bars Management
  			-- Process vertical scroll event. `vertical_scrollbar.value' has changed.
  		local
  			l_bottom_line_y,
- 			l_top_line_y,
  			l_diff,
  			view_y_offset,
  			l_line_height,

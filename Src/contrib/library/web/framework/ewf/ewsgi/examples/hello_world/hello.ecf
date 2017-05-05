@@ -7,9 +7,8 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" is_obsolete_routine_type="true" syntax="provisional">
+		<option warning="true">
 		</option>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="connector_standalone" location="..\..\connectors\standalone\standalone.ecf" readonly="false"/>
 		<library name="ewsgi" location="..\..\ewsgi.ecf" readonly="false"/>

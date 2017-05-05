@@ -66,19 +66,34 @@ feature -- Application Configuration
 		end
 
 	new_smtp_configuration (a_path: PATH): READABLE_STRING_32
-			-- Build a new database configuration.
+			-- Build a new smpt server configuration.
 		local
 			l_parser: JSON_PARSER
+			l_result: STRING_32
 		do
-			Result := ""
+			create l_result.make_empty
 			if attached json_file_from (a_path) as json_file then
 			 l_parser := new_json_parser (json_file)
-			 if  attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_valid and then
-			     attached {JSON_OBJECT} jv.item ("smtp") as l_smtp and then
-			     attached {JSON_STRING} l_smtp.item ("server") as l_server then
-			     Result := l_server.item
+			 if
+			 	attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_valid and then
+			    attached {JSON_OBJECT} jv.item ("smtp") as l_smtp and then
+			    attached {JSON_STRING} l_smtp.item ("server") as l_server
+			 then
+			    l_result := l_server.item
+			    if
+			    	attached {JSON_STRING} l_smtp.item ("username") as l_username and then
+			    	attached {JSON_STRING} l_smtp.item ("password") as l_password and then
+			    	not l_username.item.is_empty and then
+			    	not l_password.item.is_empty
+			    then
+			    	l_result.prepend_character ('@')
+			    	l_result.prepend (l_password.item)
+			    	l_result.prepend_character (':')
+			    	l_result.prepend (l_username.item)
+			    end
 			 end
 			end
+			Result := l_result
 		end
 
 	new_database_configuration (a_path: PATH): detachable DATABASE_CONFIGURATION

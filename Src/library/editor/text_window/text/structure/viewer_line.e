@@ -23,7 +23,7 @@ feature -- Initialisation
 	make_empty_line
 			-- Create an empty line.
 		obsolete
-			"Use `make' instead."
+			"Use `make' instead. [2017-05-31]"
 		do
 			make_unix_style
 		end
@@ -466,7 +466,7 @@ feature -- Obsolete
 	image: STRING
 			-- string representation of the line.
 		obsolete
-			"Use `wide_image' instead."
+			"Use `wide_image' instead. [2017-05-31]"
 		do
 			Result := wide_image.as_string_8
 		ensure
@@ -477,7 +477,7 @@ feature -- Obsolete
 			-- Create a string containing the same indentation as `ref_line'.
 			-- New instance created at each call.
 		obsolete
-			"Use `wide_indentation' instead."
+			"Use `wide_indentation' instead. [2017-05-31]"
 		do
 			Result := wide_indentation.as_string_8
 		ensure
@@ -489,7 +489,7 @@ feature -- Obsolete
 			-- the line and ending at the cursor position (not
 			-- included)
 		obsolete
-			"Use `wide_image_from_start_to_cursor' instead."
+			"Use `wide_image_from_start_to_cursor' instead. [2017-05-31]"
 		require
 			text_cursor.line = Current
 		do
@@ -502,7 +502,7 @@ feature -- Obsolete
 			-- Substring of the line starting at the cursor
 			-- position (included) and ending at the end of the line
 		obsolete
-			"Use `wide_image_from_cursor_to_end' instead."
+			"Use `wide_image_from_cursor_to_end' instead. [2017-05-31]"
 		require
 			text_cursor.line = Current
 		do
@@ -515,7 +515,7 @@ feature -- Obsolete
 			-- Substring of the line starting at `start_char' and
 			-- ending at `end_char' - included
 		obsolete
-			"Use `wide_substring_image_by_character' instead."
+			"Use `wide_substring_image_by_character' instead. [2017-05-31]"
 		do
 			Result := substring_image_by_character (start_char, end_char).as_string_8
 		ensure
@@ -531,7 +531,7 @@ invariant
 	eol_token_set: eol_token /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

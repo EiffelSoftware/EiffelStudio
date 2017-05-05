@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	admin_email: IMMUTABLE_STRING_8
 			-- Administrator email.
 		once
-			Result := "javierv@eiffel.com"
+			Result := "noreplies@eiffel.com"
 		end
 
 	webmaster_email: IMMUTABLE_STRING_8

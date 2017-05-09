@@ -774,11 +774,8 @@ feature{NONE} -- Actions
 
 	on_item_dropped (a_pebble: ANY)
 			-- Action to be performed when `a_pebble' is dropped
-		local
-			l_stone: like last_stone
 		do
-			l_stone ?= a_pebble
-			if l_stone /= Void then
+			if attached {like last_stone} a_pebble as l_stone then
 				drop_stone (l_stone)
 			end
 		end
@@ -978,7 +975,7 @@ invariant
 	veto_format_function_agent_attached: veto_format_function_agent /= Void
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

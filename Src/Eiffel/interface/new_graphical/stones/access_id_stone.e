@@ -18,15 +18,16 @@ inherit
 			stone_name
 		end
 
+--	FEATURE_STONE
+
 create
 	make
+--	,
+--	make_with_feature
 
 feature {NONE} -- Initialization
 
-	make (
-			a_class_c: CLASS_C;
---		a_feature: E_FEATURE;
-			a_ast: detachable AST_EIFFEL)
+	make (a_class_c: CLASS_C; a_ast: detachable AST_EIFFEL)
 		do
 			ast_stone_make (a_class_c, a_ast)
 --			ast_stone_make (a_feature.written_class, a_ast)
@@ -35,12 +36,25 @@ feature {NONE} -- Initialization
 			set_x_stone_cursor (cursors.cur_x_metric_local)
 		end
 
+--	make_with_feature (a_feature: E_FEATURE; a_ast: detachable AST_EIFFEL)
+--		do
+--			make (a_feature.written_class, a_ast)
+--			create feature_stone.make (a_feature)
+--		end
+
 feature -- Access
+
+--	feature_stone: detachable FEATURE_STONE
 
 	local_name: STRING_32
 			-- Variable name.
 		do
-			Result := "???"
+			if attached {ACCESS_AS} ast as l_access then
+				Result := l_access.access_name_32
+			else
+				create Result.make_from_string_general (class_name)
+				Result.append (".???")
+			end
 		end
 
 	history_name: STRING_32
@@ -48,8 +62,7 @@ feature -- Access
 		local
 			s: STRING_32
 		do
---TODO			s := Interface_names.s_local_stone.twin
-			s := "Local: "
+			create s.make_from_string (Interface_names.s_local_stone)
 			s.append_string (local_name)
 			Result := interface_names.l_from (s, Precursor {AST_STONE})
 		end

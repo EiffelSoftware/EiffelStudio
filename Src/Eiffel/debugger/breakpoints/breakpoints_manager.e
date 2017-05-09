@@ -542,14 +542,14 @@ feature -- Breakpoints access
 			Result_not_void: Result /= Void
 		end
 
-	hidden_breakpoint_at (loc: BREAKPOINT_LOCATION): like new_hidden_breakpoint
+	hidden_breakpoint_at (loc: BREAKPOINT_LOCATION): detachable like new_hidden_breakpoint
 			-- User Breakpoint located at `loc'.
 		require
 			valid_breakpoint: is_user_breakpoint_set_at (loc)
 		do
-			Result ?= breakpoint_at (loc, False)
-		ensure
-			Result_not_void: Result /= Void
+			if attached {like new_hidden_breakpoint} breakpoint_at (loc, False) as res then
+				Result := res
+			end
 		end
 
 	internal_user_breakpoint_at (loc: BREAKPOINT_LOCATION): BREAKPOINT
@@ -1427,7 +1427,7 @@ invariant
 	breakpoints_not_void: breakpoints /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

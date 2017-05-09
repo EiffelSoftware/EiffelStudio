@@ -452,7 +452,6 @@ feature -- Remote access to RT_
 			icdv, r: ICOR_DEBUG_VALUE
 			icdf: ICOR_DEBUG_FUNCTION
 			args: ARRAY [ICOR_DEBUG_VALUE]
-			dv: EIFNET_ABSTRACT_DEBUG_VALUE
 			i_ref, i_fn: ICOR_DEBUG_VALUE
 		do
 			--| This is optimization for dotnet
@@ -461,11 +460,11 @@ feature -- Remote access to RT_
 				icdv := rto.icd_referenced_value
 				icdf := rto.icd_value_info.value_icd_function ("object_loaded_from")
 				if icdf /= Void then
-					if oa /= Void then
-						dv ?= kept_object_item (oa)
-						if dv /= Void then
-							i_ref := dv.icd_referenced_value
-						end
+					if 
+						oa /= Void and then
+						attached {EIFNET_ABSTRACT_DEBUG_VALUE} kept_object_item (oa) as dv 
+					then
+						i_ref := dv.icd_referenced_value
 					end
 					i_fn := eifnet_debugger.eifnet_dbg_evaluator.new_eiffel_string_32_evaluation (Void, fn.name)
 					args := <<icdv, i_ref, i_fn>>
@@ -537,14 +536,9 @@ feature -- Remote access to Exceptions
 
 	remote_current_exception_value: EXCEPTION_DEBUG_VALUE
 			-- `{EXCEPTION_MANAGER}.last_exception' aka `{ISE_RUNTIME}.last_exception' value
-		local
-			icdv: ICOR_DEBUG_VALUE
-			val: ABSTRACT_REFERENCE_VALUE
 		do
 			if Result = Void and Eifnet_debugger.exception_occurred then
-				icdv := Eifnet_debugger.new_active_exception_value_from_thread
-				if icdv /= Void then
-					val ?= debug_value_from_icdv (icdv, Void)
+				if attached Eifnet_debugger.new_active_exception_value_from_thread as icdv then
 					if attached {ABSTRACT_REFERENCE_VALUE} eiffel_wrapper_exception (icdv) as wrap then
 						create Result.make_with_value (wrap)
 					else
@@ -553,7 +547,7 @@ feature -- Remote access to Exceptions
 						--| cf. bug#14258
 						create Result.make_without_any_value
 					end
-					if val /= Void then
+					if attached {ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (icdv, Void) as val then
 						check Result_not_void: Result /= Void end
 						if attached eifnet_debugger.exception_class_name (val) as s8 then
 							Result.set_exception_others (s8, {APPLICATION_STATUS_DOTNET}.exception_il_type_name_key)
@@ -602,9 +596,9 @@ feature -- Remote access to Exceptions
 			e_not_void: e /= Void
 		do
 			if attached {EIFNET_DEBUG_REFERENCE_VALUE} e.debug_value as v then
-				Result ?= v.attribute_value_for (Exception_dotnet_exception_attribute_name)
+				Result := {ABSTRACT_REFERENCE_VALUE} / v.attribute_value_for (Exception_dotnet_exception_attribute_name)
 				if Result = Void then
-					Result ?= v
+					Result := {ABSTRACT_REFERENCE_VALUE} / v
 				end
 			end
 		end

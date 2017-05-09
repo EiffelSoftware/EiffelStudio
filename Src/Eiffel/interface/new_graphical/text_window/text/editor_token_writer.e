@@ -448,8 +448,12 @@ feature -- Text processing
 		do
 			create tok.make (t.as_string_32)
 			if a_ast /= Void then
-				create st.make (Eiffel_system.System.current_class, a_ast)
-				tok.set_pebble (st)
+				if attached {ACCESS_FEAT_AS} a_ast as af and then af.is_tuple_access then
+						-- Skip tuple value, as not really local token.
+				else
+					create st.make (Eiffel_system.System.current_class, a_ast)
+					tok.set_pebble (st)
+				end
 			end
 			append_token (tok)
 		end
@@ -680,8 +684,9 @@ feature {NONE} -- Initialisations and File status
 			until
 				last_line.after or feature_start_found
 			loop
-				feature_start ?= last_line.item
-				feature_start_found := (feature_start /= Void and then feature_start.pebble = Void)
+				if attached {EDITOR_TOKEN_FEATURE_START} last_line.item as l_feat_start then
+					feature_start_found := l_feat_start.pebble = Void
+				end
 				if not feature_start_found then
 					last_line.forth
 				end

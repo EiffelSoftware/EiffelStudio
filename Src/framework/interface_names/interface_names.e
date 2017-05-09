@@ -2245,6 +2245,7 @@ feature -- Stone names
 	s_Class_stone: STRING_32				do Result := locale.translation("Class ")	end
 	s_Cluster_stone: STRING_32			do Result := locale.translation("Cluster ")	end
 	s_Feature_stone: STRING_32			do Result := locale.translation("Feature ")	end
+	s_Local_stone: STRING_32			do Result := locale.translation("Local ")	end
 	s_Assembly_stone: STRING_32			do Result := locale.translation("Assembly ")	end
 	s_folder_stone: STRING_32			do Result := locale.translation("Folder ")	end
 	s_library_stone: STRING_32			do Result := locale.translation("Library ")	end

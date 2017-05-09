@@ -219,7 +219,7 @@ feature {NONE} -- Click ast exploration
 				parents := current_class_as.parents
 				has_parents := parents /= Void
 				if has_parents then
-					create inherit_clauses.make (1, parents.count + 1)
+					create inherit_clauses.make_filled (0, 1, parents.count + 1)
 					from
 						parents.start
 						i := 1
@@ -416,7 +416,6 @@ feature {NONE}-- Clickable/Editable implementation
 			vn: READABLE_STRING_GENERAL
 			vn_id: INTEGER
 			td: detachable AST_EIFFEL
-			feat: like last_feature
 		do
 			if is_ok_for_completion then
 				initialize_context
@@ -433,68 +432,68 @@ feature {NONE}-- Clickable/Editable implementation
 						is_for_feature := True
 						l_type := type_from (token, line)
 						is_for_feature := False
-						feat := last_feature
-						if feat /= Void then
+						if attached last_feature as feat then
 							vn := token.wide_image
 							if vn.same_string (feat.name_32) then
 								Result := [feat, Void]
 							end
-						else
+						elseif attached token.previous as l_prev and then l_prev.wide_image.same_string_general (".") then
+								-- Ignore nested expression.
+						elseif attached cl.feature_with_name_32 (ft.feature_names.first.visual_name_32) as feat then
+
 								-- Search for locals, arguments, ... in current feature.
 								-- TODO: check if there is a simpler solution [2017-04-15].			
-							feat := cl.feature_with_name_32 (ft.feature_names.first.visual_name_32)
-
-							if feat /= Void then
-								vn := token.wide_image
-								vn_id := feat.names_heap.id_of (vn.to_string_8) --FIXME: try to reuse existing lookup if possible.
-								td := Void
-								if vn_id > 0 then
-									if attached feat.locals as l_feat_locals then
-										across
-											l_feat_locals as ic
-										until
-											td /= Void
-										loop
-											if attached {TYPE_DEC_AS} ic.item as l_type_dec then
-												across
-													l_type_dec.id_list as id_ic
-												until
-													td /= Void
-												loop
-													if vn_id = id_ic.item then
-														td := l_type_dec
-													end
+							vn := token.wide_image
+							vn_id := feat.names_heap.id_of (vn.to_string_8) --FIXME: try to reuse existing lookup if possible.
+							td := Void
+							if vn_id > 0 then
+								if attached feat.locals as l_feat_locals then
+									across
+										l_feat_locals as ic
+									until
+										td /= Void
+									loop
+										if attached {TYPE_DEC_AS} ic.item as l_type_dec then
+											across
+												l_type_dec.id_list as id_ic
+											until
+												td /= Void
+											loop
+												if vn_id = id_ic.item then
+													td := l_type_dec
 												end
 											end
 										end
 									end
-									if td = Void and attached feat.argument_names as l_feat_args then
-										across
-											l_feat_args as ic
-										until
-											td /= Void
-										loop
-											if vn.same_string (ic.item) then
-												td := feat.ast
-											end
+								end
+								if td = Void and attached feat.argument_names as l_feat_args then
+									across
+										l_feat_args as ic
+									until
+										td /= Void
+									loop
+										if vn.same_string (ic.item) then
+											td := feat.ast
 										end
 									end
-									if td = Void then
-											-- TODO: implement solution for reminding locals [2017-04-15].
-											-- + object test locals
-											-- + inline agent locals + args
-											-- + across iteration local variables
-											-- + separate local variables
-									end
 								end
-								if td /= Void then
-									Result := [feat, td]
+								if td = Void then
+										-- TODO: implement solution for reminding locals [2017-04-15].
+										-- + object test locals
+										-- + inline agent locals + args
+										-- + across iteration local variables
+										-- + separate local variables
 								end
+							end
+							if td /= Void then
+								Result := [feat, td]
 							end
 						end
 					end
 				end
 			end
+		ensure
+			result_with_feat: Result /= Void implies Result.feat /= Void
 		end
 
 	last_feature: E_FEATURE

@@ -196,11 +196,8 @@ feature -- Status setting
 
 	decide_tool_to_display (a_st: STONE): EB_STONABLE_TOOL
 			-- Decide which tool to display.
-		local
-			fs: FEATURE_STONE
 		do
-			fs ?= a_st
-			if fs /= Void then
+			if attached {FEATURE_STONE} a_st then
 				show
 				set_focus
 				Result := Current
@@ -211,33 +208,33 @@ feature -- Status setting
 			-- Test if there is a feature with the same name (or routine id?)
 			-- in the dropped class.
 		local
-			fst, ofst, new_fs: FEATURE_STONE
+			fst, new_fs: detachable FEATURE_STONE
 			new_f: E_FEATURE
-			classi_stone: CLASSI_STONE
 			cl: CLASS_C
 			found: BOOLEAN
 			l_tool: EB_STONABLE_TOOL
 		do
 			l_tool := decide_tool_to_display (st)
-			fst ?= st
+			fst := {FEATURE_STONE} / st
 			if fst = Void then
-				classi_stone ?= st
-				if classi_stone /= Void then
+				if attached {CLASSI_STONE} st as classi_stone then
 					cl := classi_stone.class_i.compiled_representation
-					ofst ?= stone
-					if ofst /= Void and then cl /= Void then
-						new_f := ofst.e_feature.ancestor_version (cl)
-						if new_f /= Void then
-							create new_fs.make (new_f)
-							found := True
+					if attached {FEATURE_STONE} stone as ofst then
+						if cl /= Void then
+							new_f := ofst.e_feature.ancestor_version (cl)
+							if new_f /= Void then
+								create new_fs.make (new_f)
+								found := True
+							end
 						end
+						if not found then
+								-- The dropped class does not have any feature named like the current feature.
+							output_line.set_text (Warning_messages.w_No_such_feature_in_this_class (
+								ofst.feature_name, classi_stone.class_i.name))
+						end
+					elseif attached {ACCESS_ID_STONE} st as accst then
+						found := False
 					end
-				end
-				if not found and ofst /= Void then
-					check classi_stone_not_void: classi_stone /= Void end
-						-- The dropped class does not have any feature named like the current feature.
-					output_line.set_text (Warning_messages.w_No_such_feature_in_this_class (
-						ofst.feature_name, classi_stone.class_i.name))
 				end
 			end
 
@@ -373,7 +370,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -288,17 +288,17 @@ feature -- Type checking
 		do
 			if
 				attached {ROUTINE_AS} a_node.content as l_routine and then
-				l_routine.locals /= Void and then
-				not l_routine.locals.is_empty
+				attached l_routine.locals as l_routine_locals and then
+				not l_routine_locals.is_empty
 			then
 				from
 					l_feat_tbl := context.current_class.feature_table
-					l_routine.locals.start
+					l_routine_locals.start
 				until
-					l_routine.locals.after
+					l_routine_locals.after
 				loop
 					from
-						l_id_list := l_routine.locals.item.id_list
+						l_id_list := l_routine_locals.item.id_list
 						l_id_list.start
 					until
 						l_id_list.after
@@ -310,7 +310,7 @@ feature -- Type checking
 							create l_vrle1
 							context.init_error (l_vrle1)
 							l_vrle1.set_local_name (l_local_name_id)
-							l_vrle1.set_location (l_routine.locals.item.start_location)
+							l_vrle1.set_location (l_routine_locals.item.start_location)
 							error_handler.insert_error (l_vrle1)
 						elseif context.is_name_used (l_local_name_id) then
 							create l_vpir
@@ -322,7 +322,7 @@ feature -- Type checking
 						end
 						l_id_list.forth
 					end
-					l_routine.locals.forth
+					l_routine_locals.forth
 				end
 			end
 		end
@@ -3089,14 +3089,22 @@ feature {NONE} -- Visitor
 						l_has_vuar_error := l_as.parameters /= Void
 						is_controlled := l_local_info.is_controlled
 						l_type := l_local_info.type
-						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
+						if l_type /= Void then
+							l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
+						else
+							check has_local_info_type: False end
+						end
 						if l_needs_byte_node then
 							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index, l_type)
 							last_byte_node := l_local
 						end
 						if not is_inherited then
 							l_as.enable_object_test_local
-							l_as.set_class_id (class_id_of (l_type))
+							if l_type /= Void then
+								l_as.set_class_id (class_id_of (l_type))
+							else
+								l_as.set_class_id (-1)
+							end
 						end
 					else
 							-- Look for a feature
@@ -3219,7 +3227,11 @@ feature {NONE} -- Visitor
 						last_access_writable := False
 						is_controlled := l_local_info.is_controlled
 						l_type := l_local_info.type
-						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
+						if l_type /= Void then
+							l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
+						else
+							check has_local_info_type: False end
+						end
 						if is_byte_node_enabled then
 							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index, l_type)
 							last_byte_node := l_local
@@ -4293,8 +4305,16 @@ feature {NONE} -- Visitor
 						last_access_writable := False
 						is_controlled := l_local_info.is_controlled
 						l_type := l_local_info.type
-						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
-						create l_typed_pointer.make_typed (l_type)
+						if l_type /= Void then
+							l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
+						else
+							check has_local_info_type: False end
+						end
+						if l_type /= Void then
+							create l_typed_pointer.make_typed (l_type)
+						else
+							l_typed_pointer := Void
+						end
 						set_type (l_typed_pointer, l_as)
 						if l_needs_byte_node then
 							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index, l_type)

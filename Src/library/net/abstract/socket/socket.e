@@ -5,8 +5,8 @@ note
 	legal: "See notice at end of class."
 
 	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision$"
+	date: "$Date: 2016-10-10 08:24:50 -0800 (Mon, 10 Oct 2016) $";
+	revision: "$Revision: 99272 $"
 
 deferred class
 
@@ -308,78 +308,78 @@ feature -- Output
 	put_character, putchar (c: CHARACTER)
 			-- Write character `c' to socket.
 		do
-			socket_buffer.put_character (c, 0)
-			put_managed_pointer (socket_buffer, 0, character_8_bytes)
+			put_socket_buffer.put_character (c, 0)
+			put_managed_pointer (put_socket_buffer, 0, character_8_bytes)
 		end
 
 	put_real, putreal (r: REAL)
 			-- Write real `r' to socket.
 		do
-			socket_buffer.put_real_32 (r, 0)
-			put_managed_pointer (socket_buffer, 0, real_32_bytes)
+			put_socket_buffer.put_real_32_be (r, 0)
+			put_managed_pointer (put_socket_buffer, 0, real_32_bytes)
 		end
 
 	put_double, putdouble (d: DOUBLE)
 			-- Write double `d' to socket.
 		do
-			socket_buffer.put_real_64_be (d, 0)
-			put_managed_pointer (socket_buffer, 0, real_64_bytes)
+			put_socket_buffer.put_real_64_be (d, 0)
+			put_managed_pointer (put_socket_buffer, 0, real_64_bytes)
 		end
 
 	put_integer, putint, put_integer_32 (i: INTEGER)
 			-- Write integer `i' to socket.
 		do
-			socket_buffer.put_integer_32_be (i, 0)
-			put_managed_pointer (socket_buffer, 0, integer_32_bytes)
+			put_socket_buffer.put_integer_32_be (i, 0)
+			put_managed_pointer (put_socket_buffer, 0, integer_32_bytes)
 		end
 
 	put_integer_8 (i: INTEGER_8)
 			-- Write integer `i' to socket.
 		do
-			socket_buffer.put_integer_8_be (i, 0)
-			put_managed_pointer (socket_buffer, 0, integer_8_bytes)
+			put_socket_buffer.put_integer_8_be (i, 0)
+			put_managed_pointer (put_socket_buffer, 0, integer_8_bytes)
 		end
 
 	put_integer_16 (i: INTEGER_16)
 			-- Write integer `i' to socket.
 		do
-			socket_buffer.put_integer_16_be (i, 0)
-			put_managed_pointer (socket_buffer, 0, integer_16_bytes)
+			put_socket_buffer.put_integer_16_be (i, 0)
+			put_managed_pointer (put_socket_buffer, 0, integer_16_bytes)
 		end
 
 	put_integer_64 (i: INTEGER_64)
 			-- Write integer `i' to socket.
 		do
-			socket_buffer.put_integer_64_be (i, 0)
-			put_managed_pointer (socket_buffer, 0, integer_64_bytes)
+			put_socket_buffer.put_integer_64_be (i, 0)
+			put_managed_pointer (put_socket_buffer, 0, integer_64_bytes)
 		end
 
 	put_natural_8 (i: NATURAL_8)
 			-- Write natural `i' to socket.
 		do
-			socket_buffer.put_natural_8_be (i, 0)
-			put_managed_pointer (socket_buffer, 0, natural_8_bytes)
+			put_socket_buffer.put_natural_8_be (i, 0)
+			put_managed_pointer (put_socket_buffer, 0, natural_8_bytes)
 		end
 
 	put_natural_16 (i: NATURAL_16)
 			-- Write natural `i' to socket.
 		do
-			socket_buffer.put_natural_16_be (i, 0)
-			put_managed_pointer (socket_buffer, 0, natural_16_bytes)
+			put_socket_buffer.put_natural_16_be (i, 0)
+			put_managed_pointer (put_socket_buffer, 0, natural_16_bytes)
 		end
 
 	put_natural, put_natural_32 (i: NATURAL_32)
 			-- Write natural `i' to socket.
 		do
-			socket_buffer.put_natural_32_be (i, 0)
-			put_managed_pointer (socket_buffer, 0, natural_32_bytes)
+			put_socket_buffer.put_natural_32_be (i, 0)
+			put_managed_pointer (put_socket_buffer, 0, natural_32_bytes)
 		end
 
 	put_natural_64 (i: NATURAL_64)
 			-- Write natural `i' to socket.
 		do
-			socket_buffer.put_natural_64_be (i, 0)
-			put_managed_pointer (socket_buffer, 0, natural_64_bytes)
+			put_socket_buffer.put_natural_64_be (i, 0)
+			put_managed_pointer (put_socket_buffer, 0, natural_64_bytes)
 		end
 
 	put_boolean, putbool (b: BOOLEAN)
@@ -492,11 +492,11 @@ feature -- Input
 			-- Read a new real.
 			-- Make result available in `last_real'.
 		do
-			read_to_managed_pointer (socket_buffer, 0, real_32_bytes)
+			read_to_managed_pointer (read_socket_buffer, 0, real_32_bytes)
 			if bytes_read /= real_32_bytes then
 				socket_error := "Peer closed connection"
 			else
-				last_real := socket_buffer.read_real_32_be (0)
+				last_real := read_socket_buffer.read_real_32_be (0)
 				socket_error := Void
 			end
 		end
@@ -505,11 +505,11 @@ feature -- Input
 			-- Read a new double.
 			-- Make result available in `last_double'.
 		do
-			read_to_managed_pointer (socket_buffer, 0, real_64_bytes)
+			read_to_managed_pointer (read_socket_buffer, 0, real_64_bytes)
 			if bytes_read /= real_64_bytes then
 				socket_error := "Peer closed connection"
 			else
-				last_double := socket_buffer.read_real_64_be (0)
+				last_double := read_socket_buffer.read_real_64_be (0)
 				socket_error := Void
 			end
 		end
@@ -518,11 +518,11 @@ feature -- Input
 			-- Read a new character.
 			-- Make result available in `last_character'.
 		do
-			read_to_managed_pointer (socket_buffer, 0, character_8_bytes)
+			read_to_managed_pointer (read_socket_buffer, 0, character_8_bytes)
 			if bytes_read /= character_8_bytes then
 				socket_error := "Peer closed connection"
 			else
-				last_character := socket_buffer.read_character (0)
+				last_character := read_socket_buffer.read_character (0)
 				socket_error := Void
 			end
 		end
@@ -548,11 +548,11 @@ feature -- Input
 			-- Read a new 32-bit integer.
 			-- Make result available in `last_integer'.
 		do
-			read_to_managed_pointer (socket_buffer, 0, integer_32_bytes)
+			read_to_managed_pointer (read_socket_buffer, 0, integer_32_bytes)
 			if bytes_read /= integer_32_bytes then
 				socket_error := "Peer closed connection"
 			else
-				last_integer := socket_buffer.read_integer_32_be (0)
+				last_integer := read_socket_buffer.read_integer_32_be (0)
 				socket_error := Void
 			end
 		end
@@ -561,11 +561,11 @@ feature -- Input
 			-- Read a new 8-bit integer.
 			-- Make result available in `last_integer_8'.
 		do
-			read_to_managed_pointer (socket_buffer, 0, integer_8_bytes)
+			read_to_managed_pointer (read_socket_buffer, 0, integer_8_bytes)
 			if bytes_read /= integer_8_bytes then
 				socket_error := "Peer closed connection"
 			else
-				last_integer_8 := socket_buffer.read_integer_8_be (0)
+				last_integer_8 := read_socket_buffer.read_integer_8_be (0)
 				socket_error := Void
 			end
 		end
@@ -574,11 +574,11 @@ feature -- Input
 			-- Read a new 16-bit integer.
 			-- Make result available in `last_integer_16'.
 		do
-			read_to_managed_pointer (socket_buffer, 0, integer_16_bytes)
+			read_to_managed_pointer (read_socket_buffer, 0, integer_16_bytes)
 			if bytes_read /= integer_16_bytes then
 				socket_error := "Peer closed connection"
 			else
-				last_integer_16 := socket_buffer.read_integer_16_be (0)
+				last_integer_16 := read_socket_buffer.read_integer_16_be (0)
 				socket_error := Void
 			end
 		end
@@ -587,11 +587,11 @@ feature -- Input
 			-- Read a new 64-bit integer.
 			-- Make result available in `last_integer_64'.
 		do
-			read_to_managed_pointer (socket_buffer, 0, integer_64_bytes)
+			read_to_managed_pointer (read_socket_buffer, 0, integer_64_bytes)
 			if bytes_read /= integer_64_bytes then
 				socket_error := "Peer closed connection"
 			else
-				last_integer_64 := socket_buffer.read_integer_64_be (0)
+				last_integer_64 := read_socket_buffer.read_integer_64_be (0)
 				socket_error := Void
 			end
 		end
@@ -600,11 +600,15 @@ feature -- Input
 			-- Read a new 8-bit natural.
 			-- Make result available in `last_natural_8'.
 		do
-			read_to_managed_pointer (socket_buffer, 0, natural_8_bytes)
+			print("before: " + read_socket_buffer.read_natural_8_be (0).out + "%N")
+			read_to_managed_pointer (read_socket_buffer, 0, natural_8_bytes)
 			if bytes_read /= natural_8_bytes then
 				socket_error := "Peer closed connection"
 			else
-				last_natural_8 := socket_buffer.read_natural_8_be (0)
+				last_natural_8 := read_socket_buffer.read_natural_8_be (0)
+				if last_natural_8 /= 2 and last_natural_8 /= 5 and last_natural_8 /= 1 then
+					do_nothing
+				end
 				socket_error := Void
 			end
 		end
@@ -613,11 +617,11 @@ feature -- Input
 			-- Read a new 16-bit natural.
 			-- Make result available in `last_natural_16'.
 		do
-			read_to_managed_pointer (socket_buffer, 0, natural_16_bytes)
+			read_to_managed_pointer (read_socket_buffer, 0, natural_16_bytes)
 			if bytes_read /= natural_16_bytes then
 				socket_error := "Peer closed connection"
 			else
-				last_natural_16 := socket_buffer.read_natural_16_be (0)
+				last_natural_16 := read_socket_buffer.read_natural_16_be (0)
 				socket_error := Void
 			end
 		end
@@ -626,11 +630,11 @@ feature -- Input
 			-- Read a new 32-bit natural.
 			-- Make result available in `last_natural'.
 		do
-			read_to_managed_pointer (socket_buffer, 0, natural_32_bytes)
+			read_to_managed_pointer (read_socket_buffer, 0, natural_32_bytes)
 			if bytes_read /= natural_32_bytes then
 				socket_error := "Peer closed connection"
 			else
-				last_natural := socket_buffer.read_natural_32_be (0)
+				last_natural := read_socket_buffer.read_natural_32_be (0)
 				socket_error := Void
 			end
 		end
@@ -639,11 +643,11 @@ feature -- Input
 			-- Read a new 64-bit natural.
 			-- Make result available in `last_natural_64'.
 		do
-			read_to_managed_pointer (socket_buffer, 0, natural_64_bytes)
+			read_to_managed_pointer (read_socket_buffer, 0, natural_64_bytes)
 			if bytes_read /= natural_64_bytes then
 				socket_error := "Peer closed connection"
 			else
-				last_natural_64 := socket_buffer.read_natural_64_be (0)
+				last_natural_64 := read_socket_buffer.read_natural_64_be (0)
 				socket_error := Void
 			end
 		end
@@ -1058,6 +1062,38 @@ feature {NONE} -- Externals
 	internal_socket_buffer: detachable MANAGED_POINTER
 			-- Internal integer buffer
 
+	put_socket_buffer: MANAGED_POINTER
+			-- Buffer used to read/write basic types.
+		local
+			l_buffer: like put_internal_socket_buffer
+		do
+			l_buffer := put_internal_socket_buffer
+			if l_buffer = Void then
+				create l_buffer.make (16)
+				put_internal_socket_buffer := l_buffer
+			end
+			Result := l_buffer
+		end
+
+	put_internal_socket_buffer: detachable MANAGED_POINTER
+			-- Internal integer buffer
+
+	read_socket_buffer: MANAGED_POINTER
+			-- Buffer used to read/write basic types.
+		local
+			l_buffer: like read_internal_socket_buffer
+		do
+			l_buffer := read_internal_socket_buffer
+			if l_buffer = Void then
+				create l_buffer.make (16)
+				read_internal_socket_buffer := l_buffer
+			end
+			Result := l_buffer
+		end
+
+	read_internal_socket_buffer: detachable MANAGED_POINTER
+			-- Internal integer buffer
+
 	c_put_stream_noexception (fd: INTEGER; s: POINTER; length: INTEGER): INTEGER
 			-- External routine to write stream pointed by `s' of
 			-- length `length' to socket `fd'.
@@ -1207,7 +1243,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

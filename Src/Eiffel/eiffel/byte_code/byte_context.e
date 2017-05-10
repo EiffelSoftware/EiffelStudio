@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Context variables for code generation and utilities."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,6 +33,7 @@ inherit
 	REFACTORING_HELPER
 	INTERNAL_COMPILER_STRING_EXPORTER
 	SHARED_ENCODING_CONVERTER
+	SHARED_TYPES
 
 create
 	make, make_from_context
@@ -1049,7 +1050,7 @@ feature -- Registers
 				-- the print_register function on Result_register,
 				-- and this has been carefully patched in RESULT_BL to handle
 				-- the once cases.
-			create {RESULT_BL} Result.make (create {NONE_A})
+			create {RESULT_BL} Result.make (detachable_none_type)
 		end
 
 	get_argument_register (t: TYPE_C): REGISTER
@@ -3156,7 +3157,9 @@ invariant
 	valid_inline_peek_depth: 0 <= inline_peek_depth and inline_peek_depth <= byte_code_stack.count
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

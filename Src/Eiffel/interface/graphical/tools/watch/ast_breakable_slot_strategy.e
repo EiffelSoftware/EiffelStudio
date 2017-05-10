@@ -2011,7 +2011,7 @@ feature {NONE} -- Implementation
 
 	process_void_as (l_as: VOID_AS)
 		do
-			last_type := none_type
+			last_type := detachable_none_type
 		end
 
 	process_type_list_as (l_as: TYPE_LIST_AS)
@@ -2787,7 +2787,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

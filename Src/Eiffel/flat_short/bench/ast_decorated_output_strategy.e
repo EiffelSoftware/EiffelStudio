@@ -4176,7 +4176,7 @@ feature {NONE} -- Implementation
 			if not expr_type_visiting then
 				text_formatter_decorator.process_keyword_text (ti_void, Void)
 			end
-			last_type := none_type
+			last_type := detachable_none_type
 		end
 
 	process_type_list_as (l_as: TYPE_LIST_AS)

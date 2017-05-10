@@ -1,0 +1,15 @@
+test_name 	 validity-vwce-type-compatibility
+test_description Expressions in conditional expressions should be pair-wise conforming and their detachable and separateness status should be propagated.
+
+copy_sub Ace $TEST Ace
+copy_raw test1.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+copy_raw test2.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUTA(2)
+
+test_end

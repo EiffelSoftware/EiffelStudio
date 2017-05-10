@@ -113,38 +113,71 @@ feature {NONE} -- Query
 			l_line: EDITOR_LINE
 			l_stop: BOOLEAN
 			l_feature_state: detachable like new_feature_state
+			l_end_count: INTEGER
 		do
 			l_matcher := brace_matcher
 			l_prev := [a_token, a_line]
+			l_end_count := 0
 			from until l_stop loop
 				l_token := l_prev.token
 				l_line := l_prev.line
 				if l_token.is_text then
 					if is_keyword_token (l_token, Void) then
 							-- Check the states of a keyword token.
-
 							-- Set stopping condition and non matches will reset it.
-						l_stop := True
+						l_stop := l_end_count = 0
 						if
-							is_feature_body_token (l_token, l_line) or else
-							is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.local_keyword) or else
-							is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.require_keyword)
+							is_feature_body_token (l_token, l_line)
+							or else is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.local_keyword)
+							or else is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.require_keyword)
+							or else (l_end_count > 0 and is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.agent_keyword))
 						then
 							l_prev := feature_start_token (l_token, l_line)
 							if l_prev /= Void then
-								l_feature_state := new_feature_state (l_prev.token, l_prev.line)
-								if l_feature_state /= Void and then l_feature_state.is_valid_start_token (l_prev.token, l_prev.line) then
-									Result := [l_prev.token, l_prev.line, l_feature_state]
+								if l_end_count > 0 then
+									if
+											-- feature start is "agent", but processing is currently on "local", or "require" , ...
+										is_keyword_token (l_prev.token, {EIFFEL_KEYWORD_CONSTANTS}.agent_keyword) and then
+										not is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.agent_keyword)
+									then
+										l_end_count := l_end_count - 1
+											-- Wait for the "agent" keyword to be processed.
+											-- case:   agent (...) local .. do ...end
+										l_token := l_prev.token
+										l_line := l_prev.line
+									else
+										l_end_count := l_end_count - 1
+									end
+								else
+									l_feature_state := new_feature_state (l_prev.token, l_prev.line)
+									if l_feature_state /= Void and then l_feature_state.is_valid_start_token (l_prev.token, l_prev.line) then
+										Result := [l_prev.token, l_prev.line, l_feature_state]
+									end
 								end
 							end
 						elseif is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.feature_keyword) then
 								-- Class feature clause
+							l_end_count := 0
 						elseif is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.convert_keyword) then
 								-- In the class conversion clause
+							l_end_count := 0
 						elseif is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.inherit_keyword) then
 								-- In the class inherit clause
+							l_end_count := 0
 						elseif is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.class_keyword) then
 								-- In the class
+							l_end_count := 0
+						elseif is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.end_keyword) then
+							l_end_count := l_end_count + 1
+							l_stop := False
+						elseif l_end_count > 0 then
+							if
+								is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.if_keyword)
+								or is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.loop_keyword)
+							then
+								l_end_count := l_end_count - 1
+							end
+							l_stop := False
 						else
 								-- No match, switch the stopping condition back to False.
 							l_stop := False
@@ -420,7 +453,7 @@ invariant
 	context_class_attached: context_class /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

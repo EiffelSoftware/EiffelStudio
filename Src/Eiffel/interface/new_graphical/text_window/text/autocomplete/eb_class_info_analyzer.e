@@ -1114,7 +1114,7 @@ feature {NONE}-- Implementation
 						-- not the "~feature" case
 					current_token.wide_image.is_empty or else
 					current_token.is_new_line or else
-					current_token.wide_image @ 1 /= ('%L').to_character_32 or else
+					current_token.wide_image[1] /= ('%L').to_character_32 or else
 					not is_beginning_of_expression (current_token.previous)
 				then
 					from
@@ -2222,7 +2222,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Constants
 
 	feature_body_keywords: ARRAY [STRING]
 		once
-			Result := <<"obsolete", "require", "local", "do", "once", "deferred", "ensure", "rescue", "unique", "is", "assign">>
+			Result := <<"obsolete", "require", "local", "do", "once", "deferred", "attribute", "ensure", "rescue", "unique", "is", "assign">>
 		end
 
 	feature_contract_keywords: ARRAY [STRING]

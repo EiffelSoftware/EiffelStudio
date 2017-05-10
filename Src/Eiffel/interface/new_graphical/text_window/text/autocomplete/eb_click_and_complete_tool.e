@@ -361,7 +361,6 @@ feature -- Basic Operations
 										check loc_with_feat: feat /= Void end
 										if attached loc.ast as l_ast then
 											create {ACCESS_ID_FEATURE_STONE} Result.make_with_feature (loc.feat, loc.ast)
---											create {ACCESS_ID_STONE} Result.make_with_feature (loc.feat, loc.ast)
 										else
 											create {FEATURE_STONE} Result.make (feat)
 										end

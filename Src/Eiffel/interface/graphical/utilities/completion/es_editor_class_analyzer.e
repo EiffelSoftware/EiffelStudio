@@ -90,6 +90,46 @@ feature {NONE} -- Status report
 			end
 		end
 
+	is_inline_separate_do_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
+			-- Is `a_token` the "do" keyword in an inline separate declaration?
+			--| Such as "separate expression as var do"
+		local
+			tok: detachable EDITOR_TOKEN
+			l_line: detachable EDITOR_LINE
+			i: INTEGER
+			l_prev: like previous_text_token
+		do
+				-- Search for "as" keyword in "separate expression as token do"
+				-- IF `a_token` is a "do" keyword.
+			if is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.do_keyword) then
+				from
+					l_line := a_line
+					l_prev := previous_text_token (a_token, l_line, True, Void)
+					if l_prev /= Void then
+						tok := l_prev.token
+						l_line := l_prev.line
+					else
+						tok := Void
+					end
+				until
+					i > 1 or tok = Void or Result
+				loop
+					if is_keyword_token (tok, {EIFFEL_KEYWORD_CONSTANTS}.as_keyword) then
+						Result := True
+					else
+						i := i + 1
+						l_prev := previous_text_token (tok, l_line, True, Void)
+						if l_prev /= Void then
+							tok := l_prev.token
+							l_line := l_prev.line
+						else
+							tok := Void
+						end
+					end
+				end
+			end
+		end
+
 feature {NONE} -- Query
 
 	token_context_state (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE; state: ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_STATE_INFO]]
@@ -126,10 +166,14 @@ feature {NONE} -- Query
 							-- Check the states of a keyword token.
 							-- Set stopping condition and non matches will reset it.
 						l_stop := True
-						if
-							is_feature_body_token (l_token, l_line)
-							or else is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.local_keyword)
-							or else is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.require_keyword)
+
+						if is_inline_separate_do_token (l_token, l_line) then
+								-- Do not stop here
+							l_stop := False
+						elseif
+								is_feature_body_token (l_token, l_line)
+								or else is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.local_keyword)
+								or else is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.require_keyword)
 						then
 							l_prev := feature_start_token (l_token, l_line)
 							if l_prev /= Void then

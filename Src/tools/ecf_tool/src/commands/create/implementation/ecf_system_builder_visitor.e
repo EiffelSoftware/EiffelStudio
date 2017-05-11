@@ -64,20 +64,20 @@ feature -- Visitor
 
 			create l_file_rule.make
 			l_file_rule.add_exclude ("/EIFGENs")
-			l_file_rule.add_exclude ("/.git")
-			l_file_rule.add_exclude ("/.svn")
+			l_file_rule.add_exclude ("/\.git$")
+			l_file_rule.add_exclude ("/\.svn$")
 			l_target.file_rule.extend (l_file_rule)
-			l_target.changeable_internal_options.set_full_class_checking (True)
+--Default:			l_target.changeable_internal_options.set_full_class_checking (True)
 
 			if v.is_voidsafe then
 				l_target.changeable_internal_options.void_safety.put_index (l_target.options.void_safety_index_all)
-				l_target.changeable_internal_options.set_is_attached_by_default (True)
+--Default:		l_target.changeable_internal_options.set_is_attached_by_default (True)
 			else
 				l_target.changeable_internal_options.void_safety.put_index (l_target.options.void_safety_index_none)
-				l_target.changeable_internal_options.set_is_attached_by_default (False)
+--Ignore:				l_target.changeable_internal_options.set_is_attached_by_default (False)
 			end
 			if v.syntax.is_case_insensitive_equal_general ("standard") then
-				l_target.changeable_internal_options.syntax.put_index (l_target.options.syntax_index_standard)
+--Default:				l_target.changeable_internal_options.syntax.put_index (l_target.options.syntax_index_standard)
 			else
 				l_target.changeable_internal_options.syntax.put (v.syntax)
 			end
@@ -152,11 +152,7 @@ feature {NONE} -- Implementation
 					v.libraries as ic
 				loop
 					if attached library_info (ic.item) as lib_info then
-						if v.is_voidsafe then
-							lib := factory.new_library (lib_info.name, lib_info.ecf_path_without_extension + "-safe.ecf", l_target)
-						else
-							lib := factory.new_library (lib_info.name, lib_info.ecf_path_without_extension + ".ecf", l_target)
-						end
+						lib := factory.new_library (lib_info.name, lib_info.ecf_path_without_extension + ".ecf", l_target)
 						l_target.add_library (lib)
 					end
 				end
@@ -233,7 +229,7 @@ feature -- Helpers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

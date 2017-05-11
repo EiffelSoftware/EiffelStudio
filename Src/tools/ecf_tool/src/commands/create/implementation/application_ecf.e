@@ -21,7 +21,7 @@ feature {NONE} -- Implementation
 	make (a_name: STRING)
 		do
 			Precursor (a_name)
-			concurrency := "none"
+			concurrency := Void
 			root_class := "ROOT_CLASS"
 			root_feature := "make"
 		end
@@ -30,7 +30,7 @@ feature -- Access
 
 	is_console_application: BOOLEAN
 
-	concurrency: STRING
+	concurrency: detachable STRING
 
 	root_cluster: detachable STRING
 
@@ -76,4 +76,14 @@ feature -- Visitor
 			v.process_application_ecf (Current)
 		end
 
+note
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -21,6 +21,8 @@ feature {NONE} -- Initialization
 			libraries.compare_objects
 			syntax := "standard"
 			uuid := "0000-0000-0000-0000"
+			set_is_voidsafe (True)
+
 		end
 
 feature -- Access
@@ -64,7 +66,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

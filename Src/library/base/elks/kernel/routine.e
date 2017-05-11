@@ -27,6 +27,13 @@ inherit
 			is_equal
 		end
 
+	MISMATCH_CORRECTOR
+		redefine
+			correct_mismatch,
+			copy,
+			is_equal
+		end
+
 feature -- Initialization
 
 	adapt (other: like Current)
@@ -264,6 +271,19 @@ feature -- Extended operations
 					call (x)
 				end
 			end
+		end
+
+feature -- Correction
+
+	correct_mismatch
+			-- <Precursor>
+		do
+			-- For the time being, even if the schema of agents changes, we will still retrieve them (without
+			-- properly initializing all the fields.) This is acceptable as agents without schema change can
+			-- be retrieved and are also invalid objects.
+
+			-- Note: This implementation of `correct_mismath` should have been introduced in 14.05, but it was
+			-- missed and introduced in 17.05 to help retrieve storables made by 13.11 and older.
 		end
 
 feature {ROUTINE} -- Implementation

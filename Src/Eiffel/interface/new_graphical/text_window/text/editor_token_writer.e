@@ -450,8 +450,8 @@ feature -- Text processing
 			if a_ast /= Void then
 				if attached {ACCESS_FEAT_AS} a_ast as af and then af.is_tuple_access then
 						-- Skip tuple value, as not really local token.
-				else
-					create st.make (Eiffel_system.System.current_class, a_ast)
+				elseif attached Eiffel_system.System.current_class as cl then
+					create st.make (cl, a_ast)
 					tok.set_pebble (st)
 				end
 			end

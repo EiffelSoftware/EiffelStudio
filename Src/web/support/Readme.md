@@ -10,13 +10,10 @@ curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
 curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
 exit
 sudo apt-get update
-sudo ACCEPT_EULA=Y apt-get install msodbcsql=13.1.4.0-1 mssql-tools-14.0.3.0-1 unixodbc-dev
-echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
-echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
-source ~/.bashrc
+sudo ACCEPT_EULA=Y apt-get install msodbcsql=13.1.4.0-1 unixodbc-dev
 
 If the pakage 13.1.4.0-1 is not found try to use 
-sudo ACCEPT_EULA=Y apt-get install msodbcsql mssql-tools unixodbc-dev
+sudo ACCEPT_EULA=Y apt-get install msodbcsql unixodbc-dev
 
 
 2- Check the driver location.
@@ -60,6 +57,16 @@ and then we will need to update the data related to the connection string, Serve
 }
 
 
+
+Optional:
+The following steps install the command-line tools and their dependencies. The mssql-tools package contains:
+
+# sqlcmd: Command-line query utility.
+# bcp: Bulk import-export utility.
+
+sudo ACCEPT_EULA=Y apt-get install mssql-tools 
+echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
+echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
 
 
 

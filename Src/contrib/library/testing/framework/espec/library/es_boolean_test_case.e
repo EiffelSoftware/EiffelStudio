@@ -1,5 +1,5 @@
 note
-	description: "Objects that represent boolean test cases (pass/fail)"
+	description: "Objects that represent boolean test cases (pass/fail)."
 	author: "Software Engineering Lab, York University"
 
 
@@ -15,10 +15,10 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Creation
 
 	make (name: STRING_8; c: PREDICATE)
-			-- Create Current
+			-- Create a test case.
 		do
 			case := c
 			case_name := name
@@ -29,10 +29,10 @@ feature -- Initialization
 			make_post_case_name: case_name = name
 		end
 
-feature -- Basic Op
+feature -- Basic operations
 
 	run
-			-- Run case test
+			-- Run case test.
 		local
 			error: BOOLEAN
 		do
@@ -54,14 +54,13 @@ feature -- Basic Op
 		end
 
 	is_violation_case: BOOLEAN
-			-- is this a violation test case of a boolean test case
+			-- Is this a violation test case of a boolean test case?
 		do
 			Result := False
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Access
 
 	case: PREDICATE
 
-end -- class ES_BOOLEAN_TEST_CASE
-
+end

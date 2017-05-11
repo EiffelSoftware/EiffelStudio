@@ -1,8 +1,8 @@
 note
-	description: "Tests for dictionary"
-	author: "Faraz A. Torshizi"
-	date: "Jan 4, 2005"
-	revision: "1.0"
+	description: "Tests for dictionary."
+	author: "Faraz A. Torshizi, Eiffel Software"
+	date: "$Date$"
+	revision: "1.1"
 
 class
 	DICTIONARY_TESTS_EXTRA
@@ -14,10 +14,10 @@ create
 	make
 
 feature {NONE} -- Initialization
-		
-    make 
-	          -- Run all tests
-    do 
+
+    make
+	          -- Run all tests.
+    do
   			-- Tests of class DIC_ITEM
 --        add_violation_case (agent  t0_0)
 --        add_boolean_case (agent  t0_1)
@@ -63,55 +63,55 @@ feature {NONE} -- Initialization
         add_boolean_case (agent t9_2)
         add_boolean_case (agent t9_3)
         add_boolean_case (agent t10_0)
-   end 
-            
+   end
+
 feature  -- tests cases
 
---   t0_0 is 
+--   t0_0 is
 --   			-- fails to make a_dic_item with void key and value v
---   local 
+--   local
 --   		a_dic_item: DIC_ITEM [INTEGER, STRING]
 --   	do
 --   		comment("Does it fail to make a_dic_item with void key?")
 --   		create  a_dic_item.make (1, void)
 --   	
---   	end 
---  
---	t0_1: BOOLEAN is 
+--   	end
+--
+--	t0_1: BOOLEAN is
 --   			-- make a_dic_item with key k and value v and get that key and value
---   local 
+--   local
 --   		a_dic_item: DIC_ITEM [INTEGER, STRING]
 --   	do
 --   		comment("Does it return the key and the value of DIC_ITEM?")
 --   		create  a_dic_item.make (1, "key1")
 --   		Result := equal(a_dic_item.get_key , "key1") and equal(a_dic_item.get_value , 1)
 --   	
---   	end 
---   
---   t0_2: BOOLEAN is 
+--   	end
+--
+--   t0_2: BOOLEAN is
 --   			-- make a_dic_item with void value
---   local 
+--   local
 --   		a_dic_item: DIC_ITEM [STRING, STRING]
 --   	do
 --   		comment("Does make a DIC_ITEM with void value?")
 --   		create  a_dic_item.make (void, "key")
 --   		Result := a_dic_item.get_value = void
---   	end 
-   	
-   t1_0: BOOLEAN 
+--   	end
+
+   t1_0: BOOLEAN
    			-- make an empty dictionary
-   local 
+   local
    		a_dictionary: DICTIONARY_ [INTEGER, STRING]
    	do
    		comment("Does it make an empty dictionary?")
    		create  a_dictionary.make
    		Result := a_dictionary.is_empty and a_dictionary.count = 0
-   	
-   	end 
 
-   t2_0: BOOLEAN 
+   	end
+
+   t2_0: BOOLEAN
    			-- make a dictionary and put a key and its value in it
-   local 
+   local
    		a_dictionary: DICTIONARY_ [STRING, STRING]
 		k: STRING
     	v: STRING
@@ -124,11 +124,11 @@ feature  -- tests cases
    		check Result end
    		a_dictionary.put(v, k)
    		Result:= not a_dictionary.is_empty and a_dictionary.count = 1 and equal (a_dictionary.at ("t1"),"t1@cs.yorku.ca")
-   	end 
- 
-  	t2_1 
+   	end
+
+  	t2_1
    			-- make a dictionary, fails to put void key into dictionary
-   local 
+   local
    		a_dictionary: DICTIONARY_ [INTEGER, STRING]
 		v: INTEGER
    	do
@@ -137,11 +137,11 @@ feature  -- tests cases
    		create  a_dictionary.make
    		check a_dictionary.is_empty and a_dictionary.count = 0 end
 		a_dictionary.put(v, void)
-   	end 
+   	end
 
-  	t2_2 
+  	t2_2
    			-- make a dictionary, fails to put key which already exists
-   local 
+   local
    		a_dictionary: DICTIONARY_ [INTEGER, STRING]
 		v: INTEGER
 		k1: STRING
@@ -156,11 +156,11 @@ feature  -- tests cases
    		a_dictionary.put(v, k1)
    		check  not a_dictionary.is_empty and a_dictionary.count = 1 end
 		a_dictionary.put(v, k2)
-   	end 
+   	end
 
-  t2_3: BOOLEAN 
+  t2_3: BOOLEAN
    			-- make a dictionary put 5 keys in it
-   local 
+   local
    		a_dictionary: DICTIONARY_ [INTEGER, STRING]
 
   	do
@@ -168,14 +168,14 @@ feature  -- tests cases
    		create  a_dictionary.make
    		check a_dictionary.is_empty and a_dictionary.count = 0 end
    		add_5_names (a_dictionary)
-   		Result:=  not a_dictionary.is_empty and a_dictionary.count = 5 and a_dictionary.at ("AB") = 6 
+   		Result:=  not a_dictionary.is_empty and a_dictionary.count = 5 and a_dictionary.at ("AB") = 6
    		and a_dictionary.at ("CD") = 13 and a_dictionary.at ("EF") = 10 and a_dictionary.at ("GH") = 21 and
    		a_dictionary.at ("IJ") = 45
-   	end 
-   	
-   t2_4: BOOLEAN 
+   	end
+
+   t2_4: BOOLEAN
    			-- make a dictionary put void value in it
-   local 
+   local
    		a_dictionary: DICTIONARY_ [STRING, STRING]
 
   	do
@@ -185,12 +185,12 @@ feature  -- tests cases
    		check Result end
 		a_dictionary.put (void, "key")
 		Result:=  not a_dictionary.is_empty and a_dictionary.count = 1 and a_dictionary.at ("key") = void
-   	end 
-   	
-   	
-   t2_5: BOOLEAN 
-   			-- make a dictionary put 100 keys and values in it
-   local 
+   	end
+
+
+   t2_5: BOOLEAN
+   			-- Make a dictionary put 100 keys and values in it.
+   local
    		a_dictionary: DICTIONARY_ [INTEGER, INTEGER]
    		i: INTEGER
   	do
@@ -201,7 +201,7 @@ feature  -- tests cases
 		from
 			i := 0
 		until
-			i < 100
+			i >= 100
 		loop
 			a_dictionary.put (i, i)
 			i := i + 1
@@ -210,22 +210,22 @@ feature  -- tests cases
 		from
 			i := 0
 		until
-			i < 100
+			i >= 100
 		loop
-			if 
+			if
 				a_dictionary.at (i) /= i
 			then
 				Result := false
 			end
 			i := i + 1
 		end
-		
-   	end 
-   	
-   	
-	t3_0: BOOLEAN 
+
+   	end
+
+
+	t3_0: BOOLEAN
    			-- make a dictionary and put_defensive a key and its value in it
-   local 
+   local
    		a_dictionary: DICTIONARY_ [STRING, STRING]
 		k: STRING
     	v: STRING
@@ -238,14 +238,14 @@ feature  -- tests cases
    		check Result end
    		a_dictionary.put_defensive(v, k)
    		Result:= not a_dictionary.is_empty and a_dictionary.count = 1 and equal (a_dictionary.at ("t"), "t@cs.yorku.ca")
-   	end 
-	
-	t3_1: BOOLEAN 
-    		-- make a dictionary and put 5 keys and their 
+   	end
+
+	t3_1: BOOLEAN
+    		-- make a dictionary and put 5 keys and their
     		-- values and put_defensive a similar key, different value. old value should be changed
-    local 
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
-    do 
+    do
     	comment("Does it put_defensive another key which already exists with new value?")
     	create  a_dictionary.make
         add_5_names (a_dictionary)
@@ -257,9 +257,9 @@ feature  -- tests cases
         Result := a_dictionary.at("AB") = 100 and a_dictionary.count = 5
     end
 
-	t3_2: BOOLEAN 
+	t3_2: BOOLEAN
    			-- make a dictionary, put_defensive void key into dictionary
-   local 
+   local
    		a_dictionary: DICTIONARY_ [INTEGER, STRING]
 		v: INTEGER
    	do
@@ -271,10 +271,10 @@ feature  -- tests cases
    		a_dictionary.put_defensive(v, void)
    		Result := a_dictionary.is_empty and a_dictionary.count = 0 -- nothing should happen
    	end
-   	
-   t3_3: BOOLEAN 
+
+   t3_3: BOOLEAN
    			-- make a dictionary put_defensive 5 keys in it
-   local 
+   local
    		a_dictionary: DICTIONARY_ [INTEGER, STRING]
 
   	do
@@ -283,13 +283,13 @@ feature  -- tests cases
    		Result := a_dictionary.is_empty and a_dictionary.count = 0
    		check Result end
    		add_5_names_2 (a_dictionary)
-   		Result:=  not a_dictionary.is_empty and a_dictionary.count = 5 and a_dictionary.at ("A") = 9 
+   		Result:=  not a_dictionary.is_empty and a_dictionary.count = 5 and a_dictionary.at ("A") = 9
    		and a_dictionary.at ("B") = 19 and a_dictionary.at ("C") = 20 and a_dictionary.at ("D") = 22 and
    		a_dictionary.at ("E") = 59
    	end
-   	
+
    	t3_4 : BOOLEAN
-		-- put_defensive 6 keys and values with 2 keys are the same. 
+		-- put_defensive 6 keys and values with 2 keys are the same.
 	local
 		a_dictionary: DICTIONARY_ [STRING, STRING]
 	do
@@ -308,41 +308,41 @@ feature  -- tests cases
 		Result := a_dictionary.at("Tina").is_equal ("new_tina@website.com") and a_dictionary.at("John").is_equal ("new_john@website.com")
 	end
 
-	t4_0: BOOLEAN 
-    		-- make a dictionary and put 5 keys and their 
+	t4_0: BOOLEAN
+    		-- make a dictionary and put 5 keys and their
     		-- values test to see if it has a specified key
-    local 
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
-    do 
+    do
     	comment("Does it return true if the key is in the dictionary?")
     	create  a_dictionary.make
         add_5_names (a_dictionary)
         Result := a_dictionary.is_empty and a_dictionary.count = 5
         check not Result end
-        Result := a_dictionary.has("AB") and a_dictionary.has("CD") and a_dictionary.has("EF") and 
+        Result := a_dictionary.has("AB") and a_dictionary.has("CD") and a_dictionary.has("EF") and
         a_dictionary.has("GH") and a_dictionary.has("IJ") and not a_dictionary.has("KL")
     end
 
-	t4_1 
-    		-- make a dictionary and put 5 keys and their 
+	t4_1
+    		-- make a dictionary and put 5 keys and their
     		-- values test to see if fails for void key
-    local 
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
     	temp: BOOLEAN
-    do 
+    do
     	comment("Does it fail to check (has) for a void key")
     	create  a_dictionary.make
         add_5_names (a_dictionary)
         check  not a_dictionary.is_empty and a_dictionary.count = 5 end
    		temp := a_dictionary.has(void)
     end
-    
-    t4_2: BOOLEAN 
+
+    t4_2: BOOLEAN
     		-- has returns false on an empty dictionary
-    local 
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
     	temp: BOOLEAN
-    do 
+    do
     	comment("has returns false on empty dictionary")
     	create  a_dictionary.make
         Result := a_dictionary.is_empty and a_dictionary.count = 0
@@ -350,29 +350,29 @@ feature  -- tests cases
    		temp := a_dictionary.has("gabligoo")
    		Result := temp = false
     end
-	
-	t5_0: BOOLEAN 
-    		-- make a dictionary and put 5 keys and their 
+
+	t5_0: BOOLEAN
+    		-- make a dictionary and put 5 keys and their
     		-- values at specifeid keys
-    local 
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
-   	do 
+   	do
     	comment("Does it return values at specified keys?")
     	create  a_dictionary.make
         add_5_names (a_dictionary)
         Result := not a_dictionary.is_empty and a_dictionary.count = 5
         check  Result end
         Result := a_dictionary.at("AB") = 6 and a_dictionary.at("CD") = 13 and a_dictionary.at("EF") = 10
-        and  a_dictionary @ ("GH") = 21  and a_dictionary @ ("IJ") = 45
+        and  a_dictionary @ "GH" = 21  and a_dictionary @ "IJ" = 45
     end
 
-	t5_1 
-    		-- make a dictionary and put 5 keys and their 
+	t5_1
+    		-- make a dictionary and put 5 keys and their
     		-- values test to see if fails for void key
-    local 
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
     	temp: INTEGER
-    do 
+    do
     	comment("Does it fail to access void key?")
     	create  a_dictionary.make
         add_5_names (a_dictionary)
@@ -380,13 +380,13 @@ feature  -- tests cases
   		temp := a_dictionary.at(void)
     end
 
-	t5_2 
-    		-- make a dictionary and put 5 keys and their 
+	t5_2
+    		-- make a dictionary and put 5 keys and their
     		-- values test to see if fails for accessing non existing key
-    local 
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
     	temp: INTEGER
-    do 
+    do
     	comment("Does it fail to access a non-existing key?")
     	create  a_dictionary.make
         add_5_names (a_dictionary)
@@ -394,12 +394,12 @@ feature  -- tests cases
    		temp := a_dictionary.at("balablah")
     end
 
-	t6_0: BOOLEAN 
-    		-- make a dictionary and put 5 keys and their 
+	t6_0: BOOLEAN
+    		-- make a dictionary and put 5 keys and their
     		-- values and remove a key
-    local 
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
-    do 
+    do
     	comment("Does it remove a key?")
     	create  a_dictionary.make
         add_5_names (a_dictionary)
@@ -408,11 +408,11 @@ feature  -- tests cases
         a_dictionary.remove("AB")
         Result:= not a_dictionary.is_empty and a_dictionary.count = 4 and
         		not a_dictionary.has("AB")
-   end   
+   end
 
-	t6_1: BOOLEAN 
+	t6_1: BOOLEAN
    			-- make a dictionary and put a key and remove that key
-   local 
+   local
    		a_dictionary: DICTIONARY_ [INTEGER, STRING]
 		k: STRING
     	v: INTEGER
@@ -430,72 +430,72 @@ feature  -- tests cases
    		Result := a_dictionary.is_empty and a_dictionary.count = 0 and not a_dictionary.has_defensive("A")
    	end
 
-	t6_2 
+	t6_2
    			-- make an empty dictionary and fails to remove a key
-   local 
+   local
    		a_dictionary: DICTIONARY_ [INTEGER, STRING]
 	do
    		comment("Does it make an empty dictionary and fail to remove a key?")
    		create  a_dictionary.make
    		check a_dictionary.is_empty and a_dictionary.count = 0 end
  		a_dictionary.remove("A")
-   	end   	
+   	end
 
-	t6_3 
+	t6_3
    			-- make a dictionary and put 5 keys and fails to remove a non existing key
-  local 
+  local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
-    do 
+    do
     	comment("Does it fail to remove a non-existing key?")
     	create  a_dictionary.make
         add_5_names (a_dictionary)
         check  not a_dictionary.is_empty and a_dictionary.count = 5 end
         a_dictionary.remove("blablah")
-   end   
-   
-   t7_0: BOOLEAN 
+   end
+
+   t7_0: BOOLEAN
     	-- make an empty dictionary and check if it has_defensive a key
-    local 
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
-    do 
+    do
     	comment("Does it perform has_defensive on an empty dictionary?")
     	create  a_dictionary.make
         Result := a_dictionary.has_defensive ("a_key") = false -- should return false
     end
-    
-    t7_1: BOOLEAN 
+
+    t7_1: BOOLEAN
     	-- make a dictionary and check if it has_defensive a void key
-    local 
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
-    do 
+    do
     	comment("Does it perform has_defensive with void key?")
     	create  a_dictionary.make
     	add_5_names (a_dictionary)
         Result := a_dictionary.has_defensive (void) = false
     end
 
-   t8_0: BOOLEAN 
-    		-- make a dictionary and put 5 keys and their 
-    		-- values and check if all of the item in the dictionary can 
-    		-- satisfy the test 'more_than' 
-    local 
+   t8_0: BOOLEAN
+    		-- make a dictionary and put 5 keys and their
+    		-- values and check if all of the item in the dictionary can
+    		-- satisfy the test 'more_than'
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
-    do 
+    do
     	comment("Are all values in the dictionary more than 5 and not more than 46?")
     	create  a_dictionary.make
         add_5_names (a_dictionary)
         Result := not a_dictionary.is_empty and a_dictionary.count = 5
         check Result end
         Result := a_dictionary.for_all(agent more_than(?, ?, 5)) and not a_dictionary.for_all(agent more_than(?, ?, 46))
-   end   
-    
-   t8_1: BOOLEAN 
-    		-- make a dictionary and put 5 keys and their 
-    		-- values and check if all of the item in the dictionary can 
-    		-- satisfy the test key_starts_with 
-    local 
+   end
+
+   t8_1: BOOLEAN
+    		-- make a dictionary and put 5 keys and their
+    		-- values and check if all of the item in the dictionary can
+    		-- satisfy the test key_starts_with
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
-    do 
+    do
     	comment("Do all keys in the dictionary start with letter s? and not letter 'A'")
     	create  a_dictionary.make
         a_dictionary.put(123, "sara")
@@ -506,14 +506,14 @@ feature  -- tests cases
         Result := a_dictionary.for_all(agent key_starts_with(?, ?, 's'))
         	   and not a_dictionary.for_all(agent key_starts_with(?, ?, 'A'))
    end
-   
-   t8_2: BOOLEAN 
-    		-- make a dictionary and put 5 keys and their 
-    		-- values and check if all of the item in the dictionary can 
+
+   t8_2: BOOLEAN
+    		-- make a dictionary and put 5 keys and their
+    		-- values and check if all of the item in the dictionary can
     		-- satisfy the test has_value
-    local 
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
-    do 
+    do
     	comment("Do all values in the dictionary equal to 20?")
     	create  a_dictionary.make
         a_dictionary.put(20, "sara")
@@ -523,15 +523,15 @@ feature  -- tests cases
         check Result end
         Result := a_dictionary.for_all(agent has_value(?, ?, 20))
         	   and not a_dictionary.for_all(agent has_value(?, ?, 60))
-   end   
-   
-   t9_0: BOOLEAN 
-    		-- make a dictionary and put 5 keys and their 
-    		-- Is there any value in dictionary which is more than 20 and not more than 93 
+   end
 
-    local 
+   t9_0: BOOLEAN
+    		-- make a dictionary and put 5 keys and their
+    		-- Is there any value in dictionary which is more than 20 and not more than 93
+
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
-    do 
+    do
     	comment("Is there any value in dictionary which is more than 20 and not more than 93")
     	create  a_dictionary.make
         add_5_names (a_dictionary)
@@ -539,45 +539,45 @@ feature  -- tests cases
         check Result end
         Result := a_dictionary.exists(agent more_than (?, ? , 20)) and
         		  not a_dictionary.exists(agent more_than (?, ? , 93))
-   end   
-   
-    t9_1: BOOLEAN 
-    		-- make a dictionary and put 5 keys and their 
+   end
+
+    t9_1: BOOLEAN
+    		-- make a dictionary and put 5 keys and their
     		-- values and check if there exist items whose keys start with E
     		-- and there exists no items whose keys start with Z
-    local 
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
-    do 
+    do
     	comment("Is there an item whose name start with E and no items whose name start with Z")
     	create  a_dictionary.make
         add_5_names (a_dictionary)
         Result := not a_dictionary.is_empty and a_dictionary.count = 5
         check Result end
-        Result := a_dictionary.exists(agent key_starts_with(?, ?, 'E')) and not 
+        Result := a_dictionary.exists(agent key_starts_with(?, ?, 'E')) and not
         a_dictionary.exists(agent key_starts_with(?, ?, 'Z'))
-   end  
-   
-    t9_2: BOOLEAN 
-    		-- make a dictionary and put 5 keys and their 
+   end
+
+    t9_2: BOOLEAN
+    		-- make a dictionary and put 5 keys and their
     		-- values and check if values for keys with key "C" are more than 8
-    		-- 
-    local 
+    		--
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
-    do 
+    do
     	comment("check if values for keys with key C are more than 8")
     	create  a_dictionary.make
         add_5_names_2 (a_dictionary)
         Result := not a_dictionary.is_empty and a_dictionary.count = 5
         check Result end
         Result := a_dictionary.exists(agent with_key_and_more_than(?, ?, "C", 8))
-   end   
-   
-    t9_3: BOOLEAN 
+   end
+
+    t9_3: BOOLEAN
     		-- Do all items whose key starts with a "A" have value 10?
-    local 
+    local
     	a_dictionary: DICTIONARY_ [INTEGER, STRING]
     	temp: BOOLEAN
-    do 
+    do
     	comment("Do all items whose key starts with a 'A' have value 10")
     	create  a_dictionary.make
         a_dictionary.put(10, "Aeeb")
@@ -587,33 +587,33 @@ feature  -- tests cases
         check Result end
         temp := a_dictionary.for_all(agent if_starts_with_has_value(?, ?, 'A', 10))
         a_dictionary.put(22, "Abbb") -- make it false
-        Result :=  not (a_dictionary.for_all(agent if_starts_with_has_value(?, ?, 'A', 10))) and temp
-   end   
- 
-	t10_0: BOOLEAN 
+        Result :=  not a_dictionary.for_all(agent if_starts_with_has_value(?, ?, 'A', 10)) and temp
+   end
+
+	t10_0: BOOLEAN
 	    		-- Reference check
-	    local 
+	    local
 	    	p1, p2, p3: PERSON
 	    	a_dictionary: DICTIONARY_ [STRING, PERSON]
-	    do 
+	    do
 	   		comment("Reference check")
 	   		create a_dictionary.make
 	   		create p1.make ("Faraz", 23)
 	   		create p3.make ("Faraz", 23)
 	   		create p2.make ("Biti", 19)
-	   		
+
 	   		a_dictionary.put ("york", p1)
 	   		Result := a_dictionary.has(p1)
 	   		check Result end
 	end
-	
+
 feature  {NONE} -- Implementation
-	add_5_names (a_dictionary: DICTIONARY_ [INTEGER, STRING]) 
+	add_5_names (a_dictionary: DICTIONARY_ [INTEGER, STRING])
     		-- resuse in various tests
-    local 
+    local
     	k: STRING
         v: INTEGER
-    do 
+    do
     	k := "AB"
         v := 6
         a_dictionary.put (v, k)
@@ -629,14 +629,14 @@ feature  {NONE} -- Implementation
         k := "IJ"
         v := 45
         a_dictionary.put (v, k)
-   end 
-   
-   add_5_names_2 (a_dictionary: DICTIONARY_ [INTEGER, STRING]) 
+   end
+
+   add_5_names_2 (a_dictionary: DICTIONARY_ [INTEGER, STRING])
     		-- resuse in various tests
-    local 
+    local
     	k: STRING
         v: INTEGER
-    do 
+    do
     	k := "A"
         v := 9
         a_dictionary.put_defensive (v, k)
@@ -652,25 +652,25 @@ feature  {NONE} -- Implementation
         k := "E"
         v := 59
         a_dictionary.put_defensive (v, k)
-   end 
-   
+   end
+
    more_than (v: INTEGER; k: STRING; this: INTEGER): BOOLEAN
    		-- is key and value more than 'this'?
    require
    		this > 0
    	do
-   		Result := (this < v)
+   		Result := this < v
    	end
-   
+
    key_starts_with (v: INTEGER; k: STRING; letter: CHARACTER): BOOLEAN
    		-- Does k starts with 'letter'?
    	require
    		k /= void
 --   		letter /= void
    	do
-   		Result := k @ (1) = letter
+   		Result := k [1] = letter
    	end
-   
+
    has_value (v: INTEGER; k: STRING; val: INTEGER): BOOLEAN
    		-- Does value equals to 'val'?
    	require
@@ -678,7 +678,7 @@ feature  {NONE} -- Implementation
    	do
    		Result := v = val
    	end
-	
+
 	if_starts_with_has_value (v: INTEGER; k: STRING; letter: CHARACTER; val:INTEGER): BOOLEAN
 		-- if k starts with letter, does v equals to val?
 	do
@@ -686,13 +686,13 @@ feature  {NONE} -- Implementation
 			Result := has_value(v, k, val)
 		else
 			Result := True
-		end	
+		end
 	end
-    
+
     with_key_and_more_than (v: INTEGER; k: STRING; this: STRING; n:INTEGER): BOOLEAN
 		-- if k is 'this', is it more than 'n'?
 	do
-		Result := equal(k, this) and more_than(v, k, n)	
-	end    		
+		Result := equal(k, this) and more_than(v, k, n)
+	end
 
-end -- class DICTIONARY__TESTS_YOURS
+end

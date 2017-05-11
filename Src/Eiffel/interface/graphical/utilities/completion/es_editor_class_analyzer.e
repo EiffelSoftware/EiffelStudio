@@ -106,18 +106,18 @@ feature {NONE} -- Query
 			a_line_has_a_token: a_line.has_token (a_token)
 			not_is_scanning_comments: not is_scanning_comments
 		local
-			l_matcher: detachable like brace_matcher
+			l_brace_matcher: detachable like brace_matcher
+			l_block_matcher: detachable like block_matcher
 			l_prev: detachable like previous_text_token
 			l_peek: detachable like previous_text_token
 			l_token: EDITOR_TOKEN
 			l_line: EDITOR_LINE
 			l_stop: BOOLEAN
 			l_feature_state: detachable like new_feature_state
-			l_end_count: INTEGER
 		do
-			l_matcher := brace_matcher
+			l_brace_matcher := brace_matcher
+			l_block_matcher := block_matcher
 			l_prev := [a_token, a_line]
-			l_end_count := 0
 			from until l_stop loop
 				l_token := l_prev.token
 				l_line := l_prev.line
@@ -125,71 +125,55 @@ feature {NONE} -- Query
 					if is_keyword_token (l_token, Void) then
 							-- Check the states of a keyword token.
 							-- Set stopping condition and non matches will reset it.
-						l_stop := l_end_count = 0
+						l_stop := True
 						if
 							is_feature_body_token (l_token, l_line)
 							or else is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.local_keyword)
 							or else is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.require_keyword)
-							or else (l_end_count > 0 and is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.agent_keyword))
 						then
 							l_prev := feature_start_token (l_token, l_line)
 							if l_prev /= Void then
-								if l_end_count > 0 then
-									if
-											-- feature start is "agent", but processing is currently on "local", or "require" , ...
-										is_keyword_token (l_prev.token, {EIFFEL_KEYWORD_CONSTANTS}.agent_keyword) and then
-										not is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.agent_keyword)
-									then
-										l_end_count := l_end_count - 1
-											-- Wait for the "agent" keyword to be processed.
-											-- case:   agent (...) local .. do ...end
-										l_token := l_prev.token
-										l_line := l_prev.line
-									else
-										l_end_count := l_end_count - 1
-									end
-								else
-									l_feature_state := new_feature_state (l_prev.token, l_prev.line)
-									if l_feature_state /= Void and then l_feature_state.is_valid_start_token (l_prev.token, l_prev.line) then
-										Result := [l_prev.token, l_prev.line, l_feature_state]
-									end
+								l_feature_state := new_feature_state (l_prev.token, l_prev.line)
+								if l_feature_state /= Void and then l_feature_state.is_valid_start_token (l_prev.token, l_prev.line) then
+									Result := [l_prev.token, l_prev.line, l_feature_state]
 								end
 							end
 						elseif is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.feature_keyword) then
 								-- Class feature clause
-							l_end_count := 0
 						elseif is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.convert_keyword) then
 								-- In the class conversion clause
-							l_end_count := 0
 						elseif is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.inherit_keyword) then
 								-- In the class inherit clause
-							l_end_count := 0
 						elseif is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.class_keyword) then
 								-- In the class
-							l_end_count := 0
 						elseif is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.end_keyword) then
-							l_end_count := l_end_count + 1
 							l_stop := False
-						elseif l_end_count > 0 then
-							if
-								is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.if_keyword)
-								or is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.inspect_keyword)
-								or is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.loop_keyword)
-								or is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.check_keyword)
-								or is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.all_keyword)
-								or is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.some_keyword)
-								or is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.debug_keyword)
-							then
-								l_end_count := l_end_count - 1
+							if l_block_matcher.is_closing_brace (l_token) and then not l_block_matcher.is_closing_match_exception (l_token, l_line) then
+								l_peek := l_block_matcher.match_closing_brace (l_token, l_line, Void)
+								if l_peek /= Void then
+									l_token := l_peek.token
+									l_line := l_peek.line
+									if is_feature_body_token (l_token, l_line) then
+										l_prev := feature_start_token (l_token, l_line)
+										if l_prev /= Void then
+											if
+												is_keyword_token (l_prev.token, {EIFFEL_KEYWORD_CONSTANTS}.agent_keyword) and then
+												not is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.agent_keyword)
+											then
+												l_token := l_prev.token
+												l_line := l_prev.line
+											end
+										end
+									end
+								end
 							end
-							l_stop := False
 						else
 								-- No match, switch the stopping condition back to False.
 							l_stop := False
 						end
 					else
-						if l_matcher.is_closing_brace (l_token) and then not l_matcher.is_closing_match_exception (l_token, l_line) then
-							l_peek := l_matcher.match_closing_brace (l_token, l_line, Void)
+						if l_brace_matcher.is_closing_brace (l_token) and then not l_brace_matcher.is_closing_match_exception (l_token, l_line) then
+							l_peek := l_brace_matcher.match_closing_brace (l_token, l_line, Void)
 							if l_peek /= Void then
 								l_token := l_peek.token
 								l_line := l_peek.line

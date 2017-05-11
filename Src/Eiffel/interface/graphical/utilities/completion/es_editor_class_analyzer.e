@@ -173,7 +173,12 @@ feature {NONE} -- Query
 						elseif l_end_count > 0 then
 							if
 								is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.if_keyword)
+								or is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.inspect_keyword)
 								or is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.loop_keyword)
+								or is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.check_keyword)
+								or is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.all_keyword)
+								or is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.some_keyword)
+								or is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.debug_keyword)
 							then
 								l_end_count := l_end_count - 1
 							end

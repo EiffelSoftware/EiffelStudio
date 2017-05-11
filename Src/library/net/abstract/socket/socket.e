@@ -1042,22 +1042,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	socket_buffer: MANAGED_POINTER
-			-- Buffer used to read/write basic types.
-		local
-			l_buffer: like internal_socket_buffer
-		do
-			l_buffer := internal_socket_buffer
-			if l_buffer = Void then
-				create l_buffer.make (16)
-				internal_socket_buffer := l_buffer
-			end
-			Result := l_buffer
-		end
-
-	internal_socket_buffer: detachable MANAGED_POINTER
-			-- Internal integer buffer
-
 	put_socket_buffer: MANAGED_POINTER
 			-- Buffer used to read/write basic types.
 		local

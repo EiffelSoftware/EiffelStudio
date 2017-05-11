@@ -1,9 +1,9 @@
 note
 	description: "Test DICTIONARY_ quantifiers"
 	author: "JSO"
-	modified_by: "Faraz A. Torshizi"
-	date: "Jan 4, 2005"
-	revision: "1.0"
+	modified_by: "Faraz A. Torshizi, Eiffel Software"
+	date: "$Date$"
+	revision: "1.1"
 
 class
 	DICTIONARY_TESTS_QUANTIFIERS
@@ -44,7 +44,7 @@ feature -- help for test cases
    require
    		this > 0
    	do
-   		Result := (this < v)
+   		Result := this < v
    	end
 
     with_name_and_aged (v: INTEGER; k: STRING; this: STRING; age:INTEGER): BOOLEAN
@@ -70,5 +70,4 @@ feature -- Setup
 				dictionary.put(20, "ZUMANBAKAWAKI")
 			end
 
-
-end -- class DICTIONARY__TESTS_QUANTIFIERS
+end

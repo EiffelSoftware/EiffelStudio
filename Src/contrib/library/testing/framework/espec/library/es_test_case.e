@@ -24,7 +24,7 @@ feature {ES_HTML_GEN, ES_TEST} -- Basic Operation
 		end
 
 	set_bookmark_name (bm: STRING_8)
-			-- prepare HTML tag
+			-- Prepare HTML tag.
 		require
 			bm_valid: bm /= Void
 		do
@@ -32,7 +32,7 @@ feature {ES_HTML_GEN, ES_TEST} -- Basic Operation
 		end
 
 	set_case_name (s: STRING_8)
-			-- sets name to `s'
+			-- Set name to `s'.
 		require
 			s_exists: s /= Void
 		do

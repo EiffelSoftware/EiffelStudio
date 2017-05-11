@@ -1,5 +1,5 @@
 note
-	description: "Objects that represent bunch of ES_TESTs (unit tests)"
+	description: "Objects that represent bunch of ES_TESTs (unit tests)."
 	author: "Software Engineering Lab, York University"
 
 class
@@ -12,32 +12,31 @@ feature -- Basic Operations
 
 	add_test (unit_test_class: ES_TEST)
 			-- Adds class level test `unit_test_class' to Current test suite
-			-- use this feature to add your unit test classes to the suite
+			-- use this feature to add your unit test classes to the suite.
 		require
 			unit_tests_class_exists: unit_test_class /= Void
+		local
+			c: like classes
 		do
-			if classes = Void then
-				create classes.make
+			c := classes
+			if not attached c then
+				create c.make
+				classes := c
 				name := generating_type.name.twin.as_string_8
 			end
-			if attached classes as classes1 then
-				classes1.extend (unit_test_class)
-			end
+			c.extend (unit_test_class)
 		end
 
 	add_suite (suite_test_class: ES_SUITE)
-			-- Adds a suite of tests to the current suite
+			-- Adds a suite of tests to the current suite.
 		require
 			suite_test_class_exists: suite_test_class /= Void
 		do
 			if attached suite_test_class.classes as c then
-				from
-					c.start
-				until
-					c.after
+				across
+					c as t
 				loop
-					add_test (c.item)
-					c.forth
+					add_test (t.item)
 				end
 			end
 		end
@@ -45,7 +44,7 @@ feature -- Basic Operations
 feature {ES_TEST} -- Implementation
 
 	to_html (output_file_name: STRING_8)
-			-- generate HTML report with details
+			-- Generate HTML report with details.
 		require
 			output_file_name_valid: output_file_name /= Void
 		local
@@ -63,7 +62,7 @@ feature {ES_TEST} -- Implementation
 		end
 
 	run_es_test
-			-- run es-test in suite mode
+			-- Run es-test in suite mode.
 		do
 			if attached classes as classes1 then
 				number_of_tests := 0
@@ -99,8 +98,6 @@ feature {ES_TEST} -- Implementation
 				across classes1 as it loop
 					Result.append (it.item.passed_cases)
 				end
-			else
-				-- do nothing
 			end
 		end
 
@@ -111,20 +108,18 @@ feature {ES_TEST} -- Implementation
 				across classes1 as it loop
 					Result.append (it.item.failed_cases)
 				end
-			else
-				-- do nothing
 			end
 		end
 
 	make_test (v: BOOLEAN)
-			-- Initialize Current
+			-- Initialize Current.
 		do
 			show_err := v
 			name := "default_name"
 		end
 
 	count: INTEGER_32
-			-- number of tests in `Current'
+			-- Number of tests in `Current'.
 		do
 			check
 				attached classes as classes1
@@ -146,5 +141,4 @@ feature {ES_SUITE, ES_SUITE}
 
 	classes: detachable LINKED_LIST [ES_TEST]
 
-end -- class ES_SUITE
-
+end

@@ -7053,8 +7053,13 @@ feature {NONE} -- Visitor
 				-- Type check on default expression.
 			l_as.else_expression.process (Current)
 			if attached last_type as t and then l_needs_byte_node and then attached {EXPR_B} last_byte_node as e then
-				if attached l_expression_type and then not l_expression_type.conformance_type.same_as (t.conformance_type) then
-					error_handler.insert_error (create {VWCE}.make (l_expression_type, t, l_as.else_expression.start_location, context))
+				if attached l_expression_type then
+					if attached upper_type (l_expression_type, t) as q then
+							-- Use the new type as the conditional expression type.
+						l_expression_type := q
+					else
+						error_handler.insert_error (create {VWCE}.make (l_expression_type, t, l_as.else_expression.start_location, context))
+					end
 				end
 				l_else_expression := e
 			end
@@ -7071,7 +7076,10 @@ feature {NONE} -- Visitor
 				last_byte_node := l_if
 			end
 
-			if error_level /= l_error_level then
+			if error_level = l_error_level then
+					-- Update expression type.
+				last_type := l_expression_type
+			else
 				reset_types
 			end
 		end
@@ -8324,8 +8332,13 @@ feature {NONE} -- Visitor
 			scope_matcher.add_scopes (l_as.condition)
 			l_as.expression.process (Current)
 			if attached l_condition and then attached {EXPR_B} last_byte_node as e then
-				if attached l_expression_type and then attached last_type as t and then not l_expression_type.conformance_type.same_as (t.conformance_type) then
-					error_handler.insert_error (create {VWCE}.make (l_expression_type, t, l_as.expression.start_location, context))
+				if attached l_expression_type and then attached last_type as t then
+					if attached upper_type (l_expression_type, t) as q then
+							-- Use the new type as the conditional expression type.
+						l_expression_type := q
+					else
+						error_handler.insert_error (create {VWCE}.make (l_expression_type, t, l_as.expression.start_location, context))
+					end
 				end
 				l_expression := e
 			end
@@ -8584,7 +8597,7 @@ feature {NONE} -- Visitor
 					error_handler.insert_error (l_vica2)
 				end
 			end
-			set_type (none_type, l_as)
+			set_type (detachable_none_type, l_as)
 			if is_byte_node_enabled then
 				create {VOID_B} last_byte_node
 			end
@@ -11044,6 +11057,41 @@ feature {NONE} -- Implementation: type validation
 			end
 		ensure
 			adapated_type_not_void: Result /= Void
+		end
+
+	upper_type (x, y: TYPE_A): detachable TYPE_A
+			-- A type that is computed as a tripple for tripples <xc, xa, xs> and <yc, ya, ys> corresponding to `x` and `y` as follows:
+			-- • xc, yc - marks free types, using only class conformance rules
+			-- • xa, ya - attachment status
+			-- • xs, ys - separateness status
+			-- The resulting type is <zc, za, zs> where
+			-- • zc = xc if yc -> xc, zc = yc if xc -> yc, zc = Void otherwise
+			-- • za = attached , if xa or ya is attached, detachable otherwise
+			-- • zs = separate, if xs or ys is separate, non-separate otherwise
+		local
+			rx, ry: TYPE_A
+		do
+			if y.is_attached or else y.is_implicitly_attached and then not x.is_attached then
+					-- `x` is less attached, use its attachment status.
+				rx := x
+				ry := y.to_other_immediate_attachment (x)
+			else
+					-- `y` is less attached, use its attachment status.
+				rx := x.to_other_immediate_attachment (y)
+				ry := y
+			end
+			if rx.is_separate then
+					-- Use `x` separateness status.
+				ry := ry.to_other_separateness (rx)
+			else
+					-- Use `y` separateness status.
+				rx := rx.to_other_separateness (ry)
+			end
+			if rx.conform_to (context.current_class, ry) then
+				Result := ry
+			elseif ry.conform_to (context.current_class, rx) then
+				Result := rx
+			end
 		end
 
 feature {NONE} -- Implementation: checking locals

@@ -600,15 +600,11 @@ feature -- Input
 			-- Read a new 8-bit natural.
 			-- Make result available in `last_natural_8'.
 		do
-			print("before: " + read_socket_buffer.read_natural_8_be (0).out + "%N")
 			read_to_managed_pointer (read_socket_buffer, 0, natural_8_bytes)
 			if bytes_read /= natural_8_bytes then
 				socket_error := "Peer closed connection"
 			else
 				last_natural_8 := read_socket_buffer.read_natural_8_be (0)
-				if last_natural_8 /= 2 and last_natural_8 /= 5 and last_natural_8 /= 1 then
-					do_nothing
-				end
 				socket_error := Void
 			end
 		end

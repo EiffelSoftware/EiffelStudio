@@ -13,7 +13,7 @@ note
 				Note that any value set in this context class overrides conflicting value eventually
 				     set in associated HTTP_CLIENT_SESSION.
 			
-				Warning: for now [2012-May], you can have only one of the following data
+				Warning: for now [2012-05-31], you can have only one of the following data
 						- form_parameters
 						- or upload_data 
 						- or upload_filename 

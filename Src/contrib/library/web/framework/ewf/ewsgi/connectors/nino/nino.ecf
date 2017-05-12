@@ -7,7 +7,7 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" >
+		<option warning="true">
 		</option>
 		<capability>
 			<concurrency support="thread" use="thread"/>

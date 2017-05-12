@@ -4,7 +4,7 @@
 		<description>Simple EiffelWeb standalone server with SSL support (Concurrent connection supported thanks to SCOOP).</description>
 		<root class="APPLICATION" feature="make_and_launch"/>
 		<file_rule>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>

@@ -1,8 +1,8 @@
-﻿note
+note
 	description: "[
 			Component responsible to send email using an external mailer
 			i.e: an external tool such as sendmail or a script, ...
-		]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

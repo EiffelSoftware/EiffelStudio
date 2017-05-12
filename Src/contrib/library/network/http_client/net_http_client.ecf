@@ -3,11 +3,12 @@
 	<target name="net_http_client">
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/.git$</exclude>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true"/>
+		<option warning="true">
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="encoder" location="..\..\web\framework\ewf\text\encoder\encoder.ecf"/>
 		<library name="http" location="..\protocol\http\http.ecf"/>

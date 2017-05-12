@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			UNARCHIVER for pax payload
 		]"
@@ -107,10 +107,11 @@ feature -- Unarchiving
 			end
 			unarchived_blocks := unarchived_blocks + 1
 
-			if unarchiving_finished then
-				if parsing_state /= ps_length then
-					report_new_error ("Parsing not finished, current key: " + active_key)
-				end
+			if
+				unarchiving_finished and then
+				parsing_state /= ps_length
+			then
+				report_new_error ("Parsing not finished, current key: " + active_key)
 			end
 		end
 
@@ -250,6 +251,6 @@ invariant
 	correct_state: parsing_state = ps_length or parsing_state = ps_key or parsing_state = ps_value
 
 note
-	copyright: "2015-2016, Nicolas Truessel, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2015-2017, Nicolas Truessel, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

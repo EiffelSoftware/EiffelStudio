@@ -1,7 +1,5 @@
-note
-	description: "[
-			Storage backends for files
-		]"
+﻿note
+	description: "Storage backends for files."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -78,7 +76,7 @@ feature -- Status setting
 		local
 			retried: BOOLEAN
 		do
-			if not has_error then
+			if not retried then
 				if backend.exists then
 					if backend.is_writable then
 						backend.open_write
@@ -251,7 +249,8 @@ feature {NONE} -- Implementation
 invariant
 	buffer_size: block_buffer.count = {TAR_CONST}.tar_block_size
 	buffer_entries_size: across buffer as ic all ic.item.count = {TAR_CONST}.tar_block_size end
+
 note
-	copyright: "2015-2016, Nicolas Truessel, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2015-2017, Nicolas Truessel, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

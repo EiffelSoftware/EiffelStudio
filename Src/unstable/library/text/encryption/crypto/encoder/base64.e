@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Base64 is a group of similar binary-to-text encoding schemes that represent binary data in an ASCII string format by translating it into a radix-64 representation. The term Base64 originates from a specific MIME content transfer encoding.
 
@@ -90,7 +90,7 @@ feature -- Decoder
 		end
 
 	decode_string_to_buffer (v: STRING; a_buffer: STRING)
-			-- Write base64 decoded value of `s' into `a_buffer'
+			-- Write base64 decoded value of `s' into `a_buffer'.
 		local
 			byte_count: INTEGER
 			pos, n, i, nb_bytes: INTEGER
@@ -110,10 +110,9 @@ feature -- Decoder
 			invariant
 				n = v.count
 			until
-				(pos >= n) or done
+				pos >= n or done
 			loop
 				byte_count := 0
-				create bytes.make_filled (0, 1, nb_bytes)
 				from
 					i := 1
 				until
@@ -163,9 +162,7 @@ feature {NONE} -- Constants
 			valid_from_pos: v.valid_index (from_pos + 1)
 		local
 			n: INTEGER
-			l_map: like character_map
 		do
-			l_map := character_map
 			from
 				Result := from_pos + 1
 				n := v.count
@@ -191,7 +188,7 @@ feature {NONE} -- Constants
 	character_map: STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

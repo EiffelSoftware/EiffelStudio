@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 					SHA256 encryption
 
@@ -124,7 +124,7 @@ feature -- Element Change
 				buffer_offset := 0
 			end
 		ensure then
-			buffer_offset_set: buffer_offset = (old buffer_offset + 1) \\ (block_size)
+			buffer_offset_set: buffer_offset = (old buffer_offset + 1) \\ block_size
 		end
 
 feature {NONE} -- Implementation
@@ -380,7 +380,7 @@ feature {NONE} -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			HMAC-based One-time Password Algorithm. (HOTP)
 
@@ -55,7 +55,7 @@ feature -- Basic operation
 			l_bytes := hmac.digest
 
 				-- Truncate (see https://tools.ietf.org/html/rfc4226#section-5.3 )
-			o := (l_bytes [l_bytes.count - 1] & 15)
+			o := l_bytes [l_bytes.count - 1] & 15
 			create ba.make (4)
 			ba.extend (l_bytes [o])
 			ba.extend (l_bytes [o + 1])
@@ -75,7 +75,7 @@ feature -- Basic operation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

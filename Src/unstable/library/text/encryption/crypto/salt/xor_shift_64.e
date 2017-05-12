@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Xorshift random number generators form a class of pseudorandom number generators "
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,9 +27,9 @@ feature -- Random
 	random: INTEGER_64
 			-- New random
 		do
-			x := x.bit_xor ((x |<< 21))
-			x := x.bit_xor ((x |>> 35))
-			x := x.bit_xor ((x |<< 4))
+			x := x.bit_xor (x |<< 21)
+			x := x.bit_xor (x |>> 35)
+			x := x.bit_xor (x |<< 4)
 			Result := x
 		end
 
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 	x: INTEGER_64
 		-- internal bit shifted	
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

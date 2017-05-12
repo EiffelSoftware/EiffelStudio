@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Base32 is one of several base 32 transfer encodings using a 32-character subset of the twenty-six letters A-Z and six digits 2-7.
 
@@ -170,9 +170,7 @@ feature {NONE} -- Implementation
 			valid_from_pos: v.valid_index (from_pos + 1)
 		local
 			n: INTEGER
-			l_map: like character_map
 		do
-			l_map := character_map
 			from
 				Result := from_pos + 1
 				n := v.count
@@ -198,7 +196,7 @@ feature {NONE} -- Implementation
 	character_map: STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567="
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

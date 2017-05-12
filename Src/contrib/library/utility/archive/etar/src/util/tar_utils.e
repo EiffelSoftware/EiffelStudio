@@ -1,8 +1,5 @@
-note
-	description: "[
-			Utility functions for tar archives
-		]"
-	author: ""
+﻿note
+	description: "Utility functions for tar archives."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,12 +25,9 @@ feature -- Block Padding
 			non_negative_position: a_pos >= 0
 			non_negative_length: n >= 0
 			enough_space: p.count >= a_pos + n
-		local
-			l_padding: SPECIAL [CHARACTER_8]
 		do
 			if n > 0 then
-				create l_padding.make_filled ('%U', n)
-				p.put_special_character_8 (l_padding, 0, a_pos, n)
+				p.put_special_character_8 (create {SPECIAL [CHARACTER_8]}.make_filled ('%U', n), 0, a_pos, n)
 			end
 		end
 
@@ -222,6 +216,6 @@ feature {NONE} -- Utilities stolen from file_info
 		end
 
 note
-	copyright: "2015-2016, Nicolas Truessel, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2015-2017, Nicolas Truessel, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

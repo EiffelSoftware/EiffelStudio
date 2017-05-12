@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Utilities to print numbers in octal representation 
 			and parse octal formatted strings
@@ -7,7 +7,6 @@ note
 			
 			Parsing allows natural numbers only
 		]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -200,11 +199,8 @@ feature -- Utilities
 			-- Pad `a_string' with `n' zeros.
 		require
 			positive: n >= 0
-		local
-			zeros: STRING_8
 		do
-			create zeros.make_filled ('0', n)
-			a_string.prepend_string (zeros)
+			a_string.prepend_string (create {STRING_8}.make_filled ('0', n))
 		ensure
 			prepended: a_string.count - n = old a_string.count
 			zeros_prepended: a_string.head (n).to_natural_64 = 0
@@ -222,6 +218,6 @@ feature -- Constants
 			-- Maximal digits of a 64 bit natural octal string representation.
 
 note
-	copyright: "2015-2016, Nicolas Truessel, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2015-2017, Nicolas Truessel, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

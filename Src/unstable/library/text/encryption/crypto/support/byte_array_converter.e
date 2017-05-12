@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Representation for byte array (item value between 0 and 255).
 			Could be useful in protocol, encoding, ... computations.
@@ -61,7 +61,6 @@ feature {NONE} -- Initialization
 			-- i.e from 0000 0000 to 1111 1111.
 		local
 			i,j,n: INTEGER
-			c: CHARACTER_8
 			s: STRING
 			f, v: NATURAL_8
 		do
@@ -80,8 +79,7 @@ feature {NONE} -- Initialization
 				until
 					j > 8 or i < 1
 				loop
-					c := a_bin_string [i]
-					if c = '1' then
+					if a_bin_string [i] = '1' then
 						v := v + f -- * 1
 					end
 					f := f * 2 -- base = 2
@@ -99,9 +97,8 @@ feature {NONE} -- Initialization
 			char_len_big_enough: a_char_len >= number_of_characters_required_for_base_n_representation (255, a_base)
 		local
 			i,j,n: INTEGER
-			c: CHARACTER_8
 			s: STRING
-			n8, v: NATURAL_8
+			v: NATURAL_8
 			f: NATURAL_8
 		do
 			n := a_base_string.count
@@ -119,9 +116,7 @@ feature {NONE} -- Initialization
 				until
 					j > a_char_len or i < 1
 				loop
-					c := a_base_string [i]
-					n8 := base_n_character_to_natural (c)
-					v := v + n8 * f
+					v := v + base_n_character_to_natural (a_base_string [i]) * f
 					f := f * a_base
 					j := j + 1
 					i := i - 1
@@ -290,7 +285,7 @@ feature -- Access and item representations.
 			char_len_big_enough: a_char_len >= number_of_characters_required_for_base_n_representation (255, a_base)
 		local
 			n8: NATURAL_8
-			q8,r8: NATURAL_8
+			q8: NATURAL_8
 		do
 			n8 := natural_8_item (i)
 			create Result.make (a_char_len)
@@ -303,8 +298,7 @@ feature -- Access and item representations.
 					n8 := 0
 				else
 					q8 := n8 // a_base
-					r8 := n8 - q8 * a_base
-					prepend_based_natural_8_to (r8, a_base, Result)
+					prepend_based_natural_8_to (n8 - q8 * a_base, a_base, Result)
 					n8 := q8
 				end
 			end
@@ -377,14 +371,12 @@ feature -- Conversion
 			-- Natural 64 representation of Current.
 		local
 			nb: INTEGER
-			v: NATURAL_64
 		do
 			nb := 0
 			across
 				new_cursor.reversed as ic
 			loop
-				v := ic.item.as_natural_64
-				Result := Result | v.bit_shift_left (nb)
+				Result := Result | ic.item.as_natural_64.bit_shift_left (nb)
 				nb := nb + 8
 			end
 		end
@@ -685,7 +677,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

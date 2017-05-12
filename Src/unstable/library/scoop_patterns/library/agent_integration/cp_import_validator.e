@@ -1,6 +1,7 @@
-note
+﻿note
 	description: "Determines if ROUTINE and TUPLE objects are valid for import."
 	author: "Roman Schmocker"
+	updated_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -36,16 +37,10 @@ feature -- Status report
 			end
 		end
 
-feature -- Status report
-
 	is_agent_importable (a_routine: separate ROUTINE): BOOLEAN
 			-- Is `a_routine' importable?
 		local
 			routine_access: CP_ROUTINE_ACCESS
-			l_separate_closed_args: BOOLEAN
-			l_no_attributes: BOOLEAN
-			l_correct_return_type: BOOLEAN
-			l_type_id: INTEGER
 		do
 				-- First check if the basic requirements hold.			
 			if is_agent_unsafe_importable (a_routine) then
@@ -99,17 +94,13 @@ feature {NONE} -- Implementation
 
 	is_function_result_void (a_function: separate FUNCTION [ANY]): BOOLEAN
 			-- Is `a_function.last_result' Void?
-		local
-			l_type_id: INTEGER
 		do
 			if attached a_function.last_result as res then
 					-- It may be an expanded type.
-				l_type_id := {ISE_RUNTIME}.dynamic_type (res)
-				Result := reflector.type_of_type (l_type_id).is_expanded
+				Result := reflector.type_of_type ({ISE_RUNTIME}.dynamic_type (res)).is_expanded
 			else
 				Result := True
 			end
-
 		end
 
 	c_is_tuple_item_separate (a_tuple: separate TUPLE; a_index: INTEGER): BOOLEAN
@@ -134,7 +125,7 @@ feature {NONE} -- Implementation
 					/* l_item may be Void */
 				if (l_item) {
 						/* Check if the processor ID is different. */
-					l_result = EIF_IS_DIFFERENT_PROCESSOR (l_tuple, l_item);
+					l_result = RTS_OS (l_tuple, l_item);
 				}
 				else {
 					l_result = EIF_FALSE;

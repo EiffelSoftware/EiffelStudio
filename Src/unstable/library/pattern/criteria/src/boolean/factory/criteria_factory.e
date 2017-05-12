@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {CRITERIA_FACTORY}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -127,19 +126,17 @@ feature {NONE} -- Parse
 
 	criteria_from_token (tok: CRITERIA_TOKEN): like criteria
 		local
-			l_op: detachable CRITERIA_TOKEN
+			l_op: CRITERIA_TOKEN
 			f_and: CRITERIA_AND [G]
 			f_or: CRITERIA_OR [G]
-			f_not: CRITERIA_NOT [G]
-			f_right: detachable CRITERIA [G]
+			f_right: CRITERIA [G]
 		do
 			if tok.is_group and then attached tok.group as group_tok then
 				f_right := criteria_from_token (group_tok.right)
 				if f_right /= Void then
 					l_op := group_tok.op
 					if l_op.is_operator_not then
-						create f_not.make (f_right)
-						Result := f_not
+						create {CRITERIA_NOT [G]} Result.make (f_right)
 					else
 						if
 							attached group_tok.left as l_left and then
@@ -230,11 +227,9 @@ feature {NONE} -- Parse
 			end
 			if i = n + 1 and in_exp then
 				l_parts.force (s.substring (p, n).as_string_32)
-				in_exp := False
 			end
 
 			create Result.make (l_parts.count)
-			prev_is_op := True
 			across
 				l_parts as cur
 			loop
@@ -245,7 +240,6 @@ feature {NONE} -- Parse
 					if not prev_is_op then
 						create tok.make_silent_and_operator
 						Result.force (tok)
-						prev_tok := tok
 					end
 					check l_name [l_name.count] = ')' end
 					create tok.make_embedded (l_name.substring (2, l_name.count - 1))
@@ -261,15 +255,13 @@ feature {NONE} -- Parse
 							create tok.make_silent_or_operator
 							l_name := l_name.substring (2, l_name.count)
 
-							if prev_tok = Void and then tok.is_binary_operator then
-							else
+							if prev_tok /= Void or else not tok.is_binary_operator then
 								Result.force (tok)
 								prev_tok := tok
 							end
 						end
 						create tok.make_operator (l_name)
-						if prev_tok = Void and then tok.is_binary_operator then
-						else
+						if prev_tok /= Void or else not tok.is_binary_operator then
 							Result.force (tok)
 							prev_tok := tok
 						end
@@ -286,10 +278,8 @@ feature {NONE} -- Parse
 							create tok.make_silent_or_operator
 							l_name := l_name.substring (2, l_name.count)
 
-							if prev_tok = Void and then tok.is_binary_operator then
-							else
+							if prev_tok /= Void or else not tok.is_binary_operator then
 								Result.force (tok)
-								prev_tok := tok
 							end
 						end
 						if l_value.count > 1 and l_value[1] = '%"' then
@@ -389,11 +379,10 @@ feature -- Access
 	short_description: STRING_32
 		local
 			k: READABLE_STRING_GENERAL
-			s: STRING_32
 			len: INTEGER
 		do
-			create s.make_empty
-			s.append ("Criteria:%N")
+			create Result.make_empty
+			Result.append ("Criteria:%N")
 			across
 				builders as c
 			loop
@@ -404,40 +393,37 @@ feature -- Access
 				builders as c
 			loop
 				k := c.key
-				s.append_character (' ')
-				s.append_character (' ')
-				s.append_character ('[')
-				s.append_string_general (k)
-				s.append_character (']')
+				Result.append_character (' ')
+				Result.append_character (' ')
+				Result.append_character ('[')
+				Result.append_string_general (k)
+				Result.append_character (']')
 				if k.count < len then
-					s.append (create {STRING_32}.make_filled (' ', len - k.count))
+					Result.append (create {STRING_32}.make_filled (' ', len - k.count))
 				end
 				if attached c.item.description as d then
-					s.append_character (' ')
-					s.append_string_general (d)
+					Result.append_character (' ')
+					Result.append_string_general (d)
 				end
-				s.append_character ('%N')
+				Result.append_character ('%N')
 			end
-			Result := s
 		end
 
 	description: STRING_32
 		local
 			sh: READABLE_STRING_32
-			s: STRING_32
 		do
 			sh := short_description
-			create s.make (sh.count + 30)
-			s.append ("Usage: %"criterion:value%"")
+			create Result.make (sh.count + 30)
+			Result.append ("Usage: %"criterion:value%"")
 			if attached default_builder_name as dft then
-				s.append (" (note: %"value%" is aliased with  %"" + dft + ":value%")")
+				Result.append (" (note: %"value%" is aliased with  %"" + dft + ":value%")")
 			end
-			s.append_character ('%N')
-			s.append_character ('%N')
-			s.append (sh)
-			s.append_character ('%N')
-			s.append ("Criteria can be combined with %"and%" (the default), %"or%" (aliased with prefix %"+%"), %"not%" (aliased with prefix %"-%").%N")
-			Result := s
+			Result.append_character ('%N')
+			Result.append_character ('%N')
+			Result.append (sh)
+			Result.append_character ('%N')
+			Result.append ("Criteria can be combined with %"and%" (the default), %"or%" (aliased with prefix %"+%"), %"not%" (aliased with prefix %"-%").%N")
 		end
 
 feature -- Change		
@@ -492,7 +478,7 @@ invariant
 	builders /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -36,13 +36,13 @@ feature -- Input
 			-- Make result available in `last_character'.
 			-- No exception raised!
 		do
-			read_to_managed_pointer_noexception (socket_buffer, 0, character_8_bytes)
+			read_to_managed_pointer_noexception (read_socket_buffer, 0, character_8_bytes)
 			if was_error then
 					-- Socket error already set.
 			elseif bytes_read /= character_8_bytes then
 				socket_error := "Peer closed connection"
 			else
-				last_character := socket_buffer.read_character (0)
+				last_character := read_socket_buffer.read_character (0)
 				socket_error := Void
 			end
 		end
@@ -208,8 +208,8 @@ feature -- Output
 	put_character_noexception (c: CHARACTER)
 			-- Write character `c' to socket.
 		do
-			socket_buffer.put_character (c, 0)
-			put_managed_pointer_noexception (socket_buffer, 0, character_8_bytes)
+			put_socket_buffer.put_character (c, 0)
+			put_managed_pointer_noexception (put_socket_buffer, 0, character_8_bytes)
 		end
 
 	put_string_8_noexception (s: READABLE_STRING_8)

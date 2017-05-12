@@ -9,7 +9,6 @@
 		</file_rule>
 		<option warning="true">
 		</option>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="ewsgi" location="..\..\ewsgi.ecf" readonly="false"/>
 		<library name="http" location="..\..\..\..\..\..\network\protocol\http\http.ecf"/>

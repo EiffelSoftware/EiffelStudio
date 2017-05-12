@@ -8,8 +8,6 @@
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true">
-		</option>
 		<capability>
 			<concurrency support="none" use="thread"/>
 		</capability>

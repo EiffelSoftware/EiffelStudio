@@ -3,13 +3,16 @@
 	<target name="tests">
 		<root class="TEST_URI_TEMPLATE" feature="default_create"/>
 		<file_rule>
-			<exclude>/.git$</exclude>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true">
 			<assertions precondition="true"/>
 		</option>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<library name="uri_template" location="..\uri_template.ecf" readonly="false"/>

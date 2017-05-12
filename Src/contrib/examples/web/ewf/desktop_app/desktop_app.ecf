@@ -16,7 +16,7 @@
 		<library name="wsf_standalone_connector" location="..\..\..\..\library\web\framework\ewf\ewsgi\connectors\standalone\standalone.ecf"/>
 		<cluster name="src" location=".\src\" recursive="true">
 			<file_rule>
-				<exclude>/.svn$</exclude>
+				<exclude>/\.svn$</exclude>
 				<exclude>/CVS$</exclude>
 				<exclude>/EIFGENs$</exclude>
 			</file_rule>

@@ -9,7 +9,6 @@
 		</file_rule>
 		<option warning="true">
 		</option>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="specification" location="specification\" recursive="true"/>

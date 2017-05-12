@@ -3,7 +3,7 @@
 	<target name="websocket_app">
 		<root class="APPLICATION" feature="make_and_launch"/>
 		<file_rule>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>

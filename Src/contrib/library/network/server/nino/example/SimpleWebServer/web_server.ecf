@@ -3,8 +3,8 @@
 	<target name="nino_web_server">
 		<root class="APPLICATION" feature="make"/>
 		<file_rule>
-			<exclude>/.git$</exclude>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
@@ -13,7 +13,6 @@
 		</option>
 		<capability>
 			<concurrency support="thread" use="thread"/>
-			<void_safety support="all"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>

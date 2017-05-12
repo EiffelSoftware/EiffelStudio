@@ -9,7 +9,6 @@
 		</file_rule>
 		<option warning="true">
 		</option>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="connector_cgi" location="..\..\ewsgi\connectors\cgi\cgi.ecf"/>
 		<library name="connector_libfcgi" location="..\..\ewsgi\connectors\libfcgi\libfcgi.ecf"/>

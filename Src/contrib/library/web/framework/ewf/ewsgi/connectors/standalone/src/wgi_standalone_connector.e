@@ -110,7 +110,7 @@ feature -- Callbacks
 
 	on_launched_actions: ACTION_SEQUENCE [TUPLE [WGI_STANDALONE_CONNECTOR [WGI_EXECUTION]]]
 			-- Actions triggered when launched.
-			-- WARNING: only supported for now with SCOOP concurrency mode. [2016-oct-07]
+			-- WARNING: only supported for now with SCOOP concurrency mode. [2016-10-07]
 
 feature -- Event
 
@@ -201,7 +201,7 @@ feature -- Server
 			-- Shutdown web server listening.
 		do
 			if launched then
-					-- FIXME jfiat [2015/03/27] : prevent multiple calls (otherwise it hangs)
+					-- FIXME: prevent multiple calls (otherwise it hangs) [2015-03-27]
 				separate_shutdown_server_on_controller (controller)
 			end
 		end
@@ -213,7 +213,7 @@ feature -- Events
 		require
 			obs.started -- SCOOP wait condition.
 		do
-				-- FIXME: this works only with SCOOP concurrency mode. [2016-oct-07]
+				-- FIXME: this works only with SCOOP concurrency mode. [2016-10-07]
 			if obs.port > 0 then
 				on_launched (obs.port)
 			end
@@ -282,9 +282,8 @@ feature {NONE} -- Implementation: element change
 			cfg.set_is_secure (b)
 		end
 
-
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

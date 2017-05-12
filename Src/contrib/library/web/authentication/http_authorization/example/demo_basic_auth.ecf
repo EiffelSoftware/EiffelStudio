@@ -3,7 +3,7 @@
 	<target name="basic">
 		<root class="DEMO_BASIC" feature="make_and_launch"/>
 		<file_rule>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>

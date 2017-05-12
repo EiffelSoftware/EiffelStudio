@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 				then
 					secure_settings := [l_secure_prot, opts.option_string_32_value ("secure_certificate", Void), opts.option_string_32_value ("secure_certificate_key", Void)]
 				elseif
-						-- OBSOLETE: backward compatible with old settings name [oct/2016].
+						-- OBSOLETE: backward compatible with old settings name [2017-05-31].
 					opts.option_boolean_value ("ssl_enabled", is_secure) and then
 					attached opts.option_string_32_value ("ssl_protocol", "tls_1_2") as ssl_prot
 				then

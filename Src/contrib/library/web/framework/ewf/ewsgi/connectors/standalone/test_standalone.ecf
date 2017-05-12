@@ -6,7 +6,6 @@
 			<debug name="dbglog" enabled="true"/>
 			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
 		</option>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="connector_standalone" location="standalone.ecf" readonly="false"/>
 		<library name="ewsgi" location="..\..\ewsgi.ecf" readonly="false"/>
@@ -15,12 +14,12 @@
 	</target>
 	<target name="test_standalone_thread" extends="test_standalone_scoop">
 		<capability>
-			<concurrency support="thread" use="thread"/>
+			<concurrency use="thread"/>
 		</capability>
 	</target>
 	<target name="test_standalone_none" extends="test_standalone_scoop">
 		<capability>
-			<concurrency support="none" use="none"/>
+			<concurrency use="none"/>
 		</capability>
 	</target>
 	<target name="test_connector_standalone" extends="test_standalone_scoop">

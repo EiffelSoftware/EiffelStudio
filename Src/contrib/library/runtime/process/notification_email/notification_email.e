@@ -1,7 +1,7 @@
-﻿note
+note
 	description : "[
 			Email message handled by notification mailer.
-		]"
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

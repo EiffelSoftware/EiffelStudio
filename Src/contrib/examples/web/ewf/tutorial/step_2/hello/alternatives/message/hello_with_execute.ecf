@@ -3,7 +3,7 @@
 	<target name="hello_with_execute">
 		<root class="HELLO_APPLICATION" feature="make_and_launch"/>
 		<file_rule>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>

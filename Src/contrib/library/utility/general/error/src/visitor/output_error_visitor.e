@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "General error output visitor"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,12 +14,12 @@ inherit
 feature -- Output
 
 	output_string (a_str: detachable READABLE_STRING_GENERAL)
-			-- Output Unicode string
+			-- Output Unicode string.
 		deferred
 		end
 
 	output_any (obj: detachable ANY)
-			-- Output Unicode string
+			-- Output Unicode string.
 		do
 			if attached {READABLE_STRING_GENERAL} obj as l_str then
 				to_implement ("Convert into UTF-8 or console encoding before output")
@@ -42,6 +42,7 @@ feature -- Output
 feature -- Process
 
 	process_error (e: ERROR)
+			-- <Precursor>
 		do
 			output_string ({STRING_32}"Error Name: ")
 			output_string (e.name)
@@ -54,6 +55,7 @@ feature -- Process
 		end
 
 	process_custom (e: ERROR_CUSTOM)
+			-- <Precursor>
 		do
 			output_string ({STRING_32}"Error Name: ")
 			output_string (e.name)
@@ -66,22 +68,19 @@ feature -- Process
 		end
 
 	process_group (g: ERROR_GROUP)
+			-- <Precursor>
 		local
 			l_errors: LIST [ERROR]
 		do
-			from
-				l_errors := g.sub_errors
-				l_errors.start
-			until
-				l_errors.after
+			across
+				g.sub_errors as s
 			loop
-				l_errors.item.process (Current)
-				l_errors.forth
+				s.item.process (Current)
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

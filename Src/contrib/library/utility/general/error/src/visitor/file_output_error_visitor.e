@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "File error output visitor"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Creation
 
 	make (f: like file)
 		require
@@ -32,7 +32,7 @@ feature -- Access
 feature -- Output
 
 	output_string (a_str: detachable READABLE_STRING_GENERAL)
-			-- Output Unicode string
+			-- Output Unicode string.
 		do
 			if a_str /= Void then
 				to_implement ("Convert into UTF-8 or console encoding before output")
@@ -51,7 +51,7 @@ feature -- Output
 		end
 
 note
-	copyright: "2011-2012, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

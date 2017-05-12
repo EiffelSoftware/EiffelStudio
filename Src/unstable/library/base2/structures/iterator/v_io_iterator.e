@@ -1,6 +1,7 @@
 note
 	description: "Iterators to read and write from/to a container in linear order."
 	author: "Nadia Polikarpova"
+	updated_by: "Alexander Kogtenkov"
 	model: target, sequence, index
 
 deferred class
@@ -35,7 +36,7 @@ feature -- Replacement
 			put (v)
 			forth
 		ensure then
-			sequence_effect: sequence |=| old (sequence.replaced_at (index, v))
+			sequence_effect: sequence |=| old sequence.replaced_at (index, v)
 			index_effect: index = old index + 1
 		end
 end

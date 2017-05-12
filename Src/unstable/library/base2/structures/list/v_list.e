@@ -4,6 +4,7 @@ note
 		Indexing starts from 1.
 		]"
 	author: "Nadia Polikarpova"
+	updated_by: "Alexander Kogtenkov"
 	model: sequence
 
 deferred class
@@ -173,7 +174,7 @@ feature -- Removal
 			has_index: has_index (i)
 		deferred
 		ensure
-			sequence_effect: sequence |=| old (sequence.removed_at (i))
+			sequence_effect: sequence |=| old sequence.removed_at (i)
 		end
 
 	remove (v: G)
@@ -189,7 +190,7 @@ feature -- Removal
 			i.search_forth (v)
 			i.remove
 		ensure
-			sequence_effect: sequence |=| old (sequence.removed_at (sequence.inverse.image_of (v).extremum (agent less_equal)))
+			sequence_effect: sequence |=| old sequence.removed_at (sequence.inverse.image_of (v).extremum (agent less_equal))
 		end
 
 	remove_all (v: G)
@@ -209,7 +210,7 @@ feature -- Removal
 				i.search_forth (v)
 			end
 		ensure
-			sequence_effect: sequence |=| old (sequence.removed (sequence.inverse.image_of (v)))
+			sequence_effect: sequence |=| old sequence.removed (sequence.inverse.image_of (v))
 		end
 
 	remove_satisfying (pred: PREDICATE [G])
@@ -225,7 +226,7 @@ feature -- Removal
 			i.satisfy_forth (pred)
 			i.remove
 		ensure
-			sequence_effect: sequence |=| old (sequence.removed_at (sequence.inverse.image (sequence.inverse.domain | pred).extremum (agent less_equal)))
+			sequence_effect: sequence |=| old sequence.removed_at (sequence.inverse.image (sequence.inverse.domain | pred).extremum (agent less_equal))
 		end
 
 	remove_all_satisfying (pred: PREDICATE [G])
@@ -251,7 +252,7 @@ feature -- Removal
 				i.satisfy_forth (pred)
 			end
 		ensure
-			sequence_effect: sequence |=| old (sequence.removed (sequence.inverse.image (sequence.inverse.domain | pred)))
+			sequence_effect: sequence |=| old sequence.removed (sequence.inverse.image (sequence.inverse.domain | pred))
 		end
 
 	wipe_out

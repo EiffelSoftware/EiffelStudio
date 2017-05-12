@@ -1,6 +1,7 @@
 note
 	description: "Iterators over doubly-linked lists."
 	author: "Nadia Polikarpova"
+	updated_by: "Alexander Kogtenkov"
 	model: target, sequence, index
 
 class
@@ -77,13 +78,13 @@ feature -- Status report
 	is_first: BOOLEAN
 			-- Is cursor at the first position?
 		do
-			Result := not (active = Void) and active = target.first_cell
+			Result := active /= Void and active = target.first_cell
 		end
 
 	is_last: BOOLEAN
 			-- Is cursor at the last position?
 		do
-			Result := not (active = Void) and then active = target.last_cell
+			Result := active /= Void and then active = target.last_cell
 		end
 
 	after: BOOLEAN
@@ -301,11 +302,11 @@ feature {V_CELL_CURSOR} -- Implementation
 			loop
 				i := i + 1
 				j := j - 1
-				check not_off: attached cf as cf_ then
-					cf := cf_.right
-				end
-				check not_off: attached cb as cb_ then
-					cb := cb_.left
+					-- The next assertion follows from the loop exit condition.
+				check not_off: attached cf end
+				cf := cf.right
+				check not_off: attached cb then
+					cb := cb.left
 				end
 			end
 			if cf = active then

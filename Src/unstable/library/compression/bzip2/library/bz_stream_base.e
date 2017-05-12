@@ -30,44 +30,35 @@ feature -- Status Report
 		require
 			has_error: has_error
 		do
-			if errno /= 0 then
-				Result := string_from_external (strerror (errno))
-			else
+			if errno = 0 then
 				if attached bz_file as l_bz_file then
 					inspect l_bz_file.last_operation
-						when -1 then
-							Result := "sequence error"
-
-						when -2 then
-							Result := "param error"
-
-						when -3 then
-							Result := "memory error"
-
-						when -4 then
-							Result := "data error"
-
-						when -5 then
-							Result := "magic data error"
-
-						when -6 then
-							Result := "I/O error"
-
-						when -7 then
-							Result := "unexpected EOF"
-
-						when -8 then
-							Result := "output buffer full"
-
-						when -9 then
-							Result := "configuration error"
-
-						else
-							Result := "unknown error"
+					when -1 then
+						Result := "sequence error"
+					when -2 then
+						Result := "param error"
+					when -3 then
+						Result := "memory error"
+					when -4 then
+						Result := "data error"
+					when -5 then
+						Result := "magic data error"
+					when -6 then
+						Result := "I/O error"
+					when -7 then
+						Result := "unexpected EOF"
+					when -8 then
+						Result := "output buffer full"
+					when -9 then
+						Result := "configuration error"
+					else
+						Result := "unknown error"
 					end
 				else
 					Result := "bzfile is void"
 				end
+			else
+				Result := string_from_external (strerror (errno))
 			end
 		end
 

@@ -1,12 +1,10 @@
-note
+﻿note
 
     description:
-
        "Implements basic OUTPUT_STREAM as a stream filtered by the bzip2 compression algorithms."
-
     library:    "ELJ"
     author:     "Uwe Sander"
-	copyright:  "Copyright (c) 2002, Uwe Sander and others"
+	copyright:  "Copyright (c) 2002-2017, Uwe Sander, Eiffel Software and others"
     license:    "Eiffel Forum License v1"
     date:       "$Date$"
     revision:   "$Revision$"
@@ -66,7 +64,7 @@ feature -- Commands
 				create name.make (0)
 			end -- if
 
-			create buffer.make (1, 2048)
+			create buffer.make_filled ('%U', 1, 2048)
 
 			if attached bz_file as l_bz_file then
 				l_bz_file.open (name_)
@@ -104,23 +102,24 @@ feature -- Operations
 
 	flush
 		do
-			if memory > 0 then
-				if attached bz_file as l_bz_file  then
-					l_bz_file.write_raw (character_array_to_external (buffer), memory)
-					memory := 0
-				end
+			if
+				memory > 0 and then
+				attached bz_file as l_bz_file
+			then
+				l_bz_file.write_raw (character_array_to_external (buffer), memory)
+				memory := 0
 			end
 		end
 
 	put (a_char: CHARACTER)
 		do
-			if memory = buffer.upper then
-				if attached bz_file as l_bz_file then
-					l_bz_file.write (buffer)
-					memory := 0
-				end
+			if
+				memory = buffer.upper and then
+				attached bz_file as l_bz_file
+			then
+				l_bz_file.write (buffer)
+				memory := 0
 			end
-
 			memory := memory + 1
 			buffer.put (a_char, memory)
 		end
@@ -137,4 +136,4 @@ invariant
 
 	buffer_created: is_open_write implies buffer /= Void
 
-end -- class BZ_OUTPUT_STREAM
+end

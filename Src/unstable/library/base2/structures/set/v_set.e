@@ -4,6 +4,7 @@ note
 		Elements can be added and removed.
 		]"
 	author: "Nadia Polikarpova"
+	updated_by: "Alexander Kogtenkov"
 	model: set, equivalence
 
 deferred class
@@ -236,7 +237,9 @@ feature -- Removal
 		local
 			other_iterator: V_SET_ITERATOR [G]
 		do
-			if other /= Current then
+			if other = Current then
+				wipe_out
+			else
 				from
 					other_iterator := other.new_cursor
 				until
@@ -245,8 +248,6 @@ feature -- Removal
 					remove (other_iterator.item)
 					other_iterator.forth
 				end
-			else
-				wipe_out
 			end
 		ensure
 			set_effect_old: (old set).for_all (agent (x: G; o: V_SET [G]): BOOLEAN
@@ -263,7 +264,9 @@ feature -- Removal
 		local
 			other_iterator: V_SET_ITERATOR [G]
 		do
-			if other /= Current then
+			if other = Current then
+				wipe_out
+			else
 				from
 					other_iterator := other.new_cursor
 				until
@@ -276,8 +279,6 @@ feature -- Removal
 					end
 					other_iterator.forth
 				end
-			else
-				wipe_out
 			end
 		ensure
 			set_effect_old: (old set).for_all (agent (x: G; o: V_SET [G]): BOOLEAN

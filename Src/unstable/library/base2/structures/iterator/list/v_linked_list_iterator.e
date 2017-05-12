@@ -1,6 +1,7 @@
 note
 	description: "Iterators over linked lists."
 	author: "Nadia Polikarpova"
+	updated_by: "Alexander Kogtenkov"
 	model: target, sequence, index
 
 class
@@ -78,13 +79,13 @@ feature -- Status report
 	is_first: BOOLEAN
 			-- Is cursor at the first position?
 		do
-			Result := not (active = Void) and active = target.first_cell
+			Result := active /= Void and active = target.first_cell
 		end
 
 	is_last: BOOLEAN
 			-- Is cursor at the last position?
 		do
-			Result := not (active = Void) and then active = target.last_cell
+			Result := active /= Void and then active = target.last_cell
 		end
 
 	after: BOOLEAN

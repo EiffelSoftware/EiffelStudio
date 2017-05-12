@@ -1,6 +1,7 @@
 note
 	description: "Maps where key-value pairs can be updated, added and removed."
 	author: "Nadia Polikarpova"
+	updated_by: "Alexander Kogtenkov"
 	model: map, key_equivalence
 
 deferred class
@@ -66,11 +67,8 @@ feature -- Replacement
 			modify: map
 		require
 			has_key: has_key (k)
-		local
-			i: V_TABLE_ITERATOR [K, V]
 		do
-			i := at_key (k)
-			i.put (v)
+			at_key (k).put (v)
 		ensure
 			map_effect: map |=| old map.updated (key (k), v)
 		end
@@ -128,4 +126,5 @@ feature -- Removal
 		ensure
 			map_effect: map.is_empty
 		end
+
 end

@@ -54,18 +54,18 @@ feature
 			compare_equality (t1, t2, False, "case 1.7")
 			compare_equality (t2, t1, False, "case 1.8")
 
-			compare_equality (t1.u, t1.u, not is_ieee_comparison, "case 1.9")
-			compare_equality (t2.u, t2.u, not is_ieee_comparison, "case 1.10")
-			compare_equality (t1.u, t2.u, not is_ieee_comparison, "case 1.11")
-			compare_equality (t2.u, t1.u, not is_ieee_comparison, "case 1.12")
+			compare_equality (t1.u, t1.u, True, "case 1.9")
+			compare_equality (t2.u, t2.u, True, "case 1.10")
+			compare_equality (t1.u, t2.u, True, "case 1.11")
+			compare_equality (t2.u, t1.u, True, "case 1.12")
 
-			compare_deep_equality (t1, t1, not is_ieee_comparison, "case 1.13")
-			compare_deep_equality (t2, t2, not is_ieee_comparison, "case 1.14")
+			compare_deep_equality (t1, t1, True, "case 1.13")
+			compare_deep_equality (t2, t2, True, "case 1.14")
 			compare_deep_equality (t1, t2, not is_ieee_comparison, "case 1.15")
 			compare_deep_equality (t2, t1, not is_ieee_comparison, "case 1.16")
 
-			compare_deep_equality (t1.u, t1.u, not is_ieee_comparison, "case 1.17")
-			compare_deep_equality (t2.u, t2.u, not is_ieee_comparison, "case 1.18")
+			compare_deep_equality (t1.u, t1.u, True, "case 1.17")
+			compare_deep_equality (t2.u, t2.u, True, "case 1.18")
 			compare_deep_equality (t1.u, t2.u, not is_ieee_comparison, "case 1.19")
 			compare_deep_equality (t2.u, t1.u, not is_ieee_comparison, "case 1.20")
 	    end

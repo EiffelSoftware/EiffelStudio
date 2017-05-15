@@ -47,7 +47,7 @@ feature {EV_ANY} -- Initialization
 			-- Every descendant should exactly one a creation procedure `make'.
 			-- Must call `base_make'.
 		obsolete
-			"Should no longer be used [2009-06-04]"
+			"Should no longer be used [2017-05-31]"
 		require
 			an_interface_not_void: an_interface /= Void
 		deferred

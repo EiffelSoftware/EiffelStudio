@@ -95,7 +95,7 @@ feature -- Obsolete
 
 	align_text_left
 			-- Display text left aligned
-		obsolete "Was not implemented on all platforms."
+		obsolete "Was not implemented on all platforms. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -103,7 +103,7 @@ feature -- Obsolete
 
 	align_text_center
 			-- Display text center aligned
-		obsolete "Was not implemented on all platforms."
+		obsolete "Was not implemented on all platforms. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -111,7 +111,7 @@ feature -- Obsolete
 
 	align_text_right
 			-- Display text right aligned
-		obsolete "Was not implemented on all platforms."
+		obsolete "Was not implemented on all platforms. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do

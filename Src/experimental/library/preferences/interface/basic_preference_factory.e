@@ -252,7 +252,7 @@ feature -- Access: Arrays
 	new_array_string_32_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ARRAY [STRING_32]): ARRAY_STRING_32_PREFERENCE
 			-- Add a new array preference with name `a_name'.  If preference cannot be found in
 			-- underlying datastore or in a default values then `a_fallback_value' is used for the value.
-		obsolete "Use new_string_list_preference_value [2012-nov]"
+		obsolete "Use `new_string_list_preference_value` [2017-05-31]"
 		require
 			name_valid: a_name /= Void
 			name_not_empty: not a_name.is_empty
@@ -270,31 +270,31 @@ feature -- Access: Arrays
 feature -- Obsolete		
 
 	new_boolean_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: BOOLEAN): BOOLEAN_PREFERENCE
-		obsolete "[060113] use new_boolean_preference_value."
+		obsolete "use `new_boolean_preference_value` [2017-05-31]."
 		do
 			Result := new_boolean_preference_value (a_manager, a_name, a_fallback_value)
 		end
 
 	new_integer_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: INTEGER): INTEGER_PREFERENCE
-		obsolete "[060113] use new_integer_preference_value."
+		obsolete "use `new_integer_preference_value` [2017-05-31]."
 		do
 			Result := new_integer_preference_value (a_manager, a_name, a_fallback_value)
 		end
 
 	new_string_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: STRING): STRING_PREFERENCE
-		obsolete "[060113] use new_string_preference_value."
+		obsolete "Use `new_string_preference_value` [2017-05-31]."
 		do
 			Result := new_string_preference_value (a_manager, a_name, a_fallback_value)
 		end
 
 	new_array_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ARRAY [STRING]): ARRAY_PREFERENCE
-		obsolete "[060113] use new_array_preference_value."
+		obsolete "Use `new_array_preference_value` [2017-05-31]."
 		do
 			Result := new_array_preference_value (a_manager, a_name, a_fallback_value)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

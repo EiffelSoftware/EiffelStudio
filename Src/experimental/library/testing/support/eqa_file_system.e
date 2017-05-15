@@ -34,8 +34,7 @@ feature -- Command
 	copy_file (a_src: FILE; a_env: EQA_ENVIRONMENT; a_dest: FILE; a_substitute: BOOLEAN)
 			-- Append lines of file `a_src', with environment
 			-- variables substituted according to `a_env' (but
-			-- only if `substitute' is true) to
-			-- file `a_dest'.
+			-- only if `substitute' is true) to file `a_dest'.
 		require
 			source_not_void: a_src /= Void
 			destination_not_void: a_dest /= Void
@@ -53,6 +52,7 @@ feature -- Command
 			loop
 				a_src.read_line
 				if a_substitute then
+						-- FIXME: Should substitution be UTF-8 encoded? [2017-05-03]
 					l_line := a_env.substitute (a_src.last_string).as_string_8_conversion
 				else
 					l_line := a_src.last_string

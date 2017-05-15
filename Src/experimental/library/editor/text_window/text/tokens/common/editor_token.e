@@ -29,7 +29,7 @@ feature -- Access
 	image: STRING
 			-- String representation of the token
 		obsolete
-			"Use `wide_image' instead."
+			"Use `wide_image' instead. [2017-05-31]"
 		do
 			Result := wide_image.as_string_8
 		end

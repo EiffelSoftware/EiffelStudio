@@ -1,5 +1,5 @@
 note
-	description: "EiffelVision file open dialog."
+	description: "EiffelVision file open dialog. [2017-05-31]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -24,7 +24,7 @@ feature -- Status report
 	file_names: ARRAYED_LIST [STRING_32]
 			-- Full names of currently selected files including path.
 		obsolete
-			"Use `file_paths' instead."
+			"Use `file_paths' instead. [2017-05-31]"
 		deferred
 		ensure
 			Result_not_void: Result /= Void

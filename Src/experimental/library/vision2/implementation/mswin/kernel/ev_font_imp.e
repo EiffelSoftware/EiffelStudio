@@ -640,7 +640,7 @@ feature -- Obsolete
 	string_width_and_height (a_string: READABLE_STRING_GENERAL): TUPLE [INTEGER, INTEGER]
 			-- [width, height] of `a_string'.
 		obsolete
-			"Use `string_size'."
+			"Use `string_size'. [2017-05-31]"
 		do
 			Result := wel_font.string_size (a_string)
 		end

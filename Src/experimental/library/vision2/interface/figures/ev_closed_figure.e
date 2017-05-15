@@ -11,7 +11,7 @@ deferred class
 	EV_CLOSED_FIGURE
 
 obsolete
-	"Use EV_MODEL_CLOSED instead."
+	"Use EV_MODEL_CLOSED instead. [2017-05-31]"
 
 inherit
 	EV_ATOMIC_FIGURE

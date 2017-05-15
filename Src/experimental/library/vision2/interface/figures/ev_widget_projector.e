@@ -11,7 +11,7 @@ deferred class
 	EV_WIDGET_PROJECTOR
 
 obsolete
-	"Use EV_MODEL_WIDGET_PROJECTOR instead. [2015-05-28]"
+	"Use EV_MODEL_WIDGET_PROJECTOR instead. [2017-05-31]"
 
 inherit
 	EV_PROJECTOR
@@ -434,7 +434,7 @@ feature {NONE} -- Event implementation
 	call_actions (f: EV_FIGURE; actions: detachable EV_LITE_ACTION_SEQUENCE [TUPLE]; arg: detachable TUPLE)
 			-- Call `actions' on `f' with `arg' if `f' is sensitive.
 		obsolete
-			"Use `actions' directly. [2014-05-21]"
+			"Use `actions' directly. [2017-05-31]"
 		do
 			if actions /= Void and then f.is_sensitive then
 				actions.call (arg)

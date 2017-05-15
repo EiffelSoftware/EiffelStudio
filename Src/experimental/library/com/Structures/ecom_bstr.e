@@ -42,7 +42,7 @@ feature {NONE} -- Externals
 	c_sys_free_string (a_item: POINTER)
 			-- `SysFreeString' API
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <OleAuto.h>"
 		alias
 			"SysFreeString((BSTR)$a_item)"
 		end
@@ -50,7 +50,7 @@ feature {NONE} -- Externals
 	c_sys_string_len (a_item: POINTER): INTEGER
 			-- `SysStringLen' API
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <OleAuto.h>"
 		alias
 			"(EIF_INTEGER)SysStringLen((BSTR)$a_item)"
 		end

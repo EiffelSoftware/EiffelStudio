@@ -18,7 +18,7 @@ feature -- Basic operations
 	register_figure (a_figure: EV_MODEL; a_routine: PROCEDURE [EV_MODEL])
 			-- Assign `a_routine' for drawing of `a_figure'.
 		obsolete
-			"Redefine `project' from your EV_MODEL descendant to perform the projection."
+			"Redefine `project' from your EV_MODEL descendant to perform the projection. [2017-05-31]"
 		require
 			a_figure_exists: a_figure /= Void
 			a_routine_exists: a_routine /= Void
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 	register_basic_figures
 			-- Register EiffelVision figures.
 		obsolete
-			"Not needed anymore. Basic figures are now handled via {EV_MODEL}.project."
+			"Not needed anymore. Basic figures are now handled via {EV_MODEL}.project. [2017-05-31]"
 		do
 		end
 

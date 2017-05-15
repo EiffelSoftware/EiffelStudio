@@ -12,7 +12,7 @@ class
 	EV_FIGURE_ELLIPSE
 
 obsolete
-	"Use EV_MODEL_ELLIPSE instead."
+	"Use EV_MODEL_ELLIPSE instead. [2017-05-31]"
 
 inherit
 	EV_CLOSED_FIGURE

@@ -300,19 +300,16 @@ feature {NONE} -- Implementation
 	hash_table_datas_to_arrayed_list_datas: MA_ARRAYED_LIST_STORABLE [like a_filter_data]
 			-- Change the data stored in HASH_TABLE to a arrayed_list which is storable.
 
-		local
-			l_datas: MA_ARRAYED_LIST_STORABLE [like a_filter_data]
 		do
-			create l_datas.make (1)
+			create Result.make (1)
 			from
 				filter.item_and_filter_names.start
 			until
 				filter.item_and_filter_names.after
 			loop
-				l_datas.extend (filter.item_and_filter_names.item_for_iteration)
+				Result.extend (filter.item_and_filter_names.item_for_iteration)
 				filter.item_and_filter_names.forth
 			end
-			Result := l_datas
 		ensure
 			result_not_void: Result /= Void
 			result_valid: Result.count = filter.item_and_filter_names.count

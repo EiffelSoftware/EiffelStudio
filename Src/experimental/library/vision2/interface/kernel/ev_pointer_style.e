@@ -66,7 +66,7 @@ feature {NONE} -- Initlization
 	make_with_cursor (a_cursor: EV_CURSOR)
 			-- Initialize from `a_cursor'.
 		obsolete
-			"Use EV_POINTER_STYLE directly now."
+			"Use EV_POINTER_STYLE directly now. [2017-05-31]"
 		do
 			default_create
 				-- We convert from EV_CURSOR, `a_cursor' maybe void.

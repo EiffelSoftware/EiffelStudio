@@ -710,7 +710,7 @@ feature -- Printing
 			-- The OpenPrinter function retrieves a handle to the specified printer or print
 			-- server or other types of handles in the print subsystem.
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return EIF_TEST(OpenPrinter((LPTSTR) $a_name, (LPHANDLE) $a_printer_handle, (LPPRINTER_DEFAULTS) $a_defaults));"
 		end
@@ -720,7 +720,7 @@ feature -- Printing
 				a_error_code: TYPED_POINTER [INTEGER]): BOOLEAN
 			-- The GetPrinter function retrieves information about a specified printer.
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"[
 				EIF_BOOLEAN result = EIF_TEST(GetPrinter((HANDLE) $a_printer, (DWORD) $a_level,
@@ -735,7 +735,7 @@ feature -- Printing
 	close_printer (a_printer: POINTER): BOOLEAN
 			-- The ClosePrinter function closes the specified printer object.
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return EIF_TEST(ClosePrinter((HANDLE) $a_printer));"
 		end

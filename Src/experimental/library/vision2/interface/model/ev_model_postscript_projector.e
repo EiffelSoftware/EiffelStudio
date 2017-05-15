@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 	make_with_filename (a_world: EV_MODEL_WORLD; a_filename: READABLE_STRING_GENERAL)
 			-- Create with `a_world' and `a_filename'.
 		obsolete
-			"Use `make_with_path' instead."
+			"Use `make_with_path' instead. [2017-05-31]"
 		require
 			a_world_not_void: a_world /= Void
 			a_filename_not_void: a_filename /= Void

@@ -22,7 +22,7 @@ class
 	EV_RELATIVE_POINT
 
 obsolete
-	"Not needed in EV_MODEL."
+	"Not needed in EV_MODEL. [2017-05-31]"
 
 inherit
 	EV_FIGURE_MATH

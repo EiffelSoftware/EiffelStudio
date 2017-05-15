@@ -77,7 +77,7 @@ feature -- Status setting
 			-- Set field at row index 'widget_row' and column index 'widget_column' with
 			-- value of `saved text' after an edit has been unsuccessful
 		obsolete
-			"use `set_with_previous_text' instead [2003-10-09]"
+			"use `set_with_previous_text' instead [2017-05-31]"
 		do
 			set_with_previous_text
 		end

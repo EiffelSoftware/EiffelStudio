@@ -9,7 +9,7 @@ class
 	EV_PRINT_PROJECTOR_IMP
 
 obsolete
-	"Use EV_MODEL_PRINT_PROJECTOR_IMP instead."
+	"Use EV_MODEL_PRINT_PROJECTOR_IMP instead. [2017-05-31]"
 
 inherit
 

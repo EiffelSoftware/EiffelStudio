@@ -76,7 +76,7 @@ feature -- Status report
 
 	selected: BOOLEAN
 			-- Is an item selected in `Current' ?
-		obsolete "Use selected_item /= Void instead."
+		obsolete "Use selected_item /= Void instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do

@@ -11,7 +11,7 @@ deferred class
 	EV_PROJECTOR
 
 obsolete
-	"Use EV_MODEL_PROJECTOR instead."
+	"Use EV_MODEL_PROJECTOR instead. [2017-05-31]"
 	
 inherit
 	ANY

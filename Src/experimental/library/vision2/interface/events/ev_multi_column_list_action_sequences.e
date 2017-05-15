@@ -59,7 +59,7 @@ feature -- Event handling
 
 	column_resize_actions: EV_COLUMN_ACTION_SEQUENCE
 			-- Actions to be performed when a column is resized.
-		obsolete "Use `column_resized_actions' instead."
+		obsolete "Use `column_resized_actions' instead. [2017-05-31]"
 		do
 			Result := implementation.column_resized_actions
 		ensure

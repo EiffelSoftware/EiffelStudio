@@ -338,7 +338,7 @@ feature -- Obsolete
 
 	clear_selection
 			-- Make `selected_items' empty.
-		obsolete "Please use `remove_selection' instead."
+		obsolete "Please use `remove_selection' instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do

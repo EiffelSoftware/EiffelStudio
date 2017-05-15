@@ -11,7 +11,7 @@ deferred class
 	EV_TREE_NODE_CONTAINER
 
 obsolete
-	"This is no longer applicable. Use EV_TREE_ITEM_LIST instead."
+	"This is no longer applicable. Use EV_TREE_ITEM_LIST instead. [2017-05-31]"
 
 inherit
 	EV_ANY

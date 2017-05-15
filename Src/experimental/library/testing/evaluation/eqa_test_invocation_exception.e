@@ -122,8 +122,8 @@ feature {NONE} -- Initialization
 					end
 					if attached last_class_name as l_cn then
 						if
-							l_cn.same_string (a_class_name) and
-							(a_feature_name /= Void implies (attached last_routine_name as l_rn and then l_rn.same_string (a_feature_name)))
+							l_cn.same_string_general (a_class_name) and
+							(a_feature_name /= Void implies (attached last_routine_name as l_rn and then l_rn.same_string_general (a_feature_name)))
 						then
 							l_found := True
 							l_prev := True
@@ -342,7 +342,7 @@ invariant
 	exception_break_point_slot_positive: break_point_slot >= 0
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

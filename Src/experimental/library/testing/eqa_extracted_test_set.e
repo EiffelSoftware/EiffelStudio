@@ -240,6 +240,7 @@ feature {NONE} -- Basic operations
 		local
 			l_new: TUPLE
 		do
+				-- FIXME: get rid of `empty_operands` usage. [2017-05-03].
 			l_new := a_routine.empty_operands
 			check l_new /= Void end
 			if a_operands.count < l_new.count then
@@ -754,7 +755,7 @@ feature {NONE} -- Constants
 	dynamic_string_32_type: INTEGER once Result := ({STRING_32}).type_id end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

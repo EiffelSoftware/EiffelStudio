@@ -11,7 +11,7 @@ deferred class
 	EV_FIGURE_DRAWER
 
 obsolete
-	"Use EV_MODEL_DRAWER instead."
+	"Use EV_MODEL_DRAWER instead. [2017-05-31]"
 
 inherit
 	EV_FIGURE_DRAWING_ROUTINES

@@ -85,7 +85,7 @@ feature -- Access
 			-- Conversion is done using `as_string_8', thus some data
 			-- might be lost.
 		obsolete
-			"Use `strings' instead."
+			"Use `strings' instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		local

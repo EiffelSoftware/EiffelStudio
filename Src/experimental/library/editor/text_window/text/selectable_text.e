@@ -116,7 +116,7 @@ feature -- Access
 
 	selected_string: STRING
 		obsolete
-			"Use `selected_wide_string' instead."
+			"Use `selected_wide_string' instead. [2017-05-31]"
 		require
 			text_is_not_empty: not is_empty
 		do
@@ -433,7 +433,7 @@ invariant
 	-- no_cursor_when_empty: is_empty implies cursor = Void and then selection_cursor = Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

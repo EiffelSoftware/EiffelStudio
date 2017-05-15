@@ -248,7 +248,7 @@ feature -- Access
 feature -- Obsolete
 
 	register_preference_widget (a_pref_widget: PREFERENCE_WIDGET)
-			obsolete "[090514] do not use, this had no effect at all, so this was removed"
+		obsolete "do not use, this had no effect at all, so this was removed [2017-05-31]."
 		do
 		end
 
@@ -1741,7 +1741,7 @@ invariant
 	has_preferences: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

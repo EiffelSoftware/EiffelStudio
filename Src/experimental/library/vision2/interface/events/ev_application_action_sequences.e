@@ -34,7 +34,7 @@ feature -- Event handling
 			-- actions handling use 'add_idle_action', `remove_idle_action'
 			-- or `do_once_on_idle'.
 		obsolete
-			"Use add_idle_action, do_once_on_idle or remove_idle_action instead"
+			"Use add_idle_action, do_once_on_idle or remove_idle_action instead [2017-05-31]"
 		require
 			single_threaded: not {PLATFORM}.is_thread_capable
 		do

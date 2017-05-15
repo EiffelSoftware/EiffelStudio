@@ -11,7 +11,7 @@ class
 	EV_FIGURE_MATH
 
 obsolete
-	"Use EV_MODEL_MATH instead."
+	"Use EV_MODEL_MATH instead. [2017-05-31]"
 
 inherit
 	DOUBLE_MATH

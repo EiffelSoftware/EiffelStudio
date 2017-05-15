@@ -38,7 +38,7 @@ feature -- Access
 	i_th_point (i: INTEGER): EV_COORDINATE
 			-- `i'-th point of `Current'.
 		obsolete
-			"Use i_th_point_x or i_th_point_y."
+			"Use i_th_point_x or i_th_point_y. [2017-05-31]"
 		require
 			i_within_bounds: i > 0 and then i <= point_count
 		do
@@ -76,7 +76,7 @@ feature -- Status setting
 	set_i_th_point (i: INTEGER; a_point: EV_COORDINATE)
 			-- Set position of `i'-th point to position of `a_point'.
 		obsolete
-			"Use set_i_th_point_position."
+			"Use set_i_th_point_position. [2017-05-31]"
 		require
 			i_within_bounds: i > 0 and then i <= point_count
 			a_point_not_void: a_point /= Void

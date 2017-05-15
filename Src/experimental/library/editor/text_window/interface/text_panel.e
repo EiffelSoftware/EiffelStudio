@@ -192,7 +192,7 @@ feature -- Access
 	text: STRING
 			-- Image of the text being displayed.
 		obsolete
-			"Use `wide_text' instead, or wide characters are truncated."
+			"Use `wide_text' instead, or wide characters are truncated. [2017-05-31]"
 		do
 			Result := wide_text.as_string_8
 		end
@@ -213,7 +213,7 @@ feature -- Access
 	file_name: detachable FILE_NAME
 			-- Name of the currently opened file, if any.
 		obsolete
-			"Use `file_path' instead as content could be truncated for Unicode paths."
+			"Use `file_path' instead as content could be truncated for Unicode paths. [2017-05-31]"
 		do
 			if attached file_path as l_path then
 				create Result.make_from_string (l_path.name.as_string_8)
@@ -711,7 +711,7 @@ feature -- Basic Operations
 	load_file (a_filename: STRING_32)
 			-- Load contents of `a_filename'.
 		obsolete
-			"Use `load_file_path' instead."
+			"Use `load_file_path' instead. [2017-05-31]"
 		require
 			a_filename_not_void: a_filename /= Void
 		do
@@ -836,12 +836,10 @@ feature -- Basic Operations
 				if changed or not editor_preferences.automatic_update then
 						-- File has not changed in panel and is not up to date.  However, user does want auto-update so prompt for reload.
 					create dialog.make_with_text ("This file has been modified by another editor.")
-					create button_labels.make (1, 2)
-					create actions.make (1, 2)
-					button_labels.put ("Reload", 1)
-					actions.put (agent reload, 1)
-					button_labels.put ("Continue anyway", 2)
-					actions.put (agent continue_editing, 2)
+					create button_labels.make_from_array (<<"Reload", "Continue anyway">>)
+					button_labels.rebase (1)
+					create actions.make_from_array (<<agent reload, agent continue_editing>>)
+					actions.rebase (1)
 					dialog.set_buttons_and_actions (button_labels, actions)
 					dialog.set_default_push_button (dialog.button (button_labels @ 1))
 					dialog.set_default_cancel_button (dialog.button (button_labels @ 2))
@@ -1174,7 +1172,6 @@ feature {NONE} -- Scroll bars Management
  			-- Process vertical scroll event. `vertical_scrollbar.value' has changed.
  		local
  			l_bottom_line_y,
- 			l_top_line_y,
  			l_diff,
  			view_y_offset,
  			l_line_height,

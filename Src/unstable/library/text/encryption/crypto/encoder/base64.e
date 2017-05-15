@@ -71,9 +71,9 @@ feature -- base64 encoder
 				i := i + 6
 			end
 
-			i := s.count \\ 3
+			i := Result.count \\ 4
 			if i > 0 then
-				from until i > 2 loop
+				from until i > 3 loop
 					Result.extend ('=')
 					i := i + 1
 				end
@@ -121,8 +121,8 @@ feature -- Decoder
 					pos := next_encoded_character_position (v, pos)
 					if pos <= n then
 						c := v [pos]
-						if i < 3 or else c /= '=' then
-							bytes[i] := l_map.index_of (c, 1) - 1
+						if c /= '=' then
+							bytes[i] := character_to_value (c)
 							byte_count := byte_count + 1
 						end
 					else
@@ -186,6 +186,28 @@ feature {NONE} -- Constants
 		end
 
 	character_map: STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+			--|              01234567890123456789012345678901234567890123456789012345678901234
+			--|              0         1         2         3         4         5         6
+
+	character_to_value (c: CHARACTER): INTEGER
+		do
+			inspect c
+			when 'A'..'Z'  then
+				Result := c.code - 65 --| 65 'A'
+			when 'a'..'z'  then
+				Result := 26 + c.code - 97 --| 97 'a'
+			when '0'..'9' then
+				Result := 52 + c.code - 48 --| 48 '0'
+			when '+' then
+				Result := 62
+			when '/' then
+				Result := 63
+			else
+				Result := 0
+			end
+		ensure
+			Result = character_map.index_of (c, 1) - 1
+		end
 
 note
 	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"

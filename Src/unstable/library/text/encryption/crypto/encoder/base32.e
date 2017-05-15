@@ -70,9 +70,9 @@ feature -- base32 encoder
 				i := i + 5
 			end
 
-			i := s.count \\ 5
+			i := Result.count \\ 8
 			if i > 0 then
-				from until i > 2 loop
+				from until i > 7 loop
 					Result.extend ('=')
 					i := i + 1
 				end
@@ -96,10 +96,9 @@ feature -- Decoder
 			tmp1, tmp2, tmp3: INTEGER
 			bytes: ARRAY [INTEGER]
 			done: BOOLEAN
-			l_map: STRING_8
+			c: CHARACTER
 		do
 			has_error := False
-			l_map := character_map
 			n := v.count
 			from
 				nb_bytes := 8
@@ -111,7 +110,6 @@ feature -- Decoder
 				(pos >= n) or done
 			loop
 				byte_count := 0
-				bytes.make_filled (0, 1, nb_bytes)
 				from
 					i := 1
 				until
@@ -119,8 +117,13 @@ feature -- Decoder
 				loop
 					pos := next_encoded_character_position (v, pos)
 					if pos <= n then
-						bytes[i] := l_map.index_of (v[pos], 1) - 1
-						byte_count := byte_count + 1
+						c := v [pos]
+						if c /= '=' then
+							bytes[i] := character_to_value (c)
+							byte_count := byte_count + 1
+						else
+							bytes[i] := 0
+						end
 					else
 						has_error := True
 					end
@@ -135,7 +138,7 @@ feature -- Decoder
 					if byte_count > 3 then
 						tmp1 := bytes[2].bit_shift_left (6) & 0b1111_1111
 						tmp2 := bytes[3].bit_shift_left (1) & 0b1111_1111
-						tmp3 := bytes[4].bit_shift_right (7) & 0b0000_0001
+						tmp3 := bytes[4].bit_shift_right (4) & 0b0000_0001
 						a_buffer.extend ((tmp1 | tmp2 | tmp3).to_character_8)
 						if byte_count > 4 then
 							tmp1 := bytes[4].bit_shift_left (4) & 0b1111_1111
@@ -194,6 +197,22 @@ feature {NONE} -- Implementation
 		end
 
 	character_map: STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567="
+			--|              012345678901234567890123456789012
+			--|              0         1         2         3
+
+	character_to_value (c: CHARACTER): INTEGER
+		do
+			inspect c
+			when 'A'..'Z'  then
+				Result := c.code - 65 --| 65 'A'
+			when '2'..'7' then
+				Result := 26 + c.code - 50 --| 50 '2'
+			else
+				Result := 0
+			end
+		ensure
+			Result = character_map.index_of (c, 1) - 1
+		end
 
 note
 	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"

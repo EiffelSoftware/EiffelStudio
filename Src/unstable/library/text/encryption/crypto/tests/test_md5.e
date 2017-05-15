@@ -16,6 +16,7 @@ feature -- Test routines
 			-- Test suite from standard specification:
 			-- http://tools.ietf.org/html/rfc1321
 		do
+			md5.reset
 			assert ("", md5_string ("").is_case_insensitive_equal ("d41d8cd98f00b204e9800998ecf8427e"))
 			assert ("", md5_string ("a").is_case_insensitive_equal ("0cc175b9c0f1b6a831c399e269772661"))
 			assert ("", md5_string ("abc").is_case_insensitive_equal ("900150983cd24fb0d6963f7d28e17f72"))
@@ -28,6 +29,7 @@ feature -- Test routines
 	test_md5_no_reset
 			-- Test MD5 without reset.
 		do
+			md5.reset
 			assert ("", update_md5_string_no_reset ("").is_case_insensitive_equal ("d41d8cd98f00b204e9800998ecf8427e"))
 			assert ("", update_md5_string_no_reset ("a").is_case_insensitive_equal ("0cc175b9c0f1b6a831c399e269772661"))
 				-- "abc"
@@ -98,7 +100,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

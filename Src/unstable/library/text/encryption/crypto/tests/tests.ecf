@@ -19,6 +19,7 @@
 		<library name="crypto" location="..\crypto.ecf" readonly="false"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<cluster name="encoder" location="..\encoder" recursive="true"/>
 		<tests name="tests" location=".\" recursive="true"/>
 	</target>
 </system>

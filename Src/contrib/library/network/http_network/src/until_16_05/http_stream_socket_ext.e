@@ -51,6 +51,20 @@ feature -- Access
 		deferred
 		end
 
+	socket_buffer: MANAGED_POINTER
+		deferred
+		end
+
+	read_socket_buffer: MANAGED_POINTER
+		do
+			Result := socket_buffer
+		end
+
+	put_socket_buffer: MANAGED_POINTER
+		do
+			Result := socket_buffer
+		end
+
 feature -- Socket Recv and Send timeout.
 
 	set_recv_timeout (a_timeout_seconds: INTEGER)

@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "Store emails in specific folder."
 	date: "$Date$"
 	revision: "$Revision$"

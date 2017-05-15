@@ -14,7 +14,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization	
+feature {NONE} -- Initialization
 
 	make (a_title: READABLE_STRING_GENERAL)
 		do
@@ -55,7 +55,7 @@ feature -- Access
 			Result := items.new_cursor
 		end
 
-feature -- Element change	
+feature -- Element change
 
 	set_description (a_description: detachable READABLE_STRING_GENERAL; a_description_content_type: like description_content_type)
 			-- Set `description' with `a_description' and optional content type `text:$a_description_content_type'.

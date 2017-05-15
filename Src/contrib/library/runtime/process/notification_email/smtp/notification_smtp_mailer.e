@@ -1,10 +1,9 @@
-﻿note
+note
 	description: "[
 			Notification mailer based on STMP protocol.
 
 			Note: it is based on EiffelNet {SMTP_PROTOCOL} implementation, and may not be complete.
 		]"
-	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 

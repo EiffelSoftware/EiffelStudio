@@ -18,7 +18,7 @@ feature
 			v: OPENID_CONSUMER_VALIDATION
 			id: READABLE_STRING_8
 		do
-			id := "https://me.yahoo.com/jfiat_net"
+			id := "https://www.google.com/accounts/o8/id"
 			create o.make ("http://localhost")
 			if attached o.auth_url (id) as l_url then
 				check o.error = Void end

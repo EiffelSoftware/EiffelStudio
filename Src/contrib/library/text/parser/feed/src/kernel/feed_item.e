@@ -22,7 +22,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization	
+feature {NONE} -- Initialization
 
 	make (a_title: READABLE_STRING_GENERAL)
 		do

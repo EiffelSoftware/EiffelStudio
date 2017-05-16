@@ -266,12 +266,18 @@ feature -- View
 			generic_response (req, res)
 		end
 
-
 	confirm_change_email (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: detachable ESA_EMAIL_VIEW)
 			-- <Precursor>
 		do
 			generic_response (req, res)
 		end
+
+	confirm_change_password (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: detachable ESA_PASSWORD_RESET_VIEW)
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
+
 
 	post_confirm_email_change_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>

@@ -487,6 +487,23 @@ feature -- View
 			end
 		end
 
+	confirm_change_password (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_PASSWORD_RESET_VIEW)
+			-- <Precursor>
+		local
+			l_hp: HTML_CONFIRM_PASSWORD_CHANGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_view)
+				if attached l_hp.representation as l_change_password_page then
+					if attached a_view.errors then
+						new_response_get_400 (req, res, l_change_password_page)
+					else
+					    new_response_get (req, res, l_change_password_page)
+					end
+				end
+			end
+		end
+
 	post_confirm_email_change_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		do

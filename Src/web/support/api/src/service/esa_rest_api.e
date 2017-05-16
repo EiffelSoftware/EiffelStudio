@@ -43,6 +43,7 @@ feature -- Initialization
 			configure_api_priority
 			configure_api_responsible
 			configure_api_reminder
+			configure_api_password_reset
 			configure_api_logger
 			configure_api_user_account
 			configure_api_user_password
@@ -384,6 +385,19 @@ feature -- Configure Resources Routes
 			l_methods.enable_post
 			router.handle ("/confirm_email", l_confirm_email_handler, l_methods)
 		end
+
+	configure_api_password_reset
+		local
+			l_password_reset_handler: ESA_PASSWORD_REST_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_password_reset_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			l_methods.enable_post
+			router.handle ("/password-reset", l_password_reset_handler, l_methods)
+		end
+
 
 	configure_api_subscribe_to_category
 		local

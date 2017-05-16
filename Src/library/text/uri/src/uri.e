@@ -463,6 +463,30 @@ feature -- Access
 			end
 		end
 
+	decoded_query_item (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+			-- Decoded query item associated with `a_name`.
+			-- If item exists without any value, return empty string.
+		local
+			k: READABLE_STRING_GENERAL
+		do
+			if attached query_items as lst then
+				across
+					lst as e
+				until
+					Result /= Void
+				loop
+					k := decoded_www_form_urlencoded_string (e.item.name)
+					if a_name.same_string (k) then
+						if attached e.item.value as l_val then
+							Result := decoded_www_form_urlencoded_string (l_val)
+						else
+							Result := {STRING_32} ""
+						end
+					end
+				end
+			end
+		end
+
 feature -- Query
 
 	hier: STRING_8
@@ -749,7 +773,7 @@ feature -- Element Change
 			else
 				create s.make_from_string (path)
 				s.append_character ('/')
-				append_percent_encoded_string_to (a_segment, s)
+				append_path_segment_encoded_string_to (a_segment, s)
 				set_path (s)
 			end
 		end
@@ -804,10 +828,10 @@ feature -- Change: query
 				q.append_character ('&')
 			end
 
-			q.append (www_form_urlencoded_string (a_name))
+			append_query_name_encoded_string_to (a_name, q)
 			if a_value /= Void then
 				q.append_character ('=')
-				q.append (www_form_urlencoded_string (a_value))
+				append_query_value_encoded_string_to (a_value, q)
 			end
 			create query.make_from_string (q)
 		end
@@ -1065,7 +1089,8 @@ feature -- Helper
 			-- character encoding is UTF-8.
 			-- See http://www.w3.org/TR/html5/forms.html#url-encoded-form-data
 		do
-			append_percent_encoded_string_to (a_string, a_target)
+
+			append_www_form_url_encoded_string_to (a_string, a_target)
 		end
 
 	www_form_urlencoded_string (a_string: READABLE_STRING_GENERAL): STRING_8
@@ -1074,7 +1099,7 @@ feature -- Helper
 			-- See http://www.w3.org/TR/html5/forms.html#url-encoded-form-data
 		do
 			create Result.make (a_string.count)
-			append_percent_encoded_string_to (a_string, Result)
+			append_www_form_urlencoded_string_to (a_string, Result)
 		end
 
 	append_decoded_www_form_urlencoded_string_to (a_string: READABLE_STRING_GENERAL; a_target: STRING_GENERAL)

@@ -93,6 +93,33 @@ feature -- Tests
 --			assert ("path segment", uri.path_segments.count = 5 and then uri[4].same_string ("d") and then uri[5].same_string (""))
 			assert ("path segment", uri.path_segments.count = 5 and then uri[0].is_empty and then uri[1].same_string ("a") and then uri[4].same_string ("d"))
 			assert ("is_valid", uri.is_valid)
+
+			uri.add_unencoded_path_segment ("a b c")
+			assert ("path segment with space", uri.path_segments.count = 6 and then
+						uri[0].is_empty and then uri[1].same_string ("a") and then uri[4].same_string ("d") and then
+						uri[5].same_string ("a b c") and then
+						uri.string.ends_with_general ("a%%20b%%20c")
+						)
+			assert ("is_valid", uri.is_valid)
+
+		end
+
+	test_spaces
+		local
+			uri: URI
+		do
+			create uri.make_from_string ("http://www.example.com")
+			uri.add_unencoded_path_segment ("foo")
+			uri.add_unencoded_path_segment ("a and b")
+			uri.add_unencoded_path_segment ("bar")
+			uri.add_unencoded_path_segment ("slash/end")
+			uri.add_query_parameter ("id", "123")
+			uri.add_query_parameter ("title", "Eiffel World!")
+			uri.add_query_parameter ("path", "foo/bar")
+			uri.add_query_parameter ("pair", "foo=bar")
+			assert ("uri with space", uri.string.same_string ("http://www.example.com/foo/a%%20and%%20b/bar/slash%%2Fend?id=123&title=Eiffel+World!&path=foo/bar&pair=foo=bar"))
+			assert ("uri segment ok", uri.decoded_path_segment (2).same_string ("a and b"))
+			assert ("uri query ok", attached uri.decoded_query_item ("title") as v and then v.same_string ("Eiffel World!"))
 		end
 
 	test_urls
@@ -209,36 +236,45 @@ feature -- Tests
 			assert ("query", same_string (uri.query, "a=b&a=b"))
 
 			uri.add_query_parameter ("a=b", "b=a")
-			assert ("query", same_string (uri.query, "a=b&a=b&a%%3Db=b%%3Da"))
+			assert ("query", same_string (uri.query, "a=b&a=b&a%%3Db=b=a"))
 
 			uri.remove_query
 			assert ("query", same_string (uri.query, Void))
 
 			uri.remove_query
 			uri.add_query_parameter ("?", "&")
-			assert ("query", same_string (uri.query, "%%3F=%%26"))
+			assert ("query", same_string (uri.query, "?=%%26"))
 
 			uri.remove_query
 			uri.add_query_parameter ("abc", "a+b+c")
 			assert ("query", same_string (uri.query, "abc=a%%2Bb%%2Bc"))
 
+			uri.remove_query
+			uri.add_query_parameter ("abc", "a b c")
+			assert ("query", same_string (uri.query, "abc=a+b+c"))
+
 
 			uri.remove_query
 			uri.add_query_parameter ("&", "?")
-			assert ("query", same_string (uri.query, "%%26=%%3F"))
+			assert ("query", same_string (uri.query, "%%26=?"))
 
 			uri.remove_query
 			uri.add_query_parameter ("?a=b", "xyz")
-			assert ("query", same_string (uri.query, "%%3Fa%%3Db=xyz"))
+			assert ("query", same_string (uri.query, "?a%%3Db=xyz"))
 
 
 			uri.remove_query
 			uri.add_query_parameter ("lst[a]", "b")
-			assert ("query", same_string (uri.query, "lst%%5Ba%%5D=b"))
+			assert ("query", same_string (uri.query, "lst[a]=b"))
+
+			uri.remove_query
+			uri.add_query_parameter ("fct(a,b)", "function(a,b)")
+			assert ("query", same_string (uri.query, "fct(a,b)=function(a,b)"))
+
 
 			uri.remove_query
 			uri.add_query_parameter ("lst[a][b]", "c")
-			assert ("query", same_string (uri.query, "lst%%5Ba%%5D%%5Bb%%5D=c"))
+			assert ("query", same_string (uri.query, "lst[a][b]=c"))
 		end
 
 	test_mailto
@@ -306,6 +342,9 @@ feature -- Tests
 
 			uri.add_unencoded_path_segment ("foo/bar")
 			assert ("path ok", uri.path.same_string ("base/foo/foo%%2Fbar"))
+
+			uri.add_unencoded_path_segment ("A and B")
+			assert ("path ok", uri.path.same_string ("base/foo/foo%%2Fbar/A%%20and%%20B"))
 		end
 
 	test_opaque

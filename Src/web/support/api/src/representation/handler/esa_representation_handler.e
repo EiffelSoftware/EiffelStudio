@@ -236,6 +236,11 @@ feature -- View
 		deferred
 		end
 
+	confirm_change_password (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: detachable ESA_PASSWORD_RESET_VIEW)
+			-- Confirm Password change
+		deferred
+		end
+
 	post_confirm_email_change_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Post Confirm Email change
 		deferred

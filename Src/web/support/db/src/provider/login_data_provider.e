@@ -485,6 +485,21 @@ feature -- Element Settings
 			post_execution
 		end
 
+	change_password (a_user: READABLE_STRING_32; a_email: READABLE_STRING_32; a_token: READABLE_STRING_32)
+			-- Change User Password.
+		local
+			l_parameters: HASH_TABLE [ANY, STRING_32]
+		do
+			log.write_information (generator + ".change_password")
+			create l_parameters.make (3)
+			l_parameters.put (string_parameter (a_user, 50), {DATA_PARAMETERS_NAMES}.Username_param)
+			l_parameters.put (string_parameter (a_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
+			l_parameters.put (string_parameter (a_token, 24), {DATA_PARAMETERS_NAMES}.Token_param)
+			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("ChangePassword", l_parameters))
+			db_handler.execute_writer
+			post_execution
+		end
+
 feature -- Factories
 
 	new_country (a_tuple: DB_TUPLE): COUNTRY
@@ -725,6 +740,28 @@ feature -- Status Report
 			post_execution
 		end
 
+	email_from_reset_password (a_token: READABLE_STRING_32): detachable STRING_32
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			log.write_debug (generator + ".email_from_reset_password token:" + a_token )
+			create l_parameters.make (1)
+			l_parameters.put (a_token, "token")
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_email_reset_password, l_parameters))
+			db_handler.execute_query
+			if not db_handler.after then
+				if
+					attached db_handler.read_string (1) as l_email
+				then
+					Result := l_email
+				end
+			end
+			post_execution
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Delete_token_password, l_parameters))
+			db_handler.execute_query
+			post_execution
+		end
+
 feature -- Connection
 
 	connect
@@ -734,7 +771,6 @@ feature -- Connection
 				db_handler.connect
 			end
 		end
-
 
 	disconnect
 			--  Disconnect to the database.
@@ -746,12 +782,13 @@ feature -- Connection
 
 feature -- Queries
 
+	Select_email_reset_password:  STRING = "SELECT email FROM UpdatePassword WHERE Token = :token;"
+
 	Select_countries: STRING = "select CountryId, Country from Countries;"
 		-- SQL Query to retrieve all countries.
 
 	tuple_user: detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
 		-- User row with first name, last name and user name.
-
 
 	Select_user_by_session_token: STRING = "[
 		SELECT Memberships.Username
@@ -771,6 +808,7 @@ feature -- Queries
 		SELECT ContactID FROM Memberships WHERE Username = :Username;
 		]"
 
+	Delete_token_password: STRING ="DELETE from UpdatePassword WHERE Token = :token;"
 
 
 feature {NONE} -- Implementation

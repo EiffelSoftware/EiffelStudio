@@ -123,7 +123,7 @@ feature -- Basic Operations
 		end
 
 
-	send_password_reset (a_to, a_message, a_host: STRING)
+	send_password_reset (a_to, a_message : STRING)
 			-- Send password reset email `a_token' to `a_to'.
 		local
 			l_email: ESA_NOTIFICATION_EMAIL
@@ -132,6 +132,8 @@ feature -- Basic Operations
 				log.write_information (generator + ".send_password_reset to [" + a_to + "]" )
 				a_message.append (disclaimer)
 				create l_email.make (admin_email, a_to, "Eiffel Support Site: Password Reset" , a_message)
+				l_email.add_header_line ("MIME-Version: 1.0")
+				l_email.add_header_line ("Content-Type: text/plain; charset=UTF-8")
 				smtp_protocol.safe_process_email (l_email)
 			end
 		end

@@ -2217,6 +2217,28 @@ CREATE TABLE [dbo].[UpdateEmail](
 GO
 SET ANSI_PADDING OFF
 GO
+/****** Table UpdatePassword **********/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[UpdatePassword](
+	[ContactID] [int] NOT NULL,
+	[Email] [varchar](150) NOT NULL,
+	[Token] [varchar](50) NOT NULL,
+	[CreatedDate] [datetime] NOT NULL,
+	[ChangePasswordID] [int] IDENTITY(1,1) NOT NULL,
+ CONSTRAINT [PK_UpdateEmail] PRIMARY KEY CLUSTERED 
+(
+	[ChangePasswordID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET ANSI_PADDING OFF
+GO
+
 /****** Object:  Table [dbo].[ProblemReportTemporaryInteractions]    Script Date: 12/14/2016 08:11:35 ******/
 SET ANSI_NULLS ON
 GO
@@ -5585,6 +5607,28 @@ AND ((Memberships.Username = @Username) OR (@Username = ''))
 AND ((Contacts.FirstName = @FirstName) OR (@FirstName = ''))
 AND ((Contacts.LastName = @LastName) OR (@LastName = ''))
 AND ((@SearchWithResponsible = 0) OR (ProblemReportResponsibles.ResponsibleID IN (SELECT ResponsibleID FROM @ResponsiblesTable)))
+GO
+
+/********** ChangePassword ******************/
+CREATE PROCEDURE [dbo].[ChangePassword]
+	-- Add the parameters for the stored procedure here
+	@Username			VARCHAR(50),
+	@Email	            VARCHAR(150), 
+	@Token              VARCHAR(50)
+	
+AS
+DECLARE @ContactID INT
+
+SELECT @ContactID = ContactID FROM Memberships WHERE Username = @Username
+
+
+BEGIN TRANSACTION ChangePassword
+
+INSERT INTO UpdatePassword(ContactID, Email, Token, CreatedDate) 
+	VALUES (@ContactID, @Email, @Token, getdate())
+
+COMMIT TRANSACTION ChangePassword
+GO
 
 /****** Object:  Default [DF_Memberships_RoleID]    Script Date: 12/14/2016 08:11:35 ******/
 ALTER TABLE [dbo].[Memberships] ADD  CONSTRAINT [DF_Memberships_RoleID]  DEFAULT (1) FOR [RoleID]

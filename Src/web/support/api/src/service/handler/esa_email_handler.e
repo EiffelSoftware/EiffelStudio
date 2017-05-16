@@ -75,13 +75,19 @@ feature -- HTTP Methods
 			l_token: STRING
 		do
 			create l_rhf
-			if attached current_media_type (req) as l_type then
-				if attached current_user_name (req) as l_user then
+			if
+				attached current_media_type (req) as l_type
+			then
+				if
+					attached current_user_name (req) as l_user
+				then
 					l_email := extract_data_from_request (req, l_type)
-					if l_email.is_valid_form and then
-					   attached l_email.email as l_new_email and then
-					   attached api_service.user_account_information (l_user).email as ll_email and then
-					   api_service.user_from_email (l_new_email) = Void then
+					if
+						l_email.is_valid_form and then
+					   	attached l_email.email as l_new_email and then
+					   	attached api_service.user_account_information (l_user).email as ll_email and then
+					  	api_service.user_from_email (l_new_email) = Void
+					 then
 					   	l_token := (create {SECURITY_PROVIDER}).token
 					   	api_service.change_user_email (l_user, l_new_email, l_token)
 					   	if api_service.successful then

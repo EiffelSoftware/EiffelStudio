@@ -83,27 +83,25 @@ feature -- HTTP Methods
 					l_error := "Account not activated"
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).reminder_page (req, res, l_error)
 				else
-					if  attached api_service.question_from_email (l_email) then
-							-- Email address exist send email with a new password
+					if
+						attached api_service.question_from_email (l_email) and then
+						attached api_service.user_from_email (l_email) as l_user
+					then
+							-- Email address exist send email with a link
+							-- to reactivate his password.
 						l_token := (create {SECURITY_PROVIDER}).token
-						api_service.update_password (l_email, l_token)
-						if attached api_service.user_from_email (l_email) as l_tuple then
+
+						api_service.change_password (l_user.user_name, l_email, l_token)
 								--  detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING] then
---							email_service.send_password_reset (l_email, message_content (l_token, l_tuple), req.absolute_script_url (""))
-							email_notification_service.send_password_reset (l_email, message_content (l_token, l_tuple), req.absolute_script_url (""))
-							if email_notification_service.successful then
-								l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).post_reminder_page (req, res, l_email)
-							else
-								l_error := email_notification_service.last_error_message
-								l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).reminder_page (req, res, l_error)
-							end
+						email_notification_service.send_password_reset (l_email, message_change_password (l_token, l_user, req))
+						if email_notification_service.successful then
+							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).post_reminder_page (req, res, l_email)
 						else
-							l_error := "User does not exist for the given email"
+							l_error := email_notification_service.last_error_message
 							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).reminder_page (req, res, l_error)
-					    end
+						end
 					else
-							-- Email address does not exist
-						l_error := "Email address does not exist"
+						l_error := "User does not exist for the given email"
 						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).reminder_page (req, res, l_error)
 					end
 				end
@@ -153,18 +151,19 @@ feature -- HTTP Methods
 			end
 		end
 
-
-	message_content (a_password: STRING; a_user: TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]): STRING
+	message_change_password (a_token: STRING; a_user: TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]; req: WSF_REQUEST): STRING
 			-- Username and Password e-mail content.
 		do
 			create Result.make (1024)
 			Result.append ("Dear ")
 			Result.append (a_user.first_name)
-			Result.append (",%N%NAs requested your eiffel.com account password was reset. Here is your login information:%N%N")
+			Result.append (",%NYou have requested a new password at support.eiffel.com %N%N")
 			Result.append ("* Username: ")
 			Result.append (a_user.user_name)
-			Result.append ("%N* Password: ")
-			Result.append (a_password)
+			Result.append ("%NTo complete your request, please click on the following link to generate a new password ")
+			Result.append (req.absolute_script_url (""))
+			Result.append ("/password-reset?token=")
+			Result.append (a_token)
 			Result.append ("%N%NThank you,%N%N--%NThe eiffel.com Team%N%N------------------------------------------------------------%N")
 		end
 

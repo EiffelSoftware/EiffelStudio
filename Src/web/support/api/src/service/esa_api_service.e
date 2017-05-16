@@ -459,6 +459,15 @@ feature -- Access
 				post_data_provider_execution
 			end
 
+	email_from_reset_password (a_token: READABLE_STRING_32): detachable STRING_32
+			-- Retrieve user email using the generated token `a_token` from the
+			-- reset password action.
+		do
+			log.write_debug (generator+".email_from_reset_password token:" + a_token)
+			Result := login_provider.email_from_reset_password (a_token)
+			post_login_provider_execution
+		end
+
 feature -- Basic Operations
 
 	row_count_problem_report_guest (a_category: INTEGER; a_status: INTEGER; a_username: READABLE_STRING_32): INTEGER
@@ -725,6 +734,20 @@ feature -- Element Settings
 		do
 			login_provider.update_email_from_user_and_token (a_token, a_user)
 			post_login_provider_execution
+		end
+
+
+	change_password (a_user: READABLE_STRING_32; a_email: READABLE_STRING_32; a_token: READABLE_STRING_32)
+			-- Change user passord.
+		do
+			if login_provider.user_from_username (a_user) /= Void then
+				login_provider.change_password (a_user, a_email, a_token)
+				set_successful
+			else
+					-- 	"Could not update user: Username does not exist"
+				log.write_alert (generator + ".change_password Could not update user password: Username not registered" )
+				set_last_error ("Username does not exist", generator + ".change_password")
+			end
 		end
 
 feature -- Access: Auth Session

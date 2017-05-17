@@ -34,6 +34,11 @@ feature -- Tests
 			test_post_with_form_data
 		end
 
+	net_test_post_with_uncommon_form_data
+		do
+			test_post_with_uncommon_form_data
+		end
+
 	net_test_post_with_file
 		do
 			test_post_with_file
@@ -67,6 +72,11 @@ feature -- Tests
 	net_test_post_with_file_using_chunked_transfer_encoding
 		do
 			test_post_with_file_using_chunked_transfer_encoding
+		end
+
+	net_test_get_with_query_parameters
+		do
+			test_get_with_query_parameters
 		end
 
 end

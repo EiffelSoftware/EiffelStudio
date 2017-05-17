@@ -142,16 +142,16 @@ feature -- Element change
 			end
 		end
 
-	add_query_parameter (k: READABLE_STRING_32; v: READABLE_STRING_32)
+	add_query_parameter (k: READABLE_STRING_GENERAL; v: READABLE_STRING_GENERAL)
 			-- Add a query parameter `k=v'.
 		do
-			query_parameters.force (v, k)
+			query_parameters.force (v.to_string_32, k.to_string_32)
 		end
 
-	add_form_parameter (k: READABLE_STRING_32; v: READABLE_STRING_32)
+	add_form_parameter (k: READABLE_STRING_GENERAL; v: READABLE_STRING_GENERAL)
 			-- Add a form parameter `k'= `v'.
 		do
-			form_parameters.force (v, k)
+			form_parameters.force (v.to_string_32, k.to_string_32)
 		end
 
 	set_credentials_required (b: BOOLEAN)
@@ -236,18 +236,62 @@ feature -- Status setting
 			end
 		end
 
+feature -- URL helpers
+
+	append_query_parameters_to_url (a_url: STRING)
+			-- Append parameters `a_parameters' to `a_url'
+		require
+			a_url_attached: a_url /= Void
+		local
+			l_first_param: BOOLEAN
+		do
+			if
+				attached query_parameters as l_query_parameters and then
+				not l_query_parameters.is_empty
+			then
+				if a_url.index_of ('?', 1) > 0 then
+					l_first_param := False
+				elseif a_url.index_of ('&', 1) > 0 then
+					l_first_param := False
+				else
+					l_first_param := True
+				end
+
+				across
+					query_parameters as ic
+				loop
+					if l_first_param then
+						a_url.append_character ('?')
+					else
+						a_url.append_character ('&')
+					end
+					l_first_param := False
+					uri_percent_encoder.append_query_name_encoded_string_to (ic.key, a_url)
+					a_url.append_character ('=')
+					uri_percent_encoder.append_query_value_encoded_string_to (ic.item, a_url)
+				end
+			end
+		end
+
 feature -- Conversion helpers
 
 	query_parameters_to_url_encoded_string: STRING_8
 			-- `query_parameters' as url-encoded string.
 		do
-			Result := parameters_to_url_encoded_string (query_parameters)
+			Result := parameters_to_uri_percent_encoded_string (query_parameters)
+		end
+
+	form_parameters_to_x_www_form_url_encoded_string: STRING_8
+			-- `form_parameters' as x-www-form-urlencoded string.	
+		do
+			Result := parameters_to_x_www_form_urlencoded_string (form_parameters)
 		end
 
 	form_parameters_to_url_encoded_string: STRING_8
 			-- `form_parameters' as url-encoded string.	
+		obsolete "Use form_parameters_to_x_www_form_url_encoded_string [2017-05-31]"
 		do
-			Result := parameters_to_url_encoded_string (form_parameters)
+			Result := form_parameters_to_x_www_form_url_encoded_string
 		end
 
 feature {NONE} -- Implementation
@@ -271,6 +315,52 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	parameters_to_uri_percent_encoded_string (ht: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]): STRING_8
+			-- Build query urlencoded string using parameters from `ht'.
+		do
+			create Result.make (64)
+			across
+				ht as ic
+			loop
+				if not Result.is_empty then
+					Result.append_character ('&')
+				end
+				uri_percent_encoder.append_query_name_encoded_string_to (ic.key, Result)
+				Result.append_character ('=')
+				uri_percent_encoder.append_query_value_encoded_string_to (ic.item, Result)
+			end
+		end
+
+	parameters_to_x_www_form_urlencoded_string (ht: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]): STRING_8
+			-- Build x-www-form-urlencoded string using parameters from `ht'.
+		do
+			create Result.make (64)
+			from
+				ht.start
+			until
+				ht.after
+			loop
+				if not Result.is_empty then
+					Result.append_character ('&')
+				end
+				Result.append (x_www_form_url_encoder.encoded_string (ht.key_for_iteration))
+				Result.append_character ('=')
+				Result.append (x_www_form_url_encoder.encoded_string (ht.item_for_iteration))
+				ht.forth
+			end
+		end
+
+	x_www_form_url_encoder: X_WWW_FORM_URL_ENCODER
+			-- Shared x-www-form-urlencoded encoder.
+		once
+			create Result
+		end
+
+	uri_percent_encoder: URI_PERCENT_ENCODER
+		once
+			create Result
+		end
+
 	url_encoder: URL_ENCODER
 			-- Shared URL encoder.
 		once
@@ -278,7 +368,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

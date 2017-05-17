@@ -41,7 +41,7 @@ feature -- Custom
 		local
 			req: HTTP_CLIENT_REQUEST
 		do
-			create {LIBCURL_HTTP_CLIENT_REQUEST} req.make (base_url + a_path, a_method, Current, ctx)
+			create {LIBCURL_HTTP_CLIENT_REQUEST} req.make (url (a_path, ctx), a_method, Current, ctx)
 			Result := req.response
 		end
 
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			create {LIBCURL_HTTP_CLIENT_REQUEST} req.make (base_url + a_path, a_method, Current, ctx)
+			create {LIBCURL_HTTP_CLIENT_REQUEST} req.make (url (a_path, ctx), a_method, Current, ctx)
 			Result := req.response
 
 			if f /= Void then
@@ -176,7 +176,7 @@ feature {LIBCURL_HTTP_CLIENT_REQUEST} -- Curl implementation
 
 
 ;note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

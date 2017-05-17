@@ -16,6 +16,7 @@
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
 		<cluster name="src" location=".\src\">
+			<cluster name="implementation" location="$|implementation" recursive="true" hidden="true"/>
 			<cluster name="spec_libcurl" location="$|spec\libcurl\" recursive="true"/>
 			<cluster name="default_libcurl" location="$|default\libcurl\"/>
 		</cluster>

@@ -156,7 +156,7 @@ feature -- Access
 					end
 
 					create l_request_uri.make_from_string (l_uri.path)
-					if attached l_uri.query as l_query then
+					if attached l_uri.query as l_query and then not l_query.is_empty then
 						l_request_uri.append_character ('?')
 						l_request_uri.append (l_query)
 					end
@@ -198,7 +198,7 @@ feature -- Access
 									attached headers.item ("Content-Type") as l_ct
 								then
 									if l_ct.starts_with ("application/x-www-form-urlencoded") then
-										l_upload_data := ctx.form_parameters_to_url_encoded_string
+										l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
 									elseif l_ct.starts_with ("multipart/form-data") then
 											-- create form using multipart/form-data encoding
 										l_boundary := new_mime_boundary (l_form_data)
@@ -208,12 +208,12 @@ feature -- Access
 											-- not supported !
 											-- Send as form-urlencoded
 										headers.extend ("application/x-www-form-urlencoded", "Content-Type")
-										l_upload_data := ctx.form_parameters_to_url_encoded_string
+										l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
 									end
 								else
 										-- Send as form-urlencoded
 									headers.extend ("application/x-www-form-urlencoded", "Content-Type")
-									l_upload_data := ctx.form_parameters_to_url_encoded_string
+									l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
 								end
 								headers.extend (l_upload_data.count.out, "Content-Length")
 								if l_is_chunked_transfer_encoding then
@@ -246,7 +246,7 @@ feature -- Access
 						elseif l_upload_filename /= Void then
 							check ctx.has_upload_filename end
 							create l_upload_file.make_with_name (l_upload_filename)
-							if l_upload_file.exists and then l_upload_file.readable then
+							if l_upload_file.exists and then l_upload_file.is_access_readable then
 								if not l_is_chunked_transfer_encoding then
 									headers.extend (l_upload_file.count.out, "Content-Length")
 								end
@@ -495,6 +495,7 @@ feature {NONE} -- Helpers
 			across
 				a_form_parameters as ic
 			loop
+				Result.append ("--")
 				Result.append (a_mime_boundary)
 				Result.append (http_end_of_header_line)
 				Result.append ("Content-Disposition: form-data; name=")
@@ -519,7 +520,7 @@ feature {NONE} -- Helpers
 				else
 					l_mime_type := "application/octet-stream"
 				end
-
+				Result.append ("--")
 				Result.append (a_mime_boundary)
 				Result.append (http_end_of_header_line)
 				Result.append ("Content-Disposition: form-data; name=%"")
@@ -542,6 +543,7 @@ feature {NONE} -- Helpers
 				end
 				Result.append (http_end_of_header_line)
 			end
+			Result.append ("--")
 			Result.append (a_mime_boundary)
 			Result.append ("--") --| end			
 		end
@@ -907,7 +909,7 @@ feature {NONE} -- Helpers
 			create ran.set_seed (i) -- FIXME: use a real random seed.
 			ran.start
 			ran.forth
-			n := (20 * ran.real_item).truncated_to_integer
+			n := (10 * ran.real_item).truncated_to_integer
 			create Result.make_filled ('-', 3 + n)
 			s := "_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 			from

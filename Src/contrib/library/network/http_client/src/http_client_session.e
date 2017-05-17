@@ -60,28 +60,10 @@ feature -- Access
 
 	url (a_path: READABLE_STRING_8; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT): STRING_8
 			-- Url computed from Current and `ctx' data.
-		local
-			s: STRING_8
-			url_encoder: URL_ENCODER
 		do
 			Result := base_url + a_path
 			if ctx /= Void then
-				create s.make_empty
-				create url_encoder
-				across
-					ctx.query_parameters as q
-				loop
-					if not s.is_empty then
-						s.append_character ('&')
-					end
-					s.append (url_encoder.encoded_string (q.key))
-					s.append_character ('=')
-					s.append (url_encoder.encoded_string (q.item))
-				end
-				if not s.is_empty then
-					Result.append_character ('?')
-					Result.append (s)
-				end
+				ctx.append_query_parameters_to_url (Result)
 			end
 		end
 
@@ -420,7 +402,7 @@ feature -- Element change
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -265,6 +265,10 @@ feature -- Tests
 
 			uri.remove_query
 			uri.add_query_parameter ("lst[a]", "b")
+			assert ("query", same_string (uri.query, "lst%%5Ba%%5D=b"))
+
+			uri.remove_query
+			uri.add_encoded_query_parameter ("lst[a]", "b")
 			assert ("query", same_string (uri.query, "lst[a]=b"))
 
 			uri.remove_query
@@ -273,7 +277,7 @@ feature -- Tests
 
 
 			uri.remove_query
-			uri.add_query_parameter ("lst[a][b]", "c")
+			uri.add_encoded_query_parameter ("lst[a][b]", "c")
 			assert ("query", same_string (uri.query, "lst[a][b]=c"))
 		end
 

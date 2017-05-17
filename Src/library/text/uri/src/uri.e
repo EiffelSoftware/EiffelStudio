@@ -814,6 +814,30 @@ feature -- Change: query
 			query := Void
 		end
 
+	add_encoded_query_parameter (a_name: READABLE_STRING_8; a_value: detachable READABLE_STRING_8)
+			-- Add already encoded parameters, used to bypass strict rules.
+			-- Warning: depending on systems, this may be unsafe, and some systems can possibly
+			-- modify characters such as: { } | \ ^ ~ [ ] `
+		local
+			q: detachable STRING
+		do
+			if attached query as l_query then
+				create q.make_from_string (l_query)
+			else
+				create q.make_empty
+			end
+			if not q.is_empty then
+				q.append_character ('&')
+			end
+
+			q.append (a_name)
+			if a_value /= Void then
+				q.append_character ('=')
+				q.append (a_value)
+			end
+			create query.make_from_string (q)
+		end
+
 	add_query_parameter (a_name: READABLE_STRING_GENERAL; a_value: detachable READABLE_STRING_GENERAL)
 			-- Add non percent-encoded parameters
 		local

@@ -116,9 +116,9 @@ feature {NONE} -- URI building helpers
 				then
 					a_result.append_code (c)
 				when
-					58, 64, -- reserved =+ gen-delims: :@
-					33, 36, 38, 39, 40, 41, 42, -- reserved =+ sub-delims: !$&'()*
-					43, 44, 59, 61, -- reserved = sub-delims: +,;=
+					58, 64, -- reserved =+ gen-delims: : @
+					33, 36, 38, 39, 40, 41, 42, -- reserved =+ sub-delims: ! $ & ' ( ) *
+					43, 44, 59, 61, -- reserved = sub-delims: + , ; =
 					37 -- percent encoding: %
 				then
 					append_percent_encoded_character_code_to (c, a_result)
@@ -146,15 +146,14 @@ feature {NONE} -- URI building helpers
 			when 32 then -- Space
 				a_result.append_code (43) -- 43 '+'
 			when
-				58, 64, -- reserved =+ gen-delims: :@
-				33, 36, 40, 41, 42, -- reserved =+ sub-delims: !$()*
-				44, 59, 61 -- reserved = sub-delims: ,;=
+				39, -- '
+				58, 64, -- reserved =+ gen-delims: : @
+				33, 36, 40, 41, 42, -- reserved =+ sub-delims: ! $ ( ) *
+				44, 59, 61 -- reserved = sub-delims: , ; =
 			then
 				a_result.append_code (c)
 			when
 				47, -- slash: /
-				91,93, -- [ ]
-				123,125, -- { }
 				63  -- question mark ?
 			then
 				a_result.append_code (c)

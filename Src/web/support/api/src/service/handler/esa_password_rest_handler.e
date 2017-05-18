@@ -63,7 +63,7 @@ feature -- HTTP Methods
 				if attached {WSF_STRING} req.query_parameter ("token") as l_token then
 					create l_view
 					if api_service.successful then
-						l_view.set_token (l_token.value)
+						l_view.set_token (l_token.url_encoded_value)
 					else
 						l_view.put_error (api_service.last_error_message, "Error")
 					end
@@ -91,7 +91,7 @@ feature -- HTTP Methods
 				   	attached l_password.password as l_new_password and then
 				   	attached api_service.email_from_reset_password (l_token) as l_email then
 				   	api_service.update_password (l_email, l_new_password)
-				   	l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).home_page (req, res)
+				   	l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).home_page_redirect (req, res)
 				else
 					l_password.put_error ("Wrong token or passwords does not match", "error")
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).confirm_change_password (req, res, l_password)

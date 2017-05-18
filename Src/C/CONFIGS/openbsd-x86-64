@@ -161,7 +161,7 @@ add_log='undef'
 if [ -n "$CC" ]; then
 	cc=$CC
 else
-	cc='gcc'
+	cc='egcc'
 fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
@@ -172,7 +172,7 @@ ccldflags=''
 if [ -n "$CPP" ]; then
 	cpp=$CPP
 else
-	cpp='g++'
+	cpp='eg++'
 fi
 if [ -n "$CPPFLAGS" ]; then
 	cppflags=$CPPFLAGS

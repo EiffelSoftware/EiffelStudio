@@ -313,7 +313,7 @@ feature -- Configure Resources Routes
 
 	configure_api_reminder
 		local
-			l_reminder_handler: ESA_REMINDER_HANDLER
+			l_reminder_handler: ESA_PASSWORD_REMINDER_HANDLER
 			l_methods: WSF_REQUEST_METHODS
 		do
 			create l_reminder_handler.make (esa_config)

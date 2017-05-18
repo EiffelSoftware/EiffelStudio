@@ -39,6 +39,11 @@ feature -- Media Variants
 
 feature -- View
 
+	home_page_redirect (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Home redirect
+		deferred
+		end
+
 	home_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Home page representation
 		deferred

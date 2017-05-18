@@ -19,6 +19,12 @@ create
 	make
 
 feature -- View
+	home_page_redirect (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Home redirect
+		do
+			generic_response (req, res)
+		end
+
 
 	home_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Home page representation.

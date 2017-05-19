@@ -1,8 +1,8 @@
 package cypress
 
 project
-	cypress_consumer = "consumer-safe.ecf"
 	apis = "consumer/apis/apis.ecf"
+	cypress_consumer = "consumer.ecf"
 
 note
 	title: Cypress the OAuth consumer library

@@ -1,13 +1,12 @@
 package graph
 
 project
-	graph = "graph-safe.ecf"
 	graph = "graph.ecf"
 
 note
 	description: "[
-				EiffelGraph lets you build graph representation which are either static or dynamic. The later is using some clever physics algorithm to automatically position nodes of the graph depending on the repulsion of each nodes and the stiffness of each edge.
-			]"
+EiffelGraph lets you build graph representation which are either static or dynamic. The later is using some clever physics algorithm to automatically position nodes of the graph depending on the repulsion of each nodes and the stiffness of each edge.
+				]"
 
 	title: EiffelGraph Library
 	tags: vision2,graph,physics,algorithm

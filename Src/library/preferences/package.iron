@@ -1,18 +1,16 @@
 package preferences
 
 project
-	preferences_reg = "preferences_reg-safe.ecf"
 	preferences_reg = "preferences_reg.ecf"
-	preferences_xml = "preferences_xml-safe.ecf"
 	preferences_xml = "preferences_xml.ecf"
 
 note
 	description: "[
-			Preferences library 
-				- support XML
-				- support registry keys (Windows)
-				- provide a set of vision2 widget to edit the preferences from a vision2 app.
-		]"
+Preferences library
+	- support XML
+	- support registry keys (Windows)
+	- provide a set of vision2 widget to edit the preferences from a vision2 app.
+				]"
 
 	title: EiffelPreferences
 	tags: preferences,console,application,vision2,widget

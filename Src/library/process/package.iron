@@ -1,15 +1,18 @@
 package process
 
+setup
+	compile_library = classic/unix/Clib
+
 project
-	process = "process-safe.ecf"
 	process = "process.ecf"
+	base_process = "base/base_process.ecf"
 
 note
 	title: EiffelProcess
 	description: "[
-			Process library: Starting/Waiting for process as well as reading/writing to/from standard inputs.
-			Note: it requires EiffelThread.
-		]"
+Process library: Starting/Waiting for process as well as reading/writing to/from standard inputs.
+				]"
+
 	tags: process,runtime
 	copyright: 1984-2016 Eiffel Software and others
 	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)

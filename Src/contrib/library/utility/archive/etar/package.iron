@@ -1,13 +1,11 @@
 package etar
 
 project
-	tar = "tar-safe.ecf"
 	tar = "tar.ecf"
 
 note
 	title: TAR archive library
-	description: "[
-		]"
+	description: TAR archive library
 	tags: archive,tar,file
 	license: Eiffel Forum License v2
 	copyright: Nicolas Truessel, Jocelyn Fiat, Eiffel Software and others.

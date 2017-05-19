@@ -4,64 +4,48 @@ setup
 	compile_library = libfcgi/Clib
 
 project
-	ewsgi = "ewsgi/ewsgi-safe.ecf"
 	ewsgi = "ewsgi/ewsgi.ecf"
-	ewsgi_spec = "ewsgi/ewsgi_spec-safe.ecf"
 	ewsgi_spec = "ewsgi/ewsgi_spec.ecf"
-	connector_cgi = "ewsgi/connectors/cgi/cgi-safe.ecf"
 	connector_cgi = "ewsgi/connectors/cgi/cgi.ecf"
-	connector_libfcgi = "ewsgi/connectors/libfcgi/libfcgi-safe.ecf"
 	connector_libfcgi = "ewsgi/connectors/libfcgi/libfcgi.ecf"
-	connector_standalone = "ewsgi/connectors/standalone/standalone-safe.ecf"
 	connector_standalone = "ewsgi/connectors/standalone/standalone.ecf"
-	httpd = "ewsgi/connectors/standalone/lib/httpd/httpd-safe.ecf"
-	httpd = "ewsgi/connectors/standalone/lib/httpd/httpd.ecf"
-	http_network = "ewsgi/connectors/standalone/lib/httpd/http_network-safe.ecf"
-	http_network = "ewsgi/connectors/standalone/lib/httpd/http_network.ecf"
-	httpd = "ewsgi/connectors/standalone/lib/httpd/httpd.ecf"
-	encoder = "text/encoder/encoder-safe.ecf"
 	encoder = "text/encoder/encoder.ecf"
-	wsf = "wsf/wsf-safe.ecf"
 	wsf = "wsf/wsf.ecf"
-	wsf_extension = "wsf/wsf_extension-safe.ecf"
 	wsf_extension = "wsf/wsf_extension.ecf"
-	wsf_policy_driven = "wsf/wsf_policy_driven-safe.ecf"
 	wsf_policy_driven = "wsf/wsf_policy_driven.ecf"
-	wsf_router_context = "wsf/wsf_router_context-safe.ecf"
 	wsf_router_context = "wsf/wsf_router_context.ecf"
-	wsf_session = "wsf/wsf_session-safe.ecf"
 	wsf_session = "wsf/wsf_session.ecf"
-	wsf_cgi = "wsf/connector/cgi-safe.ecf"
 	wsf_cgi = "wsf/connector/cgi.ecf"
-	wsf_libfcgi = "wsf/connector/libfcgi-safe.ecf"
 	wsf_libfcgi = "wsf/connector/libfcgi.ecf"
-	wsf_openshift = "wsf/connector/openshift-safe.ecf"
-	wsf_standalone = "wsf/connector/standalone-safe.ecf"
 	wsf_standalone = "wsf/connector/standalone.ecf"
-	default_cgi = "wsf/default/cgi-safe.ecf"
 	default_cgi = "wsf/default/cgi.ecf"
-	default_libfcgi = "wsf/default/libfcgi-safe.ecf"
 	default_libfcgi = "wsf/default/libfcgi.ecf"
-	default_openshift = "wsf/default/openshift-safe.ecf"
-	default_standalone = "wsf/default/standalone-safe.ecf"
 	default_standalone = "wsf/default/standalone.ecf"
-	wsf_html = "wsf_html/wsf_html-safe.ecf"
 	wsf_html = "wsf_html/wsf_html.ecf"
-	wsf_proxy = "wsf_proxy/wsf_proxy-safe.ecf"
 	wsf_proxy = "wsf_proxy/wsf_proxy.ecf"
+	connector_nino = "ewsgi/connectors/nino/nino.ecf"
+	connector_null = "ewsgi/connectors/null/null.ecf"
+	httpd = "httpd/httpd.ecf"
+	libfcgi = "libfcgi/libfcgi.ecf"
+	wsf_nino = "wsf/connector/nino.ecf"
+	wsf_openshift = "wsf/connector/openshift.ecf"
+	wsf_standalone_websocket = "wsf/connector/standalone_websocket.ecf"
+	default_nino = "wsf/default/nino.ecf"
+	default_openshift = "wsf/default/openshift.ecf"
 
 note
 	title: EiffelWeb framework
 	description: "[
-			EiffelWeb framework.
-			Include:
-				- wsf and ewsgi: core of the Eiffel Web Framework, used to build web server application.
-				- EWSGI connectors and their WSF integrations.
-				- Various wsf extensions (extension, session, policy driven, ..)
-				- text encoder (html, percent encoding, ...)
-				- wsf html: to generate and handle html widgets such as web forms.
-				- wsf proxy: to add reverse proxy behavior.
-			]"
+EiffelWeb framework.
+Include:
+	- wsf and ewsgi: core of the Eiffel Web Framework, used to build web server application.
+	- EWSGI connectors and their WSF integrations.
+	- Various wsf extensions (extension, session, policy driven, ..)
+	- text encoder (html, percent encoding, ...)
+	- wsf html: to generate and handle html widgets such as web forms.
+	- wsf proxy: to add reverse proxy behavior.
+				]"
+
 	collection: EWF
 	tags: ewf,web,server,httpd,request,connector,policy,session,widget,form,proxy,network
 	copyright: 2011-2016, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others

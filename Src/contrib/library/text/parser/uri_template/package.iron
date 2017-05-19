@@ -1,17 +1,17 @@
 package uri_template
 
 project
-	uri_template = "uri_template-safe.ecf"
 	uri_template = "uri_template.ecf"
 
 note
 	title: URI Template
 	description: "[
-			Implement URI Template as described at http://tools.ietf.org/rfc/rfc6570.txt
+Implement URI Template as described at http://tools.ietf.org/rfc/rfc6570.txt
 
-			Support for URI template string expansion
-			But also partial URI Template matching
-		]"
+Support for URI template string expansion
+But also partial URI Template matching
+				]"
+
 	collection: EWF
 	tags: uri template,router,generator,url
 	copyright: 2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others
@@ -21,4 +21,3 @@ note
 	link[doc]: "Documentation" https://github.com/EiffelWebFramework/EWF/tree/master/library/text/parser/uri_template/README.md
 
 end
-

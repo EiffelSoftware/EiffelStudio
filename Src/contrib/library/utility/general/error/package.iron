@@ -1,21 +1,20 @@
 package error
 
 project
-	error = "error-safe.ecf"
 	error = "error.ecf"
 
 note
 	title: Error framework
 	description: "[
-			Errors and associated handler, to manage errors and also provides a way to synchronize one or many error handlers. 
-			This is convenient to propagate error from a layer to another without adding unwanted dependencies.
-		]"
+Errors and associated handler, to manage errors and also provides a way to synchronize one or many error handlers.
+This is convenient to propagate error from a layer to another without adding unwanted dependencies.
+				]"
+
 	collection: EWF
 	tags: error,framework
 	license: Eiffel Forum License v2
 	copyright: Jocelyn Fiat, Eiffel Software and others.
 	link[license]: http://www.eiffel.com/licensing/forum.txt
-	link[source]: "github" https://github.com/EiffelWebFramework/EWF/tree/master/library/utility/general/error 
+	link[source]: "github" https://github.com/EiffelWebFramework/EWF/tree/master/library/utility/general/error
 
 end
-

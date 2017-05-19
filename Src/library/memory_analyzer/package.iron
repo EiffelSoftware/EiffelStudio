@@ -1,13 +1,13 @@
 package memory_analyzer
 
 project
-	memory_analyzer = "memory_analyzer-safe.ecf"
 	memory_analyzer = "memory_analyzer.ecf"
 
 note
 	description: "[
-		Memory analyzer library: Track down your memory usage within your application.
+Memory analyzer library: Track down your memory usage within your application.
 				]"
+
 	title: Memory Analyzer Library
 	tags: memory,analyzer,ide
 	copyright: 1984-2016 Eiffel Software and others

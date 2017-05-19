@@ -1,7 +1,6 @@
 package base
 
 project
-	base_safe = "base-safe.ecf"
 	base = "base.ecf"
 
 note

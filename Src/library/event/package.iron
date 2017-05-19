@@ -1,7 +1,6 @@
 package event
 
 project
-	event = "event-safe.ecf"
 	event = "event.ecf"
 
 note

@@ -2,14 +2,14 @@ package json
 
 project
 	json = "library/json.ecf"
-	json = "library/json-safe.ecf"
 	json_gobo = "library/json_gobo_extension.ecf"
 
 note
 	title: Eiffel JSON
 	description: "[
-			Eiffel JSON parser and visitors.
-		]"
+Eiffel JSON parser and visitors.
+				]"
+
 	tags: json,parser,text
 	license: MIT
 	copyright: Copyright (c)  2010-2014 Javier Velilla, Jocelyn Fiat and others,

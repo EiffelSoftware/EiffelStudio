@@ -1,4 +1,4 @@
-package cURL
+package curl
 
 setup
 	compile_library = Clib

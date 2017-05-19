@@ -1,4 +1,4 @@
-package xml
+package obsolete_xml
 
 project
 	xml_parser = "parser/xml_parser.ecf"

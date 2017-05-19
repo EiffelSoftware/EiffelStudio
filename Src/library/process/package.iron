@@ -1,16 +1,13 @@
 package process
 
-setup
-	compile_library = classic/unix/Clib
-
 project
 	process = "process.ecf"
-	base_process = "base/base_process.ecf"
 
 note
 	title: EiffelProcess
 	description: "[
 Process library: Starting/Waiting for process as well as reading/writing to/from standard inputs.
+Note: it requires EiffelThread.
 				]"
 
 	tags: process,runtime

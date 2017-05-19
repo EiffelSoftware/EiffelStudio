@@ -180,12 +180,8 @@ feature -- Visitor processing
 			a_source: XML_TREE_TO_EVENTS
 		do
 			create a_source.make (a_filter)
-			if attached xml_declaration as decl then
-				decl.process (a_source)
-			end
 			process (a_source)
 		end
-
 
 invariant
 	root_element_not_void: root_element /= Void

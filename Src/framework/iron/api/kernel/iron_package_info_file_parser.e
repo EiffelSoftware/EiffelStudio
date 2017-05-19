@@ -594,7 +594,10 @@ feature {NONE} -- Parsing
 						s.append (next_text_until_eol)
 						s.left_adjust
 						s.right_adjust
-						if s.count >= 2 and s[1] = '"' and s[s.count] = '"' then
+						if
+							(s.count >= 2 and s[1] = '"' and s[s.count] = '"') and then
+							s.index_of ('"', 2) = s.count -- No '"' inside, ex: ` "license" "MIT" ` .
+						then
 							s.remove_head (1)
 							s.remove_tail (1)
 						end
@@ -909,7 +912,7 @@ feature {NONE} -- Implementation
 invariant
 	buffer_index <= buffer.count + 1
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

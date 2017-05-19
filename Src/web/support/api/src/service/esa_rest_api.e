@@ -388,7 +388,7 @@ feature -- Configure Resources Routes
 
 	configure_api_password_reset
 		local
-			l_password_reset_handler: ESA_PASSWORD_REST_HANDLER
+			l_password_reset_handler: ESA_PASSWORD_RESET_HANDLER
 			l_methods: WSF_REQUEST_METHODS
 		do
 			create l_password_reset_handler.make (esa_config)

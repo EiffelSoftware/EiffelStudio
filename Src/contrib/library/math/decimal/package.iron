@@ -2,7 +2,6 @@ package decimal
 
 project
 	decimal = "decimal/decimal.ecf"
-	decimal = "decimal/decimal-safe.ecf"
 
 note
 	title: Decimal library
@@ -10,8 +9,8 @@ note
 	tags: math,decimal
 	license: MIT license
 	copyright: "[
-			Copyright (c) 2004, Paul G. Crismer and others.
-			Copyright (c) 2011, SEL, York University, Toronto and others.
-		]"
+Copyright (c) 2004, Paul G. Crismer and others.
+Copyright (c) 2011, SEL, York University, Toronto and others.
+				]"
 
 end

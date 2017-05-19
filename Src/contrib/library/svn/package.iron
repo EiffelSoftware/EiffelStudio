@@ -1,7 +1,6 @@
 package svn
 
 project
-	svn = "svn-safe.ecf"
 	svn = "svn.ecf"
 
 note

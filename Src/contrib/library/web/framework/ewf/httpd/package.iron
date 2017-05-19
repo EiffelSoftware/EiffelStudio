@@ -1,14 +1,14 @@
 package httpd
 
 project
-	httpd = "httpd-safe.ecf"
 	httpd = "httpd.ecf"
 
 note
 	title: HTTP server
 	description: "[
-			Simple HTTP listener and handler, that can be extended easily.
-		]"
+Simple HTTP listener and handler, that can be extended easily.
+				]"
+
 	tags: http,httpd,server,web
 	collection: EWF
 	copyright: 2011-2016, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others

@@ -1,7 +1,6 @@
 package gobo_extension
 
 project
-	gobo_extension = "gobo_extension-safe.ecf"
 	gobo_extension = "gobo_extension.ecf"
 
 note

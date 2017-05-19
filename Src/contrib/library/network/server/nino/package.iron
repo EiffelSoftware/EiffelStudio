@@ -1,7 +1,6 @@
 package nino
 
 project
-	nino = "nino-safe.ecf"
 	nino = "nino.ecf"
 
 note

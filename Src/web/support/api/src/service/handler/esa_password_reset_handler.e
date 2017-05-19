@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 class
-	ESA_PASSWORD_REST_HANDLER
+	ESA_PASSWORD_RESET_HANDLER
 
 inherit
 
@@ -56,7 +56,6 @@ feature -- HTTP Methods
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_view: ESA_PASSWORD_RESET_VIEW
-			l_tuple: TUPLE [age:INTEGER; email: detachable STRING_32]
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then

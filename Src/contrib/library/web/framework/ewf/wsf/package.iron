@@ -12,7 +12,6 @@ project
 	default_libfcgi = "default/libfcgi.ecf"
 	wsf_standalone = "connector/standalone.ecf"
 	default_standalone = "default/standalone.ecf"
-	wsf_all = "connector/all.ecf"
 	wsf_nino = "connector/nino.ecf"
 	wsf_openshift = "connector/openshift.ecf"
 	wsf_standalone_websocket = "connector/standalone_websocket.ecf"

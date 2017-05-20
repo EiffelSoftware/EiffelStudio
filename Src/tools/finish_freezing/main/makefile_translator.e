@@ -1,6 +1,7 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class
 	MAKEFILE_TRANSLATOR
 
@@ -12,7 +13,7 @@ inherit
 			{NONE} all
 		end
 
-	PROCESS_FACTORY
+	BASE_PROCESS_FACTORY
 		export
 			{NONE} all
 		end
@@ -169,7 +170,7 @@ feature -- Execution
 		local
 			command: STRING
 			l_make_flags: STRING_32
-			l_process: PROCESS
+			l_process: BASE_PROCESS
 			l_success: BOOLEAN
 			l_flags: detachable LIST [STRING_32]
 			l_file: RAW_FILE
@@ -1630,7 +1631,7 @@ feature {NONE} -- Implementation
 				io.put_string("%Tget_replacement%N")
 			end
 
-			if ({PLATFORM_CONSTANTS}.is_64_bits and force_32bit) and then word.is_case_insensitive_equal (once "ISE_PLATFORM") then
+			if ({PLATFORM}.is_64_bits and force_32bit) and then word.is_case_insensitive_equal (once "ISE_PLATFORM") then
 					-- Replace ISE_PLAFORM to 32bit builds on x64 platforms
 				Result := once "windows"
 			else

@@ -1,5 +1,5 @@
-note
-	description: "Set based on implementation of HASH_TABLE for fast lookup"
+﻿note
+	description: "Set based on implementation of HASH_TABLE for fast lookup."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -59,12 +59,10 @@ feature {NONE} -- Creation
 		require
 			n_non_negative: n >= 0
 		local
-			clever: PRIMES
 			default_value: detachable H
 		do
 			key_tester := a_key_tester
-			create clever
-			capacity := clever.higher_prime ((3 * n) // 2)
+			capacity := (create {PRIMES}).higher_prime ((3 * n) // 2)
 			if capacity < 5 then
 				capacity := 5
 			end
@@ -85,7 +83,7 @@ feature -- Access and queries
 
 	item (key: H): detachable H
 			-- Item associated with `key', if present
-			-- otherwise default value of type `G'
+			-- otherwise default value of type `G'.
 		require
 			valid_key: valid_key (key)
 		do
@@ -97,18 +95,18 @@ feature -- Access and queries
 
 	has (key: H): BOOLEAN
 			-- Is `access_key' currently used?
-			-- (Shallow equality)
+			-- (Shallow equality.)
 		require
 			valid_key: valid_key (key)
 		do
 			if count > 0 then
 				internal_search (key)
-				Result := (control = Found_constant)
+				Result := control = Found_constant
 			end
 		end
 
 	key_at (n: INTEGER): detachable H
-			-- Key corresponding to entry `n'
+			-- Key corresponding to entry `n'.
 		do
 			if n >= 0 and n < content.count then
 				Result := content.item (n)
@@ -118,11 +116,11 @@ feature -- Access and queries
 	is_empty: BOOLEAN
 			-- Is structure empty?
 		do
-			Result := (count = 0)
+			Result := count = 0
 		end
 
 	search (key: H)
-			-- Search for item of key `key'
+			-- Search for item of key `key'.
 			-- If found, set `found' to True, and set
 			-- `found_item' to item associated with `key'.
 		local
@@ -148,12 +146,12 @@ feature -- Access and queries
 
 	found_item: detachable H
 			-- Item found during a search with `has' to reduce the number of
-			-- search for clients
+			-- search for clients.
 
 	found: BOOLEAN
 			-- Did last operation find the item sought?
 		do
-			Result := (control = Found_constant)
+			Result := control = Found_constant
 		end
 
 	key_tester: detachable EQUALITY_TESTER [H]
@@ -301,8 +299,8 @@ feature -- Insertion, deletion
 		local
 			default_value: detachable H
 		do
-			content.clear_all
-			deleted_marks.clear_all
+			content.fill_with (default_value, {SPECIAL [detachable H]}.lower, content.upper)
+			deleted_marks.fill_with (False, {SPECIAL [BOOLEAN]}.lower, deleted_marks.upper)
 			count := 0
 			control := 0
 			position := 0
@@ -310,11 +308,11 @@ feature -- Insertion, deletion
 		end
 
 	merge (other: SEARCH_TABLE [H])
-			-- Merge two search_tables
+			-- Merge two search_tables.
 		require
 			other_not_void: other /= Void
 		local
-			local_other, local_current, new_content: like content
+			local_other, local_current: like content
 			new: like Current
 			i, my_size, other_size: INTEGER
 			current_key: detachable H
@@ -324,10 +322,9 @@ feature -- Insertion, deletion
 				local_current := content
 				other_size := local_other.count
 				my_size := local_current.count
-				if ((my_size + other_size) * Size_threshold <= 100*count) then
+				if (my_size + other_size) * Size_threshold <= 100*count then
 					from
 						new := empty_duplicate (3 * (capacity + other_size) // 2)
-						new_content := new.content
 					until
 						i >= my_size
 					loop
@@ -367,7 +364,7 @@ feature -- Resizing
 			other: like Current
 			local_content: like content
 		do
-			if (content.count * Size_threshold <= 100 * n) then
+			if content.count * Size_threshold <= 100 * n then
 				from
 					other := empty_duplicate (n)
 					local_content := content
@@ -389,7 +386,7 @@ feature -- Resizing
 feature -- Number of elements
 
 	count: INTEGER
-			-- Number of items actually inserted in `Current'
+			-- Number of items actually inserted in `Current'.
 
 feature -- Duplication
 
@@ -404,7 +401,7 @@ feature -- Duplication
 feature {NONE} -- Duplication
 
 	empty_duplicate (n: INTEGER): like Current
-			-- Create an empty copy of Current that can accommodate `n' items
+			-- Create an empty copy of Current that can accommodate `n' items.
 		require
 			n_non_negative: n >= 0
 		do
@@ -417,8 +414,8 @@ feature {NONE} -- Duplication
 feature -- Conversion
 
 	linear_representation: ARRAYED_LIST [H]
-			-- Representation as a linear structure
-			-- (order is same as original order of insertion)
+			-- Representation as a linear structure.
+			-- (Order is same as original order of insertion.)
 		local
 			i, table_size: INTEGER
 			l_content: like content
@@ -443,7 +440,7 @@ feature -- Conversion
 feature {NONE} -- Internal features
 
 	position: INTEGER
-			-- Hash table cursor
+			-- Hash table cursor.
 
 	internal_search (search_key: H)
 			-- Search for item of `search_key'.
@@ -515,13 +512,13 @@ feature {NONE} -- Internal features
 		end
 
 	Size_threshold: INTEGER = 80
-			-- Filling percentage over which some resizing is done
+			-- Filling percentage over which some resizing is done.
 
 	soon_full: BOOLEAN
 			-- Is `Current' close to being filled?
 			-- (If so, resizing is needed to avoid performance degradation.)
 		do
-			Result := (content.count * Size_threshold <= 100 * count)
+			Result := content.count * Size_threshold <= 100 * count
 		end
 
 feature -- Assertion check
@@ -552,22 +549,22 @@ feature {NONE} -- Status
 			-- Possible control codes are the following:
 
 	Inserted: INTEGER = 1
-			-- Insertion successful
+			-- Insertion successful.
 
 	Found_constant: INTEGER = 2
-			-- Key found
+			-- Key found.
 
 	Changed: INTEGER = 3
-			-- Change successful
+			-- Change successful.
 
 	Removed: INTEGER = 4
-			-- Remove successful
+			-- Remove successful.
 
 	Conflict: INTEGER = 5
-			-- Could not insert an already existing key
+			-- Could not insert an already existing key.
 
 	Not_found_constant: INTEGER = 6
-			-- Key not found
+			-- Key not found.
 
 	is_map: BOOLEAN
 			-- Is current comparing keys using `='.
@@ -575,18 +572,18 @@ feature {NONE} -- Status
 feature {SEARCH_TABLE, SEARCH_TABLE_ITERATION_CURSOR} -- Implementation: Access
 
 	capacity: INTEGER
-			-- Size of the table
+			-- Size of the table.
 
 	deleted_marks: SPECIAL [BOOLEAN]
-			-- Deleted marks
+			-- Deleted marks.
 
 	content: SPECIAL [detachable H]
-			-- Content
+			-- Content.
 
 feature -- Iteration
 
 	start
-			-- Iteration initialization
+			-- Iteration initialization.
 		do
 			iteration_position := -1
 			forth
@@ -602,7 +599,7 @@ feature -- Iteration
 		end
 
 	next_iteration_position (a_position: like iteration_position): like iteration_position
-			-- Given an iteration position `a_position', compute the next one
+			-- Given an iteration position `a_position', compute the next one.
 		local
 			stop: BOOLEAN
 			l_content: like content
@@ -621,13 +618,13 @@ feature -- Iteration
 		end
 
 	after, off: BOOLEAN
-			-- Is the iteration cursor off ?
+			-- Is the iteration cursor off?
 		do
 			Result := iteration_position > capacity - 1
 		end
 
 	item_for_iteration, key_for_iteration: H
-			-- Item at cursor position
+			-- Item at cursor position.
 		require
 			not_off: not after
 		do
@@ -637,7 +634,7 @@ feature -- Iteration
 		end
 
 	cursor: INTEGER
-			-- Cursor
+			-- Cursor.
 		do
 			Result := iteration_position
 		end
@@ -645,13 +642,13 @@ feature -- Iteration
 feature {NONE} -- Iteration cursor
 
 	iteration_position: INTEGER
-			-- Iteration position value
+			-- Iteration position value.
 
 invariant
 	count_big_enough: 0 <= count
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

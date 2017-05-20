@@ -1,6 +1,5 @@
-
 test_name	config-process-group-crash
-test_description After initial compilation, adding an invalid library to the configuration file and then resuming when a VD00 error is reported crashes the compiler
+test_description After initial compilation, adding an invalid library to the configuration file and then resuming when a VD00 error is reported crashes the compiler.
 
 define		BAD_LIBRARY ""
 copy_sub 	Ace $TEST Ace

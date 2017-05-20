@@ -1,10 +1,10 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	description: "[
 			List of attribute sorted by category or skeleton of a class type (instance
 			 of CLASS_TYPE).
-			]"
+		]"
 
 class SKELETON
 
@@ -12,10 +12,10 @@ inherit
 	SHARED_LEVEL
 		export
 			{ANY} all
-		end;
-	SHARED_WORKBENCH;
-	SHARED_TABLE;
-	SHARED_DECLARATIONS;
+		end
+	SHARED_WORKBENCH
+	SHARED_TABLE
+	SHARED_DECLARATIONS
 	COMPILER_EXPORTER
 	SHARED_GENERATION
 	SHARED_BYTE_CONTEXT
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation: Access
 feature -- Status Report
 
 	has_references: BOOLEAN
-			-- Does current have some references (i.e. true reference,
+			-- Does current have some direct references? (i.e. true reference,
 			-- fake references for referencing expanded objects)
 		do
 			Result := (nb_reference + nb_expanded) > 0
@@ -165,7 +165,7 @@ feature -- Comparison
 						expanded_pos := i
 					end
 					i := i + 1
-				end;
+				end
 					-- Second pass for expanded attributes only. This is where we check that the
 					-- skeleton for the expanded type did not change. And we do it recursively
 					-- until we do not find anymore expanded attributes. Fixes eweasel test melt015
@@ -219,8 +219,8 @@ feature -- Comparison
 						i := i + 1
 					end
 				end
-			end;
-		end;
+			end
+		end
 
 feature -- Element change
 
@@ -245,7 +245,7 @@ feature -- Cursor movement
 			-- ensure that `exhausted' will be true.
 		do
 			position := position + 1
-		end;
+		end
 
 	go_to (pos: INTEGER)
 			-- Move cursor until `pos'
@@ -283,7 +283,7 @@ feature -- Status
 		do
 			search_feature_id (feature_id);
 			Result := not (position = count);
-		end;
+		end
 
 	search_feature_id (feature_id: INTEGER)
 			-- Search an attribute description fo feature id `feature_id'
@@ -318,7 +318,7 @@ feature -- Status
 			-- Numer of reference attributes
 		do
 			Result := nb_attributes.item (reference_level)
-		end;
+		end
 
 	nb_character: INTEGER
 			-- Number of character and boolean attributes
@@ -330,7 +330,7 @@ feature -- Status
 				l_nb_attributes.item (boolean_level) +
 				l_nb_attributes.item (integer_8_level) +
 				l_nb_attributes.item (natural_8_level)
-		end;
+		end
 
 	nb_integer_16: INTEGER
 			-- Number of integer 16 bits attributes
@@ -351,19 +351,19 @@ feature -- Status
 			Result := l_nb_attributes.item (integer_32_level) +
 				l_nb_attributes.item (natural_32_level) +
 				l_nb_attributes.item (wide_char_level)
-		end;
+		end
 
 	nb_real_32: INTEGER
 			-- Number of real attributes
 		do
 			Result := nb_attributes.item (real_32_level)
-		end;
+		end
 
 	nb_pointer: INTEGER
 			-- Number of pointer attributes
 		do
 			Result := nb_attributes.item (pointer_level)
-		end;
+		end
 
 	nb_integer_64: INTEGER
 			-- Number of integer 64 bits attributes
@@ -379,19 +379,19 @@ feature -- Status
 			-- Number of real 64 bits attributes
 		do
 			Result := nb_attributes.item (real_64_level)
-		end;
+		end
 
 	nb_expanded: INTEGER
 			-- Number of expanded attributes
 		do
 			Result := nb_attributes.item (expanded_level)
-		end;
+		end
 
 	go_expanded
 			-- Go to the expanded
 		do
 			goto (Expanded_level);
-		end;
+		end
 
 	goto (level: INTEGER)
 			-- Position the cursor to the first reference of level `level'.
@@ -409,9 +409,9 @@ feature -- Status
 				i > nb or else l_area.item (i).level >= level
 			loop
 				i := i + 1
-			end;
+			end
 			position := i
-		end;
+		end
 
 	generate_size (buffer: GENERATION_BUFFER; as_macro: BOOLEAN)
 			-- Generate the size of current skeleton in `buffer'.
@@ -481,7 +481,7 @@ feature -- Status
 			-- Generate size of the skeleton in workbench mode.
 		do
 			buffer.put_integer (workbench_size);
-		end;
+		end
 
 	workbench_size: INTEGER
 			-- Size of the current skeleton in workbench mode
@@ -532,7 +532,7 @@ feature -- Status
 		do
 			search_feature_id (feature_id);
 			generate (buffer, is_in_attr_table, as_macro);
-		end;
+		end
 
 	generate_i_th_reference_offset (buffer: GENERATION_BUFFER; i: INTEGER; as_macro: BOOLEAN)
 			-- Generate offset for reference attribute at position `i' in `buffer'.
@@ -551,7 +551,7 @@ feature -- Status
 				l_def_buffer.put_character (')');
 				insert_in_buffer (buffer, l_def_buffer, as_macro)
 			end
-		end;
+		end
 
 	generate_workbench_offset (buffer: GENERATION_BUFFER; feature_id: INTEGER)
 			-- Generate offset for attribute of feature id `feature_id'
@@ -562,7 +562,7 @@ feature -- Status
 		do
 			search_feature_id (feature_id);
 			buffer.put_integer (workbench_offset);
-		end;
+		end
 
 	generate (buffer: GENERATION_BUFFER; is_in_attr_table, as_macro: BOOLEAN)
 			-- Generate offset of the attribute at the current position
@@ -771,7 +771,7 @@ feature -- Status
 
 				-- Restore previous position
 			position := index
-		end;
+		end
 
 	workbench_offset: INTEGER
 			-- Offset of the attribute at the current position in
@@ -891,8 +891,8 @@ feature -- Skeleton byte code
 			loop
 				ba.append_string (current_area.item (i).attribute_name);
 				i := i + 1;
-			end;
-		end;
+			end
+		end
 
 	make_rout_id_array (ba: BYTE_ARRAY)
 			-- Generate routine id array in `ba'.
@@ -911,8 +911,8 @@ feature -- Skeleton byte code
 			loop
 				ba.append_integer_32 (current_area.item (i).rout_id);
 				i := i + 1;
-			end;
-		end;
+			end
+		end
 
 	make_type_byte_code (ba: BYTE_ARRAY)
 			-- Generate meta-type array byte code
@@ -931,8 +931,8 @@ feature -- Skeleton byte code
 			loop
 				ba.append_natural_32 (current_area.item (i).sk_value)
 				i := i + 1
-			end;
-		end;
+			end
+		end
 
 	make_flags_byte_code (ba: BYTE_ARRAY)
 			-- Generate flags array byte code
@@ -955,8 +955,8 @@ feature -- Skeleton byte code
 					ba.append_natural_16 (0)
 				end
 				i := i + 1
-			end;
-		end;
+			end
+		end
 
 	make_gen_type_byte_code (ba: BYTE_ARRAY)
 			-- Generate full type array byte code
@@ -976,14 +976,14 @@ feature -- Skeleton byte code
 				current_area.item (i).type_i.make_type_byte_code (ba, False, class_type.type)
 				ba.append_short_integer (- 1)
 				i := i + 1
-			end;
-		end;
+			end
+		end
 
 	make_size_byte_code (ba: BYTE_ARRAY)
 			-- Generate datas for evaluation of the skeleton size
 		do
 			ba.append_integer (workbench_size);
-		end;
+		end
 
 	generate_name_array
 			-- Generate static C array of attributes names in the
@@ -1074,9 +1074,9 @@ feature -- Skeleton byte code
 				current_area.item (i).generate_code (buffer);
 				buffer.put_string (",%N");
 				i := i + 1;
-			end;
+			end
 			buffer.put_string ("};%N%N");
-		end;
+		end
 
 	generate_generic_type_arrays
 			-- Generate static C arrays of attributes full type codes in the
@@ -1100,7 +1100,7 @@ feature -- Skeleton byte code
 			loop
 				current_area.item (i).generate_generic_code (buffer, Context.final_mode, class_type, i)
 				i := i + 1;
-			end;
+			end
 			buffer.put_new_line;
 			buffer.put_string ("static const EIF_TYPE_INDEX *gtypes")
 			buffer.put_integer (class_type.type_id)
@@ -1119,9 +1119,9 @@ feature -- Skeleton byte code
 				buffer.put_integer (i)
 				buffer.put_string (",%N")
 				i := i + 1;
-			end;
+			end
 			buffer.put_string ("};%N%N");
-		end;
+		end
 
 	generate_offset_array
 			-- Generate static C array of attributes offset table pointers.
@@ -1149,9 +1149,9 @@ feature -- Skeleton byte code
 				generate (buffer, True, False)
 				buffer.put_string (",%N");
 				i := i + 1;
-			end;
+			end
 			buffer.put_string ("};%N%N");
-		end;
+		end
 
 	generate_rout_id_array
 			-- Generate static C array of attributes routine ids
@@ -1175,9 +1175,9 @@ feature -- Skeleton byte code
 				buffer.put_integer (current_area.item (i).rout_id);
 				buffer.put_string (",%N");
 				i := i + 1;
-			end;
+			end
 			buffer.put_string ("};%N%N");
-		end;
+		end
 
 feature {SKELETON} -- Convenience
 
@@ -1302,14 +1302,14 @@ feature {NONE} -- Externals
 			-- Offset of first character after `nb_ref' references
 		external
 			"C use %"eif_offset.h%""
-		end;
+		end
 
 	eif_i16off(nb_ref, nb_char: INTEGER): INTEGER
 			-- Offset of first integer 16 bits after `nb_ref' references,
 			-- and `nb_char' characters
 		external
 			"C use %"eif_offset.h%""
-		end;
+		end
 
 	eif_i32off(nb_ref, nb_char, nb_int16: INTEGER): INTEGER
 			-- Offset of first integer 32 bits after `nb_ref' references,
@@ -1318,14 +1318,14 @@ feature {NONE} -- Externals
 			"C use %"eif_offset.h%""
 		alias
 			"eif_lngoff"
-		end;
+		end
 
 	eif_r32off (nb_ref, nb_char, nb_int16, nb_int32: INTEGER): INTEGER
 			-- Offset of first real 32 bits after `nb_ref' references,
 			-- `nb_char' characters, `nb_int16' integers and `nb_int32' integers
 		external
 			"C use %"eif_offset.h%""
-		end;
+		end
 
 	eif_ptroff (nb_ref, nb_char, nb_int16, nb_int32, nb_r32: INTEGER): INTEGER
 			-- Offset of first pointer after `nb_ref' references,
@@ -1333,7 +1333,7 @@ feature {NONE} -- Externals
 			-- and `nb_r32' reals
 		external
 			"C use %"eif_offset.h%""
-		end;
+		end
 
 	eif_i64off (nb_ref, nb_char, nb_int16, nb_int32, nb_r32, nb_ptr: INTEGER): INTEGER
 			-- Offset of first pointer after `nb_ref' references,
@@ -1341,7 +1341,7 @@ feature {NONE} -- Externals
 			-- `nb_r32' reals and `nb_ptr' pointers.
 		external
 			"C use %"eif_offset.h%""
-		end;
+		end
 
 	eif_r64off (nb_ref, nb_char, nb_int16, nb_int32, nb_r32, nb_ptr, nb_int64: INTEGER): INTEGER
 			-- Offset of first pointer after `nb_ref' references,
@@ -1349,7 +1349,7 @@ feature {NONE} -- Externals
 			-- `nb_r32' reals, `nb_ptr' pointers and `nb_int64' integers.
 		external
 			"C use %"eif_offset.h%""
-		end;
+		end
 
 	eif_objsiz (nb_ref, nb_char, nb_int16, nb_int32, nb_r32, nb_ptr, nb_int64, nb_r64: INTEGER): INTEGER
 			-- Size of an object having `nb_ref' references,
@@ -1357,7 +1357,7 @@ feature {NONE} -- Externals
 			-- `nb_r32' reals, `nb_ptr' pointers, `nb_int64' integers and `nb_r64' reals
 		external
 			"C use %"eif_offset.h%""
-		end;
+		end
 
 	chracs (n: INTEGER): INTEGER
 			-- Size of `n' characters
@@ -1365,7 +1365,7 @@ feature {NONE} -- Externals
 			"C macro use %"eif_eiffel.h%""
 		alias
 			"CHRACS"
-		end;
+		end
 
 	refacs (n: INTEGER): INTEGER
 			-- Size of `n' references
@@ -1373,7 +1373,7 @@ feature {NONE} -- Externals
 			"C macro use %"eif_eiffel.h%""
 		alias
 			"REFACS"
-		end;
+		end
 
 	i16acs (n: INTEGER): INTEGER
 			-- size of `n' integers 16 bits.
@@ -1389,7 +1389,7 @@ feature {NONE} -- Externals
 			"C macro use %"eif_eiffel.h%""
 		alias
 			"LNGACS"
-		end;
+		end
 
 	i64acs (n: INTEGER): INTEGER
 			-- Size of `n' integers 64 bits
@@ -1397,7 +1397,7 @@ feature {NONE} -- Externals
 			"C macro use %"eif_eiffel.h%""
 		alias
 			"I64ACS"
-		end;
+		end
 
 	r32acs (n: INTEGER): INTEGER
 			-- Size of `n' reals
@@ -1405,7 +1405,7 @@ feature {NONE} -- Externals
 			"C macro use %"eif_eiffel.h%""
 		alias
 			"R32ACS"
-		end;
+		end
 
 	ptracs (n: INTEGER): INTEGER
 			-- Size of `n' pointers
@@ -1413,7 +1413,7 @@ feature {NONE} -- Externals
 			"C macro use %"eif_eiffel.h%""
 		alias
 			"PTRACS"
-		end;
+		end
 
 	r64acs (n: INTEGER): INTEGER
 			-- Size of `n' reals 64 bits
@@ -1421,7 +1421,7 @@ feature {NONE} -- Externals
 			"C macro use %"eif_eiffel.h%""
 		alias
 			"R64ACS"
-		end;
+		end
 
 	ovhsiz: INTEGER
 			-- Size of the object header
@@ -1429,13 +1429,13 @@ feature {NONE} -- Externals
 			"C macro use %"eif_eiffel.h%""
 		alias
 			"OVERHEAD"
-		end;
+		end
 
 invariant
 	class_type_not_void: class_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

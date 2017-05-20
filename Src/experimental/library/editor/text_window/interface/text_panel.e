@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Editable: no
 		Scroll bars: yes
@@ -192,7 +192,7 @@ feature -- Access
 	text: STRING
 			-- Image of the text being displayed.
 		obsolete
-			"Use `wide_text' instead, or wide characters are truncated."
+			"Use `wide_text' instead, or wide characters are truncated. [2017-05-31]"
 		do
 			Result := wide_text.as_string_8
 		end
@@ -213,7 +213,7 @@ feature -- Access
 	file_name: detachable FILE_NAME
 			-- Name of the currently opened file, if any.
 		obsolete
-			"Use `file_path' instead as content could be truncated for Unicode paths."
+			"Use `file_path' instead as content could be truncated for Unicode paths. [2017-05-31]"
 		do
 			if attached file_path as l_path then
 				create Result.make_from_string (l_path.name.as_string_8)
@@ -615,7 +615,7 @@ feature -- Status setting
 			end
 			refresh_margin
 		ensure
-			line_numbers_enabled: line_numbers_enabled = True
+			line_numbers_enabled: line_numbers_enabled
 		end
 
 	disable_line_numbers
@@ -626,7 +626,7 @@ feature -- Status setting
 			end
 			refresh_margin
 		ensure
-			line_numbers_disabled: line_numbers_enabled = False
+			line_numbers_disabled: not line_numbers_enabled
 		end
 
 	toggle_view_invisible_symbols
@@ -711,7 +711,7 @@ feature -- Basic Operations
 	load_file (a_filename: STRING_32)
 			-- Load contents of `a_filename'.
 		obsolete
-			"Use `load_file_path' instead."
+			"Use `load_file_path' instead. [2017-05-31]"
 		require
 			a_filename_not_void: a_filename /= Void
 		do
@@ -836,12 +836,10 @@ feature -- Basic Operations
 				if changed or not editor_preferences.automatic_update then
 						-- File has not changed in panel and is not up to date.  However, user does want auto-update so prompt for reload.
 					create dialog.make_with_text ("This file has been modified by another editor.")
-					create button_labels.make (1, 2)
-					create actions.make (1, 2)
-					button_labels.put ("Reload", 1)
-					actions.put (agent reload, 1)
-					button_labels.put ("Continue anyway", 2)
-					actions.put (agent continue_editing, 2)
+					create button_labels.make_from_array (<<"Reload", "Continue anyway">>)
+					button_labels.rebase (1)
+					create actions.make_from_array (<<agent reload, agent continue_editing>>)
+					actions.rebase (1)
 					dialog.set_buttons_and_actions (button_labels, actions)
 					dialog.set_default_push_button (dialog.button (button_labels @ 1))
 					dialog.set_default_cancel_button (dialog.button (button_labels @ 2))
@@ -858,7 +856,7 @@ feature -- Basic Operations
 
 			is_checking_modifications := False
 		ensure
-			is_checking_modifications_is_false: is_checking_modifications = False
+			is_checking_modifications_is_false: not is_checking_modifications
 		end
 
 	flush
@@ -957,30 +955,27 @@ feature {MARGIN_WIDGET} -- Private properties of the text window
 		end
 
 	show_vertical_scrollbar: BOOLEAN
-			-- Is it necessary to show the vertical scroll bar ?
+			-- Is it necessary to show the vertical scroll bar?
 		do
-			Result := (text_displayed.number_of_lines > number_of_lines_displayed // 2)
+			Result := text_displayed.number_of_lines > number_of_lines_displayed // 2
 		end
 
 	horizontal_scrollbar_needs_updating: BOOLEAN
 			-- Is it necessary to update horizontal
-			-- scroll bar display ?
+			-- scroll bar display?
 
 	vertical_scrollbar_needs_updating: BOOLEAN
 			-- Is it necessary to update vertical
-			-- scroll bar display ?
+			-- scroll bar display?
 
 feature -- Status Setting
 
 	set_editor_width (a_width: INTEGER)
 			-- If `a_width' is greater than `editor_width', assign `a_width' to `editor_width'
 			-- update display if necessary.
-		local
-			l_old_width: INTEGER
 		do
-			l_old_width := editor_width
-			editor_width := a_width.max (editor_width)
-			if editor_width > l_old_width then
+			if editor_width < a_width then
+				editor_width := a_width
 				editor_drawing_area.redraw_rectangle (0, editor_viewport.y_offset, viewable_width, viewable_height)
 				update_horizontal_scrollbar
 			end
@@ -1050,15 +1045,12 @@ feature {NONE} -- Scroll bars Management
 	update_vertical_scrollbar
 			-- Update vertical scrollbar value range.
 			-- Show it or hide it depending on what is appropriate.
-		local
-			nol: INTEGER
 		do
 			if not in_resize then
 				in_resize := True
 
 				if display_scrollbars then
 					if show_vertical_scrollbar then
-						nol := text_displayed.number_of_lines
 						vertical_scrollbar.value_range.resize_exactly (1, maximum_top_line_index)
 						if first_line_displayed > maximum_top_line_index then
 							vertical_scrollbar.set_value (maximum_top_line_index)
@@ -1180,7 +1172,6 @@ feature {NONE} -- Scroll bars Management
  			-- Process vertical scroll event. `vertical_scrollbar.value' has changed.
  		local
  			l_bottom_line_y,
- 			l_top_line_y,
  			l_diff,
  			view_y_offset,
  			l_line_height,
@@ -1195,8 +1186,7 @@ feature {NONE} -- Scroll bars Management
 
  			if l_diff < 0 then
  					-- Scroll up
- 				l_top_line_y := vscroll_pos * l_line_height -- pixel y offset of NEW vertical scrollbar value 				
- 				if (view_y_offset + (l_diff * l_line_height)) < 0 then
+ 				if view_y_offset + (l_diff * l_line_height) < 0 then
  						-- The newly anticipated y_offset (taking into account where we are moving to) is
  						-- above the drawing area, so flip to the bottom
  					editor_viewport.set_y_offset (l_buff_height - viewable_height - ((l_buff_height - viewable_height) \\ l_line_height))
@@ -1367,10 +1357,10 @@ feature {NONE} -- Display functions
 
  				-- Draw all lines
  			first_line_to_draw := (first_line_displayed + (top - view_y_offset) // line_height).max (1)
- 			last_line_to_draw := ((first_line_displayed + (bottom - view_y_offset) // line_height).min (text_displayed.number_of_lines))
+ 			last_line_to_draw := (first_line_displayed + (bottom - view_y_offset) // line_height).min (text_displayed.number_of_lines)
 
 			check
-				not_too_many_lines: (bottom = top) implies first_line_to_draw = last_line_to_draw
+				not_too_many_lines: bottom = top implies first_line_to_draw = last_line_to_draw
 				lines_valid: first_line_to_draw <= last_line_to_draw or last_line_to_draw = text_displayed.number_of_lines
 			end
 
@@ -1437,7 +1427,6 @@ feature {NONE} -- Display functions
 						end
 					end
 	 				curr_line := curr_line + 1
-					y_offset := y_offset + line_height
 	 				l_text.forth
 	 			end
 			end
@@ -1550,10 +1539,8 @@ feature {NONE} -- Display functions
 			text_is_not_empty: not text_displayed.is_empty
 			on_paint: on_paint
  		local
- 			curr_token	: EDITOR_TOKEN
- 			curr_y		: INTEGER
+ 			curr_token: EDITOR_TOKEN
  		do
-   			curr_y := (xline - first_line_displayed) * line_height
   			from
 				a_line.start
 				curr_token := a_line.item
@@ -1787,12 +1774,9 @@ feature -- Implementation
 		require
 			file_loaded: file_loaded
 			file_exists: file_exists
-		local
-			l_file: RAW_FILE
 		do
 			if attached file_path as l_name then
-				create l_file.make_with_path (l_name)
-				Result := l_file.date
+				Result := (create {RAW_FILE}.make_with_path (l_name)).date
 			end
 		end
 
@@ -1801,12 +1785,9 @@ feature -- Implementation
 		require
 			file_loaded: file_loaded
 			file_exists: file_exists
-		local
-			l_file: RAW_FILE
 		do
 			if attached file_path as l_name then
-				create l_file.make_with_path (l_name)
-				Result := l_file.count
+				Result := (create {RAW_FILE}.make_with_path (l_name)).count
 			end
 		end
 
@@ -1814,12 +1795,9 @@ feature -- Implementation
 			-- Does file exist?
 		require
 			file_loaded: file_loaded
-		local
-			l_file: RAW_FILE
 		do
 			if attached file_path as l_name then
-				create l_file.make_with_path (l_name)
-				Result := l_file.exists
+				Result := (create {RAW_FILE}.make_with_path (l_name)).exists
 			end
 		end
 
@@ -1955,7 +1933,7 @@ invariant
 	buffered_line_not_void: is_initialized implies buffered_line /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

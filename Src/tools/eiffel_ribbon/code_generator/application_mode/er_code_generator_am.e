@@ -1,7 +1,5 @@
-note
-	description: "[
-					Code generator using application modes
-				]"
+﻿note
+	description: "Code generator using application modes."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -775,11 +773,10 @@ feature {NONE} -- Implementation
 			not_void: a_last_string /= Void
 		local
 			l_application_menu_comment: STRING
-			l_first_application_menu_identifier_name: detachable STRING
-			l_tree_node: detachable EV_TREE_NODE
+			l_tree_node: EV_TREE_NODE
 		do
 			from
-				-- Find out application menu
+					-- Find out application menu.
 				a_tree.start
 			until
 				a_tree.after or l_tree_node /= Void
@@ -792,12 +789,13 @@ feature {NONE} -- Implementation
 
 			if l_tree_node /= Void then
 				l_application_menu_comment := "%N%T%T%T-- Application menu"
-				l_first_application_menu_identifier_name := first_application_menu_identifier_name
 				check is_application_menu: l_tree_node.text.same_string ({ER_XML_CONSTANTS}.ribbon_application_menu) end
-				if attached {ER_TREE_NODE_DATA} l_tree_node.data as l_data
-					and then attached l_data.command_name as l_identifier_name
-					and then not l_identifier_name.is_empty then
-					check l_first_application_menu_identifier_name /= void end
+				if
+					attached {ER_TREE_NODE_DATA} l_tree_node.data as l_data and then
+					attached l_data.command_name as l_identifier_name and then
+					not l_identifier_name.is_empty and then
+					attached first_application_menu_identifier_name as l_first_application_menu_identifier_name
+				then
 					a_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "%Tapplication_menu: " + l_identifier_name.as_upper + l_application_menu_comment)
 
 					a_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "%T%T%Tcreate application_menu.make_with_command_list (<<{COMMAND_NAME_CONSTANTS}." + l_first_application_menu_identifier_name + ">>)")
@@ -812,7 +810,7 @@ feature {NONE} -- Implementation
 				end
 				a_last_string.replace_substring_all ("$APPLICATION_MENU_REDEFINE", ",%N%T%T%Tapplication_menu")
 			else
-				-- Remove $APPLICATION_MENU_NAME tag
+					-- Remove $APPLICATION_MENU_NAME tag.
 				a_last_string.replace_substring_all ("$APPLICATION_MENU_NAME", "")
 				a_last_string.replace_substring_all ("$APPLICATION_MENU_CREATION", "")
 				a_last_string.replace_substring_all ("$APPLICATION_MENU_REDEFINE", "")
@@ -1955,7 +1953,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

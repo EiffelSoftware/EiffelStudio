@@ -94,7 +94,7 @@ feature -- Execution
 		do
 			if not Eiffel_project.initialized then
 				create l_project_loader.make (parent_window)
-				l_project_loader.open_project_file (a_project_file_name, target.as_string_8, Void, is_fresh_compilation, Void)
+				l_project_loader.open_project_file (a_project_file_name, target.as_string_32, Void, is_fresh_compilation, Void)
 			else
 				create file.make_with_path (a_project_file_name)
 				if not file.exists or else file.is_directory then
@@ -106,7 +106,7 @@ feature -- Execution
 		end
 
 	execute
-			-- Popup a dialog for the user to choose the project he wants to open,
+			-- Popup a dialog for the user to choose the project (s)he wants to open.
 		local
 			l_dialog: EB_OPEN_PROJECT_DIALOG
 		do

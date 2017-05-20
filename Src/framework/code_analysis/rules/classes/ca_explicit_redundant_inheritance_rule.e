@@ -5,7 +5,7 @@
 			Explicitly duplicated inheritance links are redundant if there is no renaming, 
 			redefining, or change of export status. One should be removed.
 		]"
-	author: "Paolo Antonucci"
+	author: "Paolo Antonucci", "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -42,11 +42,11 @@ feature {NONE} -- Rule checking
 			-- Process `a_class'.
 		local
 			l_viol: CA_RULE_VIOLATION
-			l_seen_parents: HASH_TABLE [BOOLEAN, STRING]
+			l_seen_parents: HASH_TABLE [BOOLEAN, STRING_32]
 				-- STRING key: the class name. Eiffel has no namespace, thus this is a class unique identifier.
 				-- BOOLEAN value: if set to true, we have already generated a violation, further violations
 				-- for the same parent class will be ignored.
-			l_parent_class_name: STRING
+			l_parent_class_name: STRING_32
 		do
 				-- Sample violation:
 				--

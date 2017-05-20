@@ -50,11 +50,9 @@ feature -- Contract support
 			when {HTTP_STATUS_CODE}.no_content then
 				Result := True
 			when {HTTP_STATUS_CODE}.reset_content then
-				Result := True				
+				Result := True
 			when {HTTP_STATUS_CODE}.not_modified then
 				Result := True
-			when {HTTP_STATUS_CODE}.conflict then
-				Result := True				
 			else
 				-- default to False
 			end
@@ -68,5 +66,15 @@ feature -- Contract support
 			Result := res.transfered_content_length = 0 -- Is that the right measure?
 		end
 
+note
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end
 

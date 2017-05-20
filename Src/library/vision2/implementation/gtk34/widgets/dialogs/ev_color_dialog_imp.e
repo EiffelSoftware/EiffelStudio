@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create a directory selection dialog with `par' as
 			-- parent.
 		do

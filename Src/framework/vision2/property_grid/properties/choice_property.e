@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	CHOICE_PROPERTY [G]
+	CHOICE_PROPERTY [G -> detachable ANY]
 
 inherit
 	ELLIPSIS_PROPERTY [G]
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

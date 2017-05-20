@@ -21,7 +21,7 @@ feature -- Access
 	command_line: ARGUMENTS
 			-- Command line that was used to start current execution
 		obsolete
-			"Use `arguments' instead for handling Unicode command lines."
+			"Use `arguments' instead for handling Unicode command lines. [2017-05-31]"
 		once
 			create Result
 		end
@@ -41,7 +41,7 @@ feature -- Access
 	current_working_directory: STRING
 			-- Directory of current execution
 		obsolete
-			"Use `current_working_path' instead to support Unicode path."
+			"Use `current_working_path' instead to support Unicode path. [2017-05-31]"
 		do
 			if attached {ENVIRONMENT}.current_directory as l_dir then
 				Result := l_dir
@@ -64,7 +64,7 @@ feature -- Access
 			-- Value of `s' if it is an environment variable and has been set;
 			-- void otherwise.
 		obsolete
-			"Use `item' instead to retrieve Unicode environment variables."
+			"Use `item' instead to retrieve Unicode environment variables. [2017-05-31]"
 		require
 			s_exists: s /= Void
 		do
@@ -122,7 +122,7 @@ feature -- Access
 	home_directory_name: STRING
 			-- Directory name corresponding to the home directory.
 		obsolete
-			"Use `home_directory_path' instead to support Unicode path."
+			"Use `home_directory_path' instead to support Unicode path. [2017-05-31]"
 		require
 			home_directory_supported: Operating_environment.home_directory_supported
 		do
@@ -155,7 +155,7 @@ feature -- Access
 			-- Table of environment variables associated with current process,
 			-- indexed by variable name
 		obsolete
-			"Use starting_environment which support unicode. [dec/2012]"
+			"Use starting_environment which support unicode. [2017-05-31]"
 		do
 			if attached {IDICTIONARY} {ENVIRONMENT}.get_environment_variables as l_dic and then attached {IENUMERATOR} l_dic.get_enumerator_2 as l_enumerator then
 				create Result.make (l_dic.count)
@@ -209,7 +209,7 @@ feature -- Status setting
 	change_working_directory (path: STRING)
 			-- Set the current directory to `path'
 		obsolete
-			"Use `change_working_path' instead to support Unicode path."
+			"Use `change_working_path' instead to support Unicode path. [2017-05-31]"
 		do
 			{ENVIRONMENT}.set_current_directory (path)
 		end
@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -450,4 +450,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EXECUTION_ENVIRONMENT
+end

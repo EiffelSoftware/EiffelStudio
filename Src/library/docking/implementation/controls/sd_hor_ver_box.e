@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EV_BOX that wrapper EV_HORIZONTAL_BOX and EV_VERTICAL_BOX. Actually this is EV_VERTICAL_BOX contain a EV_HORIZONTAL_BOX."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -52,12 +52,12 @@ feature {NONE} -- Initlization
 			-- Creation method
 		do
 			internal_vertical_style := a_vertical_style
-			if not internal_vertical_style then
+			if not a_vertical_style then
 				create internal_horizontal_box
 			end
-			create internal_pointer_enter_actions
+			create pointer_enter_actions
 			default_create
-			if not internal_vertical_style then
+			if not a_vertical_style then
 				init_horizontal_style
 			end
 		ensure
@@ -96,21 +96,7 @@ feature -- Basic operations
 feature -- Actions
 
 	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions to be executed when pointer enter
-		require
-			set: internal_pointer_enter_actions /= Void
-		local
-			l_result: like internal_pointer_enter_actions
-		do
-			l_result := internal_pointer_enter_actions
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
-	internal_pointer_enter_actions: detachable EV_NOTIFY_ACTION_SEQUENCE
-			-- Instance holder of `pointer_enter_actions'
+			-- Actions to be executed when pointer enter.
 
 feature -- Query
 
@@ -402,12 +388,12 @@ feature {NONE} -- Implementation
 			-- Attached `internal_horizontal_box'
 		require
 			set: internal_horizontal_box /= Void
-		local
-			l_result: like internal_horizontal_box
 		do
-			l_result := internal_horizontal_box
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
+			Result := internal_horizontal_box
+			check
+				from_precondition: attached Result
+			then
+			end
 		ensure
 			not_void: Result /= Void
 		end
@@ -425,19 +411,14 @@ feature {NONE} -- Contract Support
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

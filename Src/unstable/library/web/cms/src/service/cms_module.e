@@ -7,9 +7,9 @@ deferred class
 	CMS_MODULE
 
 inherit
-	REFACTORING_HELPER
-
 	CMS_ENCODERS
+
+	REFACTORING_HELPER
 
 feature -- Access
 
@@ -80,7 +80,7 @@ feature -- Status
 	is_initialized: BOOLEAN
 			-- Is Current module initialized?		
 
-feature {CMS_API} -- Access: API
+feature {CMS_API, CMS_MODULE_ADMINISTRATION} -- Access: API
 
 	module_api: detachable CMS_MODULE_API
 			-- Eventual module api.
@@ -92,10 +92,24 @@ feature {CMS_API} -- Access: API
 
 feature {CMS_API} -- Module management
 
+	installed_version (api: CMS_API): detachable READABLE_STRING_32
+		require
+			is_installed (api)
+		do
+			Result := api.storage.custom_value ("is_installed", "module-" + name)
+		end
+
 	is_installed (api: CMS_API): BOOLEAN
 			-- Is Current module installed?
+		local
+			v: detachable READABLE_STRING_32
 		do
-			if attached api.storage.custom_value ("is_initialized", "module-" + name) as v then
+			v := api.storage.custom_value ("is_installed", "module-" + name)
+			if v = Void then
+					-- Kept for backward compabilitiy
+				v := api.storage.custom_value ("is_initialized", "module-" + name)
+			end
+			if v /= Void then
 				if v.is_case_insensitive_equal_general (version) then
 					Result := True
 				elseif v.is_case_insensitive_equal_general ("yes") then
@@ -112,54 +126,58 @@ feature {CMS_API} -- Module management
 			end
 		end
 
+	is_enabled_in_storage (api: CMS_API): BOOLEAN
+			-- Is Current module installed?
+		local
+			v: detachable READABLE_STRING_32
+		do
+			v := api.storage.custom_value ("is_enabled", "module-" + name)
+			if v /= Void then
+				if v.is_case_insensitive_equal_general (version) then
+					Result := True
+				elseif v.is_case_insensitive_equal_general ("yes") then
+						-- Backward compatibility.
+					Result := True
+				elseif v.is_case_insensitive_equal_general ("no") then
+						-- Probably a module that was installed, but now uninstalled.
+					Result := False
+				else
+						-- Maybe a different version is installed.
+						-- For now, let's assume this is installed.
+					Result := True
+				end
+			end
+		end
+
+	update_status_in_storage (a_is_enabled: BOOLEAN; api: CMS_API)
+			-- Is Current module installed?
+		do
+			if a_is_enabled then
+				api.storage.set_custom_value ("is_enabled", version, "module-" + name)
+				enable
+			else
+				api.storage.unset_custom_value ("is_enabled", "module-" + name)
+				disable
+			end
+		end
+
 	install (api: CMS_API)
 		require
 			is_not_installed: not is_installed (api)
 		do
-			api.storage.set_custom_value ("is_initialized", version, "module-" + name)
+			api.storage.set_custom_value ("is_installed", version, "module-" + name)
+			if is_enabled then
+				api.storage.set_custom_value ("is_enabled", version, "module-" + name)
+			else
+				api.storage.unset_custom_value ("is_enabled", "module-" + name)
+			end
 		end
 
 	uninstall (api: CMS_API)
 		require
 			is_installed: is_installed (api)
 		do
-			api.storage.set_custom_value ("is_initialized", "no", "module-" + name)
-		end
-
-feature -- Router
-
-	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
-			-- Setup url dispatching for Current module.
-		require
-			is_initialized: is_initialized
-		deferred
-		end
-
-feature -- Hooks configuration
-
-	register_hooks (a_response: CMS_RESPONSE)
-		obsolete
-			"!UNSAFE!: it is highly recommended to update this module and use setup_hooks [Dec/2015]."
-		require
-			is_enabled: is_enabled
-		do
-			setup_hooks (a_response.api.hooks)
-		end
-
-	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
-			-- Module hooks configuration.
-		require
-			is_enabled: is_enabled
-		do
-		end
-
-feature -- Filter
-
-	filters (a_api: CMS_API): detachable LIST [WSF_FILTER]
-			-- Optional list of filter for Current module.
-		require
-			is_enabled: is_enabled
-		do
+			api.storage.set_custom_value ("is_installed", "no", "module-" + name)
 		end
 
 feature -- Settings
@@ -180,12 +198,39 @@ feature -- Settings
 			module_disbaled: not is_enabled
 		end
 
-feature -- Hooks
+feature -- Filter
+
+	filters (a_api: CMS_API): detachable LIST [WSF_FILTER]
+			-- Optional list of filter for Current module.
+		require
+			is_enabled: is_enabled
+		do
+		end
+
+feature -- Router
+
+	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
+			-- Setup url dispatching for Current module.
+		require
+			is_initialized: is_initialized
+		deferred
+		end
+
+feature -- Hooks configuration
+
+	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
+			-- Module hooks configuration.
+		require
+			is_enabled: is_enabled
+		do
+		end
+
+feature -- Help
 
 	help_text (a_path: STRING): STRING
 		do
 			debug ("refactor_fixme")
-				to_implement ("Add the corresponing implementation.")
+				to_implement ("Add the corresponding implementation.")
 			end
 			create Result.make_empty
 		end
@@ -195,6 +240,6 @@ invariant
 	version_set: not version.is_whitespace
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

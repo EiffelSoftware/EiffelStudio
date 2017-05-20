@@ -28,12 +28,11 @@ feature -- Initialization
 	make_with_entry (header_from, header_to: STRING)
 			-- Create an email with the 'header_from' and the 'header_to'.
 		require
-			needed_info: header_from /= Void
-						 and then header_to /= Void
+			needed_info: header_from /= Void and then header_to /= Void
 		do
 			make
-			add_header_entry (H_from, header_from)
-			add_header_entry (H_to, header_to)
+			add_sender_address (header_from)
+			add_recipient_address (header_to)
 		end
 
 feature {NONE} -- Basic operations.
@@ -44,7 +43,42 @@ feature {NONE} -- Basic operations.
 
 		end
 
-feature -- Basic operations
+feature -- Sender change
+
+	add_sender_address (a_sender: READABLE_STRING_8)
+			-- Àdded `a_sender' address to "From:" entries.
+		do
+			add_header_entry (H_from, a_sender)
+		end
+
+feature -- Recipient change
+
+	add_recipient_address (a_recipient: READABLE_STRING_8)
+			-- Àdded `a_recipient' address to "To:" entries.
+		do
+			add_header_entry (H_to, a_recipient)
+		end
+
+	add_recipient_address_in_cc (a_recipient: READABLE_STRING_8)
+			-- Àdded `a_recipient' address to "Cc:" entries.
+		do
+			add_header_entry (H_cc, a_recipient)
+		end
+
+	add_recipient_address_in_bcc (a_recipient: READABLE_STRING_8)
+			-- Àdded `a_recipient' address to "BCc:" entries.
+		do
+			add_header_entry (H_bcc, a_recipient)
+		end
+
+feature -- Status report
+		
+	has_header_entry (header_key: STRING): BOOLEAN
+		do
+			Result:= headers.has (header_key)
+		end
+
+feature -- Entries changes
 
 	add_header_entry (header_key, header_entry: STRING)
 			-- Add 'header_entry' to header 'header_key',
@@ -97,10 +131,7 @@ feature -- Basic operations
 			wiped_out: attached headers.item (header_key) as l_header implies l_header.entries.is_empty
 		end
 
-	has_header_entry (header_key: STRING): BOOLEAN
-		do
-			Result:= headers.has (header_key)
-		end
+feature -- Basic operations
 
 	send
 			-- Send email.
@@ -126,7 +157,7 @@ feature -- Implementation (EMAIL_RESOURCE)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

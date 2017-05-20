@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Splash containing a video."
 	author: "Robin van Ommeren"
 	date: "$Date$"
@@ -29,15 +29,15 @@ create
 
 feature -- Basic operations
 
-	set_video (a_file_name: STRING)
+	set_video (a_file_path: PATH)
 		require
-			a_file_name_not_void: a_file_name /= Void
-			a_file_name_meaningful: not a_file_name.is_empty
+			a_file_path_not_void: a_file_path /= Void
+			a_file_path_meaningful: not a_file_path.is_empty
 		local
 			rect: WEL_RECT
 		do
 			stop_and_close_video_device
-			video_device.open (a_file_name)
+			video_device.open (a_file_path)
 			if valid then
 				rect := video_device.source_rectangle
 				resize (rect.width, rect.height)
@@ -123,11 +123,12 @@ feature {NONE} -- implementation
 			Result.set_strict (True)
 		end
 
-end -- class WEX_SPLASH_VIDEO
+end
 
 --|-------------------------------------------------------------------------
 --| WEX, Windows Eiffel library eXtension
 --| Copyright (C) 1998  Robin van Ommeren, Andreas Leitner
+--| Copyright (C) 2017  Eiffel Software, Alexander Kogtenkov
 --| See the file forum.txt included in this package for licensing info.
 --|
 --| Comments, Questions, Additions to this library? please contact:

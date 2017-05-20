@@ -3,12 +3,12 @@ note
 	description:
 
 	"[
-		Checkers to see whether the implementation of a class needs to be checked again%
+		Checkers to see whether the implementation of a class needs to be checked again
 		or not after some classes have been modified in the Eiffel system.
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -90,7 +90,9 @@ feature {NONE} -- Processing
 			a_class_preparsed: a_class.is_preparsed
 		local
 			old_class: ET_CLASS
-			i, nb: INTEGER
+			i1, nb1: INTEGER
+			i2, nb2: INTEGER
+			l_parent_clause: ET_PARENT_LIST
 			l_reset_needed: BOOLEAN
 			a_parent_class: ET_CLASS
 		do
@@ -105,10 +107,12 @@ feature {NONE} -- Processing
 					-- be reset to the previous processing step.
 				current_class.unset_implementation_error
 					-- Process parents first.
-				if attached current_class.parents as a_parents then
-					nb := a_parents.count
-					from i := 1 until i > nb loop
-						a_parent_class := a_parents.parent (i).type.base_class
+				nb1 := current_class.parents_count
+				from i1 := 1 until i1 > nb1 loop
+					l_parent_clause := current_class.parents (i1)
+					nb2 := l_parent_clause.count
+					from i2 := 1 until i2 > nb2 loop
+						a_parent_class := l_parent_clause.parent (i2).type.base_class
 						if not a_parent_class.is_preparsed then
 								-- This is a controlled recursive call to `internal_process_class'.
 							l_reset_needed := True
@@ -118,8 +122,9 @@ feature {NONE} -- Processing
 								l_reset_needed := True
 							end
 						end
-						i := i + 1
+						i2 := i2 + 1
 					end
+					i1 := i1 + 1
 				end
 				if l_reset_needed then
 					set_fatal_error (current_class)

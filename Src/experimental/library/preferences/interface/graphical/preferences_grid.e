@@ -11,7 +11,7 @@ note
 class
 	PREFERENCES_GRID
 
-obsolete "[070319] You should use PREFERENCES_GRID_DIALOG"
+obsolete "Use PREFERENCES_GRID_DIALOG [2017-05-31]"
 inherit
 	PREFERENCES_GRID_DIALOG
 		rename

@@ -95,7 +95,7 @@ feature -- Query
 				until
 					l_one_group.after or not Result
 				loop
-					if not (l_check_index = l_one_group.item) then
+					if l_check_index /= l_one_group.item then
 						Result := False
 					end
 					l_check_index := l_check_index + 1
@@ -142,10 +142,8 @@ feature -- Query
 			-- Maximum width group index when divide group number to a_group_count.
 		require
 			valid: a_group_count > 0 and a_group_count <= max_group_count
-		local
-			l_fack: INTEGER
 		do
-			l_fack := maximum_row_width (best_grouping_when (a_group_count))
+			maximum_row_width (best_grouping_when (a_group_count)).do_nothing
 			Result := internal_maximum_group_index
 		ensure
 			valid: Result >0 and Result <= max_group_count
@@ -272,19 +270,14 @@ feature {NONE} -- Implementation functions
 		require
 			not_void: a_group /= Void
 		local
-			l_one_group: ARRAYED_LIST [INTEGER]
 			l_one_group_width: INTEGER
-			l_item_count: INTEGER
 		do
 			from
-				l_item_count := 1
 				a_group.start
 			until
 				a_group.after
 			loop
-				l_one_group := a_group.item
-
-				l_one_group_width := one_group_width (l_one_group)
+				l_one_group_width := one_group_width (a_group.item)
 
 				if Result < l_one_group_width then
 					Result := l_one_group_width
@@ -328,7 +321,7 @@ invariant
 
 note
 	library: "SmartDocking: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

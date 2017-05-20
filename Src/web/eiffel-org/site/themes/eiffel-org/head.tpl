@@ -5,7 +5,7 @@
 {if isset="$head"}{$head/}{/if}
 {if isset="$styles"}{$styles/}{/if}
 
-	<script type="text/javascript" src="{$site_url/}theme/js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="{$theme_path/}js/jquery-1.8.3.min.js"></script>
 {if isset="$scripts"}{$scripts/}{/if}
 {if isset="$head_lines"}{$head_lines/}{/if}
 

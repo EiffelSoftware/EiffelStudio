@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Command class that handles status window updates (when a menu is selected)"
 	status: "See notice at end of class."
 	author: "Andreas Leitner"
@@ -15,53 +15,42 @@ inherit
 			{NONE} all
 		end
 
-
 feature
 
 	execute (argument: ANY)
-		local
-			mi: WEL_MENU_SELECT_MESSAGE
 		do
-
-			main_window ?= argument
-			mi ?= message_information
-
-			check
-				valid_argument: argument /= Void
-				valid_message_information: mi /= Void
+			if
+				attached {like main_window} argument as w and then
+				attached {WEL_MENU_SELECT_MESSAGE} message_information as mi
+			then
+				main_window := w
+				w.status_window.set_text_part (0, get_status_window_text (mi.item) )
 			end
-
-			main_window.status_window.set_text_part (0, get_status_window_text (mi.item) )
-
 		end
-
-
 
 feature {NONE}
 
 	get_status_window_text (string_id: INTEGER): STRING
-		local
-			text: STRING
 		do
-			text := resource_string_id (string_id)
-			if text = Void then
-				create text.make (0)
+			Result := resource_string_id (string_id)
+			if not attached Result then
+				create Result.make_empty
 			end
-			if text.count /= 0 then
-				text.keep_head (text.index_of ('%N', 1) - 1)
+			if not Result.is_empty then
+				Result.keep_head (Result.index_of ('%N', 1) - 1)
 			end
-
-			Result := text
 		ensure
 			result_not_void: Result /= Void
 		end
+
 	main_window: WEX_MAIN_WINDOW
 
-end -- class SHOW_COMMAND_INFORMATION
+end
 
 --|-------------------------------------------------------------------------
 --| WEX, Windows Eiffel library eXtension
 --| Copyright (C) 1998  Robin van Ommeren, Andreas Leitner
+--| Copyright (C) 2017  Eiffel Software, Alexander Kogtenkov
 --| See the file forum.txt included in this package for licensing info.
 --|
 --| Comments, Questions, Additions to this library? please contact:

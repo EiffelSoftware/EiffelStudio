@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Simple directory unarchiver that creates a new directory on disk (if it does not exist)
 		]"
@@ -54,7 +54,6 @@ feature {NONE} -- Implementation
 			-- Setup internal structures after initialize has run.
 		local
 			l_directory: DIRECTORY
-			l_file: FILE
 		do
 			if attached active_header as l_header then
 				if l_header.filename.is_empty then
@@ -65,12 +64,11 @@ feature {NONE} -- Implementation
 				if not l_directory.exists then
 					l_directory.recursive_create_dir
 				end
-
-				create {RAW_FILE} l_file.make_with_path (l_directory.path)
-				file_set_metadata (l_file, l_header)
+				file_set_metadata (create {RAW_FILE} .make_with_path (l_directory.path), l_header)
 			end
 		end
+
 note
-	copyright: "2015-2016, Nicolas Truessel, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2015-2017, Nicolas Truessel, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

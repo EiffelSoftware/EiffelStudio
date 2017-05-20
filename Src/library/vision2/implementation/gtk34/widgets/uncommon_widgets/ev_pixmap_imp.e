@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create a gtk pixmap of size (1 * 1) with no mask.
 		do
 			assign_interface (an_interface)

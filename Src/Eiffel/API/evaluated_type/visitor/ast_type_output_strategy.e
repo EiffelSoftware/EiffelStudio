@@ -196,7 +196,7 @@ feature {TYPE_A} -- Visitors
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
 			if current_feature /= Void and then current_feature.argument_count <= a_type.position then
-				text_formatter.process_local_text (current_feature.arguments.item_name (a_type.position))
+				text_formatter.process_local_text (Void, current_feature.arguments.item_name (a_type.position))
 			else
 				text_formatter.add (ti_argument_index)
 				text_formatter.add_int (a_type.position)
@@ -269,7 +269,7 @@ feature {TYPE_A} -- Visitors
 				until
 					i > count
 				loop
-					text_formatter.process_local_text (a_type.label_name (i))
+					text_formatter.process_local_text (Void, a_type.label_name (i))
 					text_formatter.process_symbol_text (ti_colon)
 					text_formatter.add_space
 					a_type.generics.i_th (i).process (Current)
@@ -365,7 +365,7 @@ feature {TYPE_A} -- Visitors
 			process_annotations (a_type)
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
-			text_formatter.process_local_text (a_type.anchor)
+			text_formatter.process_local_text (Void, a_type.anchor)
 		end
 
 	process_unevaluated_qualified_anchored_type (a_type: UNEVALUATED_QUALIFIED_ANCHORED_TYPE)
@@ -390,7 +390,7 @@ feature {TYPE_A} -- Visitors
 				i = nb
 			loop
 				text_formatter.process_symbol_text (ti_dot)
-				text_formatter.process_local_text (names_heap.item_32 (a_type.chain.item (i)))
+				text_formatter.process_local_text (Void, names_heap.item_32 (a_type.chain.item (i)))
 				i := i + 1
 			end
 		end
@@ -429,7 +429,7 @@ feature {NONE} -- Generic visitors
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

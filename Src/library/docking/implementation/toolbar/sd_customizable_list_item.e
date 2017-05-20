@@ -18,7 +18,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_dlg: SD_TOOL_BAR_CUSTOMIZE_DIALOG; v: SD_TOOL_BAR_ITEM)
 			-- Creation method
@@ -54,7 +54,7 @@ feature -- Interactivity
 			from_pool := attached an_item.custom_parent as l_item_custom_parent and then l_item_custom_parent.is_a_pool_list -- Picking from a pool list?
 			to_pool := attached custom_parent as l_custom_parent and then l_custom_parent.is_a_pool_list -- Dropping into a pool list?
 			if an_item /= Current and attached an_item.parent as l_item_parent and attached parent as l_parent then
-				if (not an_item.is_separator) then
+				if not an_item.is_separator then
 					l_item_parent.start
 					l_item_parent.prune (an_item)
 					l_parent.start
@@ -102,7 +102,7 @@ feature -- Status report
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

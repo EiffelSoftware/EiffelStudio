@@ -9,7 +9,7 @@ feature -- Initialization
 	make is
 			-- A creation procedure
 		do
-			io.put_string (generating_type)
+			io.put_string (generating_type.name_32.as_string_8)
 			io.put_new_line
 
 		--	create i.make

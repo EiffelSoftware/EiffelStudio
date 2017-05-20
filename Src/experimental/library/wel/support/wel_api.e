@@ -407,6 +407,32 @@ feature -- File Drop Handling
 			"DragQueryFile ((HDROP) $hdrop, (UINT) $ifile, (LPTSTR) $buffer_pointer, (UINT) $buffer_size)"
 		end
 
+feature -- File input/output
+
+	cwin_create_file (name: POINTER; desired_access: NATURAL_32; shared_mode: NATURAL_32; security_attributes: POINTER; creation_disposition: NATURAL_32; flags_and_attributes: NATURAL_32; template_handle: POINTER): POINTER
+			-- SDK CreateFile.
+		external
+			"C [macro <winbase.h>] (LPCTSTR, DWORD, DWORD, LPSECURITY_ATTRIBUTES, DWORD, DWORD, HANDLE): HANDLE"
+		alias
+			"CreateFile"
+		end
+
+	cwin_read_file (file_handle: POINTER; buffer: POINTER; number_of_bytes_to_read: NATURAL_32; number_of_bytes_read: TYPED_POINTER [NATURAL_32]; overlapped: POINTER): BOOLEAN
+			-- SDK ReadFile.
+		external
+			"C [macro <winbase.h>] (HANDLE, LPVOID, DWORD, LPDWORD, LPOVERLAPPED): BOOL"
+		alias
+			"ReadFile"
+		end
+
+	cwin_write_file (file_handle: POINTER; buffer: POINTER; number_of_bytes_to_write: NATURAL_32; number_of_bytes_written: TYPED_POINTER [NATURAL_32]; overlapped: POINTER): BOOLEAN
+			-- SDK WriteFile.
+		external
+			"C [macro <winbase.h>] (HANDLE, LPCVOID, DWORD, LPDWORD, LPOVERLAPPED): BOOL"
+		alias
+			"WriteFile"
+		end
+
 feature -- Processes
 
 	create_process (a_name, a_command_line, a_sec_attributes1, a_sec_attributes2: POINTER;
@@ -499,15 +525,31 @@ feature -- Processes
 		end
 
 	wait_object_0: INTEGER
-			-- SDK WAIT_OBJECT_0 constant
+			-- SDK WAIT_OBJECT_0 constant.
 		external
 			"C macro use <windows.h>"
 		alias
 			"WAIT_OBJECT_0"
 		end
 
+	wait_timeout: INTEGER
+			-- SDK WAIT_TIMEOUT constant.
+		external
+			"C macro use <windows.h>"
+		alias
+			"WAIT_TIMEOUT"
+		end
+
+	wait_failed: INTEGER
+			-- SDK WAIT_FAILED constant.
+		external
+			"C macro use <windows.h>"
+		alias
+			"WAIT_FAILED"
+		end
+
 	infinite: INTEGER
-			-- SDK INFINITE constant
+			-- SDK INFINITE constant.
 		external
 			"C macro use <winbase.h>"
 		alias
@@ -653,7 +695,7 @@ feature -- Printing
 			-- The GetDefaultPrinter function retrieves the printer name
 			-- of the default printer for the current user on the local computer.
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"[
 				EIF_BOOLEAN result = EIF_TEST(GetDefaultPrinter((LPTSTR) $a_name, (LPDWORD) $a_name_length));
@@ -668,7 +710,7 @@ feature -- Printing
 			-- The OpenPrinter function retrieves a handle to the specified printer or print
 			-- server or other types of handles in the print subsystem.
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return EIF_TEST(OpenPrinter((LPTSTR) $a_name, (LPHANDLE) $a_printer_handle, (LPPRINTER_DEFAULTS) $a_defaults));"
 		end
@@ -678,7 +720,7 @@ feature -- Printing
 				a_error_code: TYPED_POINTER [INTEGER]): BOOLEAN
 			-- The GetPrinter function retrieves information about a specified printer.
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"[
 				EIF_BOOLEAN result = EIF_TEST(GetPrinter((HANDLE) $a_printer, (DWORD) $a_level,
@@ -693,7 +735,7 @@ feature -- Printing
 	close_printer (a_printer: POINTER): BOOLEAN
 			-- The ClosePrinter function closes the specified printer object.
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return EIF_TEST(ClosePrinter((HANDLE) $a_printer));"
 		end
@@ -746,7 +788,7 @@ feature -- API
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

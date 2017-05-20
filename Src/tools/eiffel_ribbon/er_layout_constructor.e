@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
-					EiffelRibbon Layout Constructor Tool with responsibility for creating target
-					ribbon window's widget layout
-					Users can pick and drop on it
-					]"
+			EiffelRibbon Layout Constructor Tool with responsibility for creating target
+			ribbon window's widget layout
+			Users can pick and drop on it
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,15 +15,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make
-			-- Creation method
+	make (m: SD_DOCKING_MANAGER)
+			-- Creation method.
 		do
 			create helper
 			create shared_singleton
 			create tree_node_factory.make
 
 			create widget
-			create content.make_with_widget (widget, "ER_LAYOUT_CONSTRUCTOR")
+			create content.make_with_widget (widget, "ER_LAYOUT_CONSTRUCTOR", m)
 			content.close_request_actions.extend (agent on_close_content)
 			shared_singleton.layout_constructor_list.extend (Current)
 
@@ -34,6 +34,8 @@ feature {NONE} -- Initialization
 			widget.drop_actions.set_veto_pebble_function (agent on_veto_root_tree_drop)
 
 			update_project_info_window_count
+
+			attach_to_docking_manager (m)
 		end
 
 	build_docking_content
@@ -71,8 +73,7 @@ feature -- Command
 			not_void: a_docking_manager /= Void
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_last_editor: detachable SD_CONTENT
-			l_count: INTEGER
+			l_last_editor: SD_CONTENT
 		do
 			from
 				l_contents := a_docking_manager.contents
@@ -81,7 +82,6 @@ feature -- Command
 				l_contents.after
 			loop
 				if l_contents.item.type = {SD_ENUMERATION}.editor then
-					l_count := l_count + 1
 					l_last_editor := l_contents.item
 				end
 				l_contents.forth
@@ -89,13 +89,11 @@ feature -- Command
 
 			a_docking_manager.contents.extend (content)
 
-			if l_count = 0 then
-				content.set_default_editor_position
-			else
-				check l_last_editor /= Void end
+			if attached l_last_editor then
 				content.set_tab_with (l_last_editor, False)
+			else
+				content.set_default_editor_position
 			end
-
 		end
 
 	expand_tree
@@ -480,7 +478,7 @@ feature {NONE} -- Implementation
 			-- Tree node factory
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

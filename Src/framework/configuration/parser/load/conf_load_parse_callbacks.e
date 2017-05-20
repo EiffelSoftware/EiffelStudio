@@ -174,10 +174,20 @@ feature -- Callbacks
 					process_root_attributes
 				when t_version then
 					process_version_attributes
-				when t_setting then
-					process_setting_attributes
 				when t_option then
 					process_option_attributes (False)
+				when t_setting then
+					process_setting_attributes
+				when t_capability_catcall_detection then
+					process_ordered_capability (agent {CONF_TARGET_OPTION}.catcall_safety_capability, tag_capability_catcall_detection)
+				when t_capability_code then
+					-- TODO: process_unordered_capability (agent {CONF_TARGET_OPTION}.code_capability, tag_capability_code)
+				when t_capability_concurrency then
+					process_ordered_capability (agent {CONF_TARGET_OPTION}.concurrency_capability, tag_capability_concurrency)
+				when t_capability_platform then
+					-- TODO: process_unordered_capability (agent {CONF_TARGET_OPTION}.platform_capability, tag_capability_platform)
+				when t_capability_void_safety then
+					process_ordered_capability (agent {CONF_TARGET_OPTION}.void_safety_capability, tag_capability_void_safety)
 				when t_assertions then
 					l_current_option := current_option
 					if l_current_option /= Void then
@@ -852,8 +862,10 @@ feature {NONE} -- Implementation attribute processing
 									if l_value.is_boolean then
 											-- SCOOP is not supported in old projects.
 										if l_value.to_boolean then
+											l_current_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_thread)
 											l_current_target.changeable_internal_options.concurrency_capability.put_root_index ({CONF_TARGET_OPTION}.concurrency_index_thread)
 										else
+											l_current_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_none)
 											l_current_target.changeable_internal_options.concurrency_capability.put_root_index ({CONF_TARGET_OPTION}.concurrency_index_none)
 										end
 									else
@@ -893,6 +905,32 @@ feature {NONE} -- Implementation attribute processing
 				end
 			else
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_no_name)
+			end
+		end
+
+	process_ordered_capability (selector: FUNCTION [CONF_TARGET_OPTION, CONF_ORDERED_CAPABILITY]; tag: READABLE_STRING_32)
+			-- Process attributes associated with capability specified in element `tag` associated with `selector`.
+		local
+			c: CONF_ORDERED_CAPABILITY
+		do
+			if includes_this_or_after (namespace_1_16_0) and then attached current_target as t then
+				c := selector (t.changeable_internal_options)
+				if attached current_attributes.item (at_support) as support then
+					if c.is_valid_item (support) then
+						c.value.put (support)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value (ca_support))
+					end
+				end
+				if attached current_attributes.item (at_use) as use then
+					if c.is_valid_item (use) then
+						c.put_root (use)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value (ca_use))
+					end
+				end
+			else
+				set_parse_error_message (conf_interface_names.e_parse_invalid_tag (tag))
 			end
 		end
 
@@ -1573,54 +1611,33 @@ feature {NONE} -- Implementation attribute processing
 			if attached current_attributes.item (at_catcall_detection) as l_catcall_detection then
 				if includes_this_or_after (namespace_1_14_0) then
 					if l_current_option.catcall_detection.is_valid_item (l_catcall_detection) then
-						l_current_option.catcall_detection.put (l_catcall_detection)
+						if attached l_target_option then
+								-- Starting from 16.11 catcall detection cannot be specified for anything except targets.
+							l_target_option.catcall_safety_capability.value.put (l_catcall_detection)
+							l_target_option.catcall_safety_capability.put_root (l_catcall_detection)
+						else
+							set_parse_warning_message (conf_interface_names.e_parse_unsupported_attribute (o_catcall_detection))
+						end
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_catcall_detection))
 					end
 				else
 					if l_catcall_detection.is_boolean then
-						if l_catcall_detection.to_boolean then
-							l_current_option.catcall_detection.put_index ({CONF_OPTION}.catcall_detection_index_all)
+						if attached l_target_option then
+								-- Starting from 16.11 catcall detection cannot be specified for anything except targets.
+							if l_catcall_detection.to_boolean then
+								l_target_option.catcall_safety_capability.value.put_index ({CONF_OPTION}.catcall_detection_index_all)
+								l_target_option.catcall_safety_capability.put_root_index ({CONF_OPTION}.catcall_detection_index_all)
+							else
+								l_target_option.catcall_safety_capability.value.put_index ({CONF_OPTION}.catcall_detection_index_none)
+								l_target_option.catcall_safety_capability.put_root_index ({CONF_OPTION}.catcall_detection_index_none)
+							end
 						else
-							l_current_option.catcall_detection.put_index ({CONF_OPTION}.catcall_detection_index_none)
+							set_parse_warning_message (conf_interface_names.e_parse_unsupported_attribute (o_catcall_detection))
 						end
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_catcall_detection))
 					end
-				end
-			end
-			if attached current_attributes.item (at_root_catcall_detection) as l_root_catcall_detection then
-				if attached l_target_option and then includes_this_or_after (namespace_1_16_0) then
-					if l_target_option.catcall_safety_capability.is_valid_item (l_root_catcall_detection) then
-						l_target_option.catcall_safety_capability.put_root (l_root_catcall_detection)
-					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_root_catcall_detection))
-					end
-				else
-					report_unknown_attribute (o_root_catcall_detection)
-				end
-			end
-				-- Capability: concurrency.
-			if attached current_attributes.item (at_concurrency) as l_concurrency then
-				if attached l_target_option and then includes_this_or_after (namespace_1_16_0) then
-					if l_target_option.concurrency.is_valid_item (l_concurrency) then
-						l_target_option.concurrency.put (l_concurrency)
-					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_concurrency))
-					end
-				else
-					report_unknown_attribute (o_concurrency)
-				end
-			end
-			if attached current_attributes.item (at_root_concurrency) as l_root_concurrency then
-				if attached l_target_option and then includes_this_or_after (namespace_1_16_0) then
-					if l_target_option.concurrency_capability.is_valid_item (l_root_concurrency) then
-						l_target_option.concurrency_capability.put_root (l_root_concurrency)
-					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_root_concurrency))
-					end
-				else
-					report_unknown_attribute (o_root_concurrency)
 				end
 			end
 				-- Are class types attached by default?
@@ -1647,23 +1664,34 @@ feature {NONE} -- Implementation attribute processing
 			if attached current_attributes.item (at_void_safety) as l_void_safety then
 				if includes_this_or_after (namespace_1_5_0) then
 					if l_current_option.void_safety.is_valid_item (l_void_safety) then
-						l_current_option.void_safety.put (l_void_safety)
-						if includes_this_or_before (namespace_1_10_0) then
-								-- Adapt indexes to earlier namespace.
-							inspect
-								l_current_option.void_safety.index
-							when
-								{CONF_OPTION}.void_safety_index_none,
-								{CONF_OPTION}.void_safety_index_initialization
-							then
-									-- Use as is.
-							when {CONF_OPTION}.void_safety_index_all then
-									-- Use lower void-safety setting.
-								l_current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_transitional)
-							else
-									-- Report unknown value.
-								set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_void_safety))
+						if attached l_target_option then
+								-- Starting from 16.11 void safety cannot be specified for anything except targets.
+							l_target_option.void_safety_capability.value.put (l_void_safety)
+							l_target_option.void_safety_capability.put_root (l_void_safety)
+							if includes_this_or_before (namespace_1_10_0) then
+									-- Adapt indexes to earlier namespace.
+								inspect
+									l_current_option.void_safety.index
+								when
+									{CONF_OPTION}.void_safety_index_none,
+									{CONF_OPTION}.void_safety_index_initialization
+								then
+										-- Use as is.
+								when {CONF_OPTION}.void_safety_index_all then
+										-- Use lower void-safety setting.
+									if attached l_target_option then
+											-- Starting from 16.11 void safety cannot be specified for anything except targets.
+											-- The warning is already reported, no need for Else_part.
+										l_target_option.void_safety_capability.value.put_index ({CONF_OPTION}.void_safety_index_transitional)
+										l_target_option.void_safety_capability.put_root_index ({CONF_OPTION}.void_safety_index_transitional)
+									end
+								else
+										-- Report unknown value.
+									set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_void_safety))
+								end
 							end
+						else
+							set_parse_warning_message (conf_interface_names.e_parse_unsupported_attribute (o_void_safety))
 						end
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_void_safety))
@@ -1679,31 +1707,28 @@ feature {NONE} -- Implementation attribute processing
 					includes_this_or_before (namespace_1_10_0))
 				then
 					if l_is_void_safe.is_boolean then
-						if includes_this_or_before (namespace_1_4_0) then
-							if l_is_void_safe.to_boolean then
-								l_current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_transitional)
-							else
-								l_current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_none)
+						if attached l_target_option then
+								-- Starting from 16.11 void safety cannot be specified for anything except targets.
+							if includes_this_or_before (namespace_1_4_0) then
+								if l_is_void_safe.to_boolean then
+									l_target_option.void_safety_capability.value.put_index ({CONF_OPTION}.void_safety_index_transitional)
+									l_target_option.void_safety_capability.put_root_index ({CONF_OPTION}.void_safety_index_transitional)
+								else
+									l_target_option.void_safety_capability.value.put_index ({CONF_OPTION}.void_safety_index_none)
+									l_target_option.void_safety_capability.put_root_index ({CONF_OPTION}.void_safety_index_none)
+								end
+							elseif l_is_void_safe.to_boolean then
+								l_target_option.void_safety_capability.value.put_index ({CONF_OPTION}.void_safety_index_all)
+								l_target_option.void_safety_capability.put_root_index ({CONF_OPTION}.void_safety_index_all)
 							end
-						elseif l_is_void_safe.to_boolean then
-							l_current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_all)
+						else
+							set_parse_warning_message (conf_interface_names.e_parse_unsupported_attribute ("is_void_safe"))
 						end
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("is_void_safe"))
 					end
 				else
 					report_unknown_attribute ("is_void_safe")
-				end
-			end
-			if attached current_attributes.item (at_root_void_safety) as l_root_void_safety then
-				if attached l_target_option and then includes_this_or_after (namespace_1_16_0) then
-					if l_target_option.void_safety_capability.is_valid_item (l_root_void_safety) then
-						l_target_option.void_safety_capability.put_root (l_root_void_safety)
-					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_root_void_safety))
-					end
-				else
-					report_unknown_attribute (o_root_void_safety)
 				end
 			end
 				-- Syntax variants.
@@ -2600,14 +2625,15 @@ feature {NONE} -- Implementation state transitions
 				-- => assembly
 				-- => cluster
 				-- => override
-			create l_trans.make (22)
+			create l_trans.make (25)
 			l_trans.force (t_note, "note")
 			l_trans.force (t_description, "description")
 			l_trans.force (t_root, "root")
 			l_trans.force (t_version, "version")
 			l_trans.force (t_file_rule, "file_rule")
-			l_trans.force (t_setting, "setting")
 			l_trans.force (t_option, "option")
+			l_trans.force (t_setting, "setting")
+			l_trans.force (t_capability, tag_capability)
 			l_trans.force (t_mapping, "mapping")
 			l_trans.force (t_external_include, "external_include")
 			l_trans.force (t_external_cflag, "external_cflag")
@@ -2651,6 +2677,20 @@ feature {NONE} -- Implementation state transitions
 			l_trans.force (t_warning, "warning")
 			Result.force (l_trans, t_option)
 			Result.force (l_trans, t_class_option)
+
+				-- capability
+				-- => catcall_detection
+				-- => code
+				-- => concurrency
+				-- => platform
+				-- => void_safety
+			create l_trans.make (5)
+			l_trans.force (t_capability_catcall_detection, tag_capability_catcall_detection)
+			-- TODO: l_trans.force (t_capability_code, tag_capability_code)
+			l_trans.force (t_capability_concurrency, tag_capability_concurrency)
+			-- TODO: l_trans.force (t_capability_platform, tag_capability_platform)
+			l_trans.force (t_capability_void_safety, tag_capability_void_safety)
+			Result.force (l_trans, t_capability)
 
 				-- (pre|post)_compile_action
 				-- => description
@@ -2828,14 +2868,6 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_trademark, "trademark")
 			Result.force (l_attr, t_version)
 
-				-- setting
-				-- * name
-				-- * value
-			create l_attr.make (2)
-			l_attr.force (at_name, "name")
-			l_attr.force (at_value, "value")
-			Result.force (l_attr, t_setting)
-
 				-- option
 				-- * trace
 				-- * profile
@@ -2847,7 +2879,7 @@ feature {NONE} -- Implementation state transitions
 				-- * cat_call_detection
 				-- * is_attached_by_default
 				-- * is_void_safe
-			create l_attr.make (11)
+			create l_attr.make (15)
 			l_attr.force (at_trace, o_is_trace)
 			l_attr.force (at_profile, o_is_profile)
 			l_attr.force (at_optimize, o_is_optimize)
@@ -2862,13 +2894,8 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_syntax, o_syntax)
 				-- Capabilities: CAT-call detection.
 			l_attr.force (at_catcall_detection, o_catcall_detection)
-			l_attr.force (at_root_catcall_detection, o_root_catcall_detection)
-				-- Capabilities: concurrency.
-			l_attr.force (at_concurrency, o_concurrency)
-			l_attr.force (at_root_concurrency, o_root_concurrency)
 				-- Capabilities: void safety.
 			l_attr.force (at_void_safety, o_void_safety)
-			l_attr.force (at_root_void_safety, o_root_void_safety)
 			l_attr.force (at_is_void_safe, "is_void_safe")
 			Result.force (l_attr, t_option)
 
@@ -2878,6 +2905,26 @@ feature {NONE} -- Implementation state transitions
 			l_attr := l_attr.twin
 			l_attr.force (at_class, "class")
 			Result.force (l_attr, t_class_option)
+
+				-- setting
+				-- * name
+				-- * value
+			create l_attr.make (2)
+			l_attr.force (at_name, "name")
+			l_attr.force (at_value, "value")
+			Result.force (l_attr, t_setting)
+
+				-- capability
+				-- * support
+				-- * use
+			create l_attr.make (2)
+			l_attr.force (at_support, ca_support)
+			l_attr.force (at_use, ca_use)
+			Result.force (l_attr, t_capability_catcall_detection)
+			Result.force (l_attr, t_capability_code)
+			Result.force (l_attr, t_capability_concurrency)
+			Result.force (l_attr, t_capability_platform)
+			Result.force (l_attr, t_capability_void_safety)
 
 				-- external_(include|object|library|resource|make)
 				-- * location

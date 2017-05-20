@@ -19,16 +19,16 @@ wecom-mt.lib: $(WOBJ)
 	if exist $@ del $@
 	lib -OUT:$@ $(WOBJ)
 	del *.obj
-	if not exist msc mkdir msc
-	$(MV) $@ msc
+	if not exist $(ISE_C_COMPILER) mkdir $(ISE_C_COMPILER)
+	$(MV) $@ $(ISE_C_COMPILER)
 	del $@
 
 ecom-mt.lib: $(OBJ)
 	if exist $@ del $@
 	lib -OUT:$@ $(OBJ)
 	del *.obj
-	if not exist msc mkdir msc
-	$(MV) $@ msc
+	if not exist $(ISE_C_COMPILER) mkdir $(ISE_C_COMPILER)
+	$(MV) $@ $(ISE_C_COMPILER)
 	del $@
 
 .cpp.obj::

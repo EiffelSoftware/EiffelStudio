@@ -2,7 +2,7 @@
 	description:	"Declarations for the rt_processor struct."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
+	copyright:	"Copyright (c) 2010-2017, Eiffel Software.",
 				"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
@@ -85,6 +85,7 @@ doc:		<field name="pid" type="EIF_SCP_PID"> The unique logical ID of the current
 doc:		<field name="client" type="EIF_SCP_PID"> The PID of the region that added the private queue this processor is currently working on. May be EIF_NULL_PROCESSOR. </field>
 doc:		<field name="is_active" type="EIF_BOOLEAN"> Indicates if the processor is executing. This is used to prevent that an active processor, that may not have any references to it, is collected during GC. </field>
 doc:		<field name="is_creation_procedure_logged" type="EIF_BOOLEAN"> Stores whether the creation procedure of the root object has already been logged. </field>
+doc:		<field name="nstcall_value" type="EIF_INTEGER_8"> A value of nstcall to be used for a next call. </field>
 doc:		<field name="is_dirty" type="EIF_BOOLEAN">  Stores whether the current processor is marked as dirty (i.e. if it has encountered an exception). </field>
 doc:		<field name="is_passive_region" type="EIF_BOOLEAN">  Indicates whether the processor is a passive region. </field>
 
@@ -118,6 +119,7 @@ struct rt_processor {
 	EIF_SCP_PID client;
 	EIF_BOOLEAN is_active;
 	volatile EIF_BOOLEAN is_creation_procedure_logged;
+	volatile EIF_INTEGER_8 nstcall_value;
 	EIF_BOOLEAN is_dirty;
 	volatile EIF_BOOLEAN is_impersonation_allowed;
 	EIF_BOOLEAN is_passive_region;

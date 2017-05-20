@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Error: Root option is not compatible with capabilty option."
 
 class CONF_ERROR_ROOT_OPTION
@@ -18,13 +18,14 @@ feature {NONE} -- Creation
 	make (target: CONF_TARGET; root_value, capability_value, capability: READABLE_STRING_GENERAL)
 			-- Initialize error with for a target `target' that has root option value `root_value'
 			-- not satisfying its capability `capability' with value `capability_value'.
-		local
-			system: READABLE_STRING_GENERAL
 		do
-			if attached target.system as s then
-				system := s.name
-			end
-			text := conf_interface_names.e_incompatible_root_option (capability, root_value, capability_value, target.name, system)
+			text := conf_interface_names.e_incompatible_root_option
+				(capability,
+				root_value,
+				capability_value,
+				target.name,
+				 target.system.name,
+				 target.system.file_name)
 		end
 
 feature -- Access

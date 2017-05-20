@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Find texts that contain certain string, wildcard matcher based."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_texts: like texts)
 			-- Set `texts' with `a_texts'.
@@ -70,10 +70,8 @@ feature -- Status report
 
 feature -- Behavior
 
-	search (a_str: like last_searched)
+	search (a_str: attached like last_searched)
 			-- Launch searching
-		require
-			a_str_attached: a_str /= Void
 		do
 			search_perform (a_str)
 			is_search_launched := true
@@ -122,7 +120,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -131,10 +129,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

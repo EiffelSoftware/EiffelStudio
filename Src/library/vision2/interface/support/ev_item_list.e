@@ -31,7 +31,7 @@ feature -- Access
 
 	item_by_data (some_data: ANY): detachable like item
 			-- First item with `some_data'.
-		obsolete "Use `retrieve_item_by_data (some_data, True)' instead."
+		obsolete "Use `retrieve_item_by_data (some_data, True)' instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 			data_not_void: some_data /= Void
@@ -152,7 +152,7 @@ invariant
 	items_unique: is_usable and not is_empty implies items_unique
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="tests_store_odbc" uuid="FE27C81D-3F7D-4E46-992B-55F4BBDA4F8B" library_target="tests_store_odbc">
+	<target name="tests_store_odbc">
+		<root class="APPLICATION" feature="make"/>
+		<option warning="true">
+			<assertions supplier_precondition="true"/>
+		</option>
+		<capability>
+			<concurrency support="thread" use="thread"/>
+			<void_safety support="conformance"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="cms" location="..\..\..\..\cms.ecf" readonly="false"/>
+		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto.ecf"/>
+		<library name="model" location="..\..\..\model\cms_model.ecf"/>
+		<library name="module_node" location="..\..\..\..\modules\node\node.ecf"/>
+		<library name="persitence_store_odbc" location="..\store_odbc.ecf" readonly="false"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<cluster name="tests" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/nodes$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

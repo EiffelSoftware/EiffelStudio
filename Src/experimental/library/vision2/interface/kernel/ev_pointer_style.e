@@ -66,7 +66,7 @@ feature {NONE} -- Initlization
 	make_with_cursor (a_cursor: EV_CURSOR)
 			-- Initialize from `a_cursor'.
 		obsolete
-			"Use EV_POINTER_STYLE directly now."
+			"Use EV_POINTER_STYLE directly now. [2017-05-31]"
 		do
 			default_create
 				-- We convert from EV_CURSOR, `a_cursor' maybe void.
@@ -131,7 +131,7 @@ feature -- Query
 
 feature -- Duplication
 
-	copy (other: like current)
+	copy (other: like Current)
 			-- Update `Current' to have same appearence as `other'.
 			-- (So as to satisfy `is_equal'.)
 		do
@@ -178,14 +178,14 @@ feature -- Implementation
 			-- Implementation.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

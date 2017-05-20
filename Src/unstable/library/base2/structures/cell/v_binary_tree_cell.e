@@ -4,6 +4,7 @@ note
 		Cells provide a low-level interface and do not ensure neither the consistency of parent and child links, nor the acyclicity property.
 		]"
 	author: "Nadia Polikarpova"
+	updated_by: "Alexander Kogtenkov"
 	model: item, left, right, parent
 
 class
@@ -31,7 +32,7 @@ feature -- Status report
 	is_root: BOOLEAN
 			-- Does not have parent?
 		do
-			Result := (parent = Void)
+			Result := parent = Void
 		ensure
 			definition: Result = (parent = Void)
 		end
@@ -39,7 +40,7 @@ feature -- Status report
 	is_leaf: BOOLEAN
 			-- Does not have children?
 		do
-			Result := (left = Void and right = Void)
+			Result := left = Void and right = Void
 		ensure
 			definition: Result = (left = Void and right = Void)
 		end

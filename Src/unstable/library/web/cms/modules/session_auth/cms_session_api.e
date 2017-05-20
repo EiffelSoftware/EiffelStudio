@@ -57,6 +57,18 @@ feature -- Settings
 	session_max_age: INTEGER
 			-- Value of the Max-Age, before the cookie expires.
 
+feature -- Status report
+
+	is_authenticating (a_response: CMS_RESPONSE): BOOLEAN
+		do
+			if
+				a_response.is_authenticated and then
+				attached a_response.request.cookie (session_token)
+			then
+				Result := True
+			end
+		end
+
 feature -- Access
 
 	user_by_session_token (a_token: READABLE_STRING_32): detachable CMS_USER
@@ -69,6 +81,47 @@ feature -- Access
 			-- Has the user `a_user' and associated session token?
 		do
 			Result := session_auth_storage.has_user_token (a_user)
+		end
+
+feature -- Basic operation
+
+	process_user_login (a_user: CMS_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			l_token: STRING
+			l_cookie: WSF_COOKIE
+		do
+			l_token := new_session_token
+			if has_user_token (a_user) then
+				update_user_session_auth (l_token, a_user)
+			else
+				new_user_session_auth (l_token, a_user)
+			end
+			create l_cookie.make (session_token, l_token)
+			l_cookie.set_max_age (session_max_age)
+			l_cookie.set_path ("/")
+			res.add_cookie (l_cookie)
+			cms_api.set_user (a_user)
+			cms_api.record_user_login (a_user)
+		end
+
+	process_user_logout (a_user: CMS_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			l_cookie: WSF_COOKIE
+		do
+			if
+				attached session_token as tok and then
+				attached {WSF_STRING} req.cookie (tok) as l_cookie_token
+			then
+					 -- Logout Session
+				create l_cookie.make (tok, "") -- l_cookie_token.value) -- FIXME: unicode issue?
+				l_cookie.set_path ("/")
+				l_cookie.unset_max_age
+				l_cookie.set_expiration_date (create {DATE_TIME}.make_from_epoch (0))
+				res.add_cookie (l_cookie)
+			else
+					-- it seems the user was not login, as there is no associated cookie!
+			end
+			cms_api.unset_user
 		end
 
 feature -- Change User session
@@ -85,5 +138,27 @@ feature -- Change User session
 		do
 			session_auth_storage.update_user_session_auth (a_token, a_user)
 		end
+
+feature -- Token
+
+	new_session_token: STRING
+			-- Generate token to use in a Session.
+		local
+			l_token: STRING
+			l_security: CMS_TOKEN_GENERATOR
+			l_encode: URL_ENCODER
+		do
+			create l_security
+			l_token := l_security.token
+			create l_encode
+			from until l_token.same_string (l_encode.encoded_string (l_token)) loop
+				-- Loop ensure that we have a security token that does not contain characters that need encoding.
+			    -- We cannot simply to an encode-decode because the email sent to the user will contain an encoded token
+				-- but the user will need to use an unencoded token if activation has to be done manually.
+				l_token := l_security.token
+			end
+			Result := l_token
+		end
+
 
 end

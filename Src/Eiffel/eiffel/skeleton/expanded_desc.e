@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Expanded description"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,10 @@ class EXPANDED_DESC
 inherit
 	ATTR_DESC
 		redefine
-			is_expanded, same_as, instantiation_in, default_create
+			default_create,
+			instantiation_in,
+			is_expanded,
+			same_as
 		end
 
 feature {NONE} -- Initialization
@@ -125,7 +128,7 @@ feature -- Code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

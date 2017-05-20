@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Title widget used in SD_TITLE_BAR for showing title with desaturation effect."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,14 +24,18 @@ feature {NONE} -- Initlization
 			create drag_actions
 			default_create
 
-			expose_actions.extend (agent(x, y, w, h: INTEGER) do on_expose end)
+			expose_actions.extend
+				(agent (a_x, a_y, a_width, a_height: INTEGER_32)
+					do on_expose end)
 			pointer_button_press_actions.extend (agent on_pointer_press)
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_leave_actions.extend (agent on_pointer_leave)
 			pointer_motion_actions.extend (agent on_pointer_motion)
 
-			-- Because on Linux, pointer leave actions will not be called after pointer double pressed, so we clear the data manually.
-			pointer_double_press_actions.extend (agent (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) do first_press_position := Void end)
+				-- Because on Linux, pointer leave actions will not be called after pointer double pressed, so we clear the data manually.
+			pointer_double_press_actions.extend
+				(agent (a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32)
+					do first_press_position := Void end)
 		end
 
 feature -- Properties
@@ -84,35 +88,23 @@ feature -- Command
 
 	set_non_focus_active_background_color
 			-- Set non focus active background colors
-		local
-			l_text_color: EV_COLOR
 		do
 			set_background_color (hightlight_non_focus_color)
-			l_text_color := internal_shared.non_focused_title_text_color
-			set_foreground_color (l_text_color)
+			set_foreground_color (internal_shared.non_focused_title_text_color)
 		end
 
 	set_focus_background_color
 			-- Set focus background colors
-		local
-			l_text_color: EV_COLOR
 		do
 			set_background_color (hightlight_color)
-			l_text_color := internal_shared.focused_title_text_color
-			set_foreground_color (l_text_color)
+			set_foreground_color (internal_shared.focused_title_text_color)
 		end
 
 	set_disable_focus_background_color
-			-- Set background color for disable status
-		local
-			l_text_color: EV_COLOR
-			l_color_helper: SD_COLOR_HELPER
+			-- Set background color for disable status.
 		do
-			create l_color_helper
 			set_background_color (hightlight_gray_color)
-
-			l_text_color := l_color_helper.text_color_by (hightlight_gray_color)
-			set_foreground_color (l_text_color)
+			set_foreground_color ((create {SD_COLOR_HELPER}).text_color_by (hightlight_gray_color))
 		end
 
 feature -- Query
@@ -274,7 +266,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -283,10 +275,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

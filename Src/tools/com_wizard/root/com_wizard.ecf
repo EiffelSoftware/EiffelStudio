@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="com_wizard" uuid="5CA9BF2F-458B-408E-A3C0-9F2A6679A98A">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="com_wizard" uuid="5CA9BF2F-458B-408E-A3C0-9F2A6679A98A">
 	<target name="com_wizard">
 		<root class="WIZARD_APPLICATION" feature="make"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="false" full_class_checking="true" is_attached_by_default="false" void_safety="none" syntax="transitional">
+		<option trace="false" profile="false" debug="false" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="True"/>
@@ -14,7 +14,10 @@
 		<setting name="inlining" value="True"/>
 		<setting name="inlining_size" value="0"/>
 		<setting name="platform" value="windows"/>
-		<setting name="concurrency" value="thread"/>
+		<capability>
+			<concurrency support="thread" use="thread"/>
+			<void_safety support="none"/>
+		</capability>
 		<external_object location="htmlhelp.lib"/>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
@@ -36,8 +39,8 @@
 		</cluster>
 		<cluster name="new_gui" location="$EIFFEL_SRC\tools\com_wizard\project\new_gui\" recursive="true">
 			<file_rule>
-				<exclude>/EIFGEN$</exclude>
 				<exclude>/Diagrams$</exclude>
+				<exclude>/EIFGEN$</exclude>
 				<exclude>/resources$</exclude>
 			</file_rule>
 		</cluster>

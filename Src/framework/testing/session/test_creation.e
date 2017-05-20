@@ -68,7 +68,6 @@ feature {NONE} -- Basic operations
 			a_name_not_empty: not a_name.is_empty
 		local
 			l_record: like record
-			l_repo: TEST_RECORD_REPOSITORY_I
 		do
 			l_record := record
 			l_record.add_test (a_name)

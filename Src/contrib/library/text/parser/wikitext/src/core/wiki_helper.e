@@ -25,6 +25,27 @@ feature -- Query
 			end
 		end
 
+	index_of_char_before_end_of_line (s: STRING; a_char: CHARACTER; i: INTEGER): INTEGER
+			-- Index of `a_char` in `s` if occurs before the end of line from `i' .
+		require
+			s_attached: s /= Void
+		local
+			p: INTEGER
+		do
+			from
+				p := i
+			until
+				s[p] = a_char or s[p] = '%N' or not s.valid_index (p)
+			loop
+				p := p + 1
+			end
+			if s.valid_index (p) and then s[p] = a_char then
+				Result := p
+			else
+				Result := 0
+			end
+		end
+
 	current_line (s: STRING; i: INTEGER): STRING
 			-- Return the line from `i' to end of line
 		require
@@ -156,7 +177,7 @@ feature -- String manipulation
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2017, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

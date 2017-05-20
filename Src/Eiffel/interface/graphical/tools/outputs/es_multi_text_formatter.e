@@ -286,7 +286,7 @@ feature -- Process
 			end
 		end
 
-	process_local_text (a_text: READABLE_STRING_GENERAL)
+	process_local_text (a_ast: AST_EIFFEL; a_text: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_formatters: like managed_formatters
@@ -295,7 +295,7 @@ feature -- Process
 			l_formatters := managed_formatters
 			from l_formatters.start until l_formatters.after loop
 				if attached l_formatters.item as l_formatter then
-					l_formatter.process_local_text (a_text)
+					l_formatter.process_local_text (a_ast, a_text)
 				end
 				l_formatters.forth
 			end
@@ -856,7 +856,7 @@ invariant
 	managed_formatters_has_notifier: managed_formatters.has (notifier)
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

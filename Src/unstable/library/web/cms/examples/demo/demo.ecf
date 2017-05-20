@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="demo" uuid="3643E657-BCBE-46AA-931B-71EAEA877A18" library_target="demo">
+	<description>Example/demo for Eiffel ROC CMS library</description>
+	<target name="common" abstract="true">
+		<root class="DEMO_CMS_SERVER" feature="make_and_launch"/>
+		<file_rule>
+			<exclude>/.svn$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option debug="true" warning="true">
+		</option>
+		<setting name="executable_name" value="demo"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="cms" location="..\..\cms.ecf" readonly="false">
+			<option>
+				<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
+			</option>
+		</library>
+		<library name="cms_admin_module" location="..\..\modules\admin\admin.ecf" readonly="false"/>
+		<library name="cms_app_env" location="..\..\library\app_env\app_env.ecf" readonly="false"/>
+		<library name="cms_auth_module" location="..\..\modules\auth\auth.ecf" readonly="false"/>
+		<library name="cms_basic_auth_module" location="..\..\modules\basic_auth\basic_auth.ecf" readonly="false"/>
+		<library name="cms_blog_module" location="..\..\modules\blog\cms_blog_module.ecf" readonly="false"/>
+		<library name="cms_comments_module" location="..\..\modules\comments\comments.ecf" readonly="false"/>
+		<library name="cms_contact_module" location="..\..\modules\contact\contact.ecf" readonly="false"/>
+		<library name="cms_custom_block_module" location="..\..\modules\custom_block\custom_block.ecf" readonly="false"/>
+		<library name="cms_demo_module" location="modules\demo\cms_demo_module.ecf" readonly="false"/>
+		<library name="cms_email_service" location="..\..\library\email\email.ecf" readonly="false"/>
+		<library name="cms_feed_aggregator_module" location="..\..\modules\feed_aggregator\feed_aggregator.ecf" readonly="false"/>
+		<library name="cms_files_module" location="..\..\modules\files\files.ecf" readonly="false"/>
+		<library name="cms_google_search_20_module" location="..\..\modules\google_search_20\google_search_20.ecf"/>
+		<library name="cms_messaging_module" location="..\..\modules\messaging\messaging.ecf"/>
+		<library name="cms_model" location="..\..\library\model\cms_model.ecf" readonly="false"/>
+		<library name="cms_node_module" location="..\..\modules\node\node.ecf" readonly="false"/>
+		<library name="cms_oauth_20_module" location="..\..\modules\oauth20\oauth20.ecf" readonly="false"/>
+		<library name="cms_openid_module" location="..\..\modules\openid\openid.ecf" readonly="false"/>
+		<library name="cms_recent_changes_module" location="..\..\modules\recent_changes\recent_changes.ecf" readonly="false"/>
+		<library name="cms_seo_module" location="..\..\modules\seo\seo.ecf" readonly="false"/>
+		<library name="cms_sitemap_module" location="..\..\modules\sitemap\sitemap.ecf" readonly="false"/>
+		<library name="cms_session_auth_module" location="..\..\modules\session_auth\cms_session_auth.ecf" readonly="false"/>
+		<library name="cms_taxnomy_module" location="..\..\modules\taxonomy\taxonomy.ecf" readonly="false"/>
+		<library name="cms_wikitext_module" location="..\..\modules\wikitext\wikitext.ecf" readonly="false"/>
+		<library name="embedded_video_module" location="..\..\modules\embedded_video\embedded_video.ecf" readonly="false"/>
+		<library name="masquerade_auth_module" location="..\..\dev_modules\masquerade_auth\masquerade_auth.ecf" readonly="false"/>
+		<library name="persistence_sqlite3" location="..\..\library\persistence\sqlite3\sqlite3.ecf" readonly="false"/>
+		<!--
+			 By default, commented, since it depends on specific environment settings.
+		<library name="persistence_store_odbc" location="..\..\library\persistence\store_odbc\store_odbc.ecf"/>
+		<library name="persistence_store_mysql" location="..\..\library\persistence\store_mysql\store_mysql.ecf" />
+		-->		
+		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf.ecf"/>
+		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension.ecf" readonly="false"/>
+	</target>
+	<target name="demo_any" extends="common">
+		<library name="any_launcher" location="..\..\launcher\any.ecf" readonly="false"/>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+	<target name="demo_standalone" extends="common">
+		<option debug="true">
+			<debug name="dbglog" enabled="true"/>
+		</option>
+		<variable name="httpd_ssl_disabled" value="true"/>
+		<library name="standalone_launcher" location="..\..\launcher\standalone.ecf" readonly="false"/>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+	<target name="demo_standalone_none" extends="demo_standalone">
+		<capability>
+			<concurrency support="none" use="none"/>
+		</capability>
+	</target>
+	<target name="demo_standalone_mt" extends="demo_standalone">
+		<capability>
+			<concurrency support="thread" use="thread"/>
+		</capability>
+	</target>
+	<target name="demo_standalone_scoop" extends="demo_standalone">
+
+	</target>
+	<target name="demo_standalone_scoop_ssl" extends="demo_standalone_scoop">
+		<capability>
+			<concurrency support="scoop" use="scoop"/>
+		</capability>
+		<variable name="httpd_ssl_enabled" value="true"/>
+		<variable name="libcurl_http_client_disabled" value="true"/>
+		<variable name="net_http_client_disabled" value="false"/>
+		<variable name="netssl_http_client_enabled" value="true"/>
+	</target>
+	<target name="demo_cgi" extends="common">
+		<capability>
+			<concurrency support="none" use="none"/>
+		</capability>
+		<library name="cgi_launcher" location="..\..\launcher\cgi.ecf" readonly="false"/>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+	<target name="demo_libfcgi" extends="common">
+		<capability>
+			<concurrency support="none" use="none"/>
+		</capability>
+		<library name="libfcgi_launcher" location="..\..\launcher\libfcgi.ecf" readonly="false"/>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+	<target name="demo" extends="demo_standalone">
+	</target>
+</system>

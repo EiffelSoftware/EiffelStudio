@@ -1,10 +1,10 @@
-note
+﻿note
 	description	: "Command to enable/disable one or all breakpoints."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_DISABLE_STOP_POINTS_COMMAND
@@ -175,11 +175,9 @@ feature -- Update
 	drop_class (cs: CLASSC_STONE)
 			-- Process class stone
 		local
-			conv_fst: FEATURE_STONE
 			bpm: BREAKPOINTS_MANAGER
 		do
-			conv_fst ?= cs
-			if conv_fst = Void then
+			if not attached {FEATURE_STONE} cs then
 				bpm := Debugger_manager.breakpoints_manager
 				bpm.disable_user_breakpoints_in_class (cs.e_class)
 
@@ -191,7 +189,7 @@ feature -- Update
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -215,11 +213,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_DISABLE_STOP_POINTS_CMD
+end

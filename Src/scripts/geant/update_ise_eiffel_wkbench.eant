@@ -235,7 +235,20 @@
 
 		<echo message="Prepare [studio|config] ..." />
 		<copy to_directory="${ISE_EIFFEL}_workbench${path_separator}studio${path_separator}config${path_separator}${ISE_PLATFORM}" 
-			dir="${ISE_EIFFEL}_workbench${path_separator}studio${path_separator}config${path_separator}unix" 
+			dir="${ISE_EIFFEL}${path_separator}studio${path_separator}config${path_separator}unix" 
+			force="true" unless="${is_windows}" >
+			<fileset include="@(**/*)" />
+		</copy>
+		<group if="$is_windows">
+			<copy to_directory="${ISE_EIFFEL}_workbench${path_separator}studio${path_separator}config${path_separator}${ISE_PLATFORM}" 
+				dir="${ISE_EIFFEL}_workbench${path_separator}studio${path_separator}config${path_separator}windows" 
+				force="true" unless="${ISE_PLATFORM}=windows" >
+				<fileset include="@(**/*)" />
+			</copy>
+		</group>
+
+		<copy to_directory="${ISE_EIFFEL}_workbench${path_separator}studio${path_separator}config${path_separator}${ISE_PLATFORM}" 
+			dir="${ISE_EIFFEL}${path_separator}studio${path_separator}config${path_separator}unix" 
 			force="true" unless="${is_windows}" >
 			<fileset include="@(**/*)" />
 		</copy>

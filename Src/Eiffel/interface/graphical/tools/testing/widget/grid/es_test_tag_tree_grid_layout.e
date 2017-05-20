@@ -245,24 +245,24 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	exception_text (a_exception: EQA_TEST_INVOCATION_EXCEPTION): STRING_32
-			-- Text describing for given expception
-		require
-			a_exception_attached: a_exception /= Void
-		local
-			l_tag: READABLE_STRING_8
-		do
-			create Result.make (a_exception.tag_name.count + 2)
-			Result.append_character (' ')
-			Result.append_character ('(')
-			l_tag := a_exception.tag_name
-			if l_tag.is_empty then
-				Result.append (exception_code_meaning (a_exception.code))
-			else
-				Result.append (l_tag)
-			end
-			Result.append_character (')')
-		end
+--	exception_text (a_exception: EQA_TEST_INVOCATION_EXCEPTION): STRING_32
+--			-- Text describing for given expception
+--		require
+--			a_exception_attached: a_exception /= Void
+--		local
+--			l_tag: READABLE_STRING_8
+--		do
+--			create Result.make (a_exception.tag_name.count + 2)
+--			Result.append_character (' ')
+--			Result.append_character ('(')
+--			l_tag := a_exception.tag_name
+--			if l_tag.is_empty then
+--				Result.append (exception_code_meaning (a_exception.code))
+--			else
+--				Result.append (l_tag)
+--			end
+--			Result.append_character (')')
+--		end
 
 	status_icon (a_test: TEST_I; a_result: detachable TEST_RESULT_I): detachable EV_PIXMAP
 			-- Icon representing status of `a_test'.
@@ -322,7 +322,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

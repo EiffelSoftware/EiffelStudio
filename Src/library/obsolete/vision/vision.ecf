@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="vision" uuid="AD30A056-8E73-403B-A474-A9BCC34BF63A" library_target="vision">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="vision" uuid="AD30A056-8E73-403B-A474-A9BCC34BF63A" library_target="vision">
 	<target name="vision">
 		<description>EiffelVision Library: Platform independent graphical library of reusable components for Eiffel.
       Copyright (c) 1984-2006, Eiffel Software and others.
       Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<file_rule>
-			<exclude>/\.svn$</exclude>
 			<exclude>/EIFGEN.{0,1}$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/temp$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Library">
+		<option is_obsolete_routine_type="true" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="mel" location="$ISE_LIBRARY\library\mel\mel.ecf">
 			<condition>
@@ -23,7 +27,7 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
-		<cluster name="vision" location=".">
+		<cluster name="vision" location=".\">
 			<cluster name="vision_context_data" location="$|oui\context_data\"/>
 			<cluster name="vision_figures" location="$|figures\"/>
 			<cluster name="vision_imp_motif" location="$|implement\motif\" recursive="true">

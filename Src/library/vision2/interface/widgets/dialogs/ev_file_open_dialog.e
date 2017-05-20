@@ -27,7 +27,7 @@ feature -- Event handling
 	ok_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when user clicks Open.
 		obsolete
-			"This has been replaced by open_actions"
+			"This has been replaced by open_actions [2017-05-31]"
 		do
 			Result := open_actions
 		ensure
@@ -50,7 +50,7 @@ feature -- Status report
 			-- Full names of currently selected files including path.
 			-- No particular order is guaranteed.
 		obsolete
-			"Use `file_paths' instead."
+			"Use `file_paths' instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do

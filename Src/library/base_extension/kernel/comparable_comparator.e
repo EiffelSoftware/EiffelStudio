@@ -16,18 +16,12 @@ feature -- Status report
 	less_than (u, v: G): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
-			Result := (u < v)
+			Result := u < v
 		end
 
 note
-	copyright: "[
-		Copyright (c) 1984-2011, Eiffel Software and others
-		Copyright (c) 2000, Eric Bezault and others
-		]"
-	license: "[
-		Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
-		MIT License (see http://www.eiffel.com/licensing/mit.txt)
-		]"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

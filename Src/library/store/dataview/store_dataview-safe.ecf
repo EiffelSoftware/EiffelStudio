@@ -1,20 +1,3 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="store_dataview" uuid="68C53B25-2D27-4AA2-9966-261222D8D436" library_target="store_dataview">
-	<target name="store_dataview">
-		<description>EiffelStore Dataview: Vision2 front end for visualizing and updating data from EiffelStore.
-      Copyright (c) 1984-2006, Eiffel Software and others.
-      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
-		<root all_classes="true"/>
-		<file_rule>
-			<exclude>/\.svn</exclude>
-		</file_rule>
-		<option warning="true" void_safety="all" namespace="EiffelSoftware.Library.Store.DataView">
-		</option>
-		<setting name="dotnet_naming_convention" value="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="store" location="$ISE_LIBRARY\library\store\store-safe.ecf" readonly="false"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
-		<cluster name="dataview" location=".\" recursive="true"/>
-	</target>
-</system>
+<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="68C53B25-2D27-4AA2-9966-261222D8D436" message="Obsolete: use store_dataview.ecf !" location="store_dataview.ecf">
+</redirection>

@@ -19,7 +19,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Creation method
+			-- Creation method.
 		do
 			create_objects
 --			build_initialize
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		end
 
 	create_objects
-			-- Create objects
+			-- Create objects.
 		do
 			create back_button.make_with_text ("Back")
 			create forth_button.make_with_text ("Forth")
@@ -58,25 +58,25 @@ feature {NONE} -- Initialization
 			l_vertical_box.extend (l_hor_box)
 			l_vertical_box.disable_item_expand (l_hor_box)
 
-			back_button.select_actions.force_extend (agent on_back_button_action)
+			back_button.select_actions.extend (agent on_back_button_action)
 			l_hor_box.extend (back_button)
 			l_hor_box.disable_item_expand (back_button)
 
-			forth_button.select_actions.force_extend (agent on_forth_button_action)
+			forth_button.select_actions.extend (agent on_forth_button_action)
 			l_hor_box.extend (forth_button)
 			l_hor_box.disable_item_expand (forth_button)
 
-			refresh_button.select_actions.force_extend (agent on_refresh_button_action)
+			refresh_button.select_actions.extend (agent on_refresh_button_action)
 			l_hor_box.extend (refresh_button)
 			l_hor_box.disable_item_expand (refresh_button)
 
-			stop_button.select_actions.force_extend (agent on_stop_button_action)
+			stop_button.select_actions.extend (agent on_stop_button_action)
 			l_hor_box.extend (stop_button)
 			l_hor_box.disable_item_expand (stop_button)
 
 			l_hor_box.extend (url_text_field)
 
-			go_button.select_actions.force_extend (agent on_go_button_action)
+			go_button.select_actions.extend (agent on_go_button_action)
 			l_hor_box.extend (go_button)
 			l_hor_box.disable_item_expand (go_button)
 
@@ -88,13 +88,13 @@ feature {NONE} -- Initialization
 feature {NONE} -- Implementation
 
 	go_button, back_button, forth_button, stop_button, refresh_button: EV_BUTTON
-			-- Buttons
+			-- Buttons.
 
 	url_text_field: EV_TEXT_FIELD
-			-- URL text field
+			-- URL text field.
 
 	on_go_button_action
-			-- Action for `go_button'
+			-- Action for `go_button'.
 		local
 			l_uri: STRING_32
 		do
@@ -108,31 +108,31 @@ feature {NONE} -- Implementation
 		end
 
 	on_back_button_action
-			-- Action for `back_button'
+			-- Action for `back_button'.
 		do
 			web_browser.back
 		end
 
 	on_forth_button_action
-			-- Action for `forth_button'
+			-- Action for `forth_button'.
 		do
 			web_browser.forth
 		end
 
 	on_refresh_button_action
-			-- Action for `refresh_button'
+			-- Action for `refresh_button'.
 		do
 			web_browser.refresh
 		end
 
 	on_stop_button_action
-			-- Action for `stop_button'
+			-- Action for `stop_button'.
 		do
 			web_browser.stop
 		end
 
 	web_browser: EV_WEB_BROWSER
-			-- Web browser widget
+			-- Web browser widget.
 
 ;note
 	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"

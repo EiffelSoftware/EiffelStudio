@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Manager that help docking manager manage all zones."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,31 +12,20 @@ inherit
 	SD_ACCESS
 
 	SD_DOCKING_MANAGER_HOLDER
-		redefine
-			set_docking_manager
-		end
 
 create
 	make
 
 feature {NONE}  -- Initlization
 
-	make
-			-- Creation method
+	make (a_docking_manager: SD_DOCKING_MANAGER)
+			-- Associate new object with `a_docking_manager'.
 		do
+			docking_manager := a_docking_manager
 			create zones
-			init_place_holder
-		end
-
-	init_place_holder
-			-- Init `place_holder_content'
-		local
-			l_shared: SD_SHARED
-		do
-			create l_shared
 			create place_holder_widget
-			create place_holder_content.make_with_widget (place_holder_widget, l_shared.Editor_place_holder_content_name)
-			place_holder_content.set_type ({SD_ENUMERATION}.place_holder)
+			create place_holder_content.make_placeholder_with_original_widget
+				(place_holder_widget, {SD_SHARED}.Editor_place_holder_content_name, a_docking_manager)
 		end
 
 feature -- Zones managements
@@ -122,7 +111,7 @@ feature -- Zones managements
 				Result /= Void
 			loop
 				Result := zones.item
-				if Result.content /= a_content then
+				if not Result.has_content or else Result.content /= a_content then
 					Result := Void
 				end
 				zones.forth
@@ -201,9 +190,12 @@ feature -- Zones managements
 		local
 			l_has_child: BOOLEAN
 		do
-			if attached {EV_CONTAINER} a_zone as l_container then
-				-- Maybe we are moving from {SD_AUTO_HIDE_STATE} to {SD_DOCKING_STATE}
-				-- {SD_CONTENT}.user_widget's parent already changed, no need to prune later
+			if
+				attached {EV_CONTAINER} a_zone as l_container and then
+					-- Maybe we are moving from {SD_AUTO_HIDE_STATE} to {SD_DOCKING_STATE}
+					-- {SD_CONTENT}.user_widget's parent already changed, no need to prune later
+				a_zone.has_content
+			then
 				l_has_child := l_container.has_recursive (a_zone.content.user_widget)
 			end
 
@@ -215,11 +207,15 @@ feature -- Zones managements
 				check not_possible: False end
 			end
 
-			-- FIXIT: call prune_all from ACTIVE_LIST contract broken?
+				-- FIXME: call prune_all from ACTIVE_LIST contract broken?
 			zones.start
 			zones.prune (a_zone)
 
-			if l_has_child and then attached {EV_CONTAINER} a_zone.content.user_widget.parent as l_parent then
+			if
+				l_has_child and then
+				a_zone.has_content and then
+				attached a_zone.content.user_widget.parent as l_parent
+			then
 				l_parent.prune (a_zone.content.user_widget)
 			end
 		ensure
@@ -231,19 +227,27 @@ feature -- Zones managements
 		require
 			has_content: has_content (a_content)
 		local
+			l_zones: like zones
+			l_zone: SD_ZONE
 			l_pruned: BOOLEAN
 		do
 			from
-				zones.start
+				l_zones := zones
+				l_zones.start
 			until
-				zones.after or l_pruned
+				l_zones.after or l_pruned
 			loop
-				if zones.item.content = a_content then
-					prune_zone (zones.item)
+				l_zone := l_zones.item
+				if
+					l_zone.has_content and then
+					l_zone.content = a_content
+				then
+						-- `zones` is modified by the next call.
+					prune_zone (l_zone)
 					l_pruned := True
-				end
-				if not l_pruned then
-					zones.forth
+				else
+						-- It is safe to advance only when `zones` is not modified.
+					l_zones.forth
 				end
 			end
 		end
@@ -285,15 +289,6 @@ feature -- Zones managements
 			end
 		end
 
-feature -- Command
-
-	set_docking_manager (a_docking_manager: detachable SD_DOCKING_MANAGER)
-			-- <Precursor>
-		do
-			Precursor {SD_DOCKING_MANAGER_HOLDER} (a_docking_manager)
-			place_holder_content.set_docking_manager (docking_manager)
-		end
-
 feature -- Query
 
 	place_holder_content: SD_CONTENT
@@ -317,7 +312,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -326,10 +321,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

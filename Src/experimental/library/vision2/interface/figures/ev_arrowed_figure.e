@@ -11,7 +11,7 @@ deferred class
 	EV_ARROWED_FIGURE
 
 obsolete
-	"Use EV_MODEL_ARROWED instead."
+	"Use EV_MODEL_ARROWED instead. [2017-05-31]"
 
 inherit
 	ANY

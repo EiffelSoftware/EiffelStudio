@@ -190,7 +190,7 @@ feature -- Text processing
 	process_quoted_text (t: READABLE_STRING_GENERAL)
 			-- Process the quoted `t' within a comment.
 		local
-			tok: EDITOR_TOKEN_COMMENT
+			tok: EDITOR_TOKEN_QUOTED_FEATURE_IN_COMMENT
 		do
 			create tok.make (text_quoted (t).as_string_32)
 			append_token (tok)
@@ -440,12 +440,21 @@ feature -- Text processing
 			append_token (tok)
 		end
 
-	process_local_text (t: READABLE_STRING_GENERAL)
+	process_local_text (a_ast: detachable AST_EIFFEL; t: READABLE_STRING_GENERAL)
 			-- Process string text `t'.
 		local
 			tok: EDITOR_TOKEN_LOCAL
+			st: ACCESS_ID_STONE
 		do
 			create tok.make (t.as_string_32)
+			if a_ast /= Void then
+				if attached {ACCESS_FEAT_AS} a_ast as af and then af.is_tuple_access then
+						-- Skip tuple value, as not really local token.
+				elseif attached Eiffel_system.System.current_class as cl then
+					create st.make (cl, a_ast)
+					tok.set_pebble (st)
+				end
+			end
 			append_token (tok)
 		end
 
@@ -629,19 +638,23 @@ feature {NONE} -- Initialisations and File status
 			until
 				last_line.after or feature_start_found
 			loop
-				feature_start ?= last_line.item
-				feature_start_found := (feature_start /= Void and then feature_start.pebble = Void)
+				if attached {EDITOR_TOKEN_FEATURE_START} last_line.item as feat_st then
+					feature_start := feat_st
+					feature_start_found := feat_st.pebble = Void
+				else
+					feature_start_found := False
+				end
 				if not feature_start_found then
 					last_line.forth
 				end
 			end
 			if feature_start_found then
 				editor_tok := last_line.item
-				if editor_tok.previous /= Void then
-					editor_tok.previous.set_next_token (editor_tok.next)
+				if attached editor_tok.previous as l_prev then
+					l_prev.set_next_token (editor_tok.next)
 				end
-				if editor_tok.next /= Void then
-					editor_tok.next.set_previous_token (editor_tok.previous)
+				if attached editor_tok.next as l_next then
+					l_next.set_previous_token (editor_tok.previous)
 				end
 				create feature_start.make (l_text)
 				feature_start.set_pebble (stone)
@@ -671,8 +684,9 @@ feature {NONE} -- Initialisations and File status
 			until
 				last_line.after or feature_start_found
 			loop
-				feature_start ?= last_line.item
-				feature_start_found := (feature_start /= Void and then feature_start.pebble = Void)
+				if attached {EDITOR_TOKEN_FEATURE_START} last_line.item as l_feat_start then
+					feature_start_found := l_feat_start.pebble = Void
+				end
 				if not feature_start_found then
 					last_line.forth
 				end
@@ -705,7 +719,7 @@ feature {NONE} -- Initialisations and File status
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

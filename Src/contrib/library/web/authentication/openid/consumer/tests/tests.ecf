@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="openid_consumer_tests" uuid="A36A6621-CF4A-4FB6-8CB2-D420D630A134">
+	<target name="openid_consumer_tests">
+		<root class="APPLICATION" feature="make"/>
+		<file_rule>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option warning="true">
+		</option>
+		<capability>
+			<concurrency support="none" use="none"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="openid" location="..\openid.ecf" readonly="false"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
+		<tests name="src" location=".\" recursive="true"/>
+	</target>
+</system>

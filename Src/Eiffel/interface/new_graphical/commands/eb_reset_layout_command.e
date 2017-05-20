@@ -39,12 +39,10 @@ feature -- Command
 	execute
 			-- Reset to default docking layout
 		local
-			l_graphical_debugger: EB_DEBUGGER_MANAGER
 			l_pointer_style: EV_POINTER_STYLE
 			l_stock_pixmaps: EV_STOCK_PIXMAPS
 		do
-			l_graphical_debugger ?= debugger_manager
-			if l_graphical_debugger /= Void then
+			if attached {EB_DEBUGGER_MANAGER} debugger_manager as l_graphical_debugger then
 				l_pointer_style := develop_window.window.pointer_style
 				create l_stock_pixmaps
 				develop_window.window.set_pointer_style (l_stock_pixmaps.busy_cursor)
@@ -68,7 +66,7 @@ feature -- Query
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

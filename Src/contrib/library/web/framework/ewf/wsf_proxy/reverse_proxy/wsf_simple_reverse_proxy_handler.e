@@ -111,9 +111,9 @@ feature -- Execution
 						i := l_raw_header.substring_index ("%R%N", 1)
 						if i > 0 then
 								-- Skip the first status line.
-							create h.make_from_raw_header_data (l_raw_header.substring (i + 2, l_raw_header.count))
+							create h.make_from_raw_header_data (l_raw_header.substring (i + 2, l_raw_header.count).as_string_8_conversion) -- NOTE: it is string 8 per nature.
 						else
-							create h.make_from_raw_header_data (l_raw_header)
+							create h.make_from_raw_header_data (l_raw_header.as_string_8_conversion)
 						end
 						if attached l_remote_uri.host as l_remote_host then
 							if l_remote_uri.port > 0 then
@@ -291,11 +291,8 @@ feature {NONE} -- Implementation
 			response.set_status_code (a_status_code)
 			response.header.put_content_type_text_html
 			response.header.put_content_length (s.count)
-			if
-				attached request.http_connection as l_connection and then
-				l_connection.is_case_insensitive_equal_general ("keep-alive")
-			then
-				response.header.put_header_key_value ("Connection", "keep-alive")
+			if request.is_keep_alive_http_connection then
+				response.header.put_connection_keep_alive
 			end
 			response.put_string (s)
 		end

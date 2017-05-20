@@ -24,9 +24,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_wdocs: WDOCS_EDIT_MANAGER)
+	make (a_wdocs: WDOCS_EDIT_MANAGER; a_win: like associated_window; a_sd_manager: SD_DOCKING_MANAGER)
 		do
+			sd_manager := a_sd_manager
 			wdocs_manager := a_wdocs
+			set_associated_window (a_win)
 			default_create
 		end
 
@@ -121,6 +123,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	sd_manager: SD_DOCKING_MANAGER
+
 	port_number: INTEGER
 
 	wdocs_manager: WDOCS_EDIT_MANAGER
@@ -133,7 +137,7 @@ feature -- Access
 
 feature -- Access: window
 
-	associated_window: detachable WDOCS_WINDOW
+	associated_window: WDOCS_WINDOW
 
 	set_associated_window (w: like associated_window)
 		do
@@ -145,9 +149,7 @@ feature -- Element change
 	set_wdocs_manager (a_wdocs: like wdocs_manager)
 		do
 			wdocs_manager := a_wdocs
-			if attached associated_window as w then
-				w.set_manager (a_wdocs)
-			end
+			associated_window.set_manager (a_wdocs)
 			on_refresh_requested
 		end
 
@@ -171,7 +173,7 @@ feature -- Docking
 		do
 			l_content := internal_sd_content
 			if l_content = Void then
-				create l_content.make_with_widget (Current, "Controller")
+				create l_content.make_with_widget (Current, "Controller", sd_manager)
 				l_content.set_long_title ("Controller")
 				create l_mini_tb.make
 
@@ -472,11 +474,7 @@ feature -- Basic operation
 				hb.extend (create {EV_CELL})
 				dlg.set_default_cancel_button (but)
 
-				if attached associated_window as w then
-					dlg.show_modal_to_window (w)
-				else
-					dlg.show
-				end
+				dlg.show_modal_to_window (associated_window)
 			end
 		end
 
@@ -488,11 +486,7 @@ feature -- Basic operation
 				create dlg.make_with_text ({STRING_32} "Delete wiki page [[" + wp.title + "]]?" )
 				dlg.set_buttons_and_actions (<<"Cancel", "Delete">>, <<Void, agent delete_page (wp)>>)
 
-				if attached associated_window as w then
-					dlg.show_modal_to_window (w)
-				else
-					dlg.show
-				end
+				dlg.show_modal_to_window (associated_window)
 			end
 		end
 
@@ -537,11 +531,7 @@ feature -- Basic operation
 				end
 				dlg.set_page (wp, wdocs_manager)
 
-				if attached associated_window as w then
-					dlg.show_modal_to_window (w)
-				else
-					dlg.show
-				end
+				dlg.show_modal_to_window (associated_window)
 			end
 		end
 
@@ -620,20 +610,15 @@ feature -- Basic operation
 		local
 			l_tool: like edit_tool
 		do
-			if
-				attached associated_window as w and then
-				attached w.sd_manager as sd_manager
-			then
-				l_tool := edit_tool
-				if l_tool = Void then
-					create l_tool.make (wdocs_manager)
-					l_tool.wiki_text_updated_actions.extend (agent on_page_edited)
-					l_tool.wiki_page_saved_actions.extend (agent on_page_saved)
-					if attached l_tool.sd_content as l_editor then
-						sd_manager.contents.extend (l_editor)
-					end
-					edit_tool := l_tool
+			l_tool := edit_tool
+			if l_tool = Void then
+				create l_tool.make (wdocs_manager, sd_manager)
+				l_tool.wiki_text_updated_actions.extend (agent on_page_edited)
+				l_tool.wiki_page_saved_actions.extend (agent on_page_saved)
+				if attached l_tool.sd_content as l_editor then
+					sd_manager.contents.extend (l_editor)
 				end
+				edit_tool := l_tool
 			end
 		end
 

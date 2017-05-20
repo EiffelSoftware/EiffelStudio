@@ -35,7 +35,7 @@ feature {NONE} -- Make
 	make (a_title: STRING; a_unused_arg: STRING)
 			-- Create wiki page with title `a_title'.
 		obsolete
-			"Use make_with_title (a_title) [Nov/2014]"
+			"Use make_with_title (a_title) [2017-05-31]"
 		do
 			make_with_title (a_title)
 		end
@@ -162,7 +162,7 @@ feature -- Element change
 			if attached metadata ("title") as l_title then
 				set_title (l_title)
 			end
-			if 
+			if
 				attached metadata ("weight") as l_weight and then
 				l_weight.is_integer
 			then
@@ -225,7 +225,7 @@ feature -- Element change
 
 	add_page (a_page: attached like page)
 		obsolete
-			"Use `extend' [Oct-2014]"
+			"Use `extend' [2017-05-31]"
 		require
 			not_current: a_page /= Current
 			not_same_title_as_current: not title.is_case_insensitive_equal (a_page.title)
@@ -235,7 +235,7 @@ feature -- Element change
 
 	add_page_with_weight (a_page: attached like page; a_weight: INTEGER)
 		obsolete
-			"Use `extend' and set weight on `a_page' directly [Oct-2014]"
+			"Use `extend' and set weight on `a_page' directly [2017-05-31]"
 		require
 			not_current: a_page /= Current
 			not_same_title_as_current: not title.is_case_insensitive_equal (a_page.title)
@@ -336,7 +336,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2017, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

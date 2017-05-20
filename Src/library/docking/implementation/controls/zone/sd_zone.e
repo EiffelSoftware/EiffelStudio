@@ -141,9 +141,11 @@ feature -- Command
 		require
 			vaild: a_width >= 0
 		do
-			content.state.set_last_floating_width (a_width)
+			if has_content then
+				content.state.set_last_floating_width (a_width)
+			end
 		ensure
-			set: content.state.last_floating_width = a_width
+			set: has_content implies content.state.last_floating_width = a_width
 		end
 
 	set_last_floating_height (a_height: INTEGER)
@@ -151,9 +153,11 @@ feature -- Command
 		require
 			valid: a_height >= 0
 		do
-			content.state.set_last_floating_height (a_height)
+			if has_content then
+				content.state.set_last_floating_height (a_height)
+			end
 		ensure
-			set: content.state.last_floating_height = a_height
+			set: has_content implies content.state.last_floating_height = a_height
 		end
 
 	update_mini_tool_bar_size
@@ -188,9 +192,17 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
+	has_content: BOOLEAN
+			-- Has content?
+		do
+				-- To redefine.
+			Result := True
+		end
+
 	content: SD_CONTENT
 			-- Content which `Current' holds
 		require
+			has_content: has_content
 			valid: is_floating_zone implies child_zone_count = 1
 		deferred
 		ensure
@@ -260,7 +272,9 @@ feature {SD_DOCKING_MANAGER_ZONES} -- Focus out
 					check False end -- Implied by not `is_main_inner_container'
 				end
 			end
-			content.focus_out_actions.call (Void)
+			if has_content then
+				content.focus_out_actions.call (Void)
+			end
 		end
 
 feature {SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS, SD_CONTENT, SD_STATE, SD_FLOATING_ZONE}  -- Focus in
@@ -310,7 +324,9 @@ feature {NONE} -- Implementation
 	on_close_request
 			-- Handle close request actions
 		do
-			content.close_request_actions.call (Void)
+			if has_content then
+				content.close_request_actions.call (Void)
+			end
 		end
 
 	internal_shared: SD_SHARED
@@ -322,7 +338,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

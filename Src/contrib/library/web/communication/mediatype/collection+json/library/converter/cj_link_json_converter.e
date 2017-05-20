@@ -66,30 +66,30 @@ feature {NONE} -- Implementation
 
 	href_key: JSON_STRING
 		once
-			create Result.make_json ("href")
+			create Result.make_from_string ("href")
 		end
 
 	rel_key: JSON_STRING
 		once
-			create Result.make_json ("rel")
+			create Result.make_from_string ("rel")
 		end
 
 	prompt_key: JSON_STRING
 		once
-			create Result.make_json ("prompt")
+			create Result.make_from_string ("prompt")
 		end
 
 	name_key: JSON_STRING
 		once
-			create Result.make_json ("name")
+			create Result.make_from_string ("name")
 		end
 
 	render_key: JSON_STRING
 		once
-			create Result.make_json ("render")
+			create Result.make_from_string ("render")
 		end
 
 note
-	copyright: "2011-2012, Javier Velilla, Jocelyn Fiat and others"
+	copyright: "2011-2017, Javier Velilla, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

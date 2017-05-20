@@ -1,0 +1,20 @@
+test_name 	 capability-library-project-setting
+test_description Settings specified by a project take over capability checks perfomed according to library capabilities.
+
+copy_sub	Ace $TEST Ace
+copy_sub	library.ecf $TEST library.ecf
+copy_raw	a.e $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+
+config library.ecf library
+
+compile_melted
+compile_result	validity_error A VUTA(2)
+abort_compile
+
+config Ace test
+
+compile_melted
+compile_result	ok
+
+test_end

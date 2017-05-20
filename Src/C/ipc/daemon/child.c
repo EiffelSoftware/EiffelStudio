@@ -51,8 +51,8 @@
 #include "shared.h" /* for C2P_IPC_NAMED_PIPE_PID_APP_TPL and P2C_.. */
 
 #ifdef EIF_WINDOWS
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include <Winsock2.h>
 #include <aclapi.h> /* for socket IPC іnitialization */
 #include "uu.h"
 #else /* non EIF_WINDOWS */

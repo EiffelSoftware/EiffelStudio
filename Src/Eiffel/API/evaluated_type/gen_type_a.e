@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Descritpion of an actual generical type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -91,8 +91,7 @@ feature -- Comparison
 			i, nb: INTEGER
 			other_generics: like generics
 		do
-			Result := Precursor {CL_TYPE_A} (other)
-			if Result then
+			if Precursor (other) then
 				from
 					i := 1
 					nb := generics.count

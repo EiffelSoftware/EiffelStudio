@@ -49,7 +49,7 @@ feature -- Access
 	to_string: STRING
 			-- Convert `Current' as a STRING.
 		obsolete
-			"Use to_string_8, to_string_32 or auto-conversion"
+			"Use to_string_8, to_string_32 or auto-conversion [2017-05-31]"
 		do
 			Result := to_string_8
 		end
@@ -92,7 +92,7 @@ feature -- Measurement
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

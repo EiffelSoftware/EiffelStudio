@@ -84,36 +84,41 @@ feature {NONE} -- Implementation
 			clusters: LIST [EG_CLUSTER]
 			l_world: like world
 		do
-			from
-				l_world := world
-				check l_world /= Void end -- Implied by precondition `world_not_void'
-				nodes := l_world.attached_model.flat_nodes
-				nodes.start
-			until
-				nodes.after or else Result /= Void
-			loop
-				if nodes.item.name ~ a_name then
-					Result := nodes.item
-				end
-				nodes.forth
-			end
-			if Result = Void then
-				from
-					clusters := l_world.attached_model.flat_clusters
-					clusters.start
-				until
-					clusters.after or else Result /= Void
-				loop
-					if clusters.item.name ~ a_name then
-						Result := clusters.item
+			l_world := world
+			if l_world /= Void and then attached l_world.model as l_world_model then
+				nodes := l_world_model.flat_nodes
+				if nodes /= Void then
+					from
+						nodes.start
+					until
+						nodes.after or else Result /= Void
+					loop
+						if nodes.item.name ~ a_name then
+							Result := nodes.item
+						end
+						nodes.forth
 					end
-					clusters.forth
 				end
+				if Result = Void then
+					from
+						clusters := l_world_model.flat_clusters
+						clusters.start
+					until
+						clusters.after or else Result /= Void
+					loop
+						if clusters.item.name ~ a_name then
+							Result := clusters.item
+						end
+						clusters.forth
+					end
+				end
+			else
+				check world_not_void: world /= Void end -- Implied by precondition `world_not_void'
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -16,7 +16,7 @@ feature -- Access
 
 	uuid: READABLE_STRING_8
 		obsolete
-			"Use `id' which is more general [2014-03]"
+			"Use `id' which is more general [2017-05-31]"
 		deferred
 		end
 
@@ -116,7 +116,7 @@ feature -- Control
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

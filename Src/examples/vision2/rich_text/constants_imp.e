@@ -7,7 +7,7 @@ note
 
 class
 	CONSTANTS_IMP
-	
+
 feature {NONE} -- Initialization
 
 	initialize_constants
@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 			file: PLAIN_TEXT_FILE
 		do
 			if not constants_initialized then
-				create file.make (file_name)
+				create file.make_with_name (file_name)
 				if file.exists then
 					file.open_read
 					file.readstream (file.count)
@@ -61,7 +61,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	caret_position_status_bar_width: INTEGER 
+	caret_position_status_bar_width: INTEGER
 			-- `Result' is INTEGER constant named caret_position_status_bar_width.
 		once
 			Result := 100
@@ -87,7 +87,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	tiny_padding: INTEGER 
+	tiny_padding: INTEGER
 			-- `Result' is INTEGER constant named tiny_padding.
 		once
 			Result := 2
@@ -113,19 +113,19 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	window_height: INTEGER 
+	window_height: INTEGER
 			-- `Result' is INTEGER constant named window_height.
 		once
 			Result := 320
 		end
 
-	small_padding: INTEGER 
+	small_padding: INTEGER
 			-- `Result' is INTEGER constant named small_padding.
 		once
 			Result := 4
 		end
 
-	window_width: INTEGER 
+	window_width: INTEGER
 			-- `Result' is INTEGER constant named window_width.
 		once
 			Result := 640
@@ -141,7 +141,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	font_size_combo_box_width: INTEGER 
+	font_size_combo_box_width: INTEGER
 			-- `Result' is INTEGER constant named font_size_combo_box_width.
 		once
 			Result := 50
@@ -167,7 +167,7 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	font_selection_combo_box_width: INTEGER 
+	font_selection_combo_box_width: INTEGER
 			-- `Result' is INTEGER constant named font_selection_combo_box_width.
 		once
 			Result := 150
@@ -202,7 +202,7 @@ feature -- Access
 		end
 
 	string_constant_by_name (a_name: STRING): STRING
-			-- `Result' is STRING 
+			-- `Result' is STRING
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
@@ -212,9 +212,9 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	integer_constant_by_name (a_name: STRING): INTEGER
-			-- `Result' is STRING 
+			-- `Result' is STRING
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
@@ -226,10 +226,10 @@ feature -- Access
 			check
 				is_integer: l_string.is_integer
 			end
-			
+
 			Result := l_string.to_integer
 		end
-		
+
 	has_constant (a_name: STRING): BOOLEAN
 			-- Does constant `a_name' exist?
 		require
@@ -246,20 +246,20 @@ feature {NONE} -- Implementation
 		once
 			create Result.put (False)
 		end
-		
+
 	all_constants: HASH_TABLE [STRING, STRING]
 			-- All constants loaded from constants file.
 		once
 			create Result.make (4)
 		end
-		
+
 	file_name: STRING = "constants.txt"
 		-- File name from which constants must be loaded.
-		
+
 	String_constant: STRING = "STRING"
-	
+
 	Integer_constant: STRING = "INTEGER"
-		
+
 	parse_file_contents (content: STRING)
 			-- Parse contents of `content' into `all_constants'.
 		local
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	first_line (content: STRING): STRING
 			-- `Result' is first line of `Content',
 			-- which will be stripped from `content'.
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 			content_not_void: content /= Void
 			content_not_empty: not content.is_empty
 		local
-			new_line_index: INTEGER		
+			new_line_index: INTEGER
 		do
 			new_line_index := content.index_of ('%N', 1)
 			if new_line_index /= 0 then
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 		local
 			l_file: RAW_FILE
 		do
-			create l_file.make (a_file_name)
+			create l_file.make_with_name (a_file_name)
 			if l_file.exists then
 				a_pixmap.set_with_named_file (a_file_name)
 			end

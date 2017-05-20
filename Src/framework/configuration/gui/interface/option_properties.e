@@ -589,7 +589,7 @@ feature {NONE} -- Modification
 				else
 					l_choice_prop.enable_inherited
 				end
-				l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?,
+				l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?,
 					agent (o: CONF_VALUE_CHOICE; p: STRING_CHOICE_PROPERTY)
 						do
 							if o.is_set then
@@ -600,7 +600,7 @@ feature {NONE} -- Modification
 						end
 					(option, l_choice_prop)
 				))
-				l_choice_prop.use_inherited_actions.extend (agent (o: CONF_VALUE_CHOICE) do o.unset end (option))
+				l_choice_prop.use_inherited_actions.extend (agent option.unset)
 				l_choice_prop.use_inherited_actions.extend (agent l_choice_prop.enable_inherited)
 				l_choice_prop.use_inherited_actions.extend (agent handle_value_changes (False))
 				l_choice_prop.use_inherited_actions.extend (agent l_choice_prop.redraw)
@@ -609,17 +609,17 @@ feature {NONE} -- Modification
 				l_choice_prop.set_value (l_choice_prop.item_strings [option.index])
 			end
 			l_choice_prop.change_value_actions.put_front (
-				agent (o: CONF_VALUE_CHOICE; content: ARRAYED_LIST [STRING_32]; value: STRING_32)
+				agent (o: CONF_VALUE_CHOICE; content: ARRAYED_LIST [STRING_32]; value: detachable READABLE_STRING_32)
 					local
 						i: INTEGER
 					do
-						if value /= Void then
+						if attached value then
 							from
 								i := content.count
 							until
 								i <= 0
 							loop
-								if value.is_equal (content.i_th ((i))) then
+								if value.is_equal (content [i]) then
 									o.put_index (i.to_natural_8)
 									i := 1
 								end
@@ -629,8 +629,89 @@ feature {NONE} -- Modification
 					end
 				(option, items, ?)
 			)
-			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
-			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent l_choice_prop.redraw))
+			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
+			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent l_choice_prop.redraw))
+			properties.add_property (l_choice_prop)
+			last_added_choice_property := l_choice_prop
+		end
+
+	add_use_capability_property (name, description: STRING_32; items: ARRAYED_LIST [STRING_32];
+		capability: CONF_ORDERED_CAPABILITY; inherited_capability: detachable CONF_ORDERED_CAPABILITY)
+			-- Add a choice property `capability' with the given `name' and `description'
+			-- that contains specified `items' and may inherit from `inherited_capability' if it is attached.
+		require
+			name_attached: name /= Void
+			description_attached: description /= Void
+			items_attached: items /= Void
+			capability_attached: capability /= Void
+		local
+			l_choice_prop: STRING_CHOICE_PROPERTY
+		do
+			create l_choice_prop.make_with_choices (name, items)
+			l_choice_prop.set_description (description)
+			l_choice_prop.disable_text_editing
+			if inherited_capability /= Void then
+				l_choice_prop.set_refresh_action (
+					agent (content: ARRAYED_LIST [STRING_32]; i: CONF_ORDERED_CAPABILITY): STRING_32
+						do
+							Result := content [i.root_index]
+						end
+					(items, inherited_capability)
+				)
+				if capability.is_root_set then
+					l_choice_prop.enable_overriden
+				else
+					l_choice_prop.enable_inherited
+				end
+				l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?,
+					agent (o: CONF_ORDERED_CAPABILITY; p: STRING_CHOICE_PROPERTY)
+						do
+							if o.is_root_set then
+								p.enable_overriden
+							else
+								p.enable_inherited
+							end
+						end
+					(capability, l_choice_prop)
+				))
+				l_choice_prop.use_inherited_actions.extend (agent capability.unset_root)
+				l_choice_prop.use_inherited_actions.extend (agent l_choice_prop.enable_inherited)
+				l_choice_prop.use_inherited_actions.extend (agent handle_value_changes (False))
+				l_choice_prop.use_inherited_actions.extend (agent l_choice_prop.redraw)
+			end
+			if capability.is_root_set then
+				l_choice_prop.set_value (l_choice_prop.item_strings [capability.custom_root_index])
+			end
+			l_choice_prop.change_value_actions.put_front (
+				agent (o: CONF_ORDERED_CAPABILITY; content: ARRAYED_LIST [STRING_32]; value: detachable READABLE_STRING_32)
+					local
+						i: INTEGER
+					do
+						if attached value then
+							from
+								i := content.count
+							until
+								i <= 0
+							loop
+								if value.same_string (content [i]) then
+									o.put_root_index (i.to_natural_8)
+									i := 1
+								end
+								i := i - 1
+							end
+						end
+					end
+				(capability, items, ?)
+			)
+			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
+			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent l_choice_prop.redraw))
+			l_choice_prop.validate_value_actions.extend
+				(agent (o: CONF_ORDERED_CAPABILITY; content: ARRAYED_LIST [STRING_32]; value: detachable READABLE_STRING_32): BOOLEAN
+					do
+						Result :=
+							attached value and then
+							across content as c some c.item.same_string (value) and then o.is_capable (c.target_index.to_natural_8) end
+					end (capability, items, ?))
 			properties.add_property (l_choice_prop)
 			last_added_choice_property := l_choice_prop
 		end

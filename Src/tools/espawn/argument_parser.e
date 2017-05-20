@@ -48,9 +48,9 @@ feature -- Access
 		require
 			is_successful: is_successful
 		do
-			Result := not {PLATFORM_CONSTANTS}.is_64_bits or else has_option (x86_switch)
+			Result := not {PLATFORM}.is_64_bits or else has_option (x86_switch)
 		ensure
-			true_for_64bit: not {PLATFORM_CONSTANTS}.is_64_bits implies Result
+			true_for_64bit: not {PLATFORM}.is_64_bits implies Result
 		end
 
 	specific_compiler_code: STRING
@@ -135,7 +135,7 @@ feature -- Status report
 
 feature {NONE} -- Usage
 
-	copyright: STRING = "Copyright Eiffel Software 1985-2016. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 1985-2017. All Rights Reserved."
 			-- <Precursor>
 
 	name: STRING = "Eiffel Environment Command Spawn Utility"
@@ -164,7 +164,7 @@ feature {NONE} -- Usage
 		once
 			create Result.make (1)
 			Result.extend (create {ARGUMENT_SWITCH}.make (manual_switch, "Suppresses automatic configuration.", False, False))
-			if {PLATFORM_CONSTANTS}.is_64_bits then
+			if {PLATFORM}.is_64_bits then
 				Result.extend (create {ARGUMENT_SWITCH}.make (x86_switch, "Forces use of a 32bit environment.", True, False))
 			else
 				Result.extend (create {ARGUMENT_SWITCH}.make_hidden (x86_switch, True, False))

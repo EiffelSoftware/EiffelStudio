@@ -26,10 +26,12 @@ feature {NONE} -- Initialization
 				output_path := l_parser.output_path
 				is_statistic_requested := l_parser.has_statistic
 				read_unicode_data (l_file)
-				if unicode_data /= Void or has_error then
-					process_properties (l_parser.property_template)
+				if attached unicode_data as l_unicode_data then
+					process_properties (l_parser.property_template, l_unicode_data)
+				elseif has_error then
+					io.error.put_string (l_file + ": error occured!%N")
 				else
-					io.error.put_string (l_file + " has not unicode character data in it.%N")
+					io.error.put_string (l_file + " has no unicode character data in it.%N")
 				end
 			end
 		end
@@ -59,7 +61,7 @@ feature -- Status Report
 feature -- Basic operations
 
 	read_unicode_data (a_file: READABLE_STRING_32)
-			-- Read the Unicode data `a_file' and store it into `
+			-- Read the Unicode data `a_file' and store it into `unicode_data` and `unicode_table`.
 		local
 			l_input: PLAIN_TEXT_FILE
 			l_list: like unicode_data
@@ -132,12 +134,12 @@ feature -- Basic operations
 			retry
 		end
 
-	process_properties (a_template_file: READABLE_STRING_32)
+	process_properties (a_template_file: READABLE_STRING_32; a_unicode_data: attached like unicode_data)
 			-- Using `a_file' representing the Unicode standard for lower and upper tables,
 			-- generate Eiffel code for CHARACTER_32 that will let you perform the operation
 			-- `to_lower' and `to_upper'. We only perform simple case folding.
 		require
-			unicode_data_set: unicode_data /= Void
+			a_unicode_data_set: a_unicode_data /= Void
 		local
 			l_input, l_output: PLAIN_TEXT_FILE
 			l_lowers, l_uppers, l_titles: like extract_case_ranges
@@ -147,10 +149,10 @@ feature -- Basic operations
 			l_filename: PATH
 		do
 				-- We generate the various mapping. Those mappings are sparse.
-			l_lowers := extract_case_ranges ("lower", unicode_data, agent {UNICODE_CHARACTER_DATA}.has_lower_code, agent {UNICODE_CHARACTER_DATA}.lower_code)
-			l_uppers := extract_case_ranges ("upper", unicode_data, agent {UNICODE_CHARACTER_DATA}.has_upper_code, agent {UNICODE_CHARACTER_DATA}.upper_code)
-			l_titles := extract_case_ranges ("title", unicode_data, agent {UNICODE_CHARACTER_DATA}.has_title_code, agent {UNICODE_CHARACTER_DATA}.title_code)
-			l_properties := extract_case_ranges ("property", unicode_data, agent {UNICODE_CHARACTER_DATA}.has_property, agent {UNICODE_CHARACTER_DATA}.property_flags)
+			l_lowers := extract_case_ranges ("lower", a_unicode_data, agent {UNICODE_CHARACTER_DATA}.has_lower_code, agent {UNICODE_CHARACTER_DATA}.lower_code)
+			l_uppers := extract_case_ranges ("upper", a_unicode_data, agent {UNICODE_CHARACTER_DATA}.has_upper_code, agent {UNICODE_CHARACTER_DATA}.upper_code)
+			l_titles := extract_case_ranges ("title", a_unicode_data, agent {UNICODE_CHARACTER_DATA}.has_title_code, agent {UNICODE_CHARACTER_DATA}.title_code)
+			l_properties := extract_case_ranges ("property", a_unicode_data, agent {UNICODE_CHARACTER_DATA}.has_property, agent {UNICODE_CHARACTER_DATA}.property_flags)
 
 				-- We have noticed that the table for upper and title cases are very similar.
 				-- As of Unicode 6.2.0, there were really 9 differences (i.e. 3 characters) that
@@ -227,6 +229,11 @@ feature -- Basic operations
 			-- Helper function that generate the ranges for the various conversion of
 			-- a Unicode character to either lower, upper or title case. This function
 			-- tries to optimize the total density so that it is no less than `density'.
+		require
+			a_table_name_set: a_table_name /= Void
+			a_list_set: a_list /= Void
+			a_filter_set: a_filter /= Void
+			a_value_set: a_value /= Void
 		local
 			l_group: ARRAYED_LIST [TUPLE [key, value: NATURAL_32]]
 			l_upper_group_code: NATURAL_32
@@ -341,6 +348,8 @@ feature -- Basic operations
 				io.put_string ("Table " + a_table_name + " has a density of " + l_formatter.formatted ((l_total_count / l_used_space_count)) + " in " + Result.count.out + " group(s) for " + l_total_count.out + " character(s)")
 				io.put_new_line
 			end
+		ensure
+			result_set: Result /= Void
 		end
 
 	generate_case_ranges (a_output: STRING; a_ranges: like extract_case_ranges; a_table_name: STRING; is_identity: BOOLEAN)
@@ -574,7 +583,7 @@ feature {NONE} -- Helpers
 			l_same := True
 			across a_table as l_entry until not l_same loop
 					-- Compute the upper character for the set
-				if attached unicode_table.item (l_entry.item.first) as l_char then
+				if attached unicode_table as l_unicode_table and then attached l_unicode_table.item (l_entry.item.first) as l_char then
 					if l_char.has_upper_code then
 						l_upper_char := l_char.upper_code
 					else
@@ -583,7 +592,7 @@ feature {NONE} -- Helpers
 				end
 				l_same := True
 				across l_entry.item as l_codes until not l_same loop
-					if attached unicode_table.item (l_codes.item) as l_char then
+					if attached unicode_table as l_unicode_table and then attached l_unicode_table.item (l_codes.item) as l_char then
 						if l_char.has_upper_code then
 							l_same := l_char.upper_code = l_upper_char
 						else

@@ -86,7 +86,7 @@ feature -- Access
 
 	frozen first_key: like first_name
 		obsolete
-			"Use first_name [2012-May-31]"
+			"Use first_name [2017-05-31]"
 		do
 			Result := first_name
 		end
@@ -130,7 +130,7 @@ feature -- Conversion
 		end
 
 	as_array_of_string: detachable ARRAY [READABLE_STRING_32]
-			-- Return an array of STRING if possible., otherwise Void
+			-- Return an array of STRING if possible, otherwise Void.
 		local
 			i,n: INTEGER
 			nb: INTEGER
@@ -232,7 +232,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

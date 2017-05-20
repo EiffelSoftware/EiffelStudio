@@ -1,4 +1,4 @@
-note
+﻿note
     description: "Node for id. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -186,9 +186,8 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 	name: STRING
 			-- Name of this id.
 		do
-			if attached names_heap.item (name_id) as l_name then
-				Result := l_name
-			else
+			Result := names_heap.item (name_id)
+			if not attached Result then
 					-- Per invariant of class.
 				check has_name_id: False end
 				Result := "_Invalid_name"
@@ -227,9 +226,9 @@ feature -- Comparison
 
 feature {NONE} -- Implementation
 
-	debug_output: STRING
+	debug_output: STRING_32
 		do
-			Result := name
+			Result := name_32
 		end
 
 invariant
@@ -237,7 +236,7 @@ invariant
 	name_id_in_bounds: names_heap.valid_index (name_id)
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -268,4 +267,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ID_AS
+end

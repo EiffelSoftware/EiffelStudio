@@ -1,7 +1,5 @@
-note
-	description: "[
-		Represents an actual code template definition.
-	]"
+﻿note
+	description: "Represents an actual code template definition."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -122,7 +120,6 @@ feature -- Access
 			-- Table with formal argument name and type
 			-- without default values.
 		local
-			i: INTEGER
 			l_result: detachable STRING_TABLE [STRING_32]
 			l_tuple: TUPLE [name:STRING_32; type:STRING_32]
 		do
@@ -325,7 +322,7 @@ feature {NONE} -- Internal Representation.
 			-- match list generated of the current templates.		
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

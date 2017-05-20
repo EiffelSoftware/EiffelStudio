@@ -11,7 +11,7 @@ class
 	EV_PRINT_PROJECTOR
 
 obsolete
-	"Use EV_MODEL_PRINT_PROJECTOR instead."
+	"Use EV_MODEL_PRINT_PROJECTOR instead. [2017-05-31]"
 
 inherit
 

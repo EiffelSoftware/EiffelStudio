@@ -1,44 +1,50 @@
 note
-	desription: "Demo class for sorted sets. %
-		% Just change the types of a, b and c to %
-		% apply to other implementations of sets. %
-		%		MSLS to demo SORTED_SET %
-		%		MBSTS to demo BST_SET"
+	desription: "[
+		Demo class for sorted sets.
+		Just change the types of a, b and c to apply to other implementations of sets:
+			MSLS to demo SORTED_SET;
+			MBSTS to demo BST_SET.
+	]"
 
-class 
+class
 	SORTED_SET_DEMO
 
 inherit
 
 	TOP_DEMO
 		redefine
-			cycle, execute, fill_menu
+			cycle,
+			execute,
+			fill_menu,
+			make
 		end
 
 create
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make
-			-- Initialize and execute demonstration
+			-- Initialize and execute demonstration.
 		do
-			create driver.make
+			Precursor
 			driver.new_menu ("%N%N        * SORTED SET DEMO%N%N[XX] shows current item *%N")
 			fill_menu
 			create a.make
 			create b.make
 			create c.make
 			cycle
-		end 
+		end
 
 feature -- Attributes
 
 	wipe_out, empty, item_count, minmax, remove, has,
 	put, intersect, merge, subtract, is_superset, is_subset,
 	show, quit: INTEGER
+			-- Command code.
 
 	a, b, c:  MSLS
+			-- Sets to operate on.
 
 feature -- Routines
 
@@ -78,7 +84,7 @@ feature -- Routines
 			driver.putstring ("c:")
 			c.display
 			driver.new_line
-		end 
+		end
 
 	fill_menu
 			-- Fill the menu with the available commands.
@@ -209,10 +215,11 @@ feature -- Routines
 				end
 			elseif new_command /= show then
 				driver.signal_error ("Unknown command")
-			end 
-		end 
+			end
+		end
 
-	get_set: like a
+	get_set: detachable like a
+			-- Select a set `a`, `b` or `c`.
 		local
 			s: STRING
 		do
@@ -229,21 +236,22 @@ feature -- Routines
 		end
 
 	get_el: INTEGER
+			-- Read an element.
 		do
 			Result := driver.get_integer ("element")
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class SORTED_SET_DEMO
-
+end

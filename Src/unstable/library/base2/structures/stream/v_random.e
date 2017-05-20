@@ -4,6 +4,7 @@ note
 		(using linear congruential pseudorandom number generator).
 	]"
 	author: "Nadia Polikarpova."
+	updated_by: "Alexander Kogtenkov"
 	model: bit_sequence
 
 class
@@ -30,7 +31,7 @@ feature -- Initialization
 	set_seed (seed: NATURAL_64)
 			-- Create a random stream with a specified `seed'.
 		do
-			value := (seed.bit_xor (Multiplier) & (({NATURAL_64} 1 |<< Random_bit_count) - 1))
+			value := seed.bit_xor (Multiplier) & (({NATURAL_64} 1 |<< Random_bit_count) - 1)
 			next_value := next (value)
 		end
 

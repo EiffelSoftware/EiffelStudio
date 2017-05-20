@@ -10,9 +10,6 @@ class
 
 inherit
 	CMS_MODULE_API
-		redefine
-			initialize
-		end
 
 	REFACTORING_HELPER
 
@@ -26,30 +23,6 @@ feature {NONE} -- Initialization
 			node_storage := a_node_storage
 			make (a_api)
 --			error_handler.add_synchronization (a_node_storage.error_handler)
-		end
-
-	initialize
-			-- <Precursor>
-		do
-			Precursor
-			initialize_node_types
-		end
-
-	initialize_node_types
-			-- Initialize content type system.
-		local
-			ct: CMS_PAGE_NODE_TYPE
-		do
-				-- Initialize node content types.			
-			create ct
-				--| For now, add all available formats to content type `ct'.
-			across
-				cms_api.formats as ic
-			loop
-				ct.extend_format (ic.item)
-			end
-			add_node_type (ct)
-			add_node_type_webform_manager (create {CMS_PAGE_NODE_TYPE_WEBFORM_MANAGER}.make (ct, Current))
 		end
 
 feature {CMS_MODULE} -- Access nodes storage.
@@ -180,6 +153,11 @@ feature -- Access: Node
 			Result := node_storage.nodes_count
 		end
 
+	nodes_of_type_count (a_content_type: CMS_CONTENT_TYPE): NATURAL_64
+		do
+			Result := node_storage.nodes_of_type_count (a_content_type)
+		end
+
 	nodes: LIST [CMS_NODE]
 			-- List of nodes.
 		do
@@ -204,6 +182,18 @@ feature -- Access: Node
 			-- List of most recent nodes according to `params.offset' and `params.size'.
 		do
 			Result := node_storage.recent_nodes (params.offset.to_integer_32, params.size.to_integer_32)
+		end
+
+	recent_nodes_of_type (a_content_type: CMS_CONTENT_TYPE; params: CMS_DATA_QUERY_PARAMETERS): ITERABLE [CMS_NODE]
+			-- Most recent `a_content_type` nodes according to `params.offset' and `params.size'.
+		do
+			Result := node_storage.recent_nodes_of_type (a_content_type, params.offset.to_integer_32, params.size.to_integer_32)
+		end
+
+	recent_published_nodes_of_type (a_content_type: CMS_CONTENT_TYPE; params: CMS_DATA_QUERY_PARAMETERS): ITERABLE [CMS_NODE]
+			-- Most recent published `a_content_type` nodes according to `params.offset' and `params.size', and order by publication_date.
+		do
+			Result := node_storage.recent_published_nodes_of_type (a_content_type, params.offset.to_integer_32, params.size.to_integer_32)
 		end
 
 	recent_node_changes_before (params: CMS_DATA_QUERY_PARAMETERS; a_date: DATE_TIME): ITERABLE [CMS_NODE]
@@ -259,15 +249,23 @@ feature -- Access: Node
 			check has_link: Result.has_id implies attached Result.link as lnk and then lnk.location.same_string (node_link (Result).location) end
 
 				-- Update partial user if needed.
-			if
-				Result /= Void and then
-				attached {CMS_PARTIAL_USER} Result.author as l_partial_author
-			then
-				if attached cms_api.user_api.user_by_id (l_partial_author.id) as l_author then
-					Result.set_author (l_author)
-				else
-					check
-						valid_author_id: False
+			if Result /= Void then
+				if attached {CMS_PARTIAL_USER} Result.author as l_partial_author and then l_partial_author.has_id then
+					if attached cms_api.user_api.user_by_id (l_partial_author.id) as l_author then
+						Result.set_author (l_author)
+					else
+						check
+							valid_author_id: False
+						end
+					end
+				end
+				if attached {CMS_PARTIAL_USER} Result.editor as l_partial_editor and then l_partial_editor.has_id then
+					if attached cms_api.user_api.user_by_id (l_partial_editor.id) as l_editor then
+						Result.set_editor (l_editor)
+					else
+						check
+							valid_author_id: False
+						end
 					end
 				end
 			end
@@ -301,45 +299,9 @@ feature -- Access: Node
 			expected_type: across Result as ic all ic.item.content_type.same_string (a_node_type.name) end
 		end
 
-feature -- Access: page/book outline
-
-	children (a_node: CMS_NODE): detachable LIST [CMS_NODE]
-			-- Children of node `a_node'.
-			-- note: this is the partial version of the nodes.
+	nodes_of_type_with_title (a_node_type: CMS_CONTENT_TYPE; a_title: READABLE_STRING_GENERAL): LIST [CMS_NODE]
 		do
-			Result := node_storage.children (a_node)
-		end
-
-	available_parents_for_node (a_node: CMS_NODE): LIST [CMS_NODE]
-			-- Potential parent nodes for node `a_node'.
-			-- Ensure no cycle exists.
-		do
-			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
-			across node_storage.available_parents_for_node (a_node) as ic loop
-				check distinct: not a_node.same_node (ic.item) end
-				if not is_node_a_parent_of (a_node, ic.item) then
-					Result.force (ic.item)
-				end
-			end
-		ensure
-			no_cycle: across Result as c all not is_node_a_parent_of (a_node, c.item) end
-		end
-
-	is_node_a_parent_of (a_node: CMS_NODE; a_child: CMS_NODE): BOOLEAN
-			-- Is `a_node' a direct or indirect parent of node `a_child'?
-		require
-			distinct_nodes: not a_node.same_node (a_child)
-		do
-			if
-				attached {CMS_PAGE} full_node (a_child) as l_child_page and then
-				attached l_child_page.parent as l_parent
-			then
-				if l_parent.same_node (a_node) then
-					Result := True
-				else
-					Result := is_node_a_parent_of (a_node, l_parent)
-				end
-			end
+			Result := node_storage.nodes_of_type_with_title (a_node_type, a_title)
 		end
 
 feature -- Permission Scope: Node
@@ -362,6 +324,18 @@ feature -- Change: Node
 
 	save_node (a_node: CMS_NODE)
 			-- Save `a_node'.
+		local
+			now: DATE_TIME
+		do
+			reset_error
+			create now.make_now_utc
+			a_node.set_modification_date (now)
+			node_storage.save_node (a_node)
+			error_handler.append (node_storage.error_handler)
+		end
+
+	import_node (a_node: CMS_NODE)
+			-- Same as `save_node` but keep modification_date unchanged.
 		do
 			reset_error
 			node_storage.save_node (a_node)
@@ -389,14 +363,6 @@ feature -- Change: Node
 			end
 		end
 
-	update_node (a_node: CMS_NODE)
-			-- Update node `a_node' data.
-		do
-			reset_error
-			node_storage.update_node (a_node)
-			error_handler.append (node_storage.error_handler)
-		end
-
 	trash_node (a_node: CMS_NODE)
 			-- Trash node `a_node'.
 			-- Soft delete
@@ -413,6 +379,85 @@ feature -- Change: Node
 			reset_error
 			node_storage.restore_node (a_node)
 			error_handler.append (node_storage.error_handler)
+		end
+
+feature -- path_alias suggestion
+
+	path_alias_uri_suggestion (a_node: detachable CMS_NODE; a_content_type: CMS_CONTENT_TYPE): STRING
+		local
+			dt: DATE_TIME
+			uri: URI
+		do
+			create uri.make_from_string ("/")
+			uri.add_unencoded_path_segment (a_content_type.name)
+			if a_node /= Void then
+				dt := a_node.creation_date
+			else
+				create dt.make_now_utc
+			end
+			if attached cms_api.user as u and then not cms_api.user_api.is_admin_user (u) then
+				uri.add_unencoded_path_segment (cms_api.user_api.user_display_name (u))
+			end
+			uri.add_unencoded_path_segment (dt.year.out)
+			if dt.month <= 9 then
+				uri.add_unencoded_path_segment ("0" + dt.month.out)
+			else
+				uri.add_unencoded_path_segment (dt.month.out)
+			end
+			if a_node /= Void and then attached a_node.title as l_title then
+				uri.add_unencoded_path_segment (safe_path_alias_uri_segment_text (l_title))
+			else
+				uri.add_unencoded_path_segment ("")
+			end
+
+			Result := uri.string
+		end
+
+	safe_path_alias_uri_segment_text (s: READABLE_STRING_GENERAL): STRING_32
+		local
+			i,n: INTEGER
+			c, prev: CHARACTER_32
+			l_words: ITERABLE [READABLE_STRING_GENERAL]
+			w: STRING_32
+		do
+			l_words := << "a", "an", "as", "at", "before", "but", "by", "for", "from", "is", "in", "into", "like", "of", "off", "on", "onto", "per", "since", "than", "the", "this", "that", "to", "up", "via", "with" >>
+			from
+				i := 1
+				n :=  s.count
+				create Result.make (n)
+				create w.make_empty
+			until
+				i > n
+			loop
+				c := s[i].as_lower
+				if c.is_alpha_numeric then
+					w.append_character (c)
+					prev := c
+				else
+					if w.is_empty then
+							-- Ignore
+					else
+						if across l_words as ic some w.same_string_general (ic.item) end then
+								-- Ignore
+							w.wipe_out
+						else
+							if not Result.is_empty then
+								Result.append_character ('-')
+							end
+							Result.append (w)
+							w.wipe_out
+						end
+					end
+				end
+				i := i + 1
+			end
+			if not w.is_empty then
+				if not Result.is_empty then
+					Result.append_character ('-')
+				end
+				Result.append (w)
+				w.wipe_out
+			end
 		end
 
 feature -- Node status

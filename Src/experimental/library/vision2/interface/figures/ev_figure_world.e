@@ -14,7 +14,7 @@ class
 	EV_FIGURE_WORLD
 
 obsolete
-	"Use EV_MODEL_WORLD instead."
+	"Use EV_MODEL_WORLD instead. [2017-05-31]"
 
 inherit
 	EV_FIGURE_GROUP

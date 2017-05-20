@@ -1,4 +1,4 @@
-note
+﻿note
 	description : "Objects that represent an error"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,17 +28,17 @@ feature -- Access
 		end
 
 	message: detachable READABLE_STRING_32
-			-- Potential error message
+			-- Potential error message.
 		deferred
 		end
 
 	parent: detachable ERROR
-			-- Eventual error prior to Current
+			-- Eventual error prior to Current.
 
 feature -- String representation
 
 	string_representation: STRING_32
-			-- String representation for Current
+			-- String representation for Current.
 		do
 			create Result.make_from_string (name.as_string_32)
 			Result.append_character (' ')
@@ -62,7 +62,7 @@ feature -- Status report
 feature -- Change
 
 	set_parent (a_parent: like parent)
-			-- Set `parent' to `a_parent'
+			-- Set `parent' to `a_parent'.
 		do
 			parent := a_parent
 		end
@@ -80,7 +80,7 @@ invariant
 	name_attached: name /= Void
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -22,7 +22,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization	
+feature {NONE} -- Initialization
 
 	make (a_title: READABLE_STRING_GENERAL)
 		do
@@ -157,8 +157,8 @@ feature -- Element change
 
 	set_updated_date_with_text (a_date_text: detachable READABLE_STRING_32)
 			-- Set `date' from date string representation `a_date_text'.
-		obsolete 
-			"Use set_date_with_text [oct/2015]"
+		obsolete
+			"Use set_date_with_text [2017-05-31]"
 		do
 			set_date_with_text (a_date_text)
 		end

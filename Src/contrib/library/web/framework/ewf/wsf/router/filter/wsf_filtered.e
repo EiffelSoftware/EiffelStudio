@@ -29,22 +29,19 @@ feature {NONE} -- Initialization
 		deferred
 		end
 
+	append_filter (a_filter: WSF_FILTER)
+			-- Append `a_filter' to the end of the `filter' chain.
+		do
+			filter.append (a_filter)
+		end
+
 	append_filters (a_filters: ITERABLE [WSF_FILTER])
 			-- Append collection `a_filters' of filters to the end of the `filter' chain.
 		local
 			f: like filter
 			l_next_filter: detachable like filter
 		do
-			from
-				f := filter
-				l_next_filter := f.next
-			until
-				l_next_filter = Void
-			loop
-				f := l_next_filter
-				l_next_filter := f.next
-			end
-			check f_attached_without_next: f /= Void and then f.next = Void end
+			f := filter.last
 			across
 				a_filters as ic
 			loop
@@ -58,6 +55,5 @@ feature -- Access
 
 	filter: WSF_FILTER
 			-- Filter
-
 
 end

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="test_uri_template_draft_05" uuid="C995E97E-BE7F-44BB-A38D-FE884CF837F5">
+	<target name="tests">
+		<root class="TEST_URI_TEMPLATE" feature="default_create"/>
+		<file_rule>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option warning="true">
+			<assertions precondition="true"/>
+		</option>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<library name="uri_template" location="..\uri_template.ecf" readonly="false"/>
+		<tests name="tests" location=".\"/>
+	</target>
+</system>

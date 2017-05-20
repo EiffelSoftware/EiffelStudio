@@ -5,8 +5,8 @@
 --                                                            --
 --  Open source license information is in the zlib.ads file.  --
 ----------------------------------------------------------------
---  Continuous test for ZLib multithreading. If the test is fail
---  Wou should provide thread safe allocation routines for the Z_Stream.
+--  Continuous test for ZLib multithreading. If the test would fail
+--  we should provide thread safe allocation routines for the Z_Stream.
 --
 --  $Id$
 
@@ -148,6 +148,9 @@ procedure MTest is
 
    pragma Unreferenced (Test);
 
+   Dummy : Character;
+
 begin
-   null;
+   Ada.Text_IO.Get_Immediate (Dummy);
+   Stop := True;
 end MTest;

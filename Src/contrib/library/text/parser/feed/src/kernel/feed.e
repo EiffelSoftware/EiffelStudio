@@ -14,7 +14,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization	
+feature {NONE} -- Initialization
 
 	make (a_title: READABLE_STRING_GENERAL)
 		do
@@ -55,7 +55,7 @@ feature -- Access
 			Result := items.new_cursor
 		end
 
-feature -- Element change	
+feature -- Element change
 
 	set_description (a_description: detachable READABLE_STRING_GENERAL; a_description_content_type: like description_content_type)
 			-- Set `description' with `a_description' and optional content type `text:$a_description_content_type'.
@@ -80,8 +80,8 @@ feature -- Element change
 
 	set_updated_date_with_text (a_date_text: detachable READABLE_STRING_32)
 			-- Set `date' from date string representation `a_date_text'.
-		obsolete 
-			"Use set_date_with_text [oct/2015]"
+		obsolete
+			"Use set_date_with_text [2017-05-31]"
 		do
 			set_date_with_text (a_date_text)
 		end
@@ -112,7 +112,7 @@ feature -- Element change
 			-- Remove feed item `a_item' from Current list of feed items.
 		do
 			items.prune (a_item)
-		end		
+		end
 
 	extended alias "+" (a_feed: FEED): FEED
 			-- New feed object made from Current merged with a_feed.

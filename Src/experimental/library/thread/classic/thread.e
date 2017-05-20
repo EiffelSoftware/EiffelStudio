@@ -59,7 +59,7 @@ feature -- Basic operations
 					-- on the same THREAD object.
 				is_last_launch_successful_cell.put (False)
 			else
-				create_thread_with_attr (Current, $thr_main, attr.item)
+				create_thread_with_attr (Current, $thr_main, $thr_set_terminated, attr.item)
 				thread_id := last_created_thread
 				is_last_launch_successful_cell.put (True)
 			end
@@ -120,7 +120,7 @@ feature -- Synchronization
 		do
 				-- Optimization
 			if not terminated then
-				thread_wait (Current)
+				thread_wait (Current, $thr_get_terminated)
 			end
 		end
 
@@ -132,7 +132,7 @@ feature -- Synchronization
 			if terminated then
 				Result := True
 			else
-				Result := thread_wait_with_timeout (Current, a_timeout_ms)
+				Result := thread_wait_with_timeout (Current, $thr_get_terminated, a_timeout_ms)
 			end
 		end
 
@@ -160,6 +160,22 @@ feature {NONE} -- Implementation
 			launch_mutex.unlock
 		end
 
+	frozen thr_get_terminated: BOOLEAN
+			-- Get value of `terminated'.
+		do
+			launch_mutex.lock
+			Result := terminated
+			launch_mutex.unlock
+		end
+
+	frozen thr_set_terminated (b: BOOLEAN)
+			-- Set `terminated' to `b'.
+		do
+			launch_mutex.lock
+			terminated := b
+			launch_mutex.unlock
+		end
+		
 	launch_mutex: MUTEX
 			-- Mutex used to ensure that no two threads call `launch' or `launch_with_attributes'
 			-- on the same object. This ensures the validity of querying `thread_id' from
@@ -176,29 +192,29 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	create_thread_with_attr (current_obj: THREAD; init_func, attr: POINTER)
+	create_thread_with_attr (current_obj: THREAD; init_func, set_terminated_func, attr: POINTER)
 			-- Initialize and start thread, after setting its priority
 			-- and stack size.
 		external
-			"C signature (EIF_OBJECT, EIF_PROCEDURE, EIF_POINTER) use %"eif_threads.h%""
+			"C signature (EIF_OBJECT, EIF_PROCEDURE, EIF_PROCEDURE, EIF_POINTER) use %"eif_threads.h%""
 		alias
 			"eif_thr_create_with_attr"
 		end
 
-	thread_wait (term: THREAD)
+	thread_wait (current_obj: THREAD; get_terminated_func: POINTER)
 			-- The calling C thread waits for the current Eiffel thread to
 			-- terminate.
 		external
-			"C use %"eif_threads.h%""
+			"C signature (EIF_OBJECT, EIF_BOOLEAN_FUNCTION) use %"eif_threads.h%""
 		alias
 			"eif_thr_wait"
 		end
 
-	thread_wait_with_timeout (term: THREAD; a_timeout_ms: NATURAL_64): BOOLEAN
+	thread_wait_with_timeout (current_obj: THREAD; get_terminated_func: POINTER; a_timeout_ms: NATURAL_64): BOOLEAN
 			-- The calling C thread waits for the current Eiffel thread to
 			-- terminate.
 		external
-			"C use %"eif_threads.h%""
+			"C signature (EIF_OBJECT, EIF_BOOLEAN_FUNCTION, EIF_NATURAL_64): EIF_BOOLEAN use %"eif_threads.h%""
 		alias
 			"eif_thr_wait_with_timeout"
 		end

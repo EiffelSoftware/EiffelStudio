@@ -37,8 +37,6 @@ feature {NONE} -- Initialization
 			-- Make a link using `a_model'.
 		require
 			a_model_not_void: a_model /= Void
-		local
-			l_reflexive: like reflexive
 		do
 			-- Satisfy invariant
 			create line
@@ -50,10 +48,8 @@ feature {NONE} -- Initialization
 			if a_model.is_directed then
 				line.enable_end_arrow
 			end
-			if a_model.is_reflexive then
+			if a_model.is_reflexive and then attached reflexive as l_reflexive then
 				prune_all (line)
-				l_reflexive := reflexive
-				check l_reflexive /= Void end -- Implied by `is_reflexive'
 				extend (l_reflexive)
 			end
 
@@ -106,12 +102,11 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			p1, p2: EV_COORDINATE
 			an_angle: DOUBLE
 			source_size: EV_RECTANGLE
-			l_model: like model
-			l_reflexive: like reflexive
 		do
-			l_model := model
-			check l_model /= Void end -- FIXME: Implied by ...?
-			if not l_model.is_reflexive then
+			if 
+				attached model as l_model and then 
+				not l_model.is_reflexive 
+			then
 				if attached source as l_source and then attached target as l_target then
 					p1 := line.point_array.item (0)
 					p2 := line.point_array.item (1)
@@ -138,18 +133,16 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 				if is_label_shown then
 					name_label.set_point_position (line.x, line.y)
 				end
-			else
+			elseif attached reflexive as l_reflexive then
 				if attached source as l_source then
 					source_size := l_source.size
-					l_reflexive := reflexive
-					check l_reflexive /= Void end -- FIXME: Implied by ...?
 					l_reflexive.set_x_y (source_size.right + l_reflexive.radius1, source_size.top + source_size.height // 2)
 				end
 				if is_label_shown then
-					l_reflexive := reflexive
-					check l_reflexive /= Void end -- FIXME: Implied by ...?
 					name_label.set_point_position (l_reflexive.x + l_reflexive.radius1, l_reflexive.y)
 				end
+			else
+				check has_reflexive: False end
 			end
 			is_update_required := False
 		end
@@ -170,12 +163,8 @@ feature {NONE} -- Implementation
 
 	on_is_directed_change
 			-- `model'.`is_directed' changed.
-		local
-			l_model: like model
 		do
-			l_model := model
-			check l_model /= Void end -- FIXME: Implied by ...?
-			if l_model.is_directed then
+			if attached model as l_model and then l_model.is_directed then
 				line.enable_end_arrow
 			else
 				line.disable_end_arrow
@@ -196,7 +185,7 @@ invariant
 	line_not_void: line /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

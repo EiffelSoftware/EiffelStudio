@@ -170,12 +170,24 @@ feature -- Access
 
 feature -- Change Element
 
+	unset_certificate_x509_string
+			-- Unset `certificate_x509_string'.
+		do
+			certificate_x509_string := Void
+		end
+
 	set_certificate_x509_string (a_x509: STRING_8)
 			-- X09 certificate manifest string.
 		do
 			certificate_x509_string := a_x509
 		ensure
 			certificate_x509_string_set: attached certificate_x509_string as l_509 implies l_509.same_string (a_x509)
+		end
+
+	unset_private_rsa_key_string
+			-- Unset `private_rsa_key_string'.
+		do
+			private_rsa_key_string := Void
 		end
 
 	set_private_rsa_key_string ( a_rsa_key: STRING_8)
@@ -186,11 +198,21 @@ feature -- Change Element
 			private_rsa_key_string_set: attached private_rsa_key_string as l_rsa_key implies l_rsa_key.same_string (a_rsa_key)
 		end
 
+	unset_certificate_file
+		do
+			certificate_file_path := Void
+		end	
+
 	set_certificate_file_path (a_path: PATH)
 			-- Set `certificate_file_path' to `a_path'
 		do
 			certificate_file_path := a_path
 		end
+
+	unset_key_file
+		do
+			key_file_path := Void
+		end	
 
 	set_key_file_path (a_path: PATH)
 			-- Set `key_file_path' to `a_path'

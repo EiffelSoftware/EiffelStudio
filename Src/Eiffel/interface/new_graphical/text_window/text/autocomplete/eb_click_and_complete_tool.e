@@ -268,8 +268,12 @@ feature -- Analysis preparation
 					end
 					l_templates.forth
 				end
-				completion_possibilities := completion_possibilities.subarray (1, cp_index - 1)
-				completion_possibilities.sort
+				if attached completion_possibilities as l_completion_possibilities then
+						-- Note: this happens when the target object has no exported feature.
+						--		 (should the `completion_possibilities` be empty instead of Void?)
+					completion_possibilities := l_completion_possibilities.subarray (1, cp_index - 1)
+					completion_possibilities.sort
+				end
 			end
 		end
 
@@ -296,7 +300,7 @@ feature -- Analysis preparation
 						-- Add template to the completion possibilities list
 					if
 						attached {ES_CODE_TEMPLATE_DEFINITION_ITEM} l_templates.item_for_iteration as l_code_template and then
-						attached l_code_template.title as l_title 
+						attached l_code_template.title as l_title
 					then
 						create l_template.make (l_code_template, a_stone, "")
 						l_template.set_class_i (current_class_i)
@@ -316,7 +320,6 @@ feature -- Basic Operations
 	stone_at_position (cursor: TEXT_CURSOR): STONE
 			-- Return stone associated with position pointed by `cursor', if any
 		local
-			l_content: TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME]
 			ft		: FEATURE_AS
 			feat		: E_FEATURE
 			a_position	: INTEGER
@@ -325,7 +328,7 @@ feature -- Basic Operations
 		do
 			if is_ok_for_completion then
 				initialize_context
-				if current_class_i /= Void then
+				if attached current_class_i as curr_class_i then
 					token := cursor.token
 					if attached {EIFFEL_EDITOR_LINE} cursor.line as l_eiffel_line then
 						line := l_eiffel_line
@@ -336,10 +339,14 @@ feature -- Basic Operations
 						if line = Void then
 							check is_eiffel_line: False end
 						elseif a_position >= invariant_index then
-							feat := described_feature (token, line, Void)
+							if attached described_access_id (token, line, ft) as tu then
+								feat := tu.feat
+								create {FEATURE_STONE} Result.make (feat)
+							else
+								feat := Void
+							end
 						elseif click_possible (token) then
-							l_content := feature_containing (token, line)
-							if l_content /= Void then
+							if attached feature_containing (token, line) as l_content then
 								ft := l_content.feat_as
 								inspect
 									feature_part_at (token, line)
@@ -349,13 +356,18 @@ feature -- Basic Operations
 									local_part,
 									signature_part
 								then
-									feat := described_feature (token, line, ft)
+									if attached described_access_id (token, line, ft) as loc then
+										feat := loc.feat
+										check loc_with_feat: feat /= Void end
+										if attached loc.ast as l_ast then
+											create {ACCESS_ID_FEATURE_STONE} Result.make_with_feature (loc.feat, loc.ast)
+										else
+											create {FEATURE_STONE} Result.make (feat)
+										end
+									end
 								else
 								end
 							end
-						end
-						if feat /= Void then
-							create {FEATURE_STONE} Result.make (feat)
 						end
 					end
 				end
@@ -827,7 +839,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -134,7 +134,6 @@ feature -- Option names
 	o_assertions_supplier_precondition: STRING_32 = "supplier_precondition"
 
 	o_catcall_detection: STRING_32 = "cat_call_detection"
-	o_concurrency: STRING_32 = "concurrency"
 	o_debug_container: STRING_32 = "debug"
 	o_description: STRING_32 = "description"
 
@@ -149,12 +148,25 @@ feature -- Option names
 	o_is_warning: STRING_32 = "warning"
 
 	o_namespace: STRING_32 = "namespace"
-	o_root_catcall_detection: STRING_32 = "root_catcall_detection"
-	o_root_concurrency: STRING_32 = "root_concurrency"
-	o_root_void_safety: STRING_32 = "root_void_safety"
 	o_syntax: STRING_32 = "syntax"
 	o_void_safety: STRING_32 = "void_safety"
 	o_warning_container: STRING_32 = "warning"
+
+feature -- Capability names
+
+	tag_capability: STRING_32 = "capability"
+			-- A container element name for capabilities.
+
+	tag_capability_catcall_detection: STRING_32 = "catcall_detection"
+	tag_capability_code: STRING_32 = "code"
+	tag_capability_concurrency: STRING_32 = "concurrency"
+	tag_capability_platform: STRING_32 = "platform"
+	tag_capability_void_safety: STRING_32 = "void_safety"
+
+feature -- Capability attribute names
+
+	ca_support: STRING_32 = "support"
+	ca_use: STRING_32 = "use"
 
 feature -- Debug
 

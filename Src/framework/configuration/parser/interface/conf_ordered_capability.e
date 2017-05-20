@@ -178,15 +178,15 @@ feature -- Modification
 		require
 			other_attached: attached other
 		do
-			if not is_root_set and then not value.is_set and then root_index /= other.root_index then
+			if not is_root_set and then root_index /= other.root_index then
 				put_root_index (other.root_index)
 			end
 		ensure
 			old_value:
-				(old is_root_set or else value.is_set or else old root_index = other.root_index) implies
+				(old is_root_set or else old root_index = other.root_index) implies
 					custom_root_index = old custom_root_index
 			new_value:
-				(not old is_root_set and then not value.is_set and then old root_index /= other.root_index) implies
+				(not old is_root_set and then old root_index /= other.root_index) implies
 					(is_root_set and custom_root_index = other.root_index)
 		end
 
@@ -196,16 +196,17 @@ feature -- Modification
 			other_attached: attached other
 		do
 			value.set_safely (other.value)
+				-- Root should be set after capabilities.
 			set_safely_root (other)
 		ensure
 			old_value: (old value.is_set or else old value.twin ~ other.value) implies value ~ old value.twin
 			new_value: (not old value.is_set and then old value.twin /~ other.value) implies value.is_set
 			old_root_value:
-				(old is_root_set or else old custom_root_index = other.custom_root_index) implies
+				(old is_root_set or else old root_index = other.root_index) implies
 					custom_root_index = old custom_root_index
 			new_root_value:
-				(not old is_root_set and then old custom_root_index /= other.custom_root_index) implies
-					(is_root_set and custom_root_index = other.custom_root_index)
+				(not old is_root_set and then old root_index /= other.root_index) implies
+					custom_root_index = other.custom_root_index
 		end
 
 feature -- Output
@@ -234,7 +235,7 @@ invariant
 	is_valid_custom_root_index: is_root_set implies is_valid_index (custom_root_index)
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

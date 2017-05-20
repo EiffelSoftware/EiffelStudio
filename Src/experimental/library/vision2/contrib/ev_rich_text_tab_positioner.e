@@ -13,7 +13,7 @@ class
 	EV_RICH_TEXT_TAB_POSITIONER
 
 obsolete
-	"No supported anymore."
+	"No supported anymore [2017-05-31]"
 
 inherit
 	EV_DRAWING_AREA

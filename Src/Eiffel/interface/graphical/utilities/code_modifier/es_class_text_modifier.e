@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A general purpose Eiffel code class modifier, associated with an Eiffel class {CLASS_I}.
 	]"
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			if not is_editor_text_ready (l_editor) then
 					-- There's no open editor, use the class text from disk instead.
 				l_text := a_class.text_32
-				l_encoding ?= a_class.encoding
+				l_encoding := a_class.encoding
 				original_bom := a_class.bom
 					-- We do not compute orginal text EOL style.
 					-- It is computed only when it is really needed.
@@ -451,9 +451,9 @@ feature -- Basic operations
 						l_editor.replace_selection (l_new_text)
 						l_set_in_editor := True
 
-						if logger.is_service_available then
+						if attached logger.service as s then
 								-- Log change
-							logger.service.put_message_format ("Modified class {1} using {2} in IDE editor", [context_class.name, generating_type], {ENVIRONMENT_CATEGORIES}.editor)
+							s.put_message_format ("Modified class {1} using {2} in IDE editor", [context_class.name, generating_type], {ENVIRONMENT_CATEGORIES}.editor)
 						end
 
 							-- Reset position information.
@@ -503,9 +503,9 @@ feature -- Basic operations
 						-- Update class file data time stamp
 					original_file_date := context_class.file_date
 
-					if logger.is_service_available then
+					if attached logger.service as s then
 							-- Log change
-						logger.service.put_message_format ("Modified class {1} using {2} on disk.", [context_class.name, generating_type], {ENVIRONMENT_CATEGORIES}.editor)
+						s.put_message_format ("Modified class {1} using {2} on disk.", [context_class.name, generating_type], {ENVIRONMENT_CATEGORIES}.editor)
 					end
 				end
 			end
@@ -583,9 +583,9 @@ feature {NONE} -- Basic operations
 				Result := ec_encoding_converter.utf8_to_utf32 (l_diff.patch (ec_encoding_converter.utf32_to_utf8 (a_current_text), l_patch, False))
 			end
 
-			if logger.is_service_available then
+			if attached logger.service as s then
 					-- Log merge
-				logger.service.put_message_format_with_severity ("A class text merge was perform because {1} was modified.", [context_class.name], {ENVIRONMENT_CATEGORIES}.editor, {PRIORITY_LEVELS}.low)
+				s.put_message_format_with_severity ("A class text merge was perform because {1} was modified.", [context_class.name], {ENVIRONMENT_CATEGORIES}.editor, {PRIORITY_LEVELS}.low)
 			end
 		end
 
@@ -780,7 +780,7 @@ invariant
 	modified_data_attached: attached modified_data
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

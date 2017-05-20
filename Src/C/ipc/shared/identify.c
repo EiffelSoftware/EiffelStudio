@@ -64,7 +64,7 @@
 
 #ifdef EIF_WINDOWS
 #include "uu.h"
-#include <windows.h>
+#include <winsock2.h>
 #else /* non EIF_WINDOWS */
 #include <unistd.h>
 #include <errno.h>

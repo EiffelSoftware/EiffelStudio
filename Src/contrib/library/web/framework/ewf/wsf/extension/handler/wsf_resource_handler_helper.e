@@ -236,16 +236,16 @@ feature -- Method Extension Method
 
 	do_extension_method (req: WSF_REQUEST; res: WSF_RESPONSE)
 		-- Execute `req' responding into `res'.
-	require
-		req_attached: req /= Void
-		res_attached: res /= Void
+		require
+			req_attached: req /= Void
+			res_attached: res /= Void
 		do
 			handle_not_implemented ("Method extension-method not implemented", req, res)
 		end
 
 feature -- Retrieve content from WGI_INPUT_STREAM
 
-	retrieve_data  (req: WSF_REQUEST): STRING
+	retrieve_data (req: WSF_REQUEST): STRING
 			-- Retrieve the content from the input stream.
 			-- Handle different transfers.
 		require
@@ -374,7 +374,7 @@ feature -- Handle responses: others
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

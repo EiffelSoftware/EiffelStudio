@@ -8,16 +8,24 @@ class
 	WSF_FORM
 
 inherit
+	WSF_WIDGET
+
 	WSF_FORM_COMPOSITE
 
 	WSF_WITH_HTML_ATTRIBUTE
+
+	WSF_WITH_CSS_ID
+
+	WSF_WITH_CSS_CLASS
+
+	WSF_WITH_CSS_STYLE
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_action: READABLE_STRING_8; a_id: READABLE_STRING_8)
+	make (a_action: READABLE_STRING_8; a_id: detachable READABLE_STRING_8)
 		do
 			action := a_action
 			id := a_id
@@ -33,8 +41,8 @@ feature -- Access
 	action: READABLE_STRING_8
 			-- URL for the web form
 
-	id: READABLE_STRING_8
-			-- Id of the form
+	id: detachable READABLE_STRING_8
+			-- Optional id of the form
 
 	is_get_method: BOOLEAN
 		do
@@ -56,9 +64,10 @@ feature -- Access
 feature -- Basic operation
 
 	process (req: WSF_REQUEST; a_before_callback, a_after_callback: detachable PROCEDURE [WSF_FORM_DATA])
-			-- Process Current form with request `req'
-			-- agent `a_before_callback' is called before the validation
-			-- agent `a_after_callback' is called after the validation
+			-- Process Current form with request `req`,
+			-- and build `last_data: WSF_FORM_DATA` object containing the field values.
+			-- agent `a_before_callback` is called before the validation
+			-- agent `a_after_callback` is called after the validation
 		local
 			fd: WSF_FORM_DATA
 		do
@@ -117,25 +126,19 @@ feature -- Optional
 feature -- Conversion
 
 	append_to_html (a_theme: WSF_THEME; a_html: STRING_8)
-		local
-			s: STRING_8
 		do
-			a_html.append ("<form action=%""+ action +"%" id=%""+ id +"%" method=%""+ method +"%"")
+			a_html.append ("<form action=%""+ action +"%"")
+			a_html.append (" method=%""+ method +"%"")
 			if attached encoding_type as enctype then
 				a_html.append (" enctype=%""+ enctype +"%"")
 			end
-			if not html_classes.is_empty then
-				create s.make_empty
-				across
-					html_classes as cl
-				loop
-					if not s.is_empty then
-						s.extend (' ')
-					end
-					s.append (cl.item)
-				end
-				a_html.append (" class=%"" + s + "%" ")
+			if attached id as l_id then
+				a_html.append (" id=%""+ l_id +"%"")
 			end
+			append_css_id_to (a_html)
+			append_css_class_to (a_html, html_classes)
+			append_css_style_to (a_html)
+			append_html_attributes_to (a_html)
 			a_html.append (">%N")
 			across
 				items as c
@@ -143,12 +146,6 @@ feature -- Conversion
 				c.item.append_to_html (a_theme, a_html)
 			end
 			a_html.append ("</form>%N")
-		end
-
-	to_html (a_theme: WSF_THEME): STRING_8
-		do
-			create Result.make_empty
-			append_to_html (a_theme, Result)
 		end
 
 end

@@ -1,6 +1,7 @@
 note
 	description: "Cursors to traverse binary trees."
 	author: "Nadia Polikarpova"
+	updated_by: "Alexander Kogtenkov"
 	model: target, map, path
 
 class
@@ -131,8 +132,8 @@ feature -- Cursor movement
 				active := a.left
 			end
 		ensure
-			path_effect_not_off: old (map.domain [path & False]) implies path |=| old (path & False)
-			path_effect_off: not old (map.domain [path & False]) implies path.is_empty
+			path_effect_not_off: old map.domain [path & False] implies path |=| old (path & False)
+			path_effect_off: not old map.domain [path & False] implies path.is_empty
 		end
 
 	right
@@ -146,8 +147,8 @@ feature -- Cursor movement
 				active := a.right
 			end
 		ensure
-			path_effect_not_off: old (map.domain [path & True]) implies path |=| old (path & True)
-			path_effect_off: not old (map.domain [path & True]) implies path.is_empty
+			path_effect_not_off: old map.domain [path & True] implies path |=| old (path & True)
+			path_effect_off: not old map.domain [path & True] implies path.is_empty
 		end
 
 	go_root

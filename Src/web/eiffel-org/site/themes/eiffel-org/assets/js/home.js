@@ -12,6 +12,16 @@ $(document).ready(function() {
     $("form button").click(function() {
         window.onbeforeunload = null;
     });
+
+	$(".roccms-load").each(function() {
+		$(this).html('<span class="loading">loading ...</span>');
+		$("span.loading").fadeOut ("slow");
+		var h = $(this).attr("data-href");
+		if (typeof h !== 'undefined') {
+			$(this).load(h);
+		};
+	});
+
 });
 
 /* Google Analytics */

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		An EiffelStudio dockable tool window, allowing a context stone to be pushed, base implementation for EiffelStudio tools.
 	]"
@@ -271,10 +271,10 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 invariant
-	tool_descriptor_is_stonable: is_interface_usable implies (({ES_STONABLE_I}) #? tool_descriptor) /= Void
+	tool_descriptor_is_stonable: is_interface_usable implies attached {ES_STONABLE_I} tool_descriptor
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

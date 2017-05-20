@@ -56,6 +56,19 @@ feature -- Properties
 			-- Parent profile
 			--| if not Void, Current is based on `parent' parameters
 
+feature -- Query
+
+	title_suggestion: detachable STRING_32
+			-- Title suggestion based on Current parameters.
+		local
+			args: like arguments
+		do
+			args := arguments
+			if not args.is_whitespace then
+				create Result.make_from_string (args)
+			end
+		end
+
 feature {DEBUGGER_EXECUTION_PROFILE, DEBUGGER_EXECUTION_RESOLVED_PROFILE} -- Access
 
 	version: NATURAL_32

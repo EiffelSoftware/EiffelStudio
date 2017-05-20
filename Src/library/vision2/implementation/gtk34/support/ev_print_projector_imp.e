@@ -11,7 +11,7 @@ class
 	EV_PRINT_PROJECTOR_IMP
 
 obsolete
-	"Use EV_MODEL_PRINT_PROJECTOR_IMP instead."
+	"Use EV_MODEL_PRINT_PROJECTOR_IMP instead. [2017-05-31]"
 
 inherit
 
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 		do
 			assign_interface (an_interface)
 		end

@@ -97,7 +97,7 @@ feature -- Access: router
 		do
 			map_uri_template_agent (a_router, "/" + uploads_location, agent execute_upload (?, ?, a_api), Void) -- Accepts any method GET, HEAD, POST, PUT, DELETE, ...
 			map_uri_template_agent (a_router, "/" + uploads_location + "{filename}", agent display_uploaded_file_info (?, ?, a_api), a_router.methods_get)
-			map_uri_template_agent (a_router, "/" + uploads_location + "remove/{filename}", agent remove_file (?, ?, a_api), a_router.methods_get)
+			map_uri_template_agent (a_router, "/" + uploads_location + "{filename}/remove", agent remove_file (?, ?, a_api), a_router.methods_get)
 		end
 
 	uploads_location: STRING = "upload/"
@@ -133,6 +133,7 @@ feature -- Handler
 		local
 			body: STRING_8
 			r: CMS_RESPONSE
+			l_file_url: STRING_8
 			f: CMS_FILE
 			md: detachable CMS_FILE_METADATA
 			fn: READABLE_STRING_32
@@ -145,7 +146,7 @@ feature -- Handler
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 
 					-- add style
-				r.add_style (r.url ("/module/" + name + "/files/css/files.css", Void), Void)
+				r.add_style (r.module_resource_url (Current, "/files/css/files.css", Void), Void)
 
 				create body.make_empty
 
@@ -193,12 +194,18 @@ feature -- Handler
 					else
 						body.append ("NA")
 					end
+					body.append ("<br/>%N")
+
+						--| File Url
+					l_file_url := req.script_url ("/" + l_files_api.file_link (f).location)
+					body.append ("<strong>File URL: </strong>")
+					body.append (l_file_url)
 					body.append ("<br/><br/>%N")
 
-					body.append ("<a class=%"button%" href=%"" + req.script_url ("/" + l_files_api.file_link (f).location) + "%">Download</a>%N")
-					body.append ("<a class=%"button%" href=%"" + req.script_url ("/" + uploads_location + "remove/" + f.filename) + "%">Remove</a>%N")
+					body.append ("<a class=%"button%" href=%"" + l_file_url + "%">Download</a>%N")
+					body.append ("<a class=%"button%" href=%"" + req.script_url ("/" + uploads_location + f.filename + "/remove") + "%">Remove</a>%N")
 					body.append ("</div>%N") -- metadata
-
+					body.append ("<br/>%N")
 					body.append ("<div class=%"overview%">")
 					if
 						attached f.relative_path.extension as ext and then
@@ -238,7 +245,7 @@ feature -- Handler
 				body.append ("<h1> Upload files </h1>%N")
 
 					-- set style
-				r.add_style (r.url ("/module/" + name + "/files/css/files.css", Void), Void)
+				r.add_style (r.module_resource_url (Current, "/files/css/files.css", Void), Void)
 
 				if api.has_permission (upload_files_permission) then
 					body.append ("<p>Please choose file(s) to upload.</p>")
@@ -262,8 +269,8 @@ feature -- Handler
 						body.append ("<a href=%""+ r.url (uploads_location, Void) +"?basic_upload=no%">Use advanced file uploading.</a>%N")
 					else
 							-- add JS for dropzone
-						r.add_javascript_url (r.url ("/module/" + name + "/files/js/dropzone.js", Void))
-						r.add_style (r.url ("/module/" + name + "/files/js/dropzone.css", Void), Void)
+						r.add_javascript_url (r.module_resource_url (Current, "/files/js/dropzone.js", Void))
+						r.add_style (r.module_resource_url (Current, "/files/js/dropzone.css", Void), Void)
 
 							-- create form to choose files and upload them
 						body.append ("<form action=%"" + r.url (uploads_location, Void) + "%" class=%"dropzone%">")
@@ -425,7 +432,7 @@ feature -- Handler
 
 									-- add remove button
 								a_output.append ("<td>")
-								a_output.append ("<a class=%"button%" href=%"" + req.script_url ("/" + uploads_location + "remove/" + f.filename) + "%">Remove</a>%N")
+								a_output.append ("<a class=%"button%" href=%"" + req.script_url ("/" + uploads_location + f.filename + "/remove") + "%">Remove</a>%N")
 								a_output.append ("</td>%N")
 
 								a_output.append ("</tr>%N")

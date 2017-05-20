@@ -1,7 +1,7 @@
 note
 	description: "Access to the sql database for the blog module"
 	author: "Dario Bösch <daboesch@student.ethz.ch>"
-	date: "$Date: 2015-05-21 14:46:00 +0100$"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -57,7 +57,7 @@ feature -- Access
 				sql_query (sql_select_blogs_order_created_desc, Void)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -84,7 +84,7 @@ feature -- Access
 				sql_query (sql_blogs_limited, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -105,14 +105,41 @@ feature -- Access
 			write_information_log (generator + ".blogs_from_user_limited")
 
 			from
-				create l_parameters.make (2)
+				create l_parameters.make (3)
 				l_parameters.put (a_limit, "limit")
 				l_parameters.put (a_offset, "offset")
 				l_parameters.put (a_user.id, "user")
 				sql_query (sql_blogs_from_user_limited, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
+			loop
+				if attached fetch_node as l_node then
+					Result.force (l_node)
+				end
+				sql_forth
+			end
+			sql_finalize
+		end
+
+	blogs_from_user_with_title (a_user: CMS_USER; a_title: READABLE_STRING_GENERAL): LIST [CMS_NODE]
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+
+			error_handler.reset
+			write_information_log (generator + ".blogs_from_user_with_title")
+
+			from
+				create l_parameters.make (2)
+				l_parameters.put (a_user.id, "user")
+				l_parameters.put (a_title, "title")
+				sql_query (sql_blogs_from_user_with_title, l_parameters)
+				sql_start
+			until
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -132,14 +159,28 @@ feature {NONE} -- Queries
 			-- Nodes count (Published and not Published)
 			--| note: {CMS_NODE_API}.trashed = -1
 
-	sql_select_blogs_order_created_desc: STRING = "SELECT * FROM nodes WHERE status != -1 AND type = %"blog%" ORDER BY created DESC;"
+	sql_select_blogs_order_created_desc: STRING
 			-- SQL Query to retrieve all nodes that are from the type "blog" ordered by descending creation date.
+		once
+			Result := sql_select_all_from_nodes + " WHERE status != -1 AND type = %"blog%" ORDER BY created DESC;"
+		end
 
-	sql_blogs_limited: STRING = "SELECT * FROM nodes WHERE status != -1 AND type = %"blog%" ORDER BY created DESC LIMIT :limit OFFSET :offset ;"
-			--- SQL Query to retrieve all node of type "blog" limited by limit and starting at offset
+	sql_blogs_limited: STRING
+			--- SQL Query to retrieve all nodes of type "blog" limited by limit and starting at offset
+		once
+			Result := sql_select_all_from_nodes + " WHERE status != -1 AND type = %"blog%" ORDER BY created DESC LIMIT :limit OFFSET :offset ;"
+		end
 
-	sql_blogs_from_user_limited: STRING = "SELECT * FROM nodes WHERE status != -1 AND type = %"blog%" AND author = :user ORDER BY created DESC LIMIT :limit OFFSET :offset ;"
-			--- SQL Query to retrieve all node of type "blog" from author with id limited by limit + offset
+	sql_blogs_from_user_limited: STRING
+			--- SQL Query to retrieve all nodes of type "blog" from author with id limited by limit + offset
+		once
+			Result := sql_select_all_from_nodes + " WHERE status != -1 AND type = %"blog%" AND author = :user ORDER BY created DESC LIMIT :limit OFFSET :offset ;"
+		end
 
+	sql_blogs_from_user_with_title: STRING
+			--- SQL Query to retrieve all nodes of type "blog" from author with title .
+		once
+			Result := sql_select_all_from_nodes + " WHERE status != -1 AND type = %"blog%" AND author = :user AND title = :title ORDER BY created DESC;"
+		end
 
 end

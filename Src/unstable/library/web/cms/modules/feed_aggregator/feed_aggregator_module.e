@@ -13,17 +13,16 @@ inherit
 		redefine
 			initialize,
 			setup_hooks,
-			permissions,
 			feed_aggregator_api
 		end
+
+	CMS_ADMINISTRABLE
 
 	CMS_HOOK_BLOCK
 
 	CMS_HOOK_RESPONSE_ALTER
 
 	CMS_HOOK_MENU_SYSTEM_ALTER
-
-	CMS_HOOK_CACHE
 
 create
 	make
@@ -42,16 +41,12 @@ feature -- Access
 
 	name: STRING = "feed_aggregator"
 
-	permissions: LIST [READABLE_STRING_8]
-			-- List of permission ids, used by this module, and declared.
-		do
-			Result := Precursor
-			Result.force (permission__manage_feed_aggregator)
-			Result.force (permission__clear_feed_cache)
-		end
+feature {CMS_EXECUTION} -- Administration
 
-	permission__manage_feed_aggregator: STRING = "manage feed aggregator"
-	permission__clear_feed_cache: STRING = "clear feed cache"
+	administration: FEED_AGGREGATOR_MODULE_ADMINISTRATION
+		do
+			create Result.make (Current)
+		end
 
 feature {CMS_API} -- Module Initialization			
 
@@ -74,7 +69,6 @@ feature -- Access: router
 		local
 			h: WSF_URI_TEMPLATE_HANDLER
 		do
-			a_router.handle ("/admin/feed_aggregator/", create {WSF_URI_AGENT_HANDLER}.make (agent handle_feed_aggregator_admin (a_api, ?, ?)), a_router.methods_head_get_post)
 			create {WSF_URI_TEMPLATE_AGENT_HANDLER} h.make (agent handle_feed_aggregation (a_api, ?, ?))
 			a_router.handle ("/feed_aggregation/", h, a_router.methods_head_get)
 			a_router.handle ("/feed_aggregation/{feed_id}", h, a_router.methods_head_get)
@@ -82,17 +76,10 @@ feature -- Access: router
 
 feature -- Handle
 
-	handle_feed_aggregator_admin (a_api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			nyi: NOT_IMPLEMENTED_ERROR_CMS_RESPONSE
-		do
-			create nyi.make (req, res, a_api)
-			nyi.execute
-		end
-
 	handle_feed_aggregation	(a_api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			r: CMS_RESPONSE
+			m: WSF_PAGE_RESPONSE
+			r: detachable CMS_RESPONSE
 			s: STRING
 			nb: INTEGER
 		do
@@ -101,49 +88,66 @@ feature -- Handle
 			else
 				nb := -1
 			end
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_api)
 			if attached {WSF_STRING} req.path_parameter ("feed_id") as p_feed_id then
 				if attached feed_aggregation (p_feed_id.value) as l_agg then
-					create s.make_empty
-					s.append ("<h1>")
-					s.append (r.html_encoded (l_agg.name))
-					s.append ("</h1>")
-					if attached l_agg.included_categories as l_categories then
-						s.append ("<span class=%"category%">")
-						across
-							l_categories as cats_ic
-						loop
-							s.append (" [")
-							s.append (r.html_encoded (cats_ic.item))
-							s.append ("]")
+					if attached {WSF_STRING} req.query_parameter ("view") as p_view and then p_view.same_string ("embedded") then
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_api)
+						if attached feed_to_html (p_feed_id.value, nb, True, r) as l_html then
+							r := Void
+							create m.make_with_body (l_html)
+							m.header.put_content_type_text_html
+							res.send (m)
+						else
+							create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, a_api)
+							r.execute
 						end
-						s.append ("</span>")
-					end
-					if attached l_agg.description as l_desc and then l_desc.is_valid_as_string_8 then
-						s.append ("<div class=%"description%">")
-						s.append (l_desc.as_string_8)
-						s.append ("</div>")
-					end
-					s.append ("<ul>")
-					across
-						l_agg.locations as ic
-					loop
-						s.append ("<li><a href=%"")
-						s.append (ic.item)
-						s.append ("%">")
-						s.append (ic.item)
-						s.append ("</a></li>")
-					end
-					s.append ("</ul>")
+					else
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_api)
+						create s.make_empty
+						s.append ("<h1>")
+						s.append (r.html_encoded (l_agg.name))
+						s.append ("</h1>")
+						if attached l_agg.included_categories as l_categories then
+							s.append ("<span class=%"category%">")
+							across
+								l_categories as cats_ic
+							loop
+								s.append (" [")
+								s.append (r.html_encoded (cats_ic.item))
+								s.append ("]")
+							end
+							s.append ("</span>")
+						end
+						if attached l_agg.description as l_desc and then l_desc.is_valid_as_string_8 then
+							s.append ("<div class=%"description%">")
+							s.append (l_desc.as_string_8)
+							s.append ("</div>")
+						end
+						s.append ("<ul>")
+						across
+							l_agg.locations as ic
+						loop
+							s.append ("<li><a href=%"")
+							s.append (ic.item)
+							s.append ("%">")
+							s.append (ic.item)
+							s.append ("</a></li>")
+						end
+						s.append ("</ul>")
 
-					if attached feed_to_html (p_feed_id.value, nb, True, r) as l_html then
-						s.append (l_html)
+						if attached feed_to_html (p_feed_id.value, nb, True, r) as l_html then
+							s.append (l_html)
+						end
+
+						r.set_main_content (s)
+						r.execute
 					end
-					r.set_main_content (s)
 				else
 					create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, a_api)
+					r.execute
 				end
 			else
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_api)
 				if attached feed_aggregator_api as l_feed_agg_api then
 					create s.make_empty
 					across
@@ -175,8 +179,8 @@ feature -- Handle
 				else
 					create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, a_api)
 				end
+				r.execute
 			end
-			r.execute
 		end
 
 feature -- Hooks configuration
@@ -187,42 +191,25 @@ feature -- Hooks configuration
 			a_hooks.subscribe_to_block_hook (Current)
 			a_hooks.subscribe_to_response_alter_hook (Current)
 			a_hooks.subscribe_to_menu_system_alter_hook (Current)
-			a_hooks.subscribe_to_cache_hook (Current)
 		end
 
 feature -- Hook
-
-	clear_cache (a_cache_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_response: CMS_RESPONSE)
-			-- <Precursor>.
-		local
-			p: PATH
-			dir: DIRECTORY
-		do
-			if a_response.has_permissions (<<permission__clear_feed_cache, permission__manage_feed_aggregator>>) then
-				if a_cache_id_list = Void then
-						-- Clear all cache.
-					p := a_response.api.files_location.extended (".cache").extended (name)
-					create dir.make_with_path (p)
-					if dir.exists then
-						dir.recursive_delete
-					end
-				end
-			end
-		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 			-- List of block names, managed by current object.
 		local
 			res: ARRAYED_LIST [like {CMS_BLOCK}.name]
-			l_aggs: HASH_TABLE [FEED_AGGREGATION, STRING_8]
+			utf_conv: UTF_CONVERTER
 		do
-			if attached feed_aggregator_api as l_feed_api then
-				l_aggs := l_feed_api.aggregations
-				create res.make (l_aggs.count)
+			if
+				attached feed_aggregator_api as l_feed_api and then
+				attached l_feed_api.aggregations_ids as l_aggs
+			then
+				create res.make (1)
 				across
 					l_aggs as ic
 				loop
-					res.force ("?feed." + ic.key)
+					res.force ("?feed." + utf_conv.utf_32_string_to_utf_8_string_8 (ic.item))
 				end
 			else
 				create res.make (0)
@@ -280,7 +267,7 @@ feature -- Hook
 		do
 			if attached feed_aggregator_api as l_feed_api then
 				if attached l_feed_api.aggregation (a_feed_id) as l_agg then
-					create l_cache.make (a_response.api.files_location.extended (".cache").extended (name).extended ("feed__" + a_feed_id + "__" + a_count.out + "_" + with_feed_info.out))
+					create l_cache.make (l_feed_api.cms_api.cache_location.extended (name).extended ("feed__" + a_feed_id + "__" + a_count.out + "_" + with_feed_info.out))
 					Result := l_cache.item
 					if Result = Void or l_cache.expired (Void, l_agg.expiration) then
 
@@ -339,7 +326,7 @@ feature -- Hook
 
 	response_alter (a_response: CMS_RESPONSE)
 		do
-			a_response.add_style (a_response.url ("/module/" + name + "/files/css/feed_aggregator.css", Void), Void)
+			a_response.add_style (a_response.module_resource_url (Current, "/files/css/feed_aggregator.css", Void), Void)
 		end
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
@@ -348,9 +335,6 @@ feature -- Hook
 		do
 			if a_response.is_authenticated then
 				a_menu_system.navigation_menu.extend (create {CMS_LOCAL_LINK}.make ("Feeds", "feed_aggregation/"))
-				if a_response.has_permission (permission__manage_feed_aggregator) then
-					a_menu_system.management_menu.extend_into (create {CMS_LOCAL_LINK}.make ("Feeds (admin)", "admin/feed_aggregator/"), "Admin", "admin")
-				end
 			end
 		end
 

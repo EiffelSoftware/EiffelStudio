@@ -14,20 +14,21 @@ feature {NONE} -- Template context
 			create Result.make
 		end
 
-	template_custom_action_by_id (a_id: detachable STRING): detachable FUNCTION [STRING, STRING_TABLE [STRING], STRING]
+	template_custom_action_by_id (a_id: detachable STRING): detachable TEMPLATE_CUSTOM_ACTION
 		do
 			if a_id /= Void then
-				Result := template_context.template_custom_actions.item (a_id)
+				Result := template_context.template_custom_action_by_id (a_id)
 			end
 		end
 
 	is_valid_template_custom_action_id (a_id: detachable STRING): BOOLEAN
 		do
-			Result := a_id /= Void and then template_context.template_custom_actions.has (a_id)
+			Result := a_id /= Void and then
+						template_context.is_valid_template_custom_action_id (a_id)
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, and Eiffel Software"
+	copyright: "2011-2016, Jocelyn Fiat, and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

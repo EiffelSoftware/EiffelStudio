@@ -44,7 +44,7 @@ feature -- Conversion
         local
 			failed: BOOLEAN
         do
-            create Result.make_array
+            create Result.make_empty
             across
             	o as c
             loop
@@ -60,7 +60,7 @@ feature -- Conversion
         end
 
 note
-	copyright: "2011-2012, Javier Velilla, Jocelyn Fiat and others"
+	copyright: "2011-2017, Javier Velilla, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end -- class CJ_JSON_ARRAYED_LIST_CONVERTER
 

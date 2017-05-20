@@ -459,6 +459,15 @@ feature -- Access
 				post_data_provider_execution
 			end
 
+	email_from_reset_password (a_token: READABLE_STRING_32): detachable STRING_32
+			-- Retrieve user email using the generated token `a_token` from the
+			-- reset password action.
+		do
+			log.write_debug (generator+".email_from_reset_password token:" + a_token)
+			Result := login_provider.email_from_reset_password (a_token)
+			post_login_provider_execution
+		end
+
 feature -- Basic Operations
 
 	row_count_problem_report_guest (a_category: INTEGER; a_status: INTEGER; a_username: READABLE_STRING_32): INTEGER
@@ -727,6 +736,20 @@ feature -- Element Settings
 			post_login_provider_execution
 		end
 
+
+	change_password (a_user: READABLE_STRING_32; a_email: READABLE_STRING_32; a_token: READABLE_STRING_32)
+			-- Change user passord.
+		do
+			if login_provider.user_from_username (a_user) /= Void then
+				login_provider.change_password (a_user, a_email, a_token)
+				set_successful
+			else
+					-- 	"Could not update user: Username does not exist"
+				log.write_alert (generator + ".change_password Could not update user password: Username not registered" )
+				set_last_error ("Username does not exist", generator + ".change_password")
+			end
+		end
+
 feature -- Access: Auth Session
 
 	user_by_session_token (a_token: READABLE_STRING_8): detachable USER
@@ -807,6 +830,35 @@ feature -- Status Report
 			post_data_provider_execution
 		end
 
+	is_interaction_visible (a_username: detachable READABLE_STRING_32; a_interaction_id: INTEGER): BOOLEAN
+			-- Is a given interaction  `interaction_id' visible ?
+			-- if the username is void means `Guest user'.
+		do
+			if attached a_username then
+				log.write_debug (generator + ".is_interaction_visible for username:" + a_username + " interaction:" + a_interaction_id.out )
+				Result := data_provider.interaction_visible (a_username, a_interaction_id)
+				post_data_provider_execution
+			else
+				log.write_debug (generator + ".is_interaction_visible_guest for interaction:" + a_interaction_id.out )
+				Result := data_provider.interaction_visible_guest (a_interaction_id)
+				post_data_provider_execution
+			end
+		end
+
+	is_attachment_visible (a_username: detachable READABLE_STRING_32; a_attachment_id: INTEGER): BOOLEAN
+			-- Is a given attachement `a_attachment_id' visible?
+			-- if the username is void it means 'Guest users'.
+		do
+			if attached a_username then
+				log.write_debug (generator + ".is_attachment_visible for user:" + a_username + " attachment:" + a_attachment_id.out )
+				Result := data_provider.attachment_visible (a_username, a_attachment_id)
+				post_data_provider_execution
+			else
+				log.write_debug (generator + ".is_attachment_visible guest  attachmebt:" + a_attachment_id.out )
+				Result := data_provider.attachment_visible_guest (a_attachment_id)
+				post_data_provider_execution
+			end
+		end
 
 	activation_valid (a_email, a_token: READABLE_STRING_32): BOOLEAN
 			-- Is activation for user with email `a_email' using token `a_token' valid?
@@ -821,7 +873,6 @@ feature -- Status Report
 				log.write_error (generator + ".activation_valid " + last_error_message)
 			end
 		end
-
 
 	user_token_new_email (a_token: READABLE_STRING_32; a_user: READABLE_STRING_32): TUPLE [age:INTEGER; email:detachable STRING_32]
 			-- A token `a_token' is valid if it exist for the given user `a_user' and is not expired (24 hours since his request).

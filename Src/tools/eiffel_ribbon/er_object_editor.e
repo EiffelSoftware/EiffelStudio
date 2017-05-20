@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-					EiffelRibbon Object Editor tool
-					Users can specify properties of ribbon items by this tool
-							]"
+			EiffelRibbon Object Editor tool
+			Users can specify properties of ribbon items by this tool
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,38 +14,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (m: SD_DOCKING_MANAGER)
 			-- Creation method
 		do
 			create constants
-			build_ui
-			build_docking_content
-		end
-
-	build_docking_content
-			-- Build docking content
-		do
-			create content.make_with_widget (widget, "ER_OBJECT_EDITOR")
+			create widget
+			create content.make_with_widget (widget, "ER_OBJECT_EDITOR", m)
 			content.set_long_title ("Object Editor")
 			content.set_short_title ("Object Editor")
-		end
-
-	build_ui
-			-- Build GUI
-		do
-			create widget
+			m.contents.extend (content)
+			content.set_top ({SD_ENUMERATION}.right)
 		end
 
 feature -- Command
-
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Attached to docking manager
-		require
-			not_void: a_docking_manager /= Void
-		do
-			a_docking_manager.contents.extend (content)
-			content.set_top ({SD_ENUMERATION}.right)
-		end
 
 	update_ui_with_node (a_node: EV_TREE_NODE)
 			-- Update GUI with `a_node'
@@ -234,7 +215,7 @@ feature {NONE} -- Implementation
 			-- Constants	
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1147,6 +1147,8 @@ feature {NONE} -- Profile actions
 			l_master_item.set_editable_background_color (profiles_grid.background_color)
 			l_master_item.set_editable_foreground_color (profiles_grid.foreground_color)
 
+			l_master_item.pointer_button_press_actions.force_extend (agent on_profile_title_clicked (a_row, ?,?,?))
+
 			a_row.set_item (1, l_master_item)
 
 
@@ -1228,6 +1230,35 @@ feature {NONE} -- Profile actions
 					Result := profiles_grid.row (r)
 				end
 				r := r + 1
+			end
+		end
+
+	on_profile_title_clicked (a_row: EV_GRID_ROW; ax,ay, abut:INTEGER_32)
+			-- Profile title row clicked.
+		require
+			a_row /= Void
+			a_row.parent /= Void
+		local
+			m: EV_MENU
+			mi: EV_MENU_ITEM
+		do
+			if
+				abut = 3
+				and not ev_application.ctrl_pressed
+				and not ev_application.alt_pressed
+				and not ev_application.shift_pressed
+				and attached profile_from_row (a_row) as prof
+			then
+				create m
+				create mi.make_with_text (interface_names.m_update_debugging_profile_title_with_suggestion)
+				mi.select_actions.extend (agent (ia_prof: DEBUGGER_EXECUTION_PROFILE)
+					do
+						if attached ia_prof.title_suggestion as l_title then
+							change_title_on (l_title, ia_prof)
+						end
+					end (prof))
+				m.extend (mi)
+				m.show
 			end
 		end
 

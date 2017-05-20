@@ -1,6 +1,6 @@
 note
 	description: "Regular expression String Facilities"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault, Eiffel Software and others"
 	license: "MIT License"
 
 deferred class
@@ -34,7 +34,7 @@ feature -- Replacement
 			a_replacement_not_void: a_replacement /= Void
 		local
 			i, j, nb, ref: NATURAL
-			c: INTEGER
+			c: NATURAL_32
 		do
 			nb := a_replacement.count.as_natural_32
 			from
@@ -42,22 +42,22 @@ feature -- Replacement
 			until
 				i > nb
 			loop
-				c := a_replacement.item_code (i.as_integer_32)
-				if c = {ASCII}.Backslash then
+				c := a_replacement.code (i.as_integer_32)
+				if c = {ASCII}.Backslash.as_natural_32 then
 					from
 						i := i + 1
 						j := i
 						ref := 0
 					until
-						i > nb or else (a_replacement.item_code (i.as_integer_32) < {ASCII}.Zero or a_replacement.item_code (i.as_integer_32) > {ASCII}.Nine)
+						i > nb or else (a_replacement.code (i.as_integer_32) < {ASCII}.Zero.as_natural_32 or a_replacement.code (i.as_integer_32) > {ASCII}.Nine.as_natural_32)
 					loop
-						c := a_replacement.item_code (i.as_integer_32)
-						ref := ref * 10 + (c - {ASCII}.Zero).as_natural_32
+						c := a_replacement.code (i.as_integer_32)
+						ref := ref * 10 + (c - {ASCII}.Zero.as_natural_32)
 						i := i + 1
 					end
 					if i <= nb then
-						c := a_replacement.item_code (i.as_integer_32)
-						if c = {ASCII}.Backslash then
+						c := a_replacement.code (i.as_integer_32)
+						if c = {ASCII}.Backslash.as_natural_32 then
 							if i > j then
 									-- Minimal one digit readed,
 								if ref < match_count then
@@ -65,7 +65,7 @@ feature -- Replacement
 								end
 							else
 									-- Double backslash means one \\ => \.
-								a_string.append_code (c.as_natural_32)
+								a_string.append_code (c)
 							end
 							i := i + 1
 						else
@@ -83,7 +83,7 @@ feature -- Replacement
 					end
 				else
 						-- Simply put the character in.
-					a_string.append_code (c.as_natural_32)
+					a_string.append_code (c)
 					i := i + 1
 				end
 			end

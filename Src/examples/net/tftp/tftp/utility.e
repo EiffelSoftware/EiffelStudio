@@ -82,7 +82,9 @@ feature
 				packet := receive (socket)
 				if packet /= Void then
 					if packet.opcode = {TFTP_PACKET}.rrq or else packet.opcode = {TFTP_PACKET}.wrq then
-						l_result ?= packet
+						if attached {TFTP_REQUEST_PACKET} packet as l_packet then
+							l_result := l_packet
+						end
 					end
 				end
 			end

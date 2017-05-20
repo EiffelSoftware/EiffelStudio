@@ -21,7 +21,7 @@ feature -- Test
 		require
 			a_obj_attached: a_obj /= Void
 		do
-			print (a_obj.generating_type + "%N")
+			print (a_obj.generating_type.name + "%N")
 		end
 
 end

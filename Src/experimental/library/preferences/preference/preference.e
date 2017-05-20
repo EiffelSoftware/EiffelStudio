@@ -106,7 +106,7 @@ feature -- Access
 	string_value: STRING_8
 			-- String value for this preference.
 		obsolete
-			"Use `value' instead of accessing implementation function [2012-oct]"
+			"Use `value` instead of accessing implementation function [2017-05-31]"
 		require
 			has_value: has_value
 		do
@@ -254,7 +254,7 @@ invariant
 	has_change_actions: change_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 					SHA1 encryption
 
@@ -84,8 +84,16 @@ feature -- Element Change
 	reset
 			-- Reset computation.
 		do
+			buffer.replace_all (0)
+			schedule.replace_all (0)
 			byte_count := 0
 			buffer_offset := 0
+			a := 0
+			b := 0
+			c := 0
+			d := 0
+			e := 0
+
 			h1 := 0x67452301
 			h2 := 0xefcdab89
 			h3 := 0x98badcfe
@@ -109,7 +117,7 @@ feature -- Element Change
 				buffer_offset := 0
 			end
 		ensure then
-			buffer_offset_set: buffer_offset = (old buffer_offset + 1) \\ (block_size)
+			buffer_offset_set: buffer_offset = (old buffer_offset + 1) \\ block_size
 		end
 
 feature {NONE} -- Implementation
@@ -339,7 +347,7 @@ feature {NONE} -- Access
 	k4: NATURAL_32 = 0xca62c1d6
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

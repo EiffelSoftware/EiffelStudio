@@ -219,7 +219,7 @@ feature {NONE} -- Click ast exploration
 				parents := current_class_as.parents
 				has_parents := parents /= Void
 				if has_parents then
-					create inherit_clauses.make (1, parents.count + 1)
+					create inherit_clauses.make_filled (0, 1, parents.count + 1)
 					from
 						parents.start
 						i := 1
@@ -405,18 +405,21 @@ feature {NONE}-- Clickable/Editable implementation
 			end
 		end
 
-	described_feature (token: EDITOR_TOKEN; line: EDITOR_LINE; ft: FEATURE_AS): E_FEATURE
-			-- search in feature represented by `ft' the feature associated with `token' if any
+	described_access_id (token: EDITOR_TOKEN; line: EDITOR_LINE; ft: FEATURE_AS): detachable TUPLE [feat: E_FEATURE; ast: detachable AST_EIFFEL]
+			-- search in feature represented by `ft' the feature name, local or argument variable associated with `token' if any.
 		require
 			token_not_void: token /= Void
 			line_not_void: line /= Void
 			token_in_line: line.has_token (token)
 		local
 			l_type: TYPE_A
+			vn: READABLE_STRING_GENERAL
+			vn_id: INTEGER
+			td: detachable AST_EIFFEL
 		do
 			if is_ok_for_completion then
 				initialize_context
-				if current_class_c /= Void then
+				if attached current_class_c as cl then
 					if not token_image_is_in_array (token, unwanted_symbols) then
 						if ft /= Void then
 							current_feature_as := [ft, ft.feature_names.first]
@@ -429,10 +432,68 @@ feature {NONE}-- Clickable/Editable implementation
 						is_for_feature := True
 						l_type := type_from (token, line)
 						is_for_feature := False
-						Result := last_feature
+						if attached last_feature as feat then
+							vn := token.wide_image
+							if vn.same_string (feat.name_32) then
+								Result := [feat, Void]
+							end
+						elseif attached token.previous as l_prev and then l_prev.wide_image.same_string_general (".") then
+								-- Ignore nested expression.
+						elseif attached cl.feature_with_name_32 (ft.feature_names.first.visual_name_32) as feat then
+
+								-- Search for locals, arguments, ... in current feature.
+								-- TODO: check if there is a simpler solution [2017-04-15].			
+							vn := token.wide_image
+							vn_id := feat.names_heap.id_of (vn.to_string_8) --FIXME: try to reuse existing lookup if possible.
+							td := Void
+							if vn_id > 0 then
+								if attached feat.locals as l_feat_locals then
+									across
+										l_feat_locals as ic
+									until
+										td /= Void
+									loop
+										if attached {TYPE_DEC_AS} ic.item as l_type_dec then
+											across
+												l_type_dec.id_list as id_ic
+											until
+												td /= Void
+											loop
+												if vn_id = id_ic.item then
+													td := l_type_dec
+												end
+											end
+										end
+									end
+								end
+								if td = Void and attached feat.argument_names as l_feat_args then
+									across
+										l_feat_args as ic
+									until
+										td /= Void
+									loop
+										if vn.same_string (ic.item) then
+											td := feat.ast
+										end
+									end
+								end
+								if td = Void then
+										-- TODO: implement solution for reminding locals [2017-04-15].
+										-- + object test locals
+										-- + inline agent locals + args
+										-- + across iteration local variables
+										-- + separate local variables
+								end
+							end
+							if td /= Void then
+								Result := [feat, td]
+							end
+						end
 					end
 				end
 			end
+		ensure
+			result_with_feat: Result /= Void implies Result.feat /= Void
 		end
 
 	last_feature: E_FEATURE
@@ -1053,7 +1114,7 @@ feature {NONE}-- Implementation
 						-- not the "~feature" case
 					current_token.wide_image.is_empty or else
 					current_token.is_new_line or else
-					current_token.wide_image @ 1 /= ('%L').to_character_32 or else
+					current_token.wide_image[1] /= ('%L').to_character_32 or else
 					not is_beginning_of_expression (current_token.previous)
 				then
 					from
@@ -2069,12 +2130,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	platform_is_windows: BOOLEAN
-			-- Is the current platform Windows?
-		once
-			Result := (create {PLATFORM_CONSTANTS}).is_windows
-		end
-
 feature {NONE} -- Implementation
 
 	is_sorted (positions: ARRAY [EB_CLICKABLE_POSITION]): BOOLEAN
@@ -2167,7 +2222,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Constants
 
 	feature_body_keywords: ARRAY [STRING]
 		once
-			Result := <<"obsolete", "require", "local", "do", "once", "deferred", "ensure", "rescue", "unique", "is", "assign">>
+			Result := <<"obsolete", "require", "local", "do", "once", "deferred", "attribute", "ensure", "rescue", "unique", "is", "assign">>
 		end
 
 	feature_contract_keywords: ARRAY [STRING]
@@ -2221,7 +2276,7 @@ invariant
 	current_token_in_current_line: (current_line = Void and current_token = Void) or else (current_line /= Void and then current_line.has_token (current_token))
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -11,7 +11,7 @@ class
 	EV_FIGURE_TEXT
 
 obsolete
-	"Use EV_MODEL_TEXT instead."
+	"Use EV_MODEL_TEXT instead. [2017-05-31]"
 
 inherit
 	EV_ATOMIC_FIGURE

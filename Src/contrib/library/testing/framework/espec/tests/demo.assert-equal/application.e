@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "New features for ESpec such as assert_equal and sub_comment"
 	author: "Jonathan S. Ostroff, SEL, York University"
 	date: "$Date$"
@@ -6,13 +6,14 @@ note
 
 class APPLICATION inherit
 	ES_TEST
+
 create
 	make
 
 feature {NONE} -- Initialization
 
 	make
-			-- Run tests
+			-- Run tests.
 		do
 			add_boolean_case (agent t0)
 			add_violation_case_with_tag ("valid_index", agent t1)
@@ -24,10 +25,11 @@ feature {NONE} -- Initialization
 			show_browser
 			run_espec
 		end
-feature -- tests
+
+feature -- Tests
 
 	t0: BOOLEAN
-			-- boolean test and feature sub_comment
+			-- Boolean test and feature sub_comment.
 		local
 			a: ARRAY[INTEGER]
 		do
@@ -40,7 +42,7 @@ feature -- tests
 		end
 
 	t1
-			-- violation test
+			-- Violation test.
 		local
 			a: ARRAY[INTEGER]
 			b: BOOLEAN
@@ -48,12 +50,12 @@ feature -- tests
 			comment("t1: violation test array of two elements")
 			a := <<9, 56>>
 			sub_comment("item (i: INTEGER_32): INT has precondition valid_index(i).")
-			sub_comment("The statement b := a[i] = 3 is expected to fail with tag valid_index.")
-			b := a[3] = 2
+			sub_comment("The statement (a[i] = 3).do_nothing is expected to fail with tag valid_index.")
+			(a[3] = 2).do_nothing
 		end
 
 	t2: BOOLEAN
-			-- using assert_equal
+			-- Using assert_equal.
 		local
 			a: ARRAY[INTEGER]
 		do
@@ -69,7 +71,7 @@ feature -- tests
 		end
 
 	t3: BOOLEAN
-			-- using assert_not_equal
+			-- Using assert_not_equal.
 		local
 			a: ARRAY[INTEGER]
 		do
@@ -83,7 +85,7 @@ feature -- tests
 		end
 
 	t4: BOOLEAN
-			-- test of assert
+			-- Test of assert.
 		local
 			a: ARRAY[INTEGER]
 		do
@@ -96,12 +98,11 @@ feature -- tests
 		end
 
 	t5: BOOLEAN
-			-- formatting error test: not an input JSON string
+			-- Formatting error test: not an input JSON string.
 		do
 			comment("t5: Problem with wrapping of subcomments to be fixed")
 			sub_comment ("'deposit(999,55)' instead of 'deposit(Steve,99)'")
 			Result := true
 		end
-
 
 end

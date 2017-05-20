@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Durations of date"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -91,7 +91,7 @@ feature -- Comparison
 			-- It is impossible to compare not definite duration.
 		do
 			if definite and then other.definite then
-				Result := (day < other.day)
+				Result := day < other.day
 			else
 				Result := False
 			end
@@ -99,7 +99,7 @@ feature -- Comparison
 			definite_duration: (definite and then other.definite) implies
 				Result = (day < other.day)
 			non_definite_duration:
-				(not definite or else not other.definite) implies Result = False
+				(not definite or else not other.definite) implies not Result
 		end
 
 	is_equal (other: like Current): BOOLEAN
@@ -145,29 +145,29 @@ feature -- Status report
 			final_date := date + Current
 			if final_date >= date then
 					create d.make (year, month + 1, 0)
-					limit_date := date + d;
-					Result := (year >= 0) and then (month >= 0) and then
-						(month < Months_in_year) and then
-						(day >= 0) and then (final_date < limit_date)
+					limit_date := date + d
+					Result := year >= 0 and then month >= 0 and then
+						month < Months_in_year and then
+						day >= 0 and then final_date < limit_date
 			else
 					create d.make (year, month - 1, 0)
-					limit_date := date + d;
-					Result := (year <= 0) and then (month <= 0)
-						and then (month > -Months_in_year)
-						and then (day <= 0) and then (final_date > limit_date)
+					limit_date := date + d
+					Result := year <= 0 and then month <= 0
+						and then month > -Months_in_year
+						and then day <= 0 and then final_date > limit_date
 			end
 		end
 
 	is_positive: BOOLEAN
 			-- Is duration positive?
 		do
-			Result := (day > 0 or month > 0 or year > 0)
+			Result := day > 0 or month > 0 or year > 0
 		end
 
 	has_origin_date: BOOLEAN
 			-- Has `origin date' been set?
 		do
-			Result := (origin_date /= Void)
+			Result := attached origin_date
 		end
 
 feature -- Status setting
@@ -329,11 +329,8 @@ feature -- Conversion
 			-- Make current duration definite.
 		require
 			date_exists: date /= Void
-		local
-			final_date: DATE
 		do
-			final_date := date + Current
-			make_by_days (final_date.days - date.days)
+			make_by_days ((date + Current).days - date.days)
 		ensure
 			definite_result: definite
 		end
@@ -358,14 +355,14 @@ invariant
 			(day <= 0 and month <= 0 and year <= 0)
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class DATE_DURATION
+end

@@ -1,0 +1,18 @@
+div.comments-box div.title {
+  font-size: x-large;
+}
+div.comments-box ul.comments {
+  border-top: solid 1px #eee;
+  padding: 0 0 0 20px;
+  border-left: solid 5px #eee;
+  list-style-type: none;
+}
+div.comments-box ul.comments li.comment {
+  border-bottom: solid 1px #eee;
+}
+div.comments-box ul.comments li.comment > span.author {
+  font-weight: bold;
+}
+div.comments-box ul.comments li.comment > span.info {
+  font-style: italic;
+}

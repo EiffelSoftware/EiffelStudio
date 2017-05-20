@@ -62,7 +62,7 @@ feature -- Obsolete
 	set_default_minimum_size
 			-- Set to the size of the text.
 		obsolete
-			"Implement using {EV_FONT_IMP}.text_metrics."
+			"Implement using {EV_FONT_IMP}.text_metrics. [2017-05-31]"
 		do
 			check
 				inapplicable: False

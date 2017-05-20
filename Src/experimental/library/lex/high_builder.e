@@ -1,12 +1,11 @@
-note
+﻿note
 
 	description:
 		"Mechanisms for building lexical analyzers from regular expressions. %
 		%This class may be used as ancestor by classes needing its facilities."
-	legal: "See notice at end of class.";
-
-	status: "See notice at end of class.";
-	date: "$Date$";
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class HIGH_BUILDER inherit
@@ -135,7 +134,7 @@ feature -- Element change
 feature -- Implementation
 
 	description: STRING
-			-- Description of the regular expression
+			-- Description of the regular expression.
 
 	cursor: INTEGER;
 			-- Position in description.
@@ -293,9 +292,7 @@ feature {NONE} -- Implementation
 				raise_error (cursor + 1, '.', "")
 			else
 				cursor := cursor + 2;
-				if description.item (cursor) /= '%'' then
-					raise_error (cursor, '%'', "")
-				else
+				if description.item (cursor) = '%'' then
 					cursor := cursor + 1;
 					get_char_in_quotes;
 					second_char := current_char;
@@ -304,8 +301,10 @@ feature {NONE} -- Implementation
 					elseif not parsing_stopped then
 						raise_error (cursor - 3, '%U', "Wrong order for characters.")
 					end
+				else
+					raise_error (cursor, '%'', "")
 				end
-			end;
+			end
 			from
 				-- This second part is for cases like:
 				-- 'a'..'z'-'e'-'x'
@@ -313,9 +312,7 @@ feature {NONE} -- Implementation
 				parsing_stopped or else description.item (cursor) /= '-'
 			loop
 				cursor := cursor + 1;
-				if description.item (cursor) /= '%'' then
-					raise_error (cursor, '%'', "")
-				else
+				if description.item (cursor) = '%'' then
 					cursor := cursor + 1;
 					get_char_in_quotes;
 					if not parsing_stopped then
@@ -327,6 +324,8 @@ feature {NONE} -- Implementation
 								"Character not belonging to the preceding category.")
 						end
 					end
+				else
+					raise_error (cursor, '%'', "")
 				end
 			end
 		end;
@@ -351,10 +350,10 @@ feature {NONE} -- Implementation
 				raise_error (cursor, '%U', "Quote unexpected.")
 			elseif scanning_char /= '\' then
 				current_char := scanning_char;
-				if description.item (cursor + 1) /= '%'' then
-					raise_error (cursor + 1, '%'', "")
-				else
+				if description.item (cursor + 1) = '%'' then
 					cursor := cursor + 2
+				else
+					raise_error (cursor + 1, '%'', "")
 				end
 			elseif description_length < cursor + 3 then
 				raise_error (description_length, '%U',
@@ -481,9 +480,7 @@ feature {NONE} -- Implementation
 				parsing_stopped or else description.item (cursor) /= '-'
 			loop
 				cursor := cursor + 1;
-				if description.item (cursor) /= '%'' then
-					raise_error (cursor, '%'', "")
-				else
+				if description.item (cursor) = '%'' then
 					cursor := cursor + 1;
 					get_char_in_quotes;
 					if not parsing_stopped then
@@ -491,6 +488,8 @@ feature {NONE} -- Implementation
 						-- "Character not belonging to the preceding category.");
 						difference (last_created_tool, current_char)
 					end
+				else
+					raise_error (cursor, '%'', "")
 				end
 			end
 		ensure
@@ -510,7 +509,7 @@ feature {NONE} -- Implementation
 		end;
 
 	dollar_n, dollar_z, dollar_r: INTEGER;
-			-- Tool numbers of $N, $Z, and $R
+			-- Tool numbers of $N, $Z, and $R.
 
 	build_dollar_w
 			-- Build $W: one or more printable characters,
@@ -809,7 +808,7 @@ invariant
 	cursor_not_too_far: cursor <= description_length
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -819,8 +818,5 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class HIGH_BUILDER
+end
 

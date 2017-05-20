@@ -63,7 +63,7 @@ feature -- Process Edit
 			fd: detachable WSF_FORM_DATA
 		do
 			create b.make_empty
-			f := new_edit_form (a_role, url (request.percent_encoded_path_info, Void), "edit-user")
+			f := new_edit_form (a_role, request_url (Void), "edit-user")
 			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.validation_actions.extend (agent edit_form_validate(?,a_role, b))
@@ -72,9 +72,9 @@ feature -- Process Edit
 				fd := f.last_data
 			end
 			if a_role.has_id then
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("View", Void), "admin/role/" + a_role.id.out), primary_tabs)
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void), "admin/role/" + a_role.id.out + "/edit"), primary_tabs)
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Delete", Void), "admin/role/" + a_role.id.out + "/delete"), primary_tabs)
+				add_to_menu (api.administration_link (translation ("View", Void), "role/" + a_role.id.out), primary_tabs)
+				add_to_menu (api.administration_link (translation ("Edit", Void), "role/" + a_role.id.out + "/edit"), primary_tabs)
+				add_to_menu (api.administration_link (translation ("Delete", Void), "role/" + a_role.id.out + "/delete"), primary_tabs)
 			end
 			if attached redirection as l_location then
 					-- FIXME: Hack for now
@@ -96,16 +96,16 @@ feature -- Process Delete
 			fd: detachable WSF_FORM_DATA
 		do
 			create b.make_empty
-			f := new_delete_form (a_role, url (request.percent_encoded_path_info, Void), "edit-user")
+			f := new_delete_form (a_role, request_url (Void), "edit-user")
 			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.process (Current)
 				fd := f.last_data
 			end
 			if a_role.has_id then
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("View", Void), "admin/role/" + a_role.id.out), primary_tabs)
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void), "admin/role/" + a_role.id.out + "/edit"), primary_tabs)
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Delete", Void), "admin/role/" + a_role.id.out + "/delete"), primary_tabs)
+				add_to_menu (api.administration_link (translation ("View", Void), "role/" + a_role.id.out), primary_tabs)
+				add_to_menu (api.administration_link (translation ("Edit", Void), "role/" + a_role.id.out + "/edit"), primary_tabs)
+				add_to_menu (api.administration_link (translation ("Delete", Void), "role/" + a_role.id.out + "/delete"), primary_tabs)
 			end
 			if attached redirection as l_location then
 					-- FIXME: Hack for now
@@ -128,7 +128,7 @@ feature -- Process New
 			l_role: detachable CMS_USER_ROLE
 		do
 			create b.make_empty
-			f := new_edit_form (l_role, url (request.percent_encoded_path_info, Void), "create-role")
+			f := new_edit_form (l_role, request_url (Void), "create-role")
 			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.validation_actions.extend (agent new_form_validate(?, b))
@@ -283,7 +283,7 @@ feature -- Form
 				create ts.make ("op")
 				ts.set_default_value ("Cancel")
 				ts.set_formmethod ("GET")
-				ts.set_formaction ("/admin/role/" + a_role.id.out)
+				ts.set_formaction (api.administration_path ("/role/" + a_role.id.out))
 				f.extend (ts)
 			end
 			Result := f
@@ -434,7 +434,7 @@ feature -- Form
 							api.user_api.save_user_role (a_role)
 							if not api.user_api.has_error then
 								add_success_message ("Permissions updated")
-								set_redirection (absolute_url ("admin/role/" + a_role.id.out, Void))
+								set_redirection (absolute_url (api.administration_path_location ("role/" + a_role.id.out), Void))
 							else
 								add_error_message ("Error during permissions update operation.")
 							end
@@ -458,8 +458,8 @@ feature -- Form
 						if api.user_api.has_error then
 								-- handle error
 						else
-							add_success_message ("Created Role " + link (l_role, "admin/role/" + u.id.out, Void))
-							set_redirection (absolute_url ("admin/role/" + u.id.out, Void))
+							add_success_message ("Created Role " + link (l_role, api.administration_path_location ("role/" + u.id.out), Void))
+							set_redirection (absolute_url (api.administration_path_location ("role/" + u.id.out), Void))
 						end
 					else
 						a_form_data.report_invalid_field ("username", "Missing role!")

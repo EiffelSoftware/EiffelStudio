@@ -13,6 +13,8 @@ inherit
 			permissions
 		end
 
+	CMS_ADMINISTRABLE
+
 	CMS_HOOK_AUTO_REGISTER
 
 	CMS_HOOK_RESPONSE_ALTER
@@ -47,6 +49,7 @@ feature {NONE} -- Initialization
 			package := "authentication"
 			create root_dir.make_current
 			cache_duration := 0
+			enable -- Is enabled by default
 		end
 
 feature -- Access
@@ -61,7 +64,14 @@ feature -- Access
 			Result.force ("account activate")
 			Result.force ("account reject")
 			Result.force ("account reactivate")
-			Result.force ("admin registration")
+			Result.force ("change own username")
+		end
+
+feature {CMS_EXECUTION} -- Administration
+
+	administration: CMS_AUTHENTICATION_MODULE_ADMINISTRATION
+		do
+			create Result.make (Current)
 		end
 
 feature -- Access: docs
@@ -89,7 +99,6 @@ feature -- Router
 			-- <Precursor>
 		do
 			configure_web (a_api, a_router)
-			configure_web_admin (a_api, a_router)
 		end
 
 	configure_web (a_api: CMS_API; a_router: WSF_ROUTER)
@@ -106,19 +115,14 @@ feature -- Router
 			a_router.handle ("/" + roc_login_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_login(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/" + roc_logout_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/roc-register", create {WSF_URI_AGENT_HANDLER}.make (agent handle_register(a_api, ?, ?)), a_router.methods_get_post)
+
 			a_router.handle ("/account/activate/{token}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_activation(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/reject/{token}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_reject(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/reactivate", create {WSF_URI_AGENT_HANDLER}.make (agent handle_reactivation(a_api, ?, ?)), a_router.methods_get_post)
+
 			a_router.handle ("/account/new-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_new_password(a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/reset-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_reset_password(a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/change/{field}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_change_field (a_api, ?, ?)), a_router.methods_get_post)
-		end
-
-
-	configure_web_admin (a_api: CMS_API; a_router: WSF_ROUTER)
-			-- Configure router mapping for admin web interface.
-		do
-			a_router.handle ("/admin/pending-registrations/", create {WSF_URI_AGENT_HANDLER}.make (agent handle_admin_pending_registrations (?, ?, a_api)), a_router.methods_get)
 		end
 
 feature -- Hooks configuration
@@ -192,9 +196,10 @@ feature -- Hooks configuration
 			a_menu_system.primary_menu.extend (lnk)
 
 				 -- Add the link to the taxonomy to the main menu
-			if a_response.has_permission ("admin registration") then
-				create lnk.make ("Registration", "admin/pending-registrations/")
-				a_menu_system.management_menu.extend_into (lnk, "Admin", "admin")
+			if a_response.has_permission ("access admin") then
+				create lnk.make ("Administration", a_response.api.administration_path_location (Void))
+				lnk.set_weight (999)
+				a_menu_system.navigation_menu.extend (lnk)
 			end
 		end
 
@@ -242,7 +247,6 @@ feature -- Handler
 			r: CMS_RESPONSE
 			l_user: detachable CMS_USER
 			b: STRING
-			f: CMS_FORM
 			lnk: CMS_LOCAL_LINK
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
@@ -264,11 +268,21 @@ feature -- Handler
 			lnk.set_weight (2)
 			r.add_to_primary_tabs (lnk)
 
-			f := new_change_password_form (r)
-			f.append_to_html (r.wsf_theme, b)
-
-			f := new_change_email_form (r)
-			f.append_to_html (r.wsf_theme, b)
+			if
+				r.has_permission ("change own username") and then
+				attached new_change_username_form (r) as f
+			then
+				f.append_to_html (r.wsf_theme, b)
+			end
+			if attached new_change_profile_name_form (r) as f then
+				f.append_to_html (r.wsf_theme, b)
+			end
+			if attached new_change_password_form (r) as f then
+				f.append_to_html (r.wsf_theme, b)
+			end
+			if attached new_change_email_form (r) as f then
+				f.append_to_html (r.wsf_theme, b)
+			end
 
 			r.set_main_content (b)
 
@@ -431,34 +445,52 @@ feature -- Handler
 			l_user_api: CMS_USER_API
 			l_ir: INTERNAL_SERVER_ERROR_CMS_RESPONSE
 			es: CMS_AUTHENTICATION_EMAIL_SERVICE
+			l_temp_id: INTEGER_64
 		do
-			l_user_api := api.user_api
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			if r.has_permission ("account activate") then
+			if api.has_permission ("account activate") then
+				l_user_api := api.user_api
 				if attached {WSF_STRING} req.path_parameter ("token") as l_token then
-					if attached {CMS_TEMP_USER} l_user_api.temp_user_by_activation_token (l_token.value) as l_user then
+					if attached {CMS_TEMP_USER} l_user_api.temp_user_by_activation_token (l_token.value) as l_temp_user then
 
 						-- TODO copy the personal information
 						--! to CMS_USER_PROFILE and persist data
 						--! check also CMS_USER.data_items
 
-							-- Delete temporal User
-						l_user_api.delete_temp_user (l_user)
+						l_temp_id := l_temp_user.id
 
 							-- Valid user_id
-						l_user.set_id (0)
-						l_user.mark_active
-						l_user_api.new_user_from_temp_user (l_user)
-						l_user_api.remove_activation (l_token.value)
-						r.set_main_content ("<p> The account <i>" + html_encoded (l_user.name) + "</i> has been activated</p>")
-							-- Send Email
-						if attached l_user.email as l_email then
-							create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
-							write_debug_log (generator + ".handle register: send_contact_activation_confirmation_email")
-							es.send_contact_activation_confirmation_email (l_email, l_user, req.absolute_script_url (""))
+						l_temp_user.set_id (0)
+						l_temp_user.mark_active
+						l_user_api.new_user_from_temp_user (l_temp_user)
+
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+						if
+							not l_user_api.has_error and then
+							attached l_user_api.user_by_name (l_temp_user.name) as l_new_user
+						then
+								-- Delete temporal User
+							l_temp_user.set_id (l_temp_id)
+							l_user_api.delete_temp_user (l_temp_user)
+							l_user_api.remove_activation (l_token.value)
+
+							r.set_main_content ("<p> The account <i>" + html_encoded (l_new_user.name) + "</i> has been activated</p>")
+								-- Send Email
+							if attached l_new_user.email as l_email then
+								create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
+								write_debug_log (generator + ".handle register: send_contact_activation_confirmation_email")
+								es.send_contact_activation_confirmation_email (l_email, l_new_user, req.absolute_script_url (""))
+							end
+						else
+								-- Failure!!!
+							r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
+							r.set_main_content ("<p>ERROR: User activation failed for <i>" + html_encoded (l_temp_user.name) + "</i>!</p>")
+							if attached l_user_api.error_handler.as_single_error as err then
+								r.add_error_message (html_encoded (err.string_representation))
+							end
 						end
-					else
-							-- the token does not exist, or it was already used.
+					else							-- the token does not exist, or it was already used.
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+
 						r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 						r.set_main_content ("<p>The token <i>" + l_token.value + "</i> is not valid " + r.link ("Reactivate Account", "account/reactivate", Void) + "</p>")
 					end
@@ -469,7 +501,7 @@ feature -- Handler
 				end
 			else
 				create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-					r.execute
+				r.execute
 			end
 		end
 
@@ -599,7 +631,7 @@ feature -- Handler
 					end
 				elseif attached {WSF_STRING} req.form_parameter ("username") as l_username then
 					if
-						attached {CMS_USER} l_user_api.user_by_name (l_username) as l_user and then
+						attached {CMS_USER} l_user_api.user_by_name (l_username.value) as l_user and then
 						attached l_user.email as l_user_email
 					then
 							-- User exist create a new token and send a new email.
@@ -721,6 +753,47 @@ feature -- Handler
 								f := new_change_email_form (r)
 								r.set_main_content (f.to_html (r.wsf_theme))
 							end
+						elseif l_fieldname.is_case_insensitive_equal ("profile_name") then
+							f := new_change_profile_name_form (r)
+							f.process (r)
+							if
+								attached f.last_data as fd and then
+								not fd.has_error and then
+								attached fd.string_item ("new_profile_name") as l_new_profile_name
+							then
+								check api.user_api.is_valid_profile_name (l_new_profile_name) end
+								l_user.set_profile_name (l_new_profile_name)
+								l_user_api.update_user (l_user)
+								r.add_success_message ("Profile name updated.")
+								r.set_redirection ("account/")
+								r.set_redirection_delay (3)
+							else
+								r.add_error_message ("Invalid form data!")
+								r.set_main_content (f.to_html (r.wsf_theme))
+							end
+						elseif l_fieldname.is_case_insensitive_equal ("username") then
+							if api.has_permission ("change own username") then
+								f := new_change_username_form (r)
+								f.process (r)
+								if
+									attached f.last_data as fd and then
+									not fd.has_error and then
+									attached fd.string_item ("new_username") as l_new_username
+								then
+									check api.user_api.is_valid_username (l_new_username) end
+									check api.user_api.user_by_name (l_new_username) = Void end
+
+									l_user_api.update_username (l_user, l_new_username)
+									r.add_success_message ("Username updated.")
+									r.set_redirection ("account/")
+									r.set_redirection_delay (3)
+								else
+									r.add_error_message ("Invalid form data!")
+									r.set_main_content (f.to_html (r.wsf_theme))
+								end
+							else
+								r.add_error_message ("You are not allowed to change your username!")
+							end
 						else
 							r.add_error_message ("You can not change %"" + l_fieldname + "%" information!")
 						end
@@ -733,102 +806,16 @@ feature -- Handler
 					elseif l_fieldname.is_case_insensitive_equal_general ("email") then
 						f := new_change_email_form (r)
 						f.append_to_html (r.wsf_theme, b)
+					elseif l_fieldname.is_case_insensitive_equal_general ("new_username") then
+						if api.has_permission ("change own username") then
+							f := new_change_username_form (r)
+							f.append_to_html (r.wsf_theme, b)
+						end
 					end
 					r.set_main_content (b)
 				end
 			end
 			r.execute
-		end
-
-	handle_admin_pending_registrations (req: WSF_REQUEST; res: WSF_RESPONSE; api: CMS_API)
-		local
-			l_response: CMS_RESPONSE
-			s: STRING
-			u: CMS_TEMP_USER
-			l_page_helper: CMS_PAGINATION_GENERATOR
-			s_pager: STRING
-			l_count: INTEGER
-			l_user_api: CMS_USER_API
-		do
-				-- At the moment the template are hardcoded, but we can
-				-- get them from the configuration file and load them into
-				-- the setup class.
-
-			create {FORBIDDEN_ERROR_CMS_RESPONSE} l_response.make (req, res, api)
-			if
-				l_response.has_permission ("admin registration")
-			then
-				l_user_api := api.user_api
-
-				l_count := l_user_api.temp_users_count
-
-				create {GENERIC_VIEW_CMS_RESPONSE} l_response.make (req, res, api)
-
-				create s.make_empty
-				if l_count > 1 then
-					l_response.set_title ("Listing " + l_count.out + " Pending Registrations")
-				else
-					l_response.set_title ("Listing " + l_count.out + " Pending Registration")
-				end
-
-				create s_pager.make_empty
-				create l_page_helper.make ("admin/pending-registrations/?page={page}&size={size}", l_user_api.temp_users_count.as_natural_64, 25) -- FIXME: Make this default page size a global CMS settings
-				l_page_helper.get_setting_from_request (req)
-				if l_page_helper.has_upper_limit and then l_page_helper.pages_count > 1 then
-					l_page_helper.append_to_html (l_response, s_pager)
-					if l_page_helper.page_size > 25 then
-						s.append (s_pager)
-					end
-				end
-
-				if attached l_user_api.temp_recent_users (create {CMS_DATA_QUERY_PARAMETERS}.make (l_page_helper.current_page_offset, l_page_helper.page_size)) as lst then
-					s.append ("<ul class=%"cms-temp-users%">%N")
-					across
-						lst as ic
-					loop
-						u := ic.item
-						s.append ("<li class=%"cms_temp_user%">")
-						s.append ("User:" + html_encoded (u.name))
-						s.append ("<ul class=%"cms_temp_user_details%">")
-						if attached u.personal_information as l_information then
-							s.append ("<li class=%"cms_temp_user_detail_information%">")
-							s.append (html_encoded (l_information))
-							s.append ("</li>%N")
-						end
-						if attached u.email as l_email then
-							s.append ("<li class=%"cms_temp_user_detail_email%">")
-							s.append (l_email)
-							s.append ("</li>%N")
-						end
-						if attached l_user_api.token_by_temp_user_id (u.id) as l_token then
-							s.append ("<li>")
-							s.append ("<a href=%"")
-							s.append (req.absolute_script_url ("/account/activate/" + l_token))
-							s.append ("%">")
-							s.append (html_encoded ("Activate"))
-							s.append ("</a>")
-							s.append ("</li>%N")
-							s.append ("<li>")
-							s.append ("<a href=%"")
-							s.append (req.absolute_script_url ("/account/reject/" + l_token))
-							s.append ("%">")
-							s.append (html_encoded ("Reject"))
-							s.append ("</a>")
-							s.append ("</li>%N")
-						end
-						s.append ("</ul>%N")
-						s.append ("</li>%N")
-					end
-					s.append ("</ul>%N")
-				end
-					-- Again the pager at the bottom, if needed
-				s.append (s_pager)
-
-				l_response.set_main_content (s)
-				l_response.execute
-			else
-				l_response.execute
-			end
 		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
@@ -850,6 +837,66 @@ feature -- Handler
 			elseif a_block_id.is_case_insensitive_equal_general ("reset_password") and then loc.starts_with ("account/reset-password") then
 				get_block_view_reset_password (a_block_id, a_response)
 			end
+		end
+
+	new_change_username_form (a_response: CMS_RESPONSE): CMS_FORM
+		local
+			fs: WSF_FORM_FIELD_SET
+			txt: WSF_FORM_TEXT_INPUT
+		do
+			create Result.make (a_response.url ("account/change/username", Void), "change-username-form")
+			create fs.make
+			fs.set_legend ("Change username")
+			Result.extend (fs)
+
+			create txt.make ("new_username")
+			txt.set_label ("Username")
+			txt.set_validation_action (agent (fd: WSF_FORM_DATA; api: CMS_API)
+					do
+						if
+							attached fd.string_item ("new_username") as l_new and then
+							api.user_api.is_valid_username (l_new)
+						then
+							if api.user_api.user_by_name (l_new) /= Void then
+								fd.report_invalid_field ("new_username", "Username is already taken!")
+							end
+						else
+							fd.report_invalid_field ("new_username", "Invalid username!")
+						end
+					end (?, a_response.api)
+				)
+			txt.enable_required
+			fs.extend (txt)
+			fs.extend_html_text ("<button type=%"submit%">Confirm</button>")
+		end
+
+	new_change_profile_name_form (a_response: CMS_RESPONSE): CMS_FORM
+		local
+			fs: WSF_FORM_FIELD_SET
+			txt: WSF_FORM_TEXT_INPUT
+		do
+			create Result.make (a_response.url ("account/change/profile_name", Void), "change-profile-name-form")
+			create fs.make
+			fs.set_legend ("Change profile name (i.e the name displayed on pages)")
+			Result.extend (fs)
+
+			create txt.make ("new_profile_name")
+			txt.set_label ("Profile name")
+			txt.set_validation_action (agent (fd: WSF_FORM_DATA; api: CMS_API)
+					do
+						if
+							attached fd.string_item ("new_profile_name") as l_new and then
+							api.user_api.is_valid_profile_name (l_new)
+						then
+								-- Ok
+						else
+							fd.report_invalid_field ("new_profile_name", "Invalid profile name!")
+						end
+					end (?, a_response.api)
+				)
+			txt.enable_required
+			fs.extend (txt)
+			fs.extend_html_text ("<button type=%"submit%">Confirm</button>")
 		end
 
 	new_change_password_form (a_response: CMS_RESPONSE): CMS_FORM
@@ -1110,7 +1157,7 @@ feature -- Response Alter
 	response_alter (a_response: CMS_RESPONSE)
 		do
 			a_response.add_javascript_url ("https://www.google.com/recaptcha/api.js")
-			a_response.add_style (a_response.url ("/module/" + name + "/files/css/auth.css", Void), Void)
+			a_response.add_style (a_response.module_resource_url (Current, "/files/css/auth.css", Void), Void)
 		end
 
 feature {NONE} -- Implementation

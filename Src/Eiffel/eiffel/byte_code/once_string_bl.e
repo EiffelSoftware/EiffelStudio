@@ -60,6 +60,7 @@ feature
 		local
 			buf: like buffer
 			l_value_32: STRING_32
+			l_value_8: STRING_8
 		do
 			if register = Void then
 					-- Remember once manifest string to generate its pre-initialization.
@@ -85,19 +86,20 @@ feature
 					l_value_32 := encoding_converter.utf8_to_utf32 (value)
 					buf.put_string_literal (encoding_converter.string_32_to_stream (l_value_32))
 				else
-					buf.put_string_literal (value)
+					l_value_8 := value_8
+					buf.put_string_literal (l_value_8)
 				end
 				buf.put_character (',')
 				if is_string_32 then
 					buf.put_integer (l_value_32.count)
 				else
-					buf.put_integer (value.count)
+					buf.put_integer (l_value_8.count)
 				end
 				buf.put_character(',')
 				if is_string_32 then
 					buf.put_integer (l_value_32.hash_code)
 				else
-					buf.put_integer (value.hash_code)
+					buf.put_integer (l_value_8.hash_code)
 				end
 				buf.put_character (')')
 				buf.put_character (';')
@@ -133,7 +135,7 @@ feature -- Properties
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

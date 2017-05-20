@@ -61,8 +61,6 @@ feature {NONE} -- Constant setting
 	set_attributes_using_string_constants
 			-- Set all attributes relying on string constants to the current
 			-- value of the associated constant.
-		local
-			s: detachable STRING_32
 		do
 			from
 				string_constant_set_procedures.start
@@ -70,9 +68,11 @@ feature {NONE} -- Constant setting
 				string_constant_set_procedures.off
 			loop
 				string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).call (Void)
-				s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).last_result
-				check s /= Void end -- Implied by design of EiffelBuild				
-				string_constant_set_procedures.item.call ([s])
+				check
+					from_eiffelbuild_design: attached string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).last_result as s
+				then
+					string_constant_set_procedures.item (s)
+				end
 				string_constant_set_procedures.forth
 			end
 		end
@@ -116,8 +116,6 @@ feature {NONE} -- Constant setting
 	set_attributes_using_pixmap_constants
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
-		local
-			p: detachable EV_PIXMAP
 		do
 			from
 				pixmap_constant_set_procedures.start
@@ -125,9 +123,11 @@ feature {NONE} -- Constant setting
 				pixmap_constant_set_procedures.off
 			loop
 				pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).call (Void)
-				p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).last_result
-				check p /= Void end -- Implied by design of EiffelBuild
-				pixmap_constant_set_procedures.item.call ([p])
+				check
+					from_eiffelbuild_design: attached pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).last_result as p
+				then
+					pixmap_constant_set_procedures.item (p)
+				end
 				pixmap_constant_set_procedures.forth
 			end
 		end
@@ -135,8 +135,6 @@ feature {NONE} -- Constant setting
 	set_attributes_using_font_constants
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
-		local
-			f: detachable EV_FONT
 		do
 			from
 				font_constant_set_procedures.start
@@ -144,9 +142,11 @@ feature {NONE} -- Constant setting
 				font_constant_set_procedures.off
 			loop
 				font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).call (Void)
-				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
-				check f /= Void end -- Implied by design of EiffelBuild
-				font_constant_set_procedures.item.call ([f])
+				check
+					from_eiffelbuild_design: attached font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result as f
+				then
+					font_constant_set_procedures.item (f)
+				end
 				font_constant_set_procedures.forth
 			end
 		end
@@ -154,8 +154,6 @@ feature {NONE} -- Constant setting
 	set_attributes_using_color_constants
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
-		local
-			c: detachable EV_COLOR
 		do
 			from
 				color_constant_set_procedures.start
@@ -163,9 +161,11 @@ feature {NONE} -- Constant setting
 				color_constant_set_procedures.off
 			loop
 				color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).call (Void)
-				c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).last_result
-				check c /= Void end -- Implied by design of EiffelBuild
-				color_constant_set_procedures.item.call ([c])
+				check
+					from_eiffelbuild_design: attached color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).last_result as c
+				then
+					color_constant_set_procedures.item (c)
+				end
 				color_constant_set_procedures.forth
 			end
 		end

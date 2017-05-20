@@ -148,7 +148,9 @@ feature -- Access
 			-- `k' can be a single name such as "foo",
 			-- or a qualified name such as "foo.bar" (assuming that "foo" is associated with a JSON object).
 		do
-			if attached json_value as obj then
+			if k.is_empty then
+				Result := json_value
+			elseif attached json_value as obj then
 				Result := object_json_value (obj, k.to_string_32)
 			end
 		end

@@ -1,5 +1,5 @@
 note
-	description: "Objects that test a given class and send results to the GUI using sockets, update NET_UNIT_TEST when you update this class"
+	description: "Objects that test a given class and send results to the GUI using sockets, update NET_UNIT_TEST when you update this class."
 	author: "Software Engineering Lab, York University"
 
 deferred class
@@ -8,73 +8,61 @@ deferred class
 inherit
 	ES_TESTABLE
 
-feature -- Basic Operations
+feature -- Basic operations
 
 	add_boolean_case (v: PREDICATE)
-			-- Add boolean function v
+			-- Add boolean function `v`.
 		require
 			v_valid: v /= Void
-		local
-			b: ES_BOOLEAN_TEST_CASE
 		do
 			if cases = Void then
 				initialize
 			end
-
 			if attached cases as cases1 then
-				create b.make ("", v)
-				cases1.extend (b)
+				cases1.extend (create {ES_BOOLEAN_TEST_CASE}.make ("", v))
 			end
 		end
 
 	add_violation_case_with_tag (expected_tag: STRING_8; v: PROCEDURE)
-			-- Add boolean function v
+			-- Add boolean function `v`.
 		require
 			v_valid: v /= Void
-		local
-			b: ES_VIOLATION_CASE
 		do
 			if cases = Void then
 				initialize
 			end
-
 			if attached cases as cases1 then
-				create b.make_with_tag ("", v, expected_tag)
-				cases1.extend (b)
+				cases1.extend (create {ES_VIOLATION_CASE}.make_with_tag ("", v, expected_tag))
 			end
 		end
 
 	add_violation_case (v: PROCEDURE)
-			-- Add boolean function v
+			-- Add boolean function `v`.
 		require
 			v_valid: v /= Void
-		local
-			b: ES_VIOLATION_CASE
 		do
 			if cases = Void then
 				initialize
 			end
-
 			if attached cases as cases1 then
-				create b.make ("", v)
-				cases1.extend (b)
+				cases1.extend (create {ES_VIOLATION_CASE}.make ("", v))
 			end
 		end
 
 feature {NONE} -- setup and teardown
 
 	setup
-			-- will be executed at the beginning of "run" in a test case
+			-- Will be executed at the beginning of "run" in a test case.
 		do
 		end
 
 	teardown
-			-- will be executed at the end of "run" in a test case
+			-- Will be executed at the end of "run" in a test case.
 		do
 		end
 
 	comment (s: STRING_8)
-			-- Adds `s' to descriptions
+			-- Adds `s' to descriptions.
 		do
 			class_variable_comment_string := s
 		end
@@ -84,23 +72,19 @@ feature {NONE} -- setup and teardown
 	space: STRING = "&nbsp"
 
 	sub_comment (s: STRING_8)
-			-- Adds `s' to comments
-		local
-			l_stuff: STRING_8
+			-- Adds `s' to comments.
 		do
-			l_stuff := "%N" + s
-			class_variable_comment_string.append (l_stuff)
+			class_variable_comment_string.append ("%N" + s)
 		end
-
 
 	assert_equal(a_name: STRING; expected, actual: detachable ANY)
 		local
-			l_line1, l_line2, l_line3: attached STRING
+			l_line1, l_line2, l_line3: STRING
 			expected_out, actual_out: STRING
 			cv: CHECK_VIOLATION
 		do
 
-			if not (expected ~ actual) then
+			if expected /~ actual then
 				if expected /= Void then
 					expected_out := expected.out
 				else
@@ -127,8 +111,7 @@ feature {NONE} -- setup and teardown
 				expected_out, actual_out: STRING
 				cv: CHECK_VIOLATION
 			do
-
-				if  (expected ~ actual) then
+				if  expected ~ actual then
 					if expected /= Void then
 						expected_out := expected.out
 					else
@@ -146,8 +129,8 @@ feature {NONE} -- setup and teardown
 					create cv
 					cv.set_description (a_name)
 					cv.raise
+				end
 			end
-		end
 
 		assert(a_name: STRING; condition: BOOLEAN; actual: detachable ANY)
 			local
@@ -155,7 +138,6 @@ feature {NONE} -- setup and teardown
 				actual_out: STRING
 				cv: CHECK_VIOLATION
 			do
-
 				if  not condition then
 					if actual /= Void then
 						actual_out := actual.out
@@ -168,9 +150,8 @@ feature {NONE} -- setup and teardown
 					create cv
 					cv.set_description (a_name)
 					cv.raise
+				end
 			end
-		end
-
 
 feature {ES_SUITE}
 
@@ -184,14 +165,10 @@ feature {ES_SUITE}
 			if attached cases as cases1 then
 				across cases1 as it loop
 					create_case_name (it.item, unkn)
-					if it.item.passed then
-						-- do nothing
-					else
+					if not it.item.passed then
 						failed.extend (case_name)
 					end
 				end
-			else
-				-- do nothing
 			end
 			Result := failed
 		end
@@ -240,7 +217,7 @@ feature {ES_SUITE}
 		end
 
 	count: INTEGER_32
-			-- number of test cases in `Current'
+			-- Number of test cases in `Current'.
 		do
 			check attached cases as cases1 then
 				Result := cases1.count
@@ -248,7 +225,7 @@ feature {ES_SUITE}
 		end
 
 	initialize
-			-- Initialize Current
+			-- Initialize Current.
 		do
 			create cases.make
 			name := generating_type.name
@@ -256,7 +233,7 @@ feature {ES_SUITE}
 		end
 
 	to_html (output_file_name: STRING_8)
-			-- generate HTML report with details
+			-- Generate HTML report with details.
 		require
 			output_file_name_valid: output_file_name /= Void
 		local
@@ -269,7 +246,7 @@ feature {ES_SUITE}
 		end
 
 	get_test_name: STRING_8
-			-- get unit test name
+			-- Get unit test name.
 		do
 			if name /= Void then
 				check attached name as n then
@@ -281,11 +258,10 @@ feature {ES_SUITE}
 		end
 
 	run_es_test
-			-- run tests in cases
+			-- Run tests in cases.
 		local
 			problem: BOOLEAN
 			last_index: INTEGER_32
-			printed_once: BOOLEAN
 		do
 			if attached cases as cases1 then
 				if not problem then
@@ -296,15 +272,13 @@ feature {ES_SUITE}
 					end
 				else
 					safe_put_string ("***FAILED                   Problem in 'setup' or 'teardown' features%N")
-					if not printed_once then
-						check attached cases1.item as item1 then
-							if show_err then
-								check attached item1.exception_trace as et then
-									safe_put_string ("%N" + et.twin + "%N")
-								end
-							end
+					if show_err then
+						check
+							attached cases1.item as item1
+							attached item1.exception_trace as et
+						then
+							safe_put_string ("%N" + et + "%N")
 						end
-						printed_once := True
 					end
 				end
 				from
@@ -351,7 +325,7 @@ feature {ES_SUITE}
 		end
 
 	to_message_string (item: ES_TEST_CASE): STRING_8
-			-- text represenation of a test case
+			-- Text represenation of a test case.
 		require
 			arg_not_void: item /= Void
 		do
@@ -396,7 +370,4 @@ feature {ES_HTML_GEN_SUITE} --test cases
 			Result := ""
 		end
 
-
-
-end -- class ES_TEST
-
+end

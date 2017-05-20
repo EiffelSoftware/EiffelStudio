@@ -1,13 +1,16 @@
-note
+﻿note
 	description: "Simple example program for ECLOP"
-	copyright: "Copyright (c) 2003 Paul Cohen."
+	copyright: "[
+			Copyright (c) 2003 Paul Cohen.
+			Copyright (c) 2017 Eiffel Software.
+		]"
 	license: "Eiffel Forum License v2 (see license.txt)"
 	author: "Paul Cohen"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class APPLICATION
-	
+
 create
 	make
 
@@ -18,38 +21,38 @@ feature {NONE} -- Initialization
 		local
 			cls: COMMAND_LINE_SYNTAX
 			clp: COMMAND_LINE_PARSER
-			args: ARGUMENTS
 			bad_options: BOOLEAN
+			output_file: STRING
 		do
-                        create cls.make (option_specifications)
-                        create clp.make (cls)
-                        create args
-                        clp.parse (args.argument_array)
+			create cls.make (option_specifications)
+			create clp.make (cls)
+			clp.parse ((create {ARGUMENTS}).argument_array)
 			exe_name := clp.executable_without_suffix
 			if clp.valid_options.has ("-v") then
 				print_version_info
 			elseif clp.valid_options.has ("-h") then
 				print (cls.program_help (exe_name, Void, Void))
 			elseif not clp.invalid_options_found then
-				input_file_names := clp.valid_options @ "-i"
-				if clp.valid_options.has ("-o") then
-					if (clp.valid_options @ "-o").count > 1 then
-						print (exe_name + ": Only one output file allowed" + "%N")
-						bad_options := True
-					else
-						output_file := (clp.valid_options @ "-o").first
+				if attached clp.valid_options ["-i"] as input_file_names then
+					if attached clp.valid_options ["-o"] as o then
+						if o.count > 1 then
+							print (exe_name + ": Only one output file allowed" + "%N")
+							bad_options := True
+						else
+							output_file := o.first
+						end
 					end
-				end
-				if not bad_options then
-					if clp.valid_options.has ("-a") then
-						algorithm_a_chosen := True
-					elseif clp.valid_options.has ("-b") then
-						algorithm_a_chosen := False
-					else
-						print ("Defaulting to use algorithm A!" + "%N")
-						algorithm_a_chosen := True
+					if not bad_options then
+						if clp.valid_options.has ("-a") then
+							algorithm_a_chosen := True
+						elseif clp.valid_options.has ("-b") then
+							algorithm_a_chosen := False
+						else
+							print ("Defaulting to use algorithm A!" + "%N")
+							algorithm_a_chosen := True
+						end
+						operate_on_files (input_file_names, output_file)
 					end
-					operate_on_files
 				end
 			else
 				print (clp.error_message)
@@ -57,10 +60,10 @@ feature {NONE} -- Initialization
 				print ("Use -h/--help for more help." + "%N")
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
-	print_version_info 
+	print_version_info
 			-- Print version information.
 		local
 			s: STRING
@@ -70,9 +73,9 @@ feature {NONE} -- Implementation
 			s.append ("Send bugs, problems or suggestions to support@foosoft.com" + "%N")
 			print (s)
 		end
-	
-	operate_on_files 
-			-- Main body of program. Operates on `file_names'. 
+
+	operate_on_files (input_file_names: LIST [STRING]; output_file: detachable STRING)
+			-- Main body of program. Operates on `file_names'.
 		do
 			if output_file = Void then
 				print ("Sending output to standard output." + "%N")
@@ -85,16 +88,16 @@ feature {NONE} -- Implementation
 				input_file_names.after
 			loop
 				-- Do something with each file!
-				print ("Operating on file %"" + input_file_names.item + "%"") 
+				print ("Operating on file %"" + input_file_names.item + "%"")
 				if algorithm_a_chosen then
-					print (" using algorithm A" + "%N")
+					print (" using algorithm A%N")
 				else
-					print (" using algorithm B" + "%N")
+					print (" using algorithm B%N")
 				end
 				input_file_names.forth
 			end
 		end
-	
+
 	option_specifications: ARRAY [STRING]
 			-- The recognized options of this program
 		once
@@ -106,19 +109,11 @@ feature {NONE} -- Implementation
 				    "-i!=INPUTFILE!#Use INPUTFILE as input.",
 				    "-o=OUTPUTFILE!#Use OUTPUTFILE as ouput. Default is stdout.">>
 		end
-	
-	input_file_names: LIST [STRING]
-			-- Names of the files to operate on
-	
-	output_file: STRING
-			-- Name of the output file
-	
+
 	algorithm_a_chosen: BOOLEAN
 			-- Is algorithm A chosen? If not assume B!
-	
+
 	exe_name: STRING
 			-- Name of this executable
 
-end -- class APPLICATION
-
-
+end

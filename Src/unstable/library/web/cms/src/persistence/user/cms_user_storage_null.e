@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {CMS_USER_STORAGE_NULL}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -30,7 +29,7 @@ feature -- Access: user
 		do
 		end
 
-	user_by_email (a_email: like {CMS_USER}.email): detachable CMS_USER
+	user_by_email (a_email: READABLE_STRING_GENERAL): detachable CMS_USER
 		do
 		end
 
@@ -65,11 +64,14 @@ feature -- Change: user
 			a_user.set_id (1)
 		end
 
+	update_username (a_user: CMS_USER; a_new_username: READABLE_STRING_32)
+		do
+		end
+
 	update_user (a_user: CMS_USER)
 			-- Update user `a_user'.
 		do
 		end
-
 
 	delete_user (a_user: CMS_USER)
 			-- Delete user `a_user'.
@@ -204,6 +206,6 @@ feature -- Temp Users
 		do
 		end
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -9,7 +9,7 @@ note
 				port: numeric such as 8099 (or equivalent string as "8099")
 				base: base_url (very specific to standalone server)
 				
-				max_concurrent_connections: set one, for single threaded behavior
+				max_concurrent_connections: set to 1, for single threaded behavior
 				max_tcp_clients: max number of open tcp connection
 				
 				socket_timeout: connection timeout
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			verbose := False
 			verbose_level := notice_level
 
-			base_url := ""
+			base_url := Void
 
 			if attached options as opts then
 				if attached {READABLE_STRING_GENERAL} opts.option ("server_name") as l_server_name then
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 
 				verbose := opts.option_boolean_value ("verbose", verbose)
 					-- See `{HTTPD_REQUEST_HANDLER_I}.*_verbose_level`
-					
+
 				if opts.has_integer_option ("verbose_level") then
 					verbose_level := opts.option_integer_value ("verbose_level", verbose_level)
 				elseif attached {READABLE_STRING_GENERAL} opts.option ("verbose_level") as s_verbose_level then
@@ -106,7 +106,8 @@ feature {NONE} -- Initialization
 				port_number := opts.option_integer_value ("port", port_number)
 
 				if opts.option_boolean_value ("force_single_threaded", False) then
-					force_single_threaded
+						-- Obsolete: keep for backward compatibility with obsolete Nino connector.
+					set_max_concurrent_connections (1)
 				end
 				max_concurrent_connections := opts.option_integer_value ("max_concurrent_connections", max_concurrent_connections)
 				max_tcp_clients := opts.option_integer_value ("max_tcp_clients", max_tcp_clients)
@@ -115,11 +116,17 @@ feature {NONE} -- Initialization
 				keep_alive_timeout := opts.option_integer_value ("keep_alive_timeout", keep_alive_timeout)
 				max_keep_alive_requests := opts.option_integer_value ("max_keep_alive_requests", max_keep_alive_requests)
 
-				if 
-					opts.option_boolean_value ("ssl_enabled", ssl_enabled) and then
+				if
+					opts.option_boolean_value ("is_secure", is_secure) and then
+					attached opts.option_string_32_value ("secure_protocol", "tls_1_2") as l_secure_prot
+				then
+					secure_settings := [l_secure_prot, opts.option_string_32_value ("secure_certificate", Void), opts.option_string_32_value ("secure_certificate_key", Void)]
+				elseif
+						-- OBSOLETE: backward compatible with old settings name [2017-05-31].
+					opts.option_boolean_value ("ssl_enabled", is_secure) and then
 					attached opts.option_string_32_value ("ssl_protocol", "tls_1_2") as ssl_prot
 				then
-					ssl_settings := [ssl_prot, opts.option_string_32_value ("ssl_ca_crt", Void), opts.option_string_32_value ("ssl_ca_key", Void)]
+					secure_settings := [ssl_prot, opts.option_string_32_value ("ssl_ca_crt", Void), opts.option_string_32_value ("ssl_ca_key", Void)]
 				end
 			end
 
@@ -133,9 +140,23 @@ feature {NONE} -- Initialization
 
 	force_single_threaded
 			-- Set `single_threaded' to True.
+		obsolete
+			"Use set_max_concurrent_connections (1) [2017-05-31]"
 		do
-			max_concurrent_connections := 1
- 		end		
+			set_max_concurrent_connections (1)
+		ensure
+			single_threaded: single_threaded
+ 		end
+
+	set_max_concurrent_connections (v: like max_concurrent_connections)
+			-- Set `max_concurrent_connections` to `v`.
+		require
+			v_positive_or_zero: v >= 0
+		do
+			max_concurrent_connections := v
+		ensure
+			max_concurrent_connections_set : max_concurrent_connections = v
+		end
 
 feature -- Execution
 
@@ -143,7 +164,7 @@ feature -- Execution
 		do
 			cfg.set_is_verbose (verbose)
 			cfg.set_verbose_level (verbose_level)
-			cfg.set_ssl_settings (ssl_settings)
+			cfg.set_secure_settings (secure_settings)
 			cfg.set_http_server_name (server_name)
 			cfg.http_server_port := port_number
 			cfg.set_max_concurrent_connections (max_concurrent_connections)
@@ -156,7 +177,7 @@ feature -- Execution
 
 	launch
 			-- <Precursor/>
-			-- using `port_number', `base_url', `verbose' and `single_threaded'
+			-- using associated settings/configuration.
 		local
 			conn: like connector
 		do
@@ -165,7 +186,7 @@ feature -- Execution
 			debug ("ew_standalone")
 				if verbose then
 					io.error.put_string ("Launching standalone web server on port " + port_number.out)
-					if ssl_enabled then
+					if is_secure then
 						io.error.put_string ("%N https://")
 					else
 						io.error.put_string ("%N http://")
@@ -175,7 +196,12 @@ feature -- Execution
 					else
 						io.error.put_string ("localhost")
 					end
-					io.error.put_string (":" + port_number.out + "/" + base_url + "%N")
+					io.error.put_string (":" + port_number.out)
+					if attached base_url as b and then not b.is_empty then
+						io.error.put_string (b + "%N")
+					else
+						io.error.put_string ("/%N")
+					end
 				end
 			end
 			update_configuration (conn.configuration)
@@ -201,32 +227,44 @@ feature {NONE} -- Implementation
 
 	server_name: detachable READABLE_STRING_8
 
-	base_url: READABLE_STRING_8
+	base_url: detachable READABLE_STRING_8
 
 	verbose: BOOLEAN
 	verbose_level: INTEGER
 			-- Help defining the verbosity.
 			-- The higher, the more output.
 
-	ssl_settings: detachable TUPLE [protocol: READABLE_STRING_GENERAL; ca_crt, ca_key: detachable READABLE_STRING_GENERAL]
+	max_concurrent_connections: INTEGER assign set_max_concurrent_connections
 
-	ssl_enabled: BOOLEAN
-			-- Is secure server? i.e using SSL?
+	single_threaded: BOOLEAN
+		obsolete
+			"Use max_concurrent_connections <= 1 [2017-05-31]"
 		do
-			Result := attached ssl_settings as ssl and then attached ssl.protocol as prot and then not prot.is_whitespace
+			Result := max_concurrent_connections <= 1
 		end
 
-	max_concurrent_connections: INTEGER
 	max_tcp_clients: INTEGER
 	socket_timeout: INTEGER
 	socket_recv_timeout: INTEGER
-	keep_alive_timeout: INTEGER	
+
+	keep_alive_timeout: INTEGER
 	max_keep_alive_requests: INTEGER
 
-	single_threaded: BOOLEAN
+	is_secure_connection_supported: BOOLEAN
+			-- Is SSL supported in current compiled system?
 		do
-			Result := max_concurrent_connections = 0
+			Result := {WGI_STANDALONE_CONSTANTS}.is_secure_connection_supported
 		end
+
+	is_secure: BOOLEAN
+			-- Is secure server? i.e using SSL?
+		do
+			Result := attached secure_settings as l_secure_settings and then
+					attached l_secure_settings.protocol as prot and then not prot.is_whitespace
+		end
+
+	secure_settings: detachable TUPLE [protocol: READABLE_STRING_GENERAL; ca_crt, ca_key: detachable READABLE_STRING_GENERAL]
+
 
 feature -- Status report
 
@@ -239,7 +277,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

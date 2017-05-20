@@ -144,7 +144,7 @@ feature -- Access
 			Result := read_natural_64.as_integer_64
 		end
 
-	read_real_32: REAL
+	read_real_32: REAL_32
 			-- Read next real_32
 		local
 			l_pos: INTEGER_32
@@ -160,7 +160,7 @@ feature -- Access
 			buffer_position := l_pos
 		end
 
-	read_real_64: DOUBLE
+	read_real_64: REAL_64
 			-- Read next real_64
 		local
 			l_pos: INTEGER_32
@@ -311,7 +311,7 @@ feature -- Element change
 			write_natural_64 (v.as_natural_64)
 		end
 
-	write_real_32 (v: REAL)
+	write_real_32 (v: REAL_32)
 			-- Write `v'.
 		local
 			l_pos: INTEGER
@@ -327,7 +327,7 @@ feature -- Element change
 			buffer_position := l_pos
 		end
 
-	write_real_64 (v: DOUBLE)
+	write_real_64 (v: REAL_64)
 			-- Write `v'.
 		local
 			l_pos: INTEGER

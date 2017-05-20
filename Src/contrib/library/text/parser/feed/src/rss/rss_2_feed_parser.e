@@ -52,7 +52,7 @@ feature -- Access
 						if attached xml_element_text (x_channel, "title") as x_title then
 							create Result.make (x_title)
 							Result.set_description (xml_element_text (x_channel, "description"), "xhtml")
-							Result.set_updated_date_with_text (xml_element_text (x_channel, "lastBuildDate"))
+							Result.set_date_with_text (xml_element_text (x_channel, "lastBuildDate"))
 							if attached links_from_xml (x_channel, "link") as l_links then
 								across
 									l_links as link_ic
@@ -69,7 +69,7 @@ feature -- Access
 									if attached xml_element_text (x_item, "title") as e_title then
 										create e.make (e_title)
 										e.set_description (xml_element_text (x_item, "description"))
-										e.set_updated_date_with_text (xml_element_text (x_item, "pubDate"))
+										e.set_date_with_text (xml_element_text (x_item, "pubDate"))
 
 										e.set_id (xml_element_text (x_item, "guid"))
 

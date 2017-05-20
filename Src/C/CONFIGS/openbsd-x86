@@ -161,7 +161,7 @@ add_log='undef'
 if [ -n "$CC" ]; then
 	cc=$CC
 else
-	cc='gcc'
+	cc='egcc'
 fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
@@ -172,7 +172,7 @@ ccldflags=''
 if [ -n "$CPP" ]; then
 	cpp=$CPP
 else
-	cpp='g++'
+	cpp='eg++'
 fi
 if [ -n "$CPPFLAGS" ]; then
 	cppflags=$CPPFLAGS
@@ -215,7 +215,7 @@ fi
 lintflags=''
 ldflags=""
 ldsharedflags="$ldflags -shared -o"
-libs='-lm -lcompat'
+libs='-lm'
 ln='/bin/ln'
 if [ -n "$MAKE" ]; then
 	make=$MAKE
@@ -234,10 +234,10 @@ ranlib=':'
 shared_prefix='lib'
 shared_suffix='.so'
 shared_rt_suffix='.so'
-sharedlibs='-lm -lcompat'
-mtsharedlibs='-lm -lcompat -lpthread'
-sharedlibversion='.16.11'
-sharedlink='ld'
+sharedlibs='-lm'
+mtsharedlibs='-lm -lpthread'
+sharedlibversion='.17.05'
+sharedlink="$cc"
 suffix='.a'
 wkeiflib='wkbench'
 

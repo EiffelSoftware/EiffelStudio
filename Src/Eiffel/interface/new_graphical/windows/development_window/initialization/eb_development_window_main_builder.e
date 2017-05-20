@@ -118,6 +118,7 @@ feature -- Command
 			l_save_cmd: EB_SAVE_FILE_COMMAND
 			l_save_as_cmd: EB_SAVE_FILE_AS_COMMAND
 			l_save_all_cmd: EB_SAVE_ALL_FILE_COMMAND
+			l_restore_tab_cmd: EB_RESTORE_CLOSE_TAB_EDITOR_COMMAND
 
 			l_shell_cmd: EB_OPEN_SHELL_COMMAND
 			l_print_cmd: EB_PRINT_COMMAND
@@ -415,6 +416,12 @@ feature -- Command
 			create l_editor_font_zoom_reset_numpad_command.make (develop_window)
 			l_dev_commands.set_editor_font_zoom_reset_numpad_command (l_editor_font_zoom_reset_numpad_command)
 			l_dev_commands.editor_commands.extend (l_editor_font_zoom_reset_numpad_command)
+
+				-- Open recently close tab.
+			create l_restore_tab_cmd.make (develop_window)
+			auto_recycle (l_restore_tab_cmd)
+			l_dev_commands.set_restore_tab_cmd (l_restore_tab_cmd)
+			l_dev_commands.toolbarable_commands.extend (l_dev_commands.restore_tab_cmd)
 
 			l_dev_commands.set_customized_formatter_command (create {EB_SETUP_CUSTOMIZED_FORMATTER_COMMAND})
 			l_dev_commands.set_customized_tool_command (create {EB_SETUP_CUSTOMIZED_TOOL_COMMAND})
@@ -1103,7 +1110,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

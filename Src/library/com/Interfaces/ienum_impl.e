@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Implementation of `IEnumXXXX' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,9 +8,9 @@ note
 class
 	IENUM_IMPL [G]
 
-create 
+create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (enumeration: like implementation)
@@ -20,27 +20,27 @@ feature {NONE} -- Initialization
 		do
 			implementation := enumeration
 		end
-		
+
 feature -- Basic Operations
 
 	next (celt: INTEGER; rgelt: ARRAY [G]; pcelt_fetched: INTEGER_REF)
-			-- Retrieves the next `celt' items in 
-			-- the enumeration sequence. 
-			-- If there are fewer than the requested number 
+			-- Retrieves the next `celt' items in
+			-- the enumeration sequence.
+			-- If there are fewer than the requested number
 			-- of elements left in the sequence, it retrieves
 			-- the remaining elements. The number of elements
 			-- actually retrieved is returned through
-			-- `pcelt_fetched' (unless the caller passed in 
+			-- `pcelt_fetched' (unless the caller passed in
 			-- Void for that parameter).
-			-- 
-			-- `celt' [in] Number of elements being requested.  
-			-- `rgelt' [out] Array of size `celt' (or larger) 
+			--
+			-- `celt' [in] Number of elements being requested.
+			-- `rgelt' [out] Array of size `celt' (or larger)
 			-- of the elements of interest. The type of this
-			-- parameter depends on the item being enumerated. 
+			-- parameter depends on the item being enumerated.
 			-- Array index starts from 1.
 			-- `pcelt_fetched' [out] Reference to the number of
 			-- elements actually supplied in `rgelt'. Caller can
-			-- pass in Void if celt is one.  
+			-- pass in Void if celt is one.
 		local
 			duplicate: like implementation
 			i: INTEGER
@@ -60,7 +60,7 @@ feature -- Basic Operations
 		end
 
 	skip (celt: INTEGER)
-			-- Skips over the next specified number of 
+			-- Skips over the next specified number of
 			-- elements in the enumeration sequence.
 			-- `celt' [in] Number of elements to be skipped.
 		do
@@ -74,20 +74,18 @@ feature -- Basic Operations
 		end
 
 	clone1 (ppenum: CELL [like Current])
-			-- Creates another enumerator that contains the 
-			-- same enumeration state as the current one. 
-			-- Using this function, a client can record a 
-			-- particular point in the enumeration sequence 
-			-- and then return to that point at a later time. 
-			-- The new enumerator supports the same interface 
+			-- Creates another enumerator that contains the
+			-- same enumeration state as the current one.
+			-- Using this function, a client can record a
+			-- particular point in the enumeration sequence
+			-- and then return to that point at a later time.
+			-- The new enumerator supports the same interface
 			-- as the original one.
-			-- `ppenum' [out].  
+			-- `ppenum' [out].
 		local
-			implementation_copy: like implementation
 			cloned: like Current
 		do
-			implementation_copy := implementation.twin
-			create cloned.make (implementation_copy)
+			create cloned.make (implementation.twin)
 			ppenum.put (cloned)
 		end
 
@@ -101,19 +99,19 @@ feature {NONE} -- Implementation
 		do
 			Result := implementation /= Void
 		end
-		
+
 invariant
 	implementation_exists: implementation_exists
-	
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

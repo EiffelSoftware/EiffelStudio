@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="encoder_tests" uuid="C6F56AE3-8E9C-4568-85CA-CA5F1EF15DCE">
+	<target name="encoder_tests">
+		<root class="TEST_BASE64" feature="default_create"/>
+		<file_rule>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option warning="true">
+			<assertions precondition="true"/>
+		</option>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="encoder" location="..\encoder.ecf" readonly="false"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<tests name="tests" location=".\"/>
+	</target>
+</system>

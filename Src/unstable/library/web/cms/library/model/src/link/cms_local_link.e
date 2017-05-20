@@ -90,6 +90,10 @@ feature -- Element change
 				children := lst
 			end
 			lst.force (lnk)
+			if not is_expanded then
+				set_expandable (True)
+				set_collapsed (True)
+			end
 		end
 
 	remove_link (lnk: CMS_LINK)
@@ -102,6 +106,8 @@ feature -- Element change
 				lst.prune_all (lnk)
 				if lst.is_empty then
 					children := Void
+					set_collapsed (False)
+					set_expandable (False)
 				end
 			end
 		end
@@ -110,6 +116,12 @@ feature -- Element change
 			-- Set `children' to `lst'.	
 		do
 			children := lst
+			if lst /= Void and then not lst.is_empty then
+				if not is_expanded then
+					set_expandable (True)
+					set_collapsed (True)
+				end
+			end
 		ensure
 			children_set: children = lst
 		end
@@ -184,6 +196,6 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "2011-2016, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

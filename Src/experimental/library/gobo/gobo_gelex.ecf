@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="gobo_gelex" uuid="655F8861-307D-4044-83C3-5F7075B485F3" library_target="gobo_gelex">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="gobo_gelex" uuid="655F8861-307D-4044-83C3-5F7075B485F3" library_target="gobo_gelex">
 	<target name="gobo_gelex">
 		<description>gobo lexical library</description>
 		<root all_classes="true"/>
 		<file_rule>
+			<exclude>/Documentation$</exclude>
+			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.svn</exclude>
-			<exclude>/hact$</exclude>
-			<exclude>/se$</exclude>
-			<exclude>/ve$</exclude>
-			<exclude>/ge$</exclude>
 			<exclude>/base$</exclude>
 			<exclude>/cvs$</exclude>
 			<exclude>/free_elks$</exclude>
-			<exclude>/EIFGENs$</exclude>
-			<exclude>/Documentation$</exclude>
+			<exclude>/ge$</exclude>
+			<exclude>/hact$</exclude>
+			<exclude>/se$</exclude>
+			<exclude>/ve$</exclude>
 		</file_rule>
 		<option namespace="Gobo.Library">
 		</option>

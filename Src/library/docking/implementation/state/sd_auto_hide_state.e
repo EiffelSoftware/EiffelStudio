@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "SD_STATE for  SD_AUTO_HIDE_ZONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,7 +9,7 @@ class
 	SD_AUTO_HIDE_STATE
 
 inherit
-	SD_STATE
+	SD_STATE_WITH_CONTENT
 		redefine
 			show,
 			close,
@@ -24,8 +24,7 @@ inherit
 			restore,
 			move_to_docking_zone,
 			move_to_tab_zone,
-			change_zone_split_area,
-			is_zone_attached
+			change_zone_split_area
 		end
 
 create
@@ -42,18 +41,19 @@ feature {NONE} -- Initlization
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		do
-			create internal_shared
 			internal_content := a_content
 			set_docking_manager (a_content.docking_manager)
 			direction := a_direction
 			if a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right then
-				width_height := (docking_manager.fixed_area.width * internal_shared.default_docking_width_rate).ceiling
+				width_height := (docking_manager.fixed_area.width * {SD_SHARED}.default_docking_width_rate).ceiling
 			else
-				width_height := (docking_manager.fixed_area.height * internal_shared.default_docking_height_rate).ceiling
+				width_height := (docking_manager.fixed_area.height * {SD_SHARED}.default_docking_height_rate).ceiling
 			end
 			auto_hide_panel := docking_manager.query.auto_hide_panel (a_direction)
 
 			create tab_stub.make (content, a_direction)
+
+			create animation.make (Current, docking_manager)
 
 			debug ("docking")
 				io.put_string ("%N ************************** SD_AUTO_HIDE_STATE: insert tab stubs.")
@@ -62,8 +62,6 @@ feature {NONE} -- Initlization
 			tab_stub.pointer_press_actions.extend (agent show)
 			auto_hide_panel.tab_stubs.extend (tab_stub)
 
-			create animation.make (docking_manager)
-			animation.init (Current)
 			last_floating_height := a_content.state.last_floating_height
 			last_floating_width := a_content.state.last_floating_width
 
@@ -106,8 +104,8 @@ feature -- Redefine
 			-- <Precursor>
 		do
 			show
-			if is_zone_attached then
-				zone.on_focus_in (a_content)
+			if attached zone as z then
+				z.on_focus_in (a_content)
 			end
 			docking_manager.property.set_last_focus_content (content)
 		end
@@ -115,7 +113,7 @@ feature -- Redefine
 	close
 			-- <Precursor>
 		do
-			Precursor {SD_STATE}
+			Precursor
 			internal_close
 		ensure then
 			tab_group_pruned: not auto_hide_panel.has (tab_stub)
@@ -184,11 +182,11 @@ feature -- Redefine
  	change_long_title (a_title: READABLE_STRING_GENERAL; a_content: SD_CONTENT)
 			-- <Precursor>
 		do
-			if is_zone_attached then
-				zone.set_title (a_title)
+			if attached zone as z then
+				z.set_title (a_title)
 			end
 		ensure then
-			set: is_zone_attached implies zone.title.same_string_general (a_title)
+			set: attached zone as z implies z.title.same_string_general (a_title)
 		end
 
 	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT)
@@ -203,17 +201,19 @@ feature -- Redefine
 			-- This class can created by make (not like SD_DOCKING_STATE, created by INTERNAL), so this routine do less work.
 			change_state (Current)
 			direction := a_data.direction
-			Precursor {SD_STATE} (a_data, a_container)
+			Precursor (a_data, a_container)
 			initialized := True
 		end
 
 	record_state
 			-- <Precursor>
 		do
-			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
-				width_height := zone.width
-			else
-				width_height := zone.height
+			if attached zone as z then
+				if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
+					width_height := z.width
+				else
+					width_height := z.height
+				end
 			end
 			animation.remove_moving_timer (False)
 			animation.remove_close_timer
@@ -235,9 +235,9 @@ feature -- Redefine
 		do
 			docking_manager.command.lock_update (Void, True)
 			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
-				create l_docking_state.make (content, direction, (docking_manager.query.container_rectangle.width * internal_shared.default_docking_width_rate).ceiling)
+				create l_docking_state.make (content, direction, (docking_manager.query.container_rectangle.width * {SD_SHARED}.default_docking_width_rate).ceiling)
 			else
-				create l_docking_state.make (content, direction, (docking_manager.query.container_rectangle.height * internal_shared.default_docking_height_rate).ceiling)
+				create l_docking_state.make (content, direction, (docking_manager.query.container_rectangle.height * {SD_SHARED}.default_docking_height_rate).ceiling)
 			end
 			l_docking_state.dock_at_top_level (a_multi_dock_area)
 			change_state (l_docking_state)
@@ -295,19 +295,20 @@ feature -- Redefine
 			-- <Precursor>
 		local
 			l_state: SD_STATE_VOID
-			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
 		do
 			if not is_hide then
 				docking_manager.command.remove_auto_hide_zones (False)
 				-- Change to SD_STATE_VOID.... wait for user call show.... then back to special state
-				create l_state.make
-				l_state.set_content (content)
-				l_tab_group := auto_hide_panel.tab_group (tab_stub)
-				internal_close
-				l_tab_group.prune (tab_stub)
-				if l_tab_group.count >= 1 then
-					l_state.set_relative (auto_hide_panel.content_by_tab (l_tab_group.last))
-					change_state (l_state)
+				create l_state.make (content, docking_manager)
+				if attached auto_hide_panel.tab_group (tab_stub) as l_tab_group then
+					internal_close
+					l_tab_group.prune (tab_stub)
+					if l_tab_group.count >= 1 then
+						if attached auto_hide_panel.content_by_tab (l_tab_group.last) as t then
+							l_state.set_relative (t)
+						end
+						change_state (l_state)
+					end
 				end
 			end
 		end
@@ -315,16 +316,16 @@ feature -- Redefine
 	set_user_widget (a_widget: EV_WIDGET)
 			-- <Precursor>
 		do
-			if is_zone_attached then
-				zone.window.set_user_widget (a_widget)
+			if attached zone as z then
+				z.window.set_user_widget (a_widget)
 			end
 		end
 
 	set_mini_toolbar (a_widget: EV_WIDGET)
 			-- <Precursor>
 		do
-			if is_zone_attached then
-				zone.window.set_mini_toolbar (a_widget)
+			if attached zone as z then
+				z.window.set_mini_toolbar (a_widget)
 			end
 		end
 
@@ -338,15 +339,8 @@ feature -- Command
 
 feature -- Query
 
-	zone: SD_AUTO_HIDE_ZONE
+	zone: detachable SD_AUTO_HIDE_ZONE
 			-- <Precursor>
-		local
-			l_result: like internal_zone
-		do
-			l_result := internal_zone
-			check l_result /= Void end -- Implied by precondition `is_zone_attached'
-			Result := l_result
-		end
 
 	is_hide: BOOLEAN
 			-- If current Hide?
@@ -364,12 +358,6 @@ feature -- Query
 			end
 		end
 
-	is_zone_attached: BOOLEAN
-			-- <Precursor>
-		do
-			Result := internal_zone /= Void
-		end
-
 feature {NONE} -- Implementation functions
 
 	stick_zones (a_direction: INTEGER)
@@ -380,54 +368,60 @@ feature {NONE} -- Implementation functions
 		local
 			l_docking_state: detachable SD_DOCKING_STATE
 			l_tab_state: detachable SD_TAB_STATE
-			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
 			l_tab_stub: SD_TAB_STUB
 			l_content: SD_CONTENT
 			l_last_tab_zone: detachable SD_TAB_ZONE
 		do
-			l_tab_group := auto_hide_panel.tab_group (tab_stub)
-			from
+			if attached auto_hide_panel.tab_group (tab_stub) as l_tab_group then
 				l_tab_group.start
-			until
-				l_tab_group.after
-			loop
-				l_tab_stub := l_tab_group.item
-				auto_hide_panel.tab_stubs.start
-				auto_hide_panel.tab_stubs.prune (l_tab_stub)
-
-				l_content := l_tab_stub.content
-				if l_tab_group.index = 1 then
+				if not l_tab_group.after then
+					l_tab_stub := l_tab_group.item
+					auto_hide_panel.tab_stubs.start
+					auto_hide_panel.tab_stubs.prune (l_tab_stub)
+					l_content := l_tab_stub.content
 					create l_docking_state.make (l_content, direction, width_height)
 					l_docking_state.dock_at_top_level (docking_manager.query.inner_container_main)
 					l_content.state.change_state (l_docking_state)
-				else
-					if attached l_content.user_widget.parent as l_parent then
-						l_parent.prune (l_content.user_widget)
-					end
-					if l_last_tab_zone = Void then
-						check l_docking_state /= Void end -- Implied by this loop first iteration
+					l_tab_group.forth
+					if not l_tab_group.after then
+						l_tab_stub := l_tab_group.item
+						auto_hide_panel.tab_stubs.start
+						auto_hide_panel.tab_stubs.prune (l_tab_stub)
+						l_content := l_tab_stub.content
 						create l_tab_state.make (l_content, l_docking_state.zone, direction)
 						l_tab_state.set_width_height (width_height)
 						l_tab_state.set_direction (l_docking_state.direction)
-					else
-						check l_tab_state /= Void end -- Implied by this loop second iteration
-						create l_tab_state.make_with_tab_zone (l_content, l_last_tab_zone, direction)
-						l_tab_state.set_width_height (width_height)
-						l_tab_state.set_direction (l_last_tab_zone.state.direction)
-					end
+						l_last_tab_zone := l_tab_state.zone
+						l_content.change_state (l_tab_state)
+						l_tab_group.forth
+						from
+						until
+							l_tab_group.after
+						loop
+							l_tab_stub := l_tab_group.item
+							auto_hide_panel.tab_stubs.start
+							auto_hide_panel.tab_stubs.prune (l_tab_stub)
 
-					l_last_tab_zone := l_tab_state.zone
-					l_content.change_state (l_tab_state)
+							l_content := l_tab_stub.content
+							if attached l_content.user_widget.parent as l_parent then
+								l_parent.prune (l_content.user_widget)
+							end
+							create l_tab_state.make_with_tab_zone (l_content, l_last_tab_zone, direction)
+							l_tab_state.set_width_height (width_height)
+							l_tab_state.set_direction (l_last_tab_zone.state.direction)
+
+							l_last_tab_zone := l_tab_state.zone
+							l_content.change_state (l_tab_state)
+
+							l_tab_group.forth
+						end
+						l_tab_state.select_tab (content, True)
+					end
 				end
 
-				l_tab_group.forth
+				auto_hide_panel.tab_groups.start
+				auto_hide_panel.tab_groups.prune (l_tab_group)
 			end
-			if l_tab_group.count > 1 then
-				check l_tab_state /= Void end -- Implied by `l_tab_group.count > 1'
-				l_tab_state.select_tab (content, True)
-			end
-			auto_hide_panel.tab_groups.start
-			auto_hide_panel.tab_groups.prune (l_tab_group)
 		ensure
 			state_changed: content.state /= Current
 		end
@@ -470,8 +464,8 @@ feature {NONE} -- Implementation functions
 			l_tab_state: detachable SD_TAB_STATE
 			l_original_direction: INTEGER
 		do
-			if is_zone_attached and then not zone.is_destroyed then
-				docking_manager.command.lock_update (zone, False)
+			if attached zone as z and then not z.is_destroyed then
+				docking_manager.command.lock_update (z, False)
 			else
 				docking_manager.command.lock_update (Void, True)
 			end
@@ -509,13 +503,13 @@ feature {SD_AUTO_HIDE_ANIMATION} -- Internal features
 			valid: a_width_height >= 0
 		do
 			if direction  = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
-				if (a_width_height <= (docking_manager.fixed_area.width * 0.8).ceiling) then
+				if a_width_height <= (docking_manager.fixed_area.width * 0.8).ceiling then
 					Result := a_width_height
 				else
 					Result := (docking_manager.fixed_area.width * 0.8).ceiling
 				end
 			else
-				if (a_width_height <= (docking_manager.fixed_area.height * 0.8).ceiling) then
+				if a_width_height <= (docking_manager.fixed_area.height * 0.8).ceiling then
 					Result := a_width_height
 				else
 					Result := (docking_manager.fixed_area.height * 0.8).ceiling
@@ -530,7 +524,7 @@ feature {SD_AUTO_HIDE_ANIMATION} -- Internal features
 		require
 			not_void: a_zone /= Void
 		do
-			internal_zone := a_zone
+			zone := a_zone
 		ensure
 			set: zone = a_zone
 		end
@@ -546,13 +540,9 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Implementation
 	animation: SD_AUTO_HIDE_ANIMATION
 			-- Animation helper
 
-	internal_zone: detachable SD_AUTO_HIDE_ZONE
-			-- Zone which current is in
-
 invariant
 
 	internal_content_not_void: initialized implies internal_content /= Void
-	internal_shared_not_void: initialized implies internal_shared /= Void
 	tab_stub_not_void: initialized implies tab_stub /= Void
 	auto_hide_panel_not_void: initialized implies auto_hide_panel /= Void
 	animation_not_void: initialized implies animation /= Void
@@ -561,7 +551,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -570,10 +560,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

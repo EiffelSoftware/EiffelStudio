@@ -1,5 +1,5 @@
-note
-    description: ""
+﻿note
+    description: "System root."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
     date: "$Date$";
@@ -7,7 +7,7 @@ note
 
 class
 	PC
-			-- Root class.
+
 inherit
 	THREAD_CONTROL
 			-- For join_all.
@@ -30,13 +30,11 @@ feature	-- Access
 			-- Boolean reference for exiting.
 			-- It has not to be expanded so that we can put it into a proxy.
 
-feature	-- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Customization, initilialization, execution.
 		local
-			consumer: CONSUMER
-			producer: PRODUCER
 			i : INTEGER
 		do
 
@@ -75,7 +73,7 @@ feature	-- Initialization
 			until
 				i > n_p
 			loop
-				create producer.make (buffer, i, finished)
+				;(create {PRODUCER}.make (buffer, i, finished)).do_nothing
 				i := i + 1
 			end
 			from
@@ -83,7 +81,7 @@ feature	-- Initialization
 			until
 				i > n_c
 			loop
-				create consumer.make (buffer, i,  finished)
+				;(create {CONSUMER}.make (buffer, i,  finished)).do_nothing
 				i := i + 1
 			end
 			join_all
@@ -91,7 +89,7 @@ feature	-- Initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -101,6 +99,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-end  -- class PC (ROOT CLASS)
-
+end

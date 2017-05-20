@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "TUPLE with different is_equal that checks the values."
 
 class
@@ -40,16 +40,13 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Does table contain the same information as `other'?
 		local
-			l_item, l_other: detachable separate ANY
 			l_count, i: INTEGER
 		do
 			l_count := item.count
 			Result := l_count = other.item.count
 			if Result then
 				from i := 1 until not Result or else i > l_count loop
-					l_item := item.item (i)
-					l_other := other.item [i]
-					Result := l_item ~ l_other
+					Result := item.item (i) ~ other.item [i]
 					i := i + 1
 				end
 			end
@@ -58,7 +55,7 @@ feature -- Comparison
 note
 	date: "$Date$";
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

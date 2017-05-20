@@ -318,12 +318,9 @@ feature -- Access
 
 	decoded_path: STRING_32
 			-- Decoded `path'
-		local
-			s: STRING_32
 		do
-			create s.make (path.count)
-			append_decoded_www_form_urlencoded_string_to (path, s)
-			Result := s
+			create Result.make (path.count)
+			append_decoded_www_form_urlencoded_string_to (path, Result)
 		end
 
 	path_segments: LIST [READABLE_STRING_8]
@@ -474,17 +471,14 @@ feature -- Query
             --      / path-absolute
             --      / path-rootless
             --      / path-empty
-		local
-			s: STRING_8
 		do
-			create s.make (10)
+			create Result.make (10)
 			if attached authority as l_authority then
-				s.append_character ('/')
-				s.append_character ('/')
-				s.append (l_authority)
+				Result.append_character ('/')
+				Result.append_character ('/')
+				Result.append (l_authority)
 			end
-			s.append (path)
-			Result := s
+			Result.append (path)
 		end
 
 	username_password: detachable TUPLE [username: READABLE_STRING_8; password: detachable READABLE_STRING_8]
@@ -570,12 +564,9 @@ feature -- Conversion
 	string: STRING_8
 			-- String representation.
 			-- scheme://username:password@hostname/path?query#fragment
-		local
-			s: STRING_8
 		do
-			create s.make_empty
-			append_to_string (s)
-			Result := s
+			create Result.make_empty
+			append_to_string (Result)
 		end
 
 	resolved_uri: URI
@@ -1140,16 +1131,13 @@ feature -- Status report
 
 	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
-		local
-			s: STRING
 		do
-			create s.make_empty
-			s.append (string)
-			Result := s
+			create Result.make_empty
+			Result.append (string)
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

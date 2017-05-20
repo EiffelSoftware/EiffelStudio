@@ -179,16 +179,15 @@ feature {NONE} -- Implementation
 
 	add_new_class_name_clicked
 			-- Called by `select_actions' of `l_ev_tool_bar_button_3'.
-		local
-			l_last_row: detachable EV_GRID_ROW
 		do
 			add_new_row (Void)
-			l_last_row := grid.last_visible_row
-			check attached l_last_row end -- FIXME: Implied by ...?
-			if attached {EV_GRID_EDITABLE_ITEM} l_last_row.item (1) as l_item then
+			if
+				attached grid.last_visible_row as l_last_row and then
+				attached {EV_GRID_EDITABLE_ITEM} l_last_row.item (1) as l_item
+			then
 				l_item.activate
 			else
-				check not_editable_item: False end
+				check editable_item: False end
 			end
 		end
 
@@ -264,14 +263,16 @@ feature {NONE} -- Implementation
 			a_index_valid: a_index = 1 or a_index = 2 or a_index = 3
 		do
 			if attached {like a_filter_data} a_item.data as l_filter_data then
-				if a_index /= 2 then
-					l_filter_data [a_index] := a_item.text
-				else
+				inspect a_index
+				when 1 then l_filter_data.class_name := a_item.text
+				when 2 then
 					if attached {MA_GRID_CHECK_BOX_ITEM} a_item as l_check_box then
 						l_filter_data.selected := l_check_box.is_selected
 					else
 						check not_check_box_item: False end
 					end
+				when 3 then l_filter_data.description := a_item.text
+				else
 				end
 			else
 				check not_filter_data: False end
@@ -291,31 +292,24 @@ feature {NONE} -- Implementation
 	a_filter_data: TUPLE [class_name: STRING; selected: BOOLEAN; description: STRING]
 			-- A anchor, should not be called
 		require
-			False
-		local
-			l_result: detachable like a_filter_data
+			callable: False
 		do
-			check False end -- Anchor type only
-			check attached l_result end -- Satisfy void-safe compiler
-			Result := l_result
+			check False then end -- Anchor type only
 		end
 
 	hash_table_datas_to_arrayed_list_datas: MA_ARRAYED_LIST_STORABLE [like a_filter_data]
 			-- Change the data stored in HASH_TABLE to a arrayed_list which is storable.
 
-		local
-			l_datas: MA_ARRAYED_LIST_STORABLE [like a_filter_data]
 		do
-			create l_datas.make (1)
+			create Result.make (1)
 			from
 				filter.item_and_filter_names.start
 			until
 				filter.item_and_filter_names.after
 			loop
-				l_datas.extend (filter.item_and_filter_names.item_for_iteration)
+				Result.extend (filter.item_and_filter_names.item_for_iteration)
 				filter.item_and_filter_names.forth
 			end
-			Result := l_datas
 		ensure
 			result_not_void: Result /= Void
 			result_valid: Result.count = filter.item_and_filter_names.count
@@ -354,7 +348,7 @@ invariant
 	grid_not_void: grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -363,9 +357,6 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class MA_FILTER_WINDOW
 

@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="eel" uuid="2A5F116C-6A76-4AB7-81A0-A73DF516F4F3" library_target="eel">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="eel" uuid="2A5F116C-6A76-4AB7-81A0-A73DF516F4F3" library_target="eel">
 	<target name="eel">
+		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/\.svn$</exclude>
-			<exclude>/\.hg$</exclude>
+			<exclude>/.hg$</exclude>
+			<exclude>/.svn$</exclude>
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<root all_classes="true"/>
-		<option profile="false" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="none" syntax="standard">
-			<assertions precondition="true" postcondition="true" check="true" loop="true" supplier_precondition="true"/>
+		<option warning="true">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="eapml" location="$ISE_LIBRARY\contrib\library\math\eapml\eapml.ecf"/>
-		<cluster name="eel" location=".\src" recursive="true">
-			<option syntax="standard">
-				<assertions precondition="true" postcondition="true" check="true" loop="true" supplier_precondition="true"/>
-			</option>
+		<cluster name="eel" location=".\src\" recursive="true">
 			<file_rule>
 				<exclude>/x509$</exclude>
 			</file_rule>

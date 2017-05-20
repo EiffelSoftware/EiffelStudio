@@ -1,0 +1,197 @@
+test_name 	 capability-condition-use
+test_description Capabilities should be checked against settings: a project cannot use a library with less capabilities that do not support specified settings. See also test#config041, test#config043.
+
+copy_raw	test.e $CLUSTER test.e
+copy_sub	thread.ecf $TEST thread.ecf
+copy_sub	none.ecf $TEST none.ecf
+copy_sub	scoop.ecf $TEST scoop.ecf
+
+
+-- Concurrency: thread
+define	CONCURRENCY thread
+
+define	LIBRARY_CONCURRENCY thread
+-- thread:	ok
+-- none:	ok
+-- scoop:	ok
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	ok
+
+define	LIBRARY_CONCURRENCY	none
+-- thread:	ok (unused)
+-- none:	ok (unused)
+-- scoop:	ok (unused)
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	ok
+
+define	LIBRARY_CONCURRENCY	scoop
+-- thread:	ok (unused)
+-- none:	ok (unused)
+-- scoop:	ok (unused)
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	ok
+
+define	LIBRARY_CONCURRENCY "thread none"
+-- thread:	warning
+-- none:	ok
+-- scoop:	ok
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	validity_warning NONE VD01
+
+define	LIBRARY_CONCURRENCY "thread scoop"
+-- thread:	warning
+-- none:	warning
+-- scoop:	ok
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	validity_warning NONE VD01 VD01
+
+define	LIBRARY_CONCURRENCY "none scoop"
+-- thread:	ok (unused)
+-- none:	ok (unused)
+-- scoop:	ok (unused)
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	ok
+
+define	LIBRARY_CONCURRENCY "thread none scoop"
+-- thread:	warning
+-- none:	warning
+-- scoop:	ok
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	validity_warning NONE VD01 VD01
+
+cleanup_compile
+
+
+-- Concurrency: none
+define	CONCURRENCY none
+
+define	LIBRARY_CONCURRENCY	thread
+-- thread:	ok (unused)
+-- none:	ok (unused)
+-- scoop:	ok (unused)
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	ok
+
+define	LIBRARY_CONCURRENCY	none
+-- thread:	error (use) warning (support)
+-- none:	ok
+-- scoop:	ok
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	validity_error NONE VD01 VD01
+
+define	LIBRARY_CONCURRENCY	scoop
+-- thread:	ok (unused)
+-- none:	ok (unused)
+-- scoop:	ok (unused)
+copy_sub	Ace $TEST Ace
+resume_compile
+compile_result	ok
+
+define	LIBRARY_CONCURRENCY	"thread none"
+-- thread:	error (use) warning (support)
+-- none:	ok
+-- scoop:	ok
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	validity_error NONE VD01 VD01
+
+define	LIBRARY_CONCURRENCY	"thread scoop"
+-- thread:	ok (unused)
+-- none:	ok (unused)
+-- scoop:	ok (unused)
+copy_sub	Ace $TEST Ace
+resume_compile
+compile_result	ok
+
+define	LIBRARY_CONCURRENCY	"none scoop"
+-- thread:	error (use) warning (support)
+-- none:	warning
+-- scoop:	ok
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	validity_error NONE VD01 VD01 VD01
+
+define	LIBRARY_CONCURRENCY	"thread none scoop"
+-- thread:	error (use) warning (support)
+-- none:	warning
+-- scoop:	ok
+copy_sub	Ace $TEST Ace
+resume_compile
+compile_result	validity_error NONE VD01 VD01 VD01
+
+abort_compile
+cleanup_compile
+
+
+-- Concurrency: scoop
+define	CONCURRENCY scoop
+
+define	LIBRARY_CONCURRENCY	thread
+-- thread:	ok (unused)
+-- none:	ok (unused)
+-- scoop:	ok (unused)
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	ok
+
+define	LIBRARY_CONCURRENCY	none
+-- thread:	ok (unused)
+-- none:	ok (unused)
+-- scoop:	ok (unused)
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	ok
+
+define	LIBRARY_CONCURRENCY	scoop
+-- thread:	error (use) warning (support)
+-- none:	error (use) warning (support)
+-- scoop:	ok
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	validity_error NONE VD01 VD01 VD01 VD01
+
+define	LIBRARY_CONCURRENCY	"thread none"
+-- thread:	ok (unused)
+-- none:	ok (unused)
+-- scoop:	ok (unused)
+copy_sub	Ace $TEST Ace
+resume_compile
+compile_result	ok
+
+define	LIBRARY_CONCURRENCY	"thread scoop"
+-- thread:	error (use) warning (support)
+-- none:	error (use) warning (support)
+-- scoop:	ok
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	validity_error NONE VD01 VD01 VD01 VD01
+
+define	LIBRARY_CONCURRENCY	"none scoop"
+-- thread:	error (use) warning (support)
+-- none:	error (use) warning (support)
+-- scoop:	ok
+copy_sub	Ace $TEST Ace
+resume_compile
+compile_result	validity_error NONE VD01 VD01 VD01 VD01
+
+define	LIBRARY_CONCURRENCY	"thread none scoop"
+-- thread:	error (use) warning (support)
+-- none:	error (use) warning (support)
+-- scoop:	ok
+copy_sub	Ace $TEST Ace
+resume_compile
+compile_result	validity_error NONE VD01 VD01 VD01 VD01
+
+abort_compile
+cleanup_compile
+
+test_end

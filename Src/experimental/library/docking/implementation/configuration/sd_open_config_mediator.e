@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that with responsibility for open all docking library config."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,8 +25,7 @@ feature {NONE} -- Initialization
 			internal_docking_manager := a_docking_manager
 
 			create cleaner.make (a_docking_manager)
-			create editor_helper
-			editor_helper.set_open_config_mediator (Current)
+			create editor_helper.make (Current)
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -67,7 +66,6 @@ feature -- Open inner container data
 			internal_docking_manager.command.recover_normal_state
 
 			internal_docking_manager.command.resize (True)
-			internal_docking_manager.property.set_is_opening_config (True)
 
 			debug ("to_implement")
 				(create {REFACTORING_HELPER}).to_implement ("Use FILE_UTILITIES to deal with `a_file' when available in a library.")
@@ -81,6 +79,7 @@ feature -- Open inner container data
 				l_top_parent := editor_top_parent_for_restore
 				if l_top_parent /= Void then
 					internal_docking_manager.command.lock_update (Void, True)
+					internal_docking_manager.property.set_is_opening_config (True)
 
 					cleaner.clean_up_all_editors
 					check not l_top_parent.full end
@@ -88,12 +87,11 @@ feature -- Open inner container data
 						open_inner_container_data (l_data, l_top_parent)
 					end
 
-					if attached {EV_SPLIT_AREA} l_top_parent as l_split_area then
-						if l_split_area.first /= Void then
-							if attached {EV_SPLIT_AREA} l_split_area.first as l_split_area_2 then
-								open_inner_container_data_split_position (l_data, l_split_area_2)
-							end
-						end
+					if
+						attached {EV_SPLIT_AREA} l_top_parent as l_split_area and then
+						attached {EV_SPLIT_AREA} l_split_area.first as l_split_area_2
+					then
+						open_inner_container_data_split_position (l_data, l_split_area_2)
 					end
 
 					l_place_holder_content := internal_docking_manager.zones.place_holder_content
@@ -178,9 +176,9 @@ feature -- Open inner container data
 feature -- Obsolete
 
 	open_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
-			-- Open all docking library data from `a_file'
+			-- Open all docking library data from `a_file'.
 		obsolete
-			"Use open_config_with_path instead"
+			"Use open_config_with_path instead. [2017-05-31]"
 		require
 			a_file_not_void: a_file /= Void
 		do
@@ -188,9 +186,9 @@ feature -- Obsolete
 		end
 
 	open_editors_config (a_file: READABLE_STRING_GENERAL)
-			-- Open main window eidtor config data
+			-- Open main window eidtor config data.
 		obsolete
-			"Use open_editors_config_with_path instead"
+			"Use open_editors_config_with_path instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 		do
@@ -198,10 +196,10 @@ feature -- Obsolete
 		end
 
 	open_tools_config (a_file: READABLE_STRING_GENERAL): BOOLEAN
-			-- Open tools config, except all editors
+			-- Open tools config, except all editors.
 			-- Not same as normal `open_config', it doesn't clear editors related things.
 		obsolete
-			"Use open_tools_config_with_path instead"
+			"Use open_tools_config_with_path instead. [2017-05-31]"
 		do
 			Result := open_tools_config_with_path (create {PATH}.make_from_string (a_file))
 		end
@@ -209,7 +207,7 @@ feature -- Obsolete
 	open_maximized_tool_data (a_file: READABLE_STRING_GENERAL)
 			-- Open maximized tool data.
 		obsolete
-			"Use open_maximized_tool_data_with_path instead"
+			"Use open_maximized_tool_data_with_path instead. [2017-05-31]"
 		require
 			a_file_not_void: a_file /= Void
 		do
@@ -219,7 +217,7 @@ feature -- Obsolete
 	open_tool_bar_item_data (a_file: READABLE_STRING_GENERAL)
 			-- Restore SD_TOOL_BAR_RESIZABLE_ITEM's width.
 		obsolete
-			"Use open_tool_bar_item_data_with_path instead"
+			"Use open_tool_bar_item_data_with_path instead. [2017-05-31]"
 		require
 			a_file_not_void: a_file /= Void
 		do
@@ -242,11 +240,15 @@ feature -- Query
 				create l_file.make_with_path (a_file)
 				if l_file.exists then
 					l_file.open_read
-					create l_reader.make (l_file)
-					l_reader.set_for_reading
-					create l_facility
-					if attached {SD_CONFIG_DATA} l_facility.retrieved (l_reader, True) as l_result then
-						Result := l_result
+					if l_file.readable then
+						create l_reader.make (l_file)
+						l_reader.set_for_reading
+						create l_facility
+						if attached {SD_CONFIG_DATA} l_facility.retrieved (l_reader, True) as l_result then
+							Result := l_result
+						end
+					else
+							-- May be empty..						
 					end
 				end
 			end
@@ -261,7 +263,7 @@ feature -- Query
 	config_data_from_file (a_file: READABLE_STRING_GENERAL): detachable SD_CONFIG_DATA
 			-- Config data readed from `a_file'
 		obsolete
-			"Use config_data_from_path instead"
+			"Use config_data_from_path instead. [2017-05-31]"
 		require
 			not_void: a_file /= Void
 		do
@@ -406,10 +408,9 @@ feature {NONE} -- Implementation
 					end
 				end
 
-				if Result = internal_docking_manager.query.inner_container_main then
-				-- If the l_top_parent is top SD_MULTI_DOCK_AREA
-					l_result := Result
-					check l_result /= Void end -- Implied by `inner_container_main' not void
+				l_result := internal_docking_manager.query.inner_container_main
+				if Result = l_result then
+						-- If the l_top_parent is top SD_MULTI_DOCK_AREA.
 					l_result.wipe_out
 					create l_temp_split_area
 					l_result.extend (l_temp_split_area)
@@ -418,16 +419,15 @@ feature {NONE} -- Implementation
 					if attached l_top_split_area.first as l_first then
 						l_left_zones := internal_docking_manager.query.all_zones_in_widget (l_first)
 					else
-						check False end -- Implied by docking widget must not has empty child
+						check False end -- Implied by docking widget must not have an empty child.
 					end
 
 					if attached l_top_split_area.second as l_second then
 						l_right_zones := internal_docking_manager.query.all_zones_in_widget (l_second)
 					else
-						check False end -- Implied by docking widget must not has empty child
+						check False end -- Implied by docking widget must not have an empty child.
 					end
-					check l_left_zones /= Void and l_right_zones /= Void end -- Implied by previous if clauses
-					if is_all_tools (l_left_zones) or  is_all_tools (l_right_zones) then
+					if is_all_tools (l_left_zones) or is_all_tools (l_right_zones) then
 						create l_temp_split_area
 						if is_all_tools (l_left_zones) then
 							-- If the top parent only right side have editors zones
@@ -458,23 +458,10 @@ feature {NONE} -- Implementation
 			result_not_have_tool_widgets:
 		end
 
-	is_all_tools (a_zones: ARRAYED_LIST [SD_ZONE]): BOOLEAN
-			-- If `a_zones' all of tools conentes.
-		require
-			not_void: a_zones /= Void
-			at_least_one: a_zones.count > 0
+	is_all_tools (a_zones: detachable ARRAYED_LIST [SD_ZONE]): BOOLEAN
+			-- Does `a_zones' contain only tools?
 		do
-			from
-				a_zones.start
-				Result := True
-			until
-				a_zones.after or not Result
-			loop
-				if a_zones.item.type /= {SD_ENUMERATION}.tool then
-					Result := False
-				end
-				a_zones.forth
-			end
+			Result := attached a_zones implies across a_zones as z all z.item.type = {SD_ENUMERATION}.tool end
 		end
 
 	open_all_inner_containers_data (a_config_data: SD_CONFIG_DATA)
@@ -519,10 +506,8 @@ feature {NONE} -- Implementation
 					l_multi_dock_area := l_floating_state.inner_container
 					internal_docking_manager.inner_containers.extend (l_multi_dock_area)
 				end
-				if l_multi_dock_area.readable then
-					if attached {EV_SPLIT_AREA} l_multi_dock_area.item as l_split then
-						open_inner_container_data_split_position (l_data_item, l_split)
-					end
+				if l_multi_dock_area.readable and then attached {EV_SPLIT_AREA} l_multi_dock_area.item as l_split then
+					open_inner_container_data_split_position (l_data_item, l_split)
 				end
 				l_data.forth
 			end
@@ -531,23 +516,20 @@ feature {NONE} -- Implementation
 	set_all_visible
 			-- Set all contents not visible
 		local
-			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_content: SD_CONTENT
 		do
-			from
-				l_contents := internal_docking_manager.contents
-				l_contents.start
-			until
-				l_contents.after
+			across
+				internal_docking_manager.contents as ic
 			loop
+				l_content := ic.item
 				if editor_helper.is_top_container_recorded then
 					-- We are restoring tools config
-					if l_contents.item.type /= {SD_ENUMERATION}.editor then
-						l_contents.item.set_visible (False)
+					if l_content.type /= {SD_ENUMERATION}.editor then
+						l_content.set_visible (False)
 					end
 				else
-					l_contents.item.set_visible (False)
+					l_content.set_visible (False)
 				end
-				l_contents.forth
 			end
 		end
 
@@ -562,14 +544,21 @@ feature {NONE} -- Implementation
 			l_internal: INTERNAL
 			l_type_id: INTEGER
 		do
-			if not a_config_data.is_split_area then -- If it's a zone.
+			if not a_config_data.is_split_area then
+					-- If it's a zone.
+				debug ("fixme")
+						-- TODO: Replace indirect object creation with the direct one.
+					(create {REFACTORING_HELPER}).fixme
+						("Creation of SD_STATE_WITH_CONTENT objects shouold be done directly %
+						%to avoid potential void-safety violations if not all attached attributes are properly set.")
+				end
 				create l_internal
 				if attached a_config_data.state as l_state then
 					l_type_id := l_internal.dynamic_type_from_string (l_state)
 				end
 
 				check a_type_exist: l_type_id /= -1 end
-				if attached {SD_STATE} l_internal.new_instance_of (l_type_id) as l_state then
+				if attached {SD_STATE_WITH_CONTENT} l_internal.new_instance_of (l_type_id) as l_state then
 					l_state.set_docking_manager (internal_docking_manager)
 
 					if attached a_config_data.titles as l_titles and then not l_titles.is_empty
@@ -585,29 +574,26 @@ feature {NONE} -- Implementation
 						l_state.restore (a_config_data, a_container)
 					end
 
-					-- We should check if we really restored content.
-					if l_state.is_content_set then
-						l_state.set_last_floating_height (a_config_data.height)
-						l_state.set_last_floating_width (a_config_data.width)
-						if not a_config_data.is_visible and l_state.content /= internal_docking_manager.zones.place_holder_content then
-							l_state.content.hide
-						end
-						if a_config_data.is_minimized then
-							-- l_state.zone will be void. We should query zone indirectly.
-							if attached {EV_WIDGET} l_state.content.state.zone as lt_widget then
-								if attached {SD_MIDDLE_CONTAINER} lt_widget.parent as l_parent and then l_parent.is_minimized then
-									-- Maybe parent not full now, Current is the first child of parent, parent will fill another child immediately.
-									-- check full: l_parent.full end
-									if attached {EV_WIDGET} l_state.content.state.zone as lt_widget_2 then
-										l_parent.disable_item_expand (lt_widget_2)
-									else
-										check not_possible: False end
-									end
+						-- We should check if we really restored content.
+					l_state.set_last_floating_height (a_config_data.height)
+					l_state.set_last_floating_width (a_config_data.width)
+					if not a_config_data.is_visible and l_state.content /= internal_docking_manager.zones.place_holder_content then
+						l_state.content.hide
+					end
+					if a_config_data.is_minimized then
+						-- l_state.zone will be void. We should query zone indirectly.
+						if attached {EV_WIDGET} l_state.content.state.zone as lt_widget then
+							if attached {SD_MIDDLE_CONTAINER} lt_widget.parent as l_parent and then l_parent.is_minimized then
+								-- Maybe parent not full now, Current is the first child of parent, parent will fill another child immediately.
+								-- check full: l_parent.full end
+								if attached {EV_WIDGET} l_state.content.state.zone as lt_widget_2 then
+									l_parent.disable_item_expand (lt_widget_2)
+								else
+									check not_possible: False end
 								end
-
-							else
-								check not_possible: False end
 							end
+						else
+							check not_possible: False end
 						end
 					end
 				end
@@ -666,23 +652,27 @@ feature {NONE} -- Implementation
 		do
 			if a_config_data.is_split_area then
 				if
-					 a_split.full then
-					-- a_split may be not full, because when restore client programer may not
-					-- supply SD_CONTENT which existed when last saving config.
-					if 0 <= a_config_data.split_proportion and a_config_data.split_proportion <= 1 then
-						a_split.set_proportion (a_config_data.split_proportion)
-					end
+						-- `a_split` may be not full, because when restore client programer may not
+						-- supply SD_CONTENT which existed when last saving config.
+					 a_split.full and then
+					0 <= a_config_data.split_proportion and a_config_data.split_proportion <= 1
+				then
+					a_split.set_proportion (a_config_data.split_proportion)
 				end
 
-				if attached a_config_data.children_left as l_left and then l_left.is_split_area then
-					if attached {EV_SPLIT_AREA} a_split.first as l_split then
-						open_inner_container_data_split_position (l_left, l_split)
-					end
+				if
+					attached a_config_data.children_left as l_left and then
+					l_left.is_split_area and then
+					attached {EV_SPLIT_AREA} a_split.first as l_split
+				then
+					open_inner_container_data_split_position (l_left, l_split)
 				end
-				if attached a_config_data.children_right as l_right and then l_right.is_split_area then
-					if attached {EV_SPLIT_AREA} a_split.second as l_split_2 then
-						open_inner_container_data_split_position (l_right, l_split_2)
-					end
+				if
+					attached a_config_data.children_right as l_right and then
+					l_right.is_split_area and then
+					attached {EV_SPLIT_AREA} a_split.second as l_split
+				then
+					open_inner_container_data_split_position (l_right, l_split)
 				end
 			end
 		end
@@ -777,8 +767,7 @@ feature {NONE} -- Implementation
 			l_data: SD_TOOL_BAR_DATA
 			l_tool_bar: SD_TOOL_BAR_ZONE
 			l_content: SD_TOOL_BAR_CONTENT
-			l_state: detachable SD_TOOL_BAR_ZONE_STATE
-			l_title: detachable STRING_32
+			l_state: SD_TOOL_BAR_ZONE_STATE
 			l_internal_docking_manager: like internal_docking_manager
 			l_tool_bar_manager: like internal_docking_manager.tool_bar_manager
 		do
@@ -807,30 +796,33 @@ feature {NONE} -- Implementation
 			loop
 				l_data := a_tool_bar_data.item
 				check is_floating_tool_bar_data: l_data.is_floating end
-				l_title := l_data.title
-				check l_title /= Void end -- Implied by check `is_floating_tool_bar_data'
-				l_content := l_tool_bar_manager.content_by_title (l_title)
+				if attached l_data.title as l_title then
+					l_content := l_tool_bar_manager.content_by_title (l_title)
 
-				-- Reset texts if original docking vertically
-				if attached l_content.zone as l_zone then
-					l_zone.change_direction (True)
-				end
+					-- Reset texts if original docking vertically
+					if attached l_content.zone as l_zone then
+						l_zone.change_direction (True)
+					end
 
-				create l_tool_bar.make (False, l_internal_docking_manager, False)
-				l_tool_bar.extend (l_content)
-				l_state := l_data.last_state
-				if l_state /= Void then
-					l_tool_bar.assistant.set_last_state (l_state)
-				end
-				if l_state /= Void and then l_state.items_layout /= Void then
-					l_tool_bar.assistant.open_items_layout
-				end
+					create l_tool_bar.make (False, False, l_content, l_internal_docking_manager)
+					l_state := l_data.last_state
+					if l_state /= Void then
+						l_tool_bar.assistant.set_last_state (l_state)
+						if l_state.items_layout /= Void then
+							l_tool_bar.assistant.open_items_layout
+						end
+					end
 
-				l_tool_bar.float (l_data.screen_x, l_data.screen_y, l_data.is_visible)
-				l_content.set_visible (l_data.is_visible)
+					l_tool_bar.float (l_data.screen_x, l_data.screen_y, l_data.is_visible)
+					l_content.set_visible (l_data.is_visible)
 
-				if l_state /= Void and then attached l_state.floating_group_info as l_info then
-					l_tool_bar.attached_floating_tool_bar.assistant.position_groups (l_info)
+					if
+						attached l_state and then
+						attached l_state.floating_group_info as l_info and then
+						attached l_tool_bar.floating_tool_bar as b
+					then
+						b.assistant.position_groups (l_info)
+					end
 				end
 				a_tool_bar_data.forth
 			end
@@ -855,17 +847,16 @@ feature {NONE} -- Implementation
 						l_zone.change_direction (True)
 					end
 
-					if attached {SD_TOOL_BAR_ZONE_STATE} l_data.last_state as l_state_2 then
-						create l_tool_bar.make (l_state_2.is_vertical, l_internal_docking_manager, False)
+					if attached l_data.last_state as l_state_2 then
+						create l_tool_bar.make (l_state_2.is_vertical, False, l_content, l_internal_docking_manager)
 					else
-						create l_tool_bar.make (False, l_internal_docking_manager, False)
+						create l_tool_bar.make (False, False, l_content, l_internal_docking_manager)
 					end
-					l_tool_bar.extend (l_content)
 					l_content.set_zone (l_tool_bar)
 					l_content.set_visible (False)
 					l_state := l_data.last_state
-					if attached {SD_TOOL_BAR_ZONE_STATE} l_state as l_state_3 and then l_state_3.is_docking_state_recorded then
-						l_tool_bar.assistant.set_last_state (l_state_3)
+					if attached l_state and then l_state.is_docking_state_recorded then
+						l_tool_bar.assistant.set_last_state (l_state)
 					end
 				end
 
@@ -889,6 +880,7 @@ feature {NONE} -- Implementation
 			l_tool_bar_zone: SD_TOOL_BAR_ZONE
 			l_string: READABLE_STRING_GENERAL
 			l_tool_bar_manager: like internal_docking_manager.tool_bar_manager
+			l_state: SD_TOOL_BAR_ZONE_STATE
 		do
 			l_tool_bar_manager := internal_docking_manager.tool_bar_manager
 			l_tool_bar_container := l_tool_bar_manager.tool_bar_container (a_direction)
@@ -917,31 +909,27 @@ feature {NONE} -- Implementation
 					l_content := l_tool_bar_manager.content_by_title (l_string)
 					check l_content_not_void: l_content /= Void end
 					l_content.set_visible (True)
-					create l_tool_bar_zone.make (False, internal_docking_manager, False)
+					create l_tool_bar_zone.make (False, False, l_content, internal_docking_manager)
 
-					if attached {SD_TOOL_BAR_ZONE_STATE} l_row_item.state as l_state then
-						l_tool_bar_zone.assistant.set_last_state (l_state)
+					l_state := l_row_item.state
+					l_tool_bar_zone.assistant.set_last_state (l_state)
 
-						l_tool_bar_zone.extend (l_content)
-						if l_state.items_layout /= Void then
-							l_tool_bar_zone.assistant.open_items_layout
-						end
-
-						-- Use this function to set all SD_TOOL_BAR_ITEM wrap states.
-						l_tool_bar_zone.change_direction (True)
-
-						l_tool_bar_row.extend (l_tool_bar_zone)
-						l_tool_bar_row.record_state
-						if attached {EV_WIDGET} l_tool_bar_zone.tool_bar as lt_widget then
-							l_tool_bar_row.set_item_position_relative (lt_widget, l_row_item.pos)
-						else
-							check not_possible: False end
-						end
-
-						l_tool_bar_zone.assistant.record_docking_state
-					else
-						check False end -- Implied by row item state must be {SD_TOOL_BAR_ZONE_STATE}
+					if l_state.items_layout /= Void then
+						l_tool_bar_zone.assistant.open_items_layout
 					end
+
+					-- Use this function to set all SD_TOOL_BAR_ITEM wrap states.
+					l_tool_bar_zone.change_direction (True)
+
+					l_tool_bar_row.extend (l_tool_bar_zone)
+					l_tool_bar_row.record_state
+					if attached {EV_WIDGET} l_tool_bar_zone.tool_bar as lt_widget then
+						l_tool_bar_row.set_item_position_relative (lt_widget, l_row_item.pos)
+					else
+						check not_possible: False end
+					end
+
+					l_tool_bar_zone.assistant.record_docking_state
 
 					l_row.forth
 				end
@@ -1005,7 +993,6 @@ feature {SD_EDITOR_CONFIG_HELPER} -- Internals
 			-- Open maximized tool data.
 		local
 			l_maximized_tools: LIST [READABLE_STRING_GENERAL]
-			l_zone: detachable SD_ZONE
 		do
 			if a_config_data /= Void then
 				from
@@ -1016,13 +1003,10 @@ feature {SD_EDITOR_CONFIG_HELPER} -- Internals
 				loop
 					if
 						attached  internal_docking_manager.query.content_by_title (l_maximized_tools.item) as l_content and then
-						l_content.state.is_zone_attached
+						attached l_content.state.zone as z and then
+						not z.is_maximized
 					then
-						l_zone := l_content.state.zone
-						check l_zone /= Void end -- Implied by `is_zone_attached'
-						if not l_zone.is_maximized then
-							l_content.state.on_normal_max_window
-						end
+						l_content.state.on_normal_max_window
 					end
 					l_maximized_tools.forth
 				end
@@ -1066,7 +1050,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

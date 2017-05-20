@@ -38,7 +38,7 @@ feature -- Access
 	procedure_name: STRING
 			-- Name of root creation procedure in `root_class'
 
-	class_type: TYPE_A
+	class_type: CL_TYPE_A
 			-- Corresponding type of `root_class'
 		require
 			type_set: is_class_type_set
@@ -122,7 +122,7 @@ invariant
 	procedure_name_attached: procedure_name /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

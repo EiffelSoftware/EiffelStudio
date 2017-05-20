@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "[
-						Log Writer that writes to a file, which, by default, is a file called
-						'system.log' in the application's current working directory (as gathered
-						from EXECUTION_ENVIRONMENT.
+			Log Writer that writes to a file, which, by default, is a file called
+			'system.log' in the application's current working directory (as gathered
+			from EXECUTION_ENVIRONMENT.
 
-						If that is not the appropriate place / path for your application,
-						please call `set_path' to set it to a different location
-					]"
+			If that is not the appropriate place / path for your application,
+			please call `set_path' to set it to a different location
+		]"
 	legal: "See note at the end of this class"
 	status: "See notice at the end of this class"
 	date: "$Date$"
@@ -28,8 +28,8 @@ create
 feature {NONE} -- Creation
 
 	default_create
-			-- Create an instance of {LOG_WRITER_FILE}
-			-- Create a default log file called `system.log' using the current working location `a_path'	
+			-- Create an instance of {LOG_WRITER_FILE}.
+			-- Create a default log file called `system.log' using the current working location `a_path'.
 		local
 			l_path: PATH
 		do
@@ -56,7 +56,7 @@ feature {NONE} -- Creation
 feature {LOG_LOGGING_FACILITY} -- Initialization
 
 	initialize
-			-- Initialize this FILE_LOG_WRITER instance
+			-- Initialize this FILE_LOG_WRITER instance.
 		require else
 			path_set: path /= Void and then not path.is_empty
 		local
@@ -77,7 +77,7 @@ feature {LOG_LOGGING_FACILITY} -- Initialization
 feature -- Access
 
 	set_path (a_path: PATH)
-			-- Set the `path' name of the log file to `a_path'
+			-- Set the `path' name of the log file to `a_path'.
 		require
 			valid_a_path: a_path /= Void and then not a_path.is_empty
 			not_initialized: not is_initialized
@@ -91,9 +91,9 @@ feature -- Access
 		end
 
 	set_file_name (a_file_name: FILE_NAME)
-			-- Set the file name of the log file to `a_file_name'
+			-- Set the file name of the log file to `a_file_name'.
 		obsolete
-			"Use unicode compliant `set_path' instead [2014/03]"
+			"Use unicode compliant `set_path' instead. [2017-05-31]"
 		require
 			valid_a_file_name: a_file_name /= Void and then not a_file_name.is_empty
 			not_initialized: not is_initialized
@@ -106,12 +106,12 @@ feature -- Access
 feature -- Status Report
 
 	path: PATH
-			-- The path name of the log file
+			-- The path name of the log file.
 
 	file_name: FILE_NAME
-			-- The name of the log file, including the absolute path to it
+			-- The name of the log file, including the absolute path to it.
 		obsolete
-			"Use unicode compliant `path' instead [2014/03]"
+			"Use unicode compliant `path' instead. [2017-05-31]"
 		do
 			create Result.make_from_string (path.utf_8_name)
 		end
@@ -120,7 +120,7 @@ feature {LOG_LOGGING_FACILITY} -- Output
 
 	do_write (priority: INTEGER; msg: STRING)
 			-- Write `msg' under `priority' to the `log_file' also noting the
-			-- current date and time, and adding a newline character if needed
+			-- current date and time, and adding a newline character if needed.
 		do
 			date_time.make_now_utc
 
@@ -139,10 +139,10 @@ feature {LOG_LOGGING_FACILITY} -- Output
 feature {LOG_LOGGING_FACILITY} -- Status Report
 
 	log_file: PLAIN_TEXT_FILE
-			-- The actual log file
+			-- The actual log file.
 
 	date_time: DATE_TIME
-			-- Date/time object that is reseeded to now every time `write' is called
+			-- Date/time object that is reseeded to now every time `write' is called.
 
 feature {NONE} -- Constants
 
@@ -150,7 +150,7 @@ feature {NONE} -- Constants
 			-- " - " constant for writing log data.
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source:		"[
 			Eiffel Software

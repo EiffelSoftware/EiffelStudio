@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			Precursor
 			version := "1.0"
 			description := "Service to manage cookie based authentication"
+			enable -- Enabled by default
 		end
 
 feature -- Access
@@ -99,11 +100,9 @@ feature -- Access: auth strategy
 			-- <Precursor>
 		do
 			if
-				a_response.is_authenticated and then
-				attached session_api as l_session_api and then
-				attached a_response.request.cookie (l_session_api.session_token)
+				attached session_api as l_session_api
 			then
-				Result := True
+				Result := l_session_api.is_authenticating (a_response)
 			end
 		end
 
@@ -115,7 +114,7 @@ feature -- Access: router
 			if attached session_api as l_session_api then
 				a_router.handle ("/" + login_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_login (a_api, ?, ?)), a_router.methods_head_get)
 				a_router.handle ("/" + logout_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout (a_api, l_session_api, ?, ?)), a_router.methods_get_post)
-				a_router.handle ("/" + login_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_login_with_session (a_api,session_api, ?, ?)), a_router.methods_post)
+				a_router.handle ("/" + login_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_login_with_session (a_api, l_session_api, ?, ?)), a_router.methods_post)
 			end
 		end
 
@@ -163,39 +162,33 @@ feature {NONE} -- Implementation: routes
 	handle_logout (api: CMS_API; a_session_api: CMS_SESSION_API ; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
-			l_cookie: WSF_COOKIE
-			tok: STRING
 		do
-			tok := a_session_api.session_token
-			if
-				attached {WSF_STRING} req.cookie (tok) as l_cookie_token and then
-				attached api.user as l_user
-			then
-					-- Logout Session
-				create l_cookie.make (tok, "") -- l_cookie_token.value) -- FIXME: unicode issue?
-				l_cookie.set_path ("/")
-				l_cookie.unset_max_age
-				l_cookie.set_expiration_date (create {DATE_TIME}.make_from_epoch (0))
-				res.add_cookie (l_cookie)
-				api.unset_user
-
+			if attached api.user as l_user then
+				a_session_api.process_user_logout (l_user, req, res)
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			else
+					-- Not loggued in ... redirect to home
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 				r.set_status_code ({HTTP_CONSTANTS}.found)
-				r.set_redirection (req.absolute_script_url (""))
-				r.execute
-			else
-				fixme (generator + ": missing else implementation in handle_logout!")
 			end
+			if
+				attached {WSF_STRING} req.item ("destination") as p_destination and then
+				attached p_destination.value as v and then
+				v.is_valid_as_string_8
+			then
+				r.set_redirection (v.to_string_8)
+			else
+				r.set_redirection (req.absolute_script_url (""))
+			end
+
+			r.execute
 		end
 
-	handle_login_with_session (api: CMS_API; a_session_api: detachable CMS_SESSION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_login_with_session (api: CMS_API; a_session_api: CMS_SESSION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
-			l_token: STRING
-			l_cookie: WSF_COOKIE
 		do
 			if
-				attached a_session_api as l_session_api and then
 				attached {WSF_STRING} req.form_parameter ("username") as l_username and then
 				attached {WSF_STRING} req.form_parameter ("password") as l_password
 			then
@@ -203,18 +196,7 @@ feature {NONE} -- Implementation: routes
 					api.user_api.is_valid_credential (l_username.value, l_password.value) and then
 					attached api.user_api.user_by_name (l_username.value) as l_user
 				then
-					l_token := generate_token
-					if a_session_api.has_user_token (l_user) then
-						l_session_api.update_user_session_auth (l_token, l_user)
-					else
-						l_session_api.new_user_session_auth (l_token, l_user)
-					end
-					create l_cookie.make (a_session_api.session_token, l_token)
-					l_cookie.set_max_age (a_session_api.session_max_age)
-					l_cookie.set_path ("/")
-					res.add_cookie (l_cookie)
-					api.set_user (l_user)
-					api.record_user_login (l_user)
+					a_session_api.process_user_login (l_user, req, res)
 
 					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 					if
@@ -292,25 +274,6 @@ feature {NONE} -- Block views
 					a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 				end
 			end
-		end
-
-	generate_token: STRING
-			-- Generate token to use in a Session.
-		local
-			l_token: STRING
-			l_security: CMS_TOKEN_GENERATOR
-			l_encode: URL_ENCODER
-		do
-			create l_security
-			l_token := l_security.token
-			create l_encode
-			from until l_token.same_string (l_encode.encoded_string (l_token)) loop
-				-- Loop ensure that we have a security token that does not contain characters that need encoding.
-			    -- We cannot simply to an encode-decode because the email sent to the user will contain an encoded token
-				-- but the user will need to use an unencoded token if activation has to be done manually.
-				l_token := l_security.token
-			end
-			Result := l_token
 		end
 
 end

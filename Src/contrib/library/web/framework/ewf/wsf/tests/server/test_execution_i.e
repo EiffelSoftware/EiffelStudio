@@ -127,7 +127,7 @@ feature -- Execution
 
 	new_file (req: WSF_REQUEST; a_suffix: STRING): detachable FILE
 		local
-			dp, p, fp: FILE_NAME
+			dp, p, fp: PATH
 			d: DIRECTORY
 			i: INTEGER
 			f: detachable FILE
@@ -135,7 +135,7 @@ feature -- Execution
 		do
 			if retried = 0 then
 				create dp.make_from_string ("logs")
-				create d.make (dp.string)
+				create d.make_with_path (dp)
 				if not d.exists then
 					d.recursive_create_dir
 				end
@@ -147,29 +147,25 @@ feature -- Execution
 
 				from
 					i := 0
-					create fp.make_from_string (dp.string)
 					if p.is_empty then
-						fp.set_file_name (p.string + a_suffix)
+						fp := dp.extended (a_suffix)
 					else
-						fp.set_file_name (p.string + "-" + a_suffix)
+						fp := dp.extended_path (p).appended ("-" + a_suffix)
 					end
-					create {PLAIN_TEXT_FILE} f.make (fp.string)
+					create {PLAIN_TEXT_FILE} f.make_with_path (fp)
 				until
 					not f.exists
 				loop
 					i := i + 1
-					create fp.make_from_string (dp.string)
 					if p.is_empty then
-						fp.set_file_name (p.string + i.out + "-" + a_suffix)
+						fp := dp.extended (i.out + "-" + a_suffix)
 					else
-						fp.set_file_name (p.string + "_" + i.out + "-" + a_suffix)
+						fp := dp.extended_path (p).appended ("_" + i.out + "-" + a_suffix)
 					end
-
-					f.make (fp.string)
+					f.make_with_path (fp)
 				end
 				f.open_write
 			elseif retried < 5 then
-
 				-- Eventually another request created the file at the same time ..
 				f := new_file (req, a_suffix)
 			else

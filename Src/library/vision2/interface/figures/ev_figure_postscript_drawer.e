@@ -11,7 +11,7 @@ class
 	EV_FIGURE_POSTSCRIPT_DRAWER
 
 obsolete
-	"No replacement class, use EV_MODEL_POSTSCRIPT_PROJECTOR instead."
+	"No replacement class, use EV_MODEL_POSTSCRIPT_PROJECTOR instead. [2017-05-31]"
 
 inherit
 	EV_FIGURE_DRAWING_ROUTINES

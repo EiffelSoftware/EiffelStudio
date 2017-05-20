@@ -4,7 +4,6 @@ setup
 	compile_library = Clib
 
 project
-	objective_c = "objc_base-safe.ecf"
 	objective_c = "objc_base.ecf"
 
 note

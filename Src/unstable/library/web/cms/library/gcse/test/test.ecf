@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="test">
-	<target name="test">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="gcse_tests" uuid="6E2183A4-28E0-4835-A9AA-BAB13696D873">
+	<target name="gcse_tests">
 		<root class="APPLICATION" feature="make"/>
-		<option warning="true" void_safety="transitional">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="gcse" location="..\gcse-safe.ecf" readonly="false"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<capability>
+			<concurrency use="none"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="gcse" location="..\gcse.ecf" readonly="false"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<cluster name="test" location=".\" recursive="true">
 			<file_rule>
-				<exclude>/EIFGENs$</exclude>
-				<exclude>/CVS$</exclude>
 				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/EIFGENs$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

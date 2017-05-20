@@ -21,6 +21,9 @@ feature -- Initialization
 			-- Initialize with `a_caller' as caller.
 		do
 			caller := a_caller
+			create internal_widget
+			create label
+			create textfield
 		end
 
 	generate
@@ -33,7 +36,11 @@ feature -- Initialization
 			empty_space: EV_CELL
 			b: like browse_button
 		do
-			create label.make_with_text(label_string)
+			if attached label_string as l_label_string then
+				label.set_text (l_label_string)
+			else
+				label.remove_text
+			end
 			if is_password then
 				create {EV_PASSWORD_FIELD} textfield
 			else
@@ -73,7 +80,6 @@ feature -- Initialization
 			create empty_space
 			empty_space.set_minimum_height (dialog_unit_to_pixels(2))
 
-			create {EV_VERTICAL_BOX} internal_widget
 			internal_widget.extend (label)
 			internal_widget.extend (empty_space)
 			internal_widget.disable_item_expand (empty_space)
@@ -265,7 +271,9 @@ feature {NONE} -- Implementation
 			file_selector: EV_FILE_OPEN_DIALOG
 		do
 			create file_selector
-			file_selector.filters.extend ([browse_file_filter, browse_file_filter])
+			if attached browse_file_filter as filt then
+				file_selector.filters.extend ([filt, filt])
+			end
 			file_selector.open_actions.extend (agent file_selected (file_selector))
 			if not text_32.is_empty then
 				file_selector.set_start_directory (text_32)
@@ -321,7 +329,7 @@ feature {NONE} -- Implementation
 
 	internal_widget: EV_VERTICAL_BOX
 
-	browse_file_filter: STRING
+	browse_file_filter: detachable STRING
 			-- File filter. Void if there is no browse button.
 
 	textfield: EV_TEXT_FIELD
@@ -356,7 +364,7 @@ feature {NONE} -- Implementation
 			-- Action for the browse button.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

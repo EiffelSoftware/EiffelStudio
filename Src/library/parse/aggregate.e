@@ -1,11 +1,10 @@
-note
+﻿note
 
 	description:
 		"Constructs whose specimens are obtained %
 		%by concatenating specimens of constructs %
 		%of zero or more specified constructs"
 	legal: "See notice at end of class.";
-
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -68,12 +67,49 @@ feature -- Transformation
 			-- Is current aggregate committed?
 
 
+feature {CONSTRUCT} -- Implementation
+
+	check_recursion
+			-- Check the aggregate for left recursion.
+		local
+			not_optional_found: BOOLEAN
+			l_child: like child
+		do
+			if not check_recursion_list.has (production) then
+				check_recursion_list.extend (production);
+				if print_mode.item then
+					print_children
+				end;
+				from
+					child_start
+				until
+					no_components or child_after
+				loop
+					l_child := child
+					if l_child /= Void then
+						if not_optional_found then
+							l_child.expand_all;
+							if child_recursion.item then
+								child_recursion.put (False)
+							else
+								l_child.check_recursion
+							end
+						else
+							l_child.expand_all
+							l_child.check_recursion
+							not_optional_found := not l_child.is_optional;
+						end
+					end
+					child_forth
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	commit_value: INTEGER;
 			-- Threshold of successfully parsed subconstructs
 			-- above which the construct is committed
-
 
 	expand
 			-- Expand the next field of the aggregate.
@@ -136,47 +172,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {CONSTRUCT} -- Implementation
-
-	check_recursion
-			-- Check the aggregate for left recursion.
-		local
-			not_optional_found, b: BOOLEAN
-			l_child: like child
-		do
-			if not check_recursion_list.has (production) then
-				check_recursion_list.extend (production);
-				if print_mode.item then
-					print_children
-				end;
-				from
-					child_start
-				until
-					no_components or child_after
-				loop
-					l_child := child
-					if l_child /= Void then
-						if not_optional_found then
-							l_child.expand_all;
-							b := not l_child.left_recursion;
-							if child_recursion.item then
-								child_recursion.put (False)
-							else
-								l_child.check_recursion
-							end;
-						else
-							l_child.expand_all;
-							l_child.check_recursion;
-							not_optional_found := not l_child.is_optional;
-						end
-					end
-					child_forth
-				end
-			end
-		end  -- check_recursion
-
-feature {NONE} -- Implementation
-
 	print_children
 			-- Print content of aggregate.
 		do
@@ -213,7 +208,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -223,8 +218,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class AGGREGATE
-
+end

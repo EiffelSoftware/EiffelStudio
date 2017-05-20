@@ -19,6 +19,13 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make
 
@@ -35,15 +42,18 @@ feature -- Execution
 		local
 			l_menu_item: EV_MENU_ITEM
 		do
+			create l_menu_item.make_with_text_and_action ("Save preferences", agent on_save_preferences)
+			a_menu.extend (l_menu_item)
+
 			create l_menu_item.make_with_text_and_action ("Save All Session Data", agent on_save_session_data)
 			a_menu.extend (l_menu_item)
-			if not session_manager.is_service_available then
+			if session_manager.service = Void then
 				l_menu_item.disable_sensitive
 			end
 
 			create l_menu_item.make_with_text_and_action ("Restore All Session Data", agent on_restore_session_data)
 			a_menu.extend (l_menu_item)
-			if not session_manager.is_service_available then
+			if session_manager.service = Void then
 				l_menu_item.disable_sensitive
 			end
 
@@ -51,17 +61,25 @@ feature -- Execution
 
 			create l_menu_item.make_with_text_and_action ("Rescan Code Template Catalog", agent on_rescan_code_template_catalog)
 			a_menu.extend (l_menu_item)
-			if not code_template_catalog.is_service_available then
+			if code_template_catalog.service = Void then
 				l_menu_item.disable_sensitive
 			end
 		end
 
 feature {NONE} -- Actions
 
+	on_save_preferences
+			-- Immediatly saves all the preferences.
+		do
+			if attached preferences as prefs then
+				prefs.preferences.save_preferences
+			end
+		end
+
 	on_save_session_data
 			-- Immediatly saves all the session data.
 		require
-			is_service_available: session_manager.is_service_available
+			is_service_available: session_manager.service /= Void
 		do
 			session_manager.service.store_all
 		end
@@ -69,7 +87,7 @@ feature {NONE} -- Actions
 	on_restore_session_data
 			-- Immediatly restores all the session data to the last saved state.
 		require
-			is_service_available: session_manager.is_service_available
+			is_service_available: session_manager.service /= Void
 		do
 			session_manager.service.active_sessions.do_all (agent (session_manager.service).reload)
 		end
@@ -77,7 +95,7 @@ feature {NONE} -- Actions
 	on_rescan_code_template_catalog
 			-- Rescans the code template catalog to retrieve updated templates and any new templates.
 		require
-			is_service_available: code_template_catalog.is_service_available
+			is_service_available: code_template_catalog.service /= Void
 		local
 			l_window: ES_POPUP_TRANSITION_WINDOW
 		do
@@ -124,7 +142,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

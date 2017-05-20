@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="proxy" uuid="B55F0D95-3793-4C90-BBAC-BF5F2DECD5E6" library_target="proxy">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="proxy" uuid="B55F0D95-3793-4C90-BBAC-BF5F2DECD5E6">
 	<target name="common" abstract="true">
 		<file_rule>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="false" is_attached_by_default="true" void_safety="transitional" syntax="transitional">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<variable name="ssl_supported" value="false"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="http" location="../../../../library/network/protocol/http/http-safe.ecf"/>
-		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
-		<library name="wsf_proxy" location="../../../../library/web/framework/ewf/wsf_proxy/wsf_proxy-safe.ecf" readonly="false"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="http" location="..\..\..\..\library\network\protocol\http\http.ecf"/>
+		<library name="wsf" location="..\..\..\..\library\web\framework\ewf\wsf\wsf.ecf"/>
+		<library name="wsf_proxy" location="..\..\..\..\library\web\framework\ewf\wsf_proxy\wsf_proxy.ecf" readonly="false"/>
 	</target>
 	<target name="proxy" extends="common">
 		<root class="APPLICATION" feature="make_and_launch"/>
-		<option warning="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<setting name="concurrency" value="scoop"/>
-		<library name="default_standalone" location="../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf"/>
+		<library name="default_standalone" location="..\..\..\..\library\web\framework\ewf\wsf\default\standalone.ecf"/>
 		<cluster name="proxy" location=".\" recursive="true"/>
 	</target>
 </system>

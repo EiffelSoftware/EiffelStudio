@@ -86,7 +86,7 @@ feature -- Access
 	html_decoded_string (v: READABLE_STRING_32): READABLE_STRING_32
 		do
 			if v.is_valid_as_string_8 then
-				Result := (create {HTML_ENCODER}).decoded_string (v)
+				Result := (create {HTML_ENCODER}).general_decoded_string (v)
 			else
 				Result := v
 			end

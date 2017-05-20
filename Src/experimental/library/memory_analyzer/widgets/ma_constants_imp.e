@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 			file: PLAIN_TEXT_FILE
 		do
 			if not constants_initialized then
-				create file.make (file_name)
+				create file.make_with_name (file_name)
 				if file.exists then
 					file.open_read
 					file.readstream (file.count)
@@ -435,7 +435,7 @@ feature -- Access
 feature -- Access
 
 --| FIXME `constant_by_name' and `has_constant' `constants_initialized' are only required until the complete change to
---| constants is complete. They are required for the pixmaps at the moment.
+--| constant s is complete. They are required for the pixmaps at the moment.
 
 	constants_initialized: BOOLEAN
 			-- Have constants been initialized from file?
@@ -443,7 +443,7 @@ feature -- Access
 			Result := initialized_cell.item
 		end
 
-	string_constant_by_name (a_name: STRING): STRING
+	string_constant_by_name (a_name: STRING): detachable STRING
 			-- `Result' is STRING
 		require
 			initialized: constants_initialized
@@ -452,9 +452,10 @@ feature -- Access
 		local
 			l_item: detachable STRING
 		do
-			l_item := all_constants.item (a_name)
-			check l_item /= Void end -- Implied by precondition `has_constant'
-			Result := l_item.twin
+			Result := all_constants.item (a_name)
+			if Result /= Void then
+				Result := Result.twin
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -464,19 +465,18 @@ feature -- Access
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
-			has_constant (a_name)
+			has_constant: has_constant (a_name)
 		local
 			l_string: STRING
-			l_item: detachable STRING
 		do
-			l_item := all_constants.item (a_name)
-			check l_item /= Void end -- Implied by precondition `has_constant'
-			l_string := l_item.twin
-			check
-				is_integer: l_string.is_integer
+			if attached all_constants.item (a_name) as l_item then
+				check
+					is_integer: l_item.is_integer
+				end
+				Result := l_item.to_integer
+			else
+				check has_constant: False end -- Implied by precondition `has_constant`.
 			end
-
-			Result := l_string.to_integer
 		end
 
 	has_constant (a_name: STRING): BOOLEAN
@@ -580,14 +580,14 @@ invariant
 	all_constants_not_void: all_constants /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class MA_CONSTANTS_IMP

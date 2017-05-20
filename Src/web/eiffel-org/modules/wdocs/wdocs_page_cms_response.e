@@ -16,10 +16,10 @@ feature {NONE} -- Initialization
 
 	make_with_page (a_bookid: like book_name; pg: like page; a_version_id: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE; a_api: like api)
 		do
-			make (req, res, a_api)
 			set_page (pg)
 			set_book_name (a_bookid)
 			set_version_id (a_version_id)
+			make (req, res, a_api)
 		end
 
 feature -- Access

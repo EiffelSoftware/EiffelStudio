@@ -11,7 +11,7 @@ deferred class
 	EV_WIDGET_PROJECTOR
 
 obsolete
-	"Use EV_MODEL_WIDGET_PROJECTOR instead."
+	"Use EV_MODEL_WIDGET_PROJECTOR instead. [2017-05-31]"
 
 inherit
 	EV_PROJECTOR
@@ -434,7 +434,7 @@ feature {NONE} -- Event implementation
 	call_actions (f: EV_FIGURE; actions: detachable EV_LITE_ACTION_SEQUENCE [TUPLE]; arg: detachable TUPLE)
 			-- Call `actions' on `f' with `arg' if `f' is sensitive.
 		obsolete
-			"Use `actions' directly."
+			"Use `actions' directly. [2017-05-31]"
 		do
 			if actions /= Void and then f.is_sensitive then
 				actions.call (arg)
@@ -534,7 +534,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

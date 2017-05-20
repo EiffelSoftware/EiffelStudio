@@ -1,0 +1,13 @@
+test_name	 obsolete-feature-call-with-body
+test_description If a feature has a body and is obsolete it should be reported regadless of its body kind (internal, external, attribute). See also test#codeanalysis020.
+
+define_date	YESTERDAY -1
+
+copy_sub	Ace $TEST Ace
+copy_sub	a.e $CLUSTER a.e
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	validity_warning TEST Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete
+
+test_end

@@ -119,7 +119,7 @@ feature -- Standard output
 	out: STRING
 			-- Readable representation of `code'.
 		obsolete
-			"Use `text' instead."
+			"Use `text' instead. [2017-05-31]"
 		do
 			Result := (key_strings @ code).as_string_8_conversion
 		end

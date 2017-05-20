@@ -76,16 +76,9 @@ feature -- Command
 				l_floating_zones.after
 			loop
 				l_item := l_floating_zones.item
-
 				internal_docking_manager.inner_containers.start
 				internal_docking_manager.inner_containers.prune (l_item.inner_container)
-
-				if attached {EV_WIDGET} l_item as lt_widget then
-					lt_widget.destroy
-				else
-					check not_possible: False end
-				end
-
+				l_item.destroy
 				l_floating_zones.forth
 			end
 		end
@@ -147,7 +140,10 @@ feature -- Command
                 until
                     l_zones.after
                 loop
-                    if l_zones.item.content.type /= {SD_ENUMERATION}.editor then
+	                if
+	                	l_zones.item.has_content and then
+	                	l_zones.item.content.type /= {SD_ENUMERATION}.editor
+	                then
                     	l_zones.remove
 					else
                     	l_zones.forth
@@ -281,7 +277,7 @@ feature {NONE} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

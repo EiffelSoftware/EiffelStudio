@@ -1,20 +1,3 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="encoder" uuid="EE80E648-C64D-4802-8868-C57AAFEACC55" library_target="encoder">
-	<target name="encoder">
-		<root all_classes="true"/>
-		<file_rule>
-			<exclude>/.git$</exclude>
-			<exclude>/EIFGENs$</exclude>
-			<exclude>/.svn$</exclude>
-		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="provisional">
-			<assertions precondition="true"/>
-		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<cluster name="src" location="src\" recursive="true">
-			<file_rule>
-				<exclude>/tests$</exclude>
-			</file_rule>
-		</cluster>
-	</target>
-</system>
+<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="EE80E648-C64D-4802-8868-C57AAFEACC55" message="Obsolete: use encoder.ecf !" location="encoder.ecf">
+</redirection>

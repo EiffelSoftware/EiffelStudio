@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {IMAGE_UPLOADER_EXECUTION}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,8 +10,6 @@ inherit
 	WSF_ROUTED_SKELETON_EXECUTION
 		undefine
 			requires_proxy
-		redefine
-			initialize
 		end
 
 	WSF_NO_PROXY_POLICY
@@ -25,12 +22,6 @@ create
 	make
 
 feature {NONE} -- Initialization
-
-	initialize
-		do
-			Precursor
-			initialize_router
-		end
 
 	setup_router
 			-- Setup router
@@ -186,32 +177,21 @@ feature {NONE} -- Encoder
 
 	new_temporary_output_file (n: detachable READABLE_STRING_8): detachable FILE
 		local
+			ut: WSF_FILE_UTILITIES [RAW_FILE]
 			bp: detachable PATH
 			d: DIRECTORY
-			i: INTEGER
 		do
 			create bp.make_current
 			create d.make_with_path (bp)
 			if not d.exists then
 				d.recursive_create_dir
 			end
+
+			create ut
 			if n /= Void then
-				bp := bp.extended ("tmp-download-" + n)
+				Result := ut.new_temporary_file (d, Void, n)
 			else
-				bp := bp.extended ("tmp")
-			end
-			from
-				i := 0
-			until
-				Result /= Void or i > 100
-			loop
-				i := i + 1
-				create {RAW_FILE} Result.make_with_path (bp.appended ("__" + i.out))
-				if Result.exists then
-					Result := Void
-				else
-					Result.open_write
-				end
+				Result := ut.new_temporary_file (d, "tmp", Void)
 			end
 		ensure
 			Result /= Void implies Result.is_open_write

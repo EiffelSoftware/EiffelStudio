@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			ARCHIVABLE wrapper for files
 			
@@ -60,7 +60,7 @@ feature -- Output
 		do
 				-- Write next block
 			file.read_to_managed_pointer (p, a_pos, {TAR_CONST}.tar_block_size)
-			if (file.end_of_file) then
+			if file.end_of_file then
 					-- Fill with '%U'
 				pad_block (p, a_pos + file.bytes_read, {TAR_CONST}.tar_block_size - file.bytes_read)
 
@@ -76,6 +76,6 @@ feature {NONE} -- Implementation
 			-- The file this ARCHIVABLE represents.
 
 ;note
-	copyright: "2015-2016, Nicolas Truessel, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2015-2017, Nicolas Truessel, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

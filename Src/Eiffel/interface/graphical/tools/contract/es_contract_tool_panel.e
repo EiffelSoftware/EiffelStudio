@@ -283,8 +283,8 @@ feature {NONE} -- Status report
 		require
 			is_interface_usable: is_interface_usable
 		do
-			if session_manager.is_service_available then
-				if attached {BOOLEAN_REF} window_session_data.value (show_all_lines_session_id) as l_value then
+			if attached develop_window_session_data as w_session_data then
+				if attached {BOOLEAN_REF} w_session_data.value (show_all_lines_session_id) as l_value then
 					Result := l_value.item
 				end
 			end
@@ -325,8 +325,8 @@ feature {NONE} -- Status setting
 
 			contract_editor.is_showing_all_rows := a_show
 
-			if session_manager.is_service_available then
-				window_session_data.set_value (a_show, show_all_lines_session_id)
+			if attached develop_window_session_data as w_session_data then
+				w_session_data.set_value (a_show, show_all_lines_session_id)
 			end
 		ensure
 			is_showing_all_rows_set: is_showing_all_rows = a_show
@@ -1586,7 +1586,7 @@ invariant
 	contract_editor_attached: (is_initialized and is_interface_usable) implies contract_editor /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

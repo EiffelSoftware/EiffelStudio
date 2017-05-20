@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="cms" uuid="8CC0D052-57D1-4CAA-AFF1-448FA290734B" library_target="cms">
-	<description>ROC CMS library</description>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="cms" uuid="8CC0D052-57D1-4CAA-AFF1-448FA290734B" library_target="cms">
 	<target name="cms">
 		<root all_classes="true"/>
 		<file_rule>
@@ -8,8 +7,7 @@
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="false" void_safety="none" syntax="transitional">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		<option warning="true">
 		</option>
 		<mapping old_name="CMS_LAYOUT" new_name="CMS_ENVIRONMENT"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
@@ -30,6 +28,7 @@
 		<library name="text_filter" location="$ISE_LIBRARY\unstable\library\text\text_filter\text_filter.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uri_template" location="$ISE_LIBRARY\contrib\library\text\parser\uri_template\uri_template.ecf"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf.ecf"/>
 		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension.ecf" readonly="false"/>
 		<library name="wsf_html" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf_html\wsf_html.ecf" readonly="false"/>

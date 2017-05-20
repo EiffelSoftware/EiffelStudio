@@ -126,9 +126,9 @@ feature -- Output
 
 	frozen tagged_out: STRING
 			-- New string containing terse printable representation
-			-- of current object
+			-- of current object.
 		do
-			Result := generating_type
+			Result := generating_type.name
 		end
 
 end

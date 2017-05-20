@@ -797,7 +797,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_8.disable_item_expand (l_ev_vertical_separator_3)
 			l_ev_horizontal_box_8.disable_item_expand (find_refers)
 			l_ev_label_42.set_text (lb_object_name)
-			l_ev_label_42.set_minimum_width (65)
+--			l_ev_label_42.set_minimum_width (65)
 			l_ev_label_42.align_text_left
 			object_name_1.set_minimum_width (140)
 			find.set_text (b_find)
@@ -1093,14 +1093,14 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

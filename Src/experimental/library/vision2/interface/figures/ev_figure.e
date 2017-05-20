@@ -11,7 +11,7 @@ deferred class
 	EV_FIGURE
 
 obsolete
-	"Use EV_MODEL instead."
+	"Use EV_MODEL instead. [2017-05-31]"
 
 inherit
 	EV_FIGURE_MATH
@@ -182,7 +182,7 @@ feature -- Action sequences
 
 	proximity_in_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when pointing device comes into range.
-		obsolete "Not supported."
+		obsolete "Not supported. [2017-05-31]"
 		do
 			if internal_proximity_in_actions = Void then
 				create internal_proximity_in_actions
@@ -192,7 +192,7 @@ feature -- Action sequences
 
 	proximity_out_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when pointing device goes out of range.
-		obsolete "Not supported."
+		obsolete "Not supported. [2017-05-31]"
 		do
 			if internal_proximity_out_actions = Void then
 				create internal_proximity_out_actions

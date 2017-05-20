@@ -26,12 +26,12 @@ feature -- Access
 			-- `has_special_type_name' last
 		require
 			was_special: was_special
-		local
-			l_result: detachable STRING
 		do
-			l_result := full_name_type_mapping_table.found_item
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			Result := full_name_type_mapping_table.found_item
+			if Result = Void then
+				check was_special: False end
+				Result := ""
+			end
 		ensure
 			non_void_name: Result /= Void
 		end

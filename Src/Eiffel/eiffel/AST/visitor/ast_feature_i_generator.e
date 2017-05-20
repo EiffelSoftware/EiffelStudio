@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Create new instance of FEATURE_I"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -245,8 +245,8 @@ feature {NONE} -- Implementation
 				end
 				l_proc.set_has_rescue_clause (l_routine.has_rescue)
 				l_proc.init_assertion_flags (l_routine)
-				if l_routine.obsolete_message /= Void then
-					l_proc.set_obsolete_message (l_routine.obsolete_message.value)
+				if attached l_routine.obsolete_message as m then
+					l_proc.set_obsolete_message (m.value)
 				end
 				l_result := l_proc
 				l_result.set_is_empty (l_as.content.is_empty)
@@ -288,6 +288,9 @@ feature {NONE} -- Implementation
 						l_attr.set_type (query_type (l_as.type), l_assigner_name_id)
 						l_attr.set_has_body (True)
 						l_attr.init_assertion_flags (l_routine)
+						if attached l_routine.obsolete_message as m then
+							l_attr.set_obsolete_message (m.value)
+						end
 						l_result := l_attr
 						l_result.set_is_empty (l_as.content.is_empty)
 					elseif l_routine.is_deferred then
@@ -335,6 +338,9 @@ feature {NONE} -- Implementation
 							l_attr.set_type (query_type (l_as.type), l_assigner_name_id)
 							l_attr.set_is_empty (True)
 							l_attr.set_extension (l_il_ext)
+							if attached l_routine.obsolete_message as m then
+								l_attr.set_obsolete_message (m.value)
+							end
 							l_result := l_attr
 							if l_external_body.alias_name_id > 0 then
 								l_result.set_private_external_name_id (l_external_body.alias_name_id)
@@ -362,8 +368,8 @@ feature {NONE} -- Implementation
 					end
 					l_func.set_has_rescue_clause (l_routine.has_rescue)
 					l_func.init_assertion_flags (l_routine)
-					if l_routine.obsolete_message /= Void then
-						l_func.set_obsolete_message (l_routine.obsolete_message.value)
+					if attached l_routine.obsolete_message as m then
+						l_func.set_obsolete_message (m.value)
 					end
 					l_func.set_type (query_type (l_as.type), l_assigner_name_id)
 					l_result := l_func
@@ -383,7 +389,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

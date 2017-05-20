@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-						Log Writer that writes to the system log, using syslog on Unix and the Event
-						Log on Windows
-					]"
+			Log Writer that writes to the system log, using syslog on Unix and the Event.
+			Log on Windows.
+		]"
 	legal: "See note at the end of this class"
 	status: "See notice at the end of this class"
 	date: "$Date$"
@@ -60,7 +60,7 @@ feature {NONE} -- Creation
 feature {LOG_LOGGING_FACILITY} -- Initialization
 
 	initialize
-			-- Initialize this LOG_WRITER_SYSTEM instance
+			-- Initialize this LOG_WRITER_SYSTEM instance.
 		require else
 			valid_application_name: application_name /= Void and then not application_name.is_empty
 			valid_options: is_windows or else options > 0
@@ -78,7 +78,7 @@ feature {LOG_LOGGING_FACILITY} -- Initialization
 feature {NONE} -- Garbage Collector
 
 	dispose
-			-- The Garbage Collector is claiming this instance
+			-- The Garbage Collector is claiming this instance.
 		do
 			c_logging_close_log (logger_data)
 		end
@@ -86,7 +86,7 @@ feature {NONE} -- Garbage Collector
 feature -- Access
 
 	set_application_name (an_application_name: STRING)
-			-- Set `application_name' to `an_application_name'
+			-- Set `application_name' to `an_application_name'.
 		require
 			valid_an_application_name: an_application_name /= Void and then not
 				an_application_name.is_empty
@@ -96,12 +96,12 @@ feature -- Access
 				application_name := an_application_name.twin
 			end
 		ensure
-			application_name_set: attached {STRING} application_name as l and then
+			application_name_set: attached application_name as l and then
 				l ~ an_application_name
 		end
 
 	set_facility (a_facility: INTEGER)
-			-- Set `facility' to `a_facility'
+			-- Set `facility' to `a_facility'.
 		require
 			valid_a_facility: a_facility > 0
 			not_is_initialized: not is_initialized
@@ -114,7 +114,7 @@ feature -- Access
 		end
 
 	set_options (some_options: INTEGER)
-			-- Set `options' to `some_options'
+			-- Set `options' to `some_options'.
 		require
 			valid_some_options: some_options > 0
 			not_is_initialized: not is_initialized
@@ -129,19 +129,19 @@ feature -- Access
 feature -- Status Report
 
 	application_name: STRING
-			-- Name of the application under which the system's log will record messages
+			-- Name of the application under which the system's log will record messages.
 
 	facility: INTEGER
-			-- The logging facility to be used. See LOG_FACILITY_CONST
+			-- The logging facility to be used. See LOG_FACILITY_CONST.
 
 	options: INTEGER
-			-- Logging options. See LOG_OPTION_CONST
+			-- Logging options. See LOG_OPTION_CONST.
 
 feature {LOG_LOGGING_FACILITY} -- Output
 
 	do_write (priority: INTEGER; msg: STRING)
 			-- Write `msg' under `priority' to `io.error' also noting the
-			-- current date and time, and adding a newline character if needed
+			-- current date and time, and adding a newline character if needed.
 		do
 			c_message.set_string (msg)
 			c_logging_write_log (priority, c_message.item, logger_data)
@@ -150,7 +150,7 @@ feature {LOG_LOGGING_FACILITY} -- Output
 feature {NONE} -- Attributes
 
 	c_message: C_STRING
-			-- A C_STRING used to interact with the C Library
+			-- A C_STRING used to interact with the C Library.
 		once
 			create Result.make_empty (0)
 		end
@@ -161,7 +161,7 @@ feature {NONE} -- Attributes
 feature {NONE} -- Externals
 
 	c_logging_close_log (l_data: POINTER)
-			-- External C call to `eif_logging_close_log'
+			-- External C call to `eif_logging_close_log'.
 		external
 			"C inline use %"eif_logging.h%""
 		alias
@@ -179,7 +179,7 @@ feature {NONE} -- Externals
 		end
 
 	c_logging_open_log (identifier: POINTER; option: INTEGER; log_fac: INTEGER; l_data: TYPED_POINTER [POINTER]): BOOLEAN
-			-- External C call to `eif_logging_open_log'
+			-- External C call to `eif_logging_open_log'.
 		external
 			"C inline use %"eif_logging.h%""
 		alias
@@ -220,7 +220,7 @@ feature {NONE} -- Externals
 		end
 
 	c_logging_write_log (priority: INTEGER; msg: POINTER; l_data: POINTER)
-			-- External C call to `eif_logging_write_log'
+			-- External C call to `eif_logging_write_log'.
 		external
 			"C inline use %"eif_logging.h%""
 		alias
@@ -255,7 +255,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source:		"[
 			Eiffel Software

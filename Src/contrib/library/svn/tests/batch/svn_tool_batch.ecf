@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="svn_tool" uuid="D1028558-6962-4936-8B1C-F90A9C9CD12D">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="svn_tool" uuid="D1028558-6962-4936-8B1C-F90A9C9CD12D">
 	<target name="common">
 		<file_rule>
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="true" warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="provisional">
-			<debug name="svn_engine" enabled="true"/>
+		<option warning="true">
 			<assertions precondition="true"/>
 		</option>
-		<setting name="concurrency" value="thread"/>
+		<capability>
+			<concurrency support="thread" use="thread"/>
+			<void_safety support="none"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="esvn" location="..\..\svn.ecf"/>

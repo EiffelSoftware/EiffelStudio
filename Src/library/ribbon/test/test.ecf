@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="test_ribbon" uuid="345FC7FB-F7D9-4134-A002-2C66BEECEAEF">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="test_ribbon" uuid="345FC7FB-F7D9-4134-A002-2C66BEECEAEF">
 	<target name="test_ribbon">
 		<root class="RIBBON_TEST" feature="make"/>
 		<file_rule>
-			<exclude>/EIFGENs$</exclude>
-			<exclude>/CVS$</exclude>
 			<exclude>/.svn$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option void_safety="all">
+		<option>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<setting name="concurrency" value="thread"/>
 		<setting name="platform" value="windows"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
-		<library name="memory_analyzer" location="$ISE_LIBRARY\library\memory_analyzer\memory_analyzer-safe.ecf"/>
-		<library name="ribbon" location="$ISE_LIBRARY\library\ribbon\ribbon-safe.ecf" readonly="false" use_application_options="true"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf" readonly="false"/>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
+		<capability>
+			<concurrency support="thread" use="thread"/>
+			<void_safety support="transitional" />
+			
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
+		<library name="memory_analyzer" location="$ISE_LIBRARY\library\memory_analyzer\memory_analyzer.ecf"/>
+		<library name="ribbon" location="$ISE_LIBRARY\library\ribbon\ribbon.ecf" readonly="false" use_application_options="true"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf" readonly="false"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<tests name="autotests" location=".\autotests\"/>
 		<cluster name="src" location=".\src\"/>
 	</target>

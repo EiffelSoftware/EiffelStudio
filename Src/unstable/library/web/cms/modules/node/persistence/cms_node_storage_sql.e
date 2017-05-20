@@ -13,7 +13,9 @@ inherit
 
 	CMS_NODE_STORAGE_I
 		redefine
-			nodes_of_type
+			nodes_of_type_count,
+			nodes_of_type,
+			nodes_of_type_with_title
 		end
 
 	CMS_STORAGE_SQL_I
@@ -37,6 +39,22 @@ feature -- Access
 			sql_finalize
 		end
 
+	nodes_of_type_count (a_node_type: CMS_CONTENT_TYPE): NATURAL_64
+			-- Count of nodes of type `a_node_type`.
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			error_handler.reset
+
+			create l_parameters.make (1)
+			l_parameters.force (a_node_type.name, "node_type")
+			sql_query (sql_select_nodes_of_type_count, l_parameters)
+			if not has_error and not sql_after then
+				Result := sql_read_natural_64 (1)
+			end
+			sql_finalize
+		end
+
 	nodes: LIST [CMS_NODE]
 			-- List of nodes.
 		do
@@ -49,7 +67,7 @@ feature -- Access
 				sql_query (sql_select_nodes, Void)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -77,7 +95,7 @@ feature -- Access
 				sql_query (sql_select_node_revisions, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -107,7 +125,7 @@ feature -- Access
 				end
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -134,7 +152,58 @@ feature -- Access
 				sql_query (sql_select_recent_nodes, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
+			loop
+				if attached fetch_node as l_node then
+					Result.force (l_node)
+				end
+				sql_forth
+			end
+			sql_finalize
+		end
+
+	recent_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
+			-- Recent `a_count` nodes of type `a_node_type` with an offset of `lower`.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+			error_handler.reset
+			from
+				create l_parameters.make (3)
+				l_parameters.put (a_node_type.name, "node_type")
+				l_parameters.put (a_count, "size")
+				l_parameters.put (a_lower, "offset")
+				sql_query (sql_select_recent_nodes_of_type, l_parameters)
+				sql_start
+			until
+				sql_after or has_error
+			loop
+				if attached fetch_node as l_node then
+					Result.force (l_node)
+				end
+				sql_forth
+			end
+			sql_finalize
+		end
+
+	recent_published_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+			error_handler.reset
+			from
+				create l_parameters.make (4)
+				l_parameters.put (a_node_type.name, "node_type")
+				l_parameters.put (a_count, "size")
+				l_parameters.put (a_lower, "offset")
+				l_parameters.put ({CMS_NODE_API}.published, "status")
+				sql_query (sql_select_recent_published_nodes_of_type, l_parameters)
+				sql_start
+			until
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -163,7 +232,7 @@ feature -- Access
 				sql_query (sql_select_recent_node_changes_before, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					Result.force (l_node)
@@ -266,64 +335,38 @@ feature -- Access
 				sql_query (sql_select_nodes_of_type, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
+			loop
+				if attached fetch_node as l_node then
+					check expected_node_type: l_node.is_typed_as (a_node_type.name) end
+					Result.force (l_node)
+				end
+				sql_forth
+			end
+			sql_finalize
+		end
+
+	nodes_of_type_with_title (a_node_type: CMS_CONTENT_TYPE; a_title: READABLE_STRING_GENERAL): LIST [CMS_NODE]
+			-- List of nodes of type `a_node_type' with title `a_title`.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+
+			error_handler.reset
+			write_information_log (generator + ".nodes_of_type_with_title")
+			create l_parameters.make (2)
+			l_parameters.put (a_node_type.name, "node_type")
+			l_parameters.put (a_title, "title")
+
+			from
+				sql_query (sql_select_nodes_of_type_with_title, l_parameters)
+				sql_start
+			until
+				sql_after or has_error
 			loop
 				if attached fetch_node as l_node then
 					check expected_node_type: l_node.content_type.same_string (a_node_type.name) end
-					Result.force (l_node)
-				end
-				sql_forth
-			end
-			sql_finalize
-		end
-
-feature -- Access: outline
-
-	children (a_node: CMS_NODE): detachable LIST [CMS_NODE]
-			-- <Precursor>
-		local
-			l_parameters: STRING_TABLE [detachable ANY]
-		do
-			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
-
-			error_handler.reset
-			write_information_log (generator + ".children")
-
-			from
-				create l_parameters.make (1)
-				l_parameters.put (a_node.id, "nid")
-				sql_query (sql_select_children_of_node, l_parameters)
-				sql_start
-			until
-				sql_after
-			loop
-				if attached fetch_node as l_node then
-					Result.force (l_node)
-				end
-				sql_forth
-			end
-			sql_finalize
-		end
-
-	available_parents_for_node (a_node: CMS_NODE): LIST [CMS_NODE]
-			-- <Precursor>
-		local
-			l_parameters: STRING_TABLE [detachable ANY]
-		do
-			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
-
-			error_handler.reset
-			write_information_log (generator + ".available_parents_for_node")
-
-			from
-				create l_parameters.make (1)
-				l_parameters.put (a_node.id, "nid")
-				sql_query (sql_select_available_parents_for_node, l_parameters)
-				sql_start
-			until
-				sql_after
-			loop
-				if attached fetch_node as l_node then
 					Result.force (l_node)
 				end
 				sql_forth
@@ -365,10 +408,8 @@ feature -- Change: Node
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [ANY]
-			l_time: DATE_TIME
 		do
 			sql_begin_transaction
-			create l_time.make_now_utc
 			write_information_log (generator + ".delete_node_base {" + a_node.id.out + "}")
 
 			error_handler.reset
@@ -377,7 +418,7 @@ feature -- Change: Node
 			sql_modify (sql_delete_node, l_parameters)
 			sql_finalize
 
-				-- we remove node_revisions and pages.
+				-- we remove node_revisions and potential extended nodes.
 				-- Check: maybe we need a transaction.
 			sql_modify (sql_delete_node_revisions, l_parameters)
 			sql_finalize
@@ -416,20 +457,18 @@ feature {NONE} -- Implementation
 			l_copy_parameters: STRING_TABLE [detachable ANY]
 			l_parameters: STRING_TABLE [detachable ANY]
 			l_rev: like last_inserted_node_revision
-			now: DATE_TIME
 		do
-			create now.make_now_utc
 			error_handler.reset
 
 			write_information_log (generator + ".store_node")
-			create l_parameters.make (9)
+			create l_parameters.make (10)
 			l_parameters.put (a_node.content_type, "type")
 			l_parameters.put (a_node.title, "title")
 			l_parameters.put (a_node.summary, "summary")
 			l_parameters.put (a_node.content, "content")
 			l_parameters.put (a_node.format, "format")
 			l_parameters.put (a_node.publication_date, "publish")
-			l_parameters.put (now, "changed")
+			l_parameters.put (a_node.modification_date, "changed")
 			l_parameters.put (a_node.status, "status")
 			if attached a_node.author as l_author then
 				check valid_author: l_author.has_id end
@@ -437,6 +476,13 @@ feature {NONE} -- Implementation
 			else
 				l_parameters.put (0, "author")
 			end
+			if attached a_node.editor as l_editor then
+				check valid_editor: l_editor.has_id end
+				l_parameters.put (l_editor.id, "editor")
+			else
+				l_parameters.put (0, "editor")
+			end
+
 			sql_begin_transaction
 
 			if a_node.has_id then
@@ -461,10 +507,6 @@ feature {NONE} -- Implementation
 					l_parameters.put (a_node.revision, "revision")
 					sql_modify (sql_update_node, l_parameters)
 					sql_finalize
-
-					if not error_handler.has_error then
-						a_node.set_modification_date (now)
-					end
 				end
 			else
 					-- Store new node
@@ -475,7 +517,6 @@ feature {NONE} -- Implementation
 				sql_finalize
 
 				if not error_handler.has_error then
-					a_node.set_modification_date (now)
 					a_node.set_id (last_inserted_node_id)
 					a_node.set_revision (l_rev) -- New object.
 --					check a_node.revision = last_inserted_node_revision (a_node) end
@@ -502,43 +543,102 @@ feature -- Helpers
 			extended_load (a_node)
 		end
 
-feature {NONE} -- Queries
+feature {NONE} -- Queries nodes
 
 	sql_select_nodes_count: STRING = "SELECT count(*) FROM nodes WHERE status != -1 ;"
 			-- Nodes count (Published and not Published)
 			--| note: {CMS_NODE_API}.trashed = -1
 
-	sql_select_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE status != -1 ;"
-			-- SQL Query to retrieve all nodes.
+	sql_select_nodes_of_type_count: STRING = "SELECT count(*) FROM nodes WHERE type=:node_type AND status != -1 ;"
+			-- Nodes of type `:node_type` count (Published and not Published)
 			--| note: {CMS_NODE_API}.trashed = -1
 
-	sql_select_nodes_of_type: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE status != -1 AND type=:node_type ;"
+	sql_select_nodes: STRING
+			-- SQL Query to retrieve all nodes.
+			--| note: {CMS_NODE_API}.trashed = -1
+		once
+			Result := sql_select_all_from_nodes + " WHERE status != -1 ;"
+		end
+
+	sql_select_nodes_of_type: STRING
 			-- SQL Query to retrieve all nodes of type :node_type.
 			--| note: {CMS_NODE_API}.trashed = -1		
+		once
+			Result := sql_select_all_from_nodes + " WHERE status != -1 AND type=:node_type ;"
+		end
 
-	sql_select_node_revisions: STRING = "SELECT nodes.nid, node_revisions.revision, nodes.type, node_revisions.title, node_revisions.summary, node_revisions.content, node_revisions.format, node_revisions.author, nodes.publish, nodes.created, node_revisions.changed, node_revisions.status FROM nodes INNER JOIN node_revisions ON nodes.nid = node_revisions.nid WHERE nodes.nid = :nid AND node_revisions.revision < :revision ORDER BY node_revisions.revision DESC;"
-			-- SQL query to get node revisions (missing the latest one).
+	sql_select_nodes_of_type_with_title: STRING
+			-- SQL Query to retrieve all nodes of type :node_type with title :title.
+			--| note: {CMS_NODE_API}.trashed = -1
+		once
+			Result := sql_select_all_from_nodes + " WHERE status != -1 AND type=:node_type AND title=:title;"
+		end
 
-	sql_select_trash_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE status = -1 ;"
+	sql_select_trash_nodes: STRING
 			-- SQL Query to retrieve all trahsed nodes.
 			--| note: {CMS_NODE_API}.trashed = -1		
+		once
+			Result := sql_select_all_from_nodes + " WHERE status = -1 ;"
+		end
 
-	sql_select_trash_nodes_by_author: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE status = -1 and author = :author ;"
+	sql_select_trash_nodes_by_author: STRING
 			-- SQL Query to retrieve all nodes by a given author.
 			--| note: {CMS_NODE_API}.trashed = -1				
+		once
+			Result := sql_select_all_from_nodes + " WHERE status = -1 and author = :author ;"
+		end
 
-	sql_select_node_by_id: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE nid =:nid ORDER BY revision DESC, publish DESC LIMIT 1;"
+	sql_select_node_by_id: STRING
+			--
+		once
+			Result := sql_select_all_from_nodes + " WHERE nid =:nid ORDER BY revision DESC, publish DESC LIMIT 1;"
+		end
 
-	sql_select_node_by_id_and_revision: STRING = "SELECT nodes.nid, node_revisions.revision, nodes.type, node_revisions.title, node_revisions.summary, node_revisions.content, node_revisions.format, node_revisions.author, nodes.publish, nodes.created, node_revisions.changed, node_revisions.status FROM nodes INNER JOIN node_revisions ON nodes.nid = node_revisions.nid WHERE nodes.nid = :nid AND node_revisions.revision = :revision ORDER BY node_revisions.revision DESC;"
+	sql_select_recent_nodes: STRING
+			--
+		once
+			Result := sql_select_all_from_nodes + " ORDER BY changed DESC, publish DESC LIMIT :size OFFSET :offset ;"
+		end
 
-	sql_select_recent_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes ORDER BY nid DESC, publish DESC LIMIT :size OFFSET :offset ;"
+	sql_select_recent_nodes_of_type: STRING
+			--
+		once
+			Result := sql_select_all_from_nodes + " WHERE type=:node_type ORDER BY changed DESC, publish DESC LIMIT :size OFFSET :offset ;"
+		end
 
-	sql_select_recent_node_changes_before: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE changed <= :date ORDER BY changed DESC, nid DESC LIMIT :size OFFSET :offset ;"
+	sql_select_recent_published_nodes_of_type: STRING
+			-- published nodes order by publication_date.
+		once
+			Result := sql_select_all_from_nodes + " WHERE type=:node_type AND status=:status ORDER BY publish DESC, changed DESC LIMIT :size OFFSET :offset ;"
+		end
 
-	sql_insert_node: STRING = "INSERT INTO nodes (revision, type, title, summary, content, format, publish, created, changed, status, author) VALUES (:revision, :type, :title, :summary, :content, :format, :publish, :created, :changed, :status, :author);"
+	sql_select_recent_node_changes_before: STRING
+			--
+		once
+			Result := sql_select_all_from_nodes + " WHERE changed <= :date ORDER BY changed DESC, nid DESC LIMIT :size OFFSET :offset ;"
+		end
+
+feature {NONE} -- Queries node revisions
+
+	sql_select_node_revisions: STRING = "SELECT nodes.nid, node_revisions.revision, nodes.type, node_revisions.title, node_revisions.summary, node_revisions.content, node_revisions.format, node_revisions.author, node_revisions.editor, nodes.publish, nodes.created, node_revisions.changed, node_revisions.status FROM nodes INNER JOIN node_revisions ON nodes.nid = node_revisions.nid WHERE nodes.nid = :nid AND node_revisions.revision < :revision ORDER BY node_revisions.revision DESC;"
+			-- SQL query to get node revisions (missing the latest one).
+
+	sql_select_node_by_id_and_revision: STRING = "SELECT nodes.nid, node_revisions.revision, nodes.type, node_revisions.title, node_revisions.summary, node_revisions.content, node_revisions.format, node_revisions.author, node_revisions.editor, node_revisions.editor, nodes.publish, nodes.created, node_revisions.changed, node_revisions.status FROM nodes INNER JOIN node_revisions ON nodes.nid = node_revisions.nid WHERE nodes.nid = :nid AND node_revisions.revision = :revision ORDER BY node_revisions.revision DESC;"
+			--
+	sql_copy_node_to_revision: STRING = "INSERT INTO node_revisions (nid, revision, title, summary, content, format, author, editor, changed, status) SELECT nid, revision, title, summary, content, format, author, editor, changed, status FROM nodes WHERE nid=:nid;"
+
+	Sql_last_insert_node_revision: STRING = "SELECT MAX(revision) FROM node_revisions;"
+	Sql_last_insert_node_revision_for_nid: STRING = "SELECT MAX(revision) FROM node_revisions WHERE nid=:nid;"
+
+	sql_delete_node_revisions: STRING = "DELETE FROM node_revisions WHERE nid=:nid;"
+
+
+feature {NONE} -- Queries insert and update
+
+	sql_insert_node: STRING = "INSERT INTO nodes (revision, type, title, summary, content, format, publish, created, changed, status, author, editor) VALUES (:revision, :type, :title, :summary, :content, :format, :publish, :created, :changed, :status, :author, :editor);"
 			-- SQL Insert to add a new node.
 
-	sql_update_node : STRING = "UPDATE nodes SET revision=:revision, type=:type, title=:title, summary=:summary, content=:content, format=:format, publish=:publish, changed=:changed, status=:status, author=:author WHERE nid=:nid;"
+	sql_update_node : STRING = "UPDATE nodes SET revision=:revision, type=:type, title=:title, summary=:summary, content=:content, format=:format, publish=:publish, changed=:changed, status=:status, author=:author, editor=:editor WHERE nid=:nid;"
 			-- SQL update node.
 
 	sql_trash_node: STRING = "UPDATE nodes SET changed=:changed, status =:status WHERE nid=:nid"
@@ -552,28 +652,9 @@ feature {NONE} -- Queries
 
 	sql_last_insert_node_id: STRING = "SELECT MAX(nid) FROM nodes;"
 
-	sql_copy_node_to_revision: STRING = "INSERT INTO node_revisions (nid, revision, title, summary, content, format, author, changed, status) SELECT nid, revision, title, summary, content, format, author, changed, status FROM nodes WHERE nid=:nid;"
-
-	Sql_last_insert_node_revision: STRING = "SELECT MAX(revision) FROM node_revisions;"
-	Sql_last_insert_node_revision_for_nid: STRING = "SELECT MAX(revision) FROM node_revisions WHERE nid=:nid;"
-
-	sql_select_available_parents_for_node : STRING = "[
-			SELECT node.nid, node.revision, node.type, title, summary, content, format, author, publish, created, changed, status 
-			FROM nodes node LEFT JOIN page_nodes pn ON node.nid = pn.nid AND node.nid != :nid 
-			WHERE node.nid != :nid AND pn.parent != :nid AND node.status != -1 GROUP BY node.nid, node.revision;
-		]"
-
-	sql_select_children_of_node: STRING = "[
-			SELECT node.nid, node.revision, node.type, title, summary, content, format, author, publish, created, changed, status
-			FROM nodes node LEFT JOIN page_nodes pn ON node.nid = pn.nid
-			WHERE pn.parent = :nid AND node.status != -1 GROUP BY node.nid, node.revision;
-		]"
-
-	sql_delete_node_revisions: STRING = "DELETE FROM node_revisions WHERE nid=:nid;"
-
-
-
 feature {NONE} -- Implementation
+
+	sql_select_all_from_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, editor, publish, created, changed, status FROM nodes "
 
 	fetch_node: detachable CMS_PARTIAL_NODE
 		do
@@ -598,19 +679,22 @@ feature {NONE} -- Implementation
 				if attached sql_read_string (7) as l_format then
 					Result.set_format (l_format)
 				end
-				if attached sql_read_integer_64 (8) as l_author_id then
+				if attached sql_read_integer_64 (8) as l_author_id and then l_author_id > 0 then
 					Result.set_author (create {CMS_PARTIAL_USER}.make_with_id (l_author_id))
 				end
-				if attached sql_read_date_time (9) as l_publication_date then
+				if attached sql_read_integer_64 (9) as l_editor_id and then l_editor_id > 0 then
+					Result.set_editor (create {CMS_PARTIAL_USER}.make_with_id (l_editor_id))
+				end
+				if attached sql_read_date_time (10) as l_publication_date then
 					Result.set_publication_date (l_publication_date)
 				end
-				if attached sql_read_date_time (10) as l_creation_date then
+				if attached sql_read_date_time (11) as l_creation_date then
 					Result.set_creation_date (l_creation_date)
 				end
-				if attached sql_read_date_time (11) as l_modif_date then
+				if attached sql_read_date_time (12) as l_modif_date then
 					Result.set_modification_date (l_modif_date)
 				end
-				if attached sql_read_integer_32 (12) as l_status then
+				if attached sql_read_integer_32 (13) as l_status then
 					Result.set_status (l_status)
 				end
 			end

@@ -5,6 +5,7 @@ note
 		can be cancelled at any moment. Displays the downloaded size.
 	]"
 	author: "Alexey Kolesnichenko, Roman Schmocker"
+	updated_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "2.0.0"
 
@@ -43,7 +44,6 @@ feature {NONE} -- Initialization
 			default_create
 
 				-- Build the window layout.
-			lower_bar.extend (standard_status_bar)
 			build_main_container
 			extend (main_container)
 
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			set_title (Window_title)
 
 				-- Set the initial size of the window
-			set_size (Window_width, Window_height)
+			set_size (Window_width, main_container.height)
 
 				-- Attach the correct actions to all buttons.
 			download_button.select_actions.extend (agent on_download_button_clicked)
@@ -100,6 +100,8 @@ feature {NONE} -- Initialization
 			main_container.set_item_x_position (cancel_button, border_margin)
 			main_container.set_item_y_position (result_text, download_button.y_position)
 			main_container.set_item_x_position (result_text, download_button.width + download_button.x_position + margin)
+			main_container.extend (standard_status_bar)
+			main_container.set_item_position (standard_status_bar, border_margin, main_container.height + margin)
 			unlock_update
 		end
 

@@ -1,9 +1,6 @@
-note
-
-	description:
-		"Sequential files, viewed as persistent sequences of characters"
+﻿note
+	description: "Sequential files, viewed as persistent sequences of characters"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,7 +27,7 @@ feature -- Initialization
 	make (fn: STRING)
 			-- Create file object with `fn' as file name.
 		obsolete
-			"Use `make_with_path' instead."
+			"Use `make_with_path' instead. [2017-05-31]"
 		require
 			string_exists: fn /= Void
 			string_not_empty: not fn.is_empty
@@ -182,7 +179,7 @@ feature -- Access
 			-- File name as a STRING_8 instance. The value might be truncated
 			-- from the original name used to create the current FILE instance.
 		obsolete
-			"Use `path' to ensure that Unicode filenames are not truncated."
+			"Use `path' to ensure that Unicode filenames are not truncated. [2017-05-31]"
 		do
 			create Result.make_from_cil (internal_file.name)
 		ensure then
@@ -330,11 +327,8 @@ feature -- Access
 			-- use assignment attempt.
 			-- Will raise an exception (code `Retrieve_exception')
 			-- if content is not a stored Eiffel structure.
-		local
-			l_formatter: BINARY_FORMATTER
 		do
-			create l_formatter.make
-			Result := l_formatter.deserialize (internal_stream)
+			Result := (create {BINARY_FORMATTER}.make).deserialize (internal_stream)
 		end
 
 feature -- Measurement
@@ -383,14 +377,11 @@ feature -- Status report
 	exists: BOOLEAN
 			-- Does physical file exist?
 			-- (Uses effective UID.)
-		local
-			l_directory: DIRECTORY_INFO
 		do
 			internal_file.refresh
 			Result := internal_file.exists
 			if not Result then -- May return `False' on directories
-				create l_directory.make (internal_file.name)
-				Result := l_directory.exists
+				Result := (create {DIRECTORY_INFO}.make (internal_file.name)).exists
 			end
 		ensure then
 			unchanged_mode: mode = old mode
@@ -650,7 +641,7 @@ feature -- Status report
 	file_prunable: BOOLEAN
 			-- May items be removed?
 		obsolete
-			"Use `prunable' instead."
+			"Use `prunable' instead. [2017-05-31]"
 		do
 			Result := mode >= Write_file and prunable
 		end
@@ -941,11 +932,9 @@ feature -- Cursor movement
 			-- Go to first position.
 		require else
 			file_opened: not is_closed
-		local
-			i: INTEGER_64
 		do
 			if attached internal_stream as l_stream then
-				i := l_stream.seek ((0).to_integer_64, {SEEK_ORIGIN}.begin)
+				l_stream.seek ((0).to_integer_64, {SEEK_ORIGIN}.begin).do_nothing
 			end
 		end
 
@@ -953,11 +942,9 @@ feature -- Cursor movement
 			-- Go to last position.
 		require else
 			file_opened: not is_closed
-		local
-			i: INTEGER_64
 		do
 			if attached internal_stream as l_stream then
-				i := l_stream.seek ((0).to_integer_64, {SEEK_ORIGIN}.end_)
+				l_stream.seek ((0).to_integer_64, {SEEK_ORIGIN}.end_).do_nothing
 			end
 		end
 
@@ -965,21 +952,17 @@ feature -- Cursor movement
 			-- Go to next position.
 		require else
 			file_opened: not is_closed
-		local
-			i: INTEGER_64
 		do
 			if attached internal_stream as l_stream then
-				i := l_stream.seek ((1).to_integer_64, {SEEK_ORIGIN}.current_)
+				l_stream.seek ((1).to_integer_64, {SEEK_ORIGIN}.current_).do_nothing
 			end
 		end
 
 	back
 			-- Go back one position.
-		local
-			i: INTEGER_64
 		do
 			if attached internal_stream as l_stream then
-				i := l_stream.seek ((-1).to_integer_64, {SEEK_ORIGIN}.current_)
+				l_stream.seek ((-1).to_integer_64, {SEEK_ORIGIN}.current_).do_nothing
 			end
 		end
 
@@ -987,11 +970,9 @@ feature -- Cursor movement
 			-- Advance by `offset' from current location.
 		require
 			file_opened: not is_closed
-		local
-			i: INTEGER_64
 		do
 			if attached internal_stream as l_stream then
-				i := l_stream.seek (offset.to_integer_64, {SEEK_ORIGIN}.current_)
+				l_stream.seek (offset.to_integer_64, {SEEK_ORIGIN}.current_).do_nothing
 			end
 		end
 
@@ -1013,11 +994,9 @@ feature -- Cursor movement
 		require
 			file_opened: not is_closed
 			non_negative_argument: abs_position >= 0
-		local
-			i: INTEGER_64
 		do
 			if attached internal_stream as l_stream then
-				i := l_stream.seek (-abs_position.to_integer_64, {SEEK_ORIGIN}.end_)
+				l_stream.seek (-abs_position.to_integer_64, {SEEK_ORIGIN}.end_).do_nothing
 			end
 		end
 
@@ -1130,12 +1109,12 @@ feature -- Element change
 		deferred
 		end
 
-	put_real, putreal (r: REAL)
+	put_real, putreal (r: REAL_32)
 			-- Write `r' at current position.
 		deferred
 		end
 
-	put_double, putdouble (d: DOUBLE)
+	put_double, putdouble (d: REAL_64)
 			-- Write `d' at current position.
 		deferred
 		end
@@ -1237,7 +1216,7 @@ feature -- Element change
 	change_name (new_name: STRING)
 			-- Change file name to `new_name'
 		obsolete
-			"Use `rename_file' instead."
+			"Use `rename_file' instead. [2017-05-31]"
 		require
 			new_name_not_void: new_name /= Void
 			new_name_not_empty: not new_name.is_empty
@@ -1364,11 +1343,8 @@ feature -- Element change
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
 			-- Retrievable within current system only.
-		local
-			l_formatter: BINARY_FORMATTER
 		do
-			create l_formatter.make
-			l_formatter.serialize (internal_stream, object)
+			(create {BINARY_FORMATTER}.make).serialize (internal_stream, object)
 		end
 
 	general_store (object: ANY)
@@ -1776,7 +1752,7 @@ feature {NONE} -- Implementation
 			-- Create new instance of `last_string' with a least `a_min_size'
 			-- as capacity.
 		obsolete
-			"Implementors should create `last_string' directly."
+			"Implementors should create `last_string' directly. [2017-05-31]"
 		require
 			last_string_void: last_string = Void
 			a_min_size_non_negative: a_min_size >= 0
@@ -1860,11 +1836,8 @@ feature {FILE} -- Implementation
 			-- convert an eiffel date to a .NET file date time
 			-- 'eiffel_date' must be the seconds from 01/01/1970:00:00:00:00 (file system time)
 			-- returns nano-seconds since 01/01/1601:00:00:00:00
-		local
-			t: SYSTEM_DATE_TIME
 		do
-			t.make_from_ticks (eiffel_base_file_time + (time.to_integer_64 * 10000000))
-			Result := t
+			Result.make_from_ticks (eiffel_base_file_time + (time.to_integer_64 * 10000000))
 		end
 
 	mode: INTEGER
@@ -1973,7 +1946,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1983,8 +1956,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-end -- class FILE
-
-
+end

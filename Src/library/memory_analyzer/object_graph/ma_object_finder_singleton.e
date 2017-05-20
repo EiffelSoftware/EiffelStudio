@@ -106,7 +106,7 @@ feature
 				until
 					l_list.after or Result /= Void
 				loop
-					if l_list.item /= Void and then a_type_name.is_equal (l_list.item.generating_type) then
+					if l_list.item /= Void and then a_type_name.same_string_general (l_list.item.generating_type.name_32) then
 						Result := l_list.item
 					end
 
@@ -117,14 +117,14 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

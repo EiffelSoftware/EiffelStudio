@@ -365,7 +365,7 @@ feature -- Processing
 							output_indentation
 							output ("<li>")
 							if attached w_section.text as l_text then
-								output ("<a href=%"#" + l_text.text + "%">")
+								output ("<a href=%"#" + anchor_name (l_text.text, True) + "%">")
 								output (l_text.text)
 								output ("</a>")
 							else
@@ -413,7 +413,7 @@ feature -- Processing
 				output ("%N")
 				if attached a_section.text as l_text then
 					output ("<a name=%"")
-					output (l_text.text)
+					output (anchor_name (l_text.text, True))
 					output ("%"></a>")
 				end
 				output ("<h" + l_level.out + ">")
@@ -592,6 +592,10 @@ feature -- Processing
 				end
 				if in_pre_block then
 					set_next_output_require_newline
+				elseif list_level = 0 then
+						-- new line, but not a break <br/> !
+						-- but not in list item.
+					output ("%N")
 				end
 			end
 		end
@@ -790,7 +794,19 @@ feature -- Links
 
 	visit_external_link (a_link: WIKI_EXTERNAL_LINK)
 		do
-			output ("<a href=%"" + a_link.url + "%" class=%"wiki_ext_link%">")
+			output ("<a href=%"" + a_link.url + "%" class=%"wiki_ext_link%"")
+			if attached a_link.parameters as l_params then
+				across
+					l_params as ic
+				loop
+					if not ic.item.is_whitespace then
+						output (" ")
+							-- No check if this is valid xhtml or not ... it is up to the wiki source.
+						output (ic.item)
+					end
+				end
+			end
+			output (">")
 			a_link.text.process (Current)
 			output ("</a>")
 		end
@@ -798,7 +814,7 @@ feature -- Links
 	visit_link (a_link: WIKI_LINK)
 		local
 			l_css_class: STRING
-			l_url: STRING
+			l_url: detachable STRING
 		do
 			create l_css_class.make_from_string ("wiki_link")
 			if a_link.name.is_whitespace then
@@ -807,9 +823,6 @@ feature -- Links
 				else
 					l_url := ""
 				end
-				output ("<a href=%"" + l_url + "%" class=%"" + l_css_class + "%">")
-				a_link.text.process (Current)
-				output ("</a>")
 			elseif
 				attached link_resolver as r and then
 				attached r.wiki_url (a_link, current_page) as u
@@ -819,7 +832,21 @@ feature -- Links
 				else
 					l_url := u
 				end
-				output ("<a href=%"" + l_url + "%" class=%"" + l_css_class + "%">")
+			end
+			if l_url /= Void then
+				output ("<a href=%"" + l_url + "%" class=%"" + l_css_class + "%"")
+				if attached a_link.parameters as l_params then
+					across
+						l_params as ic
+					loop
+						if not ic.item.is_whitespace then
+							output (" ")
+								-- No check if this is valid xhtml or not ... it is up to the wiki source.
+							output (ic.item)
+						end
+					end
+				end
+				output (">")
 				a_link.text.process (Current)
 				output ("</a>")
 			else
@@ -857,8 +884,16 @@ feature -- Links
 			if l_url = Void then
 				l_url := l_lnk_name
 			end
-			if attached a_link.location_parameter as l_location then
-				output ("<div style=%"text-align: "+ l_location +"%">")
+			if not a_link.inlined then
+				output ("<div class=%"wiki_image")
+				if a_link.has_frame or a_link.has_thumb_parameter or a_link.has_border then
+					output (" wiki_frame")
+				end
+				output ("%"")
+				if attached a_link.location_parameter as l_location then
+					output (" style=%"text-align: "+ l_location +"%"")
+				end
+				output (">")
 			end
 			if l_wiki_url /= Void then
 				output ("<a href=%"" + l_wiki_url + "%">")
@@ -874,22 +909,29 @@ feature -- Links
 				output (h)
 				output ("%"")
 			end
+			if attached a_link.alt_parameter as l_alt then
+				output (" alt=%"")
+				output (l_alt)
+				output ("%"")
+			end
 			output ("/>")
 			if l_wiki_url /= Void then
 				output ("</a>")
 			end
 			if not a_link.inlined then
-				output ("<br/>")
-			end
-
-			if not attached {WIKI_RAW_STRING} a_link.text then
-				a_link.text.process (Current)
-			end
-			if a_link.location_parameter /= Void then
-				output ("</div>")
+				if not a_link.text.is_empty then
+					output ("<div class=%"wiki_caption%">")
+					if attached {WIKI_RAW_STRING} a_link.text as l_raw then
+						visit_raw_string (l_raw)
+					else
+						a_link.text.process (Current)
+					end
+					output ("</div>")
+				end
 			end
 			if not a_link.inlined then
-				set_next_output_require_newline
+				output ("</div>")
+--				set_next_output_require_newline
 			end
 		end
 
@@ -940,15 +982,19 @@ feature -- Table
 
 	visit_table (a_table: WIKI_TABLE)
 		do
-			if attached a_table.style as st then
+			if attached a_table.style as st and then not st.is_whitespace then
 				output ("<table " + st + ">")
 			else
 				output ("<table>")
 			end
-			if attached a_table.caption as l_caption then
-				output ("<caption>")
+			if attached a_table.caption as l_caption and then not l_caption.is_whitespace then
+				if attached a_table.caption_style as st and then not st.is_whitespace then
+					output ("<caption " + st + ">")
+				else
+					output ("<caption>")
+				end
 				l_caption.process (Current)
-				output ("</caption>")
+				output ("</caption>%N")
 			end
 
 			visit_composite (a_table)
@@ -958,9 +1004,13 @@ feature -- Table
 
 	visit_table_row (a_row: WIKI_TABLE_ROW)
 		do
-			output ("<tr>")
+			if attached a_row.style as st and then not st.is_whitespace then
+				output ("<tr " + st + ">")
+			else
+				output ("<tr>")
+			end
 			visit_composite (a_row)
-			output ("</tr>")
+			output ("</tr>%N")
 		end
 
 	visit_table_header_cell (a_cell: WIKI_TABLE_HEADER_CELL)
@@ -970,8 +1020,10 @@ feature -- Table
 				across
 					lst as ic
 				loop
-					output (" ")
-					output (ic.item)
+					if not ic.item.is_whitespace then
+						output (" ")
+						output (ic.item)
+					end
 				end
 				output (">")
 			else
@@ -988,8 +1040,10 @@ feature -- Table
 				across
 					lst as ic
 				loop
-					output (" ")
-					output (ic.item)
+					if not ic.item.is_whitespace then
+						output (" ")
+						output (ic.item)
+					end
 				end
 				output (">")
 			else
@@ -999,99 +1053,152 @@ feature -- Table
 			output ("</td>")
 		end
 
+feature -- Helpers
+
+	anchor_name (a_text: READABLE_STRING_GENERAL; a_user_friendly_mode: BOOLEAN): STRING_8
+			-- Anchor name for text `a_text'.
+			-- Remove/replace space and unexpected characters.
+		local
+			i,n: INTEGER
+			curr: CHARACTER_32
+			prev: CHARACTER_8
+		do
+			n := a_text.count
+			create Result.make (a_text.count)
+			from
+				i := 1
+				prev := '_' -- Do not start with underscore as replacement.
+			until
+				i > n
+			loop
+				curr := a_text [i]
+				if curr.code <= 0x7F and then curr.is_alpha_numeric then
+						-- Valid characters in URL fragment.
+					prev := curr.to_character_8
+					Result.append_character (prev)
+				else
+					inspect a_text [i]
+					when
+						'/',  '?', '-', '.', '_',
+						'~', ':', '@', '!', '$', '&', '%'', '(', ')', '*', '+',
+						',', ';', '='
+					then
+							-- Valid characters in URL fragment.
+						prev := curr.to_character_8
+						Result.append_character (prev)
+					when ' ', '%T', '%N' then
+						if a_user_friendly_mode then
+
+								-- Note: those char should be %-encoded, but for user convenience
+								-- we use '_'.
+							if prev /= '_' then
+								prev := '_'
+								Result.append_character (prev)
+							end
+						else
+								-- %-encode the char
+							prev := '%U'
+							append_percent_encoded_to (curr.natural_32_code, Result)
+						end
+					else
+							-- %-encode the char
+						prev := '%U'
+						append_percent_encoded_to (curr.natural_32_code, Result)
+					end
+				end
+				i := i + 1
+			end
+		end
+
+feature {NONE} -- Implementation: percent encoding		
+
+	append_percent_encoded_to (a_code: NATURAL_32; a_result: STRING_8)
+		do
+			if a_code > 0xFF then
+					-- Unicode
+				append_percent_encoded_unicode_character_code_to (a_code, a_result)
+			elseif a_code > 0x7F then
+					-- Extended ASCII
+					-- This requires percent-encoding on UTF-8 converted character.
+				append_percent_encoded_unicode_character_code_to (a_code, a_result)
+			else
+					-- ASCII
+				append_percent_encoded_ascii_character_code_to (a_code, a_result)
+			end
+		end
+
+	append_percent_encoded_ascii_character_code_to (a_code: NATURAL_32; a_result: STRING_GENERAL)
+			-- Append extended ascii character code `a_code' as percent-encoded content into `a_result'
+			-- Note: it does not UTF-8 convert this extended ASCII.
+		require
+			is_extended_ascii: a_code <= 0xFF
+		local
+			c: INTEGER
+		do
+				-- Extended ASCII
+			c := a_code.to_integer_32
+			a_result.append_code (37) -- 37 '%%'
+ 			a_result.append_code (hex_digit [c |>> 4])
+ 			a_result.append_code (hex_digit [c & 0xF])
+		ensure
+			appended: a_result.count > old a_result.count
+		end
+
+	append_percent_encoded_unicode_character_code_to (a_code: NATURAL_32; a_result: STRING_GENERAL)
+			-- Append Unicode character code `a_code' as UTF-8 and percent-encoded content into `a_result'
+			-- Note: it does include UTF-8 conversion of extended ASCII and Unicode.
+		do
+			if a_code <= 0x7F then
+					-- 0xxxxxxx
+				append_percent_encoded_ascii_character_code_to (a_code, a_result)
+			elseif a_code <= 0x7FF then
+					-- 110xxxxx 10xxxxxx
+				append_percent_encoded_ascii_character_code_to ((a_code |>> 6) | 0xC0, a_result)
+				append_percent_encoded_ascii_character_code_to ((a_code & 0x3F) | 0x80, a_result)
+			elseif a_code <= 0xFFFF then
+					-- 1110xxxx 10xxxxxx 10xxxxxx
+				append_percent_encoded_ascii_character_code_to ((a_code |>> 12) | 0xE0, a_result)
+				append_percent_encoded_ascii_character_code_to (((a_code |>> 6) & 0x3F) | 0x80, a_result)
+				append_percent_encoded_ascii_character_code_to ((a_code & 0x3F) | 0x80, a_result)
+			else
+					-- c <= 1FFFFF - there are no higher code points
+					-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+				append_percent_encoded_ascii_character_code_to ((a_code |>> 18) | 0xF0, a_result)
+				append_percent_encoded_ascii_character_code_to (((a_code |>> 12) & 0x3F) | 0x80, a_result)
+				append_percent_encoded_ascii_character_code_to (((a_code |>> 6) & 0x3F) | 0x80, a_result)
+				append_percent_encoded_ascii_character_code_to ((a_code & 0x3F) | 0x80, a_result)
+			end
+		ensure
+			appended: a_result.count > old a_result.count
+		end
+
+ 	hex_digit: SPECIAL [NATURAL_32]
+ 			-- Hexadecimal digits.
+ 		once
+ 			create Result.make_filled (0, 16)
+ 			Result [0] := {NATURAL_32} 48 -- 48 '0'
+ 			Result [1] := {NATURAL_32} 49 -- 49 '1'
+ 			Result [2] := {NATURAL_32} 50 -- 50 '2'
+ 			Result [3] := {NATURAL_32} 51 -- 51 '3'
+ 			Result [4] := {NATURAL_32} 52 -- 52 '4'
+ 			Result [5] := {NATURAL_32} 53 -- 53 '5'
+ 			Result [6] := {NATURAL_32} 54 -- 54 '6'
+ 			Result [7] := {NATURAL_32} 55 -- 55 '7'
+ 			Result [8] := {NATURAL_32} 56 -- 56 '8'
+ 			Result [9] := {NATURAL_32} 57 -- 57 '9'
+ 			Result [10] := {NATURAL_32} 65 -- 65 'A'
+ 			Result [11] := {NATURAL_32} 66 -- 66 'B'
+ 			Result [12] := {NATURAL_32} 67 -- 67 'C'
+ 			Result [13] := {NATURAL_32} 68 -- 68 'D'
+ 			Result [14] := {NATURAL_32} 69 -- 69 'E'
+ 			Result [15] := {NATURAL_32} 70 -- 70 'F'
+ 		end
+
 feature -- Implementation
-
---	reset_indexes (lst: ARRAY [INTEGER]; a_index: INTEGER)
---		require
---			lst.valid_index (a_index)
---		local
---			i: INTEGER
---		do
---			from
---				i := a_index
---			until
---				i > lst.upper
---			loop
---				lst[i] := 0
---				i := i + 1
---			end
---		end
-
---	section_indexes: ARRAY [INTEGER]
 
 	section_level: INTEGER
 
---	section_index_representation (v: like list_level; a_postfix: BOOLEAN): STRING
---		local
---			l_index: INTEGER
---		do
---			l_index := section_indexes[v]
---			inspect v
---			when 1 then
---				Result := (<<"I", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X">>)[l_index + 1]
---			when 2 then
---				Result := ('A' + l_index - 1).out
---				if a_postfix then
---					Result.append_string (".")
---				end
---			when 3 then
---				Result := l_index.out
---				if a_postfix then
---					Result.append_string ("/")
---				end
-----				Result := section_index_representation (v - 1, False) + "." + l_index.out
---			when 4 then
---				Result := ('a' + l_index - 1).out
---				if a_postfix then
---					Result.append_string ("/")
---				end
---			when 5 then
---				Result := section_index_representation (v - 1, False) + "." + l_index.out
---				if a_postfix then
---					Result.append_string ("/")
---				end
---			else
---				Result := l_index.out
---				if a_postfix then
---					Result.append_string ("/")
---				end
---			end
---		end
-
---	list_indexes: ARRAY [INTEGER]
-
 	list_level: INTEGER
-
---	ordered_list_index_representation (v: like list_level; a_postfix: BOOLEAN): STRING
---		local
---			l_index: INTEGER
---		do
---			l_index := list_indexes[v]
---			inspect v
---			when 1 then
---				Result := l_index.out
---				if a_postfix then
---					Result.append_string (".")
---				end
---			when 2 then
---				Result := ('a' + l_index - 1).out
---				if a_postfix then
---					Result.append_string (")")
---				end
---			when 3 then
---				Result := ordered_list_index_representation (v - 1, False) + "." + l_index.out
---				if a_postfix then
---					Result.append_string (")")
---				end
---			when 4 then
---				Result := (<<"i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x">>)[l_index]
---			else
---				Result := l_index.out
---				if a_postfix then
---					Result.append_string (".")
---				end
---			end
---		end
 
 	visit_composite (a_composite: WIKI_COMPOSITE [WIKI_ITEM])
 		local
@@ -1108,7 +1215,7 @@ feature -- Implementation
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2017, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

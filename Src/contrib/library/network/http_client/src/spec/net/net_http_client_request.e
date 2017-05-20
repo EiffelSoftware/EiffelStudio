@@ -28,11 +28,11 @@ feature {NONE} -- Internal
 	session: NET_HTTP_CLIENT_SESSION
 	net_http_client_version: STRING = "0.1"
 
-	session_socket (a_host: READABLE_STRING_8; a_port: INTEGER; a_is_https: BOOLEAN; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT): NETWORK_STREAM_SOCKET
+	session_socket (a_host: READABLE_STRING_8; a_port: INTEGER; a_is_https: BOOLEAN; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT): HTTP_STREAM_SOCKET
 			-- Session socket to use for connection.
 			-- Eventually reuse the persistent connection if any.
 		local
-			l_socket: detachable NETWORK_STREAM_SOCKET
+			l_socket: detachable HTTP_STREAM_SOCKET
 		do
 			if
 				attached session.persistent_connection as l_persistent_connection and then
@@ -40,12 +40,12 @@ feature {NONE} -- Internal
 			then
 				l_socket := l_persistent_connection.socket
 				if a_is_https then
-					if attached {SSL_NETWORK_STREAM_SOCKET} l_socket as l_ssl_socket then
+					if attached {HTTP_STREAM_SECURE_SOCKET} l_socket as l_ssl_socket then
 						Result := l_ssl_socket
 					else
 						l_socket := Void
 					end
-				elseif attached {SSL_NETWORK_STREAM_SOCKET} l_socket as l_ssl_socket then
+				elseif attached {HTTP_STREAM_SECURE_SOCKET} l_socket as l_ssl_socket then
 					l_socket := Void
 				end
 				if l_socket /= Void and then not l_socket.is_connected then
@@ -59,7 +59,7 @@ feature {NONE} -- Internal
 			else
 				session.set_persistent_connection (Void)
 				if a_is_https then
-					create {SSL_NETWORK_STREAM_SOCKET} Result.make_client_by_port (a_port, a_host)
+					create {HTTP_STREAM_SECURE_SOCKET} Result.make_client_by_port (a_port, a_host)
 				else
 					create Result.make_client_by_port (a_port, a_host)
 				end
@@ -81,7 +81,7 @@ feature -- Access
 			l_cookie: detachable READABLE_STRING_8
 			l_request_uri: STRING
 			l_url: HTTP_URL
-			l_socket: NETWORK_STREAM_SOCKET
+			l_socket: HTTP_STREAM_SOCKET
 			s: STRING
 			l_message: STRING
 			l_content_length: INTEGER
@@ -100,6 +100,7 @@ feature -- Access
 			l_boundary: READABLE_STRING_8
 			l_is_http_1_0_request: BOOLEAN
 			l_is_keep_alive: BOOLEAN
+			l_is_chunked_transfer_encoding: BOOLEAN
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -155,7 +156,7 @@ feature -- Access
 					end
 
 					create l_request_uri.make_from_string (l_uri.path)
-					if attached l_uri.query as l_query then
+					if attached l_uri.query as l_query and then not l_query.is_empty then
 						l_request_uri.append_character ('?')
 						l_request_uri.append (l_query)
 					end
@@ -179,6 +180,8 @@ feature -- Access
 					end
 
 						-- handle sending data
+					l_is_chunked_transfer_encoding := attached headers.item ("Transfer-Encoding") as l_transfer_encoding and then l_transfer_encoding.same_string ("chunked")
+
 					if ctx /= Void then
 						if ctx.has_upload_filename then
 							l_upload_filename := ctx.upload_filename
@@ -191,18 +194,45 @@ feature -- Access
 						if ctx.has_form_data then
 							l_form_data := ctx.form_parameters
 							if l_upload_data = Void and l_upload_filename = Void then
-									-- Send as form-urlencoded
-								headers.extend ("application/x-www-form-urlencoded", "Content-Type")
-								l_upload_data := ctx.form_parameters_to_url_encoded_string
-								headers.force (l_upload_data.count.out, "Content-Length")
+								if
+									attached headers.item ("Content-Type") as l_ct
+								then
+									if l_ct.starts_with ("application/x-www-form-urlencoded") then
+										l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
+									elseif l_ct.starts_with ("multipart/form-data") then
+											-- create form using multipart/form-data encoding
+										l_boundary := new_mime_boundary (l_form_data)
+										headers.extend ("multipart/form-data; boundary=" + l_boundary, "Content-Type")
+										l_upload_data := form_date_and_uploaded_files_to_mime_string (l_form_data, l_upload_filename, l_boundary)
+									else
+											-- not supported !
+											-- Send as form-urlencoded
+										headers.extend ("application/x-www-form-urlencoded", "Content-Type")
+										l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
+									end
+								else
+										-- Send as form-urlencoded
+									headers.extend ("application/x-www-form-urlencoded", "Content-Type")
+									l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
+								end
+								headers.extend (l_upload_data.count.out, "Content-Length")
+								if l_is_chunked_transfer_encoding then
+										-- Discard chunked transfer encoding
+									headers.remove ("Transfer-Encoding")
+									l_is_chunked_transfer_encoding := False
+								end
+							elseif l_form_data /= Void then
+								check l_upload_data = Void end
 
-							else
 									-- create form using multipart/form-data encoding
-								l_boundary := new_mime_boundary
+								l_boundary := new_mime_boundary (l_form_data)
 								headers.extend ("multipart/form-data; boundary=" + l_boundary, "Content-Type")
-								if l_form_data /= Void then
-									l_upload_data := form_date_and_uploaded_files_to_mime_string (l_form_data, l_upload_filename, l_boundary)
-									headers.extend (l_upload_data.count.out, "Content-Length")
+								l_upload_data := form_date_and_uploaded_files_to_mime_string (l_form_data, l_upload_filename, l_boundary)
+								headers.extend (l_upload_data.count.out, "Content-Length")
+								if l_is_chunked_transfer_encoding then
+										-- Discard chunked transfer encoding
+									headers.remove ("Transfer-Encoding")
+									l_is_chunked_transfer_encoding := False
 								end
 							end
 						elseif l_upload_data /= Void then
@@ -210,12 +240,16 @@ feature -- Access
 							if not headers.has ("Content-Type") then
 								headers.extend ("application/x-www-form-urlencoded", "Content-Type")
 							end
-							headers.extend (l_upload_data.count.out, "Content-Length")
+							if not l_is_chunked_transfer_encoding then
+								headers.extend (l_upload_data.count.out, "Content-Length")
+							end
 						elseif l_upload_filename /= Void then
 							check ctx.has_upload_filename end
 							create l_upload_file.make_with_name (l_upload_filename)
-							if l_upload_file.exists and then l_upload_file.readable then
-								headers.extend (l_upload_file.count.out, "Content-Length")
+							if l_upload_file.exists and then l_upload_file.is_access_readable then
+								if not l_is_chunked_transfer_encoding then
+									headers.extend (l_upload_file.count.out, "Content-Length")
+								end
 							end
 							check l_upload_file /= Void end
 						end
@@ -243,6 +277,15 @@ feature -- Access
 						s.append (h_host)
 					else
 						s.append (l_host)
+						if l_is_https then
+							if l_port /= 443 then
+								s.append_character (':')
+								s.append_integer (l_port)
+							end
+						elseif l_port /= 80 then
+							s.append_character (':')
+							s.append_integer (l_port)
+						end
 					end
 					s.append (http_end_of_header_line)
 					if not headers.has ("Connection") then
@@ -289,12 +332,7 @@ feature -- Access
 						--| End of client header.
 					s.append (Http_end_of_header_line)
 
-					if l_upload_data /= Void then
-						s.append (l_upload_data)
-						s.append (http_end_of_header_line)
-					end
-
-						--| Note that any remaining file to upload will be done directly via the socket
+						--| Note that any remaining data or file to upload will be done directly via the socket
 						--| to optimize memory usage
 
 
@@ -315,9 +353,20 @@ feature -- Access
 						end
 						l_socket.put_string (s)
 							--| Send remaining payload data, if needed.
+						if l_upload_data /= Void then
+							if l_is_chunked_transfer_encoding then
+								put_string_using_chunked_transfer_encoding (l_upload_data, chunk_size, l_socket)
+							else
+								l_socket.put_string (l_upload_data)
+							end
+						end
 						if l_upload_file /= Void then
-								-- i.e: not yet processed
-							append_file_content_to_socket (l_upload_file, l_upload_file.count, l_socket)
+							if l_is_chunked_transfer_encoding then
+									-- i.e: not yet processed
+								append_file_content_to_socket_using_chunked_transfer_encoding (l_upload_file, l_upload_file.count, chunk_size, l_socket)
+							else
+								append_file_content_to_socket (l_upload_file, l_upload_file.count, l_socket)
+							end
 						end
 
 							--|-------------------------|--
@@ -371,7 +420,10 @@ feature -- Access
 								end
 
 									-- follow redirect
-								if l_location /= Void then
+								if
+									is_redirection_http_status (Result.status) and
+									l_location /= Void
+								then
 									if Result.redirections_count < max_redirects then
 										initialize (l_location, ctx)
 										redirection_response := response
@@ -418,10 +470,16 @@ feature {NONE} -- Helpers
 			io.error.put_string (m)
 		end
 
-	is_ready_for_reading (a_socket: NETWORK_STREAM_SOCKET): BOOLEAN
+	is_ready_for_reading (a_socket: HTTP_STREAM_SOCKET): BOOLEAN
 			-- Is `a_socket' ready for reading?
 		do
 			Result := a_socket.ready_for_reading
+		end
+
+	is_redirection_http_status (a_status: INTEGER): BOOLEAN
+			-- Is http status `a_status` a redirection response?
+		do
+			Result := a_status >= 300 and a_status < 400
 		end
 
 	form_date_and_uploaded_files_to_mime_string (a_form_parameters: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]; a_upload_filename: detachable READABLE_STRING_GENERAL; a_mime_boundary: READABLE_STRING_8): STRING
@@ -437,6 +495,7 @@ feature {NONE} -- Helpers
 			across
 				a_form_parameters as ic
 			loop
+				Result.append ("--")
 				Result.append (a_mime_boundary)
 				Result.append (http_end_of_header_line)
 				Result.append ("Content-Disposition: form-data; name=")
@@ -461,7 +520,7 @@ feature {NONE} -- Helpers
 				else
 					l_mime_type := "application/octet-stream"
 				end
-
+				Result.append ("--")
 				Result.append (a_mime_boundary)
 				Result.append (http_end_of_header_line)
 				Result.append ("Content-Disposition: form-data; name=%"")
@@ -484,6 +543,7 @@ feature {NONE} -- Helpers
 				end
 				Result.append (http_end_of_header_line)
 			end
+			Result.append ("--")
 			Result.append (a_mime_boundary)
 			Result.append ("--") --| end			
 		end
@@ -498,8 +558,85 @@ feature {NONE} -- Helpers
 			Result := utf.utf_32_string_to_utf_8_string_8 (s)
 		end
 
-	append_file_content_to_socket (a_file: FILE; a_len: INTEGER; a_output: NETWORK_STREAM_SOCKET)
-			-- Append `a_file' content to `a_output'.
+	put_string_using_chunked_transfer_encoding (a_string: READABLE_STRING_8; a_chunk_size: INTEGER; a_output: HTTP_STREAM_SOCKET)
+		local
+			i,n: INTEGER
+		do
+			from
+				i := 1
+				n := a_string.count
+			until
+				i > n
+			loop
+				put_chunk (a_string.substring (i, i + a_chunk_size), Void, a_output)
+				i := i + a_chunk_size
+			end
+			put_chunk_end (Void, Void, a_output)
+		end
+
+	put_chunk (a_content: READABLE_STRING_8; a_ext: detachable READABLE_STRING_8; a_output: HTTP_STREAM_SOCKET)
+			-- Write chunk non empty `a_content' to `a_output'
+			-- with optional extension `a_ext': chunk-extension= *( ";" chunk-ext-name [ "=" chunk-ext-val ] )
+			-- Note: that header "Transfer-Encoding: chunked" is required.
+		require
+			a_content_not_empty: a_content /= Void and then not a_content.is_empty
+			valid_chunk_extension: (a_ext /= Void and then not a_ext.is_empty) implies
+						( a_ext.starts_with (";") and not a_ext.has ('%N') and not not a_ext.has ('%R') )
+		local
+			l_chunk_size_line: STRING_8
+			i: INTEGER
+		do
+				--| Remove all left '0'
+			l_chunk_size_line := a_content.count.to_hex_string
+			from
+				i := 1
+			until
+				l_chunk_size_line[i] /= '0'
+			loop
+				i := i + 1
+			end
+			if i > 1 then
+				l_chunk_size_line := l_chunk_size_line.substring (i, l_chunk_size_line.count)
+			end
+
+			if a_ext /= Void then
+				l_chunk_size_line.append (a_ext)
+			end
+			l_chunk_size_line.append (crlf)
+
+			a_output.put_string (l_chunk_size_line)
+			a_output.put_string (a_content)
+			a_output.put_string (crlf)
+		end
+
+	put_chunk_end (a_ext: detachable READABLE_STRING_8; a_trailer: detachable READABLE_STRING_8; a_output: HTTP_STREAM_SOCKET)
+			-- Put end of chunked content,
+			-- with optional extension `a_ext': chunk-extension= *( ";" chunk-ext-name [ "=" chunk-ext-val ] )
+			-- and with optional trailer `a_trailer' : trailer= *(entity-header CRLF)
+		local
+			l_chunk_size_line: STRING_8
+		do
+			-- Chunk end
+			create l_chunk_size_line.make (1)
+			l_chunk_size_line.append_integer (0)
+
+			if a_ext /= Void then
+				l_chunk_size_line.append (a_ext)
+			end
+			l_chunk_size_line.append (crlf)
+			a_output.put_string (l_chunk_size_line)
+
+				-- Optional trailer
+			if a_trailer /= Void and then not a_trailer.is_empty then
+				a_output.put_string (a_trailer)
+			end
+
+				-- Final CRLF
+			a_output.put_string (crlf)
+		end
+
+	append_file_content_to_socket_using_chunked_transfer_encoding (a_file: FILE; a_len: INTEGER; a_chunk_size: INTEGER; a_output: HTTP_STREAM_SOCKET)
+			-- Append `a_file' content as chunks of `a_chunk_size' length to `a_output'.
 			-- If `a_len' >= 0 then read only `a_len' characters.
 		require
 			a_file_readable: a_file.exists and then a_file.is_access_readable
@@ -523,7 +660,44 @@ feature {NONE} -- Helpers
 				until
 					l_count = 0 or a_file.exhausted
 				loop
-					a_file.read_stream_thread_aware (l_count.min (2_048))
+					a_file.read_stream_thread_aware (l_count.min (a_chunk_size))
+					put_chunk (a_file.last_string, Void, a_output)
+					l_count := l_count - a_file.bytes_read
+				end
+				if not l_was_open then
+					a_file.close
+				end
+				put_chunk_end (Void, Void, a_output)
+			end
+		end
+
+	append_file_content_to_socket (a_file: FILE; a_len: INTEGER; a_output: HTTP_STREAM_SOCKET)
+			-- Append `a_file' content to `a_output'.
+			-- If `a_len' >= 0 then read only `a_len' characters.
+		require
+			a_file_readable: a_file.exists and then a_file.is_access_readable
+		local
+			l_was_open: BOOLEAN
+			l_count, l_buffer_size: INTEGER
+		do
+			if a_len >= 0 then
+				l_count := a_len
+			else
+				l_count := a_file.count
+			end
+			if l_count > 0 then
+				l_was_open := a_file.is_open_read
+				if a_file.is_open_read then
+					l_was_open := True
+				else
+					a_file.open_read
+				end
+				from
+					l_buffer_size := buffer_size
+				until
+					l_count = 0 or a_file.exhausted
+				loop
+					a_file.read_stream_thread_aware (l_count.min (l_buffer_size))
 					a_output.put_string (a_file.last_string)
 					l_count := l_count - a_file.bytes_read
 				end
@@ -541,6 +715,7 @@ feature {NONE} -- Helpers
 		local
 			l_was_open: BOOLEAN
 			l_count: INTEGER
+			l_buffer_size: INTEGER
 		do
 			if a_len >= 0 then
 				l_count := a_len
@@ -555,11 +730,11 @@ feature {NONE} -- Helpers
 					a_file.open_read
 				end
 				from
-
+					l_buffer_size := buffer_size
 				until
 					l_count = 0 or a_file.exhausted
 				loop
-					a_file.read_stream_thread_aware (l_count.min (2_048))
+					a_file.read_stream_thread_aware (l_count.min (l_buffer_size))
 					a_output.append (a_file.last_string)
 					l_count := l_count - a_file.bytes_read
 				end
@@ -569,7 +744,7 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	append_socket_header_content_to (a_response: HTTP_CLIENT_RESPONSE; a_socket: NETWORK_STREAM_SOCKET; a_output: STRING)
+	append_socket_header_content_to (a_response: HTTP_CLIENT_RESPONSE; a_socket: HTTP_STREAM_SOCKET; a_output: STRING)
 			-- Get header from `a_socket' into `a_output'.
 		local
 			s: READABLE_STRING_8
@@ -579,7 +754,7 @@ feature {NONE} -- Helpers
 			until
 				s.same_string ("%R") or not a_socket.readable or a_response.error_occurred
 			loop
-				a_socket.read_line_thread_aware
+				a_socket.read_line_noexception
 				s := a_socket.last_string
 				if s.is_empty then
 					if session.is_debug_verbose then
@@ -595,7 +770,7 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	append_socket_content_to (a_response: HTTP_CLIENT_RESPONSE; a_socket: NETWORK_STREAM_SOCKET; a_len: INTEGER; a_output: STRING)
+	append_socket_content_to (a_response: HTTP_CLIENT_RESPONSE; a_socket: HTTP_STREAM_SOCKET; a_len: INTEGER; a_output: STRING)
 			-- Get content from `a_socket' and append it to `a_output'.
 			-- If `a_len' is negative, try to get as much as possible,
 			-- this is probably HTTP/1.0 without any Content-Length.
@@ -614,7 +789,7 @@ feature {NONE} -- Helpers
 					until
 						r = 0 or else not a_socket.readable or else a_response.error_occurred
 					loop
-						a_socket.read_stream_thread_aware (r)
+						a_socket.read_stream_noexception (r)
 						l_count := l_count + a_socket.bytes_read
 						if session.is_debug_verbose then
 							log ("Debug:   - byte read=" + a_socket.bytes_read.out + "%N")
@@ -632,12 +807,12 @@ feature {NONE} -- Helpers
 						-- FIXME: check solution!
 					from
 						l_count := 0
-						l_chunk_size := 1_024
+						l_chunk_size := buffer_size
 						n := l_chunk_size --| value to satisfy until condition on first loop.
 					until
 						n < l_chunk_size or not a_socket.readable
 					loop
-						a_socket.read_stream_thread_aware (l_chunk_size)
+						a_socket.read_stream_noexception (l_chunk_size)
 						s := a_socket.last_string
 						n := a_socket.bytes_read
 						l_count := l_count + n
@@ -647,7 +822,7 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	append_socket_chunked_content_to (a_response: HTTP_CLIENT_RESPONSE; a_socket: NETWORK_STREAM_SOCKET; a_output: STRING)
+	append_socket_chunked_content_to (a_response: HTTP_CLIENT_RESPONSE; a_socket: HTTP_STREAM_SOCKET; a_output: STRING)
 			-- Get chunked content from `a_socket' and append it to `a_output'.
 		require
 			socket_readable: a_socket.readable
@@ -668,7 +843,7 @@ feature {NONE} -- Helpers
 			until
 				n = 0 or not a_socket.readable
 			loop
-				a_socket.read_line_thread_aware -- Read chunk info
+				a_socket.read_line_noexception
 				s := a_socket.last_string
 				s.right_adjust
 				if session.is_debug_verbose then
@@ -697,7 +872,7 @@ feature {NONE} -- Helpers
 					until
 						r = 0 or else not a_socket.readable or else a_response.error_occurred
 					loop
-						a_socket.read_stream_thread_aware (r)
+						a_socket.read_stream_noexception (r)
 						l_count := l_count + a_socket.bytes_read
 						if session.is_debug_verbose then
 							log ("Debug:   - byte read=" + a_socket.bytes_read.out + "%N")
@@ -707,9 +882,9 @@ feature {NONE} -- Helpers
 						a_output.append (a_socket.last_string)
 					end
 
-					a_socket.read_character
+					a_socket.read_character_noexception
 					check a_socket.last_character = '%R' end
-					a_socket.read_character
+					a_socket.read_character_noexception
 					check a_socket.last_character = '%N' end
 					if session.is_debug_verbose then
 						log ("Debug:   - Found CRNL %N")
@@ -718,16 +893,42 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	new_mime_boundary: STRING
+	new_mime_boundary (a_data: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]): STRING
 			-- New MIME boundary.
+		local
+			s: STRING
+			ran: RANDOM
+			n: INTEGER
+			i,j: INTEGER
 		do
-				-- FIXME: better boundary creation
-			Result := "----------------------------5eadfcf3bb3e"
+			across
+				a_data as ic
+			loop
+				i := i + ic.item.count + ic.key.count
+			end
+			create ran.set_seed (i) -- FIXME: use a real random seed.
+			ran.start
+			ran.forth
+			n := (10 * ran.real_item).truncated_to_integer
+			create Result.make_filled ('-', 3 + n)
+			s := "_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+			from
+			until
+				Result.count >= 40
+			loop
+				ran.forth
+				j := (ran.real_item * s.count).truncated_to_integer.max (1)
+				Result.append_character (s[j])
+			end
+			check Result.count = 40 and Result.starts_with ("---") end
 		end
+
+	crlf: STRING = "%R%N"
+			-- CR and NL sequence.
 
 invariant
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

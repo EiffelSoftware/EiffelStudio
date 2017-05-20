@@ -11,7 +11,7 @@ deferred class
 	EV_ATOMIC_FIGURE
 
 obsolete
-	"Use EV_MODEL_ATOMIC instead."
+	"Use EV_MODEL_ATOMIC instead. [2017-05-31]"
 
 inherit
 	EV_FIGURE

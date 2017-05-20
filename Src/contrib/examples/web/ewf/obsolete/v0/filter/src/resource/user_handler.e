@@ -42,7 +42,7 @@ feature -- Basic operations
 			id :  STRING
 		do
 			if attached req.orig_path_info as orig_path then
-				id := get_user_id_from_path (orig_path)
+				id := get_user_id_from_path (orig_path.as_string_32)
 				if attached retrieve_user (id) as l_user then
 					if l_user ~ req.execution_variable ("user") then
 						compute_response_get (req, res, l_user)
@@ -92,6 +92,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2013, Olivier Ligot, Jocelyn Fiat and others"
+	copyright: "2011-2017, Olivier Ligot, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

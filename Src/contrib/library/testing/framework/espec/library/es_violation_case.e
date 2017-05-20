@@ -15,7 +15,7 @@ create
 feature {NONE} -- Initialization
 
 	make (name: STRING_8; c: ROUTINE)
-			-- Create Current
+			-- Create Current.
 		require else
 			make_pre_c: c /= Void
 			make_pre_name: name /= Void
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_tag (name: STRING_8; c: ROUTINE; expected_tag: STRING_8)
-			-- Create Current
+			-- Create Current.
 		require
 			make_pre_c: c /= Void
 			make_pre_name: name /= Void
@@ -39,12 +39,9 @@ feature {NONE} -- Initialization
 			case := c
 			case_name := name
 			violation_tag := ""
-			check attached expected_tag as t then
-				expected_tag_name := t.twin
-			end
+			expected_tag_name := expected_tag.twin
 			bookmark_name := ""
 		end
-
 
 	run
 			-- Run and try to catch the exception.
@@ -72,12 +69,11 @@ feature {NONE} -- Initialization
 		end
 
 	is_violation_case: BOOLEAN
-			-- is this a violation test case of a boolean test case
+			-- Is this a violation test case of a boolean test case?
 		do
 			Result := True
 		end
 
 	expected_tag_name: STRING_8
 
-end -- class ES_VIOLATION_CASE
-
+end

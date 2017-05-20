@@ -11,7 +11,7 @@ feature {NONE} -- Creation
                 do
                 	io.put_string (t.generator)
                 	io.put_new_line
-                	io.put_string (t.generating_type)
+                	io.put_string (t.generating_type.name)
                 	io.put_new_line
                 end
 

@@ -107,6 +107,7 @@ feature -- Hook
 			l_feed_item: FEED_ITEM
 			lnk: FEED_LINK
 			nb: NATURAL_32
+			s: STRING_32
 		do
 			l_user := Void -- Public access for the feed!
 			create l_changes.make (a_size, create {DATE_TIME}.make_now_utc, a_source)
@@ -137,8 +138,25 @@ feature -- Hook
 				ch := ic.item
 				create l_feed_item.make (ch.link.title)
 				l_feed_item.set_date (ch.date)
-				l_feed_item.set_description (ch.information)
-				l_feed_item.set_category (ch.source)
+
+				create s.make_empty
+				if attached ch.information as l_information then
+					s.append (l_information)
+				end
+				if attached ch.summary as sum then
+					if not s.is_empty then
+						s.append ("%N%N")
+					end
+					s.append (sum)
+				end
+				l_feed_item.set_description (s)
+				if attached ch.categories as lst then
+					across
+						lst as cats_ic
+					loop
+						l_feed_item.set_category (cats_ic.item)
+					end
+				end
 				create lnk.make (a_response.absolute_url (ch.link.location, Void))
 				l_feed_item.links.force (lnk, "")
 				l_feed.extend (l_feed_item)
@@ -328,7 +346,7 @@ feature -- Handler
 					l_content.append ("</td>")
 					l_content.append ("<td class=%"user%">")
 					if attached ch.author as u then
-						l_content.append (r.link (u.name, "user/" + u.id.out, Void))
+						l_content.append (r.link (r.user_profile_name (u), "user/" + u.id.out, Void))
 					elseif attached ch.author_name as un then
 						l_content.append (r.html_encoded (un))
 					end
@@ -362,7 +380,7 @@ feature -- Handler
 				if ch /= Void then
 					if l_until_date /= Void then
 						l_content.append (" <a href=%"")
-						l_content.append (r.url (r.location, Void))
+						l_content.append (r.request_url (Void))
 						l_content.append ("?size=" + l_size.out + "%">&lt;&lt;</a> ")
 					end
 
@@ -376,7 +394,7 @@ feature -- Handler
 							l_query.append (l_filter_source)
 						end
 						l_content.append ("<a href=%"")
-						l_content.append (r.url (r.location, create {CMS_API_OPTIONS}.make_from_manifest (<<["query", l_query]>>)))
+						l_content.append (r.request_url (create {CMS_API_OPTIONS}.make_from_manifest (<<["query", l_query]>>)))
 						l_content.append ("%">See more ...</a>")
 					end
 				end

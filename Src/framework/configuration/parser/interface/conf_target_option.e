@@ -66,6 +66,18 @@ feature -- Status report
 				not void_safety_capability.is_root_set
 		end
 
+	has_capability: BOOLEAN
+			-- Are there explicitly set capabilities?
+		do
+			Result :=
+				catcall_detection.is_set or else
+				catcall_safety_capability.is_root_set or else
+				concurrency.is_set or else
+				concurrency_capability.is_root_set or else
+				void_safety.is_set or else
+				void_safety_capability.is_root_set
+		end
+
 feature -- Capability
 
 	void_safety_capability: CONF_ORDERED_CAPABILITY
@@ -100,7 +112,7 @@ feature -- Merging
 		do
 			Precursor (other)
 				-- Merge concurency capability.
-			concurrency.set_safely (other.concurrency)
+			concurrency_capability.set_safely (other.concurrency_capability)
 				-- Merge CAT-call and void safety: only root settings need to be merged because capabilities are merged by precursor.
 			catcall_safety_capability.set_safely_root (other.catcall_safety_capability)
 			void_safety_capability.set_safely_root (other.void_safety_capability)

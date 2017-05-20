@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "String constants used for parsing the code analysis output."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -33,11 +32,9 @@ feature -- Violation types
 
 	Hint: STRING = "Hint"
 
-	Unknown_violation_type: STRING = "Violation"
-
 	is_valid_violation_type (a_type: STRING): BOOLEAN
 		do
-			Result := (a_type ~ Error or a_type ~ Warning or a_type ~ Suggestion or a_type ~ Hint)
+			Result := a_type ~ Error or a_type ~ Warning or a_type ~ Suggestion or a_type ~ Hint
 		end
 
 	Error_short: STRING = "E"
@@ -52,7 +49,7 @@ feature -- Violation types
 
 	is_valid_short_violation_type (a_type: STRING): BOOLEAN
 		do
-			Result := (a_type ~ Error_short or a_type ~ Warning_short or a_type ~ Suggestion_short or a_type ~ Hint_short)
+			Result := a_type ~ Error_short or a_type ~ Warning_short or a_type ~ Suggestion_short or a_type ~ Hint_short
 		end
 
 	long_violation_type (a_type: STRING): STRING

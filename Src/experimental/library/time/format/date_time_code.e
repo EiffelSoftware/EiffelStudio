@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Code used by the DATE/TIME to STRING conversion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,15 +30,6 @@ feature -- Creation
 
 feature -- Status report
 
-	debug_output: STRING
-			-- String that should be displayed in debugger to represent `Current'.
-		do
-			create Result.make_empty
-			Result.append (type.out)
-			Result.append (" -> ")
-			Result.append (name)
-		end
-
 	is_separator_code: BOOLEAN
 		do
 			inspect type
@@ -54,6 +45,12 @@ feature -- Status report
 			else
 			end
 		end
+
+	is_text: BOOLEAN
+			-- Has the code a string value?
+
+	is_numeric: BOOLEAN;
+			-- Has the code a numeric value?
 
 feature -- Change
 
@@ -299,13 +296,16 @@ feature -- Attributes
 	type: INTEGER
 			-- Type number.
 
-feature -- Status report
+feature -- Output
 
-	is_text: BOOLEAN
-			-- Has the code a string value?
-
-	is_numeric: BOOLEAN;
-			-- Has the code a numeric value?
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			create Result.make_empty
+			Result.append_integer (type)
+			Result.append (" -> ")
+			Result.append (name)
+		end
 
 feature {FIND_SEPARATOR_FACILITY} -- Implementation
 
@@ -336,7 +336,7 @@ feature {FIND_SEPARATOR_FACILITY} -- Implementation
 		-- Type code constants
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -346,9 +346,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DATE_TIME_CODE
-
-
+end

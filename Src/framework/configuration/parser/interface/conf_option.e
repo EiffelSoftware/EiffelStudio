@@ -23,6 +23,13 @@ inherit
 			is_equal
 		end
 
+	CONF_FILE_CONSTANTS
+		redefine
+			copy,
+			default_create,
+			is_equal
+		end
+
 create
 	default_create,
 	make_6_3,
@@ -141,6 +148,30 @@ feature -- Status
 				warnings /= Void or
 				debugs /= Void or
 				syntax.is_set)
+		end
+
+	is_empty_for (n: detachable READABLE_STRING_32): BOOLEAN
+			-- Is `Current' empty in a specific namespace `n`?
+		do
+			Result := not (
+				is_profile_configured or
+				is_trace_configured or
+				is_optimize_configured or
+				is_debug_configured or
+				is_warning_configured or
+				is_msil_application_optimize_configured or
+				is_full_class_checking_configured or
+				is_attached_by_default_configured or
+				is_obsolete_routine_type_configured or
+				assertions /= Void or
+				local_namespace /= Void or
+				warnings /= Void or
+				debugs /= Void or
+				syntax.is_set or
+					-- Void safety and catcall detection options are used only before `namespace_1_15_0`.
+				(is_before_or_equal (n, namespace_1_15_0) and then
+					(catcall_detection.is_set or
+					void_safety.is_set)))
 		end
 
 feature -- Status update

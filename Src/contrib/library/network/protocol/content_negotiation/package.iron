@@ -1,14 +1,14 @@
 package content_negotiation
 
 project
-	conneg = "conneg-safe.ecf"
 	conneg = "conneg.ecf"
 
 note
 	title: CONneg Content Negotiation
 	description: "[
-			CONneg is a library that provides utilities to select the best repesentation of a resource for a client where there are multiple representations available.
-		]"
+CONneg is a library that provides utilities to select the best repesentation of a resource for a client where there are multiple representations available.
+				]"
+
 	collection: EWF
 	tags: content,accept,conneg,negotiation,EWF,web,request
 	copyright: 2011-2016, Javier Velilla, Jocelyn Fiat, Eiffel Software and others

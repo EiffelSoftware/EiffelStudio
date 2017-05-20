@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 
 	needs_event_box: BOOLEAN = True
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 		do
 			assign_interface (an_interface)
 		end

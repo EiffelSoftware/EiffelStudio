@@ -11,7 +11,7 @@ class
 	EV_FIGURE_RECTANGLE
 
 obsolete
-	"Use EV_MODEL_RECTANGLE instead."
+	"Use EV_MODEL_RECTANGLE instead. [2017-05-31]"
 
 inherit
 	EV_CLOSED_FIGURE

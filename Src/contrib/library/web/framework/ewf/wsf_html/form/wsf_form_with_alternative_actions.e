@@ -16,27 +16,27 @@ feature -- Access
 			-- indicate that the form shouldn’t be validated when submitted.
 			-- it's only applicable to input type=submit or image.
 
-	formaction: detachable READABLE_STRING_32
+	formaction: detachable READABLE_STRING_8
 			-- formaction specifies the file or application that will submit the form.
 			-- It has the same effect as the action attribute on the form element and
 			-- can only be used with a submit or image button (type="submit" or type="image").
 			-- When the form is submitted, the browser first checks for a formaction attribute;
 			-- if that isn’t present, it proceeds to look for an action attribute on the form.
 
-	formenctype: detachable READABLE_STRING_32
+	formenctype: detachable READABLE_STRING_8
 			-- formenctype details how the form data is encoded with the POST method type.
 			-- It has the same effect as the enctype attribute on the form element and
 			-- can only be used with a submit or image button (type="submit" or type="image").
 			-- The default value if not included is application/x-www-formurlencoded.
 			--! At the moment the value is not validated.
 
-	formmethod: detachable READABLE_STRING_32
+	formmethod: detachable READABLE_STRING_8
 			-- formmethod specifies which HTTP method (GET, POST, PUT, DELETE) will be used to submit the form data.
 			-- It has the same effect as the method attribute on the form element and can only be used with a
 			-- submit or image button (type="submit" or type="image").
 			--!At the moment the value is not validated.
 
-	formtarget: detachable READABLE_STRING_32
+	formtarget: detachable READABLE_STRING_8
 			-- formtarget specifies the target window for the form results.
 			--  It has the same effect as the target attribute on the form element and can only be used with a submit or image button (type="submit" or type="image").
 
@@ -60,39 +60,47 @@ feature -- Element Change
 			formnovalidate_false: not formnovalidate
 		end
 
-	set_formaction (a_action: READABLE_STRING_32)
+	set_formaction (a_action: READABLE_STRING_GENERAL)
 			-- Set `formaction' with `a_action'.
 			-- Example:<input type="submit" value="Submit" formaction="/users">
+		require
+			is_valid_as_string_8: a_action.is_valid_as_string_8
 		do
-			formaction := a_action
+			formaction := a_action.to_string_8
 		ensure
 			formaction_set: attached formaction as l_action implies l_action = a_action
 		end
 
-	set_formenctype (a_enctype: READABLE_STRING_32)
+	set_formenctype (a_enctype: READABLE_STRING_GENERAL)
 			-- Set `formenctype' with `a_enctype'.
 			-- Example: <input type="submit" value="Submit" formenctype="application/x-www-form-urlencoded">
+		require
+			is_valid_as_string_8: a_enctype.is_valid_as_string_8
 		do
-			formenctype := a_enctype
+			formenctype := a_enctype.to_string_8
 		ensure
 			formenctype_set: attached formenctype as l_enctype implies l_enctype = a_enctype
 		end
 
-	set_formmethod (a_method: READABLE_STRING_32)
+	set_formmethod (a_method: READABLE_STRING_GENERAL)
 			-- Set `formmethod' with `a_method'.
 			-- Example: <input type="submit" value="Submit" formmethod="POST">
 			--! require is_valid_method: [PUT, POST, DELETE, GET, ...]
+		require
+			is_valid_as_string_8: a_method.is_valid_as_string_8
 		do
-			formmethod := a_method
+			formmethod := a_method.to_string_8
 		ensure
 			formmethod_set: attached formmethod as l_method implies l_method = a_method
 		end
 
-	set_formtarget (a_target: READABLE_STRING_32)
+	set_formtarget (a_target: READABLE_STRING_GENERAL)
 			-- Set `formtarget' with `a_target'.
 			-- Example: <input type="submit" value="Submit" formtarget="_self">
+		require
+			is_valid_as_string_8: a_target.is_valid_as_string_8
 		do
-			formtarget := a_target
+			formtarget := a_target.to_string_8
 		ensure
 			formtarget_set: attached formtarget as l_target implies l_target = a_target
 		end

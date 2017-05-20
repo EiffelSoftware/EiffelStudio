@@ -54,7 +54,7 @@ feature -- Execution
 			if attached {WSF_STRING} req.item ("user") as u then
 				--| If yes, say hello world #name
 
-				l_user_name := (create {HTML_ENCODER}).decoded_string (u.value)
+				l_user_name := (create {HTML_ENCODER}).general_decoded_string (u.value)
 
 				s := "<p>Hello " + mesg.html_encoded_string (l_user_name) + "!</p>"
 				s.append ("Display a <a href=%"/users/" + u.url_encoded_value + "/message/%">message</a></p>")

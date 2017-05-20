@@ -157,8 +157,9 @@ feature {NONE} -- Modifiable shortcuts
 			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
 		do
 			create Result.make (1)
-			create l_hash.make (4)
+			create l_hash.make (5)
 			l_hash.put ([False, True, False, key_strings.item (key_t).twin.as_string_8], "new_tab")
+			l_hash.put ([False, True, True, key_strings.item (Key_t).twin.as_string_8], "restore_tab")
 			l_hash.put ([False, True, False, key_strings.item (Key_n).twin.as_string_8], "new_window")
 			l_hash.put ([False, True, False, key_strings.item (Key_s).twin.as_string_8], "save")
 			l_hash.put ([False, True, True, key_strings.item (Key_s).twin.as_string_8], "save_all")
@@ -264,7 +265,7 @@ invariant
 	preferences_not_void: preferences /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

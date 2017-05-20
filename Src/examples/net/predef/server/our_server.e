@@ -69,7 +69,7 @@ feature
 					io.new_line
 				end
 				our_new_list.extend ("%N I'm back.%N")
-				our_new_list.general_store (soc2)
+				our_new_list.independent_store (soc2)
 				soc2.close
 			end
 		end

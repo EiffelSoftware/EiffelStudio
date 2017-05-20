@@ -1,6 +1,6 @@
 /*
  *  png2pnm.c --- conversion from PNG-file to PGM/PPM-file
- *  copyright (C) 1999 by Willem van Schaik <willem@schaik.com>
+ *  copyright (C) 1999 by Willem van Schaik <willem at schaik.com>
  *
  *  version 1.0 - 1999.10.15 - First version.
  *
@@ -18,6 +18,7 @@
 #include <mem.h>
 #include <fcntl.h>
 #endif
+#include <zlib.h>
 
 #ifndef BOOL
 #define BOOL unsigned char
@@ -51,7 +52,8 @@
 
 int  main (int argc, char *argv[]);
 void usage ();
-BOOL png2pnm (FILE *png_file, FILE *pnm_file, FILE *alpha_file, BOOL raw, BOOL alpha);
+BOOL png2pnm (FILE *png_file, FILE *pnm_file, FILE *alpha_file, BOOL raw,
+   BOOL alpha);
 
 /*
  *  main
@@ -84,7 +86,8 @@ int main(int argc, char *argv[])
           if ((fp_al = fopen (argv[argi], "wb")) == NULL)
           {
             fprintf (stderr, "PNM2PNG\n");
-            fprintf (stderr, "Error:  can not create alpha-channel file %s\n", argv[argi]);
+            fprintf (stderr, "Error:  can not create alpha-channel file %s\n",
+               argv[argi]);
             exit (1);
           }
           break;
@@ -144,7 +147,7 @@ int main(int argc, char *argv[])
   if (png2pnm (fp_rd, fp_wr, fp_al, raw, alpha) == FALSE)
   {
     fprintf (stderr, "PNG2PNM\n");
-    fprintf (stderr, "Error:  unsuccessful convertion of PNG-image\n");
+    fprintf (stderr, "Error:  unsuccessful conversion of PNG-image\n");
     exit(1);
   }
 
@@ -175,9 +178,11 @@ void usage()
   fprintf (stderr, "Usage:  png2pnm [options] <file>.png [<file>.pnm]\n");
   fprintf (stderr, "   or:  ... | png2pnm [options]\n");
   fprintf (stderr, "Options:\n");
-  fprintf (stderr, "   -r[aw]   write pnm-file in binary format (P4/P5/P6) (default)\n");
+  fprintf (stderr,
+     "   -r[aw]   write pnm-file in binary format (P4/P5/P6) (default)\n");
   fprintf (stderr, "   -n[oraw] write pnm-file in ascii format (P1/P2/P3)\n");
-  fprintf (stderr, "   -a[lpha] <file>.pgm write PNG alpha channel as pgm-file\n");
+  fprintf (stderr,
+     "   -a[lpha] <file>.pgm write PNG alpha channel as pgm-file\n");
   fprintf (stderr, "   -h | -?  print this help-information\n");
 }
 
@@ -185,10 +190,11 @@ void usage()
  *  png2pnm
  */
 
-BOOL png2pnm (FILE *png_file, FILE *pnm_file, FILE *alpha_file, BOOL raw, BOOL alpha)
+BOOL png2pnm (FILE *png_file, FILE *pnm_file, FILE *alpha_file,
+    volatile BOOL raw, BOOL alpha)
 {
   png_struct    *png_ptr = NULL;
-  png_info	*info_ptr = NULL;
+  png_info        *info_ptr = NULL;
   png_byte      buf[8];
   png_byte      *png_pixels = NULL;
   png_byte      **row_pointers = NULL;
@@ -211,13 +217,13 @@ BOOL png2pnm (FILE *png_file, FILE *pnm_file, FILE *alpha_file, BOOL raw, BOOL a
   if (ret != 8)
     return FALSE;
 
-  ret = png_check_sig (buf, 8);
-  if (!ret)
+  ret = png_sig_cmp (buf, 0, 8);
+  if (ret)
     return FALSE;
 
   /* create png and info structures */
 
-  png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING,
+  png_ptr = png_create_read_struct (png_get_libpng_ver(NULL),
     NULL, NULL, NULL);
   if (!png_ptr)
     return FALSE;   /* out of memory */
@@ -260,7 +266,7 @@ BOOL png2pnm (FILE *png_file, FILE *pnm_file, FILE *alpha_file, BOOL raw, BOOL a
     png_set_expand (png_ptr);
 
 #ifdef NJET
-  /* downgrade 16-bit images to 8 bit */
+  /* downgrade 16-bit images to 8-bit */
   if (bit_depth == 16)
     png_set_strip_16 (png_ptr);
   /* transform grayscale images into full-color */
@@ -314,12 +320,14 @@ BOOL png2pnm (FILE *png_file, FILE *pnm_file, FILE *alpha_file, BOOL raw, BOOL a
   /* row_bytes is the width x number of channels x (bit-depth / 8) */
   row_bytes = png_get_rowbytes (png_ptr, info_ptr);
 
-  if ((png_pixels = (png_byte *) malloc (row_bytes * height * sizeof (png_byte))) == NULL) {
+  if ((png_pixels = (png_byte *)
+     malloc (row_bytes * height * sizeof (png_byte))) == NULL) {
     png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
     return FALSE;
   }
 
-  if ((row_pointers = (png_byte **) malloc (height * sizeof (png_bytep))) == NULL)
+  if ((row_pointers = (png_byte **)
+     malloc (height * sizeof (png_bytep))) == NULL)
   {
     png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
     free (png_pixels);
@@ -328,7 +336,7 @@ BOOL png2pnm (FILE *png_file, FILE *pnm_file, FILE *alpha_file, BOOL raw, BOOL a
   }
 
   /* set the individual row_pointers to point at the correct offsets */
-  for (i = 0; i < (height); i++)
+  for (i = 0; i < ((int) height); i++)
     row_pointers[i] = png_pixels + i * row_bytes;
 
   /* now we can go ahead and just read the whole image */
@@ -371,9 +379,9 @@ BOOL png2pnm (FILE *png_file, FILE *pnm_file, FILE *alpha_file, BOOL raw, BOOL a
   /* write data to PNM file */
   pix_ptr = png_pixels;
 
-  for (row = 0; row < height; row++)
+  for (row = 0; row < (int) height; row++)
   {
-    for (col = 0; col < width; col++)
+    for (col = 0; col < (int) width; col++)
     {
       for (i = 0; i < (channels - alpha_present); i++)
       {
@@ -381,7 +389,7 @@ BOOL png2pnm (FILE *png_file, FILE *pnm_file, FILE *alpha_file, BOOL raw, BOOL a
           fputc ((int) *pix_ptr++ , pnm_file);
         else
           if (bit_depth == 16){
-	    dep_16 = (long) *pix_ptr++;
+            dep_16 = (long) *pix_ptr++;
             fprintf (pnm_file, "%ld ", (dep_16 << 8) + ((long) *pix_ptr++));
           }
           else
@@ -401,9 +409,9 @@ BOOL png2pnm (FILE *png_file, FILE *pnm_file, FILE *alpha_file, BOOL raw, BOOL a
             fputc ((int) *pix_ptr++ , alpha_file);
           else
             if (bit_depth == 16){
-	      dep_16 = (long) *pix_ptr++;
+              dep_16 = (long) *pix_ptr++;
               fprintf (alpha_file, "%ld ", (dep_16 << 8) + (long) *pix_ptr++);
-	    }  
+            }
             else
               fprintf (alpha_file, "%ld ", (long) *pix_ptr++);
         }

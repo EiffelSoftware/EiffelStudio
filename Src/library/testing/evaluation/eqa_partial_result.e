@@ -62,13 +62,13 @@ feature -- Access
 	output: IMMUTABLE_STRING_8
 			-- More detailed information regarding the test result
 
-	tag: READABLE_STRING_8
+	tag: READABLE_STRING_32
 			-- Short tag describing status of `Current'
 		do
 			if attached setup_response.exception as l_exception then
 				Result := l_exception.tag_name
 			else
-				Result := ""
+				create {STRING_32} Result.make_empty
 			end
 		end
 
@@ -120,7 +120,7 @@ invariant
 	pass_or_fail_or_unresolved: is_pass or is_fail or is_unresolved
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

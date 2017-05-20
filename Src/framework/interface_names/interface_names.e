@@ -45,6 +45,7 @@ feature -- Button texts
 	b_alphabetical_cluster_list: STRING_32 		do Result := locale.translation("Alphabetical cluster list")	end
 	b_And: STRING_32								do Result := locale.translation("And")	end
 	b_Apply: STRING_32							do Result := locale.translation("Apply")	end
+	b_Advanced: STRING_32							do Result := locale.translation("Advanced")	end
 	b_Browse: STRING_32							do Result := locale.translation("Browse...")	end
 	b_C_functions: STRING_32						do Result := locale.translation("C Functions")	end
 	b_change: STRING_32 							do Result := locale.translation ("Change")	end
@@ -72,6 +73,7 @@ feature -- Button texts
 	b_Down_text: STRING_32 						do Result := locale.translation("Down")	end
 	b_Edit_ace: STRING_32						do Result := locale.translation("Edit")	end
 	b_Edit_command: STRING_32					do Result := locale.translation("Edit...")	end
+	b_Edit_settings: STRING_32					do Result := locale.translation("Edit")	end
 	b_Eiffel_features: STRING_32					do Result := locale.translation("Eiffel Features")	end
 
 	b_Force_execution_mode: STRING_32				do Result := locale.translation("Force Execution Mode")	end
@@ -100,6 +102,9 @@ feature -- Button texts
 	b_put_handle_right: STRING_32				do Result := locale.translation("Put handle right")	end
 	b_put_two_handle_right: STRING_32			do Result := locale.translation("Put two handles right")	end
 	b_put_two_handle_left: STRING_32				do Result := locale.translation("Put two handles left")	end
+	b_remind_me_later: STRING_32				do Result := locale.translation("Remind me later")	end
+
+	b_Restore_tab: STRING_32 						do Result := locale.translation("Restore Tab")	end
 
 	b_Replace: STRING_32							do Result := locale.translation("Replace")	end
 	b_Replace_all: STRING_32						do Result := locale.translation("Replace all")	end
@@ -203,6 +208,8 @@ feature -- Button texts
 	b_overwrite: STRING_32						do Result := locale.translation("Overwrite") end
 	b_append: STRING_32							do Result := locale.translation("Append") end
 	b_ignore: STRING_32							do Result := locale.translation("Ignore") end
+	b_import: STRING_32							do Result := locale.translation ("Import") end
+
 	b_force_exit: STRING_32						do Result := locale.translation("Force Exit") end
 
 	b_error: STRING_32							do Result := locale.translation("Error") end
@@ -245,6 +252,7 @@ feature -- Button texts
 	b_Ignore_external_exception: STRING_32		do Result := locale.translation ("Ignore External Exception?") end
 	b_Disable_catcall_console_warnings: STRING_32	do Result := locale.translation ("Disable Catcall Console Warning?") end
 	b_Disable_catcall_debugger_warnings: STRING_32	do Result := locale.translation ("Disable Catcall Debugger Warning?") end
+	b_import_settings: STRING_32	do Result := locale.translation ("Import Settings") end
 
 feature -- Choices
 
@@ -758,6 +766,7 @@ feature -- Accelerator, focus label and menu name
 	m_Zoom_reset: STRING_32 				do Result := locale.translation("Reset")	end
 	m_use_current_environment_variables: STRING_32 		do Result := locale.translation("Use current environment variables")	end
 	m_use_current_environment_value: STRING_32 		do Result := locale.translation("Use current environment value")	end
+	m_update_debugging_profile_title_with_suggestion: STRING_32 do Result := locale.translation("Update title with suggestion") end
 	f_Wizard_precompile: STRING_32		do Result := locale.translation("Wizard to precompile libraries")	end
 	f_go_to_first_occurrence: STRING_32	do Result := locale.translation("Double click to go to first occurrence")	end
 	f_show: STRING_32 do Result := locale.translation ("Show ") end
@@ -906,6 +915,7 @@ feature -- Formatter displayer names
 	l_remove_stone_handler: STRING_32 do Result := locale.translation ("Remove selected stone handler") end
 	l_stone_handler: STRING_32 do Result := locale.translation ("Stone handler") end
 	l_stone_handler_help: STRING_32 do Result := locale.translation ("Specify default tools for specific stones") end
+	l_advanced_options: STRING_32 do Result := locale.translation ("Advanced options") end
 
 feature -- Toggles
 
@@ -991,6 +1001,9 @@ feature -- Menu mnenomics
 	m_Tools_layout: STRING_32			do Result := locale.translation("&Tools Layout")	end
 	m_Unify_stone: STRING_32				do Result := locale.translation("Lin&k Context Tool")	end
 
+	f_Restore_tab: STRING_32 				do Result := locale.translation("Open last closed tab")	end
+	m_Restore_tab: STRING_32					do Result := locale.translation("Open last closed tab")	end
+
 	m_When_hits: STRING_32				do Result := locale.translation("When Hits ...")	end
 
 	m_Window: STRING_32					do Result := locale.translation("&Window")	end
@@ -1030,6 +1043,7 @@ feature -- Context menu
 	m_import_metrics_from_file: STRING_32 do Result := locale.translation("Import/Export metrics from file") end
 	m_input_domain: STRING_32			do Result := locale.translation("&Input domain") end
 	m_library: STRING_32					do Result := locale.translation ("Library") end
+	m_license: STRING_32					do Result := locale.translation ("License") end
 	m_move_down: STRING_32				do Result := locale.translation ("Move down") end
 	m_move_up: STRING_32					do Result := locale.translation ("Move up") end
 	m_new_metric: STRING_32				do Result := locale.translation ("New metric") end
@@ -1529,6 +1543,8 @@ feature -- Label texts
 	l_Constant_features: STRING_32		do Result := locale.translation("Constants")	end
 	l_only_classes_in_same_cluster: STRING_32			do Result := locale.translation("Only classes in same cluster")	end
 	l_only_eiffel_class_file_allowed: STRING_32			do Result := locale.translation("Only Eiffel class file allowed")	end
+	l_no_suitable_classes_for_files: STRING_32 do Result := locale.translation_in_context ("No classes matching specified files are found.", "editor") end
+	l_dropping_files_without_project: STRING_32 do Result := locale.translation_in_context ("Dropping Eiffel files to the editor works for open projects only.", "editor") end
 	l_open: STRING_32					do Result := locale.translation("Open")	end
 	l_Open_a_project: STRING_32			do Result := locale.translation("Open a project")	end
 	l_Open_project: STRING_32 			do Result := locale.translation("Open project")	end
@@ -1572,6 +1588,8 @@ feature -- Label texts
 	l_profile: STRING_32					do Result := locale.translation("profile")	end
 	l_profile_no: STRING_32				do Result := locale.translation("profile #")	end
 	l_Project_location: STRING_32		do Result := locale.translation("The project location is the place where compilation%Nfiles will be generated by the compiler")	end
+	l_remember_project_location: STRING_32		do Result := locale.translation("Remember location") end
+	f_remember_project_location_tooltip: STRING_32		do Result := locale.translation("Restart from this directory the next time you create a project") end
 	l_protocol: STRING_32				do Result := locale.translation("Protocol")	end
 	l_Public_key_token: STRING_32		do Result := locale.translation ("PublicKeyToken") end
 	l_Put_text_right_text: STRING_32 	do Result := locale.translation("Show selective text on the right of buttons")	end
@@ -2189,6 +2207,24 @@ feature -- Label texts
 			Result := locale.formatted_string ("(must conform to $1)", [a_type])
 		end
 
+	l_installed_versions: STRING_32 do Result := locale.translation ("Installed Versions") end
+	l_settings_management: STRING_32 do Result := locale.translation ("Settings Management") end
+	l_edit_custom_settings: STRING_32 do Result := locale.translation ("edit to set custom values ...") end
+
+	l_first_time_import_settings_help (a_version_name: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("[
+					You are using EiffelStudio $1 for the first time.
+					Do you want to import settings from a previous installation?
+					
+					(Note: It is always possible to import settings using the menu Tools > Import Settings)
+					]"), [a_version_name])
+		end
+
+
+	l_show_features: STRING_32 	do Result := locale.translation ("Show Features (Ctrl+Space)") end
+	l_show_templates: STRING_32 do Result := locale.translation ("Show Templates (Ctrl+Space)") end
+
 feature -- Label text, no translation (for the editor)
 
 	le_version_from_message: STRING = " (version from)"
@@ -2209,6 +2245,7 @@ feature -- Stone names
 	s_Class_stone: STRING_32				do Result := locale.translation("Class ")	end
 	s_Cluster_stone: STRING_32			do Result := locale.translation("Cluster ")	end
 	s_Feature_stone: STRING_32			do Result := locale.translation("Feature ")	end
+	s_Local_stone: STRING_32			do Result := locale.translation("Local ")	end
 	s_Assembly_stone: STRING_32			do Result := locale.translation("Assembly ")	end
 	s_folder_stone: STRING_32			do Result := locale.translation("Folder ")	end
 	s_library_stone: STRING_32			do Result := locale.translation("Library ")	end
@@ -2234,6 +2271,11 @@ feature -- Title part
 		once
 			Result := locale.formatted_string (locale.translation ("About $1"), [workbench_name])
 		end
+	t_License: STRING_32
+		once
+			Result := locale.formatted_string (locale.translation ("License for $1"), [workbench_name])
+		end
+
 	t_acknowledge_change: STRING_32				do Result := locale.translation("Acknowledge selected affected items.") end
 	t_Add_eis_entry: STRING_32					do Result := locale.translation("Add a new entry in the list.")	end
 	t_Add_search_scope: STRING_32				do Result := locale.translation("Add Search Scope")	end
@@ -2535,6 +2577,7 @@ feature -- Title part
 	t_Search_Report_tool: STRING_32				do Result := locale.translation ("Search Report")	end
 	t_See_failure_trace: STRING_32				do Result := locale.translation ("See failure trace")	end
 	t_Windows_tool: STRING_32					do Result := locale.translation ("Windows")	end
+	t_Welcome: STRING_32	do Result := locale.translation ("Welcome")	end
 	t_Welcome_to_new_unit_test_wizard: STRING_32	do Result := locale.translation ("New Unit Test Wizard")	end
 	t_Watch_tool: STRING_32						do Result := locale.translation ("Watch")	end
 	t_watch_tool_error_message: STRING_32		do Result := locale.translation ("Watch tool :: error message")	end
@@ -2917,7 +2960,7 @@ feature -- String escape
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

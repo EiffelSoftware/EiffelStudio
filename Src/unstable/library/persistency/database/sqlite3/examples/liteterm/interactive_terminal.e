@@ -85,11 +85,11 @@ feature {RECORD_COMMAND} -- Element change
 			statement_recorder := a_recorder
 			if attached a_recorder then
 				l_writer.put_string ("Recording started for file ")
-				l_writer.put_string (a_recorder.writer.name)
+				l_writer.put_string (a_recorder.writer.path.name.as_string_8)
 				l_writer.new_line
 			elseif attached l_old_recorder then
 				l_writer.put_string ("Recording stopped for file ")
-				l_writer.put_string (l_old_recorder.writer.name)
+				l_writer.put_string (l_old_recorder.writer.path.name.as_string_8)
 				l_writer.new_line
 			end
 		ensure
@@ -199,10 +199,10 @@ feature -- Basic operations: Output
 			-- `e': The exception object to report.
 		do
 			io.put_string ("Error: ")
-			io.error.put_string (e.meaning)
+			io.error.put_string (e.tag.as_string_32)
 			io.error.new_line
-			if attached e.message as l_message and then not l_message.is_empty then
-				io.error.put_string (l_message)
+			if attached e.description as l_message and then not l_message.is_empty then
+				io.error.put_string (l_message.as_string_8)
 				io.error.new_line
 			end
 			io.error.new_line
@@ -304,8 +304,8 @@ feature -- Basic operations: Input
 			not_a_default_is_empty: attached a_default implies not a_default.is_empty
 		local
 			i_count, i: INTEGER
-			l_default: detachable STRING
-			l_response: detachable STRING
+			l_default: STRING
+			l_response: STRING
 			l_responses: ARRAYED_LIST [STRING]
 		do
 			i_count := a_responses.count
@@ -344,14 +344,13 @@ feature -- Basic operations: Input
 
 				-- Get and parse result
 			l_response := read (Void, True)
-			check attached l_response end
-			if l_response.is_empty then
+			if l_response /= Void and then l_response.is_empty then
 				if attached l_default then
 					l_response := l_default
 				end
 			end
 
-			if l_responses.has (l_response) then
+			if l_response /= Void and then l_responses.has (l_response) then
 				l_responses.start
 				l_responses.search (l_response)
 				if not l_responses.after then

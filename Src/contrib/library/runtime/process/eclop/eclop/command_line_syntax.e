@@ -1,6 +1,9 @@
-note
+﻿note
 	description: "Command line syntax."
-	copyright: "Copyright (c) 2003 Paul Cohen."
+	copyright: "[
+			Copyright (c) 2003 Paul Cohen.
+			Copyright (c) 2017 Eiffel Software.
+		]"
 	license: "Eiffel Forum License v2 (see license.txt)"
 	author: "Paul Cohen"
 	date: "$Date$"
@@ -73,7 +76,7 @@ feature -- Access (Application output messages)
 			loop
 				os := specified_options.item_for_iteration
 				if os.is_required then
-					if reqopts.count = 0  then
+					if reqopts.is_empty then
 						reqopts.append (os.name)
 					else
 						reqopts := reqopts + " " + os.name
@@ -87,7 +90,7 @@ feature -- Access (Application output messages)
 						end
 					end
 				else
-					if optopts.count = 0 then
+					if optopts.is_empty then
 						optopts.append (os.name)
 					else
 						optopts := optopts + " " + os.name
@@ -112,14 +115,14 @@ feature -- Access (Application output messages)
 				specified_options.forth
 			end
 			Result := "Usage: " + program_name + " "
-			if reqopts.count = 0 then
+			if reqopts.is_empty then
 				Result := Result + "[" + optopts + "]"
 			else
 				Result := Result + reqopts + " [" + optopts + "]"
 			end
 		end
 
-	program_help (program_name, usage, program_description: STRING): STRING
+	program_help (program_name: STRING; usage, program_description: detachable STRING): STRING
 			-- Program help string for presenting to user. The
 			-- `program_name' is mandatory. If no `usage' string is
 			-- supplied the value of `program_usage (program_name)'
@@ -300,7 +303,7 @@ feature {NONE} -- Implementation
 			s := spec.twin
 			s.prune_all_leading (' ')
 			s.prune_all_trailing (' ')
-			Result := (s @ 1 = '-')
+			Result := s [1] = '-'
 		end
 
 	is_mutual_exclusivity_specification (spec: STRING): BOOLEAN
@@ -314,9 +317,7 @@ feature {NONE} -- Implementation
 			s := spec.twin
 			s.prune_all_leading (' ')
 			s.prune_all_trailing (' ')
-			Result := (s @ 1 = '(')
+			Result := s [1] = '('
 		end
 
-end -- class COMMAND_LINE_SYNTAX
-
-
+end

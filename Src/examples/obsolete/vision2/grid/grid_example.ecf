@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="grid_example" uuid="7A0260B1-F204-4245-BC4B-1C079C263FFF">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="grid_example" uuid="7A0260B1-F204-4245-BC4B-1C079C263FFF">
 	<target name="classic">
 		<root class="VISION2_APPLICATION" feature="make_and_launch"/>
-		<option warning="true">
+		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
 			<assertions precondition="true"/>
 		</option>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>

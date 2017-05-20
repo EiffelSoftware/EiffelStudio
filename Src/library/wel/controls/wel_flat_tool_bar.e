@@ -526,7 +526,7 @@ feature -- Obsolete
 	add_bitmaps (tb_bitmap: WEL_TOOL_BAR_BITMAP; bitmap_count: INTEGER)
 			-- Add bitmaps.
 		obsolete
-			"use add_bitmap instead"
+			"use add_bitmap instead [2017-05-31]."
 		local
 			l_bitmap: detachable WEL_BITMAP
 			l_default_image_list: like default_image_list
@@ -627,7 +627,7 @@ invariant
 	hot_image_list_only_when_bitmap: use_hot_image_list implies has_bitmap
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

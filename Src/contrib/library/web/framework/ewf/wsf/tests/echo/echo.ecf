@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="echo_server" uuid="D3EE5B55-6F2E-4247-8C94-E7CFC4C5B648">
+	<target name="echo_server">
+		<root class="ECHO_SERVER" feature="make"/>
+		<file_rule>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option warning="true">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="connector_null" location="..\..\..\ewsgi\connectors\null\null.ecf" readonly="false"/>
+		<library name="connector_standalone" location="..\..\..\ewsgi\connectors\standalone\standalone.ecf" readonly="false"/>
+		<library name="dft_standalone" location="..\..\default\standalone.ecf"/>
+		<library name="ewsgi" location="..\..\..\ewsgi\ewsgi.ecf" readonly="false"/>
+		<library name="wsf" location="..\..\wsf.ecf" readonly="false"/>
+		<tests name="src" location=".\src\" recursive="true"/>
+	</target>
+</system>

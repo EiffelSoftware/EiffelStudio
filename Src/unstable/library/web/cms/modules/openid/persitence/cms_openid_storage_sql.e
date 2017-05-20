@@ -88,7 +88,7 @@ feature --Access: Consumers
 				from
 					sql_start
 				until
-					sql_after
+					sql_after or has_error
 				loop
 					if attached sql_read_string (1) as l_name then
 						Result.force (l_name)

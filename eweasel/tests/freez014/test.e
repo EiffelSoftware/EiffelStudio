@@ -15,7 +15,7 @@ feature
 			x := [1, p]
 			io.put_string (x.generator)
 			io.new_line
-			io.put_string (x.generating_type)
+			io.put_string (x.generating_type.name_32.as_string_8)
 			io.new_line
   		end
 			

@@ -92,4 +92,30 @@ feature -- Constants - Data type
 	Z_null: NATURAL = 0
 			-- for initializing zalloc, zfree, opaque *
 
+
+feature -- Constants - Memory Levels
+
+   	Z_mem_default: INTEGER = 8
+			-- memLevel parameter specifies how much memory should be allocated
+			-- for the internal compression state.
+
+	Z_mem_level_1: INTEGER = 1
+			-- memLevel=1 uses minimum memory but is
+			-- slow and reduces compression ratio.
+
+	Z_mem_level_9: INTEGER = 9
+			-- memLevel=9 uses maximum memory for optimal speed.
+
+feature -- Window Bits
+
+	Z_windows_bits: INTEGER_INTERVAL
+			-- windowBits determine the windows size
+			-- 8..15, default value 8.
+		once
+			create Result.make (8, 15)
+		end
+
+	Z_default_window_bits: INTEGER = 15
+			-- default value, use with deflateInit.
+
 end

@@ -20,8 +20,6 @@ inherit
 
 	EB_SHARED_MANAGERS
 
-	SHARED_PLATFORM_CONSTANTS
-
 	PROJECT_CONTEXT
 
 	EB_CONSTANTS
@@ -447,7 +445,7 @@ feature {NONE} -- Internationalization
 	e_could_not_launch: STRING = "Could not launch C/C++ compiler."
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

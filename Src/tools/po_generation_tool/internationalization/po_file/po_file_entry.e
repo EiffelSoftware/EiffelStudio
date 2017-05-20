@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 				A representation of the parts common to all types of entry in a .po file - comments and msgid (original string in singular form)
 				When inheriting from this class, call initialize_datastructures in your creation procedure!
@@ -13,30 +13,36 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (a_msgid: READABLE_STRING_GENERAL)
+	make (source_file_name: READABLE_STRING_32; a_msgid: READABLE_STRING_GENERAL)
 			-- Initialize entry with `a_msgid' as message ID.
 			--
+			-- `source_file_name`: Name of the source file.
 			-- `a_msgid': Message ID for new entry
 		require
 			argument_not_void: a_msgid /= Void
 		do
+			source_name := source_file_name
 			initialize_datastructures
 			set_msgid (a_msgid)
 		ensure
+			source_name_set: source_name = source_file_name
 			msgid_set: a_msgid.as_string_32.is_equal(msgid)
 		end
 
 feature -- Element Change
 
-	set_msgctxt (a_msgctxt: READABLE_STRING_GENERAL)
+	set_msgctxt (a_msgctxt: detachable READABLE_STRING_GENERAL)
 			-- Set message context of entry to `a_msgctxt'.
+		local
+			m: like msgctxt_lines
 		do
 			if attached a_msgctxt as l_msgc then
-				create msgctxt_lines.make
-				msgctxt_lines.append (break_line (l_msgc.as_string_32))
+				create m.make
+				m.append (break_line (l_msgc.as_string_32))
+				msgctxt_lines := m
 			end
 		ensure
-			a_msgctxt_set: attached a_msgctxt as l_m and then msgctxt.is_equal (a_msgctxt.as_string_32)
+			a_msgctxt_set: attached a_msgctxt implies (attached msgctxt as mc and then mc.same_string_general (a_msgctxt))
 		end
 
 feature {NONE} -- Element change
@@ -120,14 +126,6 @@ feature	-- Element change
 			fuzzy := new
 		ensure
 			fuzzy_set: new = fuzzy
-		end
-
-	set_source_name (a_source_name: like source_name)
-			-- Set `a_source_name' to `source_name'.
-		do
-			source_name := a_source_name
-		ensure
-			source_name_set: source_name = a_source_name
 		end
 
 feature -- Access
@@ -334,7 +332,7 @@ feature  {NONE} -- Implementation (datastructures)
 	msgid_lines: LINKED_LIST [STRING_32]
 			-- List of message ID lines
 
-	msgctxt_lines: LINKED_LIST [STRING_32]
+	msgctxt_lines: detachable LINKED_LIST [STRING_32]
 			-- List of msgctxt lines
 
 	initialize_datastructures
@@ -352,7 +350,7 @@ feature  {NONE} -- Implementation (datastructures)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

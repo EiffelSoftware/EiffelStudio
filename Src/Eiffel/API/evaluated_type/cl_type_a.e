@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Description of an actual class type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 			description, description_with_detachable_type,
 			is_full_named_type, is_external, is_enum, is_conformant_to,
 			hash_code, sk_value, is_optimized_as_frozen, generated_id,
-			generate_cecil_value, element_type, adapted_in,
+			generate_cecil_value, element_type, adapted_in, has_reference,
 			il_type_name, generate_gen_type_il, is_generated_as_single_type,
 			generic_derivation, associated_class_type, has_associated_class_type,
 			internal_same_generic_derivation_as, internal_generic_derivation,
@@ -129,6 +129,22 @@ feature -- Properties
 			Result := l_mark = reference_mark or else (l_mark = no_mark and then class_declaration_mark = no_mark)
 		end
 
+	has_reference: BOOLEAN
+			-- <Precursor>
+		do
+			if is_reference then
+				Result := True
+			elseif attached base_class.skeleton as s then
+				across
+					s as t
+				until
+					Result
+				loop
+					Result := t.item.type_i.instantiation_in (Current, class_id).has_reference
+				end
+			end
+		end
+
 	is_full_named_type: BOOLEAN
 			-- Current is a full named type.
 		do
@@ -180,12 +196,11 @@ feature -- Comparison
 
 	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
-		local
-			other_class_type: CL_TYPE_A
 		do
-			other_class_type ?= other
-			Result := other_class_type /= Void and then class_id = other_class_type.class_id
-				and then has_same_marks (other_class_type)
+			Result :=
+				attached {CL_TYPE_A} other as other_class_type and then
+				class_id = other_class_type.class_id and then
+				has_same_marks (other_class_type)
 		end
 
 	has_same_marks (other: TYPE_A): BOOLEAN
@@ -578,11 +593,8 @@ feature {TYPE_A} -- Helpers
 
 	internal_conform_to (a_context_class: CLASS_C; other: TYPE_A; a_in_generic: BOOLEAN): BOOLEAN
 			-- <Precursor>
-		local
-			other_class_type: CL_TYPE_A
 		do
-			other_class_type ?= other.conformance_type
-			if other_class_type /= Void then
+			if attached {CL_TYPE_A} other.conformance_type as other_class_type then
 				if other_class_type.is_expanded then
 						-- It should be the exact same base class for expanded.
 					if is_expanded and then class_id = other_class_type.class_id then
@@ -732,36 +744,35 @@ feature {COMPILER_EXPORTER} -- Conformance
 			-- when current is an expanded type.
 		local
 			l_is_exp, l_other_is_exp: BOOLEAN
-			l_other_class_type: CL_TYPE_A
 			current_mark: like declaration_mark
 			other_mark: like declaration_mark
 		do
 			Result := Current = other
-			if not Result then
-				l_other_class_type ?= other.actual_type
-				if l_other_class_type /= Void then
-						-- We perform conformance as if the two types were not
-						-- expanded. So, if they are expanded, we remove their
-						-- expanded flag to do the conformance check.
-					l_is_exp := is_expanded
-					l_other_is_exp := l_other_class_type.is_expanded
-					if l_is_exp then
-						current_mark := declaration_mark
-						set_reference_mark
-					end
-					if l_other_is_exp then
-						other_mark := l_other_class_type.declaration_mark
-						l_other_class_type.set_reference_mark
-					end
+			if
+				not Result and then
+				attached {CL_TYPE_A} other.actual_type as l_other_class_type
+			then
+					-- We perform conformance as if the two types were not
+					-- expanded. So, if they are expanded, we remove their
+					-- expanded flag to do the conformance check.
+				l_is_exp := is_expanded
+				l_other_is_exp := l_other_class_type.is_expanded
+				if l_is_exp then
+					current_mark := declaration_mark
+					set_reference_mark
+				end
+				if l_other_is_exp then
+					other_mark := l_other_class_type.declaration_mark
+					l_other_class_type.set_reference_mark
+				end
 
-					Result := conform_to (a_context_class, other)
+				Result := conform_to (a_context_class, other)
 
-					if l_is_exp then
-						set_mark (current_mark)
-					end
-					if l_other_is_exp then
-						l_other_class_type.set_mark (other_mark)
-					end
+				if l_is_exp then
+					set_mark (current_mark)
+				end
+				if l_other_is_exp then
+					l_other_class_type.set_mark (other_mark)
 				end
 			end
 		end
@@ -1071,7 +1082,7 @@ invariant
 		class_declaration_mark = no_mark or class_declaration_mark = expanded_mark
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

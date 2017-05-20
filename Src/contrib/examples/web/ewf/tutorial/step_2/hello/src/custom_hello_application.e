@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 				--| Uncomment the following line, to be able to load options from the file ewf.ini
 --			create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI} service_options.make_from_file ("ewf.ini")
 
-				--| You can also uncomment the following line if you use the Nino connector
+				--| You can also uncomment the following line if you use the Standalone connector
 				--| so that the server listens on port 9999
 				--| quite often the port 80 is already busy
 			set_service_option ("port", 9999)

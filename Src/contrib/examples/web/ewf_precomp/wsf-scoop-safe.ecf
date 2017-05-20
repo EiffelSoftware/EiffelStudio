@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="precomp_wsf-scoop-safe" uuid="344344D6-5CA1-43B4-8D4B-CD1763883BE2" library_target="wsf-scoop-safe">
-	<target name="wsf-scoop-safe">
-		<root class="ANY"/>
-		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
-			<assertions precondition="true"/>
-		</option>
-		<setting name="concurrency" value="scoop"/>
-		<library name="wsf" location="../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="precomp_wsf-scoop-safe" uuid="986C232F-927D-4E01-B0F7-3FCCC9AE34C0" library_target="precomp-wsf-scoop-safe">
+	<target name="precomp-wsf-scoop-safe">
+		<root all_classes="true"/>
+		<capability>
+			<concurrency use="scoop"/>
+			<void_safety use="all"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="wsf" location="..\..\..\library\web\framework\ewf\wsf\wsf.ecf"/>
 	</target>
 </system>

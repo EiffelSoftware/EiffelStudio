@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {INTEGER_X_DIVISION}."
 	author: "Colin LeMahieu"
 	date: "$Date$"
@@ -169,13 +169,14 @@ feature
 				divisor := temp_divisor
 			end
 			tdiv_r (target, dividend, divisor)
-			if target.count /= 0 then
-				if dividend.count < 0 then
-					if divisor.count < 0 then
-						sub (target, target, divisor)
-					else
-						add (target, target, divisor)
-					end
+			if
+				target.count /= 0 and then
+				dividend.count < 0
+			then
+				if divisor.count < 0 then
+					sub (target, target, divisor)
+				else
+					add (target, target, divisor)
 				end
 			end
 		end
@@ -401,7 +402,7 @@ feature
 			limb_count := count // 32
 			in_ptr := op.item
 			if in_size > limb_count then
-				x := in_ptr [in_ptr_offset + limb_count].bit_and (((1).to_natural_32 |<< (count \\ 32)- 1))
+				x := in_ptr [in_ptr_offset + limb_count].bit_and ({NATURAL_32} 1 |<< (count \\ 32)- 1)
 				if x /= 0 then
 					res_size := limb_count + 1
 					target.resize (res_size)

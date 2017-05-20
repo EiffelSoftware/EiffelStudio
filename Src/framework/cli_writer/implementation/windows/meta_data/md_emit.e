@@ -146,7 +146,7 @@ feature -- Definition: access
 feature -- Definition: creation
 
 	define_assembly (assembly_name: UNI_STRING; assembly_flags: INTEGER;
-			assembly_info: MD_ASSEMBLY_INFO; public_key: MD_PUBLIC_KEY): INTEGER
+			assembly_info: MD_ASSEMBLY_INFO; public_key: detachable MD_PUBLIC_KEY): INTEGER
 
 			-- Define a new assembly.
 		require
@@ -182,7 +182,7 @@ feature -- Definition: creation
 		end
 
 	define_type (type_name: UNI_STRING; flags: INTEGER; extend_token: INTEGER;
-			implements: ARRAY [INTEGER]): INTEGER
+			implements: detachable ARRAY [INTEGER]): INTEGER
 
 			-- Create new type with name `type_name' and `flags' which inherits from
 			-- base class `extend_token' and implements interfaces `implements'.
@@ -759,7 +759,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

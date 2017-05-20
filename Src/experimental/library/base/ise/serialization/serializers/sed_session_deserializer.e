@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Decoding of arbitrary objects graphs within a session of a same program."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -48,7 +48,7 @@ feature -- Status report
 	error: detachable SED_ERROR
 			-- Last error encountered during retrieval
 		obsolete
-			"Use `errors' directly to find out errors encountered during retrieval."
+			"Use `errors' directly to find out errors encountered during retrieval. [2017-05-31]"
 		do
 			if attached errors as l_errors and then not l_errors.is_empty then
 				Result := l_errors.last
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation: Settings
 	set_error (a_error: SED_ERROR)
 			-- Assign `a_error' to `error'.
 		obsolete
-			"Use `add_error' instead."
+			"Use `add_error' instead. [2017-05-31]"
 		do
 			add_error (a_error)
 		ensure
@@ -295,7 +295,6 @@ feature {NONE} -- Implementation
 			l_mem: like memory
 			l_is_collecting: BOOLEAN
 			l_nat32: NATURAL_32
-			l_ref_id: INTEGER
 			l_dtype, l_old_dtype: INTEGER
 			i, nb: INTEGER
 			l_obj: ANY
@@ -329,8 +328,7 @@ feature {NONE} -- Implementation
 						check
 							l_nat32_valid: l_nat32 > 0 and l_nat32 < {INTEGER}.max_value.as_natural_32
 						end
-						l_ref_id := l_nat32.to_integer_32
-						check valid_id: l_ref_id = i + 1 end
+						check valid_id: l_nat32.to_integer_32 = i + 1 end
 
 							-- Read object flags
 						if l_deser.read_natural_8 = is_special_flag then
@@ -449,7 +447,6 @@ feature {NONE} -- Implementation
 			l_reflected_object: like reflected_object
 			l_obj: detachable ANY
 			l_nat32: NATURAL_32
-			l_index: INTEGER
 		do
 			l_deser := deserializer
 			l_reflected_object := reflected_object
@@ -459,9 +456,8 @@ feature {NONE} -- Implementation
 			check
 				l_nat32_valid: l_nat32 < {INTEGER}.max_value.as_natural_32
 			end
-			l_index := l_nat32.to_integer_32
 
-			l_obj := object_references.item (l_index)
+			l_obj := object_references.item (l_nat32.to_integer_32)
 			l_reflected_object.set_object (l_obj)
 
 			if l_reflected_object.is_special then
@@ -538,13 +534,18 @@ feature {NONE} -- Implementation
 							if l_deser.read_boolean then
 									-- Reading a reference to an object with copy semantics. First
 									-- get its dynamic type to create it.
-								l_exp_dtype := l_deser.read_compressed_integer_32
-								create l_exp.make (reflector.new_instance_of (l_exp_dtype))
-								decode_normal_object (l_exp)
-									-- Ideally we want to directly set the reference with copy semantics
-									-- without triggering a copy.
---								{ISE_RUNTIME}.set_reference_field (l_new_offset, a_reflected_object.object_address, a_reflected_object.physical_offset, l_exp.object_address)
-								a_reflected_object.set_reference_field (l_new_offset, l_exp.object)
+								l_exp_dtype := new_dynamic_type_id (l_deser.read_compressed_integer_32)
+								if l_exp_dtype < 0 then
+										-- Data is visibly corrupted, stop here.
+									raise_fatal_error (error_factory.new_internal_error ("Cannot read object type. Corrupted data!"))
+								else
+									create l_exp.make (reflector.new_instance_of (l_exp_dtype))
+									decode_normal_object (l_exp)
+										-- Ideally we want to directly set the reference with copy semantics
+										-- without triggering a copy.
+									-- {ISE_RUNTIME}.set_reference_field (l_new_offset, a_reflected_object.object_address, a_reflected_object.physical_offset, l_exp.object_address)
+									a_reflected_object.set_reference_field (l_new_offset, l_exp.object)
+								end
 							else
 								a_reflected_object.set_reference_field (l_new_offset, read_reference)
 							end
@@ -641,8 +642,8 @@ feature {NONE} -- Implementation
 			when {REFLECTOR_CONSTANTS}.integer_32_type then create {SPECIAL [INTEGER]} Result.make_empty (a_count)
 			when {REFLECTOR_CONSTANTS}.integer_64_type then create {SPECIAL [INTEGER_64]} Result.make_empty (a_count)
 
-			when {REFLECTOR_CONSTANTS}.real_32_type then create {SPECIAL [REAL]} Result.make_empty (a_count)
-			when {REFLECTOR_CONSTANTS}.real_64_type then create {SPECIAL [DOUBLE]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.real_32_type then create {SPECIAL [REAL_32]} Result.make_empty (a_count)
+			when {REFLECTOR_CONSTANTS}.real_64_type then create {SPECIAL [REAL_64]} Result.make_empty (a_count)
 
 			when {REFLECTOR_CONSTANTS}.pointer_type then create {SPECIAL [POINTER]} Result.make_empty (a_count)
 			else
@@ -741,14 +742,14 @@ feature {NONE} -- Implementation
 				end
 
 			when {REFLECTOR_CONSTANTS}.real_32_type then
-				if attached {SPECIAL [REAL]} an_obj as l_spec_real_32 then
+				if attached {SPECIAL [REAL_32]} an_obj as l_spec_real_32 then
 					decode_special_real_32 (l_spec_real_32, nb)
 				else
 					check l_spec_real_32_not_void: False end
 				end
 
 			when {REFLECTOR_CONSTANTS}.real_64_type then
-				if attached {SPECIAL [DOUBLE]} an_obj as l_spec_real_64 then
+				if attached {SPECIAL [REAL_64]} an_obj as l_spec_real_64 then
 					decode_special_real_64 (l_spec_real_64, nb)
 				else
 					check l_spec_real_64_not_void: False end
@@ -969,8 +970,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	frozen decode_special_real_32 (a_spec: SPECIAL [REAL]; a_count: INTEGER)
-			-- Decode SPECIAL [REAL].
+	frozen decode_special_real_32 (a_spec: SPECIAL [REAL_32]; a_count: INTEGER)
+			-- Decode SPECIAL [REAL_32].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
@@ -987,8 +988,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	frozen decode_special_real_64 (a_spec: SPECIAL [DOUBLE]; a_count: INTEGER)
-			-- Decode SPECIAL [DOUBLE].
+	frozen decode_special_real_64 (a_spec: SPECIAL [REAL_64]; a_count: INTEGER)
+			-- Decode SPECIAL [REAL_64].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
@@ -1055,13 +1056,18 @@ feature {NONE} -- Implementation
 					if l_deser.read_boolean then
 							-- Reading a reference to an object with copy semantics. First
 							-- get its dynamic type to create it.
-						l_exp_dtype := l_deser.read_compressed_integer_32
-						create l_exp.make (reflector.new_instance_of (l_exp_dtype))
-						decode_normal_object (l_exp)
-							-- Ideally we want to directly set the reference with copy semantics
-							-- without triggering a copy.
---						{ISE_RUNTIME}.set_reference_field (l_new_offset, a_reflected_object.object_address, a_reflected_object.physical_offset, l_exp.object_address)
-						a_spec.force (l_exp.object, i)
+						l_exp_dtype := new_dynamic_type_id (l_deser.read_compressed_integer_32)
+						if l_exp_dtype < 0 then
+								-- Data is visibly corrupted, stop here.
+							raise_fatal_error (error_factory.new_internal_error ("Cannot read object type. Corrupted data!"))
+						else
+							create l_exp.make (reflector.new_instance_of (l_exp_dtype))
+							decode_normal_object (l_exp)
+								-- Ideally we want to directly set the reference with copy semantics
+								-- without triggering a copy.
+							-- {ISE_RUNTIME}.set_reference_field (l_new_offset, a_reflected_object.object_address, a_reflected_object.physical_offset, l_exp.object_address)
+							a_spec.force (l_exp.object, i)
+						end
 					else
 						a_spec.force (read_reference, i)
 					end
@@ -1086,7 +1092,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

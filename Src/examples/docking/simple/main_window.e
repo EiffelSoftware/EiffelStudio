@@ -11,6 +11,10 @@ class
 
 inherit
 	MAIN_WINDOW_IMP
+		redefine
+			create_interface_objects,
+			user_initialization
+		end
 
 create
 	make
@@ -20,13 +24,13 @@ feature {NONE} -- Initialization
 	make
 			-- Creation method
 		do
-			init_attributes
 			default_create
 		end
 
-	init_attributes
+	create_interface_objects
 			-- Create attributes
 		do
+			Precursor
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
 			create integer_constant_set_procedures.make (10)
@@ -40,17 +44,12 @@ feature {NONE} -- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-
-			create content_1.make_with_widget (create {EV_RICH_TEXT}, "CONTENT_ONE")
-			create content_2.make_with_widget (create {EV_RICH_TEXT}, "CONTENT_TWO")
 		end
 
 	user_initialization
-			-- Called by `initialize'.
-			-- Any custom user initialization that
-			-- could not be performed in `initialize',
-			-- (due to regeneration of implementation class)
-			-- can be added here
+			-- <Precursor>
+		local
+			manager: SD_DOCKING_MANAGER
 		do
 			create manager.make (Current, Current)
 			close_request_actions.extend (agent
@@ -64,51 +63,50 @@ feature {NONE} -- Initialization
 													check False end -- Implied by application is running
 												end
 											end)
-			prepare_content_1
-			prepare_content_2
-			prepare_tool_bar_content
+			prepare_content_1 (manager)
+			prepare_content_2 (manager)
+			prepare_tool_bar_content (manager)
 		end
 
 feature {NONE} -- Implementation functions
 
-	prepare_content_1
-			-- Prepare `content 1'
+	prepare_content_1 (manager: SD_DOCKING_MANAGER)
+			-- Prepare the first tab.
 		require
-			created: content_1 /= Void
 			not_void: manager /= Void
+		local
+			content_1: SD_CONTENT
 		do
+			create content_1.make_with_widget (create {EV_RICH_TEXT}, "CONTENT_ONE", manager)
 			content_1.set_long_title ("Content 1 long title")
 			content_1.set_short_title ("Content 1 title")
-			attached_manager.contents.extend (content_1)
+			manager.contents.extend (content_1)
 			content_1.set_top ({SD_ENUMERATION}.top)
-		ensure
-			not_void: content_1 /= Void
 		end
 
-	prepare_content_2
-			-- Prepare `content_2'
+	prepare_content_2 (manager: SD_DOCKING_MANAGER)
+			-- Prepare the second tab.
 		require
-			created: content_2 /= Void
 			not_void: manager /= Void
+		local
+			content_2: SD_CONTENT
 		do
+			create content_2.make_with_widget (create {EV_RICH_TEXT}, "CONTENT_TWO", manager)
 			content_2.set_long_title ("Content 2 long title")
 			content_2.set_short_title ("Content 2 title")
-			attached_manager.contents.extend (content_2)
+			manager.contents.extend (content_2)
 			content_2.set_top ({SD_ENUMERATION}.top)
-		ensure
-			not_void: content_2 /= Void
 		end
 
-	prepare_tool_bar_content
-			-- Prepare `tool_bar_content'
+	prepare_tool_bar_content (manager: SD_DOCKING_MANAGER)
+			-- Prepare a tool bar.
 		require
-			not_prepared: tool_bar_content = Void
 			not_void: manager /= Void
 		local
 			l_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			l_item: SD_TOOL_BAR_BUTTON
 			l_count, l_max_count: INTEGER
-			l_tool_bar_content: like tool_bar_content
+			l_tool_bar_content: SD_TOOL_BAR_CONTENT
 			l_text: STRING_32
 		do
 			-- First we prepare tool bar items
@@ -134,42 +132,12 @@ feature {NONE} -- Implementation functions
 
 			-- Then we create tool bar content, extend it to tool bar manager
 			create l_tool_bar_content.make_with_items ("Tool bar one", l_items)
-			tool_bar_content := l_tool_bar_content
-			attached_manager.tool_bar_manager.contents.extend (l_tool_bar_content)
+			manager.tool_bar_manager.contents.extend (l_tool_bar_content)
 			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
-		ensure
-			not_void: tool_bar_content /= Void
 		end
-
-feature {NONE} -- Implementation attributes
-
-	attached_manager: SD_DOCKING_MANAGER
-			-- Attached `manager'
-		require
-			not_void: manager /= Void
-		local
-			l_result: like manager
-		do
-			l_result := manager
-			check l_result /= Void end -- Implied by precondition `not_void'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
-	manager: detachable SD_DOCKING_MANAGER
-			-- Docking manager
-
-	content_1: SD_CONTENT
-			-- Content one
-
-	content_2: SD_CONTENT
-
-	tool_bar_content: detachable SD_TOOL_BAR_CONTENT
-			-- Tool bar content
 
 ;note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -179,5 +147,5 @@ feature {NONE} -- Implementation attributes
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class MAIN_WINDOW
+end
 

@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 				ecf.tests_clusters.force (".")
 			end
 
-			if app_ecf /= Void and then app_ecf.concurrency.is_case_insensitive_equal ("thread") then
+			if app_ecf /= Void and then attached app_ecf.concurrency as l_concurrency and then l_concurrency.is_case_insensitive_equal ("thread") then
 				if not ecf.libraries.has ("thread") then
 					ecf.libraries.force ("thread")
 				end
@@ -120,14 +120,6 @@ feature {NONE} -- Initialization
 
 			create conf_sys_builder_vis.make
 
-			ecf.process (conf_sys_builder_vis)
-			if attached conf_sys_builder_vis.system as l_system then
-				conf_sys_builder_vis.reset
-				l_system.set_file_name (ecf_file_name (ecf, args.base_location).name)
-				save_system (l_system, ecf, args.base_location, args.execution_forced)
-			end
-
-			ecf.set_is_voidsafe (True)
 			ecf.process (conf_sys_builder_vis)
 			if attached conf_sys_builder_vis.system as l_system then
 				conf_sys_builder_vis.reset
@@ -158,12 +150,17 @@ feature {NONE} -- Initialization
 		local
 			p: PATH
 			f: PLAIN_TEXT_FILE
+			dir: DIRECTORY
 			retried: BOOLEAN
 		do
 			if not retried then
 				p := a_dir
 				if a_cluster /= Void then
 					p := p.extended (a_cluster)
+				end
+				create dir.make_with_path (p)
+				if not dir.exists then
+					dir.recursive_create_dir
 				end
 				p := p.extended (a_classname.as_lower).appended_with_extension ("e")
 				create f.make_with_path (p)
@@ -202,11 +199,7 @@ feature -- Storage
 	ecf_file_name (ecf: ECF; dir: PATH): PATH
 			-- Expected file name for output `ecf'.
 		do
-			if ecf.is_voidsafe then
-				Result := dir.extended (ecf.name + "-safe")
-			else
-				Result := dir.extended (ecf.name)
-			end
+			Result := dir.extended (ecf.name)
 			Result := Result.appended_with_extension ("ecf")
 		end
 
@@ -441,7 +434,7 @@ feature -- Constants
 	testing_target_type: STRING = "testing"
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

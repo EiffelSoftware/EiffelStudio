@@ -48,27 +48,28 @@ feature -- Basic Operations
 		local
 			retried: BOOLEAN
 			mess_box: WEL_MSG_BOX
-			buffer, displayed_text: STRING
+			buffer: STRING
 			a: ANY
 			p: POINTER_REF
 			l_null: CHARACTER
 		do
-			create buffer.make (Buffer_size)
-			create rich_edit.make (Current, "", 0, 0, width, height, Rich_edit_id)
-			from
-				create p
-				a := buffer.to_c
-				p.set_item ($a)
-				stream.read (p.item, Buffer_size - 1) -- Need one character to put `%U' at end of string
-			until
-				stream.end_of_stream
-			loop
-				(p + Buffer_size).memory_copy ($l_null, 1) -- Add ending numm character before conversion
-				create displayed_text.make_from_c (p.item)
-				rich_edit.insert_text (displayed_text)
-				stream.read (p.item, Buffer_size - 1)
+			if not retried then
+				create buffer.make (Buffer_size)
+				create rich_edit.make (Current, "", 0, 0, width, height, Rich_edit_id)
+				from
+					create p
+					a := buffer.to_c
+					p.set_item ($a)
+					stream.read (p.item, Buffer_size - 1) -- Need one character to put `%U' at end of string
+				until
+					stream.end_of_stream
+				loop
+					(p + Buffer_size).memory_copy ($l_null, 1) -- Add ending numm character before conversion
+					rich_edit.insert_text (create {STRING}.make_from_c (p.item))
+					stream.read (p.item, Buffer_size - 1)
+				end
+				rich_edit.set_read_only
 			end
-			rich_edit.set_read_only
 		rescue
 			create mess_box.make
 			mess_box.error_message_box (Current, "Cannot read stream", "Read Error")
@@ -101,7 +102,7 @@ invariant
 	non_void_stream: stream /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -111,6 +112,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class STREAM_DISPLAY_WINDOW
-
+end

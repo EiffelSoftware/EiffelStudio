@@ -42,8 +42,8 @@ feature -- Input
 			src: like source
 		do
 			src := source
-			if src.readable then
-				src.read_character
+			if src.readable and not src.was_error then
+				src.read_character_noexception
 				last_character := src.last_character
 			else
 				last_character := '%U'
@@ -56,8 +56,8 @@ feature -- Input
 		do
 			src := source
 			last_string.wipe_out
-			if src.readable then
-				src.read_stream_thread_aware (nb)
+			if src.readable and not src.was_error then
+				src.read_stream_noexception (nb)
 				last_string.append_string (src.last_string)
 			end
 		end
@@ -85,11 +85,11 @@ feature -- Status report
 	end_of_input: BOOLEAN
 			-- Has the end of input stream been reached?
 		do
-			Result := not source.readable
+			Result := not source.readable or source.was_error
 		end
 
 ;note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

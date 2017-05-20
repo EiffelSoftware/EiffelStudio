@@ -28,10 +28,10 @@ feature -- Initialization
 		require
 			a_registry_attached: attached a_registry
 		do
-			make_parser
 			registry := a_registry
 			source_path := "No source path specified."
 			create template.make_empty
+			make_parser
 		ensure
 			registry_set: registry = a_registry
 		end
@@ -473,7 +473,7 @@ invariant
 	template_attached: attached template
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

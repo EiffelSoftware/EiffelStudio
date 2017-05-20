@@ -70,7 +70,7 @@ feature -- Parsing
 
 	parse_from_filename (a_filename: READABLE_STRING_GENERAL)
 			-- Parse from file named `a_filename'
-		obsolete "Use parse_from_path [2012-oct]"
+		obsolete "Use parse_from_path [2017-05-31]"
 		require
 			a_filename_valid: a_filename /= Void and then not a_filename.is_empty
 		local
@@ -156,7 +156,7 @@ feature {XML_CALLBACKS} -- Error
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

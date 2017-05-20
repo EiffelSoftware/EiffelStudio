@@ -1,10 +1,10 @@
-class
+﻿class
 	TEST_WIKI_TEXT
 
 inherit
 	EQA_TEST_SET
 
-	WIKI_TEMPLATE_RESOLVER
+	TEST_WIKI_TEXT_I
 		undefine
 			default_create
 		end
@@ -102,10 +102,15 @@ __NOTOC__
 == three.1 ==
 == three.2 ==
 == three.3 ==
+=And the last one=
+== with spaces in text==
+== summer:été==
 end
 }")
 			l_expected_output := "{
-<div class="wikipage"><p>begin</p>
+<div class="wikipage"><p>begin
+
+</p>
 
 <a name="One"></a><h1>One</h1>
 
@@ -128,7 +133,14 @@ end
 <a name="three.2"></a><h2>three.2</h2>
 
 <a name="three.3"></a><h2>three.3</h2>
-<p>end</p>
+
+<a name="And_the_last_one"></a><h1>And the last one</h1>
+
+<a name="with_spaces_in_text"></a><h2>with spaces in text</h2>
+
+<a name="summer:%C3%A9t%C3%A9"></a><h2>summer:été</h2>
+<p>end
+</p>
 </div>
 
 }"
@@ -167,6 +179,7 @@ end
 }")
 			l_expected_output := "{
 <div class="wikipage"><p>begin
+
 <ol class="wiki-toc"><a name="toc"></a><span class="title">Contents</span>
 	<li><a href="#One">One</a></li>
 	<ol>
@@ -186,6 +199,7 @@ end
 		<li><a href="#three.3">three.3</a></li>
 	</ol>
 </ol>
+
 </p>
 
 <a name="One"></a><h1>One</h1>
@@ -209,7 +223,8 @@ end
 <a name="three.2"></a><h2>three.2</h2>
 
 <a name="three.3"></a><h2>three.3</h2>
-<p>end</p>
+<p>end
+</p>
 </div>
 
 }"
@@ -223,6 +238,18 @@ end
 			assert ("o", same_output (o, l_expected_output))
 		end
 
+	test_anchor_name
+		local
+			o: STRING
+			vis: like new_xhtml_generator
+		do
+			create o.make_empty
+			vis := new_xhtml_generator (o)
+			assert ("valid anchor name", same_output (vis.anchor_name ("A text with spaces", True), "A_text_with_spaces"))
+			assert ("valid anchor name", same_output (vis.anchor_name ("unexpected # char", True), "unexpected_%%23_char"))
+			assert ("valid anchor name", same_output (vis.anchor_name ("summer=été", True), "summer=%%C3%%A9t%%C3%%A9"))
+		end
+
 	test_html
 		local
 			t: WIKI_CONTENT_TEXT
@@ -233,7 +260,9 @@ end
 			l_expected_output := "[
 
 <a name="test"></a><h1>test</h1>
-<p><div>toto</div>end</p>
+<p><div>toto</div>
+end
+</p>
 
 ]"
 
@@ -249,10 +278,71 @@ end
 			o: STRING
 			l_expected_output: STRING
 		do
-			create t.make_from_string ("This is a first line.%NThen the second line.%N%NNext paragraph, line 1.%Nline 2.%Nend.")
+			create t.make_from_string ("[
+This is a first line.
+Then the second line.
+
+Next paragraph, line 1.
+line 2.
+end.
+]")
 			l_expected_output := "[
-<p>This is a first line.Then the second line.</p>
-<p>Next paragraph, line 1.line 2.end.</p>
+<p>This is a first line.
+Then the second line.
+</p>
+<p>Next paragraph, line 1.
+line 2.
+end.
+</p>
+
+]"
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", same_output (o, l_expected_output))
+		end
+
+	test_paragraph_with_cr
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			l_expected_output: STRING
+		do
+			create t.make_from_string ("This is a first line.%R%NThen the second line.%R%N%R%NNext paragraph, line 1.%R%Nline 2.%R%Nend.%R%N")
+			l_expected_output := "<p>This is a first line.%R%NThen the second line.%R%N</p>%N<p>Next paragraph, line 1.%R%Nline 2.%R%Nend.%R%N</p>%N"
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", same_output (o, l_expected_output))
+		end
+
+	test_paragraph_in_section
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			l_expected_output: STRING
+		do
+			create t.make_from_string ("[
+== Test ==
+This is a first line.
+Then the second line.
+
+Next paragraph, line 1.
+line 2.
+end.
+]")
+			l_expected_output := "[
+			
+<a name="Test"></a><h2>Test</h2>
+<p>This is a first line.
+Then the second line.
+</p>
+<p>Next paragraph, line 1.
+line 2.
+end.
+</p>
 
 ]"
 
@@ -282,6 +372,7 @@ end
 1= <a href="Breakpoint commands" class="wiki_link wiki_notfound">Breakpoint commands</a>, <a href="Breakpoint information command" class="wiki_link wiki_notfound">Breakpoint information command</a>  
 2={{{2}}} 
 3={{{3}}}
+
 </p>
 
 <a name="end"></a><h2>end</h2>
@@ -314,6 +405,7 @@ end
 1= <a href="Breakpoint commands" class="wiki_link wiki_notfound">Breakpoint commands</a>  
 2= <a href="Breakpoint information command" class="wiki_link wiki_notfound">Breakpoint information command</a>  
 3={{{3}}}
+
 </p>
 
 <a name="end"></a><h2>end</h2>
@@ -344,6 +436,7 @@ end
 <p>Template#Rule
 name=foo
 text=bar
+
 </p>
 
 <a name="end"></a><h2>end</h2>
@@ -357,6 +450,91 @@ text=bar
 		end
 
 	test_table
+		local
+			t: WIKI_CONTENT_TEXT
+			e,o: STRING
+		do
+			create t.make_from_string ("[
+{| class="my-table"
+|+ class="my-caption"|a table
+|-
+!style="text-align:left;"|Name
+!Quantity
+!Note
+|-
+|First
+|10
+|a comment
+|-
+|Second
+|4
+|another comment
+|-
+|Third
+|1
+|a last comment
+|- class="total"
+!Total
+|15
+|
+|}
+			]")
+
+			e := "{
+<p><table class="my-table"><caption class="my-caption">a table</caption>
+<tr><th style="text-align:left;">Name</th><th>Quantity</th><th>Note</th></tr>
+<tr><td>First</td><td>10</td><td>a comment</td></tr>
+<tr><td>Second</td><td>4</td><td>another comment</td></tr>
+<tr><td>Third</td><td>1</td><td>a last comment</td></tr>
+<tr class="total"><th>Total</th><td>15</td><td></td></tr>
+</table>
+</p>
+
+}"
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", not o.is_empty)
+			assert ("expected", o.same_string (e))
+		end
+
+	test_table_inlined
+		local
+			t: WIKI_CONTENT_TEXT
+			e,o: STRING
+		do
+			create t.make_from_string ("[
+{|
+!Name!!Quantity!!Note
+|-
+|First||10||a comment
+|-
+|Second||4||another comment
+|-
+|Third||1||a last comment
+|-
+!Total||15!!...
+|}
+			]")
+
+			e := "{
+<p><table><tr><th>Name</th><th>Quantity</th><th>Note</th></tr>
+<tr><td>First</td><td>10</td><td>a comment</td></tr>
+<tr><td>Second</td><td>4</td><td>another comment</td></tr>
+<tr><td>Third</td><td>1</td><td>a last comment</td></tr>
+<tr><th>Total</th><td>15</td><th>...</th></tr>
+</table>
+</p>
+
+}"
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", not o.is_empty)
+			assert ("expected", o.same_string (e))
+		end
+
+	test_table_with_wiki_content
 		local
 			t: WIKI_CONTENT_TEXT
 			o: STRING
@@ -393,10 +571,12 @@ end
 }")
 
 e := "{
-<p>begin</p>
+<p>begin
+</p>
 <pre>   abc
    def
-   ghi </pre><p>end</p>
+   ghi </pre><p>end
+</p>
 
 }"
 
@@ -425,6 +605,7 @@ e := "{
 <p><code lang="eiffel">class FOO [BAR]
 feature
 end</code><br/>
+
 </p>
 
 }"
@@ -444,7 +625,7 @@ end</code><br/>
 			e: STRING
 		do
 			create t.make_from_string ("[
-The creation procedure 
+The creation procedure
 <code>
     make (s, e: G)
 </code>
@@ -452,8 +633,11 @@ takes ...
 			]")
 
 e := "{
-<p>The creation procedure <code>    make (s, e: G)</code><br/>
-takes ...</p>
+<p>The creation procedure
+<code>    make (s, e: G)</code><br/>
+
+takes ...
+</p>
 
 }"
 
@@ -478,6 +662,7 @@ takes ...</p>
 
 			e := "{
 <p><code>&lt;foo&gt;bar&lt;/foo&gt;</code><br/>
+
 </p>
 
 }"
@@ -511,6 +696,7 @@ feature
 		do
 		end
 end</code><br/>
+
 </p>
 
 }"
@@ -535,7 +721,7 @@ begin/
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin/this is a ''test'' with link as [[Foobar|FooBar link]]/end</p>%N"))
+			assert ("o", o.same_string ("<p>begin/%Nthis is a ''test'' with link as [[Foobar|FooBar link]]%N/end%N</p>%N"))
 
 			create t.make_from_string ("[
 begin/
@@ -550,7 +736,7 @@ this is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin/%Nthis is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]%Nthis is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]%Nthis is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]%N/end</p>%N"))
+			assert ("o", o.same_string ("<p>begin/%N%Nthis is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]%Nthis is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]%Nthis is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]%N%N/end%N</p>%N"))
 
 			create t.make_from_string ("[
 begin/
@@ -561,7 +747,7 @@ begin/
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin/this is an inline &lt;code&gt;foo.bar + test&lt;/code&gt;/end</p>%N"))
+			assert ("o", o.same_string ("<p>begin/%Nthis is an inline &lt;code&gt;foo.bar + test&lt;/code&gt;%N/end%N</p>%N"))
 
 			create t.make_from_string ("[
 begin/
@@ -578,7 +764,7 @@ begin/
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin/this is a block%N&lt;code&gt;%N	class FOO%N	feature%N	end%N&lt;/code&gt;%N/end</p>%N"))
+			assert ("o", o.same_string ("<p>begin/%Nthis is a block%N&lt;code&gt;%N	class FOO%N	feature%N	end%N&lt;/code&gt;%N%N/end%N</p>%N"))
 
 			create t.make_from_string ("[
 begin/
@@ -595,7 +781,7 @@ begin/
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin/this is a block%N```%N	class FOO%N	feature%N	end%N```%N/end</p>%N"))
+			assert ("o", o.same_string ("<p>begin/%Nthis is a block%N```%N	class FOO%N	feature%N	end%N```%N%N/end%N</p>%N"))
 
 		end
 
@@ -617,7 +803,7 @@ end
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin<code lang=%"text%">class FOO%Nfeature%Nend</code><br/>%Nend</p>%N"))
+			assert ("o", o.same_string ("<p>begin%N<code lang=%"text%">class FOO%Nfeature%Nend</code><br/>%N%Nend%N</p>%N"))
 
 
 
@@ -634,7 +820,7 @@ end
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin<code lang=%"eiffel%">class FOO%Nfeature%Nend</code><br/>%Nend</p>%N"))
+			assert ("o", o.same_string ("<p>begin%N<code lang=%"eiffel%">class FOO%Nfeature%Nend</code><br/>%N%Nend%N</p>%N"))
 
 			create t.make_from_string ("[
 begin
@@ -649,7 +835,7 @@ end
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin<code lang=%"eiffel%">class FOO &lt;foo&gt;&lt;/bar&gt;%Nfeature%Nend</code><br/>%Nend</p>%N"))
+			assert ("o", o.same_string ("<p>begin%N<code lang=%"eiffel%">class FOO &lt;foo&gt;&lt;/bar&gt;%Nfeature%Nend</code><br/>%N%Nend%N</p>%N"))
 
 			create t.make_from_string ("[
 begin
@@ -664,7 +850,7 @@ end
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin<code lang=%"xml%">&lt;code lang=%"eiffel%"&gt;%N%Tclass FOOBAR%N&lt;/code&gt;</code><br/>%Nend</p>%N"))
+			assert ("o", o.same_string ("<p>begin%N<code lang=%"xml%">&lt;code lang=%"eiffel%"&gt;%N%Tclass FOOBAR%N&lt;/code&gt;</code><br/>%N%Nend%N</p>%N"))
 
 		end
 
@@ -680,7 +866,7 @@ begin `FOO.bar` end
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin <code class=%"inline%">FOO.bar</code> end</p>%N"))
+			assert ("o", o.same_string ("<p>begin <code class=%"inline%">FOO.bar</code> end%N</p>%N"))
 
 			create t.make_from_string ("[
 begin `FOO.bar and not ending backtick end
@@ -689,7 +875,25 @@ begin `FOO.bar and not ending backtick end
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin `FOO.bar and not ending backtick end</p>%N"))
+			assert ("o", o.same_string ("<p>begin `FOO.bar and not ending backtick end%N</p>%N"))
+
+			create t.make_from_string ("[
+begin `foo <bar> qwe` end
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("<p>begin <code class=%"inline%">foo &lt;bar&gt; qwe</code> end%N</p>%N"))
+
+			create t.make_from_string ("[
+begin `foo <bar>`
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("<p>begin <code class=%"inline%">foo &lt;bar&gt;</code>%N</p>%N"))
 		end
 
 	test_code_single_backtik_with_lt_char
@@ -709,8 +913,12 @@ end
 
 			t.structure.process (new_xhtml_generator (o))
 			assert ("o", o.same_string ("{
-<p>begin<code class="inline">foobar</code> operations <code class="inline">&lt;</code> or <code class="inline">&gt;</code> or <code class="inline">&lt;=&gt;</code> <code class="inline">blabla</code> .</p>
-<p><code class="inline">foo bar</code>end</p>
+<p>begin
+<code class="inline">foobar</code> operations <code class="inline">&lt;</code> or <code class="inline">&gt;</code> or <code class="inline">&lt;=&gt;</code> <code class="inline">blabla</code> .
+</p>
+<p><code class="inline">foo bar</code>
+end
+</p>
 
 }"
 						)
@@ -732,7 +940,10 @@ end
 
 			t.structure.process (new_xhtml_generator (o))
 			assert ("o", o.same_string ("{
-<p>beginTest `abc' a`n`d.end</p>
+<p>begin
+Test `abc' a`n`d.
+end
+</p>
 
 }")
 				)
@@ -747,7 +958,10 @@ end
 
 			t.structure.process (new_xhtml_generator (o))
 			assert ("o", o.same_string ("{
-<p>beginTest `abc' and <code class="inline">\</code> and a\b\c.end</p>
+<p>begin
+Test `abc' and <code class="inline">\</code> and a\b\c.
+end
+</p>
 
 }")
 				)
@@ -765,7 +979,7 @@ begin `` `FOO.bar' `` end
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", o.same_string ("<p>begin <code class=%"inline%"> `FOO.bar' </code> end</p>%N"))
+			assert ("o", o.same_string ("<p>begin <code class=%"inline%"> `FOO.bar' </code> end%N</p>%N"))
 		end
 
 
@@ -788,6 +1002,7 @@ e := "{
 <p><mycode lang="eiffel">class FOO [BAR]
 feature
 end</mycode><br/>
+
 </p>
 
 }"
@@ -822,7 +1037,8 @@ end</mycode><br/>
 			]")
 
 e := "{
-<p><strong>List</strong></p>
+<p><strong>List</strong>
+</p>
 <ul><li> this </li>
 <li> is</li>
 <li> a</li>
@@ -842,7 +1058,7 @@ e := "{
 			assert ("o", not o.is_empty)
 			assert ("as e", o.same_string (e))
 		end
-		
+
 	test_list_number
 		local
 			t: WIKI_CONTENT_TEXT
@@ -860,7 +1076,8 @@ e := "{
 			]")
 
 e := "{
-<p><strong>Numbered lists</strong></p>
+<p><strong>Numbered lists</strong>
+</p>
 <ol><li> list</li>
 <li> with<ol><li> sub item</li>
 <li> sub item</li>
@@ -877,7 +1094,7 @@ e := "{
 			assert ("o", not o.is_empty)
 			assert ("as e", o.same_string (e))
 		end
-		
+
 	test_list_definition
 		local
 			t: WIKI_CONTENT_TEXT
@@ -899,7 +1116,8 @@ e := "{
 			]")
 
 e := "{
-<p><strong>Definitions</strong></p>
+<p><strong>Definitions</strong>
+</p>
 <dl><dt> abc</dt>
 <dd> first letters</dd>
 <dt> pi</dt>
@@ -916,42 +1134,6 @@ e := "{
 			t.structure.process (gen)
 			assert ("o", not o.is_empty)
 			assert ("as e", o.same_string (e))
-		end
-		
-	test_list_definition_2
-		local
-			t: WIKI_CONTENT_TEXT
-			o: STRING
-			e: STRING
-			gen: like new_xhtml_generator
-		do
-			-- FIXME: does not support yet:
-			--	; Term
-			--	: description line 1
-			--	: description line 2
-
-			create t.make_from_string ("[
-'''Definitions'''
-; Term
-: description line 1
-: description line 2
-			]")
-
-e := "{
-<p><strong>Definitions</strong></p>
-<dl><dt> Term</dt>
-<dd> description line 1</dd>
-<dd> description line 2</dd>
-</dl>
-
-}"
-
-			create o.make_empty
-
-			gen := new_xhtml_generator (o)
-			t.structure.process (gen)
-			assert ("o", not o.is_empty)
-			assert ("as e", o.same_string (e)) -- FIXME: failure! see https://en.wikipedia.org/wiki/Help:List
 		end
 
 	test_list_mixed
@@ -980,7 +1162,8 @@ e := "{
 			]")
 
 e := "{
-<p><strong>Mixed list</strong></p>
+<p><strong>Mixed list</strong>
+</p>
 <ol><li> Letters<ul><li> a</li>
 <li> b</li>
 <li> c</li>
@@ -1007,44 +1190,6 @@ e := "{
 			assert ("as e", o.same_string (e))
 		end
 
-	test_list_mixed_def
-			-- See https://en.wikipedia.org/wiki/Help:List
-		local
-			t: WIKI_CONTENT_TEXT
-			o: STRING
-			e: STRING
-			gen: like new_xhtml_generator
-		do
-			create t.make_from_string ("[
-'''Mixed list and def'''
-* Def
-*; Term: description 1
-*; Term2: description 2
-* end
-			]")
-
-e := "{
-<p><strong>Mixed list and def</strong></p>
-<ul><li> Def</li>
-<dl><dt> Term</dt>
-<dd> description 1</dd>
-<dt> Term</dt>
-<dd> description 1</dd>
-</dl>
-<li> end</li>
-</ul>
-
-}"
-
-			create o.make_empty
-
-			gen := new_xhtml_generator (o)
-			t.structure.process (gen)
-			assert ("o", not o.is_empty)
-			assert ("as e", o.same_string (e)) -- FAILURE !!! see https://en.wikipedia.org/wiki/Help:List
-		end
-
-
 	test_tag_div
 		local
 			t: WIKI_CONTENT_TEXT
@@ -1062,9 +1207,11 @@ end
 			]")
 
 e := "{
-<p><strong>Test</strong><div><strong>class</strong> FOO [BAR]
+<p><strong>Test</strong>
+<div><strong>class</strong> FOO [BAR]
 feature
-end</div></p>
+end</div>
+</p>
 
 }"
 
@@ -1088,7 +1235,49 @@ Test [https://eiffel.org Eiffel Community].
 			]")
 
 e := "{
-<p>Test <a href="https://eiffel.org" class="wiki_ext_link">Eiffel Community</a>.</p>
+<p>Test <a href="https://eiffel.org" class="wiki_ext_link">Eiffel Community</a>.
+</p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+
+			create t.make_from_string ("[
+Test [https://eiffel.org|Eiffel Community].
+			]")
+
+e := "{
+<p>Test <a href="https://eiffel.org" class="wiki_ext_link">Eiffel Community</a>.
+</p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+
+			create t.make_from_string ("[
+Test [https://eiffel.org|target="blank"|foo=bar|Eiffel Community].
+			]")
+
+e := "{
+<p>Test <a href="https://eiffel.org" class="wiki_ext_link" target="blank" foo=bar>Eiffel Community</a>.
+</p>
 
 }"
 
@@ -1112,7 +1301,8 @@ Test PROCEDURE [FOO] class.
 			]")
 
 e := "{
-<p>Test PROCEDURE [FOO] class.</p>
+<p>Test PROCEDURE [FOO] class.
+</p>
 
 }"
 
@@ -1154,7 +1344,8 @@ test [[#anchor|anchor link]]
 			]")
 
 e := "{
-<p>test <a href="#anchor" class="wiki_link">anchor link</a></p>
+<p>test <a href="#anchor" class="wiki_link">anchor link</a>
+</p>
 
 }"
 
@@ -1178,7 +1369,8 @@ See [[Image:http://abs.path.to/image.png]]
 			]")
 
 e := "{
-<p>See <img src="http://abs.path.to/image.png" border="0"/></p>
+<p>See <img src="http://abs.path.to/image.png" border="0"/>
+</p>
 
 }"
 
@@ -1190,51 +1382,161 @@ e := "{
 			assert ("as e", o.same_string (e))
 		end
 
-feature {NONE} -- Implementation
-
-	same_output (s1, s2: READABLE_STRING_8): BOOLEAN
+	test_image_inlined
 		local
-			t1, t2: STRING
-			lst1, lst2: LIST [READABLE_STRING_8]
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
 		do
-			lst1 := s1.split ('%N')
-			lst2 := s2.split ('%N')
-			if lst1.count = lst2.count then
-				Result := True
-				from
-					lst1.start
-					lst2.start
-				until
-					not Result or lst1.after or lst2.after
-				loop
-					t1 := lst1.item
-					t2 := lst2.item
-					t1.right_adjust
-					t2.right_adjust
-					Result := t1.same_string (t2)
-					lst1.forth
-					lst2.forth
-				end
-			end
+			create t.make_from_string ("[
+See [[Image:http://abs.path.to/image.png|width=100px|This is a description|This is a title]]
+			]")
+
+e := "{
+<p>See <img src="http://abs.path.to/image.png" border="0" width="100px" alt="This is a description"/>
+</p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
 		end
 
-	new_xhtml_generator (o: STRING): WIKI_XHTML_GENERATOR
+	test_image_details
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
 		do
-			create Result.make (o)
-			Result.set_template_resolver (Current)
+			create t.make_from_string ("[
+See [[Image:http://abs.path.to/image.png|align=right|width=100px|This is a description]]
+			]")
+
+e := "{
+<p>See <div class="wiki_image" style="text-align: right"><img src="http://abs.path.to/image.png" border="0" width="100px"/><div class="wiki_caption">This is a description</div></div>
+</p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
 		end
 
-feature -- Resolver
-
-	content (a_template: WIKI_TEMPLATE; a_page: detachable WIKI_PAGE): detachable STRING
-			-- Template content for `a_template' in the context of `a_page' if any.
+	test_image_details_with_alt
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
 		do
-			if a_template.name.is_case_insensitive_equal_general ("rule") then
-				Result := "Template#" + a_template.name + "%Nname={{{name}}} %Ntext={{{text}}}%N"
-			else
-				Result := "Template#" + a_template.name + "%N1={{{1}}} %N2={{{2}}} %N3={{{3}}}%N"
-			end
+			create t.make_from_string ("[
+See [[Image:http://abs.path.to/image.png|align=right|width=100px|alt=Alternate text|This is a description]]
+			]")
+
+e := "{
+<p>See <div class="wiki_image" style="text-align: right"><img src="http://abs.path.to/image.png" border="0" width="100px" alt="Alternate text"/><div class="wiki_caption">This is a description</div></div>
+</p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
 		end
 
+	test_image_details_with_frame
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+See [[Image:http://abs.path.to/image.png|align=right|frame|width=100px|alt=Alternate text|This is a description]]
+			]")
+
+e := "{
+<p>See <div class="wiki_image wiki_frame" style="text-align: right"><img src="http://abs.path.to/image.png" border="0" width="100px" alt="Alternate text"/><div class="wiki_caption">This is a description</div></div>
+</p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
+	test_link
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+See [http://www.eiffel.org/ The Eiffel web site]
+			]")
+
+e := "{
+<p>See <a href="http://www.eiffel.org/" class="wiki_ext_link">The Eiffel web site</a>
+</p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
+	test_unicode
+		local
+			txt,e32: STRING_32
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+			utf: UTF_CONVERTER
+		do
+			txt := {STRING_32} "begin%N* Zhōng Fú 中孚 end"
+
+			create t.make_from_string (utf.utf_32_string_to_utf_8_string_8 (txt))
+
+e32 := {STRING_32} "{
+<p>begin
+</p>
+<ul><li> Zhōng Fú 中孚 end</li>
+</ul>
+
+}"
+e := utf.utf_32_string_to_utf_8_string_8 (e32)
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+			txt := utf.utf_8_string_8_to_string_32 (o)
+			assert ("as e32", txt.same_string (e32))
+		end
 
 end

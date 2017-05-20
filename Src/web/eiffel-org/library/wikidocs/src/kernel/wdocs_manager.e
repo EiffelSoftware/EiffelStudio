@@ -423,7 +423,7 @@ feature -- Access: File
 			if not a_file.name.has ('/') then
 				create Result.make_from_string ("/doc-file")
 				if not is_default_version then
-					Result.prepend ("/version/" + percent_encoder.percent_encoded_string (version_id))
+					Result.append ("/version/" + percent_encoder.percent_encoded_string (version_id))
 				end
 				Result.append_character ('/')
 				if a_page /= Void and then attached book_name (a_page) as l_book_name then
@@ -445,7 +445,7 @@ feature -- Access: Image
 			if not a_link.name.has ('/') then
 				create Result.make_from_string ("/doc-image")
 				if not is_default_version then
-					Result.prepend ("/version/" + percent_encoder.percent_encoded_string (version_id))
+					Result.append ("/version/" + percent_encoder.percent_encoded_string (version_id))
 				end
 
 				Result.append ("/" + a_link.name)
@@ -533,7 +533,7 @@ feature -- Access: Image
 						end
 						create Result.make_from_string ("/doc-image")
 						if not is_default_version then
-							Result.prepend ("/version/" + percent_encoder.percent_encoded_string (version_id))
+							Result.append ("/version/" + percent_encoder.percent_encoded_string (version_id))
 						end
 						if a_page /= Void then
 							Result.append ("/" + percent_encoder.percent_encoded_string (l_book_name))

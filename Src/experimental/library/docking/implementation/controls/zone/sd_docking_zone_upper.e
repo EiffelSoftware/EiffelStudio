@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Works like SD_DOCKING_ZONE, but instead of showing title bar, show one tab."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ inherit
 create
 	make
 
-feature -- Initlization
+feature {NONE} -- Initlization
 
 	make (a_content: SD_CONTENT)
 			-- Creation method
@@ -69,7 +69,7 @@ feature -- Initlization
 			set_minimum_height (internal_shared.tab_zone_upper_minimum_height)
 		ensure
 			set: internal_content = a_content
-			set: internal_docking_manager = a_content.docking_manager
+			set: docking_manager = a_content.docking_manager
 		end
 
 feature -- Redefine
@@ -210,7 +210,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -220,10 +220,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
 end
-

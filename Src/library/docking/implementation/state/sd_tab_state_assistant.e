@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Assistant for SD_TAB_STATE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,27 +16,18 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_docking_manager: SD_DOCKING_MANAGER)
+	make (a_docking_manager: SD_DOCKING_MANAGER; a_tab_state: SD_TAB_STATE)
 			-- Creation method
 		require
-			not_void: a_docking_manager /= Void
+			a_docking_manager_attacched: attached a_docking_manager
+			a_tab_state_attached: attached a_tab_state
 		do
 			internal_docking_manager := a_docking_manager
+			state := a_tab_state
 			create internal_shared
 		ensure
-			set: internal_docking_manager = a_docking_manager
-		end
-
-feature {SD_TAB_STATE} -- Initlization
-
-	init (a_tab_state: SD_TAB_STATE)
-			-- Initlization
-		require
-			not_void: a_tab_state /= Void
-		do
-			internal_state := a_tab_state
-		ensure
-			set: state = a_tab_state
+			internal_docking_manager_set: internal_docking_manager = a_docking_manager
+			state_set: state = a_tab_state
 		end
 
 feature {SD_TAB_STATE}  -- Implementation functions
@@ -87,7 +78,6 @@ feature {SD_TAB_STATE}  -- Implementation functions
 		local
 			l_new_split_area: EV_SPLIT_AREA
 			l_target_zone_parent: detachable EV_CONTAINER
-			l_old_zone_parent_type: READABLE_STRING_GENERAL
 			l_target_zone_parent_split_position: INTEGER
 			l_target_zone_parent_spliter: detachable EV_SPLIT_AREA
 		do
@@ -97,9 +87,8 @@ feature {SD_TAB_STATE}  -- Implementation functions
 				check not_possible: False end
 			end
 
-			-- First, remove current internal_zone from old parent split area	
+				-- First, remove current internal_zone from old parent split area.
 			if attached state.tab_zone.parent as l_parent then
-				l_old_zone_parent_type := l_parent.generating_type
 				l_parent.prune (state.tab_zone)
 			end
 
@@ -180,46 +169,39 @@ feature {SD_TAB_STATE}  -- Implementation functions
 				l_split_position := a_target_zone.parent_split_position
 			end
 			l_contents := state.tab_zone.contents
-			from
-				l_contents.start
-				first_move_to_docking_zone := True
-			until
-				l_contents.after
-			loop
-				if first_move_to_docking_zone then
+			l_contents.start
+			if not l_contents.after then
+				from
+						-- First move to docking zone.
 					if attached l_contents.item.user_widget.parent as l_parent then
 						l_parent.prune (l_contents.item.user_widget)
 					end
 					create l_tab_state.make (l_contents.item, a_target_zone, l_orignal_direction)
-					first_move_to_docking_zone := False
-				else
-					check l_tab_state /= Void end -- Implied by set by first time loop
-					if attached {SD_TAB_ZONE} l_tab_state.zone as l_tab_zone then
-						create l_tab_state.make_with_tab_zone (l_contents.item, l_tab_zone, l_orignal_direction)
-					else
-						check False end -- Implied by tab state's zone muse be SD_TAB_ZONE
-					end
+					l_contents.item.change_state (l_tab_state)
+					l_tab_state.set_direction (l_orignal_direction)
+					l_contents.forth
+				until
+					l_contents.after
+				loop
+					create l_tab_state.make_with_tab_zone (l_contents.item, l_tab_state.zone, l_orignal_direction)
+					l_contents.item.change_state (l_tab_state)
+					l_tab_state.set_direction (l_orignal_direction)
+					l_contents.forth
 				end
-				check l_tab_state /= Void end -- Implied by previous if clause
-				l_contents.item.change_state (l_tab_state)
-				l_tab_state.set_direction (l_orignal_direction)
-				l_contents.forth
-			end
-			check l_tab_state /= Void end -- Implied by previous loop
-			l_tab_state.select_tab (state.content, True)
-
-			if l_is_split then
-				if attached {EV_SPLIT_AREA} l_tab_state.zone.parent as l_split then
-					if l_split.full then
-						if l_split.minimum_split_position > l_split_position then
-							l_split_position := l_split.minimum_split_position
-						elseif l_split.maximum_split_position < l_split_position then
-							l_split_position := l_split.maximum_split_position
+				l_tab_state.select_tab (state.content, True)
+				if l_is_split then
+					if attached {EV_SPLIT_AREA} l_tab_state.zone.parent as l_split then
+						if l_split.full then
+							if l_split.minimum_split_position > l_split_position then
+								l_split_position := l_split.minimum_split_position
+							elseif l_split.maximum_split_position < l_split_position then
+								l_split_position := l_split.maximum_split_position
+							end
+							l_split.set_split_position (l_split_position)
 						end
-						l_split.set_split_position (l_split_position)
+					else
+						check False end -- Implied by `l_is_split'
 					end
-				else
-					check False end -- Implied by `l_is_split'
 				end
 			end
 		ensure
@@ -243,21 +225,18 @@ feature {SD_TAB_STATE}  -- Implementation functions
 
 				if attached {SD_DOCKING_ZONE} a_target_zone as l_docking_zone then
 					create l_tab_state.make (state.content, l_docking_zone, l_orignal_direction)
+					l_tab_state.set_direction (l_orignal_direction)
+					state.change_state (l_tab_state)
 				elseif attached {SD_TAB_ZONE} a_target_zone as l_tab_zone then
 					create l_tab_state.make_with_tab_zone (state.content, l_tab_zone, l_orignal_direction)
 					l_tab_zone.set_content_position (state.content, a_index)
+					l_tab_state.set_direction (l_orignal_direction)
+					state.change_state (l_tab_state)
 				else
 					check False end -- Implied by only docking zone or tab zone
 				end
-
-				check l_tab_state /= Void end -- Implied by previous if clause
-				l_tab_state.set_direction (l_orignal_direction)
-				state.change_state (l_tab_state)
-
-				-- FIXME: Maybe we are opening layout config, so the parent is Void?
---				if l_parent /= Void then
+					-- FIXME: Maybe we are opening layout config, so the parent is Void?
 				update_last_content_state (l_parent)
---				end
 			else
 				check False end -- Implied by tab zone existing in main window
 			end
@@ -283,7 +262,7 @@ feature {SD_TAB_STATE}  -- Implementation functions
 			if a_multi_dock_area.full then
 
 				l_old_stuff := a_multi_dock_area.item
-				a_multi_dock_area.save_spliter_position (l_old_stuff, generating_type)
+				a_multi_dock_area.save_spliter_position (l_old_stuff, generating_type.name_32)
 				a_multi_dock_area.prune (l_old_stuff)
 			end
 
@@ -310,7 +289,7 @@ feature {SD_TAB_STATE}  -- Implementation functions
 				l_new_container.set_split_position (state.top_split_position (state.direction, l_new_container))
 			end
 			if l_old_stuff /= Void then
-				a_multi_dock_area.restore_spliter_position (l_old_stuff, generating_type)
+				a_multi_dock_area.restore_spliter_position (l_old_stuff, generating_type.name_32)
 			end
 		ensure
 			docked: is_top_has_zone (a_multi_dock_area)
@@ -415,24 +394,7 @@ feature {SD_TAB_STATE}  -- Implementation functions
 feature -- Query
 
 	state: SD_TAB_STATE
-			-- Tab state which current help
-		require
-			set: is_state_set
-		local
-			l_result: detachable like state
-		do
-			l_result := internal_state
-			check l_result /= Void end
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
-	is_state_set: BOOLEAN
-			-- If `internal_state' attached?
-		do
-			Result := internal_state /= Void
-		end
+			-- Tab state which current help.
 
 	is_top_has_zone (a_multi_dock_area: SD_MULTI_DOCK_AREA): BOOLEAN
 			-- If `a_multi_dock_area' has `tab_zone'?
@@ -450,9 +412,6 @@ feature {NONE} -- Implementation
 	first_move_to_docking_zone: BOOLEAN
 			-- When moving to a docking zone, first time is different
 
-	internal_state: detachable SD_TAB_STATE
-			-- Tab state which current help
-
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager
 
@@ -462,7 +421,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -471,6 +430,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

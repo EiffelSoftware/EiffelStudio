@@ -1,9 +1,9 @@
-note
+﻿note
 	description	: "Toolbar button for a toolbarable toolbar command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_SD_COMMAND_TOOL_BAR_BUTTON
@@ -28,8 +28,6 @@ feature {NONE} -- Initialization
 
 	make (a_command: EB_TOOLBARABLE_COMMAND)
 			-- Creation method
-		local
-			l_recyclable: EB_RECYCLABLE
 		do
 			sd_make
 
@@ -37,8 +35,7 @@ feature {NONE} -- Initialization
 			command.managed_sd_toolbar_items.extend (Current)
 			name := command.name
 
-			l_recyclable ?= a_command
-			if l_recyclable /= Void then
+			if attached {EB_RECYCLABLE} a_command as l_recyclable then
 				l_recyclable.auto_recycle (Current)
 			end
 		end
@@ -69,7 +66,7 @@ feature {NONE} -- Implementation
 			-- command associated with Current.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -93,11 +90,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_SD_COMMAND_TOOL_BAR_BUTTON
+end

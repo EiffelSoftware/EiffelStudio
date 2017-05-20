@@ -341,7 +341,7 @@ feature -- Debug mode command
 				l_result := develop_window.docking_manager.open_tools_config_with_path (l_fn)
 			end
 			if not l_result then
-				-- Synchornze editors with docking contents
+					-- Synchronize editors with docking contents
 				develop_window.editors_manager.synchronize_with_docking_manager
 				restore_standard_debug_docking_layout_by_code
 			end
@@ -545,7 +545,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

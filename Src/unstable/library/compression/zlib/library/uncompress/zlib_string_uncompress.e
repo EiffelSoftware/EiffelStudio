@@ -51,6 +51,17 @@ feature -- Access
 			Result := attached string
 		end
 
+feature -- Change Element
+
+	set_string (a_string: READABLE_STRING_32)
+		do
+			create string.make_from_string (a_string.as_string_8)
+		ensure
+			string_set: attached string
+		end
+
+
+
 feature -- Inflate
 
 	to_string: STRING
@@ -58,6 +69,17 @@ feature -- Inflate
 			create Result.make_empty
 			create user_output_string.make_empty
 			inflate
+			if attached user_output_string as l_string then
+				Result := l_string
+			end
+			close
+		end
+
+	to_string_with_options (a_windows_bits: INTEGER): STRING
+		do
+			create Result.make_empty
+			create user_output_string.make_empty
+			inflate_with_options (a_windows_bits)
 			if attached user_output_string as l_string then
 				Result := l_string
 			end
@@ -107,7 +129,7 @@ feature	{NONE} -- Inflate Implementation
 			if l_index > a_string.count then
 				end_of_input := True
 			else
-				if attached user_output_string as l_string then
+				if attached string as l_string then
 				   string := l_string.substring (l_index, l_string.count)
 				end
 			end

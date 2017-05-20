@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create the horizontal scroll bar.
 		do
 			assign_interface (an_interface)

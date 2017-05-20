@@ -1,23 +1,32 @@
 note
 	description: "JSON Null Values"
 	author: "Javier Velilla"
-	date: "2008/08/24"
-	revision: "Revision 0.1"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	JSON_NULL
 
 inherit
-
 	JSON_VALUE
+		redefine
+			is_null
+		end
 
-feature --Access
+feature -- Status report			
+
+	is_null: BOOLEAN = True
+			-- <Precursor>
+
+feature -- Access
 
 	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := null_value.hash_code
 		end
+
+feature -- Conversion		
 
 	representation: STRING
 		do
@@ -46,6 +55,6 @@ feature {NONE} -- Implementation
 	null_value: STRING = "null"
 
 note
-	copyright: "2010-2014, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2017, Javier Velilla and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

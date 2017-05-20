@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		An event list service {EVENT_LIST_S} tool to show all errors and warning event items in a single list in the EiffelStudio UI
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	ES_ERROR_LIST_TOOL_PANEL
@@ -134,29 +134,24 @@ feature {NONE} -- Initialization: User interface
 								l_item_error.column = l_other_error.column and then
 								l_item_error.file_name ~ l_other_error.file_name)
 					end))
+
+				-- Register observer on preference 'expand_n_errors'.			
+			preferences.error_list_tool_data.expand_n_errors_preferences.change_actions.extend (agent on_preference_expand_n_errors)
 		end
 
 	on_after_initialized
 			-- <Precursor>
 		do
+
 				-- Enable copying to clipboard
 			enable_copy_to_clipboard
 
 				-- Bind redirecting pick and drop actions
 			stone_director.bind (grid_events, Current)
 
-				-- Hook up events for session data
-			if attached session_manager.service then
-				session_data.session_connection.connect_events (Current)
-				if attached {BOOLEAN_REF} session_data.value_or_default (expand_errors_session_id, False) as l_expand then
-					is_expanding_errors := l_expand.item
-					if is_expanding_errors then
-						expand_errors_button.enable_select
-					else
-						expand_errors_button.disable_select
-					end
-				end
-			end
+				-- Configure expand errors based con preferece
+				-- 'tools.error_list.expand_n_errors'
+			set_expand_error_options
 
 				-- Set UI based on initial state
 			update_content_applicable_navigation_buttons
@@ -193,6 +188,13 @@ feature {NONE} -- Access
 
 	last_tooltip_item: detachable EV_GRID_ITEM
 			-- Last item that brings up tooltip
+
+	expand_n_errors: BOOLEAN
+			-- 	Expand the first N errors.
+			--| with N=1.
+
+	show_n_errors: INTEGER
+			-- First N errors to expand.
 
 feature {NONE} -- Access: Help
 
@@ -368,36 +370,27 @@ feature {NONE} -- Query
 		require
 			a_row_attached: a_row /= Void
 			not_a_row_is_destroyed: not a_row.is_destroyed
-			a_row_data_set: ({EVENT_LIST_ITEM_I}) #? a_row.data /= Void
+			a_row_data_set: attached {EVENT_LIST_ITEM_I} a_row.data
 		local
-			l_event_item: EVENT_LIST_ITEM_I
-			l_error: ERROR
 			l_line: INTEGER
-			l_classi_stone: CLASSI_STONE
-			l_classc_stone: CLASSC_STONE
-			l_line_stone: LINE_STONE
 		do
-			l_event_item ?= a_row.data
-			if l_event_item /= Void then
-				Result ?= a_row.item (context_column).data
-				if Result /= Void then
-					l_error ?= l_event_item.data
-					if l_error /= Void then
-						l_line := l_error.line
-						if l_line > 0 then
-							l_classc_stone ?= Result
-							if l_classc_stone /= Void then
-								create {COMPILED_LINE_STONE}Result.make_with_line (l_classc_stone.e_class, l_line, True)
-							else
-								l_classi_stone ?= Result
-								create {UNCOMPILED_LINE_STONE}Result.make_with_line (l_classi_stone.class_i, l_line, True)
-							end
-							l_line_stone ?= Result
-							if l_line_stone /= Void then
-								l_line_stone.set_should_line_be_selected (True)
-								if l_error.column > 0 then
-									l_line_stone.set_column_number (l_error.column)
-								end
+			if
+				attached {EVENT_LIST_ITEM_I} a_row.data as l_event_item and then
+				attached {STONE} a_row.item (context_column).data as s
+			then
+				Result := s
+				if attached {ERROR} l_event_item.data as l_error then
+					l_line := l_error.line
+					if l_line > 0 then
+						if attached {CLASSC_STONE} Result as l_classc_stone then
+							create {COMPILED_LINE_STONE} Result.make_with_line (l_classc_stone.e_class, l_line, True)
+						elseif attached {CLASSI_STONE} Result as l_classi_stone then
+							create {UNCOMPILED_LINE_STONE} Result.make_with_line (l_classi_stone.class_i, l_line, True)
+						end
+						if attached {LINE_STONE} Result as l_line_stone then
+							l_line_stone.set_should_line_be_selected (True)
+							if l_error.column > 0 then
+								l_line_stone.set_column_number (l_error.column)
 							end
 						end
 					end
@@ -611,9 +604,13 @@ feature {NONE} -- Basic operations
 							-- or class token.
 						from l_content.finish until l_content.before or l_context_stone /= Void loop
 							if attached {EDITOR_TOKEN_FEATURE} l_content.item_for_iteration as l_ft then
-								l_context_stone ?= l_ft.pebble
+								if attached {STONE} l_ft.pebble as s then
+									l_context_stone := s
+								end
 							elseif attached {EDITOR_TOKEN_CLASS} l_content.item_for_iteration as l_ct then
-								l_context_stone ?= l_ct.pebble
+								if attached {STONE} l_ct.pebble as s then
+									l_context_stone := s
+								end
 							end
 							l_content.back
 						end
@@ -674,6 +671,11 @@ feature {NONE} -- Basic operations
 					is_expanding_all_errors := True
 					a_row.expand
 					is_expanding_all_errors := l_expanded
+				elseif expand_n_errors and then show_n_errors > 0 then
+					l_expanded := expand_n_errors
+					a_row.expand
+					show_n_errors := show_n_errors - 1
+					expand_n_errors :=  l_expanded
 				elseif a_row.is_expanded then
 					a_row.collapse
 				end
@@ -876,7 +878,7 @@ feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation
 							Result := is_error_event (a_item) and then
 								(event_context_stone (a_item) /= Void or
 									-- C compiler errors have not context stone so we need to account for this.
-								({C_COMPILER_ERROR}) #? a_item.data /= Void)
+								attached {C_COMPILER_ERROR} a_item.data)
 						end)
 				end
 			end
@@ -894,7 +896,7 @@ feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation
 							Result := is_error_event (a_item) and then
 								(event_context_stone (a_item) /= Void or
 									-- C compiler errors have not context stone so we need to account for this.
-								({C_COMPILER_ERROR}) #? a_item.data /= Void)
+								attached {C_COMPILER_ERROR} a_item.data)
 						end)
 				end
 			end
@@ -1225,7 +1227,7 @@ feature {NONE} -- Action handlers
 			if not is_expanding_all_errors then
 				grid_events.selected_rows.do_all (agent {EV_GRID_ROW}.disable_select)
 				a_row.enable_select
-				if a_row.subrow_count > 0 then
+				if a_row.subrow_count > 0 and then a_row.subrow (1).is_displayed then
 						-- Ensure the row is visible.
 					a_row.subrow (1).ensure_visible
 				end
@@ -1254,7 +1256,6 @@ feature {NONE} -- Action handlers
 		local
 			l_grid: like grid_events
 			l_row: EV_GRID_ROW
-			l_event_item: EVENT_LIST_ITEM_I
 			l_count, i: INTEGER
 		do
 			l_grid := grid_events
@@ -1265,14 +1266,14 @@ feature {NONE} -- Action handlers
 				i > l_count
 			loop
 				l_row := l_grid.row (i)
-				l_event_item ?= l_row.data
-				if l_event_item /= Void then
-					if is_error_event (l_event_item) then
-						if is_displaying_errors then
-							l_row.show
-						else
-							l_row.hide
-						end
+				if
+					attached {EVENT_LIST_ITEM_I} l_row.data as l_event_item and then
+					is_error_event (l_event_item)
+				then
+					if is_displaying_errors then
+						l_row.show
+					else
+						l_row.hide
 					end
 				end
 				i := i + 1
@@ -1288,8 +1289,6 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 		local
 			l_row: EV_GRID_ROW
-			l_event_item: EVENT_LIST_ITEM_I
-			l_warning: ERROR
 			l_filter_widget: like filter_widget
 			l_show: BOOLEAN
 			l_count, i: INTEGER
@@ -1303,16 +1302,18 @@ feature {NONE} -- Action handlers
 				i > l_count
 			loop
 				l_row := grid_events.row (i)
-				l_event_item ?= l_row.data
-				if l_event_item /= Void then
-					if is_warning_event (l_event_item) then
-						l_warning ?= l_event_item.data
-						check l_warning_attached: l_warning /= Void end
-						if l_warning /= Void and then l_show and l_filter_widget.is_unfiltered (l_warning) then
-							l_row.show
-						else
-							l_row.hide
-						end
+				if
+					attached {EVENT_LIST_ITEM_I} l_row.data as l_event_item and then
+					is_warning_event (l_event_item)
+				then
+					if
+						attached {ERROR} l_event_item.data as l_warning and then
+						l_show and then
+						l_filter_widget.is_unfiltered (l_warning)
+					then
+						l_row.show
+					else
+						l_row.hide
 					end
 				end
 				i := i + 1
@@ -1331,16 +1332,12 @@ feature {NONE} -- Action handlers
 			l_expand: BOOLEAN
 			l_grid: like grid_events
 			l_row: EV_GRID_ROW
-			l_event_item: EVENT_LIST_ERROR_ITEM_I
 			l_count, i: INTEGER
 		do
 			l_expand := expand_errors_button.is_selected
 			if is_expanding_errors /= l_expand then
 				is_expanding_all_errors := l_expand
 				is_expanding_errors := l_expand
-				if attached session_manager.service as service then
-					service.retrieve (False).set_value (l_expand, expand_errors_session_id)
-				end
 
 					-- Set applicable grid items and open/closed because on expanded status
 				l_grid := grid_events
@@ -1351,14 +1348,15 @@ feature {NONE} -- Action handlers
 					i > l_count
 				loop
 					l_row := l_grid.row (i)
-					if l_row.is_expandable then
-						l_event_item ?= l_row.data
-						if l_event_item /= Void and then is_error_event (l_event_item) then
-							if l_expand then
-								l_row.expand
-							else
-								l_row.collapse
-							end
+					if
+						l_row.is_expandable and then
+						attached {EVENT_LIST_ERROR_ITEM_I} l_row.data as l_event_item and then
+						is_error_event (l_event_item)
+					then
+						if l_expand then
+							l_row.expand
+						else
+							l_row.collapse
 						end
 					end
 					i := i + 1
@@ -1385,19 +1383,16 @@ feature {NONE} -- Action handlers
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		local
-			l_event: EVENT_LIST_ITEM_I
 			l_error: ERROR
 		do
 			if grid_events.has_selected_row then
 					-- Retrieve event item set from {ES_EVENT_LIST_TOOL_PANEL_BASE}.on_event_added
-				l_event ?= grid_events.selected_rows.first.data
-				if l_event /= Void then
-						-- Now retrieve error item
-					l_error ?= l_event.data
-					check
-						l_error_attached: l_error /= Void
-					end
-
+				if
+					attached {EVENT_LIST_ITEM_I} grid_events.selected_rows.first.data as l_event and then
+					attached {ERROR} l_event.data as e
+				then
+						-- Retrieve error item.
+					l_error := e
 				end
 			end
 
@@ -1418,28 +1413,25 @@ feature {NONE} -- Action handlers
 			l_filter: ES_WARNINGS_FILTER_WIDGET
 			l_grid: like grid_events
 			l_row: EV_GRID_ROW
-			l_event: EVENT_LIST_ITEM_I
-			l_warning: ERROR
 			l_count, i: INTEGER
 		do
 			l_filter := filter_widget
 			l_grid := grid_events
 			from l_count := l_grid.row_count; i := 1 until i > l_count loop
 				l_row := l_grid.row (i)
-				if a_exclude /= not l_row.is_show_requested then
-					l_event ?= l_row.data
-					if l_event /= Void and then is_warning_event (l_event) then
-						l_warning ?= l_event.data
-						if l_warning /= Void then
-							if not l_filter.is_unfiltered (l_warning) then
-								if a_exclude then
-									l_row.hide
-								end
-							else
-								if not a_exclude then
-									l_row.show
-								end
-							end
+				if
+					a_exclude /= not l_row.is_show_requested and then
+					attached {EVENT_LIST_ITEM_I} l_row.data as l_event and then
+					is_warning_event (l_event) and then
+					attached {ERROR} l_event.data as l_warning
+				then
+					if not l_filter.is_unfiltered (l_warning) then
+						if a_exclude then
+							l_row.hide
+						end
+					else
+						if not a_exclude then
+							l_row.show
 						end
 					end
 				end
@@ -1580,6 +1572,41 @@ feature {NONE} -- Factory
 			end
 		end
 
+feature {NONE} -- Preference Handler
+
+	on_preference_expand_n_errors
+			-- Specifies if errors in the Error List tool should be expanded automatically, to show the verbose error information. <0: auto expand all, 0: disabled, and >0: enabled ... expand N first errors..
+		do
+			set_expand_error_options
+		end
+
+
+	set_expand_error_options
+			-- Configure expand error options based on user preference
+			-- 'tools.error_list.expand_n_errors'.
+		do
+			if preferences.error_list_tool_data.expand_n_errors < 0 then
+					-- Expand all
+				is_expanding_errors := True
+				expand_errors_button.enable_select
+				expand_n_errors := False
+			elseif preferences.error_list_tool_data.expand_n_errors > 0  then
+					-- Expand the N first errors.
+				is_expanding_errors := False
+				expand_n_errors := True
+				show_n_errors :=  preferences.error_list_tool_data.expand_n_errors
+				expand_errors_button.disable_select
+			else
+					-- Expand disabled
+				expand_n_errors := False
+				is_expanding_errors :=False
+				show_n_errors := 0
+				expand_errors_button.disable_select
+			end
+
+		end
+
+
 feature {NONE} -- Constants
 
 	error_column: INTEGER = 1
@@ -1603,7 +1630,7 @@ invariant
 	item_count_matches_error_and_warning_count: error_count + warning_count = item_count
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

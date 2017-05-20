@@ -94,20 +94,20 @@
 #nav{
 	@include grid(6);
 	font-family: $museo-sans500;
-	font-size: $base-font-size + 3;
+	font-size: $base-font-size + 2;
 	text-transform: uppercase;
 	padding: 54px 0 0;
-	@include grid-width(7.5);
+	@include grid-width(8);
 	ul{
 		@extend %clearfix;
 		@extend %listreset;
 		margin: 0 -11px;
-		text-align: right;
+		text-align: left;
 		letter-spacing: 1px;
 		li{
 			display: inline-block;
 			vertical-align: top;
-			margin: 0 7px 0 5px;
+			margin: 0 3px 0 4px;
 			position: relative;
 			font-size: $base-font-size - 1;
 			a { 
@@ -304,14 +304,12 @@
 		font-size: 12px;
 		line-height: 18px;
 	}
-	&:after{
-		background: url(../images/ico-search.png) no-repeat;
+	input[type="image"]{
 		width: 16px;
 		height: 16px;
 		position: absolute;
 		top: 6px;
 		left: 5px;
-		content: '';
 	}
 }
 .search-form.parent-focus{
@@ -936,6 +934,9 @@ code, eiffel {
 	display: block;
 	font-family: monospace;
 	white-space: pre-wrap;
+	tab-size: 4;
+	-moz-tab-size: 4; /* Code for Firefox */
+	-o-tab-size: 4; /* Code for Opera 10.6-12.1 */
 
 	border: solid 1px #ccc;
 	background-color: #fff;

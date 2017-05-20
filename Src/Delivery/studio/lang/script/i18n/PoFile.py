@@ -21,7 +21,7 @@ class PoFile:
         self.entries = []
         self.entries.append (i18n.PoMessage())
         self.header().msgstr = [[
-                 "Plural-Forms: nplurals=2; plural=n>1;\\n",
+                 "Plural-Forms: nplurals=2; plural=(n != 1);\\n",
                  "Content-Type: text/plain; charset=UTF-8\\n",
                  "Content-Transfer-Encoding: 8bit\\n",
                  "MIME-Version: 1.0\\n"

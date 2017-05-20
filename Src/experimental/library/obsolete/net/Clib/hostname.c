@@ -26,7 +26,7 @@ indexing
 #endif
 
 #ifdef EIF_WINDOWS
-#include <winsock.h>
+#include <winsock2.h>
 extern void do_init (void);
 #endif
 

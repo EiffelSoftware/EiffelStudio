@@ -1,9 +1,9 @@
-note
+﻿note
 	description	: "Standard Byte code generation for features"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class STD_BYTE_CODE
 
@@ -54,7 +54,7 @@ feature -- Status
 			Result := not (is_process_relative_once or is_object_relative_once)
 		end
 
-feature -- Access
+feature -- C code generation
 
 	generated_c_feature_name: STRING
 			-- Name of generated routine in C generated code
@@ -124,7 +124,6 @@ feature -- Analyzis
 			feat: FEATURE_I
 			have_precond, have_postcond: BOOLEAN
 			inh_assert: INHERITED_ASSERTION
-			old_exp: UN_OLD_BL
 			l_context: like context
 		do
 			l_context := context
@@ -206,17 +205,18 @@ feature -- Analyzis
 				end
 				l_context.set_assertion_type (In_postcondition)
 				if old_expressions /= Void then
-					from
-						old_expressions.start
-					until
-						old_expressions.after
+					across
+						old_expressions as o
 					loop
 						--| Need to do a special analyze for the old
 						--| expressions so that the registers being used
 						--| to store the old values will not be reused.
-						old_exp ?= old_expressions.item -- Cannot fail
-						old_exp.special_analyze
-						old_expressions.forth
+						if attached {UN_OLD_BL} o.item as old_exp then
+								-- Cannot fail.
+							old_exp.special_analyze
+						else
+							check False end
+						end
 					end
 				end
 				if inh_assert.has_postcondition then
@@ -298,7 +298,6 @@ feature -- Analyzis
 			args: like arguments
 			i, nb: INTEGER
 			arg: TYPE_A
-			l_cl_type: CL_TYPE_A
 			l_arg: ARGUMENT_BL
 			l_is_catcall_checking_enabled, l_enable_hooks: BOOLEAN
 			l_name_id, l_any_class_id: INTEGER
@@ -333,14 +332,9 @@ feature -- Analyzis
 						-- If we have a request chain then we need to protect references as a request chain may trigger a GC cycle.
 					if not l_enable_hooks then
 						if l_is_catcall_checking_enabled and then arg.c_type.is_reference then
-							l_cl_type ?= args.item (i)
 									-- Only generate a catcall detection if the expected argument is different
 									-- than ANY since ANY is the ancestor to all types.
-							if l_cl_type = Void or else l_cl_type.class_id /= l_any_class_id then
-								l_enable_hooks := True
-							else
-								l_enable_hooks := False
-							end
+							l_enable_hooks := not attached {CL_TYPE_A} args [i] as c or else c.class_id /= l_any_class_id
 						else
 								-- See FIXME of `generate_expanded_initialization'
 								-- for possible improvement in the case of `true_expanded'.
@@ -657,29 +651,22 @@ end
 	generate_return_not_reached
 			-- Generate a mark that the final return is not reached.
 		local
-			assignment: ASSIGN_B
 			buf: GENERATION_BUFFER
 		do
 			if
 				attached compound as c and then
-				not c.is_empty
-			then
-				c.finish
+				not c.is_empty and then
 					-- If ALL the last statements were assignments in result,
 					-- generate a NOTREACHED for lint when last statement was
 					-- not of type assignment. Otherwise, the return
 					-- statements have already been generated.
-				if c.item.last_all_in_result then
-					assignment ?= c.item
-					if
-						assignment = Void and
-						not context.has_rescue
-					then
-						buf := buffer
-						buf.put_string ("/* NOTREACHED */")
-						buf.put_new_line
-					end
-				end
+				c.last.last_all_in_result and then
+				not attached {ASSIGN_B} c.item and then
+				not context.has_rescue
+			then
+				buf := buffer
+				buf.put_string ("/* NOTREACHED */")
+				buf.put_new_line
 			end
 		end
 
@@ -817,7 +804,6 @@ end
 	generate_expanded_initialization
 			-- Clone expanded parameters and initialize local expanded objects.
 		local
-			l_adapted_type: CL_TYPE_A
 			l_type: TYPE_A
 			i, count: INTEGER
 			buf: GENERATION_BUFFER
@@ -835,8 +821,7 @@ end
 					i > count
 				loop
 					l_type := l_list.item (i)
-					l_adapted_type ?= real_type (l_type)
-					if l_adapted_type /= Void and then l_adapted_type.is_true_expanded then
+					if attached {CL_TYPE_A} real_type (l_type) as l_adapted_type and then l_adapted_type.is_true_expanded then
 							-- FIXME: Manu: 05/10/2004: if argument is not
 							-- used and if associated type does not redefine `copy'
 							-- then we could skip this call for more efficiency.
@@ -892,8 +877,7 @@ end
 					i > count
 				loop
 					l_type := l_list.item (i)
-					l_adapted_type ?= real_type (l_type)
-					if l_adapted_type /= Void and then l_adapted_type.is_true_expanded then
+					if attached {CL_TYPE_A} real_type (l_type) as l_adapted_type and then l_adapted_type.is_true_expanded then
 							-- FIXME: Manu: 05/12/2004: if local is not
 							-- used and if associated type does not redefine `default_create'
 							-- then we could skip this call for more efficiency.
@@ -959,16 +943,17 @@ end
 			end
 			if context.result_used then
 				type_i := real_type (result_type)
-				if type_i.is_true_expanded then
-						-- If we have a C external returning an expanded, we let the external
-						-- create the expanded, and if it fails then it will perform the allocation
-						-- after calling it (done in {EXT_BYTE_CODE}.generate_return_exp).
-					if not is_external then
-						l_class_type := type_i.associated_class_type (context.context_class_type.type)
-						l_name := context.result_register.register_name
-						l_class_type.generate_expanded_creation (l_buffer, l_name, result_type, context.context_class_type)
-						l_class_type.generate_expanded_initialization (l_buffer, l_name, l_name, True)
-					end
+					-- If we have a C external returning an expanded, we let the external
+					-- create the expanded, and if it fails then it will perform the allocation
+					-- after calling it (done in {EXT_BYTE_CODE}.generate_return_exp).
+				if
+					type_i.is_true_expanded and then
+					not is_external
+				then
+					l_class_type := type_i.associated_class_type (context.context_class_type.type)
+					l_name := context.result_register.register_name
+					l_class_type.generate_expanded_creation (l_buffer, l_name, result_type, context.context_class_type)
+					l_class_type.generate_expanded_initialization (l_buffer, l_name, l_name, True)
 				end
 			end
 		end
@@ -1192,25 +1177,6 @@ end
 			if Context.origin_has_precondition then
 				have_assert := attached precondition or else inh_assert.has_precondition
 			end
-			if has_wait_condition then
-					-- There are wait conditions.
-					-- If they fail, the precondition needs to be re-eveluated.
-					-- The generated code looks like
-					--    for (;;) {
-					--       int has_wait_condition = 0
-					--       ... // Allocate request chain (see below).
-					--       ... // Evaluate preconditions and set has_wait_condition if wait conditions are involved.
-					--       if (!has_wait_condition) break;
-					--       RTCK; // Remove a stack item pushed when entering a precondition.
-					--       RTS_SRF (Current); // Free request chain to let the scheduler reschedule this call.
-					--    }
-					--    RTCF; // Raise exception
-				buf.put_new_line
-				buf.put_string ("for (;;) {")
-				buf.indent
-				buf.put_new_line
-				buf.put_string ("int has_wait_condition = 0;")
-			end
 			workbench_mode := context.workbench_mode
 				-- Preconditions are always generated in workbench mode.
 				-- In finalized mode they are generated if requested by user
@@ -1219,10 +1185,35 @@ end
 				have_assert and then
 				(workbench_mode or else context.system.keep_assertions or else has_wait_condition)
 			then
-					-- Precondition has to be checked all the time if there is a wait condition..
-				if not context.has_request_chain then
-						-- The precondition is checked on demand only.
+				buf.put_new_line
+				if has_wait_condition then
+						-- The precondition has to be checked all the time if there is a wait condition.
+					buf.put_string (if workbench_mode or else context.system.keep_assertions then
+							-- If there is no wait condition, the precondition may still need to be checked if assertion monitoring is enabled.
+						"if (uarg || (RTAL & CK_REQUIRE) || RTAC) {"
+					else
+						"if (uarg) {"
+					end)
+					buf.indent
+						-- There are wait conditions.
+						-- If they fail, the precondition needs to be re-eveluated.
+						-- The generated code looks like
+						--    for (;;) {
+						--       int has_wait_condition = 0
+						--       ... // Allocate request chain (see below).
+						--       ... // Evaluate preconditions and set has_wait_condition if wait conditions are involved.
+						--       if (!has_wait_condition) break;
+						--       RTCK; // Remove a stack item pushed when entering a precondition.
+						--       RTS_SRF (Current); // Free request chain to let the scheduler reschedule this call.
+						--    }
+						--    RTCF; // Raise exception
 					buf.put_new_line
+					buf.put_string ("for (;;) {")
+					buf.indent
+					buf.put_new_line
+					buf.put_string ("int has_wait_condition = 0;")
+				else
+						-- The precondition is checked on demand only.
 					buf.put_string ("if ((RTAL & CK_REQUIRE) || RTAC) {")
 					buf.indent
 				end
@@ -1251,10 +1242,8 @@ end
 				end
 				buf.put_new_line
 				buf.put_string ("RTCF;")
-				if not context.has_request_chain then
-						-- Close on-demand check block.
-					buf.generate_block_close
-				end
+					-- Close on-demand check block.
+				buf.generate_block_close
 			end
 			context.set_assertion_type (0)
 		end
@@ -1685,7 +1674,6 @@ end
 			i, nb: INTEGER
 			l_argument_types: like arguments
 			l_type: TYPE_A
-			l_any_type: CL_TYPE_A
 			l_any_class_id, l_name_id: INTEGER
 			l_arg: ARGUMENT_BL
 			l_optimize_like_current: BOOLEAN
@@ -1710,23 +1698,23 @@ end
 						loop
 							l_type := l_argument_types [i]
 								-- We instantiate `l_type' in current context to see if it is
-								-- really a reference
-							if context.real_type (l_type).c_type.is_reference then
-								l_any_type ?= l_type
-									-- Only generate a catcall detection if the expected argument is different
-									-- than ANY since ANY is the ancestor to all types.
-								if l_any_type = Void or else l_any_type.class_id /= l_any_class_id then
-									if l_arg = Void then
-										create l_arg
-											-- See eweasel test#catcall006 and test#incr330 for a case where it is important
-											-- to detect such assignments.
-											-- See eweasel test#catcall006 and test#incr330 for a case where it is important
-											-- to detect such assignments.
-										l_optimize_like_current := not attribute_assignment_detector.has_attribute_assignment (Current)
-									end
-									l_arg.set_position (i)
-									context.generate_catcall_check (l_arg, l_type, i, l_optimize_like_current)
+								-- really a reference.
+								-- Only generate a catcall detection if the expected argument is different
+								-- than ANY since ANY is the ancestor to all types.
+							if
+								context.real_type (l_type).c_type.is_reference and then
+								(not attached {CL_TYPE_A} l_type as l_any_type or else l_any_type.class_id /= l_any_class_id)
+							then
+								if l_arg = Void then
+									create l_arg
+										-- See eweasel test#catcall006 and test#incr330 for a case where it is important
+										-- to detect such assignments.
+										-- See eweasel test#catcall006 and test#incr330 for a case where it is important
+										-- to detect such assignments.
+									l_optimize_like_current := not attribute_assignment_detector.has_attribute_assignment (Current)
 								end
+								l_arg.set_position (i)
+								context.generate_catcall_check (l_arg, l_type, i, l_optimize_like_current)
 							end
 							i := i + 1
 						end
@@ -1899,13 +1887,10 @@ feature -- Byte code generation
 						-- Make byte code for old expression
 						--! Order is important since interpretor pops expression
 						--! bottom up.
-					from
-						old_expressions.start
-					until
-						old_expressions.after
+					across
+						old_expressions as o
 					loop
-						a_generator.generate_old_expression_initialization (ba, old_expressions.item)
-						old_expressions.forth
+						a_generator.generate_old_expression_initialization (ba, o.item)
 					end
 				end
 
@@ -1970,16 +1955,15 @@ feature -- Array optimization
 		do
 			Result := Current
 			opt_context := initial_optimization_context
-			if opt_context.array_desc.is_empty then
-					-- No entity calls a special feature
-			else
+			if not opt_context.array_desc.is_empty then
+					-- An entity calls a special feature.
 				optimizer := System.remover.array_optimizer
 				optimizer.push_optimization_context (opt_context)
-				if compound /= Void then
-					compound := compound.optimized_byte_node
+				if attached compound as c then
+					compound := c.optimized_byte_node
 				end
-				if rescue_clause /= Void then
-					rescue_clause := rescue_clause.optimized_byte_node
+				if attached rescue_clause as r then
+					rescue_clause := r.optimized_byte_node
 				end
 				optimizer.pop_optimization_context
 			end
@@ -2117,7 +2101,7 @@ feature {NONE} -- C code generation: wait conditions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

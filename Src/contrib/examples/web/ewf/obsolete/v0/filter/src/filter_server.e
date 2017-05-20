@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			create l_methods
 			l_methods.enable_options
 			l_methods.enable_get
-			router.handle_with_request_methods ("/user/{userid}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent l_options_filter.execute), l_methods)
+			router.handle ("/user/{userid}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent l_options_filter.execute), l_methods)
 		end
 
 	initialize_json
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			-- Port number
 
 note
-	copyright: "2011-2014, Olivier Ligot, Jocelyn Fiat and others"
+	copyright: "2011-2017, Olivier Ligot, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

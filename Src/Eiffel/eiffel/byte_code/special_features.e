@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Special optimization on calls where target is a basic type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -200,6 +200,7 @@ feature -- Byte code special generation
 				check
 					integer_type: type_of (basic_type) = character_type_id
 				end
+				ba.append (bc_wchar)
 				ba.append_character_32 ({CHARACTER_8}.max_value.to_character_32)
 				ba.append (bc_le)
 			end
@@ -1363,7 +1364,7 @@ feature {NONE} -- Type information
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

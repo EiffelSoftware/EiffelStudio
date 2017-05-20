@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 					This class models the header entry of a .po file. 
 					A header entry is a singular entry with the empty string as msgid. The msgstr contains the headers;
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize empty header entry
 		do
-			make_entry ("")
+			make_entry ("", "")
 				-- 10 headers should be enough for anybody
 			create headers.make (10)
 		end
@@ -65,6 +65,10 @@ feature -- Access
 			key_valid: has_header(key)
 		do
 			Result := headers.item (key.to_string_32)
+			check
+				from_precondition_key_valid: attached Result
+			then
+			end
 		ensure
 			header_not_void: Result /= Void
 		end
@@ -75,12 +79,12 @@ feature -- Access
 				-- In this case the msgstr is _not_ stored in msgstr_lines like a normal entry,
 				-- because the msgtr is a multi-line string where each line is a header. We keep them in a
 				-- hash table to be able to access them individually by key
+			create Result.make_empty
 			from
 				headers.start
 			until
 				headers.after
 			loop
-				create Result.make_empty
 				Result.append (headers.key_for_iteration)
 				Result.append (": ")
 				Result.append (headers.item_for_iteration)
@@ -154,7 +158,7 @@ feature {NONE} -- Implementation
 			-- Header values identified by header keys
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
 		Facilities for tuning up the garbage collection mechanism.
 		This class may be used as ancestor by classes needing its facilities.
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -147,8 +147,6 @@ feature -- Status report
 		alias
 			"eif_scavenge_zone_size"
 		end
-
-feature -- Status report
 
 	referers (an_object: ANY): SPECIAL [ANY]
 			-- Objects that refer to `an_object'.
@@ -322,7 +320,7 @@ feature -- Status setting
 		end
 
 	allocate_fast
-			-- Enter ``speed'' mode: will optimize speed of memory
+			-- Enter `speed' mode: will optimize speed of memory
 			-- allocation rather than memory usage.
 		external
 			"C use %"eif_memory.h%""
@@ -331,7 +329,7 @@ feature -- Status setting
 		end
 
 	allocate_compact
-			-- Enter ``memory'' mode: will try to compact memory
+			-- Enter `memory' mode: will try to compact memory
 			-- before requesting more from the operating system.
 		external
 			"C use %"eif_memory.h%""
@@ -340,7 +338,7 @@ feature -- Status setting
 		end
 
 	allocate_tiny
-			-- Enter ``tiny'' mode: will enter ``memory'' mode
+			-- Enter `tiny' mode: will enter `memory' mode
 			-- after having freed as much memory as possible.
 		external
 			"C use %"eif_memory.h%""
@@ -486,7 +484,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

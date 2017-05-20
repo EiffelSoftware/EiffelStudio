@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			file: PLAIN_TEXT_FILE
 		do
 			if not constants_initialized then
-				create file.make (file_name)
+				create file.make_with_name (file_name)
 				if file.exists then
 					file.open_read
 					file.readstream (file.count)
@@ -226,7 +226,7 @@ invariant
 	all_constants_not_void: all_constants /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Helper functions dependent of external stuff."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ feature {NONE}
 			arr: ANY
 			ptr: POINTER
 		do
-			array_.resize (1, size_)
+			array_.conservative_resize_with_default ('%U', 1, size_)
 			arr := array_.to_c
 			ptr := $arr
 			ptr.memory_copy (memory_, size_)

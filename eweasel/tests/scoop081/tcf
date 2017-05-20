@@ -1,0 +1,29 @@
+test_name 	 scoop-recursive-precondition
+test_description A recursive call to a feature in a precondition with separate arguments should not cause infinite recursion when all arguments are controlled.
+
+copy_sub	Ace $TEST Ace
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+compile_final_keep
+compile_result	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

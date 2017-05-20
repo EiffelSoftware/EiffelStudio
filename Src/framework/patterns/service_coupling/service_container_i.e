@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Base implementation for all global and local service containers.
 		
@@ -20,7 +20,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class
 	SERVICE_CONTAINER_I
@@ -53,7 +53,7 @@ feature -- Extension
 			a_type_attached: a_type /= Void
 			a_service_attached: a_service /= Void
 			not_proffers_service: not is_service_proffered (a_type, a_promote)
-			a_service_conforms_to_a_type: (a_type #? a_service) /= Void
+			a_service_conforms_to_a_type: attached (a_type / a_service)
 			not_a_type_is_container: is_service_proffered ({SERVICE_CONTAINER_S}, True) implies a_type /~ {SERVICE_CONTAINER_S}
 			not_a_type_is_provider: is_service_proffered ({SERVICE_PROVIDER_S}, True) implies a_type /~ {SERVICE_PROVIDER_S}
 		deferred
@@ -102,7 +102,7 @@ feature -- Removal
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -133,4 +133,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {SERVICE_CONTAINER_I}
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Draw rectangles in a specified window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,6 @@ feature -- Basic operations
 			dc: WEL_CLIENT_DC
 			r_left, r_top, r_right, r_bottom: INTEGER
 			brush: WEL_BRUSH
-			color: WEL_COLOR_REF
 			l_rect: WEL_RECT
 		do
 				-- Initialize
@@ -31,8 +30,7 @@ feature -- Basic operations
 			r_top := next_number (t_parent.height)
 			r_right := next_number (t_parent.width)
 			r_bottom := next_number (t_parent.height)
-			color := std_colors @ (next_number (std_colors.count))
-			create brush.make_solid (color)
+			create brush.make_solid (std_colors @ next_number (std_colors.count))
 			create l_rect.make (1, 1, t_parent.width, 30)
 
 				-- Drawing part
@@ -57,7 +55,7 @@ invariant
 	count_nonnegative: count >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -67,6 +65,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class RECTANGLE_DEMO_CMD
-
+end

@@ -31,7 +31,7 @@ feature -- colors
 
 	transparent: BOOLEAN
 			-- Does the pixmap have transparent background ?
-	
+
 	set_transparent (val: like transparent)
 		do
 			transparent := val
@@ -308,7 +308,7 @@ feature -- pixmap
 		local
 			i: INTEGER
 		once
-			create Result.make (0, 8)
+			create Result.make_filled (pix_b ("0"), 0, 8)
 			from
 				i := 0
 			until
@@ -322,12 +322,12 @@ feature -- pixmap
 end -- class GAME_CONSTANTS
 
 --|-------------------------------------------------------------------------
---| Eiffel Mine Sweeper -- ZaDoR (c) -- 
+--| Eiffel Mine Sweeper -- ZaDoR (c) --
 --| version 1.2 (July 2001)
 --|
 --| by Jocelyn FIAT
 --| email: jocelyn.fiat@ifrance.com
---| 
+--|
 --| freely distributable
 --|-------------------------------------------------------------------------
 

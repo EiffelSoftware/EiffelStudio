@@ -150,9 +150,10 @@
 	<PREF NAME="tools.class_browser.feature_view_sorting_order" DESCRIPTION="Sorting order of features with respect to their class of origin in feature tool." HIDDEN="True"><STRING>2:1</STRING></PREF>
 
 	<PREF NAME="tools.error_list.expand_errors" DESCRIPTION="Specifies if errors in the Error List tool should be expanded automatically, to show the verbose error information."><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.error_list.expand_n_errors" DESCRIPTION="Specifies if errors in the Error List tool should be expanded automatically, to show the verbose error information. <0: auto expand all, 0: disabled, and >0: enabled ... expand N first errors."><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="tools.error_list.show_tooltip" DESCRIPTION="Specifies if rich tooltip window should be shown automatically in the Error List tool."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.error_list.report_c_compiler_errors" DESCRIPTION="Specifies what level of error/warning report to perform on C compiler output."><LIST>none;[errors];errors_and_warnings</LIST></PREF>	
-        <PREF NAME="tools.testing_tool.execution.processes" DESCRIPTION="Specifies the number of tests being executed simultaneously."><INTEGER>4</INTEGER></PREF>
+    <PREF NAME="tools.testing_tool.execution.processes" DESCRIPTION="Specifies the number of tests being executed simultaneously."><INTEGER>4</INTEGER></PREF>
 	<PREF NAME="tools.testing_tool.new_tests.prepare_routine" DESCRIPTION="Should new manual tests redefine the preparation routine?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.testing_tool.new_tests.clean_routine" DESCRIPTION="Should new manual tests redefine the clean routine?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.testing_tool.autotest.duration" DESCRIPTION="Number of minutes AutoTest executes generated tests."><INTEGER>3</INTEGER></PREF>
@@ -186,6 +187,7 @@
 	<PREF NAME="interface.dialogs.confirm_on_terminate_finalizing" DESCRIPTION="Display confirmation dialog for terminating the C compilation of a finalize."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_on_terminate_process" DESCRIPTION="Display confirmation dialog for terminating an ongoing C compilation while exiting EiffelStudio."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_on_terminate_external_command" DESCRIPTION="Display confirmation dialog for terminating an external command."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.dialogs.show_first_launching_dialog" DESCRIPTION="Display First launching dialog at startup." HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.show_starting_dialog" DESCRIPTION="Display New/Open project dialog at startup."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_resource_change_needs_restart" DESCRIPTION="Display warning dialog when changing resources that require you to restart EiffeStudio before they become effective." HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.generate_homonyms" DESCRIPTION="Display dialog that warns that homonym format can take a long time."><BOOLEAN>True</BOOLEAN></PREF>
@@ -208,6 +210,7 @@
 	<PREF NAME="interface.dialogs.last_saved_exception_directory" DESCRIPTION="Directory of last exception saved." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_saved_save_file_as_directory" DESCRIPTION="Directory of last save file as saved." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_saved_profile_result_directory" DESCRIPTION="Directory of last profile result saved." HIDDEN="True"><STRING></STRING></PREF>
+	<PREF NAME="interface.dialogs.last_saved_basic_project_directory" DESCRIPTION="Directory rememberd to be reused for the next basic project creation." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_imported_metric_definition_directory" DESCRIPTION="Directory of last imported metric definition." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.project_settings_width" DESCRIPTION="Width of the project settings dialog." HIDDEN="True"><INTEGER>700</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.project_settings_height" DESCRIPTION="Height of the project settings dialog." HIDDEN="True"><INTEGER>600</INTEGER></PREF>
@@ -773,6 +776,7 @@
 	<PREF NAME="shortcuts.external_commands.shortcut_9" DESCRIPTION="Tenth external command shortcut."><SHORTCUT Alt="True">9</SHORTCUT></PREF>
 	
 	<PREF NAME="shortcuts.file.new_tab" DESCRIPTION="Shortcut to create a new tabbed editor."><SHORTCUT Ctrl="True">T</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.file.restore_tab" DESCRIPTION="Shortcut to restore last closed tab."><SHORTCUT Ctrl="True" Shift="True">T</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.file.new_window" DESCRIPTION="Shortcut to create a new development window."><SHORTCUT Ctrl="True">N</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.file.save" DESCRIPTION="Shortcut to save current editing file."><SHORTCUT Ctrl="True">S</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.file.save_all" DESCRIPTION="Shortcut to save all files."><SHORTCUT Ctrl="True" Shift="True">S</SHORTCUT></PREF>
@@ -803,7 +807,7 @@
 	
 	<PREF NAME="shortcuts.view.send_to_context" DESCRIPTION="Shortcut to send Class/Feature to tools."><SHORTCUT Alt="True">Down</SHORTCUT></PREF>
 	
-	<PREF NAME="shortcuts.view.basic_text_view" DESCRIPTION="Shortcut to display basic text view."><SHORTCUT Ctrl="True" Shift="True">T</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.view.basic_text_view" DESCRIPTION="Shortcut to display basic text view."><SHORTCUT Ctrl="True" Shift="True">B</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.clickable_text_view" DESCRIPTION="Shortcut to display clickable text view."><SHORTCUT Ctrl="True" Shift="True">C</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.flat_view" DESCRIPTION="Shortcut to display flat view."><SHORTCUT Ctrl="True" Shift="True">F</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.contract_view" DESCRIPTION="Shortcut to display contract view."><SHORTCUT Ctrl="True" Shift="True">O</SHORTCUT></PREF>

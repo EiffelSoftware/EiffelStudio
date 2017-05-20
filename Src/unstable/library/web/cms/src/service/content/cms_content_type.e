@@ -31,12 +31,18 @@ feature -- Access
 
 feature -- Access
 
+	has_format (a_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is Current content type supporting format `a_name`?
+		do
+			Result := format (a_name) /= Void
+		end
+
 	available_formats: LIST [CONTENT_FORMAT]
 			-- Available formats for Current type.
 		deferred
 		end
 
-	format (a_name: READABLE_STRING_8): detachable CONTENT_FORMAT
+	format (a_name: READABLE_STRING_GENERAL): detachable CONTENT_FORMAT
 			-- Format named `a_name', if available.
 		do
 			across
@@ -87,6 +93,6 @@ feature -- Element change
 		end
 
 note
-	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

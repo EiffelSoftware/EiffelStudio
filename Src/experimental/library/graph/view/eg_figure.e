@@ -27,8 +27,8 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create an EG_FIGURE
 		do
-			Precursor {EV_MODEL_MOVE_HANDLE}
 			create name_label
+			Precursor {EV_MODEL_MOVE_HANDLE}
 			extend (name_label)
 			is_center_valid := True
 		end
@@ -41,14 +41,19 @@ feature {NONE} -- Initialization
 			l_model: like model
 		do
 			l_model := model
-			check l_model /= Void end -- Implied by precondition `model_not_void'
-			if attached l_model.name as l_name then
-				set_name_label_text (l_name)
-			else
+			if l_model = Void then
+				check model_not_void: False end -- Implied by precondition `model_not_void'
 				name_label.set_text (once "")
 				name_label.hide
+			else
+				if attached l_model.name as l_name then
+					set_name_label_text (l_name)
+				else
+					name_label.set_text (once "")
+					name_label.hide
+				end
+				l_model.name_change_actions.extend (agent on_name_change)
 			end
-			l_model.name_change_actions.extend (agent on_name_change)
 		end
 
 feature -- Access
@@ -79,8 +84,7 @@ feature -- Access
 		do
 			l_xml_routines := xml_routines
 			l_model := model
-			check l_model /= Void end -- FIXME: Implied by ...?
-			if attached l_model.name as l_name then
+			if l_model /= Void and then attached l_model.name as l_name then
 				node.add_attribute (name_string, xml_namespace, l_name)
 			end
 			node.put_last (l_xml_routines.xml_node (node, is_selected_string, boolean_representation (is_selected)))
@@ -96,25 +100,23 @@ feature -- Access
 	set_with_xml_element (node: like xml_element)
 			-- Retrive state from `node'.
 		local
-			l_name: STRING
 			l_xml_routines: like xml_routines
-			l_model: like model
-			l_attribute: detachable XML_ATTRIBUTE
-			l_model_name: detachable STRING_8
+			l_name: READABLE_STRING_32
 		do
-			l_xml_routines := xml_routines
-			if node.has_attribute_by_name (name_string) then
-				l_attribute := node.attribute_by_name (name_string)
-				check l_attribute /= Void end -- Implied by `has_attribute_by_name'
-				l_name := l_attribute.value
-				l_model := model
-				check l_model /= Void end -- FIXME: Implied by ...?
-				l_model_name := l_model.name
-				if (l_model_name = Void) or else not (l_model_name ~ (l_name)) then
-					l_model.set_name (l_name)
+			if attached node.attribute_by_name (name_string) as l_name_attrib then
+				if attached model as l_model then
+					l_name := l_name_attrib.value
+					if
+						not attached l_model.name as l_model_name
+						or else not l_model_name.same_string_general (l_name)
+					then
+						l_model.set_name (l_name)
+					end
 				end
 				node.forth
 			end
+
+			l_xml_routines := xml_routines
 			set_is_selected (l_xml_routines.xml_boolean (node, is_selected_string))
 			if l_xml_routines.xml_boolean (node, is_label_shown_string) then
 				if not is_label_shown then
@@ -264,7 +266,7 @@ invariant
 	name_label_not_void: name_label /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

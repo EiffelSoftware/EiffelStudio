@@ -31,8 +31,8 @@ feature {NONE} -- Initialization
 	make_inlined (s: STRING)
 			-- [[Image:title|string]]
 		do
-			make (s)
 			set_inlined (True)
+			make (s)
 		end
 
 	make (s: STRING)
@@ -45,7 +45,6 @@ feature {NONE} -- Initialization
 			if t.as_lower.starts_with ("image:") then
 				name := t.substring (("image:").count + 1, t.count)
 			end
-			set_inlined (False)
 
 			if attached {WIKI_STRING} text as ws and then not ws.is_empty then
 				add_parameter (ws.text)
@@ -78,6 +77,12 @@ feature {NONE} -- Initialization
 					then
 						location_parameter := s.as_lower
 						a_parameters.remove
+					elseif s.starts_with_general ("align=") then
+						location_parameter := s.substring (s.index_of ('=', 1) + 1 ,s.count).as_lower
+						a_parameters.remove
+					elseif s.starts_with_general ("alt=") then
+						alt_parameter := s.substring (s.index_of ('=', 1) + 1 ,s.count)
+						a_parameters.remove
 					elseif
 						s.is_case_insensitive_equal_general ("baseline")
 						or s.is_case_insensitive_equal_general ("middle")
@@ -99,19 +104,35 @@ feature {NONE} -- Initialization
 					elseif s.is_case_insensitive_equal_general ("border") then
 						has_border := True
 						a_parameters.remove
-					elseif s.ends_with_general ("px") then
-						s := s.substring (1, s.count - 2)
-						width_parameter := Void
-						height_parameter := Void
-						across
-							s.split ('x') as s_ic
-						loop
-							if width_parameter = Void then
-								width_parameter := s_ic.item
-							elseif height_parameter = Void then
-								height_parameter := s_ic.item
-							else
+					elseif s.starts_with_general ("width=") then
+						width_parameter := s.substring (s.index_of ('=', 1) + 1 ,s.count).as_lower
+						a_parameters.remove
+					elseif s.starts_with_general ("height=") then
+						height_parameter := s.substring (s.index_of ('=', 1) + 1 ,s.count).as_lower
+						a_parameters.remove
+					elseif s.ends_with_general ("px") or else s.is_integer then
+						if s.is_integer then
+								-- Keep `s` as it is.
+						else
+							s := s.substring (1, s.count - 2)
+						end
+						if s.has ('x') then
+							width_parameter := Void
+							height_parameter := Void
+							across
+								s.split ('x') as s_ic
+							loop
+								if width_parameter = Void then
+									width_parameter := s_ic.item
+								elseif height_parameter = Void then
+									height_parameter := s_ic.item
+								else
+								end
 							end
+						elseif width_parameter = Void then
+							width_parameter := s.as_lower
+						elseif height_parameter = Void then
+							height_parameter := s.as_lower
 						end
 						if attached width_parameter as w and then w.is_empty then
 							width_parameter := Void
@@ -121,7 +142,7 @@ feature {NONE} -- Initialization
 						upright_parameter := "0.75"
 						a_parameters.remove
 					elseif s.starts_with_general ("upright=") then
-						upright_parameter := s.substring (8, s.count)
+						upright_parameter := s.substring (s.index_of ('=', 1) + 1 ,s.count)
 						a_parameters.remove
 					else
 						if text.is_empty then
@@ -133,6 +154,18 @@ feature {NONE} -- Initialization
 					end
 				end
 			end
+			if
+				has_frame or has_thumb_parameter
+				or location_parameter /= Void
+			then
+				inlined := False
+			else
+				inlined := True
+				if attached {WIKI_STRING} text as ws then
+						-- See code, it is a WIKI_STRING.
+					alt_parameter := ws.text
+				end
+			end
 		end
 
 feature -- Query
@@ -142,6 +175,8 @@ feature -- Query
 	has_frame: BOOLEAN
 
 	has_border: BOOLEAN
+
+	alt_parameter: detachable READABLE_STRING_8
 
 	location_parameter: detachable READABLE_STRING_8
 
@@ -160,7 +195,7 @@ feature -- Query
 
 	has_parameter (a_name: READABLE_STRING_GENERAL): BOOLEAN
 		obsolete
-			"Do not use has_parameter anymore [2014/July]"
+			"Do not use has_parameter anymore [2017-05-31]"
 		do
 			if attached parameters as lst then
 				across
@@ -186,7 +221,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2017, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

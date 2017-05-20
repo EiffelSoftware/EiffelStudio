@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Internal file information"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -160,7 +160,7 @@ feature -- Access
 			-- File name as a STRING_8 instance. The value might be truncated
 			-- from the original name used to create the current FILE instance.
 		obsolete
-			"Use `file_entry' to ensure that filenames are not truncated."
+			"Use `file_entry' to ensure that filenames are not truncated. [2017-05-31]"
 		do
 			if attached internal_file_name as l_name then
 				Result := l_name.as_string_8
@@ -187,7 +187,6 @@ feature {NATIVE_STRING_HANDLER} -- Access
 			u: UTF_CONVERTER
 			l_c_string: C_STRING
 			l_ptr: detachable MANAGED_POINTER
-			l_count: INTEGER
 		do
 			l_ptr := a_ptr
 			if {PLATFORM}.is_windows then
@@ -209,7 +208,7 @@ feature {NATIVE_STRING_HANDLER} -- Access
 					else
 						l_ptr.resize (multi_byte_to_utf_16 (l_c_string.item, default_pointer, 0))
 					end
-					l_count := multi_byte_to_utf_16 (l_c_string.item, l_ptr.item, l_ptr.count)
+					multi_byte_to_utf_16 (l_c_string.item, l_ptr.item, l_ptr.count).do_nothing
 				end
 			else
 				if l_ptr = Void then
@@ -478,7 +477,7 @@ feature -- Conversion
 	to_unix_file_info: UNIX_FILE_INFO
 			-- Convert current to old format UNIX_FILE_INFO for backward compatibility.
 		obsolete
-			"Use `FILE_INFO' as type instead of `UNIX_FILE_INFO'."
+			"Use `FILE_INFO' as type instead of `UNIX_FILE_INFO'. [2017-05-31]"
 		do
 			create Result.make
 			if attached internal_file_name as l_name then
@@ -601,7 +600,7 @@ feature {NONE} -- Implementation
 			#ifdef EIF_WINDOWS
 				return (EIF_INTEGER) MultiByteToWideChar(CP_ACP, 0, (LPSTR) $a_ptr, -1, (LPWSTR) $a_output, (int) $a_output_length) * sizeof(wchar_t);
 			#else
-				return $a_output_length
+				return $a_output_length;
 			#endif
 			}"
 		end
@@ -625,7 +624,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

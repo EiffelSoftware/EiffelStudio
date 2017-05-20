@@ -22,13 +22,13 @@ objcflags='-ObjC'
 # Standard runtime:
 #------------------
 mtccflags='$ccflags -DEIF_THREADS'
-ccflags='$warning_level $debug -nologo -MT -D_WIN32_WINNT=0x0500 -DWINVER=0x0500'
+ccflags='$warning_level $debug -nologo -MT -D_WIN32_WINNT=0x0500 -DWINVER=0x0500 -DWIN32_LEAN_AND_MEAN'
 output_libraries='standard mtstandard'
 #
 #-- DLL:
 #--------
 #mtccflags='$ccflags -DEIF_THREADS'
-#ccflags='-DEIF_MAKE_DLL $warning_level -nologo $debug -MT -D_WIN32_WINNT=0x0500 -DWINVER=0x0500'
+#ccflags='-DEIF_MAKE_DLL $warning_level -nologo $debug -MT -D_WIN32_WINNT=0x0500 -DWINVER=0x0500 -DWIN32_LEAN_AND_MEAN'
 #output_libraries='dll mtdll'
 #
 #

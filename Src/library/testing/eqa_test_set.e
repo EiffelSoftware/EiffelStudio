@@ -93,7 +93,7 @@ feature -- Access
 	current_test_name: IMMUTABLE_STRING_32
 			-- Name of test currently being executed
 		obsolete
-			"Use `environment.item ({EQA_TEST_SET}.test_name_key)' instead"
+			"Use `environment.item ({EQA_TEST_SET}.test_name_key)` [2017-05-31]"
 		do
 			if attached environment.item ({EQA_TEST_SET}.test_name_key) as l_name then
 				Result := l_name
@@ -216,11 +216,13 @@ feature -- Constants
 	target_path_key: STRING = "TARGET_PATH"
 			-- Key for path in which test of `Current' is executed
 
+	source_path_key: STRING = "SOURCE_PATH"
+
 invariant
 	internal_file_system_valid: file_system.asserter = asserter
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

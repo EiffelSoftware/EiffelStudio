@@ -46,8 +46,6 @@ doc:<file name="misc.c" header="eif_misc.h" version="$Id$" summary="Miscellenaou
 #include <envLib.h>
 #endif
 #ifdef EIF_WINDOWS
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
 #include <eif_file.h>
 #endif
 

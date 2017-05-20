@@ -24,8 +24,8 @@ feature {NONE} -- Initialization
 	make
 			-- <Precursor>
 		do
-			Precursor
 			create template.make_empty
+			Precursor
 			--create xeb_file.
 		end
 
@@ -186,7 +186,7 @@ feature {NONE} -- Parser behaviours
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

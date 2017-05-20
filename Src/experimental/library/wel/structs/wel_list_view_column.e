@@ -269,7 +269,7 @@ feature -- Obsolete
 	cx: INTEGER
 			-- Specifies the width, in pixel, of the column
 		obsolete
-			"use `width' instead, `cx' will be removed after January 2001"
+			"use `width' instead, `cx' will be removed after January 2001 [2017-05-31]."
 		require
 			exists: exists
 		do
@@ -279,7 +279,7 @@ feature -- Obsolete
 	set_cx (a_width: INTEGER)
 			-- Set `cx' with `a_cx'.
 		obsolete
-			"use `set_width' instead, `set_cx' will be removed after January 2001"
+			"use `set_width' instead, `set_cx' will be removed after January 2001 [2017-05-31]."
 		require
 			exists: exists
 		do
@@ -289,7 +289,7 @@ feature -- Obsolete
 	set_fmt (a_fmt: INTEGER)
 			-- Set `fmt' with `a_fmt'.
 		obsolete
-			"use `set_alignment' instead, `set_fmt' will be removed after January 2001"
+			"use `set_alignment' instead, `set_fmt' will be removed after January 2001 [2017-05-31]."
 		require
 			exists: exists
 		do
@@ -300,7 +300,7 @@ feature -- Obsolete
 			-- Specifies the alignment of the column
 			-- See class WEL_LVCF_CONSTANTS for possible values.
 		obsolete
-			"use `alignment' instead, `fmt' will be removed after January 2001"
+			"use `alignment' instead, `fmt' will be removed after January 2001 [2017-05-31]."
 		require
 			exists: exists
 		do
@@ -394,7 +394,7 @@ feature {NONE} -- Externals
 -----------------------------------------------------------------
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

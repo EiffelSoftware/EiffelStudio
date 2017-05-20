@@ -28,7 +28,6 @@ inherit
 
 feature {NONE} -- Initialization
 {/literal}
-
 {unless condition="$WIZ.routers.use_router ~ $WIZ_YES"}{literal}
 feature -- Execution
 
@@ -42,8 +41,8 @@ feature -- Execution
 				--| To send back easily a simple plaintext message.
 			create mesg.make_with_body ("Hello Eiffel Web")
 			response.send (mesg)
-		end{/literal}{/unless}
-
+		end
+{/literal}{/unless}
 {if condition="$WIZ.filters.use_filter ~ $WIZ_YES"}{literal}
 feature -- Filter
 
@@ -57,16 +56,17 @@ feature -- Filter
 	setup_filter
 			-- Setup `filter'
 		local
-			l_filters: ARRAYED_LIST [WSF_FILTER]
+			f: like filter
 		do
-			create l_filters.make (2)
-			l_filters.put (create {WSF_CORS_FILTER})
-			l_filters.put (create {WSF_LOGGING_FILTER})
-			append_filters (l_filters)			
+			create {WSF_CORS_FILTER} f
+			f.set_next (create {WSF_LOGGING_FILTER})
+
 				--| Chain more filters like {WSF_CUSTOM_HEADER_FILTER}, ...
 				--| and your owns filters.
-		end{/literal}{/if}
 
+			filter.append (f)
+		end
+{/literal}{/if}
 {if condition="$WIZ.routers.use_router ~ $WIZ_YES"}{literal}
 feature -- Router
 

@@ -5,7 +5,7 @@ note
 		"Eiffel precursor calls"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,10 @@ deferred class ET_PRECURSOR_CALL
 
 inherit
 
-	ET_AST_NODE
+	ET_CALL_WITH_ACTUAL_ARGUMENT_LIST
+		rename
+			name as precursor_keyword
+		end
 
 feature {NONE} -- Initialization
 
@@ -41,9 +44,7 @@ feature -- Initialization
 				-- set by the feature flattener if we only want to reset
 				-- what the implementation checker did, and especially since
 				-- it does not hurt to leave it there.
-			if attached arguments as l_arguments then
-				l_arguments.reset
-			end
+			reset_arguments
 			parenthesis_call := Void
 		end
 
@@ -55,14 +56,11 @@ feature -- Access
 	parent_name: detachable ET_PRECURSOR_CLASS_NAME
 			-- Parent class name surrounded by braces
 
-	arguments: detachable ET_ACTUAL_ARGUMENT_LIST
-			-- Arguments
-
 	parent_type: detachable ET_BASE_TYPE
 			-- Parent type;
 			-- Void if not resolved yet.
 
-	parenthesis_call: detachable ET_QUALIFIED_REGULAR_FEATURE_CALL
+	parenthesis_call: detachable ET_PARENTHESIS_CALL
 			-- Unfolded form when the current precursor call is of the parenthesis alias form;
 			-- For example, if the current precursor call is 'precursor (args)', its parenthesis call
 			-- will be 'precursor.g (args)' where 'g' is declared as 'g alias "()"'.

@@ -83,9 +83,16 @@ feature -- Output
 		local
 			s: STRING
 		do
-			create s.make_empty
-			a_response.set_value (a_node, "node")
 			a_response.set_title (a_node.title)
+
+			a_response.set_value (a_node, "node")
+			a_response.set_value (a_node.content_type, "optional_content_type")
+			create s.make_empty
+			if a_node.is_not_published then
+				a_response.add_warning_message ("This node is NOT published!")
+			elseif a_node.is_trashed then
+				a_response.add_warning_message ("This node is in the TRASH!")
+			end
 			append_content_as_html_to (a_node, False, s, a_response)
 			a_response.set_main_content (s)
 		end

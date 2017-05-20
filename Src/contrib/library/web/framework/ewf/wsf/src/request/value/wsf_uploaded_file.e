@@ -94,7 +94,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	string_representation: STRING_32
+	string_representation: READABLE_STRING_32
 		do
 			Result := filename
 		end
@@ -250,7 +250,7 @@ feature -- Element change
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

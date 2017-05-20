@@ -150,7 +150,7 @@ feature -- Measurement
 
 feature -- Obsolete
 
-	bitmap_info_header: WEL_BITMAP_INFO_HEADER obsolete "Use ``header''"
+	bitmap_info_header: WEL_BITMAP_INFO_HEADER obsolete "Use `header' [2017-05-31]"
 		require
 			exists: exists
 		do

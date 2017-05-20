@@ -1,24 +1,28 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-class 
+
+class
 	TWO_WAY_TREE_DEMO
 
 inherit
 	TOP_DEMO
 		redefine
-			cycle, execute, fill_menu
+			cycle,
+			execute,
+			fill_menu,
+			make
 		end
 
 create
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make
-			-- Initialize and execute demonstration
+			-- Initialize and execute demonstration.
 		do
-			create driver.make
+			Precursor
 			driver.new_menu ("%N%N* GENERAL TREE DEMO *%N%N[XX] Shows current node, (YY) shows child cursor%N")
 			fill_menu
 			create tree_root.make (0)
@@ -26,19 +30,23 @@ feature -- Creation
 			cycle
 		end
 
-feature -- Attributes
+feature {NONE} -- Attributes
 
 	child, parent, right, left, root, child_forth, child_back,
 	child_start, child_finish, child_put, put_left, put_right,
 	child_remove, put, show, quit: INTEGER
+			-- Command code.
 
-	tree_root : TWO_WAY_TREE [INTEGER]
+	tree_root: TWO_WAY_TREE [INTEGER]
+			-- Structure to operate on.
 
-	active : TWO_WAY_TREE [INTEGER]
+	active: TWO_WAY_TREE [INTEGER]
+			-- Currently selected node in the tree.
 
-	active_child : TWO_WAY_TREE [INTEGER]
+	active_child: detachable TWO_WAY_TREE [INTEGER]
+			-- Currently selected child.
 
-feature -- Routines
+feature {NONE} -- Basic operations
 
 	cycle
 			-- Basic user interaction process.
@@ -64,7 +72,7 @@ feature -- Routines
 		end
 
 	tree_trace (t: TWO_WAY_TREE [INTEGER]; i: INTEGER)
-			-- Display t, indented by i positions
+			-- Display `t`, indented by `i` positions.
 		require
 			tree_not_void: t /= Void
 		local
@@ -99,7 +107,9 @@ feature -- Routines
 			until
 				t.exhausted
 			loop
-				tree_trace (t.child, i + 3)
+				if attached t.child as x then
+					tree_trace (x, i + 3)
+				end
 				t.child_forth
 			end
 			t.child_go_to (c)
@@ -147,43 +157,40 @@ feature -- Routines
 			-- Execute command corresponding to user's request.
 		require else
 			valid_command: new_command >= put_left and new_command <= quit
-		local
-			other : TWO_WAY_TREE [INTEGER]
 		do
 				--| parse and perform action
 			if new_command = child then
-				if active.is_leaf then
+				if active.is_leaf or else not attached active.child as c then
 					driver.signal_error ("Cannot execute: no child.")
 				else
-					active := active.child
+					active := c
 				end
 			elseif new_command = parent then
 				if active = tree_root then
 					driver.signal_error ("Cannot execute: no parent.")
 				else
-					active := active.parent
+						-- There is a parent because this is not a top node.
+					check attached active.parent as p then
+						active := p
+					end
 				end
 			elseif new_command = right then
-				other := active.right_sibling
-				if other = Void then
-					driver.signal_error ("Cannot execute: no right sibling.")
-				else
-					active := active.right_sibling
-					if not active.is_root then
-						other := active.parent
-						other.child_forth
+				if attached active.right_sibling as other then
+					active := other
+					if attached active.parent as p then
+						p.child_forth
 					end
+				else
+					driver.signal_error ("Cannot execute: no right sibling.")
 				end
 			elseif new_command = left then
-				other := active.left_sibling
-				if other = Void then
-					driver.signal_error ("Cannot execute: no left sibling.")
-				else
-					active := active.left_sibling
-					if not active.is_root then
-						other := active.parent
-						other.child_back
+				if attached active.left_sibling as other then
+					active := other
+					if attached active.parent as p then
+						p.child_back
 					end
+				else
+					driver.signal_error ("Cannot execute: no left sibling.")
 				end
 			elseif new_command = root then
 				active := tree_root
@@ -231,27 +238,26 @@ feature -- Routines
 					driver.signal_error ("Cannot execute: no child.")
 				else
 					active.remove_child
-					if active.child_after and not
-								active.is_empty then
+					if active.child_after and not active.is_empty then
 						active.child_back
 					end
 				end
 			elseif new_command /= show then
 				driver.signal_error ("Unknown command")
 			end
-		end 
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class TWO_WAY_TREE_DEMO
-
+end

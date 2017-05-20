@@ -2,31 +2,33 @@
 	"database": {
 		"datasource": {
 			"driver": "SQL Server",
-			"environment": "test"
+			"environment":"test"
 		},
 		"environments": {
 			"test": {
                 "connection_string":"Server=JVELILLA;Database=support;Uid=jv;Pwd=test;TrustedConnection=Yes"
 			},
 			"development": {
-				"connection_string":"Server=sql.ise;Database=ESA_DB_TEST;Uid=eiffel2;Pwd=eiffel2;"
+				"connection_string":"Server=sql.ise;Database=ESA_DB_TEST;Uid=XXX;Pwd=YYY;"
 				 },
 			"production": {
-				"connection_string":"Server=SQLSERVER;Database=LIVE_DATABASE;Uid=XXX;Pwd=YYY;"
+				"connection_string":"Server=SQLSERVER;Database=XXX;Uid=UUUU;Pwd=PPPP;"
 			}
 		}
 	},
-	"smtp": {
-		"server": "localhost"
-		},
 	"logger": { 
 			"level":"debug",
 			"backup_count":"4"
 		},
+	"smtp": {
+		"server": "localhost",
+		 "username": "",
+		 "password": ""	
+		},
 	"cookie_session": {
 		"remember_me":604800
 	},
-	"versions":["16.05","15.12","15.01","14.05","13.11"]
+	"versions":["17.05","17.01","16.05","15.12","15.01","14.05","13.11"]
 
 }
 

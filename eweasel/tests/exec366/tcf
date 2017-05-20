@@ -1,0 +1,94 @@
+test_name 	 ieee-nan-deep-comparison
+test_description Checking that absolute value of -0 is 0.
+
+define TOTAL_ORDER "true"
+copy_sub	Ace $TEST Ace
+copy_sub	test_rev0.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output1.1
+execute_result	ok
+compare		exec_output1.1 output
+
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output1.2
+execute_result	ok
+compare		exec_output1.2 output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output1.3
+execute_result	ok
+compare		exec_output1.3 output
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output1.4
+execute_result	ok
+compare		exec_output1.4 output
+
+cleanup_compile
+
+define TOTAL_ORDER "false"
+copy_sub	Ace $TEST Ace
+copy_sub	test_rev0.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output2.1
+execute_result	ok
+compare		exec_output2.1 output
+
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE exec_output2.2
+execute_result	ok
+compare		exec_output2.2 output
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output2.3
+execute_result	ok
+compare		exec_output2.3 output
+
+compile_final
+compile_result	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output2.4
+execute_result	ok
+compare		exec_output2.4 output
+
+test_end

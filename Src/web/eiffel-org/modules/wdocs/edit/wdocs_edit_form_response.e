@@ -55,6 +55,7 @@ feature -- Execution
 			f: like new_edit_form
 			new_pg,pg: detachable WIKI_BOOK_PAGE
 			mng: WDOCS_MANAGER
+			lab: detachable READABLE_STRING_32
 			l_bookid: detachable READABLE_STRING_GENERAL
 			l_text: STRING
 			l_preview: BOOLEAN
@@ -78,6 +79,15 @@ feature -- Execution
 				location.ends_with_general ("/edit") and then
 				has_permission ({WDOCS_EDIT_MODULE}.perm_edit_wdocs_page)
 			then
+				lab := wdocs_api.label_of_version (wdocs_api.default_version_id)
+				if lab = Void then
+					lab := "current"
+				end
+				if mng.version_id.is_case_insensitive_equal (wdocs_api.default_version_id) then
+					add_notice_message ("You are editing " + api.html_encoded (lab) + " version [" + api.html_encoded (mng.version_id) + "].")
+				else
+					add_warning_message ("You are editing version [" + api.html_encoded (mng.version_id) + "], which is NOT the " + api.html_encoded (lab) + " version [" + api.html_encoded (wdocs_api.default_version_id) + "]!")
+				end
 				if pg /= Void then
 					set_title (formatted_string (translation ("Edit %"$1%"", Void), [pg.title]))
 					add_to_primary_tabs (create {CMS_LOCAL_LINK}.make ("View", view_location))
@@ -274,9 +284,13 @@ feature -- Form
 			l_page: detachable WIKI_BOOK_PAGE
 			l_link_title_value, l_title_value, l_source_value: detachable READABLE_STRING_8
 			l_content: detachable READABLE_STRING_8
+			l_md_text: WDOCS_METADATA_WIKI_TEXT
 			l_changed: BOOLEAN
-			l_meta_link_title, l_meta_uuid: detachable READABLE_STRING_32
+			l_meta_title, l_meta_link_title, l_meta_uuid: detachable READABLE_STRING_32
 			s: STRING
+			l_diff: DIFF_TEXT
+			l_diff_text: detachable STRING
+			l_mesg_text, l_mesg_title: STRING
 			e: CMS_EMAIL
 			fn: STRING_32
 			ctx: WDOCS_CHANGE_CONTEXT
@@ -317,6 +331,7 @@ feature -- Form
 					end
 				else
 					if pg /= Void then
+						l_meta_title := pg.metadata ("title")
 						l_meta_link_title := pg.metadata ("link_title")
 						l_meta_uuid := pg.metadata ("uuid")
 						l_path := pg.path
@@ -336,9 +351,18 @@ feature -- Form
 					if l_source_value /= Void then
 						l_changed := l_content = Void or else not l_content.same_string (l_source_value)
 						l_page.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (l_source_value))
+						create l_md_text.make_with_text (l_source_value)
+						l_meta_title := l_md_text.item ("title")
 					end
 					if not l_page.title.same_string (l_title_value) then
 						l_page.set_title (l_title_value)
+							-- The "title" field was changed, it has priority over eventual changed wiki title property from content!
+						l_page.set_metadata (l_title_value, "title")
+						l_changed := True
+					elseif l_meta_title /= Void and then not l_page.title.same_string (l_meta_title) then
+						l_page.set_title (l_meta_title)
+							-- The "title" metadata was changed, but not the title field.
+						l_page.set_metadata (l_meta_title, "title")
 						l_changed := True
 					end
 					if l_meta_link_title = Void or else l_meta_link_title.is_whitespace then
@@ -381,29 +405,48 @@ feature -- Form
 
 						wdocs_api.save_wiki_page (l_page, pg, l_source_value, l_path, a_bookid, a_manager, ctx)
 						if wdocs_api.has_error then
-							fd.report_error ("Error: could not save wiki page!")
-							add_error_message ("Error: could not save wiki page!")
+							fd.report_error ("Error: could not save doc page!")
+							add_error_message ("Error: could not save doc page!")
 						else
-							create s.make_from_string ("Wiki page %"" + l_page.title + "%" was updated")
-							if attached user as u then
-								s.append (" (by ")
-								s.append (utf_8_string (u.name))
-								s.append (")")
+							if l_source_value /= Void and l_content /= Void then
+								create l_diff
+								l_diff.set_text (l_content, l_source_value)
+								l_diff.compute_diff
+								l_diff_text := l_diff.unified
+								add_notice_message (l_diff_text)
 							end
-							s.append (".")
+
+							l_mesg_title := "Updated doc page %"" + l_page.title + "%""
+							l_mesg_title.append (" (version:" + utf_8_string (a_manager.version_id) + ")")
+							create l_mesg_text.make_from_string ("Documentation page %"" + l_page.title + "%" was updated")
+							if attached user as u then
+								l_mesg_text.append (" (by ")
+								l_mesg_text.append (utf_8_string (api.user_api.user_display_name (u)))
+								l_mesg_text.append (")")
+
+								l_mesg_title.append (" by ")
+								l_mesg_title.append (utf_8_string (api.user_api.user_display_name (u)))
+							end
+							l_mesg_text.append (".%N%N")
+							l_mesg_text.append ("- Version: " + api.html_encoded (a_manager.version_id) + "%N")
+							l_mesg_text.append ("- Page location: " + api.site_url + view_location + "%N")
+							l_mesg_text.append ("%N%N")
 
 							-- FIXME: hardcoded link to admin wdocs clear-cache ! change that.
-							add_warning_message ("You may need to " + link ("clear the cache", "admin/module/wdocs/clear-cache?destination=" + url_encoded (view_location), Void) + ".")
+							add_warning_message ("You may need to " + link ("clear the cache", api.administration_path_location ("module/wdocs/clear-cache?destination=" + url_encoded (view_location)), Void) + ".")
 
-							api.log ("wdocs", "Wiki page changed", 0, create {CMS_LOCAL_LINK}.make (l_page.title, location))
-							add_success_message ("Wiki doc saved.")
+							api.log ("wdocs", "Doc page changed", 0, create {CMS_LOCAL_LINK}.make (l_page.title, location))
+							add_success_message ("Doc page saved.")
 
-							if l_content /= Void then
-								e := api.new_email (api.setup.site_email, "Updated wiki page %"" + l_page.title + "%"", s + l_content)
-							else
-								e := api.new_email (api.setup.site_email, "Updated wiki page %"" + l_page.title + "%"", s)
+							if l_diff_text /= Void and then not l_diff_text.is_whitespace then
+								l_mesg_text.append ("Unified diff:%N%N")
+								l_mesg_text.append (l_diff_text)
+							elseif l_content /= Void then
+								l_mesg_text.append ("Content:%N%N")
+								l_mesg_text.append (l_content)
 							end
-							b.append (s)
+							e := api.new_email (api.setup.site_email, l_mesg_title, l_mesg_text)
+							b.append (l_mesg_text)
 							b.append_character ('%N')
 							api.process_email (e)
 --							set_redirection (view_location)
@@ -430,7 +473,7 @@ feature -- Form
 
 			if pg /= Void then
 				create th.make ("wiki_location")
-				th.set_text_value (location)
+				th.set_text_value (location.as_string_32)
 				f.extend (th)
 			end
 

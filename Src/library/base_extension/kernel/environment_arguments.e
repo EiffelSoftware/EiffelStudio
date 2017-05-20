@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for ENVIRONMENT_ARGUMENTS."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -102,7 +102,7 @@ feature -- Status setting
 
 	set_option_sign (c: CHARACTER_32)
 			-- Make `c' the option sign.
-			-- Use'%U' if no sign is necessary for the argument to
+			-- Use '%U' if no sign is necessary for the argument to
 			-- be an option
 		do
 			base_arguments.set_option_sign (c)
@@ -183,51 +183,53 @@ feature {NONE} -- Implementation
 			c: CHARACTER_32
 			l_flags: detachable STRING_32
 			s: STRING_32
-			exec: EXECUTION_ENVIRONMENT
 			l_in_quote: BOOLEAN
-		once
-			exec := execution_environment
-			l_flags := exec.item (arguments_environment_name)
-			if l_flags /= Void and then not l_flags.is_whitespace then
-				from
-					i := 1
-					n := l_flags.count
-					create s.make_empty
-					create Result.make (6)
-				until
-					i > n
-				loop
-					c := l_flags.item (i)
-					if l_in_quote then
-						if c = '%"' then
-							l_in_quote := False
-						else
-							s.extend (c)
-						end
-					else
-						inspect c
-						when '%"' then
-							l_in_quote := True
-						when ' ', '%T' then
-							if not s.is_empty then
-								Result.extend (create {IMMUTABLE_STRING_32}.make_from_string (s))
-								s.wipe_out
+		do
+			Result := internal_environment_arguments
+			if not attached Result then
+				create Result.make (0)
+				internal_environment_arguments := Result
+				l_flags := execution_environment.item (arguments_environment_name)
+				if l_flags /= Void and then not l_flags.is_whitespace then
+					from
+						i := 1
+						n := l_flags.count
+						create s.make_empty
+					until
+						i > n
+					loop
+						c := l_flags.item (i)
+						if l_in_quote then
+							if c = '%"' then
+								l_in_quote := False
+							else
+								s.extend (c)
 							end
 						else
-							s.extend (c)
+							inspect c
+							when '%"' then
+								l_in_quote := True
+							when ' ', '%T' then
+								if not s.is_empty then
+									Result.extend (create {IMMUTABLE_STRING_32}.make_from_string (s))
+									s.wipe_out
+								end
+							else
+								s.extend (c)
+							end
 						end
+						i := i + 1
 					end
-					i := i + 1
+					if l_in_quote then
+							-- Quote was not terminated, we simply ignore everything after
+							-- the last non-closed quote.
+					elseif not s.is_empty then
+						Result.extend (create {IMMUTABLE_STRING_32}.make_from_string (s))
+					end
 				end
-				if l_in_quote then
-						-- Quote was not terminated, we simply ignore everything after
-						-- the last non-closed quote.
-				elseif not s.is_empty then
-					Result.extend (create {IMMUTABLE_STRING_32}.make_from_string (s))
-				end
-			else
-				create Result.make (0)
 			end
+		ensure
+			environment_arguments_set: Result /= Void
 		end
 
 	base_arguments: ARGUMENTS_32
@@ -236,12 +238,14 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
+	internal_environment_arguments: detachable like environment_arguments
+
 invariant
 	environment_arguments_valid: not environment_arguments.is_empty implies
 				argument_count > base_arguments.argument_count
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

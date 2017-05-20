@@ -1,20 +1,3 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="gobo_extension" uuid="0DA7FB52-F457-4C7F-A8DD-9285E5EE2631" library_target="gobo_extension">
-	<target name="gobo_extension">
-		<description>gobo extension library</description>
-		<root all_classes="true"/>
-		<file_rule>
-			<exclude>/\.svn</exclude>
-		</file_rule>
-		<option void_safety="all" namespace="EiffelSoftware.Gobo.Library">
-		</option>
-		<setting name="dotnet_naming_convention" value="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
-		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf" readonly="true"/>
-		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel-safe.ecf" readonly="true"/>
-		<cluster name="gobo_extension" location=".\" recursive="true">
-			<option namespace="Extension">
-			</option>
-		</cluster>
-	</target>
-</system>
+<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="0DA7FB52-F457-4C7F-A8DD-9285E5EE2631" message="Obsolete: use gobo_extension.ecf !" location="gobo_extension.ecf">
+</redirection>

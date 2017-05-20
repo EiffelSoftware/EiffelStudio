@@ -60,28 +60,10 @@ feature -- Access
 
 	url (a_path: READABLE_STRING_8; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT): STRING_8
 			-- Url computed from Current and `ctx' data.
-		local
-			s: STRING_8
-			url_encoder: URL_ENCODER
 		do
 			Result := base_url + a_path
 			if ctx /= Void then
-				create s.make_empty
-				create url_encoder
-				across
-					ctx.query_parameters as q
-				loop
-					if not s.is_empty then
-						s.append_character ('&')
-					end
-					s.append (url_encoder.encoded_string (q.key))
-					s.append_character ('=')
-					s.append (url_encoder.encoded_string (q.item))
-				end
-				if not s.is_empty then
-					Result.append_character ('?')
-					Result.append (s)
-				end
+				ctx.append_query_parameters_to_url (Result)
 			end
 		end
 
@@ -243,9 +225,13 @@ feature -- Settings
 	ignore_content_length: BOOLEAN
 			-- Does this session ignore Content-Size headers?
 
-	buffer_size: NATURAL
+	buffer_size: NATURAL assign set_buffer_size
 			-- Set the buffer size for request. This option will
-			-- only be set if buffer_size is positive
+			-- only be set if buffer_size > 0.
+
+	chunk_size: NATURAL assign set_chunk_size
+			-- Set the chunk size for request, when "Transfer-Encoding: chunked".
+			-- This option will only be set if chunk_size > 0.
 
 	default_response_charset: detachable READABLE_STRING_8
 			-- Default encoding of responses. Used if no charset is provided by the host.
@@ -405,8 +391,18 @@ feature -- Element change
 			end
 		end
 
+	set_buffer_size (a_size: like buffer_size)
+		do
+			buffer_size := a_size
+		end
+
+	set_chunk_size (a_size: like chunk_size)
+		do
+			chunk_size := a_size
+		end
+
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

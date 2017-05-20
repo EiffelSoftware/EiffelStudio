@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-					Tool bar that support SD_TOOL_BAR_WIDGET_ITEM
-					A decorator for SD_TOOL_BAR
-																	]"
+		Tool bar that support SD_TOOL_BAR_WIDGET_ITEM
+		A decorator for SD_TOOL_BAR
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -57,11 +57,11 @@ feature {NONE} -- Initlization
 		require
 			not_void: a_tool_bar /= Void
 		do
-			internal_tool_bar := a_tool_bar
-
-			tool_bar.expose_actions.extend (agent on_expose)
+			tool_bar := a_tool_bar
 
 			default_create
+
+			tool_bar.expose_actions.extend (agent on_expose)
 
 			extend_fixed (tool_bar)
 
@@ -151,22 +151,19 @@ feature -- Command
 			-- See bug#15525, toolbar can be void if `is_destroyed'
 			if not is_destroyed then
 				tool_bar.compute_minimum_size
-				if attached {EV_WIDGET} tool_bar as lt_widget then
-					check has: has_fixed (lt_widget) end
 
-					set_minimum_size (tool_bar.minimum_width, tool_bar.minimum_height)
-					l_width := minimum_width
-					l_height := minimum_height
-					if l_width < 1 then
-						l_width := 1
-					end
-					if l_height < 1 then
-						l_height := 1
-					end
-					set_item_size (lt_widget, l_width, l_height)
-				else
-					check not_possible: False end
+				check has: has_fixed (tool_bar) end
+
+				set_minimum_size (tool_bar.minimum_width, tool_bar.minimum_height)
+				l_width := minimum_width
+				l_height := minimum_height
+				if l_width < 1 then
+					l_width := 1
 				end
+				if l_height < 1 then
+					l_height := 1
+				end
+				set_item_size (tool_bar, l_width, l_height)
 			end
 		end
 
@@ -232,7 +229,6 @@ feature -- Command
 		local
 			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_found, l_is_end: BOOLEAN
-			l_next_tool_bar: SD_GENERIC_TOOL_BAR
 		do
 			if attached {SD_TOOL_BAR_ROW} parent as l_tool_bar_row then
 				from
@@ -251,8 +247,7 @@ feature -- Command
 				if l_is_end then
 					Result := l_tool_bar_row.screen_x + l_tool_bar_row.width
 				else
-					l_next_tool_bar := l_zones.item_for_iteration.tool_bar
-					Result := l_next_tool_bar.screen_x
+					Result := l_zones.item_for_iteration.tool_bar.screen_x
 				end
 			end
 		end
@@ -311,16 +306,15 @@ feature -- Command
 				clear_content
 				internal_shared.widgets.prune_tool_bar (Current)
 				Precursor {EV_FIXED}
-				if internal_tool_bar /= Void then
+				if not tool_bar.is_destroyed then
 					tool_bar.destroy
-					internal_tool_bar := Void
 				end
 			end
 		end
 
 feature -- Query
 
-	content: SD_TOOL_BAR_CONTENT
+	content: detachable SD_TOOL_BAR_CONTENT
 			-- <Precursor>
 		do
 			Result := tool_bar.content
@@ -375,17 +369,8 @@ feature -- Query
 
 	expose_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Expose actions
-		local
-			l_result: detachable like expose_actions
 		do
-			if attached {SD_TOOL_BAR} tool_bar as lt_tool_bar then
-				l_result := lt_tool_bar.expose_actions
-			else
-				check not_possible: False end
-			end
-
-			check l_result /= Void end -- Implied by previous if clause
-			Result := l_result
+			Result := tool_bar.expose_actions
 		end
 
 	tooltip: STRING_32
@@ -435,11 +420,7 @@ feature {SD_TOOL_BAR_DRAWER_I, SD_TOOL_BAR_ZONE}
 	draw_pixmap (a_x, a_y: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Draw `a_pixmap' at `a_x', `a_y'
 		do
-			if attached {SD_TOOL_BAR} tool_bar as lt_tool_bar then
-				lt_tool_bar.draw_pixmap (a_x, a_y, a_pixmap)
-			else
-				check not_possible: False end
-			end
+			tool_bar.draw_pixmap (a_x, a_y, a_pixmap)
 		end
 
 	clear_rectangle (a_x, a_y, a_width, a_height: INTEGER)
@@ -581,21 +562,7 @@ feature {NONE} -- Implementation
 		end
 
 	tool_bar: SD_TOOL_BAR
-			-- Tool bar which decorated by Current
-		require
-			set: internal_tool_bar /= Void
-		local
-			l_result: like internal_tool_bar
-		do
-			l_result := internal_tool_bar
-			check l_result /= Void end
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
-	internal_tool_bar: detachable SD_TOOL_BAR
-			-- Instance holder of `tool_bar'
+			-- Tool bar decorated by `Current'.
 
 	drawer: SD_TOOL_BAR_DRAWER
 			-- Tool bar drawer
@@ -671,7 +638,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -680,6 +647,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

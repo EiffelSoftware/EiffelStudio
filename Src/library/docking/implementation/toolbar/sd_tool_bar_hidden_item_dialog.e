@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Dialog to show hidden tool bar items."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -71,11 +71,8 @@ feature {NONE}  -- Initlization
 			-- Creation method for right-click menu
 		require
 			not_void: a_tool_bar /= Void
-		local
-			l_list: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
-			create l_list.make (1)
-			make (l_list, a_tool_bar)
+			make (create {ARRAYED_LIST [SD_TOOL_BAR_ITEM]}.make (1), a_tool_bar)
 		end
 
 	init_grouping (a_hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
@@ -144,9 +141,7 @@ feature {SD_TOOL_BAR_MANAGER} -- Command
 			-- Handle customize actions
 		local
 			l_dialog: SD_TOOL_BAR_CUSTOMIZE_DIALOG
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_parent_window: EV_WINDOW
-			l_vertical_docking: BOOLEAN
 			l_docking_manager: detachable SD_DOCKING_MANAGER
 			l_assit: SD_TOOL_BAR_ZONE_ASSISTANT
 		do
@@ -156,38 +151,43 @@ feature {SD_TOOL_BAR_MANAGER} -- Command
 				create l_dialog.make
 				parent_tool_bar.set_customize_dialog (l_dialog)
 
-				l_items := parent_tool_bar.content.items
-
 				prepare_size (l_dialog, parent_tool_bar.assistant.last_state)
 
-				if parent_tool_bar.is_floating then
-					l_parent_window := parent_tool_bar.attached_floating_tool_bar
+				if attached parent_tool_bar.floating_tool_bar as b then
+					l_parent_window := b
 				else
 					l_parent_window := parent_tool_bar.docking_manager.main_window
 				end
-				l_dialog.customize_toolbar (l_parent_window, True, True, l_items)
+				if attached parent_tool_bar.content as c then
+					l_dialog.customize_toolbar (l_parent_window, True, True, c.items)
+				end
 				parent_tool_bar.set_customize_dialog (Void)
 				parent_tool_bar.assistant.last_state.set_cutomize_dialog_size (l_dialog.w_width, l_dialog.w_height)
 				if l_dialog.valid_data then
 					l_assit := parent_tool_bar.assistant
 					l_assit.save_items_layout (l_dialog.final_toolbar)
 
-					l_vertical_docking := parent_tool_bar.content.is_docking and then parent_tool_bar.is_vertical
-					if l_vertical_docking then
+					if
+						attached parent_tool_bar.content as c and then
+						c.is_docking and then
+						parent_tool_bar.is_vertical
+					then
 						l_docking_manager := parent_tool_bar.docking_manager
 						l_docking_manager.command.lock_update (Void, True)
-					end
 
-					l_assit.open_items_layout
+						l_assit.open_items_layout
+						if not parent_tool_bar.is_floating then
+							parent_tool_bar.extend_one_item (parent_tool_bar.tail_indicator)
+						end
 
-					if not parent_tool_bar.is_floating then
-						parent_tool_bar.extend_one_item (parent_tool_bar.tail_indicator)
-					end
-					if l_vertical_docking then
 						parent_tool_bar.change_direction (False)
-						check l_docking_manager /= Void end -- Implied by `l_docking_manager' is set when `l_vertical_docking'
 						l_docking_manager.command.resize (True)
 						l_docking_manager.command.unlock_update
+					else
+						l_assit.open_items_layout
+						if not parent_tool_bar.is_floating then
+							parent_tool_bar.extend_one_item (parent_tool_bar.tail_indicator)
+						end
 					end
 
 					parent_tool_bar.compute_minmum_size
@@ -268,7 +268,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -277,6 +277,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

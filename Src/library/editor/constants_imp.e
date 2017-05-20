@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 			file: PLAIN_TEXT_FILE
 		do
 			if not constants_initialized then
-				create file.make (file_name)
+				create file.make_with_name (file_name)
 				if file.exists then
 					file.open_read
 					file.readstream (file.count)
@@ -177,14 +177,14 @@ invariant
 	all_constants_not_void: all_constants /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class CONSTANTS_IMP

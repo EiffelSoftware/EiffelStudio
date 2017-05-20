@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Context variables for code generation and utilities."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,6 +33,7 @@ inherit
 	REFACTORING_HELPER
 	INTERNAL_COMPILER_STRING_EXPORTER
 	SHARED_ENCODING_CONVERTER
+	SHARED_TYPES
 
 create
 	make, make_from_context
@@ -831,6 +832,7 @@ feature -- Access: once manifest strings
 			i: INTEGER
 			value: like once_manifest_string_value
 			value_32: STRING_32
+			value_8: STRING_8
 		do
 			buf := buffer
 			class_once_manifest_strings := once_manifest_string_table
@@ -861,23 +863,25 @@ feature -- Access: once manifest strings
 						buf.put_character (',')
 						buf.put_integer (i - 1)
 						buf.put_character (',')
+						value_32 := encoding_converter.utf8_to_utf32 (value.value)
 						if value.is_string_32 then
-							value_32 := encoding_converter.utf8_to_utf32 (value.value)
 							buf.put_string_literal (encoding_converter.string_32_to_stream (value_32))
 						else
-							buf.put_string_literal (value.value)
+								-- This is an ASCII string, so it is safe to perform the `as_string_8` conversion.
+							value_8 := value_32.as_string_8
+							buf.put_string_literal (value_8)
 						end
 						buf.put_character (',')
 						if value.is_string_32 then
 							buf.put_integer (value_32.count)
 						else
-							buf.put_integer (value.value.count)
+							buf.put_integer (value_8.count)
 						end
 						buf.put_character(',')
 						if value.is_string_32 then
 							buf.put_integer (value_32.hash_code)
 						else
-							buf.put_integer (value.value.hash_code)
+							buf.put_integer (value_8.hash_code)
 						end
 						buf.put_character (')')
 						buf.put_character (';')
@@ -1046,7 +1050,7 @@ feature -- Registers
 				-- the print_register function on Result_register,
 				-- and this has been carefully patched in RESULT_BL to handle
 				-- the once cases.
-			create {RESULT_BL} Result.make (create {NONE_A})
+			create {RESULT_BL} Result.make (detachable_none_type)
 		end
 
 	get_argument_register (t: TYPE_C): REGISTER
@@ -3153,7 +3157,9 @@ invariant
 	valid_inline_peek_depth: 0 <= inline_peek_depth and inline_peek_depth <= byte_code_stack.count
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

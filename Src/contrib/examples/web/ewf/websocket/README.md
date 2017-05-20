@@ -1,0 +1,1 @@
+The EiffelWeb framework provides a websocket server and websocket client solution. This example demonstrates how to build a simple websocket service and consume it from a html+javascript page. This is a very simple chat application.

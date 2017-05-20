@@ -5,7 +5,7 @@ note
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -329,20 +329,6 @@ feature {ET_AST_NODE} -- Processing
 			a_list.right_brace.process (Current)
 		end
 
-	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST)
-			-- Process `a_list'.
-		local
-			i, nb: INTEGER
-		do
-			a_list.left_symbol.process (Current)
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				a_list.item (i).process (Current)
-				i := i + 1
-			end
-			a_list.right_symbol.process (Current)
-		end
-
 	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)
 			-- Process `an_expression'.
 		do
@@ -467,8 +453,8 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_class.obsolete_message as l_obsolete_message then
 				l_obsolete_message.process (Current)
 			end
-			if attached a_class.parent_clause as l_parent_clause then
-				l_parent_clause.process (Current)
+			if attached a_class.parent_clauses as l_parent_clauses then
+				l_parent_clauses.process (Current)
 			end
 			if attached a_class.creators as l_creators then
 				l_creators.process (Current)
@@ -1678,7 +1664,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_name'.
 		do
 			a_name.infix_keyword.process (Current)
-			a_name.operator_name.process (Current)
+			a_name.operator_string.process (Current)
 		end
 
 	process_infix_or_else_operator (an_operator: ET_INFIX_OR_ELSE_OPERATOR)
@@ -2222,11 +2208,57 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_parent_clause_list (a_list: ET_PARENT_CLAUSE_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+		end
+
+	process_parent_list (a_list: ET_PARENT_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			a_list.inherit_keyword.process (Current)
+			if attached a_list.clients_clause as l_clients_clause then
+				l_clients_clause.process (Current)
+			end
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+		end
+
 	process_parent_semicolon (a_parent: ET_PARENT_SEMICOLON)
 			-- Process `a_parent'.
 		do
 			a_parent.parent.process (Current)
 			a_parent.semicolon.process (Current)
+		end
+
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			an_expression.target.process (Current)
+			if attached an_expression.arguments as l_arguments then
+				l_arguments.process (Current)
+			end
+		end
+
+	process_parenthesis_instruction (an_instruction: ET_PARENTHESIS_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			an_instruction.target.process (Current)
+			if attached an_instruction.arguments as l_arguments then
+				l_arguments.process (Current)
+			end
 		end
 
 	process_parenthesis_symbol (a_symbol: ET_PARENTHESIS_SYMBOL)
@@ -2241,19 +2273,6 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.left_parenthesis.process (Current)
 			an_expression.expression.process (Current)
 			an_expression.right_parenthesis.process (Current)
-		end
-
-	process_parent_list (a_list: ET_PARENT_LIST)
-			-- Process `a_list'.
-		local
-			i, nb: INTEGER
-		do
-			a_list.inherit_keyword.process (Current)
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				a_list.item (i).process (Current)
-				i := i + 1
-			end
 		end
 
 	process_postconditions (a_list: ET_POSTCONDITIONS)
@@ -2345,7 +2364,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_name'.
 		do
 			a_name.prefix_keyword.process (Current)
-			a_name.operator_name.process (Current)
+			a_name.operator_string.process (Current)
 		end
 
 	process_qualified_call (a_call: ET_QUALIFIED_CALL)
@@ -2626,6 +2645,14 @@ feature {ET_AST_NODE} -- Processing
 	process_unfolded_empty_tuple_actual_parameters (a_list: ET_UNFOLDED_EMPTY_TUPLE_ACTUAL_PARAMETERS)
 			-- Process `a_list'.
 		do
+		end
+
+	process_unfolded_tuple_actual_argument_list (a_list: ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST)
+			-- Process `a_list'.
+		do
+			if attached a_list.actual_arguments as l_actual_arguments then
+				l_actual_arguments.process (Current)
+			end
 		end
 
 	process_unfolded_tuple_actual_parameters (a_list: ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS)

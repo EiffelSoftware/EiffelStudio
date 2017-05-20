@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {NUMBER_ARITHMETIC}."
 	author: "Colin LeMahieu"
 	date: "$Date$"
@@ -176,7 +176,6 @@ feature
 			x: NATURAL_32
 			cursor: INTEGER_32
 		do
-			cursor := target_offset
 			x := target [target_offset]
 			target [target_offset] := x - decr
 			if x < decr then
@@ -942,7 +941,7 @@ feature
 					r := x - 1
 					target [target_offset + i] := r
 					i := i + 1
-					if not (x < 1) then
+					if x >= 1 then
 						if op1 /= target then
 							target.copy_data (op1, op1_offset + i, target_offset + i, op1_count - i)
 						end

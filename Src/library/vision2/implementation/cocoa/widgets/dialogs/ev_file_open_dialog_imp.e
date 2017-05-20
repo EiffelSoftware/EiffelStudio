@@ -79,7 +79,7 @@ feature {NONE} -- Access
 	file_names: ARRAYED_LIST [STRING_32]
 			-- List of filenames selected by user
 		obsolete
-			"Use `file_paths' instead."
+			"Use `file_paths' instead. [2017-05-31]"
 		local
 			l_paths: like file_paths
 		do

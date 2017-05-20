@@ -1,12 +1,6 @@
-note
+﻿note
 	description:
 		"User selectable parameters and rules which govern the results of decimal arithmetic operations."
-	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
-	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
-
 
 class DCM_MA_DECIMAL_CONTEXT
 
@@ -142,12 +136,10 @@ feature -- Access
 			Result := (-exponent_limit) - (digits - 1)
 		end
 
-feature -- Access
-
 	default_context: DCM_MA_DECIMAL_CONTEXT
 			-- Default context for general purpose arithmetic
 		obsolete
-			"[050911] Use MA_SHARED_DECIMAL_CONTEXT instead."
+			"Use MA_SHARED_DECIMAL_CONTEXT instead. [2017-05-31]"
 		once
 			create Result.make_default
 		ensure
@@ -400,10 +392,14 @@ invariant
 note
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
 	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
-	license: "MIT license"
+	copyright: "Copyright (c) 2017 Eiffel Software."
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 	details: "[
 			Originally developed by Paul G. Crismer as part of Gobo. 
 			Revised by Jocelyn Fiat for void safety.
+			Revised by Alexander Kogtenkov.
 		]"
 
 end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {INTEGER_X_ARITHMETIC}."
 	author: "Colin LeMahieu"
 	date: "$Date$"
@@ -143,7 +143,7 @@ feature
 						if target.item [abs_usize - 1] = 0 then
 							wsize := - (abs_usize - 1)
 						else
-							wsize := - (abs_usize)
+							wsize := - abs_usize
 						end
 					end
 				end
@@ -179,8 +179,7 @@ feature
 			sub_l := sub_a
 			xsize := op1.count
 			ysize := op2.count
-			if xsize = 0 or ysize = 0 then
-			else
+			if xsize /= 0 and ysize /= 0 then
 				if ysize.abs > xsize.abs then
 					current_temp := op1
 					op1 := op2
@@ -296,8 +295,7 @@ feature
 			create carry.put (0)
 			sub_l := sub_a
 			xsize := op1.count
-			if xsize = 0 or op2 = 0 then
-			else
+			if xsize /= 0 and op2 /= 0 then
 				sub_l := sub_l.bit_xor (xsize)
 				xsize := xsize.abs
 				wsize_signed := target.count

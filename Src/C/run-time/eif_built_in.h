@@ -217,6 +217,7 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 #else
 #define eif_builtin_PLATFORM_is_dotnet					EIF_FALSE
 #endif
+#define eif_builtin_PLATFORM_is_64_bits					EIF_IS_64_BITS
 #define eif_builtin_PLATFORM_boolean_bytes 				sizeof(EIF_BOOLEAN)
 #define eif_builtin_PLATFORM_character_bytes 			sizeof(EIF_CHARACTER_8)
 #define eif_builtin_PLATFORM_wide_character_bytes 		sizeof(EIF_CHARACTER_32)
@@ -253,7 +254,40 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 #define eif_builtin_TYPE_generic_parameter_count(obj)		eif_gen_count_with_dftype(eif_gen_param(Dftype(obj), 1).id)
 
 /* TUPLE class */
+#define eif_builtin_TUPLE_boolean_item(obj,i)				eif_boolean_item((obj), (i))
+#define eif_builtin_TUPLE_character_8_item(obj,i)			eif_character_8_item((obj), (i))
+#define eif_builtin_TUPLE_character_32_item(obj,i)			eif_character_32_item((obj), (i))
 #define eif_builtin_TUPLE_count(area)						(RT_SPECIAL_COUNT(area) - 1) /* - 1 because first argument is for object_comparison */
+#define eif_builtin_TUPLE_integer_8_item(obj,i)				eif_integer_8_item((obj), (i))
+#define eif_builtin_TUPLE_integer_16_item(obj,i)			eif_integer_16_item((obj), (i))
+#define eif_builtin_TUPLE_integer_32_item(obj,i)			eif_integer_32_item((obj), (i))
+#define eif_builtin_TUPLE_integer_64_item(obj,i)			eif_integer_64_item((obj), (i))
+#define eif_builtin_TUPLE_item_code(obj,i)					eif_item_type((obj), (i))
+#define eif_builtin_TUPLE_natural_8_item(obj,i)				eif_natural_8_item((obj), (i))
+#define eif_builtin_TUPLE_natural_16_item(obj,i)			eif_natural_16_item((obj), (i))
+#define eif_builtin_TUPLE_natural_32_item(obj,i)			eif_natural_32_item((obj), (i))
+#define eif_builtin_TUPLE_natural_64_item(obj,i)			eif_natural_64_item((obj), (i))
+#define eif_builtin_TUPLE_object_comparison(obj)			eif_boolean_item((obj), 0)
+#define eif_builtin_TUPLE_pointer_item(obj,i)				eif_pointer_item((obj), (i))
+#define eif_builtin_TUPLE_put_boolean(obj,v,i)				eif_put_boolean_item((obj), (i), (v))
+#define eif_builtin_TUPLE_put_character_8(obj,v,i)			eif_put_character_8_item((obj), (i), (v))
+#define eif_builtin_TUPLE_put_character_32(obj,v,i)			eif_put_character_32_item((obj), (i), (v))
+#define eif_builtin_TUPLE_put_integer_8(obj,v,i)			eif_put_integer_8_item((obj), (i), (v))
+#define eif_builtin_TUPLE_put_integer_16(obj,v,i)			eif_put_integer_16_item((obj), (i), (v))
+#define eif_builtin_TUPLE_put_integer_32(obj,v,i)			eif_put_integer_32_item((obj), (i), (v))
+#define eif_builtin_TUPLE_put_integer_64(obj,v,i)			eif_put_integer_64_item((obj), (i), (v))
+#define eif_builtin_TUPLE_put_natural_8(obj,v,i)			eif_put_natural_8_item((obj), (i), (v))
+#define eif_builtin_TUPLE_put_natural_16(obj,v,i)			eif_put_natural_16_item((obj), (i), (v))
+#define eif_builtin_TUPLE_put_natural_32(obj,v,i)			eif_put_natural_32_item((obj), (i), (v))
+#define eif_builtin_TUPLE_put_natural_64(obj,v,i)			eif_put_natural_64_item((obj), (i), (v))
+#define eif_builtin_TUPLE_put_pointer(obj,v,i)				eif_put_pointer_item((obj), (i), (v))
+#define eif_builtin_TUPLE_put_real_32(obj,v,i)				eif_put_real_32_item((obj), (i), (v))
+#define eif_builtin_TUPLE_put_real_64(obj,v,i)				eif_put_real_64_item((obj), (i), (v))
+#define eif_builtin_TUPLE_put_reference(obj,v,i)			eif_put_reference_item((obj), (i), (v))
+#define eif_builtin_TUPLE_real_32_item(obj,i)				eif_real_32_item((obj), (i))
+#define eif_builtin_TUPLE_real_64_item(obj,i)				eif_real_64_item((obj), (i))
+#define eif_builtin_TUPLE_reference_item(obj,i)				eif_reference_item((obj), (i))
+#define eif_builtin_TUPLE_set_object_comparison(obj,b)		eif_put_boolean_item((obj), 0, (b))
 
 /* WEL_IDENTIFIED class */
 #define eif_builtin_WEL_IDENTIFIED_eif_current_object_id(object)	eif_reference_id(object)

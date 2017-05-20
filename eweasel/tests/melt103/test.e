@@ -20,6 +20,7 @@ feature
 	 make
 		do
 			io.put_boolean (is_character_printable_8 ('a'))
+			io.put_new_line
 			io.put_boolean (is_character_printable_32 ({CHARACTER_32} 'a'))
 			io.put_new_line
 		end

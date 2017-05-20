@@ -1,6 +1,5 @@
 note
 	description: "Objects than can pre-process incoming data and post-process outgoing data."
-	author: "Olivier Ligot"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,17 +8,51 @@ deferred class
 
 feature -- Access
 
-	next: detachable WSF_FILTER
+	next: detachable WSF_FILTER assign set_next
 			-- Next filter
+
+	last: WSF_FILTER
+			-- Last filter in the chain following `next'.
+		do
+			from
+				Result := Current
+			until
+				not attached Result.next as l_next
+			loop
+				Result := l_next
+			end
+		ensure
+			is_closing: Result /= Void and then Result.next = Void
+		end			
 
 feature -- Element change
 
 	set_next (a_next: like next)
 			-- Set `next' to `a_next'
+		require
+			a_next_is_not_current: a_next /= Current
 		do
 			next := a_next
 		ensure
 			next_set: next = a_next
+		end
+
+	append (a_filter: attached like next)
+			-- Append `a_filter' to the `last' filter.
+		do
+			last.set_next (a_filter)
+		end
+
+	insert_after (a_filter: attached like next)
+			-- Append `a_filter' to the `last' filter.
+		local
+			f: like next
+		do
+			f := next
+			set_next (a_filter)
+			if f /= Void then
+				a_filter.append (f)
+			end
 		end
 
 feature -- Basic operations

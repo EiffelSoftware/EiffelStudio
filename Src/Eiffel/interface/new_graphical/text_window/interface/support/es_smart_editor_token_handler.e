@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A token handler implementation for EiffelStudio's smart editor {EB_SMART_EDITOR}.
 		
@@ -65,7 +65,7 @@ feature -- Status report
 		do
 			Result := attached {CLASSI_STONE} editor.stone as l_class_stone and then attached {EIFFEL_CLASS_I} l_class_stone.class_i as l_class
 		ensure
-			editor_has_class_i_stone: Result implies (({CLASSI_STONE}) #? editor.stone /= Void and then ({EIFFEL_CLASS_I}) #? (({CLASSI_STONE}) #? editor.stone).class_i /= Void)
+			editor_has_class_i_stone: Result implies (attached {CLASSI_STONE} editor.stone as s and then attached {EIFFEL_CLASS_I} s.class_i)
 		end
 
 feature -- Query
@@ -379,7 +379,7 @@ feature {NONE} -- Action handlers
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

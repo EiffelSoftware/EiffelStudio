@@ -17,6 +17,8 @@ inherit
 			permissions
 		end
 
+	CMS_ADMINISTRABLE
+
 	CMS_HOOK_BLOCK
 
 	CMS_HOOK_AUTO_REGISTER
@@ -27,7 +29,7 @@ inherit
 
 	CMS_RECENT_CHANGES_HOOK
 
-	CMS_HOOK_CACHE
+	CMS_SITEMAP_HOOK
 
 	WDOCS_MODULE_HELPER
 		undefine
@@ -57,6 +59,9 @@ feature {NONE} -- Initialization
 			documentation_dir := l_root_dir.extended ("data").extended ("documentation")
 			default_version_id := "current"
 			cache_duration := 0
+
+			add_dependency ({CMS_RECENT_CHANGES_MODULE})
+			add_dependency ({CMS_SITEMAP_MODULE})
 		end
 
 feature -- Access
@@ -68,6 +73,14 @@ feature -- Access
 		do
 			Result := Precursor
 			Result.force ("clear wdocs cache")
+		end
+
+feature -- Administration
+
+	administration: WDOCS_MODULE_ADMINISTRATION
+			-- <Precursor>
+		do
+			create Result.make (Current)
 		end
 
 feature {CMS_API} -- Module Initialization			
@@ -133,6 +146,7 @@ feature -- Router
 			-- Router configuration.
 		local
 			h: WSF_URI_TEMPLATE_AGENT_HANDLER
+			h_uri: WSF_URI_AGENT_HANDLER
 		do
 			create h.make (agent handle_wikipage_by_uuid (a_api, ?, ?))
 			a_router.handle ("/doc/uuid/{wikipage_uuid}", h, a_router.methods_get)
@@ -142,9 +156,12 @@ feature -- Router
 			a_router.handle ("/doc/eis/{eis_id}", h, a_router.methods_get)
 			a_router.handle ("/doc/version/{version_id}/eis/{eis_id}", h, a_router.methods_get)
 
+			create h_uri.make (agent handle_documentation (a_api, ?, ?))
+			a_router.handle ("/documentation", h_uri, a_router.methods_get)
+			a_router.handle ("/doc", h_uri, a_router.methods_get)
+			a_router.handle ("/doc/", h_uri, a_router.methods_get)
+
 			create h.make (agent handle_documentation (a_api, ?, ?))
-			a_router.handle ("/documentation", h, a_router.methods_get)
-			a_router.handle ("/doc/", h, a_router.methods_get)
 			a_router.handle ("/doc/version/{version_id}/", h, a_router.methods_get)
 			a_router.handle ("/doc/version/{version_id}/{bookid}", h, a_router.methods_get)
 			a_router.handle ("/doc/{bookid}", h, a_router.methods_get)
@@ -174,8 +191,6 @@ feature -- Router
 			create h.make (agent handle_static_documentation (a_api, ?, ?))
 			a_router.handle ("/doc-static/version/{version_id}{/vars}", h, a_router.methods_get)
 
-			create h.make (agent handle_clear_cache (a_api, ?, ?))
-			a_router.handle ("/admin/module/" + name + "/clear-cache", h, a_router.methods_get)
 		end
 
 feature -- Hooks configuration
@@ -188,8 +203,7 @@ feature -- Hooks configuration
 				-- Module specific hook, if available.
 			a_hooks.subscribe_to_hook (Current, {CMS_RECENT_CHANGES_HOOK})
 			a_hooks.subscribe_to_hook (Current, {CMS_TAXONOMY_HOOK})
-
-			a_hooks.subscribe_to_cache_hook (Current)
+			a_hooks.subscribe_to_hook (Current, {CMS_SITEMAP_HOOK})
 		end
 
 feature {NONE} -- Config
@@ -279,25 +293,10 @@ feature -- Access: docs
 
 feature -- Hooks
 
-	clear_cache (a_cache_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_response: CMS_RESPONSE)
-			-- <Precursor>.
-		do
-			if a_response.has_permission ("clear wdocs cache") then
-				if a_cache_id_list = Void and attached manager (Void) as mng then
-					mng.refresh_data
-					across
-						mng.book_names as ic
-					loop
-						reset_cached_wdocs_cms_menu (mng.version_id, ic.item, mng)
-					end
-				end
-			end
-		end
-
 	response_alter (a_response: CMS_RESPONSE)
 		do
-			a_response.add_javascript_url (a_response.url ("/module/" + name + "/files/js/wdocs.js", Void))
-			a_response.add_style (a_response.url ("/module/" + name + "/files/css/wdocs.css", Void), Void)
+			a_response.add_javascript_url (a_response.module_resource_url (Current, "/files/js/wdocs.js", Void))
+			a_response.add_style (a_response.module_resource_url (Current, "/files/css/wdocs.css", Void), Void)
 		end
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
@@ -305,19 +304,26 @@ feature -- Hooks
 			-- for related response `a_response'.
 		local
 			lnk: CMS_LOCAL_LINK
+			l_docs_admin_loc: READABLE_STRING_8
 		do
 			if a_response.has_permissions (<<"admin wdocs", "clear wdocs cache">>) then
-				create lnk.make ("Clear Doc cache", "admin/module/" + name + "/clear-cache")
+				l_docs_admin_loc := a_response.api.administration_path_location ("module/" + name)
+
+				lnk := a_response.administration_link ("Clear cache", "module/" + name + "/clear-cache")
 				lnk.add_query_parameter (a_response.location, "destination")
-				a_menu_system.management_menu.extend (lnk)
+				a_menu_system.management_menu.extend_into (lnk, "Docs", l_docs_admin_loc)
+
+				lnk := a_response.administration_link ("Update", "module/" + name + "/update")
+				lnk.add_query_parameter (a_response.location, "destination")
+				a_menu_system.management_menu.extend_into (lnk, "Docs", l_docs_admin_loc)
 			end
 		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 		do
-			Result := <<"wdocs-tree", "wdocs-cards">>
+			Result := <<"wdocs-tree", "?wdocs-cards">>
 			debug ("wdocs")
-				Result := <<"wdocs-tree", "wdocs-page-info", "wdocs-cards">>
+				Result := <<"wdocs-tree", "?wdocs-page-info", "?wdocs-cards">>
 			end
 		end
 
@@ -331,7 +337,7 @@ feature -- Hooks
 			mng: like manager
 		do
 			if
-				attached {READABLE_STRING_GENERAL} a_response.values.item ("optional_content_type") as l_type and then
+				attached {READABLE_STRING_GENERAL} a_response.optional_content_type as l_type and then
 				l_type.is_case_insensitive_equal ("doc")
 			then
 				if a_block_id /= Void then
@@ -355,11 +361,7 @@ feature -- Hooks
 						l_menublock.set_title (Void)
 						a_response.add_block (l_menublock, "sidebar_first")
 					elseif a_block_id.same_string_general ("wdocs-cards") then
-						if
-							a_response.request.percent_encoded_path_info.same_string ("/doc/")
-						then
-							a_response.add_block (wdocs_cards_block (a_block_id, a_response, mng), "content")
-						end
+						a_response.add_block (wdocs_cards_block (a_block_id, a_response, mng), "content")
 					elseif a_block_id.same_string_general ("wdocs-page-info") then
 						if
 							l_book_name /= Void and then l_page_name /= Void and then
@@ -416,7 +418,7 @@ feature -- Hooks
 				loop
 					if attached book_ic.item as l_book then
 						if attached a_manager.version_id as l_version_id then
-							l_url := a_response.request.script_url ("/version/" + percent_encoder.percent_encoded_string (l_version_id) + "/doc/" + percent_encoder.percent_encoded_string (l_book.name) +"/index")
+							l_url := a_response.request.script_url ("/doc/version/" + percent_encoder.percent_encoded_string (l_version_id) + "/" + percent_encoder.percent_encoded_string (l_book.name) +"/index")
 						else
 							l_url := a_response.request.script_url ("/doc/" + percent_encoder.percent_encoded_string (l_book.name) +"/index")
 						end
@@ -431,6 +433,53 @@ feature -- Hooks
 				Result := l_tpl_block
 			else
 				create {CMS_CONTENT_BLOCK} Result.make_raw (a_block_id, Void, "", Void)
+			end
+		end
+
+feature -- Hook/sitemap
+
+	populate_sitemap (a_sitemap: CMS_SITEMAP)
+			-- Populate `a_sitemap`.
+		local
+			i: CMS_SITEMAP_ITEM
+			l_title: detachable READABLE_STRING_32
+			dt: detachable DATE_TIME
+			loc: STRING
+			ut: FILE_UTILITIES
+		do
+			if attached wdocs_api as l_wdocs_api then
+				if
+					attached l_wdocs_api.manager (Void) as mng and then
+					attached mng.book_names as l_book_names
+				then
+					across
+						l_book_names as bk_ic
+					loop
+						if attached mng.book (bk_ic.item) as l_book then
+							across
+								l_book.pages as ic
+							loop
+								if attached {WIKI_BOOK_PAGE} ic.item as wp then
+									l_title := wp.metadata ("link_title")
+									if l_title = Void then
+										l_title := wp.title
+									end
+									if attached wp.path as p and then ut.file_path_exists (p) then
+										dt := file_date (p)
+									else
+										create dt.make_now_utc
+									end
+									loc := mng.wiki_page_uri_path (wp, bk_ic.item, Void)
+									if loc.starts_with ("/") then
+										loc.remove_head (1)
+									end
+									create i.make (create {CMS_LOCAL_LINK}.make (l_title, loc), dt)
+									a_sitemap.force (i)
+								end
+							end
+						end
+					end
+				end
 			end
 		end
 
@@ -538,13 +587,6 @@ feature {NONE} -- Implementation
 			end
 			if l_page /= Void then
 				wdocs_append_pages_to_link (a_version_id, l_book_name, a_current_page_name, a_book.top_pages, Result, is_full, mng)
-			end
-		end
-
-	reset_cached_wdocs_cms_menu (a_version_id: READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER)
-		do
-			if attached wdocs_api as l_wdocs_api then
-				l_wdocs_api.reset_cms_menu_cache_for (a_version_id, a_book_name)
 			end
 		end
 
@@ -772,46 +814,6 @@ feature -- Hook
 
 feature -- Handler		
 
-	handle_clear_cache (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-			l_version: detachable READABLE_STRING_GENERAL
-			mng: like manager
-		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			if req.is_get_request_method then
-				if r.has_permissions (<<"admin wdocs", "clear wdocs cache">>) then
-					if attached {WSF_STRING} req.path_parameter ("version") as p_version then
-						l_version := p_version.value
-					end
-					mng := manager (l_version)
-					if l_version = Void then
-						l_version := mng.version_id
-					end
-
-						-- Clear wiki catalog
-					mng.refresh_data
-
-						-- Clear cms menu
-					across
-						mng.book_names as ic
-					loop
-						reset_cached_wdocs_cms_menu (l_version, ic.item, mng)
-					end
-
-					r.set_main_content ("Documentation cache: cleared.")
-					if attached {WSF_STRING} req.query_parameter ("destination") as p_dest then
-						r.set_redirection (p_dest.url_encoded_value)
-					end
-				else
-					create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-				end
-			else
-				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
-			end
-			r.execute
-		end
-
 	handle_documentation (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
@@ -847,7 +849,7 @@ feature -- Handler
 					wp := l_book.root_page
 				end
 
-				r.set_value ("doc", "optional_content_type")
+				r.set_optional_content_type ("doc")
 				r.set_title (l_bookid)
 				r.values.force (l_bookid, "wiki_book_name")
 				if l_toc or wp = Void then
@@ -880,7 +882,7 @@ feature -- Handler
 				if wp /= Void then
 					send_wikipage (wp, mnger, "", api, req, res)
 				else
-					r.set_value ("doc", "optional_content_type")
+					r.set_optional_content_type ("doc")
 					r.set_title (Void) --"Documentation")
 					r.set_main_content (b)
 					r.execute
@@ -1241,7 +1243,7 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 				create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
 			end
 
-			r.set_value ("doc", "optional_content_type")
+			r.set_optional_content_type ("doc")
 			r.values.force (a_manager.version_id, "wiki_version_id")
 			if a_bookid /= Void then
 				r.values.force (a_bookid, "wiki_book_name")
@@ -1262,6 +1264,7 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 				else
 					l_title := pg.title
 				end
+--				r.set_title (l_title)
 				r.set_title (Void)
 				r.values.force (l_title, "wiki_page_name")
 				if attached {WSF_STRING} req.query_parameter ("source") as s_source and then not s_source.is_case_insensitive_equal ("no") then
@@ -1355,6 +1358,8 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 					end
 					if l_book_id /= Void then
 						Result := [pg, l_book_id, mng]
+					elseif pg.is_index_page then
+						Result := [pg, "", mng] -- Main doc index page!
 					end
 				end
 			end
@@ -1410,6 +1415,7 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 		local
 			l_cache: detachable WDOCS_FILE_STRING_8_CACHE
 			l_xhtml: detachable STRING_8
+			lab: detachable READABLE_STRING_32
 			f: PLAIN_TEXT_FILE
 			l_wiki_page_date_time: detachable DATE_TIME
 			client_request_no_server_cache: BOOLEAN
@@ -1451,8 +1457,22 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 				l_xhtml.append ("<div class=%"cache-info%">cached: " + l_cache.cache_date_time.out + "</div>")
 			else
 				create l_xhtml.make_empty
-				if attached wdocs_api as l_wdocs_api and then attached {CMS_TAXONOMY_API} l_wdocs_api.cms_api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxonomy_api and then attached a_wiki_page.metadata ("uuid") as l_uuid then
-					l_taxonomy_api.append_taxonomy_to_xhtml (create {CMS_WDOCS_CONTENT}.make (a_wiki_page, l_uuid), a_response, l_xhtml)
+				if not l_version_id.is_case_insensitive_equal (default_version_id) then
+					if attached wdocs_api as l_wdocs_api then
+						lab := l_wdocs_api.label_of_version (default_version_id)
+					end
+					if lab = Void then
+						lab := "current"
+					end
+					l_xhtml.append ("<ul class=%"message%"><li class=%"warning%">This is not the " + lab + " version of the documentation. ")
+					a_response.append_link_to_html ("Recommended Version", a_manager.wiki_page_uri_path (a_wiki_page, a_book_name, Void), Void, l_xhtml)
+					l_xhtml.append ("</li></ul>")
+				end
+				if attached wdocs_api as l_wdocs_api then
+					l_wdocs_api.append_available_versions_to_xhtml (a_wiki_page, l_version_id, a_response, l_xhtml)
+					if attached {CMS_TAXONOMY_API} l_wdocs_api.cms_api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxonomy_api and then attached a_wiki_page.metadata ("uuid") as l_uuid then
+						l_taxonomy_api.append_taxonomy_to_xhtml (create {CMS_WDOCS_CONTENT}.make (a_wiki_page, l_uuid), a_response, l_xhtml)
+					end
 				end
 				if attached a_wiki_page.text.content as l_wiki_content then
 					l_xhtml.append (wiki_to_xhtml (wdocs_api, a_page_title, l_wiki_content, a_wiki_page, a_manager))

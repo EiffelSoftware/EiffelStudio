@@ -64,43 +64,34 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
 feature -- Access
 
-	argument_names: LIST [STRING]
+	argument_names: detachable LIST [STRING]
 			-- Argument names
 		do
-			Result := arguments.argument_names
+			if attached arguments as args then
+				Result := args.argument_names
+			end
 		end
 
-	locals: EIFFEL_LIST [LIST_DEC_AS]
-		local
-			routine_as: detachable ROUTINE_AS
+	locals: detachable EIFFEL_LIST [LIST_DEC_AS]
 		do
-			routine_as := associated_routine_as
-			if routine_as /= Void then
-				Result := routine_as.locals
+			if attached associated_routine_as as l_routine_as then
+				Result := l_routine_as.locals
 			end
 		end
 
 	object_test_locals: LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
 			-- Object test locals mentioned in the routine
-		local
-			routine_as: detachable ROUTINE_AS
 		do
-			routine_as := associated_routine_as
-			if routine_as /= Void then
-				Result := routine_as.object_test_locals
+			if attached associated_routine_as as l_routine_as then
+				Result := l_routine_as.object_test_locals
 			end
 		end
 
 	updated_version: E_FEATURE
-		local
-			l_class: EIFFEL_CLASS_C
-			l_feat: FEATURE_I
 		do
 			if is_inline_agent then
-				l_class ?= associated_class
-				if l_class /= Void and then l_class.is_valid then
-					l_feat := l_class.inline_agent_with_nr (enclosing_body_id, inline_agent_nr)
-					if l_feat /= Void then
+				if attached {EIFFEL_CLASS_C} associated_class as l_class and then l_class.is_valid then
+					if attached l_class.inline_agent_with_nr (enclosing_body_id, inline_agent_nr) as l_feat then
 						Result := l_feat.api_feature (l_class.class_id)
 					end
 				end
@@ -119,20 +110,30 @@ feature {NONE} -- Implementation
 			if not is_retrying then
 				if is_inline_agent then
 					if attached ast as inl_agt_feat_as then
-						Result ?= inline_agent_lookup.lookup_inline_agent_of_feature (
-								inl_agt_feat_as, inline_agent_nr).content
+						if
+							attached {ROUTINE_AS}
+								inline_agent_lookup.lookup_inline_agent_of_feature (inl_agt_feat_as, inline_agent_nr).content
+							as r_as
+						then
+							Result := r_as
+						end
 					end
 				elseif body_index > 0 then
 					if attached ast as feat_as then
 							--| feature_as can be Void for invariant routine
-						Result ?= feat_as.body.content
+						if attached {ROUTINE_AS} feat_as.body.content as r_as then
+							Result := r_as
+						end
 					end
 				end
-				if Result /= Void then
-					if Result.is_built_in then
-						if attached {BUILT_IN_AS} Result.routine_body as built_in_as then
-							if attached {FEATURE_AS} built_in_as.body as feature_as then
-								Result ?= feature_as.body.content
+				if
+					Result /= Void and then
+					Result.is_built_in
+				then
+					if attached {BUILT_IN_AS} Result.routine_body as built_in_as then
+						if attached {FEATURE_AS} built_in_as.body as feature_as then
+							if attached {ROUTINE_AS} feature_as.body.content as r_as then
+								Result := r_as
 							end
 						end
 					end
@@ -189,12 +190,6 @@ feature {FEATURE_I} -- Setting
 			has_postcondition := b;
 		end;
 
-	set_obsolete_message (s: STRING)
-			-- Assign `s' to `obsolete_message'
-		do
-			obsolete_message := s;
-		end;
-
 	set_inline_agent_nr (nr: INTEGER)
 			-- Assign `nr' to `inline_agent_nr'
 		do
@@ -237,7 +232,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

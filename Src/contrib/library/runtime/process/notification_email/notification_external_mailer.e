@@ -43,11 +43,8 @@ feature {NONE} -- Initialization
 feature -- Status
 
 	is_available: BOOLEAN
-		local
-			f: RAW_FILE
 		do
-			create f.make_with_path (executable_path)
-			Result := f.exists
+			Result := (create {RAW_FILE}.make_with_path (executable_path)).exists
 		end
 
 feature -- Change
@@ -108,7 +105,7 @@ feature -- Basic operation
 					if attached arguments as l_args then
 						args := l_args.twin
 					else
-						if attached {RAW_FILE} new_temporary_file (generator) as f then
+						if attached new_temporary_file (generator) as f then
 							f.create_read_write
 							f.put_string (a_email.message)
 							f.close
@@ -123,11 +120,13 @@ feature -- Basic operation
 					p.launch
 				end
 				if p.launched and not p.has_exited then
-					p.wait_for_exit_with_timeout (1_000_000)
+					execution_environment.sleep (1_000)
+					p.wait_for_exit
 					if not p.has_exited then
 						p.terminate
 						if not p.has_exited then
-							p.wait_for_exit_with_timeout (1_000_000)
+							execution_environment.sleep (1_000)
+							p.wait_for_exit
 						end
 					end
 				end
@@ -135,7 +134,8 @@ feature -- Basic operation
 				if p /= Void and then p.launched and then not p.has_exited then
 					p.terminate
 					if not p.has_exited then
-						p.wait_for_exit_with_timeout (1_000_000)
+						execution_environment.sleep (1_000)
+						p.wait_for_exit
 					end
 				end
 			end
@@ -193,10 +193,8 @@ feature {NONE} -- Implementation
 			result_creatable: Result.is_creatable
 		end
 
-invariant
-
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

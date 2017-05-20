@@ -50,19 +50,15 @@ feature {NONE} -- Initialization
 
 	initialize
 			-- Initialize.
-		local
-			l_model: like model
 		do
 			Precursor {EG_LINK_FIGURE}
-			l_model := model
-			check l_model /= Void end -- FIXME: Implied by ...?
-			if l_model.is_reflexive then
+			if attached model as l_model and then l_model.is_reflexive then
 				line.set_point_count (4)
 			else
 				line.pointer_button_press_actions.extend (agent pointer_button_pressed_on_a_line)
 				line.set_pointer_style (new_edge_cursor)
 			end
-			if l_model.is_directed then
+			if attached model as l_model and then l_model.is_directed then
 				line.enable_end_arrow
 			end
 		end
@@ -437,12 +433,9 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			-- Some properties may have changed.
 		local
 			nx, ny: INTEGER
-			l_model: like model
 		do
 			if attached source as l_source and then attached target as l_target then
-				l_model := model
-				check l_model /= Void end --FIXME: Implied by ...?
-				if not l_model.is_reflexive then
+				if attached model as l_model and then not l_model.is_reflexive then
 					if edge_move_handlers.count = 0 then
 						set_end_and_start_point_to_edge
 					else
@@ -515,15 +508,15 @@ feature {NONE} -- Implementation
 			an_angle: DOUBLE
 			l_pa: like point_array
 			p1: EV_COORDINATE
-			l_source: like source
 		do
-			l_pa := line.point_array
-			p1 := l_pa.item (1)
-
-			l_source := source
-			check l_source /= Void end -- FIXME: Implied by ...?
-			an_angle := line_angle (l_source.port_x, l_source.port_y, p1.x_precise, p1.y_precise)
-			l_source.update_edge_point (l_pa.item (0), an_angle)
+			if attached source as l_source then
+				l_pa := line.point_array
+				p1 := l_pa.item (1)
+				an_angle := line_angle (l_source.port_x, l_source.port_y, p1.x_precise, p1.y_precise)
+				l_source.update_edge_point (l_pa.item (0), an_angle)
+			else
+				check has_source: False end
+			end
 		end
 
 	set_end_point_to_edge
@@ -533,16 +526,17 @@ feature {NONE} -- Implementation
 			l_count: INTEGER
 			l_pa: like point_array
 			p: EV_COORDINATE
-			l_target: like target
 		do
-			l_pa := line.point_array
-			l_count := l_pa.count
-			p := l_pa.item (l_count - 2)
+			if attached target as l_target then
+				l_pa := line.point_array
+				l_count := l_pa.count
+				p := l_pa.item (l_count - 2)
 
-			l_target := target
-			check l_target /= Void end -- FIXME: Implied by ...?			
-			an_angle := line_angle (l_target.port_x, l_target.port_y, p.x_precise, p.y_precise)
-			l_target.update_edge_point (l_pa.item (l_count - 1), an_angle)
+				an_angle := line_angle (l_target.port_x, l_target.port_y, p.x_precise, p.y_precise)
+				l_target.update_edge_point (l_pa.item (l_count - 1), an_angle)
+			else
+				check has_target: False end
+			end
 		end
 
 	set_end_and_start_point_to_edge
@@ -552,18 +546,21 @@ feature {NONE} -- Implementation
 		local
 			an_angle: DOUBLE
 			l_point_array: like point_array
-			l_source: like source
-			l_target: like target
+
 		do
 			l_point_array := line.point_array
-			l_source := source
-			check l_source /= Void end -- FIXME: Implied by ...?
-			l_target := target
-			check l_target /= Void end -- FIXME: Implied by ...?
-			an_angle := line_angle (l_source.port_x, l_source.port_y, l_target.port_x, l_target.port_y)
-			l_source.update_edge_point (l_point_array.item (0), an_angle)
-			an_angle := pi + an_angle
-			l_target.update_edge_point (l_point_array.item (1), an_angle)
+			if
+				attached source as l_source and
+				attached target as l_target
+			then
+				an_angle := line_angle (l_source.port_x, l_source.port_y, l_target.port_x, l_target.port_y)
+				l_source.update_edge_point (l_point_array.item (0), an_angle)
+				an_angle := pi + an_angle
+				l_target.update_edge_point (l_point_array.item (1), an_angle)
+			else
+				check has_source: source /= Void end
+				check has_target: target /= Void end
+			end
 		end
 
 	pointer_button_pressed_on_a_line (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
@@ -636,12 +633,11 @@ feature {NONE} -- Implementation
 
 	on_is_directed_change
 			-- `model'.`is_directed' changed.
-		local
-			l_model: like model
 		do
-			l_model := model
-			check l_model /= Void end -- FIXME: Implied by ...?
-			if l_model.is_directed then
+			if
+				attached model as l_model and then
+				l_model.is_directed
+			then
 				line.enable_end_arrow
 			else
 				line.disable_end_arrow
@@ -674,7 +670,7 @@ invariant
 	line_not_void: line /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

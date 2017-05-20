@@ -1,14 +1,14 @@
 package wsf_html
 
 project
-	wsf_html = "wsf_html-safe.ecf"
 	wsf_html = "wsf_html.ecf"
 
 note
 	title: WSF Html widget
 	description: "[
-			HTML widget, such as table, web form, and more based on the WSF interfaces.
-		]"
+HTML widget, such as table, web form, and more based on the WSF interfaces.
+				]"
+
 	tags: ewf,server,html,form,widget
 	copyright: 2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others
 	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
@@ -17,4 +17,3 @@ note
 	link[doc]: "Documentation" http://eiffelwebframework.github.io/EWF/
 
 end
-

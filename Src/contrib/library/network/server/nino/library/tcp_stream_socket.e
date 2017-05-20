@@ -29,16 +29,6 @@ feature {NONE} -- Initialization
 			set_reuse_address
 		end
 
-	make_server_by_address_and_port (an_address: INET_ADDRESS; a_port: INTEGER)
-			-- Create server socket on `an_address' and `a_port'.
-		require
-			valid_port: a_port >= 0
-		do
-			make
-			create address.make_from_address_and_port (an_address, a_port)
-			bind
-		end
-
 feature -- Basic operation
 
 	send_message (a_msg: STRING)

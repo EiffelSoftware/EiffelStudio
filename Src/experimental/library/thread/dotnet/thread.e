@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Class defining an Eiffel thread."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -54,7 +54,6 @@ feature -- Basic operations
 			is_launchable: is_launchable
 		local
 			l_priority: THREAD_PRIORITY
-			l_thread_control: THREAD_DOTNET_CONTROL
 		do
 			launch_mutex.lock
 			if not is_launchable then
@@ -62,16 +61,15 @@ feature -- Basic operations
 					-- on the same THREAD object.
 				is_last_launch_successful_cell.put (False)
 			else
-				if attr.stack_size /= 0 then
-					create internal_thread_imp.make (create {PARAMETERIZED_THREAD_START}.make (Current, $thr_main), attr.stack_size.to_integer_32)
-				else
+				if attr.stack_size = 0 then
 					create internal_thread_imp.make (create {PARAMETERIZED_THREAD_START}.make (Current, $thr_main))
+				else
+					create internal_thread_imp.make (create {PARAMETERIZED_THREAD_START}.make (Current, $thr_main), attr.stack_size.to_integer_32)
 				end
 				internal_thread_imp.set_priority (l_priority.from_integer (attr.priority))
 				internal_thread_imp.set_is_background (True)
 				internal_thread_imp.start ([current_thread_id])
-				create l_thread_control
-				l_thread_control.add_child_to_parent (current_thread_id, Current)
+				;(create {THREAD_DOTNET_CONTROL}).add_child_to_parent (current_thread_id, Current)
 				thread_id := default_pointer + internal_thread_imp.managed_thread_id
 				is_last_launch_successful_cell.put (True)
 			end
@@ -209,7 +207,7 @@ feature {NONE} -- Implementation
 			-- Actual storage for current thread.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

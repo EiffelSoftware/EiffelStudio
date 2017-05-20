@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Actual type for NONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,8 +11,14 @@ class
 inherit
 	DEANCHORED_TYPE_A
 		redefine
-			is_none, dump, c_type, same_as, is_full_named_type, generated_id,
-			generate_gen_type_il
+			c_type,
+			dump,
+			generate_gen_type_il,
+			generated_id,
+			has_reference,
+			is_full_named_type,
+			is_none,
+			same_as
 		end
 
 feature -- Visitor
@@ -38,6 +44,9 @@ feature -- Properties
 
 	is_full_named_type: BOOLEAN = True
 			-- Current is a full named type.
+
+	has_reference: BOOLEAN = False
+			-- <Precursor>
 
 feature -- Access
 
@@ -132,7 +141,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -163,4 +172,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class NONE_A
+end

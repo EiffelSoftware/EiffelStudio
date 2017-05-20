@@ -27,7 +27,8 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			set_service_option ("port", {$WIZ.standalone_connector.port/})
-			{if condition="$WIZ.standalone_connector.verbose ~ $WIZ_YES"}set_service_option ("verbose", True){/if}
+			set_service_option ("verbose", "{$WIZ.standalone_connector.verbose/}")
 		end
+
 
 end

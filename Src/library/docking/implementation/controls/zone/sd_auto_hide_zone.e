@@ -82,6 +82,7 @@ feature	{NONE} -- Initlization
 			disable_item_expand (resize_bar)
 
 			-- The minimum width is the width of two buttons on the title bar.
+			check has_content: has_content end
 			content.user_widget.set_minimum_size (internal_shared.icons.stick.width * 3, internal_shared.icons.stick.height)
 		ensure
 			set: docking_manager = a_content.docking_manager
@@ -95,7 +96,9 @@ feature {NONE} -- Implementation
 	stick
 			-- Stick zone
 		do
-			internal_content.state.stick (content.state.direction)
+			if has_content and then attached content as ct then
+				ct.state.stick (ct.state.direction)
+			end
 		end
 
 	resize_bar: SD_RESIZE_BAR
@@ -278,7 +281,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

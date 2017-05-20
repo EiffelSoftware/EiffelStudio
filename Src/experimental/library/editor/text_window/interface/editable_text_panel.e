@@ -63,7 +63,7 @@ feature -- Access
 			-- Warning message indicating text is not editable.
 			-- If Void, default message will be used.
 		obsolete
-			"Use `not_editable_warning_wide_message' instead"
+			"Use `not_editable_warning_wide_message' instead [2017-05-31]"
 		do
 			if attached not_editable_warning_wide_message as l_msg then
 				Result := l_msg.as_string_8
@@ -514,7 +514,7 @@ feature -- Text selection access
 	string_selection: STRING
 			-- Current selection string
 		obsolete
-			"Use `wide_string_selection' instead."
+			"Use `wide_string_selection' instead. [2017-05-31]"
 		require
 			has_selection: has_selection
 		do
@@ -1071,7 +1071,7 @@ feature {NONE} -- Private Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -340,7 +340,7 @@ feature {NONE} -- Internal Operations
 
 feature -- Status setting
 
-	set_webapp (a_webapp: like webapp)
+	set_webapp (a_webapp: attached like webapp)
 			-- Setts webapp.
 		require
 			a_webapp_attached: a_webapp /= Void
@@ -350,7 +350,7 @@ feature -- Status setting
 			webapp_set: webapp = a_webapp
 		end
 
-	set_next_action (a_action: like next_action)
+	set_next_action (a_action: attached like next_action)
 			-- Setts a next action.
 		require
 			a_action_attached: a_action /= Void
@@ -474,7 +474,7 @@ feature {NONE} -- Implementation
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

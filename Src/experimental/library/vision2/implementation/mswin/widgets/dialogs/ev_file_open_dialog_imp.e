@@ -66,7 +66,7 @@ feature -- Status report
 	file_names: ARRAYED_LIST [STRING_32]
 			-- Full names of currently selected files including path.
 		obsolete
-			"Use `file_paths' instead."
+			"Use `file_paths' instead. [2017-05-31]"
 		local
 			l_result: detachable ARRAYED_LIST [STRING_32]
 		do

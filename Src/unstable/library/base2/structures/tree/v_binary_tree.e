@@ -1,6 +1,7 @@
 note
 	description: "Binary trees (doubly linked implementation)."
 	author: "Nadia Polikarpova"
+	updated_by: "Alexander Kogtenkov"
 	model: map
 
 class
@@ -202,13 +203,10 @@ feature {NONE} -- Implementation
 			-- String representation of a subtree with root `cell' indented by `indent'.
 		require
 			indent_non_negative: indent >= 0
-		local
-			stream: V_STRING_OUTPUT
 		do
 			if cell /= Void then
 				create Result.make_filled (' ', indent)
-				create stream.make_with_separator (Result, "%N")
-				stream.output (cell.item)
+				;(create {V_STRING_OUTPUT}.make_with_separator (Result, "%N")).output (cell.item)
 				Result.append (subtree_to_string (cell.left, indent + 1))
 				Result.append (subtree_to_string (cell.right, indent + 1))
 			else

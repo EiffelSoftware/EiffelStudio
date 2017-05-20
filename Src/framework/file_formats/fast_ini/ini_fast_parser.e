@@ -190,10 +190,11 @@ feature -- Basic operations
 								elseif l_state = property_value_state then
 										-- Property (with value)
 									check
-										l_name_attached: attached l_name
-										not_l_name_is_empty: not l_name.is_empty
+										not_l_name_is_empty: attached l_name and then not l_name.is_empty
 									end
-									a_callbacks.on_property (l_name, create {STRING_32}.make_from_string (l_partial_buffer))
+									if l_name /= Void then
+										a_callbacks.on_property (l_name, create {STRING_32}.make_from_string (l_partial_buffer))
+									end
 								else
 									check unknown_state: False end
 								end

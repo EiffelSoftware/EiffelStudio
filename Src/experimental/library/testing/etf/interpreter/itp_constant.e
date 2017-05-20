@@ -41,7 +41,7 @@ feature -- Access
 			if l_value = Void then
 				Result := none_type_name
 			else
-				Result := l_value.generating_type
+				Result := l_value.generating_type.name
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -59,7 +59,7 @@ feature -- Processing
 feature{NONE} -- Implementation
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

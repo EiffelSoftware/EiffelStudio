@@ -1,9 +1,9 @@
-note
-	description	: "Window manager for tools."
+﻿note
+	description: "Window manager for tools."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_WINDOW_MANAGER
@@ -853,17 +853,13 @@ feature {EB_WINDOW, EB_DEVELOPMENT_WINDOW_BUILDER} -- Events
 			-- This method only takes into account the cases when closing the
 			-- window means exiting the application.
 		local
-			loc_development_window: EB_DEVELOPMENT_WINDOW
 			l_cosumer: SERVICE_CONSUMER [SESSION_MANAGER_S]
 		do
-			loc_development_window ?= a_window
-			if development_windows_count = 1 and then loc_development_window /= Void then
+			if development_windows_count = 1 and then attached {EB_DEVELOPMENT_WINDOW} a_window then
 				confirm_and_quit
 			else
-				if loc_development_window /= Void then
+				if attached {EB_DEVELOPMENT_WINDOW} a_window as loc_development_window then
 					create l_cosumer
-					check l_cosumer.is_service_available end
-
 					loc_development_window.save_window_data
 				end
 				destroy_window (a_window)
@@ -1672,7 +1668,7 @@ feature{NONE} -- Implementation
 			-- Implementation of `compile_start_actions'
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1703,4 +1699,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- EB_WINDOW_MANAGER
+end

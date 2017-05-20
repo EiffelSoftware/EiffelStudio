@@ -293,7 +293,6 @@ feature {NONE} -- Add nodes
 			-- Add a new node to `graph' position it at (`ax', `ay') in `world'.
 		local
 			new_node: EG_NODE
-			fig: detachable EG_FIGURE
 		do
 			node_counter := node_counter + 1
 
@@ -305,28 +304,28 @@ feature {NONE} -- Add nodes
 			graph.add_node (new_node)
 
 			-- Place the new figure at (`ax', `ay') in `world'.
-			fig := world.figure_from_model (new_node)
-			check fig /= Void end -- FIXME: Implied by ...?
-			fig.set_point_position (ax, ay)
+			if attached world.figure_from_model (new_node) as fig then
+				fig.set_point_position (ax, ay)
 
-			-- Make new node figure a drop target
-			fig.set_accept_cursor (accept_node)
-			fig.set_deny_cursor (deny_node)
-			fig.drop_actions.extend (agent on_link_drop (?, new_node))
+				-- Make new node figure a drop target
+				fig.set_accept_cursor (accept_node)
+				fig.set_deny_cursor (deny_node)
+				fig.drop_actions.extend (agent on_link_drop (?, new_node))
 
-			-- Make new node figure pickable
-			fig.set_pebble (create {NODE_STONE}.make (new_node))
+				-- Make new node figure pickable
+				fig.set_pebble (create {NODE_STONE}.make (new_node))
+			end
 
 			-- Hide label of simple nodes
-			fig := small_world.figure_from_model (new_node)
-			check fig /= Void end -- FIXME: Implied by ...?
-			fig.hide_label
+			if attached small_world.figure_from_model (new_node) as fig then
+				fig.hide_label
 
-			-- Position the simple node at some random position
-			fig.set_point_position (300 - random.next_item_in_range (0, 200), 300 - random.next_item_in_range (0, 200) )
+				-- Position the simple node at some random position
+				fig.set_point_position (300 - random.next_item_in_range (0, 200), 300 - random.next_item_in_range (0, 200) )
 
-			-- Make sure physics is restarted when a simple node is moved
-			fig.move_actions.extend (agent on_small_move)
+				-- Make sure physics is restarted when a simple node is moved
+				fig.move_actions.extend (agent on_small_move)
+			end
 			physics_layout.reset
 		end
 
@@ -337,15 +336,14 @@ feature {NONE} -- Add nodes
 			n2_not_void: n2 /= Void
 		local
 			link: EG_LINK
-			simple_link: detachable EG_SIMPLE_LINK
 		do
 			create link.make_directed_with_source_and_target (n1, n2)
 			graph.add_link (link)
-			simple_link ?= small_world.figure_from_model (link)
-			check
-				simple_link /= Void
+			if attached {EG_SIMPLE_LINK} small_world.figure_from_model (link) as simple_link then
+				simple_link.set_arrow_size (4)
+			else
+				check is_simple_link: False end
 			end
-			simple_link.set_arrow_size (4)
 		end
 
 	add_random_nodes (nb: INTEGER)
@@ -527,15 +525,11 @@ feature {NONE} -- Save/retrive
 
 	on_save
 			-- User selected save.
-		local
-			l_name: like last_file_name
 		do
-			if last_file_name = Void then
-				on_save_as
-			else
-				l_name := last_file_name
-				check l_name /= Void end -- FIXME: Implied by ...?
+			if attached last_file_name as l_name then
 				save (l_name)
+			else
+				on_save_as
 			end
 		end
 
@@ -585,18 +579,14 @@ feature {NONE} -- Save/retrive
 			dialog: EV_FILE_OPEN_DIALOG
 			l_nodes: LIST [EG_LINKABLE_FIGURE]
 			l_item: EG_LINKABLE_FIGURE
-			l_name: like last_file_name
 		do
 			create dialog
 			dialog.filters.extend (["*.xml", "XML File"])
 			dialog.show_modal_to_window (Current)
 
-			if dialog.file_name /= Void then
-				last_file_name := dialog.file_name
-				l_name := last_file_name
-				check l_name /= Void end -- FIXME: Implied by ...?
-				load (l_name)
-
+			if attached dialog.file_name as l_dialog_file_name then
+				last_file_name := l_dialog_file_name
+				load (l_dialog_file_name)
 				from
 					l_nodes := small_world.flat_nodes
 					l_nodes.start
@@ -684,7 +674,7 @@ feature {NONE} -- Implementation
 			Result := time.millisecond_now + time.second_now * 1000 + time.minute_now * 60000
 		end
 
-	accept_node: EV_CURSOR
+	accept_node: EV_POINTER_STYLE
 		local
 			pix: EV_PIXMAP
 		once
@@ -693,7 +683,7 @@ feature {NONE} -- Implementation
 			create Result.make_with_pixmap (pix, 8, 8)
 		end
 
-	deny_node: EV_CURSOR
+	deny_node: EV_POINTER_STYLE
 		local
 			pix: EV_PIXMAP
 		once

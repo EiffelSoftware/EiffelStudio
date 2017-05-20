@@ -1,7 +1,5 @@
-note
-	description: "[
-			Profile that overrides compiler behavior.
-		]"
+﻿note
+	description: "Profile that overrides compiler behavior."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -36,7 +34,6 @@ feature -- Initialization
 			if l_args.index_of_word_option (safe_option_name) > 0 then
 				set_safe_mode
 			end
-
 				-- Process the platform part. If we encounter something invalid
 				-- we simply ignore it and let the actual argument parsing code
 				-- handle this properly.
@@ -45,6 +42,13 @@ feature -- Initialization
 				l_arg := l_args.argument (l_pos + 1)
 				if is_platform_valid (l_arg) then
 					set_platform (l_arg)
+				end
+			end
+			l_pos := l_args.index_of_word_option (capabilty_option_name)
+			if l_pos > 0 and then l_pos + 1 <= l_args.argument_count then
+				l_arg := l_args.argument (l_pos + 1)
+				if is_capability_valid (l_arg) then
+					set_capability (l_arg)
 				end
 			end
 		end
@@ -56,6 +60,7 @@ feature -- Access
 	full_option_name: STRING = "full"
 	safe_option_name: STRING = "safe"
 	platform_option_name: STRING = "platform"
+	capabilty_option_name: STRING = "capability"
 			-- Name of command line options that can be used to initialize Current
 
 	command_line: STRING
@@ -115,6 +120,18 @@ feature -- Access
 				l_option.append_character (' ')
 				l_option.append (platform_mode)
 				Result.extend (l_option)
+			end
+			if is_capability_warning then
+				Result.extend (capabilty_option)
+				Result.extend (capability_value_warning)
+			end
+			if is_capability_error then
+				Result.extend (capabilty_option)
+				Result.extend (capability_value_error)
+			end
+			if is_capability_strict then
+				Result.extend (capabilty_option)
+				Result.extend (capability_value_strict)
 			end
 		end
 
@@ -239,6 +256,33 @@ feature -- Status report
 			exclusive_answer: Result implies (not is_unix_platform and not is_windows_platform and not is_mac_platform)
 		end
 
+	is_capability_valid (v: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `v' a valid capability specification?
+		do
+			Result :=
+				v.same_string (capability_value_warning) or
+				v.same_string (capability_value_error) or
+				v.same_string (capability_value_strict)
+		end
+
+	is_capability_warning: BOOLEAN
+			-- Are capability violations reported as warnings rather than errors?
+		do
+			Result := flags & capability_warning_flag /= 0
+		end
+
+	is_capability_error: BOOLEAN
+			-- Are all capability violations reported as errors?
+		do
+			Result := flags & capability_error_flag /= 0
+		end
+
+	is_capability_strict: BOOLEAN
+			-- Are capability violations checked against library capabilities rather than compilation settings?
+		do
+			Result := flags & capability_strict_flag /= 0
+		end
+
 feature -- Settings
 
 	set_compatible_mode
@@ -289,6 +333,19 @@ feature -- Settings
 			end
 		end
 
+	set_capability (v: READABLE_STRING_GENERAL)
+		require
+			is_capability_valid (v)
+		do
+			if v.same_string (capability_value_warning) then
+				set_capability_warning
+			elseif v.same_string (capability_value_error) then
+				set_capability_error
+			elseif v.same_string (capability_value_strict) then
+				set_capability_strict
+			end
+		end
+
 	set_is_windows_platform
 			-- Use windows as target compilation
 		do
@@ -313,6 +370,24 @@ feature -- Settings
 			-- Use vxworks as target compilation
 		do
 			flags := (flags & platform_mask.bit_not) | vxworks_platform_flag
+		end
+
+	set_capability_warning
+			-- Treat capability errors as warnings.
+		do
+			flags := (flags & capability_error_flag.bit_not) | capability_warning_flag
+		end
+
+	set_capability_error
+			-- Treat capability warnings as errors.
+		do
+			flags := (flags & capability_warning_flag.bit_not) | capability_error_flag
+		end
+
+	set_capability_strict
+			-- Check library code against its capability rather than project settings.
+		do
+			flags := flags | capability_strict_flag
 		end
 
 	reset
@@ -341,8 +416,40 @@ feature {NONE}
 	vxworks_platform_flag: NATURAL_32 = 0x0040
 			-- Platform target flags.
 
+feature -- Capabilities
+
+	capabilty_option: STRING
+			-- Option to control capabilities processing with leading option sign.
+		local
+			a: ES_ARGUMENTS
+		once
+			create a
+			create Result.make_filled (a.option_sign.item.to_character_8, 1)
+			Result.append_string (capabilty_option_name)
+		end
+
+	capability_value_warning: STRING = "warning"
+			-- Capability option value to treat capability errors as warnings.
+
+	capability_value_error: STRING = "error"
+			-- Capability option value to treat capability warnings as errors.
+
+	capability_value_strict: STRING = "strict"
+			-- Capability option value to check code against library capabilities instead of current compilation settings.
+
+feature {NONE} -- Capabilities
+
+	capability_mask: NATURAL_32 = 0b111_0000_0000
+			-- A mask for capability flags.
+	capability_warning_flag: NATURAL_32 = 0b001_0000_0000
+			-- Treat capability errors as warnings.
+	capability_error_flag: NATURAL_32 = 0b010_0000_0000
+			-- Treat capability warnings as errors.
+	capability_strict_flag: NATURAL_32 = 0b100_0000_0000
+			-- Check library code against its capability rather than project settings.
+
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

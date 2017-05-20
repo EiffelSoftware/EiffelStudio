@@ -96,7 +96,9 @@ feature -- Basic operation
 						local_part,
 						signature_part
 					then
-						feat := described_feature (token, line, ft)
+						if attached described_access_id (token, line, ft) as tu then
+							feat := tu.feat
+						end
 					else
 					end
 				end
@@ -193,7 +195,7 @@ feature -- Analysis preparation
 								elseif line.next /= Void then
 									line := line.next
 									pos_in_file := pos_in_file + 1
-									if platform_is_windows then
+									if {PLATFORM}.is_windows then
 										pos_in_file := pos_in_file + 1
 									end
 									token := line.first_token
@@ -209,7 +211,7 @@ feature -- Analysis preparation
 								elseif line.next /= Void then
 									line := line.next
 									pos_in_file := pos_in_file + 1
-									if platform_is_windows then
+									if {PLATFORM}.is_windows then
 										pos_in_file := pos_in_file + 1
 									end
 									token := line.first_token
@@ -227,7 +229,7 @@ feature -- Analysis preparation
 				elseif line.next /= Void then
 					line := line.next
 					pos_in_file := pos_in_file + 1
-					if platform_is_windows then
+					if {PLATFORM}.is_windows then
 						pos_in_file := pos_in_file + 1
 					end
 					token := line.first_token
@@ -246,7 +248,7 @@ feature -- Implementation
 	current_feature_id: INTEGER;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

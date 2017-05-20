@@ -34,6 +34,11 @@ feature -- Tests
 			test_post_with_form_data
 		end
 
+	libcurl_test_post_with_uncommon_form_data
+		do
+			test_post_with_uncommon_form_data
+		end
+
 	libcurl_test_post_with_file
 		do
 			test_post_with_file

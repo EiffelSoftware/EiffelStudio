@@ -76,7 +76,7 @@ feature -- Status report
 			Result := implementation.arguments_name_32
 		end
 
-	arguments_type: detachable ARRAY [ANY]
+	arguments_type: detachable ARRAY [detachable ANY]
 			-- Argument types
 		do
 			Result := implementation.arguments_type
@@ -124,6 +124,33 @@ feature -- Basic operations
 
 	store (sql: READABLE_STRING_GENERAL)
 			-- Store current procedure with `sql' expression.
+			--| Create an store procedure based on a valid `sql' expression.
+			--| For example: sql = UPDATE Table_Name set Column_Name_1 = :N_Name_1, ...,Column_Name_n = :N_Name_n
+			--| It will generate an store procedure like this
+			--|
+			--| create procedure update_name (N_NAME_1 DATABASE_TYPE_1, ...,N_NAME_N DATABASE_TYPE_N )
+			--| BEGIN
+			--|		update Table_Name set Column_Name_1 = :N_NAME_1,..., Colum_Name_n = :N_Name_n;
+			--| END;
+			--|
+			--| How to use it?
+			--|
+			--| pr: DB_PROC; updater: DB_CHANGE; proc_name: STRING
+			--|
+			--| begin
+			--|	create pr.make (proc_name)
+			--|	create updater.make
+			--|	updater.set_query (sql_query)
+			--|  -- for each parameter to the store procedure call updater.set_map_name
+			--|	pr.set_arguments (...)
+			--|	pr.load
+			--|	if not pr.exists then
+			--|		pr.store (updater.last_query)
+			--|		pr.load
+			--|	end
+			--|	pr.execute (updater)
+			--|	updater.clear_all
+			--|	commit
 		require
 			sql_not_void: sql /= Void
 			not_exists: not exists
@@ -219,7 +246,7 @@ feature -- Status setting
 			arguments_set
 		end
 
-	set_arguments_32 (args_name: attached like arguments_name_32;
+	set_arguments_32 (args_name: attached  like arguments_name_32;
 			args_type: attached like arguments_type)
 			-- Set `arguments_name_32' of current
 			-- as a variable list of argument names.
@@ -256,7 +283,7 @@ invariant
 	load_and_exists: loaded implies (exists or not exists)
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

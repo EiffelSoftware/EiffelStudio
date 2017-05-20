@@ -8,12 +8,12 @@ copy_raw 	parent.e $CLUSTER parent.e
 copy_raw 	child.e $CLUSTER child.e
 
 compile_melted
-compile_result	validity_error CHILD VD88
+compile_result	validity_warning NONE VD80 VD80
 
 define IS_VOID_SAFE "true"
 copy_sub 	Ace $TEST Ace
 
-resume_compile
-compile_result	validity_error PARENT VUTA(2)
+compile_melted
+compile_result	validity_error NONE VD80 VD80; PARENT VUTA(2)
 
 test_end

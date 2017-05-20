@@ -88,7 +88,7 @@ feature -- HTTP Methods
 								l_page.add_error_message ("Vocabulary creation failed!")
 							else
 								l_page.add_success_message ("Vocabulary creation succeed!")
-								l_page.set_redirection ("admin/taxonomy/vocabulary/" + voc.id.out)
+								l_page.set_redirection (api.administration_path_location ("taxonomy/vocabulary/" + voc.id.out))
 							end
 						else
 							create {BAD_REQUEST_ERROR_CMS_RESPONSE} l_page.make (req, res, api)
@@ -143,7 +143,7 @@ feature -- HTTP Methods
 							end
 						end
 						if not taxonomy_api.has_error then
-							l_page.add_notice_message (l_page.link ({STRING_32} "Back to vocabulary %"" + l_vocabulary.name + "%"", "admin/taxonomy/vocabulary/" + l_vocabulary.id.out, Void))
+							l_page.add_notice_message (l_page.link ({STRING_32} "Back to vocabulary %"" + l_vocabulary.name + "%"", api.administration_path_location ("taxonomy/vocabulary/" + l_vocabulary.id.out), Void))
 						end
 						l_page.set_main_content (s)
 					else
@@ -239,7 +239,7 @@ feature -- HTTP Methods
 					create wtb_row.make (3)
 					wtb.add_row (wtb_row)
 
-					create wtb_item.make_with_text (l_page.link (ic.item.text, "admin/taxonomy/term/" + l_term.id.out, Void))
+					create wtb_item.make_with_text (l_page.link (ic.item.text, api.administration_path_location ("taxonomy/term/" + l_term.id.out), Void))
 					wtb_row.set_item (wtb_item, 1)
 					if attached ic.item.description as l_desc then
 						create wtb_item.make_with_text (api.html_encoded (l_desc))
@@ -362,7 +362,7 @@ feature -- HTTP Methods
 					create wtb_row.make (3)
 					wtb.add_row (wtb_row)
 
-					create wtb_item.make_with_text (l_page.link (ic.item.name, "admin/taxonomy/vocabulary/" + ic.item.id.out, Void))
+					create wtb_item.make_with_text (l_page.link (ic.item.name, api.administration_path_location ("taxonomy/vocabulary/" + ic.item.id.out), Void))
 --						if attached ic.item.description as l_desc then
 --							s.append (" : <em>")
 --							s.append (api.html_encoded (l_desc))
@@ -385,7 +385,7 @@ feature -- HTTP Methods
 						wtb_row.set_item (wtb_item, 2)
 					end
 
-					s := l_page.link ("edit", "admin/taxonomy/vocabulary/" + voc.id.out, Void)
+					s := l_page.link ("edit", api.administration_path_location ("taxonomy/vocabulary/" + voc.id.out), Void)
 					create wtb_item.make_with_text (s)
 					wtb_row.set_item (wtb_item, 3)
 				end

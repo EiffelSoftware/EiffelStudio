@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Functionality to query the status of an arbitrary precision integer"
 	author: "Colin LeMahieu"
 	date: "$Date$"
@@ -1067,7 +1067,7 @@ feature -- Lossless conversion
 		do
 			Result := as_integer_32
 		ensure
-			Current ~ (create {INTEGER_X}.make_from_integer (Result))
+			Current ~ create {INTEGER_X}.make_from_integer (Result)
 		end
 
 	to_integer_64: INTEGER_64
@@ -1077,7 +1077,7 @@ feature -- Lossless conversion
 		do
 			Result := as_integer_64
 		ensure
-			Current ~ (create {INTEGER_X}.make_from_integer_64 (Result))
+			Current ~ create {INTEGER_X}.make_from_integer_64 (Result)
 		end
 
 	to_integer_32: INTEGER_32
@@ -1087,7 +1087,7 @@ feature -- Lossless conversion
 		do
 			Result := as_integer_32
 		ensure
-			Current ~ (create {INTEGER_X}.make_from_integer_32 (Result))
+			Current ~ create {INTEGER_X}.make_from_integer_32 (Result)
 		end
 
 	to_integer_16: INTEGER_16
@@ -1097,7 +1097,7 @@ feature -- Lossless conversion
 		do
 			Result := as_integer_16
 		ensure
-			Current ~ (create {INTEGER_X}.make_from_integer_16 (Result))
+			Current ~ create {INTEGER_X}.make_from_integer_16 (Result)
 		end
 
 	to_integer_8: INTEGER_8
@@ -1107,7 +1107,7 @@ feature -- Lossless conversion
 		do
 			Result := as_integer_8
 		ensure
-			Current ~ (create {INTEGER_X}.make_from_integer_8 (Result))
+			Current ~ create {INTEGER_X}.make_from_integer_8 (Result)
 		end
 
 	to_natural: NATURAL_32
@@ -1117,7 +1117,7 @@ feature -- Lossless conversion
 		do
 			Result := to_natural_32
 		ensure
-			Current ~ (create {INTEGER_X}.make_from_natural (Result))
+			Current ~ create {INTEGER_X}.make_from_natural (Result)
 		end
 
 	to_natural_64: NATURAL_64
@@ -1127,7 +1127,7 @@ feature -- Lossless conversion
 		do
 			Result := as_natural_64
 		ensure
-			Current ~ (create {INTEGER_X}.make_from_natural_64 (Result))
+			Current ~ create {INTEGER_X}.make_from_natural_64 (Result)
 		end
 
 	to_natural_32: NATURAL_32
@@ -1137,7 +1137,7 @@ feature -- Lossless conversion
 		do
 			Result := as_natural_32
 		ensure
-			Current ~ (create {INTEGER_X}.make_from_natural_32 (Result))
+			Current ~ create {INTEGER_X}.make_from_natural_32 (Result)
 		end
 
 	to_natural_16: NATURAL_16
@@ -1147,7 +1147,7 @@ feature -- Lossless conversion
 		do
 			Result := as_natural_16
 		ensure
-			Current ~ (create {INTEGER_X}.make_from_natural_16 (Result))
+			Current ~ create {INTEGER_X}.make_from_natural_16 (Result)
 		end
 
 	to_natural_8: NATURAL_8
@@ -1157,7 +1157,7 @@ feature -- Lossless conversion
 		do
 			Result := as_natural_8
 		ensure
-			Current ~ (create {INTEGER_X}.make_from_natural_8 (Result))
+			Current ~ create {INTEGER_X}.make_from_natural_8 (Result)
 		end
 
 	to_bytes (target: SPECIAL [NATURAL_8] offset: INTEGER)
@@ -1170,7 +1170,7 @@ feature -- Lossless conversion
 			create junk
 			output (target, offset, junk, 1, 1, -1, Current)
 		ensure
-			reversable: (create {INTEGER_X}.make_from_bytes (target, offset, offset + bytes - 1)) ~ Current
+			reversable: create {INTEGER_X}.make_from_bytes (target, offset, offset + bytes - 1) ~ Current
 		end
 
 	as_bytes: SPECIAL[NATURAL_8]
@@ -1179,7 +1179,7 @@ feature -- Lossless conversion
 			create Result.make_filled (0, bytes)
 			to_bytes (Result, Result.lower)
 		ensure
-			reversable: (create {INTEGER_X}.make_from_bytes (Result, Result.lower, Result.upper)) ~ Current
+			reversable: create {INTEGER_X}.make_from_bytes (Result, Result.lower, Result.upper) ~ Current
 		end
 
 	to_fixed_width_byte_array (target: SPECIAL [NATURAL_8] first: INTEGER last: INTEGER)
@@ -1194,7 +1194,7 @@ feature -- Lossless conversion
 			target.fill_with (0x0, first, last)
 			output (target, first + (last - first - bytes + 1), junk, 1, 1, -1, Current)
 		ensure
-			reversable: (create {INTEGER_X}.make_from_bytes (target, first, last)) ~ Current
+			reversable: create {INTEGER_X}.make_from_bytes (target, first, last) ~ Current
 		end
 
 	as_fixed_width_byte_array (byte_size: INTEGER): SPECIAL[NATURAL_8]
@@ -1205,7 +1205,7 @@ feature -- Lossless conversion
 			create Result.make_filled (0, byte_size)
 			to_fixed_width_byte_array (Result, 0, byte_size - 1)
 		ensure
-			reversable: (create {INTEGER_X}.make_from_bytes (Result, Result.lower, Result.upper)) ~ Current
+			reversable: create {INTEGER_X}.make_from_bytes (Result, Result.lower, Result.upper) ~ Current
 		end
 
 feature -- Duplication
@@ -1577,7 +1577,7 @@ feature -- Discrete operations stateless
 			Result := identity
 			Result.inverse (modulus)
 		ensure
-			correct_result: ((Result * Current) \\ modulus) ~ (one)
+			correct_result: (Result * Current) \\ modulus ~ one
 			coprime: coprime (modulus)
 		end
 
@@ -1601,9 +1601,9 @@ feature -- Discrete operations stateless
 	coprime (other: like Current): BOOLEAN
 			-- Are `Current' and `other' coprime?
 		do
-			Result := gcd_value (other) ~ (one)
+			Result := gcd_value (other) ~ one
 		ensure
-			Result = (gcd_value (other) ~ (one))
+			Result = (gcd_value (other) ~ one)
 		end
 
 feature {INTEGER_X_FACILITIES}-- Galois field arithmetic stateful

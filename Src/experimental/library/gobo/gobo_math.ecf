@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="gobo_math" uuid="0EE2FC90-D2CD-4297-B1EC-CCBF601F988C" library_target="gobo_math">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="gobo_math" uuid="0EE2FC90-D2CD-4297-B1EC-CCBF601F988C" library_target="gobo_math">
 	<target name="gobo_math">
 		<description>gobo math library</description>
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/ge$</exclude>
-			<exclude>/hact$</exclude>
-			<exclude>/free_elks$</exclude>
-			<exclude>/cvs$</exclude>
-			<exclude>/se$</exclude>
-			<exclude>/base$</exclude>
-			<exclude>/\.svn</exclude>
 			<exclude>/Documentation$</exclude>
 			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.svn</exclude>
+			<exclude>/base$</exclude>
+			<exclude>/cvs$</exclude>
+			<exclude>/free_elks$</exclude>
+			<exclude>/ge$</exclude>
+			<exclude>/hact$</exclude>
+			<exclude>/se$</exclude>
 			<exclude>/ve$</exclude>
 		</file_rule>
-		<option full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="standard" namespace="Gobo.Library">
+		<option namespace="Gobo.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>

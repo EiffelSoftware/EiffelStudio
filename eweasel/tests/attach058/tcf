@@ -10,31 +10,31 @@ copy_sub	test.e $CLUSTER test.e
 
 define VOID_SAFETY_A "all"
 define VOID_SAFETY_TEST "all"
+define VOID_SAFETY_MAX "all"
 copy_sub	Ace $TEST Ace
 compile_melted
-compile_result	validity_error TEST VDRD(2) VDRD(2) VDRD(2) VDRD(2) VDRD(2) VDRD(2) VDRD(2) VDRD(2)
-abort_compile
+compile_result	validity_error NONE VD80 VD80; TEST VDRD(2) VDRD(2) VDRD(2) VDRD(2) VDRD(2) VDRD(2) VDRD(2) VDRD(2)
 
 define VOID_SAFETY_A "none"
 define VOID_SAFETY_TEST "all"
+define VOID_SAFETY_MAX "none"
 copy_sub	Ace $TEST Ace
-compile_melted
-compile_result	validity_error TEST VD88 VD88
-abort_compile
+resume_compile
+compile_result	validity_warning NONE VD80 VD80
 
 define VOID_SAFETY_A "all"
 define VOID_SAFETY_TEST "none"
+define VOID_SAFETY_MAX "none"
 copy_sub	Ace $TEST Ace
 compile_melted
-compile_result	validity_error A VUTA(2) VEVI
-abort_compile
+compile_result	validity_warning NONE VD80 VD80
 
 define VOID_SAFETY_A "none"
 define VOID_SAFETY_TEST "none"
+define VOID_SAFETY_MAX "none"
 copy_sub	Ace $TEST Ace
 compile_melted
-compile_result	ok
-cleanup_compile
+compile_result	validity_warning NONE VD80 VD80
 
 -- Conformance and initialization checks
 define NA ""
@@ -43,30 +43,31 @@ copy_sub	test.e $CLUSTER test.e
 
 define VOID_SAFETY_A "all"
 define VOID_SAFETY_TEST "all"
+define VOID_SAFETY_MAX "all"
 copy_sub	Ace $TEST Ace
 compile_melted
-compile_result	validity_error TEST VEVI VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2); A VUTA(2) VEVI
-abort_compile
+compile_result	validity_error NONE VD80 VD80; TEST VEVI VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2); A VUTA(2) VEVI
 
 define VOID_SAFETY_A "none"
 define VOID_SAFETY_TEST "all"
+define VOID_SAFETY_MAX "none"
 copy_sub	Ace $TEST Ace
-compile_melted
-compile_result	validity_error TEST VD88 VD88
-abort_compile
+resume_compile
+compile_result	validity_warning NONE VD80 VD80
 
 define VOID_SAFETY_A "all"
 define VOID_SAFETY_TEST "none"
+define VOID_SAFETY_MAX "none"
 copy_sub	Ace $TEST Ace
 compile_melted
-compile_result	validity_error A VUTA(2) VEVI
-abort_compile
+compile_result	validity_warning NONE VD80 VD80
 
 define VOID_SAFETY_A "none"
 define VOID_SAFETY_TEST "none"
+define VOID_SAFETY_MAX "none"
 copy_sub	Ace $TEST Ace
 compile_melted
-compile_result	ok
+compile_result	validity_warning NONE VD80 VD80
 cleanup_compile
 
 test_end

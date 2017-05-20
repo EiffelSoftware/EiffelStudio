@@ -35,19 +35,19 @@ feature -- Environment: Update
 
 	set_environment (a_value: READABLE_STRING_GENERAL; a_var: READABLE_STRING_GENERAL)
 			-- <Precursor>
-		local
-			l_env: like environment
 		do
-			l_env := environment
-			if l_env.is_service_available then
-				l_env.service.set_environment_variable (a_value, a_var)
+			if
+				attached environment as l_env and then
+				attached l_env.service as l_env_service
+			then
+				l_env_service.set_environment_variable (a_value, a_var)
 			else
 				Precursor {EIFFEL_ENV} (a_value, a_var)
 			end
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

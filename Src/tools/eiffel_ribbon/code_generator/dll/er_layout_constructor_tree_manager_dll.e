@@ -1,7 +1,5 @@
-note
-	description: "[
-					Layout Contructor's tree manager when using DLL
-					]"
+﻿note
+	description: "Layout Contructor's tree manager when using DLL."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -109,17 +107,15 @@ feature {NONE} -- Implementation
 			loop
 				if shared_singleton.layout_constructor_list.valid_index (l_index) then
 					l_layout_constructor := shared_singleton.layout_constructor_list.i_th (l_index)
-				else
-					create l_layout_constructor.make
-					if attached shared_singleton.main_window_cell.item as l_main_window then
-						if attached l_main_window.docking_manager as l_docking_manager then
-							l_layout_constructor.attach_to_docking_manager (l_docking_manager)
-						end
-					end
+				elseif
+					attached shared_singleton.main_window_cell.item as l_main_window and then
+					attached l_main_window.docking_manager as l_docking_manager
+				then
+					create l_layout_constructor.make (l_docking_manager)
 				end
-
-				l_layout_constructor.widget.wipe_out
-
+				if attached l_layout_constructor then
+					l_layout_constructor.widget.wipe_out
+				end
 				l_index := l_index + 1
 			end
 		end
@@ -153,7 +149,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

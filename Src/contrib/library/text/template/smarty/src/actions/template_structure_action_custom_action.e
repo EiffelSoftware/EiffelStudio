@@ -32,12 +32,15 @@ feature {NONE} -- Implementation
 		local
 			item_output: STRING
 		do
---			template_custom_actions
 			if
 				attached template_custom_action_by_id (action_name) as fct
 			then
 				item_output := foreach_iteration_string (inside_text, False)
-				item_output := fct.item ([item_output, parameters])
+				if attached fct.item (item_output, parameters, Current) as v then
+					item_output := v.out
+				else
+					item_output := ""
+				end
 			else
 				item_output := foreach_iteration_string (inside_text, False)
 			end
@@ -45,7 +48,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, and Eiffel Software"
+	copyright: "2011-2016, Jocelyn Fiat, and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

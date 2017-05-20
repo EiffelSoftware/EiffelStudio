@@ -102,7 +102,14 @@ feature -- Expression
 				until
 					l_sp_exp.after or tmp = Void
 				loop
-					tmp := resolved_nested_message (tmp, l_sp_exp.item)
+					if 	l_sp_exp.item.starts_with ("$") and then
+						attached {READABLE_STRING_GENERAL} resolved_variable (l_sp_exp.item) as vn  and then
+						vn.is_valid_as_string_8
+					then
+						tmp := resolved_nested_message (tmp, vn.to_string_8)
+					else
+						tmp := resolved_nested_message (tmp, l_sp_exp.item)
+					end
 					l_sp_exp.forth
 				end
 			else
@@ -112,76 +119,81 @@ feature -- Expression
 		end
 
 	resolved_composed_expression (e: STRING): detachable ANY
+		do
+			if e.has (':') then
+				Result := resolved_concatenation_expression (e)
+			else
+				Result := resolved_expression (e)
+			end
+		end
+
+	resolved_arguments (args: LIST [STRING]): LIST [ANY]
 		local
-			l_exp: STRING
-			l_sp_exp: LIST [STRING]
+			tmp: like resolved_expression
+		do
+			create {ARRAYED_LIST [ANY]} Result.make (args.count)
+			across
+				args as ic
+			loop
+				if ic.item.is_empty then
+					tmp := ""
+				else
+					tmp := resolved_expression (ic.item)
+				end
+				if tmp = Void then
+					tmp := ic.item
+				end
+				Result.extend (tmp)
+			end
+		end
+
+	resolved_concatenation_expression (e: STRING): detachable ANY
+		require
+			e_has_colon: e.has (':')
+		local
 			l_args: LIST [ANY]
 			tmp: like resolved_expression
 			str1, str2: detachable STRING
 		do
-			l_exp := e.twin
-			l_exp.left_adjust
-			l_exp.right_adjust
-			if l_exp.has (':') then
-				from
-					l_sp_exp := l_exp.split (':')
-					l_sp_exp.start
-					create {LINKED_LIST [ANY]} l_args.make
-				until
-					l_sp_exp.after
-				loop
-					if l_sp_exp.item.is_empty then
-						tmp := ""
-					else
-						tmp := resolved_expression (l_sp_exp.item)
-					end
-					if tmp = Void then
-						tmp := l_sp_exp.item
-					end
-					l_args.extend (tmp)
-					l_sp_exp.forth
+			l_args := resolved_arguments (e.split (':'))
+			from
+				l_args.start
+				Result := l_args.first
+				if attached {STRING} Result as s1 then
+					str1 := s1.string
+				elseif Result /= Void then
+					str1 := Result.out
 				end
-				from
-					l_args.start
-					Result := l_args.first
-					if attached {STRING} Result as s1 then
-						str1 := s1.string
-					elseif Result /= Void then
-						str1 := Result.out
-					end
-					l_args.forth
-				until
-					l_args.after or (Result = Void)
-				loop
-					tmp := l_args.item
-					if attached {STRING} Result as s1 then
-						str1 := s1.string
-					elseif Result /= Void then
-						str1 := Result.out
+				l_args.forth
+			until
+				l_args.after or (Result = Void)
+			loop
+				tmp := l_args.item
+				if attached {STRING} Result as s1 then
+					str1 := s1.string
+				elseif Result /= Void then
+					str1 := Result.out
+				else
+					str1 := Void
+				end
+				if str1 /= Void then
+					if attached {STRING} tmp as s2 then
+						str2 := s2
 					else
-						str1 := Void
+						if tmp /= Void then
+							str2 := tmp.out
+						end
 					end
-					if str1 /= Void then
-						if attached {STRING} tmp as s2 then
-							str2 := s2
-						else
-							if tmp /= Void then
-								str2 := tmp.out
-							end
-						end
-						if str2 /= Void then
-							str1.append_string (str2)
-							Result := str1
-						else
-							Result := Void
-						end
+					if str2 /= Void then
+						str1.append_string (str2)
+						Result := str1
 					else
 						Result := Void
 					end
-					l_args.forth
+				else
+					Result := Void
 				end
-			else
-				Result := resolved_expression (e)
+				l_args.forth
 			end
 		end
 
@@ -318,7 +330,7 @@ feature -- Status report
 
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, and Eiffel Software"
+	copyright: "2011-2016, Jocelyn Fiat, and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

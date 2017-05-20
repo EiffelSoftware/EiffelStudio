@@ -1,8 +1,8 @@
-Building instructions for the DLL versions of Zlib 1.21
-=======================================================
+Building instructions for the DLL versions of Zlib 1.2.11
+========================================================
 
 This directory contains projects that build zlib and minizip using
-Microsoft Visual C++ 7.0/7.1.
+Microsoft Visual C++ 9.0/10.0.
 
 You don't need to build these projects yourself. You can download the
 binaries from:
@@ -11,17 +11,37 @@ binaries from:
 More information can be found at this site.
 
 
-Build instructions
-------------------
-- Unzip zlib*.zip and copy the files from contrib\vstudio\vc7,
-  from contrib\vstudio\masmx86 and from contrib\minizip into the same
-  directory.
-- Download the crtdll library from
-    http://www.winimage.com/zLibDll/crtdll.zip
-  Unzip crtdll.zip to extract crtdll.lib.
-- If you are using x86, use the Release target.
-- Open zlibvc.sln with Microsoft Visual C++ 7.0 or 7.1
-  (Visual Studio .Net 2002 or 2003).
+
+
+
+Build instructions for Visual Studio 2008 (32 bits or 64 bits)
+--------------------------------------------------------------
+- Decompress current zlib, including all contrib/* files
+- Compile assembly code (with Visual Studio Command Prompt) by running:
+   bld_ml64.bat (in contrib\masmx64)
+   bld_ml32.bat (in contrib\masmx86)
+- Open contrib\vstudio\vc9\zlibvc.sln with Microsoft Visual C++ 2008
+- Or run: vcbuild /rebuild contrib\vstudio\vc9\zlibvc.sln "Release|Win32"
+
+Build instructions for Visual Studio 2010 (32 bits or 64 bits)
+--------------------------------------------------------------
+- Decompress current zlib, including all contrib/* files
+- Open contrib\vstudio\vc10\zlibvc.sln with Microsoft Visual C++ 2010
+
+Build instructions for Visual Studio 2012 (32 bits or 64 bits)
+--------------------------------------------------------------
+- Decompress current zlib, including all contrib/* files
+- Open contrib\vstudio\vc11\zlibvc.sln with Microsoft Visual C++ 2012
+
+Build instructions for Visual Studio 2013 (32 bits or 64 bits)
+--------------------------------------------------------------
+- Decompress current zlib, including all contrib/* files
+- Open contrib\vstudio\vc12\zlibvc.sln with Microsoft Visual C++ 2013
+
+Build instructions for Visual Studio 2015 (32 bits or 64 bits)
+--------------------------------------------------------------
+- Decompress current zlib, including all contrib/* files
+- Open contrib\vstudio\vc14\zlibvc.sln with Microsoft Visual C++ 2015
 
 
 Important
@@ -53,3 +73,6 @@ Additional notes
 
 Gilles Vollant
 info@winimage.com
+
+Visual Studio 2013 and 2015 Projects from Sean Hunt
+seandhunt_7@yahoo.com

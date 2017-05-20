@@ -44,6 +44,9 @@ feature {NONE} -- Initialization
 				a_partial_classes.forth
 			end
 
+			name := ""
+			path := ""
+			file_name := ""
 			check_changed
 			if is_modified then
 				build_partial
@@ -170,9 +173,6 @@ feature {NONE} -- Implementation
 					else
 						last_error := create {CONF_ERROR_PARTIAL}.make ("Unknown error in merging partial classes.")
 					end
-					name := ""
-					path := ""
-					file_name := ""
 				else
 					path := group.target.system.uuid.out + "/" + group.name
 
@@ -206,7 +206,6 @@ feature {NONE} -- Implementation
 			else
 				last_error := create {CONF_ERROR_PARTIAL}.make ("Unknown error during merging of partial classes.")
 			end
-
 			retry
 		end
 
@@ -219,7 +218,7 @@ feature {NONE} -- Shared instances
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

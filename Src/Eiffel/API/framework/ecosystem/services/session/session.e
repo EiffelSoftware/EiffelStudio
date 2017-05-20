@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A collection of managed session data, bound to a IDE/project context.
 		
@@ -7,7 +7,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	SESSION
@@ -420,33 +420,33 @@ feature {NONE} -- Conversion
 				if l_codes.has (l_id) then
 					inspect l_codes.item (l_id)
 					when {INTERNAL}.boolean_type then
-						create {CELL [BOOLEAN]} Result.put (({BOOLEAN}) #? a_value)
+						create {CELL [BOOLEAN]} Result.put ({BOOLEAN} / a_value)
 					when {INTERNAL}.character_8_type then
-						create {CELL [CHARACTER_8]} Result.put (({CHARACTER_8}) #? a_value)
+						create {CELL [CHARACTER_8]} Result.put ({CHARACTER_8} / a_value)
 					when {INTERNAL}.character_32_type then
-						create {CELL [CHARACTER_32]} Result.put (({CHARACTER_32}) #? a_value)
+						create {CELL [CHARACTER_32]} Result.put ({CHARACTER_32} / a_value)
 					when {INTERNAL}.integer_8_type then
-						create {CELL [INTEGER_8]} Result.put (({INTEGER_8}) #? a_value)
+						create {CELL [INTEGER_8]} Result.put ({INTEGER_8} / a_value)
 					when {INTERNAL}.integer_16_type then
-						create {CELL [INTEGER_16]} Result.put (({INTEGER_16}) #? a_value)
+						create {CELL [INTEGER_16]} Result.put ({INTEGER_16} / a_value)
 					when {INTERNAL}.integer_32_type then
-						create {CELL [INTEGER_32]} Result.put (({INTEGER_32}) #? a_value)
+						create {CELL [INTEGER_32]} Result.put ({INTEGER_32} / a_value)
 					when {INTERNAL}.integer_64_type then
-						create {CELL [INTEGER_64]} Result.put (({INTEGER_64}) #? a_value)
+						create {CELL [INTEGER_64]} Result.put ({INTEGER_64} / a_value)
 					when {INTERNAL}.natural_8_type then
-						create {CELL [NATURAL_8]} Result.put (({NATURAL_8}) #? a_value)
+						create {CELL [NATURAL_8]} Result.put ({NATURAL_8} / a_value)
 					when {INTERNAL}.natural_16_type then
-						create {CELL [NATURAL_16]} Result.put (({NATURAL_16}) #? a_value)
+						create {CELL [NATURAL_16]} Result.put ({NATURAL_16} / a_value)
 					when {INTERNAL}.natural_32_type then
-						create {CELL [NATURAL_32]} Result.put (({NATURAL_32}) #? a_value)
+						create {CELL [NATURAL_32]} Result.put ({NATURAL_32} / a_value)
 					when {INTERNAL}.natural_64_type then
-						create {CELL [NATURAL_64]} Result.put (({NATURAL_64}) #? a_value)
+						create {CELL [NATURAL_64]} Result.put ({NATURAL_64} / a_value)
 					when {INTERNAL}.real_32_type then
-						create {CELL [REAL_32]} Result.put (({REAL_32}) #? a_value)
+						create {CELL [REAL_32]} Result.put ({REAL_32} / a_value)
 					when {INTERNAL}.real_64_type then
-						create {CELL [REAL_64]} Result.put (({REAL_64}) #? a_value)
+						create {CELL [REAL_64]} Result.put ({REAL_64} / a_value)
 					when {INTERNAL}.pointer_type then
-						create {CELL [POINTER]} Result.put (({POINTER}) #? a_value)
+						create {CELL [POINTER]} Result.put ({POINTER} / a_value)
 					end
 				else
 					l_cell ?= a_value
@@ -519,7 +519,7 @@ invariant
 	data_compared_objects: data.object_comparison
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

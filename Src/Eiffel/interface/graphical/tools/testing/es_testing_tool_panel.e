@@ -1,8 +1,5 @@
-note
-	description: "[
-		Graphical panel for EiffelStudio's testing tool.
-	]"
-	author: ""
+﻿note
+	description: "Graphical panel for EiffelStudio's testing tool."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -218,10 +215,11 @@ feature {NONE} -- Access: test creation
 			create Result
 
 			l_launch_wizard := True
-			if session_manager.is_service_available then
-				if attached {BOOLEAN} session_data.value ({TEST_SESSION_CONSTANTS}.launch_wizard) as l_bool then
-					l_launch_wizard := l_bool
-				end
+			if
+				attached session_manager.service and then
+				attached {BOOLEAN} session_data.value ({TEST_SESSION_CONSTANTS}.launch_wizard) as l_bool
+			then
+				l_launch_wizard := l_bool
 			end
 			if l_launch_wizard then
 				l_suffix := "..."
@@ -770,7 +768,7 @@ feature {NONE} -- Internationalization
 	tt_debug_selected: STRING = "Run selected tests"
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

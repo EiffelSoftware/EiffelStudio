@@ -1,7 +1,5 @@
-note
-	description: "[
-					Manager that convert EV_FIGUREs to ribbon markup XML
-		]"
+﻿note
+	description: "Manager that convert EV_FIGUREs to ribbon markup XML."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -586,28 +584,26 @@ feature {NONE} -- Figure implementation
 		require
 			not_already_called: True
 		local
-			l_element: detachable XML_ELEMENT
+			l_element: XML_ELEMENT
 			l_item: XML_ELEMENT
 			l_attribute: XML_ATTRIBUTE
-			l_found: BOOLEAN
 		do
 			from
 				sub_root_element.start
 			until
 				sub_root_element.after
 			loop
-				if attached {XML_ELEMENT} sub_root_element.item_for_iteration as l_control_name_map then
-					if l_control_name_map.name.same_string ({ER_XML_CONSTANTS}.control_name_map) then
-						l_found := True
-						l_element := l_control_name_map
-					end
+				if
+					attached {XML_ELEMENT} sub_root_element.item_for_iteration as l_control_name_map and then
+					l_control_name_map.name.same_string ({ER_XML_CONSTANTS}.control_name_map)
+				then
+					l_element := l_control_name_map
 				end
 				sub_root_element.forth
 			end
 
-			if l_found then
-				--wipe out existing children, update mapping here
-				check l_element /= Void end
+			if attached l_element then
+					-- Wipe out existing children, update mapping here.
 				l_element.wipe_out
 			else
 				create l_element.make (sub_root_element, constants.control_name_map, name_space)
@@ -653,14 +649,9 @@ feature {NONE} -- Implementation
 			-- If not found, create a new one
 		require
 			not_void: a_name /= Void
-		local
-			l_result: detachable XML_ELEMENT
 		do
-			if sub_root_xml_hash_table.has (a_name) then
-				l_result := sub_root_xml_hash_table.item (a_name)
-				check not_void: l_result /= Void end
-				Result := l_result
-			else
+			Result := sub_root_xml_hash_table.item (a_name)
+			if not attached Result then
 				create Result.make (Void, constants.size_definition, name_space)
 				sub_root_xml_hash_table.extend (Result, a_name)
 			end
@@ -718,8 +709,9 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
+
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

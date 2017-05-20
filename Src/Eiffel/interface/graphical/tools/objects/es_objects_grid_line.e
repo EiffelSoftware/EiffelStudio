@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represent the data of a objects grid row."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -102,7 +102,7 @@ feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_MANAGER} -- Grid and row attachement
 		require
 			row_not_void: a_row /= Void
 			row_parented: a_row.parent /= Void
-			row_is_objects_grid_row: {ES_OBJECTS_GRID_ROW} #? a_row = a_row
+			row_is_objects_grid_row: attached {ES_OBJECTS_GRID_ROW} a_row
 			is_not_attached_to_row: not is_attached_to_row
 		do
 			row ?= a_row
@@ -305,7 +305,7 @@ invariant
 	parent_grid_related_to_attached_row: (row /= Void and then row.parent /= Void) implies parent_grid = row.parent
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

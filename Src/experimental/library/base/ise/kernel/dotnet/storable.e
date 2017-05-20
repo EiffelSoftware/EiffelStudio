@@ -1,11 +1,9 @@
-note
-
+﻿note
 	description: "[
 		Objects that may be stored and retrieved along with all their dependents.
 		This class may be used as ancestor by classes needing its facilities.
 		]"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -139,7 +137,8 @@ feature -- Element change
 		do
 			create file.make_with_name (file_name)
 			if (file.exists and then file.is_writable) or else
-				(file.is_creatable) then
+				file.is_creatable
+			then
 				file.open_write
 				file.independent_store (Current)
 				file.close
@@ -151,7 +150,7 @@ feature -- Element change
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -161,8 +160,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-end -- class STORABLE
-
-
+end

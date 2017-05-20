@@ -26,6 +26,7 @@ indexing
 /* It is important to include `png.h' before anything else because they don't like when you
  * include `setjmp.h' before they do. */
 #include <png.h>
+#include <pngstruct.h>
 
 #include "eif_config.h"
 #include "eif_file.h"
@@ -551,7 +552,7 @@ void c_ev_save_png (char image[], EIF_FILENAME path, int array_width, int array_
 		png_destroy_write_struct (&png_ptr, (png_infopp)NULL);
 	}
 
-	if (setjmp (png_ptr->jmpbuf)) {
+	if (setjmp (png_ptr->jmp_buf_local)) {
 		/* Eiffel exception, file could not be read */
 		fclose (fp);
 		png_destroy_write_struct (&png_ptr, (png_infopp)NULL);
@@ -1273,7 +1274,7 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 		 * the normal method of doing things with libpng). REQUIRED unless you
 		 * set up your own error handlers in the png_create_read_struct() earlier.
 		 */
-	if (setjmp(png_ptr->jmpbuf)) {
+	if (setjmp(png_ptr->jmp_buf_local)) {
 			/* Free all of the memory associated with the png_ptr and info_ptr */
 		png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
 
@@ -1311,7 +1312,7 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 
 		/* Expand grayscale images to the full 8 bits from 1, 2, or 4 bits/pixel */
 	if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8) {
-		png_set_gray_1_2_4_to_8(png_ptr);
+		png_set_expand_gray_1_2_4_to_8(png_ptr);
 	}
 
 		/* Expand paletted or RGB images with transparency to full alpha channels

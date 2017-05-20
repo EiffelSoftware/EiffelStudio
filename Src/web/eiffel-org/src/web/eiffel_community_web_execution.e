@@ -54,9 +54,14 @@ feature -- CMS setup
 
 
 				-- Content
-			a_setup.register_module (create {CMS_NODE_MODULE}.make (a_setup))
-			a_setup.register_module (create {EMBEDDED_VIDEO_MODULE}.make)
+			a_setup.register_module (create {CMS_NODE_MODULE}.make)
+			a_setup.register_module (create {CMS_PAGE_MODULE}.make)
 			a_setup.register_module (create {CMS_BLOG_MODULE}.make)
+			a_setup.register_module (create {CMS_COMMENTS_MODULE}.make)
+
+				-- Filter
+			a_setup.register_module (create {WIKITEXT_MODULE}.make)
+			a_setup.register_module (create {EMBEDDED_VIDEO_MODULE}.make)
 
 				-- Files
 			a_setup.register_module (create {CMS_FILES_MODULE}.make)
@@ -67,10 +72,11 @@ feature -- CMS setup
 			a_setup.register_module (create {CMS_RECENT_CHANGES_MODULE}.make)
 			a_setup.register_module (create {FEED_AGGREGATOR_MODULE}.make)
 			a_setup.register_module (create {CMS_SEO_MODULE}.make)
+			a_setup.register_module (create {CMS_SITEMAP_MODULE}.make)
 			a_setup.register_module (create {CMS_CUSTOM_BLOCK_MODULE}.make)
 
 				-- Google Custom Search Engine
-			a_setup.register_module (create {GOOGLE_CUSTOM_SEARCH_MODULE}.make)
+			a_setup.register_module (create {GOOGLE_CUSTOM_SEARCH_MODULE_20}.make)
 
 				-- Wiki docs
 			create wdocs.make
@@ -88,6 +94,7 @@ feature -- CMS setup
 			a_setup.register_module (create {CMS_TASK_LIST_MODULE}.make)
 
 				-- Others...
+			a_setup.register_module (create {CMS_MESSAGING_MODULE}.make)
 			debug
 				create {CMS_DEBUG_MODULE} m.make
 				m.enable

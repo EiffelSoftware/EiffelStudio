@@ -19,6 +19,8 @@ inherit
 	CMS_EXECUTION
 		rename
 			initialize as initialize_cms_execution
+		redefine
+			initialize_cms
 		end
 
 	EIFFEL_COMMUNITY_SITE_SERVICE
@@ -34,6 +36,12 @@ feature {NONE} -- Initialization
 			create request_exit_operation_actions
 			local_connection_restriction_enabled := True
 			initialize_cms_execution
+		end
+
+	initialize_cms
+		do
+			initialize_router
+			Precursor
 		end
 
 feature -- CMS setup

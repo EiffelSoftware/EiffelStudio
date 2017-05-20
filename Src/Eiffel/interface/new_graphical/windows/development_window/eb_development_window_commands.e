@@ -19,6 +19,9 @@ create
 
 feature -- Query
 
+	restore_tab_cmd: EB_RESTORE_CLOSE_TAB_EDITOR_COMMAND
+			-- Command to restore a closed tab.
+
 	new_tab_cmd: EB_NEW_TAB_EDITOR_COMMAND
 			-- Command to create a new tab.
 
@@ -225,6 +228,14 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER, E
 		end
 
 feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -- Settings
+
+	set_restore_tab_cmd (a_cmd: like restore_tab_cmd)
+			-- Set `restore_tab_cmd'
+		do
+			restore_tab_cmd := a_cmd
+		ensure
+			set: restore_tab_cmd = a_cmd
+		end
 
 	set_toolbarable_commands (a_commands: like toolbarable_commands)
 			-- Set `toolbarable_commands'.
@@ -714,6 +725,7 @@ feature -- Recycle
 			os_cmd: EB_ON_SELECTION_COMMAND
 			l_recyclable: EB_RECYCLABLE
 		do
+			restore_tab_cmd.recycle
 			new_tab_cmd.recycle
 			reset_layout_command.recycle
 			save_layout_as_command.recycle
@@ -828,7 +840,7 @@ feature -- Recycle
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

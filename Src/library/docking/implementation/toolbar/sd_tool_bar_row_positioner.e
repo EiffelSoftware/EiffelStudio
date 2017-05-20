@@ -1,7 +1,5 @@
-note
-	description: "[
-					Objects that manage tool bar positions for a SD_TOOL_BAR_ROW.
-																				]"
+﻿note
+	description: "Objects that manage tool bar positions for a SD_TOOL_BAR_ROW."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -15,30 +13,29 @@ create
 
 feature {NONE}  -- Initlization
 
-	make
+	make (a_tool_bar_row: SD_TOOL_BAR_ROW)
 			-- Creation method
-		local
-			l_shared: SD_SHARED
+		require
+			a_tool_bar_row_attached: attached a_tool_bar_row
 		do
-			create l_shared
-			internal_mediator := l_shared.tool_bar_docker_mediator_cell.item
-			-- Because tool bar row may be created when dragging. `on_pointer_motion' will call `positions_and_sizes_try'
+			tool_bar_row := a_tool_bar_row
+			create sizer.make (a_tool_bar_row)
+				-- Because tool bar row may be created when dragging. `on_pointer_motion' will call `positions_and_sizes_try'
 			create positions_and_sizes_try.make (1)
+		ensure
+			tool_bar_row_set: tool_bar_row = a_tool_bar_row
+		end
 
+feature {SD_TOOL_BAR_ROW} -- Initialization
+
+	set_mediator
+			-- Initialize `internal_mediator'.
+		do
+			internal_mediator := (create {SD_SHARED}).tool_bar_docker_mediator_cell.item
+			sizer.set_mediator
 		end
 
 feature -- Command
-
-	set_tool_bar_row (a_tool_bar_row: SD_TOOL_BAR_ROW)
-			-- set `internal_tool_bar_row' with `a_tool_bar_row'
-		require
-			not_void: a_tool_bar_row /= Void
-		do
-			internal_tool_bar_row := a_tool_bar_row
-			create internal_sizer.make (a_tool_bar_row)
-		ensure
-			set: tool_bar_row = a_tool_bar_row
-		end
 
 	position_resize_on_extend (a_new_tool_bar: SD_TOOL_BAR_ZONE; a_relative_pointer_position: INTEGER)
 			-- When extend `a_new_tool_bar', if not `is_enough_max_space', then resize tool bars
@@ -49,51 +46,52 @@ feature -- Command
 			l_hot_index: INTEGER
 			l_tool_bars: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_last_end_position: INTEGER
-			l_mediator: like internal_mediator
 		do
 			if is_dragging then
-				l_mediator := internal_mediator
-				check l_mediator /= Void end -- Implied by precondition `set'
-				check new_tool_bar_is_caller: a_new_tool_bar = l_mediator.caller end
-				sizer.resize_on_extend (a_new_tool_bar)
-				l_hot_index := put_hot_tool_bar_at (l_mediator.is_resizing_mode, a_relative_pointer_position)
-				l_tool_bars := tool_bar_row.zones
-				l_tool_bars.start
-				l_tool_bars.search (a_new_tool_bar)
-				if not l_tool_bars.exhausted then
-					l_tool_bars.remove
-				end
-				if l_hot_index = 0 then
-					if attached {EV_WIDGET} a_new_tool_bar.tool_bar as lt_widget_2 then
-						tool_bar_row.internal_set_item_position (lt_widget_2, 0)
-					else
-						check not_possible: False end
-					end
-					l_last_end_position := a_new_tool_bar.size
-				end
-				from
+				if attached internal_mediator as l_mediator then
+					check new_tool_bar_is_caller: a_new_tool_bar = l_mediator.caller end
+					sizer.resize_on_extend (a_new_tool_bar)
+					l_hot_index := put_hot_tool_bar_at (l_mediator.is_resizing_mode, a_relative_pointer_position)
+					l_tool_bars := tool_bar_row.zones
 					l_tool_bars.start
-				until
-					l_tool_bars.after
-				loop
-					if attached {EV_WIDGET} l_tool_bars.item_for_iteration.tool_bar as lt_widget_3 then
-						tool_bar_row.internal_set_item_position (lt_widget_3, l_last_end_position)
-					else
-						check not_possible: False end
+					l_tool_bars.search (a_new_tool_bar)
+					if not l_tool_bars.exhausted then
+						l_tool_bars.remove
 					end
-
-					l_last_end_position := l_tool_bars.item_for_iteration.position + l_tool_bars.item_for_iteration.size
-
-					if l_tool_bars.index = l_hot_index then
-						if attached {EV_WIDGET} a_new_tool_bar.tool_bar as lt_widget_4 then
-							tool_bar_row.internal_set_item_position (lt_widget_4, l_last_end_position)
+					if l_hot_index = 0 then
+						if attached {EV_WIDGET} a_new_tool_bar.tool_bar as lt_widget_2 then
+							tool_bar_row.internal_set_item_position (lt_widget_2, 0)
+						else
+							check not_possible: False end
+						end
+						l_last_end_position := a_new_tool_bar.size
+					end
+					from
+						l_tool_bars.start
+					until
+						l_tool_bars.after
+					loop
+						if attached {EV_WIDGET} l_tool_bars.item_for_iteration.tool_bar as lt_widget_3 then
+							tool_bar_row.internal_set_item_position (lt_widget_3, l_last_end_position)
 						else
 							check not_possible: False end
 						end
 
-						l_last_end_position := a_new_tool_bar.position + a_new_tool_bar.size
+						l_last_end_position := l_tool_bars.item_for_iteration.position + l_tool_bars.item_for_iteration.size
+
+						if l_tool_bars.index = l_hot_index then
+							if attached {EV_WIDGET} a_new_tool_bar.tool_bar as lt_widget_4 then
+								tool_bar_row.internal_set_item_position (lt_widget_4, l_last_end_position)
+							else
+								check not_possible: False end
+							end
+
+							l_last_end_position := a_new_tool_bar.position + a_new_tool_bar.size
+						end
+						l_tool_bars.forth
 					end
-					l_tool_bars.forth
+				else
+					check from_precondition_set: False end
 				end
 			end
 			on_resize (tool_bar_row.size)
@@ -243,12 +241,9 @@ feature -- Command
 		end
 
 	start_drag
-			-- Do prepare works when user start dragging
-		local
-			l_shared: SD_SHARED
+			-- Do prepare works when user start dragging.
 		do
-			create l_shared
-			internal_mediator := l_shared.tool_bar_docker_mediator_cell.item
+			internal_mediator := (create {SD_SHARED}).tool_bar_docker_mediator_cell.item
 			sizer.start_drag_prepare
 			record_positions_and_sizes (True)
 			positions_and_sizes_try := zones_last_states (True)
@@ -306,17 +301,18 @@ feature -- Command
 		local
 			l_tool_bars: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_state: SD_TOOL_BAR_ZONE_STATE
-			l_mediator: like internal_mediator
 		do
 			from
 				l_tool_bars := tool_bar_row.zones
 				if a_except_dragged_tool_bar then
-					l_mediator := internal_mediator
-					check l_mediator /= Void end -- Implied by precondition `set'
-					l_tool_bars.start
-					l_tool_bars.search (l_mediator.caller)
-					if not l_tool_bars.exhausted then
-						l_tool_bars.remove
+					if attached internal_mediator as l_mediator then
+						l_tool_bars.start
+						l_tool_bars.search (l_mediator.caller)
+						if not l_tool_bars.exhausted then
+							l_tool_bars.remove
+						end
+					else
+						check from_precondition_set: False end
 					end
 				end
 
@@ -351,22 +347,9 @@ feature -- Query
 			Result := internal_mediator /= Void
 		end
 
-	sizer: attached like internal_sizer
-			-- Attached `internal_sizer'
-		require
-			set: internal_sizer /= Void
-		local
-			l_result: detachable like sizer
-		do
-			l_result := internal_sizer
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
-	internal_sizer: detachable SD_TOOL_BAR_ROW_SIZER
+	sizer: SD_TOOL_BAR_ROW_SIZER
 			-- Tool bar sizer
+			-- Attached `internal_sizer'
 
 feature {NONE}  -- Implementation
 
@@ -427,60 +410,58 @@ feature {NONE}  -- Implementation
 		local
 			l_last_start_position: INTEGER
 			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
-			l_mediator: like internal_mediator
 		do
-			debug ("docking")
-				print ("%N SD_TOOL_BAR_ROW_POSITIONER position_front_to_back START ----------------")
-			end
-			l_mediator := internal_mediator
-			check l_mediator /= Void end -- Implied by precondition `set'
-			from
-				l_zones := tool_bar_row.zones
-				l_zones.start
-				l_zones.search (l_mediator.caller)
-				if not l_zones.exhausted then
-					l_zones.remove
+			if attached internal_mediator as l_mediator then
+				debug ("docking")
+					print ("%N SD_TOOL_BAR_ROW_POSITIONER position_front_to_back START ----------------")
 				end
-				l_last_start_position := 0
-				positions_and_sizes_try.start
-			until
-				positions_and_sizes_try.after
-			loop
-				if a_hot_index = positions_and_sizes_try.index - 1 then
-					debug ("docking")
-						print ("%N positioner caller: l_last_position: " + l_last_start_position.out + "; caller sizie: " + l_mediator.caller.size.out)
-					end
-					caller_position := l_last_start_position
-					l_last_start_position := caller_position + l_mediator.caller.size
+				from
+					l_zones := tool_bar_row.zones
+					l_zones.start
+					l_zones.prune (l_mediator.caller)
+					l_last_start_position := 0
+					positions_and_sizes_try.start
+				until
+					positions_and_sizes_try.after
+				loop
+					if a_hot_index = positions_and_sizes_try.index - 1 then
+						debug ("docking")
+							print ("%N positioner caller: l_last_position: " + l_last_start_position.out + "; caller sizie: " + l_mediator.caller.size.out)
+						end
+						caller_position := l_last_start_position
+						l_last_start_position := caller_position + l_mediator.caller.size
 
+					end
+					debug ("docking")
+						print ("%N positioner other: l_last_position: " + l_last_start_position.out + "; other size: " + l_zones.at (positions_and_sizes_try.index).size.out)
+					end
+					positions_and_sizes_try.item.pos := l_last_start_position
+					l_last_start_position := positions_and_sizes_try.item.pos + l_zones.at (positions_and_sizes_try.index).size
+					positions_and_sizes_try.forth
+				end
+				if a_hot_index = positions_and_sizes_try.count then
+					caller_position := l_last_start_position
 				end
 				debug ("docking")
-					print ("%N positioner other: l_last_position: " + l_last_start_position.out + "; other size: " + l_zones.at (positions_and_sizes_try.index).size.out)
+					print ("%N SD_TOOL_BAR_ROW_POSITIONER position_front_to_back END ----------------")
 				end
-				positions_and_sizes_try.item.pos := l_last_start_position
-				l_last_start_position := positions_and_sizes_try.item.pos + l_zones.at (positions_and_sizes_try.index).size
-				positions_and_sizes_try.forth
-			end
-			if a_hot_index = positions_and_sizes_try.count then
-				caller_position := l_last_start_position
-			end
-			debug ("docking")
-				print ("%N SD_TOOL_BAR_ROW_POSITIONER position_front_to_back END ----------------")
-			end
-			debug ("docking")
-				if a_hot_index = positions_and_sizes_try.count then
-					if caller_position + l_mediator.caller.size > tool_bar_row.size then
-						print ("%N Exception SD_TOOL_BAR_ROW_POSITIONER caller_position: " + (caller_position + l_mediator.caller.size).out)
-						print ("%N           tool bar size: " + tool_bar_row.size.out)
-					end
-				else
-					if (positions_and_sizes_try.last.pos + sizer.size_of (tool_bar_row.zones.count)) > tool_bar_row.size then
-						print ("%N Exception SD_TOOL_BAR_ROW_POSITIONER last position: " + (positions_and_sizes_try.last.pos + sizer.size_of (tool_bar_row.zones.count)).out)
-						print ("%N           tool bar size: " + tool_bar_row.size.out)
-						print ("%N          is_enough_space? " + sizer.is_enough_space (True, 0).out)
-						print ("%N          is_eought_max_space? " + sizer.is_enough_max_space (True).out)
+				debug ("docking")
+					if a_hot_index = positions_and_sizes_try.count then
+						if caller_position + l_mediator.caller.size > tool_bar_row.size then
+							print ("%N Exception SD_TOOL_BAR_ROW_POSITIONER caller_position: " + (caller_position + l_mediator.caller.size).out)
+							print ("%N           tool bar size: " + tool_bar_row.size.out)
+						end
+					else
+						if (positions_and_sizes_try.last.pos + sizer.size_of (tool_bar_row.zones.count)) > tool_bar_row.size then
+							print ("%N Exception SD_TOOL_BAR_ROW_POSITIONER last position: " + (positions_and_sizes_try.last.pos + sizer.size_of (tool_bar_row.zones.count)).out)
+							print ("%N           tool bar size: " + tool_bar_row.size.out)
+							print ("%N          is_enough_space? " + sizer.is_enough_space (True, 0).out)
+							print ("%N          is_eought_max_space? " + sizer.is_enough_max_space (True).out)
+						end
 					end
 				end
+			else
+				check from_precondition_set: False end
 			end
 		ensure
 			caller_right_side_not_outside: (attached internal_mediator as le_mediator) implies (a_hot_index = positions_and_sizes_try.count implies caller_position + le_mediator.caller.size <= tool_bar_row.size)
@@ -538,7 +519,7 @@ feature {NONE}  -- Implementation
 			-- Last `put_hot_tool_bar_at_result'
 
 	try_set_position (a_position: INTEGER; a_hot_index: INTEGER)
-			 -- Try to position every tool bar. `a_hot_index' is Result from `put_hot_tool_bar_at'
+			 -- Try to position every tool bar. `a_hot_index' is Result from `put_hot_tool_bar_at'.
 		require
 			is_dragging: is_dragging
 			set: is_mediator_set
@@ -547,67 +528,68 @@ feature {NONE}  -- Implementation
 			l_temp: TUPLE [pos: INTEGER_32; size: INTEGER_32]
 			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_zone_last_position, l_zone_last_size: INTEGER
-			l_mediator: like internal_mediator
 		do
 			l_zones := tool_bar_row.zones
-			l_mediator := internal_mediator
-			check l_mediator /= Void end -- Implied by precondition `l_mediator'
-			l_zones.start
-			l_zones.search (l_mediator.caller)
-			if not l_zones.exhausted then
-				l_zones.remove
-			end
-			-- Position every tool bar before hot tool bar
-			from
-				l_zones.go_i_th (a_hot_index)
-				l_last_position := a_position
-			until
-				l_zones.before
-			loop
-				-- FIXIT: maybe we use state pattern here?
-				l_zone_last_position := positions_and_sizes_try.i_th (l_zones.index).pos
-				l_zone_last_size := l_zones.item_for_iteration.size
-				debug ("docking")
-					print ("%N SD_TOOL_BAR_ROW_POSITIONER try_set_position set position beofre hot items; Looping ..")
-					print ("%N                            l_zone_last_position: " + l_zone_last_position.out)
-					print ("%N                            l_zone_last_size: " + l_zone_last_size.out)
-					print ("%N                            l_last_position: " + l_last_position.out)
-					print ("%N                            a_position: " + a_position.out)
+			if attached internal_mediator as l_mediator then
+				l_zones.start
+				l_zones.search (l_mediator.caller)
+				if not l_zones.exhausted then
+					l_zones.remove
 				end
-				if (l_zone_last_position + l_zone_last_size >= l_last_position)	then
-					-- There is position conflict
-					l_temp := positions_and_sizes_try.i_th (l_zones.index)
-					l_temp.pos := l_last_position - l_zone_last_size - 1
-				end
-
-				l_last_position := positions_and_sizes_try.i_th (l_zones.index).pos
-				debug ("docking")
-					print ("%N SD_TOOL_BAR_ROW_POSITIONER try_set_position set position beofre hot items; Position is: " + l_last_position.out)
-				end
-				l_zones.back
-			end
-			-- Position every tool bar after hot tool bar
-			from
-				l_zones.go_i_th (a_hot_index + 1)
-				l_last_position := a_position + l_mediator.caller.size
-			until
-				l_zones.after
-			loop
-				if not sizer.is_enough_max_space (True) then
+					-- Position every tool bar before hot tool bar.
+				from
+					l_zones.go_i_th (a_hot_index)
+					l_last_position := a_position
+				until
+					l_zones.before
+				loop
+					-- FIXIT: maybe we use state pattern here?
 					l_zone_last_position := positions_and_sizes_try.i_th (l_zones.index).pos
 					l_zone_last_size := l_zones.item_for_iteration.size
-				else
-					l_zone_last_position := l_zones.item_for_iteration.assistant.last_state.position
-					l_zone_last_size := l_zones.item_for_iteration.assistant.last_state.size
-				end
+					debug ("docking")
+						print ("%N SD_TOOL_BAR_ROW_POSITIONER try_set_position set position beofre hot items; Looping ..")
+						print ("%N                            l_zone_last_position: " + l_zone_last_position.out)
+						print ("%N                            l_zone_last_size: " + l_zone_last_size.out)
+						print ("%N                            l_last_position: " + l_last_position.out)
+						print ("%N                            a_position: " + a_position.out)
+					end
+					if l_zone_last_position + l_zone_last_size >= l_last_position then
+							-- There is position conflict.
+						l_temp := positions_and_sizes_try.i_th (l_zones.index)
+						l_temp.pos := l_last_position - l_zone_last_size - 1
+					end
 
-				if l_last_position >= l_zone_last_position then
-					-- There is position conflict
-					l_temp := positions_and_sizes_try.i_th (l_zones.index)
-					l_temp.pos := l_last_position
+					l_last_position := positions_and_sizes_try.i_th (l_zones.index).pos
+					debug ("docking")
+						print ("%N SD_TOOL_BAR_ROW_POSITIONER try_set_position set position beofre hot items; Position is: " + l_last_position.out)
+					end
+					l_zones.back
 				end
-				l_last_position := positions_and_sizes_try.i_th (l_zones.index).pos + l_zone_last_size
-				l_zones.forth
+					-- Position every tool bar after hot tool bar
+				from
+					l_zones.go_i_th (a_hot_index + 1)
+					l_last_position := a_position + l_mediator.caller.size
+				until
+					l_zones.after
+				loop
+					if not sizer.is_enough_max_space (True) then
+						l_zone_last_position := positions_and_sizes_try.i_th (l_zones.index).pos
+						l_zone_last_size := l_zones.item_for_iteration.size
+					else
+						l_zone_last_position := l_zones.item_for_iteration.assistant.last_state.position
+						l_zone_last_size := l_zones.item_for_iteration.assistant.last_state.size
+					end
+
+					if l_last_position >= l_zone_last_position then
+						-- There is position conflict
+						l_temp := positions_and_sizes_try.i_th (l_zones.index)
+						l_temp.pos := l_last_position
+					end
+					l_last_position := positions_and_sizes_try.i_th (l_zones.index).pos + l_zone_last_size
+					l_zones.forth
+				end
+			else
+				check from_precondition_set: False end
 			end
 		end
 
@@ -617,15 +599,13 @@ feature {NONE}  -- Implementation
 			set: is_mediator_set
 		local
 			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
-			l_mediator: like internal_mediator
 		do
-			l_mediator := internal_mediator
-			check l_mediator /= Void end -- Implied by precondition `set'
 			l_zones := tool_bar_row.zones
-			l_zones.start
-			l_zones.search (l_mediator.caller)
-			if not l_zones.exhausted then
-				l_zones.remove
+			if attached internal_mediator as l_mediator then
+				l_zones.start
+				l_zones.prune (l_mediator.caller)
+			else
+				check from_precondition_set: False end
 			end
 			if tool_bar_row.is_enough_max_space then
 				Result := is_possible_set_position_enough_max_space (a_hot_pointer_position, a_hot_index)
@@ -633,51 +613,52 @@ feature {NONE}  -- Implementation
 				Result := is_possible_set_position_not_enough_max_space (a_hot_pointer_position, a_hot_index)
 			end
 			last_pointer_position := a_hot_pointer_position
-		ensure
-
 		end
 
 	is_possible_set_position_enough_max_space (a_hot_pointer_position: INTEGER; a_hot_index: INTEGER): BOOLEAN
-			-- When enough maximum space, it's possible set position base on `positions_and_sizes_try'?
+			-- When enough maximum space, is is possible to set position base on `positions_and_sizes_try'?
 		require
 			enough_max_space: sizer.is_enough_max_space (True)
 			set: is_mediator_set
 		local
 			l_size: INTEGER
 			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
-			l_mediator: like internal_mediator
 		do
-			l_zones := tool_bar_row.zones
-			l_mediator := internal_mediator
-			check l_mediator /= Void end -- Implied by precondition `set'
-			if attached l_mediator.caller as l_caller then
-				l_zones.start
-				l_zones.search (l_caller)
-				if not l_zones.exhausted then
-					l_zones.remove
+			if attached internal_mediator as l_mediator then
+				l_zones := tool_bar_row.zones
+				if attached l_mediator.caller as l_caller then
+					l_zones.start
+					l_zones.search (l_caller)
+					if not l_zones.exhausted then
+						l_zones.remove
+					end
 				end
-			end
-			if positions_and_sizes_try /= Void and then positions_and_sizes_try.count > 0 then
-				if positions_and_sizes_try.first.pos < 0 then
-					position_front_to_back (a_hot_index)
-				end
-				l_size := l_zones.at (positions_and_sizes_try.count).size
-				if positions_and_sizes_try.last.pos + l_size > tool_bar_row.size then
-					position_front_to_back (a_hot_index)
-				end
-			end
-			if a_hot_index = positions_and_sizes_try.count then
-				if a_hot_pointer_position + l_mediator.caller.size > tool_bar_row.size and not Result then
-				 	-- Check if dragged tool bar right edge outside
-					Result := sizer.try_to_solve_no_space_hot_tool_bar_right (positions_and_sizes_try, (a_hot_pointer_position + l_mediator.caller.size) - tool_bar_row.size, a_hot_pointer_position)
-					if Result then
+				if positions_and_sizes_try /= Void and then positions_and_sizes_try.count > 0 then
+					if positions_and_sizes_try.first.pos < 0 then
 						position_front_to_back (a_hot_index)
+					end
+					l_size := l_zones.at (positions_and_sizes_try.count).size
+					if positions_and_sizes_try.last.pos + l_size > tool_bar_row.size then
+						position_front_to_back (a_hot_index)
+					end
+				end
+				if a_hot_index = positions_and_sizes_try.count then
+					if a_hot_pointer_position + l_mediator.caller.size > tool_bar_row.size then
+					 		-- Check if dragged tool bar right edge outside.
+						Result := sizer.try_to_solve_no_space_hot_tool_bar_right (positions_and_sizes_try, (a_hot_pointer_position + l_mediator.caller.size) - tool_bar_row.size, a_hot_pointer_position)
+						if Result then
+							position_front_to_back (a_hot_index)
+						end
+					else
+						Result := True
 					end
 				else
 					Result := True
 				end
 			else
-				Result := True
+				check
+					from_precondition_set: False
+				end
 			end
 		end
 
@@ -689,15 +670,13 @@ feature {NONE}  -- Implementation
 		local
 			l_size: INTEGER
 			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
-			l_mediator: like internal_mediator
 		do
-			l_mediator := internal_mediator
-			check l_mediator /= Void end -- Implied by precondition `set'
 			l_zones := tool_bar_row.zones
-			l_zones.start
-			l_zones.search (l_mediator.caller)
-			if not l_zones.exhausted then
-				l_zones.remove
+			if attached internal_mediator as l_mediator then
+				l_zones.start
+				l_zones.prune (l_mediator.caller)
+			else
+				check from_precondition_set: False end
 			end
 			-- Check if first out of border
 			if positions_and_sizes_try /= Void and then positions_and_sizes_try.count > 0 then
@@ -722,12 +701,16 @@ feature {NONE}  -- Implementation
 			end
 
 			if a_hot_index = positions_and_sizes_try.count then
-				if a_hot_pointer_position + l_mediator.caller.size > tool_bar_row.size and not Result then
-				 	-- Check if dragged tool bar right edge outside
-					Result := sizer.try_to_solve_no_space_hot_tool_bar_right (positions_and_sizes_try, (a_hot_pointer_position + l_mediator.caller.size) - tool_bar_row.size, a_hot_pointer_position)
-					if Result then
-						position_front_to_back (a_hot_index)
+				if attached internal_mediator as l_mediator then
+					if a_hot_pointer_position + l_mediator.caller.size > tool_bar_row.size and not Result then
+					 	-- Check if dragged tool bar right edge outside
+						Result := sizer.try_to_solve_no_space_hot_tool_bar_right (positions_and_sizes_try, (a_hot_pointer_position + l_mediator.caller.size) - tool_bar_row.size, a_hot_pointer_position)
+						if Result then
+							position_front_to_back (a_hot_index)
+						end
 					end
+				else
+					check from_precondition_set: False end
 				end
 			end
 		end
@@ -739,17 +722,18 @@ feature {NONE}  -- Implementation
 		local
 			l_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_temp_state: SD_TOOL_BAR_ZONE_STATE
-			l_mediator: like internal_mediator
 		do
 			l_zones := tool_bar_row.zones
 
 			if a_except_dragged_zone then
-				l_mediator := internal_mediator
-				check l_mediator /= Void end -- Implied by precondition `set'
-				l_zones.start
-				l_zones.search (l_mediator.caller)
-				if not l_zones.exhausted then
-					l_zones.remove
+				if attached internal_mediator as l_mediator then
+					l_zones.start
+					l_zones.search (l_mediator.caller)
+					if not l_zones.exhausted then
+						l_zones.remove
+					end
+				else
+					check from_precondition_set: False end
 				end
 			end
 
@@ -773,22 +757,8 @@ feature {NONE}  -- Implementation
 			-- Try to set tool bar positions and sizes
 			-- First is position, Second is size
 
-	tool_bar_row: attached like internal_tool_bar_row
-			-- Attached `internal_tool_bar_row'
-		require
-			set: internal_tool_bar_row /= Void
-		local
-			l_result: detachable like tool_bar_row
-		do
-			l_result := internal_tool_bar_row
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
-	internal_tool_bar_row: detachable SD_TOOL_BAR_ROW
-			-- Tool bar row which Current managed
+	tool_bar_row: SD_TOOL_BAR_ROW
+			-- Tool bar row which Current manages.
 
 	positions_and_sizes (a_except_dragged: BOOLEAN): ARRAYED_LIST [TUPLE [pos: INTEGER; size: INTEGER]]
 			-- Position and sizes
@@ -798,18 +768,21 @@ feature {NONE}  -- Implementation
 		local
 			l_list: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_state: SD_TOOL_BAR_ZONE_STATE
-			l_mediator: like internal_mediator
+			l_caller: SD_TOOL_BAR_ZONE
 		do
 			from
-				l_mediator := internal_mediator
-				check l_mediator /= Void end -- Implied by precondition `set'
+				check
+					from_precondition: attached internal_mediator as l_mediator
+				then
+					l_caller := l_mediator.caller
+				end
 				create Result.make (1)
 				l_list := tool_bar_row.zones
 				l_list.start
 			until
 				l_list.after
 			loop
-				if not (a_except_dragged and then l_list.item_for_iteration = l_mediator.caller) then
+				if not (a_except_dragged and then l_list.item_for_iteration = l_caller) then
 					l_state := l_list.item_for_iteration.assistant.last_state
 					Result.extend ([l_state.position, l_state.size])
 				end
@@ -822,7 +795,7 @@ feature {NONE}  -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -831,6 +804,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

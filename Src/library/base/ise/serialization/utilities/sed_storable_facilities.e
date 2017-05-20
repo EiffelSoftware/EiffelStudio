@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Serialize and deserialize objects to and from SED_READER_WRITER instances."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -50,7 +50,7 @@ feature -- Serialization routines
 			-- Serialization of `an_object' using `a_writer'.
 			-- Object stored can only be retrieved by programs having the same set of types.
 		obsolete
-			"Use `store' instead."
+			"Use `store' instead. [2017-05-31]"
 		require
 			an_object_not_void: an_object /= Void
 			a_writer_not_void: a_writer /= Void
@@ -110,10 +110,14 @@ feature -- Serialization routines
 				a_reader.read_natural_32
 			when eiffel_session_store then l_deserializer := session_deserializer (a_reader)
 			when eiffel_basic_store then l_deserializer := basic_deserializer (a_reader)
-			when eiffel_independent_store then l_deserializer := independent_deserializer (a_reader)
 			when eiffel_recoverable_store then l_deserializer := recoverable_deserializer (a_reader)
+			when eiffel_independent_store then
+					-- Obsolete type.
+				create l_retrieved_errors.make (1)
+				l_retrieved_errors.extend ((create {SED_ERROR_FACTORY}).new_obsolete_storable_type)
+				retrieved_errors := l_retrieved_errors
 			else
-					-- Unknown type
+					-- Unknown type.
 				create l_retrieved_errors.make (1)
 				l_retrieved_errors.extend ((create {SED_ERROR_FACTORY}).new_unknown_storable_type)
 				retrieved_errors := l_retrieved_errors
@@ -141,7 +145,7 @@ feature -- Serialization routines
 	retrieved_error: detachable SED_ERROR
 			-- Error set from last call to `retrieved'.
 		obsolete
-			"Use `retrieved_errors' directly."
+			"Use `retrieved_errors' directly. [2017-05-31]"
 		do
 			if attached retrieved_errors as l_errors and then not l_errors.is_empty then
 				Result := l_errors.last
@@ -257,29 +261,6 @@ feature {NONE} -- Data
 			basic_deserializer_not_void: Result /= Void
 		end
 
-	independent_deserializer (a_reader: SED_READER_WRITER): SED_INDEPENDENT_DESERIALIZER
-			-- New instance of `session' based on `a_reader'.
-		require
-			a_reader_not_void: a_reader /= Void
-			a_reader_ready: a_reader.is_ready_for_reading
-		do
-			Result := internal_independent_deserializer (a_reader)
-			Result.set_deserializer (a_reader)
-		ensure
-			independent_deserializer_not_void: Result /= Void
-		end
-
-	internal_independent_deserializer (a_reader: SED_READER_WRITER): SED_INDEPENDENT_DESERIALIZER
-			-- New instance of `session' based on `a_reader'.
-		require
-			a_reader_not_void: a_reader /= Void
-			a_reader_ready: a_reader.is_ready_for_reading
-		once
-			create Result.make (a_reader)
-		ensure
-			independent_deserializer_not_void: Result /= Void
-		end
-
 	internal_recoverable_deserializer (a_reader: SED_READER_WRITER): SED_RECOVERABLE_DESERIALIZER
 			-- New instance of `session' based on `a_reader'.
 		require
@@ -326,7 +307,7 @@ feature {NONE} -- Data
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

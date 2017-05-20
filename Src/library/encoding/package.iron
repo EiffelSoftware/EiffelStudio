@@ -1,15 +1,15 @@
 package encoding
 
 project
-	encoding = "encoding-safe.ecf"
 	encoding = "encoding.ecf"
 
 note
 	description: "[
-			The library is used to convert string among various encodings. It
-			basically wraps Windows APIs on windows and iconv library on Unix.
-			Major Unicode encoding conversions are implemented in pure Eiffel.
-		]"
+The library is used to convert string among various encodings. It
+basically wraps Windows APIs on windows and iconv library on Unix.
+Major Unicode encoding conversions are implemented in pure Eiffel.
+				]"
+
 	title: Eiffel Encoding Library
 	tags: encoding,iconv,conversion
 	copyright: 1984-2013 Eiffel Software and others

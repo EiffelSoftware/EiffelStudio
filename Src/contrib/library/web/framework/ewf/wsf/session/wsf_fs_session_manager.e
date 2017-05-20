@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	session_exists (a_session_uuid: READABLE_STRING_8): BOOLEAN
+	session_exists (a_session_uuid: READABLE_STRING_GENERAL): BOOLEAN
 		local
 			f: RAW_FILE
 		do
@@ -38,7 +38,7 @@ feature -- Access
 			Result := f.exists and then f.is_readable
 		end
 
-	session_data (a_session_uuid: READABLE_STRING_8): detachable WSF_SESSION_DATA
+	session_data (a_session_uuid: READABLE_STRING_GENERAL): detachable WSF_SESSION_DATA
 		local
 			f: RAW_FILE
 		do
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

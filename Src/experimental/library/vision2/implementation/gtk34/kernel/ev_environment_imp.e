@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Pass `an_interface' to base make.
 		do
 			assign_interface (an_interface)

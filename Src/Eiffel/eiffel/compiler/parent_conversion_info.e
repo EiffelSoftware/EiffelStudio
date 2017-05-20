@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Store information to be used when a conversion occurs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 					creation_type := l_info.target_type.actual_type.duplicate
 				end
 				routine_id := l_info.conversion_feature.rout_id_set.first
+				class_id := l_info.conversion_class_id
 			else
 				check
 					formal_or_null_conversion:
@@ -58,12 +59,15 @@ feature -- Access
 	routine_id: INTEGER
 			-- Routine ID of feature used for conversion.
 
+	class_id: INTEGER
+			-- Class ID of the type on which routine is called (if any).
+
 invariant
 	creation_type_not_void: is_from_conversion implies creation_type /= Void
 	routine_id_positive: routine_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

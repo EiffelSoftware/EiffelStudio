@@ -12,8 +12,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: WDOCS_EDIT_MANAGER)
+	make (a_manager: WDOCS_EDIT_MANAGER; a_sd_manager: SD_DOCKING_MANAGER)
 		do
+			sd_manager := a_sd_manager
 			create_interface_objects
 			initialize
 		end
@@ -44,6 +45,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	sd_manager: SD_DOCKING_MANAGER
+
 	widget: EV_VERTICAL_BOX
 
 	edit_box: WDOCS_EDIT_BOX
@@ -62,7 +65,7 @@ feature -- Docking
 		do
 			l_content := internal_sd_content
 			if l_content = Void then
-				create l_content.make_with_widget (widget, "Editor")
+				create l_content.make_with_widget (widget, "Editor", sd_manager)
 				l_content.set_long_title ("Wiki Editor")
 --				l_content.set_type ({SD_ENUMERATION}.editor)
 				create l_mini_tb.make

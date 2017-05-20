@@ -42,6 +42,15 @@ feature {NONE} -- Initialization
 			string_set: attached string
 		end
 
+feature -- Change element
+
+	set_string (a_string: STRING)
+		do
+			string := a_string
+		ensure
+			string_set: attached string
+		end
+
 feature -- Deflate
 
 	put_string (a_string: READABLE_STRING_GENERAL)
@@ -49,6 +58,14 @@ feature -- Deflate
 		do
 			create user_input_string.make_from_string (a_string.as_string_8)
 			deflate
+			close
+		end
+
+	put_string_with_options (a_string: READABLE_STRING_GENERAL; a_level, a_windows_bits, a_mem_level, a_strategy: INTEGER )
+			-- Deflate the buffer content.
+		do
+			create user_input_string.make_from_string (a_string.as_string_8)
+			deflate_with_options (a_level, a_windows_bits, a_mem_level, a_strategy)
 			close
 		end
 
@@ -104,7 +121,7 @@ feature {NONE} -- Deflate implementation
 				end_of_input := True
 			else
 				if attached user_input_string as l_string then
-				   string := l_string.substring (l_index, l_string.count)
+				   user_input_string := l_string.substring (l_index , l_string.count)
 				end
 			end
 			Result := l_index - 1

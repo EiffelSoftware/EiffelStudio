@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Contants used in CONF_LOAD_PARSE_CALLBACKS"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -84,6 +84,12 @@ feature {NONE} -- Implementation constants
 	t_test_cluster: INTEGER = 45
 	t_concurrency: INTEGER = 46
 	t_redirection: INTEGER = 47
+	t_capability: INTEGER = 48
+	t_capability_catcall_detection: INTEGER = 49
+	t_capability_code: INTEGER = 50
+	t_capability_concurrency: INTEGER = 51
+	t_capability_platform: INTEGER = 52
+	t_capability_void_safety: INTEGER = 53
 
 		-- Attribute states
 	at_abstract: INTEGER = 1000
@@ -152,11 +158,9 @@ feature {NONE} -- Implementation constants
 	at_void_safety: INTEGER = 1063
 	at_syntax_level: INTEGER = 1064
 	at_syntax: INTEGER = 1065
-	at_concurrency: INTEGER = 1066
-	at_root_catcall_detection: INTEGER = 1067
-	at_root_concurrency: INTEGER = 1068
-	at_root_void_safety: INTEGER = 1069
-	at_message: INTEGER = 1070
+	at_message: INTEGER = 1066
+	at_support: INTEGER = 1067
+	at_use: INTEGER = 1068
 
 		-- Undefined tag starting number
 	undefined_tag_start: INTEGER = 100000

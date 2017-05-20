@@ -5,7 +5,7 @@ note
 		"Eiffel feature calls"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,11 @@ inherit
 	ET_CALL_COMPONENT
 		redefine
 			target, arguments
+		end
+
+	ET_CALL_WITH_ACTUAL_ARGUMENTS
+		redefine
+			arguments
 		end
 
 feature -- Access
@@ -31,25 +36,11 @@ feature -- Access
 		deferred
 		end
 
-	parenthesis_call: detachable ET_QUALIFIED_REGULAR_FEATURE_CALL
+	parenthesis_call: detachable ET_PARENTHESIS_CALL
 			-- Unfolded form when the current call is of the parenthesis alias form;
 			-- For example, if the current call is 'f (args)', its parenthesis call
 			-- will be 'f.g (args)' where 'g' is declared as 'g alias "()"'.
 		do
-		end
-
-feature -- Measurement
-
-	arguments_count: INTEGER
-			-- Number of arguments
-		do
-			if attached arguments as l_arguments then
-				Result := l_arguments.count
-			end
-		ensure
-			arguments_count_not_negative: Result >= 0
-			no_argument: arguments = Void implies Result = 0
-			with_arguments: attached arguments as l_arguments implies Result = l_arguments.count
 		end
 
 end

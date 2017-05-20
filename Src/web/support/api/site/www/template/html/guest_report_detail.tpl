@@ -53,7 +53,7 @@
 									<span class="label label-primary-api-default" itemprop="status">Status:</span> <span>{$report.status.synopsis/}</span> <br/>
 								</div>
 								<div class="col-xs-4">
-									<span class="label label-primary-api-default" itemprop="responsible">Responsible:</span> <span></span> <br/>
+									<span class="label label-primary-api-default" itemprop="responsible">Responsible:</span> <span>{$report.assigned.name/}</span> <br/>
 								</div>
 							</div>
 							<div class="row">

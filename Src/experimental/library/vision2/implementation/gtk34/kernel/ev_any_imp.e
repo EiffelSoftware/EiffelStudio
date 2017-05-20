@@ -218,7 +218,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Access
 	eif_current_object_id: INTEGER
 			-- New identifier for Current
 		obsolete
-			"Use `eif_object_id (Current)' instead."
+			"Use `eif_object_id (Current)' instead. [2017-05-31]"
 		external
 			"built_in"
 		ensure

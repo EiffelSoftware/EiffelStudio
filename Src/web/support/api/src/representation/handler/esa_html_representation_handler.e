@@ -31,6 +31,17 @@ feature -- View
 			end
 		end
 
+	home_page_redirect (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Home redirect
+		local
+			l_hp: HTML_HOME
+		do
+
+			if attached req.http_host as l_host then
+				compute_response_redirect (req, res, absolute_host(req,""))
+			end
+		end
+
 	problem_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_report: REPORT)
 			-- <Precursor>
 		local
@@ -474,6 +485,23 @@ feature -- View
 			-- <Precursor>
 		local
 			l_hp: HTML_CONFIRM_EMAIL_CHANGE
+		do
+			if attached req.http_host as l_host then
+				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_view)
+				if attached l_hp.representation as l_change_password_page then
+					if attached a_view.errors then
+						new_response_get_400 (req, res, l_change_password_page)
+					else
+					    new_response_get (req, res, l_change_password_page)
+					end
+				end
+			end
+		end
+
+	confirm_change_password (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_PASSWORD_RESET_VIEW)
+			-- <Precursor>
+		local
+			l_hp: HTML_CONFIRM_PASSWORD_CHANGE
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), current_user_name (req), a_view)

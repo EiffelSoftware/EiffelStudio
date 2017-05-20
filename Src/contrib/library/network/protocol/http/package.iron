@@ -1,20 +1,20 @@
 package http
 
 project
-	http = "http-safe.ecf"
 	http = "http.ecf"
 
 note
 	title: HTTP protocol
 	description: "[
-			Collection of interfaces related to HTTP protocol:
-				- header
-				- status codes, request methods
-				- content type, media type, mime type.
-				- cookie
-				- date used in web protocol
-				- file extension mime mapping
-		]"
+Collection of interfaces related to HTTP protocol:
+	- header
+	- status codes, request methods
+	- content type, media type, mime type.
+	- cookie
+	- date used in web protocol
+	- file extension mime mapping
+				]"
+
 	collection: EWF
 	tags: http,web,header,status,method,type,mime,cookie
 	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)

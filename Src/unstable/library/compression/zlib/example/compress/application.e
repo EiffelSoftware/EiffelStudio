@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			create dc.io_medium_stream (des_file)
 			dc.put_io_medium (src_file)
 
+
 			create {RAW_FILE}des_file.make_open_read (output_file)
 			create {RAW_FILE}l_new_file.make_create_read_write (new_file)
 			create di.io_medium_stream (des_file)
@@ -48,10 +49,10 @@ feature {NONE} -- Initialization
 
 feature -- Implementation
 
-	source_file: STRING = "index.html"
+	source_file: STRING = "test.pdf"
 
-	output_file: STRING = "testing.bin"
+	output_file: STRING = "test.gz"
 
-	new_file: STRING = "new.html"
+	new_file: STRING = "new.pdf"
 
 end

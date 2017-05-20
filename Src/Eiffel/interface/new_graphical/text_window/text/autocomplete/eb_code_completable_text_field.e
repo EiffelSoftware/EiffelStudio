@@ -560,7 +560,7 @@ feature {NONE} -- Implementation
 		require
 			a_key_not_void: a_key /= Void
 		do
-			if not universe.platform_constants.is_unix then
+			if not {PLATFORM}.is_unix then
 				if caret_position > 1 then
 					if is_same_key (a_key, text.item (caret_position - 1)) then
 						back_delete_char
@@ -630,7 +630,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

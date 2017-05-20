@@ -1,22 +1,20 @@
 package http_client
 
 project
-	http_client = "http_client-safe.ecf"
 	http_client = "http_client.ecf"
-	libcurl_http_client = "libcurl_http_client-safe.ecf"
 	libcurl_http_client = "libcurl_http_client.ecf"
-	net_http_client = "net_http_client-safe.ecf"
 	net_http_client = "net_http_client.ecf"
 
 note
 	title: HTTP client
-	description:  "[
-			Provides simple routines to perform http requests, and get associated response.
-			It has two implementations:
-				- using Eiffel cURL (i.e libcurl)
-				- using EiffelNET (and the EiffelNET SSL extension)
-		]"
-	collection:EWF
+	description: "[
+Provides simple routines to perform http requests, and get associated response.
+It has two implementations:
+	- using Eiffel cURL (i.e libcurl)
+	- using EiffelNET (and the EiffelNET SSL extension)
+				]"
+
+	collection: EWF
 	tags: http,client,network,request,web,curl,EWF
 	copyright: 1984-2016 Eiffel Software and others
 	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)

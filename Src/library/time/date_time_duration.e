@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Duration of dates and times"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -151,8 +151,7 @@ feature -- Comparison
 					(time.time_modulo_day < other.time.time_modulo_day)
 			end
 		ensure then
-			non_definite_result: not (definite and other.definite) implies
-					Result = False
+			non_definite_result: not (definite and other.definite) implies not Result
 		end
 
 	is_equal (other: like Current): BOOLEAN
@@ -184,13 +183,13 @@ feature -- Status report
 		do
 			final_date := start_date + Current
 			if final_date >= start_date then
-				Result := (date.canonical (start_date.date) and then
+				Result := date.canonical (start_date.date) and then
 						time.seconds_count >= 0 and then time.canonical and then
-						hour < Hours_in_day)
+						hour < Hours_in_day
 			else
-				Result := (date.canonical (start_date.date) and then
+				Result := date.canonical (start_date.date) and then
 						time.seconds_count <= 0 and then time.canonical and then
-						hour > -Hours_in_day)
+						hour > -Hours_in_day
 			end
 		end
 
@@ -204,7 +203,7 @@ feature -- Status report
 	has_origin_date_time: BOOLEAN
 			-- Has an `origin_date_time' been set?
 		do
-			Result := (origin_date_time /= Void)
+			Result := attached origin_date_time
 		end
 
 feature -- Status setting
@@ -367,19 +366,14 @@ invariant
 				(time.is_negative or time.is_zero))
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DATE_TIME_DURATION
-
-
+end

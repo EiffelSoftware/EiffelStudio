@@ -107,7 +107,7 @@ feature -- Handler
 				append_info_to ("Assets dir", api.setup.environment.assets_path.utf_8_name, r, s)
 				append_info_to ("Config dir", api.setup.environment.config_path.utf_8_name, r, s)
 				s.append ("<hr/>")
-				append_info_to ("Theme", api.setup.theme_name, r, s)
+				append_info_to ("Theme", api.theme_name, r, s)
 				append_info_to ("Theme location", api.theme_location.utf_8_name, r, s)
 				s.append ("<hr/>")
 				append_info_to ("Files location", api.files_location.utf_8_name, r, s)
@@ -139,7 +139,7 @@ feature -- Handler
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

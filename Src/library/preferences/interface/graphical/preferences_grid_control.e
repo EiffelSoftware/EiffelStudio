@@ -248,7 +248,7 @@ feature -- Access
 feature -- Obsolete
 
 	register_preference_widget (a_pref_widget: PREFERENCE_WIDGET)
-			obsolete "[090514] do not use, this had no effect at all, so this was removed"
+		obsolete "do not use, this had no effect at all, so this was removed [2017-05-31]."
 		do
 		end
 
@@ -525,7 +525,7 @@ feature {NONE} -- Events
 					popup.show_relative_to_window (p)
 					popup.refresh_now
 
-					preferences.import_from_storage_with_callback (stor, agent (ia_txt: EV_LABEL; ia_i, ia_count: INTEGER; ia_name: READABLE_STRING_GENERAL; ia_value: READABLE_STRING_32)
+					preferences.import_from_storage_with_callback (stor, agent (ia_txt: EV_LABEL; ia_i, ia_count: INTEGER; ia_name, ia_value: READABLE_STRING_GENERAL)
 							do
 								ia_txt.set_text ("[" + ia_i.out + "/" + ia_count.out + "] " + ia_name.out + "%N")
 								ia_txt.refresh_now
@@ -1741,7 +1741,7 @@ invariant
 	has_preferences: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

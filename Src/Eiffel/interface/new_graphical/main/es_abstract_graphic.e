@@ -167,14 +167,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 		require
 			an_app_not_void: an_app /= Void
 		local
-			project_index: INTEGER
-			path_index: INTEGER
-			target_index: INTEGER
-			l_config: PATH
-			l_project_path: detachable PATH
-			l_target: detachable STRING_32
 			l_conf_constants: CONF_GUI_INTERFACE_CONSTANTS
-			l_loader: EB_GRAPHICAL_PROJECT_LOADER
 		do
 			initialize_services
 
@@ -197,54 +190,91 @@ feature {NONE} -- Implementation (preparation of all widgets)
 				-- Save EIS storage when project is closed.
 			eiffel_project.manager.close_agents.extend (agent eis_manager.save_storage)
 
+			if preferences.dialog_data.show_first_launching_dialog then
+				display_first_launching_dialog (agent load_interface)
+			else
+				load_interface
+			end
+		end
+
+	load_interface
+			-- Start interface according to arguments.
+		local
+			project_index: INTEGER
+		do
 				-- If some more arguments were specified, it means that we either asked to retrieve
 				-- an existing project, or to create one.
 			project_index := index_of_word_option ("config")
-			if project_index /= 0 and argument_count >= project_index + 1 then
-					-- A project was specified.
-				create l_config.make_from_string (argument (project_index + 1))
-				path_index := index_of_word_option ("project_path")
-				if path_index /= 0 and argument_count >= path_index + 1 then
-					create l_project_path.make_from_string (argument (path_index + 1))
-				end
-
-				target_index := index_of_word_option ("target")
-				if target_index /= 0 and argument_count >= target_index + 1 then
-					l_target := argument (target_index + 1)
-				end
-
-				check window_manager.last_created_window /= Void end
-				create l_loader.make (window_manager.last_created_window.window)
-				if path_index /= 0 then
-					l_loader.set_is_project_location_requested (False)
-				end
-				debug ("to_implement")
-					(create {REFACTORING_HELPER}).to_implement ("Handle (multiple) -config_option values and pass them to project loader.")
-				end
-				l_loader.open_project_file (l_config, l_target, l_project_path, index_of_word_option ("clean") /= 0, Void)
-				if
-					not l_loader.has_error and then
-					not l_loader.is_compilation_requested
-				then
-					if index_of_word_option ("melt") /= 0 then
-						l_loader.set_is_compilation_requested (True)
-						l_loader.melt_project (False)
-					elseif index_of_word_option ("freeze") /= 0 then
-						l_loader.set_is_compilation_requested (True)
-						l_loader.freeze_project (False)
-					elseif index_of_word_option ("finalize") /= 0 then
-						l_loader.set_is_compilation_requested (True)
-						l_loader.finalize_project (False)
-					elseif index_of_word_option ("precompile") /= 0 then
-						l_loader.set_is_compilation_requested (True)
-						l_loader.precompile_project (False)
-					end
-				end
+			if
+				project_index /= 0 and
+				argument_count >= project_index + 1 and then
+				attached argument (project_index + 1) as l_config_pathname
+			then
+				load_project_file (l_config_pathname)
 			else
-					-- Show starting dialog.
-				if preferences.dialog_data.show_starting_dialog then
-					display_starting_dialog
+					-- Show starting dialog, if enabled in prefs.
+				display_starting_dialog_if_enabled
+			end
+		end
+
+	load_project_file (a_config_pathname: READABLE_STRING_GENERAL)
+			-- Load project file from path `a_config_pathname`.
+		require
+			non_blank_config_pathname: a_config_pathname /= Void and then not a_config_pathname.is_whitespace
+		local
+			path_index: INTEGER
+			target_index: INTEGER
+			l_config: PATH
+			l_project_path: detachable PATH
+			l_target: detachable STRING_32
+			l_loader: EB_GRAPHICAL_PROJECT_LOADER
+		do
+				-- A project was specified.
+			create l_config.make_from_string (a_config_pathname)
+			path_index := index_of_word_option ("project_path")
+			if path_index /= 0 and argument_count >= path_index + 1 then
+				create l_project_path.make_from_string (argument (path_index + 1))
+			end
+
+			target_index := index_of_word_option ("target")
+			if target_index /= 0 and argument_count >= target_index + 1 then
+				l_target := argument (target_index + 1)
+			end
+
+			check window_manager.last_created_window /= Void end
+			create l_loader.make (window_manager.last_created_window.window)
+			if path_index /= 0 then
+				l_loader.set_is_project_location_requested (False)
+			end
+			debug ("to_implement")
+				(create {REFACTORING_HELPER}).to_implement ("Handle (multiple) -config_option values and pass them to project loader.")
+			end
+			l_loader.open_project_file (l_config, l_target, l_project_path, index_of_word_option ("clean") /= 0, Void)
+			if
+				not l_loader.has_error and then
+				not l_loader.is_compilation_requested
+			then
+				if index_of_word_option ("melt") /= 0 then
+					l_loader.set_is_compilation_requested (True)
+					l_loader.melt_project (False)
+				elseif index_of_word_option ("freeze") /= 0 then
+					l_loader.set_is_compilation_requested (True)
+					l_loader.freeze_project (False)
+				elseif index_of_word_option ("finalize") /= 0 then
+					l_loader.set_is_compilation_requested (True)
+					l_loader.finalize_project (False)
+				elseif index_of_word_option ("precompile") /= 0 then
+					l_loader.set_is_compilation_requested (True)
+					l_loader.precompile_project (False)
 				end
+			end
+		end
+
+	display_starting_dialog_if_enabled
+			-- Display starting dialog, if pref `show_starting_dialog` is enabled.
+		do
+			if preferences.dialog_data.show_starting_dialog then
+				display_starting_dialog
 			end
 		end
 
@@ -262,6 +292,33 @@ feature {NONE} -- Implementation (preparation of all widgets)
 
 			create project_dialog.make_default
 			project_dialog.show_modal_to_window (first_window.window)
+		end
+
+	display_first_launching_dialog (cb: detachable PROCEDURE [TUPLE])
+			-- Show the starting dialog letting the user choose where
+			-- his project is (or will be).
+			-- And call `cb` when dialog is closed (cancelled or not).
+		local
+			dlg: ES_FIRST_LAUNCHING_DIALOG
+			first_window: EB_DEVELOPMENT_WINDOW
+		do
+			if
+				is_eiffel_layout_defined and then
+				eiffel_layout.installed_version_names.count > 1
+			then
+				first_window := window_manager.last_created_window
+				check
+					first_window_not_void: first_window /= Void
+				end
+
+				create dlg.make (eiffel_layout.version_name)
+				if cb /= Void then
+					dlg.next_actions.extend (cb)
+				end
+				dlg.show_on_active_window
+			elseif cb /= Void then
+				cb.call (Void)
+			end
 		end
 
 feature {NONE} -- Exception handling

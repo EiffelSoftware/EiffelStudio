@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "implementation of IStorage interface"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -128,7 +128,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	new_stream (a_name: STRING; a_mode: INTEGER) : ECOM_STREAM
+	new_stream (a_name: READABLE_STRING_GENERAL; a_mode: INTEGER) : ECOM_STREAM
 			-- Newly created stream with name `a_name'
 			-- and mode `a_mode' nested within Current storage
 			-- Opening the same stream more than once from the
@@ -149,7 +149,7 @@ feature -- Access
 			valid_stream: Result.exists
 		end
 
-	retrieved_stream (a_name: STRING; a_mode: INTEGER): ECOM_STREAM
+	retrieved_stream (a_name: READABLE_STRING_GENERAL; a_mode: INTEGER): ECOM_STREAM
 			-- Retrieved nested stream with name `a_name'
 			-- and mode `a_mode'
 			-- same storage is not supported.
@@ -169,7 +169,7 @@ feature -- Access
 			valid_stream: Result.exists
 		end
 
-	new_substorage (a_name: STRING; a_mode: INTEGER): ECOM_STORAGE
+	new_substorage (a_name: READABLE_STRING_GENERAL; a_mode: INTEGER): ECOM_STORAGE
 			-- Newly created storage with name `a_name'
 			-- and mode `a_mode'
 			-- nested within Current storage
@@ -188,7 +188,7 @@ feature -- Access
 			valid_storage: Result.exists
 		end
 
-	retrieved_substorage (a_name: STRING; a_mode: INTEGER): ECOM_STORAGE
+	retrieved_substorage (a_name: READABLE_STRING_GENERAL; a_mode: INTEGER): ECOM_STORAGE
 			-- Retrieved storage with name `a_name' and mode `a_mode'
 			-- nested within Current storage
 			-- Opening the same storage object more than once from the same
@@ -215,7 +215,7 @@ feature -- Access
 			ptr: POINTER
 		do
 			ptr := ccom_root_storage (initializer)
-			if (ptr /= default_pointer) then
+			if ptr /= default_pointer then
 				create Result.make_from_pointer (ptr)
 			end
 		end
@@ -228,7 +228,7 @@ feature -- Access
 			Result /= Void
 		end
 
-	is_valid_name (a_name: STRING): BOOLEAN
+	is_valid_name (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- is object with name `a_name'
 			-- part of Current storage
 		require
@@ -237,13 +237,13 @@ feature -- Access
 			Result := elements.is_valid_name (a_name)
 		end
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Name
 		do
 			Result := description (Statflag_default).name
 		end
 
-	is_same_name (a_name: STRING): BOOLEAN
+	is_same_name (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- is `a_name' equal to name of Current storage
 		do
 			Result := description (Statflag_default).is_same_name (a_name)
@@ -279,7 +279,7 @@ feature -- Access
 			Result := description (Statflag_noname).clsid
 		end
 
-	element_creation_time (a_name: STRING): WEL_FILE_TIME
+	element_creation_time (a_name: READABLE_STRING_GENERAL): WEL_FILE_TIME
 			-- Creation time of element `a_name'
 		require
 			non_void_name: a_name /= Void
@@ -290,7 +290,7 @@ feature -- Access
 			non_void_creation_time: Result /= Void
 		end
 
-	element_access_time (a_name: STRING): WEL_FILE_TIME
+	element_access_time (a_name: READABLE_STRING_GENERAL): WEL_FILE_TIME
 			-- Access time of element `a_name'
 		require
 			non_void_name: a_name /= Void
@@ -301,7 +301,7 @@ feature -- Access
 			non_void_access_time: Result /= Void
 		end
 
-	element_modification_time (a_name: STRING): WEL_FILE_TIME
+	element_modification_time (a_name: READABLE_STRING_GENERAL): WEL_FILE_TIME
 			-- Modification time of element `a_name'
 		require
 			non_void_name: a_name /= Void
@@ -340,7 +340,7 @@ feature -- Basic Operations
 			ccom_revert (initializer)
 		end
 
-	destroy_element (a_name: STRING)
+	destroy_element (a_name: READABLE_STRING_GENERAL)
 			-- Remove element with name `a_name' from storage.
 		require
 			non_void_name: a_name /= Void
@@ -354,7 +354,7 @@ feature -- Basic Operations
 			element_removed: not is_valid_name (a_name)
 		end
 
-	rename_element (old_name: STRING; new_name:STRING)
+	rename_element (old_name: READABLE_STRING_GENERAL; new_name: READABLE_STRING_GENERAL)
 			-- Rename element `old_name' into `new_name'
 		require
 			non_void_old_name: old_name /= Void
@@ -374,7 +374,7 @@ feature -- Basic Operations
 
 feature -- Element Change
 
-	move_element_to (a_element_name: STRING; dest_storage: ECOM_STORAGE; new_name: STRING;
+	move_element_to (a_element_name: READABLE_STRING_GENERAL; dest_storage: ECOM_STORAGE; new_name: READABLE_STRING_GENERAL;
 				a_mode: INTEGER)
 			-- Copy or move (depending on `mode') element `a_element_name'
 			-- of root storage to `dest_storage'.
@@ -401,7 +401,7 @@ feature -- Element Change
 			element_moved: dest_storage.is_valid_name (new_name)
 		end
 
-	set_element_creation_time (a_element_name:STRING; a_creation_time: WEL_FILE_TIME)
+	set_element_creation_time (a_element_name: READABLE_STRING_GENERAL; a_creation_time: WEL_FILE_TIME)
 			-- Set creation time of element `a_element_name' with `a_creation_time'.
 		require
 			non_void_element_name: a_element_name /= Void
@@ -417,7 +417,7 @@ feature -- Element Change
 			element_creation_time_set: element_creation_time (a_element_name).is_equal (a_creation_time)
 		end
 
-	set_element_access_time (a_element_name:STRING; an_access_time: WEL_FILE_TIME)
+	set_element_access_time (a_element_name: READABLE_STRING_GENERAL; an_access_time: WEL_FILE_TIME)
 			-- Set access time of element `a_element_name' with `an_access_time'.
 		require
 			non_void_element_name: a_element_name /= Void
@@ -433,7 +433,7 @@ feature -- Element Change
 			element_access_time_set: element_access_time (a_element_name).is_equal (an_access_time)
 		end
 
-	set_element_modification_time (a_element_name:STRING; a_modification_time: WEL_FILE_TIME)
+	set_element_modification_time (a_element_name: READABLE_STRING_GENERAL; a_modification_time: WEL_FILE_TIME)
 			-- Set modification time of element `a_element_name' with `a_modification_time'.
 		require
 			non_void_element_name: a_element_name /= Void
@@ -629,18 +629,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class ECOM_STORAGE
-
+end

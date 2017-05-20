@@ -14,20 +14,36 @@ feature -- Operation
 			-- Send `a_string' as command to receiver processes with `a_key'.
 			-- `a_key' to identify receivers.
 			-- The `a_key' is recommended to be an UUID.
+		local
+			imp: like implementation
 		do
-			if implementation = Void then
+			imp := implementation
+			if imp = Void then
 				create_implementation
+				imp := implementation
 			end
-			implementation.send_command (a_string, a_key)
+			if imp /= Void then
+				imp.send_command (a_string, a_key)
+			else
+				check has_implementation: False end
+			end
 		end
 
 	send_command_process (a_string, a_key: attached STRING; a_process_id: INTEGER)
 			-- Send `a_string' as command to receiver process of `a_process_id' with `a_key'.
+		local
+			imp: like implementation
 		do
-			if implementation = Void then
+			imp := implementation
+			if imp = Void then
 				create_implementation
+				imp := implementation
 			end
-			implementation.send_command_process (a_string, a_key, a_process_id)
+			if imp /= Void then
+				imp.send_command_process (a_string, a_key, a_process_id)
+			else
+				check has_implementation: False end
+			end
 		end
 
 feature -- Querry
@@ -35,16 +51,16 @@ feature -- Querry
 	last_command_handled: BOOLEAN
 			-- Was last command handled?
 		do
-			if implementation /= Void then
-				Result := implementation.last_command_handled
+			if attached implementation as imp then
+				Result := imp.last_command_handled
 			end
 		end
 
 	last_command_reached: BOOLEAN
 			-- See if last command has really reached the target process by `send_command_process'.
 		do
-			if implementation /= Void then
-				Result := implementation.last_command_reached
+			if attached implementation as imp then
+				Result := imp.last_command_reached
 			end
 		end
 
@@ -57,13 +73,13 @@ feature {NONE} -- Implementation
 	create_implementation
 			-- Create implementation
 		do
-			create {COMMAND_SENDER_IMP}implementation
+			create {COMMAND_SENDER_IMP} implementation
 		ensure
 			implementation_not_void: implementation /= Void
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -87,11 +103,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

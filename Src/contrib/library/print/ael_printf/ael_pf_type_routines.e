@@ -2,7 +2,7 @@
 --| Copyright (c) 1995-2011, All rights reserved by
 --| Amalasoft Corporation
 --| 273 Harwood Avenue
---| Littleton, MA 01460 USA 
+--| Littleton, MA 01460 USA
 --|
 --| See additional information at bottom of file
 --|----------------------------------------------------------------------
@@ -40,7 +40,7 @@ feature -- Type matching
 			ts8: detachable STRING_8
 			ts32: detachable STRING_32
 			tfa: detachable FINITE [detachable ANY]
-			tta: detachable TUPLE []
+			tta: detachable TUPLE
 		do
 			if arg = Void then
 				Result := True
@@ -114,9 +114,9 @@ feature -- Type conversion
 			end
 		end
 
-	any_to_tuple (v: detachable ANY): detachable TUPLE []
+	any_to_tuple (v: detachable ANY): detachable TUPLE
 		do
-			if attached {TUPLE []} v as ta then
+			if attached {TUPLE} v as ta then
 				Result := ta
 			end
 		end
@@ -135,9 +135,9 @@ feature -- Type conversion
 			end
 		end
 
-	any_to_container (v: detachable ANY): detachable CONTAINER[detachable ANY]
+	any_to_container (v: detachable ANY): detachable CONTAINER [detachable ANY]
 		do
-			if attached {CONTAINER[detachable ANY]} v as ta then
+			if attached {CONTAINER [detachable ANY]} v as ta then
 				 Result := ta
 			end
 		end
@@ -320,7 +320,7 @@ end -- class AEL_PF_TYPE_ROUTINES
 --| History
 --|
 --| 007 03-Apr-2011
---|     Enhanced any_to_real_64_ref to look also for integer and 
+--|     Enhanced any_to_real_64_ref to look also for integer and
 --|     natural types (and to promote them).
 --| 006 19-Aug-2009
 --|     Moved common conversions into AEL_DS_TYPE_ROUTINES

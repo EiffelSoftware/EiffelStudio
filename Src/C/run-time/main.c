@@ -860,7 +860,7 @@ rt_private void eif_init_root (void)
 				}
 			}
 			if (egc_ridx < 0) {
-				fprintf (stderr, "%s: unknown root procedure\n", rt_eif_root);
+				fprintf (stderr, RT_NATIVE_STRING_FORMAT ": unknown root procedure\n", rt_eif_root);
 				exit (1);
 			}
 		}

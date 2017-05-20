@@ -20,8 +20,7 @@ indexing
 #include "eif_size.h" /* for LNGSIZ */
 
 #ifdef EIF_WINDOWS
-#define WIN32_LEAN_AND_MEAN
-#include <winsock.h>
+#include <winsock2.h>
 #define EWOULDBLOCK WSAEWOULDBLOCK
 #define EINPROGRESS WSAEINPROGRESS
 #include <stdio.h>

@@ -90,6 +90,46 @@ feature {NONE} -- Status report
 			end
 		end
 
+	is_inline_separate_do_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
+			-- Is `a_token` the "do" keyword in an inline separate declaration?
+			--| Such as "separate expression as var do"
+		local
+			tok: detachable EDITOR_TOKEN
+			l_line: detachable EDITOR_LINE
+			i: INTEGER
+			l_prev: like previous_text_token
+		do
+				-- Search for "as" keyword in "separate expression as token do"
+				-- IF `a_token` is a "do" keyword.
+			if is_keyword_token (a_token, {EIFFEL_KEYWORD_CONSTANTS}.do_keyword) then
+				from
+					l_line := a_line
+					l_prev := previous_text_token (a_token, l_line, True, Void)
+					if l_prev /= Void then
+						tok := l_prev.token
+						l_line := l_prev.line
+					else
+						tok := Void
+					end
+				until
+					i > 1 or tok = Void or Result
+				loop
+					if is_keyword_token (tok, {EIFFEL_KEYWORD_CONSTANTS}.as_keyword) then
+						Result := True
+					else
+						i := i + 1
+						l_prev := previous_text_token (tok, l_line, True, Void)
+						if l_prev /= Void then
+							tok := l_prev.token
+							l_line := l_prev.line
+						else
+							tok := Void
+						end
+					end
+				end
+			end
+		end
+
 feature {NONE} -- Query
 
 	token_context_state (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE; state: ES_EDITOR_ANALYZER_STATE [ES_EDITOR_ANALYZER_STATE_INFO]]
@@ -106,7 +146,8 @@ feature {NONE} -- Query
 			a_line_has_a_token: a_line.has_token (a_token)
 			not_is_scanning_comments: not is_scanning_comments
 		local
-			l_matcher: detachable like brace_matcher
+			l_brace_matcher: detachable like brace_matcher
+			l_block_matcher: detachable like block_matcher
 			l_prev: detachable like previous_text_token
 			l_peek: detachable like previous_text_token
 			l_token: EDITOR_TOKEN
@@ -114,7 +155,8 @@ feature {NONE} -- Query
 			l_stop: BOOLEAN
 			l_feature_state: detachable like new_feature_state
 		do
-			l_matcher := brace_matcher
+			l_brace_matcher := brace_matcher
+			l_block_matcher := block_matcher
 			l_prev := [a_token, a_line]
 			from until l_stop loop
 				l_token := l_prev.token
@@ -122,13 +164,16 @@ feature {NONE} -- Query
 				if l_token.is_text then
 					if is_keyword_token (l_token, Void) then
 							-- Check the states of a keyword token.
-
 							-- Set stopping condition and non matches will reset it.
 						l_stop := True
-						if
-							is_feature_body_token (l_token, l_line) or else
-							is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.local_keyword) or else
-							is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.require_keyword)
+
+						if is_inline_separate_do_token (l_token, l_line) then
+								-- Do not stop here
+							l_stop := False
+						elseif
+								is_feature_body_token (l_token, l_line)
+								or else is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.local_keyword)
+								or else is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.require_keyword)
 						then
 							l_prev := feature_start_token (l_token, l_line)
 							if l_prev /= Void then
@@ -145,13 +190,34 @@ feature {NONE} -- Query
 								-- In the class inherit clause
 						elseif is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.class_keyword) then
 								-- In the class
+						elseif is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.end_keyword) then
+							l_stop := False
+							if l_block_matcher.is_closing_brace (l_token) and then not l_block_matcher.is_closing_match_exception (l_token, l_line) then
+								l_peek := l_block_matcher.match_closing_brace (l_token, l_line, Void)
+								if l_peek /= Void then
+									l_token := l_peek.token
+									l_line := l_peek.line
+									if is_feature_body_token (l_token, l_line) then
+										l_prev := feature_start_token (l_token, l_line)
+										if l_prev /= Void then
+											if
+												is_keyword_token (l_prev.token, {EIFFEL_KEYWORD_CONSTANTS}.agent_keyword) and then
+												not is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.agent_keyword)
+											then
+												l_token := l_prev.token
+												l_line := l_prev.line
+											end
+										end
+									end
+								end
+							end
 						else
 								-- No match, switch the stopping condition back to False.
 							l_stop := False
 						end
 					else
-						if l_matcher.is_closing_brace (l_token) and then not l_matcher.is_closing_match_exception (l_token, l_line) then
-							l_peek := l_matcher.match_closing_brace (l_token, l_line, Void)
+						if l_brace_matcher.is_closing_brace (l_token) and then not l_brace_matcher.is_closing_match_exception (l_token, l_line) then
+							l_peek := l_brace_matcher.match_closing_brace (l_token, l_line, Void)
 							if l_peek /= Void then
 								l_token := l_peek.token
 								l_line := l_peek.line
@@ -420,7 +486,7 @@ invariant
 	context_class_attached: context_class /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

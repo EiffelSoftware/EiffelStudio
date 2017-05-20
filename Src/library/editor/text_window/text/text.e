@@ -116,7 +116,7 @@ feature -- Access
 	text: STRING
 			-- Image of text in `Current'.
 		obsolete
-			"Use `wide_text' instead, or wide characters are truncated."
+			"Use `wide_text' instead, or wide characters are truncated. [2017-05-31]"
 		require
 			text_loaded: reading_text_finished
 		do
@@ -621,7 +621,7 @@ invariant
 	positive_current_pos: current_pos > 0
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

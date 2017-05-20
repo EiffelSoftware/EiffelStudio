@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="egraph" uuid="1C97309F-2EFC-48A2-A333-FB69BE1A40FB">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="egraph" uuid="1C97309F-2EFC-48A2-A333-FB69BE1A40FB">
 	<target name="common" abstract="true">
 		<root cluster="root_cluster" class="APPLICATION" feature="make_and_launch"/>
-		<option warning="true" full_class_checking="true">
+		<option warning="true" is_obsolete_routine_type="true" syntax="transitional">
 			<assertions precondition="true"/>
 		</option>
-		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree.ecf"/>
 		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree.ecf"/>
 		<cluster name="root_cluster" location=".\" recursive="true"/>
 	</target>
 	<target name="classic" extends="common">

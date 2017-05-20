@@ -199,7 +199,7 @@ feature -- String
 
 	string_general_as_lower (a_s: READABLE_STRING_GENERAL): STRING_GENERAL
 			-- Make all possible char in `a_str' to lower.
-		obsolete "use {READABLE_STRING_GENERAL}.as_lower [2012-oct]"
+		obsolete "use {READABLE_STRING_GENERAL}.as_lower [2012-10-01]"
 		require
 			a_str_not_void: a_s /= Void
 		do
@@ -212,7 +212,7 @@ feature -- String
 
 	string_general_as_upper (a_s: READABLE_STRING_GENERAL): STRING_GENERAL
 			-- Make all possible char in `a_str' to upper.
-		obsolete "use {READABLE_STRING_GENERAL}.as_upper [2012-oct]"
+		obsolete "use {READABLE_STRING_GENERAL}.as_upper [2012-10-01]"
 		require
 			a_str_not_void: a_s /= Void
 		do
@@ -321,7 +321,7 @@ feature -- String
 			-- Is `a_str' case insensitive equal to `a_str_other'?
 			--
 			-- `a_str' and `a_str_other' must be UTF-32 compatible.
-		obsolete "use {READABLE_STRING_GENERAL}.is_case_insensitive_equal (..) [2012-oct]"
+		obsolete "use {READABLE_STRING_GENERAL}.is_case_insensitive_equal (..) [2012-10-01]"
 		require
 			a_str_32_not_void: a_str /= Void
 			a_str_other_not_void: a_str_other /= Void

@@ -354,6 +354,8 @@ feature {NONE} -- Implementation
 				l_loader.retrieve_configuration (a_file.name)
 				if l_loader.is_error then
 					display_error ({STRING_32} "Could not retrieve configuration "+a_file.name+"!")
+				elseif l_loader.last_redirection /= Void then
+					display_error ({STRING_32} "Ignore redirection configuration "+a_file.name+"!")
 				else
 					l_skip_dotnet := arguments.skip_dotnet
 					l_platform := arguments.platform_option
@@ -946,7 +948,7 @@ feature {NONE} -- Directory manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -5,7 +5,7 @@ note
 		"Eiffel bracket expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,6 +18,8 @@ inherit
 		redefine
 			reset
 		end
+
+	ET_CALL_WITH_ACTUAL_ARGUMENT_LIST
 
 create
 
@@ -47,9 +49,7 @@ feature -- Initialization
 		do
 			target.reset
 			name.reset
-			if attached arguments as l_arguments then
-				l_arguments.reset
-			end
+			reset_arguments
 		end
 
 feature -- Access
@@ -59,9 +59,6 @@ feature -- Access
 
 	name: ET_BRACKET_SYMBOL
 			-- Feature name
-
-	arguments: detachable ET_BRACKET_ARGUMENT_LIST
-			-- Arguments
 
 	position: ET_POSITION
 			-- Position of first character of

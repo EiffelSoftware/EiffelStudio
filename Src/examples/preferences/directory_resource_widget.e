@@ -53,7 +53,7 @@ feature {PREFERENCE_VIEW} -- Commands
 			create l_directory_tool
 			directory_tool := l_directory_tool
 			l_directory_tool.ok_actions.extend (agent update_changes)
-			if caller /= Void and attached caller.parent_window as p then
+			if attached caller as l_caller and then attached l_caller.parent_window as p then
 				l_directory_tool.show_modal_to_window (p)
 			else
 				check caller_has_parent_window: False end
@@ -114,12 +114,12 @@ feature {NONE} -- Implementation
 				end
 				area.fill_rectangle (0, 0, change_item_widget.width, change_item_widget.height)
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
-				area.draw_text_top_left (5, 1, preference.string_value)
+				area.draw_text_top_left (5, 1, preference.value)
 			else
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
 				area.fill_rectangle (0, 0, change_item_widget.width, change_item_widget.height)
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-				area.draw_text_top_left (5, 1, preference.string_value)
+				area.draw_text_top_left (5, 1, preference.value)
 			end
 		end
 

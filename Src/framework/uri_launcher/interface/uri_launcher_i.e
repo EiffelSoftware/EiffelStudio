@@ -57,7 +57,7 @@ feature {NONE} -- Basic operations
 			a__app_attached: a_app /= Void
 			not_a_app_is_empty: not a_app.is_empty
 		local
-			l_process: PROCESS
+			l_process: BASE_PROCESS
 			l_cmd: STRING_32
 			l_uri: STRING_32
 			i: INTEGER
@@ -90,20 +90,16 @@ feature {NONE} -- Basic operations
 			end
 
 				-- Execute command string.
-			l_process := (create {PROCESS_FACTORY}).process_launcher_with_command_line (l_cmd, Void)
+			l_process := (create {BASE_PROCESS_FACTORY}).process_launcher_with_command_line (l_cmd, Void)
 			l_process.set_detached_console (True)
 			l_process.set_hidden (True)
 			l_process.launch
-
-				-- Wait for an exit, but not infinitly because a new process may be blocking.
-			if l_process.launched then
-				l_process.wait_for_exit_with_timeout (1000)
-				Result := l_process.is_running or else l_process.exit_code = 0
-			end
+			Result := l_process.launched
+			l_process.close
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

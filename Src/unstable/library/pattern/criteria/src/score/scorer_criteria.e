@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {SCORE}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -59,23 +58,19 @@ feature -- Factory
 			end
 		ensure
 			result_attached: Result /= Void
-			coherent_result: Result.count <= a_capacity and then across Result as r all (across lst as ic some ic.item = r.item.value end) end
+			coherent_result: Result.count <= a_capacity and then across Result as r all across lst as ic some ic.item = r.item.value end end
 		end
 
 	sorted_scores (lst: ITERABLE [G]; a_capacity: INTEGER): LIST [SCORED_VALUE [G]]
 			-- Apply criteria on `lst' and return scored values sorted by score.
-		local
-			l_sorter: QUICK_SORTER [SCORED_VALUE [G]]
 		do
 			Result := scores (lst, a_capacity)
-			create l_sorter.make (create {COMPARABLE_COMPARATOR [SCORED_VALUE [G]]})
-			l_sorter.sort (Result)
+			;(create {QUICK_SORTER [SCORED_VALUE [G]]}.make (create {COMPARABLE_COMPARATOR [SCORED_VALUE [G]]})).sort (Result)
 		end
 
 	list (lst: LIST [G]): LIST [G]
 			-- Apply criteria on `lst' and return result.
 		local
-			l_sorter: QUICK_SORTER [SCORED_VALUE [G]]
 			l_values: ARRAYED_LIST [SCORED_VALUE [G]]
 			s: like score
 		do
@@ -84,15 +79,12 @@ feature -- Factory
 				lst as c
 			loop
 				s := score (c.item)
---				if attached {DEBUG_OUTPUT} c.item as dbg then
---					print ("[" + s.out + "] " + dbg.debug_output + "%N")
---				end
 				if not score_is_zero (s) then
 					l_values.extend (create {SCORED_VALUE [G]}.make (c.item, s))
 				end
 			end
-			create l_sorter.make (create {COMPARABLE_COMPARATOR [SCORED_VALUE [G]]})
-			l_sorter.sort (l_values)
+
+			;(create {QUICK_SORTER [SCORED_VALUE [G]]}.make (create {COMPARABLE_COMPARATOR [SCORED_VALUE [G]]})).sort (l_values)
 
 			create {ARRAYED_LIST [G]} Result.make (l_values.count)
 			from
@@ -112,7 +104,6 @@ feature -- Factory
 	apply_to_list (lst: LIST [G])
 			-- Apply current criterai to `lst'
 		local
-			l_sorter: QUICK_SORTER [SCORED_VALUE [G]]
 			l_values: ARRAYED_LIST [SCORED_VALUE [G]]
 			s: like score
 		do
@@ -125,8 +116,7 @@ feature -- Factory
 					l_values.extend (create {SCORED_VALUE [G]}.make (ic.item, s))
 				end
 			end
-			create l_sorter.make (create {COMPARABLE_COMPARATOR [SCORED_VALUE [G]]})
-			l_sorter.sort (l_values)
+			;(create {QUICK_SORTER [SCORED_VALUE [G]]}.make (create {COMPARABLE_COMPARATOR [SCORED_VALUE [G]]})).sort (l_values)
 			from
 				lst.wipe_out
 				l_values.start
@@ -168,7 +158,7 @@ feature {NONE} -- Helpers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

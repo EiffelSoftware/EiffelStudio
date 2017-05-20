@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Encoding of arbitrary objects graphs within a session of a same program.
 		
@@ -57,7 +57,7 @@ feature -- Status report
 	is_traversing_mode_set: BOOLEAN
 			-- Is traversing mode set?
 		do
-			Result := (traversable /= Void)
+			Result := traversable /= Void
 		end
 
 	is_root_object_set: BOOLEAN
@@ -249,7 +249,6 @@ feature {NONE} -- Implementation
 			l_ser: like serializer
 			l_object_indexes: like object_indexes
 			i, nb: INTEGER
-			l_dtype: INTEGER
 			l_obj: separate ANY
 			l_area: SPECIAL [separate ANY]
 		do
@@ -272,11 +271,8 @@ feature {NONE} -- Implementation
 				l_reflected_object.set_object (l_obj)
 				i := i + 1
 
-					-- Get object data.
-				l_dtype := l_reflected_object.dynamic_type
-
 					-- Write object dtype.
-				l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
+				l_ser.write_compressed_natural_32 (l_reflected_object.dynamic_type.to_natural_32)
 
 					-- Write object reference ID.
 				l_ser.write_compressed_natural_32 (l_object_indexes.index (l_obj))
@@ -584,14 +580,14 @@ feature {NONE} -- Implementation
 				end
 
 			when {REFLECTOR_CONSTANTS}.real_32_type then
-				if attached {SPECIAL [REAL]} an_object as l_spec_real_32 then
+				if attached {SPECIAL [REAL_32]} an_object as l_spec_real_32 then
 					encode_special_real_32 (l_spec_real_32)
 				else
 					check l_spec_real_32_not_void: False end
 				end
 
 			when {REFLECTOR_CONSTANTS}.real_64_type then
-				if attached {SPECIAL [DOUBLE]} an_object as l_spec_real_64 then
+				if attached {SPECIAL [REAL_64]} an_object as l_spec_real_64 then
 					encode_special_real_64 (l_spec_real_64)
 				else
 					check l_spec_real_64_not_void: False end
@@ -836,7 +832,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	frozen encode_special_real_32 (a_spec: SPECIAL [REAL])
+	frozen encode_special_real_32 (a_spec: SPECIAL [REAL_32])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -856,7 +852,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	frozen encode_special_real_64 (a_spec: SPECIAL [DOUBLE])
+	frozen encode_special_real_64 (a_spec: SPECIAL [REAL_64])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -910,7 +906,7 @@ feature {NONE} -- Implementation
 			l_ser := serializer
 			nb := a_spec.count
 			l_ser.write_compressed_integer_32 (nb)
-			
+
 			if version >= {SED_VERSIONS}.version_7_3 then
 					-- Check if there are any references with copy semantics
 				from
@@ -974,7 +970,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,0 +1,10 @@
+test_name 	 targeted-unqualified-once-function
+test_description An unqualified once function call should be treated as a qualified one because its result can be later used as a target of a call. See also more sophisticated examples with expanded classes and indirect calls to a once function in test#attach125 and test#attach126.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VEVI
+
+test_end

@@ -1,10 +1,12 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Example of a lexical analyzer based on the Eiffel syntax.
--- The analyzer itself is found in the file ``eiffel_lex'', which
--- is created according to the file  ``eiffel_token'' if not
--- previously built and stored.
+	description: "[
+			Example of a lexical analyzer based on the Eiffel syntax.
+			The analyzer itself is found in the file ``eiffel_lex'', which
+			is created according to the file  ``eiffel_token'' if not
+			previously built and stored.
+		]"
 
 class APPLICATION
 
@@ -12,10 +14,9 @@ inherit
 	ARGUMENTS
 
 create
-
 	make
 
-feature
+feature -- Initialization
 
 	make
 			-- Create a lexical analyser for Eiffel if none,
@@ -24,12 +25,13 @@ feature
 		local
 			file_name: STRING;
 			l_scanner: EIFFEL_SCAN
+			ut: FILE_UTILITIES
 		do
 			if argument_count < 1 or else argument (1).is_empty then
 				io.error.putstring ("Usage: eiffel_scan eiffel_class_file.e%N")
 			else
-				file_name := argument (1);
-				if (create {RAW_FILE}.make (file_name)).exists then
+				file_name := argument (1)
+				if ut.file_exists (file_name) then
 					create l_scanner.make
 					check l_scanner.initialized end
 					l_scanner.analyze (file_name)

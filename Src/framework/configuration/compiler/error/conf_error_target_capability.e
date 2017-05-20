@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Error: Capability target option is not compatible with capabilty of extending target."
 
 class CONF_ERROR_TARGET_CAPABILITY
@@ -18,17 +18,17 @@ feature {NONE} -- Creation
 	make (parent, target: CONF_TARGET; parent_value, target_value, capability: READABLE_STRING_GENERAL)
 			-- Initialize error with for a parent `parent' that has capability value `parent_value'
 			-- not satisfying the capability `capability' of target `target' with value `target_value'.
-		local
-			parent_system: READABLE_STRING_GENERAL
-			target_system: READABLE_STRING_GENERAL
 		do
-			if attached parent.system as s then
-				parent_system := s.name
-			end
-			if attached target.system as s then
-				target_system := s.name
-			end
-			text := conf_interface_names.e_incompatible_target_capability (capability, parent_value, parent.name, parent_system, target_value, target.name, target_system)
+			text := conf_interface_names.e_incompatible_target_capability
+				(capability,
+				parent_value,
+				parent.name,
+				parent.system.name,
+				parent.system.file_name,
+				target_value,
+				target.name,
+				target.system.name,
+				target.system.file_name)
 		end
 
 feature -- Access

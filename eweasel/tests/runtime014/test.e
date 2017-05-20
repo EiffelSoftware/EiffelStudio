@@ -14,12 +14,16 @@ feature {NONE} -- Initialization
 			dll: WEL_DLL
 			str: C_STRING
 			ptr: POINTER
+			err: INTEGER
 		do
 			create dll.make("test.dll")
 			create str.make ("test")
 			ptr := load_api (dll.item, str.item)
+			err := get_last_error
 			if ptr = default_pointer then
-				get_last_error.do_nothing
+				io.put_string ("Failed to get a proc address. Error code: ")
+				io.put_integer (err)
+				io.put_new_line
 			else
 				$BEFORE_DLL_CALL
 				call(ptr)

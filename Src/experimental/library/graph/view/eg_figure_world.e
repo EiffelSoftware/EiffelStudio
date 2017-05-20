@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			real_grid_y := default_grid_y
 		end
 
-	make_with_model (a_model: like model)
+	make_with_model (a_model: attached like model)
 			-- Create a view for `a_model' using EG_SIMPLE_FACTORY.
 		require
 			a_model_not_void: a_model /= Void
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			set: model = a_model
 		end
 
-	make_with_model_and_factory (a_model: like model; a_factory: like factory)
+	make_with_model_and_factory (a_model: attached like model; a_factory: attached like factory)
 			-- Create a view for `a_model' using `a_factory'.
 		require
 			a_model_not_void: a_model /= Void
@@ -123,13 +123,15 @@ feature {NONE} -- Initialization
 			end
 
 			-- create new views when required
-			attached_model.node_add_actions.extend (agent add_node)
-			attached_model.link_add_actions.extend (agent add_link)
-			attached_model.cluster_add_actions.extend (agent add_cluster)
+			check model_set: model = a_model end
 
-			attached_model.link_remove_actions.extend (agent remove_link)
-			attached_model.node_remove_actions.extend (agent remove_node)
-			attached_model.cluster_remove_actions.extend (agent remove_cluster)
+			a_model.node_add_actions.extend (agent add_node)
+			a_model.link_add_actions.extend (agent add_link)
+			a_model.cluster_add_actions.extend (agent add_cluster)
+
+			a_model.link_remove_actions.extend (agent remove_link)
+			a_model.node_remove_actions.extend (agent remove_node)
+			a_model.cluster_remove_actions.extend (agent remove_cluster)
 
 			enable_grid
 		ensure
@@ -207,36 +209,9 @@ feature -- Access
 	model: detachable EG_GRAPH
 			-- Model for `Current'.
 
-	attached_model: EG_GRAPH
-			-- Attached `model'
-		require
-			set: attached model
-		local
-			l_result: like model
-		do
-			l_result := model
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
 
 	factory: detachable EG_FIGURE_FACTORY
 			-- Factory used to create new figures.
-
-	attached_factory: EG_FIGURE_FACTORY
-			-- Attached `factory'
-		require
-			set: attached factory
-		local
-			l_result: like factory
-		do
-			l_result := factory
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
 
 	flat_links: like links
 			-- All links in the view.
@@ -395,17 +370,18 @@ feature -- Element change
 			pointer_button_release_actions.prune_all (agent on_pointer_button_release_on_world)
 			pointer_motion_actions.prune_all (agent on_pointer_motion_on_world)
 
-			attached_model.node_add_actions.prune_all (agent add_node)
-			attached_model.link_add_actions.prune_all (agent add_link)
-			attached_model.cluster_add_actions.prune_all (agent add_cluster)
+			if attached model as l_model then
+				l_model.node_add_actions.prune_all (agent add_node)
+				l_model.link_add_actions.prune_all (agent add_link)
+				l_model.cluster_add_actions.prune_all (agent add_cluster)
 
-			attached_model.link_remove_actions.prune_all (agent remove_link)
-			attached_model.node_remove_actions.prune_all (agent remove_node)
-			attached_model.cluster_remove_actions.prune_all (agent remove_cluster)
+				l_model.link_remove_actions.prune_all (agent remove_link)
+				l_model.node_remove_actions.prune_all (agent remove_node)
+				l_model.cluster_remove_actions.prune_all (agent remove_cluster)
+			end
 		end
 
-
-	set_factory (a_factory: like factory)
+	set_factory (a_factory: attached like factory)
 			-- Set `factory' to `a_factory'.
 		require
 			a_factory_not_Void: a_factory /= Void
@@ -454,19 +430,21 @@ feature -- Element change
 			-- `a_node' was added to the model.
 		require
 			a_node_not_void: a_node /= Void
-			model_has_node: attached_model.has_node (a_node)
+			model_has_node: attached model as rl_model and then rl_model.has_node (a_node)
 			not_has_a_node: not has_node_figure (a_node)
 		local
 			node_figure: EG_LINKABLE_FIGURE
 		do
-			node_figure := attached_factory.new_node_figure (a_node)
-			extend (node_figure)
-			root_cluster.extend (node_figure)
-			nodes.extend (node_figure)
-			linkable_add (node_figure)
+			if attached factory as l_factory then
+				node_figure := l_factory.new_node_figure (a_node)
+				extend (node_figure)
+				root_cluster.extend (node_figure)
+				nodes.extend (node_figure)
+				linkable_add (node_figure)
 
-			items_to_figure_lookup_table.put (node_figure, a_node)
-			figure_added (node_figure)
+				items_to_figure_lookup_table.put (node_figure, a_node)
+				figure_added (node_figure)
+			end
 		ensure
 			has_node_figure: has_node_figure (a_node)
 		end
@@ -475,29 +453,32 @@ feature -- Element change
 			-- `a_link' was added to the model.
 		require
 			a_link_not_void: a_link /= Void
-			model_has_link: attached_model.has_link (a_link)
+			model_has_link: attached model as rl_model and then rl_model.has_link (a_link)
 			not_has_a_link: not has_link_figure (a_link)
-			a_link.source /= Void
-			a_link.target /= Void
-			has_source_figure: has_linkable_figure (a_link.source)
-			has_target_figure: has_linkable_figure (a_link.target)
+			link_has_source: attached a_link.source as rl_link_source
+			link_has_target: attached a_link.target as rl_link_target
+			has_source_figure: has_linkable_figure (rl_link_source)
+			has_target_figure: has_linkable_figure (rl_link_target)
 		local
 			link_figure: EG_LINK_FIGURE
 			source, target: detachable EG_LINKABLE_FIGURE
 		do
-			link_figure := attached_factory.new_link_figure (a_link)
-			put_front (link_figure)
-			links.extend (link_figure)
-			if attached {EG_LINKABLE_FIGURE} items_to_figure_lookup_table.item (a_link.source) as l_source then
-				link_figure.set_source (l_source)
-				l_source.add_link (link_figure)
+			if attached factory as l_factory then
+				link_figure := l_factory.new_link_figure (a_link)
+				put_front (link_figure)
+				links.extend (link_figure)
+
+				if attached {EG_LINKABLE_FIGURE} items_to_figure_lookup_table.item (a_link.source) as l_source then
+					link_figure.set_source (l_source)
+					l_source.add_link (link_figure)
+				end
+				if attached {EG_LINKABLE_FIGURE} items_to_figure_lookup_table.item (a_link.target) as l_target then
+					link_figure.set_target (l_target)
+					l_target.add_link (link_figure)
+				end
+				items_to_figure_lookup_table.put (link_figure, a_link)
+				figure_added (link_figure)
 			end
-			if attached {EG_LINKABLE_FIGURE} items_to_figure_lookup_table.item (a_link.target) as l_target then
-				link_figure.set_target (l_target)
-				l_target.add_link (link_figure)
-			end
-			items_to_figure_lookup_table.put (link_figure, a_link)
-			figure_added (link_figure)
 		ensure
 			has_a_link: has_link_figure (a_link)
 		end
@@ -506,34 +487,39 @@ feature -- Element change
 			-- `a_cluster' was added to the model.
 		require
 			a_cluster_not_void: a_cluster /= Void
-			model_has_cluster: attached_model.has_cluster (a_cluster)
+			model_has_cluster: attached model as pl_model and then pl_model.has_cluster (a_cluster)
 			not_has_a_cluster: not has_cluster_figure (a_cluster)
 			a_cluster.flat_linkables.for_all (agent has_linkable_figure)
 		local
 			cluster_figure: EG_CLUSTER_FIGURE
 			l_model: detachable EG_CLUSTER
 		do
-			cluster_figure := attached_factory.new_cluster_figure (a_cluster)
-			extend (cluster_figure)
-			root_cluster.extend (cluster_figure)
-			linkable_add (cluster_figure)
-			clusters.extend (cluster_figure)
+			if attached factory as l_factory then
+				cluster_figure := l_factory.new_cluster_figure (a_cluster)
+				extend (cluster_figure)
+				root_cluster.extend (cluster_figure)
+				linkable_add (cluster_figure)
+				clusters.extend (cluster_figure)
 
-			from
-				a_cluster.linkables.start
-			until
-				a_cluster.linkables.after
-			loop
-				l_model := cluster_figure.model
-				check l_model /= Void end -- FIXME: Implied by ...?				
-				l_model.linkable_add_actions.call ([a_cluster.linkables.item])
-				a_cluster.linkables.forth
+				from
+					a_cluster.linkables.start
+				until
+					a_cluster.linkables.after
+				loop
+					l_model := cluster_figure.model
+					if l_model /= Void then
+						l_model.linkable_add_actions.call ([a_cluster.linkables.item])
+					else
+						check has_model: False end
+					end
+					a_cluster.linkables.forth
+				end
+
+				cluster_figure.request_update
+
+				items_to_figure_lookup_table.put (cluster_figure, a_cluster)
+				figure_added (cluster_figure)
 			end
-
-			cluster_figure.request_update
-
-			items_to_figure_lookup_table.put (cluster_figure, a_cluster)
-			figure_added (cluster_figure)
 		ensure
 			has_cluster: has_cluster_figure (a_cluster)
 		end
@@ -850,21 +836,23 @@ feature -- Save/Restore
 					l_cursor.after
 				loop
 					if
-						attached {like xml_element} l_cursor.item as l_item
-						and then attached {EG_ITEM} attached_factory.model_from_xml (l_item) as eg_item
+						attached {like xml_element} l_cursor.item as l_item	and then
+						attached factory as l_factory and then
+						attached {EG_ITEM} l_factory.model_from_xml (l_item) as eg_item and then
+						attached model as l_model
 					then
 
 						if attached {EG_CLUSTER} eg_item as eg_cluster then
-							if not attached_model.has_cluster (eg_cluster) then
-								attached_model.add_cluster (eg_cluster)
+							if not l_model.has_cluster (eg_cluster) then
+								l_model.add_cluster (eg_cluster)
 							end
 						elseif attached {EG_NODE} eg_item as eg_node then
-							if not attached_model.has_node (eg_node) then
-								attached_model.add_node (eg_node)
+							if not l_model.has_node (eg_node) then
+								l_model.add_node (eg_node)
 							end
 						elseif attached {EG_LINK} eg_item as eg_link then
-							if not attached_model.has_link (eg_link) then
-								attached_model.add_link (eg_link)
+							if not l_model.has_link (eg_link) then
+								l_model.add_link (eg_link)
 							end
 						else
 							check
@@ -1076,8 +1064,11 @@ feature {NONE} -- Implementation
 			if button = 1 and then not figure_was_selected and then ev_application.ctrl_pressed and then is_multiple_selection_enabled then
 				if is_multiselection_mode then
 					l_rect := multi_select_rectangle
-					check l_rect /= Void end -- Implied by `is_multiselection_mode'
-					prune_all (l_rect)
+					if l_rect /= Void then
+						prune_all (l_rect)
+					else
+						check is_multiselection_mode: False end
+					end
 				end
 				create l_rect.make_with_positions (ax, ay, ax, ay)
 				multi_select_rectangle := l_rect
@@ -1107,29 +1098,34 @@ feature {NONE} -- Implementation
 		do
 			if is_multiselection_mode then
 				l_rect := multi_select_rectangle
-				check l_rect /= Void end -- Implied by `is_multiselection_mode'
-				l_rect.set_point_b_position (ax, ay)
-				l_bbox := l_rect.bounding_box
+				if l_rect /= Void then
+					l_rect.set_point_b_position (ax, ay)
+					l_bbox := l_rect.bounding_box
+				else
+					check is_multiselection_mode: False end
+				end
 				create l_tmp_bbox
 				if not ev_application.ctrl_pressed then
 					deselect_all
 				end
-				from
-					nodes.start
-				until
-					nodes.after
-				loop
-					if nodes.item.is_show_requested then
-						nodes.item.update_rectangle_to_bounding_box (l_tmp_bbox)
-						if l_tmp_bbox.intersects (l_bbox) then
-							if not nodes.item.is_selected then
-								selected_figures.extend (nodes.item)
-								set_figure_selection_state (nodes.item, True)
-								figure_was_selected := True
+				if l_bbox /= Void then
+					from
+						nodes.start
+					until
+						nodes.after
+					loop
+						if nodes.item.is_show_requested then
+							nodes.item.update_rectangle_to_bounding_box (l_tmp_bbox)
+							if l_tmp_bbox.intersects (l_bbox) then
+								if not nodes.item.is_selected then
+									selected_figures.extend (nodes.item)
+									set_figure_selection_state (nodes.item, True)
+									figure_was_selected := True
+								end
 							end
 						end
+						nodes.forth
 					end
-					nodes.forth
 				end
 			end
 		end
@@ -1141,8 +1137,11 @@ feature {NONE} -- Implementation
 		do
 			if is_multiselection_mode then
 				l_rect := multi_select_rectangle
-				check l_rect /= Void end -- Implied by `is_multiselection_mode'
-				prune_all (l_rect)
+				if l_rect /= Void then
+					prune_all (l_rect)
+				else
+					check is_multiselection_mode: False end
+				end
 				full_redraw
 				is_multiselection_mode := False
 				disable_capture
@@ -1224,7 +1223,7 @@ invariant
 	selected_figures_not_void: selected_figures /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

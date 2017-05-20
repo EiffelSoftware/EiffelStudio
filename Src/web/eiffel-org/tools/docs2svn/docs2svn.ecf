@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="docs2svn" uuid="F5ABBA44-D6CE-402F-BE34-79977C25CD77">
+	<target name="docs2svn">
+		<root class="DOCS2SVN" feature="make"/>
+		<option is_obsolete_routine_type="true">
+		</option>
+		<setting name="console_application" value="true"/>
+		<capability>
+			<concurrency support="none" use="thread"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
+		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
+		<library name="svn" location="$ISE_LIBRARY\contrib\library\svn\svn.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="wikidocs" location="..\..\library\wikidocs\wikidocs.ecf" readonly="false"/>
+		<library name="wikitext" location="$ISE_LIBRARY\contrib\library\text\parser\wikitext\wikitext.ecf" readonly="false" use_application_options="true"/>
+		<cluster name="src" location="src\" recursive="true"/>
+	</target>
+</system>

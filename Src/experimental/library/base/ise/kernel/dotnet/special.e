@@ -1,10 +1,10 @@
 ﻿note
 	description: "[
-		Special objects: homogeneous sequences of values, 
+		Special objects: homogeneous sequences of values,
 		used to represent arrays and strings
-		]"
-	legal: "See notice at end of class."
+	]"
 	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,15 +14,16 @@ frozen class
 inherit
 	ABSTRACT_SPECIAL
 		redefine
-			is_equal,
 			copy,
-			debug_output
+			debug_output,
+			is_equal
 		end
 
 	READABLE_INDEXABLE [T]
 		redefine
+			copy,
 			is_equal,
-			copy
+			new_cursor
 		end
 
 create
@@ -40,7 +41,7 @@ feature {DOTNET_REFLECTOR} -- Initialization
 			create internal_native_array.make (n)
 		ensure
 			capacity_set: capacity = n
-			area_allocated: count = 0
+			count_set: count = 0
 		end
 
 feature {NONE} -- Initialization
@@ -79,14 +80,14 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	item alias "[]" (i: INTEGER): T assign put
-			-- Item at `i'-th position
+			-- Item at `i'-th position.
 			-- (indices begin at 0)
 		do
 			Result := internal_native_array.item (i)
 		end
 
 	at alias "@" (i: INTEGER): T
-			-- Item at `i'-th position
+			-- Item at `i'-th position.
 			-- (indices begin at 0)
 		require
 			valid_index: valid_index (i)
@@ -119,10 +120,10 @@ feature -- Access
 		end
 
 	item_address (i: INTEGER): POINTER
-			-- Address of element at position `i'
+			-- Address of element at position `i'.
 		require
 			not_dotnet: not {PLATFORM}.is_dotnet
-			index_big_enough: i >= 0
+			index_large_enough: i >= 0
 			index_small_enough: i < count
 		do
 		ensure
@@ -130,7 +131,7 @@ feature -- Access
 		end
 
 	base_address: POINTER
-			-- Address of element at position `0'
+			-- Address of element at position `0'.
 		require
 			not_dotnet: not {PLATFORM}.is_dotnet
 		do
@@ -139,7 +140,7 @@ feature -- Access
 		end
 
 	native_array: NATIVE_ARRAY [T]
-			-- Only for compatibility with .NET
+			-- Only for compatibility with .NET.
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
 		do
@@ -156,22 +157,28 @@ feature -- Access
 			to_array_upper_set: Result.upper = count
 		end
 
+	new_cursor: SPECIAL_ITERATION_CURSOR [T]
+			-- <Precursor>
+		do
+			create Result.make (Current)
+		end
+
 feature -- Measurement
 
 	lower: INTEGER = 0
-			-- Minimum index of Current
+			-- Minimum index of Current.
 
 	upper: INTEGER
-			-- Maximum index of Current
+			-- Maximum index of Current.
 		do
 			Result := count - 1
 		end
 
 	count: INTEGER
-			-- Count of special area
+			-- Count of special area.
 
 	capacity: INTEGER
-			-- Count of special area
+			-- Capacity of special area.
 		do
 			Result := internal_native_array.count
 		end
@@ -232,13 +239,13 @@ feature -- Status report
 				end
 			end
 		ensure
-			valid_on_empty_area: (n = 0) implies Result
+			valid_on_empty_area: n = 0 implies Result
 		end
 
 	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within the bounds of Current?
 		do
-			Result := (0 <= i) and (i < count)
+			Result := 0 <= i and i < count
 		end
 
 feature -- Comparison
@@ -249,13 +256,13 @@ feature -- Comparison
 		local
 			l_other_count: INTEGER
 		do
-			if other /= Current then
+			if other = Current then
+				Result := True
+			else
 				l_other_count := other.count
 				if count = l_other_count then
 					Result := same_items (other, 0, 0, l_other_count)
 				end
-			else
-				Result := True
 			end
 		end
 
@@ -265,7 +272,8 @@ feature -- Element change
 			-- Replace `i'-th item by `v'.
 			-- (Indices begin at 0.)
 		require
-			valid_index: valid_index (i)
+			index_large_enough: i >= 0
+			index_small_enough: i < count
 		do
 			internal_native_array.put (i, v)
 		ensure
@@ -279,7 +287,7 @@ feature -- Element change
 			-- otherwise replace `i'-th item by `v'.
 			-- (Indices begin at 0.)
 		require
-			index_big_enough: i >= 0
+			index_large_enough: i >= 0
 			index_small_enough: i <= count
 			not_full: i = count implies count < capacity
 		do
@@ -549,7 +557,7 @@ feature -- Resizing
 		end
 
 	resized_area (n: INTEGER): like Current
-			-- Create a copy of Current with a count of `n'
+			-- A copy of Current with a count of `n'.
 		require
 			n_non_negative: n >= 0
 		do
@@ -586,7 +594,7 @@ feature -- Resizing
 
 	aliased_resized_area (n: INTEGER): like Current
 			-- Try to resize `Current' with a count of `n', if not
-			-- possible a new copy
+			-- possible a new copy.
 		require
 			n_non_negative: n >= 0
 		do
@@ -653,7 +661,7 @@ feature -- Removal
 	clear_all
 			-- Reset all items to default values.
 		obsolete
-			"Because of the new precondition, it is recommended to use `fill_with' instead."
+			"Because of the new precondition, it is recommended to use `fill_with' instead. [2017-05-31]"
 		require
 			has_default: ({T}).has_default
 		do
@@ -824,12 +832,12 @@ feature {SPECIAL} -- Implementation: Access
 			-- Access to memory location.
 
 invariant
-	count_less_than_capacity: count <= capacity
+	consistent_count: count = upper - lower + 1
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library: "EiffelBase: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

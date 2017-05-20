@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EiffelVision toolbar, mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -96,7 +96,7 @@ create
 
 feature -- Initialize
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			assign_interface (an_interface)
@@ -1149,7 +1149,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			-- Called when `w' has been added to `Current'.
 		require
 			w_not_void: w /= Void
-			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
+			w_correct_type: attached {EV_TOOL_BAR_ITEM} w
 		local
 			r: detachable EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
@@ -1166,7 +1166,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			-- Called when `w' has been added to `Current'.
 		require
 			w_not_void: w /= Void
-			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
+			w_correct_type: attached {EV_TOOL_BAR_ITEM} w
 		local
 			button_imp: detachable EV_TOOL_BAR_ITEM_IMP
 		do
@@ -1183,7 +1183,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			-- Called when `w' has been removed from `Current'.
 		require
 			w_not_void: w /= Void
-			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
+			w_correct_type: attached {EV_TOOL_BAR_ITEM} w
 		local
 			r: detachable EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
@@ -1198,7 +1198,7 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 			-- Called when `w' has been added to `Current'.
 		require
 			item_not_void: w /= Void
-			w_correct_type: (({EV_TOOL_BAR_ITEM}) #? w) /= Void
+			w_correct_type: attached {EV_TOOL_BAR_ITEM} w
 		local
 			t: detachable EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 		do
@@ -1318,7 +1318,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TOOL_BAR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1328,4 +1328,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_TOOL_BAR_IMP
+end

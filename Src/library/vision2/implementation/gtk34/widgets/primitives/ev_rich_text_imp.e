@@ -55,24 +55,6 @@ feature {NONE} -- Initialization
 			real_signal_connect (text_buffer, "mark_set", agent (app_implementation.gtk_marshal).text_buffer_mark_set_intermediary (object_id, ?, ?), Void)
 		end
 
-	create_caret_move_actions: EV_INTEGER_ACTION_SEQUENCE
-			-- Create a caret move action sequence.
-		do
-			create Result
-		end
-
-	create_selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a selection change action sequence.
-		do
-			create Result
-		end
-
-	create_file_access_actions: EV_INTEGER_ACTION_SEQUENCE
-			-- Create a file access action sequence.
-		do
-			create Result
-		end
-
 feature {NONE} -- Implementation
 
 	next_change_of_character (current_pos: INTEGER; a_text_length: INTEGER): INTEGER

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Assistants that manage a SD_TOOL_BAR_ZONE size and position issues."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,24 +16,15 @@ create
 
 feature {NONE} -- Initlization
 
-	make
+	make (a_tool_bar_zone: SD_TOOL_BAR_ZONE)
 			-- Creation method
 		do
+			zone := a_tool_bar_zone
 			create internal_hidden_items.make (1)
 			create last_state.make
 		end
 
 feature -- Command
-
-	set_tool_bar_zone (a_tool_bar_zone: SD_TOOL_BAR_ZONE)
-			-- Set `zone' with `a_tool_bar_zone'
-		require
-			not_void: a_tool_bar_zone /= Void
-		do
-			zone := a_tool_bar_zone
-		ensure
-			set: zone = a_tool_bar_zone
-		end
 
 	reduce_size (a_size: INTEGER): INTEGER
 			-- Reduce `a_size', `Result' is how many size actually reduced
@@ -43,31 +34,33 @@ feature -- Command
 			l_items: LIST [SD_TOOL_BAR_ITEM]
 			l_item: SD_TOOL_BAR_ITEM
 		do
-			l_items := attached_zone.content.items_visible
-			from
-				l_items.finish
-			until
-				-- At least show one button
-				l_items.index <= 1 or Result >= a_size
-			loop
-				l_item := l_items.item
-				if attached_zone.has (l_item) then
-					internal_hidden_items.extend (l_item)
-					if not attached_zone.is_vertical then
-						Result := Result + l_item.width
-					else
-						Result := Result + l_item.rectangle.height
-					end
-					attached_zone.prune (l_item)
+			if attached attached_zone.content as c then
+				l_items := c.items_visible
+				from
+					l_items.finish
+				until
+					-- At least show one button
+					l_items.index <= 1 or Result >= a_size
+				loop
+					l_item := l_items.item
+					if attached_zone.has (l_item) then
+						internal_hidden_items.extend (l_item)
+						if not attached_zone.is_vertical then
+							Result := Result + l_item.width
+						else
+							Result := Result + l_item.rectangle.height
+						end
+						attached_zone.prune (l_item)
 
-					if attached {SD_TOOL_BAR_SEPARATOR} l_items.i_th (l_items.index - 1) as l_separator then
-						check has: attached_zone.has (l_separator) end
-						internal_hidden_items.extend (l_separator)
-						Result := Result + l_separator.width
-						attached_zone.prune (l_separator)
+						if attached {SD_TOOL_BAR_SEPARATOR} l_items.i_th (l_items.index - 1) as l_separator then
+							check has: attached_zone.has (l_separator) end
+							internal_hidden_items.extend (l_separator)
+							Result := Result + l_separator.width
+							attached_zone.prune (l_separator)
+						end
 					end
+					l_items.back
 				end
-				l_items.back
 			end
 
 			update_indicator
@@ -81,14 +74,12 @@ feature -- Command
 		local
 			l_snapshot: like internal_hidden_items
 			l_snapshot_item: SD_TOOL_BAR_ITEM
-			l_old_size: INTEGER
 			l_stop: BOOLEAN
 			l_last_result: INTEGER
 			l_item_after: detachable SD_TOOL_BAR_ITEM
 		do
 			if internal_hidden_items.count /= 0 then
 				from
-					l_old_size := attached_zone.size
 					l_snapshot := internal_hidden_items.twin
 					l_snapshot.finish
 				until
@@ -199,32 +190,21 @@ feature -- Command
 			-- Handle tail indicator selected event
 		local
 			l_dialog: SD_TOOL_BAR_HIDDEN_ITEM_DIALOG
-			l_all_hiden_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-
 			l_helper: SD_POSITION_HELPER
-			l_indicator_size: INTEGER
-
 		do
-			if attached attached_zone.row as l_row then
-				l_all_hiden_items := l_row.hidden_items
-			else
-				check False end -- Implied by end user is pressing on tool bar tail indicator, so tool bar is displayed on screen
+			if
+				attached attached_zone.row as l_row and then
+				attached l_row.hidden_items as l_all_hiden_items
+			then
+				create l_dialog.make (l_all_hiden_items, attached_zone)
+				create l_helper.make
+				if not attached_zone.is_vertical then
+					l_helper.set_tool_bar_hidden_dialog_vertical_position (l_dialog, attached_zone.hidden_dialog_position.x, attached_zone.hidden_dialog_position.y, attached_zone.tail_indicator.rectangle.height)
+				else
+					l_helper.set_tool_bar_hidden_dialog_position (l_dialog, attached_zone.hidden_dialog_position.x, attached_zone.hidden_dialog_position.y, attached_zone.tail_indicator.width)
+				end
+				l_dialog.show
 			end
-			check l_all_hiden_items /= Void end -- Implied by previous if clause
-			create l_dialog.make (l_all_hiden_items, attached_zone)
-			create l_helper.make
-			if attached_zone.is_vertical then
-				l_indicator_size := attached_zone.tail_indicator.rectangle.height
-			else
-				l_indicator_size := attached_zone.tail_indicator.width
-			end
-			if not attached_zone.is_vertical then
-				l_helper.set_tool_bar_hidden_dialog_position (l_dialog, attached_zone.hidden_dialog_position.x, attached_zone.hidden_dialog_position.y, attached_zone.tail_indicator.width)
-			else
-				l_helper.set_tool_bar_hidden_dialog_vertical_position (l_dialog, attached_zone.hidden_dialog_position.x, attached_zone.hidden_dialog_position.y, attached_zone.tail_indicator.rectangle.height)
-			end
-
-			l_dialog.show
 		end
 
 	dock_last_state
@@ -322,8 +302,11 @@ feature -- Command
 			attached_zone.float (last_state.screen_x, last_state.screen_y, True)
 			if last_state.floating_group_info /= Void then
 				l_group_info := last_state.floating_group_info
-				if l_group_info /= Void then
-					attached_zone.attached_floating_tool_bar.assistant.position_groups (l_group_info)
+				if
+					attached l_group_info and then
+					attached attached_zone.floating_tool_bar as b
+				then
+					b.assistant.position_groups (l_group_info)
 				end
 			end
 		ensure
@@ -340,74 +323,72 @@ feature -- Command
 			l_all_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_content_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_name: READABLE_STRING_GENERAL
-			l_data: detachable ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; displayed: BOOLEAN]]
-			l_content: detachable SD_TOOL_BAR_CONTENT
 			l_separator: SD_TOOL_BAR_SEPARATOR
 		do
-			l_data := last_state.items_layout
-			if l_data /= Void then
-				from
-					create l_separator.make
-					l_all_items :=  attached_zone.content.items.twin
-					l_content := attached_zone.content
-					l_content.wipe_out
-					l_data.start
-				until
-					l_data.after
-				loop
-					l_name := l_data.item.name
-					check not_void: l_name /= Void end
-					if l_name.same_string (l_separator.name) then
-						-- First check if it's a separator
-						l_content.items.extend (l_separator)
+			if attached last_state.items_layout as l_data then
+				if attached attached_zone.content as l_content then
+					from
 						create l_separator.make
-					else
-						from
-							l_item := Void
-							l_all_items.start
-						until
-							l_all_items.after or l_item /= Void
-						loop
-							check is_items_name_unique (l_name) end
-							if l_all_items.item.name.same_string_general (l_name) then
-								l_item := l_all_items.item
-								if not l_data.item.displayed then
-									l_item.disable_displayed
-								else
-									l_item.enable_displayed
+						l_all_items :=  l_content.items.twin
+						l_content.wipe_out
+						l_data.start
+					until
+						l_data.after
+					loop
+						l_name := l_data.item.name
+						check not_void: l_name /= Void end
+						if l_name.same_string (l_separator.name) then
+							-- First check if it's a separator
+							l_content.items.extend (l_separator)
+							create l_separator.make
+						else
+							from
+								l_item := Void
+								l_all_items.start
+							until
+								l_all_items.after or l_item /= Void
+							loop
+								check is_items_name_unique (l_name) end
+								if l_all_items.item.name.same_string_general (l_name) then
+									l_item := l_all_items.item
+									if not l_data.item.is_displayed then
+										l_item.disable_displayed
+									else
+										l_item.enable_displayed
+									end
 								end
+								l_all_items.forth
 							end
-							l_all_items.forth
+							if l_item /= Void then
+									-- l_item may be void in the case of changing tools, which
+									-- affects the layout.
+								l_content.items.extend (l_item)
+							end
 						end
-						if l_item /= Void then
-								-- l_item may be void in the case of changing tools, which
-								-- affects the layout.
-							l_content.items.extend (l_item)
-						end
+						l_data.forth
 					end
-					l_data.forth
-				end
-			end
-			-- After restored items data, content items should not less than original state items' count (state before calling this feature)
-			-- See bug#13972
-			-- SD_TOOL_BAR_SEPARATOR is ignored
-			from
-				check l_content /= Void end -- Implied by previous loop
-				l_content_items := l_content.items
-				check l_all_items /= Void end -- Implied by previous loop
-				l_all_items.start
-			until
-				l_all_items.after
-			loop
-				l_item := l_all_items.item
+						-- After restored items data, content items should not less than original state items' count (state before calling this feature)
+						-- See bug#13972
+						-- SD_TOOL_BAR_SEPARATOR is ignored
+					from
+						l_content_items := l_content.items
+						l_all_items.start
+					until
+						l_all_items.after
+					loop
+						l_item := l_all_items.item
 
-				if (not l_content_items.has (l_item)) and (not (attached {SD_TOOL_BAR_SEPARATOR} l_item)) then
-					l_item.disable_displayed
-					l_content_items.extend (l_item)
+						if (not l_content_items.has (l_item)) and (not (attached {SD_TOOL_BAR_SEPARATOR} l_item)) then
+							l_item.disable_displayed
+							l_content_items.extend (l_item)
+						end
+						l_all_items.forth
+					end
+				else
+					check from_precondition: False end
 				end
-				l_all_items.forth
+					-- Maybe we should check items count (ignore separator) should equal original items count
 			end
-			-- Maybe we should check items count (ignore separator) should equal original items count
 
 			refresh_items_visible
 		end
@@ -419,21 +400,23 @@ feature -- Command
 			l_data: ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; displayed: BOOLEAN]]
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
-			from
-				if a_items /= Void then
-					l_items := a_items
-				else
-					l_items := attached_zone.content.items
-				end
-				create l_data.make (l_items.count)
-				l_items.start
-			until
-				l_items.after
-			loop
-				l_data.extend ([l_items.item.name, l_items.item.is_displayed])
-				l_items.forth
+			if attached a_items then
+				l_items := a_items
+			elseif attached zone.content as c then
+				l_items := c.items
 			end
-			last_state.set_items_layout (l_data)
+			if attached l_items then
+				from
+					create l_data.make (l_items.count)
+					l_items.start
+				until
+					l_items.after
+				loop
+					l_data.extend ([l_items.item.name, l_items.item.is_displayed])
+					l_items.forth
+				end
+				last_state.set_items_layout (l_data)
+			end
 		ensure
 			saved: last_state.items_layout /= Void
 		end
@@ -443,16 +426,16 @@ feature -- Command
 		local
 			l_content: SD_TOOL_BAR_CONTENT
 		do
-			l_content := attached_zone.content
-			attached_zone.wipe_out
+			zone.wipe_out
+			l_content := zone.internal_content
 			l_content.clear
-			attached_zone.extend (l_content)
+			zone.replace (l_content)
 			update_indicator
-			if attached_zone.row /= Void then
-				attached_zone.docking_manager.command.resize (True)
+			if zone.row /= Void then
+				zone.docking_manager.command.resize (True)
 			end
-			if attached_zone.is_floating then
-				attached_zone.attached_floating_tool_bar.regroup_after_customize
+			if attached zone.floating_tool_bar as b then
+				b.regroup_after_customize
 			end
 		end
 
@@ -477,27 +460,29 @@ feature -- Query
 			l_item: SD_TOOL_BAR_ITEM
 			l_zone: like attached_zone
 		do
-			l_zone := attached_zone
-			l_items := l_zone.content.items_visible
-			from
-				l_items.finish
-			until
-				-- At least show one button
-				l_items.index <= 1 or Result >= a_size
-			loop
-				l_item := l_items.item
-				if l_zone.has (l_item) then
-					if not l_zone.is_vertical then
-						Result := Result + l_item.width
-					else
-						Result := Result + l_item.rectangle.height
+			l_zone := zone
+			if attached l_zone.content as c then
+				l_items := c.items_visible
+				from
+					l_items.finish
+				until
+					-- At least show one button
+					l_items.index <= 1 or Result >= a_size
+				loop
+					l_item := l_items.item
+					if l_zone.has (l_item) then
+						if not l_zone.is_vertical then
+							Result := Result + l_item.width
+						else
+							Result := Result + l_item.rectangle.height
+						end
+						if attached {SD_TOOL_BAR_SEPARATOR} l_items.i_th (l_items.index - 1) as l_separator then
+							check has: l_zone.has (l_separator) end
+							Result := Result + l_separator.width
+						end
 					end
-					if attached {SD_TOOL_BAR_SEPARATOR} l_items.i_th (l_items.index - 1) as l_separator then
-						check has: l_zone.has (l_separator) end
-						Result := Result + l_separator.width
-					end
+					l_items.back
 				end
-				l_items.back
 			end
 		end
 
@@ -508,14 +493,12 @@ feature -- Query
 		local
 			l_snapshot: like internal_hidden_items
 			l_snapshot_item: SD_TOOL_BAR_ITEM
-			l_old_size: INTEGER
 			l_stop: BOOLEAN
 			l_last_result: INTEGER
 			l_item_after: detachable SD_TOOL_BAR_ITEM
 		do
 			if internal_hidden_items.count /= 0 then
 				from
-					l_old_size := attached_zone.size
 					l_snapshot := internal_hidden_items.twin
 					l_snapshot.finish
 				until
@@ -562,46 +545,44 @@ feature -- Query
 			Result := internal_hidden_items.twin
 		end
 
-	groups: ARRAYED_LIST [ARRAYED_LIST [SD_TOOL_BAR_ITEM]]
-			-- Groups in `internal_tool_bar'
+	groups: detachable ARRAYED_LIST [ARRAYED_LIST [SD_TOOL_BAR_ITEM]]
+			-- Groups in `internal_tool_bar'.
 		local
 			l_items: LIST [SD_TOOL_BAR_ITEM]
 			l_group: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
-			l_items := attached_zone.content.items_visible
-			from
-				create Result.make (1)
-				create l_group.make (1)
-				Result.extend (l_group)
-				l_items.start
-			until
-				l_items.after
-			loop
-				if attached {SD_TOOL_BAR_SEPARATOR} l_items.item then
+			if attached zone.content as c then
+				l_items := c.items_visible
+				from
+					create Result.make (1)
 					create l_group.make (1)
 					Result.extend (l_group)
-				else
-					l_group.extend (l_items.item)
+					l_items.start
+				until
+					l_items.after
+				loop
+					if attached {SD_TOOL_BAR_SEPARATOR} l_items.item then
+						create l_group.make (1)
+						Result.extend (l_group)
+					else
+						l_group.extend (l_items.item)
+					end
+					l_items.forth
 				end
-				l_items.forth
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
-	zone: detachable SD_TOOL_BAR_ZONE
-			-- Tool bar which size issues Current managed
+	zone: SD_TOOL_BAR_ZONE
+			-- Tool bar which size issues Current manages.
 
 	attached_zone: attached like zone
 			-- Attached `zone'
 		require
 			set: zone /= Void
-		local
-			l_result: like zone
 		do
-			l_result := zone
-			check l_result /= Void end -- Implied by precondition
-			Result := l_result
+			Result := zone
 		ensure
 			set: Result /= Void
 		end
@@ -617,16 +598,17 @@ feature -- Query
 		local
 			l_items: LIST [SD_TOOL_BAR_ITEM]
 		do
-			from
-				Result := True
-				l_items := attached_zone.content.items.twin
-				l_items.start
-			until
-				l_items.after
-			loop
-				Result := not (l_items.item.name.same_string_general (a_name))
-
-				l_items.forth
+			Result := True
+			if attached zone.content as c then
+				from
+					l_items := c.items.twin
+					l_items.start
+				until
+					l_items.after
+				loop
+					Result := not l_items.item.name.same_string_general (a_name)
+					l_items.forth
+				end
 			end
 		end
 
@@ -668,29 +650,29 @@ feature {NONE} -- Implementation
 	groups_sizes: ARRAYED_LIST [INTEGER]
 			-- Group sizes
 		local
-			l_groups: ARRAYED_LIST [ARRAYED_LIST [SD_TOOL_BAR_ITEM]]
 			l_group: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_size: INTEGER
 		do
 			create Result.make (1)
-			l_groups := groups
-			from
-				l_groups.start
-			until
-				l_groups.after
-			loop
-				l_group := l_groups.item
+			if attached groups as l_groups then
 				from
-					l_group.start
-					l_size := 0
+					l_groups.start
 				until
-					l_group.after
+					l_groups.after
 				loop
-					l_size := l_size + l_group.item.width
-					l_group.forth
+					l_group := l_groups.item
+					from
+						l_group.start
+						l_size := 0
+					until
+						l_group.after
+					loop
+						l_size := l_size + l_group.item.width
+						l_group.forth
+					end
+					Result.extend (l_size)
+					l_groups.forth
 				end
-				Result.extend (l_size)
-				l_groups.forth
 			end
 		end
 
@@ -702,7 +684,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

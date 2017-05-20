@@ -60,6 +60,7 @@ feature -- Execution
 			req: WGI_REQUEST_FROM_TABLE
 			res: detachable WGI_RESPONSE_STREAM
 			rescued: BOOLEAN
+			utf: UTF_CONVERTER
 		do
 			if not rescued then
 				a_input.reset
@@ -68,14 +69,14 @@ feature -- Execution
 				service.execute (req, res)
 				res.push
 			else
-				if attached (create {EXCEPTION_MANAGER}).last_exception as e and then attached e.exception_trace as l_trace then
+				if attached (create {EXCEPTION_MANAGER}).last_exception as e and then attached e.trace as l_trace then
 					if res /= Void then
 						if not res.status_is_set then
 							res.set_status_code ({HTTP_STATUS_CODE}.internal_server_error, Void)
 						end
 						if res.message_writable then
 							res.put_string ("<pre>")
-							res.put_string (l_trace)
+							res.put_string (utf.string_32_to_utf_8_string_8 (l_trace))
 							res.put_string ("</pre>")
 						end
 						res.push
@@ -105,7 +106,7 @@ invariant
 	fcgi_attached: fcgi /= Void
 
 note
-	copyright: "2011-2013, Eiffel Software and others"
+	copyright: "2011-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

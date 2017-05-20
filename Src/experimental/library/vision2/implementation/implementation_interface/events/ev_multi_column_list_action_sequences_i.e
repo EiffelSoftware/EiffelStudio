@@ -16,21 +16,17 @@ feature -- Event handling
 	select_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
 			-- Actions to be performed
 		do
-			if select_actions_internal = Void then
-				select_actions_internal :=
-					 create_select_actions
+			if attached select_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				select_actions_internal := Result
 			end
-			Result := select_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_select_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
-			-- Create a select action sequence.
-		deferred
-		end
 
 	select_actions_internal: detachable EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
 			-- Implementation of once per object `select_actions'.
@@ -44,21 +40,17 @@ feature -- Event handling
 	deselect_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
 			-- Actions to be performed
 		do
-			if deselect_actions_internal = Void then
-				deselect_actions_internal :=
-					 create_deselect_actions
+			if attached deselect_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				deselect_actions_internal := Result
 			end
-			Result := deselect_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_deselect_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
-			-- Create a deselect action sequence.
-		deferred
-		end
 
 	deselect_actions_internal: detachable EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
 			-- Implementation of once per object `deselect_actions'.
@@ -72,21 +64,17 @@ feature -- Event handling
 	column_title_click_actions: EV_COLUMN_ACTION_SEQUENCE
 			-- Actions to be performed
 		do
-			if column_title_click_actions_internal = Void then
-				column_title_click_actions_internal :=
-					 create_column_title_click_actions
+			if attached column_title_click_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				column_title_click_actions_internal := Result
 			end
-			Result := column_title_click_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_column_title_click_actions: EV_COLUMN_ACTION_SEQUENCE
-			-- Create a column_title_click action sequence.
-		deferred
-		end
 
 	column_title_click_actions_internal: detachable EV_COLUMN_ACTION_SEQUENCE
 			-- Implementation of once per object `column_title_click_actions'.
@@ -100,21 +88,17 @@ feature -- Event handling
 	column_resized_actions: EV_COLUMN_ACTION_SEQUENCE
 			-- Actions to be performed
 		do
-			if column_resized_actions_internal = Void then
-				column_resized_actions_internal :=
-					 create_column_resized_actions
+			if attached column_resized_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				column_resized_actions_internal := Result
 			end
-			Result := column_resized_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_column_resized_actions: EV_COLUMN_ACTION_SEQUENCE
-			-- Create a column_resize action sequence.
-		deferred
-		end
 
 	column_resized_actions_internal: detachable EV_COLUMN_ACTION_SEQUENCE
 			-- Implementation of once per object `column_resized_actions'.

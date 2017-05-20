@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="gexace" uuid="A9419CD0-E1C6-4559-A5DB-9B664B50F5E2">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="gexace" uuid="A9419CD0-E1C6-4559-A5DB-9B664B50F5E2">
 	<target name="gexace">
 		<root class="GEXACE" feature="make"/>
-		<option trace="false" profile="false" debug="false" warning="true">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="address_expression" value="false"/>
@@ -20,13 +20,16 @@
 		<setting name="line_generation" value="false"/>
 		<setting name="msil_generation" value="false"/>
 		<setting name="msil_generation_type" value="exe"/>
-		<setting name="multithreaded" value="false"/>
+		<capability>
+			<concurrency support="none" use="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_tools" location="$ISE_LIBRARY\library\gobo\gobo_tools.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
 		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
-		<cluster name="gexace" location="$ISE_LIBRARY\contrib\library\gobo\src\gexace\"/>
+		<cluster name="gexace" location="$ISE_LIBRARY\contrib\library\gobo\tool\gexace\src\"/>
 	</target>
 </system>

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 				BCrypt implements OpenBSD-style Blowfish password hashing using
 				the scheme described in "A Future-Adaptable Password Scheme" by
@@ -135,7 +135,6 @@ feature -- Hash password
 			real_salt: STRING_8
 			l_password, l_salt, l_hashed: SPECIAL [NATURAL_8]
 			rounds, off: INTEGER
-			salt_lenght: INTEGER
 			minor: CHARACTER_8
 			utf: UTF_CONVERTER
 			pwd: STRING_8
@@ -144,8 +143,6 @@ feature -- Hash password
 			l_bcrypt: BCRYPT
 		do
 			rounds := 0
-			off := 0
-			salt_lenght := salt.count
 			if salt [3] = '$' then
 				minor := '%U'
 				off := 3
@@ -162,7 +159,7 @@ feature -- Hash password
 			if minor >= 'a' then
 				pwd.append_character ('%U')
 			end
-			pwd := utf.string_32_to_utf_8_string_8 (password)
+			pwd := password
 			create l_password.make_filled (0, pwd.count)
 			from
 				i := 0
@@ -170,7 +167,7 @@ feature -- Hash password
 			until
 				i = n
 			loop
-				l_password.put ((pwd [i+1].code.as_natural_8),i)
+				l_password.put (pwd [i+1].code.as_natural_8, i)
 				i := i + 1
 			end
 			l_salt := decoded_base64_array (real_salt, bcrypt_salt_len)
@@ -198,7 +195,7 @@ feature -- helper
 		require
 			valid_round_number: is_valid_log_round (a_log_rounds)
 		do
-			Result := ({INTEGER_64} 1) |<< a_log_rounds
+			Result := {INTEGER_64} 1 |<< a_log_rounds
 		end
 
 feature -- Generate Salt
@@ -502,18 +499,18 @@ feature {NONE} -- Implementations
 				i > Blowfish_num_rounds - 2
 			loop
 					-- Feistel substitution on left word
-				n := l_s_boxes [((l |>> 24) & 0xff)]
-				n := n + l_s_boxes [(0x100 | ((l |>> 16) & 0xff))]
-				n := n.bit_xor (l_s_boxes [(0x200 | ((l |>> 8) & 0xff))])
-				n := n + l_s_boxes [(0x300 | (l & 0xff))]
+				n := l_s_boxes [(l |>> 24) & 0xff]
+				n := n + l_s_boxes [0x100 | ((l |>> 16) & 0xff)]
+				n := n.bit_xor (l_s_boxes [0x200 | ((l |>> 8) & 0xff)])
+				n := n + l_s_boxes [0x300 | (l & 0xff)]
 				i := i + 1
 				r := r.bit_xor (n.bit_xor (l_p_array [i]))
 
 					-- Feistel substitution on right word
-				n := l_s_boxes [((r |>> 24) & 0xff)]
-				n := n + l_s_boxes [(0x100 | ((r |>> 16) & 0xff))]
-				n := n.bit_xor (l_s_boxes [(0x200 | ((r |>> 8) & 0xff))])
-				n := n + l_s_boxes [(0x300 | (r & 0xff))]
+				n := l_s_boxes [(r |>> 24) & 0xff]
+				n := n + l_s_boxes [0x100 | ((r |>> 16) & 0xff)]
+				n := n.bit_xor (l_s_boxes [0x200 | ((r |>> 8) & 0xff)])
+				n := n + l_s_boxes [0x300 | (r & 0xff)]
 				i := i + 1
 				l := l.bit_xor (n.bit_xor (l_p_array [i]))
 
@@ -533,19 +530,17 @@ feature {NONE} -- Implementations
 			word: INTEGER
 			off: INTEGER
 		do
-			word := 0
 			off := offp [0]
 			from
 				i := 0
 			until
 				i = 4
 			loop
-				word := (word |<< 8) | (data [off] & 0xff)
+				Result := (Result |<< 8) | (data [off] & 0xff)
 				off := (off + 1) \\ data.count
 				i := i + 1
 			end
 			offp [0] := off
-			Result := word
 		end
 
 	init_key
@@ -724,7 +719,7 @@ feature {BCRYPT} -- Implementation
 				Result [j] := ((cdata [i] |>> 24) & 0xff).to_natural_8
 				Result [j+1] := ((cdata [i] |>> 16) & 0xff).to_natural_8
 				Result [j+2] := ((cdata [i] |>> 8) & 0xff).to_natural_8
-				Result [j+3] := ((cdata [i]) & 0xff).to_natural_8
+				Result [j+3] := (cdata [i] & 0xff).to_natural_8
 				j := j + 4
 				i := i + 1
 			end
@@ -843,7 +838,6 @@ feature -- bcrypt modified version of base64 encoding
 		require
 			valid_lengh: maxolen > 0
 		local
-			l_out: STRING
 			l_off: INTEGER
 			l_len: INTEGER
 			l_olen: INTEGER
@@ -851,9 +845,7 @@ feature -- bcrypt modified version of base64 encoding
 			flag : BOOLEAN
 			res : ARRAYED_LIST [NATURAL_8]
 		do
-
 			create res.make (maxolen)
-			create l_out.make_empty
 			l_off := 0
 			l_len := str.count
 			l_olen := 0
@@ -869,7 +861,7 @@ feature -- bcrypt modified version of base64 encoding
 				if c1 = -1 or else c2 = -1 then
 					flag := True
 				else
-					o := (c1 |<< 2)
+					o := c1 |<< 2
 					o := o | ((c2 & 0x30) |>> 4)
 					res.force (o.to_natural_8)
 					l_olen := l_olen + 1
@@ -881,7 +873,7 @@ feature -- bcrypt modified version of base64 encoding
 						if c3 = -1 then
 							flag := True
 						else
-							o := ((c2 & 0x0f) |<< 4)
+							o := (c2 & 0x0f) |<< 4
 							o := o | ((c3 & 0x3c) |>> 2)
 							res.force (o.to_natural_8)
 							l_olen := l_olen + 1
@@ -890,7 +882,7 @@ feature -- bcrypt modified version of base64 encoding
 							else
 								c4 := char64_at (str ,l_off)
 								l_off := l_off + 1
-								o := (((c3 & 0x03) |<< 6))
+								o := (c3 & 0x03) |<< 6
 								o := o | c4
 								res.force (o.to_natural_8)
 								l_olen := l_olen + 1
@@ -903,7 +895,7 @@ feature -- bcrypt modified version of base64 encoding
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -86,8 +86,11 @@ feature -- Execution
 				r.execute
 			else
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-				f := modules_collection_web_form (r)
 				create s.make_empty
+
+				f := installed_modules_collection_web_form (r)
+				f.append_to_html (r.wsf_theme, s)
+				f := modules_to_install_collection_web_form (r)
 				f.append_to_html (r.wsf_theme, s)
 				r.set_page_title ("Modules")
 				r.set_main_content (s)
@@ -106,7 +109,7 @@ feature -- Execution
 				if l_op.same_string ("Install modules") then
 					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 
-					if attached api.setup.string_8_item ("admin.installation_access") as l_access then
+					if attached api.setup.string_8_item ("administration.installation_access") as l_access then
 						if l_access.is_case_insensitive_equal ("none") then
 							l_denied := True
 						elseif l_access.is_case_insensitive_equal ("permission") then
@@ -119,14 +122,9 @@ feature -- Execution
 						create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
 						r.set_main_content ("You do not have permission to access CMS module installation procedure!")
 					else
-						f := modules_collection_web_form (r)
-						if l_op.same_string ("Install modules") then
-							f.submit_actions.extend (agent on_installation_submit)
-							f.process (r)
-						elseif l_op.same_string ("uninstall") then
-							f.submit_actions.extend (agent on_uninstallation_submit)
-							f.process (r)
-						end
+						f := modules_to_install_collection_web_form (r)
+						f.submit_actions.extend (agent on_installation_submit)
+						f.process (r)
 						if
 							not attached f.last_data as l_data or else
 							not l_data.is_valid
@@ -142,6 +140,31 @@ feature -- Execution
 						end
 					end
 					r.execute
+				elseif l_op.same_string ("Update status") then
+					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+					if api.has_permission ("admin module") then
+						f := installed_modules_collection_web_form (r)
+						f.submit_actions.extend (agent on_update_status_submit)
+						f.process (r)
+						if
+							not attached f.last_data as l_data or else
+							not l_data.is_valid
+						then
+							r.add_error_message ("Error occurred.")
+							create s.make_empty
+							f.append_to_html (r.wsf_theme, s)
+							r.set_page_title ("Modules")
+							r.set_main_content (s)
+						else
+							r.add_notice_message ("Operation on module(s) succeeded.")
+							r.set_redirection (r.location)
+						end
+
+					else
+						create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
+						r.set_main_content ("You do not have permission to administrate CMS modules!")
+					end
+					r.execute
 				else
 					create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
 					r.execute
@@ -151,7 +174,7 @@ feature -- Execution
 			end
 		end
 
-	modules_collection_web_form (a_response: CMS_RESPONSE): CMS_FORM
+	installed_modules_collection_web_form (a_response: CMS_RESPONSE): CMS_FORM
 		local
 			mod: CMS_MODULE
 			f_cb: WSF_FORM_CHECKBOX_INPUT
@@ -160,10 +183,12 @@ feature -- Execution
 			w_item: WSF_WIDGET_TABLE_ITEM
 			w_submit: WSF_FORM_SUBMIT_INPUT
 			w_set: WSF_FORM_FIELD_SET
+			w_hidden: WSF_FORM_HIDDEN_INPUT
 
 			l_mods_to_install: ARRAYED_LIST [CMS_MODULE]
+			l_extra: STRING
 		do
-			create Result.make (a_response.url (a_response.location, Void), "modules_collection")
+			create Result.make (a_response.request_url (Void), "modules_collection")
 			create w_tb.make
 			w_tb.add_css_class ("modules_table")
 			create w_row.make (5)
@@ -179,25 +204,47 @@ feature -- Execution
 
 			create l_mods_to_install.make (0)
 			across
-				a_response.api.setup.modules as ic
+				api.setup.modules as ic
 			loop
 				mod := ic.item
-				if not a_response.api.is_module_installed (mod) then
+				if not api.is_module_installed (mod) then
 					l_mods_to_install.extend (mod)
 				else
+					create l_extra.make_empty
 					create w_row.make (5)
-					create f_cb.make ("module_" + mod.name)
-					f_cb.set_text_value (mod.name)
-					f_cb.set_checked (mod.is_enabled)
-					f_cb.set_is_readonly (True)
-					create w_item.make_with_content (f_cb)
-					w_row.add_item (w_item)
+					if not mod.is_enabled and api.is_module_enabled (mod) then
+						create w_set.make
+
+						create f_cb.make ("disabled_module_status[" + mod.name + "]")
+						f_cb.set_text_value (mod.name)
+						f_cb.set_checked (mod.is_enabled)
+						f_cb.set_checked (True)
+						f_cb.set_is_readonly (True)
+						f_cb.set_disabled (True)
+						w_set.extend (f_cb)
+
+						create w_hidden.make_with_text ("module_status[" + mod.name + "]", mod.name)
+						w_set.extend (w_hidden)
+
+						create w_item.make_with_content (w_set)
+						w_row.add_item (w_item)
+					else
+						create f_cb.make ("module_status[" + mod.name + "]")
+						f_cb.set_text_value (mod.name)
+						f_cb.set_checked (mod.is_enabled)
+						create w_item.make_with_content (f_cb)
+						w_row.add_item (w_item)
+					end
 
 					create w_item.make_with_text (mod.name)
 					w_row.add_item (w_item)
 
 					create w_item.make_with_text (mod.version)
 					w_row.add_item (w_item)
+					if attached api.installed_module_version (mod) as v and then not v.same_string (mod.version) then
+						w_item.add_css_class ("update-available")
+						l_extra.append (a_response.link (" Update(" + mod.version + ")", a_response.location + "?op=update&module_update[]=" + mod.name, Void))
+					end
 
 					if attached mod.description as l_desc then
 						create w_item.make_with_text (l_desc)
@@ -206,7 +253,9 @@ feature -- Execution
 						create w_item.make_with_text ("")
 						w_row.add_item (w_item)
 					end
-					create w_item.make_with_text (a_response.link ("Uninstall", a_response.location + "?op=uninstall&module_uninstallation[]=" + mod.name, Void))
+					l_extra.append (a_response.link (" Uninstall", a_response.location + "?op=uninstall&module_uninstallation[]=" + mod.name, Void))
+					create w_item.make_with_text (l_extra)
+
 					w_row.add_item (w_item)
 
 					w_tb.add_row (w_row)
@@ -215,20 +264,46 @@ feature -- Execution
 			create w_set.make
 			w_set.set_legend ("Installed modules")
 			w_set.extend (w_tb)
---			create w_submit.make ("op")
---			w_submit.set_text_value ("Save")
---			w_set.extend (w_submit)
+			create w_submit.make ("op")
+			w_submit.set_text_value ("Update status")
+			w_set.extend (w_submit)
 			Result.extend (w_set)
-
 			Result.extend_html_text ("<br/>")
+		end
 
-			if not l_mods_to_install.is_empty then
+	modules_to_install_collection_web_form (a_response: CMS_RESPONSE): CMS_FORM
+		local
+			mod: CMS_MODULE
+			f_cb: WSF_FORM_CHECKBOX_INPUT
+			w_tb: WSF_WIDGET_TABLE
+			w_row: WSF_WIDGET_TABLE_ROW
+			w_item: WSF_WIDGET_TABLE_ITEM
+			w_submit: WSF_FORM_SUBMIT_INPUT
+			w_set: WSF_FORM_FIELD_SET
+
+			l_mods_to_install: ARRAYED_LIST [CMS_MODULE]
+		do
+			create Result.make (a_response.request_url (Void), "modules_collection")
+			create l_mods_to_install.make (0)
+			across
+				api.setup.modules as ic
+			loop
+				mod := ic.item
+				if not api.is_module_installed (mod) then
+					l_mods_to_install.extend (mod)
+				end
+			end
+			if l_mods_to_install.is_empty then
+				Result.extend_html_text ("No module to install...")
+			else
 				create w_tb.make
 				w_tb.add_css_class ("modules_table")
 				create w_row.make (3)
 				create w_item.make_with_text ("Install ")
 				w_row.add_item (w_item)
 				create w_item.make_with_text ("Module")
+				w_row.add_item (w_item)
+				create w_item.make_with_text ("Version")
 				w_row.add_item (w_item)
 				create w_item.make_with_text ("Description")
 				w_row.add_item (w_item)
@@ -244,6 +319,9 @@ feature -- Execution
 					w_row.add_item (w_item)
 
 					create w_item.make_with_text (mod.name)
+					w_row.add_item (w_item)
+
+					create w_item.make_with_text (mod.version)
 					w_row.add_item (w_item)
 
 					if attached mod.description as l_desc then
@@ -262,6 +340,52 @@ feature -- Execution
 				w_submit.set_text_value ("Install modules")
 				w_set.extend (w_submit)
 				Result.extend (w_set)
+				Result.extend_html_text ("<br/>")
+			end
+		end
+
+	on_update_status_submit (fd: WSF_FORM_DATA)
+		local
+			l_mods: CMS_MODULE_COLLECTION
+			l_new_enabled_modules: ARRAYED_LIST [CMS_MODULE]
+			l_module: detachable CMS_MODULE
+		do
+			if attached {WSF_TABLE} fd.table_item ("module_status") as tb and then not tb.is_empty then
+				l_mods := api.setup.modules
+				create l_new_enabled_modules.make (tb.count)
+				across
+					tb as ic
+				loop
+					if
+						attached {WSF_STRING} ic.item as l_mod_name and then
+						attached l_mods.item_by_name (l_mod_name.value) as m
+					then
+						if not m.is_enabled then
+							api.enable_module (m)
+						end
+						if not api.is_module_enabled (m) then
+							fd.report_error ("Enabling failed for module " + m.name)
+						end
+						l_new_enabled_modules.force (m)
+					else
+						fd.report_error ("Can not find associated module " + ic.item.as_string.url_encoded_value)
+					end
+				end
+				across
+					l_mods as ic
+				loop
+					l_module := ic.item
+					if not l_new_enabled_modules.has (l_module) then
+						if l_module.is_enabled then
+							api.disable_module (l_module)
+						end
+						if api.is_module_enabled (l_module) then
+							fd.report_error ("Disabling failed for module " + l_module.name)
+						end
+					end
+				end
+			else
+				fd.report_error ("No module to update!")
 			end
 		end
 
@@ -283,7 +407,7 @@ feature -- Execution
 							fd.report_error ("Installation failed for module " + m.name)
 						end
 					else
-						fd.report_error ("Can not find associated module" + ic.item.as_string.url_encoded_value)
+						fd.report_error ("Can not find associated module " + ic.item.as_string.url_encoded_value)
 					end
 				end
 			else

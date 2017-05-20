@@ -5,7 +5,7 @@ note
 		"Filesystem's directories"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ inherit
 	DIRECTORY
 		rename
 			make as old_make,
-			name as string_name,
+			name as old_name,
 			open_read as old_open_read,
 			is_readable as old_is_readable,
 			exists as old_exists,
@@ -101,7 +101,7 @@ feature -- Access
 							nb := nb + 1
 							if nb > k then
 								k := k + 10
-								STRING_ARRAY_.resize (an_array, 1, k)
+								STRING_ARRAY_.resize_with_default (an_array, "", 1, k)
 							end
 							an_array.put (a_name, nb)
 						end
@@ -153,7 +153,7 @@ feature -- Access
 								nb := nb + 1
 								if nb > k then
 									k := k + 10
-									STRING_ARRAY_.resize (an_array, 1, k)
+									STRING_ARRAY_.resize_with_default (an_array, "", 1, k)
 								end
 								an_array.put (a_name, nb)
 							end
@@ -253,7 +253,7 @@ feature -- Basic operations
 					end_of_input := False
 					if old_exists and then old_is_readable then
 						old_open_read
-						lastentry := Dummy_entry
+						old_end_of_input := False
 					end
 				end
 			elseif not is_closed then
@@ -274,7 +274,8 @@ feature -- Basic operations
 		do
 			if not rescued then
 				old_close
-				lastentry := Void
+				old_end_of_input := True
+				last_entry_pointer := default_pointer
 				entry_buffer := Void
 				last_entry := Dummy_entry
 			end
@@ -437,7 +438,7 @@ feature -- Basic operations
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [STRING]])
+	do_all (an_action: PROCEDURE [STRING])
 			-- Apply `an_action' to every entry in the directory.
 			-- Do nothing if current directory could not be searched.
 			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
@@ -469,7 +470,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [STRING]]; a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN])
+	do_if (an_action: PROCEDURE [STRING]; a_test: FUNCTION [STRING, BOOLEAN])
 			-- Apply `an_action' to every entry in the directory that satisfies `a_test'.
 			-- Do nothing if current directory could not be searched.
 			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
@@ -503,7 +504,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN
+	there_exists (a_test: FUNCTION [STRING, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one entry in the directory?
 			-- False if current directory could not be searched.
 			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
@@ -537,7 +538,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN
+	for_all (a_test: FUNCTION [STRING, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all entries in the directory?
 			-- False if current directory could not be searched.
 			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
@@ -589,10 +590,12 @@ feature -- Input
 				end_of_input := True
 			else
 				readentry
-				l_last_entry := lastentry
+				l_last_entry := last_entry_8
 				if l_last_entry /= Void then
+					old_end_of_input := False
 					last_entry := l_last_entry
 				else
+					old_end_of_input := True
 					last_entry := Dummy_entry
 				end
 				end_of_input := old_end_of_input
@@ -633,8 +636,15 @@ feature {NONE} -- Implementation
 	old_end_of_input: BOOLEAN
 			-- Have all entries been read
 			-- (do not take `unread_entry' into account)?
+
+	string_name: STRING_8
+			-- File name as a STRING_8 instance. The value might be truncated
+			-- from the original name used to create the current FILE instance.
 		do
-			Result := (lastentry = Void)
+			Result := internal_name.as_string_8
+		ensure
+			string_name_not_void: Result /= Void
+			string_name_not_empty: not Result.is_empty
 		end
 
 	tmp_file: KL_TEXT_INPUT_FILE

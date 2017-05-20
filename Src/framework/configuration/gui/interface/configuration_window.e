@@ -329,53 +329,56 @@ feature {NONE} -- Layout components
 	configuration_space: EV_VERTICAL_BOX
 			-- Space to put configuration.
 
-	target_configuration_space: EV_VERTICAL_BOX
-			-- Space to put configuration for `current_target'.
-
 feature {NONE} -- Element initialization
+
+	initialize_properties_for (container: EV_VERTICAL_BOX)
+			-- Prepare `properties' to be used in `container'.
+		local
+			l_frame: EV_FRAME
+			l_description_area: ES_SCROLLABLE_LABEL
+		do
+				-- Property grid.
+			create l_frame
+			container.extend (l_frame)
+			l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
+
+			create properties
+			l_frame.extend (properties)
+			properties.focus_in_actions.extend (agent
+				do
+					if default_push_button /= Void then
+						remove_default_push_button
+					end
+				end)
+			properties.focus_out_actions.extend (agent set_default_push_button (ok_button))
+
+				-- property grid description field
+			create l_frame
+			container.extend (l_frame)
+			container.disable_item_expand (l_frame)
+			l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
+				-- Set padding.
+			l_frame.set_border_width (4)
+
+				-- Create description container.
+			create l_description_area
+			properties.set_description_field (l_description_area)
+			l_description_area.set_minimum_height (description_height)
+			l_description_area.set_minimum_width (100)
+			l_frame.extend (l_description_area)
+		ensure
+			properties_attached: attached properties
+		end
 
 	initialize_properties
 			-- Prepare `properties'.
 		require
 			not_properties_and_grid: properties = Void or grid = Void
-		local
-			l_frame: EV_FRAME
-			l_description_area: ES_SCROLLABLE_LABEL
 		do
-			if properties = Void then
+			if properties = Void or else attached tabs then
 				configuration_space.wipe_out
 
-					-- property grid
-				create l_frame
-				configuration_space.extend (l_frame)
-				l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
-
-				create properties
-				l_frame.extend (properties)
-				properties.focus_in_actions.extend (agent
-					do
-						if default_push_button /= Void then
-							remove_default_push_button
-						end
-					end)
-				properties.focus_out_actions.extend (agent set_default_push_button (ok_button))
-
-					-- property grid description field
-				create l_frame
-				configuration_space.extend (l_frame)
-				configuration_space.disable_item_expand (l_frame)
-				l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
-					-- Set padding.
-				l_frame.set_border_width (4)
-
-					-- Create description container.
-				create l_description_area
-				properties.set_description_field (l_description_area)
-				l_description_area.set_minimum_height (description_height)
-				l_description_area.set_minimum_width (100)
-				l_frame.extend (l_description_area)
-
-					-- remove grid
+					-- Remove grid.
 				if grid /= Void then
 					grid.destroy
 					grid := Void
@@ -384,6 +387,14 @@ feature {NONE} -- Element initialization
 					remove_button.destroy
 					remove_button := Void
 				end
+
+					-- Remove tabs.
+				if attached tabs as t then
+					tabs.destroy
+					tabs := Void
+				end
+
+				initialize_properties_for (configuration_space)
 			else
 				properties.reset
 			end
@@ -470,6 +481,104 @@ feature {NONE} -- Element initialization
 			properties_void: properties = Void
 		end
 
+	tabs: detachable EV_NOTEBOOK
+
+	initialize_tabs (t: CONF_TARGET)
+			-- Initialize tabs for target `t'.
+		local
+			notebook: like tabs
+			properties_tab: EV_VERTICAL_BOX
+			language_tab: EV_VERTICAL_BOX
+			options: CONF_TARGET_OPTION
+			inherited_options: CONF_TARGET_OPTION
+			inherited_void_safety: CONF_ORDERED_CAPABILITY
+			inherited_catcall_detection: CONF_ORDERED_CAPABILITY
+			inherited_concurrency: CONF_ORDERED_CAPABILITY
+			description_frame: EV_FRAME
+			description_field: ES_SCROLLABLE_LABEL
+		do
+			notebook := tabs
+			if not attached notebook then
+					-- Replace configuration space with tabs.
+				configuration_space.wipe_out
+
+				create notebook
+				tabs := notebook
+				configuration_space.extend (notebook)
+
+					-- Fill properties tab.
+				create properties_tab
+				notebook.extend (properties_tab)
+				notebook.set_item_text (properties_tab, conf_interface_names.tab_properties_name)
+				initialize_properties_for (properties_tab)
+
+					-- Fill language tab.
+				create language_tab
+				notebook.extend (language_tab)
+				notebook.set_item_text (language_tab, conf_interface_names.tab_language_name)
+			else
+				check
+					is_initialized_language_tab: attached {EV_VERTICAL_BOX} notebook.i_th (2) as l
+				then
+					language_tab := l
+					l.wipe_out
+				end
+			end
+
+			debug ("to_implement")
+				(create {REFACTORING_HELPER}).to_implement ("Avoid creation of the property page from scratch")
+			end
+			options := t.changeable_internal_options
+			if attached t.extends as inherited_target then
+				inherited_options := inherited_target.options
+				inherited_void_safety := inherited_options.void_safety_capability
+				inherited_catcall_detection := inherited_options.catcall_safety_capability
+				inherited_concurrency := inherited_options.concurrency_capability
+			end
+
+			create description_field
+
+			add_choice_value (
+				conf_interface_names.option_void_safety_name,
+				conf_interface_names.option_void_safety_description,
+				conf_interface_names.option_void_safety_value,
+				options.void_safety_capability,
+				inherited_void_safety,
+				description_field,
+				language_tab
+			)
+
+			add_choice_value (
+				conf_interface_names.option_catcall_detection_name,
+				conf_interface_names.option_catcall_detection_description,
+				conf_interface_names.option_catcall_detection_value,
+				options.catcall_safety_capability,
+				inherited_catcall_detection,
+				description_field,
+				language_tab
+			)
+
+			add_choice_value (
+				conf_interface_names.option_concurrency_name,
+				conf_interface_names.option_concurrency_description,
+				conf_interface_names.option_concurrency_value,
+				options.concurrency_capability,
+				inherited_concurrency,
+				description_field,
+				language_tab
+			)
+
+			create description_frame
+			language_tab.extend (description_frame)
+			description_frame.extend (description_field)
+			description_field.set_minimum_height (description_height)
+			description_field.set_minimum_width (100)
+			description_field.set_minimum_height (80)
+
+			notebook.selection_actions.wipe_out
+			notebook.selection_actions.extend (refresh_current)
+		end
+
 	initialize_section_tree
 			-- Initialize `section_tree'.
 		do
@@ -484,6 +593,347 @@ feature {NONE} -- Element initialization
 			)
 		ensure
 			section_tree_not_void: section_tree /= Void
+		end
+
+feature {NONE} -- Choice options
+
+	heading_rows: INTEGER = 2
+			-- Number of rows before buttons to set non-default option values.
+
+	add_choice_value	(
+			name, description: STRING_32;
+			items: ARRAYED_LIST [STRING_32];
+			capability: CONF_ORDERED_CAPABILITY;
+			inherited_capability: detachable CONF_ORDERED_CAPABILITY;
+			description_field: ES_SCROLLABLE_LABEL;
+			container: EV_BOX
+		)
+			-- Add choice value `option' with specified `name', `description' and item names `items' to the given `container'
+			-- with optionally inherited value `inherited_option'.
+		require
+			container_not_destroyed: not container.is_destroyed
+			container_extendible: container.extendible
+			consitent_items: items.count = capability.value.count
+			consistent_inherited_option: attached inherited_capability implies inherited_capability.same_kind (capability)
+		local
+			property_frame: EV_FRAME
+			property_inner_frame: EV_VERTICAL_BOX
+			check_button: EV_CHECK_BUTTON
+			radio_button: EV_RADIO_BUTTON
+			property_group: EV_TABLE
+			column_name: EV_LABEL
+			default_capability: EV_CHECK_BUTTON
+			default_preference: EV_CHECK_BUTTON
+			row: INTEGER
+			is_default_capability: BOOLEAN
+			is_default_preference: BOOLEAN
+			update_preferred_buttons: PROCEDURE
+			update_description: PROCEDURE
+			option: CONF_VALUE_CHOICE
+			inherited_option: CONF_VALUE_CHOICE
+		do
+			update_description := agent description_field.set_text (description)
+			create property_frame.make_with_text (name)
+			property_frame.set_border_width (layout_constants.default_border_size)
+			container.extend (property_frame)
+			container.disable_item_expand (property_frame)
+			create property_inner_frame
+			property_inner_frame.set_padding_width (layout_constants.default_padding_size)
+			property_frame.extend (property_inner_frame)
+
+			create property_group
+			property_inner_frame.extend (property_group)
+
+				-- In addition to `items' there are header and default value.
+			property_group.resize (4, items.count + heading_rows)
+			property_group.disable_homogeneous
+			create column_name.make_with_text (conf_interface_names.capability_header_capable_of_name)
+			column_name.align_text_left
+			property_group.put_at_position (column_name, 1, 1, 2, 1)
+			create column_name.make_with_text (conf_interface_names.capability_header_if_root_name)
+			column_name.align_text_left
+			property_group.put_at_position (column_name, 3, 1, 2, 1)
+			option := capability.value
+			if attached inherited_capability then
+				inherited_option := inherited_capability.value
+			end
+			if attached inherited_option then
+				create default_capability.make_with_text (conf_interface_names.capability_toggle_inherited_name)
+			else
+				create default_capability.make_with_text (conf_interface_names.capability_toggle_default_name)
+			end
+				-- Make sure default capability button is properly initialized before registering any actions.
+			if option.is_set then
+				default_capability.disable_select
+			else
+				default_capability.enable_select
+			end
+			on_toggle (agent option.unset, agent set_capability (option, property_group), default_capability)
+			default_capability.focus_in_actions.extend (update_description)
+			property_group.put_at_position (default_capability, 1, 2, 2, 1)
+			if attached inherited_option then
+				create default_preference.make_with_text (conf_interface_names.capability_toggle_inherited_name)
+					-- TODO: provide implementation.
+			else
+				create default_preference.make_with_text (conf_interface_names.capability_toggle_default_name)
+			end
+				-- Make sure default preference button is properly initialized before registering any actions.
+			if capability.is_root_set then
+				default_preference.disable_select
+			else
+				default_preference.enable_select
+			end
+			on_toggle
+				(agent disable_custom_root_option (capability, property_group),
+				agent enable_custom_root_option (capability, property_group),
+				default_preference)
+			update_preferred_buttons := agent (default_preference.select_actions).call ([])
+			default_preference.focus_in_actions.extend (update_description)
+			property_group.put_at_position (default_preference, 3, 2, 2, 1)
+			default_capability.select_actions.extend (update_preferred_buttons)
+			across
+				items.new_cursor.reversed as i
+			from
+				row := heading_rows + 1
+			loop
+					-- Test if option index has reached inherited index or default index.
+					-- After that it will have a check mark.
+				if is_default_capability then
+						-- Keep capablity mark for next iterations.
+						-- Erase preference mark.
+					is_default_preference := False
+				elseif attached inherited_option then
+					is_default_capability := inherited_option.index = i.target_index
+					is_default_preference := is_default_capability
+				else
+					is_default_capability := option.default_index = i.target_index
+					is_default_preference := is_default_capability
+				end
+				create check_button.make_with_text (i.item)
+				property_group.put_at_position (check_button, 2, row, 1, 1)
+					-- Mark current item as enabled default if needed.
+					-- TODO: replace pixmap with pixel buffer and use drawable to avoid cloning.
+				if is_default_capability then
+					property_group.put_at_position (conf_pixmaps.project_settings_default_icon.twin, 1, row, 1, 1)
+						-- Update default icon depending on the state of a default button.
+					on_toggle
+						(agent property_group.put_at_position (conf_pixmaps.project_settings_default_highlighted_icon.twin, 1, row, 1, 1),
+						agent property_group.put_at_position (conf_pixmaps.project_settings_default_icon.twin, 1, row, 1, 1),
+						default_capability)
+				end
+					-- Indicate whether an value is checked.
+				if capability.is_capable (i.target_index.as_natural_8) then
+					check_button.enable_select
+				end
+					-- Last item is always checked.
+				if i.is_last then
+					check_button.disable_sensitive
+				else
+						-- Enable or disable current button depending on the state of a default button.
+					on_toggle (agent check_button.disable_sensitive, agent check_button.enable_sensitive, default_capability)
+						-- Enable or disable other capabilities and preferred buttons depending on the state of the current button.
+					on_toggle
+						(agent select_smaller_capabilities (option, i.target_index.as_natural_8, row, property_group, update_preferred_buttons),
+						agent unselect_larger_capabilities (option, i.target_index.as_natural_8, row, property_group, update_preferred_buttons),
+						check_button)
+				end
+				check_button.focus_in_actions.extend (update_description)
+				check_button.set_tooltip (description)
+				create radio_button -- .make_with_text (i.item)
+				property_group.put_at_position (radio_button, 4, row, 1, 1)
+				radio_button.focus_in_actions.extend (update_description)
+				radio_button.select_actions.extend (agent capability.put_root_index (i.target_index.as_natural_8))
+				row := row + 1
+			end
+				-- Update with current state.
+				-- Update capability buttons.
+			if attached {EV_CHECK_BUTTON} property_group.item_at_position (2, property_group.rows - option.index + 1) as b then
+				b.enable_select
+			end
+				-- Refresh all capability-dependent buttons.
+			default_capability.select_actions.call
+				-- Refresh all preference-dependent buttons.
+			default_preference.select_actions.call
+		end
+
+	on_toggle (select_action, unselect_action: PROCEDURE; button: EV_CHECK_BUTTON)
+			-- Register actions `select_action' and `unselect_action' to be performed
+			-- when `button' becomes selected and unselected respectively.
+		do
+			button.select_actions.extend
+				(agent (s, u: PROCEDURE; b: EV_CHECK_BUTTON)
+					do
+						if b.is_selected then
+							s.call
+						else
+							u.call
+						end
+					end
+				(select_action, unselect_action, button))
+		end
+
+	set_capability (o: CONF_VALUE_CHOICE; group: EV_TABLE)
+			-- Set capability option `o' from the current state of associated group `group'.
+		local
+			r: INTEGER
+			index: NATURAL_8
+		do
+			from
+					-- Last item is always selected, skip it.
+				r := group.rows - 1
+					-- `index' corresponds to a knowingly selected item.
+				index := 1
+			until
+				r <= heading_rows or else
+				index >= o.count or else
+				not attached {EV_CHECK_BUTTON} group.item_at_position (2, r) as b or else
+				not b.is_selected
+			loop
+				index := index + 1
+				r := r - 1
+			variant
+				r
+			end
+			o.put_index (index)
+		end
+
+	enable_custom_root_option (o: CONF_ORDERED_CAPABILITY; group: EV_TABLE)
+			-- Enable custom root option for `o' associated with group `group'.
+		local
+			r: INTEGER
+			index: NATURAL_8
+		do
+				-- Update current root index if required.
+			if o.is_root_set and then not o.is_capable (o.custom_root_index) then
+					-- Custom root index is no longer valid, update it.
+				o.put_root_index (o.root_index)
+			end
+				-- Update default marks.
+			show_default_root_option (False, o, group)
+				-- Enable or disable radio buttons depending on whether the corresponding capability is supported.
+				-- Mark a current root option.
+			from
+				index := o.value.count
+				r := group.rows - o.value.count + 1
+			until
+				index <= 0
+			loop
+				if attached {EV_RADIO_BUTTON} group.item_at_position (4, r) as b then
+					if o.is_capable (index) then
+							-- Enable allowed option value.
+						b.enable_sensitive
+						if o.root_index = index then
+								-- Mark currently selected option value.
+							b.enable_select
+						end
+					else
+							-- Disable non-supported option value.
+						b.disable_sensitive
+					end
+				end
+				r := r + 1
+				index := index - 1
+			variant
+				index.as_integer_32
+			end
+		end
+
+	disable_custom_root_option (o: CONF_ORDERED_CAPABILITY; group: EV_TABLE)
+			-- Disable custom root option for `o' associated with group `group'.
+		local
+			r: INTEGER
+		do
+				-- Update current root index.
+			o.unset_root
+				-- Update default marks.
+			show_default_root_option (True, o, group)
+				-- Disable all radio-buttons.
+			from
+				r := group.rows
+			until
+				r <= heading_rows
+			loop
+				if attached {EV_RADIO_BUTTON} group.item_at_position (4, r) as b then
+						-- Disable non-supported option value.
+					b.disable_sensitive
+				end
+				r := r - 1
+			variant
+				r
+			end
+		end
+
+	show_default_root_option (is_highlighted: BOOLEAN; o: CONF_ORDERED_CAPABILITY; group: EV_TABLE)
+			-- Update a mark that indicates a default root option of `o' in associated group `group'.
+		local
+			r: INTEGER
+			index: NATURAL_8
+			default_row: INTEGER
+		do
+				-- Compute a row that is a default one.
+			default_row := group.rows - o.default_root_index + 1
+			from
+				index := o.value.count
+				r := group.rows - o.value.count + 1
+			until
+				index <= 0
+			loop
+					-- We cannot put anything to a cell if it contains an item.
+				if attached group.item_at_position (3, r) as m then
+						-- Remove only non-default mark.
+						-- TODO: replace pixmap with pixel buffer and use drawable to avoid cloning.
+					group.prune (m)
+				end
+				if r = default_row then
+						-- Put a default mark.
+						-- TODO: replace pixmap with pixel buffer and use drawable to avoid cloning.
+					group.put_at_position (
+						(if is_highlighted then
+							conf_pixmaps.project_settings_default_highlighted_icon
+						else
+							conf_pixmaps.project_settings_default_icon
+						end).twin,
+						3, r, 1, 1)
+				end
+				r := r + 1
+				index := index - 1
+			variant
+				index.as_integer_32
+			end
+		end
+
+	select_smaller_capabilities (o: CONF_VALUE_CHOICE; index: like {CONF_VALUE_CHOICE}.index; line: INTEGER; group: EV_TABLE; update_action: PROCEDURE)
+			-- Select all capabilities smaller than this one.
+		do
+				-- Update options, but avoid setting a lower index.
+			if o.index < index then
+				o.put_index (index)
+			end
+				-- It is sufficient to toggle only a next button, it will trigger the rest.
+			if
+				line < group.rows and then
+				attached {EV_CHECK_BUTTON}  group.item_at_position (2, line + 1) as b
+			then
+				b.enable_select
+			end
+			update_action.call
+		end
+
+	unselect_larger_capabilities (o: CONF_VALUE_CHOICE; index: like {CONF_VALUE_CHOICE}.index; line: INTEGER; group: EV_TABLE; update_action: PROCEDURE)
+			-- Unselect all capabilities larger than this one.
+			-- It is sufficient to toggle only a next one, it will trigger the rest.
+		do
+				-- Update options, but avoid setting a higher index.
+			if o.index >= index then
+				o.put_index (index - 1)
+			end
+			if
+				line > heading_rows + 1 and then
+				attached {EV_CHECK_BUTTON} group.item_at_position (2, line - 1) as b
+			then
+				b.disable_select
+			end
+			update_action.call
 		end
 
 feature {TARGET_SECTION, SYSTEM_SECTION} -- Target creation
@@ -598,10 +1048,15 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 				remove_button := Void
 			end
 
-				-- remove properties
+				-- Remove properties.
 			if properties /= Void then
 				properties.destroy
 				properties := Void
+			end
+				-- Remove tabs.
+			if attached tabs as t then
+				t.destroy
+				tabs := Void
 			end
 
 			unlock_update
@@ -642,6 +1097,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			initialize_properties
 
 			current_target := a_target
+
 			add_general_properties
 
 			unlock_update
@@ -1056,7 +1512,7 @@ feature {NONE} -- Implementation
 					Result := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_system_name (s)
 				end)
 			l_string_prop.change_value_actions.extend (agent conf_system.set_name)
-			l_string_prop.change_value_actions.extend (agent (s: STRING_32)
+			l_string_prop.change_value_actions.extend (agent (s: READABLE_STRING_32)
 				require
 					s_not_void: s /= Void
 				do
@@ -1084,7 +1540,7 @@ feature {NONE} -- Implementation
 			end
 			l_choice_prop.validate_value_actions.extend (agent check_library_target)
 			l_choice_prop.change_value_actions.extend (agent conf_system.set_library_target_by_name)
-			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_choice_prop)
 
 				-- readonly
@@ -1162,8 +1618,8 @@ feature {NONE} -- Implementation
 				create l_prop.make (conf_interface_names.external_value_name)
 				l_prop.set_description (conf_interface_names.external_value_description)
 				l_prop.set_value (an_external.location)
-				l_prop.change_value_actions.extend (agent an_external.set_location )
-				l_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+				l_prop.change_value_actions.extend (agent an_external.set_location)
+				l_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
 				properties.add_property (l_prop)
 			else
 					-- Value is a file name.

@@ -255,8 +255,7 @@ feature {NONE} -- Implementation
 								else
 									l_other := a_edge.source
 								end
-								check l_other /= Void end -- FIXME: Implied by...?
-								if l_other.is_show_requested then
+								if l_other /= Void and then l_other.is_show_requested then
 									opx := l_other.port_x
 									opy := l_other.port_y
 									l_distance := distance (px, py, opx, opy)
@@ -338,8 +337,7 @@ feature {NONE} -- Implementation
 			else
 				l_other := a_edge.source
 			end
-			check l_other /= Void end -- FIXME: Implied by ...?
-			if l_other.is_show_requested then
+			if l_other /= Void and then l_other.is_show_requested then
 				npx := a_node.port_x
 				npy := a_node.port_y
 				opx := l_other.port_x
@@ -491,7 +489,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

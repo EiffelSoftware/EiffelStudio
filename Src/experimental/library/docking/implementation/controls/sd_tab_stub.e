@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tab stubs on SD_AUTO_HIDE_PANEL."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,6 @@ feature {NONE} -- Initlization
 		do
 			create internal_shared
 			create internal_drawing_area
-			internal_drawing_area.expose_actions.extend (agent on_expose)
 			create pointer_press_actions
 			create delay_timer
 			content := a_content
@@ -52,6 +51,7 @@ feature {NONE} -- Initlization
 			internal_box.extend (internal_drawing_area)
 			internal_box.disable_item_expand (internal_drawing_area)
 
+			internal_drawing_area.expose_actions.extend (agent on_expose)
 			internal_drawing_area.pointer_enter_actions.extend (agent on_pointer_enter)
 			internal_drawing_area.pointer_button_press_actions.extend (agent on_pointer_press)
 
@@ -130,25 +130,22 @@ feature -- Query
 
 	is_group_auto_hide_zone_showing: BOOLEAN
 			-- If auto hide zone belong to our group showing?
-		local
-			l_group: ARRAYED_LIST [SD_TAB_STUB]
 		do
-			l_group := tab_group
-			from
-				l_group.start
-			until
-				l_group.after or Result
-			loop
-				if l_group.item /= Current and then l_group.item.content.state.is_zone_attached then
-					if attached {EV_WIDGET} l_group.item.content.state.zone as lt_widget then
-						if not lt_widget.is_destroyed then
-							Result := True
+			if attached tab_group as l_group then
+				from
+					l_group.start
+				until
+					l_group.after or Result
+				loop
+					if l_group.item /= Current and then attached l_group.item.content.state.zone as z then
+						if attached {EV_WIDGET} z as lt_widget then
+							Result := not lt_widget.is_destroyed
+						else
+							check not_possible: False end
 						end
-					else
-						check not_possible: False end
 					end
+					l_group.forth
 				end
-				l_group.forth
 			end
 		end
 
@@ -168,7 +165,7 @@ feature -- Command
 	set_text_size (a_size: INTEGER)
 			-- Set text width with `a_size'
 		require
-			a_size_valid: a_size > 0
+			a_size_valid: a_size >= 0
 		do
 			text_size := a_size
 		ensure
@@ -242,30 +239,29 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 
 	on_pointer_enter
 			-- Handle pointer enter
-		local
-			l_tab_group: like tab_group
 		do
-			l_tab_group := tab_group
-			internal_docking_manager.command.lock_update (Void, True)
-			from
-				l_tab_group.start
-			until
-				l_tab_group.after
-			loop
-				if l_tab_group.item = Current then
-					l_tab_group.item.set_show_text (True)
-				else
-					l_tab_group.item.set_show_text (False)
+			if attached tab_group as l_tab_group then
+				internal_docking_manager.command.lock_update (Void, True)
+				from
+					l_tab_group.start
+				until
+					l_tab_group.after
+				loop
+					if l_tab_group.item = Current then
+						l_tab_group.item.set_show_text (True)
+					else
+						l_tab_group.item.set_show_text (False)
+					end
+					l_tab_group.forth
 				end
-				l_tab_group.forth
-			end
-			internal_docking_manager.command.unlock_update
-			if is_group_auto_hide_zone_showing then
-				-- We must show immediately
-				pointer_enter_actions.call (Void)
-			else
-				delay_timer.actions.extend_kamikaze (agent on_delay_timer)
-				delay_timer.set_interval ({SD_SHARED}.auto_hide_tab_stub_show_delay)
+				internal_docking_manager.command.unlock_update
+				if is_group_auto_hide_zone_showing then
+					-- We must show immediately
+					pointer_enter_actions.call (Void)
+				else
+					delay_timer.actions.extend_kamikaze (agent on_delay_timer)
+					delay_timer.set_interval ({SD_SHARED}.auto_hide_tab_stub_show_delay)
+				end
 			end
 		end
 
@@ -276,14 +272,12 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 		end
 
 	on_delay_timer
-			-- Handle `delay_timer' actions
+			-- Handle `delay_timer' actions.
 		local
-			l_screen: EV_SCREEN
 			l_rect: EV_RECTANGLE
 			l_point: EV_COORDINATE
 		do
-			create l_screen
-			l_point := l_screen.pointer_position
+			l_point := (create {EV_SCREEN}).pointer_position
 			create l_rect.make (screen_x, screen_y, width, height)
 			if l_rect.has_x_y (l_point.x, l_point.y) then
 				-- If pointer still in current area
@@ -412,18 +406,12 @@ feature {NONE} -- Implementation
 	internal_box: SD_HOR_VER_BOX
 			-- Box contain `internal_drawing_area' and `internal_label'
 
-	tab_group: ARRAYED_LIST [SD_TAB_STUB]
-			-- Tab group `Current' belong to
-		require
-			set: auto_hide_panel /= Void
-		local
-			l_panel: like auto_hide_panel
+	tab_group: detachable ARRAYED_LIST [SD_TAB_STUB]
+			-- Tab group `Current' belongs to (if any).
 		do
-			l_panel := auto_hide_panel
-			check l_panel /= Void end -- Implied by precondition `set'
-			Result := l_panel.tab_group (Current)
-		ensure
-			not_void: Result /= Void
+			if attached auto_hide_panel as l_panel then
+				Result := l_panel.tab_group (Current)
+			end
 		end
 
 	delay_timer: EV_TIMEOUT
@@ -452,7 +440,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -461,10 +449,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

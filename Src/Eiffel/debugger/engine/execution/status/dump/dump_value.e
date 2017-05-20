@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects join all debug values: STRING, INTEGER, BOOLEAN, REFERENCES, ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,6 +33,11 @@ inherit
 		end
 
 	GENERATING_TYPE_SYSTEM_I
+		export
+			{NONE} all
+		end
+
+	SHARED_LOCALE
 		export
 			{NONE} all
 		end
@@ -501,7 +506,11 @@ feature -- Status report
 			object_with_debug_output: has_formatted_output and address /= Void
 		do
 			debug ("debugger_trace", "debug_recv")
-				print (generating_type + ".truncated_string_representation (" + min.out + ", " + max.out + ") from " + dynamic_class.name_in_upper +" %N")
+				localized_print
+					(generating_type.name_32 + {STRING_32} ".truncated_string_representation (" +
+					min.out + {STRING_32} ", " +
+					max.out + {STRING_32} ") from " +
+					dynamic_class.name_in_upper +{STRING_32} " %N")
 			end
 			last_string_representation_length := 0
 			if is_dotnet_value then
@@ -1078,7 +1087,11 @@ feature -- Conversion
 		require
 			is_basic: is_basic
 		do
-			Result ?= Current
+			check
+				from_precondition_is_basic: attached {DUMP_VALUE_BASIC} Current as r
+			then
+				Result := r
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -1088,7 +1101,11 @@ feature -- Conversion
 		require
 			is_dotnet_value: is_dotnet_value
 		do
-			Result ?= Current
+			check
+				from_precondition_is_basic: attached {DUMP_VALUE_DOTNET} Current as r
+			then
+				Result := r
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -1184,7 +1201,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1215,4 +1232,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class DUMP_VALUE
+end

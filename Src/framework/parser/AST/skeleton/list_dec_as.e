@@ -47,7 +47,7 @@ feature -- Roundtrip
 feature -- Access
 
 	id_list: IDENTIFIER_LIST
-			-- List of ids
+			-- List of ids.
 
 	item_name (i: INTEGER): detachable STRING
 			-- Name of `id' at position `i'.
@@ -55,7 +55,15 @@ feature -- Access
 		require
 			valid_index: id_list.valid_index (i)
 		do
-			Result := Names_heap.item (id_list.i_th (i))
+			Result := Names_heap.item (id_list [i])
+		end
+
+	item_name_32 (i: INTEGER): detachable STRING_32
+			-- Name of `id' at position `i'.
+		require
+			valid_index: id_list.valid_index (i)
+		do
+			Result := Names_heap.item_32 (id_list [i])
 		end
 
 	type: detachable TYPE_AS
@@ -106,7 +114,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

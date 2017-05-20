@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "SD_STATE when a content initialized, wait for change to other SD_STATE. Or when client programmer called hide, this state remember state"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,7 +9,9 @@ class
 	SD_STATE_VOID
 			--FIXIT: Rename to SD_INITIAL_STATE?
 inherit
-	SD_STATE
+	SD_SHARED
+
+	SD_STATE_WITH_CONTENT
 		redefine
 			dock_at_top_level,
 			change_zone_split_area,
@@ -20,7 +22,7 @@ inherit
 			show,
 			restore,
 			close,
-			is_zone_attached
+			debug_output
 		end
 
 create
@@ -28,14 +30,17 @@ create
 
 feature {NONE}  -- Initlization
 
-	make
+	make (a_content: SD_CONTENT; a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method
 		do
+			internal_content := a_content
+			docking_manager := a_docking_manager
 			direction := {SD_ENUMERATION}.left
-			create internal_shared
-			last_floating_height := internal_shared.default_floating_window_height
-			last_floating_width := internal_shared.default_floating_window_width
+			last_floating_height := {SD_SHARED}.default_floating_window_height
+			last_floating_width := {SD_SHARED}.default_floating_window_width
 			initialized := True
+		ensure
+			content_set: content = a_content
 		end
 
 feature -- Command
@@ -55,6 +60,17 @@ feature -- Command
 			set: content = a_content
 		end
 
+feature -- Status report
+
+	debug_output: STRING_32
+		do
+			Result := Precursor
+			if attached relative as rel then
+				Result.append_string (" rel=")
+				Result.append_string (rel.debug_output)
+			end
+		end
+
 feature  -- States report
 
 	value: INTEGER
@@ -67,12 +83,6 @@ feature -- Redefine
 	zone: detachable SD_ZONE
 			-- <Precursor>
 		do
-		end
-
-	is_zone_attached: BOOLEAN
-			-- <Precursor>
-		do
-			Result := False
 		end
 
 	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER)
@@ -90,9 +100,9 @@ feature -- Redefine
 			content.set_visible (True)
 			docking_manager.command.lock_update (Void, True)
 			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
-				create l_docking_state.make (content, direction, (docking_manager.query.container_rectangle.width * internal_shared.default_docking_width_rate).ceiling)
+				create l_docking_state.make (content, direction, (docking_manager.query.container_rectangle.width * {SD_SHARED}.default_docking_width_rate).ceiling)
 			else
-				create l_docking_state.make (content, direction, (docking_manager.query.container_rectangle.height * internal_shared.default_docking_height_rate).ceiling)
+				create l_docking_state.make (content, direction, (docking_manager.query.container_rectangle.height * {SD_SHARED}.default_docking_height_rate).ceiling)
 			end
 			l_docking_state.set_docking_manager (docking_manager)
 			l_docking_state.dock_at_top_level (a_multi_dock_area)
@@ -123,13 +133,10 @@ feature -- Redefine
 
 	stick (a_direction: INTEGER)
 			-- <Precursor>
-		local
-			l_auto_hide_state: SD_AUTO_HIDE_STATE
 		do
 			content.set_visible (True)
 			docking_manager.command.lock_update (Void, True)
-			create l_auto_hide_state.make (content, a_direction)
-			change_state (l_auto_hide_state)
+			change_state (create {SD_AUTO_HIDE_STATE}.make (content, a_direction))
 			docking_manager.command.unlock_update
 		ensure then
 			state_changed: content.state /= Current
@@ -141,7 +148,6 @@ feature -- Redefine
 			l_docking_state: SD_DOCKING_STATE
 			l_floating_state: SD_FLOATING_STATE
 			l_env: EV_ENVIRONMENT
-			l_platform: PLATFORM
 		do
 			content.set_visible (True)
 			docking_manager.command.lock_update (Void, True)
@@ -151,17 +157,17 @@ feature -- Redefine
 			change_state (l_docking_state)
 			l_floating_state.set_size (last_floating_width, last_floating_height)
 
-			create l_platform
-			if not l_platform.is_windows then
-				-- Similar to {SD_DOCKING_STATE}.show, we have to do something special for GTK.
-				-- See bug#14105
-				if attached {SD_FLOATING_ZONE} l_floating_state.zone as l_floating_zone then
-					create l_env
-					if attached l_env.application as l_app then
-						l_app.do_once_on_idle (agent set_size_in_idle (last_floating_width, last_floating_height, l_floating_zone))
-					else
-						check False end -- Implied by application is running
-					end
+			if
+				not {PLATFORM}.is_windows and then
+					-- Similar to {SD_DOCKING_STATE}.show, we have to do something special for GTK.
+					-- See bug#14105.
+				attached {SD_FLOATING_ZONE} l_floating_state.zone as l_floating_zone
+			then
+				create l_env
+				if attached l_env.application as l_app then
+					l_app.do_once_on_idle (agent set_size_in_idle (last_floating_width, last_floating_height, l_floating_zone))
+				else
+					check False end -- Implied by application is running
 				end
 			end
 
@@ -210,16 +216,12 @@ feature -- Redefine
 	show
 			-- <Precursor>
 		local
-			l_new_state: detachable SD_AUTO_HIDE_STATE
 			retried: BOOLEAN
-			l_dock_area: detachable SD_MULTI_DOCK_AREA
-			l_zone, l_new_zone: detachable SD_ZONE
+			l_dock_area: SD_MULTI_DOCK_AREA
 		do
 			if attached relative as l_relative and then (not retried and l_relative.is_visible) then
-				if l_relative.state.is_zone_attached then
-					l_zone := l_relative.state.zone
-					check l_zone /= Void end -- Implied by `is_zone_attached'
-					l_dock_area := docking_manager.query.inner_container_include_hidden (l_zone)
+				if attached l_relative.state.zone as z then
+					l_dock_area := docking_manager.query.inner_container_include_hidden (z)
 				end
 
 				if l_dock_area /= Void then
@@ -238,16 +240,14 @@ feature -- Redefine
 					move_to_docking_zone (l_docking_zone, False)
 				end
 				if attached {SD_AUTO_HIDE_STATE} l_relative.state as l_auto_hide_state then
-					create l_new_state.make_with_friend (content, l_relative)
-					change_state (l_new_state)
+					change_state (create {SD_AUTO_HIDE_STATE}.make_with_friend (content, l_relative))
 				end
 			else
-				float (internal_shared.default_screen_x, internal_shared.default_screen_y)
+				float (default_screen_x, default_screen_y)
 			end
 
-			if content /= Void and then content.state.is_zone_attached then
-				l_new_zone := content.state.zone
-				if l_new_zone /= Void and then attached {EV_WIDGET} l_new_zone as lt_widget then
+			if content /= Void and then attached content.state.zone as z then
+				if attached {EV_WIDGET} z as lt_widget then
 					-- Implied by `is_zone_attached'
 					if lt_widget.is_displayed then
 						call_show_actions
@@ -324,7 +324,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -333,10 +333,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

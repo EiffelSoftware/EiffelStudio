@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 	make_by_pointer (color_pointer: POINTER)
 			-- Set `item' with `color_pointer'.
 		obsolete
-			"Use `make_by_color' instead. Not implemented here."
+			"Use `make_by_color' instead. Not implemented here [2017-05-31]."
 		do
 		end
 
@@ -218,7 +218,7 @@ invariant
 	valid_blue_sup: blue <= 255
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -125,8 +125,6 @@ feature -- Tests
 			if f2 /= Void then
 				f2.delete
 			end
-
-
 		end
 
 	content (f: detachable FILE): STRING

@@ -300,7 +300,7 @@ feature -- Execution (declared in EWB_CMD)
 						l_rule_id := ic.item.rule.id
 						if attached ic.item.location as l_loc then
 							output_window.add ({STRING_32} " [" + ic.item.location.line.out + ":" + ic.item.location.column.out + "] "
-								+ ic.item.rule.severity.short_form + ": " + l_rule_id + " - " + l_rule_name + ": ")
+								+ ic.item.severity.short_form + ": " + l_rule_id + " - " + l_rule_name + ": ")
 						else
 								-- No location attached. Print without location.
 							output_window.add ({STRING_32} "  "	+ l_rule_name + " (" + l_rule_id + "): ")

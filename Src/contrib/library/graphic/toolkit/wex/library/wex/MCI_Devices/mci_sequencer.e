@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "This class represents the MCI sequencer device."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
@@ -29,7 +29,7 @@ feature -- Access
 			seek_device (seek_parms, Mci_to)
 		end
 
-	open (a_file: STRING)
+	open (a_file: PATH)
 			-- Open a Mci device to play a MIDI file.
 		require
 			not_opened: not opened
@@ -39,7 +39,7 @@ feature -- Access
 			open_parms: WEX_MCI_OPEN_PARMS
 		do
 			create open_parms.make (parent, device_name)
-			open_parms.set_element_name (a_file)
+			open_parms.set_element_name (a_file.utf_8_name)
 			open_device (open_parms, Mci_open_element +
 				Mci_open_type)
 		end
@@ -52,11 +52,12 @@ feature {NONE} -- Implementation
 			Result := "sequencer"
 		end
 
-end -- class WEX_MCI_SEQUENCER
+end
 
 --|-------------------------------------------------------------------------
 --| WEX, Windows Eiffel library eXtension
 --| Copyright (C) 1998  Robin van Ommeren, Andreas Leitner
+--| Copyright (C) 2017  Eiffel Software, Alexander Kogtenkov
 --| See the file forum.txt included in this package for licensing info.
 --|
 --| Comments, Questions, Additions to this library? please contact:

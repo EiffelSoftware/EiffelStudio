@@ -133,13 +133,13 @@ feature -- Output
 			end
 		end
 
-	put_real, putreal (r: REAL)
+	put_real, putreal (r: REAL_32)
 			-- Write ASCII value of `r' at current position.
 		do
 			put_string (r.out)
 		end
 
-	put_double, putdouble (d: DOUBLE)
+	put_double, putdouble (d: REAL_64)
 			-- Write ASCII value `d' at current position.
 		do
 			put_string (d.out)

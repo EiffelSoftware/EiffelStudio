@@ -1,37 +1,3 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="uri_launcher" uuid="735261AB-A4E8-480D-913F-8F5FB9ABC099" library_target="uri_launcher">
-	<target name="uri_launcher">
-		<description>Performs operations to launch URIs using a default application independent of OS.</description>
-		<root all_classes="true"/>
-		<file_rule>
-			<exclude>/tests$</exclude>
-			<exclude>/EIFGENs$</exclude>
-			<exclude>/\.svn$</exclude>
-		</file_rule>
-		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true"/>
-		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns-safe.ecf"/>
-		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</library>
-		<cluster name="uri_launcher" location=".\" recursive="true">
-			<file_rule>
-				<exclude>windows</exclude>
-				<condition>
-					<platform excluded_value="windows"/>
-				</condition>
-			</file_rule>
-			<file_rule>
-				<exclude>unix</exclude>
-				<condition>
-					<platform value="windows"/>
-				</condition>
-			</file_rule>
-		</cluster>
-	</target>
-</system>
+<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="735261AB-A4E8-480D-913F-8F5FB9ABC099" message="Obsolete: use uri_launcher.ecf !" location="uri_launcher.ecf">
+</redirection>

@@ -47,6 +47,21 @@ feature -- Errors
 	errors: detachable STRING_TABLE [READABLE_STRING_32]
 			-- Hash table with errors and descriptions.
 
+
+	put_error (new: READABLE_STRING_32; key: READABLE_STRING_GENERAL)
+		local
+			l_errors: like errors
+		do
+			l_errors := errors
+			if attached l_errors then
+				l_errors.force (new, key)
+			else
+				create l_errors.make (1)
+				l_errors.force (new, key)
+			end
+			errors := l_errors
+		end
+
 feature -- Change Element
 
 	set_password (a_password: STRING)

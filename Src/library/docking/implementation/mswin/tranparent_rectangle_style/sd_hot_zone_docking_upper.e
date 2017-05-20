@@ -23,32 +23,27 @@ feature {NONE} -- Redefine
 			-- <Precursor>, draw tab recangle on top.
 		local
 			l_shared: like internal_shared
-			l_icons: SD_ICONS_SINGLETON
-			l_rect: like internal_rectangle
 			l_center_rect, l_top_rect: EV_RECTANGLE
 		do
-			l_rect := a_rect
 			l_shared := internal_shared
-			l_icons := l_shared.icons
-
 			if a_rect = internal_rectangle_left then
-				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle.left, internal_rectangle.top, (internal_rectangle.width* 0.5).ceiling, internal_rectangle.height )
+				l_shared.feedback.draw_transparency_rectangle (internal_rectangle.left, internal_rectangle.top, (internal_rectangle.width* 0.5).ceiling, internal_rectangle.height )
 			elseif a_rect = internal_rectangle_right then
-				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle.right - (internal_rectangle.width * 0.5).ceiling, internal_rectangle.top, (internal_rectangle.width* 0.5).ceiling, internal_rectangle.height )
+				l_shared.feedback.draw_transparency_rectangle (internal_rectangle.right - (internal_rectangle.width * 0.5).ceiling, internal_rectangle.top, (internal_rectangle.width* 0.5).ceiling, internal_rectangle.height )
 			elseif a_rect = internal_rectangle_top then
-				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.top, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
+				l_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.top, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
 			elseif a_rect = internal_rectangle_bottom then
-				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.bottom - (internal_rectangle.height * 0.5).ceiling, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
+				l_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.bottom - (internal_rectangle.height * 0.5).ceiling, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
 			elseif a_rect = internal_rectangle_center or a_rect = internal_rectangle_title_area then
-				create l_center_rect.make (internal_rectangle.left, internal_rectangle.top + internal_shared.title_bar_height, internal_rectangle.width, internal_rectangle.height - internal_shared.title_bar_height)
-				create l_top_rect.make (internal_rectangle.left + internal_shared.title_bar_height, internal_rectangle.top, internal_shared.title_bar_height * 3, internal_shared.title_bar_height)
-				internal_shared.feedback.draw_transparency_rectangle_for_tab (l_top_rect, l_center_rect)
+				create l_center_rect.make (internal_rectangle.left, internal_rectangle.top + l_shared.title_bar_height, internal_rectangle.width, internal_rectangle.height - l_shared.title_bar_height)
+				create l_top_rect.make (internal_rectangle.left + l_shared.title_bar_height, internal_rectangle.top, l_shared.title_bar_height * 3, l_shared.title_bar_height)
+				l_shared.feedback.draw_transparency_rectangle_for_tab (l_top_rect, l_center_rect)
 			end
 		end
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

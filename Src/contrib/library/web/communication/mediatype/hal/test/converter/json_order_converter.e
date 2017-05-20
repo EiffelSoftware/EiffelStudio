@@ -107,12 +107,12 @@ feature {NONE} -- Implementation
 
 	customer_key: JSON_STRING
 		once
-			create Result.make_json ("customer")
+			create Result.make_from_string ("customer")
 		end
 
 	line_items_key: JSON_STRING
 		once
-			create Result.make_json ("line_items")
+			create Result.make_from_string ("line_items")
 		end
 
 end

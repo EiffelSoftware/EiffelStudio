@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Common instances of predefined types."
 
 class SHARED_TYPES
@@ -113,10 +113,19 @@ feature -- Access
 			create Result
 		end
 
-	None_type: NONE_A
-			-- Actual NONE type
+	none_type: NONE_A
+			-- Actual NONE type.
+			-- See also `detachable_none_type`.
 		once
 			create Result
+		end
+
+	detachable_none_type: NONE_A
+			-- Actual detachable NONE type (e.g., for `Void`).
+			-- See also `none_type`.
+		once
+			create Result
+			Result.set_detachable_mark
 		end
 
 	unknown_type: UNKNOWN_TYPE_A
@@ -126,7 +135,9 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

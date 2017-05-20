@@ -24,19 +24,34 @@ feature -- URL aliases
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
+			l_source: like source_of_path_alias
+			l_continue: BOOLEAN
 		do
 			error_handler.reset
 
 			create l_parameters.make (2)
 			l_parameters.put (a_source, "source")
 			l_parameters.put (a_alias, "alias")
-			if attached source_of_path_alias (a_alias) as l_path then
-				if a_source.same_string (l_path) then
-						-- already up to date
+			l_source := source_of_path_alias (a_alias)
+			l_continue := True
+			if
+				l_source /= Void -- Alias exists!
+			then
+				if a_source.same_string (l_source) then
+					if attached path_alias (l_source) as l_alias and then l_alias.same_string (a_alias) then
+							-- already up to date
+						l_continue := False
+					else
+							-- multiple alias and a_alias is not the default alias
+							-- then unset, and set again !
+						unset_path_alias (a_source, a_alias)
+					end
 				else
+					l_continue := False
 					error_handler.add_custom_error (0, "alias exists", "Path alias %"" + a_alias + "%" already exists!")
 				end
-			else
+			end
+			if l_continue then
 				sql_insert (sql_insert_path_alias, l_parameters)
 				sql_finalize
 			end
@@ -153,7 +168,7 @@ feature -- URL aliases
 			sql_finalize
 		end
 
-	sql_select_all_path_alias: STRING = "SELECT source, alias, lang FROM path_aliases;"
+	sql_select_all_path_alias: STRING = "SELECT source, alias, lang FROM path_aliases ORDER BY pid DESC;"
 			-- SQL select all path aliases.
 
 	sql_select_path_alias: STRING = "SELECT source FROM path_aliases WHERE alias=:alias ;"
@@ -240,7 +255,7 @@ feature -- Logs
 				sql_query (l_sql, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_log as l_log then
 					Result.force (l_log)
@@ -411,6 +426,6 @@ feature -- Misc
 
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

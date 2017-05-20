@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			-- Creation method.
 		do
 			create selected_changed_actions
-			
+
 			default_create
 			expose_actions.extend (agent draw_overlay_pixmap)
 			pointer_button_press_actions.force_extend (agent handle_pointer_pressed)
@@ -94,8 +94,6 @@ feature {NONE} -- Implementation
 			-- Draw the pixmap which represent whether current is selected.
 		require
 			a_drawable_not_void: a_drawable /= Void
-		local
-			l_parent_2: detachable EV_CONTAINER
 		do
 			if is_selected and attached parent as l_parent then
 				if l_parent.has_focus then
@@ -106,10 +104,10 @@ feature {NONE} -- Implementation
 			else
 				if attached row.background_color as l_row_background_color then
 					a_drawable.set_foreground_color (l_row_background_color)
+				elseif attached parent as l_parent then
+					a_drawable.set_foreground_color (l_parent.background_color)
 				else
-					l_parent_2 := parent
-					check attached l_parent_2 end -- FIXME: Implied by ...?
-					a_drawable.set_foreground_color (l_parent_2.background_color)
+					check has_parent: False end
 				end
 			end
 			a_drawable.fill_rectangle (0, 0, a_drawable.width, a_drawable.height)
@@ -242,17 +240,14 @@ invariant
 	selected_changed_actions_not_void: selected_changed_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

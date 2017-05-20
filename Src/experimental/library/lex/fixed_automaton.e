@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"General finite-state automata, implemented by arrays"
 	legal: "See notice at end of class.";
@@ -19,13 +19,13 @@ class FIXED_AUTOMATON [S-> detachable STATE] inherit
 create
 	make, make_filled
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (i, s: INTEGER)
 			-- Make an automaton including at most `s' states,
 			-- with transitions 0 to `i'.
 		obsolete
-			"Use `make_filled' instead."
+			"Use `make_filled' instead. [2017-05-31]"
 		require
 			s_large_enough: s > 0;
 			i_large_enough: i >= 0
@@ -74,7 +74,7 @@ feature -- Element change
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

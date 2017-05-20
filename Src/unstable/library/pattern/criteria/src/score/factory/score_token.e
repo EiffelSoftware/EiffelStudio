@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {SCORE_TOKEN}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -124,7 +122,7 @@ feature -- Status report
 
 	is_operator_not: BOOLEAN
 		do
-			Result := is_single and (name.is_case_insensitive_equal_general ("not"))
+			Result := is_single and name.is_case_insensitive_equal_general ("not")
 		end
 
 feature {NONE} -- Implementation
@@ -156,9 +154,8 @@ feature -- Status report
 			end
 		end
 
-invariant
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

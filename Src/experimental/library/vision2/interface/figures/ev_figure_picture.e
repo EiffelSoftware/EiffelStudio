@@ -11,7 +11,7 @@ class
 	EV_FIGURE_PICTURE
 
 obsolete
-	"Use EV_MODEL_PICTURE instead."
+	"Use EV_MODEL_PICTURE instead. [2017-05-31]"
 
 inherit
 	EV_ATOMIC_FIGURE

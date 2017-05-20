@@ -36,7 +36,20 @@ inherit
 			interface
 		end
 
-	EV_WIDGET_ACTION_SEQUENCES_IMP
+	EV_WIDGET_ACTION_SEQUENCES_I
+		export
+			{EV_INTERMEDIARY_ROUTINES}
+				focus_in_actions_internal,
+				focus_out_actions_internal,
+				pointer_motion_actions_internal,
+				pointer_button_release_actions,
+				pointer_leave_actions,
+				pointer_leave_actions_internal,
+				pointer_enter_actions_internal
+		redefine
+			init_resize_actions,
+			init_file_drop_actions
+		end
 
 	EV_DOCKABLE_SOURCE_IMP
 		redefine
@@ -71,6 +84,25 @@ feature {NONE} -- Initialization
 					GDK_ACTION_LINK
 				);
 			]"
+		end
+
+feature -- Event handling
+
+	init_resize_actions (a_resize_actions: like resize_actions)
+			-- <Precursor>
+		local
+			l_app_imp: like app_implementation
+		do
+			if not {GTK}.gtk_is_window (c_object) then
+					-- Window resize events are connected separately
+				l_app_imp := app_implementation
+				l_app_imp.gtk_marshal.signal_connect (c_object, l_app_imp.size_allocate_event_string, agent (l_app_imp.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), l_app_imp.gtk_marshal.size_allocate_translate_agent, False)
+			end
+		end
+
+	init_file_drop_actions (a_file_drop_actions: like file_drop_actions)
+			-- <Precursor>
+		do
 		end
 
 feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} -- Implementation

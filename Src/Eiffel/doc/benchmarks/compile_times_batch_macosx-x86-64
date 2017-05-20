@@ -1,7 +1,26 @@
 MacMini with OSX 10.9 (Intel Core i7-3720QM  2.6GHz (Turbo 3.6 GHz))
 
+17.05
+=====
+Apple LLVM version 8.0.0 (clang-800.0.42.1)
+17.05.10.0136 non-RTEA, non-MT, inlinig_size = 8, full class checking, gobo 4.1, exe size = 18379584):
+78.707u 7.502s 1:26.38 99.7% 0+0k 0+1118io 0pf+0w
+
+17.05.10.0136 non-RTEA, non-MT, inlinig_size = 8, full class checking, gobo 4.0d, exe size = 18375488):
+79.427u 7.675s 1:27.25 99.8% 0+0k 9+1045io 0pf+0w
+
+17.05.9.9997 non-RTEA, non-MT, inlining_size = 8, full class checking):
+80.015u 7.713s 1:27.87 99.8% 0+0k 1+1260io 0pf+0w
+
+17.05.9.9782 non-RTEA, non-MT, inlining_size = 8, full class checking):
+77.803u 7.542s 1:25.50 99.8% 0+0k 15+1109io 0pf+0w
+
 16.11
 =====
+Apple LLVM version 8.0.0 (clang-800.0.38)
+16.11.9.9556 non-RTEA, non-MT, inlining_size = 8, full class checking):
+77.539u 7.444s 1:25.13 99.8% 0+0k 6+1138io 0pf+0w
+
 Apple LLVM version 7.0.2 (clang-700.1.81)
 16.11.9.8996 non-RTEA, non-MT, inlining_size = 8, full class checking):
 75.968u 6.694s 1:22.94 99.6% 0+0k 29+1127io 0pf+0w

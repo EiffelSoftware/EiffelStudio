@@ -69,19 +69,19 @@ feature {NONE} -- Implementation
 
 	title_key: JSON_STRING
 		once
-			create Result.make_json ("title")
+			create Result.make_from_string ("title")
 		end
 
 	code_key: JSON_STRING
 		once
-			create Result.make_json ("code")
+			create Result.make_from_string ("code")
 		end
 
 	message_key: JSON_STRING
 		once
-			create Result.make_json ("message")
+			create Result.make_from_string ("message")
 		end
 note
-	copyright: "2011-2012, Javier Velilla, Jocelyn Fiat and others"
+	copyright: "2011-2017, Javier Velilla, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

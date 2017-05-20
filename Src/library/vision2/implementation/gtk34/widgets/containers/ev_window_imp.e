@@ -57,14 +57,12 @@ inherit
 			hide
 		end
 
-	EV_WINDOW_ACTION_SEQUENCES_IMP
-
 create
 	make
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create the window.
 		do
 			assign_interface (an_interface)

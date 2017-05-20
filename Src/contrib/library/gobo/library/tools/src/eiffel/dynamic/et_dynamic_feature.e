@@ -5,7 +5,7 @@ note
 		"Eiffel features equipped with dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			arg: ET_FORMAL_ARGUMENT
 			i, nb: INTEGER
-			l_name: ET_FEATURE_NAME
 		do
 			l_dynamic_type_set_builder := a_system.dynamic_type_set_builder
 			static_feature := a_feature
@@ -52,30 +51,6 @@ feature {NONE} -- Initialization
 			dynamic_type_sets := empty_dynamic_type_sets
 			if attached {ET_EXTERNAL_ROUTINE} a_feature as l_external_routine then
 				builtin_code := l_external_routine.builtin_code
-			elseif a_target_type.base_class.is_procedure_class then
-				if a_feature.name.same_feature_name (tokens.call_feature_name) then
-						-- Make sure that PROCEDURE.call is considered as
-						-- a built-in feature when computing dynamic type sets.
-						-- ISE still consider it as a regular routine.
-					builtin_code := tokens.builtin_procedure_feature (builtin_procedure_call)
-				else
-					builtin_code := builtin_not_builtin
-				end
-			elseif a_target_type.base_class.is_function_class then
-				l_name := a_feature.name
-				if l_name.same_feature_name (tokens.item_feature_name) then
-						-- Make sure that FUNCTION.item is considered as
-						-- a built-in feature when computing dynamic type sets.
-						-- ISE still consider it as a regular routine.
-					builtin_code := tokens.builtin_function_feature (builtin_function_item)
-				elseif l_name.same_feature_name (tokens.call_feature_name) then
-						-- Make sure that FUNCTION.call is considered as
-						-- a built-in feature when computing dynamic type sets.
-						-- ISE still consider it as a regular routine.
-					builtin_code := tokens.builtin_function_feature (builtin_function_call)
-				else
-					builtin_code := builtin_not_builtin
-				end
 			else
 				builtin_code := builtin_not_builtin
 			end
@@ -91,18 +66,29 @@ feature {NONE} -- Initialization
 						-- it is likely that the 'Result' will be Void at some
 						-- point after a GC cycle.
 					result_type_set := l_dynamic_type_set_builder.object_id_dynamic_type_set
-				elseif builtin_code = builtin_internal_feature (builtin_internal_type_of_type) then
-					if attached a_system.type_of_type_feature as l_type_of_type_feature then
-						result_type_set := l_type_of_type_feature.result_type_set
-					else
-						l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
-						l_dynamic_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
-							-- Unless proven otherwise after possible attachments,
-							-- the result is assumed to be never Void.
-						l_dynamic_type_set.set_never_void
-						result_type_set := l_dynamic_type_set
-						a_system.set_type_of_type_feature (Current)
-					end
+				elseif
+					(builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_new_type_instance_of)) and then
+					attached a_system.ise_runtime_new_type_instance_of_feature as l_ise_runtime_new_type_instance_of_feature
+				then
+					result_type_set := l_ise_runtime_new_type_instance_of_feature.result_type_set
+				elseif
+					(builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_reference_field) or
+					builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_reference_field_at)) and then
+					attached a_system.ise_runtime_reference_field_feature as l_reference_field_feature
+				then
+					result_type_set := l_reference_field_feature.result_type_set
+				elseif builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_reference_field_at_offset) then
+					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
+					result_type_set := l_dynamic_type_set_builder.alive_conforming_descendants (l_dynamic_type)
+				elseif builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_new_instance_of) then
+					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
+					result_type_set := l_dynamic_type_set_builder.alive_conforming_descendants (l_dynamic_type)
+				elseif builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_new_special_of_reference_instance_of) then
+					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
+					result_type_set := l_dynamic_type_set_builder.alive_conforming_descendants (l_dynamic_type)
+				elseif builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_new_tuple_instance_of) then
+					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
+					result_type_set := l_dynamic_type_set_builder.alive_conforming_descendants (l_dynamic_type)
 				else
 					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 					l_dynamic_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
@@ -121,6 +107,14 @@ feature {NONE} -- Initialization
 						arg := args.formal_argument (i)
 						if i = 1 and then builtin_code = builtin_identified_feature (builtin_identified_eif_object_id) then
 							l_dynamic_type_set := l_dynamic_type_set_builder.object_id_dynamic_type_set
+						elseif
+							i = 4 and then
+							(builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_set_reference_field) or
+							builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_set_reference_field_at)) and then
+							attached a_system.ise_runtime_set_reference_field_feature as l_set_reference_field_feature and then
+							attached l_set_reference_field_feature.argument_type_set (4) as l_argument_type_set
+						then
+							l_dynamic_type_set := l_argument_type_set
 						else
 							l_type := arg.type
 							l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
@@ -133,6 +127,27 @@ feature {NONE} -- Initialization
 						arg.name.set_index (i)
 						i := i + 1
 					end
+				end
+			end
+			if
+				builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_new_type_instance_of)
+			then
+				if a_system.ise_runtime_new_type_instance_of_feature = Void then
+					a_system.set_ise_runtime_new_type_instance_of_feature (Current)
+				end
+			elseif
+				builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_reference_field) or
+				builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_reference_field_at)
+			then
+				if a_system.ise_runtime_reference_field_feature = Void then
+					a_system.set_ise_runtime_reference_field_feature (Current)
+				end
+			elseif
+				builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_set_reference_field) or
+				builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_set_reference_field_at)
+			then
+				if a_system.ise_runtime_set_reference_field_feature = Void then
+					a_system.set_ise_runtime_set_reference_field_feature (Current)
 				end
 			end
 		ensure
@@ -397,15 +412,6 @@ feature -- Status report
 
 	builtin_code: INTEGER
 			-- Built-in code of current feature
-
-	is_builtin_routine_call: BOOLEAN
-			-- Is current feature the built-in feature 'ROUTINE.call'?
-		do
-			Result := (builtin_code = builtin_function_feature (builtin_function_call)) or
-				(builtin_code = builtin_procedure_feature (builtin_procedure_call))
-		ensure
-			builtin: Result implies is_builtin
-		end
 
 	is_builtin_function_item: BOOLEAN
 			-- Is current feature the built-in feature 'FUNCTION.item'?

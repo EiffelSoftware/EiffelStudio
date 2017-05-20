@@ -151,11 +151,18 @@ feature -- Visit nodes
 						l_existing_target.base.system.set_level (level + 1)
 					end
 
-					if
-						application_target.options.is_warning_enabled (w_same_uuid) and then
-						not (create {PATH}.make_from_string (l_path)).is_same_file_as (l_existing_target.base.system.file_path)
-					then
-						add_warning (create {CONF_ERROR_UUIDFILE}.make (a_library.target.system.file_name, l_path, l_existing_target.parent.system.file_name, l_existing_target.base.system.file_name))
+					if application_target.options.is_warning_enabled (w_same_uuid) then
+						if not (create {PATH}.make_from_string (l_path)).is_same_file_as (l_existing_target.base.system.file_path) then
+								-- Check for redirection cases.
+							if
+								attached l_load.last_redirected_location as l_new_path and then
+								l_new_path.is_same_file_as (l_existing_target.base.system.file_path)
+							then
+									-- Ok same final file, as it is an ecf redirection
+							else
+								add_warning (create {CONF_ERROR_UUIDFILE}.make (a_library.target.system.file_name, l_path, l_existing_target.parent.system.file_name, l_existing_target.base.system.file_name))
+							end
+						end
 					end
 				else
 					l_load.retrieve_configuration (l_path)
@@ -243,7 +250,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

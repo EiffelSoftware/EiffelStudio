@@ -51,14 +51,12 @@ inherit
 			{NONE} all
 		end
 
-	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
-
 create
 	make
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create `Current' empty with interface `an_interface'.
 		do
 			assign_interface (an_interface)
@@ -325,7 +323,7 @@ feature {EV_DRAWABLE_IMP} -- Internal datas.
 			-- dc we use when painting outside a WM_PAINT message
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

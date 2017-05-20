@@ -108,7 +108,7 @@ feature -- Status setting
 	set_point_b (a_point: EV_COORDINATE)
 			-- Assign `a_point' to `point_b'.
 		obsolete
-			"Use set_point_b_position"
+			"Use set_point_b_position [2017-05-31]"
 		require
 			a_point_not_void: a_point /= Void
 		do

@@ -17,7 +17,7 @@ feature -- Initialization
 			-- Initialize
 		local
 			l_smtp_protocol: SMTP_PROTOCOL
-			l_host: HOST_ADDRESS
+			l_host: INET_ADDRESS
 			l_email: EMAIL
 			l_smtp_server, l_sender, l_recipient, l_message: detachable STRING
 		do
@@ -54,7 +54,7 @@ feature -- Initialization
 			l_message := l_message.twin
 
 				-- To get local host name needed in creation of SMTP_PROTOCOL.
-			create l_host.make_local
+			l_host:= (create {INET_ADDRESS_FACTORY}).create_localhost
 
 				-- Create our message.
 			create l_email.make_with_entry (l_sender, l_recipient)
@@ -62,7 +62,7 @@ feature -- Initialization
 			l_email.set_message (l_message)
 
 				-- Send it.
-			create l_smtp_protocol.make (l_smtp_server, l_host.local_host_name)
+			create l_smtp_protocol.make (l_smtp_server, l_host.host_name)
 			l_smtp_protocol.initiate_protocol
 			l_smtp_protocol.transfer (l_email)
 			l_smtp_protocol.close_protocol

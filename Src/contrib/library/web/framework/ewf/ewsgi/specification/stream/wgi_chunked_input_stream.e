@@ -35,6 +35,9 @@ feature -- Input
 	read_character
 			-- Read the next character in input stream.
 			-- Make the result available in `last_character'
+		local
+			d: like last_chunk_data
+			l_index_in_chunk: INTEGER
 		do
 			index := index + 1
 			if index > chunk_upper then
@@ -45,10 +48,24 @@ feature -- Input
 					read_trailer_and_crlf
 					last_character := '%U'
 				else
-					last_character := last_chunk_data.item (index)
+					l_index_in_chunk := chunk_index (index)
+					d := last_chunk_data
+					if d.valid_index (l_index_in_chunk) then
+						last_character := d [l_index_in_chunk]
+					else
+						check has_character: False end
+						last_character := '%U'
+					end
 				end
 			else
-				last_character := last_chunk_data.item (index)
+				l_index_in_chunk := chunk_index (index)
+				d := last_chunk_data
+				if d.valid_index (l_index_in_chunk) then
+					last_character := d [l_index_in_chunk]
+				else
+					check has_character: False end
+					last_character := '%U'
+				end
 			end
 		end
 
@@ -77,13 +94,13 @@ feature -- Input
 					i - index + 1 = nb or last_chunk_size = 0
 				loop
 					if i + nb - 1 <= chunk_upper then
-						last_string.append (last_chunk_data.substring (i - chunk_lower + 1, i - chunk_lower + 1 + nb - 1))
+						last_string.append (last_chunk_data.substring (chunk_index (i), chunk_index (i) + nb - 1))
 						i := i + nb - 1
 					else
 						-- Need to read new chunk
 						-- first get all available data from current chunk
-						if i <= chunk_upper then
-							last_string.append (last_chunk_data.substring (i - chunk_lower + 1, chunk_upper - chunk_lower + 1))
+						if i > chunk_upper then
+							last_string.append (last_chunk_data.substring (i - chunk_lower + 1, chunk_index (chunk_upper)))
 							i := chunk_upper
 						end
 						-- then continue
@@ -166,9 +183,25 @@ feature -- Status report
 			Result := last_trailer /= Void
 		end
 
-feature {NONE} -- Parser
+feature {NONE} -- Access: chunk
 
-	index, chunk_lower, chunk_upper: INTEGER
+	chunk_index (a_index: INTEGER): INTEGER
+			-- Index in `last_chunk_data' for global input index `a_index'.
+		do
+			Result := a_index - chunk_lower + 1
+		end
+
+	index: INTEGER
+			-- Global input index.
+
+	chunk_lower: INTEGER
+			-- Lower global index for `last_chunk_data'.
+
+	chunk_upper: INTEGER
+			-- Upper global index for `last_chunk_data'.
+
+feature {NONE} -- Chunk parsing
+
 	tmp_hex_chunk_size: STRING_8
 
 	read_chunk_block
@@ -190,8 +223,10 @@ feature {NONE} -- Parser
 					check last_chunk_data.count = last_chunk_size end
 
 					l_input := input
+					check not l_input.end_of_input end
 					l_input.read_character
 					check l_input.last_character = '%R' end
+					check not l_input.end_of_input end
 					l_input.read_character
 					check l_input.last_character = '%N' end
 				end
@@ -214,8 +249,8 @@ feature {NONE} -- Parser
 			l_input.read_string (last_chunk_size)
 			last_chunk_data := l_input.last_string
 		ensure
-			last_chunk_attached: attached last_chunk_data as el_last_chunk
-			last_chunk_size_ok: el_last_chunk.count = last_chunk_size
+			last_chunk_attached: last_chunk_data /= Void
+			last_chunk_size_ok: last_chunk_data.count = last_chunk_size
 		end
 
 	read_chunk_size
@@ -350,7 +385,7 @@ feature {NONE} -- Implementation
 			-- Input Stream
 
 ;note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

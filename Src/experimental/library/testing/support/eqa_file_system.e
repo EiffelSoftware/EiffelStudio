@@ -34,8 +34,7 @@ feature -- Command
 	copy_file (a_src: FILE; a_env: EQA_ENVIRONMENT; a_dest: FILE; a_substitute: BOOLEAN)
 			-- Append lines of file `a_src', with environment
 			-- variables substituted according to `a_env' (but
-			-- only if `substitute' is true) to
-			-- file `a_dest'.
+			-- only if `substitute' is true) to file `a_dest'.
 		require
 			source_not_void: a_src /= Void
 			destination_not_void: a_dest /= Void
@@ -53,6 +52,7 @@ feature -- Command
 			loop
 				a_src.read_line
 				if a_substitute then
+						-- FIXME: Should substitution be UTF-8 encoded? [2017-05-03]
 					l_line := a_env.substitute (a_src.last_string).as_string_8_conversion
 				else
 					l_line := a_src.last_string
@@ -109,12 +109,12 @@ feature -- Query: Path
 	build_source_path (a_path: detachable EQA_SYSTEM_PATH): STRING_32
 			-- Build the actual path name relative to the source directory for given path
 			--
-			-- Note: will raise exception if {EQA_SYSTEM_TEST_SET}.source_path_key is not defined.
+			-- Note: will raise exception if {EQA_TEST_SET}.source_path_key is not defined.
 			--
 			-- `a_path': Optional path for which path name should be built.
 			-- `Result': Path name relative to source directory.
 		do
-			Result := build_path_from_key ({EQA_SYSTEM_TEST_SET}.source_path_key, a_path)
+			Result := build_path_from_key ({EQA_TEST_SET}.source_path_key, a_path)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -122,12 +122,12 @@ feature -- Query: Path
 	build_target_path (a_path: detachable EQA_SYSTEM_PATH): STRING_32
 			-- Build the actual path name relative to the target directory for given path.
 			--
-			-- Note: will raise exception if {EQA_SYSTEM_TEST_SET}.target_path_key is not defined.
+			-- Note: will raise exception if {EQA_TEST_SET}.target_path_key is not defined.
 			--
 			-- `a_path': Optional path for which path name should be built
 			-- `Result': Path name relative to target directory.
 		do
-			Result := build_path_from_key ({EQA_SYSTEM_TEST_SET}.target_path_key, a_path)
+			Result := build_path_from_key ({EQA_TEST_SET}.target_path_key, a_path)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -312,7 +312,7 @@ feature -- Constants
 	target_directory_key: STRING_32 = "EQA_TARGET_DIRECTORY"
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

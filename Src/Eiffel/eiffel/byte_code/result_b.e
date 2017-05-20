@@ -26,41 +26,42 @@ feature -- Visitor
 
 feature
 
-	read_only: BOOLEAN = False;
-			-- Is Result a read-only entity ?
+	read_only: BOOLEAN = False
+			-- Is Result a read-only entity?
 
 	type: TYPE_A
-			-- Result type
+			-- <Precursor>
 		do
-			Result := context.byte_code.result_type;
-		end;
+				-- Result is treated as detachable (like locals).
+			Result := context.byte_code.result_type.as_detachable_type
+		end
 
 	is_predefined: BOOLEAN = True
 			-- Predefined as results is store in a register.
 
 	is_result: BOOLEAN
-			-- Access is result
+			-- <Precursor>
 		do
 			Result := True
 		end
 
-	is_creatable: BOOLEAN = true;
-			-- Can an access to Result be a target for a creation ?
+	is_creatable: BOOLEAN = True
+			-- Can an access to Result be a target for a creation?
 
 	same (other: ACCESS_B): BOOLEAN
-			-- Is `other' the same access as Current ?
+			-- Is `other' the same access as Current?
 		do
 			Result := attached {RESULT_B} other
 		end
 
 	enlarged: RESULT_B
-			-- Enlarges the result node
+			-- Enlarges the result node.
 		do
 			create {RESULT_BL} Result.make (type)
 		end
 
 	register_name: STRING = "Result"
-			-- The "Result" string
+			-- The "Result" string.
 
 feature -- IL code generation
 
@@ -71,19 +72,19 @@ feature -- IL code generation
 feature -- Byte code generation
 
 	assign_code: CHARACTER
-			-- Assignment code
+			-- Assignment code.
 		once
 			Result := {BYTE_CONST}.bc_rassign
 		end
 
 	expanded_assign_code: CHARACTER
-			-- Expanded assignment code
+			-- Expanded assignment code.
 		once
 			Result := {BYTE_CONST}.bc_rexp_assign
 		end
 
 	reverse_code: CHARACTER
-			-- Reverse assignment code
+			-- Reverse assignment code.
 		once
 			Result := {BYTE_CONST}.bc_rreverse
 		end
@@ -91,13 +92,15 @@ feature -- Byte code generation
 feature -- Array optimization
 
 	assigns_to (i: INTEGER): BOOLEAN
+			-- <Precursor>
 		do
 			Result := i = 0
-		end;
+		end
 
 feature -- Inlining
 
 	pre_inlined_code: INLINED_RESULT_B
+			-- <Precursor>
 		do
 			create Result
 			Result.set_parent (parent)

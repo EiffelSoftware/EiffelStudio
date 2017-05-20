@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description: "Implementation of the STORABLE mechanism with streams."
 	legal: "See notice at end of class."
@@ -45,7 +45,7 @@ feature -- Access
 	buffer: POINTER
 			-- C buffer correspond to the Eiffel STREAM
 		obsolete
-			"Use `item' instead to directly access stored/retrieved data"
+			"Use `item' instead to directly access stored/retrieved data. [2017-05-31]"
 		do
 			Result := default_pointer
 		end
@@ -91,13 +91,11 @@ feature -- Element change
 			-- entire object structure reachable from `object'.
 			-- Retrievable within current system only.
 		local
-			l_formatter: BINARY_FORMATTER
 			l_mem: SYSTEM_MEMORY_STREAM
 			l_size: INTEGER
 		do
 			create l_mem.make (0)
-			create l_formatter.make
-			l_formatter.serialize (l_mem, object)
+			;(create {BINARY_FORMATTER}.make).serialize (l_mem, object)
 			l_size := l_mem.length.to_integer_32
 			if l_size > buffer_size then
 				buffer_size := l_size
@@ -200,7 +198,7 @@ feature -- Output
 		do
 		end
 
-	put_real, putreal (r: REAL)
+	put_real, putreal (r: REAL_32)
 			-- Write `r' to medium.
 		do
 		end
@@ -250,7 +248,7 @@ feature -- Output
 		do
 		end
 
-	put_double, putdouble (d: DOUBLE)
+	put_double, putdouble (d: REAL_64)
 			-- Write `d' to medium.
 		do
 		end
@@ -369,18 +367,14 @@ feature {NONE} -- Not exported
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-end -- class STREAM
-
-
+end

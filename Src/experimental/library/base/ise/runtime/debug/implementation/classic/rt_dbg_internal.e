@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Internal routine for RT_DBG_ classes"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -9,8 +9,6 @@ deferred class
 	RT_DBG_INTERNAL
 
 inherit
-	ANY
-
 	REFLECTOR_CONSTANTS
 
 feature -- Object access
@@ -153,7 +151,7 @@ feature -- Object access
 			debug ("RT_DBG_INTERNAL")
 				print ("stack_value_at -> ")
 				if Result /= Void then
-					print (Result.generating_type + " = " + Result.out)
+					print (Result.generating_type.name + " = " + Result.out)
 				else
 					print ("Void Result")
 				end
@@ -471,7 +469,7 @@ feature -- Change local
 				if value = Void then
 					print ("Void) %N")
 				else
-					print (value.generating_type + ": " + value.out + ") %N")
+					print (value.generating_type.name + ": " + value.out + ") %N")
 				end
 			end
 			a_eif_type := eif_type (a_rt_type)
@@ -544,13 +542,12 @@ feature -- Change local
 			debug ("RT_DBG_INTERNAL")
 				print ("set_stack_value_at (dep=" + dep.out + ", loc_type=" + a_loc_type.out + ", pos=" + pos.out  +", ...) -> " + Result.out + " %N")
 				print ("set_stack_value_at: check modification -> ")
-				if attached {ANY} stack_value_at (dep, a_loc_type, pos, a_rt_type) as a then
-					print (a.generating_type + ": " + a.out + "%N")
+				if attached stack_value_at (dep, a_loc_type, pos, a_rt_type) as a then
+					print (a.generating_type.name + ": " + a.out + "%N")
 				else
 					print (" Void %N" )
 				end
 			end
-
 		end
 
 	frozen c_set_boolean_stack_value (dep: INTEGER; a_loc_type: INTEGER; pos: INTEGER; a_bool: BOOLEAN): INTEGER
@@ -793,14 +790,14 @@ feature -- Testing
 				s := "----------------------------------%N"
 				s.append ("Loc #" + loc_pos.out + "(stack depth=" + dep.out + ")")
 				if val /= Void then
-					s.append (": should be " + val.generating_type)
+					s.append (": should be " + val.generating_type.name)
 				end
 				s.append ("%N")
 				print (s)
 --				s.wipe_out
 				s.append (" -> ")
-				if attached {ANY} stack_value_at (dep, rt_DLT_LOCALVAR, loc_pos, a_rt_type) as a then
-					s.append (a.generating_type + "=" + a.out)
+				if attached stack_value_at (dep, rt_DLT_LOCALVAR, loc_pos, a_rt_type) as a then
+					s.append (a.generating_type.name + "=" + a.out)
 				else
 					s.append ("Void object")
 				end
@@ -827,7 +824,7 @@ feature -- Testing
 				s := "----------------------------------%N"
 				s.append ("SetLoc #" + loc_pos.out + "(stack depth=" + dep.out + ")")
 				if val /= Void then
-					s.append (": value " + val.generating_type)
+					s.append (": value " + val.generating_type.name)
 				else
 					s.append (": value Void")
 				end
@@ -866,7 +863,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

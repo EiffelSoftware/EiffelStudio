@@ -1,0 +1,28 @@
+test_name 	 capability-precompile-propagation
+test_description Project settings should not be propagated to used libraries and precompile during configuration checks.
+
+copy_sub	Ace $TEST Ace
+copy_sub	bar.ecf $TEST bar.ecf
+copy_sub	dep.ecf $TEST dep.ecf
+copy_sub	foo.ecf $TEST foo.ecf
+copy_sub	precomp-thread.ecf $TEST precomp-thread.ecf
+copy_sub	precomp-scoop.ecf $TEST precomp-scoop.ecf
+copy_raw	test.e $CLUSTER test.e
+
+-- Build a precompile
+
+config precomp-thread.ecf pre-foo-thread
+
+compile_precompiled
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+
+-- Compile system
+
+config Ace test_thread
+
+compile_melted
+compile_result ok
+
+test_end

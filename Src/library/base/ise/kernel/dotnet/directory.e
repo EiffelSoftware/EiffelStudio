@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Directories, in the Unix sense, with creation and exploration features"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -188,7 +188,7 @@ feature -- Access
 			-- File name as a STRING_8 instance. The value might be truncated
 			-- from the original name used to create the current FILE instance.
 		obsolete
-			"Use `path' to ensure you can retrieve all kind of names."
+			"Use `path' to ensure you can retrieve all kind of names. [2017-05-31]"
 		do
 			Result := internal_name.as_string_8
 		ensure then
@@ -359,7 +359,7 @@ feature -- Conversion
 			-- expressed in Unicode are excluded and one has to use
 			-- `linear_representation' to get them.
 		obsolete
-			"Use `entries' instead if your application is using Unicode file names."
+			"Use `entries' instead if your application is using Unicode file names. [2017-05-31]"
 		local
 			i, c, dc: INTEGER
 			l_string: detachable SYSTEM_STRING
@@ -445,7 +445,7 @@ feature -- Status report
 	lastentry: detachable STRING_8
 			-- Last entry read by `readentry'.
 		obsolete
-			"Use `last_entry_32' for Unicode file names, or `last_entry_8' otherwise."
+			"Use `last_entry_32' for Unicode file names, or `last_entry_8' otherwise. [2017-05-31]"
 		attribute
 		end
 
@@ -462,7 +462,7 @@ feature -- Status report
 		do
 				-- count = 0, since .NET does not return "." and ".." which
 				-- are symbolic representations but not effective directories.
-			Result := (count = 0)
+			Result := count = 0
 		end
 
 	exists: BOOLEAN
@@ -611,7 +611,7 @@ feature -- Removal
 				l_name = Void or requested_cancel
 			loop
 					-- Ignore current and parent directories.
-				if (not l_name.same_string_general (current_directory_string) and not l_name.same_string_general (parent_directory_string)) then
+				if not l_name.same_string_general (current_directory_string) and not l_name.same_string_general (parent_directory_string) then
 						-- Avoid creating too many objects.
 					l_file_name := l_path.extended (l_name)
 					create file.make_with_path (l_file_name)
@@ -732,7 +732,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

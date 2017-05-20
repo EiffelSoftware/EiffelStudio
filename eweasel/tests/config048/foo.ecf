@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="foo" uuid="BAC53A3D-D15E-4535-B122-967871D21E5E" library_target="foo">
+	<target name="foo">
+		<root all_classes="true"/>
+		<setting name="concurrency" value="scoop"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="bar" location="bar.ecf"/>
+		<library name="dep" location="dep.ecf"/>
+	</target>
+</system>

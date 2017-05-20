@@ -154,9 +154,12 @@ typedef struct {
 		 */
 	attribute_detail *attributes;
 
-		/* Array of generic type patterns if `generic_count' is non-zero.
-		 */
+		/* Array of generic type patterns if `generic_count' is non-zero. */
 	int32 *generics;
+
+		/* Mapping of positions of formals in the storing system to their position
+		 * in the retrieval system. */
+	EIF_TYPE_INDEX *formal_map;
 
 		/* Type in storing system. */
 	EIF_TYPE_INDEX old_type;
@@ -183,6 +186,9 @@ typedef struct {
 
 		/* Were there a mismatch between the storing and retrieving system? */
 	uint32 mismatched;
+
+		/* Is old routine type? */
+	char is_old_routine_type;
 
 } type_descriptor;
 

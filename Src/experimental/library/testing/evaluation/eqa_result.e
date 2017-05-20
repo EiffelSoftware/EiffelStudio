@@ -62,7 +62,7 @@ feature -- Access
 	teardown_response: EQA_TEST_INVOCATION_RESPONSE
 			-- Response from teardown stage
 
-	tag: READABLE_STRING_8
+	tag: READABLE_STRING_32
 			-- If available, short tag describing stats of `Current'
 		do
 			if attached test_response.exception as l_exception then
@@ -120,7 +120,7 @@ invariant
 	setup_clean: not setup_response.is_exceptional
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

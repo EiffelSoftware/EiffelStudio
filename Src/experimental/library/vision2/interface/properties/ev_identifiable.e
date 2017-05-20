@@ -44,7 +44,7 @@ feature -- Access
 	default_identifier_name: STRING_32
 			-- Default name if no other name is set.
 		do
-			Result := {STRING_32} "{"+generating_type+"}"
+			Result := {STRING_32} "{" + generating_type.name_32 + "}"
 		ensure
 			result_not_void: Result /= Void
 			result_not_empty: not Result.is_empty

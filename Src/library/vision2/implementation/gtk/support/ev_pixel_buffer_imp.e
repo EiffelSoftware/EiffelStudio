@@ -106,12 +106,11 @@ feature -- Command
 			l_writeable_formats: ARRAYED_LIST [STRING_32]
 			l_extension: READABLE_STRING_32
 			l_format: detachable READABLE_STRING_32
-			l_app_imp: detachable EV_APPLICATION_IMP
+			l_dep: EV_GTK_ENVIRONMENT
 			i: INTEGER
 		do
-			l_app_imp ?= (create {EV_ENVIRONMENT}).implementation.application_i
-			check l_app_imp /= Void then end
-			l_writeable_formats := l_app_imp.writeable_pixbuf_formats
+			create l_dep
+			l_writeable_formats := l_dep.writeable_pixbuf_formats
 			if a_file_name.has_extension ("jpeg") then
 				l_extension := {STRING_32} "jpg"
 			elseif attached a_file_name.extension as l_ext then
@@ -527,7 +526,7 @@ feature -- Obsolete
 	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE)
 			-- Draw `a_pixel_buffer' to current at `a_rect'.
 		obsolete
-			"Use draw_pixel_buffer_with_x_y instead"
+			"Use draw_pixel_buffer_with_x_y instead [2017-05-31]"
 		local
 			l_pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
 		do
@@ -537,7 +536,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

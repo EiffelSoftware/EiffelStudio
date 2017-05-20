@@ -1,26 +1,3 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="objective_c" uuid="876E123E-1EED-4F7B-9C7D-4762358A62D7" readonly="false" library_target="objective_c">
-	<target name="objective_c">
-		<description>Objective-C Base Library. Wrapper classes for Objective C .
-&#9;&#9;&#9;Copyright (c) 2009, Daniel Furrer and others.</description>
-		<root all_classes="true"/>
-		<file_rule>
-			<exclude>/EIFGEN.{0,1}$</exclude>
-			<exclude>/\.svn$</exclude>
-			<exclude>/temp$</exclude>
-		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
-		</option>
-		<external_include location="$(ISE_LIBRARY)/library/objc_base/Clib"/>
-		<external_cflag value="-ObjC"/>
-		<external_object location="$(ISE_LIBRARY)/library/objc_base/spec/$(ISE_PLATFORM)/lib/objc_base_eiffel.o"/>
-		<external_linker_flag value="-framework Foundation"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
-		<cluster name="objective_c" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/\.svn$</exclude>
-				<exclude>tests</exclude>
-			</file_rule>
-		</cluster>
-	</target>
-</system>
+<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="876E123E-1EED-4F7B-9C7D-4762358A62D7" message="Obsolete: use objc_base.ecf !" location="objc_base.ecf">
+</redirection>

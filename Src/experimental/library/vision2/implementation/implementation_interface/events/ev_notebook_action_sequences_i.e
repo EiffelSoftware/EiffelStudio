@@ -16,21 +16,17 @@ feature -- Event handling
 	selection_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `selected_item' changes.
 		do
-			if selection_actions_internal = Void then
-				selection_actions_internal :=
-					 create_selection_actions
+			if attached selection_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				selection_actions_internal := Result
 			end
-			Result := selection_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_selection_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a selection action sequence.
-		deferred
-		end
 
 	selection_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `selection_actions'.

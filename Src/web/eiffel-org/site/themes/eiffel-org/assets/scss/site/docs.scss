@@ -166,6 +166,12 @@
 		overflow: auto;
 
 	}
+	dt {
+		font-weight: bold;
+	}
+	dd {
+		font-style: italic;
+	}
 
 	.wdocs-nav {
 		border-top: solid 1px #999;
@@ -231,3 +237,26 @@
 	width: 98%;
 }
 
+#wdocs-versions.menu {
+	padding: 0px;
+	margin: 5px 0 0 0;
+	background-color: white;
+	border: solid 1px #999;
+	ul {
+		padding: 0 0 0 20px;
+		margin: 0px;
+		list-style-type: none;
+		li>ul {
+			padding: 10px;
+			background-color: white;
+			border: solid 1px #999;
+			display: none;
+			font-size:smaller;
+		}
+		li:hover>ul {
+			position: absolute;
+			display: block;
+			z-index: 99;
+		}
+	}
+}

@@ -29,7 +29,8 @@ inherit
 
 feature -- Access
 
-	parameters: BYTE_LIST [PARAMETER_B]
+	parameters: detachable BYTE_LIST [PARAMETER_B]
+			-- Arguments of the call (if any).
 		do
 			-- no parameters
 		end
@@ -113,10 +114,8 @@ feature -- Status
 	has_gcable_variable: BOOLEAN
 			-- Is the access using a GCable variable ?
 		local
-			expr_b: EXPR_B
 			is_in_register: BOOLEAN
 			i, nb: INTEGER
-			l_parameters: BYTE_LIST [EXPR_B]
 			l_area: SPECIAL [EXPR_B]
 		do
 			is_in_register := register /= Void and register /= No_register
@@ -133,16 +132,17 @@ feature -- Status
 					-- any and if the access is not already stored in a
 					-- register (which can't be a pointer, otherwise it would
 					-- have been handled by the first "if").
-				l_parameters := parameters
-				if not is_in_register and l_parameters /= Void then
+				if
+					not is_in_register and then
+					attached parameters as l_parameters
+				then
 					from
 						l_area := l_parameters.area
 						nb := l_parameters.count
 					until
 						i = nb or Result
 					loop
-						expr_b := l_area.item (i)
-						Result := expr_b.has_gcable_variable
+						Result := l_area [i].has_gcable_variable
 						i := i + 1
 					end
 				end
@@ -152,32 +152,27 @@ feature -- Status
 	used (r: REGISTRABLE): BOOLEAN
 			-- Is register `r' used in local access ?
 		local
-			expr: EXPR_B
 			i, nb: INTEGER
 			l_area: SPECIAL [EXPR_B]
-			l_parameters: BYTE_LIST [EXPR_B]
 		do
-			l_parameters := parameters
-			if l_parameters /= Void then
+			if attached parameters as l_parameters then
 				from
 					l_area := l_parameters.area
 					nb := l_parameters.count
 				until
 					i = nb or Result
 				loop
-					expr := l_area.item (i)
-					Result := expr.used(r)
+					Result := l_area [i].used (r)
 					i := i + 1
 				end
 			end
 		end
 
 	is_single: BOOLEAN
-			-- Is access a single one ?
+			-- Is access a single one?
 		local
 			i, nb: INTEGER
 			l_area: SPECIAL [EXPR_B]
-			l_parameters: BYTE_LIST [EXPR_B]
 			expr_b: EXPR_B
 		do
 				-- If it is predefined, then it is single.
@@ -187,15 +182,14 @@ feature -- Status
 					-- It is not predefined. If it has parameters, then none
 					-- of them may have a call or allocate memory (manifest arrays,
 					-- strings, ...).
-				l_parameters := parameters
-				if l_parameters /= Void then
+				if attached parameters as l_parameters then
 					from
 						l_area := l_parameters.area
 						nb := l_parameters.count
 					until
 						i = nb or not Result
 					loop
-						expr_b := l_area.item (i)
+						expr_b := l_area [i]
 						Result := not expr_b.allocates_memory and not expr_b.has_call
 						i := i + 1
 					end
@@ -221,28 +215,28 @@ feature -- Element change
 	propagate (r: REGISTRABLE)
 			-- Propagate register across access
 		do
-			if (register = Void) and not context_type.is_basic then
-				if 	(real_type (type).c_type.same_class_type (r.c_type)
+			if
+				register = Void and
+				not context_type.is_basic and then
+				(real_type (type).c_type.same_class_type (r.c_type)
 					or
-					(	r = No_register
-						and
-						(	(parent = Void or else parent.target.is_current)
+					(r = No_register and
+						(parent = Void or else parent.target.is_current
 							or parameters = Void))
-					)
-					and
-					(r = No_register implies context.propagate_no_register)
-				then
-					set_register (r)
-					context.set_propagated
-				end
+				) and
+				(r = No_register implies context.propagate_no_register)
+			then
+				set_register (r)
+				context.set_propagated
 			end
 		end
 
 feature -- Setting
 
 	set_parameters (p: like parameters)
+			-- Set `parameters` to `p`.
 		do
-			-- Do nothing
+				-- Do nothing
 		end
 
 	set_is_attachment
@@ -255,10 +249,10 @@ feature -- C generation
 	print_register
 			-- Print register or generate if there are no register.
 		do
-			if register /= No_register then
-				Precursor {CALL_B}
-			else
+			if register = No_register then
 				generate_access
+			else
+				Precursor
 			end
 		end
 
@@ -267,7 +261,7 @@ feature -- C generation
 			-- propagated, also frees the registers used by target and
 			-- last message.
 		do
-			Precursor {CALL_B}
+			Precursor
 				-- Free those registers which where kept because No_register
 				-- was propagated, hence call was meant to be expanded in-line.
 			if perused then
@@ -291,21 +285,17 @@ feature -- C generation
 	unanalyze_parameters
 			-- Undo the analysis on parameters
 		local
-			l_parameters: BYTE_LIST [EXPR_B]
 			l_area: SPECIAL [EXPR_B]
 			i, nb: INTEGER
-			expr_b: EXPR_B
 		do
-			l_parameters := parameters
-			if l_parameters /= Void then
+			if attached parameters as l_parameters then
 				from
 					l_area := l_parameters.area
 					nb := l_parameters.count
 				until
 					i = nb
 				loop
-					expr_b := l_area.item (i)
-					expr_b.unanalyze
+					l_area [i].unanalyze
 					i := i + 1
 				end
 			end
@@ -314,35 +304,31 @@ feature -- C generation
 	free_param_registers
 			-- Free registers used by parameters
 		local
-			l_parameters: BYTE_LIST [EXPR_B]
 			l_area: SPECIAL [EXPR_B]
 			i, nb: INTEGER
-			expr_b: EXPR_B
 		do
-			l_parameters := parameters
-			if l_parameters /= Void then
+			if attached parameters as l_parameters then
 				from
 					l_area := l_parameters.area
 					nb := l_parameters.count
 				until
 					i = nb
 				loop
-					expr_b := l_area.item (i)
-					expr_b.free_register
+					l_area [i].free_register
 					i := i + 1
 				end
 			end
 		end
 
 	unanalyze
-			-- Undo the analysis
+			-- Undo the analysis.
 		do
 			set_register (Void)
 			unanalyze_parameters
 		end
 
 	Current_register: REGISTRABLE
-			-- The "Current" entity
+			-- The "Current" entity.
 		do
 			Result := Context.Current_register
 		end
@@ -381,16 +367,172 @@ feature -- C generation
 		do
 		end
 
+	generate_access
+			-- Generation of the C code for access
+		do
+		end
+
+	generate_parameters (reg: REGISTRABLE)
+			-- Generate code for parameters computation.
+			-- `reg' ("Current") is not used except for
+			-- inlining
+		require
+			reg_not_void: reg /= Void
+		do
+			if parameters /= Void then
+				parameters.generate
+			end
+		end
+
+	generate_call (is_separate: BOOLEAN; is_exactly_separate: BOOLEAN; is_creation: BOOLEAN; a_result: detachable REGISTRABLE; a_target: REGISTRABLE)
+			-- Generate a call on target register `a_target' and store the result (if any) in `a_result'.
+			-- If `is_separate' is true, the call may be separate (it cannot be non-separate if `is_exactly_separate' is 'True').
+		require
+			target_attached: attached a_target
+			is_exactly_separate_consistent: is_exactly_separate implies is_separate
+		local
+			buf: GENERATION_BUFFER
+			l_parameters: like parameters
+			l_count: like parameters.count
+			l_argument: PARAMETER_B
+			is_maybe_separate: BOOLEAN
+			is_impersonated: BOOLEAN
+		do
+			buf := buffer
+			is_maybe_separate := is_separate and not is_exactly_separate
+			is_impersonated := is_maybe_separate and then is_creation
+
+			if is_maybe_separate then
+					-- Generate if-else structure for an impersonated call as well as a separate call.
+					-- The construct should look like this:
+					-- if (RTS_CI (is_query, target)) {
+					-- 		RTS_BI (target);
+					--		    /* Generate regular call. */
+					--		RTS_EI;
+					-- } else {
+					--		    /* Generate separate call. */
+					-- }
+				if not is_impersonated then
+						-- Avoid impersonation checks when the call is known to be impersonated.
+					buf.put_new_line
+					buf.put_string ("if (RTS_CI (")
+
+						-- Generate a boolean indicating whether the call is a query.
+					buf.put_string (if attached a_result then
+						{C_CONST}.eif_true
+					else
+						{C_CONST}.eif_false
+					end)
+
+					buf.put_two_character (',', ' ')
+					a_target.print_register
+					buf.put_four_character (')', ')', ' ', '{')
+
+					buf.indent
+				end
+
+				buf.put_new_line
+				buf.put_string ("RTS_BI (")
+				a_target.print_register
+				buf.put_two_character (')', ';')
+			end
+
+				-- Generate the regular call. This is also required for non-separate calls.
+				-- Now if there is a result for the call and the result
+				-- has to be stored in a real register, do generate the assignment.
+			if not is_exactly_separate then
+				buf.put_new_line
+				if not attached a_result then
+						-- Call to a procedure.
+					generate_on (a_target)
+				elseif not attached {AGENT_CALL_B} Current then
+						-- Call to a simple function.
+					a_result.print_register
+					buf.put_three_character (' ', '=', ' ')
+					generate_on (a_target)
+				else
+						-- Call to an agent function.
+					generate_on (a_target)
+					buf.put_character (';')
+					buf.put_new_line
+					a_result.print_register
+					buf.put_string (" = ")
+					register.print_register
+				end
+				buf.put_character (';')
+			end
+
+				-- Continue with the if-else structure for impersonated calls.
+			if is_maybe_separate then
+				buf.put_new_line
+				buf.put_string ("RTS_EI;")
+				if not is_impersonated then
+					buf.exdent
+					buf.put_new_line
+					buf.put_string ("} else {")
+					buf.indent
+				end
+			end
+
+				-- Generate a separate call. The generated code should look like this:
+				--  RTS_AC (arg_count, target);
+				--  RTS_AA (arg, typed_field, sk_value, position); /* Repeat for all arguments. */
+				--	RTS_CALL (...);
+			if is_separate and then not is_impersonated then
+				buf.put_new_line
+				buf.put_string ("RTS_AC (")
+					-- Calculate the number of arguments to be passed.
+				l_parameters := parameters
+				if attached l_parameters then
+					l_count := l_parameters.count
+				end
+				buf.put_integer (l_count)
+				buf.put_two_character (',', ' ')
+				a_target.print_register
+				buf.put_two_character (')', ';')
+
+				check valid_count: l_parameters = Void implies l_count <= 0 end
+
+					-- Register arguments to be passed to the SCOOP runtime in the allocated container.
+				from
+				until
+					l_count <= 0
+				loop
+					buf.put_new_line
+					buf.put_string ("RTS_AA (")
+					l_argument := l_parameters [l_count]
+					l_argument.print_register
+					buf.put_two_character (',', ' ')
+					l_argument.c_type.generate_typed_field (buf)
+					buf.put_two_character (',', ' ')
+					l_argument.c_type.generate_sk_value (buf)
+					buf.put_two_character (',', ' ')
+					buf.put_integer (l_count)
+					buf.put_two_character (')', ';')
+					l_count := l_count - 1
+				end
+					-- Generate the RTS_CALL line.
+				generate_separate_call (a_result, a_target)
+			end
+
+				-- Finish the if-else structure.
+			if is_maybe_separate and then not is_impersonated then
+				buf.exdent
+				buf.put_new_line
+				buf.put_character ('}')
+			end
+		end
+
 feature {REGISTRABLE} -- C code generation
 
 	print_checked_target_register
 			-- <Precursor>
 		do
-			if register /= no_register then
-				register.print_checked_target_register
-			else
+			if register = no_register then
 					-- General case.
 				Precursor
+			else
+				register.print_checked_target_register
 			end
 		end
 
@@ -487,156 +629,6 @@ feature {ACCESS_B} -- C code generation: separate call
 		do
 		end
 
-feature -- C generation
-
-	generate_access
-			-- Generation of the C code for access
-		do
-		end
-
-	generate_parameters (reg: REGISTRABLE)
-			-- Generate code for parameters computation.
-			-- `reg' ("Current") is not used except for
-			-- inlining
-		require
-			reg_not_void: reg /= Void
-		do
-			if parameters /= Void then
-				parameters.generate
-			end
-		end
-
-	generate_call (is_separate: BOOLEAN; is_exactly_separate: BOOLEAN; a_result: detachable REGISTRABLE; a_target: REGISTRABLE)
-			-- Generate a call on target register `a_target' and store the result (if any) in `a_result'.
-			-- If `is_separate' is true, the call may be separate (it cannot be non-separate if `is_exactly_separate' is 'True').
-		require
-			target_attached: attached a_target
-			is_exactly_separate_consistent: is_exactly_separate implies is_separate
-		local
-			buf: GENERATION_BUFFER
-			l_parameters: like parameters
-			l_count: like parameters.count
-			l_argument: PARAMETER_B
-			is_maybe_separate: BOOLEAN
-		do
-			buf := buffer
-			is_maybe_separate := is_separate and not is_exactly_separate
-
-			if is_maybe_separate then
-					-- Generate if-else structure for an impersonated call as well as a separate call.
-					-- The construct should look like this:
-					-- if (RTS_CI (is_query, target)) {
-					-- 		RTS_BI (target);
-					--		    /* Generate regular call. */
-					--		RTS_EI;
-					-- } else {
-					--		    /* Generate separate call. */
-					-- }
-				buf.put_new_line
-				buf.put_string ("if (RTS_CI (")
-
-					-- Generate a boolean indicating whether the call is a query.
-				if attached a_result then
-					buf.put_string ({C_CONST}.eif_true)
-				else
-					buf.put_string ({C_CONST}.eif_false)
-				end
-
-				buf.put_two_character (',', ' ')
-				a_target.print_register
-				buf.put_four_character (')', ')', ' ', '{')
-
-				buf.indent
-				buf.put_new_line
-				buf.put_string ("RTS_BI (")
-				a_target.print_register
-				buf.put_two_character (')', ';')
-			end
-
-				-- Generate the regular call. This is also required for non-separate calls.
-				-- Now if there is a result for the call and the result
-				-- has to be stored in a real register, do generate the assignment.
-			if not is_exactly_separate then
-				buf.put_new_line
-				if not attached a_result then
-						-- Call to a procedure.
-					generate_on (a_target)
-				elseif not attached {AGENT_CALL_B} Current then
-						-- Call to a simple function.
-					a_result.print_register
-					buf.put_three_character (' ', '=', ' ')
-					generate_on (a_target)
-				else
-						-- Call to an agent function.
-					generate_on (a_target)
-					buf.put_character (';')
-					buf.put_new_line
-					a_result.print_register
-					buf.put_string (" = ")
-					register.print_register
-				end
-				buf.put_character (';')
-			end
-
-				-- Continue with the if-else structure for impersonated calls.
-			if is_maybe_separate then
-				buf.put_new_line
-				buf.put_string ("RTS_EI;")
-				buf.exdent
-				buf.put_new_line
-				buf.put_string ("} else {")
-				buf.indent
-			end
-
-				-- Generate a separate call. The generated code should look like this:
-				--  RTS_AC (arg_count, target, separate_type);
-				--  RTS_AA (arg, typed_field, sk_value, position); /* Repeat for all arguments. */
-				--	RTS_CALL (...);
-			if is_separate then
-				buf.put_new_line
-				buf.put_string ("RTS_AC (")
-					-- Calculate the number of arguments to be passed.
-				l_parameters := parameters
-				if attached l_parameters then
-					l_count := l_parameters.count
-				end
-				buf.put_integer (l_count)
-				buf.put_two_character (',', ' ')
-				a_target.print_register
-				buf.put_two_character (')', ';')
-
-				check valid_count: l_parameters = Void implies l_count <= 0 end
-
-					-- Register arguments to be passed to the SCOOP runtime in the allocated container.
-				from
-				until
-					l_count <= 0
-				loop
-					buf.put_new_line
-					buf.put_string ("RTS_AA (")
-					l_argument := l_parameters [l_count]
-					l_argument.print_register
-					buf.put_two_character (',', ' ')
-					l_argument.c_type.generate_typed_field (buf)
-					buf.put_two_character (',', ' ')
-					l_argument.c_type.generate_sk_value (buf)
-					buf.put_two_character (',', ' ')
-					buf.put_integer (l_count)
-					buf.put_two_character (')', ';')
-					l_count := l_count - 1
-				end
-					-- Generate the RTS_CALL line.
-				generate_separate_call (a_result, a_target)
-			end
-
-				-- Finish the if-else structure.
-			if is_maybe_separate then
-				buf.exdent
-				buf.put_new_line
-				buf.put_character ('}')
-			end
-		end
-
 feature -- Conveniences
 
 	same (other: ACCESS_B): BOOLEAN
@@ -679,7 +671,7 @@ feature -- Conveniences
 				Result := True
 			else
 				p_target := p.target
-				if (p_target = Current and then p.parent = Void) then
+				if p_target = Current and then p.parent = Void then
 					Result := True
 				else
 						-- Bug fix: CONSTANT_B has a special construct
@@ -705,13 +697,12 @@ feature -- Code generation
 				from
 					i := 1
 					nb := p.count
-					create Result.make (1, nb + 1)
-					Result.put ("EIF_REFERENCE", 1)
+					create Result.make_filled ("EIF_REFERENCE", 1, nb + 1)
 					j := 2
 				until
 					i > nb
 				loop
-					Result.put (p [i].target_type_name, j)
+					Result [j] := p [i].target_type_name
 					i := i +1
 					j := j +1
 				end
@@ -748,7 +739,7 @@ feature -- Byte code generation
 feature -- Array optimization
 
 	optimized_byte_node: like Current
-			-- Redefined for type check
+			-- Redefined for type check.
 		do
 			Result := Current
 		end
@@ -796,7 +787,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

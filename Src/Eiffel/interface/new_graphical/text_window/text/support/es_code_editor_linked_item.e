@@ -8,35 +8,63 @@ class
 
 inherit
 	DEBUG_OUTPUT
+		undefine
+			is_equal
+		end
+
+	COMPARABLE
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN; a_start_pos, a_end_pos: INTEGER)
+	make (a_line: EDITOR_LINE; a_tokens: ITERABLE [EDITOR_TOKEN]; a_start_pos, a_end_pos: INTEGER)
+		local
+			s: STRING_32
+			n: INTEGER
 		do
-			text := a_token.wide_image
-			background_color := a_token.background_color
+			create s.make_empty
+			across
+				a_tokens as toks
+			loop
+				s.append (toks.item.wide_image)
+				background_color := toks.item.background_color
+				text_color := toks.item.text_color
+			end
+			initial_text := s
+
 			line := a_line
-			token := a_token
+			tokens := a_tokens
 			start_pos := a_start_pos
 			end_pos := a_end_pos
+			across
+				a_tokens as ic
+			loop
+				n := n + 1
+			end
+			tokens_count := n
 		end
 
 feature -- Access
 
-	text: READABLE_STRING_32 assign set_text
+	initial_text: READABLE_STRING_32
 			-- Text in [start_pos:end_pos].
 
 	line: EDITOR_LINE assign set_line
 			-- Associated editor line.
 
-	token: EDITOR_TOKEN --assign set_token
-			-- Associated token, mainly used to restore color.
+	tokens: ITERABLE [EDITOR_TOKEN]
+			-- Associated tokens, mainly used to restore color.
+
+	tokens_count: INTEGER
+			-- Number of `tokens'.
 
 	background_color: detachable EV_COLOR
 			-- Original background color, used to restore later.
+
+	text_color: detachable EV_COLOR
+			-- Original text color, used to restore later.			
 
 	start_pos: INTEGER assign set_start_pos
 			-- Start position of current token region.
@@ -44,12 +72,71 @@ feature -- Access
 	end_pos: INTEGER assign set_end_pos
 			-- End position of current token region.
 
-feature -- Element change
+feature -- Query			
 
-	set_text (a_text: READABLE_STRING_32)
+	token_index_for_pos_in_text (a_pos_in_text: INTEGER): INTEGER
+			-- Index of token including `a_pos_in_text' within `tokens' container.
+		local
+			i: INTEGER
+			tok: detachable EDITOR_TOKEN
+			l_tok_end_pos_in_text: INTEGER
+			n: INTEGER
 		do
-			text := a_text
+			i := 0
+
+			across
+				tokens as ic
+			until
+				tok /= Void
+			loop
+				i := i + 1
+				tok := ic.item
+				l_tok_end_pos_in_text := tok.pos_in_text + tok.length
+				if a_pos_in_text < tok.pos_in_text then
+					tok := Void
+				elseif l_tok_end_pos_in_text < a_pos_in_text then
+					if i = n and l_tok_end_pos_in_text + 1 = a_pos_in_text then -- Last
+							-- Accept the position right after the `tokens'.
+					else
+						tok := Void
+					end
+				end
+			end
+			if tok /= Void then
+				Result := i
+			else
+			end
+		ensure
+			Result > 0 implies token_i_th (Result) /= Void
 		end
+
+	token_i_th (a_index: INTEGER): detachable EDITOR_TOKEN
+			-- Token at index `a_index' from container `tokens'.
+		local
+			i: INTEGER
+		do
+			i := 0
+			across
+				tokens as ic
+			until
+				Result /= Void
+			loop
+				i := i + 1
+				if i = a_index then
+					Result := ic.item
+				end
+			end
+		end
+
+feature -- Comparison
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- Is current object less than `other'?
+		do
+			Result := start_pos < other.start_pos
+		end
+
+feature -- Element change
 
 	set_line (a_line: EDITOR_LINE)
 		do
@@ -67,6 +154,11 @@ feature -- Element change
 		end
 
 feature -- Status report
+
+	is_included (a_pos_in_text: INTEGER): BOOLEAN
+		do
+			Result := start_pos <= a_pos_in_text and a_pos_in_text <= end_pos + 1 -- Include position right after the tokens
+		end
 
 	debug_output: STRING_32
 			-- String that should be displayed in debugger to represent `Current'.
@@ -86,9 +178,11 @@ feature -- Status report
 			Result.append_character (']')
 			Result.append_character (' ')
 			Result.append ("tok=#")
-			Result.append (token.pos_in_text.out)
-			Result.append ("+")
-			Result.append (token.length.out)
+			across
+				tokens as toks
+			loop
+				Result.append (toks.item.pos_in_text.out)
+			end
 		end
 
 ;note

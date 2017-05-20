@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	TYPED_PROPERTY [G]
+	TYPED_PROPERTY [G -> detachable ANY]
 
 inherit
 	PROPERTY
@@ -144,7 +144,7 @@ invariant
 	force_inherit_actions_not_void: force_inherit_actions /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

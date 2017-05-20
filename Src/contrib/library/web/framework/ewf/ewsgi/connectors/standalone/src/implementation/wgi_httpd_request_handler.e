@@ -97,7 +97,9 @@ feature -- Request processing
 				end
 			end
 		rescue
-			has_error := l_output = Void or else not l_output.is_available
+			if l_output = Void or else not l_output.is_available then
+				report_error ("Missing WGI output")
+			end
 			if not retried then
 				retried := True
 				retry
@@ -230,6 +232,9 @@ feature -- Request processing
 			set_environment_variable (l_server_port, "SERVER_PORT", Result)
 			set_environment_variable (version, "SERVER_PROTOCOL", Result)
 			set_environment_variable ({HTTPD_CONFIGURATION}.Server_details, "SERVER_SOFTWARE", Result)
+			if is_secure then
+				set_environment_variable ("on", "HTTPS", Result)
+			end
 
 				--| Apply `base' value
 			l_base := base

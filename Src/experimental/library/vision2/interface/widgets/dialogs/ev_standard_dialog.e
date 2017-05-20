@@ -24,9 +24,6 @@ inherit
 		end
 
 	EV_STANDARD_DIALOG_ACTION_SEQUENCES
-		redefine
-			implementation
-		end
 
 feature {NONE} -- Initialization
 
@@ -71,7 +68,7 @@ feature -- Status report
 	selected_button: detachable STRING_32
 			-- Label of last clicked button.
 		obsolete
-			"Use `selected_button_name' instead and {EV_DIALOG_NAMES} for comparison."
+			"Use `selected_button_name' instead and {EV_DIALOG_NAMES} for comparison. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do

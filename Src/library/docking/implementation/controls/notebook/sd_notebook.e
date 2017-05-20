@@ -51,8 +51,6 @@ feature {NONE}  -- Initlization
 			-- Creation method
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
-		local
-			l_helper: SD_COLOR_HELPER
 		do
 
 			create internal_shared
@@ -66,7 +64,6 @@ feature {NONE}  -- Initlization
 			create internal_tabs.make (1)
 
 			create internal_tab_box.make (docking_manager)
-			create l_helper
 
 			create internal_border_for_tab_area.make
 			create {EV_HORIZONTAL_BOX} internal_border_box
@@ -167,13 +164,18 @@ feature -- Command
 			-- Select `a_widget' and show it
 		require
 			has: has (a_content)
+		local
+			w: detachable EV_WIDGET
 		do
 			if selected_item /= a_content then
 				docking_manager.command.lock_update (Current, False)
-				if attached a_content.user_widget.parent as l_parent then
-					l_parent.prune (a_content.user_widget)
+				if a_content.is_user_widget_set then
+					w := a_content.user_widget
+					if attached w.parent as l_parent then
+						l_parent.prune (w)
+					end
+					internal_cell.replace (w)
 				end
-				internal_cell.replace (a_content.user_widget)
 				docking_manager.command.unlock_update
 			end
 			notify_tab (tab_by_content (a_content), a_focus)
@@ -256,14 +258,14 @@ feature -- Command
 
 			if l_orignal_selected = a_content then
 				-- We are closing a selected content, we should select the one at orignal index
-				if not internal_contents.valid_index (l_orignal_index) then
-					internal_contents.back
-				else
+				if internal_contents.valid_index (l_orignal_index) then
 					internal_contents.go_i_th (l_orignal_index)
+				else
+					internal_contents.back
 				end
-
-				select_item (internal_contents.item, a_focus)
-
+				if not internal_contents.off then
+					select_item (internal_contents.item, a_focus)
+				end
 				if a_focus then
 					selection_actions.call (Void)
 				end
@@ -536,15 +538,12 @@ feature -- Query
 
 	tab_bar_right_blank_area_double_click_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Double click action on tab bar right blank area
-		local
-			l_actions: like internal_tab_bar_right_blank_area_double_click_actions
 		do
-			l_actions := internal_tab_bar_right_blank_area_double_click_actions
-			if not attached l_actions then
-				create l_actions
-				internal_tab_bar_right_blank_area_double_click_actions := l_actions
+			Result := internal_tab_bar_right_blank_area_double_click_actions
+			if not attached Result then
+				create Result
+				internal_tab_bar_right_blank_area_double_click_actions := Result
 			end
-			Result := l_actions
 		end
 
 	tab_drag_actions: ACTION_SEQUENCE [ TUPLE [SD_CONTENT, INTEGER, INTEGER, INTEGER, INTEGER]]
@@ -583,12 +582,8 @@ feature {SD_NOTEBOOK_HIDE_TAB_DIALOG} -- Internal commands
 			-- Handle hidden item list select actions
 		require
 			not_void: a_content /= Void
-		local
-			l_tab: SD_NOTEBOOK_TAB
 		do
-			l_tab := tab_by_content (a_content)
-
-			on_tab_selected (l_tab)
+			on_tab_selected (tab_by_content (a_content))
 		end
 
 feature {NONE}  -- Implementation
@@ -710,13 +705,15 @@ feature {NONE}  -- Implementation
 			has: internal_tabs.has (a_tab_2) and internal_tab_box.has (a_tab_2)
 		local
 			l_index_1, l_index_2: INTEGER
-			l_index_1_valid, l_index_2_valid: BOOLEAN
 		do
 			l_index_1 := internal_tab_box.index_of (a_tab_1)
 			l_index_2 := internal_tab_box.index_of (a_tab_2)
-			l_index_1_valid := l_index_1 <= internal_tabs.count and l_index_1 /= 0
-			l_index_1_valid := l_index_2 <= internal_tabs.count and l_index_2 /= 0
-			if l_index_1_valid and l_index_2_valid then
+			if
+				l_index_1 <= internal_tabs.count and
+				l_index_1 /= 0 and
+				l_index_2 <= internal_tabs.count and
+				l_index_2 /= 0
+			then
 				internal_tabs.go_i_th (l_index_1)
 				internal_tabs.swap (l_index_2)
 
@@ -816,7 +813,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -2,11 +2,10 @@ note
 	description: "[
 				Options used by WSF_SERVICE_LAUNCHER
 	
-				For instance options supported by Nino as default connector::
+				For instance options supported by Standalone as default connector::
 					port: numeric such as 8099 (or equivalent string as "8099")
 					base: base_url (very specific to standalone server)
-					force_single_threaded: use only one thread, useful for Nino
-					verbose: to display verbose output, useful for Nino
+					verbose: to display verbose output, useful for Standalone
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -76,6 +75,12 @@ feature -- Merging
 			end
 		end
 
+	import_ini_file_options (a_filename: READABLE_STRING_GENERAL)
+			-- Import options from ini file `a_filename'.
+		do
+			append_options (create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI}.make_from_file (a_filename))
+		end
+
 feature -- Access
 
 	option (a_name: READABLE_STRING_GENERAL): detachable ANY
@@ -84,6 +89,12 @@ feature -- Access
 		end
 
 feature -- Helpers
+
+	has_option (a_opt_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is there any value associated to option name `a_opt_name'?
+		do
+			Result := attached option (a_opt_name)
+		end
 
 	has_integer_option (a_opt_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is there any INTEGER value associated to option name `a_opt_name'?
@@ -100,6 +111,29 @@ feature -- Helpers
 			end			
 		end
 
+	has_string_32_option (a_opt_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is there any string 32 value associated to option name `a_opt_name'?
+		do
+			if attached option (a_opt_name) as opt then
+				Result := attached {READABLE_STRING_GENERAL} opt
+			end			
+		end
+
+	option_string_32_value (a_opt_name: READABLE_STRING_GENERAL; a_default: detachable READABLE_STRING_GENERAL): detachable IMMUTABLE_STRING_32
+			-- Unicode String value associated to option name `a_opt_name', other return `a_default'.
+		do
+			if attached option (a_opt_name) as opt then
+				if attached {READABLE_STRING_32} opt as s32 then
+					create Result.make_from_string (s32)
+				elseif attached {READABLE_STRING_GENERAL} opt as s then
+					create Result.make_from_string_general (s)
+				end
+			end			
+			if Result = Void and a_default /= Void then
+				create Result.make_from_string_general (a_default)
+			end
+		end
+	
 	option_integer_value (a_opt_name: READABLE_STRING_GENERAL; a_default: INTEGER): INTEGER
 			-- INTEGER value associated to option name `a_opt_name', other return `a_default'.
 		local
@@ -129,7 +163,7 @@ feature -- Helpers
 					Result := b
 				else
 					s := opt.out
-					Result := s.is_case_insensitive_equal ("true")
+					Result := s.is_case_insensitive_equal ("true") or s.is_case_insensitive_equal ("yes")
 				end
 			end			
 		end
@@ -147,6 +181,34 @@ feature -- Element change
 	set_option (a_name: READABLE_STRING_GENERAL; a_value: detachable ANY)
 		do
 			options.force (a_value, a_name)
+		end
+
+	unset_option (a_name: READABLE_STRING_GENERAL)
+		do
+			options.remove (a_name)
+		end
+
+	set_string_option (a_name: READABLE_STRING_GENERAL; a_value: detachable READABLE_STRING_GENERAL)
+		do
+			if a_value = Void then
+				unset_option (a_name)
+			else
+				set_option (a_name, a_value)
+			end
+		end
+
+	set_numeric_option (a_name: READABLE_STRING_GENERAL; a_value: NUMERIC)
+		do
+			set_option (a_name, a_value)
+		end
+
+	set_boolean_option (a_name: READABLE_STRING_GENERAL; a_value: BOOLEAN)
+		do
+			if a_value then
+				set_option (a_name, "true")
+			else
+				set_option (a_name, "false")
+			end
 		end
 
 	set_verbose (b: BOOLEAN)

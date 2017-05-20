@@ -177,11 +177,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
-	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST)
-			-- Process `a_list'.
-		do
-		end
-
 	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)
 			-- Process `an_expression'.
 		do
@@ -812,10 +807,31 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_parent_clause_list (a_list: ET_PARENT_CLAUSE_LIST)
+			-- Process `a_list'.
+		do
+		end
+
+	process_parent_list (a_list: ET_PARENT_LIST)
+			-- Process `a_list'.
+		do
+		end
+
 	process_parent_semicolon (a_parent: ET_PARENT_SEMICOLON)
 			-- Process `a_parent'.
 		do
 		end
+
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+		end
+
+	process_parenthesis_instruction (an_instruction: ET_PARENTHESIS_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+		end
+
 	process_parenthesis_symbol (a_symbol: ET_PARENTHESIS_SYMBOL)
 			-- Process `a_symbol'.
 		do
@@ -823,11 +839,6 @@ feature {ET_AST_NODE} -- Processing
 
 	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)
 			-- Process `an_expression'.
-		do
-		end
-
-	process_parent_list (a_list: ET_PARENT_LIST)
-			-- Process `a_list'.
 		do
 		end
 
@@ -1022,6 +1033,11 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_unfolded_tuple_actual_parameters (a_list: ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+		do
+		end
+
+	process_unfolded_tuple_actual_argument_list (a_list: ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST)
 			-- Process `a_list'.
 		do
 		end

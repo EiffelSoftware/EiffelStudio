@@ -275,6 +275,7 @@ rt_shared void rt_processor_registry_activate (EIF_SCP_PID pid)
 		eif_thr_create_with_attr_new (
 			NULL,	/* No root object, if this is only passed to spawn_main this is OK */
 			(EIF_PROCEDURE) spawn_main, /* The entry point for the new thread. */
+			(EIF_PROCEDURE) 0, /* No procedure to set `terminated' on the root object. */
 			pid, /* Logical PID */
 			EIF_TRUE, /* We are a processor */
 			NULL); /* There are no attributes */

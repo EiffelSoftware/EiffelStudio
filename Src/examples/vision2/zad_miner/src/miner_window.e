@@ -5,11 +5,14 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	MINER_WINDOW
 
 inherit
 	EV_TITLED_WINDOW
+		redefine
+			create_interface_objects
+		end
 
  	MINER_CONSTANTS
 		undefine
@@ -20,6 +23,14 @@ create
 	default_create
 
 feature -- Initialization
+
+	create_interface_objects
+		do
+			Precursor
+			create miner_timer.make (label_time)
+			create new_menu_item.make_with_text ("New Game")
+			create end_menu_item.make_with_text ("End Game")
+		end
 
 	initialize_with (nx,ny:INTEGER; trans: BOOLEAN)
 		do
@@ -34,12 +45,13 @@ feature -- Initialization
 
 	new_menu_item: EV_MENU_ITEM
 	end_menu_item: EV_MENU_ITEM
-	debug_menu_item: EV_CHECK_MENU_ITEM
+	debug_menu_item: detachable EV_CHECK_MENU_ITEM
 	init_menu
 		local
 			mbar: EV_MENU_BAR
 			menu: EV_MENU
 			menu_item: EV_MENU_ITEM
+			l_debug_menu_item: like debug_menu_item
 		do
 			create mbar
 			set_menu_bar (mbar)
@@ -47,22 +59,21 @@ feature -- Initialization
 			create menu.make_with_text ("&Game")
 			mbar.extend (menu)
 
-			create new_menu_item.make_with_text ("New Game")
 			menu.extend (new_menu_item)
-			create end_menu_item.make_with_text ("End Game")
 			menu.extend (end_menu_item)
-			
+
 			new_menu_item.select_actions.extend (agent new_game_action)
 			end_menu_item.select_actions.extend (agent end_game_action)
 
 			debug ("SHOW_MINE")
 				if is_debuggable then
-					create debug_menu_item.make_with_text ("Debug (On/Off)")
-					menu.extend (debug_menu_item)
-					debug_menu_item.select_actions.extend (agent toggle_debug_action)
-					if debug_menu_item.is_selected /= debugging then
-						debug_menu_item.toggle
+					create l_debug_menu_item.make_with_text ("Debug (On/Off)")
+					menu.extend (l_debug_menu_item)
+					l_debug_menu_item.select_actions.extend (agent toggle_debug_action)
+					if l_debug_menu_item.is_selected /= debugging then
+						l_debug_menu_item.toggle
 					end
+					debug_menu_item := l_debug_menu_item
 				end
 			end
 
@@ -73,7 +84,7 @@ feature -- Initialization
 			menu.extend (menu_item)
 			menu_item.select_actions.extend (agent show_about_action)
 		end
-	
+
 	init_window
 			-- Initialize the window.
 		local
@@ -103,7 +114,7 @@ feature -- Initialization
  			create_control_zone ( control_frame )
 
 				--| Timer creation
-			create miner_timer.make (label_time)
+--			create miner_timer.make (label_time)
 			delai := 500
 			create timer.make_with_interval (delai)
 			timer.actions.extend (agent miner_timer.execute (delai))
@@ -111,6 +122,10 @@ feature -- Initialization
 
 				--| prepare the battle field ... the field of mines
 			reset_mine_field
+
+			if attached (create {MA_WINDOW}.make ("c:\dev\trunk\src\library\memory_analyzer")) as w then
+				w.show
+			end
 		end;
 
 feature -- About box
@@ -241,8 +256,11 @@ feature -- Mines and Field
 	mines: ARRAY2[MINER_BUTTON]
 			-- Table of mine buttons
 			-- created once.
+		local
+			but: MINER_BUTTON
 		once
-			create Result.make(nb_x,nb_y)
+			create but
+			create Result.make_filled (but, nb_x, nb_y)
 			create_mine_field
 		end
 
@@ -269,7 +287,7 @@ feature -- Mines and Field
 				until
 					h_index > h_max
 				loop
-					
+
 					mine_b := mines.item (h_index,v_index)
 					line.extend (mine_b)
 					mine_b.set_pixmap (pix_first)
@@ -410,7 +428,7 @@ feature -- Game status
 				if not game_over then
 					end_game
 				end
-			
+
 			elseif not (mine.is_shown or else mine.is_flagged) then
   				nb_marked := nb_marked+1
 				set_label_text ("%N" + mine_todo.out)
@@ -460,7 +478,7 @@ feature -- Game status
 					create but
 					but.init_mine
 
-					mines.force( but,i,j )
+					mines.put ( but,i,j )
 					but.set_pixmap(pix_first)
 					but.set_trapped(False)
 					nb_mine:= nb_mine+1
@@ -535,7 +553,7 @@ feature -- Game status
 
 	mine_todo: INTEGER
 			-- Number of mine to discover
-		do 
+		do
 			Result :=nb_x * nb_y - nb_mine - nb_marked
 		end
 
@@ -583,22 +601,22 @@ feature -- Game status
 
 		end
 
-	
+
 
 	start_message:STRING
 			-- First message of the game
 		do
 			Result := "%NGOOD LUCK (";
-			inspect level 
-				when 2 then 
+			inspect level
+				when 2 then
 					Result.append ("Very Hard")
-				when 3 then 
+				when 3 then
 					Result.append ("Hard")
-				when 4 then 
+				when 4 then
 					Result.append ("Medium")
-				when 5 then 
+				when 5 then
 					Result.append ("Easy")
-				when 6 then 
+				when 6 then
 					Result.append ("Very Easy")
 				else
 					Result.append (level.out)
@@ -639,8 +657,8 @@ feature -- command action
 		do
 			debugging := not debugging
 			debug ("SHOW_MINE")
-				if debug_menu_item.is_selected /= debugging then
-					debug_menu_item.toggle
+				if attached debug_menu_item as l_debug_menu_item and then l_debug_menu_item.is_selected /= debugging then
+					l_debug_menu_item.toggle
 				end
 			end
 		end
@@ -662,7 +680,7 @@ feature -- command action
 			end
 		end
 
-	show_button_action (h_i, v_i: INTEGER; 
+	show_button_action (h_i, v_i: INTEGER;
 					z_x, z_y: INTEGER;
 					z_button: INTEGER;
 					z_x_tilt, z_y_tilt: DOUBLE;
@@ -678,7 +696,7 @@ feature -- command action
 			end
 		end
 
-	auto_action (h_i, v_i: INTEGER; 
+	auto_action (h_i, v_i: INTEGER;
 					z_x, z_y: INTEGER;
 					z_button: INTEGER;
 					z_x_tilt, z_y_tilt: DOUBLE;
@@ -730,12 +748,12 @@ feature -- command action
 end -- class MINER_WINDOW
 
 --|-------------------------------------------------------------------------
---| Eiffel Mine Sweeper -- ZaDoR (c) -- 
+--| Eiffel Mine Sweeper -- ZaDoR (c) --
 --| version 1.2 (July 2001)
 --|
 --| by Jocelyn FIAT
 --| email: jocelyn.fiat@ifrance.com
---| 
+--|
 --| freely distributable
 --|-------------------------------------------------------------------------
 

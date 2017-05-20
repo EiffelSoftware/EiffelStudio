@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class
 	RACE
 
@@ -10,14 +11,12 @@ inherit
 create
 	make
 
-feature
-
-	io_mutex: MUTEX
+feature {NONE} -- Creation
 
 	make
+			-- Run application.
 		local
 			n, thread_count, nb_loop: INTEGER
-			r: detachable RUNNER
 		do
 			create io_mutex.make
 			io_mutex.lock
@@ -36,12 +35,9 @@ feature
 			until
 				thread_count > n
 			loop
-				create r.make (io_mutex, thread_count, nb_loop)
-				r.launch
+				;(create {RUNNER}.make (io_mutex, thread_count, nb_loop)).launch
 				thread_count := thread_count + 1
 			end
-
-			r := Void
 
 			io_mutex.lock
 			io.put_string("%N** All runners started%N")
@@ -49,8 +45,13 @@ feature
 			join_all
 		end
 
-note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+feature {NONE} -- Synchronization
+
+	io_mutex: MUTEX
+			-- A mutex to synchronize output.
+
+;note
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -60,7 +61,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class RACE
-
-
+end

@@ -1,5 +1,5 @@
 note
-	description: "Draw the histogram of the memory useage at a time."
+	description: "Draw the histogram of the memory usage at a time."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -49,7 +49,7 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	draw_histogram (used_percent, overhead_percent: DOUBLE)
-			-- Draw the graph for eiffel/c/total memory useage.
+			-- Draw the graph for eiffel/c/total memory usage.
 		require
 			used_percent_valid: used_percent >= 0 and used_percent <= 1
 			overhead_percent_valid: overhead_percent >= 0 and overhead_percent <= 1		

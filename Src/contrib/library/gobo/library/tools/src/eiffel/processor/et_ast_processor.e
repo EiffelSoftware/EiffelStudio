@@ -242,13 +242,6 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST)
-			-- Process `a_list'.
-		require
-			a_list_not_void: a_list /= Void
-		deferred
-		end
-
 	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)
 			-- Process `an_expression'.
 		require
@@ -1137,10 +1130,38 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_parent_clause_list (a_list: ET_PARENT_CLAUSE_LIST)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_parent_list (a_list: ET_PARENT_LIST)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
 	process_parent_semicolon (a_parent: ET_PARENT_SEMICOLON)
 			-- Process `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
+		deferred
+		end
+
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		deferred
+		end
+
+	process_parenthesis_instruction (an_instruction: ET_PARENTHESIS_INSTRUCTION)
+			-- Process `an_instruction'.
+		require
+			an_instruction_not_void: an_instruction /= Void
 		deferred
 		end
 
@@ -1155,13 +1176,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
-		deferred
-		end
-
-	process_parent_list (a_list: ET_PARENT_LIST)
-			-- Process `a_list'.
-		require
-			a_list_not_void: a_list /= Void
 		deferred
 		end
 
@@ -1425,6 +1439,13 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_unfolded_empty_tuple_actual_parameters (a_list: ET_UNFOLDED_EMPTY_TUPLE_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_unfolded_tuple_actual_argument_list (a_list: ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST)
 			-- Process `a_list'.
 		require
 			a_list_not_void: a_list /= Void

@@ -47,6 +47,7 @@ feature -- Execution
 			l_result: INTEGER
 			l_curl_string: detachable CURL_STRING
 			l_url: READABLE_STRING_8
+			l_use_curl_form: BOOLEAN
 			l_form: detachable CURL_FORM
 			l_last: CURL_FORM
 			l_upload_file: detachable RAW_FILE
@@ -81,9 +82,6 @@ feature -- Execution
 
 				--| URL
 				l_url := url
-				if ctx /= Void then
-					append_parameters_to_url (ctx.query_parameters, l_url)
-				end
 
 				if session.is_header_sent_verbose then
 					io.error.put_string ("> Sending:%N")
@@ -166,19 +164,24 @@ feature -- Execution
 						if l_upload_data = Void and l_upload_filename = Void then
 							-- Send as form-urlencoded
 							if
-								l_headers.has_key ("Content-Type") and then
-								attached l_headers.found_item as l_ct
+								attached l_headers.item ("Content-Type") as l_ct
 							then
 								if l_ct.starts_with ("application/x-www-form-urlencoded") then
 									-- Content-Type is already application/x-www-form-urlencoded
-									l_upload_data := ctx.form_parameters_to_url_encoded_string
+									l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
+								elseif l_ct.starts_with ("multipart/form-data") then
+									l_use_curl_form := True
 								else
-									-- Existing Content-Type and not application/x-www-form-urlencoded
+										-- Not supported, use libcurl form.
+									l_use_curl_form := True
 								end
 							else
-								l_upload_data := ctx.form_parameters_to_url_encoded_string
+								l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
 							end
 						else
+							l_use_curl_form := True
+						end
+						if l_use_curl_form then
 							create l_form.make
 							create l_last.make
 							from
@@ -192,6 +195,14 @@ feature -- Execution
 										{CURL_FORM_CONSTANTS}.curlform_end
 									)
 								l_form_data.forth
+							end
+							if l_upload_filename /= Void then
+								curl.formadd_string_string (l_form, l_last,
+										{CURL_FORM_CONSTANTS}.curlform_copyname, "file",
+										{CURL_FORM_CONSTANTS}.curlform_file, l_upload_filename,
+										{CURL_FORM_CONSTANTS}.curlform_end
+									)
+									l_upload_filename := Void
 							end
 							l_last.release_item
 							curl_easy.setopt_form (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_httppost, l_form)
@@ -434,7 +445,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

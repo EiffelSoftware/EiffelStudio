@@ -95,7 +95,7 @@ feature -- Access
 			arr: ANY
 		do
 			cnt := cwel_get_keyboard_layout_list (0, default_pointer)
-			create Result.make (1, cnt)
+			create Result.make_filled (({POINTER}).default, 1, cnt)
 			arr := Result.to_c
 			cnt := cwel_get_keyboard_layout_list (cnt, $arr)
 		ensure

@@ -1,6 +1,5 @@
-note
-	description:
-		"States of deterministic finite automata"
+﻿note
+	description: "States of deterministic finite automata"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -24,13 +23,13 @@ create
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (s: INTEGER)
 			-- Make state with 0 to `s' possibles inputs.
 		do
 			make_filled (Void, 0, s)
-		end;
+		end
 
 feature -- Element change
 
@@ -55,7 +54,7 @@ feature -- Cursor movement
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

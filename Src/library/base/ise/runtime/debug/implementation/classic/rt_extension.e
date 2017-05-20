@@ -1,4 +1,4 @@
-note
+﻿note
 	description : "Eiffel class instanciated and used from the Eiffel runtime."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -223,11 +223,10 @@ feature {NONE} -- Execution replay
 		do
 			if
 				attached execution_recorder as r and then
-				r.recording_values
+				r.recording_values and then
+				attached a_data.ref as ot_ref
 			then
-				if attached {ANY} a_data.ref as ot_ref then
-					r.notify_rt_assign_attribute (a_data.a_dep, ot_ref, a_data.a_pos, a_data.a_type.to_natural_32, a_data.a_xpm_info)
-				end
+				r.notify_rt_assign_attribute (a_data.a_dep, ot_ref, a_data.a_pos, a_data.a_type.to_natural_32, a_data.a_xpm_info)
 			end
 		end
 
@@ -389,7 +388,7 @@ invariant
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

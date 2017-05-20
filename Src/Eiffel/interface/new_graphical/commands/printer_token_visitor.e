@@ -19,7 +19,7 @@ inherit
 feature -- Access
 
 	text: STRING
-			-- Text genrated.
+			-- Text generated.
 		deferred
 		ensure
 			text_not_void: Result /= Void
@@ -256,7 +256,7 @@ invariant
 	print_color_table_not_void: print_color_table /= Void
 	print_font_table_not_void: print_font_table /= Void
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

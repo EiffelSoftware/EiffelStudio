@@ -1,7 +1,5 @@
-note
-	description: "[
-					Cocoa implementation to draw native looking notebook tabs.
-					]"
+﻿note
+	description: "Cocoa implementation to draw native looking notebook tabs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -13,7 +11,6 @@ class
 inherit
 	SD_NOTEBOOK_TAB_DRAWER_I
 		redefine
-			make,
 			draw_pixmap_text_selected,
 			draw_pixmap_text_unselected,
 			expose_unselected,
@@ -26,14 +23,6 @@ inherit
 
 create
 	make
-
-feature {NONE} -- Initlialization
-
-	make
-			-- Creation method
-		do
-			Precursor {SD_NOTEBOOK_TAB_DRAWER_I}
-		end
 
 feature -- Command
 
@@ -105,8 +94,8 @@ feature -- Command
 
 			end_draw
 
-			if attached internal_tab as l_tab and then attached l_tab.parent as l_parent and then l_parent.has_focus then
-				l_tab.draw_focus_rect
+			if attached tab.parent as l_parent and then l_parent.has_focus then
+				tab.draw_focus_rect
 			end
 		end
 
@@ -153,7 +142,7 @@ feature {NONE}  -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

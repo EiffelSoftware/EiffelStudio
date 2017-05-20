@@ -1,7 +1,6 @@
 note
-	description: "HTML report generator. Deferred class"
+	description: "HTML report generator."
 	author: "Software Engineering Lab, York University"
-
 
 deferred class
 	ES_HTML_GEN
@@ -9,7 +8,7 @@ deferred class
 feature -- Initialization
 
 	make_gen (name: STRING_8; file_name: STRING_8; show_err: BOOLEAN)
-			-- create HTML file
+			-- Create HTML file.
 		do
 			output_file_name := file_name
 			test_name := name
@@ -21,7 +20,7 @@ feature {NONE} -- Implementation
 	show_error: BOOLEAN
 
 	write_summary (file_name: STRING_8)
-			-- write the summary of the test in HTML format
+			-- Write the summary of the test in HTML format.
 		require
 			file_name_valid: file_name /= Void
 		do
@@ -35,7 +34,7 @@ feature {NONE} -- Implementation
 		end
 
 	write_summary_big (file_name: STRING_8)
-			-- write the summary of the test in HTML format
+			-- Write the summary of the test in HTML format.
 		require
 			file_name_valid: file_name /= Void
 		do
@@ -49,7 +48,7 @@ feature {NONE} -- Implementation
 		end
 
 	write_summary_start
-			-- start to write the HTML file
+			-- Start to write the HTML file.
 		local
 			date: DATE
 			time: TIME
@@ -118,7 +117,7 @@ feature {NONE} -- Implementation
 		end
 
 	write_summary_end
-			-- finish writing the HTML file
+			-- Finish writing the HTML file.
 		do
 			output_file.putstring ("</table>")
 			output_file.putstring ("</body>%N")
@@ -126,8 +125,7 @@ feature {NONE} -- Implementation
 		end
 
 	write_summary_start_big
-			-- start to write the HTML file
-		local
+			-- Start to write the HTML file.
 		do
 			output_file.putstring ("<html>%N<head>%N<base target=%"main%">%N</head>%N")
 			output_file.putstring ("<body>%N")
@@ -185,7 +183,7 @@ feature {NONE} -- Implementation
 		end
 
 	write_summary_end_big
-			-- finish writing the HTML file
+			-- Finish writing the HTML file.
 		do
 			output_file.putstring ("</table>")
 			output_file.putstring ("</font>")
@@ -194,7 +192,7 @@ feature {NONE} -- Implementation
 		end
 
 	write_statistics (case_type: STRING_8; passed: INTEGER_32; total: INTEGER_32)
-			-- write statistic information
+			-- Write statistic information.
 		require
 			case_type_valid: case_type /= Void
 			passed_valid: passed >= 0
@@ -214,7 +212,7 @@ feature {NONE} -- Implementation
 		end
 
 	write_statistics_big (case_type: STRING_8; passed: INTEGER_32; total: INTEGER_32)
-			-- write statistic information
+			-- Write statistic information.
 		require
 			case_type_valid: case_type /= Void
 			passed_valid: passed >= 0
@@ -234,10 +232,9 @@ feature {NONE} -- Implementation
 		end
 
 	write_passed_case (one_case: ES_TEST_CASE)
-			-- output test result for one passed case
+			-- Output test result for one passed case.
 		require
 			one_case_valid: one_case /= Void
-
 		do
 			output_file.putstring ("<td><font color=%"green%"><b>PASSED</b></font></td>%N")
 			output_file.putstring ("<td align=%"center%">")
@@ -249,30 +246,24 @@ feature {NONE} -- Implementation
 			output_file.putstring ("</td>%N")
 			output_file.putstring ("<td>")
 
-
 			if attached {ES_VIOLATION_CASE} one_case as l then
-
 				output_file.putstring ("*")
 			end
 
-
-			check attached one_case as o then
-				output_file.putstring (wrap_html_comments (o.case_name))
-				output_file.putstring ("</td>%N")
-			end
+			output_file.putstring (wrap_html_comments (one_case.case_name))
+			output_file.putstring ("</td>%N")
 		end
 
 	write_failed_case (one_case: ES_TEST_CASE)
-			-- output test result for one failed case
+			-- Output test result for one failed case.
 		require
 			one_case_valid: one_case /= Void
 		local
 			tag: STRING_8
-
 		do
 			output_file.putstring ("<td><font color=%"red%"><b>FAILED</b></font></td>%N")
 			output_file.putstring ("<td align=%"center%">")
-			if (one_case.contract_violated) then
+			if one_case.contract_violated then
 				if show_error then
 					check attached one_case.meaning (one_case.violation_type) as m then
 						output_file.putstring ("<font color=%"blue%">" + m + "</font>")
@@ -297,12 +288,8 @@ feature {NONE} -- Implementation
 				output_file.putstring ("*")
 			end
 
-
-
-			check attached one_case as o then
-				output_file.putstring (wrap_html_comments (o.case_name))
-				output_file.putstring ("</td>%N")
-			end
+			output_file.putstring (wrap_html_comments (one_case.case_name))
+			output_file.putstring ("</td>%N")
 		end
 
 	Wrap_length: INTEGER_32 = 100
@@ -338,33 +325,29 @@ feature {NONE} -- Implementation
 		end
 
 	wrap_html_comments (comment: STRING_8): attached STRING_8
-			-- wraps the comments in the HTML code
+			-- Wraps the comments in the HTML code.
 		local
 			ls: LIST [STRING]
 			is_first: BOOLEAN
 		do
-			if attached comment as comment1 then
-				if comment1.count > Wrap_length then
-					ls := comment1.split ('%N')
-					create Result.make (comment1.count)
-					is_first := True
-					across ls as line loop
-						if not is_first then
-							Result.append ("<br>")
-						end
-						Result.append (wrap_line (line.item))
-						is_first := false
+			if comment.count > Wrap_length then
+				ls := comment.split ('%N')
+				create Result.make (comment.count)
+				is_first := True
+				across ls as line loop
+					if not is_first then
+						Result.append ("<br>")
 					end
-				else
-					Result := comment1
+					Result.append (wrap_line (line.item))
+					is_first := false
 				end
 			else
-				Result := "default_comment"
+				Result := comment
 			end
 		end
 
 	write_one_case_details (one_case: ES_TEST_CASE)
-			-- output test result for one case
+			-- Output test result for one case.
 		require
 			one_case_valid: one_case /= Void
 		do
@@ -415,7 +398,4 @@ feature {NONE} -- Attributes
 
 	number_passed_tests: INTEGER_32
 
-
-
-end -- class ES_HTML_GEN
-
+end

@@ -158,6 +158,8 @@ feature {NONE} -- Constant strings
 			Result.append (Interface_names.t_Project)
 			Result.append (" ")
 			Result.append_integer (compiler_version_number.major)
+			Result.append (".")
+			Result.append_integer (compiler_version_number.minor)
 			Result.append (" (")
 			Result.append (Version_number)
 			Result.append (")")
@@ -195,7 +197,7 @@ feature {NONE} -- Constant strings
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

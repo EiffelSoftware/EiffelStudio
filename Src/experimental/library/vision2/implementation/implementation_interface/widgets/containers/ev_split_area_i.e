@@ -166,13 +166,13 @@ feature -- Status setting
 
 	enable_flat_separator
 			-- Set the separator to be "flat"
-		obsolete "All split areas are now flat by default."
+		obsolete "All split areas are now flat by default. [2017-05-31]"
 		do
 		end
 
 	disable_flat_separator
 			-- Set the separator to be "raised"
-		obsolete "All split areas are now flat by default."
+		obsolete "All split areas are now flat by default. [2017-05-31]"
 		do
 		end
 

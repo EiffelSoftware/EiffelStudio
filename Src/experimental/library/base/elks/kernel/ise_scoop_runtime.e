@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Features to access and interact with the SCOOP runtime."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,11 +32,9 @@ feature -- Basic operations
 
 	pin_processor_to_thread (a_object: separate ANY)
 			-- Pin the processor behind the separate object `a_object' to its own thread.
-		local
-			ignored: POINTER
 		do
 				-- We first need to synchronize with the processor.
-			ignored := a_object.default_pointer
+			a_object.default_pointer.do_nothing
 			c_disable_impersonation (c_region_id($a_object))
 		end
 
@@ -59,7 +57,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

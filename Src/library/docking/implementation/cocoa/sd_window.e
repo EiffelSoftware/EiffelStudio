@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Windows for SD_FLOATING_ZONE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -58,22 +58,16 @@ feature {NONE} -- Implementation
 feature -- Command
 
 	show_relative_to_window (a_parent: EV_WINDOW)
-			-- Redefine
-		local
-			l_x, l_y: INTEGER
+			-- Redefine.
 		do
-			-- After `disable_border', x,y position will be forgot. We restore it manually..
-			l_x := screen_x
-			l_y := screen_y
-
-			set_position (l_x, l_y)
-
+				-- After `disable_border', x,y position will be forgot. We restore it manually..
+			set_position (screen_x, screen_y)
 			Precursor {EV_WINDOW} (a_parent)
 		end
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -82,10 +76,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

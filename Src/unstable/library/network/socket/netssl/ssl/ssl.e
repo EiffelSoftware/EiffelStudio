@@ -147,12 +147,13 @@ feature -- Input
 
 feature -- Output
 
-	write (a_pointer: POINTER; nb_bytes: INTEGER)
+	write (a_pointer: POINTER; nb_bytes: INTEGER): INTEGER
 			-- Write the first `nb_bytes' from `a_pointer' onto this SSL socket
-		local
-			err: INTEGER
 		do
-			err := c_ssl_write (ptr, a_pointer, nb_bytes)
+			Result := c_ssl_write (ptr, a_pointer, nb_bytes)
+			if Result < 0 then
+				ssl_socket_error := "No all bytes sent!"
+			end
 		end
 
 feature -- Status Report
@@ -278,7 +279,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Auto-completion provider for external command
 			Allow four kinds of completaions:
@@ -49,10 +49,10 @@ feature -- Access
 			-- A code completable.
 
 	completion_possibilities: SORTABLE_ARRAY [like name_type]
-			-- Completions proposals found by `prepare_auto_complete'
+			-- Completions proposals found by `prepare_auto_complete'.
 
 	insertion: STRING_32
-			-- String to be partially completed
+			-- String to be partially completed.
 		do
 			if insertion_internal /= Void then
 				Result := insertion_internal
@@ -63,7 +63,7 @@ feature -- Access
 
 	insertion_remainder: INTEGER
 			-- The number of characters in the insertion remaining from the cursor position to the
-			-- end of the token
+			-- end of the token.
 		do
 			Result := 0
 		end
@@ -119,18 +119,16 @@ feature{NONE} -- Implementation
 	insertion_internal: like insertion
 
 	class_possibilities: like completion_possibilities
-			-- Class possibilities
+			-- Class possibilities.
 		local
 			l_generator: QL_CLASS_DOMAIN_GENERATOR
 			l_class_domain: QL_CLASS_DOMAIN
 			l_index: INTEGER
-			l_count: INTEGER
 		do
 			create l_generator.make (Void, True)
 			l_class_domain ?= system_target_domain.new_domain (l_generator)
 
-			l_count := l_class_domain.count
-			create Result.make (1, l_count)
+			create Result.make (1, l_class_domain.count)
 			from
 				l_class_domain.start
 				l_index := 1
@@ -147,7 +145,7 @@ feature{NONE} -- Implementation
 		end
 
 	feature_possibilities (a_class: CLASS_C): like completion_possibilities
-			-- Feature possibilities from `a_class'
+			-- Feature possibilities from `a_class'.
 		require
 			a_class_attached: a_class /= Void
 		local
@@ -174,7 +172,7 @@ feature{NONE} -- Implementation
 				end
 				Result.sort
 			else
-				create Result.make (1, 0)
+				create Result.make_empty
 			end
 		ensure
 			result_attached: Result /= Void
@@ -189,7 +187,7 @@ feature{NONE} -- Implementation
 		end
 
 	placeholder_possibilities: like completion_possibilities
-			-- Possibilities for placeholders such as $file, $path
+			-- Possibilities for placeholders such as $file, $path.
 		do
 			create Result.make (1, 13)
 			Result.put (create {NAME_FOR_COMPLETION}.make ("$file_name"), 1)
@@ -211,14 +209,13 @@ feature{NONE} -- Implementation
 		end
 
 	extracted_class_part_at_end (a_text: STRING): STRING
-			-- Class part of `a_text' at the end, if not found, return Void
+			-- Class part of `a_text' at the end, if not found, return Void.
 		require
 			a_text_attached: a_text /= Void
 		local
 			l_text: STRING
 			l_scanner: like scanner
 			l_last_fragment: EB_TEXT_FRAGMENT
-			l_data: INTEGER_REF
 			l_fragment_type: INTEGER
 		do
 			if not a_text.is_empty then
@@ -234,16 +231,16 @@ feature{NONE} -- Implementation
 					l_scanner.scan
 					if not l_scanner.text_fragments.is_empty then
 						l_last_fragment := l_scanner.text_fragments.last
-						if l_last_fragment.location + l_last_fragment.text.count - 1 = l_text.count then
-							l_data ?= l_last_fragment.data
-							if l_data /= Void then
-								l_fragment_type := l_data.item
-								if
-									l_fragment_type = {EB_COMMAND_SCANNER_SKELETON}.t_class_buffer or else
-									l_fragment_type = {EB_COMMAND_SCANNER_SKELETON}.t_class_buffer_selected
-								then
-									Result := l_last_fragment.normalized_text
-								end
+						if
+							l_last_fragment.location + l_last_fragment.text.count - 1 = l_text.count and then
+							attached {INTEGER_REF} l_last_fragment.data as l_data
+						then
+							l_fragment_type := l_data.item
+							if
+								l_fragment_type = {EB_COMMAND_SCANNER_SKELETON}.t_class_buffer or else
+								l_fragment_type = {EB_COMMAND_SCANNER_SKELETON}.t_class_buffer_selected
+							then
+								Result := l_last_fragment.normalized_text
 							end
 						end
 					end
@@ -252,8 +249,8 @@ feature{NONE} -- Implementation
 		end
 
 	extracted_feature_part_at_end (a_text: STRING): TUPLE [class_name: STRING; feature_name: STRING]
-			-- Feature part from `a_text' in form of {CLASS}.feat, result will be ["CLASS", "feat"]
-			-- Void if no suitable format is found
+			-- Feature part from `a_text' in form of {CLASS}.feat, result will be ["CLASS", "feat"].
+			-- Void if no suitable format is found.
 		require
 			a_text_attached: a_text /= Void
 		local
@@ -261,7 +258,6 @@ feature{NONE} -- Implementation
 			l_fake_feature: BOOLEAN
 			l_scanner: like scanner
 			l_last_fragment: EB_TEXT_FRAGMENT
-			l_data: INTEGER_REF
 			l_fragment_type: INTEGER
 			l_normalized_text: STRING
 			l_dot_index: INTEGER
@@ -281,23 +277,21 @@ feature{NONE} -- Implementation
 				l_scanner.scan
 				if not l_scanner.text_fragments.is_empty then
 					l_last_fragment := l_scanner.text_fragments.last
-					if l_last_fragment.location + l_last_fragment.text.count -1 = l_text.count then
-						l_data ?= l_last_fragment.data
-						if l_data /= Void then
-							l_fragment_type := l_data.item
-							if
-								l_fragment_type = {EB_COMMAND_SCANNER_SKELETON}.t_feature_buffer
-							then
-								l_normalized_text := l_last_fragment.normalized_text
-								l_dot_index := l_normalized_text.index_of ('.', 1)
-								l_class_name := l_normalized_text.substring (1, l_dot_index - 1)
-								if l_fake_feature then
-									l_feature_name := ""
-								else
-									l_feature_name := l_normalized_text.substring (l_dot_index + 1, l_normalized_text.count)
-								end
-								Result := [l_class_name, l_feature_name]
+					if
+						l_last_fragment.location + l_last_fragment.text.count -1 = l_text.count and then
+						attached {INTEGER_REF} l_last_fragment.data as l_data
+					then
+						l_fragment_type := l_data.item
+						if l_fragment_type = {EB_COMMAND_SCANNER_SKELETON}.t_feature_buffer then
+							l_normalized_text := l_last_fragment.normalized_text
+							l_dot_index := l_normalized_text.index_of ('.', 1)
+							l_class_name := l_normalized_text.substring (1, l_dot_index - 1)
+							if l_fake_feature then
+								l_feature_name := ""
+							else
+								l_feature_name := l_normalized_text.substring (l_dot_index + 1, l_normalized_text.count)
 							end
+							Result := [l_class_name, l_feature_name]
 						end
 					end
 				end
@@ -305,8 +299,8 @@ feature{NONE} -- Implementation
 		end
 
 	extracted_placeholder_part_at_end (a_text: STRING): STRING
-			-- Placeholder part at end of `a_text'
-			-- Void if not found
+			-- Placeholder part at end of `a_text'.
+			-- Void if not found.
 		require
 			a_text_attached: a_text /= Void
 		local
@@ -346,17 +340,17 @@ feature{NONE} -- Implementation
 		end
 
 	scanner: EB_COMMAND_SCANNER
-			-- Scanner used to scan external command
+			-- Scanner used to scan external command.
 
 	factory: EB_EXTERNAL_COMMAND_TEXT_FRAGMENT_FACTORY
-			-- Factory used in `scanner'
+			-- Factory used in `scanner'.
 
 invariant
 	scanner_attached: scanner /= Void
 	factory_attached: factory /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

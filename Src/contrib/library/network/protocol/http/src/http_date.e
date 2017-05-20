@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			create date_time.make_from_epoch (n.as_integer_32)
 		end
 
-	make_from_string (s: READABLE_STRING_8)
+	make_from_string (s: READABLE_STRING_GENERAL)
 			-- Create from string representation `s'
 			-- Supports: RFC 1123 and RFC 850
 			-- Tolerant with: GMT+offset and GMT-offset
@@ -350,7 +350,7 @@ feature -- Helper routines.
 
 feature {NONE} -- Implementation
 
-	string_to_date_time (s: READABLE_STRING_8): detachable DATE_TIME
+	string_to_date_time (s: READABLE_STRING_GENERAL): detachable DATE_TIME
 			-- String representation of `dt' using the RFC 1123
 			--       HTTP-date    = rfc1123-date | rfc850-date | asctime-date
 			--       rfc1123-date = wkday "," SP date1 SP time SP "GMT"
@@ -377,8 +377,8 @@ feature {NONE} -- Implementation
 		note
 			EIS: "name=RFC2616", "protocol=URI", "src=http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html"
 		local
-			t: STRING_8
-			l_ddd, l_mmm: detachable STRING_8
+			t: STRING_32
+			l_ddd, l_mmm: detachable STRING_32
 			l_dd, l_yyyy, l_hh, l_mi, l_ss, l_ff2: INTEGER
 			l_mo: INTEGER
 			l_gmt_offset: INTEGER -- minutes
@@ -565,7 +565,7 @@ feature {NONE} -- Implementation
 					t.extend (s[i].as_upper)
 					i := i + 1
 				end
-				if 
+				if
 					t.same_string ("GMT") 		-- for instance: GMT+0002
 					or t.same_string ("UTC")  	-- for instance: UTC+0002
 					or t.is_empty 				-- for instance: +0002
@@ -622,7 +622,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	ansi_c_string_to_date_time (s: READABLE_STRING_8): detachable DATE_TIME
+	ansi_c_string_to_date_time (s: READABLE_STRING_GENERAL): detachable DATE_TIME
 			-- String representation of `dt' using the RFC 1123
 			--       asctime-date = wkday SP date3 SP time SP 4DIGIT
 			--       date3        = month SP ( 2DIGIT | ( SP 1DIGIT ))
@@ -638,8 +638,8 @@ feature {NONE} -- Implementation
 		note
 			EIS: "name=RFC2616", "protocol=URI", "src=http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html"
 		local
-			t: STRING_8
-			l_ddd, l_mmm: detachable STRING_8
+			t: STRING_32
+			l_ddd, l_mmm: detachable STRING_32
 			l_dd, l_yyyy, l_hh, l_mi, l_ss, l_ff2: INTEGER
 			l_mo: INTEGER
 			l_gmt_offset: INTEGER -- minutes
@@ -681,18 +681,18 @@ feature {NONE} -- Implementation
 							-- Tolerant to full month name ..
 						l_mmm.keep_head (3)
 					end
-					if     l_mmm.same_string ("JAN") then l_mo := 01
-					elseif l_mmm.same_string ("FEB") then l_mo := 02
-					elseif l_mmm.same_string ("MAR") then l_mo := 03
-					elseif l_mmm.same_string ("APR") then l_mo := 04
-					elseif l_mmm.same_string ("MAY") then l_mo := 05
-					elseif l_mmm.same_string ("JUN") then l_mo := 06
-					elseif l_mmm.same_string ("JUL") then l_mo := 07
-					elseif l_mmm.same_string ("AUG") then l_mo := 08
-					elseif l_mmm.same_string ("SEP") then l_mo := 09
-					elseif l_mmm.same_string ("OCT") then l_mo := 10
-					elseif l_mmm.same_string ("NOV") then l_mo := 11
-					elseif l_mmm.same_string ("DEC") then l_mo := 12
+					if     l_mmm.same_string_general ("JAN") then l_mo := 01
+					elseif l_mmm.same_string_general ("FEB") then l_mo := 02
+					elseif l_mmm.same_string_general ("MAR") then l_mo := 03
+					elseif l_mmm.same_string_general ("APR") then l_mo := 04
+					elseif l_mmm.same_string_general ("MAY") then l_mo := 05
+					elseif l_mmm.same_string_general ("JUN") then l_mo := 06
+					elseif l_mmm.same_string_general ("JUL") then l_mo := 07
+					elseif l_mmm.same_string_general ("AUG") then l_mo := 08
+					elseif l_mmm.same_string_general ("SEP") then l_mo := 09
+					elseif l_mmm.same_string_general ("OCT") then l_mo := 10
+					elseif l_mmm.same_string_general ("NOV") then l_mo := 11
+					elseif l_mmm.same_string_general ("DEC") then l_mo := 12
 					else err := True
 					end
 				else
@@ -875,7 +875,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

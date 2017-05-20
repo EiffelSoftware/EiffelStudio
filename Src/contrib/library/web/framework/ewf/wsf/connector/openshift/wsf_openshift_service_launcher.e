@@ -2,13 +2,12 @@ note
 	description: "[
 			Component to launch the service using the default connector
 
-				Eiffel Web Nino customized for OpenShift
+				EiffelWeb standalone customized for OpenShift
 
 
 				This default connector support options:
 					base: base_url (very specific to standalone server)
-					verbose: to display verbose output, useful for Nino
-					force_single_threaded: use only one thread, useful for Nino
+					verbose: to display verbose output, useful for standalone
 
 			check WSF_SERVICE_LAUNCHER for more documentation
 		]"
@@ -19,7 +18,7 @@ class
 	WSF_OPENSHIFT_SERVICE_LAUNCHER [G -> WSF_EXECUTION create make end]
 
 inherit
-	WSF_NINO_SERVICE_LAUNCHER [G]
+	WSF_STANDALONE_SERVICE_LAUNCHER [G]
 		redefine
 			initialize
 		end

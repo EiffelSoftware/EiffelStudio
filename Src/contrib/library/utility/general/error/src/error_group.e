@@ -1,4 +1,4 @@
-note
+﻿note
 	description : "Objects that represent a group of errors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,28 +30,24 @@ feature -- Access
 
 	name: STRING
 
-	message: detachable STRING_32
+	message: STRING_32
 		do
 			create Result.make_from_string (name)
-			from
-				sub_errors.start
-			until
-				sub_errors.after
+			across
+				sub_errors as s
 			loop
 				if
-					attached sub_errors.item as e and then
+					attached s.item as e and then
 					attached e.message as m
 				then
-
 					Result.append_character ('%N')
 					Result.append_string (m)
 				end
-				sub_errors.forth
 			end
 		end
 
 	sub_errors: LIST [ERROR]
-			-- Error contained by Current
+			-- Error contained by Current.
 
 feature -- Visitor
 
@@ -61,9 +57,8 @@ feature -- Visitor
 			a_visitor.process_group (Current)
 		end
 
-
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

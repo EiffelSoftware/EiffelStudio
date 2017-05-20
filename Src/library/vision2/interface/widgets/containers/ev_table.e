@@ -116,7 +116,7 @@ feature -- Access
 
 	item_list: ARRAYED_LIST [EV_WIDGET]
 			-- List of items in `Current'.
-		obsolete "Use `linear_representation' instead."
+		obsolete "Use `linear_representation' instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -133,7 +133,7 @@ feature -- Access
 			-- from left to right, and top to bottom. You should only
 			-- use this if you relied on the inheritence of ARRAY, and
 			-- is only temporary to ease this change.
-		obsolete "Available to ease transition to new inheritance structure."
+		obsolete "Available to ease transition to new inheritance structure. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -190,7 +190,7 @@ feature -- Status report
 			-- available cells in `Current', thereby making `widget_count'
 			-- obsolete. To find the number of cells in `Current', do
 			-- not use `count' anymore, but use rows * columns.
-		obsolete "Use `count' instead."
+		obsolete "Use `count' instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do

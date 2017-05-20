@@ -1,14 +1,16 @@
 note
 	description: "[
 			Request handler related to 
-				/blogs/user/{id}/ 
-				or /blogs/user/{id}/page/{page}. 
+				/blog/{user}/ 
+				or /blog/{user}?page={page}. 
 				
 			Displays all posts of the given user
+
 		]"
-	author: "Dario Bösch <daboesch@student.ethz.ch>"
+	contributor: "Dario Bösch <daboesch@student.ethz.ch>"
 	date: "$Date$"
 	revision: "$Revision 96616$"
+	fixme: "redesign pagination... see CMS_PAGINATION_GENERATOR."
 
 class
 	BLOG_USER_HANDLER
@@ -20,6 +22,7 @@ inherit
 			posts,
 			total_entries,
 			append_page_title_html_to,
+			append_user_related_html_to,
 			base_path
 		end
 
@@ -28,7 +31,7 @@ create
 
 feature -- Global Variables
 
-	user : detachable CMS_USER
+	user: detachable CMS_USER
 
 feature -- HTTP Methods
 
@@ -37,7 +40,7 @@ feature -- HTTP Methods
 		local
 			l_error: NOT_FOUND_ERROR_CMS_RESPONSE
 		do
-			user := Void
+			check user_void: user = Void end
 			if attached user_from_request (req) as l_user then
 				user := l_user
 					-- Output the results, similar as in the blog hanlder (but with other queries)
@@ -45,53 +48,47 @@ feature -- HTTP Methods
 			else
 					-- Throw a bad request error because the user is not valid
 				create l_error.make (req, res, api)
-				l_error.set_main_content ("<h1>Error</h1>User with id " + user_id_path_parameter (req).out + " doesn't exist!")
+				if attached user_parameter (req) as l_user_id then
+					l_error.set_main_content ("<h1>Error</h1>User with id " + api.html_encoded (l_user_id) + " not found!</h1>")
+				else
+					l_error.set_main_content ("<h1>Error</h1>User not found!</h1>")
+				end
 				l_error.execute
 			end
+			user := Void
 		end
 
 feature -- Query
 
-	user_valid (req: WSF_REQUEST) : BOOLEAN
-			-- Returns true if a valid user id is given and a user with this id exists,
-			-- otherwise returns false.
-		local
-			user_id: INTEGER_32
-		do
-			user_id := user_id_path_parameter (req)
-
-			if user_id <= 0 then
-					-- Given user id is not valid
-				Result := False
-			else
-					--Check if user with user_id exists
-				Result := api.user_api.user_by_id (user_id) /= Void
-			end
-		end
-
 	user_from_request (req: WSF_REQUEST): detachable CMS_USER
 			-- Eventual user with given id in the path of request `req'.
 		local
-			uid: like user_id_path_parameter
+			uid: INTEGER_64
 		do
-			uid := user_id_path_parameter (req)
-			if uid > 0 then
-				Result := api.user_api.user_by_id (uid)
+			if
+				attached user_parameter (req) as l_user_id and then
+				not l_user_id.is_whitespace
+			then
+				if l_user_id.is_integer_64 then
+					uid := l_user_id.to_integer_64
+					if uid > 0 then
+						Result := api.user_api.user_by_id (uid)
+					end
+				else
+					Result := api.user_api.user_by_name (l_user_id)
+				end
 			else
 					-- Missing or invalid user id.
 			end
 		end
 
-	user_id_path_parameter (req: WSF_REQUEST): INTEGER_32
-			-- User id from path /blogs/{user}.
+	user_parameter (req: WSF_REQUEST): detachable STRING_32
+			-- User id from path /blog/{user}.
 			-- Unsigned integer since negative ids are not allowed.
 			-- If no valid id can be read it returns -1
 		do
-			Result := -1
 			if attached {WSF_STRING} req.path_parameter ("user") as l_user_id then
-				if l_user_id.is_integer then
-					Result := l_user_id.integer_value
-				end
+				Result := l_user_id.value
 			end
 		end
 
@@ -118,20 +115,31 @@ feature -- Query
 
 feature -- HTML Output
 
-	append_page_title_html_to (a_output: STRING)
+	append_page_title_html_to (a_page: CMS_RESPONSE; a_output: STRING)
 			-- Returns the title of the page as a html string. It shows the current page number and the name of the current user
+		local
+			l_title: STRING
 		do
-			a_output.append ("<h2>Posts from ")
+			create l_title.make_from_string ("Blog entries from ")
 			if attached user as l_user then
-				a_output.append (html_encoded (l_user.name))
+				l_title.append (html_encoded (a_page.user_profile_name (l_user)))
 			else
-				a_output.append ("unknown user")
+				l_title.append ("unknown user")
 			end
 			if multiple_pages_needed then
-				a_output.append (" (Page " + page_number.out + " of " + pages_count.out + ")")
+				l_title.append (" (Page " + page_number.out + " of " + pages_count.out + ")")
 					-- Get the posts from the current page (limited by entries per page)
 			end
-			a_output.append ("</h2>")
+			a_page.set_title (l_title)
+--			a_output.append ("<h2>" + l_title + "</h2>")
+		end
+
+	append_user_related_html_to (a_page: CMS_RESPONSE; a_output: STRING)
+		do
+			if attached api.user as u and api.has_permission ("create blog") then
+				a_page.add_to_primary_tabs (a_page.local_link ("Create a new blog entry", "node/add/blog"))
+			end
+			a_page.add_to_primary_tabs (a_page.local_link ("View all blog entries", "blogs/"))
 		end
 
 	base_path : STRING
@@ -139,9 +147,9 @@ feature -- HTML Output
 			-- If user is logged in, include user id
 		do
 			if attached user as l_user then
-				Result := "/blogs/user/" + l_user.id.out
+				Result := "/blog/" + l_user.id.out
 			else
-				Result := precursor
+				Result := Precursor
 			end
 		end
 

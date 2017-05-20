@@ -67,9 +67,6 @@ extern EIF_TYPE_INDEX rt_typeof_type_of (EIF_TYPE type);
 /* CID which creates a given type */
 extern EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE dftype, int use_old_annotations);
 
-/* Generic id list from external sources (retrieve) */
-extern  EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *, EIF_TYPE_INDEX *, int);
-
 /* Parent tables */
 extern struct eif_par_types **eif_par_table;
 extern EIF_TYPE_INDEX eif_par_table_size;

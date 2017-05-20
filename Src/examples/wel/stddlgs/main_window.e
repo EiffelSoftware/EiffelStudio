@@ -58,13 +58,13 @@ feature {NONE} -- Implementation
 			when Cmd_choose_file then
 				choose_file.activate (Current)
 				if choose_file.selected then
-					txt := choose_file.file_name
+					txt := choose_file.file_path.name.as_string_8
 					invalidate
 				end
 			when Cmd_choose_folder then
 				choose_folder.activate (Current)
 				if choose_folder.selected then
-					txt := choose_folder.folder_name
+					txt := choose_folder.folder_path.name.as_string_8
 					invalidate
 				end
 			when Cmd_choose_font then

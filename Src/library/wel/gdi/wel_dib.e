@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 
 	make_by_content_pointer (bits_ptr: POINTER; size: INTEGER)
 		obsolete
-			"Use `make_with_info_and_data' which is a safer way to proceed."
+			"Use `make_with_info_and_data' which is a safer way to proceed [2017-05-31]."
 		do
 			create info_header.make
 
@@ -340,7 +340,7 @@ feature {WEL_BITMAP}
 	info_header: WEL_BITMAP_INFO_HEADER;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

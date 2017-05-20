@@ -246,11 +246,8 @@ feature {NONE} -- Evaluation
 feature {NONE} -- INSTR_B evaluation
 
 	process_instruction_evaluation (a_instr_b: INSTR_B)
-		local
-			l_instr_call_b: INSTR_CALL_B
 		do
-			l_instr_call_b ?= a_instr_b
-			if l_instr_call_b /= Void then
+			if attached {INSTR_CALL_B} a_instr_b as l_instr_call_b then
 				process_call_b (l_instr_call_b.call)
 			else
 				dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_instruction_eval_not_yet_available (a_instr_b))
@@ -331,7 +328,6 @@ feature {BYTE_NODE} -- Visitor
 		local
 			l_byte_list: LIST [BYTE_NODE]
 			l_arg_as_lst: LINKED_LIST [DUMP_VALUE]
-			l_expr_b: EXPR_B
 			i: INTEGER
 			dv: DUMP_VALUE
 			index_dv: DUMP_VALUE_BASIC
@@ -383,8 +379,7 @@ feature {BYTE_NODE} -- Visitor
 						until
 							l_byte_list.after or error_occurred
 						loop
-							l_expr_b ?= l_byte_list.item
-							if l_expr_b /= Void then
+							if attached {EXPR_B} l_byte_list.item as l_expr_b then
 								r := parameter_evaluation (l_expr_b)
 								if r = Void then
 									dv := Void
@@ -712,12 +707,7 @@ feature {BYTE_NODE} -- Visitor
 			-- Process `a_node'.
 		local
 			retried: BOOLEAN
-
 			l_type_to_create: CL_TYPE_A
-			l_f_b: FEATURE_B
-			l_p_b: PARAMETER_B
-			l_e_b: EXPR_B
-			l_v_i: VALUE_I
 			l_supported: BOOLEAN
 			l_has_error: BOOLEAN
 			ct: CLASS_TYPE
@@ -737,19 +727,16 @@ feature {BYTE_NODE} -- Visitor
 			end
 			if not retried then
 				if l_type_to_create /= Void and then l_type_to_create.is_basic then
-					l_f_b ?= a_node.call
-					if l_f_b /= Void and then l_f_b.parameters /= Void then
-						if l_f_b.parameters.count = 1 then
-							l_p_b ?= l_f_b.parameters.first
-							if l_p_b /= Void then
-								l_e_b ?= l_p_b.expression
-								if l_e_b /= Void then
-									l_v_i := l_e_b.evaluate
-									if l_v_i /= Void then
-										l_supported	:= True
-										evaluate_value_i (l_v_i, Void)
-									end
-								end
+					if
+						attached {FEATURE_B} a_node.call as l_f_b and then
+						l_f_b.parameters /= Void and then
+						l_f_b.parameters.count = 1 and then
+						attached {PARAMETER_B} l_f_b.parameters.first as l_p_b
+					then
+						if attached {EXPR_B} l_p_b.expression as l_e_b then
+							if attached l_e_b.evaluate as l_v_i then
+								l_supported	:= True
+								evaluate_value_i (l_v_i, Void)
 							end
 						end
 					end
@@ -782,26 +769,22 @@ feature {BYTE_NODE} -- Visitor
 
 	process_current_b (a_node: CURRENT_B)
 			-- Process `a_node'.
-		local
-			cse: EIFFEL_CALL_STACK_ELEMENT
-			dv: DUMP_VALUE
 		do
 			if on_object then
 					--| If the context is on object
 					--| then Current represent the pointed object
 				create tmp_result.make_with_value (dump_value_at_address (context.address))
-			else
-				cse ?= application_status.current_call_stack_element
-				check cse /= Void end
-				dv := dbg_evaluator.current_object_from_callstack (cse)
-				if dv = Void then
-					dbg_error_handler.notify_error_evaluation (Debugger_names.Cst_unable_to_get_current_object)
-				else
+			elseif attached {EIFFEL_CALL_STACK_ELEMENT} application_status.current_call_stack_element as cse then
+				if attached dbg_evaluator.current_object_from_callstack (cse) as dv then
 					create tmp_result.make_with_value (dv)
 					if attached context.class_c as cl then
 						tmp_result.suggest_static_class (cl)
 					end
+				else
+					dbg_error_handler.notify_error_evaluation (Debugger_names.Cst_unable_to_get_current_object)
 				end
+			else
+				check is_eiffel_call_stack_element: False end
 			end
 		end
 
@@ -912,9 +895,8 @@ feature {BYTE_NODE} -- Visitor
 	process_feature_b (a_node: FEATURE_B)
 			-- Process `a_node'.
 		local
-			fi: FEATURE_I
+			fi: detachable FEATURE_I
 			cl: CLASS_C
-			l_cl_type: CL_TYPE_A
 --			l_basic_i: BASIC_A
 			params: ARRAYED_LIST [DUMP_VALUE]
 		do
@@ -943,10 +925,12 @@ feature {BYTE_NODE} -- Visitor
 --				end
 				if not error_occurred then
 					if a_node.precursor_type /= Void and then a_node.precursor_type.is_standalone then
-						l_cl_type ?= a_node.precursor_type
-						check l_cl_type_not_void_if_true_precursor: l_cl_type /= Void end
-						cl := l_cl_type.base_class
-						fi := cl.feature_table.feature_of_rout_id (a_node.routine_id)
+						if attached {CL_TYPE_A} a_node.precursor_type as l_cl_type then
+							cl := l_cl_type.base_class
+							fi := cl.feature_table.feature_of_rout_id (a_node.routine_id)
+						else
+							check l_cl_type_not_void_if_true_precursor: False end
+						end
 					else
 						fi := feature_i_from_call_access_b_in_context (cl, a_node)
 					end
@@ -1508,7 +1492,6 @@ feature {BYTE_NODE} -- Visitor
 		local
 			l_byte_list: LIST [BYTE_NODE]
 			l_arg_as_lst: LINKED_LIST [DUMP_VALUE]
-			l_expr_b: EXPR_B
 			i: INTEGER
 			dv: DUMP_VALUE
 			index_dv: DUMP_VALUE_BASIC
@@ -1547,8 +1530,7 @@ feature {BYTE_NODE} -- Visitor
 						until
 							l_byte_list.after or error_occurred
 						loop
-							l_expr_b ?= l_byte_list.item
-							if l_expr_b /= Void then
+							if attached {EXPR_B} l_byte_list.item as l_expr_b then
 								r := parameter_evaluation (l_expr_b)
 								if r = Void then
 									dv := Void
@@ -1772,17 +1754,17 @@ feature {NONE} -- Visitor: implementation
 			--| this is mainly to factory code for
 			--|      LOCAL_B, OBJECT_TEST_LOCAL_B, ARGUMENT_B
 		local
-			cse: EIFFEL_CALL_STACK_ELEMENT
-			cf: E_FEATURE
+			cf: detachable E_FEATURE
+			ecse: detachable EIFFEL_CALL_STACK_ELEMENT
 		do
-			cse ?= application_status.current_call_stack_element
-			if cse = Void then
+			if attached {EIFFEL_CALL_STACK_ELEMENT} application_status.current_call_stack_element as cse then
+				ecse := cse
+				cf := cse.routine
+			else
 				dbg_error_handler.notify_error_evaluation ("Unable to get Current call stack element")
 				check
 					False -- Shouldn't occur.
 				end
-			else
-				cf := cse.routine
 			end
 			if cf = Void then
 				dbg_error_handler.notify_error_evaluation ("Unable to get Current call stack element's routine")
@@ -1790,7 +1772,7 @@ feature {NONE} -- Visitor: implementation
 					False -- Shouldn't occur.
 				end
 			else
-				Result := [cse, cf]
+				Result := [ecse, cf]
 			end
 		ensure
 			result_void_if_error: Result = Void implies error_occurred
@@ -1922,29 +1904,21 @@ feature {NONE} -- Visitor: implementation
 		local
 			l_tmp_target_backup: like tmp_target
 			l_call_value: DBG_EVALUATED_VALUE
-			l_call_access: CALL_ACCESS_B
 			l_call: CALL_B
 			l_type_i: CL_TYPE_A
-			l_gen_type_i: GEN_TYPE_A
-			l_elt_type_i: CL_TYPE_A
 			l_params: BYTE_LIST [PARAMETER_B]
-			l_dv: DUMP_VALUE
-			r: DBG_EVALUATED_VALUE
+			l_dv: detachable DUMP_VALUE
 		do
 			l_tmp_target_backup := tmp_target
 			l_type_i := resolved_real_type_in_context (a_type_i)
 			if l_type_i.base_class.is_special then
-				l_gen_type_i ?= l_type_i
-				if l_gen_type_i /= Void then
+				if attached {GEN_TYPE_A} l_type_i as l_gen_type_i then
 					if l_gen_type_i.generics.valid_index (1) then
-						l_elt_type_i ?= l_gen_type_i.generics[1]
-						if l_elt_type_i /= Void then
-							l_call_access := a_node.call
-							if l_call_access /= Void then
+						if attached {CL_TYPE_A} l_gen_type_i.generics[1] as l_elt_type_i then
+							if attached a_node.call as l_call_access then
 								l_params := l_call_access.parameters
 								if l_params /= Void and then l_params.count = 1 then
-									r := parameter_evaluation (l_params.first)
-									if r /= Void then
+									if attached parameter_evaluation (l_params.first) as r then
 										l_dv := r.value
 									end
 									if l_dv /= Void and then l_dv.is_type_integer_32 then
@@ -2107,11 +2081,8 @@ feature {NONE} -- Evaluation: implementation
 		require
 			valid_feature: f /= Void
 			is_constant: f.is_constant
-		local
-			cv_cst_i: CONSTANT_I
 		do
-			cv_cst_i ?= f
-			if cv_cst_i /= Void then
+			if attached {CONSTANT_I} f as cv_cst_i then
 				evaluate_value_i (cv_cst_i.value, cv_cst_i.type.base_class)
 			else
 				dbg_error_handler.notify_error_evaluation_unknown_constant_type_for (f.feature_name)
@@ -2334,7 +2305,6 @@ feature -- Context: Element change
 			-- Init context data with values from current callstack
 			-- i.e: current debugging contex	
 		local
-			ecse: EIFFEL_CALL_STACK_ELEMENT
 			fi: FEATURE_I
 		do
 			if cse = Void then
@@ -2343,15 +2313,14 @@ feature -- Context: Element change
 					--| Cse can be Void if the application raised an exception
 					--| at the very beginning of the execution (for instance under dotnet)
 				context.set_address (cse.object_address)
-				ecse ?= cse
-				if ecse = Void then
-					--| Could occurs in case of External call stack element
-					--| in case of Exception or stopped state
-					dbg_error_handler.notify_error_expression_during_context_preparation
-				else
+				if attached {EIFFEL_CALL_STACK_ELEMENT} cse as ecse then
 					fi := ecse.routine_i
 					context.set_data (fi, ecse.dynamic_class, ecse.dynamic_type, ecse.local_table, ecse.object_test_locals_info, ecse.break_index, ecse.break_nested_index)
 					apply_context
+				else
+					--| Could occurs in case of External call stack element
+					--| in case of Exception or stopped state
+					dbg_error_handler.notify_error_expression_during_context_preparation
 				end
 			end
 		end
@@ -2528,12 +2497,12 @@ feature {NONE} -- Compiler helpers
 			-- Resolved real type associated with `a_type_i'
 		require
 			a_type_i_not_void: a_type_i /= Void
-		local
-			ct: CLASS_TYPE
 		do
-			ct := context.class_type
-			if ct /= Void then
-				Result ?= byte_context.real_type_in (a_type_i, ct.type)
+			if
+				attached context.class_type as ct and then
+				attached {CL_TYPE_A} byte_context.real_type_in (a_type_i, ct.type) as t
+			then
+				Result := t
 			end
 			if Result = Void then
 				Result := a_type_i
@@ -2546,14 +2515,11 @@ feature {NONE} -- Compiler helpers
 			-- Class C related to `a_external_b' if exists.
 		require
 			a_expr_b_not_void: a_external_b /= Void
-		local
-			ti: TYPE_A
 		do
-			ti := a_external_b.static_class_type
-			if ti /= Void then
+			if attached a_external_b.static_class_type as ti then
 				Result := class_c_from_type_i (ti)
 			elseif a_external_b.extension /= Void then
-				 -- try to find out the class thanks to extension
+				 	-- try to find out the class thanks to extension
 				Result := Dbg_evaluator.class_c_from_external_b_with_extension (a_external_b)
 			end
 		end
@@ -2567,7 +2533,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="repository_tool" uuid="BE42D306-725A-4333-A838-10237BAB8567">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="repository_tool" uuid="BE42D306-725A-4333-A838-10237BAB8567">
 	<target name="repository_tool_core">
 		<file_rule>
 			<exclude>/.git$</exclude>
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="false" warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="provisional">
+		<option trace="false" profile="false" debug="false" warning="true">
 			<debug name="svn_engine" enabled="true"/>
 			<assertions precondition="true"/>
 		</option>
-		<setting name="concurrency" value="none"/>
+		<capability>
+			<concurrency support="none" use="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="eapml" location="$ISE_LIBRARY\contrib\library\math\eapml\eapml.ecf"/>
@@ -37,14 +40,18 @@
 		<root class="BATCH_REPO_REVIEW" feature="make"/>
 		<setting name="console_application" value="true"/>
 		<setting name="executable_name" value="ctrb"/>
-		<setting name="concurrency" value="thread"/>
+		<capability>
+			<concurrency support="thread" use="thread"/>
+		</capability>
 		<cluster name="batch" location=".\src\batch\" recursive="true"/>
 	</target>
 	<target name="repository_tool" extends="repository_tool_core">
 		<root class="GRAPHICAL_REPO_REVIEW" feature="make_and_launch"/>
 		<setting name="console_application" value="false"/>
 		<setting name="executable_name" value="ctr"/>
-		<setting name="concurrency" value="thread"/>
+		<capability>
+			<concurrency support="thread" use="thread"/>
+		</capability>
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking.ecf" readonly="false">
 			<option>
 				<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
@@ -74,18 +81,12 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="repository_tool_unix" extends="repository_tool">
-		<option full_class_checking="true" cat_call_detection="all">
-		</option>
-	</target>
 	<target name="repository_tool_test_compilation_unix" extends="repository_tool_unix">
 		<description>Compiling UNIX version on other platforms than Unices</description>
 		<setting name="platform" value="unix"/>
 	</target>
 	<target name="repository_tool_test_compilation_windows" extends="repository_tool">
 		<description>Compiling WINDOWS version on other platforms than Unices</description>
-		<option full_class_checking="true" cat_call_detection="all">
-		</option>
 		<setting name="platform" value="windows"/>
 	</target>
 </system>

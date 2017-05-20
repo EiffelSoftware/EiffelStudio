@@ -1,6 +1,7 @@
 note
 	description: "Streams that parse textual representation of values from a string."
 	author: "Nadia Polikarpova"
+	updated_by: "Alexander Kogtenkov"
 	model: source, index, from_string, is_separator
 
 class
@@ -223,7 +224,7 @@ feature -- Specification
 			from
 				Result := i
 			until
-				Result > s.count or else p.item (([s [Result]]))
+				Result > s.count or else p.item ([s [Result]])
 			loop
 				Result := Result + 1
 			end

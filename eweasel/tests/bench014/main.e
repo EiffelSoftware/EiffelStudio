@@ -20,7 +20,9 @@ feature
       points: ARRAY[VALUE3]
       k: INTEGER
     do
-      create in.make_open_read(separate_character_option_value('i'))
+      check attached separate_character_option_value('i') as o then
+        create in.make_open_read(o)
+      end
 
       is_bench := index_of_word_option ("bench") > 0
       

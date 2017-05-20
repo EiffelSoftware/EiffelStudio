@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Timer used to check process status."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -63,7 +63,7 @@ feature -- Status reporting
 	frozen destroyed: BOOLEAN
 			-- Has this timer been destroyed?
 		obsolete
-			"Use `is_destroyed' instead."
+			"Use `is_destroyed' instead. [2017-05-31]"
 		do
 			Result := is_destroyed
 		end
@@ -88,7 +88,7 @@ invariant
 	sleep_time_positive: sleep_time > 0
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

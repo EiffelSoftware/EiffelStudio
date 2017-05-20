@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Encapsulation of standard implementation of IStream interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,8 +19,6 @@ inherit
 	ECOM_STREAM_SEEK
 
 	ECOM_LOCK_TYPES
-
-	ECOM_STAT_FLAGS
 
 	EXCEPTION_MANAGER_FACTORY
 
@@ -72,7 +70,7 @@ feature -- Access
 			Result /= Void
 		end
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Name
 		do
 			Result := description (Statflag_default).name
@@ -113,7 +111,7 @@ feature -- Basic Operations
 	update_end_of_stream
 			-- Update value of `end_of_stream'.
 		do
-			end_of_stream := (ccom_end_of_stream_reached (initializer) = 1)
+			end_of_stream := ccom_end_of_stream_reached (initializer) = 1
 		end
 
 	read (buffer: POINTER; bytes: INTEGER)
@@ -270,7 +268,7 @@ feature -- Basic Operations
 			ccom_write_boolean (initializer, boolean)
 		end
 
-	write_string (string: STRING)
+	write_string (string: READABLE_STRING_GENERAL)
 			-- Write `string' into stream.
 		require
 			string /= Void
@@ -506,7 +504,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -516,8 +514,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class ECOM_STREAM
-
+end

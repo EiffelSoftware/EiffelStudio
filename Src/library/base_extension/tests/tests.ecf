@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="base_extension-tests" uuid="B919DBF2-0436-455E-89CA-774C5D878D6F" library_target="base_extension-tests">
-	<description>Unit-tests for the Diff library.</description>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="base_extension-tests" uuid="B919DBF2-0436-455E-89CA-774C5D878D6F" library_target="base_extension-tests">
+	<description>Unit-tests for Base extension library.</description>
 	<target name="base_extension-tests">
 		<root class="TEST_BASE_EXTENSION" feature="make"/>
 		<file_rule>
 			<exclude>/EIFGENs</exclude>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option void_safety="all" namespace="EiffelSoftware.Library">
+		<option namespace="EiffelSoftware.Library">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf" readonly="false" use_application_options="true"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" use_application_options="true"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<tests name="tests" location=".\" recursive="true">
 			<option namespace="Tests">
 			</option>

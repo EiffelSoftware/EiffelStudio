@@ -39,8 +39,16 @@ feature {NONE} -- Initialization
 				print("Connect failed%N")
 			end
 
+				-- Wait until there is some data.
+			from
+			until
+				s.is_readable
+			loop
+			end
+
 			s.read_integer
-			if s.bytes_read > 0 then
+
+			if s.bytes_read > 0 and then s.last_integer /= data then
 				print ("No way%N")
 			end
 
@@ -54,6 +62,8 @@ feature -- Access
 
 	is_launched: BOOLEAN
 
+	data: INTEGER = 1123
+
 feature {NONE} -- Implementation
 
 	server
@@ -65,6 +75,7 @@ feature {NONE} -- Implementation
 			s.listen(1)
 			is_launched := True
 			s.accept
+			s.accepted.put_integer (data)
 				-- We do not close the socket as we don't want to have the recipient getting
 				-- such a notification.
 		end

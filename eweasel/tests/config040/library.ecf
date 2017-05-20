@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" name="library" library_target="library" uuid="E8436FBE-A813-4A29-98EB-8C9F153C1E31">
+	<target name="library">
+		<root all_classes="true"/>
+		<setting name="console_application" value="true"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="$LIBRARY_VOID_SAFETY"/>
+		</capability>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+	</target>
+</system>

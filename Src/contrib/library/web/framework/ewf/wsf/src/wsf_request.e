@@ -288,7 +288,7 @@ feature -- Access: Input
 					end
 				end
 				if raw_input_data_recorded then
-					set_raw_input_data (buf.substring (buf_initial_size + 1, buf.count)) 
+					set_raw_input_data (buf.substring (buf_initial_size + 1, buf.count))
 						-- Only the input data! And differente reference.
 				end
 			end
@@ -346,7 +346,7 @@ feature -- Helper
 	is_request_method (m: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `m' the Current request_method?
 		do
-			Result := request_method.is_case_insensitive_equal (m.as_string_8)
+			Result := m.is_case_insensitive_equal (request_method)
 		end
 
 	is_put_request_method: BOOLEAN
@@ -691,7 +691,7 @@ feature -- Access: CGI Meta variables
 		do
 			meta_variables_table.force (new_string_value (a_name, a_value), a_name)
 		ensure
-			param_set: attached {WSF_STRING} meta_variable (a_name) as val and then val.url_encoded_value.same_string (a_value)
+			param_set: attached {WSF_STRING} meta_variable (a_name) as val and then a_value.same_string_general (val.url_encoded_value)
 		end
 
 	unset_meta_variable (a_name: READABLE_STRING_GENERAL)
@@ -833,41 +833,60 @@ feature -- Access: CGI meta parameters - 1.1
 		local
 			l_result: like internal_percent_encoded_path_info
 			r: READABLE_STRING_8
+			pi: READABLE_STRING_32
 			i,m,n,spos: INTEGER
 		do
 			l_result := internal_percent_encoded_path_info
 			if l_result = Void then
-				r := request_uri
-				i := r.index_of ('?', 1)
-				if i > 0 then
-					l_result := r.substring (1, i - 1)
+				pi := path_info
+				if pi.is_empty then
+					l_result := ""
+				elseif pi.count = 1 and then pi[1] = '/' then
+					l_result := "/"
 				else
-					l_result := r.string
-				end
-				if attached script_name as s then
-					if l_result.starts_with (s) then
-						l_result := l_result.substring (s.count + 1, l_result.count)
+					r := request_uri
+					i := r.index_of ('?', 1)
+					if i > 0 then
+						l_result := r.substring (1, i - 1)
 					else
-						--| Handle Rewrite url engine, to have clean path
-						from
-							i := 1
-							m := l_result.count
-							n := s.count
-						until
-							i > m or i > n or l_result[i] /= s[i]
-						loop
-							if l_result[i] = '/' then
-								spos := i
-							end
-							i := i + 1
+						l_result := r.string
+					end
+					i := 0
+					if pi.is_valid_as_string_8 then
+						i := l_result.substring_index (pi.to_string_8, 1)
+						if i > 0 then
+								-- Path info is included in REQUEST_URI
+								-- so let's get the percent encoded path info from request uri.
+							l_result := l_result.substring (i, l_result.count)
 						end
-						if i > 1 then
-							if l_result[i-1] = '/' then
-								i := i -1
-							elseif spos > 0 then
-								i := spos
+					end
+						--| here "i = 0" means request_uri does not start with `path_info',
+						--| thus let's compute it from `script_name'.
+					if i = 0 and attached script_name as s then
+						if l_result.starts_with (s) then
+							l_result := l_result.substring (s.count + 1, l_result.count)
+						else
+								--| Handle Rewrite url engine, to have clean path
+							from
+								i := 1
+								m := l_result.count
+								n := s.count
+							until
+								i > m or i > n or l_result[i] /= s[i]
+							loop
+								if l_result[i] = '/' then
+									spos := i
+								end
+								i := i + 1
 							end
-							l_result := l_result.substring (i, m)
+							if i > 1 then
+								if l_result[i-1] = '/' then
+									i := i -1
+								elseif spos > 0 then
+									i := spos
+								end
+								l_result := l_result.substring (i, m)
+							end
 						end
 					end
 				end
@@ -1187,9 +1206,17 @@ feature -- HTTP_*
 
 	http_connection: detachable READABLE_STRING_8
 			-- Contents of the Connection: header from the current wgi_request, if there is one.
-			-- Example: 'Keep-Alive'.
+			-- Example: 'keep-alive'.
 		do
 			Result := wgi_request.http_connection
+		end
+
+	is_keep_alive_http_connection: BOOLEAN
+			-- Is a keep-alive connection?
+		do
+			if attached http_connection as conn then
+				Result := conn.starts_with ("keep-alive")
+			end
 		end
 
 	http_expect: detachable READABLE_STRING_8
@@ -2083,7 +2110,7 @@ invariant
 	wgi_request.content_type /= Void implies content_type /= Void
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

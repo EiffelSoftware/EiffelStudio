@@ -219,21 +219,19 @@ feature {NONE} -- Implementation
 			-- Initialize preference values.
 		local
 			l_manager: EC_PREFERENCE_MANAGER
-			l_platform: PLATFORM_CONSTANTS
 			l_eis_path: STRING_32
 		do
-			create l_platform
 			create l_manager.make (preferences, "misc")
 
 			acrobat_reader_preference := l_manager.new_string_preference_value (l_manager, acrobat_reader_string, "acrobat")
-			text_mode_is_windows_preference := l_manager.new_boolean_preference_value (l_manager, text_mode_is_windows_string, l_platform.is_windows)
+			text_mode_is_windows_preference := l_manager.new_boolean_preference_value (l_manager, text_mode_is_windows_string, {PLATFORM}.is_windows)
 			internet_browser_preference := l_manager.new_string_32_preference_value (l_manager, internet_browser_string, {STRING_32} "netscape $url")
 			dyn_lib_window_height_preference := l_manager.new_integer_preference_value (l_manager, dyn_lib_window_height_string, 200)
 			dyn_lib_window_width_preference := l_manager.new_integer_preference_value (l_manager, dyn_lib_window_width_string, 400)
 			preference_window_height_preference := l_manager.new_integer_preference_value (l_manager, preference_window_height_string, 200)
 			preference_window_width_preference := l_manager.new_integer_preference_value (l_manager, preference_window_width_string, 400)
 			show_hidden_preferences_preference := l_manager.new_boolean_preference_value (l_manager, show_hidden_preferences_string, False)
-			if l_platform.is_windows then
+			if {PLATFORM}.is_windows then
 				console_shell_command_preference := l_manager.new_string_preference_value (l_manager, console_shell_command_string, "cmd")
 				external_editor_command_preference := l_manager.new_string_preference_value (l_manager, external_editor_command_string, "notepad $target")
 				file_browser_command_preference := l_manager.new_string_32_preference_value (l_manager, file_browser_command_string, {STRING_32} "explorer $target")

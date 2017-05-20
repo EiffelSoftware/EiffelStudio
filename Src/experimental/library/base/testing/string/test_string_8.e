@@ -100,7 +100,7 @@ feature -- Tests
 	test_append_real
 		local
 			s: STRING_8
-			r: REAL
+			r: REAL_32
 		do
 			r := {REAL_32} 5.6
 			create s.make (10)
@@ -1091,6 +1091,60 @@ feature -- Tests
 			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			s.make_from_c (l_ptr.item)
 			check_boolean ("make_from_c", s.is_empty)
+		end
+
+	test_make_from_c_substring
+		local
+			l_ptr: MANAGED_POINTER
+			s: STRING_8
+		do
+				-- Creation `make_from_c_substring`
+			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create s.make_from_c_substring (l_ptr.item, 2, 5)
+			check_boolean ("make_from_c_substring", s.is_equal ("1234"))
+
+			create s.make_from_c_substring (l_ptr.item, 2, 2)
+			check_boolean ("make_from_c_substring", s.is_equal ("1"))
+
+			create s.make_from_c_substring (l_ptr.item, 3, 7)
+			check_boolean ("make_from_c_substring", s.is_equal ("23456"))
+
+			create s.make_from_c_substring (l_ptr.item, 1, 8)
+			check_boolean ("make_from_c_substring", s.is_equal ("0123456%U"))
+
+
+			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create s.make_from_c_substring (l_ptr.item, 2, 8)
+			check_boolean ("make_from_c_substring", s.is_equal ("0123456"))
+
+			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 0, 52, 53, 54, 0 >>)
+			create s.make_from_c_substring (l_ptr.item, 1, 10)
+			check_boolean ("make_from_c_substring", s.is_equal ("%U0123%U456%U"))
+
+				-- Procedure `make_from_c_substring`
+			s := "abcdef"
+			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			s.make_from_c_substring (l_ptr.item, 2, 5)
+			check_boolean ("make_from_c_substring", s.is_equal ("1234"))
+
+			s := "abcdef"
+			s.make_from_c_substring (l_ptr.item, 3, 7)
+			check_boolean ("make_from_c_substring", s.is_equal ("23456"))
+
+			s := "abcdef"
+			s.make_from_c_substring (l_ptr.item, 1, 8)
+			check_boolean ("make_from_c_substring", s.is_equal ("0123456%U"))
+
+
+			s := "abcdef"
+			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			s.make_from_c_substring (l_ptr.item, 2, 8)
+			check_boolean ("make_from_c_substring", s.is_equal ("0123456"))
+
+			s := "abcdef"
+			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 0, 52, 53, 54, 0 >>)
+			s.make_from_c_substring (l_ptr.item, 1, 10)
+			check_boolean ("make_from_c_substring", s.is_equal ("%U0123%U456%U"))
 		end
 
 	test_make_from_string
@@ -2284,15 +2338,15 @@ feature -- Tests
 
 	test_to_double
 		do
-			check_equality ("to_double", ("0").to_double, {DOUBLE} 0.0)
-			check_equality ("to_double", ("1").to_double, {DOUBLE} 1.0)
-			check_equality ("to_double", ("123").to_double, {DOUBLE} 123.0)
-			check_equality ("to_double", ("0.75").to_double, {DOUBLE} 0.75)
-			check_equality ("to_double", ("-348.75").to_double, {DOUBLE} -348.75)
-			check_equality ("to_double", ("62.5e-3").to_double, {DOUBLE} 62.5e-3)
-			check_equality ("to_double", ("1.e-4").to_double, {DOUBLE} 1.e-4)
-			check_equality ("to_double", ("1.e-4").to_double, {DOUBLE} 0.0001)
-			check_equality ("to_double", ("62.5e-3").to_double, {DOUBLE} 62.5e-3)
+			check_equality ("to_double", ("0").to_double, {REAL_64} 0.0)
+			check_equality ("to_double", ("1").to_double, {REAL_64} 1.0)
+			check_equality ("to_double", ("123").to_double, {REAL_64} 123.0)
+			check_equality ("to_double", ("0.75").to_double, {REAL_64} 0.75)
+			check_equality ("to_double", ("-348.75").to_double, {REAL_64} -348.75)
+			check_equality ("to_double", ("62.5e-3").to_double, {REAL_64} 62.5e-3)
+			check_equality ("to_double", ("1.e-4").to_double, {REAL_64} 1.e-4)
+			check_equality ("to_double", ("1.e-4").to_double, {REAL_64} 0.0001)
+			check_equality ("to_double", ("62.5e-3").to_double, {REAL_64} 62.5e-3)
 		end
 
 	test_to_integer
@@ -2404,12 +2458,12 @@ feature -- Tests
 
 	test_to_real
 		do
-			check_equality ("to_real", ("0").to_real, {REAL} 0.0)
-			check_equality ("to_real", ("1").to_real, {REAL} 1.0)
-			check_equality ("to_real", ("123").to_real, {REAL} 123.0)
-			check_equality ("to_real", ("0.75").to_real, {REAL} 0.75)
-			check_equality ("to_real", ("-348.75").to_real, {REAL} -348.75)
-			check_equality ("to_real", ("62.5e-3").to_real, {REAL} 62.5e-3)
+			check_equality ("to_real", ("0").to_real, {REAL_32} 0.0)
+			check_equality ("to_real", ("1").to_real, {REAL_32} 1.0)
+			check_equality ("to_real", ("123").to_real, {REAL_32} 123.0)
+			check_equality ("to_real", ("0.75").to_real, {REAL_32} 0.75)
+			check_equality ("to_real", ("-348.75").to_real, {REAL_32} -348.75)
+			check_equality ("to_real", ("62.5e-3").to_real, {REAL_32} 62.5e-3)
 		end
 
 	test_to_upper
@@ -2473,5 +2527,15 @@ feature -- Tests
 
 
 
+note
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end
 

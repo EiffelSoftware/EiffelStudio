@@ -236,7 +236,7 @@ feature -- Obsolete
 			-- the line and ending at the cursor position (not
 			-- included)
 		obsolete
-			"Use `wide_image_from_start_to_cursor' instead."
+			"Use `wide_image_from_start_to_cursor' instead. [2017-05-31]"
 		require
 			text_cursor.line = Current
 		do
@@ -249,7 +249,7 @@ feature -- Obsolete
 			-- Substring of the line starting at the cursor
 			-- position (included) and ending at the end of the line
 		obsolete
-			"Use `wide_image_from_cursor_to_end' instead."
+			"Use `wide_image_from_cursor_to_end' instead. [2017-05-31]"
 		require
 			text_cursor.line = Current
 		do
@@ -293,7 +293,7 @@ feature -- Status Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

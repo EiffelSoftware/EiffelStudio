@@ -12,6 +12,8 @@ inherit
 	ARGUMENT_OPTION_PARSER
 		rename
 			make as make_option_parser
+		redefine
+			new_argument_source
 		end
 
 create
@@ -24,6 +26,18 @@ feature {NONE} -- Initialization
 		do
 			make_option_parser (False)
 			set_is_using_separated_switch_values (True)
+		end
+
+feature {NONE} -- Factory
+
+	new_argument_source: ARGUMENT_SOURCE
+			-- Creates a new default argument source object for the parser,
+			-- in order to include value from potential `ISE_COMPILE_ALL_FLAGS` environment variable.
+		local
+			args: COMPILE_ALL_ARGUMENTS
+		do
+			create args
+			create {ENVIRONMENT_ARGUMENTS_SOURCE} Result.make (args)
 		end
 
 feature {NONE} -- Access
@@ -40,7 +54,7 @@ feature {NONE} -- Access
 			Result.append ((create {EIFFEL_CONSTANTS}).two_digit_minimum_minor_version)
 		end
 
-	copyright: STRING_32 = "Copyright Eiffel Software 2006-2016. All Rights Reserved."
+	copyright: STRING_32 = "Copyright Eiffel Software 2006-2017. All Rights Reserved."
 			-- <Precursor>
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
@@ -439,7 +453,7 @@ feature {NONE} -- Switch names
 	;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	copyright: STRING = "Copyright Eiffel Software 2011-2016"
+	copyright: STRING = "Copyright Eiffel Software 2011-2017"
 			-- Copyright information.
 			-- Not used if empty.
 

@@ -829,7 +829,7 @@ feature {NONE} -- Population
 				a_row.hide
 			end
 		ensure
-			a_row_data_set: a_context.text_modifier.is_ast_available implies (({ES_CONTRACT_SOURCE_I}) #? a_row.data) /= Void
+			a_row_data_set: a_context.text_modifier.is_ast_available implies attached {ES_CONTRACT_SOURCE_I} a_row.data
 		end
 
 	populate_contract_header_row (a_class: attached CLASS_I; a_row: attached EV_GRID_ROW; a_context: attached like context; a_editable: BOOLEAN)
@@ -1136,7 +1136,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

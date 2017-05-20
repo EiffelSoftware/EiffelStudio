@@ -14,7 +14,8 @@ inherit
 		redefine
 			interface,
 			flush,
-			save_to_named_path
+			save_to_named_path,
+			init_expose_actions
 		end
 
 	EV_DRAWABLE_IMP
@@ -44,8 +45,6 @@ inherit
 			make
 		end
 
-	EV_PIXMAP_ACTION_SEQUENCES_IMP
-
 create
 	make
 
@@ -57,7 +56,7 @@ feature {NONE} -- Initialization
 			Result := True
 		end
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create a gtk pixmap of size (1 * 1) with no mask.
 		do
 			assign_interface (an_interface)
@@ -461,6 +460,16 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
+	init_expose_actions (a_expose_actions: like expose_actions)
+			-- <Precursor>
+			-- Attach to GTK "expose-event" signal.
+		local
+			l_app_imp: EV_APPLICATION_IMP
+		do
+			l_app_imp := app_implementation
+			l_app_imp.gtk_marshal.signal_connect (visual_widget, once "expose-event", agent (l_app_imp.gtk_marshal).create_expose_actions_intermediary (c_object, ?, ?, ?, ?), l_app_imp.gtk_marshal.expose_translate_agent, False)
+		end
+
 feature {NONE} -- Implementation
 
 	save_to_named_path (a_format: EV_GRAPHICAL_FORMAT; a_file_path: PATH)
@@ -534,7 +543,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

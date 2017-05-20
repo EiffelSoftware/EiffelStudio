@@ -216,7 +216,7 @@ feature -- Element change
 --				txt.append_text ("%N")
 
 				if attached p.description as desc and then not desc.is_empty then
-					i := txt.text_length
+					i := txt.text_length + 1
 					txt.append_text (desc)
 					if not desc.ends_with_general ("%N") then
 						txt.append_text ("%N")
@@ -227,14 +227,14 @@ feature -- Element change
 					txt.append_text ("%N")
 				end
 				if attached p.tags as p_tags and then not p_tags.is_empty then
-					i := txt.text_length
+					i := txt.text_length + 1
 
 					txt.append_text (conf_interface_names.iron_box_tags_label)
 					j := txt.text_length + 1
 					txt.format_region (i, j, keyword_text_format)
 
 					txt.append_text (":")
-					i := txt.text_length
+					i := txt.text_length + 1
 					across
 						p_tags as ic
 					loop
@@ -254,13 +254,13 @@ feature -- Element change
 						if ic.key.same_string ("description") then
 								-- Already processed.
 						else
-							i := txt.text_length
+							i := txt.text_length + 1
 							txt.append_text (ic.key)
 							j := txt.text_length + 1
 							txt.format_region (i, j, keyword_text_format)
 
 							txt.append_text (":")
-							i := txt.text_length
+							i := txt.text_length + 1
 							txt.append_text (ic.item)
 							txt.append_text ("%N")
 							j := txt.text_length + 1

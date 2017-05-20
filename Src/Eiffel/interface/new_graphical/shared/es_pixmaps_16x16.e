@@ -8022,6 +8022,46 @@ feature -- Icons
 			project_settings_linker_flag_icon_buffer_attached: Result /= Void
 		end
 
+	frozen project_settings_default_highlighted_icon: EV_PIXMAP
+			-- Access to 'default highlighted' pixmap.
+		require
+			has_named_icon: has_named_icon (project_settings_default_highlighted_name)
+		once
+			Result := named_icon (project_settings_default_highlighted_name)
+		ensure
+			project_settings_default_highlighted_icon_attached: Result /= Void
+		end
+
+	frozen project_settings_default_highlighted_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'default highlighted' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (project_settings_default_highlighted_name)
+		once
+			Result := named_icon_buffer (project_settings_default_highlighted_name)
+		ensure
+			project_settings_default_highlighted_icon_buffer_attached: Result /= Void
+		end
+
+	frozen project_settings_default_icon: EV_PIXMAP
+			-- Access to 'default' pixmap.
+		require
+			has_named_icon: has_named_icon (project_settings_default_name)
+		once
+			Result := named_icon (project_settings_default_name)
+		ensure
+			project_settings_default_icon_attached: Result /= Void
+		end
+
+	frozen project_settings_default_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'default' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (project_settings_default_name)
+		once
+			Result := named_icon_buffer (project_settings_default_name)
+		ensure
+			project_settings_default_icon_buffer_attached: Result /= Void
+		end
+
 	frozen overlay_locked_icon: EV_PIXMAP
 			-- Access to 'locked' pixmap.
 		require
@@ -9143,6 +9183,8 @@ feature -- Constants: Icon names
 	project_settings_task_name: STRING = "project settings task"
 	project_settings_cflag_name: STRING = "project settings cflag"
 	project_settings_linker_flag_name: STRING = "project settings linker flag"
+	project_settings_default_highlighted_name: STRING = "project settings default highlighted"
+	project_settings_default_name: STRING = "project settings default"
 	overlay_locked_name: STRING = "overlay locked"
 	overlay_error_name: STRING = "overlay error"
 	overlay_warning_name: STRING = "overlay warning"
@@ -9581,6 +9623,8 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 17, {NATURAL_8} 20], project_settings_task_name)
 			a_table.put ([{NATURAL_8} 18, {NATURAL_8} 20], project_settings_cflag_name)
 			a_table.put ([{NATURAL_8} 19, {NATURAL_8} 20], project_settings_linker_flag_name)
+			a_table.put ([{NATURAL_8} 20, {NATURAL_8} 20], project_settings_default_highlighted_name)
+			a_table.put ([{NATURAL_8} 21, {NATURAL_8} 20], project_settings_default_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 21], overlay_locked_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 21], overlay_error_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 21], overlay_warning_name)

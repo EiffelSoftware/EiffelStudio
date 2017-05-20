@@ -213,7 +213,7 @@ feature -- Status report
 	title_bar_width: INTEGER
 			-- Width of bitmap contained in title bar.
 		obsolete
-			"Use title_bar_image_width instead"
+			"Use title_bar_image_width instead [2017-05-31]."
 		do
 			Result := cwin_get_system_metrics (Sm_cxsize)
 		end
@@ -337,7 +337,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

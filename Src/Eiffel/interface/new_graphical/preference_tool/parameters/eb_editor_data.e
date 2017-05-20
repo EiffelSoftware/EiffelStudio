@@ -241,12 +241,6 @@ feature -- Value
 			Result := is_linked_editing_enabled_preference.value
 		end
 
-	linked_token_background_color: EV_COLOR
-			-- Background color for linked tokens, if `is_linked_editing_enabled' is True.
-		do
-			Result := linked_token_background_color_preference.value
-		end
-
 	show_completion_signature: BOOLEAN
 			-- Should feature signature be shown in completion list?
 		do
@@ -428,9 +422,6 @@ feature -- Preference
 	is_linked_editing_enabled_preference: BOOLEAN_PREFERENCE
 			-- Is linked editing enabled?
 
-	linked_token_background_color_preference: COLOR_PREFERENCE
-			-- Background for linked token, if `is_linked_editing_enabled' is True.
-
 	show_completion_signature_preference: BOOLEAN_PREFERENCE
 			-- Should feature signature be shown in completion list?
 
@@ -565,8 +556,6 @@ feature {NONE} -- Preference Strings
 
 	is_linked_editing_enabled_string: STRING = "editor.eiffel.linked_token_editing_enabled"
 			-- Is linked editing enabled?
-
-	linked_token_background_color_string: STRING = "editor.eiffel.colors.linked_token_background_color"
 
 	auto_show_feature_contract_tooltips_string: STRING = "editor.eiffel.auto_show_feature_contract_tooltip"
 			-- Should feature contract tool tips be automatically shown
@@ -795,8 +784,6 @@ feature {NONE} -- Initialization
 				-- Experimental: linked editing
 			is_linked_editing_enabled_preference := l_manager.new_boolean_preference_value (l_manager, is_linked_editing_enabled_string, False)
 			is_linked_editing_enabled_preference.set_hidden (True)
-			linked_token_background_color_preference := l_manager.new_color_preference_value (l_manager, linked_token_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (210, 255, 210))
-			linked_token_background_color_preference.set_hidden (True)
 		end
 
 	initialize_autocomplete_prefs
@@ -1319,7 +1306,6 @@ invariant
 	highlight_matching_braces_preference_attached: highlight_matching_braces_preference /= Void
 	auto_show_feature_contract_tooltips_preference_attached: auto_show_feature_contract_tooltips_preference /= Void
 	is_linked_editing_enabled_preference_attached: is_linked_editing_enabled_preference /= Void
-	linked_token_background_color_preference_attached: linked_token_background_color_preference /= Void
 
 
 note

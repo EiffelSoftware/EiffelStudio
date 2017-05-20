@@ -29,21 +29,27 @@ inherit
 feature {NONE} -- Initialize
 
 	initialize
-		local
-			f: like filter
 		do
-			Precursor {WSF_ROUTED_EXECUTION}
-			Precursor {WSF_FILTERED_EXECUTION}
+			create_filtered_router
+			initialize_filtered_router
+		end
+
+	create_filtered_router
+			-- Create `router` and `filter`.
+		do
+			create_router
+			create_filter
+		end
+
+	initialize_filtered_router
+			-- Initialize `router` and `filter`.
+		do
+			initialize_router
+			initialize_filter
+
 				-- Current is a WSF_FILTER as well in order to call the router
 				-- let's add Current at the end of the filter chain.
-			from
-				f := filter
-			until
-				not attached f.next as l_next
-			loop
-				f := l_next
-			end
-			f.set_next (Current)
+			append_filter (Current)
 		end
 
 feature -- Execute Filter

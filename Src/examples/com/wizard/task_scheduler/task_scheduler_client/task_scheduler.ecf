@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="task_scheduler" uuid="31044CCB-901A-4111-BBE3-5F4BF519197E">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="task_scheduler" uuid="31044CCB-901A-4111-BBE3-5F4BF519197E">
 	<target name="task_scheduler">
 		<root class="TASK_SCHEDULER" feature="make"/>
-		<option warning="true">
+		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
 		<setting name="platform" value="windows"/>
-		<library name="precompile" location="..\generated\Client\mstask_modified_idl.ecf" readonly="false"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="com" location="$ISE_LIBRARY\library\com\com.ecf"/>
+		<library name="precompile" location="..\generated\Client\mstask_modified_idl.ecf" readonly="false"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 </system>

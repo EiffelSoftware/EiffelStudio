@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"A sequence of actions to be performed on `call'"
 	legal: "See notice at end of class."
@@ -182,7 +182,7 @@ feature -- Access
 
 	event_data_names: detachable ARRAY [STRING]
 			-- Textual description of each event datum.
-		obsolete "Not implemented. To be removed"
+		obsolete "Not implemented. To be removed. [2017-05-31]"
 		local
 			i: like event_data_names_internal
 		do
@@ -319,28 +319,46 @@ feature -- Event handling
 
 	not_empty_actions: ARRAYED_LIST [PROCEDURE]
 			-- Actions to be performed on transition from `is_empty' to not `is_empty'.
-		local
-			r: like not_empty_actions_internal
 		do
-			r := not_empty_actions_internal
-			if r = Void then
-				create r.make (0)
-				not_empty_actions_internal := r
+			Result := not_empty_actions_internal
+			if Result = Void then
+				create Result.make (0)
+				not_empty_actions_internal := Result
 			end
-			Result := r
 		end
 
 	empty_actions: ARRAYED_LIST [PROCEDURE]
 			-- Actions to be performed on transition from not `is_empty' to `is_empty'.
-		local
-			r: like empty_actions_internal
 		do
-			r := empty_actions_internal
-			if r = Void then
-				create r.make (0)
-				empty_actions_internal := r
+			Result := empty_actions_internal
+			if Result = Void then
+				create Result.make (0)
+				empty_actions_internal := Result
 			end
-			Result := r
+		end
+
+feature -- Obsolete
+
+	make
+		obsolete
+			"Use `default_create`. [2017-05-31]"
+		do
+			default_create
+		end
+
+	set_source_connection_agent
+				(a_source_connection_agent: PROCEDURE)
+			-- Set `a_source_connection_agent' that will connect sequence to an
+			-- actual event source. The agent will be called when the first action is
+			-- added to the sequence. If there are already actions in the
+			-- sequence the agent is called immediately.
+		obsolete
+			"Use `not_empty_actions`. [2017-05-31]"
+		do
+			not_empty_actions.extend (a_source_connection_agent)
+			if not is_empty then
+				a_source_connection_agent.call (Void)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -371,15 +389,12 @@ feature {NONE} -- Implementation
 	is_aborted_stack: LINKED_STACK [BOOLEAN]
 			-- `item' holds abort status of
 			-- innermost of possibly recursive `call's.
-		local
-			r: like is_aborted_stack_internal
 		do
-			r := is_aborted_stack_internal
-			if r = Void then
-				create r.make
-				is_aborted_stack_internal := r
+			Result := is_aborted_stack_internal
+			if Result = Void then
+				create Result.make
+				is_aborted_stack_internal := Result
 			end
-			Result := r
 		end
 
 	is_aborted_stack_internal: detachable like is_aborted_stack
@@ -388,15 +403,12 @@ feature {NONE} -- Implementation
 	call_buffer: LINKED_QUEUE [detachable EVENT_DATA]
 			-- Holds calls made while `is_paused'
 			-- to be executed on `resume'.
-		local
-			r: like call_buffer_internal
 		do
-			r := call_buffer_internal
-			if r = Void then
-				create r.make
-				call_buffer_internal := r
+			Result := call_buffer_internal
+			if Result = Void then
+				create Result.make
+				call_buffer_internal := Result
 			end
-			Result := r
 		end
 
 	call_buffer_internal: detachable like call_buffer
@@ -413,15 +425,12 @@ feature {NONE} -- Implementation
 
 	kamikazes: ARRAYED_LIST [like item]
 			-- Used by `prune_when_called'.
-		local
-			r: detachable ARRAYED_LIST [like item]
 		do
-			r := kamikazes_internal
-			if r = Void then
-				create r.make (0)
-				kamikazes_internal := r
+			Result := kamikazes_internal
+			if Result = Void then
+				create Result.make (0)
+				kamikazes_internal := Result
 			end
-			Result := r
 		end
 
 	kamikazes_internal: detachable like kamikazes
@@ -432,32 +441,6 @@ feature {NONE} -- Implementation
 
 	empty_actions_internal: detachable like empty_actions
 			-- Internal storage for `empty_actions'.
-
-feature -- Obsolete
-
-	make
-		obsolete
-			"use default_create"
-		do
-			default_create
-		end
-
-	set_source_connection_agent
-				(a_source_connection_agent: PROCEDURE)
-			-- Set `a_source_connection_agent' that will connect sequence to an
-			-- actual event source. The agent will be called when the first action is
-			-- added to the sequence. If there are already actions in the
-			-- sequence the agent is called immediately.
-		obsolete
-			"use not_empty_actions"
-		do
-			not_empty_actions.extend (a_source_connection_agent)
-			if not is_empty then
-				a_source_connection_agent.call (Void)
-			end
-		end
-
-feature {NONE} -- Implementation
 
 	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
@@ -476,14 +459,14 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class ACTION_SEQUENCE
+end

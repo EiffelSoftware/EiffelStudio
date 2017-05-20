@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Manager that manage all toolbars. This manager directly under SD_DOCKING_MANAGER's control."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,34 +23,35 @@ create
 
 feature {NONE} -- Initialization
 
-	make
-			-- Creation method
+	make (a_docking_manager: SD_DOCKING_MANAGER)
+			-- Associate new object with `a_docking_manager'.
 		do
+			docking_manager := a_docking_manager
 			create internal_shared
 			create contents
-			contents.add_actions.extend (agent on_add_tool_bar_content)
-			contents.remove_actions.extend (agent on_remove_tool_bar_content)
 			create floating_tool_bars.make (1)
-
-			init_right_click_menu
-		ensure
-			action_added: contents.add_actions.count = 1 and contents.remove_actions.count = 1
+			application_right_click_agent := agent on_menu_area_click
 		end
 
-	init_right_click_menu
-			-- Initialize right click menu.
+feature {SD_DOCKING_MANAGER} -- Initialization
+
+	add_actions
+			-- Register required actions.
 		local
 			l_platform: PLATFORM
 		do
-			application_right_click_agent := agent on_menu_area_click
-
+				-- Initialize right click menu.
 			create l_platform
-			-- We will use pointer release actions only in the future. Larry 2007-6-7
+				-- We will use pointer release actions only in the future. Larry 2007-6-7
 			if l_platform.is_windows then
 				ev_application.pointer_button_press_actions.extend (application_right_click_agent)
 			else
 				ev_application.pointer_button_release_actions.extend (application_right_click_agent)
 			end
+			contents.add_actions.extend (agent on_add_tool_bar_content)
+			contents.remove_actions.extend (agent on_remove_tool_bar_content)
+		ensure
+			action_added: contents.add_actions.count = 1 and contents.remove_actions.count = 1
 		end
 
 feature -- Query
@@ -65,23 +66,22 @@ feature -- Query
 			a_title_not_void: a_title /= Void
 			has: has (a_title)
 		local
-			l_result: detachable like content_by_title
 			l_content: like contents
 		do
 			from
 				l_content := contents
 				l_content.start
 			until
-				l_content.after or l_result /= Void
+				attached Result
 			loop
+				check
+					from_precondition_has: not l_content.after
+				end
 				if a_title.same_string (l_content.item.unique_title) then
-					l_result := l_content.item
+					Result := l_content.item
 				end
 				l_content.forth
 			end
-
-			check l_result /= Void end -- Implied by precondition `has'
-			Result := l_result
 		end
 
 	has (a_unique_title: READABLE_STRING_GENERAL): BOOLEAN
@@ -285,11 +285,9 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 			main_window_not_has:
 		local
 			l_tool_bar_row: SD_TOOL_BAR_ROW
-			l_container: EV_CONTAINER
 		do
 			create l_tool_bar_row.make (docking_manager, False)
-			l_container := tool_bar_container (a_direction)
-			l_container.extend (l_tool_bar_row)
+			tool_bar_container (a_direction).extend (l_tool_bar_row)
 			set_top_imp (a_content, l_tool_bar_row)
 		end
 
@@ -300,15 +298,17 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_AS
 			not_void: a_source_content /= Void and a_target_content /= Void
 			docking: a_target_content.is_docking
 			not_floating: not a_target_content.is_floating
-		local
-			l_tool_bar_row: detachable SD_TOOL_BAR_ROW
-			l_zone: detachable SD_TOOL_BAR_ZONE
 		do
-			l_zone := a_target_content.zone
-			check l_zone /= Void end -- Implied by precondition `docking'
-			l_tool_bar_row := l_zone.row
-			check l_tool_bar_row /= Void end -- Implied by precondition `docking'
-			set_top_imp (a_source_content, l_tool_bar_row)
+			if
+				attached a_target_content.zone as l_zone and then
+				attached l_zone.row as l_tool_bar_row
+			then
+				set_top_imp (a_source_content, l_tool_bar_row)
+			else
+				check
+					from_precondition_docking: False
+				end
+			end
 		end
 
 feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDIATOR,
@@ -343,7 +343,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 			not_destroyed: not is_destroyed
 			not_void: a_tool_bar /= Void
 			not_floating: not a_tool_bar.is_floating
-			has: contents.has (a_tool_bar.content)
+--TODO			has: attached a_tool_bar.content as c and then contents.has (c)
 		do
 			if attached {EV_WIDGET} a_tool_bar.tool_bar as lt_widget then
 				if docking_manager.tool_bar_container.top.has_recursive (lt_widget) then
@@ -596,7 +596,6 @@ feature {NONE} -- Implementation
 			not_destroyed: not is_destroyed
 		local
 			l_menu_item: EV_CHECK_MENU_ITEM
-			l_separator: EV_MENU_SEPARATOR
 			l_custom_dialog: SD_TOOL_BAR_HIDDEN_ITEM_DIALOG
 			l_string: READABLE_STRING_GENERAL
 			l_contents: like contents
@@ -631,8 +630,7 @@ feature {NONE} -- Implementation
 				l_contents.forth
 			end
 
-			create l_separator
-			Result.extend (l_separator)
+			Result.extend (create {EV_MENU_SEPARATOR})
 			-- Customize menu items
 
 			from
@@ -661,8 +659,7 @@ feature {NONE} -- Implementation
 			l_tool_bar_zone: SD_TOOL_BAR_ZONE
 		do
 			a_content.set_manager (Current)
-			create l_tool_bar_zone.make (False, docking_manager, a_content.is_menu_bar)
-			l_tool_bar_zone.extend (a_content)
+			create l_tool_bar_zone.make (False, a_content.is_menu_bar, a_content, docking_manager)
 
 			a_row.set_ignore_resize (True)
 			a_row.extend (l_tool_bar_zone)
@@ -689,7 +686,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -698,10 +695,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

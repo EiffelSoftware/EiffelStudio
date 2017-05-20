@@ -18,12 +18,12 @@ feature {NONE} -- Initialization
 	execute
 		do
 			response.set_status_code (200, Void)
-			response.put_header_text ("Content-Type: text/plain%R%N")
+			response.put_header_text ("Content-Length: 13%R%NContent-Type: text/plain%R%N")
 			response.put_string ("Hello World!%N")
 		end
 
 note
-	copyright: "2011-2015, Eiffel Software and others"
+	copyright: "2011-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

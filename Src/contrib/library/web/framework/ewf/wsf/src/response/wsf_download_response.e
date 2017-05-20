@@ -94,7 +94,7 @@ feature -- Access
 
 	file_name: READABLE_STRING_8
 		obsolete
-			"Use `file_path.name' for unicode support [2013-may]"
+			"Use `file_path.name' for unicode support [2017-05-31]"
 		do
 			Result := file_path.utf_8_name
 		end
@@ -230,7 +230,7 @@ invariant
 	status_code_set: status_code /= 0
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

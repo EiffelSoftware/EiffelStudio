@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tool bar for docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,6 +9,12 @@ class
 	SD_TOOL_BAR
 
 inherit
+	DEBUG_OUTPUT
+		undefine
+			default_create,
+			copy
+		end
+
 	SD_GENERIC_TOOL_BAR
 		undefine
 			default_create,
@@ -156,11 +162,12 @@ feature -- Command
 				l_item := l_items.item
 				if l_items.index = l_items.count or l_item.is_wrap then
 					-- Minimum width only make sence in this case.
-					if attached {SD_TOOL_BAR_SEPARATOR} l_item then
-						-- It's a separator, we should calculate the item before
-						if l_item_before /= Void then
-							l_item := l_item_before
-						end
+					if
+						attached {SD_TOOL_BAR_SEPARATOR} l_item and then
+							-- It's a separator, we should calculate the item before
+						attached l_item_before
+					then
+						l_item := l_item_before
 					end
 					if l_minimum_width < l_item.rectangle.right then
 						l_minimum_width := l_item.rectangle.right
@@ -311,9 +318,9 @@ feature -- Query
 		local
 			l_items: ARRAYED_SET [SD_TOOL_BAR_ITEM]
 		do
-			if is_content_attached then
+			if attached content as c then
 				from
-					l_items := content.items
+					l_items := c.items
 					l_items.start
 					create Result.make (l_items.count)
 				until
@@ -535,7 +542,6 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_GENERIC_TOOL_BAR, SD_SIZES
 			-- <Precursor>
 		local
 			l_items: ARRAYED_LIST [like item_type]
-			l_rect: EV_RECTANGLE
 			l_item: like item_type
 		do
 			if width /= 0 and height /= 0 then
@@ -548,8 +554,7 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_GENERIC_TOOL_BAR, SD_SIZES
 					-- item's tool bar query maybe Void, because it's hidden when not enough space to display
 					l_item := l_items.item
 					if l_item.is_need_redraw and l_item.tool_bar /= Void then
-						l_rect := l_item.rectangle
-						drawer.start_draw (l_rect)
+						drawer.start_draw (l_item.rectangle)
 						redraw_item (l_item)
 						drawer.end_draw
 						l_item.disable_redraw
@@ -614,14 +619,12 @@ feature {NONE} -- Agents
 		local
 			l_items: like internal_items
 			l_item: like item_type
-			l_platform: PLATFORM
 			l_capture_enabled: BOOLEAN
 		do
 			-- Special handing for GTK
 			-- Because on GTK, pointer leave actions doesn't have same behavior as Windows implementation
 			-- This will cause `pointer_entered' flag not same between Windows and Gtk after pressed at SD_TOOL_BAR_RESIZABLE_ITEM end area
-			create l_platform
-			if not l_platform.is_windows then
+			if not {PLATFORM}.is_windows then
 				l_capture_enabled := has_capture
 			end
 
@@ -654,28 +657,28 @@ feature {NONE} -- Agents
 			debug ("docking")
 				print ("%NSD_TOOL_BAR on_pointer_press")
 			end
-			-- We only handle press/release occurring in the widget (i.e. we ignore the one outside of the widget).		
-			-- Otherwise it will cause bug#12549
-			if a_screen_x >= screen_x and a_screen_x <= screen_x + width and
-				a_screen_y >= screen_y  and a_screen_y <= screen_y + height then
-
-				if a_button = {EV_POINTER_CONSTANTS}.left then
-					enable_capture
-					from
-						l_items := items
-						l_items.start
-					until
-						l_items.after
-					loop
-						l_item := l_items.item
-						l_item.on_pointer_press (a_x, a_y)
-						if l_item.is_need_redraw then
-							drawer.start_draw (l_item.rectangle)
-							redraw_item (l_item)
-							drawer.end_draw
-						end
-						l_items.forth
+				-- We only handle press/release occurring in the widget (i.e. we ignore the one outside of the widget).		
+				-- Otherwise it will cause bug#12549
+			if
+				a_screen_x >= screen_x and a_screen_x <= screen_x + width and
+				a_screen_y >= screen_y  and a_screen_y <= screen_y + height and then
+				a_button = {EV_POINTER_CONSTANTS}.left
+			then
+				enable_capture
+				from
+					l_items := items
+					l_items.start
+				until
+					l_items.after
+				loop
+					l_item := l_items.item
+					l_item.on_pointer_press (a_x, a_y)
+					if l_item.is_need_redraw then
+						drawer.start_draw (l_item.rectangle)
+						redraw_item (l_item)
+						drawer.end_draw
 					end
+					l_items.forth
 				end
 			end
 		end
@@ -697,40 +700,40 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
-			-- Handle pointer release actions
+			-- Handle pointer release actions.
 		local
 			l_items: like internal_items
 			l_item: like item_type
 		do
 			if a_button = {EV_POINTER_CONSTANTS}.left then
-				-- Reset state value and disable capture should not care about the pointer position. Otherwise capture will still enabled if end user released the pointer button outside current
+					-- Reset state value and disable capture should not care about the pointer position. Otherwise capture will still enabled if end user released the pointer button outside current.
 				disable_capture
 				internal_pointer_pressed := False
 			end
 
-			-- We only handle press/release occurring in the widget (i.e. we ignore the one outside of the widget)	
-			-- Otherwise it will cause bug#12549	
-			if a_screen_x >= screen_x and a_screen_x <= screen_x + width and
-				a_screen_y >= screen_y  and a_screen_y <= screen_y + height then
-
-				if a_button = {EV_POINTER_CONSTANTS}.left then
-					from
-						l_items := items
-						l_items.start
-					until
-						l_items.after
-					loop
-						l_item := l_items.item
-						l_item.on_pointer_release (a_x, a_y)
-						if l_item.is_displayed and then l_item.is_need_redraw and then (attached l_item.tool_bar as l_tool_bar and then not l_tool_bar.is_destroyed) then
+				-- We only handle press/release occurring in the widget (i.e. we ignore the one outside of the widget).
+				-- Otherwise it will cause bug#12549.
+			if
+				a_screen_x >= screen_x and a_screen_x <= screen_x + width and
+				a_screen_y >= screen_y  and a_screen_y <= screen_y + height and then
+				a_button = {EV_POINTER_CONSTANTS}.left
+			then
+				from
+					l_items := items
+					l_items.start
+				until
+					l_items.after
+				loop
+					l_item := l_items.item
+					l_item.on_pointer_release (a_x, a_y)
+					if l_item.is_displayed and then l_item.is_need_redraw and then (attached l_item.tool_bar as l_tool_bar and then not l_tool_bar.is_destroyed) then
 							--| FIXME According to LarryL, if l_item.is_displayed is False, then the toolbar is Void, this appears to not be the case in
 							--| some circumstances so the protection has been added
-							drawer.start_draw (l_item.rectangle)
-							redraw_item (l_item)
-							drawer.end_draw
-						end
-						l_items.forth
+						drawer.start_draw (l_item.rectangle)
+						redraw_item (l_item)
+						drawer.end_draw
 					end
+					l_items.forth
 				end
 			end
 		end
@@ -743,7 +746,7 @@ feature {NONE} -- Agents
 		do
 			pointer_entered := True
 		ensure
-			set: pointer_entered = True
+			set: pointer_entered
 		end
 
 	on_pointer_leave
@@ -769,18 +772,16 @@ feature {NONE} -- Agents
 			end
 			pointer_entered := False
 		ensure
-			set: pointer_entered = False
+			set: not pointer_entered
 		end
 
 	on_drop_action (a_any: ANY)
 			-- Handle drop actions
 		local
-			l_screen: EV_SCREEN
-			l_item: detachable like item_type
+			l_item: like item_type
 			l_pointer_position: EV_COORDINATE
 		do
-			create l_screen
-			l_pointer_position := l_screen.pointer_position
+			l_pointer_position := (create {EV_SCREEN}).pointer_position
 			l_item := item_at_position (l_pointer_position.x, l_pointer_position.y)
 			if l_item /= Void then
 				l_item.drop_actions.call ([a_any])
@@ -788,21 +789,19 @@ feature {NONE} -- Agents
 		end
 
 	on_veto_pebble_function (a_any: ANY): BOOLEAN
-			-- Handle veto pebble function
+			-- Handle veto pebble function.
 		local
-			l_screen: EV_SCREEN
-			l_item: detachable like item_type
 			l_pointer_position: EV_COORDINATE
 		do
 				-- We do not accept any stone if we are hidden.
 			if is_displayed then
-				create l_screen
-				l_pointer_position := l_screen.pointer_position
-				if is_item_position_valid (l_pointer_position.x, l_pointer_position.y)  then
-					l_item := item_at_position (l_pointer_position.x, l_pointer_position.y)
-					if l_item /= Void and then l_item.is_sensitive then
-						Result := l_item.drop_actions.accepts_pebble (a_any)
-					end
+				l_pointer_position := (create {EV_SCREEN}).pointer_position
+				if
+					is_item_position_valid (l_pointer_position.x, l_pointer_position.y) and then
+					attached item_at_position (l_pointer_position.x, l_pointer_position.y) as l_item and then
+					l_item.is_sensitive
+				then
+					Result := l_item.drop_actions.accepts_pebble (a_any)
 				end
 			end
 		end
@@ -811,11 +810,9 @@ feature {NONE} -- Agents
 			-- Handle pebble function event
 		local
 			l_item: detachable like item_type
-			l_screen: EV_SCREEN
 			l_position: EV_COORDINATE
 		do
-			create l_screen
-			l_position := l_screen.pointer_position
+			l_position := (create {EV_SCREEN}).pointer_position
 			if is_item_position_valid (l_position.x, l_position.y) then
 				l_item := item_at_position (l_position.x, l_position.y)
 			end
@@ -832,27 +829,20 @@ feature {NONE} -- Agents
 
 feature {SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 
-	set_content (a_content: like content)
+	set_content (a_content: SD_TOOL_BAR_CONTENT)
 			-- <Precursor>
 		do
-			internal_content := a_content
+			content := a_content
 		end
 
 	clear_content
 			-- <Precursor>
 		do
-			internal_content := Void
+			content := Void
 		end
 
-	content: SD_TOOL_BAR_CONTENT
+	content: detachable SD_TOOL_BAR_CONTENT
 			-- <Precursor>
-		local
-			l_result: like internal_content
-		do
-			l_result := internal_content
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		end
 
 	redraw_item (a_item: like item_type)
 			-- Redraw `a_item'
@@ -861,10 +851,8 @@ feature {SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 		local
 			l_argu: SD_TOOL_BAR_DRAWER_ARGUMENTS
 			l_coordinate: EV_COORDINATE
-			l_rectangle: EV_RECTANGLE
 		do
 			if not attached {SD_TOOL_BAR_WIDGET_ITEM} a_item then
-				l_rectangle := a_item.rectangle
 				create l_argu.make
 				l_argu.set_item (a_item)
 				create l_coordinate
@@ -930,9 +918,6 @@ feature {SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 			end
 		end
 
-	internal_content: detachable SD_TOOL_BAR_CONTENT
-			-- Instance holder for `content'
-
 	pointer_entered: BOOLEAN
 			-- Has pointer enter actions been called?
 			-- The reason why have this flag see `on_pointer_enter''s comments.
@@ -952,7 +937,20 @@ feature {SD_GENERIC_TOOL_BAR, SD_TOOL_BAR_ZONE} -- Implementation
 	is_content_attached: BOOLEAN
 			-- <Precursor>
 		do
-			Result := attached internal_content
+			Result := attached content
+		end
+
+feature {NONE} -- Output
+
+	debug_output: STRING_32
+		do
+			Result := {STRING_32} "SD_TOOL_BAR: "
+			Result.append
+				(if attached content as c then
+					c.title
+				else
+					{STRING_32} "no content"
+				end)
 		end
 
 invariant
@@ -961,7 +959,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -970,6 +968,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

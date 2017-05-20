@@ -926,10 +926,7 @@ feature {NONE} -- Error reporting
 			a_message_attached: a_message /= Void
 		local
 			s: STRING_32
-			p: like position
 		do
-			p := position
-
 			create s.make (a_message.count)
 			s.append_string_general (a_message)
 
@@ -1877,7 +1874,7 @@ feature {NONE} -- Factory: cache
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

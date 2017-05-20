@@ -87,8 +87,8 @@ rt_public void eif_thr_init_root(void);
 rt_public void eif_thr_register(int is_external);
 rt_public int eif_thr_is_initialized(void);
 
-rt_public void eif_thr_create_with_attr(EIF_OBJECT, EIF_PROCEDURE, EIF_THR_ATTR_TYPE *);
-rt_public void eif_thr_create_with_attr_new(EIF_OBJECT, EIF_PROCEDURE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_THR_ATTR_TYPE *);
+rt_public void eif_thr_create_with_attr(EIF_OBJECT, EIF_PROCEDURE, EIF_PROCEDURE, EIF_THR_ATTR_TYPE *);
+rt_public void eif_thr_create_with_attr_new(EIF_OBJECT, EIF_PROCEDURE, EIF_PROCEDURE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_THR_ATTR_TYPE *);
 rt_public void eif_thr_exit(void);
 
 rt_public EIF_POINTER eif_thr_mutex_create(void);
@@ -741,13 +741,15 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 
 rt_public void eif_thr_create_with_attr (EIF_OBJECT thr_root_obj, 
 										 EIF_PROCEDURE init_func,
+										 EIF_PROCEDURE set_terminated_func,
 										 EIF_THR_ATTR_TYPE *attr)
 {
-	eif_thr_create_with_attr_new (thr_root_obj, init_func, RTS_PID(eif_access(thr_root_obj)), EIF_FALSE, attr);
+	eif_thr_create_with_attr_new (thr_root_obj, init_func, set_terminated_func, RTS_PID(eif_access(thr_root_obj)), EIF_FALSE, attr);
 }
 
 rt_public void eif_thr_create_with_attr_new (EIF_OBJECT thr_root_obj, 
 										 EIF_PROCEDURE init_func,
+										 EIF_PROCEDURE set_terminated_func,
 										 EIF_INTEGER_32 thr_logical_id,
 										 EIF_BOOLEAN is_processor,
 										 EIF_THR_ATTR_TYPE *attr)
@@ -758,6 +760,7 @@ rt_public void eif_thr_create_with_attr_new (EIF_OBJECT thr_root_obj,
 	 * - the object (whose class inherits from THREAD) a clone of which
 	 *   will become the root object of the new thread
 	 * - the Eiffel routine it will execute
+	 * - the procedure to set `terminated' to True in `eif_thr_exit'.
 	 * - the priority, the stack size.
 	 *
 	 * These arguments are part of the routine context that will be
@@ -788,6 +791,7 @@ rt_public void eif_thr_create_with_attr_new (EIF_OBJECT thr_root_obj,
 		}
 
 		routine_ctxt->routine = init_func;
+		routine_ctxt->set_terminated_func = set_terminated_func;
 		routine_ctxt->thread_id = (EIF_THR_TYPE) 0;
 #if defined(EIF_ASSERTIONS) && defined(EIF_WINDOWS)
 		routine_ctxt->win_thread_id = (DWORD) 0;
@@ -875,7 +879,7 @@ rt_private rt_inline rt_global_context_t* rt_thread_initialize_thread_data (int 
 			failure();
 		}
 #else
-		if (echval = setjmp(exenv)) {
+		if ((echval = setjmp(exenv))) {
 			failure();
 		}
 #endif
@@ -1039,8 +1043,6 @@ rt_public void eif_thr_exit(void)
 	if (!thread_exiting) {
 		int destroy_mutex; /* If non null, we'll destroy the 'join' mutex */
 		int l_has_parent_thread, l_is_external_thread;
-		int ret;	/* Return Status of "eifaddr_offset". */
-		EIF_INTEGER offset;	/* Location of `terminated' in `eif_thr_context->current' */
 		EIF_MUTEX_TYPE *l_children_mutex, *l_parent_children_mutex;
 		EIF_THR_TYPE l_thread_id = eif_thr_context->thread_id;
 
@@ -1061,11 +1063,10 @@ rt_public void eif_thr_exit(void)
 
 			if (eif_thr_context->is_processor == EIF_FALSE) {
 					/* Set {THREAD}.terminated to True, not applicable to SCOOP Processors. */
-				offset = eifaddr_offset (eif_access(eif_thr_context->current), "terminated", &ret);
-				if (ret == EIF_CECIL_OK) {
+				if (eif_thr_context->set_terminated_func) {
 						/* Set the `terminated' field of the thread object to True so that
 						 * it knows the thread is terminated */
-					*(EIF_BOOLEAN *) (eif_access(eif_thr_context->current) + offset) = EIF_TRUE;
+					eif_thr_context->set_terminated_func(eif_access(eif_thr_context->current), EIF_TRUE);
 				}
 			}
 				
@@ -1688,7 +1689,7 @@ rt_public void eif_thr_join_all(void)
 	}
 }
 
-rt_public void eif_thr_wait (EIF_OBJECT Current)
+rt_public void eif_thr_wait (EIF_OBJECT Current, EIF_BOOLEAN_FUNCTION get_terminated_func)
 {
 	/*
 	 * Waits until a thread sets `terminated' from `Current' to True, which means it
@@ -1700,8 +1701,6 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 
-	int ret;	/* Return Status of "eifaddr". */
-	EIF_INTEGER offset;	/* location of `terminated' in Current */
 	EIF_REFERENCE thread_object = NULL;
 
 		/* We need to protect thread_object, because the protected
@@ -1709,8 +1708,6 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 		 * Current thread exit. */
 	RT_GC_PROTECT(thread_object);
 	thread_object = eif_access(Current);
-	offset = eifaddr_offset (thread_object, "terminated", &ret);
-	CHECK("terminated attribute exists", ret == EIF_CECIL_OK);
 
 		/* If no thread has been launched, the mutex isn't initialized */
 	if (eif_thr_context->children_mutex) {
@@ -1718,7 +1715,7 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
 		EIF_EXIT_C;
 		RTGC;
-		while (*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE) {
+		while (get_terminated_func(thread_object) == EIF_FALSE) {
 			EIF_ENTER_C;
 			RT_TRACE(eif_pthread_cond_wait(eif_thr_context->children_cond, eif_thr_context->children_mutex));
 			EIF_EXIT_C;
@@ -1729,7 +1726,7 @@ rt_public void eif_thr_wait (EIF_OBJECT Current)
 	RT_GC_WEAN(thread_object);
 }
 
-rt_public EIF_BOOLEAN eif_thr_wait_with_timeout (EIF_OBJECT Current, EIF_NATURAL_64 a_timeout_ms)
+rt_public EIF_BOOLEAN eif_thr_wait_with_timeout (EIF_OBJECT Current, EIF_BOOLEAN_FUNCTION get_terminated_func, EIF_NATURAL_64 a_timeout_ms)
 {
 	/*
 	 * Waits until a thread sets `terminated' from `Current' to True or reaching `a_timeout_ms'.
@@ -1740,7 +1737,6 @@ rt_public EIF_BOOLEAN eif_thr_wait_with_timeout (EIF_OBJECT Current, EIF_NATURAL
 	EIF_GET_CONTEXT
 
 	int res;
-	EIF_INTEGER offset;	/* location of `terminated' in Current */
 	EIF_REFERENCE thread_object = NULL;
 
 		/* We need to protect thread_object, because the protected
@@ -1748,8 +1744,6 @@ rt_public EIF_BOOLEAN eif_thr_wait_with_timeout (EIF_OBJECT Current, EIF_NATURAL
 		 * Current thread exit. */
 	RT_GC_PROTECT(thread_object);
 	thread_object = eif_access(Current);
-	offset = eifaddr_offset (thread_object, "terminated", &res);
-	CHECK("terminated attribute exists", res == EIF_CECIL_OK);
 
 		/* If no thread has been launched, the mutex isn't initialized */
 	res = T_OK;
@@ -1758,7 +1752,7 @@ rt_public EIF_BOOLEAN eif_thr_wait_with_timeout (EIF_OBJECT Current, EIF_NATURAL
 		EIF_ASYNC_SAFE_MUTEX_LOCK(eif_thr_context->children_mutex);
 		EIF_EXIT_C;
 		RTGC;
-		while ((*(EIF_BOOLEAN *) (thread_object + offset) == EIF_FALSE) && (res == T_OK)) {
+		while ((get_terminated_func(thread_object) == EIF_FALSE) && (res == T_OK)) {
 			EIF_ENTER_C;
 				/* We do not use `RT_TRACE_KEEP' because we might get T_TIMEDOUT.
 				 * We will trace the error after. */

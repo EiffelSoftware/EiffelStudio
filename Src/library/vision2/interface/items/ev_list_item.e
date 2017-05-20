@@ -47,9 +47,6 @@ inherit
 		end
 
 	EV_LIST_ITEM_ACTION_SEQUENCES
-		redefine
-			implementation
-		end
 
 create
 	default_create,
@@ -73,7 +70,7 @@ feature -- Obsolete
 
 	align_text_left
 			-- Display text left aligned
-		obsolete "Was not implemented on all platforms."
+		obsolete "Was not implemented on all platforms. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -81,7 +78,7 @@ feature -- Obsolete
 
 	align_text_center
 			-- Display text center aligned
-		obsolete "Was not implemented on all platforms."
+		obsolete "Was not implemented on all platforms. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -89,7 +86,7 @@ feature -- Obsolete
 
 	align_text_right
 			-- Display text right aligned
-		obsolete "Was not implemented on all platforms."
+		obsolete "Was not implemented on all platforms. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -118,14 +115,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

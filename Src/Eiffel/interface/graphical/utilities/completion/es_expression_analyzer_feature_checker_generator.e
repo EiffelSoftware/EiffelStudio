@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		A feature checker generator for evaluating expressions in the editor.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: ": 2009-10-07 11:40:56 -0700 (Wed, 07 Oct 2009) "
-	revision: ": 81044 "
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ES_EXPRESSION_ANALYZER_FEATURE_CHECKER_GENERATOR
@@ -34,7 +34,7 @@ create
 
 feature {AST_FEATURE_CHECKER_GENERATOR} -- Status report
 
-	is_void_safe_call (a_class: CLASS_C): BOOLEAN
+	is_void_safe_call: BOOLEAN
 			-- <Precursor>
 		do
 				-- Ignore Void-Safety.
@@ -101,7 +101,7 @@ feature {INSPECT_CONTROL} -- AST modification
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

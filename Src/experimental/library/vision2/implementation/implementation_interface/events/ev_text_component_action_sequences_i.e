@@ -15,27 +15,18 @@ feature -- Event handling
 
 	change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `text' changes.
-		local
-			l_result: like change_actions_internal
 		do
-			l_result := change_actions_internal
-			if l_result /= Void then
+			if attached change_actions_internal as l_result then
 				Result := l_result
 			else
-				l_result := create_change_actions
-				change_actions_internal := l_result
-				Result := l_result
+				create Result
+				change_actions_internal := Result
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a change action sequence.
-		deferred
-		end
 
 	change_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `change_actions'.

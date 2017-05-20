@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of an Eiffel type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,19 +42,32 @@ convert
 		--    generating_type: STRING
 		-- becomes:
 		--    generating_type: TYPE [like Current]
-	to_string_8: {STRING_8, STRING_GENERAL, READABLE_STRING_GENERAL, READABLE_STRING_8},
-	to_string_32: {STRING_32, READABLE_STRING_32},
+	to_string_8: {STRING_8, READABLE_STRING_8},
+	to_string_32: {STRING_32, READABLE_STRING_32, STRING_GENERAL, READABLE_STRING_GENERAL},
 	to_cil: {SYSTEM_TYPE}
 
 feature -- Access
 
-	name: IMMUTABLE_STRING_8
+	name_32: IMMUTABLE_STRING_32
 			-- Name of Eiffel type represented by `Current', using Eiffel style guidelines
 			-- as specified in OOSC2 (e.g. COMPARABLE, HASH_TABLE [FOO, BAR], ...)
 		do
-			if attached internal_name as l_name then
-				Result := l_name
-			else
+			Result := internal_name_32
+			if not attached Result then
+				create Result.make_from_string (runtime_name_32)
+				internal_name_32 := Result
+			end
+		ensure
+			name_32_attached: attached Result
+		end
+
+	name: IMMUTABLE_STRING_8
+			-- Name of Eiffel type represented by `Current', using Eiffel style guidelines
+			-- as specified in OOSC2 (e.g. COMPARABLE, HASH_TABLE [FOO, BAR], ...)
+			-- Consider using `name_32` instead.
+		do
+			Result := internal_name
+			if not attached Result then
 				create Result.make_from_string (runtime_name)
 				internal_name := Result
 			end
@@ -125,6 +138,17 @@ feature -- Status report
 			Result := True
 		end
 
+	is_deferred: BOOLEAN
+			-- Is current type a deferred type?
+		do
+			if
+				attached internal.pure_implementation_type (type_id) as l_rt_type and then
+				attached {SYSTEM_TYPE}.get_type_from_handle (l_rt_type.type) as l_type
+			then
+				Result := l_type.is_value_type or l_type.is_interface
+			end
+		end
+
 	is_expanded: BOOLEAN
 			-- Is current type an expanded type?
 		do
@@ -188,12 +212,23 @@ feature -- Conversion
 			adapted: Result ~ g
 		end
 
-	attempt alias "#?" (obj: detachable separate ANY): detachable G
-			-- Result of assignment attempt of `obj' to entity of type G
+	attempted alias "/" (obj: detachable separate ANY): detachable G
+			-- If possible, `obj' understood as an object of type `G';
+			-- If not, default detachable value of type `G'..
 		do
 			if attached {G} obj as l_g then
 				Result := l_g
 			end
+		ensure
+			assigned_or_void: Result = obj or Result = default_detachable_value
+		end
+
+	attempt alias "#?" (obj: detachable separate ANY): detachable G
+			-- Result of assignment attempt of `obj' to entity of type G
+		obsolete
+			"Use `attempted' or its operator alias `/'. [2017-05-31]"
+		do
+			Result := attempted (obj)
 		ensure
 			assigned_or_void: Result = obj or Result = default_detachable_value
 		end
@@ -217,10 +252,10 @@ feature -- Output
 			create Result.make_from_string (name)
 		end
 
-	debug_output: STRING
+	debug_output: READABLE_STRING_32
 			-- <Precursor>
 		do
-			create Result.make_from_string (name)
+			Result := name_32
 		end
 
 feature -- Features from STRING needed here for the transition period (see convert clause)
@@ -231,7 +266,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"[070813] Use 'name + other' instead (or 'out + other' during the transition period)."
+			"Use 'name_32 + other' instead. [2017-05-31]"
 		require
 			argument_not_void: other /= Void
 		do
@@ -249,7 +284,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"[070813] Use 'name.same_string (other)' instead (or 'out.same_string (other)' during the transition period)."
+			"Use 'name_32.same_string (other)' instead. [2017-05-31]"
 		require
 			other_not_void: other /= Void
 		do
@@ -265,7 +300,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"[070813] Use 'name.is_case_insensitive_equal (other)' instead (or 'out.is_case_insensitive_equal (other)' during the transition period)."
+			"Use 'name_32.is_case_insensitive_equal (other)' instead. [2017-05-31]"
 		require
 			other_not_void: other /= Void
 		do
@@ -280,7 +315,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"[070813] Use 'name.as_lower' instead (or 'out.as_lower' during the transition period)."
+			"Use 'name_32.as_lower' instead. [2017-05-31]"
 		do
 			create Result.make_from_string (name)
 			Result.to_lower
@@ -295,7 +330,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"[070813] Use 'name.as_upper' instead (or 'out.as_upper' during the transition period)."
+			"Use 'name_32.as_upper' instead. [2017-05-31]"
 		do
 			create Result.make_from_string (name)
 			Result.to_upper
@@ -306,7 +341,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 
 	to_string_8: STRING_8
 		obsolete
-			"Use `name' instead (or `out' during the transition period)."
+			"Use `name_32' instead. [2017-05-31]"
 		do
 			create Result.make_from_string (name)
 		ensure
@@ -316,19 +351,33 @@ feature -- Features from STRING needed here for the transition period (see conve
 	to_string_32: STRING_32
 			-- Name of type
 		obsolete
-			"[080717] Use 'name' instead (or 'out' during the transition period)."
+			"Use 'name_32' instead. [2017-05-31]"
 		do
-			create Result.make_from_string_general (name)
+			create Result.make_from_string (name_32)
 		ensure
 			to_string_32_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation: Access
 
+	internal_name_32: detachable IMMUTABLE_STRING_32
+			-- Storage for once per object `name_32`.
+		note option: stable, transient attribute end
+
 	internal_name: detachable IMMUTABLE_STRING_8
-			-- Storage for once per object `name'
+			-- Storage for once per object `name`.
+		note option: stable, transient attribute end
 
 feature {NONE} -- Implementation
+
+	runtime_name_32: STRING_32
+			-- Name of Eiffel type represented by `Current', using Eiffel style guidelines
+			-- as specified in OOSC2 (e.g. COMPARABLE, HASH_TABLE [FOO, BAR], ...)
+		do
+			Result := internal.type_name_32_of_type (type_id)
+		ensure
+			name_not_void: Result /= Void
+		end
 
 	runtime_name: STRING
 			-- Name of Eiffel type represented by `Current', using Eiffel style guidelines
@@ -346,8 +395,8 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -355,6 +404,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

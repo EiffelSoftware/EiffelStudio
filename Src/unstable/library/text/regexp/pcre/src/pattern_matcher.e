@@ -1,6 +1,6 @@
 note
-	description:	"Pattern matchers"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	description: "Pattern matchers"
+	copyright: "Copyright (c) 2002-2017, Eric Bezault, Eiffel Software and others"
 	license: "MIT License"
 
 deferred class
@@ -245,7 +245,7 @@ feature -- Matching
 			match_substring (a_subject, 1, a_subject.count.as_natural_32)
 		ensure
 			is_matching: is_matching
-			subject_set: subject = a_subject
+			subject_set: subject.same_string (a_subject)
 			subject_start_set: subject_start = 1
 			subject_end_set: subject_end = a_subject.count.as_natural_32
 		end
@@ -263,7 +263,7 @@ feature -- Matching
 		deferred
 		ensure
 			is_matching: is_matching
-			subject_set: subject = a_subject
+			subject_set: subject.same_string (a_subject)
 			subject_start_set: subject_start = a_from
 			subject_end_set: subject_end = a_to
 		end
@@ -284,7 +284,7 @@ feature -- Matching
 		deferred
 		ensure
 			is_matching: is_matching
-			subject_set: subject = a_subject
+			subject_set: subject.same_string (a_subject)
 			subject_start_set: subject_start = a_from
 			subject_end_set: subject_end = a_to
 		end

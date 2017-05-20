@@ -466,28 +466,28 @@ feature -- Type checking
 
 feature {AST_FEATURE_CHECKER_GENERATOR}
 
-	is_void_safe_call (a_class: CLASS_C): BOOLEAN
+	is_void_safe_call: BOOLEAN
 			-- <Precursor>
 			-- Never check void-safety for debugger's expressions.
 		do
 			-- Result := False
 		end
 
-	is_void_safe_initialization (a_class: CLASS_C): BOOLEAN
+	is_void_safe_initialization: BOOLEAN
 			-- <Precursor>
 			-- Never check void-safety for debugger's expressions.
 		do
 			-- Result := False
 		end
 
-	is_void_safe_conformance (a_class: CLASS_C): BOOLEAN
+	is_void_safe_conformance: BOOLEAN
 			-- <Precursor>
 			-- Never check void-safety for debugger's expressions.
 		do
 			-- Result := False
 		end
 
-	is_void_safe_construct (a_class: CLASS_C): BOOLEAN
+	is_void_safe_construct: BOOLEAN
 			-- <Precursor>
 			-- Never check void-safety for debugger's expressions.
 		do
@@ -647,7 +647,7 @@ feature {INSPECT_CONTROL} -- AST modification
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -11,7 +11,7 @@ deferred class
 	EV_SINGLE_POINTED_FIGURE
 
 obsolete
-	"Use EV_MODEL_SINGLE_POINTED instead."
+	"Use EV_MODEL_SINGLE_POINTED instead. [2017-05-31]"
 
 feature {NONE} -- Initialization
 

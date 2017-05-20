@@ -35,8 +35,6 @@ inherit
 			make
 		end
 
-	EV_HEADER_ACTION_SEQUENCES_IMP
-
 create
 	make
 
@@ -48,7 +46,7 @@ feature -- Initialization
 			Result := False
 		end
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create an empty Tree.
 		do
 			assign_interface (an_interface)
@@ -202,9 +200,8 @@ feature {NONE} -- Implementation
 			gdkwin, gtkwid: POINTER
 			i, l_count, l_x, l_y, l_button_x, l_pointer_x, l_pointer_y: INTEGER
 			a_item_imp: detachable EV_HEADER_ITEM_IMP
-			l_cs: EV_GTK_C_STRING
 		do
-			gdkwin := {GTK}.gdk_window_at_pointer ($l_pointer_x, $l_pointer_y)
+			gdkwin := {GDK_HELPERS}.window_at ($l_pointer_x, $l_pointer_y)
 			if gdkwin /= default_pointer then
 
 				{GTK2}.gdk_window_get_position (gdkwin, $l_x, $l_y)
@@ -212,7 +209,6 @@ feature {NONE} -- Implementation
 
 				if gtkwid = c_object then
 					from
-						l_cs := app_implementation.c_string_from_eiffel_string ("x-offset")
 						i := 1
 						l_count := count
 					until
@@ -221,7 +217,7 @@ feature {NONE} -- Implementation
 						a_item_imp ?= i_th (i).implementation
 						check a_item_imp /= Void end
 						if a_item_imp /= Void then
-							{GTK2}.g_object_get_integer (a_item_imp.c_object, l_cs.item, $l_button_x)
+							l_button_x := {GTK2}.g_object_get_integer (a_item_imp.c_object, {GTK_PROPERTIES}.x_offset)
 						end
 						if l_button_x < l_x then
 							Result := Result + 1
@@ -253,7 +249,7 @@ feature {NONE} -- Implementation
 
 				-- If we are clicking on the Void area then we the item events passing Void items.
 			if a_type = {GTK}.gdk_button_press_enum or a_type = {GTK}.gdk_2button_press_enum then
-				gdkwin := {GTK}.gdk_window_at_pointer ($a_pointer_x, $a_pointer_y)
+				gdkwin := {GDK_HELPERS}.window_at ($a_pointer_x, $a_pointer_y)
 				if gdkwin /= default_pointer then
 					{GTK}.gdk_window_get_user_data (gdkwin, $l_widget)
 					l_last_column := {GTK2}.gtk_tree_view_get_column (c_object, count)
@@ -290,7 +286,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_HEADER note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

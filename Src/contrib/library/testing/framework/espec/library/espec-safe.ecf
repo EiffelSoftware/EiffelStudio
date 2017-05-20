@@ -1,19 +1,3 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="espec" uuid="76C3CFC0-A72E-11DB-BEFA-0800200C9A66" library_target="espec">
-	<target name="espec">
-		<description>ESpec: Eiffel Specification Library</description>
-		<root all_classes="true"/>
-		<option warning="true" full_class_checking="true" cat_call_detection="none" is_attached_by_default="true" void_safety="all" syntax="standard">
-			<assertions/>
-		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
-		<cluster name="espec" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
-	</target>
-</system>
+<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="76C3CFC0-A72E-11DB-BEFA-0800200C9A66" message="Obsolete: use espec.ecf !" location="espec.ecf">
+</redirection>

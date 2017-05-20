@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 	internal_show_successful: BOOLEAN
 			-- Was last call to `show' successful?
 
-	internal_error_message: STRING
+	internal_error_message: detachable STRING
 			-- Last error message, if any
 
 	hh_handler: WIZARD_HTML_HELP_HANDLER
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			-- Error message displayed when topic could not be displayed
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

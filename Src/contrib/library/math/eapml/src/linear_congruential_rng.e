@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A Linear congruential random number generator"
 	author: "Colin LeMahieu"
 	date: "$Date$"

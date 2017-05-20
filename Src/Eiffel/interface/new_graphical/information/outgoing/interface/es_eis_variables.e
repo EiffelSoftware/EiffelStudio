@@ -120,11 +120,11 @@ feature -- Access
 			-- These variables should ideally be built into a configure file.
 		once
 			create Result.make (5)
-			Result.put ({STRING_32} "http://dev.eiffel.com", "ISE_WIKI")
-			Result.put ({STRING_32} "http://www.eiffelroom.com", "EIFFELROOM")
-			Result.put ({STRING_32} "http://doc.eiffel.com", "ISE_DOC")
-			Result.put ({STRING_32} "http://doc.eiffel.com/isedoc/uuid", "ISE_DOC_UUID")
-			Result.put ({STRING_32} "http://doc.eiffel.com/isedoc/eis", "ISE_DOC_REF")
+			Result.put ({STRING_32} "https://dev.eiffel.com", "ISE_WIKI")
+			Result.put ({STRING_32} "https://room.eiffel.com", "EIFFELROOM")
+			Result.put ({STRING_32} "https://www.eiffel.org/documentation", "ISE_DOC")
+			Result.put ({STRING_32} "https://www.eiffel.org/doc/uuid", "ISE_DOC_UUID")
+			Result.put ({STRING_32} "https://www.eiffel.org/doc/eis", "ISE_DOC_REF")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

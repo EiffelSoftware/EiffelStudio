@@ -55,7 +55,7 @@ feature -- Access
 
 	body: like content
 		obsolete
-			"Use `content' [June/2015]"
+			"Use `content'. [2017-05-31]"
 		do
 			Result := body
 		end
@@ -67,6 +67,19 @@ feature -- Status report
 		do
 			Result := 	is_valid_address (from_address) and
 						across to_addresses as ic all is_valid_address (ic.item) end
+		end
+
+	has_header (a_header_name: READABLE_STRING_8): BOOLEAN
+			-- Has additional header `a_header_name'?
+			-- Warning: it checks only `additional_header_lines'!
+		local
+			h_colon: STRING
+		do
+			if attached additional_header_lines as lst then
+				create h_colon.make_from_string (a_header_name)
+				h_colon.append_character (':')
+				Result := across lst as ic some ic.item.starts_with (h_colon) end
+			end
 		end
 
 feature -- Change	
@@ -158,21 +171,6 @@ feature -- Header manipulation
 			lst.force (a_line)
 		end
 
-feature -- Status report
-
-	has_header (a_header_name: READABLE_STRING_8): BOOLEAN
-			-- Has additional header `a_header_name'?
-			-- Warning: it checks only `additional_header_lines'!
-		local
-			h_colon: STRING
-		do
-			if attached additional_header_lines as lst then
-				create h_colon.make_from_string (a_header_name)
-				h_colon.append_character (':')
-				Result := across lst as ic some ic.item.starts_with (h_colon) end
-			end
-		end
-
 feature -- Reset
 
 	reset
@@ -209,8 +207,6 @@ feature -- Conversion
 		end
 
 	header: STRING_8
-		local
-			hdate: HTTP_DATE
 		do
 			create Result.make (20)
 			if attached reply_to_address as l_reply_to then
@@ -259,8 +255,7 @@ feature -- Conversion
 			Result.append (subject)
 			Result.append_character ('%N')
 			Result.append ("Date: ")
-			create hdate.make_from_date_time (date)
-			hdate.append_to_rfc1123_string (Result)
+			;(create {HTTP_DATE}.make_from_date_time (date)).append_to_rfc1123_string (Result)
 			Result.append_character ('%N')
 			if attached additional_header_lines as l_lines and then
 				not l_lines.is_empty
@@ -285,11 +280,8 @@ feature -- Helpers
 			Result := add.has ('@')
 		end
 
-invariant
---	invariant_clause: True
-
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

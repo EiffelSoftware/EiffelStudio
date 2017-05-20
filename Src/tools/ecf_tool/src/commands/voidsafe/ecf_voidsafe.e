@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "[
 		Application to generate void-safe and non void-safe version of ECFs 
 		using the configuration library.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	ECF_VOIDSAFE
@@ -256,14 +256,14 @@ feature {NONE} -- Basic operations
 
 	update_config_to_voidsafe_all (cfg: CONF_SYSTEM)
 		local
-			opts: CONF_OPTION
+			opts: CONF_TARGET_OPTION
 			tgt: CONF_TARGET
 		do
 			across
 				cfg.targets as ic
 			loop
 				tgt := ic.item
-				opts := tgt.options
+				opts := tgt.changeable_internal_options
 				opts.set_is_attached_by_default (True)
 				opts.void_safety.put_index (opts.void_safety_index_all)
 				across
@@ -273,20 +273,19 @@ feature {NONE} -- Basic operations
 						loc.set_full_path (void_safe_location (loc))
 					end
 				end
-				tgt.set_options (opts)
 			end
 		end
 
 	update_config_to_voidsafe_none (cfg: CONF_SYSTEM)
 		local
-			opts: CONF_OPTION
+			opts: CONF_TARGET_OPTION
 			tgt: CONF_TARGET
 		do
 			across
 				cfg.targets as ic
 			loop
 				tgt := ic.item
-				opts := tgt.options
+				opts := tgt.changeable_internal_options
 				opts.unset_is_attached_by_default
 				opts.void_safety.put_index (opts.void_safety_index_none)
 				across
@@ -296,7 +295,6 @@ feature {NONE} -- Basic operations
 						loc.set_full_path (non_void_safe_location (loc))
 					end
 				end
-				tgt.set_options (opts)
 			end
 		end
 

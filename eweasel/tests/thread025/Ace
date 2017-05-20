@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" name="test">
+	<target name="test">
+		<root class="TEST" feature="make"/>
+		<setting name="console_application" value="true"/>
+		<capability>
+			<concurrency support="thread"/>
+			<void_safety support="none"/>
+		</capability>
+		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<cluster name="test" location="clusters"/>
+	</target>
+</system>

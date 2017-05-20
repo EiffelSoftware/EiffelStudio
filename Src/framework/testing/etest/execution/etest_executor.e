@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Executor capable of running parallel instances of {ETEST}.
 		
@@ -7,7 +7,6 @@ note
 		      through a bridge pattern, but also makes sure the project is properly compiled before
 		      starting or proceeding `Current'.
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -219,7 +218,6 @@ feature {NONE} -- Status setting
 		local
 			l_body_id: INTEGER_32
 			l_tag_tree: TAG_TREE [TEST_I]
-			l_isolated: BOOLEAN
 			l_controller: like new_controller
 		do
 			check attached a_task_data.test as l_test then
@@ -261,8 +259,6 @@ feature {NONE} -- Status setting
 			l_controller: like new_controller
 			l_test: detachable ETEST
 			l_result: TEST_RESULT_I
-			l_remove: BOOLEAN
-			l_tag_tree: TAG_TREE [TEST_I]
 			l_last_output: STRING
 		do
 			l_task_data := tasks.item_for_iteration
@@ -323,8 +319,6 @@ feature {NONE} -- Status setting
 				-- False and relaunch them when `start' is called after compilation is done.
 			occupied_controllers.do_all (
 				agent (a_task_data: like new_task_data)
-					local
-						l_dir_name: DIRECTORY_NAME
 					do
 						a_task_data.task.reset
 						if attached a_task_data.test as l_test then
@@ -368,7 +362,6 @@ feature {NONE} -- Implementation
 			a_name_attached: a_path /= Void
 		local
 			l_retried: BOOLEAN
-			u: GOBO_FILE_UTILITIES
 			d: DIRECTORY
 		do
 			if not l_retried then
@@ -523,7 +516,7 @@ invariant
 	empty_tasks_empty: empty_tasks.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

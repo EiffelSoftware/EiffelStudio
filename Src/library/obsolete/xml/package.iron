@@ -1,0 +1,16 @@
+package obsolete_xml
+
+project
+	xml_parser = "parser/xml_parser.ecf"
+	xml_tree = "tree/xml_tree.ecf"
+
+note
+	title: EiffelXML (obsolete)
+	description: version of EiffelXML before the unicode support.
+	tags: xml,obsolete
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	copyright: 1984-2016 Eiffel Software and others
+	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/obsolete/xml
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+
+end

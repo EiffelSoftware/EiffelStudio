@@ -1,32 +1,39 @@
-
-Libpng 1.2.8 - December 3, 2004
+Libpng 1.6.28 - January 5, 2017
 
 This is a public release of libpng, intended for use in production codes.
 
-Changes since the last public release (1.2.7):
+Files available for download:
 
-  Fixed bug in png_text_compress() that would fail to complete a large block.
-  Fixed bug, introduced in libpng-1.2.7, that overruns a buffer during
-    strip alpha operation in png_do_strip_filler().
-  Added PNG_1_2_X definition in pngconf.h
-  #ifdef out png_info_init in png.c and png_read_init in pngread.c (as of 1.3.0)
-  Reduce color_type to a nonalpha type after strip alpha operation in
-    png_do_strip_filler().
-  Revised definitions of PNG_MAX_UINT_32, PNG_MAX_SIZE, and PNG_MAXSUM
-  Fixed (again) definition of PNG_LIBPNG_VER_DLLNUM in png.h (Cosmin).
-  Added PNG_LIBPNG_BUILD_PRIVATE in png.h (Cosmin).
-  Set png_ptr->zstream.data_type to Z_BINARY, to avoid unnecessary detection
-    of data type in deflate (Cosmin).
-  Deprecated but continue to support SPECIALBUILD and PRIVATEBUILD in favor of
-    PNG_LIBPNG_BUILD_SPECIAL_STRING and PNG_LIBPNG_BUILD_PRIVATE_STRING.
-  Despammed mailing addresses by masking "@" with "at".
-  Added scripts/makefile.elf with supporting code in pngconf.h for symbol
-    versioning (John Bowler).
-  Added projects/visualc71 (Simon-pierre).
+Source files with LF line endings (for Unix/Linux) and with a
+"configure" script
 
-Send comments/corrections/commendations to
-png-implement at ccrc.wustl.edu (subscription required; write to
-majordomo at ccrc.wustl.edu with "subscribe png-implement" in the message)
+   libpng-1.6.28.tar.xz (LZMA-compressed, recommended)
+   libpng-1.6.28.tar.gz
+
+Source files with CRLF line endings (for Windows), without the
+"configure" script
+
+   lpng1628.7z  (LZMA-compressed, recommended)
+   lpng1628.zip
+
+Other information:
+
+   libpng-1.6.28-README.txt
+   libpng-1.6.28-LICENSE.txt
+   libpng-1.6.28-*.asc (armored detached GPG signatures)
+
+Changes since the last public release (1.6.27):
+  Fixed arm/aarch64 detection in CMakeLists.txt (Gianfranco Costamagna).
+  Added option to Cmake build allowing a custom location of zlib to be
+    specified in a scenario where libpng is being built as a subproject
+    alongside zlib by another project (Sam Serrels).
+  Changed png_ptr->options from a png_byte to png_uint_32, to accomodate
+    up to 16 options.
+
+Send comments/corrections/commendations to png-mng-implement at lists.sf.net
+(subscription required; visit
+https://lists.sourceforge.net/lists/listinfo/png-mng-implement
+to subscribe)
 or to glennrp at users.sourceforge.net
 
 Glenn R-P

@@ -1,7 +1,5 @@
-note
-	description: "[
-			Class used to process evaluation on dotnet system ...
-		]"
+﻿note
+	description: "Class used to process evaluation on dotnet system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "$Author$"
@@ -39,13 +37,14 @@ feature -- Concrete initialization
 			-- Retrieve new value for evaluation mecanism.
 		require else
 			is_dotnet_project: dm.is_dotnet_project
-		local
-			app: APPLICATION_EXECUTION_DOTNET
 		do
 			Precursor {DBG_EVALUATOR} (dm)
-			app ?= debugger_manager.application
-			eifnet_debugger := app.eifnet_debugger
-			eifnet_evaluator := eifnet_debugger.eifnet_dbg_evaluator
+			check
+				attached {APPLICATION_EXECUTION_DOTNET} debugger_manager.application as app
+			then
+				eifnet_debugger := app.eifnet_debugger
+				eifnet_evaluator := eifnet_debugger.eifnet_dbg_evaluator
+			end
 		ensure then
 			eifnet_evaluator /= Void
 		end
@@ -64,7 +63,7 @@ feature {NONE} -- Implementation
 			exc_dv: EXCEPTION_DEBUG_VALUE
 		do
 			debug ("debugger_trace_eval")
-				print (generating_type + ".impl_dotnet_evaluate_function : ")
+				localized_print (generating_type.name_32 + {STRING_32} ".impl_dotnet_evaluate_function : ")
 				print (ctype.associated_class.name_in_upper + "." + f.feature_name)
 				print ("%N")
 			end
@@ -214,7 +213,7 @@ feature {NONE} -- Implementation
 			edvi: EIFNET_DEBUG_VALUE_INFO
 		do
 			debug ("debugger_trace_eval")
-				print (generating_type + ".impl_dotnet_evaluate_function_with_name : ")
+				localized_print (generating_type.name_32 + {STRING_32} ".impl_dotnet_evaluate_function_with_name : ")
 				print (a_feature_name + ", " + a_external_name)
 				if a_addr /= Void and then not a_addr.is_void then
 					print (" on " + a_addr.output)
@@ -302,7 +301,7 @@ feature {NONE} -- Implementation
 			l_icd_frame: ICOR_DEBUG_FRAME
 		do
 			debug ("debugger_trace_eval")
-				print (generating_type + ".dotnet_evaluate_static_function : ")
+				localized_print (generating_type.name_32 + {STRING_32} ".dotnet_evaluate_static_function : ")
 				print (ctype.associated_class.name_in_upper + "." + f.feature_name)
 				print ("%N")
 			end
@@ -356,7 +355,7 @@ feature {NONE} -- Implementation
 			l_once_data: TUPLE [called: BOOLEAN; exc: ICOR_DEBUG_VALUE; res: ICOR_DEBUG_VALUE]
 		do
 			debug ("debugger_trace_eval")
-				print (generating_type + ".effective_evaluate_once : ")
+				localized_print (generating_type.name_32 + {STRING_32} ".effective_evaluate_once : ")
 				print (f.written_class.name_in_upper + "." + f.feature_name)
 				print ("%N")
 			end
@@ -581,7 +580,7 @@ feature {NONE} -- Parameters operation
 			l_dmp: DUMP_VALUE
 		do
 			debug ("debugger_trace_eval_data")
-				print (generating_type + ".parameters_push_and_metamorphose :: dotnet Metamorphose ... %N")
+				localized_print (generating_type.name_32 + {STRING_32} ".parameters_push_and_metamorphose :: dotnet Metamorphose ... %N")
 			end
 			l_dmp := dotnet_metamorphose_basic_to_reference_value (dmp)
 			dotnet_parameters_index := dotnet_parameters_index + 1
@@ -612,7 +611,7 @@ feature {NONE} -- Parameters operation
 							--| This means this value has been created by eStudioDbg
 							--| We need to build the corresponding ICorDebugValue object.
 						debug ("debugger_trace_eval_data")
-							print (generating_type + ".prepared_parameters: creating dotnet value from DUMP_VALUE %N")
+							localized_print (generating_type.name_32 + {STRING_32} ".prepared_parameters: creating dotnet value from DUMP_VALUE %N")
 						end
 						l_icdv_param := dump_value_to_icdv (l_dumpvalue_param)
 						if not eifnet_evaluator.last_call_succeed then
@@ -620,7 +619,7 @@ feature {NONE} -- Parameters operation
 						end
 					end
 					debug ("debugger_trace_eval_data")
-						print (generating_type + ".prepared_parameters: param ... %N")
+						localized_print (generating_type.name_32 + {STRING_32} ".prepared_parameters: param ... %N")
 						display_info_on_object (l_icdv_param)
 					end
 					Result.put (l_icdv_param, l_param_i + 1)
@@ -725,7 +724,7 @@ feature {NONE} -- Implementation
 			l_icdv_args := prepared_parameters (a_params, not is_external)
 			if not error_occurred then
 				debug ("debugger_trace_eval_data")
-					print (generating_type + ".dotnet_evaluate_icd_function: target ... %N")
+					localized_print (generating_type.name_32 + {STRING_32} ".dotnet_evaluate_icd_function: target ... %N")
 					display_info_on_object (target_icdv)
 				end
 
@@ -775,7 +774,7 @@ feature {NONE} -- Implementation
 			end
 			debug ("debugger_trace_eval_data")
 				if l_result /= Void then
-					print (generating_type + ".dotnet_evaluate_icd_function: result ... %N")
+					localized_print (generating_type.name_32 + {STRING_32} ".dotnet_evaluate_icd_function: result ... %N")
 					display_info_on_object (l_result)
 				end
 			end
@@ -807,55 +806,58 @@ feature {NONE} -- Implementation
 		require
 			dmv_not_void: dmv /= Void
 		local
-			dmvb: DUMP_VALUE_BASIC
 			utf: UTF_CONVERTER
 		do
 			Result := dmv.value_dotnet
 			if Result = Void then
 					--| This means this value has been created by eStudioDbg
 					--| We need to build the corresponding ICorDebugValue object.
-				dmvb ?= dmv
-				inspect dmv.type
-				when {DUMP_VALUE_CONSTANTS}.type_integer_8 then
-					Result := eifnet_evaluator.new_i1_evaluation (new_active_icd_frame, dmvb.value_integer_8)
-				when {DUMP_VALUE_CONSTANTS}.type_integer_16 then
-					Result := eifnet_evaluator.new_i2_evaluation (new_active_icd_frame, dmvb.value_integer_16)
-				when {DUMP_VALUE_CONSTANTS}.type_integer_32 then
-					Result := eifnet_evaluator.new_i4_evaluation (new_active_icd_frame, dmvb.value_integer_32)
-				when {DUMP_VALUE_CONSTANTS}.type_integer_64 then
-					Result := eifnet_evaluator.new_i8_evaluation (new_active_icd_frame, dmvb.value_integer_64)
+				if attached {DUMP_VALUE_BASIC} dmv as dmvb then
+					inspect dmv.type
+					when {DUMP_VALUE_CONSTANTS}.type_integer_8 then
+						Result := eifnet_evaluator.new_i1_evaluation (new_active_icd_frame, dmvb.value_integer_8)
+					when {DUMP_VALUE_CONSTANTS}.type_integer_16 then
+						Result := eifnet_evaluator.new_i2_evaluation (new_active_icd_frame, dmvb.value_integer_16)
+					when {DUMP_VALUE_CONSTANTS}.type_integer_32 then
+						Result := eifnet_evaluator.new_i4_evaluation (new_active_icd_frame, dmvb.value_integer_32)
+					when {DUMP_VALUE_CONSTANTS}.type_integer_64 then
+						Result := eifnet_evaluator.new_i8_evaluation (new_active_icd_frame, dmvb.value_integer_64)
 
-				when {DUMP_VALUE_CONSTANTS}.type_natural_8 then
-					Result := eifnet_evaluator.new_u1_evaluation (new_active_icd_frame, dmvb.value_natural_8)
-				when {DUMP_VALUE_CONSTANTS}.type_natural_16 then
-					Result := eifnet_evaluator.new_u2_evaluation (new_active_icd_frame, dmvb.value_natural_16)
-				when {DUMP_VALUE_CONSTANTS}.type_natural_32 then
-					Result := eifnet_evaluator.new_u4_evaluation (new_active_icd_frame, dmvb.value_natural_32)
-				when {DUMP_VALUE_CONSTANTS}.type_natural_64 then
-					Result := eifnet_evaluator.new_u8_evaluation (new_active_icd_frame, dmvb.value_natural_64)
+					when {DUMP_VALUE_CONSTANTS}.type_natural_8 then
+						Result := eifnet_evaluator.new_u1_evaluation (new_active_icd_frame, dmvb.value_natural_8)
+					when {DUMP_VALUE_CONSTANTS}.type_natural_16 then
+						Result := eifnet_evaluator.new_u2_evaluation (new_active_icd_frame, dmvb.value_natural_16)
+					when {DUMP_VALUE_CONSTANTS}.type_natural_32 then
+						Result := eifnet_evaluator.new_u4_evaluation (new_active_icd_frame, dmvb.value_natural_32)
+					when {DUMP_VALUE_CONSTANTS}.type_natural_64 then
+						Result := eifnet_evaluator.new_u8_evaluation (new_active_icd_frame, dmvb.value_natural_64)
 
-				when {DUMP_VALUE_CONSTANTS}.type_boolean then
-					Result := eifnet_evaluator.new_boolean_evaluation (new_active_icd_frame, dmvb.value_boolean )
-				when {DUMP_VALUE_CONSTANTS}.type_character_8 then
-					Result := eifnet_evaluator.new_char_evaluation (new_active_icd_frame, dmvb.value_character_8)
-				when {DUMP_VALUE_CONSTANTS}.type_character_32 then
-					debug ("refactor_fixme")
-						fixme ("FIXME: when CHARACTER_32 is redesign for dotnet, change that")
+					when {DUMP_VALUE_CONSTANTS}.type_boolean then
+						Result := eifnet_evaluator.new_boolean_evaluation (new_active_icd_frame, dmvb.value_boolean )
+					when {DUMP_VALUE_CONSTANTS}.type_character_8 then
+						Result := eifnet_evaluator.new_char_evaluation (new_active_icd_frame, dmvb.value_character_8)
+					when {DUMP_VALUE_CONSTANTS}.type_character_32 then
+						debug ("refactor_fixme")
+							fixme ("FIXME: when CHARACTER_32 is redesign for dotnet, change that")
+						end
+						Result := eifnet_evaluator.new_u4_evaluation (new_active_icd_frame, dmvb.value_character_32.natural_32_code)
+
+					when {DUMP_VALUE_CONSTANTS}.type_real_32 then
+						Result := eifnet_evaluator.new_r4_evaluation (new_active_icd_frame, dmvb.value_real_32)
+					when {DUMP_VALUE_CONSTANTS}.type_real_64 then
+						Result := eifnet_evaluator.new_r8_evaluation (new_active_icd_frame, dmvb.value_real_64)
+					when {DUMP_VALUE_CONSTANTS}.type_pointer then
+						Result := eifnet_evaluator.new_ptr_evaluation (new_active_icd_frame, dmvb.value_pointer)
+					else
 					end
-					Result := eifnet_evaluator.new_u4_evaluation (new_active_icd_frame, dmvb.value_character_32.natural_32_code)
-
-				when {DUMP_VALUE_CONSTANTS}.type_real_32 then
-					Result := eifnet_evaluator.new_r4_evaluation (new_active_icd_frame, dmvb.value_real_32)
-				when {DUMP_VALUE_CONSTANTS}.type_real_64 then
-					Result := eifnet_evaluator.new_r8_evaluation (new_active_icd_frame, dmvb.value_real_64)
-				when {DUMP_VALUE_CONSTANTS}.type_pointer then
-					Result := eifnet_evaluator.new_ptr_evaluation (new_active_icd_frame, dmvb.value_pointer)
-
-				when {DUMP_VALUE_CONSTANTS}.Type_manifest_string then
-					Result := eifnet_evaluator.new_eiffel_string_8_evaluation (new_active_icd_frame, dmv.value_string )
-				when {DUMP_VALUE_CONSTANTS}.Type_manifest_string_32 then
-					Result := eifnet_evaluator.new_eiffel_string_32_evaluation (new_active_icd_frame, utf.utf_8_string_8_to_string_32 (dmv.value_string))
 				else
+					inspect dmv.type
+					when {DUMP_VALUE_CONSTANTS}.Type_manifest_string then
+						Result := eifnet_evaluator.new_eiffel_string_8_evaluation (new_active_icd_frame, dmv.value_string )
+					when {DUMP_VALUE_CONSTANTS}.Type_manifest_string_32 then
+						Result := eifnet_evaluator.new_eiffel_string_32_evaluation (new_active_icd_frame, utf.utf_8_string_8_to_string_32 (dmv.value_string))
+					else
+					end
 				end
 
 				if not eifnet_evaluator.last_call_succeed then
@@ -867,7 +869,6 @@ feature {NONE} -- Implementation
 	dump_value_to_reference_icdv (dmv: DUMP_VALUE): ICOR_DEBUG_VALUE
 			-- DUMP_VALUE converted into ICOR_DEBUG_VALUE for reference TYPE Objects
 		local
-			dmvb: DUMP_VALUE_BASIC
 			utf: UTF_CONVERTER
 		do
 			Result := dmv.value_dotnet
@@ -915,12 +916,12 @@ feature {NONE} -- Implementation
 						Result := eifnet_evaluator.icdv_string_32_from_icdv_system_string (new_active_icd_frame, Result)
 					else
 					end
-				else
+				elseif attached {DUMP_VALUE_BASIC} dmv as dmvb then
+
 						--| we have manifest value
 
 						--| This means this value has been created by eStudioDbg
 						--| We need to build the corresponding ICorDebugValue object.
-					dmvb ?= dmv
 					inspect dmv.type
 					when {DUMP_VALUE_CONSTANTS}.type_integer_8 then
 						Result := eifnet_evaluator.new_reference_i1_evaluation (new_active_icd_frame, dmvb.value_integer_8)
@@ -950,6 +951,12 @@ feature {NONE} -- Implementation
 						Result := eifnet_evaluator.new_reference_character_8_evaluation (new_active_icd_frame, dmvb.value_character_8 )
 					when {DUMP_VALUE_CONSTANTS}.type_character_32 then
 						Result := eifnet_evaluator.new_reference_character_32_evaluation (new_active_icd_frame, dmvb.value_character_32 )
+					when {DUMP_VALUE_CONSTANTS}.type_pointer then
+						Result := eifnet_evaluator.new_ptr_evaluation (new_active_icd_frame, dmvb.value_pointer)
+					else
+					end
+				else
+					inspect dmv.type
 					when {DUMP_VALUE_CONSTANTS}.Type_manifest_string then
 						Result := eifnet_evaluator.new_eiffel_string_8_evaluation (new_active_icd_frame, dmv.value_string )
 					when {DUMP_VALUE_CONSTANTS}.Type_manifest_string_32 then
@@ -969,11 +976,8 @@ feature {NONE} -- Internal Helpers
 			-- ICorDebugValue indexed by `addr' if exists
 		require
 			address_valid: addr /= Void and then not addr.is_void
-		local
-			dv: EIFNET_ABSTRACT_DEBUG_VALUE
 		do
-			dv ?= debug_value_by_address (addr)
-			if dv /= Void then
+			if attached {EIFNET_ABSTRACT_DEBUG_VALUE} debug_value_by_address (addr) as dv then
 				Result := dv.icd_referenced_value
 			else
 				--| FIXME jfiat [2004/02/19] : can't find object by address .. how can this happens ???!!!
@@ -1006,9 +1010,9 @@ feature {NONE} -- Debug purpose only
 			debug ("debugger_trace_eval_data")
 				if icd_f /= Void then
 					mdi := icd_f.get_class.get_module.interface_md_import
-					print (generating_type + " : Fct evaluation : " + mdi.get_method_props (icd_f.token) + "%N")
+					localized_print (generating_type.name_32 + {STRING_32} " : Fct evaluation : " + mdi.get_method_props (icd_f.token) + {STRING_32} "%N")
 					l_class := icd_f.get_class
-					print (generating_type + " :      on class : " + mdi.get_typedef_props (l_class.token) + "%N")
+					localized_print (generating_type.name_32 + {STRING_32} " :      on class : " + mdi.get_typedef_props (l_class.token) + {STRING_32} "%N")
 				end
 			end
 		end
@@ -1024,15 +1028,15 @@ feature {NONE} -- Debug purpose only
 				if not retried then
 					create l_edvi.make (icdv)
 					if l_edvi.has_object_interface and then l_edvi.value_class_name /= Void then
-						print (generating_type + " : ClassName = " + l_edvi.value_class_name + "%N")
+						localized_print (generating_type.name_32 + {STRING_32} " : ClassName = " + l_edvi.value_class_name + {STRING_32} "%N")
 					else
 						if l_edvi.is_reference_type then
 							print ("IsNull =? " + l_edvi.is_null.out +"%N")
 						end
-						print (generating_type + " : Basic type = " + l_edvi.is_basic_type.out + "%N")
+						localized_print (generating_type.name_32 + {STRING_32} " : Basic type = " + l_edvi.is_basic_type.out + {STRING_32} "%N")
 					end
 				else
-					print (generating_type + " : Error in display info .. %N")
+					localized_print (generating_type.name_32 + {STRING_32} " : Error in display info .. %N")
 				end
 			end
 		rescue
@@ -1041,7 +1045,7 @@ feature {NONE} -- Debug purpose only
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

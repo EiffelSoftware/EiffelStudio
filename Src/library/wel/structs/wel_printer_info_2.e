@@ -204,7 +204,7 @@ feature -- Measurements
 
 	structure_size: INTEGER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return sizeof(PRINTER_INFO_2);"
 		end
@@ -213,147 +213,147 @@ feature {NONE} -- C externals
 
 	c_server_name (a_item: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->pServerName;"
 		end
 
 	c_printer_name (a_item: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->pPrinterName;"
 		end
 
 	c_share_name (a_item: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->pShareName;"
 		end
 
 	c_port_name (a_item: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->pPortName;"
 		end
 
 	c_driver_name (a_item: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->pDriverName;"
 		end
 
 	c_comment (a_item: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->pComment;"
 		end
 
 	c_location (a_item: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->pLocation;"
 		end
 
 	c_dev_mode (a_item: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->pDevMode;"
 		end
 
 	c_sep_file (a_item: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->pSepFile;"
 		end
 
 	c_print_processor (a_item: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->pPrintProcessor;"
 		end
 
 	c_data_type (a_item: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->pDatatype;"
 		end
 
 	c_parameters (a_item: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->pParameters;"
 		end
 
 	c_security_descriptor (a_item: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->pSecurityDescriptor;"
 		end
 
 	c_attributes (a_item: POINTER): INTEGER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->Attributes;"
 		end
 
 	c_priority (a_item: POINTER): INTEGER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->Priority;"
 		end
 
 	c_default_priority (a_item: POINTER): INTEGER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->DefaultPriority;"
 		end
 
 	c_start_time (a_item: POINTER): INTEGER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->StartTime;"
 		end
 
 	c_until_time (a_item: POINTER): INTEGER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->UntilTime;"
 		end
 
 	c_status (a_item: POINTER): INTEGER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->Status;"
 		end
 
 	c_jobs (a_item: POINTER): INTEGER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->cJobs;"
 		end
 
 	c_average_ppm (a_item: POINTER): INTEGER
 		external
-			"C inline use <windows.h>"
+			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return ((PRINTER_INFO_2 *) $a_item)->AveragePPM;"
 		end

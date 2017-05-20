@@ -10,6 +10,8 @@ class
 
 inherit
 	EV_TREE_NODE_I
+		export
+			{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} expand_actions_internal, collapse_actions_internal
 		redefine
 			interface,
 			reset_pebble_function
@@ -22,16 +24,6 @@ inherit
 		redefine
 			interface,
 			make
-		end
-
-	EV_ITEM_ACTION_SEQUENCES_IMP
-
-	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
-
-	EV_TREE_NODE_ACTION_SEQUENCES_IMP
-		export
-			{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}
-				expand_actions_internal, collapse_actions_internal
 		end
 
 	EV_PND_DEFERRED_ITEM
@@ -53,7 +45,7 @@ feature {NONE} -- Initialization
 			set_is_destroyed (True)
 		end
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create the tree item.
 		do
 			assign_interface (an_interface)
@@ -676,7 +668,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TREE_NODE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

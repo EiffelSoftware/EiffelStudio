@@ -122,6 +122,7 @@ feature -- Websocket events: implemented
 			ws_valid: ws.is_open_read and then ws.is_open_write
 		do
 			ws.send (Connection_close_frame, "")
+			on_close (ws)
 		end
 
 note

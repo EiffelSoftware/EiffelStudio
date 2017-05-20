@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {NUMBER_GCD}."
 	author: "Colin LeMahieu"
 	date: "$Date$"
@@ -47,7 +47,7 @@ feature
 					loop
 						if n1_h > n2_h or (n1_h = n2_h and n1_l >= n2_l) then
 							n1_h := n1_h - (n2_h + (n1_l < n2_l).to_integer.to_natural_32)
-							n1_l := (n1_l - n2_l)
+							n1_l := n1_l - n2_l
 						end
 						n2_l := (n2_l |>> 1).bit_or (n2_h |<< (limb_bits - 1))
 						n2_h := n2_h |>> 1
@@ -374,9 +374,9 @@ feature
 								up [up_offset + usize] := carry.item
 								usize := usize + 1
 								v_inv := modlimb_invert (vp [vp_offset])
-								bp0 := (up [up_offset] * v_inv)
+								bp0 := up [up_offset] * v_inv
 								umul_ppmm (hi, lo, bp0, vp [vp_offset])
-								bp1 := (up [up_offset + 1] + hi.item + (bp0.bit_and (vp [vp_offset + 1]))).bit_and (0x1)
+								bp1 := (up [up_offset + 1] + hi.item + bp0.bit_and (vp [vp_offset + 1])).bit_and (0x1)
 								up [up_offset + usize] := 0
 								usize := usize + 1
 								if bp1 /= 0 then
@@ -707,7 +707,7 @@ feature
 					dh.bit_test (limb_high_bit)
 				loop
 					dh := (dh |<< 1).bit_or (dl |>> (limb_bits - 1))
-					dl := (dl |<< 1)
+					dl := dl |<< 1
 					count := count + 1
 				end
 				from

@@ -12,7 +12,7 @@ class
 	EV_FIGURE_STAR
 
 obsolete
-	"Use EV_MODEL_STAR instead."
+	"Use EV_MODEL_STAR instead. [2017-05-31]"
 
 inherit
 	EV_ATOMIC_FIGURE

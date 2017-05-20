@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Process status listening timer implemented with thread."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Implementation
+feature {NONE} -- Creation
 
 	make (a_sleep_time: INTEGER)
 			-- Set time interval which this timer will be triggered with `a_sleep_time'.
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Access
 
 	is_destroy_requested: BOOLEAN
 			-- Should this timer be destroyed?
@@ -122,7 +122,7 @@ invariant
 	mutex_not_void: mutex /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

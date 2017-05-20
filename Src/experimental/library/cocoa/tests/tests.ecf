@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="cocoa-tests" uuid="7BAF21AA-DAA5-4B71-AD29-EF6F1ADAFD82">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="cocoa-tests" uuid="7BAF21AA-DAA5-4B71-AD29-EF6F1ADAFD82">
 	<description>Unit-tests for the Cocoa library.</description>
 	<target name="cocoa-tests">
 		<root class="TEST" feature="make"/>
 		<file_rule>
-			<exclude>/\.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.svn$</exclude>
 		</file_rule>
 		<option>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="objc_base" location="$ISE_LIBRARY\library\objc_base\objc_base-safe.ecf" readonly="false"/>
-		<library name="cocoa" location="$ISE_LIBRARY\library\cocoa\cocoa-safe.ecf" readonly="false"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<capability>
+			<concurrency support="thread"/>
+			<void_safety support="none"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="cocoa" location="$ISE_LIBRARY\library\cocoa\cocoa.ecf" readonly="false"/>
+		<library name="objc_base" location="$ISE_LIBRARY\library\objc_base\objc_base.ecf" readonly="false"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<tests name="tests" location=".\" recursive="true">
 			<option namespace="Tests">
 			</option>

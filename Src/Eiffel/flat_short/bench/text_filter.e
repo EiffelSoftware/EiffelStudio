@@ -453,12 +453,9 @@ feature -- Text processing
 
 	process_quoted_text (text: READABLE_STRING_GENERAL)
 			-- Process the quoted `text' within a comment.
-		local
-			format: CELL2 [STRING_32, STRING_32];
 		do
 			if not skipping then
-				if format_table.has_key (f_Quoted) then
-					format := format_table.found_item
+				if attached format_table.item (f_Quoted) as format then
 					image_append (format.item1)
 					if format.item2 /= Void then
 						print_escaped_text (text)
@@ -946,7 +943,7 @@ feature -- Text processing
 			end
 		end
 
-	process_local_text (text: READABLE_STRING_GENERAL)
+	process_local_text (a_ast: AST_EIFFEL; text: READABLE_STRING_GENERAL)
 			-- Process local symbol `text'.
 		local
 			format: CELL2 [STRING_32, STRING_32];
@@ -1232,7 +1229,7 @@ invariant
 	image_not_void: image /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

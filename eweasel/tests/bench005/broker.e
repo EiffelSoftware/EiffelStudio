@@ -5,7 +5,7 @@ create make
 feature
 	n: Integer
 	max: Integer
-	current_cham: separate Chameneos
+	current_cham: detachable separate Chameneos
 	current_c: Integer
 
 	make(max_: Integer)

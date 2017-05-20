@@ -218,9 +218,7 @@ feature -- Hooks
 			if api.user_is_authenticated then
 				r.add_error_message ("You are already signed in!")
 			elseif req.is_get_request_method then
-				r.set_value ("Login", "optional_content_type")
-
-
+				r.set_optional_content_type ("Login")
 			elseif req.is_post_request_method then
 				create s.make_empty
 				if attached req.string_item ("openid") as p_openid then

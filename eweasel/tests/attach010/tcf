@@ -7,6 +7,8 @@ copy_sub	Ace $TEST Ace
 compile_melted
 compile_result	ok
 
+cleanup_compile
+
 copy_sub	Ace2 $TEST Ace
 
 compile_melted

@@ -15,7 +15,8 @@ inherit
 		export
 			{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} select_actions_internal
 		redefine
-			interface
+			interface,
+			init_select_actions
 		end
 
 	EV_ITEM_IMP
@@ -51,8 +52,6 @@ inherit
 		end
 
 	EV_PND_DEFERRED_ITEM
-		undefine
-			create_drop_actions
 		redefine
 			interface
 		end
@@ -68,7 +67,7 @@ feature {NONE} -- Initialization
 			Result := False
 		end
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create the tool bar button.
 		do
 			assign_interface (an_interface)
@@ -169,7 +168,7 @@ feature -- Element change
 		do
 			internal_tooltip := a_text.as_string_32.twin
 			a_cs := App_implementation.c_string_from_eiffel_string (a_text)
-			--| FIXME IEK Need implementing
+			--| FIXME IEK Needs proper implementation
 		end
 
 	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP)
@@ -187,21 +186,7 @@ feature -- Element change
 		end
 
 	enable_sensitive
-			 -- Enable `Current'.
-		do
-			enabled_before := is_sensitive
-			enable_sensitive_internal
-		end
-
-	disable_sensitive
-			 -- Disable `Current'.
-		do
-			enabled_before := is_sensitive
-			disable_sensitive_internal
-		end
-
-	enable_sensitive_internal
-			-- Allow the object to be sensitive to user input.
+			-- Enable `Current'.
 		local
 			l_gdkwin: POINTER
 			i, l_screen_x, l_screen_y, l_x, l_y: INTEGER
@@ -213,7 +198,7 @@ feature -- Element change
 			end
 				--| This is a hack for gtk 2.6.x that renders the button unusable if the mouse pointer is over `Current' when `enable_sensitive' is called.
 			if is_displayed then
-				l_gdkwin := {GTK}.gdk_window_at_pointer ($l_x, $l_y)
+				l_gdkwin := {GDK_HELPERS}.window_at ($l_x, $l_y)
 				if l_gdkwin /= default_pointer then
 					if Current = app_implementation.gtk_widget_from_gdk_window (l_gdkwin) then
 						i := {GTK}.gdk_window_get_origin (l_gdkwin, $l_screen_x, $l_screen_y)
@@ -224,8 +209,8 @@ feature -- Element change
 			end
 		end
 
-	disable_sensitive_internal
-			-- Set the object to ignore all user input.
+	disable_sensitive
+			-- Disable `Current'.
 		do
 			{GTK}.gtk_widget_set_sensitive (c_object, False)
 			if {GTK}.gtk_is_event_box (c_object) then
@@ -281,18 +266,10 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a select action sequence.
-			-- Attach to GTK "clicked" signal.
+	init_select_actions (a_select_actions: EV_NOTIFY_ACTION_SEQUENCE)
+			-- <Precursor>
 		do
-			create Result
 			real_signal_connect (c_object, once "clicked", agent (App_implementation.gtk_marshal).new_toolbar_item_select_actions_intermediary (internal_id), Void)
-		end
-
-	create_drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- 	Create a drop down action sequence.
-		do
-			create Result
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -300,7 +277,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

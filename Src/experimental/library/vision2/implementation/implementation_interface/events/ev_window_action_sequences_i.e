@@ -16,21 +16,17 @@ feature -- Event handling
 	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when window is requested to be closed.
 		do
-			if close_request_actions_internal = Void then
-				close_request_actions_internal :=
-					 create_close_request_actions
+			if attached close_request_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				close_request_actions_internal := Result
 			end
-			Result := close_request_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a close_request action sequence.
-		deferred
-		end
 
 	close_request_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `close_request_actions'.
@@ -44,21 +40,17 @@ feature -- Event handling
 	move_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Actions to be performed when window moves.
 		do
-			if move_actions_internal = Void then
-				move_actions_internal :=
-					 create_move_actions
+			if attached move_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				move_actions_internal := Result
 			end
-			Result := move_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_move_actions: EV_GEOMETRY_ACTION_SEQUENCE
-			-- Create a move action sequence.
-		deferred
-		end
 
 	move_actions_internal: detachable EV_GEOMETRY_ACTION_SEQUENCE
 			-- Implementation of once per object `move_actions'.
@@ -72,21 +64,17 @@ feature -- Event handling
 	show_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when window is shown.
 		do
-			if show_actions_internal = Void then
-				show_actions_internal :=
-					 create_show_actions
+			if attached show_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				show_actions_internal := Result
 			end
-			Result := show_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_show_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a show action sequence.
-		deferred
-		end
 
 	show_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `show_actions'.
@@ -100,21 +88,17 @@ feature -- Event handling
 	hide_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when window is hiden.
 		do
-			if hide_actions_internal = Void then
-				hide_actions_internal :=
-					 create_hide_actions
+			if attached hide_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				hide_actions_internal := Result
 			end
-			Result := hide_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_hide_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a hide action sequence.
-		deferred
-		end
 
 	hide_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `hide_actions'.

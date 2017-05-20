@@ -47,7 +47,7 @@ feature -- Query
 	file_exist (a_file_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does file named `a_file_name' exist?
 		obsolete
-			"Use `file_path_exist' instead."
+			"Use `file_path_exist' instead. [2017-05-31]"
 		local
 			l_fu: FILE_UTILITIES
 		do

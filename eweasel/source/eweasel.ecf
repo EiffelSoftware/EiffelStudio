@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="eweasel" uuid="811A5BF8-16CC-462C-A517-D1E11E521589" library_target="eweasel_st">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="eweasel" uuid="811A5BF8-16CC-462C-A517-D1E11E521589" library_target="eweasel_st">
 	<target name="common" abstract="true">
 		<root class="EWEASEL" feature="make_and_execute"/>
 		<file_rule>
-			<exclude>/gui$</exclude>
 			<exclude>/.svn$</exclude>
+			<exclude>/gui$</exclude>
 		</file_rule>
 		<file_rule>
 			<exclude>/unix$</exclude>
@@ -18,16 +18,43 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="false" void_safety="none" syntax="standard">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="exception_trace" value="true"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none" use="none"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf">
+			<condition>
+				<custom name="eqa" value="true"/>
+			</condition>
+		</library>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf">
+			<condition>
+				<concurrency value="thread"/>
+			</condition>
+		</library>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
-		<cluster name="eweasel" location=".\" recursive="true"/>
+		<cluster name="eweasel" location=".\" recursive="true">
+			<file_rule>
+				<include>/eqa$</include>
+				<condition>
+					<custom name="eqa" value="true"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/shared/mt$</exclude>
+				<exclude>/tests/mt$</exclude>
+				<condition>
+					<concurrency value="none"/>
+				</condition>
+			</file_rule>
+		</cluster>
 	</target>
 	<target name="eweasel_st" extends="common">
 		<root class="EW_EWEASEL_ST" feature="make_and_execute"/>
@@ -36,16 +63,25 @@
 	<target name="eweasel_mt" extends="common">
 		<root class="EW_EWEASEL_MT" feature="make_and_execute"/>
 		<setting name="executable_name" value="eweasel-mt"/>
-		<setting name="concurrency" value="thread"/>
+		<capability>
+			<concurrency support="thread" use="thread"/>
+		</capability>
 	</target>
 	<target name="all" extends="common">
 		<root all_classes="true"/>
+		<capability>
+			<concurrency support="thread" use="thread"/>
+		</capability>
+		<variable name="eqa" value="true"/>
 	</target>
 	<target name="eweasel_mt_unix" extends="eweasel_mt">
 		<setting name="platform" value="unix"/>
 	</target>
 	<target name="gui" extends="common">
 		<root class="VISION2_APPLICATION" feature="make_and_launch"/>
+		<capability>
+			<concurrency support="thread" use="thread"/>
+		</capability>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf"/>
 		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree.ecf"/>

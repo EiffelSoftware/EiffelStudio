@@ -39,6 +39,11 @@ feature -- Media Variants
 
 feature -- View
 
+	home_page_redirect (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Home redirect
+		deferred
+		end
+
 	home_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Home page representation
 		deferred
@@ -233,6 +238,11 @@ feature -- View
 
 	confirm_change_email (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: detachable ESA_EMAIL_VIEW)
 			-- Confirm Email change
+		deferred
+		end
+
+	confirm_change_password (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: detachable ESA_PASSWORD_RESET_VIEW)
+			-- Confirm Password change
 		deferred
 		end
 

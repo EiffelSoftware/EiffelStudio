@@ -247,7 +247,7 @@ feature -- Loading
 
 							-- Check console application flag
 						if l_target.libraries.current_keys.there_exists (agent is_gui_library (?)) then
-							l_target.update_setting ("console_application", "false")
+							l_target.update_setting ({CONF_CONSTANTS}.s_console_application, "false")
 						end
 					else
 							-- Target does not exist yet, create it
@@ -1032,49 +1032,46 @@ feature {NONE} -- Implementation
 			l_target: CONF_TARGET
 			l_root: CONF_ROOT
 			l_directory_location: CONF_DIRECTORY_LOCATION
-			l_cluster: CONF_CLUSTER
-			l_library: CONF_LIBRARY
-			l_precompile: CONF_PRECOMPILE
 		do
 			create l_factory
 
-				-- Configuration target
+				-- Configuration target.
 			l_target := l_factory.new_target (a_target_name, a_system)
 			a_system.add_target (l_target)
 
-				-- Root class and feature
+				-- Root class and feature.
 			l_root := l_factory.new_root (Void, a_root_class_name, a_root_feature_name, False)
 			l_target.set_root (l_root)
 
-				-- Default to console application.
-			l_target.update_setting ("console_application", "true")
-
 				-- Default to SCOOP application.
-			l_target.update_setting ("concurrency", "scoop")
+				-- Set only capability part, root setting will default to it.
+			if l_target.changeable_internal_options.concurrency_capability.value.index /= {CONF_TARGET_OPTION}.concurrency_index_scoop then
+				l_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_scoop)
+			end
 
-				-- Add libraries to target
+				-- Add libraries to target.
 			if a_libraries /= Void then
 				a_libraries.do_all (agent add_library_to_target (?, l_target))
 			end
 
-				-- Check if there are any gui libraries and set flag accordingly
+				-- Check if there are any gui libraries and set flag accordingly.
 			if l_target.libraries.current_keys.there_exists (agent is_gui_library (?)) then
-				l_target.update_setting ("console_application", "false")
+				l_target.update_setting ({CONF_CONSTANTS}.s_console_application, "false")
+			else
+					-- Default to console application.
+				l_target.update_setting ({CONF_CONSTANTS}.s_console_application, "true")
 			end
 
-				-- Add 'current directory' as root cluster
+				-- Add 'current directory' as root cluster.
 			l_directory_location := l_factory.new_location_from_path ("./", l_target)
-			l_cluster := l_factory.new_cluster (a_target_name, l_directory_location, l_target)
-			l_target.add_cluster (l_cluster)
+			l_target.add_cluster (l_factory.new_cluster (a_target_name, l_directory_location, l_target))
 
-				-- Add base library
-			l_library := l_factory.new_library ("base", "$ISE_LIBRARY/library/base/base-safe.ecf", l_target)
-			l_target.add_library (l_library)
+				-- Add base library.
+			l_target.add_library (l_factory.new_library ("base", "$ISE_LIBRARY/library/base/base.ecf", l_target))
 
 			if l_target.precompile = Void then
-					-- No precompile is set, add base as precompile
-				l_precompile := l_factory.new_precompile ("base_pre", "$ISE_PRECOMP/base-scoop-safe.ecf", l_target)
-				l_target.set_precompile (l_precompile)
+					-- No precompile is set, add base as precompile.
+				l_target.set_precompile (l_factory.new_precompile ("base_pre", "$ISE_PRECOMP/base-scoop-safe.ecf", l_target))
 			end
 		ensure
 			target_exists: a_system.targets.has (a_target_name)

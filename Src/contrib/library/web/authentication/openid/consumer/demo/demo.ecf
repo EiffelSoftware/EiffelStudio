@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="demo" uuid="DC4D6549-D5F4-4E1A-959A-6BD536737A21">
+	<target name="demo">
+		<root class="APPLICATION" feature="make_and_launch"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="ewsgi" location="..\..\..\..\framework\ewf\ewsgi\ewsgi.ecf" readonly="false"/>
+		<library name="ewsgi_standalone_connector" location="..\..\..\..\framework\ewf\ewsgi\connectors\standalone\standalone.ecf" readonly="false"/>
+		<library name="http" location="..\..\..\..\..\network\protocol\http\http.ecf"/>
+		<library name="openid" location="..\openid.ecf" readonly="false"/>
+		<library name="wsf" location="..\..\..\..\framework\ewf\wsf\wsf.ecf" readonly="false"/>
+		<library name="wsf_standalone_connector" location="..\..\..\..\framework\ewf\wsf\connector\standalone.ecf" readonly="false"/>
+		<cluster name="src" location=".\" recursive="true"/>
+	</target>
+	<target name="demo_mt" extends="demo">
+		<capability>
+			<concurrency use="thread"/>
+		</capability>
+	</target>
+</system>

@@ -269,6 +269,18 @@ feature -- Value
 			Result := comments_background_color_preference.value
 		end
 
+	quoted_feature_text_color: EV_COLOR
+			-- Color used to display quoted feature in comments
+		do
+			Result := quoted_feature_text_color_preference.value
+		end
+
+	quoted_feature_background_color: EV_COLOR
+			-- Color used to display quoted feature in comments background
+		do
+			Result := quoted_feature_background_color_preference.value
+		end
+
 	number_text_color: EV_COLOR
 			-- Color used to display numbers
 		do
@@ -438,6 +450,12 @@ feature {ANY} -- Preferences
 	comments_background_color_preference: COLOR_PREFERENCE
 			-- Background color used to display comments
 
+	quoted_feature_text_color_preference: COLOR_PREFERENCE
+			-- Color used to display quoted feature in comments
+
+	quoted_feature_background_color_preference: COLOR_PREFERENCE
+			-- Background color used to display quoted feature in comments			
+
 	number_text_color_preference: COLOR_PREFERENCE
 			-- Color used to display numbers
 
@@ -590,6 +608,12 @@ feature {NONE} -- Preference Strings
 	mouse_over_link_background_color_string: STRING = "editor.general.colors.mouse_over_link_background_color"
 			-- Mouse over background color for links
 
+	quoted_feature_text_color_string: STRING = "editor.general.colors.quoted_feature_text_color"
+			-- Quoted feature in comment link color
+
+	quoted_feature_background_color_string: STRING = "editor.general.colors.quoted_feature_background_color"
+			-- Quoted feature background color for links			
+
 	smart_indentation_string: STRING = "editor.general.smart_indentation"
 			-- Is smart indentation enabled?
 
@@ -642,6 +666,8 @@ feature {NONE} -- Implementation
 			colors.put (link_background_color_preference.value, link_background_color_id)
 			colors.put (mouse_over_link_color_preference.value, mouse_over_link_color_id)
 			colors.put (mouse_over_link_background_color_preference.value, mouse_over_link_background_color_id)
+			colors.put (quoted_feature_text_color_preference.value, quoted_feature_text_color_id)
+			colors.put (quoted_feature_background_color_preference.value, quoted_feature_background_color_id)
 		end
 
 	init_fonts
@@ -710,6 +736,8 @@ feature {NONE} -- Implementation
 			spaces_background_color_preference := l_manager.new_color_preference_value (l_manager, spaces_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			comments_text_color_preference := l_manager.new_color_preference_value (l_manager, comments_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (128, 0, 0))
 			comments_background_color_preference := l_manager.new_color_preference_value (l_manager, comments_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			quoted_feature_text_color_preference := l_manager.new_color_preference_value (l_manager, quoted_feature_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (64, 0, 0))
+			quoted_feature_background_color_preference := l_manager.new_color_preference_value (l_manager, quoted_feature_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			operator_text_color_preference := l_manager.new_color_preference_value (l_manager, operator_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 0, 0))
 			operator_background_color_preference := l_manager.new_color_preference_value (l_manager, operator_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			number_text_color_preference := l_manager.new_color_preference_value (l_manager, number_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (128, 0, 255))
@@ -756,6 +784,8 @@ feature {NONE} -- Implementation
 			spaces_background_color_preference.change_actions.extend (agent update)
 			comments_text_color_preference.change_actions.extend (agent update)
 			comments_background_color_preference.change_actions.extend (agent update)
+			quoted_feature_text_color_preference.change_actions.extend (agent update)
+			quoted_feature_background_color_preference.change_actions.extend (agent update)
 			number_text_color_preference.change_actions.extend (agent update)
 			number_background_color_preference.change_actions.extend (agent update)
 			operator_text_color_preference.change_actions.extend (agent update)
@@ -781,7 +811,7 @@ feature {NONE} -- Implementation
 			-- Preferences
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

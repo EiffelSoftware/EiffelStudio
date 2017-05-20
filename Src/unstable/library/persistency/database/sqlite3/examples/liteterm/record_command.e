@@ -61,7 +61,7 @@ feature -- Basic operations
 					end
 
 						-- Create the file to record to.
-					create l_file.make (l_file_name)
+					create l_file.make_with_name (l_file_name)
 					if l_file.exists then
 							-- File already exists, check what user wants to do.
 						l_result := interactive_terminal.read_response ("The file already exists! Append/Overwrite/Cancel", ["A", "O", "C"], "A")
@@ -76,7 +76,7 @@ feature -- Basic operations
 
 					if not l_file.is_closed then
 							-- Set file name for next default.
-						create record_file_name.make_from_string (l_file.name)
+						create record_file_name.make_from_string (l_file.path.name.as_string_8)
 
 						l_recorder := interactive_terminal.statement_recorder
 						if attached l_recorder then

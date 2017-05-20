@@ -311,14 +311,14 @@ feature {NONE} -- Externals
 
 	cwel_choose_font_set_lpfnhook (ptr: POINTER; value: POINTER)
 		external
-			"C inline use <windows.h>"
+			"C inline use <choosefo.h>"
 		alias
 			"((LPCHOOSEFONT) $ptr)->lpfnHook = (LPCFHOOKPROC) $value;"
 		end
 
 	cwel_choose_font_get_hwndowner (ptr: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <choosefo.h>"
 		alias
 			"return ((LPCHOOSEFONT) $ptr)->hwndOwner;"
 		end
@@ -355,7 +355,7 @@ feature {NONE} -- Externals
 
 	cwel_choose_font_get_lpfnhook (ptr: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <choosefo.h>"
 		alias
 			"return ((LPCHOOSEFONT) $ptr)->lpfnHook;"
 		end

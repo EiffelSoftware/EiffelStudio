@@ -1,9 +1,8 @@
-note
+﻿note
 	description: "[
-					Vision2 tree to Ribbon markup XML tree translator
-					when using application modes
-
-				]"
+			Vision2 tree to Ribbon markup XML tree translator
+			when using application modes
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -121,11 +120,10 @@ feature {NONE} -- Tree saving
 			l_ribbon_xml := xml_node_by_name (xml_constants.ribbon)
 			if l_ribbon_xml /= Void then
 				create l_shared
-				if attached l_shared.size_definition_cell.item as l_size_definition and then not l_size_definition.size_definition_writer.is_empty then
+				if attached l_shared.size_definition as l_size_definition and then not l_size_definition.size_definition_writer.is_empty then
 					l_writer := l_size_definition.size_definition_writer
 					if not l_writer.is_empty then
 						l_root_xml_size_definition := l_writer.root_xml_for_saving
-	--					l_root_xml_size_definition.set_parent (l_ribbon_xml)
 						l_ribbon_xml.put_last (l_root_xml_size_definition)
 					end
 				end
@@ -1379,7 +1377,7 @@ feature {NONE} -- implementation
 			-- Root XML element
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

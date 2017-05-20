@@ -60,7 +60,7 @@ feature -- Access, in compiled only
 
 feature -- Update, in compiled only
 
-	set_file_name (a_file_name: like file_name)
+	set_file_name (a_file_name: READABLE_STRING_GENERAL)
 			-- Set `file_name' to `a_file_name' and set `directory'.
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
@@ -68,11 +68,11 @@ feature -- Update, in compiled only
 			fp: PATH
 		do
 			is_location_set := True
-			file_name := a_file_name
+			file_name := a_file_name.as_string_32
 			create fp.make_from_string (a_file_name)
 			directory := fp.parent
 		ensure
-			name_set: file_name = a_file_name
+			name_set: a_file_name.same_string (file_name)
 			is_location_set: a_file_name /= Void and then (is_location_set and directory /= Void)
 		end
 
@@ -137,7 +137,7 @@ invariant
 	is_location_set: is_location_set implies (attached file_name as fn and then not fn.is_empty and directory /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

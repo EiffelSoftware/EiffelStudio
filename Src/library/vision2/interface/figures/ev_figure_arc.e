@@ -12,7 +12,7 @@ class
 	EV_FIGURE_ARC
 
 obsolete
-	"Use EV_MODEL_ARC instead."
+	"Use EV_MODEL_ARC instead. [2017-05-31]"
 
 inherit
 	EV_ATOMIC_FIGURE

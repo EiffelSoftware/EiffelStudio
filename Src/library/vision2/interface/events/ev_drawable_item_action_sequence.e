@@ -11,10 +11,8 @@ class
 	EV_DRAWABLE_ITEM_ACTION_SEQUENCE
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, EV_DRAWABLE]]
-	-- EV_ACTION_SEQUENCE [TUPLE [x, y, width, height: INTEGER]]
-	-- (ETL3 TUPLE with named parameters)
-	
+	EV_ACTION_SEQUENCE [TUPLE [x, y, width, height: INTEGER; drawable: EV_DRAWABLE]]
+
 create
 	default_create
 
@@ -25,6 +23,8 @@ feature -- Access
 
 	force_extend (action: PROCEDURE)
 			-- Extend without type checking.
+		obsolete
+			"Use `extend' instead and provide the right type of agent. [2017-05-31]"
 		do
 			extend (agent wrapper (?, ?, ?, ?, ?, action))
 		end
@@ -32,6 +32,8 @@ feature -- Access
 	wrapper (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER; a_drawable: EV_DRAWABLE; action: PROCEDURE)
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
+		obsolete
+			"Call `action' directly instead. [2017-05-31]"
 		do
 			action.call ([a_x, a_y, a_width, a_height, a_drawable])
 		end
@@ -45,14 +47,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

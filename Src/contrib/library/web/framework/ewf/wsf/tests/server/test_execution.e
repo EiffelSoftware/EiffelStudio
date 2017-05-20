@@ -35,6 +35,13 @@ feature -- Helper
 		end
 
 	base_url: detachable STRING
+		once
+			Result := {TEST_SETTINGS}.base_url
+
+			if Result.is_whitespace then
+				Result := Void
+			end
+		end
 
 	test_url (a_query_url: READABLE_STRING_8): READABLE_STRING_8
 		local
@@ -44,7 +51,7 @@ feature -- Helper
 			if b = Void then
 				b := ""
 			end
-			Result := "/" + b + a_query_url
+			Result := b + a_query_url
 		end
 
 end

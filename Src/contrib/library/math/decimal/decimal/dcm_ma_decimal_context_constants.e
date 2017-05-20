@@ -1,12 +1,6 @@
-note
+﻿note
 	description:
 		"Context constants for the Decimal Arithmetic library"
-	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
-	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
-
 
 class DCM_MA_DECIMAL_CONTEXT_CONSTANTS
 
@@ -100,7 +94,7 @@ feature -- Constants: limits
 	Minimum_integer_as_decimal: DECIMAL
 			-- Minimum value convertible to integer
 		obsolete
-			"[050911] Use MA_DECIMAL_CONSTANTS.minimum_integer instead."
+			"Use MA_DECIMAL_CONSTANTS.minimum_integer instead. [2017-05-31]"
 		once
 			Result := decimal.minimum_integer
 		ensure
@@ -110,7 +104,7 @@ feature -- Constants: limits
 	Maximum_integer_as_decimal: DECIMAL
 			-- Maximum value convertible to integer
 		obsolete
-			"[050911] Use MA_DECIMAL_CONSTANTS.maximum_integer instead."
+			"Use MA_DECIMAL_CONSTANTS.maximum_integer instead. [2017-05-31]"
 		once
 			Result := decimal.maximum_integer
 		ensure
@@ -190,11 +184,14 @@ feature -- Constants: support
 note
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
 	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
-	license: "MIT license"
+	copyright: "Copyright (c) 2017 Eiffel Software."
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 	details: "[
 			Originally developed by Paul G. Crismer as part of Gobo. 
 			Revised by Jocelyn Fiat for void safety.
-			Revised by Jonathan Ostroff, Manu Stapf, and Moksh Khurana
+			Revised by Jonathan Ostroff, Manu Stapf, Moksh Khurana, Alexander Kogtenkov.
 		]"
 
 end

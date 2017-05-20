@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Universal constants about dates"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -77,7 +77,7 @@ feature -- Access
 feature -- Status report
 
 	i_th_leap_year (i: INTEGER): BOOLEAN
-		obsolete "Use `is_leap_year' instead."
+		obsolete "Use `is_leap_year' instead. [2017-05-31]"
 			-- Is the `i'-th year a leap year?
 		do
 			Result := is_leap_year (i)
@@ -103,18 +103,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DATE_CONSTANTS
-
+end

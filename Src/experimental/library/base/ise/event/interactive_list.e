@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Sequential, one-way linked lists that call add/remove features
 		when an item is removed or added.
@@ -224,10 +224,8 @@ feature -- Element Change
 			-- position. Do not move cursor. Empty `other'
 		local
 			original_index: INTEGER
-			new_item_count: INTEGER
 		do
 			original_index := index
-			new_item_count := other.count
 			in_operation := True
 			Precursor {ARRAYED_LIST} (other)
 			in_operation := False
@@ -342,8 +340,6 @@ feature {NONE} -- Implementation
 			other.go_to (cur)
 		end
 
-feature {NONE} -- Implementation
-
 	in_operation: BOOLEAN
 			-- Are we executing an operation from ARRAYED_LIST?
 
@@ -365,14 +361,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

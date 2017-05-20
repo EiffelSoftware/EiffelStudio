@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="server" uuid="1E224EC4-AE55-4588-BAE4-163BAAFEE52A">
+	<target name="iron_all">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/.git$</exclude>
+			<exclude>/.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option warning="true" is_obsolete_routine_type="true">
+		</option>
+		<capability>
+			<concurrency support="thread" use="thread"/>
+			
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="batch" location="..\server\batch.ecf" readonly="false"/>
+		<library name="server" location="..\server\server.ecf" readonly="false"/>
+	</target>
+</system>

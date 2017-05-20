@@ -101,7 +101,7 @@ create
 
 feature -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create `Current' with the default options.
 			-- Assign `Ev_frame_etched_in' to `frame_style'.
 		do
@@ -520,7 +520,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_FRAME note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

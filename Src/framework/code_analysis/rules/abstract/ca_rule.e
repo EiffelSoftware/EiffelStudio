@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			checks_library_classes := True
 			checks_nonlibrary_classes := True
 			default_severity_score := 50
-			create {CA_WARNING} severity
+			severity := severity_warning
 			create violations.make
 		end
 
@@ -82,13 +82,35 @@ feature {CA_RULE_VIOLATION} -- formatted rule checking output
 		deferred
 		end
 
+feature {CA_CODE_ANALYZER, CA_RULE_VIOLATION} -- Properties a user can change
+
+	severity: CA_RULE_SEVERITY
+			-- The severity of violations of this rule.
+
+feature {NONE} -- Severity levels
+
+	severity_error: CA_ERROR
+			-- Severity of error level.
+		once
+			create Result
+		end
+
+	severity_warning: CA_WARNING
+			-- Severity of warning level.
+		once
+			create Result
+		end
+
+	severity_suggestion: CA_SUGGESTION
+			-- Severity of suggestion level.
+		once
+			create Result
+		end
+
 feature -- Properties the user can change
 
 	is_enabled: BOOLEAN_PREFERENCE
 			-- Is the rule enabled?
-
-	severity: CA_RULE_SEVERITY
-			-- The severity of violations of this rule.
 
 	severity_score: INTEGER_PREFERENCE
 			-- The severity score.
@@ -147,9 +169,9 @@ feature -- Hash Code
 
 feature {CA_CODE_ANALYZER} -- Preferences
 
-	full_preference_name (a_preference_name: STRING): STRING
+	frozen full_preference_name (a_preference_name: STRING): STRING
 		do
-			Result := preference_namespace + a_preference_name
+			Result := full_rule_preference_name (a_preference_name, name)
 		end
 
 feature -- Preferences
@@ -171,28 +193,8 @@ feature -- Preferences
 
 feature {NONE} -- Preferences
 
-	frozen preference_namespace: STRING
-			-- Every rule has a separate sub namespace so that in the preferences dialog,
-			-- the rule will have its own folder.
-		do
-			Result := "rule." + name + "."
-		end
-
 	option_name_severity: STRING = "severity"
 			-- A name of a severity option.
-
-	frozen is_integer_string_within_bounds (a_value: attached READABLE_STRING_GENERAL; a_lower, a_upper: INTEGER): BOOLEAN
-			-- Is the integer string `a_value' within the interval [`a_lower', `a_upper']?
-		require
-			is_integer: a_value.is_integer
-		local
-			int: INTEGER
-		do
-			int := a_value.to_integer
-			if int >= a_lower and int <= a_upper then
-				Result := True
-			end
-		end
 
 invariant
 	checks_some_classes: checks_library_classes or checks_nonlibrary_classes

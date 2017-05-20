@@ -101,18 +101,22 @@ feature -- Get
 		do
 			create f.make_with_path (file_name)
 			c := f.count
-			f.open_read
-			from
-				create s.make (c)
---				done := False
-			until
-				done
-			loop
-				f.read_stream (1_024)
-				s.append (f.last_string)
-				done := f.last_string.count < 1_024 or f.exhausted
+			if c > 0 and then f.exists and then f.is_access_readable then
+				f.open_read
+				from
+					create s.make (c)
+	--				done := False
+				until
+					done
+				loop
+					f.read_stream (1_024)
+					s.append (f.last_string)
+					done := f.last_string.count < 1_024 or f.exhausted
+				end
+				f.close
+			else
+				s := ""
 			end
-			f.close
 
 			text := s
 		end

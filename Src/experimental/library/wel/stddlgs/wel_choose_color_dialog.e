@@ -232,14 +232,14 @@ feature {NONE} -- Externals
 
 	cwel_choose_color_set_lpfnhook (ptr: POINTER; value: POINTER)
 		external
-			"C inline use <windows.h>"
+			"C inline use <chooseco.h>"
 		alias
 			"((LPCHOOSECOLOR) $ptr)->lpfnHook = (LPCCHOOKPROC) $value;"
 		end
 
 	cwel_choose_color_get_hwndowner (ptr: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <chooseco.h>"
 		alias
 			"return ((LPCHOOSECOLOR) $ptr)->hwndOwner;"
 		end
@@ -261,7 +261,7 @@ feature {NONE} -- Externals
 
 	cwel_choose_color_get_lpfnhook (ptr: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <chooseco.h>"
 		alias
 			"return (EIF_POINTER) ((LPCHOOSECOLOR) $ptr)->lpfnHook;"
 		end

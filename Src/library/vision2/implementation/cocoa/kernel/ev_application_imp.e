@@ -20,8 +20,6 @@ inherit
 			copy
 		end
 
-	EV_APPLICATION_ACTION_SEQUENCES_IMP
-
 	EXECUTION_ENVIRONMENT
 		rename
 			sleep as nano_sleep,
@@ -298,7 +296,7 @@ feature {NONE} -- Implementation
 invariant
 	idle_action_mutex_valid: {PLATFORM}.is_thread_capable implies idle_action_mutex /= Void
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

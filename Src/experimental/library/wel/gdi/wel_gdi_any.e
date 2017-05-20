@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "This class is an ancestor to all GDI classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -65,10 +65,9 @@ feature {NONE} -- Removal
 	delete_gdi_object
 			-- Delete the current gdi object
 		local
-			p: POINTER
 			delete_result: BOOLEAN
 		do
-			if item /= p then
+			if item /= default_pointer then
 				debug ("WEL_GDI_COUNT")
 					decrease_gdi_objects_count
 				end
@@ -79,7 +78,7 @@ feature {NONE} -- Removal
 						print (Current)
 					end
 				end
-				item := p
+				item := default_pointer
 			end
 		ensure
 			not_exists: not exists
@@ -122,18 +121,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_GDI_ANY
-
+end

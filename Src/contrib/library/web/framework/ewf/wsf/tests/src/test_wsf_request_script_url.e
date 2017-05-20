@@ -32,7 +32,7 @@ feature -- Execution
 
 feature -- Tests
 
-	test_script_url
+	test_script_url_1
 		local
 			req: WSF_REQUEST
 			s: READABLE_STRING_8
@@ -48,7 +48,15 @@ feature -- Tests
 				)
 			s := req.script_url ("/new/path/")
 			assert ("script_url (/new/path/) = %""+s+"%" but should be %"/foo/bar/new/path/%"", s.same_string ("/foo/bar/new/path/"))
+			assert ("valid path info", req.path_info.same_string_general ("/test/home"))
+			assert ("valid path info", req.percent_encoded_path_info.same_string_general ("/test/home"))
+		end
 
+	test_script_url_2
+		local
+			req: WSF_REQUEST
+			s: READABLE_STRING_8
+		do
 			--| Case #2			
 			req := new_request (<<
 						["REQUEST_METHOD", "GET"],
@@ -60,7 +68,13 @@ feature -- Tests
 				)
 			s := req.script_url ("/new/path/")
 			assert ("script_url (/new/path/) = %""+s+"%" but should be %"/foo/bar/new/path/%"", s.same_string ("/foo/bar/new/path/"))
+		end
 
+	test_script_url_3
+		local
+			req: WSF_REQUEST
+			s: READABLE_STRING_8
+		do
 			--| Case #3		
 			req := new_request (<<
 						["REQUEST_METHOD", "GET"],
@@ -72,7 +86,48 @@ feature -- Tests
 				)
 			s := req.script_url ("/new/path/")
 			assert ("script_url (/new/path/) = %""+s+"%" but should be %"/intranet/collab/cms/new/path/%"", s.same_string ("/intranet/collab/cms/new/path/"))
+			assert ("path_info", req.path_info.same_string_general ("/home"))
+			assert ("percent_encoded_path_info", req.percent_encoded_path_info.same_string_general ("/home"))
+		end
 
+	test_script_url_4
+		local
+			req: WSF_REQUEST
+			s: READABLE_STRING_8
+		do
+			--| Case #3		
+			req := new_request (<<
+						["REQUEST_METHOD", "GET"],
+						["QUERY_STRING", ""],
+						["REQUEST_URI", "/support/"],
+						["SCRIPT_NAME", "/support/esa_api.exe"],
+						["PATH_INFO", ""]
+					>>
+				)
+			s := req.script_url ("/new/path/")
+			assert ("script_url (/new/path/) = %""+s+"%" but should be %"/support/new/path/%"", s.same_string ("/support/new/path/"))
+			assert ("path_info", req.path_info.same_string_general (""))
+			assert ("percent_encoded_path_info", req.percent_encoded_path_info.same_string_general (""))
+		end
+
+	test_script_url_5
+		local
+			req: WSF_REQUEST
+			s: READABLE_STRING_8
+		do
+			--| Case #3		
+			req := new_request (<<
+						["REQUEST_METHOD", "GET"],
+						["QUERY_STRING", ""],
+						["REQUEST_URI", "/support/"],
+						["SCRIPT_NAME", "/support/esa_api.exe"],
+						["PATH_INFO", "/"]
+					>>
+				)
+			s := req.script_url ("/new/path/")
+			assert ("script_url (/new/path/) = %""+s+"%" but should be %"/support/new/path/%"", s.same_string ("/support/new/path/"))
+			assert ("path_info", req.path_info.same_string_general ("/"))
+			assert ("percent_encoded_path_info", req.percent_encoded_path_info.same_string_general ("/"))
 		end
 
 feature {NONE} -- Implementation

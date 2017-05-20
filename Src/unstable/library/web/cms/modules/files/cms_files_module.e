@@ -97,7 +97,7 @@ feature -- Access: router
 		do
 			map_uri_template_agent (a_router, "/" + uploads_location, agent execute_upload (?, ?, a_api), Void) -- Accepts any method GET, HEAD, POST, PUT, DELETE, ...
 			map_uri_template_agent (a_router, "/" + uploads_location + "{filename}", agent display_uploaded_file_info (?, ?, a_api), a_router.methods_get)
-			map_uri_template_agent (a_router, "/" + uploads_location + "remove/{filename}", agent remove_file (?, ?, a_api), a_router.methods_get)
+			map_uri_template_agent (a_router, "/" + uploads_location + "{filename}/remove", agent remove_file (?, ?, a_api), a_router.methods_get)
 		end
 
 	uploads_location: STRING = "upload/"
@@ -133,6 +133,7 @@ feature -- Handler
 		local
 			body: STRING_8
 			r: CMS_RESPONSE
+			l_file_url: STRING_8
 			f: CMS_FILE
 			md: detachable CMS_FILE_METADATA
 			fn: READABLE_STRING_32
@@ -145,7 +146,7 @@ feature -- Handler
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 
 					-- add style
-				r.add_style (r.url ("/module/" + name + "/files/css/files.css", Void), Void)
+				r.add_style (r.module_resource_url (Current, "/files/css/files.css", Void), Void)
 
 				create body.make_empty
 
@@ -193,12 +194,18 @@ feature -- Handler
 					else
 						body.append ("NA")
 					end
+					body.append ("<br/>%N")
+
+						--| File Url
+					l_file_url := req.script_url ("/" + l_files_api.file_link (f).location)
+					body.append ("<strong>File URL: </strong>")
+					body.append (l_file_url)
 					body.append ("<br/><br/>%N")
 
-					body.append ("<a class=%"button%" href=%"" + req.script_url ("/" + l_files_api.file_link (f).location) + "%">Download</a>%N")
-					body.append ("<a class=%"button%" href=%"" + req.script_url ("/" + uploads_location + "remove/" + f.filename) + "%">Remove</a>%N")
+					body.append ("<a class=%"button%" href=%"" + l_file_url + "%">Download</a>%N")
+					body.append ("<a class=%"button%" href=%"" + req.script_url ("/" + uploads_location + f.filename + "/remove") + "%">Remove</a>%N")
 					body.append ("</div>%N") -- metadata
-
+					body.append ("<br/>%N")
 					body.append ("<div class=%"overview%">")
 					if
 						attached f.relative_path.extension as ext and then
@@ -230,45 +237,78 @@ feature -- Handler
 		local
 			body: STRING_8
 			r: CMS_RESPONSE
+			i: INTEGER
 		do
-			if req.is_get_head_request_method or req.is_post_request_method then
+			if req.is_get_head_request_method then
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 				create body.make_empty
 				body.append ("<h1> Upload files </h1>%N")
 
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-
 					-- set style
-				r.add_style (r.url ("/module/" + name + "/files/css/files.css", void), void)
-
-					-- add JS for dropzone
-				r.add_javascript_url (r.url ("/module/" + name + "/files/js/dropzone.js", void))
-				r.add_style (r.url ("/module/" + name + "/files/js/dropzone.css", void), void)
+				r.add_style (r.module_resource_url (Current, "/files/css/files.css", Void), Void)
 
 				if api.has_permission (upload_files_permission) then
-						-- create body
-					body.append ("<p>Please choose some file(s) to upload.</p>")
-
+					body.append ("<p>Please choose file(s) to upload.</p>")
 						-- create form to choose files and upload them
 					body.append ("<div class=%"upload-files%">")
-					body.append ("<form action=%"" + r.url (uploads_location, Void) + "%" class=%"dropzone%">")
-					body.append ("</form>%N")
-					body.append ("<div class=%"center%"><a class=%"button%" href=%""+ r.url (uploads_location, Void) +"%">Upload Files</a></div>")
-					body.append ("</div>")
-					if req.is_post_request_method then
-						process_uploaded_files (req, api, body)
+
+					if attached {WSF_STRING} req.item ("basic_upload") as p and then p.is_case_insensitive_equal ("yes") then
+							-- No dropzone
+						body.append ("<form action=%"" + r.url (uploads_location, Void) + "%" method=%"post%" enctype=%"multipart/form-data%">")
+						body.append ("<input type=%"hidden%" name=%"basic_upload%" value=%"yes%"/>%N")
+						from
+							i := 1
+						until
+							i > 5
+						loop
+							body.append ("<input type=%"file%" name=%"filenames[]%" id=%"filenames[]%" size=%"60%"/><br/>%N")
+							i := i + 1
+						end
+						body.append ("<br/><input type=%"submit%" value=%"Upload File(s)%"/>")
+						body.append ("</form>%N")
+						body.append ("<a href=%""+ r.url (uploads_location, Void) +"?basic_upload=no%">Use advanced file uploading.</a>%N")
+					else
+							-- add JS for dropzone
+						r.add_javascript_url (r.module_resource_url (Current, "/files/js/dropzone.js", Void))
+						r.add_style (r.module_resource_url (Current, "/files/js/dropzone.css", Void), Void)
+
+							-- create form to choose files and upload them
+						body.append ("<form action=%"" + r.url (uploads_location, Void) + "%" class=%"dropzone%">")
+						body.append ("</form>%N")
+
+						body.append ("<a href=%""+ r.url (uploads_location, Void) +"?basic_upload=yes%">Use basic file uploading.</a>%N")
 					end
-				else
-					create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
+					body.append ("</div>")
 				end
 
-					-- Build the response.
-				if r.has_permission (browse_files_permission) then
-					append_uploaded_file_album_to (req, api, body)
-				else
-					r.add_warning_message ("You are not allowed to browse files!")
+				if req.is_get_head_request_method then
+						-- Build the response.
+					if r.has_permission (browse_files_permission) then
+						body.append ("<br/><div class=%"center%"><a class=%"button%" href=%""+ r.url (uploads_location, Void) +"%">Refresh uploaded</a></div>")
+
+						append_uploaded_file_album_to (req, api, body)
+					else
+						r.add_warning_message ("You are not allowed to browse files!")
+					end
 				end
 
 				r.set_main_content (body)
+			elseif req.is_post_request_method then
+				if api.has_permission (upload_files_permission) then
+					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+					create body.make_empty
+					body.append ("<h1> Upload files </h1>%N")
+					process_uploaded_files (req, api, body)
+					if attached {WSF_STRING} req.item ("basic_upload") as p and then p.is_case_insensitive_equal ("yes") then
+						r.set_redirection (r.url (uploads_location, Void) + "?basic_upload=yes")
+					else
+						r.set_redirection (r.url (uploads_location, Void))
+					end
+					r.set_main_content (body)
+				else
+					create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
+					r.set_main_content ("You are not allowed to upload file!")
+				end
 			else
 				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
 			end
@@ -392,7 +432,7 @@ feature -- Handler
 
 									-- add remove button
 								a_output.append ("<td>")
-								a_output.append ("<a class=%"button%" href=%"" + req.script_url ("/" + uploads_location + "remove/" + f.filename) + "%">Remove</a>%N")
+								a_output.append ("<a class=%"button%" href=%"" + req.script_url ("/" + uploads_location + f.filename + "/remove") + "%">Remove</a>%N")
 								a_output.append ("</td>%N")
 
 								a_output.append ("</tr>%N")

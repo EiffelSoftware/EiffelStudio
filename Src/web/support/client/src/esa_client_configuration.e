@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 	implementation_service_root: STRING
 			-- Root uri to drive the interaction.
 
-	default_timeout: INTEGER = 300
+	default_timeout: INTEGER = 30
 			-- Default time the request is allowed to take.
 
 	config_mode: BOOLEAN

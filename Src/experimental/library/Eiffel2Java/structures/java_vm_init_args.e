@@ -94,7 +94,7 @@ feature -- Settings
 				create l_options_area.make (nb * l_option.structure_size)
 				c_set_options (item, l_options_area.item)
 				c_set_n_options (item, a_options.count)
-				create l_internal_options.make (1, a_options.count)
+				create l_internal_options.make_filled (({JAVA_VM_OPTION}).default,1, a_options.count)
 				internal_options := l_internal_options
 				j := 1
 			until
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

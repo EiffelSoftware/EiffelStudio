@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Windows implementation for SD_SYSTEM_SETTER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,11 +42,8 @@ feature -- Command
 
 	is_remote_desktop: BOOLEAN
 			-- <Precursor>
-		local
-			l_routine: WEL_WINDOWS_ROUTINES
 		do
-			create l_routine
-			Result := l_routine.is_terminal_service
+			Result := (create {WEL_WINDOWS_ROUTINES}).is_terminal_service
 		end
 
 	is_during_pnd: BOOLEAN
@@ -64,7 +61,7 @@ feature -- Command
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

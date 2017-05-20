@@ -164,11 +164,24 @@ feature -- Settings
 			Result := session.ignore_content_length
 		end
 
-	buffer_size: NATURAL
-			-- Set the buffer size for request. This option will
-			-- only be set if buffer_size is positive
+	buffer_size: INTEGER
+			-- Buffer size for request,
+			-- initialized from the session buffer_size value, or default 2_048.
 		do
-			Result := session.buffer_size
+			Result := session.buffer_size.to_integer_32
+			if Result <= 0 then
+				Result := 2_048
+			end
+		end
+
+	chunk_size: INTEGER
+			-- Chunk size for request, when "Transfer-Encoding: chunked"
+			-- initialized from the session buffer_size value, or default 2_048.
+		do
+			Result := session.chunk_size.to_integer_32
+			if Result <= 0 then
+				Result := 2_048
+			end
 		end
 
 	default_response_charset: detachable READABLE_STRING_8
@@ -183,73 +196,8 @@ feature -- Settings
 			Result := session.is_insecure
 		end
 
-feature {NONE} -- Utilities
-
-	append_parameters_to_url (a_parameters: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]; a_url: STRING)
-			-- Append parameters `a_parameters' to `a_url'
-		require
-			a_url_attached: a_url /= Void
-		local
-			l_first_param: BOOLEAN
-		do
-			if a_parameters.count > 0 then
-				if a_url.index_of ('?', 1) > 0 then
-					l_first_param := False
-				elseif a_url.index_of ('&', 1) > 0 then
-					l_first_param := False
-				else
-					l_first_param := True
-				end
-
-				from
-					a_parameters.start
-				until
-					a_parameters.after
-				loop
-					if l_first_param then
-						a_url.append_character ('?')
-					else
-						a_url.append_character ('&')
-					end
-					a_url.append (urlencode (a_parameters.key_for_iteration))
-					a_url.append_character ('=')
-					a_url.append (urlencode (a_parameters.item_for_iteration))
-					l_first_param := False
-					a_parameters.forth
-				end
-			end
-		end
-
-feature {NONE} -- Utilities: encoding
-
-	url_encoder: URL_ENCODER
-		once
-			create Result
-		end
-
-	urlencode (s: READABLE_STRING_32): READABLE_STRING_8
-			-- URL encode `s'
-		do
-			Result := url_encoder.encoded_string (s)
-		end
-
-	urldecode (s: READABLE_STRING_8): READABLE_STRING_32
-			-- URL decode `s'
-		do
-			Result := url_encoder.decoded_string (s)
-		end
-
-	stripslashes (s: STRING): STRING
-		do
-			Result := s.string
-			Result.replace_substring_all ("\%"", "%"")
-			Result.replace_substring_all ("\'", "'")
-			Result.replace_substring_all ("\/", "/")
-			Result.replace_substring_all ("\\", "\")
-		end
-
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

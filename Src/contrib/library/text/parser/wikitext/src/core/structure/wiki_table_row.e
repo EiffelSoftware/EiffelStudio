@@ -26,6 +26,18 @@ feature {NONE} -- Initialization
 			initialize
 		end
 
+feature -- Access
+
+	style: detachable READABLE_STRING_8
+			-- Optional style.		
+
+feature -- Element change
+
+	set_style (s: like style)
+		do
+			style := s
+		end
+
 feature -- Visitor
 
 	process (a_visitor: WIKI_VISITOR)
@@ -34,7 +46,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2017, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

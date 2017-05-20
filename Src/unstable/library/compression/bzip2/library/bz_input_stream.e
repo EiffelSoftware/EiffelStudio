@@ -1,13 +1,11 @@
-note
-
+﻿note
     description:"[
     		Implements basic INPUT_STREAM as a stream filtered by the bzip2 compression
         	algorithms. Source must be a file which has been compressed by bzip2 before.
         ]"
-
     library:    "ELJ/base"
     author:     "Uwe Sander"
-	copyright:  "Copyright (c) 2002, Uwe Sander and others"
+	copyright:  "Copyright (c) 2002-2017, Uwe Sander, Eiffel Software and others"
     license:    "Eiffel Forum License v1"
     date:       "$Date$"
     revision:   "$Revision$"
@@ -65,7 +63,7 @@ feature --
 				create name.make (0)
 			end
 
-			create buffer.make (1, 2048)
+			create buffer.make_filled ('%U', 1, 2048)
 
 			if attached bz_file as l_bz_file then
 				l_bz_file.open (name_)

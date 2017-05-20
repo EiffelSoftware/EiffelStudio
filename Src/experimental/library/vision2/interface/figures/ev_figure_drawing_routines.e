@@ -11,7 +11,7 @@ deferred class
 	EV_FIGURE_DRAWING_ROUTINES
 
 obsolete
-	"Use EV_MODEL_DRAWING_ROUTINES."
+	"Use EV_MODEL_DRAWING_ROUTINES. [2017-05-31]"
 
 inherit
 	ANY

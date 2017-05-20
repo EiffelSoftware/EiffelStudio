@@ -1,7 +1,6 @@
 package netssl
 
 project
-	net_ssl = "net_ssl-safe.ecf"
 	net_ssl = "net_ssl.ecf"
 
 note

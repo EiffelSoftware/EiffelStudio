@@ -212,7 +212,6 @@ feature -- Basic operations
 			minute_val := 0
 			fine_second_val := 0
 			pos1 := 1
-			pos2 := 1
 			has_seps := has_separators (s)
 			from
 				i := 1
@@ -371,7 +370,7 @@ invariant
 	valid_value_implies_parsing: is_value_valid implies parsed
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

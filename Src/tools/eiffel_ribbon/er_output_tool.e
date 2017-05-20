@@ -1,60 +1,46 @@
-note
+﻿note
 	description: "[
-					EiffelRibbon output tool
-					It display outputs from UICC.exe, link.exe etc
-							]"
+			EiffelRibbon output tool
+			It display outputs from UICC.exe, link.exe etc
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	ER_OUTPUT_TOOL
 
+inherit
+	EV_SHARED_APPLICATION
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make
-			-- Creation method
+	make (m: SD_DOCKING_MANAGER)
+			-- Creation method.
 		do
 			create widget
-			create content.make_with_widget (widget, "ER_OUTPUT_TOOL")
+			create content.make_with_widget (widget, "ER_OUTPUT_TOOL", m)
 
-			build_ui
-		end
-
-	build_docking_content
-			-- Build docking content
-		do
 			content.set_long_title ("Output")
 			content.set_short_title ("Output")
 			content.set_type ({SD_ENUMERATION}.tool)
-		end
 
-	build_ui
-			-- Build GUI
-		do
-			build_docking_content
 			widget.disable_edit
+
+			m.contents.extend (content)
+			content.set_auto_hide ({SD_ENUMERATION}.bottom)
+
+			if
+				attached shared_environment.is_application_processor and then
+				attached shared_environment.application as a
+			then
+				a.add_idle_action (agent append_output_in_idle)
+			end
 		end
 
 feature -- Command
-
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Attach to docking manager
-		require
-			not_void: a_docking_manager /= Void
-		local
-			l_env: EV_ENVIRONMENT
-		do
-			a_docking_manager.contents.extend (content)
-			content.set_auto_hide ({SD_ENUMERATION}.bottom)
-
-			create l_env
-			if attached l_env.application as l_app then
-				l_app.add_idle_action (agent append_output_in_idle)
-			end
-		end
 
 	append_output (a_string: STRING_32)
 			-- Append output
@@ -146,7 +132,7 @@ feature {NONE} -- Multi threading
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

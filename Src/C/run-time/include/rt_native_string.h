@@ -53,6 +53,7 @@ extern "C" {
 #ifdef EIF_WINDOWS
 
 	/* Macro used to manipulate native string, i.e: (wchar_t*) */
+#define RT_NATIVE_STRING_FORMAT "%ls"
 #define rt_nstrlen wcslen /* size of string */
 #define rt_nstrncpy wcsncpy /* Copy n characters of one string to another */
 #define rt_nstrcpy wcscpy /* Copy one string to another */
@@ -78,6 +79,7 @@ extern "C" {
 #else /* not EIF_WINDOWS */
 
 	/* Macro used to manipulate native string, i.e: (char*) */
+#define RT_NATIVE_STRING_FORMAT "%s"
 #define rt_nstrlen  strlen /* size of string */
 #define rt_nstrncpy strncpy /* Copy n characters of one string to another */
 #define rt_nstrcpy strcpy /* Copy one string to another */

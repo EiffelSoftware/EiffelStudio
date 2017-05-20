@@ -1,0 +1,12 @@
+test_name 	 obsolete-assigner-command
+test_description Obsolete assigner commands should be detected. See also test#codeanalysis022 and test#valid290.
+
+define_date     YESTERDAY -1
+
+copy_sub	Ace $TEST Ace
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	validity_warning TEST Obsolete Obsolete Obsolete Obsolete Obsolete
+
+test_end

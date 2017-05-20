@@ -396,7 +396,7 @@ feature -- Notifications
 
 feature -- Obsolete
 
-	clear_selection obsolete "Use ``delete_selection''"
+	clear_selection obsolete "Use `delete_selection' [2017-05-31]"
 			-- Delete the current selection.
 		require
 			exists: exists

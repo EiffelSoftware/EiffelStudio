@@ -7,11 +7,14 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	EV_MODEL_DRAWER
 
 inherit
 	EV_MODEL_DRAWING_ROUTINES
+
+create
+	make_with_drawable
 
 feature {NONE} -- Initialization
 
@@ -41,7 +44,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	draw_grid
+	draw_grid (a_world: EV_MODEL_WORLD)
 			-- Draw grid on canvas.
 			-- `world.point' is the origin of the grid.
 		local
@@ -49,8 +52,8 @@ feature -- Basic Operations
 			gx, gy, h, w: INTEGER
 			l_drawable: like drawable
 		do
-			gx := world.grid_x
-			gy := world.grid_y
+			gx := a_world.grid_x
+			gy := a_world.grid_y
 			l_drawable := drawable
 			l_drawable.set_foreground_color (default_colors.grey)
 			h := l_drawable.height
@@ -80,12 +83,9 @@ feature -- Access
 	drawable: EV_DRAWABLE
 			-- Drawable surface (screen, drawing area or pixmap).
 
-	world: EV_MODEL_WORLD
-		deferred
-		end
-
 	Default_colors: EV_STOCK_COLORS
-		deferred
+		once
+			create Result
 		end
 
 feature -- Element Change
@@ -887,16 +887,24 @@ feature -- Figure drawing
 			end
 			d.set_foreground_color (f.foreground_color)
 
+				-- Top line
 			d.draw_segment (p2x, p0y, p3x, p0y)
+				-- Right line
 			d.draw_segment (p1x, p3y, p1x, p4y)
+				-- Bottom line
 			d.draw_segment (p5x - 1, p1y, p4x, p1y)
+				-- Left line
 			d.draw_segment (p0x, p2y - 1, p0x, p5y)
 
 			pi2 := (pi / 2).truncated_to_real
 
+				-- Top left corner
 			d.draw_arc (p0x, p0y, (p2x - p0x) * 2, (p2y - p0y) * 2, pi2, pi2)
+				-- Top right corner
 			d.draw_arc (p1x - (p1x - p3x) * 2, p0y, (p1x - p3x) * 2, (p3y - p0y) * 2, 0, pi2)
+				-- Bottom right corner
 			d.draw_arc (p1x - (p1x - p4x) * 2 + 1, p1y - (p1y - p4y) * 2 + 1, (p1x - p4x) * 2, (p1y - p4y) * 2, 3* pi2, pi2)
+				-- Bottom left corner
 			d.draw_arc (p0x, p1y - (p1y - p5y) * 2 + 1, (p5x - p0x) * 2, (p1y - p5y) * 2, pi.truncated_to_real, pi2)
 
 			if f.dashed_line_style then
@@ -1719,14 +1727,14 @@ invariant
 	drawable_not_void: drawable /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -385,13 +385,13 @@ feature -- Basic operation
 			l_rn: STRING_32
 			l_ecf: STRING_32
 			l_origin_location: IMMUTABLE_STRING_32
-			l_old_content, l_new_content: STRING_32
+			l_old_content, l_new_content: STRING_8
+			l_is_crlf_eol: BOOLEAN
 			u: FILE_UTILITIES
 			utf: UTF_CONVERTER
 		do
 			if attached path_details (fn.name) as l_info then
 				l_rn := root_directory.name
-				l_rn.replace_substring_all ("\", "/")
 
 				create f.make_with_path (fn)
 				debug
@@ -407,6 +407,7 @@ feature -- Basic operation
 					until
 						f.exhausted
 					loop
+						l_is_crlf_eol := f.last_string.ends_with ("%R")
 						create l_line.make_from_string_general (f.last_string)
 						l_old_content.append (f.last_string)
 						l_old_content.append_character ('%N')
@@ -435,6 +436,7 @@ feature -- Basic operation
 											report_warning ({STRING_32} "Multiple option to replace %"" + l_ecf.to_string_32 + {STRING_32} "%" in file %"" + fn.name + {STRING_32} "%"")
 										end
 										l_new_path := relative_path (l_location, fn.name, l_rn, root_base_name)
+										l_new_path := harmonized_path_with (l_new_path, l_ecf)
 									else
 										if not u.file_exists (l_ecf) then
 											report_warning ({STRING_32} "Unable to find %"" + l_ecf.to_string_32 + {STRING_32} "%" from file %"" + fn.name + {STRING_32} "%"")
@@ -458,6 +460,9 @@ feature -- Basic operation
 							end
 						end
 						l_new_content.append (utf.string_32_to_utf_8_string_8 (l_line))
+						if l_is_crlf_eol then
+							l_new_content.append_character ('%R')
+						end
 						l_new_content.append_character ('%N')
 						f.read_line
 					end
@@ -494,7 +499,7 @@ feature -- Basic operation
 								else
 									if not is_simulation then
 										f.open_write
-										f.put_string (l_new_content.as_string_8)
+										f.put_string (l_new_content)
 										f.close
 									end
 									report_progress ({STRING_32} "Updated %"" + f.path.name + {STRING_32} "%"")
@@ -780,12 +785,14 @@ feature {NONE} -- Implementation
 			lst, blst: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			s: STRING_32
 			t: STRING_32
+			sep: READABLE_STRING_GENERAL
 		do
-			lst := segments_from_string (a_lib_ecf)
+			sep := segment_separator_from (a_lib_ecf)
+			lst := segments_from_string (a_lib_ecf, False)
 
 			if bn = Void then
 				-- relative
-				blst := segments_from_string (a_ecf)
+				blst := segments_from_string (a_ecf, False)
 
 				from
 					lst.start
@@ -814,7 +821,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				create s.make (a_lib_ecf.count)
-				append_segments_to_string (lst, s)
+				append_segments_to_string (lst, s, sep)
 			else
 				s := reduced_path (a_lib_ecf, 0)
 				t := reduced_path (rn, 0)
@@ -831,6 +838,26 @@ feature {NONE} -- Implementation
 			end
 
 			Result := s
+		end
+
+	harmonized_path_with (v: READABLE_STRING_GENERAL; ref: READABLE_STRING_GENERAL): STRING_32
+		local
+			sep: READABLE_STRING_GENERAL
+		do
+			sep := segment_separator_from (ref)
+			if sep.same_string (segment_separator_from (v)) then
+				create Result.make_from_string_general (v)
+			else
+				create Result.make (v.count)
+				across
+					segments_from_string (v, True) as ic
+				loop
+					if not Result.is_empty then
+						Result.append_string_general (sep)
+					end
+					Result.append_string_general (ic.item)
+				end
+			end
 		end
 
 	path_starts_with (a_path_name: READABLE_STRING_32; a_base_name: READABLE_STRING_32): BOOLEAN
@@ -926,7 +953,7 @@ feature {NONE} -- Implementation
 							end
 						end
 					end
-					create Result.make (l_uuid, segments_from_string (l_dir), l_dir, l_file)
+					create Result.make (l_uuid, segments_from_string (l_dir, False), l_dir, l_file)
 					Result.set_is_redirection (l_is_redirection)
 					if err then
 						Result.set_is_error (True)
@@ -947,12 +974,27 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Path manipulation
 
+	segment_separator_from (fn: READABLE_STRING_GENERAL): STRING
+			-- Segment separator used in `fn` if any, otherwise default is '\'.
+		local
+			i,j: INTEGER
+		do
+			i := fn.last_index_of ('/', fn.count)
+			j := fn.last_index_of ('\', fn.count)
+			Result := "\"
+			if i > j then
+				Result := "/"
+			end
+		end
+
 	reduced_path (fn: READABLE_STRING_GENERAL; a_depth: INTEGER): STRING_32
 		local
 			lst: like segments_from_string
+			sep: READABLE_STRING_GENERAL
 		do
+			sep := segment_separator_from (fn)
 			create Result.make (fn.count)
-			lst := segments_from_string (fn)
+			lst := segments_from_string (fn, False)
 			if a_depth > 0 then
 				from
 					lst.start
@@ -965,15 +1007,15 @@ feature {NONE} -- Path manipulation
 			if fn.starts_with ({STRING_32} "/") then
 				Result.append_character ('/')
 			end
-			append_segments_to_string (lst, Result)
+			append_segments_to_string (lst, Result, sep)
 		end
 
 	common_segment_count (p1, p2: detachable READABLE_STRING_GENERAL): INTEGER
 			-- Number of segments common between p1 and p2 starting from the left.
 		do
 			if
-				(p1 /= Void and then attached segments_from_string (p1) as lst_1) and
-				(p2 /= Void and then attached segments_from_string (p2) as lst_2)
+				(p1 /= Void and then attached segments_from_string (p1, False) as lst_1) and
+				(p2 /= Void and then attached segments_from_string (p2, False) as lst_2)
 			then
 				from
 					lst_1.start
@@ -993,22 +1035,22 @@ feature {NONE} -- Path manipulation
 			end
 		end
 
-	append_segments_to_string (lst: LIST [READABLE_STRING_GENERAL]; s: STRING_GENERAL)
+	append_segments_to_string (lst: LIST [READABLE_STRING_GENERAL]; s: STRING_GENERAL; sep: READABLE_STRING_GENERAL)
 		do
 			across
 				lst as curs
 			loop
 				if
 					not s.is_empty and then
-					not s.ends_with ("/")
+					not s.ends_with (sep)
 				then
-					s.append ("/")
+					s.append (sep)
 				end
 				s.append (curs.item)
 			end
 		end
 
-	segments_from_string (fn: READABLE_STRING_GENERAL): ARRAYED_LIST [READABLE_STRING_GENERAL]
+	segments_from_string (fn: READABLE_STRING_GENERAL; a_keep_each_segment: BOOLEAN): ARRAYED_LIST [READABLE_STRING_GENERAL]
 		local
 			c_slash, c_bslash: NATURAL_32
 			i,p,n: INTEGER
@@ -1035,18 +1077,20 @@ feature {NONE} -- Path manipulation
 			if i > p then
 				lst.extend (fn.substring (p, n))
 			end
-			from
-				lst.start
-			until
-				lst.after
-			loop
-				if not lst.isfirst and then lst.item.same_string ("..") then
-					lst.remove_left
-					lst.remove
-				elseif lst.item.same_string (".") then
-					lst.remove
-				else
-					lst.forth
+			if not a_keep_each_segment then
+				from
+					lst.start
+				until
+					lst.after
+				loop
+					if not lst.isfirst and then lst.item.same_string ("..") then
+						lst.remove_left
+						lst.remove
+					elseif lst.item.same_string (".") then
+						lst.remove
+					else
+						lst.forth
+					end
 				end
 			end
 			Result := lst
@@ -1058,7 +1102,7 @@ feature {NONE} -- Path manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

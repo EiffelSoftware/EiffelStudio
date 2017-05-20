@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Execution recorder"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -223,13 +223,13 @@ feature -- Event
 			debug ("RT_DBG_RECORD")
 				dtrace_indent (dep);
 				dtrace ("enter_feature (")
-				dtrace (ref.generating_type)
+				dtrace (ref.generating_type.name)
 				dtrace (", " + cid.out + ", " + fid.out + ", " + dep.out + ")");
 				dtrace (" [[" + record_count.out + "]]%N")
 			end
 			monitor_record_count
 			create r.make (Current, ref, cid, fid, dep)
-			increment_records_count (+1)
+			increment_records_count (1)
 
 --| We do not use it anymore, however, we might need to reuse it, with external calls
 --| need to check/test this. Since we don't have hands on what the external could do on the Eiffel objects
@@ -246,7 +246,7 @@ feature -- Event
 						print ("Warning: enter mismatch !!!%N")
 						print (" top: depth=" + r.depth.out + " ->" + r.debug_output + "%N")
 						print (" now: depth=" + dep.out)
-						print (" obj=" + ref.generating_type)
+						print (" obj=" + ref.generating_type.name)
 						print (" cid=" + cid.out)
 						print (" fid=" + fid.out)
 						print ("%N")
@@ -281,11 +281,10 @@ feature -- Event
 			debug ("RT_DBG_RECORD")
 				dtrace_indent (dep);
 				dtrace ("enter_rescue (")
-				dtrace (ref.generating_type)
+				dtrace (ref.generating_type.name)
 				dtrace (", " + dep.out + ")");
 				dtrace (" [[" + record_count.out + "]]%N")
 			end
-			r := top_callstack_record
 			from
 				r := top_callstack_record
 			until
@@ -323,7 +322,7 @@ feature -- Event
 			debug ("RT_DBG_RECORD")
 				dtrace_indent (dep);
 				dtrace ("leave_feature (")
-				dtrace (ref.generating_type + " <" + ($ref).out + ">")
+				dtrace (ref.generating_type.name + " <" + ($ref).out + ">")
 				dtrace (", " + cid.out + ", " + fid.out + ", " + dep.out + "). %N")
 			end
 
@@ -340,19 +339,19 @@ feature -- Event
 						--| and thus discard previous recorded data
 					clear_recording_data
 				else
+					n := r
 					if r.depth > dep then
 						debug ("RT_DBG_WARNING")
 							print ("Warning: leave mismatch !!!%N")
 							print (" top: depth=" + r.depth.out + " ->" + r.debug_output + "%N")
 							print (" now: depth=" + dep.out)
-							print (" obj=" + ref.generating_type)
+							print (" obj=" + ref.generating_type.name)
 							print (" cid=" + cid.out)
 							print (" fid=" + fid.out)
 							print ("%N")
 							print ("%N")
 						end
 						from
-							n := r
 						until
 							n = Void or else n.depth = dep
 						loop
@@ -363,8 +362,6 @@ feature -- Event
 							r.deep_close_until (n)
 							n.close_call_records
 						end
-					else
-						n := r
 					end
 					if n = Void then
 						debug ("RT_DBG_RECORD")
@@ -548,41 +545,41 @@ feature -- Replay
 			debug ("RT_DBG_REPLAY")
 				print ("replay_to_point (" + a_id + ") -start-%N")
 			end
-			if attached replayed_call as l_curr then
-				--| Current replayed call exists
-				if attached {like callstack_record_by_id} callstack_record_by_id (a_id) as l_req then
+			if
+					--| Current replayed call exists
+				attached replayed_call as l_curr and then
 					--| a_id correspond to an existing call
+				attached {like callstack_record_by_id} callstack_record_by_id (a_id) as l_req and then
 					--| now find the associated replayable call (with rt_information_available)
-					if attached {like callstack_record} l_req.associated_replayable_call as l_next then
-						d1 := l_curr.depth
-						d2 := l_next.depth
-						if d2 > d1 then
-								--| Go forth in the stack
-							from
-							until
-								d1 >= d2
-							loop
-								replay_forth
-								d1 := d1 + 1
-								check valid_replayed_depth: is_call_at_depth (replayed_call, d1) end
-							end
-							check valid_replayed_depth: is_call_at_depth (replayed_call, d2) end
-						elseif d2 < d1 then
-								--| Go back in the stack
-							from
-							until
-								d1 <= d2
-							loop
-								replay_back
-								d1 := d1 - 1
-								check valid_replayed_depth: is_call_at_depth (replayed_call, d1) end
-							end
-							check valid_replayed_depth: is_call_at_depth (replayed_call, d2) end
-						end
-
-						Result := True
+				attached {like callstack_record} l_req.associated_replayable_call as l_next
+			then
+				d1 := l_curr.depth
+				d2 := l_next.depth
+				if d2 > d1 then
+						--| Go forth in the stack
+					from
+					until
+						d1 >= d2
+					loop
+						replay_forth
+						d1 := d1 + 1
+						check valid_replayed_depth: is_call_at_depth (replayed_call, d1) end
 					end
+					check valid_replayed_depth: is_call_at_depth (replayed_call, d2) end
+				elseif d2 < d1 then
+						--| Go back in the stack
+					from
+					until
+						d1 <= d2
+					loop
+						replay_back
+						d1 := d1 - 1
+						check valid_replayed_depth: is_call_at_depth (replayed_call, d1) end
+					end
+					check valid_replayed_depth: is_call_at_depth (replayed_call, d2) end
 				end
+
+				Result := True
 			end
 
 			debug ("RT_DBG_REPLAY")
@@ -765,8 +762,8 @@ feature -- Replay operation
 							debug ("RT_DBG_REPLAY")
 								print ("replay_back -> " + l_records.item_for_iteration.debug_output + " %N")
 							end
-							if attached {RT_DBG_VALUE_RECORD} l_records.item_for_iteration as ot_rec then
-								if attached {RT_DBG_VALUE_RECORD} ot_rec.current_value_record as val then
+							if attached l_records.item_for_iteration as ot_rec then
+								if attached ot_rec.current_value_record as val then
 									chgs.extend ([ot_rec, val])
 									ot_rec.restore (val)
 								else
@@ -817,7 +814,6 @@ feature -- Replay operation
 						create rs.make
 						replay_stack := rs
 					end
-					n := r
 				until
 					done
 				loop
@@ -833,8 +829,8 @@ feature -- Replay operation
 							debug ("RT_DBG_REPLAY")
 								print ("replay_left -> " + ot_records.item_for_iteration.debug_output + " %N")
 							end
-							if attached {RT_DBG_VALUE_RECORD} ot_records.item_for_iteration as ot_rec then
-								if attached {RT_DBG_VALUE_RECORD} ot_rec.current_value_record as val then
+							if attached ot_records.item_for_iteration as ot_rec then
+								if attached ot_rec.current_value_record as val then
 									chgs.extend ([ot_rec, val])
 									ot_rec.restore (val)
 								else
@@ -873,14 +869,16 @@ feature -- Replay operation
 	replay_left_to_first
 			-- Replay execution left as many times as needed to be at the entry of the feature
 		local
-			r,n: like replayed_call
+			r,prev: like replayed_call
 		do
 			from
 				r := replayed_call
-				r := n
 			until
-				n = Void or else n /= r or else r = Void or else r.replayed_position_is_first
+				r = Void
+				or else r.replayed_position_is_first
+				or else prev = r -- In case replayed_call is always the same.
 			loop
+				prev := r
 				replay_left
 				r := replayed_call
 			end
@@ -1047,7 +1045,7 @@ feature -- Replay operation
 				from
 					r := replayed_call
 				until
-					rs.count = 0
+					rs.is_empty
 				loop
 						--| pop last entry
 					rs.finish
@@ -1110,7 +1108,7 @@ feature -- Measurement
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

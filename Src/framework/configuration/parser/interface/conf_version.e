@@ -82,6 +82,22 @@ feature -- Status
 
 	is_two_digit_minimum_minor: BOOLEAN
 			-- Is current minor version printed on at least 2 digits?
+		obsolete "Use `minimum_length_for_minor` [2017-05-31]"
+		do
+			Result := minimum_length_for_minor = 2
+		end
+
+	minimum_length_for_major: NATURAL_8
+			-- Minimum length of current `major` string representation.
+
+	minimum_length_for_minor: NATURAL_8
+			-- Minimum length of current `minor` string representation.
+
+	minimum_length_for_release: NATURAL_8
+			-- Minimum length of current `release` string representation.
+
+	minimum_length_for_build: NATURAL_8
+			-- Minimum length of current `build` string representation.
 
 feature -- Access, stored in configuration file
 
@@ -101,16 +117,13 @@ feature -- Access, stored in configuration file
 			-- The complete version.
 		do
 			create Result.make_empty
-			Result.append_integer (major)
+			append_natural_16_to (major, minimum_length_for_major, Result)
 			Result.append_character ('.')
-			if is_two_digit_minimum_minor and then minor < 10 then
-				Result.append_character ('0')
-			end
-			Result.append_integer (minor)
+			append_natural_16_to (minor, minimum_length_for_minor, Result)
 			Result.append_character ('.')
-			Result.append_integer (release)
+			append_natural_16_to (release, minimum_length_for_release, Result)
 			Result.append_character ('.')
-			Result.append_integer (build)
+			append_natural_16_to (build, minimum_length_for_build, Result)
 		end
 
 	company: detachable STRING_32
@@ -129,10 +142,47 @@ feature -- Settings
 
 	set_is_two_digit_mimimum_minor (v: BOOLEAN)
 			-- Set `is_two_digit_minimum_minor' to `v'.
+		obsolete "Use `set_minimum_length_for_minor` [2017-05-31]"
 		do
-			is_two_digit_minimum_minor := v
+			if v then
+				minimum_length_for_minor := 2
+			else
+				minimum_length_for_minor := 0
+			end
 		ensure
 			is_two_digit_minimum_minor_set: is_two_digit_minimum_minor = v
+		end
+
+	set_minimum_length_for_major (v: NATURAL_8)
+			-- Set `minimum_length_for_major' to `v'.
+		do
+			minimum_length_for_major := v
+		ensure
+			minimum_length_for_major_length_set: minimum_length_for_major = v
+		end
+
+	set_minimum_length_for_minor (v: NATURAL_8)
+			-- Set `minimum_length_for_minor' to `v'.
+		do
+			minimum_length_for_minor := v
+		ensure
+			minimum_length_for_minor_length_set: minimum_length_for_minor = v
+		end
+
+	set_minimum_length_for_release (v: NATURAL_8)
+			-- Set `minimum_length_for_release' to `v'.
+		do
+			minimum_length_for_release := v
+		ensure
+			minimum_length_for_release_length_set: minimum_length_for_release = v
+		end
+
+	set_minimum_length_for_build (v: NATURAL_8)
+			-- Set `minimum_length_for_build' to `v'.
+		do
+			minimum_length_for_build := v
+		ensure
+			minimum_length_for_build_length_set: minimum_length_for_build = v
 		end
 
 feature {CONF_ACCESS}  -- Update, stored in configuration file
@@ -288,8 +338,29 @@ feature -- Output
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	append_natural_16_to (v: NATURAL_16; a_min_len: NATURAL_8; a_output: STRING_32)
+			-- Append natural 16 value `v` to a_output with a minimum of `a_min_len` digits.
+		local
+			n: INTEGER
+		do
+			n := v.out.count
+			if n < a_min_len then
+				from
+					n := a_min_len - n
+				until
+					n = 0
+				loop
+					a_output.append_character ('0')
+					n := n - 1
+				end
+			end
+			a_output.append_natural_16 (v)
+		end
+
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

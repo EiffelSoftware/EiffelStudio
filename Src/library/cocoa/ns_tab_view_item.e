@@ -81,7 +81,7 @@ feature -- Setting the Color
 
 	set_color (a_color: NS_COLOR)
 		obsolete
-			"Deprecated. NSTabViewItems use a color supplied by the current theme."
+			"Deprecated. NSTabViewItems use a color supplied by the current theme [2017-05-31]."
 		do
 			{NS_TAB_VIEW_ITEM_API}.set_color(item, a_color.item)
 		end
@@ -119,4 +119,14 @@ feature -- Accessing the Parent Tab View
 			create Result.share_from_pointer ({NS_TAB_VIEW_ITEM_API}.tab_view (item))
 		end
 
+note
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

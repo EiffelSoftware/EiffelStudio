@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Generate a text representation of the configuration in xml."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,11 +46,17 @@ feature {NONE} -- Initialization
 			make_namespace_and_schema (namespace_1_0_0, schema_1_0_0)
 		end
 
-	make_namespace_and_schema (a_namespace: like namespace; a_schema: like schema)
+	make_namespace_and_schema (a_namespace: detachable READABLE_STRING_GENERAL; a_schema: READABLE_STRING_GENERAL)
 			-- Create with `a_namespace' and `a_schema'.
+		require
+			a_schema_set: a_schema /= Void
 		do
-			namespace := a_namespace
-			schema := a_schema
+			if a_namespace = Void then
+				namespace := Void
+			else
+				namespace := a_namespace.as_string_32
+			end
+			schema := a_schema.as_string_32
 			create text.make_empty
 		end
 
@@ -116,6 +122,10 @@ feature -- Visit nodes
 			if attached a_redirection.uuid as l_uuid then
 				append_text (" uuid=%"" + l_uuid.out + "%"")
 			end
+			if attached a_redirection.message as msg then
+				append_text_attribute ("message", msg)
+			end
+
 			append_text_attribute ("location", a_redirection.redirection_location)
 			append_text (">%N")
 			Precursor (a_redirection)
@@ -234,7 +244,7 @@ feature -- Visit nodes
 				append_tag ("version", Void, l_name, l_val)
 			end
 			append_file_rule (a_target.internal_file_rule)
-			append_options (a_target.internal_options, Void)
+			append_target_options (a_target.internal_options)
 			from
 				create l_name.make (2)
 				l_name.force ("name")
@@ -257,25 +267,47 @@ feature -- Visit nodes
 				append_tag ("setting", Void, l_name, l_val)
 				l_sorted_list.forth
 			end
-			if a_target.immediate_setting_concurrency.is_set then
-				if includes_this_or_after (namespace_1_7_0) then
-						-- Use "concurrency" setting.
-					l_val.wipe_out
-					l_val.force (s_concurrency)
-					l_val.force (a_target.immediate_setting_concurrency.item)
-				else
-						-- Use "multithreaded" setting.
-					l_val.wipe_out
-					l_val.force (s_multithreaded)
-					if a_target.immediate_setting_concurrency.index = {CONF_TARGET}.setting_concurrency_index_none then
-						l_val.force ("false")
+			if
+				attached a_target.internal_options as o and then
+				attached o.concurrency_capability as concurrency_capability and then
+				concurrency_capability.is_root_set
+			then
+					-- Before `namespace_1_15_0' inclusively this was a setting.
+					-- In `namespace_1_16_0' and above this is a capaility that is handled elsewhere.
+				if includes_this_or_before (namespace_1_15_0) then
+					if includes_this_or_after (namespace_1_7_0) then
+							-- Use "concurrency" setting.
+						l_val.wipe_out
+						l_val.force (s_concurrency)
+						l_val.force (concurrency_capability.custom_root)
 					else
-							-- There is no way to specify all concurrent variants,
-							-- so only multithreaded variant is used.
-						l_val.force ("true")
+							-- Use "multithreaded" setting.
+						l_val.wipe_out
+						l_val.force (s_multithreaded)
+						if concurrency_capability.custom_root_index = {CONF_TARGET_OPTION}.concurrency_index_none then
+							l_val.force ("false")
+						else
+								-- There is no way to specify all concurrent variants,
+								-- so only multithreaded variant is used.
+							l_val.force ("true")
+						end
 					end
+					append_tag ("setting", Void, l_name, l_val)
 				end
-				append_tag ("setting", Void, l_name, l_val)
+			end
+			if
+				includes_this_or_after (namespace_1_16_0) and then
+				attached a_target.internal_options as o and then
+				o.has_capability
+			then
+				append_start_tag (tag_capability)
+					-- Add capabilities in alphabetical order as specified in ECF schema.
+				append_ordered_capability (o.catcall_safety_capability, tag_capability_catcall_detection)
+					-- TODO: append_unordered_capability (o.code_capability, tag_capability_code)
+				append_ordered_capability (o.concurrency_capability, tag_capability_concurrency)
+					-- TODO: append_unordered_capability (o.platform_capability, tag_capability_platform)
+				append_ordered_capability (o.void_safety_capability, tag_capability_void_safety)
+				append_end_tag (tag_capability)
 			end
 			append_mapping (a_target.internal_mapping)
 			append_externals (a_target.internal_external_include, "include", "location")
@@ -505,6 +537,52 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	append_tag_open (name: READABLE_STRING_32)
+			-- Append indented open tag for element of name `name` that can be used to append attributes.
+			-- The tag should be closed with `append_tag_close` or `append_tag_close_empty`.
+			-- See also: `append_start_tag`, `append_end_tag`.
+		local
+			u: UTF_CONVERTER
+		do
+			append_text_indent ("<")
+			append_text (u.string_32_to_utf_8_string_8 (name))
+		end
+
+	append_tag_close
+			-- Append a close sequence for a start tag previously open with `append_tag_open` and prepare it for adding nested elements.
+		do
+			indent := indent + 1
+			append_text (">%N")
+		end
+
+	append_tag_close_empty
+			-- Append a close sequence for an empty start tag previously open with `append_tag_open`
+			-- and move to the next line.
+		do
+			append_text ("/>%N")
+		end
+
+	append_start_tag (name: READABLE_STRING_32)
+			-- Append start tag for an element of name `name` without attributes and move to the next line.
+			-- Equivalent to the sequence `append_tag_open (name); append_tag_close`.
+			-- See also: `append_end_tag`.
+		do
+			append_tag_open (name)
+			append_tag_close
+		end
+
+	append_end_tag (name: READABLE_STRING_32)
+			-- Append end tag for a previously started element of name `name` and move to the next line.
+			-- See also: `append_start_tag`, `append_tag_close`.
+		local
+			u: UTF_CONVERTER
+		do
+			indent := indent - 1
+			append_text_indent ("</")
+			append_text (u.string_32_to_utf_8_string_8 (name))
+			append_text (">%N")
+		end
+
 	append_text_indent (a_text: STRING)
 			-- Append `a_text' at the current `indent' intendation level.
 		require
@@ -513,12 +591,12 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			from
-				i := 1
+				i := indent
 			until
-				i > indent
+				i <= 0
 			loop
 				text.append_character ('%T')
-				i := i + 1
+				i := i - 1
 			end
 			text.append (a_text)
 		end
@@ -862,8 +940,35 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_options (an_options: detachable CONF_OPTION; a_class: detachable READABLE_STRING_GENERAL)
-			-- Append `an_options', optionally for `a_class'.
+	append_target_options (o: detachable CONF_TARGET_OPTION)
+			-- Append target options `o' (if any).
+		do
+			append_group_options (o)
+		end
+
+	append_class_options (o: detachable CONF_OPTION; c: READABLE_STRING_GENERAL)
+			-- Append class options `o' (if any) for a calss `c'.
+		do
+			if attached o and then not o.is_empty_for (namespace) then
+				append_text_indent ("<class_option")
+				append_text_attribute ("class", c)
+				append_general_options (o)
+				append_text_indent ("</class_option>%N")
+			end
+		end
+
+	append_group_options (o: detachable CONF_OPTION)
+			-- Append group options `o' (if any).
+		do
+			if attached o and then not o.is_empty_for (namespace) then
+				append_text_indent ("<option")
+				append_general_options (o)
+				append_text_indent ("</option>%N")
+			end
+		end
+
+	append_general_options (an_options: CONF_OPTION)
+			-- Append `an_options' in an already open option element.
 		local
 			l_str: detachable STRING_32
 			l_debugs, l_warnings: detachable STRING_TABLE [BOOLEAN]
@@ -873,156 +978,170 @@ feature {NONE} -- Implementation
 			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 		do
-			if an_options /= Void and then not an_options.is_empty then
-				if a_class /= Void and then not a_class.is_empty then
-					append_text_indent ("<class_option")
-					append_text_attribute ("class", a_class)
+			if an_options.is_trace_configured then
+				append_text (" trace=%""+an_options.is_trace.out.as_lower+"%"")
+			end
+			if an_options.is_profile_configured then
+				append_text (" profile=%""+an_options.is_profile.out.as_lower+"%"")
+			end
+			if an_options.is_optimize_configured then
+				append_text (" optimize=%""+an_options.is_optimize.out.as_lower+"%"")
+			end
+			if an_options.is_debug_configured then
+				append_text (" debug=%""+an_options.is_debug.out.as_lower+"%"")
+			end
+			if an_options.is_warning_configured then
+				append_text (" warning=%""+an_options.is_warning.out.as_lower+"%"")
+			end
+			if an_options.is_msil_application_optimize_configured then
+				append_text (" msil_application_optimize=%""+an_options.is_msil_application_optimize.out.as_lower+"%"")
+			end
+			if an_options.is_full_class_checking_configured then
+				append_text (" full_class_checking=%""+an_options.is_full_class_checking.out.as_lower+"%"")
+			end
+			if
+				is_before_or_equal (namespace, namespace_1_15_0) and then
+				an_options.catcall_detection.is_set
+			then
+					-- Starting from `namespace_1_16_0` the option is treated as capability.
+				append_text (" cat_call_detection=%""+an_options.catcall_detection.out+"%"")
+			end
+			if an_options.is_attached_by_default_configured then
+				append_text (" is_attached_by_default=%""+an_options.is_attached_by_default.out.as_lower+"%"")
+			end
+			if (an_options.is_obsolete_routine_type_configured or else an_options.is_obsolete_routine_type) and then is_after_or_equal (namespace, namespace_1_15_0) then
+				append_text (" is_obsolete_routine_type=%""+an_options.is_obsolete_routine_type.out.as_lower+"%"")
+			end
+			if
+				is_before_or_equal (namespace, namespace_1_15_0) and then
+				an_options.void_safety.is_set
+			then
+					-- Starting from `namespace_1_16_0` the option is treated as capability.
+				if is_after_or_equal (namespace, namespace_1_11_0) then
+						-- Current namespace.
+					l_str := an_options.void_safety.out
 				else
-					append_text_indent ("<option")
-				end
-
-				if an_options.is_trace_configured then
-					append_text (" trace=%""+an_options.is_trace.out.as_lower+"%"")
-				end
-				if an_options.is_profile_configured then
-					append_text (" profile=%""+an_options.is_profile.out.as_lower+"%"")
-				end
-				if an_options.is_optimize_configured then
-					append_text (" optimize=%""+an_options.is_optimize.out.as_lower+"%"")
-				end
-				if an_options.is_debug_configured then
-					append_text (" debug=%""+an_options.is_debug.out.as_lower+"%"")
-				end
-				if an_options.is_warning_configured then
-					append_text (" warning=%""+an_options.is_warning.out.as_lower+"%"")
-				end
-				if an_options.is_msil_application_optimize_configured then
-					append_text (" msil_application_optimize=%""+an_options.is_msil_application_optimize.out.as_lower+"%"")
-				end
-				if an_options.is_full_class_checking_configured then
-					append_text (" full_class_checking=%""+an_options.is_full_class_checking.out.as_lower+"%"")
-				end
-				if an_options.catcall_detection.is_set then
-					append_text (" cat_call_detection=%""+an_options.catcall_detection.out+"%"")
-				end
-				if an_options.is_attached_by_default_configured then
-					append_text (" is_attached_by_default=%""+an_options.is_attached_by_default.out.as_lower+"%"")
-				end
-				if an_options.is_obsolete_routine_type_configured or else an_options.is_obsolete_routine_type and then is_after_or_equal (namespace, namespace_1_15_0) then
-					append_text (" is_obsolete_routine_type=%""+an_options.is_obsolete_routine_type.out.as_lower+"%"")
-				end
-				if an_options.void_safety.is_set then
-					if is_after_or_equal (namespace, namespace_1_11_0) then
-							-- Current namespace.
-						l_str := an_options.void_safety.out
+						-- Earlier namespaces with less void-safety levels.
+					inspect
+						an_options.void_safety.index
+					when {CONF_OPTION}.void_safety_index_none then
+						l_str := "none"
+					when
+						{CONF_OPTION}.void_safety_index_conformance,
+						{CONF_OPTION}.void_safety_index_initialization
+					then
+						l_str := "initialization"
 					else
-							-- Earlier namespaces with less void-safety levels.
-						inspect
-							an_options.void_safety.index
-						when {CONF_OPTION}.void_safety_index_none then
-							l_str := "none"
-						when
-							{CONF_OPTION}.void_safety_index_conformance,
-							{CONF_OPTION}.void_safety_index_initialization
-						then
-							l_str := "initialization"
-						else
-							l_str := "all"
-						end
-						if is_after_or_equal (namespace, namespace_1_9_0) then
+						l_str := "all"
+					end
+					if is_after_or_equal (namespace, namespace_1_9_0) then
+						append_text_attribute ("is_void_safe",
 							if an_options.void_safety.index = {CONF_OPTION}.void_safety_index_all then
-								append_text (" is_void_safe=%"true%"")
+								"true"
 							else
-								append_text (" is_void_safe=%"false%"")
-							end
-						end
-					end
-					append_text (" void_safety=%"" + l_str + "%"")
-				end
-				if an_options.syntax.is_set then
-					append_text (" syntax=%"" + an_options.syntax.out + "%"")
-				end
-				l_str := an_options.local_namespace
-				if l_str /= Void and then not l_str.is_empty then
-					append_text_attribute ("namespace", l_str)
-				end
-				append_text (">%N")
-
-				indent := indent + 1
-				append_description_tag (an_options.description)
-
-				l_debugs := an_options.debugs
-				if l_debugs /= Void and then not l_debugs.is_empty then
-					create l_sorted_list.make_from_array (l_debugs.current_keys)
-					create l_sorter.make (create {STRING_COMPARATOR}.make)
-					l_sorter.sort (l_sorted_list)
-					from
-						l_sorted_list.start
-					until
-						l_sorted_list.after
-					loop
-						append_text_indent ("<debug")
-						append_text_attribute ("name", l_sorted_list.item_for_iteration)
-						append_text (" enabled=%""+l_debugs.item (l_sorted_list.item_for_iteration).out.as_lower+"%"/>%N")
-						l_sorted_list.forth
+								"false"
+							end)
 					end
 				end
+				append_text_attribute (o_void_safety, l_str)
+			end
+			if an_options.syntax.is_set then
+				append_text (" syntax=%"" + an_options.syntax.out + "%"")
+			end
+			l_str := an_options.local_namespace
+			if l_str /= Void and then not l_str.is_empty then
+				append_text_attribute ("namespace", l_str)
+			end
+			append_text (">%N")
 
-				l_assertions := an_options.assertions
-				if l_assertions /= Void then
-					create l_a_name.make (5)
-					create l_a_val.make (5)
-					if l_assertions.is_precondition then
-						l_a_name.extend ("precondition")
-						l_a_val.extend (l_assertions.is_precondition.out.as_lower)
-					end
-					if l_assertions.is_postcondition then
-						l_a_name.extend ("postcondition")
-						l_a_val.extend (l_assertions.is_postcondition.out.as_lower)
-					end
-					if l_assertions.is_check then
-						l_a_name.extend ("check")
-						l_a_val.extend (l_assertions.is_check.out.as_lower)
-					end
-					if l_assertions.is_invariant then
-						l_a_name.extend ("invariant")
-						l_a_val.extend (l_assertions.is_invariant.out.as_lower)
-					end
-					if l_assertions.is_loop then
-						l_a_name.extend ("loop")
-						l_a_val.extend (l_assertions.is_loop.out.as_lower)
-					end
-					if namespace /= namespace_1_0_0 and then l_assertions.is_supplier_precondition then
-						l_a_name.extend ("supplier_precondition")
-						l_a_val.extend (l_assertions.is_supplier_precondition.out.as_lower)
-					end
+			indent := indent + 1
+			append_description_tag (an_options.description)
 
-					append_tag ("assertions", Void, l_a_name, l_a_val)
+			l_debugs := an_options.debugs
+			if l_debugs /= Void and then not l_debugs.is_empty then
+				create l_sorted_list.make_from_array (l_debugs.current_keys)
+				create l_sorter.make (create {STRING_COMPARATOR}.make)
+				l_sorter.sort (l_sorted_list)
+				from
+					l_sorted_list.start
+				until
+					l_sorted_list.after
+				loop
+					append_text_indent ("<debug")
+					append_text_attribute ("name", l_sorted_list.item_for_iteration)
+					append_text (" enabled=%""+l_debugs.item (l_sorted_list.item_for_iteration).out.as_lower+"%"/>%N")
+					l_sorted_list.forth
+				end
+			end
+
+			l_assertions := an_options.assertions
+			if l_assertions /= Void then
+				create l_a_name.make (5)
+				create l_a_val.make (5)
+				if l_assertions.is_precondition then
+					l_a_name.extend ("precondition")
+					l_a_val.extend (l_assertions.is_precondition.out.as_lower)
+				end
+				if l_assertions.is_postcondition then
+					l_a_name.extend ("postcondition")
+					l_a_val.extend (l_assertions.is_postcondition.out.as_lower)
+				end
+				if l_assertions.is_check then
+					l_a_name.extend ("check")
+					l_a_val.extend (l_assertions.is_check.out.as_lower)
+				end
+				if l_assertions.is_invariant then
+					l_a_name.extend ("invariant")
+					l_a_val.extend (l_assertions.is_invariant.out.as_lower)
+				end
+				if l_assertions.is_loop then
+					l_a_name.extend ("loop")
+					l_a_val.extend (l_assertions.is_loop.out.as_lower)
+				end
+				if namespace /= namespace_1_0_0 and then l_assertions.is_supplier_precondition then
+					l_a_name.extend ("supplier_precondition")
+					l_a_val.extend (l_assertions.is_supplier_precondition.out.as_lower)
 				end
 
-				l_warnings := an_options.warnings
-				if l_warnings /= Void and then not l_warnings.is_empty then
-					create l_sorted_list.make_from_array (l_warnings.current_keys)
-					create l_sorter.make (create {STRING_COMPARATOR}.make)
-					l_sorter.sort (l_sorted_list)
-					from
-						l_sorted_list.start
-					until
-						l_sorted_list.after
-					loop
-						append_text_indent ("<warning name=%""+l_sorted_list.item_for_iteration+"%"")
-						append_text (" enabled=%""+l_warnings.item (l_sorted_list.item_for_iteration).out.as_lower+"%"/>%N")
-						l_sorted_list.forth
-					end
-				end
+				append_tag ("assertions", Void, l_a_name, l_a_val)
+			end
 
-				indent := indent - 1
-				if a_class /= Void and then not a_class.is_empty then
-					append_text_indent ("</class_option>%N")
-				else
-					append_text_indent ("</option>%N")
+			l_warnings := an_options.warnings
+			if l_warnings /= Void and then not l_warnings.is_empty then
+				create l_sorted_list.make_from_array (l_warnings.current_keys)
+				create l_sorter.make (create {STRING_COMPARATOR}.make)
+				l_sorter.sort (l_sorted_list)
+				from
+					l_sorted_list.start
+				until
+					l_sorted_list.after
+				loop
+					append_text_indent ("<warning name=%""+l_sorted_list.item_for_iteration+"%"")
+					append_text (" enabled=%""+l_warnings.item (l_sorted_list.item_for_iteration).out.as_lower+"%"/>%N")
+					l_sorted_list.forth
 				end
+			end
 
+			indent := indent - 1
+		end
+
+	append_ordered_capability (capability: CONF_ORDERED_CAPABILITY; name: READABLE_STRING_32)
+			-- Append capability element of name `name` for capability `capability`.
+		local
+			is_support_set: BOOLEAN
+			is_use_set: BOOLEAN
+		do
+			is_support_set := capability.value.is_set
+			is_use_set := capability.is_root_set
+			if is_support_set or else is_use_set then
+				append_tag_open (name)
+				if is_support_set then
+					append_text_attribute (ca_support, capability.value.item)
+				end
+				if is_use_set then
+					append_text_attribute (ca_use, capability.custom_root)
+				end
+				append_tag_close_empty
 			end
 		end
 
@@ -1125,7 +1244,7 @@ feature {NONE} -- Implementation
 			append_note_tag (a_group)
 			append_description_tag (a_group.description)
 			append_conditionals (a_group.internal_conditions, a_group.is_assembly)
-			append_options (a_group.internal_options, Void)
+			append_group_options (a_group.internal_options)
 			if
 				attached {CONF_VIRTUAL_GROUP} a_group as l_vg and then
 				attached l_vg.renaming as l_renaming
@@ -1148,7 +1267,7 @@ feature {NONE} -- Implementation
 				until
 					l_c_opt.after
 				loop
-					append_options (l_c_opt.item_for_iteration, l_c_opt.key_for_iteration)
+					append_class_options (l_c_opt.item_for_iteration, l_c_opt.key_for_iteration)
 					l_c_opt.forth
 				end
 			end

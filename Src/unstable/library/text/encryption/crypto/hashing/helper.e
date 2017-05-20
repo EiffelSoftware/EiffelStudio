@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Helper routines"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -173,7 +173,7 @@ feature -- Conversion
 	is_hexadecimal_string (s: READABLE_STRING_8): BOOLEAN
 			-- Is `s' an hexadecimal string?
 		do
-			Result := (s.count \\ 2 = 0) and (across s as c all c.item.is_hexa_digit end)
+			Result := s.count \\ 2 = 0 and across s as c all c.item.is_hexa_digit end
 		end
 
 	bytes_from_hexadecimal_string (s: READABLE_STRING_8): SPECIAL [NATURAL_8]
@@ -192,7 +192,7 @@ feature -- Conversion
 				until
 					i > n
 				loop
-					Result [i - 1] := (hexadecimal_to_natural_8 (s [j]) |<< 4)
+					Result [i - 1] := hexadecimal_to_natural_8 (s [j]) |<< 4
 					if s.valid_index (j + 1) then
 						Result [i - 1] := Result [i - 1] + hexadecimal_to_natural_8 (s [j + 1])
 					end
@@ -249,7 +249,7 @@ feature -- Conversion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			set_button_action_before_close (dialog_buttons.yes_button, agent on_apply)
 			set_button_text (dialog_buttons.no_button, interface_names.b_reset)
 			set_button_action_before_close (dialog_buttons.no_button, agent on_reset)
-			set_button_text (dialog_buttons.cancel_button, interface_names.b_cancel)
+			set_button_text (dialog_buttons.cancel_button, interface_names.b_close)
 			set_button_action_before_close (dialog_buttons.cancel_button, agent on_cancel)
 		end
 
@@ -493,7 +493,7 @@ feature {NONE} -- Factory
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

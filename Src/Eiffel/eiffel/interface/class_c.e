@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of a compiled class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -418,23 +418,6 @@ feature -- Status report
 			end
 		end
 
-	has_stable_attribute: BOOLEAN
-			-- Does class contain any stable attribute?
-		do
-			Result :=
-				attached skeleton as s and then
-				s.there_exists (
-					agent (a: ATTR_DESC): BOOLEAN
-						local
-							f: FEATURE_I
-						do
-							f := feature_of_rout_id (a.rout_id)
-							check f /= Void end
-							Result := f.is_attribute and then f.is_stable
-						end
-				)
-		end
-
 feature -- Action
 
 	record_precompiled_class_in_system
@@ -607,8 +590,6 @@ feature -- Expanded rules validity
 			-- (the creators must be up to date)
 		local
 			l_constraint_types: TYPE_SET_A
-			l_formals: like generic_features
-			l_cursor: CURSOR
 			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
 debug ("CHECK_EXPANDED")
@@ -620,18 +601,12 @@ end
 
 				-- Check validity of all formal generic parameters instantiated
 				-- as expanded types.
-			l_formals := generic_features
-			if l_formals /= Void then
-				from
-					l_cursor := l_formals.cursor
-					l_formals.start
-				until
-					l_formals.after
+			if attached generic_features as fs then
+				across
+					fs as f
 				loop
-					l_formals.item_for_iteration.check_expanded (Current)
-					l_formals.forth
+					f.item.check_expanded (Current)
 				end
-				l_formals.go_to (l_cursor)
 				Error_handler.checksum
 			end
 
@@ -662,19 +637,19 @@ end
 feature -- Access: object relative once
 
 	create_object_relative_once_infos (n: INTEGER)
-			-- Create a new `object_relative_once_infos' table
+			-- Create a new `object_relative_once_infos' table.
 		do
 			create object_relative_once_infos.make (n)
 		end
 
 	reset_object_relative_once_infos
-			-- Reset `object_relative_once_infos' to Void .
+			-- Reset `object_relative_once_infos' to Void.
 		do
 			object_relative_once_infos := Void
 		end
 
 	object_relative_once_infos: detachable OBJECT_RELATIVE_ONCE_INFO_TABLE
-			-- List of info about object relative onces associated with Current
+			-- List of info about object relative onces associated with Current.
 
 	object_relative_once_dependances (a_body_index: INTEGER): detachable FEATURE_DEPENDANCE
 			-- feature dependances related to once per object associated with `a_body_index'.
@@ -689,7 +664,7 @@ feature -- Access: object relative once
 		end
 
 	object_relative_once_attribute_with_body_index (a_body_index: INTEGER):	detachable ATTRIBUTE_I
-			-- Info about object relative once associated with Current and an item of `a_body_index'
+			-- Info about object relative once associated with Current and an item of `a_body_index'.
 		require
 			a_body_index_valid: a_body_index /= 0
 		do
@@ -699,7 +674,7 @@ feature -- Access: object relative once
 		end
 
 	object_relative_once_info_of_rout_id_set (a_rout_id_set: ROUT_ID_SET): detachable OBJECT_RELATIVE_ONCE_INFO
-			-- Info about object relative once associated with Current and an item of `a_rout_id_set'
+			-- Info about object relative once associated with Current and an item of `a_rout_id_set'.
 		require
 			a_rout_id_set_not_void: a_rout_id_set /= Void
 		do
@@ -709,7 +684,7 @@ feature -- Access: object relative once
 		end
 
 	object_relative_once_info (a_once_routine_id: INTEGER): detachable OBJECT_RELATIVE_ONCE_INFO
-			-- Info about object relative once associated with Current and `a_once_routine_id'
+			-- Info about object relative once associated with Current and `a_once_routine_id'.
 		do
 			if attached object_relative_once_infos as l_infos then
 				Result := l_infos.item_of_rout_id (a_once_routine_id)
@@ -799,7 +774,7 @@ feature -- Generation
 
 	pass4
 			-- Generation of C files for each type associated to the current
-			-- class
+			-- class.
 			--|Don't forget to modify also `generate_workbench_files' when modifying
 			--|this function
 		do
@@ -1035,16 +1010,16 @@ feature -- Class initialization
 
 feature {NONE} -- Private access
 
-	Any_type: CL_TYPE_A
-			-- Default parent type
+	any_type: CL_TYPE_A
+			-- Default parent type.
 		once
 			create Result.make (System.any_id)
 		ensure
 			any_type_not_void: Result /= Void
 		end
 
-	Any_type_attached: CL_TYPE_A
-			-- Default parent type when it is attached by default
+	any_type_attached: CL_TYPE_A
+			-- Default parent type when it is attached by default.
 		once
 			create Result.make (System.any_id)
 			Result.set_is_attached
@@ -1052,8 +1027,8 @@ feature {NONE} -- Private access
 			any_type_not_void: Result /= Void
 		end
 
-	Any_parent: PARENT_C
-			-- Default compiled parent
+	any_parent: PARENT_C
+			-- Default compiled parent.
 		once
 			create Result
 			Result.set_parent_type (Any_type)
@@ -1065,7 +1040,7 @@ feature
 
 	update_syntactical_relations (old_syntactical_suppliers: like syntactical_suppliers)
 			-- Remove syntactical client/supplier relations and take
-			-- care of possible removed classes
+			-- care of possible removed classes.
 		local
 			a_class: CLASS_C
 			supplier_clients: like syntactical_clients
@@ -1133,7 +1108,7 @@ feature
 		end
 
 	remove_parent_relations
-			-- Remove parent/descendant relations of the Current class
+			-- Remove parent/descendant relations of the Current class.
 		require
 			parents_exists: parents_classes /= Void
 		local
@@ -1165,8 +1140,8 @@ feature
 
 	mark_class (marked_classes: SEARCH_TABLE [INTEGER])
 			-- Mark the class as used in the system
-			-- and propagate to the suppliers
-			-- Used by remove_useless_classes in SYSTEM_I
+			-- and propagate to the suppliers.
+			-- Used by remove_useless_classes in SYSTEM_I.
 		local
 			l_syntactical_suppliers: like syntactical_suppliers
 		do
@@ -1210,21 +1185,21 @@ feature
 		end
 
 	check_types_in_constraints
-			-- Check validity of constraint genericity
+			-- Check validity of constraint genericity.
 		require
 			generics_exists: is_generic
 		do
 		end
 
 	check_constraint_genericity
-			-- Check validity of constraint genericity
+			-- Check validity of constraint genericity.
 		require
 			generics_exists: is_generic
 		do
 		end
 
 	check_constraint_renaming
-			-- Check validity of renaming
+			-- Check validity of renaming.
 			-- Requires feature tables!!
 		do
 		end
@@ -1936,7 +1911,7 @@ feature -- Status Settings
 		end
 
 	set_has_unique
-			-- Set `has_unique' to True
+			-- Set `has_unique' to `True`.
 		do
 			has_unique := True
 		ensure
@@ -1944,7 +1919,7 @@ feature -- Status Settings
 		end
 
 	set_has_expanded
-			-- Set `has_expanded' to True
+			-- Set `has_expanded' to `True`.
 		do
 			has_expanded := True
 		ensure
@@ -2009,7 +1984,7 @@ feature -- Status Settings
 		end
 
 	set_visible_table_size (i: INTEGER)
-			-- Assign `i' to `visible_table_size'
+			-- Assign `i' to `visible_table_size'.
 		require
 			i_positive: i >= 0
 		do
@@ -2019,7 +1994,7 @@ feature -- Status Settings
 		end
 
 	set_is_single (v: BOOLEAN)
-			-- Set `is_single' with `v'
+			-- Set `is_single' with `v'.
 		do
 			is_single := v
 		ensure
@@ -2027,7 +2002,7 @@ feature -- Status Settings
 		end
 
 	set_storable_version (v: like storable_version)
-			-- Set `storable_version' with `v'
+			-- Set `storable_version' with `v'.
 		do
 			storable_version := v
 		ensure
@@ -2037,7 +2012,7 @@ feature -- Status Settings
 feature -- Convenience features
 
 	add_descendant (c: CLASS_C)
-			-- Insert class `c' into the descendant list
+			-- Insert class `c' into the descendant list.
 		require
 			good_argument: c /= Void
 		local
@@ -2052,7 +2027,7 @@ feature -- Convenience features
 		end
 
 	external_name: STRING
-			-- External name
+			-- External name.
 		local
 			l_vis: EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]
 			u: UTF_CONVERTER
@@ -2070,7 +2045,7 @@ feature -- Convenience features
 		end
 
 	assertion_level: ASSERTION_I
-			-- Assertion level of the class
+			-- Assertion level of the class.
 		do
 			if System.in_final_mode then
 					-- In final mode we do not generate assertions
@@ -2088,31 +2063,31 @@ feature -- Convenience features
 		end
 
 	trace_level: OPTION_I
-			-- Trace level of the class
+			-- Trace level of the class.
 		do
 			Result := lace_class.trace_level
 		end
 
 	profile_level: OPTION_I
-			-- Profile level of the class
+			-- Profile level of the class.
 		do
 			Result := lace_class.profile_level
 		end
 
 	optimize_level: OPTIMIZE_I
-			-- Optimization level
+			-- Optimization level.
 		do
 			Result := lace_class.optimize_level
 		end
 
 	debug_level: DEBUG_I
-			-- Debug level
+			-- Debug level.
 		do
 			Result := lace_class.debug_level
 		end
 
 	visible_level: VISIBLE_I
-			-- Visible level
+			-- Visible level.
 		do
 			Result := lace_class.visible_level
 		end
@@ -2413,7 +2388,7 @@ end
 		end
 
 	constraint (i: INTEGER): TYPE_A
-			-- I-th constraint of the class
+			-- `i`-th constraint of the class.
 		require
 			generics_exists: is_generic
 			valid_index: generics.valid_index (i)
@@ -2429,7 +2404,7 @@ end
 		end
 
 	constraint_if_possible (i: INTEGER): TYPE_A
-			-- I-th constraint of the class
+			-- `i`-th constraint of the class.
 		require
 			generics_exists: is_generic
 			valid_index: generics.valid_index (i)
@@ -2447,7 +2422,7 @@ end
 		end
 
 	constraints (i: INTEGER): TYPE_SET_A
-			-- I-th constraint set of the class
+			-- `i`-th constraint set of the class.
 		require
 			generics_exists: is_generic
 			valid_index: generics.valid_index (i)
@@ -2832,7 +2807,6 @@ feature {CLASS_C} -- Incrementality
 			conformance: new_class_type.associated_class.inherits_from (Current)
 		local
 			class_filters: like filters
-			filter: CL_TYPE_A
 			class_filters_cursor: INTEGER
 		do
 			class_filters := filters
@@ -2846,9 +2820,8 @@ feature {CLASS_C} -- Incrementality
 					-- and that this class has some `like Current' then
 					-- we are going to traverse recursively the `filters' list.
 				class_filters_cursor := class_filters.cursor
-					-- Instantiation of the filter with `new_class_type'
-				filter ?= class_filters.item_for_iteration.instantiation_in (new_class_type.type, class_id)
-				if filter /= Void and then not filter.has_formal_generic then
+					-- Instantiation of the filter with `new_class_type'.
+				if attached {CL_TYPE_A} class_filters.item_for_iteration.instantiation_in (new_class_type.type, class_id) as filter and then not filter.has_formal_generic then
 					check
 						has_associated_class: filter.has_associated_class
 					end
@@ -3051,7 +3024,7 @@ feature -- default_create routine
 feature -- Dead code removal
 
 	mark_visible (remover: REMOVER)
-			-- Dead code removal from the visible features
+			-- Dead code removal from the visible features.
 		require
 			visible_level.has_visible
 		do
@@ -3059,7 +3032,7 @@ feature -- Dead code removal
 		end
 
 	has_visible: BOOLEAN
-			-- Has the class some visible features
+			-- Has the class some visible features?
 		do
 			Result := visible_level.has_visible
 		end
@@ -3070,7 +3043,7 @@ feature -- Dead code removal
 feature -- Cecil
 
 	generate_cecil (generated_wrappers: SEARCH_TABLE [STRING])
-			-- Generate cecil table for a class having visible features
+			-- Generate cecil table for a class having visible features.
 		require
 			has_visible: has_visible
 			generated_wrappers_attached: generated_wrappers /= Void
@@ -3084,7 +3057,7 @@ feature -- Cecil
 feature -- Invariant feature
 
 	has_invariant: BOOLEAN
-			-- Has the current class an invariant clause ?
+			-- Has the current class an invariant clause?
 		do
 			Result := invariant_feature /= Void
 		end
@@ -3105,7 +3078,7 @@ feature -- Process the creation feature
 		end
 
 	insert_changed_assertion (a_feature: FEATURE_I)
-			-- Insert `a_feature' in the melted set
+			-- Insert `a_feature' in the melted set.
 		do
 			add_feature_to_melted_set (a_feature)
 			Degree_1.insert_class (Current)
@@ -3161,12 +3134,12 @@ feature -- Initialization
 feature -- Properties
 
 	original_class: CLASS_I
-			-- Original lace class
+			-- Original lace class.
 			--
 			-- See `lace_class' for example.
 
 	lace_class: like original_class
-			-- Lace class (takes overriding into account)
+			-- Lace class (takes overriding into account).
 			--
 			-- e.g. Class in cluster c1 and in override o1
 			--
@@ -3336,14 +3309,14 @@ feature -- Properties
 		end
 
 	clients: ARRAYED_LIST [CLASS_C]
-			-- Clients of the class
+			-- Clients of the class.
 
 	suppliers: SUPPLIER_LIST
 			-- Suppliers of the class in terms of calls
 			-- [Useful for incremental type check].
 
 	generics: EIFFEL_LIST [FORMAL_DEC_AS]
-			-- Formal generical parameters
+			-- Formal generical parameters.
 
 	generic_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER]
 			-- Collect all possible generic derivations inherited or current.
@@ -3376,7 +3349,7 @@ feature -- Properties
 			-- sort on classes.
 
 	is_deferred: BOOLEAN
-			-- Is class deferred ?
+			-- Is class deferred?
 
 	is_interface: BOOLEAN
 			-- Is class an interface for IL code generation?
@@ -3431,7 +3404,7 @@ feature -- Properties
 			-- Is class's features hidden in debugger call stack tool?
 
 	obsolete_message_32: STRING_32
-			-- Obsolete message
+			-- Obsolete message.
 			-- (Void if Current is not obsolete)
 		do
 			if attached obsolete_message as l_m then
@@ -3446,7 +3419,7 @@ feature -- Properties
 			-- Associated custom attributes for assembly if any.
 
 	name: STRING
-			-- Class name
+			-- Class name.
 		do
 			Result := lace_class.name
 		end
@@ -3541,7 +3514,7 @@ feature -- Properties
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
 	text: detachable STRING_8
-			-- Class text
+			-- Class text.
 		do
 			Result := lace_class.text
 		end
@@ -3549,19 +3522,19 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 feature -- Access: Encoding
 
 	encoding: detachable ENCODING
-			-- Encoding detected when reading `text'
+			-- Encoding detected when reading `text'.
 		do
 			Result := lace_class.encoding
 		end
 
 	bom: detachable STRING
-			-- Bom of the encoding detected when reading `text'
+			-- Bom of the encoding detected when reading `text'.
 		do
 			Result := lace_class.bom
 		end
 
 	obsolete_message: STRING
-			-- Obsolete message
+			-- Obsolete message.
 			-- (Void if Current is not obsolete)
 
 feature {NONE} -- Implementation: Properties
@@ -3578,17 +3551,17 @@ feature {NONE} -- Implementation: Properties
 		end
 
 	constrained_type_cache: SPECIAL [detachable TYPE_A]
-			-- Constraining type for each given formal, if there exists one
+			-- Constraining type for each given formal, if there exists one.
 
 	constrained_types_cache: SPECIAL [detachable TYPE_SET_A]
-			-- Constraining types for each given formal
+			-- Constraining types for each given formal.
 			--| In case someone requests a type set for a single constraint this is just fine.
 			--| That is why we have two caches.
 
 feature -- IL code generation
 
 	il_data_name: STRING
-			-- IL class name of class data
+			-- IL class name of class data.
 		require
 			not_is_external: not is_external
 		local
@@ -3627,13 +3600,13 @@ feature -- IL code generation
 feature {NONE} -- IL code generation
 
 	precompiled_namespace: STRING
-			-- Namespace of this class when it is precompiled
+			-- Namespace of this class when it is precompiled.
 
 	precompiled_class_name: STRING
-			-- Name of this class when it is precompiled
+			-- Name of this class when it is precompiled.
 
 	data_prefix: STRING = "Data"
-			-- Prefix in a name of class data
+			-- Prefix in a name of class data.
 
 feature -- status
 
@@ -3717,7 +3690,7 @@ feature -- Access
 		end
 
 	name_in_upper: STRING
-			-- Class name in upper case
+			-- Class name in upper case.
 		do
 			Result := name
 		ensure
@@ -3725,7 +3698,7 @@ feature -- Access
 		end
 
 	ast: CLASS_AS
-			-- Associated AST structure
+			-- Associated AST structure.
 		do
 			if Tmp_ast_server.has (class_id) then
 				Result := Tmp_ast_server.item (class_id)
@@ -3737,7 +3710,7 @@ feature -- Access
 		end
 
 	invariant_ast: INVARIANT_AS
-			-- Associated invariant AST structure
+			-- Associated invariant AST structure.
 		do
 			if invariant_feature /= Void then
 				Result := Inv_ast_server.item (class_id)
@@ -3758,7 +3731,7 @@ feature -- Access
 		end
 
 	frozen feature_with_name_id (a_feature_name_id: INTEGER): E_FEATURE
-			-- Feature whose internal name is `n'
+			-- Feature whose internal name is `n'.
 		require
 			valid_a_feature_name_id: a_feature_name_id > 0
 			has_feature_table: has_feature_table
@@ -3772,7 +3745,7 @@ feature -- Access
 		end
 
 	frozen feature_with_id (a_feature_id: ID_AS): E_FEATURE
-			-- Feature whose internal name is `n'
+			-- Feature whose internal name is `n'.
 		require
 			valid_a_feature_id: a_feature_id /= Void
 			has_feature_table: has_feature_table
@@ -3786,7 +3759,7 @@ feature -- Access
 		end
 
 	frozen feature_with_name_32 (n: STRING_32): E_FEATURE
-			-- Feature whose internal name is `n'
+			-- Feature whose internal name is `n'.
 		require
 			valid_n: n /= Void
 			has_feature_table: has_feature_table
@@ -4071,7 +4044,7 @@ feature -- Access
 		end
 
 	written_in_features: LIST [E_FEATURE]
-			-- List of features defined in current class
+			-- List of features defined in current class.
 		require
 			has_feature_table: has_feature_table
 		do
@@ -4119,7 +4092,7 @@ feature -- Server Access
 		end
 
 	group: CONF_GROUP
-			-- Cluster to which the class belongs to
+			-- Cluster to which the class belongs to.
 		do
 			Result := lace_class.group
 		ensure
@@ -4127,7 +4100,7 @@ feature -- Server Access
 		end
 
 	file_name: IMMUTABLE_STRING_32
-			-- File name of the class
+			-- File name of the class.
 		do
 			Result := lace_class.file_name.name
 		end
@@ -4144,7 +4117,7 @@ feature -- Server Access
 feature -- Comparison
 
 	is_less alias "<" (other: like Current): BOOLEAN
-			-- Order relation on classes
+			-- Order relation on classes.
 		do
 			Result := topological_id < other.topological_id
 		end
@@ -4152,7 +4125,7 @@ feature -- Comparison
 feature -- Output
 
 	class_signature: STRING
-			-- Signature of class
+			-- Signature of class.
 		local
 			old_group: CONF_GROUP
 			gens: like generics
@@ -4221,7 +4194,7 @@ feature -- Output
 		end
 
 	append_name (a_text_formatter: TEXT_FORMATTER)
-			-- Append the name ot the current class in `a_text_formatter'
+			-- Append the name ot the current class in `a_text_formatter'.
 		require
 			non_void_st: a_text_formatter /= Void
 		do
@@ -4314,14 +4287,14 @@ feature {COMPILER_EXPORTER} -- Setting
 		end
 
 	set_encoding_and_bom (a_encoding: like ENCODING; a_bom: like bom)
-			-- Set `encoding' with `a_encoding'
-			-- Set `bom' with `a_bom'
+			-- Set `encoding' with `a_encoding'.
+			-- Set `bom' with `a_bom'.
 		do
 			lace_class.set_encoding_and_bom (a_encoding, a_bom)
 		end
 
 	set_is_hidden_in_debugger_call_stack (v: BOOLEAN)
-			-- Set `is_hidden_in_debugger_call_stack' with `v'
+			-- Set `is_hidden_in_debugger_call_stack' with `v'.
 		do
 			is_hidden_in_debugger_call_stack := v
 		ensure
@@ -4341,7 +4314,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 feature -- Genericity
 
 	invalidate_caches_related_to_generics
-			-- Invalidates the cache which stores computed renamings
+			-- Invalidates the cache which stores computed renamings.
 		do
 			constraint_cache := Void
 		ensure
@@ -4354,28 +4327,20 @@ feature -- Genericity
 		require
 			has_formal: is_generic
 			generic_features_computed: generic_features /= Void
-		local
-			l_formals: like generic_features
-			l_formal: FORMAL_A
-			l_cursor: CURSOR
 		do
-			from
-				l_formals := generic_features
-				l_cursor := l_formals.cursor
-				l_formals.start
+			across
+				generic_features as g
 			until
-				l_formals.after or Result /= Void
+				attached Result
 			loop
-				l_formal ?= l_formals.item_for_iteration.type
 				if
-					l_formal /= Void and then l_formal.position = n and then
+					attached {FORMAL_A} g.item.type as l_formal and then
+					l_formal.position = n and then
 					(not l_formal.has_detachable_mark and not l_formal.has_attached_mark)
 				then
-					Result := l_formals.item_for_iteration
+					Result := g.item
 				end
-				l_formals.forth
 			end
-			l_formals.go_to (l_cursor)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -4385,29 +4350,20 @@ feature -- Genericity
 		require
 			has_formal: is_generic
 			generic_features_computed: generic_features /= Void
-		local
-			l_formals: like generic_features
-			l_formal: FORMAL_A
-			l_cursor: CURSOR
 		do
+			across
+				generic_features as g
 			from
-				l_formals := generic_features
-				l_cursor := l_formals.cursor
-				l_formals.start
 				create Result.make
-			until
-				l_formals.after
 			loop
-				l_formal ?= l_formals.item_for_iteration.type
 				if
-					l_formal /= Void and then l_formal.position = n and then
+					attached {FORMAL_A} g.item.type as l_formal and then
+					l_formal.position = n and then
 					(not l_formal.has_detachable_mark and not l_formal.has_attached_mark)
 				then
-					Result.merge (l_formals.item_for_iteration.rout_id_set)
+					Result.merge (g.item.rout_id_set)
 				end
-				l_formals.forth
 			end
-			l_formals.go_to (l_cursor)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -4905,14 +4861,6 @@ feature {DEGREE_4, NAMED_TUPLE_TYPE_A, TYPE_A_CHECKER} -- Degree 4
 			removed: not degree_4_needed
 		end
 
-	degree_4_needed: BOOLEAN
-			-- Does current class need to be
-			-- processed in Degree 4?
-
-	degree_4_processed: BOOLEAN
-			-- Has current class been processed in
-			-- first pass of Degree 4?
-
 	expanded_modified: BOOLEAN
 			-- Has the expanded status of current
 			-- class been modified?
@@ -4960,6 +4908,16 @@ feature {DEGREE_4, NAMED_TUPLE_TYPE_A, TYPE_A_CHECKER} -- Degree 4
 			supplier_status_modified_set: supplier_status_modified
 		end
 
+feature {DEGREE_4, NAMED_TUPLE_TYPE_A, TYPE_A_CHECKER, AST_CONTEXT} -- Degree 4
+
+	degree_4_needed: BOOLEAN
+			-- Does current class need to be
+			-- processed in Degree 4?
+
+	degree_4_processed: BOOLEAN
+			-- Has current class been processed in
+			-- first pass of Degree 4?
+
 feature {DEGREE_4, INHERIT_TABLE} -- Degree 4
 
 	deferred_modified: BOOLEAN
@@ -4985,7 +4943,7 @@ feature {DEGREE_4, ORIGIN_TABLE, AST_FEATURE_REPLICATION_GENERATOR, CLASS_C} -- 
 			-- List of routine ids that are replicated in `Current'.
 
 	set_replicated_features_list (l: like replicated_features_list)
-			-- Set `replicated_featurs_list' to `l'
+			-- Set `replicated_featurs_list' to `l'.
 		do
 			replicated_features_list := l
 		ensure
@@ -5288,7 +5246,7 @@ invariant
 	-- has_ast: has_ast
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -5319,4 +5277,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CLASS_C
+end

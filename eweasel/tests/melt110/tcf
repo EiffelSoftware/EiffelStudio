@@ -1,0 +1,23 @@
+test_name 	 melted-character_32-is_character_8
+test_description Melted code for a call to {CHARACTER_32}.is_character_8 should not cause "illegal opcode" exception at run-time.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work   NONE exec_output_m
+execute_result ok
+compare        exec_output_m output
+
+compile_frozen
+compile_result   ok
+c_compile_work
+c_compile_result ok
+
+execute_work   NONE exec_output_w
+execute_result ok
+compare        exec_output_w output
+
+test_end

@@ -1,12 +1,8 @@
-note
-
-    description:
-
-        "High level reading interface of libbzip2"
-
+﻿note
+    description: "High level reading interface of libbzip2"
     library:    "ELJ/ifs"
     author:     "Uwe Sander"
-	copyright:  "Copyright (c) 2002, Uwe Sander and others"
+	copyright:  "Copyright (c) 2002-2017, Uwe Sander, Eiffel Software and others"
     license:    "Eiffel Forum License v1"
     date:       "$Date$"
     revision:   "$Revision$"
@@ -88,7 +84,7 @@ feature
 
 			if last_operation >= Ok and then len < a_buffer.count then
 				buf := a_buffer.subarray (a_buffer.lower, a_buffer.lower + len - 1)
-				a_buffer.make (buf.lower, buf.upper)
+				a_buffer.make_filled ('%U', buf.lower, buf.upper)
 				a_buffer.copy (buf)
 			end
 		end
@@ -100,4 +96,4 @@ feature {NONE}
 			Result := fopen (string_to_external (a_name), string_to_external ("rb"))
 		end
 
-end -- class BZFILE_READ
+end

@@ -10,7 +10,7 @@ class
 	EV_SHADOW_DIALOG
 
 obsolete
-	"Use EV_POPUP_WINDOW instead"
+	"Use EV_POPUP_WINDOW instead [2017-05-31]"
 
 inherit
 	EV_POPUP_WINDOW

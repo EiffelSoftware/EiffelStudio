@@ -19,6 +19,9 @@
 #ifndef GE_EXCEPTION_H
 #include "ge_exception.h"
 #endif
+#ifndef GE_STRING_H
+#include "ge_string.h"
+#endif
 #ifdef EIF_WINDOWS
 #include <winbase.h>
 #endif
@@ -83,7 +86,7 @@ char* GE_exception_tag(long code)
 /*
  * Initialize `a_trace'.
  */
-static GE_init_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
+static void GE_init_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
 {
 	a_trace->count = 0;
 	a_trace->capacity = 0;
@@ -97,7 +100,7 @@ static GE_init_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
  * Append `a_string' to `a_trace'.
  * Resize area if needed.
  */
-static GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_trace, char* a_string)
+static void GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_trace, char* a_string)
 {
 	int l_length = strlen(a_string);
 	uint32_t l_new_capacity;
@@ -124,7 +127,7 @@ static GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_trace, c
 /*
  * Wipe out `a_trace'.
  */
-static GE_wipe_out_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
+static void GE_wipe_out_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
 {
 	char* l_area = a_trace->area;
 
@@ -257,7 +260,7 @@ static void GE_print_object_location_reason_effect(GE_exception_trace_buffer* a_
 
 		/* Print object address with 16 digits to be ready when pointers
 		 * will be on 64 bits on all platform. */
-	sprintf(buffer, "<%016" EIF_POINTER_DISPLAY ">  ", (uint64_t) a_object_addr);
+	sprintf(buffer, "<%016" EIF_POINTER_DISPLAY ">  ", (unsigned long)(intptr_t)a_object_addr);
 	GE_append_to_exception_trace_buffer(a_trace, buffer);
 
 	if (l_location_count > 22) {
@@ -378,7 +381,7 @@ static void GE_print_exception_trace(GE_context* context, long code, const char*
 /*
  * Default initialization for `GE_context'.
  */
-GE_context GE_default_context = {0, 0, 0, 0, 0, '\1', 0, 0, {0, 0, 0}, {0, 0, 0}
+GE_context GE_default_context = {0, 0, 0, 0, 0, 0, '\1', 0, 0, {0, 0, 0}, {0, 0, 0}, 1
 #ifdef EIF_THREADS
 	, 0
 #endif
@@ -459,7 +462,7 @@ static void GE_jump_to_last_rescue(GE_context* context)
 		l_exception_trace = context->last_exception_trace.area;
 		if (l_exception_trace) {
 			fprintf(stderr, "Following is the set of recorded exceptions:\n\n");
-			fprintf(stderr, l_exception_trace);
+			fprintf(stderr, "%s", l_exception_trace);
 		} else {
 			fprintf(stderr, "No exception trace found.\n");
 		}
@@ -486,34 +489,34 @@ static void GE_call_set_exception_data(GE_context* context, long code, int new_o
 		ge_exception_manager = context->exception_manager;
 	}
 	if (tag) {
-		l_tag = GE_str8(tag);
+		l_tag = GE_str(tag);
 	} else {
-		l_tag = GE_ms8("", 0);
+		l_tag = GE_ms("", 0);
 	}
 	if (recipient) {
-		l_recipient = GE_str8(recipient);
+		l_recipient = GE_str(recipient);
 	} else {
-		l_recipient = GE_ms8("", 0);
+		l_recipient = GE_ms("", 0);
 	}
 	if (eclass) {
-		l_eclass = GE_str8(eclass);
+		l_eclass = GE_str(eclass);
 	} else {
-		l_eclass = GE_ms8("", 0);
+		l_eclass = GE_ms("", 0);
 	}
 	if (rf_routine) {
-		l_rf_routine = GE_str8(rf_routine);
+		l_rf_routine = GE_str(rf_routine);
 	} else {
-		l_rf_routine = GE_ms8("", 0);
+		l_rf_routine = GE_ms("", 0);
 	}
 	if (rf_class) {
-		l_rf_class = GE_str8(rf_class);
+		l_rf_class = GE_str(rf_class);
 	} else {
-		l_rf_class = GE_ms8("", 0);
+		l_rf_class = GE_ms("", 0);
 	}
 	if (trace && context->exception_trace_enabled) {
-		l_trace = GE_str8(trace);
+		l_trace = GE_str(trace);
 	} else {
-		l_trace = GE_ms8("", 0);
+		l_trace = GE_ms("", 0);
 	}
 	GE_set_exception_data(context, ge_exception_manager, (EIF_INTEGER_32) code, EIF_TEST(new_obj), (EIF_INTEGER_32) signal_code, (EIF_INTEGER_32) error_code, l_tag, l_recipient, l_eclass, l_rf_routine, l_rf_class, l_trace, (EIF_INTEGER_32) line_number, EIF_TEST(is_invariant_entry));
 }
@@ -553,7 +556,7 @@ static void GE_raise_exception(long code, int new_obj, int signal_code, int erro
 		if (l_trace) {
 			fprintf(stderr, "Following is the set of recorded exceptions\n");
 			fprintf(stderr, "NB: The raised panic may have induced completely inconsistent information:\n\n");
-			fprintf(stderr, l_trace);
+			fprintf(stderr, "%s", l_trace);
 		} else {
 			fprintf(stderr, "No exception trace found.\n");
 		}
@@ -608,13 +611,28 @@ void GE_developer_raise(long code, char* meaning, char* message)
 }
 
 /*
+ * Set `in_assertion' to 'not b'.
+ * Return the opposite of previous value.
+ */
+EIF_BOOLEAN GE_check_assert(EIF_BOOLEAN b)
+{
+	EIF_BOOLEAN l_old_value;
+	GE_context* l_context;
+
+	l_context = GE_current_context();
+	l_old_value = EIF_TEST(!(l_context->in_assertion));
+	l_context->in_assertion = (b?0:1);
+	return l_old_value;
+}
+
+/*
  * Check whether the type id of `obj' is not in `type_ids'.
  * If it is, then raise a CAT-call exception. Don't do anything if `obj' is Void.
  * `nb' is the number of ids in `type_ids' and is expected to be >0.
  * `type_ids' is sorted in increasing order.
  * Return `obj'.
  */
-EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, int type_ids[], int nb)
+EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, EIF_TYPE_INDEX type_ids[], int nb)
 {
 	if (obj) {
 		int type_id = obj->id;

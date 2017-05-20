@@ -24,14 +24,12 @@ inherit
 
 	EXCEPTIONS
 
-	PROCESS_FACTORY
-
 	LOCALIZED_PRINTER
 
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Creation procedure.
@@ -42,18 +40,10 @@ feature -- Initialization
 			create {ARRAYED_LIST [IMMUTABLE_STRING_32]} make_flags.make (0)
 
 			parse_arguments
-			if not has_error then
-				process
-			else
-					-- Exit with error code.
-				die (1)
-			end
+			process
 		end
 
-feature -- Status report
-
-	has_error: BOOLEAN
-			-- Did we encountered an error?
+feature {NONE} -- Status report
 
 	target: PATH
 			-- Directory were processing will be done.
@@ -73,108 +63,83 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	parse_arguments
-			-- Parse arguments and report errors, if any.
+			-- Parse arguments.
+			-- If any error is detected, report it and exit application.
 		local
-			l_nb_cpu, l_make, l_make_flags, l_target: IMMUTABLE_STRING_32
-			l_has_error: BOOLEAN
+			l_make_flags: IMMUTABLE_STRING_32
 			l_dir: DIRECTORY
-			l_help: IMMUTABLE_STRING_32
 			l_index: INTEGER
 		do
-			l_help := separate_word_option_value ("help")
-			if l_help /= Void and then l_help.is_empty then
+			if attached separate_word_option_value ("help") as h and then h.is_empty then
 				print_usage
-					-- Exit now
+					-- Exit now.
 				die (0)
+			end
+			if attached separate_word_option_value ("target") as l_target then
+				if l_target.is_empty then
+					report_error ("Error: Missing target directory.%N")
+				end
+				create target.make_from_string (l_target)
+				create l_dir.make_with_path (target)
+				if not l_dir.exists then
+					report_error ("Error: '" + l_target + "' directory does not exist.%N")
+				elseif not l_dir.is_readable or not l_dir.is_writable then
+					report_error ("Error: '" + l_target + "' directory is not readable nor writable.%N")
+				end
 			else
-				l_target := separate_word_option_value ("target")
-				if l_target /= Void then
-					if l_target.is_empty then
-						io.error.put_string ("Error: Missing target directory.%N")
-						print_usage
-						l_has_error := True
-					else
-						create target.make_from_string (l_target)
-						create l_dir.make_with_path (target)
-						if not l_dir.exists then
-							io.error.put_string ("Error: '" + l_target + "' directory does not exist.%N")
-							print_usage
-							l_has_error := True
-						elseif not l_dir.is_readable or not l_dir.is_writable then
-							io.error.put_string ("Error: '" + l_target + "' directory is not readable nor writable.%N")
-							print_usage
-							l_has_error := True
-						end
-					end
+				target := (create {EXECUTION_ENVIRONMENT}).current_working_path
+			end
+
+			l_index := index_of_word_option ("make_flags")
+			if l_index > 0 then
+				if l_index < argument_count then
+						-- We take the argument following `make_flags' as flags for `make_utility'.
+					l_make_flags := argument (l_index + 1)
 				end
-
-				if not l_has_error then
-					l_make := separate_word_option_value ("make")
-					if l_make /= Void then
-						if l_make.is_empty then
-							io.error.put_string ("Error: Missing make utility command.%N")
-							print_usage
-							l_has_error := True
-						else
-							make_utility := "%"" + l_make + "%""
-						end
-					end
-
-					if not l_has_error then
-						l_index := index_of_word_option ("make_flags")
-						if l_index > 0 and l_index < argument_count then
-								-- We take the argument following `make_flags' as flags for `make_utility'.
-							l_make_flags := argument (l_index + 1)
-						end
-						if l_index > 0 then
-							if l_make_flags = Void or else l_make_flags.is_empty then
-									-- Error, we expected a number of CPU
-								io.error.put_string ("Error: Missing make flags.%N")
-								print_usage
-								l_has_error := True
-							else
-								make_flags := l_make_flags.split (' ')
-							end
-						end
-
-						if not l_has_error then
-							l_nb_cpu := separate_word_option_value ("cpu")
-							if l_nb_cpu /= Void then
-								if l_nb_cpu.is_empty or not l_nb_cpu.is_integer then
-										-- Error, we expected a number of CPU
-									io.error.put_string ("Error: Missing number of CPU.%N")
-									print_usage
-									l_has_error := True
-								else
-									number_of_cpu := l_nb_cpu.to_integer
-								end
-							end
-						end
-					end
-				end
-				has_error := l_has_error
-
-				if not l_has_error then
-					if l_target = Void then
-						target := (create {EXECUTION_ENVIRONMENT}).current_working_path
-					end
-					if l_make = Void then
-						if (create {PLATFORM}).is_windows then
-							make_utility := "nmake.exe"
-							if l_make_flags = Void then
-								make_flags.extend ("-s")
-								make_flags.extend ("-nologo")
-							end
-						else
-							make_utility := "make"
-						end
-					end
-					if l_nb_cpu = Void then
-							-- No CPU number was specified, get the information from the OS.
-						compute_number_of_cpu ($number_of_cpu)
-					end
+				if not attached l_make_flags or else l_make_flags.is_empty then
+						-- Error, we expected make flags.
+					report_error ("Error: Missing make flags.%N")
+				else
+					make_flags := l_make_flags.split (' ')
 				end
 			end
+
+			if attached separate_word_option_value ("make") as l_make then
+				if l_make.is_empty then
+					report_error ("Error: Missing make utility command.%N")
+				end
+				make_utility := "%"" + l_make + "%""
+			elseif (create {PLATFORM}).is_windows then
+				make_utility := "nmake.exe"
+				if not attached l_make_flags then
+					make_flags.extend ("-s")
+					make_flags.extend ("-nologo")
+				end
+			else
+				make_utility := "make"
+			end
+
+			if attached separate_word_option_value ("cpu") as l_nb_cpu then
+				if l_nb_cpu.is_empty or not l_nb_cpu.is_integer then
+						-- Error, we expected a number of CPU.
+					report_error ("Error: Missing number of CPU.%N")
+				else
+					number_of_cpu := l_nb_cpu.to_integer
+				end
+			else
+					-- No CPU number was specified, get the information from the OS.
+				compute_number_of_cpu ($number_of_cpu)
+			end
+		end
+
+	report_error (message: STRING)
+			-- Report error `message` and exit.
+		do
+			io.error.put_string (message)
+			print_usage
+			die (1)
+		ensure
+			can_return: False
 		end
 
 	print_usage
@@ -204,33 +169,28 @@ feature {NONE} -- Implementation
 		end
 
 	process
-			-- Call make
+			-- Call make.
 		require
 			target_not_void: target /= Void
 			target_not_empty: not target.is_empty
 			make_utility_not_void: make_utility /= Void
 			make_utility_not_empty: not make_utility.is_empty
 		local
-			l_dirs: ARRAYED_LIST [PATH]
 			l_dir_name: PATH
 			l_name: like target
 			l_dir: DIRECTORY
-			l_worker_thread: WORKER_THREAD
 			i, l_min: INTEGER
 			l_file: RAW_FILE
 			l_sorted_list: ARRAYED_LIST [PATH]
-			l_sorter: QUICK_SORTER [PATH]
 			l_has_e1: BOOLEAN
 		do
 			create l_dir.make_with_path (target)
-			l_dirs := l_dir.entries
+			across
+				l_dir.entries as entry
 			from
-				l_dirs.start
 				create l_sorted_list.make (10)
-			until
-				l_dirs.after
 			loop
-				l_dir_name := l_dirs.item
+				l_dir_name := entry.item
 				if not l_dir_name.is_current_symbol and not l_dir_name.is_parent_symbol then
 					if l_dir_name.name.same_string_general ("E1") then
 						l_has_e1 := True
@@ -250,20 +210,15 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-				l_dirs.forth
 			end
 
-			create l_sorter.make (create {DIRECTORY_SORTER})
-			l_sorter.sort (l_sorted_list)
+			(create {QUICK_SORTER [PATH]}.make (create {DIRECTORY_SORTER})).sort (l_sorted_list)
 
 				-- Process additions of found directories.
-			from
-				l_sorted_list.start
-			until
-				l_sorted_list.after
+			across
+				l_sorted_list as directory
 			loop
-				insert_directory (l_sorted_list.item_for_iteration)
-				l_sorted_list.forth
+				insert_directory (directory.item)
 			end
 
 			if l_has_e1 then
@@ -281,8 +236,7 @@ feature {NONE} -- Implementation
 				until
 					i > l_min
 				loop
-					create l_worker_thread.make (agent process_compilation)
-					l_worker_thread.launch
+					(create {WORKER_THREAD}.make (agent process_compilation)).launch
 					i := i + 1
 				end
 				join_all
@@ -291,11 +245,11 @@ feature {NONE} -- Implementation
 			if failed_actions.count /= 0 then
 					-- An error occurred, signal it.
 				die (1)
-			else
+			elseif
 					-- No need to twin here since we are single threaded again.
-				if not compile_directory (target, make_flags) then
-					die (1)
-				end
+				not compile_directory (target, make_flags)
+			then
+				die (1)
 			end
 		end
 
@@ -306,15 +260,15 @@ feature {NONE} -- Implementation
 			l_failure: BOOLEAN
 		do
 			from
-				l_action ?= actions.removed_element
+				l_action := actions.removed_element
 			until
-				l_action = Void or l_failure
+				not attached l_action or l_failure
 			loop
-				l_failure := not l_action.item (Void)
+				l_failure := not l_action.item
 				if l_failure then
 					failed_actions.extend (l_action)
 				else
-					l_action ?= actions.removed_element
+					l_action := actions.removed_element
 				end
 			end
 		end
@@ -329,15 +283,20 @@ feature {NONE} -- Implementation
 			make_utility_not_void: make_utility /= Void
 			make_utility_not_empty: not make_utility.is_empty
 		local
-			l_process: PROCESS
+			l_process: BASE_PROCESS
 		do
-			l_process := process_launcher (make_utility, l_flags, a_dir.name)
+			l_process := process_factory.process_launcher (make_utility, l_flags, a_dir.name)
 			l_process.launch
-			Result := l_process.launched
-			if Result then
+			if l_process.launched then
 				l_process.wait_for_exit
 				Result := l_process.exit_code = 0
 			end
+		end
+
+	process_factory: BASE_PROCESS_FACTORY
+			-- A factory to create processes.
+		once
+			create Result
 		end
 
 	insert_directory (a_dir: PATH)
@@ -351,16 +310,13 @@ feature {NONE} -- Implementation
 			make_utility_not_empty: not make_utility.is_empty
 		local
 			l_name: like target
-			l_makefile, l_finished: PATH
 			l_file: RAW_FILE
 		do
 			l_name := target.extended_path (a_dir)
-			l_makefile := l_name.extended (makefile_name)
-			create l_file.make_with_path (l_makefile)
+			create l_file.make_with_path (l_name.extended (makefile_name))
 			if l_file.exists then
 					-- Only process directories which have a Makefile.
-				l_finished := l_name.extended (finished_name)
-				create l_file.make_with_path (l_finished)
+				create l_file.make_with_path (l_name.extended (finished_name))
 				if not l_file.exists then
 						-- Only process directories which do not have a `finished' file, which shows
 						-- that the directory needs to be processed.
@@ -398,7 +354,7 @@ invariant
 	make_flags_not_void: make_flags /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -428,4 +384,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class EIFFEL_MAKE
+end

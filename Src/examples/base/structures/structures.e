@@ -2,7 +2,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
-class 
+class
 	STRUCTURES
 
 inherit
@@ -11,12 +11,13 @@ inherit
 create
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make
+			-- Run the application.
 		do
+			create chosen_demo.make
 			io.set_error_default
-			
 				--| no_message_on_failure
 			io.putstring ("%N%N     * Class demos from the Eiffel Data Structure Library *%N%N")
 			session
@@ -24,25 +25,11 @@ feature -- Creation
 
 feature -- Attributes
 
-	a_two_way_tree_demo: TWO_WAY_TREE_DEMO
-
-	a_sort_demo: SORT_DEMO
-
-	a_binary_search_tree_demo: BINARY_SEARCH_TREE_DEMO
-
-	a_binary_tree_demo: BINARY_TREE_DEMO
-
-	--a_priority_queue_demo: PRIORITY_QUEUE_DEMO
-
-	a_set_demo: SET_DEMO
-
-	a_sorted_set_demo: SORTED_SET_DEMO
-
 	chosen_demo: TOP_DEMO
+			-- Currently selected demo.
 
-	saved_demo_file: RAW_FILE
-
-	saved_file_name: STRING = "demo.S"
+	saved_file_name: STRING_32 = "demo.S"
+			-- A name of a file where a demo is saved.
 
 feature -- Routines
 
@@ -50,15 +37,16 @@ feature -- Routines
 			-- Execute a new session, possibly from a previously saved one.
 			-- Then store it if requested.
 		local
+			saved_demo_file: RAW_FILE
 			resume_session: BOOLEAN
 		do
-			create saved_demo_file.make (saved_file_name)
+			create saved_demo_file.make_with_name (saved_file_name)
 			if saved_demo_file.exists then
 				io.putstring ("Do you want to retrieve the last saved demo (y/n)?: ")
-				io.readchar 
+				io.readchar
 				if io.lastchar = 'y' then
 					io.next_line
-					create chosen_demo
+					create chosen_demo.make
 					saved_demo_file.open_read
 					if attached {TOP_DEMO} chosen_demo.retrieved (saved_demo_file) as d then
 						chosen_demo := d
@@ -104,7 +92,7 @@ feature -- Routines
 				io.new_line
 				io.putstring ("Another demo? (y/n): ")
 				io.readchar
-				over := (io.lastchar /= 'y')
+				over := io.lastchar /= 'y'
 				io.next_line
 			end
 		end
@@ -142,34 +130,28 @@ feature -- Routines
 			inspect
 				choice
 			when 1 then
-				create a_sort_demo.make
-				chosen_demo := a_sort_demo
+				create {SORT_DEMO} chosen_demo.make
 			when 2 then
-				create a_two_way_tree_demo.make
-				chosen_demo := a_two_way_tree_demo
+				create {TWO_WAY_TREE_DEMO} chosen_demo.make
 			when 3 then
-				create a_binary_tree_demo.make
-				chosen_demo := a_binary_tree_demo
+				create {BINARY_TREE_DEMO} chosen_demo.make
 			when 4 then
-				create a_binary_search_tree_demo.make
-				chosen_demo := a_binary_search_tree_demo
+				create {BINARY_SEARCH_TREE_DEMO} chosen_demo.make
 			when 5 then
 				io.putstring ("This is temporarily disabled%N")
-				--create a_priority_queue_demo.make
-				--chosen_demo := a_priority_queue_demo
 			when 6 then
-				create a_set_demo.make
-				chosen_demo := a_set_demo
+				create {SET_DEMO} chosen_demo.make
 			when 7 then
-				create a_sorted_set_demo.make
-				chosen_demo := a_sorted_set_demo
+				create {SORTED_SET_DEMO} chosen_demo.make
 			else
 				io.putstring ("Demo number should be between 1 and 7")
 			end
-		end 
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -179,4 +161,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class STRUCTURES
+end

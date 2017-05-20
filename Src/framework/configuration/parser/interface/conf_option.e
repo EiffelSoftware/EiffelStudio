@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that specify configuration options."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,6 +17,13 @@ inherit
 		end
 
 	CONF_ACCESS
+		redefine
+			copy,
+			default_create,
+			is_equal
+		end
+
+	CONF_FILE_CONSTANTS
 		redefine
 			copy,
 			default_create,
@@ -55,7 +62,7 @@ feature {NONE} -- Creation
 			-- Difference from `make_6_3': transitional syntax.
 		do
 			make_6_3
-			create syntax.make (syntax_name, syntax_index_transitional)
+			syntax.put_default_index (syntax_index_transitional)
 		end
 
 	make_7_0
@@ -63,7 +70,7 @@ feature {NONE} -- Creation
 			-- Difference from `make_6_4': standard syntax, class types attached by default.
 		do
 			make_6_4
-			create syntax.make (syntax_name, syntax_index_standard)
+			syntax.put_default_index (syntax_index_standard)
 			is_attached_by_default := True
 		end
 
@@ -72,7 +79,7 @@ feature {NONE} -- Creation
 			-- Difference fom `make_7_0': transitional void-safety, full class checking.
 		do
 			make_7_0
-			create void_safety.make (void_safety_name, void_safety_index_transitional)
+			void_safety.put_default_index (void_safety_index_transitional)
 			is_full_class_checking := True
 		end
 
@@ -81,7 +88,7 @@ feature {NONE} -- Creation
 			-- Difference from `make_7_3': complete void-safety.
 		do
 			make_7_3
-			create void_safety.make (void_safety_name, void_safety_index_all)
+			void_safety.put_default_index (void_safety_index_all)
 		end
 
 	make_15_11
@@ -141,6 +148,30 @@ feature -- Status
 				warnings /= Void or
 				debugs /= Void or
 				syntax.is_set)
+		end
+
+	is_empty_for (n: detachable READABLE_STRING_32): BOOLEAN
+			-- Is `Current' empty in a specific namespace `n`?
+		do
+			Result := not (
+				is_profile_configured or
+				is_trace_configured or
+				is_optimize_configured or
+				is_debug_configured or
+				is_warning_configured or
+				is_msil_application_optimize_configured or
+				is_full_class_checking_configured or
+				is_attached_by_default_configured or
+				is_obsolete_routine_type_configured or
+				assertions /= Void or
+				local_namespace /= Void or
+				warnings /= Void or
+				debugs /= Void or
+				syntax.is_set or
+					-- Void safety and catcall detection options are used only before `namespace_1_15_0`.
+				(is_before_or_equal (n, namespace_1_15_0) and then
+					(catcall_detection.is_set or
+					void_safety.is_set)))
 		end
 
 feature -- Status update
@@ -751,7 +782,7 @@ feature -- Merging
 				if not is_attached_by_default_configured then
 					if not other.is_attached_by_default_configured and then void_safety.index = void_safety_index_none then
 							-- Default attached-by-default to True, so that if a user decides to switch the option,
-							-- it get's attached-by-default automatically.
+							-- he get's attached-by-default automatically.
 						is_attached_by_default_configured := not other.is_attached_by_default
 						is_attached_by_default := True
 					else

@@ -15,7 +15,7 @@ create {NONE}
 
 feature -- Statics
 
-	frozen is_infinity (f: REAL): BOOLEAN
+	frozen is_infinity (f: REAL_32): BOOLEAN
 			-- (Static)
 			-- Returns a value indicating whether the specified number
 			-- evaluates to negative or positive infinity
@@ -32,7 +32,7 @@ feature -- Statics
 			"IsInfinity"
 		end
 
-	frozen is_positive_infinity (f: REAL): BOOLEAN
+	frozen is_positive_infinity (f: REAL_32): BOOLEAN
 			-- (Static)
 			-- Returns a value indicating whether the specified number
 			-- evaluates to positive infinity.
@@ -49,7 +49,7 @@ feature -- Statics
 			"IsPositiveInfinity"
 		end
 
-	frozen is_negative_infinity (f: REAL): BOOLEAN
+	frozen is_negative_infinity (f: REAL_32): BOOLEAN
 			-- (Static)
 			-- Returns a value indicating whether the specified number
 			-- evaluates to negative infinity.
@@ -66,7 +66,7 @@ feature -- Statics
 			"IsNegativeInfinity"
 		end
 
-	frozen is_nan (f: REAL): BOOLEAN
+	frozen is_nan (f: REAL_32): BOOLEAN
 			-- (Static)
 			-- Returns a value indicating whether the specified number
 			-- evaluates to not a number (System.Single.NaN).
@@ -85,7 +85,7 @@ feature -- Statics
 
 feature -- Conversion
 
-	frozen from_string (s: SYSTEM_STRING): REAL
+	frozen from_string (s: SYSTEM_STRING): REAL_32
 			-- (Static)
 			-- Converts the string representation of a number to its single-precision
 			-- floating point number equivalent.
@@ -108,7 +108,7 @@ feature -- Conversion
 			"Parse"
 		end
 
-	frozen from_string_with_style (s: SYSTEM_STRING; style: NUMBER_STYLES): REAL
+	frozen from_string_with_style (s: SYSTEM_STRING; style: NUMBER_STYLES): REAL_32
 			-- (Static)
 			-- Converts the string representation of a number in a specified style to
 			-- its single-precision floating point number equivalent.
@@ -134,7 +134,7 @@ feature -- Conversion
 			"Parse"
 		end
 
-	frozen from_string_with_format (s: SYSTEM_STRING; provider: IFORMAT_PROVIDER): REAL
+	frozen from_string_with_format (s: SYSTEM_STRING; provider: IFORMAT_PROVIDER): REAL_32
 			-- (Static)
 			-- Converts the string representation of a number in a specified
 			-- culture-specific format to its single-precision floating point
@@ -160,7 +160,7 @@ feature -- Conversion
 			"Parse"
 		end
 
-	frozen from_string_with_style_and_format (s: SYSTEM_STRING; style: NUMBER_STYLES; provider: IFORMAT_PROVIDER): REAL
+	frozen from_string_with_style_and_format (s: SYSTEM_STRING; style: NUMBER_STYLES; provider: IFORMAT_PROVIDER): REAL_32
 			-- (Static)
 			-- Converts the string representation of a number in a specified style
 			-- and culture-specific format to its single-precision floating point

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Exception manager."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -62,11 +62,8 @@ feature -- Status setting
 
 	catch (a_exception: TYPE [EXCEPTION])
 			-- Set type of `a_exception' `is_ignored'.
-		local
-			l_type: INTEGER
 		do
-			l_type := a_exception.type_id
-			ignored_exceptions.remove (l_type)
+			ignored_exceptions.remove (a_exception.type_id)
 		end
 
 	set_is_ignored (a_exception: TYPE [EXCEPTION]; a_ignored: BOOLEAN)
@@ -323,8 +320,6 @@ feature {NONE} -- Implementation, exception chain
 		require
 			a_last_exception_not_viod: a_last_exception /= Void
 		local
-			l_exception: detachable EXCEPTION
-			l_stack_trace: STACK_TRACE
 			l_rs: like recipient_and_type_name
 			l_to_skip: INTEGER
 		do
@@ -338,17 +333,14 @@ feature {NONE} -- Implementation, exception chain
 				end
 			end
 
-			create l_stack_trace.make (a_last_exception)
-			l_rs := recipient_and_type_name (l_stack_trace, l_to_skip)
-			l_exception := wrapped_exception (a_last_exception)
-			check l_exception_attached: l_exception /= Void end
-			l_exception.set_recipient_name (l_rs.recipient)
-			l_exception.set_type_name (l_rs.type)
-			l_exception.set_line_number (l_rs.line_number)
+			l_rs := recipient_and_type_name (create {STACK_TRACE}.make (a_last_exception), l_to_skip)
+			Result := wrapped_exception (a_last_exception)
+			Result.set_recipient_name (l_rs.recipient)
+			Result.set_type_name (l_rs.type)
+			Result.set_line_number (l_rs.line_number)
 			if {ISE_RUNTIME}.exception_from_rescue then
-				l_exception.original.set_throwing_exception (last_exception)
+				Result.original.set_throwing_exception (last_exception)
 			end
-			Result := l_exception
 		ensure
 			constructed_exception_chain_not_void: Result /= Void
 		end
@@ -436,20 +428,15 @@ feature {NONE} -- Implementation, exception chain
 			-- Implementations, routines out of Eiffel classes and some routines in the manager are filtered.
 		require
 			a_method_not_void: a_method /= Void
-		local
-			l_attributes: detachable NATIVE_ARRAY [detachable SYSTEM_OBJECT]
-			l_routine_name: STRING
 		do
-			if attached a_method.declaring_type as l_type then
-				l_attributes := l_type.get_custom_attributes ({EIFFEL_NAME_ATTRIBUTE}, False)
-				if l_attributes /= Void and then l_attributes.count = 1 then
-					if attached {EIFFEL_NAME_ATTRIBUTE} l_attributes.item (0) as l_attr then
-						if not filtered_class.has (create {STRING}.make_from_cil(l_attr.name)) then
-							create l_routine_name.make_from_cil (a_method.name)
-							Result := not filtered_routines.has (l_routine_name)
-						end
-					end
-				end
+			if
+				attached a_method.declaring_type as l_type and then
+				attached l_type.get_custom_attributes ({EIFFEL_NAME_ATTRIBUTE}, False) as l_attributes and then
+				l_attributes.count = 1 and then
+				attached {EIFFEL_NAME_ATTRIBUTE} l_attributes.item (0) as l_attr and then
+				not filtered_class.has (create {STRING}.make_from_cil(l_attr.name))
+			then
+				Result := not filtered_routines.has (create {STRING}.make_from_cil (a_method.name))
 			end
 		end
 
@@ -604,7 +591,7 @@ feature {NONE} -- Exception codes, Implementation of RT_EXCEPTION_MANAGER
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

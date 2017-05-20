@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="quicksort" uuid="C6F5412E-6850-47DA-921D-655121272996">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="quicksort" uuid="C6F5412E-6850-47DA-921D-655121272996">
 	<target name="quicksort">
 		<note>
 			<eis name="Quicksort" protocol="" src="$(ISE_DOC)/book/solutions/Quicksort"/>
 		</note>
 		<root class="APPLICATION" feature="make"/>
-		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="provisional">
-		</option>
 		<setting name="console_application" value="true"/>
-		<setting name="concurrency" value="scoop"/>
 		<precompile name="base_pre" location="$ISE_PRECOMP\base-scoop-safe.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="quicksort" location=".\" recursive="true">
 			<file_rule>
-				<exclude>/EIFGENs$</exclude>
-				<exclude>/CVS$</exclude>
 				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/EIFGENs$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

@@ -264,7 +264,9 @@ feature -- Destroy
 	destroy
 			-- Destroy
 		do
-			keyword_field.destroy
+			if attached keyword_field as kf then
+				kf.destroy
+			end
 			recycle
 			Precursor {QUICK_SEARCH_BAR_IMP}
 		end
@@ -426,7 +428,7 @@ invariant
 	option_manager_not_void: not is_recycled implies option_manager /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

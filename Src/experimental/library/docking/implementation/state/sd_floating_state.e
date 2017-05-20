@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "SD_STATE that manage SD_FLOATING_ZONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,8 +16,6 @@ inherit
 			stick,
 			move_to_docking_zone,
 			move_to_tab_zone,
-			content_void,
-			change_state,
 			record_state
 		end
 
@@ -31,7 +29,6 @@ feature {NONE} -- Initlization
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
 		do
-			create internal_shared
 			set_docking_manager (a_docking_manager)
 			create internal_zone.make (a_docking_manager)
 			internal_zone.set_position (a_screen_x, a_screen_y)
@@ -57,7 +54,6 @@ feature -- Redefine
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA)
 			-- <Precursor>
 		local
-			l_width_height: INTEGER
 			l_widget: EV_WIDGET
 			l_split_area: EV_SPLIT_AREA
 			l_main_container_widget: EV_WIDGET
@@ -68,14 +64,12 @@ feature -- Redefine
 			internal_zone.inner_container.wipe_out
 
 			if 	direction	= {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
-				l_width_height := (a_multi_dock_area.width * internal_shared.default_docking_width_rate).ceiling
 				l_split_area := create {SD_HORIZONTAL_SPLIT_AREA}
 			else
-				l_width_height := (a_multi_dock_area.height * internal_shared.default_docking_height_rate).ceiling
 				l_split_area := create {SD_VERTICAL_SPLIT_AREA}
 			end
 			l_main_container_widget := docking_manager.query.inner_container_main.item
-			docking_manager.query.inner_container_main.save_spliter_position (l_main_container_widget, generating_type + ".dock_at_top_level")
+			docking_manager.query.inner_container_main.save_spliter_position (l_main_container_widget, generating_type.name_32 + {STRING_32} ".dock_at_top_level")
 			docking_manager.query.inner_container_main.wipe_out
 			docking_manager.query.inner_container_main.extend (l_split_area)
 			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.top then
@@ -88,7 +82,7 @@ feature -- Redefine
 			if l_split_area.full then
 				l_split_area.set_split_position (top_split_position (direction, l_split_area))
 			end
-			docking_manager.query.inner_container_main.restore_spliter_position (l_main_container_widget, generating_type + ".dock_at_top_level")
+			docking_manager.query.inner_container_main.restore_spliter_position (l_main_container_widget, generating_type.name_32 + {STRING_32} ".dock_at_top_level")
 			docking_manager.command.unlock_update
 			docking_manager.command.update_title_bar
 		end
@@ -133,7 +127,9 @@ feature -- Redefine
 
 				if l_tab_zone = Void then
 					l_zones.item.state.move_to_docking_zone (a_target_zone, a_first)
-					if attached {SD_TAB_ZONE} a_target_zone.content.state.zone as z then
+					if
+						a_target_zone.has_content and then
+						attached {SD_TAB_ZONE} a_target_zone.content.state.zone as z then
 						l_tab_zone := z
 					else
 						check is_tab_zone: False end
@@ -188,17 +184,6 @@ feature -- Redefine
 
 			docking_manager.command.update_title_bar
 			docking_manager.command.unlock_update
-		end
-
-	change_state (a_state: SD_STATE)
-			-- <Precursor>
-		do
-			content.change_state (a_state)
-			a_state.set_last_floating_height (internal_zone.height)
-			a_state.set_last_floating_width (internal_zone.width)
-		ensure then
-			set: a_state.last_floating_height = last_floating_height
-			set: a_state.last_floating_width = last_floating_width
 		end
 
 	record_state
@@ -295,7 +280,7 @@ feature {NONE} -- Implementation
 				attached {EV_WIDGET} a_target_zone as l_widget and then
 				attached l_widget.parent as l_container
 			then
-				inner_container.save_spliter_position (l_current_item, generating_type + ".change_zone_split_area_whole_content")
+				inner_container.save_spliter_position (l_current_item, generating_type.name_32 + {STRING_32} ".change_zone_split_area_whole_content")
 				if attached {EV_SPLIT_AREA} l_container as spl then
 					l_target_split	:= spl
 					l_target_split_position := l_target_split.split_position
@@ -327,7 +312,7 @@ feature {NONE} -- Implementation
 					l_target_split.set_split_position (l_target_split_position)
 				end
 				l_spliter.set_proportion ({REAL_32} 0.5)
-				inner_container.restore_spliter_position (l_current_item, generating_type + ".change_zone_split_area_whole_content")
+				inner_container.restore_spliter_position (l_current_item, generating_type.name_32 + {STRING_32} ".change_zone_split_area_whole_content")
 			else
 				check a_target_zone_is_widget_and_is_parented: False end
 				check inner_container_item_is_split_area: False end
@@ -336,7 +321,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -345,10 +330,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

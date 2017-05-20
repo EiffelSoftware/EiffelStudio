@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			An argument parser's arguments from the terminal.
 		]"
@@ -40,7 +40,6 @@ feature {NONE} -- Initialization
 			a_arguments_attached: a_arguments /= Void
 		local
 			l_args: ARRAYED_LIST [IMMUTABLE_STRING_32]
-			l_arg: IMMUTABLE_STRING_32
 			l_upper: INTEGER
 			i: INTEGER
 		do
@@ -51,8 +50,7 @@ feature {NONE} -- Initialization
 			until
 				i > l_upper
 			loop
-				l_arg := a_arguments[i]
-				l_args.extend (l_arg)
+				l_args.extend (a_arguments [i])
 				i := i + 1
 			end
 			arguments := l_args
@@ -74,7 +72,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

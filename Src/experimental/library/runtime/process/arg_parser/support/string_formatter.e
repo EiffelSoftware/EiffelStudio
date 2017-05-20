@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Permits argument-based formatting of string instances."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ feature -- Formatting
 			-- Yields:
 			--     He}llo there {
 		obsolete
-			"Use `format_unicode' instead."
+			"Use `format_unicode' instead. [2017-05-31]"
 		require
 			a_str_attached: a_str /= Void
 			not_a_str_is_empty: not a_str.is_empty
@@ -108,12 +108,13 @@ feature -- Formatting
 					end
 				elseif c = cl then
 					l_skip := False
-					if i < l_count then
-						if n = cl then
-							Result.append_character (n)
-							i := i + 1
-							l_skip := True
-						end
+					if
+						i < l_count and then
+						n = cl
+					then
+						Result.append_character (n)
+						i := i + 1
+						l_skip := True
 					end
 					if l_match and not l_skip then
 						l_match := False
@@ -192,8 +193,6 @@ feature -- Formatting
 			result_not_is_a_str: Result /= a_str
 		end
 
-feature -- Formatting
-
 	tabbify (a_str: READABLE_STRING_GENERAL; a_tab_chars: INTEGER): STRING_8
 			-- Tabbifies a string by replacing spaces with tabs.
 			--
@@ -201,7 +200,7 @@ feature -- Formatting
 			-- `a_tab_chars': Number of space characters in a tab.
 			-- `Result': A tabbified string.
 		obsolete
-			"Use `tabbify_unicode' instead."
+			"Use `tabbify_unicode' instead. [2017-05-31]"
 		require
 			a_str_attached: a_str /= Void
 			not_a_str_is_empty: not a_str.is_empty
@@ -265,7 +264,7 @@ feature -- Formatting
 feature {NONE} -- Implemenetation
 
 	out_from_separate (a_any: separate ANY): STRING
-			-- Out from separate
+			-- Out from separate.
 		do
 			create Result.make_from_separate (a_any.out)
 		end
@@ -273,13 +272,13 @@ feature {NONE} -- Implemenetation
 feature {NONE} -- Symbols
 
 	open_char: CHARACTER = '{'
-			-- Index open character
+			-- Index open character.
 
 	close_char: CHARACTER = '}'
-			-- Index close character
+			-- Index close character.
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -310,4 +309,4 @@ feature {NONE} -- Symbols
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {STRING_FORMATTER}
+end

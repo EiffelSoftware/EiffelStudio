@@ -308,7 +308,7 @@ feature -- Internal support
 			"built_in static"
 		end
 
-	frozen real_32_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): REAL
+	frozen real_32_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): REAL_32
 			-- Real value of `i'-th field of `object + a_physical_offset'
 		external
 			"built_in static"
@@ -398,7 +398,7 @@ feature -- Internal support
 			"built_in static"
 		end
 
-	frozen real_32_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): REAL
+	frozen real_32_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): REAL_32
 			-- Real value of the field at `field_offset' in object `a_object + a_physical_offset'.
 		external
 			"built_in static"
@@ -513,7 +513,7 @@ feature -- Internal support
 			"built_in static"
 		end
 
-	frozen set_real_32_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: REAL)
+	frozen set_real_32_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: REAL_32)
 		external
 			"built_in static"
 		end
@@ -588,7 +588,7 @@ feature -- Internal support
 			"built_in static"
 		end
 
-	frozen set_real_32_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: REAL)
+	frozen set_real_32_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: REAL_32)
 		external
 			"built_in static"
 		end

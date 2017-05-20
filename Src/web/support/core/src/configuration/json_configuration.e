@@ -6,6 +6,10 @@ note
 class
 	JSON_CONFIGURATION
 
+inherit
+
+	JSON_PARSER_ACCESS
+
 feature -- Application Configuration
 
 	cookie_session_default (a_path: PATH): INTEGER_64
@@ -15,7 +19,7 @@ feature -- Application Configuration
 		do
 			if attached json_file_from (a_path) as json_file then
 			 l_parser := new_json_parser (json_file)
-			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			 if  attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_valid and then
 			     attached {JSON_OBJECT} jv.item ("cookie_session") as l_cookie_session and then
 			     attached {JSON_NUMBER} l_cookie_session.item ("default") as l_item then
 			     Result := l_item.integer_64_item
@@ -30,7 +34,7 @@ feature -- Application Configuration
 		do
 			if attached json_file_from (a_path) as json_file then
 			 l_parser := new_json_parser (json_file)
-			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			 if  attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_valid and then
 			     attached {JSON_OBJECT} jv.item ("cookie_session") as l_cookie_session and then
 			     attached {JSON_NUMBER} l_cookie_session.item ("remember_me") as l_item then
 			     Result := l_item.integer_64_item
@@ -38,20 +42,58 @@ feature -- Application Configuration
 			end
 		end
 
-	new_smtp_configuration (a_path: PATH): READABLE_STRING_32
-			-- Build a new database configuration.
+	eiffel_stable_versions (a_path: PATH): LIST [STRING]
+			-- List of eiffel stable versions.
 		local
 			l_parser: JSON_PARSER
 		do
-			Result := ""
+			create {ARRAYED_LIST [STRING]} Result.make (0)
+			if
+				attached json_file_from (a_path) as json_file
+			then
+				 l_parser := new_json_parser (json_file)
+			 	if
+			 		attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_valid and then
+			     	attached {JSON_ARRAY} jv.item ("versions") as l_versions
+			    then
+					across l_versions as c loop
+						if attached {JSON_STRING} c.item as l_item then
+							Result.force (l_item.item)
+						end
+					end
+			 	end
+			end
+		end
+
+	new_smtp_configuration (a_path: PATH): READABLE_STRING_32
+			-- Build a new smpt server configuration.
+		local
+			l_parser: JSON_PARSER
+			l_result: STRING_32
+		do
+			create l_result.make_empty
 			if attached json_file_from (a_path) as json_file then
 			 l_parser := new_json_parser (json_file)
-			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
-			     attached {JSON_OBJECT} jv.item ("smtp") as l_smtp and then
-			     attached {JSON_STRING} l_smtp.item ("server") as l_server then
-			     Result := l_server.item
+			 if
+			 	attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_valid and then
+			    attached {JSON_OBJECT} jv.item ("smtp") as l_smtp and then
+			    attached {JSON_STRING} l_smtp.item ("server") as l_server
+			 then
+			    l_result := l_server.item
+			    if
+			    	attached {JSON_STRING} l_smtp.item ("username") as l_username and then
+			    	attached {JSON_STRING} l_smtp.item ("password") as l_password and then
+			    	not l_username.item.is_empty and then
+			    	not l_password.item.is_empty
+			    then
+			    	l_result.prepend_character ('@')
+			    	l_result.prepend (l_password.item)
+			    	l_result.prepend_character (':')
+			    	l_result.prepend (l_username.item)
+			    end
 			 end
 			end
+			Result := l_result
 		end
 
 	new_database_configuration (a_path: PATH): detachable DATABASE_CONFIGURATION
@@ -61,7 +103,7 @@ feature -- Application Configuration
 		do
 			if attached json_file_from (a_path) as json_file then
 			 l_parser := new_json_parser (json_file)
-			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			 if  attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_valid and then
 			     attached {JSON_OBJECT} jv.item ("database") as l_database and then
 			     attached {JSON_OBJECT} l_database.item ("datasource") as l_datasource and then
 			     attached {JSON_STRING} l_datasource.item ("driver") as l_driver and then
@@ -84,7 +126,7 @@ feature -- Application Configuration
 			Result := "DEBUG"
 			if attached json_file_from (a_path) as json_file then
 			 l_parser := new_json_parser (json_file)
-			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			 if  attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_valid and then
 			     attached {JSON_OBJECT} jv.item ("logger") as l_logger and then
 			     attached {JSON_STRING} l_logger.item ("level") as l_level then
 			     Result := l_level.item
@@ -99,7 +141,7 @@ feature -- Application Configuration
 		do
 			if attached json_file_from (a_path) as json_file then
 			 l_parser := new_json_parser (json_file)
-			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			 if  attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_valid and then
 			     attached {JSON_OBJECT} jv.item ("database") as l_database and then
 			     attached {JSON_OBJECT} l_database.item ("datasource") as l_datasource and then
 			     attached {JSON_STRING} l_datasource.item ("driver") as l_driver and then
@@ -124,7 +166,7 @@ feature {NONE} -- JSON
 
 	new_json_parser (a_string: STRING): JSON_PARSER
 		do
-			create Result.make_parser (a_string)
+			create Result.make_with_string (a_string)
 		end
 
 end

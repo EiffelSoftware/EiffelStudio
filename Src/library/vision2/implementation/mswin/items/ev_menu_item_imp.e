@@ -38,8 +38,6 @@ inherit
 
 	EV_ID_IMP
 
-	EV_MENU_ITEM_ACTION_SEQUENCES_IMP
-
 	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all
@@ -80,7 +78,7 @@ create
 
 feature -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create the menu item.
 		do
 			assign_interface (an_interface)
@@ -983,7 +981,7 @@ feature {NONE} -- Constants
 			-- Space between the text and the pixmap in a menu bar item
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

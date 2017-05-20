@@ -36,7 +36,7 @@ inherit
 feature -- Element settings
 
 	set_block_size (a_size: INTEGER)
-			-- Set `block_size' woth `a_size'
+			-- Set `block_size' with `a_size'.
 		require
 			valid_size: a_size > 0
 		do
@@ -46,7 +46,7 @@ feature -- Element settings
 		end
 
 	set_environment_variables (a_env_vars: like environment_variables)
-			-- Set `environment_variables' with `a_env_vars'
+			-- Set `environment_variables' with `a_env_vars'.
 		do
 			environment_variables := a_env_vars
 		ensure
@@ -70,8 +70,6 @@ feature -- Basic Operations
 			valid_command_line: not a_command_line.is_empty
 		do
 			spawn_with_flags (a_command_line, a_working_directory, detached_process)
-		ensure
-			process_info_attached: process_info /= Void
 		end
 
 	spawn_with_console (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL)
@@ -81,8 +79,6 @@ feature -- Basic Operations
 			valid_command_line: not a_command_line.is_empty
 		do
 			spawn_with_flags (a_command_line, a_working_directory, create_new_console)
-		ensure
-			process_info_attached: process_info /= Void
 		end
 
 	launch (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; a_output_handler: detachable ROUTINE [STRING])
@@ -95,7 +91,6 @@ feature -- Basic Operations
 			l_block_size: INTEGER
 			l_input_pipe: like input_pipe
 			l_output_pipe: like output_pipe
-			l_process_info: like process_info
 		do
 			if hidden then
 				spawn_with_flags (a_command_line, a_working_directory, create_no_window)
@@ -103,8 +98,6 @@ feature -- Basic Operations
 				spawn (a_command_line, a_working_directory)
 			end
 				-- Per postcondition
-			l_process_info := process_info
-			check l_process_info /= Void then end
 			l_output_pipe := output_pipe
 			check l_output_pipe /= Void then end
 			l_output_pipe.close_input
@@ -119,20 +112,20 @@ feature -- Basic Operations
 				end
 				l_output_pipe.read_stream (l_block_size)
 			end
-			last_launch_successful := {WEL_API}.wait_for_single_object (l_process_info.process_handle,
-				{WEL_API}.infinite) = {WEL_API}.wait_object_0
-			if last_launch_successful then
-				last_launch_successful := {WEL_API}.get_exit_code_process (l_process_info.process_handle,
-					$last_process_result)
+			if
+				attached process_handle as p and then
+				attached thread_handle as t
+			then
+				if {WEL_API}.wait_for_single_object (p.item, {WEL_API}.infinite) = {WEL_API}.wait_object_0 then
+					last_launch_successful := {WEL_API}.get_exit_code_process (p.item, $last_process_result)
+				else
+					last_launch_successful := False
+				end
+				t.close
+				p.close
+			else
+				last_launch_successful := False
 			end
-			if {WEL_API}.close_handle (l_process_info.thread_handle) = 0 then
-				check close_thread_handle_success: False end
-			end
-			l_process_info.set_thread_handle (default_pointer)
-			if {WEL_API}.close_handle (l_process_info.process_handle) = 0 then
-				check close_process_handle_success: False end
-			end
-			l_process_info.set_process_handle (default_pointer)
 			l_output_pipe.close_output
 
 			l_input_pipe := input_pipe
@@ -154,17 +147,17 @@ feature -- Basic Operations
 		do
 			spawn (a_command_line, a_working_directory)
 				-- Per postcondition
-			check attached process_info as l_process_info then
+			check attached process_handle as h then
 				from
 				until
 					finished
 				loop
-					a_boolean := {WEL_API}.get_exit_code_process (l_process_info.process_handle, $last_process_result)
+					a_boolean := {WEL_API}.get_exit_code_process (h.item, $last_process_result)
 					check
 						valid_external_call_2: a_boolean
 					end
 					if last_process_result = {WEL_API}.still_active then
-						an_integer := {WEL_API}.wait_for_single_object (l_process_info.process_handle, 1)
+						an_integer := {WEL_API}.wait_for_single_object (h.item, 1)
 						if an_integer = {WEL_API}.wait_object_0 then
 							finished := True
 						else
@@ -181,27 +174,22 @@ feature -- Basic Operations
 		end
 
 	terminate_process
-			-- Terminate current process (corresponding to `process_info').
-		local
-			l_boolean: BOOLEAN
-			l_process_info: like process_info
+			-- Terminate current process.
 		do
-			if last_launch_successful then
-				l_process_info := process_info
-				check l_process_info /= Void then end
-				l_boolean := {WEL_API}.get_exit_code_process (l_process_info.process_handle, $last_process_result)
-				if l_boolean then
+			if
+				attached process_handle as p and then p.is_open and then
+				attached thread_handle as t
+			then
+				if {WEL_API}.get_exit_code_process (p.item, $last_process_result) then
 					if last_process_result = {WEL_API}.still_active then
-						l_boolean := {WEL_API}.terminate_process (l_process_info.process_handle, 0)
+						{WEL_API}.terminate_process (p.item, 0).do_nothing
 					end
-					if {WEL_API}.close_handle (l_process_info.thread_handle) = 0 then
-						check close_thread_handle_success: False end
+					if t.is_open then
+						t.close
 					end
-					l_process_info.set_thread_handle (default_pointer)
-					if {WEL_API}.close_handle (l_process_info.process_handle) = 0 then
-						check close_process_handle_success: False end
-					end
-					l_process_info.set_process_handle (default_pointer)
+					thread_handle := Void
+					p.close
+					process_handle := Void
 				end
 			end
 		end
@@ -223,6 +211,15 @@ feature -- Access
 			-- If this table is Void or empty, environment variables of the
 			-- parent process will be passed to the new process.
 
+	process_handle: detachable WEL_HANDLE
+			-- Handle of the launched process.
+
+	thread_handle: detachable WEL_HANDLE
+			-- Handle of the launched process main thread.
+
+	process_id: NATURAL_32
+			-- Process ID when it is started.
+
 feature {NONE} -- Implementation
 
 	spawn_with_flags (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; a_flags: INTEGER)
@@ -234,31 +231,32 @@ feature {NONE} -- Implementation
 			valid_command_line: not a_command_line.is_empty
 		local
 			l_ws_command_line, l_ws_working_directory: WEL_STRING
-			l_process_info: like process_info
+			l_process_info: WEL_PROCESS_INFO
 			l_envs: detachable WEL_STRING
 			l_envs_ptr: POINTER
+			l_directory: POINTER
+			b: BOOLEAN
 		do
 			create l_ws_command_line.make (a_command_line)
 			create l_process_info.make
-			process_info := l_process_info
 			l_envs := environment_variables_as_wel_string
 			if l_envs /= Void then
 				l_envs_ptr := l_envs.item
 			end
 			if a_working_directory /= Void and then not a_working_directory.is_empty then
 				create l_ws_working_directory.make (a_working_directory)
-				last_launch_successful := {WEL_API}.create_process (default_pointer, l_ws_command_line.item,
-							default_pointer, default_pointer, True, a_flags | create_unicode_environment,
-							l_envs_ptr, l_ws_working_directory.item,
-							startup_info.item, l_process_info.item)
-			else
-				last_launch_successful := {WEL_API}.create_process (default_pointer, l_ws_command_line.item,
-							default_pointer, default_pointer, True, a_flags | create_unicode_environment,
-							l_envs_ptr, default_pointer,
-							startup_info.item, l_process_info.item)
+				l_directory := l_ws_working_directory.item
 			end
-		ensure
-			process_info_attached: process_info /= Void
+			b := {WEL_API}.create_process (default_pointer, l_ws_command_line.item,
+					default_pointer, default_pointer, True, a_flags | create_unicode_environment,
+					l_envs_ptr, l_directory,
+					startup_info.item, l_process_info.item)
+			last_launch_successful := b
+			if b then
+				create process_handle.make (l_process_info.process_handle)
+				create thread_handle.make (l_process_info.thread_handle)
+				process_id := l_process_info.process_id.as_natural_32
+			end
 		end
 
 	environment_variables_as_wel_string: detachable WEL_STRING
@@ -320,9 +318,6 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	process_info: detachable WEL_PROCESS_INFO
-			-- Process information
-
 	Default_block_size: INTEGER = 255
 			-- Default output block size
 
@@ -337,79 +332,10 @@ feature {NONE} -- Implementation
 		end
 
 	internal_block_size: INTEGER
-			-- Output block size
+			-- Output block size.
 
-feature {NONE} -- Externals
-
-	cwin_close_handle (a_handle: POINTER)
-			-- SDK CloseHandle
-		obsolete
-			"Use {WEL_API}.close_handle instead."
-		do
-			if {WEL_API}.close_handle (a_handle) = 0 then
-				check close_handle_success: False end
-			end
-		end
-
-	cwin_create_process (a_name, a_command_line, a_sec_attributes1, a_sec_attributes2: POINTER;
-							a_herit_handles: BOOLEAN; a_flags: INTEGER; an_environment, a_directory,
-							a_startup_info, a_process_info: POINTER): BOOLEAN
-			-- SDK CreateProcess
-		obsolete
-			"Use {WEL_API}.create_process instead."
-		do
-			Result := {WEL_API}.create_process (a_name, a_command_line, a_sec_attributes1, a_sec_attributes2,
-				a_herit_handles, a_flags, an_environment, a_directory, a_startup_info, a_process_info)
-		end
-
-	cwin_wait_for_single_object (handle: POINTER; type: INTEGER): INTEGER
-		obsolete
-			"Use {WEL_API}.wait_for_single_object instead."
-		do
-			Result := {WEL_API}.wait_for_single_object (handle, type)
-		end
-
-	cwin_exit_code_process (handle: POINTER; ptr: POINTER): BOOLEAN
-		obsolete
-			"Use {WEL_API}.get_exit_code_process instead."
-		do
-			Result := {WEL_API}.get_exit_code_process (handle, ptr)
-		end
-
-	cwin_wait_object_0: INTEGER
-			-- SDK WAIT_OBJECT_0 constant
-		obsolete
-			"Use {WEL_API}.wait_object_0 instead."
-		do
-			Result := {WEL_API}.wait_object_0
-		end
-
-	cwin_infinite: INTEGER
-			-- SDK INFINITE constant
-		obsolete
-			"Use {WEL_API}.infinite instead."
-		do
-			Result := {WEL_API}.infinite
-		end
-
-	cwin_terminate_process (handle: POINTER; exit_code: INTEGER): BOOLEAN
-			-- SDK TerminateProcess
-		obsolete
-			"Use {WEL_API}.terminate_process instead."
-		do
-			Result := {WEL_API}.terminate_process (handle, exit_code)
-		end
-
-	cwin_still_active: INTEGER
-			-- SDK STILL_ACTIVE constant
-		obsolete
-			"Use {WEL_API}.still_active instead."
-		do
-			Result := {WEL_API}.still_active
-		end
-
-note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+;note
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

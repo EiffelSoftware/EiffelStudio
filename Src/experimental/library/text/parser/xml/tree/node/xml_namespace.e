@@ -111,16 +111,16 @@ feature -- Status report
 			Result := uri.hash_code
 		end
 
-	debug_output: STRING
+	debug_output: STRING_32
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			create Result.make_empty
 			if attached ns_prefix as p then
-				Result.append ("xmlns:")
+				Result.append ({STRING_32} "xmlns:")
 				Result.append (p)
 				Result.append_character ('=')
 			end
-			Result.append (uri)
+			Result.append_string_general (uri)
 		end
 
 feature -- Status report
@@ -167,7 +167,7 @@ invariant
 	uri_not_void: uri /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -77,7 +77,7 @@ feature -- Access
 	file_name: STRING_32
 			-- Name of output file
 		obsolete
-			"Use `file_path' instead."
+			"Use `file_path' instead. [2017-05-31]"
 		do
 			create Result.make_from_string (file_path.name)
 		end
@@ -150,7 +150,7 @@ feature {EV_PRINT_DIALOG_I} -- Status setting
 	set_file_name (a_string: READABLE_STRING_GENERAL)
 			-- Set "file_name" to "a_string".
 		obsolete
-			"Use `set_file_path' instead."
+			"Use `set_file_path' instead. [2017-05-31]"
 		require
 			a_string_not_empty: a_string.count > 0
 		do

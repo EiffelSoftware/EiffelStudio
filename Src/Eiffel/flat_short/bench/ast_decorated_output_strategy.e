@@ -379,7 +379,7 @@ feature {NONE} -- Implementation
 	process_id_as (l_as: ID_AS)
 		do
 			if is_local_id then
-				text_formatter_decorator.process_local_text (l_as.name_32)
+				text_formatter_decorator.process_local_text (l_as, l_as.name_32)
 			else
 				text_formatter_decorator.process_basic_text (l_as.name_32)
 			end
@@ -889,7 +889,7 @@ feature {NONE} -- Implementation
 				if not expr_type_visiting then
 						-- Named tuple is neither a local nor an argument, we simply use local style.
 					l_text_formatter_decorator.process_symbol_text (ti_dot)
-					l_text_formatter_decorator.process_local_text (l_as.access_name_32)
+					l_text_formatter_decorator.process_local_text (l_as, l_as.access_name_32)
 				end
 			else
 				if not has_error_internal then
@@ -998,7 +998,7 @@ feature {NONE} -- Implementation
 						if l_as.is_qualified or l_text_formatter_decorator.dot_needed then
 							l_text_formatter_decorator.process_symbol_text (ti_dot)
 						end
-						l_text_formatter_decorator.process_local_text (l_as.access_name_32)
+						l_text_formatter_decorator.process_local_text (l_as, l_as.access_name_32)
 					end
 				end
 			end
@@ -3588,7 +3588,8 @@ feature {NONE} -- Implementation
 				if last_type /= Void then
 					type_output_strategy.process (last_type, text_formatter_decorator, current_class, current_feature)
 				else
-					text_formatter_decorator.process_local_text (l_as.dump)
+						-- TODO: check if Void is ok for now [2017-04-15].
+					text_formatter_decorator.process_local_text (Void, l_as.dump)
 				end
 			end
 		end
@@ -4175,7 +4176,7 @@ feature {NONE} -- Implementation
 			if not expr_type_visiting then
 				text_formatter_decorator.process_keyword_text (ti_void, Void)
 			end
-			last_type := none_type
+			last_type := detachable_none_type
 		end
 
 	process_type_list_as (l_as: TYPE_LIST_AS)
@@ -4432,7 +4433,8 @@ feature {NONE} -- Implementation: helpers
 			if l_feat /= Void then
 				text_formatter_decorator.process_feature_text (a_feature_name.visual_name_32, l_feat, False)
 			else
-				text_formatter_decorator.process_local_text (a_feature_name.visual_name_32)
+					-- TODO: check if Void is ok for now [2017-04-15].
+				text_formatter_decorator.process_local_text (Void, a_feature_name.visual_name_32)
 			end
 		end
 
@@ -5304,7 +5306,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

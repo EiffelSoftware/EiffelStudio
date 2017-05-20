@@ -5,6 +5,7 @@ note
 			Search, extension and removal are amortized constant time.
 		]"
 	author: "Nadia Polikarpova"
+	updated_by: "Alexander Kogtenkov"
 	model: set, equivalence, hash
 
 class
@@ -241,7 +242,6 @@ feature {NONE} -- Implementation
 		require
 			c_positive: c > 0
 		local
-			i: INTEGER
 			b: V_ARRAY [V_LINKED_LIST [G]]
 			iterator: V_HASH_SET_ITERATOR [G]
 		do
@@ -251,8 +251,7 @@ feature {NONE} -- Implementation
 			until
 				iterator.after
 			loop
-				i := bucket_index (iterator.item, c)
-				b [i].extend_back (iterator.item)
+				b [bucket_index (iterator.item, c)].extend_back (iterator.item)
 				iterator.forth
 			end
 			buckets := b

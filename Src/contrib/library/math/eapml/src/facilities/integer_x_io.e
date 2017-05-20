@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {INTEGER_X_IO}."
 	author: "Colin LeMahieu"
 	date: "$Date$"
@@ -262,9 +262,7 @@ feature
 				wbits := numb \\ 8
 				wbitsmask := ((1).to_natural_8 |<< wbits) - 1
 				woffset := (numb + 7) // 8
-				if endian >= 0 then
-					woffset := woffset
-				else
+				if endian < 0 then
 					woffset := -woffset
 				end
 				if order < 0 then

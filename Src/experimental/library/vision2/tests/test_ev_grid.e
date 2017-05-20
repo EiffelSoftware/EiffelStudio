@@ -179,6 +179,15 @@ feature -- Test routines
 					l_grid.set_minimum_height (l_old_height)
 					assert ("Minumum_height updated", l_old_height = l_grid.minimum_height)
 					assert ("Same virtual height", l_old_height = l_grid.virtual_height + l_grid.header.height)
+
+						-- Add 20 rows which makes the grid content larger than its container.
+						-- Now we check that the minimum height if set is properly set.
+					l_grid.set_row_count_to (20)
+					assert ("viewable_height", l_grid.viewable_height + l_grid.header.height = l_grid.height)
+					l_old_height := l_grid.virtual_height
+					l_grid.set_minimum_height (l_old_height)
+					assert ("Minumum_height updated", l_old_height = l_grid.minimum_height)
+					assert ("Same virtual height", l_old_height = l_grid.virtual_height)
 				end
 			)
 		end

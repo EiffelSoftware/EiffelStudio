@@ -1,6 +1,6 @@
 note
-	description: "Request handler related to /blogs and /blogs/{page}. Displays all posts in the blog."
-	author: "Dario Bösch <daboesch@student.ethz.ch>"
+	description: "Request handler related to /blogs and /blogs/?page={page}. Displays all posts in the blog."
+	contributor: "Dario Bösch <daboesch@student.ethz.ch>"
 	date: "$Date$"
 	revision: "$9661667$"
 
@@ -69,7 +69,8 @@ feature -- HTTP Methods
 			l_page: CMS_RESPONSE
 		do
 				-- Read page number from path parameter.
-			page_number := page_number_path_parameter (req)
+			page_number := page_number_parameter (req)
+			entries_per_page := size_parameter (req)
 
 				-- Responding with `main_content_html (l_page)'.
 			create {GENERIC_VIEW_CMS_RESPONSE} l_page.make (req, res, api)
@@ -94,6 +95,19 @@ feature -- Query
 			Result := entries_per_page < total_entries
 		end
 
+	size_parameter (req: WSF_REQUEST): NATURAL_32
+			-- Page size value from req, otherwise use default.
+		do
+			if
+				attached {WSF_STRING} req.query_parameter ("size") as p_size and then
+				p_size.is_integer
+			then
+				Result := p_size.integer_value.to_natural_32
+			else
+				Result := blog_api.default_entries_count_per_page
+			end
+		end
+
 	pages_count: NATURAL_32
 			-- Number of pages needed to display all posts.
 		require
@@ -105,14 +119,14 @@ feature -- Query
 			Result := tmp.ceiling.to_natural_32
 		end
 
-	page_number_path_parameter (req: WSF_REQUEST): NATURAL_32
-			-- Page number from path /blogs/{page}.
+	page_number_parameter (req: WSF_REQUEST): NATURAL_32
+			-- Page number from path /blogs/?page={page}.
 			-- Unsigned integer since negative pages are not allowed.
 		local
-			s: STRING
+			s: READABLE_STRING_32
 		do
 			Result := 1 -- default if not get variable is set
-			if attached {WSF_STRING} req.path_parameter ("page") as p_page then
+			if attached {WSF_STRING} req.query_parameter ("page") as p_page then
 				s := p_page.value
 				if s.is_natural_32 then
 					if s.to_natural_32 > 1 then
@@ -142,9 +156,12 @@ feature -- HTML Output
 		local
 			n: CMS_NODE
 			lnk: CMS_LOCAL_LINK
+			l_hide: BOOLEAN
 		do
 				-- Output the title. If more than one page, also output the current page number
-			append_page_title_html_to (a_output)
+			append_page_title_html_to (page, a_output)
+
+			append_user_related_html_to (page, a_output)
 
 				-- Get the posts from the current page (given by page number and entries per page)
 				-- Start list of posts
@@ -153,22 +170,42 @@ feature -- HTML Output
 				posts as ic
 			loop
 				n := ic.item
-				lnk := blog_api.node_api.node_link (n)
-				a_output.append ("<li class=%"cms_type_"+ n.content_type +"%">")
+				l_hide := not n.is_published
+				if l_hide then
+					if
+						attached api.user as u
+					then
+						if api.user_api.is_admin_user (u) then
+							l_hide := False
+						else
+							l_hide := not u.same_as (n.author)
+						end
+					end
+				end
+				if not l_hide then
+					lnk := blog_api.node_api.node_link (n)
+					a_output.append ("<li class=%"cms_type_"+ n.content_type +"%">")
 
-					-- Output the creation date
-				append_creation_date_html_to (n, a_output)
+					if not n.is_published then
+						a_output.append ("<div class=%"warning%">This entry is not yet published!</div>")
+					end
+						-- Output the creation date
+					append_creation_date_html_to (n, a_output)
 
-					-- Output the author of the post
-				append_author_html_to (n, a_output)
+						-- Output the author of the post
+					append_author_html_to (n, page, a_output)
 
-					-- Output the title of the post as a link (to the detail page)
-				append_title_html_to (n, page, a_output)
+						-- Output the title of the post as a link (to the detail page)
+					append_title_html_to (n, page, a_output)
 
-					-- Output the summary of the post and a more link to the detail page
-				append_summary_html_to (n, page, a_output)
+						-- Output associated tags.
+					append_taxonomy_html_to (n, page, a_output)
 
-				a_output.append ("</li>%N")
+						-- Output the summary of the post and a more link to the detail page
+					append_summary_html_to (n, page, a_output)
+
+					a_output.append ("</li>%N")
+				end
 			end
 
 				-- End of post list
@@ -178,15 +215,26 @@ feature -- HTML Output
 			append_pagination_html_to (a_output)
 		end
 
-	append_page_title_html_to (a_output: STRING)
+	append_page_title_html_to (a_page: CMS_RESPONSE; a_output: STRING)
 			-- Append the title of the page as a html string to `a_output'.
 			-- It shows the current page number.
+		local
+			l_title: STRING
 		do
-			a_output.append ("<h2>Blog")
+			create l_title.make_from_string ("Blog entries")
 			if multiple_pages_needed then
-				a_output.append (" (Page " + page_number.out + " of " + pages_count.out + ")")
+				l_title.append (" (Page " + page_number.out + " of " + pages_count.out + ")")
 			end
-			a_output.append ("</h2>")
+			a_page.set_title (l_title)
+--			a_output.append ("<h2>" + l_title + "</h2>")
+		end
+
+	append_user_related_html_to (a_page: CMS_RESPONSE; a_output: STRING)
+		do
+			if attached api.user as u and api.has_permission ("create blog") then
+				a_page.add_to_primary_tabs (a_page.local_link ("Create a new blog entry", "node/add/blog"))
+				a_page.add_to_primary_tabs (a_page.local_link ("View your blog entries", "blog/" + u.id.out))
+			end
 		end
 
 	append_creation_date_html_to (n: CMS_NODE; a_output: STRING)
@@ -201,12 +249,12 @@ feature -- HTML Output
 			end
 		end
 
-	append_author_html_to (n: CMS_NODE; a_output: STRING)
+	append_author_html_to (n: CMS_NODE; a_page: CMS_RESPONSE; a_output: STRING)
 			-- Append to `a_output', the author of node `n' as html link to author's posts.
 		do
 			if attached n.author as l_author then
 				a_output.append ("by ")
-				a_output.append ("<a class=%"blog_user_link%" href=%"/blogs/user/" + l_author.id.out + "%">" + html_encoded (l_author.name) + "</a>")
+				a_output.append ("<a class=%"blog_user_link%" href=%"/blog/" + l_author.id.out + "%">" + html_encoded (a_page.user_profile_name (l_author)) + "</a>")
 			end
 		end
 
@@ -226,7 +274,7 @@ feature -- HTML Output
 		local
 			lnk: CMS_LOCAL_LINK
 		do
-			if attached n.summary as l_summary then
+			if attached n.summary as l_summary and then not l_summary.is_whitespace then
 				lnk := blog_api.node_api.node_link (n)
 				a_output.append ("<p class=%"blog_list_summary%">")
 				if attached api.format (n.format) as f then
@@ -237,6 +285,14 @@ feature -- HTML Output
 				a_output.append ("<br />")
 				a_output.append (page.link ("See more...", lnk.location, Void))
 				a_output.append ("</p>")
+			end
+		end
+
+	append_taxonomy_html_to (n: CMS_NODE; page: CMS_RESPONSE; a_output: STRING_8)
+			-- returns a html string with the summary of the node and a link to the detail page
+		do
+			if attached {CMS_TAXONOMY_API} api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxo_api then
+				l_taxo_api.append_taxonomy_to_xhtml (n, page, a_output)
 			end
 		end
 
@@ -251,7 +307,7 @@ feature -- HTML Output
 					-- If exist older posts show link to next page
 				if page_number < pages_count then
 					tmp := page_number + 1
-					a_output.append (" <a class=%"blog_older_posts%" href=%"" + base_path + "/page/" + tmp.out + "%"><< Older Posts</a> ")
+					a_output.append (" <a class=%"blog_older_posts%" href=%"" + base_path + "?page=" + tmp.out + "&size=" + entries_per_page.out + "%"><< Older Posts</a> ")
 				end
 
 				-- Delimiter
@@ -262,7 +318,7 @@ feature -- HTML Output
 				-- If exist newer posts show link to previous page
 				if page_number > 1 then
 					tmp := page_number -1
-					a_output.append (" <a class=%"blog_newer_posts%" href=%"" + base_path + "/page/" + tmp.out + "%">Newer Posts >></a> ")
+					a_output.append (" <a class=%"blog_newer_posts%" href=%"" + base_path + "?page=" + tmp.out + "&size=" + entries_per_page.out + "%">Newer Posts >></a> ")
 				end
 
 				a_output.append ("</div>")

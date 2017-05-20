@@ -64,7 +64,8 @@ inherit
 			on_key_pressed,
 			calculate_completion_list_width,
 			prepare_auto_complete,
-			on_char_completable
+			on_char_completable,
+			complete_template_call
 		end
 
 	ES_HELP_REQUEST_BINDER
@@ -468,8 +469,7 @@ feature {NONE} -- Process Vision2 Events
 	handle_character (c: CHARACTER_32)
  			-- Process the push on a character key.
 		local
-			t: EDITOR_TOKEN_KEYWORD
-			token: EDITOR_TOKEN
+			tok, token: detachable EDITOR_TOKEN
 			look_for_keyword: BOOLEAN
 			insert: CHARACTER_32
 			syntax_completed: BOOLEAN
@@ -486,13 +486,19 @@ feature {NONE} -- Process Vision2 Events
 						cur.go_left_char
 						token := cur.token
 						if token /= Void then
-							t ?= token.previous
-							if t /= Void and then keyword_image(t).is_equal (previous_token_image) then
-								text_displayed.back_delete_char
-								text_displayed.complete_syntax (previous_token_image, True, False)
-								syntax_completed := text_displayed.syntax_completed
-								look_for_keyword := False
-								latest_typed_word_is_keyword := False
+							if
+								attached {EDITOR_TOKEN_KEYWORD} token.previous as l_keyword_token
+							then
+								tok := l_keyword_token
+								if
+									keyword_image (l_keyword_token).is_equal (previous_token_image)
+								then
+									text_displayed.back_delete_char
+									text_displayed.complete_syntax (previous_token_image, True, False)
+									syntax_completed := text_displayed.syntax_completed
+									look_for_keyword := False
+									latest_typed_word_is_keyword := False
+								end
 							end
 						end
 					else
@@ -500,18 +506,18 @@ feature {NONE} -- Process Vision2 Events
 						if text_displayed.cursor.line.eol_token = token then
 								-- case: keyword|space|eol
 							if token.previous /= Void and then token.previous.length = 1 then
-								t ?= token.previous.previous
+								tok := token.previous.previous
 							end
 						elseif token /= Void then
 								-- case: keyword|space|space|...
 							if text_displayed.cursor.pos_in_token = 2 then
-								t ?= token.previous
+								tok := token.previous
 							end
 						end
-						if t /= Void then
+						if attached {EDITOR_TOKEN_KEYWORD} tok as l_keyword_token then
 							text_displayed.back_delete_char
 							look_for_keyword := False
-							text_displayed.complete_syntax (keyword_image (t), False, False)
+							text_displayed.complete_syntax (keyword_image (l_keyword_token), False, False)
 							syntax_completed := text_displayed.syntax_completed
 							look_for_keyword := False
 						end
@@ -529,12 +535,17 @@ feature {NONE} -- Process Vision2 Events
 				end
 				if look_for_keyword then
 					if text_displayed.cursor.token /= Void then
-						t ?= text_displayed.cursor.token.previous
+						tok := text_displayed.cursor.token.previous
 					end
-					latest_typed_word_is_keyword := (t /= Void) and then text_displayed.cursor.pos_in_token = 1
-					if latest_typed_word_is_keyword then
-						previous_token_image := keyword_image (t)
-					end
+					if
+						attached {EDITOR_TOKEN_KEYWORD} tok as l_keyword_token and then
+						text_displayed.cursor.pos_in_token = 1
+					then
+						latest_typed_word_is_keyword := True
+						previous_token_image := keyword_image (l_keyword_token)
+					else
+						latest_typed_word_is_keyword := False
+ 					end
 				end
 			else
 				display_not_editable_warning_message
@@ -545,7 +556,6 @@ feature {NONE} -- Process Vision2 Events
 	handle_extended_key (ev_key: EV_KEY)
  			-- Process the push on an extended key.
 		local
-			t: EDITOR_TOKEN_KEYWORD
 			code: INTEGER
 			token: EDITOR_TOKEN
 			syntax_completed: BOOLEAN
@@ -568,15 +578,19 @@ feature {NONE} -- Process Vision2 Events
 						token := text_displayed.cursor.token
 						if token /= Void then
 							if latest_typed_word_is_keyword then
-								t ?= token.previous
-								if t /= Void and then keyword_image (t).is_equal (previous_token_image) then
+								if
+									attached {EDITOR_TOKEN_KEYWORD} token.previous as t and then
+									keyword_image (t).is_equal (previous_token_image)
+								then
 									text_displayed.complete_syntax (previous_token_image, True, True)
 									syntax_completed := text_displayed.syntax_completed
 									latest_typed_word_is_keyword := False
 								end
 							else
-								t ?= token.previous
-								if t /= Void and then text_displayed.cursor.pos_in_token = 1 then
+								if
+									attached {EDITOR_TOKEN_KEYWORD} token.previous as t and then
+									text_displayed.cursor.pos_in_token = 1
+								then
 									text_displayed.complete_syntax (keyword_image (t), False, True)
 									syntax_completed := text_displayed.syntax_completed
 								end
@@ -648,7 +662,8 @@ feature {NONE} -- Handle mouse clicks
 			-- And if `a_regions' is not empty, limit the impact token in those regions.
 		do
 			if attached text_displayed as txt then
-				if has_selection and then
+				if
+					has_selection and then
 					is_word (wide_string_selection)
 	--| Alternative code using cursor.
 	--				attached txt.cursor as l_cursor and then
@@ -656,18 +671,12 @@ feature {NONE} -- Handle mouse clicks
 	--				tok.is_text and then is_word (tok.wide_image)
 				then
 					if a_regions = Void then
-						txt.enable_linked_editing (Current, a_pos_in_text, current_feature_scope_as_regions (txt))
+						txt.enable_linked_editing (Current, a_pos_in_text, current_feature_scope_as_regions (txt), Void)
 					else
-						txt.enable_linked_editing (Current, a_pos_in_text, a_regions)
+						txt.enable_linked_editing (Current, a_pos_in_text, a_regions, Void)
 					end
 				else
 					txt.disable_linked_editing
-				end
-				if
-					attached txt.linked_editing as e and then
-					e.is_active
-				then
-					e.prepare
 				end
 			end
 		end
@@ -875,7 +884,7 @@ feature {NONE} -- Brace matching
 			l_token := text_displayed.cursor.token
 			l_line := text_displayed.cursor.line
 			if l_token /= Void and l_line /= Void then
-				l_prev_token ?= l_token.previous
+				l_prev_token := l_token.previous
 				if l_utils.is_closing_brace (l_token) and then position = l_token.pos_in_text
 						and then l_prev_token /= Void and then l_utils.is_closing_brace (l_prev_token) then
 							-- Check the previous token for a closing brace, because it has priority
@@ -912,7 +921,6 @@ feature {NONE} -- Brace matching
 			l_utils: attached like brace_matcher
 			l_token: attached EDITOR_TOKEN
 			l_line: attached EDITOR_LINE
-			l_brace: detachable like brace_match_caret_token
 			l_invalidated_lines: ARRAYED_SET [EDITOR_LINE]
 			l_last_matches: attached like last_highlighted_matched_braces
 			l_invalidated_line: detachable EDITOR_LINE
@@ -924,8 +932,7 @@ feature {NONE} -- Brace matching
 					-- Remove last matches
 				l_last_matches := last_highlighted_matched_braces
 				from l_last_matches.start until l_last_matches.after loop
-					l_brace ?= l_last_matches.item
-					if l_brace /= Void then
+					if attached {like brace_match_caret_token} l_last_matches.item as l_brace then
 						l_brace.token.set_highlighted (False)
 						if not l_invalidated_lines.has (l_brace.line) then
 							l_invalidated_lines.extend (l_brace.line)
@@ -936,16 +943,14 @@ feature {NONE} -- Brace matching
 
 				if not has_selection and then preferences.editor_data.highlight_matching_braces then
 						-- Locate applicable tokens
-					l_brace := brace_match_caret_token
-					if l_brace /= Void then
+					if attached {like brace_match_caret_token} brace_match_caret_token as l_brace then
 						l_token := l_brace.token
 						l_line := l_brace.line
 
 							-- Find matching brace tokens.
 						l_utils := brace_matcher
 						if l_utils.is_brace (l_token) and then l_line.has_token (l_token) then
-							l_brace := l_utils.match_brace (l_token, l_line, Void)
-							if l_brace /= Void then
+							if attached l_utils.match_brace (l_token, l_line, Void) as l_matched_brace then
 									-- There was a match.
 								l_token.set_highlighted (True)
 								if not l_invalidated_lines.has (l_line) then
@@ -953,11 +958,11 @@ feature {NONE} -- Brace matching
 								end
 								l_last_matches.extend ([l_token, l_line])
 
-								l_brace.token.set_highlighted (True)
-								if not l_invalidated_lines.has (l_brace.line) then
-									l_invalidated_lines.extend (l_brace.line)
+								l_matched_brace.token.set_highlighted (True)
+								if not l_invalidated_lines.has (l_matched_brace.line) then
+									l_invalidated_lines.extend (l_matched_brace.line)
 								end
-								l_last_matches.extend ([l_brace.token, l_brace.line])
+								l_last_matches.extend ([l_matched_brace.token, l_matched_brace.line])
 							end
 						end
 					end
@@ -1066,7 +1071,7 @@ feature {NONE} -- Autocomplete implementation
 	switch_auto_point: BOOLEAN
 			-- Should `auto_point' have the opposite value?
 
-	auto_point_token: EDITOR_TOKEN
+	auto_point_token: detachable EDITOR_TOKEN
 			-- Point where autocomplete should add a period.
 
 feature {NONE} -- syntax completion
@@ -1074,15 +1079,13 @@ feature {NONE} -- syntax completion
 	latest_typed_word_is_keyword: BOOLEAN
 			-- Is the preceding token a keyword?
 
-	previous_token_image: STRING_32
+	previous_token_image: detachable STRING_32
 			-- Image of the previous token
 
 	keyword_image (token: EDITOR_TOKEN_KEYWORD): STRING_32
 			-- Image of keyword beginning by `token'.
 		local
 			test: STRING_32
-			kw: like token
-			blnk: EDITOR_TOKEN_BLANK
 			tok: EDITOR_TOKEN
 			is_else, is_then: BOOLEAN
 		do
@@ -1092,15 +1095,13 @@ feature {NONE} -- syntax completion
 			is_then := test.is_case_insensitive_equal ({STRING_32} "then")
 			if is_else or is_then then
 				from
-					blnk ?= token.previous
+					tok := token.previous
 				until
-					blnk = Void
+					not attached {EDITOR_TOKEN_BLANK} tok as blnk
 				loop
 					tok := blnk.previous
-					blnk ?= tok
 				end
-				kw ?= tok
-				if kw /= Void then
+				if attached {like token} tok as kw then
 					if is_else then
 						test := kw.wide_image.twin
 						if test.is_case_insensitive_equal ({STRING_32} "or") then
@@ -1309,8 +1310,6 @@ feature -- Text Loading
 			-- <Precursor>
 		local
 			l_d_class : DOCUMENT_CLASS
-			l_scanner: EDITOR_EIFFEL_SCANNER
-			l_stone: CLASSI_STONE
 		do
 			if (not load_without_save) and then changed then
 				load_without_save := True
@@ -1318,12 +1317,10 @@ feature -- Text Loading
 			else
 				l_d_class := get_class_from_type (once "e")
 				set_current_document_class (l_d_class)
-				l_scanner ?= l_d_class.scanner
-				if l_scanner /= Void then
+				if attached {EDITOR_EIFFEL_SCANNER} l_d_class.scanner as l_scanner then
 					text_displayed.set_lexer (l_scanner)
-					l_stone ?= stone
-					if l_stone /= Void then
-						l_scanner.set_current_class (l_stone.class_i.config_class)
+					if attached {CLASSI_STONE} stone as l_classi_stone then
+						l_scanner.set_current_class (l_classi_stone.class_i.config_class)
 					end
 				end
 				text_displayed.set_current_document_class (get_class_from_type (once "e"))
@@ -1372,8 +1369,8 @@ feature {NONE} -- Memory management
 			-- so that we know whether we're still referenced or not.
 		do
 			Precursor {EB_CLICKABLE_EDITOR}
-			if completion_timeout /= Void and then not completion_timeout.is_destroyed then
-				completion_timeout.destroy
+			if attached completion_timeout as l_timeout and then not l_timeout.is_destroyed then
+				l_timeout.destroy
 			end
 
 			if event_list.is_service_available then
@@ -1418,10 +1415,9 @@ feature {NONE} -- Code completable implementation
 			-- We don't need signature when completing outside a feature.
 		local
 			l_line: EIFFEL_EDITOR_LINE
-			l_kt: EDITOR_TOKEN_KEYWORD
 			l_end_loop, l_quit: BOOLEAN
 			l_cursor: EDITOR_CURSOR
-			l_token: EDITOR_TOKEN
+			l_token: detachable EDITOR_TOKEN
 			l_found_blank: BOOLEAN
 		do
 			set_discard_feature_signature (False)
@@ -1442,8 +1438,7 @@ feature {NONE} -- Code completable implementation
 						l_line.after or l_end_loop
 					loop
 						if l_line.item.wide_image.is_case_insensitive_equal ({STRING_32} "feature") then
-							l_kt ?= l_line.item
-							if l_kt /= Void then
+							if attached {EDITOR_TOKEN_KEYWORD} l_line.item as l_kt then
 								l_end_loop := True
 								check l_line_valid: l_line.is_valid end
 								create l_cursor.make_from_relative_pos (l_line, l_kt, 1, text_displayed)
@@ -1485,7 +1480,7 @@ feature {NONE} -- Code completable implementation
 									l_end_loop := True
 								end
 							end
-							-- We do not need feature signature when it is a pointer reference. case2: "$feature"
+								-- We do not need feature signature when it is a pointer reference. case2: "$feature"
 							if not l_found_blank and then not l_quit and then not l_end_loop then
 								if token_equal (l_token, "$") then
 									l_end_loop := True
@@ -1528,11 +1523,14 @@ feature {NONE} -- Code completable implementation
 	current_line: EIFFEL_EDITOR_LINE
 			-- Line of current cursor.
 			-- Every query is not guarenteed the same object.
+		local
+			l_line: detachable EIFFEL_EDITOR_LINE
 		do
-			Result := text_displayed.cursor.line
-			if Result = Void then
-				create Result.make (is_windows_file)
+			l_line := text_displayed.cursor.line
+			if l_line = Void then
+				create l_line.make (is_windows_file)
 			end
+			Result := l_line
 		end
 
 	can_complete (a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN): BOOLEAN
@@ -1663,7 +1661,6 @@ feature {NONE} -- Code completable implementation
 		local
 			l_current_line: like current_line
 			l_current_token, l_cur_token: EDITOR_TOKEN
-			l_comment: EDITOR_TOKEN_COMMENT
 			l_has_left_brace_ahead,
 			l_has_right_brace_ahead,
 			l_has_right_brace_following,
@@ -1684,8 +1681,7 @@ feature {NONE} -- Code completable implementation
 					l_cur_token := l_cur_token.previous
 				end
 				if l_cur_token /= Void then
-					l_comment ?= l_cur_token
-					l_comment_ahead := (l_comment /= Void)
+					l_comment_ahead := attached {EDITOR_TOKEN_COMMENT} l_cur_token
 				end
 				Result := not l_comment_ahead
 				if Result then
@@ -1885,12 +1881,166 @@ feature {NONE} -- Code completable implementation
 			text_displayed.cursor.set_from_character_pos (saved_cursor.x_in_characters, saved_cursor.y_in_lines, text_displayed)
 		end
 
-	saved_cursor: EDITOR_CURSOR
+	saved_cursor: detachable EDITOR_CURSOR
 
 	complete_feature_call (completed: STRING_32; is_feature_signature: BOOLEAN; appended_character: CHARACTER_32; remainder: INTEGER; a_continue_completion: BOOLEAN)
 			--
 		do
 			text_displayed.complete_feature_call (completed, is_feature_signature, appended_character, remainder, not a_continue_completion)
+		end
+
+	complete_template_call (a_template: EB_TEMPLATE_FOR_COMPLETION)
+			-- Insert code template `a_template'.
+		local
+			l_template: STRING_32
+			l_locals: READABLE_STRING_GENERAL
+			s: STRING_32
+			l_pos, l_feat_pos: INTEGER
+			txt: like text_displayed
+			l_local_pos, l_start_pos, p: INTEGER
+			l_locals_offset: INTEGER
+			l_code_texts: TUPLE [locals: STRING_32; code: STRING_32; linked_token: ARRAY [READABLE_STRING_GENERAL]]
+			l_regions: ARRAYED_LIST [TUPLE [start_pos,end_pos: INTEGER]]
+			l_template_region, l_locals_region: detachable TUPLE [start_pos,end_pos: INTEGER]
+			l_nb_cr: INTEGER
+			txt_is_windows_eol_style: BOOLEAN
+		do
+				-- local varianles and code from template
+			l_code_texts := a_template.code_texts
+
+			txt := text_displayed
+			txt_is_windows_eol_style := txt.is_windows_eol_style -- and False
+
+				-- Maybe a bit heavy...
+			txt.update_token_pos_in_text_from (1)
+
+
+				-- Body
+			l_pos := txt.cursor.pos_in_characters
+			create l_template.make_from_string_general (l_code_texts.code)
+			l_template.prune_all ('%R')
+
+
+				-- TODO: remove previous token!
+			if
+				attached txt.cursor.token.previous as prev and then prev.wide_image.same_string_general (".") and then
+				attached prev.previous as prev2
+			then
+				p := l_pos - prev2.wide_image.count - 2 + 1
+				txt.select_region (p, l_pos)
+				txt.delete_selection
+				l_pos := p
+				txt.go_to (p)
+				l_pos := p
+			else
+				txt.insert_string ("%N")
+				l_pos := l_pos + 1
+				if txt_is_windows_eol_style then
+					l_pos := l_pos + 1 -- Inserted CR  %R
+				end
+			end
+
+				-- Insert template body
+
+			txt.paste_with_indentation (l_template)
+			if txt_is_windows_eol_style then
+				l_nb_cr := l_template.occurrences ('%N') -- For the missing %R.
+			else
+				l_nb_cr := 0
+			end
+			l_template_region := [l_pos, l_pos + l_template.count + l_nb_cr]
+--			l_regions.force ([l_pos, l_pos + 3 + l_template.count + l_nb_cr]) -- code region
+
+				-- Locals
+			if attached a_template.e_feature as f then
+					-- FIXME: check for inline agent !
+				txt.find_feature_named (f.name_32) -- Cursor is moved.
+				if txt.found_feature then
+					l_locals := l_code_texts.locals
+
+					l_feat_pos := txt.cursor.pos_in_characters
+
+					txt.cursor.go_to_position (l_feat_pos)
+					txt.search_string_from_cursor ("local")
+					if txt.successful_search then
+						l_local_pos := txt.found_string_total_character_position
+					end
+
+					txt.cursor.go_to_position (l_feat_pos)
+					txt.search_string_from_cursor ("do")
+					if txt.successful_search then
+						l_start_pos := txt.found_string_total_character_position
+					end
+
+					txt.cursor.go_to_position (l_feat_pos)
+					txt.search_string_from_cursor ("once")
+					if txt.successful_search then
+						p := txt.found_string_total_character_position
+						if l_start_pos = 0 then
+							l_start_pos := p
+						else
+							l_start_pos := l_start_pos.min (p)
+						end
+					end
+
+					if l_start_pos > 0 then
+						check locals_do_not_start_with_new_line: not l_locals.starts_with ("%N") end
+						check locals_ends_with_new_line: not l_locals.starts_with ("%N") end
+
+						txt.cursor.go_to_position (l_start_pos + 1) -- goto "do" , "once" ,... start of the body!
+						p := txt.cursor.line.first_token.pos_in_text
+						txt.cursor.go_to_position (p) -- cursor at the beginning of the line.
+
+						if l_local_pos > 0 and l_local_pos < l_start_pos then
+							create s.make_from_string_general (l_locals)
+						else -- no "local" found!
+							create s.make_from_string_general ("%T%Tlocal%N")
+							s.append_string_general (l_locals)
+						end
+						s.prune_all ('%R')
+						txt.insert_string (s)
+						if txt_is_windows_eol_style then
+							l_nb_cr := s.occurrences ('%N') -- For the missing %R.
+						else
+							l_nb_cr := 0
+						end
+						l_locals_offset := s.count + l_nb_cr
+
+						l_locals_region := [p, p + s.count + l_nb_cr] -- locals region
+						l_pos := l_pos + l_locals_offset
+						if l_template_region /= Void then
+							l_template_region.start_pos := l_template_region.start_pos + l_locals_offset
+							l_template_region.end_pos := l_template_region.end_pos + l_locals_offset
+						end
+					end
+				end
+			end
+
+			txt.cursor.go_to_position (l_pos + 1)
+			refresh_now
+
+				-- Update pos in text for tokens.
+			create l_regions.make (2)
+			if l_locals_region /= Void then
+				l_regions.force (l_locals_region)
+			end
+			if l_template_region /= Void then
+				l_regions.force (l_template_region)
+			end
+
+			across
+				l_regions as ic
+			loop
+				p := p.min (ic.item.start_pos)
+			end
+			dev_window.save_text
+			txt.update_token_pos_in_text_from (p)
+
+			if True then
+				txt.enable_linked_editing (Current, l_pos, l_regions, l_code_texts.linked_token)
+				refresh_now
+			end
+
 		end
 
 	select_from_cursor_to_saved
@@ -2001,4 +2151,4 @@ feature {NONE} -- Implementation: Internal cache
 			Customer support http://support.eiffel.com
 		]"
 
-end
+end -- class SMART_EDITOR

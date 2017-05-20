@@ -1,11 +1,10 @@
-note
+﻿note
 	description: "[
 		Editor pick n drop.
 		Uses a tool to make feature text clickable.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -231,6 +230,8 @@ feature -- Possibly delayed operations
 						else
 							text_displayed.select_line (l_num)
 						end
+					elseif a_col > 0 then
+						text_displayed.set_cursor (l_num, a_col)
 					end
 					if highlight and has_selection then
 						show_selection (False)
@@ -985,7 +986,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1016,4 +1017,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CLICKABLE_EDITOR
+end

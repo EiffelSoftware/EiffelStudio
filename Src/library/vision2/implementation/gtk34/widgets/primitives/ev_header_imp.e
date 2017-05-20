@@ -35,8 +35,6 @@ inherit
 			make
 		end
 
-	EV_HEADER_ACTION_SEQUENCES_IMP
-
 create
 	make
 
@@ -48,7 +46,7 @@ feature -- Initialization
 			Result := False
 		end
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create an empty Tree.
 		do
 			assign_interface (an_interface)

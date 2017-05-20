@@ -1,0 +1,15 @@
+test_name	 library-removed-hash_table-cursor
+test_description Removing items from a hash table should not lead to a postcondition violation during iteration.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+test_end

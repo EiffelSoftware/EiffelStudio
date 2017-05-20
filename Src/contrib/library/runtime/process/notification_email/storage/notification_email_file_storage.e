@@ -45,7 +45,7 @@ feature -- Storage
 			if not retried then
 				has_error := False
 				if not output.is_open_write then
-					output.open_write
+					output.open_append
 					l_close_needed := True
 				end
 				output.put_string ("%N----%N" + a_email.message)

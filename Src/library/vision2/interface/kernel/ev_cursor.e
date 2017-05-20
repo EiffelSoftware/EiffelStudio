@@ -11,7 +11,7 @@ class
 	EV_CURSOR
 
 obsolete
-	"[090630] Use EV_POINTER_STYLE instead"
+	"Use EV_POINTER_STYLE instead [2017-05-31]"
 	
 inherit
 	EV_PIXMAP

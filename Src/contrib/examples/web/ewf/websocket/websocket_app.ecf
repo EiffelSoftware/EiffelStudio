@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="websocket_app" uuid="75D17C20-10A8-4E4C-A059-33D72A2B6AEF">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="websocket_app" uuid="75D17C20-10A8-4E4C-A059-33D72A2B6AEF">
 	<target name="websocket_app">
 		<root class="APPLICATION" feature="make_and_launch"/>
 		<file_rule>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<setting name="concurrency" value="scoop"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="http" location="../../../../library/network/protocol/http/http-safe.ecf"/>
-		<library name="standalone_websocket_connector" location="../../../../library/web/framework/ewf/wsf/connector/standalone_websocket-safe.ecf" readonly="false"/>
-		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="http" location="..\..\..\..\library\network\protocol\http\http.ecf"/>
+		<library name="standalone_websocket_connector" location="..\..\..\..\library\web\framework\ewf\wsf\connector\standalone_websocket.ecf" readonly="false"/>
+		<library name="wsf" location="..\..\..\..\library\web\framework\ewf\wsf\wsf.ecf"/>
 		<cluster name="app" location=".\" recursive="true"/>
+	</target>
+	<target name="websocket_app_ssl" extends="websocket_app">
+		<variable name="ssl_enabled" value="true"/>
 	</target>
 </system>

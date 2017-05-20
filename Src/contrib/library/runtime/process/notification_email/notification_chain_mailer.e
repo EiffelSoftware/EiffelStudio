@@ -50,9 +50,24 @@ feature -- Basic operation
 		do
 			if active.is_available then
 				active.process_email (a_email)
+				import_errors (active)
 			end
 			if attached next as l_next and then l_next.is_available then
 				l_next.process_email (a_email)
+				import_errors (l_next)
+			end
+		end
+
+feature {NONE} -- Errors
+
+	import_errors (a_mailer: NOTIFICATION_MAILER)
+		do
+			if attached a_mailer.last_errors as errs then
+				across
+					errs as ic
+				loop
+					report_error (ic.item)
+				end					
 			end
 		end
 

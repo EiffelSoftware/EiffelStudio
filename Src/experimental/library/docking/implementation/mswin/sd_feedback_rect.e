@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Transparent rectangle which only avail on Microsoft Windows 2000 and later."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -51,11 +51,17 @@ feature -- Command
 			set_size (a_rect.width, a_rect.height)
 			set_position (a_rect.left, a_rect.top)
 
-			create l_region.make_rect (0, 0, a_rect.width, a_rect.height)
 			check attached {WEL_WINDOW} implementation as l_imp then
-				set_window_rgn (l_imp.item, l_region.item, $l_result)
+				create l_region.make_rect (0, 0, a_rect.width, a_rect.height)
+					-- Check if a region object has been allocated.
+				if l_region.exists then
+					set_window_rgn (l_imp.item, l_region.item, $l_result)
+						-- If `l_result = 0' then something went wrong and
+						-- the region handle has to be deallocated
+						-- to prevent resource leaks.
+						-- Fortunately this is done automatically by `l_region.dispose'.
+				end
 			end
-			check successed: l_result /= 0 end
 		end
 
 	set_tab_area (a_top_rect, a_bottom_rect: EV_RECTANGLE)
@@ -171,7 +177,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -180,10 +186,5 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

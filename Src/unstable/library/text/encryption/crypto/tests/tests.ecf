@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="crypto-tests" uuid="2FA09D1B-B59B-44CC-99D0-B7C0DFF2DACA" library_target="crypto-tests">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="crypto-tests" uuid="2FA09D1B-B59B-44CC-99D0-B7C0DFF2DACA" library_target="crypto-tests">
 	<description>Unit-tests for the crypto library.</description>
 	<target name="crypto-tests">
 		<root class="TEST_MESSAGE_DIGEST" feature="make"/>
 		<file_rule>
-			<exclude>/EIFGENs$</exclude>
-			<exclude>/CVS$</exclude>
-			<exclude>/tests$</exclude>
 			<exclude>/.svn$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/tests$</exclude>
 		</file_rule>
-		<option is_attached_by_default="false" syntax="transitional" namespace="EiffelSoftware.Library">
+		<option namespace="EiffelSoftware.Library">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<setting name="dotnet_naming_convention" value="true"/>
+		<capability>
+			<concurrency support="thread" use="thread"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="crypto" location="..\crypto.ecf" readonly="false"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<cluster name="encoder" location="..\encoder" recursive="true"/>
 		<tests name="tests" location=".\" recursive="true"/>
 	</target>
 </system>

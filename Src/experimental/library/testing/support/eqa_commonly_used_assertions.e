@@ -138,7 +138,7 @@ feature -- Equality
 		require
 			a_tag_not_void: a_tag /= Void
 			pred_not_void: pred /= Void
-			pred_no_argument: pred.empty_operands.count = 0
+			pred_no_argument: pred.open_count = 0
 		do
 			assert (a_tag, pred.item (Void))
 		end
@@ -312,7 +312,7 @@ feature {NONE} -- Messages
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

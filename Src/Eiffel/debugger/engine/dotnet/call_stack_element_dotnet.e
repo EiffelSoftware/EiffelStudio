@@ -516,7 +516,6 @@ feature {NONE} -- Implementation
 			counter: INTEGER
 			l_names_heap: like Names_heap
 			l_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]
-			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE
 			l_stat_class: CLASS_C
 			l_old_group: CONF_GROUP
 			l_old_class: CLASS_C
@@ -555,8 +554,7 @@ feature {NONE} -- Implementation
 							end
 
 								--| at this point, the private_current_object is known
-							l_dotnet_ref_value ?= private_current_object
-							if l_dotnet_ref_value /= Void then
+							if attached {EIFNET_DEBUG_REFERENCE_VALUE} private_current_object as l_dotnet_ref_value then
 								l_dotnet_ref_value.get_object_value
 								if l_dotnet_ref_value.object_value /= Void then
 									private_result := l_dotnet_ref_value.once_function_value (rout)
@@ -651,9 +649,11 @@ feature {NONE} -- Implementation
 									value.set_item_number (counter)
 									counter := counter + 1
 									value.set_name (l_names_heap.item (l_ot_locals.item.id.name_id))
-									l_stat_class := static_class_for_local_from_type_a (l_ot_locals.item.li.type, rout_i, l_wc)
-									if l_stat_class /= Void then
-										value.set_static_class (l_stat_class)
+									if attached l_ot_locals.item.li.type as t then
+										l_stat_class := static_class_for_local_from_type_a (t, rout_i, l_wc)
+										if l_stat_class /= Void then
+											value.set_static_class (l_stat_class)
+										end
 									end
 									locals_list.extend (value)
 									l_ot_locals.forth
@@ -829,7 +829,7 @@ invariant
 note
 	date		: "$Date$"
 	revision	: "$Revision $"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -268,7 +268,15 @@ feature -- Basic operation
 						w_block := Void
 						is_start_of_line := True
 						l_line := a_text.substring (b, l_eol)
-						if l_line.is_empty then
+-- Remove any '%R' in text...
+--						if not l_line.is_empty and then l_line[l_line.count] = '%R' then
+--							l_line := l_line.substring (1, l_line.count - 1)
+--						end
+
+						if
+							l_line.is_empty
+							or (l_line.count = 1 and then l_line[1] = '%R')
+						then
 							w_box := new_paragraph (w_psec)
 --							add_element_to (w_box, w_line)
 						else
@@ -335,6 +343,13 @@ feature -- Basic operation
 								multiline_level := multiline_level - 1
 							end
 						end
+					else
+							-- Single backtik
+							-- Search until end of line!
+						tmp := index_of_char_before_end_of_line (a_text, '`', i + 1)
+						if tmp > 0 then
+							i := tmp
+						end
 					end
 				when '<' then
 						--| Builtin tags
@@ -376,8 +391,11 @@ feature -- Basic operation
 					else
 						q := next_end_of_tag_character (a_text, i + 1)
 						if q > 0 then
-							if a_text[q-1] = '/' then
-								l_tag := tag_name_from (a_text.substring (i, q))
+							l_tag := tag_name_from (a_text.substring (i, q))
+							if l_tag = Void or else l_tag.is_empty then
+									-- Invalid tag name!
+									-- Ignore...
+							elseif a_text[q-1] = '/' then
 								on_wiki_item_begin_token (l_items, i + 1, "tag:" + l_tag)
 								on_wiki_item_end_token (l_items, i + 1, "tag:" + l_tag)
 								if q > 0 then
@@ -387,23 +405,18 @@ feature -- Basic operation
 									i := i + (l_tag).count + 1 + 1
 								end
 							else
-								l_tag := tag_name_from (a_text.substring (i, q))
-								if l_tag.is_empty then
-										-- ???
+								multiline_level := multiline_level + 1
+								in_tag := True
+								on_wiki_item_begin_token (l_items, i + 1, "tag:" + l_tag)
+								if q > 0 then
+									i := q
 								else
-									multiline_level := multiline_level + 1
-									in_tag := True
-									on_wiki_item_begin_token (l_items, i + 1, "tag:" + l_tag)
-									if q > 0 then
-										i := q
-									else
-										check has_end_of_tag_character: False end
-										i := i + (l_tag).count + 1
-									end
+									check has_end_of_tag_character: False end
+									i := i + (l_tag).count + 1
 								end
 							end
 						else
-							l_tag := ""
+							l_tag := Void
 						end
 					end
 				else
@@ -530,7 +543,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2017, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

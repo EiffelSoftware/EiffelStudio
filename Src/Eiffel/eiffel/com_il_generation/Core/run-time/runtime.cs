@@ -668,6 +668,9 @@ feature -- Builtin implementations for Eiffel classes, see Eiffel classes for co
 	public static bool builtin_PLATFORM_is_vxworks () {
 		return false;
 	}
+	public static bool builtin_PLATFORM_is_64_bits () {
+		return IntPtr.Size == 8;
+	}
 	public static int builtin_PLATFORM_boolean_bytes () {
 		return 1;
 	}

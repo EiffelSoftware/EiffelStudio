@@ -1,0 +1,27 @@
+test_name 	 ca-obsolete-feature-call-date
+test_description Obsolete feature call should be reported with different severity levels depending on the specified date.
+
+copy_sub	Ace $TEST Ace
+
+	-- 4 years ago: error.
+define_date     DATE -1461
+copy_sub	test.e $CLUSTER test.e
+
+analyze_code rule "CA069"
+analyze_code_result violation "TEST CA069:10-Error"
+
+	-- Yerterday: warning.
+define_date     DATE -1
+copy_sub	test.e $CLUSTER test.e
+
+analyze_code rule "CA069"
+analyze_code_result violation "TEST CA069:10-Warning"
+
+	-- In a month: suggestion.
+define_date     DATE 31
+copy_sub	test.e $CLUSTER test.e
+
+analyze_code rule "CA069"
+analyze_code_result violation "TEST CA069:10-Suggestion"
+
+test_end

@@ -18,6 +18,9 @@ inherit
 	EV_MODEL_PROJECTOR
 
 	EV_MODEL_DRAWER
+		undefine
+			default_colors
+		end
 
 	EV_MODEL_PROJECTION_ROUTINES
 
@@ -26,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create with `a_world' and `a_filename'.
 		do
 			assign_interface (an_interface)
@@ -44,7 +47,7 @@ feature {NONE} -- Initialization
 			create a_printer.make_with_context (print_dc)
 			drawable := a_printer
 
-				-- This is only for letting users who have defined their own figure to still be 
+				-- This is only for letting users who have defined their own figure to still be
 				-- able to use the `register_figure'.
 			create draw_routines.make_filled (Void, 0, 20)
 			make_with_world (a_world)
@@ -92,7 +95,7 @@ feature -- Access
 				logical_y := print_dc.device_caps (logical_pixels_y)
 				set_dc_extents (pixels_per_inch, pixels_per_inch, logical_x, logical_y)
 				if world.grid_enabled and world.grid_visible then
-					draw_grid
+					draw_grid (world)
 				end
 				if world.is_show_requested then
 					project_figure_group (world, clip_rect)
@@ -150,7 +153,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

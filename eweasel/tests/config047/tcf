@@ -1,0 +1,21 @@
+test_name 	 capability-precompile-inheritance
+test_description Inherited capability rules should be checked similar to specified or default ones against used precompile.
+
+copy_raw	test.e $CLUSTER test.e
+
+-- Compatible capability, incompatible use.
+copy_sub	Ace-scoop-thread.ecf $TEST Ace
+compile_melted
+compile_result	validity_error NONE VD83
+
+-- Incompatible capability, incompatible use.
+copy_sub	Ace-thread.ecf $TEST Ace
+resume_compile
+compile_result	validity_error NONE VD46
+
+-- Compatible capability, compatible use.
+copy_sub	Ace-scoop.ecf $TEST Ace
+resume_compile
+compile_result	ok
+
+test_end

@@ -131,20 +131,18 @@ feature -- Factory functions
 
 feature {NONE} -- Implementation
 
-	max_identifier: separate NATURAL_64_REF
+	max_identifier: CELL [NATURAL_64]
 			-- The next identifier.
 		once
-			create Result
-			Result.set_item (1)
+			create Result.put (1)
 		end
 
-	increment (id: separate NATURAL_64_REF): NATURAL_64
+	increment (id: CELL [NATURAL_64]): NATURAL_64
 			-- Increment `id' and return the new value.
 		do
 			Result := id.item + 1
-			id.set_item (Result)
+			id.replace (Result)
 		end
-
 
 	object_store: HASH_TABLE [ANY, NATURAL_64]
 			-- The internal storage.
@@ -154,28 +152,28 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation: GC control
 
-	disable_gc (counter: separate NATURAL_32_REF)
+	disable_gc (counter: CELL [NATURAL_32])
 			-- Disable garbage collection.
 		do
 			if counter.item = 0 then
 				gc.collection_off
 			end
-			counter.set_item (counter.item + 1)
+			counter.replace (counter.item + 1)
 		end
 
-	enable_gc (counter: separate NATURAL_32_REF)
+	enable_gc (counter: CELL [NATURAL_32])
 			-- Enable garbage collection.
 		do
-			counter.set_item (counter.item - 1)
+			counter.replace (counter.item - 1)
 			if counter.item = 0 then
 				gc.collection_on
 			end
 		end
 
-	prepare_count: separate NATURAL_32_REF
+	prepare_count: CELL [NATURAL_32]
 			-- The global collection counter.
 		once
-			create Result
+			create Result.put (0)
 		end
 
 	gc: MEMORY

@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 					loop
 						s.append ("  - ")
 						s.append (c.item.url_encoded_name)
-						t := c.item.generating_type
+						t := c.item.generating_type.name
 						if t.same_string ("WSF_STRING") then
 						else
 							s.append_character (' ')

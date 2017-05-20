@@ -33,8 +33,6 @@ inherit
 			accelerators_enabled
 		end
 
-	EV_MENU_ITEM_ACTION_SEQUENCES_IMP
-
 create
 	make
 
@@ -45,7 +43,7 @@ feature {NONE} -- Initialization
 
 	is_dockable: BOOLEAN = False
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create a menu.
 		do
 			assign_interface (an_interface)
@@ -160,7 +158,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MENU_ITEM note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

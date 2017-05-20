@@ -10,7 +10,7 @@ class
 
 feature -- Factory: system and redirection
 
-	new_redirection_with_file_name (a_file_name: STRING_32; a_location: READABLE_STRING_GENERAL; a_uuid: detachable UUID): CONF_REDIRECTION
+	new_redirection_with_file_name (a_file_name: READABLE_STRING_GENERAL; a_location: READABLE_STRING_GENERAL; a_uuid: detachable UUID): CONF_REDIRECTION
 			-- Create a {CONF_REDIRECTION} object with `a_location' and optional `a_uuid'.
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
@@ -19,7 +19,7 @@ feature -- Factory: system and redirection
 			create Result.make (a_file_name, a_location, a_uuid)
 		end
 
-	new_system_generate_uuid_with_file_name (a_file_name: STRING_32; a_name: STRING_32): CONF_SYSTEM
+	new_system_generate_uuid_with_file_name (a_file_name: READABLE_STRING_GENERAL; a_name: STRING_32): CONF_SYSTEM
 			-- Create a {CONF_SYSTEM} object with an automatically generated UUID.
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
@@ -31,7 +31,7 @@ feature -- Factory: system and redirection
 			Result_not_void: Result /= Void
 		end
 
-	new_system_with_file_name (a_file_name: STRING_32; a_name: STRING_32; an_uuid: UUID): CONF_SYSTEM
+	new_system_with_file_name (a_file_name: READABLE_STRING_GENERAL; a_name: STRING_32; an_uuid: UUID): CONF_SYSTEM
 			-- Create a `CONF_SYSTEM' object.
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
@@ -145,6 +145,14 @@ feature -- Factory
 
 	new_option: CONF_OPTION
 			-- Create a `CONF_OPTION' object.
+		do
+			create Result
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	new_target_option: CONF_TARGET_OPTION
+			-- Create a `CONF_TARGET_OPTION' object.
 		do
 			create Result
 		ensure
@@ -353,7 +361,7 @@ feature -- Factory
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -2,6 +2,6 @@ class
 	TEST1 [G]
 
 inherit
-	TEST2 [LIST [G]]
+	TEST2 [detachable LIST [G]]
 
 end

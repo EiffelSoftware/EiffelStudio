@@ -35,8 +35,16 @@ feature -- Access
 	last_uuid: detachable UUID
 			-- The last parsed uuid.
 
-	last_location: detachable READABLE_STRING_GENERAL
+	last_redirected_location: detachable READABLE_STRING_GENERAL
 			-- The last parsed location from <redirection location=".." />
+
+	last_location: like last_redirected_location
+			-- The last parsed location from <redirection location=".." />
+		obsolete
+			"Use directly last_redirected_location [Dec/2016]"
+		do
+			Result := last_redirected_location
+		end
 
 feature -- Callbacks
 
@@ -69,7 +77,7 @@ feature -- Callbacks
 					is_redirection and then
 					a_local_part.is_case_insensitive_equal_general ("location")
 				then
-					last_location := a_value
+					last_redirected_location := a_value
 				end
 			end
 		end
@@ -95,7 +103,7 @@ invariant
 	is_not_system_and_redirection: not (is_system and is_redirection)
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

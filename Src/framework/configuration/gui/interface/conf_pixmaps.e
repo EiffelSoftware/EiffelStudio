@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Pixmaps for configuration objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -471,6 +470,20 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+	project_settings_default_highlighted_icon: EV_PIXMAP
+			-- An icon for a highlighted default option/setting.
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	project_settings_default_icon: EV_PIXMAP
+			-- An icon for a default option/setting.
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	tool_properties_icon: EV_PIXMAP
 		deferred
 		ensure
@@ -551,8 +564,6 @@ feature -- Access
 			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
 			path_implies_not_library: not a_path.is_empty implies not a_group.is_library
-		local
-			l_cluster: CONF_CLUSTER
 		do
 			if not a_path.is_empty then
 				if a_group.is_override then
@@ -561,11 +572,7 @@ feature -- Access
 					else
 						Result := folder_override_blank_icon
 					end
-				elseif a_group.is_cluster then
-					l_cluster ?= a_group
-					check
-						cluster: l_cluster /= Void
-					end
+				elseif attached {CONF_CLUSTER} a_group as l_cluster then
 					if l_cluster.is_hidden then
 						if a_group.is_readonly then
 							Result := folder_hidden_blank_readonly_icon
@@ -591,11 +598,7 @@ feature -- Access
 					else
 						Result := folder_override_cluster_icon
 					end
-				elseif a_group.is_cluster then
-					l_cluster ?= a_group
-					check
-						cluster: l_cluster /= Void
-					end
+				elseif attached {CONF_CLUSTER} a_group as l_cluster then
 					if l_cluster.is_hidden then
 						if a_group.is_readonly then
 							Result := folder_hidden_cluster_readonly_icon

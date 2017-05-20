@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="preferences_example" uuid="F824BD73-1E99-428F-8FC9-5BFF5D5C0ADA">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="preferences_example" uuid="F824BD73-1E99-428F-8FC9-5BFF5D5C0ADA">
 	<target name="common" abstract="true">
 		<root class="APPLICATION" feature="make_and_launch"/>
 		<file_rule>
@@ -13,11 +13,14 @@
 			<warning name="obsolete_feature" enabled="false"/>
 			<warning name="syntax" enabled="false"/>
 		</option>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 	</target>
 	<target name="xml" extends="common">
-		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.ecf" readonly="false"/>
+		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.ecf"/>
 		<cluster name="root_cluster" location=".\">
 			<cluster name="storage_factory" location="$|spec\xml\"/>
 		</cluster>

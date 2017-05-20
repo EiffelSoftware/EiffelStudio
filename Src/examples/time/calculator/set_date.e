@@ -12,39 +12,35 @@ feature -- Access
     execute (d: DATE): DATE
             -- Date choosen par user
 		local
-			year, month, day: INTEGER
+			year, month: INTEGER
         do
-            Result := d;
+            Result := d
 			print (display_help)
-			print ("%Nyear: ");
-			io.readint;
-			year:= io.lastint;
-			print ("month: ");
-			io.readint;
-			month:= io.lastint;
-			print ("day: ");
- 			io.readint;
-			day:= io.lastint;
-			Result.make (year, month, day);
-        end;
+			print ("%Nyear: ")
+			io.read_integer
+			year:= io.last_integer
+			print ("month: ")
+			io.read_integer
+			month:= io.last_integer
+			print ("day: ")
+ 			io.read_integer
+			Result.make (year, month, io.last_integer)
+        end
 
     display_help: STRING
         do
             Result := "Enter new year then new month and new day"
-        end;
+        end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class SET_DATE
-
-
+end

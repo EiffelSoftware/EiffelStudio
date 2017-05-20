@@ -24,7 +24,6 @@ inherit
 			interface,
 			insert_text,
 			make,
-			create_change_actions,
 			dispose,
 			text_length,
 			visual_widget,
@@ -41,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create a gtk text view.
 		do
 			assign_interface (an_interface)
@@ -67,12 +66,6 @@ feature {NONE} -- Initialization
 			set_editable (True)
 			initialize_buffer_events
 			Precursor {EV_TEXT_COMPONENT_IMP}
-		end
-
-	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Hook up the change actions for the text widget
-		do
-			Result := Precursor {EV_TEXT_COMPONENT_IMP}
 		end
 
 	initialize_buffer_events

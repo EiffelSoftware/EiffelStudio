@@ -1,10 +1,6 @@
 note
 	description:
 		"All the new features are tested here which run slow and require finalizing of the system."
-	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	AF_TESTS
@@ -23,8 +19,8 @@ create
 feature {NONE} -- Initialization
 
 	teardown
-			--Precision to 28
-			--epsilon to 5
+			-- Precision to 28.
+			-- epsilon to 5.
 		local
 			d: DECIMAL
 		do
@@ -59,14 +55,11 @@ feature {NONE} -- Initialization
 			add_boolean_case (agent t8)
 			add_boolean_case (agent t9)
 			add_boolean_case (agent t10)
-
-
 	end
 
 feature -- tests
 
-
-t1: BOOLEAN
+	t1: BOOLEAN
 		local
 			d1,d2,d3: DECIMAL
 		do
@@ -162,8 +155,6 @@ t1: BOOLEAN
 			d3 := d1.power (d2)
 			Result := d3 |~ "0.999999645449391585233416785414656877789234357020085613517929147684573770123597988673173444498038833"
 			check Result end
-
-
 		end
 
 	t2: BOOLEAN
@@ -294,665 +285,665 @@ t1: BOOLEAN
 			d1 := "200"
 			d2 := d1.exp
 			Result := d2 |~ ("7.22597377E+86")    -- off by 2 ULP
-			Check Result end
+			check Result end
 				d1.default_context.set_digits (9)
 			d1 := "0.0023"
 			d2 := d1.exp
 			Result := d2 |~ ("1.00230265")
-			Check Result end
+			check Result end
 			d1.default_context.set_digits (9)
 			d1 := "1.0"
 			d2 := d1.exp
 			Result := d2 |~ ("2.71828183")
-			Check Result end
+			check Result end
 			d1.default_context.set_digits (9)
 			d1 := "14684.78"
 			d2 := d1.exp
 			Result := d2 |~ ("3.30310183E+6377")  -- off by 3 ULP
-			Check Result end
+			check Result end
 			-- IBM Dec Tests Begin
 			-- Change Precision to 7
 			d1.default_context.set_digits (7)
 			d1 := "0.1"
 			d2 := d1.exp
 			Result := d2 |~ ("1.105171")
-			Check Result end
+			check Result end
 			d1 := "0.01"
 			d2 := d1.exp
 			Result := d2 |~ ("1.010050")
-			Check Result end
+			check Result end
 			d1 := "0.001"
 			d2 := d1.exp
 			Result := d2 |~ ("1.001001")
-			Check Result end
+			check Result end
 			d1 := "0.0001"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000100")
-			Check Result end
+			check Result end
 			d1 := "0.00001"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000010")
-			Check Result end
+			check Result end
 			d1 := "0.000001"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000001")
-			Check Result end
+			check Result end
 			d1 := "0.0000001"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000")
-			Check Result end
+			check Result end
 			d1 := "0.0000003"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000")
-			Check Result end
+			check Result end
 			d1 := "0.0000004"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000") -- off by 2 ULP
-			Check Result end
+			check Result end
 			d1 := "0.0000005"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000001")
-			Check Result end
+			check Result end
 			d1 := "0.0000008"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000001") -- off by 2 ULP
-			Check Result end
+			check Result end
 			d1 := "0.0000009"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000001")
-			Check Result end
+			check Result end
 			d1 := "0.0000010"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000001")
-			Check Result end
+			check Result end
 			d1 := "0.0000011"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000001")
-			Check Result end
+			check Result end
 			d1 := "0.00000009"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000")
-			Check Result end
+			check Result end
 			d1 := "0.00000005"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000")
-			Check Result end
+			check Result end
 			d1 := "0.00000004"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000")
-			Check Result end
+			check Result end
 			d1 := "0.00000001"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000")
-			Check Result end
+			check Result end
 			-- Change precision to 34
 			d1.default_context.set_digits (34)
 			d1 := "309.5948855821510212996700645087188"
 			d2 := d1.exp
 			Result := d2 |~ ("2.853319692901387521201738015050724E134") -- off by 3 ULP
-			Check Result end
+			check Result end
 			d1 := "9.936543068706211420422803962680164"
 			d2 := d1.exp
 			Result := d2 |~ ("20672.15839203171877476511093276022")
-			Check Result end
+			check Result end
 			d1 := "6.307870323881505684429839491707908"
 			d2 := d1.exp
 			Result := d2 |~ ("548.8747777054637296137277391754665")
-			Check Result end
+			check Result end
 			d1 := "0.0003543281389438420535201308282503"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000354390920573746164733350843155")
-			Check Result end
+			check Result end
 			d1 := "0.0000037087453363918375598394920229"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000003708752213796324841920189323")
-			Check Result end
+			check Result end
 			d1 := "0.0020432312687512438040222444116585"
 			d2 := d1.exp
 			Result := d2 |~ ("1.002045320088164826013561630975308")
-			Check Result end
+			check Result end
 			d1 := "6.856313340032177672550343216129586"
 			d2 := d1.exp
 			Result := d2 |~ ("949.8587981604144147983589660524396")
-			Check Result end
+			check Result end
 			d1 := "0.0049610784722412117632647003545839"
 			d2 := d1.exp
 			Result := d2 |~ ("1.004973404997901987039589029277833")
-			Check Result end
+			check Result end
 			d1 := "0.0000891471883724066909746786702686"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000089151162101085412780088266699")
-			Check Result end
+			check Result end
 			d1 := "08.59979170376061890684723211112566"
 			d2 := d1.exp
 			Result := d2 |~ ("5430.528314920905714615339273738097")
-			Check Result end
+			check Result end
 			d1 := "9.473117039341003854872778112752590"
 			d2 := d1.exp
 			Result := d2 |~ ("13005.36234331224953460055897913917") -- off by 2 ULP
-			Check Result end
+			check Result end
 			d1 := "0.0999060724692207648429969999310118"
 			d2 := d1.exp
 			Result := d2 |~ ("1.105067116975190602296052700726802")
-			Check Result end
+			check Result end
 			d1 := "0.0376578583872889916298772818265677"
 			d2 := d1.exp
 			Result := d2 |~ ("1.038375900489771946477857818447556")
-			Check Result end
+			check Result end
 			d1 := "261.6896411697539524911536116712307"
 			d2 := d1.exp
 			Result := d2 |~ ("4.470613562127465095241600174941460E113") -- off by 3 ULP
-			Check Result end
+			check Result end
 			d1 := "0.0709997423269162980875824213889626"
 			d2 := d1.exp
 			Result := d2 |~ ("1.073580949235407949417814485533172")
-			Check Result end
+			check Result end
 			d1 := "0.0000000444605583295169895235658731"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000044460559317887627657593900")
-			Check Result end
+			check Result end
 			d1 := "0.0000021224072854777512281369815185"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000002122409537785687390631070906")
-			Check Result end
+			check Result end
 			d1 := "547.5174462574156885473558485475052"
 			d2 := d1.exp
 			Result := d2 |~ ("6.078629247383807942612114579728672E237") -- off by 3 ULP
-			Check Result end
+			check Result end
 			d1 := "0.0000009067598041615192002339844670"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000906760215268314680115374387")
-			Check Result end
+			check Result end
 			d1 := "0.0316476500308065365803455533244603"
 			d2 := d1.exp
 			Result := d2 |~ ("1.032153761880187977658387961769034")
-			Check Result end
+			check Result end
 			d1 := "84.46160530377645101833996706384473"
 			d2 := d1.exp
 			Result := d2 |~ ("4.799644995897968383503269871697856E36") -- off by 2 ULP
-			Check Result end
+			check Result end
 			d1 := "0.0000000000520599740290848018904145"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000000052059974030439922338393")
-			Check Result end
+			check Result end
 			d1 := "0.0000006748530640093620665651726708"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000674853291722742292331812997")
-			Check Result end
+			check Result end
 			d1 := "0.0000000116853119761042020507916169"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000011685312044377460306165203")
-			Check Result end
+			check Result end
 			d1 := "0.0022593818094258636727616886693280"
 			d2 := d1.exp
 			Result := d2 |~ ("1.002261936135876893707094845543461")
-			Check Result end
+			check Result end
 			d1 := "0.0029398857673478912249856509667517"
 			d2 := d1.exp
 			Result := d2 |~ ("1.002944211469495086813087651287012")
-			Check Result end
+			check Result end
 			d1 := "0.7511480029928802775376270557636963"
 			d2 := d1.exp
 			Result := d2 |~ ("2.119431734510320169806976569366789")
-			Check Result end
+			check Result end
 			d1 := "174.9431952176750671150886423048447"
 			d2 := d1.exp
 			Result := d2 |~ ("9.481222305374955011464619468044051E75 ")
-			Check Result end
+			check Result end
 			d1 := "0.0000810612451694136129199895164424"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000081064530720924186615149646920")
-			Check Result end
+			check Result end
 			d1 := "51.06888989702669288180946272499035"
 			d2 := d1.exp
 			Result := d2 |~ ("15098613888619165073959.89896018749") -- off by 2 ULP
-			Check Result end
+			check Result end
 			d1 := "0.0000000005992887599437093651494510"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000000599288760123282874082758")
-			Check Result end
+			check Result end
 			d1 := "714.8549046761054856311108828903972"
 			d2 := d1.exp
 			Result := d2 |~ ("2.867744544891081117381595080480784E310") -- off by 3 ULP
-			Check Result end
+			check Result end
 			d1 := "0.0000000004468247802990643645607110"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000000446824780398890556720233")
-			Check Result end
+			check Result end
 			d1 := "831.5818151589890366323551672043709"
 			d2 := d1.exp
 			Result := d2 |~ ("1.417077409182624969435938062261655E361") -- off by 4 ULP
-			Check Result end
+			check Result end
 			d1 := "0.0000000006868323825179605747108044"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000000686832382753829935602454")
-			Check Result end
+			check Result end
 			d1 := "0.0000001306740266408976840228440255"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000130674035178748675187648098")
-			Check Result end
+			check Result end
 			d1 := "0.3182210609022267704811502412335163"
 			d2 := d1.exp
 			Result := d2 |~ ("1.374680115667798185758927247894859")
-			Check Result end
+			check Result end
 			d1 := "0.0147741234179104437440264644295501"
 			d2 := d1.exp
 			Result := d2 |~ ("1.014883800239950682628277534839222")
-			Check Result end
+			check Result end
 			-- Change Precision to 50
 			d1.default_context.set_digits (50)
 			d1 := "656.35397950590285612266095596539934213943872885728"
 			d2 := d1.exp
 			Result := d2 |~ ("1.1243757610640319783611178528839652672062820040314E+285") -- off by 3 ULP
-			Check Result end
+			check Result end
 			d1 := "0.93620571093652800225038550600780322831236082781471"
 			d2 := d1.exp
 			Result := d2 |~ ("2.5502865130986176689199711857825771311178046842009")
-			Check Result end
+			check Result end
 			d1 := "0.00000000000000008340785856601514714183373874105791"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0000000000000000834078585660151506202691740252512")
-			Check Result end
+			check Result end
 			d1 := "0.00009174057262887789625745574686545163168788456203"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0000917447809239005146722341251524081006051473273")
-			Check Result end
+			check Result end
 			d1 := "33.909116897973797735657751591014926629051117541243"
 			d2 := d1.exp
 			Result := d2 |~ ("532773181025002.03543618901306726495870476617232229 ")
-			Check Result end
+			check Result end
 			d1 := "0.00000740470413004406592124575295278456936809587311"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0000074047315449333590066395670306135567889210814")
-			Check Result end
+			check Result end
 			d1 := "0.00000000000124854922222108802453746922483071445492"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0000000000012485492222218674621176239911424968263")
-			Check Result end
+			check Result end
 			d1 := "4.1793280674155659794286951159430651258356014391382"
 			d2 := d1.exp
 			Result := d2 |~ ("65.321946520147199404199787811336860087975118278185")
-			Check Result end
+			check Result end
 			d1 := "485.43595745460655893746179890255529919221550201686"
 			d2 := d1.exp
 			Result := d2 |~ ("6.6398403920459617255950476953129377459845366585463E210") -- off by 3 ULP
-			Check Result end
+			check Result end
 			d1 := "0.00000000003547259806590856032527875157830328156597"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0000000000354725980665377129320589406715000685515")
-			Check Result end
+			check Result end
 			d1 := "0.00000000000000759621497339104047930616478635042678"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0000000000000075962149733910693305471257715463887")
-			Check Result end
+			check Result end
 			d1 := "9.7959168821760339304571595474480640286072720233796"
 			d2 := d1.exp
 			Result := d2 |~ ("17960.261146042955179164303653412650751681436352437")
-			Check Result end
+			check Result end
 			d1 := "0.00000000566642006258290526783901451194943164535581"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0000000056664200786370634609832438815665249347650")
-			Check Result end
+			check Result end
 			d1 := "741.29888791134298194088827572374718940925820027354"
 			d2 := d1.exp
 			Result := d2 |~ ("8.7501694006317332808128946666402622432064923198731E321") -- off by 3 ULP
-			Check Result end
+			check Result end
 			d1 := "032.75573003552517668808529099897153710887014947935"
 			d2 := d1.exp
 			Result := d2 |~ ("168125196578678.17725841108617955904425345631092339")
-			Check Result end
+			check Result end
 			d1 := "42.333700726429333308594265553422902463737399437644"
 			d2 := d1.exp
 			Result := d2 |~ ("2428245675864172475.4681119493045657797309369672012")
-			Check Result end
+			check Result end
 			d1 := "0.00000000000000559682616876491888197609158802835798"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0000000000000055968261687649345442076732739577049")
-			Check Result end
+			check Result end
 			d1 := "0.00000000000080703688668280193584758300973549486312"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0000000000008070368866831275901158164321867914342")
-			Check Result end
+			check Result end
 			d1 := "640.72396012796509482382712891709072570653606838251"
 			d2 := d1.exp
 			Result := d2 |~ ("1.8318094990683394229304133068983914236995326891045E278") -- off by 4 ULP
-			Check Result end
+			check Result end
 			d1 := "0.00000000000000509458922167631071416948112219512224"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0000000000000050945892216763236915891499324358556")
-			Check Result end
+			check Result end
 			d1 := "6.7670394314315206378625221583973414660727960241395"
 			d2 := d1.exp
 			Result := d2 |~ ("868.73613012822031367806248697092884415119568271315")
-			Check Result end
+			check Result end
 			d1 := "04.823217407412963506638267226891024138054783122548"
 			d2 := d1.exp
 			Result := d2 |~ ("124.36457929588837129731821077586705505565904205366")
-			Check Result end
+			check Result end
 			d1 := "193.51307878701196403991208482520115359690106143615"
 			d2 := d1.exp
 			Result := d2 |~ ("1.1006830872854715677390914655452261550768957576034E84")
-			Check Result end
+			check Result end
 			d1 := "5.7307749038303650539200345901210497015617393970463"
 			d2 := d1.exp
 			Result := d2 |~ ("308.20800743106843083522721523715645950574866495196")
-			Check Result end
+			check Result end
 			d1 := "0.00000000000095217825199797965200541169123743500267"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0000000000009521782519984329737172007991390381273")
-			Check Result end
+			check Result end
 			d1 := "0.00027131440949183370966393682617930153495028919140"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0002713512185751022906058160480606598754913607364")
-			Check Result end
+			check Result end
 			d1 := "0.00000000064503059114680682343002315662069272707123"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0000000006450305913548390552323517403613135496633")
-			Check Result end
+			check Result end
 			d1 := "0.00000000000000095616643506527288866235238548440593"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0000000000000009561664350652733457894781582009094")
-			Check Result end
+			check Result end
 			d1 := "0.00000000000000086449942811678650244459550252743433"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0000000000000008644994281167868761242261096529986")
-			Check Result end
+			check Result end
 			d1 := "0.06223488355635359965683053157729204988381887621850"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0642122813392406657789688931838919323826250630831")
-			Check Result end
+			check Result end
 			d1 := "0.00000400710807804429435502657131912308680674057053"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0000040071161065125925620890019319832127863559260")
-			Check Result end
+			check Result end
 			d1 := "85.522796894744576211573232055494551429297878413017"
 			d2 := d1.exp
 			Result := d2 |~ ("13870073686404228452757799770251085177.853337368935")
-			Check Result end
+			check Result end
 			d1 := "9.1496720811363678696938036379756663548353399954363"
 			d2 := d1.exp
 			Result := d2 |~ ("9411.3537122832743386783597629161763057370034495157")
-			Check Result end
+			check Result end
 			d1 := "8.2215705240788294472944382056330516738577785177942"
 			d2 := d1.exp
 			Result := d2 |~ ("3720.3406813383076953899654701615084425598377758189")
-			Check Result end
+			check Result end
 			d1 := "0.0000000001577206456964061314282320372682107623956"
 			d2 := d1.exp
 			Result := d2 |~ ("1.0000000001577206457088440324683315788358926129830")
-			Check Result end
+			check Result end
 			d1 := "0.58179346473959531432624153576883440625538017532480"
 			d2 := d1.exp
 			Result := d2 |~ ("1.7892445018275360163797022372655837188423194863605")
-			Check Result end
+			check Result end
 			d1 := "33.555726197149525061455517784870570470833498096559"
 			d2 := d1.exp
 			Result := d2 |~ ("374168069896324.62578073148993526626307095854407952")
-			Check Result end
+			check Result end
 			d1 := "89.157697327174521542502447953032536541038636966347"
 			d2 := d1.exp
 			Result := d2 |~ ("525649152320166503771224149330448089550.67293829227")
-			Check Result end
+			check Result end
 			d1 := "25.022947600123328912029051897171319573322888514885"
 			d2 := d1.exp
 			Result := d2 |~ ("73676343442.952517824345431437683153304645851960524")
-			Check Result end
+			check Result end
 			-- Change Precision to 16
 			d1.default_context.set_digits (16)
 			d1 := "8.473011527013724"
 			d2 := d1.exp
 			Result := d2 |~ ("4783.900643969246")
-			Check Result end
+			check Result end
 			d1 := "0.0000055753022764"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000005575317818")
-			Check Result end
+			check Result end
 			d1 := "0.0000323474114482"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000032347934631")
-			Check Result end
+			check Result end
 			d1 := "64.54374138544166"
 			d2 := d1.exp
 			Result := d2 |~ ("1.073966476173531E28")
-			Check Result end
+			check Result end
 			d1 := "90.47203246416569"
 			d2 := d1.exp
 			Result := d2 |~ ("1.956610887250643E39")
-			Check Result end
+			check Result end
 			d1 := "9.299931532342757 "
 			d2 := d1.exp
 			Result := d2 |~ ("10937.27033325227")
-			Check Result end
+			check Result end
 			d1 := "8.759678437852203"
 			d2 := d1.exp
 			Result := d2 |~ ("6372.062234495381")
-			Check Result end
+			check Result end
 			d1 := "0.0000931755127172 "
 			d2 := d1.exp
 			Result := d2 |~ ("1.000093179853690")
-			Check Result end
+			check Result end
 			d1 := "0.0000028101158373 "
 			d2 := d1.exp
 			Result := d2 |~ ("1.000002810119786")
-			Check Result end
+			check Result end
 			d1 := "0.0000008008130919 "
 			d2 := d1.exp
 			Result := d2 |~ ("1.000000800813413")
-			Check Result end
+			check Result end
 			d1 := "8.339771722299049 "
 			d2 := d1.exp
 			Result := d2 |~ ("4187.133803081878")
-			Check Result end
+			check Result end
 			d1 := "0.0026140497995474 "
 			d2 := d1.exp
 			Result := d2 |~ ("1.002617469406750")
-			Check Result end
+			check Result end
 			d1 := "0.7478033356261771 "
 			d2 := d1.exp
 			Result := d2 |~ ("2.112354781975418")
-			Check Result end
+			check Result end
 			d1 := "51.77663761827966 "
 			d2 := d1.exp
 			Result := d2 |~ ("3.064135801120365E22") -- off by 2 ULP
-			Check Result end
+			check Result end
 			d1 := "0.1524989783061012 "
 			d2 := d1.exp
 			Result := d2 |~ ("1.164741272084955")
-			Check Result end
+			check Result end
 			d1 := "0.0066298798669219 "
 			d2 := d1.exp
 			Result := d2 |~ ("1.006651906170791")
-			Check Result end
+			check Result end
 			d1 := "9.955141865534960 "
 			d2 := d1.exp
 			Result := d2 |~ ("21060.23334287038")
-			Check Result end
+			check Result end
 			d1 := "92.34503059198483 "
 			d2 := d1.exp
 			Result := d2 |~ ("1.273318993481226E40") -- off by 2 ULP
-			Check Result end
+			check Result end
 			d1 := "9.299931532342757 "
 			d2 := d1.exp
 			Result := d2 |~ ("10937.27033325227")
-			Check Result end
+			check Result end
 			d1 := "0.0000709388677346 "
 			d2 := d1.exp
 			Result := d2 |~ ("1.000070941383956")
-			Check Result end
+			check Result end
 			d1 := "79.12883036433204 "
 			d2 := d1.exp
 			Result := d2 |~ ("2.318538899389243E34")
-			Check Result end
+			check Result end
 			d1 := "0.0000090881548873"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000009088196185")
-			Check Result end
+			check Result end
 			d1 := "0.0424828809603411 "
 			d2 := d1.exp
 			Result := d2 |~ ("1.043398194245720")
-			Check Result end
+			check Result end
 			d1 := "0.8009035891427416"
 			d2 := d1.exp
 			Result := d2 |~ ("2.227552811933310")
-			Check Result end
+			check Result end
 			d1 := "8.825786167283102 "
 			d2 := d1.exp
 			Result := d2 |~ ("6807.540455289995")
-			Check Result end
+			check Result end
 			d1 := "1.535457249746275 "
 			d2 := d1.exp
 			Result := d2 |~ ("4.643448260146849")
-			Check Result end
+			check Result end
 			d1 := "69.02254254355800 "
 			d2 := d1.exp
 			Result := d2 |~ ("9.464754500670653E29")
-			Check Result end
+			check Result end
 			d1 := "0.0007050554368713"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000705304046880")
-			Check Result end
+			check Result end
 			d1 := "0.0000081206549504 "
 			d2 := d1.exp
 			Result := d2 |~ ("1.000008120687923")
-			Check Result end
+			check Result end
 			d1 := "0.621774854641137 "
 			d2 := d1.exp
 			Result := d2 |~ (" 1.862230298554903")
-			Check Result end
+			check Result end
 			d1 := "3.847629031404354 "
 			d2 := d1.exp
 			Result := d2 |~ ("46.88177613568203")
-			Check Result end
+			check Result end
 			d1 := "24.81250184697732  "
 			d2 := d1.exp
 			Result := d2 |~ ("59694268456.19966")
-			Check Result end
+			check Result end
 			d1 := "5.107546500516044"
 			d2 := d1.exp
 			Result := d2 |~ ("165.2643809755670")
-			Check Result end
+			check Result end
 			d1 := "79.17810943951986 "
 			d2 := d1.exp
 			Result := d2 |~ ("2.435656372541360E34") -- off by 2 ULP
-			Check Result end
+			check Result end
 			d1 := "0.0051394695667015 "
 			d2 := d1.exp
 			Result := d2 |~ ("1.005152699295301")
-			Check Result end
+			check Result end
 			d1 := "57.44504488501725 "
 			d2 := d1.exp
 			Result := d2 |~ ("8.872908566929688E24") -- off by 2 ULP
-			Check Result end
+			check Result end
 			d1 := "0.0000508388968036 "
 			d2 := d1.exp
 			Result := d2 |~ ("1.000050840189122")
-			Check Result end
+			check Result end
 			d1 := "69.71309932148997 "
 			d2 := d1.exp
 			Result := d2 |~ ("1.888053740693541E30")
-			Check Result end
+			check Result end
 			d1 := "0.0064183412981502 "
 			d2 := d1.exp
 			Result := d2 |~ ("1.006438982988835")
-			Check Result end
+			check Result end
 			d1 := "9.346991220814677 "
 			d2 := d1.exp
 			Result := d2 |~ ("11464.27802035082")
-			Check Result end
+			check Result end
 			d1 := "33.09087139999152 "
 			d2 := d1.exp
 			Result := d2 |~ ("235062229168763.5")
-			Check Result end
+			check Result end
 			-- change precision to 7
 			d1.default_context.set_digits (7)
 			d1 := "2.395441"
 			d2 := d1.exp
 			Result := d2 |~ ("10.97304")
-			Check Result end
+			check Result end
 			d1 := "0.6406779"
 			d2 := d1.exp
 			Result := d2 |~ ("1.897767")
-			Check Result end
+			check Result end
 			d1 := "0.5618218"
 			d2 := d1.exp
 			Result := d2 |~ ("1.753865")
-			Check Result end
+			check Result end
 			d1 := "3.055120"
 			d2 := d1.exp
 			Result := d2 |~ ("21.22373")
-			Check Result end
+			check Result end
 			d1 := "1.536792"
 			d2 := d1.exp
 			Result := d2 |~ ("4.649650")
-			Check Result end
+			check Result end
 			d1 := "0.0801591"
 			d2 := d1.exp
 			Result := d2 |~ ("1.083459")
-			Check Result end
+			check Result end
 			d1 := "0.0966875"
 			d2 := d1.exp
 			Result := d2 |~ ("1.101516")
-			Check Result end
+			check Result end
 			d1 := "0.0646761"
 			d2 := d1.exp
 			Result := d2 |~ ("1.066813")
-			Check Result end
+			check Result end
 			d1 := "0.0095670"
 			d2 := d1.exp
 			Result := d2 |~ ("1.009613")
-			Check Result end
+			check Result end
 			d1 := "2.956859"
 			d2 := d1.exp
 			Result := d2 |~ ("19.23745")
-			Check Result end
+			check Result end
 			d1 := "7.504679"
 			d2 := d1.exp
 			Result := d2 |~ ("1816.522")
-			Check Result end
+			check Result end
 			d1 := "0.0045259"
 			d2 := d1.exp
 			Result := d2 |~ ("1.004536")
-			Check Result end
+			check Result end
 			d1 := "3.810071"
 			d2 := d1.exp
 			Result := d2 |~ ("45.15364") -- off by 2 ULP
-			Check Result end
+			check Result end
 			d1 := "1.502390"
 			d2 := d1.exp
 			Result := d2 |~ ("4.492413")
-			Check Result end
+			check Result end
 			d1 := "0.0321523"
 			d2 := d1.exp
 			Result := d2 |~ ("1.032675")
-			Check Result end
+			check Result end
 			d1 := "0.0057214"
 			d2 := d1.exp
 			Result := d2 |~ ("1.005738")
-			Check Result end
+			check Result end
 			d1 := "9.811445"
 			d2 := d1.exp
 			Result := d2 |~ ("18241.33")
-			Check Result end
+			check Result end
 			d1 := "3.245249"
 			d2 := d1.exp
 			Result := d2 |~ ("25.66810")
-			Check Result end
+			check Result end
 			d1 := "0.3189742"
 			d2 := d1.exp
 			Result := d2 |~ ("1.375716")
-			Check Result end
+			check Result end
 			d1 := "0.8621610"
 			d2 := d1.exp
 			Result := d2 |~ ("2.368273")
-			Check Result end
+			check Result end
 			d1 := "0.0122511"
 			d2 := d1.exp
 			Result := d2 |~ ("1.012326")
-			Check Result end
+			check Result end
 			d1 := "2.202088"
 			d2 := d1.exp
 			Result := d2 |~ ("9.043877")
-			Check Result end
+			check Result end
 			d1 := "8.778203"
 			d2 := d1.exp
 			Result := d2 |~ ("6491.202") -- off by 2 ULP
@@ -989,45 +980,45 @@ t1: BOOLEAN
 			d1 := "9.118125"
 			d2 := d1.exp
 			Result := d2 |~ ("9119.087")
-			Check Result end
+			check Result end
 			d1 := "9.469083"
 			d2 := d1.exp
 			Result := d2 |~ ("12953.00")
-			Check Result end
+			check Result end
 			d1 := "0.0499983"
 			d2 := d1.exp
 			Result := d2 |~ ("1.051269")
-			Check Result end
+			check Result end
 			d1 := "0.0050746"
 			d2 := d1.exp
 			Result := d2 |~ ("1.005087")
-			Check Result end
+			check Result end
 			d1 := "0.0014696"
 			d2 := d1.exp
 			Result := d2 |~ ("1.001471") -- off by 2 ULP
-			Check Result end
+			check Result end
 			d1 := "9.138494"
 			d2 := d1.exp
 			Result := d2 |~ ("9306.739")
-			Check Result end
+			check Result end
 			d1 := "0.0065436"
 			d2 := d1.exp
 			Result := d2 |~ ("1.006565")
-			Check Result end
+			check Result end
 			d1 := "0.7284803"
 			d2 := d1.exp
 			Result := d2 |~ ("2.071930")
-			Check Result end
+			check Result end
 			-- Change precision to 40
 			d1.default_context.set_digits (40)
 			d1 := "1.2"
 			d2 := d1.exp
 			Result := d2 |~ ("3.320116922736547489530767429601644320074")
-			Check Result end
+			check Result end
 			d1 := "0.00000121"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000001210000732050295260255982888697858") -- off by 2 ULP
-			Check Result end
+			check Result end
 			-- Change precision to 100
 			d1.default_context.set_digits (100)
 	     	d1 := "0.0005"
@@ -1048,36 +1039,35 @@ t1: BOOLEAN
 			d1 := "5000"
 			d2 := d1.exp
 			Result := d2 |~ ("2.96762838402366706896629680528947009056986046017072782713629019382661490260609722025271069451017557E+2171") -- off by 5 ULP
-			Check Result end
+			check Result end
 			d1.default_context.set_digits (100)
 			d1 := "350"
 			d2 := d1.exp
 			Result := d2 |~ ("1.007090887028079759823375862957008934750807691523463949591733165265104584422741902386611822721170146e152") -- off by 4 ULP
-			Check Result end
+			check Result end
 			d1.default_context.set_digits (100)
 			d1 := "40.8675"
 			d2 := d1.exp
 			Result := d2 |~ ("560440793351738556.6375023298501116747558018595398419884517821051716081305064300592310541992771159926")
-			Check Result end
+			check Result end
 			d1.default_context.set_digits (100)
 			d1 := "0.0000023"
 			d2 := d1.exp
 			Result := d2 |~ ("1.000002300002645002027834499338036362122272135611635434277106600186640759357295809240614694694330455")
-			Check Result end
+			check Result end
 			d1.default_context.set_digits (100)
 			d1 := "90.1234567"
 			d2 := d1.exp
 			Result := d2 |~ ("1380765524457469385762746703256674401055.406886634257806066991329784602427246104288854000271725913621")
-			Check Result end
+			check Result end
 			d1.default_context.set_digits (100)
 			d1 := "12345.678910"
 			d2 := d1.exp
 			Result := d2 |~ ("4.573260733575855081791110241330996171100345291391873010919078267432259432242052552994285819844043374E+5361") -- off by 3 ULP
-		    Check Result end
+		    check Result end
 		end
 
-
-		t3:	BOOLEAN
+	t3:	BOOLEAN
 		local
 			d1, d2: DECIMAL
 			c: DCM_MA_DECIMAL_CONTEXT
@@ -1214,7 +1204,7 @@ t1: BOOLEAN
 			d2 := d1.log2_wrt_ctx (c)
 			Result := d2 |~ "40.470485718962124455869661390454931709593848514271370013965639515087626749409100290762541166524119598"
 			check Result end
-end
+		end
 
 	t4: BOOLEAN
 		local
@@ -1236,13 +1226,11 @@ end
 			d6 := d5.sqrt
 			Result := d6 ~ "340206192657387690925882213614.999536766"
 			check Result end
-
 		end
-
 
 	t5: BOOLEAN
 		local
-			d1, d2, d3, d4, d5, d6: DECIMAL
+			d1, d2: DECIMAL
 			c: DCM_MA_DECIMAL_CONTEXT
 		do
 			comment("t5:  Test Sin function")
@@ -1284,12 +1272,11 @@ end
 			d2 := d1.sin
 			Result := d2 |~ "0.9832549075639545845546320564"
 			check Result end
-
 		end
 
 	t6: BOOLEAN
 		local
-			d1, d2, d3, d4, d5, d6: DECIMAL
+			d1, d2: DECIMAL
 			c: DCM_MA_DECIMAL_CONTEXT
 		do
 			comment("t6:  Test Cos Function")
@@ -1335,7 +1322,7 @@ end
 
 	t7: BOOLEAN
 		local
-			d1, d2, d3, d4, d5, d6: DECIMAL
+			d1, d2: DECIMAL
 			c: DCM_MA_DECIMAL_CONTEXT
 		do
 			comment("t7:  Test Tan Function")
@@ -1377,7 +1364,7 @@ end
 
 	t8: BOOLEAN
 		local
-			d1, d2, d3, d4, d5, d6: DECIMAL
+			d1, d2: DECIMAL
 			c: DCM_MA_DECIMAL_CONTEXT
 		do
 			comment("t8:  Test Cot Function")
@@ -1399,12 +1386,11 @@ end
 			d2 := d1.cot
 			Result := d2 |~ "0.1662662745067357139495706097"
 			check Result end
-
 		end
 
 		t9: BOOLEAN
 		local
-			d1, d2, d3, d4, d5, d6: DECIMAL
+			d1, d2: DECIMAL
 			c: DCM_MA_DECIMAL_CONTEXT
 		do
 			comment("t9:  Test Sec Function")
@@ -1426,12 +1412,11 @@ end
 			d2 := d1.sec
 			Result := d2 |~ "6.097015230093473115738218397"
 			check Result end
-
 		end
 
 	t10: BOOLEAN
 		local
-			d1, d2, d3, d4, d5, d6: DECIMAL
+			d1, d2: DECIMAL
 			c: DCM_MA_DECIMAL_CONTEXT
 		do
 			comment("t10:  Test Csc Function")
@@ -1453,13 +1438,18 @@ end
 			d2 := d1.csc
 			Result := d2 |~ "1.013728007918469812255785957"
 			check Result end
-
 		end
+
 note
 	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
-	license: "MIT license"
+	copyright: "Copyright (c) 2017 Eiffel Software."
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 	details: "[
-			Originally developed by Jonathan Ostroff, Moksh Khurana, and Alex Fevga. See class DECIMAL.
+			See class DECIMAL.
+			Originally developed by Jonathan Ostroff, Moksh Khurana, and Alex Fevga.
+			Revised by Alexander Kogtenkov.
 		]"
 
 end

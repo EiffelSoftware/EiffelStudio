@@ -1,18 +1,11 @@
-note
+﻿note
 	description:
 		"[
-		Decimal coefficients. They hold the significant digits.
-		Can be seen as arrays of decimal values.
-		Zero-based index.
-		Index '0' is the least significant digit,index 'count-'1 is the most significant digit.
+			Decimal coefficients. They hold the significant digits.
+			Can be seen as arrays of decimal values.
+			Zero-based index.
+			Index '0' is the least significant digit,index 'count-'1 is the most significant digit.
 		]"
-
-	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
-	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
-
 
 deferred class DCM_MA_DECIMAL_COEFFICIENT
 
@@ -112,7 +105,7 @@ feature -- Status report
 	valid_index (index: INTEGER): BOOLEAN
 			-- Is `index' valid ?
 		do
-			Result := (index >= 0 and then index < count)
+			Result := index >= 0 and then index < count
 		ensure
 			definition: Result = (index >= 0 and then index < count)
 		end
@@ -128,11 +121,11 @@ feature -- Status report
 			until
 				i < 0
 			loop
-				if item (i) /= 0 then
+				if item (i) = 0 then
+					i := i - 1
+				else
 					Result := False
 					i := -1
-				else
-					i := i - 1
 				end
 			end
 		end
@@ -140,7 +133,7 @@ feature -- Status report
 	is_one: BOOLEAN
 			-- Is `Current' one?
 		do
-			Result := (msd_index = 0 and then item (0) = 1)
+			Result := msd_index = 0 and then item (0) = 1
 		ensure
 			definition: Result = (msd_index = 0 and then item (0) = 1)
 		end
@@ -172,13 +165,13 @@ feature -- Comparison
 	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is `Current' less than `other'?
 		do
-			Result := (three_way_comparison (other) = -1)
+			Result := three_way_comparison (other) = -1
 		end
 
 	is_greater alias ">" (other: like Current): BOOLEAN
 			-- Is `Current' greater than `other'?
 		do
-			Result := (three_way_comparison (other) = 1)
+			Result := three_way_comparison (other) = 1
 		end
 
 feature {DECIMAL, DCM_MA_DECIMAL_PARSER, DCM_MA_DECIMAL_COEFFICIENT} -- Element change
@@ -295,11 +288,8 @@ feature {DECIMAL, DCM_MA_DECIMAL_COEFFICIENT} -- Basic operations
 
 	strip_leading_zeroes
 			-- Strip leading zeroes.
-		local
-			index: INTEGER
 		do
-			index := msd_index
-			set_count (index + 1)
+			set_count (msd_index + 1)
 		ensure
 			no_leading_zero: count > 1 implies item (count - 1) /= 0
 		end
@@ -344,14 +334,18 @@ invariant
 	count_not_negative: count >= 0
 	lower_upper_consistent: lower <= upper
 
-
 note
+
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
 	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
-	license: "MIT license"
+	copyright: "Copyright (c) 2017 Eiffel Software."
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 	details: "[
 			Originally developed by Paul G. Crismer as part of Gobo. 
 			Revised by Jocelyn Fiat for void safety.
+			Revised by Alexander Kogtenkov.
 		]"
 
 end

@@ -1,17 +1,3 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="uri" uuid="C83EA64A-F823-4A1C-A38E-138EDB142F52" library_target="uri">
-	<target name="uri">
-		<root all_classes="true"/>
-		<file_rule>
-			<exclude>/.git$</exclude>
-			<exclude>/EIFGENs$</exclude>
-			<exclude>/.svn$</exclude>
-		</file_rule>
-		<option warning="true" void_safety="all">
-		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<cluster name="src" location=".\src\">
-			<cluster name="implementation" location="$|implementation\" hidden="true"/>
-		</cluster>
-	</target>
-</system>
+<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="C83EA64A-F823-4A1C-A38E-138EDB142F52" message="Obsolete: use uri.ecf !" location="uri.ecf">
+</redirection>

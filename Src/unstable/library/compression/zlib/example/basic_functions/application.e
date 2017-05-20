@@ -16,6 +16,8 @@ inherit
 
 	UTIL_EXTERNALS
 
+	PAYLOAD_DATA
+
 create
 	make
 
@@ -26,14 +28,19 @@ feature {NONE} -- Initialization
 		local
 			l_start_time, l_finish_time: TIME
 		do
-			basic_example_without_streams
-			stream_example_memory
-			create l_start_time.make_now
-			stream_example_file_to_file2
-			create l_finish_time.make_now
-			print ("%NNew version using MANAGED_POINTERS: ")
-			print ((l_finish_time - l_start_time).duration.out)
-			stream_example_string_2
+--			basic_example_without_streams
+--			stream_example_memory
+--			create l_start_time.make_now
+--			stream_example_file_to_file2
+--			create l_finish_time.make_now
+--			print ("%NNew version using MANAGED_POINTERS: ")
+--			print ((l_finish_time - l_start_time).duration.out)
+--			stream_example_string_2
+--			stream_example_string_ws
+--			perfomance_8192
+--			io.read_line
+--			perfomance_16384
+			stream_example_string_ws2
 			io.read_line
 		end
 
@@ -154,6 +161,134 @@ The lovely zlib-vise image above was provided courtesy of Bruce Gardner, art dir
 			print ("%NBytes uncompresses:" + di.total_bytes_uncompressed.out)
 		end
 
+	stream_example_string_ws
+			-- Using PPP defate.
+		local
+			di: ZLIB_STRING_UNCOMPRESS
+			dc: ZLIB_STRING_COMPRESS
+			input_string: STRING
+			output_string: STRING
+			l_array: ARRAY [NATURAL_8]
+			l_byte: SPECIAL [INTEGER_8]
+		do
+			input_string:= "Hello"
+			create output_string.make_empty
+			create dc.string_stream (output_string)
+			dc.mark_full_flush
+			dc.put_string (input_string)
+
+
+			l_array := string_to_array (output_string)
+			l_byte := byte_array (l_array)
+
+
+			create di.string_stream (output_string)
+			check
+				same_string: input_string.same_string (di.to_string)
+			end
+			print ("%NBytes compresses:" + dc.total_bytes_compressed.out)
+			print ("%NBytes uncompresses:" + di.total_bytes_uncompressed.out)
+		end
+
+
+		stream_example_string_ws2
+				-- Using PPP defate.
+			local
+				di: ZLIB_STRING_UNCOMPRESS
+				dc: ZLIB_STRING_COMPRESS
+				input_string: STRING
+				output_string: STRING
+				l_array: ARRAY [NATURAL_8]
+				l_byte: SPECIAL [INTEGER_8]
+			do
+				input_string:= payload_size_131072
+				create output_string.make_empty
+				create dc.string_stream (output_string)
+				dc.mark_full_flush
+				dc.put_string (input_string)
+			
+				l_array := string_to_array (output_string)
+				l_byte := byte_array (l_array)
+
+
+				create di.string_stream (output_string)
+				check
+					same_string: input_string.same_string (di.to_string)
+				end
+				print ("%NBytes compresses:" + dc.total_bytes_compressed.out)
+				print ("%NBytes uncompresses:" + di.total_bytes_uncompressed.out)
+			end
+
+
+feature -- Performance
+
+		perfomance_16384
+			local
+				di: ZLIB_STRING_UNCOMPRESS
+				dc: ZLIB_STRING_COMPRESS
+				input_string: STRING
+				output_string: STRING
+				sw: DT_STOPWATCH
+				i: INTEGER
+			do
+				create sw.make
+				sw.start
+				from
+					i := 1
+				until
+					i > 1000
+				loop
+					input_string:= payload_size_16384
+					create output_string.make_empty
+					create dc.string_stream (output_string)
+					dc.mark_full_flush
+					dc.put_string (input_string)
+					create di.string_stream (output_string)
+					check
+						same_string: input_string.same_string (di.to_string)
+					end
+					print ("%NBytes compresses:" + dc.total_bytes_compressed.out)
+					print ("%NBytes uncompresses:" + di.total_bytes_uncompressed.out)
+					i := i + 1
+				end
+				sw.stop
+
+				print ("Elapsed time:" + sw.elapsed_time.precise_time_out)
+			end
+
+		perfomance_8192
+			local
+				di: ZLIB_STRING_UNCOMPRESS
+				dc: ZLIB_STRING_COMPRESS
+				input_string: STRING
+				output_string: STRING
+				sw: DT_STOPWATCH
+				i: INTEGER
+			do
+				create sw.make
+				sw.start
+				from
+					i := 1
+				until
+					i > 1000
+				loop
+					create input_string.make_from_string (payload_size_8192)
+					create output_string.make_empty
+					create dc.string_stream (output_string)
+					dc.mark_full_flush
+					dc.put_string (input_string)
+					create di.string_stream (output_string)
+					check
+						same_string: input_string.same_string (di.to_string)
+					end
+					print ("%NBytes compresses:" + dc.total_bytes_compressed.out)
+					print ("%NBytes uncompresses:" + di.total_bytes_uncompressed.out)
+					i := i + 1
+				end
+				sw.stop
+
+				print ("Elapsed time:" + sw.elapsed_time.precise_time_out)
+			end
 
 feature -- Custom Deflate Implementation
 
@@ -248,6 +383,8 @@ feature -- Custom Deflate Implementation
 			end
 		end
 
+
+
 feature -- Custom Inflate Implementation
 
 	inflate (a_source: RAW_FILE; a_dest: RAW_FILE): INTEGER
@@ -335,6 +472,57 @@ feature -- Custom Inflate Implementation
 					-- Clean up and return
 				l_zlib.inflate_end (l_stream)
 				Result := l_zlib.last_operation
+			end
+		end
+
+feature -- Byte Array
+
+	byte_array (a_bytes: SPECIAL [NATURAL_8]) : SPECIAL [INTEGER_8]
+		local
+			i: INTEGER
+		do
+
+			create Result.make_filled (0,a_bytes.count)
+			across a_bytes as c
+				loop
+   					Result.put(to_byte(c.item.as_integer_8), i)
+					i := i + 1
+				end
+		end
+
+	to_byte (a_val : INTEGER) : INTEGER_8
+			-- takes a value between 0 and 255
+			-- Result :-128 to 127
+		do
+			if a_val >= 128 then
+				Result := (-256 + a_val).to_integer_8
+			else
+				Result := a_val.to_integer_8
+			end
+		ensure
+			result_value :  127 >= Result and Result >= -128
+		end
+
+	string_to_array (s: STRING): ARRAY [NATURAL_8]
+		local
+			i, n: INTEGER
+			c: INTEGER
+		do
+			n := s.count
+			create Result.make_empty
+			if n > 0 then
+				from
+					i := 1
+				until
+					i > n
+				loop
+					c := s [i].code
+					check
+						c <= 0xFF
+					end
+					Result.force (c.as_natural_8, i)
+					i := i + 1
+				end
 			end
 		end
 

@@ -52,14 +52,14 @@ feature -- Status report
 
 feature -- Query
 
-	string_representation: STRING_32
+	string_representation: READABLE_STRING_32
 			-- String representation of Current
 			-- if possible
 		do
 			if attached value as v then
-				Result := v.generating_type
+				Result := generating_type.name_32
 			else
-				Result := "Void"
+				Result := {STRING_32} "Void"
 			end
 		end
 
@@ -71,7 +71,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -29,7 +29,7 @@ feature -- Access
 	image: STRING
 			-- String representation of the token
 		obsolete
-			"Use `wide_image' instead."
+			"Use `wide_image' instead. [2017-05-31]"
 		do
 			Result := wide_image.as_string_8
 		end
@@ -158,7 +158,7 @@ feature -- Status report
 
 feature -- Status report
 
-	debug_output: STRING
+	debug_output: STRING_32
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			if attached wide_image as w then
@@ -169,7 +169,7 @@ feature -- Status report
 			else
 				create Result.make_empty
 			end
-			Result.append_string (" pos_in_text=")
+			Result.append_string (" @")
 			Result.append_integer (pos_in_text)
 		end
 
@@ -660,7 +660,7 @@ invariant
 	previous = Void implies position = 0
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EiffelCOM exception"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,13 +27,13 @@ feature --  Access
 			Result := hresult_code
 		end
 
-	message: STRING_8
-			-- Message(Tag) of current exception
+	message: READABLE_STRING_32
+			-- Message (Tag) of current exception.
 		do
 			if attached {COM_FAILURE} exception_manager.last_exception as l_com_failure then
-				Result := l_com_failure.message
+				Result := l_com_failure.description.as_string_32
 			else
-				create Result.make_empty
+				create {IMMUTABLE_STRING_32} Result.make_empty
 			end
 		end
 
@@ -106,18 +106,14 @@ feature -- Element Change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class ECOM_EXCEPTION
-
+end

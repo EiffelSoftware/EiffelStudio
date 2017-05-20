@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="process_all" uuid="022B81C4-0563-4411-A405-0C25F9FBCA54">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="process_all" uuid="022B81C4-0563-4411-A405-0C25F9FBCA54">
 	<target name="process_all">
 		<root class="ROOT_CLASS" feature="make"/>
-		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="provisional">
+		<option warning="true">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="exception_trace" value="true"/>
-		<setting name="concurrency" value="scoop"/>
+		<capability>
+			<concurrency support="thread"/><!-- FIXME: when EiffelProcess supports SCOOP. -->
+			<void_safety support="none"/>
+		</capability>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>

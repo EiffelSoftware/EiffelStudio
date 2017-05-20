@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Actual type for typed pointer type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,18 +27,35 @@ inherit
 			internal_same_generic_derivation_as, generic_derivation, check_labels,
 			duplicate_for_instantiation, deanchored_form_marks_free
 		redefine
-			is_typed_pointer, c_type, base_class, process,
-			il_type_name, generic_il_type_name
+			base_class,
+			c_type,
+			generic_il_type_name,
+			il_type_name,
+			is_typed_pointer,
+			process
 		end
 
 	GEN_TYPE_A
 		undefine
-			meta_type, is_basic,
-			description, instantiated_description, description_with_detachable_type,
-			generate_cecil_value, sk_value, element_type, cl_make, is_processor_attachable_to
+			cl_make,
+			description,
+			description_with_detachable_type,
+			element_type,
+			generate_cecil_value,
+			has_reference,
+			instantiated_description,
+			is_basic,
+			is_processor_attachable_to,
+			meta_type,
+			sk_value
 		redefine
-			is_typed_pointer, c_type, base_class, process, reference_type,
-			il_type_name, generic_il_type_name
+			base_class,
+			c_type,
+			generic_il_type_name,
+			il_type_name,
+			is_typed_pointer,
+			process,
+			reference_type
 		end
 
 create
@@ -74,7 +91,7 @@ feature -- Property
 			-- Is current type a typed pointer type?
 
 	base_class: CLASS_C
-			-- Class POINTER
+			-- Class POINTER.
 		once
 			Result := System.typed_pointer_class.compiled_class
 		end
@@ -88,7 +105,7 @@ feature -- Property
 feature -- IL code generation
 
 	il_type_name (a_prefix: STRING; a_context_type: TYPE_A): STRING
-			-- Name of current class
+			-- Name of current class.
 		local
 			t: TYPE_A
 		do
@@ -102,7 +119,7 @@ feature -- IL code generation
 		end
 
 	generic_il_type_name (a_context_type: TYPE_A): STRING
-			-- Name of current class
+			-- Name of current class.
 		do
 			Result := generics.first.generic_il_type_name (a_context_type).twin
 			Result.append ("&")
@@ -111,7 +128,7 @@ feature -- IL code generation
 feature {COMPILER_EXPORTER} -- Access
 
 	reference_type: GEN_TYPE_A
-			-- Reference counterpart of an expanded type
+			-- Reference counterpart of an expanded type.
 		do
 			create Result.make (class_id, duplicate.generics)
 			if class_declaration_mark = expanded_mark then
@@ -121,13 +138,13 @@ feature {COMPILER_EXPORTER} -- Access
 		end
 
 	c_type: TYPED_POINTER_I
-			-- Pointer C type
+			-- Pointer C type.
 		do
 			create Result.make (pointed_type.c_type)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -158,4 +175,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class TYPED_POINTER_A
+end

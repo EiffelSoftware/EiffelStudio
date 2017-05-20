@@ -53,7 +53,7 @@ feature -- Element Change
 	set_synopsis (a_synopsis: like synopsis)
 			-- <Precursor>
 		do
-			synopsis := a_synopsis
+			synopsis := a_synopsis.as_lower
 		end
 
 feature -- Output

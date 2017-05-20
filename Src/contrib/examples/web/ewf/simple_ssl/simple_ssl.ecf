@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="simple_ssl" uuid="C2FE296C-3C18-4609-A5AB-F604BDEE4410">
+	<target name="simple_ssl">
+		<description>Simple EiffelWeb standalone server with SSL support (Concurrent connection supported thanks to SCOOP).</description>
+		<root class="APPLICATION" feature="make_and_launch"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option warning="true">
+		</option>
+		<setting name="console_application" value="true"/>
+		<variable name="ssl_enabled" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="http" location="..\..\..\..\library\network\protocol\http\http.ecf"/>
+		<library name="wsf" location="..\..\..\..\library\web\framework\ewf\wsf\wsf.ecf"/>
+		<library name="wsf_standalone" location="..\..\..\..\library\web\framework\ewf\wsf\connector\standalone.ecf"/>
+		<cluster name="simple" location=".\" recursive="true"/>
+	</target>
+	<target name="simple_ssl_st" extends="simple_ssl">
+		<description>Simple EiffelWeb standalone server with SSL support (Single threaded, thus no concurrent connection.)</description>
+		<capability>
+			<concurrency use="none"/>
+		</capability>
+	</target>
+</system>

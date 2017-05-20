@@ -33,8 +33,6 @@ inherit
 			accelerators_enabled
 		end
 
-	EV_MENU_ITEM_ACTION_SEQUENCES_IMP
-
 create
 	make
 
@@ -45,7 +43,7 @@ feature {NONE} -- Initialization
 
 	is_dockable: BOOLEAN = False
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create a menu.
 		do
 			assign_interface (an_interface)

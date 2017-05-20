@@ -289,25 +289,25 @@ feature {NONE} -- External
 feature -- Obsolete
 
 	is_windows95: BOOLEAN
-		obsolete "use `is_windows_95' instead"
+		obsolete "use `is_windows_95' instead [2017-05-31]."
 		do
 			Result := is_windows_95
 		end
 
 	is_windows98: BOOLEAN
-		obsolete "use `is_windows_98' instead"
+		obsolete "use `is_windows_98' instead [2017-05-31]."
 		do
 			Result := is_windows_98
 		end
 
 	is_windows2000: BOOLEAN
-		obsolete "use `is_windows_2000' instead"
+		obsolete "use `is_windows_2000' instead [2017-05-31]."
 		do
 			Result := is_windows_2000
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

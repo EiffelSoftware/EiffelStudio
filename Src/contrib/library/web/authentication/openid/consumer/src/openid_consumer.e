@@ -47,7 +47,7 @@ feature -- Change
 			across
 				ax_to_sreg_map as c
 			loop
-				ask_info (c.key.to_string_32, is_required)
+				ask_info (c.key, is_required)
 			end
 		end
 
@@ -204,18 +204,18 @@ feature {OPENID_CONSUMER_VALIDATION} -- Implementation
 										l_types as t
 									loop
 										s := xml_content (t.item)
-										if s.same_string ("http://openid.net/sreg/1.0") then
+										if s.same_string_general ("http://openid.net/sreg/1.0") then
 											r_sreg_supported := True
-										elseif s.same_string ("http://openid.net/extensions/sreg/1.1") then
+										elseif s.same_string_general ("http://openid.net/extensions/sreg/1.1") then
 											r_sreg_supported := True
-										elseif s.same_string ("http://openid.net/srv/ax/1.0") then
+										elseif s.same_string_general ("http://openid.net/srv/ax/1.0") then
 											r_ax_supported := True
-										elseif s.same_string ("http://specs.openid.net/auth/2.0/signon") then
+										elseif s.same_string_general ("http://specs.openid.net/auth/2.0/signon") then
 											r_version := 2
-										elseif s.same_string ("http://specs.openid.net/auth/2.0/server") then
+										elseif s.same_string_general ("http://specs.openid.net/auth/2.0/server") then
 											r_version := 2
 											r_identifier_select := True
-										elseif s.same_string ("http://openid.net/signon/1.1") then
+										elseif s.same_string_general ("http://openid.net/signon/1.1") then
 											r_version := 1
 										end
 									end
@@ -494,7 +494,7 @@ feature {NONE} -- Implementation
 
 feature -- Helper		
 
-	xml_content (e: XML_ELEMENT): STRING_8
+	xml_content (e: XML_ELEMENT): STRING_32
 		do
 			create Result.make_empty
 			if attached e.contents as lst then
@@ -508,9 +508,9 @@ feature -- Helper
 
 	new_session (a_uri: READABLE_STRING_8): HTTP_CLIENT_SESSION
 		local
-			cl: LIBCURL_HTTP_CLIENT
+			cl: DEFAULT_HTTP_CLIENT
 		do
-			create cl.make
+			create cl
 			Result := cl.new_session (a_uri)
 			Result.set_is_insecure (True)
 			Result.set_max_redirects (5)

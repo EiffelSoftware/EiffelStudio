@@ -12,7 +12,7 @@ class
 	EV_MOVE_HANDLE
 
 obsolete
-	"Use EV_MODEL_MOVE_HANDLE instead."
+	"Use EV_MODEL_MOVE_HANDLE instead. [2017-05-31]"
 
 inherit
 	EV_FIGURE_GROUP

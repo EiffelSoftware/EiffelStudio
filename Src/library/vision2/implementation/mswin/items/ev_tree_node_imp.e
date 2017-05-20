@@ -97,17 +97,12 @@ inherit
 			copy, is_equal
 		end
 
-	EV_TREE_NODE_ACTION_SEQUENCES_IMP
-		undefine
-			copy, is_equal
-		end
-
 create
 	make
 
 feature -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			assign_interface (an_interface)
@@ -748,7 +743,7 @@ invariant
 	internal_children_not_void_when_not_parented: is_initialized and top_parent_imp = Void implies internal_children /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

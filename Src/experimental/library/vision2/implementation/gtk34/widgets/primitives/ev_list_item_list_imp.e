@@ -37,8 +37,6 @@ inherit
 			make
 		end
 
-	EV_LIST_ITEM_LIST_ACTION_SEQUENCES_IMP
-
 	EV_KEY_CONSTANTS
 
 	EV_PND_DEFERRED_ITEM_PARENT
@@ -244,17 +242,13 @@ feature -- Status report
 			end
 
 			if attached pebble_function as l_pebble_function then
-				l_pebble_function.call ([a_x, a_y]);
-				pebble := l_pebble_function.last_result
+				pebble := l_pebble_function.item ([a_x, a_y])
 			end
 		end
 
 	reset_pebble_function
 			-- Reset `pebble_function'.
 		do
-			if attached pebble_function as l_pebble_function then
-				l_pebble_function.clear_last_result
-			end
 			pebble := temp_pebble
 			pebble_function := temp_pebble_function
 			temp_pebble := Void
@@ -407,7 +401,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

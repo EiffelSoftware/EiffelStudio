@@ -24,7 +24,7 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: like file_name; a_redirection_location: READABLE_STRING_GENERAL; a_uuid: detachable UUID)
+	make (a_file_name: READABLE_STRING_GENERAL; a_redirection_location: READABLE_STRING_GENERAL; a_uuid: detachable UUID)
 			-- Creation with `a_redirection_location' and `a_uuid'.
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			redirection_location := a_redirection_location
 			uuid := a_uuid
 		ensure
-			file_name_set: a_file_name ~ file_name
+			file_name_set: a_file_name.same_string (file_name)
 			redirection_location_set: redirection_location.same_string (a_redirection_location)
 			uuid_set: uuid = a_uuid
 		end
@@ -55,6 +55,20 @@ feature -- Access, stored in configuration file
 	uuid: detachable UUID
 			-- Universal unique identifier that identifies this system.
 
+	message: detachable READABLE_STRING_32
+			-- Optional message, reported as warning.
+
+feature -- Element change
+
+	set_message (m: detachable READABLE_STRING_GENERAL)
+			-- Set `message' to `m'.
+		do
+			if m = Void then
+				message := Void
+			else
+				create {STRING_32} message.make_from_string_general (m)
+			end
+		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
@@ -83,7 +97,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

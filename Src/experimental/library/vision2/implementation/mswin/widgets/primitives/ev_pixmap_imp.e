@@ -42,7 +42,7 @@ create
 
 feature -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create `Current' empty.
 		do
 			assign_interface (an_interface)
@@ -93,6 +93,16 @@ feature -- Initialization
 				Precursor {EV_PIXMAP_IMP_STATE}	(a_pixel_buffer)
 			end
 
+		end
+
+feature -- Event handling
+
+	init_file_drop_actions (a_file_drop_actions: like file_drop_actions)
+		do
+		end
+
+	init_resize_actions (a_resize_actions: like resize_actions)
+		do
 		end
 
 feature -- Basic Operation
@@ -1384,12 +1394,6 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_file_drop_actions: like file_drop_actions
-			-- Create `file_drop_actions'
-		do
-			create Result
-		end
-
 	update_fields(
 		error_code		: INTEGER -- Loadpixmap_error_xxxx
 		data_type		: INTEGER -- Loadpixmap_hicon, ...
@@ -1990,7 +1994,7 @@ invariant
 			l_private_cursor.reference_tracked
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

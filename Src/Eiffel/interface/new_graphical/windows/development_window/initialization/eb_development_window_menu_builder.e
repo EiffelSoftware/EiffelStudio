@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "Builder which build all EB_DEVELOPMENT_WINDOW menus."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_DEVELOPMENT_WINDOW_MENU_BUILDER
@@ -739,13 +739,11 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 	build_favorites_menu
 			-- Build the favorites menu
 		local
-			l_conv_cst: CLASSI_STONE
 			l_show_favorites_menu_item: EV_MENU_ITEM
 		do
 			develop_window.menus.set_favorites_menu (develop_window.favorites_manager.menu)
-			l_conv_cst ?= develop_window.stone
 				-- We update the state of the `Add to Favorites' command.
-			if l_conv_cst /= Void then
+			if attached {CLASSI_STONE} develop_window.stone then
 				develop_window.menus.favorites_menu.first.enable_sensitive
 			else
 				develop_window.menus.favorites_menu.first.disable_sensitive
@@ -952,6 +950,11 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			auto_recycle (l_command_menu_item)
 			l_tools_menu.extend (l_command_menu_item)
 
+					-- Settings import
+			l_command_menu_item := develop_window.Show_settings_import_cmd.new_menu_item
+			auto_recycle (l_command_menu_item)
+			l_tools_menu.extend (l_command_menu_item)
+
 					-- External commands editor
 			l_command_menu_item := develop_window.commands.Edit_external_commands_cmd.new_menu_item
 			auto_recycle (l_command_menu_item)
@@ -979,13 +982,14 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_ms := develop_window.commands.Edit_external_commands_cmd.menus
 			develop_window.menus.set_number_of_displayed_external_commands (l_ms.count)
 
-			if not l_ms.is_empty and not l_tools_menu.is_empty then
-				l_sep ?= l_tools_menu.last
-				if l_sep = Void then
-					create l_sep
-					l_tools_menu.extend (l_sep)
-					develop_window.menus.set_number_of_displayed_external_commands (develop_window.menus.number_of_displayed_external_commands + 1)
-				end
+			if
+				not l_ms.is_empty and
+				not l_tools_menu.is_empty and then
+				not attached {EV_MENU_SEPARATOR} l_tools_menu.last
+			then
+				create l_sep
+				l_tools_menu.extend (l_sep)
+				develop_window.menus.set_number_of_displayed_external_commands (develop_window.menus.number_of_displayed_external_commands + 1)
 			end
 
 			from
@@ -1088,6 +1092,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 		do
 			create Result.make_with_text (develop_window.Interface_names.m_Editor_area)
 
+
 			l_new_menu_item := develop_window.commands.maximize_editor_area_command.new_menu_item
 			Result.extend (l_new_menu_item)
 			auto_recycle (l_new_menu_item)
@@ -1149,11 +1154,11 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			insert_show_tool_menu_item (Result, {ES_FEATURE_RELATION_TOOL})
 			insert_show_tool_menu_item (Result, {ES_DEPENDENCY_TOOL})
 			Result.extend (create {EV_MENU_SEPARATOR})
-			if (create {SERVICE_CONSUMER [OUTPUT_MANAGER_S]}).is_service_available then
+			if attached (create {SERVICE_CONSUMER [OUTPUT_MANAGER_S]}).service then
 				insert_show_tool_menu_item (Result, {ES_OUTPUTS_TOOL})
 			end
 			insert_show_tool_menu_item (Result, {ES_CONSOLE_TOOL})
-			if (create {SERVICE_CONSUMER [EVENT_LIST_S]}).is_service_available then
+			if attached (create {SERVICE_CONSUMER [EVENT_LIST_S]}).service then
 				Result.extend (create {EV_MENU_SEPARATOR})
 				insert_show_tool_menu_item (Result, {ES_ERROR_LIST_TOOL})
 			end
@@ -1169,7 +1174,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			Result.extend (create {EV_MENU_SEPARATOR})
 			insert_show_tool_menu_item (Result, {ES_WINDOWS_TOOL})
 			insert_show_tool_menu_item (Result, {ES_FAVORITES_TOOL})
-			if (create {SERVICE_CONSUMER [TEST_SUITE_S]}).is_service_available then
+			if attached (create {SERVICE_CONSUMER [TEST_SUITE_S]}).service then
 				Result.extend (create {EV_MENU_SEPARATOR})
 				insert_show_tool_menu_item (Result, {ES_TESTING_TOOL})
 				insert_show_tool_menu_item (Result, {ES_TESTING_RESULTS_TOOL})
@@ -1205,6 +1210,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 		local
 			l_menu_item: EV_MENU_ITEM
 			l_about_cmd: EB_ABOUT_COMMAND
+			l_license_cmd: EB_LICENSE_COMMAND
 			l_menu_sep: EV_MENU_SEPARATOR
 			l_help_menu: EV_MENU
 		do
@@ -1234,6 +1240,14 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				-- Add the separator
 			create l_menu_sep
 			l_help_menu.extend (l_menu_sep)
+
+				-- License
+			create l_license_cmd
+			if l_license_cmd.is_available then
+				create l_menu_item.make_with_text (develop_window.Interface_names.m_license)
+				register_action (l_menu_item.select_actions, agent l_license_cmd.execute)
+				l_help_menu.extend (l_menu_item)
+			end
 
 				-- About
 			create l_menu_item.make_with_text (develop_window.Interface_names.m_About)
@@ -1507,6 +1521,13 @@ feature -- Docking library menu items
 				l_new_menu_item := l_last_development_window.commands.restore_editors_command.new_menu_item
 				Result.extend (l_new_menu_item)
 				auto_recycle (l_new_menu_item)
+
+					-- Separator --------------------------------------
+				Result.extend (create {EV_MENU_SEPARATOR})
+				l_new_menu_item := l_last_development_window.commands.restore_tab_cmd.new_menu_item
+				Result.extend (l_new_menu_item)
+				auto_recycle (l_new_menu_item)
+
 			end
 		end
 
@@ -1577,7 +1598,7 @@ feature -- Docking library menu items
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

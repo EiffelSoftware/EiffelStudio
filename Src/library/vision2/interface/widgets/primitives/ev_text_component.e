@@ -25,9 +25,6 @@ inherit
 		end
 
 	EV_TEXT_COMPONENT_ACTION_SEQUENCES
-		redefine
-			implementation
-		end
 
 feature -- Access
 
@@ -117,7 +114,7 @@ feature -- Status report
 	selection_start: INTEGER
 			-- Index of first selected character.
 		obsolete
-			"Use `start_selection' instead."
+			"Use `start_selection' instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 			has_selection: has_selection
@@ -128,7 +125,7 @@ feature -- Status report
 	selection_end: INTEGER
 			-- Index of last character selected.
 		obsolete
-			"Use `end_selection - 1' instead."
+			"Use `end_selection - 1' instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 			has_selection: has_selection

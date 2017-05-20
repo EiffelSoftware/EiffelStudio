@@ -11,7 +11,8 @@ class
 inherit
 	EV_DRAWING_AREA_I
 		redefine
-			interface
+			interface,
+			init_expose_actions
 		end
 
 	EV_DRAWABLE_IMP
@@ -39,14 +40,12 @@ inherit
 			internal_set_focus
 		end
 
-	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
-
 create
 	make
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create an empty drawing area.
 		do
 			assign_interface (an_interface)
@@ -390,13 +389,21 @@ feature {NONE} -- Implementation
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
+	init_expose_actions (a_expose_actions: like expose_actions)
+		local
+			l_app_imp: like app_implementation
+		do
+			l_app_imp := app_implementation
+			l_app_imp.gtk_marshal.signal_connect (visual_widget, once "expose-event", agent (l_app_imp.gtk_marshal).create_expose_actions_intermediary (c_object, ?, ?, ?, ?), l_app_imp.gtk_marshal.expose_translate_agent, True)
+		end
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_DRAWING_AREA note option: stable attribute end
 		-- Interface object of Current.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

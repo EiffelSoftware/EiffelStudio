@@ -1,11 +1,10 @@
-note
+﻿note
 
 	description:
 		"The general notion of language construct,  %
 		%characterized by a grammatical production %
 		%and associated semantic actions"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -181,7 +180,7 @@ feature -- Element Change
 			-- <precursor>
 		do
 			if attached {like Current} other as l_other then
-				Precursor {TWO_WAY_TREE}(l_other)
+				Precursor (l_other)
 			end
 		end
 
@@ -189,7 +188,7 @@ feature -- Element Change
 			-- <precursor>
 		do
 			if attached {like Current} other as l_other then
-				Precursor {TWO_WAY_TREE}(l_other)
+				Precursor (l_other)
 			end
 		end
 
@@ -256,11 +255,8 @@ feature {NONE} -- Implementation
 			-- Insert a keyword into the production.
 		require
 			s_not_void: s /= Void
-		local
-			key: KEYWORD
 		do
-			create key.make (s)
-			put (key)
+			put (create {KEYWORD}.make (s))
 		end
 
 	expand_next
@@ -460,7 +456,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -470,8 +466,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class CONSTRUCT
-
+end

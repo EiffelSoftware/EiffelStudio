@@ -17,12 +17,6 @@ inherit
 			interface
 		end
 
-	EV_ITEM_ACTION_SEQUENCES_IMP
-
-	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
-
-	EV_MULTI_COLUMN_LIST_ROW_ACTION_SEQUENCES_IMP
-
 	EV_PND_DEFERRED_ITEM
 		redefine
 			interface
@@ -33,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create a row with one empty column.
 		do
 			assign_interface (an_interface)
@@ -370,7 +364,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MULTI_COLUMN_LIST_ROW note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

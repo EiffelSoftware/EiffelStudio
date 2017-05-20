@@ -11,7 +11,8 @@ class
 inherit
 	EV_DRAWING_AREA_I
 		redefine
-			interface
+			interface,
+			init_expose_actions
 		end
 
 	EV_DRAWABLE_IMP
@@ -36,14 +37,12 @@ inherit
 			button_actions_handled_by_signals
 		end
 
-	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
-
 create
 	make
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create an empty drawing area.
 		do
 			assign_interface (an_interface)
@@ -255,6 +254,14 @@ feature {NONE} -- Implementation
 				set_focus
 			end
 			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+		end
+
+	init_expose_actions (a_expose_actions: like expose_actions)
+		local
+			l_app_imp: like app_implementation
+		do
+			l_app_imp := app_implementation
+			l_app_imp.gtk_marshal.signal_connect (visual_widget, once "draw", agent (l_app_imp.gtk_marshal).create_draw_actions_intermediary (c_object, ?), l_app_imp.gtk_marshal.draw_translate_agent, True)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

@@ -11,7 +11,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_socket: NETWORK_STREAM_SOCKET; a_host: READABLE_STRING_GENERAL; a_port: INTEGER)
+	make (a_socket: HTTP_STREAM_SOCKET; a_host: READABLE_STRING_GENERAL; a_port: INTEGER)
 		do
 			socket := a_socket
 			host := a_host
@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	socket: NETWORK_STREAM_SOCKET
+	socket: HTTP_STREAM_SOCKET
 			-- Persistent connection socket.
 
 	host: READABLE_STRING_GENERAL
@@ -40,7 +40,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

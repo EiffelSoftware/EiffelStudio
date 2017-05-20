@@ -62,26 +62,26 @@ feature -- Access
 			-- Current analyzed class.
 
 	current_class_type: LIKE_CURRENT
-			-- Actual type of `current_class'
+			-- Actual type of `current_class'.
 
 	written_class: CLASS_C
 			-- Class where the code is originally written.
 			-- (Used for checking inherited code in current context.)
 
 	iterable_class: CLASS_C
-			-- Class ITERABLE used to process Loop Iteration part
+			-- Class ITERABLE used to process Loop Iteration part.
 
 	iteration_cursor_class: CLASS_C
-			-- Class ITERATION_CURSOR used to process Loop Iteration part
+			-- Class ITERATION_CURSOR used to process Loop Iteration part.
 
 	current_feature: FEATURE_I
 			-- Current analyzed feature.
 
 	locals: HASH_TABLE [LOCAL_INFO, INTEGER]
-			-- Current local variables of the analyzed feature
+			-- Current local variables of the analyzed feature.
 
 	supplier_ids: FEATURE_DEPENDANCE
-			-- Supplier units
+			-- Supplier units.
 
 	hidden_local_counter: COUNTER
 			-- Counter for managing hidden locals needed for object test where user does not specify
@@ -112,10 +112,10 @@ feature -- Access
 		end
 
 	inline_agent_counter: COUNTER
-			-- counter for managing the inline agents that are enclosed in the current feature
+			-- Counter for managing the inline agents that are enclosed in the current feature.
 
 	current_inline_agent_body: BODY_AS
-			-- Body of the current processec inline agent. Is only valid if the current feature is an inline agent
+			-- Body of the current processec inline agent. Is only valid if the current feature is an inline agent.
 
 	old_inline_agents: HASH_TABLE [FEATURE_I, INTEGER]
 			-- If the processed feature was already present, this table gives a mapping from
@@ -130,19 +130,19 @@ feature -- Access
 		end
 
 	used_argument_names: SEARCH_TABLE [INTEGER]
-			-- Argument names that are already used by enclosing features
+			-- Argument names that are already used by enclosing features.
 
 	used_local_names: SEARCH_TABLE [INTEGER]
-			-- Local names that are already used by enclosing features
+			-- Local names that are already used by enclosing features.
 
 	set_used_argument_names (table: like used_argument_names)
-			-- Set the used argument names
+			-- Set the used argument names.
 		do
 			used_argument_names := table
 		end
 
 	set_used_local_names (table: like used_local_names)
-			-- Set the used local names
+			-- Set the used local names.
 		do
 			used_local_names := table
 		end
@@ -194,18 +194,18 @@ feature -- Modification
 feature {NONE} -- Local scopes
 
 	object_test_locals: HASH_TABLE [LOCAL_INFO, ID_AS]
-			-- Types of object-test locals indexes by their name id
+			-- Types of object-test locals indexes by their name id.
 
 	result_id: INTEGER_32 = 0x7fffffff
-			-- Name ID that is used for the special entity "Result"
+			-- Name ID that is used for the special entity "Result".
 
 	old_id: INTEGER_32 = 0x7ffffffe
-			-- Name ID that is used to mark the scope of an old expression
+			-- Name ID that is used to mark the scope of an old expression.
 
 feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 
 	next_object_test_local_position: INTEGER
-			-- Position of a next object test local
+			-- Position of a next object test local.
 		do
 			Result := object_test_locals.count + 1
 		end
@@ -221,7 +221,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 
 	object_test_local (id: INTEGER_32): detachable LOCAL_INFO
 			-- Information about object-test local of name `id' if such
-			-- a local is currently in scope or `Void' otherwise
+			-- a local is currently in scope or `Void' otherwise.
 		local
 			i: INTEGER
 			l: INTEGER
@@ -259,7 +259,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 		end
 
 	unchecked_object_test_local (id: ID_AS): detachable LOCAL_INFO
-			-- Information about object-test local of name `id' (if any) regardless of current scope
+			-- Information about object-test local of name `id' (if any) regardless of current scope.
 		require
 			id_attached: id /= Void
 		do
@@ -315,29 +315,29 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: status rep
 feature {AST_CONTEXT} -- Local scopes
 
 	scopes: ARRAYED_LIST [INTEGER_32]
-			-- Currently active scopes identified by entity name ID
+			-- Currently active scopes identified by entity name ID.
 
 	scope_count: INTEGER
-			-- Number of active scopes
+			-- Number of active scopes.
 		do
 			Result := scopes.count
 		end
 
 	object_test_scopes: ARRAYED_LIST [ID_AS]
-			-- Currently active scopes of object test locals
+			-- Currently active scopes of object test locals.
 
 feature {AST_CREATION_PROCEDURE_CHECKER, AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT, AST_SCOPE_COMBINED_PRECONDITION} -- Attribute positions
 
 	attributes: HASH_TABLE [INTEGER_32, INTEGER_32]
-			-- Attribute indecies indexed by their feature ID
+			-- Attribute indecies indexed by their feature ID.
 
 	attribute_initialization: AST_ATTRIBUTE_INITIALIZATION_TRACKER
-			-- Tracker of initialized stable attributes
+			-- Tracker of initialized stable attributes.
 
 feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Scope state
 
 	scope: INTEGER
-			-- Current scope ID
+			-- Current scope ID.
 		do
 				-- For simplicity the current number of local scopes is used.
 			Result := scope_count
@@ -395,10 +395,10 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Scope state
 		end
 
 	local_initialization: AST_LOCAL_INITIALIZATION_TRACKER
-			-- Tracker of initialized locals
+			-- Tracker of initialized locals.
 
 	local_scope: AST_LOCAL_SCOPE_TRACKER
-			-- Tracker of scopes of non-void locals
+			-- Tracker of scopes of non-void locals.
 
 	local_scopes: TUPLE [local_initialization: like local_initialization; local_scope: like local_scope]
 			-- Scopes that can be saved before calling `init_local_scopes' and restored by calling `set_local_scopes'.
@@ -423,7 +423,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Scope state
 feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modification
 
 	add_old_expression_scope
-			-- Add a scope of an old expression
+			-- Add a scope of an old expression.
 		do
 			scopes.extend (old_id)
 		end
@@ -666,10 +666,10 @@ feature -- Status report
 
 	is_ignoring_export: BOOLEAN
 			-- Do we ignore export validity for feature access ?
-			-- Useful for expression evaluation
+			-- Useful for expression evaluation.
 
 	last_conversion_info: CONVERSION_INFO
-			-- Information about last conversion
+			-- Information about last conversion.
 
 feature -- Setting
 
@@ -681,29 +681,44 @@ feature -- Setting
 		local
 			s: GENERIC_SKELETON
 			i: INTEGER
+			a: ATTR_DESC
 		do
 			current_class := a_class
+			is_void_safe_call := a_class.lace_class.is_void_safe_call
+			is_void_safe_conformance := a_class.lace_class.is_void_safe_conformance
+			is_void_safe_initialization := a_class.lace_class.is_void_safe_initialization
+			is_void_safe_construct := a_class.lace_class.is_void_safe_construct
+			is_void_unsafe := a_class.lace_class.is_void_unsafe
+
 			create current_class_type.make (a_type)
 				-- Current is always attached.
-			if current_class.lace_class.is_void_safe_conformance then
+			if is_void_safe_conformance then
 				current_class_type.set_attached_mark
 			end
-				-- Current is always frozen
+				-- Current is always frozen.
 			if current_class.lace_class.is_catcall_conformance then
 				current_class_type.set_frozen_mark
 			end
 			set_written_class (Void)
-			from
-				s := a_class.skeleton
-				if s /= Void then
-					i := s.count
+				-- TODO: Instead of making the following check, it is better to split `{AST_CONTEXT}` into 2 classes: one for degree 4 and one for degree 3.
+			if a_class.degree_4_needed implies a_class.degree_4_processed then
+				from
+					s := a_class.skeleton
+					if s /= Void then
+						i := s.count
+					end
+					create attributes.make (i)
+					has_stable_attributes := False
+				until
+					i <= 0
+				loop
+					a := s [i]
+					attributes.put (i, a.feature_id)
+					if not a.type_i.is_attached and then a_class.feature_of_feature_id (a.feature_id).is_stable then
+						has_stable_attributes := True
+					end
+					i := i - 1
 				end
-				create attributes.make (i)
-			until
-				i <= 0
-			loop
-				attributes.put (i, s [i].feature_id)
-				i := i - 1
 			end
 		ensure
 			current_class_set: current_class = a_class
@@ -756,7 +771,7 @@ feature -- Setting
 	init_error (e: FEATURE_ERROR)
 			-- Initialize `e'.
 		require
-			good_argument: not (e = Void)
+			e_attached: attached e
 		do
 			e.set_class (current_class)
 			e.set_written_class (written_class)
@@ -773,11 +788,11 @@ feature -- Setting
 		local
 			local_dec: ARRAY [TYPE_A]
 			local_info: LOCAL_INFO
+			total_count: INTEGER
 			local_count: INTEGER
-			argument_count: INTEGER
+			test_count: INTEGER
 			i: INTEGER
 			arguments: FEAT_ARG
-			rout_id: INTEGER
 		do
 				-- Name
 			byte_code.set_feature_name_id (current_feature.feature_name_id)
@@ -786,50 +801,57 @@ feature -- Setting
 				-- Result type if any
 			byte_code.set_result_type (current_feature.type)
 				-- Routine id
-			rout_id := current_feature.rout_id_set.first
-			byte_code.set_rout_id (rout_id)
+			byte_code.set_rout_id (current_feature.rout_id_set.first)
 				-- Written_id
 			byte_code.set_written_class_id (current_class.class_id)
 				-- Pattern id
 			byte_code.set_pattern_id (current_feature.pattern_id)
-				-- Local variable declarations
-			local_count := locals.count + object_test_locals.count
+				-- Local variable declarations.
+			local_dec := Void
+			local_count := locals.count
+			test_count := object_test_locals.count
+			total_count := local_count + test_count
 			if local_count > 0 then
-				create local_dec.make (1, local_count)
+				across
+					locals as l
 				from
-					locals.start
-				until
-					locals.after
+						-- Local variables are treated as detachable.
+					create local_dec.make_filled (l.item.type.as_detachable_type, 1, total_count)
 				loop
-					local_info := locals.item_for_iteration
-					local_dec.put (local_info.type, local_info.position)
-					locals.forth
+					local_info := l.item
+						-- Local variables are treated as detachable.
+					local_dec [local_info.position] := local_info.type.as_detachable_type
 				end
-				from
-					object_test_locals.start
-				until
-					object_test_locals.after
-				loop
-					local_info := object_test_locals.item_for_iteration
-					local_dec.put (local_info.type, locals.count + local_info.position)
-					object_test_locals.forth
-				end
-				byte_code.set_locals (local_dec, locals.count)
 			end
-				-- Arguments declarations
-			argument_count := current_feature.argument_count
-			if argument_count > 0 then
+			if test_count > 0 then
+				across
+					object_test_locals as o
 				from
-					arguments := current_feature.arguments
-					i := 1
-					create local_dec.make (1, argument_count)
-				until
-					i > argument_count
+					if not attached local_dec then
+						create local_dec.make_filled (o.item.type, 1, total_count)
+					end
 				loop
-					local_dec.put (arguments.i_th (i), i)
-					i := i + 1
+					local_info := o.item
+					local_dec [local_count + local_info.position] := local_info.type
 				end
-				byte_code.set_arguments (local_dec)
+			end
+			byte_code.set_locals (local_dec, local_count)
+				-- Arguments declarations.
+			arguments := current_feature.arguments
+			if attached arguments then
+				total_count := arguments.count
+				if total_count > 0 then
+					from
+						i := 2
+						create local_dec.make_filled (arguments [1], 1, total_count)
+					until
+						i > total_count
+					loop
+						local_dec [i] := arguments [i]
+						i := i + 1
+					end
+					byte_code.set_arguments (local_dec)
+				end
 			end
 		end
 
@@ -843,53 +865,69 @@ feature -- Setting
 			l: ARRAY [TYPE_A]
 		do
 			if not object_test_locals.is_empty then
-				from
-					object_test_locals.start
-				until
-					object_test_locals.after
+				across
+					object_test_locals as o
 				loop
-					i := object_test_locals.item_for_iteration
+					i := o.item
 					if i.position >= first_object_test_local_position then
 							-- An object test local is declared inside this assertion.
 							-- It should be recorded to allow code generation when
 							-- assertion is inherited.
-						if l = Void then
-							create l.make (first_object_test_local_position, i.position)
+						if attached l then
+							l.force (i.type, i.position)
+						else
+							create l.make_filled (i.type, first_object_test_local_position, i.position)
 						end
-						l.force (i.type, i.position)
 					end
-					object_test_locals.forth
 				end
 				b.set_object_test_locals (l)
 			end
 		end
 
 	init_invariant_byte_code (b: INVARIANT_B)
-			-- Initialize class invariant byte code `b'
+			-- Initialize class invariant byte code `b'.
 		local
 			i: LOCAL_INFO
 			l: ARRAY [TYPE_A]
 		do
 			if not object_test_locals.is_empty then
-				create l.make (1, object_test_locals.count)
+				across
+					object_test_locals as o
 				from
-					object_test_locals.start
-				until
-					object_test_locals.after
+					create l.make_filled (o.item.type, 1, object_test_locals.count)
 				loop
-					i := object_test_locals.item_for_iteration
+					i := o.item
 					l.force (i.type, i.position)
-					object_test_locals.forth
 				end
 				b.set_object_test_locals (l)
 			end
 		end
 
 	set_current_inline_agent_body (body: like current_inline_agent_body)
-			-- Sets the current inline agent body
+			-- Set current inline agent body to `body`.
 		do
 			current_inline_agent_body := body
 		end
+
+feature -- Settings: void safety
+
+	is_void_unsafe: BOOLEAN
+			-- Is context  class compiled without any void-safety mechanism enabled?
+
+	is_void_safe_conformance: BOOLEAN
+			-- Should attachment status be taken into account when checking conformance?
+
+	is_void_safe_initialization: BOOLEAN
+			-- Should attached entities be property set before use?
+
+	is_void_safe_call: BOOLEAN
+			-- Should feature call target be attached?
+
+	is_void_safe_construct: BOOLEAN
+			-- Should only mode-independent void-safety constructs be taken into account?
+
+	has_stable_attributes: BOOLEAN
+			-- Does current class have stable attributes?
 
 feature -- Iteration classes
 
@@ -928,6 +966,7 @@ feature -- Managing the type stack
 			current_class := Void
 			current_class_type := Void
 			attributes.wipe_out
+			has_stable_attributes := False
 			clear_feature_context
 		end
 
@@ -963,7 +1002,7 @@ feature -- Managing the type stack
 feature	-- Saving contexts
 
 	save: AST_CONTEXT
-			-- Returns a saved context
+			-- Make a copy of the current context and return it.
 		require
 			current_class_attached: current_class /= Void
 		do
@@ -979,20 +1018,22 @@ feature	-- Saving contexts
 		end
 
 	restore (context: AST_CONTEXT)
-			-- Restores a given context
+			-- Restore a given context.
 		do
 			copy (context)
 		end
 
-feature {NONE} --Internals
+feature {NONE} -- Internals
+
 	old_inline_agents_int:  HASH_TABLE [FEATURE_I, INTEGER]
+			-- Storage for `old_inline_agents`.
 
 invariant
 	locals_attached: locals /= Void
 	object_test_locals_attached: object_test_locals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

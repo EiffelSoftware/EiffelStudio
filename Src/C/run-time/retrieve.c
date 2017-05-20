@@ -2961,13 +2961,14 @@ rt_shared void print_object_summary (
 /*
 doc:	<routine name="old_attribute_type_matched" export="private">
 doc:		<summary>Find out if `gtype' and `atype' corresponds to the same type. This is similar to `attribute_type_matched' except this one takes care of storable versions that are strictly less than INDEPENDENT_STORE_5_5.</summary>
+doc:		<param name="context_type" type="type_descriptor *">Context where type arrays are read from.</param>
 doc:		<param name="gtype" type="const EIF_TYPE_INDEX **">Type array for attribute defined in retrieving system.</param>
 doc:		<param name="atype" type="const EIF_TYPE_INDEX **">Type array for attribute defined in storing system (here it uses the encoding for storable versions that are strictly less than INDEPENDENT_STORE_5_5.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>GC mutex</synchronization>
 doc:	</routine>
 */
-rt_private int old_attribute_type_matched (const EIF_TYPE_INDEX **gtype, const EIF_TYPE_INDEX **atype)
+rt_private int old_attribute_type_matched (type_descriptor *context_type, const EIF_TYPE_INDEX **gtype, const EIF_TYPE_INDEX **atype)
 {
 #ifdef EIF_ASSERTIONS
 	RT_GET_CONTEXT
@@ -3003,7 +3004,11 @@ rt_private int old_attribute_type_matched (const EIF_TYPE_INDEX **gtype, const E
 					 * is position. */
 				(*gtype)++;
 				dftype = **gtype;
-				result = ((OLD_FORMAL_TYPE - aftype ) == dftype);
+				if (context_type->formal_map) {
+					result = (context_type->formal_map[OLD_FORMAL_TYPE - aftype] == dftype);
+				} else {
+					result = ((OLD_FORMAL_TYPE - aftype ) == dftype);
+				}
 			} else {
 				result = 0;
 			}
@@ -3040,12 +3045,74 @@ rt_private int old_attribute_type_matched (const EIF_TYPE_INDEX **gtype, const E
 	return result;
 }
 
-rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_ptr att_index, const EIF_TYPE_INDEX **gtype, const EIF_TYPE_INDEX **atype, int level)
+/*
+doc:	<routine name="skip_old_routine_first_argument" export="private">
+doc:		<summary>Given a type array `atype`, skip the first entry in it. It is used to remove the first formal generic type of old routine classes. Note it is not just a matter of removing the first entry, we have to analyze the entry to see if it is generic or not and then remove more and stopping just before the second type in the agent's type.</summary>
+doc:		<param name="atype" type="const EIF_TYPE_INDEX **">Type array for attribute defined in storing system (here it uses the encoding for storable versions that are strictly less than INDEPENDENT_STORE_5_5.)</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>GC mutex</synchronization>
+doc:	</routine>
+*/
+rt_private void skip_old_routine_first_argument (const EIF_TYPE_INDEX **atype)
+{
+	EIF_TYPE_INDEX aftype = **atype;
+	int l_is_tuple = 0;
+
+	/* Skip all annotations we do not need them. */
+	while (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(aftype)) {
+		(*atype)++;
+		aftype = **atype;
+	}
+
+		/* We are now checking the actual type. */
+	if (aftype == TUPLE_TYPE) {
+		(*atype) += TUPLE_OFFSET;
+		aftype = **atype;
+		l_is_tuple = 1;
+	}
+
+	if (aftype == FORMAL_TYPE) {
+		(*atype)++;
+	} else {
+		if (aftype <= MAX_DTYPE) {
+			if (type_defined (aftype)) {
+				size_t i, n;
+				type_descriptor * conv = type_description(aftype);
+				n = conv->is_old_routine_type ? conv->generic_count + 1 : conv->generic_count;
+				for (i = 0; i < n; i++) {
+					skip_old_routine_first_argument(atype);
+				}
+			} else {
+				/* Type was not part of our retrieval system. There is no way we can skip the necessary
+				 * type indexes without knowing how many formal generic parameter the type has. So we exit,
+				 * it will be most likely cause a mismatch in `attribute_type_matched`. */
+				return;
+			}
+		}
+	}
+}
+
+/*
+doc:	<routine name="attribute_type_matched" export="private">
+doc:		<summary>Compare if the new type represented by the `gtype` type array matches the stored type `atype'. </summary>
+doc:		<param name="context_type" type="type_descriptor *">Context where type arrays are read from.</param>
+doc:		<param name="att_index" type="rt_uint_ptr">Index of attribute in `context_type` we are processing the type.</param>
+doc:		<param name="gtype" type="const EIF_TYPE_INDEX **">Type array for attribute defined in retrieving system.</param>
+doc:		<param name="atype" type="const EIF_TYPE_INDEX **">Type array for attribute defined in storing system (here it uses the encoding for storable versions that are strictly less than INDEPENDENT_STORE_5_5.)</param>
+doc:		<param name="is_routine_type" type="int *">If the current entry represents a routine type, store 1 otherwise 0.</param>
+doc:		<return>1 when types are matching, 0 otherwise.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>GC mutex</synchronization>
+doc:	</routine>
+*/
+rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_ptr att_index, const EIF_TYPE_INDEX **gtype, const EIF_TYPE_INDEX **atype, int level, int *is_routine_type)
 {
 	RT_GET_CONTEXT
 	int result = 1;
 	EIF_TYPE_INDEX dftype = **gtype;
 	EIF_TYPE_INDEX aftype = **atype;
+
+	REQUIRE("Has context type", context_type);
 
 	while (result && RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(dftype)) {
 		if (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(aftype)) {
@@ -3083,7 +3150,7 @@ rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_pt
 		}
 
 		if (rt_kind_version < INDEPENDENT_STORE_5_5) {
-			result = old_attribute_type_matched (gtype, atype);
+			result = old_attribute_type_matched (context_type, gtype, atype);
 		} else {
 
 				/* We are now checking the actual type. */
@@ -3103,18 +3170,24 @@ rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_pt
 				(*gtype)++;
 				if (aftype == FORMAL_TYPE) {
 					(*atype)++;
-					result = (**gtype == **atype ? 1 : 0);
+					if (context_type->formal_map) {
+						result = (**gtype == context_type->formal_map[**atype] ? 1 : 0);
+					} else {
+						result = (**gtype == **atype ? 1 : 0);
+					}
 				} else {
 						/* Attribute is not matching. This could happen if the storable was created with a
 						 * version <= 6.1 where formals in a generic derivation involving some basic types
 						 * where instantiated whereas in 6.2 and above we keep them as formals.
 						 * So let's check the context type and see if there is indeed a formal generic at
 						 * the expected position and check if it is the same type. */
-					if ((context_type) && (aftype <= MAX_DTYPE) && type_defined (aftype)) {
+					if ((aftype <= MAX_DTYPE) && type_defined (aftype)) {
 							/* We can resolve only if a context type was specified. */
 						EIF_TYPE_INDEX l_pos = **gtype;
 						if (context_type->generic_count >= l_pos) {
-							result = (type_description (aftype)->new_type == eif_sk_type_to_dtype(context_type->generics [l_pos - 1]));
+							type_descriptor *conv = type_description(aftype);
+							*is_routine_type = (int) conv->is_old_routine_type;
+							result = (conv->new_type == eif_sk_type_to_dtype(context_type->generics [l_pos - 1]));
 						} else {
 							result = 0;
 						}
@@ -3125,7 +3198,9 @@ rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_pt
 			} else if (result) {
 				if (dftype <= MAX_DTYPE  &&  aftype <= MAX_DTYPE) {
 					if (type_defined (aftype)) {
-						result = (dftype == type_description (aftype)->new_type);
+						type_descriptor *conv = type_description(aftype);
+						*is_routine_type = (int) conv->is_old_routine_type;
+						result = (dftype == conv->new_type);
 					} else {
 						result = 0;
 					}
@@ -3135,7 +3210,11 @@ rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_pt
 
 							/* Get the formal position in the stored system. */
 						(*atype)++;
-						l_pos = **atype;
+						if (context_type->formal_map) {
+							l_pos = context_type->formal_map[**atype];
+						} else {
+							l_pos = **atype;
+						}
 							/* Attribute is not matching. This could happen if the storable was created with
 							 * a version <= 6.4 where formals in a generic derivation involving some basic
 							 * types where left as formals whereas in 6.5 and above we instantiate them as
@@ -3143,13 +3222,8 @@ rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_pt
 							 * So let's check the context type and see if the actual type of the formal
 							 * generic type matches `dftype'.
 							 * See eweasel test#store026. */
-						if (context_type) {
-								/* We can resolve only if a context type was specified. */
-							if (context_type->generic_count >= l_pos) {
-								result = (dftype == eif_sk_type_to_dtype(context_type->generics [l_pos - 1]));
-							} else {
-								result = 0;
-							}
+						if (context_type->generic_count >= l_pos) {
+							result = (dftype == eif_sk_type_to_dtype(context_type->generics [l_pos - 1]));
 						} else {
 							result = 0;
 						}
@@ -3175,6 +3249,9 @@ rt_private int attribute_types_matched (type_descriptor *context_type, rt_uint_p
 {
 	int result;
 	EIF_TYPE_INDEX atype = atypes[0];
+
+	REQUIRE("Has context type", context_type);
+
 	if (type_defined (atype) && type_description (atype)->new_dftype != TYPE_UNDEFINED) {
 		EIF_TYPE_INDEX dftype;
 		/* FIXME: Shouldn't we also compare annotations? */
@@ -3182,13 +3259,23 @@ rt_private int attribute_types_matched (type_descriptor *context_type, rt_uint_p
 		result = (dftype == type_description (atype)->new_dftype);
 	} else {
 		int level = 0;
+		int is_old_routine_type = 0;
 		gtypes = rt_canonical_types (gtypes, 0, NULL);
 		result = (gtypes != NULL);
 			/* If `gtypes' is shorter than `atypes', we accept this, as it
 			 * means that generic parameters were removed.
 			 */
 		for (; (result == 1) && (*gtypes != TERMINATOR); gtypes++, atypes++) {
-			result = attribute_type_matched (context_type, att_index, &gtypes, &atypes, level);
+			if (is_old_routine_type) {
+					/* We skip the first generic argument since it has no representation in the current system. */
+				skip_old_routine_first_argument(&atypes);
+					/* Reset the flag. */
+				is_old_routine_type = 0;
+					/* Undo the action of the loop to ensure next iteration starts at the exact same place for `gtypes`. */
+				gtypes--;
+			} else {
+				result = attribute_type_matched(context_type, att_index, &gtypes, &atypes, level, &is_old_routine_type);
+			}
 			level++;
 		}
 	}
@@ -3576,22 +3663,64 @@ rt_private int map_type (type_descriptor *conv, int *unresolved)
 	const char *l_new_storable_version;
 	char *name = class_translation_lookup (conv->name);
 	struct cecil_info *ginfo = cecil_info (conv, name);
-	if (ginfo != NULL && ginfo->nb_param == conv->generic_count) {
-		if (ginfo->nb_param > 0) {
-			/* Generic class in storing and retrieving systems */
-			EIF_TYPE_INDEX orig_value = conv->new_type;
-			conv->new_type = map_generics (ginfo, conv->generic_count, conv->generics);
-			if (conv->new_type != orig_value) {
+	if (ginfo != NULL) {
+		EIF_TYPE_INDEX orig_value = conv->new_type;
+
+		if (ginfo->nb_param == conv->generic_count) {
+			if (ginfo->nb_param > 0) {
+				/* Generic class in storing and retrieving systems */
+				conv->new_type = map_generics(ginfo, conv->generic_count, conv->generics);
+				if (conv->new_type != orig_value) {
+					result = 1;
+				}
+				if (conv->new_type == TYPE_UNRESOLVED_GENERIC) {
+					(*unresolved)++;
+				}
+			} else {
+				conv->new_type = ginfo->dynamic_type;
 				result = 1;
 			}
-			if (conv->new_type == TYPE_UNRESOLVED_GENERIC) {
-				(*unresolved)++;
-			}
 		} else {
-			conv->new_type = ginfo->dynamic_type;
-			result = 1;
+			size_t l_count = strlen(name);
+			/* Check if this is not the special case of routine objects where the first generic
+			   parameter was removed.
+			 */
+			if
+				((ginfo->nb_param == conv->generic_count - 1) &&
+				((l_count >= 7 && (strncmp("ROUTINE", name, 7) == 0)) ||
+				(l_count >= 8 && (strncmp("FUNCTION", name, 8) == 0)) ||
+				(l_count >= 9 && ((strncmp("PROCEDURE", name, 9) == 0) || (strncmp("PREDICATE", name, 9) == 0)))))
+			{
+				EIF_TYPE_INDEX i;
+					/* Tweak the representation so that it matches what we expect. */
+				conv->is_old_routine_type = (char) 1;
+					/* Create mapping of old formal positions to the one in the retrieval system.
+					 * Formal positions are one based, so position 0 holds no data in the map.
+					 * Note this is hardcoded for now as we are in control of the routine classes. */
+				conv->formal_map = (EIF_TYPE_INDEX *) eif_rt_xmalloc ((conv->generic_count + 1) * sizeof (int32), C_T, GC_OFF);
+				if (conv->formal_map == NULL) {
+					xraise(EN_MEM);
+				}
+					/* First formal generic parameter is now an invalid type. */
+				conv->formal_map[0] = INVALID_DTYPE;
+				conv->formal_map[1] = INVALID_DTYPE;
+				for (i = 1; i <= conv->generic_count; i++) {
+					conv->formal_map[i] = i - 1;
+				}
+				conv->generic_count--;
+				conv->new_type = map_generics(ginfo, conv->generic_count, conv->generics + 1);
+				if (conv->new_type != orig_value) {
+					result = 1;
+				}
+				if (conv->new_type == TYPE_UNRESOLVED_GENERIC) {
+					(*unresolved)++;
+				}
+			} else {
+				conv->new_type = TYPE_NOT_PRESENT;
+				result = 1;
+			}
 		}
-	} else if (ginfo == NULL) {
+	} else {
 		if (strchr (name, '[') != NULL) {
 			EIF_TYPE_ID new_id = eif_type_id (name);
 			if (new_id == -1)
@@ -3604,9 +3733,6 @@ rt_private int map_type (type_descriptor *conv, int *unresolved)
 				/* If we are here type was not found in current system. */
 			conv->new_type = TYPE_NOT_PRESENT;
 		}
-		result = 1;
-	} else {
-		conv->new_type = TYPE_NOT_PRESENT;
 		result = 1;
 	}
 	if (result && conv->new_type <= MAX_DTYPE) {
@@ -4926,6 +5052,98 @@ rt_private struct cecil_info * cecil_info (type_descriptor *conv, char *name)
 	return result;
 }
 
+
+/*
+doc:	<routine name="EIF_TYPE_INDEX" export="private">
+doc:		<summary>Given a type array from the storable, compute the type in the retrieval system.</summary>
+doc:		<param name="a_cidarr" type="EIF_TYPE_INDEX *">Type array in the storable.</param>
+doc:		<param name="dtype_map" type="EIF_TYPE_INDEX *">Mapping between IDs from the storable to IDs in the retrieval system.</summary>
+doc:		<param name="count" type="int">Number of entry in `a_cidarr`.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>GC mutex</synchronization>
+doc:	</routine>
+*/
+rt_private EIF_TYPE_INDEX rt_mapped_cid (EIF_TYPE_INDEX *a_cidarr, EIF_TYPE_INDEX *dtype_map, int count)
+{
+	RT_GET_CONTEXT
+	EIF_TYPE_INDEX i, dtype;
+
+	REQUIRE ("Valid cid array", a_cidarr);
+	REQUIRE ("Valid cid array count", count > 1);
+	REQUIRE ("Valid cid array terminator", a_cidarr [count] == TERMINATOR);
+	REQUIRE ("Has dtype map", dtype_map);
+
+	if (!type_conversions) {
+			/* We need to map old dtypes to new dtypes. Typical case of general/independent store. */
+		for (i = 0; i < count; i++) {
+			dtype = a_cidarr [i];
+
+				/* Read annotation if any. */
+			while (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(dtype)) {
+				i++;
+				dtype = a_cidarr [i];
+			}
+			
+			if (dtype <= MAX_DTYPE) {
+				a_cidarr[i] = dtype_map[dtype];
+			} else if (RT_CONF_IS_NONE_TYPE(dtype)) {
+			} else {
+				CHECK("Can only be a TUPLE", dtype == TUPLE_TYPE);
+					/* We simply skip number of generic
+					 * parameters of the tuple as they are not really used
+					 * and only update TUPLE dynamic type */
+				i = i + TUPLE_OFFSET;
+				a_cidarr [i]  = dtype_map [a_cidarr [i]];
+			}
+		}
+	} else {
+				/* We need to map old dtypes to new dtypes. We also handle agents. */
+		EIF_TYPE_INDEX *types = a_cidarr;
+		EIF_TYPE_INDEX old_dtype;
+		type_descriptor *conv;
+		i = 0;
+		while (*types != TERMINATOR) {
+				/* Read annotation if any. */
+			dtype = *types;
+			while (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(dtype)) {
+				a_cidarr[i] = dtype;
+				i++;
+				types++;
+				dtype = *types;
+			}
+
+			if (dtype <= MAX_DTYPE) {
+				old_dtype = dtype;
+				dtype = dtype_map[old_dtype];
+				a_cidarr[i] = dtype;
+				i++;
+				conv = type_description(old_dtype);
+				if (conv->is_old_routine_type) {
+					types++;
+					skip_old_routine_first_argument((const EIF_TYPE_INDEX **)&types);
+				}
+			}  else if (RT_CONF_IS_NONE_TYPE(dtype)) {
+				a_cidarr[i] = dtype;
+				i++;
+			} else {
+				CHECK("Can only be a TUPLE", dtype == TUPLE_TYPE);
+					/* We simply skip number of generic
+						* parameters of the tuple as they are not really used
+						* and only update TUPLE dynamic type */
+				memmove(a_cidarr + i, types, TUPLE_OFFSET * sizeof(EIF_TYPE_INDEX));
+				types += TUPLE_OFFSET;
+				dtype = dtype_map[*types];
+				i += TUPLE_OFFSET;
+				a_cidarr[i] = dtype;
+				i++;
+			}
+			types++;
+		}
+		a_cidarr[i] = TERMINATOR;
+	}
+	return eif_compound_id (0, a_cidarr).id;
+}
+
 /*
 doc:	<routine name="rt_read_cid" return_type="EIF_TYPE_INDEX" export="private">
 doc:		<summary>Given `odtype', dynamic type of the stored object, let's find the new full dynamic type in the retrieving system. This routine only works for basic and general store. For independent store, one has to use `rt_id_read_cid'.</summary>
@@ -4962,9 +5180,9 @@ rt_private EIF_TYPE_INDEX rt_read_cid (EIF_TYPE_INDEX odtype)
 		l_cid [count] = TERMINATOR;
 
 		if (rt_kind) {
-			dftype = eif_gen_id_from_cid (l_cid, dtypes, count);
+			dftype = rt_mapped_cid (l_cid, dtypes, count);
 		} else {
-			dftype = eif_gen_id_from_cid (l_cid, NULL, count);
+			dftype = eif_compound_id (0, l_cid).id;
 		}
 
 		if (l_cid != cidarr) {
@@ -4999,6 +5217,8 @@ rt_private EIF_TYPE_INDEX rt_id_read_cid (EIF_TYPE_INDEX odtype)
 	int16 old_dftype;
 	EIF_TYPE_INDEX *l_cid;
 	uint32 i, j;
+
+	REQUIRE((rt_kind != BASIC_STORE) && (rt_kind != GENERAL_STORE), "Not basic store or general store");
 
 	ridr_norm_int (&count);
 
@@ -5098,22 +5318,14 @@ rt_private EIF_TYPE_INDEX rt_id_read_cid (EIF_TYPE_INDEX odtype)
 
 		l_cid [l_real_count] = TERMINATOR;
 
-		if (rt_kind) {
-			dftype = eif_gen_id_from_cid (l_cid, dtypes, l_real_count);
-		} else {
-			dftype = eif_gen_id_from_cid (l_cid, NULL, l_real_count);
-		}
+		dftype = rt_mapped_cid (l_cid, dtypes, l_real_count);
 
 		if (l_cid != cidarr) {
 				/* Let's free the allocated array. */
 			free (l_cid);
 		}
 	} else {
-		if (rt_kind) {
-			dftype = dtypes [odtype];
-		} else {
-			dftype = odtype;
-		}
+		dftype = dtypes [odtype];
 	}
 
 	return dftype;

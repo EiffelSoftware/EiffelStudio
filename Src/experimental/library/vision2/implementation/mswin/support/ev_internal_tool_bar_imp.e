@@ -37,8 +37,8 @@ feature {NONE} -- Initialization
 		(a_parent: WEL_COMPOSITE_WINDOW; a_toolbar_imp: EV_TOOL_BAR_IMP)
 			-- Create the internal toolbar for toolbar `a_toolbar_imp'.
 		do
-			make (a_parent, "EV_INTERNAL_TOOL_BAR_IMP")
 			toolbar := a_toolbar_imp
+			make (a_parent, "EV_INTERNAL_TOOL_BAR_IMP")
 		end
 
 feature {NONE} -- WEL Implementation
@@ -132,7 +132,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

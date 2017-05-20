@@ -10,7 +10,7 @@ feature
 	make
 		local
 			l_file_1, l_file_2: PLAIN_TEXT_FILE
-			l_file_1_info, l_file_2_info : UNIX_FILE_INFO
+			l_file_1_info, l_file_2_info : FILE_INFO
 			l_file_1_date, l_file_2_date : INTEGER
 		do
 			create l_file_1.make_open_write ("input1")

@@ -43,10 +43,12 @@ feature -- Specialized update
 			-- Set `value' to `a_value' and propagate the change if it the new value is different from the old one.
 		local
 			l_val: like displayed_value
+			tu: TUPLE [detachable READABLE_STRING_32]
 		do
 			if not equal (value, a_value) then
 				value := a_value
-				change_value_actions.call ([a_value])
+				tu := [a_value]
+				change_value_actions.call (tu)
 			end
 			l_val := displayed_value
 			set_text (l_val)

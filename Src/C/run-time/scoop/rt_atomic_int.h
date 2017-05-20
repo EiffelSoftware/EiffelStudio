@@ -65,15 +65,15 @@ rt_private rt_inline void rt_atomic_int_init (struct rt_atomic_int* self) {
 
 rt_private rt_inline void rt_atomic_int_deinit (struct rt_atomic_int* self) {
 #if !defined EIF_HAS_ATOMIC
-	RT_TRACE (eif_pthread_mutex_destroy (&self->lock));
+	RT_TRACE (eif_pthread_mutex_destroy (self->lock));
 #endif
 }
 
 rt_private rt_inline void rt_atomic_int_increment (struct rt_atomic_int* self) {
 #if !defined EIF_HAS_ATOMIC
-	RT_TRACE (eif_pthread_mutex_lock (&self->lock));
+	RT_TRACE (eif_pthread_mutex_lock (self->lock));
 	++(self->count);
-	RT_TRACE (eif_pthread_mutex_unlock (&self->lock));
+	RT_TRACE (eif_pthread_mutex_unlock (self->lock));
 #else
 	RTS_AI_I32 (&self->count);
 #endif
@@ -82,9 +82,9 @@ rt_private rt_inline void rt_atomic_int_increment (struct rt_atomic_int* self) {
 rt_private rt_inline int rt_atomic_int_decrement_and_fetch (struct rt_atomic_int* self) {
 	int result = 0;
 #if !defined EIF_HAS_ATOMIC
-	RT_TRACE (eif_pthread_mutex_lock (&self->lock));
+	RT_TRACE (eif_pthread_mutex_lock (self->lock));
 	result = (--self->count);
-	RT_TRACE (eif_pthread_mutex_unlock (&self->lock));
+	RT_TRACE (eif_pthread_mutex_unlock (self->lock));
 #else
 	result = RTS_AD_I32 (&self->count);
 #endif

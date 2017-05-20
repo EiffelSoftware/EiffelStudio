@@ -10,19 +10,19 @@ deferred class
 	EV_PIXMAP_IMP_STATE
 
 inherit
-	EV_WIDGET_ACTION_SEQUENCES_IMP
+	EV_WIDGET_ACTION_SEQUENCES_I
 		export
 			{EV_PIXMAP_IMP_STATE}
 				all
 		end
 
-	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
+	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_I
 		export
 			{EV_PIXMAP_IMP_STATE}
 				all
 		end
 
-	EV_PIXMAP_ACTION_SEQUENCES_IMP
+	EV_DRAWABLE_ACTION_SEQUENCES_I
 		export
 			{EV_PIXMAP_IMP_STATE}
 				expose_actions_internal
@@ -358,7 +358,6 @@ feature {EV_POINTER_STYLE_IMP} -- Implementation
 			mem_dc: WEL_MEMORY_DC
 			empty_mask_bitmap: WEL_BITMAP
 			raster_operations: WEL_RASTER_OPERATIONS_CONSTANTS
-			ev_cursor_interface: detachable EV_CURSOR
 			l_bitmap: WEL_BITMAP
 			tmp_bitmap: WEL_BITMAP
 			tmp_mask_bitmap: detachable WEL_BITMAP
@@ -374,8 +373,7 @@ feature {EV_POINTER_STYLE_IMP} -- Implementation
 			l_bitmap.decrement_reference
 
 			if not is_icon then
-				ev_cursor_interface ?= interface
-				if ev_cursor_interface /= Void then
+				if attached {EV_CURSOR} interface as ev_cursor_interface then
 					-- This is a cursor, so set the hotspot
 					icon_info.set_x_hotspot (ev_cursor_interface.x_hotspot)
 					icon_info.set_y_hotspot (ev_cursor_interface.y_hotspot)
@@ -496,7 +494,7 @@ feature {
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

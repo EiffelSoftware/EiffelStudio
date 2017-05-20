@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Abstract class to dispatch tracing events to user. Tracing events are dispatched
 		by calling `activate' on the TRACING_HANDLER's instance.
@@ -6,7 +6,7 @@ note
 	 	used for the newly created thread to avoid race condition. It is up to the implementer
 	 	of the class to ensure proper thread-safety and to properly implement `duplicated' which
 	 	is by default implemented using `twin'.
-	 	]"
+ 	]"
 	legal: "See notice at end of class."
     status: "See notice at end of class."
     date: "$Date$"
@@ -26,8 +26,6 @@ feature -- Tracing
 			a_depth_non_negative: a_depth >= 0
 		deferred
 		end
-
-feature -- Tracing
 
 	frozen activate
 			-- Register `Current' to the runtime and for all running threads to handle
@@ -90,14 +88,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

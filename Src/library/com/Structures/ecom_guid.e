@@ -46,7 +46,7 @@ feature -- Basic operation
 
 feature {NONE} -- Initialization
 
-	make_from_string (string: STRING)
+	make_from_string (string: READABLE_STRING_GENERAL)
 			-- Create GUID from string `string'.
 		require
 			non_void_string: string /= Void
@@ -93,8 +93,8 @@ feature -- Measurement
 
 feature -- Conversion
 
-	to_string: STRING
-			-- String representation
+	to_string: STRING_32
+			-- String representation.
 		require
 			valid_item: item /= default_pointer
 		local
@@ -102,9 +102,9 @@ feature -- Conversion
 		do
 			create l_string.make_empty (39)
 			if c_guid_to_string (item, l_string.item, 39) = 0 then
-				Result := ""
+				Result := {STRING_32} ""
 			else
-				Result := l_string.string.as_string_8_conversion
+				Result := l_string.string
 			end
 		ensure
 			non_void_representation: Result /= Void
@@ -125,9 +125,13 @@ feature -- Conversion
 		end
 
 	out: STRING
-			-- String representation
+			-- String representation.
 		do
-			Result := to_string
+			if item = default_pointer then
+				Result := ""
+			else
+				Result := to_string.as_string_8
+			end
 		end
 
 feature {NONE} -- Externals
@@ -180,14 +184,14 @@ feature {NONE} -- Externals
       	end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class ECOM_GUID

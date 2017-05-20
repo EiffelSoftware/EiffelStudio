@@ -41,11 +41,6 @@ inherit
 		end
 
 	EV_MULTI_COLUMN_LIST_ROW_ACTION_SEQUENCES
-		undefine
-			copy, is_equal
-		redefine
-			implementation
-		end
 
 create
 	default_create
@@ -77,7 +72,7 @@ feature -- Element change
 			-- The representations of `other' and current structure
 			-- need not be the same.
 		obsolete
-			"Use `fill' for Unicode support."
+			"Use `fill' for Unicode support. [2017-05-31]"
 		local
 			lin_rep: LINEAR [STRING]
 			l_cursor: CURSOR

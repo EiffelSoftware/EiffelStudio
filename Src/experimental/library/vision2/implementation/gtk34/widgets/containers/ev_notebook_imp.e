@@ -33,8 +33,6 @@ inherit
 			interface
 		end
 
-	EV_NOTEBOOK_ACTION_SEQUENCES_IMP
-
 create
 	make
 
@@ -46,7 +44,7 @@ feature {NONE} -- Initialization
 			Result := True
 		end
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create a fixed widget.
 		do
 			assign_interface (an_interface)
@@ -72,10 +70,11 @@ feature -- Access
 			i: INTEGER
 			gdkwin, mouse_ptr_wid, tab_label: POINTER
 			a_wid: detachable EV_WIDGET_IMP
+			l_x, l_y: INTEGER
 		do
 			from
 				i := 1
-				gdkwin := {GTK}.gdk_window_at_pointer (default_pointer, default_pointer)
+				gdkwin := {GDK_HELPERS}.window_at ($l_x, $l_y)
 				if gdkwin /= default_pointer then
 					{GTK}.gdk_window_get_user_data (gdkwin, $mouse_ptr_wid)
 					a_wid ?= eif_object_from_c (mouse_ptr_wid)
@@ -369,7 +368,7 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

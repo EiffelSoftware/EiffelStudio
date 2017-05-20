@@ -6,7 +6,7 @@ note
 		%(8-bit code between 0 and 255)"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -121,7 +121,7 @@ feature -- Input
 				if not old_end_of_file then
 					last_string.set_count (nb)
 					i := old_read_to_string (last_string, 1, nb)
-					last_string.set_internal_hash_code (0)
+					last_string.reset_hash_codes
 					last_string.set_count (i)
 				else
 					last_string.set_count (0)
@@ -164,16 +164,16 @@ feature -- Input
 				if not old_end_of_file then
 					if ANY_.same_types (a_string, dummy_string) then
 						i := i + old_read_to_string (a_string, j, nb - i)
-						a_string.set_internal_hash_code (0)
+						a_string.reset_hash_codes
 					elseif ANY_.same_types (a_string, dummy_kl_character_buffer) then
 						i := i + old_read_to_string (a_string, j, nb - i)
-						a_string.set_internal_hash_code (0)
+						a_string.reset_hash_codes
 					else
 						nb2 := nb - i
 						create tmp_string.make (nb2)
 						tmp_string.set_count (nb2)
 						nb2 := old_read_to_string (tmp_string, 1, nb2)
-						tmp_string.set_internal_hash_code (0)
+						tmp_string.reset_hash_codes
 						from
 							k := 1
 						until
@@ -198,11 +198,8 @@ feature -- Input
 			-- (Note that even if at least `nb' characters are available
 			-- in the input file, there is no guarantee that they
 			-- will all be read.)
-		local
-			char_buffer: detachable KL_CHARACTER_BUFFER
 		do
-			char_buffer ?= a_buffer
-			if char_buffer /= Void then
+			if attached {KL_CHARACTER_BUFFER} a_buffer as char_buffer then
 				Result := char_buffer.fill_from_stream (Current, pos, nb)
 			else
 				Result := precursor (a_buffer, pos, nb)

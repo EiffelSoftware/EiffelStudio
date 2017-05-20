@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Splash screen containing a bitmap"
 	author: "Robin van Ommeren"
 	date: "$Date$"
@@ -27,11 +27,11 @@ create
 
 feature -- Basic operations
 
-	set_bitmap (file_name: STRING)
+	set_bitmap (file_path: PATH)
 			-- Set splashscreen
 		require
-			file_name_not_void: file_name /= Void
-			file_name_meaningfull: not file_name.is_empty
+			file_path_not_void: file_path /= Void
+			file_path_meaningfull: not file_path.is_empty
 		local
 			a_file: RAW_FILE
 			a_dib: WEL_DIB
@@ -39,7 +39,8 @@ feature -- Basic operations
 			retried: BOOLEAN
 		do
 			if not retried then
-				create a_file.make_open_read (file_name)
+				create a_file.make_with_path (file_path)
+				a_file.open_read
 				create a_dib.make_by_file (a_file)
 				create client_dc.make (Current)
 				client_dc.get
@@ -110,11 +111,12 @@ feature {NONE} -- Implementation
 			Result := "SplashBitmapWindowWEX"
 		end
 
-end -- class WEX_SPLASH_BITMAP_WINDOW
+end
 
 --|-------------------------------------------------------------------------
 --| WEX, Windows Eiffel library eXtension
 --| Copyright (C) 1998  Robin van Ommeren, Andreas Leitner
+--| Copyright (C) 2017  Eiffel Software, Alexander Kogtenkov
 --| See the file forum.txt included in this package for licensing info.
 --|
 --| Comments, Questions, Additions to this library? please contact:

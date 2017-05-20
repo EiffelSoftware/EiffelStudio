@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="manager" uuid="56B27D8D-8B31-42F6-BEAC-94CB4BE01F24">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="manager" uuid="56B27D8D-8B31-42F6-BEAC-94CB4BE01F24">
 	<target name="manager_common" abstract="true">
 		<description>Eiffel Codedom Manager utility</description>
 		<root class="ECDM_APPLICATION" feature="make_and_launch"/>
@@ -7,7 +7,7 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
+		<option full_class_checking="false" syntax="transitional">
 		</option>
 		<setting name="cls_compliant" value="true"/>
 		<setting name="console_application" value="false"/>
@@ -21,6 +21,10 @@
 		<setting name="msil_use_optimized_precompile" value="true"/>
 		<setting name="use_all_cluster_name_as_namespace" value="true"/>
 		<setting name="use_cluster_name_as_namespace" value="false"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\vision2.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="cache_browser" location="cache_browser_library.ecf" readonly="true"/>

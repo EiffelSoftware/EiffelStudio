@@ -14,10 +14,12 @@ inherit
 		undefine
 			requires_proxy
 		redefine
+			execute,
 			create_router, router,
 			execute_default,
 			filter_execute,
-			initialize
+			initialize,
+			initialize_router
 		end
 
 	WSF_NO_PROXY_POLICY
@@ -25,6 +27,8 @@ inherit
 	WSF_ROUTED_URI_HELPER
 
 	WSF_ROUTED_URI_TEMPLATE_HELPER
+
+	WSF_REQUEST_EXPORTER
 
 	REFACTORING_HELPER
 
@@ -52,15 +56,16 @@ feature {NONE} -- Initialization
 
 	initialize_cms
 		do
-			write_debug_log (generator + ".initialize_cms")
-
 				-- CMS Initialization
+				-- for void-safety concern.
+			create {WSF_MAINTENANCE_FILTER} filter
+		end
 
-				-- initialize_router
-				-- initialize_filter: expanded here, for void-safety concern.
-			create_filter
-			initialize_router
-			setup_filter
+	initialize_router
+			-- Initialize `router`.
+		do
+			create_router
+			-- setup_router: delayed to `initialize_execution`.
 		end
 
 	initialize_modules
@@ -90,7 +95,7 @@ feature -- Access
 		end
 
 	modules: CMS_MODULE_COLLECTION
-			-- Configurator of possible modules.		
+			-- Declared modules.
 
 feature -- CMS setup
 
@@ -121,14 +126,15 @@ feature -- Settings: router
 			l_router: like router
 			l_module: CMS_MODULE
 		do
-			api.logger.put_debug (generator + ".setup_router", Void)
-				-- Configure root of api handler.
+			l_api := api
+			l_api.logger.put_debug (generator + ".setup_router", Void)
 
 			l_router := router
+
+				-- Configure root of api handler.
 			configure_api_root (l_router)
 
 				-- Include routes from modules.
-			l_api := api
 			across
 				modules as ic
 			loop
@@ -139,6 +145,37 @@ feature -- Settings: router
 			end
 				-- Configure files handler.
 			configure_api_file_handler (l_router)
+		end
+
+	setup_router_for_administration
+			-- <Precursor>
+		local
+			l_api: like api
+			l_router: like router
+			l_module: CMS_MODULE
+		do
+			l_api := api
+			l_router := router
+
+			l_api.logger.put_debug (generator + ".setup_router_for_administration", Void)
+
+				-- Configure root of api handler.
+			l_router.set_base_url (l_api.administration_path (Void))
+
+				-- Include routes from modules.
+			across
+				modules as ic
+			loop
+				l_module := ic.item
+				if
+					l_module.is_initialized and then
+					attached {CMS_ADMINISTRABLE} l_module as l_administration and then
+					attached l_administration.module_administration as adm
+				then
+					adm.setup_router (l_router, l_api)
+				end
+			end
+			map_uri ("/install", create {CMS_ADMIN_INSTALL_HANDLER}.make (api), l_router.methods_head_get)
 		end
 
 	configure_api_root (a_router: WSF_ROUTER)
@@ -153,23 +190,22 @@ feature -- Settings: router
 			a_router.handle ("/", l_root_handler, l_methods)
 			a_router.handle ("", l_root_handler, l_methods)
 			map_uri_agent ("/favicon.ico", agent handle_favicon, a_router.methods_head_get)
-
-			map_uri ("/admin/install", create {CMS_ADMIN_INSTALL_HANDLER}.make (api), a_router.methods_head_get)
 		end
 
 	configure_api_file_handler (a_router: WSF_ROUTER)
 		local
 			fhdl: WSF_FILE_SYSTEM_HANDLER
+			themehdl: CMS_THEME_FILE_SYSTEM_HANDLER
 		do
 			api.logger.put_information (generator + ".configure_api_file_handler", Void)
 
-			create fhdl.make_hidden_with_path (api.theme_assets_location)
-			fhdl.disable_index
-			fhdl.set_not_found_handler (agent (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
+			create themehdl.make (api)
+			themehdl.set_not_found_handler (agent (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
 				do
 					execute_default (ia_req, ia_res)
 				end)
-			a_router.handle ("/theme/", fhdl, router.methods_GET)
+				-- See CMS_API.api.theme_path_for (...) for the hardcoded "/theme/" path.
+			a_router.handle ("/theme/{theme_id}{/vars}", themehdl, router.methods_GET)
 
 				-- "/files/.."
 			create fhdl.make_hidden_with_path (api.files_location)
@@ -178,7 +214,7 @@ feature -- Settings: router
 				do
 					execute_default (ia_req, ia_res)
 				end)
-			a_router.handle ("/files/", fhdl, router.methods_GET)
+			a_router.handle (api.files_path, fhdl, router.methods_GET)
 
 				-- files folder from specific module.
 			a_router.handle ("/module/{modname}/files{/vars}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_module_files), a_router.methods_get)
@@ -193,13 +229,48 @@ feature -- Settings: router
 			a_router.handle ("/", fhdl, router.methods_GET)
 		end
 
-feature -- Execute Filter
+feature -- Request execution
+
+	initialize_execution
+			-- Initialize CMS execution.
+		do
+			request.set_uploaded_file_path (api.temp_location)
+			if api.is_administration_request (request) then
+				initialize_administration_execution
+			else
+				initialize_site_execution
+			end
+		end
+
+	initialize_site_execution
+			-- Initialize for site execution.
+		do
+			api.switch_to_site_mode
+			api.initialize_execution
+			setup_router
+		end
+
+	initialize_administration_execution
+			-- Initialize for administration execution.	
+		do
+			api.switch_to_administration_mode
+			api.initialize_execution
+			setup_router_for_administration
+		end
+
+	execute
+			-- <Precursor>.
+		do
+			initialize_execution
+			Precursor
+		end
 
 	filter_execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute the filter.
 		do
 			res.put_header_line ("Date: " + (create {HTTP_DATE}.make_now_utc).string)
 			res.put_header_line ("X-EWF-Server: CMS_v1.0")
+
 			Precursor (req, res)
 		end
 
@@ -212,11 +283,12 @@ feature -- Filters
 			l_module: CMS_MODULE
 			l_api: like api
 		do
-			api.logger.put_debug (generator + ".create_filter", Void)
+			l_api := api
+			l_api.logger.put_debug (generator + ".create_filter", Void)
 			l_filter := Void
 
 				-- Maintenance
-			create {WSF_MAINTENANCE_FILTER} f
+			create {CMS_MAINTENANCE_FILTER} f.make (Void, l_api)
 			f.set_next (l_filter)
 			l_filter := f
 
@@ -226,7 +298,6 @@ feature -- Filters
 --			l_filter := f
 
 				-- Include filters from modules
-			l_api := api
 			across
 				modules as ic
 			loop
@@ -248,19 +319,7 @@ feature -- Filters
 
 	setup_filter
 			-- Setup `filter'.
-		local
-			f: WSF_FILTER
 		do
-			api.logger.put_debug (generator + ".setup_filter", Void)
-
-			from
-				f := filter
-			until
-				not attached f.next as l_next
-			loop
-				f := l_next
-			end
-			f.set_next (Current)
 		end
 
 feature -- Execution
@@ -275,6 +334,7 @@ feature -- Execution
 			p := api.theme_assets_location.extended ("favicon.ico")
 			if ut.file_path_exists (p) then
 				create f.make_with_path (p)
+				f.set_expires_in_seconds (86_400) -- 24h = 60 sec * 60 min * 24 = 86 400 minutes
 				res.send (f)
 			else
 				create r.make (req, res, api)
@@ -314,7 +374,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

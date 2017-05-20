@@ -37,7 +37,7 @@ create
 
 feature -- Initialize
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create a list widget with `par' as parent.
 			-- By default, a list allow only one selection.
 		do
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

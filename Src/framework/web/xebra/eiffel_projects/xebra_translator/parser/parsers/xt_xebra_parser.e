@@ -31,15 +31,16 @@ feature -- Initialization
 			identifier.fixate
 			identifier.set_name ("identifier")
 
-				-- XML comments
-			comment := rstringp ("<!--") + (-(stringp("-->").negate + rany)) + rstringp ("-->")
-			comment.set_behaviour (agent concatenate_results)
-			comment.set_name ("comment")
-
+				-- Constants
 			open := char ('<')
 			close := char ('>')
 
 			source_path := "No source path specified"
+
+				-- XML comments
+			comment := rstringp ("<!--") + (-(stringp("-->").negate + rany)) + rstringp ("-->")
+			comment.set_behaviour (agent concatenate_results)
+			comment.set_name ("comment")
 		end
 
 feature {XT_XEBRA_PARSER} -- Access
@@ -104,7 +105,7 @@ feature {XT_XEBRA_PARSER} -- Behaviours
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

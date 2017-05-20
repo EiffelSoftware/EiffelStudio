@@ -5,7 +5,7 @@ note
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,6 +73,7 @@ feature {NONE} -- Initialization
 			name := a_name
 			id := 0
 			ancestors := tokens.empty_ancestors
+			conforming_ancestors := tokens.empty_ancestors
 			queries := tokens.empty_queries
 			procedures := tokens.empty_procedures
 			class_keyword := tokens.class_keyword
@@ -144,8 +145,8 @@ feature -- Initialization
 			if attached formal_parameters as l_formal_parameters then
 				l_formal_parameters.reset
 			end
-			if attached parent_clause as l_parent_clause then
-				l_parent_clause.reset
+			if attached parent_clauses as l_parent_clauses then
+				l_parent_clauses.reset
 			end
 			if attached invariants as l_invariants then
 				l_invariants.reset
@@ -171,6 +172,11 @@ feature -- Initialization
 	reset_after_ancestors_built
 			-- Reset current class as it was just after its ancestors were last built.
 			-- Do nothing if ancestors not built.
+		local
+			l_unfolded_tuple_actual_parameters_resolver: detachable ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS_RESOLVER1
+			i, nb: INTEGER
+			j, nb2: INTEGER
+			l_parent_list: ET_PARENT_LIST
 		do
 			reset_implementation_checked
 			reset_interface_checked
@@ -179,9 +185,30 @@ feature -- Initialization
 			procedures.reset
 			if attached formal_parameters as l_formal_parameters then
 				l_formal_parameters.reset
+				create l_unfolded_tuple_actual_parameters_resolver.make
+				nb := l_formal_parameters.count
+				from i := 1 until i > nb loop
+					if attached l_formal_parameters.formal_parameter (i).constraint as l_constraint then
+						l_unfolded_tuple_actual_parameters_resolver.resolve_type (l_constraint, Current)
+					end
+					i := i + 1
+				end
 			end
-			if attached parent_clause as l_parent_clause then
-				l_parent_clause.reset
+			if attached parent_clauses as l_parent_clauses then
+				l_parent_clauses.reset
+				if l_unfolded_tuple_actual_parameters_resolver = Void then
+					create l_unfolded_tuple_actual_parameters_resolver.make
+				end
+				nb := l_parent_clauses.count
+				from i := 1 until i > nb loop
+					l_parent_list := l_parent_clauses.item (i)
+					nb2 := l_parent_list.count
+					from j := 1 until j > nb2 loop
+						l_unfolded_tuple_actual_parameters_resolver.resolve_type (l_parent_list.parent (j).type, Current)
+						j := j + 1
+					end
+					i := i + 1
+				end
 			end
 			if attached invariants as l_invariants then
 				l_invariants.reset
@@ -214,7 +241,7 @@ feature -- Initialization
 			queries.reset_after_features_flattened
 			procedures.reset_after_features_flattened
 			if attached formal_parameters as l_formal_parameters then
-				l_formal_parameters.reset
+				l_formal_parameters.reset_constraint_creation_procedures
 			end
 			if attached invariants as l_invariants then
 				l_invariants.reset
@@ -974,7 +1001,7 @@ feature -- Parsing status
 			tuple_constraint_position := 0
 			invariants := Void
 			obsolete_message := Void
-			parent_clause := Void
+			parent_clauses := Void
 			queries := tokens.empty_queries
 			procedures := tokens.empty_procedures
 			leading_break := Void
@@ -1323,6 +1350,26 @@ feature -- Ancestors
 			end
 		end
 
+	has_conforming_ancestor (a_class: ET_CLASS): BOOLEAN
+			-- Is `a_class' a conforming ancestor of current class?
+			-- (Note: you have to make sure that the ancestors have correctly
+			-- been built first in order to get the correct answer.)
+		require
+			a_class_not_void: a_class /= Void
+		do
+			if is_unknown then
+					-- Class "*UNKNOWN*" has no ancestors.
+				Result := False
+			elseif a_class = Current then
+				Result := True
+			elseif is_none then
+					-- "NONE" is a descendant of all classes.
+				Result := True
+			else
+				Result := conforming_ancestors.has_class (a_class)
+			end
+		end
+
 	ancestor (a_type: ET_BASE_TYPE): detachable ET_BASE_TYPE
 			-- Ancestor of current class with same base class as `a_type';
 			-- Void if no such ancestor.
@@ -1345,6 +1392,56 @@ feature -- Ancestors
 			else
 				Result := ancestors.base_type (a_class)
 			end
+		end
+
+	conforming_ancestor (a_type: ET_BASE_TYPE): detachable ET_BASE_TYPE
+			-- Conforming ancestor of current class with same base class as `a_type';
+			-- Void if no such ancestor.
+			-- (Note: you have to make sure that the ancestors have correctly
+			-- been built first in order to get the correct answer.)
+		require
+			a_type_not_void: a_type /= Void
+		local
+			a_class: ET_CLASS
+		do
+			a_class := a_type.base_class
+			if is_unknown then
+					-- Class "*UNKNOWN*" has no ancestors.
+				Result := Void
+			elseif a_class = Current then
+				Result := a_type
+			elseif is_none then
+					-- "NONE" is a descendant of all classes.
+				Result := a_type
+			else
+				Result := conforming_ancestors.base_type (a_class)
+			end
+		end
+
+	ancestors: ET_BASE_TYPE_LIST
+			-- Proper ancestors
+
+	conforming_ancestors: ET_BASE_TYPE_LIST
+			-- Proper conforming ancestors
+
+	set_ancestors (some_ancestors: like ancestors)
+			-- Set `ancestors' to `some_ancestors'.
+		require
+			some_ancestors_not_void: some_ancestors /= Void
+		do
+			ancestors := some_ancestors
+		ensure
+			ancestors_set: ancestors = some_ancestors
+		end
+
+	set_conforming_ancestors (a_ancestors: like ancestors)
+			-- Set `conforming_ancestors' to `a_ancestors'.
+		require
+			a_ancestors_not_void: a_ancestors /= Void
+		do
+			conforming_ancestors := a_ancestors
+		ensure
+			conforming_ancestors_set: conforming_ancestors = a_ancestors
 		end
 
 	descendants: DS_ARRAYED_LIST [ET_CLASS]
@@ -1391,52 +1488,148 @@ feature -- Ancestors
 			no_void_descendants: not a_descendants.has_void
 		end
 
-	parent_clause: detachable ET_PARENT_LIST
-			-- Parents explicitly specified in the Parent clause
+	conforming_descendants: DS_ARRAYED_LIST [ET_CLASS]
+			-- Proper conforming descendant classes of current class in the surrounding Eiffel system
+			-- (Note: you have to make sure that the ancestors of the classes in the
+			-- surrounding Eiffel system have correctly been built first in order to
+			-- get the correct answer.)
+		do
+			if is_unknown then
+					-- Class "*UNKNOWN*" has no descendants.
+				create Result.make (0)
+			elseif is_none then
+					-- Class "NONE" has no descendants.
+				create Result.make (0)
+			elseif not is_preparsed then
+					-- Current class is not preparsed, this means that we know nothing
+					-- about it, not even its filename. Therefore it cannot possibly
+					-- have descendant classes.
+				create Result.make (0)
+			else
+				create Result.make (initial_descendants_capacity)
+				current_system.classes_do_recursive (agent {ET_CLASS}.add_to_conforming_descendants (Current, Result))
+			end
+		ensure
+			conforming_descendants_not_void: Result /= Void
+			no_void_conforming_descendant: not Result.has_void
+		end
 
-	parents: detachable ET_PARENT_LIST
-			-- Parents of current class, either declared explicitly in `parent_clause'
-			-- or the implicit parent when no parents have been specified
+	add_to_conforming_descendants (a_class: ET_CLASS; a_descendants: DS_ARRAYED_LIST [ET_CLASS])
+			-- Add current class to `a_descendants' if it is a proper conforming descendant of `a_class'.
+			-- (Note: you have to make sure that the ancestors of current class have correctly
+			-- been built first in order to get the correct behavior.)
+		require
+			a_class_not_void: a_class /= Void
+			a_descendants_not_void: a_descendants /= Void
+			no_void_descendants: not a_descendants.has_void
+		do
+			if a_class /= Current then
+				if ancestors_built and then has_conforming_ancestor (a_class) then
+					a_descendants.force_last (Current)
+				end
+			end
+		ensure
+			no_void_descendants: not a_descendants.has_void
+		end
+
+	parent_clauses: detachable ET_PARENT_CLAUSE_LIST
+			-- Parents explicitly specified in the Parent clauses
+
+	set_parent_clauses (a_parents: like parent_clauses)
+			-- Set `parent_clauses' to `a_parents'.
+		do
+			parent_clauses := a_parents
+		ensure
+			parent_clauses_set: parent_clauses = a_parents
+		end
+
+	has_explicit_conforming_parent: BOOLEAN
+			-- Does current class have at least one explicit conforming parent?
+		do
+			Result := attached parent_clauses as l_parent_clauses and then l_parent_clauses.has_conforming_parent
+		ensure
+			definition: Result = (attached parent_clauses as l_parent_clauses and then l_parent_clauses.has_conforming_parent)
+		end
+
+	implicit_parent_clause: detachable ET_PARENT_LIST
+			-- Implicit parent clause when the current class has no explicit conforming parent.
 			--
 			-- Under .NET, the implicit parent in the "SYSTEM_OBJECT" class if the class
 			-- is not the "SYSTEM_OBJECT" class itself.
 			-- Otherwise the implicit parent if "ANY" if the class is not "ANY"
 			-- itself. As a consequence, "ANY" is the only class with no parents.
+		require
+			no_explicit_conforming_parent: not has_explicit_conforming_parent
 		do
-			Result := parent_clause
-			if Result = Void or else Result.is_empty then
-				if is_any_class then
-						-- "ANY" has no implicit parents.
-					Result := Void
-				elseif is_dotnet and then not is_system_object_class then
-					Result := universe.system_object_parents
-				else
-					Result := universe.any_parents
+			if is_any_class then
+					-- "ANY" has no implicit parents.
+				Result := Void
+			elseif is_dotnet and then not is_system_object_class then
+				Result := universe.system_object_parents
+			else
+				Result := universe.any_parents
+			end
+		end
+
+	parents_count: INTEGER
+			-- Number of explicit and implicit parent clauses
+		do
+			if attached parent_clauses as l_parent_clauses then
+				Result := l_parent_clauses.count
+			end
+			if not has_explicit_conforming_parent and then implicit_parent_clause /= Void then
+				Result := Result + 1
+			end
+		ensure
+			parents_count_not_negative: Result >= 0
+		end
+
+	parents (i: INTEGER): ET_PARENT_LIST
+			-- `i'-th parent clause (explicit or implicit)
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= parents_count
+		do
+			if attached parent_clauses as l_parent_clauses and then i <= l_parent_clauses.count then
+				Result := l_parent_clauses.item (i)
+			else
+				check has_implicit_parent: attached implicit_parent_clause as l_implicit_parent_clause then
+					Result := l_implicit_parent_clause
 				end
 			end
 		ensure
-			parents_not_void: not is_any_class implies Result /= Void
+			parents_not_void: Result /= Void
 		end
 
-	ancestors: ET_BASE_TYPE_LIST
-			-- Proper ancestors
-
-	set_parent_clause (a_parents: like parent_clause)
-			-- Set `parent_clause' to `a_parents'.
-		do
-			parent_clause := a_parents
-		ensure
-			parent_clause_set: parent_clause = a_parents
-		end
-
-	set_ancestors (some_ancestors: like ancestors)
-			-- Set `ancestors' to `some_ancestors'.
+	add_base_class_of_parents_exported_to (a_client: ET_CLASS; a_set: DS_HASH_SET [ET_CLASS])
+			-- Add to `a_set' the base class of the parents which are exported 
+			-- to `a_client' (all conforming parents, and if `a_client' is "NONE"
+			-- then the non-conforming parents as well).
 		require
-			some_ancestors_not_void: some_ancestors /= Void
+			a_client_not_void: a_client /= Void
+			a_set_not_void: a_set /= Void
+			no_void_classes: not a_set.has_void
+		local
+			l_is_none: BOOLEAN
+			l_parent_list: ET_PARENT_LIST
+			i1, nb1: INTEGER
+			i2, nb2: INTEGER
 		do
-			ancestors := some_ancestors
+			l_is_none := a_client.is_none
+			nb1 := parents_count
+			from i1 := 1 until i1 > nb1 loop
+				l_parent_list := parents (i1)
+				if l_is_none or else l_parent_list.is_conforming then
+					nb2 := l_parent_list.count
+					from i2 := 1 until i2 > nb2 loop
+						a_set.force (l_parent_list.parent (i2).type.base_class)
+						i2 := i2 + 1
+					end
+				end
+				i1 := i1 + 1
+			end
 		ensure
-			ancestors_set: ancestors = some_ancestors
+			no_void_classes: not a_set.has_void
 		end
 
 feature -- Ancestor building status
@@ -1479,6 +1672,7 @@ feature -- Ancestor building status
 			has_ancestors_error := False
 			ancestors_built := False
 			ancestors := tokens.empty_ancestors
+			conforming_ancestors := tokens.empty_ancestors
 		ensure
 			ancestors_not_built: not ancestors_built
 			no_ancestors_error: not has_ancestors_error
@@ -1513,6 +1707,19 @@ feature -- Creation
 		do
 			if attached creators as l_creators then
 				Result := l_creators.is_directly_exported_to (a_name, a_client)
+			end
+		end
+
+	add_creations_exported_to (a_client: ET_CLASS; a_set: DS_HASH_SET [ET_FEATURE_NAME])
+			-- Add to `a_set' the feature name of creation procedures which are
+			-- exported to `a_client'.
+		require
+			a_client_not_void: a_client /= Void
+			a_set_not_void: a_set /= Void
+			no_void_names: not a_set.has_void
+		do
+			if attached creators as l_creators then
+				l_creators.add_creations_exported_to (a_client, a_set)
 			end
 		end
 
@@ -1751,7 +1958,7 @@ feature -- Features
 			procedures_set: procedures = a_procedures
 		end
 
-	features_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
+	features_do_all (an_action: PROCEDURE [ET_FEATURE])
 			-- Apply `an_action' to every feature of current class.
 			-- (Semantics not guaranteed if `an_action' changes the list of features.)
 		require
@@ -1761,7 +1968,7 @@ feature -- Features
 			procedures.features_do_all (an_action)
 		end
 
-	features_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_until (an_action: PROCEDURE [ET_FEATURE]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature of current class.
 			-- (Semantics not guaranteed if `an_action' changes the list of features.)
 			--
@@ -1775,7 +1982,7 @@ feature -- Features
 			procedures.features_do_until (an_action, a_stop_request)
 		end
 
-	features_do_declared (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
+	features_do_declared (an_action: PROCEDURE [ET_FEATURE])
 			-- Apply `an_action' to every feature declared in current class
 			-- (i.e. do not traverse inherited features which have not been
 			-- redefined in current class).
@@ -1787,7 +1994,7 @@ feature -- Features
 			procedures.features_do_declared (an_action)
 		end
 
-	features_do_declared_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_declared_until (an_action: PROCEDURE [ET_FEATURE]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature declared in current class
 			-- (i.e. do not traverse inherited features which have not been
 			-- redefined in current class).
@@ -1803,7 +2010,7 @@ feature -- Features
 			procedures.features_do_declared_until (an_action, a_stop_request)
 		end
 
-	features_do_inherited (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
+	features_do_inherited (an_action: PROCEDURE [ET_FEATURE])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' changes the list of features.)
@@ -1814,7 +2021,7 @@ feature -- Features
 			procedures.features_do_inherited (an_action)
 		end
 
-	features_do_inherited_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_inherited_until (an_action: PROCEDURE [ET_FEATURE]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' changes the list of features.)
@@ -1829,7 +2036,7 @@ feature -- Features
 			procedures.features_do_inherited_until (an_action, a_stop_request)
 		end
 
-	features_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
+	features_do_if (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN])
 			-- Apply `an_action' to every feature of current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
 		require
@@ -1840,7 +2047,7 @@ feature -- Features
 			procedures.features_do_if (an_action, a_test)
 		end
 
-	features_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_if_until (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature of current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
 			--
@@ -1855,7 +2062,7 @@ feature -- Features
 			procedures.features_do_if_until (an_action, a_test, a_stop_request)
 		end
 
-	features_do_declared_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
+	features_do_declared_if (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN])
 			-- Apply `an_action' to every feature declared in current class
 			-- (i.e. do not traverse inherited features which have not been
 			-- redefined in current class) that satisfies `a_test'.
@@ -1868,7 +2075,7 @@ feature -- Features
 			procedures.features_do_declared_if (an_action, a_test)
 		end
 
-	features_do_declared_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_declared_if_until (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature declared in current class
 			-- (i.e. do not traverse inherited features which have not been
 			-- redefined in current class) that satisfies `a_test'.
@@ -1885,7 +2092,7 @@ feature -- Features
 			procedures.features_do_declared_if_until (an_action, a_test, a_stop_request)
 		end
 
-	features_do_inherited_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
+	features_do_inherited_if (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
@@ -1897,7 +2104,7 @@ feature -- Features
 			procedures.features_do_inherited_if (an_action, a_test)
 		end
 
-	features_do_inherited_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_inherited_if_until (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
@@ -2329,6 +2536,7 @@ invariant
 	index_not_negative: index >= 0
 	group_not_void: group /= Void
 	ancestors_not_void: ancestors /= Void
+	conforming_ancestors_not_void: conforming_ancestors /= Void
 	queries_not_void: queries /= Void
 	-- queries_registered: forall f in queries, f.is_registered
 	procedures_not_void: procedures /= Void

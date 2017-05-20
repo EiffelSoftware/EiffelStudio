@@ -1,4 +1,4 @@
-note 
+﻿note
 	description: "Demonstration of FORMATTING and COUNTABLES"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,32 +12,27 @@ class DEMO_DRIVER
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
-		local
-			formatting: FORMATTING;
-			countables: COUNTABLES
+			-- Run the demo.
 		do
-			io.putstring ("Formatting demonstration%N%N");
-			create formatting.make;
-			io.putstring ("%NPress <Return> to start Countables demonstration%N");
-			io.readline;
-			create countables.make;
+			io.putstring ("Formatting demonstration%N%N")
+			;(create {FORMATTING}.make).do_nothing
+			io.putstring ("%NPress <Return> to start Countables demonstration%N")
+			io.readline
+			;(create {COUNTABLES}.make).do_nothing
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class DEMO_DRIVER
-
-
+end

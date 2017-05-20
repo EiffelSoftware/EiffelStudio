@@ -30,9 +30,6 @@ inherit
 		end
 
 	EV_TITLED_WINDOW_ACTION_SEQUENCES
-		redefine
-			implementation
-		end
 
 create
 	default_create,
@@ -204,7 +201,7 @@ invariant
 	accelerators_not_void: is_usable implies accelerators /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

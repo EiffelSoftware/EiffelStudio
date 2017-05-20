@@ -51,7 +51,7 @@ feature -- Initialization
 	make_with_value (t: like type; v: like internal_value)
 			-- Create a new key value of type `t' using `v'.
 		obsolete
-			"Use `make_with_data', `make' or `make_with_dword_value' instead."
+			"Use `make_with_data', `make' or `make_with_dword_value' instead [2017-05-31]."
 		require
 			v_not_void: v /= Void
 		do
@@ -86,7 +86,7 @@ feature -- Access
 	internal_value: WEL_STRING
 			-- Storage for Current.
 		obsolete
-			"Use `string_value' or `dword_value' instead."
+			"Use `string_value' or `dword_value' instead [2017-05-31]."
 		do
 			create Result.make_empty (data.count - 2)
 			Result.item.memory_copy (data.item, data.count)
@@ -95,7 +95,7 @@ feature -- Access
 	value: STRING_32
 			-- String data.
 		obsolete
-			"Use `string_value' instead."
+			"Use `string_value' instead [2017-05-31]."
 		require
 			valid_type: type = Reg_sz
 		do
@@ -154,7 +154,7 @@ feature -- Element Change
 	set_value (v: like value)
 			-- Set `value' with `v'.
 		obsolete
-			"Use `set_string_value' instead'."
+			"Use `set_string_value' instead' [2017-05-31]."
 		require
 			v_not_void: v /= Void
 		local
@@ -197,7 +197,7 @@ feature -- Element Change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

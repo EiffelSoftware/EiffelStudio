@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Objects that display class information in a widget."
 	legal: "See notice at end of class."
@@ -519,11 +519,8 @@ feature {NONE} -- Location
 
 	fresh_old_formatter
 			-- Fresh old formatter position
-		local
-			l_formatter: EB_FORMATTER
 		do
-			l_formatter ?= manager.previous_pos_container
-			if l_formatter /= Void then
+			if attached {EB_FORMATTER} manager.previous_pos_container as l_formatter then
 				l_formatter.fresh_position
 			end
 		end
@@ -684,7 +681,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -715,4 +712,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_FORMATTER
+end

@@ -296,7 +296,7 @@ feature {NONE} -- Parameters operation
 	parameters_push_and_metamorphose (dmp: DUMP_VALUE)
 		do
 			debug ("debugger_trace_eval_data")
-				print (generating_type + ".parameters_push_and_metamorphose :: Send Metamorphose request ... %N")
+				localized_print (generating_type.name_32 + {STRING_32} ".parameters_push_and_metamorphose :: Send Metamorphose request ... %N")
 			end
 			dmp.classic_send_value
 			if not dmp.last_classic_send_value_succeed then
@@ -316,7 +316,7 @@ feature -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

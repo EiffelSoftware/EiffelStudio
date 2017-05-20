@@ -285,8 +285,10 @@ feature -- Processing
 						if p > 0 then
 							t := tag_name_from (a_text.substring (i, p))
 								-- FIXME: do not ignore params ...
-
-							if a_text [p - 1] = '/' then
+							if t = Void then
+									-- Invalid tag name, ignore pseudo tag!
+								s.extend (c)
+							elseif a_text [p - 1] = '/' then
 									-- <tag/>
 								q := p
 								r := p

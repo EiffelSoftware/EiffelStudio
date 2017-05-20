@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "SD_DOCKING_ZONE when title is at top area."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ feature	{NONE} -- Initlization
 		do
 			create internal_shared
 			set_docking_manager (a_content.docking_manager)
-			create window.make (a_content.type, {SD_ENUMERATION}.docking)
+			create window.make ({SD_WIDGET_FACTORY}.style_different, {SD_ENUMERATION}.docking)
 			internal_content := a_content
 
 			default_create
@@ -60,7 +60,7 @@ feature	{NONE} -- Initlization
 			set_minimum_width (internal_shared.zone_minimum_width)
 			set_minimum_height (internal_shared.zone_minimum_height)
 		ensure
-			set: internal_docking_manager = a_content.docking_manager
+			set: docking_manager = a_content.docking_manager
 			added: has_cell (window)
 		end
 
@@ -180,11 +180,8 @@ feature {NONE} -- Implementation
 
 	update_mini_toolbar
 			-- <Precursor>
-		local
-			l_title_bar: SD_TITLE_BAR
 		do
-			l_title_bar := window.title_bar
-			l_title_bar.extend_custom_area (content.mini_toolbar)
+			window.title_bar.extend_custom_area (content.mini_toolbar)
 		end
 
 	update_mini_tool_bar_size
@@ -200,7 +197,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -209,10 +206,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that hold SD_CONTENT's user widgets."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,6 @@ feature -- Command
 			-- Normal or max `Current'
 		local
 			l_main_area: like main_area
-			l_internal_parent: detachable EV_CONTAINER
 		do
 			if attached {EV_WIDGET} Current as lt_widget then
 				docking_manager.command.lock_update (lt_widget, False)
@@ -41,9 +40,9 @@ feature -- Command
 					if attached {EV_SPLIT_AREA} internal_parent as l_split_area then
 						internal_parent_split_position := l_split_area.split_position
 					end
-					l_internal_parent := internal_parent
-					check l_internal_parent /= Void end -- Implied by current displaying in main window
-					l_internal_parent.prune (lt_widget)
+					if attached internal_parent as l_internal_parent then
+						l_internal_parent.prune (lt_widget)
+					end
 					l_main_area.wipe_out
 					l_main_area.extend (lt_widget)
 					set_max (True)
@@ -58,10 +57,7 @@ feature -- Command
 		end
 
 	close
-			-- Close window
-		local
-			l_main_area: like main_area
-			l_main_area_widget: like main_area_widget
+			-- Close window.
 		do
 			if attached {EV_WIDGET} Current as lt_widget then
 				docking_manager.command.lock_update (lt_widget, False)
@@ -70,13 +66,12 @@ feature -- Command
 			end
 
 			if is_maximized then
-				l_main_area := main_area
-				check l_main_area /= Void end -- Implied by `is_maximized'
-				l_main_area.wipe_out
-
-				l_main_area_widget := main_area_widget
-				check l_main_area_widget /= Void end -- Implied by `is_maximized'
-				l_main_area.extend (l_main_area_widget)
+				if attached main_area as l_main_area then
+					l_main_area.wipe_out
+					if attached main_area_widget as l_main_area_widget then
+						l_main_area.extend (l_main_area_widget)
+					end
+				end
 				main_area := Void
 			end
 
@@ -84,29 +79,25 @@ feature -- Command
 		end
 
 	recover_to_normal_state
-			-- If Current maximized, then normal Current
-		local
-			l_main_area: like main_area
-			l_main_area_widget: like main_area_widget
-			l_internal_parent: like internal_parent
+			-- If Current maximized, then normal Current.
 		do
 			if is_maximized then
 				if attached {EV_WIDGET} Current as lt_widget then
 					docking_manager.command.lock_update (lt_widget, False)
 
 					if internal_parent /= main_area then
-						l_main_area := main_area
-						check l_main_area /= Void end -- Implied by `is_maximized'
-						l_main_area.wipe_out
 						if attached lt_widget.parent as l_parent then
 							l_parent.prune (lt_widget)
 						end
-						l_internal_parent := internal_parent
-						check l_internal_parent /= Void end -- Implied by `is_maximized'
-						l_internal_parent.extend (lt_widget)
-						l_main_area_widget := main_area_widget
-						check l_main_area_widget /= Void end -- Implied by `is_maximized'
-						l_main_area.extend (l_main_area_widget)
+						if attached internal_parent as l_internal_parent then
+							l_internal_parent.extend (lt_widget)
+						end
+						if attached main_area as l_main_area then
+							l_main_area.wipe_out
+							if attached main_area_widget as l_main_area_widget then
+								l_main_area.extend (l_main_area_widget)
+							end
+						end
 					end
 
 					main_area := Void
@@ -150,9 +141,11 @@ feature -- Command
 		require
 			vaild: a_width >= 0
 		do
-			content.state.set_last_floating_width (a_width)
+			if has_content then
+				content.state.set_last_floating_width (a_width)
+			end
 		ensure
-			set: content.state.last_floating_width = a_width
+			set: has_content implies content.state.last_floating_width = a_width
 		end
 
 	set_last_floating_height (a_height: INTEGER)
@@ -160,9 +153,11 @@ feature -- Command
 		require
 			valid: a_height >= 0
 		do
-			content.state.set_last_floating_height (a_height)
+			if has_content then
+				content.state.set_last_floating_height (a_height)
+			end
 		ensure
-			set: content.state.last_floating_height = a_height
+			set: has_content implies content.state.last_floating_height = a_height
 		end
 
 	update_mini_tool_bar_size
@@ -197,9 +192,17 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
+	has_content: BOOLEAN
+			-- Has content?
+		do
+				-- To redefine.
+			Result := True
+		end
+
 	content: SD_CONTENT
 			-- Content which `Current' holds
 		require
+			has_content: has_content
 			valid: is_floating_zone implies child_zone_count = 1
 		deferred
 		ensure
@@ -269,7 +272,9 @@ feature {SD_DOCKING_MANAGER_ZONES} -- Focus out
 					check False end -- Implied by not `is_main_inner_container'
 				end
 			end
-			content.focus_out_actions.call (Void)
+			if has_content then
+				content.focus_out_actions.call (Void)
+			end
 		end
 
 feature {SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS, SD_CONTENT, SD_STATE, SD_FLOATING_ZONE}  -- Focus in
@@ -319,7 +324,9 @@ feature {NONE} -- Implementation
 	on_close_request
 			-- Handle close request actions
 		do
-			content.close_request_actions.call (Void)
+			if has_content then
+				content.close_request_actions.call (Void)
+			end
 		end
 
 	internal_shared: SD_SHARED
@@ -331,7 +338,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -340,10 +347,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

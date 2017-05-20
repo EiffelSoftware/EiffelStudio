@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A command line switch that accepts a value in the form of single character flags."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -122,7 +122,7 @@ feature {ARGUMENT_BASE_PARSER} -- Access
 feature -- Status report
 
 	is_case_sensitive: BOOLEAN
-			-- Indicates if flags are case-sensitive
+			-- Indicates if flags are case-sensitive.
 
 feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 
@@ -185,8 +185,10 @@ feature {NONE} -- Usage
 			l_list.sort
 
 			Result.append (once "Use one or more of the following flags:%N")
-			from l_list.start until l_list.after loop
-				c := l_list.item
+			across
+				l_list as i
+			loop
+				c := i.item
 				Result.append (once "   ")
 				Result.append_character (c)
 				Result.append (once ": ")
@@ -195,7 +197,6 @@ feature {NONE} -- Usage
 					Result.append_string (l_flag)
 				end
 				Result.append_character ('%N')
-				l_list.forth
 			end
 		ensure
 			result_attached: Result /= Void
@@ -215,7 +216,7 @@ invariant
 	flag_descriptions_contains_printable_items: across flag_descriptions as l_desc all is_character_printable (l_desc.key) end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

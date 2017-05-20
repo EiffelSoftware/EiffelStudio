@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 					MD5 encryption
 					
@@ -101,7 +101,7 @@ feature -- Element Change
 				buffer_offset := 0
 			end
 		ensure then
-			buffer_offset_set: buffer_offset = (old buffer_offset + 1) \\ (block_size)
+			buffer_offset_set: buffer_offset = (old buffer_offset + 1) \\ block_size
 		end
 
 feature {NONE} -- Implemetation
@@ -131,17 +131,17 @@ feature {NONE} -- Implemetation
 			until
 				i > 63
 			loop
-				if (i < 16) then
+				if i < 16 then
 					f := (b & c) | (b.bit_not & d)
 					g := i.to_natural_32
-				elseif (i < 32) then
+				elseif i < 32 then
 					f := (d & b) | (d.bit_not & c)
 					g := (5 * i.to_natural_32 + 1) \\ 16
-				elseif (i < 48) then
+				elseif i < 48 then
 					f := b.bit_xor (c).bit_xor (d)
 					g := (3 * i.to_natural_32 + 5) \\ 16
 				else
-					f := c.bit_xor (b | (d.bit_not))
+					f := c.bit_xor (b | d.bit_not)
 					g := (7 * i.to_natural_32) \\ 16
 				end
 
@@ -233,7 +233,7 @@ feature {NONE} -- Access
 	h4: NATURAL_32;
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

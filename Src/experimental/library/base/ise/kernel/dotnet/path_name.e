@@ -1,10 +1,6 @@
-
-note
-
-	description:
-		"Path name abstraction"
+﻿note
+	description: "Path name abstraction."
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -133,7 +129,7 @@ feature -- Status setting
 	extend_from_array (directories: ARRAY [STRING])
 			-- Append the subdirectories from `directories' to the path name.
 		require
-			array_exists: directories /= Void and then not (directories.is_empty)
+			array_exists: directories /= Void and then not directories.is_empty
 		local
 			i, nb: INTEGER
 		do
@@ -152,7 +148,7 @@ feature -- Status setting
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -162,8 +158,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-end -- class PATH_NAME
-
-
+end

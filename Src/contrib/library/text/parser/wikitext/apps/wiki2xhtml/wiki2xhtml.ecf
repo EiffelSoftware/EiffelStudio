@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="wiki2xhtml" uuid="9B9FBB11-B7FD-4B7C-9AFE-25A07A41A21F">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="wiki2xhtml" uuid="9B9FBB11-B7FD-4B7C-9AFE-25A07A41A21F">
 	<target name="wiki2xhtml">
 		<root class="WIKI_TO_XHTML" feature="make"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
-			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" void_safety="none" syntax="standard">
+		<option warning="true">
 		</option>
 		<setting name="console_application" value="true"/>
-		<setting name="concurrency" value="none"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="wikitext" location="..\..\wikitext.ecf"/>
+		<library name="wikitext" location="..\..\wikitext.ecf" readonly="false"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 </system>

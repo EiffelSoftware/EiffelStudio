@@ -17,7 +17,7 @@ feature -- Initialization
 			-- Initializes configuration manager given `for_32bit'
 		do
 			for_32bit := a_for_32bit
-			initialize_configs (a_for_32bit or not {PLATFORM_CONSTANTS}.is_64_bits)
+			initialize_configs (a_for_32bit or not {PLATFORM}.is_64_bits)
 		ensure
 			for_32bit_set: for_32bit = a_for_32bit
 		end
@@ -179,21 +179,21 @@ feature {NONE} -- Access
 			-- Visual Studio configuration for x64/x86 platforms.
 			--|Be sure to place deprecated configurations after all valid configurations!
 		require
-			a_use_32bit_for_x86: not a_use_32bit implies {PLATFORM_CONSTANTS}.is_64_bits
+			a_use_32bit_for_x86: not a_use_32bit implies {PLATFORM}.is_64_bits
 		local
 			l_32_bits: BOOLEAN
 			l_configs: ARRAYED_LIST [C_CONFIG]
 			l_c_config: C_CONFIG
 		do
-			l_32_bits := not {PLATFORM_CONSTANTS}.is_64_bits or else a_use_32bit
+			l_32_bits := not {PLATFORM}.is_64_bits or else a_use_32bit
 
 			create compatibility_configs.make_caseless (2)
 			create configs.make (10)
 
 				-- Group of compatible C compilers.
 			create l_configs.make (1)
-				-- VS 15.0 (aka VS 15 all editions)
-			create {VS_2015_CONFIG} l_c_config.make ("Microsoft\VisualStudio\15.0\Setup\VC", a_use_32bit, "VC150", "Microsoft Visual Studio 15 VC++ (15.0)", "15-VS")
+				-- VS 15.0 (aka VS 2017 all editions)
+			create {VS_2017_CONFIG} l_c_config.make (a_use_32bit, "VC150", "Microsoft Visual Studio 2017 VC++ (15.0)", "2017-VS")
 			l_configs.extend (l_c_config)
 			compatibility_configs.put (l_configs, l_c_config.code)
 
@@ -285,7 +285,7 @@ feature {NONE} -- Internal implementation cache
 			-- Map C configs code to the list of compatible C configs.
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

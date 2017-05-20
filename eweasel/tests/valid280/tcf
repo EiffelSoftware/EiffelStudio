@@ -1,5 +1,5 @@
 test_name	bogus-vjar-error
-test_description If you have an assignment of æn expression where one component involves an anchored type to an argument, the compiler resolves the type of the expression incorrectly.
+test_description If you have an assignment of an expression where one component involves an anchored type to an argument, the compiler resolves the type of the expression incorrectly.
 
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e

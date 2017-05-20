@@ -45,7 +45,7 @@ feature -- Status report
 				across
 					mtds as c
 				loop
-					s.append_string (c.item)
+					s.append_string_general (c.item)
 					s.append_string (" ")
 				end
 				s.append_string ("]")
@@ -65,7 +65,7 @@ invariant
 	mapping_attached: mapping /= Void
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

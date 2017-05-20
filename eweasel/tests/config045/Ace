@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" name="test">
+	<target name="test">
+		<root class="TEST" feature="make"/>
+		<setting name="console_application" value="true"/>
+		<capability>
+			<concurrency support="scoop" use="$CONCURRENCY"/>
+		</capability>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="thread" location="thread.ecf">
+			<condition>
+				<concurrency value="$LIBRARY_CONCURRENCY"/>
+			</condition>
+		</library>
+		<library name="none" location="none.ecf">
+			<condition>
+				<concurrency value="$LIBRARY_CONCURRENCY"/>
+			</condition>
+		</library>
+		<library name="scoop" location="scoop.ecf">
+			<condition>
+				<concurrency value="$LIBRARY_CONCURRENCY"/>
+			</condition>
+		</library>
+		<cluster name="root_cluster" location="$CLUSTER\"/>
+	</target>
+</system>

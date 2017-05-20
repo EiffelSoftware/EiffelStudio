@@ -594,11 +594,15 @@ feature -- Observer pattern
 			-- Add `an_observer' to the list of observers for Current.
 		require
 			valid_observer: an_observer /= Void
+		local
+			l_obs_list: like observers
 		do
-			if observers = Void then
-				create observers.make (2)
+			l_obs_list := observers
+			if l_obs_list = Void then
+				create l_obs_list.make (2)
+				observers := l_obs_list
 			end
-			observers.extend (an_observer)
+			l_obs_list.extend (an_observer)
 		end
 
 	remove_observer (an_observer: UNDO_REDO_OBSERVER)
@@ -606,33 +610,33 @@ feature -- Observer pattern
 		require
 			valid_observer: an_observer /= Void
 		do
-			if observers /= Void then
-				observers.prune_all (an_observer)
+			if attached observers as l_obs_list then
+				l_obs_list.prune_all (an_observer)
 			end
 		end
 
 feature {NONE} -- Implementation
 
+	observers: detachable ARRAYED_LIST [UNDO_REDO_OBSERVER]
+			-- All observers for Current.
+
 	notify_observers
 			-- Notify all observers about the change of Current.
 		do
-			if observers /= Void then
+			if attached observers as l_obs_list then
 				from
-					observers.start
+					l_obs_list.start
 				until
-					observers.after
+					l_obs_list.after
 				loop
-					observers.item.on_changed
-					observers.forth
+					l_obs_list.item.on_changed
+					l_obs_list.forth
 				end
 			end
 		end
 
-	observers: detachable ARRAYED_LIST [UNDO_REDO_OBSERVER] note option: stable attribute end
-			-- All observers for Current.
-
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

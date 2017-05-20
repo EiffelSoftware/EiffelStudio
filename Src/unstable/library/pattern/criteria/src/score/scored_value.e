@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {SCORED_VALUE}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -48,7 +47,7 @@ feature -- Comparison
 				Result := True
 			elseif other.score - score <= {REAL_32}.machine_epsilon then
 					-- Same score.
-				if 
+				if
 					attached {COMPARABLE} value as l_value and
 					attached {COMPARABLE} other.value as l_other_value
 				then
@@ -70,12 +69,12 @@ feature -- Status report
 			if attached {DEBUG_OUTPUT} value as dbg then
 				Result.append_string_general (dbg.debug_output)
 			elseif attached {ANY} value as v then
-				Result.append (v.generating_type)
+				Result.append (v.generating_type.name_32)
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

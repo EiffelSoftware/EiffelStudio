@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Byte node for object test."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,18 +34,22 @@ create
 
 feature {NONE} -- Creation
 
-	make (l: like target; e: like expression; i: like info; b: BOOLEAN)
+	make (l: like target; e: like expression; a: BOOLEAN; i: like info; b: BOOLEAN)
+			-- Initialize object test byte node with expression `e` that is always attached if `a` and may be detachable otherwise,
+			-- object test local `l`, object test type `i` and a flag `b` that indicates that the types are not checked.
 		require
 			l_attached: l /= Void
 			e_attached: e /= Void
 		do
 			target := l
 			expression := e
+			is_attached := a
 			info := i
 			is_void_check := b
 		ensure
 			target_set: target = l
 			expression_set: expression = e
+			is_attached_set: is_attached = a
 			info_set: info = i
 			is_void_check_set: is_void_check = b
 		end
@@ -61,19 +65,22 @@ feature -- Visitor
 feature -- Access
 
 	target: OBJECT_TEST_LOCAL_B
-			-- Object test local
+			-- Object test local.
 
 	expression: EXPR_B
-			-- Associated expression
+			-- Associated expression.
+
+	is_attached: BOOLEAN
+			-- Is expression always attached?
 
 	type: TYPE_A
-			-- Expression type
+			-- Expression type.
 		do
 			Result := boolean_type
 		end
 
 	info: CREATE_INFO
-			-- Additional information about target type
+			-- Additional information about target type.
 
 	is_void_check: BOOLEAN
 			-- Are we simply performing a check for voidness, in which case no need to

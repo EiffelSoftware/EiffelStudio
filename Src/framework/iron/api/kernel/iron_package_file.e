@@ -212,6 +212,30 @@ feature -- Change
 			end
 		end
 
+	remove_project (a_proj_name: detachable READABLE_STRING_32; a_relative_iri: READABLE_STRING_32)
+			-- Remove project for path `a_relative_iri`, and optionaly named `a_proj_name`.
+		local
+			l_proj: detachable TUPLE [name: READABLE_STRING_GENERAL; relative_iri: READABLE_STRING_32]
+		do
+			if attached projects as l_projects then
+				from
+					l_projects.start
+				until
+					l_projects.after
+				loop
+					l_proj := l_projects.item
+					if
+						a_relative_iri.is_case_insensitive_equal_general (l_proj.relative_iri) and then
+						(a_proj_name = Void or else	a_proj_name.is_case_insensitive_equal_general (l_proj.name))
+					then
+						l_projects.remove
+						l_projects.finish
+					end
+					l_projects.forth
+				end
+			end
+		end
+
 	add_setup (a_setup_name: READABLE_STRING_GENERAL; a_instruction: READABLE_STRING_32)
 		local
 			l_setup_operations: like setup_operations
@@ -294,7 +318,7 @@ feature -- Helper
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

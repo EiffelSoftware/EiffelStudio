@@ -15,34 +15,50 @@
 	<PREF NAME="rule.argument_name.enforce_prefix" DESCRIPTION="Enforce 'a_' prefix."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.attribute_in_single_feature.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.attribute_in_single_feature.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
+	<PREF NAME="rule.class_name.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.combinable_nested_conditionals.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.combinable_nested_conditionals.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 	<PREF NAME="rule.comment_content.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.comment_content.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 	<PREF NAME="rule.comment_content.words" DESCRIPTION="List of undesirable words or phrases."><LIST>fuck;shit</LIST></PREF>
 	<PREF NAME="rule.comment_content.case_sensitive" DESCRIPTION="Are words case-sensitive?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="rule.comment_style.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.comparison_to_boolean_constant.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.comparison_to_boolean_constant.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 	<PREF NAME="rule.conditional_computes_only_boolean.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.conditional_computes_only_boolean.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
+	<PREF NAME="rule.creation_in_loop.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.deeply_nested_conditionals.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.deeply_nested_conditionals.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
-	<PREF NAME="rule.deeply_nested_conditionals.maximum_depth" DESCRIPTION="Maximum allowed number of nested conditionals."><INTEGER>3</INTEGER></PREF>
+	<PREF NAME="rule.deeply_nested_conditionals.maximum_depth" DESCRIPTION="Maximum allowed number of nested conditionals."><INTEGER>5</INTEGER></PREF>
 	<PREF NAME="rule.empty_conditional.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.empty_conditional.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
+	<PREF NAME="rule.double_negation.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.duplicate_feature_clause.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.duplicated_parent.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.empty_creation_procedure.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="rule.empty_feature.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.empty_feature_in_deferred class.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.empty_feature_in_deferred class.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
+	<PREF NAME="rule.empty_loop.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="rule.empty_rescue.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.equal_in_void_test.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.exported_creation_procedure.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.exported_creation_procedure.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
+	<PREF NAME="rule.feature_name.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="rule.fixed_attribute_value.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.general_loop_on_iterable.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.general_loop_on_iterable.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 	<PREF NAME="rule.inequality_in_conditional.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.inequality_in_conditional.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
+	<PREF NAME="rule.inheritance_from_any.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="rule.invariant_in_loop.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.local_name.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.local_name.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 	<PREF NAME="rule.local_name.enforce_prefix" DESCRIPTION="Enforce 'l_' prefix."><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="rule.local_used_as_result.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.long_class.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.long_class.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 	<PREF NAME="rule.long_class.maximum_feature_count" DESCRIPTION="Maximum allowed number of features in a class."><INTEGER>60</INTEGER></PREF>
@@ -50,32 +66,40 @@
 	<PREF NAME="rule.long_feature.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.long_feature.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
 	<PREF NAME="rule.long_feature.maximum_instruction_count" DESCRIPTION="Maximum allowed number of instructions in a feature."><INTEGER>70</INTEGER></PREF>
+	<PREF NAME="rule.long_formal_generic_name.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.long_identifier.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.long_identifier.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 	<PREF NAME="rule.long_identifier.maximum_argument_name_length" DESCRIPTION="Maximum allowed length of an argument name."><INTEGER>20</INTEGER></PREF>
 	<PREF NAME="rule.long_identifier.maximum_feature_name_length" DESCRIPTION="Maximum allowed length of a feature name."><INTEGER>30</INTEGER></PREF>
 	<PREF NAME="rule.long_identifier.maximum_local_name_length" DESCRIPTION="Maximum allowed length of a local name."><INTEGER>20</INTEGER></PREF>
+	<PREF NAME="rule.mergeable_conditionals.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.long_multi_branch.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.long_multi_branch.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 	<PREF NAME="rule.long_multi_branch.maximum_instruction_count" DESCRIPTION="Maximum allowed number of instructions in one branch."><INTEGER>8</INTEGER></PREF>
 	<PREF NAME="rule.many_arguments.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.many_arguments.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 	<PREF NAME="rule.many_arguments.maximum_argument_count" DESCRIPTION="Maximum allowed number of arguments."><INTEGER>4</INTEGER></PREF>
-	<PREF NAME="rule.missing_argument_semicolon.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.missing_argument_semicolon.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.missing_argument_semicolon.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 	<PREF NAME="rule.missing_feature_clause_comment.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.missing_feature_clause_comment.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 	<PREF NAME="rule.missing_feature_comment.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.missing_feature_comment.severity" DESCRIPTION="Severity score."><INTEGER>20</INTEGER></PREF>
+	<PREF NAME="rule.nan_comparison.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.negated_comparison.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.negated_comparison.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 	<PREF NAME="rule.nested_complexity.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.nested_complexity.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
-	<PREF NAME="rule.nested_complexity.threshold" DESCRIPTION="Maximum allowed number of branches and loops."><INTEGER>5</INTEGER></PREF>
-	<PREF NAME="rule.npath_complexity.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.nested_complexity.threshold" DESCRIPTION="Maximum allowed number of branches and loops."><INTEGER>8</INTEGER></PREF>
+	<PREF NAME="rule.no_default_creation_procedure.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="rule.no_when_part.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.nonconforming_object_test.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="rule.npath_complexity.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.npath_complexity.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
-	<PREF NAME="rule.npath_complexity.threshold" DESCRIPTION="Maximum allowed number of acyclic execution paths through a routine."><INTEGER>200</INTEGER></PREF>
-	<PREF NAME="rule.possible_side_effect.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.npath_complexity.threshold" DESCRIPTION="Maximum allowed number of acyclic execution paths through a routine."><INTEGER>1000</INTEGER></PREF>
+	<PREF NAME="rule.obsolete_feature.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.obsolete_feature_call.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.possible_side_effect.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.possible_side_effect.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 	<PREF NAME="rule.redundant_object_test.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.redundant_object_test.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
@@ -83,6 +107,7 @@
 	<PREF NAME="rule.redundant_object_test_local.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 	<PREF NAME="rule.redundant_parentheses.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.redundant_parentheses.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
+	<PREF NAME="rule.reference_comparison.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.self_assignment.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.self_assignment.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
 	<PREF NAME="rule.self_comparison.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
@@ -101,12 +126,18 @@
 	<PREF NAME="rule.suspicious_interation_scheme.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
 	<PREF NAME="rule.todo_comment.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.todo_comment.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
+	<PREF NAME="rule.unnecessary_sign.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.unnecessary_voidness_test.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.unnecessay_accessor.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="rule.unreachable_code.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.unread_variable.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.unread_variable.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
 	<PREF NAME="rule.unused_argument.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.unused_argument.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
+	<PREF NAME="rule.unused_export.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.unused_feature.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.unused_feature.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
+	<PREF NAME="rule.useless_attachment_check.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.zero_count_test.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.zero_count_test.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 </EIFFEL_DOCUMENT>

@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Terminal constructs with just one specimen, %
@@ -22,15 +22,15 @@ create
 
 	make
 
-feature -- Initialization
+feature {NONE}-- Initialization
 
 	make (s: STRING)
 			-- Set up terminal to represent `s'.
 		require
 			s_not_void: s /= Void
 		do
-			construct_name := s;
-			construct_make;
+			construct_name := s
+			construct_make
 			lex_code := document.keyword_code (s)
 		ensure
 			construct_name = s;
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			-- Unused token type
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -82,8 +82,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class KEYWORD
-
+end

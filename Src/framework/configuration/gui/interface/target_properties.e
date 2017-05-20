@@ -34,9 +34,15 @@ feature {NONE} -- Implementation
 			l_root_dial: ROOT_DIALOG
 			l_extends: BOOLEAN
 			l_bool_prop: BOOLEAN_PROPERTY
+			inherited_choice: CONF_VALUE_CHOICE
+			inherited_capability: CONF_ORDERED_CAPABILITY
+			inherited_option: CONF_TARGET_OPTION
 		do
 				-- Does `current_target' extend something?
-			l_extends := current_target.extends /= Void
+			if attached current_target.extends as inherited_target then
+				inherited_option := inherited_target.options
+				l_extends := True
+			end
 
 				-- General section.
 			properties.add_section (conf_interface_names.section_general)
@@ -46,7 +52,7 @@ feature {NONE} -- Implementation
 			l_string_prop.set_value (current_target.name)
 			l_string_prop.validate_value_actions.extend (agent check_target_name)
 			l_string_prop.change_value_actions.extend (agent current_target.set_name)
-			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_string_prop)
 				-- Description.
 			create l_mls_prop.make (conf_interface_names.target_description_name)
@@ -85,20 +91,41 @@ feature {NONE} -- Implementation
 				-- Language section.
 			properties.add_section (conf_interface_names.section_language)
 				-- Void safety.
-			add_void_safety_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
+			if attached inherited_option then
+				inherited_capability := inherited_option.void_safety_capability
+			else
+				inherited_capability := Void
+			end
+			add_use_capability_property
+				(conf_interface_names.option_void_safety_name,
+				conf_interface_names.option_void_safety_description,
+				conf_interface_names.option_void_safety_value,
+				current_target.changeable_internal_options.void_safety_capability,
+				inherited_capability)
 				-- Cat call detection.
-			add_cat_call_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
+			if attached inherited_option then
+				inherited_capability := inherited_option.catcall_safety_capability
+			else
+				inherited_capability := Void
+			end
+			add_use_capability_property
+				(conf_interface_names.option_catcall_detection_name,
+				conf_interface_names.option_catcall_detection_description,
+				conf_interface_names.option_catcall_detection_value,
+				current_target.changeable_internal_options.catcall_safety_capability,
+				inherited_capability)
 				-- Concurrency.
-			add_choice_property (
-				conf_interface_names.target_concurrency_name,
-				conf_interface_names.target_concurrency_description,
-				create {ARRAYED_LIST [STRING_32]}.make_from_array (
-					<<conf_interface_names.target_concurrency_none_name,
-					conf_interface_names.target_concurrency_thread_name,
-					conf_interface_names.target_concurrency_scoop_name>>),
-				current_target.immediate_setting_concurrency,
-				Void
-			)
+			if attached inherited_option then
+				inherited_capability := inherited_option.concurrency_capability
+			else
+				inherited_capability := Void
+			end
+			add_use_capability_property
+				(conf_interface_names.option_concurrency_name,
+				conf_interface_names.option_concurrency_description,
+				conf_interface_names.option_concurrency_value,
+				current_target.changeable_internal_options.concurrency_capability,
+				inherited_capability)
 			properties.current_section.expand
 
 				-- Execution section.
@@ -109,15 +136,15 @@ feature {NONE} -- Implementation
 				<<conf_interface_names.target_compilation_type_standard, conf_interface_names.target_compilation_type_dotnet>>))
 			l_choice_prop.set_description (conf_interface_names.target_compilation_type_description)
 			l_choice_prop.disable_text_editing
-			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent update_inheritance_setting (s_msil_generation, l_choice_prop)))
+			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent update_inheritance_setting (s_msil_generation, l_choice_prop)))
 			if current_target.setting_msil_generation then
 				l_choice_prop.set_value (conf_interface_names.target_compilation_type_dotnet)
 			else
 				l_choice_prop.set_value (conf_interface_names.target_compilation_type_standard)
 			end
 			l_choice_prop.change_value_actions.put_front (agent set_compilation_mode)
-			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
-			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent refresh))
+			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
+			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent refresh))
 			l_choice_prop.use_inherited_actions.extend (agent current_target.update_setting (s_msil_generation, Void))
 			l_choice_prop.use_inherited_actions.extend (agent refresh)
 			l_choice_prop.use_inherited_actions.extend (agent handle_value_changes (False))
@@ -142,6 +169,25 @@ feature {NONE} -- Implementation
 			update_inheritance_version (Void, l_version_prop)
 			properties.add_property (l_version_prop)
 			properties.current_section.expand
+
+				-- Capability section.
+			properties.add_section (conf_interface_names.section_capability)
+				-- Void safety.
+			add_void_safety_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
+				-- Cat call detection.
+			add_cat_call_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
+				-- Concurrency.
+			if attached inherited_option then
+				inherited_choice := inherited_option.concurrency
+			end
+			add_choice_property (
+				conf_interface_names.option_concurrency_name,
+				conf_interface_names.option_concurrency_description,
+				conf_interface_names.option_concurrency_value,
+				current_target.changeable_internal_options.concurrency,
+				inherited_choice
+			)
+			properties.current_section.collapse
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -462,8 +508,8 @@ feature {NONE} -- Implementation helper
 			a_property.set_refresh_action (agent (current_target.settings).item (a_name))
 			a_property.refresh
 			a_property.change_value_actions.extend (agent set_string_setting (a_name, a_default, ?))
-			a_property.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent update_inheritance_setting (a_name, a_property)))
-			a_property.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+			a_property.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent update_inheritance_setting (a_name, a_property)))
+			a_property.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
 			a_property.use_inherited_actions.extend (agent current_target.update_setting (a_name, Void))
 			a_property.use_inherited_actions.extend (agent update_inheritance_setting (a_name, a_property))
 			a_property.use_inherited_actions.extend (agent handle_value_changes (False))
@@ -572,7 +618,7 @@ feature {NONE} -- Configuration setting
 			end
 		end
 
-	set_string_setting (a_name: STRING_32; a_default: STRING_32; a_value: STRING_32)
+	set_string_setting (a_name: STRING_32; a_default: STRING_32; a_value: READABLE_STRING_32)
 			-- Set a string setting with `a_name' to `a_value'.
 		require
 			a_name_valid: valid_setting (a_name)
@@ -600,7 +646,7 @@ feature {NONE} -- Configuration setting
 
 feature {NONE} -- Validation and warning generation
 
-	check_target_name (a_name: STRING_32): BOOLEAN
+	check_target_name (a_name: READABLE_STRING_32): BOOLEAN
 			-- Is `a_name' a valid name for a target?
 		require
 			current_target: current_target /= Void

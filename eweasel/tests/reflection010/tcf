@@ -1,0 +1,13 @@
+test_name	 reflector-new_instance_of-marks
+test_description Type marks for {REFLECTOR}.new_instance_of should not trigger a postcondition violation because a new object type does not match the original type because of the marks.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+test_end

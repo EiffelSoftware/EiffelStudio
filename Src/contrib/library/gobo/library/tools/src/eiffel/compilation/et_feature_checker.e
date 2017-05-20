@@ -86,6 +86,8 @@ inherit
 			process_once_manifest_string,
 			process_once_procedure,
 			process_once_procedure_inline_agent,
+			process_parenthesis_expression,
+			process_parenthesis_instruction,
 			process_parenthesized_expression,
 			process_precursor_expression,
 			process_precursor_instruction,
@@ -123,6 +125,9 @@ inherit
 		export {NONE} all end
 
 	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
+	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
 	UT_SHARED_ISE_VERSIONS
@@ -166,6 +171,10 @@ feature {NONE} -- Initialization
 			create current_attachment_scope.make
 			create attachment_scope_builder.make
 			create unused_attachment_scopes.make (40)
+				-- Default creation call.
+			create default_creation_call_name.make (tokens.default_create_feature_name.name)
+			default_creation_call_name.set_seed (current_system.default_create_seed)
+			create default_creation_call.make (default_creation_call_name, Void)
 		end
 
 feature -- Status report
@@ -267,7 +276,6 @@ feature -- Validity checking
 				current_type := a_current_type
 				old_class_impl := current_class_impl
 				current_class_impl := l_class_impl
-				current_universe_impl.resolve_unfolded_tuple_actual_parameters
 					-- First, make sure that the interface of `current_type' is valid.
 				current_class.process (current_system.interface_checker)
 				if not current_class.interface_checked or else current_class.has_interface_error then
@@ -395,7 +403,6 @@ feature -- Validity checking
 				current_class_impl := l_class_impl
 				old_in_precondition := in_precondition
 				in_precondition := True
-				current_universe_impl.resolve_unfolded_tuple_actual_parameters
 					-- First, make sure that the interface of `current_type' is valid.
 				current_class.process (current_system.interface_checker)
 				if not current_class.interface_checked or else current_class.has_interface_error then
@@ -525,7 +532,6 @@ feature -- Validity checking
 				current_class_impl := l_class_impl
 				old_in_postcondition := in_postcondition
 				in_postcondition := True
-				current_universe_impl.resolve_unfolded_tuple_actual_parameters
 					-- First, make sure that the interface of `current_type' is valid.
 				current_class.process (current_system.interface_checker)
 				if not current_class.interface_checked or else current_class.has_interface_error then
@@ -660,7 +666,6 @@ feature -- Validity checking
 				current_class_impl := l_class_impl
 				old_in_invariant := in_invariant
 				in_invariant := True
-				current_universe_impl.resolve_unfolded_tuple_actual_parameters
 					-- First, make sure that the interface of `current_type' is valid.
 				current_class.process (current_system.interface_checker)
 				if not current_class.interface_checked or else current_class.has_interface_error then
@@ -2666,7 +2671,7 @@ feature {NONE} -- Instruction validity
 						end
 						had_error := has_fatal_error
 							-- Check validity of the arguments of the call.
-						check_actual_arguments_validity (l_actuals, l_target_context, l_name, l_query, l_target_base_class)
+						check_actual_arguments_validity (l_call, l_target_context, l_query, l_target_base_class)
 						has_fatal_error := has_fatal_error or had_error
 							-- Check whether the query has an associated assigner procedure.
 						l_assigner_seed := an_instruction.name.seed
@@ -3121,19 +3126,31 @@ feature {NONE} -- Instruction validity
 			l_explicit_creation_type: detachable ET_TYPE
 			l_explicit_creation_type_context: ET_NESTED_TYPE_CONTEXT
 			l_seed: INTEGER
-			l_call: detachable ET_QUALIFIED_CALL
-			l_name: detachable ET_FEATURE_NAME
+			l_creation_call: detachable ET_QUALIFIED_CALL
+			l_name: ET_FEATURE_NAME
 			l_position: ET_POSITION
 			had_error: BOOLEAN
 			l_type: detachable ET_TYPE
 			l_locals: detachable ET_LOCAL_VARIABLE_LIST
 			l_local_seed: INTEGER
-			l_name_identifier: ET_IDENTIFIER
 			l_name_position: ET_POSITION
 			l_actuals: detachable ET_ACTUAL_ARGUMENTS
 			l_overloaded_procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
 		do
 			has_fatal_error := False
+			l_creation_call := an_instruction.creation_call
+			if l_creation_call /= Void then
+					-- There is an explicit creation call.
+				l_name := l_creation_call.name
+				l_seed := l_name.seed
+			else
+					-- No explicit creation call. Use 'default_create' instead.
+				l_creation_call := default_creation_call
+				l_name_position := an_instruction.last_position
+				default_creation_call_name.set_position (l_name_position.line, l_name_position.column)
+				l_name := default_creation_call_name
+				l_seed := current_system.default_create_seed
+			end
 			l_target := an_instruction.target
 			l_target_context := new_context (current_type)
 			l_explicit_creation_type := an_instruction.type
@@ -3197,11 +3214,8 @@ feature {NONE} -- Instruction validity
 				end
 			end
 			if not has_fatal_error then
-				l_call := an_instruction.creation_call
-				if l_call /= Void then
-					l_name := l_call.name
-					l_actuals := l_call.arguments
-					l_seed := l_name.seed
+				if l_creation_call /= default_creation_call then
+						-- There is an explicit creation call.
 					if l_seed = 0 then
 							-- We need to resolve `l_name' in the implementation
 							-- class of `current_feature_impl' first.
@@ -3234,6 +3248,7 @@ feature {NONE} -- Instruction validity
 										l_overloaded_procedures := new_overloaded_procedures
 										l_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
 										if not l_overloaded_procedures.is_empty then
+											l_actuals := l_creation_call.arguments
 											keep_best_overloaded_features (l_overloaded_procedures, l_name, l_actuals, l_creation_context, False, True)
 											if has_fatal_error then
 												-- Do nothing.
@@ -3273,9 +3288,6 @@ feature {NONE} -- Instruction validity
 							end
 						end
 					end
-				else
-					l_name := tokens.default_create_feature_name
-					l_seed := current_system.default_create_seed
 				end
 			end
 			if not has_fatal_error then
@@ -3305,7 +3317,7 @@ feature {NONE} -- Instruction validity
 					end
 				end
 			end
-			if not has_fatal_error and l_class /= Void and l_creation_type /= Void and l_name /= Void and l_target_type /= Void then
+			if not has_fatal_error and l_class /= Void and l_creation_type /= Void and l_target_type /= Void then
 				if l_explicit_creation_type /= Void then
 					l_explicit_creation_type_context := new_context (current_type)
 					l_explicit_creation_type_context.force_last (l_explicit_creation_type)
@@ -3339,7 +3351,7 @@ feature {NONE} -- Instruction validity
 					check
 							-- No creation call, and feature 'default_create' not
 							-- supported by the underlying Eiffel compiler.
-						no_call: l_call = Void
+						no_call: l_creation_call = default_creation_call
 						no_default_create: current_system.default_create_seed = 0
 					end
 					if l_class.creators /= Void then
@@ -3366,14 +3378,6 @@ feature {NONE} -- Instruction validity
 							l_creator := l_formal_parameter.creation_procedures
 							if l_creator = Void or else not l_creator.has_feature (l_procedure) then
 								set_fatal_error
-								if l_name = tokens.default_create_feature_name then
-										-- The creation has no call part. Make sure that
-										-- the error message will give a valid position.
-									create l_name_identifier.make (l_name.name)
-									l_name_position := an_instruction.last_position
-									l_name_identifier.set_position (l_name_position.line, l_name_position.column)
-									l_name := l_name_identifier
-								end
 								error_handler.report_vgcc8b_error (current_class, current_class_impl, l_name, l_procedure, l_class, l_formal_parameter)
 							end
 						end
@@ -3386,26 +3390,11 @@ feature {NONE} -- Instruction validity
 							-- if the current class is deferred.
 						else
 							set_fatal_error
-							if l_name = tokens.default_create_feature_name then
-									-- The creation has no call part. Make sure that
-									-- the error message will give a valid position.
-								create l_name_identifier.make (l_name.name)
-								l_name_position := an_instruction.last_position
-								l_name_identifier.set_position (l_name_position.line, l_name_position.column)
-								l_name := l_name_identifier
-							end
 							error_handler.report_vgcc6e_error (current_class, current_class_impl, l_name, l_procedure, l_class)
 						end
 					end
 					had_error := has_fatal_error
-					if l_call /= Void then
-						check_actual_arguments_validity (l_actuals, l_creation_context, l_name, l_procedure, l_class)
-					else
--- TODO: `l_name' is "default_create". It may be a shared identifier not holding the correct
--- position! A solution could be to inline `check_actual_arguments_validity' here. It's
--- not a big deal: just checking that `l_procedure' has no formal arguments.
-						check_actual_arguments_validity (Void, l_creation_context, l_name, l_procedure, l_class)
-					end
+					check_actual_arguments_validity (l_creation_call, l_creation_context, l_procedure, l_class)
 					if had_error then
 						set_fatal_error
 					end
@@ -3949,6 +3938,9 @@ feature {NONE} -- Instruction validity
 						l_seed := l_identifier.seed
 						l_query := current_class.seeded_query (l_seed)
 					end
+				elseif attached {ET_UNQUALIFIED_FEATURE_CALL} a_choice_constant as l_unqualified_call and then l_unqualified_call.arguments_count = 0 then
+					l_seed := l_unqualified_call.name.seed
+					l_query := current_class.seeded_query (l_seed)
 				elseif attached {ET_STATIC_CALL_EXPRESSION} a_choice_constant as l_static_call then
 					l_static_type := l_static_call.type
 					l_static_context := new_context (current_type)
@@ -4300,7 +4292,7 @@ feature {NONE} -- Instruction validity
 		do
 			l_actual_context := new_context (current_type)
 			l_actual_context.force_last (a_parent_type)
-			check_actual_arguments_validity (an_instruction.arguments, l_actual_context, an_instruction.precursor_keyword, a_parent_procedure, a_parent_class)
+			check_actual_arguments_validity (an_instruction, l_actual_context, a_parent_procedure, a_parent_class)
 			free_context (l_actual_context)
 			if not has_fatal_error then
 				report_precursor_instruction (an_instruction, a_parent_type, a_parent_procedure)
@@ -4705,7 +4697,10 @@ feature {NONE} -- Instruction validity
 			check_qualified_vape_validity (l_name, a_procedure, a_class)
 			l_had_error := has_fatal_error or l_had_error
 				-- Check the validity of the arguments of the call.
-			check_actual_arguments_validity (a_call.arguments, a_context, l_name, a_procedure, a_class)
+			check_actual_arguments_validity (a_call, a_context, a_procedure, a_class)
+			l_had_error := has_fatal_error or l_had_error
+				-- Check the validity `a_procedure' as a feature of a static call.
+			check_static_feature_validity (a_call, a_procedure, a_class)
 			reset_fatal_error (has_fatal_error or l_had_error)
 			if not has_fatal_error then
 				report_static_call_instruction (a_call, l_type, a_procedure)
@@ -5037,7 +5032,7 @@ feature {NONE} -- Instruction validity
 			l_had_error := has_fatal_error
 				-- Check the validity of the arguments of the call.
 			l_context := new_context (current_type)
-			check_actual_arguments_validity (a_call.arguments, l_context, l_name, a_procedure, Void)
+			check_actual_arguments_validity (a_call, l_context, a_procedure, Void)
 			free_context (l_context)
 			reset_fatal_error (l_had_error or has_fatal_error)
 			if not has_fatal_error then
@@ -5634,14 +5629,27 @@ feature {NONE} -- Expression validity
 			l_creation_type: ET_TYPE
 			l_creation_type_context: ET_NESTED_TYPE_CONTEXT
 			l_seed: INTEGER
-			l_name: detachable ET_FEATURE_NAME
+			l_name: ET_FEATURE_NAME
 			had_error: BOOLEAN
-			l_name_identifier: ET_IDENTIFIER
 			l_name_position: ET_POSITION
 			l_actuals: detachable ET_ACTUAL_ARGUMENTS
 			l_overloaded_procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
+			l_creation_call: detachable ET_CREATION_CALL
 		do
 			has_fatal_error := False
+			l_creation_call := an_expression.creation_call
+			if l_creation_call /= Void then
+					-- There is an explicit creation call.
+				l_name := l_creation_call.name
+				l_seed := l_name.seed
+			else
+					-- No explicit creation call. Use 'default_create' instead.
+				l_creation_call := default_creation_call
+				l_name_position := an_expression.last_position
+				default_creation_call_name.set_position (l_name_position.line, l_name_position.column)
+				l_name := default_creation_call_name
+				l_seed := current_system.default_create_seed
+			end
 			l_creation_type := an_expression.type
 			check_type_validity (l_creation_type)
 			if not has_fatal_error then
@@ -5651,11 +5659,8 @@ feature {NONE} -- Expression validity
 						-- descendant classes/types.
 					report_current_type_needed
 				end
-				l_name := an_expression.name
-				if l_name /= Void then
+				if l_creation_call /= default_creation_call then
 						-- There is an explicit creation call.
-					l_actuals := an_expression.arguments
-					l_seed := l_name.seed
 					if l_seed = 0 then
 							-- We need to resolve `l_name' in the implementation
 							-- class of `current_feature_impl' first.
@@ -5691,6 +5696,7 @@ feature {NONE} -- Expression validity
 									l_overloaded_procedures := new_overloaded_procedures
 									l_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
 									if not l_overloaded_procedures.is_empty then
+										l_actuals := l_creation_call.arguments
 										keep_best_overloaded_features (l_overloaded_procedures, l_name, l_actuals, a_context, False, True)
 										if has_fatal_error then
 											-- Do nothing.
@@ -5729,10 +5735,6 @@ feature {NONE} -- Expression validity
 							end
 						end
 					end
-				else
-						-- No explicit creation call. Use 'default_create' instead.
-					l_name := tokens.default_create_feature_name
-					l_seed := current_system.default_create_seed
 				end
 			end
 			if not has_fatal_error then
@@ -5772,8 +5774,7 @@ feature {NONE} -- Expression validity
 			end
 			if not has_fatal_error then
 				check l_class_not_void: l_class /= Void end
-				check l_name_not_void: l_name /= Void end
-				if l_class /= Void and l_name /= Void then
+				if l_class /= Void then
 					report_create_supplier (l_creation_type, current_class, current_feature)
 					l_creation_type_context := new_context (current_type)
 					l_named_creation_type := l_creation_type.shallow_named_type (l_creation_type_context)
@@ -5785,7 +5786,7 @@ feature {NONE} -- Expression validity
 							-- No creation call, and feature 'default_create' not
 							-- supported by the underlying Eiffel compiler.
 						check
-							no_call: an_expression.name = Void
+							no_call: l_creation_call = default_creation_call
 							no_default_create: current_system.default_create_seed = 0
 						end
 						if l_class.creators /= Void then
@@ -5817,14 +5818,6 @@ feature {NONE} -- Expression validity
 										-- The creation procedure of the expression is not
 										-- one of those declared with the associated constraint.
 									set_fatal_error
-									if l_name = tokens.default_create_feature_name then
-											-- The creation has no call part. Make sure that
-											-- the error message will give a valid position.
-										create l_name_identifier.make (l_name.name)
-										l_name_position := an_expression.last_position
-										l_name_identifier.set_position (l_name_position.line, l_name_position.column)
-										l_name := l_name_identifier
-									end
 									error_handler.report_vgcc8a_error (current_class, current_class_impl, l_name, l_procedure, l_class, l_formal_parameter)
 								end
 							end
@@ -5837,22 +5830,11 @@ feature {NONE} -- Expression validity
 								-- if the current class is deferred.
 							else
 								set_fatal_error
-								if l_name = tokens.default_create_feature_name then
-										-- The creation has no call part. Make sure that
-										-- the error message will give a valid position.
-									create l_name_identifier.make (l_name.name)
-									l_name_position := an_expression.last_position
-									l_name_identifier.set_position (l_name_position.line, l_name_position.column)
-									l_name := l_name_identifier
-								end
 								error_handler.report_vgcc6c_error (current_class, current_class_impl, l_name, l_procedure, l_class)
 							end
 						end
 						had_error := has_fatal_error
--- TODO: When `an_expression.name' is Void, then `l_name' is "default_create". It may be a shared identifier
--- not holding the correct position! A solution could be to inline `check_actual_arguments_validity'
--- here. It's not a big deal: just checking that `l_procedure' has no formal arguments.
-						check_actual_arguments_validity (l_actuals, a_context, l_name, l_procedure, l_class)
+						check_actual_arguments_validity (l_creation_call, a_context, l_procedure, l_class)
 						if had_error then
 							set_fatal_error
 						end
@@ -8431,7 +8413,7 @@ feature {NONE} -- Expression validity
 		do
 			l_actual_context := new_context (current_type)
 			l_actual_context.force_last (a_parent_type)
-			check_actual_arguments_validity (an_expression.arguments, l_actual_context, an_expression.precursor_keyword, a_parent_query, a_parent_class)
+			check_actual_arguments_validity (an_expression, l_actual_context, a_parent_query, a_parent_class)
 			free_context (l_actual_context)
 			if not has_fatal_error then
 -- TODO: like argument.
@@ -8692,7 +8674,7 @@ feature {NONE} -- Expression validity
 			check_qualified_vape_validity (l_name, a_feature, a_class)
 			l_had_error := has_fatal_error or l_had_error
 				-- Check the validity of the arguments of the call.
-			check_actual_arguments_validity (a_call.arguments, a_context, l_name, a_feature, a_class)
+			check_actual_arguments_validity (a_call, a_context, a_feature, a_class)
 			reset_fatal_error (l_had_error or has_fatal_error)
 		end
 
@@ -9381,14 +9363,77 @@ feature {NONE} -- Expression validity
 			check_qualified_vape_validity (l_name, a_query, a_class)
 			l_had_error := has_fatal_error or l_had_error
 				-- Check the validity of the arguments of the call.
-			check_actual_arguments_validity (a_call.arguments, a_context, l_name, a_query, a_class)
+			check_actual_arguments_validity (a_call, a_context, a_query, a_class)
+			l_had_error := has_fatal_error or l_had_error
+				-- Check the validity `a_query' as a feature of a static call.
+			check_static_feature_validity (a_call, a_query, a_class)
 			reset_fatal_error (has_fatal_error or l_had_error)
 			if not has_fatal_error then
--- TODO: check that `a_query' is a constant attribute or an external function.
 -- TODO: like argument.
 				l_result_type := a_query.type
 				a_context.force_last (l_result_type)
 				report_static_call_expression (a_call, l_type, a_query)
+			end
+		end
+
+	check_static_feature_validity (a_call: ET_STATIC_FEATURE_CALL; a_feature: ET_FEATURE; a_class: ET_CLASS)
+			-- Check validity of `a_feature' as the feature of static call `a_call'.
+			-- `a_class' is the base class of the static type part of the call.
+			--
+			-- To be valid, the feature needs to be a constant attribute, a unique attribute,
+			-- an external routine with no assertions other than a built-in non-static routine,
+			-- or a static .NET feature.
+			-- For the assertions in external routines, ECMA says that it's possible to have
+			-- assertions provided that they do not involve "Current" or unqualified calls
+			-- (see ECMA VUNO-3). But ISE is more strict and does not accept any assertions
+			-- apart from empty ones or those containing only the expression "True".
+			--
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_call_not_void: a_call /= Void
+			a_feature_not_void: a_feature /= Void
+			a_class_not_void: a_class /= Void
+		local
+			l_external_language: STRING
+			l_assertions: DS_HASH_TABLE [ET_ASSERTIONS, ET_FEATURE]
+			l_is_valid_feature: BOOLEAN
+		do
+			has_fatal_error := False
+			if attached {ET_CONSTANT_ATTRIBUTE} a_feature then
+				l_is_valid_feature := True
+			elseif attached {ET_UNIQUE_ATTRIBUTE} a_feature then
+				l_is_valid_feature := True
+			elseif attached {ET_EXTERNAL_ROUTINE} a_feature as l_external_feature then
+				l_is_valid_feature := True
+				if l_external_feature.is_builtin then
+					l_external_language := l_external_feature.language.manifest_string.value
+					l_is_valid_feature := STRING_.same_case_insensitive (l_external_language, tokens.builtin_static_marker) or STRING_.same_case_insensitive (l_external_language, tokens.static_builtin_marker)
+				end
+				if l_is_valid_feature then
+					if attached l_external_feature.preconditions as l_preconditions and then not l_preconditions.are_all_true then
+						l_is_valid_feature := False
+					elseif attached l_external_feature.postconditions as l_postconditions and then not l_postconditions.are_all_true then
+						l_is_valid_feature := False
+					else
+						create l_assertions.make_map (30)
+						add_precursors_with_preconditions_recursive (a_feature, l_assertions)
+						if not l_assertions.for_all (agent {ET_ASSERTIONS}.are_all_true) then
+							l_is_valid_feature := False
+						else
+							l_assertions.wipe_out
+							add_precursors_with_postconditions_recursive (a_feature, l_assertions)
+							if not l_assertions.for_all (agent {ET_ASSERTIONS}.are_all_true) then
+								l_is_valid_feature := False
+							end
+						end
+					end
+				end
+			elseif attached {ET_DOTNET_FEATURE} a_feature as l_dotnet_feature and then l_dotnet_feature.is_static then
+				l_is_valid_feature := True
+			end
+			if not l_is_valid_feature then
+				set_fatal_error
+				error_handler.report_vuno3a_error (current_class, current_class_impl, a_call.name, a_feature, a_class)
 			end
 		end
 
@@ -9805,7 +9850,7 @@ feature {NONE} -- Expression validity
 			check_unqualified_vape_validity (l_name, a_query)
 			l_had_error := has_fatal_error
 				-- Check the validity of the arguments of the call.
-			check_actual_arguments_validity (a_call.arguments, a_context, l_name, a_query, Void)
+			check_actual_arguments_validity (a_call, a_context, a_query, Void)
 			reset_fatal_error (l_had_error or has_fatal_error)
 			if not has_fatal_error then
 				report_unqualified_call_expression (a_call, a_query)
@@ -10141,17 +10186,18 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_actual_arguments_validity (an_actuals: detachable ET_ACTUAL_ARGUMENTS; a_context: ET_NESTED_TYPE_CONTEXT;
-		a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_class: detachable ET_CLASS)
-			-- Check actual arguments validity when calling `a_feature' named `a_name'
+	check_actual_arguments_validity (a_call: ET_CALL_WITH_ACTUAL_ARGUMENTS; a_context: ET_NESTED_TYPE_CONTEXT; a_feature: ET_FEATURE; a_class: detachable ET_CLASS)
+			-- Check actual arguments validity of `a_call' when calling `a_feature'
 			-- in context of its target `a_context'. `a_class' is the base class of the
 			-- target, or void in case of an unqualified call.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
+			a_call_not_void: a_call /= Void
 			a_context_not_void: a_context /= Void
-			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 		local
+			l_actuals: detachable ET_ACTUAL_ARGUMENTS
+			l_name: ET_CALL_NAME
 			l_actual: ET_EXPRESSION
 			l_actual_list: detachable ET_ACTUAL_ARGUMENT_LIST
 			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
@@ -10166,25 +10212,75 @@ feature {NONE} -- Expression validity
 			l_formal_type_detachable: BOOLEAN
 			l_actual_type_attached: BOOLEAN
 			l_actual_entity_attached: BOOLEAN
+			l_tuple_argument_position: INTEGER
 		do
 			has_fatal_error := False
+			l_name := a_call.name
+			l_actuals := a_call.arguments
 			l_formals := a_feature.arguments
-			if an_actuals = Void or else an_actuals.is_empty then
+			if l_actuals = Void or else l_actuals.is_empty then
 				if l_formals /= Void and then not l_formals.is_empty then
 						-- The number of actual arguments is different from
 						-- the number of formal arguments.
-					set_fatal_error
 					if current_class = current_class_impl then
-						if a_class /= Void then
-							if a_name.is_precursor then
-								error_handler.report_vdpr4a_error (current_class, a_name.precursor_keyword, a_feature, a_class)
+						if
+							attached {ET_CALL_WITH_ACTUAL_ARGUMENT_LIST} a_call as l_call and then
+							not attached {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST} l_call.arguments and then
+							tuple_argument_position (l_formals, a_context) = 1
+						then
+							l_call.set_arguments (create {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST}.make (Void, 1, 1))
+							check_actual_arguments_validity (l_call, a_context, a_feature, a_class)
+						else
+							set_fatal_error
+							if a_class /= Void then
+								if l_name.is_precursor then
+									error_handler.report_vdpr4a_error (current_class, l_name.precursor_keyword, a_feature, a_class)
+								else
+									error_handler.report_vuar1a_error (current_class, l_name, a_feature, a_class)
+								end
 							else
-								error_handler.report_vuar1a_error (current_class, a_name, a_feature, a_class)
+								error_handler.report_vuar1b_error (current_class, l_name, a_feature)
+							end
+						end
+					else
+						set_fatal_error
+						if not has_implementation_error (current_feature_impl) then
+								-- Internal error: this error should have been reported when
+								-- processing the implementation of `current_feature_impl' or in
+								-- the feature flattener when redeclaring `a_feature' in an
+								-- ancestor of `a_class' or `current_class'.
+							error_handler.report_giaaa_error
+						end
+					end
+				end
+			elseif l_formals = Void or else l_formals.count /= l_actuals.count then
+					-- The number of actual arguments is different from
+					-- the number of formal arguments.
+				if current_class = current_class_impl then
+					if
+						l_formals /= Void and then l_formals.count <= l_actuals.count + 1 and then
+						attached {ET_CALL_WITH_ACTUAL_ARGUMENT_LIST} a_call as l_call and then
+						not attached {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST} l_call.arguments and then
+						attached tuple_argument_position (l_formals, a_context) as l_tuple_position and then
+						l_tuple_position > 0
+					then
+						l_call.set_arguments (create {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST}.make (l_call.arguments, l_tuple_position,l_formals.count))
+						check_actual_arguments_validity (l_call, a_context, a_feature, a_class)
+					else
+						set_fatal_error
+						if a_class /= Void then
+							if l_name.is_precursor then
+								error_handler.report_vdpr4a_error (current_class, l_name.precursor_keyword, a_feature, a_class)
+							else
+								error_handler.report_vuar1a_error (current_class, l_name, a_feature, a_class)
 							end
 						else
-							error_handler.report_vuar1b_error (current_class, a_name, a_feature)
+							error_handler.report_vuar1b_error (current_class, l_name, a_feature)
 						end
-					elseif not has_implementation_error (current_feature_impl) then
+					end
+				else
+					set_fatal_error
+					if not has_implementation_error (current_feature_impl) then
 							-- Internal error: this error should have been reported when
 							-- processing the implementation of `current_feature_impl' or in
 							-- the feature flattener when redeclaring `a_feature' in an
@@ -10192,36 +10288,16 @@ feature {NONE} -- Expression validity
 						error_handler.report_giaaa_error
 					end
 				end
-			elseif l_formals = Void or else l_formals.count /= an_actuals.count then
-					-- The number of actual arguments is different from
-					-- the number of formal arguments.
-				set_fatal_error
-				if current_class = current_class_impl then
-					if a_class /= Void then
-						if a_name.is_precursor then
-							error_handler.report_vdpr4a_error (current_class, a_name.precursor_keyword, a_feature, a_class)
-						else
-							error_handler.report_vuar1a_error (current_class, a_name, a_feature, a_class)
-						end
-					else
-						error_handler.report_vuar1b_error (current_class, a_name, a_feature)
-					end
-				elseif not has_implementation_error (current_feature_impl) then
-						-- Internal error: this error should have been reported when
-						-- processing the implementation of `current_feature_impl' or in
-						-- the feature flattener when redeclaring `a_feature' in an
-						-- ancestor of `a_class' or `current_class'.
-					error_handler.report_giaaa_error
-				end
 			else
+				l_tuple_argument_position := -1
 				l_actual_context := new_context (current_type)
 				l_formal_context := a_context
-				if attached {ET_ACTUAL_ARGUMENT_LIST} an_actuals as l_attached_actual_list then
+				if attached {ET_ACTUAL_ARGUMENT_LIST} l_actuals as l_attached_actual_list then
 					l_actual_list := l_attached_actual_list
 				end
-				nb := an_actuals.count
+				nb := l_actuals.count
 				from i := 1 until i > nb loop
-					l_actual := an_actuals.actual_argument (i)
+					l_actual := l_actuals.actual_argument (i)
 					l_formal := l_formals.formal_argument (i)
 					l_formal_context.force_last (l_formal.type)
 					check_expression_validity (l_actual, l_actual_context, l_formal_context)
@@ -10262,23 +10338,44 @@ feature {NONE} -- Expression validity
 							then
 								-- Compatibility with ISE 5.6.0610.
 							else
-								if current_universe.attachment_type_conformance_mode then
-									if l_actual_entity_attached then
-										l_actual_context.remove_last
-									end
+								if l_tuple_argument_position < 0 and then current_class = current_class_impl then
+										-- Try Tuple-argument-unfolding.
+									l_formal_context.remove_last
+									l_tuple_argument_position := tuple_argument_position (l_formals, a_context)
+									l_formal_context.force_last (l_formal.type)
 								end
-								had_error := True
-								set_fatal_error
-								l_actual_named_type := l_actual_context.named_type
-								l_formal_named_type := l_formal_context.named_type
-								if a_class /= Void then
-									if a_name.is_precursor then
-										error_handler.report_vdpr4b_error (current_class, current_class_impl, a_name.precursor_keyword, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
-									else
-										error_handler.report_vuar2a_error (current_class, current_class_impl, a_name, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
-									end
+								if
+									l_tuple_argument_position = i and then
+									current_class = current_class_impl and then
+									attached {ET_CALL_WITH_ACTUAL_ARGUMENT_LIST} a_call as l_call and then
+									not attached {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST} l_call.arguments
+								then
+									l_actual_list := create {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST}.make (l_call.arguments, l_tuple_argument_position, nb)
+									l_actuals := l_actual_list
+									l_call.set_arguments (l_actual_list)
+										-- Reprocess this actual argument now that it has been
+										-- converted to a Tuple argument.
+									i := i - 1
+
 								else
-									error_handler.report_vuar2b_error (current_class, current_class_impl, a_name, a_feature, i, l_actual_named_type, l_formal_named_type)
+									if current_universe.attachment_type_conformance_mode then
+										if l_actual_entity_attached then
+											l_actual_context.remove_last
+										end
+									end
+									had_error := True
+									set_fatal_error
+									l_actual_named_type := l_actual_context.named_type
+									l_formal_named_type := l_formal_context.named_type
+									if a_class /= Void then
+										if l_name.is_precursor then
+											error_handler.report_vdpr4b_error (current_class, current_class_impl, l_name.precursor_keyword, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
+										else
+											error_handler.report_vuar2a_error (current_class, current_class_impl, l_name, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
+										end
+									else
+										error_handler.report_vuar2b_error (current_class, current_class_impl, l_name, a_feature, i, l_actual_named_type, l_formal_named_type)
+									end
 								end
 							end
 						end
@@ -10409,9 +10506,9 @@ feature {NONE} -- Parenthesis call validity
 					set_parenthesis_call_position (l_parenthesis, a_actuals)
 					l_parenthesis.set_seed (l_unfolded_feature.first_seed)
 					a_call.set_parenthesis_call (a_name, l_parenthesis, a_actuals)
-					if attached {ET_QUALIFIED_CALL_INSTRUCTION} a_call.parenthesis_call as l_parenthesis_call_instruction then
+					if attached {ET_PARENTHESIS_INSTRUCTION} a_call.parenthesis_call as l_parenthesis_call_instruction then
 						check_qualified_feature_call_instruction_validity (l_parenthesis_call_instruction, l_unfolded_feature, l_base_class, a_context)
-					elseif attached {ET_QUALIFIED_CALL_EXPRESSION} a_call.parenthesis_call as l_parenthesis_call_expression then
+					elseif attached {ET_PARENTHESIS_EXPRESSION} a_call.parenthesis_call as l_parenthesis_call_expression then
 						check_qualified_feature_call_expression_validity (l_parenthesis_call_expression, l_unfolded_feature, l_base_class, a_context)
 					else
 							-- The parenthesis call is either an instruction or an expression.
@@ -10476,9 +10573,9 @@ feature {NONE} -- Parenthesis call validity
 							end
 							if has_fatal_error then
 								-- Do nothing.
-							elseif attached {ET_QUALIFIED_CALL_INSTRUCTION} l_regular_call.parenthesis_call as l_parenthesis_call_instruction then
+							elseif attached {ET_PARENTHESIS_INSTRUCTION} l_regular_call.parenthesis_call as l_parenthesis_call_instruction then
 								check_qualified_feature_call_instruction_validity (l_parenthesis_call_instruction, l_unfolded_feature, l_base_class, a_context)
-							elseif attached {ET_QUALIFIED_CALL_EXPRESSION} l_regular_call.parenthesis_call as l_parenthesis_call_expression then
+							elseif attached {ET_PARENTHESIS_EXPRESSION} l_regular_call.parenthesis_call as l_parenthesis_call_expression then
 								check_qualified_feature_call_expression_validity (l_parenthesis_call_expression, l_unfolded_feature, l_base_class, a_context)
 							else
 									-- The parenthesis call is either an instruction or an expression.
@@ -10607,9 +10704,9 @@ feature {NONE} -- Parenthesis call validity
 						check_precursor_query_expression_validity (l_unfolded_target, a_parent_query, a_parent_class, a_parent_type, a_context)
 						if has_fatal_error then
 							-- Do nothing.
-						elseif attached {ET_QUALIFIED_CALL_INSTRUCTION} a_call.parenthesis_call as l_parenthesis_call_instruction then
+						elseif attached {ET_PARENTHESIS_INSTRUCTION} a_call.parenthesis_call as l_parenthesis_call_instruction then
 							check_qualified_feature_call_instruction_validity (l_parenthesis_call_instruction, l_unfolded_feature, l_base_class, a_context)
-						elseif attached {ET_QUALIFIED_CALL_EXPRESSION} a_call.parenthesis_call as l_parenthesis_call_expression then
+						elseif attached {ET_PARENTHESIS_EXPRESSION} a_call.parenthesis_call as l_parenthesis_call_expression then
 							check_qualified_feature_call_expression_validity (l_parenthesis_call_expression, l_unfolded_feature, l_base_class, a_context)
 						else
 								-- The parenthesis call is either an instruction or an expression.
@@ -10667,9 +10764,9 @@ feature {NONE} -- Parenthesis call validity
 						check_static_query_call_expression_validity (l_unfolded_target, a_query, a_class, a_context)
 						if has_fatal_error then
 							-- Do nothing.
-						elseif attached {ET_QUALIFIED_CALL_INSTRUCTION} a_call.parenthesis_call as l_parenthesis_call_instruction then
+						elseif attached {ET_PARENTHESIS_INSTRUCTION} a_call.parenthesis_call as l_parenthesis_call_instruction then
 							check_qualified_feature_call_instruction_validity (l_parenthesis_call_instruction, l_unfolded_feature, l_base_class, a_context)
-						elseif attached {ET_QUALIFIED_CALL_EXPRESSION} a_call.parenthesis_call as l_parenthesis_call_expression then
+						elseif attached {ET_PARENTHESIS_EXPRESSION} a_call.parenthesis_call as l_parenthesis_call_expression then
 							check_qualified_feature_call_expression_validity (l_parenthesis_call_expression, l_unfolded_feature, l_base_class, a_context)
 						else
 								-- The parenthesis call is either an instruction or an expression.
@@ -13705,6 +13802,36 @@ feature {NONE} -- Conversion
 			implementation_class: Result /= Void implies (current_class = current_class_impl)
 		end
 
+	tuple_argument_position (a_formals: ET_FORMAL_ARGUMENT_LIST; a_context: ET_NESTED_TYPE_CONTEXT): INTEGER
+			-- Position of the formal argument in `a_formals' with a Tuple type
+			-- when viewed from `a_context', where there is exactly one (i.e. when
+			-- the routine is a single-tuple routine).
+			-- Otherwise, 0.
+		require
+			a_formals_not_void: a_formals /= Void
+			a_context_not_void: a_context /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := a_formals.count
+			from i := 1 until i > nb loop
+				if a_formals.formal_argument (i).type.base_class (a_context).is_tuple_class then
+					if Result /= 0 then
+							-- This is not a single-tuple routine: there are more than one
+							-- formal argument with a Tuple type.
+						Result := 0
+						i := nb -- Jump out of the loop.
+					else
+						Result := i
+					end
+				end
+				i := i + 1
+			end
+		ensure
+			tuple_argument_position_large_enough: Result >= 0
+			tuple_argument_position_small_enough: Result <= a_formals.count
+		end
+
 feature {ET_AST_NODE} -- Processing
 
 	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
@@ -13976,10 +14103,10 @@ feature {ET_AST_NODE} -- Processing
 				check_object_test_local_validity (an_identifier, current_context)
 			elseif an_identifier.is_across_cursor then
 				check_across_cursor_validity (an_identifier, current_context)
-			elseif an_identifier.is_instruction then
-				check_unqualified_call_instruction_validity (an_identifier)
 			else
-				check_unqualified_call_expression_validity (an_identifier, current_context)
+					-- Internal error: invalid kind of identifier.
+				set_fatal_error
+				error_handler.report_giaaa_error
 			end
 		end
 
@@ -14095,6 +14222,18 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			check_once_procedure_inline_agent_validity (an_expression, current_context)
+		end
+
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			check_qualified_call_expression_validity (an_expression, current_context)
+		end
+
+	process_parenthesis_instruction (an_instruction: ET_PARENTHESIS_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			check_qualified_call_instruction_validity (an_instruction)
 		end
 
 	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)
@@ -14445,7 +14584,7 @@ feature {NONE} -- Attachments
 			l_old_attachment_scope: like current_attachment_scope
 			l_preconditions_attachment_scope: like current_attachment_scope
 			l_count: INTEGER
-			l_set: DS_HASH_TABLE [ET_PRECONDITIONS, ET_FEATURE]
+			l_set: DS_HASH_TABLE [ET_ASSERTIONS, ET_FEATURE]
 		do
 			create l_set.make_map (30)
 			add_precursors_with_preconditions_recursive (a_feature, l_set)
@@ -14480,43 +14619,6 @@ feature {NONE} -- Attachments
 				current_attachment_scope.merge_scope (l_preconditions_attachment_scope)
 				free_attachment_scope (l_preconditions_attachment_scope)
 			end
-		end
-
-	add_precursors_with_preconditions_recursive (a_feature: ET_FEATURE; a_set: DS_HASH_TABLE [ET_PRECONDITIONS, ET_FEATURE])
-			-- Add to `a_set', recursively, the precursors of `a_feature' which have a precondition.
-		require
-			a_feature_not_void: a_feature /= Void
-			a_set_not_void: a_set /= Void
-			no_void_precursors: not a_set.has_void
-			no_void_preconditions: not a_set.has_void_item
-		local
-			i, nb: INTEGER
-			l_other_precursor: ET_FEATURE
-		do
-			if attached a_feature.first_precursor as l_first_precursor then
-				add_precursors_with_preconditions_recursive (l_first_precursor, a_set)
-				if attached l_first_precursor.preconditions as l_preconditions then
-					a_set.force_last (l_preconditions, l_first_precursor)
-				end
-				if attached a_feature.other_precursors as l_other_precursors then
-					from
-						i := 1
-						nb := l_other_precursors.count
-					until
-						i > nb
-					loop
-						l_other_precursor := l_other_precursors.item (i)
-						add_precursors_with_preconditions_recursive (l_other_precursor, a_set)
-						if attached l_other_precursor.preconditions as l_preconditions then
-							a_set.force_last (l_preconditions, l_other_precursor)
-						end
-						i := i + 1
-					end
-				end
-			end
-		ensure
-			no_void_precursors: not a_set.has_void
-			no_void_preconditions: not a_set.has_void_item
 		end
 
 	current_initialization_scope: ET_ATTACHMENT_SCOPE
@@ -14555,6 +14657,82 @@ feature {NONE} -- Attachments
 
 	unused_attachment_scopes: DS_ARRAYED_LIST [ET_ATTACHMENT_SCOPE]
 			-- Attachment scopes that are not currently used
+
+feature {NONE} -- Assertions
+
+	add_precursors_with_preconditions_recursive (a_feature: ET_FEATURE; a_set: DS_HASH_TABLE [ET_ASSERTIONS, ET_FEATURE])
+			-- Add to `a_set', recursively, the precursors of `a_feature' which have a precondition.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_set_not_void: a_set /= Void
+			no_void_precursors: not a_set.has_void
+			no_void_preconditions: not a_set.has_void_item
+		local
+			i, nb: INTEGER
+			l_other_precursor: ET_FEATURE
+		do
+			if attached a_feature.first_precursor as l_first_precursor then
+				add_precursors_with_preconditions_recursive (l_first_precursor, a_set)
+				if attached l_first_precursor.preconditions as l_preconditions then
+					a_set.force_last (l_preconditions, l_first_precursor)
+				end
+				if attached a_feature.other_precursors as l_other_precursors then
+					from
+						i := 1
+						nb := l_other_precursors.count
+					until
+						i > nb
+					loop
+						l_other_precursor := l_other_precursors.item (i)
+						add_precursors_with_preconditions_recursive (l_other_precursor, a_set)
+						if attached l_other_precursor.preconditions as l_preconditions then
+							a_set.force_last (l_preconditions, l_other_precursor)
+						end
+						i := i + 1
+					end
+				end
+			end
+		ensure
+			no_void_precursors: not a_set.has_void
+			no_void_preconditions: not a_set.has_void_item
+		end
+
+	add_precursors_with_postconditions_recursive (a_feature: ET_FEATURE; a_set: DS_HASH_TABLE [ET_ASSERTIONS, ET_FEATURE])
+			-- Add to `a_set', recursively, the precursors of `a_feature' which have a postcondition.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_set_not_void: a_set /= Void
+			no_void_precursors: not a_set.has_void
+			no_void_preconditions: not a_set.has_void_item
+		local
+			i, nb: INTEGER
+			l_other_precursor: ET_FEATURE
+		do
+			if attached a_feature.first_precursor as l_first_precursor then
+				add_precursors_with_postconditions_recursive (l_first_precursor, a_set)
+				if attached l_first_precursor.postconditions as l_postconditions then
+					a_set.force_last (l_postconditions, l_first_precursor)
+				end
+				if attached a_feature.other_precursors as l_other_precursors then
+					from
+						i := 1
+						nb := l_other_precursors.count
+					until
+						i > nb
+					loop
+						l_other_precursor := l_other_precursors.item (i)
+						add_precursors_with_postconditions_recursive (l_other_precursor, a_set)
+						if attached l_other_precursor.postconditions as l_postconditions then
+							a_set.force_last (l_postconditions, l_other_precursor)
+						end
+						i := i + 1
+					end
+				end
+			end
+		ensure
+			no_void_precursors: not a_set.has_void
+			no_void_postconditions: not a_set.has_void_item
+		end
 
 feature {NONE} -- Status report
 
@@ -15040,6 +15218,14 @@ feature {NONE} -- Type contexts
 			-- Maximum capacity found in nested context so far when calling `free_context'.
 			-- Used in 'debug ("nested_type_context")' only.
 
+feature {NONE} -- Default creation call
+
+	default_creation_call: ET_QUALIFIED_CALL
+			-- Creation call to 'default_create'
+
+	default_creation_call_name: ET_IDENTIFIER
+			-- Call name of `default_creation_call'
+
 feature {NONE} -- Feature checker
 
 	feature_checker: ET_FEATURE_CHECKER
@@ -15096,6 +15282,9 @@ invariant
 	unused_contexts_not_void: unused_contexts /= Void
 	no_void_unused_context: not unused_contexts.has_void
 	current_target_type_not_void: current_target_type /= Void
+	default_creation_call_not_void: default_creation_call /= Void
+	default_creation_call_name_not_void: default_creation_call_name /= Void
+	default_creation_call_name_definition: default_creation_call_name = default_creation_call.name
 		-- Object-tests.
 	current_object_test_types_not_void: current_object_test_types /= Void
 	no_void_object_test_type: not current_object_test_types.has_void_item

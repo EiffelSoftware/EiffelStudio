@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Facility to find separators in date or time strings"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,6 @@ feature {NONE} -- Implementation
 		local
 			j, pos: INTEGER
 			ch: CHARACTER
-			tmp_strg: STRING
 			sep_found: BOOLEAN
 		do
 			Result := s.count + 1
@@ -61,8 +60,7 @@ feature {NONE} -- Implementation
 			if not sep_found then
 				from
 					j := i
-					tmp_strg := s.substring (j, j + 2)
-					if equal (tmp_strg, "[0]") then
+					if s.substring (j, j + 2).same_string ("[0]") then
 						j := j + 3
 					end
 					ch := s @ j
@@ -93,15 +91,13 @@ feature {NONE} -- Implementation
 			string_exists: s /= Void
 			range_correct: pos1 <= abs (pos2)
 		local
-			upper: INTEGER
 			l_substrg, l_substrg2: STRING
 		do
 			if pos2 > 0 then
 				l_substrg := s.substring (pos1, pos2 - 1)
 				l_substrg2 := s.substring (pos2, pos2)
 			else
-				upper := abs (pos2)
-				l_substrg := s.substring (pos1, upper)
+				l_substrg := s.substring (pos1, - pos2)
 				create l_substrg2.make (0)
 			end
 			Result := [l_substrg, l_substrg2]
@@ -128,19 +124,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class FIND_SEPARATOR_FACILITY
-
-
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		To easily manage allocation and release of allocated C memory, and
 		to perform insertion of basic elements. Byte order is by default
@@ -298,9 +298,9 @@ feature -- Access: Platform specific
 			Result := l_target.item (0)
 		end
 
-	read_real (pos: INTEGER): REAL
+	read_real (pos: INTEGER): REAL_32
 			-- Read REAL_32 at position `pos'.
-		obsolete "Use read_real_32 instead."
+		obsolete "Use read_real_32 instead. [2017-05-31]"
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_32_bytes) <= count
@@ -308,22 +308,22 @@ feature -- Access: Platform specific
 			Result := read_real_32 (pos)
 		end
 
-	read_real_32 (pos: INTEGER): REAL
+	read_real_32 (pos: INTEGER): REAL_32
 			-- Read REAL_32 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_32_bytes) <= count
 		local
-			l_target: NATIVE_ARRAY [REAL]
+			l_target: NATIVE_ARRAY [REAL_32]
 		do
 			create l_target.make (1)
 			{MARSHAL}.copy (item + pos, l_target, 0, 1)
 			Result := l_target.item (0)
 		end
 
-	read_double (pos: INTEGER): DOUBLE
+	read_double (pos: INTEGER): REAL_64
 			-- Read REAL_64 at position `pos'.
-		obsolete "Use read_real_64 instead."
+		obsolete "Use read_real_64 instead. [2017-05-31]"
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_64_bytes) <= count
@@ -331,13 +331,13 @@ feature -- Access: Platform specific
 			Result := read_real_64 (pos)
 		end
 
-	read_real_64 (pos: INTEGER): DOUBLE
+	read_real_64 (pos: INTEGER): REAL_64
 			-- Read REAL_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_64_bytes) <= count
 		local
-			l_target: NATIVE_ARRAY [DOUBLE]
+			l_target: NATIVE_ARRAY [REAL_64]
 		do
 			create l_target.make (1)
 			{MARSHAL}.copy (item + pos, l_target, 0, 1)
@@ -556,9 +556,9 @@ feature -- Element change: Platform specific
 			inserted: c = read_character (pos)
 		end
 
-	put_real (r: REAL; pos: INTEGER)
+	put_real (r: REAL_32; pos: INTEGER)
 			-- Insert `r' at position `pos'.
-		obsolete "Use put_real_32 instead."
+		obsolete "Use put_real_32 instead. [2017-05-31]"
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_32_bytes) <= count
@@ -568,13 +568,13 @@ feature -- Element change: Platform specific
 			inserted: r = read_real_32 (pos)
 		end
 
-	put_real_32 (r: REAL; pos: INTEGER)
+	put_real_32 (r: REAL_32; pos: INTEGER)
 			-- Insert `r' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_32_bytes) <= count
 		local
-			l_source: NATIVE_ARRAY [REAL]
+			l_source: NATIVE_ARRAY [REAL_32]
 		do
 			create l_source.make (1)
 			l_source.put (0, r)
@@ -583,9 +583,9 @@ feature -- Element change: Platform specific
 			inserted: r = read_real_32 (pos)
 		end
 
-	put_double (d: DOUBLE; pos: INTEGER)
+	put_double (d: REAL_64; pos: INTEGER)
 			-- Insert `d' at position `pos'.
-		obsolete "Use put_real_64 instead."
+		obsolete "Use put_real_64 instead. [2017-05-31]"
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_64_bytes) <= count
@@ -595,13 +595,13 @@ feature -- Element change: Platform specific
 			inserted: d = read_real_64 (pos)
 		end
 
-	put_real_64 (d: DOUBLE; pos: INTEGER)
+	put_real_64 (d: REAL_64; pos: INTEGER)
 			-- Insert `d' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_64_bytes) <= count
 		local
-			l_source: NATIVE_ARRAY [DOUBLE]
+			l_source: NATIVE_ARRAY [REAL_64]
 		do
 			create l_source.make (1)
 			l_source.put (0, d)
@@ -766,7 +766,7 @@ feature -- Access: Little-endian format
 			Result := read_natural_64_le (pos).as_integer_64
 		end
 
-	read_real_32_le (pos: INTEGER): REAL
+	read_real_32_le (pos: INTEGER): REAL_32
 			-- Read REAL_32 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -781,7 +781,7 @@ feature -- Access: Little-endian format
 			($Result).memory_copy ($l_nat32, natural_32_bytes)
 		end
 
-	read_real_64_le (pos: INTEGER): DOUBLE
+	read_real_64_le (pos: INTEGER): REAL_64
 			-- Read REAL_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -903,7 +903,7 @@ feature -- Element change: Little-endian format
 			inserted: i = read_integer_64_le (pos)
 		end
 
-	put_real_32_le (v: REAL; pos: INTEGER_32)
+	put_real_32_le (v: REAL_32; pos: INTEGER_32)
 			-- Insert `v' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -920,7 +920,7 @@ feature -- Element change: Little-endian format
 			inserted: v = read_real_32_le (pos)
 		end
 
-	put_real_64_le (v: DOUBLE; pos: INTEGER_32)
+	put_real_64_le (v: REAL_64; pos: INTEGER_32)
 			-- Insert `v' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -1035,7 +1035,7 @@ feature -- Access: Big-endian format
 			Result := read_natural_64_be (pos).as_integer_64
 		end
 
-	read_real_32_be (pos: INTEGER): REAL
+	read_real_32_be (pos: INTEGER): REAL_32
 			-- Read REAL_32 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -1050,7 +1050,7 @@ feature -- Access: Big-endian format
 			($Result).memory_copy ($l_nat32, natural_32_bytes)
 		end
 
-	read_real_64_be (pos: INTEGER): DOUBLE
+	read_real_64_be (pos: INTEGER): REAL_64
 			-- Read REAL_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -1172,7 +1172,7 @@ feature -- Element change: Big-endian format
 			inserted: i = read_integer_64_be (pos)
 		end
 
-	put_real_32_be (v: REAL; pos: INTEGER_32)
+	put_real_32_be (v: REAL_32; pos: INTEGER_32)
 			-- Insert `v' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -1189,7 +1189,7 @@ feature -- Element change: Big-endian format
 			inserted: v = read_real_32_be (pos)
 		end
 
-	put_real_64_be (v: DOUBLE; pos: INTEGER_32)
+	put_real_64_be (v: REAL_64; pos: INTEGER_32)
 			-- Insert `v' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -1290,7 +1290,7 @@ invariant
 	valid_count: count >= 0
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

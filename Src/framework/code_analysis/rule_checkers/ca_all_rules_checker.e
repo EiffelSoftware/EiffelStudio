@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
-				   Checks a set of (standard) rules (see {CA_STANDARD_RULE}). The rules have to
-				   register their AST visitor agents here.
-		          ]"
-	author: "Stefan Zurfluh"
+		Checks a set of (standard) rules (see {CA_STANDARD_RULE}). The rules have to
+		register their AST visitor agents here.
+	]"
+	author: "Stefan Zurfluh", "Eiffel Software"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,10 +29,14 @@ inherit
 			process_symbol_stub_as,
 			process_keyword_stub_as
 		redefine
+			process_access_feat_as,
 			process_access_id_as,
+			process_address_as,
+			process_agent_routine_creation_as,
 			process_assign_as,
 			process_assigner_call_as,
 			process_bang_creation_as,
+			process_binary_as,
 			process_bin_eq_as,
 			process_bin_ge_as,
 			process_bin_gt_as,
@@ -40,6 +44,7 @@ inherit
 			process_bin_lt_as,
 			process_bin_ne_as,
 			process_body_as,
+			process_bracket_as,
 			process_case_as,
 			process_converted_expr_as,
 			process_create_as,
@@ -48,6 +53,7 @@ inherit
 			process_do_as,
 			process_eiffel_list,
 			process_elseif_as,
+			process_expr_call_as,
 			process_feature_as,
 			process_feature_clause_as,
 			process_id_as,
@@ -55,16 +61,20 @@ inherit
 			process_inline_agent_creation_as,
 			process_inspect_as,
 			process_instr_call_as,
+			process_integer_as,
 			process_loop_as,
 			process_nested_as,
+			process_nested_expr_as,
 			process_object_test_as,
 			process_once_as,
+			process_parameter_list_as,
 			process_paran_as,
+			process_precursor_as,
+			process_real_as,
 			process_routine_as,
+			process_static_access_as,
 			process_unary_as,
-			process_un_not_as,
-			process_integer_as,
-			process_real_as
+			process_un_not_as
 		end
 
 create
@@ -74,8 +84,6 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			last_run_successful := False
-
 			create_action_lists
 		end
 
@@ -83,14 +91,22 @@ feature {NONE} -- Initialization
 			-- Creates all the lists of agents that will be called when visiting
 			-- certain AST nodes.
 		do
+			create access_feat_pre_actions
+			create access_feat_post_actions
 			create access_id_pre_actions
 			create access_id_post_actions
+			create address_pre_actions
+			create address_post_actions
+			create agent_routine_pre_action
+			create agent_routine_post_action
 			create assign_pre_actions
 			create assign_post_actions
 			create assigner_call_pre_actions
 			create assigner_call_post_actions
 			create bang_creation_pre_actions
 			create bang_creation_post_actions
+			create binary_pre_actions
+			create binary_post_actions
 			create bin_eq_pre_actions
 			create bin_eq_post_actions
 			create bin_ge_pre_actions
@@ -105,6 +121,8 @@ feature {NONE} -- Initialization
 			create bin_ne_post_actions
 			create body_pre_actions
 			create body_post_actions
+			create bracket_pre_actions
+			create bracket_post_actions
 			create case_pre_actions
 			create case_post_actions
 			create class_pre_actions
@@ -131,6 +149,8 @@ feature {NONE} -- Initialization
 			create id_post_actions
 			create if_pre_actions
 			create if_post_actions
+			create inline_agent_creation_pre_actions
+			create inline_agent_creation_post_actions
 			create inspect_pre_actions
 			create inspect_post_actions
 			create instruction_call_pre_actions
@@ -143,10 +163,16 @@ feature {NONE} -- Initialization
 			create object_test_post_actions
 			create once_pre_actions
 			create once_post_actions
+			create parameter_list_pre_actions
+			create parameter_list_post_actions
 			create paran_pre_actions
 			create paran_post_actions
+			create precursor_pre_actions
+			create precursor_post_actions
 			create routine_pre_actions
 			create routine_post_actions
+			create static_access_pre_actions
+			create static_access_post_actions
 			create unary_pre_actions
 			create unary_post_actions
 			create un_not_pre_actions
@@ -157,7 +183,25 @@ feature {NONE} -- Initialization
 			create real_post_actions
 		end
 
+feature {CA_RULE} -- State
+
+	is_assign: BOOLEAN
+			-- Is target of an assignment or a creation instruction being processed?
+
+	is_assigner_call: BOOLEAN
+			-- Is current call an assigner call?
+
 feature {CA_STANDARD_RULE} -- Adding agents
+
+	add_access_feat_pre_action (a_action: attached PROCEDURE [ACCESS_FEAT_AS])
+		do
+			access_feat_pre_actions.extend (a_action)
+		end
+
+	add_access_feat_post_action (a_action: attached PROCEDURE [ACCESS_FEAT_AS])
+		do
+			access_feat_post_actions.extend (a_action)
+		end
 
 	add_access_id_pre_action (a_action: attached PROCEDURE [ACCESS_ID_AS])
 		do
@@ -167,6 +211,16 @@ feature {CA_STANDARD_RULE} -- Adding agents
 	add_access_id_post_action (a_action: attached PROCEDURE [ACCESS_ID_AS])
 		do
 			access_id_post_actions.extend (a_action)
+		end
+
+	add_address_pre_action (a: PROCEDURE [ADDRESS_AS])
+		do
+			address_pre_actions.extend (a)
+		end
+
+	add_address_post_action (a: PROCEDURE [ADDRESS_AS])
+		do
+			address_post_actions.extend (a)
 		end
 
 	add_assign_pre_action (a_action: attached PROCEDURE [ASSIGN_AS])
@@ -197,6 +251,16 @@ feature {CA_STANDARD_RULE} -- Adding agents
 	add_bang_creation_post_action (a_action: attached PROCEDURE [BANG_CREATION_AS])
 		do
 			bang_creation_post_actions.extend (a_action)
+		end
+
+	add_binary_pre_action (a_action: attached PROCEDURE [BINARY_AS])
+		do
+			binary_pre_actions.extend (a_action)
+		end
+
+	add_binary_post_action (a_action: attached PROCEDURE [BINARY_AS])
+		do
+			binary_post_actions.extend (a_action)
 		end
 
 	add_bin_eq_pre_action (a_action: attached PROCEDURE [BIN_EQ_AS])
@@ -259,13 +323,24 @@ feature {CA_STANDARD_RULE} -- Adding agents
 			bin_ne_post_actions.extend (a_action)
 		end
 
-	add_body_pre_action (a_action: attached PROCEDURE [BODY_AS])		do
+	add_body_pre_action (a_action: attached PROCEDURE [BODY_AS])
+		do
 			body_pre_actions.extend (a_action)
 		end
 
 	add_body_post_action (a_action: attached PROCEDURE [BODY_AS])
 		do
 			body_post_actions.extend (a_action)
+		end
+
+	add_bracket_pre_action (a_action: attached PROCEDURE [BRACKET_AS])
+		do
+			bracket_pre_actions.extend (a_action)
+		end
+
+	add_bracket_post_action (a_action: attached PROCEDURE [BRACKET_AS])
+		do
+			bracket_post_actions.extend (a_action)
 		end
 
 	add_case_pre_action (a_action: attached PROCEDURE [CASE_AS])
@@ -398,6 +473,16 @@ feature {CA_STANDARD_RULE} -- Adding agents
 			if_post_actions.extend (a_action)
 		end
 
+	add_inline_agent_creation_pre_action (a_action: PROCEDURE [INLINE_AGENT_CREATION_AS])
+		do
+			inline_agent_creation_pre_actions.extend (a_action)
+		end
+
+	add_inline_agent_creation_post_action (a_action: PROCEDURE [INLINE_AGENT_CREATION_AS])
+		do
+			inline_agent_creation_post_actions.extend (a_action)
+		end
+
 	add_inspect_pre_action (a_action: attached PROCEDURE [INSPECT_AS])
 		do
 			inspect_pre_actions.extend (a_action)
@@ -458,6 +543,16 @@ feature {CA_STANDARD_RULE} -- Adding agents
 			once_post_actions.extend (a_action)
 		end
 
+	add_parameter_list_pre_action (a_action: attached PROCEDURE [PARAMETER_LIST_AS])
+		do
+			parameter_list_pre_actions.extend (a_action)
+		end
+
+	add_parameter_list_post_action (a_action: attached PROCEDURE [PARAMETER_LIST_AS])
+		do
+			parameter_list_post_actions.extend (a_action)
+		end
+
 	add_paran_pre_action (a_action: attached PROCEDURE [PARAN_AS])
 		do
 			paran_pre_actions.extend (a_action)
@@ -468,6 +563,26 @@ feature {CA_STANDARD_RULE} -- Adding agents
 			paran_post_actions.extend (a_action)
 		end
 
+	add_precursor_pre_action (a: PROCEDURE [PRECURSOR_AS])
+		do
+			precursor_pre_actions.extend (a)
+		end
+
+	add_precursor_post_action (a: PROCEDURE [PRECURSOR_AS])
+		do
+			precursor_post_actions.extend (a)
+		end
+
+	add_routine_agent_pre_action (a_action:  PROCEDURE [AGENT_ROUTINE_CREATION_AS])
+		do
+			agent_routine_pre_action.extend (a_action)
+		end
+
+	add_routine_agent_post_action (a_action:  PROCEDURE [AGENT_ROUTINE_CREATION_AS])
+		do
+			agent_routine_post_action.extend (a_action)
+		end
+
 	add_routine_pre_action (a_action: attached PROCEDURE [ROUTINE_AS])
 		do
 			routine_pre_actions.extend (a_action)
@@ -476,6 +591,16 @@ feature {CA_STANDARD_RULE} -- Adding agents
 	add_routine_post_action (a_action: attached PROCEDURE [ROUTINE_AS])
 		do
 			routine_post_actions.extend (a_action)
+		end
+
+	add_static_access_pre_action (a: PROCEDURE [STATIC_ACCESS_AS])
+		do
+			static_access_pre_actions.extend (a)
+		end
+
+	add_static_access_post_action (a: PROCEDURE [STATIC_ACCESS_AS])
+		do
+			static_access_post_actions.extend (a)
 		end
 
 	add_unary_pre_action (a_action: attached PROCEDURE [UNARY_AS])
@@ -520,13 +645,21 @@ feature {CA_STANDARD_RULE} -- Adding agents
 
 feature {NONE} -- Agent lists
 
+	access_feat_pre_actions, access_feat_post_actions: ACTION_SEQUENCE [TUPLE [ACCESS_FEAT_AS]]
+
 	access_id_pre_actions, access_id_post_actions: ACTION_SEQUENCE [TUPLE [ACCESS_ID_AS]]
+
+	address_pre_actions, address_post_actions: ACTION_SEQUENCE [TUPLE [ADDRESS_AS]]
+
+	agent_routine_pre_action, agent_routine_post_action: ACTION_SEQUENCE [TUPLE [AGENT_ROUTINE_CREATION_AS]]
 
 	assign_pre_actions, assign_post_actions: ACTION_SEQUENCE [TUPLE [ASSIGN_AS]]
 
 	assigner_call_pre_actions, assigner_call_post_actions: ACTION_SEQUENCE [TUPLE [ASSIGNER_CALL_AS]]
 
 	bang_creation_pre_actions, bang_creation_post_actions: ACTION_SEQUENCE [TUPLE [BANG_CREATION_AS]]
+
+	binary_pre_actions, binary_post_actions: ACTION_SEQUENCE [TUPLE [BINARY_AS]]
 
 	bin_eq_pre_actions, bin_eq_post_actions: ACTION_SEQUENCE [TUPLE [BIN_EQ_AS]]
 
@@ -541,6 +674,8 @@ feature {NONE} -- Agent lists
 	bin_ne_pre_actions, bin_ne_post_actions: ACTION_SEQUENCE [TUPLE [BIN_NE_AS]]
 
 	body_pre_actions, body_post_actions: ACTION_SEQUENCE [TUPLE [BODY_AS]]
+
+	bracket_pre_actions, bracket_post_actions: ACTION_SEQUENCE [TUPLE [BRACKET_AS]]
 
 	case_pre_actions, case_post_actions: ACTION_SEQUENCE [TUPLE [CASE_AS]]
 
@@ -568,6 +703,8 @@ feature {NONE} -- Agent lists
 
 	if_pre_actions, if_post_actions: ACTION_SEQUENCE [TUPLE [IF_AS]]
 
+	inline_agent_creation_pre_actions, inline_agent_creation_post_actions: ACTION_SEQUENCE [TUPLE [INLINE_AGENT_CREATION_AS]]
+
 	inspect_pre_actions, inspect_post_actions: ACTION_SEQUENCE [TUPLE [INSPECT_AS]]
 
 	instruction_call_pre_actions, instruction_call_post_actions: ACTION_SEQUENCE [TUPLE [INSTR_CALL_AS]]
@@ -582,7 +719,13 @@ feature {NONE} -- Agent lists
 
 	paran_pre_actions, paran_post_actions: ACTION_SEQUENCE [TUPLE [PARAN_AS]]
 
+	parameter_list_pre_actions, parameter_list_post_actions: ACTION_SEQUENCE [TUPLE [PARAMETER_LIST_AS]]
+
+	precursor_pre_actions, precursor_post_actions: ACTION_SEQUENCE [TUPLE [PRECURSOR_AS]]
+
 	routine_pre_actions, routine_post_actions: ACTION_SEQUENCE [TUPLE [ROUTINE_AS]]
+
+	static_access_pre_actions, static_access_post_actions: ACTION_SEQUENCE [TUPLE [STATIC_ACCESS_AS]]
 
 	unary_pre_actions, unary_post_actions: ACTION_SEQUENCE [TUPLE [UNARY_AS]]
 
@@ -599,15 +742,25 @@ feature {CA_RULE_CHECKING_TASK} -- Execution Commands
 		local
 			l_ast: CLASS_AS
 		do
-			last_run_successful := False
 			l_ast := a_class_to_check.ast
 			class_pre_actions.call (l_ast)
 			process_class_as (l_ast)
 			class_post_actions.call (l_ast)
-			last_run_successful := True
 		end
 
 feature {NONE} -- Processing
+
+	process_access_feat_as (a_id: ACCESS_FEAT_AS)
+		local
+			old_is_assigner_call: BOOLEAN
+		do
+			access_feat_pre_actions.call ([a_id])
+			old_is_assigner_call := is_assigner_call
+			is_assigner_call := False
+			Precursor (a_id)
+			is_assigner_call := old_is_assigner_call
+			access_feat_post_actions.call ([a_id])
+		end
 
 	process_access_id_as (a_id: ACCESS_ID_AS)
 		do
@@ -616,18 +769,39 @@ feature {NONE} -- Processing
 			access_id_post_actions.call ([a_id])
 		end
 
-	process_assign_as (a_assign: ASSIGN_AS)
+	process_address_as (a: ADDRESS_AS)
 		do
-			assign_pre_actions.call ([a_assign])
-			Precursor (a_assign)
-			assign_post_actions.call ([a_assign])
+			address_pre_actions.call (a)
+			Precursor (a)
+			address_post_actions.call (a)
 		end
 
-	process_assigner_call_as (a_assigner_call: ASSIGNER_CALL_AS)
+	process_agent_routine_creation_as (a: AGENT_ROUTINE_CREATION_AS)
 		do
-			assigner_call_pre_actions.call ([a_assigner_call])
-			Precursor (a_assigner_call)
-			assigner_call_post_actions.call ([a_assigner_call])
+			agent_routine_pre_action.call (a)
+			Precursor (a)
+			agent_routine_post_action.call (a)
+		end
+
+	process_assign_as (a: ASSIGN_AS)
+			-- <Precursor>
+		do
+			assign_pre_actions.call (a)
+			is_assign := True
+			a.target.process (Current)
+			is_assign := False
+			a.source.process (Current)
+			assign_post_actions.call (a)
+		end
+
+	process_assigner_call_as (a: ASSIGNER_CALL_AS)
+		do
+			assigner_call_pre_actions.call (a)
+			a.source.process (Current)
+			is_assigner_call := True
+			a.target.process (Current)
+			is_assigner_call := False
+			assigner_call_post_actions.call (a)
 		end
 
 	process_bang_creation_as (a_bang_creation: BANG_CREATION_AS)
@@ -635,6 +809,18 @@ feature {NONE} -- Processing
 			bang_creation_pre_actions.call ([a_bang_creation])
 			Precursor (a_bang_creation)
 			bang_creation_post_actions.call ([a_bang_creation])
+		end
+
+	process_binary_as (a: BINARY_AS)
+		local
+			old_is_assigner_call: BOOLEAN
+		do
+			binary_pre_actions.call ([a])
+			old_is_assigner_call := is_assigner_call
+			is_assigner_call := False
+			Precursor (a)
+			is_assigner_call := old_is_assigner_call
+			binary_post_actions.call ([a])
 		end
 
 	process_bin_eq_as (a_bin_eq: BIN_EQ_AS)
@@ -686,6 +872,18 @@ feature {NONE} -- Processing
 			body_post_actions.call ([a_body])
 		end
 
+	process_bracket_as (a: BRACKET_AS)
+		local
+			old_is_assigner_call: BOOLEAN
+		do
+			bracket_pre_actions.call ([a])
+			old_is_assigner_call := is_assigner_call
+			is_assigner_call := False
+			Precursor (a)
+			is_assigner_call := old_is_assigner_call
+			bracket_post_actions.call ([a])
+		end
+
 	process_case_as (a_case: CASE_AS)
 		do
 			case_pre_actions.call ([a_case])
@@ -714,11 +912,16 @@ feature {NONE} -- Processing
 			create_creation_post_actions.call ([a_create_creation])
 		end
 
-	process_creation_as (a_creation: CREATION_AS)
+	process_creation_as (a: CREATION_AS)
+			-- <Precursor>
 		do
-			creation_pre_actions.call ([a_creation])
-			Precursor (a_creation)
-			creation_post_actions.call ([a_creation])
+			creation_pre_actions.call (a)
+			is_assign := True
+			a.target.process (Current)
+			is_assign := False
+			safe_process (a.type)
+			safe_process (a.call)
+			creation_post_actions.call (a)
 		end
 
 	process_do_as (a_do: DO_AS)
@@ -740,6 +943,11 @@ feature {NONE} -- Processing
 			elseif_pre_actions.call ([a_elseif])
 			Precursor (a_elseif)
 			elseif_post_actions.call ([a_elseif])
+		end
+
+	process_expr_call_as (a: EXPR_CALL_AS)
+		do
+			Precursor (a)
 		end
 
 	process_feature_as (a_feature: FEATURE_AS)
@@ -770,12 +978,11 @@ feature {NONE} -- Processing
 			if_post_actions.call ([a_if])
 		end
 
-	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS)
+	process_inline_agent_creation_as (a: INLINE_AGENT_CREATION_AS)
 		do
-			-- TODO: 2014-09-22 Processing of inline agent body fails due to feature pre and post processing not being
-			-- called. We simply ignore bodies of inline agents for now and do not process them.
-			--safe_process (l_as.body)
-			safe_process (l_as.operands)
+			inline_agent_creation_pre_actions.call (a)
+			Precursor (a)
+			inline_agent_creation_post_actions.call (a)
 		end
 
 	process_inspect_as (a_inspect: INSPECT_AS)
@@ -799,11 +1006,28 @@ feature {NONE} -- Processing
 			loop_post_actions.call ([a_loop])
 		end
 
-	process_nested_as (a_nested: NESTED_AS)
+	process_nested_as (a: NESTED_AS)
+		local
+			old_is_assigner_call: BOOLEAN
 		do
-			nested_pre_actions.call ([a_nested])
-			Precursor (a_nested)
-			nested_post_actions.call ([a_nested])
+			nested_pre_actions.call (a)
+			old_is_assigner_call := is_assigner_call
+			is_assigner_call := False
+			a.target.process (Current)
+			is_assigner_call := old_is_assigner_call
+			a.message.process (Current)
+			nested_post_actions.call (a)
+		end
+
+	process_nested_expr_as (a: NESTED_EXPR_AS)
+		local
+			old_is_assigner_call: BOOLEAN
+		do
+			old_is_assigner_call := is_assigner_call
+			is_assigner_call := False
+			a.target.process (Current)
+			is_assigner_call := old_is_assigner_call
+			a.message.process (Current)
 		end
 
 	process_object_test_as (a_ot: OBJECT_TEST_AS)
@@ -820,6 +1044,13 @@ feature {NONE} -- Processing
 			once_post_actions.call ([a_once])
 		end
 
+	process_parameter_list_as (a: PARAMETER_LIST_AS)
+		do
+			parameter_list_pre_actions.call ([a])
+			Precursor (a)
+			parameter_list_post_actions.call ([a])
+		end
+
 	process_paran_as (a_paran: PARAN_AS)
 		do
 			paran_pre_actions.call ([a_paran])
@@ -827,11 +1058,25 @@ feature {NONE} -- Processing
 			paran_post_actions.call ([a_paran])
 		end
 
+	process_precursor_as (a: PRECURSOR_AS)
+		do
+			precursor_pre_actions.call (a)
+			Precursor (a)
+			precursor_post_actions.call (a)
+		end
+
 	process_routine_as (a_routine: ROUTINE_AS)
 		do
 			routine_pre_actions.call ([a_routine])
 			Precursor (a_routine)
 			routine_post_actions.call ([a_routine])
+		end
+
+	process_static_access_as (a: STATIC_ACCESS_AS)
+		do
+			static_access_pre_actions.call (a)
+			Precursor (a)
+			static_access_post_actions.call (a)
 		end
 
 	process_un_not_as (a_un_not: UN_NOT_AS)
@@ -842,9 +1087,14 @@ feature {NONE} -- Processing
 		end
 
 	process_unary_as (a_unary: UNARY_AS)
+		local
+			old_is_assigner_call: BOOLEAN
 		do
 			unary_pre_actions.call ([a_unary])
+			old_is_assigner_call := is_assigner_call
+			is_assigner_call := False
 			Precursor (a_unary)
+			is_assigner_call := old_is_assigner_call
 			unary_post_actions.call ([a_unary])
 		end
 
@@ -862,20 +1112,36 @@ feature {NONE} -- Processing
 			real_post_actions.call ([a_real])
 		end
 
-feature -- Results
+note
+	copyright:	"Copyright (c) 2014-2017, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
-	last_run_successful: BOOLEAN
-
-feature {NONE} -- Implementation
-
-	frozen rota: detachable ROTA_S
-			-- Access to rota service
-		local
-			l_service_consumer: SERVICE_CONSUMER [ROTA_S]
-		do
-			create l_service_consumer
-			if attached l_service_consumer.service as l_service and then l_service.is_interface_usable then
-				Result := l_service
-			end
-		end
 end

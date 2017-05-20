@@ -122,7 +122,7 @@ feature -- Status report
 
 	default_processing_enabled: BOOLEAN
 		obsolete
-			"Use `default_processing' instead"
+			"Use `default_processing' instead [2017-05-31]."
 			-- Is the default window processing enabled?
 			-- If True (by default) the standard window
 			-- procedure will be called. Otherwise, the standard
@@ -217,7 +217,7 @@ feature -- Status report
 	has_heavy_capture: BOOLEAN
 			-- Does this window have the heavy capture?
 		obsolete
-			"Use `has_capture' instead."
+			"Use `has_capture' instead [2017-05-31]."
 		do
 			Result := has_capture
 		end
@@ -227,7 +227,7 @@ feature -- Status report
 			-- (i.e. is there a window in the current program
 			-- with `has_heavy_capture' to True?)
 		obsolete
-			"Use `has_capture' instead."
+			"Use `has_capture' instead [2017-05-31]."
 		do
 			Result := has_capture
 		end
@@ -688,7 +688,7 @@ feature -- Status setting
 			--
 			-- Works for ALL windows.
 		obsolete
-			"Use `set_capture' instead."
+			"Use `set_capture' instead [2017-05-31]."
 		require
 			exists: exists
 			has_not_capture: not has_capture
@@ -712,7 +712,7 @@ feature -- Status setting
 			-- Release the mouse capture after a call
 			-- to `set_heavy_capture'.
 		obsolete
-			"Use `release_capture' instead."
+			"Use `release_capture' instead [2017-05-31]."
 		require
 			exists: exists
 			has_capture: has_capture
@@ -1140,7 +1140,7 @@ feature -- Basic operations
 		end
 
 	message_box (a_text, a_title: READABLE_STRING_GENERAL; a_style: INTEGER): INTEGER
-		obsolete "Use class WEL_MSG_BOX instead."
+		obsolete "Use class WEL_MSG_BOX instead [2017-05-31]."
 			-- Show an information message box with `Current'
 			-- as parent with `a_text' and `a_title'.
 			-- See class WEL_MB_CONSTANTS for `a_style' value.
@@ -1159,7 +1159,7 @@ feature -- Basic operations
 		end
 
 	information_message_box (a_text, a_title: READABLE_STRING_GENERAL)
-		obsolete "Use class WEL_MSG_BOX instead."
+		obsolete "Use class WEL_MSG_BOX instead [2017-05-31]."
 			-- Show an information message box with `Current'
 			-- as parent with `a_text' and `a_title'.
 		require
@@ -1176,7 +1176,7 @@ feature -- Basic operations
 		end
 
 	warning_message_box (a_text, a_title: READABLE_STRING_GENERAL)
-		obsolete "Use class WEL_MSG_BOX instead."
+		obsolete "Use class WEL_MSG_BOX instead [2017-05-31]."
 			-- Show a warning message box with `Current'
 			-- as parent with `a_text' and `a_title'.
 		require
@@ -1193,7 +1193,7 @@ feature -- Basic operations
 		end
 
 	error_message_box (a_text: READABLE_STRING_GENERAL)
-		obsolete "Use class WEL_MSG_BOX instead."
+		obsolete "Use class WEL_MSG_BOX instead [2017-05-31]."
 			-- Show an error message box with `Current' as
 			-- parent with `a_text' and error as title.
 		require
@@ -1208,7 +1208,7 @@ feature -- Basic operations
 		end
 
 	question_message_box (a_text, a_title: READABLE_STRING_GENERAL): BOOLEAN
-		obsolete "Use class WEL_MSG_BOX instead."
+		obsolete "Use class WEL_MSG_BOX instead [2017-05-31]."
 			-- Show a question message box with `Current'
 			-- as parent with `a_text' and `a_title'.
 			-- True is returned if the user answers yes, False
@@ -1330,7 +1330,7 @@ feature -- Basic operations
 			-- class WEL_HELP_CONSTANTS for `a_command' values.
 			-- 'data' is depandant on 'a_command'.  Check MSDN for more details.
 		obsolete
-			"Use `win_help_from_path' instead."
+			"Use `win_help_from_path' instead [2017-05-31]."
 		require
 			exists: exists
 			help_file_not_void: help_file /= Void
@@ -2348,7 +2348,7 @@ feature {NONE} -- Externals
 			-- Change the parent of the given child and return handle to
 			-- previous parent, or NULL otherwise.
 		obsolete
-			"Use {WEL_API}.set_parent instead."
+			"Use {WEL_API}.set_parent instead [2017-05-31]."
 		external
 			"C [macro <winuser.h>] (HWND, HWND)"
 		alias
@@ -2438,7 +2438,7 @@ feature {NONE} -- Externals
 	cwin_get_focus: POINTER
 			-- SDK GetFocus
 		obsolete
-			"Use {WEL_API}.get_focus instead."
+			"Use {WEL_API}.get_focus instead [2017-05-31]."
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
@@ -2488,7 +2488,7 @@ feature {NONE} -- Externals
 	cwin_set_window_text (hwnd, str: POINTER)
 			-- SDK SetWindowText
 		obsolete
-			"Use {WEL_API}.set_window_text instead."
+			"Use {WEL_API}.set_window_text instead [2017-05-31]."
 		external
 			"C [macro %"wel.h%"] (HWND, LPCTSTR)"
 		alias
@@ -2590,7 +2590,7 @@ feature {NONE} -- Externals
 	cwin_send_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- SDK SendMessage (with the result)
 		obsolete
-			"Use {WEL_API}.send_message_result instead."
+			"Use {WEL_API}.send_message_result instead [2017-05-31]."
 		external
 			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM): EIF_POINTER"
 		alias
@@ -2600,7 +2600,7 @@ feature {NONE} -- Externals
 	cwin_send_message_result_integer (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): INTEGER
 			-- SDK SendMessage (with the result)
 		obsolete
-			"Use {WEL_API}.send_message_result_integer instead,"
+			"Use {WEL_API}.send_message_result_integer instead [2017-05-31]."
 		external
 			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM): EIF_INTEGER"
 		alias
@@ -2610,7 +2610,7 @@ feature {NONE} -- Externals
 	cwin_send_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER)
 			-- SDK SendMessage (without the result)
 		obsolete
-			"Use {WEL_API}.send_message instead."
+			"Use {WEL_API}.send_message instead [2017-05-31]."
 		external
 			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
 		alias
@@ -2620,7 +2620,7 @@ feature {NONE} -- Externals
 	cwin_post_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): BOOLEAN
 			-- SDK PostMessage (with the result)
 		obsolete
-			"Use {WEL_API}.post_message_result instead."
+			"Use {WEL_API}.post_message_result instead [2017-05-31]."
 		external
 			"C [macro %"wel.h%"] (HWND, UINT, %
 				%WPARAM, LPARAM): EIF_BOOLEAN"
@@ -2631,7 +2631,7 @@ feature {NONE} -- Externals
 	cwin_post_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER)
 			-- SDK PostMessage (without the result)
 		obsolete
-			"Use {WEL_API}.post_message instead."
+			"Use {WEL_API}.post_message instead [2017-05-31]."
 		external
 			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
 		alias
@@ -2650,7 +2650,7 @@ feature {NONE} -- Externals
 				repaint: BOOLEAN)
 			-- SDK MoveWindow
 		obsolete
-			"Use {WEL_API}.move_window (x, y, w, h, b).do_nothing instead."
+			"Use {WEL_API}.move_window (x, y, w, h, b).do_nothing instead [2017-05-31]."
 		external
 			"C [macro %"wel.h%"] (HWND, int, int, int, int, BOOL)"
 		alias
@@ -2661,7 +2661,7 @@ feature {NONE} -- Externals
 				flags: INTEGER)
 			-- SDK SetWindowPos
 		obsolete
-			"Use {WEL_API}.set_window_pos (hwnd, hwnd_after, a_x, a_y, a_w, a_h, flags).do_nothing instead."
+			"Use {WEL_API}.set_window_pos (hwnd, hwnd_after, a_x, a_y, a_w, a_h, flags).do_nothing instead [2017-05-31]."
 		external
 			"C [macro %"wel.h%"] (HWND, HWND, int, int, int, int, UINT)"
 		alias
@@ -2772,7 +2772,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

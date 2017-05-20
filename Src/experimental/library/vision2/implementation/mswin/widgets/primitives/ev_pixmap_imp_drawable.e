@@ -531,6 +531,16 @@ feature -- Element change
 			s_dc.release
 		end
 
+feature -- Event handling
+
+	init_file_drop_actions (a_file_drop_actions: like file_drop_actions)
+		do
+		end
+
+	init_resize_actions (a_resize_actions: like resize_actions)
+		do
+		end
+
 feature -- Navigation
 
 	internal_tabable_info: NATURAL_8
@@ -640,7 +650,7 @@ feature {EV_PIXMAP} -- Duplication
 
 feature {NONE} -- Private Implementation
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Initialize the bridge pattern.
 		do
 		end
@@ -751,13 +761,6 @@ feature {NONE} -- Private Implementation
 		end
 
 feature -- Delegated features
-
-	create_file_drop_actions: like file_drop_actions
-			-- Create `file_drop_actions'
-		do
-			promote_to_widget
-			Result := attached_interface.implementation.create_file_drop_actions
-		end
 
 	widget_imp_at_pointer_position: detachable EV_WIDGET_IMP
 			-- `Result' is widget implementation at current
@@ -1153,7 +1156,7 @@ invariant
 		attached mask_dc as l_mask_dc implies l_mask_dc.reference_tracked;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

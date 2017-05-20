@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Multi-dimensional array"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 			is_equal, copy
 		end
 
-	ARRAY [G]
+	ARRAY [detachable G]
 		rename
 			make as array_make,
 			make_empty as array_make_empty,
@@ -64,6 +64,7 @@ feature {NONE} -- Initialization
 		local
 			a_count: INTEGER
 			i: INTEGER
+			v: detachable G
 		do
 			dimension_count := a_dimension_count
 			element_counts := some_element_counts.twin
@@ -88,9 +89,7 @@ feature {NONE} -- Initialization
 				dimension_count - i + 1
 			end
 
-				--| FIXME: This code is not void safe since we do not know the type of elements
-				--| This routine signature should take a default element instead.
-			array_make (0, a_count - 1)
+			make_filled (v, 0, a_count - 1)
 		ensure
 			valid_dimension_count: dimension_count >= 0
 			valid_element_counts: element_counts /= Void and then element_counts.count = dimension_count
@@ -182,8 +181,8 @@ feature -- Status report
 			-- Are `some_element_counts' valid element counts?
 		require
 			non_void_element_counts: some_element_counts /= Void
-			valid_element_counts:  (some_element_counts.count > 0 implies
-						some_element_counts.lower = 1)
+			valid_element_counts: some_element_counts.count > 0 implies
+						some_element_counts.lower = 1
 		local
 			i: INTEGER
 		do
@@ -452,7 +451,7 @@ invariant
 	non_negative_count: count >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -462,8 +461,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class ECOM_ARRAY
-
+end

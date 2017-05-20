@@ -62,18 +62,21 @@ feature -- Change
 	update_from_byte (a_byte: NATURAL_8)
 			-- Append byte.
 		do
+			finished := False
 			message_hash.update_from_byte (a_byte)
 		end
 
 	update_from_bytes (a_bytes: SPECIAL [NATURAL_8])
 			-- Append bytes.
 		do
+			finished := False
 			message_hash.update_from_bytes (a_bytes)
 		end
 
 	update_from_string (a_string: READABLE_STRING_8)
 			-- Append bytes from `a_string'.
 		do
+			finished := False
 			message_hash.update_from_string (a_string)
 		end
 
@@ -82,6 +85,7 @@ feature -- Change
 			message_hash.reset
 			hmac.wipe_out
 			finished := False
+			update_from_bytes (ipad)
 		ensure
 			not finished
 		end
@@ -133,15 +137,16 @@ feature {NONE} -- Operation
 			hash_inner: SPECIAL [NATURAL_8]
 			l_hash: like message_hash
 		do
-			hash_inner := message_hash.digest
+			if not finished then
+				hash_inner := message_hash.digest
 
-			l_hash := new_message_hash
-			l_hash.update_from_bytes (opad)
-			l_hash.update_from_bytes (hash_inner)
+				l_hash := new_message_hash
+				l_hash.update_from_bytes (opad)
+				l_hash.update_from_bytes (hash_inner)
 
-			hmac := l_hash.digest
-			message_hash.reset
-			finished := True
+				hmac := l_hash.digest
+				finished := True
+			end
 		ensure
 			finished
 		end
@@ -192,7 +197,7 @@ feature {NONE} -- Implementation
 	opad: SPECIAL [NATURAL_8]
 
 ;note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

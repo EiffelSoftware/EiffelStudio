@@ -19,8 +19,6 @@ inherit
 
 	SHARED_FLAGS
 
-	SHARED_PLATFORM_CONSTANTS
-
 	SHARED_EXECUTION_ENVIRONMENT
 
 	EB_SHARED_PREFERENCES
@@ -270,7 +268,7 @@ feature -- Control
 				prc.redirect_input_to_stream
 				prc.redirect_output_to_agent (output_handler)
 				prc.redirect_error_to_same_as_output
-				if platform_constants.is_windows then
+				if {PLATFORM}.is_windows then
 					prc.set_hidden (is_hidden)
 					prc.set_separate_console (False)
 				end
@@ -278,7 +276,7 @@ feature -- Control
 				prc.cancel_error_redirection
 				prc.cancel_input_redirection
 				prc.cancel_output_redirection
-				if platform_constants.is_windows then
+				if {PLATFORM}.is_windows then
 					prc.set_hidden (False)
 					prc.set_separate_console (True)
 				end
@@ -354,7 +352,7 @@ feature -- Unmanaged process launch
 				cl.append (console_shell)
 			end
 			if console_shell.is_empty then
-				if platform_constants.is_windows then
+				if {PLATFORM}.is_windows then
 					cmdexe := Execution_environment.item ("COMSPEC")
 					if cmdexe /= Void then
 							-- This allows the use of `dir' etc.
@@ -559,7 +557,7 @@ invariant
 	data_storage_not_void: data_storage /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

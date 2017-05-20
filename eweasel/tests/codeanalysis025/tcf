@@ -1,0 +1,10 @@
+test_name 	 ca-query-in-agent-failure
+test_description A query accessed in an agent causes the analyzer to fail on certain rules.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+analyze_code rule "CA045"
+analyze_code_result violation "TEST CA045:12"
+
+test_end

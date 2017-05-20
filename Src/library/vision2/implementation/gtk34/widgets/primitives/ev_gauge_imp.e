@@ -20,11 +20,9 @@ inherit
 			make
 		end
 
-	EV_GAUGE_ACTION_SEQUENCES_IMP
-
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create the horizontal scroll bar.
 		do
 			assign_interface (an_interface)
@@ -215,7 +213,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

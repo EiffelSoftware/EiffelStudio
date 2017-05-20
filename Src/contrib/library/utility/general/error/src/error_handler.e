@@ -1,8 +1,5 @@
-note
-	description : "[
-			Error handler or receiver.
-
-		]"
+﻿note
+	description : "Error handler or receiver."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -12,8 +9,6 @@ class
 	ERROR_HANDLER
 
 inherit
-	ANY
-
 	DEBUG_OUTPUT
 
 create
@@ -46,7 +41,7 @@ feature -- Access
 			-- Optional identifier for Current handler.
 
 	primary_error_code: INTEGER
-			-- Code of first error in `errors'
+			-- Code of first error in `errors'.
 		require
 			at_least_one_error: has_error
 		do
@@ -62,7 +57,7 @@ feature -- Status
 		end
 
 	count: INTEGER
-			-- Number of error
+			-- Number of error.
 		do
 			Result := errors.count
 		end
@@ -83,7 +78,7 @@ feature -- Status
 feature {ERROR_HANDLER, ERROR_VISITOR} -- Restricted access
 
 	errors: LIST [ERROR]
-			-- Errors container
+			-- Errors container.
 
 feature -- Status report
 
@@ -119,12 +114,12 @@ feature -- Status report
 feature -- Events
 
 	error_added_actions: ACTION_SEQUENCE [TUPLE [ERROR]]
-			-- Actions triggered when a new error is added
+			-- Actions triggered when a new error is added.
 
 feature -- Synchronization
 
 	add_synchronization (h: ERROR_HANDLER)
-			-- Add synchronization between `h' and `Current'	
+			-- Add synchronization between `h' and `Current`.
 			--| the same handler can be added more than once
 			--| it will be synchronized only once
 		do
@@ -133,7 +128,7 @@ feature -- Synchronization
 		end
 
 	remove_synchronization (h: ERROR_HANDLER)
-			-- Remove synchronization between `h' and `Current'
+			-- Remove synchronization between `h' and `Current'.
 		do
 			remove_propagation (h)
 			h.remove_propagation (Current)
@@ -347,7 +342,7 @@ feature {NONE} -- Event: implementation
 		end
 
 	on_reset
-			-- `reset' was just called
+			-- `reset' was just called.
 		local
 			sync_list: detachable ARRAYED_LIST [ERROR_HANDLER]
 			lst: detachable LIST [ERROR_HANDLER]
@@ -389,7 +384,7 @@ feature {NONE} -- Event: implementation
 feature -- Basic operation
 
 	add_error (a_error: ERROR)
-			-- Add `a_error' to the stack of error
+			-- Add `a_error' to the stack of error.
 		do
 			errors.force (a_error)
 			on_error_added (a_error)
@@ -406,28 +401,22 @@ feature -- Basic operation
 		end
 
 	add_error_details, add_custom_error (a_code: INTEGER; a_name: STRING; a_message: detachable READABLE_STRING_GENERAL)
-			-- Add custom error to the stack of error
-		local
-			e: ERROR_CUSTOM
+			-- Add custom error to the stack of error.
 		do
-			create e.make (a_code, a_name, a_message)
-			add_error (e)
+			add_error (create {ERROR_CUSTOM}.make (a_code, a_name, a_message))
 		end
 
 	append (other: ERROR_HANDLER)
-			-- Append errors from `a_err_handler'
+			-- Append errors from `a_err_handler'.
 		local
 			other_errs: LIST [ERROR]
 		do
 			other_errs := other.errors
-			if other_errs.count > 0 then
-				from
-					other_errs.start
-				until
-					other_errs.after
+			if other_errs /= errors and then other_errs.count > 0 then
+				across
+					other_errs as e
 				loop
-					add_error (other_errs.item)
-					other_errs.forth
+					add_error (e.item)
 				end
 			end
 		ensure
@@ -435,7 +424,7 @@ feature -- Basic operation
 			new_count: count = old count + other.count
 		end
 
-feature -- Access
+feature -- Conversion
 
 	as_single_error: detachable ERROR
 			-- All error(s) concatenated into one single error.
@@ -465,7 +454,7 @@ feature -- Access
 feature -- Element changes
 
 	concatenate
-			-- Concatenate into a single error if any
+			-- Concatenate into a single error if any.
 		do
 			if count > 1 and then attached as_single_error as e then
 				reset
@@ -516,7 +505,7 @@ invariant
 	propagators_not_empty: attached propagators as lst implies not lst.is_empty
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

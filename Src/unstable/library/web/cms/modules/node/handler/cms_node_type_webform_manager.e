@@ -106,58 +106,107 @@ feature -- Forms ...
 
 	populate_form_with_path_alias (response: NODE_RESPONSE; f: CMS_FORM; a_node: detachable CMS_NODE)
 		local
+			w: detachable WSF_WIDGET
+			div: WSF_FORM_DIV
 			ti: WSF_FORM_TEXT_INPUT
+			thi: WSF_FORM_HIDDEN_INPUT
 			l_uri: detachable READABLE_STRING_8
 			l_iri: detachable READABLE_STRING_32
+			l_auto_path_alias: READABLE_STRING_8
 		do
 				-- Path alias		
-			create ti.make ("path_alias")
-			ti.set_label ("Path")
-			ti.set_pattern ("^([A-Za-z0-9-_+ ]).+")
-			ti.set_description ("Path alias pattern: ^([A-Za-z0-9-_+ ]).+  For example resource/page1 ")
-			ti.set_size (70)
+			l_auto_path_alias := node_api.path_alias_uri_suggestion (a_node, content_type)
+
 			if a_node /= Void and then a_node.has_id then
 				if attached a_node.link as lnk then
 					l_uri := lnk.location
+					if l_uri.same_string (node_api.node_path (a_node)) then
+						l_uri := ""
+					end
 				else
 					l_iri := percent_encoder.percent_decoded_string (response.api.location_alias (response.node_api.node_path (a_node)))
 					l_uri := l_iri.to_string_8
 				end
-				ti.set_text_value (l_uri)
-				ti.set_description ("Optionally specify an alternative URL path by which this content can be accessed. For example, type 'about' when writing an about page. Use a relative path or the URL alias won't work.")
-			end
-			ti.set_validation_action (agent (fd: WSF_FORM_DATA; ia_response: NODE_RESPONSE; ia_node: detachable CMS_NODE)
-					do
-						if
-							attached fd.string_item ("path_alias") as f_path_alias
-						then
-							if ia_response.api.is_valid_path_alias (f_path_alias) then
-									-- Ok.
-							elseif f_path_alias.is_empty then
-									-- Ok
-							elseif f_path_alias.starts_with_general ("/") then
-								fd.report_invalid_field ("path_alias", "Path alias should not start with a slash '/' .")
-							elseif f_path_alias.has_substring ("://") then
-								fd.report_invalid_field ("path_alias", "Path alias should not be absolute url .")
-							else
-									-- TODO: implement full path alias validation
-							end
-							if
-								attached ia_response.api.source_of_path_alias (f_path_alias) as l_aliased_location and then
-								((ia_node /= Void and then ia_node.has_id) implies not l_aliased_location.same_string (ia_response.node_api.node_path (ia_node)))
-							then
-								fd.report_invalid_field ("path_alias", "Path is already aliased to location %"" + ia_response.link (Void, l_aliased_location, Void) + "%" !")
-							end
-						end
-					end(?, response, a_node)
-				)
-			if
-				attached f.fields_by_name ("title") as l_title_fields and then
-				attached l_title_fields.first as l_title_field
-			then
-				f.insert_after (ti, l_title_field)
 			else
-				f.extend (ti)
+				l_uri := ""
+			end
+
+			if cms_api.has_permission ("edit path_alias") then
+				create ti.make ("path_alias")
+				ti.set_label ("Path")
+				ti.set_pattern ("^([A-Za-z0-9-_+ ]).+")
+				ti.set_description ("Path alias pattern: ^([A-Za-z0-9-_+ ]).+  For example resource/page1 ")
+				ti.set_size (70)
+
+				if a_node /= Void and then a_node.has_id then
+					ti.set_description ("Optionally specify an alternative URL path by which this content can be accessed.<br/>%NFor example, type 'about' when writing an about page. Use a relative path or the URL alias won't work.")
+				end
+
+				ti.set_text_value (l_uri)
+				ti.set_placeholder (l_auto_path_alias)
+				ti.set_validation_action (agent (fd: WSF_FORM_DATA; ia_response: NODE_RESPONSE; ia_node: detachable CMS_NODE)
+						do
+							if
+								attached fd.string_item ("path_alias") as f_path_alias
+							then
+								if ia_response.api.is_valid_path_alias (f_path_alias) then
+										-- Ok.
+								elseif f_path_alias.is_empty then
+										-- Ok
+								elseif f_path_alias.starts_with_general ("/") then
+									fd.report_invalid_field ("path_alias", "Path alias should not start with a slash '/' .")
+								elseif f_path_alias.has_substring ("://") then
+									fd.report_invalid_field ("path_alias", "Path alias should not be absolute url .")
+								else
+										-- TODO: implement full path alias validation
+								end
+								if
+									attached ia_response.api.source_of_path_alias (f_path_alias) as l_aliased_location and then
+									((ia_node /= Void and then ia_node.has_id) implies not l_aliased_location.same_string (ia_response.node_api.node_path (ia_node)))
+								then
+									fd.report_invalid_field ("path_alias", "Path is already aliased to location %"" + ia_response.link (Void, l_aliased_location, Void) + "%" !")
+								end
+							end
+						end(?, response, a_node)
+					)
+				w := ti
+			elseif a_node /= Void and then a_node.has_id and then l_uri /= Void and then not l_uri.is_whitespace then
+					-- FIXME: should we have an input field or just a raw text?
+--				ti.set_is_readonly (True)
+				create div.make
+				div.add_css_class ("path-alias")
+				div.extend_html_text ("<strong><label>Path</label></strong> = ")
+				div.extend_html_text ("<a href=%""+ cms_api.site_url + l_uri +"%">" + l_uri + "</a>")
+				w := div
+			elseif content_type.is_path_alias_required and then l_auto_path_alias /= Void and then not l_auto_path_alias.is_whitespace then
+				create div.make
+				div.extend_html_text ("<strong><label>Path</label></strong> = ")
+				if a_node /= Void and then a_node.has_id then
+					div.extend_html_text ("<a href=%""+ cms_api.site_url + l_auto_path_alias +"%">" + l_auto_path_alias + "</a>")
+				else
+					div.extend_html_text ("<span>"+ cms_api.site_url + "</span>")
+--					if a_node /= Void and then a_node.has_id then
+--						div.extend_html_text ("<span>" + l_auto_path_alias + "</span>")
+--					else
+						div.extend_html_text ("<span>" + l_auto_path_alias + " ...</span>")
+--					end
+				end
+				w := div
+			end
+			if w /= Void then
+				if
+					attached f.fields_by_name ("title") as l_title_fields and then
+					attached l_title_fields.first as l_title_field
+				then
+					f.insert_after (w, l_title_field)
+				else
+					f.extend (w)
+				end
+					-- Auto path alias / suggestion
+				create thi.make ("auto_path_alias")
+				thi.set_text_value (l_auto_path_alias)
+				thi.set_is_readonly (True)
+				f.insert_before (thi, w)
 			end
 		end
 
@@ -182,9 +231,9 @@ feature -- Forms ...
 				s := l_summary
 			end
 
-			if attached fd.string_item ("format") as s_format and then attached response.api.format (s_format) as f_format then
+			if attached fd.string_item ("format") as s_format and then attached cms_api.format (s_format) as f_format then
 				f := f_format
-			elseif a_node /= Void and then attached a_node.format as s_format and then attached response.api.format (s_format) as f_format then
+			elseif a_node /= Void and then attached a_node.format as s_format and then attached cms_api.format (s_format) as f_format then
 				f := f_format
 			else
 				f := cms_api.formats.default_format
@@ -195,8 +244,13 @@ feature -- Forms ...
 				a_node.set_content (b, s, f.name)
 			end
 
-			-- Update author
-			a_node.set_author (response.user)
+			-- Update editor, author
+			a_node.set_editor (cms_api.user)
+			if a_node.author = Void then
+				a_node.set_author (cms_api.user)
+			else
+					-- Keep existing author as creator!
+			end
 		end
 
 	new_node (response: NODE_RESPONSE; fd: WSF_FORM_DATA; a_node: detachable CMS_NODE): G
@@ -234,7 +288,8 @@ feature -- Forms ...
 					l_node := content_type.new_node_with_title ("...", Void)
 				end
 			end
-			l_node.set_author (response.user)
+			l_node.set_author (cms_api.user)
+			l_node.set_editor (cms_api.user)
 
 				--Summary
 			if attached fd.string_item ("summary") as l_summary then
@@ -263,7 +318,7 @@ feature -- Forms ...
 
 feature -- Output
 
-	append_content_as_html_to (a_node: G; is_teaser: BOOLEAN; a_output: STRING; a_response: detachable CMS_RESPONSE)
+	append_content_as_html_to (a_node: G; is_teaser: BOOLEAN; a_output: STRING; a_response: CMS_RESPONSE)
 			-- <Precursor>
 		local
 			lnk: detachable CMS_LOCAL_LINK
@@ -275,7 +330,6 @@ feature -- Output
 				-- Show tabs only if a user is authenticated.
 			if
 				not is_teaser and then
-				a_response /= Void and then
 				attached a_response.user as l_user
 			then
 				lnk := a_node.link
@@ -288,8 +342,11 @@ feature -- Output
 				a_response.add_to_primary_tabs (lnk)
 
 				if a_node.status = {CMS_NODE_API}.trashed then
-					create lnk.make ("Delete", l_node_api.node_path (a_node) + "/delete")
+					create lnk.make ("Restore", l_node_api.node_path (a_node) + "/trash")
 					lnk.set_weight (2)
+					a_response.add_to_primary_tabs (lnk)
+					create lnk.make ("Delete", l_node_api.node_path (a_node) + "/delete")
+					lnk.set_weight (3)
 					a_response.add_to_primary_tabs (lnk)
 				elseif a_node.has_id then
 						-- Node in {{CMS_NODE_API}.published} or {CMS_NODE_API}.not_published} status.
@@ -317,12 +374,22 @@ feature -- Output
 			if is_teaser then
 				a_output.append (" cms-teaser")
 			end
-			a_output.append ("cms-node node-" + a_node.content_type + "%">")
+			a_output.append ("cms-node node-" + a_node.content_type)
+			if a_node.is_published then
+				a_output.append (" cms-status-published")
+			elseif a_node.is_trashed then
+				a_output.append (" cms-status-trashed")
+			elseif a_node.is_not_published then
+				a_output.append (" cms-status-unpublished")
+			else
+				a_output.append (" cms-status-" + a_node.status.out)
+			end
+			a_output.append ("%">")
 
 			a_output.append ("<div class=%"info%"> ")
 			if attached a_node.author as l_author then
 				a_output.append (" by ")
-				a_output.append (l_node_api.html_encoded (l_author.name))
+				a_output.append (a_response.html_encoded (a_response.user_profile_name (l_author)))
 			end
 			if attached a_node.modification_date as l_modified then
 				a_output.append (" (modified: ")
@@ -333,7 +400,6 @@ feature -- Output
 			a_output.append ("</div>")
 
 			if
-				a_response /= Void and then
 				attached {CMS_TAXONOMY_API} cms_api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxonomy_api
 			then
 				l_taxonomy_api.append_taxonomy_to_xhtml (a_node, a_response, a_output)
@@ -351,17 +417,81 @@ feature -- Output
 					end
 					a_output.append ("</p>")
 				end
-			elseif attached a_node.content as l_content then
-				a_output.append ("<p class=%"content%">")
-				if attached cms_api.format (a_node.format) as f then
-					append_formatted_content_to (l_content, f, a_output)
-				else
-					append_formatted_content_to (l_content, cms_api.formats.default_format, a_output)
+			else
+				if attached a_node.content as l_content then
+					a_output.append ("<p class=%"content%">")
+					if attached cms_api.format (a_node.format) as f then
+						append_formatted_content_to (l_content, f, a_output)
+					else
+						append_formatted_content_to (l_content, cms_api.formats.default_format, a_output)
+					end
+					a_output.append ("</p>")
 				end
-				a_output.append ("</p>")
+
+				append_comments_as_html_to (a_node, a_output, a_response)
+
 			end
 			a_output.append ("</div>")
 		end
 
-end
+	append_comments_as_html_to (a_node: G; a_output: STRING; a_response: CMS_RESPONSE)
+		do
+			if attached {CMS_COMMENTS_API} cms_api.module_api ({CMS_COMMENTS_MODULE}) as l_comments_api then
+				if attached l_comments_api.comments_for (a_node) as l_comments and then not l_comments.is_empty then
+					a_output.append ("<div class=%"comments-box%"><div class=%"title%">Comments</div><ul class=%"comments%">")
+					across
+						l_comments as ic
+					loop
+						append_comment_as_html_to (ic.item, a_output, a_response)
+					end
+					a_output.append ("</ul></div>")
+				end
+			end
+		end
 
+	append_comment_as_html_to (a_comment: CMS_COMMENT; a_output: STRING; a_response: CMS_RESPONSE)
+		local
+			l_ago: DATE_TIME_AGO_CONVERTER
+		do
+			a_output.append ("<li class=%"comment%">")
+			if attached a_comment.author as l_author then
+				a_output.append ("<span class=%"author%">")
+				a_output.append (a_response.html_encoded (a_response.user_profile_name (l_author)))
+				a_output.append ("</span>")
+			elseif attached a_comment.author_name as l_author_name then
+				a_output.append ("<span class=%"author%">")
+				a_output.append (cms_api.html_encoded (l_author_name))
+				a_output.append ("</span>")
+			end
+			if attached a_comment.creation_date as dt then
+				a_output.append (" <span class=%"info%">(")
+				create l_ago.make
+				a_output.append (l_ago.smart_date_duration (dt))
+				a_output.append (" ")
+				a_output.append (l_ago.short_date (dt))
+				a_output.append (")</span>")
+			end
+			if attached a_comment.content as l_content then
+				a_output.append ("<div class=%"content%">")
+				if
+					attached a_comment.format as l_format and then
+					attached cms_api.format (l_format) as f
+				then
+					append_formatted_content_to (l_content, f, a_output)
+				else
+					append_formatted_content_to (l_content, cms_api.formats.default_format, a_output)
+				end
+				a_output.append ("</div>")
+			end
+			if attached a_comment.items as lst and then not lst.is_empty then
+				a_output.append ("<ul class=%"comments%">")
+				across
+					lst as ic
+				loop
+					append_comment_as_html_to (ic.item, a_output, a_response)
+				end
+				a_output.append ("</ul>")
+			end
+			a_output.append ("</li>")
+		end
+end

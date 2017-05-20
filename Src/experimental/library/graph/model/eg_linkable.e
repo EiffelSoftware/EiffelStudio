@@ -25,16 +25,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	link_name: STRING
+	link_name: detachable STRING
 			-- Name for linking
 		require
 			set: name /= Void
-		local
-			l_result: detachable like link_name
 		do
-			l_result := name
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
+			Result := name
+		ensure
+			Result /= Void
 		end
 
 	cluster: detachable EG_CLUSTER
@@ -105,7 +103,7 @@ invariant
 	internal_links_not_void: internal_links /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -5,16 +5,17 @@ INDIR= .
 CC = $cc
 OUTPUT_CMD = $output_cmd
 CFLAGS = -I"$rt_include" -I.
-JCFLAGS = $(CFLAGS) $ccflags $optimize
-JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
-JILCFLAGS = $(CFLAGS) $mtccflags $optimize -DEIF_IL_DLL
+JCFLAGS = $(CFLAGS) $optimize $ccflags 
+JMTCFLAGS = $(CFLAGS) $optimize $mtccflags 
+JILCFLAGS = $(CFLAGS) $optimize $mtccflags  -DEIF_IL_DLL
 LN = copy
 MV = $mv
 RM = $del
 MAKE = $make
 MKDIR = $mkdir
-OBJECTS =   adler32.$obj compress.$obj crc32.$obj deflate.$obj gzio.$obj infback.$obj \
-       inffast.$obj inflate.$obj inftrees.$obj trees.$obj uncompr.$obj zutil.$obj
+OBJECTS =   adler32.$obj compress.$obj crc32.$obj deflate.$obj gzclose.$obj gzlib.$obj \
+       gzread.$obj gzwrite.$obj infback.$obj inffast.$obj inflate.$obj inftrees.$obj trees.$obj \
+       uncompr.$obj zutil.$obj
 
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<

@@ -1,14 +1,17 @@
 note
-	description: "Providing shared features for ES_TEST and ES_TEST_SUITE classes"
+	description: "Providing shared features for ES_TEST and ES_TEST_SUITE classes."
 	author: "Software Engineering Lab (York University)"
 
 deferred class
 	ES_TESTABLE
 
+inherit
+	SHARED_EXECUTION_ENVIRONMENT
+
 feature
 
 	run_espec
-			-- new feature instead of run_all
+			-- New feature instead of `run_all`.
 		local
 			problem: BOOLEAN
 		do
@@ -23,28 +26,26 @@ feature
 		end
 
 	show_errors
-			-- print error traces to the output
+			-- Print error traces to the output.
 		do
 			show_err := True
 		end
 
 	show_browser
-			--shows the default browser
+			-- Show the default browser.
 		do
 			browser := True
 		end
 
 	set_html_name (s: STRING_8)
-			-- set the output html name
+			-- Set the output html name.
 		do
 			default_html_name := s
 		end
 
-
-
 feature
 	set_error_report (v: BOOLEAN)
-			-- show the contract violations if set to true
+			-- Show the contract violations if set to true.
 		do
 			show_err := v
 		end
@@ -54,7 +55,7 @@ feature
 		end
 
 	curr_os_dir_separator: CHARACTER_8
-			--  return path separator for current OS
+			--  Return path separator for current OS.
 		do
 			Result := (create {OPERATING_ENVIRONMENT}).Directory_separator
 		ensure
@@ -62,13 +63,13 @@ feature
 		end
 
 	print_to_screen (message: STRING_8)
-			-- prints the message to the screen, handles both GUI and standard output
+			-- Prints the message to the screen, handles both GUI and standard output.
 		do
 			safe_put_string (message)
 		end
 
 	safe_put_string (message: STRING_8)
-			-- socket.putstring with exception handling
+			-- Socket.putstring with exception handling.
 		do
 			print (message)
 		end
@@ -100,31 +101,23 @@ feature
 
 
 	check_browser
-			-- run the browser on the generated HTML
-		local
-			env: EXECUTION_ENVIRONMENT
-			command: STRING_8
+			-- Run the browser on the generated HTML.
 		do
-			create env
 			check attached get_html_name end
 			if browser then
 				if {PLATFORM}.is_windows then
-					command := "%"explorer%" " + (get_html_name.twin) + "%""
-					env.launch (command)
+					execution_environment.launch ("%"explorer%" " + get_html_name + "%"")
 				elseif {PLATFORM}.is_mac then
-					command := "open" + " '" + get_html_name.twin + "'"
-					env.launch (command)
+					execution_environment.launch ("open" + " '" + get_html_name + "'")
 				else
 					check{PLATFORM}.is_unix end
-					command := "xdg-open" + " '" + get_html_name.twin + "'"
-					env.launch (command)
+					execution_environment.launch ("xdg-open" + " '" + get_html_name + "'")
 				end
 			end
 		end
 
-
 	get_html_name: STRING_8
-			-- return the name of the default html for this unit test
+			-- Return the name of the default html for this unit test.
 		do
 			if default_html_name /= Void then
 				check
@@ -138,30 +131,27 @@ feature
 		end
 
 	passed_cases: LIST [STRING]
-			-- list of the name of all the successful test cases
+			-- List of the name of all the successful test cases.
 		deferred
 		end
 
 	failed_cases: LIST [STRING]
-			-- list of the name of all the failed test cases
+			-- List of the name of all the failed test cases.
 		deferred
 		end
 
 	print_console_report
-			-- print a summary of all the test case results to the
-			-- console.
+			-- Print a summary of all the test case results to the console.
 		local
 			failed: LIST [STRING]
 			success: LIST [STRING]
 			passed, total : INTEGER
-			line: STRING
 		do
 			failed := failed_cases
 			success := passed_cases
 			passed := success.count
 			total := success.count + failed.count
-			create line.make_filled ('=', 60)
-			io.put_string (line)
+			io.put_string (create {STRING}.make_filled ('=', 60))
 			io.put_new_line
 			safe_put_string ("passing tests%N")
 			across success as it loop
@@ -189,5 +179,4 @@ feature
 
 	browser: BOOLEAN
 
-end -- class ES_TESTABLE
-
+end

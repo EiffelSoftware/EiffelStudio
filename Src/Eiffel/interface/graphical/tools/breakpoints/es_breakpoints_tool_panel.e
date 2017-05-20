@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tool that displays breakpoints"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -185,8 +185,8 @@ feature {NONE} -- Initialization
 			enable_sorting
 
 				-- Set button states based on session data
-			if session_manager.is_service_available then
-				if attached {STRING} window_session_data.value (columns_sorting_data_session_id) as s then
+			if attached develop_window_session_data as w_session_data then
+				if attached {STRING} w_session_data.value (columns_sorting_data_session_id) as s then
 					grid_wrapper.set_sorting_status (grid_wrapper.sorted_columns_from_string (s))
 				end
 			end
@@ -344,9 +344,9 @@ feature {NONE} -- Sort handling
 			not_a_column_list_is_empty: not a_column_list.is_empty
 			a_comparator_attached: a_comparator /= Void
 		do
-			if session_manager.is_service_available then
+			if attached develop_window_session_data as w_session_data then
 					-- Set session data
-				window_session_data.set_value (grid_wrapper.string_representation_of_sorted_columns, columns_sorting_data_session_id)
+				w_session_data.set_value (grid_wrapper.string_representation_of_sorted_columns, columns_sorting_data_session_id)
 			end
 
 				-- Repopulate grid
@@ -372,58 +372,46 @@ feature -- Events
 		end
 
 	on_stone_dropped (a_stone: STONE)
-			--	Stone dropped
+			--	Stone dropped.
 		local
-			fs: FEATURE_STONE
-			cs: CLASSC_STONE
 			bm: BREAKPOINTS_MANAGER
 		do
-			fs ?= a_stone
 			bm := debugger_manager.breakpoints_manager
-			if fs /= Void then
+			if attached {FEATURE_STONE} a_stone as fs then
 				if not bm.is_breakpoint_set (fs.e_feature, 1, False) then
 					bm.enable_first_user_breakpoint_of_feature (fs.e_feature)
 					bm.notify_breakpoints_changes
 				end
-			else
-				cs ?= a_stone
-				if cs /= Void then
-					bm.enable_first_user_breakpoints_in_class (cs.e_class)
-					bm.notify_breakpoints_changes
-				end
+			elseif attached {CLASSC_STONE} a_stone as cs then
+				bm.enable_first_user_breakpoints_in_class (cs.e_class)
+				bm.notify_breakpoints_changes
 			end
 		end
 
 	on_item_pebble_function (gi: EV_GRID_ITEM): detachable STONE
-			-- Handle item pebble function
+			-- Handle item pebble function.
 		do
 			if gi /= Void then
 				if attached {ES_GRID_BREAKPOINT_LOCATION_ITEM} gi as bpl then
 					Result := bpl.pebble_at_position
-				else
-					Result ?= gi.data
+				elseif attached {STONE} gi.data as s then
+					Result := s
 				end
 			end
 		end
 
 	on_item_pebble_accept_cursor (gi: EV_GRID_ITEM): EV_POINTER_STYLE
 			-- Handle item pebble accpet cursor
-		local
-			st: STONE
 		do
-			st := on_item_pebble_function (gi)
-			if st /= Void then
+			if attached on_item_pebble_function (gi) as st then
 				Result := st.stone_cursor
 			end
 		end
 
 	on_item_pebble_deny_cursor (gi: EV_GRID_ITEM): EV_POINTER_STYLE
 			-- Handle item pebble deny cursor
-		local
-			st: STONE
 		do
-			st := on_item_pebble_function (gi)
-			if st /= Void then
+			if attached on_item_pebble_function (gi) as st then
 				Result := st.x_stone_cursor
 			end
 		end
@@ -1035,10 +1023,8 @@ feature {NONE} -- Dynamic item filling
 			bploc_item: ES_GRID_BREAKPOINT_LOCATION_ITEM
 			i: INTEGER
 			fs: FEATURE_STONE
-			bp: BREAKPOINT
 		do
-			bp ?= a_row.data
-			if bp /= Void and then not bp.is_corrupted then
+			if attached {BREAKPOINT} a_row.data as bp and then not bp.is_corrupted then
 				f := bp.routine
 				i := bp.breakable_line_number
 
@@ -1118,9 +1104,9 @@ feature {NONE} -- Dynamic item filling
 					if bp.has_when_hits_action then
 						t.append_character ('%N')
 						t.append_string_general (interface_names.m_when_hits)
-						bp.when_hits_actions.do_all (agent (ai: BREAKPOINT_WHEN_HITS_ACTION_I; astr: STRING)
+						bp.when_hits_actions.do_all (agent (ai: BREAKPOINT_WHEN_HITS_ACTION_I; astr: STRING_32)
 								do
-									astr.append_string (ai.generating_type + ", ")
+									astr.append_string (ai.generating_type.name_32 + {STRING_32} ", ")
 								end(?, t)
 							)
 					end
@@ -1427,7 +1413,7 @@ feature {NONE} -- Implementation, cosmetic
 			-- Row highlight background color.
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

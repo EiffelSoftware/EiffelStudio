@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Title bar on the top of SD_ZONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -86,7 +86,9 @@ feature {NONE} -- Initlization
 			normal_max.select_actions.extend (agent on_normal_max)
 			close.select_actions.extend (agent on_close)
 
-			internal_title.pointer_double_press_actions.force_extend (agent on_normal_max)
+			internal_title.pointer_double_press_actions.extend
+				(agent(a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32)
+					do on_normal_max end)
 
 			internal_tool_bar.extend (stick)
 			internal_tool_bar.extend (normal_max)
@@ -371,45 +373,36 @@ feature -- Actions
 
 	stick_select_actions: attached like internal_stick_select_actions
 			-- Stick button select actions
-		local
-			l_actions: like internal_stick_select_actions
 		do
-			l_actions := internal_stick_select_actions
-			if l_actions = Void then
-				create l_actions
-				internal_stick_select_actions := l_actions
+			Result := internal_stick_select_actions
+			if not attached Result then
+				create Result
+				internal_stick_select_actions := Result
 			end
-			Result := l_actions
 		ensure
 			not_void: Result /= Void
 		end
 
 	close_request_actions: attached like internal_close_request_actions
 			-- Close button select actions
-		local
-			l_actions: like internal_close_request_actions
 		do
-			l_actions := internal_close_request_actions
-			if l_actions = Void then
-				create l_actions
-				internal_close_request_actions := l_actions
+			Result := internal_close_request_actions
+			if not attached Result then
+				create Result
+				internal_close_request_actions := Result
 			end
-			Result := l_actions
 		ensure
 			not_void: Result /= Void
 		end
 
 	normal_max_actions: attached like internal_normal_max_actions
-			-- Min max select actions
-		local
-			l_actions: like internal_normal_max_actions
+			-- Min max select actions.
 		do
-			l_actions := internal_normal_max_actions
-			if l_actions = Void then
-				create l_actions
-				internal_normal_max_actions := l_actions
+			Result := internal_normal_max_actions
+			if not attached Result then
+				create Result
+				internal_normal_max_actions := Result
 			end
-			Result := l_actions
 		ensure
 			not_void: Result /= Void
 		end
@@ -592,21 +585,18 @@ feature {NONE} -- Implementation
 
 	mini_tool_bar_indicator: SD_TOOL_BAR_BUTTON
 			-- Factory method for `internal_mini_tool_bar_indicator'
-		local
-			l_indicator: like internal_mini_tool_bar_indicator
 		do
-			l_indicator := internal_mini_tool_bar_indicator
-			if l_indicator = Void then
-				create l_indicator.make
-				internal_mini_tool_bar_indicator := l_indicator
-				l_indicator.set_pixmap (internal_shared.icons.tool_bar_indicator)
+			Result := internal_mini_tool_bar_indicator
+			if not attached Result then
+				create Result.make
+				internal_mini_tool_bar_indicator := Result
+				Result.set_pixmap (internal_shared.icons.tool_bar_indicator)
 				if internal_shared.icons.tool_bar_indicator_buffer /= Void then
-					l_indicator.set_pixel_buffer (internal_shared.icons.tool_bar_indicator_buffer)
+					Result.set_pixel_buffer (internal_shared.icons.tool_bar_indicator_buffer)
 				end
-				l_indicator.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_hidden_toolbar_indicator)
-				l_indicator.select_actions.extend (agent on_mini_tool_bar_indicator_clicked)
+				Result.set_tooltip (internal_shared.interface_names.tooltip_mini_toolbar_hidden_toolbar_indicator)
+				Result.select_actions.extend (agent on_mini_tool_bar_indicator_clicked)
 			end
-			Result := l_indicator
 		ensure
 			not_void: Result /= Void
 		end
@@ -697,11 +687,15 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_agent /= Void
 		do
-			if attached last_color_setting_agent as l_agent then
-				application.remove_idle_action (l_agent)
+			if environment_i.is_application_processor and then attached environment_i.application as a then
+				if attached last_color_setting_agent as l_agent then
+					a.remove_idle_action (l_agent)
+				end
+				last_color_setting_agent := a_agent
+				a.do_once_on_idle (a_agent)
+			else
+				last_color_setting_agent := a_agent
 			end
-			last_color_setting_agent := a_agent
-			application.do_once_on_idle (a_agent)
 		ensure
 			set: last_color_setting_agent = a_agent
 		end
@@ -709,35 +703,15 @@ feature {NONE} -- Implementation
 	last_color_setting_agent: detachable PROCEDURE
 			--	Last agent, possibly one of `enable_focus_color_imp', `enable_non_focus_active_color_imp' and `disable_focus_color_imp'
 
-	application: EV_APPLICATION
-			-- Application instance
-		require
-			ready: attached (create {EV_ENVIRONMENT}).application
-		local
-			l_env: EV_ENVIRONMENT
-			l_result: detachable like application
-		once
-			create l_env
-			if attached l_env.application as l_app then
-				l_result := l_app
-			end
-			check l_result /= Void end -- Implied by precondition `ready'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
 	add_refresh_title_in_idle_action
 			-- call `internal_title'.refresh in idle actions
 		local
-			l_env: EV_ENVIRONMENT
-			l_agent: attached like title_bar_refresh_agent
+			l_agent: like title_bar_refresh_agent
 		do
 			if title_bar_refresh_agent = Void then
 				l_agent := agent refresh_title_bar
 				title_bar_refresh_agent := l_agent
-				create l_env
-				if attached l_env.application as l_app then
+				if attached (create {EV_ENVIRONMENT}).application as l_app then
 					l_app.do_once_on_idle (l_agent)
 				end
 			end
@@ -767,20 +741,15 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end
 

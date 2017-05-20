@@ -1,14 +1,14 @@
 package http_authorization
 
 project
-	http_authorization = "http_authorization-safe.ecf"
 	http_authorization = "http_authorization.ecf"
 
 note
 	title: HTTP Authorization
 	description: "[
-			Class to manipulate HTTP 'Authorization' header value.
-		]"
+Class to manipulate HTTP 'Authorization' header value.
+				]"
+
 	collection: EWF
 	tags: http,authorization,authentication,web
 	copyright: 2011-2016, Jocelyn Fiat, Eiffel Software and others
@@ -17,4 +17,3 @@ note
 	link[source]: "github" https://github.com/EiffelWebFramework/EWF/tree/master/library/server/authentication/http_authorization
 
 end
-

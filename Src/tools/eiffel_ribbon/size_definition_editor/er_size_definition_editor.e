@@ -1,7 +1,5 @@
-note
-	description: "[
-					GUI editor for size definition
-																]"
+﻿note
+	description: "GUI editor for size definition."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,23 +11,23 @@ create
 
 feature {NONE} -- Initialization
 
-	make
-			-- Creation method
+	make (m: SD_DOCKING_MANAGER)
+			-- Creation method.
 		do
 			create figures.make (20)
 
+			create widget
+			create content.make_with_widget (widget, "ER_SIZE_DEFINITION_EDITOR", m)
+
 			build_ui
-			build_docking_content
 
 			update_figure_world
-		end
 
-	build_docking_content
-			-- Build docking library content
-		do
-			create content.make_with_widget (widget, "ER_SIZE_DEFINITION_EDITOR")
 			content.set_long_title ("Size Definition Editor")
 			content.set_short_title ("Size Definition Editor")
+			m.contents.extend (content)
+			content.set_auto_hide ({SD_ENUMERATION}.bottom)
+			content.show_actions.extend_kamikaze (agent update_figure_world)
 		end
 
 	build_ui
@@ -41,31 +39,21 @@ feature {NONE} -- Initialization
 			l_sep: EV_HORIZONTAL_SEPARATOR
 			l_constants: CONSTANTS
 		do
-			create widget
 			create add_button.make_with_text ("Add button")
 			create remove_button.make_with_text ("Remove button")
 			create group_button.make_with_text ("Group buttons")
 			create label_visible_checker.make_with_text ("Label visible")
 			create image_size_large_radio.make_with_text ("large")
-			image_size_large_radio.select_actions.extend (agent on_image_size_select)
 			create image_size_small_radio.make_with_text ("small")
-			image_size_small_radio.select_actions.extend (agent on_image_size_select)
 
 			create name_combo_box
-			name_combo_box.select_actions.extend (agent on_name_combo_box_select)
 			create save_button.make_with_text ("Save")
-			save_button.select_actions.extend (agent on_save_button_select)
 			create snap_to_lines_checker.make_with_text ("Snap to line")
-			snap_to_lines_checker.enable_select
 			create auto_group_checker.make_with_text ("Auto group")
-			auto_group_checker.enable_select
 
 			create large.make_with_text ("Large")
-			large.select_actions.extend (agent on_large_select)
 			create medium.make_with_text ("Medium")
-			medium.select_actions.extend (agent on_medium_select)
 			create small.make_with_text ("Small")
-			small.select_actions.extend (agent on_small_select)
 
 			create drawing_area
 			create drawing_area_buffer
@@ -73,6 +61,15 @@ feature {NONE} -- Initialization
 
 			create projector.make_with_buffer (model_world, drawing_area_buffer, drawing_area)
 
+			image_size_large_radio.select_actions.extend (agent on_image_size_select)
+			image_size_small_radio.select_actions.extend (agent on_image_size_select)
+			name_combo_box.select_actions.extend (agent on_name_combo_box_select)
+			save_button.select_actions.extend (agent on_save_button_select)
+			snap_to_lines_checker.enable_select
+			auto_group_checker.enable_select
+			large.select_actions.extend (agent on_large_select)
+			medium.select_actions.extend (agent on_medium_select)
+			small.select_actions.extend (agent on_small_select)
 			drawing_area.resize_actions.extend (agent on_drawing_area_resize)
 
 			widget.extend (drawing_area)
@@ -120,7 +117,6 @@ feature {NONE} -- Initialization
 
 			l_vertical_box.extend (snap_to_lines_checker)
 			l_vertical_box.disable_item_expand (snap_to_lines_checker)
---			snap_to_lines_checker.select_actions.extend (agent on_snap_to_lines_checker_select)
 			l_vertical_box.extend (auto_group_checker)
 			l_vertical_box.disable_item_expand (auto_group_checker)
 
@@ -132,7 +128,6 @@ feature {NONE} -- Initialization
 			l_hor_box.extend (large)
 			l_hor_box.extend (medium)
 			l_hor_box.extend (small)
---			auto_group_checker.select_actions.extend (agent on_auto_group_checker_select)
 
 			create l_hor_box
 			l_hor_box.set_padding (l_constants.default_padding)
@@ -148,25 +143,6 @@ feature {NONE} -- Initialization
 			drawing_area.pointer_motion_actions.extend (agent on_pointer_motion)
 
 			drawing_area_buffer.set_size (600, 500)
-		end
-
-feature -- Command
-
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
-			-- Attach current to `a_docking_manager'
-		require
-			not_void: a_docking_manager /= Void
-		do
-			a_docking_manager.contents.extend (content)
-
---			content.set_floating_width (600)
---			content.set_floating_height (600)
---			content.set_floating (0, 0)
-
-			content.set_auto_hide ({SD_ENUMERATION}.bottom)
-			content.show_actions.extend_kamikaze (agent do
-															update_figure_world
-														end)
 		end
 
 feature -- Query
@@ -819,7 +795,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

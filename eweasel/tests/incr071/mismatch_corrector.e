@@ -22,7 +22,7 @@ feature -- Correction
 				-- If it is not redefined then we raise an exception.
 			create l_msg.make_from_string ("Mismatch: ")
 			create l_exc
-			l_msg.append (generating_type)
+			l_msg.append (generating_type.name)
 			l_exc.raise_retrieval_exception (l_msg)
 		end
 

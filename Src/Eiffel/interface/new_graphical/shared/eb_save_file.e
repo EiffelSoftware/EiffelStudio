@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Class to save a file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -171,9 +171,9 @@ feature -- Basic operations
 
 						-- Notify service of file change
 					create l_notifier
-					if l_notifier.is_service_available then
+					if attached l_notifier.service as s then
 							-- Poll modifications, allowing subscribers to receive change modifications.
-						l_notifier.service.poll_modifications (create {PATH}.make_from_string (a_file_name)).do_nothing
+						s.poll_modifications (create {PATH}.make_from_string (a_file_name)).do_nothing
 					end
 				end
 			else
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

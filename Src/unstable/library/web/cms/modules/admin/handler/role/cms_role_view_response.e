@@ -52,16 +52,17 @@ feature -- Execution
 			s: STRING
 		do
 			a_response.set_value (a_role, "role")
-			create lnk.make (a_response.translation ("View", Void), "admin/role/" + a_role.id.out)
+			lnk := api.administration_link (a_response.translation ("View", Void), "role/" + a_role.id.out)
 			lnk.set_is_active (True)
 			lnk.set_weight (1)
 			a_response.add_to_primary_tabs (lnk)
-			create lnk.make (a_response.translation ("Edit", Void), "admin/role/" + a_role.id.out  + "/edit")
+
+			lnk := api.administration_link (a_response.translation ("Edit", Void), "role/" + a_role.id.out  + "/edit")
 			lnk.set_weight (2)
 			a_response.add_to_primary_tabs (lnk)
 
 			if a_role /= Void and then a_role.id > 0 then
-				create lnk.make (a_response.translation ("Delete", Void), "admin/role/" + a_role.id.out  + "/delete")
+				lnk := api.administration_link (a_response.translation ("Delete", Void), "role/" + a_role.id.out  + "/delete")
 				lnk.set_weight (3)
 				a_response.add_to_primary_tabs (lnk)
 			end

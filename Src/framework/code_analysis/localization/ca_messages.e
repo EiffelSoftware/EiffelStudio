@@ -1,6 +1,6 @@
 ﻿note
 	description: "Message strings for the Code Analyzer"
-	author: "Stefan Zurfluh"
+	author: "Stefan Zurfluh", "Eiffel Software"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -522,6 +522,49 @@ feature -- Rule Violations
 
 	explicit_redundant_inheritance_violation_3: STRING_32
 			do Result := locale.translation ("', with no renaming, redefining or change of export status. This is redundant, and the duplicate links should be removed.") end
+
+	obsolete_feature_call_title: STRING_32
+		do
+			Result := locale.translation_in_context ("Call to obsolete feature {1}: {2}", "code_analyzer.violation")
+		end
+
+	obsolete_feature_call_violation: STRING_32
+		do
+			Result := locale.translation_in_context ("Obsolete feature {1} of class {2} is called from {3} of class {4}:{5}", "code_analyzer.violation")
+		end
+
+	obsolete_feature_invalid_date_title (feature_count: INTEGER): STRING_32
+		do
+			Result := locale.plural_translation_in_context
+				("Obsolete message date for feature {1} is absent or unreadable.",
+				"Obsolete message date for features {1} is absent or unreadable.",
+				once "code_analyzer.violation",
+				feature_count)
+		end
+
+	obsolete_feature_invalid_date_violation: STRING_32
+		do
+			Result := locale.translation_in_context ("Obsolete message date should appear at the end of the message in brackets. The default value [{1}] is used.", once "code_analyzer.violation")
+		end
+
+	obsolete_feature_call_expires_in (n: INTEGER): STRING_32
+		do
+			Result := locale.plural_translation_in_context ("The obsolete feature call has to be removed in a day.", "The obsolete feature call has to be removed in {1} days.",  once "code_analyzer.violation", n)
+		end
+
+	obsolete_feature_title (feature_count: INTEGER): STRING_32
+		do
+			Result := locale.plural_translation_in_context
+				("A feature {1} is obsolete.",
+				"Features {1} are obsolete.",
+				once "code_analyzer.violation",
+				feature_count)
+		end
+
+	obsolete_feature_violation: STRING_32
+		do
+			Result := locale.translation_in_context ("Obsolete features should be removed.", "code_analyzer.violation")
+		end
 
 	error: STRING_32
 		do Result := translation_in_context ("An error occurred when analyzing this class.", once "code_analyzer.violation") end

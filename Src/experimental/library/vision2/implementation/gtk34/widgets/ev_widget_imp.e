@@ -36,7 +36,20 @@ inherit
 			interface
 		end
 
-	EV_WIDGET_ACTION_SEQUENCES_IMP
+	EV_WIDGET_ACTION_SEQUENCES_I
+		export
+			{EV_INTERMEDIARY_ROUTINES}
+				focus_in_actions_internal,
+				focus_out_actions_internal,
+				pointer_motion_actions_internal,
+				pointer_button_release_actions,
+				pointer_leave_actions,
+				pointer_leave_actions_internal,
+				pointer_enter_actions_internal
+		redefine
+			init_resize_actions,
+			init_file_drop_actions
+		end
 
 	EV_DOCKABLE_SOURCE_IMP
 		redefine
@@ -71,6 +84,25 @@ feature {NONE} -- Initialization
 					GDK_ACTION_LINK
 				);
 			]"
+		end
+
+feature -- Event handling
+
+	init_resize_actions (a_resize_actions: like resize_actions)
+			-- <Precursor>
+		local
+			l_app_imp: like app_implementation
+		do
+			if not {GTK}.gtk_is_window (c_object) then
+					-- Window resize events are connected separately
+				l_app_imp := app_implementation
+				l_app_imp.gtk_marshal.signal_connect (c_object, l_app_imp.size_allocate_event_string, agent (l_app_imp.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), l_app_imp.gtk_marshal.size_allocate_translate_agent, False)
+			end
+		end
+
+	init_file_drop_actions (a_file_drop_actions: like file_drop_actions)
+			-- <Precursor>
+		do
 		end
 
 feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} -- Implementation
@@ -262,62 +294,41 @@ feature -- Element change
 
 	set_minimum_width (a_minimum_width: INTEGER)
 			-- Set the minimum horizontal size to `a_minimum_width'.
-		local
-			l_viewport_parent: detachable EV_VIEWPORT_IMP
-			l_fixed_parent: detachable EV_FIXED_IMP
 		do
 			{GTK2}.gtk_widget_set_minimum_size (c_object, a_minimum_width, height_request)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
-			l_viewport_parent ?= parent_imp
-			if l_viewport_parent /= Void then
+			if attached {EV_VIEWPORT_IMP} parent_imp as l_viewport_parent then
 				l_viewport_parent.set_item_width (a_minimum_width.max (width))
-			else
-				l_fixed_parent ?= parent_imp
-				if l_fixed_parent /= Void then
-					l_fixed_parent.set_item_width (attached_interface, a_minimum_width.max (width))
-				end
+			elseif attached {EV_FIXED_IMP} parent_imp as l_fixed_parent then
+				l_fixed_parent.set_item_width (attached_interface, a_minimum_width.max (width))
 			end
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER)
 			-- Set the minimum vertical size to `a_minimum_height'.
-		local
-			l_viewport_parent: detachable EV_VIEWPORT_IMP
-			l_fixed_parent: detachable EV_FIXED_IMP
 		do
 			{GTK2}.gtk_widget_set_minimum_size (c_object, width_request, a_minimum_height)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
-			l_viewport_parent ?= parent_imp
-			if l_viewport_parent /= Void then
+			if attached {EV_VIEWPORT_IMP} parent_imp as l_viewport_parent then
 				l_viewport_parent.set_item_height (a_minimum_height.max (height))
-			else
-				l_fixed_parent ?= parent_imp
-				if l_fixed_parent /= Void then
-					l_fixed_parent.set_item_height (attached_interface, a_minimum_height.max (height))
-				end
+			elseif attached {EV_FIXED_IMP} parent_imp as l_fixed_parent then
+				l_fixed_parent.set_item_height (attached_interface, a_minimum_height.max (height))
 			end
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER)
 			-- Set the minimum horizontal size to `a_minimum_width'.
 			-- Set the minimum vertical size to `a_minimum_height'.
-		local
-			l_viewport_parent: detachable EV_VIEWPORT_IMP
-			l_fixed_parent: detachable EV_FIXED_IMP
 		do
 			{GTK2}.gtk_widget_set_minimum_size (c_object, a_minimum_width, a_minimum_height)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
-			l_viewport_parent ?= parent_imp
-			if l_viewport_parent /= Void then
+			if attached {EV_VIEWPORT_IMP} parent_imp as l_viewport_parent then
 				l_viewport_parent.set_item_size (a_minimum_width.max (width), a_minimum_height.max (height))
-			else
-				l_fixed_parent ?= parent_imp
-				if l_fixed_parent /= Void then
-					l_fixed_parent.set_item_size (attached_interface, a_minimum_width.max (width), a_minimum_height.max (height))
-				end
+			elseif attached {EV_FIXED_IMP} parent_imp as l_fixed_parent then
+				l_fixed_parent.set_item_size (attached_interface, a_minimum_width.max (width), a_minimum_height.max (height))
 			end
 		end
 
@@ -326,12 +337,9 @@ feature -- Measurement
 	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position'.
 			-- Unit of measurement: screen pixels.
-		local
-			a_fixed_imp: detachable EV_FIXED_IMP
 		do
-			a_fixed_imp ?= parent_imp
-			if a_fixed_imp /= Void then
-				Result := a_fixed_imp.x_position_of_child (Current)
+			if attached {EV_FIXED_IMP} parent_imp as l_fixed then
+				Result := l_fixed.x_position_of_child (Current)
 			else
 				Result := Precursor {EV_PICK_AND_DROPABLE_IMP}
 			end
@@ -340,12 +348,9 @@ feature -- Measurement
 	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position'.
 			-- Unit of measurement: screen pixels.
-		local
-			a_fixed_imp: detachable EV_FIXED_IMP
 		do
-			a_fixed_imp ?= parent_imp
-			if a_fixed_imp /= Void then
-				Result := a_fixed_imp.y_position_of_child (Current)
+			if attached {EV_FIXED_IMP} parent_imp as l_fixed then
+				Result := l_fixed.y_position_of_child (Current)
 			else
 				Result := Precursor {EV_PICK_AND_DROPABLE_IMP}
 			end
@@ -376,9 +381,15 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	destroy
 			-- Destroy `Current'
+		local
+			l_window: POINTER
 		do
 			if not is_destroyed then
-				internal_set_pointer_style (Void)
+					-- Remove previously set pointer.
+				l_window := {GTK}.gtk_widget_get_window (c_object)
+				if l_window /= default_pointer then
+					{GTK}.gdk_window_set_cursor (l_window, default_pointer)
+				end
 				if attached parent_imp as l_parent_imp then
 					l_parent_imp.attached_interface.prune_all (attached_interface)
 				end
@@ -397,8 +408,8 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 		do
 				-- Make sure that the pointer style is correctly set when the widget is mapped.
 				-- This is needed for gtkwidgets that have not yet been realized.
-			if previously_set_pointer_style = Void and then pointer_style /= Void then
-				internal_set_pointer_style (pointer_style)
+			if previously_set_pointer_style = Void and then attached pointer_style as l_pointer_style then
+				internal_set_pointer_style (l_pointer_style)
 			end
 		end
 
@@ -521,7 +532,7 @@ feature {EV_ANY, EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	interface: detachable EV_WIDGET note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

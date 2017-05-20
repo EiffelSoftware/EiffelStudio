@@ -14,7 +14,8 @@ inherit
 		redefine
 			interface,
 			flush,
-			save_to_named_path
+			save_to_named_path,
+			init_expose_actions
 		end
 
 	EV_DRAWABLE_IMP
@@ -43,14 +44,12 @@ inherit
 			process_draw_event
 		end
 
-	EV_PIXMAP_ACTION_SEQUENCES_IMP
-
 create
 	make
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create a gtk pixmap of size (1 * 1) with no mask.
 		do
 			assign_interface (an_interface)
@@ -169,7 +168,7 @@ feature -- Measurement
 			-- Width of the pixmap in pixels.
 		do
 			if cairo_surface /= default_pointer then
-				Result := {CAIRO}.cairo_image_surface_get_width (cairo_surface)
+				Result := {CAIRO}.image_surface_get_width (cairo_surface)
 			end
 		end
 
@@ -177,7 +176,7 @@ feature -- Measurement
 			-- height of the pixmap.
 		do
 			if cairo_surface /= default_pointer then
-				Result := {CAIRO}.cairo_image_surface_get_height (cairo_surface)
+				Result := {CAIRO}.image_surface_get_height (cairo_surface)
 			end
 		end
 
@@ -240,11 +239,11 @@ feature -- Element change
 			-- Set the size of the pixmap to `a_width' by `a_height'.
 		do
 			if cairo_surface /= default_pointer then
-				{CAIRO}.cairo_surface_destroy (cairo_surface)
-				{CAIRO}.cairo_destroy (drawable)
+				{CAIRO}.surface_destroy (cairo_surface)
+				{CAIRO}.destroy (drawable)
 			end
-			cairo_surface := {CAIRO}.cairo_image_surface_create ({CAIRO}.cairo_format_argb32, a_width, a_height)
-			drawable := {CAIRO}.cairo_create (cairo_surface)
+			cairo_surface := {CAIRO}.image_surface_create ({CAIRO}.format_argb32, a_width, a_height)
+			drawable := {CAIRO}.create_context (cairo_surface)
 			init_default_values
 		end
 
@@ -281,8 +280,8 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				expose_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (0, 0, l_width, l_height))
 			end
 
-			{CAIRO}.cairo_set_source_surface (a_cairo_context, cairo_surface, (l_width - width) / 2, (l_height - height) / 2)
-			{CAIRO}.cairo_paint (a_cairo_context)
+			{CAIRO}.set_source_surface (a_cairo_context, cairo_surface, (l_width - width) / 2, (l_height - height) / 2)
+			{CAIRO}.paint (a_cairo_context)
 		end
 
 feature -- Access
@@ -342,12 +341,12 @@ feature -- Duplication
 			if attached {EV_PIXMAP_IMP} other.implementation as l_other_imp then
 				l_width := l_other_imp.width
 				l_height := l_other_imp.height
-				cairo_surface := {CAIRO}.cairo_image_surface_create ({CAIRO}.cairo_format_argb32, l_width, l_height)
-				drawable := {CAIRO}.cairo_create (cairo_surface)
+				cairo_surface := {CAIRO}.image_surface_create ({CAIRO}.format_argb32, l_width, l_height)
+				drawable := {CAIRO}.create_context (cairo_surface)
 				init_default_values
-				{CAIRO}.cairo_set_source_surface (drawable, l_other_imp.cairo_surface, 0, 0)
-				{CAIRO}.cairo_paint (drawable)
-				{CAIRO}.cairo_set_source_rgb (drawable, 0, 0, 0)
+				{CAIRO}.set_source_surface (drawable, l_other_imp.cairo_surface, 0, 0)
+				{CAIRO}.paint (drawable)
+				{CAIRO}.set_source_rgb (drawable, 0, 0, 0)
 			end
 		end
 
@@ -356,20 +355,20 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_APPLICATION_IMP} -- Implementation
 	set_pixmap_from_pixbuf (a_pixbuf: POINTER)
 			-- Attempt to load pixmap data from a file specified by `file_name'.
 		do
-			cairo_surface := {CAIRO}.cairo_image_surface_create (
-				{CAIRO}.CAIRO_FORMAT_ARGB32,
+			cairo_surface := {CAIRO}.image_surface_create (
+				{CAIRO}.FORMAT_ARGB32,
 				{GTK}.gdk_pixbuf_get_width (a_pixbuf),
 				{GTK}.gdk_pixbuf_get_height (a_pixbuf)
 			)
-			drawable := {CAIRO}.cairo_create (cairo_surface)
+			drawable := {CAIRO}.create_context (cairo_surface)
 			set_drawing_mode (drawing_mode_copy)
 
 				-- Temporarily set the source to the pixbuf so that we can draw it on to the drawable.
-			{GTK}.gdk_cairo_set_source_pixbuf (drawable, a_pixbuf, 0, 0)
-			{CAIRO}.cairo_paint (drawable)
+			{GDK_CAIRO}.set_source_pixbuf (drawable, a_pixbuf, 0, 0)
+			{CAIRO}.paint (drawable)
 
 				-- Reset the cairo context back to rgb source of black.
-			{CAIRO}.cairo_set_source_rgb (drawable, 0, 0, 0)
+			{CAIRO}.set_source_rgb (drawable, 0, 0, 0)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -413,6 +412,16 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 				set_pixmap_from_pixbuf (stock_pixbuf)
 				{GTK2}.g_object_unref (stock_pixbuf)
 			end
+		end
+
+	init_expose_actions (a_expose_actions: like expose_actions)
+			-- <Precursor>
+			-- Attach to GTK "draw" signal.
+		local
+			l_app_imp: EV_APPLICATION_IMP
+		do
+			l_app_imp := app_implementation
+			l_app_imp.gtk_marshal.signal_connect (visual_widget, once "draw", agent (l_app_imp.gtk_marshal).create_draw_actions_intermediary (c_object, ?), l_app_imp.gtk_marshal.draw_translate_agent, True)
 		end
 
 feature {NONE} -- Implementation
@@ -473,7 +482,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

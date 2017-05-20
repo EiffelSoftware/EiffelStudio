@@ -33,9 +33,9 @@ feature -- Access
 		end
 
 	process_events_and_idle
-		obsolete
-			"Call ev_application.process_events instead"
 			-- Call `process_events'.
+		obsolete
+			"Call ev_application.process_events instead [2017-05-31]"
 		do
 			ev_application.process_events
 				-- Idle actions are called when all events are processed.

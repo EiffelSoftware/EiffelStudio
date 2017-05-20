@@ -22,13 +22,13 @@ inherit
 			disable_capture, pointer_position, start_transport,
 			enable_transport, pointer_style, tooltip, has_capture,
 			end_transport, enable_capture, minimum_height,
-			hide, set_pebble, create_drop_actions, real_pointed_target,
+			hide, set_pebble, real_pointed_target,
 			set_actual_drop_target_agent, has_parent, parent_is_sensitive,
 			internal_set_pointer_style, widget_imp_at_pointer_position,
 			internal_enable_dockable, internal_disable_dockable,
-			update_buttons, refresh_now, create_file_drop_actions, update_for_pick_and_drop,
+			update_buttons, refresh_now, init_file_drop_actions, update_for_pick_and_drop,
 			is_tabable_from, is_tabable_to, enable_tabable_from, enable_tabable_to,
-			disable_tabable_from, disable_tabable_to
+			disable_tabable_from, disable_tabable_to, init_resize_actions
 		redefine
 			interface, make,
 			read_from_named_path,
@@ -683,7 +683,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Interface for the bridge pattern.
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

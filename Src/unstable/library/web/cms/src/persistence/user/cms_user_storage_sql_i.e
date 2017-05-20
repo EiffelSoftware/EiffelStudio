@@ -77,7 +77,7 @@ feature -- Access: user
 			sql_finalize
 		end
 
-	user_by_name (a_name: like {CMS_USER}.name): detachable CMS_USER
+	user_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- User for the given name `a_name', if any.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -95,7 +95,7 @@ feature -- Access: user
 			sql_finalize
 		end
 
-	user_by_email (a_email: like {CMS_USER}.email): detachable CMS_USER
+	user_by_email (a_email: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- User for the given email `a_email', if any.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -217,13 +217,14 @@ feature -- Change: user
 				l_password_hash := l_security.password_hash (l_password, l_password_salt)
 
 				write_information_log (generator + ".new_user")
-				create l_parameters.make (4)
+				create l_parameters.make (7)
 				l_parameters.put (a_user.name, "name")
 				l_parameters.put (l_password_hash, "password")
 				l_parameters.put (l_password_salt, "salt")
 				l_parameters.put (l_email, "email")
 				l_parameters.put (create {DATE_TIME}.make_now_utc, "created")
 				l_parameters.put (a_user.status, "status")
+  				l_parameters.put (a_user.profile_name, "profile_name")
 
 				sql_insert (sql_insert_user, l_parameters)
 				if not error_handler.has_error then
@@ -238,6 +239,54 @@ feature -- Change: user
 				sql_finalize
 			else
 				-- set error
+				error_handler.add_custom_error (-1, "bad request" , "Missing password or email")
+			end
+		end
+
+	update_username (a_user: CMS_USER; a_new_username: READABLE_STRING_32)
+			-- Update username of `a_user' to `a_new_username`.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+			l_password_salt, l_password_hash: detachable READABLE_STRING_8
+			l_security: SECURITY_PROVIDER
+		do
+			error_handler.reset
+			if attached a_user.password as l_password then
+					-- New password!
+				create l_security
+				l_password_salt := l_security.salt
+				l_password_hash := l_security.password_hash (l_password, l_password_salt)
+			else
+					-- Existing hashed password
+				l_password_hash := a_user.hashed_password
+				l_password_salt := user_salt (a_user.name)
+			end
+			if
+				l_password_hash /= Void and l_password_salt /= Void
+			then
+				sql_begin_transaction
+
+				write_information_log (generator + ".update_username")
+				create l_parameters.make (4)
+				l_parameters.put (a_user.id, "uid")
+				l_parameters.put (a_new_username, "name")
+				l_parameters.put (l_password_hash, "password")
+				l_parameters.put (l_password_salt, "salt")
+
+				sql_modify (sql_update_user_name, l_parameters)
+				sql_finalize
+				if not error_handler.has_error then
+					a_user.set_name (a_new_username)
+					update_user_roles (a_user)
+				end
+				if not error_handler.has_error then
+					sql_commit_transaction
+				else
+					sql_rollback_transaction
+				end
+				sql_finalize
+			else
+					-- set error
 				error_handler.add_custom_error (-1, "bad request" , "Missing password or email")
 			end
 		end
@@ -267,7 +316,7 @@ feature -- Change: user
 				sql_begin_transaction
 
 				write_information_log (generator + ".update_user")
-				create l_parameters.make (7)
+				create l_parameters.make (8)
 				l_parameters.put (a_user.id, "uid")
 				l_parameters.put (a_user.name, "name")
 				l_parameters.put (l_password_hash, "password")
@@ -275,6 +324,7 @@ feature -- Change: user
 				l_parameters.put (l_email, "email")
 				l_parameters.put (a_user.status, "status")
 				l_parameters.put (a_user.last_login_date, "signed")
+				l_parameters.put (a_user.profile_name, "profile_name")
 
 				sql_modify (sql_update_user, l_parameters)
 				sql_finalize
@@ -517,7 +567,7 @@ feature -- Access: roles and permissions
 				sql_query (select_role_permissions_by_role_id, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached sql_read_string (1) as l_permission then
 					Result.force (l_permission)
@@ -541,7 +591,7 @@ feature -- Access: roles and permissions
 				sql_query (select_role_permissions, Void)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached sql_read_string (1) as l_permission then
 					Result.force (l_permission)
@@ -818,7 +868,7 @@ feature {NONE} -- Implementation: User
 		end
 
 	fetch_user: detachable CMS_USER
-			-- Fetch user from fields: 1:uid, 2:name, 3:password, 4:salt, 5:email, 6:status, 7:created, 8:signed.
+			-- Fetch user from fields: 1:uid, 2:name, 3:password, 4:salt, 5:email, 6:status, 7:created, 8:signed, 9:profile_name.
 		local
 			l_id: INTEGER_64
 			l_name: detachable READABLE_STRING_32
@@ -850,8 +900,14 @@ feature {NONE} -- Implementation: User
 				if attached sql_read_integer_32 (6) as l_status then
 					Result.set_status (l_status)
 				end
+				if attached sql_read_date_time (7) as l_creation_date then
+					Result.set_creation_date (l_creation_date)
+				end
 				if attached sql_read_date_time (8) as l_signed_date then
 					Result.set_last_login_date (l_signed_date)
+				end
+				if attached sql_read_string_32 (9) as l_prof_name then
+					Result.set_profile_name (l_prof_name)
 				end
 			else
 				check expected_valid_user: False end
@@ -888,29 +944,32 @@ feature {NONE} -- Sql Queries: USER
 	select_users_count: STRING = "SELECT count(*) FROM users;"
 			-- Number of users.
 
-	select_users: STRING = "SELECT * FROM users;"
+	select_users: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users;"
 			-- List of users.
 
-	select_user_by_id: STRING = "SELECT * FROM users WHERE uid =:uid;"
+	select_user_by_id: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users WHERE uid =:uid;"
 			-- Retrieve user by id if exists.
 
-	select_user_by_name: STRING = "SELECT * FROM users WHERE name =:name;"
+	select_user_by_name: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users WHERE name =:name;"
 			-- Retrieve user by name if exists.
 
-	sql_select_recent_users: STRING = "SELECT uid, name, password, salt, email, status, created, signed FROM users ORDER BY uid DESC, created DESC LIMIT :rows OFFSET :offset;"
+	sql_select_recent_users: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users ORDER BY uid DESC, created DESC LIMIT :rows OFFSET :offset;"
 			-- Retrieve recent users
 
-	select_user_by_email: STRING = "SELECT uid, name, password, salt, email, status, created, signed FROM users WHERE email =:email;"
+	select_user_by_email: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users WHERE email =:email;"
 			-- Retrieve user by email if exists.
 
 	select_salt_by_username: STRING = "SELECT salt FROM users WHERE name =:name;"
 			-- Retrieve salt by username if exists.
 
-	sql_insert_user: STRING = "INSERT INTO users (name, password, salt, email, created, status) VALUES (:name, :password, :salt, :email, :created, :status);"
+	sql_insert_user: STRING = "INSERT INTO users (name, password, salt, email, created, status, profile_name) VALUES (:name, :password, :salt, :email, :created, :status, :profile_name);"
 			-- SQL Insert to add a new user.
 
-	sql_update_user: STRING = "UPDATE users SET name=:name, password=:password, salt=:salt, email=:email, status=:status, signed=:signed WHERE uid=:uid;"
+	sql_update_user: STRING = "UPDATE users SET name=:name, password=:password, salt=:salt, email=:email, status=:status, signed=:signed, profile_name=:profile_name WHERE uid=:uid;"
 			-- SQL update to update an existing user.
+
+	sql_update_user_name: STRING = "UPDATE users SET name=:name, password=:password, salt=:salt WHERE uid=:uid;"
+			-- SQL update to update `name` for an existing user.
 
 	sql_delete_user: STRING = "DELETE FROM users WHERE uid=:uid;"
 
@@ -971,7 +1030,7 @@ feature {NONE} -- Sql Queries: USER ACTIVATION
 	sql_select_userid_activation: STRING = "SELECT uid FROM users_activations WHERE token = :token;"
 			-- Retrieve userid given the activation token.
 
-	select_user_by_activation_token: STRING = "SELECT u.* FROM users as u JOIN users_activations as ua ON ua.uid = u.uid and ua.token = :token;"
+	select_user_by_activation_token: STRING = "SELECT u.uid, u.name, u.password, u.salt, u.email, u.status, u.created, u.signed, u.profile_name FROM users as u JOIN users_activations as ua ON ua.uid = u.uid and ua.token = :token;"
 			-- Retrieve user by activation token if exist.
 
 	sql_remove_activation: STRING = "DELETE FROM users_activations WHERE token = :token;"
@@ -985,7 +1044,7 @@ feature {NONE} -- User Password Recovery
 	sql_remove_password: STRING = "DELETE FROM users_password_recovery WHERE token = :token;"
 			-- Retrieve password if exist.
 
-	select_user_by_password_token: STRING = "SELECT u.* FROM users as u JOIN users_password_recovery as ua ON ua.uid = u.uid and ua.token = :token;"
+	select_user_by_password_token: STRING = "SELECT u.uid, u.name, u.password, u.salt, u.email, u.status, u.created, u.signed, u.profile_name FROM users as u JOIN users_password_recovery as ua ON ua.uid = u.uid and ua.token = :token;"
 			-- Retrieve user by password token if exist.
 
 feature -- Acess: Temp users
@@ -1099,7 +1158,7 @@ feature -- Acess: Temp users
 				sql_query (sql_select_temp_recent_users, l_parameters)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_temp_user as l_user then
 					Result.force (l_user)
@@ -1173,33 +1232,31 @@ feature {NONE} -- Implementation: User
 
 feature -- New Temp User
 
-	new_user_from_temp_user (a_user: CMS_TEMP_USER)
+	new_user_from_temp_user (a_temp_user: CMS_TEMP_USER)
 			-- <Precursor>
   		local
   			l_parameters: STRING_TABLE [detachable ANY]
   		do
   			error_handler.reset
   			if
-  				attached a_user.hashed_password as l_password_hash and then
-  				attached a_user.email as l_email and then
-  				attached a_user.salt as l_password_salt
+  				attached a_temp_user.hashed_password as l_password_hash and then
+  				attached a_temp_user.email as l_email and then
+  				attached a_temp_user.salt as l_password_salt
   			then
   					-- FIXME: store the personal_information in profile!
   				sql_begin_transaction
 
   				write_information_log (generator  + ".new_user_from_temp_user")
-  				create l_parameters.make (4)
-  				l_parameters.put (a_user.name, "name")
+  				create l_parameters.make (7)
+  				l_parameters.put (a_temp_user.name, "name")
   				l_parameters.put (l_password_hash, "password")
   				l_parameters.put (l_password_salt, "salt")
   				l_parameters.put (l_email, "email")
   				l_parameters.put (create {DATE_TIME}.make_now_utc, "created")
-  				l_parameters.put (a_user.status, "status")
+  				l_parameters.put (a_temp_user.status, "status")
+  				l_parameters.put (a_temp_user.profile_name, "profile_name")
 
   				sql_insert (sql_insert_user, l_parameters)
-  				if not error_handler.has_error then
-  					a_user.set_id (last_inserted_user_id)
-  				end
   				if not error_handler.has_error then
   					sql_commit_transaction
   				else
@@ -1212,8 +1269,8 @@ feature -- New Temp User
   			end
   		end
 
-	new_temp_user (a_user: CMS_TEMP_USER)
-			-- Add a new temp_user `a_user'.
+	new_temp_user (a_temp_user: CMS_TEMP_USER)
+			-- Add a new temp_user `a_temp_user'.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 			l_password_salt, l_password_hash: STRING
@@ -1221,9 +1278,9 @@ feature -- New Temp User
 		do
 			error_handler.reset
 			if
-				attached a_user.password as l_password and then
-				attached a_user.email as l_email and then
-				attached a_user.personal_information as l_personal_information
+				attached a_temp_user.password as l_password and then
+				attached a_temp_user.email as l_email and then
+				attached a_temp_user.personal_information as l_personal_information
 			then
 
 				create l_security
@@ -1232,7 +1289,7 @@ feature -- New Temp User
 
 				write_information_log (generator + ".new_temp_user")
 				create l_parameters.make (4)
-				l_parameters.put (a_user.name, "name")
+				l_parameters.put (a_temp_user.name, "name")
 				l_parameters.put (l_password_hash, "password")
 				l_parameters.put (l_password_salt, "salt")
 				l_parameters.put (l_email, "email")
@@ -1241,7 +1298,7 @@ feature -- New Temp User
 				sql_begin_transaction
 				sql_insert (sql_insert_temp_user, l_parameters)
 				if not error_handler.has_error then
-					a_user.set_id (last_inserted_temp_user_id)
+					a_temp_user.set_id (last_inserted_temp_user_id)
 					sql_commit_transaction
 				else
 					sql_rollback_transaction
@@ -1270,8 +1327,8 @@ feature -- Remove Activation
 			sql_finalize
 		end
 
-	delete_temp_user (a_user: CMS_TEMP_USER)
-			-- Delete user `a_user'.
+	delete_temp_user (a_temp_user: CMS_TEMP_USER)
+			-- Delete user `a_temp_user'.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
@@ -1279,7 +1336,7 @@ feature -- Remove Activation
 			sql_begin_transaction
 			write_information_log (generator + ".delete_temp_user")
 			create l_parameters.make (1)
-			l_parameters.put (a_user.id, "uid")
+			l_parameters.put (a_temp_user.id, "uid")
 			sql_modify (sql_delete_temp_user, l_parameters)
 			sql_commit_transaction
 			sql_finalize
@@ -1347,6 +1404,6 @@ feature {NONE} -- SQL select
 
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of an attribute of a class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,11 +10,26 @@ class ATTRIBUTE_I
 inherit
 	ENCAPSULATED_I
 		redefine
-			assigner_name_id, transfer_to, unselected, extension,
-			new_attr_entry, new_rout_entry, melt, access_for_feature, generate, new_rout_id,
-			set_type, type, is_attribute, is_transient, is_hidden,
-			undefinable, check_expanded, transfer_from,
-			assert_id_set, set_assert_id_set
+			assert_id_set,
+			assigner_name_id,
+			check_expanded,
+			extension,
+			generate,
+			is_attribute,
+			is_hidden,
+			is_transient,
+			melt, access_for_feature,
+			new_attr_entry,
+			new_rout_entry,
+			new_rout_id,
+			obsolete_message,
+			set_assert_id_set,
+			set_type,
+			transfer_from,
+			transfer_to,
+			type,
+			undefinable,
+			unselected
 		end
 
 	SHARED_DECLARATIONS
@@ -88,6 +103,17 @@ feature -- Access
 	assert_id_set: ASSERT_ID_SET
 			-- Assertions
 
+	obsolete_message_id: INTEGER
+			-- Id of `obsolete_message' in `names_heap' table.
+
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	obsolete_message: detachable STRING
+			-- Obsolete message if specified or Void otherwise.
+		do
+			Result := names_heap.item (obsolete_message_id)
+		end
+
 feature -- Status report
 
 	is_attribute: BOOLEAN = True
@@ -155,6 +181,14 @@ feature -- Status setting
 			is_hidden_set: is_hidden = v
 		end
 
+	set_obsolete_message_id (v: like obsolete_message_id)
+			-- Assign `v' to `obsolete_message_id'
+		do
+			obsolete_message_id := v
+		ensure
+			obsolete_message_id_set: obsolete_message_id = v
+		end
+
 feature -- Element Change
 
 	init_assertion_flags (content: ROUTINE_AS)
@@ -203,7 +237,7 @@ feature -- Element Change
 			solved_type: TYPE_A
 		do
 			Precursor {ENCAPSULATED_I} (class_c)
-			solved_type ?= type.conformance_type
+			solved_type := type.conformance_type
 			if
 				solved_type.is_true_expanded and then
 				(solved_type.has_associated_class and then solved_type.base_class = class_c) and then
@@ -538,6 +572,7 @@ feature -- Element Change
 			other.set_assert_id_set (assert_id_set)
 			other.set_has_rescue_clause (has_rescue_clause)
 			other.set_is_transient (is_transient)
+			other.set_obsolete_message_id (obsolete_message_id)
 		end
 
 	transfer_from (other: like Current)
@@ -548,6 +583,7 @@ feature -- Element Change
 			assigner_name_id := other.assigner_name_id
 				-- `has_function_origin' is set in FEATURE_I
 			set_has_function_origin (other.has_function_origin)
+			obsolete_message_id := other.obsolete_message_id
 			assert_id_set := other.assert_id_set
 			extension := other.extension
 			set_is_transient (other.is_transient)
@@ -627,6 +663,22 @@ feature -- Element Change
 			Execution_table.mark_melted (body_index, a_class_type)
 		end
 
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Modification
+
+	set_obsolete_message (s: STRING)
+			-- Assign `s' to `obsolete_message'.
+		require
+			s_not_void: s /= Void
+		local
+			l_names_heap: like names_heap
+		do
+			l_names_heap := names_heap
+			l_names_heap.put (s)
+			obsolete_message_id := l_names_heap.found_item
+		ensure
+			obsolete_message_set: equal (obsolete_message, s)
+		end
+
 feature {NONE} -- Implementation
 
 	new_api_feature: E_ATTRIBUTE
@@ -635,10 +687,11 @@ feature {NONE} -- Implementation
 			create Result.make (feature_name_id, alias_name, has_convert_mark, feature_id)
 			Result.set_type (type, assigner_name)
 			Result.set_is_attribute_with_body (has_body)
+			Result.set_obsolete_message (obsolete_message)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

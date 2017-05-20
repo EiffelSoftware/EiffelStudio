@@ -2,7 +2,7 @@
 	description:	"Helper functions used by the SCOOP runtime."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 2010-2016, Eiffel Software.",
+	copyright:	"Copyright (c) 2010-2017, Eiffel Software.",
 			"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
@@ -132,11 +132,12 @@ rt_private void execute_scoop_call (struct eif_scoop_call_data* a_call)
 doc:	<routine name="rt_try_execute_scoop_call" return_type="EIF_BOOLEAN" export="shared">
 doc:		<summary> Try to apply the feature in 'call', and catch any exceptions that may occur. </summary>
 doc:		<param name="call" type="struct eif_scoop_call_data*"> The feature to apply. Must not be NULL. </param>
+doc:		<param name="nstcall" type="int"> The value of nstcall to use for the call. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None </synchronization>
 doc:	</routine>
 */
-rt_shared EIF_BOOLEAN rt_try_execute_scoop_call (struct eif_scoop_call_data *call)
+rt_shared EIF_BOOLEAN rt_try_execute_scoop_call (struct eif_scoop_call_data *call, int nstcall_value)
 {
 		/* NOTE: It is vitally important that this function does not trigger
 		 * garbage collection until the stack frame of the Eiffel function described
@@ -159,6 +160,10 @@ rt_shared EIF_BOOLEAN rt_try_execute_scoop_call (struct eif_scoop_call_data *cal
 	excatch(&exenv);
 
 	if (!setjmp(exenv)) {
+			/* Initialize `in_assertion` variable. */
+		in_assertion = call -> is_assertion;
+			/* Mark the call as a creation or as a regular qualified one. */
+		nstcall = nstcall_value;
 			/* Execute the Eiffel function. */
 		execute_scoop_call (call);
 

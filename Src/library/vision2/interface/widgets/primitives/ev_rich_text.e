@@ -20,9 +20,6 @@ inherit
 		end
 
 	EV_RICH_TEXT_ACTION_SEQUENCES
-		redefine
-			implementation
-		end
 
 feature -- Access
 
@@ -458,7 +455,7 @@ feature -- Status setting
 	save_to_named_file (a_filename: READABLE_STRING_GENERAL)
 			-- Save `text' and formatting of `Current' to file `a_filename' in RTF format.
 		obsolete
-			"Use `save_to_named_path' instead."
+			"Use `save_to_named_path' instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 			filename_not_void: a_filename /= Void
@@ -474,7 +471,7 @@ feature -- Status setting
 	set_with_named_file (a_filename: READABLE_STRING_GENERAL)
 			-- Set `text' and formatting of `Current' from file `a_filename' in RTF format.
 		obsolete
-			"Use `set_with_named_path' instead."
+			"Use `set_with_named_path' instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 			filename_not_void: a_filename /= Void
@@ -545,7 +542,7 @@ invariant
 	buffer_locked_in_a_single_mode: not (buffer_locked_in_append_mode and buffer_locked_in_format_mode)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

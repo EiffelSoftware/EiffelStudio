@@ -16,14 +16,6 @@ create
 feature {NONE} -- Initialization
 
 	make
-		local
---			hlink : LINK
---			hresource : RESOURCE
-			order: ORDER
-			js_cc: JSON_CUSTOMER_CONVERTER
-			js_ic: JSON_ITEM_CONVERTER
-			js_li: JSON_LINE_ITEM_CONVERTER
-			js_oc: JSON_ORDER_CONVERTER
 		do
 			create file_reader
 --			test_json_min
@@ -76,12 +68,7 @@ feature {NONE} -- Initialization
 			js_cc : JSON_CUSTOMER_CONVERTER
 			js_oc : JSON_ORDER_CONVERTER
 			js_hal:  JSON_HAL_RESOURCE_CONVERTER
-			l_item : ITEM
-			line:LINE_ITEM
-			l_cust : CUSTOMER
-			l_order : ORDER
 			l_res : HAL_RESOURCE
-			l_total : REAL
 			l_currency : STRING
 			l_status : STRING
 			l_placed : STRING
@@ -266,7 +253,7 @@ feature -- Implementation
 
 	new_json_parser (a_string: STRING): JSON_PARSER
 		do
-			create Result.make_parser (a_string)
+			create Result.make_with_string (a_string)
 		end
 
 	json_value_from_file (json_file: STRING): detachable JSON_VALUE
@@ -274,10 +261,12 @@ feature -- Implementation
 			p: like new_json_parser
 		do
 			p := new_json_parser (json_file)
-			Result := p.parse_json
+			p.parse_content
 			check
 				json_is_parsed: p.is_parsed
 			end
+
+			Result := p.parsed_json_value
 		end
 
 end

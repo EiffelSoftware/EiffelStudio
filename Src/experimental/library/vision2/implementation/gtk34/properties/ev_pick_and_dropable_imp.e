@@ -24,11 +24,6 @@ inherit
 			interface
 		end
 
-	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
-		redefine
-			create_drop_actions
-		end
-
 feature {EV_APPLICATION_IMP} -- Implementation
 
 	button_actions_handled_by_signals: BOOLEAN
@@ -156,32 +151,23 @@ feature {NONE} -- Implementation
 			-- Perform a global mouse and keyboard grab.
 		local
 			i: INTEGER
-			l_gdk_window: POINTER
 		do
+				-- We have to disable the debugger before grabing any inputs
+				-- as otherwise if we stop the session it will deadlock. Ideally
+				-- we should only have to do it if the debugger display is different
+				-- from the application display but we cannot detect this.
 			App_implementation.disable_debugger
-			l_gdk_window := {GTK}.gtk_widget_get_window (event_widget)
-			i := {GTK}.gdk_pointer_grab (
-				l_gdk_window,
-				1,
-				{GTK}.gdk_button_release_mask_enum |
-				{GTK}.gdk_button_press_mask_enum |
-				{GTK}.gdk_pointer_motion_mask_enum |
-				{GTK}.gdk_pointer_motion_hint_mask_enum
-				,
-				null,
-				null,
-				0
-			)
---			i := {GTK}.gdk_keyboard_grab (l_gdk_window, True, 0)
+			i := {GTK}.gdk_seat_grab (
+				{GDK_HELPERS}.default_seat,
+				{GTK}.gtk_widget_get_window (event_widget),
+				{GDK_ENUMS}.seat_capability_all,
+				True, null, null, null, null)
 		end
 
 	release_keyboard_and_mouse
 			-- Release mouse and keyboard grab.
 		do
-			{GTK}.gdk_pointer_ungrab (
-				0 -- guint32 time
-			)
---			{GTK}.gdk_keyboard_ungrab (0) -- guint32 time
+			{GTK}.gdk_seat_ungrab ({GDK_HELPERS}.default_seat)
 			app_implementation.enable_debugger
 		end
 
@@ -332,8 +318,6 @@ feature -- Implementation
 				-- It is then re-set in the configure agent.
 			if l_pebble /= Void then
 				l_configure_agent := agent (a_pebble: like pebble; a_start_x, a_start_y, a_start_screen_x, a_start_screen_y: INTEGER)
-				local
-					l_cursor: detachable EV_POINTER_STYLE
 				do
 					pebble := a_pebble
 					if a_pebble /= Void then
@@ -341,21 +325,19 @@ feature -- Implementation
 						pre_pick_steps (a_start_x, a_start_y, a_start_screen_x, a_start_screen_y)
 						if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (a_pebble) then
 								-- Set correct accept cursor if `Current' accepts its own pebble.
-							if accept_cursor /= Void then
-								l_cursor := accept_cursor
+							if attached accept_cursor as l_accept_cursor then
+								internal_set_pointer_style (l_accept_cursor)
 							else
-								l_cursor := default_accept_cursor
+								internal_set_pointer_style (default_accept_cursor)
 							end
 						else
 								-- Set correct deny cursor
-							if deny_cursor /= Void then
-								l_cursor := deny_cursor
+							if attached deny_cursor as l_deny_cursor then
+								internal_set_pointer_style (l_deny_cursor)
 							else
-								l_cursor := default_deny_cursor
+								internal_set_pointer_style (default_deny_cursor)
 							end
 						end
-						check l_cursor /= Void end
-						internal_set_pointer_style (l_cursor)
 					end
 
 				end (l_pebble, a_x, a_y, a_screen_x, a_screen_y)
@@ -388,14 +370,23 @@ feature -- Implementation
 			l_pebble_tuple: TUPLE [attached like pebble]
 			app_imp: EV_APPLICATION_IMP
 			l_pebble: like pebble
+			l_window: POINTER
 		do
 			disable_capture
 			app_imp := app_implementation
 			erase_rubber_band
 			modify_widget_appearance (False)
 			if not is_destroyed then
-					-- Reset the cursor.
-				internal_set_pointer_style (pointer_style)
+				if attached pointer_style as l_pointer_style then
+						-- Reset the cursor.
+					internal_set_pointer_style (l_pointer_style)
+				else
+						-- Remove previously set pointer.
+					l_window := {GTK}.gtk_widget_get_window (c_object)
+					if l_window /= default_pointer then
+						{GTK}.gdk_window_set_cursor (l_window, default_pointer)
+					end
+				end
 			end
 
 			l_pebble := pebble
@@ -468,7 +459,7 @@ feature -- Implementation
 					if a_pnd_deferred_item_parent /= Void then
 							-- We need to explicitly search for PND deferred items
 							-- A server roundtrip is needed to get the coordinates relative to the PND target parent..
-						gdkwin := {GTK}.gdk_window_get_pointer ({GTK}.gtk_widget_get_window (a_wid_imp.c_object), $a_x, $a_y, default_pointer)
+						gdkwin := {GDK}.gdk_window_get_device_position ({GTK}.gtk_widget_get_window (a_wid_imp.c_object), {GDK_HELPERS}.default_device, $a_x, $a_y, null)
 						a_pnd_item := a_pnd_deferred_item_parent.item_from_coords (a_x, a_y)
 						if a_pnd_item /= Void and then l_app_imp.pnd_targets.has (a_pnd_item.attached_interface.object_id) then
 							Result := a_pnd_item.interface
@@ -478,20 +469,13 @@ feature -- Implementation
 			end
 		end
 
-	create_drop_actions: EV_PND_ACTION_SEQUENCE
-			-- Create and initialize `drop_actions' for `Current'
-		do
-			create Result
-			attached_interface.init_drop_actions (Result)
-		end
-
 	pointer_position: EV_COORDINATE
 			-- Position of the screen pointer relative to `Current'.
 		local
 			x, y, s: INTEGER
 			child: POINTER
 		do
-			child := {GTK}.gdk_window_get_pointer ({GTK}.gtk_widget_get_window (c_object), $x, $y, $s)
+			child := {GDK}.gdk_window_get_device_position ({GTK}.gtk_widget_get_window (c_object), {GDK_HELPERS}.default_device, $x, $y, $s)
 			create Result.set (x, y)
 		end
 
@@ -500,7 +484,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PICK_AND_DROPABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

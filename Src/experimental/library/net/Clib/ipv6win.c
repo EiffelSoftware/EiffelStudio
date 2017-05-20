@@ -106,8 +106,8 @@ static int net_bind(SOCKET s, struct sockaddr *him, int len)
 }
 
 static int net_bindV6(struct ipv6bind* b) {
-	SOCKET fd=INVALID_SOCKET, ofd=INVALID_SOCKET, rv;
 	int len;
+	SOCKET fd=INVALID_SOCKET, ofd=INVALID_SOCKET, rv;
 		/* need to defer close until new sockets created */
 	SOCKET close_fd=INVALID_SOCKET, close_ofd=INVALID_SOCKET; 
 	SOCKETADDRESS oaddr; /* other address to bind */
@@ -198,7 +198,7 @@ static int net_bindV6(struct ipv6bind* b) {
 		 * succeed sooner.
 		 */
 		for (retries = 0; retries < SOCK_RETRIES; retries ++) {
-			int len;
+			len = 0;
 			close_fd = fd; fd = INVALID_SOCKET;
 			close_ofd = ofd; ofd = INVALID_SOCKET;
 			b->ipv4_fd = INVALID_SOCKET;

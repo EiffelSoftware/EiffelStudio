@@ -110,12 +110,14 @@ feature -- Split area resizing
 			-- Set proportion recursive in idle actions
 		require
 			not_void: top_resize_split_area.item /= Void
-		local
-			l_item: detachable SD_MIDDLE_CONTAINER
 		do
-			l_item := top_resize_split_area.item
-			check l_item /= Void end -- Implied by precondition `not_void'
-			set_proportion_recursive_imp (l_item)
+			if attached top_resize_split_area.item as l_item then
+				set_proportion_recursive_imp (l_item)
+			else
+				check
+					from_preconditon_not_void: False
+				end
+			end
 			top_resize_split_area.put (Void)
 		ensure
 			cleared: top_resize_split_area.item = Void
@@ -181,7 +183,7 @@ feature -- Split area resizing
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

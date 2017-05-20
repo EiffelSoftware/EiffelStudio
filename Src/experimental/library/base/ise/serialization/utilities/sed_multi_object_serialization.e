@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Serialize and deserialize multiple objects into one file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -88,8 +88,6 @@ feature -- Basic Operations
 			retry
 		end
 
-feature -- Basic Operations
-
 	serialize (a: ANY; path: READABLE_STRING_GENERAL; is_appending: BOOLEAN)
 			-- Serialize object `a' at the end of file `path' if `is_appending', otherwise
 			-- reset content of `path'.
@@ -140,7 +138,7 @@ feature {NONE} -- Logging
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

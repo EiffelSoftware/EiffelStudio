@@ -8,6 +8,8 @@ class
 
 inherit
 	CMS_NODE_TYPE_WEBFORM_MANAGER [CMS_PAGE]
+		rename
+			make as make_for_node
 		redefine
 			content_type,
 			append_content_as_html_to,
@@ -19,10 +21,21 @@ inherit
 create
 	make
 
+feature {NONE} -- Initialization
+
+	make (a_type: like content_type; a_page_api: CMS_PAGE_API)
+		do
+			page_api := a_page_api
+			make_for_node (a_type, a_page_api.node_api)
+		end
+
 feature -- Access
 
 	content_type: CMS_PAGE_NODE_TYPE
 			-- Associated content type.	
+
+	page_api: CMS_PAGE_API
+			-- Associated page API.
 
 feature -- Forms ...
 
@@ -122,7 +135,7 @@ feature -- Forms ...
 					if
 						nid > 0 and then
 						attached l_node_api.node (nid) as l_node and then
-						l_node_api.is_node_a_parent_of (l_node, l_parent_node)
+						page_api.is_node_a_parent_of (l_node, l_parent_node)
 					then
 						fd.report_invalid_field ("select_parent_node", "Invalid parent due to cycle (node #" + nid.out + " is already a parent of node #" + l_parent_id.out)
 					end
@@ -137,14 +150,14 @@ feature -- Forms ...
 
 feature -- Output
 
-	append_content_as_html_to (a_node: CMS_PAGE; is_teaser: BOOLEAN; a_output: STRING; a_response: detachable CMS_RESPONSE)
+	append_content_as_html_to (a_node: CMS_PAGE; is_teaser: BOOLEAN; a_output: STRING; a_response: CMS_RESPONSE)
 			-- <Precursor>
 		local
 			l_node_api: CMS_NODE_API
 			lnk: CMS_LOCAL_LINK
 		do
 			Precursor (a_node, is_teaser, a_output, a_response)
-			
+
 			if not is_teaser then
 				l_node_api := node_api
 				if
@@ -170,7 +183,7 @@ feature -- Output
 						a_output.append (a_response.link (l_parent_node.title, l_node_api.node_path (l_parent_node), Void))
 						a_output.append ("</li>")
 					end
-					if attached l_node_api.children (a_node) as l_children then
+					if attached page_api.children (a_node) as l_children then
 						across
 							l_children as ic
 						loop

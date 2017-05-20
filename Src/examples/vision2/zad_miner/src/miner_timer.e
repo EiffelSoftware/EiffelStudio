@@ -16,10 +16,9 @@ feature -- Initialization
 	make (label_time: EV_LABEL)
 			-- Creation routine
 		do
-			default_create
-			reset
 			label := label_time
 			change := False
+			reset
 		end
 
 	reset
@@ -56,7 +55,7 @@ feature -- Implementation
 			then
 				delai := arg
 				time := time + ( delai.item // 100 )
-				hour := (time // 10 // 3600) 
+				hour := (time // 10 // 3600)
 				min := (time // 10 // 60) \\ 60
 				sec := ( time // 10) \\ 60
 
@@ -80,12 +79,12 @@ feature -- Implementation
 end -- class MINER_TIMER
 
 --|-------------------------------------------------------------------------
---| Eiffel Mine Sweeper -- ZaDoR (c) -- 
+--| Eiffel Mine Sweeper -- ZaDoR (c) --
 --| version 1.2 (july 2001)
 --|
 --| by Jocelyn FIAT
 --| email: jocelyn.fiat@ifrance.com
---| 
+--|
 --| freely distributable
 --|-------------------------------------------------------------------------
 

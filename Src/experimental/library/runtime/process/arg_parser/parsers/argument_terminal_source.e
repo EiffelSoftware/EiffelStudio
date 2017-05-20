@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			An argument parser's arguments from the terminal.
 		]"
@@ -19,7 +19,6 @@ feature -- Access
 			-- <Precursor>
 		local
 			l_args: ARRAY [IMMUTABLE_STRING_32]
-			l_arg: detachable IMMUTABLE_STRING_32
 			l_count: INTEGER
 			i: INTEGER
 		once
@@ -28,8 +27,7 @@ feature -- Access
 			create Result.make (l_count)
 			from i := 1 until i > l_count
 			loop
-				l_arg := l_args.item (i)
-				Result.extend (l_arg)
+				Result.extend (l_args [i])
 				i := i + 1
 			end
 		end
@@ -51,7 +49,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

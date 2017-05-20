@@ -71,7 +71,6 @@ feature {NONE} -- Initialization
 			l_file: RAW_FILE
 			l_retrieval: FUNCTION [RAW_FILE, detachable ANY]
 			l_test_suite: like test_suite
-			u: FILE_UTILITIES
 		do
 			if not has_retrieved_statistics then
 

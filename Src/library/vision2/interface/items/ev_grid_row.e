@@ -15,11 +15,6 @@ inherit
 		end
 
 	EV_GRID_ROW_ACTION_SEQUENCES
-		undefine
-			default_create, copy, is_equal
-		redefine
-			implementation
-		end
 
 	EV_DESELECTABLE
 		redefine
@@ -709,7 +704,7 @@ invariant
 	virtual_position_and_virtual_position_unlocked_equal_when_not_locked: not is_locked implies virtual_y_position = virtual_y_position_unlocked
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

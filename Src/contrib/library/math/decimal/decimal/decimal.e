@@ -1,11 +1,6 @@
-note
+﻿note
 	description:
 		"DECIMAL numbers. Following the 'General Decimal Arithmetic Specification'."
-	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
-	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class DECIMAL
 
@@ -509,11 +504,8 @@ feature -- Status report
 
 	is_double: BOOLEAN
 			-- Is this a double?
-		local
-			str: STRING
 		do
-			str := to_scientific_string
-			Result := str.is_double
+			Result := to_scientific_string.is_double
 		end
 
 	divisible (other: like Current): BOOLEAN
@@ -555,7 +547,7 @@ feature -- Status report
 	is_special: BOOLEAN
 			-- Is this a special value?
 		do
-			Result := (special /= Special_none)
+			Result := special /= Special_none
 		ensure
 			definition: Result = (is_nan or else is_infinity)
 		end
@@ -563,19 +555,19 @@ feature -- Status report
 	is_signaling_nan: BOOLEAN
 			-- Is this a "Signaling NaN"?
 		do
-			Result := (special = Special_signaling_nan)
+			Result := special = Special_signaling_nan
 		end
 
 	is_quiet_nan: BOOLEAN
 			-- Is this a "Quiet NaN"?
 		do
-			Result := (special = Special_quiet_nan)
+			Result := special = Special_quiet_nan
 		end
 
 	is_infinity: BOOLEAN
 			-- Is this an Infinity?
 		do
-			Result := (special = Special_infinity)
+			Result := special = Special_infinity
 		end
 
 	is_zero: BOOLEAN
@@ -639,7 +631,7 @@ feature -- Basic operations
 	numeric_quotient alias "/" (other: like Current): like Current
 			-- Division by `other'
 		require else
-			exception_trap: not shared_decimal_context.exception_on_trap or else not (other.is_zero)
+			exception_trap: not shared_decimal_context.exception_on_trap or else not other.is_zero
 		do
 			Result := divide (other, shared_decimal_context)
 		ensure then
@@ -665,11 +657,8 @@ feature -- Basic operations
 
 	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current decimal less than `other'?
-		local
-			res: DECIMAL
 		do
-			res := compare (other, shared_decimal_context)
-			Result := res.is_negative
+			Result := compare (other, shared_decimal_context).is_negative
 		end
 
 feature -- epsilon
@@ -750,8 +739,6 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN
 			-- Are `Current' and `other' considered equal?
-		local
-			comparison_result: like Current
 		do
 			if is_nan and then other.is_nan then
 				if is_quiet_nan then
@@ -760,10 +747,9 @@ feature -- Comparison
 					Result := other.is_signaling_nan
 				end
 			elseif is_infinity and then other.is_infinity then
-				Result := (sign = other.sign)
+				Result := sign = other.sign
 			else
-				comparison_result := compare (other, shared_decimal_context)
-				Result := comparison_result.is_zero
+				Result := compare (other, shared_decimal_context).is_zero
 			end
 		end
 
@@ -773,15 +759,15 @@ feature -- Conversion
 			-- Printable representation
 		do
 			create Result.make (0)
-			Result.append_string ("[")
+			Result.append_character ('[')
 				-- Sign.
 			if is_negative then
-				Result.append_string ("1")
+				Result.append_character ('1')
 			else
-				Result.append_string ("0")
+				Result.append_character ('0')
 			end
 				-- Coefficient.
-			Result.append_string (",")
+			Result.append_character (',')
 			if is_infinity then
 				Result.append_string ("inf")
 			elseif is_signaling_nan then
@@ -791,21 +777,18 @@ feature -- Conversion
 			else
 				Result.append_string (coefficient.out)
 					-- Exponent.
-				Result.append_string (",")
+				Result.append_character (',')
 				Result.append_string (exponent.out)
 			end
-			Result.append_string ("]")
+			Result.append_character (']')
 		end
 
 	to_double: DOUBLE
 			-- `Current' as a DOUBLE
 		require
 			is_double: is_double
-		local
-			str: STRING
 		do
-			str := to_scientific_string
-			Result := str.to_double
+			Result := to_scientific_string.to_double
 		end
 
 	to_integer: INTEGER
@@ -814,11 +797,8 @@ feature -- Conversion
 			is_integer: is_integer
 			large_enough: Current >= decimal.minimum_integer
 			small_enough: Current <= decimal.maximum_integer
-		local
-			ctx: DCM_MA_DECIMAL_CONTEXT
 		do
-			create ctx.make_double
-			Result := to_integer_ctx (ctx)
+			Result := to_integer_ctx (create {DCM_MA_DECIMAL_CONTEXT}.make_double)
 		end
 
 	to_integer_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): INTEGER
@@ -1012,7 +992,7 @@ feature -- Basic operations
 		require
 			other_not_void: other /= Void
 			ctx_not_void: ctx /= Void
-			exception_trap: not ctx.exception_on_trap or else not (other.is_zero)
+			exception_trap: not ctx.exception_on_trap or else not other.is_zero
 		do
 				-- a E m / b E n = a/b E m-n
 			Result := do_divide (other, ctx, division_standard)
@@ -1047,7 +1027,7 @@ feature -- Basic operations
 			greater_than_equal_zero: not ctx.exception_on_trap or else is_greater_equal ("0")
 		local
 			two, x, y, e, m, m_prev: DECIMAL
-			exp_local, i, factor: INTEGER
+			exp_local, i: INTEGER
 		do
 			if is_zero then
 				create Result.make_from_string_ctx ("0", ctx)
@@ -1056,7 +1036,6 @@ feature -- Basic operations
 			elseif is_infinity and is_positive then
 				Result := "Infinity"
 			else
-				create e.make_nan
 				create two.make_from_string_ctx ("2", ctx)
 
 				x := multiply (two, ctx)
@@ -1067,10 +1046,9 @@ feature -- Basic operations
 				create e.make_from_string_ctx ("1", ctx)
 
 				if exponent.abs > ctx.precision then
-					factor := (exponent.abs / ctx.precision).ceiling
-					exp_local := -1 * (ctx.precision * factor)
+					exp_local := - ctx.precision * (exponent.abs / ctx.precision).ceiling
 				else
-					exp_local := -1 * (ctx.precision)
+					exp_local := - ctx.precision
 				end
 
 
@@ -1338,7 +1316,7 @@ feature -- Basic operations
 	normalize: like Current
 			-- Normalized version of current decimal
 		local
-			l_count, trailing_zeroes: INTEGER
+			trailing_zeroes: INTEGER
 		do
 			Result := plus (shared_decimal_context)
 			if Result.is_zero then
@@ -1347,7 +1325,6 @@ feature -- Basic operations
 			elseif not Result.is_special then
 				from
 					trailing_zeroes := 0
-					l_count := Result.count
 				until
 					trailing_zeroes >= count or else Result.coefficient.item (trailing_zeroes) /= 0
 				loop
@@ -1555,9 +1532,9 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
     local
         d1: DECIMAL
     do
-        d1 := current.coefficient.item (0)
-        d1.set_exponent (current.no_digits_after_point * -1)
-        Result := current - d1
+        d1 := coefficient.item (0)
+        d1.set_exponent (- no_digits_after_point)
+        Result := Current - d1
     end
 
 
@@ -1584,19 +1561,16 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
     local
         d1: DECIMAL
     do
-        d1 := current.coefficient.item (0)
+        d1 := Current.coefficient.item (0)
         d1 := "10" - d1
-        d1.set_exponent (current.no_digits_after_point * -1)
-        Result := current + d1
+        d1.set_exponent (- no_digits_after_point)
+        Result := Current + d1
     end
 
 
 
 	exp: like Current
-		-- Perform e^`Current' using shared_default_context
-
-		require
-			current_not_void: Current /= Void
+			-- Perform e^`Current' using shared_default_context.
 		do
 			Result := exp_wrt_ctx (shared_decimal_context)
 		ensure
@@ -1604,17 +1578,15 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		end
 
 	exp_wrt_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
---		 Perform e^`Current' using ctx as context
---       Implemented using the "Variable Precision Exponential Function" algorithm by T.E Hull.
---       Result differs from "MPCalcRB" source by two or three significant digits when evaluating large numbers.
---       Higher precision does not negatively impact accuracy of final result, but lower precision causes rounding errors.
+			-- Perform e^`Current' using ctx as context.
+			-- Implemented using the "Variable Precision Exponential Function" algorithm by T.E Hull.
+			-- Result differs from "MPCalcRB" source by two or three significant digits when evaluating large numbers.
+			-- Higher precision does not negatively impact accuracy of final result, but lower precision causes rounding errors.
 		require
-			current_not_void: current /= Void
 			context_not_void: ctx /= Void
 		local
-			t_val: INTEGER
 			neg: BOOLEAN
-			x, half_sum, i, sum, n, pbyr_exp, step2, step1, denom, f, pbyr, numer, prec, p, r, t, k, rval, base, Forty: DECIMAL
+			x, half_sum, i, sum, n, pbyr_exp, step2, step1, denom, f, pbyr, numer, prec, p, r, t, k, rval, base, forty: DECIMAL
 			ctx_local: DCM_MA_DECIMAL_CONTEXT
 			q: DCM_PRECOMPUTED_VALUES
 		do
@@ -1631,32 +1603,17 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 				ctx_local.set_rounding_mode (6)
 
 				if is_negative then
-					create x.make_copy (current)
+					create x.make_copy (Current)
 					x := x.multiply ("-1", ctx_local)
 					neg := True
 				else
 					neg := False
-					create x.make_copy (current)
+					create x.make_copy (Current)
 				end
 
 				create prec.make_from_string_ctx (ctx_local.digits.out, ctx_local)
 
-				t_val := (x.count - x.no_digits_after_point - 1)
-				if t_val <= 0 then
-					create t.make_from_string_ctx ("1", ctx_local)
-				else
-					create t.make_from_string_ctx (t_val.out, ctx_local)
-				end
-
 				if x.is_less_equal ("40") then
-
-					t_val := x.exponent
-
-					if t_val <= 0 then
-					create t.make_from_string_ctx ("0", ctx_local)
-					else
-					create t.make_from_string_ctx (t_val.out, ctx_local)
-					end
 
 					create t.make_from_string_ctx ("1", ctx_local)
 
@@ -1668,8 +1625,7 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 					p := p.add ("2", ctx_local)
 
 					if p.is_less_equal ("4") then
-
-					create p.make_from_string_ctx ("4", ctx_local)
+						create p.make_from_string_ctx ("4", ctx_local)
 					end
 
 					create numer.make_from_string_ctx ("1.435", ctx_local)
@@ -1725,9 +1681,8 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 					end
 
 				else
-					create Forty.make_from_string_ctx ("40", ctx_local)
-					create rval.make_from_string_ctx ("0", ctx_local)
-					rval := x.subtract (Forty, ctx)
+					create forty.make_from_string_ctx ("40", ctx_local)
+					rval := x.subtract (forty, ctx)
 					base:= q.e40
 				    create Result.make_from_string_ctx("1", ctx_local)
 					Result := base.multiply(rval.exp, ctx_local)
@@ -1770,7 +1725,7 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 
 				from --Compute using newton's method
 					create prec.make_from_string_ctx ("1", ctx)
-					prec.set_exponent ((ctx.digits - 2) * -1) --Set precision to context digits - 2. This resolves the issue of infinite loop.
+					prec.set_exponent (- (ctx.digits - 2)) --Set precision to context digits - 2. This resolves the issue of infinite loop.
 				until
 					x.subtract (x_prev, ctx).abs.is_less (prec)
 				loop
@@ -1800,7 +1755,6 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		-- Inaccuracy of exp_wrt_ctx causes a propagating rounding error in power_wrt_ctx
 
 		require
-			current_not_void: Current /= Void
 			other_not_void: other /= Void
 			context_not_void: ctx /= Void
 			curr_not_negative_if_exp_pos: not ctx.exception_on_trap or else not (other.is_double and is_double and is_negative)
@@ -1810,35 +1764,35 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		do
 			create q.make
 
-			if (is_nan or other.is_nan) then
+			if is_nan or other.is_nan then
 				create Result.make_from_string_ctx ("NaN", ctx)
-			elseif (is_signaling_nan or other.is_signaling_nan) then
+			elseif is_signaling_nan or other.is_signaling_nan then
 				create Result.make_snan
-			elseif (is_zero and other.is_zero) then
+			elseif is_zero and other.is_zero then
 				create Result.make_from_string_ctx ("NaN", ctx)
-			elseif (is_zero and other.is_infinity and other.sign = 1) then
+			elseif is_zero and other.is_infinity and other.sign = 1 then
 				create Result.make_from_string_ctx ("0", ctx)
-			elseif (is_zero and other.sign = -1) then
+			elseif is_zero and other.sign = -1 then
 				create Result.make_from_string_ctx ("Infinity", ctx)
-			elseif ((sign = -1 and (other.is_infinity or other.is_nan))) then
+			elseif sign = -1 and (other.is_infinity or other.is_nan) then
 				create Result.make_from_string_ctx ("NaN", ctx)
-			elseif ((sign = -1 and (other.is_infinity or other.is_signaling_nan))) then
+			elseif sign = -1 and (other.is_infinity or other.is_signaling_nan) then
 				create Result.make_snan
-			elseif (sign = 1 and is_infinity and other.sign = -1) then
+			elseif sign = 1 and is_infinity and other.sign = -1 then
 				create Result.make_from_string_ctx ("0", ctx)
-			elseif (sign = 1 and is_infinity and other.is_zero) then
+			elseif sign = 1 and is_infinity and other.is_zero then
 				create Result.make_from_string_ctx ("1", ctx)
-			elseif (sign = 1 and is_infinity and other.sign = 1) then
+			elseif sign = 1 and is_infinity and other.sign = 1 then
 				create Result.make_from_string_ctx ("Infinity", ctx)
-			elseif (sign = -1 and is_infinity and other.sign = -1) then
+			elseif sign = -1 and is_infinity and other.sign = -1 then
 				create Result.make_from_string_ctx ("-0", ctx)
-			elseif (sign = -1 and is_infinity and other.is_zero) then
+			elseif sign = -1 and is_infinity and other.is_zero then
 				create Result.make_from_string_ctx ("0", ctx)
-			elseif (sign = -1 and is_infinity and other.sign = 1 and (other.remainder ("2", ctx).is_zero)) then
+			elseif sign = -1 and is_infinity and other.sign = 1 and other.remainder ("2", ctx).is_zero then
 				create Result.make_from_string_ctx ("Infinity", ctx)
-			elseif (sign = -1 and is_infinity and other.sign = 1 and (not other.remainder ("2", ctx).is_zero)) then
+			elseif sign = -1 and is_infinity and other.sign = 1 and not other.remainder ("2", ctx).is_zero then
 				create Result.make_from_string_ctx ("-Infinity", ctx)
-			elseif (other.is_zero and not (is_signaling_nan or is_nan)) then
+			elseif other.is_zero and not (is_signaling_nan or is_nan) then
 				create Result.make_from_string_ctx ("1", ctx)
 			elseif other.is_double and is_double and is_negative then
 				create Result.make_from_string_ctx ("NaN", ctx)
@@ -1866,42 +1820,41 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 			ctx_not_void: ctx /= Void
 			other_is_integer: other.is_integer
 		local
-			cur, ot, final: DECIMAL
+			cur, ot: DECIMAL
 			flag: BOOLEAN
 		do
-			create final.make_one
+			create Result.make_one
 			create cur.make_copy (Current)
 			create ot.make_copy (other)
 
 			ot := ot.abs
 
 			from
-				flag := FALSE
+				check not flag end
 			until
-				ot.to_double.floor = 0 or ot.to_double.floor = -0 or flag = TRUE
+				ot.to_double.floor = 0 or flag
 			loop
-				if (not (ot.remainder ("2", ctx).is_zero)) then
-					final := final.multiply (cur, ctx)
+				if not ot.remainder ("2", ctx).is_zero then
+					Result := Result.multiply (cur, ctx)
 					ot := ot - once_one
 				end
 				cur := cur.multiply (cur, ctx)
 				ot := ot.divide ("2", ctx)
-				if final.is_infinity or final.is_nan or final.is_signaling_nan then
-					flag := TRUE
+				if Result.is_infinity or Result.is_nan or Result.is_signaling_nan then
+					flag := True
 				end
 			end
 
 			if other.sign = -1 then
-				if final.is_infinity and final.sign = -1 then
+				if Result.is_infinity and Result.sign = -1 then
 					ctx.reset_flags
 					ctx.set_flag (2)
 					ctx.set_flag (6)
 					ctx.set_flag (7)
 					ctx.set_flag (8)
 				end
-				final := once_one.divide (final, ctx)
+				Result := once_one.divide (Result, ctx)
 			end
-			Result := final
 		ensure
 			power_not_void: Result /= Void
 		end
@@ -1915,7 +1868,6 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 	position_of_decimal_point_wrt_ctx(ctx: DCM_MA_DECIMAL_CONTEXT): INTEGER
 
 		require
-			current_not_void: Current /= Void
 			context_not_void: ctx /= Void
 		do
 			If is_equal (one) then
@@ -1933,16 +1885,13 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		require
 			is_greater (zero)
 			is_less (one)
-			current_not_void: Current /= Void
 			context_not_void: ctx /= Void
 		local
-			i, ten, start_interval, end_interval, x: DECIMAL
+			i, start_interval, end_interval, x: DECIMAL
 			terminate: BOOLEAN
 		do
 			from
-				create ten.make_from_string_ctx ("10", ctx)
 				create i.make_from_string_ctx ("1", ctx)
-				create start_interval.make_from_string_ctx ("1", ctx)
 				end_interval := "1"
 			until
 				terminate
@@ -1970,14 +1919,12 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 
 		require
 			current_greater_equal_to_one: is_greater_equal (one)
-			current_not_void: Current /= Void
 			context_not_void: ctx /= Void
 		local
-			i, ten, start_interval, end_interval : DECIMAL
+			i, start_interval, end_interval : DECIMAL
 			terminate: BOOLEAN
 		do
 			from
-				create ten.make_from_string_ctx ("10", ctx)
 				create i.make_from_string_ctx ("1", ctx)
 				create start_interval.make_from_string_ctx ("1", ctx)
 			until
@@ -2029,7 +1976,7 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		end
 
 	log10: like Current
-		--Perform log10 on `Current' using shared_decimal_context
+		-- Perform log10 on `Current' using shared_decimal_context.
 		do
 			Result := log10_wrt_ctx (shared_decimal_context)
 		ensure then
@@ -2037,13 +1984,12 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		end
 
 	log10_wrt_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
-		--Perform log10 on `Current' using ctx as context
-		--Using Mayer Goldberg algorithm, Computing Logarithms Digit-by-Digit
+		-- Perform log10 on `Current' using ctx as context.
+		-- Using Mayer Goldberg algorithm, Computing Logarithms Digit-by-Digit.
 
 		require
-			current_not_void: Current /= Void
 			ctx_not_void: ctx /= Void
-			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
+			greater_than_equal_zero: not ctx.exception_on_trap or else is_greater_equal ("0")
 		local
 			a, index: INTEGER
 			a1, x, ten, ten_w: DECIMAL
@@ -2090,11 +2036,11 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 				end
 				a := position_of_decimal_point_wrt_ctx (ctx) --Find the decimal position for the answer and set the exponent accordingly
 				if a = 0 then
-					Result.set_exponent ((ctx.precision) * -1)
+					Result.set_exponent (- ctx.precision)
 				elseif a <= ctx.precision then
-					Result.set_exponent ((ctx.precision - a) * -1)
+					Result.set_exponent (- (ctx.precision - a))
 				else
-					Result.set_exponent ((ctx.precision + a) * -1)
+					Result.set_exponent (- (ctx.precision + a))
 				end
 					-- If answer is integer then remove all the zeros				
 				if Result.is_integer then
@@ -2108,7 +2054,7 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		end
 
 	log2: like Current
-		--Perform log2 on `Current' using shared_decimal_context
+		-- Perform log2 on `Current' using shared_decimal_context.
 		do
 			Result := log2_wrt_ctx (shared_decimal_context)
 		ensure then
@@ -2116,13 +2062,12 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		end
 
 	log2_wrt_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
-		--Perform log2 on `Current' using ctx as context
+			-- Perform log2 on `Current' using ctx as context.
 		require
-			current_not_void: Current /= Void
 			ctx_not_void: ctx /= Void
-			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
+			greater_than_equal_zero: not ctx.exception_on_trap or else is_greater_equal ("0")
 		local
-		 	two, user, base, peak: DECIMAL
+		 	two, base, peak: DECIMAL
 		 do
 		-- Check extreme cases where user input is either zero, infinity, or NaN.
 		if is_zero then
@@ -2138,10 +2083,8 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		-- In all other cases, we return the logarithm in base 2 of the user input
 			create Result.make_from_string_ctx ("0", ctx)
      		create two.make_from_string_ctx ("2", ctx)
-			create base.make_from_string_ctx ("0", ctx)
 	    	base := two.log10_wrt_ctx (ctx)
-     		create user.make_copy (current)
-			peak := user.log10_wrt_ctx (ctx)
+			peak := (create {DECIMAL}.make_copy (current)).log10_wrt_ctx (ctx)
 			Result := peak.divide (base, ctx)
 		end
 		ensure
@@ -2149,7 +2092,7 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		end
 
 	sin: like Current
-		--Perform sin on `Current' using shared_decimal_context
+			-- Perform sin on `Current' using shared_decimal_context.
 		do
 			Result := sin_wrt_ctx (shared_decimal_context)
 		ensure then
@@ -2157,23 +2100,18 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		end
 
 	sin_wrt_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
-		--Perform sin on `Current' using ctx as context
+			-- Perform sin on `Current' using ctx as context.
 		require
-			current_not_void: Current /= Void
 			ctx_not_void: ctx /= Void
-			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
+			greater_than_equal_zero: not ctx.exception_on_trap or else is_greater_equal ("0")
 		local
 		 	one80, deg, user, x, taylor, step1, step2, step3, step4, zer: DECIMAL
 		 	q: DCM_PRECOMPUTED_VALUES
 		 do
 		 	create q.make
 			create Result.make_from_string_ctx ("0", ctx)
-			create step1.make_from_string_ctx ("0", ctx)
-			create step2.make_from_string_ctx ("0", ctx)
-			create step3.make_from_string_ctx ("0", ctx)
      		create one80.make_from_string_ctx ("180", ctx)
 			create user.make_copy (current)
-			create step1.make_from_string_ctx ("0", ctx)
 			deg := user.divide (one80, ctx)
 			deg := deg.multiply (q.pi, ctx)
 			create zer.make_from_string_ctx ("0", ctx)
@@ -2201,7 +2139,7 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		end
 
 	cos: like Current
-		--Perform cos on `Current' using shared_decimal_context
+			-- Perform cos on `Current' using shared_decimal_context.
 		do
 			Result := cos_wrt_ctx (shared_decimal_context)
 		ensure then
@@ -2209,24 +2147,18 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		end
 
 	cos_wrt_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
-		--Perform cos on `Current' using ctx as context
+			-- Perform cos on `Current' using ctx as context.
 		require
-			current_not_void: Current /= Void
 			ctx_not_void: ctx /= Void
-			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
+			greater_than_equal_zero: not ctx.exception_on_trap or else is_greater_equal ("0")
 		local
-		 	one80, deg, user, x, taylor, step1, step2, step3, step4, zer: DECIMAL
+		 	one80, deg, x, taylor, step1, step2, step3, step4, zer: DECIMAL
 		 	q: DCM_PRECOMPUTED_VALUES
 		 do
 		 	create q.make
 			create Result.make_from_string_ctx ("0", ctx)
-			create step1.make_from_string_ctx ("0", ctx)
-			create step2.make_from_string_ctx ("0", ctx)
-			create step3.make_from_string_ctx ("0", ctx)
      		create one80.make_from_string_ctx ("180", ctx)
-			create user.make_copy (current)
-			create step1.make_from_string_ctx ("0", ctx)
-			deg := user.divide (one80, ctx)
+			deg := (create {DECIMAL}.make_copy (Current)).divide (one80, ctx)
 			deg := deg.multiply (q.pi, ctx)
 			create zer.make_from_string_ctx ("0", ctx)
 			create taylor.make_from_string_ctx ("1", ctx)
@@ -2253,7 +2185,7 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 
 
 	tan: like Current
-		--Perform tan on `Current' using shared_decimal_context
+			-- Perform tan on `Current' using shared_decimal_context.
 		do
 			Result := tan_wrt_ctx (shared_decimal_context)
 		ensure then
@@ -2261,27 +2193,23 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		end
 
 	tan_wrt_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
-		--Perform tan on `Current' using ctx as context
+			-- Perform tan on `Current' using ctx as context.
 		require
-			current_not_void: Current /= Void
 			ctx_not_void: ctx /= Void
-			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
+			greater_than_equal_zero: not ctx.exception_on_trap or else is_greater_equal ("0")
 		local
-		 	user, cosval, sinval, final: DECIMAL
+		 	user: DECIMAL
 		 do
-		 	create Result.make_from_string_ctx ("0", ctx)
-			create final.make_from_string_ctx ("0", ctx)
-     		create user.make_copy (current)
- 			create sinval.make_copy (user.sin)
-			create cosval.make_copy (user.cos)
-		    final := sinval.divide (cosval, ctx)
-			Result := final
+     		create user.make_copy (Current)
+		    Result :=
+		    	(create {DECIMAL}.make_copy (user.sin)).divide
+		    	(create {DECIMAL}.make_copy (user.cos), ctx)
 		ensure
 			answer_not_void: Result /= Void
 		end
 
 	cot: like Current
-		--Perform cot on `Current' using shared_decimal_context
+			-- Perform cot on `Current' using shared_decimal_context.
 		do
 			Result := cot_wrt_ctx (shared_decimal_context)
 		ensure then
@@ -2289,27 +2217,23 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		end
 
 	cot_wrt_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
-		--Perform tan on `Current' using ctx as context
+			-- Perform tan on `Current' using ctx as context.
 		require
-			current_not_void: Current /= Void
 			ctx_not_void: ctx /= Void
-			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
+			greater_than_equal_zero: not ctx.exception_on_trap or else is_greater_equal ("0")
 		local
-		 	user, cosval, sinval, final: DECIMAL
+		 	user: DECIMAL
 		 do
-		 	create Result.make_from_string_ctx ("0", ctx)
-			create final.make_from_string_ctx ("0", ctx)
-     		create user.make_copy (current)
- 			create sinval.make_copy (user.sin)
-			create cosval.make_copy (user.cos)
-		    final := cosval.divide (sinval, ctx)
-			Result := final
+     		create user.make_copy (Current)
+			Result :=
+				(create {DECIMAL}.make_copy (user.cos)).divide
+				(create {DECIMAL}.make_copy (user.sin), ctx)
 		ensure
 			answer_not_void: Result /= Void
 		end
 
 	sec: like Current
-		--Perform sec on `Current' using shared_decimal_context
+			-- Perform sec on `Current' using shared_decimal_context.
 		do
 			Result := sec_wrt_ctx (shared_decimal_context)
 		ensure then
@@ -2317,27 +2241,21 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		end
 
 	sec_wrt_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
-		--Perform sec on `Current' using ctx as context
+			-- Perform sec on `Current' using ctx as context.
 		require
-			current_not_void: Current /= Void
 			ctx_not_void: ctx /= Void
-			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
+			greater_than_equal_zero: not ctx.exception_on_trap or else is_greater_equal ("0")
 		local
-		 	user, cosval, one1, final: DECIMAL
+		 	one1: DECIMAL
 		 do
-		 	create Result.make_from_string_ctx ("0", ctx)
-			create final.make_from_string_ctx ("0", ctx)
-     		create user.make_copy (current)
- 			create one1.make_from_string_ctx ("1", ctx)
-			create cosval.make_copy (user.cos)
-		    final := one1.divide (cosval, ctx)
-			Result := final
+			create one1.make_from_string_ctx ("1", ctx)
+			Result := one1.divide (create {DECIMAL}.make_copy ((create {DECIMAL}.make_copy (Current)).cos), ctx)
 		ensure
 			answer_not_void: Result /= Void
 		end
 
 	csc: like Current
-		--Perform csc on `Current' using shared_decimal_context
+			-- Perform csc on `Current' using shared_decimal_context.
 		do
 			Result := csc_wrt_ctx (shared_decimal_context)
 		ensure then
@@ -2345,21 +2263,15 @@ feature {DECIMAL, DCM_MA_DECIMAL_TEST} -- Log, Root and Power and their helper f
 		end
 
 	csc_wrt_ctx (ctx: DCM_MA_DECIMAL_CONTEXT): like Current
-		--Perform csc on `Current' using ctx as context
+			-- Perform csc on `Current' using ctx as context.
 		require
-			current_not_void: Current /= Void
 			ctx_not_void: ctx /= Void
-			greater_than_equal_zero: not ctx.exception_on_trap or else (is_greater_equal ("0"))
+			greater_than_equal_zero: not ctx.exception_on_trap or else is_greater_equal ("0")
 		local
-		 	user, one1, sinval, final: DECIMAL
+		 	one1: DECIMAL
 		 do
-		 	create Result.make_from_string_ctx ("0", ctx)
-			create final.make_from_string_ctx ("0", ctx)
-     		create user.make_copy (current)
- 			create sinval.make_copy (user.sin)
 			create one1.make_from_string_ctx ("1", ctx)
-		    final := one1.divide (sinval, ctx)
-			Result := final
+			Result := one1.divide (create {DECIMAL}.make_copy ((create {DECIMAL}.make_copy (Current)).sin), ctx)
 		ensure
 			answer_not_void: Result /= Void
 		end
@@ -2446,32 +2358,15 @@ feature {DECIMAL} -- Basic operations
 					ctx.signal (Signal_invalid_operation, "sNaN operand in add")
 				end
 				Result := nan
-			elseif is_infinity and then other.is_infinity then
-				if sign /= other.sign then
+			elseif is_infinity then
+				if other.is_infinity and then sign /= other.sign then
 					ctx.signal (Signal_invalid_operation, "+Inf and -Inf operands in add")
 					Result := nan
 				else
-					if is_negative then
-						Result := negative_infinity
-					else
-						Result := infinity
-					end
+					Result := if is_negative then negative_infinity else infinity end
 				end
-			elseif is_infinity or else other.is_infinity then
-				if is_infinity then
-					if is_negative then
-						Result := negative_infinity
-					else
-						Result := infinity
-					end
-				else
-						-- `other' is Inf
-					if other.is_negative then
-						Result := negative_infinity
-					else
-						Result := infinity
-					end
-				end
+			elseif other.is_infinity then
+				Result := if other.is_negative then negative_infinity else infinity end
 			else
 				Result := nan
 			end
@@ -2653,7 +2548,7 @@ feature {DECIMAL} -- Basic operations
 			limited_precision: BOOLEAN
 			shift_count: INTEGER
 		do
-			limited_precision := (precision > 0)
+			limited_precision := precision > 0
 			if exponent = other.exponent then
 					-- Adjust each other's count?
 				new_count := count.max (other.count)
@@ -2828,13 +2723,12 @@ feature {DECIMAL} -- Basic operations
 		require
 			ctx_not_void: ctx /= Void
 		local
-			old_count, exponent_increment: INTEGER
+			old_count: INTEGER
 		do
 			if lost_digits (ctx) then
 				old_count := count
 				coefficient.integer_quick_add_msd (1, ctx.digits)
-				exponent_increment := old_count - ctx.digits
-				exponent := exponent + exponent_increment
+				exponent := exponent + (old_count - ctx.digits)
 			end
 			if count > ctx.digits then
 				shift_right (count - ctx.digits)
@@ -2848,13 +2742,11 @@ feature {DECIMAL} -- Basic operations
 			ctx_not_void: ctx /= Void
 			positive_precision: ctx.digits >= 1
 		local
-			exponent_increment: INTEGER
 			l_count: INTEGER
 		do
 			l_count := count - ctx.digits
 			coefficient.shift_right (l_count)
-			exponent_increment := l_count
-			exponent := exponent + exponent_increment
+			exponent := exponent + l_count
 			coefficient.keep_head (ctx.digits)
 		end
 
@@ -2975,7 +2867,7 @@ feature {DECIMAL} -- Basic operations
 				do_round_up (ctx)
 			else
 					-- Equal.
-				if (coefficient.item (count - ctx.digits) \\ 2 = 0) then
+				if coefficient.item (count - ctx.digits) \\ 2 = 0 then
 					do_round_down (ctx)
 				else
 					do_round_up (ctx)
@@ -3143,7 +3035,7 @@ feature {DECIMAL} -- Basic operations
 			ctx_not_void: ctx /= Void
 			underflow: is_underflow (ctx)
 		local
-			e_tiny, shared_digits, subnormal_count, count_upto_elimit, saved_digits: INTEGER
+			e_tiny, shared_digits, count_upto_elimit, saved_digits: INTEGER
 			l_is_zero, l_was_rounded: BOOLEAN
 			value: INTEGER
 		do
@@ -3199,8 +3091,7 @@ feature {DECIMAL} -- Basic operations
 						if count < count_upto_elimit then
 							grow (count_upto_elimit)
 						end
-						subnormal_count := -ctx.exponent_limit - e_tiny + 1
-						ctx.set_digits (subnormal_count)
+						ctx.set_digits (- ctx.exponent_limit - e_tiny + 1)
 					end
 					round (ctx)
 					ctx.set_digits (saved_digits)
@@ -3314,7 +3205,7 @@ feature {DECIMAL} -- Basic operations
 			original_dividend_exponent, original_divisor_exponent, bias: INTEGER
 			done, integer_division, impossible, is_negative_exponent, dividend_is_zero: BOOLEAN
 		do
-			integer_division := (division_type /= division_standard)
+			integer_division := division_type /= division_standard
 			create dividend.make_copy (Current)
 			create divisor.make_copy (other)
 				--
@@ -3368,9 +3259,9 @@ feature {DECIMAL} -- Basic operations
 			from
 				if integer_division then
 						-- Determine if division is possible.
-					current_digit_exponent := (original_dividend_exponent - (original_divisor_exponent + adjust))
-					impossible := (current_digit_exponent >= ctx.digits)
-					is_negative_exponent := (current_digit_exponent) < 0
+					current_digit_exponent := original_dividend_exponent - (original_divisor_exponent + adjust)
+					impossible := current_digit_exponent >= ctx.digits
+					is_negative_exponent := current_digit_exponent < 0
 					done := is_negative_exponent or else impossible
 				else
 					impossible := False
@@ -3453,7 +3344,7 @@ feature {DECIMAL} -- Basic operations
 						create Result.make_copy (Current)
 					else
 						new_exponent := original_dividend_exponent.min (original_divisor_exponent)
-						bias := new_exponent - (dividend.exponent.min (divisor.exponent))
+						bias := new_exponent - dividend.exponent.min (divisor.exponent)
 						if Result.is_zero then
 							if dividend_is_zero then
 								new_exponent := original_dividend_exponent
@@ -3655,7 +3546,6 @@ feature -- rounding
 			-- using the context rounding menthod in the current context
 
 		local
-			j: INTEGER
 			x, y: DECIMAL
 		do
 
@@ -3684,8 +3574,7 @@ feature -- rounding
 							Result := x
 						end
 					else
-						j := n * -1
-						Result := rescale_decimal (j.out, ctx)
+						Result := rescale_decimal ((- n).out, ctx)
 					end
 				else
 					if (count - no_digits_after_point) < n.abs then
@@ -3732,7 +3621,6 @@ feature -- rounding
 	ceiling: like Current
 
 		require
-			current_not_void: Current /= Void
 			current_not_special: not is_special
 		do
 			Result := ceiling_wrt_ctx (shared_decimal_context)
@@ -3744,7 +3632,6 @@ feature -- rounding
 
 		require
 			ctx_not_void: ctx /= Void
-			current_not_void: Current /= Void
 			current_not_special: not is_special
 		local
 			ctx_local: DCM_MA_DECIMAL_CONTEXT
@@ -3760,7 +3647,6 @@ feature -- rounding
 	floor: like Current
 
 		require
-			current_not_void: Current /= Void
 			current_not_special: not is_special
 		do
 			Result := floor_wrt_ctx (shared_decimal_context)
@@ -3772,7 +3658,6 @@ feature -- rounding
 
 		require
 			ctx_not_void: ctx /= Void
-			current_not_void: Current /= Void
 			current_not_special: not is_special
 		local
 			ctx_local: DCM_MA_DECIMAL_CONTEXT
@@ -3796,11 +3681,14 @@ invariant
 note
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others."
 	copyright: "Copyright (c) 2011, SEL, York University, Toronto and others."
-	license: "MIT license"
+	copyright: "Copyright (c) 2017 Eiffel Software."
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 	details: "[
 			Originally developed by Paul G. Crismer as part of Gobo. 
 			Revised by Jocelyn Fiat for void safety.
-			Revised by Jonathan Ostroff, Manu Stapf, Moksh Khurana, and Alex Fevga
+			Revised by Jonathan Ostroff, Manu Stapf, Moksh Khurana, Alex Fevga, Alexander Kogtenkov.
 			for full void safety and additional features such as
 			approximately_equal
 			log10(x)

@@ -20,6 +20,8 @@ inherit
 
 	APPLICATION_COMMAND_ARGUMENT_PARSER
 
+	CONF_FILE_CONSTANTS
+
 create
 	make,
 	make_with_source
@@ -90,6 +92,55 @@ feature -- Access
 			Result := has_option (recursive_switch)
 		end
 
+	namespace: detachable STRING
+		do
+			if
+				attached option_of_name (namespace_switch) as opt and then
+				attached opt.value as v and then
+				v.is_valid_as_string_8
+			then
+				Result := v.to_string_8
+			elseif attached ecf_version as v then
+				Result := versioned_namespace (v)
+			end
+		end
+
+	schema: detachable STRING
+		do
+			if
+				attached option_of_name (schema_switch) as opt and then
+				attached opt.value as v and then
+				v.is_valid_as_string_8
+			then
+				Result := v.to_string_8
+			elseif attached ecf_version as v then
+				Result := versioned_schema (v)
+			end
+		end
+
+	versioned_schema (v: READABLE_STRING_8): STRING
+		do
+			create Result.make_from_string (schema_1_0_0)
+			Result.replace_substring_all ("1-0-0", v)
+		end
+
+	versioned_namespace (v: READABLE_STRING_8): STRING
+		do
+			create Result.make_from_string (namespace_1_0_0)
+			Result.replace_substring_all ("1-0-0", v)
+		end
+
+	ecf_version: detachable STRING
+		do
+			if
+				attached option_of_name (ecf_version_switch) as opt and then
+				attached opt.value as v and then
+				v.is_valid_as_string_8
+			then
+				Result := v.to_string_8
+			end
+		end
+
 feature {NONE} -- Usage
 
 	non_switched_argument_name: STRING = "path"
@@ -117,14 +168,23 @@ feature {NONE} -- Switches
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 		once
-			create Result.make (1)
+			create Result.make (3)
 			Result.extend (create {ARGUMENT_SWITCH}.make (recursive_switch, "Recursive scan any directories for *.ecf", True, False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (namespace_switch, "Eiffel Configuration File namespace", True, False, "namespace", "URL of the namespace", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (schema_switch, "Eiffel Configuration File schema", True, False, "schema", "URL of the schema", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (ecf_version_switch, "Eiffel Configuration File schema version (schema and namespace will be set from this version)", True, False, "version", "ECF schema version (formatted like [0-9]-[0-9][0-9]*-[0-9])", False))
 		end
 
 	recursive_switch: STRING = "r|recursive"
 
+	schema_switch: STRING = "schema"
+
+	namespace_switch: STRING = "namespace"
+
+	ecf_version_switch: STRING = "ecf_version"
+
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

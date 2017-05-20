@@ -618,7 +618,6 @@ feature -- External
 			-- <Precursor>
 		local
 			l_area: MANAGED_POINTER
-			i: INTEGER
 			l_data, l_null: POINTER
 		do
 			Result := odbc_put_data (con_context_pointer, no_descriptor, index, $l_data)

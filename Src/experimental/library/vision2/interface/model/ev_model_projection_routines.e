@@ -18,7 +18,7 @@ feature -- Basic operations
 	register_figure (a_figure: EV_MODEL; a_routine: PROCEDURE [EV_MODEL])
 			-- Assign `a_routine' for drawing of `a_figure'.
 		obsolete
-			"Redefine `project' from your EV_MODEL descendant to perform the projection."
+			"Redefine `project' from your EV_MODEL descendant to perform the projection. [2017-05-31]"
 		require
 			a_figure_exists: a_figure /= Void
 			a_routine_exists: a_routine /= Void
@@ -123,13 +123,13 @@ feature {NONE} -- Implementation
 			f_not_void: f /= Void
 			f_show_requested: f.is_show_requested
 		local
-			l_tuple: TUPLE [EV_MODEL]
+			l_tuple: TUPLE [model: EV_MODEL]
 		do
 				-- If figures are registered via `register_figure' we proceed the old fashion way.
 			if draw_routines.valid_index (f.draw_id) and then attached draw_routines.item (f.draw_id) as l_draw_routine then
 				l_tuple := l_draw_routine.empty_operands
 				check valid_entry: l_tuple.valid_type_for_index (f, 1) end
-				l_tuple.put (f, 1)
+				l_tuple.model := f
 				l_draw_routine.call (l_tuple)
 			else
 					-- New way of projecting via double-dispatch.
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 	register_basic_figures
 			-- Register EiffelVision figures.
 		obsolete
-			"Not needed anymore. Basic figures are now handled via {EV_MODEL}.project."
+			"Not needed anymore. Basic figures are now handled via {EV_MODEL}.project. [2017-05-31]"
 		do
 		end
 
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

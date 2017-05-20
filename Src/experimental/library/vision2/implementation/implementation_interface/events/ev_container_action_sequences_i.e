@@ -16,21 +16,17 @@ feature -- Event handling
 	new_item_actions: EV_NEW_ITEM_ACTION_SEQUENCE
 			-- Actions to be performed when a new item is added.
 		do
-			if new_item_actions_internal = Void then
-				new_item_actions_internal :=
-					 create_new_item_actions
+			if attached new_item_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				new_item_actions_internal := Result
 			end
-			Result := new_item_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_new_item_actions: EV_NEW_ITEM_ACTION_SEQUENCE
-			-- Create a new_item action sequence.
-		deferred
-		end
 
 	new_item_actions_internal: detachable EV_NEW_ITEM_ACTION_SEQUENCE
 			-- Implementation of once per object `new_item_actions'.

@@ -17,6 +17,19 @@ create
 
 feature -- View
 
+	home_page_redirect (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Home redirect
+		local
+			l_hp: HTML_HOME
+		do
+
+			if attached req.http_host as l_host then
+				compute_response_redirect (req, res, absolute_host(req,""))
+			end
+		end
+
+
+
 	home_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Home page representation
 		local
@@ -555,6 +568,13 @@ feature -- View
 				end
 			end
 		end
+
+	confirm_change_password (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: detachable ESA_PASSWORD_RESET_VIEW)
+			-- <Precursor>
+		do
+			-- Not implemented.
+		end
+
 
 	post_confirm_email_change_page (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>

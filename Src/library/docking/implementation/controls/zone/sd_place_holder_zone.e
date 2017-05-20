@@ -1,13 +1,13 @@
-note
+﻿note
 	description: "[
-					A place holder zone.
-					Normally used for place holder for editors zones.											
-					When there is no type_editor zone in docking manager,
-					This zone is the place holder for eidtors zones, when
-					added new editor zones to docking manager, this zone's 
-					location is the	default location for editor zones.
-					Used docking library internally.
-																			]"
+		A place holder zone.
+		Normally used for place holder for editors zones.											
+		When there is no type_editor zone in docking manager,
+		This zone is the place holder for eidtors zones, when
+		added new editor zones to docking manager, this zone's 
+		location is the	default location for editor zones.
+		Used docking library internally.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -39,12 +39,13 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_content: SD_CONTENT)
-			-- Creation method
+	make (a_content: SD_CONTENT; a_docking_manager: SD_DOCKING_MANAGER)
+			-- Associate new object with `a_content' and `a_docking_manager'.
 		require
 			not_void: a_content /= Void
 			only_for_place_holder_zone: a_content.unique_title.is_equal ((create {SD_SHARED}).editor_place_holder_content_name)
 		do
+			docking_manager := a_docking_manager
 			create internal_shared
 			internal_content := a_content
 			create {EV_CELL_IMP} implementation_upper_zone.make -- Make void safe compiler happy, not used
@@ -91,13 +92,9 @@ feature -- Command
 		require
 			a_container_not_void: a_container /= Void
 			a_container_not_full: not a_container.full
-		local
-			l_docking_state: SD_DOCKING_STATE
 		do
 			a_container.extend (Current)
-
-			create l_docking_state.make_for_place_holder_zone (content, Current)
-
+			;(create {SD_DOCKING_STATE}.make_for_place_holder_zone (content, Current)).do_nothing
 			if not docking_manager.contents.has (content) then
 				docking_manager.contents.extend (content)
 			end
@@ -120,7 +117,9 @@ feature {SD_DOCKING_MANAGER_COMMAND} -- Internal command
 			create l_tool_bar.make
 			create l_button.make
 			l_button.set_text (internal_shared.interface_names.editor_area)
-			l_button.pointer_button_press_actions.force_extend (agent (docking_manager.command).restore_editor_area_for_minimized)
+			l_button.pointer_button_press_actions.extend
+				(agent (a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32)
+					do (docking_manager.command).restore_editor_area_for_minimized end)
 			l_button.set_pixel_buffer (internal_shared.icons.editor_area)
 			l_tool_bar.extend (l_button)
 			create l_border.make
@@ -150,15 +149,13 @@ feature {SD_DOCKING_MANAGER_COMMAND} -- Internal command
 			wipe_out
 			extend_cell (l_border)
 		ensure
-			set: internal_docking_manager = a_manager
+			set: docking_manager = a_manager
 		end
 
 	clear_for_minimized_area
 			-- Cleanup
 		do
 			clear_docking_manager
-		ensure
-			cleared: internal_docking_manager = Void
 		end
 
 feature -- Query
@@ -170,16 +167,13 @@ feature -- Query
 		end
 
 	title: STRING_32
-			-- Title
-		local
-			l_shared: SD_SHARED
+			-- Title.
 		do
-			create l_shared
-			Result := l_shared.editor_place_holder_content_name
+			Result := (create {SD_SHARED}).editor_place_holder_content_name
 		end
 
 	title_area: EV_RECTANGLE
-			-- Place holder content has zero sized title area
+			-- Place holder content has zero sized title area.
 		do
 			create Result
 		end
@@ -214,7 +208,7 @@ feature {NONE} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -224,6 +218,4 @@ feature {NONE} -- Implementation
 			Customer support http://support.eiffel.com
 		]"
 
-
 end
-

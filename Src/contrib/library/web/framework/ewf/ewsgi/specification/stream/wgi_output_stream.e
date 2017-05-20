@@ -37,6 +37,53 @@ feature -- Output
 			end
 		end
 
+	put_file_content (a_file: FILE; a_offset: INTEGER; a_byte_count: INTEGER)
+			-- Send `a_byte_count' bytes from the content of file `a_file' starting at offset `a_offset'.
+			--| Could be redefined for optimization.
+		require
+			a_file_closed_or_openread: a_file.exists and then (a_file.is_access_readable or a_file.is_closed)
+			is_open_write: is_open_write
+			a_file_not_void: a_file /= Void
+		local
+			l_close_needed: BOOLEAN
+			l_remain: INTEGER
+			l_done: BOOLEAN
+			s: STRING
+		do
+			if a_file.exists and then a_file.is_access_readable then
+				if a_file.is_open_read then
+					l_close_needed := False
+				else
+					l_close_needed := True
+					a_file.open_read
+				end
+				if a_offset > 0 then
+					a_file.move (a_offset)
+				end
+				from
+					l_remain := a_byte_count
+					l_done := False
+				until
+					a_file.exhausted or l_done
+				loop
+					a_file.read_stream (l_remain.min (4_096))
+					s := a_file.last_string
+					if s.is_empty then
+							-- network error?
+						l_done := True
+					else
+						put_string (s)
+						l_remain := l_remain - s.count
+						check l_remain >= 0 end
+						l_done := l_remain = 0
+					end
+				end
+				if l_close_needed then
+					a_file.close
+				end
+			end			
+		end
+
 	put_character (c: CHARACTER_8)
 			-- Write `c' to output stream.
 			--| Could be redefined for optimization			

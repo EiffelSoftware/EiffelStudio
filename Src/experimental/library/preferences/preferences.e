@@ -209,8 +209,11 @@ feature {NONE} -- Initialization
 
 feature -- Importation
 
-	import_from_storage (a_storage: PREFERENCES_STORAGE_I)
-			-- Import preferences values from `a_storage'
+	import_from_storage_with_callback_and_exclusion (a_storage: PREFERENCES_STORAGE_I; a_ignore_hidden_preference: BOOLEAN;
+				a_callback: detachable PROCEDURE [TUPLE [ith: INTEGER; total: INTEGER; name: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL]];
+				a_exclude_function: detachable FUNCTION [TUPLE [ith: INTEGER; total: INTEGER; name: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL], BOOLEAN])
+			-- Import preferences values from `a_storage', on import call `a_callback` if any.
+			-- If `a_exclude_function` is set, import related preference only if return is False.
 		require
 			a_storage_not_void: a_storage /= Void
 		local
@@ -218,24 +221,56 @@ feature -- Importation
 			k: READABLE_STRING_GENERAL
 			v: READABLE_STRING_32
 			p: detachable PREFERENCE
+			i,n: INTEGER
 		do
 			a_storage.initialize_with_preferences (Current)
 			vals := a_storage.session_values
 			from
+				i := 0
+				n := vals.count
 				vals.start
 			until
 				vals.after
 			loop
+				i := i + 1
 				k := vals.key_for_iteration
 				v := vals.item_for_iteration
-				session_values.force (v, k)
 				p := preferences.item (k)
-				if p /= Void then
-					check preferences.has (k) end
-					p.set_value_from_string (v)
+				if a_ignore_hidden_preference and (p = Void or else p.is_hidden) then
+						-- Ignored
+				elseif
+					a_exclude_function /= Void and then
+					a_exclude_function.item ([i, n, k, v])
+				then
+						-- Excluded
+				else
+					if a_callback /= Void then
+						a_callback.call ([i,n,k, v])
+					end
+					session_values.force (v, k)
+					if p /= Void then
+						check preferences.has (k) end
+						p.set_value_from_string (v)
+					end
 				end
 				vals.forth
 			end
+		end
+
+	import_from_storage_with_callback (a_storage: PREFERENCES_STORAGE_I; a_callback: detachable PROCEDURE [TUPLE [ith: INTEGER; total: INTEGER; name: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL]])
+			-- Import preferences values from `a_storage'
+		require
+			a_storage_not_void: a_storage /= Void
+		do
+			import_from_storage_with_callback_and_exclusion (a_storage, False, a_callback, Void)
+		end
+
+	import_from_storage (a_storage: PREFERENCES_STORAGE_I)
+			-- Import preferences values from `a_storage'
+		require
+			a_storage_not_void: a_storage /= Void
+		do
+			import_from_storage_with_callback (a_storage, Void)
 		end
 
 	export_to_storage (a_storage: PREFERENCES_STORAGE_I; a_save_modified_values_only: BOOLEAN)
@@ -261,7 +296,7 @@ feature -- Access
 	error_message: detachable STRING_8
 			-- Message explaining why `Current' could not be initialized.
 		obsolete
-			"Use `error_message_32' instead."
+			"Use `error_message_32` instead [2017-05-31]."
 		require
 			error_message_is_valid_as_string_8: error_message_is_valid_as_string_8
 		do
@@ -378,7 +413,7 @@ feature -- Preference
 		end
 
 	get_resource (a_name: STRING): detachable PREFERENCE
-		obsolete "[060113] use get_preference instead of get_resource"
+		obsolete "use `get_preference` [2017-05-31]"
 		do
 			Result := get_preference (a_name)
 		end
@@ -397,7 +432,7 @@ feature -- Preference
 		end
 
 	get_resource_value_direct (a_name: READABLE_STRING_GENERAL): like get_preference_value_direct
-		obsolete "[060113] use get_preference_value_direct instead of get_resource_value_direct"
+		obsolete "use `get_preference_value_direct` [2017-05-31]"
 		do
 			Result := get_preference_value_direct (a_name)
 		end
@@ -420,7 +455,7 @@ feature -- Preference
 		end
 
 	has_resource (a_name: STRING): BOOLEAN
-		obsolete "[060113] use has_preference instead of has_resource"
+		obsolete "use `has_preference` [2017-05-31]"
 		do
 			Result := has_preference (a_name)
 		end
@@ -455,13 +490,13 @@ feature -- Preference
 		end
 
 	save_resource (a_preference: PREFERENCE)
-		obsolete "[060113] use save_preference instead of save_resource"
+		obsolete "use `save_preference` [2017-05-31]"
 		do
 			save_preference (a_preference)
 		end
 
 	save_resources
-		obsolete "[060113] use save_preferences instead of save_resources"
+		obsolete "use `save_preferences` [2017-05-31]"
 		do
 			save_preferences
 		end
@@ -508,7 +543,7 @@ feature {PREFERENCE_EXPORTER} -- Implementation
 			-- Preferences part of Current.
 
 	resources: like preferences
-		obsolete "[060113] use preferences instead of resources"
+		obsolete "use `preferences` [2017-05-31]"
 		do
 			Result := preferences
 		end
@@ -684,7 +719,7 @@ invariant
 	has_preferences_storage: preferences_storage /= Void
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

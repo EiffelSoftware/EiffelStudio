@@ -43,7 +43,7 @@ feature -- Command
 	frozen load_image_from_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Redefine
 		obsolete
-			"Use `load_image_from_path' instead."
+			"Use `load_image_from_path' instead [2017-05-31]."
 		do
 			load_image_from_path (create {PATH}.make_from_string (a_file_name))
 		end
@@ -92,7 +92,7 @@ feature -- Command
 	frozen save_image_to_file (a_file_name: READABLE_STRING_GENERAL)
 			-- Save data to a file.
 		obsolete
-			"Use `save_image_to_path' instead."
+			"Use `save_image_to_path' instead [2017-05-31]."
 		require
 			not_void: a_file_name /= Void
 			exists: exists
@@ -103,7 +103,7 @@ feature -- Command
 	frozen save_image_to_file_with_parameters (a_file_name: READABLE_STRING_GENERAL; a_parameters: detachable WEL_GDIP_IMAGE_ENCODER_PARAMETERS)
 			-- Save data to a file with `a_parameters' options
 		obsolete
-			"Use `save_image_to_path_with_parameters' instead."
+			"Use `save_image_to_path_with_parameters' instead [2017-05-31]."
 		require
 			not_void: a_file_name /= Void
 			exists: exists
@@ -114,7 +114,7 @@ feature -- Command
 	frozen save_image_to_file_with_encoder (a_file_name: READABLE_STRING_GENERAL; a_format: WEL_GDIP_IMAGE_ENCODER)
 			-- Save data to a file with image encoder parameter
 		obsolete
-			"Use `save_image_to_path_with_encoder' instead."
+			"Use `save_image_to_path_with_encoder' instead [2017-05-31]."
 		require
 			not_void: a_file_name /= Void
 			not_void: a_format /= Void
@@ -126,7 +126,7 @@ feature -- Command
 	frozen save_image_to_file_with_encoder_and_parameters (a_file_name: READABLE_STRING_GENERAL; a_format: WEL_GDIP_IMAGE_ENCODER; a_parameters: detachable WEL_GDIP_IMAGE_ENCODER_PARAMETERS)
 			-- Save data to a file with image encoder and parameters
 		obsolete
-			"Use `save_image_to_path_with_encoder_and_parameters' instead."
+			"Use `save_image_to_path_with_encoder_and_parameters' instead [2017-05-31]."
 		require
 			not_void: a_file_name /= Void
 			not_void: a_format /= Void
@@ -815,7 +815,7 @@ feature -- Obsolete
 	save_image_to_file_with_format (a_file_name: STRING; a_format: WEL_GDIP_IMAGE_FORMAT)
 			-- Save data to a file with image format parameter
 		obsolete
-			"Use save_image_to_file_with_encoder instead"
+			"Use save_image_to_file_with_encoder instead [2017-05-31]."
 		require
 			not_void: a_file_name /= Void
 			not_void: a_format /= Void
@@ -827,7 +827,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

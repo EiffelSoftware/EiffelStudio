@@ -1,0 +1,15 @@
+package obsolete_eiffeltest
+
+project
+	eiffeltest = "eiffeltest.ecf"
+
+note
+	title: Obsolete EiffelTest
+	description: Obsolete EiffelTest solution
+	tags: test, obsolete
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	copyright: 1984-2016 Eiffel Software and others
+	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/obsolete/eiffeltest
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+
+end

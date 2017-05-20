@@ -1,10 +1,10 @@
-note
+﻿note
 
 	description:
 		"Parser for the resource file."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class RESOURCE_PARSER
@@ -14,13 +14,16 @@ inherit
 
 	LOCALIZED_PRINTER
 
+create
+	parse_file
+
 feature -- Parsing
 
 	parse_file (filename: PATH; table: RESOURCE_TABLE)
 			-- Parse the resource file `filename' and store the
 			-- information in the resource table `table'.
 		require
-			filename_not_void: filename /= Void;
+			filename_not_void: filename /= Void
 			filename_not_empty: not filename.is_empty
 			table_not_void: table /= Void
 		local
@@ -33,27 +36,27 @@ feature -- Parsing
 			if not l_resource_file.exists then
 				-- Do nothing (no message) if the resource file does not exist
 			elseif l_resource_file.is_readable then
-				l_resource_file.open_read;
+				l_resource_file.open_read
 				if l_resource_file.readable then
 					from
-						line_number := 0;
-						read_line;
+						line_number := 0
+						read_line
 						parse_separators
 					until
 						end_of_file
 					loop
-						parse_name;
+						parse_name
 						l_last_token := last_token
 						if l_last_token = Void then
 							syntax_error ("Resource name expected", filename)
 						else
-							resource_name := l_last_token;
-							resource_name.to_lower;
-							parse_colon;
+							resource_name := l_last_token
+							resource_name.to_lower
+							parse_colon
 							if last_token = Void then
 								syntax_error ("%":%" expected",filename)
 							else
-								parse_value;
+								parse_value
 								l_last_token := last_token
 								if l_last_token = Void then
 									syntax_error ("Resource value expected", filename)
@@ -61,18 +64,19 @@ feature -- Parsing
 									table.force (l_last_token, resource_name)
 								end
 							end
-						end;
+						end
 						parse_separators
 					end
-				end;
+				end
 				l_resource_file.close
 			else
-				io.error.put_string ("Warning: Cannot read resource file %"");
-				localized_print_error (filename.name);
-				io.error.put_string ("%".");
+				io.error.put_string ("Warning: Cannot read resource file %"")
+				localized_print_error (filename.name)
+				io.error.put_string ("%".")
 				io.error.put_new_line
 			end
-		end;
+			line := ""
+		end
 
 feature -- Errors
 
@@ -87,18 +91,18 @@ feature -- Errors
 		do
 			l_resource_file := resource_file
 			check attached l_resource_file end -- implied by precondition `resource_file_attached'
-			io.error.put_string ("Warning: resource file %"");
-			localized_print_error (a_file_name.name);
-			io.error.put_string ("%"%N%TSyntax error, line ");
-			io.error.put_integer (line_number);
-			io.error.put_string (": ");
-			io.error.put_string (message);
-			io.error.put_new_line;
+			io.error.put_string ("Warning: resource file %"")
+			localized_print_error (a_file_name.name)
+			io.error.put_string ("%"%N%TSyntax error, line ")
+			io.error.put_integer (line_number)
+			io.error.put_string (": ")
+			io.error.put_string (message)
+			io.error.put_new_line
 			read_line
-		end;
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -129,4 +133,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class RESOURCE_PARSER
+end

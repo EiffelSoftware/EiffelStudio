@@ -98,7 +98,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	non_compliant_reasons: EC_CHECKED_REASON_CONSTANTS
+	non_compliant_reasons: separate EC_CHECKED_REASON_CONSTANTS
 			-- Checked reasons
 		once ("PROCESS")
 			create Result
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

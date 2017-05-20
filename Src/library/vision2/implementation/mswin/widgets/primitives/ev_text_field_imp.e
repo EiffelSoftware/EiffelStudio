@@ -19,7 +19,7 @@ inherit
 		end
 
 	EV_TEXT_COMPONENT_IMP
-		
+
 		redefine
 			on_key_down,
 			interface,
@@ -109,14 +109,12 @@ inherit
 			text
 		end
 
-	EV_TEXT_FIELD_ACTION_SEQUENCES_IMP
-
 create
 	make
 
 feature -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create `Current' with inteface `an_interface'.
 		do
 			assign_interface (an_interface)
@@ -134,7 +132,7 @@ feature -- Initialization
 
 feature -- Element Change
 
-	set_text (a_text: detachable READABLE_STRING_GENERAL)
+	set_text (a_text: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_wel_string: WEL_STRING
@@ -402,7 +400,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TEXT_FIELD note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

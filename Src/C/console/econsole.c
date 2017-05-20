@@ -13,19 +13,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -141,8 +141,8 @@ void eif_console_cleanup (EIF_BOOLEAN crashed)
 	}
 }
 
-/* 
- * Console mutex in MT mode. 
+/*
+ * Console mutex in MT mode.
  */
 #ifdef EIF_THREADS
 /*
@@ -180,7 +180,34 @@ rt_public void eif_show_console(void)
 		old_conout = eif_conout = GetStdHandle (STD_OUTPUT_HANDLE);
 		old_conerr = eif_conerr = GetStdHandle (STD_ERROR_HANDLE);
 
-#define is_invalid_handle(x) (x == 0) || (x == INVALID_HANDLE_VALUE)
+#define is_invalid_handle(x) ((x == 0) || (x == INVALID_HANDLE_VALUE))
+
+			/* Test the handles to see if they really are valid.
+			 * This code is to handle the odd behavior in Window Server 2008. */
+
+		if
+			(!is_invalid_handle(eif_conin) &&
+			GetFileType(eif_conin) == FILE_TYPE_UNKNOWN &&
+			GetLastError() == ERROR_INVALID_HANDLE)
+		{
+			old_conin = eif_conin = 0;
+		}
+
+		if
+			(!is_invalid_handle(eif_conout) &&
+			GetFileType(eif_conout)==FILE_TYPE_UNKNOWN &&
+			GetLastError() == ERROR_INVALID_HANDLE)
+		{
+			old_conout = eif_conout = 0;
+		}
+
+		if
+			(!is_invalid_handle(eif_conerr) &&
+			GetFileType(eif_conerr)==FILE_TYPE_UNKNOWN &&
+			GetLastError() == ERROR_INVALID_HANDLE)
+		{
+			old_conerr = eif_conerr = 0;
+		}
 
 		if (is_invalid_handle(old_conin) || is_invalid_handle(old_conout) || is_invalid_handle(old_conerr)) {
 			AllocConsole();
@@ -199,7 +226,7 @@ rt_public void eif_show_console(void)
 			 * handles `stdin', `stdout' and `stderr' to the new
 			 * created console.
 			 */
-		if (old_conout != eif_conout) {
+		if (is_invalid_handle(old_conout) && old_conout != eif_conout) {
 				/* Use console for standard output. */
 			if (!freopen("CONOUT$", "w", stdout)) {
 				EIF_CONSOLE_UNLOCK;
@@ -207,16 +234,16 @@ rt_public void eif_show_console(void)
 			}
 		}
 
-		if (old_conerr != eif_conerr) {
+		if (is_invalid_handle(old_conerr) && old_conerr != eif_conerr) {
 				/* Use console for standard error. */
 				/* There is no "CONERR$", only "CONOUT$". */
 			if (!freopen("CONOUT$", "w", stderr)) {
 				EIF_CONSOLE_UNLOCK;
-				eraise("Cannot reopen stdout", EN_IO);
+				eraise("Cannot reopen stderr", EN_IO);
 			}
 		}
 
-		if (old_conin != eif_conin) {
+		if (is_invalid_handle(old_conin) && old_conin != eif_conin) {
 				/* Use console for standard input. */
 			if (!freopen("CONIN$", "r", stdin)) {
 				EIF_CONSOLE_UNLOCK;

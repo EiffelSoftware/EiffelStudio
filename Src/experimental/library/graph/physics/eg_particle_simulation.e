@@ -43,7 +43,10 @@ feature -- Access
 	force (a_particle: like particle_type): G
 			-- The force affecting `a_particle'.
 		do
-			Result := external_force (a_particle) + nearest_neighbor_force (a_particle) + n_body_force_solver (a_particle)
+			Result := external_force (a_particle) + nearest_neighbor_force (a_particle)
+			if attached n_body_force_solver (a_particle) as v then
+				Result := Result + v
+			end
 		ensure
 			Result_exists: Result /= Void
 		end
@@ -89,11 +92,9 @@ feature {NONE}
 			Result_exists: Result /= Void
 		end
 
-	n_body_force_solver (a_particle: EG_PARTICLE): G
+	n_body_force_solver (a_particle: EG_PARTICLE): detachable G
 			-- Solve n_nody_force for `a_particle'.
 		deferred
-		ensure
-			Result_exists: Result /= Void
 		end
 
 feature {NONE} -- Implementation

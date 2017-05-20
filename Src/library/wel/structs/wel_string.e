@@ -89,7 +89,7 @@ feature -- Access
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos'. Truncated to STRING_8.
 		obsolete
-			"Use `substring' and then convert to STRING_8."
+			"Use `substring' and then convert to STRING_8 [2017-05-31]."
 		require
 			start_position_big_enough: start_pos >= 1
 			end_position_big_enough: start_pos <= end_pos + 1
@@ -104,7 +104,7 @@ feature -- Access
 			-- Eiffel string, ignoring `count'. Reads until a null character is being read.
 			-- Truncated to STRING_8.
 		obsolete
-			"Use `string' and then convert to STRING_8."
+			"Use `string' and then convert to STRING_8 [2017-05-31]."
 		do
 			Result := string.as_string_8
 		ensure
@@ -249,7 +249,7 @@ feature -- Measurement
 	length: INTEGER
 			-- Synonym for `count'.
 		obsolete
-			"Use `count' instead."
+			"Use `count' instead [2017-05-31]."
 		do
 			Result := count
 		ensure
@@ -460,7 +460,7 @@ feature -- Element change
 	initialize
 			-- Fill Current with zeros.
 		obsolete
-			"Use `fill_blank' instead."
+			"Use `fill_blank' instead [2017-05-31]."
 		do
 			fill_blank
 		ensure
@@ -470,7 +470,7 @@ feature -- Element change
 	initialize_with_character (a_character: CHARACTER)
 			-- Fill current with `a_character'.
 		obsolete
-			"Use `fill_value (a_character.code.to_integer_8)' instead"
+			"Use `fill_value (a_character.code.to_integer_8)' instead [2017-05-31]."
 		do
 			fill_value (a_character.code.to_integer_8)
 		ensure
@@ -482,7 +482,7 @@ feature -- Status report
 	to_integer: INTEGER
 			-- Converts `item' to an integer.
 		obsolete
-			"Use `item' instead to ensure portability between 32 and 64 bits version of Windows."
+			"Use `item' instead to ensure portability between 32 and 64 bits version of Windows [2017-05-31]."
 		do
 			Result := item.to_integer_32
 		end
@@ -529,7 +529,7 @@ invariant
 	bytes_count_valid: (bytes_count \\ character_size) = 0
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

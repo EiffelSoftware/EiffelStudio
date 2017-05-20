@@ -51,6 +51,7 @@ doc:<file name="equal.c" header="eif_equal.h" version="$Id$" summary="Equality o
 #include "rt_interp.h"
 #include "rt_gen_types.h"
 #include "eif_memory.h"
+#include "eif_helpers.h"
 #include "rt_macros.h"
 #include "rt_assert.h"
 #include <string.h>
@@ -598,12 +599,22 @@ rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF
 				return EIF_FALSE;
 			break;
 		case SK_REAL32:
-			if (*(EIF_REAL_32 *) t_ref != *(EIF_REAL_32 *) s_ref)
-				return EIF_FALSE;
+			if (egc_has_ieee_semantic) {
+				if ((*(EIF_REAL_32 *) t_ref != *(EIF_REAL_32 *) s_ref))
+					return EIF_FALSE;
+			} else {
+				if (!eif_is_equal_real_32(*(EIF_REAL_32 *) t_ref, *(EIF_REAL_32 *) s_ref))
+					return EIF_FALSE;
+			}
 			break;
 		case SK_REAL64:
-			if (*(EIF_REAL_64 *) t_ref != *(EIF_REAL_64 *) s_ref)
-				return EIF_FALSE;
+			if (egc_has_ieee_semantic) {
+				if ((*(EIF_REAL_64 *) t_ref != *(EIF_REAL_64 *) s_ref))
+					return EIF_FALSE;
+			} else {
+				if (!eif_is_equal_real_64(*(EIF_REAL_64 *) t_ref, *(EIF_REAL_64 *) s_ref))
+					return EIF_FALSE;
+			}
 			break;
 		case SK_POINTER:
 			if (*(fnptr *) t_ref != *(fnptr *) s_ref)
@@ -728,12 +739,22 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
 				return EIF_FALSE;
 			break;
 		case SK_REAL32:
-			if (*(EIF_REAL_32 *) t_ref != *(EIF_REAL_32 *) s_ref)
-				return EIF_FALSE;
+			if (egc_has_ieee_semantic) {
+				if ((*(EIF_REAL_32 *) t_ref != *(EIF_REAL_32 *) s_ref))
+					return EIF_FALSE;
+			} else {
+				if (!eif_is_equal_real_32(*(EIF_REAL_32 *) t_ref, *(EIF_REAL_32 *) s_ref))
+					return EIF_FALSE;
+			}
 			break;
 		case SK_REAL64:
-			if (*(EIF_REAL_64 *) t_ref != *(EIF_REAL_64 *) s_ref)
-				return EIF_FALSE;
+			if (egc_has_ieee_semantic) {
+				if ((*(EIF_REAL_64 *) t_ref != *(EIF_REAL_64 *) s_ref))
+					return EIF_FALSE;
+			} else {
+				if (!eif_is_equal_real_64(*(EIF_REAL_64 *) t_ref, *(EIF_REAL_64 *) s_ref))
+					return EIF_FALSE;
+			}
 			break;
 		case SK_POINTER:
 			if (*(fnptr *) t_ref != *(fnptr *) s_ref)

@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create input_locales.make (1, 0)
+			create input_locales.make_filled (({POINTER}).default ,1, 0)
 			create log_font.make (12, "Courrier New")
 			make_top (Title)
 			resize (800, 680)

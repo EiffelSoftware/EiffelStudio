@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "SD_ZONE which tab is at top side without SD_TITLE_BAR"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ feature {NONE} -- Initlization
 
 			Precursor {SD_TAB_ZONE} (a_content)
 			init
-			
+
 			internal_notebook.set_tab_position ({SD_NOTEBOOK}.tab_top)
 			internal_notebook.normal_max_actions.extend (agent on_normal_max_window)
 			internal_notebook.minimize_actions.extend (agent on_minimize)
@@ -116,8 +116,9 @@ feature {NONE} -- Implementation
 				if attached {EV_SPLIT_AREA} l_parent as l_split_area then
 					internal_parent_split_position := l_split_area.split_position
 				end
-				check l_parent /= Void end -- Implied by Current displaying in main window
-				l_parent.prune (Current)
+				if attached l_parent then
+					l_parent.prune (Current)
+				end
 				l_main_area.wipe_out
 				l_main_area.extend (Current)
 				internal_notebook.set_show_maximized (True)
@@ -142,7 +143,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

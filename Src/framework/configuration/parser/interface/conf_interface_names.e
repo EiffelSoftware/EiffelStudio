@@ -47,6 +47,7 @@ feature -- Section names
 	section_mapping: STRING_32 do Result := locale.translation ("Type Mapping")	end
 
 	section_general: STRING_32 do Result := locale.translation ("General")	end
+	section_capability: STRING_32 do Result := locale.translation ("Capability")	end
 	section_language: STRING_32 do Result := locale.translation ("Language")	end
 	section_execution: STRING_32 do Result := locale.translation ("Execution")	end
 	section_optimization: STRING_32 do Result := locale.translation ("Optimization")	end
@@ -121,18 +122,6 @@ feature -- Target names and descriptions
 	target_console_application_description: STRING_32 do Result := locale.translation ("Is the project a console application?")	end
 	target_cls_compliant_name: STRING_32 do Result := locale.translation ("CLS Compliant")	end
 	target_cls_compliant_description: STRING_32 do Result := locale.translation ("Should generated assemblies be marked as CLS compliant?")	end
-	target_concurrency_name: STRING_32 do Result := locale.translation ("Concurrency")	end
-	target_concurrency_description: STRING_32 do Result := locale.translation
-			({STRING_32} "[
-				Concurrency mode of the target application:
-				 • No concurrency - mono-threaded;
-				 • EiffelThread - based on EiffelThread library;
-				 • SCOOP - controlled by SCOOP rules.
-			]")
-		end
-	target_concurrency_none_name: STRING_32 do Result := locale.translation ("No concurrency") end
-	target_concurrency_thread_name: STRING_32 do Result := locale.translation ("EiffelThread") end
-	target_concurrency_scoop_name: STRING_32 do Result := locale.translation ("SCOOP") end
 	target_dead_code_removal_name: STRING_32 do Result := locale.translation ("Dead Code Removal")	end
 	target_dead_code_removal_description: STRING_32 do Result := locale.translation ("Should unused code be removed?")	end
 	target_dotnet_naming_convention_name: STRING_32 do Result := locale.translation (".NET Naming Convention")	end
@@ -305,6 +294,18 @@ feature -- Target names and descriptions
 	properties_class_name: STRING_32 do Result := locale.translation ("Class")	end
 	properties_target_name: STRING_32 do Result := locale.translation ("Target")	end
 
+feature -- Tab names
+
+	tab_properties_name: READABLE_STRING_32 do Result := locale.translation_in_context ("Properties", "configuration") end
+	tab_language_name: READABLE_STRING_32 do Result := locale.translation_in_context ("Language", "configuration") end
+
+feature -- Capability names and descriptions
+
+	capability_header_capable_of_name: READABLE_STRING_32 do Result := locale.translation_in_context ("Support", "configuration.capability") end
+	capability_header_if_root_name: READABLE_STRING_32 do Result := locale.translation_in_context ("Use", "configuration.capability") end
+	capability_toggle_default_name: READABLE_STRING_32 do REsult := locale.translation_in_context ("Default", "configuration.capability") end
+	capability_toggle_inherited_name: READABLE_STRING_32 do REsult := locale.translation_in_context ("Inherited", "configuration.capability") end
+
 feature -- Option names and descriptions
 
 	option_require_name: STRING_32 do Result := locale.translation ("Require")	end
@@ -351,15 +352,37 @@ feature -- Option names and descriptions
 			-- Name of a catcall detection option value indexed by the corresponding option index.
 		once
 			create Result.make_from_array (<<
-				locale.translation ("No"),
-				locale.translation ("Conformance"),
-				locale.translation ("Complete")
+				locale.translation_in_context ("None", "configuration.catcall_detection"),
+				locale.translation_in_context ("Conformance", "configuration.catcall_detection"),
+				locale.translation_in_context ("Complete", "configuration.catcall_detection")
 			>>)
 		ensure
 			valid_index:
 				Result.valid_index ({CONF_OPTION}.catcall_detection_index_none) and
 				Result.valid_index ({CONF_OPTION}.catcall_detection_index_conformance) and
 				Result.valid_index ({CONF_OPTION}.catcall_detection_index_all)
+		end
+
+	option_concurrency_name: STRING_32 do Result := locale.translation_in_context ("Concurrency", "configuration") end
+	option_concurrency_description: STRING_32 do Result := locale.translation_in_context ({STRING_32} "[
+				Concurrency mode:
+				 • Thread - unstructured multithreading based on EiffelThread library or built-in (in .NET);
+				 • None - no concurrency, mono-threaded;
+				 • SCOOP - controlled by SCOOP rules.
+			]", "configuration") end
+	option_concurrency_value: ARRAYED_LIST [STRING_32]
+			-- Name of a catcall detection option value indexed by the corresponding option index.
+		once
+			create Result.make_from_array (<<
+				locale.translation_in_context ("Thread", "configuration.concurrency"),
+				locale.translation_in_context ("None", "configuration.concurrency"),
+				locale.translation_in_context ("SCOOP", "configuration.concurrency")
+			>>)
+		ensure
+			valid_index:
+				Result.valid_index ({CONF_TARGET_OPTION}.concurrency_index_thread) and
+				Result.valid_index ({CONF_TARGET_OPTION}.concurrency_index_none) and
+				Result.valid_index ({CONF_TARGET_OPTION}.concurrency_index_scoop)
 		end
 
 	option_void_safety_name: STRING_32 do Result := locale.translation ("Void safety") end
@@ -375,11 +398,11 @@ feature -- Option names and descriptions
 			-- Name of a void safety option value indexed by the corresponding option index.
 		once
 			create Result.make_from_array (<<
-				locale.translation ("No"),
-				locale.translation ("Conformance"),
-				locale.translation ("Initialization"),
-				locale.translation ("Transitional"),
-				locale.translation ("Complete")
+				locale.translation_in_context ("None", "configuration.void_safety"),
+				locale.translation_in_context ("Conformance", "configuration.void_safety"),
+				locale.translation_in_context ("Initialization", "configuration.void_safety"),
+				locale.translation_in_context ("Transitional", "configuration.void_safety"),
+				locale.translation_in_context ("Complete", "configuration.void_safety")
 			>>)
 		ensure
 			valid_index:
@@ -816,6 +839,10 @@ feature -- Parse errors
 		do
 			Result := locale.formatted_string (locale.translation ("Invalid attribute '$1'"), [an_attribute])
 		end
+	e_parse_unsupported_attribute (an_attribute: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("Attribute '$1' is no longer supported for this element."), [an_attribute])
+		end
 	e_parse_missing_attribute (an_attribute: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Missing attribute '$1'"), [an_attribute])
@@ -1148,6 +1175,115 @@ feature -- String parse errors
 			else
 				Result := locale.formatted_string (locale.translation ("Invalid value for configuration option %"$1%": %"$2%""), [option_name, option_value])
 			end
+		end
+
+feature -- Capability errors
+
+	e_incompatible_class_capability (capability, class_value, class_name, cluster_value, cluster_name, target, system, file: READABLE_STRING_GENERAL): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context
+				("[
+					Class option "$1" has value "$2" insufficient for its cluster value "$4".
+						Class: $3
+						Cluster: $5
+						Target: $6
+						System: $7
+						File: $8
+				]", "configuration"),
+				capability, -- 1
+				class_value, -- 2
+				class_name, -- 3
+				cluster_value, -- 4
+				cluster_name, -- 5
+				target, -- 6
+				system, --7
+				file) -- 8
+		end
+
+	e_incompatible_group_capability (capability, group_value, group_name, target_value, target_name, target_system, target_file: READABLE_STRING_GENERAL): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context
+				("[
+					Group option "$1" has value "$2" insufficient for value "$4" of a target containing this group.
+						Group: $3
+						Target: $5
+						System: $6
+						File: $7
+				]", "configuration"),
+				capability, -- 1
+				group_value, -- 2
+				group_name, -- 3
+				target_value, -- 4
+				target_name, -- 5
+				target_system, -- 6
+				target_file) -- 7
+		end
+
+	e_incompatible_target_capability (capability, parent_value, parent_name, parent_system, parent_file, target_value, target_name, target_system, target_file: READABLE_STRING_GENERAL): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context
+				("[
+					Capability "$1" of supplier target has value "$2" insuffient for client value "$6".
+					Client/child target
+						Name: $7
+						System: $8
+						File: $9
+					Supplier/parent target					
+						Name: $3
+						System: $4
+						File: $5
+				]", "configuration"),
+				capability, -- 1
+				parent_value, -- 2
+				parent_name, -- 3
+				parent_system, -- 4
+				parent_file, -- 5
+				target_value, -- 6
+				target_name, -- 7
+				target_system, -- 8
+				target_file) -- 9
+		end
+
+	e_incompatible_root_option (capability, root_value, capability_value, target_name, system, file: READABLE_STRING_GENERAL): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context
+				("[
+					Capability "$1" of current target has value "$3" insufficient for setting "$2".
+						Target: $4
+						System: $5
+						File: $6
+				]", "configuration"),
+				capability, -- 1
+				root_value, -- 2
+				capability_value, -- 3
+				target_name, -- 4
+				system, -- 5
+				file) -- 6
+		end
+
+	e_incompatible_root_capability (capability, parent_value, parent_name, parent_system, parent_file, target_value, target_name, target_system, target_file: READABLE_STRING_GENERAL): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context
+				("[
+					Capability "$1" of dependent target has value "$2" insufficient for current target setting "$6".
+					Current target
+						Name: $7
+						System: $8
+						File: $9
+					Dependent target
+						Name: $3
+						System: $4
+						File: $5
+				]", "configuration"),
+				capability, -- 1
+				parent_value, -- 2
+				parent_name, -- 3
+				parent_system, -- 4
+				parent_file, -- 5
+				target_value, -- 6
+				target_name, -- 7
+				target_system, -- 8
+				target_file) -- 9
 		end
 
 feature -- Boolean values

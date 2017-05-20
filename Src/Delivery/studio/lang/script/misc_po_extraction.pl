@@ -35,7 +35,7 @@ select POT_FILE;
 #print "\"Language-Team: YOUR TEAM HERE\\n\"\n";
 #print "\"Content-Type: text/plain; charset=UTF-8\\n\"\n";
 #print "\"Content-Transfer-Encoding: 8bit\\n\"\n";
-#print "\"Plural-Forms: nplurals=2; plural=n>1;\\n\"\n";
+#print "\"Plural-Forms: nplurals=2; plural=(n != 1);\\n\"\n";
 #print "\"MIME-Version: 1.0\\n\"\n";
 #print "\"Last-Translator: YOUR NAME HERE\\n\"\n\n";
 

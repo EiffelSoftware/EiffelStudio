@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tool bar hot zone of four tool bar area."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,37 +18,38 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tool_bar_box: EV_BOX; a_vertical: BOOLEAN)
-			-- Creation method
+	make (x, y, w, h: INTEGER; a_tool_bar_box: EV_BOX; a_vertical: BOOLEAN; m: like docker_mediator; d: SD_DOCKING_MANAGER)
+			-- Create a tool bar zone with tool bar box `a_tool_bar_box' that is vertical if `a_vertical'
+			-- using meditor `m'.
 		require
 			a_tool_bar_box_not_void: a_tool_bar_box /= Void
 		do
+			docking_manager := d
 			create internal_shared
 
 			internal_box := a_tool_bar_box
 			internal_vertical := a_vertical
+			docker_mediator := m
 
-			create area.make (internal_box.screen_x, internal_box.screen_y, internal_box.width, internal_box.height)
+			create area.make (x, y, w, h)
 		ensure
 			internal_box_set: a_tool_bar_box = internal_box
+			docking_manager_set: docking_manager = d
 		end
 
 feature -- Query
 
 	area_managed: EV_RECTANGLE
 			-- Managed area. Different from `area', it's bigger
-		local
-			l_area: EV_RECTANGLE
 		do
-			l_area := area.twin
+			Result := area.twin
 			if internal_vertical then
-				l_area.set_left (l_area.left - internal_shared.tool_bar_size)
-				l_area.set_right (l_area.right + internal_shared.tool_bar_size)
+				Result.set_left (Result.left - internal_shared.tool_bar_size)
+				Result.set_right (Result.right + internal_shared.tool_bar_size)
 			else
-				l_area.set_top (l_area.top - internal_shared.tool_bar_size)
-				l_area.set_bottom (l_area.bottom + internal_shared.tool_bar_size)
+				Result.set_top (Result.top - internal_shared.tool_bar_size)
+				Result.set_bottom (Result.bottom + internal_shared.tool_bar_size)
 			end
-			Result := l_area
 		ensure
 			not_void: Result /= Void
 		end
@@ -98,36 +99,8 @@ feature -- Command
 			every_row_notified:
 		end
 
-	set_tool_bar_mediator (a_tool_bar_dock_mediator: like internal_dock_mediator)
-			-- Set `internal_dock_mediator'
-		require
-			a_tool_bar_dock_mediator_not_void: a_tool_bar_dock_mediator /= Void
-		do
-			internal_dock_mediator := a_tool_bar_dock_mediator
-			set_docking_manager (docker_mediator.docking_manager)
-		ensure
-			internal_tool_bar_dock_mediator_set: a_tool_bar_dock_mediator = internal_dock_mediator
-		end
-
 	docker_mediator: SD_TOOL_BAR_DOCKER_MEDIATOR
 			-- Tool bar docker mediator
-		require
-			set: is_docker_mediator_set
-		local
-			l_result: like internal_dock_mediator
-		do
-			l_result := internal_dock_mediator
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
-	is_docker_mediator_set: BOOLEAN
-			-- If `internal_dock_mediator' has been set?
-		do
-			Result := internal_dock_mediator /= Void
-		end
 
 feature {NONE} -- Implementation functions
 
@@ -330,9 +303,6 @@ feature {NONE} -- Implementation arrtibutes
 	internal_vertical: BOOLEAN
 			-- If `Current' vertical?
 
-	internal_dock_mediator: detachable SD_TOOL_BAR_DOCKER_MEDIATOR
-			-- Tool bar docker mediator
-
 	internal_shared: SD_SHARED
 			-- All singletons
 
@@ -345,19 +315,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

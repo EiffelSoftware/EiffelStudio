@@ -38,7 +38,7 @@ feature -- Access
 			password: Result /= Void implies (Result.hashed_password /= Void and Result.password = Void)
 		end
 
-	user_by_name (a_name: like {CMS_USER}.name): detachable CMS_USER
+	user_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- User with name `a_name', if any.
 		require
 			 a_name /= Void and then not a_name.is_empty
@@ -48,11 +48,11 @@ feature -- Access
 			password: Result /= Void implies (Result.hashed_password /= Void and Result.password = Void)
 		end
 
-	user_by_email (a_email: like {CMS_USER}.email): detachable CMS_USER
+	user_by_email (a_email: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- User with name `a_email', if any.
 		deferred
 		ensure
-			same_email: Result /= Void implies a_email ~ Result.email
+			same_email: Result /= Void implies (attached Result.email as r_email and then a_email.same_string (r_email))
 			password: Result /= Void implies (Result.hashed_password /= Void and Result.password = Void)
 		end
 
@@ -101,6 +101,13 @@ feature -- Change: user
 			-- New user `a_user'.
 		require
 			no_id: not a_user.has_id
+		deferred
+		end
+
+	update_username (a_user: CMS_USER; a_new_username: READABLE_STRING_32)
+			-- Update username of `a_user' to `a_new_username`.
+		require
+			has_id: a_user.has_id
 		deferred
 		end
 
@@ -234,7 +241,6 @@ feature -- Access: Temp Users
 			password: Result /= Void implies (Result.hashed_password /= Void and Result.password = Void)
 		end
 
-
 	temp_user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
 			-- User with activation token `a_token', if any.
 		deferred
@@ -247,19 +253,15 @@ feature -- Access: Temp Users
 		deferred
 		end
 
-
 	token_by_temp_user_id (a_id: like {CMS_USER}.id): detachable STRING
 			-- Retrieve activation token for user identified with id `a_id', if any.
 		deferred
 		end
 
-
 feature -- New Temp User
 
-	new_user_from_temp_user (a_user: CMS_TEMP_USER)
-  			-- new user from temporal user `a_user'
-  		require
-  			no_id: not a_user.has_id
+	new_user_from_temp_user (a_temp_user: CMS_TEMP_USER)
+  			-- new user from temporal user `a_temp_user'
   		deferred
   		end
 
@@ -268,22 +270,21 @@ feature -- New Temp User
 		deferred
 		end
 
-	new_temp_user (a_user: CMS_TEMP_USER)
-			-- New temp user `a_user'.
+	new_temp_user (a_temp_user: CMS_TEMP_USER)
+			-- New temp user `a_temp_user'.
 		require
-			no_id: not a_user.has_id
+			no_id: not a_temp_user.has_id
 		deferred
 		end
 
-	delete_temp_user (a_user: CMS_TEMP_USER)
-			-- Delete user `a_user'.
+	delete_temp_user (a_temp_user: CMS_TEMP_USER)
+			-- Delete user `a_temp_user'.
 		require
-			has_id: a_user.has_id
+			has_id: a_temp_user.has_id
 		deferred
 		end
-
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

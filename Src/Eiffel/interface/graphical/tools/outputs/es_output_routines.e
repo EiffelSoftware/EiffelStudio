@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		EiffelStudio output routines, used to display various predefined output structures.
 	]"
@@ -12,6 +12,11 @@ class
 
 inherit
 	ANY
+
+	CONF_INTERFACE_CONSTANTS
+		export
+			{NONE} all
+		end
 
 	ES_SHARED_LOCALE_FORMATTER
 		export
@@ -46,6 +51,7 @@ feature -- Output
 			l_location: STRING_32
 			l_compilation: STRING_32
 			l_concurrency: STRING_32
+			l_void_safety: STRING_32
 			l_console_application: STRING_32
 			l_experimental_mode, l_compatible_mode: STRING_32
 			l_project_location: PROJECT_DIRECTORY
@@ -53,8 +59,10 @@ feature -- Output
 			l_lace: LACE_I
 			l_count: INTEGER
 			l_max_len: INTEGER
-			concurrency_index: like {CONF_TARGET}.setting_concurrency_index_none
+			concurrency_index: like {CONF_TARGET_OPTION}.concurrency_index_none
 			concurrency_name: READABLE_STRING_GENERAL
+			void_safety_index: like {CONF_TARGET_OPTION}.void_safety_index_none
+			void_safety_name: READABLE_STRING_GENERAL
 		do
 			l_name := locale_formatter.translation (lb_name)
 			l_target := locale_formatter.translation (lb_target)
@@ -62,6 +70,7 @@ feature -- Output
 			l_location := locale_formatter.translation (lb_location)
 			l_compilation := locale_formatter.translation (lb_compilation)
 			l_concurrency := locale_formatter.translation (lb_concurrency)
+			l_void_safety := locale_formatter.translation (lb_void_safety)
 			l_console_application := locale_formatter.translation (lb_console_application)
 			l_experimental_mode := locale_formatter.translation (lb_experimental_mode)
 			l_compatible_mode := locale_formatter.translation (lb_compatible_mode)
@@ -130,6 +139,27 @@ feature -- Output
 			a_formatter.process_basic_text (l_project_location.target_path.name)
 			a_formatter.add_new_line
 
+				-- Void-safety
+			a_formatter.add_indent
+			a_formatter.process_indexing_tag_text (l_void_safety)
+			a_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_colon)
+			l_count := l_void_safety.count
+			if l_count < l_max_len then
+				a_formatter.process_basic_text (create {STRING}.make_filled (' ', l_max_len - l_count))
+			end
+			if l_compiled then
+				void_safety_index := l_lace.target.options.void_safety_capability.root_index
+				if l_lace.target.options.void_safety.is_valid_index (void_safety_index) then
+					void_safety_name := conf_interface_names.option_void_safety_value [void_safety_index]
+				else
+					void_safety_name := locale_formatter.translation (lb_no)
+				end
+			else
+				void_safety_name := conf_interface_names.option_void_safety_value [l_lace.target.options.void_safety_capability.root_index]
+			end
+			a_formatter.process_basic_text (void_safety_name)
+			a_formatter.add_new_line
+
 				-- Concurrency
 			a_formatter.add_indent
 			a_formatter.process_indexing_tag_text (l_concurrency)
@@ -138,20 +168,17 @@ feature -- Output
 			if l_count < l_max_len then
 				a_formatter.process_basic_text (create {STRING}.make_filled (' ', l_max_len - l_count))
 			end
-
 			if l_compiled then
 				concurrency_index := eiffel_ace.system.concurrency_index
+				if l_lace.target.options.concurrency_capability.is_valid_index (concurrency_index) then
+					concurrency_name := conf_interface_names.option_concurrency_value [concurrency_index]
+				else
+					concurrency_name := locale_formatter.translation (lb_concurrency_unknown)
+				end
 			else
-				concurrency_index := l_lace.target.setting_concurrency.index
+				concurrency_name := conf_interface_names.option_concurrency_value [l_lace.target.options.concurrency_capability.root_index]
 			end
-			inspect concurrency_index
-			when {CONF_TARGET}.setting_concurrency_index_none then concurrency_name := lb_concurrency_none
-			when {CONF_TARGET}.setting_concurrency_index_thread then concurrency_name := lb_concurrency_thread
-			when {CONF_TARGET}.setting_concurrency_index_scoop then concurrency_name := lb_concurrency_scoop
-			else
-				concurrency_name := lb_concurrency_unknown
-			end
-			a_formatter.process_basic_text (locale_formatter.translation (concurrency_name))
+			a_formatter.process_basic_text (concurrency_name)
 			a_formatter.add_new_line
 
 				--| Console or Graphical mode?
@@ -255,11 +282,9 @@ feature {NONE} -- Internationalization
 	lb_configuration: STRING = "configuration"
 	lb_location: STRING = "location"
 	lb_compilation: STRING = "compilation"
-	lb_concurrency: STRING = "tag_concurrency"
-	lb_concurrency_none: STRING = "tag_concurrency_none"
-	lb_concurrency_thread: STRING = "tag_concurrency_thread"
-	lb_concurrency_scoop: STRING = "tag_concurrency_scoop"
+	lb_concurrency: STRING = "concurrency"
 	lb_concurrency_unknown: STRING = "tag_concurrency_unknown"
+	lb_void_safety: STRING = "void_safety"
 	lb_console_application: STRING = "console"
 	lb_experimental_mode: STRING = "experimental"
 	lb_compatible_mode: STRING = "compatible"
@@ -271,7 +296,7 @@ feature {NONE} -- Internationalization
 	lb_more_info_on_compile: STRING = "More information available after a compilation!"
 
 ;note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

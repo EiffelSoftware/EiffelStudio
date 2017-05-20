@@ -14,7 +14,8 @@ inherit
 		redefine
 			interface,
 			flush,
-			save_to_named_path
+			save_to_named_path,
+			init_expose_actions
 		end
 
 	EV_DRAWABLE_IMP
@@ -43,14 +44,12 @@ inherit
 			process_draw_event
 		end
 
-	EV_PIXMAP_ACTION_SEQUENCES_IMP
-
 create
 	make
 
 feature {NONE} -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create a gtk pixmap of size (1 * 1) with no mask.
 		do
 			assign_interface (an_interface)
@@ -413,6 +412,16 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 				set_pixmap_from_pixbuf (stock_pixbuf)
 				{GTK2}.g_object_unref (stock_pixbuf)
 			end
+		end
+
+	init_expose_actions (a_expose_actions: like expose_actions)
+			-- <Precursor>
+			-- Attach to GTK "draw" signal.
+		local
+			l_app_imp: EV_APPLICATION_IMP
+		do
+			l_app_imp := app_implementation
+			l_app_imp.gtk_marshal.signal_connect (visual_widget, once "draw", agent (l_app_imp.gtk_marshal).create_draw_actions_intermediary (c_object, ?), l_app_imp.gtk_marshal.draw_translate_agent, True)
 		end
 
 feature {NONE} -- Implementation

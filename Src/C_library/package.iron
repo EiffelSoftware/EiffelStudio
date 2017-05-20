@@ -5,9 +5,7 @@ setup
 	compile_library = zlib
 
 project
-	clibs_libpng = "libpng/clibs_libpng-safe.ecf"
 	clibs_libpng = "libpng/clibs_libpng.ecf"
-	clibs_zlib = "zlib/clibs_zlib-safe.ecf"
 	clibs_zlib = "zlib/clibs_zlib.ecf"
 
 note

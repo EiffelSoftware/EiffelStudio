@@ -59,6 +59,18 @@ feature -- Access: node
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 		end
 
+	recent_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
+			-- Recent `a_count` nodes of type `a_node_type` with an offset of `lower`.
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+		end
+
+	recent_published_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
+			-- <Precursor>
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+		end
+
 	recent_node_changes_before (a_lower: INTEGER; a_count: INTEGER; a_date: DATE_TIME): LIST [CMS_NODE]
 			-- List of recent changes, before `a_date', according to `params' settings.
 		do
@@ -73,19 +85,6 @@ feature -- Access: node
 	node_by_id_and_revision (a_node_id, a_revision: INTEGER_64): detachable CMS_NODE
 			-- <Precuror>
 		do
-		end
-
-feature -- Access: outline		
-
-	children (a_node: CMS_NODE): detachable LIST [CMS_NODE]
-			-- <Precursor>
-		do
-		end
-
-	available_parents_for_node (a_node: CMS_NODE): LIST [CMS_NODE]
-			-- <Precursor>
-		do
-			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 		end
 
 feature -- Node

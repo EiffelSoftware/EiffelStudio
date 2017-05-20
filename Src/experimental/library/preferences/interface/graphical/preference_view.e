@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Abstraction for a particular graphical view of the preferences.  Implement this to
 			provide a default view of preferences.  For an example see PREFERENCES_WINDOW.
@@ -44,7 +44,7 @@ feature -- Access
 	show_dialog_modal (w: EV_ANY)
 			-- Show `dlg' modal to `parent_window' if not Void
 		require
-			w_is_a_dialog: {EV_STANDARD_DIALOG} #? w /= Void or {EV_DIALOG} #? w /= Void
+			w_is_a_dialog: attached {EV_STANDARD_DIALOG} w or attached {EV_DIALOG} w
 		local
 			p: like parent_window
 		do
@@ -55,10 +55,8 @@ feature -- Access
 				else
 					dlg.show
 				end
-			elseif p /= Void then
-				if attached {EV_STANDARD_DIALOG} w as sdlg then
-					sdlg.show_modal_to_window (p)
-				end
+			elseif p /= Void and then attached {EV_STANDARD_DIALOG} w as sdlg then
+				sdlg.show_modal_to_window (p)
 			end
 		end
 
@@ -91,7 +89,7 @@ invariant
 --	has_parent_window: parent_window /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -101,7 +99,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class PREFERENCE_VIEW
+end

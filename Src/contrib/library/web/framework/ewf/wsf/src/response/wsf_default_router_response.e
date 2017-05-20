@@ -83,7 +83,7 @@ feature {WSF_RESPONSE} -- Output
 			else
 				--| Other response codes are possible, such as 301 Moved permananently,
 				--| 302 Found and 410 Gone. But these require handlers to implement,
-				--| so no other code can be given at this point. 
+				--| so no other code can be given at this point.
 				msg := not_found_message (req)
 			end
 			res.send (msg)
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (req)
 		end
-	
+
 	method_not_allowed_message (req: WSF_REQUEST): detachable WSF_METHOD_NOT_ALLOWED_RESPONSE
 		require
 			req_attached: req /= Void
@@ -125,13 +125,13 @@ feature {NONE} -- Implementation
 										l_is_hidden := l_doc_mapping.documentation (i.request_methods).is_hidden
 									end
 									if not l_is_hidden then
-										create s.make_from_string (i.mapping.associated_resource)
+										create s.make_from_string_general (i.mapping.associated_resource)
 										if attached i.request_methods as mtds then
 											s.append (" [ ")
 											across
 												mtds as mtds_c
 											loop
-												s.append (mtds_c.item)
+												s.append_string_general (mtds_c.item)
 												s.append_character (' ')
 											end
 											s.append ("]")
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 							end
 							if not l_is_hidden then
 								ok := True
-								create s.make_from_string (i.mapping.associated_resource)
+								create s.make_from_string_general (i.mapping.associated_resource)
 								if attached i.request_methods as mtds then
 									ok := False
 									s.append (" [ ")
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 										if m = Void or else m.is_case_insensitive_equal (c.item) then
 											ok := True
 										end
-										s.append (c.item)
+										s.append_string_general (c.item)
 										s.append_character (' ')
 									end
 									s.append ("]")
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

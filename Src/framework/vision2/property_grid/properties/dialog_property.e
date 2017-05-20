@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	DIALOG_PROPERTY [G]
+	DIALOG_PROPERTY [G -> detachable ANY]
 
 inherit
 	ELLIPSIS_PROPERTY [G]
@@ -55,19 +55,27 @@ feature {NONE} -- Agents
 		do
 			update_text_on_deactivation
 			is_dialog_open := True
-			if dialog = Void then
-				create dialog
+			l_dialog := dialog
+			if l_dialog = Void then
+				create l_dialog
+				dialog := l_dialog
 			end
-			dialog.set_title (dialog_title (name))
+			l_dialog.set_title (dialog_title (name))
 			if attached value as l_value then
-				dialog.set_value (l_value.twin)
+				l_dialog.set_value (l_value.twin)
 			else
-				dialog.set_value (l_default_value)
+				l_dialog.set_value (l_default_value)
 			end
-			check attached parent_window (parent) as l_parent then
-				dialog.show_modal_to_window (l_parent)
+			if attached parent_window (parent) as l_parent then
+				l_dialog.show_modal_to_window (l_parent)
+			else
+				l_dialog.show
 			end
-			if dialog.is_ok and then attached dialog.value as l_value and then is_valid_value (l_value) then
+			if
+				l_dialog.is_ok and then
+				attached l_dialog.value as l_value and then
+				is_valid_value (l_value)
+			then
 				set_value (l_value)
 			end
 			is_dialog_open := False
@@ -86,7 +94,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

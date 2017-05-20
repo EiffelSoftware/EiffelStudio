@@ -1,7 +1,6 @@
 note
 	description: "API to handle nodes of type blog. Extends the node API."
-	author: "Dario Bösch <daboesch@student.ethz.ch"
-	date: "$Date: 2015-05-21 14:46:00 +0100$"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -41,7 +40,8 @@ feature {NONE} -- Initialization
 			else
 				create {CMS_BLOG_STORAGE_NULL} blog_storage.make
 			end
---			initialize_node_types
+
+			default_entries_count_per_page := 8 -- Default FIXME: find a way to make it customizable.
 		end
 
 feature {CMS_API_ACCESS, CMS_MODULE, CMS_API} -- Restricted access		
@@ -54,10 +54,8 @@ feature {CMS_MODULE} -- Access nodes storage.
 
 feature -- Configuration of blog handlers
 
-	entries_per_page : NATURAL_32 = 2
+	default_entries_count_per_page : NATURAL_32
 			-- The numbers of posts that are shown on one page. If there are more post a pagination is generated
-			--| For test reasons this is 2, so we don't have to create a lot of blog entries.
-			--| TODO: Set to bigger constant.
 
 feature -- Access node
 
@@ -88,13 +86,22 @@ feature -- Access node
 			Result := nodes_to_blogs (blog_storage.blogs_limited (a_limit, a_offset))
 		end
 
-	blogs_from_user_order_created_desc_limited (a_user: CMS_USER; a_limit: NATURAL_32; a_offset: NATURAL_32) : LIST [CMS_BLOG]
+	blogs_from_user_order_created_desc_limited (a_user: CMS_USER; a_limit: NATURAL_32; a_offset: NATURAL_32): LIST [CMS_BLOG]
 			-- List of nodes ordered by creation date and limited by limit and offset
 		require
 			has_id: a_user.has_id
 		do
 				-- load all posts and add the authors to each post
 			Result := nodes_to_blogs (blog_storage.blogs_from_user_limited (a_user, a_limit, a_offset))
+		end
+
+	blogs_by_title (a_user: CMS_USER; a_title: READABLE_STRING_GENERAL): LIST [CMS_BLOG]
+			-- List of blogs with title `a_title` for user `a_user` and ordered by creation date .
+		require
+			has_id: a_user.has_id
+		do
+				-- load all posts and add the authors to each post
+			Result := nodes_to_blogs (blog_storage.blogs_from_user_with_title (a_user, a_title))
 		end
 
 feature -- Conversion
@@ -110,6 +117,19 @@ feature -- Conversion
 			else
 				Result := a_blog
 			end
+		end
+
+feature -- Commit
+
+	save_blog (a_blog: CMS_BLOG)
+		do
+			node_api.save_node (a_blog)
+		end
+
+	import_blog (a_blog: CMS_BLOG)
+			-- Same as `save_blog` but keep modification_date unchanged.
+		do
+			node_api.import_node (a_blog)
 		end
 
 feature {NONE} -- Helpers

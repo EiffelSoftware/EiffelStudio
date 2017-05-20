@@ -14,6 +14,74 @@ inherit
 create
 	make
 
+feature -- Validation
+
+	is_valid_username (a_name: READABLE_STRING_32): BOOLEAN
+		local
+			c: CHARACTER_32
+		do
+			if a_name.is_empty or a_name.is_whitespace then
+				Result := False
+			elseif a_name[1].is_space then
+				Result := False
+			elseif a_name[a_name.count].is_space then
+				Result := False
+			else
+				Result := True
+				across
+					a_name as ic
+				until
+					not Result
+				loop
+					c := ic.item
+					if c.is_alpha_numeric or c = '-' or c = '_' then
+					else
+						Result := False
+					end
+				end
+			end
+		end
+
+	is_valid_profile_name (a_name: READABLE_STRING_32): BOOLEAN
+		local
+			c: CHARACTER_32
+		do
+			if a_name.is_empty or a_name.is_whitespace then
+				Result := False
+			elseif a_name[1].is_space then
+				Result := False
+			elseif a_name[a_name.count].is_space then
+				Result := False
+			else
+				Result := True
+				across
+					a_name as ic
+				until
+					not Result
+				loop
+					c := ic.item
+					if c.is_alpha_numeric or c = '-' or c = '_' or c.is_space or c = '%'' then
+					else
+						Result := False
+					end
+				end
+			end
+		end
+
+feature -- Query
+
+	user_display_name (u: CMS_USER): READABLE_STRING_32
+			-- Display name for user `u`.
+		do
+			if attached u.profile_name as pn and then not pn.is_whitespace then
+				Result := pn
+			elseif not u.name.is_whitespace then
+				Result := u.name
+			else
+				Result := {STRING_32} "user #" + u.id.out
+			end
+		end
+
 feature -- Access: user
 
 	user_by_id (a_id: like {CMS_USER}.id): detachable CMS_USER
@@ -22,13 +90,13 @@ feature -- Access: user
 			Result := storage.user_by_id (a_id)
 		end
 
-	user_by_name (a_username: READABLE_STRING_32): detachable CMS_USER
+	user_by_name (a_username: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- User by name `a_user_name', if any.
 		do
 			Result := storage.user_by_name (a_username)
 		end
 
-	user_by_email (a_email: READABLE_STRING_32): detachable CMS_USER
+	user_by_email (a_email: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- User by email `a_email', if any.
 		do
 			Result := storage.user_by_email (a_email)
@@ -75,6 +143,18 @@ feature -- Change User
 			else
 				error_handler.add_custom_error (0, "bad new user request", "Missing password or email to create new user!")
 			end
+		end
+
+	update_username (a_user: CMS_USER; a_new_username: READABLE_STRING_32)
+			-- Update username of `a_user' to `a_new_username'.
+		require
+			has_id: a_user.has_id
+			valid_user_name: is_valid_username (a_new_username)
+			user_by_name (a_new_username) = Void
+		do
+			reset_error
+			storage.update_username (a_user, a_new_username)
+			error_handler.append (storage.error_handler)
 		end
 
 	update_user (a_user: CMS_USER)
@@ -183,7 +263,7 @@ feature -- User roles.
 	role_permissions: HASH_TABLE [LIST [READABLE_STRING_8], STRING_8]
 			-- Possible known permissions indexed by modules.
 		local
-			lst, l_used_permissions: LIST [READABLE_STRING_8]
+			lst, l_full_lst, l_used_permissions: LIST [READABLE_STRING_8]
 		do
 			create Result.make (cms_api.enabled_modules.count + 1)
 
@@ -192,6 +272,28 @@ feature -- User roles.
 				cms_api.enabled_modules as ic
 			loop
 				lst := ic.item.permissions
+				if attached {CMS_ADMINISTRABLE} ic.item as adm then
+					create {ARRAYED_LIST [READABLE_STRING_8]} l_full_lst.make (lst.count)
+					l_full_lst.compare_objects
+						-- l_full_lst.append (lst)
+					across
+						lst as lst_ic
+					loop
+						if not l_full_lst.has (lst_ic.item) then
+							l_full_lst.extend (lst_ic.item)
+						end
+					end
+						-- l_full_lst.append (adm.module_administration.permissions)
+					lst := adm.module_administration.permissions
+					across
+						lst as lst_ic
+					loop
+						if not l_full_lst.has (lst_ic.item) then
+							l_full_lst.extend (lst_ic.item)
+						end
+					end
+					lst := l_full_lst
+				end
 				Result.force (lst, ic.item.name)
 				across
 					lst as p_ic
@@ -352,38 +454,37 @@ feature -- Access - Temp User
 
 feature -- Change Temp User
 
-	new_user_from_temp_user (a_user: CMS_TEMP_USER)
-			-- Add a new user `a_user'.
+	new_user_from_temp_user (a_temp_user: CMS_TEMP_USER)
+			-- Add a new user `a_temp_user'.
 		require
-			no_id: not a_user.has_id
-			has_hashed_password: a_user.hashed_password /= Void
-			has_sal: a_user.salt /= Void
+			has_hashed_password: a_temp_user.hashed_password /= Void
+			has_sal: a_temp_user.salt /= Void
 		do
 			reset_error
 			if
-				attached a_user.hashed_password as l_password and then
-				attached a_user.salt as l_salt and then
-				attached a_user.email as l_email
+				attached a_temp_user.hashed_password as l_password and then
+				attached a_temp_user.salt as l_salt and then
+				attached a_temp_user.email as l_email
 			then
-				storage.new_user_from_temp_user (a_user)
+				storage.new_user_from_temp_user (a_temp_user)
 				error_handler.append (storage.error_handler)
 			else
 				error_handler.add_custom_error (0, "bad new user request", "Missing password or email to create new user!")
 			end
 		end
 
-	new_temp_user (a_user: CMS_TEMP_USER)
-			-- Add a new user `a_user'.
+	new_temp_user (a_temp_user: CMS_TEMP_USER)
+			-- Add a new user `a_temp_user'.
 		require
-			no_id: not a_user.has_id
-			no_hashed_password: a_user.hashed_password = Void
+			no_id: not a_temp_user.has_id
+			no_hashed_password: a_temp_user.hashed_password = Void
 		do
 			reset_error
 			if
-				attached a_user.password as l_password and then
-				attached a_user.email as l_email
+				attached a_temp_user.password as l_password and then
+				attached a_temp_user.email as l_email
 			then
-				storage.new_temp_user (a_user)
+				storage.new_temp_user (a_temp_user)
 				error_handler.append (storage.error_handler)
 			else
 				error_handler.add_custom_error (0, "bad new user request", "Missing password or email to create new user!")
@@ -396,17 +497,17 @@ feature -- Change Temp User
 			storage.remove_activation (a_token)
 		end
 
-	delete_temp_user (a_user: CMS_TEMP_USER)
-			-- Delete user `a_user'.
+	delete_temp_user (a_temp_user: CMS_TEMP_USER)
+			-- Delete user `a_temp_user'.
 		require
-			has_id: a_user.has_id
+			has_id: a_temp_user.has_id
 		do
 			reset_error
-			storage.delete_temp_user (a_user)
+			storage.delete_temp_user (a_temp_user)
 			error_handler.append (storage.error_handler)
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

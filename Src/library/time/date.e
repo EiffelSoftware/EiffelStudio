@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Absolute dates"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -115,11 +115,11 @@ feature -- Initialization
 			y, m, d: INTEGER
 		do
 			i := 4 * (n - 59) - 1
-			j := (4 * div ((mod (i, 146097)), 4)) + 3
-			y := (100 * (div (i, 146097))) + (div (j, 1461))
-			i := (5 * (div (((mod (j, 1461)) + 4), 4))) - 3
+			j := 4 * div (mod (i, 146097), 4) + 3
+			y := 100 * div (i, 146097) + div (j, 1461)
+			i := 5 * div (mod (j, 1461) + 4, 4) - 3
 			m := div (i, 153)
-			d := div (((mod (i, 153)) + 5), 5)
+			d := div (mod (i, 153) + 5, 5)
 			if m < 10 then
 				m := m + 3
 			else
@@ -166,11 +166,9 @@ feature -- Initialization
 			c_exists: code /= Void
 			date_valid: date_valid (s, code)
 		local
-			code_string: DATE_TIME_CODE_STRING
 			date: DATE
 		do
-			create code_string.make (code)
-			date := code_string.create_date (s)
+			date := (create {DATE_TIME_CODE_STRING}.make (code)).create_date (s)
 			make (date.year, date.month, date.day)
 		end
 
@@ -197,7 +195,7 @@ feature -- Initialization
 		obsolete
 			"Use `make_by_ordered_compact_date' instead. But be careful in your update %
 			%since `compact_date' and `ordered_compact_date' do not have the same %
-			%encoding."
+			%encoding. [2017-05-31]"
 		require
 			c_d_valid: compact_date_valid (c_d)
 		do
@@ -338,11 +336,8 @@ feature -- Status report
 
 	day_of_january_1st: INTEGER
 			-- Day of the week of january 1st of the current year
-		local
-			january_1st: DATE
 		do
-			create january_1st.make (year, 1, 1)
-			Result := january_1st.day_of_the_week
+			Result := (create {DATE}.make (year, 1, 1)).day_of_the_week
 		ensure
 			day_of_the_week_definition: Result > 0 and then Result < 8
 		end
@@ -566,11 +561,8 @@ feature -- Output
 			-- Form: `s'
 		require
 			s_exists: s /= Void
-		local
-			code: DATE_TIME_CODE_STRING
 		do
-			create code.make (s)
-			Result := code.create_date_string (Current)
+			Result := (create {DATE_TIME_CODE_STRING}.make (s)).create_date_string (Current)
 		end
 
 feature {NONE} -- Implementation
@@ -596,7 +588,7 @@ invariant
 	year_non_negative: year >= 0
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -606,8 +598,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DATE
-
+end

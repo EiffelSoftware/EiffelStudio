@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Warning that a setting could not be changed."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,18 +9,24 @@ class
 	VD83
 
 inherit
+	ERROR
+		redefine
+			error_string
+		end
+
 	LACE_WARNING
 		redefine
-			build_explain
-		end;
+			build_explain,
+			error_string
+		end
 
 create
-	make
+	make, make_error
 
 feature {NONE} -- Initialization
 
 	make (a_setting: STRING; an_old_value: like old_value; a_new_value: like new_value)
-			-- Create.
+			-- Create a warning object.
 		require
 			a_setting_not_void: a_setting /= Void
 			an_old_value_not_void: an_old_value /= Void
@@ -29,6 +35,17 @@ feature {NONE} -- Initialization
 			setting := a_setting
 			old_value := an_old_value
 			new_value := a_new_value
+		end
+
+	make_error  (a_setting: STRING; an_old_value: like old_value; a_new_value: like new_value)
+			-- Create an error object.
+		require
+			a_setting_not_void: a_setting /= Void
+			an_old_value_not_void: an_old_value /= Void
+			a_new_value_not_void: a_new_value /= Void
+		do
+			make (a_setting, an_old_value, a_new_value)
+			is_error := True
 		end
 
 feature -- Properties
@@ -42,7 +59,19 @@ feature -- Properties
 	new_value: like old_value
 			-- New value (which was ignored).
 
+	is_error: BOOLEAN
+			-- Does issue report represent an error rather than a warning?
+
 feature -- Output
+
+	error_string: STRING
+		do
+			Result := if is_error then
+				Precursor {ERROR}
+			else
+				Precursor {LACE_WARNING}
+			end
+		end
 
 	build_explain (st: TEXT_FORMATTER)
 		do
@@ -59,7 +88,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

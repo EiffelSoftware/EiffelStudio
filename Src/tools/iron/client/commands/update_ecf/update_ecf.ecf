@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="update_ecf" uuid="9379585A-E276-42D2-AF6F-0824657E6FE5">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="update_ecf" uuid="9379585A-E276-42D2-AF6F-0824657E6FE5">
 	<target name="update_ecf">
 		<root class="APP_UPDATE_ECF" feature="make"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
-			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option debug="false" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="standard">
+		<option debug="false" warning="true" is_obsolete_routine_type="true">
 			<debug name="update_ecf" enabled="true"/>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<setting name="concurrency" value="none"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
-		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser-safe.ecf" readonly="false" use_application_options="true"/>
-		<library name="iron_api" location="$EIFFEL_SRC\framework\iron\api\iron_api-safe.ecf" readonly="false"/>
-		<library name="iron_support" location="$EIFFEL_SRC\framework\iron\support\iron_support-safe.ecf" readonly="false"/>
-		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander-safe.ecf"/>
-		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri-safe.ecf" readonly="false"/>
+		<capability>
+			<concurrency use="none"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
+		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf" readonly="false" use_application_options="true"/>
+		<library name="iron_api" location="$EIFFEL_SRC\framework\iron\api\iron_api.ecf" readonly="false"/>
+		<library name="iron_support" location="$EIFFEL_SRC\framework\iron\support\iron_support.ecf" readonly="false"/>
+		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander.ecf"/>
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf" readonly="false"/>
 		<cluster name="src" location="src\" recursive="true"/>
 	</target>
 </system>

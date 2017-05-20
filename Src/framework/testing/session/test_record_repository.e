@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Implementation of a {TEST_RECORD_REPOSITORY_I} which keeps a limited number of records and uses
 		the file system to store records permanently.
@@ -169,7 +169,7 @@ feature -- Access
 			until
 				l_records.after
 			loop
-				if attached a_type.attempt (l_records.item_for_iteration) as l_item then
+				if attached (a_type / l_records.item_for_iteration) as l_item then
 					Result.force (l_item)
 				end
 				l_records.forth
@@ -506,7 +506,7 @@ invariant
 	same_record_and_property_count: record_storage.count = property_storage.count
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

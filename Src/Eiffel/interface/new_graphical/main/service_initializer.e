@@ -104,11 +104,24 @@ feature {NONE} -- Registeration: Environemtn
 			a_service_is_interface_usable: a_service.is_interface_usable
 		do
 				-- Add the environment variables used for the external URIs
-			a_service.set_environment_variable ("http://dev.eiffel.com", "ISE_WIKI")
-			a_service.set_environment_variable ("http://www.eiffelroom.com", "EIFFELROOM")
-			a_service.set_environment_variable ("https://www.eiffel.org", "EIFFELORG")
-			a_service.set_environment_variable ("https://www.eiffel.org/doc", "ISE_DOC")
-			a_service.set_environment_variable ("https://www.eiffel.org/doc/uuid/", "ISE_DOC_UUID")
+			if a_service.variable ("ISE_WIKI") = Void then
+				a_service.set_environment_variable ("https://dev.eiffel.com", "ISE_WIKI")
+			end
+			if a_service.variable ("EIFFELROOM") = Void then
+				a_service.set_environment_variable ("https://room.eiffel.com", "EIFFELROOM")
+			end
+			if a_service.variable ("EIFFELORG") = Void then
+				a_service.set_environment_variable ("https://www.eiffel.org", "EIFFELORG")
+			end
+			if a_service.variable ("ISE_DOC") = Void then
+				a_service.set_environment_variable ("https://www.eiffel.org/documentation", "ISE_DOC")
+			end
+			if a_service.variable ("ISE_DOC_UUID") = Void then
+				a_service.set_environment_variable ("https://www.eiffel.org/doc/uuid", "ISE_DOC_UUID")
+			end
+			if a_service.variable ("ISE_DOC_REF") = Void then
+				a_service.set_environment_variable ("https://www.eiffel.org/doc/eis", "ISE_DOC_REF")
+			end
 		end
 
 feature {NONE} -- Registration: Output

@@ -27,7 +27,6 @@ inherit
 			make as make_settings
 		redefine
 			options,
-			setting_concurrency,
 			settings
 		end
 
@@ -255,12 +254,19 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	options: CONF_OPTION
+	options: CONF_TARGET_OPTION
 			-- Options (Debuglevel, assertions, ...)
 		do
-			Result := Precursor.twin
-			if attached extends as l_extends then
+			if not attached extends as l_extends then
+					-- Top-level target: use its options directly.
+				Result := Precursor.twin
+			elseif attached internal_options as o then
+					-- A parented target with its own options: update options from parent.
+				Result := Precursor.twin
 				Result.merge (l_extends.options)
+			else
+					-- A parented target without its own options: take options from parent.
+				Result := l_extends.options
 			end
 		end
 
@@ -414,18 +420,20 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-feature -- Access: concurrency setting
-
-	setting_concurrency: CONF_VALUE_CHOICE
-			-- Value of the "concurrency" setting
-			-- calculated using both immediate and inherited data.
+	concurrency_mode: like {CONF_STATE}.concurrency
+			-- Concurrency mode to set `{CONF_STATE}.concurrency'
+			-- in the tools that process ECF.
 		do
-			if attached extends as e then
-				Result := Precursor.twin
-				Result.set_safely (e.setting_concurrency)
-			else
-				Result := Precursor
+			inspect options.concurrency_capability.root_index
+			when {CONF_TARGET_OPTION}.concurrency_index_none then Result := concurrency_none
+			when {CONF_TARGET_OPTION}.concurrency_index_thread then Result := concurrency_multithreaded
+			when {CONF_TARGET_OPTION}.concurrency_index_scoop then Result := concurrency_scoop
 			end
+		ensure
+			definition:
+				options.concurrency_capability.root_index = {CONF_TARGET_OPTION}.concurrency_index_none  and then Result = concurrency_none or else
+				options.concurrency_capability.root_index = {CONF_TARGET_OPTION}.concurrency_index_thread and then Result = concurrency_multithreaded or else
+				options.concurrency_capability.root_index = {CONF_TARGET_OPTION}.concurrency_index_scoop and then Result = concurrency_scoop
 		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file

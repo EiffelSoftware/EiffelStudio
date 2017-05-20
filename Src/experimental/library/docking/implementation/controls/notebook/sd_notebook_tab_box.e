@@ -1,5 +1,5 @@
-note
-	description: "Container only contain SD_NOTEBOOK_TABs"
+﻿note
+	description: "Container only contain SD_NOTEBOOK_TABs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -42,7 +42,9 @@ feature {NONE} -- Initialization
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_enter_actions.extend (agent on_pointer_enter)
 			pointer_leave_actions.extend (agent on_pointer_leave)
-			pointer_double_press_actions.force_extend (agent clear_pressed_flag)
+			pointer_double_press_actions.extend
+				(agent (a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32)
+					do clear_pressed_flag end)
 
 			update_size
 
@@ -339,7 +341,6 @@ feature {NONE} -- Agents
 	on_pointer_enter
 			-- Handle pointer enter actions
 		local
-			l_screen: EV_SCREEN
 			l_x: INTEGER
 			l_found: BOOLEAN
 			l_snapshot: like internal_tabs
@@ -347,8 +348,7 @@ feature {NONE} -- Agents
 		do
 			pointer_entered := True
 			if captured_tab = Void then
-				create l_screen
-				l_x := l_screen.pointer_position.x - screen_x
+				l_x := (create {EV_SCREEN}).pointer_position.x - screen_x
 				from
 					l_snapshot := internal_tabs
 					l_snapshot.start
@@ -389,7 +389,7 @@ feature {NONE} -- Agents
 							l_found := True
 							l_item.on_pointer_leave
 						end
-						if l_snapshot.islast and l_found = False then
+						if l_snapshot.islast and not l_found then
 							l_item.on_pointer_leave
 						end
 						l_snapshot.forth
@@ -397,7 +397,7 @@ feature {NONE} -- Agents
 				end
 			end
 		ensure
-			cleared: pointer_entered = False
+			cleared: not pointer_entered
 		end
 
 	on_drop_action (a_pebble: ANY)
@@ -418,34 +418,31 @@ feature {NONE} -- Agents
 		end
 
 	on_key (a_key: EV_KEY)
-			-- Handle left/right navigation actions
+			-- Handle left/right navigation actions.
 		local
-			l_notebook: SD_NOTEBOOK
 			l_selected_index: INTEGER
 			l_content: detachable SD_CONTENT
 		do
-
-			if a_key /= Void then
-				if a_key.code = {EV_KEY_CONSTANTS}.key_left or a_key.code = {EV_KEY_CONSTANTS}.key_right then
-					l_notebook := notebook
-					l_selected_index := l_notebook.selected_item_index
-					if a_key.code = {EV_KEY_CONSTANTS}.key_left then
-						if l_selected_index > 1 then
-							l_content := l_notebook.contents.i_th (l_selected_index - 1)
-						end
-					else
-						if l_selected_index < l_notebook.contents.count then
-							l_content := l_notebook.contents.i_th (l_selected_index + 1)
-						end
+			if (a_key.code = {EV_KEY_CONSTANTS}.key_left or a_key.code = {EV_KEY_CONSTANTS}.key_right) and then
+				attached notebook as l_notebook
+			then
+				l_selected_index := l_notebook.selected_item_index
+				if a_key.code = {EV_KEY_CONSTANTS}.key_left then
+					if l_selected_index > 1 then
+						l_content := l_notebook.contents.i_th (l_selected_index - 1)
 					end
-
-					if l_content /= Void then
-						l_notebook.select_item (l_content, True)
-						l_content.focus_in_actions.call ([])
-
-						-- The focus maybe was lost in `l_content.focus_in_actions', but we hope keep the focus, when end user press left/right in tabs area
-						set_focus
+				else
+					if l_selected_index < l_notebook.contents.count then
+						l_content := l_notebook.contents.i_th (l_selected_index + 1)
 					end
+				end
+
+				if l_content /= Void then
+					l_notebook.select_item (l_content, True)
+					l_content.focus_in_actions.call ([])
+
+					-- The focus maybe was lost in `l_content.focus_in_actions', but we hope keep the focus, when end user press left/right in tabs area
+					set_focus
 				end
 			end
 		end
@@ -472,11 +469,9 @@ feature{NONE} -- Implementation
 	update_focus_rectangle
 			-- Draw or clear focus rectangle base on if Current has focus
 		local
-			l_notebook: SD_NOTEBOOK
 			l_selected: detachable SD_CONTENT
 		do
-			if has_parent then
-				l_notebook := notebook
+			if has_parent and then attached notebook as l_notebook then
 				l_selected := l_notebook.selected_item
 				if l_selected /= Void then
 					l_notebook.tab_by_content (l_selected).redraw_selected
@@ -484,12 +479,12 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	notebook: SD_NOTEBOOK
+	notebook: detachable SD_NOTEBOOK
 			-- Parent notebook
 		do
 			--| Note from review#7528237: should be detachable SD_NOTEBOOK,
 			--|  since lack of assertions prevent us to use check
-			check attached {SD_NOTEBOOK_TAB_AREA} parent as l_tab_area then
+			if attached {SD_NOTEBOOK_TAB_AREA} parent as l_tab_area then
 				Result := l_tab_area.notebook
 			end
 		ensure
@@ -519,20 +514,18 @@ feature{NONE} -- Implementation
 		end
 
 	tab_under_pointer: detachable SD_NOTEBOOK_TAB
-			-- Tab at `a_screen_x'
+			-- Tab at `a_screen_x'.
 		local
-			l_screen: EV_SCREEN
 			l_relative_x: INTEGER
 		do
-			create l_screen
-			l_relative_x := l_screen.pointer_position.x - screen_x
+			l_relative_x := (create {EV_SCREEN}).pointer_position.x - screen_x
 			if l_relative_x >= 0 and l_relative_x <= width then
 				Result := tab_at (l_relative_x)
 			end
 		end
 
 	clear_pressed_flag
-			-- Clear pressed flag for Linux, because when pointer double pressed, no pointer leave will be called
+			-- Clear pressed flag for Linux, because when pointer double pressed, no pointer leave will be called.
 		local
 			l_tabs: like tabs
 		do
@@ -548,14 +541,15 @@ feature{NONE} -- Implementation
 		end
 
 	internal_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
-			-- All tabs in Current
+			-- All tabs in Current.
+
 invariant
 
 	not_void: internal_tabs /= Void
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -564,9 +558,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
 
 end

@@ -375,62 +375,62 @@ feature {NONE} --Implementation
 			else
 				create Result.make_from_string ("/reports?")
 				if attached {WSF_STRING} req.form_parameter ("page") as l_page then
-					Result.append ("page=")
-					Result.append_string (l_page.value)
-					Result.append_string ("&")
+					Result.append_string_general ("page=")
+					Result.append_string_general (l_page.value)
+					Result.append_string_general ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("size") as l_size then
-					Result.append ("size=")
-					Result.append_string (l_size.value)
-					Result.append_string ("&")
+					Result.append_string_general ("size=")
+					Result.append_string_general (l_size.value)
+					Result.append_string_general ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("category") as l_category then
-					Result.append_string ("category=")
-					Result.append_string (l_category.value)
-					Result.append_string ("&")
+					Result.append_string_general ("category=")
+					Result.append_string_general (l_category.value)
+					Result.append_string_general ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("severity") as l_severity then
-					Result.append_string ("severity=")
-					Result.append_string (l_severity.value)
-					Result.append_string ("&")
+					Result.append_string_general ("severity=")
+					Result.append_string_general (l_severity.value)
+					Result.append_string_general ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("priority") as l_priority then
-					Result.append_string ("priority=")
-					Result.append_string (l_priority.value)
-					Result.append_string ("&")
+					Result.append_string_general ("priority=")
+					Result.append_string_general (l_priority.value)
+					Result.append_string_general ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("responsible") as l_responsible then
-					Result.append_string ("responsible=")
-					Result.append_string (l_responsible.value)
-					Result.append_string ("&")
+					Result.append_string_general ("responsible=")
+					Result.append_string_general (l_responsible.value)
+					Result.append_string_general ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("status") as l_status then
-					Result.append_string (l_status.value)
-					Result.append_string ("&")
+					Result.append_string_general (l_status.value)
+					Result.append_string_general ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("orderBy") as l_orderby then
-					Result.append_string ("orderBy=")
-					Result.append_string (l_orderBy.value)
-					Result.append_string ("&")
+					Result.append_string_general ("orderBy=")
+					Result.append_string_general (l_orderBy.value)
+					Result.append_string_general ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("dir") as l_dir then
-					Result.append_string ("dir=")
-					Result.append_string (l_dir.value)
-					Result.append_string ("&")
+					Result.append_string_general ("dir=")
+					Result.append_string_general (l_dir.value)
+					Result.append_string_general ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("submitter") as l_submitter then
-					Result.append_string ("submitter=")
-					Result.append_string (l_submitter.value)
-					Result.append_string ("&")
+					Result.append_string_general ("submitter=")
+					Result.append_string_general (l_submitter.value)
+					Result.append_string_general ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("filter") as l_filter then
-					Result.append_string ("filter=")
-					Result.append_string (l_filter.value)
-					Result.append_string ("&")
+					Result.append_string_general ("filter=")
+					Result.append_string_general (l_filter.value)
+					Result.append_string_general ("&")
 				end
 				if attached {WSF_STRING} req.form_parameter ("filter_content") as l_filter_content then
-					Result.append_string ("filter_content=")
-					Result.append_string (l_filter_content.value)
+					Result.append_string_general ("filter_content=")
+					Result.append_string_general (l_filter_content.value)
 				end
 			end
 		end
@@ -444,7 +444,7 @@ feature {NONE} --Implementation
 				attached l_report.assigned as l_assigned and then
 				attached l_assigned.name as l_name
 			then
-				email_service.send_responsible_change_email (a_user,l_report, api_service.user_account_information (l_name), a_url )
+				email_notification_service.send_responsible_change_email (a_user,l_report, api_service.user_account_information (l_name), a_url )
 			else
 				log.write_error (generator + ".send_responsible_change_email")
 			end

@@ -24,13 +24,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_msgid: READABLE_STRING_GENERAL)
+	make (source_file_name: READABLE_STRING_32; a_msgid: READABLE_STRING_GENERAL)
 			-- Initialize singular entry with `a_msgid' as message ID.
-			--
-			-- `a_msgid': Message ID for new entry
+			-- <Precursor>
 		do
-			Precursor(a_msgid)
 			create msgstr_lines.make
+			Precursor(source_file_name, a_msgid)
 		ensure then
 			msgstr_lines_created: msgstr_lines /= Void
 		end
@@ -75,7 +74,7 @@ feature {NONE} -- Implementation
 	msgstr_lines: LINKED_LIST [STRING_32];
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Process/Thread iteration"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -22,7 +21,6 @@ feature -- Access
 			entry: POINTER
 			succ: BOOLEAN
 			pid1, pid2: INTEGER
-			p_pair: WEL_PROCESS_ID_PAIR
 		do
 			cwin_create_toolhelp32_snapshot (cwin_th32cs_snapprocess, 0, $ptr)
 			if ptr /= default_pointer then
@@ -30,11 +28,10 @@ feature -- Access
 				from
 					cwin_process32_first (ptr, $entry, $succ)
 				until
-					succ = False
+					not succ
 				loop
 					cwin_get_process_id_and_parent_id (entry, $pid1, $pid2)
-					create p_pair.make (pid2, pid1)
-					Result.extend (p_pair)
+					Result.extend (create {WEL_PROCESS_ID_PAIR}.make (pid2, pid1))
 					cwin_process32_next (ptr, $entry, $succ)
 				end
 				if entry /= default_pointer then
@@ -72,8 +69,6 @@ feature -- Access
 					cwin_free_pointer (entry)
 				end
 				cwin_close_handle (ptr)
-			else
-				Result := Void
 			end
 		end
 
@@ -249,7 +244,6 @@ feature{NONE} -- Thread iteration
 			entry: POINTER
 			succ: BOOLEAN
 			owner_pid, thread_id, base_pri: INTEGER
-			l_entry: WEL_THREAD_ENTRY_32
 		do
 			cwin_create_toolhelp32_snapshot (cwin_th32cs_snapthread, 0, $handle)
 			if handle /= default_pointer then
@@ -260,8 +254,7 @@ feature{NONE} -- Thread iteration
 					not succ
 				loop
 					cwin_read_thread_entry_32 (entry, $owner_pid, $thread_id, $base_pri)
-					create l_entry.make (owner_pid, thread_id, base_pri)
-					Result.extend (l_entry)
+					Result.extend (create {WEL_THREAD_ENTRY_32}.make (owner_pid, thread_id, base_pri))
 					cwin_thread32_next (handle, $entry, $succ)
 				end
 				if entry /= default_pointer then
@@ -359,13 +352,13 @@ feature{NONE} -- Implementation
 			-- Initial list capacity
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

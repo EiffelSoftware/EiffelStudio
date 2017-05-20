@@ -318,12 +318,9 @@ feature -- Access
 
 	decoded_path: STRING_32
 			-- Decoded `path'
-		local
-			s: STRING_32
 		do
-			create s.make (path.count)
-			append_decoded_www_form_urlencoded_string_to (path, s)
-			Result := s
+			create Result.make (path.count)
+			append_decoded_www_form_urlencoded_string_to (path, Result)
 		end
 
 	path_segments: LIST [READABLE_STRING_8]
@@ -466,6 +463,30 @@ feature -- Access
 			end
 		end
 
+	decoded_query_item (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+			-- Decoded query item associated with `a_name`.
+			-- If item exists without any value, return empty string.
+		local
+			k: READABLE_STRING_GENERAL
+		do
+			if attached query_items as lst then
+				across
+					lst as e
+				until
+					Result /= Void
+				loop
+					k := decoded_www_form_urlencoded_string (e.item.name)
+					if a_name.same_string (k) then
+						if attached e.item.value as l_val then
+							Result := decoded_www_form_urlencoded_string (l_val)
+						else
+							Result := {STRING_32} ""
+						end
+					end
+				end
+			end
+		end
+
 feature -- Query
 
 	hier: STRING_8
@@ -474,17 +495,14 @@ feature -- Query
             --      / path-absolute
             --      / path-rootless
             --      / path-empty
-		local
-			s: STRING_8
 		do
-			create s.make (10)
+			create Result.make (10)
 			if attached authority as l_authority then
-				s.append_character ('/')
-				s.append_character ('/')
-				s.append (l_authority)
+				Result.append_character ('/')
+				Result.append_character ('/')
+				Result.append (l_authority)
 			end
-			s.append (path)
-			Result := s
+			Result.append (path)
 		end
 
 	username_password: detachable TUPLE [username: READABLE_STRING_8; password: detachable READABLE_STRING_8]
@@ -570,12 +588,9 @@ feature -- Conversion
 	string: STRING_8
 			-- String representation.
 			-- scheme://username:password@hostname/path?query#fragment
-		local
-			s: STRING_8
 		do
-			create s.make_empty
-			append_to_string (s)
-			Result := s
+			create Result.make_empty
+			append_to_string (Result)
 		end
 
 	resolved_uri: URI
@@ -758,7 +773,7 @@ feature -- Element Change
 			else
 				create s.make_from_string (path)
 				s.append_character ('/')
-				append_percent_encoded_string_to (a_segment, s)
+				append_path_segment_encoded_string_to (a_segment, s)
 				set_path (s)
 			end
 		end
@@ -799,6 +814,30 @@ feature -- Change: query
 			query := Void
 		end
 
+	add_encoded_query_parameter (a_name: READABLE_STRING_8; a_value: detachable READABLE_STRING_8)
+			-- Add already encoded parameters, used to bypass strict rules.
+			-- Warning: depending on systems, this may be unsafe, and some systems can possibly
+			-- modify characters such as: { } | \ ^ ~ [ ] `
+		local
+			q: detachable STRING
+		do
+			if attached query as l_query then
+				create q.make_from_string (l_query)
+			else
+				create q.make_empty
+			end
+			if not q.is_empty then
+				q.append_character ('&')
+			end
+
+			q.append (a_name)
+			if a_value /= Void then
+				q.append_character ('=')
+				q.append (a_value)
+			end
+			create query.make_from_string (q)
+		end
+
 	add_query_parameter (a_name: READABLE_STRING_GENERAL; a_value: detachable READABLE_STRING_GENERAL)
 			-- Add non percent-encoded parameters
 		local
@@ -813,10 +852,10 @@ feature -- Change: query
 				q.append_character ('&')
 			end
 
-			q.append (www_form_urlencoded_string (a_name))
+			append_query_name_encoded_string_to (a_name, q)
 			if a_value /= Void then
 				q.append_character ('=')
-				q.append (www_form_urlencoded_string (a_value))
+				append_query_value_encoded_string_to (a_value, q)
 			end
 			create query.make_from_string (q)
 		end
@@ -1074,7 +1113,8 @@ feature -- Helper
 			-- character encoding is UTF-8.
 			-- See http://www.w3.org/TR/html5/forms.html#url-encoded-form-data
 		do
-			append_percent_encoded_string_to (a_string, a_target)
+
+			append_www_form_url_encoded_string_to (a_string, a_target)
 		end
 
 	www_form_urlencoded_string (a_string: READABLE_STRING_GENERAL): STRING_8
@@ -1083,7 +1123,7 @@ feature -- Helper
 			-- See http://www.w3.org/TR/html5/forms.html#url-encoded-form-data
 		do
 			create Result.make (a_string.count)
-			append_percent_encoded_string_to (a_string, Result)
+			append_www_form_urlencoded_string_to (a_string, Result)
 		end
 
 	append_decoded_www_form_urlencoded_string_to (a_string: READABLE_STRING_GENERAL; a_target: STRING_GENERAL)
@@ -1140,16 +1180,13 @@ feature -- Status report
 
 	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
-		local
-			s: STRING
 		do
-			create s.make_empty
-			s.append (string)
-			Result := s
+			create Result.make_empty
+			Result.append (string)
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

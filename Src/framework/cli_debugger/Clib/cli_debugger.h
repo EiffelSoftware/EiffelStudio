@@ -3,6 +3,7 @@
 
 #include "eif_eiffel.h"
 #include <windows.h>
+#include <ole2.h>
 
 #include "cli_debugger_callback_id.h"
 

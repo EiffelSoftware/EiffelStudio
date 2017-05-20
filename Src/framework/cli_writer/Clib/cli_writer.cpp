@@ -1,4 +1,6 @@
 #define _WIN32_DCOM
+#include <windows.h>
+#include <ole2.h>
 #include "cli_writer.h"
 #include "metadata_consumer.h"
 #include <objbase.h>

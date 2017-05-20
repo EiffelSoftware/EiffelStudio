@@ -951,6 +951,7 @@ end
 			d1, d2: DATE_TIME
 			l_factory: CONF_COMP_FACTORY
 			l_state: CONF_STATE
+			w: ARRAYED_LIST [ERROR]
 		do
 			debug ("timing")
 				print_memory_statistics
@@ -959,6 +960,22 @@ end
 
 			if equal (universe.new_target, universe.target) or else universe.new_target = Void then
 				lace.force_new_target
+					-- Remove previously reported configuration  warnings.
+				from
+					w := error_handler.warning_list
+					w.start
+				until
+					w.after
+				loop
+					if
+						w.item.generating_type = {VD01} or else
+						w.item.generating_type = {VD80}
+					then
+						w.remove
+					else
+						w.forth
+					end
+				end
 				lace.recompile
 			end
 
@@ -979,13 +996,31 @@ end
 					-- Check for testing library in current config
 				test_system.check_for_testing_configuration (l_target)
 
+					-- Use target's settings for compilation.
+					-- This should be done before any class options are set (test#config049),
+					-- but only once per compilation so that updated options are not
+					-- used for capability checks.
+				lace.update_capabilities
+
 					-- let the configuration system build "everything"
 				l_state := universe.conf_state_from_target (l_target)
 				if universe.target /= Void then
-					create l_vis_build.make_build_from_old (l_state,
-						l_target, universe.target, l_factory)
+					create l_vis_build.make_build_from_old
+						(l_state,
+						l_target,
+						universe.target,
+						if il_generation then metadata_cache_path else {STRING_32} "" end,
+						if il_generation then clr_runtime_version else {STRING_32} "" end,
+						l_factory.new_location_from_path (project_location.partial_generation_path.name, l_target),
+						l_factory)
 				else
-					create l_vis_build.make_build (l_state, l_target, l_factory)
+					create l_vis_build.make_build
+						(l_state,
+						l_target,
+						if il_generation then metadata_cache_path else {STRING_32} "" end,
+						if il_generation then clr_runtime_version else {STRING_32} "" end,
+						l_factory.new_location_from_path (project_location.partial_generation_path.name, l_target),
+						l_factory)
 				end
 				if has_potential_class_name_mismatch then
 					has_potential_class_name_mismatch := False
@@ -994,12 +1029,6 @@ end
 					has_potential_class_name_mismatch := True
 					l_vis_build.set_is_full_class_name_analyzis (False)
 				end
-				if il_generation then
-					l_vis_build.set_assembly_cach_folder (metadata_cache_path)
-					l_vis_build.set_il_version (clr_runtime_version)
-				end
-				l_vis_build.set_partial_location (
-					l_factory.new_location_from_path (project_location.partial_generation_path.name, l_target))
 
 					-- set observers
 				l_vis_build.consume_assembly_observer.extend (agent degree_output.put_consume_assemblies)
@@ -1367,6 +1396,8 @@ end
 				original_body_index_table.copy (body_index_table)
 				Degree_1.wipe_out
 			end
+				-- Update capability settings used during compilation.
+			lace.update_capability_root
 		end
 
 feature -- ANY.default_rescue routine id
@@ -6147,7 +6178,7 @@ feature {NONE} -- External features
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

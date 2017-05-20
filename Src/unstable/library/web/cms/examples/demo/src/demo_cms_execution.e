@@ -53,8 +53,11 @@ feature -- CMS modules
 			a_setup.register_module (create {CMS_OPENID_MODULE}.make)
 			a_setup.register_module (create {CMS_SESSION_AUTH_MODULE}.make)
 
+				-- User
+
 				-- Nodes
-			a_setup.register_module (create {CMS_NODE_MODULE}.make (a_setup))
+			a_setup.register_module (create {CMS_NODE_MODULE}.make)
+			a_setup.register_module (create {CMS_PAGE_MODULE}.make)
 			a_setup.register_module (create {CMS_BLOG_MODULE}.make)
 
 				-- Files
@@ -65,9 +68,15 @@ feature -- CMS modules
 
 				-- Misc
 			a_setup.register_module (create {CMS_SEO_MODULE}.make)
+			a_setup.register_module (create {CMS_SITEMAP_MODULE}.make)
+			a_setup.register_module (create {CMS_COMMENTS_MODULE}.make)
 
 				-- Taxonomy
 			a_setup.register_module (create {CMS_TAXONOMY_MODULE}.make)
+
+				-- Wiki
+			a_setup.register_module (create {WIKITEXT_MODULE}.make)
+			a_setup.register_module (create {EMBEDDED_VIDEO_MODULE}.make)
 
 				-- Recent changes
 			a_setup.register_module (create {CMS_RECENT_CHANGES_MODULE}.make)
@@ -76,10 +85,14 @@ feature -- CMS modules
 			a_setup.register_module (create {FEED_AGGREGATOR_MODULE}.make)
 
 				-- Miscellanious
-			a_setup.register_module (create {GOOGLE_CUSTOM_SEARCH_MODULE}.make)
+			a_setup.register_module (create {CMS_MESSAGING_MODULE}.make)
+			a_setup.register_module (create {GOOGLE_CUSTOM_SEARCH_MODULE_20}.make)
 			a_setup.register_module (create {CMS_CUSTOM_BLOCK_MODULE}.make)
 			a_setup.register_module (create {CMS_DEBUG_MODULE}.make)
 			a_setup.register_module (create {CMS_DEMO_MODULE}.make)
+
+				-- Dev
+			a_setup.register_module (create {MASQUERADE_AUTH_MODULE}.make)
 
 		end
 

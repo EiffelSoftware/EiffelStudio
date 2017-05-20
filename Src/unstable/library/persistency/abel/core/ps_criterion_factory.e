@@ -38,7 +38,7 @@ feature -- Creating a criterion
 			-- or three values of type [STRING, STRING, ANY], where the tuple values correspond
 			-- to the arguments of the `new_predefined' routine.
 		obsolete
-			"Use new_criterion with parenthesis alias."
+			"Use new_criterion with parenthesis alias [2017-05-31]."
 		require
 			well_formed: is_agent (tuple) or is_predefined (tuple)
 		do

@@ -1,5 +1,4 @@
 ul.cms-users {
-	
 	list-style-type: none;
 	padding: 3px 3px 3px 3px;
 	border: solid 1px #ccc;
@@ -9,10 +8,22 @@ ul.cms-users {
 		&:first-child {
 			border-top: none;
 		}
-	}
-
-	li.cms_user a::before {
-		content: "[users] ";
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		span {
+			flex-grow: 1;
+			flex-basis: 20px;
+			padding-left: 2px;
+			text-align: left;
+			&.identifier a::before {
+				content: "[user] ";
+			}
+			&.roles {
+				color: #090;
+				font-weight: bold;
+			}
+		}
 	}
 }
 
@@ -31,7 +42,7 @@ ul.cms-roles {
 	}
 
 	li.cms_role a::before {
-		content: "[roles] ";
+		content: "[role] ";
 	}
 }
 
@@ -54,6 +65,16 @@ ul.cms-permissions {
 	}
 }
 
-
+form#modules_collection {
+	thead td {
+		font-weight: bold;
+	}
+	tr {
+		border-bottom: dotted 1px #ccc;
+	}
+	td {
+		padding: 3px;
+	}
+}
 
 

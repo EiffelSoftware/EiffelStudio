@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that manage tabs on SD_NOTEBOOK."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,7 +44,9 @@ feature {NONE}  -- Initlization
 
 			extend_horizontal_box (tab_box)
 			disable_item_expand (tab_box)
-			pointer_double_press_actions.force_extend (agent on_tab_box_right_side_double_click)
+			pointer_double_press_actions.extend
+				(agent (a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32)
+					do on_tab_box_right_side_double_click end)
 
 			extend_horizontal_box (internal_tool_bar)
 			disable_item_expand (internal_tool_bar)
@@ -69,13 +71,13 @@ feature {NONE}  -- Initlization
 feature {SD_NOTEBOOK} -- Initlization
 
 	set_notebook (a_notebook: SD_NOTEBOOK)
-			-- Set `internal_notebook' with `a_notebook'
+			-- Set `notebook' with `a_notebook'.
 		require
-			a_notebook_not_void: a_notebook /= Void
+			a_notebook_attached: attached a_notebook
 		do
-			internal_notebook := a_notebook
+			notebook := a_notebook
 		ensure
-			set: internal_notebook = a_notebook
+			notebook_set: notebook = a_notebook
 		end
 
 feature -- Redefine
@@ -179,7 +181,7 @@ feature -- Command
 				ignore_resize := False
 			end
 		ensure
-			enable_resize: a_width >= 0 implies ignore_resize = False
+			enable_resize: a_width >= 0 implies not ignore_resize
 		end
 
 	update_minimum_size
@@ -287,15 +289,12 @@ feature -- Query
 
 	right_side_double_click_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Double click actions on Current right side blank area
-		local
-			l_actions: like internal_right_side_double_click_actions
 		do
-			l_actions := internal_right_side_double_click_actions
-			if not attached l_actions then
-				create l_actions
-				internal_right_side_double_click_actions := l_actions
+			Result := internal_right_side_double_click_actions
+			if not attached Result then
+				create Result
+				internal_right_side_double_click_actions := Result
 			end
-			Result := l_actions
 		end
 
 feature {NONE}  -- Implementation functions
@@ -308,64 +307,64 @@ feature {NONE}  -- Implementation functions
 			l_helper: SD_POSITION_HELPER
 			l_tabs_invisible: like internal_tabs_not_shown
 		do
-			create l_dialog.make (notebook)
-			check
-				internal_tabs_not_shown_not_void: internal_tabs_not_shown /= Void
-			end
-			from
-				l_tabs_invisible := internal_tabs_not_shown
-				l_tabs_invisible.finish
-			until
-				l_tabs_invisible.before
-			loop
-				l_dialog.extend_hide_tab (l_tabs_invisible.item)
-				l_tabs_invisible.back
-			end
-
-			from
-				l_tabs := all_tabs
-				l_tabs.start
-			until
-				l_tabs.after
-			loop
-				if l_tabs.item.is_displayed then
-					l_dialog.extend_shown_tab (l_tabs.item)
+			if attached notebook as n then
+				create l_dialog.make (n)
+				check
+					internal_tabs_not_shown_not_void: internal_tabs_not_shown /= Void
+				end
+				from
+					l_tabs_invisible := internal_tabs_not_shown
+					l_tabs_invisible.finish
+				until
+					l_tabs_invisible.before
+				loop
+					l_dialog.extend_hide_tab (l_tabs_invisible.item)
+					l_tabs_invisible.back
 				end
 
-				l_tabs.forth
+				from
+					l_tabs := all_tabs
+					l_tabs.start
+				until
+					l_tabs.after
+				loop
+					if l_tabs.item.is_displayed then
+						l_dialog.extend_shown_tab (l_tabs.item)
+					end
+
+					l_tabs.forth
+				end
+				l_dialog.init
+				create l_helper.make
+				l_helper.set_dialog_position (l_dialog, internal_tool_bar.screen_x, internal_tool_bar.screen_y, internal_tool_bar.height)
+				l_dialog.show
 			end
-			l_dialog.init
-			create l_helper.make
-			l_helper.set_dialog_position (l_dialog, internal_tool_bar.screen_x, internal_tool_bar.screen_y, internal_tool_bar.height)
-			l_dialog.show
 		end
 
 	on_drop_actions (a_any: ANY)
-			-- Handle drop actions
-		local
-			l_drop_actions: detachable SD_PND_ACTION_SEQUENCE
-			l_content: detachable SD_CONTENT
+			-- Handle drop actions.
 		do
-			l_drop_actions := internal_docking_manager.tab_drop_actions
-			if l_drop_actions /= Void then
-				l_content := notebook.selected_item
-				check l_content /= Void end -- Implied by this is tab drop action when there is/are tab(s) in current notebook, so there must be content(s) in current
+			if
+				attached internal_docking_manager.tab_drop_actions as l_drop_actions and then
+				attached notebook as n and then
+				attached n.selected_item as l_content
+			then
 				l_drop_actions.call ([a_any, l_content])
 			end
 		end
 
 	on_veto_drop_action (a_any: ANY): BOOLEAN
-			-- Handle veto drop action
-		local
-			l_veto_function: detachable FUNCTION [ANY, BOOLEAN]
+			-- Handle veto drop action.
 		do
-			if attached internal_docking_manager.tab_drop_actions as l_actions then
-				l_veto_function := l_actions.veto_pebble_function
-			end
-			if l_veto_function /= Void then
-				Result := l_veto_function.item ([a_any, notebook.selected_item])
+			if
+				attached internal_docking_manager.tab_drop_actions as l_actions and then
+				attached l_actions.veto_pebble_function as l_veto_function and then
+				attached notebook as n and then
+				attached n.selected_item as c
+			then
+				Result := l_veto_function (a_any, c)
 			else
-				-- If veto drop function not set
+					-- If veto drop function not set.
 				Result := True
 			end
 		end
@@ -529,22 +528,8 @@ feature {NONE}  -- Implementation functions
 
 feature {SD_NOTEBOOK_TAB_BOX, SD_NOTEBOOK} -- Internal attributes
 
-	notebook: attached like internal_notebook
-			-- Attached `internal_notebook'
-		require
-			set: internal_notebook /= Void
-		local
-			l_result: like internal_notebook
-		do
-			l_result := internal_notebook
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
-	internal_notebook: detachable SD_NOTEBOOK
-			-- Notebook which Current belong to
+	notebook: detachable SD_NOTEBOOK
+			-- Notebook which Current belong to.
 
 feature {NONE}  -- Implementation attributes
 
@@ -586,7 +571,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -595,10 +580,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

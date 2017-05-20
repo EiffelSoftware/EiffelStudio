@@ -1,10 +1,9 @@
-note
+﻿note
 	description: "[
 		Project-wide universal properties.
 		This class is an ancestor to all developer-written classes.
 		ANY may be customized for individual projects or teams.
-		]"
-
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -189,7 +188,7 @@ feature -- Duplication
 			-- For non-void `other', `clone' calls `copy';
 		 	-- to change copying/cloning semantics, redefine `copy'.
 		obsolete
-			"Use `twin' instead."
+			"Use `twin' instead. [2017-05-31]"
 		do
 			if other /= Void then
 				Result := other.twin
@@ -203,7 +202,7 @@ feature -- Duplication
 			-- field-by-field identical to `other'.
 			-- Always uses default copying semantics.
 		obsolete
-			"Use `standard_twin' instead."
+			"Use `standard_twin' instead. [2017-05-31]"
 		do
 			if other /= Void then
 				Result := other.standard_twin
@@ -235,7 +234,7 @@ feature -- Duplication
 			-- Void if `other' is void: otherwise, new object structure
 			-- recursively duplicated from the one attached to `other'
 		obsolete
-			"Use `deep_twin' instead."
+			"Use `deep_twin' instead. [2017-05-31]"
 		do
 			if other /= Void then
 				Result := other.deep_twin
@@ -358,9 +357,10 @@ feature -- Basic operations
 		end
 
 	frozen as_attached: attached like Current
-			-- Attached version of Current
+			-- Attached version of Current.
 			-- (Can be used during transitional period to convert
 			-- non-void-safe classes to void-safe ones.)
+		obsolete "Remove calls to this feature. [2017-05-31]"
 		do
 			Result := Current
 		end
@@ -370,7 +370,7 @@ invariant
 	reflexive_conformance: conforms_to (Current)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

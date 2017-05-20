@@ -3,6 +3,8 @@ note
 			Summary description for {WIKI_EXTERNAL_LINK}.
 
 			[http://www.example.com Example site]
+			[http://www.example.com|Example site]
+			[http://www.example.com|param1|param2|Example site]
 			[mailto:me@address.com Email me]
 			[file://.... the local file]
 
@@ -29,14 +31,14 @@ feature {NONE} -- Initialization
 			ends_with_bracket: s.ends_with ("]")
 			valid_wiki_link: s.count > 0
 		local
-			p, n: INTEGER
+			i, p, n: INTEGER
 			l_text: detachable READABLE_STRING_8
 		do
 			from
 				n := s.count
 				p := 1 + 1 -- skip first "["
 			until
-				p > n or s.item (p).is_space
+				p > n or s.item (p).is_space or s.item (p) = '|'
 			loop
 				p := p + 1
 			end
@@ -54,7 +56,18 @@ feature {NONE} -- Initialization
 			if l_text = Void then
 				text := wiki_raw_string (url)
 			else
-				text := wiki_raw_string (l_text)
+				i := l_text.last_index_of ('|', l_text.count)
+				if i > 0 then
+					text := wiki_raw_string (l_text.substring (i + 1, l_text.count))
+					l_text := l_text.head (i - 1)
+					across
+						l_text.split ('|') as ic
+					loop
+						add_parameter (ic.item)
+					end
+				else
+					text := wiki_raw_string (l_text)
+				end
 			end
 		end
 
@@ -63,6 +76,8 @@ feature -- Access
 	url: STRING
 
 	text: WIKI_STRING_ITEM
+
+	parameters: detachable ARRAYED_LIST [READABLE_STRING_8]
 
 feature -- Status report
 
@@ -95,7 +110,7 @@ feature -- Status report
 				s := l_url.head (i - 1)
 				Result := across s as ic all ic.item.is_alpha_numeric end
 				if Result then
-						-- This should not be usefull to check, since `make' is extracting 
+						-- This should not be usefull to check, since `make' is extracting
 						-- the `url', thanks to the first whitespace.
 						-- But in case, someone update the `url' in a different manner.!
 					check l_url.valid_index (i + 1) end
@@ -106,6 +121,22 @@ feature -- Status report
 			end
 		end
 
+feature -- Element change
+
+	add_parameter (p: READABLE_STRING_8)
+		local
+			lst: like parameters
+		do
+			lst := parameters
+			if lst = Void then
+				create lst.make (1)
+				parameters := lst
+			end
+			lst.force (p)
+		ensure
+			parameters /= Void
+		end
+
 feature -- Visitor
 
 	process (a_visitor: WIKI_VISITOR)
@@ -114,7 +145,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2017, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

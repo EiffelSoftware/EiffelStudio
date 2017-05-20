@@ -20,7 +20,7 @@ feature -- Access
 	interface_item: G
 			-- Current item but guaranteed attached for calling from interface only
 		obsolete
-			"Use `item' instead."
+			"Use `item' instead. [2017-05-31]"
 		require
 			readable: index > 0 and then index <= count
 		do
@@ -58,7 +58,7 @@ feature -- Access
 	interface_i_th (i: INTEGER): G
 			-- Current i_th item but guaranteed attached for calling from interface only
 		obsolete
-			"Use `i_th' instead."
+			"Use `i_th' instead. [2017-05-31]"
 		require
 			readable: i > 0 and then i <= count
 		do

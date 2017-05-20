@@ -87,10 +87,14 @@ feature -- Color ids
 	mouse_over_link_background_color_id: INTEGER = 26
 			-- Link color when mouse is over
 
+	quoted_feature_text_color_id: INTEGER = 27
+
+	quoted_feature_background_color_id: INTEGER = 28
+
 	max_color_id: INTEGER
 			-- Maximal id of color.
 		do
-			Result := mouse_over_link_background_color_id
+			Result := quoted_feature_background_color_id
 		end
 
 feature -- Font ids
@@ -111,7 +115,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

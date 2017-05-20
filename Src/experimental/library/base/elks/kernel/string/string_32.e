@@ -130,7 +130,7 @@ feature -- Initialization
 			l_count := c_string_provider.count
 			grow (l_count + 1)
 			count := l_count
-			internal_hash_code := 0
+			reset_hash_codes
 			c_string_provider.read_string_into (Current)
 		ensure
 			no_zero_byte: not has ('%/0/')
@@ -155,7 +155,7 @@ feature -- Initialization
 				-- Resize string in case it is not big enough
 			grow (l_count + 1)
 			count := l_count
-			internal_hash_code := 0
+			reset_hash_codes
 			c_string_provider.read_substring_into (Current, 1, l_count)
 		ensure
 			valid_count: count = end_pos - start_pos + 1
@@ -177,7 +177,7 @@ feature -- Initialization
 	remake (n: INTEGER)
 			-- Allocate space for at least `n' characters.
 		obsolete
-			"Use `make' instead"
+			"Use `make' instead. [2017-05-31]"
 		require
 			non_negative_size: n >= 0
 		do
@@ -204,7 +204,7 @@ feature -- Access
 	item_code (i: INTEGER): INTEGER
 			-- Character at position `i'
 		obsolete
-			"Due to potential truncation it is recommended to use `code (i)' instead."
+			"Due to potential truncation it is recommended to use `code (i)' instead. [2017-05-31]"
 		do
 			Result := area.item (i - 1).natural_32_code.as_integer_32
 		end
@@ -238,7 +238,7 @@ feature -- Element change
 			s := t.substring (n1, n2)
 			area := s.area
 			count := s.count
-			internal_hash_code := 0
+			reset_hash_codes
 		ensure
 			is_substring: same_string (t.substring (n1, n2))
 		end
@@ -250,23 +250,23 @@ feature -- Element change
 			other_not_void: other /= Void
 			valid_start_pos: other.valid_index (start_pos)
 			valid_end_pos: other.valid_index (end_pos)
-			valid_bounds: (start_pos <= end_pos) or (start_pos = end_pos + 1)
+			valid_bounds: start_pos <= end_pos or start_pos = end_pos + 1
 			valid_index_pos: valid_index (index_pos)
-			enough_space: (count - index_pos) >= (end_pos - start_pos)
+			enough_space: count - index_pos >= end_pos - start_pos
 		local
 			l_other_area, l_area: like area
 		do
 			if end_pos >= start_pos then
 				l_other_area := other.area
 				l_area := area
-				if l_area /= l_other_area then
-					l_area.copy_data (l_other_area, start_pos - 1, index_pos - 1,
-						end_pos - start_pos + 1)
-				else
+				if l_area = l_other_area then
 					l_area.overlapping_move (start_pos - 1, index_pos - 1,
 						end_pos - start_pos + 1)
+				else
+					l_area.copy_data (l_other_area, start_pos - 1, index_pos - 1,
+						end_pos - start_pos + 1)
 				end
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		ensure
 			same_count: count = old count
@@ -393,7 +393,7 @@ feature -- Element change
 						set_count (l_count - l_offset)
 						end
 							-- String was modified we need to recompute the `hash_code'.
-						internal_hash_code := 0
+						reset_hash_codes
 					end
 				elseif attached l_string_searcher.substring_index_list_with_deltas (Current, original, 1, l_count) as l_list then
 						-- Get the number of substitution to be performed by getting a list
@@ -460,7 +460,7 @@ feature -- Element change
 			l_count := count
 			if l_count /= 0 then
 				area.fill_with (c, 0, l_count - 1)
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		ensure
 			same_count: (count = old count) and (capacity = old capacity)
@@ -470,7 +470,7 @@ feature -- Element change
 	replace_character (c: CHARACTER_32)
 			-- Replace every character with `c'.
 		obsolete
-			"ELKS 2001: use `fill_with' instead'"
+			"ELKS 2001: use `fill_with' instead'. [2017-05-31]"
 		do
 			fill_with (c)
 		ensure
@@ -484,7 +484,7 @@ feature -- Element change
 		do
 			if n < count then
 				count := n
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		end
 
@@ -498,7 +498,7 @@ feature -- Element change
 			if n < nb then
 				area.overlapping_move (nb - n, 0, n)
 				count := n
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		end
 
@@ -528,7 +528,7 @@ feature -- Element change
 				l_area.overlapping_move (nb_space, 0, nb)
 					-- Set new count.
 				count := nb
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		end
 
@@ -563,7 +563,7 @@ feature -- Element change
 			if nb_space > 0 then
 					-- Set new count.
 				count := nb + 1 - nb_space
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		end
 
@@ -576,7 +576,7 @@ feature -- Element change
 		do
 			area := other.area
 			count := other.count
-			internal_hash_code := 0
+			reset_hash_codes
 		ensure
 			shared_count: other.count = count
 			shared_area: other.area = area
@@ -586,7 +586,7 @@ feature -- Element change
 			-- Replace character at position `i' by `c'.
 		do
 			area.put (c, i - 1)
-			internal_hash_code := 0
+			reset_hash_codes
 		ensure then
 			stable_count: count = old count
 			stable_before_i: elks_checking implies substring (1, i - 1) ~ (old substring (1, i - 1))
@@ -597,7 +597,7 @@ feature -- Element change
 			-- Replace character at position `i' by character of code `v'.
 		do
 			area.put (v.to_character_32, i - 1)
-			internal_hash_code := 0
+			reset_hash_codes
 		end
 
 	prepend_string_general (s: READABLE_STRING_GENERAL)
@@ -622,7 +622,7 @@ feature -- Element change
 			l_area.overlapping_move (0, 1, count)
 			l_area.put (c, 0)
 			count := count + 1
-			internal_hash_code := 0
+			reset_hash_codes
 		ensure
 			new_count: count = old count + 1
 		end
@@ -669,7 +669,7 @@ feature -- Element change
 				l_area.copy_data (s.area, s.area_lower + start_index - 1, 0, l_s_count)
 
 				count := new_size
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		ensure
 			new_count: count = old count + end_index - start_index + 1
@@ -682,7 +682,7 @@ feature -- Element change
 			prepend_string_general (b.out)
 		end
 
-	prepend_double (d: DOUBLE)
+	prepend_double (d: REAL_64)
 			-- Prepend the string representation of `d' at front.
 		do
 			prepend_string_general (d.out)
@@ -694,7 +694,7 @@ feature -- Element change
 			prepend_string_general (i.out)
 		end
 
-	prepend_real (r: REAL)
+	prepend_real (r: REAL_32)
 			-- Prepend the string representation of `r' at front.
 		do
 			prepend_string_general (r.out)
@@ -734,7 +734,7 @@ feature -- Element change
 				end
 				area.copy_data (s.area, s.area_lower, l_count, l_s_count)
 				count := l_new_size
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		ensure
 			new_count: count = old count + old s.count
@@ -760,7 +760,7 @@ feature -- Element change
 				end
 				area.copy_data (s.area, s.area_lower + start_index - 1, l_count, l_s_count)
 				count := l_new_size
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		ensure
 			new_count: count = old count + (end_index - start_index + 1)
@@ -1142,13 +1142,13 @@ feature -- Element change
 			end
 		end
 
-	append_real (r: REAL)
+	append_real (r: REAL_32)
 			-- Append the string representation of `r' at end.
 		do
 			append_string_general (r.out)
 		end
 
-	append_double (d: DOUBLE)
+	append_double (d: REAL_64)
 			-- Append the string representation of `d' at end.
 		do
 			append_string_general (d.out)
@@ -1165,7 +1165,7 @@ feature -- Element change
 			end
 			area.put (c, current_count)
 			count := current_count + 1
-			internal_hash_code := 0
+			reset_hash_codes
 		ensure then
 			item_inserted: item (count) = c
 			new_count: count = old count + 1
@@ -1181,7 +1181,7 @@ feature -- Element change
 	insert (s: READABLE_STRING_32; i: INTEGER)
 			-- Add `s' to left of position `i' in current string.
 		obsolete
-			"ELKS 2001: use `insert_string' instead"
+			"ELKS 2001: use `insert_string' instead. [2017-05-31]"
 		require
 			string_exists: s /= Void
 			index_small_enough: i <= count + 1
@@ -1224,7 +1224,7 @@ feature -- Element change
 				l_area.copy_data (s.area, s.area_lower, pos, l_s_count)
 
 				count := new_size
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		ensure
 			inserted: elks_checking implies (Current ~ (old substring (1, i - 1) + old (s.twin) + old substring (i, count)))
@@ -1256,7 +1256,7 @@ feature -- Element change
 			l_area.put (c, pos)
 
 			count := new_size
-			internal_hash_code := 0
+			reset_hash_codes
 		ensure
 			one_more_character: count = old count + 1
 			inserted: item (i) = c
@@ -1276,32 +1276,24 @@ feature -- Removal
 			area.overlapping_move (i, i - 1, l_count - i)
 				-- Update content.
 			count := l_count - 1
-			internal_hash_code := 0
+			reset_hash_codes
 		end
 
 	remove_head (n: INTEGER)
 			-- Remove first `n' characters;
 			-- if `n' > `count', remove all.
-		require
-			n_non_negative: n >= 0
 		do
 			if n > count then
 				count := 0
-				internal_hash_code := 0
+				reset_hash_codes
 			else
 				keep_tail (count - n)
 			end
-		ensure
-			removed: elks_checking implies Current ~ (old substring (n.min (count) + 1, count))
 		end
 
 	remove_substring (start_index, end_index: INTEGER)
 			-- Remove all characters from `start_index'
 			-- to `end_index' inclusive.
-		require
-			valid_start_index: 1 <= start_index
-			valid_end_index: end_index <= count
-			meaningful_interval: start_index <= end_index + 1
 		local
 			l_count, nb_removed: INTEGER
 		do
@@ -1310,29 +1302,23 @@ feature -- Removal
 				l_count := count
 				area.overlapping_move (start_index + nb_removed - 1, start_index - 1, l_count - end_index)
 				count := l_count - nb_removed
-				internal_hash_code := 0
+				reset_hash_codes
 			end
-		ensure
-			removed: elks_checking implies Current ~ (old substring (1, start_index - 1) + old substring (end_index + 1, count))
 		end
 
 	remove_tail (n: INTEGER)
 			-- Remove last `n' characters;
 			-- if `n' > `count', remove all.
-		require
-			n_non_negative: n >= 0
 		local
 			l_count: INTEGER
 		do
 			l_count := count
 			if n > l_count then
 				count := 0
-				internal_hash_code := 0
+				reset_hash_codes
 			else
 				keep_head (l_count - n)
 			end
-		ensure
-			removed: elks_checking implies Current ~ (old substring (1, count - n.min (count)))
 		end
 
 	prune (c: CHARACTER_32)
@@ -1379,7 +1365,7 @@ feature -- Removal
 				i := i + 1
 			end
 			count := j
-			internal_hash_code := 0
+			reset_hash_codes
 		ensure then
 			changed_count: count = (old count) - (old occurrences (c))
 			-- removed: For every `i' in 1..`count', `item' (`i') /= `c'
@@ -1411,19 +1397,16 @@ feature -- Removal
 			-- Remove all characters.
 		do
 			count := 0
-			internal_hash_code := 0
-		ensure then
-			is_empty: count = 0
-			same_capacity: capacity = old capacity
+			reset_hash_codes
 		end
 
 	clear_all
 			-- Reset all characters.
 		obsolete
-			"Use `wipe_out' instead."
+			"Use `wipe_out' instead. [2017-05-31]"
 		do
 			count := 0
-			internal_hash_code := 0
+			reset_hash_codes
 		ensure
 			is_empty: count = 0
 			same_capacity: capacity = old capacity
@@ -1507,7 +1490,7 @@ feature -- Conversion
 				end
 					-- Restore `count'
 				count := nb
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		end
 
@@ -1563,7 +1546,7 @@ feature -- Conversion
 						-- Fill right part with spaces.
 					l_area.fill_with (' ', nb - right_nb_space - l_offset, nb - 1)
 				end
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		end
 
@@ -1603,7 +1586,7 @@ feature -- Conversion
 				end
 					-- Restore `count'
 				count := nb
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		ensure
 			same_count: count = old count
@@ -1641,7 +1624,7 @@ feature -- Conversion
 					l_area.move_data (l_index_of_pivot - position, 0, count - l_index_of_pivot + position)
 					l_area.fill_with (' ', count - l_index_of_pivot + position, count - 1)
 				end
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		end
 
@@ -1649,7 +1632,7 @@ feature -- Conversion
 			-- Convert to lower case.
 		do
 			to_lower_area (area, 0, count - 1)
-			internal_hash_code := 0
+			reset_hash_codes
 		ensure
 			length_and_content: elks_checking implies Current ~ (old as_lower)
 		end
@@ -1658,7 +1641,7 @@ feature -- Conversion
 			-- Convert to upper case.
 		do
 			to_upper_area (area, 0, count - 1)
-			internal_hash_code := 0
+			reset_hash_codes
 		ensure
 			length_and_content: elks_checking implies Current ~ (old as_upper)
 		end
@@ -1725,7 +1708,7 @@ feature -- Conversion
 					i := i - 1
 					j := j + 1
 				end
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		ensure
 			same_count: count = old count
@@ -1774,7 +1757,7 @@ feature {STRING_HANDLER} -- Implementation
 			-- Set `count' to `number' of characters.
 		do
 			count := number
-			internal_hash_code := 0
+			reset_hash_codes
 		end
 
 feature {NONE} -- Implementation
@@ -1790,8 +1773,9 @@ feature -- Transformation
 	correct_mismatch
 			-- Attempt to correct object mismatch during retrieve using `mismatch_information'.
 		do
-				-- Nothing to be done because we only added `internal_hash_code' that will
-				-- be recomputed next time we query `hash_code'.
+				-- Nothing to be done because we only added `internal_hash_code' and
+				-- `internal_case_insensitive_hash_code' that will be recomputed next
+				-- time we query `hash_code'.
 
 				-- In .NET, we have a mismatch that is triggered due to the implementation of
 				-- SPECIAL [CHARACTER_32] as a .NET array of UInt16.
@@ -1805,7 +1789,7 @@ invariant
 	compare_character: not object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 	needs_event_box: BOOLEAN = True
 		-- <Precursor>
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- <Precursor>
 		do
 			check never_used: False end

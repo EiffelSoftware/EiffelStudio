@@ -11,6 +11,7 @@
 			<warning name="syntax" enabled="false"/>
 		</option>
 		<setting name="console_application" value="true"/>
+		<setting name="multithreaded" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
 		$EWEASEL_DOTNET_SETTING
 		<setting name="exception_trace" value="true"/>

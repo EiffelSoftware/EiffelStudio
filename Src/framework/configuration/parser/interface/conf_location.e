@@ -249,7 +249,7 @@ feature -- Comparison
 			Result := equal (original_path, other.original_path)
 		end
 
-feature {NONE} -- Implementation, attributes stored in configuration file
+feature {CONF_ERROR} -- Implementation, attributes stored in configuration file
 
 	parent: detachable CONF_LOCATION
 			-- The path of the parent directory (if any).
@@ -296,7 +296,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
- 	old_make (an_interface: like interface)
+ 	old_make (an_interface: attached like interface)
  			-- Create the default font.
 		do
 			assign_interface (an_interface)
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			l_app_imp: like app_implementation
 		do
 			l_app_imp := app_implementation
-			font_description := {GTK2}.pango_font_description_new
+			font_description := {PANGO}.font_description_new
 			create preferred_families
 			family := Family_sans
 			set_face_name (l_app_imp.default_font_name)
@@ -101,7 +101,7 @@ feature -- Element change
 		do
 			name := a_face.as_string_32
 			propvalue := app_implementation.c_string_from_eiffel_string (a_face)
-			{GTK2}.pango_font_description_set_family (font_description, propvalue.item)
+			{PANGO}.font_description_set_family (font_description, propvalue.item)
 			calculate_font_metrics
 		end
 
@@ -109,7 +109,7 @@ feature -- Element change
 			-- Set `a_weight' as preferred font thickness.
 		do
 			weight := a_weight
-			{GTK2}.pango_font_description_set_weight (font_description, pango_weight)
+			{PANGO}.font_description_set_weight (font_description, pango_weight)
 			calculate_font_metrics
 		end
 
@@ -117,7 +117,7 @@ feature -- Element change
 			-- Set `a_shape' as preferred font slant.
 		do
 			shape := a_shape
-			{GTK2}.pango_font_description_set_style (font_description, pango_style)
+			{PANGO}.font_description_set_style (font_description, pango_style)
 			calculate_font_metrics
 		end
 
@@ -126,7 +126,7 @@ feature -- Element change
 		do
 			height_in_points := app_implementation.point_value_from_pixel_value (a_height)
 			height  := a_height
-			{GTK2}.pango_font_description_set_size (font_description, height_in_points * {GTK2}.pango_scale)
+			{PANGO}.font_description_set_size (font_description, height_in_points * {PANGO}.scale)
 			calculate_font_metrics
 		end
 
@@ -135,7 +135,7 @@ feature -- Element change
 		do
 			height_in_points := a_height
 			height := app_implementation.pixel_value_from_point_value (a_height)
-			{GTK2}.pango_font_description_set_size (font_description, height_in_points * {GTK2}.pango_scale)
+			{PANGO}.font_description_set_size (font_description, height_in_points * {PANGO}.scale)
 			calculate_font_metrics
 		end
 
@@ -212,26 +212,26 @@ feature -- Status report
 			a_cs := l_app_imp.c_string_from_eiffel_string (a_string)
 
 			a_pango_layout := l_app_imp.pango_layout
-			{GTK2}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
-			{GTK2}.pango_layout_set_font_description (a_pango_layout, font_description)
+			{PANGO}.layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
+			{PANGO}.layout_set_font_description (a_pango_layout, font_description)
 
-			ink_rect := {GTK2}.c_pango_rectangle_struct_allocate
+			ink_rect := {PANGO}.new_rectangle_struct
 			log_rect := reusable_pango_rectangle_struct
-			{GTK2}.pango_layout_get_pixel_extents (a_pango_layout, ink_rect, log_rect)
+			{PANGO}.layout_get_pixel_extents (a_pango_layout, ink_rect, log_rect)
 
 			a_pango_iter := l_app_imp.pango_iter
-			a_baseline := {GTK2}.pango_layout_iter_get_baseline (a_pango_iter) // {GTK2}.pango_scale
-			{GTK2}.pango_layout_iter_free (a_pango_iter)
+			a_baseline := {PANGO}.layout_iter_get_baseline (a_pango_iter) // {PANGO}.scale
+			{PANGO}.layout_iter_free (a_pango_iter)
 
-			log_x := {GTK2}.pango_rectangle_struct_x (log_rect)
-			log_y := {GTK2}.pango_rectangle_struct_y (log_rect)
-			log_width := {GTK2}.pango_rectangle_struct_width (log_rect)
-			log_height := {GTK2}.pango_rectangle_struct_height (log_rect)
+			log_x := {PANGO}.rectangle_struct_x (log_rect)
+			log_y := {PANGO}.rectangle_struct_y (log_rect)
+			log_width := {PANGO}.rectangle_struct_width (log_rect)
+			log_height := {PANGO}.rectangle_struct_height (log_rect)
 
-			ink_x := {GTK2}.pango_rectangle_struct_x (ink_rect)
-			ink_y := {GTK2}.pango_rectangle_struct_y (ink_rect)
-			ink_width := {GTK2}.pango_rectangle_struct_width (ink_rect)
-			ink_height := {GTK2}.pango_rectangle_struct_height (ink_rect)
+			ink_x := {PANGO}.rectangle_struct_x (ink_rect)
+			ink_y := {PANGO}.rectangle_struct_y (ink_rect)
+			ink_width := {PANGO}.rectangle_struct_width (ink_rect)
+			ink_height := {PANGO}.rectangle_struct_height (ink_rect)
 
 			a_width := log_width
 			a_height := log_height
@@ -256,7 +256,7 @@ feature -- Status report
 			Result.put_integer (bottom_off, 7)
 
 			ink_rect.memory_free
-			{GTK2}.pango_layout_set_font_description (a_pango_layout, default_pointer)
+			{PANGO}.layout_set_font_description (a_pango_layout, default_pointer)
 		end
 
 	reusable_string_size_tuple: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER]
@@ -277,17 +277,17 @@ feature -- Status report
 				l_app_imp := App_implementation
 				a_cs := l_app_imp.c_string_from_eiffel_string (a_string)
 				a_pango_layout := l_app_imp.pango_layout
-				{GTK2}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
-				{GTK2}.pango_layout_set_font_description (a_pango_layout, font_description)
-				{GTK2}.pango_layout_get_pixel_size (a_pango_layout, $Result, $temp_height)
-				{GTK2}.pango_layout_set_font_description (a_pango_layout, default_pointer)
+				{PANGO}.layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
+				{PANGO}.layout_set_font_description (a_pango_layout, font_description)
+				{PANGO}.layout_get_pixel_size (a_pango_layout, $Result, $temp_height)
+				{PANGO}.layout_set_font_description (a_pango_layout, default_pointer)
 			end
 		end
 
 	reusable_pango_rectangle_struct: POINTER
 			-- PangoRectangle that may be reused to prevent memory allocation, must not be freed
 		once
-			Result := {GTK2}.c_pango_rectangle_struct_allocate
+			Result := {PANGO}.new_rectangle_struct
 		end
 
 	horizontal_resolution: INTEGER
@@ -474,12 +474,12 @@ feature {EV_ANY_I} -- Implementation
 	dispose
 			-- Clean up `Current'
 		do
-			{GTK2}.pango_font_description_set_family (font_description, default_pointer)
-			{GTK2}.pango_font_description_free (font_description)
+			{PANGO}.font_description_set_family (font_description, default_pointer)
+			{PANGO}.font_description_free (font_description)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

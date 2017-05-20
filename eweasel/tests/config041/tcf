@@ -1,0 +1,62 @@
+test_name 	 capability-library-use
+test_description Capabilities should be checked against settings: a project cannot use a library with less capabilities that do not support specified settings. See also test#config043, test#config045.
+
+copy_raw	test.e $CLUSTER test.e
+
+-- Library void safety: conformance
+define	LIBRARY_VOID_SAFETY conformance
+copy_sub	library.ecf $TEST library.ecf
+
+define	USE_VOID_SAFETY none
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_error NONE VD46
+
+define	USE_VOID_SAFETY initialization
+copy_sub	Ace $TEST Ace
+
+resume_compile
+compile_result	validity_error NONE VD01
+
+define	USE_VOID_SAFETY transitional
+copy_sub	Ace $TEST Ace
+
+resume_compile
+compile_result	validity_error NONE VD01
+
+define	USE_VOID_SAFETY all
+copy_sub	Ace $TEST Ace
+
+resume_compile
+compile_result	validity_error NONE VD01
+
+-- Library void safety: all
+define	LIBRARY_VOID_SAFETY all
+copy_sub	library.ecf $TEST library.ecf
+
+define	USE_VOID_SAFETY conformance
+copy_sub	Ace $TEST Ace
+
+resume_compile
+compile_result	ok
+
+define	USE_VOID_SAFETY initialization
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+define	USE_VOID_SAFETY transitional
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+define	USE_VOID_SAFETY all
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+test_end

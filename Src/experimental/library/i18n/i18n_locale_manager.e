@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Class that presents information about available locales and generates I18N_LOCALE objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -81,6 +81,7 @@ feature -- Access
 			temp: LINEAR [I18N_LOCALE_ID]
 		do
 			create {LINKED_LIST [I18N_LOCALE_ID]} Result.make
+			Result.compare_objects
 			Result.fill (host_locale.available_locales)
 			temp := datasource_manager.available_locales
 			from
@@ -153,7 +154,7 @@ invariant
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

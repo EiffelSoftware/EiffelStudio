@@ -1,0 +1,30 @@
+test_name 	 store-retrieve-different-expanded-id
+test_description Expanded object attached to a reference field or kept in a reference SPECIAL should be retrieved using a new dynamic type ID, not the original one.
+
+copy_sub	Ace_test.ecf $TEST Ace
+copy_raw	point.e $CLUSTER point.e
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+define_file	STORAGE $TEST test.dat
+
+execute_work 	NONE 	exec_output $STORAGE
+execute_result 	ok
+compare		exec_output output
+
+cleanup_compile
+
+copy_sub	Ace_root.ecf $TEST Ace
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output $STORAGE
+execute_result 	ok
+compare		exec_output output
+
+test_end

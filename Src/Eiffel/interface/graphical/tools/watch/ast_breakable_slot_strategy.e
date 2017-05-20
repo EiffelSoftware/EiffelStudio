@@ -2011,7 +2011,7 @@ feature {NONE} -- Implementation
 
 	process_void_as (l_as: VOID_AS)
 		do
-			last_type := none_type
+			last_type := detachable_none_type
 		end
 
 	process_type_list_as (l_as: TYPE_LIST_AS)
@@ -2410,13 +2410,18 @@ feature {NONE} -- Implementation: helpers
 		require
 			a_classs_c_not_void: a_class_c /= Void
 			a_id_set_not_void: a_id_set /= Void
+		local
+			l_rout_id: INTEGER
 		do
 			if not has_error_internal and a_id_set.first = 0 then
 				has_error_internal := True
 				set_error_message ("Feature with routine id of 0!!!")
 			else
 				if not has_error_internal then
-					Result := a_class_c.feature_with_rout_id (a_id_set.first)
+					l_rout_id := a_id_set.first
+					if l_rout_id > 0 then
+						Result := a_class_c.feature_with_rout_id (l_rout_id)
+					end
 				end
 			end
 			if not has_error_internal and Result = Void then
@@ -2782,7 +2787,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

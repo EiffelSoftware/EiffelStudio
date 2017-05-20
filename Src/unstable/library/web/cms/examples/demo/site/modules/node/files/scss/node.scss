@@ -8,6 +8,9 @@ ul.cms-nodes {
 		&:first-child {
 			border-top: none;
 		}
+		span.author, span.info {
+			float: right;
+		}
 	}
 	li.cms_type_page a::before {
 		content: "[page] ";

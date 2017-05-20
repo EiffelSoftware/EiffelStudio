@@ -1,11 +1,15 @@
 test_name 	 attached-inherited-argument
-test_description Attachment status of an argument specified in a precondition should be supported when the inheritance is involved.
+test_description Attachment status of an argument specified in a precondition should be supported when inheritance is involved.
 
 copy_raw	a.e $CLUSTER a.e
 copy_raw	test.e $CLUSTER test.e
-copy_sub	Ace $TEST Ace
 
+copy_sub	Ace-complete $TEST Ace
 compile_melted
+compile_result	validity_error TEST VUAR(2) VUAR(2) VUAR(2) VUAR(2)
+
+copy_sub	Ace-transitional $TEST Ace
+resume_compile
 compile_result	ok
 
 test_end

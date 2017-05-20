@@ -16,7 +16,8 @@ c_compile_result ok
 
 execute_work	NONE exec_output_w
 execute_result	ok
-compare		exec_output_w output
+if WINDOWS compare		exec_output_w output_windows
+if not WINDOWS compare		exec_output_w output
 
 define CONTENT	"4321"
 define MODIFICATION ""
@@ -28,7 +29,8 @@ compile_result	ok
 
 execute_work	NONE exec_output_m
 execute_result	ok
-compare		exec_output_m output
+if WINDOWS compare		exec_output_m output_windows
+if not WINDOWS compare		exec_output_m output
 
 compile_final
 compile_result	ok

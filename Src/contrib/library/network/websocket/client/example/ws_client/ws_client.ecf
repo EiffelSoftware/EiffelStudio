@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="ws_client" uuid="AF6EDC56-D7B4-4E1F-A62B-40EBED3D93DF">
+	<target name="common">
+		<file_rule>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="web_socket_client" location="..\..\web_socket_client.ecf" readonly="false"/>
+		<cluster name="ws_client" location=".\" recursive="true"/>
+	</target>
+	<target name="ws_client" extends="common">
+		<root class="APPLICATION" feature="make"/>
+	</target>
+	<target name="ws_client_ssl" extends="ws_client">
+		<variable name="ssl_enabled" value="true"/>
+	</target>
+</system>

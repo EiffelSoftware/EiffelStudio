@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="vision2-tests" uuid="215B392B-6B3D-427B-BD0C-190B8522DAA4">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="vision2-tests" uuid="215B392B-6B3D-427B-BD0C-190B8522DAA4">
 	<target name="vision2-tests">
 		<root cluster="tests" class="TEST" feature="make"/>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+		<option warning="true" is_obsolete_routine_type="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false" use_application_options="true"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf" readonly="false" use_application_options="true"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf" readonly="false" use_application_options="true"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf" readonly="false" use_application_options="true">
+		<capability>
+			<concurrency support="none"/>
+			
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false" use_application_options="true"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf" readonly="false" use_application_options="true"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="false" use_application_options="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="false" use_application_options="true">
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</library>
 		<tests name="tests" location=".\" recursive="true">
 			<file_rule>
-				<exclude>/EIFGENs$</exclude>
-				<exclude>/CVS$</exclude>
 				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/EIFGENs$</exclude>
 			</file_rule>
 		</tests>
 	</target>

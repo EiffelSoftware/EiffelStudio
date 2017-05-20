@@ -14,14 +14,11 @@ inherit
 feature -- Set
 
 	set_pixmap_directory (a_dir: READABLE_STRING_GENERAL)
-			-- Set `internal_pixmap_path'.
-		local
-			l_set_once: like pixmap_path
+			-- Set `pixmap_path'.
 		do
-			create internal_pixmap_path.make_from_string (a_dir)
-			l_set_once := pixmap_path
+			create pixmap_path.make_from_string (a_dir)
 		ensure then
-			path_valid: internal_pixmap_path /= Void
+			path_valid: pixmap_path /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -32,18 +29,8 @@ feature {NONE} -- Implementation
 	pixmap_height: INTEGER = 16
 			-- The height of the icons
 
-	pixmap_path: PATH
+	pixmap_path: detachable PATH
 			-- Path containing all of the Memory Analyzer icons
-		local
-			l_result: like internal_pixmap_path
-		do
-			l_result := internal_pixmap_path
-			check attached l_result end -- FIXME: Implied by ...?
-			Result := l_result
-		end
-
-	internal_pixmap_path: detachable like pixmap_path
-			-- Path where have icons image.
 
 	image_matrix: EV_PIXMAP
 			-- The pixmap contain all the icons
@@ -263,7 +250,7 @@ feature {NONE} -- Icons' Names
 			-- Icon names
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

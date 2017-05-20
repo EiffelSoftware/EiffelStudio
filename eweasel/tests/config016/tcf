@@ -5,6 +5,6 @@ copy_raw	test.e	$CLUSTER	test.e
 copy_sub 	Ace	$TEST	Ace
 
 compile_melted
-compile_result	validity_warning NONE VD80 VD80 VD80 VD80
+compile_result	validity_warning NONE VD80 VD80
 
 test_end

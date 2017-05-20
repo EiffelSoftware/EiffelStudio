@@ -197,9 +197,10 @@ feature -- Helpers
 
 feature {NONE} -- Implementation
 
-	tag_name_from (s: READABLE_STRING_8): STRING_8
-			-- Tag name from  inside of <...>
+	tag_name_from (s: READABLE_STRING_8): detachable STRING_8
+			-- Valid tag name from  inside of <...>
 			--| for instance ' abc def="geh"' will return abc
+			--| if tagname has invalid character, return empty string.
 		require
 			starts_and_ends_with_tag_char: s.starts_with_general ("<") and then s.ends_with_general (">")
 		local
@@ -223,11 +224,15 @@ feature {NONE} -- Implementation
 				Result.remove_tail (1)
 				Result.right_adjust
 			end
+			if across Result as ic some not (ic.item.is_alpha_numeric or ic.item = ':' or ic.item = '_' or ic.item = '-') end then
+					-- Bad tag name
+				Result := Void
+			end
 		end
 
 
 note
-	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

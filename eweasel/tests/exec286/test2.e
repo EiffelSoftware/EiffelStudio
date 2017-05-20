@@ -6,7 +6,7 @@ feature
 	f
 		require
 			toot: side_effect (create {LINKED_LIST [G]}.make)
-			titi: ({detachable G}) #? (" ") /= Void
+			titi: ({detachable G}) / (" ") /= Void
 		do
 			io.put_string ("TEST2.f")
 			io.put_new_line
@@ -16,7 +16,7 @@ feature
 		require
 			a_not_void: a /= Void
 		do
-			io.put_string (a.generating_type)
+			io.put_string (a.generating_type.name_32.as_string_8)
 			io.put_new_line
 			Result := True
 		end

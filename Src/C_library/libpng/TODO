@@ -1,12 +1,14 @@
+/*
 TODO - list of things to do for libpng:
 
 Final bug fixes.
-Improve API by hiding the png_struct and png_info structs.
-Finish work on the no-floating-point version (including gamma compensation)
 Better C++ wrapper/full C++ implementation?
 Fix problem with C++ and EXTERN "C".
 cHRM transformation.
-Improve setjmp/longjmp usage or remove it in favor of returning error codes.
+Remove setjmp/longjmp usage in favor of returning error codes. As a start on
+  this, minimize the use of png_error(), replacing them with
+  png_warning(); return(0); or similar.
+Palette creation.
 Add "grayscale->palette" transformation and "palette->grayscale" detection.
 Improved dithering.
 Multi-lingual error and warning message support.
@@ -17,8 +19,11 @@ Better filter selection
    (counting huffman bits/precompression?  filter inertia?  filter costs?).
 Histogram creation.
 Text conversion between different code pages (Latin-1 -> Mac and DOS).
-Should we always malloc 2^bit_depth PLTE/tRNS/hIST entries for safety?
-Build gamma tables using fixed point (and do away with floating point entirely).
+Avoid building gamma tables whenever possible.
 Use greater precision when changing to linear gamma for compositing against
   background and doing rgb-to-gray transformation.
 Investigate pre-incremented loop counters and other loop constructions.
+Add interpolated method of handling interlacing.
+Extend pngvalid.c to validate more of the libpng transformations.
+
+*/

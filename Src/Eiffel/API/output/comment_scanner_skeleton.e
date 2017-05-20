@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			l_feat := feature_by_name (l_feat_8.as_lower)
 				-- We try infix and prefix
 			if l_feat = Void then
-				add_text (l_text, True)
+				add_text (l_text.substring (2, l_text.count - 1), True)
 			else
 				if last_is_alias then
 					l_feat.append_full_name (text_formatter)
@@ -296,10 +296,10 @@ feature {NONE} -- Implementation
 		do
 			if not a_text.is_empty then
 				if for_comment then
-					if not a_basic_comment then
-						text_formatter.process_comment_text (a_text, Void)
+					if a_basic_comment then
+						text_formatter.process_quoted_text (a_text)
 					else
-						text_formatter.process_basic_text (a_text)
+						text_formatter.process_comment_text (a_text, Void)
 					end
 				else
 					text_formatter.process_string_text (a_text, Void)
@@ -394,7 +394,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

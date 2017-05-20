@@ -12,6 +12,11 @@ class
 inherit
 	EB_DIALOG
 
+	EB_SHARED_PREFERENCES
+		undefine
+			default_create, copy
+		end
+
 	EXCEPTIONS
 		rename
 			raise as raise_exception
@@ -256,6 +261,14 @@ feature -- Execution
 					success := not l_project_loader.has_error and then Eiffel_project.initialized and then
 						(not Eiffel_ace.file_name.is_empty)
 
+					if success then
+						if last_saved_location_checkbox.is_selected then
+							preferences.dialog_data.set_last_saved_basic_project_directory (directory_name.parent)
+						else
+							preferences.dialog_data.set_last_saved_basic_project_directory (Void)
+						end
+					end
+
 					destroy
 				end
 			else
@@ -308,6 +321,7 @@ feature {NONE} -- Implementation
 			project_directory_frame: EV_FRAME
 			system_name_frame: EV_FRAME
 			clal, clul, snl, fnl, scoop_label: EV_LABEL
+			cb: EV_CHECK_BUTTON
 			sz: INTEGER
 		do
 				-- Let the user choose the directory
@@ -410,6 +424,20 @@ feature {NONE} -- Implementation
 			create label.make_with_text (Interface_names.l_Project_location)
 			label.align_text_left
 			vb.extend (label)
+
+			if ask_for_system_name then
+					-- Remember location, only for project creation.
+				create cb.make_with_text (Interface_names.l_remember_project_location)
+				cb.set_tooltip (Interface_names.f_remember_project_location_tooltip)
+				last_saved_location_checkbox := cb
+				if preferences.dialog_data.last_saved_basic_project_directory /= Void then
+					cb.enable_select
+				else
+					cb.disable_select
+				end
+				vb.extend (cb)
+			end
+
 			project_directory_frame.extend (vb)
 
 				-- "Compile project" Check box
@@ -510,7 +538,14 @@ feature {NONE} -- Implementation
 	create_default_directory_name (project_name: READABLE_STRING_GENERAL): PATH
 			-- Return the proposed directory for project `project_name'
 		do
-			Result := eiffel_layout.user_projects_path.extended (project_name)
+			if
+				attached preferences.dialog_data.last_saved_basic_project_directory as p
+			then
+				Result := p
+			else
+				Result := eiffel_layout.user_projects_path
+			end
+			Result := Result.extended (project_name)
 		end
 
 	old_project_name: STRING_32
@@ -609,6 +644,8 @@ feature {NONE} -- Vision2 architechture
 
 	directory_field: EV_TEXT_FIELD
 
+	last_saved_location_checkbox: EV_CHECK_BUTTON
+
 	system_name_field: EV_TEXT_FIELD
 
 	root_class_field: EV_TEXT_FIELD
@@ -638,7 +675,7 @@ feature {NONE} -- Constants
 	Invalid_project_name_exception: STRING = "Invalid_project_name";
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

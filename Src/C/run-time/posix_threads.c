@@ -1376,33 +1376,36 @@ rt_public int eif_pthread_cond_wait_with_timeout (EIF_COND_TYPE *condvar, EIF_MU
 	eif_pthread_mutex_unlock(mutex);
 
 	for (;;) {
-		Result = eif_pthread_sem_wait_with_timeout(condvar->semaphore, timeout);	
-
-		(void) eif_pthread_cs_lock(condvar->csection);
-
-		if (condvar->num_wake) {
-			if (condvar->generation != generation) {
-				condvar->num_wake--;
-				condvar->num_waiting--;
-				Result = T_OK;
-				break;
-			} else {
-				wake = 1;
-			}
-		} else if (Result == T_TIMEDOUT) {
-			condvar->num_waiting--;
+		Result = eif_pthread_sem_wait_with_timeout(condvar->semaphore, timeout);
+		if (Result != T_OK && Result != T_TIMEDOUT) {
+			// An error occurred. We have to cancel the wait.
 			break;
-		}
+		} else {
+			(void) eif_pthread_cs_lock(condvar->csection);
+			if (condvar->num_wake) {
+				if (condvar->generation != generation) {
+					condvar->num_wake--;
+					condvar->num_waiting--;
+					Result = T_OK;
+	                (void) eif_pthread_cs_unlock(condvar->csection);
+					break;
+				} else {
+					wake = 1;
+				}
+			} else if (Result == T_TIMEDOUT) {
+				condvar->num_waiting--;
+	            (void) eif_pthread_cs_unlock(condvar->csection);
+				break;
+			}
+			(void) eif_pthread_cs_unlock(condvar->csection);
 
-		(void) eif_pthread_cs_unlock(condvar->csection);
-
-		if (wake) {
-			wake = 0;
-			eif_pthread_sem_post(condvar->semaphore);
+			if (wake) {
+				wake = 0;
+				eif_pthread_sem_post(condvar->semaphore);
+			}
 		}
 	}
 
-	(void) eif_pthread_cs_unlock(condvar->csection);
 	eif_pthread_mutex_lock(mutex);
 #else
 	struct timespec tspec = rt_timeout_to_timespec(timeout);

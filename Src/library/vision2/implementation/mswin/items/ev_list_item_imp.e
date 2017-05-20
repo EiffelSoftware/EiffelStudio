@@ -10,6 +10,8 @@ class
 
 inherit
 	EV_LIST_ITEM_I
+		export
+			{EV_LIST_IMP, EV_COMBO_BOX_IMP} select_actions_internal, deselect_actions_internal
 		redefine
 			parent_imp, interface
 		end
@@ -50,18 +52,13 @@ inherit
 			all
 		end
 
-	EV_LIST_ITEM_ACTION_SEQUENCES_IMP
-		export
-			{EV_LIST_IMP, EV_COMBO_BOX_IMP} select_actions_internal, deselect_actions_internal
-		end
-
 create
 	make
 
 
 feature -- Initialization
 
-	old_make (an_interface: like interface)
+	old_make (an_interface: attached like interface)
 			-- Create the widget with `par' as parent.
 		do
 			assign_interface (an_interface)
@@ -480,7 +477,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_LIST_ITEM note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

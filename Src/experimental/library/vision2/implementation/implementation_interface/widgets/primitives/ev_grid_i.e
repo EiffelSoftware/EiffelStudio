@@ -4429,7 +4429,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			set_minimum_size (default_minimum_size, default_minimum_size)
 
 			create drawer_internal.make_with_grid (Current)
-			drawable.expose_actions.force_extend (agent drawer.redraw_area_in_drawable_coordinates_wrapper)
+			drawable.expose_actions.extend (agent drawer.redraw_area_in_drawable_coordinates_wrapper)
 
 			header.set_grid (Current)
 			extend (horizontal_box)

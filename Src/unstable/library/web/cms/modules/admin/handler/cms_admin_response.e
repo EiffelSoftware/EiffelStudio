@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {CMS_ADMIN_RESPONSE}."
+	description: "Response for the /admin request."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,12 +23,14 @@ feature -- Process
 			l_package: READABLE_STRING_8
 		do
 			create l_admin_links.make (5)
-			l_admin_links.force (["core", <<"admin users">>, local_link ("Users", "admin/users"), "View/Edit/Add Users"])
-			l_admin_links.force (["core", <<"admin roles">>, local_link ("Roles", "admin/roles"), "View/Edit/Add Roles"])
-			l_admin_links.force (["core", <<"admin modules">>, local_link ("Modules", "admin/modules"), "(un)Install modules"])
-			l_admin_links.force (["core", <<"view logs">>, local_link ("Logs", "admin/logs"), "View logs"])
-			l_admin_links.force (["support", <<"admin cache">>, local_link ("Cache", "admin/cache"), "Clear caches"])
-			l_admin_links.force (["support", <<"admin export">>, local_link ("Export", "admin/export"), "Export CMS contents, and modules contents."])
+			l_admin_links.force (["core", <<"admin users">>, administration_link ("Users", "users"), "View/Edit/Add Users"])
+			l_admin_links.force (["core", <<"admin roles">>, administration_link ("Roles", "roles"), "View/Edit/Add Roles"])
+			l_admin_links.force (["core", <<"admin modules">>, administration_link ("Modules", "modules"), "(un)Install modules"])
+			l_admin_links.force (["core", <<"view logs">>, administration_link ("Logs", "logs"), "View logs"])
+			l_admin_links.force (["core", <<"admin path_alias">>, administration_link ("Path Alias", "path_alias"), "Manage path aliases"])
+			l_admin_links.force (["support", <<"admin cache">>, administration_link ("Cache", "cache"), "Clear caches"])
+			l_admin_links.force (["support", <<"admin export">>, administration_link ("Export", "export"), "Export CMS contents, and modules contents."])
+			l_admin_links.force (["support", <<"admin import">>, administration_link ("Import", "import"), "Import CMS contents, and modules contents."])
 			create categories.make_caseless (3)
 			across
 				l_admin_links as ic

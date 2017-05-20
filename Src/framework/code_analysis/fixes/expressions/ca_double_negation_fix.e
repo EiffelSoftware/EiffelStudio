@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Fixes violations of rule #15 ('Double negation')."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -41,8 +40,10 @@ feature {NONE} -- Implementation
 		end
 
 	execute (a_class: attached CLASS_AS)
+		local
+			u: UTF_CONVERTER
 		do
-			unary.replace_text (get_expression(unary.expr), matchlist)
+			unary.replace_text (u.string_32_to_utf_8_string_8 (get_expression(unary.expr)), matchlist)
 		end
 
 end

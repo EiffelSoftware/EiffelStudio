@@ -47,10 +47,10 @@ feature {NONE} -- Initialization
 			not_a_code_is_ok: a_code /= {SQLITE_RESULT_CODE}.ok
 		do
 			internal_code := a_code
-			create tag.make_from_string (a_message)
+			create tag.make_from_string_8 (a_message)
 		ensure
 			internal_code_set: internal_code = a_code
-			tag_set: tag.same_string (a_message)
+			tag_set: tag.same_string_general (a_message)
 		end
 
 feature -- Access
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			-- Actual reported code.
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

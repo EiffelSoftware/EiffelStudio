@@ -1,4 +1,4 @@
-note
+﻿note
 	description:"[
 				Abstract class that is used for the internal representation
 				of a class. Descendants of `ABSTRACT_CLASS' represent
@@ -6,7 +6,6 @@ note
 			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -248,15 +247,6 @@ feature -- Access
 			Result := options.catcall_detection.index = {CONF_OPTION}.catcall_detection_index_all
 		end
 
-	is_attached_by_default: BOOLEAN
-			-- Is class type without an explicit attachment mark
-			-- considered as an attached one?
-		do
-				-- It only makes sense if we are in non-void-safe mode regardless
-				-- of the user setting.
-			Result := not is_void_unsafe and options.is_attached_by_default
-		end
-
 	is_obsolete_routine_type: BOOLEAN
 			-- Is obsolete routine type declaration (i.e., "ROUTINE [BASE_TYPE, OPEN_ARGS]" instead of "ROUTINE [OPEN_ARGS]") used?
 		do
@@ -277,18 +267,24 @@ feature -- Access
 
 	is_void_safe_initialization: BOOLEAN
 			-- Should attached entities be property set before use?
+		local
+			i: like {CONF_OPTION}.void_safety_index_none
 		do
+			i := options.void_safety.index
 			Result :=
-				options.void_safety.index /= {CONF_OPTION}.void_safety_index_none and then
-				options.void_safety.index /= {CONF_OPTION}.void_safety_index_conformance
+				i /= {CONF_OPTION}.void_safety_index_none and then
+				i /= {CONF_OPTION}.void_safety_index_conformance
 		end
 
 	is_void_safe_call: BOOLEAN
 			-- Should feature call target be attached?
+		local
+			i: like {CONF_OPTION}.void_safety_index_none
 		do
+			i := options.void_safety.index
 			Result :=
-				options.void_safety.index = {CONF_OPTION}.void_safety_index_transitional or else
-				options.void_safety.index = {CONF_OPTION}.void_safety_index_all
+				i = {CONF_OPTION}.void_safety_index_transitional or else
+				i = {CONF_OPTION}.void_safety_index_all
 		end
 
 	is_void_safe_construct: BOOLEAN
@@ -297,18 +293,13 @@ feature -- Access
 			Result := options.void_safety.index = {CONF_OPTION}.void_safety_index_all
 		end
 
-	is_void_safety_supported (other: CLASS_I): BOOLEAN
-			-- Does class provide the same or better void-safety level than `other'?
+	is_attached_by_default: BOOLEAN
+			-- Is class type without an explicit attachment mark
+			-- considered as an attached one?
 		do
-			Result := options.is_void_safety_supported (other.options)
-		end
-
-	is_void_safety_sufficient (other: CLASS_I): BOOLEAN
-			-- Does class provide the void-safety level than is sufficient to be used by the client `other'?
-		do
-			Result := options.is_void_safety_sufficient (other.options)
-		ensure
-			sufficient_if_supported: is_void_safety_supported (other) implies Result
+				-- It only makes sense if we are in non-void-safe mode regardless
+				-- of the user setting.
+			Result := not is_void_unsafe and then options.is_attached_by_default
 		end
 
 	is_syntax_obsolete: BOOLEAN
@@ -679,7 +670,7 @@ invariant
 	compiled_class_connection: is_compiled implies compiled_class.original_class = Current
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

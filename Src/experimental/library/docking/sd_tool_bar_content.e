@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Contents that have a tool bar items that client programmer want to managed by docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -107,13 +107,13 @@ feature -- Command
 			if not is_visible then
 				if attached zone as l_zone then
 					l_zone.show
-					if l_zone.is_floating then
-						l_zone.attached_floating_tool_bar.show
+					if attached l_zone.floating_tool_bar as b then
+						b.show
 					else
 						if l_zone.assistant.last_state.is_docking_state_recorded then
 							l_zone.assistant.dock_last_state_for_hide
-						elseif is_added then
-							manager.set_top (Current, {SD_ENUMERATION}.top)
+						elseif attached manager as m then
+							m.set_top (Current, {SD_ENUMERATION}.top)
 						end
 					end
 				end
@@ -130,8 +130,8 @@ feature -- Command
 		do
 			if is_visible then
 				if attached zone as l_zone then
-					if l_zone.is_floating then
-						l_zone.attached_floating_tool_bar.hide
+					if attached l_zone.floating_tool_bar as b then
+						b.hide
 					else
 						l_row := l_zone.row
 						if l_row /= Void then
@@ -145,7 +145,9 @@ feature -- Command
 					l_zone.hide
 				end
 				is_visible := False
-				manager.docking_manager.command.resize (True)
+				if attached manager as m then
+					m.docking_manager.command.resize (True)
+				end
 			end
 		end
 
@@ -155,9 +157,9 @@ feature -- Command
 			not_destroyed: not is_destroyed
 		do
 			destroy_container
-			if is_added then
-				manager.contents.start
-				manager.contents.prune (Current)
+			if attached manager as m then
+				m.contents.start
+				m.contents.prune (Current)
 			end
 		end
 
@@ -185,11 +187,17 @@ feature -- Command
 			end
 			destroy_container
 
-			manager.set_top (Current, a_direction)
+			if attached manager as m then
+				m.set_top (Current, a_direction)
+			else
+				check
+					from_precondition_added: False
+				end
+			end
 
 			is_visible := True
 		ensure
-			visible: is_visible = True
+			visible: is_visible
 		end
 
 	set_top_with (a_target_content: SD_TOOL_BAR_CONTENT)
@@ -206,11 +214,17 @@ feature -- Command
 			end
 			destroy_container
 
-			manager.set_top_with (Current, a_target_content)
+			if attached manager as m then
+				m.set_top_with (Current, a_target_content)
+			else
+				check
+					from_precondition_added: False
+				end
+			end
 
 			is_visible := True
 		ensure
-			visible: is_visible = True
+			visible: is_visible
 		end
 
 	refresh
@@ -330,7 +344,7 @@ feature -- Query
 					-- At least two sepators at the end.
 					Result := Result - 1
 				end
-			elseif l_last_is_separator = True and l_items.count = 1 then
+			elseif l_last_is_separator and l_items.count = 1 then
 				-- Only one separator
 				Result := 0
 			elseif l_items.count = 0 then
@@ -385,28 +399,22 @@ feature -- Query
 
 	show_request_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to perform when show requested
-		local
-			l_result: like internal_show_request_actions
 		do
-			l_result := internal_show_request_actions
-			if l_result = Void then
-				create l_result
-				internal_show_request_actions := l_result
+			Result := internal_show_request_actions
+			if not attached Result then
+				create Result
+				internal_show_request_actions := Result
 			end
-			Result := l_result
 		end
 
 	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions to perfrom when close requested
-		local
-			l_result: like internal_close_request_actions
+			-- Actions to perfrom when close requested.
 		do
-			l_result := internal_close_request_actions
-			if l_result = Void then
-				create l_result
-				internal_close_request_actions := l_result
+			Result := internal_close_request_actions
+			if not attached Result then
+				create Result
+				internal_close_request_actions := Result
 			end
-			Result := l_result
 		end
 
 	item_count_except_sep (a_include_invisible: BOOLEAN): INTEGER
@@ -449,7 +457,7 @@ feature -- Query
 	is_added: BOOLEAN
 			-- If Current added to a tool bar manager?
 		do
-			Result := internal_manager /= Void
+			Result := manager /= Void
 		end
 
 	is_destroyed: BOOLEAN
@@ -499,33 +507,33 @@ feature -- Query
 feature -- Obsolete
 
 	item_count_except_separator: INTEGER
-			-- Item count except SD_TOOL_BAR_SEPARATOR
+			-- Item count except SD_TOOL_BAR_SEPARATOR.
 		obsolete
-			"Use item_count_except_sep instead."
+			"Use item_count_except_sep instead. [2017-05-31]"
 		do
 			Result := item_count_except_sep (True)
 		end
 
 	group (a_group_index: INTEGER_32): like group_items
-			-- Group items except hidden items
+			-- Group items except hidden items.
 		obsolete
-			"Use group_items instead."
+			"Use group_items instead. [2017-05-31]"
 		do
 			Result := group_items (a_group_index, True)
 		end
 
 	group_count: INTEGER
-			-- Group count, group is buttons before one separater
+			-- Group count, group is buttons before one separater.
 		obsolete
-			"Use groups_count instead."
+			"Use groups_count instead. [2017-05-31]"
 		do
 			Result := groups_count (True)
 		end
 
 	items_except_separator: like items_except_sep
-			-- `items' except SD_TOOL_BAR_SEPARATOR
+			-- `items' except SD_TOOL_BAR_SEPARATOR.
 		obsolete
-			"Use items_except_sep instead."
+			"Use items_except_sep instead. [2017-05-31]"
 		do
 			Result := items_except_sep (True)
 		end
@@ -699,29 +707,15 @@ feature {SD_ACCESS}  -- Internal issues
 			set: zone = a_zone
 		end
 
-	manager: attached like internal_manager
-			-- Attached `internal_manager'
-		require
-			set: is_added
-		local
-			l_result: like internal_manager
-		do
-			l_result := internal_manager
-			check l_result /= Void end -- Implied by precondition `set'
-			Result := l_result
-		ensure
-			not_void: Result /= Void
-		end
-
-	internal_manager: detachable SD_TOOL_BAR_MANAGER
-			-- Manager which manage Current
+	manager: detachable SD_TOOL_BAR_MANAGER
+			-- Manager which manages `Current' (if any).
 
 	set_manager (a_manager: detachable SD_TOOL_BAR_MANAGER)
-			-- Set `internal_manager'
+			-- Set `manager' to `a_manager'.
 		do
-			internal_manager := a_manager
+			manager := a_manager
 		ensure
-			set: internal_manager = a_manager
+			set: manager = a_manager
 		end
 
 	set_visible (a_bool: BOOLEAN)
@@ -739,10 +733,10 @@ feature {NONE} -- Implementation
 		do
 			if attached zone as l_zone then
 				l_zone.destroy_parent_containers
-				if l_zone.is_floating then
-					l_zone.attached_floating_tool_bar.destroy
-					if is_added then
-						manager.floating_tool_bars.prune_all (l_zone.attached_floating_tool_bar)
+				if attached l_zone.floating_tool_bar as b then
+					b.destroy
+					if attached manager as m then
+						m.floating_tool_bars.prune_all (b)
 					end
 				end
 				l_zone.destroy
@@ -760,7 +754,7 @@ invariant
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -769,10 +763,5 @@ invariant
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

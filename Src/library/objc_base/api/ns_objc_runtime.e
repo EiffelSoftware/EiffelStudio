@@ -282,7 +282,7 @@ feature -- Working with Selectors
 	frozen sel_get_uid (a_name: POINTER): POINTER
 			-- SEL sel_getUid(const char *str)
 		obsolete
-			"Use sel_register_name instead."
+			"Use sel_register_name instead [2017-05-31]."
 		external
 			"C inline use <objc/runtime.h>"
 		alias
@@ -308,7 +308,7 @@ feature -- Working with Selectors
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -64,7 +64,7 @@ feature -- Process Edit
 			fd: detachable WSF_FORM_DATA
 		do
 			create b.make_empty
-			f := new_edit_form (a_user, url (location, Void), "edit-user")
+			f := new_edit_form (a_user, request_url (Void), "edit-user")
 			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.submit_actions.extend (agent edit_form_submit (?, a_user, b))
@@ -72,9 +72,9 @@ feature -- Process Edit
 				fd := f.last_data
 			end
 			if a_user.has_id then
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("View", Void),"admin/user/" + a_user.id.out), primary_tabs)
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void),"admin/user/" + a_user.id.out + "/edit"), primary_tabs)
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Delete", Void),"admin/user/" + a_user.id.out + "/delete"), primary_tabs)
+				add_to_menu (api.administration_link (translation ("View", Void), "user/" + a_user.id.out), primary_tabs)
+				add_to_menu (api.administration_link (translation ("Edit", Void), "user/" + a_user.id.out + "/edit"), primary_tabs)
+				add_to_menu (api.administration_link (translation ("Delete", Void), "user/" + a_user.id.out + "/delete"), primary_tabs)
 			end
 			if attached redirection as l_location then
 				-- FIXME: Hack for now
@@ -96,16 +96,16 @@ feature -- Process Delete
 			fd: detachable WSF_FORM_DATA
 		do
 			create b.make_empty
-			f := new_delete_form (a_user, url (location, Void), "edit-user")
+			f := new_delete_form (a_user, request_url (Void), "edit-user")
 			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.process (Current)
 				fd := f.last_data
 			end
 			if a_user.has_id then
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("View", Void),"admin/user/" + a_user.id.out ), primary_tabs)
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void),"admin/user/" + a_user.id.out + "/edit"), primary_tabs)
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Delete", Void),"admin/user/" + a_user.id.out + "/delete"), primary_tabs)
+				add_to_menu (api.administration_link (translation ("View", Void),"user/" + a_user.id.out ), primary_tabs)
+				add_to_menu (api.administration_link (translation ("Edit", Void),"user/" + a_user.id.out + "/edit"), primary_tabs)
+				add_to_menu (api.administration_link (translation ("Delete", Void),"user/" + a_user.id.out + "/delete"), primary_tabs)
 			end
 			if attached redirection as l_location then
 				-- FIXME: Hack for now
@@ -129,7 +129,7 @@ feature -- Process New
 			l_user: detachable CMS_USER
 		do
 			create b.make_empty
-			f := new_edit_form (l_user, url (location, Void), "create-user")
+			f := new_edit_form (l_user, request_url (Void), "create-user")
 			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.validation_actions.extend (agent new_form_validate (?, b))
@@ -180,7 +180,7 @@ feature -- Form
 				if a_user /= Void then
 					l_user := a_user
 					if l_user.has_id then
-						create {CMS_LOCAL_LINK} lnk.make (translation ("View", Void),"admin/user/" + l_user.id.out )
+						lnk := api.administration_link (translation ("View", Void),"user/" + l_user.id.out)
 						change_user (fd, a_user)
 						s := "modified"
 						set_redirection (lnk.location)
@@ -227,7 +227,7 @@ feature -- Form
 		end
 
 	new_edit_form (a_user: detachable CMS_USER; a_url: READABLE_STRING_8; a_name: STRING): CMS_FORM
-			-- Create a web form named `a_name' for uSER `a_YSER' (if set), using form action url `a_url'.
+			-- Create a web form named `a_name' for user `a_user' (if set), using form action url `a_url'.
 		local
 			f: CMS_FORM
 			th: WSF_FORM_HIDDEN_INPUT
@@ -302,14 +302,12 @@ feature -- Form
 				create ts.make ("op")
 				ts.set_default_value ("Cancel")
 				ts.set_formmethod ("GET")
-				ts.set_formaction ("/admin/user/" + a_user.id.out)
+				ts.set_formaction (api.administration_path ("/user/" + a_user.id.out))
 				f.extend (ts)
 			end
 
 			Result := f
 		end
-
-
 
 	populate_form (a_form: WSF_FORM; a_user: detachable CMS_USER)
 			-- Fill the web form `a_form' with data from `a_node' if set,
@@ -327,6 +325,7 @@ feature -- Form
 				fs.set_legend ("Basic User Account Information")
 				fs.extend_html_text ("<div><string><label>User name </label></strong><br></div>")
 				fs.extend_html_text (a_user.name)
+
 				if attached a_user.email as l_email then
 					create fe.make_with_text ("email", l_email)
 				else
@@ -335,6 +334,15 @@ feature -- Form
 				fe.set_label ("Email")
 				fe.enable_required
 				fs.extend (fe)
+
+				if attached a_user.profile_name as l_profile_name then
+					create ti.make_with_text ("profile_name", l_profile_name)
+				else
+					create ti.make_with_text ("profile_name", "")
+				end
+				ti.set_label ("Profile name")
+				fs.extend (ti)
+
 				a_form.extend (fs)
 				a_form.extend_html_text ("<br/>")
 				create ts.make ("op")
@@ -373,6 +381,11 @@ feature -- Form
 				fe.set_label ("Email")
 				fe.enable_required
 				fs.extend (fe)
+
+				create ti.make ("profile_name")
+				ti.set_label ("Profile name")
+				fs.extend (ti)
+
 				a_form.extend (fs)
 				a_form.extend_html_text ("<br/>")
 				create ts.make ("op")
@@ -471,6 +484,15 @@ feature -- Form
 								end
 							end
 							if not a_form_data.has_error then
+								if
+									attached a_form_data.string_item ("profile_name") as l_prof_name and then
+									not l_prof_name.is_whitespace
+								then
+									a_user.set_profile_name (l_prof_name)
+								else
+									a_user.set_profile_name (Void)
+								end
+
 								api.user_api.update_user (a_user)
 								add_success_message ("Updated basic info")
 							end
@@ -530,6 +552,5 @@ feature -- Generation
 			end
 			Result := l_token + url_encoded (u.name) + u.creation_date.out
 		end
-
 
 end

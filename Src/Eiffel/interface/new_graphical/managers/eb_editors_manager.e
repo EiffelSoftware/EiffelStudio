@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "Tabbed editor manager for one window of EiffelStudio"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_EDITORS_MANAGER
@@ -44,7 +44,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_dev_win: EB_DEVELOPMENT_WINDOW)
 			-- Initialization
@@ -59,6 +59,7 @@ feature -- Initialization
 
 			create editors_internal.make (0)
 			create fake_editors.make (0)
+			create recently_closed_editors.make (0)
 
 				-- Action sequences
 			create editor_switched_actions
@@ -66,6 +67,7 @@ feature -- Initialization
 			create editor_closed_actions
 
 			editor_switched_actions.extend (agent on_editor_switched)
+			editor_closed_actions.extend (agent on_editor_closed)
 
 			create editor_number_factory.make
 			build_observer_lists
@@ -86,6 +88,7 @@ feature -- Initialization
 			end
 			docking_manager.zones.place_holder_widget.file_drop_actions.extend (agent on_file_drop)
 		ensure
+			recently_closed_editors_not_void: recently_closed_editors /= Void
 			editors_internal_not_void: editors_internal /= Void
 			editors_not_empty: not editors_internal.is_empty
 			docking_manager_attached: docking_manager = a_dev_win.docking_manager
@@ -191,23 +194,18 @@ feature -- Access
 			-- Editor editing a class with `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
-		local
-			l_editors: ARRAYED_LIST [like current_editor]
-			l_classi_stone: CLASSI_STONE
 		do
-			l_editors := editors
-			from
-				l_editors.start
+			across
+				editors as e
 			until
-				l_editors.after or Result /= Void
+				attached Result
 			loop
-				l_classi_stone ?= l_editors.item.stone
-				if l_classi_stone /= Void then
-					if l_classi_stone.file_name.is_equal (a_file_name.name) then
-						Result := l_editors.item
-					end
+				if
+					attached {CLASSI_STONE} e.item.stone as s and then
+					s.file_name.is_equal (a_file_name.name)
+				then
+					Result := e.item
 				end
-				l_editors.forth
 			end
 		end
 
@@ -233,22 +231,17 @@ feature -- Access
 			-- Editors contain `a_class_i'
 		require
 			a_class_i_attached: a_class_i /= Void
-		local
-			l_stone: CLASSI_STONE
-			l_editors: like editors
 		do
 			create Result.make (0)
-			l_editors := editors
-			from
-				l_editors.start
-			until
-				l_editors.after
+			across
+				editors as e
 			loop
-				l_stone ?= l_editors.item.stone
-				if l_stone /= Void and then l_stone.class_i /= Void and then a_class_i = l_stone.class_i then
-					Result.extend (l_editors.item)
+				if
+					attached {CLASSI_STONE} e.item.stone as s and then
+					s.class_i = a_class_i
+				then
+					Result.extend (e.item)
 				end
-				l_editors.forth
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -263,9 +256,7 @@ feature -- Access
 	open_classes: HASH_TABLE [STRING, STRING]
 			-- Open classes. [ID, title]
 		local
-			l_classc_stone: CLASSC_STONE
 			l_editors: like editors
-			l_id: STRING
 		do
 			create Result.make (editors_internal.count)
 			l_editors := editors
@@ -278,14 +269,13 @@ feature -- Access
 			until
 				l_editors.after
 			loop
-				l_classc_stone ?= l_editors.item.stone
-				if l_classc_stone /= Void then
+				if attached {CLASSC_STONE} l_editors.item.stone as l_classc_stone then
 					check
 						class_not_void: l_classc_stone.class_i /= Void
 						config_class_not_void: l_classc_stone.class_i.config_class /= Void
 					end
-					l_id := id_of_class (l_classc_stone.class_i.config_class)
-					Result.force (l_id, l_editors.item.docking_content.unique_title.as_string_8)
+					Result.force (id_of_class (l_classc_stone.class_i.config_class),
+						l_editors.item.docking_content.unique_title.as_string_8)
 				end
 				l_editors.forth
 					-- Perform a second iteration of the loop, this time using `fake_editors'.
@@ -301,9 +291,7 @@ feature -- Access
 	open_clusters: HASH_TABLE [STRING, STRING]
 			-- Open clusters. [ID, title]
 		local
-			l_cluster_stone: CLUSTER_STONE
 			l_editors: like editors
-			l_id: STRING
 		do
 			create Result.make (editors_internal.count)
 			l_editors := editors
@@ -316,10 +304,9 @@ feature -- Access
 			until
 				l_editors.after
 			loop
-				l_cluster_stone ?= l_editors.item.stone
-				if l_cluster_stone /= Void then
-					l_id := id_of_group (l_cluster_stone.group)
-					Result.force (l_id, l_editors.item.docking_content.unique_title.as_string_8)
+				if attached {CLUSTER_STONE} l_editors.item.stone as l_cluster_stone then
+					Result.force (id_of_group (l_cluster_stone.group),
+						l_editors.item.docking_content.unique_title.as_string_8)
 				end
 				l_editors.forth
 					-- Perform a second iteration of the loop, this time using `fake_editors'.
@@ -334,34 +321,19 @@ feature -- Access
 			-- All classes with unsaved changes
 		require
 			changed: changed
-		local
-			l_classc_stone: CLASSC_STONE
-			l_classi_stone: CLASSI_STONE
-			l_editors: like editors
-			l_cursor: CURSOR
 		do
 			create Result.make (editors_internal.count)
-			l_editors := editors
-			l_cursor := l_editors.cursor
-			from
-				l_editors.start
-			until
-				l_editors.after
+			across
+				editors as e
 			loop
-				if l_editors.item.changed then
-					l_classc_stone ?= l_editors.item.stone
-					if l_classc_stone /= Void then
-						Result.extend (l_classc_stone.class_i)
-					else
-						l_classi_stone ?= l_editors.item.stone
-						if l_classi_stone /= Void then
-							Result.extend (l_classi_stone.class_i)
-						end
+				if e.item.changed then
+					if attached {CLASSC_STONE} e.item.stone as s then
+						Result.extend (s.class_i)
+					elseif attached {CLASSI_STONE} e.item.stone as s then
+						Result.extend (s.class_i)
 					end
 				end
-				l_editors.forth
 			end
-			l_editors.go_to (l_cursor)
 		ensure
 			not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -373,7 +345,6 @@ feature -- Access
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_item: SD_CONTENT
-			l_editor: EB_SMART_EDITOR
 			l_editor_count: INTEGER
 			l_all_editors: like editors
 		do
@@ -414,7 +385,7 @@ feature -- Access
 				l_all_editors.append (l_fake_editors)
 			end
 
-			Result := (l_editor_count = l_all_editors.count)
+			Result := l_editor_count = l_all_editors.count
 
 			if Result then
 				from
@@ -422,13 +393,27 @@ feature -- Access
 				until
 					l_all_editors.after or not Result
 				loop
-					l_editor := l_all_editors.item
-					Result := l_editor.docking_content.type = {SD_ENUMERATION}.editor
-
+					Result := l_all_editors.item.docking_content.type = {SD_ENUMERATION}.editor
 					l_all_editors.forth
 				end
 			end
 		end
+
+	last_recently_closed_editor: detachable EB_SMART_EDITOR
+			-- last recently closed editor.
+
+	restore_last_recently_closed_editor
+			-- last closed editor.
+		local
+			l_editor: EB_SMART_EDITOR
+		do
+			if not recently_closed_editors.is_empty then
+				l_editor := recently_closed_editors.last.twin
+				last_recently_closed_editor := l_editor
+				recently_closed_editors.prune_all (recently_closed_editors.last)
+			end
+		end
+
 
 feature {NONE} -- Access
 
@@ -453,11 +438,12 @@ feature {NONE} -- Action handlers
 		require
 			a_editor_attached: a_editor /= Void
 		do
-			if not a_editor.is_recycled then
-				if development_window.editors_manager /= Void then
-						-- During initialization of Current, the editor manager will be Void for the development window
-					development_window.set_stone (a_editor.stone)
-				end
+			if
+				not a_editor.is_recycled and then
+				development_window.editors_manager /= Void
+			then
+					-- During initialization of Current, the editor manager will be Void for the development window
+				development_window.set_stone (a_editor.stone)
 			end
 		end
 
@@ -469,6 +455,14 @@ feature {NONE} -- Action handlers
 			if Result then
 				Result := default_veto_func (a_stone, a_content)
 			end
+		end
+
+	on_editor_closed (a_editor: EB_SMART_EDITOR)
+			-- Editor is closed
+		require
+			a_editor_attached: a_editor /= Void
+		do
+			recently_closed_editors.force (a_editor.twin)
 		end
 
 feature -- Status report
@@ -634,6 +628,25 @@ feature -- Editor observer
 			end
 		end
 
+	remove_cursor_observer (a_cursor_observer: TEXT_OBSERVER)
+			-- Remove observer for all editors.
+		require
+			a_cursor_observer_attached: a_cursor_observer /= Void
+		local
+			l_editors: ARRAYED_LIST [like current_editor]
+		do
+			l_editors := editors
+			from
+				l_editors.start
+			until
+				l_editors.after
+			loop
+				l_editors.item.text_displayed.remove_observer (a_cursor_observer)
+				cursor_observer_list_internal.prune_all (a_cursor_observer)
+				l_editors.forth
+			end
+		end
+
 feature -- Element change
 
 	create_editor
@@ -717,9 +730,6 @@ feature -- Element change
 			l_classi_stone: CLASSI_STONE
 			l_classc_stone: CLASSC_STONE
 			l_cluster_stone: CLUSTER_STONE
-			l_conf_class: CONF_CLASS
-			l_class_i: CLASS_I
-			l_group: CONF_GROUP
 			l_content: SD_CONTENT
 			l_editor_numbers: ARRAYED_LIST [INTEGER]
 		do
@@ -736,9 +746,7 @@ feature -- Element change
 				until
 					a_open_classes.after
 				loop
-					l_conf_class := class_of_id (a_open_classes.item_for_iteration)
-
-					if l_conf_class /= Void then
+					if attached class_of_id (a_open_classes.item_for_iteration) as l_conf_class then
 						l_content := create_docking_content_fake_one (a_open_classes.key_for_iteration)
 						if attached {EB_FAKE_SMART_EDITOR} last_created_editor as l_fake_editor then
 							fake_editors.extend (l_fake_editor)
@@ -750,20 +758,18 @@ feature -- Element change
 						l_content.set_long_title (l_conf_class.name)
 						l_content.set_short_title (l_conf_class.name)
 
-						l_class_i ?= l_conf_class
-						check
-							l_class_i_not_void: l_class_i /= Void
-						end
-						l_content.set_pixmap (pixmap_from_class_i (l_class_i))
-						l_editor_numbers.extend (editor_number_factory.editor_number_from_title (a_open_classes.key_for_iteration))
-						if l_class_i.is_compiled then
-							create l_classc_stone.make (l_class_i.compiled_class)
-							last_created_editor.set_stone (l_classc_stone)
-							update_content_description (l_classc_stone, last_created_editor.docking_content)
-						else
-							create l_classi_stone.make (l_class_i)
-							last_created_editor.set_stone (l_classi_stone)
-							update_content_description (l_classi_stone, last_created_editor.docking_content)
+						if attached {CLASS_I} l_conf_class as l_class_i then
+							l_content.set_pixmap (pixmap_from_class_i (l_class_i))
+							l_editor_numbers.extend (editor_number_factory.editor_number_from_title (a_open_classes.key_for_iteration))
+							if l_class_i.is_compiled then
+								create l_classc_stone.make (l_class_i.compiled_class)
+								last_created_editor.set_stone (l_classc_stone)
+								update_content_description (l_classc_stone, last_created_editor.docking_content)
+							else
+								create l_classi_stone.make (l_class_i)
+								last_created_editor.set_stone (l_classi_stone)
+								update_content_description (l_classi_stone, last_created_editor.docking_content)
+							end
 						end
 						Result := True
 					end
@@ -775,8 +781,7 @@ feature -- Element change
 				until
 					a_open_clusters.after
 				loop
-					l_group := group_of_id (a_open_clusters.item_for_iteration)
-					if l_group /= Void then
+					if attached group_of_id (a_open_clusters.item_for_iteration) as l_group then
 						create l_cluster_stone.make (l_group)
 						l_content := create_docking_content_fake_one (a_open_clusters.key_for_iteration)
 						if attached {EB_FAKE_SMART_EDITOR} last_created_editor as l_fake_editor then
@@ -807,42 +812,35 @@ feature -- Element change
 
 	show_editors_possible
 			-- Show editors which are possible to show.
-		local
-			l_snapshot: like fake_editors
 		do
-			if fake_editors /= Void then
-				from
-					l_snapshot := fake_editors.twin
-					l_snapshot.start
-				until
-					l_snapshot.after
+			if attached fake_editors as l_fake_editors then
+				across
+					l_fake_editors.twin as ic  -- FIXME: check if the twin is required now with across loop.
 				loop
-					if l_snapshot.item /= Void and then l_snapshot.item.docking_content.user_widget.is_displayed then
-						on_focus (l_snapshot.item)
+					if
+						attached ic.item as l_snapshot_item and then
+						l_snapshot_item.docking_content.user_widget.is_displayed
+					then
+						on_focus (l_snapshot_item)
 					end
-					l_snapshot.forth
 				end
 			end
 			synchronize_with_docking_manager
 		end
 
-	update_content_description (a_stone: STONE; a_content: SD_CONTENT)
+	update_content_description (a_stone: STONE; a_content: detachable SD_CONTENT)
 			-- Update `a_content''s detail and description text which are readed from `a_stone'.
 		local
-			l_class_stone: CLASSI_STONE
-			l_cluster_stone: CLUSTER_STONE
 			l_shared: SD_SHARED
 			l_name: like {FILED_STONE}.file_name
 		do
 			if a_content /= Void then
-				l_class_stone ?= a_stone
-				l_cluster_stone ?= a_stone
-				if l_class_stone /= Void then
+				if attached {CLASSI_STONE} a_stone as l_class_stone then
 					a_content.set_description (interface_names.l_eiffel_class)
 					l_name := l_class_stone.file_name
 					a_content.set_detail (l_name.as_string_32)
 					a_content.set_tab_tooltip (l_name.as_string_32)
-				elseif l_cluster_stone /= Void then
+				elseif attached {CLUSTER_STONE} a_stone as l_cluster_stone then
 					a_content.set_description (interface_names.l_eiffel_cluster)
 
 					if attached l_cluster_stone.group.location.evaluated_path as l_path then
@@ -946,8 +944,7 @@ feature -- Element change
 						l_contents.after or l_found_editor
 					loop
 						l_item := l_contents.item
-						l_found_editor := (l_item.user_widget ~ l_editor_item.widget)
-
+						l_found_editor := l_item.user_widget ~ l_editor_item.widget
 						l_contents.forth
 					end
 					if not l_found_editor then
@@ -970,7 +967,7 @@ feature -- Element change
 						l_editors.after or l_has
 					loop
 						l_editor_item := l_editors.item
-						l_has := (l_item.user_widget ~ l_editor_item.widget)
+						l_has := l_item.user_widget ~ l_editor_item.widget
 						l_editors.forth
 					end
 					if not l_has then
@@ -1086,6 +1083,20 @@ feature -- Memory management
 				end
 				l_editors.wipe_out
 			end
+			if recently_closed_editors /= Void then
+				from
+					l_editors := recently_closed_editors
+					l_editors.start
+				until
+					l_editors.after
+				loop
+					if not l_editors.item.is_recycled then
+						l_editors.item.recycle
+					end
+					l_editors.forth
+				end
+				l_editors.wipe_out
+			end
 			editor_created_actions.wipe_out
 			editor_closed_actions.wipe_out
 			editor_switched_actions.wipe_out
@@ -1105,6 +1116,7 @@ feature -- Memory management
 			development_window := Void
 			docking_manager := Void
 			fake_editors := Void
+			recently_closed_editors := Void
 			last_created_editor := Void
 			veto_pebble_function_internal := Void
 			editor_number_factory := Void
@@ -1117,6 +1129,9 @@ feature {NONE} -- Access
 
 	editors_internal: ARRAYED_LIST [like current_editor]
 			-- Actual list of editors.
+
+	recently_closed_editors: ARRAYED_LIST [like current_editor]
+			-- Actual list of recently closed editors.	
 
 feature {NONE} -- Observer
 
@@ -1316,51 +1331,49 @@ feature {NONE} -- Agents
 			l_item: CLASS_I
 			l_class_name, l_dropped_class_name: STRING_32
 			l_splitted_file_path: LIST [STRING_32]
-			l_classes_founded: LIST [CLASS_I]
 			l_prompt_provider: ES_PROMPT_PROVIDER
 		do
-			from
-				a_list.start
-			until
-				a_list.after
-			loop
-				l_class_name := a_list.item
-				l_splitted_file_path := l_class_name.split (Operating_environment.directory_separator)
-				if l_splitted_file_path.count >= 1 then
-					-- FIXME: file name and class name must be same, problem here?
-					l_dropped_class_name := l_splitted_file_path.last
-					if l_dropped_class_name.ends_with (".e") then
-						l_dropped_class_name.remove_tail (2)
-						l_classes_founded := universe.classes_with_name (l_dropped_class_name.as_upper)
-
-						from
-							l_classes_founded.start
-						until
-							l_classes_founded.after
-						loop
-							l_item := l_classes_founded.item
-							if l_item.file_name.name.is_case_insensitive_equal (l_class_name) then
-								create l_stone.make (l_item)
-								if attached current_editor as l_editor then
-										-- There is already an editor, we drop the stone there.
-									on_drop (l_stone, l_editor)
-								else
-										-- No editor is present, we create a new one.
-									create_editor_beside_content (l_stone, Void, False)
+			if workbench.universe_defined then
+				across
+					a_list as file_cursor
+				loop
+					l_class_name := file_cursor.item
+					l_splitted_file_path := l_class_name.split (Operating_environment.directory_separator)
+					if l_splitted_file_path.count >= 1 then
+							-- FIXME: file name and class name must be same, problem here?
+						l_dropped_class_name := l_splitted_file_path.last
+						if l_dropped_class_name.ends_with (".e") then
+							l_dropped_class_name.remove_tail (2)
+							across
+								universe.classes_with_name (l_dropped_class_name.as_upper) as class_cursor
+							loop
+								l_item := class_cursor.item
+								if l_item.file_name.name.is_case_insensitive_equal (l_class_name) then
+									create l_stone.make (l_item)
+									if attached current_editor as l_editor then
+											-- There is already an editor, we drop the stone there.
+										on_drop (l_stone, l_editor)
+									else
+											-- No editor is present, we create a new one.
+										create_editor_beside_content (l_stone, Void, False)
+									end
 								end
 							end
-							l_classes_founded.forth
-						end
-					else
-						-- Should tell users only drop ".e" file here, only tell users ONE time.
-						if l_prompt_provider = Void then
+						elseif l_prompt_provider = Void then
+								-- Should tell users only drop ".e" file here, only tell users ONE time.
 							create l_prompt_provider
 							l_prompt_provider.show_error_prompt (interface_names.l_only_eiffel_class_file_allowed, Void, Void)
 						end
-
 					end
 				end
-				a_list.forth
+				if not attached l_stone then
+						-- No suitable eiffel class is found.
+					create l_prompt_provider
+					l_prompt_provider.show_warning_prompt (interface_names.l_no_suitable_classes_for_files, Void, Void)
+				end
+			else
+				create l_prompt_provider
+				l_prompt_provider.show_warning_prompt (interface_names.l_dropping_files_without_project, Void, Void)
 			end
 		end
 
@@ -1562,7 +1575,7 @@ feature {NONE} -- Implementation
 			a_unique_title_not_void: a_unique_title /= Void
 			a_editor_not_void: a_editor /= Void
 		do
-			create Result.make_with_widget_title_pixmap (a_editor.widget, Pixmaps.icon_pixmaps.general_document_icon , a_unique_title)
+			create Result.make_with_widget_title_pixmap (a_editor.widget, Pixmaps.icon_pixmaps.general_document_icon , a_unique_title, docking_manager)
 
 			register_action (Result.drop_actions, agent on_drop (?, a_editor))
 			if veto_pebble_function_internal = Void then
@@ -1595,7 +1608,7 @@ feature {NONE} -- Implementation
 		require
 			not_void: a_unique_title /= Void
 		do
-			create Result.make_with_widget_title_pixmap (create {EV_CELL}, Pixmaps.icon_pixmaps.general_document_icon , a_unique_title)
+			create Result.make_with_widget_title_pixmap (create {EV_CELL}, Pixmaps.icon_pixmaps.general_document_icon , a_unique_title, docking_manager)
 			create {EB_FAKE_SMART_EDITOR} last_created_editor.make (Result)
 			last_created_editor.set_docking_content (Result)
 
@@ -1677,29 +1690,21 @@ feature {NONE} -- Implementation
 			a_editor_not_void: a_editor /= Void
 		local
 			retried: BOOLEAN
-			tmp_name: PATH
 			tmp_file: RAW_FILE
-			l_encoding: ENCODING
-			l_stream: STRING
-			l_text: STRING_32
 		do
 			if not retried then
-				if a_editor.changed then
-					tmp_name := a_editor.file_path
-					if tmp_name /= Void then
-						tmp_name := tmp_name.appended (".swp")
-						create tmp_file.make_with_path (tmp_name)
-						if
-							not tmp_file.exists and then
-							tmp_file.is_creatable
-						then
-							tmp_file.open_append
-							l_encoding := a_editor.encoding
-							l_text := a_editor.wide_text
-							l_stream := convert_to_stream (l_text, l_encoding)
-							tmp_file.put_string (l_stream)
-							tmp_file.close
-						end
+				if
+					a_editor.changed and then
+					attached a_editor.file_path as tmp_name
+				then
+					create tmp_file.make_with_path (tmp_name.appended (".swp"))
+					if
+						not tmp_file.exists and then
+						tmp_file.is_creatable
+					then
+						tmp_file.open_append
+						tmp_file.put_string (convert_to_stream (a_editor.wide_text, a_editor.encoding))
+						tmp_file.close
 					end
 				end
 			else
@@ -1710,32 +1715,29 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	editor_with_stone_internal (a_editors: ARRAYED_LIST [EB_SMART_EDITOR]; a_stone: STONE): EB_SMART_EDITOR
-			-- Quey a editor which from `a_editors' has `a_stone'.
+	editor_with_stone_internal (a_editors: ARRAYED_LIST [EB_SMART_EDITOR]; a_stone: STONE): detachable EB_SMART_EDITOR
+			-- Editor from `a_editors' having `a_stone'.
 		require
-			not_void: a_editors /= Void
-		local
-			l_file_stone1, l_file_stone2: FILED_STONE
+			editors_not_void: a_editors /= Void
 		do
-			from
-				a_editors.start
+				-- FIXME: check the implementation about the use of ~ to compare strings [oct/2016]
+			across
+				a_editors as ic
 			until
-				a_editors.after or Result /= Void
+				Result /= Void
 			loop
-				if a_editors.item.stone /= Void and then a_stone ~ a_editors.item.stone then
-					Result := a_editors.item
-				else
-					l_file_stone1 ?= a_stone
-					l_file_stone2 ?= a_editors.item.stone
-					if
-						(l_file_stone1 /= Void and l_file_stone2 /= Void) and then
+				if attached ic.item.stone as l_editor_stone then
+					if a_stone ~ l_editor_stone then
+						Result := ic.item
+					elseif
+						attached {FILED_STONE} a_stone as l_file_stone1 and then
+						attached {FILED_STONE} l_editor_stone as l_file_stone2 and then
 						(l_file_stone1.is_valid and l_file_stone2.is_valid) and then
-						l_file_stone1.file_name ~ l_file_stone2.file_name
+						(l_file_stone1.file_name ~ l_file_stone2.file_name)
 					then
-						Result := a_editors.item
+						Result := ic.item
 					end
 				end
-				a_editors.forth
 			end
 		end
 
@@ -1776,18 +1778,11 @@ feature {NONE} -- Implementation
 
 	default_veto_func (a_stone: ANY; a_content: SD_CONTENT): BOOLEAN
 			-- Default veto function
-		local
-			l_cluster_stone: CLUSTER_STONE
-			l_filed_stone: FILED_STONE
 		do
-			l_filed_stone ?= a_stone
-			if l_filed_stone /= Void then
+			if attached {FILED_STONE} a_stone then
 				Result := True
-			else
-				l_cluster_stone ?= a_stone
-				if l_cluster_stone /= Void then
-					Result := True
-				end
+			elseif attached {CLUSTER_STONE} a_stone then
+				Result := True
 			end
 		end
 
@@ -1831,7 +1826,7 @@ feature {NONE} -- Implementation
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

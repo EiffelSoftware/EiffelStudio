@@ -34,11 +34,6 @@ inherit
 		end
 
 	EV_LIST_ITEM_LIST_ACTION_SEQUENCES
-		undefine
-			is_equal
-		redefine
-			implementation
-		end
 
 feature {NONE} -- Initialization
 
@@ -90,7 +85,7 @@ feature -- Access
 			-- Conversion is done using `as_string_8', thus some data
 			-- might be lost.
 		obsolete
-			"Use `strings' instead."
+			"Use `strings' instead. [2017-05-31]"
 		require
 			not_destroyed: not is_destroyed
 		local

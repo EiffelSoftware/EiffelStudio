@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Printer visitor used when saving configuration files."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,23 +8,10 @@ class
 
 inherit
 	CONF_PRINT_VISITOR
-		redefine
-			append_options
-		end
 
 create
-	make
-
-feature {NONE} -- Implementation
-
-	append_options (an_options: detachable CONF_OPTION; a_class: detachable READABLE_STRING_GENERAL)
-			-- <Precursor>
-		do
---			if an_options /= Void and then an_options.syntax.is_set then
---				an_options.syntax.unset
---			end
-			Precursor (an_options, a_class)
-		end
+	make,
+	make_namespace_and_schema
 
 note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"

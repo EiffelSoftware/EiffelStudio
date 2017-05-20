@@ -66,7 +66,7 @@ feature {NONE} -- Rule checking
 
 feature -- Properties
 
-	name: STRING = "empty-rescue"
+	name: STRING = "empty_rescue"
 			-- <Precursor>
 
 	title: STRING_32

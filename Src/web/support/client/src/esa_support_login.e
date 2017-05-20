@@ -61,13 +61,15 @@ feature -- Basic operations
 					end
 				end
 
-				l_resp := get (logon_url, ctx)
-				if l_resp.status = 200 then
-					is_logged_in := True
-				end
-				if is_logged_in then
-					last_username := a_user
-					last_password := a_pass
+				if attached logon_url as l_logon_url then
+					l_resp := get (l_logon_url, ctx)
+					if l_resp.status = 200 then
+						is_logged_in := True
+					end
+					if is_logged_in then
+						last_username := a_user
+						last_password := a_pass
+					end
 				end
 			end
 		ensure

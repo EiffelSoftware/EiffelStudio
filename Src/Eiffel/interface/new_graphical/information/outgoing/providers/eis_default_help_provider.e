@@ -70,7 +70,7 @@ feature -- Query
 		require
 			a_entry_not_void: a_entry /= Void
 		do
-			if attached a_entry.source as l_source then
+			if attached a_entry.source as l_source and then not l_source.is_empty then
 				Result := l_source.twin
 				format_uris (Result)
 			else
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

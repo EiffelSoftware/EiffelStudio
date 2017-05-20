@@ -17,6 +17,7 @@ feature {NONE} -- Initialization
 		local
 			l_url: like site_url
 			s, l_email: detachable READABLE_STRING_8
+			utf: UTF_CONVERTER
 		do
 			site_location := environment.path
 
@@ -36,7 +37,7 @@ feature {NONE} -- Initialization
 			site_url := l_url
 
 				-- Site name
-			site_name := text_item_or_default ("site.name", "Another Eiffel ROC Website")
+			site_name := text_item_or_default ("site.name", "Your ROC CMS")
 
 				-- Website email used to send email.
 				-- used as real "From:" email.
@@ -49,7 +50,7 @@ feature {NONE} -- Initialization
 				l_email := string_8_item_or_default ("mailer.from", "webmaster")
 			end
 			if l_email.has ('<') then
-				l_email := site_name + " <" + l_email + ">"
+				l_email := utf.string_32_to_utf_8_string_8 (site_name) + " <" + l_email + ">"
 			end
 			site_email := l_email
 
@@ -70,6 +71,20 @@ feature {NONE} -- Initialization
 				files_location := site_location.extended ("files")
 			end
 
+				-- Location for temp files
+			if attached text_item ("temp-dir") as l_temp_dir then
+				create temp_location.make_from_string (l_temp_dir)
+			else
+				temp_location := site_location.extended ("temp")
+			end
+
+				-- Location for cache folder
+			if attached text_item ("cache-dir") as l_cache_dir then
+				create cache_location.make_from_string (l_cache_dir)
+			else
+				cache_location := temp_location.extended ("cache")
+			end
+
 				-- Location for modules folders.
 			if attached text_item ("modules-dir") as l_modules_dir then
 				create modules_location.make_from_string (l_modules_dir)
@@ -85,13 +100,23 @@ feature {NONE} -- Initialization
 			end
 
 				-- Selected theme's name
-			theme_name := text_item_or_default ("theme", "default")
+			site_theme_name := text_item_or_default ("site.theme", "default")
+			set_theme (site_theme_name)
 
-			debug ("refactor_fixme")
-				fixme ("Review export clause for configuration and environment")
+				-- Administration
+			l_url := string_8_item ("administration.base_path")
+			if l_url /= Void and then not l_url.is_empty then
+				if l_url [l_url.count] = '/' then
+					l_url := l_url.substring (1, l_url.count - 1)
+				end
+				if l_url [1] /= '/' then
+					l_url := "/" + l_url
+				end
+				create administration_base_path.make_from_string (l_url)
+			else
+				create administration_base_path.make_from_string (default_administration_base_path)
 			end
-
-			theme_location := themes_location.extended (theme_name)
+			administration_theme_name := text_item_or_default ("administration.theme", theme_name) -- TODO: Default to builtin theme?
 		end
 
 feature -- Access
@@ -101,39 +126,66 @@ feature -- Access
 
 	layout: CMS_ENVIRONMENT
 			-- CMS environment.
-		obsolete "use `environment' [april-2015]"
+		obsolete "use `environment' [2017-05-31]"
 		do
 			Result := environment
 		end
 
 feature {CMS_API} -- API Access		
 
-	enabled_modules: CMS_MODULE_COLLECTION
+	frozen fill_enabled_modules (api: CMS_API)
 			-- List of enabled modules.
 		local
+			l_enabled_modules: CMS_MODULE_COLLECTION
+			l_modules_to_remove: CMS_MODULE_COLLECTION
 			l_module: CMS_MODULE
+			l_core: CMS_CORE_MODULE
 		do
-			create Result.make (modules.count)
+			l_enabled_modules := api.enabled_modules
+
+				-- Include required CORE module
+			create l_core.make
+			l_core.enable
+			l_enabled_modules.extend (l_core)
+
+				-- Includes other modules.
 			across
 				modules as ic
 			loop
 				l_module := ic.item
 				update_module_status_from_configuration (l_module)
+				if not l_module.is_enabled then
+					if
+						api.is_module_enabled (l_module) -- Check from storage!
+					then
+						l_module.enable
+					end
+				end
 				if l_module.is_enabled then
-					Result.extend (l_module)
+					l_enabled_modules.extend (l_module)
 				end
 			end
 			across
-				Result as ic
+				l_enabled_modules as ic
 			loop
 				l_module := ic.item
-				update_module_status_within (l_module, Result)
-				if not l_module.is_enabled then
-					Result.remove (l_module)
+				update_module_status_within (l_module, l_enabled_modules)
+				if not l_module.is_enabled then -- Check from storage!
+					if l_modules_to_remove = Void then
+						create l_modules_to_remove.make (1)
+					end
+					l_modules_to_remove.extend (l_module)
+				end
+			end
+			if l_modules_to_remove /= Void then
+				across
+					l_modules_to_remove as ic
+				loop
+					l_enabled_modules.remove (ic.item)
 				end
 			end
 		ensure
-			only_enabled_modules: across Result as ic all ic.item.is_enabled end
+			only_enabled_modules: across api.enabled_modules as ic all ic.item.is_enabled end
 		end
 
 feature {CMS_MODULE, CMS_API, CMS_SETUP_ACCESS} -- Restricted access
@@ -177,11 +229,11 @@ feature {NONE} -- Implementation: update
 			b: BOOLEAN
 			dft: BOOLEAN
 		do
-				-- By default enabled.
-			if false and attached text_item ("modules.*") as l_mod_status then
+				-- By default, keep previous status.
+			if attached text_item ("modules.*") as l_mod_status then
 				dft := l_mod_status.is_case_insensitive_equal_general ("on")
 			else
-				dft := True
+				dft := m.is_enabled
 			end
 			if attached text_item ("modules." + m.name) as l_mod_status then
 				b := l_mod_status.is_case_insensitive_equal_general ("on")
@@ -262,10 +314,48 @@ feature -- Access: Site
 			-- Optional path defining the front page.
 			-- By default "" or "/".
 
+	administration_base_path: IMMUTABLE_STRING_8
+			-- Administration base url, default=`default_administration_base_path`.
+
+feature {NONE} -- Constants
+
+	default_administration_base_path: STRING = "/admin"
+
 feature -- Settings
 
 	is_debug: BOOLEAN
 			-- Is debug mode enabled?
+
+	set_site_mode
+			-- Switch to site mode.
+			--| 	- Change theme
+			--| 	- ..
+		do
+			if is_theme_valid (site_theme_name) then
+				set_theme (site_theme_name)
+			else
+					-- Keep previous theme!
+			end
+		end
+
+	set_administration_mode
+			-- Switch to administration mode.
+			--| 	- Change theme
+			--| 	- ..
+		do
+			if is_theme_valid (administration_theme_name) then
+				set_theme (administration_theme_name)
+			else
+					-- Keep previous theme!
+			end
+		end
+
+	set_theme (a_name: READABLE_STRING_GENERAL)
+			-- Set theme to `a_name`.
+		do
+			theme_name := a_name.as_string_32
+			theme_location := theme_location_for (theme_name)
+		end
 
 feature -- Query
 
@@ -309,13 +399,20 @@ feature -- Query
 			end
 		end
 
-feature -- Access: Theme
+feature -- Access: directory
 
 	site_location: PATH
 			-- Path to CMS site root dir.
 
+	temp_location: PATH
+			-- Path to folder used as temporary dir.
+			-- (Mainly for uploaded file).
+
 	files_location: PATH
-			-- Path to public "files" dir.			
+			-- Path to public "files" dir.
+
+	cache_location: PATH
+			-- Path to internal cache dir.
 
 	modules_location: PATH
 			-- Path to modules.	
@@ -323,8 +420,18 @@ feature -- Access: Theme
 	themes_location: PATH
 			-- Path to themes.
 
+feature -- Access: theme
+
 	theme_location: PATH
 			-- Path to a active theme.
+
+	is_theme_valid (a_theme_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Does `a_theme_name` exists?
+		local
+			fu: FILE_UTILITIES
+		do
+			Result := fu.directory_path_exists (theme_location_for (a_theme_name))
+		end
 
 	theme_information_location: PATH
 			-- Active theme informations.
@@ -334,6 +441,20 @@ feature -- Access: Theme
 
 	theme_name: READABLE_STRING_32
 			-- theme name.
+
+	site_theme_name: READABLE_STRING_32
+			-- Site theme name.
+
+	administration_theme_name: READABLE_STRING_32
+			-- Administration theme name.
+			-- Default: same as site theme.
+			-- TODO: change to builtin "admin" theme?
+
+	theme_location_for (a_theme_name: READABLE_STRING_GENERAL): PATH
+			-- Theme directory location for theme `a_theme_name`.
+		do
+			Result := themes_location.extended (a_theme_name)
+		end
 
 feature -- Access
 
@@ -419,6 +540,6 @@ feature -- Element change
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

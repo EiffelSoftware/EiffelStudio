@@ -64,22 +64,22 @@ feature -- Visitor
 
 			create l_file_rule.make
 			l_file_rule.add_exclude ("/EIFGENs")
-			l_file_rule.add_exclude ("/.git")
-			l_file_rule.add_exclude ("/.svn")
+			l_file_rule.add_exclude ("/\.git$")
+			l_file_rule.add_exclude ("/\.svn$")
 			l_target.file_rule.extend (l_file_rule)
-			l_target.options.set_full_class_checking (True)
+--Default:			l_target.changeable_internal_options.set_full_class_checking (True)
 
 			if v.is_voidsafe then
-				l_target.options.void_safety.put_index (l_target.options.void_safety_index_all)
-				l_target.options.set_is_attached_by_default (True)
+				l_target.changeable_internal_options.void_safety.put_index (l_target.options.void_safety_index_all)
+--Default:		l_target.changeable_internal_options.set_is_attached_by_default (True)
 			else
-				l_target.options.void_safety.put_index (l_target.options.void_safety_index_none)
-				l_target.options.set_is_attached_by_default (False)
+				l_target.changeable_internal_options.void_safety.put_index (l_target.options.void_safety_index_none)
+--Ignore:				l_target.changeable_internal_options.set_is_attached_by_default (False)
 			end
 			if v.syntax.is_case_insensitive_equal_general ("standard") then
-				l_target.options.syntax.put_index (l_target.options.syntax_index_standard)
+--Default:				l_target.changeable_internal_options.syntax.put_index (l_target.options.syntax_index_standard)
 			else
-				l_target.options.syntax.put (v.syntax)
+				l_target.changeable_internal_options.syntax.put (v.syntax)
 			end
 
 			l_system.add_target (l_target)
@@ -117,13 +117,13 @@ feature -- Visitor
 
 				if attached v.concurrency as s then
 					if s.is_case_insensitive_equal_general ("thread") then
-						l_target.setting_concurrency.put_index (l_target.setting_concurrency_index_thread)
+						l_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_thread)
 					elseif s.is_case_insensitive_equal_general ("scoop") then
-						l_target.setting_concurrency.put_index (l_target.setting_concurrency_index_scoop)
+						l_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_scoop)
 					elseif s.is_case_insensitive_equal_general ("none") then
-						l_target.setting_concurrency.put_index (l_target.setting_concurrency_index_none)
-					else
-						l_target.setting_concurrency.put (s)
+						l_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_none)
+					elseif l_target.changeable_internal_options.concurrency_capability.is_valid_item (s) then
+						l_target.changeable_internal_options.concurrency_capability.value.put (s)
 					end
 				end
 			end
@@ -152,11 +152,7 @@ feature {NONE} -- Implementation
 					v.libraries as ic
 				loop
 					if attached library_info (ic.item) as lib_info then
-						if v.is_voidsafe then
-							lib := factory.new_library (lib_info.name, lib_info.ecf_path_without_extension + "-safe.ecf", l_target)
-						else
-							lib := factory.new_library (lib_info.name, lib_info.ecf_path_without_extension + ".ecf", l_target)
-						end
+						lib := factory.new_library (lib_info.name, lib_info.ecf_path_without_extension + ".ecf", l_target)
 						l_target.add_library (lib)
 					end
 				end
@@ -233,7 +229,7 @@ feature -- Helpers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

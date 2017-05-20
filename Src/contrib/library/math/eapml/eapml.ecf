@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="eapml" uuid="3E9258E1-383A-40BF-864B-231FC8F25ADF" library_target="eapml">
-	<description>Eiffel Arbitrary Precision Mathematics Library		
-
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="eapml" uuid="3E9258E1-383A-40BF-864B-231FC8F25ADF" library_target="eapml">
+	<description>Eiffel Arbitrary Precision Mathematics Library
+			
 			Note: you should set 'eapml_scan_type' to 'gcc' or 'vc'
 			and 'eapml_limb_type' to 'natural_32' (or 'natural_64')
 
-			If not, default values will be used depending on the platform
-	</description>
+			If not, default values will be used depending on the platform</description>
 	<target name="eapml">
+		<description>Eiffel Arbitrary Precision Mathematics</description>
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/EIFGENs$</exclude>
+			<exclude>/.hg$</exclude>
+			<exclude>/.svn$</exclude>
 			<exclude>/CVS$</exclude>
-			<exclude>/\.svn$</exclude>
-			<exclude>/\.hg$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="false" void_safety="none" syntax="standard">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
@@ -39,8 +39,8 @@
 		</cluster>
 		<cluster name="eapml" location=".\src\" recursive="true">
 			<file_rule>
-				<exclude>/bit_scan_vc$</exclude>
 				<exclude>/bit_scan_gcc$</exclude>
+				<exclude>/bit_scan_vc$</exclude>
 				<exclude>/limb_natural_32$</exclude>
 				<exclude>/limb_natural_64$</exclude>
 			</file_rule>
@@ -48,19 +48,6 @@
 				<exclude>^/mp/number/support$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="limb_natural_32" location=".\src\limb_natural_32\" recursive="true">
-			<!--
-			<condition>
-				<custom name="eapml_limb_type" value="natural_32"/>
-			</condition>
-			-->
-		</cluster>
-		<!--
-		<cluster name="limb_natural_64" location=".\src\limb_natural_64\" recursive="true">
-			<condition>
-				<custom name="eapml_limb_type" value="natural_64"/>
-			</condition>
-		</cluster>
-		-->
+		<cluster name="limb_natural_32" location=".\src\limb_natural_32\" recursive="true"/>
 	</target>
 </system>

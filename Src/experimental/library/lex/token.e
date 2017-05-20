@@ -1,11 +1,8 @@
-note
-
-	description:
-		"Individual elements of lexical analysis"
-	legal: "See notice at end of class.";
-
-	status: "See notice at end of class.";
-	date: "$Date$";
+﻿note
+	description: "Individual elements of lexical analysis"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -41,7 +38,7 @@ feature -- Access
 			-- If the token is a keyword,
 			-- is `i' its identification number?
 		do
-			Result := (i = keyword_code)
+			Result := i = keyword_code
 		end
 
 feature -- Status setting
@@ -85,20 +82,20 @@ feature -- Obsolete
 
 	position_in_line: INTEGER
 		obsolete
-			"Use ``column_number'' instead"
+			"Use `column_number' instead. [2017-05-31]"
 		do
 			Result := column_number
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

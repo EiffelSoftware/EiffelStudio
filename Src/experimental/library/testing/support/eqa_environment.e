@@ -70,7 +70,7 @@ feature -- Access: obsolete
 			--
 			-- `a_key': Key for which setting should be returned.
 			-- `Result': Value associated with `a_key'..
-		obsolete "Use `item' [dec/2012]"
+		obsolete "Use `item` [2017-05-31]"
 		require
 			a_key_attached: a_key /= Void
 		do
@@ -85,7 +85,7 @@ feature -- Access: obsolete
 			-- `a_key': Key for which setting should be returned.
 			-- `an_asserter': Asserter in which exceptions are raised if value could not be retrieved.
 			-- `Result': Value associated with `a_key'.
-		obsolete "Use `item_attached' [dec/2012]"
+		obsolete "Use `item_attached` [2017-05-31]"
 		require
 			a_key_attached: a_key /= Void
 			an_asserter_attached: an_asserter /= Void
@@ -102,7 +102,7 @@ feature -- Access: obsolete
 			-- `a_key': Key for which setting should be returned.
 			-- `an_asserter': Asserter in which exceptions are raised if value could not be retrieved.
 			-- `Result': Non-empty value associated with `a_key'.
-		obsolete "Use `item_not_empty' [dec/2012]"
+		obsolete "Use `item_not_empty` [2017-05-31]"
 		require
 			a_key_attached: a_key /= Void
 			an_asserter_attached: an_asserter /= Void
@@ -265,7 +265,7 @@ feature {NONE} -- Constants
 			-- variable name off from surrounding text
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

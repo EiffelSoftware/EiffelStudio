@@ -1,100 +1,59 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="test_xml_parser" uuid="40FBC226-EDFE-4C19-B0C0-8AD8AF17AD05">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="test_xml_parser" uuid="40FBC226-EDFE-4C19-B0C0-8AD8AF17AD05">
 	<target name="common">
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option debug="true">
+		<option debug="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="inlining_size" value="0"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 	</target>
 	<target name="xml_parser" extends="common">
 		<root class="TEST_XML_PARSER" feature="make"/>
 		<setting name="executable_name" value="test_xml"/>
+		<library name="xml_parser" location="$ISE_LIBRARY\library\obsolete\xml\parser\xml_parser.ecf" readonly="false"/>
 		<library name="xml_tree" location="$ISE_LIBRARY\library\obsolete\xml\tree\xml_tree.ecf" readonly="false">
 			<option>
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 			</option>
 		</library>
-		<library name="xml_parser" location="$ISE_LIBRARY\library\obsolete\xml\parser\xml_parser.ecf" readonly="false"/>
 		<cluster name="test" location=".\"/>
 	</target>
 	<target name="xml_gobo_parser" extends="common">
 		<root class="TEST_GOBO_XML_PARSER" feature="make"/>
 		<setting name="executable_name" value="test_xml_gobo"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
-		<library name="xml_tree" location="$ISE_LIBRARY\library\obsolete\xml\tree\xml_tree.ecf">
-			<!--
-			<renaming old_name="XML_ATTRIBUTE" new_name="XM_ATTRIBUTE"/>
-			<renaming old_name="XML_CHARACTER_DATA" new_name="XM_CHARACTER_DATA"/>
-			<renaming old_name="XML_COMMENT" new_name="XM_COMMENT"/>
-			<renaming old_name="XML_COMPOSITE" new_name="XM_COMPOSITE"/>
-			<renaming old_name="XML_DOCUMENT" new_name="XM_DOCUMENT"/>
-			<renaming old_name="XML_ELEMENT" new_name="XM_ELEMENT"/>
-			<renaming old_name="XML_NAMESPACE" new_name="XM_NAMESPACE"/>
-			<renaming old_name="XML_CALLBACKS_TREE" new_name="XM_CALLBACKS_TREE"/>
-			<renaming old_name="XML_DOCUMENT_NODE" new_name="XM_DOCUMENT_NODE"/>
-			<renaming old_name="XML_ELEMENT_NODE" new_name="XM_ELEMENT_NODE"/>
-			<renaming old_name="XML_NAMED_NODE" new_name="XM_NAMED_NODE"/>
-			<renaming old_name="XML_NODE" new_name="XM_NODE"/>
-			<renaming old_name="XML_NODE_VISITOR" new_name="XM_NODE_VISITOR"/>
-			<renaming old_name="XML_NODE_VISITOR_NULL" new_name="XM_NODE_VISITOR_NULL"/>
-			<renaming old_name="XML_NODE_VISITOR_PRINT" new_name="XM_NODE_VISITOR_PRINT"/>
-			<renaming old_name="XML_PROCESSING_INSTRUCTION" new_name="XM_PROCESSING_INSTRUCTION"/>
-			-->
-		</library>
-		<library name="xml_parser" location="$ISE_LIBRARY\library\obsolete\xml\parser\xml_parser.ecf">
-			<!--
-			<renaming old_name="XML_CALLBACKS" new_name="XM_CALLBACKS"/>
-			<renaming old_name="XML_CALLBACKS_FILTER" new_name="XM_CALLBACKS_FILTER"/>
-			<renaming old_name="XML_CALLBACKS_NULL" new_name="XM_CALLBACKS_NULL"/>
-			<renaming old_name="XML_CALLBACKS_SOURCE" new_name="XM_CALLBACKS_SOURCE"/>
-			<renaming old_name="XML_FORWARD_CALLBACKS" new_name="XM_FORWARD_CALLBACKS"/>
-			-->
-			<renaming old_name="XML_NAMESPACE_RESOLVER" new_name="XM_NAMESPACE_RESOLVER"/>
-			<!--
-			<renaming old_name="XML_NAMESPACE_RESOLVER_CONTEXT" new_name="XM_NAMESPACE_RESOLVER_CONTEXT"/>
-			-->
-			<renaming old_name="XML_POSITION" new_name="XM_POSITION"/>
-			<!--
-			<renaming old_name="XML_MARKUP_CONSTANTS" new_name="XM_MARKUP_CONSTANTS"/>
-			-->
-		</library>
 		<library name="xml_gobo" location="$EIFFEL_SRC\framework\xml\gobo\xml_gobo.ecf" readonly="false">
 			<renaming old_name="XML_CALLBACKS_FILTER_FACTORY" new_name="XM_CALLBACKS_FILTER_FACTORY"/>
-			<!--
-			<renaming old_name="XML_TREE_CALLBACKS_PIPE" new_name="XM_TREE_CALLBACKS_PIPE"/>
-			<renaming old_name="XML_CONTENT_CONCATENATOR" new_name="XM_CONTENT_CONCATENATOR"/>
-			-->
 			<renaming old_name="XML_CALLBACKS_TO_TREE_FILTER" new_name="XM_CALLBACKS_TO_TREE_FILTER"/>
-			<!--
-			<renaming old_name="XML_STOP_ON_ERROR_FILTER" new_name="XM_STOP_ON_ERROR_FILTER"/>
-			<renaming old_name="XML_POSITION_TABLE" new_name="XM_POSITION_TABLE"/>
-			<renaming old_name="XML_MARKUP_CONSTANTS" new_name="XM_MARKUP_CONSTANTS"/>
-			-->
 		</library>
+		<library name="xml_parser" location="$ISE_LIBRARY\library\obsolete\xml\parser\xml_parser.ecf">
+			<renaming old_name="XML_NAMESPACE_RESOLVER" new_name="XM_NAMESPACE_RESOLVER"/>
+			<renaming old_name="XML_POSITION" new_name="XM_POSITION"/>
+		</library>
+		<library name="xml_tree" location="$ISE_LIBRARY\library\obsolete\xml\tree\xml_tree.ecf"/>
 		<cluster name="test" location=".\"/>
-		<!--
-		<override name="gobo" location=".\gobo\"/>
-		-->
 	</target>
-
 	<target name="gobo_xm_parser" extends="common">
 		<root class="TEST_GOBO_XML_PARSER" feature="make"/>
 		<setting name="executable_name" value="test_gobo_xm"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
+		<library name="xml_parser" location="$ISE_LIBRARY\library\obsolete\xml\parser\xml_parser.ecf" readonly="false"/>
 		<library name="xml_tree" location="$ISE_LIBRARY\library\obsolete\xml\tree\xml_tree.ecf" readonly="false">
 			<option>
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 			</option>
 		</library>
-		<library name="xml_parser" location="$ISE_LIBRARY\library\obsolete\xml\parser\xml_parser.ecf" readonly="false"/>
 		<cluster name="test" location=".\"/>
 		<override name="gobo" location=".\gobo\"/>
 	</target>

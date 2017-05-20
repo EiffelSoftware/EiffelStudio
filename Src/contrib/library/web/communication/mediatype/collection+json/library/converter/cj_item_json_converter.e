@@ -78,20 +78,20 @@ feature {NONE} -- Implementation
 
 	href_key: JSON_STRING
 		once
-			create Result.make_json ("href")
+			create Result.make_from_string ("href")
 		end
 
 	data_key: JSON_STRING
 		once
-			create Result.make_json ("data")
+			create Result.make_from_string ("data")
 		end
 
 	links_key: JSON_STRING
 		once
-			create Result.make_json ("links")
+			create Result.make_from_string ("links")
 		end
 
 note
-	copyright: "2011-2012, Javier Velilla, Jocelyn Fiat and others"
+	copyright: "2011-2017, Javier Velilla, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

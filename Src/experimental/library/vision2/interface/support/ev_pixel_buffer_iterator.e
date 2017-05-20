@@ -23,8 +23,8 @@ feature {NONE} -- Creation
 
 			create internal_item
 			internal_item.set_pixel_buffer (pixel_buffer)
-			max_row_value := a_pixel_buffer.height.to_natural_32 - 1
-			max_column_value := a_pixel_buffer.width.to_natural_32 - 1
+			max_row_value := a_pixel_buffer.height.to_natural_32
+			max_column_value := a_pixel_buffer.width.to_natural_32
 		end
 
 feature
@@ -32,51 +32,49 @@ feature
 	start
 			-- Move to first position if any.
 		do
-			max_row_value := pixel_buffer.height.to_natural_32 - 1
-			max_column_value := pixel_buffer.width.to_natural_32 - 1
-			column_value := 0
-			row_value := 0
+			column := 1
+			row := 1
 		end
 
 	after: BOOLEAN
 			-- Is there no valid position to the right of current one?
 		do
-			Result := row_value > max_row_value
+			Result := row > max_row_value
 		end
 
 	finish
 			-- Move to last position.
 		do
-			row_value := max_row_value
-			column_value := max_column_value
+			row := max_row_value
+			column := max_column_value
 		end
 
 	forth
 			-- Move to next position; if no next position,
 			-- ensure that exhausted will be true.
 		do
-			if column_value = max_column_value then
-				column_value := 0
-				row_value := row_value + 1
+			if column = max_column_value then
+				column := 1
+				row := row + 1
 			else
-				column_value := column_value + 1
+				column := column + 1
 			end
 		end
 
 	before: BOOLEAN
 			-- Is there no valid position to the left of current one?
 		do
-			Result := row_value < 0
+			Result := row = 0
 		end
 
 	back
 			-- Move to previous position.
 		do
-			if column_value = 0 then
-				column_value := max_column_value
-				row_value := row_value - 1
+			if column = 1 then
+				column := max_column_value
+				row := row - 1
 			else
-				column_value := column_value - 1
+				column := column - 1
 			end
 		end
 
@@ -89,65 +87,56 @@ feature
 	set_column (a_column: NATURAL_32)
 			-- Set iterator to column `a_column' of `pixel_buffer'.
 		require
-			a_column_valid: a_column >= 1 and then a_column - 1 <= max_column_value
+			a_column_valid: a_column >= 1 and then a_column <= max_column_value
 		do
-			column_value := a_column - 1
+			column := a_column
 		end
 
 	column: NATURAL_32
 			-- Column index of `item'.
-		assign
-			set_column
-		do
-			Result := column_value + 1
-		end
 
 	set_row (a_row: NATURAL_32)
 			-- Set iterator to row `a_row' of `pixel_buffer'.
 		require
-			a_row_valid: a_row >= 1 and then a_row - 1 <= max_row_value
+			a_row_valid: a_row >= 1 and then a_row <= max_row_value
 		do
-			row_value := a_row - 1
+			row := a_row
 		end
 
 	row: NATURAL_32
 			-- Row index of `item'.
-		assign
-			set_row
-		do
-			Result := row_value + 1
-		end
 
 	item: EV_PIXEL_BUFFER_PIXEL
 			-- Pixel at current iteration position.
 			-- Object is reused for efficiency so retained references will be automatically updated.
-			-- If locked then a default pixel is returned.
+			-- If not locked then a default pixel is returned.
 		do
 			if pixel_buffer.is_locked then
 				Result := internal_item
 					-- Update internal_item with `Current' pixel
-				Result.sync_with_pixel_buffer_value (column_value, row_value)
+				Result.sync_with_pixel_buffer_value (column - 1, row - 1)
 			else
 				create Result
 			end
 		end
 
 	update_pixel (a_column, a_row: NATURAL_32; a_pixel: EV_PIXEL_BUFFER_PIXEL)
-			-- Update `a_pixel' with pixel value at `a_column', `a_row' of `Current'
+			-- Update `a_pixel' with pixel value at `a_column', `a_row' of `Current'.
+			-- If not locked nothing is done.
 		require
-			a_column_valid: a_column >= 1 and then a_column - 1 <= max_column_value
-			a_row_valid: a_row >= 1 and then a_row - 1 <= max_row_value
+			a_column_valid: a_column >= 1 and then a_column <= max_column_value
+			a_row_valid: a_row >= 1 and then a_row <= max_row_value
 		do
 			if pixel_buffer.is_locked then
 				a_pixel.set_pixel_buffer (pixel_buffer)
-				a_pixel.sync_with_pixel_buffer_value (a_column, a_row)
+				a_pixel.sync_with_pixel_buffer_value (a_column - 1, a_row - 1)
 			end
 		end
 
 	index: INTEGER
 			-- Index of current position.
 		do
-			Result := (row_value * max_column_value + column_value).to_integer_32
+			Result := ((row - 1) * max_column_value + column).to_integer_32
 		end
 
 	max_column_value: NATURAL_32
@@ -163,14 +152,8 @@ feature {NONE} -- Implementation
 	pixel_buffer: EV_PIXEL_BUFFER_I
 		-- Pixel buffer for which `Current' is iterating.
 
-	column_value: NATURAL_32
-		-- Current column being iterated (zero based)
-
-	row_value: NATURAL_32
-		-- Current row being iterated (zero based)
-
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

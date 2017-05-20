@@ -11,7 +11,7 @@ deferred class
 	EV_MULTI_POINTED_FIGURE
 
 obsolete
-	"Use EV_MODEL_MULTI_POINTED instead."
+	"Use EV_MODEL_MULTI_POINTED instead. [2017-05-31]"
 
 feature -- Access
 

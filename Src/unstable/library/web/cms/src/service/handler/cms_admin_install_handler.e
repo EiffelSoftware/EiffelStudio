@@ -43,11 +43,16 @@ feature -- HTTP Methods
 			l_module: CMS_MODULE
 			s: STRING
 			lst: ARRAYED_LIST [CMS_MODULE]
+			l_access: detachable READABLE_STRING_8
 			l_denied: BOOLEAN
 		do
 				--| FIXME: improve the installer.
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			if attached api.setup.string_8_item ("admin.installation_access") as l_access then
+			l_access := api.setup.string_8_item ("admin.installation_access")
+			if l_access = Void then
+				l_access := api.setup.string_8_item ("administration.installation_access")
+			end
+			if l_access /= Void then
 				if l_access.is_case_insensitive_equal ("none") then
 					l_denied := True
 				elseif l_access.is_case_insensitive_equal ("permission") then
@@ -91,13 +96,16 @@ feature -- HTTP Methods
 
 					if api.is_module_installed (l_module) then
 						s.append (" was successfully installed.")
-					else
+					elseif l_module.is_enabled then
 						s.append (" could not be installed!")
 						s.append (" <span class=%"error%">[ERROR]</span>")
+					else
+						s.append (" is not enabled!")
 					end
 					s.append ("</li>%N")
 				end
 				s.append ("</ul>")
+				s.append ("<div>Back to the " + r.link ("Administration", api.administration_path (Void), Void) + " ...</div>")
 				r.set_main_content (s)
 			end
 			r.set_title (r.translation ("CMS Installation ...", Void))
@@ -105,6 +113,6 @@ feature -- HTTP Methods
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

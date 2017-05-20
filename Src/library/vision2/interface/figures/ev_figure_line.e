@@ -11,7 +11,7 @@ class
 	EV_FIGURE_LINE
 
 obsolete
-	"Use EV_MODEL_LINE instead."
+	"Use EV_MODEL_LINE instead. [2017-05-31]"
 
 inherit
 	EV_ATOMIC_FIGURE

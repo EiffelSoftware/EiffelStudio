@@ -2,7 +2,7 @@
 	description:	"Main functions of the SCOOP runtime."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 2010-2015, Eiffel Software."
+	copyright:	"Copyright (c) 2010-2017, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -101,7 +101,7 @@ rt_private void rt_scoop_impersonated_call (struct rt_processor* client, struct 
 
 		/* Perform the call. We perform a safe call here because we need
 		 * to free the eif_scoop_call_data struct afterwards. */
-	is_successful = rt_try_execute_scoop_call (call);
+	is_successful = rt_try_execute_scoop_call (call, 1);
 
 		/* Adopt the once values of the current region and revert the region ID. */
 	eif_scoop_impersonate (eif_globals, stored_pid);
@@ -333,7 +333,9 @@ rt_public EIF_SCP_PID eif_scoop_new_processor (EIF_BOOLEAN is_passive)
 		rt_processor_registry_activate (new_pid);
 				/* For passive regions we'll execute the creation procedure right away. */
 		if (is_passive) {
-			rt_get_processor (new_pid)->is_creation_procedure_logged = EIF_TRUE;
+			struct rt_processor *supplier = rt_get_processor (new_pid);
+			supplier->is_creation_procedure_logged = EIF_TRUE;
+			supplier->nstcall_value = 1;
 		}
 	} else {
 		if (error == T_NO_MORE_MEMORY) {

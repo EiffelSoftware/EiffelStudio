@@ -3,8 +3,8 @@ note
 	pattern: "Visitor"
 	author: "Javier Velilla"
 	license: "MIT (see http://www.opensource.org/licenses/mit-license.php)"
-	date: "2008/08/24"
-	revision: "Revision 0.1"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	JSON_VISITOR

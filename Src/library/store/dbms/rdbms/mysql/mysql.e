@@ -143,7 +143,7 @@ feature -- For DATABASE_FORMAT
 	string_format (object: detachable STRING): STRING
 			-- String representation in SQL of `object'.
 		obsolete
-			"Use `string_format_32' instead."
+			"Use `string_format_32' instead [2017-05-31]."
 		do
 			Result := string_format_32 (object).as_string_8_conversion
 		end
@@ -1402,7 +1402,7 @@ feature {NONE} -- C Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source:		"[
 			Eiffel Software

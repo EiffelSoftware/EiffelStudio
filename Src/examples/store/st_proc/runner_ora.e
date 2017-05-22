@@ -88,12 +88,12 @@ feature {NONE}
 			create l_proc.make (Proc_name)
 			proc := l_proc
 			l_proc.load
-			l_proc.set_arguments (<<"new_author", "new_price", "new_date">>,
+			l_proc.set_arguments_32 (<<"new_author", "new_price", "new_date">>,
 						<<author, price, pub_date >>)
 
 			if l_proc.exists then
 				io.putstring ("Stored procedure text: ")
-				io.putstring (l_proc.text)
+				(create {LOCALIZED_PRINTER}).localized_print (l_proc.text_32)
 				io.new_line
 			else
 				l_proc.store (Select_text)

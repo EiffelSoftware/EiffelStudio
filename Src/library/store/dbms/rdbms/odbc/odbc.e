@@ -103,7 +103,7 @@ feature -- For DATABASE_FORMAT
 	string_format (object: detachable STRING): STRING
 			-- String representation in SQL of `object'.
 		obsolete
-			"Use `string_format_32' instead."
+			"Use `string_format_32' instead.  [2017-05-31]"
 		do
 			Result := string_format_32 (object).as_string_8_conversion
 		end
@@ -351,7 +351,7 @@ feature -- For DATABASE_PROC
 			io.put_string ("== Try to Get Text of Stored Procedure through EiffelStore on ODBC ==")
 			io.new_line
 			io.put_string ("Sorry, the ")
-			io.put_string (Result.as_string_8_conversion)
+			(create {LOCALIZED_PRINTER}).localized_print (Result)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 			io.put_string ("=====================================================================")
@@ -384,7 +384,7 @@ feature -- For DATABASE_PROC
 			io.put_string ("===== Try to Create Stored Procedure through EiffelStore on ODBC =====")
 			io.new_line
 			io.put_string ("Sorry, the ")
-			io.put_string (driver_name.string.as_string_8_conversion)
+			(create {LOCALIZED_PRINTER}).localized_print (driver_name.string)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 			io.put_string ("======================================================================")
@@ -408,7 +408,7 @@ feature -- For DATABASE_PROC
 			create driver_name.make_shared_from_pointer (odbc_driver_name)
 			io.new_line
 			io.put_string ("Sorry, the ")
-			io.put_string (driver_name.string.as_string_8_conversion)
+			(create {LOCALIZED_PRINTER}).localized_print (driver_name.string)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 		end
@@ -433,7 +433,7 @@ feature -- For DATABASE_PROC
 			io.put_string ("===== Try to Drop Stored Procedure through EiffelStore on ODBC =====")
 			io.new_line
 			io.put_string ("Sorry, the ")
-			io.put_string (driver_name.string.as_string_8_conversion)
+			(create {LOCALIZED_PRINTER}).localized_print (driver_name.string)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 			io.put_string ("====================================================================")
@@ -1453,7 +1453,7 @@ feature {NONE} -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

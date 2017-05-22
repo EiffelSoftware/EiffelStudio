@@ -98,9 +98,9 @@ feature {NONE}
 			l_proc.load
 
 			if l_proc.exists then
-				if l_proc.text /= Void then
+				if l_proc.text_32 /= Void then
 					io.putstring ("Stored procedure text: ")
-					io.putstring (l_proc.text)
+					(create {LOCALIZED_PRINTER}).localized_print (l_proc.text_32)
 					io.new_line
 				end
 			else

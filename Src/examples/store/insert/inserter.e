@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 				if not session_control.is_ok then
 						-- The attempt to insert a new object
 						-- failed
-					io.putstring (session_control.error_message)
+					(create {LOCALIZED_PRINTER}).localized_print (session_control.error_message_32)
 					io.new_line
 				else
 					io.putstring ("Object inserted%N")

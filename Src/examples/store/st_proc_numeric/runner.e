@@ -104,6 +104,7 @@ feature {NONE}
 			l_int_64: INTEGER_64
 			l_real_32: REAL_32
 			l_real_64: REAL_64
+			l_utf: UTF_CONVERTER
 		do
 			create l_decimal.make_from_string ("1.00")
 			l_int_16 := 9999
@@ -115,14 +116,14 @@ feature {NONE}
 			create l_proc.make (Proc_name)
 			proc := l_proc
 			l_proc.load
-			l_proc.set_arguments (
+			l_proc.set_arguments_32 (
 				<<"decimal", "int_16", "int_32", "int_64", "real_32", "real_64">>,
 				<<l_decimal, l_int_16, l_int_32, l_int_64, l_real_32, l_real_64>>)
 
 			if l_proc.exists then
-				if l_proc.text /= Void then
+				if l_proc.text_32 /= Void then
 					io.putstring ("Stored procedure text: ")
-					io.putstring (l_proc.text)
+					io.putstring (l_utf.string_32_to_utf_8_string_8 (l_proc.text_32))
 					io.new_line
 				end
 			else

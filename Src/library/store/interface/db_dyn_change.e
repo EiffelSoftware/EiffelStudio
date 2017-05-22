@@ -38,7 +38,7 @@ feature -- Element change
 	prepare (s: STRING)
 			-- Parse of the sql statement `s'
 		obsolete
-			"Use `prepare_32' instead [2017-05-31]."
+			"Use `prepare_32' instead [2017-11-30]."
 		require
 			not_void: s /= Void
 			meaning_full_sql: s.count > 0

@@ -43,7 +43,7 @@ feature -- Conversion
 	string_format (object: STRING): STRING
 			-- String representation in SQL of `object'
 		obsolete
-			"Use `string_format_32' instead  [2017-05-31]."
+			"Use `string_format_32' instead [2017-11-30]."
 		require
 			object_not_void: object /= Void
 		do

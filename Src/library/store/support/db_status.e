@@ -73,7 +73,7 @@ feature -- Status report
 	error_message: STRING
 			-- SQL error message prompted by database server
 		obsolete
-			"Use `error_message_32' instead [2017-05-31]."
+			"Use `error_message_32' instead [2017-11-30]."
 		do
 			Result := error_message_32.as_string_8
 		end
@@ -91,7 +91,7 @@ feature -- Status report
 	warning_message: STRING
 			-- SQL warning message prompted by database server
 		obsolete
-			"Use `warning_message_32' instead [2017-05-31]."
+			"Use `warning_message_32' instead [2017-11-30]."
 		do
 			Result := warning_message_32.as_string_8
 		end

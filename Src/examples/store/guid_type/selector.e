@@ -37,7 +37,7 @@ feature {NONE}
 
 	numeric_info: NUMERIC_INFO
 
-feature
+feature {NONE} -- Initialization
 
 	make
 		local

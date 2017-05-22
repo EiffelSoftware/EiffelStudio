@@ -15,7 +15,7 @@ feature -- Status report
 	last_query: detachable STRING
 			-- Last SQL statement used
 		obsolete
-			"Use `last_query_32' instead [2017-05-31]."
+			"Use `last_query_32' instead [2017-11-30]."
 		do
 			if attached last_query_32 as l_str then
 				Result := l_str.as_string_8

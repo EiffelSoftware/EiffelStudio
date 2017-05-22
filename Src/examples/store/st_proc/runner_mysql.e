@@ -9,6 +9,8 @@ class RUNNER_MYSQL
 inherit
 	RDB_HANDLE
 
+	LOCALIZED_PRINTER
+
 create
 	make
 
@@ -100,7 +102,7 @@ feature {NONE}
 
 			if l_proc.exists then
 				io.putstring ("Stored procedure text: ")
-				(create {LOCALIZED_PRINTER}).localized_print (l_proc.text_32)
+				localized_print (l_proc.text_32)
 				io.new_line
 			else
 				l_proc.store (Select_text)

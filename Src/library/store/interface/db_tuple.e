@@ -55,7 +55,7 @@ feature -- Status report
 			-- Is Current tuple empty?
 		obsolete
 			"Please use `is_empty' instead to remain %
-			%consistant with CONTAINER `is_empty' feature [2017-05-31]."
+			%consistant with CONTAINER `is_empty' feature [2017-11-30]."
 		do
 			Result := is_empty
 		end

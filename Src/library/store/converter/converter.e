@@ -33,7 +33,7 @@ feature -- Status report
 	conv_message: detachable STRING
 			-- Error message.
 		obsolete
-			"Use `conv_message_32' instead  [2017-05-31]."
+			"Use `conv_message_32' instead  [2017-11-30]."
 		do
 			if attached conv_message_32 as l_s then
 				Result := l_s.as_string_8

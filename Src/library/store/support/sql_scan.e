@@ -80,7 +80,7 @@ feature -- Basic operations
 			-- with the Eiffel object description whose name
 			-- also matches "<name>".
 		obsolete
-			"Use `parse_32' instead [2017-05-31]."
+			"Use `parse_32' instead [2017-11-30]."
 		require
 			s_not_void: s /= Void
 		do

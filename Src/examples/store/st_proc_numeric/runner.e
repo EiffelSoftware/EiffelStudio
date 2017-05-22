@@ -17,6 +17,7 @@ inherit
 			error as error_parser,
 			parse as parse_parser
 		end
+	LOCALIZED_PRINTER
 
 create
 	make
@@ -104,7 +105,6 @@ feature {NONE}
 			l_int_64: INTEGER_64
 			l_real_32: REAL_32
 			l_real_64: REAL_64
-			l_utf: UTF_CONVERTER
 		do
 			create l_decimal.make_from_string ("1.00")
 			l_int_16 := 9999
@@ -123,7 +123,7 @@ feature {NONE}
 			if l_proc.exists then
 				if l_proc.text_32 /= Void then
 					io.putstring ("Stored procedure text: ")
-					io.putstring (l_utf.string_32_to_utf_8_string_8 (l_proc.text_32))
+					localized_print(l_proc.text_32)
 					io.new_line
 				end
 			else

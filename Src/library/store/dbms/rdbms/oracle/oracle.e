@@ -69,7 +69,7 @@ feature -- For DATABASE_FORMAT
 	string_format (object: detachable STRING): STRING
 			-- String representation in SQL of `object'.
 		obsolete
-			"Use `string_format_32' instead [2017-05-31]."
+			"Use `string_format_32' instead [2017-11-30]."
 		do
 			Result := string_format_32 (object).as_string_8_conversion
 		end

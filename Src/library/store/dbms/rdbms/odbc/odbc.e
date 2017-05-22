@@ -37,6 +37,8 @@ inherit
 
 	GLOBAL_SETTINGS
 
+	LOCALIZED_PRINTER
+
 feature -- Access
 
 	database_handle_name: STRING = "ODBC"
@@ -103,7 +105,7 @@ feature -- For DATABASE_FORMAT
 	string_format (object: detachable STRING): STRING
 			-- String representation in SQL of `object'.
 		obsolete
-			"Use `string_format_32' instead.  [2017-05-31]"
+			"Use `string_format_32' instead.  [2017-11-30]"
 		do
 			Result := string_format_32 (object).as_string_8_conversion
 		end
@@ -351,7 +353,7 @@ feature -- For DATABASE_PROC
 			io.put_string ("== Try to Get Text of Stored Procedure through EiffelStore on ODBC ==")
 			io.new_line
 			io.put_string ("Sorry, the ")
-			(create {LOCALIZED_PRINTER}).localized_print (Result)
+			localized_print (Result)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 			io.put_string ("=====================================================================")
@@ -384,7 +386,7 @@ feature -- For DATABASE_PROC
 			io.put_string ("===== Try to Create Stored Procedure through EiffelStore on ODBC =====")
 			io.new_line
 			io.put_string ("Sorry, the ")
-			(create {LOCALIZED_PRINTER}).localized_print (driver_name.string)
+			localized_print (driver_name.string)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 			io.put_string ("======================================================================")
@@ -408,7 +410,7 @@ feature -- For DATABASE_PROC
 			create driver_name.make_shared_from_pointer (odbc_driver_name)
 			io.new_line
 			io.put_string ("Sorry, the ")
-			(create {LOCALIZED_PRINTER}).localized_print (driver_name.string)
+			localized_print (driver_name.string)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 		end
@@ -433,7 +435,7 @@ feature -- For DATABASE_PROC
 			io.put_string ("===== Try to Drop Stored Procedure through EiffelStore on ODBC =====")
 			io.new_line
 			io.put_string ("Sorry, the ")
-			(create {LOCALIZED_PRINTER}).localized_print (driver_name.string)
+			localized_print (driver_name.string)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 			io.put_string ("====================================================================")

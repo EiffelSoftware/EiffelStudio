@@ -55,7 +55,7 @@ feature -- Access
 	last_parsed_query : detachable STRING
 			-- Last parsed SQL query
 		obsolete
-			"Use `last_parsed_query_32' instead [2017-05-31]."
+			"Use `last_parsed_query_32' instead [2017-11-30]."
 		do
 			if attached implementation.last_parsed_query_32 as l_s then
 				Result := l_s.as_string_8
@@ -134,7 +134,7 @@ feature -- Status report
 	error_m: STRING
 			-- Error message.
 		Obsolete
-			"Please use `{DB_CONTROL}.error_message' [2017-05-31]."
+			"Please use `{DB_CONTROL}.error_message' [2017-11-30]."
 		do
 			Result := error_message
 		end
@@ -142,7 +142,7 @@ feature -- Status report
 	error_c: INTEGER
 			-- Error code.
 		Obsolete
-			"Please use `{DB_CONTROL}.error_code' [2017-05-31]."
+			"Please use `{DB_CONTROL}.error_code' [2017-11-30]."
 		do
 			Result := error_code
 		end

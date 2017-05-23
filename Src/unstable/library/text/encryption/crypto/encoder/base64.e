@@ -20,63 +20,76 @@ feature -- Status report
 
 feature -- base64 encoder
 
-	encoded_string (s: READABLE_STRING_8): STRING_8
-			-- base64 encoded value of `s'.
+	bytes_encoded_string (a_bytes: READABLE_INDEXABLE [NATURAL_8]): STRING_8
+			-- base64 encoded value of `a_bytes'.
 		local
 			i,n: INTEGER
-			c: INTEGER
-			f: SPECIAL [BOOLEAN]
+			i1,i2,i3: INTEGER
 			l_map: STRING_8
 		do
 			has_error := False
 			l_map := character_map
+			n := 4 * ((a_bytes.upper - a_bytes.lower + 1 + 2) // 3)
+
 			from
-				n := s.count
-				i := (8 * n) \\ 6
-				if i > 0 then
-					create f.make_filled (False, 8 * n + (6 - i))
-				else
-					create f.make_filled (False, 8 * n)
-				end
-				i := 0
+				i := a_bytes.lower
+				create Result.make (n)
+				n := a_bytes.upper
 			until
-				i > n - 1
+				i > n
 			loop
-				c := s.item (i + 1).code
-				f[8 * i + 0] := c.bit_test(7)
-				f[8 * i + 1] := c.bit_test(6)
-				f[8 * i + 2] := c.bit_test(5)
-				f[8 * i + 3] := c.bit_test(4)
-				f[8 * i + 4] := c.bit_test(3)
-				f[8 * i + 5] := c.bit_test(2)
-				f[8 * i + 6] := c.bit_test(1)
-				f[8 * i + 7] := c.bit_test(0)
+				i1 := a_bytes[i].as_integer_32
+				if i < n then
+					i := i + 1
+					i2 := a_bytes[i].as_integer_32
+					if i < n then
+						i := i + 1
+						i3 := a_bytes[i].as_integer_32
+					else
+						i3 := -1
+					end
+				else
+					i2 := -1
+				end
+
+				append_triple_encoded_to (i1, i2, i3, l_map, Result)
 				i := i + 1
 			end
-			from
-				i := 0
-				n := f.count
-				create Result.make (n // 6)
-			until
-				i > n - 1
-			loop
-				c := 0
-				if f[i + 0] then c := c + 0x20 end
-				if f[i + 1] then c := c + 0x10 end
-				if f[i + 2] then c := c + 0x8 end
-				if f[i + 3] then c := c + 0x4 end
-				if f[i + 4] then c := c + 0x2 end
-				if f[i + 5] then c := c + 0x1 end
-				Result.extend (l_map.item (c + 1))
-				i := i + 6
-			end
+		end
 
-			i := Result.count \\ 4
-			if i > 0 then
-				from until i > 3 loop
-					Result.extend ('=')
+	encoded_string (s: READABLE_STRING_8): STRING_8
+			-- base64 encoded value of `s'.
+		local
+			i,n: INTEGER
+			i1,i2,i3: INTEGER
+			l_map: STRING_8
+		do
+			has_error := False
+			l_map := character_map
+			n := 4 * ((s.count + 2) // 3)
+
+			from
+				i := 1
+				create Result.make (n)
+				n := s.count
+			until
+				i > n
+			loop
+				i1 := s.item_code (i)
+				if i < n then
 					i := i + 1
+					i2 := s.item_code (i)
+					if i < n then
+						i := i + 1
+						i3 := s.item_code (i)
+					else
+						i3 := -1
+					end
+				else
+					i2 := -1
 				end
+				append_triple_encoded_to (i1, i2, i3, l_map, Result)
+				i := i + 1
 			end
 		end
 
@@ -150,7 +163,37 @@ feature -- Decoder
 			end
 		end
 
-feature {NONE} -- Constants
+feature {NONE} -- Implementation
+
+	append_triple_encoded_to (i1,i2,i3: INTEGER; a_map: STRING; a_output: STRING)
+		local
+			i,j,n: INTEGER
+			c: INTEGER
+			t: INTEGER
+		do
+			--| [ 'f'  ][ 'o'  ][ 'o'  ]
+			--| [ 102  ][ 111  ][ 111  ]
+			--| 011001100110111101101111
+			--| 011001100110111101101111
+			--| [ 25 ][ 38 ][ 61 ][ 47 ]
+			--| [  Z ][  m ][  9 ][  v ]
+			a_output.extend (a_map.item (1 + i1 |>> 2))
+			if i2 >= 0 then
+				a_output.extend (a_map.item (1 + (i1 |<< 4 & 0b111111) + (i2 |>> 4 & 0b111111) ))
+				if i3 >= 0 then
+					a_output.extend (a_map.item (1 + (i2 |<< 2 & 0b111111) + (i3 |>> 6 & 0b111111) ))
+					a_output.extend (a_map.item (1 + (i3 & 0b111111) ))
+					t := t + i3
+				else
+					a_output.extend (a_map.item (1 + (i2 |<< 2 & 0b111111) ))
+					a_output.append_character ('=')
+				end
+			else
+				a_output.extend (a_map.item (1 + (i1 |<< 4) & 0b111111))
+				a_output.append_character ('=')
+				a_output.append_character ('=')
+			end
+		end
 
 	next_encoded_character_position (v: STRING; from_pos: INTEGER): INTEGER
 			-- Next encoded character position from `v' starting after `from_pos' index.
@@ -185,9 +228,10 @@ feature {NONE} -- Constants
 			end
 		end
 
-	character_map: STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
-			--|              01234567890123456789012345678901234567890123456789012345678901234
+	character_map: STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+			--|              0123456789012345678901234567890123456789012345678901234567890123
 			--|              0         1         2         3         4         5         6
+			--| pad= '='
 
 	character_to_value (c: CHARACTER): INTEGER
 		do

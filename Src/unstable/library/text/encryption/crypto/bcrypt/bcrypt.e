@@ -4,7 +4,7 @@
 				the scheme described in "A Future-Adaptable Password Scheme" by
 				Niels Provos and David Mazieres.
 				A bcrypt password should look like this
-				
+
 				$2a$12$D4G5f18o7aMMfwasBL7GpuQWuP3pkrZrOAnqP.bmezbMng.QwJ/pG
 				2a identifies the bcrypt algorithm version that was used.
 				12 is the cost factor; 2^12 iterations of the key derivation function are used.It's recommend a cost of 12 or more.
@@ -120,7 +120,15 @@ feature -- Hash password
 		local
 			l_utf: UTF_CONVERTER
 		do
-			Result := hashed_password (l_utf.string_32_to_utf_8_string_8 (a_password), l_utf.string_32_to_utf_8_string_8 (a_salt))
+			if
+				l_utf.string_32_to_utf_8_string_8 (a_salt).count > 28 and then
+				is_valid_salt_version (l_utf.string_32_to_utf_8_string_8 (a_salt))
+			then
+				Result := hashed_password (l_utf.string_32_to_utf_8_string_8 (a_password), l_utf.string_32_to_utf_8_string_8 (a_salt))
+			else
+				create Result.make_empty
+				set_error_description ("Not valid_salt_length or valid_salt_version calling hashed_password")
+			end
 		end
 
 	hashed_password (password: READABLE_STRING_8; salt: READABLE_STRING_8): STRING_8
@@ -170,23 +178,31 @@ feature -- Hash password
 				l_password.put (pwd [i+1].code.as_natural_8, i)
 				i := i + 1
 			end
-			l_salt := decoded_base64_array (real_salt, bcrypt_salt_len)
-			create l_bcrypt.make_with_salt_generator (Current.salt_generator)
-			l_hashed := l_bcrypt.crypt_raw (l_password, l_salt, rounds)
-
-			create Result.make_empty
-			Result.append ("$2")
-			if minor >= 'a' then
-				Result.append_character (minor)
+			if bcrypt_salt_len > 0 then
+				l_salt := decoded_base64_array (real_salt, bcrypt_salt_len)
+				create l_bcrypt.make_with_salt_generator (Current.salt_generator)
+				l_hashed := l_bcrypt.crypt_raw (l_password, l_salt, rounds)
+				create Result.make_empty
+				if l_bcrypt.has_error then
+					set_error_description (l_bcrypt.error_description)
+				else
+					Result.append ("$2")
+					if minor >= 'a' then
+						Result.append_character (minor)
+					end
+					Result.append_character ('$')
+					if rounds < 10 then
+						Result.append_integer (0)
+					end
+					Result.append_integer (rounds)
+					Result.append_character ('$')
+					append_encoded_base64_to (l_salt, l_salt.count, Result)
+					append_encoded_base64_to (l_hashed, bf_crypt_ciphertext.count * 4 - 1, Result)
+				end
+			else
+				create Result.make_empty
+				set_error_description ("Not valid valid_length calling decoded_base64_array")
 			end
-			Result.append_character ('$')
-			if rounds < 10 then
-				Result.append_integer (0)
-			end
-			Result.append_integer (rounds)
-			Result.append_character ('$')
-			append_encoded_base64_to (l_salt, l_salt.count, Result)
-			append_encoded_base64_to (l_hashed, bf_crypt_ciphertext.count * 4 - 1, Result)
 		end
 
 feature -- helper
@@ -208,6 +224,8 @@ feature -- Generate Salt
 			--  Result an encoded salt value.
 		require
 			valid_rounds: is_valid_log_round (a_log_rounds)
+		local
+			l_sequence: SPECIAL [NATURAL_8]
 		do
 			create Result.make_empty
 			Result.append ("$2a$")
@@ -216,7 +234,15 @@ feature -- Generate Salt
 			end
 			Result.append_integer (a_log_rounds)
 			Result.append_character ('$')
-			append_encoded_base64_to (salt_generator.new_sequence, Bcrypt_salt_len, Result)
+
+			l_sequence := salt_generator.new_sequence
+			if Bcrypt_salt_len > 0 and then Bcrypt_salt_len <= l_sequence.count
+			then
+				append_encoded_base64_to (l_sequence, Bcrypt_salt_len, Result)
+			else
+				set_error_description ("Not valid precondition valid_length calling append_encoded_base64_to")
+			end
+
 		ensure
 			is_valid_salt_version: is_valid_salt_version (Result)
 		end
@@ -227,6 +253,11 @@ feature -- Generate Salt
 			-- rounds to apply
 			-- Result an encoded salt value.
 		do
+				--No need to check precondition.
+				-- since `gensalt_default_log2_rounds' is a valid log round
+			check
+				valid_log_round: is_valid_log_round (gensalt_default_log2_rounds)
+			end
 			Result := new_salt (gensalt_default_log2_rounds)
 		ensure
 			is_valid_salt_version: is_valid_salt_version (Result)
@@ -253,6 +284,29 @@ feature -- Generate Salt
 			Result := hashed.same_string (hashed_password_general (plaintext, hashed))
 		end
 
+feature -- Error Report
+
+	has_error: BOOLEAN
+			-- There was an error?
+		do
+			Result := attached error_description
+		end
+
+	error_description: detachable STRING
+			-- Last error description.
+
+	clean_error
+			-- Clean up error description
+		do
+			error_description := Void
+		end
+
+	set_error_description (a_description: detachable READABLE_STRING_8)
+		do
+			if attached a_description then
+				create error_description.make_from_string (a_description)
+			end
+		end
 
 feature {NONE} -- Bcrypt Parameters
 
@@ -680,48 +734,53 @@ feature {BCRYPT} -- Implementation
 		do
 			cdata := bf_crypt_ciphertext.twin
 			clen := cdata.count
-			rounds := rounds_for_log_rounds (log_rounds)
-			create Result.make_filled (0,clen * 4)
-			init_key
-			eks_key (salt, password)
-			from
-				i64 := 0
-			until
-				i64 = rounds
-			loop
-				build_key (password)
-				build_key (salt)
-				i64 := i64 + 1
-			end
-
-			from
-				i := 0
-			until
-				i = 64
-			loop
+			if is_valid_log_round (log_rounds) then
+				rounds := rounds_for_log_rounds (log_rounds)
+				create Result.make_filled (0,clen * 4)
+				init_key
+				eks_key (salt, password)
 				from
+					i64 := 0
+				until
+					i64 = rounds
+				loop
+					build_key (password)
+					build_key (salt)
+					i64 := i64 + 1
+				end
+
+				from
+					i := 0
+				until
+					i = 64
+				loop
+					from
+						j := 0
+					until
+						j = (clen |>> 1)
+					loop
+						encipher (cdata, j |<< 1)
+						j := j + 1
+					end
+					i := i + 1
+				end
+
+				from
+					i := 0
 					j := 0
 				until
-					j = (clen |>> 1)
+					i = clen
 				loop
-					encipher (cdata, j |<< 1)
-					j := j + 1
+					Result [j] := ((cdata [i] |>> 24) & 0xff).to_natural_8
+					Result [j+1] := ((cdata [i] |>> 16) & 0xff).to_natural_8
+					Result [j+2] := ((cdata [i] |>> 8) & 0xff).to_natural_8
+					Result [j+3] := (cdata [i] & 0xff).to_natural_8
+					j := j + 4
+					i := i + 1
 				end
-				i := i + 1
-			end
-
-			from
-				i := 0
-				j := 0
-			until
-				i = clen
-			loop
-				Result [j] := ((cdata [i] |>> 24) & 0xff).to_natural_8
-				Result [j+1] := ((cdata [i] |>> 16) & 0xff).to_natural_8
-				Result [j+2] := ((cdata [i] |>> 8) & 0xff).to_natural_8
-				Result [j+3] := (cdata [i] & 0xff).to_natural_8
-				j := j + 4
-				i := i + 1
+			else
+				create Result.make_filled (0,clen * 4)
+				set_error_description ("Invalid log roudns")
 			end
 		end
 

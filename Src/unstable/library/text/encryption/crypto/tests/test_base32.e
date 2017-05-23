@@ -42,6 +42,14 @@ feature -- Test routines
 			assert ("unicode test_decoded", uni.same_string ({STRING_32} "你好"))
 		end
 
+	test_cases_bytes_encoding
+		local
+			expected: STRING
+		do
+			assert("test cases#b01", base32_bytes_encoded_string (<<('f').code.to_natural_8, ('o').code.to_natural_8>>).same_string ("MZXQ===="))
+			assert("test cases#b02", base32_bytes_encoded_string (<<('f').code.to_natural_8, ('o').code.to_natural_8, ('o').code.to_natural_8>>).same_string ("MZXW6==="))
+		end
+
 	test_cases_encoding
 		local
 			expected: STRING
@@ -70,6 +78,14 @@ feature -- Test routines
 
 
 feature -- Helpers
+
+	base32_bytes_encoded_string (a_bytes: ARRAY [NATURAL_8]): STRING
+		local
+			base32: BASE32
+		do
+			create base32
+			Result := base32.bytes_encoded_string (a_bytes)
+		end
 
 	base32_encoded_string (s: READABLE_STRING_8): STRING
 		local

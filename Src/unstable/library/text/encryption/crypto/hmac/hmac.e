@@ -117,6 +117,12 @@ feature -- Digest access
 			end
 		end
 
+	base64_digest: STRING_8
+			-- base64 string representation of Current digest.
+		do
+			Result := (create {BASE64}).bytes_encoded_string (digest)
+		end
+
 	lowercase_hexadecimal_string_digest: STRING_8
 			-- Lowercase hexadecimal string representation of Current digest.	
 		do
@@ -197,7 +203,7 @@ feature {NONE} -- Implementation
 	opad: SPECIAL [NATURAL_8]
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

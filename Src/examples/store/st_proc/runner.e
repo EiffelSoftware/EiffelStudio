@@ -15,6 +15,8 @@ inherit
 
 	RDB_HANDLE
 
+	LOCALIZED_PRINTER
+
 create
 
 	make
@@ -103,14 +105,14 @@ feature {NONE}
 			create l_proc.make (Proc_name)
 			proc := l_proc
 			l_proc.load
-			l_proc.set_arguments (
+			l_proc.set_arguments_32 (
 				<<"author", "price", "pub_date">>,
 				<<author, price, pub_date >>)
 
 			if l_proc.exists then
-				if l_proc.text /= Void then
+				if l_proc.text_32 /= Void then
 					io.putstring ("Stored procedure text: ")
-					io.putstring (l_proc.text)
+					localized_print (l_proc.text_32)
 					io.new_line
 				end
 			else

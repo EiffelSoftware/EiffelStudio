@@ -47,8 +47,6 @@ feature {NONE}
 feature
 
 	make
-		local
-			l_repository: like repository
 		do
 			io.putstring ("Database user authentication:%N")
 			perform_login
@@ -128,7 +126,6 @@ feature {NONE}
 			-- Create table in database with same structure as 'book'
 		local
 			l_repository: like repository
-			l_data_file: like data_file
 			l_book: like filled_book
 		do
 				-- Create the table for book-objects.

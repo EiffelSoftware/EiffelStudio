@@ -37,7 +37,7 @@ feature {NONE}
 
 	numeric_info: NUMERIC_INFO
 
-feature
+feature {NONE} -- Initialization
 
 	make
 		local
@@ -129,7 +129,6 @@ feature {NONE}
 			repository_attached: repository /= Void
 		local
 			l_laststring: detachable STRING
-			l_repository: like repository
 			l_data_file: like data_file
 			l_string: STRING_32
 		do
@@ -163,8 +162,6 @@ feature {NONE}
 	make_selection
 			-- Select to list all data from the database.
 		local
-			author: STRING
-			l_laststring: detachable STRING
 		do
 			io.putstring ("Print data directly from database: ")
 			io.new_line

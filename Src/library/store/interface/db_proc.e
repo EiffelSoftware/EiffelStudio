@@ -43,7 +43,7 @@ feature -- Status report
 	text: STRING
 			-- SQL text of current procedure
 		obsolete
-			"Use `text_32' instead."
+			"Use `text_32' instead  [2017-11-30]."
 		require
 			exists: exists
 		do
@@ -65,7 +65,7 @@ feature -- Status report
 	arguments_name: detachable ARRAY [STRING]
 			-- Argument names
 		obsolete
-			"Use `arguments_name_32' instead."
+			"Use `arguments_name_32' instead  [2017-11-30]."
 		do
 			Result := implementation.arguments_name
 		end
@@ -233,7 +233,7 @@ feature -- Status setting
 			-- Set `arguments_name' of current
 			-- as a variable list of argument names.
 		obsolete
-			"Use `set_arguments_32' instead."
+			"Use `set_arguments_32' instead  [2017-11-30]."
 		require
 			args_name_not_void: args_name /= Void
 			args_type_not_void: args_type /= Void

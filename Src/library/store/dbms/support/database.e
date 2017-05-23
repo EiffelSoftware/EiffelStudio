@@ -90,7 +90,7 @@ feature -- For DATABASE_FORMAT
 	string_format (object: detachable STRING): STRING
 			-- String representation in SQL of `object'
 		obsolete
-			"Use `string_format_32' instead."
+			"Use `string_format_32' instead [2017-11-30]."
 		deferred
 		end
 
@@ -425,7 +425,7 @@ feature -- For DATABASE_PROC
 	map_var_name (par_name: STRING): STRING
 			-- Redefined for Sybase
 		obsolete
-			"Use `map_var_name_32' instead."
+			"Use `map_var_name_32' instead [2017-11-30]."
 		require
 			par_name_not_void: par_name /= Void
 		do
@@ -435,7 +435,7 @@ feature -- For DATABASE_PROC
 	Select_text (proc_name: STRING): STRING
 			-- SQL query to get stored procedure text
 		obsolete
-			"Use `Select_text_32' instead."
+			"Use `Select_text_32' instead  [2017-11-30]."
 		require
 			proc_name_not_void: proc_name /= Void
 		do
@@ -445,7 +445,7 @@ feature -- For DATABASE_PROC
 	Select_exists (name: STRING): STRING
 			-- SQL query to test stored procedure existing
 		obsolete
-			"Use `Select_exists_32' instead."
+			"Use `Select_exists_32' instead  [2017-11-30]."
 		require
 			name_not_void: name /= Void
 		do
@@ -1053,7 +1053,7 @@ feature -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

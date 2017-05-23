@@ -55,7 +55,7 @@ feature -- Access
 	last_parsed_query : detachable STRING
 			-- Last parsed SQL query
 		obsolete
-			"Use `last_parsed_query_32' instead."
+			"Use `last_parsed_query_32' instead [2017-11-30]."
 		do
 			if attached implementation.last_parsed_query_32 as l_s then
 				Result := l_s.as_string_8
@@ -134,7 +134,7 @@ feature -- Status report
 	error_m: STRING
 			-- Error message.
 		Obsolete
-			"Please use `{DB_CONTROL}.error_message'."
+			"Please use `{DB_CONTROL}.error_message' [2017-11-30]."
 		do
 			Result := error_message
 		end
@@ -142,7 +142,7 @@ feature -- Status report
 	error_c: INTEGER
 			-- Error code.
 		Obsolete
-			"Please use `{DB_CONTROL}.error_code'."
+			"Please use `{DB_CONTROL}.error_code' [2017-11-30]."
 		do
 			Result := error_code
 		end
@@ -430,7 +430,7 @@ feature {NONE} -- Status report
 			-- Does `map_table' need to be updated?
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

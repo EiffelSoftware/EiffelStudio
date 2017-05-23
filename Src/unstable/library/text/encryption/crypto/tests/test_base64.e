@@ -76,6 +76,17 @@ feature -- Test routines
 			assert("test cases#07", base64_decoded_string ("Zm9vYmFy").same_string ("foobar"))
 		end
 
+	test_cases_decoding_paddingless
+		local
+			expected: STRING
+		do
+			assert("test cases#02", base64_decoded_string ("Zg").same_string ("f"))
+			assert("test cases#03", base64_decoded_string ("Zm8").same_string ("fo"))
+			assert("test cases#04", base64_decoded_string ("Zm9v").same_string ("foo"))
+			assert("test cases#05", base64_decoded_string ("Zm9vYg").same_string ("foob"))
+			assert("test cases#06", base64_decoded_string ("Zm9vYmE").same_string ("fooba"))
+			assert("test cases#07", base64_decoded_string ("Zm9vYmFy").same_string ("foobar"))
+		end
 
 feature -- Helpers
 

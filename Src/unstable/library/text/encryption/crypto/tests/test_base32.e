@@ -76,6 +76,18 @@ feature -- Test routines
 			assert ("test case#7", base32_decoded_string ("MZXW6YTBOI======").same_string ("foobar"))
 		end
 
+	test_cases_decoding_paddingless
+		local
+			expected: STRING
+		do
+			assert ("test case#2", base32_decoded_string ("MY").same_string ("f"))
+			assert ("test case#3", base32_decoded_string ("MZXQ").same_string ("fo"))
+			assert ("test case#4", base32_decoded_string ("MZXW6").same_string ("foo"))
+			assert ("test case#5", base32_decoded_string ("MZXW6YQ").same_string ("foob"))
+			assert ("test case#6", base32_decoded_string ("MZXW6YTB").same_string ("fooba"))
+			assert ("test case#7", base32_decoded_string ("MZXW6YTBOI").same_string ("foobar"))
+		end
+
 
 feature -- Helpers
 

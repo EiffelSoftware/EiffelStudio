@@ -25,7 +25,7 @@ feature -- base64 encoder
 		local
 			i,n: INTEGER
 			i1,i2,i3: INTEGER
-			l_map: STRING_8
+			l_map: READABLE_STRING_8
 		do
 			has_error := False
 			l_map := character_map
@@ -62,7 +62,7 @@ feature -- base64 encoder
 		local
 			i,n: INTEGER
 			i1,i2,i3: INTEGER
-			l_map: STRING_8
+			l_map: READABLE_STRING_8
 		do
 			has_error := False
 			l_map := character_map
@@ -95,14 +95,14 @@ feature -- base64 encoder
 
 feature -- Decoder
 
-	decoded_string (v: STRING): STRING
+	decoded_string (v: READABLE_STRING_8): STRING
 			-- base64 decoded value of `s'.	
 		do
 			create Result.make (v.count)
 			decode_string_to_buffer (v, Result)
 		end
 
-	decode_string_to_buffer (v: STRING; a_buffer: STRING)
+	decode_string_to_buffer (v: READABLE_STRING_8; a_buffer: STRING)
 			-- Write base64 decoded value of `s' into `a_buffer'.
 		local
 			byte_count: INTEGER
@@ -110,7 +110,7 @@ feature -- Decoder
 			bytes: ARRAY [INTEGER]
 			tmp1, tmp2: INTEGER
 			done: BOOLEAN
-			l_map: STRING_8
+			l_map: READABLE_STRING_8
 			c: CHARACTER
 		do
 			has_error := False
@@ -127,19 +127,25 @@ feature -- Decoder
 			loop
 				byte_count := 0
 				from
-					i := 1
+					i := byte_count + 1
 				until
-					i > nb_bytes or has_error
+					i > nb_bytes or has_error or pos >= n
 				loop
-					pos := next_encoded_character_position (v, pos)
-					if pos <= n then
-						c := v [pos]
-						if c /= '=' then
-							bytes[i] := character_to_value (c)
-							byte_count := byte_count + 1
+					if pos < n then
+						pos := next_encoded_character_position (v, pos)
+						if pos <= n then
+							c := v [pos]
+							if c /= '=' then
+								bytes[i] := character_to_value (c)
+								byte_count := byte_count + 1
+							end
+						else
+							has_error := True
 						end
 					else
-						has_error := True
+							-- Consider as missing padding '='
+						bytes[i] := character_to_value (c)
+						byte_count := byte_count + 1
 					end
 					i := i + 1
 				end
@@ -165,7 +171,7 @@ feature -- Decoder
 
 feature {NONE} -- Implementation
 
-	append_triple_encoded_to (i1,i2,i3: INTEGER; a_map: STRING; a_output: STRING)
+	append_triple_encoded_to (i1,i2,i3: INTEGER; a_map: READABLE_STRING_8; a_output: STRING)
 		local
 			i,j,n: INTEGER
 			c: INTEGER
@@ -195,7 +201,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	next_encoded_character_position (v: STRING; from_pos: INTEGER): INTEGER
+	next_encoded_character_position (v: READABLE_STRING_8; from_pos: INTEGER): INTEGER
 			-- Next encoded character position from `v' starting after `from_pos' index.
 			-- Result over `v.count' denodes no remaining decodable position
 			--| Mainly to handle base64 encoded text on multiple line

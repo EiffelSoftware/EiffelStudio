@@ -119,7 +119,7 @@ feature -- Test routines
 			loop
 				plain := (test_vectors [i]) [1]
 				expected := (test_vectors [i]) [3]
-				assert ("True", l_bcrypt.is_valid_password_unicode (plain, expected))
+				assert ("True", l_bcrypt.is_valid_password (plain, expected))
 				i := i + 1
 			end
 			print ("%N")
@@ -194,8 +194,12 @@ feature -- Test routines
 		do
 			long := 0x80000000
 			create l_bcrypt.make
+			assert ("valid log round", l_bcrypt.is_valid_log_round (10))
 			assert ("Equals", 1024 = l_bcrypt.rounds_for_log_rounds (10))
+
+			assert ("valid log round", l_bcrypt.is_valid_log_round (31))
 			assert ("Equals", long = l_bcrypt.rounds_for_log_rounds (31))
+
 		end
 
 

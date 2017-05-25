@@ -2422,7 +2422,9 @@ rt_private void rt_put_gen_seq (EIF_TYPE a_type, EIF_TYPE_INDEX *a_types, EIF_TY
 
 rt_public EIF_BOOLEAN eif_is_attached_type2 (EIF_TYPE ftype)
 {
-	return EIF_TEST(RT_CONF_IS_ATTACHED_FLAG(ftype.annotations)); 
+		/* A type is attached if it is marked attached or if it is expanded. */
+	return EIF_TEST(RT_CONF_IS_ATTACHED_FLAG(ftype.annotations) ||
+		EIF_IS_EXPANDED_TYPE(System(eif_cid_map[ftype.id])));
 }
 
 /*------------------------------------------------------------------*/
@@ -2492,8 +2494,12 @@ rt_public EIF_TYPE eif_non_attached_type2 (EIF_TYPE ftype)
 
 rt_public EIF_TYPE eif_attached_type2 (EIF_TYPE ftype)
 {
-	ftype.annotations &= ~DETACHABLE_FLAG;
-	ftype.annotations |= ATTACHED_FLAG;
+	if (EIF_IS_EXPANDED_TYPE(System(eif_cid_map[ftype.id]))) {
+		CHECK("No marks", !RT_CONF_HAS_ATTACHMENT_MARK(ftype.annotations));
+	} else {
+		ftype.annotations &= ~DETACHABLE_FLAG;
+		ftype.annotations |= ATTACHED_FLAG;
+	}
 	return ftype;
 }
 

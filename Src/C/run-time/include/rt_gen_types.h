@@ -135,7 +135,7 @@ extern "C" {
 /* Conveniences. */
 
 /* Non-contracted versions. */
-#define RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(g)	((g) & (ATTACHED_FLAG | DETACHABLE_FLAG))
+#define RT_CONF_HAS_ATTACHMENT_MARK_FLAG(g)	((g) & (ATTACHED_FLAG | DETACHABLE_FLAG))
 #define RT_CONF_HAS_VARIANT_MARK_FLAG(g)		((g) & (VARIANT_FLAG | FROZEN_FLAG | POLY_FLAG))
 #define RT_CONF_IS_ATTACHED_FLAG(g)			((g) & ATTACHED_FLAG)
 #define RT_CONF_IS_DETACHABLE_FLAG(g)		((g) & DETACHABLE_FLAG)
@@ -148,7 +148,7 @@ extern "C" {
 #ifdef EIF_ASSERTIONS
 	/* For each macro, we first check that `g' is indeed an annotation
 	 * before checking the proper flag. */
-#define RT_CONF_HAS_ATTACHEMENT_MARK_TYPE_IN_ARRAY(g)	(CHECK_IN_EXPR("Has annotation", RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(g)), RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(g))
+#define RT_CONF_HAS_ATTACHMENT_MARK_TYPE_IN_ARRAY(g)	(CHECK_IN_EXPR("Has annotation", RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(g)), RT_CONF_HAS_ATTACHMENT_MARK_FLAG(g))
 #define RT_CONF_HAS_VARIANT_MARK_TYPE_IN_ARRAY(g)		(CHECK_IN_EXPR("Has annotation", RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(g)), RT_CONF_HAS_VARIANT_MARK_FLAG(g))
 #define RT_CONF_IS_ATTACHED_TYPE_IN_ARRAY(g)			(CHECK_IN_EXPR("Has annotation", RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(g)), RT_CONF_IS_ATTACHED_FLAG(g))
 #define RT_CONF_IS_DETACHABLE_TYPE_IN_ARRAY(g)		(CHECK_IN_EXPR("Has annotation", RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(g)), RT_CONF_IS_DETACHABLE_FLAG(g))
@@ -159,7 +159,7 @@ extern "C" {
 
 #else
 	/* Non-contracted versions. */
-#define RT_CONF_HAS_ATTACHEMENT_MARK_TYPE_IN_ARRAY(g)	RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(g)
+#define RT_CONF_HAS_ATTACHMENT_MARK_TYPE_IN_ARRAY(g)	RT_CONF_HAS_ATTACHMENT_MARK_FLAG(g)
 #define RT_CONF_HAS_VARIANT_MARK_TYPE_IN_ARRAY(g)		RT_CONF_HAS_VARIANT_MARK_FLAG(g)
 #define RT_CONF_IS_ATTACHED_TYPE_IN_ARRAY(g)			RT_CONF_IS_ATTACHED_FLAG(g)
 #define RT_CONF_IS_DETACHABLE_TYPE_IN_ARRAY(g)		RT_CONF_IS_DETACHABLE_FLAG(g)
@@ -192,13 +192,13 @@ rt_private rt_inline int rt_is_conforming_annotation (EIF_TYPE source, EIF_TYPE 
 		result = 1;
 	} else {
 			/* If annotations are missing we need to create them. */
-		if (!RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(source.annotations)) {
+		if (!RT_CONF_HAS_ATTACHMENT_MARK_FLAG(source.annotations)) {
 			source.annotations |= DETACHABLE_FLAG;
 		}
 		if (!RT_CONF_HAS_VARIANT_MARK_FLAG(source.annotations)) {
 			source.annotations |= VARIANT_FLAG;
 		}
-		if (!RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(target.annotations)) {
+		if (!RT_CONF_HAS_ATTACHMENT_MARK_FLAG(target.annotations)) {
 			target.annotations |= DETACHABLE_FLAG;
 		}
 		if (!RT_CONF_HAS_VARIANT_MARK_FLAG(target.annotations)) {

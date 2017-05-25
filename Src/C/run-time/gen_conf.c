@@ -1078,7 +1078,7 @@ rt_public int eif_gen_conf2 (EIF_TYPE stype, EIF_TYPE ttype)
 			/* Target is not expanded and not NONE, but source is NONE.
 			 * It only conforms if target is detachable. */
 		CHECK("NONE type", RT_CONF_IS_NONE_TYPE(stype.id));
-		return RT_CONF_IS_DETACHABLE_FLAG(ttype.annotations) || !RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(ttype.annotations);
+		return RT_CONF_IS_DETACHABLE_FLAG(ttype.annotations) || !RT_CONF_HAS_ATTACHMENT_MARK_FLAG(ttype.annotations);
 	} else {
 		if (EIF_IS_EXPANDED_TYPE(System(eif_cid_map[stype.id]))) {
 				/* Source is expanded, we force the attachment mark, otherwise
@@ -1087,7 +1087,7 @@ rt_public int eif_gen_conf2 (EIF_TYPE stype, EIF_TYPE ttype)
 				* that this is because in `rt_id_of' we clear the annotations when
 				* type is expanded. We clear it to maintain as much backward compatibility
 				* with existing code. */
-			CHECK("no attachment marks", !RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(stype.annotations) || RT_CONF_IS_ATTACHED_FLAG(stype.annotations));
+			CHECK("no attachment marks", !RT_CONF_HAS_ATTACHMENT_MARK_FLAG(stype.annotations) || RT_CONF_IS_ATTACHED_FLAG(stype.annotations));
 			stype.annotations |= ATTACHED_FLAG;
 		}
 			/* If `nnotations are not compatible, the types are not conforming. */

@@ -56,7 +56,7 @@
 #define eif_thr_yield()
 #define eif_thr_join_all()
 #define eif_thr_wait(current_obj,get_terminated_func)
-#define eif_thr_wait_with_timeout(current_obj,get_terminated_func,tms) EIF_FALSE
+#define eif_thr_wait_with_timeout(current_obj,get_terminated_func,tms) EIF_TRUE
 #define eif_thr_join(term)
 
 #define eif_thr_thread_id() NULL
@@ -73,7 +73,7 @@
 #define eif_thr_sem_create(count) NULL
 #define eif_thr_sem_wait(a_sem_pointer)
 #define eif_thr_sem_post(a_sem_pointer)
-#define eif_thr_sem_trywait(a_sem_pointer) EIF_FALSE
+#define eif_thr_sem_trywait(a_sem_pointer) EIF_TRUE
 #define eif_thr_sem_destroy(a_sem_pointer)
 
 #define eif_thr_rwl_create() NULL
@@ -85,14 +85,14 @@
 #define eif_thr_mutex_create() NULL
 #define eif_thr_mutex_lock(a_mutex_pointer)
 #define eif_thr_mutex_unlock(a_mutex_pointer)
-#define eif_thr_mutex_trylock(a_mutex_pointer) EIF_FALSE
+#define eif_thr_mutex_trylock(a_mutex_pointer) EIF_TRUE
 #define eif_thr_mutex_destroy(a_mutex_pointer)
 
 #define eif_thr_cond_create() NULL
 #define eif_thr_cond_broadcast(a_cond_ptr)
 #define eif_thr_cond_signal(a_cond_ptr)
 #define eif_thr_cond_wait(a_cond_ptr,a_mutex_ptr)
-#define eif_thr_cond_wait_with_timeout(a_cond_ptr,a_mutex_ptr,a_timeout) 0
+#define eif_thr_cond_wait_with_timeout(a_cond_ptr,a_mutex_ptr,a_timeout) 1
 #define eif_thr_cond_destroy(a_cond_ptr)
 
 #if !defined(EIF_WINDOWS) && !defined(VXWORKS)

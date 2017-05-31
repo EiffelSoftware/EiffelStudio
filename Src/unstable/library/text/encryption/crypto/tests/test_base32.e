@@ -42,6 +42,14 @@ feature -- Test routines
 			assert ("unicode test_decoded", uni.same_string ({STRING_32} "你好"))
 		end
 
+	test_cases_bytes_encoding
+		local
+			expected: STRING
+		do
+			assert("test cases#b01", base32_bytes_encoded_string (<<('f').code.to_natural_8, ('o').code.to_natural_8>>).same_string ("MZXQ===="))
+			assert("test cases#b02", base32_bytes_encoded_string (<<('f').code.to_natural_8, ('o').code.to_natural_8, ('o').code.to_natural_8>>).same_string ("MZXW6==="))
+		end
+
 	test_cases_encoding
 		local
 			expected: STRING
@@ -68,8 +76,28 @@ feature -- Test routines
 			assert ("test case#7", base32_decoded_string ("MZXW6YTBOI======").same_string ("foobar"))
 		end
 
+	test_cases_decoding_paddingless
+		local
+			expected: STRING
+		do
+			assert ("test case#2", base32_decoded_string ("MY").same_string ("f"))
+			assert ("test case#3", base32_decoded_string ("MZXQ").same_string ("fo"))
+			assert ("test case#4", base32_decoded_string ("MZXW6").same_string ("foo"))
+			assert ("test case#5", base32_decoded_string ("MZXW6YQ").same_string ("foob"))
+			assert ("test case#6", base32_decoded_string ("MZXW6YTB").same_string ("fooba"))
+			assert ("test case#7", base32_decoded_string ("MZXW6YTBOI").same_string ("foobar"))
+		end
+
 
 feature -- Helpers
+
+	base32_bytes_encoded_string (a_bytes: ARRAY [NATURAL_8]): STRING
+		local
+			base32: BASE32
+		do
+			create base32
+			Result := base32.bytes_encoded_string (a_bytes)
+		end
 
 	base32_encoded_string (s: READABLE_STRING_8): STRING
 		local

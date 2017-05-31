@@ -27,6 +27,7 @@ feature -- Test routines
 	test_sha1_no_reset
 			-- Test SHA1 without reset.
 		do
+			sha1.reset
 			assert ("", update_sha1_string_no_reset ("").is_case_insensitive_equal ("da39a3ee5e6b4b0d3255bfef95601890afd80709"))
 			assert ("", update_sha1_string_no_reset ("a").is_case_insensitive_equal ("86f7e437faa5a7fce15d1ddcb9eaeaea377667b8"))
 				-- "abc"
@@ -97,7 +98,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

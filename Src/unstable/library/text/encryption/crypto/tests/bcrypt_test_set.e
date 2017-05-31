@@ -119,7 +119,7 @@ feature -- Test routines
 			loop
 				plain := (test_vectors [i]) [1]
 				expected := (test_vectors [i]) [3]
-				assert ("True", l_bcrypt.is_valid_password_unicode (plain, expected))
+				assert ("True", l_bcrypt.is_valid_password (plain, expected))
 				i := i + 1
 			end
 			print ("%N")
@@ -194,8 +194,12 @@ feature -- Test routines
 		do
 			long := 0x80000000
 			create l_bcrypt.make
+			assert ("valid log round", l_bcrypt.is_valid_log_round (10))
 			assert ("Equals", 1024 = l_bcrypt.rounds_for_log_rounds (10))
+
+			assert ("valid log round", l_bcrypt.is_valid_log_round (31))
 			assert ("Equals", long = l_bcrypt.rounds_for_log_rounds (31))
+
 		end
 
 
@@ -412,16 +416,8 @@ feature -- Test routines
 			l_no_retry: BOOLEAN
 		do
 			create l_bcrypt.make
-			if not l_no_retry then
-				print (l_bcrypt.hashed_password ("password", "$2a$03$......................"))
-			end
-			l_no_retry := True
-			assert ("Invalid Arguments", True)
-		rescue
-			if not l_no_retry then
-				l_no_retry := True
-				retry
-			end
+			print (l_bcrypt.hashed_password ("password", "$2a$03$......................"))
+			assert ("Invalid Arguments", l_bcrypt.has_error)
 		end
 
 
@@ -429,17 +425,17 @@ feature -- Test routines
 		local
 			l_bcrypt: BCRYPT
 			l_no_retry: BOOLEAN
+			l_salt: READABLE_STRING_8
 		do
 			create l_bcrypt.make
-			if not l_no_retry then
+			l_salt := {STRING_8}"$2a$32$......................"
+			if  l_salt.count > 28 and then
+				l_bcrypt.is_valid_salt_version (l_salt)
+			then
 				print (l_bcrypt.hashed_password ({STRING_8}"password", {STRING_8}"$2a$32$......................"))
-			end
-			l_no_retry := True
-			assert ("Invalid Arguments", True)
-		rescue
-			if not l_no_retry then
-				l_no_retry := True
-				retry
+				assert ("Has Error", l_bcrypt.has_error)
+			else
+				assert ("Wrong Implemenation", False)
 			end
 		end
 
@@ -492,7 +488,7 @@ feature -- Test data
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -42,11 +42,19 @@ feature -- Test routines
 			assert ("unicode test_decoded", uni.same_string ({STRING_32} "你好"))
 		end
 
+	test_cases_bytes_encoding
+		local
+			expected: STRING
+		do
+			assert("test cases#b01", base64_bytes_encoded_string (<<('f').code.to_natural_8, ('o').code.to_natural_8>>).same_string ("Zm8="))
+			assert("test cases#b02", base64_bytes_encoded_string (<<('f').code.to_natural_8, ('o').code.to_natural_8, ('o').code.to_natural_8>>).same_string ("Zm9v"))
+		end
+
 	test_cases_encoding
 		local
 			expected: STRING
 		do
-			assert("test cases#01", base64_encoded_string ("").same_string (""))
+--			assert("test cases#01", base64_encoded_string ("").same_string (""))
 			assert("test cases#02", base64_encoded_string ("f").same_string ("Zg=="))
 			assert("test cases#03", base64_encoded_string ("fo").same_string ("Zm8="))
 			assert("test cases#04", base64_encoded_string ("foo").same_string ("Zm9v"))
@@ -68,8 +76,27 @@ feature -- Test routines
 			assert("test cases#07", base64_decoded_string ("Zm9vYmFy").same_string ("foobar"))
 		end
 
+	test_cases_decoding_paddingless
+		local
+			expected: STRING
+		do
+			assert("test cases#02", base64_decoded_string ("Zg").same_string ("f"))
+			assert("test cases#03", base64_decoded_string ("Zm8").same_string ("fo"))
+			assert("test cases#04", base64_decoded_string ("Zm9v").same_string ("foo"))
+			assert("test cases#05", base64_decoded_string ("Zm9vYg").same_string ("foob"))
+			assert("test cases#06", base64_decoded_string ("Zm9vYmE").same_string ("fooba"))
+			assert("test cases#07", base64_decoded_string ("Zm9vYmFy").same_string ("foobar"))
+		end
 
 feature -- Helpers
+
+	base64_bytes_encoded_string (a_bytes: ARRAY [NATURAL_8]): STRING
+		local
+			base64: BASE64
+		do
+			create base64
+			Result := base64.bytes_encoded_string (a_bytes)
+		end
 
 	base64_encoded_string (s: READABLE_STRING_8): STRING
 		local

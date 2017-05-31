@@ -20,75 +20,112 @@ feature -- Status report
 
 feature -- base32 encoder
 
+	bytes_encoded_string (a_bytes: READABLE_INDEXABLE [NATURAL_8]): STRING_8
+			-- base32 encoded value of byte array `a_bytes'.
+		local
+			i,n: INTEGER
+			i1,i2,i3,i4,i5: INTEGER
+			l_map: READABLE_STRING_8
+		do
+			has_error := False
+			l_map := character_map
+			n := 8 * ((a_bytes.upper - a_bytes.lower + 1 + 4) // 5)
+
+			from
+				i := a_bytes.lower
+				create Result.make (n)
+				n := a_bytes.upper
+			until
+				i > n
+			loop
+				i1 := a_bytes.item (i).as_integer_32
+				if i < n then
+					i := i + 1
+					i2 := a_bytes.item (i).as_integer_32
+					if i < n then
+						i := i + 1
+						i3 := a_bytes.item (i).as_integer_32
+						if i < n then
+							i := i + 1
+							i4 := a_bytes.item (i).as_integer_32
+							if i < n then
+								i := i + 1
+								i5 := a_bytes.item (i).as_integer_32
+							else
+								i5 := -1
+							end
+						else
+							i4 := -1
+						end
+					else
+						i3 := -1
+					end
+				else
+					i2 := -1
+				end
+				append_quintuple_encoded_to (i1, i2, i3, i4, i5, l_map, Result)
+				i := i + 1
+			end
+		end
+
 	encoded_string (s: READABLE_STRING_8): STRING_8
 			-- base32 encoded value of `s'.
 		local
 			i,n: INTEGER
-			c: INTEGER
-			f: SPECIAL [BOOLEAN]
-			l_map: STRING_8
+			i1,i2,i3,i4,i5: INTEGER
+			l_map: READABLE_STRING_8
 		do
 			has_error := False
 			l_map := character_map
-			from
-				n := s.count
-				i := (8 * n) \\ 5
-				if i > 0 then
-					create f.make_filled (False, 8 * n + (5 - i))
-				else
-					create f.make_filled (False, 8 * n)
-				end
-				i := 0
-			until
-				i > n - 1
-			loop
-				c := s.item (i + 1).code
-				f[8 * i + 0] := c.bit_test(7)
-				f[8 * i + 1] := c.bit_test(6)
-				f[8 * i + 2] := c.bit_test(5)
-				f[8 * i + 3] := c.bit_test(4)
-				f[8 * i + 4] := c.bit_test(3)
-				f[8 * i + 5] := c.bit_test(2)
-				f[8 * i + 6] := c.bit_test(1)
-				f[8 * i + 7] := c.bit_test(0)
-				i := i + 1
-			end
-			from
-				i := 0
-				n := f.count
-				create Result.make (n // 5)
-			until
-				i > n - 1
-			loop
-				c := 0
-				if f[i + 0] then c := c + 0x10 end
-				if f[i + 1] then c := c + 0x8 end
-				if f[i + 2] then c := c + 0x4 end
-				if f[i + 3] then c := c + 0x2 end
-				if f[i + 4] then c := c + 0x1 end
-				Result.extend (l_map.item (c + 1))
-				i := i + 5
-			end
+			n := 8 * ((s.count + 4) // 5)
 
-			i := Result.count \\ 8
-			if i > 0 then
-				from until i > 7 loop
-					Result.extend ('=')
+			from
+				i := 1
+				create Result.make (n)
+				n := s.count
+			until
+				i > n
+			loop
+				i1 := s.item_code (i)
+				if i < n then
 					i := i + 1
+					i2 := s.item_code (i)
+					if i < n then
+						i := i + 1
+						i3 := s.item_code (i)
+						if i < n then
+							i := i + 1
+							i4 := s.item_code (i)
+							if i < n then
+								i := i + 1
+								i5 := s.item_code (i)
+							else
+								i5 := -1
+							end
+						else
+							i4 := -1
+						end
+					else
+						i3 := -1
+					end
+				else
+					i2 := -1
 				end
+				append_quintuple_encoded_to (i1, i2, i3, i4, i5, l_map, Result)
+				i := i + 1
 			end
 		end
 
 feature -- Decoder
 
-	decoded_string (v: STRING): STRING
+	decoded_string (v: READABLE_STRING_8): STRING
 			-- base32 decoded value of `s'.	
 		do
 			create Result.make (v.count)
 			decode_string_to_buffer (v, Result)
 		end
 
-	decode_string_to_buffer (v: STRING; a_buffer: STRING)
+	decode_string_to_buffer (v: READABLE_STRING_8; a_buffer: STRING)
 			-- Write base32 decoded value of `s' into `a_buffer'
 		local
 			byte_count: INTEGER
@@ -113,7 +150,7 @@ feature -- Decoder
 				from
 					i := 1
 				until
-					i > nb_bytes or has_error
+					i > nb_bytes or has_error or pos >= n
 				loop
 					pos := next_encoded_character_position (v, pos)
 					if pos <= n then
@@ -163,7 +200,58 @@ feature -- Decoder
 
 feature {NONE} -- Implementation
 
-	next_encoded_character_position (v: STRING; from_pos: INTEGER): INTEGER
+	append_quintuple_encoded_to (i1,i2,i3,i4,i5: INTEGER; a_map: READABLE_STRING_8; a_output: STRING)
+		local
+			i,j,n: INTEGER
+			c: INTEGER
+			t: INTEGER
+		do
+			--| [ 'f'  ][ 'o'  ][ 'o'  ][      ][      ]
+			--| [ 102  ][ 111  ][ 111  ][   0  ][   0  ]
+			--| 0110011001101111011011110000000000000000
+			--| [ 12][ 25][ 23][ 11][ 30][ 0 ][ 0 ][ 0 ]
+			--| [ M ][ Z ][ X ][ W ][ 6 ][ = ][ = ][ = ]
+			a_output.extend (a_map.item (1 + i1 |>> 3))
+			if i2 >= 0 then
+				a_output.extend (a_map.item (1 + (i1 |<< 2 & 0b11111) + (i2 |>> 6 & 0b11111) ))
+				a_output.extend (a_map.item (1 + i2 |>> 1 & 0b11111) )
+				if i3 >= 0 then
+					a_output.extend (a_map.item (1 + (i2 |<< 4 & 0b11111) + (i3 |>> 4 & 0b11111) ))
+					if i4 >= 0 then
+						a_output.extend (a_map.item (1 + (i3 |<< 1 & 0b11111) + (i4 |>> 7 & 0b11111 )) )
+						a_output.extend (a_map.item (1 + (i4 |>> 2 & 0b11111)) )
+						if i5 >= 0 then
+							a_output.extend (a_map.item (1 + (i4 |<< 3 & 0b11111) + (i5 |>> 5 & 0b11111 )) )
+							a_output.extend (a_map.item (1 + i5 & 0b11111 ))
+						else
+							a_output.extend (a_map.item (1 + (i4 |<< 3 & 0b11111) ) )
+							a_output.append_character ('=')
+						end
+					else
+						a_output.extend (a_map.item (1 + (i3 |<< 1 & 0b11111) ))
+						a_output.append_character ('=')
+						a_output.append_character ('=')
+						a_output.append_character ('=')
+					end
+				else
+					a_output.extend (a_map.item (1 + (i2 |<< 4 & 0b11111) ))
+					a_output.append_character ('=')
+					a_output.append_character ('=')
+					a_output.append_character ('=')
+					a_output.append_character ('=')
+				end
+			else
+				a_output.extend (a_map.item (1 + (i1 |<< 2) & 0b11111))
+				a_output.append_character ('=')
+				a_output.append_character ('=')
+				a_output.append_character ('=')
+				a_output.append_character ('=')
+				a_output.append_character ('=')
+				a_output.append_character ('=')
+			end
+		end
+
+	next_encoded_character_position (v: READABLE_STRING_8; from_pos: INTEGER): INTEGER
 			-- Next encoded character position from `v' starting after `from_pos' index.
 			-- Result over `v.count' denodes no remaining decodable position
 			--| Mainly to handle base32 encoded text on multiple line
@@ -196,9 +284,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	character_map: STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567="
-			--|              012345678901234567890123456789012
+	character_map: STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
+			--|              01234567890123456789012345678901
 			--|              0         1         2         3
+			--| pad= '='
 
 	character_to_value (c: CHARACTER): INTEGER
 		do

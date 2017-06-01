@@ -1,0 +1,169 @@
+/* Footer specific */
+
+#footer{
+	background: $footer-bg-color;
+	@include mask;
+	font-size: $base-footer-size;
+	color: $footer-text-color;
+	.copyrights{
+		@extend %listreset;
+//		@include grid(12);
+		a {
+			color: $footer-link-color;
+		}
+		padding-top: 10px !important;
+		margin-bottom: 40px;
+		//border-top: 1px solid #1a3d50;
+		li{
+			float: left;
+			padding: 0 7px 0 ;
+			position: relative;
+			&:after{
+				background: url(../images/sep2.png) no-repeat;
+				width: 2px;
+				height: 14px;
+				position: absolute;
+				top: 3px;
+				left: 0;
+				content: '';
+				a{
+					display: inline-block;
+				}
+			}
+			&:first-child{
+				padding-left: 0;
+				&:after{
+					display: none;
+				}
+			}
+		}
+	}
+
+	>.container{
+		padding: 44px 0 60px;
+		min-height: 150px;
+		.btn-holder{
+//			@include grid(3);
+			margin-left: 0px;
+			margin-right: 0px;
+			.btn {
+				@include linear-gradient(#99cc33, #769830);
+				@include border-radius(4px);
+//				@include grid(2);
+				height: 48px;
+				display: block;
+				margin: 0 0 5px 0px;
+				color: $white;
+				letter-spacing: 1px;
+				position: relative;
+				padding: 15px 42px 0px 14px;
+				font: #{$base-font-size}/16px $museo-sans500;
+				&:after{
+					width: 30px;
+					height: 30px;
+					position: absolute;
+					right: 10px;
+					top: 8px;
+					content: '';
+				}
+
+				&.btn-account{
+					//@include linear-gradient(#2B4054, #12273A);
+					border: solid 1px rgba(210,210,210, 0.5);
+					background: $footer-bg-color;
+					color: $white;
+					&:after{
+						background: url(../images/person277_b_30x30.png) no-repeat;
+					}
+					&:hover{
+						background-color: #12273A;
+						@include linear-gradient(#12273A, #12273A);
+					}
+				}
+
+				&.btn-download{
+					@include linear-gradient(#99cc33, #769830);
+					color: $white;
+					&:after{
+						background: url(../images/download_b_30x30.png) no-repeat;
+					}
+					&:hover{
+						@include linear-gradient(#89bc2b, #6a8c28);
+					}
+				}
+				&.btn-tryonline{
+					@include linear-gradient(#2B4054, #12273A);
+					color: $white;
+					&:after{
+						background: url(../images/play12_b_30x30.png) no-repeat;
+					}
+					&:hover{
+						 background-color: #12273A;
+						 @include linear-gradient(#12273A, #12273A);
+					}
+				}
+				&.btn-contribute{
+					@include linear-gradient(#3c75d8, #2b4175);
+					color: $white;
+					&:after{
+						background: url(../images/arrows_b_30x30.png) no-repeat;
+					}
+					&:hover{
+						@include linear-gradient(#2A56A3, #2b4175);
+					}
+				}
+			}
+		}
+	}
+
+	.social-networks{
+		@extend %clearfix;
+		li {
+			float: left;
+		}
+	}
+
+	.footer-nav{
+//		@include grid(6);
+		margin-right: auto;
+		margin-left: auto; 
+		>ul{
+			@extend %listreset;
+			text-transform: uppercase; 
+			font: #{$base-font-size} $museo-sans500;
+			>li{
+//				@include grid-width(2);
+				//float: left;
+				padding: 0 10px 6px 0;
+				a{
+					color: $white;
+					display: inline-block;
+					&:hover{
+						color: $footer-link-color;
+					}
+				}
+				div.btn-holder {
+					text-transform: capitalize;
+				}
+				>ul{
+					@extend %listreset;
+					text-transform: capitalize;
+					font-family: $base-font-family;
+					font-size: $base-footer-size;
+					padding: 6px 0 0;
+					>li{
+						a{
+							color: $footer-link-color;
+							display: inline-block;
+							&:hover{
+								color: $footer-link-h-color;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+

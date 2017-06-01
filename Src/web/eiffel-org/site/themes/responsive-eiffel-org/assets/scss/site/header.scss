@@ -1,0 +1,71 @@
+/* Header specific */
+
+#header{
+	min-height: 94px;
+	.logo{
+		@extend .one-fifth;
+		padding: 16px 0 0 10px;
+		a{
+			display: inline-block;
+			vertical-align: top;
+			img{
+				color: #fff;
+				font-size: 48px;
+				vertical-align: top;
+				margin: 0 0 0 -7px;
+			}
+		}
+	}
+	.add-links{
+		@extend .one-fifth;
+		//margin: 0 0 20px;
+		margin-top: 10px;
+		ul{
+			@extend %listreset;
+			text-align: left;
+			font: 12px/18px $museo-sans500;
+			margin: 0 -7px 0 0;
+			text-transform: uppercase;
+			li{
+				margin-top: 5px;
+				display: inline-block;
+				vertical-align: top;
+				position: relative;
+				padding: 0 8px;
+				a{
+					color: #99cc33;
+					&:hover{
+						color: #c7ec7e;
+					}
+				}
+			}
+		}
+	}
+}
+
+.search-form {
+	display: inline-block;
+	height: 24px;
+	background: $white;
+	@include box-shadow(inset 1px 1px 1px 0 rgba(0,0,0,0.4));
+	@include border-radius(4px);
+	input[type="search"],
+	input[type="text"]{
+		border: 0;
+		padding: 0;
+		background: $white;
+		height: 18px;
+		//@include grid-width(2.5);
+		outline: none;
+		font-size: 12px;
+		line-height: 18px;
+	}
+	input[type="image"]{
+		width: 16px;
+		height: 16px;
+	}
+}
+
+.search-form.parent-focus{
+	@include box-shadow(0 0 5px rgba(13,65,67,0.9), inset 1px 1px 1px 0 rgba(0,0,0,0.4));
+}

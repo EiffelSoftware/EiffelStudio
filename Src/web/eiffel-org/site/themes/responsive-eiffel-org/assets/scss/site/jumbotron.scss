@@ -1,0 +1,109 @@
+@import "variables";
+
+.jumbotron >.container {
+	min-height: 300px;
+	position: relative;
+
+	>div {
+		@extend .has-gutter;
+
+		.col {
+			@extend .one-half;
+		}
+		#block-play_eiffel {
+		}	
+		#block-front_header_welcome {
+			margin-top: 55px;
+			.holder {
+				//@include grid-width(6);
+				padding: 0;
+				@include border-radius($front-box-radius);
+				border: 1px solid #fff;
+				background-color: $front-box-bg-color;
+				height: 115px;
+				h3 {
+					padding: 10px;
+					text-align: center;
+				}
+			}
+		}	
+		#block-download_area {
+			.row {
+				padding-left: 10px;
+			}
+			.link-platforms.row {
+				border: none;
+			}
+		}	
+	}
+
+	.social-networks{
+		position: absolute;
+		top: -40px;
+		right: 0px;
+
+		float: right;
+		li {
+			float: left;
+		}
+	}
+	.holder{
+//		//@include grid(7);
+//		overflow: hidden;
+		padding: 10px 0 0 9px;
+//		float: right;
+//		display: inline-block;
+//		clear: both;
+		margin-bottom: 15px;
+		h1{
+			font: 36px/36px $museo-sans500;
+			color: #112935;
+			margin: 0 0 35px;
+			letter-spacing: 2px;
+		}
+		.btn-holder{
+////			@include grid(4);
+			width: auto;
+			border: 1px solid #98dcd4;
+			padding: 0 0 16px;
+			margin: 0 0 0 2px;
+//			float:left;
+			.row{
+//				overflow: hidden;
+				color: #112935;
+				margin: 0 0 14px;
+				font: 14px/19px $museo-sans500;
+				letter-spacing: 1px;
+				text-transform: uppercase;
+				border-bottom: 1px solid #98dcd4;
+			}
+			.btn-download{
+				@include linear-gradient(#99cc33, #769830);
+				@include border-radius(4px);
+//				//@include grid-width(3);
+				width: 300px;
+				height: 63px;
+				display: block;
+				margin: 0 auto 13px auto;
+				font: 30px/63px $museo-sans500;
+				color: $white;
+				letter-spacing: 1px;
+				text-align: center;
+				position: relative;
+				padding: 0 57px 6px 0;
+				&:after{
+					background: url(../images/ico-download.png) no-repeat;
+					width: 37px;
+					height: 37px;
+					position: absolute;
+					right: 16px;
+					top: 13px;
+					content: '';
+				}
+				&:hover{
+					@include linear-gradient(#89bc2b, #6a8c28);
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Beautifying Eiffel</title>
+
+    <link href="../styles/lang-eiffel.css" type="text/css" rel="stylesheet" />
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/prettify.js"></script>
+    <script type="text/javascript" src="../src/lang-eiffel.js"></script>
+
+</head>
+
+<body onload="prettyPrint()">
+<h1>Making Eiffel Prettier</h1>
+
+Here are some snippets.
+
+<!-- Language hints can be put in XML application directive style comments. -->
+<pre class="prettyprint lang-eiffel">
+
+	your_integrator.integral (agent your_function, 0, 1)
+
+	["Brigitte", 3.5, Last_night]
+
+	Bastille_day := [14, "July", 1789]
+
+	string_verbatim_curly: STRING = "{
+		This is a string
+		that spans across multiple lines
+		}"
+
+	string_verbatim_square: STRING = "[
+		This is another string
+		that spans across multiple lines
+		]"
+
+	integer : INTEGER = 123_456_789
+	decimal1: REAL64 = 123_456.123_456
+	decimal2: REAL64 = 1.234_567e-3
+
+</pre>
+
+An entire class with numbered lines.
+
+<pre class="prettyprint lang-eiffel linenums">
+note
+	description: "[
+				APPLICATION implements the "Hello World" service.
+
+				It inherits from WSF_DEFAULT_SERVICE to get default EWF connector ready
+				only `execute' needs to be implemented.
+
+			]"
+
+class
+	HELLO_APPLICATION
+
+inherit
+	WSF_RESPONSE_SERVICE
+
+create
+	make_and_launch
+
+feature {NONE} -- Initialization
+
+	make_and_launch
+		local
+			launcher: WSF_DEFAULT_SERVICE_LAUNCHER
+			opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS
+		do
+			--| Uncomment the following line, to read options from "ewf.ini" configuration file
+			--	create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI} opts.make_from_file ("ewf.ini")
+
+			create launcher.make_and_launch (Current, opts)
+		end
+
+feature {NONE} -- Initialization
+
+	response (req: WSF_REQUEST): WSF_PAGE_RESPONSE
+		do
+			create Result.make
+			Result.put_string ("Hello World")
+		end
+
+end
+</pre>
+
+</body>
+</html>

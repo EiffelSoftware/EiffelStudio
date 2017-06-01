@@ -1,0 +1,357 @@
+/* Elements specific */
+
+#content {
+
+	ul.cards {
+		@extend %listreset;
+		@include grid(3);
+
+		overflow: hidden;
+		padding: 8px 0 0 8px;
+		margin: 0;
+
+		li{
+			@extend .one-third;
+			background: #e9eced;
+			//@include grid-width(4);
+			height: 320px;
+			float: left;
+			margin: 0 18px 26px 18px;
+			text-align: center;
+			@include border-radius(7px);
+			&:hover{
+				background: #e3e7e8;
+			}
+			>a{
+				display: block;
+				padding: 18px 5px 5px 5px;
+			}
+			.ico{
+				width: 52px;
+				height: 52px;
+				padding: 10px;
+				display: inline-block;
+				vertical-align: top;
+				background: #1e3b4b;
+				margin: 0 0 15px;
+				@include border-radius(100%);
+			}
+			h2{
+				color: $green-light;
+				margin: 0 0 8px;
+				font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
+			}
+			p{
+				color: #0C0D0D;
+				a{
+					display: inline-block;
+				}
+			}
+		}
+		li.large-card {
+			height: 365px;
+		}
+		li.big-card {
+			height: 305px;
+		}
+		li.medium-card {
+			height: 225px;
+		}
+		li.small-card {
+			height: 165px;
+		}
+	}
+
+	ul.cms-page-links {
+		//@include grid(12);
+		background: #e9eced;
+		height: 100%;
+		width: 95%;
+		float: left;
+		margin: 0 20px 30px 20px;
+		padding: 10px 10px 10px 10px;
+		text-align: center;
+		list-style-type: none;
+		@include border-radius(10px);
+		display:block;
+		> li{
+			//@include grid-width(2);
+			@include border-radius(10px);
+			background-color: white;
+			display: inline-block;
+			&:hover{
+				background: #e3e7e8;
+				> a { }
+				> form { }
+			}
+		}
+	}
+
+	.promo-area {
+		padding: 10px 20px 10px 20px;
+		min-height: 0px;
+		float: right;
+		margin-right: 30%;
+		border: solid 1px $green-light;
+		background-color: $green-light-bg;
+		@include border-radius(10px);
+		.row {
+			text-transform: uppercase;
+			border-bottom: solid 1px $green-light;
+			margin: 0 0 15px 0;
+		}
+	}
+
+	.info-block {
+		overflow: hidden;
+		position: relative;
+		&:after{
+			background: url(../images/sep.png) no-repeat;
+			width: 22px;
+			height: 2px;
+			position: absolute;
+			bottom: 1px;
+			left: 0;
+			content: ''
+		}
+		h2{
+			color: $green-light;
+			margin: 0 0 19px;
+			padding: 0 0 14px;
+			border-bottom: 1px solid #bfd1da;
+			font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
+		}
+		.post{
+			overflow: hidden;
+			margin: 0 0 13px;
+			h3{
+				color: #0d4143;
+				margin: 0 0 9px;
+				font: #{$base-h3-size}/#{$base-h3-lineheight} $museo-sans500;
+				a{
+					color: #0d4143;
+					&:hover{
+						color: $blue-light;
+					}
+				}
+			}
+			.date{
+				display: block;
+				text-transform: uppercase;
+				color: $green;
+				margin: 0 0 2px;
+				font: #{$base-date-size} $museo-sans500;
+			}
+			p{
+				margin: 0 0 10px;
+				a{
+					font: #{$base-date-size} $museo-sans500;
+					color: #1f3d4d;
+					text-transform: uppercase;
+					&:hover{
+						color: #4c6877;
+					}
+				}
+			}
+		}
+	}
+
+}
+
+#nav{
+	//@include grid(6);
+	font-family: $museo-sans500;
+	font-size: $base-font-size + 2;
+	text-transform: uppercase;
+	padding: 54px 0 0;
+	//@include grid-width(8);
+	ul{
+		@extend %clearfix;
+		@extend %listreset;
+		margin: 0 -11px;
+		text-align: left;
+		letter-spacing: 1px;
+		li{
+			display: inline-block;
+			vertical-align: top;
+			margin: 0 3px 0 4px;
+			position: relative;
+			font-size: $base-font-size - 1;
+			a { 
+				color: $white;
+				padding: 2px;
+			}
+			&:hover > a{
+				color: black;
+				@include border-radius(3px);
+				padding: 2px;
+				background-color: rgba(255,255,255,0.6);
+				@include box-shadow(0 0 10px 0 rgba(17,41,53,0.25));
+			}
+		}
+		.active{
+			a{
+				color: $white;
+			}
+		}
+		a{
+			color: #112935;
+			display: block;
+			&:hover{ color: $white; }
+		}
+		.drop-slide-wrapper{
+			//@include grid-width(2.3);
+			left: 50% !important;
+			top: 100%;
+			margin: 0 0 0 -86px;
+		}
+		.dropdown{
+			width: 100%;
+			text-align: left;
+			padding: 16px 0 0;
+		}
+		&:hover .dropdown{
+			display: block;
+		}
+		ul{
+			background: #4a6d82;
+			border: 1px solid #abc4d4;
+			text-align: center;
+			font-size: 14px;
+			line-height: 21px;
+			position: relative;
+			padding: 1px 0 3px;
+			margin: 0;
+			@include box-shadow(0 0 10px 0 rgba(17,41,53,0.25));
+			&:after,
+			&:before {
+				bottom: 100%;
+				left: 50%;
+				border: solid transparent;
+				content: " ";
+				height: 0;
+				width: 0;
+				position: absolute;
+				pointer-events: none;
+			}
+			&:after {
+				border-color: rgba(74, 109, 130, 0);
+				border-bottom-color: #4a6d82;
+				border-width: 9px 6px;
+				margin-left: -6px;
+			}
+			&:before {
+				border-color: rgba(171, 196, 212, 0);
+				border-bottom-color: #abc4d4;
+				border-width: 10px 7px;
+				margin-left: -7px;
+			}
+			li{
+				display: block;
+				margin: 0;
+			}
+			a{
+				color: #abc4d4;
+				padding: 3px 0 3px;
+				position: relative;
+				&:after,
+				&:before{
+					width: 4px;
+					height: 100%;
+					background: #1a3d50;
+					position: absolute;
+					top: 0;
+					left: -4px;
+					display: none;
+					content: '';
+				}
+				&:before{
+					left: auto;
+					right: -4px;
+				}
+				&:hover{
+					color: $white;
+					background: #1a3d50;
+				}
+				&:hover:after,
+				&:hover:before{
+					display: block;
+				}
+			}
+		}
+	}
+}
+
+.social-networks{
+	@extend %listreset;
+	@extend %clearfix;
+	li{
+		margin: 0 0 0 10px;
+		a{
+			display: block;
+			width: 35px;
+			height: 34px;
+			background: url(../images/ico-social.png) no-repeat;
+			@include hide-text;
+			&:hover{ background: url(../images/ico-social-h.png) no-repeat; }
+		}
+		.facebook{
+			width: 34px;
+		}
+		.linkedin{
+			background-position: -44px 0;
+			&:hover{ background-position: -44px 0; }
+		}
+		.youtube{ 
+			background-position: -89px 0;
+			&:hover{ background-position: -89px 0; }
+		}
+		.twitter{
+			background-position: -134px 0;
+			&:hover{ background-position: -134px 0; }
+		}
+		.googleplus{
+			background-position: -179px 0;
+			width: 34px;
+			&:hover{ background-position: -179px 0; }
+		}
+	}
+}
+
+#breadcrumb {
+	margin-bottom: 10px;
+	font-size: smaller;
+}
+
+.btn-holder {
+	margin-left: 0px;
+	margin-right: 0px;
+	.btn-download {
+		@include linear-gradient(#99cc33, #769830);
+		@include border-radius(4px);
+		height: 48px;
+		display: block;
+		margin: 0 0 5px 0px;
+		color: $white;
+		letter-spacing: 1px;
+		position: relative;
+		padding: 15px 42px 0px 14px;
+		font: #{$base-font-size}/16px $museo-sans500;
+		&:after{
+			width: 30px;
+			height: 30px;
+			position: absolute;
+			right: 10px;
+			top: 8px;
+			content: '';
+		}
+
+		&:after{
+			background: url(../images/download_b_30x30.png) no-repeat;
+		}
+		&:hover{
+			@include linear-gradient(#89bc2b, #6a8c28);
+		}
+	}
+}
+

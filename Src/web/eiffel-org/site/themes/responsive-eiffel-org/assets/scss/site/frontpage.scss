@@ -1,0 +1,29 @@
+/* Front page specific */
+
+@import "jumbotron";
+
+.rss-block {
+	background-color: #fff;
+	padding-top: 10px;
+	.container >ul{
+		@extend .grid;
+		@extend %listreset;
+		//margin: 0 0 0 -70px;
+		>li{
+			@extend .one-third;
+			//@include grid-width(3.8);
+			&:not(:last-child) {	border-right: dotted 1px $green-light; }
+			margin: 0 0 54px 33px;
+			>h2{
+				font: (#{$base-h2-size}-8)/(#{$base-h2-lineheight}-8) $museo_slab500;			
+			}
+			.feed {
+				font-size: $base-small-font-size;
+				line-height: $base-small-line-height;
+				.description {
+					line-height: 18px;
+				}
+			}
+		}
+	}
+}

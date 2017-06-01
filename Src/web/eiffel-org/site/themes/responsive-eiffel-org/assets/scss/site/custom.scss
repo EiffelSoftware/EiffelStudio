@@ -1,0 +1,85 @@
+/* Custom */
+
+.less.active {
+	.button-read-more {
+    	display: none;
+	}
+	.button-read-less {
+		display: block;
+	}
+}
+.button-read-less {
+    display: none;
+}
+.more {
+    margin-top: 10px;
+	table {
+		margin: 0;
+		padding: 0;
+	}
+}
+
+/* Link */
+
+a.link-options {
+  color: white;
+  &:hover {
+	  color: black;
+  }
+}  
+
+a.link-platforms {
+  color: #191922;
+  &:hover {
+	  color: black;
+  }
+}  
+
+#primary-tabs {
+	ul.horizontal {
+		list-style-type: none;
+		li {
+			display: inline;
+			padding: 2px 5px;
+			border: solid 1px #ccf;
+		}
+		li.active {
+			border-color: #99f #99f #ddd;
+			border-style: solid solid none;
+			border-width: 2px 1px 0;
+			padding: 2px 7px 1px;
+		}
+	}
+}
+
+#message li {
+	margin-bottom: 2px;
+	padding: 5px 2px 5px 3px;
+	&.error {
+		background-color: #ffcbba;
+		border-left: solid 4px #f00;
+	}
+	&.warning {
+		background-color: #ffc;
+		border-left: solid 4px #ffd200;
+	}
+
+	&.notice {
+		background-color: #cff2ee;
+		border-left: solid 4px #77ff77;
+	}
+}
+
+
+div.node-blog .info {
+  display: block;
+  font-size: smaller;
+  color: #777;
+  font-style: italic;
+}
+
+/* Hide author and date for CMS pages */
+div.node-page .info {
+  display: none;
+}
+

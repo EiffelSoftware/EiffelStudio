@@ -1,12 +1,13 @@
 ﻿note
 	description: "Representation of an Eiffel type."
+	remark: "At any given time, there is no more than one instance of TYPE representing a given Eiffel type."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	TYPE [G]
 
 inherit

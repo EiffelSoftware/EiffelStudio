@@ -1,0 +1,225 @@
+// clearfix
+%clearfix {
+	&:after {
+		content: " ";
+		display: block;
+		clear: both;
+	}
+}
+
+// reset for list
+%listreset {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+// link color
+@mixin link-color($color) {
+	color: $color;
+	&:hover, &:active, &:focus {
+		color: lighten($color, 25%);
+		text-decoration: none;
+	}
+}
+
+// hide text
+@mixin hide-text {
+	overflow: hidden;
+	text-indent: -9999px;
+}
+
+// bottom links' border
+@mixin link-border($color) {
+	border-bottom: 1px solid lighten($color, 25%);
+	&:hover, &:active, &:focus {
+		border-color: lighten($color, 30%);
+		text-decoration: none;
+	}
+}
+
+// some CSS3 style
+@mixin css3($property, $value) {
+	@each $prefix in -webkit-, -moz-, '' {
+			#{$prefix}#{$property}: $value;
+	}
+}
+
+// box sizing
+@mixin box-sizing($type: border-box) {
+	-webkit-box-sizing: $type;
+		 -moz-box-sizing: $type;
+					box-sizing: $type;
+}
+
+// box shadow
+// sample: @include box-shadow(2px 2px 5px rgba(255,0,0,0.6));
+@mixin box-shadow($shadows...) {
+		-webkit-box-shadow: $shadows;
+		box-shadow: $shadows;
+}
+// border radius
+@mixin border-radius($radius...) {
+		-webkit-border-radius: $radius;
+		border-radius: $radius;
+}
+
+//mask
+@mixin mask{
+	width:100%;
+	overflow:hidden;
+	position:relative;
+}
+// opacity
+@mixin opacity($opacity) {
+	opacity: $opacity;
+	$opacityIE: $opacity * 100;
+	filter: alpha(opacity=$opacityIE);
+}
+
+// font size rem
+@mixin fontsize($size: 24, $base: 16) {
+	font-size: $size + px;
+	font-size: ($size / $base) * 1rem;
+}
+
+// retina images
+@mixin img-retina($image, $extension, $width, $height) {
+	background: url('../images/' + $image + '.' + $extension) no-repeat;
+	width: $width;
+	height: $height;
+
+	@media (min--moz-device-pixel-ratio: 1.3),
+	(-o-min-device-pixel-ratio: 2.6/2),
+	(-webkit-min-device-pixel-ratio: 1.3),
+	(min-device-pixel-ratio: 1.3),
+	(min-resolution: 1.3dppx) {		 
+		background-image: url('../images/' + $image + '@2x' + '.' + $extension);
+		background-size: $width $height;
+	}
+}
+
+// placeholder
+@mixin placeholder {
+	::-webkit-input-placeholder {@content}
+	::-moz-placeholder					{opacity: 1; @content}
+	:-moz-placeholder					 {@content}
+	:-ms-input-placeholder			{@content}
+	.placeholder								{@content}
+}
+
+// full width
+%full-width {
+	padding-left: 9999px;
+	padding-right: 9999px;
+	margin-left: -9999px;
+	margin-right: -9999px;
+}
+
+
+// transition
+@mixin transition ($type:all, $time:0.4s, $ease:ease) {
+	-moz-transition		 : $type $time $ease;
+	-webkit-transition	: $type $time $ease;
+	-o-transition			 : $type $time $ease;
+	transition					: $type $time $ease;
+}
+
+// gradient
+@mixin linear-gradient($fromColor, $toColor) {
+	background-color: $toColor;
+	background-image: -webkit-linear-gradient(top, $fromColor, $toColor);
+	background-image:		-moz-linear-gradient(top, $fromColor, $toColor);
+	background-image:		 -ms-linear-gradient(top, $fromColor, $toColor);
+	background-image:			-o-linear-gradient(top, $fromColor, $toColor);
+	background-image:				 linear-gradient(top, $fromColor, $toColor);
+}
+
+@mixin transform ($deg) {
+	transform				 : $deg;
+	-moz-transform		: $deg;
+	-ms-transform		 : $deg;
+	-o-transform			: $deg;
+	-webkit-transform : $deg;
+}
+
+@mixin scale ($multiplier) {
+	transform				 : scale($multiplier);
+	-moz-transform		: scale($multiplier);
+	-ms-transform		 : scale($multiplier);
+	-o-transform			: scale($multiplier);
+	-webkit-transform : scale($multiplier);
+}
+
+@mixin rotate ($deg) {
+	-moz-transform		: rotate($deg);
+	-ms-transform		 : rotate($deg);
+	-o-transform			: rotate($deg);
+	-webkit-transform : rotate($deg);
+}
+
+@mixin skew ($deg, $deg2) {
+	transform				 : skew($deg, $deg2);
+	-moz-transform		: skew($deg, $deg2);
+	-ms-transform		 : skew($deg, $deg2);
+	-o-transform			: skew($deg, $deg2);
+	-webkit-transform : skew($deg, $deg2);
+}
+
+
+@mixin font-size ($sizeValue){
+	font-size: $sizeValue + px;
+	font-size: ($sizeValue / 10) + rem;
+}
+
+
+// from http://codepen.io/MichaelArestad/pen/IxFGj 
+@mixin arrow-lazy($al-direction: top, $al-size: 10px, $al-color: #ccc, $al-center: 50%, $al-margin: -1px, $al-pseudo: before){
+	position: relative;
+	border-color: $al-color;
+
+	&:#{$al-pseudo} {
+		position: absolute;
+		content: "";
+		width: 0;
+		height: 0;
+		border-color: $al-color;
+
+		@if $al-direction == "right" {
+				top: $al-center;
+				left: 100%;
+				margin-left: $al-margin;
+				margin-top: $al-size * -1;
+				border-top: $al-size solid transparent;
+				border-bottom: $al-size solid transparent;
+				border-left: $al-size solid $al-color;
+				border-left-color: inherit;
+		} @else if $al-direction == "down" {
+				top: 100%;
+				left: $al-center;
+				margin-top: $al-margin;
+				margin-left: $al-size * -1;
+				border-left: $al-size solid transparent;
+				border-right: $al-size solid transparent;
+				border-top: $al-size solid $al-color;
+				border-top-color: inherit;
+		} @else if $al-direction == "left" {
+				top: $al-center;
+				right: 100%;
+				margin-right: $al-margin;
+				margin-top: $al-size * -1;
+				border-top: $al-size solid transparent;
+				border-bottom: $al-size solid transparent; 
+				border-right:$al-size solid $al-color;
+				border-right-color: inherit;
+		} @else {
+				bottom: 100%;
+				left: $al-center;
+				margin-bottom: $al-margin;
+				margin-left: $al-size * -1;
+				border-left: $al-size solid transparent;
+				border-right: $al-size solid transparent;
+				border-bottom: $al-size solid $al-color;
+				border-bottom-color: inherit;
+		}
+	}
+}

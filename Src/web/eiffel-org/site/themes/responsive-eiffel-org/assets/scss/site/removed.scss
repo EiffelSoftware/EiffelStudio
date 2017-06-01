@@ -1,0 +1,219 @@
+/* Removed or useless */
+
+#content{
+	.head{
+		overflow: hidden;
+		color: #13a69a;
+		padding: 0 50px 0 0;
+		margin: 0 0 5px;
+		h1{
+			margin: 0 0 -1px;
+		}
+		p{
+			margin: 0 0 10px;
+		}
+	}
+
+	.ico{
+		display: inline-block;
+		vertical-align: top;
+		background: #1f3d4d;
+		margin: 2px 5px 0 0;
+		width: 18px;
+		height: 18px;
+		padding: 5px;
+		@include border-radius(100%);
+		img{
+			vertical-align: top;
+		}
+	}
+
+}
+
+.widget{
+	overflow: hidden;
+	margin: 0 0 34px;
+	h2{
+		margin: 0 0 16px;
+	}
+	ul{
+		@extend %listreset;
+		font-family: $museo-sans500;
+		li{
+			border-bottom: 1px solid #becbd3;
+			padding: 16px 0 5px;
+			&:first-child{
+				padding-top: 0;
+			}
+			&.date{
+				display: inline-block;
+				margin: 0 5px 0 0;
+				text-transform: uppercase;
+				color: $green-lt;
+				font: #{$base-date-size} $museo-sans500;
+			}
+			a{
+				color: $blue-light;
+				&:hover{
+					color: $blue;
+				}
+			}
+		}
+	}
+}
+
+.social-plugin{
+	overflow: hidden;
+	margin: 0 0 30px -2px;
+	img{
+		vertical-align: top;
+	}
+}
+
+.popular{
+	padding: 12px 0 0;
+	li{
+		padding-left: 37px !important;
+		position: relative;
+		img{
+			position: absolute;
+			top: 10px;
+			left: 0;
+		}
+		&:first-child{
+			img{
+				top: -5px;
+			}
+		}
+	}
+}
+
+.home{
+	#nav{
+		font-size: $base-font-size + 6px;
+		padding: 56px 0 0;
+		ul{
+			margin: 0 -30px 0 -16px;
+			text-align: left;
+			li{
+				margin: 0 7px;
+			}
+			.dropdown{
+				padding: 14px 0 0;
+			}
+			ul{
+				margin: 0;
+				text-align: center;
+				li{
+					display: block;
+					margin: 0;
+				}
+			}
+		}
+	}
+
+	#main{
+		background: #353637;
+		padding: 50px 0 38px;
+		border-bottom: 1px solid $white;
+		margin: 0 0 1px;
+		&:after,
+		&:before{
+			display: none;
+		}
+	}
+}
+
+.column{
+//	@include grid(4);
+	h2{
+		color: $green-light;
+		margin: 0 0 19px;
+		padding: 0 0 15px;
+		border-bottom: 1px solid #bfd1da;
+		font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
+		a{
+			color: $green-light;
+			&:hover{ color: $white; }
+		}
+	}
+	.news-holder,
+	.blog-holder{
+		overflow: hidden;
+//		@include grid-width(3.5);
+		color: #abc4d4;
+		.holder{
+			overflow: hidden;
+		}
+	}
+	.news-holder{
+		h2{
+			margin: 0 0 28px;
+		}
+	}
+	.news{
+		overflow: hidden;
+		margin: 0 0 20px;
+		p{
+			margin: 0 0 12px;
+		}
+	}
+	.date{
+		display: block;
+		text-transform: uppercase;
+		color: $green;
+		margin: 0 0 2px;
+		font: #{$base-date-size} $museo-sans500;
+	}
+	.blog-holder{
+		margin: 0 0 0 27px;
+		.blog-post{
+			overflow: hidden;
+			margin: 0 0 13px;
+			p{
+				margin: 0 0 10px;
+			}
+		}
+		h3{
+			color: $white;
+			margin: 0 0 9px;
+			font: #{$base-h3-size}/#{$base-h3-lineheight} $museo-sans500;
+			a{
+				 color: $white;
+				 &:hover{
+					color: $yellow-lt;
+				}
+			}
+		}
+	}
+	.libraries,
+	.updates{
+//		@include grid-width(3.4);
+		overflow: hidden;
+		margin: 0 0 34px 55px;
+		h2{
+			border-bottom: 1px solid #292626;
+			margin: 0 0 16px;
+		}
+		ul{
+			@extend %listreset;
+			overflow: hidden;
+			font-family: $museo-sans500;
+			li{
+				border-bottom: 1px solid #292626;
+				padding: 16px 0 5px;
+				&:first-child{ padding-top: 0; }
+				.date{
+					display: inline-block;
+					margin: 0 5px 0 0;
+				}
+				a{
+					color: #7FB514;
+					&:hover{
+						color: $yellow-lt;
+					}
+				}
+			}
+		}
+	}
+}

@@ -1078,7 +1078,7 @@ rt_public int eif_gen_conf2 (EIF_TYPE stype, EIF_TYPE ttype)
 			/* Target is not expanded and not NONE, but source is NONE.
 			 * It only conforms if target is detachable. */
 		CHECK("NONE type", RT_CONF_IS_NONE_TYPE(stype.id));
-		return RT_CONF_IS_DETACHABLE_FLAG(ttype.annotations) || !RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(ttype.annotations);
+		return RT_CONF_IS_DETACHABLE_FLAG(ttype.annotations) || !RT_CONF_HAS_ATTACHMENT_MARK_FLAG(ttype.annotations);
 	} else {
 		if (EIF_IS_EXPANDED_TYPE(System(eif_cid_map[stype.id]))) {
 				/* Source is expanded, we force the attachment mark, otherwise
@@ -1087,7 +1087,7 @@ rt_public int eif_gen_conf2 (EIF_TYPE stype, EIF_TYPE ttype)
 				* that this is because in `rt_id_of' we clear the annotations when
 				* type is expanded. We clear it to maintain as much backward compatibility
 				* with existing code. */
-			CHECK("no attachment marks", !RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(stype.annotations) || RT_CONF_IS_ATTACHED_FLAG(stype.annotations));
+			CHECK("no attachment marks", !RT_CONF_HAS_ATTACHMENT_MARK_FLAG(stype.annotations) || RT_CONF_IS_ATTACHED_FLAG(stype.annotations));
 			stype.annotations |= ATTACHED_FLAG;
 		}
 			/* If `nnotations are not compatible, the types are not conforming. */
@@ -2422,7 +2422,9 @@ rt_private void rt_put_gen_seq (EIF_TYPE a_type, EIF_TYPE_INDEX *a_types, EIF_TY
 
 rt_public EIF_BOOLEAN eif_is_attached_type2 (EIF_TYPE ftype)
 {
-	return EIF_TEST(RT_CONF_IS_ATTACHED_FLAG(ftype.annotations)); 
+		/* A type is attached if it is marked attached or if it is expanded. */
+	return EIF_TEST(RT_CONF_IS_ATTACHED_FLAG(ftype.annotations) ||
+		EIF_IS_EXPANDED_TYPE(System(eif_cid_map[ftype.id])));
 }
 
 /*------------------------------------------------------------------*/
@@ -2492,8 +2494,12 @@ rt_public EIF_TYPE eif_non_attached_type2 (EIF_TYPE ftype)
 
 rt_public EIF_TYPE eif_attached_type2 (EIF_TYPE ftype)
 {
-	ftype.annotations &= ~DETACHABLE_FLAG;
-	ftype.annotations |= ATTACHED_FLAG;
+	if (EIF_IS_EXPANDED_TYPE(System(eif_cid_map[ftype.id]))) {
+		CHECK("No marks", !RT_CONF_HAS_ATTACHMENT_MARK(ftype.annotations));
+	} else {
+		ftype.annotations &= ~DETACHABLE_FLAG;
+		ftype.annotations |= ATTACHED_FLAG;
+	}
 	return ftype;
 }
 

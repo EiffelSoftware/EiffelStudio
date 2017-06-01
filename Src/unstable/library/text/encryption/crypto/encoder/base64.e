@@ -20,76 +20,89 @@ feature -- Status report
 
 feature -- base64 encoder
 
+	bytes_encoded_string (a_bytes: READABLE_INDEXABLE [NATURAL_8]): STRING_8
+			-- base64 encoded value of `a_bytes'.
+		local
+			i,n: INTEGER
+			i1,i2,i3: INTEGER
+			l_map: READABLE_STRING_8
+		do
+			has_error := False
+			l_map := character_map
+			n := 4 * ((a_bytes.upper - a_bytes.lower + 1 + 2) // 3)
+
+			from
+				i := a_bytes.lower
+				create Result.make (n)
+				n := a_bytes.upper
+			until
+				i > n
+			loop
+				i1 := a_bytes[i].as_integer_32
+				if i < n then
+					i := i + 1
+					i2 := a_bytes[i].as_integer_32
+					if i < n then
+						i := i + 1
+						i3 := a_bytes[i].as_integer_32
+					else
+						i3 := -1
+					end
+				else
+					i2 := -1
+				end
+
+				append_triple_encoded_to (i1, i2, i3, l_map, Result)
+				i := i + 1
+			end
+		end
+
 	encoded_string (s: READABLE_STRING_8): STRING_8
 			-- base64 encoded value of `s'.
 		local
 			i,n: INTEGER
-			c: INTEGER
-			f: SPECIAL [BOOLEAN]
-			l_map: STRING_8
+			i1,i2,i3: INTEGER
+			l_map: READABLE_STRING_8
 		do
 			has_error := False
 			l_map := character_map
-			from
-				n := s.count
-				i := (8 * n) \\ 6
-				if i > 0 then
-					create f.make_filled (False, 8 * n + (6 - i))
-				else
-					create f.make_filled (False, 8 * n)
-				end
-				i := 0
-			until
-				i > n - 1
-			loop
-				c := s.item (i + 1).code
-				f[8 * i + 0] := c.bit_test(7)
-				f[8 * i + 1] := c.bit_test(6)
-				f[8 * i + 2] := c.bit_test(5)
-				f[8 * i + 3] := c.bit_test(4)
-				f[8 * i + 4] := c.bit_test(3)
-				f[8 * i + 5] := c.bit_test(2)
-				f[8 * i + 6] := c.bit_test(1)
-				f[8 * i + 7] := c.bit_test(0)
-				i := i + 1
-			end
-			from
-				i := 0
-				n := f.count
-				create Result.make (n // 6)
-			until
-				i > n - 1
-			loop
-				c := 0
-				if f[i + 0] then c := c + 0x20 end
-				if f[i + 1] then c := c + 0x10 end
-				if f[i + 2] then c := c + 0x8 end
-				if f[i + 3] then c := c + 0x4 end
-				if f[i + 4] then c := c + 0x2 end
-				if f[i + 5] then c := c + 0x1 end
-				Result.extend (l_map.item (c + 1))
-				i := i + 6
-			end
+			n := 4 * ((s.count + 2) // 3)
 
-			i := Result.count \\ 4
-			if i > 0 then
-				from until i > 3 loop
-					Result.extend ('=')
+			from
+				i := 1
+				create Result.make (n)
+				n := s.count
+			until
+				i > n
+			loop
+				i1 := s.item_code (i)
+				if i < n then
 					i := i + 1
+					i2 := s.item_code (i)
+					if i < n then
+						i := i + 1
+						i3 := s.item_code (i)
+					else
+						i3 := -1
+					end
+				else
+					i2 := -1
 				end
+				append_triple_encoded_to (i1, i2, i3, l_map, Result)
+				i := i + 1
 			end
 		end
 
 feature -- Decoder
 
-	decoded_string (v: STRING): STRING
+	decoded_string (v: READABLE_STRING_8): STRING
 			-- base64 decoded value of `s'.	
 		do
 			create Result.make (v.count)
 			decode_string_to_buffer (v, Result)
 		end
 
-	decode_string_to_buffer (v: STRING; a_buffer: STRING)
+	decode_string_to_buffer (v: READABLE_STRING_8; a_buffer: STRING)
 			-- Write base64 decoded value of `s' into `a_buffer'.
 		local
 			byte_count: INTEGER
@@ -97,7 +110,7 @@ feature -- Decoder
 			bytes: ARRAY [INTEGER]
 			tmp1, tmp2: INTEGER
 			done: BOOLEAN
-			l_map: STRING_8
+			l_map: READABLE_STRING_8
 			c: CHARACTER
 		do
 			has_error := False
@@ -114,19 +127,25 @@ feature -- Decoder
 			loop
 				byte_count := 0
 				from
-					i := 1
+					i := byte_count + 1
 				until
-					i > nb_bytes or has_error
+					i > nb_bytes or has_error or pos >= n
 				loop
-					pos := next_encoded_character_position (v, pos)
-					if pos <= n then
-						c := v [pos]
-						if c /= '=' then
-							bytes[i] := character_to_value (c)
-							byte_count := byte_count + 1
+					if pos < n then
+						pos := next_encoded_character_position (v, pos)
+						if pos <= n then
+							c := v [pos]
+							if c /= '=' then
+								bytes[i] := character_to_value (c)
+								byte_count := byte_count + 1
+							end
+						else
+							has_error := True
 						end
 					else
-						has_error := True
+							-- Consider as missing padding '='
+						bytes[i] := character_to_value (c)
+						byte_count := byte_count + 1
 					end
 					i := i + 1
 				end
@@ -150,9 +169,39 @@ feature -- Decoder
 			end
 		end
 
-feature {NONE} -- Constants
+feature {NONE} -- Implementation
 
-	next_encoded_character_position (v: STRING; from_pos: INTEGER): INTEGER
+	append_triple_encoded_to (i1,i2,i3: INTEGER; a_map: READABLE_STRING_8; a_output: STRING)
+		local
+			i,j,n: INTEGER
+			c: INTEGER
+			t: INTEGER
+		do
+			--| [ 'f'  ][ 'o'  ][ 'o'  ]
+			--| [ 102  ][ 111  ][ 111  ]
+			--| 011001100110111101101111
+			--| 011001100110111101101111
+			--| [ 25 ][ 38 ][ 61 ][ 47 ]
+			--| [  Z ][  m ][  9 ][  v ]
+			a_output.extend (a_map.item (1 + i1 |>> 2))
+			if i2 >= 0 then
+				a_output.extend (a_map.item (1 + (i1 |<< 4 & 0b111111) + (i2 |>> 4 & 0b111111) ))
+				if i3 >= 0 then
+					a_output.extend (a_map.item (1 + (i2 |<< 2 & 0b111111) + (i3 |>> 6 & 0b111111) ))
+					a_output.extend (a_map.item (1 + (i3 & 0b111111) ))
+					t := t + i3
+				else
+					a_output.extend (a_map.item (1 + (i2 |<< 2 & 0b111111) ))
+					a_output.append_character ('=')
+				end
+			else
+				a_output.extend (a_map.item (1 + (i1 |<< 4) & 0b111111))
+				a_output.append_character ('=')
+				a_output.append_character ('=')
+			end
+		end
+
+	next_encoded_character_position (v: READABLE_STRING_8; from_pos: INTEGER): INTEGER
 			-- Next encoded character position from `v' starting after `from_pos' index.
 			-- Result over `v.count' denodes no remaining decodable position
 			--| Mainly to handle base64 encoded text on multiple line
@@ -185,9 +234,10 @@ feature {NONE} -- Constants
 			end
 		end
 
-	character_map: STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
-			--|              01234567890123456789012345678901234567890123456789012345678901234
+	character_map: STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+			--|              0123456789012345678901234567890123456789012345678901234567890123
 			--|              0         1         2         3         4         5         6
+			--| pad= '='
 
 	character_to_value (c: CHARACTER): INTEGER
 		do

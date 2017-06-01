@@ -33,7 +33,7 @@ feature -- Status report
 	conv_message: detachable STRING
 			-- Error message.
 		obsolete
-			"Use `conv_message_32' instead."
+			"Use `conv_message_32' instead  [2017-11-30]."
 		do
 			if attached conv_message_32 as l_s then
 				Result := l_s.as_string_8
@@ -214,7 +214,7 @@ feature {NONE} -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -39,4 +39,11 @@
 								</div>	
 							</div>
 						{/unless}	
-
+						{unless condition="$page.region_jumbotron1 ~ $empty"}
+							<div class="container">
+								<div class="promo-area">
+									{$page.region_jumbotron1/}
+									{$page.region_jumbotron2/}
+								</div>	
+							</div>
+						{/unless}	

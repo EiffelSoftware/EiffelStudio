@@ -6,8 +6,8 @@
 			"expiration": 21600,
 			"size": 5,
 			"locations": {
-				"bm": "https://bertrandmeyer.com/feed/",
-				"blog": "https://www.eiffel.org/nodes/blog/feed"
+				"blog": "https://www.eiffel.org/nodes/blog/feed",
+				"bm": "https://bertrandmeyer.com/feed/"
 			}
 			, "categories": {"bm": ["Eiffel"]}
 			,"option_description": "enabled"
@@ -27,8 +27,8 @@
 			"expiration": 3600,
 			"size": 25,
 			"locations": {
-				"bm": "https://bertrandmeyer.com/feed/",
-				"blog": "https://www.eiffel.org/nodes/blog/feed"
+				"blog": "https://www.eiffel.org/nodes/blog/feed",
+				"bm": "https://bertrandmeyer.com/feed/"
 			}
 			, "bm_categories": ["Eiffel"]
 			,"option_description": "enabled"

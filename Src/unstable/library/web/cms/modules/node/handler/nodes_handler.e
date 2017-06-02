@@ -80,8 +80,12 @@ feature -- HTTP Methods
 			lnk: FEED_LINK
 			mesg: CMS_CUSTOM_RESPONSE_MESSAGE
 			l_payload: STRING
+			l_feed_name: STRING_32
 		do
-			create l_feed.make (a_content_type.name)
+			create l_feed_name.make_from_string (api.setup.site_name)
+			l_feed_name.append_string ({STRING_32} " : ")
+			l_feed_name.append_string_general (a_content_type.name)
+			create l_feed.make (l_feed_name)
 			l_feed.set_date (create {DATE_TIME}.make_now_utc)
 
 			if attached {WSF_STRING} req.query_parameter ("size") as p_size and then p_size.is_integer then

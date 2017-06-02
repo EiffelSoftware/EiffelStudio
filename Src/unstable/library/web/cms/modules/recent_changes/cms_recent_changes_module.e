@@ -105,6 +105,7 @@ feature -- Hook
 			ch: CMS_RECENT_CHANGE_ITEM
 			l_user: detachable CMS_USER
 			l_feed: FEED
+			l_feed_name: STRING_32
 			l_feed_item: FEED_ITEM
 			lnk: FEED_LINK
 			nb: NATURAL_32
@@ -128,7 +129,9 @@ feature -- Hook
 					end
 				end
 			end
-			create l_feed.make (a_response.api.setup.site_name  + " : recent changes")
+			create l_feed_name.make_from_string (a_response.api.setup.site_name)
+			l_feed_name.append_string ({STRING_32} " : recent changes")
+			create l_feed.make (l_feed_name)
 			l_feed.set_date (create {DATE_TIME}.make_now_utc)
 			nb := a_size
 			across
@@ -142,7 +145,7 @@ feature -- Hook
 
 				create s.make_empty
 				if attached ch.information as l_information then
-					s.append (l_information)
+					s.append_string_general (l_information)
 				end
 				if attached ch.summary as sum then
 					if not s.is_empty then

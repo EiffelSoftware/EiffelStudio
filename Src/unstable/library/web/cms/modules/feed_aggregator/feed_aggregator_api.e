@@ -153,6 +153,9 @@ feature -- Operation
 					end
 				end
 			end
+			if Result /= Void then
+				Result.set_date (create {DATE_TIME}.make_now_utc)
+			end
 		end
 
 	new_http_client_session (a_url: READABLE_STRING_8): HTTP_CLIENT_SESSION

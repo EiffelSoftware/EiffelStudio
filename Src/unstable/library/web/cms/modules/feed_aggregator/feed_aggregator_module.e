@@ -106,7 +106,7 @@ feature -- Handle
 						end
 					elseif
 						attached {WSF_STRING} req.query_parameter ("view") as p_view and then
-						(p_view.same_string ("feed") or p_view.same_string ("atom")) and then
+						(p_view.same_string ("feed") or p_view.same_string ("feed.atom")) and then
 						attached feed_to_atom (p_feed_id.value, nb) as l_feed_content
 					then
 						create m.make_with_body (l_feed_content)
@@ -114,7 +114,7 @@ feature -- Handle
 						res.send (m)
 					elseif
 						attached {WSF_STRING} req.query_parameter ("view") as p_view and then
-						(p_view.same_string ("rss")) and then
+						(p_view.same_string ("feed.rss")) and then
 						attached feed_to_rss (p_feed_id.value, nb) as l_feed_content
 					then
 						create m.make_with_body (l_feed_content)

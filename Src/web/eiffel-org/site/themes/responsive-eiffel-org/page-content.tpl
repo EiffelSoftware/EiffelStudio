@@ -27,12 +27,12 @@
 		</section>
 	</div>
 
-	<!--
+	{if value="False"}
 	{unless isempty="$page.region_sidebar_second"}
 		<aside>	
 			<div class="holder">{$page.region_sidebar_second/}</div>
 		</aside>
 	{/unless} 
-	-->
+	{/if}
 	</div>
 </section>

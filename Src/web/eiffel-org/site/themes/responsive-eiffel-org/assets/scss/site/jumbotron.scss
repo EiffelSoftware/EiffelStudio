@@ -7,32 +7,48 @@
 	>div {
 		@extend .has-gutter;
 
+		.holder {
+			//@include grid-width(6);
+			padding: 0;
+			@include border-radius($front-box-radius);
+			border: 1px solid #fff;
+			background-color: $front-box-bg-color;
+			h3 {
+				padding: 10px;
+				text-align: center;
+			}
+		}
+
 		.col {
 			@extend .one-half;
 		}
 		#block-play_eiffel {
+			.prettyprint {
+				padding-top: 20px;
+				height: 267px;
+			}
 		}	
 		#block-front_header_welcome {
 			margin-top: 55px;
 			.holder {
-				//@include grid-width(6);
-				padding: 0;
-				@include border-radius($front-box-radius);
-				border: 1px solid #fff;
-				background-color: $front-box-bg-color;
 				height: 115px;
-				h3 {
-					padding: 10px;
-					text-align: center;
-				}
 			}
 		}	
 		#block-download_area {
+			border: none;
+			.btn-holder {
+				border: none;
+				padding: 0;
+				margin: 0;
+			}
 			.row {
 				padding-left: 10px;
 			}
 			.link-platforms.row {
 				border: none;
+				&:hover {
+					color: $base-link-h-color;
+				}
 			}
 		}	
 	}

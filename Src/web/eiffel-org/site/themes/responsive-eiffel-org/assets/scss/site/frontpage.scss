@@ -2,28 +2,76 @@
 
 @import "jumbotron";
 
+.front-section {
+	@extend %clearfix;
+	padding: 20px 0 40px 0;
+	margin: 0;
+	.container {
+		>h1 {
+			//text-transform: uppercase;
+			font-family: Titillium Web;
+			color: CadetBlue;
+			text-align: center;
+			padding: 20px 0 20px 0;
+			//border: solid 1px #f00;
+		}
+	}
+}
+
 .rss-block {
+	@extend .front-section;
+
 	background-color: #fff;
-	padding-top: 10px;
-	.container >ul{
-		@extend .grid;
-		@extend %listreset;
-		//margin: 0 0 0 -70px;
-		>li{
-			@extend .one-third;
-			//@include grid-width(3.8);
-			&:not(:last-child) {	border-right: dotted 1px $green-light; }
-			margin: 0 0 54px 33px;
-			>h2{
-				font: (#{$base-h2-size}-8)/(#{$base-h2-lineheight}-8) $museo_slab500;			
-			}
-			.feed {
-				font-size: $base-small-font-size;
-				line-height: $base-small-line-height;
-				.description {
-					line-height: 18px;
+	.container {
+		>ul{
+			@extend .grid;
+			@extend %listreset;
+			//margin: 0 0 0 -70px;
+			>li{
+				@extend .one-third;
+				//@include grid-width(3.8);
+				&:not(:last-child) {	border-right: dotted 1px $green-light; }
+				margin: 0 0 54px 33px;
+				>h2{
+					font: (#{$base-h2-size}-8)/(#{$base-h2-lineheight}-8) $museo_slab500;			
+				}
+				.feed {
+					font-size: $base-small-font-size;
+					line-height: $base-small-line-height;
+					.description {
+						line-height: 18px;
+					}
 				}
 			}
+		}
+	}
+}
+
+#eiffel-community {
+	@extend .front-section;
+	background-color: #e9e9e9;
+	color: #000;
+	>.container {
+		font-size: 150%;
+		text-align: center;
+		h2 {
+			text-transform: uppercase;
+		}
+		img {
+			margin-bottom: 20px;
+		}
+	}
+}
+
+#built-with-eiffel {
+	@extend .front-section;
+	padding-top: 40px;
+	background-color: #b8d1f9;
+	color: #000;
+	>.container {
+		text-align: center;
+		img {
+			margin-bottom: 20px;
 		}
 	}
 }

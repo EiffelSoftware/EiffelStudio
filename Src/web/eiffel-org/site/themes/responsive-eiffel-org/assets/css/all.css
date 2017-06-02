@@ -1,6 +1,6 @@
 @charset "UTF-8";
 /* line 3, ../scss/markup-mixins.scss */
-#nav ul:after, .social-networks:after, #footer .social-networks:after, #header:after, .jumbotron:after, div.container:after, #built-with-eiffel:after, #footer:after {
+.front-section:after, .rss-block:after, #eiffel-community:after, #built-with-eiffel:after, #nav ul:after, .social-networks:after, #footer .social-networks:after, #header:after, .jumbotron:after, div.container:after, #footer:after {
   content: " ";
   display: block;
   clear: both;
@@ -1386,7 +1386,8 @@ http://www.alsacreations.com/tuto/lire/1493-css3-flexbox-layout-module.html
 */
 /* line 85, ../scss/knacss/utilities/_layout.scss */
 [class*="flex-container"],
-.flex-container {
+.flex-container,
+#header nav.nav > ul {
   display: flex;
   flex-wrap: wrap;
 }
@@ -1402,7 +1403,7 @@ http://www.alsacreations.com/tuto/lire/1493-css3-flexbox-layout-module.html
 }
 
 /* line 99, ../scss/knacss/utilities/_layout.scss */
-.flex-item-fluid {
+.flex-item-fluid, #header nav.nav > ul > li {
   flex: 1;
   min-width: 0;
 }
@@ -1612,7 +1613,7 @@ ul.is-unstyled, ul.unstyled {
   }
 
   /* line 159, ../scss/knacss/utilities/_helpers.scss */
-  .mw1140p {
+  .mw1140p, div.container {
     max-width: 1140px;
   }
 }
@@ -2098,7 +2099,7 @@ ul.is-unstyled, ul.unstyled {
   }
 
   /* line 218, ../scss/knacss/utilities/_responsive.scss */
-  .flex-container {
+  .flex-container, #header nav.nav > ul {
     flex-direction: column;
   }
 
@@ -2941,63 +2942,85 @@ ul.is-unstyled, ul.unstyled {
   min-height: 300px;
   position: relative;
 }
-/* line 15, ../scss/site/jumbotron.scss */
-.jumbotron > .container > div #block-front_header_welcome {
-  margin-top: 55px;
-}
-/* line 17, ../scss/site/jumbotron.scss */
-.jumbotron > .container > div #block-front_header_welcome .holder {
+/* line 10, ../scss/site/jumbotron.scss */
+.jumbotron > .container > div .holder {
   padding: 0;
   -webkit-border-radius: 6px;
   border-radius: 6px;
   border: 1px solid #fff;
   background-color: rgba(255, 255, 255, 0.75);
-  height: 115px;
 }
-/* line 24, ../scss/site/jumbotron.scss */
-.jumbotron > .container > div #block-front_header_welcome .holder h3 {
+/* line 16, ../scss/site/jumbotron.scss */
+.jumbotron > .container > div .holder h3 {
   padding: 10px;
   text-align: center;
 }
+/* line 26, ../scss/site/jumbotron.scss */
+.jumbotron > .container > div #block-play_eiffel .prettyprint {
+  padding-top: 20px;
+  height: 267px;
+}
 /* line 31, ../scss/site/jumbotron.scss */
+.jumbotron > .container > div #block-front_header_welcome {
+  margin-top: 55px;
+}
+/* line 33, ../scss/site/jumbotron.scss */
+.jumbotron > .container > div #block-front_header_welcome .holder {
+  height: 115px;
+}
+/* line 37, ../scss/site/jumbotron.scss */
+.jumbotron > .container > div #block-download_area {
+  border: none;
+}
+/* line 39, ../scss/site/jumbotron.scss */
+.jumbotron > .container > div #block-download_area .btn-holder {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+/* line 44, ../scss/site/jumbotron.scss */
 .jumbotron > .container > div #block-download_area .row {
   padding-left: 10px;
 }
-/* line 34, ../scss/site/jumbotron.scss */
+/* line 47, ../scss/site/jumbotron.scss */
 .jumbotron > .container > div #block-download_area .link-platforms.row {
   border: none;
 }
-/* line 40, ../scss/site/jumbotron.scss */
+/* line 49, ../scss/site/jumbotron.scss */
+.jumbotron > .container > div #block-download_area .link-platforms.row:hover {
+  color: #3498db;
+}
+/* line 56, ../scss/site/jumbotron.scss */
 .jumbotron > .container .social-networks {
   position: absolute;
   top: -40px;
   right: 0px;
   float: right;
 }
-/* line 46, ../scss/site/jumbotron.scss */
+/* line 62, ../scss/site/jumbotron.scss */
 .jumbotron > .container .social-networks li {
   float: left;
 }
-/* line 50, ../scss/site/jumbotron.scss */
+/* line 66, ../scss/site/jumbotron.scss */
 .jumbotron > .container .holder {
   padding: 10px 0 0 9px;
   margin-bottom: 15px;
 }
-/* line 58, ../scss/site/jumbotron.scss */
+/* line 74, ../scss/site/jumbotron.scss */
 .jumbotron > .container .holder h1 {
   font: 36px/36px "museo_sans500", Arial, Helvetica, sans-serif;
   color: #112935;
   margin: 0 0 35px;
   letter-spacing: 2px;
 }
-/* line 64, ../scss/site/jumbotron.scss */
+/* line 80, ../scss/site/jumbotron.scss */
 .jumbotron > .container .holder .btn-holder {
   width: auto;
   border: 1px solid #98dcd4;
   padding: 0 0 16px;
   margin: 0 0 0 2px;
 }
-/* line 71, ../scss/site/jumbotron.scss */
+/* line 87, ../scss/site/jumbotron.scss */
 .jumbotron > .container .holder .btn-holder .row {
   color: #112935;
   margin: 0 0 14px;
@@ -3006,7 +3029,7 @@ ul.is-unstyled, ul.unstyled {
   text-transform: uppercase;
   border-bottom: 1px solid #98dcd4;
 }
-/* line 80, ../scss/site/jumbotron.scss */
+/* line 96, ../scss/site/jumbotron.scss */
 .jumbotron > .container .holder .btn-holder .btn-download {
   background-color: #769830;
   background-image: -webkit-linear-gradient(top, #99cc33, #769830);
@@ -3027,7 +3050,7 @@ ul.is-unstyled, ul.unstyled {
   position: relative;
   padding: 0 57px 6px 0;
 }
-/* line 94, ../scss/site/jumbotron.scss */
+/* line 110, ../scss/site/jumbotron.scss */
 .jumbotron > .container .holder .btn-holder .btn-download:after {
   background: url(../images/ico-download.png) no-repeat;
   width: 37px;
@@ -3037,7 +3060,7 @@ ul.is-unstyled, ul.unstyled {
   top: 13px;
   content: '';
 }
-/* line 103, ../scss/site/jumbotron.scss */
+/* line 119, ../scss/site/jumbotron.scss */
 .jumbotron > .container .holder .btn-holder .btn-download:hover {
   background-color: #6a8c28;
   background-image: -webkit-linear-gradient(top, #89bc2b, #6a8c28);
@@ -3048,30 +3071,76 @@ ul.is-unstyled, ul.unstyled {
 }
 
 /* line 5, ../scss/site/frontpage.scss */
+.front-section, .rss-block, #eiffel-community, #built-with-eiffel {
+  padding: 20px 0 40px 0;
+  margin: 0;
+}
+/* line 10, ../scss/site/frontpage.scss */
+.front-section .container > h1, .rss-block .container > h1, #eiffel-community .container > h1, #built-with-eiffel .container > h1 {
+  font-family: Titillium Web;
+  color: CadetBlue;
+  text-align: center;
+  padding: 20px 0 20px 0;
+}
+
+/* line 21, ../scss/site/frontpage.scss */
 .rss-block {
   background-color: #fff;
-  padding-top: 10px;
 }
-/* line 12, ../scss/site/frontpage.scss */
+/* line 30, ../scss/site/frontpage.scss */
 .rss-block .container > ul > li {
   margin: 0 0 54px 33px;
 }
-/* line 15, ../scss/site/frontpage.scss */
+/* line 33, ../scss/site/frontpage.scss */
 .rss-block .container > ul > li:not(:last-child) {
   border-right: dotted 1px #99cc33;
 }
-/* line 17, ../scss/site/frontpage.scss */
+/* line 35, ../scss/site/frontpage.scss */
 .rss-block .container > ul > li > h2 {
   font: 28px-8/28px-8 "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 20, ../scss/site/frontpage.scss */
+/* line 38, ../scss/site/frontpage.scss */
 .rss-block .container > ul > li .feed {
   font-size: 14px;
   line-height: 14px;
 }
-/* line 23, ../scss/site/frontpage.scss */
+/* line 41, ../scss/site/frontpage.scss */
 .rss-block .container > ul > li .feed .description {
   line-height: 18px;
+}
+
+/* line 50, ../scss/site/frontpage.scss */
+#eiffel-community {
+  background-color: #e9e9e9;
+  color: #000;
+}
+/* line 54, ../scss/site/frontpage.scss */
+#eiffel-community > .container {
+  font-size: 150%;
+  text-align: center;
+}
+/* line 57, ../scss/site/frontpage.scss */
+#eiffel-community > .container h2 {
+  text-transform: uppercase;
+}
+/* line 60, ../scss/site/frontpage.scss */
+#eiffel-community > .container img {
+  margin-bottom: 20px;
+}
+
+/* line 66, ../scss/site/frontpage.scss */
+#built-with-eiffel {
+  padding-top: 40px;
+  background-color: #b8d1f9;
+  color: #000;
+}
+/* line 71, ../scss/site/frontpage.scss */
+#built-with-eiffel > .container {
+  text-align: center;
+}
+/* line 73, ../scss/site/frontpage.scss */
+#built-with-eiffel > .container img {
+  margin-bottom: 20px;
 }
 
 /* Elements specific */
@@ -3555,18 +3624,18 @@ ul.is-unstyled, ul.unstyled {
   vertical-align: top;
   margin: 0 0 0 -7px;
 }
-/* line 19, ../scss/site/header.scss */
+/* line 25, ../scss/site/header.scss */
 #header .add-links {
   margin-top: 10px;
 }
-/* line 23, ../scss/site/header.scss */
+/* line 29, ../scss/site/header.scss */
 #header .add-links ul {
   text-align: left;
   font: 12px/18px "museo_sans500", Arial, Helvetica, sans-serif;
   margin: 0 -7px 0 0;
   text-transform: uppercase;
 }
-/* line 29, ../scss/site/header.scss */
+/* line 35, ../scss/site/header.scss */
 #header .add-links ul li {
   margin-top: 5px;
   display: inline-block;
@@ -3574,16 +3643,16 @@ ul.is-unstyled, ul.unstyled {
   position: relative;
   padding: 0 8px;
 }
-/* line 35, ../scss/site/header.scss */
+/* line 41, ../scss/site/header.scss */
 #header .add-links ul li a {
   color: #99cc33;
 }
-/* line 37, ../scss/site/header.scss */
+/* line 43, ../scss/site/header.scss */
 #header .add-links ul li a:hover {
   color: #c7ec7e;
 }
 
-/* line 46, ../scss/site/header.scss */
+/* line 52, ../scss/site/header.scss */
 .search-form {
   display: inline-block;
   height: 24px;
@@ -3593,7 +3662,7 @@ ul.is-unstyled, ul.unstyled {
   -webkit-border-radius: 4px;
   border-radius: 4px;
 }
-/* line 52, ../scss/site/header.scss */
+/* line 58, ../scss/site/header.scss */
 .search-form input[type="search"],
 .search-form input[type="text"] {
   border: 0;
@@ -3604,13 +3673,13 @@ ul.is-unstyled, ul.unstyled {
   font-size: 12px;
   line-height: 18px;
 }
-/* line 63, ../scss/site/header.scss */
+/* line 69, ../scss/site/header.scss */
 .search-form input[type="image"] {
   width: 16px;
   height: 16px;
 }
 
-/* line 69, ../scss/site/header.scss */
+/* line 75, ../scss/site/header.scss */
 .search-form.parent-focus {
   -webkit-box-shadow: 0 0 5px rgba(13, 65, 67, 0.9), inset 1px 1px 1px 0 rgba(0, 0, 0, 0.4);
   box-shadow: 0 0 5px rgba(13, 65, 67, 0.9), inset 1px 1px 1px 0 rgba(0, 0, 0, 0.4);
@@ -3907,7 +3976,7 @@ code .com, eiffel .com {
 }
 
 /* line 3, ../scss/markup-mixins.scss */
-#nav ul:after, .social-networks:after, #footer .social-networks:after, #header:after, .jumbotron:after, div.container:after, #built-with-eiffel:after, #footer:after {
+.front-section:after, .rss-block:after, #eiffel-community:after, #built-with-eiffel:after, #nav ul:after, .social-networks:after, #footer .social-networks:after, #header:after, .jumbotron:after, div.container:after, #footer:after {
   content: " ";
   display: block;
   clear: both;
@@ -4208,7 +4277,7 @@ code .com, eiffel .com {
 }
 
 /* line 3, ../scss/markup-mixins.scss */
-#nav ul:after, .social-networks:after, #footer .social-networks:after, #header:after, .jumbotron:after, div.container:after, #built-with-eiffel:after, #footer:after {
+.front-section:after, .rss-block:after, #eiffel-community:after, #built-with-eiffel:after, #nav ul:after, .social-networks:after, #footer .social-networks:after, #header:after, .jumbotron:after, div.container:after, #footer:after {
   content: " ";
   display: block;
   clear: both;
@@ -4230,7 +4299,6 @@ code .com, eiffel .com {
   -webkit-border-radius: 6px;
   border-radius: 6px;
   background-color: rgba(255, 255, 255, 0.75);
-  height: 256px;
 }
 /* line 18, ../scss/site/codeboard.scss */
 #block-play_eiffel .holder-play .btn-holder {
@@ -4719,15 +4787,51 @@ body, body.page {
   background: #0AA694 url(../images/bg-head.jpg);
 }
 
+/* line 25, ../scss/all.scss */
+.rss-block, #content {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+/* line 29, ../scss/all.scss */
+.rss-block:after, .rss-block:before, #content:after, #content:before {
+  position: absolute;
+  width: 100%;
+  height: 10px;
+  content: '';
+}
+/* line 36, ../scss/all.scss */
+.rss-block:after, #content:after {
+  top: 1px;
+  background-color: #f0f3f5;
+  background-image: -webkit-linear-gradient(top, #d1dae0, #f0f3f5);
+  background-image: -moz-linear-gradient(top, #d1dae0, #f0f3f5);
+  background-image: -ms-linear-gradient(top, #d1dae0, #f0f3f5);
+  background-image: -o-linear-gradient(top, #d1dae0, #f0f3f5);
+  background-image: linear-gradient(top, #d1dae0, #f0f3f5);
+}
+/* line 40, ../scss/all.scss */
+.rss-block:before, #content:before {
+  bottom: 1px;
+  background-color: #d1dae0;
+  background-image: -webkit-linear-gradient(top, #f0f3f5, #d1dae0);
+  background-image: -moz-linear-gradient(top, #f0f3f5, #d1dae0);
+  background-image: -ms-linear-gradient(top, #f0f3f5, #d1dae0);
+  background-image: -o-linear-gradient(top, #f0f3f5, #d1dae0);
+  background-image: linear-gradient(top, #f0f3f5, #d1dae0);
+}
+
 /* Header */
-/* line 46, ../scss/all.scss */
+/* line 47, ../scss/all.scss */
 #header {
   background: url(../images/bg-header.jpg) no-repeat 100% 0;
   border-bottom: solid 1px #000;
 }
 
 /* Jumbotron */
-/* line 63, ../scss/all.scss */
+/* line 64, ../scss/all.scss */
 .jumbotron {
   background-color: none;
   padding: 20px;
@@ -4737,18 +4841,16 @@ body, body.page {
 }
 
 /* Content */
-/* line 74, ../scss/all.scss */
+/* line 75, ../scss/all.scss */
 div.container {
-  max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
 }
 
-/* line 81, ../scss/all.scss */
+/* line 82, ../scss/all.scss */
 #content {
   background-color: #fff;
   border: none;
-  padding-top: 10px;
 }
 /* line 95, ../scss/all.scss */
 #content h1 {
@@ -4793,16 +4895,8 @@ div.container {
   color: white;
 }
 
-/* Section */
-/* line 138, ../scss/all.scss */
-#built-with-eiffel {
-  background-color: #ccc;
-  color: #000;
-  min-height: 50px;
-}
-
 /* Footer */
-/* line 147, ../scss/all.scss */
+/* line 138, ../scss/all.scss */
 #footer {
   background: #4c6877;
   font-size: 13px;

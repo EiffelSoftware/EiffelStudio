@@ -12,7 +12,7 @@
 		border: solid 1px #fff;
 		@include border-radius($front-box-radius);
 		background-color: $front-box-bg-color;
-		height: 256px;
+		//min-height: 246px;
 	}
 	.holder-play{
 		.btn-holder{

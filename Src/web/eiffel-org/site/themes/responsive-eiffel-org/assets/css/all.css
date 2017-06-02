@@ -4193,18 +4193,24 @@ code .com, eiffel .com {
   text-align: right;
 }
 
-/* line 193, ../scss/site/docs.scss */
+/* line 190, ../scss/site/docs.scss */
+#content .wiki-toc {
+  clear: both;
+  margin: 10px;
+  padding: 1.5em;
+}
+/* line 196, ../scss/site/docs.scss */
 #content .bookcards {
   padding: 0;
   margin: 0;
 }
-/* line 198, ../scss/site/docs.scss */
+/* line 201, ../scss/site/docs.scss */
 #content .bookcards ul li {
   display: inline-block;
   height: 140px;
   margin: 0 10px 5px 0px;
 }
-/* line 203, ../scss/site/docs.scss */
+/* line 206, ../scss/site/docs.scss */
 #content .bookcards ul li a {
   border: solid 1px #ddd;
   margin: 10px;
@@ -4215,23 +4221,23 @@ code .com, eiffel .com {
   -webkit-border-radius: 7px;
   border-radius: 7px;
 }
-/* line 211, ../scss/site/docs.scss */
+/* line 214, ../scss/site/docs.scss */
 #content .bookcards ul li a:hover {
   background: #e3e7e8;
 }
-/* line 215, ../scss/site/docs.scss */
+/* line 218, ../scss/site/docs.scss */
 #content .bookcards ul li img {
   float: left;
   opacity: 0.4;
 }
-/* line 219, ../scss/site/docs.scss */
+/* line 222, ../scss/site/docs.scss */
 #content .bookcards ul li h2 {
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
   padding: 0;
   margin-top: 5px;
   margin-bottom: 10px;
 }
-/* line 225, ../scss/site/docs.scss */
+/* line 228, ../scss/site/docs.scss */
 #content .bookcards ul li p {
   font-size: smaller;
   line-height: 1.2em;
@@ -4243,25 +4249,25 @@ code .com, eiffel .com {
   overflow: auto;
 }
 
-/* line 239, ../scss/site/docs.scss */
+/* line 242, ../scss/site/docs.scss */
 #wdocs_edit textarea {
   width: 98%;
 }
 
-/* line 243, ../scss/site/docs.scss */
+/* line 246, ../scss/site/docs.scss */
 #wdocs-versions.menu {
   padding: 0px;
   margin: 5px 0 0 0;
   background-color: white;
   border: solid 1px #999;
 }
-/* line 248, ../scss/site/docs.scss */
+/* line 251, ../scss/site/docs.scss */
 #wdocs-versions.menu ul {
   padding: 0 0 0 20px;
   margin: 0px;
   list-style-type: none;
 }
-/* line 252, ../scss/site/docs.scss */
+/* line 255, ../scss/site/docs.scss */
 #wdocs-versions.menu ul li > ul {
   padding: 10px;
   background-color: white;
@@ -4269,7 +4275,7 @@ code .com, eiffel .com {
   display: none;
   font-size: smaller;
 }
-/* line 259, ../scss/site/docs.scss */
+/* line 262, ../scss/site/docs.scss */
 #wdocs-versions.menu ul li:hover > ul {
   position: absolute;
   display: block;

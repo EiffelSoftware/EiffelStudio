@@ -189,6 +189,9 @@
 #content {
 	.wiki-toc {
 		@extend %clearfix;
+		clear: both;
+		margin: 10px;
+		padding: 1.5em;
 	}
 	.bookcards {
 		padding: 0;

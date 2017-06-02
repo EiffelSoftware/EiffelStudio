@@ -128,7 +128,7 @@ feature -- Hook
 					end
 				end
 			end
-			create l_feed.make ("CMS Recent changes")
+			create l_feed.make (a_response.api.setup.site_name  + " : recent changes")
 			l_feed.set_date (create {DATE_TIME}.make_now_utc)
 			nb := a_size
 			across

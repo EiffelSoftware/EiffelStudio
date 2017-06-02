@@ -35,12 +35,12 @@
 	}
 }
 
-//.container-codeboard {
+.container-codeboard {
 	//@include grid-container;
-	//@extend %clearfix;
-  //width: 920px;
-  //height: 800px;
-//}
+  @extend %clearfix;
+  width: 920px;
+  height: 800px;
+}
 
 //.ideHeader {
   //width: 100%;

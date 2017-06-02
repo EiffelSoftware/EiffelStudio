@@ -1,6 +1,6 @@
 @charset "UTF-8";
 /* line 3, ../scss/markup-mixins.scss */
-.front-section:after, .rss-block:after, #eiffel-community:after, #built-with-eiffel:after, #nav ul:after, .social-networks:after, #footer .social-networks:after, #header:after, .jumbotron:after, div.container:after, #footer:after {
+.front-section:after, .rss-block:after, #eiffel-community:after, #built-with-eiffel:after, #nav ul:after, .social-networks:after, #footer .social-networks:after, .container-codeboard:after, #header:after, .jumbotron:after, div.container:after, #footer:after {
   content: " ";
   display: block;
   clear: both;
@@ -3976,7 +3976,7 @@ code .com, eiffel .com {
 }
 
 /* line 3, ../scss/markup-mixins.scss */
-.front-section:after, .rss-block:after, #eiffel-community:after, #built-with-eiffel:after, #nav ul:after, .social-networks:after, #footer .social-networks:after, #header:after, .jumbotron:after, div.container:after, #footer:after {
+.front-section:after, .rss-block:after, #eiffel-community:after, #built-with-eiffel:after, #nav ul:after, .social-networks:after, #footer .social-networks:after, .container-codeboard:after, #header:after, .jumbotron:after, div.container:after, #footer:after {
   content: " ";
   display: block;
   clear: both;
@@ -4277,7 +4277,7 @@ code .com, eiffel .com {
 }
 
 /* line 3, ../scss/markup-mixins.scss */
-.front-section:after, .rss-block:after, #eiffel-community:after, #built-with-eiffel:after, #nav ul:after, .social-networks:after, #footer .social-networks:after, #header:after, .jumbotron:after, div.container:after, #footer:after {
+.front-section:after, .rss-block:after, #eiffel-community:after, #built-with-eiffel:after, #nav ul:after, .social-networks:after, #footer .social-networks:after, .container-codeboard:after, #header:after, .jumbotron:after, div.container:after, #footer:after {
   content: " ";
   display: block;
   clear: both;
@@ -4330,6 +4330,12 @@ code .com, eiffel .com {
   background-image: -ms-linear-gradient(top, #12273A, #0C1A26);
   background-image: -o-linear-gradient(top, #12273A, #0C1A26);
   background-image: linear-gradient(top, #12273A, #0C1A26);
+}
+
+/* line 38, ../scss/site/codeboard.scss */
+.container-codeboard {
+  width: 920px;
+  height: 800px;
 }
 
 /***********************/

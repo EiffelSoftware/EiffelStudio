@@ -52,6 +52,7 @@ feature -- Access: router
 		do
 			a_router.handle ("/recent_changes/", create {WSF_URI_AGENT_HANDLER}.make (agent handle_recent_changes (a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/recent_changes/feed", create {WSF_URI_AGENT_HANDLER}.make (agent handle_recent_changes_feed (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/recent_changes/feed.{format}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_recent_changes_feed (a_api, ?, ?)), a_router.methods_head_get)
 		end
 
 feature -- Hook		
@@ -197,10 +198,22 @@ feature -- Handler
 				l_size := 25
 			end
 
+			create mesg.make ({HTTP_STATUS_CODE}.ok)
+
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			create l_content.make (1024)
-			recent_changes_feed (r, l_size, l_filter_source).accept (create {ATOM_FEED_GENERATOR}.make (l_content))
-			create mesg.make ({HTTP_STATUS_CODE}.ok)
+			if
+				attached {WSF_STRING} req.path_parameter ("format") as p_format and then
+				p_format.same_string ("rss")
+			then
+				mesg.header.put_content_type ("application/rss+xml")
+
+				recent_changes_feed (r, l_size, l_filter_source).accept (create {RSS_2_FEED_GENERATOR}.make (l_content))
+			else
+				mesg.header.put_content_type ("application/atom+xml")
+
+				recent_changes_feed (r, l_size, l_filter_source).accept (create {ATOM_FEED_GENERATOR}.make (l_content))
+			end
 			mesg.set_payload (l_content)
 			res.send (mesg)
 		end

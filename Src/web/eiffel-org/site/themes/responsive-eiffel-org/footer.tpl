@@ -42,8 +42,13 @@
 						<a class="btn btn-download" href="{$site_url/}downloads">Download Now</a>
 						<a class="btn btn-tryonline" href="{$site_url/}try_eiffel">Try Eiffel Online</a>
 						<a class="btn btn-contribute" href="{$site_url/}contribute">Contribute</a>
-						{unless isempty="$site_sign_in_url"}<a class="btn btn-account" href="{$site_sign_in_url/}">Sign in</a>{/unless}
-						{if isempty="$site_sign_in_url"}<a class="btn btn-account" href="{$site_url/}account">Sign in</a>{/if}
+						{if isempty="$user"}
+							{unless isempty="$site_sign_in_url"}<a class="btn btn-account" href="{$site_sign_in_url/}">Sign in</a>{/unless}
+							{if isempty="$site_sign_in_url"}<a class="btn btn-account" href="{$site_url/}account">Sign in</a>{/if}
+						{/if}
+						{unless isempty="$user"}
+							<a href="{$site_url/}account">{$user.name/}</a>
+						{/unless}
 					</div>
 				</li>
 				<li class="one-sixth">

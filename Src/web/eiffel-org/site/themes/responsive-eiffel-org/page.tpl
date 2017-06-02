@@ -5,7 +5,8 @@
 	<title>{if isset="$site_title"}{$site_title/}{/if}</title>
 <link media="all" rel="stylesheet" href="{$theme_path/}css/all.css" />
 <link rel="shortcut icon" href="{$site_url/}favicon.ico"/>
-<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css" />
+<link href="https://fonts.googleapis.com/css?family=Inconsolata|Open+Sans:400,700|Titillium+Web" rel="stylesheet" type="text/css" />
+
 <!--[if IE]><script type="text/javascript" src="{$theme_path/}js/ie.js"></script><![endif]-->
 
 {if isset="$head"}{$head/}{/if}

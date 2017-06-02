@@ -16,6 +16,12 @@
 			}
 		}
 	}
+	nav.nav >ul {
+		@extend .flex-container;
+		>li {
+			@extend .flex-item-fluid;
+		}
+	}
 	.add-links{
 		@extend .one-fifth;
 		//margin: 0 0 20px;

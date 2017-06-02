@@ -22,24 +22,25 @@ body, body.page {
 	background: #0AA694 url(../images/bg-head.jpg);
 }
 
-#main{
-//	@include mask;
-//	padding: 28px 0;
-//	&:after,
-//	&:before{
-//		position: absolute;
-//		width: 100%;
-//		height: 22px;
-//		content: '';
-//	}
-//	&:after{
-//		top: 0;
-//		@include linear-gradient(#d1dae0, #f0f3f5);
-//	}
-//	&:before{
-//		bottom: 1px;
-//		@include linear-gradient(#f0f3f5, #d1dae0);
-//	}
+.rss-block, #content{
+	@include mask;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	&:after,
+	&:before{
+		position: absolute;
+		width: 100%;
+		height: 10px;
+		content: '';
+	}
+	&:after{
+		top: 1px;
+		@include linear-gradient(#d1dae0, #f0f3f5);
+	}
+	&:before{
+		bottom: 1px;
+		@include linear-gradient(#f0f3f5, #d1dae0);
+	}
 }
 
 /* Header */
@@ -72,7 +73,7 @@ body, body.page {
 /* Content */
 
 div.container{
-	max-width: 1200px;
+	@extend .mw1140p;
 	margin-left: auto;
 	margin-right: auto;
 	@extend %clearfix;
@@ -82,7 +83,6 @@ div.container{
 	background-color: #fff;
 	//background-color: #f00;
 	border: none;
-	padding-top: 10px;
 	>.container>.content{
 		//@extend .one-half;
 	}
@@ -131,15 +131,6 @@ div.container{
 			}
 		}
 	}
-}
-
-/* Section */
-
-#built-with-eiffel {
-	@extend %clearfix;
-	background-color: #ccc;
-	color: #000;
-	min-height: 50px;
 }
 
 /* Footer */

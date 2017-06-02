@@ -1,4 +1,4 @@
-<header id="header">
+<header id="header" class="grid-3">
 		<div class="logo"><a href="{$site_url/}"><img src="{$theme_path/}images/logo.png" width="226" height="60" alt="Eiffel"></a></div>
 		<nav id="nav">
 			<ul>

@@ -52,14 +52,14 @@ feature -- Access
 feature -- Status report
 
 	has_category_filter: BOOLEAN
-			-- Is there any category filtering?
+			-- Is there any global category filtering?
 			-- i.e via `included_categories'
 		do
 			Result := attached included_categories as cats and then not cats.is_empty
 		end
 
 	has_category_filter_for_location (a_location: READABLE_STRING_GENERAL): BOOLEAN
-			-- Is there any category filtering for `a_location'?
+			-- Is there any specific category filtering for `a_location'?
 		do
 			Result := attached included_categories_per_feed as cats_per_location and then
 					attached cats_per_location.item (a_location) as cats and then
@@ -118,7 +118,7 @@ feature -- Element change
 			end
 		end
 
-	include_category_per_feed (a_cat: READABLE_STRING_GENERAL; a_feed_location: READABLE_STRING_8)
+	include_category_per_feed (a_cat: READABLE_STRING_GENERAL; a_feed_location: READABLE_STRING_GENERAL)
 		local
 			tb: like included_categories_per_feed
 			lst: like included_categories
@@ -163,20 +163,22 @@ feature -- Status report
 
 	is_included_for_location (e: FEED_ITEM; a_location: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `e' included in feed related to `a_location'?
-			-- note that if `e' has no category, it is included by default,
-			-- even if `included_categories_per_feed' is defined for `a_location'.
+			-- notes:
+			--		- it also check for `included_categories' condition.
+			-- 		- if `e' has no category, it is included by default,
+			-- 			even if `included_categories_per_feed' is defined for `a_location'.
 		do
-			Result := True
-			if attached e.categories as e_cats then
+			Result := is_included (e)
+			if Result and attached e.categories as e_cats then
 				if
 					attached included_categories_per_feed as tb and then
 					attached tb.item (a_location) as lst
 				then
 					Result := across lst as ic some
-							across e_cats as e_ic some
-								e_ic.item.same_string (ic.item)
+								across e_cats as e_ic some
+									e_ic.item.same_string (ic.item)
+								end
 							end
-						end
 				end
 			end
 		end

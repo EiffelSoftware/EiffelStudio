@@ -150,7 +150,22 @@ feature -- Handle
 							s.append (ic.item)
 							s.append ("%">")
 							s.append (ic.item)
-							s.append ("</a></li>")
+							s.append ("</a>")
+							if
+								attached l_agg.included_categories_per_feed as tb and then
+								attached tb.item (ic.item) as l_cats
+							then
+								s.append ("<span class=%"category%">")
+								across
+									l_cats as cats_ic
+								loop
+									s.append (" [")
+									s.append (r.html_encoded (cats_ic.item))
+									s.append ("]")
+								end
+								s.append ("</span>")
+							end
+							s.append ("</li>")
 						end
 						s.append ("</ul>")
 
@@ -293,11 +308,15 @@ feature -- Hook
 						until
 							lst.after
 						loop
-							if nb = 0 or not a_feed_agg.is_included (lst.item_for_iteration) then
+							if nb = 0 then
 								lst.remove
-							else
+							elseif a_feed_agg.is_included (lst.item_for_iteration) then
 								nb := nb - 1
 								lst.forth
+							elseif a_feed_agg.is_included_for_location (lst.item_For_iteration, "") then
+
+							else
+								lst.remove
 							end
 						end
 					elseif nb > 0 then

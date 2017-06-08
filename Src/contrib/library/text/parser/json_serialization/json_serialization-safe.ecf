@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="json_serialization" uuid="A16C3F36-ADE5-43FE-A2ED-6955EE0A268C" library_target="json_serialization">
+	<description>Eiffel to JSON serialization, and deserialization.</description>
+	<target name="json_serialization">
+		<root all_classes="true"/>
+		<option warning="true">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="json" location="..\json\library\json-safe.ecf"/>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+</system>

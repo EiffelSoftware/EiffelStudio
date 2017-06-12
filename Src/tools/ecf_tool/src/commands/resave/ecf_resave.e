@@ -19,6 +19,8 @@ inherit
 
 	LOCALIZED_PRINTER
 
+	CONF_ACCESS
+
 create
 	make
 
@@ -44,6 +46,7 @@ feature {NONE} -- Execution
 		do
 			namespace := a_options.namespace
 			schema := a_options.schema
+			reset_uuid_requested := a_options.reset_uuid_requested
 
 				-- Add specified files
 			create l_files.make (0)
@@ -100,20 +103,42 @@ feature {NONE} -- Execution
 
 	namespace, schema: detachable READABLE_STRING_GENERAL
 
+	reset_uuid_requested: BOOLEAN
+			-- Reset ECF UUID?
+
 feature {NONE} -- Basic operations
 
 	resave_config (a_file_name: READABLE_STRING_32)
 			-- Loads and resaves `a_file_name' using the configuration system.
 		local
 			b: BOOLEAN
+			l_cfg: detachable CONF_SYSTEM
 		do
 			if a_file_name /= Void and then not a_file_name.is_empty and then conf_helpers.is_file_readable (a_file_name) then
 				print ("Loading configuration file '")
 				localized_print (a_file_name)
 				print ("'... ")
-				if attached config_system_from (a_file_name) as l_cfg then
+				l_cfg := config_system_from (a_file_name)
+				if attached config_redirection_from (a_file_name) as redir then
+					print ("Done%N")
+					print ("Saving redirection file... ")
+					if reset_uuid_requested then
+						print (" (reset UUID) ")
+						redir.set_uuid (Void) -- As we don't know if targetted ecf file is going to be resaved with new uuid, just remove UUID on redirection.
+					end
+					b := save_conf_file_with_namespace_and_schema (redir, a_file_name, namespace, schema)
+					if b then
+						print ("Done%N")
+					else
+						print ("Failed!%N")
+					end
+				elseif l_cfg /= Void then
 					print ("Done%N")
 					print ("Saving configuration file... ")
+					if reset_uuid_requested and not l_cfg.is_generated_uuid then
+						print (" (reset UUID) ")
+						l_cfg.set_uuid ((create {UUID_GENERATOR}).generate_uuid)
+					end
 					b := save_conf_file_with_namespace_and_schema (l_cfg, a_file_name, namespace, schema)
 					if b then
 						print ("Done%N")
@@ -129,7 +154,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

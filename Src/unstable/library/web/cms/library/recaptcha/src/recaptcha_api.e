@@ -98,26 +98,24 @@ feature {NONE} -- REST API
 
 	get: detachable RESPONSE
 			-- Reading Data
-		local
-			l_request: REQUEST
 		do
-			create l_request.make ("GET", new_uri)
-			Result := l_request.execute
+			Result := (create {REQUEST}.make ("GET", new_uri)).execute
 		end
 
 feature {NONE} -- Implementation
 
 	new_uri: STRING_8
 			-- new uri (BaseUri?secret=secret_value&response=response_value[&remoteip=remoteip_value]
+		local
+			l_uri: URI
 		do
-			create Result.make_from_string (base_uri)
-			Result.append ("?secret=")
-			Result.append (secret)
-			Result.append ("&response=")
-			Result.append (response)
+			create l_uri.make_from_string (base_uri)
+			l_uri.add_query_parameter ("secret", secret)
+			l_uri.add_query_parameter ("response", response)
 			if attached remoteip as l_remoteip then
-				Result.append ("&remoteip=" + l_remoteip)
+				l_uri.add_query_parameter ("remoteip", l_remoteip)
 			end
+			Result := l_uri.string
 		end
 
 	put_error (a_code: READABLE_STRING_GENERAL)
@@ -134,7 +132,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2015 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2017 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

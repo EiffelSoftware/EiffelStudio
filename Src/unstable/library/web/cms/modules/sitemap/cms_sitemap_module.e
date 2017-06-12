@@ -123,8 +123,7 @@ feature -- Handler
 					mesg.set_payload (l_sitemap_xml)
 					res.send (mesg)
 				else
-					create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
-					r.execute
+					api.response_api.send_not_found (Void, req, res)
 				end
 			end
 		end

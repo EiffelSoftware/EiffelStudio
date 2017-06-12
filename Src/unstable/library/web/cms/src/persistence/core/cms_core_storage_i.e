@@ -42,7 +42,7 @@ feature -- URL aliases
 		deferred
 		end
 
-	source_of_path_alias (a_alias: READABLE_STRING_8): detachable READABLE_STRING_8
+	source_of_path_alias (a_alias: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
 			-- Source path for alias `a_alias'.
 		deferred
 		end
@@ -89,6 +89,6 @@ feature -- Misc
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

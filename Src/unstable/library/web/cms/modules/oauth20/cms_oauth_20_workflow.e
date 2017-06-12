@@ -38,15 +38,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	authorization_url: detachable READABLE_STRING_32
+	authorization_url: detachable READABLE_STRING_8
 			-- Obtain the Authorization URL.
 		do
 				-- Obtain the Authorization URL
 			write_debug_log (generator + ".authorization_url Fetching the Authorization URL..!")
 			if attached api_service.authorization_url (empty_token) as l_authorization_url then
-				write_debug_log (generator + ".authorization_url: Got the Authorization URL!")
 				write_debug_log (generator + ".authorization_url:" + l_authorization_url)
-				Result := l_authorization_url.as_string_32
+				Result := l_authorization_url
 			end
 		end
 
@@ -77,8 +76,8 @@ feature -- Access
 			end
 		end
 
-	user_email: detachable READABLE_STRING_32
-			-- Retrieve user email if any.
+	user_email: detachable READABLE_STRING_8
+			-- User email if any.
 		local
 			l_json: JSON_CONFIG
 		do
@@ -91,7 +90,7 @@ feature -- Access
 				then
 					Result := l_email.item
 				elseif attached {JSON_STRING} l_json.item ("email") as l_email then
-					Result := l_email.unescaped_string_32
+					Result := l_email.unescaped_string_8
 				end
 			end
 		end
@@ -101,7 +100,7 @@ feature -- Access
 	access_token: detachable OAUTH_TOKEN
 			-- JSON representing the access token.
 
-	user_profile: detachable READABLE_STRING_32
+	user_profile: detachable READABLE_STRING_8
 			-- JSON representing the user profiles.
 
 feature {NONE} -- Implementation

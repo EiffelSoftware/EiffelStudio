@@ -47,10 +47,10 @@ feature -- Execution
 				create s.make_empty
 				f.append_to_html (l_response.wsf_theme, s)
 				l_response.set_main_content (s)
+				l_response.execute
 			else
-				create {FORBIDDEN_ERROR_CMS_RESPONSE} l_response.make (req, res, api)
+				send_custom_access_denied (Void, <<"admin cache">>, req, res)
 			end
-			l_response.execute
 		end
 
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -77,10 +77,10 @@ feature -- Execution
 				create s.make_empty
 				f.append_to_html (l_response.wsf_theme, s)
 				l_response.set_main_content (s)
+				l_response.execute
 			else
-				create {FORBIDDEN_ERROR_CMS_RESPONSE} l_response.make (req, res, api)
+				send_custom_access_denied (Void, <<"admin cache">>, req, res)
 			end
-			l_response.execute
 		end
 
 feature -- Widget

@@ -460,7 +460,7 @@ feature -- Blocks initialization
 	block_region_preference (a_block_id: READABLE_STRING_8; a_default_region: READABLE_STRING_8): READABLE_STRING_8
 			-- Region associated with `a_block_id' in configuration, if any.
 		do
-			Result := setup.text_item_or_default ("blocks." + a_block_id + ".region", a_default_region).as_string_8_conversion
+			Result := setup.string_8_item_or_default ("blocks." + a_block_id + ".region", a_default_region)
 		end
 
 feature -- Block management
@@ -1119,9 +1119,14 @@ feature -- Generation
 			add_to_primary_menu (lnk)
 			api.hooks.invoke_menu_system_alter (menu_system, Current)
 
-			if api.enabled_modules.count = 1 then
+			if api.enabled_modules.count <= 1 then
 					-- It is the required CMS_CORE_MODULE!
-				add_to_primary_menu (api.administration_link ("Install", "install"))
+				lnk := api.administration_link ("Install", "install")
+				if lnk.location.same_string (location) then
+						-- We are on the Install page!
+				else
+					add_to_primary_menu (lnk)
+				end
 			end
 
 				-- Blocks
@@ -1454,7 +1459,6 @@ feature {NONE} -- Execution
 		local
 			cms_page: CMS_HTML_PAGE
 			page: CMS_HTML_PAGE_RESPONSE
-			utf: UTF_CONVERTER
 			h: HTTP_HEADER
 			l_new_location: detachable READABLE_STRING_8
 			l_redirection_delay: like redirection_delay
@@ -1473,7 +1477,7 @@ feature {NONE} -- Execution
 			end
 
 			if attached {READABLE_STRING_GENERAL} optional_content_type as l_type then
-				create cms_page.make_typed (utf.utf_32_string_to_utf_8_string_8 (l_type))
+				create cms_page.make_typed (api.utf_8_encoded (l_type))
 			else
 				create cms_page.make
 			end

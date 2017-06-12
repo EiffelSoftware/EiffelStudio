@@ -21,6 +21,8 @@ inherit
 			oauth20_api
 		end
 
+	CMS_ADMINISTRABLE
+
 	CMS_HOOK_BLOCK
 
 	SHARED_EXECUTION_ENVIRONMENT
@@ -49,6 +51,13 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: STRING = "oauth20"
+
+feature {CMS_EXECUTION} -- Administration
+
+	administration: CMS_OAUTH_20_MODULE_ADMINISTRATION
+		do
+			create Result.make (Current)
+		end
 
 feature {CMS_API} -- Module Initialization			
 
@@ -130,7 +139,7 @@ feature {CMS_API} -- Module management
 			end
 		end
 
-feature {CMS_API} -- Access: API
+feature {CMS_API, CMS_MODULE_ADMINISTRATION} -- Access: API
 
 	oauth20_api: detachable CMS_OAUTH_20_API
 			-- <Precursor>	
@@ -280,7 +289,7 @@ feature -- Hooks
 				attached {WSF_STRING} req.cookie (a_oauth20_api.session_token) as l_cookie_token
 			then
 					-- Logout OAuth
-				create l_cookie.make (a_oauth20_api.session_token, l_cookie_token.value)
+				create l_cookie.make (a_oauth20_api.session_token, l_cookie_token.url_encoded_value)
 				l_cookie.set_path ("/")
 				l_cookie.set_max_age (-1)
 				res.add_cookie (l_cookie)
@@ -386,7 +395,8 @@ feature -- OAuth2 Login with Provider
 			l_cookie: WSF_COOKIE
 			es: CMS_AUTHENTICATION_EMAIL_SERVICE
 		do
-			if  attached {WSF_STRING} req.path_parameter (oauth_callback_path_parameter) as l_callback and then
+			if
+				attached {WSF_STRING} req.path_parameter (oauth_callback_path_parameter) as l_callback and then
 			    attached {CMS_OAUTH_20_CONSUMER} a_oauth_api.oauth_consumer_by_callback (l_callback.value) as l_consumer and then
 				attached {WSF_STRING} req.query_parameter (oauth_code_query_parameter) as l_code
 			then
@@ -411,7 +421,7 @@ feature -- OAuth2 Login with Provider
 								a_oauth_api.update_user_oauth2 (l_access_token.token, l_user_profile, p_user, l_consumer.name )
 							else
 									-- create a oauth entry
-								a_oauth_api.new_user_oauth2 (l_access_token.token, l_user_profile, p_user, l_consumer.name )
+								a_oauth_api.new_user_oauth2 (l_access_token.token, l_user_profile.to_string_32, p_user, l_consumer.name )
 							end
 							create l_cookie.make (a_oauth_api.session_token, l_access_token.token)
 							l_cookie.set_max_age (l_access_token.expires_in)
@@ -468,7 +478,7 @@ feature -- OAuth2 Login with Provider
 					attached {WSF_STRING} req.form_parameter ("email") as l_email and then
 					attached r.user as l_user
 				then
-					l_user.set_email (l_email.value)
+					l_user.set_email (api.utf_8_encoded (l_email.value))
 					a_oauth_api.new_user_oauth2 ("none", "none", l_user, l_consumer.value )
 						-- TODO send email?
 				end

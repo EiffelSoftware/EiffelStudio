@@ -40,7 +40,6 @@ feature -- Access
 	regions: ARRAY [STRING]
 		local
 			i: INTEGER
-			utf: UTF_CONVERTER
 			l_regions: like internal_regions
 		do
 			l_regions := internal_regions
@@ -51,7 +50,7 @@ feature -- Access
 					across
 						tb as ic
 					loop
-						l_regions.force (utf.utf_32_string_to_utf_8_string_8 (ic.key), i) -- NOTE: UTF-8 encoded !
+						l_regions.force (utf_8_encoded (ic.key), i) -- NOTE: UTF-8 encoded !
 						i := i + 1
 					end
 				else

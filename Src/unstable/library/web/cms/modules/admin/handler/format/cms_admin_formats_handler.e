@@ -152,8 +152,8 @@ feature -- View/edit Format
 					i := i + 1
 					l_name := f_ic.item.name
 					l_all_filters.force (f_ic.item, l_name)
-					create cb.make_with_value ("filters[" + l_name + "]", l_name)
-					cb.set_title (f_ic.item.title)
+					create cb.make_with_value ("filters[" + l_name + "]", l_name.to_string_32)
+					cb.set_title (f_ic.item.title.to_string_32)
 					cb.set_checked (True)
 
 					create hf.make_with_text ("filter_weight[" + l_name + "]", i.out)
@@ -178,8 +178,8 @@ feature -- View/edit Format
 				l_name := f_ic.item.name
 				if l_all_filters.has (l_name) then
 				else
-					create cb.make_with_value ("filters[" + l_name + "]", l_name)
-					cb.set_title (f_ic.item.title)
+					create cb.make_with_value ("filters[" + l_name + "]", l_name.to_string_32)
+					cb.set_title (f_ic.item.title.to_string_32)
 					create ftb_row.make (2)
 					ftb.add_row (ftb_row)
 					ftb_row.add_widget (cb)
@@ -195,8 +195,8 @@ feature -- View/edit Format
 				api.content_types as ct_ic
 			loop
 				l_name := ct_ic.item.name
-				create cb.make_with_value ("content_types[]", l_name)
-				cb.set_title (l_name)
+				create cb.make_with_value ("content_types[]", l_name.to_string_32)
+				cb.set_title (l_name.to_string_32)
 				if f /= Void and then ct_ic.item.has_format (f.name) then
 					cb.set_checked (True)
 				end

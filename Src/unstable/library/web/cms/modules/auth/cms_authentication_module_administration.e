@@ -54,9 +54,8 @@ feature -- Request handling
 				-- get them from the configuration file and load them into
 				-- the setup class.
 
-			create {FORBIDDEN_ERROR_CMS_RESPONSE} l_response.make (req, res, api)
 			if
-				l_response.has_permission ("admin registration")
+				api.has_permission ("admin registration")
 			then
 				l_user_api := api.user_api
 
@@ -127,7 +126,7 @@ feature -- Request handling
 				l_response.set_main_content (s)
 				l_response.execute
 			else
-				l_response.execute
+				api.response_api.send_access_denied (Void, req, res)
 			end
 		end
 

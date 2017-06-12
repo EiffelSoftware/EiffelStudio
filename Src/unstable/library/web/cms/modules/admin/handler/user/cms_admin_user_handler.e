@@ -1,12 +1,12 @@
 note
 	description: "[
-		Handler for a CMS user in the CMS interface
+		Administration handler for a CMS user in the CMS interface
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CMS_USER_HANDLER
+	CMS_ADMIN_USER_HANDLER
 
 inherit
 	CMS_HANDLER
@@ -79,12 +79,10 @@ feature -- HTTP Methods
 		local
 			l_user: detachable CMS_USER
 			l_uid: INTEGER_64
-			edit_response: CMS_USER_FORM_RESPONSE
-			view_response: CMS_USER_VIEW_RESPONSE
-			r: CMS_RESPONSE
+			edit_response: CMS_ADMIN_USER_FORM_RESPONSE
+			view_response: CMS_ADMIN_USER_VIEW_RESPONSE
 		do
-			create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-			if r.has_permission ("admin users") then
+			if api.has_permission ("admin users") then
 				if req.percent_encoded_path_info.ends_with_general ("/edit") then
 					check valid_url: req.percent_encoded_path_info.starts_with_general (api.administration_path ("/user/")) end
 					create edit_response.make (req, res, api)
@@ -111,18 +109,16 @@ feature -- HTTP Methods
 					end
 				end
 			else
-				r.execute
+				send_access_denied (req, res)
 			end
 		end
 
 
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			edit_response: CMS_USER_FORM_RESPONSE
-			r: CMS_RESPONSE
+			edit_response: CMS_ADMIN_USER_FORM_RESPONSE
 		do
-			create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-			if r.has_permission ("admin users") then
+			if api.has_permission ("admin users") then
 				if req.percent_encoded_path_info.ends_with_general ("/edit") then
 					create edit_response.make (req, res, api)
 					edit_response.execute
@@ -138,7 +134,7 @@ feature -- HTTP Methods
 					edit_response.execute
 				end
 			else
-				r.execute
+				send_access_denied (req, res)
 			end
 		end
 
@@ -190,7 +186,7 @@ feature {NONE} -- New User
 
 	create_new_user (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			edit_response: CMS_USER_FORM_RESPONSE
+			edit_response: CMS_ADMIN_USER_FORM_RESPONSE
 		do
 			if req.percent_encoded_path_info.starts_with (api.administration_path ("/add/user")) then
 				create edit_response.make (req, res, api)

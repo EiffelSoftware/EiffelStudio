@@ -17,15 +17,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: READABLE_STRING_32)
+	make (a_name: READABLE_STRING_GENERAL)
 			-- Create an object with name `a_name'.
 		require
 			a_name_not_empty: not a_name.is_whitespace
 		do
-			name := a_name
+			if attached {READABLE_STRING_32} a_name as n32 then
+				name := n32
+			else
+				name := a_name.to_string_32
+			end
 			initialize
 		ensure
-			name_set: name = a_name
+			name_set: name.same_string_general (a_name)
 			status_not_active: status = not_active
 		end
 

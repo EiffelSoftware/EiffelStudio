@@ -57,15 +57,13 @@ feature -- GCSE Keys
 
 	gcse_cx_key (api: CMS_API): detachable READABLE_STRING_8
 			-- Get google custom search engine id.
-		local
-			utf: UTF_CONVERTER
 		do
 			if attached api.module_configuration (Current, Void) as cfg then
 				if
 					attached cfg.text_item ("gcse.search_engine_id") as l_gcse_cx_key and then
 					not l_gcse_cx_key.is_empty
 				then
-					Result := utf.utf_32_string_to_utf_8_string_8 (l_gcse_cx_key)
+					Result := api.utf_8_encoded (l_gcse_cx_key)
 				end
 			end
 		end

@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {CMS_USER_VIEW_RESPONSE}."
+	description: "Summary description for {CMS_ADMIN_USER_VIEW_RESPONSE}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CMS_USER_VIEW_RESPONSE
+	CMS_ADMIN_USER_VIEW_RESPONSE
 
 inherit
 	CMS_RESPONSE
@@ -26,7 +26,6 @@ feature -- Query
 				end
 			end
 		end
-
 
 feature -- Execution
 

@@ -3,7 +3,7 @@ note
 			handler for CMS admin in the CMS interface.
 
 			TODO: implement REST API.
-		]"	
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -64,12 +64,11 @@ feature -- HTTP Methods
 		local
 			r: CMS_RESPONSE
 		do
-			create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-			if r.has_permission ("manage " + {CMS_ADMIN_MODULE}.name) then
+			if api.has_permission ("manage " + {CMS_ADMIN_MODULE}.name) then
 				create {CMS_ADMIN_RESPONSE} r.make (req, res, api)
 				r.execute
 			else
-				r.execute
+				send_access_denied (req, res)
 			end
 		end
 
@@ -77,12 +76,11 @@ feature -- HTTP Methods
 		local
 			r: CMS_RESPONSE
 		do
-			create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-			if r.has_permission ("manage " + {CMS_ADMIN_MODULE}.name) then
+			if api.has_permission ("manage " + {CMS_ADMIN_MODULE}.name) then
 				create {CMS_ADMIN_RESPONSE} r.make (req, res, api)
 				r.execute
 			else
-				r.execute
+				send_access_denied (req, res)
 			end
 		end
 

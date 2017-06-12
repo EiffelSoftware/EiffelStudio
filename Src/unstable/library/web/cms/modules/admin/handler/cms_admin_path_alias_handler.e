@@ -81,10 +81,10 @@ feature -- Execution
 					s.append ("</ul>")
 				end
 				l_response.set_main_content (s)
+				l_response.execute
 			else
-				create {FORBIDDEN_ERROR_CMS_RESPONSE} l_response.make (req, res, api)
+				send_access_denied (req, res)
 			end
-			l_response.execute
 		end
 
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -114,11 +114,11 @@ feature -- Execution
 
 				l_response.set_redirection (l_response.location)
 				l_response.set_redirection_delay (3)
+				l_response.execute
 			else
-				create {FORBIDDEN_ERROR_CMS_RESPONSE} l_response.make (req, res, api)
-				l_response.set_redirection (l_response.location)
+				send_access_denied (req, res)
+					-- CHECK: set redirection?
 			end
-			l_response.execute
 		end
 
 end

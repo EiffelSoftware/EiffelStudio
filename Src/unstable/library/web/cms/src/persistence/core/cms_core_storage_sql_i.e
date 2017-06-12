@@ -123,7 +123,7 @@ feature -- URL aliases
 			sql_finalize
 		end
 
-	source_of_path_alias (a_alias: READABLE_STRING_8): detachable READABLE_STRING_8
+	source_of_path_alias (a_alias: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]

@@ -28,7 +28,6 @@ feature -- Execution
 			-- Execute `req' responding in `res'.
 		local
 			fhdl: WSF_FILE_SYSTEM_HANDLER
-			not_found: NOT_FOUND_ERROR_CMS_RESPONSE
 		do
 			if attached {WSF_STRING} req.path_parameter ("theme_id") as l_theme_id then
 				create fhdl.make_hidden_with_path (api.theme_assets_location_for (l_theme_id.value))
@@ -39,8 +38,7 @@ feature -- Execution
 			elseif attached not_found_handler as h then
 				h.call (req.percent_encoded_path_info, req, res)
 			else
-				create not_found.make (req, res, api)
-				not_found.execute
+				api.response_api.send_not_found (Void, req, res)
 			end
 		end
 

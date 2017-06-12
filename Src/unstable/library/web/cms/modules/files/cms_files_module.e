@@ -140,8 +140,8 @@ feature -- Handler
 		do
 			check req.is_get_request_method end
 			if not api.has_permission (browse_files_permission) then
-				create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-				r.add_error_message ("You are not allowed to browse CMS files!")
+				create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make_with_permissions (req, res, api, <<browse_files_permission>>)
+				r.add_error_message ("You are not allowed to browse files!")
 			elseif attached {WSF_STRING} req.path_parameter ("filename") as p_filename then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 
@@ -276,7 +276,7 @@ feature -- Handler
 						body.append ("<form action=%"" + r.url (uploads_location, Void) + "%" class=%"dropzone%">")
 						body.append ("</form>%N")
 
-						body.append ("<a href=%""+ r.url (uploads_location, Void) +"?basic_upload=yes%">Use basic file uploading.</a>%N")
+						body.append ("<a href=%""+ r.url (uploads_location, Void) + "?basic_upload=yes%">Use basic file uploading.</a>%N")
 					end
 					body.append ("</div>")
 				end
@@ -284,15 +284,15 @@ feature -- Handler
 				if req.is_get_head_request_method then
 						-- Build the response.
 					if r.has_permission (browse_files_permission) then
-						body.append ("<br/><div class=%"center%"><a class=%"button%" href=%""+ r.url (uploads_location, Void) +"%">Refresh uploaded</a></div>")
+						body.append ("<br/><div class=%"center%"><a class=%"button%" href=%"" + r.url (uploads_location, Void) + "%">Refresh uploaded</a></div>")
 
 						append_uploaded_file_album_to (req, api, body)
 					else
 						r.add_warning_message ("You are not allowed to browse files!")
 					end
 				end
-
 				r.set_main_content (body)
+				r.execute
 			elseif req.is_post_request_method then
 				if api.has_permission (upload_files_permission) then
 					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
@@ -305,14 +305,13 @@ feature -- Handler
 						r.set_redirection (r.url (uploads_location, Void))
 					end
 					r.set_main_content (body)
+					r.execute
 				else
-					create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-					r.set_main_content ("You are not allowed to upload file!")
+					api.response_api.send_permissions_access_denied ("You are not allowed to upload file!", <<upload_files_permission>>, req, res)
 				end
 			else
-				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				api.response_api.send_bad_request (Void, req, res)
 			end
-			r.execute
 		end
 
 	process_uploaded_files (req: WSF_REQUEST; api: CMS_API; a_output: STRING)
@@ -472,7 +471,7 @@ feature -- Handler
 		do
 			if attached files_api as l_files_api then
 				if not api.has_permission (admin_files_permission) then
-					create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
+					create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make_with_permissions (req, res, api, <<admin_files_permission>>)
 					r.add_error_message ("You are not allowed to remove file!")
 				elseif attached {WSF_STRING} req.path_parameter ("filename") as p_filename then
 					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)

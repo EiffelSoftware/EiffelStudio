@@ -37,8 +37,6 @@ feature -- HTTP Methods
 
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
-		local
-			l_error: NOT_FOUND_ERROR_CMS_RESPONSE
 		do
 			check user_void: user = Void end
 			if attached user_from_request (req) as l_user then
@@ -47,13 +45,11 @@ feature -- HTTP Methods
 				Precursor (req, res)
 			else
 					-- Throw a bad request error because the user is not valid
-				create l_error.make (req, res, api)
 				if attached user_parameter (req) as l_user_id then
-					l_error.set_main_content ("<h1>Error</h1>User with id " + api.html_encoded (l_user_id) + " not found!</h1>")
+					api.response_api.send_not_found ("<h1>Error</h1>User with id " + api.html_encoded (l_user_id) + " not found!</h1>", req, res)
 				else
-					l_error.set_main_content ("<h1>Error</h1>User not found!</h1>")
+					api.response_api.send_not_found ("<h1>Error</h1>User not found!</h1>", req, res)
 				end
-				l_error.execute
 			end
 			user := Void
 		end

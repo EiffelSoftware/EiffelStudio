@@ -226,7 +226,7 @@ feature -- Hooks
 					create o.make (req.absolute_script_url ("/account/auth/login-with-openid"))
 					o.ask_email (True)
 					o.ask_all_info (False)
-					if attached o.auth_url (p_openid) as l_url then
+					if p_openid.is_valid_as_string_8 and then attached o.auth_url (p_openid.to_string_8) as l_url then
 						r.set_redirection (l_url)
 					else
 						s.append (" Failure")
@@ -248,7 +248,7 @@ feature -- Hooks
 				attached {WSF_STRING} req.cookie (a_openid_api.session_token) as l_cookie_token
 			then
 					-- Logout OAuth
-				create l_cookie.make (a_openid_api.session_token, l_cookie_token.value)
+				create l_cookie.make (a_openid_api.session_token, l_cookie_token.url_encoded_value)
 				l_cookie.set_path ("/")
 				l_cookie.set_max_age (-1)
 				res.add_cookie (l_cookie)
@@ -335,6 +335,7 @@ feature -- Openid Login
 			b: STRING
 			o: OPENID_CONSUMER
 			v: OPENID_CONSUMER_VALIDATION
+			l_email: STRING_8
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			create b.make_empty
@@ -346,8 +347,9 @@ feature -- Openid Login
 				v.validate
 				if v.is_valid then
 					if attached v.identity as l_identity and then
-					    attached v.email_attribute as l_email
+					    attached v.email_attribute as l_email_attrib
 					then
+						l_email := api.utf_8_encoded (l_email_attrib)
 						l_user_api := api.user_api
 						if attached l_user_api.user_by_email (l_email) as p_user then
 								-- User with email exist
@@ -355,7 +357,7 @@ feature -- Openid Login
 									-- Update openid entry?
 							else
 									-- create a oauth entry
-								a_openid_api.new_user_openid (l_identity,p_user)
+								a_openid_api.new_user_openid (l_identity, p_user)
 							end
 							create l_cookie.make (a_openid_api.session_token, l_identity)
 							l_cookie.set_max_age (a_openid_api.session_max_age)
@@ -368,7 +370,7 @@ feature -- Openid Login
 							l_roles.force (l_user_api.authenticated_user_role)
 
 								-- Create a new user and oauth entry
-							create l_user.make (l_email)
+							create l_user.make (l_email_attrib)
 							l_user.set_email (l_email)
 							l_user.set_password (new_token) -- generate a random password.
 							l_user.set_roles (l_roles)

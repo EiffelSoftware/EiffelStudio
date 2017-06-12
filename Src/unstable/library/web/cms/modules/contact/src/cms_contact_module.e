@@ -123,30 +123,26 @@ feature -- Recaptcha
 
 	recaptcha_secret_key (api: CMS_API): detachable READABLE_STRING_8
 			-- Get recaptcha security key.
-		local
-			utf: UTF_CONVERTER
 		do
 			if attached api.module_configuration (Current, Void) as cfg then
 				if
 					attached cfg.text_item ("recaptcha.secret_key") as l_recaptcha_key and then
 					not l_recaptcha_key.is_empty
 				then
-					Result := utf.utf_32_string_to_utf_8_string_8 (l_recaptcha_key)
+					Result := api.utf_8_encoded (l_recaptcha_key)
 				end
 			end
 		end
 
 	recaptcha_site_key (api: CMS_API): detachable READABLE_STRING_8
 			-- Get recaptcha security key.
-		local
-			utf: UTF_CONVERTER
 		do
 			if attached api.module_configuration (Current, Void) as cfg then
 				if
 					attached cfg.text_item ("recaptcha.site_key") as l_recaptcha_key and then
 					not l_recaptcha_key.is_empty
 				then
-					Result := utf.utf_32_string_to_utf_8_string_8 (l_recaptcha_key)
+					Result := api.utf_8_encoded (l_recaptcha_key)
 				end
 			end
 		end

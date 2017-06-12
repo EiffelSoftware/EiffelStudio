@@ -26,12 +26,10 @@
 		<library name="cms_contact_module" location="..\..\modules\contact\contact.ecf" readonly="false"/>
 		<library name="cms_custom_block_module" location="..\..\modules\custom_block\custom_block.ecf" readonly="false"/>
 		<library name="cms_demo_module" location="modules\demo\cms_demo_module.ecf" readonly="false"/>
-		<library name="cms_email_service" location="..\..\library\email\email.ecf" readonly="false"/>
 		<library name="cms_feed_aggregator_module" location="..\..\modules\feed_aggregator\feed_aggregator.ecf" readonly="false"/>
 		<library name="cms_files_module" location="..\..\modules\files\files.ecf" readonly="false"/>
-		<library name="cms_google_search_20_module" location="..\..\modules\google_search_20\google_search_20.ecf"/>
+		<library name="cms_google_search_20_module" location="..\..\modules\google_search_20\google_search_20"/>
 		<library name="cms_messaging_module" location="..\..\modules\messaging\messaging.ecf"/>
-		<library name="cms_model" location="..\..\library\model\cms_model.ecf" readonly="false"/>
 		<library name="cms_node_module" location="..\..\modules\node\node.ecf" readonly="false"/>
 		<library name="cms_oauth_20_module" location="..\..\modules\oauth20\oauth20.ecf" readonly="false"/>
 		<library name="cms_openid_module" location="..\..\modules\openid\openid.ecf" readonly="false"/>

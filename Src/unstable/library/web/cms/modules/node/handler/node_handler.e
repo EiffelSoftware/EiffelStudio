@@ -75,6 +75,14 @@ feature -- Query
 			end
 		end
 
+feature -- Permissions
+
+	view_unpublished_permissions (a_node: CMS_NODE): ITERABLE [READABLE_STRING_8]
+			-- Permissions to view unpublished node `a_node`.
+		do
+			Result := <<"view unpublished " + a_node.content_type>>
+		end
+
 feature -- HTTP Methods
 
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -148,7 +156,7 @@ feature -- HTTP Methods
 							attached api.user as l_user and then
 							(	node_api.is_author_of_node (l_user, l_node)
 								or else (
-									api.user_has_permission (l_user, "view unpublished " + l_node.content_type)
+									api.user_has_permissions (l_user, view_unpublished_permissions (l_node))
 								)
 							)
 						then
@@ -403,14 +411,9 @@ feature -- Error
 
 	send_access_denied_to_unpublished_node (req: WSF_REQUEST; res: WSF_RESPONSE; a_node: CMS_NODE)
 			-- Forbidden response.
-		local
-			r: CMS_RESPONSE
 		do
-			create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-			r.set_main_content ("This content is NOT published!")
-			r.execute
+			send_custom_access_denied ("This content is NOT published!", view_unpublished_permissions (a_node), req, res)
 		end
-
 
 feature {NONE} -- Node
 

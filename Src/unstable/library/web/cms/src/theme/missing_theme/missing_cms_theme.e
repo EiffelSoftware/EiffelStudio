@@ -47,7 +47,7 @@ feature -- Access
 	page_html (page: CMS_HTML_PAGE): STRING_8
 		do
 			to_implement ("Add a better response message, maybe using smarty template")
-			Result := "Service Unavailable"
+			Result := "Service Unavailable (missing theme!)"
 		end
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

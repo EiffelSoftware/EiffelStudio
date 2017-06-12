@@ -37,7 +37,7 @@ feature -- Access: Users
 		do
 		end
 
-	user_oauth2_without_consumer_by_token (a_token: READABLE_STRING_GENERAL ): detachable CMS_USER
+	user_oauth2_without_consumer_by_token (a_token: READABLE_STRING_GENERAL): detachable CMS_USER
 		do
 		end
 
@@ -48,24 +48,28 @@ feature -- Access: Consumers
 			create {ARRAYED_LIST [STRING]} Result.make (0)
 		end
 
-	oauth_consumer_by_name (a_name: READABLE_STRING_8): detachable CMS_OAUTH_20_CONSUMER
+	oauth_consumer_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_OAUTH_20_CONSUMER
 			-- Retrieve a consumer by name `a_name', if any.
 		do
 		end
 
-	oauth_consumer_by_callback  (a_callback: READABLE_STRING_8): detachable CMS_OAUTH_20_CONSUMER
+	oauth_consumer_by_callback (a_callback: READABLE_STRING_GENERAL): detachable CMS_OAUTH_20_CONSUMER
 			-- Retrieve a consumer by callback `a_callback', if any.
 		do
 		end
 
 feature -- Change: User Oauth2
 
-	new_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_32; a_user: CMS_USER; a_consumer_table: READABLE_STRING_GENERAL)
+	save_oauth_consumer (a_cons: CMS_OAUTH_20_CONSUMER)
+		do
+		end
+
+	new_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_GENERAL; a_user: CMS_USER; a_consumer_table: READABLE_STRING_GENERAL)
 			-- Add a new user with oauth2  authentication.
 		do
 		end
 
-	update_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_32; a_user: CMS_USER; a_consumer_table: READABLE_STRING_GENERAL )
+	update_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_GENERAL; a_user: CMS_USER; a_consumer_table: READABLE_STRING_GENERAL )
 			-- Update user `a_user' with oauth2 authentication.
 		do
 		end

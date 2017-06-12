@@ -148,7 +148,7 @@ feature --Access: Consumers
 			sql_finalize
 		end
 
-	oauth_consumer_by_name (a_name: READABLE_STRING_8): detachable CMS_OAUTH_20_CONSUMER
+	oauth_consumer_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_OAUTH_20_CONSUMER
 			-- Retrieve a consumer by name `a_name', if any.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -169,7 +169,7 @@ feature --Access: Consumers
 			sql_finalize
 		end
 
-	oauth_consumer_by_callback  (a_callback: READABLE_STRING_8): detachable CMS_OAUTH_20_CONSUMER
+	oauth_consumer_by_callback  (a_callback: READABLE_STRING_GENERAL): detachable CMS_OAUTH_20_CONSUMER
 			-- Retrieve a consumer by callback `a_callback', if any.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -192,7 +192,37 @@ feature --Access: Consumers
 
 feature -- Change: User OAuth
 
-	new_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_32; a_user: CMS_USER; a_consumer: READABLE_STRING_GENERAL)
+	save_oauth_consumer (a_cons: CMS_OAUTH_20_CONSUMER)
+			-- Save consumer `a_cons`.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+			if a_cons.has_id then
+				create l_parameters.make (10)
+				l_parameters.put (a_cons.id, "cid")
+			else
+				create l_parameters.make (9)
+			end
+			l_parameters.put (a_cons.name, "name")
+			l_parameters.put (a_cons.api_secret, "api_secret")
+			l_parameters.put (a_cons.api_key, "api_key")
+			l_parameters.put (a_cons.scope, "scope")
+			l_parameters.put (a_cons.protected_resource_url, "protected_resource_url")
+			l_parameters.put (a_cons.callback_name, "callback_name")
+			l_parameters.put (a_cons.extractor, "extractor")
+			l_parameters.put (a_cons.authorize_url, "authorize_url")
+			l_parameters.put (a_cons.endpoint, "endpoint")
+
+			if a_cons.has_id then
+				sql_modify (sql_update_oauth2_consumers, l_parameters)
+			else
+				sql_insert (sql_insert_oauth2_consumers, l_parameters)
+			end
+			sql_finalize
+		end
+
+	new_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_GENERAL; a_user: CMS_USER; a_consumer: READABLE_STRING_GENERAL)
 			-- Add a new user with oauth2  authentication.
 		-- <Precursor>.
 		local
@@ -209,7 +239,6 @@ feature -- Change: User OAuth
 			l_parameters.put (a_user_profile, "profile")
 			l_parameters.put (create {DATE_TIME}.make_now_utc, "utc_date")
 			l_parameters.put (a_user.email, "email")
-
 
 			create l_string.make_from_string (sql_insert_oauth2_template)
 			l_string.replace_substring_all ("$table_name", oauth2_sql_table_name (a_consumer))
@@ -355,5 +384,9 @@ feature {NONE} -- Consumer
 	Sql_oauth_consumer_callback: STRING = "SELECT * FROM oauth2_consumers where callback_name =:name;"
 
 	Sql_oauth_consumer_name: STRING = "SELECT * FROM oauth2_consumers where name =:name;"
+
+	sql_insert_oauth2_consumers: STRING = "INSERT INTO oauth2_consumers (name, api_secret, api_key,  scope, protected_resource_url, callback_name, extractor, authorize_url, endpoint) VALUES (:name, :api_secret, :api_key,  :scope, :protected_resource_url, :callback_name, :extractor, :authorize_url, :endpoint);"
+
+	sql_update_oauth2_consumers: STRING = "UPDATE oauth2_consumers SET name = :name, api_secret = :api_secret, api_key = :api_key, scope = :scope, protected_resource_url = :protected_resource_url, callback_name = :callback_name, extractor = :extractor, authorize_url = :authorize_url, endpoint = :endpoint WHERE cid = :cid;"
 
 end

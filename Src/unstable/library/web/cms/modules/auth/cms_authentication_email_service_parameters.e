@@ -13,7 +13,6 @@ feature {NONE} -- Initialization
 
 	make (a_cms_api: CMS_API)
 		local
-			utf: UTF_CONVERTER
 			s: detachable READABLE_STRING_32
 			l_utf8_site_name: IMMUTABLE_STRING_8
 			l_contact_email, l_subject_register, l_subject_activate, l_subject_password, l_subject_oauth: detachable READABLE_STRING_8
@@ -31,23 +30,23 @@ feature {NONE} -- Initialization
 			if attached a_cms_api.module_configuration_by_name ({CMS_AUTHENTICATION_MODULE}.name, Void) as cfg then
 				s := cfg.text_item ("email")
 				if s /= Void then
-					l_contact_email := utf.utf_32_string_to_utf_8_string_8 (s)
+					l_contact_email := cms_api.utf_8_encoded (s)
 				end
 				s := cfg.text_item ("subject_register")
 				if s /= Void then
-					l_subject_register := utf.utf_32_string_to_utf_8_string_8 (s)
+					l_subject_register := cms_api.utf_8_encoded (s)
 				end
 				s := cfg.text_item ("subject_activate")
 				if s /= Void then
-					l_subject_register := utf.utf_32_string_to_utf_8_string_8 (s)
+					l_subject_register := cms_api.utf_8_encoded (s)
 				end
 				s := cfg.text_item ("subject_password")
 				if s /= Void then
-					l_subject_register := utf.utf_32_string_to_utf_8_string_8 (s)
+					l_subject_register := cms_api.utf_8_encoded (s)
 				end
 				s := cfg.text_item ("subject_oauth")
 				if s /= Void then
-					l_subject_oauth := utf.utf_32_string_to_utf_8_string_8 (s)
+					l_subject_oauth := cms_api.utf_8_encoded (s)
 				end
 			end
 			if l_contact_email = Void then

@@ -642,7 +642,7 @@ feature -- Status Report
 
 feature -- Logging
 
-	logs (a_category: detachable READABLE_STRING_8; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_LOG]
+	logs (a_category: detachable READABLE_STRING_GENERAL; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_LOG]
 			-- List of recent logs from `a_lower' to `a_lower+a_count'.
 			-- If `a_category' is set, filter to return only associated logs.
 			-- If `a_count' <= 0 then, return all logs.
@@ -1001,6 +1001,19 @@ feature -- Access: API
 			Result := l_api
 		end
 
+	response_api: CMS_RESPONSE_API
+			-- API to send predefined cms responses.
+		local
+			l_api: like internal_response_api
+		do
+			l_api := internal_response_api
+			if l_api = Void then
+				create l_api.make (Current)
+				internal_response_api := l_api
+			end
+			Result := l_api
+		end
+
 feature -- Hooks
 
 	setup_core_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
@@ -1014,9 +1027,9 @@ feature -- Hooks
 
 feature -- Path aliases	
 
-	is_valid_path_alias (a_alias: READABLE_STRING_8): BOOLEAN
+	is_valid_path_alias (a_alias: READABLE_STRING_GENERAL): BOOLEAN
 		do
-			Result := a_alias.is_empty or else not a_alias.starts_with_general ("/")
+			Result := a_alias.is_empty or else not a_alias.starts_with ("/")
 		end
 
 	set_path_alias (a_source, a_alias: READABLE_STRING_8; a_keep_previous: BOOLEAN)
@@ -1076,7 +1089,7 @@ feature -- Path aliases
 			end
 		end
 
-	source_of_path_alias (a_alias: READABLE_STRING_8): detachable READABLE_STRING_8
+	source_of_path_alias (a_alias: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
 			-- Resolved path for alias `a_alias'.
 			--| the CMS supports aliases for path, and then this function simply returns
 			--| the effective target path/url for this `a_alias'.
@@ -1105,6 +1118,9 @@ feature {NONE}-- Implementation
 
 	internal_user_api: detachable like user_api
 			-- Cached value for `user_api`.
+
+	internal_response_api: detachable like response_api
+			-- Cached value for `response_api`.			
 
 feature -- Environment/ theme
 

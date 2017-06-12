@@ -223,14 +223,14 @@ $(document).ready(function() {
 		local
 			r: CMS_RESPONSE
 		do
-			if api.has_permission ("use messaging") or api.has_permission ("message any user") then
+			if api.has_permissions (<<"use messaging", "message any user">>) then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 				r.values.force ("messaging", "messaging")
 				r.set_main_content (new_html_messaging_form (r, api))
+				r.execute
 			else
-				create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				api.response_api.send_permissions_access_denied (Void, <<"use messaging", "message any user">>, req, res)
 			end
-			r.execute
 		end
 
 	handle_post_messaging (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -313,10 +313,10 @@ $(document).ready(function() {
 					end
 				end
 				r.set_main_content (s)
+				r.execute
 			else
-				create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				api.response_api.send_permissions_access_denied (Void, <<"message any user">>, req, res)
 			end
-			r.execute
 		end
 
 feature {NONE} -- Helpers
@@ -337,9 +337,8 @@ feature {NONE} -- Contact Message
 	resolved_template_text (api: CMS_API; a_text: READABLE_STRING_GENERAL; a_target_user: detachable CMS_USER): STRING_8
 		local
 			smt: CMS_SMARTY_TEMPLATE_TEXT
-			utf: UTF_CONVERTER
 		do
-			create smt.make (utf.utf_32_string_to_utf_8_string_8 (a_text))
+			create smt.make (api.utf_8_encoded (a_text))
 			across
 				api.builtin_variables as vars_ic
 			loop

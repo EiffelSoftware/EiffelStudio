@@ -87,7 +87,7 @@ feature -- Access
 		do
 			if attached text_item (a_name) as s then
 				if s.is_valid_as_string_8 then
-					Result := s.as_string_8
+					Result := s.to_string_8
 				else
 					Result := utf.escaped_utf_32_string_to_utf_8_string_8 (s)
 				end
@@ -101,10 +101,11 @@ feature -- Access
 			l_chain: NOTIFICATION_CHAIN_MAILER
 			l_storage_mailer: NOTIFICATION_STORAGE_MAILER
 			l_mailer: detachable NOTIFICATION_MAILER
+			b: BOOLEAN
 		do
 			if not retried then
-				if attached text_item ("mailer.smtp") as l_smtp then
-					create {NOTIFICATION_SMTP_MAILER} l_mailer.make (l_smtp.as_string_8_conversion)
+				if attached text_item ("mailer.smtp") as l_smtp and then l_smtp.is_valid_as_string_8 then
+					create {NOTIFICATION_SMTP_MAILER} l_mailer.make (l_smtp.to_string_8)
 				elseif attached text_item ("mailer.sendmail") as l_sendmail then
 					create {NOTIFICATION_SENDMAIL_MAILER} l_mailer.make_with_location (l_sendmail)
 				end
@@ -120,19 +121,24 @@ feature -- Access
 						if f.exists and then f.is_directory then
 							create {NOTIFICATION_STORAGE_MAILER} l_storage_mailer.make (create {NOTIFICATION_EMAIL_DIRECTORY_STORAGE}.make (f.path))
 						else
-							if not f.exists then
-								f.create_read_write
-								f.close
+							if f.exists then
+								b := True
+							else
+								b := (create {CMS_FILE_SYSTEM_UTILITIES}).safe_create_raw_file (f.path)
 							end
-							create {NOTIFICATION_STORAGE_MAILER} l_storage_mailer.make (create {NOTIFICATION_EMAIL_FILE_STORAGE}.make (f))
+							if b then
+								create {NOTIFICATION_STORAGE_MAILER} l_storage_mailer.make (create {NOTIFICATION_EMAIL_FILE_STORAGE}.make (f))
+							end
 						end
 					end
 					if l_mailer /= Void then
 						create l_chain.make (l_mailer)
 						l_chain.set_next (l_storage_mailer)
 						l_mailer := l_chain
-					else
+					elseif l_storage_mailer /= Void then
 						l_mailer := l_storage_mailer
+					else
+						create {NOTIFICATION_NULL_MAILER} l_mailer
 					end
 				elseif l_mailer = Void then
 					create {NOTIFICATION_STORAGE_MAILER} l_mailer.make (create {NOTIFICATION_EMAIL_FILE_STORAGE}.make (io.error))

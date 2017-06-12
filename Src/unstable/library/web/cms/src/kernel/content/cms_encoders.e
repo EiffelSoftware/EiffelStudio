@@ -21,6 +21,14 @@ inherit
 
 feature -- Encoders
 
+	utf_8_encoded (a_string: READABLE_STRING_GENERAL): STRING_8
+			-- `a_string' encoded using UTF-8.
+		local
+			utf: UTF_CONVERTER
+		do
+			Result := utf.utf_32_string_to_utf_8_string_8 (a_string)
+		end
+
 	html_encoded (a_string: READABLE_STRING_GENERAL): STRING_8
 			-- `a_string' encoded for html output.
 		do
@@ -36,7 +44,7 @@ feature -- Encoders
 				Result := ""
 			end
 		end
-		
+
 	url_encoded,
 	percent_encoded (a_string: READABLE_STRING_GENERAL): STRING_8
 			-- `a_string' encoded with percent encoding, mainly used for url.
@@ -45,6 +53,6 @@ feature -- Encoders
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

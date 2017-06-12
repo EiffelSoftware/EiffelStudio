@@ -241,7 +241,11 @@ feature -- Form
 				if attached fd.string_item ("content") as l_content then
 					b.append ("<strong>Content:</strong><div class=%"content%">")
 					if l_format /= Void then
-						b.append (l_format.formatted_output (l_content))
+						if l_content.is_valid_as_string_8 then
+							b.append (l_format.formatted_output (l_content.to_string_8))
+						else
+							b.append (l_format.formatted_output (api.utf_8_encoded (l_content)))
+						end
 					else
 						b.append (html_encoded (l_content))
 					end

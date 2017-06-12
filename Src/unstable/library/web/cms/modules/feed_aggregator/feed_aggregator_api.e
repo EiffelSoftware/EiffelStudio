@@ -37,7 +37,6 @@ feature -- Access
 			l_locations: detachable STRING_TABLE [READABLE_STRING_8]
 			loc_name: READABLE_STRING_GENERAL
 			loc: READABLE_STRING_8
-			utf: UTF_CONVERTER
 			l_table: like internal_aggregations
 		do
 			l_table := internal_aggregations
@@ -58,20 +57,20 @@ feature -- Access
 								across
 									l_location_list as loc_ic
 								loop
-									l_locations.force (utf.utf_32_string_to_utf_8_string_8 (loc_ic.item), loc_ic.item)
+									l_locations.force (cms_api.utf_8_encoded (loc_ic.item), loc_ic.item)
 								end
 							end
 							if attached cfg.text_table_item ({STRING_32} "feeds." + l_feed_id + ".locations") as l_location_table then
 								across
 									l_location_table as loc_tb_ic
 								loop
-									l_locations.force (utf.utf_32_string_to_utf_8_string_8 (loc_tb_ic.item), loc_tb_ic.key)
+									l_locations.force (cms_api.utf_8_encoded (loc_tb_ic.item), loc_tb_ic.key)
 								end
 							end
 							if
 								attached cfg.text_item ({STRING_32} "feeds." + l_feed_id + ".location") as l_location
 							then
-								l_locations.force (utf.utf_32_string_to_utf_8_string_8 (l_location), l_location)
+								l_locations.force (cms_api.utf_8_encoded (l_location), l_location)
 							end
 							if l_locations /= Void and then not l_locations.is_empty then
 								l_title := cfg.text_item ({STRING_32} "feeds." + l_feed_id + ".title")
@@ -95,7 +94,7 @@ feature -- Access
 								across
 									l_locations as loc_ic
 								loop
-									agg.locations.force (utf.utf_32_string_to_utf_8_string_8 (loc_ic.item))
+									agg.locations.force (cms_api.utf_8_encoded (loc_ic.item))
 								end
 								Result.force (agg, l_feed_id)
 								if attached cfg.text_list_item ({STRING_32} "feeds." + l_feed_id + ".categories") as l_cats then

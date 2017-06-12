@@ -253,11 +253,19 @@ feature {NONE} -- Implementation
 		end
 
 	replace_substring_all (s: STRING_GENERAL; a_old: READABLE_STRING_8; a_new: STRING_GENERAL)
+		local
+			utf: UTF_CONVERTER
 		do
 			if attached {STRING_8} s as s8 then
-				s8.replace_substring_all (a_old, a_new.to_string_8)
+				if a_new.is_valid_as_string_8 then
+					s8.replace_substring_all (a_old, a_new.to_string_8)
+				else
+					check a_new_is_string_8: False end
+						-- Use UTF-8 for now.
+					s8.replace_substring_all (a_old, utf.utf_32_string_to_utf_8_string_8 (a_new))
+				end
 			elseif attached {STRING_32} s as s32 then
-				s32.replace_substring_all (a_old, a_new)
+				s32.replace_substring_all (a_old.to_string_32, a_new)
 			end
 		end
 

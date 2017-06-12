@@ -51,7 +51,7 @@ feature {NONE} -- Router/administration
 			l_roles_handler: CMS_ADMIN_ROLES_HANDLER
 			l_formats_handler: CMS_ADMIN_FORMATS_HANDLER
 
-			l_user_handler: CMS_USER_HANDLER
+			l_user_handler: CMS_ADMIN_USER_HANDLER
 			l_role_handler:	CMS_ROLE_HANDLER
 			l_admin_logs_handler: CMS_LOGS_HANDLER
 

@@ -372,7 +372,7 @@ feature -- Hooks
 				loop
 					if
 						attached ic.item.typename as l_typename and then
-						across l_node_typenames as t_ic some t_ic.item.same_string (l_typename) end
+						across l_node_typenames as t_ic some t_ic.item.same_string_general (l_typename) end
 					then
 						if ic.item.entity.is_integer then
 							nid := ic.item.entity.to_integer_64

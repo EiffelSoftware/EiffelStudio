@@ -143,11 +143,11 @@ feature -- HTTP Methods
 						s.append ("No entity found.")
 					end
 					l_page.set_main_content (s)
+					l_page.execute
 				else
 						-- Responding with `main_content_html (l_page)'.
-					create {NOT_FOUND_ERROR_CMS_RESPONSE} l_page.make (req, res, api)
+					send_not_found (req, res)
 				end
-				l_page.execute
 			else
 					-- Responding with `main_content_html (l_page)'.
 				create {BAD_REQUEST_ERROR_CMS_RESPONSE} l_page.make (req, res, api)

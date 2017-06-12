@@ -86,8 +86,7 @@ feature -- HTTP Methods
 				-- l_page.add_block (create {CMS_CONTENT_BLOCK}.make ("nodes_warning", Void, "/nodes/ is not yet fully implemented<br/>", Void), "highlighted")
 				l_page.execute
 			else
-				create {FORBIDDEN_ERROR_CMS_RESPONSE} l_page.make (req, res, api)
-				l_page.execute
+				send_custom_access_denied (Void, <<"view trash", "view any trash", "view own trash">>, req, res)
 			end
 		end
 

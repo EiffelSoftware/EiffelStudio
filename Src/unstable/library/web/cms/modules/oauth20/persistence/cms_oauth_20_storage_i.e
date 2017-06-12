@@ -46,24 +46,29 @@ feature -- Access: Consumers
 		deferred
 		end
 
-	oauth_consumer_by_name (a_name: READABLE_STRING_8): detachable CMS_OAUTH_20_CONSUMER
+	oauth_consumer_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_OAUTH_20_CONSUMER
 			-- Retrieve a consumer by name `a_name', if any.
 		deferred
 		end
 
-	oauth_consumer_by_callback  (a_callback: READABLE_STRING_8): detachable CMS_OAUTH_20_CONSUMER
+	oauth_consumer_by_callback (a_callback: READABLE_STRING_GENERAL): detachable CMS_OAUTH_20_CONSUMER
 			-- Retrieve a consumer by callback `a_callback', if any.
 		deferred
 		end
 
 feature -- Change: User Oauth2
 
-	new_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_32; a_user: CMS_USER; a_consumer_table: READABLE_STRING_GENERAL)
+	save_oauth_consumer (a_cons: CMS_OAUTH_20_CONSUMER)
+			-- Save consumer `a_cons`.
+		deferred
+		end
+
+	new_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_GENERAL; a_user: CMS_USER; a_consumer_table: READABLE_STRING_GENERAL)
 			-- Add a new user with oauth2  authentication.
 		deferred
 		end
 
-	update_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_32; a_user: CMS_USER; a_consumer_table: READABLE_STRING_GENERAL )
+	update_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_GENERAL; a_user: CMS_USER; a_consumer_table: READABLE_STRING_GENERAL )
 			-- Update user `a_user' with oauth2 authentication.
 		deferred
 		end

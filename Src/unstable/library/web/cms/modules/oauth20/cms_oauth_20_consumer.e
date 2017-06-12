@@ -38,7 +38,17 @@ feature {NONE} -- Initialization
 			set_name ("")
 		end
 
+feature -- Status report
+
+	has_id: BOOLEAN
+		do
+			Result := id > 0
+		end
+
 feature -- Access
+
+	id: INTEGER_64
+			-- unique identifier.
 
 	endpoint: READABLE_STRING_8
 			-- 	Url that receives the access token request.
@@ -67,9 +77,6 @@ feature -- Access
 
 	name: READABLE_STRING_32
 			-- consumer name.
-
-	id: INTEGER_64
-			-- unique identifier.
 
 feature -- Element change
 

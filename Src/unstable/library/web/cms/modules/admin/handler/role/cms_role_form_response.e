@@ -348,9 +348,9 @@ feature -- Form
 							fs.extend (lab)
 							string_sorter.sort (l_permissions)
 							across l_permissions as ic loop
-								create cb.make_with_value ("cms_permissions", ic.item)
+								create cb.make_with_value ("cms_permissions", ic.item.to_string_32)
 								cb.set_checked (across l_role_permissions as rp_ic some rp_ic.item.is_case_insensitive_equal (ic.item) end)
-								cb.set_title (ic.item)
+								cb.set_title (ic.item.to_string_32)
 								fs.extend (cb)
 							end
 						end
@@ -389,7 +389,7 @@ feature -- Form
 	update_role (a_form_data: WSF_FORM_DATA; a_role: CMS_USER_ROLE)
 			-- Update node `a_node' with form_data `a_form_data' for the given content type `a_content_type'.
 		local
-			l_perm: READABLE_STRING_8
+			l_perm: READABLE_STRING_GENERAL
 		do
 			if attached a_form_data.string_item ("op") as f_op then
 				if f_op.is_case_insensitive_equal_general ("Update role") then
@@ -400,16 +400,16 @@ feature -- Form
 					then
 						if attached {WSF_STRING} a_form_data.item ("cms_permissions") as u_role then
 							a_role.permissions.wipe_out
-							a_role.add_permission (u_role.value)
+							a_role.add_permission (api.utf_8_encoded (u_role.value)) -- TODO: utf-8 or require valid string 8?
 						elseif attached {WSF_MULTIPLE_STRING} a_form_data.item ("cms_permissions") as u_permissions then
 							a_role.permissions.wipe_out
 								-- Enable checked permissions.
 							across
 								u_permissions as ic
 							loop
-								l_perm := ic.item.value.as_string_8
+								l_perm := ic.item.value
 								if not l_perm.is_whitespace then
-									a_role.add_permission (l_perm)
+									a_role.add_permission (api.utf_8_encoded (l_perm)) -- TODO: utf-8 or require valid string 8?
 								end
 							end
 						else
@@ -421,9 +421,9 @@ feature -- Form
 								l_cms_perms.values as ic
 							loop
 								if attached {WSF_STRING} ic.item as p then
-									l_perm := p.value.as_string_8
+									l_perm := p.value
 									if not l_perm.is_whitespace then
-										a_role.add_permission (l_perm)
+										a_role.add_permission (api.utf_8_encoded (l_perm))
 									end
 								end
 							end

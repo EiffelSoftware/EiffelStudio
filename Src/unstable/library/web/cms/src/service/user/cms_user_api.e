@@ -126,6 +126,17 @@ feature -- Access: user
 			Result := storage.recent_users (params.offset.to_integer_32, params.size.to_integer_32)
 		end
 
+	admin_user: detachable CMS_USER
+			-- Admin user if any.
+		do
+			if
+				attached user_by_id (1) as u and then
+				is_admin_user (u)
+			then
+				Result := u
+			end
+		end
+
 feature -- Change User
 
 	new_user (a_user: CMS_USER)

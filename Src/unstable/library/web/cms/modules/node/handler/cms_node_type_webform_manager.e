@@ -142,8 +142,8 @@ feature -- Forms ...
 					ti.set_description ("Optionally specify an alternative URL path by which this content can be accessed.<br/>%NFor example, type 'about' when writing an about page. Use a relative path or the URL alias won't work.")
 				end
 
-				ti.set_text_value (l_uri)
-				ti.set_placeholder (l_auto_path_alias)
+				ti.set_text_value (l_uri.to_string_32)
+				ti.set_placeholder (l_auto_path_alias.to_string_32)
 				ti.set_validation_action (agent (fd: WSF_FORM_DATA; ia_response: NODE_RESPONSE; ia_node: detachable CMS_NODE)
 						do
 							if
@@ -204,7 +204,7 @@ feature -- Forms ...
 				end
 					-- Auto path alias / suggestion
 				create thi.make ("auto_path_alias")
-				thi.set_text_value (l_auto_path_alias)
+				thi.set_text_value (l_auto_path_alias.to_string_32)
 				thi.set_is_readonly (True)
 				f.insert_before (thi, w)
 			end

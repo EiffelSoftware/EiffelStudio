@@ -79,7 +79,7 @@ feature -- Access: Consumers OAuth20
 			Result := openid_storage.openid_consumers
 		end
 
-	openid_consumer_by_name (a_name: READABLE_STRING_8): detachable CMS_OPENID_CONSUMER
+	openid_consumer_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_OPENID_CONSUMER
 			-- Retrieve a consumer by name `a_name', if any.
 		do
 			Result := openid_storage.openid_consumer_by_name (a_name)

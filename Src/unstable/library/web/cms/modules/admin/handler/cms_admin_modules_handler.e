@@ -60,8 +60,7 @@ feature -- Execution
 					l_denied := True
 				end
 				if l_denied then
-					create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-					r.set_main_content ("You do not have permission to access CMS module uninstallation procedure!")
+					send_custom_access_denied ("You do not have permission to access CMS module uninstallation procedure!", Void, req, res)
 				else
 					create s.make_empty
 					across
@@ -82,8 +81,8 @@ feature -- Execution
 					end
 					s.append (r.link ("Back to modules management", r.location, Void))
 					r.set_main_content (s)
+					r.execute
 				end
-				r.execute
 			else
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 				create s.make_empty
@@ -119,8 +118,7 @@ feature -- Execution
 						l_denied := True
 					end
 					if l_denied then
-						create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-						r.set_main_content ("You do not have permission to access CMS module installation procedure!")
+						send_custom_access_denied ("You do not have permission to access CMS module installation procedure!", Void, req, res)
 					else
 						f := modules_to_install_collection_web_form (r)
 						f.submit_actions.extend (agent on_installation_submit)
@@ -138,8 +136,8 @@ feature -- Execution
 							r.add_notice_message ("Operation on module(s) succeeded.")
 							r.set_redirection (r.location)
 						end
+						r.execute
 					end
-					r.execute
 				elseif l_op.same_string ("Update status") then
 					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 					if api.has_permission ("admin module") then
@@ -159,15 +157,12 @@ feature -- Execution
 							r.add_notice_message ("Operation on module(s) succeeded.")
 							r.set_redirection (r.location)
 						end
-
+						r.execute
 					else
-						create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-						r.set_main_content ("You do not have permission to administrate CMS modules!")
+						send_custom_access_denied ("You do not have permission to administrate CMS modules!", Void, req, res)
 					end
-					r.execute
 				else
-					create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
-					r.execute
+					send_bad_request (req, res)
 				end
 			else
 				do_get (req, res)

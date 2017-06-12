@@ -196,24 +196,24 @@ feature -- Settings: router
 		local
 			fhdl: WSF_FILE_SYSTEM_HANDLER
 			themehdl: CMS_THEME_FILE_SYSTEM_HANDLER
+			l_not_found_handler_agent: PROCEDURE [READABLE_STRING_8, WSF_REQUEST, WSF_RESPONSE]
 		do
 			api.logger.put_information (generator + ".configure_api_file_handler", Void)
 
-			create themehdl.make (api)
-			themehdl.set_not_found_handler (agent (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
+			l_not_found_handler_agent := agent (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
 				do
 					execute_default (ia_req, ia_res)
-				end)
+				end
+
+			create themehdl.make (api)
+			themehdl.set_not_found_handler (l_not_found_handler_agent)
 				-- See CMS_API.api.theme_path_for (...) for the hardcoded "/theme/" path.
 			a_router.handle ("/theme/{theme_id}{/vars}", themehdl, router.methods_GET)
 
 				-- "/files/.."
 			create fhdl.make_hidden_with_path (api.files_location)
 			fhdl.disable_index
-			fhdl.set_not_found_handler (agent (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
-				do
-					execute_default (ia_req, ia_res)
-				end)
+			fhdl.set_not_found_handler (l_not_found_handler_agent)
 			a_router.handle (api.files_path, fhdl, router.methods_GET)
 
 				-- files folder from specific module.
@@ -222,10 +222,7 @@ feature -- Settings: router
 				-- www folder. Should we keep this??
 			create fhdl.make_hidden_with_path (setup.environment.www_path)
 			fhdl.disable_index
-			fhdl.set_not_found_handler (agent  (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
-				do
-					execute_default (ia_req, ia_res)
-				end)
+			fhdl.set_not_found_handler (l_not_found_handler_agent)
 			a_router.handle ("/", fhdl, router.methods_GET)
 		end
 
@@ -328,7 +325,6 @@ feature -- Execution
 		local
 			ut: FILE_UTILITIES
 			p: PATH
-			r: NOT_FOUND_ERROR_CMS_RESPONSE
 			f: WSF_FILE_RESPONSE
 		do
 			p := api.theme_assets_location.extended ("favicon.ico")
@@ -337,8 +333,7 @@ feature -- Execution
 				f.set_expires_in_seconds (86_400) -- 24h = 60 sec * 60 min * 24 = 86 400 minutes
 				res.send (f)
 			else
-				create r.make (req, res, api)
-				r.execute
+				api.response_api.send_not_found (Void, req, res)
 			end
 		end
 
@@ -347,7 +342,6 @@ feature -- Execution
 			-- i.e: "/module/{modname}/files{/vars}"
 		local
 			fhdl: WSF_FILE_SYSTEM_HANDLER
-			r: NOT_FOUND_ERROR_CMS_RESPONSE
 		do
 			if attached {WSF_STRING} req.path_parameter ("modname") as l_mod_name then
 				create fhdl.make_with_path (api.module_location_by_name (l_mod_name.url_encoded_value).extended ("files"))
@@ -358,19 +352,15 @@ feature -- Execution
 					end)
 				fhdl.execute_starts_with ("/module/" + l_mod_name.url_encoded_value + "/files/", req, res)
 			else
-				create r.make (req, res, api)
-				r.execute
+				api.response_api.send_not_found (Void, req, res)
 			end
 		end
 
 	execute_default (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Default request handler if no other are relevant
-		local
-			r: NOT_FOUND_ERROR_CMS_RESPONSE
 		do
 			to_implement ("Default response for CMS_SERVICE")
-			create r.make (req, res, api)
-			r.execute
+			api.response_api.send_not_found (Void, req, res)
 		end
 
 note

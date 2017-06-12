@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {CMS_USER_FORM_RESPONSE}."
+	description: "Summary description for {CMS_ADMIN_USER_FORM_RESPONSE}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CMS_USER_FORM_RESPONSE
+	CMS_ADMIN_USER_FORM_RESPONSE
 
 inherit
 	CMS_RESPONSE
@@ -324,10 +324,10 @@ feature -- Form
 				create fs.make
 				fs.set_legend ("Basic User Account Information")
 				fs.extend_html_text ("<div><string><label>User name </label></strong><br></div>")
-				fs.extend_html_text (a_user.name)
+				fs.extend_raw_text (a_user.name)
 
 				if attached a_user.email as l_email then
-					create fe.make_with_text ("email", l_email)
+					create fe.make_with_text ("email", l_email.to_string_32)
 				else
 					create fe.make_with_text ("email", "")
 				end
@@ -477,7 +477,7 @@ feature -- Form
 								api.user_api.user_by_email (l_email) = Void
 							then
 									-- Valid email
-								a_user.set_email (l_email)
+								a_user.set_email (api.utf_8_encoded (l_email))
 							else
 								if attached l_user.email as u_email and then not u_email.is_case_insensitive_equal_general (l_email) then
 									a_form_data.report_invalid_field ("email", "Email already exist!")

@@ -6,7 +6,7 @@ note
 class
 	CMS_FILE_SYSTEM_UTILITIES
 
-feature -- Files
+feature -- File path
 
 	relative_path_inside (a_path: PATH; a_root_path: PATH): detachable PATH
 			-- Relative path from `a_root_path` to `a_path`, or Void if `a_path` is not inside `a_root_path`.
@@ -42,6 +42,8 @@ feature -- Files
 				end
 			end
 		end
+
+feature -- Read
 
 	files_from_location (a_loc: PATH; is_recursive: BOOLEAN): detachable LIST [PATH]
 		local
@@ -82,13 +84,14 @@ feature -- Files
 			retry
 		end
 
+feature -- Read/Write		
+
 	safe_copy_file (src,dst: PATH): BOOLEAN
 			-- Copy file from `src` to `dst'
 			-- and return True on success, False on failure.
 		local
 			retried: BOOLEAN
 			f_src, f_dst: RAW_FILE
-			d: DIRECTORY
 		do
 			Result := False
 			if retried then
@@ -96,21 +99,68 @@ feature -- Files
 			else
 				create f_src.make_with_path (src)
 				if f_src.exists and then f_src.is_access_readable then
-					if attached dst.parent as l_parent then
-						create d.make_with_path (l_parent)
-						if not d.exists then
-							d.recursive_create_dir
+					if safe_create_parent_directory (dst) then
+						create f_dst.make_with_path (dst)
+						if not f_dst.exists or else f_dst.is_access_writable then
+							f_src.open_read
+							f_dst.open_write
+							f_src.copy_to (f_dst)
+							f_dst.close
+							f_src.close
+							Result := True -- Succeed!
 						end
+					else
+						Result := False -- No parent directory!
 					end
-					create f_dst.make_with_path (dst)
-					if not f_dst.exists or else f_dst.is_access_writable then
-						f_src.open_read
-						f_dst.open_write
-						f_src.copy_to (f_dst)
-						f_dst.close
-						f_src.close
-						Result := True -- Succeed!
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+feature -- Create
+
+	safe_create_raw_file (p: PATH): BOOLEAN
+			-- Create file at `p`
+			-- and return True on success or if file already exists, False on failure.
+		local
+			retried: BOOLEAN
+			f: RAW_FILE
+		do
+			Result := False
+			if not retried then
+				if safe_create_parent_directory (p) then
+					create f.make_with_path (p)
+					if f.exists then
+						Result := True
+					else
+						f.create_read_write
+						f.close
+						Result := f.exists
 					end
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	safe_create_parent_directory (p: PATH): BOOLEAN
+			-- Create parent directory of `p`
+			-- and return True on success or if parent already exists, False on failure.
+		local
+			retried: BOOLEAN
+			d: DIRECTORY
+		do
+			Result := False
+			if not retried then
+				create d.make_with_path (p.parent)
+				if d.exists then
+					Result := True
+				else
+					d.recursive_create_dir
+					Result := d.exists
 				end
 			end
 		rescue

@@ -71,7 +71,7 @@ feature -- Execution
 			s.append ("<div class=%"info%"> ")
 			s.append ("<h4>Role Information</h4>")
 			s.append ("<p>Role:")
-			s.append (a_role.name)
+			s.append (html_encoded (a_role.name))
 			s.append ("</p>")
 
 			s.append ("<h4>Permissions:</h4>")

@@ -39,7 +39,7 @@ feature -- Access: Consumers
 			create {ARRAYED_LIST[STRING]}Result.make(0)
 		end
 
-	openid_consumer_by_name (a_name: READABLE_STRING_8): detachable CMS_OPENID_CONSUMER
+	openid_consumer_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_OPENID_CONSUMER
 			-- <Precursor>
 		do
 		end

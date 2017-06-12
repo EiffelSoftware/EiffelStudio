@@ -183,10 +183,10 @@ feature {NONE} -- Implementation: routes
 					create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
 					r.add_block (login_block ("login", "Wrong username", r), "content")
 				end
+				r.execute
 			else
-				create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				api.response_api.send_access_denied (Void, req, res)
 			end
-			r.execute
 		end
 
 feature -- Hooks configuration

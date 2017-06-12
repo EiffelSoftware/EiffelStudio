@@ -277,13 +277,13 @@ feature -- HTTP Methods
 
 					l_typename := ic.item.name
 					create w_cb.make_with_value ("typenames[]", api.html_encoded (l_typename))
-					w_cb.set_title (ic.item.name)
+					w_cb.set_title (ic.item.name.to_string_32)
 					wtb_row.set_item (create {WSF_WIDGET_TABLE_ITEM}.make_with_content (w_cb), 1)
 
 					v := Void
 					if
 						l_typenames /= Void and then
-						across l_typenames as tn_ic some l_typename.is_case_insensitive_equal (tn_ic.item) end
+						across l_typenames as tn_ic some l_typename.is_case_insensitive_equal_general (tn_ic.item) end
 					then
 						w_cb.set_checked (True)
 						if attached taxonomy_api.vocabularies_for_type (l_typename) as v_list then
@@ -319,11 +319,11 @@ feature -- HTTP Methods
 				create s.make_empty
 				f.append_to_html (l_page.wsf_theme, s)
 				l_page.set_main_content (s)
+				l_page.execute
 			else
 					-- Responding with `main_content_html (l_page)'.
-				create {NOT_FOUND_ERROR_CMS_RESPONSE} l_page.make (req, res, api)
+				send_not_found (req, res)
 			end
-			l_page.execute
 		end
 
 	do_get_vocabularies (req: WSF_REQUEST; res: WSF_RESPONSE)

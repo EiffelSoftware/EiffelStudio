@@ -81,7 +81,7 @@ feature -- Basic Operations / Internal
 
 feature -- Basic Operations / Contact
 
-	send_account_evaluation (a_user: CMS_USER; a_application, a_url_activate, a_url_reject, a_host: READABLE_STRING_8)
+	send_account_evaluation (a_user: CMS_USER; a_application: READABLE_STRING_GENERAL; a_url_activate, a_url_reject, a_host: READABLE_STRING_8)
 			-- Send new user register to webmaster to confirm or reject itt.
 		local
 			l_message: STRING
@@ -95,7 +95,7 @@ feature -- Basic Operations / Contact
 			else
 				l_message.replace_substring_all ("$email", "unknown email")
 			end
-			l_message.replace_substring_all ("$application", a_application)
+			l_message.replace_substring_all ("$application", cms_api.utf_8_encoded (a_application))
 			l_message.replace_substring_all ("$activation_url", a_url_activate)
 			l_message.replace_substring_all ("$rejection_url", a_url_reject)
 			send_message (contact_email_address, contact_email_address, parameters.contact_subject_account_evaluation, l_message)

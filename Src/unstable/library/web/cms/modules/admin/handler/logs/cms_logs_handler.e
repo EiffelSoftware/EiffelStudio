@@ -63,7 +63,7 @@ feature -- HTTP Methods
 			l_logs: LIST [CMS_LOG]
 			l_log: CMS_LOG
 			r: CMS_RESPONSE
-			l_cat: detachable READABLE_STRING_8
+			l_cat: detachable READABLE_STRING_32
 			l_lower: INTEGER
 			l_count: INTEGER
 			b: STRING
@@ -104,11 +104,10 @@ feature -- HTTP Methods
 				r.set_main_content (b)
 				r.set_page_title ("Logs ...")
 				r.set_title ("Logs")
+				r.execute
 			else
-				create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				send_access_denied (req, res)
 			end
-			r.execute
-
 		end
 
 end

@@ -15,6 +15,5 @@
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
 		<cluster name="recaptcha" location=".\src\" recursive="true"/>
-		</cluster>
 	</target>
 </system>

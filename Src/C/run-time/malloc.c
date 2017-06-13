@@ -925,7 +925,7 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_I
 						zone->ov_dftype = dftype;
 						zone->ov_dtype = dtype;
 						(init) (obj + OVERHEAD + offset, obj + OVERHEAD + offset);
-						(cp) (obj + OVERHEAD + offset);
+						nstcall = -1, (cp) (obj + OVERHEAD + offset);
 						offset += elem_size;
 					}
 					RT_GC_WEAN(obj);
@@ -951,7 +951,7 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_I
 						zone->ov_flags = EO_EXP;	/* Expanded type */
 						zone->ov_dftype = dftype;
 						zone->ov_dtype = dtype;
-						(cp) (obj + OVERHEAD + offset);
+						nstcall = -1, (cp) (obj + OVERHEAD + offset);
 						offset += elem_size;
 					}
 					RT_GC_WEAN(obj);
@@ -969,11 +969,24 @@ rt_public EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_I
 #ifndef WORKBENCH
 		} else {
 			if (cp) {
+					/* See test#exec091. */
+				EIF_REFERENCE expanded_object;
+
 				RT_GC_PROTECT(obj);
+					/* Creation procedure expects regular object header, let's provide it. */
+				expanded_object = emalloc (dftype);
+				RT_GC_PROTECT(expanded_object);
 				for (i = lower, offset = elem_size * i; i <= upper; i++) {
-					cp (obj + offset);
+						/* Start initialization for every object from scratch. */
+					memset (expanded_object, 0, elem_size);
+						/* Call creation procedure. */
+					nstcall = -1, (cp) (expanded_object);
+						/* Copy initialized object value to the area. */
+					memcpy (obj + offset, expanded_object, elem_size);
+						/* Advance to next object. */
 					offset += elem_size;
 				}
+				RT_GC_WEAN(expanded_object);
 				RT_GC_WEAN(obj);
 			}
 		}

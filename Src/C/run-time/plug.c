@@ -666,36 +666,41 @@ rt_private void recursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, int wh
 		}
 	}
 
-	/* Invariant check */
+		/* Invariant check.
+		 * Skip this step for an expanded object because the corresponding reference class is in the set of its parents.
+		 * See test#exec091.
+		 */
+	if (EIF_IS_EXPANDED_TYPE(System(dtype))) {
 #ifndef WORKBENCH
-	{
-		void (*cn_inv)(EIF_REFERENCE, EIF_INTEGER);
-		cn_inv = FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER)) System(dtype).cn_inv;
-		if (cn_inv) {
-			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER)) cn_inv)(obj, where);
-		}
-	}
-#else
-	{
-		BODY_INDEX body_id;
-		EIF_TYPED_VALUE *last;
-
-		CBodyId(body_id,INVARIANT_ID,dtype);
-		if (body_id != INVALID_ID) {
-			if (egc_frozen [body_id]) {	/* Frozen invariant */
-				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER)) egc_frozen[body_id])
-				  	(obj, where);
-			} else {
-				/* Melted invariant */
-				last = eif_opstack_push_empty(&op_stack);
-				last->type = SK_REF;
-				last->it_ref = obj;
-				IC = melt[body_id];
-				xiinv(MTC IC, where);
+		{
+			void (*cn_inv)(EIF_REFERENCE, EIF_INTEGER);
+			cn_inv = FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER)) System(dtype).cn_inv;
+			if (cn_inv) {
+				(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER)) cn_inv)(obj, where);
 			}
 		}
-	}
+#else
+		{
+			BODY_INDEX body_id;
+			EIF_TYPED_VALUE *last;
+
+			CBodyId(body_id,INVARIANT_ID,dtype);
+			if (body_id != INVALID_ID) {
+				if (egc_frozen [body_id]) {	/* Frozen invariant */
+					(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER)) egc_frozen[body_id])
+				  		(obj, where);
+				} else {
+					/* Melted invariant */
+					last = eif_opstack_push_empty(&op_stack);
+					last->type = SK_REF;
+					last->it_ref = obj;
+					IC = melt[body_id];
+					xiinv(MTC IC, where);
+				}
+			}
+		}
 #endif
+	}
 
 		/* No more propection for `obj' */
 	RT_GC_WEAN(obj);

@@ -1,7 +1,21 @@
-In TEST1 make
-Checking invariant inv1
-In TEST1 make
-Checking invariant inv1
-In TEST1 make
-Checking invariant inv1
+Basic
+0: create invariant
+1: create invariant
+2: create invariant
+3: invariant
+invariant
+4: create invariant
+5: create invariant
+create invariant
+
+Reference
+0: create invariant
+1: create invariant
+2: create invariant
+3: invariant
+invariant
+4: create invariant
+5: create invariant
+create invariant
+
 Execution completed

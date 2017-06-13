@@ -166,42 +166,42 @@ feature {NONE} -- Externals
 
 	c_next_item (a_item: POINTER; a_res: POINTER; a_count: TYPED_POINTER [NATURAL_32]): NATURAL_32
 		external
-			"C inline use <windows.h>"
+			"C inline use <objidl.h>"
 		alias
 			"((IEnumSTATSTG*)$a_item)->lpVtbl->Next ((IEnumSTATSTG*)$a_item, 1, (STATSTG*)$a_res, (ULONG*)$a_count)"
 		end
 
 	c_skip (a_item: POINTER; n: NATURAL_32)
 		external
-			"C inline use <windows.h>"
+			"C inline use <objidl.h>"
 		alias
-			"((IEnumSTATSTG*)$a_item)->lpVtbl->Skip ((IEnumSTATSTG*)$a_item, (ULONG)$n)"
+			"((IEnumSTATSTG*)$a_item)->lpVtbl->Skip ((IEnumSTATSTG*)$a_item, (ULONG)$n);"
 		end
 
 	c_reset (a_item: POINTER)
 		external
-			"C inline use <windows.h>"
+			"C inline use <objidl.h>"
 		alias
-			"((IEnumSTATSTG*)$a_item)->lpVtbl->Reset((IEnumSTATSTG*)$a_item)"
+			"((IEnumSTATSTG*)$a_item)->lpVtbl->Reset((IEnumSTATSTG*)$a_item);"
 		end
 
 	c_clone (a_item, a_res: POINTER)
 		external
-			"C inline use <windows.h>"
+			"C inline use <objidl.h>"
 		alias
-			"((IEnumSTATSTG*)$a_item)->lpVtbl->Clone ((IEnumSTATSTG*)$a_item, (IEnumSTATSTG**)$a_res)"
+			"((IEnumSTATSTG*)$a_item)->lpVtbl->Clone ((IEnumSTATSTG*)$a_item, (IEnumSTATSTG**)$a_res);"
 		end
 
 	c_release (a_item: POINTER)
 		external
-			"C inline use <windows.h>"
+			"C inline use <objidl.h>"
 		alias
-			"((IEnumSTATSTG*)$a_item)->lpVtbl->Release((IEnumSTATSTG*)$a_item)"
+			"((IEnumSTATSTG*)$a_item)->lpVtbl->Release((IEnumSTATSTG*)$a_item);"
 		end
 
 	c_sizeof_statstg: INTEGER
 		external
-			"C inline use <windows.h>"
+			"C inline use <objidl.h>"
 		alias
 			"sizeof(STATSTG)"
 		end

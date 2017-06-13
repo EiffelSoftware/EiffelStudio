@@ -4112,8 +4112,11 @@ rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struc
 		}
 	}
 
-	/* Invariant check */
-	{
+		/* Invariant check.
+		 * Skip this step for an expanded object because the corresponding reference class is in the set of its parents.
+		 * See test#exec091.
+		 */
+	if (EIF_IS_EXPANDED_TYPE(System(dtype))) {
 		BODY_INDEX body_id;
 		EIF_TYPED_VALUE *last;
 
@@ -6000,7 +6003,7 @@ rt_private void create_expanded_locals (
 	}
 }
 
-/* Initialize expanded locals and result (if required) */
+/* Initialize expanded result (if required) */
 rt_private void create_expanded_result (
 	struct stopchunk * scur,		/* Current chunk (stack context) */
 	EIF_TYPED_VALUE * stop			/* To save stack context */

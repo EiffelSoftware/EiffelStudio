@@ -244,7 +244,7 @@ rt_shared void rt_wexp(int routine_id, EIF_TYPE_INDEX dyn_type, EIF_REFERENCE ob
 	REQUIRE("Not called by non-GC thread", rt_is_call_allowed());
 	REQUIRE("Consistent object", Dtype(object) == dyn_type);
 
-	nstcall = 0;					/* No invariant check */
+	nstcall = -1;					/* Creation call invariant check. See test#exec091. */
 
 	OLD_IC = IC;					/* Save old IC */
 	((void (*)(EIF_REFERENCE)) (wfeat(routine_id, dyn_type))) (object);

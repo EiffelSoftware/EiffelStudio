@@ -1,5 +1,4 @@
-
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2017 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -7,26 +6,44 @@
 -- This is a test control file
 
 test_name 	 expanded-skip-class-invariant
-test_description The class invariant should be checked after creation/initialization of an entity of an expanded type, but it is not.  Invariant checking works correctly for non-expanded types.
+test_description The class invariant should be checked after creation/initialization of an entity of an expanded type, but it is not. Invariant checking works correctly for non-expanded types.
 
 copy_sub 	 Ace $TEST Ace
-copy_raw 	 test.e  $CLUSTER test.e
-copy_raw 	 test1.e  $CLUSTER test1.e
-compile_melted
-compile_result 	 validity_warning TEST Unused_local_warning
+copy_raw 	 test.e $CLUSTER test.e
 
-execute_work	 NONE exec_output1
-execute_result	 ok
-compare		 exec_output1 output
+copy_raw 	 tester_0.e $CLUSTER tester.e
+copy_raw 	 expanded_basic_0.e $CLUSTER expanded_basic.e
+copy_raw 	 expanded_reference_0.e $CLUSTER expanded_reference.e
 
 compile_frozen
 compile_result 	 ok
-
 c_compile_work
 c_compile_result ok
 
-execute_work	 NONE exec_output2
+copy_raw 	 tester.e $CLUSTER tester.e
+copy_raw 	 expanded_basic.e $CLUSTER expanded_basic.e
+copy_raw 	 expanded_reference.e $CLUSTER expanded_reference.e
+
+compile_melted
+compile_result 	 ok
+execute_work	 NONE exec_output_m
 execute_result	 ok
-compare		 exec_output2 output
+compare		 exec_output_m output
+
+compile_frozen
+compile_result 	 ok
+c_compile_work
+c_compile_result ok
+execute_work	 NONE exec_output_w
+execute_result	 ok
+compare		 exec_output_w output
+
+compile_final_keep
+compile_result 	 ok
+c_compile_final
+c_compile_result ok
+execute_final	 NONE exec_output_f
+execute_result	 ok
+compare		 exec_output_f output
 
 test_end

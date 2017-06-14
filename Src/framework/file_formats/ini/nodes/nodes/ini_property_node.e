@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Represents a INI document property AS node."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,20 +34,13 @@ feature {NONE} -- Initialization
 
 feature -- Node Access
 
-	identifer: INI_ID_NODE
-			-- Optional identifier.
-		obsolete
-			"Use `identifier' instead."
-		do
-		end
-
-	identifier: INI_ID_NODE
+	identifier: detachable INI_ID_NODE
 			-- Optional identifier.
 
 	assigner: INI_SYMBOL_NODE
 			-- Property assigner
 
-	value: INI_VALUE_NODE
+	value: detachable INI_VALUE_NODE
 			-- Optional value
 
 feature -- Access
@@ -91,7 +84,7 @@ feature -- Visitation
 
 feature {NONE} -- Internal Implementation Cache
 
-	internal_span: like span
+	internal_span: detachable like span
 			-- Cached version of `span'
 			-- Note: Do not use directly!
 
@@ -101,7 +94,7 @@ invariant
 	value_attached: identifier = Void implies value /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -132,4 +125,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {INI_PROPERTY_NODE}
+end

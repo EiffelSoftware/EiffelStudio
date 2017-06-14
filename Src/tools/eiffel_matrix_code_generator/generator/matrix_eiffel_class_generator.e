@@ -129,6 +129,9 @@ feature -- Basic Operations
 										if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
 											l_temp_buffer.keep_head (l_temp_buffer.count - 1)
 										end
+										if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = ',' then
+											l_temp_buffer.keep_head (l_temp_buffer.count - 1)
+										end
 										buffer (animations_token).append (string_formatter.format (icon_animation_template, [l_iname, l_name, l_animations.count, l_temp_buffer]))
 
 											-- Pixel buffer icon animations
@@ -138,6 +141,9 @@ feature -- Basic Operations
 											l_animations.forth
 										end
 										if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
+											l_temp_buffer.keep_head (l_temp_buffer.count - 1)
+										end
+										if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = ',' then
 											l_temp_buffer.keep_head (l_temp_buffer.count - 1)
 										end
 										buffer (animations_token).append (string_formatter.format (icon_buffer_animation_template, [l_ibname, l_name, l_animations.count, l_temp_buffer]))
@@ -444,10 +450,10 @@ feature {NONE} -- Constants: Templates
 	icon_name_registration_template: STRING = "%T%T%Ta_table.put ([{{NATURAL_8}} {1}, {{NATURAL_8}} {2}], {3})%N"
 			-- Template for icon name constants
 
-	icon_animation_registration_template: STRING = "%T%T%TResult.put (named_icon ({1}), {2})%N"
+	icon_animation_registration_template: STRING = "%T%T%T%Tnamed_icon ({1}),%N"
 			-- Template for icon animation indexes
 
-	icon_buffer_animation_registration_template: STRING = "%T%T%TResult.put (named_icon_buffer ({1}), {2})%N"
+	icon_buffer_animation_registration_template: STRING = "%T%T%T%Tnamed_icon_buffer ({1}),%N"
 			-- Template for icon buffer animation indexes
 
 	icon_template: STRING =
@@ -485,31 +491,33 @@ feature {NONE} -- Constants: Templates
 	icon_animation_template: STRING =
 			-- Template used for access pixel buffer features
 		"[
-	frozen {1}: ARRAY [EV_PIXMAP]
-			-- Access to '{2}' pixmap animation items.
-		once
-			create Result.make (1, {3})
-	{4}
-		ensure
-			{1}_attached: Result /= Void
-		end
-
-
-	]"
+			frozen {1}: ARRAY [EV_PIXMAP]
+					-- Access to '{2}' pixmap animation items.
+				once
+					Result := <<
+		{4}
+					>>
+				ensure
+					{1}_attached: Result /= Void
+				end
+		
+		
+		]"
 
 	icon_buffer_animation_template: STRING =
 			-- Template used for access pixel buffer features
 		"[
-	frozen {1}: ARRAY [EV_PIXEL_BUFFER]
-			-- Access to '{2}' pixel buffer animation items.
-		once
-			create Result.make (1, {3})
-	{4}
-		ensure
-			{1}_attached: Result /= Void
-		end
-
-
+			frozen {1}: ARRAY [EV_PIXEL_BUFFER]
+					-- Access to '{2}' pixel buffer animation items.
+				once
+					Result := <<
+		{4}
+					>>
+				ensure
+					{1}_attached: Result /= Void
+				end
+		
+		
 		]"
 
 feature {NONE} -- Implementation: Internal cache

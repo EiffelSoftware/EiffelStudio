@@ -5,12 +5,10 @@
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Framework">
+		<option warning="true" namespace="EiffelSoftware.Framework">
 		</option>
-		<capability>
-			<concurrency support="none"/>
-		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
 		<library name="text" location="$EIFFEL_SRC\framework\base\text\text.ecf" readonly="true"/>
 		<cluster name="error_manager" location=".\" recursive="true">
 			<option namespace="ErrorManager">

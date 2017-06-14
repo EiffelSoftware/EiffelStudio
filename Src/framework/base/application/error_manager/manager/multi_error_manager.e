@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "An error manager to handle multiple typed errors and warnings"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,12 +23,12 @@ inherit
 create
 	make
 
-feature {NONE} -- Implementation
+feature {NONE} -- Creation
 
 	make
 			-- Create a new error manager
 		do
-			create internal_errors.make
+			create internal_errors.make (0)
 			Precursor {ERROR_MANAGER}
 		end
 
@@ -36,8 +36,6 @@ feature -- Access
 
 	errors: LINEAR [ERROR_ERROR_INFO]
 			-- List of errors.
-		require
-			has_errors: has_errors
 		do
 			Result := internal_errors
 		ensure
@@ -51,13 +49,13 @@ feature -- Status report
 		do
 			Result := not has_errors
 		ensure then
-			not_has_errors: not has_errors
+			not_has_errors: Result implies not has_errors
 		end
 
 	has_errors: BOOLEAN
 			-- Does error manager have any errors to report?
 		do
-			Result := attached internal_errors as err and then not err.is_empty
+			Result := not internal_errors.is_empty
 		end
 
 feature -- Query
@@ -66,10 +64,8 @@ feature -- Query
 			-- <Precursor>
 		local
 			l_errors: like internal_errors
-			l_error: like last_error
 		do
 			Result := Precursor
-
 			l_errors := internal_errors
 			l_errors.finish
 			l_errors.remove
@@ -87,7 +83,9 @@ feature -- Status Setting
 	add_error (a_error: ERROR_ERROR_INFO; a_raise: BOOLEAN)
 			-- <Precursor>
 		do
-			internal_add_error (a_error)
+			if not internal_errors.has (a_error) then
+				internal_add_error (a_error)
+			end
 			if a_raise then
 				raise_on_error
 			end
@@ -103,11 +101,11 @@ feature -- Basic Operations
 			-- after calling.
 		require
 			a_printer_attached: a_printer /= Void
-			not_successful: not successful
+			not_successful: not is_successful
 		local
 			l_error: like pop_error
 		do
-			from until successful loop
+			from until is_successful loop
 				l_error := pop_error
 				check l_error_attached: l_error /= Void end
 				a_printer.print_error (l_error)
@@ -120,26 +118,24 @@ feature {NONE} -- Implementation
 			-- Add `a_err' to list of errors.
 		require
 			a_err_attached: a_err /= Void
-			already_added: not errors.has (a_err)
+			not_already_added: not internal_errors.has (a_err)
 		do
-			if not errors.has (a_err) then
-				internal_errors.extend (a_err)
-				last_error := a_err
-			end
+			internal_errors.extend (a_err)
+			last_error := a_err
 		ensure
 			errors_has_a_warn: errors.has (a_err)
 			last_error_set: last_error = a_err
-			not_successful: not successful
+			not_successful: not is_successful
 		end
 
-	internal_errors: LINKED_LIST [ERROR_ERROR_INFO]
+	internal_errors: ARRAYED_LIST [ERROR_ERROR_INFO]
 			-- Internal list of errors
 
 invariant
 	internal_errors_attached: internal_errors /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -170,4 +166,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {MULTI_ERROR_MANAGER}
+end

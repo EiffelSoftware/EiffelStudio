@@ -13,10 +13,6 @@ inherit
 	SSL_SHARED
 
 create
-	make_as_sslv23_client,
-	make_as_sslv23_server,
-	make_as_sslv3_client,
-	make_as_sslv3_server,
 	make_as_tlsv10_client,
 	make_as_tlsv10_server,
 	make_as_tlsv11_client,
@@ -28,30 +24,6 @@ create
 	make_from_context_pointer
 
 feature {NONE} -- Initialization
-
-	make_as_sslv23_client
-			-- Make an SSLv2 and SSLv3 capable client context.
-		local
-			method_pointer: POINTER
-		do
-				--| Initialize SSL, as this may be one of the entry points into SSL where it is
-				--| useful to initialize the SSL Library
-			initialize_ssl
-			method_pointer := c_sslv23_client_method
-			ctx := c_ssl_ctx_new (method_pointer)
-		end
-
-	make_as_sslv3_client
-			-- Make an SSLv3 capable client context.
-		local
-			method_pointer: POINTER
-		do
-				--| Initialize SSL, as this may be one of the entry points into SSL where it is
-				--| useful to initialize the SSL Library
-			initialize_ssl
-			method_pointer := c_sslv3_client_method
-			ctx := c_ssl_ctx_new (method_pointer)
-		end
 
 	make_as_tlsv10_client
 			-- Make an TLSv1 capable client context.
@@ -101,29 +73,6 @@ feature {NONE} -- Initialization
 			ctx := c_ssl_ctx_new (method_pointer)
 		end
 
-	make_as_sslv23_server
-			-- Make an SSLv2 and SSLv3 capable server context.
-		local
-			method_pointer: POINTER
-		do
-				--| Initialize SSL, as this may be one of the entry points into SSL where it is
-				--| useful to initialize the SSL Library
-			initialize_ssl
-			method_pointer := c_sslv23_server_method
-			ctx := c_ssl_ctx_new (method_pointer)
-		end
-
-	make_as_sslv3_server
-			-- Make an SSLv3 capable server context.
-		local
-			method_pointer: POINTER
-		do
-				--| Initialize SSL, as this may be one of the entry points into SSL where it is
-				--| useful to initialize the SSL Library
-			initialize_ssl
-			method_pointer := c_sslv3_server_method
-			ctx := c_ssl_ctx_new (method_pointer)
-		end
 
 	make_as_tlsv10_server
 			-- Make an TLSv1 capable server context.
@@ -356,38 +305,6 @@ feature {NONE} -- Externals
 			"SSL_CTX_use_PrivateKey_file"
 		end
 
-	c_sslv3_client_method: POINTER
-			-- External call to SSLv3_client_method.
-		external
-			"C use %"eif_openssl.h%""
-		alias
-			"SSLv3_client_method"
-		end
-
-	c_sslv23_client_method: POINTER
-			-- External call to SSLv23_client_method.
-		external
-			"C use %"eif_openssl.h%""
-		alias
-			"SSLv23_client_method"
-		end
-
-	c_sslv23_server_method: POINTER
-			-- External call to SSLv23_server_method.
-		external
-			"C use %"eif_openssl.h%""
-		alias
-			"SSLv23_server_method"
-		end
-
-	c_sslv3_server_method: POINTER
-			-- External call to SSLv3_server_method.
-		external
-			"C use %"eif_openssl.h%""
-		alias
-			"SSLv3_server_method"
-		end
-
 	c_tlsv10_client_method: POINTER
 			-- External call to TLSv1_client_method.
 		external
@@ -453,7 +370,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -21,9 +21,9 @@ feature -- SSL
 		local
 			l_context: like context
 		do
-			if tls_protocol = {SSL_PROTOCOL}.ssl_23 then
-				create l_context.make_as_sslv23_client
-			elseif tls_protocol = {SSL_PROTOCOL}.tls_1_0 then
+--			if tls_protocol = {SSL_PROTOCOL}.ssl_23 then
+--				create l_context.make_as_sslv23_client
+			if tls_protocol = {SSL_PROTOCOL}.tls_1_0 then
 				create l_context.make_as_tlsv10_client
 			elseif tls_protocol = {SSL_PROTOCOL}.tls_1_1 then
 				create l_context.make_as_tlsv11_client
@@ -106,8 +106,8 @@ feature -- SSL
 			--Server SSL context.
 		do
 			inspect tls_protocol
-			when {SSL_PROTOCOL}.ssl_23  then
-				create Result.make_as_sslv23_server
+--			when {SSL_PROTOCOL}.ssl_23  then
+--				create Result.make_as_sslv23_server
 			when {SSL_PROTOCOL}.tls_1_0 then
 				create Result.make_as_tlsv10_server
 			when {SSL_PROTOCOL}.tls_1_1 then
@@ -201,7 +201,7 @@ feature -- Change Element
 	unset_certificate_file
 		do
 			certificate_file_path := Void
-		end	
+		end
 
 	set_certificate_file_path (a_path: PATH)
 			-- Set `certificate_file_path' to `a_path'
@@ -212,7 +212,7 @@ feature -- Change Element
 	unset_key_file
 		do
 			key_file_path := Void
-		end	
+		end
 
 	set_key_file_path (a_path: PATH)
 			-- Set `key_file_path' to `a_path'
@@ -251,7 +251,7 @@ feature {NONE} -- Attributes
 			-- The SSL structure used in the SSL/TLS communication	
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

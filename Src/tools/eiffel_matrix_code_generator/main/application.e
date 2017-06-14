@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Application root."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,6 +18,7 @@ feature {NONE} -- Initialization
 		local
 			l_parser: ARGUMENT_PARSER
 		do
+			create error_manager.make
 			create l_parser.make
 			l_parser.execute (agent start (l_parser))
 		end
@@ -29,11 +30,9 @@ feature {NONE} -- Initialization
 			a_parser_successful: a_parser.is_successful
 		local
 			l_opt: ARGUMENT_OPTION
-			l_source_fn: STRING
-			l_class_name: STRING
-			l_output_fn: STRING
-			l_fn: FILE_NAME
-			l_doc: INI_DOCUMENT
+			l_class_name: READABLE_STRING_32
+			l_output_fn: PATH
+			l_fn: PATH
 			l_frame_text: STRING
 			l_generator: MATRIX_FILE_GENERATOR
 			l_cls_generator: MATRIX_EIFFEL_CLASS_GENERATOR
@@ -55,69 +54,71 @@ feature {NONE} -- Initialization
 				l_error_manager := l_generator
 				error_manager := l_error_manager
 
-				l_source_fn := a_parser.ini_file_option
-				l_doc := open_ini_document (l_source_fn)
-				if l_doc /= Void then
-
-					if a_parser.use_slice_mode then
-						(create {EV_APPLICATION}).do_nothing
-							-- Try loading pixmap. If not create a blank one.
-						l_pixmap := (agent (a_fn: STRING): EV_PIXMAP
-							local
-								retried_il: BOOLEAN
-							do
-								if not retried_il then
-									create Result
-									Result.set_with_named_file (a_fn)
-								else
-									create Result.make_with_size (10, 10)
-									error_manager.add_error (create {ERROR_INVALID_MATRIX_PNG}.make ([a_fn]), False)
+				if attached a_parser.ini_file_option as l_source_fn then
+					if attached open_ini_document (l_source_fn) as l_doc then
+						if attached l_ico_generator then
+							(create {EV_APPLICATION}).do_nothing
+								-- Try loading pixmap. If not create a blank one.
+							l_pixmap := (agent (a_fn: READABLE_STRING_32): EV_PIXMAP
+								local
+									retried_il: BOOLEAN
+								do
+									if not retried_il then
+										create Result
+										Result.set_with_named_file (a_fn)
+									else
+										create Result.make_with_size (10, 10)
+										error_manager.add_error (create {ERROR_INVALID_MATRIX_PNG}.make ([a_fn]), False)
+									end
+								rescue
+									retried_il := True
+									retry
+								end).item ([a_parser.slice_matrix])
+							if l_error_manager.is_successful then
+								l_ico_generator.generate (l_doc, a_parser.png_slices_locations, l_pixmap)
+							end
+						else
+							check
+								l_cls_generator_attached: attached l_cls_generator
+							then
+							end
+								-- Set frame file option
+							l_opt := a_parser.frame_file_option
+							if l_opt /= Void then
+								create l_fn.make_from_string (l_opt.value)
+							else
+								l_fn := a_parser.application_base.extended (frame_folder).extended (frame_file)
+							end
+							l_frame_text := open_frame_file (l_fn)
+							if l_frame_text /= Void and then not l_frame_text.is_empty then
+									-- Set output file name option
+								l_opt := a_parser.output_file_name_option
+								if l_opt /= Void then
+									create l_output_fn.make_from_string (l_opt.value)
 								end
-							rescue
-								retried_il := True
-								retry
-							end).item ([a_parser.slice_matrix])
-						if l_error_manager.is_successful then
-							l_ico_generator.generate (l_doc, a_parser.png_slices_locations, l_pixmap)
+
+									-- Set class name option
+								l_opt := a_parser.class_name_option
+								if l_opt /= Void then
+									l_class_name := l_opt.value
+								end
+
+								l_cls_generator.generate (l_doc, l_frame_text, l_class_name, l_output_fn)
+							end
 						end
 					else
-							-- Set frame file option
-						l_opt := a_parser.frame_file_option
-						create l_fn.make
-						if l_opt /= Void then
-							l_fn.set_file_name (l_opt.value)
-						else
-							l_fn.set_directory (a_parser.application_base)
-							l_fn.set_subdirectory (frame_folder)
-							l_fn.set_file_name (frame_file)
-						end
-						l_frame_text := open_frame_file (l_fn)
-						if l_frame_text /= Void and then not l_frame_text.is_empty then
-								-- Set output file name option
-							l_opt := a_parser.output_file_name_option
-							if l_opt /= Void then
-								l_output_fn := l_opt.value
-							end
-
-								-- Set class name option
-							l_opt := a_parser.class_name_option
-							if l_opt /= Void then
-								l_class_name := l_opt.value
-							end
-
-							l_cls_generator.generate (l_doc, l_frame_text, l_class_name, l_output_fn)
-						end
+						l_error_manager.add_error (create {ERROR_INVALID_INI_FILE}.make ([l_source_fn]), False)
 					end
 				else
-					l_error_manager.add_error (create {ERROR_INVALID_INI_FILE}.make ([l_source_fn]), False)
+					l_error_manager.add_error (create {ERROR_INVALID_INI_FILE}.make, False)
 				end
 			end
 
 			create l_printer
-			if not l_error_manager.is_successful then
+			if attached l_error_manager and then not l_error_manager.is_successful then
 				l_error_manager.trace_errors (l_printer)
 			else
-				if l_error_manager.has_warnings then
+				if attached l_error_manager and then l_error_manager.has_warnings then
 					l_error_manager.trace_warnings (l_printer)
 					io.put_new_line
 				end
@@ -126,11 +127,11 @@ feature {NONE} -- Initialization
 				io.put_new_line
 				if a_parser.use_slice_mode then
 					io.put_string ("Output tiles generated into folder: '")
-					io.put_string (a_parser.png_slices_locations)
+					output.localized_print (a_parser.png_slices_locations.name)
 					io.put_string ("'")
-				elseif l_cls_generator.generated_file_name /= Void then
+				elseif attached l_cls_generator and then attached l_cls_generator.generated_file_name as n then
 					io.put_string ("Output generated into file: '")
-					io.put_string (l_cls_generator.generated_file_name)
+					output.localized_print (n.name)
 					io.put_string ("'")
 				else
 					io.put_string ("Unknown error")
@@ -145,12 +146,11 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Basic Operations
 
-	open_ini_document (a_file_name: STRING): INI_DOCUMENT
+	open_ini_document (a_file_name: READABLE_STRING_32): detachable INI_DOCUMENT
 			-- Attempts to open `a_file_name' as an INI document.
 		require
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_exists: (create {PLAIN_TEXT_FILE}.make (a_file_name)).exists
 			error_manager_attached: error_manager /= Void
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -175,11 +175,9 @@ feature {NONE} -- Basic Operations
 			retry
 		end
 
-	open_frame_file (a_file_name: STRING): STRING
+	open_frame_file (a_file_name: PATH): detachable STRING
 			-- Attempts to open frame file `a_file_name' and returns it's content
 		require
-			a_file_name_attached: a_file_name /= Void
-			not_a_file_name_is_empty: not a_file_name.is_empty
 			error_manager_attached: error_manager /= Void
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -187,7 +185,8 @@ feature {NONE} -- Basic Operations
 			retried: BOOLEAN
 		do
 			if not retried then
-				create l_file.make_open_read (a_file_name)
+				create l_file.make_with_path (a_file_name)
+				l_file.open_read
 				create Result.make (l_file.count)
 				if not l_file.is_empty then
 					from until l_file.end_of_file loop
@@ -229,8 +228,16 @@ feature {NONE} -- Constants
 	frame_folder: STRING = "frames";
 			-- Sub folder where frame files are located
 
+feature {NONE} -- Output
+
+	output: LOCALIZED_PRINTER
+			-- Standard output.
+		once
+			create Result
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -261,4 +268,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {APPLICATION}
+end

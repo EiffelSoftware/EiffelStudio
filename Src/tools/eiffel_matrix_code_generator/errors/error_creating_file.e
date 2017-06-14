@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Error to indicate that a specified ini file is not valid."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,10 +19,10 @@ create
 
 feature -- Access
 
-	code: STRING
+	code: READABLE_STRING_32
 			-- Error code
 		once
-			Result := "GEN1"
+			Result := {STRING_32} "GEN1"
 		end
 
 feature {NONE} -- Implementation
@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -66,4 +66,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {ERROR_CREATING_FILE}
+end

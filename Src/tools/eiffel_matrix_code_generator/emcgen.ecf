@@ -7,35 +7,24 @@
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option profile="false" warning="true" full_class_checking="false" syntax="transitional">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
-		<setting name="array_optimization" value="false"/>
 		<setting name="console_application" value="true"/>
-		<setting name="dead_code_removal" value="false"/>
 		<setting name="dynamic_runtime" value="false"/>
 		<setting name="executable_name" value="emcgen"/>
-		<setting name="inlining" value="false"/>
-		<setting name="inlining_size" value="0"/>
-		<setting name="line_generation" value="false"/>
 		<capability>
-			<concurrency support="none" use="none"/>
-			<void_safety support="none"/>
+			<concurrency use="none"/>
 		</capability>
-		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
+		<library name="argument_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf"/>
 		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
 		<library name="ini" location="$EIFFEL_SRC\framework\file_formats\ini.ecf"/>
 		<library name="text" location="$EIFFEL_SRC\framework\base\text\text.ecf"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf">
-			<option>
-				<assertions/>
-			</option>
-		</library>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<cluster name="eiffel_matrix_code_generator" location="${EIFFEL_SRC}\tools\eiffel_matrix_code_generator\" recursive="true">
-			<option warning="true">
-			</option>
 			<file_rule>
 				<exclude>/example$</exclude>
 				<exclude>/frames$</exclude>

@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			timeout: INTEGER
 			l_socket: SSL_NETWORK_STREAM_SOCKET
 		do
-			host := "www.openssl.org"
+			host := "www.requestb.in"
 			port := 443
 			if argument_count > 0 then
 				host := argument (1)
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 
 						-- Since this is the client, we will initiate the talking.
 					client_get.append ("%R%N")
-					client_get.append ("Host: www.openssl.org")
+					client_get.append ("Host: www.requestb.in")
 					client_get.append ("%R%N")
 					client_get.append ("Cache-Control: max-age=0")
 					client_get.append ("%R%N")

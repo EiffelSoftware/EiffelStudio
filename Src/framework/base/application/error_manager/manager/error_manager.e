@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "An error manager to handle typed errors and warnings"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 create
 	make
 
-feature {NONE} -- Implementation
+feature {NONE} -- Creation
 
 	make
 			-- Create a new error manager
@@ -56,7 +56,7 @@ feature -- Status report
 	frozen successful: BOOLEAN
 			-- Have no errors been raised, indicating a successful result
 		obsolete
-			"use is_successful instead"
+			"Use is_successful instead. [2017-06-14]"
 		do
 			Result := is_successful
 		end
@@ -79,7 +79,7 @@ feature -- Query
 			result_attached: Result /= Void
 		end
 
-	pop_error_description: STRING
+	pop_error_description: READABLE_STRING_32
 			-- Pops last error description.
 		require
 			not_is_successful: not is_successful
@@ -95,14 +95,12 @@ feature -- Query
 		require
 			has_warnings: has_warnings
 		local
-			l_warning: detachable ERROR_WARNING_INFO
 			l_warnings: like internal_warnings
 		do
 			check has_warnings: not warnings.is_empty end
 			l_warnings := internal_warnings
-			l_warning := l_warnings.first
-			l_warnings.prune (l_warning)
-			Result := l_warning
+			Result := l_warnings.first
+			l_warnings.prune (Result)
 		ensure
 			result_attached: Result /= Void
 			warning_removed: not warnings.has (Result)
@@ -140,14 +138,12 @@ feature -- Basic Operations
 
 	reset
 			-- Reset error manager and clear all errors.
-		local
-			l_err: ERROR_ERROR_INFO
 		do
 			from until is_successful loop
-				l_err := pop_last_error
+				pop_last_error.do_nothing
 			end
 			from until not has_warnings loop
-				l_err := pop_warning
+				pop_warning.do_nothing
 			end
 		ensure
 			is_successful: is_successful
@@ -157,16 +153,18 @@ feature -- Basic Operations
 	raise_on_error
 			-- Checks state a raises an exception if not `is_successful'
 		local
-			l_error: like last_error
+			x: DEVELOPER_EXCEPTION
 		do
 			if not is_successful then
-				l_error := last_error
-				if l_error /= Void and then not l_error.description.is_empty then
-					(create {EXCEPTIONS}).raise (l_error.description)
-				else
-						-- This should never be called, but you never know.
-					(create {EXCEPTIONS}).raise (unexpected_error_message)
-				end
+				create x
+				x.set_description
+					(if attached last_error as e and then not e.description.is_empty then
+						e.description
+					else
+							-- This should never be called, but you never know.
+						unexpected_error_message
+					end)
+				x.raise
 			end
 		end
 
@@ -176,7 +174,7 @@ feature -- Basic Operations
 			-- after calling.
 		require
 			a_printer_attached: a_printer /= Void
-			not_is_successful: not successful
+			not_is_successful: not is_successful
 		do
 			a_printer.print_error (pop_last_error)
 		end
@@ -196,7 +194,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Constants
 
-	unexpected_error_message: STRING = "Unexpected Error"
+	unexpected_error_message: STRING_32 = "Unexpected Error"
 			-- Unexpected error message
 
 feature {NONE} -- Implementation
@@ -208,7 +206,7 @@ invariant
 	internal_warnings_attached: internal_warnings /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

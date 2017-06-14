@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A concrete error printer for displaying errors to the command line that follow the
 		Microsoft standard for error reporting.
@@ -34,6 +34,7 @@ class
 
 inherit
 	ERROR_PRINTER
+	LOCALIZED_PRINTER
 
 create
 	default_create
@@ -56,7 +57,7 @@ feature -- Basic Operations
 			if a_err.description /= Void and then not a_err.description.is_empty then
 				io.error.put_string (msg_separator)
 				io.error.put_character (' ')
-				io.error.put_string (a_err.description)
+				localized_print_error (a_err.description)
 			end
 			io.new_line
 		end
@@ -72,7 +73,6 @@ feature {NONE} -- Output
 			l_ln: INTEGER
 			l_cwd: STRING_32
 			l_name: detachable STRING_32
-			p: PATH
 			utf: UTF_CONVERTER
 		do
 			l_ln := -1
@@ -90,8 +90,7 @@ feature {NONE} -- Output
 				check l_ln_positive: l_ln >= 0 end
 
 					-- Create relative path	for file names	
-				p := (create {EXECUTION_ENVIRONMENT}).current_working_path
-				l_cwd := p.name
+				l_cwd := ((create {EXECUTION_ENVIRONMENT}).current_working_path).name
 
 				if {PLATFORM}.is_windows then
 					if l_file_name.as_lower.starts_with (l_cwd.as_lower) then
@@ -129,7 +128,7 @@ feature {NONE} -- Output
 		do
 			io.error.put_string (a_err.error_level_tag)
 			io.error.put_character (' ')
-			io.error.put_string (a_err.code)
+			localized_print_error (a_err.code)
 		end
 
 feature {NONE} -- Implementation
@@ -165,7 +164,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -196,4 +195,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {ERROR_CUI_PRINTER}
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Base implementation for all errors."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,29 +24,23 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code: STRING
+	code: READABLE_STRING_32
 			-- Error code.
 		do
-			Result := generating_type
+			Result := generating_type.name_32
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
 
-	description: STRING
+	description: READABLE_STRING_32
 			-- Error description.
-		local
-			l_context: like context
 		do
-			if attached internal_description as l_result then
-				Result := l_result
-			else
-				if has_context then
-					l_context := context
-					check l_context_attached: l_context /= Void end
-					Result := string_formatter.format (dollar_description, l_context)
-				else
-					Result := dollar_description
+			Result := internal_description
+			if not attached Result then
+				Result := dollar_description
+				if attached context as c and then not c.is_empty then
+					Result := string_formatter.format_unicode (Result, c)
 				end
 				internal_description := Result
 			end
@@ -94,9 +88,9 @@ feature -- Status report
 	has_context: BOOLEAN
 			-- Does error have a context information?
 		do
-			Result := (attached context as l_context) and then not l_context.is_empty
+			Result := attached context as l_context and then not l_context.is_empty
 		ensure
-			not_context_is_empty: Result implies ((attached context as l_context) and then not l_context.is_empty)
+			not_context_is_empty: Result implies (attached context as l_context and then not l_context.is_empty)
 		end
 
 feature {NONE} -- Helpers
@@ -111,12 +105,12 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Implementation: Internal cache
 
-	internal_description: detachable STRING
+	internal_description: detachable READABLE_STRING_32
 			-- Cached version of `description'.
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -147,4 +141,4 @@ feature {NONE} -- Implementation: Internal cache
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {ERROR_ERROR_INFO}
+end

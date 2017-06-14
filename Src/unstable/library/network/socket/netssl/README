@@ -47,7 +47,7 @@ How to build OpenSSL on Windows.
 Requirements.
 	* Perl Installation    : http://www.activestate.com/activeperl/downloads
 	* OpenSSL source code  : http://www.openssl.org/source/
-	* C compiler (Visual Studio)
+	* C compiler (for example: Visual Studio)
 	* Netwide Assembler, a.k.a. NASM, available from http://www.nasm.us,is required if you intend to utilize assembler modules.
 
 
@@ -62,14 +62,21 @@ So, for example, you might end up with C:\openssl-src-32 and C:\openssl-src-64.
 Example:
 Building the 64-bit static libraries
 
-Open the Visual Studio Command Prompt (2010). (Be sure to open the corrent command prompt)
-Check Confugure file under OpenSSL distribution to read different types of configuration.
+To build a 64-Bit static library (/MT) use the option <<no-shared>> with VC-WIN64A
+
+Note: To build a 64-Bit shared library (/MD) use the option <<shared>> with VC-WIN64A
+
+Open the Visual Studio Command Prompt. (Be sure to open the corrent command prompt)
+Check Configure file under OpenSSL distribution to read different types of configurations.
 
 1: perl Configure { VC-WIN32 | VC-WIN64A | VC-WIN64I | VC-CE }
 -- for example 
-1.1 perl Configure VC-WIN64A shared --prefix=C:\Build-OpenSSL-VC-64
+1.1 perl Configure VC-WIN64A no-shared --prefix=C:\Build-OpenSSL-VC-64
 2: nmake
 3: nmake test
 
-
 Your outputs will be in C:\Build-OpenSSL-VC-64
+
+For 32-bit the proccess is similar just change the VC-WIN64A for VC-WIN32.
+
+

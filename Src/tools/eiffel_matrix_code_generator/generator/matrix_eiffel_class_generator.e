@@ -28,12 +28,12 @@ create
 
 feature -- Access
 
-	generated_file_name: STRING
+	generated_file_name: detachable PATH
 			-- Location of generated file
 
 feature {NONE} -- Access
 
-	class_name: STRING
+	class_name: detachable READABLE_STRING_32
 			-- Class name specified in matrix file
 
 	animation_pixmaps: attached HASH_TABLE [attached ARRAYED_LIST [attached STRING], attached STRING]
@@ -41,7 +41,7 @@ feature {NONE} -- Access
 
 feature -- Basic Operations
 
-	generate (a_doc: INI_DOCUMENT; a_frame: STRING; a_class_name: STRING; a_output: STRING)
+	generate (a_doc: INI_DOCUMENT; a_frame: STRING; a_class_name: detachable READABLE_STRING_32; a_output: detachable PATH)
 			-- Generates a matrix file.
 		require
 			not_a_class_name_is_empty: a_class_name /= Void implies not a_class_name.is_empty
@@ -50,7 +50,7 @@ feature -- Basic Operations
 			l_props: LIST [INI_PROPERTY]
 			l_prop: INI_PROPERTY
 			l_cursor: CURSOR
-			l_of: STRING
+			l_of: PATH
 			l_buffer: STRING
 			l_temp_buffer: attached STRING
 			l_buffers: like internal_buffers
@@ -58,7 +58,8 @@ feature -- Basic Operations
 			l_anim_pixmaps: attached like animation_pixmaps
 			l_iname: attached STRING
 			l_ibname: attached STRING
-			l_args: ARGUMENTS
+			l_args: ARGUMENTS_32
+			u: UTF_CONVERTER
 		do
 			reset
 
@@ -77,41 +78,36 @@ feature -- Basic Operations
 
 				if is_successful then
 					check
-						class_name_attached: class_name /= Void
-					end
+						class_name_attached: attached class_name as l_class_name
+					then
+							-- Replace optional tokens.
+						l_buffer.replace_substring_all (token_variable (class_name_property), u.string_32_to_utf_8_string_8 (l_class_name))
+						l_buffer.replace_substring_all (token_variable (pixel_border_property), pixel_border.out)
+						create l_args
+						l_buffer.replace_substring_all (token_variable (command_line_property), u.string_32_to_utf_8_string_8 (l_args.command_line))
 
-						-- Replace optional tokens.
-					if class_name /= Void and then not class_name.is_empty then
-						l_buffer.replace_substring_all (token_variable (class_name_property), class_name)
-					else
-						l_buffer.replace_substring_all (token_variable (class_name_property), "")
-					end
-					l_buffer.replace_substring_all (token_variable (pixel_border_property), pixel_border.out)
-					create l_args
-					l_buffer.replace_substring_all (token_variable (command_line_property), l_args.command_line)
-
-						-- Replace aux tokens based on other properties in the configuration file
-					l_props := a_doc.named_properties
-					if not l_props.is_empty then
-						l_cursor := l_props.cursor
-						from l_props.start until l_props.after loop
-							l_prop := l_props.item
-							if l_prop.has_value then
-								l_buffer.replace_substring_all (token_variable (l_prop.name), l_prop.value)
-							else
-								l_buffer.replace_substring_all (token_variable (l_prop.name), "")
+							-- Replace aux tokens based on other properties in the configuration file
+						l_props := a_doc.named_properties
+						if not l_props.is_empty then
+							l_cursor := l_props.cursor
+							from l_props.start until l_props.after loop
+								l_prop := l_props.item
+								if attached l_prop.name as n and then not n.is_empty then
+									l_buffer.replace_substring_all (token_variable (n), if l_prop.has_value then l_prop.value else "" end)
+								end
+								l_props.forth
 							end
-							l_props.forth
+							l_props.go_to (l_cursor)
 						end
-						l_props.go_to (l_cursor)
-					end
 
-						-- Generate any animations
-					l_anim_pixmaps := animation_pixmaps
-					if not l_anim_pixmaps.is_empty then
-						from l_anim_pixmaps.start until l_anim_pixmaps.after loop
-							if attached {ARRAYED_LIST [STRING]} l_anim_pixmaps.item_for_iteration as l_animations then
-								if l_animations.count > 1 then
+							-- Generate any animations
+						l_anim_pixmaps := animation_pixmaps
+						if not l_anim_pixmaps.is_empty then
+							from l_anim_pixmaps.start until l_anim_pixmaps.after loop
+								if
+									attached {ARRAYED_LIST [STRING]} l_anim_pixmaps.item_for_iteration as l_animations and then
+									l_animations.count > 1
+								then
 										-- More than one entry, so it must be an animation
 									if attached {STRING} l_anim_pixmaps.key_for_iteration as l_name then
 											-- Create feature names
@@ -149,48 +145,48 @@ feature -- Basic Operations
 										check False end
 									end
 								end
+								l_anim_pixmaps.forth
 							end
-							l_anim_pixmaps.forth
 						end
-					end
 
-					if buffer (animations_token).is_empty then
-						buffer (animations_token).append ("%T-- No animation frames detected.")
-					end
+						if buffer (animations_token).is_empty then
+							buffer (animations_token).append ("%T-- No animation frames detected.")
+						end
 
-						-- Remove extra whitespace from animation features buffer
-					l_temp_buffer := buffer (animations_token)
-					if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
-						l_temp_buffer.keep_head (l_temp_buffer.count - 1)
-					end
+							-- Remove extra whitespace from animation features buffer
+						l_temp_buffer := buffer (animations_token)
+						if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
+							l_temp_buffer.keep_head (l_temp_buffer.count - 1)
+						end
 
-						-- Remove extra whitespace from icon features buffer
-					l_temp_buffer := buffer (icons_token)
-					if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
-						l_temp_buffer.keep_head (l_temp_buffer.count - 1)
-					end
+							-- Remove extra whitespace from icon features buffer
+						l_temp_buffer := buffer (icons_token)
+						if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
+							l_temp_buffer.keep_head (l_temp_buffer.count - 1)
+						end
 
-						-- Replace the used buffers
-					l_buffers := internal_buffers
-					if not l_buffers.is_empty then
-						from l_buffers.start until l_buffers.after loop
-							l_fragment := l_buffers.item_for_iteration
-							if not l_fragment.is_empty and then l_fragment.item (l_fragment.count) = '%N' then
-								l_fragment.keep_head (l_fragment.count - 1)
+							-- Replace the used buffers
+						l_buffers := internal_buffers
+						if not l_buffers.is_empty then
+							from l_buffers.start until l_buffers.after loop
+								l_fragment := l_buffers.item_for_iteration
+								if not l_fragment.is_empty and then l_fragment.item (l_fragment.count) = '%N' then
+									l_fragment.keep_head (l_fragment.count - 1)
+								end
+								l_buffer.replace_substring_all (token_variable (l_buffers.key_for_iteration), l_fragment)
+								l_buffers.forth
 							end
-							l_buffer.replace_substring_all (token_variable (l_buffers.key_for_iteration), l_fragment)
-							l_buffers.forth
 						end
-					end
 
-					if a_output = Void then
-						l_of := class_name + ".e"
-						l_of.to_lower
-					else
-						l_of := a_output
+						l_of :=
+							if attached a_output then
+								a_output
+							else
+								(create {PATH}.make_from_string (l_class_name.as_lower)).appended_with_extension ("e")
+							end
+						generate_output_file (l_of, l_buffer)
+						generated_file_name := l_of
 					end
-					generate_output_file (l_of, l_buffer)
-					generated_file_name := l_of
 				end
 			end
 		ensure
@@ -212,7 +208,7 @@ feature {NONE} -- Basic Operations
 			animation_pixmaps_reset: animation_pixmaps.is_empty
 		end
 
-	generate_output_file (a_file_name: STRING; a_content: STRING)
+	generate_output_file (a_file_name: PATH; a_content: STRING)
 			-- Generates output file `a_file_name' containing `a_content'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -224,7 +220,7 @@ feature {NONE} -- Basic Operations
 			retried: BOOLEAN
 		do
 			if not retried then
-				create l_file.make (a_file_name)
+				create l_file.make_with_path (a_file_name)
 				if l_file.exists then
 					l_file.delete
 				end
@@ -250,13 +246,17 @@ feature {NONE} -- Processing
 			l_value: STRING
 		do
 			Result := Precursor {MATRIX_FILE_GENERATOR} (a_property)
-			if not Result then
-				l_name := a_property.name.as_lower
+			if
+				not Result and then
+				attached a_property.name as n
+			then
+				l_name := n.as_lower
 				l_value := a_property.value
-				if l_name.is_equal (class_name_property) then
-					if class_name = Void then
-						class_name := format_eiffel_name (l_value)
-					end
+				if
+					l_name.is_equal (class_name_property) and then
+					class_name = Void
+				then
+					class_name := format_eiffel_name (l_value)
 				end
 			end
 		end
@@ -274,7 +274,6 @@ feature {NONE} -- Processing
 			l_cname: attached STRING
 			l_aname: attached STRING
 			l_animations: attached ARRAYED_LIST [attached STRING]
-			l_index: INTEGER
 			l_anim_regex: attached like animation_regex
 			l_anim_pixmaps: attached like animation_pixmaps
 			l_cvalue: attached STRING
@@ -333,20 +332,14 @@ feature {NONE} -- Processing
 
 						-- Add item to the animation list
 					l_anim_pixmaps := animation_pixmaps
-					if l_anim_pixmaps.has (l_aname) then
+					if attached l_anim_pixmaps.item (l_aname) as l_anim_pixmaps_item then
 							-- An animation list already exists
-						if attached {ARRAYED_LIST [attached STRING]} l_anim_pixmaps.item (l_aname) as l_anim_pixmaps_item then
-							l_animations := l_anim_pixmaps_item
-						else
-							check False end
-						end
+						l_animations := l_anim_pixmaps_item
 					else
 							-- Create a new list
 						create l_animations.make (1)
 						l_anim_pixmaps.force (l_animations, l_aname)
 					end
-
-					l_index := l_anim_regex.captured_substring (2).to_integer
 					l_animations.extend (l_cname)
 				end
 			else
@@ -384,13 +377,8 @@ feature {NONE} -- Query
 		require
 			not_a_name_is_empty: not a_name.is_empty
 		do
-			if internal_buffers.has (a_name) then
-				if attached {STRING} internal_buffers.item (a_name) as s then
-					Result := s
-				else
-					check False end
-				end
-			else
+			Result := internal_buffers.item (a_name)
+			if not attached Result then
 				create Result.make (1024)
 				internal_buffers.put (Result, a_name)
 			end
@@ -399,7 +387,7 @@ feature {NONE} -- Query
 			result_consistent: Result = buffer (a_name)
 		end
 
-	token_variable (a_name: detachable STRING): attached STRING
+	token_variable (a_name: STRING): attached STRING
 			-- Returns a token varaible for token name `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -533,11 +521,11 @@ feature {NONE} -- Implementation: Internal cache
 			-- Value: The actual text buffer
 
 invariant
-	generated_file_name_not_empty: generated_file_name /= Void implies not generated_file_name.is_empty
-	class_name_not_empty: class_name /= Void implies not class_name.is_empty
+	generated_file_name_not_empty: attached generated_file_name as n implies not n.is_empty
+	class_name_not_empty: attached class_name as n implies not n.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

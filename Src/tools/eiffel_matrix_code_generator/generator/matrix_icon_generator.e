@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A generator for creating Eiffel classes from a matrix INI file.
 	]"
@@ -21,10 +21,10 @@ create
 
 feature {NONE} -- Access
 
-	png_location: STRING
+	png_location: detachable PATH
 			-- Location where PNGs are generated
 
-	matrix: EV_PIXMAP
+	matrix: detachable EV_PIXMAP
 			-- Full matrix PNG
 
 feature {NONE} -- Basic Operations
@@ -42,12 +42,8 @@ feature {NONE} -- Basic Operations
 
 feature -- Basic Operations
 
-	generate (a_doc: INI_DOCUMENT; a_output: STRING; a_matrix: EV_PIXMAP)
+	generate (a_doc: INI_DOCUMENT; a_output: PATH; a_matrix: EV_PIXMAP)
 			-- Generates a matrix file.
-		require
-			a_output_attached: a_output /= Void
-			not_a_output_is_empty: not a_output.is_empty
-			a_output_exists: (create {DIRECTORY}.make (a_output)).exists
 		do
 			reset
 			png_location := a_output
@@ -57,7 +53,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Icon generation
 
-	generate_icon (a_name: STRING; a_prefix: STRING; a_location: STRING; a_x, a_y, a_pw, a_ph: NATURAL; a_matrix: EV_PIXMAP)
+	generate_icon (a_name: STRING; a_prefix: STRING; a_location: PATH; a_x, a_y, a_pw, a_ph: NATURAL; a_matrix: EV_PIXMAP)
 			-- Generates a single icon tile in `a_matrix'
 		require
 			a_name_attached: a_name /= Void
@@ -65,26 +61,17 @@ feature {NONE} -- Icon generation
 			a_prefix_attached: a_prefix /= Void
 			a_location_attached: a_location /= Void
 			not_a_location_is_empty: not a_location.is_empty
-			a_location_exists: (create {DIRECTORY}.make (a_location)).exists
 			a_matrix_attached: a_matrix /= Void
 			coords_in_bounds: (a_matrix.width.to_natural_32 >= (a_x* a_pw)) and  (a_matrix.height.to_natural_32 >= (a_y * a_ph))
 		local
-			l_pixmap: EV_PIXMAP
-			l_fn: FILE_NAME
+			l_fn: PATH
 			retried: BOOLEAN
 		do
-			if not retried then
-				create l_fn.make
-				l_fn.set_directory (a_location)
-				l_fn.set_file_name (format_eiffel_name (a_prefix + a_name + icon_suffix) + ".png")
-				l_pixmap := a_matrix.sub_pixmap (pixel_rectangle (a_x, a_y, a_pw, a_ph))
-				retried := l_pixmap = Void
-				if not retried then
-					l_pixmap.save_to_named_file (create {EV_PNG_FORMAT}, l_fn)
-				end
-			end
 			if retried then
 				add_warning (create {WARNING_PNG_NOT_SAVED}.make ([l_fn]))
+			else
+				l_fn := a_location.extended (format_eiffel_name (a_prefix + a_name + icon_suffix) + ".png")
+				a_matrix.sub_pixmap (pixel_rectangle (a_x, a_y, a_pw, a_ph)).save_to_named_path (create {EV_PNG_FORMAT}, l_fn)
 			end
 		rescue
 			retried := True
@@ -96,7 +83,9 @@ feature {NONE} -- Processing
 	process_literal_item (a_item: INI_LITERAL; a_x: NATURAL_32; a_y: NATURAL_32)
 			-- Processes a literal from an INI matrix file.
 		do
-			generate_icon (a_item.name, icon_prefix (a_item), png_location, a_x, a_y, pixel_width, pixel_height, matrix)
+			if attached png_location as l and attached matrix as m then
+				generate_icon (a_item.name, icon_prefix (a_item), l, a_x, a_y, pixel_width, pixel_height, m)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -131,7 +120,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

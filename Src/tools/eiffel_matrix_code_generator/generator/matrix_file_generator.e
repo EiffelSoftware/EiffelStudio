@@ -19,7 +19,7 @@ inherit
 			reset as reset_error_manager
 		export
 			{NONE} all
-			{ANY} successful, trace_errors, trace_warnings, errors, warnings, has_errors, has_warnings
+			{ANY} is_successful, trace_errors, trace_warnings, errors, warnings, has_errors, has_warnings
 		end
 
 feature {NONE} -- Initialization
@@ -56,7 +56,7 @@ feature {NONE} -- Access
 	current_y: NATURAL
 			-- Current Y position in matrix file
 
-	suffix: STRING
+	suffix: detachable STRING
 			-- Generated icon name suffix
 
 feature -- Status report
@@ -115,16 +115,15 @@ feature {NONE} -- Query
 	icon_suffix: attached STRING
 			-- Retrieves icon name suffix
 		do
-			if attached {STRING} suffix as l_suffix then
-				Result := l_suffix
-			else
+			Result := suffix
+			if not attached Result then
 				Result := default_icon_suffix
 			end
 		end
 
 feature -- Basic Operations
 
-	process (a_doc: INI_DOCUMENT; a_post_validate: PROCEDURE; a_post_process: PROCEDURE)
+	process (a_doc: INI_DOCUMENT; a_post_validate: detachable PROCEDURE; a_post_process: detachable PROCEDURE)
 			-- Processes INI document `a_doc' and executes `a_post_validate' to do other initalization once the basics have been validated
 			-- and `a_post_validate' on post processing
 		require
@@ -138,12 +137,12 @@ feature -- Basic Operations
 			validate_properties (a_doc)
 			if is_successful then
 				if a_post_validate /= Void then
-					a_post_validate.call ([])
+					a_post_validate.call
 				end
 				if is_successful then
 					process_sections (a_doc.sections)
 					if a_post_process /= Void and then is_successful then
-						a_post_process.call ([])
+						a_post_process.call
 					end
 				end
 			end
@@ -206,7 +205,7 @@ feature {NONE} -- Processing
 			l_value: STRING
 		do
 			Result := True
-			l_name := a_property.name.as_lower
+			l_name := if attached a_property.name as n then n.as_lower else "" end
 			l_value := a_property.value
 			if l_name.is_equal (pixel_width_property) then
 				if l_value.is_natural then
@@ -401,10 +400,10 @@ feature {NONE} -- Constants: Property Names
 			-- Character mark on sections to indication a continuation
 
 invariant
-	not_suffix_is_empty: suffix /= Void implies not suffix.is_empty
+	not_suffix_is_empty: attached suffix as s implies not s.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

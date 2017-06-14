@@ -1571,7 +1571,7 @@ test	rescue-show-exception-meaning	exec085  tcf pass execution
 test	clone-integer-boolean-character	exec087  tcf pass execution
 if not DOTNET test	expanded-local-void-in-rescue	exec088  tcf pass execution
 test	print-char-dot-is-digit		exec090  tcf pass execution
-test	expanded-skip-class-invariant	exec091  tcf fail execution
+test	expanded-skip-class-invariant	exec091  tcf pass execution
 test	parent-invariants-reverse-order	exec092  tcf pass execution
 test	external-routine-skip-assertion	exec093  tcf pass execution
 test	many-big-expanded-locals	exec094  tcf pass execution

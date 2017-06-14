@@ -38,3 +38,38 @@ to $(ISE_LIBRARY)\unstable\library\network\socket\netssl\spec\$(ISE_PLATFORM)\li
 When you use this option does not forget to have the dll in the PATH of the corresponding project,
 you can get the dll's files from step1.
 
+3. How to complile OpenSSL
+===========================
+
+How to build OpenSSL on Windows.
+================================
+
+Requirements.
+	* Perl Installation    : http://www.activestate.com/activeperl/downloads
+	* OpenSSL source code  : http://www.openssl.org/source/
+	* C compiler (Visual Studio)
+	* Netwide Assembler, a.k.a. NASM, available from http://www.nasm.us,is required if you intend to utilize assembler modules.
+
+
+How to build OpenSSL with VisualStudio  
+======================================.
+
+Setting up for the build
+
+Unzip the OpenSSL source code into two different folders, one for the 32-bit build and one for the 64-bit build. 
+So, for example, you might end up with C:\openssl-src-32 and C:\openssl-src-64.
+
+Example:
+Building the 64-bit static libraries
+
+Open the Visual Studio Command Prompt (2010). (Be sure to open the corrent command prompt)
+Check Confugure file under OpenSSL distribution to read different types of configuration.
+
+1: perl Configure { VC-WIN32 | VC-WIN64A | VC-WIN64I | VC-CE }
+-- for example 
+1.1 perl Configure VC-WIN64A shared --prefix=C:\Build-OpenSSL-VC-64
+2: nmake
+3: nmake test
+
+
+Your outputs will be in C:\Build-OpenSSL-VC-64

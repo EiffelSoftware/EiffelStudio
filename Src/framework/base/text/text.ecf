@@ -7,9 +7,6 @@
 		</file_rule>
 		<option namespace="EiffelSoftware.Framework">
 		</option>
-		<capability>
-			<concurrency support="none"/>
-		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<cluster name="text" location=".\"/>
 	</target>

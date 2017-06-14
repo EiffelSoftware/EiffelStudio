@@ -69,7 +69,6 @@ feature -- Formatting
 			not_a_args_is_empty: not a_args.is_empty
 		local
 			l_str: STRING_32
-			l_arg: detachable separate ANY
 			l_count: INTEGER
 			l_arg_count: INTEGER
 			l_match: BOOLEAN
@@ -108,21 +107,29 @@ feature -- Formatting
 					end
 				elseif c = cl then
 					l_skip := False
-					if i < l_count then
-						if n = cl then
-							Result.append_character (n)
-							i := i + 1
-							l_skip := True
-						end
+					if
+						i < l_count and then
+						n = cl
+					then
+						Result.append_character (n)
+						i := i + 1
+						l_skip := True
 					end
 					if l_match and not l_skip then
 						l_match := False
 						if l_digit.is_integer then
 							l_index := l_digit.to_integer
-							if l_index > 0 and l_index <= l_arg_count then
-								l_arg := a_args[l_index]
-								if l_arg /= Void then
-									Result.append (l_arg.out)
+							if	l_index > 0 and l_index <= l_arg_count and then
+								attached a_args [l_index] as l_arg
+							then
+								if attached {READABLE_STRING_GENERAL} l_arg as s then
+									Result.append_string_general (s)
+								elseif attached {separate READABLE_STRING_GENERAL} l_arg as s then
+									Result.append (create {STRING_32}.make_from_separate (s))
+								else
+									separate l_arg as a do
+										Result.append (a.out)
+									end
 								end
 							end
 						end
@@ -141,7 +148,7 @@ feature -- Formatting
 		end
 
 	ellipse (a_str: READABLE_STRING_GENERAL; a_max_len: INTEGER): STRING_8
-			-- Prunes string an adds ',,,' if the supplied string length is greater than the threadshold.
+			-- Prunes string an adds "..." if the supplied string length is greater than the threadshold.
 			--
 			-- `a_str': The string to ellipse.
 			-- `a_max_len': A string's maximum length, after which ellipsing will be performed.
@@ -167,7 +174,7 @@ feature -- Formatting
 		end
 
 	ellipse_unicode (a_str: READABLE_STRING_GENERAL; a_max_len: INTEGER): STRING_32
-			-- Prunes string an adds ',,,' if the supplied string length is greater than the threadshold.
+			-- Prunes string an adds "..." if the supplied string length is greater than the threadshold.
 			--
 			-- `a_str': The string to ellipse.
 			-- `a_max_len': A string's maximum length, after which ellipsing will be performed.
@@ -191,8 +198,6 @@ feature -- Formatting
 			result_ellipsed: Result.count <= a_max_len
 			result_not_is_a_str: Result /= a_str
 		end
-
-feature -- Formatting
 
 	tabbify (a_str: READABLE_STRING_GENERAL; a_tab_chars: INTEGER): STRING_8
 			-- Tabbifies a string by replacing spaces with tabs.
@@ -271,7 +276,7 @@ feature {NONE} -- Symbols
 			-- Index close character
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

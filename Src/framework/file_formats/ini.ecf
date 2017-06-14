@@ -5,9 +5,8 @@
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<capability>
-			<void_safety support="none"/>
-		</capability>
+		<option warning="true">
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="ini" location="ini\" recursive="true"/>
 	</target>

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Represents a INI document AS root node."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,27 +49,21 @@ feature -- Access
 			if Result = Void then
 				l_props := properties
 				l_sections := sections
-				if l_props = Void then
-					if l_sections = Void then
-						create Result.make (1, 0, 1, 0)
-					else
-						l_start := l_sections.first.span
-						l_end := l_sections.last.span
-					end
-				else
+				if attached l_props then
 					l_start := l_props.first.span
 					if l_sections = Void then
 						l_end := l_props.last.span
 					else
 						l_end := l_sections.last.span
 					end
+				elseif attached l_sections then
+					l_start := l_sections.first.span
+					l_end := l_sections.last.span
 				end
-				if Result = Void then
-					check
-						l_start_attached: l_start /= Void
-						l_end_attached: l_end /= Void
-					end
+				if attached l_start and attached l_end then
 					create Result.make (l_start.start_line, l_start.start_index, l_end.end_line, l_end.end_index)
+				else
+					create Result.make (1, 0, 1, 0)
 				end
 				internal_span := Result
 			end
@@ -142,40 +136,40 @@ feature -- Visitation
 
 feature {NONE} -- Internal Implementation Cache
 
-	internal_span: like span;
+	internal_span: detachable like span;
 			-- Cached version of `span'
 			-- Note: Do not use directly!
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-
+			See the GNU General Public License for more details.
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {INI_DOCUMENT_NODE}

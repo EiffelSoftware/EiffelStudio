@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A recoverable INI parser that creates an Abstract Syntax Tree (AST)
 		reprentation of a parsed buffer.
@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			a_max_errors_positive: a_max_errors > 0
 			a_factory_attached: a_factory /= Void
 		do
+			create parsed_root_node.make
 			max_syntax_errors := a_max_errors
 			factory := a_factory
 			create internal_syntax_errors.make (0)
@@ -87,7 +88,6 @@ feature -- Basic Operations
 			l_errors: like syntax_errors
 			l_scanner: INI_SCANNER
 			l_state: INI_SCANNER_STATE
-			l_token: INI_SCANNER_TOKEN_INFO
 			l_type: INI_SCANNER_TOKEN_TYPE
 			l_line_tokens: ARRAYED_LIST [INI_SCANNER_TOKEN_INFO]
 			l_index: INTEGER
@@ -103,7 +103,7 @@ feature -- Basic Operations
 			from
 				l_lines.start
 			until
-				l_lines.after
+				l_lines.after or l_stop
 			loop
 				l_line := l_lines.item
 				l_line.prune_all_trailing ('%R')
@@ -119,20 +119,24 @@ feature -- Basic Operations
 						l_index > l_count
 					loop
 						l_scanner.scan_for_next_token_info (l_line.substring (l_index, l_count), l_index, l_state)
-						l_token := l_scanner.token
-						l_state := l_scanner.next_state
-						l_type := l_token.type
-						if l_type /= {INI_SCANNER_TOKEN_TYPE}.comment and l_type /= {INI_SCANNER_TOKEN_TYPE}.whitespace then
-							l_line_tokens.extend (l_token)
+						if attached l_scanner.token as l_token and then attached l_scanner.next_state as s then
+							l_state := s
+							l_type := l_token.type
+							if l_type /= {INI_SCANNER_TOKEN_TYPE}.comment and l_type /= {INI_SCANNER_TOKEN_TYPE}.whitespace then
+								l_line_tokens.extend (l_token)
+							end
+							l_index := l_token.end_index + 1
+						else
+								-- There is no token: exit the loop.
+							l_index := l_count + 1
 						end
-						l_index := l_token.end_index + 1
 					end
 					if not l_line_tokens.is_empty then
 							-- Process scanned tokens
 						process_line_tokens (l_line_tokens, l_lines.index)
 
-						-- Error handling
-					l_stop := l_errors.count >= l_max_errors
+							-- Error handling
+						l_stop := l_errors.count >= l_max_errors
 					end
 				end
 				l_lines.forth
@@ -301,7 +305,7 @@ feature {NONE} -- Token Processing
 						if not a_tokens.off then
 							a_tokens.forth
 							if not a_tokens.off then
-									--| Unexpected tailing text
+									--| Unexpected trailing text.
 								extend_syntax_error (create {INI_UNEXPECTED_SYNTAX_ERROR}.make (a_tokens.item.text, a_line, a_tokens.item.start_index))
 							end
 						end
@@ -319,10 +323,7 @@ feature {NONE} -- Token Processing
 					parsed_root_node.extend_literal (l_literal_as)
 				else
 						--| Assigner expected
-					check
-						l_identifier_attached: l_identifier /= Void
-					end
-					extend_syntax_error (create {INI_EXPECTED_SYNTAX_ERROR}.make ({INI_SCANNER_TOKEN_TYPE}.assigner.out, a_line, l_identifier.end_index + 1))
+					extend_syntax_error (create {INI_EXPECTED_SYNTAX_ERROR}.make ({INI_SCANNER_TOKEN_TYPE}.assigner.out, a_line, a_tokens.item.start_index))
 				end
 			end
 		end
@@ -391,35 +392,35 @@ invariant
 	factory_attached: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-
+			See the GNU General Public License for more details.
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class {INI_PARSER}
+end

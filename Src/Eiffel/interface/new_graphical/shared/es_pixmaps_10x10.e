@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
 		Automatically generated class for EiffelStudio 10x10 icons.
 	]"
 	generator: "Eiffel Matrix Generator"
-	command_line: "emcgen.exe \work\73dev\Delivery\studio\bitmaps\png\10x10.ini -f \work\73dev\tools\eiffel_matrix_code_generator\frames\studio.e.frame"
+	command_line: "emcgen $EIFFEL_SRC/Delivery/studio/bitmaps/png/10x10.ini -f $EIFFEL_SRC/tools/eiffel_matrix_code_generator/frames/studio.e.frame"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
@@ -41,7 +41,7 @@ feature {NONE} -- Access
 			-- <Precursor>
 
 feature -- Icons
-
+	
 	frozen toolbar_close_icon: EV_PIXMAP
 			-- Access to 'close' pixmap.
 		require
@@ -1383,13 +1383,14 @@ feature -- Icons
 		end
 
 feature -- Icons: Animations
-
+	
 	frozen reserved_reserved_anim: ARRAY [EV_PIXMAP]
 			-- Access to 'reserved_reserved' pixmap animation items.
 		once
-			create Result.make (1, 2)
-				Result.put (named_icon (reserved_reserved_1_name), 1)
-			Result.put (named_icon (reserved_reserved_2_name), 2)
+			Result := <<
+				named_icon (reserved_reserved_1_name),
+				named_icon (reserved_reserved_2_name)
+			>>
 		ensure
 			reserved_reserved_anim_attached: Result /= Void
 		end
@@ -1397,9 +1398,10 @@ feature -- Icons: Animations
 	frozen reserved_reserved_buffer_anim: ARRAY [EV_PIXEL_BUFFER]
 			-- Access to 'reserved_reserved' pixel buffer animation items.
 		once
-			create Result.make (1, 2)
-				Result.put (named_icon_buffer (reserved_reserved_1_name), 1)
-			Result.put (named_icon_buffer (reserved_reserved_2_name), 2)
+			Result := <<
+				named_icon_buffer (reserved_reserved_1_name),
+				named_icon_buffer (reserved_reserved_2_name)
+			>>
 		ensure
 			reserved_reserved_buffer_anim_attached: Result /= Void
 		end
@@ -1549,7 +1551,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

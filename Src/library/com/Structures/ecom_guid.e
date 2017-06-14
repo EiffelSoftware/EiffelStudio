@@ -138,42 +138,42 @@ feature {NONE} -- Externals
 
 	c_size_of_guid: INTEGER
 		external
-			"C macro use <windows.h>"
+			"C macro use <GuidDef.h>"
 		alias
 			"sizeof(GUID)"
 		end
 
 	c_string_to_guid (a_str: POINTER; a_guid: POINTER): INTEGER
 		external
-			"C signature (LPOLESTR, LPCLSID): EIF_INTEGER use <windows.h>"
+			"C signature (LPOLESTR, LPCLSID): EIF_INTEGER use <Objbase.h>"
 		alias
 			"CLSIDFromString"
 		end
 
 	c_guid_to_string (a_guid, a_string: POINTER; a_count: INTEGER): INTEGER
 		external
-			"C signature (REFGUID, LPOLESTR, int): EIF_INTEGER use <windows.h>"
+			"C signature (REFGUID, LPOLESTR, int): EIF_INTEGER use <Objbase.h>"
 		alias
 			"StringFromGUID2"
 		end
 
 	c_is_equal_guid (a_guid1, a_guid2: POINTER): BOOLEAN
 		external
-			"C signature (REFGUID, REFGUID): EIF_BOOLEAN use <windows.h>"
+			"C signature (REFGUID, REFGUID): EIF_BOOLEAN use <GuidDef.h>"
 		alias
 			"IsEqualGUID"
 		end
 
 	c_generate_guid (a_guid: POINTER): INTEGER
 		external
-			"C signature (GUID*): EIF_INTEGER use <windows.h>"
+			"C signature (GUID*): EIF_INTEGER use <Objbase.h>"
 		alias
 			"CoCreateGuid"
 		end
 
 	c_guid_to_defstring (a_guid, a_string: POINTER)
 		external
-			"C inline use <windows.h>"
+			"C inline use <GuidDef.h>"
 		alias
 			"[
 				sprintf ($a_string, "{0x%.8x,0x%.4x,0x%.4x,{0x%.2x,0x%.2x,0x%.2x,0x%.2x,0x%.2x,0x%.2x,0x%.2x,0x%.2x}}",

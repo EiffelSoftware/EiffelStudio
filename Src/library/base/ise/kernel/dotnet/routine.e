@@ -324,7 +324,7 @@ feature {ROUTINE} -- Implementation
 	frozen is_inline_agent: BOOLEAN
 			-- Is the target feature an inline agent
 
-	frozen set_rout_disp (handle: RUNTIME_METHOD_HANDLE; closed_args: TUPLE;
+	frozen set_rout_disp_final, set_rout_disp (handle: RUNTIME_METHOD_HANDLE; closed_args: TUPLE;
 						  omap: ARRAY [INTEGER]; a_is_inline_agent: BOOLEAN)
 			-- Initialize object.
 		require

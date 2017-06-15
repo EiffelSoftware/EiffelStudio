@@ -21,7 +21,8 @@ inherit
 		end
 
 create {NONE}
-	set_rout_disp
+	set_rout_disp,
+	set_rout_disp_final
 
 feature -- Access
 

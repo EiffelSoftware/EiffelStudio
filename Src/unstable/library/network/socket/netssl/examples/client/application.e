@@ -28,8 +28,8 @@ feature {NONE} -- Initialization
 			timeout: INTEGER
 			l_socket: SSL_NETWORK_STREAM_SOCKET
 		do
-			host := "https://requestb.in/119hdxk1"
-			port := 443
+			host := "localhost"
+			port := 12111
 
 			if argument_count > 0  then
 				host := argument (1)
@@ -63,7 +63,6 @@ feature {NONE} -- Initialization
 			else
 					-- Create the socket connection to the Echo Server.
 				create l_socket.make_client_by_address_and_port (address, port)
-				l_socket.set_tls_protocol ()
 					-- Set the connection timeout
 				l_socket.set_connect_timeout (timeout)
 					-- Connect to the Server

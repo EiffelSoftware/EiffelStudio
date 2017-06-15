@@ -157,13 +157,12 @@ feature -- Basic Operations
 		do
 			if not is_successful then
 				create x
-				x.set_description
-					(if attached last_error as e and then not e.description.is_empty then
-						e.description
-					else
-							-- This should never be called, but you never know.
-						unexpected_error_message
-					end)
+				if attached last_error as e and then not e.description.is_empty then
+					x.set_description (e.description)
+				else
+						-- This should never be called, but you never know.
+					x.set_description (unexpected_error_message)
+				end
 				x.raise
 			end
 		end

@@ -69,6 +69,7 @@ if .%3. == .dll. (
 	shell\bin\mv config.sh.modif config.sh
 )
 
+rem You might get a message about /tmp not being created. So far it is harmless
 "%COMSPEC%" /c shell\bin\sh.exe eif_config_h.SH
 cd run-time
 "%COMSPEC%" /c ..\shell\bin\sh.exe eif_size_h.SH

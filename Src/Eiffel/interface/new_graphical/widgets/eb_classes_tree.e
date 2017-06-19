@@ -1,9 +1,9 @@
 note
-	description	: "Tree showing the classes present in the system."
+	description: "Tree showing the classes present in the system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_CLASSES_TREE
@@ -171,43 +171,47 @@ feature {NONE} -- Initialization
 
 				l_target := Universe.target
 
-					-- sort clusters
+					-- Sort clusters.
 				create cluster_header.make (interface_names.l_class_tree_clusters, pixmaps.icon_pixmaps.top_level_folder_clusters_icon)
 				build_group_tree (a_list, manager.clusters, cluster_header)
-				cluster_header.set_pebble (create {DATA_STONE}.make (groups_from_sorted_clusters (manager.clusters, True), agent is_group_valid))
+				cluster_header.set_pebble (create {DATA_STONE}.make
+					(groups_from_sorted_clusters (manager.clusters, True), agent is_group_valid, interface_names.l_class_tree_clusters))
 				if context_menu_factory /= Void then
 					cluster_header.set_configurable_target_menu_mode
 					cluster_header.set_configurable_target_menu_handler (agent context_menu_factory.clusters_data_menu)
 				end
 
-					-- sort overrides
+					-- Sort overrides.
 				create override_header.make (interface_names.l_class_tree_overrides, pixmaps.icon_pixmaps.top_level_folder_overrides_icon)
 				build_group_tree (a_list, manager.overrides, override_header)
-				override_header.set_pebble (create {DATA_STONE}.make (groups_from_sorted_clusters (manager.overrides, False), agent is_group_valid))
+				override_header.set_pebble (create {DATA_STONE}.make
+					(groups_from_sorted_clusters (manager.overrides, False), agent is_group_valid, interface_names.l_class_tree_overrides))
 				if context_menu_factory /= Void then
 					override_header.set_configurable_target_menu_mode
 					override_header.set_configurable_target_menu_handler (agent context_menu_factory.clusters_data_menu)
 				end
 
-					-- sort libraries
+					-- Sort libraries.
 				create library_header.make (interface_names.l_class_tree_libraries, pixmaps.icon_pixmaps.top_level_folder_library_icon)
 				build_group_tree (a_list, manager.libraries, library_header)
-				library_header.set_pebble (create {DATA_STONE}.make (groups_from_sorted_clusters (manager.libraries, False), agent is_group_valid))
+				library_header.set_pebble (create {DATA_STONE}.make
+					(groups_from_sorted_clusters (manager.libraries, False), agent is_group_valid, interface_names.l_class_tree_libraries))
 				if context_menu_factory /= Void then
 					library_header.set_configurable_target_menu_mode
 					library_header.set_configurable_target_menu_handler (agent context_menu_factory.libraries_data_menu)
 				end
 
-					-- sort assemblies
+					-- Sort assemblies.
 				create assembly_header.make (interface_names.l_class_tree_assemblies, pixmaps.icon_pixmaps.top_level_folder_references_icon)
 				build_group_tree (a_list, manager.assemblies, assembly_header)
-				assembly_header.set_pebble (create {DATA_STONE}.make (groups_from_sorted_clusters (manager.assemblies, False), agent is_group_valid))
+				assembly_header.set_pebble (create {DATA_STONE}.make
+					(groups_from_sorted_clusters (manager.assemblies, False), agent is_group_valid, interface_names.l_class_tree_assemblies))
 				if context_menu_factory /= Void then
 					assembly_header.set_configurable_target_menu_mode
 					assembly_header.set_configurable_target_menu_handler (agent context_menu_factory.assemblies_data_menu)
 				end
 
-					-- targets
+					-- Targets.
 				if has_targets then
 					build_target_tree (a_list)
 				end
@@ -1155,7 +1159,7 @@ invariant
 	expanded_clusters_not_void: expanded_clusters /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

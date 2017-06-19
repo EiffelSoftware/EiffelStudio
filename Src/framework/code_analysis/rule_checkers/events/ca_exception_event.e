@@ -1,6 +1,5 @@
-note
-	description: "Summary description for {CA_EXCEPTION_EVENT}."
-	author: ""
+﻿note
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,6 +18,8 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'. Sets the data to
 			-- `a_exception'.
 		do
+			category := {ENVIRONMENT_CATEGORIES}.static_analysis
+			priority := {PRIORITY_LEVELS}.normal
 			data := a_exception
 		end
 
@@ -32,8 +33,8 @@ feature -- Access
 
 	frozen type: NATURAL_8
 			-- <Precursor>
-		once
-			Result := {EVENT_LIST_ITEM_TYPES}.unknown
+		do
+			Result := {EVENT_LIST_ITEM_TYPES}.error
 		end
 
 	frozen category: NATURAL_8

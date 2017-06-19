@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Constants for command names, etc."
 	legal: "See notice at end of class."
@@ -212,11 +212,22 @@ feature -- Button texts
 
 	b_force_exit: STRING_32						do Result := locale.translation("Force Exit") end
 
-	b_error: STRING_32							do Result := locale.translation("Error") end
-	b_errors: STRING_32							do Result := locale.translation("Errors") end
-	b_warning: STRING_32							do Result := locale.translation("Warning") end
-	b_warnings: STRING_32						do Result := locale.translation("Warnings") end
-	b_apply_fix: STRING_32						do Result := locale.translation("Fix") end
+	b_error_toggle_error (n: NATURAL_32): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.plural_translation_in_context
+				(once "$1 error", once "	$1 errors", once "tool.error", n.as_integer_32), n)
+		end
+	b_error_toggle_warning (n: NATURAL_32): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.plural_translation_in_context
+				(once "$1 warning", once "	$1 warnings", once "tool.error", n.as_integer_32), n)
+		end
+	b_error_toggle_hint (n: NATURAL_32): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.plural_translation_in_context
+				(once "$1 hint", once "	$1 hints", once "tool.error", n.as_integer_32), n)
+		end
+	b_apply_fix: STRING_32 do Result := locale.translation_in_context (once"Fix", once "tool.error") end
 
 	b_Activate_execution_recording: STRING_32 	do Result := locale.translation("Record Execution")	end
 	b_Deactivate_execution_recording: STRING_32 	do Result := locale.translation("Disable Execution Recording")	end
@@ -852,7 +863,21 @@ feature -- Menu entries
 
 feature -- Tool tips
 
-	f_apply_fix: STRING_32 do Result := locale.translation ("Apply selected fixes to source code") end
+	f_error_clear_text_filter: READABLE_STRING_32 do Result := locale.translation_in_context (once "Clear text filter", once "tool.error")  end
+	f_apply_fix: STRING_32 do Result := locale.translation_in_context (once "Apply selected fixes to source code",  once "tool.error") end
+	f_error_text_filter: READABLE_STRING_32 do Result := locale.translation_in_context (once  "Text to filter messages", once "tool.error") end
+	f_error_toggle_error (n: NATURAL_32): READABLE_STRING_32
+		do
+			Result := locale.translation_in_context (once "Toggle this button to show/hide errors.", once "tool.error")
+		end
+	f_error_toggle_warning (n: NATURAL_32): READABLE_STRING_32
+		do
+			Result := locale.translation_in_context (once "Toggle this button to show/hide warnings.", once "tool.error")
+		end
+	f_error_toggle_hint (n: NATURAL_32): READABLE_STRING_32
+		do
+			Result := locale.translation_in_context (once "Toggle this button to show/hide hints.", once "tool.error")
+		end
 
 	f_go_to_next_error: STRING_32 				do Result := locale.translation ("Navigates to the next error or the first error found if the end of the list is reached") end
 	f_go_to_previous_error: STRING_32 			do Result := locale.translation ("Navigates to the previous error or the last error found if the start of the list is reached") end
@@ -1627,6 +1652,7 @@ feature -- Label texts
 	l_Routine_descendants: STRING_32		do Result := locale.translation("Descendant versions")	end
 	l_Routine_flat: STRING_32			do Result := locale.translation("flat view")	end
 	l_Routines: STRING_32				do Result := locale.translation("Routines")	end
+	l_rule_code: STRING_32 			do Result := locale.translation_in_context (once "Rule", once "tool.error") end
 	l_Runtime_information_record: STRING_32 do Result := locale.translation("Run-time information record")	end
 	l_Runs: STRING_32					do Result := locale.translation("Runs")	end
 	l_run_after_all: STRING_32			do Result := "run_after_all" end
@@ -1645,6 +1671,7 @@ feature -- Label texts
 	l_Set_slice_limits: STRING_32		do Result := locale.translation ("Slice limits") end
 	l_Set_slice_limits_desc: STRING_32	do Result := locale.translation("Set which values are shown in special objects")	end
 	l_settings: STRING_32				do Result := locale.translation ("Settings") end
+	l_severity: STRING_32				do Result := locale.translation_in_context (once "Severity", once "tool.error") end
 	l_Short: STRING_32					do Result := locale.translation("Contract view")	end
 	l_Short_name: STRING_32				do Result := locale.translation("Short Name")	end
 	l_Show_all_call_stack: STRING_32		do Result := locale.translation("Show all stack elements")	end

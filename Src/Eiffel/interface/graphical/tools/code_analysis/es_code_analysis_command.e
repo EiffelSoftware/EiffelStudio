@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Command to launch Code Analyzer.
 		
@@ -15,9 +15,10 @@ inherit
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			tooltext,
+			is_tooltext_important,
+			new_mini_sd_toolbar_item,
 			new_sd_toolbar_item,
-			new_mini_sd_toolbar_item
+			tooltext
 		end
 
 	CA_SHARED_NAMES
@@ -29,6 +30,13 @@ inherit
 	COMPILER_EXPORTER
 
 	EB_SHARED_WINDOW_MANAGER
+	EB_SHARED_GRAPHICAL_COMMANDS
+
+	CODE_ANALYZER_OBSERVER [STONE, CA_RULE_VIOLATION]
+		redefine
+			on_finish,
+			on_start
+		end
 
 create
 	make
@@ -38,13 +46,19 @@ feature {NONE} -- Initialization
 	make
 			-- Creation method.
 		do
-			initialize_preferences
-
 			enable_sensitive
 			set_up_menu_items
 
-			create analysis_timestamp.make (0)
+				-- Connect the observer to the code analyzer service.
+			if attached code_analyzer_s.service as s then
+				s.code_analyzer_connection.connect_events (Current)
+			end
 		end
+
+feature -- Status report
+
+	is_tooltext_important: BOOLEAN = True
+			-- <Precursor>
 
 feature -- Execution
 
@@ -54,9 +68,6 @@ feature -- Execution
 			l_save_confirm: ES_DISCARDABLE_COMPILE_SAVE_FILES_PROMPT
 			l_classes: DS_ARRAYED_LIST [CLASS_I]
 		do
-				-- Show the tool right from the start.
-			show_ca_tool
-
 			if not eiffel_project.is_compiling then
 				if window_manager.has_modified_windows then
 					create l_classes.make_default
@@ -73,19 +84,10 @@ feature -- Execution
 
 	execute_with_stone (a_stone: STONE)
 			-- Execute with `a_stone'.
-		do
-			execute_with_stone_content (a_stone, Void)
-		end
-
-	execute_with_stone_content (a_stone: STONE; a_content: SD_CONTENT)
-			-- Execute with `a_stone'.
 		local
 			l_save_confirm: ES_DISCARDABLE_COMPILE_SAVE_FILES_PROMPT
 			l_classes: DS_ARRAYED_LIST [CLASS_I]
 		do
-				-- Show the tool right from the start.
-			show_ca_tool
-
 			if not eiffel_project.is_compiling then
 				if window_manager.has_modified_windows then
 					create l_classes.make_default
@@ -113,40 +115,11 @@ feature {ES_CODE_ANALYSIS_BENCH_HELPER} -- Basic operations
 	compile_and_analyze_all
 			-- Compiles the system; if successful then the whole system will
 			-- be analyzed.
-		local
-			l_helper: ES_CODE_ANALYSIS_BENCH_HELPER
-			l_dialog: ES_INFORMATION_PROMPT
 		do
-				-- Compile the project and only analyze if the compilation was successful.
-			if eiffel_project.able_to_compile then
-					-- Avoid recompiling a precompiled library.
-				eiffel_project.quick_melt (True, True, True)
-			end
-			if eiffel_project.successful then
-				create l_helper
-				if l_helper.code_analyzer.is_running then
-					create l_dialog.make_standard (ca_messages.already_running_long)
-					l_dialog.show_on_active_window
-				else
-						-- Detection of changes
-
-						-- If we did a system analysis recently then only add modified classes.
-					if last_was_analyze_all then
-						analyze_changed_classes
-					else
-						analyze_all
-					end
-					last_was_analyze_all := True
-				end
+			if attached target_stone as stone then
+				compile_and_analyze (stone)
 			end
 		end
-
-	last_was_analyze_all: BOOLEAN
-			-- Was the last analysis performed on the whole system?
-
-	analysis_timestamp: HASH_TABLE [INTEGER, CLASS_I]
-			-- Stores the time of the last modification of the class at the point
-			-- of the last analysis.
 
 	save_compile_and_analyze (a_stone: STONE)
 			-- Save modified windows, compile project and perform analysis of stone `a_stone'.
@@ -157,158 +130,27 @@ feature {ES_CODE_ANALYSIS_BENCH_HELPER} -- Basic operations
 
 	compile_and_analyze (a_stone: STONE)
 			-- Compile project and perform analysis of stone `a_stone'.
-		local
-			l_helper: ES_CODE_ANALYSIS_BENCH_HELPER
-			l_dialog: ES_INFORMATION_PROMPT
 		do
-				-- Compile the project and only analyze if the compilation was successful.
-			if eiffel_project.able_to_compile then
-					-- Avoid recompiling a precompiled library.
-				eiffel_project.quick_melt (True, True, True)
-			end
-			if eiffel_project.successful then
-				create l_helper
-				if l_helper.code_analyzer.is_running then
-					create l_dialog.make_standard (ca_messages.already_running_long)
-					l_dialog.show_on_active_window
-				else
-					perform_analysis (a_stone)
+			if droppable (a_stone) then
+					-- Compile the project and only analyze if the compilation was successful.
+				if eiffel_project.able_to_compile then
+						-- Avoid recompiling a precompiled library.
+					eiffel_project.quick_melt (True, True, True)
 				end
-			end
-		end
-
-	analyze_all
-			-- Analyzes the whole system.
-		local
-			l_helper: ES_CODE_ANALYSIS_BENCH_HELPER
-			l_scope_label: EV_LABEL
-		do
-			create l_helper
-			code_analyzer := l_helper.code_analyzer
-			code_analyzer.clear_classes_to_analyze
-			code_analyzer.rule_violations.wipe_out
-			code_analyzer.add_whole_system
-
-				-- Store all found classes.
-			across code_analyzer.class_list as l_classes loop
-				analysis_timestamp.force (l_classes.item.original_class.date, l_classes.item.original_class)
-			end
-
-			disable_tool_button
-			window_manager.display_message (ca_messages.status_bar_running)
-			code_analyzer.add_completed_action (agent analysis_completed)
-			code_analyzer.analyze
-			l_scope_label := ca_tool.panel.scope_label
-			l_scope_label.set_text (ca_messages.system_scope)
-			l_scope_label.set_tooltip (ca_messages.system_scope_tooltip)
-			l_scope_label.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (30, 30, 30))
-		end
-
-	analyze_changed_classes
-			-- Only analyze the classes that have been modified since the last analysis.
-		local
-			l_helper: ES_CODE_ANALYSIS_BENCH_HELPER
-			l_scope_label: EV_LABEL
-			l_analysis_timestamp, l_changed_timestamp: INTEGER
-			l_class: CLASS_I
-		do
-			create l_helper
-			code_analyzer := l_helper.code_analyzer
-			code_analyzer.clear_classes_to_analyze
-
-			from analysis_timestamp.start
-			until analysis_timestamp.after
-			loop
-					-- Check if class has been modified since last analysis.
-				l_analysis_timestamp := analysis_timestamp.item_for_iteration
-				l_class := analysis_timestamp.key_for_iteration
-				l_changed_timestamp := l_class.date
-				if l_changed_timestamp /= l_analysis_timestamp then
-					code_analyzer.rule_violations.remove (l_class.compiled_class)
-					code_analyzer.add_class (l_class.config_class)
-				end
-
-				analysis_timestamp.forth
-			end
-
-				-- Update the analysis timestamp for all the classes that have been added.
-			across code_analyzer.class_list as l_classes loop
-				analysis_timestamp.force (l_classes.item.original_class.date, l_classes.item.original_class)
-			end
-
-			disable_tool_button
-			window_manager.display_message (ca_messages.status_bar_running)
-			code_analyzer.add_completed_action (agent analysis_completed)
-			code_analyzer.analyze
-			l_scope_label := ca_tool.panel.scope_label
-			l_scope_label.set_text (ca_messages.system_scope)
-			l_scope_label.set_tooltip (ca_messages.system_scope_tooltip)
-			l_scope_label.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (30, 30, 30))
-		end
-
-	last_scope_label: EV_LABEL
-			-- Shows the scope of the last analysis (system, single class, etc.). A stone
-			-- will be attached, too, depending on the scope.
-
-	perform_analysis (a_stone: STONE)
-			-- Analyze `a_stone' only.
-		local
-			l_helper: ES_CODE_ANALYSIS_BENCH_HELPER
-			l_scope_label: EV_LABEL
-		do
-				-- For simplicity let us assume that `a_stone' does not
-				-- correspond to the system or is equivalent to it.
-			last_was_analyze_all := False
-
-			create l_helper
-			code_analyzer := l_helper.code_analyzer
-			code_analyzer.clear_classes_to_analyze
-			code_analyzer.rule_violations.wipe_out
-
-			l_scope_label := ca_tool.panel.scope_label
-
-			if attached {CLASSC_STONE} a_stone as s then
-				code_analyzer.add_class (s.class_i.config_class)
-				l_scope_label.set_text (s.class_name)
-				l_scope_label.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (140, 140, 255))
-				l_scope_label.set_pebble (s)
-				l_scope_label.set_pick_and_drop_mode
-				l_scope_label.set_tooltip (ca_messages.class_scope_tooltip)
-			elseif attached {CLUSTER_STONE} a_stone as s then
-				if s.is_cluster then
-					code_analyzer.add_cluster (s.cluster_i)
-				else
-					code_analyzer.add_group (s.group)
-				end
-				l_scope_label.set_text (s.stone_name)
-				l_scope_label.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 140, 140))
-				l_scope_label.set_pebble (s)
-				l_scope_label.set_pick_and_drop_mode
-				l_scope_label.set_tooltip (ca_messages.cluster_scope_tooltip)
-			elseif attached {DATA_STONE} a_stone as s then
-				if attached {LIST [CONF_GROUP]} s.data as g then
-					from
-						g.start
-					until
-						g.after
-					loop
-						if attached {CLUSTER_I} g.item_for_iteration as c then
-							code_analyzer.add_cluster (c)
-						end
-						g.forth
+				if eiffel_project.successful then
+					if
+						attached code_analyzer_s.service as service and then
+						service.is_interface_usable and then
+						service.is_stopped and then
+						service.is_value_valid (a_stone)
+					then
+						service.put (a_stone)
+						service.start
+					else
+						;(create {ES_INFORMATION_PROMPT}.make_standard (ca_messages.already_running_long)).show_on_active_window
 					end
-					l_scope_label.set_text (s.stone_name)
-					l_scope_label.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (140, 255, 140))
-					l_scope_label.set_pebble (s)
-					l_scope_label.set_pick_and_drop_mode
-					l_scope_label.set_tooltip (ca_messages.conf_group_tooltip)
 				end
 			end
-
-			disable_tool_button
-			window_manager.display_message (ca_messages.status_bar_running)
-			code_analyzer.add_completed_action (agent analysis_completed)
-			code_analyzer.analyze
 		end
 
 	analysis_completed (a_exceptions: detachable ITERABLE [TUPLE [detachable EXCEPTION, CLASS_C]])
@@ -317,36 +159,47 @@ feature {ES_CODE_ANALYSIS_BENCH_HELPER} -- Basic operations
 		local
 			l_violation_exists: BOOLEAN
 		do
-			if attached event_list as l then
-					-- First off, remove all event items.
-				l.prune_event_items (event_context_cookie)
+			if attached event_list_s.service as s then
+					-- Avoid redrawing all items one by one.
+				s.lock
 
+					-- First off, remove all event items.
+				s.prune_event_items (event_context_cookie)
+
+					-- Report exceptions (if any).
 				if a_exceptions /= Void then
 					across a_exceptions as ic loop
-						l.put_event_item (event_context_cookie, create {CA_EXCEPTION_EVENT}.make (ic.item))
+						s.put_event_item (event_context_cookie, create {CA_EXCEPTION_EVENT}.make (ic.item))
 						l_violation_exists := True
 					end
 				end
 
 					-- Add an event item for each rule violation.
-				across code_analyzer.rule_violations as l_viol_list loop
-					across l_viol_list.item as l_viol loop
-						l.put_event_item (event_context_cookie, create {CA_RULE_VIOLATION_EVENT}.make (l_viol.item))
-						l_violation_exists := True
+				if attached code_analyzer_s.service as code_analyzer then
+					across
+						code_analyzer.violations as v
+					from
+						if not v.after then
+							l_violation_exists := True
+						end
+					loop
+						s.put_event_item (event_context_cookie, create {CA_RULE_VIOLATION_EVENT}.make (v.item))
 					end
 				end
 
 					-- If there are no violations at all then add a pseudo item indicating this very fact.
 				if not l_violation_exists then
-					l.put_event_item (event_context_cookie, create {CA_NO_ISSUES_EVENT}.make)
+					s.put_event_item (event_context_cookie, create {CA_NO_ISSUES_EVENT}.make)
 				end
+
+					-- Enable redrawing of items.
+				s.unlock
 			end
 
-			show_ca_tool
-
-			enable_tool_button
 				-- Update status bar.
 			window_manager.display_message (ca_messages.status_bar_terminated)
+				-- Raise error tool panel.
+			error_handler.force_display
 		end
 
 	event_context_cookie: UUID
@@ -360,68 +213,23 @@ feature {ES_CODE_ANALYSIS_BENCH_HELPER} -- Basic operations
 			valid_result: Result /= Void
 		end
 
-	ca_tool: detachable ES_CODE_ANALYSIS_TOOL
-			-- Analysis tool (if applicable).
-		local
-			l_tool: ES_TOOL [EB_TOOL]
-			l_window: EB_DEVELOPMENT_WINDOW
-		do
-			l_window := window_manager.last_focused_development_window
-			if not l_window.is_recycled and then l_window.is_visible and then l_window = window_manager.last_focused_development_window then
-				l_tool := l_window.shell_tools.tool ({ES_CODE_ANALYSIS_TOOL})
-				if attached {ES_CODE_ANALYSIS_TOOL} l_tool as l_ca_tool then
-					Result := l_ca_tool
-				else
-					check False end
-				end
-			end
-		end
-
-	show_ca_tool
-			-- Shows the analysis tool.
-		local
-			l_tool: ES_CODE_ANALYSIS_TOOL
-		do
-			l_tool := ca_tool
-			if l_tool /= Void and then not l_tool.is_recycled then
-				l_tool.show (True)
-			end
-		end
-
-	disable_tool_button
-			-- Disable analysis button on tool.
-		local
-			l_tool: ES_CODE_ANALYSIS_TOOL
-		do
-			l_tool := ca_tool
-			if l_tool /= Void and then l_tool.is_tool_instantiated then
-				ca_tool.panel.whole_system_button.disable_sensitive
-				ca_tool.panel.current_item_button.disable_sensitive
-			end
-		end
-
-	enable_tool_button
-			-- Enable analysis button on tool.
-		local
-			l_tool: ES_CODE_ANALYSIS_TOOL
-		do
-			l_tool := ca_tool
-			if l_tool /= Void and then l_tool.is_tool_instantiated then
-				ca_tool.panel.whole_system_button.enable_sensitive
-				ca_tool.panel.current_item_button.enable_sensitive
-			end
-		end
-
 feature -- Items
 
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- <Precursor>
+		local
+			popup_button: EB_SD_COMMAND_TOOL_BAR_DUAL_POPUP_BUTTON
 		do
-			create Result.make (Current)
+			create popup_button.make (Current)
+			popup_button.set_menu_function (agent updated_drop_down_menu)
+
+			Result := popup_button
 			initialize_sd_toolbar_item (Result, display_text)
-			Result.set_text (ca_names.analyze_item)
+			if display_text then
+				Result.set_text (ca_names.analyze_item)
+			end
 			Result.set_tooltip (ca_names.analyze_item_tooltip)
-			Result.select_actions.extend (agent analyze_current_item)
+			Result.select_actions.extend (agent analyze_again)
 
 			Result.drop_actions.extend (agent execute_with_stone)
 			Result.drop_actions.set_veto_pebble_function (agent droppable)
@@ -452,64 +260,258 @@ feature -- Items
 
 feature -- Status report
 
-	droppable (a_pebble: ANY): BOOLEAN
-			-- Can user drop `a_pebble' on `Current'?
+	droppable (a: ANY): BOOLEAN
+			-- Can user drop `a` on `Current`?
 		do
 			Result :=
-				(attached {CLASSC_STONE} a_pebble) or else
-				(attached {CLUSTER_STONE} a_pebble) or else
-				(attached {DATA_STONE} a_pebble as s and then attached {LIST [CONF_GROUP]} s.data)
+				attached code_analyzer_s.service as s and then
+				attached {STONE} a as x and then
+				s.is_value_valid (x)
+		end
+
+feature {CODE_ANALYZER_S} -- Event handlers
+
+	on_start (service: CODE_ANALYZER_S [STONE, CA_RULE_VIOLATION])
+			-- <Precursor>
+		do
+			disable_sensitive
+			window_manager.display_message (ca_messages.status_bar_running)
+		end
+
+	on_finish (service: CODE_ANALYZER_S [STONE, CA_RULE_VIOLATION]; exceptions: ITERABLE [TUPLE [detachable EXCEPTION, CLASS_C]])
+			-- <Precursor>
+		do
+			enable_sensitive
+			analysis_completed (exceptions)
 		end
 
 feature {NONE} -- Implementation
 
-	code_analyzer: CA_CODE_ANALYZER
-			-- Code Analyzer instance
-
 	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
-			Result := pixmaps.icon_pixmaps.view_flat_icon
+			Result := pixmaps.icon_pixmaps.analyzer_analyze_icon
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
-			Result := pixmaps.icon_pixmaps.view_flat_icon_buffer
+			Result := pixmaps.icon_pixmaps.analyzer_analyze_icon_buffer
 		end
 
-	analyze_current_item
-			-- Proof current item
-		local
-			l_window: EB_DEVELOPMENT_WINDOW
+	analyze_again
+			-- Analyze last analyzed item.
 		do
-			l_window := window_manager.last_focused_development_window
-			if droppable (l_window.stone) then
-				execute_with_stone (l_window.stone)
+			if attached code_analyzer_s.service as s then
+				if attached last_stone as stone then
+					execute_with_stone (stone)
+				else
+					updated_drop_down_menu.show
+				end
+			end
+		end
+
+	analyze_editor
+			-- Analyze current editor item.
+		do
+			if attached editor_stone as stone then
+				execute_with_stone (editor_stone)
 			end
 		end
 
 	analyze_parent_cluster
-			-- Proof parent cluster of window item.
-		local
-			l_window: EB_DEVELOPMENT_WINDOW
-			l_cluster_stone: CLUSTER_STONE
+			-- Analyze parent cluster of current stone (if any).
 		do
-			l_window := window_manager.last_focused_development_window
-			if attached {CLASSC_STONE} l_window.stone as l_stone then
-				create l_cluster_stone.make (l_stone.group)
-				execute_with_stone (l_cluster_stone)
-			elseif attached {CLUSTER_STONE} l_window.stone as l_stone then
-				if l_stone.cluster_i.parent_cluster /= Void then
-					create l_cluster_stone.make (l_stone.cluster_i.parent_cluster)
-				end
-				execute_with_stone (l_cluster_stone)
+			if attached parent_stone as stone then
+				execute_with_stone (stone)
 			end
 		end
 
+feature {NONE} -- Stone information
+
+	last_stone: detachable STONE
+			-- Most recently analyzed stone if any.
+		do
+			if
+				attached code_analyzer_s.service as s and then
+				attached s.item as stone and then
+				droppable (stone)
+			then
+				Result := stone
+			end
+		ensure
+			is_droppable: attached Result implies droppable (Result)
+		end
+
+	editor_stone: detachable STONE
+			-- Currently selected editor stone if any.
+		do
+			if
+				attached window_manager.last_focused_development_window as w and then
+				attached w.stone as stone and then
+				droppable (stone)
+			then
+				Result := stone
+			end
+		ensure
+			is_droppable: attached Result implies droppable (Result)
+		end
+
+	parent_stone: detachable STONE
+			-- Parent stone of currently selected item if any.
+		do
+			Result := last_stone
+			if attached {CLASSC_STONE} Result as class_stone then
+				Result := create {CLUSTER_STONE}.make (class_stone.group)
+			elseif
+				attached {CLUSTER_STONE} Result as cluster_stone and then
+				attached cluster_stone.cluster_i.parent_cluster as parent_cluster
+			then
+				Result := create {CLUSTER_STONE}.make (parent_cluster)
+			else
+					-- There is no parent.
+				Result := Void
+			end
+			if not droppable (Result) then
+				Result := Void
+			end
+		ensure
+			is_droppable: attached Result implies droppable (Result)
+		end
+
+	target_stone: detachable STONE
+			-- Target stone of currently selected item if any.
+		do
+			if attached eiffel_universe.target as target then
+				create {TARGET_STONE} Result.make (target)
+				if not droppable (Result) then
+					Result := Void
+				end
+			end
+		ensure
+			is_droppable: attached Result implies droppable (Result)
+		end
+
+feature -- Access
+
+	name: STRING_GENERAL
+			-- <Precursor>
+		do
+			Result := command_name
+		end
+
+	command_name: STRING = "Analyze"
+			-- Value for `name` used in this class.
+
 feature {NONE} -- Implementation
 
-	frozen service_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
+	set_up_menu_items
+			-- Set up menu items of proof button.
+		do
+			create analyze_again_menu_item.make_with_text_and_action (ca_messages.analyze_last_menu (Void), agent analyze_again)
+			analyze_again_menu_item.set_pixmap (pixmaps.icon_pixmaps.analyzer_analyze_refresh_icon)
+			create analyze_editor_menu_item.make_with_text_and_action (ca_messages.analyze_editor_menu (Void), agent analyze_editor)
+			analyze_editor_menu_item.set_pixmap (pixmaps.icon_pixmaps.analyzer_analyze_editor_icon)
+			create analyze_parent_menu_item.make_with_text_and_action (ca_messages.analyze_parent_menu (Void), agent analyze_parent_cluster)
+			analyze_parent_menu_item.set_pixmap (pixmaps.icon_pixmaps.analyzer_analyze_cluster_icon)
+				-- Use `execute` instead of `analyze_all` to ensure compilation is done first.
+			create analyze_target_menu_item.make_with_text_and_action (ca_messages.analyze_target_menu (Void), agent execute)
+			analyze_target_menu_item.set_pixmap (pixmaps.icon_pixmaps.analyzer_analyze_target_icon)
+		end
+
+	updated_drop_down_menu: EV_MENU
+			-- Same as `drop_down_menu`, but with all entries updated to reflect current scope.
+		do
+			if attached last_stone as stone then
+				analyze_again_menu_item.set_text (ca_messages.analyze_last_menu (stone.stone_name))
+				analyze_again_menu_item.enable_sensitive
+			else
+				analyze_again_menu_item.set_text (ca_messages.analyze_last_menu (Void))
+				analyze_again_menu_item.disable_sensitive
+			end
+			if attached editor_stone as stone then
+				analyze_editor_menu_item.set_text (ca_messages.analyze_editor_menu (stone.stone_name))
+				analyze_editor_menu_item.enable_sensitive
+			else
+				analyze_editor_menu_item.set_text (ca_messages.analyze_editor_menu (Void))
+				analyze_editor_menu_item.disable_sensitive
+			end
+			if attached parent_stone as stone then
+				analyze_parent_menu_item.set_text (ca_messages.analyze_parent_menu (stone.stone_name))
+				analyze_parent_menu_item.enable_sensitive
+			else
+				analyze_parent_menu_item.set_text (ca_messages.analyze_parent_menu (Void))
+				analyze_parent_menu_item.disable_sensitive
+			end
+			if attached target_stone as stone then
+				analyze_target_menu_item.set_text (ca_messages.analyze_target_menu (stone.stone_name))
+				analyze_target_menu_item.enable_sensitive
+			else
+				analyze_target_menu_item.set_text (ca_messages.analyze_target_menu (Void))
+				analyze_target_menu_item.disable_sensitive
+			end
+			Result := drop_down_menu
+		end
+
+	drop_down_menu: EV_MENU
+			-- Drop down menu for `new_sd_toolbar_item'.
+		once
+			create Result
+			Result.extend (analyze_again_menu_item)
+			Result.extend (analyze_editor_menu_item)
+			Result.extend (analyze_parent_menu_item)
+			Result.extend (analyze_target_menu_item)
+			Result.extend (create {EV_MENU_SEPARATOR})
+			Result.extend (analyzer_preferences_cmd.new_menu_item)
+		ensure
+			not_void: Result /= Void
+		end
+
+	analyze_again_menu_item: EV_MENU_ITEM
+			-- Menu item to analyze editor.
+
+	analyze_editor_menu_item: EV_MENU_ITEM
+			-- Menu item to analyze editor.
+
+	analyze_parent_menu_item: EV_MENU_ITEM
+			-- Menu item to analyze parent.
+
+	analyze_target_menu_item: EV_MENU_ITEM
+			-- Menu item to analyze target.
+
+	menu_name: STRING_GENERAL
+			-- Name as it appears in the menu (with & symbol).
+		do
+			Result := ca_messages.analyze_last_menu (Void)
+		end
+
+	tooltip: STRING_GENERAL
+			-- Tooltip for the toolbar button.
+		do
+			Result := ca_names.analyze_item_tooltip
+		end
+
+	tooltext: STRING_GENERAL
+			-- Text for the toolbar button.
+		do
+			Result := ca_names.analyze_item
+		end
+
+	description: STRING_GENERAL
+			-- Description for this command.
+		do
+			Result := ca_messages.analyze_again_description
+		end
+
+feature {CODE_ANALYZER} -- Services
+
+	code_analyzer_s: SERVICE_CONSUMER [CODE_ANALYZER_S [STONE, CA_RULE_VIOLATION]]
+			-- Access to code analyzer service.
+		once
+			create Result
+		end
+
+	event_list_s: SERVICE_CONSUMER [EVENT_LIST_S]
 			-- Access to an event list service {EVENT_LIST_S} consumer.
 		once
 			create Result
@@ -517,190 +519,8 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	frozen event_list: detachable EVENT_LIST_S
-			-- Access to an event list service.
-		do
-			Result := service_consumer.service
-		end
-
-	set_up_menu_items
-			-- Set up menu items of proof button
-		do
-			create analyze_system_item.make_with_text_and_action (ca_messages.analyze_whole_system, agent analyze_all)
-			create analyze_current_item_item.make_with_text_and_action (ca_messages.analyze_current_item, agent analyze_current_item)
-			create analyze_parent_item_item.make_with_text_and_action (ca_messages.analyze_parent_cluster, agent analyze_parent_cluster)
-		end
-
-	drop_down_menu: EV_MENU
-			-- Drop down menu for `new_sd_toolbar_item'.
-		once
-			create Result
-			Result.extend (analyze_system_item)
-			Result.extend (analyze_current_item_item)
-			Result.extend (analyze_parent_item_item)
-		ensure
-			not_void: Result /= Void
-		end
-
-	analyze_current_item_item: EV_MENU_ITEM
-			-- Menu item to analyze current item
-
-	analyze_parent_item_item: EV_MENU_ITEM
-			-- Menu item to analyze parent item
-
-	analyze_system_item: EV_MENU_ITEM
-			-- Menu item to analyze system
-
-	menu_name: STRING_GENERAL
-			-- Name as it appears in the menu (with & symbol).
-		do
-			Result := ca_messages.run_code_analysis
-		end
-
-	tooltip: STRING_GENERAL
-			-- Tooltip for the toolbar button.
-		do
-			Result := ca_messages.analyze_whole_system
-		end
-
-	tooltext: STRING_GENERAL
-			-- Text for the toolbar button.
-		do
-			Result := ca_messages.run_code_analysis
-		end
-
-	description: STRING_GENERAL
-			-- Description for this command.
-		do
-			Result := "Run Eiffel Inspector."
-		end
-
-	name: STRING_GENERAL
-			-- Name of the command. Used to store the command in the
-			-- preferences.
-		do
-			Result := "Eiffel Inspector"
-		end
-
-feature -- GUI preferences
-
-	initialize_preferences
-			-- Initializes the preferences related to the tool panel.
-		local
-			l_helper: ES_CODE_ANALYSIS_BENCH_HELPER
-			l_manager: EB_PREFERENCE_MANAGER
-		do
-			create l_helper
-			code_analyzer := l_helper.code_analyzer
-			create l_manager.make (code_analyzer.preferences, {CA_SETTINGS}.code_analysis_namespace)
-
-			error_bgcolor := l_manager.new_color_preference_value (l_manager,
-				preference_option_name_error_background, default_error_bgcolor)
-			warning_bgcolor := l_manager.new_color_preference_value (l_manager,
-				preference_option_name_warning_background, default_warning_bgcolor)
-			suggestion_bgcolor := l_manager.new_color_preference_value (l_manager,
-				preference_option_name_suggestion_background, default_suggestion_bgcolor)
-			hint_bgcolor := l_manager.new_color_preference_value (l_manager,
-				preference_option_name_hint_background, default_hint_bgcolor)
-			fixed_violation_bgcolor := l_manager.new_color_preference_value (l_manager,
-				preference_option_name_fixed_background, default_fixed_violation_bgcolor)
-		end
-
-	color_string (a_color: attached EV_COLOR): STRING
-			-- String representation of `a_color' for use in preferences.
-		do
-			create Result.make_empty
-			Result.append_integer (a_color.red_8_bit)
-			Result.append_character (';')
-			Result.append_integer (a_color.green_8_bit)
-			Result.append_character (';')
-			Result.append_integer (a_color.blue_8_bit)
-		ensure
-			valid_result: Result /= Void
-		end
-
-	error_bgcolor,
-	warning_bgcolor,
-	suggestion_bgcolor,
-	hint_bgcolor,
-	fixed_violation_bgcolor: COLOR_PREFERENCE
-			-- Color preferences
-
-	default_error_bgcolor: EV_COLOR
-		do
-			create Result.make_with_8_bit_rgb (255, 220, 220)
-		ensure
-			valid_result: Result /= Void
-		end
-
-	default_warning_bgcolor: EV_COLOR
-		do
-			create Result.make_with_8_bit_rgb (255, 255, 188)
-		ensure
-			valid_result: Result /= Void
-		end
-
-	default_suggestion_bgcolor: EV_COLOR
-		do
-			create Result.make_with_8_bit_rgb (239, 228, 176)
-		ensure
-			valid_result: Result /= Void
-		end
-
-	default_hint_bgcolor: EV_COLOR
-		do
-			create Result.make_with_8_bit_rgb (188, 226, 193)
-		ensure
-			valid_result: Result /= Void
-		end
-
-	default_fixed_violation_bgcolor: EV_COLOR
-		do
-			create Result.make_with_8_bit_rgb (181, 230, 29)
-		ensure
-			valid_result: Result /= Void
-		end
-
-feature {NONE} -- Preferences
-
-	preference_option_name_error_background: STRING
-			-- A name of an error background option within the corresponding preference namespace.
-		do
-			Result := color_option_name ("error_background")
-		end
-
-	preference_option_name_warning_background: STRING
-			-- A name of a warning background option within the corresponding preference namespace.
-		do
-			Result := color_option_name ("warning_background")
-		end
-
-	preference_option_name_suggestion_background: STRING
-			-- A name of a suggestion background option within the corresponding preference namespace.
-		do
-			Result := color_option_name ("suggestion_background")
-		end
-
-	preference_option_name_hint_background: STRING
-			-- A name of a hint background option within the corresponding preference namespace.
-		do
-			Result := color_option_name ("hint_background")
-		end
-
-	preference_option_name_fixed_background: STRING
-			-- A name of a fixed violation background option within the corresponding preference namespace.
-		do
-			Result := color_option_name ("fixed_violation_background")
-		end
-
-	color_option_name (n: STRING): STRING
-			-- A color option name in the corresponding color namespace.
-		do
-			Result := "color." + n
-		end
-
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

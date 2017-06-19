@@ -14,21 +14,22 @@ inherit
 	ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE
 		redefine
 			build_tool_interface,
-			on_before_initialize,
-			on_after_initialized,
+			create_clickable_tooltip,
+			create_mini_tool_bar_items,
+			create_right_tool_bar_items,
 			internal_recycle,
 			is_appliable_event,
 			is_event_list_synchronized_on_initialized,
+			on_after_initialized,
+			on_before_initialize,
+			on_event_item_added,
+			on_event_item_clean_up,
+			on_event_item_removed,
+			on_handle_key,
+			on_unlocked,
 			show,
 			show_context_menu,
-			update_content_applicable_widgets,
-			on_unlocked,
-			on_event_item_added,
-			on_event_item_removed,
-			on_event_item_clean_up,
-			on_handle_key,
-			create_right_tool_bar_items,
-			create_clickable_tooltip
+			update_content_applicable_widgets
 		end
 
 	ES_ERROR_LIST_COMMANDER_I
@@ -53,7 +54,24 @@ inherit
 			on_session_value_changed
 		end
 
+	CODE_ANALYZER_OBSERVER [STONE, CA_RULE_VIOLATION]
+		export
+			{NONE} all
+		redefine
+			on_put
+		end
+
 	SHARED_ERROR_TRACER
+		export
+			{NONE} all
+		end
+
+	CA_SHARED_NAMES
+		export
+			{NONE} all
+		end
+
+	EB_SHARED_GRAPHICAL_COMMANDS
 		export
 			{NONE} all
 		end
@@ -71,11 +89,18 @@ feature {NONE} -- Initialization: User interface
 		local
 			l_col: EV_GRID_COLUMN
 		do
-			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_widget)
+			Precursor (a_widget)
 			a_widget.set_column_count_to (last_column)
 
 				-- Create columns
-			l_col := a_widget.column (error_column)
+			l_col := a_widget.column (category_column)
+			l_col.set_width (40)
+
+			l_col := a_widget.column (rule_column)
+			l_col.set_title (interface_names.l_rule_code)
+			l_col.set_width (40)
+
+			l_col := a_widget.column (description_column)
 			l_col.set_title (interface_names.l_description)
 			l_col.set_width (100)
 
@@ -87,35 +112,82 @@ feature {NONE} -- Initialization: User interface
 			l_col.set_title (interface_names.l_position)
 			l_col.set_width (80)
 
+			l_col := a_widget.column (severity_column)
+			l_col.set_title (interface_names.l_severity)
+			l_col.set_width (50)
+			l_col.hide
+
 			a_widget.enable_tree
 			a_widget.hide_tree_node_connectors
 			a_widget.disable_row_height_fixed
-			a_widget.enable_auto_size_best_fit_column (error_column)
+			a_widget.enable_auto_size_best_fit_column (description_column)
 			a_widget.enable_multiple_row_selection
 			register_action (a_widget.row_deselect_actions, agent (a_row: EV_GRID_ROW)
 				do
 						-- Updates UI based on selection and row count.
 					update_content_applicable_widgets (grid_events.row_count > 0)
-					on_row_deselected (a_row)
 				end)
 			register_action (a_widget.row_select_actions, agent (a_row: EV_GRID_ROW)
 				do
 						-- Updates UI based on selection and row count.
 					update_content_applicable_widgets (grid_events.row_count > 0)
-					on_row_selected (a_row)
 				end)
 
-				-- Enable sorting
+				-- Enable sorting.
 			enable_sorting_on_columns (<<
-				a_widget.column (error_column),
+				a_widget.column (category_column),
+				a_widget.column (severity_column),
+				a_widget.column (rule_column),
+				a_widget.column (description_column),
 				a_widget.column (context_column),
 				a_widget.column (position_column)>>)
+
+				-- Support correct sorting on position.
+			grid_wrapper.column_sort_info [position_column].set_comparator
+				(agent (r1, r2: EV_GRID_ROW; o: like {EVS_GRID_TWO_WAY_SORTING_ORDER}.ascending_order): BOOLEAN
+					local
+						l1, l2: INTEGER
+						c1, c2: INTEGER
+					do
+						if attached {EVENT_LIST_ITEM_I} r1.data as i then
+							if attached {ERROR} i.data as e then
+								l1 := e.line
+								c1 := e.column
+							elseif
+								attached {CA_RULE_VIOLATION_EVENT} i as v and then
+								attached v.location as l
+							then
+								l1 := l.line
+								c1 := l.position
+							end
+						end
+						if attached {EVENT_LIST_ITEM_I} r2.data as i then
+							if attached {ERROR} i.data as e then
+								l2 := e.line
+								c2 := e.column
+							elseif
+								attached {CA_RULE_VIOLATION_EVENT} i as v and then
+								attached v.location as l
+							then
+								l2 := l.line
+								c2 := l.position
+							end
+						end
+						Result :=
+							(l1 < l2 or else l1 = l2 and then c1 < c2) =
+							(o = {EVS_GRID_TWO_WAY_SORTING_ORDER}.ascending_order)
+					end)
 		end
 
 	on_before_initialize
 			-- <Precursor>
 		do
 			Precursor
+
+				-- Connect the observer to the code analyzer service.
+			if attached code_analyzer.service as s then
+				s.code_analyzer_connection.connect_events (Current)
+			end
 
 				-- We want the tool to synchronize with the event list, when first initialized.
 			is_event_list_synchronized_on_initialized := True
@@ -143,17 +215,17 @@ feature {NONE} -- Initialization: User interface
 			-- <Precursor>
 		do
 
-				-- Enable copying to clipboard
+				-- Enable copying to clipboard.
 			enable_copy_to_clipboard
 
-				-- Bind redirecting pick and drop actions
-			stone_director.bind (grid_events, Current)
+--				-- Bind redirecting pick and drop actions.
+--			stone_director.bind (grid_events, Current)
 
 				-- Configure expand errors based con preferece
-				-- 'tools.error_list.expand_n_errors'
-			set_expand_error_options
+				-- 'tools.error_list.expand_n_errors'.
+			on_preference_expand_n_errors
 
-				-- Set UI based on initial state
+				-- Set UI based on initial state.
 			update_content_applicable_navigation_buttons
 
 			Precursor
@@ -171,16 +243,25 @@ feature {NONE} -- Clean up
 			then
 				session_data.session_connection.disconnect_events (Current)
 			end
-			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE}
+			if
+				attached code_analyzer.service as s and then
+				s.code_analyzer_connection.is_connected (Current)
+			then
+				s.code_analyzer_connection.disconnect_events (Current)
+			end
+			Precursor
 		end
 
 feature {NONE} -- Access
 
 	error_count: NATURAL
-			-- Number of errors
+			-- Number of errors.
 
 	warning_count: NATURAL
-			-- Number of warnings
+			-- Number of warnings.
+
+	hint_count: NATURAL
+			-- Number of hints.
 
 	syntax_errors: DS_ARRAYED_LIST [EVENT_LIST_ERROR_ITEM_I]
 			-- List of managed syntax errors, used to perform error adoption.
@@ -206,11 +287,14 @@ feature {NONE} -- Access: Help
 
 feature {NONE} -- Access: User interface
 
-	errors_button: detachable SD_TOOL_BAR_TOGGLE_BUTTON
-			-- Toogle to show/hide error events
+	error_button: detachable SD_TOOL_BAR_TOGGLE_BUTTON
+			-- Toogle to show/hide error events.
 
-	warnings_button: detachable SD_TOOL_BAR_TOGGLE_BUTTON
-			-- Toogle to show/hide warning events
+	warning_button: detachable SD_TOOL_BAR_TOGGLE_BUTTON
+			-- Toogle to show/hide warning events.
+
+	hint_button: SD_TOOL_BAR_TOGGLE_BUTTON
+			-- Toogle to show/hide hint events.
 
 	expand_errors_button: detachable SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Toogle to expanded error events automatically
@@ -227,10 +311,13 @@ feature {NONE} -- Access: User interface
 	filter_widget: detachable ES_WARNINGS_FILTER_WIDGET
 			-- Filter widget
 
+	text_filter: EV_TEXT_FIELD
+			-- Text field to enter filter
+
 feature {NONE} -- Element change
 
 	set_error_count (a_count: like error_count)
-			-- Sets `error_count' to `a_count'
+			-- Sets `error_count' to `a_count'.
 		do
 			error_count := a_count
 		ensure
@@ -238,55 +325,152 @@ feature {NONE} -- Element change
 		end
 
 	set_warning_count (a_count: like warning_count)
-			-- Sets `warning_count' to `a_count'
+			-- Sets `warning_count' to `a_count'.
 		do
 			warning_count := a_count
 		ensure
 			warning_count_set: warning_count = a_count
 		end
 
+	set_hint_count (c: like hint_count)
+			-- Sets `hint_count' to `c'.
+		do
+			hint_count := c
+		ensure
+			hint_count_set: hint_count = c
+		end
+
 feature {NONE} -- Status report
 
 	is_error_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
-			-- Determines if event `a_event_item' is an error event
+			-- Does event `a_event_item' correspond to an error?
 		do
-			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error and then attached {EVENT_LIST_ERROR_ITEM_I} a_event_item as l_error then
-				Result := not l_error.is_warning
+			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error then
+				Result :=
+					attached {EVENT_LIST_ERROR_ITEM_I} a_event_item as e and then not e.is_warning or else
+					attached {CA_RULE_VIOLATION_EVENT} a_event_item as e and then e.is_error_event or else
+					attached {CA_EXCEPTION_EVENT} a_event_item
 			end
 		ensure
-			not_is_warning_event: Result implies not is_warning_event (a_event_item)
+			not_is_other_event: Result implies not
+				(is_warning_event (a_event_item) or
+				is_hint_event (a_event_item) or
+				is_ok_event (a_event_item))
 		end
 
 	is_warning_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
-			-- Determines if event `a_event_item' is an error event
+			-- Does event `a_event_item' correspond to a warning?
 		require
 			a_event_item_attached: a_event_item /= Void
 		do
-			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error and then attached {EVENT_LIST_ERROR_ITEM_I} a_event_item as l_error then
-				Result := l_error.is_warning
+			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error then
+				Result :=
+					attached {EVENT_LIST_ERROR_ITEM_I} a_event_item as e and then e.is_warning or else
+					attached {CA_RULE_VIOLATION_EVENT} a_event_item as e and then e.is_warning_event
 			end
 		ensure
-			not_is_error_event: Result implies not is_error_event (a_event_item)
+			not_is_other_event: Result implies not
+				(is_error_event (a_event_item) or
+				is_hint_event (a_event_item) or
+				is_ok_event (a_event_item))
+		end
+
+	is_hint_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
+			-- Does event `a_event_item' correspond to a hint?
+		do
+			if a_event_item.type = {EVENT_LIST_ITEM_TYPES}.error then
+				Result := attached {CA_RULE_VIOLATION_EVENT} a_event_item as e and then e.is_hint_event
+			end
+		ensure
+			not_is_other_event: Result implies not
+				(is_error_event (a_event_item) or
+				is_warning_event (a_event_item) or
+				is_ok_event (a_event_item))
+		end
+
+	is_ok_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
+			-- Does event `a_event_item' correspond to a "no issue" event?
+		do
+			Result := attached {CA_NO_ISSUES_EVENT} a_event_item
+		ensure
+			not_is_other_event: Result implies not
+				(is_error_event (a_event_item) or
+				is_warning_event (a_event_item) or
+				is_hint_event (a_event_item))
 		end
 
 	is_appliable_event (a_event_item: EVENT_LIST_ITEM_I): BOOLEAN
 			-- <Precursor>
 		do
-			Result := is_error_event (a_event_item) or is_warning_event (a_event_item)
+			Result :=
+				is_error_event (a_event_item) or
+				is_warning_event (a_event_item) or
+				is_hint_event (a_event_item) or
+				is_ok_event (a_event_item)
 		ensure then
-			is_error_or_warning_event: Result implies (is_error_event (a_event_item) or is_warning_event (a_event_item))
+			definition: Result implies
+				(is_error_event (a_event_item) or
+				is_warning_event (a_event_item) or
+				is_hint_event (a_event_item))
 		end
 
-	is_displaying_errors: BOOLEAN
-			-- Indicates if errors should be shown.
+	is_displaying_error: BOOLEAN
+			-- Indicates if error messages should be shown.
 		do
-			Result := not is_initialized or else errors_button.is_selected
+			Result := not is_initialized or else error_button.is_selected
 		end
 
-	is_displaying_warnings: BOOLEAN
-			-- Indicates if errors should be shown.
+	is_displaying_warning: BOOLEAN
+			-- Indicates if warning messages should be shown.
 		do
-			Result := not is_initialized or else warnings_button.is_selected
+			Result := not is_initialized or else warning_button.is_selected
+		end
+
+	is_displaying_hint: BOOLEAN
+			-- Indicates if hint messages should be shown.
+		do
+			Result := not is_initialized or else hint_button.is_selected
+		end
+
+	is_row_visible (s: READABLE_STRING_32; r: EV_GRID_ROW): BOOLEAN
+			-- Is row `r` visible with text filter `s`?
+		require
+			s_is_lower: s.same_string (s.as_lower)
+		do
+			Result := True
+			if attached {EVENT_LIST_ITEM_I} r.data as e then
+					-- Test if the corresponding event type is shown.
+				if is_error_event (e) then
+					Result := is_displaying_error
+				elseif is_warning_event (e) then
+					Result := is_displaying_warning
+				elseif is_hint_event (e) then
+					Result := is_displaying_hint
+				end
+				if Result then
+						-- Test if the event matches text filter.
+					Result :=
+						s.is_empty or else
+						has_text (s, r, rule_column) or else
+						has_text (s, r, description_column) or else
+						has_text (s, r, context_column)
+				end
+			end
+		end
+
+	has_text (s: READABLE_STRING_32; r: EV_GRID_ROW; c: like category_column): BOOLEAN
+			-- Does item in column `c` of row `r` have a text `s`?
+		require
+			s_is_lower: s.same_string (s.as_lower)
+		do
+			if attached r.item (c) as i then
+				Result :=
+					attached i.tooltip as t and then t.as_lower.has_substring (s) or else
+					attached {EV_GRID_LABEL_ITEM} i as l and then attached l.text as t and then t.as_lower.has_substring (s) or else
+					attached {EB_GRID_EDITOR_TOKEN_ITEM} i as e and then attached e.text as t and then t.as_lower.has_substring (s)
+			else
+				Result := True
+			end
 		end
 
 	is_expanding_errors: BOOLEAN
@@ -395,35 +579,34 @@ feature {NONE} -- Query
 						end
 					end
 				end
+			elseif attached {CA_EXCEPTION_EVENT} a_row.parent_row_root.data as l_exception then
+				raise_default_exception_dialog (create {EV_DIALOG}, l_exception.data.ex)
+			elseif attached {CA_RULE_VIOLATION_EVENT} a_row.parent_row_root.data as l_event_item then
+				if attached l_event_item.location as l_loc then
+					create {COMPILED_LINE_STONE} Result.make_with_line_and_column (l_event_item.affected_class, l_loc.line, l_loc.column)
+				else
+					create {CLASSC_STONE} Result.make (l_event_item.affected_class)
+				end
 			end
 		end
 
 	should_tooltip_be_displayed: BOOLEAN
 			-- Check preference to see if tooltip should be displayed?
-		local
-			l_preference: EB_SHARED_PREFERENCES
 		do
-			create l_preference
-			Result := l_preference.preferences.error_list_tool_data.show_tooltip
+			Result := (create {EB_SHARED_PREFERENCES}).preferences.error_list_tool_data.show_tooltip
 		end
 
 feature {ES_TOOL} -- Basic operation
 
 	show
 			-- <Precursor>
-		local
-			l_width: INTEGER
-			l_platform: PLATFORM
-			l_grid: ES_GRID
 		do
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE}
 
-			create l_platform
-			if l_platform.is_unix then
-				-- This is hack for bug#13604
-				l_grid := grid_events
-				if l_grid /= Void and then not l_grid.is_destroyed then
-					l_width := l_grid.width
+			if {PLATFORM}.is_unix then
+					-- This is hack for bug#13604.
+				if attached grid_events as l_grid and then not l_grid.is_destroyed then
+					l_grid.width.do_nothing
 				end
 			end
 		end
@@ -432,12 +615,14 @@ feature {NONE} -- Basic operations
 
 	do_default_action (a_row: EV_GRID_ROW)
 			-- <Precursor>
+		local
+			s: STONE
 		do
 			if attached {EVENT_LIST_ITEM_I} a_row.data as l_event_item then
 				if attached {C_COMPILER_ERROR} l_event_item.data as l_error then
 					if attached l_error.associated_feature as l_feature then
-							-- Open the corresponding feature
-						(create {EB_CONTROL_PICK_HANDLER}).launch_stone (create {FEATURE_STONE}.make (l_feature))
+							-- Open the corresponding feature.
+						create {FEATURE_STONE} s.make (l_feature)
 					elseif attached c_compiler_output as l_output then
 							-- Show the C/C++ compiler output
 						l_output.activate (True)
@@ -446,13 +631,11 @@ feature {NONE} -- Basic operations
 						end
 					end
 				else
-					if
-						attached event_context_stone_from_row (a_row) as l_stone and then
-						l_stone.is_valid
-					then
-						(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
-					end
+					s := event_context_stone_from_row (a_row)
 				end
+			end
+			if attached s and then s.is_valid then
+				(create {EB_CONTROL_PICK_HANDLER}).launch_stone (s)
 			end
 		end
 
@@ -463,7 +646,7 @@ feature {NONE} -- Basic operations
 			l_menu_item: EV_MENU_ITEM
 			s: ARRAYED_LIST [EV_GRID_ROW]
 			fix_count: INTEGER
-			fix_action: ES_FIX_FEATURE
+			fix_action: ES_FIX
 		do
 			if attached {EVENT_LIST_ITEM_I} a_item.row.data as l_item then
 				create l_menu
@@ -474,9 +657,9 @@ feature {NONE} -- Basic operations
 				loop
 					if
 						attached {EVENT_LIST_ITEM_I} r.item.data and then
-						attached {EB_GRID_EDITOR_TOKEN_ITEM} r.item.item (error_column) as e and then
+						attached {EB_GRID_EDITOR_TOKEN_ITEM} r.item.item (description_column) as e and then
 						e.component_count > 0 and then
-						attached {ES_FIX_FEATURE} e.component (e.component_count) as action
+						attached {ES_FIX} e.component (e.component_count) as action
 					then
 						fix_count := fix_count + 1
 						fix_action := action
@@ -503,7 +686,12 @@ feature {NONE} -- Basic operations
 					-- Remove, singular.
 				create l_menu_item.make_with_text (interface_names.m_remove)
 				l_menu_item.set_pixmap (stock_pixmaps.general_delete_icon)
-				l_menu_item.select_actions.extend (agent remove_event_list_row (a_item.row))
+				l_menu_item.select_actions.extend (agent (r: EV_GRID_ROW)
+					do
+						remove_event_list_row (r)
+						update_message_counters
+						update_content_applicable_navigation_buttons
+					end (a_item.row))
 				l_menu.extend (l_menu_item)
 
 				if grid_events.has_selected_row then
@@ -538,101 +726,186 @@ feature {NONE} -- Basic operations
 			l_context_stone: STONE
 			l_expanded: BOOLEAN
 			l_is_updating: BOOLEAN
+			l_label: EV_GRID_LABEL_ITEM
+			has_details: BOOLEAN
+			category_label: EV_GRID_LABEL_ITEM
 		do
+			a_row.set_data (a_event_item)
+
 				-- Set expand actions
 			a_row.expand_actions.extend (agent on_row_expanded (a_row))
 
-				-- Set error information
-			if attached {ERROR} a_event_item.data as l_error then
-				create l_gen.make
-				tracer.trace_tersely (l_gen, l_error)
-
-				if l_gen.last_line /= Void and then l_gen.last_line.count > 0 then
-					l_editor_item := create_clickable_grid_item (l_gen.last_line, False)
+				-- Set error information.
+			if is_appliable_event (a_event_item) then
+					-- Category column.
+				create category_label
+				category_label.disable_full_select
+				if is_error_event (a_event_item) then
+					a_row.set_background_color (error_background_color)
+					category_label.set_pixmap (stock_pixmaps.tool_error_icon)
+					category_label.set_data (once "1")
+				elseif is_warning_event (a_event_item) then
+					a_row.set_background_color (warning_background_color)
+					category_label.set_pixmap (stock_pixmaps.tool_warning_icon)
+					category_label.set_data (once "2")
+				elseif is_hint_event (a_event_item) then
+					a_row.set_background_color (hint_background_color)
+					category_label.set_pixmap (stock_pixmaps.general_information_icon)
+					category_label.set_data (once "3")
+				elseif is_ok_event (a_event_item) then
+					a_row.set_background_color (success_background_color)
+					category_label.set_pixmap (stock_pixmaps.general_tick_icon)
+					category_label.set_data (once "4")
 				else
+						-- Unknown issue is most significat.
+					category_label.set_data (once "0")
+				end
+				a_row.set_item (category_column, category_label)
+
+				create l_gen.make
+					-- Description column.
+				if attached {ERROR} a_event_item.data as l_error then
+						-- Mark that the message has a details subrow.
+					has_details := True
+						-- Compute error code.
+					tracer.trace_error_code (l_gen, l_error)
+						-- Add a tooltip to the category.
+					category_label.set_tooltip (l_gen.last_line.wide_image)
+						-- Rule column.
+					l_editor_item := create_clickable_grid_item (l_gen.last_line, False)
+						-- TODO: Add tooltip.
+					a_row.set_item (rule_column, l_editor_item)
+						-- Context column.
+					l_gen.wipe_out_lines
+					tracer.trace_context (l_gen, l_error)
+					if l_gen.last_line /= Void then
+						l_editor_item := create_clickable_grid_item (l_gen.last_line, False)
+							-- No extra initialization needed so update `l_editor_item' to reflect settings.
+						l_editor_item.try_call_setting_change_actions
+						a_row.set_item (context_column, l_editor_item)
+						l_content := l_gen.last_line.content
+						if not l_content.is_empty then
+								-- Set context pebble by iterating through the context content to find a feature
+								-- or class token.
+							from l_content.finish until l_content.before or l_context_stone /= Void loop
+								if attached {EDITOR_TOKEN_FEATURE} l_content.item_for_iteration as l_ft then
+									if attached {STONE} l_ft.pebble as s then
+										l_context_stone := s
+									end
+								elseif attached {EDITOR_TOKEN_CLASS} l_content.item_for_iteration as l_ct then
+									if attached {STONE} l_ct.pebble as s then
+										l_context_stone := s
+									end
+								end
+								l_content.back
+							end
+							if l_context_stone /= Void then
+								l_editor_item.set_data (l_context_stone)
+							end
+						end
+					end
+						-- Retrieve location if available.
+					if l_error.line > 0 then
+							-- Create position token.
+						create l_pos_token.make (l_error.line.out + ", " + l_error.column.max (1).out)
+					end
+						-- Set description.
+					l_gen.wipe_out_lines
+					tracer.trace_tersely (l_gen, l_error)
+					if attached l_gen.last_line as l and then l.count > 0 then
+						l_editor_item := create_clickable_grid_item (l, False)
+					else
+						l_editor_item := Void
+					end
+				elseif attached {CA_NO_ISSUES_EVENT} a_event_item then
+					create l_editor_item.make_with_text (ca_messages.no_issues)
+				elseif attached {CA_EXCEPTION_EVENT} a_event_item as e then
+						-- Context column.
+					e.data.cl.append_name (l_gen)
+					l_editor_item := create_clickable_grid_item (l_gen.last_line, True)
+					a_row.set_item (context_column, l_editor_item)
+						-- Set description.
+					create l_editor_item.make_with_text (ca_messages.error)
+				elseif attached {CA_RULE_VIOLATION_EVENT} a_event_item as v then
+						-- Mark that the message has a details subrow.
+					has_details := True
+						-- Add a tooltip to the category.
+					category_label.set_tooltip (v.rule_id)
+						-- Rule column.
+					create l_label.make_with_text (v.rule_id)
+					l_label.set_tooltip (v.rule_title)
+					a_row.set_item (rule_column, l_label)
+						-- Severity column.
+					a_row.set_item (severity_column,
+						create {EV_GRID_LABEL_ITEM}.make_with_text (v.severity_score.out))
+						-- Context column.
+					v.affected_class.append_name (l_gen)
+					l_editor_item := create_clickable_grid_item (l_gen.last_line, True)
+					a_row.set_item (context_column, l_editor_item)
+					create {CLASSC_STONE} l_context_stone.make (v.affected_class)
+						-- Retrieve location if available.
+					if attached v.location as l then
+							-- Create position token.
+						create l_pos_token.make (l.line.out + ", " + l.column.out)
+						l_pos_token.set_is_clickable (True)
+						l_pos_token.set_pebble (create {COMPILED_LINE_STONE}.make_with_line_and_column (v.affected_class, l.line, l.column))
+					end
+						-- Set description.
+					l_gen.wipe_out_lines
+					v.add_title (l_gen)
+					if attached l_gen.last_line as l and then l.count > 0 then
+						l_editor_item := create_clickable_grid_item (l, False)
+					else
+						l_editor_item := Void
+					end
+				end
+				if not attached l_editor_item then
 					create l_editor_item.make_with_text ("No error message found!")
 				end
 
 					-- Lock update of editor item until everything has been set.
 				l_editor_item.lock_update
-
 				l_editor_item.disable_full_select
-				if is_error_event (a_event_item) then
-					l_editor_item.set_pixmap (stock_pixmaps.tool_error_icon)
-				elseif is_warning_event (a_event_item) then
-					l_editor_item.set_pixmap (stock_pixmaps.tool_warning_icon)
-				else
-					check False end
-				end
+
 				l_editor_item.set_spacing ({ES_UI_CONSTANTS}.grid_item_spacing)
 					-- Add optional fix component.
-				add_fix_component (l_error, l_editor_item)
+				add_fix_component (a_event_item, l_editor_item)
 
-									-- Unlock editor item and call setting changed actions to signify that settings have changed.
+					-- Unlock editor item and call setting changed actions to signify that settings have changed.
 				l_editor_item.unlock_update
 				l_editor_item.try_call_setting_change_actions
 
-				a_row.set_item (error_column, l_editor_item)
+				a_row.set_item (description_column, l_editor_item)
 
 					-- Set row height
-				a_row.set_height (l_editor_item.label_font_height.max ({ES_UI_CONSTANTS}.grid_row_height))
+				a_row.set_height (l_editor_item.label_font_height.max
+					(l_editor_item.required_height_for_text_and_component).max
+					({ES_UI_CONSTANTS}.grid_row_height))
 
-					-- Build full error text row, the actually building is deferred to expansion action.
-					-- Only update the row if there was already a subrow.
-				if a_row.subrow_count = 0 then
-					a_row.insert_subrow (1)
-				else
+					-- Build full error text row.
+				if a_row.subrow_count > 0 then
+						-- Only update the row if there was already a subrow.
 					populate_error_subrow (a_row)
 						-- The row is being updated, so preserve any original state.
 					l_is_updating := True
+				elseif has_details then
+						-- Defer the actual building to expansion action.
+					a_row.insert_subrow (1)
 				end
 
-				l_tip := create_clickable_tooltip (agent generate_lines_for_tooltip (l_error), l_editor_item, a_row)
+				l_tip := create_clickable_tooltip (agent generate_lines_for_tooltip (a_event_item), l_editor_item, a_row)
 				a_row.select_actions.extend (agent l_tip.restart_tooltip_timer)
 
-					-- Context
-				create l_gen.make
-				tracer.trace_context (l_gen, l_error)
-				if l_gen.last_line /= Void then
-					l_editor_item := create_clickable_grid_item (l_gen.last_line, False)
-						-- No extra initialization needed so update `l_editor_item' to reflect settings.
-					l_editor_item.try_call_setting_change_actions
-					a_row.set_item (context_column, l_editor_item)
-					l_content := l_gen.last_line.content
-					if not l_content.is_empty then
-							-- Set context pebble by iterating through the context content to find a feature
-							-- or class token.
-						from l_content.finish until l_content.before or l_context_stone /= Void loop
-							if attached {EDITOR_TOKEN_FEATURE} l_content.item_for_iteration as l_ft then
-								if attached {STONE} l_ft.pebble as s then
-									l_context_stone := s
-								end
-							elseif attached {EDITOR_TOKEN_CLASS} l_content.item_for_iteration as l_ct then
-								if attached {STONE} l_ct.pebble as s then
-									l_context_stone := s
-								end
-							end
-							l_content.back
-						end
-						if l_context_stone /= Void then
-							l_editor_item.set_data (l_context_stone)
-						end
-					end
-				end
-
-					-- Line and column number
+					-- Line and column number.
 				l_editor_item := Void
-				if l_error.line > 0 then
-						-- Created position token
-					create l_pos_token.make (l_error.line.out + ", " + l_error.column.max (1).out)
+				if attached l_pos_token then
 					if l_context_stone /= Void then
 						l_pos_token.set_is_clickable (True)
 							-- Note: We call `event_context_stone_from_row' instead of using `l_context_stone' because
 							--       it uses line position information, unlike `l_context_stone'
 						l_pos_token.set_pebble (event_context_stone_from_row (a_row))
 					end
-
-						-- Create editor item
+						-- Create editor item.
 					create l_line.make_unix_style
 					l_line.append_token (l_pos_token)
 					l_editor_item := create_clickable_grid_item (l_line, False)
@@ -646,22 +919,9 @@ feature {NONE} -- Basic operations
 			grid_events.grid_row_fill_empty_cells (a_row)
 			a_row.set_height (a_row.height + 2)
 
-				-- Set visibility
-			if is_error_event (a_event_item) then
-				if not is_displaying_errors then
-					a_row.hide
-				end
-			elseif is_warning_event (a_event_item) then
-				if
-					not is_displaying_warnings or else
-					filter_widget /= Void and then
-					attached {ERROR} a_event_item.data as l_error and then
-					not filter_widget.is_unfiltered (l_error)
-				then
-					a_row.hide
-				end
-			else
-				check False end
+				-- Set visibility.
+			if not is_row_visible (text_filter.text.as_lower, a_row) then
+				a_row.hide
 			end
 
 				-- Set expanded status
@@ -692,26 +952,29 @@ feature {NONE} -- Basic operations
 		do
 			l_title := interface_names.t_errors_and_warnings_tool.twin
 			if item_count > 0 then
-				l_title := l_title + " (" + error_count.out + "|" + warning_count.out + ")"
+				l_title.append_character (' ')
+				l_title.append_character ('(')
+				l_title.append_natural_32 (error_count)
+				l_title.append_character ('|')
+				l_title.append_natural_32 (warning_count)
+				l_title.append_character ('|')
+				l_title.append_natural_32 (hint_count)
+				l_title.append_character (')')
 				if error_count > 0 and warning_count > 0 then
 					l_buffer := stock_pixmaps.tool_errors_list_with_errors_and_warnings_icon_buffer
 				elseif error_count > 0 then
 					l_buffer := stock_pixmaps.tool_errors_list_with_errors_icon_buffer
 				elseif warning_count > 0 then
 					l_buffer := stock_pixmaps.tool_errors_list_with_warnings_icon_buffer
-				else
-					check False end
+				elseif hint_count > 0 then
+					l_buffer := stock_pixmaps.general_information_icon_buffer
 				end
 			end
-
-			if l_title /= Void and then not l_title.is_empty then
-				set_title (l_title)
+			if not attached l_buffer then
+				l_buffer := stock_pixmaps.tool_errors_list_with_errors_icon_buffer
 			end
-			if l_buffer /= Void then
-				set_icon (l_buffer)
-			else
-				set_icon (stock_pixmaps.tool_errors_list_with_errors_icon_buffer)
-			end
+			set_title (l_title)
+			set_icon (l_buffer)
 		end
 
 	update_content_applicable_widgets (a_enable: BOOLEAN)
@@ -733,7 +996,7 @@ feature {NONE} -- Basic operations
 					across
 						grid_events.selected_rows as r
 					some
-						attached {EB_GRID_EDITOR_TOKEN_ITEM} r.item.item (error_column) as c and then c.component_count > 0
+						attached {EB_GRID_EDITOR_TOKEN_ITEM} r.item.item (description_column) as c and then c.component_count > 0
 					end
 				then
 						-- Some items can be fixed.
@@ -753,7 +1016,7 @@ feature {NONE} -- Basic operations
 	update_content_applicable_navigation_buttons
 			-- Updates content applicable navigation buttons
 		do
-			if error_count > 0 and errors_button.is_selected then
+			if error_count > 0 and error_button.is_selected then
 				go_to_next_error_command.enable_sensitive
 				go_to_previous_error_command.enable_sensitive
 			else
@@ -761,7 +1024,7 @@ feature {NONE} -- Basic operations
 				go_to_previous_error_command.disable_sensitive
 			end
 
-			if warning_count > 0  and warnings_button.is_selected then
+			if warning_count > 0  and warning_button.is_selected then
 				go_to_next_warning_command.enable_sensitive
 				go_to_previous_warning_command.enable_sensitive
 			else
@@ -770,34 +1033,18 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	update_error_and_warning_counters
-			-- Updates the error and warning counters on the user interface.
+	update_message_counters
+			-- Updates message counters on the user interface.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-		local
-			l_text: STRING_32
 		do
-			create l_text.make (20)
-			l_text.append_natural_32 (error_count)
-			l_text.append_character (' ')
-			if error_count = 1 then
-				l_text.append_string (interface_names.b_error)
-			else
-				l_text.append_string (interface_names.b_errors)
-			end
-			errors_button.set_text (l_text)
-
-			create l_text.make (20)
-			l_text.append_natural_32 (warning_count)
-			l_text.append_character (' ')
-			if warning_count = 1 then
-				l_text.append_string (interface_names.b_warning)
-			else
-				l_text.append_string (interface_names.b_warnings)
-			end
-			warnings_button.set_text (l_text)
-
+			error_button.set_text (interface_names.b_error_toggle_error (error_count))
+			error_button.set_tooltip (interface_names.f_error_toggle_error (error_count))
+			warning_button.set_text (interface_names.b_error_toggle_warning (warning_count))
+			warning_button.set_tooltip (interface_names.f_error_toggle_warning (warning_count))
+			hint_button.set_text (interface_names.b_error_toggle_hint (hint_count))
+			hint_button.set_tooltip (interface_names.f_error_toggle_hint (hint_count))
 			update_tool_title_and_pixmap
 		end
 
@@ -807,21 +1054,12 @@ feature {NONE} -- Basic operations
 			a_parent_row_not_void: a_parent_row /= Void
 			a_parent_row_has_data: attached {EVENT_LIST_ITEM_I} a_parent_row.data
 		local
-			l_gen: EB_EDITOR_TOKEN_GENERATOR
 			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
 			l_lines: LIST [EIFFEL_EDITOR_LINE]
 			l_row: EV_GRID_ROW
 		do
-			if attached {EVENT_LIST_ITEM_I} a_parent_row.data as l_event and then attached {ERROR} l_event.data as l_error then
-				create l_gen.make
-				l_gen.enable_multiline
-				tracer.trace (l_gen, l_error)
-				if l_gen.last_line.count > 0 then
-						-- Last line is not terminated with a new line.
-						-- Add it anyway.
-					l_gen.add_new_line
-				end
-				l_lines := l_gen.lines
+			if attached {EVENT_LIST_ITEM_I} a_parent_row.data as l_event then
+				l_lines := generate_lines_for_tooltip (l_event)
 				if not l_lines.is_empty then
 						-- Sub row full error
 					if a_parent_row.subrow_count = 0 then
@@ -832,28 +1070,36 @@ feature {NONE} -- Basic operations
 
 					l_row := a_parent_row.subrow (1)
 					l_row.set_data (l_event)
+					l_row.set_background_color (a_parent_row.background_color)
 
 					l_editor_item := create_multiline_clickable_grid_item (l_lines, True, False)
+					if attached {CA_RULE_VIOLATION_EVENT} l_event as v then
+						l_editor_item.set_tooltip (v.data.rule.description)
+					end
 						-- No extra initialization needed so update `l_editor_item' to reflect settings.
 					l_editor_item.try_call_setting_change_actions
 					l_row.set_height (l_editor_item.required_height_for_text_and_component)
-					l_row.set_item (error_column, l_editor_item)
+					l_row.set_item (description_column, l_editor_item)
 					l_row.set_height (l_row.height + 2)
 					grid_events.grid_row_fill_empty_cells (l_row)
 				end
 			end
 		end
 
-	generate_lines_for_tooltip (a_error: ERROR): LIST [EIFFEL_EDITOR_LINE]
-			-- Generate lines for tooltip of `a_error'.
+	generate_lines_for_tooltip (e: EVENT_LIST_ITEM_I): LIST [EIFFEL_EDITOR_LINE]
+			-- Generate lines for tooltip of `e'.
 		require
-			a_error_not_void: a_error /= Void
+			event_item_attached: e /= Void
 		local
 			l_gen: EB_EDITOR_TOKEN_GENERATOR
 		do
 			create l_gen.make
 			l_gen.enable_multiline
-			tracer.trace (l_gen, a_error)
+			if attached {EVENT_LIST_ERROR_ITEM} e as i and then attached {ERROR} i.data as r then
+				tracer.trace (l_gen, r)
+			elseif attached {CA_RULE_VIOLATION_EVENT} e as v then
+				v.format_description (l_gen)
+			end
 			if l_gen.last_line.count > 0 then
 					-- Last line is not terminated with a new line.
 					-- Add it anyway.
@@ -869,7 +1115,7 @@ feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation
 	go_to_next_error (a_cycle: BOOLEAN)
 			-- <Precursor>
 		do
-			if is_displaying_errors then
+			if is_displaying_error then
 				if error_count > 0 then
 					move_next (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
 						require
@@ -887,7 +1133,7 @@ feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation
 	go_to_previous_error (a_cycle: BOOLEAN)
 			-- <Precursor>
 		do
-			if is_displaying_errors then
+			if is_displaying_error then
 				if error_count > 0 then
 					move_previous (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
 						require
@@ -905,30 +1151,36 @@ feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation
 	go_to_next_warning (a_cycle: BOOLEAN)
 			-- <Precursor>
 		do
-			if is_displaying_warnings then
-				if warning_count > 0 then
-					move_next (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
-						require
-							a_item_attached: a_item /= Void
-						do
-							Result := is_warning_event (a_item) and then event_context_stone (a_item) /= Void
-						end)
-				end
+			if
+				is_displaying_warning and then warning_count > 0 or else
+				is_displaying_hint and then hint_count > 0
+			then
+				move_next (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
+					require
+						a_item_attached: a_item /= Void
+					do
+						Result :=
+							(is_warning_event (a_item) or else is_hint_event (a_item)) and then
+							attached event_context_stone (a_item)
+					end)
 			end
 		end
 
 	go_to_previous_warning (a_cycle: BOOLEAN)
 			-- <Precursor>
 		do
-			if is_displaying_warnings then
-				if warning_count > 0 then
-					move_previous (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
-						require
-							a_item_attached: a_item /= Void
-						do
-							Result := is_warning_event (a_item) and then event_context_stone (a_item) /= Void
-						end)
-				end
+			if
+				is_displaying_warning and then warning_count > 0 or else
+				is_displaying_hint and then hint_count > 0
+			then
+				move_previous (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
+					require
+						a_item_attached: a_item /= Void
+					do
+						Result :=
+							(is_warning_event (a_item) or else is_hint_event (a_item)) and then
+							attached event_context_stone (a_item)
+					end)
 			end
 		end
 
@@ -940,12 +1192,18 @@ feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation
 
 feature {NONE} -- Fixing
 
-	add_fix_component (e: ERROR; i: EB_GRID_EDITOR_TOKEN_ITEM)
+	add_fix_component (e: EVENT_LIST_ITEM_I; i: EB_GRID_EDITOR_TOKEN_ITEM)
 			-- Add a fix option of `e' to the item `i'.
 		local
-			fix_component: detachable ES_FIX_FEATURE
+			fix_component: detachable ES_FIX
+			f: ITERABLE [FIX [TEXT_FORMATTER]]
 		do
-			if attached {COMPILER_ERROR} e as ce and then attached fix_factory.fix_option (ce) as f then
+			if attached {COMPILER_ERROR} e.data as ce then
+				f := fix_factory.fix_option (ce)
+			elseif attached {CA_RULE_VIOLATION_EVENT} e as v then
+				f := v.data.fixes
+			end
+			if attached f then
 					-- TODO: Handle multiple fix options instead of just the first one.
 				across
 					f as o
@@ -957,6 +1215,8 @@ feature {NONE} -- Fixing
 						-- so that adding a new fix class does not pass unnoticed.
 					if attached {FIX_FEATURE} o.item as u then
 						create {ES_FIX_FEATURE} fix_component.make (u)
+					elseif attached {CA_FIX} o.item as u then
+						create {ES_CA_FIX_EXECUTOR} fix_component.make (u)
 					end
 					if attached fix_component then
 							-- Augment `i'  with a notification that a fix is available.
@@ -979,13 +1239,13 @@ feature {NONE} -- Fixing
 		local
 			i: INTEGER
 		do
-			if attached {EB_GRID_EDITOR_TOKEN_ITEM} r.item (error_column) as e then
+			if attached {EB_GRID_EDITOR_TOKEN_ITEM} r.item (description_column) as e then
 				from
 					i := e.component_count
 				until
 					i <= 0
 				loop
-					if attached {ES_FIX_FEATURE} e.component (i) as f then
+					if attached {ES_FIX} e.component (i) as f then
 							-- Prevent further applications of the fix and
 							-- remove a notification that a fix is available.
 						e.remove_component (i)
@@ -1034,13 +1294,14 @@ feature {NONE} -- Fixing
 			create Result.make
 		end
 
-feature {NONE} -- Event handlers
+feature {NONE} -- Event handlers: event list
 
 	on_unlocked (a_sender: attached LOCKABLE_I)
 			-- <Precursor>
 		do
 			if is_interface_usable and is_initialized then
-				update_error_and_warning_counters
+				update_content_applicable_navigation_buttons
+				update_message_counters
 			end
 			Precursor (a_sender)
 		end
@@ -1058,17 +1319,18 @@ feature {NONE} -- Event handlers
 				initialize
 			end
 
-			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_service, a_event_item)
+			Precursor (a_service, a_event_item)
 
 			if l_applicable then
 				if is_error_event (a_event_item) then
 					set_error_count (error_count + 1)
 				elseif is_warning_event (a_event_item) then
 					set_warning_count (warning_count + 1)
+				elseif is_hint_event (a_event_item) then
+					set_hint_count (hint_count + 1)
 				else
 					check False end
 				end
-				update_content_applicable_navigation_buttons
 			end
 		ensure then
 			is_initialized: is_appliable_event (a_event_item) implies is_initialized
@@ -1086,17 +1348,17 @@ feature {NONE} -- Event handlers
 				is_event_list_synchronized_on_initialized := False
 				initialize
 			end
-
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_service, a_event_item)
 			if l_applicable then
 				if is_error_event (a_event_item) then
 					set_error_count (error_count - 1)
 				elseif is_warning_event (a_event_item) then
 					set_warning_count (warning_count - 1)
+				elseif is_hint_event (a_event_item) then
+					set_hint_count (hint_count - 1)
 				else
 					check False end
 				end
-				update_content_applicable_navigation_buttons
 			end
 		ensure then
 			is_initialized: is_appliable_event (a_event_item) implies is_initialized
@@ -1118,7 +1380,9 @@ feature {NONE} -- Event handlers
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_service)
 			set_error_count (0)
 			set_warning_count (0)
+			set_hint_count (0)
 			update_content_applicable_navigation_buttons
+			update_message_counters
 		ensure then
 			is_initialized: is_initialized
 		end
@@ -1142,71 +1406,32 @@ feature {NONE} -- Event handlers
 			end
 		end
 
+feature {NONE} -- Event handlers: code analyzer
+
+	on_put (s: CODE_ANALYZER_S [STONE, CA_RULE_VIOLATION]; e: STONE)
+			-- <Precursor>
+		do
+			if attached {TARGET_STONE} e then
+				scope_label.set_tooltip (ca_messages.system_scope_tooltip)
+				scope_label.set_foreground_color (preferences.editor_data.target_text_color)
+			elseif attached {CLASSC_STONE} e then
+				scope_label.set_tooltip (ca_messages.class_scope_tooltip)
+				scope_label.set_foreground_color (preferences.editor_data.class_text_color)
+			elseif attached {CLUSTER_STONE} e then
+				scope_label.set_tooltip (ca_messages.cluster_scope_tooltip)
+				scope_label.set_foreground_color (preferences.editor_data.cluster_text_color)
+			elseif attached {DATA_STONE} e then
+				scope_label.set_tooltip (ca_messages.conf_group_tooltip)
+				scope_label.set_foreground_color (preferences.editor_data.cluster_text_color)
+			else
+				scope_label.remove_tooltip
+			end
+			scope_label.set_text (e.stone_name)
+			scope_label.set_pebble (e)
+			scope_label.set_pick_and_drop_mode
+		end
+
 feature {NONE} -- Action handlers
-
-	on_row_selected (a_row: EV_GRID_ROW)
-			-- Called when a row is selected in the event list row.
-			--
-			-- `a_row': The selected row.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-			a_row_attached: attached a_row
-			not_a_row_is_destroyed: not a_row.is_destroyed
-			a_row_has_grid_events_as_parent: a_row.parent = grid_events
-		local
---			l_fix_handlers: like fix_handlers
---			l_rows: ARRAYED_LIST [EV_GRID_ROW]
---			l_first_error: ERROR
---			l_enable: BOOLEAN
-		do
---				-- Scan the selected errors for applicability to fix errors.
---			l_fix_handlers := fix_handlers
---			l_rows := grid_events.selected_rows
---			if not l_rows.is_empty then
---				l_enable := True
---				from l_rows.start until l_rows.after loop
---					if
---						attached {EVENT_LIST_ERROR_ITEM_I} l_rows.item_for_iteration.data as l_error_item and then
---						attached {EIFFEL_ERROR} l_error_item.data as l_error
---					then
---						if attached l_first_error then
---							l_enable := l_first_error.generating_type ~ l_error.generating_type
---						else
---							if l_fix_handlers.is_fixable (l_error) then
---								l_first_error := l_error
---							else
---								l_enable := False
---							end
---						end
---					end
---					l_rows.forth
---				end
---			end
-
---			if l_enable then
---				fix_button.enable_sensitive
---			else
---				fix_button.disable_sensitive
---			end
-		end
-
-	on_row_deselected (a_row: EV_GRID_ROW)
-			-- Called when a row is deselected in the event list row.
-			--
-			-- `a_row': The deselected row.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-			a_row_attached: attached a_row
-		local
---			l_rows: ARRAYED_LIST [EV_GRID_ROW]
-		do
---			l_rows := grid_events.selected_rows
---			if l_rows.is_empty then
---				fix_button.disable_sensitive
---			end
-		end
 
 	on_row_expanded (a_row: EV_GRID_ROW)
 			-- Called when the expand error button is selected.
@@ -1237,64 +1462,34 @@ feature {NONE} -- Action handlers
 	on_handle_key (a_key: EV_KEY; a_alt: BOOLEAN; a_ctrl: BOOLEAN; a_shift: BOOLEAN; a_released: BOOLEAN): BOOLEAN
 			-- <Precursor>
 		do
-			if a_released and then not a_alt and then not a_ctrl and then not a_shift then
-				if a_key.code = {EV_KEY_CONSTANTS}.key_delete then
-					remove_all_selected_event_list_rows
-					Result := True
-				end
-			end
-			if not Result then
+			if
+				a_released and then
+				not a_alt and then
+				not a_ctrl and then
+				not a_shift and then
+				a_key.code = {EV_KEY_CONSTANTS}.key_delete
+			then
+				remove_all_selected_event_list_rows
+				Result := True
+			else
 				Result := Precursor (a_key, a_alt, a_ctrl, a_shift, a_released)
 			end
 		end
 
-	on_toogle_errors_button
-			-- Called when `errors_button' is selected.
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-		local
-			l_grid: like grid_events
-			l_row: EV_GRID_ROW
-			l_count, i: INTEGER
-		do
-			l_grid := grid_events
-			from
-				i := 1
-				l_count := l_grid.row_count
-			until
-				i > l_count
-			loop
-				l_row := l_grid.row (i)
-				if
-					attached {EVENT_LIST_ITEM_I} l_row.data as l_event_item and then
-					is_error_event (l_event_item)
-				then
-					if is_displaying_errors then
-						l_row.show
-					else
-						l_row.hide
-					end
-				end
-				i := i + 1
-			end
-
-			update_content_applicable_navigation_buttons
-		end
-
-	on_toogle_warnings_button
-			-- Called when `warnings_button' is selected
+	on_toogle_message_button (is_enabled: PREDICATE; is_controlled: PREDICATE [EVENT_LIST_ITEM_I]; is_seeable: PREDICATE [EVENT_LIST_ITEM_I])
+			-- Called when one of the buttons selecting message kinds is toggled.
+			-- `is_enabled` tells if the message kind is currently enabled.
+			-- `is_controlled` tells if the message is controlled by the associated button.
+			-- `is_seeable` tells if the message is visible according to current filters.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		local
 			l_row: EV_GRID_ROW
-			l_filter_widget: like filter_widget
 			l_show: BOOLEAN
 			l_count, i: INTEGER
 		do
-			l_filter_widget := filter_widget
-			l_show := is_displaying_warnings
+			l_show := is_enabled.item
 			from
 				i := 1
 				l_count := grid_events.row_count
@@ -1303,14 +1498,10 @@ feature {NONE} -- Action handlers
 			loop
 				l_row := grid_events.row (i)
 				if
-					attached {EVENT_LIST_ITEM_I} l_row.data as l_event_item and then
-					is_warning_event (l_event_item)
+					attached {EVENT_LIST_ITEM_I} l_row.data as e and then
+					is_controlled (e)
 				then
-					if
-						attached {ERROR} l_event_item.data as l_warning and then
-						l_show and then
-						l_filter_widget.is_unfiltered (l_warning)
-					then
+					if l_show and then is_seeable (e) then
 						l_row.show
 					else
 						l_row.hide
@@ -1318,8 +1509,37 @@ feature {NONE} -- Action handlers
 				end
 				i := i + 1
 			end
-
 			update_content_applicable_navigation_buttons
+		end
+
+	on_update_visiblity
+			-- Show or hide rows according to the current settings.
+		require
+			is_interface_usable: is_interface_usable
+			is_initialized: is_initialized
+		local
+			l_row: EV_GRID_ROW
+			l_count, i: INTEGER
+			s: STRING_32
+		do
+			s := text_filter.text
+			if not s.is_empty then
+				 s := s.as_lower
+			end
+			from
+				i := 1
+				l_count := grid_events.row_count
+			until
+				i > l_count
+			loop
+				l_row := grid_events.row (i)
+				if is_row_visible (s, l_row) then
+					l_row.show
+				else
+					l_row.hide
+				end
+				i := i + 1
+			end
 		end
 
 	on_toggle_expand_errors_button
@@ -1375,6 +1595,7 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 		do
 			remove_all_selected_event_list_rows
+			update_message_counters
 		end
 
 	on_select_error_info
@@ -1420,7 +1641,7 @@ feature {NONE} -- Action handlers
 			from l_count := l_grid.row_count; i := 1 until i > l_count loop
 				l_row := l_grid.row (i)
 				if
-					a_exclude /= not l_row.is_show_requested and then
+					a_exclude = l_row.is_show_requested and then
 					attached {EVENT_LIST_ITEM_I} l_row.data as l_event and then
 					is_warning_event (l_event) and then
 					attached {ERROR} l_event.data as l_warning
@@ -1457,29 +1678,63 @@ feature {NONE} -- Factory
 	create_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- <Precursor>
 		do
-			create errors_button.make
-			errors_button.set_text (("0 ").as_string_32 + interface_names.b_errors.as_string_32)
-			errors_button.set_pixmap (stock_pixmaps.tool_error_icon)
-			errors_button.set_pixel_buffer (stock_pixmaps.tool_error_icon_buffer)
-			errors_button.enable_select
-			errors_button.select_actions.extend (agent on_toogle_errors_button)
-			errors_button.select_actions.compare_objects
+			create error_button.make
+			error_button.set_pixmap (stock_pixmaps.tool_error_icon)
+			error_button.set_pixel_buffer (stock_pixmaps.tool_error_icon_buffer)
+			error_button.enable_select
+			error_button.select_actions.extend (agent on_toogle_message_button
+				(agent is_displaying_error,
+				agent is_error_event,
+				agent (e: EVENT_LIST_ITEM_I): BOOLEAN do Result := True end))
 
-			create warnings_button.make
-			warnings_button.set_text (("0 ").as_string_32 + interface_names.b_warnings.as_string_32)
-			warnings_button.set_pixmap (stock_pixmaps.tool_warning_icon)
-			warnings_button.set_pixel_buffer (stock_pixmaps.tool_warning_icon_buffer)
-			warnings_button.enable_select
-			warnings_button.select_actions.extend (agent on_toogle_warnings_button)
-			warnings_button.select_actions.compare_objects
+			create warning_button.make
+			warning_button.set_pixmap (stock_pixmaps.tool_warning_icon)
+			warning_button.set_pixel_buffer (stock_pixmaps.tool_warning_icon_buffer)
+			warning_button.enable_select
+			warning_button.select_actions.extend (agent on_toogle_message_button
+				(agent is_displaying_warning,
+				agent is_warning_event,
+				agent (e: EVENT_LIST_ITEM_I): BOOLEAN do
+					Result := attached {ERROR} e.data as w implies filter_widget.is_unfiltered (w)
+				end))
 
-			create Result.make (3)
-			Result.extend (errors_button)
-			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
-			Result.extend (warnings_button)
+			create hint_button.make
+			hint_button.set_pixmap (stock_pixmaps.general_information_icon)
+			hint_button.set_pixel_buffer (stock_pixmaps.general_information_icon_buffer)
+			hint_button.enable_select
+			hint_button.select_actions.extend (agent on_toogle_message_button
+				(agent is_displaying_hint,
+				agent is_hint_event,
+				agent (e: EVENT_LIST_ITEM_I): BOOLEAN do Result := True end))
+
+			update_message_counters
+
+			create Result.make (4)
+			Result.extend (error_button)
+--			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.extend (warning_button)
+--			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
+			Result.extend (hint_button)
 		ensure then
-			errors_button_attached: errors_button /= Void
-			warnings_button_attached: warnings_button /= Void
+			error_button_attached: error_button /= Void
+			warning_button_attached: warning_button /= Void
+		end
+
+	create_mini_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+		local
+			h: EV_HORIZONTAL_BOX
+		do
+			create h
+			h.set_padding (3)
+			h.disable_homogeneous
+			h.extend (create {EV_LABEL}.make_with_text (ca_names.last_analyzed))
+				-- Scope label.
+			create scope_label.make_with_text (ca_names.analysis_not_run)
+			scope_label.set_foreground_color (colors.disabled_foreground_color)
+			scope_label.align_text_left
+			scope_label.set_minimum_width (200)
+			h.extend (scope_label)
+			create Result.make_from_array (<<create {SD_TOOL_BAR_WIDGET_ITEM}.make (h)>>)
 		end
 
 	create_right_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -1487,7 +1742,13 @@ feature {NONE} -- Factory
 		local
 			l_button: SD_TOOL_BAR_BUTTON
 		do
-			create Result.make (11)
+			create Result.make (17)
+
+				-- Use drop actions of code analyzer for the whole panel.
+			content.drop_actions.extend (agent analyze_cmd.execute_with_stone)
+			grid_events.drop_actions.extend (agent analyze_cmd.execute_with_stone)
+			content.drop_actions.set_veto_pebble_function (agent analyze_cmd.droppable)
+			grid_events.drop_actions.set_veto_pebble_function (agent analyze_cmd.droppable)
 
 				-- Fix buttons.
 			l_button := apply_fix_command.new_sd_toolbar_item (True)
@@ -1538,14 +1799,37 @@ feature {NONE} -- Factory
 			create filter_widget.make
 			register_action (filter_widget.filter_changed_actions, agent on_warnings_filter_changed)
 
-				-- Filter button
+				-- Filter section.
+
+			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
+
+				-- Filter button.
 			create filter_button.make
 			filter_button.set_pixmap (stock_pixmaps.metric_filter_icon)
 			filter_button.set_pixel_buffer (stock_pixmaps.metric_filter_icon_buffer)
 			filter_button.set_tooltip (interface_names.f_filter_warnings)
 			filter_button.set_popup_widget (filter_widget)
-
 			Result.extend (filter_button)
+
+				-- Text filter.
+			create text_filter
+			text_filter.key_release_actions.extend (agent (k: EV_KEY) do on_update_visiblity end)
+			text_filter.set_minimum_width_in_characters (10)
+			text_filter.set_tooltip (interface_names.f_error_text_filter)
+			Result.extend (create {SD_TOOL_BAR_WIDGET_ITEM}.make (text_filter))
+
+				-- Text filter clear button.
+			create l_button.make
+			l_button.set_pixmap (stock_mini_pixmaps.general_delete_icon)
+			l_button.pointer_button_press_actions.extend (
+				agent (x, y, b: INTEGER_32; xt, yt, p: REAL_64; xs, ys: INTEGER_32)
+					do
+						text_filter.set_text ("")
+						on_update_visiblity
+					end
+				)
+			l_button.set_tooltip (interface_names.f_error_clear_text_filter)
+			Result.extend (l_button)
 		ensure then
 			filter_button_attached: filter_button /= Void
 		end
@@ -1572,47 +1856,179 @@ feature {NONE} -- Factory
 			end
 		end
 
+feature {ES_CODE_ANALYSIS_COMMAND} -- UI Items
+
+	scope_label: EV_LABEL
+			-- Label showing the scope of the last analysis.
+
+feature {NONE} -- Services
+
+	frozen code_analyzer: SERVICE_CONSUMER [CODE_ANALYZER_S [STONE, CA_RULE_VIOLATION]]
+			-- Access to an code analyzer service {CODE_ANALYZER_S} consumer.
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {NONE} -- Preference Handler
 
 	on_preference_expand_n_errors
-			-- Specifies if errors in the Error List tool should be expanded automatically, to show the verbose error information. <0: auto expand all, 0: disabled, and >0: enabled ... expand N first errors..
+			-- Update the state that controls if errors in the Error List tool should be expanded automatically.
+			-- The behavior is controlled by `preferences.error_list_tool_data.expand_n_errors`:
+			-- • < 0: auto expand all,
+			-- • = 0: do not expand,
+			-- • > 0: expand first N errors.
+		local
+			n: like {ES_ERROR_LIST_DATA}.expand_n_errors
 		do
-			set_expand_error_options
-		end
-
-
-	set_expand_error_options
-			-- Configure expand error options based on user preference
-			-- 'tools.error_list.expand_n_errors'.
-		do
-			if preferences.error_list_tool_data.expand_n_errors < 0 then
-					-- Expand all
+			n := preferences.error_list_tool_data.expand_n_errors
+			if n < 0 then
+					-- Expand all.
 				is_expanding_errors := True
-				expand_errors_button.enable_select
 				expand_n_errors := False
-			elseif preferences.error_list_tool_data.expand_n_errors > 0  then
+				expand_errors_button.enable_select
+			elseif n > 0  then
 					-- Expand the N first errors.
 				is_expanding_errors := False
 				expand_n_errors := True
-				show_n_errors :=  preferences.error_list_tool_data.expand_n_errors
+				show_n_errors :=  n
 				expand_errors_button.disable_select
 			else
-					-- Expand disabled
-				expand_n_errors := False
+					-- Expand disabled.
 				is_expanding_errors :=False
+				expand_n_errors := False
 				show_n_errors := 0
 				expand_errors_button.disable_select
 			end
-
 		end
 
+feature {NONE} -- Exception handling
+
+	raise_default_exception_dialog (a_empty_dialog: EV_DIALOG; an_exception: EXCEPTION)
+			-- Raises the exception dialog `a_empty_dialog' for `an_exception'.
+		require
+			a_empty_dialog_valid: a_empty_dialog /= Void and then not a_empty_dialog.is_destroyed
+		local
+			l_exception_string: detachable STRING_32
+			l_label: EV_TEXT
+			l_label_box: EV_HORIZONTAL_BOX
+			l_vbox: EV_VERTICAL_BOX
+			l_hbox: EV_HORIZONTAL_BOX
+			l_font: EV_FONT
+			l_ignore: EV_BUTTON
+			l_frame: EV_FRAME
+			l_error_box: EV_HORIZONTAL_BOX
+			l_error_label: EV_LABEL
+			l_exception_message: READABLE_STRING_GENERAL
+		do
+			l_exception_string := an_exception.trace
+			if l_exception_string /= Void then
+				l_exception_string := l_exception_string.twin
+				l_exception_string.prune_all ('%R')
+			end
+			create l_label
+			l_label.disable_word_wrapping
+			l_label.disable_edit
+			create l_font
+			l_font.set_family ({EV_FONT_CONSTANTS}.Family_typewriter)
+			l_label.set_font (l_font)
+			if l_exception_string /= Void then
+				l_label.set_text (l_exception_string)
+			else
+				l_label.set_text (ca_messages.no_trace)
+			end
+			create l_vbox
+			create l_error_box
+			l_error_box.set_border_width (5)
+			l_error_box.set_padding (5)
+			l_error_box.extend ((create {EV_STOCK_PIXMAPS}).error_pixmap.twin)
+			l_error_box.disable_item_expand (l_error_box.first)
+			l_error_box.first.set_minimum_size (32, 32)
+			create l_error_label
+			l_error_label.align_text_left
+			l_error_label.set_text (ca_messages.the_following_exception)
+			l_error_box.extend (l_error_label)
+			l_vbox.extend (l_error_box)
+			l_vbox.disable_item_expand (l_error_box)
+
+			create l_frame
+			create l_label_box
+			l_frame.extend (l_label_box)
+			l_label_box.set_padding (5)
+			l_label_box.set_border_width (5)
+			l_label_box.extend (l_label)
+			l_frame.set_text (ca_messages.exception_trace)
+			l_vbox.extend (l_frame)
+			a_empty_dialog.extend (l_vbox)
+			create l_hbox
+			l_vbox.extend (l_hbox)
+			l_vbox.disable_item_expand (l_hbox)
+			create l_ignore.make_with_text (ca_messages.close)
+			l_ignore.select_actions.extend (agent a_empty_dialog.destroy)
+			l_hbox.extend (create {EV_CELL})
+			l_hbox.extend (l_ignore)
+			l_hbox.disable_item_expand (l_ignore)
+			l_hbox.set_border_width (5)
+			l_hbox.set_padding (5)
+			if attached an_exception.description as l_message then
+				l_exception_message := l_message
+			else
+				l_exception_message := ""
+			end
+			a_empty_dialog.set_title (ca_messages.inspector_eiffel_exception + l_exception_message)
+			a_empty_dialog.set_minimum_height (350)
+			a_empty_dialog.set_size (500, 300)
+			a_empty_dialog.raise
+				--| FIXME Behavior would be better if dialog has full application modality.
+
+				-- Set "Ignore" as the default
+			l_ignore.set_focus
+		end
+
+feature {NONE} -- Colors
+
+	error_background_color: EV_COLOR
+			-- Background color for errors.
+		do
+			Result := preferences.error_list_tool_data.error_background
+		ensure
+			valid_result: Result /= Void
+		end
+
+	warning_background_color: EV_COLOR
+			-- Background color for warning.
+		do
+			Result := preferences.error_list_tool_data.warning_background
+		ensure
+			valid_result: Result /= Void
+		end
+
+	hint_background_color: EV_COLOR
+			-- Background color for hint.
+		do
+			Result := preferences.error_list_tool_data.hint_background
+		ensure
+			valid_result: Result /= Void
+		end
+
+	success_background_color: EV_COLOR
+			-- Background color for success.
+		do
+			Result := preferences.error_list_tool_data.success_background
+		ensure
+			valid_result: Result /= Void
+		end
 
 feature {NONE} -- Constants
 
-	error_column: INTEGER = 1
-	context_column: INTEGER = 2
-	position_column: INTEGER = 3
-	last_column: INTEGER = 3
+	category_column: INTEGER = 1
+	rule_column: INTEGER = 2
+	description_column: INTEGER = 3
+	context_column: INTEGER = 4
+	position_column: INTEGER = 5
+	severity_column: INTEGER = 6
+	last_column: INTEGER = 6
 
 	expand_errors_session_id: STRING = "com.eiffel.error_list.expand_errors"
 
@@ -1621,13 +2037,13 @@ feature {NONE} -- Internationalization
 	tt_delete_items: STRING = "Delete all the selected [completed] items"
 
 invariant
-	errors_button_attached: (is_initialized and is_interface_usable) implies attached errors_button
-	warnings_button_attached: (is_initialized and is_interface_usable) implies attached warnings_button
+	error_button_attached: (is_initialized and is_interface_usable) implies attached error_button
+	warning_button_attached: (is_initialized and is_interface_usable) implies attached warning_button
 	deletebutton_attached: (is_initialized and is_interface_usable) implies attached delete_button
 	expand_errors_button_attached: (is_initialized and is_interface_usable) implies attached expand_errors_button
 	error_info_button_attached: (is_initialized and is_interface_usable) implies attached error_info_button
 	filter_button_attached: (is_initialized and is_interface_usable) implies attached filter_button
-	item_count_matches_error_and_warning_count: error_count + warning_count = item_count
+	item_count_matches_error_and_warning_count: error_count + warning_count + hint_count = item_count
 
 ;note
 	copyright: "Copyright (c) 1984-2017, Eiffel Software"

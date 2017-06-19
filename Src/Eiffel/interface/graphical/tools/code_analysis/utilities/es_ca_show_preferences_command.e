@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 
 feature -- Properties
 
-	name: STRING_32 = "Code Analysis Preferences"
+	name: STRING_32 = "Code_analyzer_preferences"
 			-- <Precursor>
 
 	menu_name: STRING_32
@@ -58,8 +58,11 @@ feature -- Properties
 			Result := ca_names.pref_tooltext
 		end
 
-	description: STRING_32 = ""
+	description: STRING_32
 			-- <Precursor>
+			do
+				Result := ca_messages.preferences_description
+			end
 
 	tooltip: STRING_32
 			-- <Precursor>
@@ -70,17 +73,17 @@ feature -- Properties
 	pixmap: EV_PIXMAP
 			-- <Precursor>
 		once
-			Result := pixmaps.icon_pixmaps.project_settings_advanced_icon
+			Result := pixmaps.icon_pixmaps.analyzer_preferences_icon
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER
 			-- <Precursor>
 		once
-			Result := pixmaps.icon_pixmaps.project_settings_advanced_icon_buffer
+			Result := pixmaps.icon_pixmaps.analyzer_preferences_icon_buffer
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -24,20 +24,20 @@ feature -- GUI
 		do Result := translation_in_context ("No issues.", once "code_analyzer.message") end
 
 	class_context_menu_caption (a_class_name: attached READABLE_STRING_GENERAL): STRING_32
-		do Result := locale.formatted_string (translation_in_context ("Run Eiffel Inspector on Class '$1'", once "code_analyzer"), [a_class_name]) end
+		do Result := locale.formatted_string (translation_in_context ("Analyze '$1'", once "code_analyzer.menu"), [a_class_name]) end
 
-	cluster_context_menu_caption: STRING_32
-		do Result := translation_in_context ("Run Eiffel Inspector on cluster", once "code_analyzer") end
+	cluster_context_menu_caption (a_cluster_name: attached READABLE_STRING_GENERAL): STRING_32
+		do Result := locale.formatted_string (translation_in_context ("Analyze '$1'", once "code_analyzer.menu"), [a_cluster_name]) end
 
-	already_running: STRING_32
-		do Result := translation_in_context (" (already running)", once "code_analyzer") end
+	already_running_menu_suffix: STRING_32
+		do Result := translation_in_context (" (already running)", once "code_analyzer.menu") end
 
 	already_running_long: STRING_32
-		do Result := translation_in_context	("Eiffel Inspector is already running.%N%
-				%Please wait until the current analysis has finished.", once "code_analyzer") end
+		do Result := translation_in_context	("Code analysis is already running.%N%
+				%Please wait until it has finished.", once "code_analyzer") end
 
 	status_bar_running: STRING_32
-		do Result := translation_in_context ("Eiffel Inspector running...", once "code_analyzer") end
+		do Result := translation_in_context ("Analyzing code...", once "code_analyzer") end
 
 	system_scope: STRING_32
 		do Result := translation_in_context ("System", once "code_analyzer") end
@@ -55,25 +55,61 @@ feature -- GUI
 		do Result := translation_in_context ("Configuration group that has been analyzed recently.", once "code_analyzer.tooltip") end
 
 	status_bar_terminated: STRING_32
-		do Result := translation_in_context ("Eiffel Inspector has terminated.", once "code_analyzer") end
+		do Result := translation_in_context ("Code analysis has finished.", once "code_analyzer") end
 
-	analyze_whole_system: STRING_32
-		do Result := translation_in_context ("Analyze whole system", once "code_analyzer.tooltip") end
+	analyze_last_menu (s: detachable READABLE_STRING_32): STRING_32
+		do
+			Result := if attached s then
+				locale.formatted_string (translation_in_context ("Analyze '$1' again", once "code_analyzer.menu"), s)
+			else
+				translation_in_context ("Analyze Last Item Again", once "code_analyzer.menu")
+			end
+		end
 
-	analyze_current_item: STRING_32
-		do Result := translation_in_context ("Analyze current item", once "code_analyzer.tooltip") end
+	analyze_editor_menu (s: detachable READABLE_STRING_32): STRING_32
+		do
+			Result := if attached s then
+				locale.formatted_string (translation_in_context ("Analyze '$1'", once "code_analyzer.menu"), s)
+			else
+				translation_in_context ("Analize Editor Item", once "code_analyzer.menu")
+			end
+		end
 
-	analyze_parent_cluster: STRING_32
-		do Result := translation_in_context ("Analyze parent cluster of current item", once "code_analyzer.tooltip") end
+	analyze_parent_menu (s: detachable READABLE_STRING_32): STRING_32
+		do
+			Result := if attached s then
+				locale.formatted_string (translation_in_context ("Analyze Cluster '$1'", once "code_analyzer.menu"), s)
+			else
+				translation_in_context ("Analyze Parent Cluster of Last Item", once "code_analyzer.menu")
+			end
+		end
 
-	run_code_analysis: STRING_32
-		do Result := translation_in_context ("Run Eiffel Inspector", once "code_analyzer") end
+	analyze_target_menu (s: detachable READABLE_STRING_32): STRING_32
+		do
+			Result := if attached s then
+				locale.formatted_string (translation_in_context ("Analyze System Target '$1'", once "code_analyzer.menu"), s)
+			else
+				translation_in_context ("Analyze System Target", once "code_analyzer.menu")
+			end
+		end
+
+	analyze_again_description: STRING_32
+		do Result := translation_in_context ("Analyze", once "code_analyzer") end
+
+	analyze_editor_description: STRING_32
+		do Result := translation_in_context ("Analyze Code from Editor", once "code_analyzer") end
+
+	analyze_parent_description: STRING_32
+		do Result := translation_in_context ("Analyze Parent Cluster", once "code_analyzer") end
+
+	analyze_target_description: STRING_32
+		do Result := translation_in_context ("Analyze Whole Target", once "code_analyzer") end
 
 	no_trace: STRING_32
 		do Result := translation_in_context ("No trace available.", once "code_analyzer") end
 
 	the_following_exception: STRING_32
-		do Result := translation_in_context ("The following exception has occurred while Eiffel Inspector was running:", once "code_analyzer") end
+		do Result := translation_in_context ("The following exception has occurred during code analysis:", once "code_analyzer") end
 
 	exception_trace: STRING_32
 		do Result := translation_in_context ("Exception Trace", once "code_analyzer") end
@@ -82,7 +118,10 @@ feature -- GUI
 		do Result := translation_in_context ("Close", once "code_analyzer") end
 
 	inspector_eiffel_exception: STRING_32
-		do Result := translation_in_context ("Eiffel Inspector Exception: ", once "code_analyzer") end
+		do Result := translation_in_context ("Code Analyzer Exception: ", once "code_analyzer") end
+
+	preferences_description: STRING_32
+		do Result := translation_in_context ("Code Analyzer Preferences", once "code_analyzer") end
 
 feature -- Messages for both GUI and command line mode
 

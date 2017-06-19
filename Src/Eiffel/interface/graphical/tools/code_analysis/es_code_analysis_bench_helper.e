@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Helper class to minimize changes of proper EiffelStudio for the integration of the Code Analysis Tool.
 	]"
@@ -15,10 +15,11 @@ inherit
 	EB_SHARED_PIXMAPS
 
 	EB_SHARED_WINDOW_MANAGER
+	EB_SHARED_GRAPHICAL_COMMANDS
 
 feature -- Basic operations
 
-	build_context_menu_for_class_stone (a_menu: attached EV_MENU; a_stone: attached CLASSC_STONE)
+	build_context_menu_for_class_stone (a_menu: EV_MENU; a_stone: CLASSC_STONE)
 			-- Build context menu for class stone `a_stone' and add it to `a_menu'.
 			--
 			-- Added to {EB_CONTEXT_MENU_FACTORY}.extend_standard_compiler_item_menu.
@@ -30,20 +31,21 @@ feature -- Basic operations
 		do
 				-- The class should be compiled in any case. Make it sure anyway.
 			if a_stone.class_i.is_compiled then
-				create l_item.make_with_text_and_action (ca_messages.class_context_menu_caption (a_stone.class_name)
-					, agent ca_command.execute_with_stone (a_stone))
+				create l_item.make_with_text_and_action
+					(ca_messages.class_context_menu_caption (a_stone.class_name),
+					agent analyze_cmd.execute_with_stone (a_stone))
 					-- Although the icon name is not very suitable, the icon itself seems appropriate.
-				l_item.set_pixmap (icon_pixmaps.view_flat_icon)
+				l_item.set_pixmap (icon_pixmaps.analyzer_analyze_class_icon)
 
 				if code_analyzer.is_running then
 					l_item.disable_sensitive
-					l_item.set_text (l_item.text + ca_messages.already_running)
+					l_item.set_text (l_item.text + ca_messages.already_running_menu_suffix)
 				end
 				a_menu.extend (l_item)
 			end
 		end
 
-	build_context_menu_for_cluster_stone (a_menu: attached EV_MENU; a_stone: attached CLUSTER_STONE)
+	build_context_menu_for_cluster_stone (a_menu: EV_MENU; a_stone: CLUSTER_STONE)
 			-- Build context menu for cluster stone `a_stone' and add it to `a_menu'.
 			-- Very similar to `build_context_menu_for_class_stone'.
 			-- Added to {EB_CONTEXT_MENU_FACTORY}.extend_standard_compiler_item_menu.
@@ -53,13 +55,14 @@ feature -- Basic operations
 		local
 			l_item: EV_MENU_ITEM
 		do
-			create l_item.make_with_text_and_action (ca_messages.cluster_context_menu_caption
-				, agent ca_command.execute_with_stone (a_stone))
-			l_item.set_pixmap (icon_pixmaps.view_flat_icon)
+			create l_item.make_with_text_and_action
+				(ca_messages.cluster_context_menu_caption (a_stone.cluster_i.cluster_name),
+				agent analyze_cmd.execute_with_stone (a_stone))
+			l_item.set_pixmap (icon_pixmaps.analyzer_analyze_cluster_icon)
 
 			if code_analyzer.is_running then
 				l_item.disable_sensitive
-				l_item.set_text (l_item.text + ca_messages.already_running)
+				l_item.set_text (l_item.text + ca_messages.already_running_menu_suffix)
 			end
 			a_menu.extend (l_item)
 		end
@@ -76,15 +79,8 @@ feature -- Shared instances
 			valid_result: Result /= Void
 		end
 
-	ca_command: ES_CODE_ANALYSIS_COMMAND
-			-- Shared Code Analysis command.
-		once
-			create Result.make
-		ensure
-			valid_result: Result /= Void
-		end
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

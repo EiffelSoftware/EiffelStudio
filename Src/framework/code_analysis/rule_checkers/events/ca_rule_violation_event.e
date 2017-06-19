@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			-- Initialize event item.
 		do
 			data := a_violation
-			category := {ENVIRONMENT_CATEGORIES}.none
+			category := {ENVIRONMENT_CATEGORIES}.static_analysis
 			priority := {PRIORITY_LEVELS}.normal
 		ensure
 			data_set: data = a_violation
@@ -48,14 +48,8 @@ feature -- Access
 			Result := attached {CA_WARNING} data.severity
 		end
 
-	frozen is_suggestion_event: BOOLEAN
-			-- Does `Current' represent a suggestion?	
-		do
-			Result := attached {CA_SUGGESTION} data.severity
-		end
-
 	frozen is_hint_event: BOOLEAN
-			-- Does `Current' represent a hint?	
+			-- Does `Current' represent a hint?
 		do
 			Result := attached {CA_HINT} data.severity
 		end
@@ -112,7 +106,7 @@ feature -- Access
 	frozen type: NATURAL_8
 			-- <Precursor>
 		once
-			Result := {EVENT_LIST_ITEM_TYPES}.unknown
+			Result := {EVENT_LIST_ITEM_TYPES}.error
 		end
 
 	frozen category: NATURAL_8

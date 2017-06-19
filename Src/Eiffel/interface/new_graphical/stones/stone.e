@@ -53,7 +53,7 @@ feature  -- Access
 		deferred
 		end
 
-	stone_name: READABLE_STRING_GENERAL
+	stone_name: READABLE_STRING_32
 			-- Name of Current stone
 		do
 			Result := ""

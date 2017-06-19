@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "All shared preferences for the Error List tool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_preferences: PREFERENCES)
-			-- Create
+			-- Initialize with `a_preferences`.
 		require
 			preferences_not_void: a_preferences /= Void
 		do
@@ -59,21 +59,85 @@ feature -- Value
 			Result := report_c_compiler_errors_preference.selected_index > 2
 		end
 
+	error_background: EV_COLOR
+			-- Background color for errors.
+		do
+			Result := preference_error_background.value
+		end
+
+	warning_background: EV_COLOR
+			-- Background color for warnings.
+		do
+			Result := preference_warning_background.value
+		end
+
+	hint_background: EV_COLOR
+			-- Background color for hints.
+		do
+			Result := preference_hint_background.value
+		end
+
+	success_background: EV_COLOR
+			-- Background color for success.
+		do
+			Result := preference_success_background.value
+		end
+
 feature {ES_ERROR_LIST_TOOL_PANEL, EB_SHARED_PREFERENCES} -- Preference
 
 	expand_errors_preferences: BOOLEAN_PREFERENCE
+	expand_n_errors_preferences: INTEGER_PREFERENCE
 	show_tooltip_preferences: BOOLEAN_PREFERENCE
 	report_c_compiler_errors_preference: ARRAY_PREFERENCE
 
-	expand_n_errors_preferences: INTEGER_PREFERENCE
+feature {NONE} -- Preference
+
+	preference_error_background: COLOR_PREFERENCE
+	preference_warning_background: COLOR_PREFERENCE
+	preference_hint_background: COLOR_PREFERENCE
+	preference_success_background: COLOR_PREFERENCE
+
+feature {NONE} -- Default values
+
+	default_error_background: EV_COLOR
+		do
+			create Result.make_with_8_bit_rgb (255, 230, 230)
+		ensure
+			valid_result: Result /= Void
+		end
+
+	default_warning_background: EV_COLOR
+		do
+			create Result.make_with_8_bit_rgb (255, 255, 216)
+		ensure
+			valid_result: Result /= Void
+		end
+
+	default_hint_background: EV_COLOR
+		do
+			create Result.make_with_8_bit_rgb (230, 244, 255)
+		ensure
+			valid_result: Result /= Void
+		end
+
+	default_success_background: EV_COLOR
+		do
+			create Result.make_with_8_bit_rgb (226, 255, 226)
+		ensure
+			valid_result: Result /= Void
+		end
 
 feature {NONE} -- Preference Strings
 
 	expand_errors_string: STRING = "tools.error_list.expand_errors"
+	expand_n_errors_string: STRING = "tools.error_list.expand_n_errors"
 	report_c_compiler_errors_string: STRING = "tools.error_list.report_c_compiler_errors"
 	show_tooltip_string: STRING = "tools.error_list.show_tooltip"
 
-	expand_n_errors_string: STRING = "tools.error_list.expand_n_errors"
+	preference_name_error_background: STRING = "tools.error_list.color.error_background"
+	preference_name_warning_background: STRING = "tools.error_list.color.warning_background"
+	preference_name_hint_background: STRING = "tools.error_list.color.hint_background"
+	preference_name_success_background: STRING = "tools.error_list.color.success_background"
 
 feature {NONE} -- Implementation
 
@@ -84,16 +148,20 @@ feature {NONE} -- Implementation
 		do
 			create l_manager.make (preferences, "tools.tools.error_list")
 			expand_errors_preferences := l_manager.new_boolean_preference_value (l_manager, expand_errors_string, True)
-			show_tooltip_preferences := l_manager.new_boolean_preference_value (l_manager, show_tooltip_string, True)
-
 			expand_n_errors_preferences := l_manager.new_integer_preference_value (l_manager, expand_n_errors_string, 1)
+			show_tooltip_preferences := l_manager.new_boolean_preference_value (l_manager, show_tooltip_string, True)
 
 			report_c_compiler_errors_preference := l_manager.new_array_preference_value (l_manager, report_c_compiler_errors_string, <<"none", "errors", "errors_and_warnings">>)
 			report_c_compiler_errors_preference.set_is_choice (True)
+
+			preference_error_background := l_manager.new_color_preference_value (l_manager, preference_name_error_background, default_error_background)
+			preference_warning_background := l_manager.new_color_preference_value (l_manager, preference_name_warning_background, default_warning_background)
+			preference_hint_background := l_manager.new_color_preference_value (l_manager, preference_name_hint_background, default_hint_background)
+			preference_success_background := l_manager.new_color_preference_value (l_manager, preference_name_success_background, default_success_background)
 		end
 
 	preferences: PREFERENCES
-			-- Preferences
+			-- Preferences.
 
 invariant
 	preferences_not_void: attached preferences

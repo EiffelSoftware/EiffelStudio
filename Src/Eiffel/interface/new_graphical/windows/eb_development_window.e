@@ -1,8 +1,8 @@
-note
-	description	: "Window holding a project tool"
+﻿note
+	description: "Window holding a project tool"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
+	date: "$Date$"
 	revision	: "$Revision$"
 
 class
@@ -904,6 +904,12 @@ feature -- Stone process
 			Finalize_project_cmd.update (window)
 			project_cancel_cmd.update (window)
 
+				-- Update analyzer commands.
+			analyze_cmd.update (window)
+			analyze_editor_cmd.update (window)
+			analyze_parent_cmd.update (window)
+			analyze_target_cmd.update (window)
+
 				-- Update debug commands
 			eb_debugger_manager.refresh_commands (Current)
 
@@ -1804,9 +1810,11 @@ feature {EB_DEVELOPMENT_WINDOW_PART, EB_DEVELOPMENT_WINDOW_BUILDER} -- Implement
 			if is_empty then
 				commands.print_cmd.disable_sensitive
 				commands.save_as_cmd.disable_sensitive
+				analyze_editor_cmd.disable_sensitive
 			else
 				commands.print_cmd.enable_sensitive
 				commands.save_as_cmd.enable_sensitive
+				analyze_editor_cmd.update_sensitive
 			end
 			if any_editor_changed then
 				save_all_cmd.enable_sensitive
@@ -2545,7 +2553,7 @@ invariant
 	window_id_positive: window_id > 0
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -2576,4 +2584,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_DEVELOPMENT_WINDOW
+end

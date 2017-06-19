@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that handles debugger evaluation error."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -235,20 +235,14 @@ feature -- Error notification: evaluation error
 
 	notify_error_evaluation_report_to_support (a: detachable ANY)
 		do
-			if a /= Void then
-				notify_error_evaluation_report_message_to_support (a.generating_type)
-			else
-				notify_error_evaluation_report_message_to_support (Void)
-			end
+			notify_error_evaluation_report_message_to_support
+				(if attached a then a.generating_type.name_32 else Void end)
 		end
 
 	notify_error_evaluation_report_message_to_support (msg: detachable READABLE_STRING_GENERAL)
 		do
-			if msg /= Void then
-				notify_error_evaluation (Debugger_names.msg_error_report_to_support (msg))
-			else
-				notify_error_evaluation (Debugger_names.msg_error_report_to_support (""))
-			end
+			notify_error_evaluation (Debugger_names.msg_error_report_to_support
+				(if attached msg then msg else "" end))
 		end
 
 	notify_error_evaluation_during_call_evaluation (a: ANY; fname: STRING_GENERAL)
@@ -478,7 +472,7 @@ invariant
 	error_list_attached: error_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

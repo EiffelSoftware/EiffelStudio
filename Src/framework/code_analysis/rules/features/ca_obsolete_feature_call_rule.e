@@ -221,7 +221,7 @@ feature {NONE} -- Rule Checking
 					end
 					expires_in := d.relative_duration (create {DATE}.make_now_utc).days_count
 					if expires_in > 0 then
-						violation_severity := severity_suggestion
+						violation_severity := severity_hint
 					end
 					expires_in := expires_in + feature_call_expiration.value
 					if expires_in <= 0 then

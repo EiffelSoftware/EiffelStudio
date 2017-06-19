@@ -6,6 +6,7 @@
 			local variable that is very short is bad for code readability.
 		]"
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,7 +27,7 @@ feature {NONE} -- Initialization
 			make_with_defaults
 			is_enabled_by_default := False
 			default_severity_score := 40
-			create {CA_SUGGESTION} severity
+			severity := severity_hint
 			initialize_options (a_pref_manager)
 		end
 

@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-		Description of a generic derivation of a generic CLASS_C. It contains
-		type of the current generic derivation. All generic derivations are stored
-		in TYPE_LIST of CLASS_C
+			Description of a generic derivation of a generic CLASS_C. It contains
+			type of the current generic derivation. All generic derivations are stored
+			in TYPE_LIST of CLASS_C
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -260,11 +260,8 @@ feature -- Access
 
 	is_generic: BOOLEAN
 			-- Is current class a generic class?
-		local
-			l_gen_type: GEN_TYPE_A
 		do
-			l_gen_type ?= type
-			Result := l_gen_type /= Void
+			Result := attached {GEN_TYPE_A} type
 		end
 
 	is_external: BOOLEAN
@@ -366,7 +363,6 @@ feature -- Status report
 			l_generics: ARRAYED_LIST [TYPE_A]
 			l_type_feat: TYPE_FEATURE_I
 			l_ancestor_class, l_class: CLASS_C
-			l_formal: FORMAL_A
 			l_type, l_descendant_type: TYPE_A
 			i, nb: INTEGER
 			l_packed: PACKED_BOOLEANS
@@ -402,9 +398,8 @@ feature -- Status report
 									check l_type_has_class: l_type.has_associated_class end
 									l_type_feat := l_class.generic_features.item (l_ancestor_class.formal_at_position (i).rout_id_set.first)
 									check l_type_feat_not_void: l_type_feat /= Void end
-									if l_type_feat.is_formal then
-										l_formal ?= l_type_feat.type
-										l_descendant_type := type.generics.i_th (l_formal.position)
+									if attached {FORMAL_A} l_type_feat.type as l_formal then
+										l_descendant_type := type.generics [l_formal.position]
 										if l_descendant_type.is_expanded then
 											Result := l_descendant_type.base_class.simple_conform_to (l_type.base_class)
 										end
@@ -574,7 +569,6 @@ feature -- Update
 			a_table: like conformance_table
 			l_area: SPECIAL [CL_TYPE_A]
 			l_parent_type: CL_TYPE_A
-			l_gen_type: GEN_TYPE_A
 			i, nb: INTEGER
 		do
 			a_table := cl.conformance_table
@@ -595,10 +589,9 @@ feature -- Update
 					a_parent.build_conformance_table_of (cl)
 					i := i + 1
 				end
-				l_gen_type ?= type
-				if l_gen_type /= Void and then not l_gen_type.is_tuple then
+				if attached {GEN_TYPE_A} type as g and then not g.is_tuple then
 						-- Mark all generic derivations this one conforms to.
-					l_gen_type.enumerate_interfaces (agent {CLASS_TYPE}.build_conformance_table_of (cl))
+					g.enumerate_interfaces (agent {CLASS_TYPE}.build_conformance_table_of (cl))
 				end
 			end
 		end
@@ -1332,20 +1325,17 @@ feature {NONE} -- Implementation
 	compute_parent_table (final_mode: BOOLEAN)
 			-- Compute parent table and make it available in `Par_table'.
 		local
-			parents     : FIXED_LIST [CL_TYPE_A];
-			parent_type : CL_TYPE_A
-			gen_type    : GEN_TYPE_A;
-			a_class     : CLASS_C
+			parents: FIXED_LIST [CL_TYPE_A]
+			parent_type: CL_TYPE_A
+			gen_type: GEN_TYPE_A
+			a_class: CLASS_C
 		do
-			gen_type ?= type
+			gen_type := {GEN_TYPE_A} / type
 			a_class  := associated_class
 
-			if gen_type /= Void and then gen_type.generics /= Void then
-				Par_table.init (type.generated_id (final_mode, Void),
-								gen_type.generics.count, a_class.is_expanded);
-			else
-				Par_table.init (type.generated_id (final_mode, Void), 0, a_class.is_expanded);
-			end
+			Par_table.init (type.generated_id (final_mode, Void),
+				if attached gen_type and then attached  gen_type.generics as gs then gs.count else 0 end,
+				a_class.is_expanded);
 
 			if is_expanded then
 					-- Use a reference counterpart as a parent to ensure
@@ -1756,6 +1746,7 @@ feature -- Structure generation
 					c_name := Encoder.feature_name (l_written_type.type_id,
 						creation_feature.body_index)
 					buffer.put_new_line
+					buffer.put_string ("nstcall = -1, ")
 					buffer.put_string (c_name)
 					buffer.put_character ('(')
 					buffer.put_string (a_target_name)

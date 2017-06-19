@@ -1,11 +1,9 @@
-note
-	description: "[
-		Category identifiers for various parts of the EiffelStudio ecosystem.
-	]"
+﻿note
+	description: "Category identifiers for various parts of the EiffelStudio ecosystem."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	ENVIRONMENT_CATEGORIES
@@ -13,25 +11,28 @@ class
 feature -- Access
 
 	none: NATURAL_8 = 0
-			-- Unknown category
+			-- Unknown category.
 
 	internal_event: NATURAL_8 = 1
-			-- An internal event
+			-- An internal event.
 
 	compilation: NATURAL_8 = 2
-			-- A compilation/build
+			-- A compilation/build.
 
 	debugger: NATURAL_8 = 3
-			-- Eiffel debugger
+			-- Eiffel debugger.
 
 	editor: NATURAL_8 = 4
-			-- Text editor
+			-- Text editor.
 
 	refactoring: NATURAL_8 = 5
-			-- Refactoring engine
+			-- Refactoring engine.
 
 	testing: NATURAL_8 = 6
-			-- Testing related
+			-- Testing related.
+
+	static_analysis: NATURAL_8 = 7
+			-- Static analyzer.
 
 feature -- Query
 
@@ -41,18 +42,25 @@ feature -- Query
 			-- `a_cat': A category identifier to validate
 			-- `Result': True to indicate the category is valid; False otherwise.
 		do
-			Result :=
-				a_cat = none or
-				a_cat = internal_event or
-				a_cat = compilation or
-				a_cat = debugger or
-				a_cat = editor or
-				a_cat = refactoring or
-				a_cat = testing
+			inspect a_cat
+			when
+				none,
+				internal_event,
+				compilation,
+				debugger,
+				editor,
+				refactoring,
+				testing,
+				static_analysis
+			then
+				Result := True
+			else
+					-- False here.
+			end
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -65,22 +73,22 @@ feature -- Query
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

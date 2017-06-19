@@ -1,6 +1,5 @@
-note
-	description: "Stone which can contain any data"
-	author: ""
+﻿note
+	description: "Stone which can contain any dataю"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,8 +9,10 @@ class
 inherit
 	STONE
 		redefine
+			default_create,
+			is_storable,
 			is_valid,
-			is_storable
+			stone_name
 		end
 
 create
@@ -20,11 +21,29 @@ create
 
 feature{NONE} -- Initializatioin
 
-	make (a_data: like data; a_validity_func: like validity_function)
+	default_create
+		do
+			name := {STRING_32} ""
+		end
+
+	make (a_data: like data; a_validity_func: like validity_function; data_name: like name)
 			-- Initialize `data' with `a_data'.
 		do
+			name := data_name
 			set_data (a_data)
 			set_validity_function (a_validity_func)
+		end
+
+feature -- Access
+
+	stone_name: READABLE_STRING_32
+			-- <Precursor>
+		do
+			if is_valid then
+				Result := name.twin
+			else
+				Result := Precursor
+			end
 		end
 
 feature -- Properties
@@ -66,6 +85,9 @@ feature -- Properties
 		do
 			Result := stone_signature
 		end
+
+	name: READABLE_STRING_32
+			-- Name of the data.
 
 	data: ANY
 			-- List of groups contained in Current stone

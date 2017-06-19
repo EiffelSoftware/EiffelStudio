@@ -76,8 +76,8 @@ feature -- Access
 			Result := stone_signature
 		end
 
-	stone_name: READABLE_STRING_GENERAL
-			-- Name of Current stone
+	stone_name: READABLE_STRING_32
+			-- Name of Current stone.
 		do
 			if is_valid then
 				Result := target.name.twin

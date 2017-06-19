@@ -67,7 +67,7 @@ feature -- Access
 			Result := interface_names.l_from (s, Precursor {AST_STONE})
 		end
 
-	stone_name: READABLE_STRING_GENERAL
+	stone_name: READABLE_STRING_32
 			-- Name of Current stone
 		do
 			if is_valid then

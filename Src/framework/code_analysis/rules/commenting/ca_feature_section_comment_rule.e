@@ -6,6 +6,7 @@
 			This comment serves as caption and is used for example by the 'Features' panel.
 		]"
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,7 +27,7 @@ feature {NONE} -- Initialization
 			make_with_defaults
 			is_enabled_by_default := False
 			default_severity_score := 30
-			create {CA_SUGGESTION} severity
+			severity := severity_hint
 		end
 
 feature {NONE} -- Activation

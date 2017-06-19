@@ -8,6 +8,7 @@
 			expression is inserted will not have too many characters.
 		]"
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,7 +33,7 @@ feature {NONE} -- Initialization
 		do
 			make_with_defaults
 			default_severity_score := 40
-			create {CA_SUGGESTION} severity
+			severity := severity_hint
 			initialize_preferences (a_pref_manager)
 
 			create locals_usage.make (0)

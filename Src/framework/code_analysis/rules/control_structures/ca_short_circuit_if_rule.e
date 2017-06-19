@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		do
 			make_with_defaults
 			default_severity_score := 40
-			create {CA_SUGGESTION} severity
+			severity := severity_hint
 		end
 
 	register_actions (a_checker: attached CA_ALL_RULES_CHECKER)

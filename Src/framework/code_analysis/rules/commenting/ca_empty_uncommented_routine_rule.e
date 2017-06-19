@@ -5,6 +5,7 @@
 		A routine which does not contain any instructions and has no comment too indicates that the implementation might be missing.
 	]"
 	author: "Paolo Antonucci"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -24,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			make_with_defaults
-			create {CA_HINT} severity
+			severity := severity_hint
 		end
 
 feature {NONE} -- Activation

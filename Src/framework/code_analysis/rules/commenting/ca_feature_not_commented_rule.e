@@ -7,6 +7,7 @@
 			the programmer, feature comments will appear as tooltip documentation.
 		]"
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -27,7 +28,7 @@ feature {NONE} -- Initialization
 			make_with_defaults
 			is_enabled_by_default := False
 			default_severity_score := 20
-			create {CA_SUGGESTION} severity
+			severity := severity_hint
 		end
 
 feature {NONE} -- Activation

@@ -6,6 +6,7 @@
 			be merged into one, or their comments could be made more specific.
 		]"
 	author: "Paolo Antonucci"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			make_with_defaults
-			create {CA_HINT} severity
+			severity := severity_hint
 		end
 
 feature {NONE} -- Activation

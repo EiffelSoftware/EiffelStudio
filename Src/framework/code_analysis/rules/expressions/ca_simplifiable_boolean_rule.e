@@ -6,6 +6,7 @@
 			simplified using the inverse comparison operator.
 		]"
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -24,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Initialization.
 		do
 			make_with_defaults
-			create {CA_SUGGESTION} severity
+			severity := severity_hint
 		end
 
 feature {NONE} -- Activation

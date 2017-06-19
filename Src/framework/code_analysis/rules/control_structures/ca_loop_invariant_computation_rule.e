@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			-- Initialization.
 		do
 			make_with_defaults
-			create {CA_SUGGESTION} severity
+			severity := severity_hint
 			create locals_assign.make (10)
 			create assign_instr.make (10)
 		end

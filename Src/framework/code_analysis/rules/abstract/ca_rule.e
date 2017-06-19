@@ -1,6 +1,7 @@
 note
 	description: "A rule that will be used by the Code Analyzer."
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -77,7 +78,6 @@ feature {CA_RULE_VIOLATION} -- formatted rule checking output
 	format_violation_description (a_violation: attached CA_RULE_VIOLATION; a_formatter: attached TEXT_FORMATTER)
 			-- Formats a description of a violation of this rule, `a_violation', using `a_formatter'.
 		require
-			violation_added: violations.has (a_violation)
 			violation_correct: a_violation.rule = Current
 		deferred
 		end
@@ -101,8 +101,8 @@ feature {NONE} -- Severity levels
 			create Result
 		end
 
-	severity_suggestion: CA_SUGGESTION
-			-- Severity of suggestion level.
+	severity_hint: CA_HINT
+			-- Severity of hint level.
 		once
 			create Result
 		end

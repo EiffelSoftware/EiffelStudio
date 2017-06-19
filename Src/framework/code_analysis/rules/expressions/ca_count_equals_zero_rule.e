@@ -6,6 +6,7 @@
 			of elements to zero can be transformed into the boolean query 'is_empty'.
 		]"
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,7 +27,7 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			make_with_defaults
-			create {CA_SUGGESTION} severity
+			severity := severity_hint
 		end
 
 	register_actions (a_checker: attached CA_ALL_RULES_CHECKER)

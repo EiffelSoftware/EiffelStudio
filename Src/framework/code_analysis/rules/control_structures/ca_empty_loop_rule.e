@@ -5,6 +5,7 @@
 			A loop with an empty body should be removed. In most of the cases the loop never exits.
 		]"
 	author: "Samuel Schmid"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,7 +24,7 @@ feature {NONE} -- Initialization
 			-- Initialization.
 		do
 			make_with_defaults
-			create {CA_SUGGESTION} severity
+			severity := severity_hint
 		end
 
 feature {NONE} -- Activation

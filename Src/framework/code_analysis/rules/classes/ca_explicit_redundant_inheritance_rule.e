@@ -5,7 +5,8 @@
 			Explicitly duplicated inheritance links are redundant if there is no renaming, 
 			redefining, or change of export status. One should be removed.
 		]"
-	author: "Paolo Antonucci", "$Author$"
+	author: "Paolo Antonucci"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			make_with_defaults
-			create {CA_SUGGESTION} severity
+			severity := severity_hint
 		end
 
 feature {NONE} -- Activation

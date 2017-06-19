@@ -8,6 +8,7 @@
 			the condition and by switching the instructions solves this issue.
 		]"
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -27,7 +28,7 @@ feature {NONE} -- Initialization
 		do
 			make_with_defaults
 			default_severity_score := 30
-			create {CA_SUGGESTION} severity
+			severity := severity_hint
 		end
 
 	register_actions (a_checker: attached CA_ALL_RULES_CHECKER)

@@ -149,11 +149,16 @@
 	<PREF NAME="tools.class_browser.dependency_view_sorting_order" DESCRIPTION="Sorting order of clients/suppliers of class in dependency tool." HIDDEN="True"><STRING>1:1</STRING></PREF>
 	<PREF NAME="tools.class_browser.feature_view_sorting_order" DESCRIPTION="Sorting order of features with respect to their class of origin in feature tool." HIDDEN="True"><STRING>2:1</STRING></PREF>
 
+	<PREF NAME="tools.error_list.color.error_background" DESCRIPTION="Background color for errors."><COLOR>255;230;230</COLOR></PREF>
+	<PREF NAME="tools.error_list.color.hint_background" DESCRIPTION="Background color for hints."><COLOR>230;244;255</COLOR></PREF>
+	<PREF NAME="tools.error_list.color.success_background" DESCRIPTION="Background color for hints."><COLOR>230;255;230</COLOR></PREF>
+	<PREF NAME="tools.error_list.color.warning_background" DESCRIPTION="Background color for warnings."><COLOR>255;255;216</COLOR></PREF>
 	<PREF NAME="tools.error_list.expand_errors" DESCRIPTION="Specifies if errors in the Error List tool should be expanded automatically, to show the verbose error information."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.error_list.expand_n_errors" DESCRIPTION="Specifies if errors in the Error List tool should be expanded automatically, to show the verbose error information. <0: auto expand all, 0: disabled, and >0: enabled ... expand N first errors."><INTEGER>1</INTEGER></PREF>
-	<PREF NAME="tools.error_list.show_tooltip" DESCRIPTION="Specifies if rich tooltip window should be shown automatically in the Error List tool."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.error_list.report_c_compiler_errors" DESCRIPTION="Specifies what level of error/warning report to perform on C compiler output."><LIST>none;[errors];errors_and_warnings</LIST></PREF>	
-    <PREF NAME="tools.testing_tool.execution.processes" DESCRIPTION="Specifies the number of tests being executed simultaneously."><INTEGER>4</INTEGER></PREF>
+	<PREF NAME="tools.error_list.show_tooltip" DESCRIPTION="Specifies if rich tooltip window should be shown automatically in the Error List tool."><BOOLEAN>True</BOOLEAN></PREF>
+
+	<PREF NAME="tools.testing_tool.execution.processes" DESCRIPTION="Specifies the number of tests being executed simultaneously."><INTEGER>4</INTEGER></PREF>
 	<PREF NAME="tools.testing_tool.new_tests.prepare_routine" DESCRIPTION="Should new manual tests redefine the preparation routine?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.testing_tool.new_tests.clean_routine" DESCRIPTION="Should new manual tests redefine the clean routine?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.testing_tool.autotest.duration" DESCRIPTION="Number of minutes AutoTest executes generated tests."><INTEGER>3</INTEGER></PREF>
@@ -162,6 +167,7 @@
 	<PREF NAME="tools.testing_tool.autotest.use_ddmin" DESCRIPTION="Should ddmin algorithm be used for minimizing found failures?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.testing_tool.autotest.use_slicing" DESCRIPTION="Should slicing be used for minimizing found failures?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.testing_tool.autotest.html_statistics" DESCRIPTION="Should AutoTest generate HTML statistics?"><BOOLEAN>True</BOOLEAN></PREF>
+
 	<PREF NAME="interface.dialogs.confirm_acknowledge_eis_affected_items" DESCRIPTION="Display confirmation dialog for acknowledging affected items in Info tool."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_always_compile_before_executing" DESCRIPTION="Display confirmation dialog on execution."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_always_apply_debugger_profiles_before_closing" DESCRIPTION="Display confirmation dialog to apply profile when closing execution parameters dialog."><BOOLEAN>True</BOOLEAN></PREF>

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Fix for a single class."
 
 deferred class
@@ -14,10 +14,13 @@ feature -- Access
 		deferred
 		end
 
+invariant
+	is_class_writable: not source_class.is_read_only
+
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

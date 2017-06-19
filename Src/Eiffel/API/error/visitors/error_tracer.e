@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Visitor for Eiffel errors. Currently it visists only the node which are defined in the parser library.
 		
@@ -53,6 +53,23 @@ feature -- Display
 			error_not_void: a_error /= Void
 		do
 			trace_with_style (a_text_formatter, a_error, context)
+		end
+
+	trace_error_code (t: TEXT_FORMATTER; e: ERROR)
+			-- Display a short error code of `e` in `t`.
+		require
+			t_attached: attached t
+			e_attached: attached e
+		local
+			n: like {ERROR}.subcode
+		do
+			t.add_error (e, e.code)
+			n := e.subcode
+			if e.subcode /= 0 then
+				t.add_char ('(')
+				t.add_int (n)
+				t.add_char (')')
+			end
 		end
 
 feature {NONE} -- Display
@@ -178,7 +195,6 @@ feature -- Processing
 					process_error (a_value)
 				end
 			elseif type = single_line then
-				print_single_line_error_code (text_formatter, a_value)
 				a_value.initialize_output
 				if a_value.syntax_message /= Void and then not a_value.syntax_message.is_empty then
 					text_formatter.add (a_value.syntax_message)
@@ -223,12 +239,7 @@ feature -- Processing
 				end
 			elseif type = single_line then
 				a_value.initialize_output
-
-				text_formatter.add (a_value.code)
-				text_formatter.add_error (a_value, " Obsolete")
-				text_formatter.add (" syntax used at line ")
-				text_formatter.add_int (a_value.line)
-				text_formatter.add (". ")
+				text_formatter.add ("Obsolete syntax: ")
 				text_formatter.add (a_value.warning_message_32)
 			elseif type = context then
 				if attached {CLASS_C} a_value.associated_class as l_class2 then
@@ -359,7 +370,6 @@ feature {NONE} -- Trace
 			error_not_void: a_error /= Void
 			is_defined: a_error.is_defined
 		do
-			print_single_line_error_code (a_text_formatter, a_error)
 			print_single_line_error_message (a_text_formatter, a_error)
 		end
 
@@ -463,23 +473,6 @@ feature {NONE} -- Line
 		end
 
 feature {NONE} -- Implementation
-
-	print_single_line_error_code (a_text_formatter: TEXT_FORMATTER; a_error: ERROR)
-			-- Display a short error code in `a_text_formatter'.
-		require
-			valid_st: a_text_formatter /= Void
-			error_not_void: a_error /= Void
-		do
-			a_text_formatter.add_error (a_error, a_error.code)
-			if a_error.subcode /= 0 then
-				a_text_formatter.add ("(")
-				a_text_formatter.add_int (a_error.subcode)
-				a_text_formatter.add ("):")
-			else
-				a_text_formatter.add (":")
-			end
-			a_text_formatter.add_space
-		end
 
 	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER; a_error: ERROR)
 			-- Displays single line help in `a_text_formatter'.
@@ -658,7 +651,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

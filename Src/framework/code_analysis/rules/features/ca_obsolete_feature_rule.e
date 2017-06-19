@@ -142,7 +142,13 @@ feature {NONE} -- Rule Checking
 					expires_in := expires_in + feature_call_expiration.value
 					if expires_in <= 0 then
 						create violation.make_formatted
-							(agent {TEXT_FORMATTER}.add (ca_messages.obsolete_feature_title (names.count)),
+							(agent message.format
+								(?,
+								ca_messages.obsolete_feature_title (names.count),
+								<<message.list (create {ITERABLE_FUNCTION [PROCEDURE [TEXT_FORMATTER], FEATURE_NAME]}.make
+								(agent (feature_name: FEATURE_NAME; feature_class: CLASS_C): PROCEDURE [TEXT_FORMATTER] do
+									Result := agent {TEXT_FORMATTER}.add_feature_name (feature_name.visual_name_32, feature_class)
+								end (?, current_context.checking_class), names))>>),
 							agent {TEXT_FORMATTER}.add (ca_messages.obsolete_feature_violation),
 							Current)
 						if expires_in + feature_expiration.value <= 0 then

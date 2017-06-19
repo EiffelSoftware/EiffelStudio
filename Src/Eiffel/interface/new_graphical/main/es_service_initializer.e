@@ -49,6 +49,7 @@ feature -- Services
 			--a_container.register_with_activator ({STATUS_BAR_S}, agent new_status_bar_service, False)
 			a_container.register_with_activator ({WIZARD_ENGINE_S}, agent new_wizard_service, False)
 			a_container.register_with_activator ({ES_CODE_TEMPLATE_CATALOG_S}, agent new_es_code_template_catalog_service, False)
+			a_container.register_with_activator ({CODE_ANALYZER_S [STONE, CA_RULE_VIOLATION]}, agent new_code_analyzer_service, False)
 		end
 
 feature {NONE} -- Factory
@@ -129,6 +130,14 @@ feature {NONE} -- Factory
 			-- <Precursor>
 		do
 			create {ES_DEBUGGER} Result.make
+		end
+
+	new_code_analyzer_service: detachable CODE_ANALYZER_S [STONE, CA_RULE_VIOLATION]
+			-- Creates a code analyzer service.
+		do
+			create {CODE_ANALYZER} Result.make
+		ensure
+			result_is_interface_usable: Result.is_interface_usable
 		end
 
 feature {NONE} -- Registering: Code templates

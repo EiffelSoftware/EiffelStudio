@@ -1,10 +1,11 @@
-note
-	description	: "$EiffelGraphicalCompiler$ window. Ancestor of all windows in $EiffelGraphicalCompiler$."
+﻿note
+	description: "IDE window. Ancestor of all windows in IDE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date: "$Date$"
+	revision: "$Revision$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	revised_by: "Alexander Kogtenkov"
 
 deferred class
 	EB_WINDOW
@@ -434,45 +435,33 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Implementation / Flags
 
 	display_help_contents
 			-- Display the part of the help relative to EiffelStudio.
-		local
-			l_service: SERVICE_CONSUMER [HELP_PROVIDERS_S]
 		do
-			create l_service
-			if l_service.is_service_available then
-				l_service.service.show_help (create {ES_HELP_CUSTOM_CONTEXT}.make ("e34647c8-840e-159d-74b3-07353a27472e", Void))
+			if attached (create {SERVICE_CONSUMER [HELP_PROVIDERS_S]}).service as s then
+				s.show_help (create {ES_HELP_CUSTOM_CONTEXT}.make ("e34647c8-840e-159d-74b3-07353a27472e", Void))
 			end
 		end
 
 	display_how_to_s
 			-- Display the part of the help relative to EiffelStudio.
-		local
-			l_service: SERVICE_CONSUMER [HELP_PROVIDERS_S]
 		do
-			create l_service
-			if l_service.is_service_available then
-				l_service.service.show_help (create {ES_HELP_CUSTOM_CONTEXT}.make ("10d806ce-5b43-26a5-6f0e-23b3b2faa2ed", Void))
+			if attached (create {SERVICE_CONSUMER [HELP_PROVIDERS_S]}).service as s then
+				s.show_help (create {ES_HELP_CUSTOM_CONTEXT}.make ("10d806ce-5b43-26a5-6f0e-23b3b2faa2ed", Void))
 			end
 		end
 
 	display_guided_tour
 			-- Display the guided tour of EiffelStudio.
-		local
-			l_service: SERVICE_CONSUMER [HELP_PROVIDERS_S]
 		do
-			create l_service
-			if l_service.is_service_available then
-				l_service.service.show_help (create {ES_HELP_CUSTOM_CONTEXT}.make ("4d68a136-f7c2-ddd3-d30d-e16ee7692302", Void))
+			if attached (create {SERVICE_CONSUMER [HELP_PROVIDERS_S]}).service as s then
+				s.show_help (create {ES_HELP_CUSTOM_CONTEXT}.make ("4d68a136-f7c2-ddd3-d30d-e16ee7692302", Void))
 			end
 		end
 
 	display_eiffel_introduction
 			-- Display the introduction to Eiffel.
-		local
-			l_service: SERVICE_CONSUMER [HELP_PROVIDERS_S]
 		do
-			create l_service
-			if l_service.is_service_available then
-				l_service.service.show_help (create {ES_HELP_CUSTOM_CONTEXT}.make ("ae6f212e-bdc6-d5f2-972a-1bfee586479e", Void))
+			if attached (create {SERVICE_CONSUMER [HELP_PROVIDERS_S]}).service as s then
+				s.show_help (create {ES_HELP_CUSTOM_CONTEXT}.make ("ae6f212e-bdc6-d5f2-972a-1bfee586479e", Void))
 			end
 		end
 
@@ -511,5 +500,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_WINDOW
-
+end

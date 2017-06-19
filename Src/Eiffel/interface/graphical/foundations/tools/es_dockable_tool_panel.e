@@ -319,7 +319,7 @@ feature {NONE} -- Access
 	frozen session_data: SESSION_I
 			-- Provides access to the environment session data
 		require
-			is_session_manager_available: session_manager.is_service_available
+			is_session_manager_available: attached session_manager.service
 		do
 			Result := session_manager.service.retrieve (False)
 		ensure

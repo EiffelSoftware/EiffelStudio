@@ -834,6 +834,32 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
+
+				-- Separator -------------------------------------------------
+			l_project_menu.extend (create {EV_MENU_SEPARATOR})
+
+				-- Analyze
+			l_command_menu_item := develop_window.analyze_cmd.new_menu_item
+			auto_recycle (l_command_menu_item)
+			l_project_menu.extend (l_command_menu_item)
+
+			l_command_menu_item := develop_window.analyze_editor_cmd.new_menu_item
+			auto_recycle (l_command_menu_item)
+			l_project_menu.extend (l_command_menu_item)
+
+			l_command_menu_item := develop_window.analyze_parent_cmd.new_menu_item
+			auto_recycle (l_command_menu_item)
+			l_project_menu.extend (l_command_menu_item)
+
+			l_command_menu_item := develop_window.analyze_target_cmd.new_menu_item
+			auto_recycle (l_command_menu_item)
+			l_project_menu.extend (l_command_menu_item)
+
+			l_command_menu_item := develop_window.analyzer_preferences_cmd.new_menu_item
+			auto_recycle (l_command_menu_item)
+			l_project_menu.extend (l_command_menu_item)
+
+
 				-- Separator -------------------------------------------------
 			l_project_menu.extend (create {EV_MENU_SEPARATOR})
 
@@ -1179,7 +1205,6 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				insert_show_tool_menu_item (Result, {ES_TESTING_TOOL})
 				insert_show_tool_menu_item (Result, {ES_TESTING_RESULTS_TOOL})
 			end
-			insert_show_tool_menu_item (Result, {ES_CODE_ANALYSIS_TOOL})
 		end
 
 	build_window_menu

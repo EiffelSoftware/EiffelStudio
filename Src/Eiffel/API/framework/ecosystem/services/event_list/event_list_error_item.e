@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		An implementation of an event list service ({EVENT_LIST_SERVICE_I}) item for Eiffel compiler {ERROR} objects.
 	]"

@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		An error display for the graphical version of EiffelStudio, used in combination with the event list service {EVENT_LIST_SERVICE_S}
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$: "
+	revision: "$Revision$"
 
 class
 	ES_ERROR_DISPLAYER
@@ -131,21 +131,19 @@ feature -- Basic operations
 	clear_display
 			-- <Precursor>
 		local
-			l_service: detachable EVENT_LIST_S
 			l_context_cookies: like {EVENT_LIST_S}.context_cookies
 		do
-			if event_list.is_service_available then
-				l_service := event_list.service
-				l_context_cookies := l_service.context_cookies
+			if attached event_list.service as service and then service.is_interface_usable then
+				l_context_cookies := service.context_cookies
 				if
 					(l_context_cookies.count = 1 and then (l_context_cookies.has (warning_context) or else l_context_cookies.has (error_context))) or else
 					(l_context_cookies.count = 2 and then (l_context_cookies.has (warning_context) and then l_context_cookies.has (error_context)))
 				then
 						-- If the events contains and only contains error or warning events,
 						-- publish clean up event. Do this to optimize cleaning up the error list tool.
-					l_service.lock
-					l_service.clean_up_event_items
-					l_service.unlock
+					service.lock
+					service.clean_up_event_items
+					service.unlock
 				elseif not l_context_cookies.is_empty then
 					Precursor
 				end
@@ -161,14 +159,14 @@ feature -- Basic operations
 		require
 			a_cookie_attached: a_cookie /= Void
 			not_a_cookie_is_null: not a_cookie.is_null
-		local
-			l_service: detachable EVENT_LIST_S
 		do
-			if event_list.is_service_available then
-				l_service := event_list.service
-				l_service.lock
-				l_service.prune_event_items (a_cookie)
-				l_service.unlock
+			if
+				attached event_list.service as service and then
+				service.is_interface_usable
+			then
+				service.lock
+				service.prune_event_items (a_cookie)
+				service.unlock
 			end
 		end
 
@@ -186,11 +184,11 @@ feature -- Basic operations
 			not_a_warning_cookie_is_null: not a_warning_cookie.is_null
 			a_handler_attached: a_handler /= Void
 		local
-			l_service: detachable EVENT_LIST_S
+			service: EVENT_LIST_S
 		do
-			if event_list.is_service_available then
-				l_service := event_list.service
-				l_service.lock
+			service := event_list.service
+			if attached service and then service.is_interface_usable then
+				service.lock
 			end
 
 				-- For EiffelStudio, we report the errors first to ensure they are display on the top of the
@@ -202,8 +200,8 @@ feature -- Basic operations
 				trace_warnings (a_category, a_warning_cookie, a_handler)
 			end
 
-			if l_service /= Void and then l_service.is_interface_usable then
-				l_service.unlock
+			if attached service and then service.is_interface_usable then
+				service.unlock
 			end
 		ensure
 			error_list_unmoved: a_handler.error_list.cursor ~ old a_handler.error_list.cursor
@@ -222,14 +220,14 @@ feature -- Basic operations
 			a_handler_attached: a_handler /= Void
 			not_a_handler_error_list_is_empty: not a_handler.error_list.is_empty
 		local
-			l_service: detachable EVENT_LIST_S
+			service: EVENT_LIST_S
 			l_errors: LIST [ERROR]
 			l_cursor: CURSOR
 			l_locked: BOOLEAN
 		do
-			if event_list.is_service_available then
-				l_service := event_list.service
-				l_service.lock
+			service := event_list.service
+			if attached service and then service.is_interface_usable then
+				service.lock
 				l_locked := True
 			end
 
@@ -237,21 +235,21 @@ feature -- Basic operations
 			l_cursor := l_errors.cursor
 			from l_errors.start until l_errors.after loop
 				if attached l_errors.item as l_item then
-					extend_event_item (l_service, a_cookie, create_error_event_item (a_category, l_item))
+					extend_event_item (service, a_cookie, create_error_event_item (a_category, l_item))
 				end
 				l_errors.forth
 			end
 			l_errors.go_to (l_cursor)
 
-			if l_service /= Void and then l_service.is_interface_usable then
+			if attached service and then service.is_interface_usable then
 				l_locked := False
-				l_service.unlock
+				service.unlock
 			end
 		ensure
 			error_list_unmoved: a_handler.error_list.cursor ~ old a_handler.error_list.cursor
 		rescue
-			if l_locked and then l_service /= Void and then l_service.is_interface_usable then
-				l_service.unlock
+			if l_locked and then service /= Void and then service.is_interface_usable then
+				service.unlock
 			end
 		end
 
@@ -267,14 +265,14 @@ feature -- Basic operations
 			a_handler_attached: a_handler /= Void
 			not_a_handler_warning_list_is_empty: not a_handler.warning_list.is_empty
 		local
-			l_service: detachable EVENT_LIST_S
+			service: EVENT_LIST_S
 			l_warnings: LIST [ERROR]
 			l_cursor: CURSOR
 			l_locked: BOOLEAN
 		do
-			if event_list.is_service_available then
-				l_service := event_list.service
-				l_service.lock
+			service := event_list.service
+			if attached service and then service.is_interface_usable then
+				service.lock
 				l_locked := True
 			end
 
@@ -282,40 +280,40 @@ feature -- Basic operations
 			l_cursor := l_warnings.cursor
 			from l_warnings.start until l_warnings.after loop
 				if attached l_warnings.item as l_item then
-					extend_event_item (l_service, a_cookie, create_warning_event_item (a_category, l_item))
+					extend_event_item (service, a_cookie, create_warning_event_item (a_category, l_item))
 				end
 				l_warnings.forth
 			end
 			l_warnings.go_to (l_cursor)
 
-			if l_service /= Void and then l_service.is_interface_usable then
+			if attached service and then service.is_interface_usable then
 				l_locked := False
-				l_service.unlock
+				service.unlock
 			end
 		ensure
 			warning_list_unmoved: a_handler.warning_list.cursor ~ old a_handler.warning_list.cursor
 		rescue
-			if l_locked and then l_service /= Void and then l_service.is_interface_usable then
-				l_service.unlock
+			if l_locked and then service /= Void and then service.is_interface_usable then
+				service.unlock
 			end
 		end
 
 	trace_error (a_category: NATURAL_8; a_cookie: UUID; a_error: ERROR)
-			-- Traces all warnings in the supplied error handler.
+			-- Traces a specified error.
 			--
 			-- `a_category': An error item category, see {ENVIRONMENT_CATEGORIES}.
 			-- `a_cookie': A context identifier used to manage warnings items.
-			-- `a_handler': An error handler to produce warnings from.
+			-- `a_error': An error to report.
 		require
 			a_cookie_attached: a_cookie /= Void
 			not_a_cookie_is_null: not a_cookie.is_null
 			a_error_attached: a_error /= Void
 		local
-			l_service: detachable EVENT_LIST_S
+			l_service: EVENT_LIST_S
 			l_locked: BOOLEAN
 		do
-			if event_list.is_service_available then
-				l_service := event_list.service
+			l_service := event_list.service
+			if attached l_service and then l_service.is_interface_usable then
 				l_service.lock
 				l_locked := True
 				extend_event_item (l_service, a_cookie, create_error_event_item (a_category, a_error))
@@ -323,17 +321,17 @@ feature -- Basic operations
 				l_service.unlock
 			end
 		rescue
-			if l_locked and then l_service /= Void and then l_service.is_interface_usable then
+			if l_locked and then attached l_service and then l_service.is_interface_usable then
 				l_service.unlock
 			end
 		end
 
 	trace_warning (a_category: NATURAL_8; a_cookie: UUID; a_warning: WARNING)
-			-- Traces all warnings in the supplied error handler.
+			-- Traces a specified warning.
 			--
 			-- `a_category': An error item category, see {ENVIRONMENT_CATEGORIES}.
 			-- `a_cookie': A context identifier used to manage warnings items.
-			-- `a_handler': An error handler to produce warnings from.
+			-- `a_warning': A warning to report.
 		require
 			a_cookie_attached: a_cookie /= Void
 			not_a_cookie_is_null: not a_cookie.is_null
@@ -342,8 +340,8 @@ feature -- Basic operations
 			l_service: detachable EVENT_LIST_S
 			l_locked: BOOLEAN
 		do
-			if event_list.is_service_available then
-				l_service := event_list.service
+			l_service := event_list.service
+			if attached l_service then
 				l_service.lock
 				l_locked := True
 				extend_event_item (l_service, a_cookie, create_warning_event_item (a_category, a_warning))

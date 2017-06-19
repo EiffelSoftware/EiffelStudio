@@ -1,6 +1,7 @@
-note
+﻿note
 	description: "Event representing that no rule violation event has occurred."
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,9 +19,9 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-
+			category := {ENVIRONMENT_CATEGORIES}.static_analysis
+			priority := {PRIORITY_LEVELS}.normal
 		end
-
 
 feature -- Access
 
@@ -33,7 +34,7 @@ feature -- Access
 	frozen type: NATURAL_8
 			-- <Precursor>
 		once
-			Result := {EVENT_LIST_ITEM_TYPES}.unknown
+			Result := {EVENT_LIST_ITEM_TYPES}.error
 		end
 
 	frozen category: NATURAL_8

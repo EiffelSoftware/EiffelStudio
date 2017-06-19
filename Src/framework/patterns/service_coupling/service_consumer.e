@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "[
 		A utility for clients accessing a service (globally or locally via a service provider) and determining a service's existence.
 	]"
 	doc: "wiki://Service Consumers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	SERVICE_CONSUMER [G -> SERVICE_I]
@@ -44,14 +44,10 @@ feature -- Access
 
 	service: detachable G
 			-- Access to the service
-		local
-			l_result: like internal_service
 		do
-			l_result := internal_service
-			if l_result /= Void then
-				Result := l_result
-			elseif attached {G} service_provider.service ({detachable G}) as l_service then
-				Result := l_service
+			Result := internal_service
+			if not attached Result then
+				Result := ({G}) / service_provider.service ({G})
 				internal_service := Result
 			end
 		end
@@ -96,7 +92,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

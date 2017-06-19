@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_rules_checker: attached CA_ALL_RULES_CHECKER; a_rules: attached LINKED_LIST [attached CA_RULE]; a_classes: attached LINKED_SET [CLASS_C]; a_completed_action: attached PROCEDURE [ITERABLE [TUPLE [detachable EXCEPTION, CLASS_C]]])
+	make (a_rules_checker: CA_ALL_RULES_CHECKER; a_rules: LINKED_LIST [CA_RULE]; a_classes: LINKED_SET [CLASS_C]; a_completed_action: PROCEDURE [detachable ITERABLE [TUPLE [detachable EXCEPTION, CLASS_C]]])
 			-- Initializes `Current'. `a_rules_checker' will be used for checking standard rules. All classes from `a_classes'
 			-- will be analyzed by all rules from `a_rules'. `a_completed_action' will be called as soon as the analysis is done.
 		do
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			if a_classes.is_empty then
 					-- Make sure `completed_action' is called even when no classes
 					-- have been added.
-				a_completed_action.call ([Void])
+				a_completed_action ([Void])
 			else -- Initialization.
 				rules_checker := a_rules_checker
 				rules := a_rules
@@ -120,7 +120,7 @@ feature -- From ROTA
 				classes.forth
 				has_next_step := not classes.after
 				if not has_next_step then
-					completed_action.call ([exceptions])
+					completed_action (exceptions)
 				end
 			end
 		rescue
@@ -133,7 +133,7 @@ feature -- From ROTA
 			classes.forth
 			has_next_step := not classes.after
 			if not has_next_step then
-				completed_action.call ([exceptions])
+				completed_action (exceptions)
 			end
 			is_retried := True
 			retry

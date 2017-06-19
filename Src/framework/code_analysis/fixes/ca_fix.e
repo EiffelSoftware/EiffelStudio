@@ -1,6 +1,7 @@
-note
+﻿note
 	description: "Represents a fix for a rule violation."
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,6 +9,8 @@ class
 	CA_FIX
 
 inherit
+	FIX_CLASS
+
 	AST_ROUNDTRIP_ITERATOR
 
 	CA_SHARED_NAMES
@@ -35,6 +38,14 @@ feature {NONE} -- Implementation
 			Result := Match_list_server.item (class_to_change.class_id)
 		end
 
+feature -- Access
+
+	source_class: CLASS_I
+			-- <Precursor>
+		do
+			Result := class_to_change.lace_class
+		end
+
 feature -- Basic Operations
 
 	execute (a_class: attached CLASS_AS)
@@ -60,5 +71,23 @@ feature -- Properties
 
 	applied: BOOLEAN
 			-- Has the fix already been applied?
+
+feature -- Output
+
+	append_name (t: TEXT_FORMATTER)
+			-- <Precursor>
+		do
+				-- TODO: Implement  in descendants with clickable and remove this feature from this class.
+			t.add (ca_messages.fix)
+			t.add (caption)
+		end
+
+	append_description (t: TEXT_FORMATTER)
+			-- <Precursor>
+		do
+				-- TODO: Implement  in descendants with clickable and remove this feature from this class.
+			t.add (ca_messages.fix)
+			t.add (caption)
+		end
 
 end

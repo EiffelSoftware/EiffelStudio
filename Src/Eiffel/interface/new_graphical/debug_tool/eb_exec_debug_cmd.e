@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Set execution format so that breakable point %
@@ -144,6 +144,11 @@ feature -- Access
 			a_item.set_menu_function (agent drop_down_menu)
 		end
 
+feature -- Access
+
+	name: STRING = "Exec_debug"
+			-- <Precursor>
+
 feature {NONE} -- Attributes
 
 	is_launched: BOOLEAN
@@ -160,9 +165,6 @@ feature {NONE} -- Attributes
 		do
 			Result := pixmaps.icon_pixmaps.debug_run_icon_buffer
 		end
-
-	name: STRING = "Exec_debug"
-			-- Name of the command.
 
 	tooltext: STRING_GENERAL
 			-- Default text displayed in toolbar button
@@ -286,7 +288,7 @@ feature {NONE} -- Attributes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -317,4 +319,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_EXEC_NO_STOP_CMD
+end

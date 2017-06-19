@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Scan the override clusters for changes and recompile."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,10 +41,12 @@ feature {NONE} -- Implementation
 			eiffel_project.override_scan
 		end
 
-feature {NONE} -- Attributes
+feature -- Access
 
 	name: STRING = "Override_scan"
 			-- Name of the command.
+
+feature {NONE} -- Attributes
 
 	tooltext: STRING_GENERAL
 			-- Text for the toolbar button.
@@ -71,7 +73,7 @@ feature {NONE} -- Attributes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -416,6 +416,17 @@ feature {NONE} -- Execution
 			end
 		end
 
+feature -- Access
+
+	name: STRING
+			-- <Precursor>
+		do
+			Result := command_name
+		end
+
+	command_name: STRING = "Melt_project"
+			-- Value for `name` used in this class.
+
 feature {NONE} -- Implementation
 
 	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_DUAL_POPUP_BUTTON
@@ -501,13 +512,6 @@ feature {NONE} -- Implementation
 			-- Description for the command.
 		do
 			Result := Interface_names.f_Melt
-		end
-
-	name: STRING
-			-- Name of the command. Used to store the command in the
-			-- preferences.
-		do
-			Result := "Melt_project"
 		end
 
 	stop_execution: ANY

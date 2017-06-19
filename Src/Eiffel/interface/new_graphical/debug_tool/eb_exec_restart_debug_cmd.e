@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Set execution format so that breakable point %
@@ -153,6 +153,11 @@ feature {NONE} -- Implementation
 
 	kill_requested: BOOLEAN
 
+feature -- Access
+
+	name: STRING = "Exec_restart_debug"
+			-- <Precursor>
+
 feature {NONE} -- Attributes
 
 	pixmap: EV_PIXMAP
@@ -166,9 +171,6 @@ feature {NONE} -- Attributes
 		do
 			Result := pixmaps.icon_pixmaps.debug_restart_icon_buffer
 		end
-
-	name: STRING = "Exec_restart_debug"
-			-- Name of the command.
 
 	tooltext: STRING_GENERAL
 			-- Default text displayed in toolbar button
@@ -189,7 +191,7 @@ feature {NONE} -- Attributes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -220,4 +222,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_EXEC_NO_STOP_CMD
+end

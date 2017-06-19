@@ -1,8 +1,8 @@
-note
-	description	: "Command to finalize the Eiffel code."
+﻿note
+	description: "Command to finalize the Eiffel code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
+	date: "$Date$"
 	revision	: "$Revision$"
 
 class
@@ -121,6 +121,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature -- Access
+
+	name: STRING = "Finalize_project"
+			-- <Precursor>
+
 feature {NONE} -- Implementation
 
 	description: STRING_GENERAL
@@ -159,12 +164,8 @@ feature {NONE} -- Implementation
 			Result := Interface_names.b_Finalize
 		end
 
-	name: STRING = "Finalize_project";
-			-- Name of the command. Used to store the command in the
-			-- preferences.
-
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -195,4 +196,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_FINALIZE_PROJECT_COMMAND
+end

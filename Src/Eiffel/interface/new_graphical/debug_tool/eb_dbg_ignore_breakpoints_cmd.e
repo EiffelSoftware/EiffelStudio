@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description: "Command to toggle ignore breakpoints status."
 	legal: "See notice at end of class."
@@ -77,6 +77,11 @@ feature -- Change text
 			Precursor (b)
 		end
 
+feature -- Access
+
+	name: STRING = "Ignore_breakpoints_cmd"
+			-- <Precursor>
+
 feature {NONE} -- Attributes
 
 	description: STRING_GENERAL
@@ -104,9 +109,6 @@ feature {NONE} -- Attributes
 				Result := Interface_names.b_Dbg_ignore_breakpoints
 			end
 		end
-
-	name: STRING = "Ignore_breakpoints_cmd"
-			-- Name of the command.
 
 	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
@@ -139,7 +141,7 @@ feature {NONE} -- Attributes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Command to stop the execution of the debugged application."
@@ -45,6 +45,11 @@ feature -- Formatting
 			end
 		end
 
+feature -- Access
+
+	name: STRING = "Exec_quit"
+			-- <Precursor>
+
 feature {NONE} -- Attributes
 
 	description: STRING_GENERAL
@@ -64,9 +69,6 @@ feature {NONE} -- Attributes
 		do
 			Result := Interface_names.b_Exec_kill
 		end
-
-	name: STRING = "Exec_quit"
-			-- Name of the command.
 
 	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
@@ -111,7 +113,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -142,4 +144,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_EXEC_QUIT_CMD
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Command to force the environment to stay in debug maode"
@@ -86,6 +86,11 @@ feature -- Status change
 			set_select (is_selected)
 		end
 
+feature -- Access
+
+	name: STRING = "Force_debug_mode"
+			-- <Precursor>
+
 feature {NONE} -- Properties
 
 	description: STRING_GENERAL
@@ -106,9 +111,6 @@ feature {NONE} -- Properties
 			Result := Interface_names.b_Force_execution_mode
 		end
 
-	name: STRING = "Force_debug_mode"
-			-- Name of the command.
-
 	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
 		do
@@ -128,7 +130,7 @@ feature {NONE} -- Properties
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

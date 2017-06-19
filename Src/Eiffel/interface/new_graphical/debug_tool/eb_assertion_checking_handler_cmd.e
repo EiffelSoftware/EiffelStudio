@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Command to manage exception handling."
@@ -79,6 +79,11 @@ feature -- Execution
 			Result := assertion_checking_changed
 		end
 
+feature -- Access
+
+	name: STRING = "Assertion_checking_handler"
+			-- <Precursor>
+
 feature {NONE} -- Attributes
 
 	description: STRING_GENERAL
@@ -102,9 +107,6 @@ feature {NONE} -- Attributes
 				Result := Interface_names.b_Dbg_assertion_checking_disable
 			end
 		end
-
-	name: STRING = "Assertion_checking_handler"
-			-- Name of the command.
 
 	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
@@ -137,7 +139,7 @@ feature {NONE} -- Attributes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

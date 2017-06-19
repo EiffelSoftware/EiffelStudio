@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Shared object that manages all debugging actions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -294,6 +294,11 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (override_scan_cmd)
 			toolbarable_commands.extend (discover_melt_cmd)
 
+			toolbarable_commands.extend (analyze_cmd)
+			toolbarable_commands.extend (analyze_editor_cmd)
+			toolbarable_commands.extend (analyze_parent_cmd)
+			toolbarable_commands.extend (analyze_target_cmd)
+			toolbarable_commands.extend (analyzer_preferences_cmd)
 
 				-- command not included in toolbars
 				-- however let's initialize them for safety
@@ -2625,4 +2630,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_DEBUGGER_MANAGER
+end

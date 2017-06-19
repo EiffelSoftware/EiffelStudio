@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Set execution format so that each breakable points %
@@ -37,6 +37,11 @@ feature -- Initialization
 			accelerator.actions.extend (agent execute)
 		end
 
+feature -- Access
+
+	name: STRING = "Exec_step"
+			-- <Precursor>
+
 feature {NONE} -- Attributes
 
 	pixmap: EV_PIXMAP
@@ -50,9 +55,6 @@ feature {NONE} -- Attributes
 		do
 			Result := pixmaps.icon_pixmaps.debug_step_over_icon_buffer
 		end
-
-	name: STRING = "Exec_step"
-			-- Name of the command.
 
 	internal_tooltip: STRING_GENERAL
 			-- Tooltip displayed on `Current's buttons.
@@ -104,4 +106,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_EXEC_STEP_CMD
+end

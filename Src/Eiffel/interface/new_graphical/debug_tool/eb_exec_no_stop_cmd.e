@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Set execution format so that no breakable point %
@@ -49,6 +49,11 @@ feature -- Execution
 			end
 		end
 
+feature -- Access
+
+	name: STRING = "Exec_no_stop"
+			-- <Precursor>
+
 feature {NONE} -- Attributes
 
 	pixmap: EV_PIXMAP
@@ -62,9 +67,6 @@ feature {NONE} -- Attributes
 		do
 			Result := pixmaps.icon_pixmaps.debug_run_without_breakpoint_icon_buffer
 		end
-
-	name: STRING = "Exec_no_stop"
-			-- Name of the command.
 
 	internal_tooltip: STRING_GENERAL
 			-- Tooltip displayed on `Current's buttons.
@@ -85,7 +87,7 @@ feature {NONE} -- Attributes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -116,5 +118,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_EXEC_NO_STOP_CMD
-
+end

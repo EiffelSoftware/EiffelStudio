@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Command to freeze the Eiffel code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -69,6 +69,11 @@ feature {NONE} -- Implementation
 			Eiffel_project.freeze
 		end
 
+feature -- Access
+
+	name: STRING = "Freeze_project"
+			-- <Precursor>
+
 feature {NONE} -- Implementation
 
 	description: STRING_GENERAL
@@ -101,12 +106,8 @@ feature {NONE} -- Implementation
 			Result := Interface_names.b_Freeze
 		end
 
-	name: STRING = "Freeze_project";
-			-- Name of the command. Used to store the command in the
-			-- preferences.
-
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -137,4 +138,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_FREEZE_PROJECT_COMMAND
+end

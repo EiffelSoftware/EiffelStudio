@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Command to open system configuration tool window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -209,13 +209,15 @@ feature {NONE} -- Actions
 			Result := l_stone /= Void and then l_stone.group.is_library
 		end
 
+feature -- Access
+
+	name: STRING = "System_tool"
+			-- <Precursor>
+
 feature {NONE} -- Implementation
 
 	configuration_window: CONFIGURATION_WINDOW
 			-- Configuration window, as a class attribute in order for it to not get collecte by the gc.
-
-	name: STRING = "System_tool"
-			-- Name of command. Used to store command in preferences
 
 	pixmap: EV_PIXMAP
 			-- Pixmap representing command.
@@ -298,7 +300,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Command to display system information in output tool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -75,10 +75,12 @@ feature -- Basic operations
 			end
 		end
 
-feature {NONE} -- Implementation
+feature -- Access
 
 	name: STRING = "System_info"
-			-- Name of command. Used to store command in preferences
+			-- <Precursor>
+
+feature {NONE} -- Implementation
 
 	pixmap: EV_PIXMAP
 			-- Pixmap representing command.
@@ -116,7 +118,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

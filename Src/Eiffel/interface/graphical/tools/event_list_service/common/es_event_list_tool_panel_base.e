@@ -1,12 +1,12 @@
-note
-	description	: "[
+﻿note
+	description: "[
 		An EiffelStudio base implementation for all tools implementing a derviation of an event list tool. The tool is based on the 
 		ecosystem event list service {EVENT_LIST_S}.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	ES_EVENT_LIST_TOOL_PANEL_BASE
@@ -41,8 +41,8 @@ feature {NONE} -- Initialization
 			Precursor {ES_DOCKABLE_TOOL_PANEL}
 
 				-- Connect the observer to the event list service.
-			if event_list.is_service_available then
-				event_list.service.event_list_connection.connect_events (Current)
+			if attached event_list.service as s then
+				s.event_list_connection.connect_events (Current)
 			end
 		end
 
@@ -84,10 +84,10 @@ feature {NONE} -- Initialization
 
 			Precursor
 
-			if event_list.is_service_available and then event_list.service.is_locked then
+			if attached event_list.service as s and then s.is_locked then
 					-- If the service has already performed a lock, but the UI was not initialized then we need
 					-- to call the lock handler now.
-				on_locked (event_list.service)
+				on_locked (s)
 			end
 
 			if item_count = 0 then
@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 			end
 			update_content_applicable_widgets (item_count > 0)
 
-			if not event_list.is_service_available then
+			if not attached event_list.service then
 					-- The event list service is not available to disable the tool.
 				widget.disable_sensitive
 			end
@@ -106,14 +106,12 @@ feature {NONE} -- Clean up
 
 	internal_recycle
 			-- Recycle tool.
-		local
-			l_event_list: EVENT_LIST_S
 		do
-			if event_list.is_service_available then
-				l_event_list := event_list.service
-				if l_event_list.event_list_connection.is_connected (Current) then
-					l_event_list.event_list_connection.disconnect_events (Current)
-				end
+			if
+				attached event_list.service as l_event_list and then
+				l_event_list.event_list_connection.is_connected (Current)
+			then
+				l_event_list.event_list_connection.disconnect_events (Current)
 			end
 			Precursor
 		end
@@ -320,18 +318,13 @@ feature {NONE} -- Query
 			a_item_attached: a_item /= Void
 			not_a_item_is_destroyed: not a_item.is_destroyed
 			a_item_is_parented: a_item.is_parented
-		local
-			l_label_item: EV_GRID_LABEL_ITEM
-			l_string: STRING_GENERAL
 		do
-			l_label_item ?= a_item
-			if l_label_item /= Void then
+			if attached {EV_GRID_LABEL_ITEM} a_item as l_label_item then
 				Result := l_label_item.text
 			end
 			if Result = Void or else Result.is_empty then
 					-- There might be string information in the item data, use that.
-				l_string ?= a_item.data
-				if l_string /= Void then
+				if attached {STRING_GENERAL} a_item.data as l_string then
 					Result := l_string.to_string_32
 				end
 			end
@@ -400,8 +393,13 @@ feature {NONE} -- Query
 				i = 0
 			loop
 				l_row := l_grid.row (i)
-				if l_row.data = a_event_item and l_row.subrow_count > 0 then
-					Result := l_row
+				if l_row.data = a_event_item then
+						-- Pick a parent row if this is a subrow with `a_event_item`.
+					Result := l_row.parent_row
+					if not attached Result then
+						Result := l_row
+					end
+						-- Stop looking for `a_event_item`.
 					i := 0
 				else
 					i := i - 1
@@ -471,7 +469,6 @@ feature {NONE} -- Basic operations
 			is_initialized: is_initialized
 			is_event_list_synchronized_on_initialized: is_event_list_synchronized_on_initialized
 		local
-			l_service: EVENT_LIST_S
 			l_items: DS_BILINEAR [EVENT_LIST_ITEM_I]
 			l_cursor: DS_BILINEAR_CURSOR [EVENT_LIST_ITEM_I]
 			l_applicable_items: DS_ARRAYED_LIST [EVENT_LIST_ITEM_I]
@@ -479,10 +476,9 @@ feature {NONE} -- Basic operations
 			l_locked: BOOLEAN
 			l_count, i: INTEGER
 		do
-			if event_list.is_service_available then
+			if attached event_list.service as l_service then
 					-- Fake all events to synchronize what is in the event list with the Current panel.
 				check no_rows_added: grid_events.row_count = 0 end
-				l_service := event_list.service
 				l_items := l_service.all_items
 
 				if not l_items.is_empty then
@@ -569,7 +565,6 @@ feature {NONE} -- Basic operations: Navigation
 			l_index: INTEGER
 			l_stop_index: INTEGER
 			l_row: EV_GRID_ROW
-			l_item: EVENT_LIST_ITEM_I
 			l_found: BOOLEAN
 			l_valid_rows: BOOLEAN
 		do
@@ -640,9 +635,12 @@ feature {NONE} -- Basic operations: Navigation
 						check
 							l_row_is_root: l_row.parent_row_root = Void or l_row.parent_row_root = l_row
 						end
-						if l_row.is_show_requested and l_row.is_selectable then
-							l_item ?= l_row.data
-							l_found := l_item /= Void and then a_query_action.item ([l_item])
+						if
+							l_row.is_show_requested and
+							l_row.is_selectable and
+							attached {EVENT_LIST_ITEM_I} l_row.data as l_item
+						then
+							l_found := a_query_action.item ([l_item])
 						end
 
 						if not l_found then
@@ -688,7 +686,6 @@ feature {NONE} -- Basic operations: Navigation
 			l_index: INTEGER
 			l_stop_index: INTEGER
 			l_row: EV_GRID_ROW
-			l_item: EVENT_LIST_ITEM_I
 			l_found: BOOLEAN
 			l_valid_rows: BOOLEAN
 		do
@@ -773,9 +770,12 @@ feature {NONE} -- Basic operations: Navigation
 						check
 							l_row_is_root: l_row.parent_row_root = Void or l_row.parent_row_root = l_row
 						end
-						if l_row.is_show_requested and l_row.is_selectable then
-							l_item ?= l_row.data
-							l_found := l_item /= Void and then a_query_action.item ([l_item])
+						if
+							l_row.is_show_requested and
+							l_row.is_selectable and
+							attached {EVENT_LIST_ITEM_I} l_row.data as l_item
+						then
+							l_found := a_query_action.item ([l_item])
 						end
 
 						if not l_found then
@@ -842,8 +842,8 @@ feature {NONE} -- Removal
 			a_row_attached: a_row /= Void
 			a_row_parented_to_grid_events: a_row.parent = grid_events
 		do
-			if event_list.is_service_available and then attached {EVENT_LIST_ITEM_I} a_row.data as l_item then
-				event_list.service.prune_event_item (l_item)
+			if attached event_list.service as s and then attached {EVENT_LIST_ITEM_I} a_row.data as l_item then
+				s.prune_event_item (l_item)
 			end
 		end
 
@@ -857,7 +857,9 @@ feature {NONE} -- Removal
 		do
 			l_selected := grid_events.selected_rows
 			if l_selected /= Void and then not l_selected.is_empty then
+				grid_events.lock_update
 				l_selected.do_all (agent remove_event_list_row)
+				grid_events.unlock_update
 			end
 		end
 
@@ -998,9 +1000,11 @@ feature {NONE} -- Sort handling
 			create l_event_items.make (l_rows.count)
 			from l_rows.start until l_rows.after loop
 				l_row := l_rows.item_for_iteration
-				l_event_item ?= l_row.data
-				check l_event_item_attached: l_event_item /= Void end
-				l_event_items.force ([l_event_item, l_row.is_expanded])
+				if attached {EVENT_LIST_ITEM_I} l_row.data as e then
+					l_event_items.force ([e, l_row.is_expanded])
+				else
+					check is_event_list_item: False end
+				end
 				l_rows.forth
 			end
 
@@ -1063,7 +1067,6 @@ feature {EVENT_LIST_OBSERVER} -- Events handlers
 			-- <Precursor>
 		local
 			l_add: BOOLEAN
-			l_event_item: EVENT_LIST_ITEM_I
 			l_grid: like grid_events
 			l_row: EV_GRID_ROW
 			l_count: INTEGER
@@ -1076,12 +1079,12 @@ feature {EVENT_LIST_OBSERVER} -- Events handlers
 
 				l_add := maximum_item_count = 0 or else item_count < maximum_item_count
 				if not l_add and then has_maximum_list_length and then l_count > 0 then
-						-- Remove top grid item
-					l_event_item ?= l_grid.row (1).data
-					check
-						l_event_attached: l_event_item /= Void
+						-- Remove top grid item.
+					if attached {EVENT_LIST_ITEM_I} l_grid.row (1).data as l_event_item then
+						on_event_item_removed (a_sender, l_event_item)
+					else
+						check l_event_attached: False end
 					end
-					on_event_item_removed (a_sender, l_event_item)
 				end
 
 				check
@@ -1323,7 +1326,7 @@ invariant
 	grid_events_attached: (is_initialized and is_interface_usable) implies attached grid_events
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

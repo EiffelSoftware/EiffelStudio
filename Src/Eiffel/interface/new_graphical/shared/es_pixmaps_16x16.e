@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Automatically generated class for EiffelStudio 16x16 icons.
 	]"
@@ -2480,6 +2480,146 @@ feature -- Icons
 			Result := named_icon_buffer (library_iron_library_name)
 		ensure
 			library_iron_library_icon_buffer_attached: Result /= Void
+		end
+
+	frozen analyzer_analyze_icon: EV_PIXMAP
+			-- Access to 'analyze' pixmap.
+		require
+			has_named_icon: has_named_icon (analyzer_analyze_name)
+		once
+			Result := named_icon (analyzer_analyze_name)
+		ensure
+			analyzer_analyze_icon_attached: Result /= Void
+		end
+
+	frozen analyzer_analyze_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'analyze' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (analyzer_analyze_name)
+		once
+			Result := named_icon_buffer (analyzer_analyze_name)
+		ensure
+			analyzer_analyze_icon_buffer_attached: Result /= Void
+		end
+
+	frozen analyzer_analyze_class_icon: EV_PIXMAP
+			-- Access to 'analyze class' pixmap.
+		require
+			has_named_icon: has_named_icon (analyzer_analyze_class_name)
+		once
+			Result := named_icon (analyzer_analyze_class_name)
+		ensure
+			analyzer_analyze_class_icon_attached: Result /= Void
+		end
+
+	frozen analyzer_analyze_class_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'analyze class' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (analyzer_analyze_class_name)
+		once
+			Result := named_icon_buffer (analyzer_analyze_class_name)
+		ensure
+			analyzer_analyze_class_icon_buffer_attached: Result /= Void
+		end
+
+	frozen analyzer_analyze_editor_icon: EV_PIXMAP
+			-- Access to 'analyze editor' pixmap.
+		require
+			has_named_icon: has_named_icon (analyzer_analyze_editor_name)
+		once
+			Result := named_icon (analyzer_analyze_editor_name)
+		ensure
+			analyzer_analyze_editor_icon_attached: Result /= Void
+		end
+
+	frozen analyzer_analyze_editor_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'analyze editor' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (analyzer_analyze_editor_name)
+		once
+			Result := named_icon_buffer (analyzer_analyze_editor_name)
+		ensure
+			analyzer_analyze_editor_icon_buffer_attached: Result /= Void
+		end
+
+	frozen analyzer_analyze_cluster_icon: EV_PIXMAP
+			-- Access to 'analyze cluster' pixmap.
+		require
+			has_named_icon: has_named_icon (analyzer_analyze_cluster_name)
+		once
+			Result := named_icon (analyzer_analyze_cluster_name)
+		ensure
+			analyzer_analyze_cluster_icon_attached: Result /= Void
+		end
+
+	frozen analyzer_analyze_cluster_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'analyze cluster' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (analyzer_analyze_cluster_name)
+		once
+			Result := named_icon_buffer (analyzer_analyze_cluster_name)
+		ensure
+			analyzer_analyze_cluster_icon_buffer_attached: Result /= Void
+		end
+
+	frozen analyzer_analyze_target_icon: EV_PIXMAP
+			-- Access to 'analyze target' pixmap.
+		require
+			has_named_icon: has_named_icon (analyzer_analyze_target_name)
+		once
+			Result := named_icon (analyzer_analyze_target_name)
+		ensure
+			analyzer_analyze_target_icon_attached: Result /= Void
+		end
+
+	frozen analyzer_analyze_target_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'analyze target' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (analyzer_analyze_target_name)
+		once
+			Result := named_icon_buffer (analyzer_analyze_target_name)
+		ensure
+			analyzer_analyze_target_icon_buffer_attached: Result /= Void
+		end
+
+	frozen analyzer_analyze_refresh_icon: EV_PIXMAP
+			-- Access to 'analyze refresh' pixmap.
+		require
+			has_named_icon: has_named_icon (analyzer_analyze_refresh_name)
+		once
+			Result := named_icon (analyzer_analyze_refresh_name)
+		ensure
+			analyzer_analyze_refresh_icon_attached: Result /= Void
+		end
+
+	frozen analyzer_analyze_refresh_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'analyze refresh' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (analyzer_analyze_refresh_name)
+		once
+			Result := named_icon_buffer (analyzer_analyze_refresh_name)
+		ensure
+			analyzer_analyze_refresh_icon_buffer_attached: Result /= Void
+		end
+
+	frozen analyzer_preferences_icon: EV_PIXMAP
+			-- Access to 'preferences' pixmap.
+		require
+			has_named_icon: has_named_icon (analyzer_preferences_name)
+		once
+			Result := named_icon (analyzer_preferences_name)
+		ensure
+			analyzer_preferences_icon_attached: Result /= Void
+		end
+
+	frozen analyzer_preferences_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'preferences' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (analyzer_preferences_name)
+		once
+			Result := named_icon_buffer (analyzer_preferences_name)
+		ensure
+			analyzer_preferences_icon_buffer_attached: Result /= Void
 		end
 
 	frozen project_melt_icon: EV_PIXMAP
@@ -7262,6 +7402,26 @@ feature -- Icons
 			preference_shortcut_icon_buffer_attached: Result /= Void
 		end
 
+	frozen preference_option_icon: EV_PIXMAP
+			-- Access to 'option' pixmap.
+		require
+			has_named_icon: has_named_icon (preference_option_name)
+		once
+			Result := named_icon (preference_option_name)
+		ensure
+			preference_option_icon_attached: Result /= Void
+		end
+
+	frozen preference_option_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'option' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (preference_option_name)
+		once
+			Result := named_icon_buffer (preference_option_name)
+		ensure
+			preference_option_icon_buffer_attached: Result /= Void
+		end
+
 	frozen document_eiffel_project_icon: EV_PIXMAP
 			-- Access to 'eiffel project' pixmap.
 		require
@@ -8182,6 +8342,346 @@ feature -- Icons
 			overlay_new_icon_buffer_attached: Result /= Void
 		end
 
+	frozen overlay_flag_icon: EV_PIXMAP
+			-- Access to 'flag' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_flag_name)
+		once
+			Result := named_icon (overlay_flag_name)
+		ensure
+			overlay_flag_icon_attached: Result /= Void
+		end
+
+	frozen overlay_flag_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'flag' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_flag_name)
+		once
+			Result := named_icon_buffer (overlay_flag_name)
+		ensure
+			overlay_flag_icon_buffer_attached: Result /= Void
+		end
+
+	frozen overlay_information_icon: EV_PIXMAP
+			-- Access to 'information' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_information_name)
+		once
+			Result := named_icon (overlay_information_name)
+		ensure
+			overlay_information_icon_attached: Result /= Void
+		end
+
+	frozen overlay_information_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'information' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_information_name)
+		once
+			Result := named_icon_buffer (overlay_information_name)
+		ensure
+			overlay_information_icon_buffer_attached: Result /= Void
+		end
+
+	frozen overlay_edit_icon: EV_PIXMAP
+			-- Access to 'edit' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_edit_name)
+		once
+			Result := named_icon (overlay_edit_name)
+		ensure
+			overlay_edit_icon_attached: Result /= Void
+		end
+
+	frozen overlay_edit_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'edit' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_edit_name)
+		once
+			Result := named_icon_buffer (overlay_edit_name)
+		ensure
+			overlay_edit_icon_buffer_attached: Result /= Void
+		end
+
+	frozen overlay_class_icon: EV_PIXMAP
+			-- Access to 'class' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_class_name)
+		once
+			Result := named_icon (overlay_class_name)
+		ensure
+			overlay_class_icon_attached: Result /= Void
+		end
+
+	frozen overlay_class_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'class' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_class_name)
+		once
+			Result := named_icon_buffer (overlay_class_name)
+		ensure
+			overlay_class_icon_buffer_attached: Result /= Void
+		end
+
+	frozen overlay_cluster_icon: EV_PIXMAP
+			-- Access to 'cluster' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_cluster_name)
+		once
+			Result := named_icon (overlay_cluster_name)
+		ensure
+			overlay_cluster_icon_attached: Result /= Void
+		end
+
+	frozen overlay_cluster_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'cluster' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_cluster_name)
+		once
+			Result := named_icon_buffer (overlay_cluster_name)
+		ensure
+			overlay_cluster_icon_buffer_attached: Result /= Void
+		end
+
+	frozen overlay_target_icon: EV_PIXMAP
+			-- Access to 'target' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_target_name)
+		once
+			Result := named_icon (overlay_target_name)
+		ensure
+			overlay_target_icon_attached: Result /= Void
+		end
+
+	frozen overlay_target_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'target' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_target_name)
+		once
+			Result := named_icon_buffer (overlay_target_name)
+		ensure
+			overlay_target_icon_buffer_attached: Result /= Void
+		end
+
+	frozen overlay_library_icon: EV_PIXMAP
+			-- Access to 'library' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_library_name)
+		once
+			Result := named_icon (overlay_library_name)
+		ensure
+			overlay_library_icon_attached: Result /= Void
+		end
+
+	frozen overlay_library_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'library' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_library_name)
+		once
+			Result := named_icon_buffer (overlay_library_name)
+		ensure
+			overlay_library_icon_buffer_attached: Result /= Void
+		end
+
+	frozen overlay_clusters_icon: EV_PIXMAP
+			-- Access to 'clusters' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_clusters_name)
+		once
+			Result := named_icon (overlay_clusters_name)
+		ensure
+			overlay_clusters_icon_attached: Result /= Void
+		end
+
+	frozen overlay_clusters_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'clusters' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_clusters_name)
+		once
+			Result := named_icon_buffer (overlay_clusters_name)
+		ensure
+			overlay_clusters_icon_buffer_attached: Result /= Void
+		end
+
+	frozen overlay_editor_icon: EV_PIXMAP
+			-- Access to 'editor' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_editor_name)
+		once
+			Result := named_icon (overlay_editor_name)
+		ensure
+			overlay_editor_icon_attached: Result /= Void
+		end
+
+	frozen overlay_editor_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'editor' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_editor_name)
+		once
+			Result := named_icon_buffer (overlay_editor_name)
+		ensure
+			overlay_editor_icon_buffer_attached: Result /= Void
+		end
+
+	frozen overlay_refresh_icon: EV_PIXMAP
+			-- Access to 'refresh' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_refresh_name)
+		once
+			Result := named_icon (overlay_refresh_name)
+		ensure
+			overlay_refresh_icon_attached: Result /= Void
+		end
+
+	frozen overlay_refresh_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'refresh' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_refresh_name)
+		once
+			Result := named_icon_buffer (overlay_refresh_name)
+		ensure
+			overlay_refresh_icon_buffer_attached: Result /= Void
+		end
+
+	frozen overlay_class_left_icon: EV_PIXMAP
+			-- Access to 'class left' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_class_left_name)
+		once
+			Result := named_icon (overlay_class_left_name)
+		ensure
+			overlay_class_left_icon_attached: Result /= Void
+		end
+
+	frozen overlay_class_left_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'class left' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_class_left_name)
+		once
+			Result := named_icon_buffer (overlay_class_left_name)
+		ensure
+			overlay_class_left_icon_buffer_attached: Result /= Void
+		end
+
+	frozen overlay_cluster_left_icon: EV_PIXMAP
+			-- Access to 'cluster left' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_cluster_left_name)
+		once
+			Result := named_icon (overlay_cluster_left_name)
+		ensure
+			overlay_cluster_left_icon_attached: Result /= Void
+		end
+
+	frozen overlay_cluster_left_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'cluster left' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_cluster_left_name)
+		once
+			Result := named_icon_buffer (overlay_cluster_left_name)
+		ensure
+			overlay_cluster_left_icon_buffer_attached: Result /= Void
+		end
+
+	frozen overlay_target_left_icon: EV_PIXMAP
+			-- Access to 'target left' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_target_left_name)
+		once
+			Result := named_icon (overlay_target_left_name)
+		ensure
+			overlay_target_left_icon_attached: Result /= Void
+		end
+
+	frozen overlay_target_left_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'target left' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_target_left_name)
+		once
+			Result := named_icon_buffer (overlay_target_left_name)
+		ensure
+			overlay_target_left_icon_buffer_attached: Result /= Void
+		end
+
+	frozen overlay_library_left_icon: EV_PIXMAP
+			-- Access to 'library left' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_library_left_name)
+		once
+			Result := named_icon (overlay_library_left_name)
+		ensure
+			overlay_library_left_icon_attached: Result /= Void
+		end
+
+	frozen overlay_library_left_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'library left' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_library_left_name)
+		once
+			Result := named_icon_buffer (overlay_library_left_name)
+		ensure
+			overlay_library_left_icon_buffer_attached: Result /= Void
+		end
+
+	frozen overlay_clusters_left_icon: EV_PIXMAP
+			-- Access to 'clusters left' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_clusters_left_name)
+		once
+			Result := named_icon (overlay_clusters_left_name)
+		ensure
+			overlay_clusters_left_icon_attached: Result /= Void
+		end
+
+	frozen overlay_clusters_left_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'clusters left' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_clusters_left_name)
+		once
+			Result := named_icon_buffer (overlay_clusters_left_name)
+		ensure
+			overlay_clusters_left_icon_buffer_attached: Result /= Void
+		end
+
+	frozen overlay_editor_left_icon: EV_PIXMAP
+			-- Access to 'editor left' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_editor_left_name)
+		once
+			Result := named_icon (overlay_editor_left_name)
+		ensure
+			overlay_editor_left_icon_attached: Result /= Void
+		end
+
+	frozen overlay_editor_left_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'editor left' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_editor_left_name)
+		once
+			Result := named_icon_buffer (overlay_editor_left_name)
+		ensure
+			overlay_editor_left_icon_buffer_attached: Result /= Void
+		end
+
+	frozen overlay_refresh_left_icon: EV_PIXMAP
+			-- Access to 'refresh left' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_refresh_left_name)
+		once
+			Result := named_icon (overlay_refresh_left_name)
+		ensure
+			overlay_refresh_left_icon_attached: Result /= Void
+		end
+
+	frozen overlay_refresh_left_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'refresh left' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_refresh_left_name)
+		once
+			Result := named_icon_buffer (overlay_refresh_left_name)
+		ensure
+			overlay_refresh_left_icon_buffer_attached: Result /= Void
+		end
+
 	frozen errors_and_warnings_next_error_icon: EV_PIXMAP
 			-- Access to 'next error' pixmap.
 		require
@@ -8727,15 +9227,16 @@ feature -- Icons: Animations
 	frozen compile_animation_anim: ARRAY [EV_PIXMAP]
 			-- Access to 'compile_animation' pixmap animation items.
 		once
-			create Result.make (1, 8)
-				Result.put (named_icon (compile_animation_1_name), 1)
-			Result.put (named_icon (compile_animation_2_name), 2)
-			Result.put (named_icon (compile_animation_3_name), 3)
-			Result.put (named_icon (compile_animation_4_name), 4)
-			Result.put (named_icon (compile_animation_5_name), 5)
-			Result.put (named_icon (compile_animation_6_name), 6)
-			Result.put (named_icon (compile_animation_7_name), 7)
-			Result.put (named_icon (compile_animation_8_name), 8)
+			Result := <<
+				named_icon (compile_animation_1_name),
+				named_icon (compile_animation_2_name),
+				named_icon (compile_animation_3_name),
+				named_icon (compile_animation_4_name),
+				named_icon (compile_animation_5_name),
+				named_icon (compile_animation_6_name),
+				named_icon (compile_animation_7_name),
+				named_icon (compile_animation_8_name)
+			>>
 		ensure
 			compile_animation_anim_attached: Result /= Void
 		end
@@ -8743,15 +9244,16 @@ feature -- Icons: Animations
 	frozen compile_animation_buffer_anim: ARRAY [EV_PIXEL_BUFFER]
 			-- Access to 'compile_animation' pixel buffer animation items.
 		once
-			create Result.make (1, 8)
-				Result.put (named_icon_buffer (compile_animation_1_name), 1)
-			Result.put (named_icon_buffer (compile_animation_2_name), 2)
-			Result.put (named_icon_buffer (compile_animation_3_name), 3)
-			Result.put (named_icon_buffer (compile_animation_4_name), 4)
-			Result.put (named_icon_buffer (compile_animation_5_name), 5)
-			Result.put (named_icon_buffer (compile_animation_6_name), 6)
-			Result.put (named_icon_buffer (compile_animation_7_name), 7)
-			Result.put (named_icon_buffer (compile_animation_8_name), 8)
+			Result := <<
+				named_icon_buffer (compile_animation_1_name),
+				named_icon_buffer (compile_animation_2_name),
+				named_icon_buffer (compile_animation_3_name),
+				named_icon_buffer (compile_animation_4_name),
+				named_icon_buffer (compile_animation_5_name),
+				named_icon_buffer (compile_animation_6_name),
+				named_icon_buffer (compile_animation_7_name),
+				named_icon_buffer (compile_animation_8_name)
+			>>
 		ensure
 			compile_animation_buffer_anim_attached: Result /= Void
 		end
@@ -8759,12 +9261,13 @@ feature -- Icons: Animations
 	frozen run_animation_anim: ARRAY [EV_PIXMAP]
 			-- Access to 'run_animation' pixmap animation items.
 		once
-			create Result.make (1, 5)
-				Result.put (named_icon (run_animation_1_name), 1)
-			Result.put (named_icon (run_animation_2_name), 2)
-			Result.put (named_icon (run_animation_3_name), 3)
-			Result.put (named_icon (run_animation_4_name), 4)
-			Result.put (named_icon (run_animation_5_name), 5)
+			Result := <<
+				named_icon (run_animation_1_name),
+				named_icon (run_animation_2_name),
+				named_icon (run_animation_3_name),
+				named_icon (run_animation_4_name),
+				named_icon (run_animation_5_name)
+			>>
 		ensure
 			run_animation_anim_attached: Result /= Void
 		end
@@ -8772,12 +9275,13 @@ feature -- Icons: Animations
 	frozen run_animation_buffer_anim: ARRAY [EV_PIXEL_BUFFER]
 			-- Access to 'run_animation' pixel buffer animation items.
 		once
-			create Result.make (1, 5)
-				Result.put (named_icon_buffer (run_animation_1_name), 1)
-			Result.put (named_icon_buffer (run_animation_2_name), 2)
-			Result.put (named_icon_buffer (run_animation_3_name), 3)
-			Result.put (named_icon_buffer (run_animation_4_name), 4)
-			Result.put (named_icon_buffer (run_animation_5_name), 5)
+			Result := <<
+				named_icon_buffer (run_animation_1_name),
+				named_icon_buffer (run_animation_2_name),
+				named_icon_buffer (run_animation_3_name),
+				named_icon_buffer (run_animation_4_name),
+				named_icon_buffer (run_animation_5_name)
+			>>
 		ensure
 			run_animation_buffer_anim_attached: Result /= Void
 		end
@@ -8906,6 +9410,13 @@ feature -- Constants: Icon names
 	tool_terminal_name: STRING = "tool terminal"
 	library_iron_package_name: STRING = "library iron package"
 	library_iron_library_name: STRING = "library iron library"
+	analyzer_analyze_name: STRING = "analyzer analyze"
+	analyzer_analyze_class_name: STRING = "analyzer analyze class"
+	analyzer_analyze_editor_name: STRING = "analyzer analyze editor"
+	analyzer_analyze_cluster_name: STRING = "analyzer analyze cluster"
+	analyzer_analyze_target_name: STRING = "analyzer analyze target"
+	analyzer_analyze_refresh_name: STRING = "analyzer analyze refresh"
+	analyzer_preferences_name: STRING = "analyzer preferences"
 	project_melt_name: STRING = "project melt"
 	project_quick_melt_name: STRING = "project quick melt"
 	project_freeze_name: STRING = "project freeze"
@@ -9145,6 +9656,7 @@ feature -- Constants: Icon names
 	preference_numerical_name: STRING = "preference numerical"
 	preference_font_name: STRING = "preference font"
 	preference_shortcut_name: STRING = "preference shortcut"
+	preference_option_name: STRING = "preference option"
 	document_eiffel_project_name: STRING = "document eiffel project"
 	document_eiffel_project_compiled_name: STRING = "document eiffel project compiled"
 	document_blank_name: STRING = "document blank"
@@ -9191,6 +9703,23 @@ feature -- Constants: Icon names
 	overlay_packaged_name: STRING = "overlay packaged"
 	overlay_search_name: STRING = "overlay search"
 	overlay_new_name: STRING = "overlay new"
+	overlay_flag_name: STRING = "overlay flag"
+	overlay_information_name: STRING = "overlay information"
+	overlay_edit_name: STRING = "overlay edit"
+	overlay_class_name: STRING = "overlay class"
+	overlay_cluster_name: STRING = "overlay cluster"
+	overlay_target_name: STRING = "overlay target"
+	overlay_library_name: STRING = "overlay library"
+	overlay_clusters_name: STRING = "overlay clusters"
+	overlay_editor_name: STRING = "overlay editor"
+	overlay_refresh_name: STRING = "overlay refresh"
+	overlay_class_left_name: STRING = "overlay class left"
+	overlay_cluster_left_name: STRING = "overlay cluster left"
+	overlay_target_left_name: STRING = "overlay target left"
+	overlay_library_left_name: STRING = "overlay library left"
+	overlay_clusters_left_name: STRING = "overlay clusters left"
+	overlay_editor_left_name: STRING = "overlay editor left"
+	overlay_refresh_left_name: STRING = "overlay refresh left"
 	errors_and_warnings_next_error_name: STRING = "errors and warnings next error"
 	errors_and_warnings_previous_error_name: STRING = "errors and warnings previous error"
 	errors_and_warnings_next_warning_name: STRING = "errors and warnings next warning"
@@ -9346,6 +9875,13 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 33, {NATURAL_8} 5], tool_terminal_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 6], library_iron_package_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 6], library_iron_library_name)
+			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 6], analyzer_analyze_name)
+			a_table.put ([{NATURAL_8} 4, {NATURAL_8} 6], analyzer_analyze_class_name)
+			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 6], analyzer_analyze_editor_name)
+			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 6], analyzer_analyze_cluster_name)
+			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 6], analyzer_analyze_target_name)
+			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 6], analyzer_analyze_refresh_name)
+			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 6], analyzer_preferences_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 7], project_melt_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 7], project_quick_melt_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 7], project_freeze_name)
@@ -9585,10 +10121,11 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 18], preference_numerical_name)
 			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 18], preference_font_name)
 			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 18], preference_shortcut_name)
-			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 18], document_eiffel_project_name)
-			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 18], document_eiffel_project_compiled_name)
-			a_table.put ([{NATURAL_8} 10, {NATURAL_8} 18], document_blank_name)
-			a_table.put ([{NATURAL_8} 11, {NATURAL_8} 18], document_eiffel_project_large_name)
+			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 18], preference_option_name)
+			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 18], document_eiffel_project_name)
+			a_table.put ([{NATURAL_8} 10, {NATURAL_8} 18], document_eiffel_project_compiled_name)
+			a_table.put ([{NATURAL_8} 11, {NATURAL_8} 18], document_blank_name)
+			a_table.put ([{NATURAL_8} 12, {NATURAL_8} 18], document_eiffel_project_large_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 19], compile_animation_1_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 19], compile_animation_2_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 19], compile_animation_3_name)
@@ -9631,6 +10168,23 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 4, {NATURAL_8} 21], overlay_packaged_name)
 			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 21], overlay_search_name)
 			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 21], overlay_new_name)
+			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 21], overlay_flag_name)
+			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 21], overlay_information_name)
+			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 21], overlay_edit_name)
+			a_table.put ([{NATURAL_8} 10, {NATURAL_8} 21], overlay_class_name)
+			a_table.put ([{NATURAL_8} 11, {NATURAL_8} 21], overlay_cluster_name)
+			a_table.put ([{NATURAL_8} 12, {NATURAL_8} 21], overlay_target_name)
+			a_table.put ([{NATURAL_8} 13, {NATURAL_8} 21], overlay_library_name)
+			a_table.put ([{NATURAL_8} 14, {NATURAL_8} 21], overlay_clusters_name)
+			a_table.put ([{NATURAL_8} 15, {NATURAL_8} 21], overlay_editor_name)
+			a_table.put ([{NATURAL_8} 16, {NATURAL_8} 21], overlay_refresh_name)
+			a_table.put ([{NATURAL_8} 17, {NATURAL_8} 21], overlay_class_left_name)
+			a_table.put ([{NATURAL_8} 18, {NATURAL_8} 21], overlay_cluster_left_name)
+			a_table.put ([{NATURAL_8} 19, {NATURAL_8} 21], overlay_target_left_name)
+			a_table.put ([{NATURAL_8} 20, {NATURAL_8} 21], overlay_library_left_name)
+			a_table.put ([{NATURAL_8} 21, {NATURAL_8} 21], overlay_clusters_left_name)
+			a_table.put ([{NATURAL_8} 22, {NATURAL_8} 21], overlay_editor_left_name)
+			a_table.put ([{NATURAL_8} 23, {NATURAL_8} 21], overlay_refresh_left_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 22], errors_and_warnings_next_error_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 22], errors_and_warnings_previous_error_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 22], errors_and_warnings_next_warning_name)
@@ -9661,7 +10215,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

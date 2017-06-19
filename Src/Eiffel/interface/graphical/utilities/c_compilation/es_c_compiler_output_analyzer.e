@@ -1,7 +1,5 @@
-note
-	description: "[
-		Analyzes the C compilation output to produce results.
-	]"
+﻿note
+	description: "Analyzes the C compilation output to produce results.]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -110,7 +108,7 @@ feature {NONE} -- Basic operations
 			l_msg: like message
 		do
 			if
-				event_list.is_service_available and then
+				attached event_list.service as s and then
 				attached file_name as l_file_name and then
 				attached message as l_message and then
 				not l_message.is_empty
@@ -138,9 +136,9 @@ feature {NONE} -- Basic operations
 						l_error.associated_feature := l_feature
 					end
 
-					event_list.service.lock
-					event_list.service.put_event_item (c_compiler_context, l_item)
-					event_list.service.unlock
+					s.lock
+					s.put_event_item (c_compiler_context, l_item)
+					s.unlock
 				end
 			end
 
@@ -230,7 +228,7 @@ invariant
 	error_list_preferences_attached: attached error_list_preferences
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

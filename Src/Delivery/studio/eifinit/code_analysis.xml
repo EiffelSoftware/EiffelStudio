@@ -1,13 +1,6 @@
 <EIFFEL_DOCUMENT>
-	<PREF NAME="color.error_background" DESCRIPTION="Background color for errors."><COLOR>255;220;220</COLOR></PREF>
-	<PREF NAME="color.fixed_violation_background" DESCRIPTION="Background color for fixed violations."><COLOR>181;230;29</COLOR></PREF>
-	<PREF NAME="color.hint_background" DESCRIPTION="Background color for hints."><COLOR>188;226;193</COLOR></PREF>
-	<PREF NAME="color.suggestion_background" DESCRIPTION="Background color for suggestions."><COLOR>239;228;176</COLOR></PREF>
-	<PREF NAME="color.warning_background" DESCRIPTION="Background color for warnings."><COLOR>255;255;188</COLOR></PREF>
-
 	<PREF NAME="general.enable_errors" DESCRIPTION="Report errors."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="general.enable_hints" DESCRIPTION="Report hints."><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="general.enable_suggestions" DESCRIPTION="Report suggestions."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="general.enable_warnings" DESCRIPTION="Report warnings."><BOOLEAN>True</BOOLEAN></PREF>
 
 	<PREF NAME="rule.argument_name.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>

@@ -290,7 +290,7 @@ feature -- Properties
 	is_running: BOOLEAN
 			-- Is code analysis running?
 
-	rule_violations: detachable HASH_TABLE [SORTED_TWO_WAY_LIST [CA_RULE_VIOLATION], CLASS_C]
+	rule_violations: HASH_TABLE [SORTED_TWO_WAY_LIST [CA_RULE_VIOLATION], CLASS_C]
 			-- All found violations from the last analysis.
 
 	preferences: PREFERENCES
@@ -421,10 +421,9 @@ feature {NONE} -- Implementation
 	is_severity_enabled (a_severity: CA_RULE_SEVERITY): BOOLEAN
 			-- Is severity `a_severity` enabled?
 		do
-			Result := (attached {CA_HINT} a_severity and settings.are_hints_enabled.value)
-				or else (attached {CA_SUGGESTION} a_severity and settings.are_suggestions_enabled.value)
-				or else (attached {CA_WARNING} a_severity and settings.are_warnings_enabled.value)
-				or else (attached {CA_ERROR} a_severity and settings.are_errors_enabled.value)
+			Result := (attached {CA_HINT} a_severity and settings.is_hint_enabled.value)
+				or else (attached {CA_WARNING} a_severity and settings.is_warning_enabled.value)
+				or else (attached {CA_ERROR} a_severity and settings.is_error_enabled.value)
 		end
 
 	output_actions: ACTION_SEQUENCE [TUPLE [READABLE_STRING_GENERAL]]

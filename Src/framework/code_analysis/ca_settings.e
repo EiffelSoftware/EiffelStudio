@@ -36,10 +36,9 @@ feature {NONE} -- Initialization
 				<<preference_path.name>>, eiffel_layout.eiffel_preferences, version_2_0)
 			l_manager := preferences.new_manager (code_analysis_namespace)
 
-			are_errors_enabled := l_factory.new_boolean_preference_value (l_manager, preference_name_errors_enabled, True)
-			are_warnings_enabled := l_factory.new_boolean_preference_value (l_manager, preference_name_warnings_enabled, True)
-			are_suggestions_enabled := l_factory.new_boolean_preference_value (l_manager, preference_name_suggestions_enabled, True)
-			are_hints_enabled := l_factory.new_boolean_preference_value (l_manager, preference_name_hints_enabled, True)
+			is_error_enabled := l_factory.new_boolean_preference_value (l_manager, preference_name_error_enabled, True)
+			is_warning_enabled := l_factory.new_boolean_preference_value (l_manager, preference_name_warning_enabled, True)
+			is_hint_enabled := l_factory.new_boolean_preference_value (l_manager, preference_name_hint_enabled, True)
 		end
 
 feature {CA_CODE_ANALYZER} -- Initialization
@@ -85,10 +84,9 @@ feature -- Settings
 			Result := preferences.manager (code_analysis_namespace)
 		end
 
-	are_errors_enabled,
-	are_warnings_enabled,
-	are_suggestions_enabled,
-	are_hints_enabled: BOOLEAN_PREFERENCE
+	is_error_enabled,
+	is_warning_enabled,
+	is_hint_enabled: BOOLEAN_PREFERENCE
 			-- Are certain rule categories enabled?
 
 feature -- Preferences
@@ -114,25 +112,19 @@ feature {NONE} -- Preferences
 	preference_name_prefix_general: STRING = "general."
 			-- A prefix for preference names on a general category.
 
-	preference_name_errors_enabled: STRING
+	preference_name_error_enabled: STRING
 			-- Name of a preference that tells if errors are enabled.
 		do
 			Result := preference_name_prefix_general + "enable_errors"
 		end
 
-	preference_name_warnings_enabled: STRING
+	preference_name_warning_enabled: STRING
 			-- Name of a preference that tells if warnings are enabled.
 		do
 			Result := preference_name_prefix_general + "enable_warnings"
 		end
 
-	preference_name_suggestions_enabled: STRING
-			-- Name of a preference that tells if suggestions are enabled.
-		do
-			Result := preference_name_prefix_general + "enable_suggestions"
-		end
-
-	preference_name_hints_enabled: STRING
+	preference_name_hint_enabled: STRING
 			-- Name of a preference that tells if hints are enabled.
 		do
 			Result := preference_name_prefix_general + "enable_hints"

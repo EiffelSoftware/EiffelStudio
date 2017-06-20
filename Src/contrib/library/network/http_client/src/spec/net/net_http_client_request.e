@@ -91,8 +91,8 @@ feature -- Access
 			l_authorization: HTTP_AUTHORIZATION
 			l_platform: STRING
 			l_upload_data: detachable READABLE_STRING_8
-			l_form_data: detachable HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]
 			ctx: like context
+			l_ct: detachable READABLE_STRING_8
 			l_upload_file: detachable RAW_FILE
 			l_upload_filename: detachable READABLE_STRING_GENERAL
 			l_form_string: STRING
@@ -149,7 +149,7 @@ feature -- Access
 						then
 							create l_authorization.make_basic_auth (u_name, u_pass)
 							if attached l_authorization.http_authorization as auth then
-								headers.extend (auth, "Authorization")
+								headers.force (auth, "Authorization")
 							end
 							check headers.has_key ("Authorization") end
 						end
@@ -176,7 +176,7 @@ feature -- Access
 						else
 							l_platform := "Unknown"
 						end
-						headers.extend ("eiffelhttpclient/" + net_http_client_version + " (" + l_platform + ")", "User-Agent")
+						headers.force ("eiffelhttpclient/" + net_http_client_version + " (" + l_platform + ")", "User-Agent")
 					end
 
 						-- handle sending data
@@ -191,67 +191,52 @@ feature -- Access
 							l_upload_data := ctx.upload_data
 						end
 
-						if ctx.has_form_data then
-							l_form_data := ctx.form_parameters
-							if l_upload_data = Void and l_upload_filename = Void then
-								if
-									attached headers.item ("Content-Type") as l_ct
-								then
-									if l_ct.starts_with ("application/x-www-form-urlencoded") then
-										l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
-									elseif l_ct.starts_with ("multipart/form-data") then
-											-- create form using multipart/form-data encoding
-										l_boundary := new_mime_boundary (l_form_data)
-										headers.extend ("multipart/form-data; boundary=" + l_boundary, "Content-Type")
-										l_upload_data := form_date_and_uploaded_files_to_mime_string (l_form_data, l_upload_filename, l_boundary)
-									else
-											-- not supported !
-											-- Send as form-urlencoded
-										headers.extend ("application/x-www-form-urlencoded", "Content-Type")
-										l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
-									end
-								else
-										-- Send as form-urlencoded
-									headers.extend ("application/x-www-form-urlencoded", "Content-Type")
-									l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
-								end
-								headers.extend (l_upload_data.count.out, "Content-Length")
-								if l_is_chunked_transfer_encoding then
-										-- Discard chunked transfer encoding
-									headers.remove ("Transfer-Encoding")
-									l_is_chunked_transfer_encoding := False
-								end
-							elseif l_form_data /= Void then
-								check l_upload_data = Void end
-
-									-- create form using multipart/form-data encoding
-								l_boundary := new_mime_boundary (l_form_data)
-								headers.extend ("multipart/form-data; boundary=" + l_boundary, "Content-Type")
-								l_upload_data := form_date_and_uploaded_files_to_mime_string (l_form_data, l_upload_filename, l_boundary)
-								headers.extend (l_upload_data.count.out, "Content-Length")
-								if l_is_chunked_transfer_encoding then
-										-- Discard chunked transfer encoding
-									headers.remove ("Transfer-Encoding")
-									l_is_chunked_transfer_encoding := False
-								end
-							end
-						elseif l_upload_data /= Void then
+						if l_upload_data /= Void then
 							check ctx.has_upload_data end
+							check no_form_data: not ctx.has_form_data end
 							if not headers.has ("Content-Type") then
-								headers.extend ("application/x-www-form-urlencoded", "Content-Type")
+								headers.force ("application/x-www-form-urlencoded", "Content-Type")
 							end
 							if not l_is_chunked_transfer_encoding then
-								headers.extend (l_upload_data.count.out, "Content-Length")
+								headers.force (l_upload_data.count.out, "Content-Length")
 							end
 						elseif l_upload_filename /= Void then
 							check ctx.has_upload_filename end
+							check no_form_data: not ctx.has_form_data end
 							create l_upload_file.make_with_name (l_upload_filename)
 							if l_upload_file.exists and then l_upload_file.is_access_readable then
 								if not l_is_chunked_transfer_encoding then
-									headers.extend (l_upload_file.count.out, "Content-Length")
+									headers.force (l_upload_file.count.out, "Content-Length")
 								end
 							end
 							check l_upload_file /= Void end
+						elseif
+							ctx.has_form_data and
+							attached ctx.form_parameters as l_form_data
+						then
+							l_ct := headers.item ("Content-Type")
+							if l_ct /= Void and then l_ct.starts_with ("application/x-www-form-urlencoded") then
+								l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
+							elseif
+								(l_ct /= Void and then l_ct.starts_with ("multipart/form-data"))
+								or l_form_data.has_file_parameter
+							then
+									-- create form using multipart/form-data encoding
+								l_boundary := new_mime_boundary (l_form_data)
+								headers.force ("multipart/form-data; boundary=" + l_boundary, "Content-Type")
+								l_upload_data := form_date_and_uploaded_files_to_mime_string (l_form_data, l_boundary)
+							else
+									-- not supported !
+									-- Send as form-urlencoded
+								headers.force ("application/x-www-form-urlencoded", "Content-Type")
+								l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
+							end
+							headers.force (l_upload_data.count.out, "Content-Length")
+							if l_is_chunked_transfer_encoding then
+									-- Discard chunked transfer encoding
+								headers.remove ("Transfer-Encoding")
+								l_is_chunked_transfer_encoding := False
+							end
 						end
 					end
 
@@ -482,14 +467,9 @@ feature {NONE} -- Helpers
 			Result := a_status >= 300 and a_status < 400
 		end
 
-	form_date_and_uploaded_files_to_mime_string (a_form_parameters: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]; a_upload_filename: detachable READABLE_STRING_GENERAL; a_mime_boundary: READABLE_STRING_8): STRING
+	form_date_and_uploaded_files_to_mime_string (a_form_parameters: ITERABLE [HTTP_CLIENT_REQUEST_PARAMETER]; a_mime_boundary: READABLE_STRING_8): STRING
 			-- Form data and uploaded files converted to mime string.
 			-- TODO: design a proper MIME... component.
-		local
-			l_path: PATH
-			l_mime_type: READABLE_STRING_8
-			l_upload_file: detachable RAW_FILE
-			l_mime_type_mapping: HTTP_FILE_EXTENSION_MIME_MAPPING
 		do
 			create Result.make (100)
 			across
@@ -500,47 +480,25 @@ feature {NONE} -- Helpers
 				Result.append (http_end_of_header_line)
 				Result.append ("Content-Disposition: form-data; name=")
 				Result.append_character ('%"')
-				Result.append (string_to_mime_encoded_string (ic.key))
+				Result.append (string_to_mime_encoded_string (ic.item.name))
 				Result.append_character ('%"')
-				Result.append (http_end_of_header_line)
-				Result.append (http_end_of_header_line)
-				Result.append (string_to_mime_encoded_string (ic.item))
-				Result.append (http_end_of_header_line)
-			end
-
-			if a_upload_filename /= Void then
-					-- get file extension, otherwise set default
-				create l_mime_type_mapping.make_default
-				create l_path.make_from_string (a_upload_filename)
 				if
-					attached l_path.extension as ext and then
-					attached l_mime_type_mapping.mime_type (ext) as l_mt
+					attached {HTTP_CLIENT_REQUEST_FILE_PARAMETER} ic.item as fileparam and then
+					attached fileparam.file_name as fn
 				then
-					l_mime_type := l_mt
-				else
-					l_mime_type := "application/octet-stream"
+					Result.append ("; filename=")
+					Result.append_character ('%"')
+					Result.append (string_to_mime_encoded_string (fn))
+					Result.append_character ('%"')
 				end
-				Result.append ("--")
-				Result.append (a_mime_boundary)
-				Result.append (http_end_of_header_line)
-				Result.append ("Content-Disposition: form-data; name=%"")
-				Result.append (string_to_mime_encoded_string (a_upload_filename))
-				Result.append_character ('%"')
-				Result.append ("; filename=%"")
-				Result.append (string_to_mime_encoded_string (a_upload_filename))
-				Result.append_character ('%"')
-				Result.append (http_end_of_header_line)
-				Result.append ("Content-Type: ")
-				Result.append (l_mime_type)
-				Result.append (http_end_of_header_line)
-				Result.append (http_end_of_header_line)
-
-				create l_upload_file.make_with_path (l_path)
-				if l_upload_file.exists and then l_upload_file.is_access_readable then
-					append_file_content_to (l_upload_file, l_upload_file.count, Result)
-						-- Reset l_upload_file to Void, since the related content is already processed.
-					l_upload_file := Void
+				if attached ic.item.content_type as ct then
+					Result.append (http_end_of_header_line)
+					Result.append ("Content-Type: ")
+					Result.append (ct)
 				end
+				Result.append (http_end_of_header_line)
+				Result.append (http_end_of_header_line)
+				ic.item.append_as_mime_encoded_to (Result)
 				Result.append (http_end_of_header_line)
 			end
 			Result.append ("--")
@@ -893,7 +851,7 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	new_mime_boundary (a_data: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]): STRING
+	new_mime_boundary (a_data: ITERABLE [HTTP_CLIENT_REQUEST_PARAMETER]): STRING
 			-- New MIME boundary.
 		local
 			s: STRING
@@ -904,7 +862,7 @@ feature {NONE} -- Helpers
 			across
 				a_data as ic
 			loop
-				i := i + ic.item.count + ic.key.count
+				i := i + ic.item.count + ic.item.name.count
 			end
 			create ran.set_seed (i) -- FIXME: use a real random seed.
 			ran.start

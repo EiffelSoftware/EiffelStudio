@@ -58,11 +58,11 @@ feature -- Access
 			-- Specific headers to use in addition to the one set in the related HTTP_CLIENT_SESSION
 			--| note: the value from Current context override the one from the session in case of conflict
 
-	query_parameters: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]
+	query_parameters: HTTP_CLIENT_REQUEST_QUERY_PARAMETERS
 			-- Query parameters to be appended to the url
 			--| note: if the url already contains a query_string, the `query_parameters' will be appended to the url
 
-	form_parameters: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]
+	form_parameters: HTTP_CLIENT_REQUEST_FORM_PARAMETERS
 			-- Form parameters
 
 	upload_data: detachable READABLE_STRING_8
@@ -145,13 +145,25 @@ feature -- Element change
 	add_query_parameter (k: READABLE_STRING_GENERAL; v: READABLE_STRING_GENERAL)
 			-- Add a query parameter `k=v'.
 		do
-			query_parameters.force (v.to_string_32, k.to_string_32)
+			query_parameters.force (create {HTTP_CLIENT_REQUEST_STRING_PARAMETER}.make (k, v))
 		end
 
 	add_form_parameter (k: READABLE_STRING_GENERAL; v: READABLE_STRING_GENERAL)
 			-- Add a form parameter `k'= `v'.
 		do
-			form_parameters.force (v.to_string_32, k.to_string_32)
+			form_parameters.force (create {HTTP_CLIENT_REQUEST_STRING_PARAMETER}.make (k, v))
+		end
+
+	add_file_form_parameter (k: READABLE_STRING_GENERAL; a_location: READABLE_STRING_GENERAL; a_content_type: detachable READABLE_STRING_8)
+			-- Add a form file parameter named `k`, located at `a_location`, with optional content type `a_content_type`.
+		require
+			has_no_upload_data_or_filename: not has_upload_data and not has_upload_filename
+		local
+			param: HTTP_CLIENT_REQUEST_FILE_PARAMETER
+		do
+			create param.make_with_path (k, create {PATH}.make_from_string (a_location))
+			param.set_content_type (a_content_type)
+			form_parameters.force (param)
 		end
 
 	set_credentials_required (b: BOOLEAN)
@@ -164,7 +176,8 @@ feature -- Element change
 			-- Set `upload_data' to `a_data'
 			--| note: the Current context can have upload_data XOR upload_filename, but not both.
 		require
-			has_upload_filename: (a_data /= Void and then not a_data.is_empty) implies not has_upload_filename
+			has_no_upload_filename: (a_data /= Void and then not a_data.is_empty) implies not has_upload_filename
+			has_no_form_data: (a_data /= Void and then not a_data.is_empty) implies  not has_form_data
 		do
 			if a_data = Void or else a_data.is_empty then
 				upload_data := Void
@@ -180,6 +193,7 @@ feature -- Element change
 			--| note: the Current context can have upload_data XOR upload_filename, but not both.	
 		require
 			has_no_upload_data: (a_fn /= Void and then not a_fn.is_empty) implies not has_upload_data
+			has_no_form_data: (a_fn /= Void and then not a_fn.is_empty) implies  not has_form_data
 		do
 			if a_fn = Void or else a_fn.is_empty then
 				upload_filename := Void
@@ -266,9 +280,9 @@ feature -- URL helpers
 						a_url.append_character ('&')
 					end
 					l_first_param := False
-					uri_percent_encoder.append_query_name_encoded_string_to (ic.key, a_url)
+					uri_percent_encoder.append_query_name_encoded_string_to (ic.item.name, a_url)
 					a_url.append_character ('=')
-					uri_percent_encoder.append_query_value_encoded_string_to (ic.item, a_url)
+					ic.item.append_query_value_encoded_to (a_url)
 				end
 			end
 		end
@@ -315,38 +329,35 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parameters_to_uri_percent_encoded_string (ht: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]): STRING_8
-			-- Build query urlencoded string using parameters from `ht'.
+	parameters_to_uri_percent_encoded_string (a_params: HTTP_CLIENT_REQUEST_PARAMETERS [HTTP_CLIENT_REQUEST_PARAMETER]): STRING_8
+			-- Build query urlencoded string using parameters from `a_params'.
 		do
 			create Result.make (64)
 			across
-				ht as ic
+				a_params as ic
 			loop
 				if not Result.is_empty then
 					Result.append_character ('&')
 				end
-				uri_percent_encoder.append_query_name_encoded_string_to (ic.key, Result)
+				uri_percent_encoder.append_query_name_encoded_string_to (ic.item.name, Result)
 				Result.append_character ('=')
-				uri_percent_encoder.append_query_value_encoded_string_to (ic.item, Result)
+				ic.item.append_query_value_encoded_to (Result)
 			end
 		end
 
-	parameters_to_x_www_form_urlencoded_string (ht: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]): STRING_8
-			-- Build x-www-form-urlencoded string using parameters from `ht'.
+	parameters_to_x_www_form_urlencoded_string (a_params: HTTP_CLIENT_REQUEST_PARAMETERS [HTTP_CLIENT_REQUEST_PARAMETER]): STRING_8
+			-- Build x-www-form-urlencoded string using parameters from `a_params'.
 		do
 			create Result.make (64)
-			from
-				ht.start
-			until
-				ht.after
+			across
+				a_params as ic
 			loop
 				if not Result.is_empty then
 					Result.append_character ('&')
 				end
-				Result.append (x_www_form_url_encoder.encoded_string (ht.key_for_iteration))
+				x_www_form_url_encoder.append_percent_encoded_string_to (ic.item.name, Result)
 				Result.append_character ('=')
-				Result.append (x_www_form_url_encoder.encoded_string (ht.item_for_iteration))
-				ht.forth
+				ic.item.append_form_url_encoded_to (Result)
 			end
 		end
 

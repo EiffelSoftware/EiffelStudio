@@ -58,7 +58,6 @@ feature -- Execution
 			ctx: like context
 			p_slist: POINTER
 			retried: BOOLEAN
-			l_form_data: detachable HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]
 			l_upload_data: detachable READABLE_STRING_8
 			l_upload_filename: detachable READABLE_STRING_GENERAL
 			l_headers: like headers
@@ -151,70 +150,19 @@ feature -- Execution
 							--| Credentials not provided ...
 						end
 					end
-
 					if ctx.has_upload_data then
 						l_upload_data := ctx.upload_data
 					end
 					if ctx.has_upload_filename then
 						l_upload_filename := ctx.upload_filename
 					end
-					if ctx.has_form_data then
-						l_form_data := ctx.form_parameters
-						check non_empty_form_data: not l_form_data.is_empty end
-						if l_upload_data = Void and l_upload_filename = Void then
-							-- Send as form-urlencoded
-							if
-								attached l_headers.item ("Content-Type") as l_ct
-							then
-								if l_ct.starts_with ("application/x-www-form-urlencoded") then
-									-- Content-Type is already application/x-www-form-urlencoded
-									l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
-								elseif l_ct.starts_with ("multipart/form-data") then
-									l_use_curl_form := True
-								else
-										-- Not supported, use libcurl form.
-									l_use_curl_form := True
-								end
-							else
-								l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
-							end
-						else
-							l_use_curl_form := True
-						end
-						if l_use_curl_form then
-							create l_form.make
-							create l_last.make
-							from
-								l_form_data.start
-							until
-								l_form_data.after
-							loop
-								curl.formadd_string_string (l_form, l_last,
-										{CURL_FORM_CONSTANTS}.curlform_copyname, l_form_data.key_for_iteration,
-										{CURL_FORM_CONSTANTS}.curlform_copycontents, l_form_data.item_for_iteration,
-										{CURL_FORM_CONSTANTS}.curlform_end
-									)
-								l_form_data.forth
-							end
-							if l_upload_filename /= Void then
-								curl.formadd_string_string (l_form, l_last,
-										{CURL_FORM_CONSTANTS}.curlform_copyname, "file",
-										{CURL_FORM_CONSTANTS}.curlform_file, l_upload_filename,
-										{CURL_FORM_CONSTANTS}.curlform_end
-									)
-									l_upload_filename := Void
-							end
-							l_last.release_item
-							curl_easy.setopt_form (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_httppost, l_form)
-						end
-					end
-
 					if l_upload_data /= Void then
 						check
 							post_or_put_request_method:	request_method.is_case_insensitive_equal ("POST")
 														or request_method.is_case_insensitive_equal ("PUT")
 														or request_method.is_case_insensitive_equal ("PATCH")
 						end
+						check no_form_data: not ctx.has_form_data end
 
 						curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_postfields, l_upload_data)
 						curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_postfieldsize, l_upload_data.count)
@@ -224,6 +172,7 @@ feature -- Execution
 														or request_method.is_case_insensitive_equal ("PUT")
 														or request_method.is_case_insensitive_equal ("PATCH")
 						end
+						check no_form_data: not ctx.has_form_data end
 
 						create l_upload_file.make_with_name (l_upload_filename)
 						if l_upload_file.exists and then l_upload_file.is_readable then
@@ -238,12 +187,59 @@ feature -- Execution
 							l_upload_file.open_read
 							curl_easy.set_curl_function (l_custom_function)
 						end
+					elseif
+						ctx.has_form_data and
+						attached ctx.form_parameters as l_form_data
+					then
+						check non_empty_form_data: not l_form_data.is_empty end
+						-- Send as form-urlencoded
+						if
+							attached l_headers.item ("Content-Type") as l_ct
+						then
+							if l_ct.starts_with ("application/x-www-form-urlencoded") then
+								-- Content-Type is already application/x-www-form-urlencoded
+								l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
+							elseif l_ct.starts_with ("multipart/form-data") or l_form_data.has_file_parameter then
+								l_use_curl_form := True
+							else
+									-- Not supported, use libcurl form.
+								l_use_curl_form := True
+							end
+						else
+							l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
+						end
+						if l_use_curl_form then
+							create l_form.make
+							create l_last.make
+							across
+								l_form_data as ic
+							loop
+								if attached {HTTP_CLIENT_REQUEST_STRING_PARAMETER} ic.item as strparam then
+									curl.formadd_string_string (l_form, l_last,
+											{CURL_FORM_CONSTANTS}.curlform_copyname, strparam.name,
+											{CURL_FORM_CONSTANTS}.curlform_copycontents, strparam.value,
+											{CURL_FORM_CONSTANTS}.curlform_end
+										)
+								elseif attached {HTTP_CLIENT_REQUEST_FILE_PARAMETER} ic.item as fileparam then
+									curl.formadd_string_string (l_form, l_last,
+											{CURL_FORM_CONSTANTS}.curlform_copyname, "file",
+											{CURL_FORM_CONSTANTS}.curlform_file, fileparam.location.name,
+											{CURL_FORM_CONSTANTS}.curlform_end
+										)
+								else
+									check supported_parameter_type: False end
+								end
+							end
+							l_last.release_item
+							curl_easy.setopt_form (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_httppost, l_form)
+						end
 					else
-						check no_upload_data: l_upload_data = Void and l_upload_filename = Void end
+							-- No form, or upload data to send!
+						check no_data: not (ctx.has_upload_data or ctx.has_upload_filename or ctx.has_form_data) end
 					end
 				end -- ctx /= Void
 
-				--| Header
+					--| Header
 				across
 					l_headers as curs
 				loop

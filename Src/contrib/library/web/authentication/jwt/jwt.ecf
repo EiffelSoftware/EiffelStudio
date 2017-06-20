@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="jwt" uuid="A75C2D84-D543-4708-BAF3-254C308376CC" library_target="jwt">
+	<target name="jwt">
+		<root all_classes="true"/>
+		<option warning="true">
+		</option>
+		<capability>
+			<concurrency support="scoop" use="scoop"/>
+			<void_safety support="all" use="all"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto.ecf"/>
+		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<cluster name="src" location="src\" recursive="true"/>
+	</target>
+</system>

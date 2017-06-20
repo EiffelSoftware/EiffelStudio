@@ -11,14 +11,9 @@ class
 	HAL_TEST_SUITE
 
 inherit
-	SHARED_EJSON
-			rename default_create as default_create_ejson
-		end
 	EQA_TEST_SET
 		redefine
 			on_prepare
-		select
-			default_create
 		end
 
 feature {NONE} -- Events
@@ -119,17 +114,17 @@ feature -- Test routines
 
 	test_links_key
 		local
-			l_res : detachable HAL_RESOURCE
-			l_arr : ARRAY[STRING]
+			l_res: detachable HAL_RESOURCE
+			l_arr: ARRAY [READABLE_STRING_GENERAL]
 		do
 			l_res := json_to_hal ("hal_example.json")
-			assert("Not Void", l_res /= Void)
-			if attached{HAL_RESOURCE} l_res as ll_res then
-				l_arr := ll_res.links_keys
+			assert ("Not Void", l_res /= Void)
+			if l_res /= Void then
+				l_arr := l_res.links_keys
 				l_arr.compare_objects
 				assert ("Has three elements", l_arr.count = 3 )
-				assert ("Has element self", l_arr.has ("self") = True)
-				assert ("Has element next", l_arr.has ("next") = True)
+				assert ("Has element self", l_arr.has ("self"))
+				assert ("Has element next", l_arr.has ("next"))
 				assert ("Has element searcg", l_arr.has ("search") = True)
 			end
 		end
@@ -141,12 +136,12 @@ feature -- Test routines
 		do
 			l_res := json_to_hal ("hal_example.json")
 			assert("Not Void", l_res /= Void)
-			if attached{HAL_RESOURCE} l_res as ll_res then
-				assert ("Expected Void",ll_res.links_by_key ("keynotexist") = Void)
-				if attached {HAL_LINK} ll_res.links_by_key ("next") as ll_link then
-					assert ("Expected rel : next", ll_link.rel ~ "next")
-					assert ("Expected shared links 1", ll_link.attributes.count = 1)
-					assert ("Expected Href value", ll_link.attributes.at (1).href ~ "/orders?page=2" )
+			if l_res /= Void then
+				assert ("Expected Void", l_res.links_by_key ("keynotexist") = Void)
+				if attached {HAL_LINK} l_res.links_by_key ("next") as l_link then
+					assert ("Expected rel : next", l_link.rel ~ "next")
+					assert ("Expected shared links 1", l_link.attributes.count = 1)
+					assert ("Expected Href value", l_link.attributes.first.href ~ "/orders?page=2" )
 				end
 			end
 		end
@@ -184,8 +179,6 @@ feature -- Test routines
 			end
 		end
 
-
-
 	test_fields_keys
 		local
 			l_res : detachable HAL_RESOURCE
@@ -202,8 +195,6 @@ feature -- Test routines
 			end
 		end
 
-
-
 	test_fields_by_key
 		local
 			l_res : detachable HAL_RESOURCE
@@ -219,7 +210,6 @@ feature -- Test routines
 				end
 			end
 		end
-
 
 	test_link_template
 		local
@@ -238,30 +228,27 @@ feature -- Test routines
 			end
 		end
 
-
-
-
 feature {NONE} -- Implementation
+
 	hal_to_json ( a_res : HAL_RESOURCE) : detachable JSON_VALUE
 		local
-				hal: JSON_HAL_RESOURCE_CONVERTER
+			conv: JSON_HAL_RESOURCE_CONVERTER
 		do
-				create hal.make
-				json.add_converter (hal)
-				Result := json.value (a_res)
+			create conv.make
+			Result := conv.to_json (a_res)
 		end
 
 	json_to_hal (fn : STRING) : detachable HAL_RESOURCE
 		local
-			parse_json: like new_json_parser
-			hal: JSON_HAL_RESOURCE_CONVERTER
+			jp: like new_json_parser
+			conv: JSON_HAL_RESOURCE_CONVERTER
 		do
-			create hal.make
-			json.add_converter (hal)
 			if attached json_file_from (fn) as json_file then
-				parse_json := new_json_parser (json_file)
-				if attached parse_json.parsed_json_value as jv then
-					if attached {HAL_RESOURCE} json.object (jv, "HAL_RESOURCE") as l_hal then
+				jp := new_json_parser (json_file)
+				jp.parse_content
+				if attached jp.parsed_json_value as jv then
+					create conv.make
+					if attached {HAL_RESOURCE} conv.from_json (jv) as l_hal then
 						Result := l_hal
 					end
 				end

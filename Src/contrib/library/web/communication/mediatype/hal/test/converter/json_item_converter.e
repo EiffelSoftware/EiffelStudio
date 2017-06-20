@@ -6,55 +6,47 @@ note
 
 class
 	JSON_ITEM_CONVERTER
+
 inherit
-    JSON_CONVERTER
-
-create
-    make
-
-feature {NONE} -- Initialization
-
-    make
-        local
-            l_id: STRING_32
-        do
-            create l_id.make_from_string ("")
-            create object.make (l_id,0,0.0)
-        end
-
-feature -- Access
-
-    object: ITEM
+	JSON_SERIALIZER
+	JSON_DESERIALIZER
 
 feature -- Conversion
 
-    from_json (j: like to_json): detachable like object
+	from_json (a_json: detachable JSON_VALUE; ctx: JSON_DESERIALIZER_CONTEXT; a_type: detachable TYPE [detachable ANY]): detachable ITEM
         local
             l_quantity : NATURAL
             l_price : REAL
         do
-            if attached {STRING_32} json.object (j.item (id_key), Void) as l_id then
+        	if attached {JSON_OBJECT} a_json as j then
+	            if attached {JSON_STRING} j.item (id_key) as l_id then
 
-	            if attached {NATURAL} json.object (j.item (quantity_key), Void) as l_ucs then
-	            	l_quantity := l_ucs
+		            if attached {JSON_NUMBER} j.item (quantity_key) as l_ucs then
+		            	l_quantity := l_ucs.natural_64_item.to_natural_32
+		            end
+		            if attached {JSON_NUMBER} j.item (price_key) as l_ucs then
+		            	l_price := l_ucs.real_64_item.truncated_to_real
+					end
+	            	create Result.make (l_id.unescaped_string_8, l_quantity, l_price)
+	            else
+	            	check has_id: False end
 	            end
-
-	            if attached {REAL} json.object (j.item (quantity_key), Void) as l_ucs then
-	            	l_price := l_ucs
-				end
-
-            	create Result.make (l_id, l_quantity, l_price)
-            else
-            	check has_id: False end
-            end
+        	end
         end
 
-    to_json (o: like object): JSON_OBJECT
+	to_json (obj: detachable ANY; ctx: JSON_SERIALIZER_CONTEXT): JSON_VALUE
+		local
+			jo: JSON_OBJECT
         do
-            create Result.make
-            Result.put (json.value (o.id), id_key)
-            Result.put (json.value (o.quantity), quantity_key)
-            Result.put (json.value (o.price), price_key)
+        	if attached {ITEM} obj as o then
+	            create jo.make
+	            jo.put_string (o.id, id_key)
+	            jo.put_natural (o.quantity, quantity_key)
+	            jo.put_real (o.price, price_key)
+				Result := jo
+        	else
+        		create {JSON_NULL} Result
+        	end
         end
 
 feature    {NONE} -- Implementation

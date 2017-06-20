@@ -43,9 +43,7 @@ feature -- Test routines
 			l_res : detachable HAL_RESOURCE
 		do
 			l_res := json_to_hal ("min_hal_document.json")
-			if attached l_res as l_r then
-				assert("Is Valid Hal document", True)
-			end
+			assert("Is Valid Hal document", l_res /= Void)
 		end
 
 
@@ -57,7 +55,7 @@ feature -- Test routines
 			l_res := json_to_hal ("min_hal.json")
 			assert("Not Void", l_res /= Void)
 			if attached l_res as l_r then
-				assert("Is Valid Resource", l_r.is_valid_resource = True)
+				assert("Is Valid Resource", l_r.is_valid_resource)
 			end
 		end
 
@@ -70,7 +68,7 @@ feature -- Test routines
 			l_res := json_to_hal ("empty.json")
 			assert("Not Void", l_res /= Void)
 			if attached l_res as l_r then
-				assert("Is Valid Resource", l_r.is_valid_resource = True)
+				assert("Is Valid Resource", l_r.is_valid_resource)
 			end
 		end
 
@@ -82,7 +80,7 @@ feature -- Test routines
 			l_res := json_to_hal ("min_hal.json")
 			assert("Not Void", l_res /= Void)
 			if attached l_res as ll_res then
-				if attached{HAL_LINK} ll_res.self as l_link then
+				if attached {HAL_LINK} ll_res.self as l_link then
 					assert ("Rel attribute is self", l_link.rel ~ "self" )
 					assert ("Has 1 element", l_link.attributes.count = 1 )
 					assert ("Has href",l_link.attributes.at (1).href ~ "http://example.com/")
@@ -125,7 +123,7 @@ feature -- Test routines
 				assert ("Has three elements", l_arr.count = 3 )
 				assert ("Has element self", l_arr.has ("self"))
 				assert ("Has element next", l_arr.has ("next"))
-				assert ("Has element searcg", l_arr.has ("search") = True)
+				assert ("Has element searcg", l_arr.has ("search"))
 			end
 		end
 

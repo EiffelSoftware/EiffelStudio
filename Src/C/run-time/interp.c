@@ -4116,7 +4116,7 @@ rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struc
 		 * Skip this step for an expanded object because the corresponding reference class is in the set of its parents.
 		 * See test#exec091.
 		 */
-	if (EIF_IS_EXPANDED_TYPE(System(dtype))) {
+	if (!EIF_IS_EXPANDED_TYPE(System(dtype))) {
 		BODY_INDEX body_id;
 		EIF_TYPED_VALUE *last;
 

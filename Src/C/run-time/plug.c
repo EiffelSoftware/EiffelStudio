@@ -670,7 +670,7 @@ rt_private void recursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, int wh
 		 * Skip this step for an expanded object because the corresponding reference class is in the set of its parents.
 		 * See test#exec091.
 		 */
-	if (EIF_IS_EXPANDED_TYPE(System(dtype))) {
+	if (!EIF_IS_EXPANDED_TYPE(System(dtype))) {
 #ifndef WORKBENCH
 		{
 			void (*cn_inv)(EIF_REFERENCE, EIF_INTEGER);

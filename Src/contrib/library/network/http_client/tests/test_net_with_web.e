@@ -59,6 +59,11 @@ feature -- Tests
 			test_post_with_file_and_form_data
 		end
 
+	net_test_post_with_multiple_file_and_form_data
+		do
+			test_post_with_multiple_file_and_form_data
+		end
+
 	net_test_get_with_redirection
 		do
 			test_get_with_redirection

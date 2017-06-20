@@ -13,7 +13,8 @@
 		<capability>
 			<concurrency support="thread"/>
 		</capability>
-		<variable name="netssl_http_client_enabled" value="false"/>
+		<variable name="ssl_enabled" value="true"/>
+		<variable name="netssl_http_client_enabled" value="true"/>
 		<variable name="net_http_client_disabled" value="false"/>
 		<variable name="libcurl_http_client_disabled" value="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

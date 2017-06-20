@@ -1,8 +1,8 @@
-/*
+ï»¿/*
 	description: "Eiffel retrieve mechanism."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2017, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -26,11 +26,11 @@
 			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 */
 
@@ -3056,7 +3056,6 @@ doc:	</routine>
 rt_private void skip_old_routine_first_argument (const EIF_TYPE_INDEX **atype)
 {
 	EIF_TYPE_INDEX aftype = **atype;
-	int l_is_tuple = 0;
 
 	/* Skip all annotations we do not need them. */
 	while (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(aftype)) {
@@ -3068,7 +3067,6 @@ rt_private void skip_old_routine_first_argument (const EIF_TYPE_INDEX **atype)
 	if (aftype == TUPLE_TYPE) {
 		(*atype) += TUPLE_OFFSET;
 		aftype = **atype;
-		l_is_tuple = 1;
 	}
 
 	if (aftype == FORMAL_TYPE) {
@@ -5274,7 +5272,7 @@ rt_private EIF_TYPE_INDEX rt_id_read_cid (EIF_TYPE_INDEX odtype)
 						 * allocate more space. */
 					l_real_count++;
 					if (l_real_count > count) {
-							/* We have more entries than previously computed, we check if we can still use `l_cidé to accomodate
+							/* We have more entries than previously computed, we check if we can still use `l_cid' to accomodate
 							 * the additional entry, if we need to resize the previously allocated blocks or create a new block
 							 * if `cidarr' is too small. */
 						if (l_cid != cidarr) {

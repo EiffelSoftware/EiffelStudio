@@ -10,7 +10,7 @@ class
 create
 	make
 
-feature
+feature {NONE} -- Initialization
 
 	make
 		do

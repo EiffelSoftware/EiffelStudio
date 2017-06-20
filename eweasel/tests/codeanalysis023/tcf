@@ -17,11 +17,11 @@ copy_sub	test.e $CLUSTER test.e
 analyze_code rule "CA069"
 analyze_code_result violation "TEST CA069:10-Warning"
 
-	-- In a month: suggestion.
+	-- In a month: hint.
 define_date     DATE 31
 copy_sub	test.e $CLUSTER test.e
 
 analyze_code rule "CA069"
-analyze_code_result violation "TEST CA069:10-Suggestion"
+analyze_code_result violation "TEST CA069:10-Hint"
 
 test_end

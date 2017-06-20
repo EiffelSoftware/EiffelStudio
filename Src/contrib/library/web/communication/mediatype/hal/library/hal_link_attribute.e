@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 
 	make (a_ref: STRING)
 			-- Create a link attribute with an href and
-			-- set if it's a tempalted uri or just a uri.
+			-- set if it's a templated uri or just a uri.
 		do
 			set_href (a_ref)
 			set_templated (is_uri_template)
@@ -63,7 +63,7 @@ feature -- Access
 			-- Its value is a string which is a URI that hints about the profile (as
    			-- defined by [I-D.wilde-profile-link]) of the target resource.	
 
-	title: detachable STRING
+	title: detachable READABLE_STRING_32
 			--@title
 			--OPTIONAL
 			--For labeling the destination of a link with a human-readable identifier.
@@ -123,10 +123,10 @@ feature -- Element change
 			profile_set: profile = a_profile
 		end
 
-	set_title (a_title: STRING)
+	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Set title with `a_title'
 		do
-			title := a_title
+			create {STRING_32} title.make_from_string_general (a_title)
 		ensure
 			assigned: title = a_title
 		end
@@ -138,7 +138,6 @@ feature -- Element change
 		ensure
 			assigned: hreflang = a_hreflang
 		end
-
 
 feature {NONE} -- Implementation
 

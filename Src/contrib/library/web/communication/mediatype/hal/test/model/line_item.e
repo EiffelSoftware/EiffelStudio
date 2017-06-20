@@ -24,17 +24,13 @@ feature -- Access
 
    items: LIST [ITEM]
         do
-            from
-                create {LINKED_LIST [ITEM]} Result.make
-				item_index.start
-            until
-                item_index.after
+			create {ARRAYED_LIST [ITEM]} Result.make (item_index.count)
+			across
+				item_index as ic
             loop
-                Result.append (item_index.item_for_iteration)
-                item_index.forth
+                Result.append (ic.item)
             end
         end
-
 
 feature -- Status setting
 
@@ -45,35 +41,27 @@ feature -- Status setting
 
     add_item (an_item: ITEM)
         local
-            l: detachable LIST [ITEM]
+            lst: detachable LIST [ITEM]
         do
-            if item_index.has (an_item.id) then
-                l := item_index.at ( an_item.id )
-            else
-                create {LINKED_LIST [ITEM]} l.make
-                item_index.put (l, an_item.id)
+            lst := item_index.item (an_item.id)
+            if lst = Void then
+                create {ARRAYED_LIST [ITEM]} lst.make (1)
+                item_index.force (lst, an_item.id)
             end
-            if attached l as la then
-           	 	la.force (an_item)
-            end
-
+			lst.force (an_item)
         end
 
-	add_items (item_list: like items)
+	add_items (lst: like items)
         do
-            from
-                item_list.start
-            until
-                item_list.after
+            across
+                lst as ic
             loop
-                add_item (item_list.item)
-                item_list.forth
+                add_item (ic.item)
             end
         end
-
 
 feature {NONE} -- Implementation
 
-    item_index: HASH_TABLE [LIST [ITEM], STRING_32]
+    item_index: STRING_TABLE [LIST [ITEM]]
 
 end -- class LINE_ITEM

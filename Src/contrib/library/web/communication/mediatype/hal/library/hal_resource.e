@@ -54,8 +54,6 @@ feature -- Access
 			valid: Result /= Void
 		end
 
-
-
 	curies: detachable HAL_LINK
 			-- Return the curies link
 			-- For example if you have the following JSON representation
@@ -82,7 +80,7 @@ feature -- Access
 		end
 
 
-	links_keys: ARRAY [STRING]
+	links_keys: ARRAY [READABLE_STRING_GENERAL]
 			-- Return an array of keys, ie rel attributes
 			-- For example if you have the following JSON representation
 			--
@@ -100,7 +98,7 @@ feature -- Access
 			Result := links.current_keys
 		end
 
-	links_by_key (a_key: STRING): detachable HAL_LINK
+	links_by_key (a_key: READABLE_STRING_GENERAL): detachable HAL_LINK
 			-- Retrieve a link given a `a_key', ie a rel attribute if it exist,
 			-- Void in othercase
 			-- For example if you have the following JSON representation
@@ -119,7 +117,7 @@ feature -- Access
 			Result := links.at (a_key)
 		end
 
-	embedded_resources_keys: detachable ARRAY [STRING]
+	embedded_resources_keys: detachable ARRAY [READABLE_STRING_GENERAL]
 			-- Retrieve an arrray of resource keys, if exist,
 			-- Void in othercase
 		do
@@ -128,15 +126,15 @@ feature -- Access
 			end
 		end
 
-	embedded_resources_by_key (a_key: STRING): detachable LIST [HAL_RESOURCE]
+	embedded_resources_by_key (a_key: READABLE_STRING_GENERAL): detachable LIST [HAL_RESOURCE]
 			-- Return a list embedded resources if it exist or Void in other case
 		do
 			if attached embedded_resource as er then
-				Result := er.at (a_key)
+				Result := er [a_key]
 			end
 		end
 
-	fields_keys: detachable ARRAY [STRING]
+	fields_keys: detachable ARRAY [READABLE_STRING_GENERAL]
 			-- Return an array of fields keys if exist,
 			-- Void in othercase
 		do
@@ -145,80 +143,79 @@ feature -- Access
 			end
 		end
 
-	fields_by_key (a_key: STRING): detachable STRING
+	fields_by_key (a_key: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 			-- Return a string value, if key `a_key' exists
 			-- Void in othercase
 		do
-			if attached fields as p then
-				Result := p.at (a_key)
+			if attached fields as l_fields then
+				Result := l_fields [a_key]
 			end
 		end
 
 feature -- Element Change
 
-	add_all_links (all_link: HASH_TABLE [HAL_LINK, STRING])
+	add_all_links (all_link: STRING_TABLE [HAL_LINK])
 		do
-			links.copy (all_link)
+			across
+				all_link as ic
+			loop
+				add_link_with_key (ic.key, ic.item)
+			end
 		end
 
-	add_link_with_key (a_key: STRING; a_link: HAL_LINK)
+	add_link_with_key (a_key: READABLE_STRING_GENERAL; a_link: HAL_LINK)
 			-- add an (a_key,a_link) pair
 			-- require a_key is_equal a_link.rel
+		local
+			l_links: like links
 		do
-			links.force (a_link, a_key)
+			l_links := links
+			if l_links = Void then
+				create l_links.make (10)
+				l_links.compare_objects
+				links := l_links
+			elseif
+				l_links.has (a_link.rel) and then
+				attached {HAL_LINK} l_links [a_link.rel] as l_hal
+			then
+				l_hal.attributes.append (a_link.attributes)
+				l_links := Void
+			end
+			if l_links /= Void then
+				l_links.force (a_link, a_key)
+			end
 		end
 
 	add_link (a_link: HAL_LINK)
-		local
-			l_links: like links
 		do
-			l_links := links
-			if l_links = Void then
-				create l_links.make (10)
-				l_links.compare_objects
-				links := l_links
-			end
-			if l_links.has (a_link.rel) then
-				if attached {HAL_LINK} l_links.at (a_link.rel) as l_hal then
-					l_hal.attributes.append (a_link.attributes)
-				end
-			else
-				l_links.force (a_link, a_link.rel)
-			end
+			add_link_with_key (a_link.rel, a_link)
 		end
 
 	add_curie_link (a_attribute: HAL_LINK_ATTRIBUTE)
-		local
-			l_links: like links
 		do
-			l_links := links
-			if l_links = Void then
-				create l_links.make (10)
-				l_links.compare_objects
-				links := l_links
-			end
-			if l_links.has ("curies") then
-				if attached {HAL_LINK} l_links.at ("curies") as l_hal then
-					l_hal.attributes.force (a_attribute)
-				end
-			else
-				l_links.force (create {HAL_LINK}.make_with_attribute ("curies",a_attribute), "curies")
-			end
+			add_link_with_key ("curies", create {HAL_LINK}.make_with_attribute ("curies", a_attribute))
 		end
 
-	add_fields (key: STRING; value: STRING)
+	add_fields (key: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL)
+		obsolete
+			"Use `add_field` [2017-06-20]"
+		do
+			add_field (key, value)
+		end
+
+	add_field (key: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL)
 		local
 			l_fields: like fields
 		do
 			l_fields := fields
 			if l_fields = Void then
-				create l_fields.make (5)
+				create l_fields.make (1)
 				fields := l_fields
 			end
-			l_fields.force (value, key)
+			l_fields.force (value.to_string_32, key)
 		end
 
-	add_embedded_resource_with_key (key: STRING; res: HAL_RESOURCE)
+	add_embedded_resource_with_key (key: READABLE_STRING_GENERAL; res: HAL_RESOURCE)
 		local
 			er: like embedded_resource
 		do
@@ -233,7 +230,7 @@ feature -- Element Change
 			end
 		end
 
-	add_embedded_resources_with_key (key: STRING; resources: LIST [HAL_RESOURCE])
+	add_embedded_resources_with_key (key: READABLE_STRING_GENERAL; resources: LIST [HAL_RESOURCE])
 		local
 			er: like embedded_resource
 		do
@@ -255,15 +252,15 @@ feature -- Status Report
 			Result := links.has_key ("self") or else links.is_empty
 		end
 
-feature {JSON_HAL_RESOURCE_CONVERTER} -- Implementation
+feature {HAL_ACCESS} -- Implementation
 
-	links: HASH_TABLE [HAL_LINK, STRING]
+	links: STRING_TABLE [HAL_LINK]
 			--  contains links to other resources.
 
-	embedded_resource: detachable HASH_TABLE [LIST [HAL_RESOURCE], STRING]
+	embedded_resource: detachable STRING_TABLE [LIST [HAL_RESOURCE]]
 			-- expressing the embedded nature of a given part of the representation.
 
-	fields: detachable HASH_TABLE [STRING, STRING]
-			-- properties that represent the current state of the resource
+	fields: detachable STRING_TABLE [READABLE_STRING_32]
+			-- Properties representing current state of Current resource.
 
 end

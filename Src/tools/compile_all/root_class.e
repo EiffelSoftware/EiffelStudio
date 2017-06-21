@@ -191,6 +191,7 @@ feature {NONE} -- Implementation
 						localized_print ({STRING_32} "" + c.item.system + "-" + c.item.uuid + "-" + c.item.target + " (" + c.item.ecf.name + ")")
 						if attached c.item.log as l_logfn then
 							localized_print ({STRING_32} ": " + l_logfn.name)
+							show_log_content (l_logfn)
 						end
 						io.put_new_line
 					end
@@ -742,6 +743,22 @@ feature {NONE} -- Implementation
 			retry
 		end
 
+	show_log_content (a_log_file_name: PATH)
+			-- Display the whole content of `a_log_filename` to the console.
+		local
+			l_raw_file: PLAIN_TEXT_FILE
+		do
+			create l_raw_file.make_with_path (a_log_file_name)
+			if l_raw_file.exists and l_raw_file.is_readable then
+				l_raw_file.open_read
+				l_raw_file.read_stream (l_raw_file.count)
+				l_raw_file.close
+				localized_print ("%N")
+				localized_print (l_raw_file.last_string)
+				localized_print ("%N")
+			end
+		end
+
 feature {NONE} -- Error handling
 
 	display_error (a_message: READABLE_STRING_GENERAL)
@@ -948,7 +965,7 @@ feature {NONE} -- Directory manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

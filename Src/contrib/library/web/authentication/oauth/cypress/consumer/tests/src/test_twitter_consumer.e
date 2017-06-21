@@ -123,19 +123,26 @@ feature {NONE} -- Initialization
 				across
 					ctx.query_parameters as q
 				loop
-					tb.force (q.item, q.key)
+					tb.force (q.item.value, q.item.name)
 				end
 				if not ctx.form_parameters.is_empty then
 					check is_post: rqst_method.is_case_insensitive_equal ("POST") end
 					across
 						ctx.form_parameters as f
 					loop
-						tb.force (f.item, f.key)
+						if attached {HTTP_CLIENT_REQUEST_STRING_PARAMETER} f.item as sp then
+							tb.force (sp.value, sp.name)
+						else
+							check
+									-- no file.
+								only_string_parameters: False
+							end
+						end
 					end
 				end
 			end
 
-			Result := l_sig_builder.signature (<<rqst_method.as_upper, a_url>>, tb, signing_key)
+			Result := l_sig_builder.signature (<<rqst_method.as_upper, a_url.to_string_32>>, tb, signing_key)
 		end
 
 	nonce: STRING_8
@@ -210,7 +217,7 @@ invariant
 --	invariant_clause: True
 
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

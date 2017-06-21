@@ -1,4 +1,4 @@
-﻿/*
+/*
 	description: "Eiffel retrieve mechanism."
 	date:		"$Date$"
 	revision:	"$Revision$"

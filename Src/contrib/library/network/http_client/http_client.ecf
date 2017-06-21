@@ -33,6 +33,7 @@
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
 		<cluster name="src" location=".\src\">
 			<cluster name="implementation" location="$|implementation" recursive="true" hidden="true"/>
+			<cluster name="parameters" location="$|parameters" recursive="true"/>
 			<cluster name="spec_null" location="$|spec\null\" recursive="true"/>
 			<cluster name="spec_net" location="$|spec\net\">
 				<condition>

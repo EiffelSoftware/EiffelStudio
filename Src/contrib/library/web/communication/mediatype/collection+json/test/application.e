@@ -6,10 +6,6 @@ note
 class
 	APPLICATION
 
-inherit
-
-	SHARED_EJSON
-
 create
 	make
 
@@ -17,7 +13,7 @@ feature -- Initialization
 
 	make
 		do
-			initialize_converters
+			create json
 			print ("test data%N")
 			test_data
 			print ("%Ntest error%N")
@@ -34,20 +30,8 @@ feature -- Initialization
 			test_collection
 		end
 
-	initialize_converters
-			-- Initialize json converters
-		do
-			json.add_converter (create {CJ_COLLECTION_JSON_CONVERTER}.make)
-			json.add_converter (create {CJ_DATA_JSON_CONVERTER}.make)
-			json.add_converter (create {CJ_ERROR_JSON_CONVERTER}.make)
-			json.add_converter (create {CJ_ITEM_JSON_CONVERTER}.make)
-			json.add_converter (create {CJ_QUERY_JSON_CONVERTER}.make)
-			json.add_converter (create {CJ_TEMPLATE_JSON_CONVERTER}.make)
-			json.add_converter (create {CJ_LINK_JSON_CONVERTER}.make)
-			if json.converter_for (create {ARRAYED_LIST [detachable ANY]}.make (0)) = Void then
-				json.add_converter (create {CJ_ARRAYED_LIST_JSON_CONVERTER}.make)
-			end
-		end
+	json: CJ_TO_JSON
+
 
 	test_data
 			--{"name" : "full-name", "value" : "", "prompt" : "Full Name"}
@@ -58,7 +42,7 @@ feature -- Initialization
 			l_data.set_name ("full-name")
 			l_data.set_value ("test")
 			l_data.set_prompt ("Full Name")
-			if attached {JSON_VALUE} json.value (l_data) as jv then
+			if attached json.data_to_json (l_data) as jv then
 				print (pretty_string (jv))
 			end
 		end
@@ -76,7 +60,7 @@ feature -- Initialization
 			l_error.set_code ("X1C2")
 			l_error.set_message ("The server have encountered an error, please wait and try again.")
 			l_error.set_title ("Server Error")
-			if attached {JSON_VALUE} json.value (l_error) as jv then
+			if attached json.error_to_json (l_error) as jv then
 				print (pretty_string (jv))
 			end
 		end
@@ -89,7 +73,7 @@ feature -- Initialization
 			create l_link.make ("http://examples.org/images/jdoe", "avatar")
 			l_link.set_prompt ("Avatar")
 			l_link.set_render ("image")
-			if attached {JSON_VALUE} json.value (l_link) as jv then
+			if attached json.link_to_json (l_link) as jv then
 				print (pretty_string (jv))
 			end
 		end
@@ -111,7 +95,7 @@ feature -- Initialization
 			l_template.add_data (new_data ("email", "", "Email"))
 			l_template.add_data (new_data ("blog", "", "Blog"))
 			l_template.add_data (new_data ("avatar", "", "Avatar"))
-			if attached {JSON_VALUE} json.value (l_template) as jv then
+			if attached json.template_to_json (l_template) as jv then
 				print (pretty_string (jv))
 			end
 		end
@@ -136,7 +120,7 @@ feature -- Initialization
 			l_item.add_data (new_data ("email", "jdoe@example.org", "Email"))
 			l_item.add_link (new_link ("http://examples.org/blogs/jdoe", "blog", "Blog", Void, Void))
 			l_item.add_link (new_link ("http://examples.org/images/jdoe", "avatar", "Avatar", Void, "image"))
-			if attached {JSON_VALUE} json.value (l_item) as jv then
+			if attached json.item_to_json (l_item) as jv then
 				print (pretty_string (jv))
 			end
 		end
@@ -155,7 +139,7 @@ feature -- Initialization
 			create l_query.make ("http://example.org/friends/search", "search")
 			l_query.set_prompt ("Search")
 			l_query.add_data (new_data ("search", "", ""))
-			if attached {JSON_VALUE} json.value (l_query) as jv then
+			if attached json.query_to_json (l_query) as jv then
 				print (pretty_string (jv))
 			end
 		end
@@ -283,12 +267,12 @@ feature -- Initialization
 			l_error.set_message ("The server have encountered an error, please wait and try again.")
 			l_error.set_title ("Server Error")
 			l_collection.set_error (l_error)
-			if attached {JSON_VALUE} json.value (l_collection) as jv then
+			if attached json.collection_to_json (l_collection) as jv then
 				s := pretty_string (jv)
 				print (s.as_string_8)
 				print ("%N")
 				if attached (create {CJ_COLLECTION_FACTORY}).collection (s) as v_collection then
-					if attached {JSON_VALUE} json.value (l_collection) as jv2 then
+					if attached {JSON_VALUE} json.collection_to_json (l_collection) as jv2 then
 						if s.same_string (pretty_string (jv2)) then
 							if attached (create {RAW_FILE}.make_create_read_write ("test_collection.json")) as f then
 								f.put_string (s)

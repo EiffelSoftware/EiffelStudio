@@ -117,9 +117,8 @@ feature -- Access
 				create l_option.make (1 + platform_option_name.count)
 				l_option.append_character ('-')
 				l_option.append (platform_option_name)
-				l_option.append_character (' ')
-				l_option.append (platform_mode)
 				Result.extend (l_option)
+				Result.extend (platform_mode)
 			end
 			if is_capability_warning then
 				Result.extend (capabilty_option)
@@ -449,7 +448,7 @@ feature {NONE} -- Capabilities
 			-- Check library code against its capability rather than project settings.
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

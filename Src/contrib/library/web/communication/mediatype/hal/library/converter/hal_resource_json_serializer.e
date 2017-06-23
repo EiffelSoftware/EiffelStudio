@@ -132,8 +132,8 @@ feature {NONE} -- Converter implementation
 			if attached a_link_attribute.title as l_title then
 				Result.put_string (l_title, title_key)
 			end
-			if attached a_link_attribute.templated as l_templated then
-				Result.put_boolean (l_templated, templated_key)
+			if a_link_attribute.templated then
+				Result.put_boolean (True, templated_key)
 			end
 			if attached a_link_attribute.deprecation as l_deprecation then
 				Result.put_string (l_deprecation, deprecation_key)
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation: LINK
 
 	ref_key: JSON_STRING
 		once
-			create Result.make_from_String ("ref")
+			create Result.make_from_string ("ref")
 		end
 
 feature {NONE} -- Implementation: LINK_ATTRIBUTE

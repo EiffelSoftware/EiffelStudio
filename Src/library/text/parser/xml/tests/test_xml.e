@@ -732,6 +732,24 @@ feature -- ASCII
 			test_xml_content ("cdata_bracket_02", True, False, "<doc><![CDATA[]]]]><![CDATA[>]]></doc>")
 		end
 
+	test_entity_at_end_of_input
+		local
+			p: XML_PARSER
+			doc_cb: XML_CALLBACKS_DOCUMENT
+			s: STRING_8
+		do
+			print ("Testing case MarkH%N")
+			p := Factory.new_parser
+			create s.make_empty
+			create doc_cb.make_null
+			p.set_callbacks (new_callbacks_pipe (s, Void, doc_cb))
+				-- valid
+			p.parse_from_string ("<foo att=%"AT&ampT")
+			p.parse_from_string_32 ({STRING_32} "<foo att=%"AT&ampT")
+			p.parse_from_string_32 ({STRING_32} "<doc><foo att=%"AT&ampT%">AT&ampT</foo><foo att=%"AT&ampT%">AT&ampT</foo></doc>")
+			assert ("mark", not p.is_correct)
+		end
+
 feature {NONE} -- XML content
 
 	test_xml_content (a_assert_name: READABLE_STRING_8; a_expecting_success: BOOLEAN; a_expecting_truncation_reported: BOOLEAN; a_xml_content: READABLE_STRING_8)

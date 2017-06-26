@@ -21,11 +21,22 @@ feature -- Convertion
 		do
 			if attached {HAL_RESOURCE} obj as o then
 				create jo.make
-				jo.put (to_json_links (o.links, ctx), links_key)
-				if attached o.embedded_resource as l_embedded_resource then
+				if 
+					attached o.links as l_links and then
+					not l_links.is_empty
+				then
+					jo.put (to_json_links (l_links, ctx), links_key)
+				end
+				if 
+					attached o.embedded_resource as l_embedded_resource and then
+					not l_embedded_resource.is_empty
+				then
 					jo.put (to_json_embedded_resource (l_embedded_resource, ctx), embedded_key)
 				end
-				if attached o.fields as l_fields then
+				if 
+					attached o.fields as l_fields and then
+					not l_fields.is_empty
+				then
 					across
 						l_fields as ic
 					loop
@@ -109,7 +120,10 @@ feature {NONE} -- Converter implementation
 			l_result_arr: JSON_ARRAY
 		do
 			create {JSON_ARRAY} l_result_arr.make_empty
-			if attached a_link.attributes as l_attribs then
+			if 
+				attached a_link.attributes as l_attribs and then
+				not l_attribs.is_empty
+			then
 				across
 					l_attribs as ic
 				loop

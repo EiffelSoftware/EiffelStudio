@@ -750,7 +750,11 @@ feature {EB_ARGUMENT_DIALOG} -- Status change
 			l_name: STRING_32
 		do
 			if workbench.system_defined then
-				l_uuid := workbench.lace.conf_system.uuid.out
+				if workbench.lace.conf_system.is_generated_uuid then
+					l_uuid := "_"
+				else
+					l_uuid := workbench.lace.conf_system.uuid.out
+				end
 				sys_name := workbench.lace.system.name
 				tgt_name := workbench.lace.target_name
 
@@ -1821,7 +1825,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -38,19 +38,13 @@ feature -- Access: profiles
 		local
 			dn: PATH
 			tgt_name: READABLE_STRING_GENERAL
-			l_uuid: READABLE_STRING_GENERAL
 			l_name: STRING_32
 		do
 			if workbench.system_defined then
-				if workbench.lace.conf_system.is_generated_uuid then
-					l_uuid := "_"
-				else
-					l_uuid := workbench.lace.conf_system.uuid.out
-				end
 				tgt_name := workbench.lace.target_name
 				if is_eiffel_layout_defined then
 					dn := eiffel_layout.session_data_path
-					create l_name.make_from_string_general (l_uuid)
+					create l_name.make_from_string_general (unique_identifier_for_conf_system (workbench.lace.conf_system))
 					l_name.append_character ('.')
 					l_name.append_string_general (tgt_name)
 					l_name.append_character ('.')
@@ -172,15 +166,10 @@ feature -- Access: exception handler
 			l_name: STRING_32
 		do
 			if workbench.system_defined then
-				if workbench.lace.conf_system.is_generated_uuid then
-					l_uuid := "_"
-				else
-					l_uuid := workbench.lace.conf_system.uuid.out
-				end
 				tgt_name := workbench.lace.target_name
 				if is_eiffel_layout_defined then
 					dn := eiffel_layout.session_data_path
-					create l_name.make_from_string_general (l_uuid)
+					create l_name.make_from_string_general (unique_identifier_for_conf_system (workbench.lace.conf_system))
 					l_name.append_character ('.')
 					l_name.append_string_general (tgt_name)
 					l_name.append_character ('.')
@@ -267,6 +256,52 @@ feature -- Access: exception handler
 		end
 
 feature {NONE} -- Persistence
+
+	unique_identifier_for_conf_system (cfg: CONF_SYSTEM): READABLE_STRING_GENERAL
+			-- Unique identifier for `cfg`.
+			-- Usually the ecf uuid, or the generated uuid remembered in the mapping info.
+		local
+			fn: STRING_32
+			s: STRING_32
+			i,n: INTEGER
+			p: CHARACTER_32
+		do
+			if cfg.is_generated_uuid then
+				fn := cfg.file_name
+				if attached (create {USER_OPTIONS_FACTORY}).mapped_uuid (fn) as l_mapped_uuid then
+					Result := l_mapped_uuid.out
+				else
+					check has_known_ecf: False end
+						-- Without any uuid to reuse, 
+						-- let's generate a unique identifier based on compacted ecf filename.
+					from
+						i := 1
+						n := fn.count
+						create s.make (n)
+					until
+						i > n
+					loop
+						if p /= '%U' and fn[i] = p then
+								-- Same char as previous char.
+								-- Ignore.
+						else
+							p := fn[i]
+							inspect p
+							when ':','/','\',' ','%T' then
+								s.append_character ('-')
+								p := '-'
+							else
+								s.append_character (p)
+							end
+						end
+						i := i + 1
+					end
+					Result := s
+				end
+			else
+				Result := cfg.uuid.out
+			end
+		end
 
 	profiles_data_to_storage (a_data: like profiles_data_from_storage)
 			-- <Precursor>

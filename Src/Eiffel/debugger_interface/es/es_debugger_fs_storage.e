@@ -42,7 +42,11 @@ feature -- Access: profiles
 			l_name: STRING_32
 		do
 			if workbench.system_defined then
-				l_uuid := workbench.lace.conf_system.uuid.out
+				if workbench.lace.conf_system.is_generated_uuid then
+					l_uuid := "_"
+				else
+					l_uuid := workbench.lace.conf_system.uuid.out
+				end
 				tgt_name := workbench.lace.target_name
 				if is_eiffel_layout_defined then
 					dn := eiffel_layout.session_data_path
@@ -168,7 +172,11 @@ feature -- Access: exception handler
 			l_name: STRING_32
 		do
 			if workbench.system_defined then
-				l_uuid := workbench.lace.conf_system.uuid.out
+				if workbench.lace.conf_system.is_generated_uuid then
+					l_uuid := "_"
+				else
+					l_uuid := workbench.lace.conf_system.uuid.out
+				end
 				tgt_name := workbench.lace.target_name
 				if is_eiffel_layout_defined then
 					dn := eiffel_layout.session_data_path
@@ -429,6 +437,7 @@ feature {NONE} -- Implementation: xml
 			vis: XML_NODE_PRINTER
 			t2e: XML_TREE_TO_EVENTS
 			f: FILE
+			d: DIRECTORY
 			cb: XML_INDENT_PRETTY_PRINT_FILTER
 		do
 			create {PLAIN_TEXT_FILE} f.make_with_path (a_path)
@@ -440,6 +449,10 @@ feature {NONE} -- Implementation: xml
 					check has_permission: False end
 				end
 			else
+				create d.make_with_path (f.path.parent)
+				if not d.exists then
+					d.recursive_create_dir
+				end
 				f.create_read_write
 			end
 			if f.is_open_write then
@@ -453,7 +466,7 @@ feature {NONE} -- Implementation: xml
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

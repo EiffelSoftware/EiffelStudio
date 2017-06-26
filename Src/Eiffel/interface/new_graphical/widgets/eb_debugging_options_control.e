@@ -746,15 +746,9 @@ feature {EB_ARGUMENT_DIALOG} -- Status change
 		local
 			dn: PATH
 			sys_name, tgt_name: READABLE_STRING_GENERAL
-			l_uuid: READABLE_STRING_GENERAL
 			l_name: STRING_32
 		do
 			if workbench.system_defined then
-				if workbench.lace.conf_system.is_generated_uuid then
-					l_uuid := "_"
-				else
-					l_uuid := workbench.lace.conf_system.uuid.out
-				end
 				sys_name := workbench.lace.system.name
 				tgt_name := workbench.lace.target_name
 

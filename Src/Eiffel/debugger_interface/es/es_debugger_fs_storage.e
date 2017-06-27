@@ -162,7 +162,6 @@ feature -- Access: exception handler
 		local
 			dn: PATH
 			tgt_name: READABLE_STRING_GENERAL
-			l_uuid: READABLE_STRING_GENERAL
 			l_name: STRING_32
 		do
 			if workbench.system_defined then
@@ -272,7 +271,7 @@ feature {NONE} -- Persistence
 					Result := l_mapped_uuid.out
 				else
 					check has_known_ecf: False end
-						-- Without any uuid to reuse, 
+						-- Without any uuid to reuse,
 						-- let's generate a unique identifier based on compacted ecf filename.
 					from
 						i := 1

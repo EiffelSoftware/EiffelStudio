@@ -1,0 +1,11 @@
+test_name pretty-manifest-array
+test_description Manifest array may be printed inline or multi-line.
+
+-- copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+prettify	test.e prettify_output
+compile_result ok
+compare		prettify_output output
+
+test_end

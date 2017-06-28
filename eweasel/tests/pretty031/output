@@ -1,0 +1,17 @@
+class
+	TEST
+
+create
+	make
+
+feature
+
+	make
+		local
+			x: ARRAY [ANY]
+		do
+			x := <<1, 2, 3>>
+			x := {ARRAY [INTEGER]} <<1, 2, 3>>
+		end
+
+end

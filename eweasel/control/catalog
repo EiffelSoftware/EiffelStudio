@@ -3042,6 +3042,7 @@ test	pretty-feature-call-comment		pretty027 tcf pass pretty
 test	pretty-comments-between-features	pretty028 tcf pass pretty
 test	pretty-loop-invariant			pretty029 tcf pass pretty
 test	pretty-inline-separate-instruction	pretty030 tcf pass pretty
+test	pretty-manifest-array			pretty031 tcf fail pretty
 
 -- Benchmarks
 test	benchmark-scoop-gc-sequential-processor-creation	bench001 tcf pass benchmark scoop scoop_gc gc

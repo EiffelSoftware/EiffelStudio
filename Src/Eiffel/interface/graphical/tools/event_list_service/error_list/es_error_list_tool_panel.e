@@ -228,6 +228,9 @@ feature {NONE} -- Initialization: User interface
 				-- Set UI based on initial state.
 			update_content_applicable_navigation_buttons
 
+				-- Set message counters to their defaults.
+			update_message_counters
+
 			Precursor
 		end
 
@@ -1707,13 +1710,9 @@ feature {NONE} -- Factory
 				agent is_hint_event,
 				agent (e: EVENT_LIST_ITEM_I): BOOLEAN do Result := True end))
 
-			update_message_counters
-
 			create Result.make (4)
 			Result.extend (error_button)
---			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 			Result.extend (warning_button)
---			Result.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 			Result.extend (hint_button)
 		ensure then
 			error_button_attached: error_button /= Void

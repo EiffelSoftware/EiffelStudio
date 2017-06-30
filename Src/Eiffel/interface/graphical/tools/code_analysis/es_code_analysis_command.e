@@ -365,7 +365,8 @@ feature {NONE} -- Stone information
 				Result := create {CLUSTER_STONE}.make (class_stone.group)
 			elseif
 				attached {CLUSTER_STONE} Result as cluster_stone and then
-				attached cluster_stone.cluster_i.parent_cluster as parent_cluster
+				attached {CLUSTER_I} cluster_stone.group as cluster and then
+				attached cluster.parent_cluster as parent_cluster
 			then
 				Result := create {CLUSTER_STONE}.make (parent_cluster)
 			else

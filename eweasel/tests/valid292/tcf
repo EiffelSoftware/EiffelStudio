@@ -1,0 +1,10 @@
+test_name 	 typed-manifest-array-validity
+test_description Manifest array element types should conform to explicit element type.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	 validity_error TEST VWMA VWMA VWMA VWMA VWMA VWMA VWMA VWMA VWMA
+
+test_end

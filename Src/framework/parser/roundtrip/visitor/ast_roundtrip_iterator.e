@@ -385,6 +385,7 @@ feature
 
 	process_array_as (l_as: ARRAY_AS)
 		do
+			safe_process (l_as.type)
 			safe_process (l_as.larray_symbol (match_list))
 			safe_process (l_as.expressions)
 			safe_process (l_as.rarray_symbol (match_list))
@@ -1541,7 +1542,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

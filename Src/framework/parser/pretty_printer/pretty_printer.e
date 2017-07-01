@@ -1594,6 +1594,7 @@ feature {AST_VISITOR} -- Expressions
 	process_array_as (l_as: ARRAY_AS)
 			-- Process array expression `l_as'.
 		do
+			safe_process_and_print (l_as.type, "", " ")
 			safe_process (l_as.larray_symbol (match_list))
 			print_list_inline (l_as.expressions)
 			safe_process (l_as.rarray_symbol (match_list))
@@ -1983,7 +1984,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

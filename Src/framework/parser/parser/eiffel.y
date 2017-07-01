@@ -219,7 +219,7 @@ create
 %type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 364
+%expect 365
 
 %%
 
@@ -3954,12 +3954,25 @@ Infix_operator: TE_STR_LT
 			}
 	;
 
-Manifest_array: TE_LARRAY TE_RARRAY
+Manifest_array:
+	TE_LARRAY TE_RARRAY
+			{ $$ := ast_factory.new_array_as (ast_factory.new_eiffel_list_expr_as (0), $1, $2) }
+	|	Typed TE_LARRAY TE_RARRAY
 			{
-				$$ := ast_factory.new_array_as (ast_factory.new_eiffel_list_expr_as (0), $1, $2)
+				$$ := ast_factory.new_array_as (ast_factory.new_eiffel_list_expr_as (0), $2, $3)
+				if attached $$ as a then
+					a.set_type ($1)
+				end
 			}
 	|	TE_LARRAY Add_counter Expression_list Remove_counter TE_RARRAY
 			{ $$ := ast_factory.new_array_as ($3, $1, $5) }
+	|	Typed TE_LARRAY Add_counter Expression_list Remove_counter TE_RARRAY
+			{
+				$$ := ast_factory.new_array_as ($4, $2, $6)
+				if attached $$ as a then
+					a.set_type ($1)
+				end
+			}
 	;
 
 Manifest_tuple: TE_LSQURE TE_RSQURE

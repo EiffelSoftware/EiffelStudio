@@ -12,7 +12,8 @@ feature {NONE} -- Creation
 			b: B
 			c: C
 			t: TEST
-			x, y: COMPARABLE
+			x: COMPARABLE
+			y: INTEGER_REF
 		do
 			x := ""
 
@@ -31,9 +32,9 @@ feature {NONE} -- Creation
 			report (<<a, c, b>>, {ARRAY [detachable C]}, 6)
 			report (<<c, a, b>>, {ARRAY [detachable C]}, 7)
 
-				-- Compatible integer constants.
-			report (<<1, {NATURAL_8} 0>>, {ARRAY [NATURAL_8]}, 8)
-			report (<<1, 0x1_0000_0000>>, {ARRAY [INTEGER_64]}, 9)
+				-- Non-conforming integer constants.
+			report (<<1, {NATURAL_8} 0>>, {ARRAY [ANY]}, 8)
+			report (<<1, 0x1_0000_0000>>, {ARRAY [ANY]}, 9)
 
 				-- Attached and detachable types.
 			report (<<Current, Void>>, {ARRAY [detachable TEST]}, 10)
@@ -63,7 +64,7 @@ feature {NONE} -- Creation
 
 				-- Expanded and detachable separate types.
 			report (<<1, a, create {separate C}>>, {ARRAY [detachable separate ANY]}, 24)
-			report (<<1, y, create {separate STRING}.make_empty>>, {ARRAY [detachable separate COMPARABLE]}, 25)
+			report (<<1, y, create {separate STRING}.make_empty, x>>, {ARRAY [detachable separate COMPARABLE]}, 25)
 		end
 
 feature {NONE} -- Output

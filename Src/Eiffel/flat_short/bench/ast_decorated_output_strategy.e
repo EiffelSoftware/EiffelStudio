@@ -630,8 +630,11 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator := text_formatter_decorator
 			reset_last_class_and_type
 			if not expr_type_visiting then
+				if attached l_as.type as t then
+					t.process (Current)
+					l_text_formatter_decorator.put_space
+				end
 				l_text_formatter_decorator.process_symbol_text (ti_l_array)
-				l_text_formatter_decorator.put_space
 			end
 			if not l_as.expressions.is_empty then
 				if not expr_type_visiting then
@@ -639,9 +642,6 @@ feature {NONE} -- Implementation
 					l_text_formatter_decorator.set_space_between_tokens
 				end
 				l_as.expressions.process (Current)
-				if not expr_type_visiting then
-					l_text_formatter_decorator.put_space
-				end
 			end
 			if not expr_type_visiting then
 				l_text_formatter_decorator.set_without_tabs

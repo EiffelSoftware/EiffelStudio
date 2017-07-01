@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "AST representation of manifest array."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -94,13 +94,31 @@ feature -- Attributes
 	expressions: EIFFEL_LIST [EXPR_AS]
 			-- Expression list symbolizing the manifest array
 
+	type: detachable TYPE_AS
+			-- Specified array type (if any).
+
+feature -- Modification
+
+	set_type (t: like type)
+			-- Set type with `t`.
+		do
+			type := t
+		ensure
+			type_set: type = t
+		end
+
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			Result := larray_symbol (a_list)
-			if Result = Void then
-				Result := expressions.first_token (a_list)
+			if attached type as t then
+				Result := t.first_token (a_list)
+			end
+			if not attached Result then
+				Result := larray_symbol (a_list)
+				if Result = Void then
+					Result := expressions.first_token (a_list)
+				end
 			end
 		end
 
@@ -111,6 +129,9 @@ feature -- Roundtrip/Token
 			else
 				Result := expressions.last_token (a_list)
 			end
+			if not attached Result and then attached type as t then
+				Result := t.last_token (a_list)
+			end
 		end
 
 feature -- Comparison
@@ -118,7 +139,9 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (expressions, other.expressions)
+			Result :=
+				equivalent (type, other.type) and then
+				equivalent (expressions, other.expressions)
 		end
 
 feature {AST_EIFFEL} -- Output
@@ -135,7 +158,7 @@ invariant
 	expressions_not_void: expressions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -166,4 +189,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ARRAY_AS
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Environment configuration for EiffelStudio.
 	]"
@@ -13,7 +13,8 @@ class
 inherit
 	EC_EIFFEL_LAYOUT
 		redefine
-			creatable_directories
+			creatable_directories,
+			ec_command_name
 		end
 
 feature -- Access
@@ -30,8 +31,16 @@ feature -- Access
 			Result.extend (user_projects_path)
 		end
 
+feature -- Files (commands)
+
+	ec_command_name: PATH
+			-- <Precursor>
+		once
+			create Result.make_from_string ((create {ARGUMENTS_32}).command_name)
+		end
+
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

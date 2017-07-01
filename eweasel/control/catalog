@@ -1847,7 +1847,7 @@ test	void-safe-like-argument		exec364 tcf pass execution attached_types anchored
 test	once-manifest-string-extended-ascii exec365 tcf pass execution
 test	ieee-nan-deep-comparison	exec366 tcf pass execution ieee
 test	types-and-attachement 		exec367 tcf pass execution conformance void_safe
-test	manifest-array-type-computation	exec368 tcf fail execution manifest array
+test	manifest-array-type-computation	exec368 tcf pass execution manifest array
 test	conditional-expression-type-computation	exec369 tcf fail execution conditional expression
 
 -- Once specific

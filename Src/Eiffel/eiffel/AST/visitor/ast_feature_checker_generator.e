@@ -2334,30 +2334,50 @@ feature {NONE} -- Visitor
 			l_context := context
 			l_current_class := l_context.current_class
 			reset_for_unqualified_call_checking
-				-- Get target for manifest array creation (either through assignment or
-				-- argument passing).
-			l_gen_type ?= current_target_type
-				-- Let's try to find the type of the manifest array.
-			if l_gen_type /= Void then
-					-- Check that it is either an ARRAY, or a NATIVE_ARRAY when used
-					-- in a custom attribute.
-				if
-					l_gen_type.class_id = system.array_id or
-					(is_checking_cas and then l_gen_type.class_id = system.native_array_id)
-				then
-					l_has_array_target := True
-						-- Check that expressions' type matches element's type of `l_gen_type' array.
-					l_element_type := l_gen_type.generics.first.actual_type
+				-- Check explicit array type (if specified).
+			if attached l_as.type as type_declaration then
+				check_type (type_declaration)
+				if attached last_type as t then
+					current_target_type := t
+					if not attached current_target_type.conformance_type.base_class as b then
+							-- Error: there is no fixed class type.
+						error_handler.insert_error (create {VWMA_NO_CLASS_TYPE}.make (context, t, type_declaration.first_token (match_list_of_class (context.written_class.class_id))))
+						l_has_error := True
+					elseif b.class_id /= system.array_id then
+							-- Error: the specified type is not an ARRAY class type.
+						error_handler.insert_error (create {VWMA_NOT_ARRAY}.make (context, t, type_declaration.first_token (match_list_of_class (context.written_class.class_id))))
+						l_has_error := True
+					end
+				else
+					l_has_error := True
 				end
 			end
+			if not l_has_error then
+					-- Get target for manifest array creation (either through assignment or
+					-- argument passing).
+				l_gen_type ?= current_target_type
+					-- Let's try to find the type of the manifest array.
+				if l_gen_type /= Void then
+						-- Check that it is either an ARRAY, or a NATIVE_ARRAY when used
+						-- in a custom attribute.
+					if
+						l_gen_type.class_id = system.array_id or
+						(is_checking_cas and then l_gen_type.class_id = system.native_array_id)
+					then
+						l_has_array_target := True
+							-- Check that expressions' type matches element's type of `l_gen_type' array.
+						l_element_type := l_gen_type.generics.first.actual_type
+					end
+				end
 
-				-- Type check expression list
-				-- If there is a manifest array within a manifest array, we consider there is
-				-- no target type specified.
-			nb := l_as.expressions.count
-			current_target_type := l_element_type
-			process_expressions_list (l_as.expressions)
-			l_last_types := last_expressions_type
+					-- Type check expression list
+					-- If there is a manifest array within a manifest array, we consider there is
+					-- no target type specified.
+				nb := l_as.expressions.count
+				current_target_type := l_element_type
+				process_expressions_list (l_as.expressions)
+				l_last_types := last_expressions_type
+			end
 
 			if l_last_types /= Void then
 				if is_byte_node_enabled then
@@ -2382,10 +2402,10 @@ feature {NONE} -- Visitor
 									end
 									l_as.expressions [i] := converted_expression (l_as.expressions [i], l_context.last_conversion_info)
 									if is_byte_node_enabled and not is_checking_cas then
-										l_list.put_i_th (l_context.last_conversion_info.byte_node (
-											l_list.i_th (i)), i)
+										l_list [i] := l_context.last_conversion_info.byte_node (l_list [i])
 									end
 								else
+									error_handler.insert_error (create {VWMA_INCOMPATIBLE_EXPRESSION}.make (context, l_element_type, l_type_a, i, l_as.expressions [i].first_token (match_list_of_class (context.written_class.class_id))))
 									l_has_error := True
 									i := nb + 1	-- Exit the loop
 								end
@@ -2522,7 +2542,6 @@ feature {NONE} -- Visitor
 				end
 
 				if l_has_error then
-					fixme ("Insert new validity error saying that manifest array is not valid")
 					reset_types
 				elseif attached l_array_type then
 						-- Update type stack.

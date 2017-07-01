@@ -1,0 +1,17 @@
+test_name 	 conditional-expression-type-computation
+test_description A type of a conditional expression should be computed using only conformance and it should be the maximum element regadless of the condition position. See also test#exec368.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 a.e $CLUSTER a.e
+copy_raw 	 b.e $CLUSTER b.e
+copy_raw 	 c.e $CLUSTER c.e
+copy_raw 	 test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	 ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

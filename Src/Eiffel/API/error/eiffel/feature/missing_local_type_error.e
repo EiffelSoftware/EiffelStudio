@@ -105,12 +105,6 @@ feature {NONE} -- Formatting
 				identifiers)
 		end
 
-	message: FORMATTED_MESSAGE
-			-- A message formatter.
-		once
-			create Result
-		end
-
 feature {TYPE_A} -- Type visitor
 
 	process_boolean_a (a_type: BOOLEAN_A)
@@ -317,7 +311,7 @@ feature {TYPE_A} -- Type visitor
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

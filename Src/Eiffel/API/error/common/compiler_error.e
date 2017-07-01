@@ -22,7 +22,7 @@ inherit
 			process
 		end
 
-	EIFFEL_LAYOUT
+	SHARED_LOCALE
 		export
 			{NONE} all
 		end
@@ -418,6 +418,14 @@ feature {NONE} -- Output
 				a_text_formatter.add ("^")
 				a_text_formatter.add_new_line
 			end
+		end
+
+feature {NONE} -- Output
+
+	message: FORMATTED_MESSAGE
+			-- A message formatter.
+		once
+			create Result
 		end
 
 note

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Error for precompiled systems that are not compatible."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -22,12 +22,12 @@ feature {NONE} -- Creation
 	make (m: READABLE_STRING_GENERAL)
 			-- Initialize error with error message `m'.
 		do
-			message := m
+			description := m
 		end
 
 feature -- Access
 
-	message: READABLE_STRING_GENERAL
+	description: READABLE_STRING_GENERAL
 			-- Error message.
 
 feature -- Output
@@ -35,12 +35,12 @@ feature -- Output
 	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			a_text_formatter.add (message)
+			a_text_formatter.add (description)
 			a_text_formatter.add_new_line
 		end
 
 note
-	copyright:	"Copyright (c) 2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -71,4 +71,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class VD45
+end

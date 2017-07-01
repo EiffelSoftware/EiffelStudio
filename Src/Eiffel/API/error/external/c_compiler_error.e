@@ -33,23 +33,23 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_message: like message)
-			-- Initializes the C Compiler error with a message.
+	make (a_message: like description)
+			-- Initializes the C Compiler error with a description.
 			--
-			-- `a_message': A C compiler error message.
+			-- `a_message': A C compiler error description.
 		require
 			a_message_attached: a_message /= Void
 			not_a_message_is_empty: not a_message.is_empty
 		do
-			create message.make_from_string (a_message)
+			create description.make_from_string (a_message)
 		ensure
-			message_set: message ~ a_message
+			description_set: description ~ a_message
 		end
 
-	make_with_file (a_message: like message; a_file_name: like file_name; a_line: like line; a_column: like column)
-			-- Initializes the C Compiler error with a message.
+	make_with_file (a_message: like description; a_file_name: like file_name; a_line: like line; a_column: like column)
+			-- Initializes the C Compiler error with a description.
 			--
-			-- `a_message': A C compiler error message.
+			-- `a_message': A C compiler error description.
 			-- `a_file_name': The file associated with the error.
 			-- `a_line': Line number where the error occurred.
 			-- `a_column': Line column number where the error occurred.
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			line := a_line
 			column := a_column
 		ensure
-			message_set: message ~ a_message
+			description_set: description ~ a_message
 			file_name_set: file_name = a_file_name
 			line_set: line = a_line
 			column_set: column = a_column
@@ -81,7 +81,7 @@ feature -- Access
 	help_file_name: STRING = "C_COMPILER_ERROR"
 			-- Help file name
 
-	message: STRING_32
+	description: STRING_32
 			-- Message from C compiler.
 
 	file_name: detachable like {ERROR}.file_name
@@ -154,11 +154,11 @@ feature -- Output
 	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- <Precursor>
 		local
-			l_message: like message
+			l_message: like description
 		do
-			l_message := message
+			l_message := description
 			if not l_message.is_empty then
-				a_text_formatter.add (message)
+				a_text_formatter.add (description)
 				if l_message[l_message.count].is_alpha_numeric then
 					a_text_formatter.add (once ".")
 				end
@@ -183,11 +183,11 @@ feature {NONE} -- Output
 	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		do
-			a_text_formatter.add (message)
+			a_text_formatter.add (description)
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

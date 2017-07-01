@@ -2329,7 +2329,6 @@ feature {NONE} -- Visitor
 			l_current_class: CLASS_C
 			l_context: like context
 			l_is_attached: BOOLEAN
-			l_is_expression_unknown: BOOLEAN
 		do
 			l_context := context
 			l_current_class := l_context.current_class
@@ -2438,78 +2437,43 @@ feature {NONE} -- Visitor
 				end
 				if l_array_type = Void then
 					l_has_error := False
-					if nb > 0 then
-							-- `l_gen_type' is not an array type, so for now we compute as if
-							-- there was no context the type of the manifest array by taking the lowest
-							-- common type.
-							-- Take first element in manifest array and let's suppose
-							-- it is the lowest type.
-						l_type_a := l_last_types.i_th (1)
-						if not l_type_a.is_known then
-							l_is_expression_unknown := True
-						end
-						l_is_attached := l_type_a.is_attached
-						i := 2
-						if is_checking_cas then
-							from
-							until
-								i > nb
-							loop
-								l_element_type := l_last_types.i_th (i)
-								if not l_element_type.is_known then
-									l_is_expression_unknown := True
-								end
-								if l_is_attached and then not l_element_type.is_attached then
-									l_is_attached := False
-								end
-									-- Let's try to find the type to which everyone conforms to.
-									-- If not found it will be ANY.
-								if
-									l_type_a.backward_conform_to (l_current_class, l_element_type) or
-									(not is_inherited and then
-										l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type))
-								then
-										-- Nothing to be done
-								elseif
-									l_element_type.backward_conform_to (l_current_class, l_type_a) or
-									(not is_inherited and then
-										l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type))
-								then
-										-- Found a lowest type.
-									l_type_a := l_element_type
-								else
-										-- Cannot find a common type
-									l_has_error := True
-									i := nb + 1 -- Exit the loop
-								end
-								i := i + 1
+						-- `l_gen_type' is not an array type, so for now we compute as if
+						-- there was no context the type of the manifest array by taking the lowest
+						-- common type.
+						-- Use "NONE" as the initial lowest type, it conforms to any other type.
+					l_type_a := none_type
+					l_is_attached := True
+					i := 1
+					if is_checking_cas then
+						from
+						until
+							i > nb
+						loop
+							l_element_type := l_last_types.i_th (i)
+							if l_is_attached and then not l_element_type.is_attached then
+								l_is_attached := False
 							end
-						else
-							from
-							until
-								i > nb
-							loop
-								l_element_type := l_last_types.i_th (i)
-								if not l_element_type.is_known then
-									l_is_expression_unknown := True
-								end
-								if l_is_attached and then not l_element_type.is_attached then
-									l_is_attached := False
-								end
-									-- Let's try to find the type to which everyone conforms to.
-									-- If not found it will be ANY.
-								if l_type_a.backward_conform_to (l_current_class, l_element_type) then
-										-- Nothing to be done
-								elseif l_element_type.backward_conform_to (l_current_class, l_type_a) then
-										-- Found a lowest type.
-									l_type_a := l_element_type
-								else
-										-- Cannot find a common type
-									l_has_error := True
-									i := nb + 1 -- Exit the loop
-								end
-								i := i + 1
+								-- Let's try to find the type to which everyone conforms to.
+								-- If not found it will be ANY.
+							if
+								l_type_a.backward_conform_to (l_current_class, l_element_type) or
+								(not is_inherited and then
+									l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type))
+							then
+									-- Nothing to be done
+							elseif
+								l_element_type.backward_conform_to (l_current_class, l_type_a) or
+								(not is_inherited and then
+									l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type))
+							then
+									-- Found a lowest type.
+								l_type_a := l_element_type
+							else
+									-- Cannot find a common type
+								l_has_error := True
+								i := nb + 1 -- Exit the loop
 							end
+							i := i + 1
 						end
 						if l_has_error then
 								-- We could not find a common type, so we now assume it is ANY since
@@ -2517,27 +2481,22 @@ feature {NONE} -- Visitor
 							l_has_error := False
 							create {CL_TYPE_A} l_type_a.make (system.any_id)
 						end
-					else
-							-- Empty manifest array
-						l_type_a := create {CL_TYPE_A}.make (system.any_id)
-							-- No elements, so it's safe to treat them as attached.
-						l_is_attached := True
-					end
-					if not l_has_error then
 						if l_is_attached then
 								-- Respect attachment status of the elements.
 							l_type_a := l_type_a.as_attached_in (l_current_class)
 						end
-						create l_generics.make (1)
-						l_generics.extend (l_type_a)
-						create l_array_type.make (system.array_id, l_generics)
-							-- Type of a manifest array is always frozen.
-						l_array_type.set_frozen_mark
-							-- Type of a manifest array is always attached.
-						l_array_type := l_array_type.as_attached_in (l_current_class)
-						if not l_is_expression_unknown then
-							instantiator.dispatch (l_array_type, l_current_class)
-						end
+					else
+						l_type_a := maximal_type (l_last_types)
+					end
+					create l_generics.make (1)
+					l_generics.extend (l_type_a)
+					create l_array_type.make (system.array_id, l_generics)
+						-- Type of a manifest array is always frozen.
+					l_array_type.set_frozen_mark
+						-- Type of a manifest array is always attached.
+					l_array_type := l_array_type.as_attached_in (l_current_class)
+					if l_type_a.is_known then
+						instantiator.dispatch (l_array_type, l_current_class)
 					end
 				end
 
@@ -11110,6 +11069,42 @@ feature {NONE} -- Implementation: type validation
 				Result := ry
 			elseif ry.conform_to (context.current_class, rx) then
 				Result := rx
+			end
+		end
+
+	maximal_type (ts: ARRAYED_LIST [TYPE_A]): TYPE_A
+			-- A type that is maximal in the list `ts`, if present, or a properly adapted version of "ANY".
+		local
+			t: TYPE_A
+			i, j, n: INTEGER
+		do
+				-- Use "NONE" as the initial lowest type, it conforms to any other type.
+			Result := none_type.as_attached_type
+			from
+				n := ts.count
+			until
+				i >= n
+			loop
+				i := i + 1
+				t := ts [i]
+				if attached upper_type (t, Result) as x then
+					Result := x
+				else
+					if i >= n or else j >= n then
+							-- Cannot find a common type, use "ANY".
+						Result := (create {CL_TYPE_A}.make (system.any_id)).as_attached_type
+					else
+							-- Start over from the next unprocessed element type as the initial one.
+						if i > j then
+							j := i + 1
+						else
+							j := j + 1
+						end
+						Result := ts [j]
+					end
+						-- Recheck with the new type, adapting it if necessary.
+					i := 0
+				end
 			end
 		end
 

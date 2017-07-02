@@ -1848,7 +1848,7 @@ test	once-manifest-string-extended-ascii exec365 tcf pass execution
 test	ieee-nan-deep-comparison	exec366 tcf pass execution ieee
 test	types-and-attachement 		exec367 tcf pass execution conformance void_safe
 test	manifest-array-type-computation	exec368 tcf pass execution manifest array
-test	conditional-expression-type-computation	exec369 tcf fail execution conditional expression
+test	conditional-expression-type-computation	exec369 tcf pass execution conditional expression
 
 -- Once specific
 
@@ -2499,8 +2499,8 @@ test	validity-vuex2-in-multibranch	vuex201  tcf pass validity vuex inspect
 
 test	bracket-expression-on-current	vwbr101  tcf pass validity vwbr anchored_type bracket_expression
 
-test	validity-vwce-basic		vwce001  tcf pass validity vwce conditional expression
-test	validity-vwce-type-conformance	vwce002  tcf pass validity vwce conditional expression conformance compatibility
+test	validity-vwce-basic			vwce001  tcf pass validity vwce conditional expression
+test	validity-vwce-type-compatibility	vwce002  tcf pass validity vwce conditional expression conformance compatibility
 
 test	validity-vwmq-string-conversion	vwmq001  tcf pass vaildity vwmq
 

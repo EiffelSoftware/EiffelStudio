@@ -1,5 +1,5 @@
 test_name 	 conditional-expression-type-computation
-test_description A type of a conditional expression should be computed using only conformance and it should be the maximum element regadless of the condition position. See also test#exec368.
+test_description A type of a conditional expression should be computed using only conformance and it should be the maximum element regadless of the condition position. See also test#exec368, test#vwce001, test#vwce002.
 
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 a.e $CLUSTER a.e

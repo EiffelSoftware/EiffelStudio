@@ -6978,6 +6978,7 @@ feature {NONE} -- Visitor
 			scope_matcher: AST_SCOPE_MATCHER
 			l_expression_type: detachable TYPE_A
 			l_error_level: like error_level
+			l_type_list: like last_expressions_type
 		do
 			l_error_level := error_level
 			l_needs_byte_node := is_byte_node_enabled
@@ -7010,6 +7011,9 @@ feature {NONE} -- Visitor
 			scope_matcher.add_scopes (l_as.condition)
 			l_as.then_expression.process (Current)
 			if attached last_type as e then
+				create l_type_list.make (if attached l_as.elsif_list as l then l.count else 0 end + 2)
+				l_type_list.extend (e)
+				last_expressions_type := l_type_list
 				l_expression_type := e
 				if l_needs_byte_node and then attached {EXPR_B} last_byte_node as t  then
 					l_then_expression := t
@@ -7031,13 +7035,9 @@ feature {NONE} -- Visitor
 				-- Type check on default expression.
 			l_as.else_expression.process (Current)
 			if attached last_type as t and then l_needs_byte_node and then attached {EXPR_B} last_byte_node as e then
-				if attached l_expression_type then
-					if attached upper_type (l_expression_type, t) as q then
-							-- Use the new type as the conditional expression type.
-						l_expression_type := q
-					else
-						error_handler.insert_error (create {VWCE}.make (l_expression_type, t, l_as.else_expression.start_location, context))
-					end
+				if attached l_type_list then
+					l_type_list.extend (t)
+					l_expression_type := maximal_type (l_type_list)
 				end
 				l_else_expression := e
 			end
@@ -8284,8 +8284,6 @@ feature {NONE} -- Visitor
 
 			l_needs_byte_node := is_byte_node_enabled
 
-			l_expression_type := last_type
-
 				-- Type check test first
 			l_as.condition.process (Current)
 			if attached last_type then
@@ -8309,14 +8307,10 @@ feature {NONE} -- Visitor
 			s := context.scope
 			scope_matcher.add_scopes (l_as.condition)
 			l_as.expression.process (Current)
+			l_expression_type := last_type
 			if attached l_condition and then attached {EXPR_B} last_byte_node as e then
-				if attached l_expression_type and then attached last_type as t then
-					if attached upper_type (l_expression_type, t) as q then
-							-- Use the new type as the conditional expression type.
-						l_expression_type := q
-					else
-						error_handler.insert_error (create {VWCE}.make (l_expression_type, t, l_as.expression.start_location, context))
-					end
+				if attached l_expression_type and then attached last_expressions_type as type_list then
+					type_list.extend (l_expression_type)
 				end
 				l_expression := e
 			end

@@ -598,14 +598,14 @@ feature {NONE} -- Externals
 
 	cwel_print_dlg_set_lpfnprinthook (ptr: POINTER; value: POINTER)
 		external
-			"C inline use <windows.h>"
+			"C inline use <printdlg.h>"
 		alias
 			"((LPPRINTDLG) $ptr)->lpfnPrintHook = (LPPRINTHOOKPROC) $value;"
 		end
 
 	cwel_print_dlg_get_hwndowner (ptr: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <printdlg.h>"
 		alias
 			"return ((LPPRINTDLG) $ptr)->hwndOwner;"
 		end
@@ -647,7 +647,7 @@ feature {NONE} -- Externals
 
 	cwel_print_dlg_get_lpfnprinthook (ptr: POINTER): POINTER
 		external
-			"C inline use <windows.h>"
+			"C inline use <printdlg.h>"
 		alias
 			"return (EIF_POINTER) ((LPPRINTDLG) $ptr)->lpfnPrintHook;"
 		end

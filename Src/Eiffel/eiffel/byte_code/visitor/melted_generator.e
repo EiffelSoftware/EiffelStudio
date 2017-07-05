@@ -807,6 +807,28 @@ feature {NONE} -- Visitors
 			ba.write_forward
 		end
 
+	process_elsif_expression_b_for_type (a_node: ELSIF_EXPRESSION_B; t: TYPE_A)
+			-- Same as `process_elsif_expression_b`, but converts result value to type `t`.
+		do
+				-- Generate hook for the condition test.
+			generate_melted_debugger_hook (ba)
+
+				-- Generate byte code for condition.
+			a_node.condition.process (Current)
+
+				-- Test if False.
+			ba.append (Bc_jmp_f)
+			ba.mark_forward
+
+				-- Generate hook for Then_part.
+			generate_melted_debugger_hook (ba)
+				-- Generate alternative expression byte code.
+			make_expression_byte_code_for_type (a_node.expression, t)
+			ba.append (Bc_jmp)
+			ba.mark_forward2
+			ba.write_forward
+		end
+
 	process_expr_address_b (a_node: EXPR_ADDRESS_B)
 			-- Process `a_node'.
 			--| Generation is exactly the same as in `process_hector_b'.
@@ -1155,7 +1177,10 @@ feature {NONE} -- Visitors
 			-- <Precursor>
 		local
 			nb_jumps: INTEGER
+			t: TYPE_A
 		do
+			t := context.real_type (a_node.type)
+
 				-- Generate byte code for condition.
 			a_node.condition.process (Current)
 
@@ -1168,7 +1193,7 @@ feature {NONE} -- Visitors
 				-- Generate hook for Then_part.
 			generate_melted_debugger_hook (ba)
 				-- Generate expression for Then_part.
-			a_node.then_expression.process (Current)
+			make_expression_byte_code_for_type (a_node.then_expression, t)
 
 			ba.append (Bc_jmp)
 			ba.mark_forward2
@@ -1182,7 +1207,7 @@ feature {NONE} -- Visitors
 				across
 					l as c
 				loop
-					c.item.process (Current)
+					process_elsif_expression_b_for_type (c.item, t)
 				end
 				nb_jumps := nb_jumps + l.count
 			end
@@ -1190,7 +1215,7 @@ feature {NONE} -- Visitors
 				-- Generate hook for Else_part.
 			generate_melted_debugger_hook (ba)
 				-- Generate expression for Else_part.
-			a_node.else_expression.process (Current)
+			make_expression_byte_code_for_type (a_node.else_expression, t)
 
 			from
 					-- Generate jump values for unconditional jumps

@@ -819,7 +819,7 @@ feature -- Links
 			create l_css_class.make_from_string ("wiki_link")
 			if a_link.name.is_whitespace then
 				if attached a_link.fragment as l_fragment then
-					l_url := "#" + l_fragment
+					l_url := "#" + anchor_name (l_fragment, True)
 				else
 					l_url := ""
 				end
@@ -828,7 +828,7 @@ feature -- Links
 				attached r.wiki_url (a_link, current_page) as u
 			then
 				if attached a_link.fragment as l_fragment then
-					l_url := u + "#" + l_fragment
+					l_url := u + "#" + anchor_name (l_fragment, True)
 				else
 					l_url := u
 				end

@@ -2336,19 +2336,22 @@ feature {NONE} -- Visitor
 				-- Check explicit array type (if specified).
 			if attached l_as.type as type_declaration then
 				check_type (type_declaration)
-				if attached last_type as t then
-					current_target_type := t
-					if not attached current_target_type.conformance_type.base_class as b then
-							-- Error: there is no fixed class type.
-						error_handler.insert_error (create {VWMA_NO_CLASS_TYPE}.make (context, t, type_declaration.first_token (match_list_of_class (context.written_class.class_id))))
-						l_has_error := True
-					elseif b.class_id /= system.array_id then
-							-- Error: the specified type is not an ARRAY class type.
-						error_handler.insert_error (create {VWMA_NOT_ARRAY}.make (context, t, type_declaration.first_token (match_list_of_class (context.written_class.class_id))))
-						l_has_error := True
-					end
-				else
+				if not attached last_type as t then
 					l_has_error := True
+				elseif not attached t.conformance_type.base_class as b then
+						-- Error: there is no fixed class type.
+					error_handler.insert_error (create {VWMA_NO_CLASS_TYPE}.make (context, t, type_declaration.first_token (match_list_of_class (context.written_class.class_id))))
+					l_has_error := True
+				elseif b.class_id /= system.array_id then
+						-- Error: the specified type is not an ARRAY class type.
+					error_handler.insert_error (create {VWMA_NOT_ARRAY}.make (context, t, type_declaration.first_token (match_list_of_class (context.written_class.class_id))))
+					l_has_error := True
+				elseif t.is_separate then
+						-- Error: the specified ARRAY type is separate.
+					error_handler.insert_error (create {VWMA_SEPARATE_ARRAY}.make (context, t, type_declaration.first_token (match_list_of_class (context.written_class.class_id))))
+					l_has_error := True
+				else
+					current_target_type := t
 				end
 			end
 			if not l_has_error then

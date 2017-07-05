@@ -1,0 +1,29 @@
+test_name 	 conditional-expression-expanded-type
+test_description If a conditional expression involves expanded and reference type or incompatible expanded types, the expanded values should be boxed before use.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 a.e $CLUSTER a.e
+copy_raw 	 test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	 ok
+
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result 	 ok
+
+execute_work 	NONE 	exec_output_w
+execute_result 	ok
+compare		exec_output_w output
+
+compile_final
+compile_result 	 ok
+
+execute_work 	NONE 	exec_output_f
+execute_result 	ok
+compare		exec_output_f output
+
+test_end

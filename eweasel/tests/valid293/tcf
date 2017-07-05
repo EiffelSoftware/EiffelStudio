@@ -1,0 +1,11 @@
+test_name 	 typed-manifest-array-type-validity
+test_description Explicit manifest array type should resolve to a non-separate class type with base class ARRAY.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 a.e $CLUSTER a.e
+copy_raw 	 test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	 validity_error A VWMA VWMA; TEST VWMA VWMA
+
+test_end

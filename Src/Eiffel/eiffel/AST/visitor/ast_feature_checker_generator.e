@@ -7049,7 +7049,7 @@ feature {NONE} -- Visitor
 			context.leave_realm
 
 			if attached l_condition and then attached l_then_expression and then attached l_else_expression then
-				create l_if.make (l_condition, l_then_expression, l_list, l_else_expression, l_as.end_keyword)
+				create l_if.make (l_condition, l_then_expression, l_list, l_else_expression, l_expression_type, l_as.end_keyword)
 				l_if.set_line_number (l_as.condition.start_location.line)
 				last_byte_node := l_if
 			end

@@ -30,19 +30,22 @@ create
 
 feature {NONE} -- Creation
 
-	make (c: like condition; t: like then_expression; l: like elsif_list; e: like else_expression; a: like end_location)
+	make (condition_expression: like condition; then_part: like then_expression; elseif_parts: like elsif_list; else_part: like else_expression; common_type: like type; location: like end_location)
+			-- Initialize byte node with condition `contiion_expression`, Then_part `then_part`, a list of Elseif clauses `elseif_parts`, Else_part `else_part`, computed common type `common_type` and final location `location`.
 		do
-			condition := c
-			then_expression := t
-			elsif_list := l
-			else_expression := e
-			end_location := a
+			condition := condition_expression
+			then_expression := then_part
+			elsif_list := elseif_parts
+			else_expression := else_part
+			type := common_type
+			end_location := location
 		ensure
-			condition_set: condition = c
-			then_expression_set: then_expression = t
-			elsif_list_set: elsif_list = l
-			else_expression_set: else_expression = e
-			end_location_set: end_location = a
+			condition_set: condition = condition_expression
+			then_expression_set: then_expression = then_part
+			elsif_list_set: elsif_list = elseif_parts
+			else_expression_set: else_expression = else_part
+			type_set: type = common_type
+			end_location_set: end_location = location
 		end
 
 feature -- Visitor
@@ -72,9 +75,6 @@ feature -- Access
 
 	type: TYPE_A
 			-- <Precursor>
-		do
-			Result := then_expression.type
-		end
 
 feature -- Status report
 
@@ -301,28 +301,17 @@ feature -- Code generation: C
 			-- <Precursor>
 		local
 			buf: GENERATION_BUFFER
+			t: TYPE_A
 		do
+			t := context.real_type (type)
 			buf := buffer
-
 			condition.generate
-
 			buf.put_new_line
 			buf.put_string ({C_CONST}.if_conditional)
 			buf.put_two_character (' ', '(')
 			condition.print_register
-			buf.put_three_character (')', ' ', '{')
-			buf.indent
-				-- Generate the hook for Then_part.
-			generate_frozen_debugger_hook
-			then_expression.generate
-			buf.put_new_line
-			print_register
-			buf.put_three_character (' ', '=', ' ')
-			then_expression.print_register
-			buf.put_character (';')
-			buf.exdent
-			buf.put_new_line
-			buf.put_character ('}')
+			buf.put_character (')')
+			generate_one_branch (then_expression, t)
 			if attached elsif_list as l then
 				across
 					l as c
@@ -339,34 +328,13 @@ feature -- Code generation: C
 					buf.put_string ({C_CONST}.if_conditional)
 					buf.put_two_character (' ', '(')
 					c.item.condition.print_register
-					buf.put_three_character (')', ' ', '{')
-					buf.indent
-					c.item.generate_frozen_debugger_hook
-					c.item.expression.generate
-					buf.put_new_line
-					print_register
-					buf.put_three_character (' ', '=', ' ')
-					c.item.expression.print_register
-					buf.put_character (';')
-					buf.exdent
-					buf.put_new_line
-					buf.put_character ('}')
+					buf.put_character (')')
+					generate_one_branch (c.item.expression, t)
 				end
 			end
 			buf.put_character (' ')
 			buf.put_string ({C_CONST}.else_conditional)
-			buf.put_two_character (' ', '{')
-			buf.indent
-			generate_frozen_debugger_hook
-			else_expression.generate
-			buf.put_new_line
-			print_register
-			buf.put_three_character (' ', '=', ' ')
-			else_expression.print_register
-			buf.put_character (';')
-			buf.exdent
-			buf.put_new_line
-			buf.put_character ('}')
+			generate_one_branch (else_expression, t)
 			generate_closing_brakets
 		end
 
@@ -395,6 +363,31 @@ feature {NONE} -- Code generation: C
 
 	register: REGISTRABLE
 			-- Register to keep result of the conditional expression.
+
+	generate_one_branch (e: EXPR_B; t: TYPE_A)
+			-- Generate code for a single branch `e`.
+		local
+			buf: GENERATION_BUFFER
+		do
+			buf := buffer
+				-- There is a leading test, so put a space before opening a brace.
+			buf.put_two_character (' ', '{')
+			buf.indent
+				-- Generate the hook for the branch.
+			generate_frozen_debugger_hook
+			e.generate_for_type (register, t)
+			if not e.is_register_required (t) then
+					-- Assign value to register when it is not done yet.
+				buf.put_new_line
+				print_register
+				buf.put_three_character (' ', '=', ' ')
+				e.print_register
+				buf.put_character (';')
+			end
+			buf.exdent
+			buf.put_new_line
+			buf.put_character ('}')
+		end
 
 feature -- Array optimization
 
@@ -470,7 +463,7 @@ feature -- Inlining
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

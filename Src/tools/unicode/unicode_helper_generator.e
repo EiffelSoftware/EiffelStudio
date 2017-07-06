@@ -180,9 +180,9 @@ feature -- Basic operations
 
 			if attached output_path as l_path and then not l_path.is_empty then
 				create l_filename.make_from_string (l_path)
-				create l_output.make_with_path (l_filename.extended (character_32_property_filename))
+				create l_output.make_with_path (l_filename.extended (character_property_filename))
 			else
-				create l_output.make_with_name (character_32_property_filename)
+				create l_output.make_with_name (character_property_filename)
 			end
 			l_output.open_write
 
@@ -696,7 +696,7 @@ feature {NONE} -- Helpers
 		end
 		}"
 
-	character_32_property_filename: STRING_32 = "character_32_property.e"
+	character_property_filename: STRING_32 = "character_property.e"
 			-- Name of output file
 
 	to_lower_table_name: STRING = "to_lower_table_"

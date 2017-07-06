@@ -2,17 +2,13 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="unicode_helper_generator" uuid="AA452682-C95E-4E11-AE63-8C4E50C0C066">
 	<target name="unicode_helper_generator">
 		<root class="UNICODE_HELPER_GENERATOR" feature="make"/>
-		<option warning="true">
-			<assertions/>
-		</option>
-		<setting name="automatic_backup" value="true"/>
+		<option warning="true"/>
 		<setting name="check_for_void_target" value="false"/>
 		<setting name="console_application" value="true"/>
 		<capability>
 			<concurrency use="none"/>
-			<void_safety support="all"/>
 		</capability>
-		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf" readonly="false"/>
+		<library name="arg_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="framework_utilities" location="$EIFFEL_SRC\framework\utilities\utilities.ecf"/>

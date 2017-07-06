@@ -5,6 +5,7 @@
 		a punctuation, a control or a space character.
 	]"
 	generator: "unicode_helper_generator"
+	unicode_version: "$UNICODE_VERSION"
 	date: "$Date: $"
 	revision: "$Revision: $"
 

@@ -118,8 +118,8 @@ test	two-way-tree-fill	tree006	tcf fail tree
 test	tree-various-operations	tree007 tcf fail tree
 test	two-way-tree-operations	tree008 tcf fail tree
 
-test	string-regression		string001 tcf pass string
-test	check-lower-upper-unicode	string002 tcf pass string
+test	string-regression		string001 tcf pass string unicode
+test	check-lower-upper-unicode	string002 tcf pass string unicode
 test	manifest-string32-constants	string003 tcf pass string
 
 test	insert-default-key		table001 tcf pass table
@@ -659,7 +659,7 @@ test	code-compatible-io-failure		except035 tcf pass exception
 test	original_routines_in_exceptions		except036 tcf pass exception
 test	exception_cause				except037 tcf pass exception
 test	io_exception_code			except038 tcf pass exception
-test	unicode_in_exception			except039 tcf pass exception
+test	unicode_in_exception			except039 tcf pass exception unicode
 
 
 -- Catcall tests

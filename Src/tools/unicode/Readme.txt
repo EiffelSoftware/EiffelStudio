@@ -1,8 +1,8 @@
-Unicode Helper Generator - Version: 1.0
-Copyright Eiffel Software 2012. All Rights Reserved.
+Unicode Helper Generator - Version: 1.1
+Copyright Eiffel Software 2012-2017. All Rights Reserved.
 
-USAGE:
-   unicode_helper_generator.exe -i <file> [-d <density>] [-p <template>] [-o <dir>] [-s] [-v] [-nologo]
+USAGE: 
+   unicode_helper_generator.exe -i <file> [-d <density>] [-p <template>] [-o <dir>] [-s] -u <version> [-v] [--nologo]
 
 OPTIONS:
    -i --input            : UnicodeData.txt file
@@ -14,6 +14,8 @@ OPTIONS:
    -o --output_directory : Directory where files will be generated (Optional)
                            <dir>: Directory for outputs
    -s --statistics       : Display statistics (Optional)
+   -u --unicode_version  : Version of Unicode data
+                           <version>: Version string, e.g. "6.2.0"
    -? --help             : Display usage information. (Optional)
    -v --version          : Displays version information. (Optional)
       --nologo           : Supresses copyright information. (Optional)

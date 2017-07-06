@@ -454,7 +454,6 @@ feature -- Basic operations
 			a_output.append (" <= l_code) and (l_code <= ")
 			a_output.append_natural_32 (a_ranges.i_th (1).last.key)
 			a_output.append (") then")
-			write_tab (a_output, a_nb_tab)
 			a_output.append_character ('%N')
 			write_tab (a_output, a_nb_tab + 1)
 			a_output.append ("Result := ")
@@ -501,7 +500,6 @@ feature -- Basic operations
 					a_output.append_natural_32 (a_ranges.i_th (a_lower_bound).last.key)
 				end
 				a_output.append (" then")
-				write_tab (a_output, a_nb_tab)
 				a_output.append_character ('%N')
 				write_tab (a_output, a_nb_tab + 1)
 				a_output.append ("Result := ")

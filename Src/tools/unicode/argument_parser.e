@@ -55,7 +55,7 @@ feature -- Access
 			if attached {ARGUMENT_OPTION} option_of_name (property_template_switch) as l_value then
 				Result := l_value.value
 			else
-				Result := "character_32_property.template"
+				Result := "character_property.template"
 			end
 		end
 

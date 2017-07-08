@@ -428,6 +428,12 @@ feature {NONE} -- Output
 			create Result
 		end
 
+	format (t: TEXT_FORMATTER; m: READABLE_STRING_32; a: ITERABLE [PROCEDURE [TEXT_FORMATTER]])
+			-- Format message `m` with arguments `a` using formatter `t`.
+		do
+			message.format (t, m, create {ITERABLE_FUNCTION [PROCEDURE [FORMAT_SPECIFICATION, TEXT_FORMATTER], PROCEDURE [TEXT_FORMATTER]]}.make (agent message.element, a))
+		end
+
 note
 	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

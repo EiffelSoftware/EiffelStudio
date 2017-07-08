@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A type of a manifest array element is not compatible with the type of the array."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -54,11 +54,11 @@ feature -- Output
 	build_explain (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			message.format (t, locale.translation_in_context ("Manifest array element at index {1} has type {2} incompatible with declared element type {3}.", "compiler.error"),
+			format (t, locale.translation_in_context ("Manifest array element at index {1} has type {2} incompatible with declared element type {3}.", "compiler.error"),
 				<<
-					message.element (agent {TEXT_FORMATTER}.add_int (index)),
-					message.element (agent expression_type.append_to),
-					message.element (agent element_type.append_to)
+					agent {TEXT_FORMATTER}.add_int (index),
+					agent expression_type.append_to,
+					agent element_type.append_to
 				>>)
 			t.add_new_line
 		end
@@ -66,11 +66,11 @@ feature -- Output
 	trace_single_line (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			message.format (t, locale.translation_in_context ("Array element at index {1} has type {2} incompatible with {3}.", "compiler.error"),
+			format (t, locale.translation_in_context ("Array element at index {1} has type {2} incompatible with {3}.", "compiler.error"),
 				<<
-					message.element (agent {TEXT_FORMATTER}.add_int (index)),
-					message.element (agent expression_type.append_to),
-					message.element (agent element_type.append_to)
+					agent {TEXT_FORMATTER}.add_int (index),
+					agent expression_type.append_to,
+					agent element_type.append_to
 				>>)
 		end
 

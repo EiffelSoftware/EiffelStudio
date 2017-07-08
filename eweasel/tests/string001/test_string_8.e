@@ -415,12 +415,12 @@ feature {NONE} -- Implementation
 			s: STRING_8
 		do
 			s := "abcdef"
-			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			s.from_c (l_ptr.item)
 			check_boolean ("from_c", s.is_equal ("0123456"))
 			
 			s := "abcdef"
-			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			s.from_c (l_ptr.item)
 			check_boolean ("from_c", s.is_empty)
 		end
@@ -430,7 +430,7 @@ feature {NONE} -- Implementation
 			l_ptr: MANAGED_POINTER
 			s: STRING_8
 		do
-			create l_ptr.make_from_array (<<65,66,67,68>>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} <<65,66,67,68>>)
 			create s.make (2)
 
 			s.from_c_substring (l_ptr.item, 3, 3)
@@ -1214,21 +1214,21 @@ feature {NONE} -- Implementation
 			l_ptr: MANAGED_POINTER
 			s: STRING_8
 		do
-			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			create s.make_from_c (l_ptr.item)
 			check_boolean ("make_from_c", s.is_equal ("0123456"))
 
-			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			create s.make_from_c (l_ptr.item)
 			check_boolean ("make_from_c", s.is_empty)
 			
 			s := "abcdef"
-			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			s.make_from_c (l_ptr.item)
 			check_boolean ("make_from_c", s.is_equal ("0123456"))
 			
 			s := "abcdef"
-			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			s.make_from_c (l_ptr.item)
 			check_boolean ("make_from_c", s.is_empty)
 		end

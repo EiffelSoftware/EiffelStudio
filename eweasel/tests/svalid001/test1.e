@@ -36,8 +36,8 @@ feature
 			f (a, b)
 			g (a, d)
 
-			l_array_b := << a, b >>
-			l_array_d := << a, d >>
+			l_array_b := {ARRAY [B]} << a, b >>
+			l_array_d := {ARRAY [D]} << a, d >>
 
 			if a = b or a /= b then
 			end

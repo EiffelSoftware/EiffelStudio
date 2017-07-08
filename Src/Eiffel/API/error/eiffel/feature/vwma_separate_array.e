@@ -49,8 +49,8 @@ feature -- Output
 	trace_single_line (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			message.format (t, locale.translation_in_context ("Manifest array type {1} is separate.", "compiler.error"),
-				<<message.element (agent type.append_to)>>)
+			format (t, locale.translation_in_context ("Manifest array type {1} is separate.", "compiler.error"),
+				<<agent type.append_to>>)
 		end
 
 note

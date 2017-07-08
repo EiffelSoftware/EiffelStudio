@@ -219,7 +219,7 @@ feature -- Visit nodes
 					l_name.force ("feature")
 					l_val.force (l_root.feature_name)
 				end
-				append_tag ("root", Void, l_name, l_val)
+				append_tag ({STRING_32} "root", Void, l_name, l_val)
 			end
 			l_version := a_target.internal_version
 			if l_version /= Void then
@@ -241,7 +241,7 @@ feature -- Visit nodes
 				l_val.force (l_version.trademark)
 				l_name.force ("copyright")
 				l_val.force (l_version.copyright)
-				append_tag ("version", Void, l_name, l_val)
+				append_tag ({STRING_32} "version", Void, l_name, l_val)
 			end
 			append_file_rule (a_target.internal_file_rule)
 			append_target_options (a_target.internal_options)
@@ -264,7 +264,7 @@ feature -- Visit nodes
 						-- l_sorted_list is built from l_settings.current_keys, then l_settings has related item
 					l_val.force (l_setting_item)
 				end
-				append_tag ("setting", Void, l_name, l_val)
+				append_tag ({STRING_32} "setting", Void, l_name, l_val)
 				l_sorted_list.forth
 			end
 			if
@@ -292,7 +292,7 @@ feature -- Visit nodes
 							l_val.force ("true")
 						end
 					end
-					append_tag ("setting", Void, l_name, l_val)
+					append_tag ({STRING_32} "setting", Void, l_name, l_val)
 				end
 			end
 			if
@@ -329,7 +329,7 @@ feature -- Visit nodes
 				l_val.wipe_out
 				l_val.force (l_variables.key_for_iteration)
 				l_val.force (l_variables.item_for_iteration)
-				append_tag ("variable", Void, l_name, l_val)
+				append_tag ({STRING_32} "variable", Void, l_name, l_val)
 				l_variables.forth
 			end
 
@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_tag (a_name: READABLE_STRING_8; a_value: detachable READABLE_STRING_32; an_attribute_names: detachable ARRAYED_LIST [READABLE_STRING_8]; an_attribute_values: detachable ARRAYED_LIST [detachable READABLE_STRING_GENERAL])
+	append_tag (a_name: READABLE_STRING_32; a_value: detachable READABLE_STRING_32; an_attribute_names: detachable ARRAYED_LIST [READABLE_STRING_8]; an_attribute_values: detachable ARRAYED_LIST [detachable READABLE_STRING_GENERAL])
 			-- Append a tag with `a_name', `a_value' and `an_attributes' to `text', intendend it with `indent' tabs.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -508,9 +508,11 @@ feature {NONE} -- Implementation
 		local
 			l_val: detachable READABLE_STRING_GENERAL
 			u: UTF_CONVERTER
+			name8: READABLE_STRING_8
 		do
 			append_text_indent ("<")
-			append_text (u.string_32_to_utf_8_string_8 (a_name))
+			name8 := u.string_32_to_utf_8_string_8 (a_name)
+			append_text (name8)
 			if (an_attribute_names /= Void and an_attribute_values /= Void) and then not an_attribute_names.is_empty then
 				from
 					an_attribute_names.start
@@ -530,7 +532,7 @@ feature {NONE} -- Implementation
 				append_text (">")
 				append_text_escaped (a_value, True)
 				append_text ("</")
-				append_text (u.string_32_to_utf_8_string_8 (a_name))
+				append_text (name8)
 				append_text (">%N")
 			else
 				append_text ("/>%N")
@@ -674,7 +676,7 @@ feature {NONE} -- Implementation
 			-- Append `a_description'.
 		do
 			if a_description /= Void and then not a_description.is_empty then
-				append_tag ("description", a_description, Void, Void)
+				append_tag ({STRING_32} "description", a_description, Void, Void)
 			end
 		end
 
@@ -923,12 +925,12 @@ feature {NONE} -- Implementation
 						-- Save patterns lexicographically ordered.
 					if attached l_rule.ordered_exclude as p then
 						across p as pc loop
-							append_tag ("exclude", pc.item, Void, Void)
+							append_tag ({STRING_32} "exclude", pc.item, Void, Void)
 						end
 					end
 					if attached l_rule.ordered_include as p then
 						across p as pc loop
-							append_tag ("include", pc.item, Void, Void)
+							append_tag ({STRING_32} "include", pc.item, Void, Void)
 						end
 					end
 					append_conditionals (l_rule.internal_conditions, False)
@@ -1103,7 +1105,7 @@ feature {NONE} -- Implementation
 					l_a_val.extend (l_assertions.is_supplier_precondition.out.as_lower)
 				end
 
-				append_tag ("assertions", Void, l_a_name, l_a_val)
+				append_tag ({STRING_32} "assertions", Void, l_a_name, l_a_val)
 			end
 
 			l_warnings := an_options.warnings
@@ -1401,7 +1403,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

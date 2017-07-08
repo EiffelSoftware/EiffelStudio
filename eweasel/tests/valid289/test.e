@@ -21,8 +21,6 @@ feature {NONE} -- Creation
 		local
 			value: TEST
 			b: BOOLEAN
-			array_test: ARRAY [TEST]
-			array_boolean: ARRAY [BOOLEAN]
 		do
 			attr := Current -- No warning here: it's OK to assign to obsolete attributes.
 			create attr.make -- No warning here: it's OK to use obsolete attributes as targets of creation.
@@ -48,8 +46,8 @@ feature {NONE} -- Creation
 			Precursor
 			value := b
 			b := value
-			array_test := <<b>>
-			array_boolean := <<value>>
+			;({ARRAY [TEST]} <<b>>).do_nothing
+			;({ARRAY [BOOLEAN]} <<value>>).do_nothing
 			;(value = b).do_nothing
 			;(b = value).do_nothing
 			;(value * b).do_nothing

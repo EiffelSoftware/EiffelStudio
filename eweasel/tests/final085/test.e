@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			a_default_format_not_void: a_default_format /= Void
 		do
 			default_format := a_default_format
-			default_lags := <<
+			default_lags := {ARRAY [TEST1]} <<
 					[0, "YTD"], [1, "M"], [3, "M"], [1, "Y"]
 				>>
 			parser := a_parser

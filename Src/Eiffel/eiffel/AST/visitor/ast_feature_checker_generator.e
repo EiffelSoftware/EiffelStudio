@@ -2318,17 +2318,16 @@ feature {NONE} -- Visitor
 	process_array_as (l_as: COMPILER_ARRAY_AS)
 		local
 			i, nb: INTEGER
-			l_array_type: detachable GEN_TYPE_A
+			l_array_type: GEN_TYPE_A
 			l_generics: ARRAYED_LIST [TYPE_A]
 			l_type_a, l_element_type: TYPE_A
 			l_list: BYTE_LIST [EXPR_B]
-			l_gen_type: GEN_TYPE_A
 			l_last_types: like last_expressions_type
 			l_has_error: BOOLEAN
-			l_has_array_target: BOOLEAN
 			l_current_class: CLASS_C
 			l_context: like context
-			l_is_attached: BOOLEAN
+			explicit_type: TYPE_A
+			implicit_type: GEN_TYPE_A
 		do
 			l_context := context
 			l_current_class := l_context.current_class
@@ -2342,7 +2341,11 @@ feature {NONE} -- Visitor
 						-- Error: there is no fixed class type.
 					error_handler.insert_error (create {VWMA_NO_CLASS_TYPE}.make (context, t, type_declaration.first_token (match_list_of_class (context.written_class.class_id))))
 					l_has_error := True
-				elseif b.class_id /= system.array_id then
+				elseif
+					attached {GEN_TYPE_A} t.conformance_type as g implies
+					g.class_id /= system.array_id and then
+					(is_checking_cas implies g.class_id /= system.native_array_id)
+				then
 						-- Error: the specified type is not an ARRAY class type.
 					error_handler.insert_error (create {VWMA_NOT_ARRAY}.make (context, t, type_declaration.first_token (match_list_of_class (context.written_class.class_id))))
 					l_has_error := True
@@ -2351,80 +2354,99 @@ feature {NONE} -- Visitor
 					error_handler.insert_error (create {VWMA_SEPARATE_ARRAY}.make (context, t, type_declaration.first_token (match_list_of_class (context.written_class.class_id))))
 					l_has_error := True
 				else
+					explicit_type := t
 					current_target_type := t
+					implicit_type := g
+					l_type_a := implicit_type.generics.first.actual_type
 				end
+			elseif
+					-- Look at the target type to see if it can be used to compute target type.
+					-- TODO [2017-11-30]: Remove this branch when all source code is updated.
+				attached current_target_type as t and then
+				attached {GEN_TYPE_A} t.conformance_type as g and then
+					-- Check that it is either an ARRAY, or a NATIVE_ARRAY when used
+					-- in a custom attribute.
+				(g.base_class.class_id = system.array_id or else
+				is_checking_cas and then g.base_class.class_id = system.native_array_id)
+			then
+				implicit_type := g
+				l_type_a := implicit_type.generics.first.actual_type
 			end
 			if not l_has_error then
-					-- Get target for manifest array creation (either through assignment or
-					-- argument passing).
-				l_gen_type ?= current_target_type
-					-- Let's try to find the type of the manifest array.
-				if l_gen_type /= Void then
-						-- Check that it is either an ARRAY, or a NATIVE_ARRAY when used
-						-- in a custom attribute.
-					if
-						l_gen_type.class_id = system.array_id or
-						(is_checking_cas and then l_gen_type.class_id = system.native_array_id)
-					then
-						l_has_array_target := True
-							-- Check that expressions' type matches element's type of `l_gen_type' array.
-						l_element_type := l_gen_type.generics.first.actual_type
-					end
-				end
-
-					-- Type check expression list
-					-- If there is a manifest array within a manifest array, we consider there is
-					-- no target type specified.
-				nb := l_as.expressions.count
-				current_target_type := l_element_type
+					-- Type check expression list.
+					-- Use element type (if any) as a target type.
+				current_target_type := l_type_a
 				process_expressions_list (l_as.expressions)
 				l_last_types := last_expressions_type
 			end
 
 			if l_last_types /= Void then
 				if is_byte_node_enabled then
-					l_list ?= last_byte_node
+					l_list := {BYTE_LIST [EXPR_B]} / last_byte_node
 				end
 
-					-- Let's try to find the type of the manifest array.
-				if l_has_array_target then
-						-- Check that expressions' type matches element's type of `l_gen_type' array.
-					l_type_a := l_element_type
-					if nb > 0 then
-						from
-							i := 1
-						until
-							i > nb
-						loop
-							l_element_type := l_last_types.i_th (i)
-							if not l_type_a.backward_conform_to (l_current_class, l_element_type) then
-								if not is_inherited and then l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type) then
-									if l_context.last_conversion_info.has_depend_unit then
-										context.supplier_ids.extend (l_context.last_conversion_info.depend_unit)
-									end
-									l_as.expressions [i] := converted_expression (l_as.expressions [i], l_context.last_conversion_info)
-									if is_byte_node_enabled and not is_checking_cas then
-										l_list [i] := l_context.last_conversion_info.byte_node (l_list [i])
-									end
-								else
+				if attached l_type_a then
+					check
+						attached_implicit_type_from_code: attached implicit_type
+					end
+						-- Check that expressions' type matches element's type of the array.
+					from
+						nb := l_as.expressions.count
+						i := 1
+					until
+						i > nb
+					loop
+						l_element_type := l_last_types [i]
+						if not l_type_a.backward_conform_to (l_current_class, l_element_type) then
+							if not is_inherited and then l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type) then
+								if l_context.last_conversion_info.has_depend_unit then
+									context.supplier_ids.extend (l_context.last_conversion_info.depend_unit)
+								end
+								l_as.expressions [i] := converted_expression (l_as.expressions [i], l_context.last_conversion_info)
+								if attached l_list and not is_checking_cas then
+									l_list [i] := l_context.last_conversion_info.byte_node (l_list [i])
+								end
+							else
+								if attached explicit_type then
+										-- Report an error.
 									error_handler.insert_error (create {VWMA_INCOMPATIBLE_EXPRESSION}.make (context, l_element_type, l_type_a, i, l_as.expressions [i].first_token (match_list_of_class (context.written_class.class_id))))
 									l_has_error := True
-									i := nb + 1	-- Exit the loop
+								else
+										-- Behave as if target array type is not taken into account.
+									l_type_a := Void
 								end
+								i := nb + 1	-- Exit the loop
 							end
-							i := i + 1
 						end
+						i := i + 1
 					end
-					if not l_has_error then
-						if is_checking_cas then
-								-- Create a .NET array
-							check l_gen_type.class_id = system.native_array_id end
+					if not l_has_error and then attached l_type_a then
+						if
+							not attached explicit_type and then
+							not maximal_type (l_last_types).conform_to (context.current_class, l_type_a)
+						then
+								-- The implicit type is required to compute array type, it should be replaced with an explicit one.
+								-- Report the warning unconditionally if
+								-- TODO [2017-11-30]: Remove this branch when all source code is updated.
+							if (create {DATE}.make (2017, 11, 30)).relative_duration (create {DATE}.make_now_utc).days_count + 366  + 183 <= 0 then
+									-- Report an error.
+								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED}.make (context, maximal_type (l_last_types), l_type_a, l_as.first_token (match_list_of_class (context.written_class.class_id)), True))
+							elseif
+									(create {DATE}.make (2017, 11, 30)).relative_duration (create {DATE}.make_now_utc).days_count + 366 <= 0 or else
+									context.current_class.is_warning_enabled (w_manifest_array_type)
+							then
+									-- Report a warning either when it is enabled or when a year has passed since the release.
+								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED}.make (context, maximal_type (l_last_types), l_type_a, l_as.first_token (match_list_of_class (context.written_class.class_id)), False))
+							end
+						end
+						if is_checking_cas and then implicit_type.class_id /= system.native_array_id then
+								-- Create a .NET array.
 							create l_generics.make (1)
 							l_generics.extend (l_type_a)
 							create {NATIVE_ARRAY_TYPE_A} l_array_type.make (system.native_array_id, l_generics)
 						else
-								-- We can reuse the target type for the ARRAY type.
-							l_array_type := l_gen_type
+								-- Reuse the target type for the ARRAY type.
+							l_array_type := implicit_type
 						end
 						if is_qualified_call then
 								-- When the manifest array appears in a qualified call, the anchors if any should
@@ -2438,84 +2460,30 @@ feature {NONE} -- Visitor
 						instantiator.dispatch (l_array_type, l_current_class)
 					end
 				end
-				if l_array_type = Void then
-					l_has_error := False
-						-- `l_gen_type' is not an array type, so for now we compute as if
-						-- there was no context the type of the manifest array by taking the lowest
-						-- common type.
-						-- Use "NONE" as the initial lowest type, it conforms to any other type.
-					l_type_a := none_type
-					l_is_attached := True
-					i := 1
-					if is_checking_cas then
-						from
-						until
-							i > nb
-						loop
-							l_element_type := l_last_types.i_th (i)
-							if l_is_attached and then not l_element_type.is_attached then
-								l_is_attached := False
-							end
-								-- Let's try to find the type to which everyone conforms to.
-								-- If not found it will be ANY.
-							if
-								l_type_a.backward_conform_to (l_current_class, l_element_type) or
-								(not is_inherited and then
-									l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type))
-							then
-									-- Nothing to be done
-							elseif
-								l_element_type.backward_conform_to (l_current_class, l_type_a) or
-								(not is_inherited and then
-									l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type))
-							then
-									-- Found a lowest type.
-								l_type_a := l_element_type
-							else
-									-- Cannot find a common type
-								l_has_error := True
-								i := nb + 1 -- Exit the loop
-							end
-							i := i + 1
-						end
-						if l_has_error then
-								-- We could not find a common type, so we now assume it is ANY since
-								-- we always conform to ANY.
-							l_has_error := False
-							create {CL_TYPE_A} l_type_a.make (system.any_id)
-						end
-						if l_is_attached then
-								-- Respect attachment status of the elements.
-							l_type_a := l_type_a.as_attached_in (l_current_class)
-						end
-					else
-						l_type_a := maximal_type (l_last_types)
-					end
-					create l_generics.make (1)
-					l_generics.extend (l_type_a)
-					create l_array_type.make (system.array_id, l_generics)
-						-- Type of a manifest array is always frozen.
-					l_array_type.set_frozen_mark
-						-- Type of a manifest array is always attached.
-					l_array_type := l_array_type.as_attached_in (l_current_class)
-					if l_type_a.is_known then
-						instantiator.dispatch (l_array_type, l_current_class)
-					end
-				end
-
 				if l_has_error then
 					reset_types
-				elseif attached l_array_type then
+				else
+					if not attached l_array_type then
+							-- There is no explicit manifest array type and implicit type does not suit.
+							-- Compute manifest array type by using the common type for all elements.
+						l_type_a := maximal_type (l_last_types)
+						create l_generics.make (1)
+						l_generics.extend (l_type_a)
+						create l_array_type.make (system.array_id, l_generics)
+							-- Type of a manifest array is always frozen.
+						l_array_type.set_frozen_mark
+							-- Type of a manifest array is always attached.
+						l_array_type := l_array_type.as_attached_in (l_current_class)
+						if l_type_a.is_known then
+							instantiator.dispatch (l_array_type, l_current_class)
+						end
+					end
 						-- Update type stack.
 					set_type (l_array_type, l_as)
 					l_as.set_array_type (last_type)
-					if is_byte_node_enabled then
+					if attached l_list then
 						create {ARRAY_CONST_B} last_byte_node.make (l_list, l_array_type)
 					end
-				else
-						-- Unknown type.
-					set_type (unknown_type, l_as)
-					l_as.set_array_type (last_type)
 				end
 			else
 				reset_types

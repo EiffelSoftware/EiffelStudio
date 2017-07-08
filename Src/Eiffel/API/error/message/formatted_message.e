@@ -76,7 +76,7 @@ feature -- Format: message parsing
 			-- 	...
 			-- 	format_elements (t,  locale.translation_in_context ("Class {1} has perfect code."), <<agent c.append_name>>)
 		do
-			format (formatter, message, create {ITERABLE_FUNCTION [PROCEDURE [FORMAT_SPECIFICATION, TEXT_FORMATTER], PROCEDURE [TEXT_FORMATTER]]}.make (element_agent, arguments))
+			format (formatter, message, create {ITERABLE_MAP [PROCEDURE [TEXT_FORMATTER], PROCEDURE [FORMAT_SPECIFICATION, TEXT_FORMATTER]]}.make (element_agent, arguments))
 		end
 
 feature {NONE} -- Format: message parsing

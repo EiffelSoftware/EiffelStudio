@@ -1,21 +1,30 @@
-note
+﻿note
 	description: "[
-			Structure that can be iterated over based on another iterable structure and a function that performs a required conversion.
-			First parameter specifies a type of elements returned by this iterable structure.
-			Second parameter specifies a type of elements in the original iterable structure.
+			An iterable based on another one whose items of one type are mapped to values of another type with a specified function.
+			First parameter specifies a type of elements in the original iterable structure.
+			Second parameter specifies a type of elements returned by this iterable structure.
+			
+			Example. The following expression produced an iterable with a sequence of two values: "no" and "yes":
+				
+					create {ITERABLE_MAP [BOOLEAN, STRING]}.make
+						(agent (v: BOOLEAN)
+							do
+								Result := if v then "yes" else "no" end
+							end,
+						<<false, true>>)
 		]"
 
-class ITERABLE_FUNCTION [G, H]
+class ITERABLE_MAP [G, H]
 
 inherit
-	ITERABLE [G]
+	ITERABLE [H]
 
 create
 	make
 
 feature {NONE} -- Creation
 
-	make (map: FUNCTION [H, G]; other: ITERABLE [H])
+	make (map: FUNCTION [G, H]; other: ITERABLE [G])
 			-- Associate iteration with `other' which elements are to be transformed using `map'.
 		do
 			target := other
@@ -27,24 +36,24 @@ feature {NONE} -- Creation
 
 feature -- Access
 
-	new_cursor: ITERATION_CURSOR [G]
+	new_cursor: ITERATION_CURSOR [H]
 			-- <Precursor>
 		do
-			create {ITERABLE_FUNCTION_CURSOR [G, H]} Result.make (mapping_function, target.new_cursor)
+			create {ITERABLE_MAP_CURSOR [G, H]} Result.make (mapping_function, target.new_cursor)
 		end
 
 feature {NONE} -- Access
 
-	target: ITERABLE [H]
+	target: ITERABLE [G]
 			-- Original structure to be iterated over.
 
-	mapping_function: FUNCTION [H, G]
-			-- Function to tranform elements of the original structure `target' to elements of the desired type {G}.
+	mapping_function: FUNCTION [G, H]
+			-- Function to tranform elements of the original structure `target' to elements of the desired type {H}.
 
 ;note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

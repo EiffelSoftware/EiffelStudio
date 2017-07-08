@@ -68,6 +68,7 @@ feature -- Warnings
 	w_vwab: STRING = "vwab"
 	w_obsolete_class: STRING = "obsolete_class"
 	w_obsolete_feature: STRING = "obsolete_feature"
+	w_manifest_array_type: STRING = "manifest_array_type"
 	w_once_in_generic: STRING = "once_in_generic"
 	w_syntax: STRING = "syntax"
 	w_old_verbatim_strings: STRING = "old_verbatim_strings"
@@ -209,7 +210,7 @@ feature -- Extension
 			-- File extension for an Eiffel source file without the dot
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

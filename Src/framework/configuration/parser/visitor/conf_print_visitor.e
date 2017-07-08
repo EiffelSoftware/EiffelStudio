@@ -29,7 +29,6 @@ inherit
 
 create
 	make,
-	make_1_0_0,
 	make_namespace_and_schema
 
 feature {NONE} -- Initialization
@@ -38,12 +37,6 @@ feature {NONE} -- Initialization
 			-- Create.
 		do
 			make_namespace_and_schema (latest_namespace, latest_schema)
-		end
-
-	make_1_0_0
-			-- Create for EiffelStudio 5.7
-		do
-			make_namespace_and_schema (namespace_1_0_0, schema_1_0_0)
 		end
 
 	make_namespace_and_schema (a_namespace: detachable READABLE_STRING_GENERAL; a_schema: READABLE_STRING_GENERAL)
@@ -979,6 +972,7 @@ feature {NONE} -- Implementation
 			l_a_val: ARRAYED_LIST [STRING_32]
 			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
+			w: READABLE_STRING_GENERAL
 		do
 			if an_options.is_trace_configured then
 				append_text (" trace=%""+an_options.is_trace.out.as_lower+"%"")
@@ -1118,8 +1112,11 @@ feature {NONE} -- Implementation
 				until
 					l_sorted_list.after
 				loop
-					append_text_indent ("<warning name=%""+l_sorted_list.item_for_iteration+"%"")
-					append_text (" enabled=%""+l_warnings.item (l_sorted_list.item_for_iteration).out.as_lower+"%"/>%N")
+					w := l_sorted_list.item_for_iteration
+					if valid_warning (w, namespace) then
+						append_text_indent ("<warning name=%"" + w + "%"")
+						append_text (" enabled=%"" + l_warnings.item (w).out.as_lower + "%"/>%N")
+					end
 					l_sorted_list.forth
 				end
 			end

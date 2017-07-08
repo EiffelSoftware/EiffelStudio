@@ -50,15 +50,11 @@ feature -- Basic validity queries
 		require
 			a_warning_not_void: a_warning /= Void
 			a_warning_lower: a_warning.same_string (a_warning.as_lower)
-		local
-			w: like valid_warnings_default
 		do
-			if is_after_or_equal (a_namespace, namespace_1_10_0) then
-				w := valid_warnings_1_10_0
-			else
-				w := valid_warnings_default
-			end
-			Result := w.has (a_warning)
+			Result :=
+				is_after_or_equal (a_namespace, namespace_1_17_0) and then valid_warnings_1_17_0.has (a_warning) or else
+				is_after_or_equal (a_namespace, namespace_1_10_0) and then is_before_or_equal (a_namespace, namespace_1_16_0) and then valid_warnings_1_10_0.has (a_warning) or else
+				is_before_or_equal (a_namespace, namespace_1_9_0) and then valid_warnings_default.has (a_warning)
 		end
 
 	valid_regexp (a_regexp: READABLE_STRING_GENERAL): BOOLEAN
@@ -348,7 +344,7 @@ feature {NONE} -- Implementation
 	known_warnings: STRING_TABLE [BOOLEAN]
 			-- The codes of known warnings.
 		once
-			Result := valid_warnings_1_10_0
+			Result := valid_warnings_1_17_0
 		end
 
 	valid_warnings_default: STRING_TABLE [BOOLEAN]
@@ -373,10 +369,19 @@ feature {NONE} -- Implementation
 		end
 
 	valid_warnings_1_10_0: STRING_TABLE [BOOLEAN]
-			-- The codes of valid warnings in `namespace_1_10_0' and above.
+			-- The codes of valid warnings in between `namespace_1_10_0` and `namespace_1_17_0`.
 		once
 			Result := valid_warnings_default.twin
 			Result.force (True, w_vwab)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	valid_warnings_1_17_0: STRING_TABLE [BOOLEAN]
+			-- The codes of valid warnings in `namespace_1_17_0` and above.
+		once
+			Result := valid_warnings_1_10_0.twin
+			Result.force (True, w_manifest_array_type)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -609,7 +614,7 @@ feature {NONE} -- Option names
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

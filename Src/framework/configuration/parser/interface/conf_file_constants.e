@@ -157,16 +157,25 @@ feature {NONE} -- Constants
 			Result := namespace_1_16_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd"
 		end
 
+	namespace_1_17_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-17-0"
+			-- Namespace of the 17.11 release.
+
+	schema_1_17_0: STRING_32
+			-- Schema of the 17.11 release.
+		once
+			Result := namespace_1_17_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd"
+		end
+
 	Latest_namespace: READABLE_STRING_32
 			-- Latest configuration namespace.
 		once
-			Result := namespace_1_16_0
+			Result := namespace_1_17_0
 		end
 
 	Latest_schema: STRING_32
 			-- Latest schema location.
 		once
-			Result := schema_1_16_0
+			Result := schema_1_17_0
 		end
 
 feature -- Status report
@@ -205,6 +214,7 @@ feature -- Normalization
 			elseif n.same_string (namespace_1_14_0) then Result := namespace_1_14_0
 			elseif n.same_string (namespace_1_15_0) then Result := namespace_1_15_0
 			elseif n.same_string (namespace_1_16_0) then Result := namespace_1_16_0
+			elseif n.same_string (namespace_1_17_0) then Result := namespace_1_17_0
 			elseif n.same_string (latest_namespace) then Result := latest_namespace
 			else
 					-- Unknown namespace.
@@ -247,7 +257,7 @@ feature {NONE} -- Ordering
 	namespace_order: STRING_TABLE [NATURAL]
 			-- Order numbers associated with namespaces.
 		once
-			create Result.make (16)
+			create Result.make (17)
 			Result.compare_objects
 			Result.extend (1, namespace_1_0_0)
 			Result.extend (2, namespace_1_2_0)
@@ -265,11 +275,12 @@ feature {NONE} -- Ordering
 			Result.extend (14, namespace_1_14_0)
 			Result.extend (15, namespace_1_15_0)
 			Result.extend (16, namespace_1_16_0)
+			Result.extend (17, namespace_1_17_0)
 				-- When adding a new namespace, do not forget to increment the counter index too!
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

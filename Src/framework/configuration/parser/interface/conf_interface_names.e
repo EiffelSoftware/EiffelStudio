@@ -448,7 +448,7 @@ feature -- Option names and descriptions
 	warning_names: STRING_TABLE [STRING_32]
 			-- Warning names.
 		once
-			create Result.make (12)
+			create Result.make (13)
 			Result.force (locale.translation ("Unused Locals"), w_unused_local)
 			Result.force (locale.translation ("Unused attribute body"), w_vwab)
 			Result.force (locale.translation ("Obsolete Classes"), w_obsolete_class)
@@ -461,12 +461,13 @@ feature -- Option names and descriptions
 			Result.force (locale.translation ("Renaming Unknown Class"), w_renaming_unknown_class)
 			Result.force (locale.translation ("Options Unknown Class"), w_option_unknown_class)
 			Result.force (locale.translation ("Classname/filename mismatch"), w_classname_filename_mismatch)
+			Result.force (locale.translation ("Missing manifest array type"), w_manifest_array_type)
 		end
 
 	warning_descriptions: STRING_TABLE [STRING_32]
 			-- Warning descriptions.
 		once
-			create Result.make (12)
+			create Result.make (13)
 			Result.force (locale.translation ("Warn about locals that are not used?"), w_unused_local)
 			Result.force (locale.translation ("Warn about attribute bodies that are never executed?"), w_vwab)
 			Result.force (locale.translation ("Warn about usage of obsolete classes?"), w_obsolete_class)
@@ -479,6 +480,7 @@ feature -- Option names and descriptions
 			Result.force (locale.translation ("Warn about renamings of unknown classes?"), w_renaming_unknown_class)
 			Result.force (locale.translation ("Warn about class options of unknown classes?"), w_option_unknown_class)
 			Result.force (locale.translation ("Warn about classes where the filename does not match the classname?"), w_classname_filename_mismatch)
+			Result.force (locale.translation ("Warn about missing manifest array type?"), w_manifest_array_type)
 		end
 
 feature -- Misc
@@ -1301,7 +1303,7 @@ feature -- Boolean values
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

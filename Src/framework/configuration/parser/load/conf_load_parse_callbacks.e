@@ -2310,61 +2310,59 @@ feature {NONE} -- Processing of options
 			default_options: CONF_TARGET_OPTION
 			new_options: CONF_TARGET_OPTION
 		do
-			if not a_namespace.same_string (latest_namespace) then
-					-- Option settings are different from the current defauls, we need to set them if they are not set yet.
-				if
-					a_namespace.same_string (namespace_1_16_0)
-				then
-						-- Use the defaults of ES 16.11.
-					default_options := default_options_16_11
-				elseif
-					a_namespace.same_string (namespace_1_15_0)
-				then
-						-- Use the defaults of ES 15.11.
-					default_options := default_options_15_11
-				elseif
-					a_namespace.same_string (namespace_1_14_0) or else
-					a_namespace.same_string (namespace_1_13_0)
-				then
-						-- Use the defaults of ES 14.05.
-					default_options := default_options_14_05
-				elseif
-					a_namespace.same_string (namespace_1_12_0) or else
-					a_namespace.same_string (namespace_1_11_0)
-				then
-						-- Use the defaults of ES 7.3.
-					default_options := default_options_7_3
-				elseif
-					a_namespace.same_string (namespace_1_10_0) or else
-					a_namespace.same_string (namespace_1_9_0)
-				then
-						-- Use the defaults of ES 7.0.
-					default_options := default_options_7_0
-				elseif
-					a_namespace.same_string (namespace_1_8_0) or else
-					a_namespace.same_string (namespace_1_7_0) or else
-					a_namespace.same_string (namespace_1_6_0) or else
-					a_namespace.same_string (namespace_1_5_0)
-				then
-						-- Use the defaults of ES 6.4.
-					default_options := default_options_6_4
-				elseif
-					a_namespace.same_string (namespace_1_4_0) or else
-					a_namespace.same_string (namespace_1_3_0) or else
-					a_namespace.same_string (namespace_1_2_0) or else
-					a_namespace.same_string (namespace_1_0_0)
-				then
-						-- Use the defaults of ES 6.3 and below.
-					default_options := default_options_6_3
-				else
-						-- Unknown version, do not change anything just in case it is above the current one.
-					-- default_options := Void
-				end
-				if attached default_options then
-					new_options := t.options
-					new_options.merge (default_options)
-					t.set_options (new_options)
-				end
+			if
+				a_namespace.same_string (namespace_1_17_0) or else
+				a_namespace.same_string (namespace_1_16_0)
+			then
+					-- Use the defaults of ES 16.11.
+				default_options := default_options_16_11
+			elseif
+				a_namespace.same_string (namespace_1_15_0)
+			then
+					-- Use the defaults of ES 15.11.
+				default_options := default_options_15_11
+			elseif
+				a_namespace.same_string (namespace_1_14_0) or else
+				a_namespace.same_string (namespace_1_13_0)
+			then
+					-- Use the defaults of ES 14.05.
+				default_options := default_options_14_05
+			elseif
+				a_namespace.same_string (namespace_1_12_0) or else
+				a_namespace.same_string (namespace_1_11_0)
+			then
+					-- Use the defaults of ES 7.3.
+				default_options := default_options_7_3
+			elseif
+				a_namespace.same_string (namespace_1_10_0) or else
+				a_namespace.same_string (namespace_1_9_0)
+			then
+					-- Use the defaults of ES 7.0.
+				default_options := default_options_7_0
+			elseif
+				a_namespace.same_string (namespace_1_8_0) or else
+				a_namespace.same_string (namespace_1_7_0) or else
+				a_namespace.same_string (namespace_1_6_0) or else
+				a_namespace.same_string (namespace_1_5_0)
+			then
+					-- Use the defaults of ES 6.4.
+				default_options := default_options_6_4
+			elseif
+				a_namespace.same_string (namespace_1_4_0) or else
+				a_namespace.same_string (namespace_1_3_0) or else
+				a_namespace.same_string (namespace_1_2_0) or else
+				a_namespace.same_string (namespace_1_0_0)
+			then
+					-- Use the defaults of ES 6.3 and below.
+				default_options := default_options_6_3
+			else
+					-- Unknown version, do not change anything just in case it is above the current one.
+				-- default_options := Void
+			end
+			if attached default_options then
+				new_options := t.options
+				new_options.merge (default_options)
+				t.set_options (new_options)
 			end
 		end
 
@@ -3192,7 +3190,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

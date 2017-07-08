@@ -178,15 +178,15 @@ feature -- Modification
 		require
 			other_attached: attached other
 		do
-			if not is_root_set and then root_index /= other.root_index then
+			if not is_root_set and then other.is_root_set and then root_index /= other.root_index then
 				put_root_index (other.root_index)
 			end
 		ensure
 			old_value:
-				(old is_root_set or else old root_index = other.root_index) implies
+				(old is_root_set or else not other.is_root_set or else old root_index = other.root_index) implies
 					custom_root_index = old custom_root_index
 			new_value:
-				(not old is_root_set and then old root_index /= other.root_index) implies
+				(not old is_root_set and then other.is_root_set and then old root_index /= other.root_index) implies
 					(is_root_set and custom_root_index = other.root_index)
 		end
 
@@ -202,11 +202,11 @@ feature -- Modification
 			old_value: (old value.is_set or else old value.twin ~ other.value) implies value ~ old value.twin
 			new_value: (not old value.is_set and then old value.twin /~ other.value) implies value.is_set
 			old_root_value:
-				(old is_root_set or else old root_index = other.root_index) implies
+				(old is_root_set or else not other.is_root_set or else old root_index = other.root_index) implies
 					custom_root_index = old custom_root_index
 			new_root_value:
-				(not old is_root_set and then old root_index /= other.root_index) implies
-					custom_root_index = other.custom_root_index
+				(not old is_root_set and then other.is_root_set and then old root_index /= other.root_index) implies
+					custom_root_index = other.root_index
 		end
 
 feature -- Output

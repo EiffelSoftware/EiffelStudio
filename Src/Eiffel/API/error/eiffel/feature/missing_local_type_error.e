@@ -97,7 +97,7 @@ feature {NONE} -- Formatting
 	locals: like listable
 			-- Collection of formatters to add local variable names.
 		do
-			create {ITERABLE_FUNCTION [PROCEDURE[TEXT_FORMATTER], INTEGER_32]} Result.make
+			create {ITERABLE_MAP [INTEGER_32, PROCEDURE[TEXT_FORMATTER]]} Result.make
 				(agent (local_name: INTEGER_32): PROCEDURE[TEXT_FORMATTER]
 					do
 						Result := agent {TEXT_FORMATTER}.add_local (names_heap.item_32 (local_name))

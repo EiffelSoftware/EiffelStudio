@@ -129,7 +129,7 @@ feature {NONE} -- Rule Checking
 							(agent format
 								(?,
 								ca_messages.obsolete_feature_invalid_date_title (names.count),
-								<<element_list (create {ITERABLE_FUNCTION [PROCEDURE [TEXT_FORMATTER], FEATURE_NAME]}.make
+								<<element_list (create {ITERABLE_MAP [FEATURE_NAME, PROCEDURE [TEXT_FORMATTER]]}.make
 								(agent (feature_name: FEATURE_NAME; feature_class: CLASS_C): PROCEDURE [TEXT_FORMATTER] do
 									Result := agent {TEXT_FORMATTER}.add_feature_name (feature_name.visual_name_32, feature_class)
 								end (?, current_context.checking_class), names))>>),
@@ -145,7 +145,7 @@ feature {NONE} -- Rule Checking
 							(agent format
 								(?,
 								ca_messages.obsolete_feature_title (names.count),
-								<<element_list (create {ITERABLE_FUNCTION [PROCEDURE [TEXT_FORMATTER], FEATURE_NAME]}.make
+								<<element_list (create {ITERABLE_MAP [FEATURE_NAME, PROCEDURE [TEXT_FORMATTER]]}.make
 								(agent (feature_name: FEATURE_NAME; feature_class: CLASS_C): PROCEDURE [TEXT_FORMATTER] do
 									Result := agent {TEXT_FORMATTER}.add_feature_name (feature_name.visual_name_32, feature_class)
 								end (?, current_context.checking_class), names))>>),

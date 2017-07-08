@@ -1,21 +1,22 @@
-note
+﻿note
 	description: "[
 			External iteration cursor based on another iteration cursor and a function that performs a required conversion.
-			First parameter specifies a type of elements produced by this cursor.
-			Second parameter specifies a type of elements returned by the original iteration cursor.
+			The first parameter specifies a type of elements returned by the original iteration cursor.
+			The second parameter specifies a type of elements produced by this cursor.
 		]"
+	see_also: "{ITERABLE_MAP}"
 
-class ITERABLE_FUNCTION_CURSOR [G, H]
+class ITERABLE_MAP_CURSOR [G, H]
 
 inherit
-	ITERATION_CURSOR [G]
+	ITERATION_CURSOR [H]
 
 create
 	make
 
 feature {NONE} -- Creation
 
-	make (map: FUNCTION [H, G]; other: ITERATION_CURSOR [H])
+	make (map: FUNCTION [G, H]; other: ITERATION_CURSOR [G])
 			-- Associate iteration with `other' which elements are to be transformed using `map'.
 		do
 			target := other
@@ -27,7 +28,7 @@ feature {NONE} -- Creation
 
 feature -- Access
 
-	item: G
+	item: H
 			-- <Precursor>
 		do
 			Result := mapping_function (target.item)
@@ -51,16 +52,16 @@ feature -- Cursor movement
 
 feature {NONE} -- Access
 
-	target: ITERATION_CURSOR [H]
+	target: ITERATION_CURSOR [G]
 			-- Original iteration cursor.
 
-	mapping_function: FUNCTION [H, G]
-			-- Function to tranform elements produced by `target' to elements of the desired type {G}.
+	mapping_function: FUNCTION [G, H]
+			-- Function to tranform elements produced by `target' to elements of the desired type {H}.
 
 ;note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

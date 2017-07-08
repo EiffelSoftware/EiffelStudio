@@ -245,7 +245,7 @@ feature {NONE} -- Rule Checking
 							affected: ITERABLE [PROCEDURE [TEXT_FORMATTER]]
 						do
 							if attached caller_names then
-								affected := create {ITERABLE_FUNCTION [PROCEDURE [TEXT_FORMATTER], FEATURE_NAME]}.make
+								affected := create {ITERABLE_MAP [FEATURE_NAME, PROCEDURE [TEXT_FORMATTER]]}.make
 									(agent (feature_name: FEATURE_NAME; caller: CLASS_C): PROCEDURE [TEXT_FORMATTER] do
 										Result := agent {TEXT_FORMATTER}.add_feature_name (feature_name.visual_name_32, caller)
 									end (?, caller_class), caller_names)

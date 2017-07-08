@@ -73,13 +73,13 @@ feature {NONE} -- Output
 		do
 			print_error_code (t)
 			t.add_new_line
-			message.format (t, locale.translation_in_context
+			format (t, locale.translation_in_context
 					("[
 						No type is specified for the local declaration list:
 						  {1}
 					]",
 					"eiffel.error"),
-				<<message.list (locals)>>
+				<<element_list (locals)>>
 			)
 				-- Make sure any other information about the error comes at a new line.
 			t.add_new_line
@@ -89,12 +89,12 @@ feature {NONE} -- Output
 	print_single_line_error_message (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			message.format (t, locale.translation_in_context ("Missing type in local declaration list: {1}", "eiffel.error"), <<message.list (locals)>>)
+			format (t, locale.translation_in_context ("Missing type in local declaration list: {1}", "eiffel.error"), <<element_list (locals)>>)
 		end
 
 feature {NONE} -- Formatting
 
-	locals: like message.listable
+	locals: like listable
 			-- Collection of formatters to add local variable names.
 		do
 			create {ITERABLE_FUNCTION [PROCEDURE[TEXT_FORMATTER], INTEGER_32]} Result.make

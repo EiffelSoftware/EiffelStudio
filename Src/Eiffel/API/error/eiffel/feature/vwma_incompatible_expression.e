@@ -54,7 +54,7 @@ feature -- Output
 	build_explain (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			format (t, locale.translation_in_context ("Manifest array element at index {1} has type {2} incompatible with declared element type {3}.", "compiler.error"),
+			format_elements (t, locale.translation_in_context ("Manifest array element at index {1} has type {2} incompatible with declared element type {3}.", "compiler.error"),
 				<<
 					agent {TEXT_FORMATTER}.add_int (index),
 					agent expression_type.append_to,
@@ -66,7 +66,7 @@ feature -- Output
 	trace_single_line (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			format (t, locale.translation_in_context ("Array element at index {1} has type {2} incompatible with {3}.", "compiler.error"),
+			format_elements (t, locale.translation_in_context ("Array element at index {1} has type {2} incompatible with {3}.", "compiler.error"),
 				<<
 					agent {TEXT_FORMATTER}.add_int (index),
 					agent expression_type.append_to,

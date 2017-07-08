@@ -14,13 +14,13 @@ feature -- Format: action
 	format_action_unused_local (t: TEXT_FORMATTER; local_list: like listable)
 			-- Add a name of an action to remove unused locals `local_list' to `t'.
 		do
-			format (t, locale.translation_in_context ("Remove {1}", "fix"), <<list (local_list)>>)
+			format (t, locale.translation_in_context ("Remove {1}", "fix"), <<element_list (local_list)>>)
 		end
 
 	format_action_missing_local_type (t: TEXT_FORMATTER; v: PROCEDURE [TEXT_FORMATTER])
 			-- Add a name of an action to add a local type `v' to `t'.
 		do
-			format (t, locale.translation_in_context ("Add type {1}", "fix"), <<element (v)>>)
+			format_elements (t, locale.translation_in_context ("Add type {1}", "fix"), <<v>>)
 		end
 
 feature -- Format: description
@@ -28,19 +28,19 @@ feature -- Format: description
 	format_description_unused_local (t: TEXT_FORMATTER; local_list: like listable)
 			-- Add a description of an action to remove unused locals `local_list' to `t'.
 		do
-			format (t, locale.translation_in_context ("Remove declarations of the local variables {1}.", "fix"), <<list (local_list)>>)
+			format (t, locale.translation_in_context ("Remove declarations of the local variables {1}.", "fix"), <<element_list (local_list)>>)
 		end
 
 	format_description_missing_local_type (t: TEXT_FORMATTER; v: PROCEDURE [TEXT_FORMATTER])
 			-- Add a description of an action to add a local type `v' to `t'.
 		do
-			format (t, locale.translation_in_context ("Add type declaration {1} to the local declaration list.", "fix"), <<element (v)>>)
+			format_elements (t, locale.translation_in_context ("Add type declaration {1} to the local declaration list.", "fix"), <<v>>)
 		end
 
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

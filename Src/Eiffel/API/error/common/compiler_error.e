@@ -22,6 +22,11 @@ inherit
 			process
 		end
 
+	FORMATTED_MESSAGE
+		export
+			{NONE} all
+		end
+
 	SHARED_LOCALE
 		export
 			{NONE} all
@@ -418,20 +423,6 @@ feature {NONE} -- Output
 				a_text_formatter.add ("^")
 				a_text_formatter.add_new_line
 			end
-		end
-
-feature {NONE} -- Output
-
-	message: FORMATTED_MESSAGE
-			-- A message formatter.
-		once
-			create Result
-		end
-
-	format (t: TEXT_FORMATTER; m: READABLE_STRING_32; a: ITERABLE [PROCEDURE [TEXT_FORMATTER]])
-			-- Format message `m` with arguments `a` using formatter `t`.
-		do
-			message.format (t, m, create {ITERABLE_FUNCTION [PROCEDURE [FORMAT_SPECIFICATION, TEXT_FORMATTER], PROCEDURE [TEXT_FORMATTER]]}.make (agent message.element, a))
 		end
 
 note

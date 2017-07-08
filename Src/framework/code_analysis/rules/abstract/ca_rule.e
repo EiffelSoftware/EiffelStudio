@@ -13,6 +13,8 @@ inherit
 
 	CA_SHARED_NAMES
 
+	FORMATTED_MESSAGE
+
 	SHARED_SERVER
 
 feature {NONE} -- Initialization

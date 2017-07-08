@@ -126,15 +126,15 @@ feature {NONE} -- Rule Checking
 				if attached feature_names as names then
 					if not attached stamp then
 						create violation.make_formatted
-							(agent message.format
+							(agent format
 								(?,
 								ca_messages.obsolete_feature_invalid_date_title (names.count),
-								<<message.list (create {ITERABLE_FUNCTION [PROCEDURE [TEXT_FORMATTER], FEATURE_NAME]}.make
+								<<element_list (create {ITERABLE_FUNCTION [PROCEDURE [TEXT_FORMATTER], FEATURE_NAME]}.make
 								(agent (feature_name: FEATURE_NAME; feature_class: CLASS_C): PROCEDURE [TEXT_FORMATTER] do
 									Result := agent {TEXT_FORMATTER}.add_feature_name (feature_name.visual_name_32, feature_class)
 								end (?, current_context.checking_class), names))>>),
-							agent message.format (?, ca_messages.obsolete_feature_invalid_date_violation,
-								<<message.element (agent {TEXT_FORMATTER}.add (default_date.formatted_out (date_code)))>>),
+							agent format_elements (?, ca_messages.obsolete_feature_invalid_date_violation,
+								<<agent {TEXT_FORMATTER}.add (default_date.formatted_out (date_code))>>),
 							Current)
 						violation.set_location (r.first_token (current_context.matchlist))
 						violations.extend (violation)
@@ -142,10 +142,10 @@ feature {NONE} -- Rule Checking
 					expires_in := expires_in + feature_call_expiration.value
 					if expires_in <= 0 then
 						create violation.make_formatted
-							(agent message.format
+							(agent format
 								(?,
 								ca_messages.obsolete_feature_title (names.count),
-								<<message.list (create {ITERABLE_FUNCTION [PROCEDURE [TEXT_FORMATTER], FEATURE_NAME]}.make
+								<<element_list (create {ITERABLE_FUNCTION [PROCEDURE [TEXT_FORMATTER], FEATURE_NAME]}.make
 								(agent (feature_name: FEATURE_NAME; feature_class: CLASS_C): PROCEDURE [TEXT_FORMATTER] do
 									Result := agent {TEXT_FORMATTER}.add_feature_name (feature_name.visual_name_32, feature_class)
 								end (?, current_context.checking_class), names))>>),
@@ -159,14 +159,6 @@ feature {NONE} -- Rule Checking
 					end
 				end
 			end
-		end
-
-feature {NONE} -- Formatting
-
-	message: FORMATTED_MESSAGE
-			-- A message formatter.
-		once
-			create Result
 		end
 
 note

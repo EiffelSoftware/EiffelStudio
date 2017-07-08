@@ -228,10 +228,10 @@ feature {NONE} -- Rule Checking
 						violation_severity := severity_error
 					end
 					create violation.make_formatted
-						(agent message.format (?, ca_messages.obsolete_feature_call_title,
+						(agent format_elements (?, ca_messages.obsolete_feature_call_title,
 							<<
-								message.element (agent (f.e_feature).append_name),
-								message.element (agent add_single_line (obsolete_message, ?))
+								agent (f.e_feature).append_name,
+								agent add_single_line (obsolete_message, ?)
 							>>),
 						agent
 							(callee: E_FEATURE;
@@ -253,13 +253,13 @@ feature {NONE} -- Rule Checking
 								affected := create {ARRAY [PROCEDURE [TEXT_FORMATTER]]}.make_filled
 									(agent {TEXT_FORMATTER}.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_invariant_keyword, Void), 1, 1)
 							end
-							message.format (t, ca_messages.obsolete_feature_call_violation,
+							format (t, ca_messages.obsolete_feature_call_violation,
 							<<
-								message.element (agent callee.append_name),
-								message.element (agent callee_class.append_name),
-								message.list (affected),
-								message.element (agent caller_class.append_name),
-								message.element (agent (formatter: TEXT_FORMATTER; msg: READABLE_STRING_32) do
+								element (agent callee.append_name),
+								element (agent callee_class.append_name),
+								element_list (affected),
+								element (agent caller_class.append_name),
+								element (agent (formatter: TEXT_FORMATTER; msg: READABLE_STRING_32) do
 									formatter.add_new_line
 									if msg.has ({CHARACTER_32} '%N') then
 										formatter.add_multiline_string (msg, 1)
@@ -271,10 +271,8 @@ feature {NONE} -- Rule Checking
 							>>)
 							if days > 0 then
 								t.add_new_line
-								message.format (t, ca_messages.obsolete_feature_call_expires_in (days),
-								<<
-									message.element (agent {TEXT_FORMATTER}.add_int (days))
-								>>)
+								format_elements (t, ca_messages.obsolete_feature_call_expires_in (days),
+									<<agent {TEXT_FORMATTER}.add_int (days)>>)
 							end
 						end (f.e_feature, c, feature_names, current_context.checking_class, u.utf_8_string_8_to_string_32 (m), expires_in, ?),
 						Current)
@@ -288,12 +286,6 @@ feature {NONE} -- Rule Checking
 		end
 
 feature {NONE} -- Formatting
-
-	message: FORMATTED_MESSAGE
-			-- A message formatter.
-		once
-			create Result
-		end
 
 	add_single_line (s: READABLE_STRING_32; t: TEXT_FORMATTER)
 			-- Add a single line of `s` to `t`.

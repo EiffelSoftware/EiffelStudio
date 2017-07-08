@@ -1,7 +1,7 @@
 ﻿note
 	description: "Optionally parameterized messages that are subject to translation."
 
-class
+deferred class
 	FORMATTED_MESSAGE
 
 feature -- Format: elements
@@ -17,7 +17,7 @@ feature -- Format: elements
 
 feature -- Format: lists
 
-	list (data: like listable): like formattable
+	element_list (data: like listable): like formattable
 			-- Agent to add a given list `data' to output using a formatter.
 		do
 			Result := message_formatter.list (add_list, data)
@@ -66,6 +66,19 @@ feature -- Format: message parsing
 			message_formatter.format (formatter, message, arguments)
 		end
 
+	format_elements (formatter: TEXT_FORMATTER; message: READABLE_STRING_32; arguments: ITERABLE [PROCEDURE [TEXT_FORMATTER]])
+			-- Format `message` replacing placeholders with elements from `arguments' using `formatter'.
+			-- Same as `format` but arguments do not need to handle format specification,
+			-- so appropriate agents with an open {TEXT_FORMATTER} argument can be used directly.
+			-- Example:
+			-- 	t: TEXT_FORMATTER
+			-- 	c: CLASS_C
+			-- 	...
+			-- 	format_elements (t,  locale.translation_in_context ("Class {1} has perfect code."), <<agent c.append_name>>)
+		do
+			format (formatter, message, create {ITERABLE_FUNCTION [PROCEDURE [FORMAT_SPECIFICATION, TEXT_FORMATTER], PROCEDURE [TEXT_FORMATTER]]}.make (element_agent, arguments))
+		end
+
 feature {NONE} -- Format: message parsing
 
 	formattable: PROCEDURE [FORMAT_SPECIFICATION, TEXT_FORMATTER]
@@ -109,10 +122,18 @@ feature {NONE} -- Format: message parsing
 					end)
 		end
 
+feature {NONE} -- Optimization
+
+	element_agent: FUNCTION [PROCEDURE [TEXT_FORMATTER], PROCEDURE [FORMAT_SPECIFICATION, TEXT_FORMATTER]]
+			-- An agent based on `element`.
+		once
+			Result := agent element
+		end
+
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -95,7 +95,7 @@ feature -- Output
 		do
 			trace_single_line (t)
 			t.add_new_line
-			format (t, locale.translation_in_context ("Computed type of array elements {1} does not conform to the type {2} of target array elements.", "compiler.error"),
+			format_elements (t, locale.translation_in_context ("Computed type of array elements {1} does not conform to the type {2} of target array elements.", "compiler.error"),
 				<<agent implicit_element_type.append_to, agent target_element_type.append_to>>)
 			t.add_new_line
 		end
@@ -103,7 +103,7 @@ feature -- Output
 	trace_single_line (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			format (t, locale.translation_in_context ("Explicit array type {1} has to be specified.", "compiler.error"), <<agent target_array_type.append_to>>)
+			format_elements (t, locale.translation_in_context ("Explicit array type {1} has to be specified.", "compiler.error"), <<agent target_array_type.append_to>>)
 		end
 
 note

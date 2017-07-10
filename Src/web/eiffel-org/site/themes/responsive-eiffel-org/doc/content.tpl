@@ -4,7 +4,7 @@
 			  <div id="breadcrumb">
 					<span class="ico"><img src="{$theme_path/}images/ico-document.png" width="21" height="21" alt="Documentation"></span>
 					<a href="{$site_url/}doc/{$wiki_book_name/}">{$wiki_book_name/}</a>
-					{if isset="$wiki_page_name"}:: {$wiki_page_name/}{/if}
+					{if isset="$wiki_link_title"}:: {$wiki_link_title/}{/if}
 					{if isset="$breadcrumb"}:: {$breadcrumb/}{/if}
 			  </div>
 			  </header>

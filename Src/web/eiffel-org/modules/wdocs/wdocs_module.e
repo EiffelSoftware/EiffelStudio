@@ -1253,7 +1253,7 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 				create s.make_empty
 
 				if
-					attached a_manager.page_metadata (pg, <<"title", "uuid">>) as md and then
+					attached a_manager.page_metadata (pg, <<"title", "uuid", "link_title">>) as md and then
 					attached md.item ("title") as l_md_title and then
 					not l_md_title.is_whitespace
 				then
@@ -1261,11 +1261,17 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 					if attached md.item ("uuid") as l_uuid then
 						r.values.force (l_uuid, "wiki_uuid")
 					end
+					if attached md.item ("link_title") as l_link_title then
+						r.values.force (l_link_title, "wiki_link_title")
+					else
+						r.values.force (l_title, "wiki_link_title")
+					end
 				else
 					l_title := pg.title
 				end
 --				r.set_title (l_title)
 				r.set_title (Void)
+				r.set_value (l_title, "site_title")
 				r.values.force (l_title, "wiki_page_name")
 				if attached {WSF_STRING} req.query_parameter ("source") as s_source and then not s_source.is_case_insensitive_equal ("no") then
 					if attached pg.path as l_path then

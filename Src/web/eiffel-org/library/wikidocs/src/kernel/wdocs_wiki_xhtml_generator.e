@@ -60,14 +60,16 @@ feature -- Page processing
 			b: like is_html_encoded_output
 		do
 			current_page := a_page
-			output ("<h1 class=%"wikititle%">")
-			b := is_html_encoded_output
-			set_html_encoded_output (True)
-			output (page_title (a_page))
-			set_html_encoded_output (b)
-			output ("</h1>%N")
 			if attached a_page.structure as st then
 				output ("<div class=%"wikipage%">")
+
+				output ("<h1 class=%"wikititle%">")
+				b := is_html_encoded_output
+				set_html_encoded_output (True)
+				output (page_title (a_page))
+				set_html_encoded_output (b)
+				output ("</h1>%N")
+
 				if is_auto_toc_enabled then
 					output_toc (Void, True)
 				end

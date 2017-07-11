@@ -31,6 +31,17 @@ feature -- Access
 			end
 		end
 
+	parent_window: detachable EV_WINDOW
+			-- If set, license dialog will be modal to this `parent_window`.
+
+feature -- Element change
+
+	set_parent_window (win: detachable EV_WINDOW)
+			-- Set `parent_window` to `win`.
+		do
+			parent_window := win
+		end
+
 feature -- Status report
 
 	is_available: BOOLEAN
@@ -49,13 +60,16 @@ feature -- Execution
 			-- Popup the help window.
 		local
 			lic_dialog: EB_LICENSE_DIALOG
-			parent_window: EB_WINDOW
+			l_parent_window: detachable EV_WINDOW
 		do
 			create lic_dialog.make (license_path)
 
-			parent_window := window_manager.last_focused_window
-			if parent_window /= Void then
-				lic_dialog.show_modal_to_window (parent_window.window)
+			l_parent_window := parent_window
+			if l_parent_window = Void and then attached window_manager.last_focused_window as win then
+				l_parent_window := win.window
+			end
+			if l_parent_window /= Void then
+				lic_dialog.show_modal_to_window (l_parent_window)
 			end
 		end
 

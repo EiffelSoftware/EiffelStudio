@@ -95,7 +95,9 @@ feature {NONE} -- Basic operations
 			l_process.set_hidden (True)
 			l_process.launch
 			Result := l_process.launched
-			l_process.close
+			if Result then
+				l_process.close
+			end
 		end
 
 ;note

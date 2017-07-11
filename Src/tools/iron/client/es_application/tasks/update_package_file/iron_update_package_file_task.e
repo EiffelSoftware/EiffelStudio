@@ -69,6 +69,10 @@ feature -- Execute
 					then
 						is_stdout := False
 					elseif
+						ic.item.is_case_insensitive_equal_general ("--assistant")
+					then
+						is_assistant := True
+					elseif
 						ic.item.is_case_insensitive_equal_general ("--folder")
 					then
 						ic.forth
@@ -128,6 +132,10 @@ feature -- Execute
 	is_stdout: BOOLEAN
 			-- Output updated ecf file to stdout
 
+	is_assistant: BOOLEAN
+			-- If True, generated available information as comment.
+			-- mainly used to help building package file from folder.
+
 	has_error: BOOLEAN
 			-- Last `update_iron' has error?
 
@@ -163,7 +171,11 @@ feature -- Execute
 				pac.set_name (p_name)
 				create pif_fac
 				pif := pif_fac.new_package_file (a_iron_file)
-				pif.enable_assistant
+				if is_assistant then
+					pif.enable_assistant
+				else
+					pif.disable_assistant
+				end
 
 				pif.load_package (pac)
 				has_error := pif.has_error
@@ -296,7 +308,7 @@ feature -- Execute
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

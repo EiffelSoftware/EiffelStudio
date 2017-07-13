@@ -1851,6 +1851,7 @@ test	types-and-attachement 		exec367 tcf pass execution conformance void_safe
 test	manifest-array-type-computation	exec368 tcf pass execution manifest array
 test	conditional-expression-type-computation	exec369 tcf pass execution conditional expression
 test	conditional-expression-expanded-type	exec370 tcf pass execution conditional expression
+test	old-expression-in-feature-body		exec371 tcf pass execution old expression
 
 -- Once specific
 

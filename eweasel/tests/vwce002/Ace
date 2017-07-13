@@ -3,7 +3,7 @@
 	<target name="test">
 		<root class="TEST" feature="make"/>
 		<setting name="console_application" value="true"/>
-		<precompile name="precompile" location="$PRECOMPILED_BASE_SCOOP_SAFE"/>
+		$PRECOMPILE
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="test" location="clusters"/>

@@ -34,14 +34,14 @@ feature {NONE} -- Creation
 				end
 				-- VUTA(2): target is not attached.
 			a.do_nothing
-				-- VUAR(2): non-separate formal argument.
+				-- VUAR(2) in SCOOP: non-separate formal argument.
 			use_attached 
 				(if Current = twin then
 					create {separate TEST}
 				else
 					Current
 				end)
-				-- VUAR(2): non-separate formal argument.
+				-- VUAR(2) in SCOOP: non-separate formal argument.
 			use_attached
 				(if Current = twin then
 					Current

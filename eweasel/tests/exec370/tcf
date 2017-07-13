@@ -1,6 +1,9 @@
 test_name 	 conditional-expression-expanded-type
 test_description If a conditional expression involves expanded and reference type or incompatible expanded types, the expanded values should be boxed before use.
 
+if     DOTNET define PRECOMPILE	<capability><concurrency support="none"/></capability><precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
+if not DOTNET define PRECOMPILE	<precompile name="precompile" location="$PRECOMPILED_BASE_SCOOP_SAFE"/>
+
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 a.e $CLUSTER a.e
 copy_raw 	 test.e $CLUSTER test.e

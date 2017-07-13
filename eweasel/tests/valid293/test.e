@@ -11,7 +11,7 @@ feature {NONE} -- Creation
 			;({ARRAY [INTEGER_8]} <<1>>).do_nothing
 			;({LIST [INTEGER_8]} <<1>>).do_nothing -- Error: wrong base class
 			;({like x} <<1>>).do_nothing
-			;({separate ARRAY [INTEGER_8]} <<1>>).do_nothing -- Error: separate type
+			;({separate ARRAY [INTEGER_8]} <<1>>).do_nothing -- Error in SCOOP: separate type
 			;(create {A [ARRAY [INTEGER_8]]}).f
 		end
 

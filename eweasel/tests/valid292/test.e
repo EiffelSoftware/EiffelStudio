@@ -17,7 +17,7 @@ feature
 			;({ARRAY [COMPARABLE]} <<1, 2>>).do_nothing
 			;({ARRAY [COMPARABLE]} <<1, "">>).do_nothing
 			;({ARRAY [COMPARABLE]} <<1, Current>>).do_nothing -- Error
-			;({ARRAY [COMPARABLE]} <<1, create {separate TEST}.make>>).do_nothing -- Error
+			;({ARRAY [COMPARABLE]} <<1, create {separate STRING}.make_empty>>).do_nothing -- Error in SCOOP
 			;({ARRAY [COMPARABLE]} <<1, Void>>).do_nothing -- Error
 
 			;({ARRAY [detachable COMPARABLE]} <<>>).do_nothing
@@ -25,7 +25,7 @@ feature
 			;({ARRAY [detachable COMPARABLE]} <<1, 2>>).do_nothing
 			;({ARRAY [detachable COMPARABLE]} <<1, "">>).do_nothing
 			;({ARRAY [detachable COMPARABLE]} <<1, Current>>).do_nothing -- Error
-			;({ARRAY [detachable COMPARABLE]} <<1, create {separate STRING}.make_empty>>).do_nothing -- Error
+			;({ARRAY [detachable COMPARABLE]} <<1, create {separate STRING}.make_empty>>).do_nothing -- Error in SCOOP
 			;({ARRAY [detachable COMPARABLE]} <<1, Void>>).do_nothing
 
 			;({ARRAY [separate COMPARABLE]} <<>>).do_nothing

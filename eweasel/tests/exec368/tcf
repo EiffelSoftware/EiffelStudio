@@ -1,6 +1,9 @@
 test_name 	 manifest-array-type-computation
 test_description A type of a manifest array should be computed using only conformance and it should be the maximum element regadless of its position. See also test#exec369, test#valid292.
 
+if     DOTNET define PRECOMPILE	<capability><concurrency support="none"/></capability><precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
+if not DOTNET define PRECOMPILE	<precompile name="precompile" location="$PRECOMPILED_BASE_SCOOP_SAFE"/>
+
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 a.e $CLUSTER a.e
 copy_raw 	 b.e $CLUSTER b.e

@@ -1,6 +1,9 @@
 test_name 	 validity-vwce-type-compatibility
 test_description Expressions in conditional expressions should be pair-wise conforming and their detachable and separateness status should be propagated. See also test#exec369.
 
+if     DOTNET define PRECOMPILE	<capability><concurrency support="none"/></capability><precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
+if not DOTNET define PRECOMPILE	<precompile name="precompile" location="$PRECOMPILED_BASE_SCOOP_SAFE"/>
+
 copy_sub Ace $TEST Ace
 copy_raw test1.e $CLUSTER test.e
 
@@ -10,6 +13,7 @@ compile_result	ok
 copy_raw test2.e $CLUSTER test.e
 
 compile_melted
-compile_result	validity_error TEST VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUTA(2)
+if     DOTNET compile_result	validity_error TEST VUAR(2) VUAR(2) VUAR(2) VUTA(2)
+if not DOTNET compile_result	validity_error TEST VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUTA(2)
 
 test_end

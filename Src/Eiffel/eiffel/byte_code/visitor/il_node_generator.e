@@ -2133,7 +2133,10 @@ feature {NONE} -- Visitors
 		local
 			l_elsif_clause: ELSIF_EXPRESSION_B
 			l_else_label, l_end_label, l_elsif_label: IL_LABEL
+			t: TYPE_A
 		do
+			t := context.real_type (a_node.type)
+
 				-- Generated IL code for condition.
 			a_node.condition.process (Current)
 				-- Generated a test
@@ -2141,7 +2144,7 @@ feature {NONE} -- Visitors
 			il_generator.branch_on_false (l_else_label)
 
 				-- Generated IL code for first expression.
-			a_node.then_expression.process (Current)
+			generate_expression_il_for_type (a_node.then_expression, t)
 
 			l_end_label := il_generator.create_label
 			il_generator.branch_to (l_end_label)
@@ -2164,7 +2167,7 @@ feature {NONE} -- Visitors
 					il_generator.branch_on_false (l_elsif_label)
 
 						-- Generate alternative expression IL code.
-					l_elsif_clause.expression.process (Current)
+					generate_expression_il_for_type (l_elsif_clause.expression, t)
 
 					il_generator.branch_to (l_end_label)
 
@@ -2173,7 +2176,7 @@ feature {NONE} -- Visitors
 			end
 
 				-- Generates byte code for default expression.
-			a_node.else_expression.process (Current)
+			generate_expression_il_for_type (a_node.else_expression, t)
 
 				-- End of `if' statement.
 			il_generator.mark_label (l_end_label)
@@ -4931,7 +4934,7 @@ feature {NONE} -- Convenience
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

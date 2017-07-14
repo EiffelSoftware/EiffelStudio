@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "An Eiffel expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,18 +25,18 @@ inherit
 feature -- Access
 
 	type: TYPE_A
-			-- Expression type
+			-- Expression type.
 		deferred
 		end
 
 	c_type: TYPE_C
-			-- C type of the expression
+			-- C type of the expression.
 		do
 			Result := real_type (type).c_type
 		end
 
 	used (r: REGISTRABLE): BOOLEAN
-			-- Is register `r' used in local or forthcomming dot calls ?
+			-- Is register `r' used in local or forthcomming dot calls?
 		deferred
 		end
 
@@ -87,14 +87,11 @@ feature -- Status report
 		require
 			source_type_not_void: source_type /= Void
 			source_type_is_reference: source_type.is_reference
-		local
-			cl_type_i: CL_TYPE_A
 		do
 			Result := True
-			cl_type_i ?= source_type
 			if
 				context.original_body_index = context.twin_body_index or else
-				(cl_type_i /= Void and then cl_type_i.base_class.is_optimized_as_frozen) or else
+				(attached {CL_TYPE_A} source_type as cl_type_i and then cl_type_i.base_class.is_optimized_as_frozen) or else
 				source_type.is_none or else
 				is_type_fixed
 			then
@@ -105,46 +102,13 @@ feature -- Status report
 			elseif system.in_final_mode then
 					-- Avoid dynamic check of object type if we know
 					-- in advance that the type cannot be expanded.
-				if cl_type_i /= Void then
+				if attached {CL_TYPE_A} source_type as cl_type_i then
 					Result := context.has_expanded_descendants (cl_type_i.type_id (context.context_class_type.type))
 				end
 			end
 		end
 
-feature -- C generation
-
-	get_register
-			-- Get a temporary register to hold result of expr. If a register
-			-- has already been propagated, then `register' is not void and
-			-- nothing has to be done.
-		local
-			tmp_register: REGISTER
-			ctype: TYPE_C
-		do
-			if register = Void then
-				ctype := c_type
-				if not ctype.is_void then
-					create tmp_register.make (ctype)
-					set_register (tmp_register)
-				end
-			end
-		ensure then
-			register_exists: register = Void implies type.is_void
-		end
-
-	free_register
-			-- Free register used by expr, if necessary
-		do
-			if register /= Void then
-				register.free_register
-			end
-		end
-
-	print_register
-			-- Print register.
-		do
-			register.print_register
-		end
+feature -- C generation: status report
 
 	is_simple_expr: BOOLEAN
 			-- Is the current expression a simple one ?
@@ -198,33 +162,15 @@ feature -- C generation
 			end
 		end
 
-	unanalyze
-			-- Undo the effect of analyze.
+	is_exception_possible: BOOLEAN
+			-- Can exception be raised during evaluation of the expression?
 		do
+				-- Exception is possible if there is a call to unknown code or memory allocation is possible.
+			Result := has_call or else allocates_memory
 		end
 
-	stored_register: REGISTRABLE
-			-- The register in which the expression is stored
-		do
-			Result := register
-			if Result = Void then
-				Result := Current
-			end
-		end
-
-	need_enlarging: BOOLEAN = true
-			-- All the expressions need enlarging
-
-	enlarged: EXPR_B
-			-- Redefined for type check
-		do
-			Result := Current
-		end
-
-	register_name: STRING
-			-- Do nothing
-		do
-		end
+	need_enlarging: BOOLEAN = True
+			-- All the expressions need enlarging.
 
 	is_register_required (target_type: TYPE_A): BOOLEAN
 			-- Is register required if expression is about
@@ -238,6 +184,66 @@ feature -- C generation
 				(target_type.is_true_expanded or (source_type.is_reference and is_dynamic_clone_required (source_type)))
 		end
 
+feature -- C generation
+
+	get_register
+			-- Get a temporary register to hold result of expr. If a register
+			-- has already been propagated, then `register' is not void and
+			-- nothing has to be done.
+		local
+			tmp_register: REGISTER
+			ctype: TYPE_C
+		do
+			if register = Void then
+				ctype := c_type
+				if not ctype.is_void then
+					create tmp_register.make (ctype)
+					set_register (tmp_register)
+				end
+			end
+		ensure then
+			register_exists: register = Void implies type.is_void
+		end
+
+	free_register
+			-- Free register used by expr, if necessary.
+		do
+			if register /= Void then
+				register.free_register
+			end
+		end
+
+	print_register
+			-- Print register.
+		do
+			register.print_register
+		end
+
+	unanalyze
+			-- Undo the effect of analyze.
+		do
+		end
+
+	stored_register: REGISTRABLE
+			-- The register in which the expression is stored.
+		do
+			Result := register
+			if Result = Void then
+				Result := Current
+			end
+		end
+
+	enlarged: EXPR_B
+			-- Redefined for type check.
+		do
+			Result := Current
+		end
+
+	register_name: STRING
+			-- Do nothing.
+		do
+		end
+
 	generate_for_type (target_register: REGISTRABLE; target_type: TYPE_A)
 			-- Generate expression which is about
 			-- to be assigned or compared to the type `target_type'.
@@ -247,17 +253,15 @@ feature -- C generation
 		local
 			expression_type: TYPE_A
 			basic_i: BASIC_A
-			typed_pointer_i: TYPED_POINTER_A
 			buf: GENERATION_BUFFER
 		do
 			generate
 			buf := buffer
 			expression_type := context.real_type (type)
 			if target_type.is_reference and then expression_type.is_expanded then
-				if expression_type.is_basic then
-					basic_i ?= expression_type
-					typed_pointer_i ?= basic_i
-					if typed_pointer_i /= Void then
+				if expression_type.is_basic and then attached {BASIC_A} expression_type as b then
+					basic_i := b
+					if attached {TYPED_POINTER_A} basic_i as typed_pointer_i then
 							-- Use POINTER instead of TYPED_POINTER to follow .NET semantics.
 						basic_i := pointer_type
 					end
@@ -321,7 +325,7 @@ feature -- C generation
 feature -- Array optimization
 
 	optimized_byte_node: EXPR_B
-			-- Redefined for type check
+			-- Redefined for type check.
 		do
 			Result := Current
 		end
@@ -329,19 +333,19 @@ feature -- Array optimization
 feature -- Inlining
 
 	pre_inlined_code: EXPR_B
-			-- Redefined for type check
+			-- Redefined for type check.
 		do
 			Result := Current
 		end
 
 	inlined_byte_code: EXPR_B
-			-- Redefined for type check
+			-- Redefined for type check.
 		do
 			Result := Current
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -3071,6 +3071,7 @@ test	benchmark-scoop-passive-memory-stress-test		bench017 tcf pass benchmark sco
 test	benchmark-loop-across-code-motion			bench018 tcf pass benchmark loop across iteration inlining
 test	benchmark-loop-across-expression			bench019 tcf fail benchmark loop across iteration inlining
 test	benchmark-launch_process				bench020 tcf pass benchmark process launch
+test	benchmark-old-expression				bench021 tcf pass benchmark old expression
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

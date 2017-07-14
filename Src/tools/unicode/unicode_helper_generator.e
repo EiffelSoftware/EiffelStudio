@@ -689,25 +689,22 @@ feature {NONE} -- Helpers
 			i: INTEGER
 		do
 			from
-				i := 1
+				i := a_nb_tab
 			until
-				i > a_nb_tab
+				i <= 0
 			loop
 				a_string.append_character ('%T')
-				i := i + 1
+				i := i - 1
 			end
 		end
 
 	table_template: STRING_8 = "{
 	$table_name: SPECIAL [$data_type]
 			-- Table for Unicode characters in the range 0x$low .. 0x$high.
-		local
-			l_array: ARRAY [$data_type]
 		once
-			l_array := <<
+			Result := ({ARRAY [$data_type]} <<
 				$values
-			>>
-			Result := l_array.area
+			>>).area
 		end
 		}"
 

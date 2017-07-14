@@ -96,7 +96,7 @@ feature {NONE} -- Usage
 	name: STRING = "Unicode Helper Generator"
 			-- <Precursor>
 
-	version: STRING = "1.1"
+	version: STRING = "1.2"
 			-- <Precursor>
 
 	copyright: STRING = "Copyright Eiffel Software 2012-2017. All Rights Reserved."

@@ -134,10 +134,10 @@ feature {NONE} -- Rule checking
 			end
 		end
 
-	allowed_names: ARRAY [STRING_32]
+	allowed_names: ARRAY [READABLE_STRING_32]
 			-- List of names that are allowed despite breaking the conventions.
 		once
-			Result := << "i", "j", "k", "n" >>
+			Result := {ARRAY [READABLE_STRING_32]} << "i", "j", "k", "n" >>
 			Result.compare_objects
 		end
 

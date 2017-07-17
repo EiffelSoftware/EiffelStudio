@@ -1,6 +1,4 @@
-note
-	description: "Objects that ..."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,13 +24,13 @@ feature -- Access
 	any_local_address: INET_ADDRESS
 		once
 			create {INET6_ADDRESS} Result.make_from_host_and_address("::",
-			<<0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00>>);
+			{ARRAY [NATURAL_8]} <<0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00>>)
 		end
 
 	loopback_address: INET_ADDRESS
 		do
 			create {INET6_ADDRESS} Result.make_from_host_and_address("::1",
-			<<0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01>>)
+			{ARRAY [NATURAL_8]} <<0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01>>)
 		end
 
 feature {NONE} -- Externals
@@ -44,5 +42,14 @@ feature {NONE} -- Externals
 			"en_local_host_name"
 		end
 
-
+note
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
-				Class that represents a .mo file. 
-				The description of this file format can be found here: 
-					http://www.gnu.org/software/gettext/manual/html_node/gettext_136.html
-				]"
+			Class that represents a .mo file. 
+			The description of this file format can be found here: 
+				http://www.gnu.org/software/gettext/manual/html_node/gettext_136.html
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -87,9 +87,9 @@ feature -- Access
 	valid_index (i:INTEGER): BOOLEAN
 			-- is this index valid?
 		do
-			Result := ((i >= 1) and (i <= entry_count))
+			Result := i >= 1 and i <= entry_count
 		ensure then
-			correct_result: Result = ((i >= 1) and (i <= entry_count))
+			correct_result: Result = (i >= 1 and i <= entry_count)
 		end
 
 	entry_has_plurals (i:INTEGER): BOOLEAN
@@ -200,13 +200,13 @@ feature -- Access
 
 feature --Entries
 
-	last_original: TUPLE [i:INTEGER; list: LIST [STRING_32]]
-	last_translated: TUPLE [i:INTEGER; list: LIST [STRING_32]]
+	last_original: TUPLE [i: INTEGER; list: LIST [STRING_32]]
+	last_translated: TUPLE [i: INTEGER; list: LIST [STRING_32]]
 
 	get_original_entries (i_th: INTEGER)
 			-- get `i_th' original entry in the file
 		do
-			if (last_original.i /= i_th) then
+			if last_original.i /= i_th then
 				last_original.i := i_th
 				last_original.list := extract_string(original_table_offset, i_th).split('%U')
 			end
@@ -215,7 +215,7 @@ feature --Entries
 	get_translated_entries (i_th: INTEGER)
 			-- What's the `i-th' translated entry?
 		do
-			if (last_translated.i /= i_th) then
+			if last_translated.i /= i_th then
 				last_translated.i := i_th
 				last_translated.list := extract_string(translated_table_offset, i_th).split('%U')
 			end
@@ -248,14 +248,14 @@ feature {NONE} -- Implementation
 			file.go(0)
 			-- Read magic number byte-by-byte.
 			t_magic_number := get_integer
-			if t_magic_number.is_equal (<<0xde,0x12,0x04,0x95>>) then
+			if t_magic_number.is_equal ({ARRAY [NATURAL_8]} <<0xde, 0x12, 0x04, 0x95>>) then
 				is_little_endian_file := True
 				if l_magic_number = 0xde120495 then
 					is_big_endian_machine := True
 				elseif l_magic_number = 0x950412de then
 					is_little_endian_machine := True
 				end
-			elseif t_magic_number.is_equal (<<0x95,0x04,0x12,0xde>>) then
+			elseif t_magic_number.is_equal ({ARRAY [NATURAL_8]} <<0x95, 0x04, 0x12, 0xde>>) then
 				is_big_endian_file := True
 				if l_magic_number = 0xde120495 then
 					is_little_endian_machine := True
@@ -273,13 +273,11 @@ feature {NONE} -- Implementation
 			t_list : LIST [STRING_32]
 			t_string : detachable STRING_32
 			index : INTEGER
-			char0: CHARACTER_32
 			code0: NATURAL_32
 			conditional: STRING_32
 			nplurals: INTEGER_32
 		do
-			char0 := '0'
-			code0 := char0.natural_32_code
+			code0 := ('0').natural_32_code
 				-- Get the first translated string of the first entry in the .mo file - this is the headers entry (the empty string)
 			get_translated_entries (1)
 			t_list := last_translated.list.i_th(1).split('%N')
@@ -333,7 +331,7 @@ feature {NONE} -- Implementation (helpers)
 			file.go(a_offset + (a_number - 1) * 8)
 			string_length := read_integer
 			string_offset := read_integer
-			file.go(string_offset)
+			file.go (string_offset)
 			Result := utf8_rw.file_read_string_32_with_length (file, string_length)
 		ensure
 			result_exists : Result /= Void
@@ -431,7 +429,7 @@ invariant
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -525,7 +525,7 @@ feature {NONE} -- Implementation
 	dos_header: MANAGED_POINTER
 			-- DOS header.
 		once
-			create Result.make_from_array ( <<
+			create Result.make_from_array ({ARRAY [NATURAL_8]} <<
 				0x4D, 0x5A, 0x90, 0x0, 0x3, 0x0, 0x0, 0x0,
 				0x4, 0x0, 0x0, 0x0, 0xFF, 0xFF, 0x0, 0x0,
 				0xB8, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
@@ -569,7 +569,7 @@ invariant
 	public_key_not_void: (is_valid and has_strong_name) implies public_key /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

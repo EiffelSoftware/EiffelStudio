@@ -1,7 +1,7 @@
-note
+﻿note
+	descriptio: "The enlarged 'old' operator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- The enlarged "old" operator
 
 class UN_OLD_BL
 
@@ -12,98 +12,107 @@ inherit
 			register, set_register,
 			generate, unanalyze, analyze,
 			print_register, free_register
-		end;
+		end
 
 feature
 
-	register: REGISTRABLE;
+	register: REGISTRABLE
 			-- Register which stores the old value.
 			-- This register is never freed, of course.
 
-	exception_register: REGISTRABLE;
+	exception_register: REGISTER
 			-- Register which stores the exception object if any.
 
 	set_register (r: REGISTRABLE)
 			-- Assign `r' to `register'
 		do
-			register := r;
-		end;
+			register := r
+		end
 
 	special_analyze
 			-- Analyze expression and get a register
 		local
 			target_type: TYPE_A
 		do
-			target_type := Context.real_type (type);
-			context.init_propagation;
-			expr.propagate (No_register);
-			get_register;
-			expr.analyze;
-			expr.free_register;
-				-- Create exception register
-			create {REGISTER}exception_register.make (exception_type.c_type)
-		end;
+			target_type := Context.real_type (type)
+			context.init_propagation
+			expr.propagate (No_register)
+			get_register
+			expr.analyze
+			expr.free_register
+				-- Avoid generating code that handles exceptions when no exceptions are possiible (and no memory is allocated to store intermediate result).
+			if expr.is_exception_possible or else expr.allocates_memory_for_type (target_type) then
+					-- Create exception register.
+				create exception_register.make (exception_type.c_type)
+			end
+		end
 
 	initialize
 			-- Initialize the value of the old variable.
 		local
 			target_type: TYPE_A
 			buf: GENERATION_BUFFER
+			e: like exception_register
 		do
 			buf := buffer
 
-				-- Start try block of old expression evaluation
-			buf.put_new_line
-			buf.put_string ("RTE_OT")
+			e := exception_register
+			if attached e then
+					-- Start try block of old expression evaluation
+				buf.put_new_line
+				buf.put_string ("RTE_OT")
+			end
 
-			expr.generate;
-			target_type := Context.real_type (type);
+			expr.generate
+			target_type := Context.real_type (type)
 			buf.put_new_line
-			register.print_register;
-			buf.put_string (" = ");
+			register.print_register
+			buf.put_string (" = ")
 			if target_type.is_true_expanded then
 				buf.put_string ("RTCL(")
 				expr.print_register
 				buf.put_character (')')
 			else
-				expr.print_register;
+				expr.print_register
 			end
 			buf.put_character (';')
 
-				-- Clean the exception recording local.
-			buf.put_new_line
-			exception_register.print_register
-			buf.put_string (" = ")
-			buf.put_string ("NULL;")
+			if attached e then
+					-- Clean the exception recording local.
+				buf.put_new_line
+				e.print_register
+				buf.put_string (" = ")
+				buf.put_string ("NULL;")
 
-				-- End try block of old expression evaluation
-			buf.put_new_line
-			buf.put_string ("RTE_O")
+					-- End try block of old expression evaluation
+				buf.put_new_line
+				buf.put_string ("RTE_O")
 
-				-- Save possible exception object.
-			buf.put_new_line
-			exception_register.print_register
-			buf.put_string (" = ")
-			buf.put_string ("RTLA;")
+					-- Save possible exception object.
+				buf.put_new_line
+				e.print_register
+				buf.put_string (" = ")
+				buf.put_string ("RTLA;")
 
-				-- End of local rescue
-			buf.put_new_line
-			buf.put_string ("RTE_OE")
-		end;
+					-- End of local rescue
+				buf.put_new_line
+				buf.put_string ("RTE_OE")
+			end
+		end
 
 	unanalyze
-			-- Undo the analysis
+			-- Undo the analysis.
 		local
-			void_reg: REGISTER;
+			void_reg: REGISTER
 		do
-			expr.unanalyze;
-			set_register (void_reg);
-		end;
+			expr.unanalyze
+			set_register (void_reg)
+		end
 
 	analyze
 			-- Do nothing
 		do
-		end;
+		end
 
 	generate
 			-- We always check that the corresponding recorded exception object exists,
@@ -111,26 +120,30 @@ feature
 		local
 			buf: GENERATION_BUFFER
 		do
-			buf := buffer
-			buf.put_new_line;
-			buf.put_string ("RTCO(")
-			exception_register.print_register
-			buf.put_two_character (')', ';')
-		end;
+			if attached exception_register as e then
+				buf := buffer
+				buf.put_new_line
+				buf.put_string ("RTCO(")
+				e.print_register
+				buf.put_two_character (')', ';')
+			end
+		end
 
 	print_register
 			-- Print the value of the old variable
 		do
-			register.print_register;
-		end;
+			register.print_register
+		end
 
 	free_register
 			-- Do nothing
 		do
-		end;
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

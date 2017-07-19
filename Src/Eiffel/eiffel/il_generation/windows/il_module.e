@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Entity that generates IL code into one module file. Stores only
 		module specific data such as tokens. Delegate most of the work to
@@ -838,9 +838,7 @@ feature {NONE} -- Implementations: signatures
 			valid_type: a_type /= Void
 			a_context_type_not_void: a_context_type /= Void
 		local
-			l_native_array_type: NATIVE_ARRAY_TYPE_A
 			l_exp_type: CL_TYPE_A
-			l_formal: FORMAL_A
 			l_type, l_other_type: TYPE_A
 		do
 			if a_is_by_ref then
@@ -850,11 +848,7 @@ feature {NONE} -- Implementations: signatures
 			l_type := a_type.actual_type
 			if l_type.is_basic or l_type.is_none then
 				a_sig.set_type (l_type.element_type, 0)
-			elseif l_type.is_formal then
-				l_formal ?= l_type
-				check
-					l_formal_not_void: l_formal /= Void
-				end
+			elseif l_type.is_formal and then attached {FORMAL_A} l_type as l_formal then
 				l_other_type := a_context_type.type.generics.i_th (l_formal.position)
 				if l_other_type.is_formal then
 					a_sig.set_type (l_type.element_type, 0)
@@ -863,7 +857,7 @@ feature {NONE} -- Implementations: signatures
 				end
 			elseif l_type.is_expanded then
 					-- Correctly process classes mapped to built-in .NET types.
-				l_exp_type ?= l_type
+				l_exp_type := {CL_TYPE_A} / l_type
 				if
 					l_exp_type /= Void and then
 					il_code_generator.il_module (l_exp_type.associated_class_type (a_context_type.type)) /= Current and then
@@ -878,15 +872,12 @@ feature {NONE} -- Implementations: signatures
 					a_sig.set_type (l_type.element_type,
 						actual_class_type_token (l_type.implementation_id (a_context_type.type)))
 				end
+			elseif attached {NATIVE_ARRAY_TYPE_A} l_type as l_native_array_type then
+				a_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+				set_signature_type (a_sig, l_native_array_type.generics.first, a_context_type)
 			else
-				l_native_array_type ?= l_type
-				if l_native_array_type /= Void then
-					a_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-					set_signature_type (a_sig, l_native_array_type.generics.first, a_context_type)
-				else
-					a_sig.set_type (l_type.element_type,
-						actual_class_type_token (l_type.static_type_id (a_context_type.type)))
-				end
+				a_sig.set_type (l_type.element_type,
+					actual_class_type_token (l_type.static_type_id (a_context_type.type)))
 			end
 		end
 
@@ -1253,7 +1244,6 @@ feature -- Metadata description
 			is_generated: is_generated
 			class_type_not_void: class_type /= Void
 		local
-			l_name: STRING
 			class_c: CLASS_C
 			l_type_token: INTEGER
 			l_attributes: INTEGER
@@ -1262,8 +1252,7 @@ feature -- Metadata description
 			if class_mapping.item (class_type.static_type_id) = 0 then
 
 				class_c := class_type.associated_class
-				l_name := class_type.full_il_type_name
-				create l_uni_string.make (l_name)
+				create l_uni_string.make (class_type.full_il_type_name)
 
 				if
 					class_type.is_precompiled or
@@ -1324,15 +1313,13 @@ feature -- Metadata description
 			class_type_not_void: class_type /= Void
 			not_generated_as_single_type: not class_type.is_generated_as_single_type
 		local
-			l_name: STRING
 			class_c: CLASS_C
 			l_type_token: INTEGER
 			l_attributes: INTEGER
 			l_uni_string: UNI_STRING
 		do
 			class_c := class_type.associated_class
-			l_name := class_type.full_il_implementation_type_name
-			create l_uni_string.make (l_name)
+			create l_uni_string.make (class_type.full_il_implementation_type_name)
 
 			if
 				class_type.is_precompiled or
@@ -1753,7 +1740,6 @@ feature -- Metadata description
 			l_il_extension: IL_EXTENSION_I
 			l_define_default_ctor: BOOLEAN
 			l_feat_arg: FEAT_ARG
-			l_type_i: TYPE_A
 			l_creators_table: HASH_TABLE [EXPORT_I, STRING]
 			i: INTEGER
 			l_constructors: LIST [STRING]
@@ -1799,8 +1785,7 @@ feature -- Metadata description
 							until
 								l_feat_arg.after
 							loop
-								l_type_i := argument_actual_type (l_feat_arg.item)
-								set_signature_type (l_sig, l_type_i, class_type)
+								set_signature_type (l_sig, argument_actual_type (l_feat_arg.item), class_type)
 								l_feat_arg.forth
 							end
 							if l_is_generic then
@@ -1910,14 +1895,11 @@ feature -- Local saving
 		local
 			l_locals: like local_types
 			l_sig: MD_TYPE_SIGNATURE
-			l_type: TYPE_A
 			i: INTEGER
 			nb: INTEGER
 			l_start_offset, l_end_offset: INTEGER
-			l_local_info: like local_debug_info
 		do
-			l_local_info := local_info.item (a_method_token)
-			if l_local_info /= Void then
+			if attached local_info.item (a_method_token) as l_local_info then
 				from
 					l_start_offset := l_local_info.start_offset
 					l_end_offset := l_local_info.end_offset
@@ -1931,8 +1913,7 @@ feature -- Local saving
 					l_locals.after or i >= nb
 				loop
 					l_sig.reset
-					l_type := l_locals.item.first
-					set_signature_type (l_sig, l_type, a_context_type)
+					set_signature_type (l_sig, l_locals.item.first, a_context_type)
 					uni_string.set_string (l_locals.item.second)
 					dbg_writer.define_local_variable (uni_string, i, l_sig)
 					l_locals.forth
@@ -2524,11 +2505,9 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			in_debug_mode: is_debug_info_enabled
 		local
 			l_string: UNI_STRING
-			l_class: CLASS_C
 		do
 			Result := internal_dbg_documents.item (a_class_id)
-			if Result = Void then
-				l_class := System.class_of_id (a_class_id)
+			if Result = Void and then attached system.class_of_id (a_class_id) as l_class then
 				create l_string.make (l_class.file_name)
 				Result := dbg_writer.define_document (l_string, language_guid,
 					vendor_guid, document_type_guid)
@@ -2809,14 +2788,11 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			is_generated: is_generated
 			a_module_not_void: a_module /= Void
 			a_module_not_current: a_module /= Current
-		local
-			l_uni_string: UNI_STRING
 		do
 			Result := internal_module_references.item (a_module)
 			if Result = 0 then
 					-- ModuleRef token has not yet computed.
-				create l_uni_string.make (a_module.module_name)
-				Result := md_emit.define_module_ref (l_uni_string)
+				Result := md_emit.define_module_ref (create {UNI_STRING}.make (a_module.module_name))
 				internal_module_references.put (Result, a_module)
 			end
 		end
@@ -3047,11 +3023,8 @@ feature {NONE} -- Once per modules being generated.
 			-- Compute `c_module_token'.
 		require
 			is_generated: is_generated
-		local
-			l_uni_string: UNI_STRING
 		do
-			create l_uni_string.make (c_module_name)
-			c_module_token := md_emit.define_module_ref (l_uni_string)
+			c_module_token := md_emit.define_module_ref (create {UNI_STRING}.make (c_module_name))
 		end
 
 	compute_mscorlib_token
@@ -3063,15 +3036,13 @@ feature {NONE} -- Once per modules being generated.
 		local
 			l_ass_info: MD_ASSEMBLY_INFO
 			l_pub_key: MD_PUBLIC_KEY_TOKEN
-			l_system_object: EXTERNAL_CLASS_I
 			l_mscorlib: ASSEMBLY_I
 			l_version: VERSION
 		do
 				-- To compute it, we simply take the data from `System.Object'. That way our
 				-- code is automatically using the version of `mscorlib' that was specified
 				-- in the Ace file.
-			l_system_object := System.system_object_class
-			l_mscorlib := l_system_object.assembly
+			l_mscorlib := system.system_object_class.assembly
 
 			create l_version
 			check
@@ -3263,7 +3234,7 @@ feature {NONE} -- Once per modules being generated.
 			l_ass_info.set_revision_number (2490)
 
 			create l_pub_key.make_from_array (
-				<<0xDE, 0xF2, 0x6F, 0x29, 0x6E, 0xFE, 0xF4, 0x69>>)
+				{ARRAY [NATURAL_8]} <<0xDE, 0xF2, 0x6F, 0x29, 0x6E, 0xFE, 0xF4, 0x69>>)
 
 			ise_runtime_token := md_emit.define_assembly_ref (
 				create {UNI_STRING}.make (runtime_namespace), l_ass_info, l_pub_key)
@@ -3694,7 +3665,7 @@ invariant
 	dll_or_console_valid: not is_assembly_module implies (is_dll and is_console_application)
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -3725,4 +3696,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class IL_MODULE
+end

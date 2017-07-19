@@ -19,6 +19,17 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
+			create classes_to_analyze.make
+			create rule_violations.make (100)
+			create start_actions
+			create completed_actions
+			create output_actions
+
+			create ignoredby.make (25)
+			create checked_only_by.make (25)
+			create library_class.make (25)
+			create nonlibrary_class.make (25)
+
 			create settings.make
 			create rules.make_caseless (100) -- Rule IDs should be case insensitive.
 
@@ -95,28 +106,25 @@ feature {NONE} -- Initialization
 			add_rule (create {CA_WRONG_LOOP_ITERATION_RULE}.make)
 
 			settings.initialize_rule_settings (rules)
-
-			create classes_to_analyze.make
-			create rule_violations.make (100)
-			create completed_actions
-			create output_actions
-
-			create ignoredby.make (25)
-			create checked_only_by.make (25)
-			create library_class.make (25)
-			create nonlibrary_class.make (25)
 		end
 
 feature -- Analysis interface
 
-	add_completed_action (a_action: attached PROCEDURE [ITERABLE [TUPLE [detachable EXCEPTION, CLASS_C]]])
+	add_start_action (a_action: PROCEDURE)
+			-- Adds `a_action' to the list of procedures that will be
+			-- called when analysis has started.
+		do
+			start_actions.extend (a_action)
+		end
+
+	add_completed_action (a_action: PROCEDURE [ITERABLE [TUPLE [detachable EXCEPTION, CLASS_C]]])
 			-- Adds `a_action' to the list of procedures that will be
 			-- called when analysis has completed.
 		do
 			completed_actions.extend (a_action)
 		end
 
-	add_output_action (a_action: attached PROCEDURE [READABLE_STRING_GENERAL])
+	add_output_action (a_action: PROCEDURE [READABLE_STRING_GENERAL])
 			-- Adds `a_action' to the procedures that are called for outputting status. The final results
 			-- (rule violations) are not given to these procedures.
 		do
@@ -133,6 +141,8 @@ feature -- Analysis interface
 			l_rules_to_check: LINKED_LIST [CA_RULE]
 		do
 			is_running := True
+
+			start_actions.call
 
 			create l_rules_checker.make
 			create l_rules_to_check.make
@@ -403,6 +413,9 @@ feature {NONE} -- Implementation
 
 	system_wide_check: BOOLEAN
 			-- Shall the whole system be analyzed?
+
+	start_actions: ACTION_SEQUENCE
+			-- List of procedures to call when analysis has started.
 
 	completed_actions: ACTION_SEQUENCE [TUPLE [ITERABLE [TUPLE [detachable EXCEPTION, CLASS_C]]]]
 			-- List of procedures to call when analysis has completed.

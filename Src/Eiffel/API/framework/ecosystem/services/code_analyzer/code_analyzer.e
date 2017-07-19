@@ -157,9 +157,8 @@ feature -- Basic operations
 	start
 			-- <Precursor>
 		do
-				-- Fire events.
-			on_start
-				-- Register termination event handler.
+				-- Register start and termination event handlers.
+			code_analyzer.add_start_action (agent on_start)
 			code_analyzer.add_completed_action (agent on_finish)
 				-- Perform analysis.
 			code_analyzer.analyze

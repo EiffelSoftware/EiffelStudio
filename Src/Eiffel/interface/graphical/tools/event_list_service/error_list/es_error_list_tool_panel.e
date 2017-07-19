@@ -414,7 +414,8 @@ feature {NONE} -- Status report
 			definition: Result implies
 				(is_error_event (a_event_item) or
 				is_warning_event (a_event_item) or
-				is_hint_event (a_event_item))
+				is_hint_event (a_event_item) or
+				is_ok_event (a_event_item))
 		end
 
 	is_displaying_error: BOOLEAN
@@ -1331,8 +1332,10 @@ feature {NONE} -- Event handlers: event list
 					set_warning_count (warning_count + 1)
 				elseif is_hint_event (a_event_item) then
 					set_hint_count (hint_count + 1)
+				elseif is_ok_event (a_event_item) then
+						-- Nothing to do.
 				else
-					check False end
+					check from_is_appliable_event_postcondition: False end
 				end
 			end
 		ensure then
@@ -1359,8 +1362,10 @@ feature {NONE} -- Event handlers: event list
 					set_warning_count (warning_count - 1)
 				elseif is_hint_event (a_event_item) then
 					set_hint_count (hint_count - 1)
+				elseif is_ok_event (a_event_item) then
+						-- Nothing to do.
 				else
-					check False end
+					check from_is_appliable_event_postcondition: False end
 				end
 			end
 		ensure then

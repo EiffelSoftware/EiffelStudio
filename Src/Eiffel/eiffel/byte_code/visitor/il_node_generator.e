@@ -3271,7 +3271,9 @@ feature {NONE} -- Visitors
 	process_un_old_b (a_node: UN_OLD_B)
 			-- Process `a_node'.
 		do
-			il_generator.generate_raising_old_exception (a_node.exception_position)
+			if a_node.is_exception_block_needed then
+				il_generator.generate_raising_old_exception (a_node.exception_position)
+			end
 			il_generator.generate_local (a_node.position)
 		end
 

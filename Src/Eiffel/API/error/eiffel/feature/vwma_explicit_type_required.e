@@ -22,7 +22,8 @@ inherit
 			make as make_parent
 		redefine
 			build_explain,
-			error_string
+			error_string,
+			process_issue
 		end
 
 	COMPILER_WARNING
@@ -32,6 +33,7 @@ inherit
 			trace_primary_context
 		redefine
 			error_string,
+			process_issue,
 			trace_single_line
 		end
 
@@ -42,25 +44,27 @@ create
 
 feature {NONE} -- Creation
 
-	make (c: AST_CONTEXT; i, t: TYPE_A; l: LOCATION_AS; e: BOOLEAN)
+	make (c: AST_CONTEXT; i, t: TYPE_A; a: ARRAY_AS; e: BOOLEAN)
 			-- Initialize error object for implicit element type `i` and target element type `t`
-			-- at location `l' in the context `c' with the error indicator `e`.
+			-- of a manifest array `a` in the context `c` with the error indicator `e`.
 			--
 			-- `e`: `True` - Error, `False` - Warning.
 		require
 			c_attached: attached c
 			i_attached: attached i
 			t_attached: attached t
-			l_attached: attached l
+			a_attached: attached a
 		do
-			make_parent (c, l)
 			implicit_element_type := i
 			target_element_type := t
 			is_error := e
+			array := a
+			make_parent (c, a.first_token (system.match_list_server.item (c.written_class.class_id)))
 		ensure
 			implicit_element_type_set: implicit_element_type = i
 			target_element_type_set: target_element_type = t
 			is_error_set: is_error = e
+			array_set: array = a
 		end
 
 feature -- Access
@@ -71,6 +75,25 @@ feature -- Access
 			Result := if is_error then Precursor {VWMA} else Precursor {COMPILER_WARNING} end
 		end
 
+feature {COMPILER_ERROR_VISITOR} -- Visitor
+
+	process_issue (v: COMPILER_ERROR_VISITOR)
+			-- <Precursor>
+		do
+			v.process_array_explicit_type_required (Current)
+		end
+
+feature {FIX_FEATURE} -- Access
+
+	target_array_type: GEN_TYPE_A
+			-- Type of a target.
+		do
+			create Result.make (system.array_id, create {like {GEN_TYPE_A}.generics}.make_from_array (<<target_element_type>>))
+		end
+
+	array: ARRAY_AS
+			-- Manifest array AST node.
+
 feature {NONE} -- Access
 
 	implicit_element_type: TYPE_A
@@ -78,12 +101,6 @@ feature {NONE} -- Access
 
 	target_element_type: TYPE_A
 			-- Type of a target element.
-
-	target_array_type: GEN_TYPE_A
-			-- Type of a target.
-		do
-			create Result.make (system.array_id, create {like {GEN_TYPE_A}.generics}.make_from_array (<<target_element_type>>))
-		end
 
 	is_error: BOOLEAN
 			-- Does current represent an error?

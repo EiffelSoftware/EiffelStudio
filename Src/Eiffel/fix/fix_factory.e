@@ -19,7 +19,7 @@ feature {NONE} -- Creation
 feature -- Basic operation
 
 	fix_option (e: COMPILER_ERROR): detachable ITERABLE [FIX [TEXT_FORMATTER]]
-			-- Available fixes for the issue `e'.
+			-- Available fixes for the issue `e`.
 		do
 			fix := Void
 			e.process (Current)
@@ -29,12 +29,12 @@ feature -- Basic operation
 feature {NONE} -- Access
 
 	fix: detachable SPECIAL [FIX [TEXT_FORMATTER]]
-			-- A collection of fixes to be returned by `fix_option'.
+			-- A collection of fixes to be returned by `fix_option`.
 
 feature {COMPILER_ERROR} -- Visitor
 
 	process_missing_local_type (e: MISSING_LOCAL_TYPE_ERROR)
-			-- Visit `e'.
+			-- <Precursor>
 		do
 			if attached e.suggested_type and then not e.written_class.lace_class.is_read_only then
 				record_fix (create {FIX_MISSING_LOCAL_TYPE}.make (e))
@@ -42,10 +42,18 @@ feature {COMPILER_ERROR} -- Visitor
 		end
 
 	process_unused_local (e: UNUSED_LOCAL_WARNING)
-			-- Visit `e'.
+			-- <Precursor>
 		do
 			if not e.associated_class.lace_class.is_read_only then
 				record_fix (create {FIX_UNUSED_LOCAL}.make (e))
+			end
+		end
+
+	process_array_explicit_type_required (e: VWMA_EXPLICIT_TYPE_REQUIRED)
+			-- <Precursor>
+		do
+			if not e.written_class.lace_class.is_read_only then
+				record_fix (create {FIX_VWMA_EXPLICIT_TYPE_REQUIRED}.make (e))
 			end
 		end
 
@@ -109,7 +117,7 @@ feature {ERROR} -- Visitor
 feature {NONE} -- Helper
 
 	record_fix (f: FIX_FEATURE)
-			-- Make `f' available via `fix_option'.
+			-- Make `f` available via `fix_option`.
 		do
 				-- TODO: Support multiple fix options.
 			create fix.make_filled (f, 1)

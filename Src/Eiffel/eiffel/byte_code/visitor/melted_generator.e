@@ -69,12 +69,12 @@ feature -- Initialize
 			ba := a_ba
 			a_node.expr.process (Current)
 				-- Write the end of last old expression evaluation.
-			ba.write_forward
-			ba.append (bc_old)
-			ba.append_short_integer (a_node.position)
-			ba.append_short_integer (a_node.exception_position)
+			a_ba.write_forward
+			a_ba.append (bc_old)
+			a_ba.append_short_integer (a_node.position)
+			a_ba.append_short_integer (a_node.exception_position)
 				-- Mark start of next old expression evaluation.
-			ba.mark_forward
+			a_ba.mark_forward
 			ba := Void
 		end
 
@@ -509,7 +509,6 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_lt, l_rt: TYPE_A
-			l_flag: BOOLEAN
 		do
 			l_lt := context.real_type (a_node.left.type)
 			l_rt := context.real_type (a_node.right.type)
@@ -538,14 +537,12 @@ feature {NONE} -- Visitors
 				ba.append_boolean (False)
 			else
 				a_node.left.process (Current)
-				if (l_lt.is_basic and then l_rt.is_reference) then
+				if l_lt.is_basic and then l_rt.is_reference then
 					ba.append (Bc_metamorphose)
-					l_flag := True
 				end
 				a_node.right.process (Current)
-				if (l_lt.is_reference and then l_rt.is_basic) then
+				if l_lt.is_reference and then l_rt.is_basic then
 					ba.append (Bc_metamorphose)
-					l_flag := True
 				end
 					-- FIXME: This call assumes that `is_equal' from ANY always takes
 					-- `like Current' as argument, but actually it could be different.
@@ -2130,11 +2127,9 @@ feature {NONE} -- Visitors
 			end
 		end
 
-
 	process_type_expr_b (a_node: TYPE_EXPR_B)
 			-- Process `a_node'.
 		local
-			l_type_creator: CREATE_INFO
 			l_type_type: TYPE_A
 		do
 			ba.append (Bc_create_type)
@@ -2142,8 +2137,7 @@ feature {NONE} -- Visitors
 			ba.append_boolean (False)
 
 			l_type_type := context.descendant_type (a_node.type_type)
-			l_type_creator := l_type_type.create_info
-			l_type_creator.make_byte_code (ba)
+			l_type_type.create_info.make_byte_code (ba)
 			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 
 				-- Add annotations, if any, of the declaration of the manifest type.
@@ -2180,9 +2174,14 @@ feature {NONE} -- Visitors
 	process_un_old_b (a_node: UN_OLD_B)
 			-- Process `a_node'.
 		do
-			ba.append (Bc_retrieve_old)
-			ba.append_short_integer (a_node.position)
-			ba.append_short_integer (a_node.exception_position)
+			if a_node.is_exception_block_needed then
+				ba.append (Bc_retrieve_old)
+				ba.append_short_integer (a_node.position)
+				ba.append_short_integer (a_node.exception_position)
+			else
+				ba.append (bc_local)
+				ba.append_short_integer (a_node.position)
+			end
 		end
 
 	process_un_plus_b (a_node: UN_PLUS_B)
@@ -2418,13 +2417,13 @@ feature {NONE} -- Implementation
 			l_rt := context.real_type (a_node.right.type)
 
 			a_node.left.process (Current)
-			if (l_lt.is_basic and then l_rt.is_reference) then
+			if l_lt.is_basic and then l_rt.is_reference then
 				ba.append (Bc_metamorphose)
 				l_flag := True
 			end
 
 			a_node.right.process (Current)
-			if (l_lt.is_reference and then l_rt.is_basic) then
+			if l_lt.is_reference and then l_rt.is_basic then
 				ba.append (Bc_metamorphose)
 				l_flag := True
 			end
@@ -2595,14 +2594,16 @@ feature {BYTE_NODE} -- Debugger hook
 			ctx: like context
 		do
 			ctx := context
-			if not ctx.is_inside_hidden_code then
-				if attached ctx.current_feature as cf and then cf.supports_step_in then
-					lnr := ctx.get_next_breakpoint_slot
-					check
-						valid_line: lnr > 0
-					end
-					a_ba.generate_melted_debugger_hook (lnr)
+			if
+				not ctx.is_inside_hidden_code and then
+				attached ctx.current_feature as cf and then
+				cf.supports_step_in
+			then
+				lnr := ctx.get_next_breakpoint_slot
+				check
+					valid_line: lnr > 0
 				end
+				a_ba.generate_melted_debugger_hook (lnr)
 			end
 		end
 
@@ -2613,16 +2614,18 @@ feature {BYTE_NODE} -- Debugger hook
 			ctx: like context
 		do
 			ctx := context
-			if not ctx.is_inside_hidden_code then
-				if attached ctx.current_feature as cf and then cf.supports_step_in then
-					l_line := ctx.get_breakpoint_slot
-					if l_line > 0 then
-							-- Generate a hook when there is really need for one.
-							-- (E.g. we do not need a hook for the code generation
-							-- of an invariant).
-						l_nested := ctx.get_next_breakpoint_nested_slot
-						ba.generate_melted_debugger_hook_nested (l_line, l_nested)
-					end
+			if
+				not ctx.is_inside_hidden_code and then
+				attached ctx.current_feature as cf and then
+				cf.supports_step_in
+			then
+				l_line := ctx.get_breakpoint_slot
+				if l_line > 0 then
+						-- Generate a hook when there is really need for one.
+						-- (E.g. we do not need a hook for the code generation
+						-- of an invariant).
+					l_nested := ctx.get_next_breakpoint_nested_slot
+					ba.generate_melted_debugger_hook_nested (l_line, l_nested)
 				end
 			end
 		end

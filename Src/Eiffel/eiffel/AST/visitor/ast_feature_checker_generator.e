@@ -2430,13 +2430,13 @@ feature {NONE} -- Visitor
 								-- TODO [2017-11-30]: Remove this branch when all source code is updated.
 							if (create {DATE}.make (2017, 11, 30)).relative_duration (create {DATE}.make_now_utc).days_count + 366  + 183 <= 0 then
 									-- Report an error.
-								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED}.make (context, maximal_type (l_last_types), l_type_a, l_as.first_token (match_list_of_class (context.written_class.class_id)), True))
+								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED}.make (context, maximal_type (l_last_types), l_type_a, l_as, True))
 							elseif
 									(create {DATE}.make (2017, 11, 30)).relative_duration (create {DATE}.make_now_utc).days_count + 366 <= 0 or else
 									context.current_class.is_warning_enabled (w_manifest_array_type)
 							then
 									-- Report a warning either when it is enabled or when a year has passed since the release.
-								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED}.make (context, maximal_type (l_last_types), l_type_a, l_as.first_token (match_list_of_class (context.written_class.class_id)), False))
+								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED}.make (context, maximal_type (l_last_types), l_type_a, l_as, False))
 							end
 						end
 						if is_checking_cas and then implicit_type.class_id /= system.native_array_id then

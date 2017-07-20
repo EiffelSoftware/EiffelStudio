@@ -11,19 +11,24 @@ inherit
 feature {COMPILER_ERROR} -- Visitor
 
 	process_missing_local_type (e: MISSING_LOCAL_TYPE_ERROR)
-			-- Visit `e'.
+			-- Visit `e`.
 		deferred
 		end
 
 	process_unused_local (e: UNUSED_LOCAL_WARNING)
-			-- Visit `e'.
+			-- Visit `e`.
+		deferred
+		end
+
+	process_array_explicit_type_required (e: VWMA_EXPLICIT_TYPE_REQUIRED)
+			-- Visit `e`.
 		deferred
 		end
 
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

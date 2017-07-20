@@ -31,17 +31,14 @@ feature
 
 	special_analyze
 			-- Analyze expression and get a register
-		local
-			target_type: TYPE_A
 		do
-			target_type := Context.real_type (type)
 			context.init_propagation
 			expr.propagate (No_register)
 			get_register
 			expr.analyze
 			expr.free_register
 				-- Avoid generating code that handles exceptions when no exceptions are possiible (and no memory is allocated to store intermediate result).
-			if expr.is_exception_possible or else expr.allocates_memory_for_type (target_type) then
+			if is_exception_block_needed then
 					-- Create exception register.
 				create exception_register.make (exception_type.c_type)
 			end

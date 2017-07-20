@@ -1,10 +1,10 @@
 note
-	description	: "Inherited details of assertions. Used for the generation%
+	description: "Inherited details of assertions. Used for the generation%
 				  %of chain assertions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class INHERITED_ASSERTION
 
@@ -821,17 +821,14 @@ feature -- inherited postcondition
 			a_generator_not_void: a_generator /= Void
 			types_and_assert_count_same: valid_post_count
 			is_postcondition: context.assertion_type = {ASSERT_TYPE}.in_postcondition
-		local
-			old_expressions: LINKED_LIST [UN_OLD_B]
 		do
 			from
 				postcondition_start
 			until
 				postcondition_after
 			loop
-				old_expressions := old_expression_list.item
-				if old_expressions /= Void then
-					--! Old expressions can be void
+				if attached old_expression_list.item as old_expressions then
+						--! Old expressions can be void
 					postcondition_context_init
 					context.make_once_string_allocation_byte_code (ba, postcondition_oms_counts.item)
 					from
@@ -969,7 +966,7 @@ feature -- inherited postcondition
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

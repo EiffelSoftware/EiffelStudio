@@ -1,8 +1,8 @@
-note
-	description	: "Window to create dynamic libraries"
+﻿note
+	description: "Window to create dynamic libraries"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
+	date: "$Date$"
 	revision	: "$Revision$"
 
 class
@@ -608,35 +608,30 @@ feature {NONE} -- Implementation: Feature operations
 
 	edit_selected_feature
 			-- Modify the exportation properties of the selected feature.
-		local
-			sel: EV_MULTI_COLUMN_LIST_ROW
 		do
-			sel := exports_list.selected_item
-			if sel /= Void then
-				modified_exported_feature ?= sel.data
-				if modified_exported_feature /= Void then
+			if attached exports_list.selected_item as sel then
+				if attached {DYNAMIC_LIB_EXPORT_FEATURE} sel.data as f then
+					modified_exported_feature := f
 					create_properties_dialog (True)
 					initialize_modification_dialog
 					properties_dialog.show_modal_to_window (window)
+				else
+					modified_exported_feature := Void
 				end
 			end
 		end
 
 	remove_selected_feature
 			-- Remove the selected feature from the exported features.
-		local
-			sel: EV_MULTI_COLUMN_LIST_ROW
-			f: DYNAMIC_LIB_EXPORT_FEATURE
 		do
-			sel := exports_list.selected_item
-			if sel /= Void then
-				f ?= sel.data
-				if f /= Void then
-					changed := True
-					exports.start
-					exports.prune_all (f)
-					refresh_list
-				end
+			if
+				attached exports_list.selected_item as sel and then
+				attached {DYNAMIC_LIB_EXPORT_FEATURE} sel.data as f
+			then
+				changed := True
+				exports.start
+				exports.prune_all (f)
+				refresh_list
 			end
 		end
 
@@ -834,15 +829,13 @@ feature {NONE} -- Implementation: Creation routine selection
 		require
 			valid_class_c: cl /= Void and then cl.has_feature_table
 		local
-			list_creators: ARRAY [STRING]
 			tmp_creation: E_FEATURE
 			dfcr: FEATURE_I
 			i, max: INTEGER
 		do
 			create {ARRAYED_LIST [E_FEATURE]} Result.make (5)
 			if cl.creators /= Void then
-				list_creators ?= cl.creators.current_keys
-				if list_creators /= Void then
+				if attached {ARRAY [STRING]} cl.creators.current_keys as list_creators then
 					max := list_creators.upper
 					from
 						i := list_creators.lower
@@ -1069,7 +1062,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 				create {EB_FILE_SAVE_DIALOG} dd.make_with_preference (l_pref)
 			end
 			dd.set_start_path (Eiffel_project.project_directory.path)
-			set_dialog_filters_and_add_all (dd, <<definition_files_filter>>)
+			set_dialog_filters_and_add_all (dd, {ARRAY [STRING_32]} <<definition_files_filter>>)
 			dd.ok_actions.extend (agent file_was_chosen (dd))
 			dd.show_modal_to_window (window)
 		end
@@ -1839,4 +1832,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_DYNAMIC_LIB_WINDOW
+end

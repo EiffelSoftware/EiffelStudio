@@ -27,6 +27,21 @@ feature {NONE} -- Access
 
 feature -- Fixing
 
+	apply_to (m: ES_CLASS_TEXT_AST_MODIFIER)
+			-- <Precursor>
+		local
+			s: TUPLE [start_position: INTEGER_32; end_position: INTEGER_32]
+			r: ERT_TOKEN_REGION
+		do
+			if m.is_ast_available and then attached m.ast.feature_of_name_32 (item.source_feature.name_32, False) as a then
+				s := m.ast_position (a)
+				r := a.token_region (m.ast_match_list)
+				item.apply (a, m.ast_match_list)
+			else
+				prompts.show_error_prompt (interface_names.l_syntax_error, Void, Void)
+			end
+		end
+
 	apply
 			-- Attempt to apply the fix.
 		local

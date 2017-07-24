@@ -41,6 +41,14 @@ feature {NONE} -- Creation
 			item_set: item = f
 		end
 
+feature -- Access
+
+	compiled_class: CLASS_C
+			-- Associated class.
+		do
+			Result := item.source_class.compiled_class
+		end
+
 feature {NONE} -- Access
 
 	item: FIX_CLASS
@@ -69,6 +77,14 @@ feature -- Fixing
 
 	apply
 			-- Attempt to apply the fix.
+		deferred
+		end
+
+	apply_to (m: ES_CLASS_TEXT_AST_MODIFIER)
+			-- Attempt to apply the fix using `m`.
+			-- Useful when several modifications should be done for the same source code in a row.
+		require
+			m.is_prepared
 		deferred
 		end
 

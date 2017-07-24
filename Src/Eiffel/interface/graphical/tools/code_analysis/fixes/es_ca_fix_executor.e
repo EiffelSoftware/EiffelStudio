@@ -54,6 +54,12 @@ feature {NONE} -- Implementation
 
 feature -- Fixing
 
+	apply_to (m: ES_CLASS_TEXT_AST_MODIFIER)
+			-- <Precursor>
+		do
+			-- TODO: provide impementation.
+		end
+
     apply
 			-- Attempt to apply the fix.
         do

@@ -2423,6 +2423,7 @@ feature {NONE} -- Visitor
 					if not l_has_error and then attached l_type_a then
 						if
 							not attached explicit_type and then
+							not is_inherited and then
 							not maximal_type (l_last_types).conform_to (context.current_class, l_type_a)
 						then
 								-- The implicit type is required to compute array type, it should be replaced with an explicit one.

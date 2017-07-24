@@ -22,9 +22,7 @@ feature {NONE} -- Initialization
 			is_expanded: ({G}).is_expanded
 		local
 			l_ppv_data: POINTER
-			l_managed_data: MANAGED_POINTER
 			l_result: INTEGER
-			i, nb: INTEGER
 		do
 			lower := min_index
 			upper := max_index
@@ -137,7 +135,6 @@ feature -- Element change
 		local
 			l_result: INTEGER_32
 			l_ppv_data: POINTER
-			l_ptr: MANAGED_POINTER
 		do
 			l_result := c_safe_array_access_data (safe_array_item, $l_ppv_data)
 			if l_result = {COM_EXTERNALS}.s_ok and then l_ppv_data /= default_pointer then
@@ -155,7 +152,6 @@ feature -- Element change
 		local
 			l_result: INTEGER_32
 			l_ppv_data: POINTER
-			l_ptr: MANAGED_POINTER
 		do
 			l_result := c_safe_array_access_data (safe_array_item, $l_ppv_data)
 			if l_result = {COM_EXTERNALS}.s_ok and then l_ppv_data /= default_pointer then

@@ -284,7 +284,7 @@ feature {NONE} -- Action handlers
 				end
 				create l_save_dialog.make_with_preference (l_pref)
 				create l_constants
-				l_constants.set_dialog_filters_and_add_all (l_save_dialog, <<l_constants.text_files_filter>>)
+				l_constants.set_dialog_filters_and_add_all (l_save_dialog, {ARRAY [STRING_32]} <<l_constants.text_files_filter>>)
 				l_save_dialog.show_modal_to_window (dialog)
 				if not l_save_dialog.full_file_path.is_empty then
 					create l_file.make_with_path (l_save_dialog.full_file_path)

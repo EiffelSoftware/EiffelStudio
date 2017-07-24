@@ -118,7 +118,7 @@ feature -- Access: connection point
 				create {EVENT_CONNECTION [TEST_SUITE_OBSERVER, TEST_SUITE_S]} l_result.make (
 					agent (an_observer: TEST_SUITE_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE]]
 						do
-							Result := <<
+							Result := {ARRAY [TUPLE [EVENT_TYPE, PROCEDURE]]} <<
 									[test_added_event, agent an_observer.on_test_added],
 									[test_removed_event, agent an_observer.on_test_removed],
 									[session_launched_event, agent an_observer.on_session_launched],

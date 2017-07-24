@@ -331,7 +331,7 @@ feature {NONE} -- Events: test creation
 			l_launch: BOOLEAN
 		do
 			if a_launch_wizard then
-				create l_composition.make (locale.translation ("Create manual test"), <<
+				create l_composition.make (locale.translation ("Create manual test"), {ARRAY [ES_TEST_WIZARD_PAGE]} <<
 					create {ES_TEST_MANUAL_WIZARD_PAGE},
 					create {ES_TEST_TAGS_WIZARD_PAGE},
 					create {ES_TEST_GENERAL_WIZARD_PAGE} >>)
@@ -383,7 +383,7 @@ feature {NONE} -- Events: test creation
 			if not l_types.is_empty and attached session_manager.service as l_session_service then
 				l_session_service.retrieve (True).set_value (l_types, {TEST_SESSION_CONSTANTS}.temporary_types)
 				if a_launch_wizard then
-					create l_composition.make (locale.translation (generate_test_text), <<
+					create l_composition.make (locale.translation (generate_test_text), {ARRAY [ES_TEST_WIZARD_PAGE]} <<
 						create {ES_TEST_GENERATION_WIZARD_PAGE}.make_using_temporary_types,
 						create {ES_TEST_TAGS_WIZARD_PAGE},
 						create {ES_TEST_GENERAL_WIZARD_PAGE} >>)
@@ -408,7 +408,7 @@ feature {NONE} -- Events: test creation
 			l_launch: BOOLEAN
 		do
 			if a_launch_wizard then
-				create l_composition.make (locale.translation (generate_test_text), <<
+				create l_composition.make (locale.translation (generate_test_text), {ARRAY [ES_TEST_WIZARD_PAGE]} <<
 					create {ES_TEST_GENERATION_WIZARD_PAGE},
 					create {ES_TEST_TAGS_WIZARD_PAGE},
 					create {ES_TEST_GENERAL_WIZARD_PAGE} >>)
@@ -435,7 +435,7 @@ feature {NONE} -- Events: test creation
 			l_session_service := session_manager.service
 			if a_launch_wizard then
 				create l_page.make (an_app_status)
-				create l_composition.make (locale.translation (extract_test_text), <<
+				create l_composition.make (locale.translation (extract_test_text), {ARRAY [ES_TEST_WIZARD_PAGE]} <<
 					l_page,
 					create {ES_TEST_TAGS_WIZARD_PAGE},
 					create {ES_TEST_GENERAL_WIZARD_PAGE} >>)
@@ -454,7 +454,7 @@ feature {NONE} -- Events: test creation
 			l_composition: ES_TEST_WIZARD_COMPOSITION
 			l_wizard: ES_TEST_PREFERENCE_WIZARD
 		do
-			create l_composition.make (locale.translation (t_creation_preferences), <<
+			create l_composition.make (locale.translation (t_creation_preferences), {ARRAY [ES_TEST_WIZARD_PAGE]} <<
 				create {ES_TEST_GENERAL_WIZARD_PAGE},
 				create {ES_TEST_TAGS_WIZARD_PAGE},
 				create {ES_TEST_MANUAL_WIZARD_PAGE},

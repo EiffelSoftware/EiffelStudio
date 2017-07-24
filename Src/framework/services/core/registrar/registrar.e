@@ -344,7 +344,7 @@ feature -- Events: Connection point
 				create {EVENT_CONNECTION [REGISTRAR_OBSERVER [G, K], REGISTRAR_I [G, K]]} Result.make (
 					agent (ia_observer: REGISTRAR_OBSERVER [G, K]): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE]]
 						do
-							Result := <<
+							Result := {ARRAY [TUPLE [event: EVENT_TYPE; action: PROCEDURE]]} <<
 								[registered_event, agent ia_observer.on_registered],
 								[unregistered_event, agent ia_observer.on_unregistered],
 								[registration_activated_event, agent ia_observer.on_registeration_activated] >>

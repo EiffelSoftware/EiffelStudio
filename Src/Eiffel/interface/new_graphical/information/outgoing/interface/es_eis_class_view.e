@@ -421,7 +421,7 @@ feature {NONE} -- Target token
 				token_writer.add_class (class_i)
 				l_line := token_writer.last_line
 				create l_e_com.make (l_line.content, 0)
-				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array (<<class_pixmap_component (class_i), l_e_com>>))
+				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array ({ARRAY [ES_GRID_ITEM_COMPONENT]} <<class_pixmap_component (class_i), l_e_com>>))
 				l_item_item.set_data (class_i)
 				l_list.extend (l_item_item)
 				if attached {CLASS_I} a_item as l_class and then l_class.is_equal (class_i) then
@@ -440,7 +440,7 @@ feature {NONE} -- Target token
 						token_writer.add_sectioned_feature_name (lt_feature)
 						l_line := token_writer.last_line
 						create l_e_com.make (l_line.content, 0)
-						create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array (<<feature_pixmap_component (lt_feature), l_e_com>>))
+						create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array ({ARRAY [ES_GRID_ITEM_COMPONENT]} <<feature_pixmap_component (lt_feature), l_e_com>>))
 						l_item_item.set_data (lt_feature)
 						l_list.extend (l_item_item)
 						if l_feature /= Void and then l_feature.is_equal (lt_feature) then

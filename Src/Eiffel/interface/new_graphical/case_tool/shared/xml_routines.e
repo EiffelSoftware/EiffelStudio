@@ -248,7 +248,7 @@ feature -- Deserialization
 				create l_parser.make
 				create l_tree.make_null
 				create l_xm_concatenator.make_null
-				l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree>>))
+				l_parser.set_callbacks (standard_callbacks_pipe ({ARRAY [XML_CALLBACKS_FILTER]} <<l_xm_concatenator, l_tree>>))
 				l_parser.parse_from_file (l_file)
 				l_file.close
 				if l_parser.is_correct then

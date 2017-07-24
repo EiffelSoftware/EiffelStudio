@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "[
-						Drawer who can draw grayscale images base on original images.
-																						]"
+			Drawer who can draw grayscale images base on original images.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -133,11 +133,11 @@ feature {NONE} -- Implementation
 			-- See MSDN "A Twist in Color Space"
 		do
 			create Result.make
-			Result.set_m_row (<<{REAL_32} 0.2125, {REAL_32} 0.2125, {REAL_32} 0.2125, {REAL_32} 0.0, {REAL_32} 0.0>>, 0) -- Grey scale R channel
-			Result.set_m_row (<<{REAL_32} 0.2577, {REAL_32} 0.2577, {REAL_32} 0.2577, {REAL_32} 0.0, {REAL_32} 0.0>>, 1) -- Grey scale G channel
-			Result.set_m_row (<<{REAL_32} 0.0361, {REAL_32} 0.0361, {REAL_32} 0.0361, {REAL_32} 0.0, {REAL_32} 0.0>>, 2) -- Grey scale B channel			
-			Result.set_m_row (<<{REAL_32} 0.0, {REAL_32} 0.0, {REAL_32} 0.0, {REAL_32} 1.0, {REAL_32} 0.0>>, 3) -- Opacity
-			Result.set_m_row (<<{REAL_32} 0.38, {REAL_32} 0.38, {REAL_32} 0.38, {REAL_32} 0.0, {REAL_32} 1.0>>, 4) -- Brightness
+			Result.set_m_row ({ARRAY [REAL_32]} <<0.2125, 0.2125, 0.2125, 0.0, 0.0>>, 0) -- Grey scale R channel
+			Result.set_m_row ({ARRAY [REAL_32]} <<0.2577, 0.2577, 0.2577, 0.0, 0.0>>, 1) -- Grey scale G channel
+			Result.set_m_row ({ARRAY [REAL_32]} <<0.0361, 0.0361, 0.0361, 0.0, 0.0>>, 2) -- Grey scale B channel			
+			Result.set_m_row ({ARRAY [REAL_32]} <<0.0, 0.0, 0.0, 1.0, 0.0>>, 3) -- Opacity
+			Result.set_m_row ({ARRAY [REAL_32]} <<0.38, 0.38, 0.38, 0.0, 1.0>>, 4) -- Brightness
 		ensure
 			not_void: Result /= Void
 		end
@@ -147,11 +147,11 @@ feature {NONE} -- Implementation
 			-- See MSDN "A Twist in Color Space"
 		do
 			create Result.make
-			Result.set_m_row (<<1, 0, 0, 0, 0>>, 0) -- Grey scale R channel
-			Result.set_m_row (<<0, 1, 0, 0, 0>>, 1) -- Grey scale G channel
-			Result.set_m_row (<<0, 0, 1, 0, 0>>, 2) -- Grey scale B channel			
-			Result.set_m_row (<<0, 0, 0, {REAL_32} 0.7, 0>>, 3) -- Opacity
-			Result.set_m_row (<<0, 0, 0, 0, 0>>, 4) -- Brightness
+			Result.set_m_row ({ARRAY [REAL_32]} <<1, 0, 0, 0, 0>>, 0) -- Grey scale R channel
+			Result.set_m_row ({ARRAY [REAL_32]} <<0, 1, 0, 0, 0>>, 1) -- Grey scale G channel
+			Result.set_m_row ({ARRAY [REAL_32]} <<0, 0, 1, 0, 0>>, 2) -- Grey scale B channel			
+			Result.set_m_row ({ARRAY [REAL_32]} <<0, 0, 0, 0.7, 0>>, 3) -- Opacity
+			Result.set_m_row ({ARRAY [REAL_32]} <<0, 0, 0, 0, 0>>, 4) -- Brightness
 		ensure
 			not_void: Result /= Void
 		end
@@ -204,14 +204,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

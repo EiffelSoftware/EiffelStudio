@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 		do
 			if is_used_for_inheritance then
 					-- List suitable ancestor types (ie: not expanded or TUPLE).
-				Result := <<
+				Result := {ARRAY [STRING_32]} <<
 					"ANY",
 					"ARRAYED_LIST [ ... ]",
 					"ARRAYED_STACK [ ... ]",
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 				>>
 			else
 					-- List types suitable for general use.
-				Result := <<
+				Result := {ARRAY [STRING_32]} <<
 					"ANY",
 					"like Current",
 					"BOOLEAN",

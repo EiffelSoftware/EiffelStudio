@@ -1,9 +1,9 @@
-note
-	description : "Objects that edit a breakpoint..."
+﻿note
+	description: "Objects that edit a breakpoint."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date        : "$Date$"
-	revision    : "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ES_BREAKPOINT_DIALOG
@@ -135,7 +135,7 @@ feature {NONE} -- User interface initialization
 			set_button_action_before_close (dialog_buttons.reset_button, agent on_reset)
 			set_button_action_before_close (dialog_buttons.cancel_button, agent on_cancel)
 
-			dialog.resize_actions.force_extend (agent request_refresh_now)
+			dialog.resize_actions.extend (agent (x, y, w, h: INTEGER_32) do request_refresh_now end)
 		end
 
 feature -- Access: Help
@@ -238,14 +238,14 @@ feature {NONE} -- Helpers
 
 	new_panel_container (a_text: STRING_GENERAL; a_collapsable: BOOLEAN): EV_FRAME
 			-- Create a new panel container for `a_text',
-			-- and make it collapsable if `a_collapsable' is True
+			-- and make it collapsable if `a_collapsable' is True.
 		do
 			create Result
 			if a_text /= Void and then not a_text.is_empty then
 				Result.set_text (a_text)
 			end
 			if a_collapsable then
-				Result.pointer_double_press_actions.force_extend (agent (af: EV_FRAME)
+				Result.pointer_double_press_actions.extend (agent (af: EV_FRAME; x, y, b: INTEGER_32; xt, yt, p: REAL_64; sx, sy: INTEGER_32)
 						do
 							if af.item /= Void then
 								if af.item.is_displayed then
@@ -254,7 +254,7 @@ feature {NONE} -- Helpers
 									af.item.show
 								end
 							end
-						end(Result)
+						end(Result, ?, ?, ?, ?, ?, ?, ?, ?)
 					)
 			end
 		end
@@ -674,7 +674,7 @@ feature {NONE} -- When hits
 			mi.set_pixmap (stock_pixmaps.general_add_icon)
 			l_combo.extend (mi)
 			register_action (l_combo.select_actions, agent mi.enable_select)
-			l_array := <<
+			l_array := {ARRAY [TUPLE [s: STRING_GENERAL; type: TYPE [BREAKPOINT_WHEN_HITS_ACTION_I]]]} <<
 				[interface_names.b_bp_print_message, {BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE}],
 				[interface_names.b_bp_change_assertion_checking, {BREAKPOINT_WHEN_HITS_ACTION_CHANGE_ASSERTION_CHECKING}],
 				[interface_names.b_bp_activate_execution_recording, {BREAKPOINT_WHEN_HITS_ACTION_EXECUTION_RECORDING}],
@@ -719,7 +719,7 @@ feature {NONE} -- When hits
 						asc.set_item_size (asc.item.minimum_width.max (asc.width - vertical_scrollbar_width), asc.item.minimum_height.max (asc.height - horizontal_scrollbar_height))
 					end(l_scroll, ?,?,?,?)
 				)
-			l_fixed.resize_actions.force_extend (agent (af: EV_FIXED; avb: EV_BOX; ax,ay,aw,ah: INTEGER)
+			l_fixed.resize_actions.extend (agent (af: EV_FIXED; avb: EV_BOX; ax,ay,aw,ah: INTEGER)
 					do
 						af.set_item_position (avb, 0, 0)
 						af.set_item_size (avb, af.width - 1, af.height - horizontal_scrollbar_height - 1)
@@ -749,7 +749,7 @@ feature {NONE} -- When hits
 		do
 			create m.make_with_text (Interface_names.b_bp_insert_keywords)
 
-			arr := <<
+			arr := {ARRAY [STRING_GENERAL]} <<
 						Interface_names.b_bp_custom_expression,
 						"$HITCOUNT",
 						"$ADDRESS",
@@ -766,8 +766,7 @@ feature {NONE} -- When hits
 			from
 				i := arr.lower
 
-				s := arr[i]
-				create mi.make_with_text (arr[i])
+				create mi.make_with_text (arr [i])
 				s := "{}"
 				mi.select_actions.extend (agent atf.insert_text (s))
 				mi.select_actions.extend (agent atf.set_focus)
@@ -926,9 +925,7 @@ feature -- change
 					insert_when_hits_action_entry (wh_a, when_hits_action_container, False)
 					wh_acts.forth
 				end
-			end
 
-			if bp /= Void then
 				if bp.continue_execution then
 					when_hits_continue_execution_cb.enable_select
 				else
@@ -940,11 +937,8 @@ feature -- change
 		end
 
 	insert_when_hits_action_entry (wh_a: BREAKPOINT_WHEN_HITS_ACTION_I; box: EV_VERTICAL_BOX; a_has_focus: BOOLEAN)
-		local
-			t: TYPE [BREAKPOINT_WHEN_HITS_ACTION_I]
 		do
-			t ?= (create {INTERNAL}).type_of (wh_a)
-			if t /= Void then
+			if attached {TYPE [BREAKPOINT_WHEN_HITS_ACTION_I]} (create {INTERNAL}).type_of (wh_a) as t then
 				insert_when_hits_action_entry_for_type (wh_a, t, box, a_has_focus)
 			end
 		end
@@ -1121,7 +1115,7 @@ feature -- change
 			extend_non_expandable_to (box, vb)
 
 				--| actions
-			add_toggle_status_on_check_button (cb, <<tf, on_rb, off_rb>>, cl, tf)
+			add_toggle_status_on_check_button (cb, {ARRAY [EV_WIDGET]} <<tf, on_rb, off_rb>>, cl, tf)
 				--| default
 			if a /= Void then
 				cb.enable_select
@@ -1188,7 +1182,7 @@ feature -- change
 			extend_non_expandable_to (box, vb)
 
 				--| actions
-			add_toggle_status_on_check_button (cb, <<tf>>, cl, tf)
+			add_toggle_status_on_check_button (cb, {ARRAY [EV_WIDGET]} <<tf>>, cl, tf)
 				--| default
 			if a /= Void then
 				cb.enable_select
@@ -1396,7 +1390,6 @@ feature -- Action
 			new: BOOLEAN
 			s: STRING
 			expr: DBG_EXPRESSION
-			ir: INTEGER_REF
 			i,v: INTEGER
 			wh_a: BREAKPOINT_WHEN_HITS_ACTION_I
 			l_changes: ACTION_SEQUENCE [TUPLE [BREAKPOINT]]
@@ -1456,19 +1449,14 @@ feature -- Action
 				end
 			end
 			if err then
-				expr := Void
 				if new then
 					bpm.remove_user_breakpoint (breakpoint_routine, breakpoint_index)
 					bp := Void
 				end
 			else
 				l_changes.extend (agent {BREAKPOINT}.set_continue_on_condition_failure (condition_continue_on_failure_cb.is_selected))
-			end
-
-			--| Hit count
-			if not err then
-				ir ?= hit_count_condition_combo.selected_item.data
-				if ir /= Void then
+					--| Hit count
+				if attached {INTEGER_REF} hit_count_condition_combo.selected_item.data as ir then
 					i := ir.item
 					inspect i
 					when {BREAKPOINT}.hits_count_condition_always,
@@ -1610,7 +1598,7 @@ feature -- Access
 			-- Indicates if the size and position information is remembered for the dialog	
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

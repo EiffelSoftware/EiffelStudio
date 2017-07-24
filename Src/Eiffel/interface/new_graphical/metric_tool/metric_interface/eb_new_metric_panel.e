@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			set_is_metric_reloaded (True)
 
 			append_drop_actions (
-				<<
+				{ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]} <<
 					no_metric_area,
 					toolbar_area,
 					metric_definition_area,

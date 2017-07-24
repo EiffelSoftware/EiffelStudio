@@ -925,7 +925,7 @@ feature {NONE} -- Actions
 			create environment_variable
 			create fod.make_with_preference (preferences.dialog_data.last_opened_project_directory_preference)
 			fod.set_title (Interface_names.t_select_a_file)
-			set_dialog_filters_and_add_all (fod, <<config_files_filter>>)
+			set_dialog_filters_and_add_all (fod, {ARRAY [STRING_32]} <<config_files_filter>>)
 			fod.open_actions.extend (agent file_choice_callback (fod))
 			fod.show_modal_to_window (parent_window)
 		end

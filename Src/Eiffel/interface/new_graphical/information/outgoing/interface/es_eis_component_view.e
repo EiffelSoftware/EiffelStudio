@@ -1035,7 +1035,7 @@ feature {NONE} -- Target token
 				Result := l_editable_item
 				l_line := token_writer.last_line
 				create l_e_com.make (l_line.content, 0)
-				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array (<<target_pixmap_component, l_e_com>>))
+				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array ({ARRAY [ES_GRID_ITEM_COMPONENT]} <<target_pixmap_component, l_e_com>>))
 				l_item_item.set_data (a_item)
 				l_editable_item.set_list_item (l_item_item)
 				l_editable_item.set_choice_list_key_press_action (agent tab_to_next)
@@ -1060,7 +1060,7 @@ feature {NONE} -- Target token
 				l_editable_item := new_listable_item
 				l_line := token_writer.last_line
 				create l_e_com.make (l_line.content, 0)
-				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array (<<group_pixmap_component (a_item), l_e_com>>))
+				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array ({ARRAY [ES_GRID_ITEM_COMPONENT]} <<group_pixmap_component (a_item), l_e_com>>))
 				l_item_item.set_data (a_item)
 				l_editable_item.set_list_item (l_item_item)
 				l_editable_item.set_choice_list_key_press_action (agent tab_to_next)
@@ -1089,7 +1089,7 @@ feature {NONE} -- Target token
 				Result := l_editable_item
 				l_line := token_writer.last_line
 				create l_e_com.make (l_line.content, 0)
-				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array (<<folder_pixmap_component, l_e_com>>))
+				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array ({ARRAY [ES_GRID_ITEM_COMPONENT]} <<folder_pixmap_component, l_e_com>>))
 				l_item_item.set_data (a_item)
 				l_editable_item.set_list_item (l_item_item)
 				l_editable_item.set_choice_list_key_press_action (agent tab_to_next)
@@ -1114,7 +1114,7 @@ feature {NONE} -- Target token
 				l_editable_item := new_listable_item
 				l_line := token_writer.last_line
 				create l_e_com.make (l_line.content, 0)
-				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array (<<class_pixmap_component (a_item), l_e_com>>))
+				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array ({ARRAY [ES_GRID_ITEM_COMPONENT]} <<class_pixmap_component (a_item), l_e_com>>))
 				l_item_item.set_data (a_item)
 				l_editable_item.set_list_item (l_item_item)
 				l_editable_item.set_choice_list_key_press_action (agent tab_to_next)
@@ -1153,7 +1153,7 @@ feature {NONE} -- Target token
 			l_editable_item := new_listable_item
 			l_line := token_writer.last_line
 			create l_e_com.make (l_line.content, 0)
-			create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array (<<l_component, l_e_com>>))
+			create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array ({ARRAY [ES_GRID_ITEM_COMPONENT]} <<l_component, l_e_com>>))
 			l_item_item.set_data (a_item)
 			l_editable_item.set_list_item (l_item_item)
 			l_editable_item.set_choice_list_key_press_action (agent tab_to_next)

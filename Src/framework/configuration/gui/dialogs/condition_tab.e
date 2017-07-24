@@ -704,7 +704,7 @@ feature {NONE} -- Implementation
 						l_text.set_value (l_key)
 						l_text.change_value_actions.extend (agent update_variable ({STRING_32} ?, l_key, l_values.key_for_iteration))
 						custom.set_item (1, i, l_text)
-						create l_choice.make_with_choices ("", create {ARRAYED_LIST [STRING_32]}.make_from_array (<<"=", "/=">>))
+						create l_choice.make_with_choices ("", create {ARRAYED_LIST [STRING_32]}.make_from_array ({ARRAY [STRING_32]} <<"=", "/=">>))
 						if l_values.item_for_iteration then
 							l_choice.set_value ("/=")
 						else

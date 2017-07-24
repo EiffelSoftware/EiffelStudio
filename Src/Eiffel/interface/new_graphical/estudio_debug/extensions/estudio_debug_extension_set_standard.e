@@ -17,7 +17,7 @@ feature -- Access
 
 	extensions: ARRAY [detachable ESTUDIO_DEBUG_EXTENSION]
 		once
-			Result := <<
+			Result := {ARRAY [ESTUDIO_DEBUG_EXTENSION]} <<
 						create {ESTUDIO_DEBUG_EXTENSION_TOOLS}.make (estudio_debug_menu),
 						create {ESTUDIO_DEBUG_EXTENSION_SERVICES}.make (estudio_debug_menu),
 						create {ESTUDIO_DEBUG_EXTENSION_FOUNDATIONS}.make (estudio_debug_menu),

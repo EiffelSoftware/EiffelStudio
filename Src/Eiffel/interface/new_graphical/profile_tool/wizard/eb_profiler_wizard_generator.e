@@ -94,7 +94,7 @@ feature -- Basic operations
 				if prof_invoker.must_invoke_profiler then
 					prof_invoker.invoke_profiler
 				end
-				create prof_converter.make (<<profinfo, compile>>, conf_load.shared_prof_config)
+				create prof_converter.make ({ARRAY [STRING_8]} <<profinfo, compile>>, conf_load.shared_prof_config)
 				if not prof_converter.is_last_conversion_ok then
 					if prof_converter.conf_load_error then
 						error_msg := {STRING_32} "Error while generating the execution profile.%N" + profinfo + ": file does not exist"

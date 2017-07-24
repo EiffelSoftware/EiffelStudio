@@ -64,7 +64,7 @@ feature -- Basic operations
 						l_pref.set_value (eiffel_layout.user_projects_path)
 					end
 					create dial.make_with_preference (l_pref)
-					set_dialog_filters_and_add_all (dial, <<Png_files_filter>>)
+					set_dialog_filters_and_add_all (dial, {ARRAY [STRING_32]} <<Png_files_filter>>)
 
 					if tool.class_graph /= Void then
 						create l_path.make_from_string (tool.class_graph.center_class.name + ".png")

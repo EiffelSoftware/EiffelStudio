@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Eiffel Vision file dialog. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -88,7 +88,7 @@ feature -- Element change
 			if a_filter.same_string ("*.*") then
 				wel_set_filter (<<"All files">>, <<"*.*">>)
 			else
-				wel_set_filter (<<filter_name, "All files">>, <<a_filter, "*.*">>)
+				wel_set_filter ({ARRAY [READABLE_STRING_GENERAL]} <<filter_name, "All files">>, <<a_filter, "*.*">>)
 			end
 			wel_set_filter_index (0)
 		end
@@ -212,12 +212,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_FILE_DIALOG_IMP
-
-
-
-
-
+end

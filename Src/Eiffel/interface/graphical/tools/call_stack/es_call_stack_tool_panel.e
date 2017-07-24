@@ -1256,7 +1256,7 @@ feature {NONE} -- Export call stack
 				standard_path := Eiffel_project.project_directory.path
 			end
 			create fd.make_with_preference (preferences.dialog_data.last_saved_call_stack_directory_preference)
-			set_dialog_filters_and_add_all (fd, <<Text_files_filter>>)
+			set_dialog_filters_and_add_all (fd, {ARRAY [STRING_32]} <<Text_files_filter>>)
 			fd.set_start_path (standard_path)
 				--| We try to find a file_name that does not exist.
 			create f.make_with_path (standard_path.extended (Interface_names.default_stack_file_name + ".txt"))

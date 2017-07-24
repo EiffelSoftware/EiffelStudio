@@ -104,7 +104,7 @@ feature {NONE} -- Initialization
 			set_is_metric_reloaded (True)
 
 			append_drop_actions (
-				<<
+				{ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]} <<
 					comparison_area_cell,
 					empty_cell,
 					empty_cell2,

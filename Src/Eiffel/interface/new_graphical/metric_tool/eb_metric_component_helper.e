@@ -77,7 +77,7 @@ feature -- Element Change
 			l_visitor: EB_METRIC_ITERATOR
 		do
 			create l_visitor
-			l_visitor.append_actions (<<agent on_clean_metric_value_retriever, agent on_clean_value_criterion>>)
+			l_visitor.append_actions ({ARRAY [PROCEDURE [EB_METRIC_VISITABLE]]} <<agent on_clean_metric_value_retriever, agent on_clean_value_criterion>>)
 			a_metric.process (l_visitor)
 		end
 

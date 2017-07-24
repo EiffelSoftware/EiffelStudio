@@ -76,6 +76,8 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -1263,11 +1265,63 @@ feature {NONE} -- Fixing
 
 	apply_fix_without_undo_prompt
 			-- Apply fixes to selected items without notification about "undo" behaviour.
+		local
+			selected_fixes: HASH_TABLE [ARRAYED_LIST [ES_FIX], like {CLASS_C}.class_id]
+			class_fixes: ARRAYED_LIST [ES_FIX]
+			i: INTEGER
+			m: ES_CLASS_TEXT_AST_MODIFIER
 		do
+			create selected_fixes.make (1)
 			across
 				grid_events.selected_rows as r
 			loop
-				apply_single_fix_without_undo_prompt (r.item)
+				if attached {EB_GRID_EDITOR_TOKEN_ITEM} r.item.item (Description_column) as e then
+					from
+						i := e.component_count
+					until
+						i <= 0
+					loop
+						if attached {ES_FIX} e.component (i) as f then
+							e.remove_component (i)
+							class_fixes := selected_fixes [f.compiled_class.class_id]
+							if not attached class_fixes then
+								create class_fixes.make (1)
+								selected_fixes [f.compiled_class.class_id] := class_fixes
+							end
+							class_fixes.extend (f)
+						end
+						i := i - 1
+					end
+				end
+			end
+			across
+				selected_fixes as selected_class_fixes
+			loop
+				if attached system.class_of_id (selected_class_fixes.key) as c then
+					create m.make (c.lace_class)
+					if m.is_modifiable then
+						m.execute_batch_modifications (agent (modifier: ES_CLASS_TEXT_AST_MODIFIER; fixes: ARRAYED_LIST [ES_FIX])
+							local
+								a: CLASS_AS
+								s: TUPLE [start_position: INTEGER_32; end_position: INTEGER_32]
+								r: ERT_TOKEN_REGION
+							do
+								a := modifier.ast
+								s := modifier.ast_position (a)
+								r := a.token_region (modifier.ast_match_list)
+								across
+									fixes as f
+								loop
+									f.item.apply_to (modifier)
+								end
+								if modifier.ast_match_list.is_text_modified (r) then
+									modifier.replace_code (s.start_position, s.end_position, modifier.ast_match_list.text_32 (r))
+								end
+							end (m, selected_class_fixes.item), True, True)
+					else
+						prompts.show_error_prompt (interface_names.l_class_is_not_editable, Void, Void)
+					end
+				end
 			end
 		end
 

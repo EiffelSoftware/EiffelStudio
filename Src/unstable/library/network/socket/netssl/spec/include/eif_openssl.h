@@ -23,3 +23,5 @@
 # include <openssl/pem.h>
 # include <openssl/err.h>
 # include <openssl/ssl.h>
+# include <openssl/evp.h>
+# include <openssl/tls1.h>

@@ -12,10 +12,14 @@ feature {NONE} -- Initialization
 
 	initialize_ssl
 			-- Initialize the SSL Library.
+			-- with libcrypto.
 		do
 			if ssl_initialized.item = False then
-				c_ssleay_add_ssl_algorithms
+				c_openssl_init_ssl
+				c_openssl_add_ssl_algorithms
+				c_openssl_add_all_algorithms
 				process_exclusive_execution (exclusive_access)
+				process_crypto_exclusive_execution (exclusive_access)
 				ssl_initialized.put (True)
 			end
 		end
@@ -38,6 +42,23 @@ feature {NONE} -- Attributes
 			retry
 		end
 
+	process_crypto_exclusive_execution (a_access: like exclusive_access)
+		local
+			l_retry: BOOLEAN
+		do
+			if not l_retry then
+				a_access.enter
+	   			a_access.call(agent c_err_load_crypto_strings)
+				a_access.leave
+			else
+			end
+		rescue
+			l_retry := True
+			a_access.leave
+			retry
+		end
+
+
 	ssl_initialized: CELL [BOOLEAN]
 			-- Have the SSL Library initialization routines been called?
 		once ("THREAD")
@@ -59,12 +80,36 @@ feature {NONE} -- External
 			"SSL_load_error_strings"
 		end
 
-	c_ssleay_add_ssl_algorithms
-			-- External call to SSLeay_add_ssl_algorithms.
+	c_openssl_init_ssl
+			-- External call to OPENSSL_init_ssl.
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"OPENSSL_init_ssl(0, NULL)"
+		end
+
+	c_openssl_add_ssl_algorithms
+			-- External call to OpenSSL_add_ssl_algorithms();.
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"OPENSSL_init_ssl(0, NULL)"
+		end
+
+
+	c_openssl_add_all_algorithms
+			-- External call to OPENSSL_add_all_algorithm.
+		external "C use %"eif_openssl.h%""
+		alias
+			"OpenSSL_add_all_algorithms"
+		end
+
+	c_err_load_crypto_strings
+			-- External call to ERR_load_crypto_strings
 		external
 			"C use %"eif_openssl.h%""
 		alias
-			"SSLeay_add_ssl_algorithms"
+			"ERR_load_crypto_strings"
 		end
 
 	c_ssl_get_ctx (a_ssl: POINTER): POINTER
@@ -76,7 +121,7 @@ feature {NONE} -- External
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

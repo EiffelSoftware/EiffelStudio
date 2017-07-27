@@ -220,6 +220,19 @@ feature -- Access
 			end
 		end
 
+	ssl_set_tlsext_host_name (a_server_name: READABLE_STRING_GENERAL)
+			-- Set the value of the servername extension `a_server_name' to send in the client hello.
+		local
+			c_string: C_STRING
+			err: INTEGER
+			l_exception: DEVELOPER_EXCEPTION
+		do
+			create c_string.make (a_server_name)
+			if attached last_ssl as l_ssl then
+				c_ssl_set_tlsext_host_name (l_ssl.ptr, c_string.item)
+			end
+		end
+
 feature -- Status Report
 
 	last_ssl: detachable SSL
@@ -368,6 +381,15 @@ feature {NONE} -- Externals
 		alias
 			"DTLSv1_server_method"
 		end
+
+	c_ssl_set_tlsext_host_name (a_ssl: POINTER; a_name: POINTER)
+			-- External call to SSL_set_tlsext_host_name.
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"SSL_set_tlsext_host_name((SSL *)$a_ssl,(char *)$a_name)"
+		end
+
 
 note
 	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"

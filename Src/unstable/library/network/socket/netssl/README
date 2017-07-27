@@ -68,6 +68,8 @@ Note: To build a 64-Bit shared library (/MD) use the option <<shared>> with VC-W
 
 Open the Visual Studio Command Prompt. (Be sure to open the corrent command prompt)
 Check Configure file under OpenSSL distribution to read different types of configurations.
+or the following link https://wiki.openssl.org/index.php/Compilation_and_Installation
+
 
 1: perl Configure { VC-WIN32 | VC-WIN64A | VC-WIN64I | VC-CE }
 -- for example 

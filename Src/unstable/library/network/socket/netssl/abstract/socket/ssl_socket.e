@@ -21,8 +21,6 @@ feature -- SSL
 		local
 			l_context: like context
 		do
---			if tls_protocol = {SSL_PROTOCOL}.ssl_23 then
---				create l_context.make_as_sslv23_client
 			if tls_protocol = {SSL_PROTOCOL}.tls_1_0 then
 				create l_context.make_as_tlsv10_client
 			elseif tls_protocol = {SSL_PROTOCOL}.tls_1_1 then
@@ -36,6 +34,18 @@ feature -- SSL
 
 			context := l_context
 			l_context.create_ssl
+
+				-- Server name indication is only used by TLS protocol.
+
+
+			if
+				attached server_name as l_server_name and then (
+				tls_protocol = {SSL_PROTOCOL}.tls_1_0 or else
+				tls_protocol = {SSL_PROTOCOL}.tls_1_1 or else
+				tls_protocol = {SSL_PROTOCOL}.tls_1_2)
+			then
+				l_context.ssl_set_tlsext_host_name (l_server_name)
+			end
 
 			if attached l_context.last_ssl as l_ssl then
 				l_ssl.set_fd (descriptor)
@@ -106,8 +116,6 @@ feature -- SSL
 			--Server SSL context.
 		do
 			inspect tls_protocol
---			when {SSL_PROTOCOL}.ssl_23  then
---				create Result.make_as_sslv23_server
 			when {SSL_PROTOCOL}.tls_1_0 then
 				create Result.make_as_tlsv10_server
 			when {SSL_PROTOCOL}.tls_1_1 then
@@ -232,6 +240,18 @@ feature -- Change Element
 			set_key_file_path (create {PATH}.make_from_string (a_file_name))
 		end
 
+feature -- Client Server Name Indication
+
+	set_tls_server_name_indication (a_server_name: READABLE_STRING_GENERAL)
+		note
+			EIS:"name=Server Name Indication", "src=https://en.wikipedia.org/wiki/Server_Name_Indication", "protocol=uri"
+		do
+			server_name := a_server_name
+		ensure
+			server_name_set: attached server_name as l_server_name implies l_server_name.same_string (a_server_name)
+		end
+
+
 feature {NONE} -- Implementation
 
 	shutdown
@@ -250,7 +270,10 @@ feature {NONE} -- Attributes
 	context: detachable SSL_CONTEXT;
 			-- The SSL structure used in the SSL/TLS communication	
 
-note
+	server_name: detachable READABLE_STRING_GENERAL
+			-- The name of the hostname used by TLS extension.		
+
+;note
 	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

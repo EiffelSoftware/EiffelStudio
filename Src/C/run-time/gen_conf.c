@@ -2495,7 +2495,7 @@ rt_public EIF_TYPE eif_non_attached_type2 (EIF_TYPE ftype)
 rt_public EIF_TYPE eif_attached_type2 (EIF_TYPE ftype)
 {
 	if (EIF_IS_EXPANDED_TYPE(System(eif_cid_map[ftype.id]))) {
-		CHECK("No marks", !RT_CONF_HAS_ATTACHMENT_MARK(ftype.annotations));
+		CHECK("No marks", !RT_CONF_HAS_ATTACHMENT_MARK_FLAG(ftype.annotations));
 	} else {
 		ftype.annotations &= ~DETACHABLE_FLAG;
 		ftype.annotations |= ATTACHED_FLAG;

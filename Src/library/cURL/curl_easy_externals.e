@@ -303,7 +303,7 @@ feature {NONE} -- C externals
 		require
 			exists: a_api /= default_pointer
 		external
-			"C inline use <curl/curl.h>"
+			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
 		alias
 			"[
 				return (FUNCTION_CAST(CURL *, ()) $a_api)();
@@ -316,7 +316,7 @@ feature {NONE} -- C externals
 			exists: a_api /= default_pointer
 			exists: a_curl_handle /= default_pointer
 		external
-			"C inline use <curl/curl.h>"
+			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
 		alias
 			"[
 				(FUNCTION_CAST(void, (CURL *)) $a_api)((CURL *)$a_curl_handle);
@@ -329,7 +329,7 @@ feature {NONE} -- C externals
 			exists: a_api /= default_pointer
 			exists: a_curl_handle /= default_pointer
 		external
-			"C inline use <curl/curl.h>"
+			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
 		alias
 			"[
 				return (FUNCTION_CAST(CURLcode, (CURL *)) $a_api)
@@ -344,7 +344,7 @@ feature {NONE} -- C externals
 			exists: a_curl_handle /= default_pointer
 			valid: (create {CURL_OPT_CONSTANTS}).is_valid (a_opt)
 		external
-			"C inline use <curl/curl.h>"
+			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
 		alias
 			"[
 			{
@@ -364,7 +364,7 @@ feature {NONE} -- C externals
 			exists: a_curl_handle /= default_pointer
 			valid: (create {CURL_OPT_CONSTANTS}).is_valid (a_opt)
 		external
-			"C inline use <curl/curl.h>"
+			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
 		alias
 			"[
 			{
@@ -384,7 +384,7 @@ feature {NONE} -- C externals
 			exists: a_curl_handle /= default_pointer
 			valid: (create {CURL_OPT_CONSTANTS}).is_valid (a_opt)
 		external
-			"C inline use <curl/curl.h>"
+			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
 		alias
 			"[
 				return (FUNCTION_CAST(CURLcode, (CURL *, CURLINFO info, ...)) $a_api)
@@ -396,7 +396,7 @@ feature {NONE} -- C externals
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

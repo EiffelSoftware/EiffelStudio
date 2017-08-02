@@ -57,7 +57,7 @@ feature {NONE} -- C externals
 	c_curl_handle (a_item: POINTER): POINTER
 			-- cURL easy handle it concerns
 		external
-			"C inline use <curl/curl.h>"
+			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
 		alias
 			"return (CURL *)((CURLMsg *)$a_item)->easy_handle;"
 		end
@@ -65,13 +65,13 @@ feature {NONE} -- C externals
 	c_msg (a_item: POINTER): INTEGER
 			-- Get msg
 		external
-			"C inline use <curl/curl.h>"
+			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
 		alias
 			"return (CURLMSG)((CURLMsg *)$a_item)->msg;"
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

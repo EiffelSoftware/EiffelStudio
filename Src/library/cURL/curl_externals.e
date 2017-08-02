@@ -155,7 +155,7 @@ feature {NONE} -- C externals
 		require
 			exists: a_api /= default_pointer
 		external
-			"C inline use <curl/curl.h>"
+			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
 		alias
 			"[
 			{
@@ -177,7 +177,7 @@ feature {NONE} -- C externals
 			exists: a_api /= default_pointer
 			exists: a_curl_form /= default_pointer
 		external
-			"C inline use <curl/curl.h>"
+			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
 		alias
 			"[
 				(FUNCTION_CAST(void, (struct curl_httppost *)) $a_api)
@@ -191,7 +191,7 @@ feature {NONE} -- C externals
 		require
 			exists: a_api /= default_pointer
 		external
-			"C inline use <curl/curl.h>"
+			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
 		alias
 			"[
 				(FUNCTION_CAST(void, (long)) $a_api)((long) $a_opt);
@@ -203,7 +203,7 @@ feature {NONE} -- C externals
 		require
 			exists: a_api /= default_pointer
 		external
-			"C inline use <curl/curl.h>"
+			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
 		alias
 			"[
 				(FUNCTION_CAST(void, ()) $a_api)();
@@ -215,7 +215,7 @@ feature {NONE} -- C externals
 		require
 			exists: a_api /= default_pointer
 		external
-			"C inline use <curl/curl.h>"
+			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
 		alias
 			"[
 			{
@@ -225,13 +225,13 @@ feature {NONE} -- C externals
 			}
 			]"
 		end
-	
+
 	c_slist_free_all (a_api: POINTER; a_list_pointer: POINTER)
 			-- Declared as void curl_slist_free_all(struct curl_slist * list)
 		require
 			exists: a_api /= default_pointer
 		external
-			"C inline use <curl/curl.h>"
+			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
 		alias
 			"[
 				(FUNCTION_CAST(void *, (struct curl_slist *)) $a_api)
@@ -241,7 +241,7 @@ feature {NONE} -- C externals
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

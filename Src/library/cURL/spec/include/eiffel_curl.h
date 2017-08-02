@@ -23,7 +23,7 @@ indexing
 #include <unistd.h> 
 #endif
 
-#include <curl/curl.h>
+#include <../../../../C_library/curl/include/curl/curl.h>
 
 #ifdef __cplusplus
 extern "C" {

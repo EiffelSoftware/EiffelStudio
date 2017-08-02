@@ -1,12 +1,39 @@
 #! /bin/sh
-# Script to build release-archives with
+# Script to build release-archives with. Note that this requires a checkout
+# from git and you should first run ./buildconf and build curl once.
 #
+#***************************************************************************
+#                                  _   _ ____  _
+#  Project                     ___| | | |  _ \| |
+#                             / __| | | | |_) | |
+#                            | (__| |_| |  _ <| |___
+#                             \___|\___/|_| \_\_____|
+#
+# Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+#
+# This software is licensed as described in the file COPYING, which
+# you should have received as part of this distribution. The terms
+# are also available at https://curl.haxx.se/docs/copyright.html.
+#
+# You may opt to use, copy, modify, merge, publish, distribute and/or sell
+# copies of the Software, and permit persons to whom the Software is
+# furnished to do so, under the terms of the COPYING file.
+#
+# This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+# KIND, either express or implied.
+#
+###########################################################################
 
 version=$1
 
 if [ -z "$version" ]; then
   echo "Specify a version number!"
   exit
+fi
+
+if [ "xonly" = "x$2" ]; then
+    echo "Setup version number only!"
+    only=1
 fi
 
 libversion="$version"
@@ -18,34 +45,50 @@ major=`echo $libversion |cut -d. -f1 | sed -e "s/[^0-9]//g"`
 minor=`echo $libversion |cut -d. -f2 | sed -e "s/[^0-9]//g"`
 patch=`echo $libversion |cut -d. -f3 | cut -d- -f1 | sed -e "s/[^0-9]//g"`
 
+if test -z "$patch"; then
+    echo "invalid version number? needs to be z.y.z"
+    exit
+fi
+
 numeric=`perl -e 'printf("%02x%02x%02x\n", '"$major, $minor, $patch);"`
 
 HEADER=include/curl/curlver.h
-CHEADER=src/version.h
+CHEADER=src/tool_version.h
+PLIST=lib/libcurl.plist
 
-# requires a date command that knows -u for UTC time zone
-datestamp=`date -u`
+if test -z "$only"; then
+    ext=".dist"
+    # when not setting up version numbers locally
+    for a in $HEADER $CHEADER $PLIST; do
+        cp $a "$a$ext"
+    done
+    HEADER="$HEADER$ext"
+    CHEADER="$CHEADER$ext"
+    PLIST="$PLIST$ext"
+fi
+
+# requires a date command that knows + for format
+datestamp=`date +"%F"`
 
 # Replace version number in header file:
-sed -e 's/^#define LIBCURL_VERSION .*/#define LIBCURL_VERSION "'$libversion'"/g' \
+sed -i -e 's/^#define LIBCURL_VERSION .*/#define LIBCURL_VERSION "'$libversion'"/g' \
     -e 's/^#define LIBCURL_VERSION_NUM .*/#define LIBCURL_VERSION_NUM 0x'$numeric'/g' \
     -e 's/^#define LIBCURL_VERSION_MAJOR .*/#define LIBCURL_VERSION_MAJOR '$major'/g' \
     -e 's/^#define LIBCURL_VERSION_MINOR .*/#define LIBCURL_VERSION_MINOR '$minor'/g' \
     -e 's/^#define LIBCURL_VERSION_PATCH .*/#define LIBCURL_VERSION_PATCH '$patch'/g' \
     -e "s/^#define LIBCURL_TIMESTAMP .*/#define LIBCURL_TIMESTAMP \"$datestamp\"/g" \
- $HEADER >$HEADER.dist
+ $HEADER
 
 # Replace version number in header file:
-sed 's/#define CURL_VERSION .*/#define CURL_VERSION "'$curlversion'"/g' $CHEADER >$CHEADER.dist
-
-echo "generate VC8 makefiles"
-# Generate VC8 versions from the VC6 Makefile versions 
-sed -e "s#/GX /DWIN32 /YX#/EHsc /DWIN32#" -e 's#/GZ#/RTC1#' -e 's/wsock32.lib/wsock32.lib bufferoverflowu.lib/g' -e 's/VC6/VC8/g' lib/Makefile.vc6 > lib/Makefile.vc8.dist
-sed -e "s#/GX /DWIN32 /YX#/EHsc /DWIN32#" -e 's#/GZ#/RTC1#' -e 's/wsock32.lib/wsock32.lib bufferoverflowu.lib/g' -e 's/VC6/VC8/g' src/Makefile.vc6 > src/Makefile.vc8.dist
+sed -i 's/#define CURL_VERSION .*/#define CURL_VERSION "'$curlversion'"/g' $CHEADER
 
 # Replace version number in plist file:
-PLIST=lib/libcurl.plist
-sed "s/7\.12\.3/$libversion/g" $PLIST > $PLIST.dist
+sed -i "s/7\.12\.3/$libversion/g" $PLIST
+
+if test -n "$only"; then
+    # done!
+    exit;
+fi
 
 echo "curl version $curlversion"
 echo "libcurl version $libversion"
@@ -66,9 +109,6 @@ findprog()
   # no such executable
   return 0
 }
-
-echo "maketgz: cp lib/config.h.in src/config.h.in"
-cp lib/config.h.in src/config.h.in
 
 ############################################################################
 #
@@ -93,14 +133,20 @@ fi
 
 ############################################################################
 #
-# Make sure we have updated HTML versions of all man pages:
+# Modify the man pages to display the version number and date.
 #
-echo "make html"
-make -s html
 
-# And the PDF versions
-echo "make pdf"
-make -s pdf
+echo "update man pages"
+./scripts/updatemanpages.pl $version
+
+############################################################################
+#
+# Update the IDE files
+echo "make vc-ide"
+make -s vc-ide
+
+echo "produce CHANGES"
+git log --pretty=fuller --no-color --date=short --decorate=full -1000 | ./scripts/log2changes.pl > CHANGES.dist
 
 ############################################################################
 #
@@ -109,7 +155,7 @@ make -s pdf
 
 echo "make dist"
 targz="curl-$version.tar.gz"
-make -s dist VERSION=$version
+make -sj dist VERSION=$version
 
 ############################################################################
 #
@@ -118,7 +164,16 @@ make -s dist VERSION=$version
 
 bzip2="curl-$version.tar.bz2"
 echo "Generating $bzip2"
-gzip -dc $targz | bzip2 - > $bzip2
+gzip -dc $targz | bzip2 --best > $bzip2
+
+############################################################################
+#
+# Now make an lzma archive from the tar.gz original
+#
+
+lzma="curl-$version.tar.lzma"
+echo "Generating $lzma"
+gzip -dc $targz | lzma --best - > $lzma
 
 ############################################################################
 #
@@ -144,11 +199,7 @@ makezip
 echo "------------------"
 echo "maketgz report:"
 echo ""
-ls -l $targz $bzip2 $zip
+ls -l $targz $bzip2 $zip $lzma
 
-md5sum $targz $bzip2 $zip
-
-echo "Run these commands:"
-echo "gpg -b -a $targz"
-echo "gpg -b -a $bzip2"
-echo "gpg -b -a $zip"
+echo "Run this:"
+echo "gpg -b -a $targz && gpg -b -a $bzip2 && gpg -b -a $zip && gpg -b -a $lzma"

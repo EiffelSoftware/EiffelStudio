@@ -1,8 +1,24 @@
-#  $Id: makefile.dj,v 1.7 2007-03-17 17:58:45 giva Exp $
+#***************************************************************************
+#                                  _   _ ____  _
+#  Project                     ___| | | |  _ \| |
+#                             / __| | | | |_) | |
+#                            | (__| |_| |  _ <| |___
+#                             \___|\___/|_| \_\_____|
 #
-#  Adapted for djgpp / Watt-32 / DOS by
-#  Gisle Vanem <giva@bgnett.no>
+# Copyright (C) 1998 - 2011, Daniel Stenberg, <daniel@haxx.se>, et al.
 #
+# This software is licensed as described in the file COPYING, which
+# you should have received as part of this distribution. The terms
+# are also available at https://curl.haxx.se/docs/copyright.html.
+#
+# You may opt to use, copy, modify, merge, publish, distribute and/or sell
+# copies of the Software, and permit persons to whom the Software is
+# furnished to do so, under the terms of the COPYING file.
+#
+# This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+# KIND, either express or implied.
+#
+###########################################################################
 
 TOPDIR = ../..
 
@@ -16,16 +32,15 @@ ifeq ($(USE_SSL),1)
   LIBS += $(OPENSSL_ROOT)/lib/libssl.a $(OPENSSL_ROOT)/lib/libcrypt.a
 endif
 
+ifeq ($(USE_IDNA),1)
+  LIBS += $(LIBIDN_ROOT)/lib/dj_obj/libidn.a -liconv
+endif
+
 LIBS += $(WATT32_ROOT)/lib/libwatt.a $(ZLIB_ROOT)/libz.a
 
-CSOURCES = fopen.c ftpget.c ftpgetresp.c ftpupload.c getinmemory.c  \
-           http-post.c httpput.c https.c multi-app.c multi-double.c \
-           multi-post.c multi-single.c persistant.c post-callback.c \
-           postit2.c sepheaders.c simple.c simplepost.c simplessl.c \
-           multi-debugcallback.c fileupload.c getinfo.c anyauthput.c \
-           10-at-a-time.c # ftpuploadresume.c ftp3rdparty.c cookie_interface.c
+include Makefile.inc
 
-PROGRAMS = $(CSOURCES:.c=.exe)
+PROGRAMS = $(patsubst %,%.exe,$(check_PROGRAMS))
 
 all: $(PROGRAMS)
 	@echo Welcome to libcurl example program

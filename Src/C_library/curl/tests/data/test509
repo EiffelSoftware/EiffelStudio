@@ -1,57 +1,44 @@
 <testcase>
+<info>
+<keywords>
+memory callbacks
+</keywords>
+</info>
 #
 # Server-side
 <reply>
-<data>
-HTTP/1.1 200 OK
-Date: Thu, 09 Nov 2010 14:49:00 GMT
-Content-length:6
-
-Hello
-</data>
-<datacheck>
-Hello
-</datacheck>
 </reply>
 
-#
 # Client-side
 <client>
 <server>
-https
+none
 </server>
 <features>
-SSL
-OpenSSL
+http
 </features>
+# tool is what to use instead of 'curl'
 <tool>
 lib509
 </tool>
 
- <name>
-simple HTTPS GET and URL redirect in certificate
- </name>
- <command>
-https://127.0.0.1:%HTTPSPORT/dvcs %HTTPSPORT
+<name>
+initialization with memory callbacks and actual usage
+</name>
+<command>
+nothing
 </command>
 </client>
 
 #
 # Verify data after the test has been "shot"
 <verify>
-<strip>
-^User-Agent:.*
-</strip>
-<protocol>
-GET /509 HTTP/1.1
-Host: 127.0.0.1:%HTTPSPORT
-Accept: */*
-
-</protocol>
-# valgrind detects numerous problems in OpenSSL for this test case, disable
-# the valgrind logfile scan
-<valgrind>
-disable
-</valgrind>
+<stdout>
+seen custom_calloc()
+seen custom_malloc()
+seen custom_realloc()
+seen custom_free()
+</stdout>
 </verify>
+
 </testcase>

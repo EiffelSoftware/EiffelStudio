@@ -9,7 +9,7 @@ FAILURE
 </info>
 # Server-side
 <reply>
-<data nocheck="1">
+<data nocheck="yes">
 HTTP/1.0 200 Mooo
 Date: Mon, 13 Nov 2000 13:41:09 GMT
 Server: myown/1.0
@@ -28,9 +28,9 @@ http
 HTTP resume request without server supporting it
  </name>
  <command option="no-output">
-http://%HOSTIP:%HTTPPORT/want/38 -C - -i -o log/fewl.txt
+http://%HOSTIP:%HTTPPORT/want/38 -C - --no-include -o log/fewl38.txt
 </command>
-<file name="log/fewl.txt">
+<file name="log/fewl38.txt">
 This text is here to simulate a partly downloaded file to resume
 download on.
 </file>
@@ -46,14 +46,14 @@ download on.
 </strip>
 <protocol>
 GET /want/38 HTTP/1.1
+Host: %HOSTIP:%HTTPPORT
 Range: bytes=78-
-Host: 127.0.0.1:%HTTPPORT
 Accept: */*
 
 </protocol>
 
 # the download target file must remain untouched
-<file name="log/fewl.txt">
+<file name="log/fewl38.txt">
 This text is here to simulate a partly downloaded file to resume
 download on.
 </file>

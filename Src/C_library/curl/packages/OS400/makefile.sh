@@ -2,7 +2,6 @@
 #
 #       curl compilation script for the OS/400.
 #
-# $Id$
 #
 #       This is a shell script since make is not a standard component of OS/400.
 
@@ -22,7 +21,7 @@ fi
 #       Create the DOCS source file if it does not exist.
 
 if action_needed "${LIBIFSNAME}/DOCS.FILE"
-then    CMD="CRTSRCPF FILE(${TARGETLIB}/DOCS) RCDLEN(112)"
+then    CMD="CRTSRCPF FILE(${TARGETLIB}/DOCS) RCDLEN(240)"
         CMD="${CMD} CCSID(${TGTCCSID}) TEXT('Documentation texts')"
         system "${CMD}"
 fi
@@ -48,6 +47,7 @@ done
 
 #       Build in each directory.
 
-for SUBDIR in include lib src tests
+# for SUBDIR in include lib src tests
+for SUBDIR in include lib src
 do      "${SCRIPTDIR}/make-${SUBDIR}.sh"
 done

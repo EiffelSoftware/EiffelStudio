@@ -1,22 +1,37 @@
-/*****************************************************************************
+/***************************************************************************
  *                                  _   _ ____  _
  *  Project                     ___| | | |  _ \| |
  *                             / __| | | | |_) | |
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * $Id$
+ * Copyright (C) 1998 - 2016, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
- * Example application source code using the multi interface to download many
- * files, but with a capped maximum amount of simultaneous transfers.
+ * This software is licensed as described in the file COPYING, which
+ * you should have received as part of this distribution. The terms
+ * are also available at https://curl.haxx.se/docs/copyright.html.
  *
+ * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+ * copies of the Software, and permit persons to whom the Software is
+ * furnished to do so, under the terms of the COPYING file.
+ *
+ * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+ * KIND, either express or implied.
+ *
+ ***************************************************************************/
+/* <DESC>
+ * Source code using the multi interface to download many
+ * files, with a capped maximum amount of simultaneous transfers.
+ * </DESC>
  * Written by Michael Wallner
  */
 
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
+#ifndef WIN32
+#  include <unistd.h>
+#endif
 #include <curl/multi.h>
 
 static const char *urls[] = {
@@ -48,7 +63,6 @@ static const char *urls[] = {
   "http://www.uefa.com",
   "http://www.ieee.org",
   "http://www.apple.com",
-  "http://www.sony.com",
   "http://www.symantec.com",
   "http://www.zdnet.com",
   "http://www.fujitsu.com",
@@ -72,9 +86,9 @@ static const char *urls[] = {
 };
 
 #define MAX 10 /* number of simultaneous transfers */
-#define CNT sizeof(urls)/sizeof(char*) /* total number of transfers to do */
+#define CNT sizeof(urls)/sizeof(char *) /* total number of transfers to do */
 
-static int cb(char *d, size_t n, size_t l, void *p)
+static size_t cb(char *d, size_t n, size_t l, void *p)
 {
   /* take care of the data here, ignored in this example */
   (void)d;
@@ -87,10 +101,10 @@ static void init(CURLM *cm, int i)
   CURL *eh = curl_easy_init();
 
   curl_easy_setopt(eh, CURLOPT_WRITEFUNCTION, cb);
-  curl_easy_setopt(eh, CURLOPT_HEADER, 0);
+  curl_easy_setopt(eh, CURLOPT_HEADER, 0L);
   curl_easy_setopt(eh, CURLOPT_URL, urls[i]);
   curl_easy_setopt(eh, CURLOPT_PRIVATE, urls[i]);
-  curl_easy_setopt(eh, CURLOPT_VERBOSE, 0);
+  curl_easy_setopt(eh, CURLOPT_VERBOSE, 0L);
 
   curl_multi_add_handle(cm, eh);
 }
@@ -111,39 +125,44 @@ int main(void)
 
   /* we can optionally limit the total amount of connections this multi handle
      uses */
-  curl_multi_setopt(cm, CURLMOPT_MAXCONNECTS, MAX);
+  curl_multi_setopt(cm, CURLMOPT_MAXCONNECTS, (long)MAX);
 
-  for (C = 0; C < MAX; ++C) {
+  for(C = 0; C < MAX; ++C) {
     init(cm, C);
   }
 
-  while (U) {
-    while (CURLM_CALL_MULTI_PERFORM == curl_multi_perform(cm, &U));
+  while(U) {
+    curl_multi_perform(cm, &U);
 
-    if (U) {
+    if(U) {
       FD_ZERO(&R);
       FD_ZERO(&W);
       FD_ZERO(&E);
 
-      if (curl_multi_fdset(cm, &R, &W, &E, &M)) {
+      if(curl_multi_fdset(cm, &R, &W, &E, &M)) {
         fprintf(stderr, "E: curl_multi_fdset\n");
         return EXIT_FAILURE;
       }
 
-      if (curl_multi_timeout(cm, &L)) {
+      if(curl_multi_timeout(cm, &L)) {
         fprintf(stderr, "E: curl_multi_timeout\n");
         return EXIT_FAILURE;
       }
-      if (L == -1)
+      if(L == -1)
         L = 100;
 
-      if (M == -1) {
-        sleep(L / 1000);
-      } else {
+      if(M == -1) {
+#ifdef WIN32
+        Sleep(L);
+#else
+        sleep((unsigned int)L / 1000);
+#endif
+      }
+      else {
         T.tv_sec = L/1000;
         T.tv_usec = (L%1000)*1000;
 
-        if (0 > select(M+1, &R, &W, &E, &T)) {
+        if(0 > select(M+1, &R, &W, &E, &T)) {
           fprintf(stderr, "E: select(%i,,,,%li): %i: %s\n",
               M+1, L, errno, strerror(errno));
           return EXIT_FAILURE;
@@ -151,8 +170,8 @@ int main(void)
       }
     }
 
-    while ((msg = curl_multi_info_read(cm, &Q))) {
-      if (msg->msg == CURLMSG_DONE) {
+    while((msg = curl_multi_info_read(cm, &Q))) {
+      if(msg->msg == CURLMSG_DONE) {
         char *url;
         CURL *e = msg->easy_handle;
         curl_easy_getinfo(msg->easy_handle, CURLINFO_PRIVATE, &url);
@@ -164,7 +183,7 @@ int main(void)
       else {
         fprintf(stderr, "E: CURLMsg (%d)\n", msg->msg);
       }
-      if (C < CNT) {
+      if(C < CNT) {
         init(cm, C++);
         U++; /* just to prevent it from remaining at 0 if there are more
                 URLs to get */

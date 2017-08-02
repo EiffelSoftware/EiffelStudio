@@ -1,8 +1,13 @@
 <testcase>
+<info>
+<keywords>
+FILE
+</keywords>
+</info>
 #
 # Server-side
 <reply>
-<data mode="text">
+<data>
 foo
    bar swsclose
 bar

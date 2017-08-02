@@ -18,15 +18,12 @@
  * Original code by Paul Vixie. "curlified" by Gisle Vanem.
  */
 
-#include "setup.h"
+#include "curl_setup.h"
 
 #ifndef HAVE_INET_NTOP
 
 #ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
-#endif
-#ifdef HAVE_SYS_SOCKET_H
-#include <sys/socket.h>
 #endif
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
@@ -34,19 +31,9 @@
 #ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>
 #endif
-#include <string.h>
-#include <errno.h>
-
-#define _MPRINTF_REPLACE /* use our functions only */
-#include <curl/mprintf.h>
 
 #include "inet_ntop.h"
-
-#if defined(HAVE_INET_NTOA_R) && !defined(HAVE_INET_NTOA_R_DECL)
-/* this platform has a inet_ntoa_r() function, but no proto declared anywhere
-   so we include our own proto to make compilers happy */
-#include "inet_ntoa_r.h"
-#endif
+#include "curl_printf.h"
 
 #define IN6ADDRSZ       16
 #define INADDRSZ         4
@@ -62,30 +49,25 @@
  */
 static char *inet_ntop4 (const unsigned char *src, char *dst, size_t size)
 {
-#if defined(HAVE_INET_NTOA_R_2_ARGS)
-  const char *ptr;
+  char tmp[sizeof "255.255.255.255"];
+  size_t len;
+
   DEBUGASSERT(size >= 16);
-  ptr = inet_ntoa_r(*(struct in_addr*)src, dst);
-  return (char *)memmove(dst, ptr, strlen(ptr)+1);
 
-#elif defined(HAVE_INET_NTOA_R)
+  tmp[0] = '\0';
+  (void)snprintf(tmp, sizeof(tmp), "%d.%d.%d.%d",
+                 ((int)((unsigned char)src[0])) & 0xff,
+                 ((int)((unsigned char)src[1])) & 0xff,
+                 ((int)((unsigned char)src[2])) & 0xff,
+                 ((int)((unsigned char)src[3])) & 0xff);
 
-#if defined(HAVE_INT_INET_NTOA_R)
-  return inet_ntoa_r(*(struct in_addr*)src, dst, size)? NULL: dst;
-#else
-  return inet_ntoa_r(*(struct in_addr*)src, dst, size);
-#endif
-
-#else
-  const char *addr = inet_ntoa(*(struct in_addr*)src);
-
-  if (strlen(addr) >= size)
-  {
+  len = strlen(tmp);
+  if(len == 0 || len >= size) {
     SET_ERRNO(ENOSPC);
     return (NULL);
   }
-  return strcpy(dst, addr);
-#endif
+  strcpy(dst, tmp);
+  return dst;
 }
 
 #ifdef ENABLE_IPV6
@@ -115,61 +97,51 @@ static char *inet_ntop6 (const unsigned char *src, char *dst, size_t size)
    *  Find the longest run of 0x00's in src[] for :: shorthanding.
    */
   memset(words, '\0', sizeof(words));
-  for (i = 0; i < IN6ADDRSZ; i++)
-      words[i/2] |= (src[i] << ((1 - (i % 2)) << 3));
+  for(i = 0; i < IN6ADDRSZ; i++)
+    words[i/2] |= (src[i] << ((1 - (i % 2)) << 3));
 
   best.base = -1;
   cur.base  = -1;
   best.len = 0;
   cur.len = 0;
 
-  for (i = 0; i < (IN6ADDRSZ / INT16SZ); i++)
-  {
-    if (words[i] == 0)
-    {
-      if (cur.base == -1)
+  for(i = 0; i < (IN6ADDRSZ / INT16SZ); i++) {
+    if(words[i] == 0) {
+      if(cur.base == -1)
         cur.base = i, cur.len = 1;
       else
         cur.len++;
     }
-    else if (cur.base != -1)
-    {
-      if (best.base == -1 || cur.len > best.len)
-         best = cur;
+    else if(cur.base != -1) {
+      if(best.base == -1 || cur.len > best.len)
+        best = cur;
       cur.base = -1;
     }
   }
-  if ((cur.base != -1) && (best.base == -1 || cur.len > best.len))
-     best = cur;
-  if (best.base != -1 && best.len < 2)
-     best.base = -1;
-
-  /* Format the result.
-   */
+  if((cur.base != -1) && (best.base == -1 || cur.len > best.len))
+    best = cur;
+  if(best.base != -1 && best.len < 2)
+    best.base = -1;
+  /* Format the result. */
   tp = tmp;
-  for (i = 0; i < (IN6ADDRSZ / INT16SZ); i++)
-  {
-    /* Are we inside the best run of 0x00's?
-     */
-    if (best.base != -1 && i >= best.base && i < (best.base + best.len))
-    {
-      if (i == best.base)
-         *tp++ = ':';
+  for(i = 0; i < (IN6ADDRSZ / INT16SZ); i++) {
+    /* Are we inside the best run of 0x00's? */
+    if(best.base != -1 && i >= best.base && i < (best.base + best.len)) {
+      if(i == best.base)
+        *tp++ = ':';
       continue;
     }
 
     /* Are we following an initial run of 0x00s or any real hex?
      */
-    if (i != 0)
-       *tp++ = ':';
+    if(i != 0)
+      *tp++ = ':';
 
     /* Is this address an encapsulated IPv4?
      */
-    if (i == 6 && best.base == 0 &&
-        (best.len == 6 || (best.len == 5 && words[5] == 0xffff)))
-    {
-      if (!inet_ntop4(src+12, tp, sizeof(tmp) - (tp - tmp)))
-      {
+    if(i == 6 && best.base == 0 &&
+        (best.len == 6 || (best.len == 5 && words[5] == 0xffff))) {
+      if(!inet_ntop4(src+12, tp, sizeof(tmp) - (tp - tmp))) {
         SET_ERRNO(ENOSPC);
         return (NULL);
       }
@@ -181,18 +153,18 @@ static char *inet_ntop6 (const unsigned char *src, char *dst, size_t size)
 
   /* Was it a trailing run of 0x00's?
    */
-  if (best.base != -1 && (best.base + best.len) == (IN6ADDRSZ / INT16SZ))
+  if(best.base != -1 && (best.base + best.len) == (IN6ADDRSZ / INT16SZ))
      *tp++ = ':';
   *tp++ = '\0';
 
   /* Check for overflow, copy, and we're done.
    */
-  if ((size_t)(tp - tmp) > size)
-  {
+  if((size_t)(tp - tmp) > size) {
     SET_ERRNO(ENOSPC);
     return (NULL);
   }
-  return strcpy (dst, tmp);
+  strcpy(dst, tmp);
+  return dst;
 }
 #endif  /* ENABLE_IPV6 */
 
@@ -204,18 +176,18 @@ static char *inet_ntop6 (const unsigned char *src, char *dst, size_t size)
  * error, EAFNOSUPPORT or ENOSPC.
  *
  * On Windows we store the error in the thread errno, not
- * in the winsock error code. This is to avoid loosing the
+ * in the winsock error code. This is to avoid losing the
  * actual last winsock error. So use macro ERRNO to fetch the
- * errno this funtion sets when returning NULL, not SOCKERRNO.
+ * errno this function sets when returning NULL, not SOCKERRNO.
  */
 char *Curl_inet_ntop(int af, const void *src, char *buf, size_t size)
 {
-  switch (af) {
+  switch(af) {
   case AF_INET:
-    return inet_ntop4((const unsigned char*)src, buf, size);
+    return inet_ntop4((const unsigned char *)src, buf, size);
 #ifdef ENABLE_IPV6
   case AF_INET6:
-    return inet_ntop6((const unsigned char*)src, buf, size);
+    return inet_ntop6((const unsigned char *)src, buf, size);
 #endif
   default:
     SET_ERRNO(EAFNOSUPPORT);

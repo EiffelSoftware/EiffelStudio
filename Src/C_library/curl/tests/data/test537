@@ -1,4 +1,11 @@
 <testcase>
+<info>
+<keywords>
+HTTP
+HTTP GET
+</keywords>
+</info>
+
 #
 # Server-side
 <reply>
@@ -49,7 +56,7 @@ http://%HOSTIP:%HTTPPORT/537
 <verify>
 <protocol>
 GET /537 HTTP/1.1
-Host: 127.0.0.1:%HTTPPORT
+Host: %HOSTIP:%HTTPPORT
 Accept: */*
 
 </protocol>

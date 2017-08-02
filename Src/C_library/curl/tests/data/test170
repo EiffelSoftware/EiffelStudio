@@ -1,4 +1,13 @@
 <testcase>
+<info>
+<keywords>
+HTTP
+HTTP POST
+HTTP proxy
+HTTP proxy NTLM auth
+</keywords>
+</info>
+
 # Server-side
 <reply>
 </reply>
@@ -10,6 +19,7 @@ http
 </server>
 <features>
 NTLM
+!SSPI
 </features>
  <name>
 HTTP POST with --proxy-ntlm and no SSL with no response
@@ -26,10 +36,9 @@ http://a.galaxy.far.far.away/170 --proxy http://%HOSTIP:%HTTPPORT --proxy-user f
 </strip>
 <protocol>
 POST http://a.galaxy.far.far.away/170 HTTP/1.1
+Host: a.galaxy.far.far.away
 Proxy-Authorization: NTLM TlRMTVNTUAABAAAABoIIAAAAAAAAAAAAAAAAAAAAAAA=
 User-Agent: curl/7.12.0-CVS (i686-pc-linux-gnu) libcurl/7.12.0-CVS OpenSSL/0.9.6b ipv6 zlib/1.1.4 libidn/0.4.3
-Host: a.galaxy.far.far.away
-Pragma: no-cache
 Accept: */*
 Proxy-Connection: Keep-Alive
 Content-Length: 0

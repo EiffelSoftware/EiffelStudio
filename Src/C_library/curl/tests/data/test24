@@ -7,7 +7,7 @@ HTTP GET
 </info>
 # Server-side
 <reply>
-<data nocheck="1">
+<data nocheck="yes">
 HTTP/1.0 404 BAD BOY
 Content-Type: text/html
 
@@ -24,7 +24,7 @@ http
 HTTP GET fail silently on HTTP error return
  </name>
  <command>
-http://%HOSTIP:%HTTPPORT/24 --fail
+http://%HOSTIP:%HTTPPORT/24 --fail --silent --show-error
 </command>
 </client>
 
@@ -36,12 +36,15 @@ http://%HOSTIP:%HTTPPORT/24 --fail
 <protocol>
 GET /24 HTTP/1.1
 User-Agent: curl/7.8.1-pre3 (sparc-sun-solaris2.7) libcurl 7.8.1-pre3 (OpenSSL 0.9.6a) (krb4 enabled)
-Host: 127.0.0.1:%HTTPPORT
+Host: %HOSTIP:%HTTPPORT
 Accept: */*
 
 </protocol>
 <errorcode>
 22
 </errorcode>
+<file2 name="log/stderr24" mode="text">
+curl: (22) The requested URL returned error: 404 BAD BOY
+</file2>
 </verify>
 </testcase>

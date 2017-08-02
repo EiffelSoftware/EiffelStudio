@@ -9,7 +9,7 @@ SOCKS4
 
 #
 # Server-side
-<reply name="1">
+<reply>
 <data>
 HTTP/1.1 200 OK
 Date: Thu, 09 Nov 2010 14:49:00 GMT
@@ -49,7 +49,7 @@ HTTP GET via SOCKS4 proxy
 </strip>
 <protocol>
 GET /700 HTTP/1.1
-Host: 127.0.0.1:%HTTPPORT
+Host: %HOSTIP:%HTTPPORT
 Accept: */*
 
 </protocol>

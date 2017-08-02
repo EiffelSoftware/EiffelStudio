@@ -5,11 +5,11 @@
 #                            | (__| |_| |  _ <| |___
 #                             \___|\___/|_| \_\_____|
 #
-# Copyright (C) 1998 - 2007, Daniel Stenberg, <daniel@haxx.se>, et al.
+# Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
 #
 # This software is licensed as described in the file COPYING, which
 # you should have received as part of this distribution. The terms
-# are also available at http://curl.haxx.se/docs/copyright.html.
+# are also available at https://curl.haxx.se/docs/copyright.html.
 #
 # You may opt to use, copy, modify, merge, publish, distribute and/or sell
 # copies of the Software, and permit persons to whom the Software is
@@ -18,39 +18,54 @@
 # This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
 # KIND, either express or implied.
 #
-# $Id$
 ###########################################################################
+AUTOMAKE_OPTIONS = foreign nostdinc
 
+# Specify our include paths here, and do it relative to $(top_srcdir) and
+# $(top_builddir), to ensure that these paths which belong to the library
+# being currently built and tested are searched before the library which
+# might possibly already be installed in the system.
+#
+# $(top_builddir)/include/curl for generated curlbuild.h included from curl.h
+# $(top_builddir)/include for generated curlbuild.h inc. from lib/curl_setup.h
+# $(top_srcdir)/include is for libcurl's external include files
+# $(top_builddir)/lib is for libcurl's generated lib/curl_config.h file
+# $(top_srcdir)/lib for libcurl's lib/curl_setup.h and other "borrowed" files
+# $(top_builddir)/ares is for in-tree c-ares's generated ares_build.h file
+# $(top_srcdir)/ares is for in-tree c-ares's external include files
 
+if USE_EMBEDDED_ARES
+AM_CPPFLAGS = -I$(top_builddir)/include/curl \
+              -I$(top_builddir)/include      \
+              -I$(top_srcdir)/include        \
+              -I$(top_builddir)/lib          \
+              -I$(top_srcdir)/lib            \
+              -I$(top_builddir)/ares         \
+              -I$(top_srcdir)/ares
+else
+AM_CPPFLAGS = -I$(top_builddir)/include/curl \
+              -I$(top_builddir)/include      \
+              -I$(top_srcdir)/include        \
+              -I$(top_builddir)/lib          \
+              -I$(top_srcdir)/lib
+endif
 
-AUTOMAKE_OPTIONS = foreign
+# Prevent LIBS from being used for all link targets
+LIBS = $(BLANK_AT_MAKETIME)
 
-INCLUDES = -I$(top_srcdir)/include \
-           -I$(top_builddir)/lib   \
-           -I$(top_srcdir)/lib 
+if DOING_NATIVE_WINDOWS
+AM_CPPFLAGS += -DCURL_STATICLIB
+endif
 
-noinst_PROGRAMS = sws getpart sockfilt resolve tftpd
+# Makefile.inc provides neat definitions
+include Makefile.inc
 
-useful = getpart.c getpart.h $(top_srcdir)/lib/strequal.c	\
- $(top_srcdir)/lib/base64.c $(top_srcdir)/lib/mprintf.c		\
- $(top_srcdir)/lib/memdebug.c $(top_srcdir)/lib/timeval.c
+EXTRA_DIST = base64.pl Makefile.inc CMakeLists.txt
 
-resolve_SOURCES= resolve.c util.c util.h $(useful)
-resolve_LDADD = @TEST_SERVER_LIBS@
+checksrc:
+	@PERL@ $(top_srcdir)/lib/checksrc.pl $(srcdir)/*.c
 
-sws_SOURCES= sws.c util.c util.h $(useful)
-sws_LDADD = @TEST_SERVER_LIBS@
-
-sockfilt_SOURCES = sockfilt.c util.c util.h $(useful)	\
- $(top_srcdir)/lib/inet_pton.c
-sockfilt_LDADD = @TEST_SERVER_LIBS@
-
-getpart_SOURCES= testpart.c $(useful)
-# This is needed because of (unused) network debugging functions in memdebug.c
-getpart_LDADD = @TEST_SERVER_LIBS@
-
-tftpd_SOURCES = tftpd.c util.c util.h $(useful) tftp.h
-tftpd_LDADD = @TEST_SERVER_LIBS@
-
-extra_DIST = base64.pl
-
+if CURLDEBUG
+# for debug builds, we scan the sources on all regular make invokes
+all-local: checksrc
+endif

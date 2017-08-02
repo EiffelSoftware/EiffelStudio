@@ -1,34 +1,73 @@
+#***************************************************************************
+#                                  _   _ ____  _
+#  Project                     ___| | | |  _ \| |
+#                             / __| | | | |_) | |
+#                            | (__| |_| |  _ <| |___
+#                             \___|\___/|_| \_\_____|
 #
-#  Adapted for djgpp2 / Watt-32 / DOS by
-#  Gisle Vanem <giva@bgnett.no>
+# Copyright (C) 2003 - 2008, Gisle Vanem <gvanem@yahoo.no>.
+# Copyright (C) 2003 - 2015, Daniel Stenberg, <daniel@haxx.se>, et al.
 #
-# $Id: makefile.dj,v 1.12 2007-02-27 15:24:32 giva Exp $
+# This software is licensed as described in the file COPYING, which
+# you should have received as part of this distribution. The terms
+# are also available at https://curl.haxx.se/docs/copyright.html.
+#
+# You may opt to use, copy, modify, merge, publish, distribute and/or sell
+# copies of the Software, and permit persons to whom the Software is
+# furnished to do so, under the terms of the COPYING file.
+#
+# This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+# KIND, either express or implied.
+#
+#***************************************************************************
 
-DEPEND_PREREQ = config.h
+#
+#  Adapted for djgpp2 / Watt-32 / DOS
+#
+
+DEPEND_PREREQ = curl_config.h
+VPATH  = vtls
 TOPDIR = ..
 
 include ../packages/DOS/common.dj
-
-# Makefile.inc provides the CSOURCES and HHEADERS defines
 include Makefile.inc
 
-OBJECTS := $(patsubst %.c,$(OBJ_DIR)/%.o,$(strip $(CSOURCES)))
+SOURCES = $(sort $(CSOURCES))
+OBJECTS = $(addprefix $(OBJ_DIR)/, $(notdir $(SOURCES:.c=.o)))
 
 CURL_LIB = libcurl.a
 
-all: $(OBJ_DIR) config.h $(CURL_LIB)
+# NOTE: if ../include/curl/curlbuild.h is missing, you're probably building
+# this from a git checkout and then you need to run buildconf.bat first.
+
+all: $(OBJ_DIR) curl_config.h $(CURL_LIB)
 
 $(CURL_LIB): $(OBJECTS)
 	ar rs $@ $?
 
-config.h: config.dos
-	cp $^ $@
+curl_config.h: config-dos.h
+	$(COPY) $^ $@
 
-clean:
-	- rm -f $(OBJECTS)
+# clean generated files
+#
+genclean:
+	- $(DELETE) curl_config.h
 
+# clean object files and subdir
+#
+objclean: genclean
+	- $(DELETE) $(OBJ_DIR)$(DS)*.o
+	- $(RMDIR) $(OBJ_DIR)
+
+# clean without removing built library
+#
+clean: objclean
+	- $(DELETE) depend.dj
+
+# clean everything
+#
 realclean vclean: clean
-	- rm -f config.h depend.dj $(CURL_LIB)
+	- $(DELETE) $(CURL_LIB)
 
 -include depend.dj
 

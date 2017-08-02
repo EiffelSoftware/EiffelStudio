@@ -5,17 +5,17 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * $Id$
+ *  Copyright (c) 2000 David Odin (aka DindinX) for MandrakeSoft
  */
-/* Copyright (c) 2000 David Odin (aka DindinX) for MandrakeSoft */
-/* an attempt to use the curl library in concert with a gtk-threaded application */
+/* <DESC>
+ * use the libcurl in a gtk-threaded application
+ * </DESC>
+ */
 
 #include <stdio.h>
 #include <gtk/gtk.h>
 
 #include <curl/curl.h>
-#include <curl/types.h> /* new for v7 */
-#include <curl/easy.h> /* new for v7 */
 
 GtkWidget *Bar;
 
@@ -29,7 +29,7 @@ size_t my_read_func(void *ptr, size_t size, size_t nmemb, FILE *stream)
   return fread(ptr, size, nmemb, stream);
 }
 
-int my_progress_func(GtkWidget *Bar,
+int my_progress_func(GtkWidget *bar,
                      double t, /* dltotal */
                      double d, /* dlnow */
                      double ultotal,
@@ -37,7 +37,7 @@ int my_progress_func(GtkWidget *Bar,
 {
 /*  printf("%d / %d (%g %%)\n", d, t, d*100.0/t);*/
   gdk_threads_enter();
-  gtk_progress_set_value(GTK_PROGRESS(Bar), d*100.0/t);
+  gtk_progress_set_value(GTK_PROGRESS(bar), d*100.0/t);
   gdk_threads_leave();
   return 0;
 }
@@ -50,15 +50,15 @@ void *my_thread(void *ptr)
   gchar *url = ptr;
 
   curl = curl_easy_init();
-  if(curl)
-  {
-    outfile = fopen("test.curl", "w");
+  if(curl) {
+    const char *filename = "test.curl";
+    outfile = fopen(filename, "wb");
 
     curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, outfile);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, my_write_func);
     curl_easy_setopt(curl, CURLOPT_READFUNCTION, my_read_func);
-    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, FALSE);
+    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
     curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, my_progress_func);
     curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, Bar);
 
@@ -77,6 +77,9 @@ int main(int argc, char **argv)
   GtkWidget *Window, *Frame, *Frame2;
   GtkAdjustment *adj;
 
+  /* Must initialize libcurl before any threads are started */
+  curl_global_init(CURL_GLOBAL_ALL);
+
   /* Init thread */
   g_thread_init(NULL);
 
@@ -94,7 +97,7 @@ int main(int argc, char **argv)
   gtk_container_add(GTK_CONTAINER(Frame2), Bar);
   gtk_widget_show_all(Window);
 
-  if (!g_thread_create(&my_thread, argv[1], FALSE, NULL) != 0)
+  if(!g_thread_create(&my_thread, argv[1], FALSE, NULL) != 0)
     g_warning("can't create the thread");
 
 

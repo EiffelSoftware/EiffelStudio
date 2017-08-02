@@ -1,7 +1,12 @@
 <testcase>
+<info>
+<keywords>
+missing URL
+</keywords>
+</info>
 #
 # Server-side
-<reply name="1">
+<reply>
 </reply>
 
 # Client-side

@@ -5,11 +5,11 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2007, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2015, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
- * are also available at http://curl.haxx.se/docs/copyright.html.
+ * are also available at https://curl.haxx.se/docs/copyright.html.
  *
  * You may opt to use, copy, modify, merge, publish, distribute and/or sell
  * copies of the Software, and permit persons to whom the Software is
@@ -18,19 +18,10 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id$
  ***************************************************************************/
 
-#include "setup.h"
+#include "curl_setup.h"
 
-#include <string.h>
-
-#ifdef NEED_MALLOC_H
-#include <malloc.h>
-#endif
-#ifdef HAVE_SYS_SOCKET_H
-#include <sys/socket.h>
-#endif
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
 #endif
@@ -40,20 +31,9 @@
 #ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>
 #endif
-#ifdef HAVE_STDLIB_H
-#include <stdlib.h>     /* required for free() prototypes */
-#endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>     /* for the close() proto */
-#endif
-#ifdef  VMS
+#ifdef __VMS
 #include <in.h>
 #include <inet.h>
-#include <stdlib.h>
-#endif
-
-#ifdef HAVE_SETJMP_H
-#include <setjmp.h>
 #endif
 
 #ifdef HAVE_PROCESS_H
@@ -67,15 +47,7 @@
 #include "share.h"
 #include "strerror.h"
 #include "url.h"
-
-#define _MPRINTF_REPLACE /* use our functions only */
-#include <curl/mprintf.h>
-
-#if defined(HAVE_INET_NTOA_R) && !defined(HAVE_INET_NTOA_R_DECL)
-#include "inet_ntoa_r.h"
-#endif
-
-#include "memory.h"
+#include "curl_memory.h"
 /* The last #include file should be: */
 #include "memdebug.h"
 
@@ -83,40 +55,29 @@
  * Only for builds using asynchronous name resolves
  **********************************************************************/
 #ifdef CURLRES_ASYNCH
+
 /*
- * addrinfo_callback() gets called by ares, gethostbyname_thread() or
- * getaddrinfo_thread() when we got the name resolved (or not!).
+ * Curl_addrinfo_callback() gets called by ares, gethostbyname_thread()
+ * or getaddrinfo_thread() when we got the name resolved (or not!).
  *
- * If the status argument is CURL_ASYNC_SUCCESS, we might need to copy the
- * address field since it might be freed when this function returns. This
- * operation stores the resolved data in the DNS cache.
- *
- * NOTE: for IPv6 operations, Curl_addrinfo_copy() returns the same
- * pointer it is given as argument!
+ * If the status argument is CURL_ASYNC_SUCCESS, this function takes
+ * ownership of the Curl_addrinfo passed, storing the resolved data
+ * in the DNS cache.
  *
  * The storage operation locks and unlocks the DNS cache.
  */
-static CURLcode addrinfo_callback(void *arg, /* "struct connectdata *" */
-                                  int status,
-                                  void *addr)
+CURLcode Curl_addrinfo_callback(struct connectdata *conn,
+                                int status,
+                                struct Curl_addrinfo *ai)
 {
-  struct connectdata *conn = (struct connectdata *)arg;
   struct Curl_dns_entry *dns = NULL;
-  CURLcode rc = CURLE_OK;
+  CURLcode result = CURLE_OK;
 
   conn->async.status = status;
 
   if(CURL_ASYNC_SUCCESS == status) {
-
-    /*
-     * IPv4/ares: Curl_addrinfo_copy() copies the address and returns an
-     * allocated version.
-     *
-     * IPv6: Curl_addrinfo_copy() returns the input pointer!
-     */
-    Curl_addrinfo *ai = Curl_addrinfo_copy(addr, conn->async.port);
     if(ai) {
-      struct SessionHandle *data = conn->data;
+      struct Curl_easy *data = conn->data;
 
       if(data->share)
         Curl_share_lock(data, CURL_LOCK_DATA_DNS, CURL_LOCK_ACCESS_SINGLE);
@@ -127,14 +88,15 @@ static CURLcode addrinfo_callback(void *arg, /* "struct connectdata *" */
       if(!dns) {
         /* failed to store, cleanup and return error */
         Curl_freeaddrinfo(ai);
-        rc = CURLE_OUT_OF_MEMORY;
+        result = CURLE_OUT_OF_MEMORY;
       }
 
       if(data->share)
         Curl_share_unlock(data, CURL_LOCK_DATA_DNS);
     }
-    else
-      rc = CURLE_OUT_OF_MEMORY;
+    else {
+      result = CURLE_OUT_OF_MEMORY;
+    }
   }
 
   conn->async.dns = dns;
@@ -144,28 +106,48 @@ static CURLcode addrinfo_callback(void *arg, /* "struct connectdata *" */
     async struct */
   conn->async.done = TRUE;
 
-  /* ipv4: The input hostent struct will be freed by ares when we return from
+  /* IPv4: The input hostent struct will be freed by ares when we return from
      this function */
-  return rc;
+  return result;
 }
 
-CURLcode Curl_addrinfo4_callback(void *arg, /* "struct connectdata *" */
-                                 int status,
-                                 struct hostent *hostent)
+/* Call this function after Curl_connect() has returned async=TRUE and
+   then a successful name resolve has been received.
+
+   Note: this function disconnects and frees the conn data in case of
+   resolve failure */
+CURLcode Curl_async_resolved(struct connectdata *conn,
+                             bool *protocol_done)
 {
-  return addrinfo_callback(arg, status, hostent);
+  CURLcode result;
+
+  if(conn->async.dns) {
+    conn->dns_entry = conn->async.dns;
+    conn->async.dns = NULL;
+  }
+
+  result = Curl_setup_conn(conn, protocol_done);
+
+  if(result)
+    /* We're not allowed to return failure with memory left allocated
+       in the connectdata struct, free those here */
+    Curl_disconnect(conn, FALSE); /* close the connection */
+
+  return result;
 }
 
-#ifdef CURLRES_IPV6
-CURLcode Curl_addrinfo6_callback(void *arg, /* "struct connectdata *" */
-                                 int status,
-                                 struct addrinfo *ai)
+/*
+ * Curl_getaddrinfo() is the generic low-level name resolve API within this
+ * source file. There are several versions of this function - for different
+ * name resolve layers (selected at build-time). They all take this same set
+ * of arguments
+ */
+Curl_addrinfo *Curl_getaddrinfo(struct connectdata *conn,
+                                const char *hostname,
+                                int port,
+                                int *waitp)
 {
- /* NOTE: for CURLRES_ARES, the 'ai' argument is really a
-  * 'struct hostent' pointer.
-  */
-  return addrinfo_callback(arg, status, ai);
+  return Curl_resolver_getaddrinfo(conn, hostname, port, waitp);
 }
-#endif
 
-#endif /* CURLRES_ASYNC */
+#endif /* CURLRES_ASYNCH */

@@ -1,8 +1,14 @@
 <testcase>
+<info>
+<keywords>
+HTTP
+HTTP HEAD
+</keywords>
+</info>
 #
 # Server-side
 <reply>
-<data mode="text">
+<data>
 HTTP/1.1 200 OK
 Date: Thu, 09 Nov 2010 14:49:00 GMT
 Server: test-server/fake
@@ -29,7 +35,8 @@ lib514
  <name>
 First set options to POST and then to make HEAD
  </name>
- <command>
+# the 1s post-command delay helps to prevent a spurious failure on s390
+ <command delay="1">
 http://%HOSTIP:%HTTPPORT/514
 </command>
 </client>
@@ -42,7 +49,7 @@ http://%HOSTIP:%HTTPPORT/514
 </strip>
 <protocol>
 HEAD /514 HTTP/1.1
-Host: 127.0.0.1:%HTTPPORT
+Host: %HOSTIP:%HTTPPORT
 Accept: */*
 
 </protocol>

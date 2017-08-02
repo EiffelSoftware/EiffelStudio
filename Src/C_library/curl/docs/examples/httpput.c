@@ -1,18 +1,31 @@
-/*****************************************************************************
+/***************************************************************************
  *                                  _   _ ____  _
  *  Project                     ___| | | |  _ \| |
  *                             / __| | | | |_) | |
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * $Id$
+ * Copyright (C) 1998 - 2016, Daniel Stenberg, <daniel@haxx.se>, et al.
+ *
+ * This software is licensed as described in the file COPYING, which
+ * you should have received as part of this distribution. The terms
+ * are also available at https://curl.haxx.se/docs/copyright.html.
+ *
+ * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+ * copies of the Software, and permit persons to whom the Software is
+ * furnished to do so, under the terms of the COPYING file.
+ *
+ * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+ * KIND, either express or implied.
+ *
+ ***************************************************************************/
+/* <DESC>
+ * HTTP PUT with easy interface and read callback
+ * </DESC>
  */
-
 #include <stdio.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <unistd.h>
-
 #include <curl/curl.h>
 
 /*
@@ -28,13 +41,17 @@
 static size_t read_callback(void *ptr, size_t size, size_t nmemb, void *stream)
 {
   size_t retcode;
+  curl_off_t nread;
 
   /* in real-world cases, this would probably get this data differently
      as this fread() stuff is exactly what the library already would do
      by default internally */
   retcode = fread(ptr, size, nmemb, stream);
 
-  fprintf(stderr, "*** We read %d bytes from file\n", retcode);
+  nread = (curl_off_t)retcode;
+
+  fprintf(stderr, "*** We read %" CURL_FORMAT_CURL_OFF_T
+          " bytes from file\n", nread);
 
   return retcode;
 }
@@ -43,8 +60,7 @@ int main(int argc, char **argv)
 {
   CURL *curl;
   CURLcode res;
-  FILE * hd_src ;
-  int hd ;
+  FILE * hd_src;
   struct stat file_info;
 
   char *file;
@@ -57,9 +73,7 @@ int main(int argc, char **argv)
   url = argv[2];
 
   /* get the file size of the local file */
-  hd = open(file, O_RDONLY) ;
-  fstat(hd, &file_info);
-  close(hd) ;
+  stat(file, &file_info);
 
   /* get a FILE * of the same file, could also be made with
      fdopen() from the previous descriptor, but hey this is just
@@ -76,14 +90,14 @@ int main(int argc, char **argv)
     curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
 
     /* enable uploading */
-    curl_easy_setopt(curl, CURLOPT_UPLOAD, 1) ;
+    curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
 
     /* HTTP PUT please */
-    curl_easy_setopt(curl, CURLOPT_PUT, 1);
+    curl_easy_setopt(curl, CURLOPT_PUT, 1L);
 
     /* specify target URL, and note that this URL should include a file
        name, not only a directory */
-    curl_easy_setopt(curl,CURLOPT_URL, url);
+    curl_easy_setopt(curl, CURLOPT_URL, url);
 
     /* now specify which file to upload */
     curl_easy_setopt(curl, CURLOPT_READDATA, hd_src);
@@ -95,6 +109,10 @@ int main(int argc, char **argv)
 
     /* Now run off and do what you've been told! */
     res = curl_easy_perform(curl);
+    /* Check for errors */
+    if(res != CURLE_OK)
+      fprintf(stderr, "curl_easy_perform() failed: %s\n",
+              curl_easy_strerror(res));
 
     /* always cleanup */
     curl_easy_cleanup(curl);

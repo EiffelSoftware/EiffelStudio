@@ -1,5 +1,5 @@
-#ifndef _CURL_STRTOOFFT_H
-#define _CURL_STRTOOFFT_H
+#ifndef HEADER_CURL_STRTOOFFT_H
+#define HEADER_CURL_STRTOOFFT_H
 /***************************************************************************
  *                                  _   _ ____  _
  *  Project                     ___| | | |  _ \| |
@@ -7,11 +7,11 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2004, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2014, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
- * are also available at http://curl.haxx.se/docs/copyright.html.
+ * are also available at https://curl.haxx.se/docs/copyright.html.
  *
  * You may opt to use, copy, modify, merge, publish, distribute and/or sell
  * copies of the Software, and permit persons to whom the Software is
@@ -20,54 +20,56 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id$
  ***************************************************************************/
 
+#include "curl_setup.h"
+
 /*
- * CAUTION: this header is designed to work when included by the app-side
- * as well as the library. Do not mix with library internals!
+ * Determine which string to integral data type conversion function we use
+ * to implement string conversion to our curl_off_t integral data type.
+ *
+ * Notice that curl_off_t might be 64 or 32 bit wide, and that it might use
+ * an underlying data type which might be 'long', 'int64_t', 'long long' or
+ * '__int64' and more remotely other data types.
+ *
+ * On systems where the size of curl_off_t is greater than the size of 'long'
+ * the conversion function to use is strtoll() if it is available, otherwise,
+ * we emulate its functionality with our own clone.
+ *
+ * On systems where the size of curl_off_t is smaller or equal than the size
+ * of 'long' the conversion function to use is strtol().
  */
 
-#include "setup.h"
-#include <stddef.h>
-#include <curl/curl.h> /* for the curl_off_t type */
-
-/* Determine what type of file offset conversion handling we wish to use.  For
- * systems with a 32-bit curl_off_t type, we should use strtol.  For systems
- * with a 64-bit curl_off_t type, we should use strtoll if it exists, and if
- * not, should try to emulate its functionality.  At any rate, we define
- * 'strtoofft' such that it can be used to work with curl_off_t's regardless.
- */
-#if (SIZEOF_CURL_OFF_T > 4) && (SIZEOF_LONG < 8)
-#ifdef HAVE_STRTOLL
-#define curlx_strtoofft strtoll
-#else /* HAVE_STRTOLL */
-
-/* For MSVC7 we can use _strtoi64() which seems to be a strtoll() clone */
-#if defined(_MSC_VER) && (_MSC_VER >= 1300)
-#define curlx_strtoofft _strtoi64
-#else /* MSVC7 or later */
-curl_off_t curlx_strtoll(const char *nptr, char **endptr, int base);
-#define curlx_strtoofft curlx_strtoll
-#define NEED_CURL_STRTOLL
-#endif /* MSVC7 or later */
-
-#endif /* HAVE_STRTOLL */
-#else /* (SIZEOF_CURL_OFF_T > 4) && (SIZEOF_LONG < 8) */
-/* simply use strtol() to get numbers, either 32 or 64 bit */
-#define curlx_strtoofft strtol
-#endif
-
-#if defined(_MSC_VER) || defined(__WATCOMC__)
-#define CURL_LLONG_MIN 0x8000000000000000i64
-#define CURL_LLONG_MAX 0x7FFFFFFFFFFFFFFFi64
-#elif defined(HAVE_LL)
-#define CURL_LLONG_MIN 0x8000000000000000LL
-#define CURL_LLONG_MAX 0x7FFFFFFFFFFFFFFFLL
+#if (CURL_SIZEOF_CURL_OFF_T > CURL_SIZEOF_LONG)
+#  ifdef HAVE_STRTOLL
+#    define curlx_strtoofft strtoll
+#  else
+#    if defined(_MSC_VER) && (_MSC_VER >= 1300) && (_INTEGRAL_MAX_BITS >= 64)
+#      if defined(_SAL_VERSION)
+         _Check_return_ _CRTIMP __int64 __cdecl _strtoi64(
+             _In_z_ const char *_String,
+             _Out_opt_ _Deref_post_z_ char **_EndPtr, _In_ int _Radix);
+#      else
+         _CRTIMP __int64 __cdecl _strtoi64(const char *_String,
+                                           char **_EndPtr, int _Radix);
+#      endif
+#      define curlx_strtoofft _strtoi64
+#    else
+       curl_off_t curlx_strtoll(const char *nptr, char **endptr, int base);
+#      define curlx_strtoofft curlx_strtoll
+#      define NEED_CURL_STRTOLL 1
+#    endif
+#  endif
 #else
-#define CURL_LLONG_MIN 0x8000000000000000L
-#define CURL_LLONG_MAX 0x7FFFFFFFFFFFFFFFL
+#  define curlx_strtoofft strtol
 #endif
 
+#if (CURL_SIZEOF_CURL_OFF_T == 4)
+#  define CURL_OFF_T_MAX CURL_OFF_T_C(0x7FFFFFFF)
+#else
+   /* assume CURL_SIZEOF_CURL_OFF_T == 8 */
+#  define CURL_OFF_T_MAX CURL_OFF_T_C(0x7FFFFFFFFFFFFFFF)
 #endif
+#define CURL_OFF_T_MIN (-CURL_OFF_T_MAX - CURL_OFF_T_C(1))
 
+#endif /* HEADER_CURL_STRTOOFFT_H */

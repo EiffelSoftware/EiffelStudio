@@ -4,6 +4,7 @@
 HTTP
 HTTP GET
 Resume
+Largefile
 FAILURE
 </keywords>
 </info>
@@ -59,8 +60,8 @@ http://%HOSTIP:%HTTPPORT/99 -C 9999999999
 </strip>
 <protocol>
 GET /99 HTTP/1.1
+Host: %HOSTIP:%HTTPPORT
 Range: bytes=9999999999-
-Host: 127.0.0.1:%HTTPPORT
 Accept: */*
 
 </protocol>

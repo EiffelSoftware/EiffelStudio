@@ -13,6 +13,8 @@ inherit
 	SSL_SHARED
 
 create
+	make_as_sslv23_client,
+	make_as_sslv23_server,
 	make_as_tlsv10_client,
 	make_as_tlsv10_server,
 	make_as_tlsv11_client,
@@ -24,6 +26,16 @@ create
 	make_from_context_pointer
 
 feature {NONE} -- Initialization
+
+	make_as_sslv23_client
+			-- Make an SSLv2 and SSLv3 capable client context.	
+		local
+			err: DEVELOPER_EXCEPTION
+		do
+			create err
+			err.set_description ("Obsolete protocol, use Tlsv1_2")
+			err.raise
+		end
 
 	make_as_tlsv10_client
 			-- Make an TLSv1 capable client context.
@@ -73,6 +85,15 @@ feature {NONE} -- Initialization
 			ctx := c_ssl_ctx_new (method_pointer)
 		end
 
+	make_as_sslv23_server
+			-- Make an SSLv2 and SSLv3 capable server context.	
+		local
+			err: DEVELOPER_EXCEPTION
+		do
+			create err
+			err.set_description ("Obsolete protocol, use Tlsv1_2")
+			err.raise
+		end
 
 	make_as_tlsv10_server
 			-- Make an TLSv1 capable server context.

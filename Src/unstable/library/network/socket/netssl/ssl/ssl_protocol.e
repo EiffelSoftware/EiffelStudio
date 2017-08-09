@@ -10,6 +10,10 @@ class
 
 feature -- Access
 
+	Ssl_23: NATURAL = 1
+        -- Ssl version 3 but can rollback to version 2.
+		-- obsolte: "Use Tls_1_2 since Ssl_23 is not suported anymore [2017-12-01]."
+
 	Tls_1_0: NATURAL = 3
 		-- Tls version 1.
 

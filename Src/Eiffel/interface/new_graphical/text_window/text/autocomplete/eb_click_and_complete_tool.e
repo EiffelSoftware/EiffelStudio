@@ -762,7 +762,8 @@ feature {NONE} -- Code template conformance
 						-- Convert TYPE_AS into TYPE_A.
 					if
 						attached type_a_generator.evaluate_type (l_class_type_as, written_class) as l_type_a and then
-						attached last_type as l_last_type
+						attached last_type as l_last_type and then
+						l_last_type.is_valid_for_class (current_class_c)
 					then
 						Result := l_last_type.conform_to (current_class_c, l_type_a)
 					end

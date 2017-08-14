@@ -420,7 +420,10 @@ feature {NONE}-- Clickable/Editable implementation
 			if is_ok_for_completion then
 				initialize_context
 				if attached current_class_c as cl then
-					if not token_image_is_in_array (token, unwanted_symbols) then
+					if
+						token /= Void and then
+						not token_image_is_in_array (token, unwanted_symbols)
+					then
 						if ft /= Void then
 							current_feature_as := [ft, ft.feature_names.first]
 						else
@@ -434,7 +437,7 @@ feature {NONE}-- Clickable/Editable implementation
 						is_for_feature := False
 						if attached last_feature as feat then
 							vn := token.wide_image
-							if vn.same_string (feat.name_32) then
+							if vn /= Void and then vn.same_string (feat.name_32) then
 								Result := [feat, Void]
 							end
 						elseif attached token.previous as l_prev and then l_prev.wide_image.same_string_general (".") then
@@ -1275,6 +1278,52 @@ feature {NONE}-- Implementation
 									end
 								end
 							end
+						elseif token_image_is_same_as_word (exp.item, opening_brace) then
+								-- if there is a {, we fill the new `sub_exp' with what's inside with the { } characters.
+							from
+								par_cnt := 1
+								sub_exp.extend (exp.item)
+							until
+								par_cnt = 0 or else exp.after
+							loop
+								exp.forth
+								if not exp.after then
+									sub_exp.extend (exp.item)
+									if token_image_is_same_as_word (exp.item, Closing_brace) then
+										par_cnt := par_cnt - 1
+									elseif token_image_is_same_as_word (exp.item, Closing_brace) then
+											-- Could occur with `{LIST [like {FOO}.bar]}`
+										par_cnt := par_cnt + 1
+									end
+								end
+							end
+							if exp.after or else sub_exp.count < 3 then
+								error := True
+							else
+								exp.forth
+								if exp.after then
+										-- TYPE or TYPE [..]
+								elseif token_image_is_same_as_word (exp.item, ".") then
+										-- FIXME: add support for "{FOO}.constant" !!!
+									sub_exp.extend (exp.item)
+									exp.forth
+										-- let's see if case is handled this way.
+								else
+										-- Note: we ignore the rest of the expression
+										-- when it starts with a manifest type declaration
+										-- such as "{FOO} ..."
+										-- FIXME: "({FOO} foo + {BAR} bar).|" is not supported.
+										--		  but for now "(foo + bar).|" is not supported neither for now.
+
+										--| extend `exp.item`, mainly to distinguish from the type interface case
+									sub_exp.extend (exp.item)
+
+										--| Ignore rest of expression for such manifest type declaration.
+									stop := True
+									exp.finish
+									exp.forth
+								end
+							end
 						end
 					end
 					from
@@ -1285,7 +1334,7 @@ feature {NONE}-- Implementation
 						sub_exp.extend (exp.item)
 						exp.forth
 							-- if it is a function, we skip the arguments
-							-- we do not need them to knw the returned type
+							-- we do not need them to know the returned type
 						if not exp.after then
 							if token_image_is_same_as_word (exp.item, Opening_parenthesis) then
 								from
@@ -1415,8 +1464,8 @@ feature {NONE}-- Implementation
 			name: STRING_32
 			l_processed_class: CLASS_C
 			processed_feature: E_FEATURE
-			formal: FORMAL_A
 			l_current_class_c: CLASS_C
+			l_typename: STRING_32
 		do
 			l_current_class_c := current_class_c
 			create Result.make
@@ -1455,7 +1504,64 @@ feature {NONE}-- Implementation
 							recur_exp.finish
 							recur_exp.remove
 							type := complete_expression_type (recur_exp)
+							sub_exp.forth
 						end
+					elseif token_image_is_same_as_word (sub_exp.item, Opening_brace) then
+						create recur_exp.make
+						create l_typename.make_empty
+						from
+							recur_exp.extend (sub_exp.item)
+							par_cnt := 1
+						until
+							par_cnt = 0 or else sub_exp.after
+						loop
+							sub_exp.forth
+							if not sub_exp.after then
+								recur_exp.extend (sub_exp.item)
+								if token_image_is_same_as_word (sub_exp.item, Closing_brace) then
+									par_cnt := par_cnt - 1
+									if par_cnt > 0 then
+										l_typename.append (sub_exp.item.wide_image)
+									end
+								else
+									if token_image_is_same_as_word (sub_exp.item, Opening_brace) then
+										check no_error: False end
+										par_cnt := par_cnt + 1
+									end
+									l_typename.append (sub_exp.item.wide_image)
+								end
+							end
+						end
+						if sub_exp.after or recur_exp.count < 3 then
+							error := True
+						else
+							sub_exp.forth
+							if sub_exp.after then
+									-- Type interface: such as in `({FOO}).|`
+								type := manifest_expression_type ({STRING_32} "TYPE [" + l_typename + {STRING_32} "]")
+								if type = Void then
+										-- Note: if not found, resolve as TYPE (better than nothing).
+									if attached system.type_class as l_type_cl and then attached l_type_cl.compiled_class as cl then
+										type := cl.actual_type
+									else
+										error := True
+									end
+								end
+							elseif token_image_is_same_as_word (sub_exp.item, ".") then
+									-- FIXME: static call are NOT Supported for now!
+								type := manifest_expression_type (l_typename)
+								error := error or type = Void
+							else
+									-- manifest typed expression "{FOO} bar"
+								type := manifest_expression_type (l_typename)
+								if type /= Void then
+										-- Ignore remaining tokens.
+									sub_exp.finish
+								end
+								sub_exp.forth
+							end
+						end
+						recur_exp.wipe_out
 					else
 							-- type is Void
 						name := string_32_to_lower_copy_optimized (sub_exp.item.wide_image)
@@ -1465,14 +1571,14 @@ feature {NONE}-- Implementation
 						if processed_feature /= Void then
 							if processed_feature.type /= Void then
 								if processed_feature.type.is_formal then
-									formal ?= processed_feature.type
 									type := l_current_class_c.actual_type
 									if
 										type /= Void and then
 										type.has_generics and then
-										type.generics.valid_index (formal.position)
+										attached {FORMAL_A} processed_feature.type as l_formal and then
+										type.generics.valid_index (l_formal.position)
 									then
-										type := type.generics @ (formal.position)
+										type := type.generics @ (l_formal.position)
 										error := False
 									end
 								else
@@ -1486,24 +1592,24 @@ feature {NONE}-- Implementation
 							end
 						end
 						error := type = Void
+						sub_exp.forth
 					end
-					sub_exp.forth
 				until
 					error or else sub_exp.after
 				loop
+					check type_attached: type /= Void end
 					if token_image_is_in_array (sub_exp.item, feature_call_separators) then
 						sub_exp.forth
 						if sub_exp.after then
 							error := True
 						else
 							name := string_32_to_lower_copy_optimized (sub_exp.item.wide_image)
-							if type.is_formal then
-								formal ?= type
-								if l_current_class_c.is_valid_formal_position (formal.position) then
-									if formal.is_single_constraint_without_renaming (l_current_class_c) then
-										type := formal.constrained_type_if_possible (l_current_class_c)
+							if type.is_formal and then attached {FORMAL_A} type as l_formal then
+								if l_current_class_c.is_valid_formal_position (l_formal.position) then
+									if l_formal.is_single_constraint_without_renaming (l_current_class_c) then
+										type := l_formal.constrained_type_if_possible (l_current_class_c)
 									else
-										l_type_set := formal.constrained_types_if_possible (l_current_class_c)
+										l_type_set := l_formal.constrained_types_if_possible (l_current_class_c)
 									end
 								else
 									-- TODO: Can this case ever occur in a valid system?
@@ -1526,20 +1632,19 @@ feature {NONE}-- Implementation
 							type := Void
 							l_type_set := Void
 								-- If we found a feature continue...
-								if processed_feature /= Void and then processed_feature.type /= Void then
-									if processed_feature.type.is_formal then
-										formal ?= processed_feature.type
-										if
-											type /= Void and then
-											type.has_generics and then
-											type.generics.valid_index (formal.position)
-										then
-											type := type.generics @ (formal.position)
-										end
-									else
-										type := processed_feature.type
+							if processed_feature /= Void and then attached processed_feature.type as l_processed_feature_type then
+								if l_processed_feature_type.is_formal and then attached {FORMAL_A} l_processed_feature_type as l_formal then
+									if
+										type /= Void and then
+										type.has_generics and then
+										type.generics.valid_index (l_formal.position)
+									then
+										type := type.generics @ (l_formal.position)
 									end
+								else
+									type := l_processed_feature_type
 								end
+							end
 							sub_exp.forth
 						end
 					else
@@ -1713,8 +1818,6 @@ feature {NONE}-- Implementation
 		require
 			current_class_c_not_void: current_class_c /= Void
 		local
-			nb: EDITOR_TOKEN_NUMBER
-			ch: EDITOR_TOKEN_CHARACTER
 			current_feature: E_FEATURE
 			l_current_class_c: CLASS_C
 		do
@@ -1731,7 +1834,8 @@ feature {NONE}-- Implementation
 					if Result = Void then
 							-- Used the compiled information
 						current_feature := l_current_class_c.feature_with_name_id (
-							current_feature_as.name.internal_name.name_id)
+								current_feature_as.name.internal_name.name_id
+							)
 						if current_feature /= Void then
 							Result := current_feature.type
 						end
@@ -1740,21 +1844,44 @@ feature {NONE}-- Implementation
 					Result := boolean_type
 				end
 			else
-				nb ?= token
-				if nb /= Void then
+				if attached {EDITOR_TOKEN_NUMBER} token as nb then
 					if nb.wide_image.occurrences('.') > 0 then
 						Result := real_64_type
 					else
 						Result := integer_type
 					end
-				else
-					ch ?= token
-					if ch /= Void then
-						Result := character_type
+				elseif attached {EDITOR_TOKEN_CHARACTER} token as ch then
+					Result := character_type
+				elseif attached {EDITOR_TOKEN_STRING} token as str then
+						-- Support for manifest string 8
+						-- FIXME: update if one day manifest string are unicode, i.e STRING_32.
+					if
+						attached system.string_8_class  as str_cl and then
+						attached str_cl.compiled_class as cl
+					then
+						Result := cl.actual_type
 					end
 				end
 			end
---| FIXME: Missing manifest arrays and strings
+		end
+
+	manifest_expression_type (a_typename: READABLE_STRING_GENERAL): detachable TYPE_A
+			-- Type for `a_typename`.
+		require
+			a_typename_not_empty: a_typename /= Void and then not a_typename.is_empty
+		local
+			exp: STRING_32
+		do
+				-- We care only at the first class name, no need for formals here...
+			if not a_typename.is_empty then
+				create exp.make_from_string_general ("type ")
+				exp.append_string_general (a_typename)
+				type_parser.parse_from_string_32 (exp, current_class_c)
+				if attached type_parser.type_node as l_cl_type_as then
+						-- Convert TYPE_AS into TYPE_A.
+					Result := type_a_generator.evaluate_type (l_cl_type_as, written_class)
+				end
+			end
 		end
 
 	type_of_generic (a_str: STRING): TYPE_A
@@ -1929,7 +2056,7 @@ feature {NONE}-- Implementation
 							uncomplete_string := True
 						end
 					end
-						-- we move to previous token, if there is one
+						-- we move to next token, if there is one
 					if current_token.next /= Void then
 						current_token := current_token.next
 					elseif current_line.next /= Void then
@@ -1964,20 +2091,13 @@ feature {NONE}-- Implementation
 								if current_token.wide_image @ 1 = ('%%').to_character_32 then
 									uncomplete_string := True
 								else
-										-- if the string is on one lines, we skip it
-									if current_token.next /= Void then
-										current_token := current_token.next
-									elseif current_line.next /= Void then
-										current_line := current_line.next
-										current_token := current_line.first_token
-									else
-										current_token := Void
-									end
+										-- Handle manifest string token.
+									found := True
 								end
 							else
 									-- if current_token is text but not comment or string, it is interesting
 									-- we stop
-								found := true
+								found := True
 							end
 						end
 					else

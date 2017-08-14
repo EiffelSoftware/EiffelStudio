@@ -181,7 +181,7 @@ feature {NONE} -- Constants
 
 	binary_operators: ARRAY [STRING]
 		once
-			Result := <<"@", "^", "*", "/", "//", "\\", "+", "-", "/=", "=", ">", ">=", "<", "<=", "and", "xor", "or", "implies">>
+			Result := <<"@", "^", "*", "/", "//", "\\", "+", "-", "/=", "=", "/~", "~", ">", ">=", "<", "<=", "and", "xor", "or", "implies">>
 		end
 
 	unary_operators: ARRAY [STRING]
@@ -219,7 +219,7 @@ feature {NONE} -- Constants
 	result_word: STRING_32 = "result"
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

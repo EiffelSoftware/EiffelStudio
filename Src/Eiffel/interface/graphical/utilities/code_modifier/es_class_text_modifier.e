@@ -585,7 +585,7 @@ feature {NONE} -- Basic operations
 
 			if attached logger.service as s then
 					-- Log merge
-				s.put_message_format_with_severity ("A class text merge was perform because {1} was modified.", [context_class.name], {ENVIRONMENT_CATEGORIES}.editor, {PRIORITY_LEVELS}.low)
+				s.put_message_format_with_severity ("A class text merge was performed because {1} was modified.", [context_class.name], {ENVIRONMENT_CATEGORIES}.editor, {PRIORITY_LEVELS}.low)
 			end
 		end
 

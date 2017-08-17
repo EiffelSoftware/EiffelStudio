@@ -75,11 +75,6 @@ feature -- Output
 
 feature -- Fixing
 
-	apply
-			-- Attempt to apply the fix.
-		deferred
-		end
-
 	apply_to (m: ES_CLASS_TEXT_AST_MODIFIER)
 			-- Attempt to apply the fix using `m`.
 			-- Useful when several modifications should be done for the same source code in a row.

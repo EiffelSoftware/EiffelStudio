@@ -1256,7 +1256,7 @@ feature {NONE} -- Fixing
 							-- remove a notification that a fix is available.
 						e.remove_component (i)
 							-- Apply the fix.
-						f.apply
+						apply_fixes (create {ARRAYED_LIST [ES_FIX]}.make_from_array (<<f>>), f.compiled_class)
 					end
 					i := i - 1
 				end
@@ -1269,13 +1269,12 @@ feature {NONE} -- Fixing
 			selected_fixes: HASH_TABLE [ARRAYED_LIST [ES_FIX], like {CLASS_C}.class_id]
 			class_fixes: ARRAYED_LIST [ES_FIX]
 			i: INTEGER
-			m: ES_CLASS_TEXT_AST_MODIFIER
 		do
 			create selected_fixes.make (1)
 			across
 				grid_events.selected_rows as r
 			loop
-				if attached {EB_GRID_EDITOR_TOKEN_ITEM} r.item.item (Description_column) as e then
+				if attached {EB_GRID_EDITOR_TOKEN_ITEM} r.item.item (description_column) as e then
 					from
 						i := e.component_count
 					until
@@ -1298,30 +1297,38 @@ feature {NONE} -- Fixing
 				selected_fixes as selected_class_fixes
 			loop
 				if attached system.class_of_id (selected_class_fixes.key) as c then
-					create m.make (c.lace_class)
-					if m.is_modifiable then
-						m.execute_batch_modifications (agent (modifier: ES_CLASS_TEXT_AST_MODIFIER; fixes: ARRAYED_LIST [ES_FIX])
-							local
-								a: CLASS_AS
-								s: TUPLE [start_position: INTEGER_32; end_position: INTEGER_32]
-								r: ERT_TOKEN_REGION
-							do
-								a := modifier.ast
-								s := modifier.ast_position (a)
-								r := a.token_region (modifier.ast_match_list)
-								across
-									fixes as f
-								loop
-									f.item.apply_to (modifier)
-								end
-								if modifier.ast_match_list.is_text_modified (r) then
-									modifier.replace_code (s.start_position, s.end_position, modifier.ast_match_list.text_32 (r))
-								end
-							end (m, selected_class_fixes.item), True, True)
-					else
-						prompts.show_error_prompt (interface_names.l_class_is_not_editable, Void, Void)
-					end
+					apply_fixes (selected_class_fixes.item, c)
 				end
+			end
+		end
+
+	apply_fixes (f: ARRAYED_LIST [ES_FIX]; c: CLASS_C)
+			-- Apply fixes `f` to class `c`.
+		local
+			m: ES_CLASS_TEXT_AST_MODIFIER
+		do
+			create m.make (c.lace_class)
+			if m.is_modifiable then
+				m.execute_batch_modifications (agent (modifier: ES_CLASS_TEXT_AST_MODIFIER; fixes: ARRAYED_LIST [ES_FIX])
+					local
+						a: CLASS_AS
+						s: TUPLE [start_position: INTEGER_32; end_position: INTEGER_32]
+						r: ERT_TOKEN_REGION
+					do
+						a := modifier.ast
+						s := modifier.ast_position (a)
+						r := a.token_region (modifier.ast_match_list)
+						across
+							fixes as f
+						loop
+							f.item.apply_to (modifier)
+						end
+						if modifier.ast_match_list.is_text_modified (r) then
+							modifier.replace_code (s.start_position, s.end_position, modifier.ast_match_list.text_32 (r))
+						end
+					end (m, f), True, True)
+			else
+				prompts.show_error_prompt (interface_names.l_class_is_not_writable (c.name), Void, Void)
 			end
 		end
 

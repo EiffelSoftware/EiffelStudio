@@ -42,32 +42,6 @@ feature -- Fixing
 			end
 		end
 
-	apply
-			-- Attempt to apply the fix.
-		local
-			m: ES_FEATURE_TEXT_AST_MODIFIER
-			s: TUPLE [start_position: INTEGER_32; end_position: INTEGER_32]
-			r: ERT_TOKEN_REGION
-		do
-			create m.make (item.source_feature, item.source_feature.written_class.lace_class)
-			if m.is_modifiable then
-				m.prepare
-				if m.is_ast_available and then attached m.ast_feature as a then
-					s := m.ast_position (a)
-					r := a.token_region (m.ast_match_list)
-					item.apply (a, m.ast_match_list)
-					if m.ast_match_list.is_text_modified (r) then
-						m.replace_code (s.start_position, s.end_position, m.ast_match_list.text_32 (r))
-						m.commit
-					end
-				else
-					prompts.show_error_prompt (interface_names.l_syntax_error, Void, Void)
-				end
-			else
-				prompts.show_error_prompt (interface_names.l_class_is_not_editable, Void, Void)
-			end
-		end
-
 note
 	date: "$Date$"
 	revision: "$Revision$"

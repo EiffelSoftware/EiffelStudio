@@ -1,0 +1,10 @@
+test_name 	 ca-local-only-initializes-result
+test_description A warning about using a local only to initialize Result should be reported only when types of the local and Result are the same.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+analyze_code rule "CA050"
+analyze_code_result violation "TEST CA050:29"
+
+test_end

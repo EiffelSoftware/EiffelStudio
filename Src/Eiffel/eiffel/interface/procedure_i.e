@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract representation of a routine"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -184,7 +184,7 @@ feature -- Initialization
 			-- for an unchanged feature
 		do
 			if not is_replicated then
-				feature_checker.check_local_names (Current, a_body)
+				feature_checker.check_local_names (a_body)
 			end
 		end
 

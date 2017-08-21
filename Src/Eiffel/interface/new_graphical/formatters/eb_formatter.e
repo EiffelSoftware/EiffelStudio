@@ -370,7 +370,7 @@ feature -- Interface
 				tt.append (Closing_parenthesis)
 			end
 			Result.set_tooltip (tt)
-			Result.set_name (generating_type)
+			Result.set_name (generating_type.name_32)
 			Result.set_description (capital_command_name)
 			set_sd_button (Result)
 			Result.drop_actions.extend (agent execute_with_stone)
@@ -457,9 +457,7 @@ feature -- Commands
 				output_line.set_text (header)
 				output_line.refresh_now
 			end
-			if cur_wid = Void or old_cur = Void then
-				--| Do nothing.
-			else
+			if attached cur_wid and attached old_cur then
 				cur_wid.set_pointer_style (old_cur)
 				old_cur := Void
 				cur_wid := Void
@@ -547,10 +545,11 @@ feature {NONE} -- Recyclable
 			-- Recycle
 		do
 			manager := Void
-			if should_displayer_be_recycled then
-				if displayer /= Void then
-					displayer.recycle
-				end
+			if
+				should_displayer_be_recycled and then
+				attached displayer as d
+			then
+					d.recycle
 			end
 			if sd_button /= Void then
 				sd_button.drop_actions.set_veto_pebble_function (Void)
@@ -600,9 +599,7 @@ feature {NONE} -- Implementation
 					-- Check is needed for session handling.
 				cur_wid := Window_manager.last_focused_development_window.window
 			end
-			if cur_wid = Void then
-				--| Do nothing.
-			else
+			if attached cur_wid then
 				old_cur := cur_wid.pointer_style
 				cur_wid.set_pointer_style (wait_cursor)
 			end

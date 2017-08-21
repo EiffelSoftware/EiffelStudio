@@ -30,15 +30,6 @@ feature {NONE} -- Implementation
 			class_to_change := a_class
 		end
 
-	matchlist: detachable LEAF_AS_LIST
-			-- The matchlist of the class the fix will change.
-		obsolete "Use `match_list` instead."
-		require
-			is_valid: is_valid
-		do
-			Result := match_list
-		end
-
 feature -- Access
 
 	source_class: CLASS_I

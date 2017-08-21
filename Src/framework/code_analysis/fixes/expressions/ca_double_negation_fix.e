@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 			if attached {PARAN_AS} a_expr as l_paran then
 				Result := get_expression (l_paran.expr)
 			elseif attached {UN_NOT_AS} a_expr as l_un_not then
-				Result := l_un_not.expr.text_32 (matchlist)
+				Result := l_un_not.expr.text_32 (match_list)
 			end
 		end
 
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 		local
 			u: UTF_CONVERTER
 		do
-			unary.replace_text (u.string_32_to_utf_8_string_8 (get_expression(unary.expr)), matchlist)
+			unary.replace_text (u.string_32_to_utf_8_string_8 (get_expression(unary.expr)), match_list)
 		end
 
 end

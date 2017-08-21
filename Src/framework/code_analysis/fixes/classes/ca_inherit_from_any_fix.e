@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Fixes violations of rule #31 (Explicit inheritance from ANY')."
 	author: ""
 	date: "$Date$"
@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 	process_parent_as (a_parent: PARENT_AS)
 		do
 			if a_parent.type.class_name.name_32.is_equal ("ANY") then
-				a_parent.remove_text (matchlist)
+				a_parent.remove_text (match_list)
 			end
 		end
 

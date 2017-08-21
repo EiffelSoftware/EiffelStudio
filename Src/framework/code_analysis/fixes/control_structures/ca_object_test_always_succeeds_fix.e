@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Fixes violations of rule #29 ('Object test or non-Void test always succeeds')."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -42,9 +41,9 @@ feature {NONE} -- Visitor
 	execute (a_class: attached CLASS_AS)
 		do
 			if attached bin_ne_to_change then
-				bin_ne_to_change.replace_text ("True", matchlist)
+				bin_ne_to_change.replace_text ("True", match_list)
 			else
-				object_test_to_change.replace_text ("True", matchlist)
+				object_test_to_change.replace_text ("True", match_list)
 			end
 		end
 end

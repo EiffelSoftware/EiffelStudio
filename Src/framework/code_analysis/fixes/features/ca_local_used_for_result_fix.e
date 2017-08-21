@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Fixes violations of rule #50 ('Local variable only used for Result')."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			create l_list.make
 			l_list.extend ([local_index, local_type])
 
-			(create {CA_FIX_UNUSED_LOCAL_APPLICATION}.make (l_list, feature_as, matchlist)).do_nothing
+			(create {CA_FIX_UNUSED_LOCAL_APPLICATION}.make (l_list, feature_as, match_list)).do_nothing
 
 				-- Process the feature to replace the local with Result.
 			process_feature_as (feature_as)
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 	process_access_id_as (a_access_id: attached ACCESS_ID_AS)
 		do
 			if a_access_id.is_equivalent (access_id_as) then
-				a_access_id.replace_text ("Result", matchlist)
+				a_access_id.replace_text ("Result", match_list)
 			end
 		end
 
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 				and then attached {ACCESS_ID_AS} l_expr_call.call as l_access
 				and then l_access.is_equivalent (access_id_as)
 			then
-				a_assign.remove_text (matchlist)
+				a_assign.remove_text (match_list)
 			end
 		end
 

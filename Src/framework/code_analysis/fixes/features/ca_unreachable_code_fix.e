@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Fixes violations of rule #22 ('Unreachable code')."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -41,9 +40,9 @@ feature {NONE} -- Implementation
 			until
 				list_to_change.after
 			loop
-				list_to_change.item.remove_text (matchlist)
+				list_to_change.item.remove_text (match_list)
 				list_to_change.forth
 			end
 		end
-		
+
 end

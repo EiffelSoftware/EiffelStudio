@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Fixes violations of various rules that need to move an instruction from a loop body in front of or after the loop."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -44,26 +43,26 @@ feature {NONE} -- Implementation
 			l_new_string, l_indent, l_temp: STRING_32
 		do
 			l_body := loop_to_change.compound
-			l_temp := loop_to_change.text_32 (matchlist)
+			l_temp := loop_to_change.text_32 (match_list)
 
 			-- Calculate the indentation of the loop. TODO: Refactor.
-			l_temp := l_temp.substring (l_temp.substring_index (l_body.last.text_32 (matchlist), 1), l_temp.count - 3)
+			l_temp := l_temp.substring (l_temp.substring_index (l_body.last.text_32 (match_list), 1), l_temp.count - 3)
 			l_indent := l_temp.substring (l_temp.index_of ('%T', 1), l_temp.count)
 
 			create l_new_string.make_empty
 
-			l_temp := instruction_to_move.text_32 (matchlist)
-			instruction_to_move.remove_text (matchlist)
+			l_temp := instruction_to_move.text_32 (match_list)
+			instruction_to_move.remove_text (match_list)
 
 			if move_to_front then
 				l_new_string.append (l_temp + "%N")
-				l_new_string.append (l_indent + loop_to_change.text_32 (matchlist) + "%N")
+				l_new_string.append (l_indent + loop_to_change.text_32 (match_list) + "%N")
 			else
-				l_new_string.append (loop_to_change.text_32 (matchlist) + "%N")
+				l_new_string.append (loop_to_change.text_32 (match_list) + "%N")
 				l_new_string.append (l_indent + l_temp + "%N")
 			end
 
-			loop_to_change.replace_text (l_new_string, matchlist)
+			loop_to_change.replace_text (l_new_string, match_list)
 		end
 
 end

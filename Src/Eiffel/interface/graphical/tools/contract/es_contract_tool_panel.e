@@ -806,20 +806,17 @@ feature {NONE} -- Tool action handlers
 
 	on_stone_changed (a_old_stone: detachable like stone)
 			-- <Precursor>
-		local
-			l_service: FILE_NOTIFIER_S
 		do
-			if file_notifier.is_service_available then
-				l_service := file_notifier.service
+			if attached file_notifier.service as l_service then
 				if a_old_stone /= Void and then attached {CLASSI_STONE} a_old_stone as l_old_cs and then attached l_old_cs.class_i.file_name as l_old_fn then
-						-- Remove old monitor
+						-- Remove old monitor.
 					if l_service.is_monitoring (l_old_fn) then
 						l_service.uncheck_modifications_with_callback (l_old_fn, agent on_file_modified)
 					end
 				end
 
 				if stone /= Void and then attached {CLASSI_STONE} stone as l_new_cs and then attached l_new_cs.class_i.file_name as l_new_fn then
-						-- Add monitor
+						-- Add monitor.
 					l_service.check_modifications_with_callback (l_new_fn, agent on_file_modified)
 				end
 			end
@@ -830,13 +827,11 @@ feature {NONE} -- Tool action handlers
 						-- Calling `set_contract_mode' will call `update'
 					set_contract_mode ({ES_CONTRACT_TOOL_EDIT_MODE}.preconditions)
 				end
-			else
-				if attached {CLASSI_STONE} stone as l_cs then
-					if contract_mode /= {ES_CONTRACT_TOOL_EDIT_MODE}.invariants then
-							-- A feature was dropped so we should switch to a feature contract mode.
-							-- Calling `set_contract_mode' will call `update'
-						set_contract_mode ({ES_CONTRACT_TOOL_EDIT_MODE}.invariants)
-					end
+			elseif attached {CLASSI_STONE} stone as l_cs then
+				if contract_mode /= {ES_CONTRACT_TOOL_EDIT_MODE}.invariants then
+						-- A class was dropped so we should switch to a class contract mode.
+						-- Calling `set_contract_mode' will call `update'
+					set_contract_mode ({ES_CONTRACT_TOOL_EDIT_MODE}.invariants)
 				end
 			end
 
@@ -1350,15 +1345,18 @@ feature {NONE} -- Action handlers
 			a_x_non_negative: a_x >= 0
 			a_y_non_negative: a_y >= 0
 		do
-			if a_button = 3 then
-				if has_stone and then contract_editor.selected_source /= Void and then contract_editor.selected_source.is_editable then
-					if contract_editor.selected_line = Void then
-							-- The contract item is select, show the add menu.
-						add_menu.show_at (a_row.parent, a_x, a_y)
-					else
-							-- The contract is select, show the edit menu.
-						edit_menu.show_at (a_row.parent, a_x, a_y)
-					end
+			if
+				a_button = 3 and then
+				has_stone and then
+				contract_editor.selected_source /= Void and then
+				contract_editor.selected_source.is_editable
+			then
+				if contract_editor.selected_line = Void then
+						-- The contract item is select, show the add menu.
+					add_menu.show_at (a_row.parent, a_x, a_y)
+				else
+						-- The contract is select, show the edit menu.
+					edit_menu.show_at (a_row.parent, a_x, a_y)
 				end
 			end
 		end

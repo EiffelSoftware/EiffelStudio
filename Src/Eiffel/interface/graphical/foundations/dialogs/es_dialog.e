@@ -93,41 +93,43 @@ feature {NONE} -- Initialization
 				dialog.set_default_push_button (dialog_window_buttons.item (default_button))
 			end
 
-			if help_providers.is_service_available and then attached {HELP_CONTEXT_I} Current as l_context then
+			if attached help_providers.service and then attached {HELP_CONTEXT_I} Current as l_context then
 				bind_help_shortcut (dialog)
 			end
 
-			if is_size_and_position_remembered then
-	       		if session_manager.is_service_available then
+			if
+				is_size_and_position_remembered and then
+	       		attached session_manager.service
+	       	then
 
-	       				-- Retrieve persisted session data size/position information
-	       			if attached {TUPLE [x, y, width, height: INTEGER]} session_data.value (dialog_session_id) as l_sp_info then
-	       					-- Previous session data is available
+       				-- Retrieve persisted session data size/position information
+       			if attached {TUPLE [x, y, width, height: INTEGER]} session_data.value (dialog_session_id) as l_sp_info then
+       					-- Previous session data is available
 --	       				create l_screen
 -- Currently the saved position is not used because it should be saved relative to the parent window.
 --	       				if (l_sp_info.x >= 0 and then l_sp_info.x < l_screen.virtual_width) and (l_sp_info.y >= 0 and then l_sp_info.y < l_screen.virtual_height) then
 --	       						-- Ensure dialog is not off-screen
 --	       					dialog.set_position (l_sp_info.x, l_sp_info.y)
 --	       				end
-	       				dialog.set_size (l_sp_info.width, l_sp_info.height)
-	       			end
+       				dialog.set_size (l_sp_info.width, l_sp_info.height)
+       			end
 
-	       				-- Hook up close action to store session size/position data
-	       			register_action (hide_actions, (agent (a_ia_session: SESSION_I)
-	       				local
-							l_screen: EV_SCREEN
-	       				do
-	       					if is_size_and_position_remembered then
-	       							-- Only persist data if a cancel button wasn't selected
-		       					if a_ia_session.is_interface_usable then
-		       							-- Store session data
-									create l_screen
-									a_ia_session.set_value ([dialog.x_position.max (l_screen.virtual_left), dialog.y_position.max (0), dialog.width, dialog.height], dialog_session_id)
-		       					end
-	       					end
-	       				end (session_data)))
-	       		end
-			end
+       				-- Hook up close action to store session size/position data
+       			register_action (hide_actions, agent (a_ia_session: SESSION_I)
+       				local
+						l_screen: EV_SCREEN
+       				do
+       					if
+       						is_size_and_position_remembered and then
+       							-- Only persist data if a cancel button wasn't selected
+	       					a_ia_session.is_interface_usable
+	       				then
+       							-- Store session data
+							create l_screen
+							a_ia_session.set_value ([dialog.x_position.max (l_screen.virtual_left), dialog.y_position.max (0), dialog.width, dialog.height], dialog_session_id)
+       					end
+       				end (session_data))
+       		end
         end
 
 feature {NONE} -- User interface initialization
@@ -279,19 +281,17 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	development_window: EB_DEVELOPMENT_WINDOW
-			-- Access to top-level parent window
+	development_window: detachable EB_DEVELOPMENT_WINDOW
+			-- Access to top-level parent window.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: internal_development_window /= Void or else (is_initialized or is_initializing)
 		local
-			l_result: like internal_development_window
 			l_window: EV_WINDOW
 			l_windows: BILINEAR [EB_WINDOW]
-			l_wm: detachable EB_WINDOW_MANAGER
 		do
-			l_result := internal_development_window
-			if l_result = Void then
+			Result := internal_development_window
+			if not attached Result then
 				if is_modal then
 					l_window := dialog.blocking_window
 					if l_window /= Void then
@@ -301,20 +301,16 @@ feature {NONE} -- Access
 				if l_window /= Void then
 						-- Attempt to find matching top level window.
 					l_windows := (create {EB_SHARED_WINDOW_MANAGER}).window_manager.windows
-					from l_windows.start until l_windows.after or l_result /= Void loop
+					from l_windows.start until l_windows.after or attached Result loop
 						if l_window = l_windows.item.window and then attached {EB_DEVELOPMENT_WINDOW} l_windows.item as l_result_window then
-							l_result := l_result_window
+							Result := l_result_window
 						end
 						l_windows.forth
 					end
-				else
-					l_wm := (create {EB_SHARED_WINDOW_MANAGER}).window_manager
-					if l_wm /= Void then
-						l_result := l_wm.last_focused_development_window
-					end
+				elseif attached (create {EB_SHARED_WINDOW_MANAGER}).window_manager as l_wm then
+					Result := l_wm.last_focused_development_window
 				end
 			end
-			Result := l_result
 		ensure
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
@@ -356,12 +352,12 @@ feature {NONE} -- Access
 	frozen button_actions: HASH_TABLE [TUPLE [action: like button_action; before_close: BOOLEAN], INTEGER]
 			-- Dialog button actions
 
-	dialog_session_id: attached STRING_8
-			-- Dialog session ID for storing size/position information
+	dialog_session_id: attached IMMUTABLE_STRING_32
+			-- Dialog session ID for storing size/position information.
 		require
 			is_interface_usable: is_interface_usable
 		do
-			create Result.make_from_string (generating_type)
+			Result := generating_type.name_32
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -477,9 +473,9 @@ feature {NONE} -- Status report
 		end
 
 	is_size_and_position_remembered: BOOLEAN
-			-- Indicates if the size and position information is remembered for the dialog
+			-- Indicates if the size and position information is remembered for the dialog.
 		do
-			Result := session_manager.is_service_available
+			Result := attached session_manager.service
 		end
 
 	is_confirmation_key_active: BOOLEAN
@@ -978,13 +974,15 @@ feature {NONE} -- Factory
 			create l_container
 			l_container.set_padding ({ES_UI_CONSTANTS}.dialog_button_horizontal_padding)
 
-			if help_providers.is_service_available then
-					-- Add a help button, if help is available
-				if attached {HELP_CONTEXT_I} Current as l_help_context and then l_help_context.is_help_available then
-					l_button := create_help_button
-					l_container.extend (l_button)
-					l_container.disable_item_expand (l_button)
-				end
+				-- Add a help button, if help is available
+			if
+				attached help_providers.service and then
+				attached {HELP_CONTEXT_I} Current as l_help_context and then
+				l_help_context.is_help_available
+			then
+				l_button := create_help_button
+				l_container.extend (l_button)
+				l_container.disable_item_expand (l_button)
 			end
 
 			l_container.extend (create {EV_CELL})
@@ -1060,7 +1058,7 @@ feature {NONE} -- Factory
 		require
 			is_interface_usable: is_interface_usable
 			is_initializing: is_initializing
-			help_providers_is_service_available: help_providers.is_service_available
+			help_providers_is_service_available: attached help_providers.service
 		local
 			l_enable_help: BOOLEAN
 		do

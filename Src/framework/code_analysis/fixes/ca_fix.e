@@ -15,8 +15,6 @@ inherit
 
 	CA_SHARED_NAMES
 
-	SHARED_SERVER
-
 	INTERNAL_COMPILER_STRING_EXPORTER
 
 create
@@ -34,8 +32,11 @@ feature {NONE} -- Implementation
 
 	matchlist: detachable LEAF_AS_LIST
 			-- The matchlist of the class the fix will change.
+		obsolete "Use `match_list` instead."
+		require
+			is_valid: is_valid
 		do
-			Result := Match_list_server.item (class_to_change.class_id)
+			Result := match_list
 		end
 
 feature -- Access
@@ -51,14 +52,7 @@ feature -- Basic Operations
 	execute (a_class: attached CLASS_AS)
 		do
 			process_ast_node (a_class)
-		end
-
-feature -- Setting properties
-
-	set_applied (a_applied: BOOLEAN)
-			-- Marks this fix as applied.
-		do
-			applied := a_applied
+			process_all_break_as
 		end
 
 feature -- Properties
@@ -68,9 +62,6 @@ feature -- Properties
 
 	class_to_change: CLASS_C
 			-- Class this fix will change.
-
-	applied: BOOLEAN
-			-- Has the fix already been applied?
 
 feature -- Output
 

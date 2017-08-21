@@ -272,12 +272,11 @@ feature -- Type checking
 			a_cas.process (Current)
 		end
 
-	check_local_names (a_procedure: PROCEDURE_I; a_node: BODY_AS)
-			-- Check validity of the names of the locals of `a_procedure'.
+	check_local_names (a_node: BODY_AS)
+			-- Check validity of the names of the locals.
 			-- Useful when a feature has been added, we need to make sure that
 			-- locals of existing features have a different name.
 		require
-			a_procedure_not_void: a_procedure /= Void
 			a_node_not_void: a_node /= Void
 		local
 			l_id_list: IDENTIFIER_LIST

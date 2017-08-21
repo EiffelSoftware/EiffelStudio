@@ -36,12 +36,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Visitor
 
-	execute (a_class: attached CLASS_AS)
+	execute
+			-- <Precursor>
 		local
 			u: UTF_CONVERTER
 		do
 			attribute_to_change.body.append_text (" = " + u.string_32_to_utf_8_string_8 (constant_value), match_list)
-			process_ast_node (a_class)
+			process_ast_node (parsed_class)
 		end
 
 	process_assign_as (a_assign: ASSIGN_AS)

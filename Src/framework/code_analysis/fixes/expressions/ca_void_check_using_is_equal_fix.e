@@ -30,7 +30,8 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Visitor
 
-	execute (a_class: CLASS_AS)
+	execute
+			-- <Precursor>
 		local
 			l_new_text: STRING_32
 		do

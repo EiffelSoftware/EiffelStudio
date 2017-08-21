@@ -31,7 +31,8 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	execute (a_class: attached CLASS_AS)
+	execute
+			-- <Precursor>
 		local
 			l_list: LINKED_LIST[TUPLE[INTEGER, TYPE_A]]
 		do

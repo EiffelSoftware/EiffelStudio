@@ -40,9 +40,12 @@ feature -- Access
 
 feature -- Basic Operations
 
-	execute (a_class: attached CLASS_AS)
+	execute
+			-- Apply the fix.
+		require
+			is_valid: is_valid
 		do
-			process_ast_node (a_class)
+			process_ast_node (parsed_class)
 			process_all_break_as
 		end
 

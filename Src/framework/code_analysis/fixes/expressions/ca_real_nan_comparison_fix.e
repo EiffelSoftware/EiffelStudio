@@ -33,7 +33,8 @@ feature {NONE} -- Implementation
 	is_on_right_side: BOOLEAN
 		-- Is the call to '.nan' on the right side of the equation?
 
-	execute (a_class: CLASS_AS)
+	execute
+			-- <Precursor>
 		local
 			l_new: STRING_32
 		do

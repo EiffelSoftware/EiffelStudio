@@ -39,7 +39,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	execute (a_class: attached CLASS_AS)
+	execute
+			-- <Precursor>
 		local
 			u: UTF_CONVERTER
 		do

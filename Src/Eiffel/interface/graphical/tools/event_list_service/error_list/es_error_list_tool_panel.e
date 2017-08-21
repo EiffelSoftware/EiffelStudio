@@ -609,11 +609,13 @@ feature {ES_TOOL} -- Basic operation
 		do
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE}
 
-			if {PLATFORM}.is_unix then
-					-- This is hack for bug#13604.
-				if attached grid_events as l_grid and then not l_grid.is_destroyed then
-					l_grid.width.do_nothing
-				end
+				-- This is hack for bug#13604.
+			if
+				{PLATFORM}.is_unix and then
+				attached grid_events as l_grid and then
+				not l_grid.is_destroyed
+			then
+				l_grid.width.do_nothing
 			end
 		end
 
@@ -1121,36 +1123,38 @@ feature {ES_ERROR_LIST_COMMANDER_I} -- Basic operations: Navigation
 	go_to_next_error (a_cycle: BOOLEAN)
 			-- <Precursor>
 		do
-			if is_displaying_error then
-				if error_count > 0 then
-					move_next (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
-						require
-							a_item_attached: a_item /= Void
-						do
-							Result := is_error_event (a_item) and then
-								(event_context_stone (a_item) /= Void or
-									-- C compiler errors have not context stone so we need to account for this.
-								attached {C_COMPILER_ERROR} a_item.data)
-						end)
-				end
+			if
+				is_displaying_error and then
+				error_count > 0
+			then
+				move_next (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
+					require
+						a_item_attached: a_item /= Void
+					do
+						Result := is_error_event (a_item) and then
+							(event_context_stone (a_item) /= Void or
+								-- C compiler errors have not context stone so we need to account for this.
+							attached {C_COMPILER_ERROR} a_item.data)
+					end)
 			end
 		end
 
 	go_to_previous_error (a_cycle: BOOLEAN)
 			-- <Precursor>
 		do
-			if is_displaying_error then
-				if error_count > 0 then
-					move_previous (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
-						require
-							a_item_attached: a_item /= Void
-						do
-							Result := is_error_event (a_item) and then
-								(event_context_stone (a_item) /= Void or
-									-- C compiler errors have not context stone so we need to account for this.
-								attached {C_COMPILER_ERROR} a_item.data)
-						end)
-				end
+			if
+				is_displaying_error and then
+				error_count > 0
+			then
+				move_previous (agent (a_item: EVENT_LIST_ITEM_I): BOOLEAN
+					require
+						a_item_attached: a_item /= Void
+					do
+						Result := is_error_event (a_item) and then
+							(event_context_stone (a_item) /= Void or
+								-- C compiler errors have not context stone so we need to account for this.
+							attached {C_COMPILER_ERROR} a_item.data)
+					end)
 			end
 		end
 
@@ -1308,7 +1312,13 @@ feature {NONE} -- Fixing
 			m: ES_CLASS_TEXT_AST_MODIFIER
 		do
 			create m.make (c.lace_class)
-			if m.is_modifiable then
+			if
+				window_manager.active_editor_for_class (c.lace_class).changed or else
+				c.lace_class.date /= c.lace_class.file_date
+			then
+				prompts.show_error_prompt (locale.formatted_string
+					(locale.translation_in_context ("Class $1 has been changed and should be recompiled before applying fixes.", once "tool.error"), c.name) , develop_window.window, Void)
+			elseif m.is_modifiable then
 				m.execute_batch_modifications (agent (modifier: ES_CLASS_TEXT_AST_MODIFIER; fixes: ARRAYED_LIST [ES_FIX])
 					local
 						a: CLASS_AS
@@ -1328,7 +1338,7 @@ feature {NONE} -- Fixing
 						end
 					end (m, f), True, True)
 			else
-				prompts.show_error_prompt (interface_names.l_class_is_not_writable (c.name), Void, Void)
+				prompts.show_error_prompt (interface_names.l_class_is_not_writable (c.name), develop_window.window, Void)
 			end
 		end
 
@@ -1459,19 +1469,19 @@ feature {NONE} -- Event handlers: event list
 	on_session_value_changed (a_session: SESSION; a_id: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
-			if a_id.same_string (expand_errors_session_id) then
+			if
+				a_id.same_string (expand_errors_session_id) and then
 					-- Retrieve global session
-				if attached {BOOLEAN_REF} a_session.value_or_default (expand_errors_session_id, False) as l_expand then
-					if is_expanding_errors /= l_expand.item then
-						is_expanding_errors := l_expand.item
-						if is_expanding_errors then
-							expand_errors_button.enable_select
-						else
-							expand_errors_button.disable_select
-						end
-						on_toggle_expand_errors_button
-					end
+				attached {BOOLEAN_REF} a_session.value_or_default (expand_errors_session_id, False) as l_expand and then
+				is_expanding_errors /= l_expand.item
+			then
+				is_expanding_errors := l_expand.item
+				if is_expanding_errors then
+					expand_errors_button.enable_select
+				else
+					expand_errors_button.disable_select
 				end
+				on_toggle_expand_errors_button
 			end
 		end
 
@@ -1675,15 +1685,14 @@ feature {NONE} -- Action handlers
 		local
 			l_error: ERROR
 		do
-			if grid_events.has_selected_row then
+			if
+				grid_events.has_selected_row and then
 					-- Retrieve event item set from {ES_EVENT_LIST_TOOL_PANEL_BASE}.on_event_added
-				if
-					attached {EVENT_LIST_ITEM_I} grid_events.selected_rows.first.data as l_event and then
-					attached {ERROR} l_event.data as e
-				then
-						-- Retrieve error item.
-					l_error := e
-				end
+				attached {EVENT_LIST_ITEM_I} grid_events.selected_rows.first.data as l_event and then
+				attached {ERROR} l_event.data as e
+			then
+					-- Retrieve error item.
+				l_error := e
 			end
 
 			if l_error = Void then

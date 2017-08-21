@@ -60,6 +60,15 @@ feature -- Status report
 	is_tooltext_important: BOOLEAN = True
 			-- <Precursor>
 
+	droppable (a: ANY): BOOLEAN
+			-- Can user drop `a` on `Current`?
+		do
+			Result :=
+				attached code_analyzer_s.service as s and then
+				attached {STONE} a as x and then
+				s.is_value_valid (x)
+		end
+
 feature -- Execution
 
 	execute
@@ -204,11 +213,8 @@ feature {ES_CODE_ANALYSIS_BENCH_HELPER} -- Basic operations
 
 	event_context_cookie: UUID
 			-- Context cookie for Code Analysis events.
-		local
-			l_generator: UUID_GENERATOR
 		once
-			create l_generator
-			Result := l_generator.generate_uuid
+			Result := (create {UUID_GENERATOR}).generate_uuid
 		ensure
 			valid_result: Result /= Void
 		end
@@ -258,17 +264,6 @@ feature -- Items
 			valid_result: Result /= Void
 		end
 
-feature -- Status report
-
-	droppable (a: ANY): BOOLEAN
-			-- Can user drop `a` on `Current`?
-		do
-			Result :=
-				attached code_analyzer_s.service as s and then
-				attached {STONE} a as x and then
-				s.is_value_valid (x)
-		end
-
 feature {CODE_ANALYZER_S} -- Event handlers
 
 	on_start (service: CODE_ANALYZER_S [STONE, CA_RULE_VIOLATION])
@@ -285,7 +280,7 @@ feature {CODE_ANALYZER_S} -- Event handlers
 			analysis_completed (exceptions)
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Analysis
 
 	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
@@ -404,7 +399,7 @@ feature -- Access
 	command_name: STRING = "Analyze"
 			-- Value for `name` used in this class.
 
-feature {NONE} -- Implementation
+feature {NONE} -- Menu
 
 	set_up_menu_items
 			-- Set up menu items of proof button.

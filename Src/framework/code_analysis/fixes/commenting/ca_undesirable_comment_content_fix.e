@@ -67,7 +67,8 @@ feature {NONE} -- Implementation
 			Result.at (6) := '$'
 		end
 
-	execute (a_class: CLASS_AS)
+	execute
+			-- <Precursor>
 		local
 			l_comment: STRING_32
 		do

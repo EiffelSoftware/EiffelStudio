@@ -32,7 +32,8 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Visitor
 
-	execute (a_class: attached CLASS_AS)
+	execute
+			-- <Precursor>
 		do
 			bin_eq_to_change.replace_text (bin_eq_to_change.left.text_32 (match_list) + " - " + bin_eq_to_change.right.text_32 (match_list), match_list)
 		end

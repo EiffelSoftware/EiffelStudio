@@ -30,7 +30,8 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	execute (a_class: attached CLASS_AS)
+	execute
+			-- <Precursor>
 		local
 			l_contracts: ASSERT_LIST_AS
 		do

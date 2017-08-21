@@ -16,6 +16,7 @@ create
 	make_with_create_proc
 
 feature {NONE} -- Initialization
+
 	make_with_create_proc (a_class: attached CLASS_C; a_feature: attached FEATURE_AS)
 			-- Initializes `Current' with class `a_class'. `a_feature' is the creation procedure which is to be removed.
 		do
@@ -28,11 +29,12 @@ feature {NONE} -- Implementation
 	feature_to_remove: FEATURE_AS
 		-- The creation procedure this fix will remove.
 
-	execute (a_class: attached CLASS_AS)
+	execute
+			-- <Precursor>
 		do
 			feature_to_remove.remove_text (match_list)
 
-			across a_class.creators as l_create_as loop
+			across parsed_class.creators as l_create_as loop
 				process_create(l_create_as.item)
 			end
 		end

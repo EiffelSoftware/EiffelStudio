@@ -37,7 +37,8 @@ feature {NONE} -- Implementation
 	move_to_front: BOOLEAN
 		-- Will the instruction be moved in front of the loop? (Instead of after the loop)
 
-	execute (a_class: CLASS_AS)
+	execute
+			-- <Precursor>
 		local
 			l_body: EIFFEL_LIST[INSTRUCTION_AS]
 			l_new_string, l_indent, l_temp: STRING_32

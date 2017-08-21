@@ -26,7 +26,8 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	execute (a_class: attached CLASS_AS)
+	execute
+			-- <Precursor>
 		local
 			l_new, l_indent, l_temp: STRING_32
 		do

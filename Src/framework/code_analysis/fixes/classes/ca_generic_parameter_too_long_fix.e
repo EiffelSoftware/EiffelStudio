@@ -26,7 +26,8 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	execute (a_class: attached CLASS_AS)
+	execute
+			-- <Precursor>
 		local
 			l_regex: RX_PCRE_REGULAR_EXPRESSION
 		do
@@ -36,10 +37,10 @@ feature {NONE} -- Implementation
 			l_regex.set_case_insensitive (False)
 
 				-- Match the classtext.
-			l_regex.match (a_class.text (match_list))
+			l_regex.match (parsed_class.text (match_list))
 
 				-- Replace all occurences with the first character and then replace the classtext with the new string.
-			a_class.replace_text (l_regex.replace_all (param_to_change.at (1).out), match_list)
+			parsed_class.replace_text (l_regex.replace_all (param_to_change.at (1).out), match_list)
 		end
 
 	param_to_change: STRING

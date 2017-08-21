@@ -25,7 +25,8 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	execute (a_class: CLASS_AS)
+	execute
+			-- <Precursor>
 		do
 			ot_to_change.replace_text ("False", match_list)
 		end

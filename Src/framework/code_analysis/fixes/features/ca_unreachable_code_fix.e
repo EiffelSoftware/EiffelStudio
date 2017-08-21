@@ -33,7 +33,8 @@ feature {NONE} -- Implementation
 	index_of_first_instruction_to_remove: INTEGER
 		-- The first instruction to be moved.
 
-	execute (a_class: CLASS_AS)
+	execute
+			-- <Precursor>
 		do
 			from
 				list_to_change.go_i_th (index_of_first_instruction_to_remove)

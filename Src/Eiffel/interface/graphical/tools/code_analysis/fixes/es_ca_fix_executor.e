@@ -10,42 +10,13 @@ class
 
 inherit
 
-	ERF_CLASS_TEXT_MODIFICATION
-		rename
-			make as make_refactoring
-		end
-
 	ES_FIX
-		rename
-			make as make_fix
 		redefine
 			item
 		end
 
-	EB_SHARED_WINDOW_MANAGER
-		undefine
-			is_equal,
-			copy
-		end
-
-	SHARED_EIFFEL_PROJECT
-
 create
 	make
-
-feature {NONE} -- Initialization
-
-	make (f: attached CA_FIX)
-			-- Initializes `Current' with fix `a_fix' to apply and with GUI grid
-			-- row `a_row' (will be painted green when fix has been applied).
-		require
-			is_class_writable: not f.source_class.is_read_only
-			fix_not_yet_applied: not f.applied
-		do
-			make_fix (f)
-				-- Call initialization of {ERF_CLASS_TEXT_MODIFICATION}.
-			make_refactoring (item.class_to_change.original_class)
-		end
 
 feature {NONE} -- Implementation
 
@@ -57,53 +28,9 @@ feature -- Fixing
 	apply_to (m: ES_CLASS_TEXT_AST_MODIFIER)
 			-- <Precursor>
 		do
-			-- TODO: provide impementation.
+			item.setup (m.ast, m.ast_match_list, False, True)
+			item.execute (m.ast)
 		end
-
-    apply
-			-- Attempt to apply the fix.
-        do
-        		-- Only continue fixing when there are no unsaved files.
-        	if window_manager.has_modified_windows then
-        		prompts.show_info_prompt ("You may not apply a fix when there are unsaved changes.", Void, Void)
-        	else
-        		window_manager.display_message ("Fixing rule violation...")
-
-        		eiffel_project.quick_melt (True, True, True)
-        			-- The compilation must be successful before the fix.
-        		if eiffel_project.successful then
-					prepare
-					check
-						text_managed: text_managed
-					end
-					compute_ast
-					if not is_parse_error then
-						item.setup (ast, match_list, False, true)
-						item.process_ast_node (ast)
-						item.process_all_break_as
-					end
-					rebuild_text
-					logger.refactoring_class (class_i)
-		        	commit
-
-						-- Mark the fix as applied so that it may not be applied a second time. Then
-						-- color the rule violation entry in the GUI.
-					item.set_applied (True)
-
-		        		-- Now compile again, which in all cases should succeed.
-		        	eiffel_project.quick_melt (True, True, True)
-
-		        	window_manager.display_message (
-		        		if eiffel_project.successful then
-		        			"Fixing rule violation succeeded."
-		        		else
-		        			"Fixing rule violation failed."
-		        		end)
-		        else
-		        	prompts.show_info_prompt ("Fix could not be applied due to failed compilation.", Void, Void)
-		        end
-	        end
-        end
 
 note
 	copyright:	"Copyright (c) 1984-2017, Eiffel Software"

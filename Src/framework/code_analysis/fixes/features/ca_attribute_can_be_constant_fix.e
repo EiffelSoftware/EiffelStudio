@@ -40,7 +40,7 @@ feature {NONE} -- Visitor
 		local
 			u: UTF_CONVERTER
 		do
-			attribute_to_change.body.append_text (" = " + u.string_32_to_utf_8_string_8 (constant_value), matchlist)
+			attribute_to_change.body.append_text (" = " + u.string_32_to_utf_8_string_8 (constant_value), match_list)
 			process_ast_node (a_class)
 		end
 
@@ -51,7 +51,7 @@ feature {NONE} -- Visitor
 				attached {ACCESS_ID_AS} a_assign.target as l_access_id
 				and then l_access_id.access_name_32.is_equal (attribute_to_change.feature_name.name_32)
 			then
-				a_assign.remove_text (matchlist)
+				a_assign.remove_text (match_list)
 			end
 		end
 

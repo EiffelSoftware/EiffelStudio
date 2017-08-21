@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Fixes violations of rule #37 ('Undesirable comment content')."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -72,14 +71,14 @@ feature {NONE} -- Implementation
 		local
 			l_comment: STRING_32
 		do
-			l_comment := break.text_32 (matchlist)
+			l_comment := break.text_32 (match_list)
 			from
 			until
 				not r.matches (l_comment)
 			loop
 				l_comment := r.replace (get_new_string (r.captured_substring_count (0) + 1))
 			end
-			break.replace_text (l_comment, matchlist)
+			break.replace_text (l_comment, match_list)
 		end
 
 end

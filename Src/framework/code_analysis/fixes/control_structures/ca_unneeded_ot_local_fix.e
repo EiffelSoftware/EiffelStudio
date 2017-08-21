@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Fixes violations of rule #5 ('Unneeded object test local')."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -51,18 +50,18 @@ feature {NONE} -- Visitor
 		do
 			if ot.is_equivalent (a_ot) then
 				ot_local := a_ot.name.name_id
-				tested_expression := a_ot.expression.text_32 (matchlist)
+				tested_expression := a_ot.expression.text_32 (match_list)
 					-- Let the visitor process all IDs until we have reached the end of the
 					-- current if block.
 				within_ot := True
 
 					-- Getting rid of the name.
-				l_new_string := a_ot.text_32 (matchlist)
+				l_new_string := a_ot.text_32 (match_list)
 
 				l_new_string.replace_substring_all (a_ot.name.name_32, "")
 				l_new_string.replace_substring_all ("as ", "")
 
-				a_ot.replace_text (l_new_string, matchlist)
+				a_ot.replace_text (l_new_string, match_list)
 			end
 		end
 
@@ -82,7 +81,7 @@ feature {NONE} -- Visitor
 		do
 			if within_ot and then a_id.name_id = ot_local then
 					-- Replace the object test local by the expression from the object test.
-				a_id.replace_text (tested_expression, matchlist)
+				a_id.replace_text (tested_expression, match_list)
 			end
 		end
 

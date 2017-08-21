@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Fixes violations of rule #3 ('Feature never called')."
 	author: "Stefan Zurfluh"
 	date: "$Date$"
@@ -76,10 +76,10 @@ feature {NONE} -- Visitor
 
 					-- Remove the first comma.
 				l_new_feature_names.remove_head (2)
-				l_feature_names.replace_text (l_new_feature_names, matchlist)
+				l_feature_names.replace_text (l_new_feature_names, match_list)
 			else
 				if a_feature.is_equivalent (feature_to_remove) then
-					a_feature.remove_text (matchlist)
+					a_feature.remove_text (match_list)
 				end
 			end
 		end

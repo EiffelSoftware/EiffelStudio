@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Fixes violations of rule #9 ('Useless contract with void-safety')."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -43,9 +42,9 @@ feature {NONE} -- Implementation
 				end
 
 				if l_contracts.assertions.count = 1 then
-					l_contracts.remove_text (matchlist)
+					l_contracts.remove_text (match_list)
 				else
-					tagged_to_fix.remove_text (matchlist)
+					tagged_to_fix.remove_text (match_list)
 				end
 			end
 		end

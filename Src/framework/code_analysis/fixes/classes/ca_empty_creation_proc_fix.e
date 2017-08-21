@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Fixes violations of rule #38 ('Empty argumentless creation procedure can be removed')."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -31,7 +30,7 @@ feature {NONE} -- Implementation
 
 	execute (a_class: attached CLASS_AS)
 		do
-			feature_to_remove.remove_text (matchlist)
+			feature_to_remove.remove_text (match_list)
 
 			across a_class.creators as l_create_as loop
 				process_create(l_create_as.item)
@@ -56,9 +55,9 @@ feature {NONE} -- Implementation
 			l_new_feature_names.remove_head (1)
 
 			if l_new_feature_names.is_empty then
-				a_create_as.replace_text (l_new_feature_names, matchlist)
+				a_create_as.replace_text (l_new_feature_names, match_list)
 			else
-				a_create_as.feature_list.replace_text (l_new_feature_names, matchlist)
+				a_create_as.feature_list.replace_text (l_new_feature_names, match_list)
 			end
 		end
 

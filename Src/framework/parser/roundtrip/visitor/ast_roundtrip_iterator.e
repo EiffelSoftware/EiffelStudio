@@ -102,6 +102,8 @@ feature -- Settings
 			set_match_list (a_list)
 			set_will_process_leading_leaves (will_process_leading)
 			set_will_process_trailing_leaves (will_process_trailing)
+		ensure
+			is_valid: is_valid
 		end
 
 	set_parsed_class (a_class: CLASS_AS)

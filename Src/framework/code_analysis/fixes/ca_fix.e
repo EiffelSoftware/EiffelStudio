@@ -40,6 +40,15 @@ feature -- Access
 
 feature -- Basic Operations
 
+	apply (s: CLASS_AS; l: LEAF_AS_LIST)
+			-- Attempt to apply the fix to the source AST `s' with tokens `l'.
+		do
+			setup (s, l, False, True)
+			execute
+		end
+
+feature {NONE} -- Basic Operations
+
 	execute
 			-- Apply the fix.
 		require

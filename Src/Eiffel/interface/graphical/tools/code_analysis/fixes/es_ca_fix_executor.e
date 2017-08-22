@@ -28,8 +28,7 @@ feature -- Fixing
 	apply_to (m: ES_CLASS_TEXT_AST_MODIFIER)
 			-- <Precursor>
 		do
-			item.setup (m.ast, m.ast_match_list, False, True)
-			item.execute
+			item.apply (m.ast, m.ast_match_list)
 		end
 
 note

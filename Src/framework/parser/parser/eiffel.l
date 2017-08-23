@@ -44,16 +44,28 @@ UTF8_3		\xE0[\xA0-\xBF]{UTF8_TAIL})|([\xE1-\xEC]({UTF8_TAIL}{2}))|(\xED[\x80-\x9
 UTF8_4		\xF4[\x80-\x8F]({UTF8_TAIL}{2}))|([\xF1-\xF3]({UTF8_TAIL}{3}))|(\xF4[\x80-\x8F]({UTF8_TAIL}{2})
 UTF8_TAIL	[\x80-\xBF]
 
+SPACE [ \t\x0B\f]|{U_no_break_space}|{U_ogham_space_mark}|{U_en_quad_U_hair_space}|{U_narrow_no_break_space}|{U_medium_mathematical_space}|{U_ideographic_space}
+
+U_no_break_space \xC2\xA0
+U_ogham_space_mark \xE1\x9A\x80
+U_en_quad_U_hair_space \xE2\x80[\x80-\x8A]
+U_narrow_no_break_space \xE2\x80\xAF
+U_medium_mathematical_space \xE2\x81\x9F
+U_ideographic_space \xE3\x80\x80
+
+HORIZONAL_BREAK {SPACE}|\r
+BREAK	{HORIZONAL_BREAK}|\n
+
 %%
 
 -- Breaks
 
-[ \t\r\n]+ { 
+{BREAK}+ { 
 				update_character_locations
 				ast_factory.create_break_as (Current)  
 		}
 
-[ \t\r\n]*/"--" {
+{BREAK}*/"--" {
 				update_character_locations
 				save_break_as_data
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
@@ -72,7 +84,7 @@ UTF8_TAIL	[\x80-\xBF]
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 			}
 
-	[ \t\r\n]+	{
+	{BREAK}+	{
 				update_character_locations
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 			}
@@ -596,7 +608,7 @@ UTF8_TAIL	[\x80-\xBF]
 				last_detachable_keyword_as_value := ast_factory.new_once_string_keyword_as (text, line, column, position, 4, character_column, character_position, 4)
 				last_token := TE_ONCE_STRING
 			}
-[oO][nN][cC][eE]([ \t\r\n]|"--".*\n)+/[\"{]	{
+[oO][nN][cC][eE]({BREAK}|"--".*\n)+/[\"{]	{
 				update_character_locations
 					-- `{' is for the typed manifest string.
 				last_detachable_keyword_as_value := ast_factory.new_once_string_keyword_as (text_substring (1, 4), line, column, position, 4, character_column, character_position, 4)
@@ -625,7 +637,7 @@ UTF8_TAIL	[\x80-\xBF]
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_OR, Current)
 				last_token := TE_OR
 			}
-[pP][aA][rR][tT][iI][aA][lL][ \t\r\n]*[cC][lL][aA][sS][sS] {
+[pP][aA][rR][tT][iI][aA][lL]{BREAK}*[cC][lL][aA][sS][sS] {
 				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_PARTIAL_CLASS, Current)
 				last_token := TE_PARTIAL_CLASS
@@ -1084,7 +1096,7 @@ UTF8_TAIL	[\x80-\xBF]
 					-- Regular string.
 				process_simple_string_as (TE_STRING)
 			}
-\"[^\n"]*[\[\{]/[ \t\r]*\n {
+\"[^\n"]*[\[\{]/{HORIZONAL_BREAK}*\n {
 				update_character_locations
 					-- Verbatim string.
 				token_buffer.wipe_out
@@ -1102,7 +1114,7 @@ UTF8_TAIL	[\x80-\xBF]
 <VERBATIM_STR3>{
 		-- Discard space characters at the
 		-- end of Verbatim_string_opener.
-	[ \t\r]*\n {
+	{HORIZONAL_BREAK}*\n {
 				update_character_locations
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				set_start_condition (VERBATIM_STR1)
@@ -1129,7 +1141,7 @@ UTF8_TAIL	[\x80-\xBF]
 <VERBATIM_STR1>{
 		-- Read one line of a verbatim string body
 		-- from the beginning of line.
-	[ \t\r]*[\]\}][^\n"]*\" {
+	{HORIZONAL_BREAK}*[\]\}][^\n"]*\" {
 				update_character_locations
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				if is_verbatim_string_closer then
@@ -1366,11 +1378,11 @@ UTF8_TAIL	[\x80-\xBF]
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				process_string_character_code (text_substring (3, text_count - 1).to_natural_32)
 			}
-	%[ \t\r\n]+%	{
+	%{BREAK}+%	{
 				update_character_locations
 					-- This regular expression should actually be: %\n[ \t\r]*%
 					-- Left as-is for compatibility with previous releases.
-			ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 			}
 	[^%\n"]*\"	{
 				update_character_locations

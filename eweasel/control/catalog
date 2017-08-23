@@ -160,11 +160,12 @@ test	eiffelstore_various_functions eiffelstore001 tcf fail used_to_pass eiffelst
 
 -- Unicode
 test unicode_manifest_string_char_and_constants unicode001 tcf pass unicode
-test unicode_free_operator unicode002 tcf pass unicode
-test big_extended_ascii_src unicode003 tcf pass unicode
-test extended_ascii_string_compatibility unicode004 tcf pass unicode
-test manifest-string-with-null-character unicode005 tcf pass unicode
-test invalid-manifest-string-8-with-unicode unicode006 tcf pass unicode
+test unicode_free_operator                      unicode002 tcf pass unicode
+test big_extended_ascii_src                     unicode003 tcf pass unicode
+test extended_ascii_string_compatibility        unicode004 tcf pass unicode
+test manifest-string-with-null-character        unicode005 tcf pass unicode
+test invalid-manifest-string-8-with-unicode     unicode006 tcf pass unicode
+test unicode-white-space-character              unicode007 tcf pass unicode
 
 -- Non Conforming Inheritance
 test basic-non-conforming-inheritance			noncon001 tcf pass non-conforming

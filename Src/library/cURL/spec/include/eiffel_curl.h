@@ -23,7 +23,21 @@ indexing
 #include <unistd.h> 
 #endif
 
-#include <../../../../C_library/curl/include/curl/curl.h>
+/* See declaration from $ISE_LIBRARY/C_library/curl/include/curl/curl.h */
+#ifndef __CURL_CURL_H
+typedef void CURL;
+typedef enum {
+  CURLINFO_TEXT = 0,
+  CURLINFO_HEADER_IN,    /* 1 */
+  CURLINFO_HEADER_OUT,   /* 2 */
+  CURLINFO_DATA_IN,      /* 3 */
+  CURLINFO_DATA_OUT,     /* 4 */
+  CURLINFO_SSL_DATA_IN,  /* 5 */
+  CURLINFO_SSL_DATA_OUT, /* 6 */
+  CURLINFO_END
+} curl_infotype;
+
+#endif
 
 #ifdef __cplusplus
 extern "C" {

@@ -26,7 +26,7 @@ feature -- Version
 	libcurl_version_pointer: POINTER
 			-- String pointer declared as LIBCURL_VERSION
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curlver.h>"
+			"C inline use <curl/curlver.h>"
 		alias
 			"return LIBCURL_VERSION;"
 		end
@@ -34,7 +34,7 @@ feature -- Version
 	libcurl_version_major: INTEGER
 			-- Declared as LIBCURL_VERSION_MAJOR
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curlver.h>"
+			"C inline use <curl/curlver.h>"
 		alias
 			"return LIBCURL_VERSION_MAJOR;"
 		end
@@ -42,7 +42,7 @@ feature -- Version
 	libcurl_version_minor: INTEGER
 			-- Declared as LIBCURL_VERSION_MINOR
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curlver.h>"
+			"C inline use <curl/curlver.h>"
 		alias
 			"return LIBCURL_VERSION_MINOR;"
 		end
@@ -50,7 +50,7 @@ feature -- Version
 	libcurl_version_patch: INTEGER
 			-- Declared as LIBCURL_VERSION_PATCH
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curlver.h>"
+			"C inline use <curl/curlver.h>"
 		alias
 			"return LIBCURL_VERSION_PATCH;"
 		end
@@ -60,7 +60,7 @@ feature -- Behavior
 	curlopt_verbose: INTEGER
 			-- Declared as CURLOPT_VERBOSE.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_VERBOSE;"
 		end
@@ -68,7 +68,7 @@ feature -- Behavior
 	curlopt_header: INTEGER
 			-- Declared as CURLOPT_HEADER.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HEADER;"
 		end
@@ -76,7 +76,7 @@ feature -- Behavior
 	curlopt_noprogress: INTEGER
 			-- Declared as CURLOPT_NOPROGRESS
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_NOPROGRESS;"
 		end
@@ -86,7 +86,7 @@ feature -- Callback
 	curlopt_writefunction: INTEGER
 			-- Declared as CURLOPT_WRITEFUNCTION.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_WRITEFUNCTION;"
 		end
@@ -94,7 +94,7 @@ feature -- Callback
 	curlopt_writedata: INTEGER
 			-- Declared as CURLOPT_WRITEDATA.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_WRITEDATA;"
 		end
@@ -102,7 +102,7 @@ feature -- Callback
 	curlopt_readfunction: INTEGER
 			-- Declared as CURLOPT_READFUNCTION.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_READFUNCTION;"
 		end
@@ -110,7 +110,7 @@ feature -- Callback
 	curlopt_readdata: INTEGER
 			-- Declared as CURLOPT_READDATA.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_READDATA;"
 		end
@@ -118,7 +118,7 @@ feature -- Callback
 	curlopt_debugfunction: INTEGER
 			-- Declared as CURLOPT_DEBUGFUNCTION.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_DEBUGFUNCTION;"
 		end
@@ -126,7 +126,7 @@ feature -- Callback
 	curlopt_progressfunction: INTEGER
 			-- Declared as CURLOPT_PROGRESSFUNCTION
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PROGRESSFUNCTION;"
 		end
@@ -134,7 +134,7 @@ feature -- Callback
 	curlopt_progressdata: INTEGER
 			-- Declared as CURLOPT_PROGRESSDATA
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PROGRESSDATA;"
 		end
@@ -142,7 +142,7 @@ feature -- Callback
 	curlopt_writeheader: INTEGER
 			-- Declared as CURLOPT_WRITEHEADER.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_WRITEHEADER;"
 		end
@@ -152,7 +152,7 @@ feature -- Network
 	curlopt_url: INTEGER
 			-- Declared as CURLOPT_URL.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_URL;"
 		end
@@ -160,7 +160,7 @@ feature -- Network
 	curlopt_proxy: INTEGER
 			-- Declared as CURLOPT_PROXY.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PROXY;"
 		end
@@ -168,7 +168,7 @@ feature -- Network
 	curlopt_proxyport: INTEGER
 			-- Declared as CURLOPT_PROXYPORT.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PROXYPORT;"
 		end
@@ -176,7 +176,7 @@ feature -- Network
 	curlopt_proxytype: INTEGER
 			-- Declared as CURLOPT_PROXYTYPE.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PROXYTYPE;"
 		end
@@ -184,7 +184,7 @@ feature -- Network
 	curlopt_httpproxytunnel: INTEGER
 			-- Declared as CURLOPT_HTTPPROXYTUNNEL.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HTTPPROXYTUNNEL;"
 		end
@@ -192,7 +192,7 @@ feature -- Network
 	curlopt_interface: INTEGER
 			-- Declared as CURLOPT_INTERFACE.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_INTERFACE;"
 		end
@@ -200,7 +200,7 @@ feature -- Network
 	curlopt_localport: INTEGER
 			-- Declared as CURLOPT_LOCALPORT
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_LOCALPORT;"
 		end
@@ -208,7 +208,7 @@ feature -- Network
 	curlopt_localportrange: INTEGER
 			-- Declared as CURLOPT_LOCALPORTRANGE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_LOCALPORTRANGE;"
 		end
@@ -216,7 +216,7 @@ feature -- Network
 	curlopt_buffersize: INTEGER
 			-- Declared as CURLOPT_BUFFERSIZE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_BUFFERSIZE"
 		end
@@ -224,7 +224,7 @@ feature -- Network
 	curlopt_port: INTEGER
 			-- Declared as CURLOPT_PORT
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PORT;"
 		end
@@ -232,7 +232,7 @@ feature -- Network
 	curlopt_tcp_nodelay: INTEGER
 			-- Declared as CURLOPT_TCP_NODELAY
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_TCP_NODELAY;"
 		end
@@ -240,7 +240,7 @@ feature -- Network
 	curlopt_nosignal: INTEGER
 			-- Declared as CURLOPT_NOSIGNAL
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_NOSIGNAL;"
 		end
@@ -250,7 +250,7 @@ feature -- Names and Passwords (Authentication)
 	curlopt_userpwd: INTEGER
 			-- Declared as CURLOPT_USERPWD.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_USERPWD;"
 		end
@@ -258,7 +258,7 @@ feature -- Names and Passwords (Authentication)
 	curlopt_proxyuserpwd: INTEGER
 			-- Declared as CURLOPT_PROXYUSERPWD
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PROXYUSERPWD;"
 		end
@@ -266,7 +266,7 @@ feature -- Names and Passwords (Authentication)
 	curlopt_httpauth: INTEGER
 			-- Declared as CURLOPT_HTTPAUTH.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HTTPAUTH;"
 		end
@@ -274,7 +274,7 @@ feature -- Names and Passwords (Authentication)
 	curlauth_none: INTEGER
 			-- Declared as CURLAUTH_NONE.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLAUTH_NONE;"
 		end
@@ -282,7 +282,7 @@ feature -- Names and Passwords (Authentication)
 	curlauth_basic: INTEGER
 			-- Declared as CURLAUTH_BASIC.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLAUTH_BASIC;"
 		end
@@ -290,7 +290,7 @@ feature -- Names and Passwords (Authentication)
 	curlauth_digest: INTEGER
 			-- Declared as CURLAUTH_DIGEST.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLAUTH_DIGEST;"
 		end
@@ -298,7 +298,7 @@ feature -- Names and Passwords (Authentication)
 	curlauth_any: INTEGER
 			-- Declared as CURLAUTH_ANY.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLAUTH_ANY;"
 		end
@@ -306,7 +306,7 @@ feature -- Names and Passwords (Authentication)
 	curlauth_anysafe: INTEGER
 			-- Declared as CURLAUTH_ANYSAFE.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLAUTH_ANYSAFE;"
 		end
@@ -314,7 +314,7 @@ feature -- Names and Passwords (Authentication)
 	curlopt_proxyauth: INTEGER
 			-- Declared as CURLOPT_PROXYAUTH
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PROXYAUTH;"
 		end
@@ -324,7 +324,7 @@ feature -- HTTP
 	curlopt_autoreferer: INTEGER
 			-- Declared as CURLOPT_AUTOREFERER
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_AUTOREFERER;"
 		end
@@ -333,7 +333,7 @@ feature -- HTTP
 			-- Declared as CURLOPT_ENCODING.
 			-- in future version, this is called CURLOPT_ACCEPT_ENCODING
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_ENCODING;"
 		end
@@ -341,7 +341,7 @@ feature -- HTTP
 	curlopt_followlocation: INTEGER
 			-- Declared as CURLOPT_FOLLOWLOCATION
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_FOLLOWLOCATION;"
 		end
@@ -349,7 +349,7 @@ feature -- HTTP
 	curlopt_unrestricted_auth: INTEGER
 			-- Declared as CURLOPT_UNRESTRICTED_AUTH
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_UNRESTRICTED_AUTH;"
 		end
@@ -357,7 +357,7 @@ feature -- HTTP
 	curlopt_maxredirs: INTEGER
 			-- Declared as CURLOPT_MAXREDIRS
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_MAXREDIRS;"
 		end
@@ -365,7 +365,7 @@ feature -- HTTP
 	curlopt_put: INTEGER
 			-- Declared as CURLOPT_PUT.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PUT;"
 		end
@@ -373,7 +373,7 @@ feature -- HTTP
 	curlopt_post: INTEGER
 			-- Declared as CURLOPT_POST.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_POST;"
 		end
@@ -381,7 +381,7 @@ feature -- HTTP
 	curlopt_postfields: INTEGER
 			-- Declared as CURLOPT_POSTFIELDS.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_POSTFIELDS;"
 		end
@@ -389,7 +389,7 @@ feature -- HTTP
 	curlopt_postfieldsize: INTEGER
 			-- Declared as CURLOPT_POSTFIELDSIZE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_POSTFIELDSIZE;"
 		end
@@ -397,7 +397,7 @@ feature -- HTTP
 	curlopt_postfieldsize_large: INTEGER
 			-- Declared as CURLOPT_POSTFIELDSIZE_LARGE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_POSTFIELDSIZE_LARGE;"
 		end
@@ -405,7 +405,7 @@ feature -- HTTP
 	curlopt_httppost: INTEGER
 			-- Declared as CURLOPT_HTTPPOST.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HTTPPOST;"
 		end
@@ -413,7 +413,7 @@ feature -- HTTP
 	curlopt_referer: INTEGER
 			-- Declared as CURLOPT_REFERER
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_REFERER;"
 		end
@@ -421,7 +421,7 @@ feature -- HTTP
 	curlopt_useragent: INTEGER
 			-- Declared as CURLOPT_USERAGENT.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_USERAGENT;"
 		end
@@ -429,7 +429,7 @@ feature -- HTTP
 	curlopt_httpheader: INTEGER
 			-- Declared as CURLOPT_HTTPHEADER.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HTTPHEADER;"
 		end
@@ -437,7 +437,7 @@ feature -- HTTP
 	curlopt_cookie: INTEGER
 			-- Declared as CURLOPT_COOKIE.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_COOKIE;"
 		end
@@ -445,7 +445,7 @@ feature -- HTTP
 	curlopt_cookiefile: INTEGER
 			-- Declared as CURLOPT_COOKIEFILE.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_COOKIEFILE;"
 		end
@@ -453,7 +453,7 @@ feature -- HTTP
 	curlopt_cookiejar: INTEGER
 			-- Declared as CURLOPT_COOKIEJAR
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_COOKIEJAR;"
 		end
@@ -461,7 +461,7 @@ feature -- HTTP
 	curlopt_cookiesession: INTEGER
 			-- Declared as CURLOPT_COOKIESESSION
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_COOKIESESSION;"
 		end
@@ -469,7 +469,7 @@ feature -- HTTP
 	curlopt_cookielist: INTEGER
 			-- Declared as CURLOPT_COOKIELIST.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_COOKIELIST"
 		end
@@ -479,7 +479,7 @@ feature -- HTTP
 			-- Pass a long. If the long is non-zero, this forces the HTTP request to get back to GET. usable if a POST, HEAD, PUT or a custom request have been used previously using the same curl handle.
 			-- When setting CURLOPT_HTTPGET to a non-zero value, it will automatically set CURLOPT_NOBODY to 0 (since 7.14.1).
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HTTPGET;"
 		end
@@ -487,7 +487,7 @@ feature -- HTTP
 	curlopt_http_version: INTEGER
 			-- Declared as CURLOPT_HTTP_VERSION
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HTTP_VERSION;"
 		end
@@ -496,7 +496,7 @@ feature -- HTTP
 			-- Value used for CURL_HTTP_VERSION.
 			-- Let the library to choose the best possible.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_HTTP_VERSION_NONE"
 		end
@@ -505,7 +505,7 @@ feature -- HTTP
 			-- Value used for CURL_HTTP_VERSION.
 			-- Use CURL_HTTP_VERSION_1_0
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_HTTP_VERSION_1_0"
 		end
@@ -514,7 +514,7 @@ feature -- HTTP
 			-- Value used for CURL_HTTP_VERSION.
 			-- Use CURL_HTTP_VERSION_1_1
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_HTTP_VERSION_1_1"
 		end
@@ -522,7 +522,7 @@ feature -- HTTP
 	curlopt_ignore_content_length: INTEGER
 			-- Declared as CURLOPT_IGNORE_CONTENT_LENGTH
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_IGNORE_CONTENT_LENGTH;"
 		end
@@ -530,7 +530,7 @@ feature -- HTTP
 	curlopt_http_content_decoding: INTEGER
 			-- Declared as CURLOPT_HTTP_CONTENT_DECODING
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HTTP_CONTENT_DECODING;"
 		end
@@ -540,7 +540,7 @@ feature -- Protocol
 	curlopt_transfertext: INTEGER
 			-- Declared as CURLOPT_TRANSFERTEXT
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_TRANSFERTEXT;"
 		end
@@ -548,7 +548,7 @@ feature -- Protocol
 	curlopt_crlf: INTEGER
 			-- Declared as CURLOPT_CRLF
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_CRLF;"
 		end
@@ -556,7 +556,7 @@ feature -- Protocol
 	curlopt_resume_from: INTEGER
 			-- Declared as CURLOPT_RESUME_FROM
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_RESUME_FROM;"
 		end
@@ -564,7 +564,7 @@ feature -- Protocol
 	curlopt_resume_from_large: INTEGER
 			-- Declared as CURLOPT_RESUME_FROM_LARGE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_RESUME_FROM_LARGE;"
 		end
@@ -572,7 +572,7 @@ feature -- Protocol
 	curlopt_customrequest: INTEGER
 			-- Declared as CURLOPT_CUSTOMREQUEST
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_CUSTOMREQUEST"
 		end
@@ -580,7 +580,7 @@ feature -- Protocol
 	curlopt_filetime: INTEGER
 			-- Declared as CURLOPT_FILETIME
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_FILETIME;"
 		end
@@ -588,7 +588,7 @@ feature -- Protocol
 	curlopt_nobody: INTEGER
 			-- Declared as CURLOPT_NOBODY
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_NOBODY;"
 		end
@@ -596,7 +596,7 @@ feature -- Protocol
 	curlopt_infilesize: INTEGER
 			-- Declared as CURLOPT_INFILESIZE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_INFILESIZE;"
 		end
@@ -604,7 +604,7 @@ feature -- Protocol
 	curlopt_infilesize_large: INTEGER
 			-- Declared as CURLOPT_INFILESIZE_LARGE.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_INFILESIZE_LARGE;"
 		end
@@ -612,7 +612,7 @@ feature -- Protocol
 	curlopt_upload: INTEGER
 			-- Declared as CURLOPT_UPLOAD.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_UPLOAD;"
 		end
@@ -620,7 +620,7 @@ feature -- Protocol
 	curlopt_maxfilesize: INTEGER
 			-- Declared as CURLOPT_MAXFILESIZE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_MAXFILESIZE;"
 		end
@@ -628,7 +628,7 @@ feature -- Protocol
 	curlopt_maxfilesize_large: INTEGER
 			-- Declared as CURLOPT_MAXFILESIZE_LARGE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_MAXFILESIZE_LARGE;"
 		end
@@ -636,7 +636,7 @@ feature -- Protocol
 	curlopt_timecondition: INTEGER
 			-- Declared as CURLOPT_TIMECONDITION
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_TIMECONDITION;"
 		end
@@ -644,7 +644,7 @@ feature -- Protocol
 	curlopt_timevalue: INTEGER
 			-- Declared as CURLOPT_TIMEVALUE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_TIMEVALUE;"
 		end
@@ -654,7 +654,7 @@ feature -- Connection
 	curlopt_timeout: INTEGER
 			-- Declared as CURLOPT_TIMEOUT.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_TIMEOUT"
 		end
@@ -663,7 +663,7 @@ feature -- Connection
 			-- The number of seconds to wait while trying to connect. Use 0 to wait indefinitely.
 			-- Declared as CURLOPT_CONNECTTIMEOUT
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 				return CURLOPT_CONNECTTIMEOUT
@@ -673,7 +673,7 @@ feature -- Connection
 	curlopt_timeout_ms: INTEGER
 			-- Declared as CURLOPT_TIMEOUT_MS
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_TIMEOUT_MS;"
 		end
@@ -681,7 +681,7 @@ feature -- Connection
 	curlopt_low_speed_limit: INTEGER
 			-- Declared as CURLOPT_LOW_SPEED_LIMIT
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_LOW_SPEED_LIMIT;"
 		end
@@ -689,7 +689,7 @@ feature -- Connection
 	curlopt_low_speed_time: INTEGER
 			-- Declared as CURLOPT_LOW_SPEED_TIME
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_LOW_SPEED_TIME;"
 		end
@@ -697,7 +697,7 @@ feature -- Connection
 	curlopt_max_send_speed_large: INTEGER
 			-- Declared as CURLOPT_MAX_SEND_SPEED_LARGE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_MAX_SEND_SPEED_LARGE;"
 		end
@@ -705,7 +705,7 @@ feature -- Connection
 	curlopt_max_recv_speed_large: INTEGER
 			-- Declared as CURLOPT_MAX_RECV_SPEED_LARGE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_MAX_RECV_SPEED_LARGE;"
 		end
@@ -713,7 +713,7 @@ feature -- Connection
 	curlopt_maxconnects: INTEGER
 			-- Declared as CURLOPT_MAXCONNECTS
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_MAXCONNECTS;"
 		end
@@ -721,7 +721,7 @@ feature -- Connection
 	curlopt_fresh_connect: INTEGER
 			-- Declared as CURLOPT_FRESH_CONNECT
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_FRESH_CONNECT;"
 		end
@@ -729,7 +729,7 @@ feature -- Connection
 	curlopt_forbid_reuse: INTEGER
 			-- Declared as CURLOPT_FORBID_REUSE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_FORBID_REUSE;"
 		end
@@ -737,7 +737,7 @@ feature -- Connection
 	curlopt_connecttimeout: INTEGER
 			-- Declared as CURLOPT_CONNECTTIMEOUT.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_CONNECTTIMEOUT"
 		end
@@ -745,7 +745,7 @@ feature -- Connection
 	curlopt_ipresolve: INTEGER
 			-- Declared as CURLOPT_IPRESOLVE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_IPRESOLVE;"
 		end
@@ -753,7 +753,7 @@ feature -- Connection
 	curl_ipresolve_whatever: INTEGER
 			-- Declared as CURL_IPRESOLVE_WHATEVER
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_IPRESOLVE_WHATEVER;"
 		end
@@ -761,7 +761,7 @@ feature -- Connection
 	curl_ipresolve_v4: INTEGER
 			-- Declared as CURL_IPRESOLVE_V4
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_IPRESOLVE_V4;"
 		end
@@ -769,7 +769,7 @@ feature -- Connection
 	curl_ipresolve_v6: INTEGER
 			-- Declared as CURL_IPRESOLVE_V6
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_IPRESOLVE_V6;"
 		end
@@ -777,7 +777,7 @@ feature -- Connection
 	curlopt_connect_only: INTEGER
 			-- Declared as CURLOPT_CONNECT_ONLY
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_CONNECT_ONLY;"
 		end
@@ -785,7 +785,7 @@ feature -- Connection
 	curlopt_use_ssl: INTEGER
 			-- Declared as CURLOPT_USE_SSL
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_USE_SSL;"
 		end
@@ -793,7 +793,7 @@ feature -- Connection
 	curlusessl_none: INTEGER
 			-- Declared as CURLUSESSL_NONE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLUSESSL_NONE;"
 		end
@@ -801,7 +801,7 @@ feature -- Connection
 	curlusessl_try: INTEGER
 			-- Declared as CURLUSESSL_TRY
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLUSESSL_TRY;"
 		end
@@ -809,7 +809,7 @@ feature -- Connection
 	curlusessl_control: INTEGER
 			-- Declared as CURLUSESSL_CONTROL
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLUSESSL_CONTROL;"
 		end
@@ -817,7 +817,7 @@ feature -- Connection
 	curlusessl_all: INTEGER
 			-- Declared as CURLUSESSL_ALL
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLUSESSL_ALL;"
 		end
@@ -827,7 +827,7 @@ feature -- SSL and Security
 	curlopt_sslcert: INTEGER
 			-- Declared as CURLOPT_SSLCERT
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSLCERT;"
 		end
@@ -835,7 +835,7 @@ feature -- SSL and Security
 	curlopt_sslcerttype: INTEGER
 			-- Declared as CURLOPT_SSLCERTTYPE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSLCERTTYPE;"
 		end
@@ -843,7 +843,7 @@ feature -- SSL and Security
 	curlopt_sslkey: INTEGER
 			-- Declared as CURLOPT_SSLKEY
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSLKEY;"
 		end
@@ -851,7 +851,7 @@ feature -- SSL and Security
 	curlopt_sslkeytype: INTEGER
 			-- Declared as CURLOPT_SSLKEYTYPE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSLKEYTYPE;"
 		end
@@ -859,7 +859,7 @@ feature -- SSL and Security
 	curlopt_keypasswd: INTEGER
 			-- Declared as CURLOPT_KEYPASSWD
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_KEYPASSWD;"
 		end
@@ -867,7 +867,7 @@ feature -- SSL and Security
 	curlopt_sslengine: INTEGER
 			-- Declared as CURLOPT_SSLENGINE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSLENGINE;"
 		end
@@ -875,7 +875,7 @@ feature -- SSL and Security
 	curlopt_sslengine_default: INTEGER
 			-- Declared as CURLOPT_SSLENGINE_DEFAULT
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSLENGINE_DEFAULT;"
 		end
@@ -883,7 +883,7 @@ feature -- SSL and Security
 	curlopt_sslversion: INTEGER
 			-- Declared as CURLOPT_SSLVERSION
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSLVERSION;"
 		end
@@ -891,7 +891,7 @@ feature -- SSL and Security
 	curl_sslversion_default: INTEGER
 			-- Declared as CURL_SSLVERSION_DEFAULT
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_SSLVERSION_DEFAULT;"
 		end
@@ -899,7 +899,7 @@ feature -- SSL and Security
 	curl_sslversion_tlsv1: INTEGER
 			-- Declared as CURL_SSLVERSION_TLSv1
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_SSLVERSION_TLSv1;"
 		end
@@ -907,7 +907,7 @@ feature -- SSL and Security
 	curl_sslversion_sslv2: INTEGER
 			-- Declared as CURL_SSLVERSION_SSLv2
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_SSLVERSION_SSLv2;"
 		end
@@ -915,7 +915,7 @@ feature -- SSL and Security
 	curl_sslversion_sslv3: INTEGER
 			-- Declared as CURL_SSLVERSION_SSLv3
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_SSLVERSION_SSLv3;"
 		end
@@ -923,7 +923,7 @@ feature -- SSL and Security
 	curlopt_ssl_verifypeer: INTEGER
 			-- Declared as CURLOPT_SSL_VERIFYPEER.
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSL_VERIFYPEER;"
 		end
@@ -931,7 +931,7 @@ feature -- SSL and Security
 	curlopt_cainfo: INTEGER
 			-- Declared as CURLOPT_CAINFO
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_CAINFO;"
 		end
@@ -939,7 +939,7 @@ feature -- SSL and Security
 	curlopt_capath: INTEGER
 			-- Declared as CURLOPT_CAPATH
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_CAPATH;"
 		end
@@ -947,7 +947,7 @@ feature -- SSL and Security
 	curlopt_ssl_verifyhost: INTEGER
 			-- Declared as CURLOPT_SSL_VERIFYHOST
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSL_VERIFYHOST;"
 		end
@@ -955,7 +955,7 @@ feature -- SSL and Security
 	curlopt_random_file: INTEGER
 			-- Declared as CURLOPT_RANDOM_FILE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_RANDOM_FILE;"
 		end
@@ -963,7 +963,7 @@ feature -- SSL and Security
 	curlopt_egdsocket: INTEGER
 			-- Declared as CURLOPT_EGDSOCKET
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_EGDSOCKET;"
 		end
@@ -971,7 +971,7 @@ feature -- SSL and Security
 	curlopt_ssl_cipher_list: INTEGER
 			-- Declared as CURLOPT_SSL_CIPHER_LIST
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSL_CIPHER_LIST;"
 		end
@@ -979,7 +979,7 @@ feature -- SSL and Security
 	curlopt_ssl_sessionid_cache: INTEGER
 			-- Declared as CURLOPT_SSL_SESSIONID_CACHE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSL_SESSIONID_CACHE;"
 		end
@@ -987,7 +987,7 @@ feature -- SSL and Security
 	curlopt_krblevel: INTEGER
 			-- Declared as CURLOPT_KRBLEVEL
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_KRBLEVEL;"
 		end
@@ -997,7 +997,7 @@ feature -- SSH
 	curlopt_ssh_auth_types: INTEGER
 			-- Declared as CURLOPT_SSH_AUTH_TYPES
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSH_AUTH_TYPES;"
 		end
@@ -1005,7 +1005,7 @@ feature -- SSH
 	curlopt_ssh_public_keyfile: INTEGER
 			-- Declared as CURLOPT_SSH_PUBLIC_KEYFILE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSH_PUBLIC_KEYFILE;"
 		end
@@ -1013,7 +1013,7 @@ feature -- SSH
 	curlopt_ssh_private_keyfile: INTEGER
 			-- Declared as CURLOPT_SSH_PRIVATE_KEYFILE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSH_PRIVATE_KEYFILE;"
 		end

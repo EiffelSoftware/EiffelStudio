@@ -56,7 +56,8 @@
 			</condition>
 		</external_object>
 		<library name="api_wrapper" location="$ISE_LIBRARY\library\api_wrapper\api_wrapper.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="api_wrapper" location="$ISE_LIBRARY\library\api_wrapper\api_wrapper.ecf"/>
+		<library name="clibs_libcurl" location="$ISE_LIBRARY\C_library\curl\clibs_libcurl.ecf"/>
 		<cluster name="curl" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/Clib$</exclude>

@@ -7,12 +7,13 @@ setup
 project
 	clibs_libpng = "libpng/clibs_libpng.ecf"
 	clibs_zlib = "zlib/clibs_zlib.ecf"
+	clibs_libcurl = "curl/clibs_libcurl.ecf"
 
 note
 	title: C_library dependencies
-	description: Clibs dependencies used by and vision2 on Windows. Please do not use directly.
-	tags: clib,libpng,zlib
-	copyright: 1984-2016 Eiffel Software and others
+	description: Clibs dependencies used by other Eiffe libraries. Please do not use directly.
+	tags: clib,libpng,zlib,libcurl
+	copyright: 1984-2017 Eiffel Software and others
 	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
 	link[license]: http://www.eiffel.com/licensing/forum.txt
 	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/C_library

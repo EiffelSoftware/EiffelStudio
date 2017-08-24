@@ -17,7 +17,7 @@ feature -- Query
 	curlform_copyname: INTEGER
 			-- Declared as CURLFORM_COPYNAME
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 				CURLFORM_COPYNAME
@@ -27,7 +27,7 @@ feature -- Query
 	curlform_copycontents: INTEGER
 			-- Declared as CURLFORM_COPYCONTENTS
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 				CURLFORM_COPYCONTENTS
@@ -37,7 +37,7 @@ feature -- Query
 	curlform_end: INTEGER
 			-- Declared as CURLFORM_END
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 				CURLFORM_END
@@ -47,7 +47,7 @@ feature -- Query
 	curlform_file: INTEGER
 			-- Declared as CURLFORM_FILE
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 				CURLFORM_FILE

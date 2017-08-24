@@ -41,7 +41,7 @@ feature -- Interactive with C
 		require
 			exists: a_setopt_api /= default_pointer
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 			{
@@ -59,7 +59,7 @@ feature -- Interactive with C
 		require
 			exists: a_curl_handle /= default_pointer
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 			{
@@ -78,7 +78,7 @@ feature -- Interactive with C
 		require
 			exists: a_setopt_api /= default_pointer
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 			{
@@ -96,7 +96,7 @@ feature -- Interactive with C
 		require
 			exists: a_setopt_api /= default_pointer
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 			{

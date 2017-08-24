@@ -15,7 +15,7 @@ feature -- Query
 			-- This easy handle has completed.
 			-- 'result' contains the CURLcode of the transfer			
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLMSG_DONE;"
 		end
@@ -24,7 +24,7 @@ feature -- Query
 			-- Declared as CURLMSG_NONE.
 			-- First, not used
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLMSG_NONE;"
 		end
@@ -33,7 +33,7 @@ feature -- Query
 			-- Declared as CURLMSG_LAST.
 			-- Last, not used
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"return CURLMSG_LAST;"
 		end

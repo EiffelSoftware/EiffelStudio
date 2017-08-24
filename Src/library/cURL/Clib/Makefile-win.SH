@@ -4,7 +4,8 @@ OUTDIR= .
 INDIR= .
 CC = $cc
 OUTPUT_CMD = $output_cmd
-CFLAGS = -I"$rt_include" -I..$(DIR)spec$(DIR)include -I.
+CFLAGS = -I"$rt_include" -I..$(DIR)spec$(DIR)include -I. \
+	-I..$(DIR)..$(DIR)..$(DIR)C_library$(DIR)curl$(DIR)include 
 JCFLAGS = $(CFLAGS) $optimize $ccflags 
 JMTCFLAGS = $(CFLAGS) $optimize $mtccflags 
 JILCFLAGS = $(CFLAGS) $optimize $mtccflags  -DEIF_IL_DLL

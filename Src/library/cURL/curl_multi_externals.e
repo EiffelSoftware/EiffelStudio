@@ -150,7 +150,7 @@ feature {NONE} -- C externals
 		require
 			exists: a_api /= default_pointer
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 				return (FUNCTION_CAST(CURLM *, ()) $a_api)();
@@ -162,7 +162,7 @@ feature {NONE} -- C externals
 		require
 			exists: a_api /= default_pointer
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 				return (FUNCTION_CAST(CURLMcode, (CURLM *)) $a_api)
@@ -175,7 +175,7 @@ feature {NONE} -- C externals
 		require
 			exists: a_api /= default_pointer
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 				(FUNCTION_CAST(void, (CURLM *, CURL *)) $a_api)
@@ -189,7 +189,7 @@ feature {NONE} -- C externals
 		require
 			exists: a_api /= default_pointer
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 				(FUNCTION_CAST(void, (CURLM *, CURL *)) $a_api)
@@ -203,7 +203,7 @@ feature {NONE} -- C externals
 		require
 			exists: a_api /= default_pointer
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 				return (FUNCTION_CAST(CURLMcode, (CURLM *, int *)) $a_api)
@@ -217,7 +217,7 @@ feature {NONE} -- C externals
 		require
 			exists: a_api /= default_pointer
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 				return (FUNCTION_CAST(CURLMsg *, (CURLM *, int *)) $a_api)

@@ -15,7 +15,7 @@ feature -- Query
 	curl_global_ssl: NATURAL_64
 			-- Delcared as CURL_GLOBAL_SSL
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 				return CURL_GLOBAL_SSL;
@@ -25,7 +25,7 @@ feature -- Query
 	curl_global_win32: NATURAL_64
 			-- Delcared as CURL_GLOBAL_WIN32
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 				return CURL_GLOBAL_WIN32;
@@ -35,7 +35,7 @@ feature -- Query
 	curl_global_all: NATURAL_64
 			-- Delcared as CURL_GLOBAL_ALL
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 				return CURL_GLOBAL_ALL;
@@ -45,7 +45,7 @@ feature -- Query
 	curl_global_nothing: NATURAL_64
 			-- Delcared as CURL_GLOBAL_NOTHING
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 				return CURL_GLOBAL_NOTHING;
@@ -55,7 +55,7 @@ feature -- Query
 	curl_global_default: NATURAL_64
 			-- Delcared as CURL_GLOBAL_DEFAULT
 		external
-			"C inline use <../../../../C_library/curl/include/curl/curl.h>"
+			"C inline use <curl/curl.h>"
 		alias
 			"[
 				return CURL_GLOBAL_DEFAULT;

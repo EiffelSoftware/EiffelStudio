@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "An Eiffel compilation result"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$"
+	revision: "$Revision$"
 
 class EW_EIFFEL_COMPILATION_RESULT
 
@@ -20,45 +21,45 @@ feature -- Properties
 	has_command_line_option_error: BOOLEAN
 			-- Is there a command-line option error?
 
-	syntax_errors: SORTED_TWO_WAY_LIST [EW_EIFFEL_SYNTAX_ERROR];
+	syntax_errors: SORTED_TWO_WAY_LIST [EW_EIFFEL_SYNTAX_ERROR]
 			-- Syntax errors reported by compiler
 
-	validity_errors: SORTED_TWO_WAY_LIST [EW_EIFFEL_VALIDITY_ERROR];
+	validity_errors: SORTED_TWO_WAY_LIST [EW_EIFFEL_VALIDITY_ERROR]
 			-- Validity errors reported by compiler
 
 	last_validity_error: EW_EIFFEL_VALIDITY_ERROR
 			-- Last validity error being inserted
 
-	missing_precompile: BOOLEAN;
+	missing_precompile: BOOLEAN
 			-- Was a missing precompile detected during
 			-- compilation?
 
-	had_panic: BOOLEAN;
+	had_panic: BOOLEAN
 			-- Did a panic occur during compilation?
 
-	had_exception: BOOLEAN;
+	had_exception: BOOLEAN
 			-- Did an exception occur during compilation?
 
-	execution_failure: BOOLEAN;
+	execution_failure: BOOLEAN
 			-- Did a system execution failure occur during
 			-- compilation?
 
-	illegal_instruction: BOOLEAN;
+	illegal_instruction: BOOLEAN
 			-- Was an illegal instruction executed
 			-- during compilation?
 
-	compilation_paused: BOOLEAN;
+	compilation_paused: BOOLEAN
 			-- Did compilation pause and await user input
 			-- before resuming?
 
-	compilation_aborted: BOOLEAN;
+	compilation_aborted: BOOLEAN
 			-- Was compilation aborted prematurely, usually
 			-- due to an exception?
 
-	compilation_finished: BOOLEAN;
+	compilation_finished: BOOLEAN
 			-- Did compilation finish normally?
 
-	exception_tag: STRING;
+	exception_tag: STRING
 			-- Tag of exception which aborted compilation,
 			-- if any
 
@@ -78,33 +79,27 @@ feature -- Properties
 	summary: STRING
 			-- Summary of `Current'
 		local
-			status: STRING;
+			status: STRING
 		do
-			create Result.make (0);
-			if syntax_errors /= Void then
-				from
-					syntax_errors.start;
-				until
-					syntax_errors.after
+			create Result.make_empty
+			if attached syntax_errors as errors then
+				across
+					errors as e
 				loop
-					Result.extend ('%T');
-					Result.append (syntax_errors.item.summary);
-					Result.extend ('%N');
-					syntax_errors.forth;
+					Result.extend ('%T')
+					Result.append (e.item.summary)
+					Result.extend ('%N')
 				end
-			end;
-			if validity_errors /= Void then
-				from
-					validity_errors.start;
-				until
-					validity_errors.after
+			end
+			if attached validity_errors as errors then
+				across
+					errors as e
 				loop
-					Result.extend ('%T');
-					Result.append (validity_errors.item.summary);
-					Result.extend ('%N');
-					validity_errors.forth;
-				end;
-			end;
+					Result.extend ('%T')
+					Result.append (e.item.summary)
+					Result.extend ('%N')
+				end
+			end
 
 			create status.make (0);
 			if has_command_line_option_error then
@@ -127,30 +122,30 @@ feature -- Properties
 			end;
 			if had_exception then
 				status.append ("had_exception ");
-				if (exception_tag /= Void) then
-					status.append ("(");
-					status.append (exception_tag);
-					status.append (") ");
+				if exception_tag /= Void then
+					status.append ("(")
+					status.append (exception_tag)
+					status.append (") ")
 				end
-			end;
+			end
 			if had_panic then
-				status.append ("had_panic ");
-			end;
+				status.append ("had_panic ")
+			end
 			if illegal_instruction then
-				status.append ("illegal_instruction ");
-			end;
-			if status.count = 0 then
-				status.append ("unknown	");
+				status.append ("illegal_instruction ")
+			end
+			if status.is_empty then
+				status.append ("unknown	")
 				if raw_compiler_output /= Void then
 					status.extend ('%N')
 					status.append ("Raw compiler output:")
 					status.extend ('%N')
 					status.append (raw_compiler_output)
 				end
-			end;
-			status.prepend ("%TFinal status:  ");
-			Result.append (status);
-		end;
+			end
+			status.prepend ("%TFinal status:  ")
+			Result.append (status)
+		end
 
 feature -- Update
 
@@ -158,53 +153,64 @@ feature -- Update
 			-- Update `Current' to reflect the presence of
 			-- `line' as next line in compiler output.
 		local
-			s: SEQ_STRING;
+			s: SEQ_STRING
 		do
-			create s.make (line.count);
-			s.append (line);
+			create s.make (line.count)
+			s.append (line)
 			if is_prefix (Pass_prefix, line) then
-				s.start;
+				s.start
 				s.search_string_after (Pass_string, 0);
 				if not s.after then
-					in_error := False;
-				end;
+					in_error := False
+				end
 			elseif is_prefix (Command_line_option_error_prefix, line) then
+				in_error := False
 				has_command_line_option_error := True
 			elseif is_prefix (Syntax_error_prefix, line) then
-				analyze_syntax_error (line);
+				in_error := False
+				analyze_syntax_error (line)
 			elseif is_prefix (Syntax_warning_prefix, line) then
-				analyze_syntax_warning (line);
+				in_error := False
+				analyze_syntax_warning (line)
 			elseif is_prefix (Validity_error_prefix, line) or
-			       is_prefix (Validity_warning_prefix, line) then
-				in_error := True;
-				analyze_validity_error (line);
+				is_prefix (Validity_warning_prefix, line) then
+				in_error := True
+				analyze_validity_error (line)
 			elseif is_prefix (Resume_prompt, line) then
-				compilation_paused := True;
+				in_error := False
+				compilation_paused := True
 			elseif is_prefix (Missing_precompile_prompt, line) then
+				in_error := False
 				missing_precompile := True
-				compilation_paused := True;
+				compilation_paused := True
 			elseif is_prefix (Aborted_prefix, line) then
-				compilation_aborted := True;
+				in_error := False
+				compilation_aborted := True
 			elseif is_prefix (Exception_prefix, line) then
+				in_error := False
 				analyze_exception_line (line)
 			elseif is_prefix (Exception_occurred_prefix, line) then
+				in_error := False
 				analyze_exception_occurred_line (line)
 			elseif is_prefix (Failure_prefix, line) then
-				execution_failure := True;
+				in_error := False
+				execution_failure := True
 			elseif is_prefix (Illegal_inst_prefix, line) then
-				illegal_instruction := True;
+				in_error := False
+				illegal_instruction := True
 			elseif is_prefix (Finished_prefix, line) then
-				compilation_finished := True;
+				in_error := False
+				compilation_finished := True
 			elseif in_error then
-				analyze_error_line (line);
-			end;
-			s.to_lower;
-			s.start;
-			s.search_string_after (Panic_string, 0);
+				analyze_error_line (line)
+			end
+			s.to_lower
+			s.start
+			s.search_string_after (Panic_string, 0)
 			if not s.after then
-				had_panic := True;
-			end;
-		end;
+				had_panic := True
+			end
+		end
 
 feature {NONE} -- State
 
@@ -226,39 +232,39 @@ feature -- Modification
 	set_compilation_paused
 			-- Set the `compilation_paused' status flag to True.
 		do
-			compilation_paused := True;
+			compilation_paused := True
 		ensure
-			compilation_paused = True
+			compilation_paused
 		end;
 
 	set_compilation_finished
 			-- Set the `compilation_finished' status flag to True.
 		do
-			compilation_finished := True;
+			compilation_finished := True
 		ensure
-			compilation_finished = True
+			compilation_finished
 		end;
 
 	add_syntax_error (err: EW_EIFFEL_SYNTAX_ERROR)
 		require
-			error_not_void: err /= Void;
+			error_not_void: err /= Void
 		do
 			if syntax_errors = Void then
-				create syntax_errors.make;
+				create syntax_errors.make
 			end;
-			syntax_errors.extend (err);
+			syntax_errors.extend (err)
 		end;
 
 	add_validity_error (err: EW_EIFFEL_VALIDITY_ERROR)
 		require
-			error_not_void: err /= Void;
+			error_not_void: err /= Void
 		do
 			if validity_errors = Void then
-				create validity_errors.make;
-			end;
-			validity_errors.extend (err);
+				create validity_errors.make
+			end
+			validity_errors.extend (err)
 			last_validity_error := err
-		end;
+		end
 
 	set_raw_compiler_output (s: STRING)
 		require
@@ -284,10 +290,9 @@ feature -- Modification
 feature -- Comparison
 
 	matches (other: EW_EIFFEL_COMPILATION_RESULT): BOOLEAN
-			-- Do `Current' and `other' represent the
-			-- same compilation result?
+			-- Does the actual compilation result `Current' match the expected result `other'?
 		require
-			other_not_void: other /= Void;
+			other_not_void: other /= Void
 		do
 			Result := had_panic = other.had_panic and
 				had_exception = other.had_exception and
@@ -301,8 +306,7 @@ feature -- Comparison
 				and equal(exception_tag, other.exception_tag)
 				and linked_list_matches (syntax_errors, other.syntax_errors)
 				and linked_list_matches (validity_errors, other.validity_errors)
-		end;
-
+		end
 
 feature {NONE} -- Implementation
 
@@ -327,11 +331,11 @@ feature {NONE} -- Implementation
 		do
 			had_exception := True;
 			if exception_tag = Void then
-				create exception_tag.make(0);
-			end;
-			if exception_tag.count = 0 then
-				line.keep_tail (line.count - Exception_occurred_prefix.count);
-				exception_tag.append (line);
+				create exception_tag.make(0)
+			end
+			if exception_tag.is_empty then
+				line.keep_tail (line.count - Exception_occurred_prefix.count)
+				exception_tag.append (line)
 					-- Remove all newlines characters so that the exception tag appears on a single line.
 				exception_tag.replace_substring_all ("%N", "")
 				exception_tag.replace_substring_all ("%R", "")
@@ -443,77 +447,93 @@ feature {NONE} -- Implementation
 
 	new_validity_error (line: STRING): EW_EIFFEL_VALIDITY_ERROR
 		require
-			line_not_void: line /= Void;
-		local
-			words: LIST [STRING];
-			code: STRING;
-			class_name: STRING;
+			line_not_void: line /= Void
 		do
-			words := broken_into_words (line);
-			code := words.i_th (3);
-			create class_name.make (0);
-			create Result.make (class_name, code)
-		end;
+			create Result.make (create {STRING}.make_empty, broken_into_words (line) [3])
+		end
 
 	analyze_error_line (line: STRING)
 		require
 			line_not_void: line /= Void;
 		local
-			words: LIST [STRING];
-			class_name: STRING;
+			words: LIST [STRING]
+			value: STRING
 		do
 			if is_prefix (Class_name_prefix, line) then
-				words := broken_into_words (line);
+				words := broken_into_words (line)
 				if words.count >= 2 then
-					class_name := words.i_th (2);
+					value := words [2]
 					check
 						last_validity_error_not_void: last_validity_error /= Void
 					end
-					last_validity_error.set_class_name (class_name);
-				end;
-				in_error := False;
-			end
-		end;
-
-	linked_list_matches (list1, list2: SORTED_TWO_WAY_LIST [EW_EIFFEL_ERROR]): BOOLEAN
-		local
-			count1, count2: INTEGER;
-			different: BOOLEAN;
-		do
-			if list1 = Void then
-				count1 := 0;
-			else
-				count1 := list1.count;
-			end;
-			if list2 = Void then
-				count2 := 0;
-			else
-				count2 := list2.count;
-			end;
-			if count1 = 0 and count2 = 0 then
-				Result := True;
-			elseif count1 /= count2 then
-				Result := False;
-			else
-				from
-					list1.start; list2.start;
-				until
-					list1.after or list2.after or different
-				loop
-					if not equal (list1.item, list2.item) then
-						different := True;
-					else
-						list1.forth; list2.forth;
+					last_validity_error.set_class_name (value)
+				end
+			elseif is_prefix (line_prefix, line) then
+				words := broken_into_words (line)
+				if words.count >= 2 then
+					value := words [2]
+					check
+						last_validity_error_not_void: last_validity_error /= Void
 					end
-				end;
-				Result := not different;
+					if value.is_integer and then value.to_integer > 0 then
+						last_validity_error.set_line_number (value.to_integer)
+					end
+				end
+			elseif is_prefix (Next_message_prefix, line) then
+				in_error := False
+			end
+		end
+
+	linked_list_matches (actual_list, expected_list: SORTED_TWO_WAY_LIST [EW_EIFFEL_ERROR]): BOOLEAN
+		local
+			actual: SORTED_TWO_WAY_LIST [EW_EIFFEL_ERROR]
+		do
+			if attached actual_list and attached expected_list then
+				actual := actual_list.twin
+				actual.compare_objects
+				across
+					expected_list as e
+				from
+					Result := actual.count = expected_list.count
+					e.reverse
+					e.start
+				until
+					not Result
+				loop
+					check
+						from_count_comparison: not actual.is_empty
+					end
+						-- Test if the matching item is at the end of the actual list.
+					actual.finish
+					if actual.item.matches_pattern (e.item) then
+							-- Found: remove the item.
+						actual.remove
+					elseif e.item.has_line_number then
+							-- The item may appear before last item if there are other expected items without line number information.
+						actual.start
+						actual.search (e.item)
+						if actual.exhausted then
+								-- Not found: mismatch.
+							Result := False
+						else
+								-- Found: remove the item.
+							actual.remove
+						end
+					else
+							-- Not found: mismatch.
+						Result := False
+					end
+				end
+			else
+					-- One of the lists is Void, so it is sufficient to check that the other is Void too.
+				Result := actual_list = expected_list
 			end
 		end
 note
 	copyright: "[
-			Copyright (c) 1984-2015, University of Southern California and contributors.
+			Copyright (c) 1984-2017, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -534,6 +554,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

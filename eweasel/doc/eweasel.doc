@@ -563,6 +563,11 @@ compile_result <result>
 			white space separated list of validity codes
 			from "Eiffel: The Language".
 
+			A validity code may be followed after a colon
+			by an optional line number indicating where
+			the error is expected to happen:
+				VALIDITY_CODE:line_number
+
 		validity_warning { <class> <validity-code-list> ";" ...}+
 			
 			Matches if compiler reported the indicated

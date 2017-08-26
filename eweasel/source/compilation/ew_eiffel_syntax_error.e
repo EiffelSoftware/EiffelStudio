@@ -1,16 +1,14 @@
-note
+﻿note
 	description: "An Eiffel syntax error"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "93/08/30"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EW_EIFFEL_SYNTAX_ERROR
 
 inherit
 	EW_EIFFEL_ERROR
-		redefine
-			is_equal
-		end
 
 create
 	make
@@ -27,18 +25,6 @@ feature {NONE} -- Initialization
 			class_name_set: class_name = a_name
 		end
 
-feature -- Properties
-
-	line_number: INTEGER;
-			-- Line number on which syntax error occurred
-
-feature -- Modification
-
-	set_line_number (n: INTEGER)
-		do
-			line_number := n;
-		end
-
 feature -- Summary
 
 	summary: STRING
@@ -46,36 +32,22 @@ feature -- Summary
 			create Result.make (0);
 			Result.append ("Syntax error in ");
 			if equal (class_name, "") then
-				Result.append ("Ace");
+				Result.append ("Ace")
 			elseif equal (class_name, "_USE_FILE") then
-				Result.append ("%"Use%" file");
+				Result.append ("%"Use%" file")
 			else
-				Result.append ("class ");
-				Result.append (class_name);
+				Result.append ("class ")
+				Result.append (class_name)
 			end;
-			Result.append (" at line ");
-			Result.append_integer (line_number);
-		end;
-
-feature -- Comparison
-
-	is_equal (other: like Current): BOOLEAN
-		do
-			Result := equal (class_name, other.class_name) and
-				line_number = other.line_number
-		end
-
-	is_less alias "<" (other: like Current): BOOLEAN
-		do
-			Result := class_name < other.class_name or else
-				(equal (class_name, other.class_name) and line_number < other.line_number)
+			Result.append (" at line ")
+			Result.append_integer (line_number)
 		end
 
 note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2017, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

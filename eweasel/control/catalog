@@ -575,6 +575,7 @@ test	obsolete-assigner-query		valid290 tcf pass validity warning obsolete_call
 test	obsolete-assigner-command	valid291 tcf pass validity warning obsolete_call
 test	typed-manifest-array-item-validity	valid292 tcf pass validity manifest array
 test	typed-manifest-array-type-validity	valid293 tcf pass validity manifest array
+test	identifier-scope-validity		valid294 tcf fail validity scope argument local object_test separate iteration agent
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

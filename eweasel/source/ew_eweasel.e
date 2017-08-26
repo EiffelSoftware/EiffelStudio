@@ -413,7 +413,7 @@ feature  {NONE} -- Implementation
 			revision.remove_head (11)
 				-- Remove trailing " $".
 			revision.remove_tail (2)
-			output.append ("  (version 1.0.002, revision " + revision + ")", True)
+			output.append ("  (version 1.1.0." + revision + ")", True)
 		end
 
 	new_test_suite (tests: LIST [EW_NAMED_EIFFEL_TEST] opts: EW_TEST_SUITE_OPTIONS): EW_EIFFEL_TEST_SUITE

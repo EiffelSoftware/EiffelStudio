@@ -1,8 +1,9 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
+	keywords: "Eiffel test"
 	date: "$Date$"
+	revision: "$Revision$"
 
 class EW_COMPILE_RESULT_INST
 
@@ -23,9 +24,9 @@ feature
 			cr: EW_EIFFEL_COMPILATION_RESULT;
 		do
 			mod_args := args.twin
-			mod_args.left_adjust;
-			mod_args.right_adjust;
-			if mod_args.count = 0 then
+			mod_args.left_adjust
+			mod_args.right_adjust
+			if mod_args.is_empty then
 				init_ok := False;
 				failure_explanation := "no arguments present";
 			else
@@ -59,9 +60,9 @@ feature
 						init_ok := True
 					end
 				elseif equal (type, Syntax_error_result) or equal (type, Syntax_warning_result) then
-					if phrases.count = 0 then
-						init_ok := False;
-						failure_explanation := "no class/line_no pairs specified for syntax error or syntax warning";
+					if phrases.is_empty then
+						init_ok := False
+						failure_explanation := "no class/line_no pairs specified for syntax error or syntax warning"
 					else
 						from
 							init_ok := True;
@@ -74,7 +75,7 @@ feature
 						end
 					end
 				elseif equal (type, Validity_error_result) or equal (type, Validity_warning_result) then
-					if phrases.count = 0 then
+					if phrases.is_empty then
 						init_ok := False;
 						failure_explanation := "no class/constraint lists specified for validity error or validity warning";
 					else
@@ -160,41 +161,33 @@ feature {NONE} -- Implementation
 			-- Result expected from compilation
 
 	process_syntax_phrase (phrase: STRING; cr: EW_EIFFEL_COMPILATION_RESULT)
-			-- Modify `cr' to reflect presence of syntax phrase
-			-- `phrase'
+			-- Modify `cr' to reflect presence of syntax phrase `phrase'.
 		require
-			phrase_not_void: phrase /= Void;
-			compile_result_not_void: cr /= Void;
+			phrase_not_void: phrase /= Void
+			compile_result_not_void: cr /= Void
 		local
-			words: LIST [STRING];
-			count: INTEGER;
-			cname, line_no: STRING;
-			syn: EW_EIFFEL_SYNTAX_ERROR;
+			words: LIST [STRING]
+			line_no: STRING
+			syn: EW_EIFFEL_SYNTAX_ERROR
 		do
-			words := broken_into_words (phrase);
-			count := words.count;
-			if count = 2 then
-				cname := words.i_th (1);
-				line_no := words.i_th (2);
-			end
-			if count /= 2 then
-				init_ok := False;
-				create failure_explanation.make (0);
-				failure_explanation.append ("wrong number of arguments for syntax error phrase: ");
-				failure_explanation.append (phrase);
-			elseif not is_integer (line_no) then
-				init_ok := False;
-				create failure_explanation.make (0);
-				failure_explanation.append ("syntax error has non-integer line number: ");
-				failure_explanation.append (line_no);
+			words := broken_into_words (phrase)
+			if words.count = 2 then
+				line_no := words [2]
+				if is_integer (line_no) then
+					create syn.make (real_class_name (words [1]))
+					syn.set_line_number (line_no.to_integer)
+					cr.add_syntax_error (syn)
+				else
+					init_ok := False
+					failure_explanation := "syntax error has non-integer line number: "
+					failure_explanation.append (line_no)
+				end
 			else
-				cname := real_class_name (cname);
-				create syn.make (cname)
-				syn.set_line_number (line_no.to_integer);
-				cr.add_syntax_error (syn);
+				init_ok := False
+				failure_explanation := "wrong number of arguments for syntax error phrase: "
+				failure_explanation.append (phrase)
 			end
-
-		end;
+		end
 
 	process_validity_phrase (phrase: STRING; cr: EW_EIFFEL_COMPILATION_RESULT)
 			-- Modify `cr' to reflect presence of validity phrase
@@ -203,10 +196,13 @@ feature {NONE} -- Implementation
 			phrase_not_void: phrase /= Void;
 			compile_result_not_void: cr /= Void;
 		local
-			words: LIST [STRING];
-			count: INTEGER;
-			cname: STRING;
-			val: EW_EIFFEL_VALIDITY_ERROR;
+			words: LIST [STRING]
+			count: INTEGER
+			cname: STRING
+			val: EW_EIFFEL_VALIDITY_ERROR
+			code: STRING
+			line: STRING
+			line_no: INTEGER
 		do
 			words := broken_into_words (phrase);
 			count := words.count;
@@ -223,10 +219,33 @@ feature {NONE} -- Implementation
 				until
 					words.after
 				loop
-					create val.make (cname, words.item)
-					cr.add_validity_error (val);
-					words.forth;
-				end;
+					code := words.item
+					if code.has (':') then
+						line := code.substring (code.index_of (':', 1) + 1, code.count)
+						if line.is_integer then
+							code := code.substring (1, code.index_of (':', 1) - 1)
+							line_no := line.to_integer
+							if line_no <= 0 and then init_ok then
+								init_ok := False
+								failure_explanation := "validity error specifies non-positive line number "
+								failure_explanation.append_integer (line_no)
+							end
+						else
+							init_ok := False
+							failure_explanation := "validity error specifies line number that is not an integer: "
+							failure_explanation.append_string (line)
+						end
+					else
+							-- Reset (previously set) line number to 0.
+						line_no := 0
+					end
+					create val.make (cname, code)
+					if line_no > 0 then
+						val.set_line_number (line_no)
+					end
+					cr.add_validity_error (val)
+					words.forth
+				end
 			end
 		end
 
@@ -262,9 +281,9 @@ feature {EW_COMPILE_RESULT_INST, EW_CODE_ANALYSIS_RESULT_INST} -- Result strings
 
 note
 	copyright: "[
-			Copyright (c) 1984-2015, University of Southern California and contributors.
+			Copyright (c) 1984-2017, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -285,6 +304,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

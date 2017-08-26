@@ -1,8 +1,19 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2017 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General Public
 --| License version 2.
+
+1.1.0
+=====
+
+1. Supported optional line number for validity errors in eweasel scripts.
+   In addition to the old syntax for validity code
+   	VALIDITY_CODE
+   the new one is now supported:
+   	VALIDITY_CODE:line_number
+   where line_number should be a positive integer corresponding to the
+   line number for which the violation is reported.
 
 Bugs and deficiencies which have been fixed in EiffelWeasel release 1.0
 =======================================================================

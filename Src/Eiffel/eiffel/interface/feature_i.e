@@ -2152,37 +2152,36 @@ feature -- Signature checking
 					-- We do `i + 1' for the start index because we need to go
 					-- one step further (+ 1)
 				if args.argument_position_id (arg_id, i + 1) /= 0 then
-						-- Two arguments with the same name
+						-- Two arguments with the same name.
 					create vreg
 					vreg.set_class (written_class)
 					vreg.set_feature (Current)
 					vreg.set_entity_name (Names_heap.item (arg_id))
+					if attached argument_ast (args.argument_position_id (arg_id, i + 1)) as location then
+						vpir.set_location (location)
+					end
 					Error_handler.insert_error (vreg)
 				end
 				feat_table.search_id (arg_id)
 				if feat_table.found then
-						-- An argument name is a feature name of the feature
-						-- table.
+						-- An argument name is a feature name of the feature table.
 					create vrfa
 					vrfa.set_class (written_class)
 					vrfa.set_feature (Current)
 					vrfa.set_other_feature (feat_table.found_item)
+					if attached argument_ast (i) as location then
+						vrfa.set_location (location)
+					end
 					Error_handler.insert_error (vrfa)
 				end
 				if context.is_name_used (arg_id) then
-						-- An argument name is an argument name of an enclosing feature
+						-- An argument name is an argument name of an enclosing feature.
 					create vpir
 					vpir.set_entity_name (arg_id)
 					vpir.set_class (written_class)
 					vpir.set_feature (Current)
-					if
-						attached match_list_server.item (written_in) as match_list and then
-						attached real_body as body_ast and then
-						attached body_ast.argument_index (i) as argument_index and then
-						match_list.valid_index (argument_index) and then
-						attached match_list [argument_index] as argument_ast
-					then
-						vpir.set_location (argument_ast)
+					if attached argument_ast (i) as location then
+						vpir.set_location (location)
 					end
 					Error_handler.insert_error (vpir)
 				end
@@ -2320,6 +2319,21 @@ feature {NONE} -- Signature checking
 					end
 					i := i + 1
 				end
+			end
+		end
+
+feature {NONE} -- AST evaluation
+
+	argument_ast (n: INTEGER): detachable LEAF_AS
+			-- AST node of an argument of number `n` if available, `Void` otherwise.
+		do
+			if
+				attached match_list_server.item (written_in) as match_list and then
+				attached real_body as body_ast and then
+				attached body_ast.argument_index (n) as argument_index and then
+				match_list.valid_index (argument_index)
+			then
+				Result := match_list [argument_index]
 			end
 		end
 

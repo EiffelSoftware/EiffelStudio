@@ -7661,29 +7661,11 @@ feature {NONE} -- Visitor
 				-- Type check loop local name.
 			local_id := l_as.identifier
 			local_name_id := local_id.name_id
-			if not is_inherited then
-				if current_feature.has_argument_name (local_name_id) then
-						-- The local name is an argument name of the
-						-- current analyzed feature.
-					error_handler.insert_error (create {VOIT2}.make (context, local_id))
-						-- Clear `last_type' to make sure it is not set when there is an error.
-					reset_types
-				elseif feature_table.has_id (local_name_id) then
-						-- The local name is a feature name of the
-						-- current analyzed class.
-					error_handler.insert_error (create {VOIT2}.make (context, local_id))
-						-- Clear `last_type' to make sure it is not set when there is an error.
-					reset_types
-				end
-			end
-			if context.locals.has (local_name_id) then
-					-- The local name is a name of a feature local variable.
-				error_handler.insert_error (create {VOIT2}.make (context, local_id))
-					-- Clear `last_type' to make sure it is not set when there is an error.
-				reset_types
-			end
-			if context.object_test_local (local_name_id) /= Void then
-					-- The local name is a name of an object test local.
+			if
+				not is_inherited and then
+				(feature_table.has_id (local_name_id) or else context.is_name_used (local_name_id))
+			then
+					-- The local name is the same as one used for an entity in the current scope.
 				error_handler.insert_error (create {VOIT2}.make (context, local_id))
 					-- Clear `last_type' to make sure it is not set when there is an error.
 				reset_types

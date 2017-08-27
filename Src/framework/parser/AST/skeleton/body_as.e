@@ -261,7 +261,9 @@ feature -- Access
 						distance := distance - id_list.count
 					else
 							-- The argument should be in this declaration list.
-						Result := id_list.id_list [distance]
+						if attached id_list.id_list as argument_indexes then
+							Result := argument_indexes [distance]
+						end
 							-- Exit the loop.
 						distance := 0
 					end

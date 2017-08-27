@@ -534,7 +534,7 @@ test	infix-prefix-alias-compatibility	valid248 tcf pass validity
 test	assigner-validity-rules				valid249 tcf pass assigner validity
 test	assigner-wrong-vbac					valid250 tcf pass assigner validity
 test	bogus-veen-on-object-test-local		valid251 tcf fail used_to_pass validity
-test	undetected-vuot-error			valid252 tcf fail used_to_pass validity
+test	undetected-vuot-error			valid252 tcf pass used_to_pass validity
 test	equality-of-conforming-classes		valid253 tcf pass validity equality conformance attached_types
 test	missing-vhpr-with-different-generic-derivation	valid255 tcf fail used_to_pass validity
 test	wrong-vdpr-errors			valid256 tcf fail used_to_pass validity

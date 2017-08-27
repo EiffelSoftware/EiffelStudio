@@ -94,6 +94,20 @@ feature -- Roundtrip
 			Result := keyword_from_index (a_list, assign_keyword_index)
 		end
 
+	internal_arguments: detachable FORMAL_ARGU_DEC_LIST_AS
+			-- Internal list (of list) of arguments, in which "(" and ")" are stored
+
+	indexing_clause: detachable INDEXING_CLAUSE_AS
+			-- Indexing clause in this structure
+
+	index: INTEGER
+			-- <Precursor>
+		do
+			if attached content as l_content then
+				Result := l_content.index
+			end
+		end
+
 feature -- Attributes
 
 	arguments: detachable EIFFEL_LIST [TYPE_DEC_AS]
@@ -129,22 +143,6 @@ feature -- Attributes
 		do
 			if attached {CONSTANT_AS} content as l_constant then
 				Result := l_constant
-			end
-		end
-
-feature -- Roundtrip
-
-	internal_arguments: detachable FORMAL_ARGU_DEC_LIST_AS
-			-- Internal list (of list) of arguments, in which "(" and ")" are stored
-
-	indexing_clause: detachable INDEXING_CLAUSE_AS
-			-- Indexing clause in this structure
-
-	index: INTEGER
-			-- <Precursor>
-		do
-			if attached content as l_content then
-				Result := l_content.index
 			end
 		end
 
@@ -327,7 +325,7 @@ feature -- New feature description
 					equivalent (arguments, other.arguments)
 			if Result then
 				if attached content as l_content and attached other.content as l_other_content then
-					if (l_content.is_constant = l_other_content.is_constant) then
+					if l_content.is_constant = l_other_content.is_constant then
 							-- The two objects are of the same type.
 							-- There is no global typing problem.
 						Result := l_content.is_body_equiv (l_other_content)

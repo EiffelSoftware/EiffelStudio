@@ -1,2 +1,2 @@
-Error: tried to declare an inline agent of a deferred form.
-What to do: use an effective form of an agent.
+Error: tried to declare an inline agent of a deferred or attribute form.
+What to do: use an effective routine form of an agent.

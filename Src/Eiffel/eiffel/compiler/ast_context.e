@@ -548,9 +548,6 @@ feature {AST_SCOPE_MATCHER, SHARED_AST_CONTEXT, AST_FEATURE_CHECKER_GENERATOR} -
 		require
 			id_attached: id /= Void
 		do
-			if scopes.has (id.name_id) then
-				error_handler.insert_error (create {VUOT1}.make (Current, id))
-			end
 			scopes.extend (id.name_id)
 			object_test_scopes.extend (id)
 		ensure

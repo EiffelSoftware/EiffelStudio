@@ -315,8 +315,6 @@ feature -- Type checking
 							create l_vpir
 							context.init_error (l_vpir)
 							l_vpir.set_entity_name (l_local_name_id)
-							l_vpir.set_class (context.current_class)
-							l_vpir.set_feature (context.current_feature)
 							l_vpir.set_location (match_list_of_class(context.written_class.class_id) [l_id_list.id_list [l_id_list.index]])
 							error_handler.insert_error (l_vpir)
 						end
@@ -11064,6 +11062,7 @@ feature {NONE} -- Implementation: checking locals
 			l_vrle1: VRLE1
 			l_vrle2: VRLE2
 			l_vreg: VREG
+			l_vpir: VPIR1
 			l_curr_feat: FEATURE_I
 			l_vrrr2: VRRR2
 			l_missing_type: detachable MISSING_LOCAL_TYPE_ERROR
@@ -11123,6 +11122,13 @@ feature {NONE} -- Implementation: checking locals
 									l_vrle1.set_local_name (l_local_name_id)
 									l_vrle1.set_location (l_as.locals.item.start_location)
 									error_handler.insert_error (l_vrle1)
+								elseif context.is_name_used (l_local_name_id) then
+										-- The local name is the same as one used for an entity in the current scope.
+									create l_vpir
+									context.init_error (l_vpir)
+									l_vpir.set_entity_name (l_local_name_id)
+									l_vpir.set_location (match_list_of_class(context.written_class.class_id) [l_id_list.id_list [l_id_list.index]])
+									error_handler.insert_error (l_vpir)
 								end
 							end
 

@@ -5556,21 +5556,13 @@ feature {NONE} -- Visitor
 
 				-- Type check object-test local name if present.
 			local_id := l_as.name
-			if local_id /= Void then
+			if attached local_id then
 				local_name_id := local_id.name_id
-				if not is_inherited then
-					if current_feature.has_argument_name (local_name_id) then
-							-- The local name is an argument name of the
-							-- current analyzed feature
-						error_handler.insert_error (create {VUOT1}.make (context, local_id))
-					elseif feature_table.has_id (local_name_id) then
-							-- The local name is a feature name of the
-							-- current analyzed class.
-						error_handler.insert_error (create {VUOT1}.make (context, local_id))
-					end
-				end
-				if context.locals.has (local_name_id) then
-						-- The object-test local is a name of a feature local variable
+				if
+					not is_inherited and then
+					(feature_table.has_id (local_name_id) or else context.is_name_used (local_name_id))
+				then
+						-- The local name is the same as one used for an entity in the current scope.
 					error_handler.insert_error (create {VUOT1}.make (context, local_id))
 				end
 			end

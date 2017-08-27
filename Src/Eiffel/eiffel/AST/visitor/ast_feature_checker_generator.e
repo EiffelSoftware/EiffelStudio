@@ -309,7 +309,7 @@ feature -- Type checking
 							create l_vrle1
 							context.init_error (l_vrle1)
 							l_vrle1.set_local_name (l_local_name_id)
-							l_vrle1.set_location (l_routine_locals.item.start_location)
+							l_vrle1.set_location (match_list_of_class(context.written_class.class_id) [l_id_list.id_list [l_id_list.index]])
 							error_handler.insert_error (l_vrle1)
 						elseif context.is_name_used (l_local_name_id) then
 							create l_vpir
@@ -317,6 +317,7 @@ feature -- Type checking
 							l_vpir.set_entity_name (l_local_name_id)
 							l_vpir.set_class (context.current_class)
 							l_vpir.set_feature (context.current_feature)
+							l_vpir.set_location (match_list_of_class(context.written_class.class_id) [l_id_list.id_list [l_id_list.index]])
 							error_handler.insert_error (l_vpir)
 						end
 						l_id_list.forth
@@ -915,21 +916,23 @@ feature {NONE} -- Roundtrip
 				l_feature := l_feature.instantiation_in (context.current_class_type.conformance_type.as_implicitly_detachable.as_variant_free)
 			elseif
 				not attached {ROUTINE_AS} l_as.body.content as r or else
-				r.is_external or else
-				r.is_once or else
+				r.is_deferred or else
 				r.is_attribute
 			then
-				create l_unsupported.make ("Inline agent with the body other than a %"do%" form is not supported.")
-				context.init_error (l_unsupported)
-				l_unsupported.set_location (l_as.body.start_location)
-				error_handler.insert_error (l_unsupported)
-				reset_types
-			elseif r.is_deferred then
 				create l_vpir
 				l_vpir.set_class (context.current_class)
 				l_vpir.set_feature (context.current_feature)
 				l_vpir.set_location (l_as.body.start_location)
 				error_handler.insert_error (l_vpir)
+				reset_types
+			elseif
+				r.is_external or else
+				r.is_once
+			then
+				create l_unsupported.make ("Inline agent with the body other than a %"do%" form is not supported.")
+				context.init_error (l_unsupported)
+				l_unsupported.set_location (l_as.body.start_location)
+				error_handler.insert_error (l_unsupported)
 				reset_types
 			elseif is_byte_node_enabled or else has_untyped_local then
 					-- TODO: Move creation of a new `{FEATURE_I}' object to an earlier stage to avoid the dependency on code generation.

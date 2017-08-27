@@ -2175,6 +2175,15 @@ feature -- Signature checking
 					vpir.set_entity_name (arg_id)
 					vpir.set_class (written_class)
 					vpir.set_feature (Current)
+					if
+						attached match_list_server.item (written_in) as match_list and then
+						attached real_body as body_ast and then
+						attached body_ast.argument_index (i) as argument_index and then
+						match_list.valid_index (argument_index) and then
+						attached match_list [argument_index] as argument_ast
+					then
+						vpir.set_location (argument_ast)
+					end
 					Error_handler.insert_error (vpir)
 				end
 
@@ -3577,7 +3586,7 @@ invariant
 	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0 or is_fake_inline_agent
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

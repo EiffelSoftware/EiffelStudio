@@ -1498,8 +1498,8 @@ feature {NONE} -- Implementation
 										l_warning_count := error_handler.warning_list.count
 										if not l_formal_arg_type.backward_conform_to (l_context_current_class, l_arg_type) then
 											if
-												(not is_inherited and then
-												l_arg_type.convert_to (l_context_current_class, l_formal_arg_type.deep_actual_type))
+												not is_inherited and then
+												l_arg_type.convert_to (l_context_current_class, l_formal_arg_type.deep_actual_type)
 											then
 												l_conv_info := context.last_conversion_info
 												if l_conv_info.has_depend_unit then
@@ -1858,8 +1858,8 @@ feature {NONE} -- Implementation
 										l_warning_count := error_handler.warning_list.count
 										if not l_formal_arg_type.backward_conform_to (l_context_current_class, l_arg_type) then
 											if
-												(not is_inherited and then
-												l_arg_type.convert_to (l_context_current_class, l_formal_arg_type.deep_actual_type))
+												not is_inherited and then
+												l_arg_type.convert_to (l_context_current_class, l_formal_arg_type.deep_actual_type)
 											then
 												l_conv_info := context.last_conversion_info
 												if l_conv_info.has_depend_unit then
@@ -2223,8 +2223,8 @@ feature {NONE} -- Type checks
 			warning_count := error_handler.warning_list.count
 			if not formal_type.backward_conform_to (current_class, expression_type) then
 				if
-					(not is_inherited and then
-					expression_type.convert_to (current_class, formal_type.deep_actual_type))
+					not is_inherited and then
+					expression_type.convert_to (current_class, formal_type.deep_actual_type)
 				then
 				elseif
 					expression_type.is_expanded and then formal_type.is_external and then
@@ -3285,7 +3285,7 @@ feature {NONE} -- Visitor
 						l_pre_table := precursor_table (l_as, l_current_class, l_rout_id_set)
 
 							-- Check that current feature is a redefinition.
-						if l_pre_table.count = 0 then
+						if l_pre_table.is_empty then
 							if l_as.parent_base_class /= Void then
 									-- The specified parent does not have
 									-- an effective precursor.
@@ -7890,19 +7890,11 @@ feature {NONE} -- Visitor
 					-- Type check new local name.
 				local_id := c.item.name
 				local_name_id := local_id.name_id
-				if not is_inherited then
-					if current_feature.has_argument_name (local_name_id) then
-							-- The local name is an argument name of the
-							-- current analyzed feature.
-						error_handler.insert_error (create {FRESH_IDENTIFIER_ERROR}.make (context, local_id))
-					elseif feature_table.has_id (local_name_id) then
-							-- The local name is a feature name of the
-							-- current analyzed class.
-						error_handler.insert_error (create {FRESH_IDENTIFIER_ERROR}.make (context, local_id))
-					end
-				end
-				if context.locals.has (local_name_id) then
-						-- The local name is a name of a feature local variable.
+				if
+					not is_inherited and then
+					(feature_table.has_id (local_name_id) or else context.is_name_used (local_name_id))
+				then
+						-- The local name is the same as one used for an entity in the current scope.
 					error_handler.insert_error (create {FRESH_IDENTIFIER_ERROR}.make (context, local_id))
 				end
 					-- A name clash with object test locals, iteration cursors and separate instruction arguments will be reported when checking for their scopes.
@@ -10862,28 +10854,26 @@ feature {NONE} -- Implementation
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_class_id: INTEGER
 			l_formal: FORMAL_A
 			l_type_a: TYPE_A
 			cl: CLASS_C
 		do
 			l_type_a := a_type.actual_type
-			l_class_id := -1
+			Result := -1
 			if l_type_a.is_formal then
 				cl := context.current_class
 				l_formal ?= l_type_a
 				if l_formal.is_multi_constrained (cl) then
-					--	l_class_id := -1
+					--	Result := -1
 				else
 					l_type_a := l_formal.constrained_type (cl)
 					if not (l_type_a.is_none or l_type_a.is_void) then
-						l_class_id := l_type_a.base_class.class_id
+						Result := l_type_a.base_class.class_id
 					end
 				end
 			elseif not (l_type_a.is_none or l_type_a.is_void or not l_type_a.is_known) then
-					l_class_id := l_type_a.base_class.class_id
+				Result := l_type_a.base_class.class_id
 			end
-			Result := l_class_id
 		end
 
 	match_list_of_class (a_class_id: INTEGER): LEAF_AS_LIST
@@ -11106,7 +11096,7 @@ feature {NONE} -- Implementation: checking locals
 			l_untyped_local: like untyped_local
 		do
 			untyped_local := Void
-			if (l_as.is_deferred or l_as.is_external) then
+			if l_as.is_deferred or l_as.is_external then
 				create l_vrrr2
 				context.init_error (l_vrrr2)
 				l_vrrr2.set_is_deferred (l_as.is_deferred)
@@ -11250,7 +11240,7 @@ feature {NONE} -- Implementation: checking locals
 						x.reset
 						r := x
 					else
-						if attached missing_types as m and then attached missing_types [x.position] as e then
+						if attached missing_types and then attached missing_types [x.position] as e then
 								-- Report the error.
 							error_handler.insert_error (e)
 								-- Remove the error from the list.

@@ -165,6 +165,7 @@ safe_md %STUDIO_DIR\C_library
 cdd %STUDIO_DIR\C_library
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library/libpng libpng
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library/zlib zlib
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library/curl curl
 cdd %STUDIO_DIR
 remtrace root
 exprt -N -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery Delivery

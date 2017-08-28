@@ -297,7 +297,6 @@ if [ ! "$NO_INSTALL" ]; then
 
 		remtrace C_library
 			# Removing parts that we do not need to put in the porterpackage
-		fullrd	C_library/curl
 		fullrd	C_library/openssl
 		pax -w -f c_libs.tar C_library
 		bzip2 c_libs.tar

@@ -2083,8 +2083,7 @@ feature -- Signature checking
 					end
 					Error_handler.insert_error (vreg)
 				end
-				feat_table.search_id (arg_id)
-				if feat_table.found then
+				if feat_table.has_id (arg_id) then
 						-- An argument name is a feature name of the feature table.
 					create vrfa
 					vrfa.set_class (written_class)

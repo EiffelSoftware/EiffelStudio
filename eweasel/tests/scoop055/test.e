@@ -4,7 +4,7 @@ create
 	make
 
 feature {NONE} -- Creation
-	
+
 	make
 			-- Run the test.
 		do
@@ -24,43 +24,43 @@ feature -- Test
 		local
 			x3: detachable separate TEST
 		do
-			separate y as x1 do end -- Clash with a feature name.
-			separate y as x2 do end -- Clash with a feature argument name.
-			separate y as x3 do end -- Clash with a feature local name.
+			separate y as x1 do end -- FRESH_IDENTIFIER: Clash with a feature name.
+			separate y as x2 do end -- FRESH_IDENTIFIER: Clash with a feature argument name.
+			separate y as x3 do end -- FRESH_IDENTIFIER: Clash with a feature local name.
 			(agent (x4: detachable separate TEST; z: separate TEST)
 				local
 					x5: detachable separate TEST
 				do
-					separate z as x4 do end -- Clash with an agent argument name.
-					separate z as x5 do end -- Clash with an agent local name.
+					separate z as x4 do end -- FRESH_IDENTIFIER: Clash with an agent argument name.
+					separate z as x5 do end -- FRESH_IDENTIFIER: Clash with an agent local name.
 				end
 			(Void, Current)).do_nothing
 			if attached y as x6 then
-				separate y as x6 do end -- Clash with an object test local name.
+				separate y as x6 do end -- FRESH_IDENTIFIER: Clash with an object test local name.
 			end
 			across
 				out as x7
 			loop
-				separate y as x7 do end -- Clash with a loop cursor name.
+				separate y as x7 do end -- FRESH_IDENTIFIER: Clash with a loop cursor name.
 			end
 			separate y as x8 do
-				separate y as x8 do end -- Clash with an inline separate argument name.
+				separate y as x8 do end -- FRESH_IDENTIFIER: Clash with an inline separate argument name.
 			end
-			separate y as x9, y as x9 do end -- Clash with an inline separate argument name.
+			separate y as x9, y as x9 do end -- FRESH_IDENTIFIER: Clash with an inline separate argument name.
 		end
 
 	test_inner_scopes (y: separate TEST)
 			-- Test that constructs nested in a separate instruction cannot declare names of the separate instruction arguments.
 		do
 			separate y as x do
-				(agent (x: detachable separate TEST) -- Clash with an agent argument name.
+				(agent (x: detachable separate TEST) -- VPIR(1): Clash with an agent argument name.
 					local
-						x: detachable separate TEST -- Clash with an agent local name.
+						x: detachable separate TEST -- VPIR(1): Clash with an agent local name.
 					do
 					end
 				(Void)).do_nothing
-				if attached y as x then end -- Clash with an object test local name.
-				across out as x loop end -- Clash with a loop cursor name.
+				if attached y as x then end -- VUOT(1): Clash with an object test local name.
+				across out as x loop end -- VOIT(2): Clash with a loop cursor name.
 			end
 		end
 

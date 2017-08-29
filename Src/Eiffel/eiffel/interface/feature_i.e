@@ -378,56 +378,6 @@ feature -- Access
 			end
 		end
 
-	generic_fingerprint: STRING
-			-- Fingerprint of the feature signature that distinguishes
-			-- between formal generic and non-formal-generic types.
-		local
-			digit: NATURAL_8
-			a: like arguments
-			i: NATURAL_8
-			z: INTEGER
-		do
-			create Result.make_empty
-				-- It is pretty important that we use `actual_type.is_formal' and not
-				-- just `is_formal' because otherwise if you have `like x' and `x: G'
-				-- then we would fail to detect that.
-			if type.actual_type.is_formal then
-				digit := 1
-			end
-			a := arguments
-			if a /= Void then
-				from
-					i := 2
-					a.start
-				until
-					a.after
-				loop
-					if a.item.actual_type.is_formal then
-						digit := digit + i
-					end
-					i := i |<< 1
-					if i >= 16 then
-							-- Add a digit to the result.
-						Result.append_character (digit.to_hex_character)
-						if digit = 0 then
-							z := z + 1
-						else
-							z := 0
-						end
-						digit := 0
-						i := 1
-					end
-					a.forth
-				end
-			end
-			if digit /= 0 then
-				Result.append_character (digit.to_hex_character)
-			elseif z > 0 then
-					-- Remove trailing zeroes.
-				Result.remove_tail (z)
-			end
-		end
-
 	extension: EXTERNAL_EXT_I
 			-- Encapsulation of the external extension
 		do
@@ -594,15 +544,12 @@ feature -- Debugger access
 			--| of the inherited routines has an empty precondition    |
 			--| clause.                                                |
 			--|---------------------------------------------------------
-		local
-			l_body: like real_body
-			l_routine: ROUTINE_AS
 		do
-			l_body := real_body
-
-			if l_body /= Void then
-				l_routine ?= l_body.content
-				Result := l_routine.number_of_breakpoint_slots
+			if
+				attached real_body as b and then
+				attached {ROUTINE_AS} b.content as r
+			then
+				Result := r.number_of_breakpoint_slots
 			end
 			Result := Result.max (1)
 		end
@@ -610,25 +557,18 @@ feature -- Debugger access
 	first_breakpoint_slot_index: INTEGER
 			-- Index of the first breakpoint-slot of the body
 			-- Take into account inherited and inner assertions
-		local
-			l_body: like real_body
-			l_routine: ROUTINE_AS
-			l_internal: INTERNAL_AS
 		do
-			l_body := real_body
-			if l_body /= Void then
-				l_routine ?= l_body.content
-				if l_routine /= Void then
-					l_internal ?= l_routine.routine_body
-					if l_internal /= Void then
-						if l_internal.is_empty then
-								--| in this case, the first bp of the body
-								--| is the last breakable point
-							Result := number_of_breakpoint_slots
-						else
-							Result := l_internal.first_breakpoint_slot_index
-						end
-					end
+			if
+				attached real_body as b and then
+				attached {ROUTINE_AS} b.content as r and then
+				attached {INTERNAL_AS} r.routine_body as i
+			then
+				if i.is_empty then
+						--| in this case, the first bp of the body
+						--| is the last breakable point
+					Result := number_of_breakpoint_slots
+				else
+					Result := i.first_breakpoint_slot_index
 				end
 			end
 			Result := Result.max (1)
@@ -647,16 +587,15 @@ feature -- Status
 				Result := not has_precondition
 			elseif a.has_precondition then
 					-- There are inherited features that are not precondition-free.
-				if has_precondition then
+				if
+					has_precondition and then
 						-- Current feature has precondition, that might be True.
-					if
-						attached body as fb and then attached fb.body as b and then
-						attached {ROUTINE_AS} b.content as r and then attached {BOOL_AS} r.precondition.assertions.first.expr as v
-					then
-							-- The precondition has the first expression in the form of a boolean constant.
-							-- If it is true, the feature is precondition-free
-						Result := v.value
-					end
+					attached body as fb and then attached fb.body as b and then
+					attached {ROUTINE_AS} b.content as r and then attached {BOOL_AS} r.precondition.assertions.first.expr as v
+				then
+						-- The precondition has the first expression in the form of a boolean constant.
+						-- If it is true, the feature is precondition-free
+					Result := v.value
 				end
 			else
 					-- There are inherited precondition-free precursors.
@@ -1401,29 +1340,18 @@ feature -- Conveniences
 
 	frozen is_il_external: BOOLEAN
 			-- Is current feature a C external one?
-		local
-			ext: IL_EXTENSION_I
-			l_const: CONSTANT_I
 		do
-			ext ?= extension
-			Result := ext /= Void
-			if not Result then
-				l_const ?= Current
-				if l_const /= Void then
-					Result := l_const.written_class.is_external
-				end
-			end
+			Result :=
+				attached {IL_EXTENSION_I} extension or else
+				attached {CONSTANT_I} Current as c and then c.written_class.is_external
 		ensure
 			not_is_c_external: Result implies not is_c_external
 		end
 
 	frozen is_c_external: BOOLEAN
 			-- Is current feature a C external one?
-		local
-			ext: EXTERNAL_EXT_I
 		do
-			ext := extension
-			Result := ext /= Void and then (not ext.is_il and not ext.is_built_in)
+			Result := attached extension as e and then (not e.is_il and not e.is_built_in)
 		ensure
 			not_is_il_external: Result implies not is_il_external
 		end
@@ -1469,22 +1397,16 @@ feature -- Conveniences
 
 	has_static_access: BOOLEAN
 			-- Can Current be access in a static manner?
-		local
-			l_ext: IL_EXTENSION_I
 		do
-			Result := is_constant
-			if not Result then
-				if System.il_generation then
-					l_ext ?= extension
-						 -- Static access only if it is a C external (l_ext = Void)
-						 -- or if IL external does not need an object.
-					Result :=
-						(l_ext = Void and (is_external and not has_assertion)) or
-						(l_ext /= Void and then not l_ext.need_current (l_ext.type))
+			Result :=
+				is_constant or else
+					 -- Static access only if it is a C external (IL_EXTENSION_I = Void)
+					 -- or if IL external does not need an object.
+				if System.il_generation and attached {IL_EXTENSION_I} extension as e then
+					not e.need_current (e.type)
 				else
-					Result := is_external and not has_assertion
+					is_external and not has_assertion
 				end
-			end
 		end
 
 	frozen has_precondition: BOOLEAN
@@ -1721,25 +1643,21 @@ feature -- Export checking
 		local
 			type_a: TYPE_A
 		do
-				-- Create the supplier set for the feature
-			type_a := type
-			if type_a /= Void then
-				if type_a.has_associated_class then
-					feat_depend.add_supplier (type_a.base_class)
+				-- Create the supplier set for the feature.
+			if attached type as t then
+				if t.has_associated_class then
+					feat_depend.add_supplier (t.base_class)
 				end
-				type_a.update_dependance (feat_depend)
+				t.update_dependance (feat_depend)
 			end
-			if has_arguments then
-				from
-					arguments.start
-				until
-					arguments.after
+			if attached arguments as a then
+				across
+					a as argument
 				loop
-					type_a := arguments.item
+					type_a := argument.item
 					if type_a.has_associated_class then
 						feat_depend.add_supplier (type_a.base_class)
 					end
-					arguments.forth
 				end
 			end
 		end
@@ -1845,40 +1763,43 @@ feature -- IL code generation
 
 	custom_attributes: BYTE_LIST [BYTE_NODE]
 			-- Custom attributes of Current if any.
-		local
-			byte_code: BYTE_CODE
 		do
-			if not is_attribute and not is_c_external and not is_il_external then
-				if Byte_server.has (body_index) then
-					byte_code := Byte_server.item (body_index)
-					Result := byte_code.custom_attributes
-				end
+			if
+				not is_attribute and
+				not is_c_external and
+				not is_il_external and then
+				Byte_server.has (body_index) and then
+				attached Byte_server.item (body_index) as byte_code
+			then
+				Result := byte_code.custom_attributes
 			end
 		end
 
 	class_custom_attributes: BYTE_LIST [BYTE_NODE]
 			-- Class custom attributes of Current if any.
-		local
-			byte_code: BYTE_CODE
 		do
-			if not is_attribute and then not is_external and then not is_il_external then
-				if Byte_server.has (body_index) then
-					byte_code := Byte_server.item (body_index)
-					Result := byte_code.class_custom_attributes
-				end
+			if
+				not is_attribute and then
+				not is_external and then
+				not is_il_external and then
+				Byte_server.has (body_index) and then
+				attached Byte_server.item (body_index) as byte_code
+			then
+				Result := byte_code.class_custom_attributes
 			end
 		end
 
 	interface_custom_attributes: BYTE_LIST [BYTE_NODE]
 			-- Interface custom attributes of Current if any.
-		local
-			byte_code: BYTE_CODE
 		do
-			if not is_attribute and then not is_external and then not is_il_external then
-				if Byte_server.has (body_index) then
-					byte_code := Byte_server.item (body_index)
-					Result := byte_code.interface_custom_attributes
-				end
+			if
+				not is_attribute and then
+				not is_external and then
+				not is_il_external and then
+				Byte_server.has (body_index) and then
+				attached Byte_server.item (body_index) as byte_code
+			then
+				Result := byte_code.interface_custom_attributes
 			end
 		end
 
@@ -2158,7 +2079,7 @@ feature -- Signature checking
 					vreg.set_feature (Current)
 					vreg.set_entity_name (Names_heap.item (arg_id))
 					if attached argument_ast (args.argument_position_id (arg_id, i + 1)) as location then
-						vpir.set_location (location)
+						vreg.set_location (location)
 					end
 					Error_handler.insert_error (vreg)
 				end
@@ -2212,132 +2133,6 @@ feature -- Signature checking
 				)
 			end
 		end
-
-feature {NONE} -- Signature checking
-
-	do_check_types (feat_table: FEATURE_TABLE; is_delayed: BOOLEAN)
-			-- Check type and arguments types. The objective is
-			-- to deal with anchored types and genericity. All anchored
-			-- types are interpreted here and generic parameter
-			-- instantiated if possible. `is_delayed' tells if type
-			-- checking may be delayed because not all feature tables
-			-- are computed.
-			-- Make sure that `context' is already initialized for `feat_table' before calling.
-		require
-			feat_table_attached: attached feat_table
-			is_context_initialized_for_feat_table:
-				context.current_class = feat_table.associated_class
-		local
-			vffd5: VFFD5
-			vffd6: VFFD6
-			vffd7: VFFD7
-			l_class: CLASS_C
-			l_error_level: NATURAL_32
-			is_immediate: BOOLEAN
-			l_area: SPECIAL [TYPE_A]
-			nb, i: INTEGER
-		do
-			l_class := feat_table.associated_class
-			context.set_current_feature (Current)
-				-- Process an actual type for the feature interpret
-				-- anchored types.
-			type_a_checker.init_with_feature_table (Current, feat_table, error_handler)
-			type_a_checker.set_is_delayed (is_delayed)
-			set_is_type_evaluation_delayed (False)
-
-			l_error_level := error_handler.error_level
-			if attached type_a_checker.check_and_solved (type, Void) as solved_type then
-				set_type (solved_type, assigner_name_id)
-					-- Instantitate the feature type in the context of the
-					-- actual type of the class associated to `feat_table'.
-
-				if
-					(is_once and then not is_object_relative_once and not is_constant) and then
-					not solved_type.is_standalone
-				then
-						-- A (non-object-relative) once function cannot have a type with formal generics
-						-- and/or (flexible) anchors.
-					create vffd7
-					vffd7.set_class (written_class)
-					vffd7.set_feature_name (feature_name)
-					Error_handler.insert_error (vffd7)
-				end
-
-				if is_once and then system.is_scoop and then is_process_relative and then not solved_type.is_void and then not solved_type.is_separate and then not solved_type.is_expanded then
-					Error_handler.insert_error (create {VFFD8}.make (Current))
-				end
-
-				if
-					is_infix and then
-					((argument_count /= 1) or else (solved_type.is_void))
-				then
-						-- Infixed features should have only one argument
-						-- and must have a return type.
-					create vffd6
-					vffd6.set_class (written_class)
-					vffd6.set_feature_name (feature_name)
-					Error_handler.insert_error (vffd6)
-				end
-				if
-					is_prefix and then
-					((argument_count /= 0) or else (solved_type.is_void))
-				then
-						-- Prefixed features shouldn't have any argument
-						-- and must have a return type.
-					create vffd5
-					vffd5.set_class (written_class)
-					vffd5.set_feature_name (feature_name)
-					Error_handler.insert_error (vffd5)
-				end
-
-				if l_class.class_id = written_in then
-					is_immediate := True
-					type_a_checker.check_type_validity (solved_type, Void)
-					solved_type.check_for_obsolete_class (l_class, Current)
-				end
-			elseif is_delayed then
-				set_is_type_evaluation_delayed (l_error_level = error_handler.error_level)
-			end
-			if attached arguments as a then
-					-- Check types of arguments.
-				from
-					l_area := a.area
-					nb := a.count
-				until
-					i = nb
-				loop
-						-- Process type of an argument.
-					l_error_level := error_handler.error_level
-					if attached type_a_checker.check_and_solved (l_area.item (i), Void) as t then
-						l_area.put (t, i)
-						if is_immediate then
-							type_a_checker.check_type_validity (t, Void)
-							t.check_for_obsolete_class (l_class, Current)
-						end
-					elseif is_delayed then
-						set_is_type_evaluation_delayed (l_error_level = error_handler.error_level)
-					end
-					i := i + 1
-				end
-			end
-		end
-
-feature {NONE} -- AST evaluation
-
-	argument_ast (n: INTEGER): detachable LEAF_AS
-			-- AST node of an argument of number `n` if available, `Void` otherwise.
-		do
-			if
-				attached match_list_server.item (written_in) as match_list and then
-				attached real_body as body_ast and then
-				attached body_ast.argument_index (n) as argument_index and then
-				match_list.valid_index (argument_index)
-			then
-				Result := match_list [argument_index]
-			end
-		end
-
-feature -- Signature checking
 
 	nested_check_types (c: CLASS_C)
 			--
@@ -2438,7 +2233,7 @@ end
 
 					-- `set_type' has been called in `check_types' so
 					-- the reverse assignment is valid.
-				solved_type ?= type.actual_type
+				solved_type := type.actual_type
 				if solved_type.has_expanded then
 					if solved_type.expanded_deferred then
 						create {VTEC1} vtec
@@ -2675,10 +2470,10 @@ end
 				-- `old_type' is the instantiated inherited type in the
 				-- context of the class where the join takes place:
 				-- i.e the class relative to `access_in'.
-			old_type ?= old_feature.type
+			old_type := old_feature.type
 				-- `new_type' is the actual type of the join already
 				-- instantiated
-			new_type ?= type
+			new_type := type
 			if not new_type.is_safe_equivalent (old_type) then
 				create vdjr1
 				vdjr1.init (old_feature, Current)
@@ -2697,8 +2492,8 @@ end
 				until
 					i > arg_count
 				loop
-					old_type ?= old_arguments.i_th (i)
-					new_type ?= arguments.i_th (i)
+					old_type := old_arguments.i_th (i)
+					new_type := arguments.i_th (i)
 					if not new_type.is_safe_equivalent (old_type) then
 						create vdjr2
 						vdjr2.init (old_feature, Current)
@@ -2752,7 +2547,7 @@ end
 			i, arg_count: INTEGER
 			old_arguments: like arguments
 		do
-			old_type ?= old_feature.type
+			old_type := old_feature.type
 			old_type := old_type.actual_argument_type (special_arguments).
 				instantiation_in (a_written_type, a_written_type.class_id).actual_type
 
@@ -2769,7 +2564,7 @@ end
 			until
 				i > arg_count
 			loop
-				old_type ?= old_arguments.i_th (i)
+				old_type := old_arguments.i_th (i)
 				old_type := old_type.actual_argument_type (special_arguments).
 					instantiation_in (a_written_type, a_written_type.class_id).actual_type
 
@@ -2981,6 +2776,130 @@ end
 					vfac.set_assigner (assigner.api_feature (system.current_class.class_id))
 				end
 				error_handler.insert_error (vfac)
+			end
+		end
+
+feature {NONE} -- Signature checking
+
+	do_check_types (feat_table: FEATURE_TABLE; is_delayed: BOOLEAN)
+			-- Check type and arguments types. The objective is
+			-- to deal with anchored types and genericity. All anchored
+			-- types are interpreted here and generic parameter
+			-- instantiated if possible. `is_delayed' tells if type
+			-- checking may be delayed because not all feature tables
+			-- are computed.
+			-- Make sure that `context' is already initialized for `feat_table' before calling.
+		require
+			feat_table_attached: attached feat_table
+			is_context_initialized_for_feat_table:
+				context.current_class = feat_table.associated_class
+		local
+			vffd5: VFFD5
+			vffd6: VFFD6
+			vffd7: VFFD7
+			l_class: CLASS_C
+			l_error_level: NATURAL_32
+			is_immediate: BOOLEAN
+			l_area: SPECIAL [TYPE_A]
+			nb, i: INTEGER
+		do
+			l_class := feat_table.associated_class
+			context.set_current_feature (Current)
+				-- Process an actual type for the feature interpret
+				-- anchored types.
+			type_a_checker.init_with_feature_table (Current, feat_table, error_handler)
+			type_a_checker.set_is_delayed (is_delayed)
+			set_is_type_evaluation_delayed (False)
+
+			l_error_level := error_handler.error_level
+			if attached type_a_checker.check_and_solved (type, Void) as solved_type then
+				set_type (solved_type, assigner_name_id)
+					-- Instantitate the feature type in the context of the
+					-- actual type of the class associated to `feat_table'.
+
+				if
+					(is_once and then not is_object_relative_once and not is_constant) and then
+					not solved_type.is_standalone
+				then
+						-- A (non-object-relative) once function cannot have a type with formal generics
+						-- and/or (flexible) anchors.
+					create vffd7
+					vffd7.set_class (written_class)
+					vffd7.set_feature_name (feature_name)
+					Error_handler.insert_error (vffd7)
+				end
+
+				if is_once and then system.is_scoop and then is_process_relative and then not solved_type.is_void and then not solved_type.is_separate and then not solved_type.is_expanded then
+					Error_handler.insert_error (create {VFFD8}.make (Current))
+				end
+
+				if
+					is_infix and then
+					((argument_count /= 1) or else (solved_type.is_void))
+				then
+						-- Infixed features should have only one argument
+						-- and must have a return type.
+					create vffd6
+					vffd6.set_class (written_class)
+					vffd6.set_feature_name (feature_name)
+					Error_handler.insert_error (vffd6)
+				end
+				if
+					is_prefix and then
+					((argument_count /= 0) or else (solved_type.is_void))
+				then
+						-- Prefixed features shouldn't have any argument
+						-- and must have a return type.
+					create vffd5
+					vffd5.set_class (written_class)
+					vffd5.set_feature_name (feature_name)
+					Error_handler.insert_error (vffd5)
+				end
+
+				if l_class.class_id = written_in then
+					is_immediate := True
+					type_a_checker.check_type_validity (solved_type, Void)
+					solved_type.check_for_obsolete_class (l_class, Current)
+				end
+			elseif is_delayed then
+				set_is_type_evaluation_delayed (l_error_level = error_handler.error_level)
+			end
+			if attached arguments as a then
+					-- Check types of arguments.
+				from
+					l_area := a.area
+					nb := a.count
+				until
+					i = nb
+				loop
+						-- Process type of an argument.
+					l_error_level := error_handler.error_level
+					if attached type_a_checker.check_and_solved (l_area.item (i), Void) as t then
+						l_area.put (t, i)
+						if is_immediate then
+							type_a_checker.check_type_validity (t, Void)
+							t.check_for_obsolete_class (l_class, Current)
+						end
+					elseif is_delayed then
+						set_is_type_evaluation_delayed (l_error_level = error_handler.error_level)
+					end
+					i := i + 1
+				end
+			end
+		end
+
+feature {NONE} -- AST evaluation
+
+	argument_ast (n: INTEGER): detachable LEAF_AS
+			-- AST node of an argument of number `n` if available, `Void` otherwise.
+		do
+			if
+				attached match_list_server.item (written_in) as match_list and then
+				attached real_body as body_ast and then
+				attached body_ast.argument_index (n) as argument_index and then
+				match_list.valid_index (argument_index)
+			then
+				Result := match_list [argument_index]
 			end
 		end
 
@@ -3480,8 +3399,6 @@ feature -- Api creation
 			-- API representation of Current
 		require
 			a_class_id_positive: a_class_id > 0
-		local
-			e_routine: E_ROUTINE
 		do
 			Result := new_api_feature
 			Result.set_written_feature_id (written_feature_id)
@@ -3496,9 +3413,14 @@ feature -- Api creation
 			Result.set_rout_id_set (rout_id_set)
 			Result.set_is_il_external (is_il_external)
 			if is_inline_agent then
-				e_routine ?= Result
-				e_routine.set_enclosing_body_id (enclosing_body_id)
-				e_routine.set_inline_agent_nr (inline_agent_nr)
+				if attached {E_ROUTINE} Result as r then
+					r.set_enclosing_body_id (enclosing_body_id)
+					r.set_inline_agent_nr (inline_agent_nr)
+				else
+					check
+						correct_result: False
+					end
+				end
 			end
 		end
 

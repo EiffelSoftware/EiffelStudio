@@ -282,10 +282,13 @@ feature -- Type checking
 			l_id_list: IDENTIFIER_LIST
 			l_feat_tbl: FEATURE_TABLE
 			l_vrle1: VRLE1
+			l_vrle2: VRLE2
+			l_vreg: VREG
 			l_vpir: VPIR1
 			l_local_name_id: INTEGER
 		do
 			if
+				not is_inherited and then
 				attached {ROUTINE_AS} a_node.content as l_routine and then
 				attached l_routine.locals as l_routine_locals and then
 				not l_routine_locals.is_empty
@@ -303,7 +306,7 @@ feature -- Type checking
 						l_id_list.after
 					loop
 						l_local_name_id := l_id_list.item
-						if not is_inherited and then l_feat_tbl.has_id (l_local_name_id) then
+						if l_feat_tbl.has_id (l_local_name_id) then
 								-- The local name is a feature name of the
 								-- current analyzed class.
 							create l_vrle1
@@ -317,6 +320,18 @@ feature -- Type checking
 							l_vpir.set_entity_name (l_local_name_id)
 							l_vpir.set_location (match_list_of_class(context.written_class.class_id) [l_id_list.id_list [l_id_list.index]])
 							error_handler.insert_error (l_vpir)
+						elseif current_feature.has_argument_name (l_local_name_id) then
+							create l_vrle2
+							context.init_error (l_vrle2)
+							l_vrle2.set_local_name (l_local_name_id)
+							l_vrle2.set_location (match_list_of_class(context.written_class.class_id) [l_id_list.id_list [l_id_list.index]])
+							error_handler.insert_error (l_vrle2)
+						elseif context.locals.has (l_local_name_id) then
+							create l_vreg
+							context.init_error (l_vreg)
+							l_vreg.set_entity_name (names_heap.item (l_local_name_id))
+							l_vreg.set_location (match_list_of_class(context.written_class.class_id) [l_id_list.id_list [l_id_list.index]])
+							error_handler.insert_error (l_vreg)
 						end
 						l_id_list.forth
 					end
@@ -5558,7 +5573,10 @@ feature {NONE} -- Visitor
 				local_name_id := local_id.name_id
 				if
 					not is_inherited and then
-					(feature_table.has_id (local_name_id) or else context.is_name_used (local_name_id))
+					(feature_table.has_id (local_name_id) or else
+					current_feature.has_argument_name (local_name_id) or else
+					context.locals.has (local_name_id) or else
+					context.is_name_used (local_name_id))
 				then
 						-- The local name is the same as one used for an entity in the current scope.
 					error_handler.insert_error (create {VUOT1}.make (context, local_id))
@@ -7653,7 +7671,10 @@ feature {NONE} -- Visitor
 			local_name_id := local_id.name_id
 			if
 				not is_inherited and then
-				(feature_table.has_id (local_name_id) or else context.is_name_used (local_name_id))
+				(feature_table.has_id (local_name_id) or else
+				current_feature.has_argument_name (local_name_id) or else
+				context.locals.has (local_name_id) or else
+				context.is_name_used (local_name_id))
 			then
 					-- The local name is the same as one used for an entity in the current scope.
 				error_handler.insert_error (create {VOIT2}.make (context, local_id))
@@ -7864,7 +7885,11 @@ feature {NONE} -- Visitor
 				local_name_id := local_id.name_id
 				if
 					not is_inherited and then
-					(feature_table.has_id (local_name_id) or else context.is_name_used (local_name_id))
+					(feature_table.has_id (local_name_id) or else
+					current_feature.has_argument_name (local_name_id) or else
+					context.locals.has (local_name_id) or else
+					across arguments as a some a.item.name_id = local_name_id end or else
+					context.is_name_used (local_name_id))
 				then
 						-- The local name is the same as one used for an entity in the current scope.
 					error_handler.insert_error (create {FRESH_IDENTIFIER_ERROR}.make (context, local_id))
@@ -11106,15 +11131,7 @@ feature {NONE} -- Implementation: checking locals
 							l_local_name_id := l_id_list.item
 							l_local_name := Names_heap.item (l_local_name_id)
 							if not is_inherited then
-								if l_curr_feat.has_argument_name (l_local_name_id) then
-										-- The local name is an argument name of the
-										-- current analyzed feature
-									create l_vrle2
-									context.init_error (l_vrle2)
-									l_vrle2.set_local_name (l_local_name_id)
-									l_vrle2.set_location (l_as.locals.item.start_location)
-									error_handler.insert_error (l_vrle2)
-								elseif not is_replicated and then feature_table.has_id (l_local_name_id) then
+								if not is_replicated and then feature_table.has_id (l_local_name_id) then
 										-- The local name is a feature name of the
 										-- current analyzed class.
 									create l_vrle1
@@ -11129,6 +11146,14 @@ feature {NONE} -- Implementation: checking locals
 									l_vpir.set_entity_name (l_local_name_id)
 									l_vpir.set_location (match_list_of_class(context.written_class.class_id) [l_id_list.id_list [l_id_list.index]])
 									error_handler.insert_error (l_vpir)
+								elseif l_curr_feat.has_argument_name (l_local_name_id) then
+										-- The local name is an argument name of the
+										-- current analyzed feature
+									create l_vrle2
+									context.init_error (l_vrle2)
+									l_vrle2.set_local_name (l_local_name_id)
+									l_vrle2.set_location (l_as.locals.item.start_location)
+									error_handler.insert_error (l_vrle2)
 								end
 							end
 

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Compiler's Extension for Estudio debug menu ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ feature -- Execution
 			hb: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
 			tf_c, tf_f: EV_TEXT_FIELD
-			cl: EV_CELL
+			cell: EV_CELL
 			but, cbut: EV_BUTTON
 			but_action: PROCEDURE
 		do
@@ -47,7 +47,7 @@ feature -- Execution
 
 			create vb
 			vb.extend (hb)
-			create cl
+			create cell
 			but_action := agent (ai_tf_c, ai_tf_f: EV_TEXT_FIELD; ai_cell: EV_CELL)
 					local
 						sh_sys: SHARED_WORKBENCH
@@ -207,11 +207,12 @@ feature -- Execution
 										until
 											ftable.after
 										loop
-											if attached ftable.item_for_iteration as fi then
-												if fi.written_class /= cl then
-													n := n + 1
-													debug_class_feature_info_add_feature_i (cl, fi, l_row, bgcol, True)
-												end
+											if
+												attached ftable.item_for_iteration as fi and then
+												fi.written_class /= cl
+											then
+												n := n + 1
+												debug_class_feature_info_add_feature_i (cl, fi, l_row, bgcol, True)
 											end
 											ftable.forth
 										end
@@ -225,11 +226,12 @@ feature -- Execution
 										until
 											ftable.after
 										loop
-											if attached ftable.item_for_iteration as fi then
-												if fi.written_class = cl then
-													n := n + 1
-													debug_class_feature_info_add_feature_i (cl, fi, l_row, bgcol, True)
-												end
+											if
+												attached ftable.item_for_iteration as fi and then
+												fi.written_class = cl
+											then
+												n := n + 1
+												debug_class_feature_info_add_feature_i (cl, fi, l_row, bgcol, True)
 											end
 											ftable.forth
 										end
@@ -262,7 +264,7 @@ feature -- Execution
 							end
 						end
 
-					end(tf_c, tf_f, cl)
+					end(tf_c, tf_f, cell)
 
 			create but.make_with_text_and_action ("Info", but_action)
 			create cbut.make_with_text_and_action ("Close", agent release_dialog (l_dlg))
@@ -270,7 +272,7 @@ feature -- Execution
 			vb.extend (but)
 			vb.extend (cbut)
 
-			vb.extend (cl)
+			vb.extend (cell)
 			vb.disable_item_expand (hb)
 			vb.disable_item_expand (but)
 			vb.disable_item_expand (cbut)
@@ -300,174 +302,164 @@ feature -- Execution
 	debug_class_feature_info_add_class_type (ct: CLASS_TYPE; r: EV_GRID_ROW; bgcol: EV_COLOR)
 		local
 			l_row: EV_GRID_ROW
-			g: ES_GRID
-			gi: EV_GRID_LABEL_ITEM
 		do
-			g ?= r.parent
-			l_row := g.grid_extended_new_subrow (r)
-			create {EV_GRID_LABEL_ITEM} gi.make_with_text (ct.type.name)
-			l_row.set_item (1, gi)
-			l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text ("static_type_id=" + ct.static_type_id.out + " type_id=" + ct.type_id.out))
-
---			sr := g.grid_extended_new_subrow (l_row)
---			l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("static_type_id"))
---			l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (ct.static_type_id.out))
-
---			sr := g.grid_extended_new_subrow (l_row)
---			l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("type_id"))
---			l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (ct.type_id.out))
-
+			if attached {ES_GRID} r.parent as g then
+				l_row := g.grid_extended_new_subrow (r)
+				l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (ct.type.name))
+				l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text ("static_type_id=" + ct.static_type_id.out + " type_id=" + ct.type_id.out))
+			end
 		end
 
 	debug_class_feature_info_add_feature_i (cl: CLASS_C; fi: FEATURE_I; r: EV_GRID_ROW; bgcol: EV_COLOR; a_list: BOOLEAN)
 		local
-			l_row,sr: EV_GRID_ROW
-			g: ES_GRID
+			l_row, sr: EV_GRID_ROW
 			gi: EV_GRID_LABEL_ITEM
 			gei: EV_GRID_EDITABLE_ITEM
-			f,s: STRING
+			f, s: STRING
 		do
-			g ?= r.parent
-			l_row := g.grid_extended_new_subrow (r)
-			create {EV_GRID_LABEL_ITEM} gi.make_with_text (fi.feature_name_32)
-			if a_list then
-				gi.set_background_color (bgcol)
-				gi.pointer_double_press_actions.force_extend (agent open_debug_class_feature_info (cl.name, fi.feature_name_32))
-			end
-			l_row.set_item (1, gi)
-			s := attached_string (fi.alias_name_32).as_string_8
-			if s.is_empty then
-				s := fi.feature_id.out
-			else
-				s.prepend_string (fi.feature_id.out + "  ")
-			end
-			l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (s))
+			if attached {ES_GRID} r.parent as g then
+				l_row := g.grid_extended_new_subrow (r)
+				create gi.make_with_text (fi.feature_name_32)
+				if a_list then
+					gi.set_background_color (bgcol)
+					gi.pointer_double_press_actions.force_extend (agent open_debug_class_feature_info (cl.name, fi.feature_name_32))
+				end
+				l_row.set_item (1, gi)
+				s := attached_string (fi.alias_name_32).as_string_8
+				if s.is_empty then
+					s := fi.feature_id.out
+				else
+					s.prepend_string (fi.feature_id.out + "  ")
+				end
+				l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (s))
 
-			sr := g.grid_extended_new_subrow (l_row)
-			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("feature_id"))
-			if a_list then
-				create gi.make_with_text (fi.feature_id.out)
-				sr.set_item (2, gi)
-			else
-				gei := create {EV_GRID_EDITABLE_ITEM}.make_with_text (fi.feature_id.out)
-				gei.set_background_color (bgcol)
-				gei.pointer_double_press_actions.force_extend (agent gei.activate)
-				gei.deactivate_actions.extend (agent (ai_gei: EV_GRID_EDITABLE_ITEM; ai_cl: CLASS_C)
-						local
-							l_id: STRING
-						do
-							if attached ai_gei.text_field as tf then
-								l_id := tf.text
-								if l_id.is_integer then
-									if attached ai_cl.feature_of_feature_id (l_id.to_integer) as i_ft then
+				sr := g.grid_extended_new_subrow (l_row)
+				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("feature_id"))
+				if a_list then
+					create gi.make_with_text (fi.feature_id.out)
+					sr.set_item (2, gi)
+				else
+					gei := create {EV_GRID_EDITABLE_ITEM}.make_with_text (fi.feature_id.out)
+					gei.set_background_color (bgcol)
+					gei.pointer_double_press_actions.force_extend (agent gei.activate)
+					gei.deactivate_actions.extend (agent (ai_gei: EV_GRID_EDITABLE_ITEM; ai_cl: CLASS_C)
+							local
+								l_id: STRING
+							do
+								if attached ai_gei.text_field as tf then
+									l_id := tf.text
+									if
+										l_id.is_integer and then
+										attached ai_cl.feature_of_feature_id (l_id.to_integer) as i_ft
+									then
 										open_debug_class_feature_info (ai_cl.name, i_ft.feature_name_32)
 									end
 								end
-							end
-						end(gei, cl))
-				sr.set_item (2, gei)
-			end
+							end(gei, cl))
+					sr.set_item (2, gei)
+				end
 
-			sr := g.grid_extended_new_subrow (l_row)
-			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("feature_name_id"))
-			sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (fi.feature_name_id.out))
+				sr := g.grid_extended_new_subrow (l_row)
+				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("feature_name_id"))
+				sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (fi.feature_name_id.out))
 
-			sr := g.grid_extended_new_subrow (l_row)
-			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("id"))
-			sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (fi.id.out))
+				sr := g.grid_extended_new_subrow (l_row)
+				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("id"))
+				sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (fi.id.out))
 
-			sr := g.grid_extended_new_subrow (l_row)
-			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("body_index"))
-			sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (fi.body_index.out))
-			if
-				attached fi.rout_id_set as ridset and then
-				attached ridset.linear_representation as ridset_list
-			then
-				create s.make_empty
-				from
-					ridset_list.start
-				until
-					ridset_list.after
-				loop
-					s.append_integer (ridset_list.item)
-					s.append_character (' ')
-					ridset_list.forth
+				sr := g.grid_extended_new_subrow (l_row)
+				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("body_index"))
+				sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (fi.body_index.out))
+				if
+					attached fi.rout_id_set as ridset and then
+					attached ridset.linear_representation as ridset_list
+				then
+					create s.make_empty
+					from
+						ridset_list.start
+					until
+						ridset_list.after
+					loop
+						s.append_integer (ridset_list.item)
+						s.append_character (' ')
+						ridset_list.forth
+					end
+					sr := g.grid_extended_new_subrow (l_row)
+					sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("rout_id_set"))
+					sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (s))
 				end
 				sr := g.grid_extended_new_subrow (l_row)
-				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("rout_id_set"))
-				sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (s))
-			end
-			sr := g.grid_extended_new_subrow (l_row)
-			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("origin_class_id"))
-			sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (fi.origin_class_id.out))
+				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("origin_class_id"))
+				sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (fi.origin_class_id.out))
 
-			sr := g.grid_extended_new_subrow (l_row)
-			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("origin_feature_id"))
-			sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (fi.origin_feature_id.out))
-
-			sr := g.grid_extended_new_subrow (l_row)
-			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("written_feature_id"))
-			sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (fi.written_feature_id.out))
-
-			sr := g.grid_extended_new_subrow (l_row)
-			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("written_in"))
-			sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (fi.written_in.out))
-
-			if attached fi.written_class as wcl and then wcl /= cl then
 				sr := g.grid_extended_new_subrow (l_row)
-				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("written_class"))
-				create gi.make_with_text (wcl.name)
-				gi.pointer_double_press_actions.force_extend (agent open_debug_class_feature_info (wcl.name, f))
-				gi.set_background_color (bgcol)
-				sr.set_item (2, gi)
-			end
-			if not a_list and then l_row.is_expandable then
-				l_row.expand
+				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("origin_feature_id"))
+				sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (fi.origin_feature_id.out))
+
+				sr := g.grid_extended_new_subrow (l_row)
+				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("written_feature_id"))
+				sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (fi.written_feature_id.out))
+
+				sr := g.grid_extended_new_subrow (l_row)
+				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("written_in"))
+				sr.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (fi.written_in.out))
+
+				if attached fi.written_class as wcl and then wcl /= cl then
+					sr := g.grid_extended_new_subrow (l_row)
+					sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("written_class"))
+					create gi.make_with_text (wcl.name)
+					gi.pointer_double_press_actions.force_extend (agent open_debug_class_feature_info (wcl.name, f))
+					gi.set_background_color (bgcol)
+					sr.set_item (2, gi)
+				end
+				if not a_list and then l_row.is_expandable then
+					l_row.expand
+				end
 			end
 		end
 
 	debug_class_feature_info_add_attr_desc (cl: CLASS_C; attr_desc: ATTR_DESC; r: EV_GRID_ROW; bgcol: EV_COLOR; a_list: BOOLEAN)
 		local
-			l_row,sr: EV_GRID_ROW
-			g: ES_GRID
+			l_row, sr: EV_GRID_ROW
 			gi: EV_GRID_LABEL_ITEM
 		do
-			g ?= r.parent
-			l_row := g.grid_extended_new_subrow (r)
-			if attr_desc.is_hidden then
-				create {EV_GRID_LABEL_ITEM} gi.make_with_text (attr_desc.attribute_name + " (HIDDEN)")
-			else
-				create {EV_GRID_LABEL_ITEM} gi.make_with_text (attr_desc.attribute_name)
-			end
-			l_row.set_item (1, gi)
-			if attached attr_desc.type_i as t then
-				l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (t.name))
-			end
+			if attached {ES_GRID} r.parent as g then
+				l_row := g.grid_extended_new_subrow (r)
+				if attr_desc.is_hidden then
+					create {EV_GRID_LABEL_ITEM} gi.make_with_text (attr_desc.attribute_name + " (HIDDEN)")
+				else
+					create {EV_GRID_LABEL_ITEM} gi.make_with_text (attr_desc.attribute_name)
+				end
+				l_row.set_item (1, gi)
+				if attached attr_desc.type_i as t then
+					l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (t.name))
+				end
 
-			sr := g.grid_extended_new_subrow (l_row)
-			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("feature_id"))
-			create gi.make_with_text (attr_desc.feature_id.out)
-			sr.set_item (2, gi)
-
-			sr := g.grid_extended_new_subrow (l_row)
-			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("rout_id"))
-			create gi.make_with_text (attr_desc.rout_id.out)
-			sr.set_item (2, gi)
-
-			sr := g.grid_extended_new_subrow (l_row)
-			sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("attribute_name"))
-			create gi.make_with_text (attr_desc.attribute_name)
-			sr.set_item (2, gi)
-
-			if attached cl.feature_of_rout_id (attr_desc.rout_id) as f then
 				sr := g.grid_extended_new_subrow (l_row)
-				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("body_index"))
-				create gi.make_with_text (f.body_index.out)
+				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("feature_id"))
+				create gi.make_with_text (attr_desc.feature_id.out)
 				sr.set_item (2, gi)
-			end
 
-			if not a_list and then l_row.is_expandable then
-				l_row.expand
+				sr := g.grid_extended_new_subrow (l_row)
+				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("rout_id"))
+				create gi.make_with_text (attr_desc.rout_id.out)
+				sr.set_item (2, gi)
+
+				sr := g.grid_extended_new_subrow (l_row)
+				sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("attribute_name"))
+				create gi.make_with_text (attr_desc.attribute_name)
+				sr.set_item (2, gi)
+
+				if attached cl.feature_of_rout_id (attr_desc.rout_id) as f then
+					sr := g.grid_extended_new_subrow (l_row)
+					sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("body_index"))
+					create gi.make_with_text (f.body_index.out)
+					sr.set_item (2, gi)
+				end
+
+				if not a_list and then l_row.is_expandable then
+					l_row.expand
+				end
 			end
 		end
 
@@ -480,7 +472,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -510,4 +502,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

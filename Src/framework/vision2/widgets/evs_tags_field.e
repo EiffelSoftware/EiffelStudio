@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Test field for tags."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -185,12 +184,13 @@ feature -- Change
 feature -- event
 
 	on_key_released (k: EV_KEY)
-			-- Key released event
+			-- Key released event.
 		do
-			if ev_application.ctrl_pressed then
-				if k.code = {EV_KEY_CONSTANTS}.key_space then
-					open_tags_popup
-				end
+			if
+				ev_application.ctrl_pressed and then
+				k.code = {EV_KEY_CONSTANTS}.key_space
+			then
+				open_tags_popup
 			end
 		end
 
@@ -258,16 +258,16 @@ feature -- event
 						local
 							t: like text
 						do
-							if attached {STRING_32} achk.data as s then
+							if attached {STRING_32} achk.data as d then
 								t := text
 								if achk.is_checked then
 									if not t.is_empty then
 										t.append_character (',')
 										t.append_character (' ')
 									end
-									t.append_string (s)
+									t.append_string (d)
 								elseif not t.is_empty then
-									remove_tag_from_tags_text (s, t)
+									remove_tag_from_tags_text (d, t)
 								end
 								internal_set_text (t)
 							end
@@ -324,8 +324,7 @@ feature -- event
 					if ltags /= Void and then not ltags.is_empty then
 						r := r + 1
 						g.insert_new_row (r)
-						create glab.make_with_text ("- Available tags -")
-						g.set_item (1, r, glab)
+						g.set_item (1, r, create {EV_GRID_LABEL_ITEM}.make_with_text ("- Available tags -"))
 					end
 				until
 					lptags.after
@@ -408,8 +407,7 @@ feature -- event
 				)
 
 			g.column (1).resize_to_content
-			w := g.column (1).width
-			g.set_minimum_width (w)
+			g.set_minimum_width (g.column (1).width)
 			pw.set_position (text_field.screen_x, text_field.screen_y + text_field.height)
 			pw.set_width (button.screen_x + button.width - text_field.screen_x)
 			pw.set_height (g.virtual_height)
@@ -476,8 +474,7 @@ feature -- event
 					loop
 						i := i + 1
 					end
-					r := (i - 1).min (a_text.count)
-					a_text.remove_substring (l, r)
+					a_text.remove_substring (l, (i - 1).min (a_text.count))
 					p := a_text.substring_index (t, 1)
 				end
 			end
@@ -634,9 +631,7 @@ feature {NONE} -- Implementation
 						pp > s.count or n = 0
 					loop
 						p := s.index_of (',', pp)
-						if p > 0 then
-
-						else
+						if p <= 0 then
 							p := s.count + 1
 						end
 						t := s.substring (pp, p - 1)
@@ -668,8 +663,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

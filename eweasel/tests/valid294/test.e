@@ -8,13 +8,13 @@ feature
 	make
 			-- Run test.
 		do
-			ca := Current
+			$(COMMENT_OUT)ca := Current
 			test (Current)
 		end
 
 feature -- Test
 
-	ca: ANY
+	$(COMMENT_OUT)ca: ANY
 			-- A class feature for testing.
 
 	test (fa: ANY)

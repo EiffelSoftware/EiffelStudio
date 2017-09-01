@@ -1739,12 +1739,6 @@ feature -- Check
 --		do
 --		end
 
-	check_local_names (a_body: BODY_AS)
-			-- Check conflicts between local names and feature names
-			-- for an unchanged feature
-		do
-		end
-
 feature -- IL code generation
 
 	generate_il

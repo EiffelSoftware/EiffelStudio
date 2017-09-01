@@ -2,7 +2,7 @@
 	description: "Error for a clashing name of an identifier."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2013-05-21 04:05:33 +0400$"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class FRESH_IDENTIFIER_ERROR
@@ -22,21 +22,39 @@ inherit
 	INTERNAL_COMPILER_STRING_EXPORTER
 
 create
-	make
+	make,
+	make_from_context
 
 feature {NONE} -- Creation
 
-	make (c: AST_CONTEXT; n: ID_AS)
-			-- Create error object for an entity named `n' in the context `c'.
+	make (n: ID_AS; f: detachable FEATURE_I; c: CLASS_C)
+			-- Create error object for an entity named `n` in feature `f` of class `c`.
 		require
-			c_attached: c /= Void
-			n_attached: n /= Void
+			c_attached: attached c
+			n_attached: attached n
+		do
+			set_class (c)
+			set_written_class (c)
+			if attached f then
+				set_feature (f)
+			end
+			set_entity_name (n.name_id)
+			set_location (n)
+		ensure
+			entity_name_set: attached entity_name
+		end
+
+	make_from_context (c: AST_CONTEXT; n: ID_AS)
+			-- Create error object for an entity named `n` in the context `c`.
+		require
+			c_attached: attached c
+			n_attached: attached n
 		do
 			c.init_error (Current)
 			set_entity_name (n.name_id)
 			set_location (n)
 		ensure
-			entity_name_set: entity_name /= Void
+			entity_name_set: attached entity_name
 		end
 
 feature -- Error properties
@@ -50,9 +68,11 @@ feature -- Error properties
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER)
+		local
+			u: UTF_CONVERTER
 		do
 			a_text_formatter.add ("Entity: ")
-			a_text_formatter.add (encoding_converter.utf8_to_utf32 (entity_name))
+			a_text_formatter.add (u.utf_8_string_8_to_string_32 (entity_name))
 			a_text_formatter.add_new_line
 		end
 
@@ -72,7 +92,7 @@ feature {NONE} -- Modification
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

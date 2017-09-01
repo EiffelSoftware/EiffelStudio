@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Error when an Object-Test Local name clashes with feature name, local, etc."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,15 +11,33 @@ inherit
 	VUOT
 
 create
-	make
+	make,
+	make_from_context
 
 feature {NONE} -- Creation
 
-	make (c: AST_CONTEXT; n: ID_AS)
-			-- Create error object for object test local named `n' in the context `c'.
+	make (n: ID_AS; f: detachable FEATURE_I; c: CLASS_C)
+			-- Create error object for object test local named `n` in feature `f` of class `c`.
 		require
-			c_attached: c /= Void
-			n_attached: n /= Void
+			c_attached: attached c
+			n_attached: attached n
+		do
+			set_class (c)
+			set_written_class (c)
+			if attached f then
+				set_feature (f)
+			end
+			set_local_name (n.name_id)
+			set_location (n)
+		ensure
+			local_name_set: local_name /= Void
+		end
+
+	make_from_context (c: AST_CONTEXT; n: ID_AS)
+			-- Create error object for object test local named `n` in the context `c`.
+		require
+			c_attached: attached c
+			n_attached: attached n
 		do
 			c.init_error (Current)
 			set_local_name (n.name_id)
@@ -34,7 +52,7 @@ feature -- Error properties
 			-- Subcode of error
 
 note
-	copyright:	"Copyright (c) 2007-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -47,22 +65,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

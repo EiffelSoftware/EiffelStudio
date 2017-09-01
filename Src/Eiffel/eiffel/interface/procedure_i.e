@@ -13,7 +13,7 @@ inherit
 			transfer_to, transfer_from, duplicate,
 			is_routine, arguments,
 			obsolete_message, assert_id_set, set_assert_id_set,
-			check_local_names, duplicate_arguments, set_arguments
+			duplicate_arguments, set_arguments
 		end
 
 feature -- Access
@@ -177,15 +177,6 @@ feature -- Initialization
 			arguments := other.arguments
 			obsolete_message_id := other.obsolete_message_id
 			assert_id_set := other.assert_id_set
-		end
-
-	check_local_names (a_body: BODY_AS)
-			-- Check the conflicts between local names and feature names
-			-- for an unchanged feature
-		do
-			if not is_replicated then
-				feature_checker.check_local_names (a_body)
-			end
 		end
 
 -- Note: `require else' can be used even if the feature has no

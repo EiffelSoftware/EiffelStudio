@@ -77,8 +77,8 @@ feature {NONE}-- Initialization
 			editor_drawing_area.drop_actions.extend (agent resume_cursor_for_drop)
 				-- Always refuse pick and drop by default if user does not add its own `drop_actions'.
 			editor_drawing_area.drop_actions.set_veto_pebble_function (agent (a: ANY): BOOLEAN do Result := False end)
-			editor_drawing_area.pick_actions.force_extend (agent suspend_cursor_blinking)
-			editor_drawing_area.pick_ended_actions.force_extend (agent resume_cursor_blinking)
+			editor_drawing_area.pick_actions.extend (agent (x, y: INTEGER) do suspend_cursor_blinking end)
+			editor_drawing_area.pick_ended_actions.extend (agent (pnd: EV_ABSTRACT_PICK_AND_DROPABLE) do resume_cursor_blinking end)
 
 				-- Not necessarily use `a_dev_window' to get context menu.
 				-- `a_dev_window' could be void for some uses.

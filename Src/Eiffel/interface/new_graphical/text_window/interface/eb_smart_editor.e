@@ -132,7 +132,7 @@ feature {NONE} -- Access
 	help_uri_scavenger: attached ES_HELP_CONTEXT_SCAVENGER [attached EB_SMART_EDITOR]
 			-- Scavenger used to local help contexts within the editor
 		require
-			help_providers_is_service_available: help_providers.is_service_available
+			help_providers_is_service_available: attached help_providers.service
 		once
 			create {ES_EDITOR_HELP_CONTEXT_SCAVENGER} Result
 		ensure
@@ -148,7 +148,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Basic operations
 			l_contexts: attached DS_BILINEAR [attached HELP_CONTEXT_I]
 			l_dialog: ES_HELP_SELECTOR_DIALOG
 		do
-			if help_providers.is_service_available and then has_focus then
+			if attached help_providers.service and then has_focus then
 					-- Look for help contexts
 				l_uri_scavenger := help_uri_scavenger
 				l_uri_scavenger.probe (Current)
@@ -1138,9 +1138,9 @@ feature {NONE} -- Implementation
 				-- we don't want to see the UI reflecting the fact we are removing all errors associated
 				-- to that editor and then adding them later (below).
 			event_list.service.lock
-			if event_list.is_service_available then
+			if attached event_list.service as s then
 					-- Remove any error items associated with the editor
-				event_list.service.prune_event_items (editor_context_cookie)
+				s.prune_event_items (editor_context_cookie)
 			end
 
 			if text_displayed.click_tool_status = text_displayed.class_name_changed then
@@ -1373,9 +1373,9 @@ feature {NONE} -- Memory management
 				l_timeout.destroy
 			end
 
-			if event_list.is_service_available then
+			if attached event_list.service as s then
 					-- Remove any added error items
-				event_list.service.prune_event_items (editor_context_cookie)
+				s.prune_event_items (editor_context_cookie)
 			end
 		end
 
@@ -2120,7 +2120,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -2151,4 +2151,4 @@ feature {NONE} -- Implementation: Internal cache
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class SMART_EDITOR
+end

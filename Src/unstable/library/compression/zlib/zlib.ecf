@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="zlib" uuid="8D76506B-B91E-49A2-BB2C-3B37F2FFA56C" library_target="zlib">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="zlib" uuid="8D76506B-B91E-49A2-BB2C-3B37F2FFA56C" library_target="zlib">
 	<target name="zlib">
 		<root all_classes="true"/>
-		<option warning="true">
-		</option>
-		<external_include location="$(ISE_LIBRARY)\C_library\zlib">	
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</external_include>
-		<external_object location="$(ISE_LIBRARY)\C_library\zlib\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\zlib.lib">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</external_object>
-		<external_object location="-lz">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="clibs_zlib" location="$ISE_LIBRARY\C_library\zlib\clibs_zlib.ecf"/>
 		<cluster name="zlib" location="library\" recursive="true">
 			<file_rule>
 				<exclude>/.svn$</exclude>

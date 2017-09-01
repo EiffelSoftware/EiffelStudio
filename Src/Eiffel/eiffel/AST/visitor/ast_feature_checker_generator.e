@@ -272,74 +272,6 @@ feature -- Type checking
 			a_cas.process (Current)
 		end
 
-	check_local_names (a_node: BODY_AS)
-			-- Check validity of the names of the locals.
-			-- Useful when a feature has been added, we need to make sure that
-			-- locals of existing features have a different name.
-		require
-			a_node_not_void: a_node /= Void
-		local
-			l_id_list: IDENTIFIER_LIST
-			l_feat_tbl: FEATURE_TABLE
-			l_vrle1: VRLE1
-			l_vrle2: VRLE2
-			l_vreg: VREG
-			l_vpir: VPIR1
-			l_local_name_id: INTEGER
-		do
-			if
-				not is_inherited and then
-				attached {ROUTINE_AS} a_node.content as l_routine and then
-				attached l_routine.locals as l_routine_locals and then
-				not l_routine_locals.is_empty
-			then
-				from
-					l_feat_tbl := context.current_class.feature_table
-					l_routine_locals.start
-				until
-					l_routine_locals.after
-				loop
-					from
-						l_id_list := l_routine_locals.item.id_list
-						l_id_list.start
-					until
-						l_id_list.after
-					loop
-						l_local_name_id := l_id_list.item
-						if l_feat_tbl.has_id (l_local_name_id) then
-								-- The local name is a feature name of the
-								-- current analyzed class.
-							create l_vrle1
-							context.init_error (l_vrle1)
-							l_vrle1.set_local_name (l_local_name_id)
-							l_vrle1.set_location (match_list_of_class(context.written_class.class_id) [l_id_list.id_list [l_id_list.index]])
-							error_handler.insert_error (l_vrle1)
-						elseif context.is_name_used (l_local_name_id) then
-							create l_vpir
-							context.init_error (l_vpir)
-							l_vpir.set_entity_name (l_local_name_id)
-							l_vpir.set_location (match_list_of_class(context.written_class.class_id) [l_id_list.id_list [l_id_list.index]])
-							error_handler.insert_error (l_vpir)
-						elseif current_feature.has_argument_name (l_local_name_id) then
-							create l_vrle2
-							context.init_error (l_vrle2)
-							l_vrle2.set_local_name (l_local_name_id)
-							l_vrle2.set_location (match_list_of_class(context.written_class.class_id) [l_id_list.id_list [l_id_list.index]])
-							error_handler.insert_error (l_vrle2)
-						elseif context.locals.has (l_local_name_id) then
-							create l_vreg
-							context.init_error (l_vreg)
-							l_vreg.set_entity_name (names_heap.item (l_local_name_id))
-							l_vreg.set_location (match_list_of_class(context.written_class.class_id) [l_id_list.id_list [l_id_list.index]])
-							error_handler.insert_error (l_vreg)
-						end
-						l_id_list.forth
-					end
-					l_routine_locals.forth
-				end
-			end
-		end
-
 feature -- Status report
 
 	is_ast_modified: BOOLEAN
@@ -376,11 +308,12 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 				a_feature.check_type_validity (context.current_class)
 				if error_level = l_error_level then
 					context.set_written_class (l_written_class)
-					if not is_inherited and then a_is_for_inline_agent then
-						if a_feature.has_arguments then
-							a_feature.check_argument_names (feature_table)
-						end
-						a_feature.check_local_names (a_body)
+					if
+						not is_inherited and then
+						a_is_for_inline_agent and then
+						a_feature.has_arguments
+					then
+						a_feature.check_argument_names (feature_table)
 					end
 					if error_level = l_error_level then
 						a_body.process (Current)
@@ -5579,7 +5512,7 @@ feature {NONE} -- Visitor
 					context.is_name_used (local_name_id))
 				then
 						-- The local name is the same as one used for an entity in the current scope.
-					error_handler.insert_error (create {VUOT1}.make (context, local_id))
+					error_handler.insert_error (create {VUOT1}.make_from_context (context, local_id))
 				end
 			end
 
@@ -7677,7 +7610,7 @@ feature {NONE} -- Visitor
 				context.is_name_used (local_name_id))
 			then
 					-- The local name is the same as one used for an entity in the current scope.
-				error_handler.insert_error (create {VOIT2}.make (context, local_id))
+				error_handler.insert_error (create {VOIT2}.make_from_context (context, local_id))
 					-- Clear `last_type' to make sure it is not set when there is an error.
 				reset_types
 			end
@@ -7892,7 +7825,7 @@ feature {NONE} -- Visitor
 					context.is_name_used (local_name_id))
 				then
 						-- The local name is the same as one used for an entity in the current scope.
-					error_handler.insert_error (create {FRESH_IDENTIFIER_ERROR}.make (context, local_id))
+					error_handler.insert_error (create {FRESH_IDENTIFIER_ERROR}.make_from_context (context, local_id))
 				end
 					-- A name clash with object test locals, iteration cursors and separate instruction arguments will be reported when checking for their scopes.
 				local_info := context.unchecked_object_test_local (local_id)

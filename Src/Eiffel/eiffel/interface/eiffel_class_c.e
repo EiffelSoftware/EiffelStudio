@@ -800,8 +800,13 @@ feature -- Third pass: byte code production and type check
 								recompile_descendants_with_replication (False)
 							end
 							check_local_names_needed := False
-						elseif check_local_names_needed then
-							feature_i.check_local_names (feature_i.real_body)
+						elseif
+							check_local_names_needed and then
+								-- Check local names only for the first feature name alias.
+							attached feature_i.body as b and then
+							b.feature_name.name_id = feature_i.feature_name_id
+						then
+							;(create {AST_LOCAL_IDENTIFIER_CHECKER}.make (b, feature_table)).do_nothing
 						end
 					elseif not feature_i.is_routine then
 						record_suppliers (feature_i, dependances)
@@ -2163,7 +2168,7 @@ invariant
 	inline_agent_table_not_void: inline_agent_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

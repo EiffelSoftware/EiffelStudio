@@ -9,6 +9,6 @@ copy_raw 	 a.e $CLUSTER a.e
 copy_raw 	 test.e $CLUSTER test.e
 
 compile_melted
-compile_result 	 validity_error A VWMA VWMA; TEST VWMA VWMA
+compile_result 	 validity_error A VWMA VWMA; TEST VWMA VWMA:12
 
 test_end

@@ -807,7 +807,7 @@ feature {NONE} -- Impl filling
 					sr := 1
 					subrow.set_item (Data_column_index, lab)
 					subrow.set_item (Status_column_index, create {EV_GRID_ITEM})
-					subrow.item (Status_column_index).pointer_button_release_actions.force_extend (agent on_class_item_right_clicked (c, subrow, ?,?,?))
+					subrow.item (Status_column_index).pointer_button_release_actions.extend (agent on_class_item_right_clicked (c, subrow, ?, ?, ?, ?, ?, ?, ?, ?))
 
 					from
 						stwl.start
@@ -913,7 +913,7 @@ feature {NONE} -- Impl filling
 				end
 				create lab.make_with_text (s)
 				subrow.set_item (Status_column_index, lab)
-				lab.pointer_button_release_actions.force_extend (agent on_feature_item_right_clicked (f, subrow, ?,?,?))
+				lab.pointer_button_release_actions.extend (agent on_feature_item_right_clicked (f, subrow, ?, ?, ?, ?, ?, ?, ?, ?))
 				subrow.ensure_expandable
 				if subrow.is_expandable then
 					subrow.expand
@@ -1117,8 +1117,8 @@ feature {NONE} -- Dynamic item filling
 					lab.set_tooltip (t)
 				end
 
-				lab.pointer_double_press_actions.force_extend (agent on_breakpoint_cell_double_left_clicked (f, i, lab, ?,?,?))
-				lab.pointer_button_release_actions.force_extend (agent on_line_cell_right_clicked (f, i, lab, ?, ?, ?))
+				lab.pointer_double_press_actions.extend (agent on_breakpoint_cell_double_left_clicked (f, i, lab, ?, ?, ?, ?, ?, ?, ?, ?))
+				lab.pointer_button_release_actions.extend (agent on_line_cell_right_clicked (f, i, lab, ?, ?, ?, ?, ?, ?, ?, ?))
 				a_row.set_item (Status_column_index, lab)
 
 				if bp.has_condition then
@@ -1140,7 +1140,7 @@ feature {NONE} -- Dynamic item filling
 
 feature {NONE} -- Events on grid
 
-	on_breakpoint_cell_double_left_clicked (f: E_FEATURE; i: INTEGER; gi: EV_GRID_ITEM; x, y, button: INTEGER)
+	on_breakpoint_cell_double_left_clicked (f: E_FEATURE; i: INTEGER; gi: EV_GRID_ITEM; x, y, button: INTEGER; tx, ty, p: REAL_64; sx, sy: INTEGER)
 			-- Handle a cell right click actions.
 		require
 			f /= Void
@@ -1157,7 +1157,7 @@ feature {NONE} -- Events on grid
 			end
 		end
 
-	on_line_cell_right_clicked (f: E_FEATURE; i: INTEGER; gi: EV_GRID_ITEM; x, y, button: INTEGER)
+	on_line_cell_right_clicked (f: E_FEATURE; i: INTEGER; gi: EV_GRID_ITEM; x, y, button: INTEGER; tx, ty, p: REAL_64; sx, sy: INTEGER)
 			-- Handle a cell right click actions.
 		require
 			f /= Void
@@ -1174,7 +1174,7 @@ feature {NONE} -- Events on grid
 			end
 		end
 
-	on_class_item_right_clicked	(c: CLASS_C; r: EV_GRID_ROW; x, y, button: INTEGER)
+	on_class_item_right_clicked	(c: CLASS_C; r: EV_GRID_ROW; x, y, button: INTEGER; tx, ty, p: REAL_64; sx, sy: INTEGER)
 		require
 			c /= Void
 			r /= Void
@@ -1208,7 +1208,7 @@ feature {NONE} -- Events on grid
 			end
 		end
 
-	on_feature_item_right_clicked	(f: E_FEATURE; r: EV_GRID_ROW; x, y, button: INTEGER)
+	on_feature_item_right_clicked	(f: E_FEATURE; r: EV_GRID_ROW; x, y, button: INTEGER; tx, ty, p: REAL_64; sx, sy: INTEGER)
 		require
 			f /= Void
 			r /= Void

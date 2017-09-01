@@ -1329,9 +1329,9 @@ feature {NONE} -- Fixing
 						s := modifier.ast_position (a)
 						r := a.token_region (modifier.ast_match_list)
 						across
-							fixes as f
+							fixes as fix
 						loop
-							f.item.apply_to (modifier)
+							fix.item.apply_to (modifier)
 						end
 						if modifier.ast_match_list.is_text_modified (r) then
 							modifier.replace_code (s.start_position, s.end_position, modifier.ast_match_list.text_32 (r))

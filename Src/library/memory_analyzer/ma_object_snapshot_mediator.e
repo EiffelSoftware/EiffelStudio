@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that show the whole system's memory objects in a grid."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -237,7 +237,6 @@ feature {NONE} -- Implementation
 		require
 			grid_data_set: grid_data /= Void
 		local
-			l_sorter: QUICK_SORTER [like row_data]
 			l_agent_sorter: detachable AGENT_EQUALITY_TESTER [like row_data]
 			l_grid_data: like grid_data
 		do
@@ -252,10 +251,9 @@ feature {NONE} -- Implementation
 						-- No sorting can be performed on sizes as it will slow down the grid usage.
 				end
 				if l_agent_sorter /= Void then
-					create l_sorter.make (l_agent_sorter)
-					l_sorter.sort (l_grid_data)
+					;(create {QUICK_SORTER [like row_data]}.make (l_agent_sorter)).sort (l_grid_data)
 						-- Perform update action.
-					a_update_action.call (Void)
+					a_update_action.call
 				end
 			else
 				check grid_data_set: False end -- implied by precondition
@@ -400,8 +398,8 @@ feature {NONE} -- Implementation
 							l_item.set_data (l_any)
 							l_item.pointer_button_press_actions.extend (agent (a1, a2, a3: INTEGER_32; a4, a5, a6: REAL_64; a7, a8: INTEGER_32; a_item: EV_GRID_LABEL_ITEM)
 								do
-									if attached a_item.data as l_data then
-										a_item.set_text (formatted_size (internal.deep_physical_size_64 (l_data)))
+									if attached a_item.data as d then
+										a_item.set_text (formatted_size (internal.deep_physical_size_64 (d)))
 									else
 										a_item.set_text ("0 B")
 									end
@@ -812,15 +810,8 @@ feature {NONE} -- Internal
 
 	special_any_dynamic_type: INTEGER
 			-- Dynamic type ID of an instance of `SPECIAL [ANY]'
-		local
-			a: ARRAY [ANY]
-			spec: SPECIAL [ANY]
-			l_inte: INTERNAL
 		once
-			create a.make_empty
-			spec := a.area
-			create l_inte
-			Result := l_inte.dynamic_type (spec)
+			Result := (create {INTERNAL}).dynamic_type ((create {ARRAY [ANY]}.make_empty).area)
 		end
 
 invariant

@@ -53,12 +53,14 @@ feature -- Test
 			-- Test that constructs nested in a separate instruction cannot declare names of the separate instruction arguments.
 		do
 			separate y as x do
-				(agent (x: detachable separate TEST) -- VPIR(1): Clash with an agent argument name.
+				;(agent (x: detachable separate TEST) -- VPIR(1): Clash with an agent argument name.
+					do
+					end (Void)).do_nothing
+				;(agent
 					local
 						x: detachable separate TEST -- VPIR(1): Clash with an agent local name.
 					do
-					end
-				(Void)).do_nothing
+					end).do_nothing
 				if attached y as x then end -- VUOT(1): Clash with an object test local name.
 				across out as x loop end -- VOIT(2): Clash with a loop cursor name.
 			end

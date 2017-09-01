@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "An Eiffel test suite - multi-threaded version"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "93/09/14"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EW_EIFFEL_TEST_SUITE_MT
 
@@ -112,13 +113,14 @@ feature -- Execution
 			debug ("threaded_eweasel")
 				print_debug_main ("All child threads have terminated" )
 			end
-			display_summary;
-		end;
-
+			if opts.display_summary then
+				display_summary
+			end
+		end
 
 note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2017, University of Southern California, Eiffel Software, and contributors.
 			All rights reserved.
 			]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
@@ -141,6 +143,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

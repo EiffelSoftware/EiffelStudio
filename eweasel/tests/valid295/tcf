@@ -13,7 +13,7 @@ compile_result 	 ok
 define COMMENT_OUT_PARENT ""
 copy_sub	a.e $CLUSTER a.e
 compile_melted
-compile_result 	 validity_error TEST VUOT(1):38 VOIT(2):40 FRESH_IDENTIFIER:42 VRFA:44 VRLE(1):46
+compile_result 	 validity_error TEST VUOT(1):41 VOIT(2):43 FRESH_IDENTIFIER:45 VRFA:47 VRLE(1):49
 
 define COMMENT_OUT_PARENT "--"
 copy_sub	a.e $CLUSTER a.e
@@ -23,7 +23,7 @@ compile_result 	 ok
 define COMMENT_OUT_CHILD ""
 copy_sub	test.e $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error TEST VUOT(1):39 VOIT(2):41 FRESH_IDENTIFIER:43 VRFA:45 VRLE(1):47
+compile_result 	 validity_error TEST VUOT(1):42 VOIT(2):44 FRESH_IDENTIFIER:46 VRFA:48 VRLE(1):50
 
 define COMMENT_OUT_CHILD "--"
 copy_sub	test.e $CLUSTER test.e
@@ -35,7 +35,7 @@ copy_sub	a.e $CLUSTER a.e
 define COMMENT_OUT_CHILD ""
 copy_sub	test.e $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error TEST VUOT(1):38 VUOT(1):39 VOIT(2):40 VOIT(2):41 FRESH_IDENTIFIER:42 FRESH_IDENTIFIER:43 VRFA:44 VRFA:45 VRLE(1):46 VRLE(1):47
+compile_result 	 validity_error TEST VUOT(1):41 VUOT(1):42 VOIT(2):43 VOIT(2):44 FRESH_IDENTIFIER:45 FRESH_IDENTIFIER:46 VRFA:47 VRFA:48 VRLE(1):49 VRLE(1):50
 
 define COMMENT_OUT_PARENT "--"
 copy_sub	a.e $CLUSTER a.e

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "The EiffelWeasel automatic tester"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,6 +19,7 @@ feature  -- Creation
 	make (args: ARRAY [STRING])
 			-- Make
 		do
+			is_logo_enabled := True
 			set_output (create {EW_EWEASEL_OUTPUT_CONTROL}.make (io))
 			parse_arguments (args)
 			if not args_ok then
@@ -34,6 +35,7 @@ feature  -- Creation
 	make_and_execute (args: ARRAY [STRING])
 			-- Make and execute tests in catalog file
 		do
+			is_logo_enabled := True
 			make (args)
 			if args_ok then
 				execute
@@ -47,7 +49,9 @@ feature -- Commands
 		require
 			able_to_execute: args_ok
 		do
-			display_version
+			if is_logo_enabled then
+				display_version
+			end
 			do_tests
 		end
 
@@ -60,6 +64,9 @@ feature -- Status
 
 	args_ok: BOOLEAN
 			-- Were command line arguments valid?
+
+	is_logo_enabled: BOOLEAN
+			-- Should logo information be displayed?
 
 feature  {NONE} -- Implementation
 
@@ -215,6 +222,12 @@ feature  {NONE} -- Implementation
 						else
 							args_ok := False
 						end
+					elseif equal (flag, "nologo") then
+						k := k + 1
+						is_logo_enabled := False
+					elseif equal (flag, "nosummary") then
+						k := k + 1
+						test_suite_options.set_display_summary (False)
 					else
 						output.append_error ("Unknown option: ", False)
 						output.append (args.item (k), True)
@@ -347,7 +360,8 @@ feature  {NONE} -- Implementation
 		do
 			output.append_new_line
 			output.append ("Usage:", True)
-			output.append ("   eweasel [-help] [-max_threads COUNT] [-max_c_processes COUNT]", True)
+			output.append ("   eweasel [-help] [-nologo] [-nosummary]", True)
+			output.append ("      [-max_threads COUNT] [-max_c_processes COUNT]", True)
 			output.append ("      [-order | -noorder] [-keep [{all | passed | failed}]] [-clean | -noclean]", True)
 			output.append ("      [-filter FILTER] [-define NAME VALUE ...]", True)
 			output.append ("      -init INIT_CONTROL_FILE -catalog TEST_CATALOG -output TEST_SUITE_DIR", True)
@@ -401,19 +415,21 @@ feature  {NONE} -- Implementation
 			output.append ("                    ISE_PLATFORM for name of platform", True)
 			output.append ("                    VERSION for compiler version", True)
 			output.append ("                    PLATFORM_TYPE (unix, windows, dotnet)", True)
+			output.append ("   -nologo      Suppress copyright message and version information.", True)
+			output.append ("   -nosummary   Suppress summary of test results.", True)
 		end
 
 	display_version
 		local
 			revision: STRING
 		do
-			output.append ("%NEiffelWeasel test execution manager", True)
+			output.append ("EiffelWeasel test execution manager", False)
 			revision := "$Revision$"
 				-- Remove leading "$Revision: ".
 			revision.remove_head (11)
 				-- Remove trailing " $".
 			revision.remove_tail (2)
-			output.append ("  (version 1.1.0." + revision + ")", True)
+			output.append (" (version 1.2.0." + revision + ")", True)
 		end
 
 	new_test_suite (tests: LIST [EW_NAMED_EIFFEL_TEST] opts: EW_TEST_SUITE_OPTIONS): EW_EIFFEL_TEST_SUITE
@@ -466,6 +482,5 @@ feature  {NONE} -- Implementation
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

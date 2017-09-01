@@ -1,0 +1,47 @@
+test_name 	 identifier-scope-validity-recompilation
+test_description Recompilation should not break the rule that an identifier cannot be reused in the scope where it is already used, including deep nesting in agents. See also test#valid294.
+
+copy_sub	Ace $TEST Ace
+
+define COMMENT_OUT_PARENT "--"
+copy_sub	a.e $CLUSTER a.e
+define COMMENT_OUT_CHILD "--"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+define COMMENT_OUT_PARENT ""
+copy_sub	a.e $CLUSTER a.e
+compile_melted
+compile_result 	 validity_error TEST VUOT(1):38 VOIT(2):40 FRESH_IDENTIFIER:42 VRFA:44 VRLE(1):46
+
+define COMMENT_OUT_PARENT "--"
+copy_sub	a.e $CLUSTER a.e
+resume_compile
+compile_result 	 ok
+
+define COMMENT_OUT_CHILD ""
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VUOT(1):39 VOIT(2):41 FRESH_IDENTIFIER:43 VRFA:45 VRLE(1):47
+
+define COMMENT_OUT_CHILD "--"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+define COMMENT_OUT_PARENT ""
+copy_sub	a.e $CLUSTER a.e
+define COMMENT_OUT_CHILD ""
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VUOT(1):38 VUOT(1):39 VOIT(2):40 VOIT(2):41 FRESH_IDENTIFIER:42 FRESH_IDENTIFIER:43 VRFA:44 VRFA:45 VRLE(1):46 VRLE(1):47
+
+define COMMENT_OUT_PARENT "--"
+copy_sub	a.e $CLUSTER a.e
+define COMMENT_OUT_CHILD "--"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

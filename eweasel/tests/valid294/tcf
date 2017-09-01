@@ -1,5 +1,5 @@
 test_name 	 identifier-scope-validity
-test_description An identifier cannot be reused in the scope where it is already used, including deep nesting in agents.
+test_description An identifier cannot be reused in the scope where it is already used, including deep nesting in agents. See also test#valid252, test#valid295.
 
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e

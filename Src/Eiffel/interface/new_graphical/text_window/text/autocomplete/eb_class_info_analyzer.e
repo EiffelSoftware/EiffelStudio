@@ -442,7 +442,7 @@ feature {NONE}-- Clickable/Editable implementation
 							end
 						elseif attached token.previous as l_prev and then l_prev.wide_image.same_string_general (".") then
 								-- Ignore nested expression.
-						elseif attached cl.feature_with_name_32 (ft.feature_names.first.visual_name_32) as feat then
+						elseif cl.has_feature_table and then attached cl.feature_with_name_32 (ft.feature_names.first.visual_name_32) as feat then
 
 								-- Search for locals, arguments, ... in current feature.
 								-- TODO: check if there is a simpler solution [2017-04-15].			

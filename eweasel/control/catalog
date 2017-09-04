@@ -612,7 +612,7 @@ test	svalid-inherited-invariant-not-checked	svalid017 tcf fail system-validity
 test	svalid-invalid-parent			svalid018 tcf pass system-validity conversion
 test	svalid-conversion-with-binary	svalid019 tcf pass system-validity conversion
 test	svalid-undetected-vwoe			svalid020 tcf pass system-validity conversion
-test	svalid-conversion-detachable	svalid022 tcf pass system-validity conversion
+test	svalid-conversion-detachable	svalid022 tcf pass system-validity conversion void_safety
 test	svalid-missing-recheck			svalid023 tcf fail system-validity conversion
 test	inspect-inherited-static-access-missing-library	svalid024 tcf pass system-validity inspect
 test	svalid-inherited-agent-with-formal-switch	svalid025 tcf pass system-validity agents
@@ -1856,6 +1856,7 @@ test	manifest-array-type-computation	exec368 tcf pass execution manifest array
 test	conditional-expression-type-computation	exec369 tcf pass execution conditional expression
 test	conditional-expression-expanded-type	exec370 tcf pass execution conditional expression
 test	old-expression-in-feature-body		exec371 tcf fail execution old expression
+test	target-manifest-array-type-computation	exec372 tcf fail execution manifest array
 
 -- Once specific
 

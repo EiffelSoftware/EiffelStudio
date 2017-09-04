@@ -1,0 +1,14 @@
+test_name 	 target-manifest-array-type-computation
+test_description A type of a manifest array should not depend on the target of reattachment when it is used as a source.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	 ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

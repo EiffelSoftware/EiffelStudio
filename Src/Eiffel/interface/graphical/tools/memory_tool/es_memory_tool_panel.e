@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		Tool descriptor for EiffelStudio's memory analyser tool.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ES_MEMORY_TOOL_PANEL
@@ -602,30 +602,25 @@ feature {NONE} -- Basic operations
 			a_object_attached: a_object /= Void
 		local
 			l_item: EV_GRID_LABEL_ITEM
-			l_description: STRING
-			l_recyclable: EB_RECYCLABLE
+			l_description: STRING_32
 			l_color: EV_COLOR
 		do
 			create l_description.make (30)
 			l_description.append_integer (a_index)
-			l_description.append (once ": ")
-			l_recyclable ?= a_object
-			if l_recyclable /= Void then
+			l_description.append (once {STRING_32} ": ")
+			if attached {EB_RECYCLABLE} a_object as l_recyclable then
 				a_row.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (230, 230, 230))
 				if l_recyclable.is_recycled then
-					l_description.append (once "(Recycled) ")
+					l_description.append (once {STRING_32} "(Recycled) ")
 					l_color := colors.stock_colors.dark_green
 				else
-					l_description.append (once "(Not Recycled) ")
+					l_description.append (once {STRING_32} "(Not Recycled) ")
 					l_color := colors.stock_colors.red
 				end
-			else
-				l_color := Void
 			end
-			l_description.append (a_object.generating_type)
-
+			l_description.append (a_object.generating_type.name_32)
 			create l_item.make_with_text (l_description)
-			if l_color /= Void then
+			if attached l_color then
 				a_row.set_foreground_color (l_color)
 			end
 			a_row.set_item (object_column_index, l_item)
@@ -739,7 +734,7 @@ feature {NONE} -- Basic operations
 						l_sorted_data.after
 					loop
 						l_any := l_sorted_data.item_for_iteration.obj
-						create l_item.make_with_text (l_any.generating_type)
+						create l_item.make_with_text (l_any.generating_type.name_32)
 						memory_map_grid.set_item (1, i, l_item)
 						create l_item.make_with_text (($l_any).out)
 						memory_map_grid.set_item (2, i, l_item)
@@ -773,17 +768,11 @@ feature {NONE} -- Basic operations
 			a_x_non_negative: a_x >= 0
 			a_y_non_negative: a_y >= 0
 		local
-			l_object: ANY
-			l_recycleable: EB_RECYCLABLE
 			l_menu: EV_MENU
 			l_menu_item: EV_MENU_ITEM
-			l_data: like row_data
 		do
-			l_object ?= a_item.row.data
-
 				-- Only allow recycling in objects that are not used by the tool.
-			l_data ?= l_object
-			if l_object /= Void and l_data = Void then
+			if attached a_item.row.data as l_object and then not attached {like row_data} l_object then
 				create l_menu
 				create l_menu_item.make_with_text_and_action ("Go to object", agent (a_object: ANY) do execute_with_busy_cursor (agent select_object (a_object)) end (l_object))
 				l_menu.extend (l_menu_item)
@@ -791,10 +780,8 @@ feature {NONE} -- Basic operations
 				create l_menu_item.make_with_text_and_action ("Free object",  agent (a_object: ANY) do execute_with_busy_cursor (agent free_object (a_object)) end (l_object))
 				l_menu.extend (l_menu_item)
 
-				l_recycleable ?= l_object
-				if l_recycleable /= Void and then not l_recycleable.is_recycled then
-						-- Add recycle option
-
+				if attached {EB_RECYCLABLE} l_object as l_recycleable and then not l_recycleable.is_recycled then
+						-- Add recycle option.
 					create l_menu_item.make_with_text_and_action ("Perform recycle",  agent (a_object: EB_RECYCLABLE) do execute_with_busy_cursor (agent recycle_object (a_object)) end (l_recycleable))
 					l_menu.extend (l_menu_item)
 				end
@@ -899,12 +886,9 @@ feature {NONE} -- Analysis
 
 	is_data_result_of_analyzis (a_data: ANY): BOOLEAN
 			-- Is `a_data' indirectly the result of an internal operation of Current
-		local
-			l_row: EV_GRID_ROW
 		do
-			l_row ?= a_data
 				-- If this is the row from our current grid, no need to show this object.
-			Result := l_row /= Void and then l_row.parent = memory_map_grid
+			Result := attached {EV_GRID_ROW} a_data as l_row and then l_row.parent = memory_map_grid
 			if not Result then
 					-- If this is the closed arguments tuple of one of our agent, no need to show this object.
 				Result := (attached {TUPLE [like Current]} a_data as l_discardable_data)
@@ -1271,7 +1255,6 @@ feature {NONE} -- Action handlers
 		local
 			l_grid: like memory_map_grid
 			l_row: EV_GRID_ROW
-			l_data: like row_data
 			l_count, i: INTEGER
 			l_regex: like filter_match_expression
 			l_show_only_deltas: like is_showing_positive_deltas
@@ -1291,14 +1274,16 @@ feature {NONE} -- Action handlers
 				from i := 1 until i > l_count loop
 					l_row := l_grid.row (i)
 					if l_row.parent_row = Void then
-						l_data ?= l_row.data
-						check
-							l_data_attached: l_data /= Void
-						end
-						if (l_regex = Void or else l_regex.matches (l_data.name)) and (not l_show_only_deltas or else l_data.delta > 0) then
-							l_row.show
+						if attached {like row_data} l_row.data as l_data then
+							if (attached l_regex implies l_regex.matches (l_data.name)) and (not l_show_only_deltas or else l_data.delta > 0) then
+								l_row.show
+							else
+								l_row.hide
+							end
 						else
-							l_row.hide
+							check
+								is_expected_data_type: False
+							end
 						end
 					end
 					i := i + l_row.subrow_count_recursive + 1
@@ -1325,19 +1310,17 @@ feature {NONE} -- Memory pruning
 			l_count, i: INTEGER
 			l_row: EV_GRID_ROW
 			l_object_row: EV_GRID_ROW
-			l_type_name: STRING
-			l_data: like row_data
+			l_type_name: READABLE_STRING_32
 			l_stop: BOOLEAN
 		do
-			l_type_name := a_object.generating_type
+			l_type_name := a_object.generating_type.name_32
 
 				-- Attempt to locate type row
 			l_grid := memory_map_grid
 			l_count := l_grid.row_count
 			from i := 1 until i > l_count or l_stop loop
 				l_row := l_grid.row (i)
-				l_data ?= l_row.data
-				l_stop := l_data /= Void and then l_data.name.is_equal (l_type_name)
+				l_stop := attached {like row_data} l_row.data as l_data and then l_data.name.same_string_general (l_type_name)
 				if not l_stop then
 					i := i + l_row.subrow_count_recursive + 1
 				end
@@ -1389,7 +1372,6 @@ feature {NONE} -- Memory pruning
 			not_is_recycled: not is_recycled
 			a_object_attached: a_object /= Void
 		local
-			l_name: STRING
 			l_address: STRING
 			l_warning: ES_WARNING_PROMPT
 			l_grid: like memory_map_grid
@@ -1397,9 +1379,9 @@ feature {NONE} -- Memory pruning
 			l_row: EV_GRID_ROW
 		do
 			if a_object /= Current and a_object /= tool_descriptor and a_object /= develop_window then
-				l_name := a_object.generating_type
 				l_address := ($a_object).out
-				create l_warning.make_standard_with_cancel ("Freeing an object can harm this running application%NAre you sure you want to free " + l_name + "(" + l_address + ")?")
+				create l_warning.make_standard_with_cancel
+					({STRING_32} "Freeing an object can harm this running application%NAre you sure you want to free " + a_object.generating_type.name_32 + {STRING_32} "(" + l_address.as_string_32 + {STRING_32} ")?")
 				l_warning.show_on_active_window
 
 				if l_warning.dialog_result = l_warning.dialog_buttons.ok_button then

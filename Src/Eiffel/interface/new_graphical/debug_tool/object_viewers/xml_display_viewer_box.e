@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "XML display expanded viewer  ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -130,15 +130,9 @@ feature {NONE} -- Implementation
 		end
 
 	parent_window (w: EV_WIDGET): EV_WINDOW
-		local
-			p: EV_WIDGET
 		do
-			p := w.parent
-			if p /= Void then
-				Result ?= p
-				if Result = Void then
-					Result := parent_window (p)
-				end
+			if attached w.parent as p then
+				Result := if attached {EV_WINDOW} p as r then r else parent_window (p) end
 			end
 		end
 
@@ -163,7 +157,7 @@ feature {NONE} -- Event handling
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

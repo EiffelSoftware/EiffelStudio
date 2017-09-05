@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract notion of value during the execution of the application in the dotnet world."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -85,11 +85,11 @@ feature {NONE} -- Init
 		do
 			if address /= Void then
 				debug ("debugger_eifnet_data")
-					print ("  <start> " + generating_type + ".register_dotnet_data : " + address.output + "%N")
+					print ("  <start> " + generating_type.name + ".register_dotnet_data : " + address.output + "%N")
 				end
 				Debug_value_keeper.keep_dotnet_value (Current)
 				debug ("debugger_eifnet_data")
-					print ("  <end> " + generating_type + ".register_dotnet_data : " + address.output + "%N")
+					print ("  <end> " + generating_type.name + ".register_dotnet_data : " + address.output + "%N")
 				end
 			end
 		end
@@ -336,7 +336,7 @@ feature -- Properties
 			-- Value info of object.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

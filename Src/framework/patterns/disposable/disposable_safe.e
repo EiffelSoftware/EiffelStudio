@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A safe (protectect) version of {DISPOSABLE_I}, linked with the well known GC linked {DISPOSABLE}.
 		
@@ -46,7 +46,7 @@ feature -- Clean Up
 			l_active := is_actively_disposing
 			if not l_active then
 				debug ("dispose")
-					print ("Disposing of {" + generating_type + "}.%N")
+					print ("Disposing of {" + generating_type.name + "}.%N")
 				end
 
 				is_actively_disposing := True
@@ -70,7 +70,7 @@ feature -- Clean Up
 						end
 					else
 						debug ("dispose")
-							print ("Warning {" + generating_type + "} has already been disposed!%N")
+							print ("Warning {" + generating_type.name + "} has already been disposed!%N")
 						end
 					end
 				end
@@ -210,7 +210,7 @@ invariant
 	not_is_interface_usable: is_disposed implies not is_interface_usable
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

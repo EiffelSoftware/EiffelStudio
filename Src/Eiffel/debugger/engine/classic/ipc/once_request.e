@@ -1,7 +1,7 @@
-note
+﻿note
+	description: "Request for once functions' result"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Request for once functions' result
 
 class
 	ONCE_REQUEST
@@ -147,7 +147,7 @@ feature -- Implementation
 			l_index := once_index (once_routine)
 			if l_index >= 0 then
 				debug ("debugger_ipc")
-					print ("### feature is of type : " + once_routine.generating_type + "%N")
+					print ("### feature is of type : " + once_routine.generating_type.name + "%N")
 				end
 				if
 					(once_routine.is_function or once_routine.is_constant) and
@@ -354,7 +354,9 @@ feature -- Contract support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -385,4 +387,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ONCE_REQUEST	
+end

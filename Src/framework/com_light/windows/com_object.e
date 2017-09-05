@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Light COM object"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			an_item_not_null: an_item /= default_pointer
 		do
 			debug ("COM_OBJECT")
-				io.put_string ("["+generating_type+"].make_by_pointer("+an_item.out+") called")
+				io.put_string ("["+generating_type.name+"].make_by_pointer("+an_item.out+") called")
 				io.put_new_line
 			end
 			item := an_item
@@ -419,7 +419,7 @@ feature {NONE} -- COM Ref management
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

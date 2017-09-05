@@ -1,6 +1,4 @@
-note
-	description: "Objects that ..."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -55,13 +53,13 @@ feature {NONE} -- Initialization
 
 feature -- Recycling
 
-	debug_output: STRING
+	debug_output: STRING_32
 		do
-			Result := generating_type
+			Result := generating_type.name_32.as_string_32
 			if object_name /= Void then
-				Result.append_string (" name=[")
-				Result.append_string (object_name.as_string_8)
-				Result.append_string ("] ")
+				Result.append_string ({STRING_32} " name=[")
+				Result.append_string (object_name)
+				Result.append_string ({STRING_32} "] ")
 			end
 		end
 
@@ -1263,7 +1261,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

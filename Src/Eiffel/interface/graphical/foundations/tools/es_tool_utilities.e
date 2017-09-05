@@ -39,7 +39,7 @@ feature -- Query
 			l_type: STRING_32
 			l_edition: NATURAL_8
 		do
-			l_type := a_tool.generating_type
+			l_type := a_tool.generating_type.name_32
 			create Result.make (l_type.count + 2)
 			Result.append (l_type)
 
@@ -155,7 +155,7 @@ feature -- Query
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

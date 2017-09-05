@@ -1,5 +1,5 @@
-note
-	description: "XMI Translation (for UML Tools)"
+﻿note
+	description: "XMI Translation (for UML Tools)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -56,7 +56,7 @@ feature -- Access
 			-- Directory where the documentation is going
 			-- to be generated.
 
-	target_file_name: FILE_NAME
+	target_file_name: PATH
 			-- Location.
 
 feature -- Actions
@@ -73,8 +73,7 @@ feature -- Actions
 			new_xmi_class_presentation: XMI_CLASS_PRESENTATION
 			new_xmi_cluster_presentation: XMI_CLUSTER_PRESENTATION
 			retried: BOOLEAN
-			ir_error: INTERRUPT_ERROR
-			l_class_i: CLASS_I
+			classes: like {DOCUMENTATION_UNIVERSE}.classes -- Classes to be generated.
 		do
 			deg.put_start_output
 			if not retried then
@@ -98,15 +97,14 @@ feature -- Actions
 					current_cluster_id := idref_counter
 					idref_counter := idref_counter + 1
 						-- Classes
-					if current_cluster /= Void then
-						from
-							current_cluster.start
-						until
-							current_cluster.after
+					if attached current_cluster then
+						across
+							current_cluster as c
 						loop
-							l_class_i ?= current_cluster.item_for_iteration
-							check l_class_i_not_void: l_class_i /= Void end
-							if l_class_i.is_compiled then
+							if
+								attached {CLASS_I} c.item as l_class_i and then
+								l_class_i.is_compiled
+							then
 								current_compiled_class := l_class_i.compiled_class
 								create new_xmi_class.make (id_counter, current_cluster_id, current_compiled_class)
 								last_class_x := last_class_x + ((id_counter \\ 4) - 1) * 300
@@ -118,7 +116,6 @@ feature -- Actions
 								new_xmi_diagram.add_presentation (new_xmi_class_presentation)
 								xmi_classes.put (new_xmi_class, current_compiled_class)
 							end
-							current_cluster.forth
 						end
 					end
 					idref_counter := idref_counter + 1
@@ -149,25 +146,19 @@ feature -- Actions
 
 				deg.put_string ("Building generalizations list")
 
-				from
-					classes.start
-				until
-					classes.after
+				across
+					classes as c
 				loop
-					l_class_i ?= classes.item_for_iteration
 					check
-						l_class_i_not_void: l_class_i /= Void
-						l_class_i_is_compiled: l_class_i.is_compiled
+						class_i_is_compiled: c.item.is_compiled
 					end
-					current_compiled_class := l_class_i.compiled_class
-					add_generalizations (current_compiled_class)
+					add_generalizations (c.item.compiled_class)
 					classes.forth
 				end
 
 				deg.put_string ("Generating XMI")
 				generate_from_lists
 				deg.put_string ("XMI generated")
-				classes := Void
 				groups := Void
 				xmi_classes := Void
 				xmi_clusters := Void
@@ -178,15 +169,15 @@ feature -- Actions
 			end
 			deg.put_end_output
 		rescue
-			if Error_handler.error_list /= Void and then
-				not Error_handler.error_list.is_empty then
-				ir_error ?= Error_handler.error_list.first
-				if ir_error /= Void then
-					retried := True
-					deg.put_string ("XMI generation was cancelled.")
-					Error_handler.error_list.wipe_out
-					retry
-				end
+			if
+				attached Error_handler.error_list as es and then
+				not es.is_empty and then
+				attached {INTERRUPT_ERROR} es.first as ir_error
+			then
+				retried := True
+				deg.put_string ("XMI generation was cancelled.")
+				es.wipe_out
+				retry
 			end
 		end
 
@@ -222,8 +213,6 @@ feature {NONE} -- Cache
 			-- Put it into temporary file if too big.
 		require
 			a_str_not_void: a_str /= Void
-		local
-			l_tmp_filename: FILE_NAME
 		do
 			if string_cache = Void then
 				create string_cache.make (max_string_cache)
@@ -232,8 +221,7 @@ feature {NONE} -- Cache
 				string_cache.append (a_str)
 			else
 				if tmp_target_file = Void then
-					create l_tmp_filename.make_temporary_name
-					create tmp_target_file.make_create_read_write (l_tmp_filename)
+					create tmp_target_file.make_create_read_write (create {FILE_NAME}.make_temporary_name)
 				end
 				tmp_target_file.putstring (string_cache)
 				tmp_target_file.putstring (a_str)
@@ -248,21 +236,18 @@ feature {NONE} -- Cache
 			end
 		end
 
-	commit_cache (a_file_name: STRING)
-			-- Commit the cache into `a_file_name'
+	commit_cache (a_file_name: PATH)
+			-- Commit the cache into `a_file_name'.
 		require
 			a_file_name_not_void: a_file_name /= Void
-		local
-			l_tmp_filename: FILE_NAME
 		do
 			if tmp_target_file = Void then
-				create l_tmp_filename.make_temporary_name
-				create tmp_target_file.make_create_read_write (l_tmp_filename)
+				create tmp_target_file.make_create_read_write (create {FILE_NAME}.make_temporary_name)
 			end
 			tmp_target_file.putstring (string_cache)
 			tmp_target_file.close
-			tmp_target_file.rename_file (a_file_name)
-				-- Reset
+			tmp_target_file.rename_path (a_file_name)
+				-- Reset.
 			string_cache.wipe_out
 			tmp_target_file := Void
 		rescue
@@ -275,9 +260,6 @@ feature {NONE} -- Cache
 		end
 
 feature {NONE} -- Implementation
-
-	classes: ARRAYED_LIST [CONF_CLASS]
-			-- Classes to be generated.
 
 	groups: ARRAYED_LIST [CONF_GROUP]
 			-- Clusters to be generated.
@@ -360,14 +342,8 @@ feature {NONE} -- Implementation
 
 	is_in_selection (c: CLASS_C): BOOLEAN
 			-- Is `c' in the clusters selected by the user?
-		local
-			l_class: CONF_CLASS
 		do
-			l_class ?= c.lace_class
-			check
-				l_class_not_void: l_class /= Void
-			end
-			Result := doc_universe.classes.has (l_class)
+			Result := doc_universe.classes.has (c.lace_class)
 		end
 
 	add_type (t: XMI_TYPE)
@@ -423,37 +399,24 @@ feature {NONE} -- Implementation
 			-- Fill field `features' in items of `xmi_classes'.
 		local
 			current_xmi_class: XMI_CLASS
-			current_compiled_class: CLASS_C
 			current_feature: E_FEATURE
-			current_feature_list: LIST [E_FEATURE]
 		do
-			from
-				xmi_classes.start
-			until
-				xmi_classes.after
+			across
+				xmi_classes as c
 			loop
-
-				current_compiled_class := xmi_classes.item_for_iteration.compiled_class
-				current_xmi_class := xmi_classes.item_for_iteration
-				current_feature_list := current_compiled_class.written_in_features
-				from
-					current_feature_list.start
-				until
-					current_feature_list.after
+				current_xmi_class := c.item
+				across
+					current_xmi_class.compiled_class.written_in_features as f
 				loop
-					current_feature := current_feature_list.item
+					current_feature := f.item
 					if current_feature.is_attribute then
 						add_attribute_or_association (current_feature, current_xmi_class)
+					elseif current_feature.is_procedure then
+						add_procedure (current_feature, current_xmi_class)
 					else
-						if not current_feature.is_procedure then
-							add_function (current_feature, current_xmi_class)
-						else
-							add_procedure (current_feature, current_xmi_class)
-						end
+						add_function (current_feature, current_xmi_class)
 					end
-					current_feature_list.forth
 				end
-				xmi_classes.forth
 			end
 		end
 
@@ -461,18 +424,13 @@ feature {NONE} -- Implementation
 			-- Add XMI representation of `a_feature' to the field `features' in `a_xmi_class'.
 		require
 			a_feature_not_void: a_feature /= void
-		local
-			feature_type: XMI_CLASS
 		do
-			if a_feature.type.has_associated_class then
-				feature_type := xmi_class_by_class_c (a_feature.type.base_class)
-				if feature_type = Void then
-					add_function_type_unknown (a_feature, a_xmi_class)
-				else
-					add_function_type_known (a_feature, a_xmi_class, feature_type)
-				end
-			else
+			if not a_feature.type.has_associated_class then
 				add_function_type_formal (a_feature, a_xmi_class)
+			elseif attached xmi_class_by_class_c (a_feature.type.base_class) as feature_type then
+				add_function_type_known (a_feature, a_xmi_class, feature_type)
+			else
+				add_function_type_unknown (a_feature, a_xmi_class)
 			end
 		end
 
@@ -738,13 +696,13 @@ feature {NONE} -- Implementation
 				full_type_name.append (c.ast.generics_as_string)
 			end
 			create new_xmi_type.make_type (idref_counter, full_type_name)
-			if not xmi_types.has (new_xmi_type) then
+			xmi_types.start
+			xmi_types.search (new_xmi_type)
+			if xmi_types.exhausted then
 				idref_counter := idref_counter + 1
-				add_type (new_xmi_type)
+				xmi_types.extend (new_xmi_type)
 			else
-				xmi_types.start
-				xmi_types.search (new_xmi_type)
-				new_xmi_type ?= xmi_types.item
+				new_xmi_type := xmi_types.item
 			end
 			create new_xmi_association.make (idref_counter, f_name, new_xmi_type, a_xmi_class, False, False)
 			idref_counter := idref_counter + 3
@@ -858,32 +816,22 @@ feature {NONE} -- Implementation
 		local
 			new_xmi_association: XMI_ASSOCIATION
 			new_xmi_type: XMI_TYPE
-			l_ordered,
-			l_multiple: BOOLEAN
 			f_name,
 			full_type_name: STRING
-			c: CLASS_C
 		do
 			f_name := feature_name (a_feature)
-			c := a_feature.type.base_class
 				-- Take 1st generic.
 			full_type_name := full_class_name_from_generic_class (a_feature)
 			create new_xmi_type.make_type (idref_counter, full_type_name)
-			if not xmi_types.has (new_xmi_type) then
+			xmi_types.start
+			xmi_types.search (new_xmi_type)
+			if xmi_types.exhausted then
 				idref_counter := idref_counter + 1
-				add_type (new_xmi_type)
+				xmi_types.extend (new_xmi_type)
 			else
-				xmi_types.start
-				xmi_types.search (new_xmi_type)
-				new_xmi_type ?= xmi_types.item
+				new_xmi_type := xmi_types.item
 			end
-			if is_parent_of (ordered_type, full_type_name) then
-				l_ordered := True
-			end
-			if is_parent_of (multiple_type, full_type_name) then
-				l_multiple := True
-			end
-			create new_xmi_association.make (idref_counter, f_name, new_xmi_type, a_xmi_class, l_ordered, l_multiple)
+			create new_xmi_association.make (idref_counter, f_name, new_xmi_type, a_xmi_class, is_parent_of (ordered_type, full_type_name), is_parent_of (multiple_type, full_type_name))
 			idref_counter := idref_counter + 3
 			if a_feature.export_status.is_none then
 				new_xmi_association.set_private
@@ -966,10 +914,8 @@ feature {NONE} -- Implementation
 			a_xmi_type_not_void: a_xmi_type /= Void
 		local
 			new_xmi_attribute: XMI_ATTRIBUTE
-			f_name: STRING
 		do
-			f_name := feature_name (a_feature)
-			create new_xmi_attribute.make (id_counter, f_name, a_xmi_type)
+			create new_xmi_attribute.make (id_counter, feature_name (a_feature), a_xmi_type)
 			id_counter := id_counter + 1
 			if a_feature.export_status.is_none then
 				new_xmi_attribute.set_private
@@ -1085,9 +1031,7 @@ feature {NONE} -- Implementation
 	set_target_file_name
 			-- Finalize file name using `root_directory'.
 		do
-			create target_file_name.make_from_string (root_directory.name)
-			target_file_name.set_file_name (Eiffel_system.name)
-			target_file_name.add_extension ("xml")
+			target_file_name := root_directory.path.appended (Eiffel_system.name).appended_with_extension ("xml")
 		end
 
 	feature_name (f: E_FEATURE): STRING
@@ -1129,46 +1073,35 @@ feature {NONE} -- Implementation
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			full_type_name: STRING
-			l_cnt: INTEGER
-			l_multiple_generics: BOOLEAN
-			l_number: INTEGER
-			l_name: STRING
+			i: INTEGER
+			n: INTEGER
+			generics: ARRAYED_LIST [TYPE_A]
+			g: TYPE_A
 		do
-			full_type_name := a_feature.type.base_class.name_in_upper.twin
+			Result := a_feature.type.base_class.name_in_upper.twin
 			from
-				l_cnt := 1
-				l_number := a_feature.type.generics.count
-				full_type_name.append (" [")
+				i := 1
+				generics := a_feature.type.generics
+				n := generics.count
+				Result.append_character (' ')
+				Result.append_character ('[')
 			until
-				l_cnt > l_number
+				i > n
 			loop
-				if l_multiple_generics then
-					if a_feature.type.generics.i_th (l_cnt).has_associated_class then
-						full_type_name.append ("," + a_feature.type.generics.i_th (l_cnt).base_class.name_in_upper)
-					else
-						if attached {FORMAL_A} a_feature.type.generics.i_th (l_cnt).actual_type as l_formal then
-								-- This is not proper until AST_TYPE_OUTPUT_STRATEGY is used.
-							l_name := a_feature.associated_class.generics.i_th (l_formal.position).name.name
-							full_type_name.append ("," + l_name)
-						end
-					end
-				else
-					if a_feature.type.generics.i_th (l_cnt).has_associated_class then
-						full_type_name.append (a_feature.type.generics.i_th (l_cnt).base_class.name_in_upper)
-					else
-						if attached {FORMAL_A} a_feature.type.generics.i_th (l_cnt).actual_type as l_formal then
-								-- This is not proper until AST_TYPE_OUTPUT_STRATEGY is used.
-							l_name := a_feature.associated_class.generics.i_th (l_formal.position).name.name
-							full_type_name.append (l_name)
-						end
-					end
-					l_multiple_generics := True
+				if i > 1 then
+					Result.append_character (',')
+					Result.append_character (' ')
 				end
-				l_cnt := l_cnt + 1
+				g := generics [i]
+				if g.has_associated_class then
+					Result.append (g.base_class.name_in_upper)
+				elseif attached {FORMAL_A} g.actual_type as l_formal then
+						-- This is not proper until AST_TYPE_OUTPUT_STRATEGY is used.
+					Result.append (a_feature.associated_class.generics [l_formal.position].name.name)
+				end
+				i := i + 1
 			end
-			full_type_name.append ("]")
-			Result := full_type_name
+			Result.append_character (']')
 		end
 
 	ordered_type: STRING = "CHAIN [ANY]"
@@ -1178,7 +1111,7 @@ feature {NONE} -- Implementation
 			-- Name of topmost multiple type
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1209,4 +1142,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class XMI_EXPORT
+end

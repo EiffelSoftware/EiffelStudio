@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Groups selection for documentation."
 	legal: "See notice at end of class."
@@ -42,27 +42,19 @@ feature -- Element change
 		require
 			gr_not_void: gr /= Void
 			not_is_universe_completed: not is_universe_completed
-		local
-			cl: STRING_TABLE [CONF_CLASS]
-			l_class_i: CLASS_I
 		do
 			if not groups.has (gr) then
 				groups.extend (gr)
-				cl := gr.classes
-				if cl /= Void then
-					from
-						cl.start
-					until
-						cl.after
+				if attached gr.classes as cs then
+					across
+						cs as c
 					loop
-						l_class_i ?= cl.item_for_iteration
-						check
-							l_class_i /= Void
+						if
+							attached {CLASS_I} c.item as class_i and then
+							class_i.is_compiled
+						then
+							classes_internal.extend (class_i)
 						end
-						if l_class_i.is_compiled then
-							classes_internal.extend (cl.item_for_iteration)
-						end
-						cl.forth
 					end
 				end
 			end
@@ -73,31 +65,25 @@ feature -- Element change
 		require
 			not_is_universe_completed: not is_universe_completed
 		local
-			gr: ARRAYED_LIST [CONF_GROUP]
-			cl: STRING_TABLE [CONF_CLASS]
-			l_class_i: CLASS_I
+			g: CONF_GROUP
 		do
-			gr := Universe.groups
-			from gr.start until gr.after loop
-				groups.extend (gr.item)
-				cl := gr.item.classes
-				if cl /= Void then
-					from
-						cl.start
-					until
-						cl.after
+			across
+				Universe.groups as gs
+			loop
+				g := gs.item
+				groups.extend (g)
+				if attached g.classes as cs then
+					across
+						cs as c
 					loop
-						l_class_i ?= cl.item_for_iteration
-						check
-							l_class_i /= Void
+						if
+							attached {CLASS_I} c.item as class_i and then
+							class_i.is_compiled
+						then
+							classes_internal.extend (class_i)
 						end
-						if l_class_i.is_compiled then
-							classes_internal.extend (cl.item_for_iteration)
-						end
-						cl.forth
 					end
 				end
-				gr.forth
 			end
 		end
 
@@ -118,7 +104,7 @@ feature -- Access
 	groups: ARRAYED_LIST [CONF_GROUP]
 			-- All groups in universe.
 
-	classes: ARRAYED_LIST [CONF_CLASS]
+	classes: ARRAYED_LIST [CLASS_I]
 			-- All classes from `groups' sorted.
 		do
 			Result := classes_internal
@@ -201,7 +187,7 @@ feature -- Status report
 		do
 			l_index := classes.index
 			classes.start
-			classes.search (a_class.config_class)
+			classes.search (a_class)
 			if not classes.after then
 				Result := True
 				found_group := classes.item_for_iteration.group
@@ -257,26 +243,18 @@ feature {NONE} -- Implementation
 			-- List of all items from `classes' whose group is `group'.
 		require
 			group_not_void: group /= Void
-		local
-			cl: STRING_TABLE [CONF_CLASS]
-			l_class_i: CLASS_I
 		do
 			create Result.make (100)
 			if group.classes_set then
-				cl := group.classes
-				from
-					cl.start
-				until
-					cl.after
+				across
+					group.classes as cs
 				loop
-					l_class_i ?= cl.item_for_iteration
-					check
-						l_class_i_not_void: l_class_i /= Void
+					if
+						attached {CLASS_I} cs.item as class_i and then
+						class_i.is_compiled
+					then
+						Result.extend (class_i)
 					end
-					if l_class_i.is_compiled then
-						Result.extend (cl.item_for_iteration)
-					end
-					cl.forth
 				end
 			end
 		ensure
@@ -285,10 +263,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation: Access
 
-	class_sorter: QUICK_SORTER [CONF_CLASS]
+	class_sorter: QUICK_SORTER [CLASS_I]
 			-- Sorter object for classes.
 		once
-			create Result.make (create {COMPARABLE_COMPARATOR [CONF_CLASS]})
+			create Result.make (create {COMPARABLE_COMPARATOR [CLASS_I]})
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -301,8 +279,8 @@ feature {NONE} -- Implementation: Access
 			Result_not_void: Result /= Void
 		end
 
-	classes_internal: ARRAYED_LIST [CONF_CLASS]
-			-- Classes internal
+	classes_internal: ARRAYED_LIST [CLASS_I]
+			-- Classes internal.
 
 	class_sorted: BOOLEAN
 			-- Is classes sorted?
@@ -311,7 +289,7 @@ invariant
 	groups_not_void: groups /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -342,4 +320,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class DOCUMENTATION_UNIVERSE
+end

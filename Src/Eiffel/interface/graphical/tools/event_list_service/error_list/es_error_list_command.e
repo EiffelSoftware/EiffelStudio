@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		A command that all Errors and Warnings tool {ES_ERRORS_AND_WARNINGS_TOOL} commands are based on.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	ES_ERROR_LIST_COMMAND
@@ -89,11 +89,11 @@ feature -- Access
 			result_consistent: Result = Result
 		end
 
-	name: STRING_GENERAL
+	name: STRING_32
 			-- Name of the command. Use to store the command in the
 			-- preferences.
 		do
-			Result := generating_type
+			Result := generating_type.name_32
 		end
 
 feature {NONE} -- Access
@@ -111,7 +111,7 @@ invariant
 	tool_commander_attached: is_interface_usable implies tool_commander /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

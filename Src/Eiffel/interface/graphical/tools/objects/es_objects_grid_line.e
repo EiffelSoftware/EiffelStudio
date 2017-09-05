@@ -71,12 +71,6 @@ feature {NONE} -- Initialization
 			parent_grid := g
 		end
 
-feature -- Debug output
-
-	debug_output: STRING
-		deferred
-		end
-
 feature -- Recycling
 
 	reset

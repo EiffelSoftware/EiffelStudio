@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		A command used to show a tool through a tool shim {ES_TOOL} descendants.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ES_NEW_TOOL_COMMAND
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			tool_type := a_tool.window.shell_tools.dynamic_tool_type (a_tool.generating_type)
 			tooltip := locale_formatter.translation (f_create_new_tool)
 			description := tooltip
-			name := tool_type.generating_type
+			name := tool_type.generating_type.name_32
 
 			create l_pixmaps
 			mini_pixmap := l_pixmaps.mini_pixmaps.new_tool_edition_icon
@@ -73,7 +73,7 @@ feature -- Access
 	menu_name: STRING_GENERAL
 			-- Name as it appears in menus.
 
-	name: STRING
+	name: STRING_32
 			-- Name to be displayed.
 
 	pixmap: EV_PIXMAP
@@ -157,7 +157,7 @@ invariant
 	tool_type_attached: not is_recycled implies tool_type /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

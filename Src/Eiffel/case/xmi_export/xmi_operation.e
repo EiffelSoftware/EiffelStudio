@@ -1,5 +1,5 @@
-note
-	description: "Information on an operation of the system for XMI export"
+﻿note
+	description: "Information on an operation of the system for XMI export."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -27,7 +27,7 @@ feature -- Initialization
 		end
 
 feature -- Access
-	
+
 	arguments: LINKED_LIST [XMI_ARGUMENT]
 			-- Formal arguments of `Current'.
 
@@ -50,8 +50,6 @@ feature -- Actions
 
 	code: STRING
 			-- XMI representation of the attribute.
-		local
-			xmi_class: XMI_CLASS
 		do
 			Result := "<Foundation.Core.Operation xmi.id = 'S."
 			Result.append (xmi_id.out)
@@ -64,7 +62,7 @@ feature -- Actions
 				Result.append ("public")
 			elseif is_protected then
 				Result.append ("protected")
-			else 
+			else
 				Result.append ("private")
 			end
 			Result.append ("'/>%N%
@@ -98,8 +96,7 @@ feature -- Actions
 					%                      </Foundation.Core.Parameter.defaultValue>%N%
 					%                      <Foundation.Core.Parameter.kind xmi.value = 'return'/>%N%
 					%                      <Foundation.Core.Parameter.type>%N")
-				xmi_class ?= type
-				if xmi_class /= Void then
+				if attached {XMI_CLASS} type as xmi_class then
 					Result.append ("                        <Foundation.Core.Class xmi.idref = 'S.")
 					Result.append (xmi_class.xmi_id.out)
 					Result.append ("'/> <!-- ")
@@ -118,7 +115,7 @@ feature -- Actions
 			Result.append ("</Foundation.Core.BehavioralFeature.parameter>%N%
 				%            </Foundation.Core.Operation>%N")
 		end
-	
+
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

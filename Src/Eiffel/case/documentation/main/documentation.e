@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Project Documentation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -81,7 +81,6 @@ feature -- Actions
 			cf: CLASS_FORMAT
 			af: LINEAR [INTEGER]
 			retried: BOOLEAN
-			ir_error: INTERRUPT_ERROR
 			l_groups: like groups
 			l_group: CONF_GROUP
 			l_classes: STRING_TABLE [CONF_CLASS]
@@ -204,8 +203,12 @@ feature -- Actions
 										set_base_cluster (l_group)
 										cl_name := l_class.name.as_lower
 										set_class_name (cl_name)
-										if l_filter.is_html then
-											l_filter.set_keyword ({STRING_32}"html_meta", html_meta_for_class (l_classes.item_for_iteration))
+										if
+											l_filter.is_html and then
+											attached {CLASS_I} l_classes.item_for_iteration as c and then
+											c.is_compiled
+										then
+											l_filter.set_keyword ({STRING_32}"html_meta", html_meta_for_class (c))
 										end
 										af := all_class_formats.linear_representation
 										from af.start until af.after loop
@@ -232,14 +235,14 @@ feature -- Actions
 			end
 			deg.put_end_output
 		rescue
-			if Error_handler.error_list /= Void and then
-				not Error_handler.error_list.is_empty then
-				ir_error ?= Error_handler.error_list.first
-				if ir_error /= Void then
-					retried := True
-					Error_handler.error_list.wipe_out
-					retry
-				end
+			if
+				attached Error_handler.error_list as es and then
+				not es.is_empty and then
+				attached {INTERRUPT_ERROR} es.first as ir_error
+			then
+				retried := True
+				es.wipe_out
+				retry
 			end
 		end
 
@@ -306,10 +309,8 @@ feature -- Actions
 			root_directory /= Void
 		local
 			d: DIRECTORY
-			fi: PATH
 		do
-			fi := root_directory.path.extended_path (relative_path (a_group))
-			create d.make_with_path (fi)
+			create d.make_with_path (root_directory.path.extended_path (relative_path (a_group)))
 			if not d.exists then
 				d.recursive_create_dir
 			end
@@ -448,7 +449,7 @@ feature {NONE} -- Implementation
 			doc_universe.set_any_feature_format_generated (feature_links /= Void)
 		end
 
-	classes: ARRAYED_LIST [CONF_CLASS]
+	classes: ARRAYED_LIST [CLASS_I]
 			-- Classes to be generated.
 
 	groups: ARRAYED_LIST [CONF_GROUP]
@@ -471,11 +472,10 @@ feature {NONE} -- Implementation
 		local
 			s, class_array, location_array, goto_text: STRING_32
 			textfile: PLAIN_TEXT_FILE
-			fn: PATH
 			l_add: BOOLEAN
 			l_index: INTEGER
 			l_classes: like classes
-			l_class: CONF_CLASS
+			l_class: CLASS_I
 		do
 			create class_array.make (5000)
 			create location_array.make (8000)
@@ -531,8 +531,7 @@ feature {NONE} -- Implementation
 				%	}%N%
 				%// -->%N"
 
-			fn := root_directory.path.extended ("goto.html")
-			create textfile.make_with_path (fn)
+			create textfile.make_with_path (root_directory.path.extended ("goto.html"))
 			textfile.open_write
 			save_string_in_file (textfile, goto_text)
 			textfile.close
@@ -675,15 +674,13 @@ feature {EB_DIAGRAM_HTML_GENERATOR, DOCUMENTATION_ROUTINES} -- Access
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
-			l_string: STRING_32
-			l_sep: detachable STRING_32
+			l_sep: STRING_32
 		do
 			l_sep := filter.file_separator
 			if l_sep = Void then
 				l_sep := operating_environment.directory_separator.out
 			end
-			l_string := path_representation (l_sep, "..", a_cluster, True)
-			create Result.make_from_string (l_string)
+			create Result.make_from_string (path_representation (l_sep, "..", a_cluster, True))
 		end
 
 feature -- Specific Generation
@@ -926,7 +923,7 @@ feature {NONE} -- Menu bars
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -957,4 +954,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class DOCUMENTATION
+end

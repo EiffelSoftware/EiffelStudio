@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Routines intended for use by DOCUMENTATION."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -118,9 +118,7 @@ feature -- Access
 			du_not_void: du /= Void
 			a_text_formatter_not_void: a_text_formatter /= Void
 		local
-			l_groups: STRING_TABLE [CONF_GROUP]
-			l_grp: CONF_GROUP
-			l_cluster: CONF_CLUSTER
+			group: CONF_GROUP
 		do
 			a_text_formatter.process_filter_item (f_class_declaration, True)
 
@@ -130,23 +128,13 @@ feature -- Access
 
 			a_text_formatter.process_keyword_text ("Clusters", Void)
 			a_text_formatter.add_new_line
-			l_groups := eiffel_universe.target.groups
-			from
-				l_groups.start
-			until
-				l_groups.after
+			across
+				eiffel_universe.target.groups as gs
 			loop
-				l_grp := l_groups.item_for_iteration
-				if l_grp.is_cluster then
-					l_cluster ?= l_grp
-					check cluster: l_cluster /= Void end
-					if l_cluster.parent = Void then
-						append_cluster_hierarchy_leaf (a_text_formatter, du, l_grp, 1)
-					end
-				else
-					append_cluster_hierarchy_leaf (a_text_formatter, du, l_grp, 1)
+				group := gs.item
+				if attached {CONF_CLUSTER} group as l_cluster implies not attached l_cluster.parent then
+					append_cluster_hierarchy_leaf (a_text_formatter, du, group, 1)
 				end
-				l_groups.forth
 			end
 
 			a_text_formatter.process_filter_item (f_menu_bar, True)
@@ -158,7 +146,7 @@ feature -- Access
 
 	group_index_text (
 				group: CONF_GROUP;
-				class_list: ARRAYED_LIST [CONF_CLASS];
+				class_list: ARRAYED_LIST [CLASS_I];
 				diagrams: BOOLEAN; a_text_formatter: TEXT_FORMATTER
 			)
 			-- Generate documentation group index for `group'.
@@ -364,7 +352,6 @@ feature -- Routines
 			creators: HASH_TABLE [EXPORT_I, STRING]
 			s: STRING_32
 			class_c: CLASS_C
-			l_external_class: EXTERNAL_CLASS_I
 			l_group: CONF_GROUP
 		do
 			class_c := class_i.compiled_class
@@ -375,8 +362,7 @@ feature -- Routines
 				add_string_multilined (text, "%"" + class_c.obsolete_message + "%"")
 				text.add_new_line
 			end
-			if class_i.is_external_class then
-				l_external_class ?= class_i
+			if attached {EXTERNAL_CLASS_I} class_i as l_external_class then
 				append_info_item (text, "dotnet name")
 				text.process_string_text (l_external_class.dotnet_name, Void)
 				text.add_new_line
@@ -546,22 +532,17 @@ feature -- Routines
 
 feature {NONE} -- Implementation
 
-	append_class_list (text: TEXT_FORMATTER; class_list: ARRAYED_LIST [CONF_CLASS]; desc: BOOLEAN)
+	append_class_list (text: TEXT_FORMATTER; class_list: ARRAYED_LIST [CLASS_I]; desc: BOOLEAN)
 			-- Append to `ctxt.text', formatted `class_list'.
 			-- Depending on `desc', include descriptions.
 		local
 			s: detachable STRING_32
 			ci: CLASS_I
 		do
-			from
-				class_list.start
-			until
-				class_list.after
+			across
+				class_list as c
 			loop
-				ci ?= class_list.item_for_iteration
-				check
-					ci_not_void: ci /= Void
-				end
+				ci := c.item
 				text.add_indent
 				ci.compiled_class.append_signature (text, True)
 				text.add_new_line
@@ -579,7 +560,6 @@ feature {NONE} -- Implementation
 					end
 					text.add_new_line
 				end
-				class_list.forth
 			end
 		end
 
@@ -696,20 +676,16 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Indexing clauses
 
-	html_meta_for_class (a_class: CONF_CLASS): STRING_32
+	html_meta_for_class (a_class: CLASS_I): STRING_32
 			-- Generate string with list of HTML META tags
 			-- describing the indexing clause of `a_class'.
 		require
 			a_class_not_void: a_class /= Void
+			a_class_is_compiled: a_class.is_compiled
 		local
-			l_class_i: CLASS_I
 			cl: CLASS_C
 		do
-			l_class_i ?= a_class
-			check
-				l_class_i /= Void and then l_class_i.is_compiled
-			end
-			cl := l_class_i.compiled_class
+			cl := a_class.compiled_class
 			Result := indexes_to_html_meta (cl.ast.top_indexes, "Eiffel class")
 			Result.append (indexes_to_html_meta (cl.ast.bottom_indexes, "Eiffel class"))
 		end
@@ -941,7 +917,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

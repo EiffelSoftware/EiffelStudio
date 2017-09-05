@@ -67,8 +67,8 @@ feature {NONE} -- Implementation
 		rescue
 			if not l_dir_created then
 				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {WARNING_MESSAGES}).w_invalid_directory_or_cannot_be_created (wizard.directory.path.name), Void, Void)
-			elseif xe.target_file_name /= Void then
-				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {WARNING_MESSAGES}).w_Cannot_create_file (xe.target_file_name), Void, Void)
+			elseif attached xe.target_file_name as f then
+				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {WARNING_MESSAGES}).w_Cannot_create_file (f.name), Void, Void)
 			end
 			retried := True
 			retry

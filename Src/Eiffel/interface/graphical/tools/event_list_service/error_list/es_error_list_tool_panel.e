@@ -1313,7 +1313,8 @@ feature {NONE} -- Fixing
 		do
 			create m.make (c.lace_class)
 			if
-				window_manager.active_editor_for_class (c.lace_class).changed or else
+				attached window_manager.active_editor_for_class (c.lace_class) as class_editor and then
+				class_editor.changed or else
 				c.lace_class.date /= c.lace_class.file_date
 			then
 				prompts.show_error_prompt (locale.formatted_string

@@ -122,6 +122,9 @@ feature -- Forms ...
 					l_uri := lnk.location
 					if l_uri.same_string (node_api.node_path (a_node)) then
 						l_uri := ""
+					else
+						l_iri := percent_encoder.percent_decoded_string (l_uri)
+						l_uri := l_iri.to_string_8
 					end
 				else
 					l_iri := percent_encoder.percent_decoded_string (response.api.location_alias (response.node_api.node_path (a_node)))

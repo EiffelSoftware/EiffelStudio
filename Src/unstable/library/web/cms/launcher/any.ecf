@@ -10,7 +10,6 @@
 	<target name="launcher" extends="common">
 		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi.ecf"/>
 		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi.ecf"/>
-
 		<library name="standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone.ecf"/>
 		<cluster name="launcher" location=".\any\" recursive="true"/>
 		<cluster name="src" location=".\"/>

@@ -3,8 +3,6 @@
 	<description>CMS Eiffel Store MySQL persistence solution</description>
 	<target name="store_mysql">
 		<root all_classes="true"/>
-		<option warning="true">
-		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cms" location="..\..\..\cms.ecf" readonly="false"/>
 		<library name="cms_app_env" location="..\..\app_env\app_env.ecf"/>
@@ -24,7 +22,8 @@
 		</cluster>
 		<cluster name="persistence_store_mysql" location=".\src\" recursive="true">
 			<file_rule>
-				<exclude>/.svn$</exclude>
+				<exclude>/\.git$</exclude>
+				<exclude>/\.svn$</exclude>
 				<exclude>/CVS$</exclude>
 				<exclude>/EIFGENs$</exclude>
 			</file_rule>

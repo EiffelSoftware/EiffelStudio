@@ -3,16 +3,14 @@
 	<target name="cms_blog_module">
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/.git$</exclude>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true">
-		</option>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="cms" location="..\..\cms.ecf" readonly="false"/>
+		<library name="cms_comments_module" location="..\..\modules\comments\comments.ecf" readonly="false"/>
 		<library name="cms_model" location="..\..\library\model\cms_model.ecf" readonly="false"/>
 		<library name="cms_node_module" location="..\..\modules\node\node.ecf" readonly="false"/>
 		<library name="cms_taxnomy_module" location="..\..\modules\taxonomy\taxonomy.ecf"/>

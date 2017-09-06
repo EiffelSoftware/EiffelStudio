@@ -3,7 +3,7 @@
 	<target name="masquerade_auth">
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>

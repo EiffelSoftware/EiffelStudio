@@ -3,13 +3,10 @@
 	<target name="email_service">
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/.git$</exclude>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true">
-		</option>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cms_app_env" location="..\app_env\app_env.ecf"/>
 		<library name="notification_mailer" location="$ISE_LIBRARY\contrib\library\runtime\process\notification_email\notification_email.ecf"/>

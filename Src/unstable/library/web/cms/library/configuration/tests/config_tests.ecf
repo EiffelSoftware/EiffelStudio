@@ -3,12 +3,10 @@
 	<target name="config_tests">
 		<root class="TEST_CONFIG_READER_SET" feature="default_create"/>
 		<file_rule>
-			<exclude>/.git$</exclude>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true">
-		</option>
 		<capability>
 			<concurrency use="none"/>
 		</capability>

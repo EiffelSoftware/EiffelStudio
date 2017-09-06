@@ -4,7 +4,7 @@
 		<root all_classes="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cms" location="..\..\cms.ecf" readonly="false"/>
-		<library name="cms_app_env" location="..\..\library\app_env\app_env.ecf"/>
+		<library name="cms_app_env" location="..\..\library\app_env\app_env.ecf" readonly="false"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf.ecf"/>
 		<cluster name="src" location="src\" recursive="true"/>
 	</target>

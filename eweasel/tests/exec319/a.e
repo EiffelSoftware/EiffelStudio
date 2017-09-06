@@ -7,8 +7,8 @@ feature {NONE} -- Creation
 			-- Run tests.
 		do
 				-- "All" loop expressions
-			report (across data (<<>>) as c all c.item > 0 end)
-			report (across data (<<>>) as c all c.item < 0 end)
+			report (across data ({ARRAY [INTEGER]} <<>>) as c all c.item > 0 end)
+			report (across data ({ARRAY [INTEGER]} <<>>) as c all c.item < 0 end)
 			report (across data (<<5>>) as c all c.item > 0 end)
 			report (not across data (<<-5>>) as c all c.item > 0 end)
 			report (across data (<<1, 2, 3>>) as c all c.item > 0 end)
@@ -23,8 +23,8 @@ feature {NONE} -- Creation
 			report (not across data (<<1, -2, -3>>) as c until c.item = -3 all c.item > 0 end)
 			report (not across data (<<-1, -2, -3>>) as c until c.item = -2 all c.item > 0 end)
 				-- "Some" loop expressions
-			report (not across data (<<>>) as c some c.item > 0 end)
-			report (not across data (<<>>) as c some c.item < 0 end)
+			report (not across data ({ARRAY [INTEGER]} <<>>) as c some c.item > 0 end)
+			report (not across data ({ARRAY [INTEGER]} <<>>) as c some c.item < 0 end)
 			report (across data (<<5>>) as c some c.item > 0 end)
 			report (not across data (<<-5>>) as c some c.item > 0 end)
 			report (across data (<<1, 2, 3>>) as c some c.item > 0 end)
@@ -39,10 +39,10 @@ feature {NONE} -- Creation
 			report (across data (<<-1, 2, -3>>) as c until c.item = -3 some c.item > 0 end)
 			report (not across data (<<-1, -2, -3>>) as c until c.item = -3 some c.item > 0 end)
 				-- Nested loop expressions
-			report (across data2 (data (<<>>), data (<<1>>), data (<<1, 2, 3>>)) as c2
+			report (across data2 (data ({ARRAY [INTEGER]} <<>>), data (<<1>>), data (<<1, 2, 3>>)) as c2
 				all across c2.item as c all c.item > 0 end end
 			)
-			report (across data2 (data (<<>>), data (<<1>>), data (<<1, -2, 3>>)) as c2
+			report (across data2 (data ({ARRAY [INTEGER]} <<>>), data (<<1>>), data (<<1, -2, 3>>)) as c2
 				some across c2.item as c all c.item > 0 end end
 			)
 				-- Loops with assertions

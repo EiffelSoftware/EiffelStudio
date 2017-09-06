@@ -528,6 +528,7 @@ feature -- Hook / Recent changes
 								l_title := wp.title
 							end
 							create i.make ("doc", create {CMS_LOCAL_LINK}.make (l_title, wp.src), l_data.time)
+							i.set_id ("doc:" + wp.src)
 							i.set_author_name (l_data.author)
 							if attached ic.item.log as l_log then
 								i.set_information (l_log)

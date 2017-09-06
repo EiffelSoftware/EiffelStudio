@@ -10,7 +10,7 @@ class
 	CMS_OAUTH_20_FILTER
 
 inherit
-	CMS_AUTH_FILTER_I
+	CMS_AUTH_STRATEGY_FILTER
 		rename
 			make as make_filter
 		end

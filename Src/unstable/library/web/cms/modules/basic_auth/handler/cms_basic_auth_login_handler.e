@@ -15,9 +15,6 @@ inherit
 			new_mapping as new_uri_mapping
 		end
 
-	WSF_FILTER
-
-
 	WSF_RESOURCE_HANDLER_HELPER
 		redefine
 			do_get
@@ -34,7 +31,6 @@ feature -- execute
 			-- Execute request handler.
 		do
 			execute_methods (req, res)
-			execute_next (req, res)
 		end
 
 	uri_execute (req: WSF_REQUEST; res: WSF_RESPONSE)

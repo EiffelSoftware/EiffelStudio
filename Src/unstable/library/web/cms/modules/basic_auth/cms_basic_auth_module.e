@@ -19,6 +19,8 @@ inherit
 			setup_hooks
 		end
 
+	CMS_WITH_WEBAPI
+
 	CMS_HOOK_BLOCK
 
 create
@@ -31,6 +33,13 @@ feature {NONE} -- Initialization
 			Precursor
 			version := "1.0"
 			description := "Service to manage basic authentication"
+		end
+
+feature {CMS_EXECUTION} -- Administration
+
+	webapi: CMS_BASIC_AUTH_MODULE_WEBAPI
+		do
+			create Result.make (Current)
 		end
 
 feature -- Access

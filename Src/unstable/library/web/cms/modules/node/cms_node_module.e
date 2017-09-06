@@ -329,7 +329,11 @@ feature -- Hooks
 								end
 							end
 							ch.set_information (l_info)
-							ch.set_author (n.editor)
+							if n.editor = Void then
+								ch.set_author (n.author)
+							else
+								ch.set_author (n.editor)
+							end
 							ch.set_summary (n.summary)
 							if attached {CMS_TAXONOMY_API} l_node_api.cms_api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxonomy_api then
 								if attached l_taxonomy_api.terms_of_content (n, Void) as l_terms then

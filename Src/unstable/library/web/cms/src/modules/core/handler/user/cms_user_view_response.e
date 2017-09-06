@@ -10,7 +10,19 @@ inherit
 	CMS_RESPONSE
 
 create
-	make
+	make_with_user
+
+feature {NONE} -- Initialization
+
+	make_with_user (u: CMS_USER; req: WSF_REQUEST; res: WSF_RESPONSE; a_api: like api)
+		do
+			make (req, res, a_api)
+			associated_user := u
+		end
+
+feature -- Access
+
+	associated_user: CMS_USER
 
 feature -- Query
 
@@ -33,16 +45,11 @@ feature -- Process
 			-- Computed response message.
 		local
 			b: STRING_8
-			uid: INTEGER_64
-			user_api: CMS_USER_API
 			f: CMS_FORM
 		do
-			user_api := api.user_api
 			create b.make_empty
-			uid := user_id_path_parameter (request)
 			if
-				uid > 0 and then
-				attached user_api.user_by_id (uid) as l_user
+				attached associated_user as l_user
 			then
 				if
 					api.has_permission ("view user")
@@ -67,7 +74,6 @@ feature -- Process Edit
 			th: WSF_FORM_HIDDEN_INPUT
 		do
 			create Result.make (a_url, a_name)
-
 			create th.make ("user-id")
 			if a_user /= Void then
 				th.set_text_value (a_user.id.out)
@@ -79,12 +85,14 @@ feature -- Process Edit
 			populate_form (Result, a_user)
 		end
 
-	populate_form (a_form: WSF_FORM; a_user: detachable CMS_USER)
+	populate_form (a_form: CMS_FORM; a_user: detachable CMS_USER)
 			-- Fill the web form `a_form' with data from `a_node' if set,
 			-- and apply this to content type `a_content_type'.
 		local
 			ti: WSF_FORM_TEXT_INPUT
 			fs: WSF_FORM_FIELD_SET
+			l_new_access_token_form: WSF_FORM
+			l_access_token: detachable READABLE_STRING_32
 		do
 			if a_user /= Void then
 				create fs.make
@@ -97,7 +105,33 @@ feature -- Process Edit
 				ti.set_is_readonly (True)
 				fs.extend (ti)
 				a_form.extend (fs)
+				if api.setup.webapi_enabled then
+					create fs.make
+					fs.set_legend ("Web API")
+					l_access_token := api.user_api.user_profile_item ("access_token", a_user)
+					if l_access_token /= Void then
+						create ti.make_with_text ("api_access_token", a_user.name)
+						ti.set_text_value (l_access_token)
+						ti.set_label ("Access Token")
+						ti.set_is_readonly (True)
+						fs.extend (ti)
+					end
+
+					create l_new_access_token_form.make (api.webapi_path ("access_token"), Void)
+					l_new_access_token_form.set_method_post
+					if l_access_token /= Void then
+						l_new_access_token_form.extend (create {WSF_FORM_SUBMIT_INPUT}.make_with_text ("access_token_op", "Refresh Access Token"))
+					else
+						l_new_access_token_form.extend (create {WSF_FORM_SUBMIT_INPUT}.make_with_text ("access_token_op", "Create Access Token"))
+					end
+					l_new_access_token_form.extend (create {WSF_FORM_HIDDEN_INPUT}.make_with_text ("destination", request.percent_encoded_path_info))
+					a_form.put_widget_after_form (l_new_access_token_form)
+					a_form.extend (fs)
+				end
 			end
 		end
 
+note
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

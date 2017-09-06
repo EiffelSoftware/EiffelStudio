@@ -8,11 +8,33 @@ class
 
 inherit
 	CMS_MODULE_API
+		redefine
+			initialize
+		end
+
+	CMS_USER_PROFILE_API
+		redefine
+			initialize
+		end
 
 	REFACTORING_HELPER
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	initialize
+		do
+			Precursor {CMS_MODULE_API}
+			Precursor {CMS_USER_PROFILE_API}
+			user_storage := storage
+		end
+
+feature -- Storage
+
+	user_storage: CMS_USER_STORAGE_I
+			-- User storage.
 
 feature -- Validation
 
@@ -82,48 +104,71 @@ feature -- Query
 			end
 		end
 
+	real_user_display_name (u: CMS_USER): READABLE_STRING_32
+			-- Display name for user `u`.
+		do
+			if
+				attached {CMS_PARTIAL_USER} u as l_partial and then
+				attached user_by_id (l_partial.id) as l_user
+			then
+				Result := user_display_name (l_user)
+			else
+				Result := user_display_name (u)
+			end
+		end
+
 feature -- Access: user
 
 	user_by_id (a_id: like {CMS_USER}.id): detachable CMS_USER
 			-- User by id `a_id', if any.
 		do
-			Result := storage.user_by_id (a_id)
+			Result := user_storage.user_by_id (a_id)
 		end
 
 	user_by_name (a_username: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- User by name `a_user_name', if any.
 		do
-			Result := storage.user_by_name (a_username)
+			Result := user_storage.user_by_name (a_username)
+		end
+
+	user_by_id_or_name (a_uid: READABLE_STRING_GENERAL): detachable CMS_USER
+			-- User by id or name `a_uid`, if any.
+		do
+			if a_uid.is_integer_64 then
+				Result := user_by_id (a_uid.to_integer_64)
+			else
+				Result := user_by_name (a_uid)
+			end
 		end
 
 	user_by_email (a_email: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- User by email `a_email', if any.
 		do
-			Result := storage.user_by_email (a_email)
+			Result := user_storage.user_by_email (a_email)
 		end
 
 	user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
 			-- User by activation token `a_token'.
 		do
-			Result := storage.user_by_activation_token (a_token)
+			Result := user_storage.user_by_activation_token (a_token)
 		end
 
 	user_by_password_token (a_token: READABLE_STRING_32): detachable CMS_USER
 			-- User by password token `a_token'.
 		do
-			Result := storage.user_by_password_token (a_token)
+			Result := user_storage.user_by_password_token (a_token)
 		end
 
 	users_count: INTEGER
 			-- Number of users.
 		do
-			Result := storage.users_count
+			Result := user_storage.users_count
 		end
 
 	recent_users (params: CMS_DATA_QUERY_PARAMETERS): ITERABLE [CMS_USER]
 			-- List of the `a_rows' most recent users starting from  `a_offset'.
 		do
-			Result := storage.recent_users (params.offset.to_integer_32, params.size.to_integer_32)
+			Result := user_storage.recent_users (params.offset.to_integer_32, params.size.to_integer_32)
 		end
 
 	admin_user: detachable CMS_USER
@@ -149,8 +194,8 @@ feature -- Change User
 			if
 				attached a_user.email as l_email
 			then
-				storage.new_user (a_user)
-				error_handler.append (storage.error_handler)
+				user_storage.new_user (a_user)
+				error_handler.append (user_storage.error_handler)
 			else
 				error_handler.add_custom_error (0, "bad new user request", "Missing password or email to create new user!")
 			end
@@ -164,8 +209,8 @@ feature -- Change User
 			user_by_name (a_new_username) = Void
 		do
 			reset_error
-			storage.update_username (a_user, a_new_username)
-			error_handler.append (storage.error_handler)
+			user_storage.update_username (a_user, a_new_username)
+			error_handler.append (user_storage.error_handler)
 		end
 
 	update_user (a_user: CMS_USER)
@@ -174,8 +219,8 @@ feature -- Change User
 			has_id: a_user.has_id
 		do
 			reset_error
-			storage.update_user (a_user)
-			error_handler.append (storage.error_handler)
+			user_storage.update_user (a_user)
+			error_handler.append (user_storage.error_handler)
 		end
 
 	delete_user (a_user: CMS_USER)
@@ -184,8 +229,8 @@ feature -- Change User
 			has_id: a_user.has_id
 		do
 			reset_error
-			storage.delete_user (a_user)
-			error_handler.append (storage.error_handler)
+			user_storage.delete_user (a_user)
+			error_handler.append (user_storage.error_handler)
 		end
 
 feature -- Status report
@@ -193,7 +238,7 @@ feature -- Status report
 	is_valid_credential (a_auth_login, a_auth_password: READABLE_STRING_32): BOOLEAN
 				-- Is the credentials `a_auth_login' and `a_auth_password' valid?
 		do
-			Result := storage.is_valid_credential (a_auth_login, a_auth_password)
+			Result := user_storage.is_valid_credential (a_auth_login, a_auth_password)
 		end
 
 	user_has_permission (a_user: detachable CMS_USER; a_permission: detachable READABLE_STRING_GENERAL): BOOLEAN
@@ -229,7 +274,7 @@ feature -- Status report
 			if l_roles = Void then
 					-- Fill user with its roles.
 				create {ARRAYED_LIST [CMS_USER_ROLE]} l_roles.make (0)
-				l_roles := storage.user_roles_for (a_user)
+				l_roles := user_storage.user_roles_for (a_user)
 			end
 			Result := l_roles
 		end
@@ -262,13 +307,13 @@ feature -- User roles.
 	user_role_by_id (a_id: like {CMS_USER_ROLE}.id): detachable CMS_USER_ROLE
 			-- Retrieve a `Role' represented by an id `a_id' if any.
 		do
-			Result := storage.user_role_by_id (a_id)
+			Result := user_storage.user_role_by_id (a_id)
 		end
 
 	user_role_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_USER_ROLE
 			-- Retrieve a `Role' represented by a name `a_name' if any.
 		do
-			Result := storage.user_role_by_name (a_name)
+			Result := user_storage.user_role_by_name (a_name)
 		end
 
 	role_permissions: HASH_TABLE [LIST [READABLE_STRING_8], STRING_8]
@@ -278,12 +323,16 @@ feature -- User roles.
 		do
 			create Result.make (cms_api.enabled_modules.count + 1)
 
-			l_used_permissions := storage.role_permissions
+			l_used_permissions := user_storage.role_permissions
 			across
 				cms_api.enabled_modules as ic
 			loop
 				lst := ic.item.permissions
-				if attached {CMS_ADMINISTRABLE} ic.item as adm then
+				if
+					attached {CMS_ADMINISTRABLE} ic.item as adm and then
+					attached adm.module_administration.permissions as adm_permissions and then
+					not adm_permissions.is_empty
+				then
 					create {ARRAYED_LIST [READABLE_STRING_8]} l_full_lst.make (lst.count)
 					l_full_lst.compare_objects
 						-- l_full_lst.append (lst)
@@ -294,10 +343,34 @@ feature -- User roles.
 							l_full_lst.extend (lst_ic.item)
 						end
 					end
-						-- l_full_lst.append (adm.module_administration.permissions)
-					lst := adm.module_administration.permissions
+						-- l_full_lst.append (adm_permissions)
+					across
+						adm_permissions as lst_ic
+					loop
+						if not l_full_lst.has (lst_ic.item) then
+							l_full_lst.extend (lst_ic.item)
+						end
+					end
+					lst := l_full_lst
+				end
+				if
+					attached {CMS_WITH_WEBAPI} ic.item as wapi and then
+					attached wapi.module_webapi.permissions as wapi_permissions and then
+					not wapi_permissions.is_empty
+				then
+					create {ARRAYED_LIST [READABLE_STRING_8]} l_full_lst.make (lst.count)
+					l_full_lst.compare_objects
+						-- l_full_lst.append (lst)
 					across
 						lst as lst_ic
+					loop
+						if not l_full_lst.has (lst_ic.item) then
+							l_full_lst.extend (lst_ic.item)
+						end
+					end
+						-- l_full_lst.append (wapi_permissions)
+					across
+						wapi_permissions as lst_ic
 					loop
 						if not l_full_lst.has (lst_ic.item) then
 							l_full_lst.extend (lst_ic.item)
@@ -331,7 +404,7 @@ feature -- User roles.
 	roles: LIST [CMS_USER_ROLE]
 			-- List of possible roles.
 		do
-			Result := storage.user_roles
+			Result := user_storage.user_roles
 		end
 
 	effective_roles: LIST [CMS_USER_ROLE]
@@ -340,7 +413,7 @@ feature -- User roles.
 			l_roles: like roles
 			r: CMS_USER_ROLE
 		do
-			l_roles := storage.user_roles
+			l_roles := user_storage.user_roles
 			create {ARRAYED_LIST [CMS_USER_ROLE]} Result.make (l_roles.count)
 			across
 				l_roles as ic
@@ -357,7 +430,7 @@ feature -- User roles.
 	roles_count: INTEGER
 			-- Number of roles
 		do
-			Result := storage.user_roles.count
+			Result := user_storage.user_roles.count
 		end
 
 feature -- Change User role		
@@ -365,31 +438,31 @@ feature -- Change User role
 	save_user_role (a_user_role: CMS_USER_ROLE)
 		do
 			reset_error
-			storage.save_user_role (a_user_role)
-			error_handler.append (storage.error_handler)
+			user_storage.save_user_role (a_user_role)
+			error_handler.append (user_storage.error_handler)
 		end
 
 	unassign_role_from_user (a_role: CMS_USER_ROLE; a_user: CMS_USER; )
 			-- Unassign user_role `a_role' to user `a_user'.
 		do
 			reset_error
-			storage.unassign_role_from_user (a_role, a_user)
-			error_handler.append (storage.error_handler)
+			user_storage.unassign_role_from_user (a_role, a_user)
+			error_handler.append (user_storage.error_handler)
 		end
 
 	assign_role_to_user (a_role: CMS_USER_ROLE; a_user: CMS_USER; )
 			-- Assign user_role `a_role' to user `a_user'.
 		do
 			reset_error
-			storage.assign_role_to_user (a_role, a_user)
-			error_handler.append (storage.error_handler)
+			user_storage.assign_role_to_user (a_role, a_user)
+			error_handler.append (user_storage.error_handler)
 		end
 
 	delete_role (a_role: CMS_USER_ROLE)
 		do
 			reset_error
-			storage.delete_role (a_role)
-			error_handler.append (storage.error_handler)
+			user_storage.delete_role (a_role)
+			error_handler.append (user_storage.error_handler)
 		end
 
 feature -- User Activation
@@ -397,7 +470,7 @@ feature -- User Activation
 	new_activation (a_token: READABLE_STRING_32; a_id: INTEGER_64)
 			-- Save activation token `a_token', for the user with the id `a_id'.
 		do
-			storage.save_activation (a_token, a_id)
+			user_storage.save_activation (a_token, a_id)
 		end
 
 feature -- User Password Recovery
@@ -405,13 +478,13 @@ feature -- User Password Recovery
 	new_password (a_token: READABLE_STRING_32; a_id: INTEGER_64)
 			-- Save password token `a_token', for the user with the id `a_id'.
 		do
-			storage.save_password (a_token, a_id)
+			user_storage.save_password (a_token, a_id)
 		end
 
 	remove_password (a_token: READABLE_STRING_32)
-			-- Remove password token `a_token', from the storage.
+			-- Remove password token `a_token', from the user_storage.
 		do
-			storage.remove_password (a_token)
+			user_storage.remove_password (a_token)
 		end
 
 feature -- User status
@@ -423,7 +496,7 @@ feature -- User status
 			-- The user is active
 
 	Trashed: INTEGER = -1
-			-- The user is trashed (soft delete), ready to be deleted/destroyed from storage.
+			-- The user is trashed (soft delete), ready to be deleted/destroyed from user_storage.
 
 feature -- Access - Temp User
 
@@ -431,36 +504,36 @@ feature -- Access - Temp User
 			-- Number of pending users.
 			--! to be accepted or rehected
 		do
-			Result := storage.temp_users_count
+			Result := user_storage.temp_users_count
 		end
 
 	temp_user_by_name (a_username: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- User by name `a_user_name', if any.
 		do
-			Result := storage.temp_user_by_name (a_username.as_string_32)
+			Result := user_storage.temp_user_by_name (a_username.as_string_32)
 		end
 
 	temp_user_by_email (a_email: READABLE_STRING_8): detachable CMS_USER
 			-- User by email `a_email', if any.
 		do
-			Result := storage.temp_user_by_email (a_email)
+			Result := user_storage.temp_user_by_email (a_email)
 		end
 
 	temp_user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
 			-- User by activation token `a_token'.
 		do
-			Result := storage.temp_user_by_activation_token (a_token)
+			Result := user_storage.temp_user_by_activation_token (a_token)
 		end
 
 	temp_recent_users (params: CMS_DATA_QUERY_PARAMETERS): ITERABLE [CMS_TEMP_USER]
 			-- List of the `a_rows' most recent users starting from  `a_offset'.
 		do
-			Result := storage.temp_recent_users (params.offset.to_integer_32, params.size.to_integer_32)
+			Result := user_storage.temp_recent_users (params.offset.to_integer_32, params.size.to_integer_32)
 		end
 
 	token_by_temp_user_id (a_id: like {CMS_USER}.id): detachable STRING
 		do
-			Result := storage.token_by_temp_user_id (a_id)
+			Result := user_storage.token_by_temp_user_id (a_id)
 		end
 
 feature -- Change Temp User
@@ -477,8 +550,8 @@ feature -- Change Temp User
 				attached a_temp_user.salt as l_salt and then
 				attached a_temp_user.email as l_email
 			then
-				storage.new_user_from_temp_user (a_temp_user)
-				error_handler.append (storage.error_handler)
+				user_storage.new_user_from_temp_user (a_temp_user)
+				error_handler.append (user_storage.error_handler)
 			else
 				error_handler.add_custom_error (0, "bad new user request", "Missing password or email to create new user!")
 			end
@@ -495,17 +568,17 @@ feature -- Change Temp User
 				attached a_temp_user.password as l_password and then
 				attached a_temp_user.email as l_email
 			then
-				storage.new_temp_user (a_temp_user)
-				error_handler.append (storage.error_handler)
+				user_storage.new_temp_user (a_temp_user)
+				error_handler.append (user_storage.error_handler)
 			else
 				error_handler.add_custom_error (0, "bad new user request", "Missing password or email to create new user!")
 			end
 		end
 
 	remove_activation (a_token: READABLE_STRING_32)
-			-- Remove activation token `a_token', from the storage.
+			-- Remove activation token `a_token', from the user_storage.
 		do
-			storage.remove_activation (a_token)
+			user_storage.remove_activation (a_token)
 		end
 
 	delete_temp_user (a_temp_user: CMS_TEMP_USER)
@@ -514,9 +587,37 @@ feature -- Change Temp User
 			has_id: a_temp_user.has_id
 		do
 			reset_error
-			storage.delete_temp_user (a_temp_user)
-			error_handler.append (storage.error_handler)
+			user_storage.delete_temp_user (a_temp_user)
+			error_handler.append (user_storage.error_handler)
 		end
+
+--feature -- Access: User profile
+
+--	user_profile (a_user: CMS_USER): detachable CMS_USER_PROFILE
+--			-- User profile for `a_user'.
+--		require
+--			valid_user: a_user.has_id
+--		do
+--			Result := user_profile_storage.user_profile (a_user)
+--		end
+
+--	user_profile_item (a_item_name: READABLE_STRING_GENERAL; a_user: CMS_USER): detachable READABLE_STRING_32
+--			-- User profile item `a_item_name` for `a_user`.
+--		require
+--			valid_user: a_user.has_id
+--		do
+--			Result := user_profile_storage.user_profile_item (a_user, a_item_name)
+--		end
+
+--feature -- Change: User profile
+
+--	save_user_profile (a_user: CMS_USER; a_user_profile: CMS_USER_PROFILE)
+--			-- Save `a_user' profile `a_user_profile'.
+--		require
+--			valid_user: a_user.has_id
+--		do
+--			user_profile_storage.save_user_profile (a_user, a_user_profile)
+--		end
 
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

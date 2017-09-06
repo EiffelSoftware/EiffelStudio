@@ -14,6 +14,8 @@ inherit
 		rename
 			is_initialized as module_is_initialized,
 			is_enabled as module_is_enabled
+		redefine
+			module_api
 		end
 
 feature {NONE} -- Initialization
@@ -51,6 +53,14 @@ feature -- Status
 			-- Is Current module enabled?
 		do
 			Result := module.is_enabled
+		end
+
+feature {CMS_API, CMS_MODULE_ADMINISTRATION, CMS_MODULE_WEBAPI} -- Access: API
+
+	module_api: detachable CMS_MODULE_API
+			-- Eventual module api.
+		do
+			Result := module.module_api
 		end
 
 feature -- Router

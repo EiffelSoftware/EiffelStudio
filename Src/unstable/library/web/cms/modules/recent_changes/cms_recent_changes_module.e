@@ -143,9 +143,11 @@ feature -- Hook
 				ch := ic.item
 				create l_feed_item.make (ch.link.title)
 				l_feed_item.set_date (ch.date)
-
 				if attached ch.id as l_ch_id then
 					l_feed_item.set_id (l_ch_id)
+				end
+				if attached ch.author as l_author then
+					l_feed_item.set_author (create {FEED_AUTHOR}.make (a_response.api.real_user_display_name (l_author)))
 				end
 
 				create s.make_empty

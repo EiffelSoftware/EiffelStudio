@@ -230,6 +230,12 @@ feature -- Operation
 			end
 		end
 
+	sql_delete (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+			-- <Precursor>
+		do
+			sql_modify (a_sql_statement, a_params)
+		end
+
 	sqlite_arguments (a_params: STRING_TABLE [detachable ANY]): ARRAYED_LIST [SQLITE_BIND_ARG [ANY]]
 		local
 			k: READABLE_STRING_GENERAL

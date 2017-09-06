@@ -800,7 +800,7 @@ feature -- Change: User activation
 			sql_begin_transaction
 			write_information_log (generator + ".save_activation")
 			create l_utc_date.make_now_utc
-			create l_parameters.make (2)
+			create l_parameters.make (3)
 			l_parameters.put (a_token, "token")
 			l_parameters.put (a_id, "uid")
 			l_parameters.put (l_utc_date, "utc_date")

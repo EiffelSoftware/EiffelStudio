@@ -60,6 +60,28 @@ feature -- Hook: response
 			end
 		end
 
+feature -- Hook: webapi response
+
+	subscribe_to_webapi_response_alter_hook (h: CMS_HOOK_WEBAPI_RESPONSE_ALTER)
+			-- Add `h' as subscriber of response alter hooks CMS_HOOK_WEBAPI_RESPONSE_ALTER.		
+		do
+			subscribe_to_hook (h, {CMS_HOOK_WEBAPI_RESPONSE_ALTER})
+		end
+
+	invoke_webapi_response_alter (a_response: WEBAPI_RESPONSE)
+			-- Invoke response alter hook for response `a_response'.		
+		do
+			if attached subscribers ({CMS_HOOK_WEBAPI_RESPONSE_ALTER}) as lst then
+				across
+					lst as ic
+				loop
+					if attached {CMS_HOOK_WEBAPI_RESPONSE_ALTER} ic.item as h then
+						h.webapi_response_alter (a_response)
+					end
+				end
+			end
+		end
+
 feature -- Hook: menu_system_alter
 
 	subscribe_to_menu_system_alter_hook (h: CMS_HOOK_MENU_SYSTEM_ALTER)
@@ -110,7 +132,7 @@ feature -- Hook: form_alter
 			-- Add `h' as subscriber of form alter hooks CMS_HOOK_FORM_ALTER,
 			-- and response `a_response'.
 		do
-			subscribe_to_hook (h, {CMS_HOOK_MENU_ALTER})
+			subscribe_to_hook (h, {CMS_HOOK_FORM_ALTER})
 		end
 
 	invoke_form_alter (a_form: CMS_FORM; a_form_data: detachable WSF_FORM_DATA; a_response: CMS_RESPONSE)

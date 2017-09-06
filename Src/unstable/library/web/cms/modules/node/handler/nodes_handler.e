@@ -86,6 +86,7 @@ feature -- HTTP Methods
 			l_feed_name.append_string ({STRING_32} " : ")
 			l_feed_name.append_string_general (a_content_type.name)
 			create l_feed.make (l_feed_name)
+			l_feed.set_id (api.absolute_url (req.path_info, Void))
 			l_feed.set_date (create {DATE_TIME}.make_now_utc)
 
 			if attached {WSF_STRING} req.query_parameter ("size") as p_size and then p_size.is_integer then
@@ -113,9 +114,10 @@ feature -- HTTP Methods
 						if n.is_published then
 							create l_feed_item.make (n.title)
 							if attached n.author as u then
-								l_feed_item.set_author (create {FEED_AUTHOR}.make (api.user_api.user_display_name (u)))
+								l_feed_item.set_author (create {FEED_AUTHOR}.make (api.user_api.real_user_display_name (u)))
 							end
 							l_feed_item.set_date (n.publication_date)
+							l_feed_item.set_id (n.content_type + ":id" + n.id.out + "-rev" + n.revision.out)
 							create lnk.make (req.absolute_script_url ("/" + node_api.node_link (n).location))
 							l_feed_item.links.force (lnk, "")
 							if attached n.summary as l_summary and then not l_summary.is_whitespace then

@@ -486,8 +486,8 @@ feature -- Form
 			f_title.set_validation_action (agent (fd: WSF_FORM_DATA)
 					do
 						if
-							not attached fd.string_item ("title") as f_title
-							or else f_title.is_whitespace
+							not attached fd.string_item ("title") as i_title
+							or else i_title.is_whitespace
 						then
 							fd.report_invalid_field ("title", "Please set the title!")
 						end

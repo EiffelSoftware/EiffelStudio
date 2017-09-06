@@ -57,15 +57,21 @@ feature -- execute
 
 feature -- Query
 
-	user_id_path_parameter (req: WSF_REQUEST): INTEGER_64
-			-- User id passed as path parameter for request `req'.
+	user_path_parameter (req: WSF_REQUEST): detachable CMS_USER
+			-- User id (uid or username) passed as path parameter for request `req'.
 		local
 			s: STRING
+			l_uid: INTEGER_64
 		do
 			if attached {WSF_STRING} req.path_parameter ("uid") as p_nid then
 				s := p_nid.value
 				if s.is_integer_64 then
-					Result := s.to_integer_64
+					l_uid := s.to_integer_64
+					if l_uid > 0 then
+						Result := api.user_api.user_by_id (l_uid)
+					end
+				else
+					Result := api.user_api.user_by_name (s)
 				end
 			end
 		end
@@ -76,28 +82,23 @@ feature -- HTTP Methods
 			-- <Precursor>
 		local
 			l_user: detachable CMS_USER
-			l_uid: INTEGER_64
-			view_response: CMS_USER_VIEW_RESPONSE
 		do
 			if api.has_permission ("view user") then
 					-- Display existing node
-				l_uid := user_id_path_parameter (req)
-				if l_uid > 0 then
-					l_user := api.user_api.user_by_id (l_uid)
-					if
-						l_user /= Void
-					then
-						create view_response.make (req, res, api)
-						view_response.execute
-					else
-						send_not_found (req, res)
-					end
+				l_user := user_path_parameter (req)
+				if
+					l_user /= Void
+				then
+					(create {CMS_USER_VIEW_RESPONSE}.make_with_user (l_user, req, res, api)).execute
 				else
-					send_bad_request (req, res)
+					send_not_found (req, res)
 				end
 			else
 				send_access_denied (req, res)
 			end
 		end
 
+note
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

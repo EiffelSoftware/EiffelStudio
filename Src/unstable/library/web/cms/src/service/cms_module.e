@@ -80,7 +80,7 @@ feature -- Status
 	is_initialized: BOOLEAN
 			-- Is Current module initialized?		
 
-feature {CMS_API, CMS_MODULE_ADMINISTRATION} -- Access: API
+feature {CMS_API, CMS_MODULE} -- Access: API
 
 	module_api: detachable CMS_MODULE_API
 			-- Eventual module api.

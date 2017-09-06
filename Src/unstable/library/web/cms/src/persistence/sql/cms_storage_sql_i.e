@@ -138,6 +138,11 @@ feature -- Operation
 		deferred
 		end
 
+	sql_delete (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+			-- Execute sql delete `a_sql_statement' with optional parameters `a_params'.
+		deferred
+		end
+
 feature -- Helper
 
 	sql_script_content (a_path: PATH): detachable STRING
@@ -462,6 +467,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

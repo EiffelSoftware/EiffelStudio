@@ -103,6 +103,24 @@ feature {NONE} -- Initialization
 			site_theme_name := text_item_or_default ("site.theme", "default")
 			set_theme (site_theme_name)
 
+
+				-- Webapi
+			webapi_enabled := string_8_item_or_default ("webapi.mode", "off").is_case_insensitive_equal_general ("on")
+
+			l_url := string_8_item ("webapi.base_path")
+			if l_url /= Void and then not l_url.is_empty then
+				if l_url [l_url.count] = '/' then
+					l_url := l_url.substring (1, l_url.count - 1)
+				end
+				if l_url [1] /= '/' then
+					l_url := "/" + l_url
+				end
+				create webapi_base_path.make_from_string (l_url)
+			else
+				create webapi_base_path.make_from_string (default_webapi_base_path)
+			end
+
+
 				-- Administration
 			l_url := string_8_item ("administration.base_path")
 			if l_url /= Void and then not l_url.is_empty then
@@ -117,6 +135,7 @@ feature {NONE} -- Initialization
 				create administration_base_path.make_from_string (default_administration_base_path)
 			end
 			administration_theme_name := text_item_or_default ("administration.theme", theme_name) -- TODO: Default to builtin theme?
+
 		end
 
 feature -- Access
@@ -314,10 +333,18 @@ feature -- Access: Site
 			-- Optional path defining the front page.
 			-- By default "" or "/".
 
+	webapi_enabled: BOOLEAN
+			-- Is WebAPI enabled?
+
+	webapi_base_path: IMMUTABLE_STRING_8
+			-- Web API base url, default=`default_webapi_base_path`.
+
 	administration_base_path: IMMUTABLE_STRING_8
 			-- Administration base url, default=`default_administration_base_path`.
 
 feature {NONE} -- Constants
+
+	default_webapi_base_path: STRING = "/api"
 
 	default_administration_base_path: STRING = "/admin"
 
@@ -336,6 +363,12 @@ feature -- Settings
 			else
 					-- Keep previous theme!
 			end
+		end
+
+	set_webapi_mode
+			-- Switch to webapi mode.
+		do
+			set_site_mode
 		end
 
 	set_administration_mode

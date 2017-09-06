@@ -10,9 +10,16 @@ inherit
 	CMS_MODULE
 		redefine
 			initialize,
+			setup_hooks,
 			install,
 			permissions
 		end
+
+	CMS_WITH_WEBAPI
+
+	CMS_HOOK_AUTO_REGISTER
+
+	CMS_HOOK_FORM_ALTER
 
 create
 	make
@@ -41,10 +48,16 @@ feature {CMS_API} -- Module Initialization
 feature {CMS_API} -- Module management
 
 	install (a_api: CMS_API)
+		local
+			l_parent_loc: PATH
 		do
 				-- Schema
 			if attached a_api.storage.as_sql_storage as l_sql_storage then
-				l_sql_storage.sql_execute_file_script (a_api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended (name + ".sql")), Void)
+				l_parent_loc := a_api.module_resource_location (Current, create {PATH}.make_from_string ("scripts"))
+				l_sql_storage.sql_execute_file_script (l_parent_loc.extended (name + ".sql"), Void)
+				if not l_sql_storage.has_error then
+					l_sql_storage.sql_execute_file_script (l_parent_loc.extended ("user_profile.sql"), Void)
+				end
 
 				if l_sql_storage.has_error then
 					a_api.logger.put_error ("Could not initialize database for module [" + name + "]", generating_type)
@@ -81,6 +94,7 @@ feature {CMS_API} -- Module management
 				--! external configuration file?
 				--! at the moment we only have 1 admin to the whole site.
 				--! is that ok?
+
 			l_anonymous_role.add_permission ("view any page")
 			a_api.user_api.save_user_role (l_anonymous_role)
 
@@ -101,6 +115,7 @@ feature -- Router
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
 		do
+			a_router.handle ("/user/{uid}", create {CMS_USER_HANDLER}.make (a_api), a_router.methods_get)
 		end
 
 feature -- Security
@@ -116,6 +131,54 @@ feature -- Security
 			Result.force ("admin path_alias")
 			Result.force ("edit path_alias")
 		end
+
+feature {CMS_EXECUTION} -- Administration
+
+	webapi: CMS_CORE_MODULE_WEBAPI
+		do
+			create Result.make (Current)
+		end
+
+feature -- Hooks
+
+	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
+		do
+			a_hooks.subscribe_to_form_alter_hook (Current)
+		end
+
+feature -- Hook
+
+	form_alter (a_form: CMS_FORM; a_form_data: detachable WSF_FORM_DATA; a_response: CMS_RESPONSE)
+			-- Hook execution on form `a_form' and its associated data `a_form_data',
+			-- for related response `a_response'.
+		local
+			fset: WSF_FORM_FIELD_SET
+			tf: WSF_FORM_TEXT_INPUT
+		do
+			if
+				attached a_form.id as fid and then
+				fid.same_string ("roccms-user-view")
+			then
+				if
+					attached a_response.user as u and then
+					attached a_response.api.user_api as l_user_profile_api and then
+					attached l_user_profile_api.user_profile (u) as l_profile and then
+					not l_profile.is_empty
+				then
+					create fset.make
+					fset.set_legend ("User-Profile")
+					a_form.extend (fset)
+					across
+						l_profile as ic
+					loop
+						create tf.make_with_text (ic.key.to_string_32, ic.item)
+						tf.set_label (ic.key.to_string_32)
+						a_form.extend (tf)
+					end
+				end
+			end
+		end
+
 
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

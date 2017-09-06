@@ -7,7 +7,6 @@ class
 	FORBIDDEN_ERROR_CMS_RESPONSE
 
 inherit
-
 	CMS_RESPONSE
 		redefine
 			custom_prepare

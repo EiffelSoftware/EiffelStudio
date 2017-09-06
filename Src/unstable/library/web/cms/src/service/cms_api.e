@@ -54,6 +54,10 @@ feature {NONE} -- Initialize
 			s := setup.administration_base_path
 			administration_base_path_location := s.shared_substring (2, s.count)
 
+				-- Webapi backend
+			s := setup.webapi_base_path
+			webapi_base_path_location := s.shared_substring (2, s.count)
+
 				-- Initialize contents.
 			initialize_content_types
 
@@ -398,6 +402,55 @@ feature -- Access: url
 	site_url: IMMUTABLE_STRING_8
 			-- Site url
 
+feature -- Access: WebAPI
+
+	is_webapi_request (req: WSF_REQUEST): BOOLEAN
+		do
+			Result := setup.webapi_enabled and then req.percent_encoded_path_info.starts_with_general (setup.webapi_base_path)
+		end
+
+	webapi_path (a_relative_path: detachable READABLE_STRING_8): STRING_8
+		require
+			is_webapi_enabled: setup.webapi_enabled
+		do
+			create Result.make_from_string (setup.webapi_base_path)
+			if a_relative_path /= Void then
+				if a_relative_path.is_empty then
+					Result.append_character ('/')
+				else
+					if a_relative_path[1] /= '/' then
+						Result.append_character ('/')
+					end
+					Result.append (a_relative_path)
+				end
+			end
+		end
+
+	webapi_path_location (a_relative_location: detachable READABLE_STRING_8): STRING_8
+		require
+			is_webapi_enabled: setup.webapi_enabled
+			no_first_slash: a_relative_location = Void or else not a_relative_location.starts_with_general ("/")
+		do
+			create Result.make_from_string (webapi_base_path_location)
+			if a_relative_location /= Void then
+				if a_relative_location.is_empty then
+					Result.append_character ('/')
+				else
+					if a_relative_location[1] /= '/' then
+						Result.append_character ('/')
+					end
+					Result.append (a_relative_location)
+				end
+			end
+		end
+
+feature {NONE} -- Implementation/WebAPI.
+
+	webapi_base_path_location: IMMUTABLE_STRING_8
+			-- Webapi path without first slash!
+
+feature -- Access: Administration		
+
 	is_administration_request (req: WSF_REQUEST): BOOLEAN
 		do
 			Result := req.percent_encoded_path_info.starts_with_general (setup.administration_base_path)
@@ -435,12 +488,19 @@ feature -- Access: url
 			end
 		end
 
-feature {NONE} -- Url implementation.		
+feature {NONE} -- Implementation/ Administration
 
 	administration_base_path_location: IMMUTABLE_STRING_8
 			-- Administration path without first slash!
 
 feature -- CMS links
+
+	webapi_link (a_title: READABLE_STRING_GENERAL; a_relative_location: detachable READABLE_STRING_8): CMS_LOCAL_LINK
+		require
+			no_first_slash: a_relative_location = Void or else not a_relative_location.starts_with_general ("/")
+		do
+			Result := local_link (a_title, webapi_path_location (a_relative_location))
+		end
 
 	administration_link (a_title: READABLE_STRING_GENERAL; a_relative_location: detachable READABLE_STRING_8): CMS_LOCAL_LINK
 		require
@@ -502,17 +562,32 @@ feature -- Helpers: URLs
 feature -- Helpers: html links
 
 	user_display_name (u: CMS_USER): READABLE_STRING_32
+			-- User profile name or name.
 		do
 			Result := user_api.user_display_name (u)
+		end
+
+	real_user_display_name (u: CMS_USER): READABLE_STRING_32
+			-- Real user profile name or name, even if `u` has only user `id` value.
+		do
+			Result := user_api.real_user_display_name (u)
 		end
 
 feature -- Settings
 
 	switch_to_site_mode
 		do
-			if is_administration_mode then
+			if not is_site_mode then
 				setup.set_site_mode
-				is_administration_mode := False
+				mode := mode_site
+			end
+		end
+
+	switch_to_webapi_mode
+		do
+			if not is_webapi_mode then
+				setup.set_webapi_mode
+				mode := mode_webapi
 			end
 		end
 
@@ -520,12 +595,32 @@ feature -- Settings
 		do
 			if not is_administration_mode then
 				setup.set_administration_mode
-				is_administration_mode := True
+				mode := mode_administration
 			end
+		end
+
+	mode: NATURAL_8
+
+	mode_site: NATURAL_8 = 0
+	mode_administration: NATURAL_8 = 1
+	mode_webapi: NATURAL_8 = 2
+
+	is_site_mode: BOOLEAN
+		do
+			Result := mode = mode_site
 		end
 
 	is_administration_mode: BOOLEAN
 			-- Is administration mode?
+		do
+			Result := mode = mode_administration
+		end
+
+	is_webapi_mode: BOOLEAN
+			-- Is webapi mode?
+		do
+			Result := mode = mode_webapi
+		end
 
 	is_debug: BOOLEAN
 			-- Is debug mode enabled?
@@ -969,6 +1064,12 @@ feature {CMS_EXECUTION} -- Hooks
 					else
 						l_module := Void
 					end
+				elseif is_webapi_mode then
+					if attached {CMS_WITH_WEBAPI} l_module as wapi then
+						l_module := wapi.module_webapi
+					else
+						l_module := Void
+					end
 				end
 				if l_module /= Void then
 					if attached {CMS_HOOK_AUTO_REGISTER} l_module as l_auto then
@@ -1205,7 +1306,7 @@ feature -- Theming path helpers
 			Result := theme_location_for (a_theme_name).extended ("assets")
 		end
 
-feature -- Environment/ module		
+feature -- Environment/ module
 
 	module_configuration (a_module: CMS_MODULE; a_name: detachable READABLE_STRING_GENERAL): detachable CONFIG_READER
 		do
@@ -1215,19 +1316,41 @@ feature -- Environment/ module
 	module_configuration_by_name (a_module_name: READABLE_STRING_GENERAL; a_name: detachable READABLE_STRING_GENERAL): detachable CONFIG_READER
 			-- Configuration reader for `a_module', and if `a_name' is set, using name `a_name'.
 		local
+			k: STRING_32
 			p: detachable PATH
+			l_cache: like module_configuration_cache
 		do
 				-- Search first in site/config/modules/$module_name/($app|$module_name).(json|ini)
 				-- if none, look as sub configuration if $app /= Void
 				-- and then in site/modules/$module_name/config/($app|$module_name).(json|ini)
 				-- and if non in sub config if $app /= Void
-			p := site_location.extended ("config").extended ("modules").extended (a_module_name)
-			Result := module_configuration_by_name_in_location (a_module_name, p, a_name)
-			if Result = Void then
-				p := module_location_by_name (a_module_name).extended ("config")
+			create k.make_from_string_general (a_module_name)
+			if a_name /= Void then
+				k.append_character (':')
+				k.append_string_general (a_name)
+			end
+			l_cache := module_configuration_cache
+			if l_cache /= Void then
+				l_cache.search (k)
+			else
+				create l_cache.make_caseless (1)
+				module_configuration_cache := l_cache
+			end
+			if l_cache.found then
+				Result := l_cache.found_item
+			else
+				p := site_location.extended ("config").extended ("modules").extended (a_module_name)
 				Result := module_configuration_by_name_in_location (a_module_name, p, a_name)
+				if Result = Void then
+					p := module_location_by_name (a_module_name).extended ("config")
+					Result := module_configuration_by_name_in_location (a_module_name, p, a_name)
+				end
+				l_cache.force (Result, k)
 			end
 		end
+
+	module_configuration_cache: detachable STRING_TABLE [detachable CONFIG_READER]
+			-- Cache for `module_configuration(_by_name)` function.
 
 	module_configuration_by_name_in_location (a_module_name: READABLE_STRING_GENERAL; a_dir: PATH; a_name: detachable READABLE_STRING_GENERAL): detachable CONFIG_READER
 			-- Configuration reader from "$a_dir/($a_module_name|$a_name).(json|ini)" location.

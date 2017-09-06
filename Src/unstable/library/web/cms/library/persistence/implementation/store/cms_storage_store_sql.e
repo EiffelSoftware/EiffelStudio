@@ -110,6 +110,12 @@ feature -- Query
 			sql_post_execution
 		end
 
+	sql_delete (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+			-- <Precursor>
+		do
+			sql_modify (a_sql_statement, a_params)
+		end
+
 	sql_rows_count: INTEGER
 			-- Number of rows for last sql execution.	
 		do

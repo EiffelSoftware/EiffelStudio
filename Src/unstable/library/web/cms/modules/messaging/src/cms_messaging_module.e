@@ -161,7 +161,7 @@ feature -- Hooks
 							if l_current_user.id = ic.item.id then
 							else
 								create f_user.make_with_value ("users[]", ic.item.id.out)
-								l_name := api.user_api.user_display_name (ic.item)
+								l_name := api.user_api.real_user_display_name (ic.item)
 								if l_name.same_string (ic.item.name) then
 									f_user.set_title (l_name)
 								else
@@ -280,7 +280,7 @@ $(document).ready(function() {
 								end
 								s.append ("<li>")
 								if l_user /= Void and then attached l_user.email as l_user_email then
-									s.append (r.html_encoded (api.user_api.user_display_name (l_user)))
+									s.append (r.html_encoded (api.user_api.real_user_display_name (l_user)))
 									s.append (" &lt;")
 									s.append (r.html_encoded (l_user_email))
 									s.append ("&gt;")
@@ -346,7 +346,7 @@ feature {NONE} -- Contact Message
 			end
 			if a_target_user /= Void then
 				smt.set_value (a_target_user.name, "target_user_name")
-				smt.set_value (api.user_api.user_display_name (a_target_user), "target_user_profile_name")
+				smt.set_value (api.user_api.real_user_display_name (a_target_user), "target_user_profile_name")
 				smt.set_value (a_target_user.id.out, "target_user_id")
 				if attached a_target_user.email as l_email then
 					smt.set_value (l_email, "target_user_email")

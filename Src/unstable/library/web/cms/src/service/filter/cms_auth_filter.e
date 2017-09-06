@@ -6,10 +6,13 @@ note
 	revision: "$Revision$"
 
 deferred class
-	CMS_AUTH_FILTER_I
+	CMS_AUTH_FILTER
 
 inherit
 	WSF_FILTER
+		rename
+			execute as auth_execute
+		end
 
 feature {NONE} -- Initialization
 
@@ -25,20 +28,28 @@ feature -- API Service
 
 feature -- Basic operations
 
-	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
+	auth_execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
-		deferred
+		do
+				-- If user is already authenticated, do not try current authenticating filter
+				-- and go to next filter directly.
+			if api.user_is_authenticated then
+				execute_next (req, res)
+			else
+				execute (req, res)
+			end
 		end
 
-	auth_strategy: STRING
+	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- <Precursor>
+		require
+			no_user_authenticated: api.user = Void
 		deferred
 		end
 
 	set_current_user (u: CMS_USER)
 		do
 			api.set_user (u)
-				-- Record auth strategy:
-			api.set_execution_variable ("auth_strategy", auth_strategy)
 		end
 
 end

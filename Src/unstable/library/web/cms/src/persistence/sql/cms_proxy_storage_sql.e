@@ -84,6 +84,11 @@ feature -- Operation
 			sql_storage.sql_modify (a_sql_statement, a_params)
 		end
 
+	sql_delete (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+		do
+			sql_storage.sql_delete (a_sql_statement, a_params)
+		end
+
 feature -- Access		
 
 	sql_start
@@ -133,6 +138,6 @@ feature -- Conversion
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

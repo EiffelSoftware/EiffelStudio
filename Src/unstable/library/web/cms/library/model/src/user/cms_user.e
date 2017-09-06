@@ -98,19 +98,6 @@ feature -- Roles
 	roles: detachable LIST [CMS_USER_ROLE]
 			-- If set, list of roles for current user.			
 
-feature -- Access: data			
-
-	item (k: READABLE_STRING_GENERAL): detachable ANY assign put
-			-- Additional item data associated with key `k'.
-		do
-			if attached items as tb then
-				Result := tb.item (k)
-			end
-		end
-
-	items: detachable STRING_TABLE [detachable ANY]
-			-- Additional data.
-
 feature -- Status report
 
 	has_id: BOOLEAN
@@ -221,29 +208,6 @@ feature -- Element change: roles
 			-- Set `roles' to `lst'.
 		do
 			roles := lst
-		end
-
-feature -- Change element: data
-
-	put (d: like item; k: READABLE_STRING_GENERAL)
-			-- Associate data item `d' with key `k'.
-		local
-			tb: like items
-		do
-			tb := items
-			if tb = Void then
-				create tb.make (1)
-				items := tb
-			end
-			tb.force (d, k)
-		end
-
-	remove (k: READABLE_STRING_GENERAL)
-			-- Remove data item associated with key `k'.	
-		do
-			if attached items as tb then
-				tb.remove (k)
-			end
 		end
 
 feature -- Status change		

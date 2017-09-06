@@ -312,6 +312,7 @@ feature -- Hooks
 						if l_node_api.has_permission_for_action_on_node ("view", n, a_current_user) then
 							n := l_node_api.full_node (n)
 							create ch.make (n.content_type, create {CMS_LOCAL_LINK}.make (n.title, "node/" + n.id.out), n.modification_date)
+							ch.set_id (n.content_type + ":id" + n.id.out + "-rev" + n.revision.out)
 							if n.creation_date ~ n.modification_date then
 								l_info := "new"
 								if not n.is_published then

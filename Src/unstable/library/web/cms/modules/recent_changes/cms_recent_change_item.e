@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	id: detachable READABLE_STRING_32
+			-- Optional id, expected to be unique.
+
 	link: CMS_LOCAL_LINK
 			-- Local link associated with the resource.
 
@@ -50,6 +53,16 @@ feature -- Access
 			--| For instance: creation, trashed, modified, ...
 
 feature -- Element change
+
+	set_id (a_id: detachable READABLE_STRING_GENERAL)
+			-- Set `id` to `a_id`.
+		do
+			if a_id = Void then
+				id := Void
+			else
+				id := a_id.as_string_32
+			end
+		end
 
 	set_author_name (n: like author_name)
 			-- Set `author_name' to `n'.

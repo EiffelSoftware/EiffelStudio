@@ -214,7 +214,7 @@ feature -- Access
 		end
 
 	recent_node_changes_before (a_lower: INTEGER; a_count: INTEGER; a_date: DATE_TIME): LIST [CMS_NODE]
-			-- List of recent changes, before `a_date', according to `params' settings.
+			-- List of recent changes on published nodes, before `a_date', according to `params' settings.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
@@ -224,10 +224,11 @@ feature -- Access
 			write_information_log (generator + ".recent_node_changes_before")
 
 			from
-				create l_parameters.make (3)
+				create l_parameters.make (4)
 				l_parameters.put (a_count, "size")
 				l_parameters.put (a_lower, "offset")
 				l_parameters.put (a_date, "date")
+				l_parameters.put ({CMS_NODE_API}.published, "status")
 
 				sql_query (sql_select_recent_node_changes_before, l_parameters)
 				sql_start
@@ -613,9 +614,9 @@ feature {NONE} -- Queries nodes
 		end
 
 	sql_select_recent_node_changes_before: STRING
-			--
+			--published nodes before ':date'.
 		once
-			Result := sql_select_all_from_nodes + " WHERE changed <= :date ORDER BY changed DESC, nid DESC LIMIT :size OFFSET :offset ;"
+			Result := sql_select_all_from_nodes + " WHERE changed <= :date AND status=:status ORDER BY changed DESC, nid DESC LIMIT :size OFFSET :offset ;"
 		end
 
 feature {NONE} -- Queries node revisions

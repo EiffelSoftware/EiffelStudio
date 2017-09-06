@@ -133,6 +133,7 @@ feature -- Hook
 			l_feed_name.append_string ({STRING_32} " : recent changes")
 			create l_feed.make (l_feed_name)
 			l_feed.set_date (create {DATE_TIME}.make_now_utc)
+			l_feed.set_id (a_response.api.absolute_url (a_response.request.path_info, Void))
 			nb := a_size
 			across
 				l_changes as ic
@@ -142,6 +143,9 @@ feature -- Hook
 				ch := ic.item
 				create l_feed_item.make (ch.link.title)
 				l_feed_item.set_date (ch.date)
+				if attached ch.id as l_ch_id then
+					l_feed_item.set_id (l_ch_id)
+				end
 
 				create s.make_empty
 				if attached ch.information as l_information then
@@ -264,9 +268,9 @@ feature -- Handler
 				l_size := 25
 			end
 
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			if r.has_permission ("view recent changes") then
-				l_user := r.user
+			if api.has_permission ("view recent changes") then
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+				l_user := api.user
 				create l_changes.make (l_size, l_until_date, l_filter_source)
 
 				create l_content.make (1024)
@@ -422,11 +426,10 @@ feature -- Handler
 					create htdate.make_from_date_time (l_until_date)
 					r.set_title ("Recent changes before " + htdate.string)
 				end
+				r.execute
 			else
-				create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				api.response_api.send_permissions_access_denied (Void, <<"view recent changes">>, req, res)
 			end
-
-			r.execute
 		end
 
 feature -- Hooks configuration

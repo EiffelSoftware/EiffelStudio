@@ -1,3 +1,10 @@
+div.feed ul.nav {
+  list-style: none;
+}
+div.feed ul.nav li {
+  display: inline-block;
+  padding-right: 1em;
+}
 div.feed ul {
   list-style: none;
   position: relative;

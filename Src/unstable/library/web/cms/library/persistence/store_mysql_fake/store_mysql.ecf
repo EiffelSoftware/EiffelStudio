@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="store_mysql_fake" uuid="F79448C5-95FA-4BAD-9194-A6142F9EE041" library_target="store_mysql_fake">
+	<description>CMS Eiffel Store MySQL persistence solution FAKE!!!</description>
+	<target name="store_mysql_fake">
+		<root all_classes="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="cms" location="..\..\..\cms.ecf" readonly="false"/>
+		<library name="cms_app_env" location="..\..\app_env\app_env.ecf"/>
+		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto.ecf"/>
+		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>
+		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error.ecf"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>
+		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging.ecf"/>
+		<library name="model" location="..\..\model\cms_model.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<cluster name="persistence_store_mysql_fake" location=".\src\" recursive="true">
+			<file_rule>
+				<exclude>/\.svn$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/EIFGENs$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

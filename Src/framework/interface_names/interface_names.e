@@ -215,17 +215,17 @@ feature -- Button texts
 	b_error_toggle_error (n: NATURAL_32): READABLE_STRING_32
 		do
 			Result := locale.formatted_string (locale.plural_translation_in_context
-				(once "$1 error", once "	$1 errors", once "tool.error", n.as_integer_32), n)
+				(once "$1 error", once "$1 errors", once "tool.error", n.as_integer_32), n)
 		end
 	b_error_toggle_warning (n: NATURAL_32): READABLE_STRING_32
 		do
 			Result := locale.formatted_string (locale.plural_translation_in_context
-				(once "$1 warning", once "	$1 warnings", once "tool.error", n.as_integer_32), n)
+				(once "$1 warning", once "$1 warnings", once "tool.error", n.as_integer_32), n)
 		end
 	b_error_toggle_hint (n: NATURAL_32): READABLE_STRING_32
 		do
 			Result := locale.formatted_string (locale.plural_translation_in_context
-				(once "$1 hint", once "	$1 hints", once "tool.error", n.as_integer_32), n)
+				(once "$1 hint", once "$1 hints", once "tool.error", n.as_integer_32), n)
 		end
 	b_apply_fix: STRING_32 do Result := locale.translation_in_context (once"Fix", once "tool.error") end
 

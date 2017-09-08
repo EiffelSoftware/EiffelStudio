@@ -1788,7 +1788,9 @@ feature {NONE} -- Factory
 
 			create Result.make (4)
 			Result.extend (error_button)
+			Result.extend (create {SD_TOOL_BAR_WIDGET_ITEM}.make (create {EV_LABEL}))
 			Result.extend (warning_button)
+			Result.extend (create {SD_TOOL_BAR_WIDGET_ITEM}.make (create {EV_LABEL}))
 			Result.extend (hint_button)
 		ensure then
 			error_button_attached: error_button /= Void

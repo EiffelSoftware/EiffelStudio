@@ -155,7 +155,7 @@ feature {NONE} -- Initialization
 
 				-- Delete following in docking EiffelStudio.
 			append_drop_actions (
-				<<
+				{ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]} <<
 					information_bar_empty_area,
 					input_grid,
 					input_cell,
@@ -437,7 +437,7 @@ invariant
 	result_grid_attached: result_grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

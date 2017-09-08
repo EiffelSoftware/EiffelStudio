@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 
 				-- Delete following in docking EiffelStudio.
 			append_drop_actions (
-				<<name_empty_area>>,
+				{ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]} <<name_empty_area>>,
 				metric_tool
 			)
 		end
@@ -220,7 +220,7 @@ feature{NONE} -- Actions
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2017, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

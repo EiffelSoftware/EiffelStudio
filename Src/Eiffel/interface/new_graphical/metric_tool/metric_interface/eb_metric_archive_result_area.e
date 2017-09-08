@@ -136,7 +136,7 @@ feature {NONE} -- Initialization
 			extend (grid_wrapper.component_widget)
 
 			append_drop_actions (
-				<<result_grid,
+				{ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]} <<result_grid,
 				  l_cell
 				>>,
 				metric_tool
@@ -535,7 +535,7 @@ invariant
 	metric_panel_attached: metric_panel /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

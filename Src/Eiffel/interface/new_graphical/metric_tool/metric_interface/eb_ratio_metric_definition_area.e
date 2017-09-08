@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			set_mode (a_mode)
 			setup_editor
 			append_drop_actions (
-				<<expression_lbl_empty_area,
+				{ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]} <<expression_lbl_empty_area,
 				  ratio_definition_empty_area
 				>>,
 				metric_tool
@@ -272,7 +272,7 @@ invariant
 	denominator_metric_setter_attached: denominator_metric_setter /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2017, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

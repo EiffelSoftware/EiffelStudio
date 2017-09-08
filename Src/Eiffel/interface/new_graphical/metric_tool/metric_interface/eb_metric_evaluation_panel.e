@@ -197,7 +197,7 @@ feature {NONE} -- Initialization
 			auto_go_to_result_btn.set_tooltip (metric_names.f_auto_go_to_result)
 
 			append_drop_actions (
-				<<
+				{ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]} <<
 					toolbar_empty_area,
 					grid_wrapper_empty_area,
 					metric_definition_empty_area,
@@ -1012,7 +1012,7 @@ invariant
 	show_percent_btn_attached: show_percent_btn /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2017, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

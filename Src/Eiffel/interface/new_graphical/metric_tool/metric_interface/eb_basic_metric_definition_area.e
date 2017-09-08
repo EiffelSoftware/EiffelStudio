@@ -87,7 +87,7 @@ feature {NONE} -- Initialization
 			setup_editor
 
 			append_drop_actions (
-				<<criterion_definition_empty_area,
+				{ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]} <<criterion_definition_empty_area,
 				  lbl_empty_area,
 				  expression_lbl_empty_area
 				>>,
@@ -463,7 +463,7 @@ invariant
 	alt_right_shortcut_attached: or_indent_shortcut /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2017, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

@@ -138,7 +138,7 @@ feature {NONE} -- Initialization
 			group_tool_bar.extend (group_btn)
 			warning_tool_bar.extend (check_warning_btn)
 			append_drop_actions (
-				<<toolbar_cell,
+				{ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]} <<toolbar_cell,
 				  tree_grid.grid,
 				  flat_grid.grid>>,
 				 metric_tool
@@ -847,7 +847,7 @@ invariant
 	on_hide_old_item_change_from_outside_agent_attached: on_hide_old_item_change_from_outside_agent /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2017, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

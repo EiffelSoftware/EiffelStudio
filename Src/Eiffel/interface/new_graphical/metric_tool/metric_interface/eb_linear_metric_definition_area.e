@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			setup_editor
 
 			append_drop_actions (
-				<<linear_lbl_empty_area,
+				{ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]} <<linear_lbl_empty_area,
 				  linear_definition_empty_area,
 				  expression_lbl_empty_area
 				>>,
@@ -655,7 +655,7 @@ invariant
 	metric_grid_attached: metric_grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

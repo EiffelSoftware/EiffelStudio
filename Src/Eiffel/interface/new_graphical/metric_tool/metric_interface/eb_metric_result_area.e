@@ -126,7 +126,7 @@ feature {NONE} -- Initialization
 			dummy_area.show
 
 			append_drop_actions (
-				<<dummy_text>>,
+				{ARRAY [EV_PICK_AND_DROPABLE_ACTION_SEQUENCES]} <<dummy_text>>,
 				metric_tool
 			)
 		end
@@ -415,7 +415,7 @@ invariant
 	archive_result_attached: archive_result /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

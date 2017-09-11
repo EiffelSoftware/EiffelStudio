@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "[
 			Objects that is a factory for scaled pixmaps.
-			Reduces memory usage and speed up systems with only a few diffrend pixmaps and a
+			Reduces memory usage and speed up systems with only a few different pixmaps and a
 			lot of EV_MODEL_PICTURE objects which uses this pixmaps and get uniformly scaled.
 	]"
 	legal: "See notice at end of class."
@@ -56,8 +56,6 @@ feature -- Access
 			an_id_pixmap_not_Void: an_id_pixmap /= Void
 			a_hight_positive: a_height > 0
 			a_width_positive: a_width > 0
-		local
-			l_result: detachable EV_PIXMAP
 		do
 			if an_id_pixmap.id > max_table_size then
 				Result := scaled_pixmap_internal (an_id_pixmap.pixmap, a_width, a_height)
@@ -65,12 +63,10 @@ feature -- Access
 				check
 					an_id_pixmap_is_in_table: orginal_pixmaps.item (an_id_pixmap.id) = an_id_pixmap.pixmap
 				end
-				l_result := scaled_pixmaps.item (an_id_pixmap.id)
-				if l_result = Void or else l_result.height /= a_height or else l_result.width /= a_width then
+				Result := scaled_pixmaps.item (an_id_pixmap.id)
+				if not attached Result or else Result.height /= a_height or else Result.width /= a_width then
 					Result := scaled_pixmap_internal (an_id_pixmap.pixmap, a_width, a_height)
-					scaled_pixmaps.put (l_result, an_id_pixmap.id)
-				else
-					Result := l_result
+					scaled_pixmaps.put (Result, an_id_pixmap.id)
 				end
 			end
 		end
@@ -96,7 +92,7 @@ feature {NONE} -- Implementation
 	orginal_pixmaps: ARRAY [detachable EV_PIXMAP]
 			-- Table of orginal pixmaps for `scaled_pixmaps'.
 
-	max_table_size: INTEGER = 20
+	max_table_size: INTEGER = 200
 			-- Maxmimum size of `scaled_pixmaps' and `orginal_pixmaps'.
 
 	scaled_pixmap_internal (a_pixmap: EV_PIXMAP; a_width, a_height: INTEGER): EV_PIXMAP
@@ -121,18 +117,14 @@ invariant
 	orginal_pixmaps_not_Void: orginal_pixmaps /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_SCALED_PIXMAP_FACTORY
-
+end

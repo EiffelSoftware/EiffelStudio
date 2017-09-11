@@ -29,6 +29,13 @@ feature -- API Service
 
 	api: CMS_API
 
+feature -- Response factory
+
+	new_generic_response (req: WSF_REQUEST; res: WSF_RESPONSE): CMS_RESPONSE
+		do
+			create {GENERIC_VIEW_CMS_RESPONSE} Result.make (req, res, api)
+		end
+
 feature -- Response message helpers
 
 	redirect_to (a_location: READABLE_STRING_8; res: WSF_RESPONSE)

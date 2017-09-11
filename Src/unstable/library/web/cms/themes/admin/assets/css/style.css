@@ -1,0 +1,107 @@
+div {
+	background-color: #ffdddd;
+}
+
+ul.horizontal li {
+  display: inline-block;
+}
+
+#header #primary.menu ul li {
+  color: #555;
+  background-color: #fff;
+  padding: 10px;
+  margin: 0;
+}
+#header #primary.menu ul li a {
+  color: #555;
+  text-decoration: none;
+}
+#header #primary.menu ul li a:hover {
+  color: black;
+}
+#header #primary.menu ul.horizontal {
+  border-bottom: solid 1px #ddd;
+}
+#header #primary.menu ul.horizontal li {
+  border-top: solid 3px #fff;
+}
+#header #primary.menu ul.horizontal li:hover {
+  background-color: #ffe;
+  border-top: solid 3px #999;
+}
+#header #primary.menu ul.horizontal li.active {
+  font-weight: bold;
+  border-top: solid 3px #ddd;
+  background-color: #ddd;
+}
+#header #primary.menu ul.horizontal li.active:hover {
+  border-top: solid 3px blue;
+}
+
+#content {
+  margin-left: 20px;
+}
+#content #highlighted {
+  position: relative;
+  border: solid 1px #ddd;
+  background-color: #ffc;
+  width: 70%;
+  left: 15%;
+  right: 15%;
+  padding: 5px;
+  font-style: italic;
+}
+#content .preview {
+  border: solid 1px red;
+}
+
+.sidebar {
+  padding: 5px;
+  margin: 3px;
+  /* border: solid 1px #ccc; */
+}
+.sidebar#sidebar_first {
+  width: 250px;
+  position: fixed;
+  top: 45px;
+  left: 0;
+  bottom: 0;
+  width: 200px;
+  border-right: solid 1px #ddd;
+}
+.sidebar#sidebar_second {
+  width: 250px;
+  float: right;
+}
+.sidebar + .main {
+  margin-left: 200px;
+}
+
+#primary-tabs ul.horizontal {
+  list-style-type: none;
+}
+#primary-tabs ul.horizontal li {
+  display: inline;
+  padding: 2px 5px;
+  border: solid 1px #ccf;
+}
+#primary-tabs ul.horizontal li.active {
+  border-color: #99f #99f #ddd;
+  border-style: solid solid none;
+  border-width: 2px 1px 0;
+  padding: 2px 7px 1px;
+}
+
+#message li.error {
+  background-color: #f99;
+  border: solid 1px red;
+  padding: 5px 2px 5px 2px;
+}
+
+table.with_border thead td {
+  font-weight: bold;
+}
+table.with_border td {
+  border: solid 1px #ccc;
+  padding: 2px 5px 2px 5px;
+}

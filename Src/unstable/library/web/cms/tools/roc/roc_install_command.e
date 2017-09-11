@@ -248,6 +248,8 @@ feature -- Execution
 						end
 					end
 				end
+			elseif l_config_path /= Void then
+				localized_print_error ({STRING_32} "Unable to read configuration file %"" + l_config_path.name + "%"!%N")
 			end
 
 			if l_cms_path = Void then
@@ -282,7 +284,7 @@ feature -- Execution
 						print (" in %"")
 						print (l_dest_dir.path.name)
 						print ("%":%N")
-						install_module_elements (l_module_source_path, l_dest_dir.path, Void)
+						install_module_elements (l_mod_name, l_module_source_path, l_dest_dir.path, Void)
 --					   	install_module_elements (l_module_source_path, l_dest_dir.path, Config_dir)
 --						install_module_elements (l_module_source_path, l_dest_dir.path, Scripts_dir)
 --						install_module_elements (l_module_source_path, l_dest_dir.path, Themes_dir)
@@ -350,7 +352,52 @@ feature -- Execution
 			end
 		end
 
-	install_module_elements (a_module_source_path: ROC_INSTALL_COPY_PARAMETERS; a_cms_module_target_path: PATH; a_element: detachable READABLE_STRING_GENERAL)
+	ecf_location (a_module_name: READABLE_STRING_GENERAL; a_module_source_path: ROC_INSTALL_COPY_PARAMETERS): detachable PATH
+			-- ecf location if exists.
+			-- Try to find based on `a_module_name`, or dir name from `a_module_source_path`, or .. search unique .ecf file (ignoring -safe.ecf).
+		local
+			l_name: READABLE_STRING_GENERAL
+			p: PATH
+			ut: FILE_UTILITIES
+		do
+			p := a_module_source_path.location
+			Result := p.extended (a_module_name).appended_with_extension ("ecf")
+			if ut.file_path_exists (Result) then
+					-- Found.
+			else
+				Result := Void
+				if attached p.entry as e then
+					Result := p.extended (e.name).appended_with_extension ("ecf")
+					if not ut.file_path_exists (Result) then
+						Result := Void
+					end
+				end
+				if Result = Void then
+					if attached ut.file_names (p.name) as l_filenames then
+						across
+							l_filenames as ic
+						until
+							Result /= Void
+						loop
+							l_name := ic.item
+							if l_name.ends_with (".ecf") then
+								if l_name.ends_with ("-safe.ecf") then
+										-- Ignore
+								else
+									Result := p.extended (l_name)
+									if not ut.file_path_exists (Result) then
+										check existing_file: False end
+										Result := Void
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+
+	install_module_elements (a_module_name: READABLE_STRING_GENERAL; a_module_source_path: ROC_INSTALL_COPY_PARAMETERS; a_cms_module_target_path: PATH; a_element: detachable READABLE_STRING_GENERAL)
 			-- Install module site files from `a_module_source_path' to cms application `a_cms_module_target_path' under expected modules folder.
 			-- If `a_element' is set, take into account only sub folder `a_element'.
 		local
@@ -379,6 +426,12 @@ feature -- Execution
 				copy_directory (l_src_dir, l_dest_dir, True)
 			else
 				link_directory (l_src_dir, l_dest_dir, True)
+			end
+				-- Detect ecf file (in the future, update main ecf file).
+			if attached ecf_location (a_module_name, a_module_source_path) as l_ecf_loc then
+					-- Found ecf file.
+			elseif not a_module_name.is_case_insensitive_equal ("core") then
+				localized_print_error ({STRING_32} "Missing .ecf file for " + a_module_name + "!%N")
 			end
 		end
 

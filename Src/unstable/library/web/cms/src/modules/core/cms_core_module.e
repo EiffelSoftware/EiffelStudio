@@ -157,7 +157,7 @@ feature -- Hook
 		do
 			if
 				attached a_form.id as fid and then
-				fid.same_string ("roccms-user-view")
+				fid.same_string ("roccms-user-view") -- Check {CMS_AUTHENTICATION_MODULE}.view_account_form_id
 			then
 				if
 					attached a_response.user as u and then

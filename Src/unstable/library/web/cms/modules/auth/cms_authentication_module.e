@@ -223,6 +223,9 @@ feature -- Handler / Constants
 
 feature -- Handler
 
+	view_account_form_id: STRING = "roccms-user-view"
+	edit_account_form_id: STRING = "roccms-user-edit"
+
 	handle_account (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
@@ -235,7 +238,7 @@ feature -- Handler
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			create b.make_empty
 			l_user := r.user
-			create f.make (r.location, "roccms-user-view")
+			create f.make (r.location, view_account_form_id)
 			if attached smarty_template_block (Current, "account_info", api) as l_tpl_block then
 				l_tpl_block.set_weight (-10)
 				r.add_block (l_tpl_block, "content")
@@ -301,7 +304,7 @@ feature -- Handler
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			create b.make_empty
 			l_user := r.user
-			create l_form.make (r.location, "roccms-user-edit")
+			create l_form.make (r.location, edit_account_form_id)
 			if attached smarty_template_block (Current, "account_edit", api) as l_tpl_block then
 				l_tpl_block.set_weight (-10)
 				r.add_block (l_tpl_block, "content")

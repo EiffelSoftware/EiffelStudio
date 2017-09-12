@@ -52,6 +52,27 @@ feature -- Encoders
 			Result := percent_encoder.percent_encoded_string (a_string)
 		end
 
+	date_time_to_string (dt: DATE_TIME): STRING_8
+			-- Date time `dt` converted to standard output (using RFC1123)
+		local
+			hd: HTTP_DATE
+		do
+			create hd.make_from_date_time (dt)
+			Result := hd.rfc1123_string
+		end
+
+	date_time_from_string (s: READABLE_STRING_GENERAL): detachable DATE_TIME
+			-- Date time from string `s`, if valid.
+		local
+			hd: HTTP_DATE
+		do
+			create hd.make_from_string (s)
+			check not hd.has_error end
+			if not hd.has_error then
+				Result := hd.date_time
+			end
+		end
+
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

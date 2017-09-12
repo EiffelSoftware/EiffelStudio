@@ -8,12 +8,18 @@ class
 
 inherit
 	CMS_MODULE
+		rename
+			module_api as auth_api
 		redefine
+			initialize,
 			setup_hooks,
-			permissions
+			permissions,
+			auth_api
 		end
 
-	CMS_ADMINISTRABLE
+	CMS_WITH_MODULE_ADMINISTRATION
+
+	CMS_WITH_WEBAPI
 
 	CMS_HOOK_AUTO_REGISTER
 
@@ -52,6 +58,15 @@ feature {NONE} -- Initialization
 			enable -- Is enabled by default
 		end
 
+feature {CMS_API} -- Initialization
+
+	initialize (api: CMS_API)
+			-- <PRecursor>
+		do
+			create auth_api.make (api)
+			Precursor (api)
+		end
+
 feature -- Access
 
 	name: STRING = "auth"
@@ -68,9 +83,18 @@ feature -- Access
 			Result.force ("view user")
 		end
 
+	auth_api: detachable CMS_AUTHENTICATION_API
+
 feature {CMS_EXECUTION} -- Administration
 
 	administration: CMS_AUTHENTICATION_MODULE_ADMINISTRATION
+		do
+			create Result.make (Current)
+		end
+
+feature -- Webapi
+
+	webapi: CMS_AUTHENTICATION_MODULE_WEBAPI
 		do
 			create Result.make (Current)
 		end
@@ -99,10 +123,12 @@ feature -- Router
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
 		do
-			configure_web (a_api, a_router)
+			if attached auth_api as l_auth_api then
+				configure_web (l_auth_api, a_router)
+			end
 		end
 
-	configure_web (a_api: CMS_API; a_router: WSF_ROUTER)
+	configure_web (a_api: CMS_AUTHENTICATION_API; a_router: WSF_ROUTER)
 		local
 			m: WSF_URI_MAPPING
 		do
@@ -226,7 +252,7 @@ feature -- Handler
 	view_account_form_id: STRING = "roccms-user-view"
 	edit_account_form_id: STRING = "roccms-user-edit"
 
-	handle_account (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_account (a_auth_api: CMS_AUTHENTICATION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			l_user: detachable CMS_USER
@@ -235,11 +261,11 @@ feature -- Handler
 			f: CMS_FORM
 			tf: WSF_FORM_TEXT_INPUT
 		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 			create b.make_empty
 			l_user := r.user
 			create f.make (r.location, view_account_form_id)
-			if attached smarty_template_block (Current, "account_info", api) as l_tpl_block then
+			if attached smarty_template_block (Current, "account_info", a_auth_api.cms_api) as l_tpl_block then
 				l_tpl_block.set_weight (-10)
 				r.add_block (l_tpl_block, "content")
 			else
@@ -260,12 +286,12 @@ feature -- Handler
 						tf.set_label ("Profile name")
 						f.extend (tf)
 					end
-					create tf.make_with_text ("creation", api.formatted_date_time_yyyy_mm_dd (l_user.creation_date))
+					create tf.make_with_text ("creation", a_auth_api.cms_api.formatted_date_time_yyyy_mm_dd (l_user.creation_date))
 					tf.set_label ("Creation date")
 					f.extend (tf)
 
 					if attached l_user.last_login_date as dt then
-						create tf.make_with_text ("last_login", api.formatted_date_time_ago (dt))
+						create tf.make_with_text ("last_login", a_auth_api.cms_api.formatted_date_time_ago (dt))
 						tf.set_label ("Last login")
 						f.extend (tf)
 					end
@@ -282,7 +308,7 @@ feature -- Handler
 				r.add_to_primary_tabs (lnk)
 			end
 
-			api.hooks.invoke_form_alter (f, Void, r)
+			a_auth_api.cms_api.hooks.invoke_form_alter (f, Void, r)
 			f.append_to_html (r.wsf_theme, b)
 
 			r.set_main_content (b)
@@ -293,7 +319,7 @@ feature -- Handler
 			r.execute
 		end
 
-	handle_edit_account (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_edit_account (a_auth_api: CMS_AUTHENTICATION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			l_user: detachable CMS_USER
@@ -301,11 +327,11 @@ feature -- Handler
 			lnk: CMS_LOCAL_LINK
 			l_form: CMS_FORM
 		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 			create b.make_empty
 			l_user := r.user
 			create l_form.make (r.location, edit_account_form_id)
-			if attached smarty_template_block (Current, "account_edit", api) as l_tpl_block then
+			if attached smarty_template_block (Current, "account_edit", a_auth_api.cms_api) as l_tpl_block then
 				l_tpl_block.set_weight (-10)
 				r.add_block (l_tpl_block, "content")
 			else
@@ -348,17 +374,17 @@ feature -- Handler
 			r.execute
 		end
 
-	handle_login (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_login (a_auth_api: CMS_AUTHENTICATION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 		do
-			if api.user_is_authenticated then
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			if a_auth_api.cms_api.user_is_authenticated then
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 				r.set_redirection ("account")
 				r.execute
-			elseif attached api.module_by_name ("session_auth") then
+			elseif attached a_auth_api.cms_api.module_by_name ("session_auth") then
 					-- FIXME: find better solution to support a default login system.
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 				if attached {WSF_STRING} req.item ("destination") as l_destination then
 					r.set_redirection ("account/auth/roc-session-login?destination=" + l_destination.url_encoded_value)
 				else
@@ -367,9 +393,9 @@ feature -- Handler
 
 				r.execute
 
-			elseif attached api.module_by_name ("basic_auth") then
+			elseif attached a_auth_api.cms_api.module_by_name ("basic_auth") then
 					-- FIXME: find better solution to support a default login system.
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 				if attached {WSF_STRING} req.item ("destination") as l_destination then
 					r.set_redirection ("account/auth/roc-basic-login?destination=" + l_destination.url_encoded_value)
 				else
@@ -378,17 +404,17 @@ feature -- Handler
 
 				r.execute
 			else
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 				r.execute
 			end
 		end
 
-	handle_logout (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_logout (a_auth_api: CMS_AUTHENTICATION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			loc: STRING
 		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 			if attached auth_strategy (req) as l_auth_strategy then
 				loc := l_auth_strategy
 			else
@@ -402,8 +428,9 @@ feature -- Handler
 			r.execute
 		end
 
-	handle_register (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_register (a_auth_api: CMS_AUTHENTICATION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
+			f: CMS_FORM
 			r: CMS_RESPONSE
 			l_user_api: CMS_USER_API
 			u: CMS_TEMP_USER
@@ -416,20 +443,29 @@ feature -- Handler
 			l_email: READABLE_STRING_8
 		do
 			if
-				api.has_permission ("account register") and then
+				a_auth_api.cms_api.has_permission ("account register") and then
 				req.is_post_request_method
 			then
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+				create f.make (req.percent_encoded_path_info, "roccms-user-register")
+				f.extend_text_field ("name", Void)
+				f.extend_password_field ("password", Void)
+				f.extend_text_field ("email", Void)
+				f.extend_text_field ("personal_information", Void)
+
+
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
+				f.process (r)
 				if
-					attached {WSF_STRING} req.form_parameter ("name") as l_name and then
-					attached {WSF_STRING} req.form_parameter ("password") as l_password and then
-					attached {WSF_STRING} req.form_parameter ("email") as p_email and then
-					attached {WSF_STRING} req.form_parameter ("personal_information") as l_personal_information
+					attached f.last_data as fd and then not fd.has_error and then
+					attached fd.string_item ("name") as l_name and then
+					attached fd.string_item ("password") as l_password and then
+					attached fd.string_item ("email") as s_email and then
+					attached fd.string_item ("personal_information") as l_personal_information
 				then
-					if p_email.value.is_valid_as_string_8 then
-						l_email := p_email.value.to_string_8
-						l_user_api := api.user_api
-						if attached l_user_api.user_by_name (l_name.value) or else attached l_user_api.temp_user_by_name (l_name.value) then
+					if s_email.is_valid_as_string_8 then
+						l_email := s_email.to_string_8
+						l_user_api := a_auth_api.cms_api.user_api
+						if attached l_user_api.user_by_name (l_name) or else attached l_user_api.temp_user_by_name (l_name) then
 								-- Username already exist.
 							r.set_value ("User name already exists!", "error_name")
 							l_exist := True
@@ -439,7 +475,7 @@ feature -- Handler
 							r.set_value ("An account is already associated with that email address!", "error_email")
 							l_exist := True
 						end
-						if attached recaptcha_secret_key (api) as l_recaptcha_key then
+						if attached recaptcha_secret_key (a_auth_api.cms_api) as l_recaptcha_key then
 							if attached {WSF_STRING} req.form_parameter ("g-recaptcha-response") as l_recaptcha_response and then is_captcha_verified (l_recaptcha_key, l_recaptcha_response.url_encoded_value) then
 								l_captcha_passed := True
 							else
@@ -452,47 +488,35 @@ feature -- Handler
 						end
 						if not l_exist then
 								-- New temp user
-							create u.make (l_name.value)
+							create u.make (l_name)
 							u.set_email (l_email)
-							u.set_password (l_password.value)
-							u.set_personal_information (l_personal_information.value)
+							u.set_password (l_password)
+							u.set_personal_information (l_personal_information)
 							l_user_api.new_temp_user (u)
-								-- Create activation token
-							l_token := new_token
-							l_user_api.new_activation (l_token, u.id)
-							l_url_activate := req.absolute_script_url ("/account/activate/" + l_token)
-							l_url_reject := req.absolute_script_url ("/account/reject/" + l_token)
-								-- Send Email to webmaster
-							create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
-							write_debug_log (generator + ".handle register: send_register_email")
-							es.send_account_evaluation (u, l_personal_information.value, l_url_activate, l_url_reject, req.absolute_script_url (""))
 
-								-- Send Email to user
-							create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
-							write_debug_log (generator + ".handle register: send_contact_email")
-							es.send_contact_email (l_email, u, req.absolute_script_url (""))
+							a_auth_api.register_user (u, l_email, l_personal_information)
 						else
-							r.set_value (l_name.value, "name")
+							r.set_value (l_name, "name")
 							r.set_value (l_email, "email")
-							r.set_value (l_personal_information.value, "personal_information")
+							r.set_value (l_personal_information, "personal_information")
 							r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 						end
 					else
-						r.set_value (l_name.value, "name")
-						r.set_value (p_email.value, "email")
-						r.set_value (l_personal_information.value, "personal_information")
+						r.set_value (l_name, "name")
+						r.set_value (l_email, "email")
+						r.set_value (l_personal_information, "personal_information")
 						r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 					end
 					r.execute
 				else
-					api.response_api.send_bad_request ("There were issue with your application, invalid or missing values.", req, res)
+					a_auth_api.cms_api.response_api.send_bad_request ("There were issue with your application, invalid or missing values.", req, res)
 				end
 			else
-				api.response_api.send_permissions_access_denied ("You can also contact the webmaster to ask for an account.", Void, req, res)
+				a_auth_api.cms_api.response_api.send_permissions_access_denied ("You can also contact the webmaster to ask for an account.", Void, req, res)
 			end
 		end
 
-	handle_activation (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_activation (a_auth_api: CMS_AUTHENTICATION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			l_user_api: CMS_USER_API
@@ -500,8 +524,8 @@ feature -- Handler
 			es: CMS_AUTHENTICATION_EMAIL_SERVICE
 			l_temp_id: INTEGER_64
 		do
-			if api.has_permission ("account activate") then
-				l_user_api := api.user_api
+			if a_auth_api.cms_api.has_permission ("account activate") then
+				l_user_api := a_auth_api.cms_api.user_api
 				if attached {WSF_STRING} req.path_parameter ("token") as l_token then
 					if attached {CMS_TEMP_USER} l_user_api.temp_user_by_activation_token (l_token.value) as l_temp_user then
 
@@ -516,20 +540,25 @@ feature -- Handler
 						l_temp_user.mark_active
 						l_user_api.new_user_from_temp_user (l_temp_user)
 
-						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 						if
 							not l_user_api.has_error and then
 							attached l_user_api.user_by_name (l_temp_user.name) as l_new_user
 						then
+							if attached l_temp_user.personal_information as l_perso_info then
+									-- Keep personal information in profile item!
+								a_auth_api.cms_api.user_api.save_user_profile_item (l_new_user, "personal_information", l_perso_info)
+							end
 								-- Delete temporal User
 							l_temp_user.set_id (l_temp_id)
 							l_user_api.delete_temp_user (l_temp_user)
 							l_user_api.remove_activation (l_token.value)
 
-							r.set_main_content ("<p> The account <i>" + html_encoded (l_new_user.name) + "</i> has been activated</p>")
+							r.set_main_content ("<p> The account <i>" + a_auth_api.cms_api.user_html_link (l_new_user) + "</i> has been activated</p>")
 								-- Send Email
 							if attached l_new_user.email as l_email then
-								create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
+								create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (a_auth_api.cms_api))
 								write_debug_log (generator + ".handle register: send_contact_activation_confirmation_email")
 								es.send_contact_activation_confirmation_email (l_email, l_new_user, req.absolute_script_url (""))
 							end
@@ -542,38 +571,38 @@ feature -- Handler
 							end
 						end
 					else							-- the token does not exist, or it was already used.
-						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 
 						r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 						r.set_main_content ("<p>The token <i>" + l_token.value + "</i> is not valid " + r.link ("Reactivate Account", "account/reactivate", Void) + "</p>")
 					end
 					r.execute
 				else
-					create l_ir.make (req, res, api)
+					create l_ir.make (req, res, a_auth_api.cms_api)
 					l_ir.execute
 				end
 			else
-				api.response_api.send_access_denied (Void, req, res)
+				a_auth_api.cms_api.response_api.send_access_denied (Void, req, res)
 			end
 		end
 
-	handle_reject (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_reject (a_auth_api: CMS_AUTHENTICATION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			es: CMS_AUTHENTICATION_EMAIL_SERVICE
 			l_ir: INTERNAL_SERVER_ERROR_CMS_RESPONSE
 			l_user_api: CMS_USER_API
 		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 			if r.has_permission ("account reject") then
 				if attached {WSF_STRING} req.path_parameter ("token") as l_token then
-					l_user_api := api.user_api
+					l_user_api := a_auth_api.cms_api.user_api
 					if attached {CMS_TEMP_USER} l_user_api.temp_user_by_activation_token (l_token.value) as l_user then
 						l_user_api.delete_temp_user (l_user)
 						r.set_main_content ("<p> The temporal account for <i>" + html_encoded (l_user.name) + "</i> has been removed</p>")
 							-- Send Email
 						if attached l_user.email as l_email then
-							create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
+							create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (a_auth_api.cms_api))
 							write_debug_log (generator + ".handle register: send_contact_activation_reject_email")
 							es.send_contact_activation_reject_email (l_email, l_user, req.absolute_script_url (""))
 						end
@@ -584,15 +613,15 @@ feature -- Handler
 					end
 					r.execute
 				else
-					create l_ir.make (req, res, api)
+					create l_ir.make (req, res, a_auth_api.cms_api)
 					l_ir.execute
 				end
 			else
-				api.response_api.send_access_denied (Void, req, res)
+				a_auth_api.cms_api.response_api.send_access_denied (Void, req, res)
 			end
 		end
 
-	handle_reactivation (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_reactivation (a_auth_api: CMS_AUTHENTICATION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			es: CMS_AUTHENTICATION_EMAIL_SERVICE
@@ -602,26 +631,26 @@ feature -- Handler
 			l_url_reject: STRING
 			l_email: READABLE_STRING_8
 		do
-			if api.has_permission ("account reactivate") then
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			if a_auth_api.cms_api.has_permission ("account reactivate") then
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 				if req.is_post_request_method then
 					if attached {WSF_STRING} req.form_parameter ("email") as p_email then
 						if p_email.value.is_valid_as_string_8 then
 							l_email := p_email.value.to_string_8
-							l_user_api := api.user_api
+							l_user_api := a_auth_api.cms_api.user_api
 							if attached {CMS_TEMP_USER} l_user_api.temp_user_by_email (l_email) as l_user then
 									-- User exist create a new token and send a new email.
 								if l_user.is_active then
 									r.set_value ("The asociated user to the given email " + l_email + " , is already active", "is_active")
 									r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 								else
-									l_token := new_token
+									l_token := a_auth_api.new_token
 									l_user_api.new_activation (l_token, l_user.id)
 									l_url_activate := req.absolute_script_url ("/account/activate/" + l_token)
 									l_url_reject := req.absolute_script_url ("/account/reject/" + l_token)
 											-- Send Email to webmaster
 									if attached l_user.personal_information as l_personal_information then
-										create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
+										create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (a_auth_api.cms_api))
 										write_debug_log (generator + ".handle register: send_register_email")
 										es.send_account_evaluation (l_user, l_personal_information, l_url_activate, l_url_reject, req.absolute_script_url (""))
 									end
@@ -640,11 +669,11 @@ feature -- Handler
 				end
 				r.execute
 			else
-				api.response_api.send_access_denied (Void, req, res)
+				a_auth_api.cms_api.response_api.send_access_denied (Void, req, res)
 			end
 		end
 
-	handle_new_password (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_new_password (a_auth_api: CMS_AUTHENTICATION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			es: CMS_AUTHENTICATION_EMAIL_SERVICE
@@ -653,20 +682,20 @@ feature -- Handler
 			l_url: STRING
 			l_email: READABLE_STRING_8
 		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 			if req.is_post_request_method then
-				l_user_api := api.user_api
+				l_user_api := a_auth_api.cms_api.user_api
 				if attached {WSF_STRING} req.form_parameter ("email") as p_email then
 					if p_email.value.is_valid_as_string_8 then
 						l_email := p_email.value.to_string_8
 						if attached {CMS_USER} l_user_api.user_by_email (l_email) as l_user then
 								-- User exist create a new token and send a new email.
-							l_token := new_token
+							l_token := a_auth_api.new_token
 							l_user_api.new_password (l_token, l_user.id)
 							l_url := req.absolute_script_url ("/account/reset-password?token=" + l_token)
 
 								-- Send Email
-							create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
+							create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (a_auth_api.cms_api))
 							write_debug_log (generator + ".handle register: send_contact_password_email")
 							es.send_contact_password_email (l_email, l_user, l_url, req.absolute_script_url (""))
 						else
@@ -685,12 +714,12 @@ feature -- Handler
 						attached l_user.email as l_user_email
 					then
 							-- User exist create a new token and send a new email.
-						l_token := new_token
+						l_token := a_auth_api.new_token
 						l_user_api.new_password (l_token, l_user.id)
 						l_url := req.absolute_script_url ("/account/reset-password?token=" + l_token)
 
 							-- Send Email
-						create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
+						create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (a_auth_api.cms_api))
 						write_debug_log (generator + ".handle register: send_contact_password_email")
 						es.send_contact_password_email (l_user_email, l_user, l_url, req.absolute_script_url (""))
 					else
@@ -703,13 +732,13 @@ feature -- Handler
 			r.execute
 		end
 
-	handle_reset_password (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_reset_password (a_auth_api: CMS_AUTHENTICATION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			l_user_api: CMS_USER_API
 		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			l_user_api := api.user_api
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
+			l_user_api := a_auth_api.cms_api.user_api
 			if attached {WSF_STRING} req.query_parameter ("token") as l_token then
 				r.set_value (l_token.value, "token")
 				if l_user_api.user_by_password_token (l_token.value) = Void then
@@ -737,7 +766,7 @@ feature -- Handler
 			r.execute
 		end
 
-	handle_change_field (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_change_field (a_auth_api: CMS_AUTHENTICATION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			l_user_api: CMS_USER_API
@@ -750,9 +779,9 @@ feature -- Handler
 				l_fieldname := p_field.url_encoded_value
 			end
 			if l_fieldname = Void then
-				api.response_api.send_bad_request (Void, req, res)
+				a_auth_api.cms_api.response_api.send_bad_request (Void, req, res)
 			else
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 
 				if r.is_authenticated then
 					create lnk.make ("View", "account/")
@@ -764,7 +793,7 @@ feature -- Handler
 					r.add_to_primary_tabs (lnk)
 				end
 
-				l_user_api := api.user_api
+				l_user_api := a_auth_api.cms_api.user_api
 				if req.is_post_request_method then
 					if attached r.user as l_user then
 						if l_fieldname.is_case_insensitive_equal ("password") then
@@ -811,7 +840,7 @@ feature -- Handler
 								not fd.has_error and then
 								attached fd.string_item ("new_profile_name") as l_new_profile_name
 							then
-								check api.user_api.is_valid_profile_name (l_new_profile_name) end
+								check a_auth_api.cms_api.user_api.is_valid_profile_name (l_new_profile_name) end
 								l_user.set_profile_name (l_new_profile_name)
 								l_user_api.update_user (l_user)
 								r.add_success_message ("Profile name updated.")
@@ -822,7 +851,7 @@ feature -- Handler
 								r.set_main_content (f.to_html (r.wsf_theme))
 							end
 						elseif l_fieldname.is_case_insensitive_equal ("username") then
-							if api.has_permission ("change own username") then
+							if a_auth_api.cms_api.has_permission ("change own username") then
 								f := new_change_username_form (r)
 								f.process (r)
 								if
@@ -830,8 +859,8 @@ feature -- Handler
 									not fd.has_error and then
 									attached fd.string_item ("new_username") as l_new_username
 								then
-									check api.user_api.is_valid_username (l_new_username) end
-									check api.user_api.user_by_name (l_new_username) = Void end
+									check a_auth_api.cms_api.user_api.is_valid_username (l_new_username) end
+									check a_auth_api.cms_api.user_api.user_by_name (l_new_username) = Void end
 
 									l_user_api.update_username (l_user, l_new_username)
 									r.add_success_message ("Username updated.")
@@ -857,7 +886,7 @@ feature -- Handler
 						f := new_change_email_form (r)
 						f.append_to_html (r.wsf_theme, b)
 					elseif l_fieldname.is_case_insensitive_equal_general ("new_username") then
-						if api.has_permission ("change own username") then
+						if a_auth_api.cms_api.has_permission ("change own username") then
 							f := new_change_username_form (r)
 							f.append_to_html (r.wsf_theme, b)
 						end
@@ -994,30 +1023,6 @@ feature -- Handler
 			fs.extend (tf)
 
 			fs.extend_html_text ("<button type=%"submit%">Confirm</button>")
-		end
-
-feature {NONE} -- Token Generation
-
-	new_token: STRING
-			-- Generate a new token activation token
-		local
-			l_token: STRING
-			l_security: SECURITY_PROVIDER
-			l_encode: URL_ENCODER
-		do
-			create l_security
-			l_token := l_security.token
-			create l_encode
-			from
-			until
-				l_token.same_string (l_encode.encoded_string (l_token))
-			loop
-					-- Loop ensure that we have a security token that does not contain characters that need encoding.
-					-- We cannot simply to an encode-decode because the email sent to the user will contain an encoded token
-					-- but the user will need to use an unencoded token if activation has to be done manually.
-				l_token := l_security.token
-			end
-			Result := l_token
 		end
 
 feature {NONE} -- Block views

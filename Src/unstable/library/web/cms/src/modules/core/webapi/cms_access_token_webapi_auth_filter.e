@@ -18,6 +18,7 @@ feature -- Basic operations
 			-- Execute the filter.
 		local
 			tok: READABLE_STRING_GENERAL
+			u: CMS_USER
 		do
 			if
 				attached req.http_authorization as l_auth and then
@@ -26,7 +27,10 @@ feature -- Basic operations
 				tok := l_auth.substring (8, l_auth.count)
 				if attached api.user_api.users_with_profile_item ("access_token", tok) as lst then
 					if lst.count = 1 then
-						api.set_user (lst.first)
+						u := lst.first
+						if api.user_has_permission (u, "use access_token") then
+							api.set_user (u)
+						end
 					end
 				end
 			end

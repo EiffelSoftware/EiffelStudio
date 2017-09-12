@@ -6,7 +6,7 @@ note
 deferred class
 	CMS_WITH_WEBAPI
 
-feature -- Administration
+feature -- Webapi
 
 	module_webapi: like webapi
 			-- Associated web api module.

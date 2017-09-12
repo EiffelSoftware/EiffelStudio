@@ -527,7 +527,7 @@ feature -- CMS links
 		require
 			u_with_name: not u.name.is_whitespace
 		do
-			Result := link (user_display_name (u), "user/" + u.id.out, Void)
+			Result := link (real_user_display_name (u), "user/" + u.id.out, Void)
 		end
 
 feature -- Helpers: URLs	
@@ -782,6 +782,11 @@ feature -- Logging
 				else
 					logger.put_debug (m, Void)
 			end
+		end
+
+	log_debug (a_category: READABLE_STRING_8; a_message: READABLE_STRING_8; a_link: detachable CMS_LINK)
+		do
+			log (a_category, a_message, {CMS_LOG}.level_debug, a_link)
 		end
 
 feature -- Internationalization (i18n)
@@ -1059,7 +1064,7 @@ feature {CMS_EXECUTION} -- Hooks
 			loop
 				l_module := ic.item
 				if is_administration_mode then
-					if attached {CMS_ADMINISTRABLE} l_module as adm then
+					if attached {CMS_WITH_MODULE_ADMINISTRATION} l_module as adm then
 						l_module := adm.module_administration
 					else
 						l_module := Void

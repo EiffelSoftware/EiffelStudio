@@ -85,7 +85,7 @@ feature {CMS_API} -- Module management
 			create u.make ("admin")
 			u.set_password ("istrator#")
 			u.set_email (a_api.setup.site_email)
-			u.set_status ({CMS_USER}.active)
+			u.mark_active
 			a_api.user_api.new_user (u)
 
 				--| Node			
@@ -130,6 +130,7 @@ feature -- Security
 			Result.force ("import core")
 			Result.force ("admin path_alias")
 			Result.force ("edit path_alias")
+			Result.force ("use access_token")
 		end
 
 feature {CMS_EXECUTION} -- Administration

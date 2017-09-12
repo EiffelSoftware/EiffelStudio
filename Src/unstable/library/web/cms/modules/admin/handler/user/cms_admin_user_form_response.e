@@ -516,6 +516,7 @@ feature -- Form
 						create u.make (l_username)
 						u.set_email (l_email.as_string_8)
 						u.set_password (new_random_password (u))
+						u.mark_active
 						api.user_api.new_user (u)
 						if api.user_api.has_error then
 							-- handle error

@@ -119,17 +119,18 @@ feature -- Process Edit
 						ti.set_is_readonly (True)
 						fs.extend (ti)
 					end
-
-					create l_new_access_token_form.make (api.webapi_path ("access_token"), Void)
-					l_new_access_token_form.set_method_post
-					if l_access_token /= Void then
-						l_new_access_token_form.extend (create {WSF_FORM_SUBMIT_INPUT}.make_with_text ("access_token_op", "Refresh Access Token"))
-					else
-						l_new_access_token_form.extend (create {WSF_FORM_SUBMIT_INPUT}.make_with_text ("access_token_op", "Create Access Token"))
+					if api.user_has_permission (a_user, "use access_token") then
+						create l_new_access_token_form.make (api.webapi_path ("access_token"), Void)
+						l_new_access_token_form.set_method_post
+						if l_access_token /= Void then
+							l_new_access_token_form.extend (create {WSF_FORM_SUBMIT_INPUT}.make_with_text ("access_token_op", "Refresh Access Token"))
+						else
+							l_new_access_token_form.extend (create {WSF_FORM_SUBMIT_INPUT}.make_with_text ("access_token_op", "Create Access Token"))
+						end
+						l_new_access_token_form.extend (create {WSF_FORM_HIDDEN_INPUT}.make_with_text ("destination", request.percent_encoded_path_info))
+						a_form.put_widget_after_form (l_new_access_token_form)
+						a_form.extend (fs)
 					end
-					l_new_access_token_form.extend (create {WSF_FORM_HIDDEN_INPUT}.make_with_text ("destination", request.percent_encoded_path_info))
-					a_form.put_widget_after_form (l_new_access_token_form)
-					a_form.extend (fs)
 				end
 			end
 		end

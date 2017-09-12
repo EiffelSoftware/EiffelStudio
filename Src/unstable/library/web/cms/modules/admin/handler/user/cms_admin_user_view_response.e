@@ -61,11 +61,17 @@ feature -- Execution
 			lnk.set_weight (2)
 			a_response.add_to_primary_tabs (lnk)
 
+
 			if a_user /= Void and then a_user.id > 0 then
 				lnk := api.administration_link (a_response.translation ("Delete", Void), "user/" + a_user.id.out  + "/delete")
 				lnk.set_weight (3)
 				a_response.add_to_primary_tabs (lnk)
 			end
+
+			lnk := api.administration_link (a_response.translation ("<< Users", Void), "users")
+			lnk.set_weight (10)
+			a_response.add_to_primary_tabs (lnk)
+
 
 				-- FIXME: [04/aug/2015] use a CMS_FORM rather than hardcoded html.
 				-- So that other module may easily integrate them-selves to add information.

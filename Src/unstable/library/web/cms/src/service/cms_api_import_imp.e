@@ -194,6 +194,7 @@ feature -- Import
 					end
 				else
 					user_api.new_user (u)
+					-- FIXME: check what status to use...
 					a_import_ctx.log ("New user %"" + u.name + "%" -> " + u.id.out + " .")
 				end
 			end

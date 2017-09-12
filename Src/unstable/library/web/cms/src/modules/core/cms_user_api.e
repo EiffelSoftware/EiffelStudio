@@ -329,7 +329,7 @@ feature -- User roles.
 			loop
 				lst := ic.item.permissions
 				if
-					attached {CMS_ADMINISTRABLE} ic.item as adm and then
+					attached {CMS_WITH_MODULE_ADMINISTRATION} ic.item as adm and then
 					attached adm.module_administration.permissions as adm_permissions and then
 					not adm_permissions.is_empty
 				then

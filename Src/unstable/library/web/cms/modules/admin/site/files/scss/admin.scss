@@ -45,6 +45,14 @@ ul.cms-roles {
 		content: "[role] ";
 	}
 }
+table.cms-roles {
+	border: solid 1px black;
+	border-collapse: collapse;
+	th,td {padding: 2px; border: solid 1px black; }
+	td.cms_role_permission {
+		font-style: italic;
+	}
+}
 
 
 ul.cms-permissions {

@@ -45,7 +45,6 @@ feature -- Execution
 			end
 		end
 
-
 	append_html_to_output (a_role: CMS_USER_ROLE; a_response: CMS_RESPONSE )
 		local
 			lnk: CMS_LOCAL_LINK
@@ -66,6 +65,9 @@ feature -- Execution
 				lnk.set_weight (3)
 				a_response.add_to_primary_tabs (lnk)
 			end
+			lnk := api.administration_link (translation ("<< Roles", Void), "roles")
+			lnk.set_weight (10)
+			add_to_primary_tabs (lnk)
 
 			create s.make_empty
 			s.append ("<div class=%"info%"> ")

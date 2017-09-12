@@ -37,11 +37,26 @@ feature -- Process
 			b: STRING_8
 			uid: INTEGER_64
 			user_api: CMS_USER_API
+			lnk: CMS_LINK
 		do
 			user_api := api.user_api
 			create b.make_empty
 			uid := role_id_path_parameter (request)
 			if uid > 0 and then attached user_api.user_role_by_id (uid.to_integer) as l_role then
+				if l_role.has_id then
+					lnk := api.administration_link (translation ("View", Void), "role/" + l_role.id.out)
+					lnk.set_weight (1)
+					add_to_primary_tabs (lnk)
+					lnk := api.administration_link (translation ("Edit", Void), "role/" + l_role.id.out + "/edit")
+					lnk.set_weight (2)
+					add_to_primary_tabs (lnk)
+
+					lnk := api.administration_link (translation ("Delete", Void), "role/" + l_role.id.out + "/delete")
+					lnk.set_weight (3)
+					add_to_primary_tabs (lnk)
+
+				end
+
 				fixme ("Issues with  WSD_FORM_DATA.apply_to_associated_form")
 					-- if we have a WSF_FORM_CHECKBOK_INPUT, cheked inputs, are not preserverd in case of error.
 				if location.ends_with_general ("/edit") then
@@ -52,6 +67,10 @@ feature -- Process
 			else
 				new_form
 			end
+			lnk := api.administration_link (translation ("<< Roles", Void), "roles")
+			lnk.set_weight (10)
+			add_to_primary_tabs (lnk)
+
 		end
 
 feature -- Process Edit
@@ -71,11 +90,7 @@ feature -- Process Edit
 				f.process (Current)
 				fd := f.last_data
 			end
-			if a_role.has_id then
-				add_to_menu (api.administration_link (translation ("View", Void), "role/" + a_role.id.out), primary_tabs)
-				add_to_menu (api.administration_link (translation ("Edit", Void), "role/" + a_role.id.out + "/edit"), primary_tabs)
-				add_to_menu (api.administration_link (translation ("Delete", Void), "role/" + a_role.id.out + "/delete"), primary_tabs)
-			end
+
 			if attached redirection as l_location then
 					-- FIXME: Hack for now
 				set_title (a_role.name)
@@ -102,11 +117,7 @@ feature -- Process Delete
 				f.process (Current)
 				fd := f.last_data
 			end
-			if a_role.has_id then
-				add_to_menu (api.administration_link (translation ("View", Void), "role/" + a_role.id.out), primary_tabs)
-				add_to_menu (api.administration_link (translation ("Edit", Void), "role/" + a_role.id.out + "/edit"), primary_tabs)
-				add_to_menu (api.administration_link (translation ("Delete", Void), "role/" + a_role.id.out + "/delete"), primary_tabs)
-			end
+
 			if attached redirection as l_location then
 					-- FIXME: Hack for now
 				set_title (a_role.name)

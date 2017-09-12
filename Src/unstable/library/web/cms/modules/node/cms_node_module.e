@@ -134,6 +134,8 @@ feature -- Access
 					l_type_name := ic.item.name
 					if not l_type_name.is_whitespace then
 						Result.force ("create " + l_type_name)
+						Result.force ("delete " + l_type_name)
+						Result.force ("trash " + l_type_name)
 
 						Result.force ("view any " + l_type_name)
 						Result.force ("edit any " + l_type_name)

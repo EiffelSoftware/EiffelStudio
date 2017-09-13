@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Warning for a non-empty body of an attribute that is of a self-initializing type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,13 +9,18 @@ class VWAB
 
 inherit
 	FEATURE_ERROR
+		rename
+			class_c as associated_class
 		undefine
-			error_string
+			error_string,
+			has_associated_file
 		end
 
-	WARNING
+	EIFFEL_WARNING
 		undefine
-			has_associated_file
+			file_name,
+			trace,
+			trace_primary_context
 		end
 
 create
@@ -33,7 +38,7 @@ feature {NONE} -- Initialization
 			c.init_error (Current)
 			set_location (l)
 		ensure
-			class_c_attached: attached class_c
+			class_c_attached: attached associated_class
 			e_feature_attached: attached e_feature
 			location_set: line = l.line and column = l.column
 		end
@@ -44,11 +49,11 @@ feature -- Properties
 			-- <Precursor>
 
 invariant
-	class_c_attached: attached class_c
+	class_c_attached: attached associated_class
 	e_feature_attached: attached e_feature
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

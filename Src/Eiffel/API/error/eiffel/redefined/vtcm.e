@@ -100,14 +100,6 @@ feature {NONE} -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_class (c: like associated_class)
-			-- Assign `c' to class_c.
-		require
-			valid_c: c /= Void
-		do
-			associated_class := c
-		end
-
 	set_class_name (s: STRING)
 			-- Assign `s' to `class_name'.
 		require
@@ -119,7 +111,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

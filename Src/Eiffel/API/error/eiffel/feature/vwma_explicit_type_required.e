@@ -19,19 +19,23 @@ class VWMA_EXPLICIT_TYPE_REQUIRED
 inherit
 	VWMA
 		rename
+			class_c as associated_class,
 			make as make_parent
+		undefine
+			has_associated_file
 		redefine
 			build_explain,
 			error_string,
 			process_issue
 		end
 
-	COMPILER_WARNING
+	EIFFEL_WARNING
 		undefine
-			has_associated_file,
+			file_name,
 			trace,
 			trace_primary_context
 		redefine
+			build_explain,
 			error_string,
 			process_issue,
 			trace_single_line
@@ -72,7 +76,7 @@ feature -- Access
 	error_string: STRING
 			-- <Precursor>
 		do
-			Result := if is_error then Precursor {VWMA} else Precursor {COMPILER_WARNING} end
+			Result := if is_error then Precursor {VWMA} else Precursor {EIFFEL_WARNING} end
 		end
 
 feature {COMPILER_ERROR_VISITOR} -- Visitor

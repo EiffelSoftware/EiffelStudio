@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Warning in an Eiffel class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,50 +9,34 @@ deferred class
 	EIFFEL_WARNING
 
 inherit
-	COMPILER_WARNING
+	EIFFEL_ERROR
+		rename
+			class_c as associated_class
+		undefine
+			error_string
 		redefine
-			has_associated_file, trace_primary_context, associated_class
+			has_associated_file
 		end
 
-	ERROR_CONTEXT_PRINTER
-		export
-			{NONE} all
+	COMPILER_WARNING
+		undefine
+			associated_class_type,
+			trace,
+			trace_primary_context
+		redefine
+			has_associated_file
 		end
 
 feature -- Properties
 
-	associated_class: CLASS_C
-			-- Class where the error is encountered
-
-	file_name: like {ERROR}.file_name
-			-- File where error is encountered
-		do
-			Result := associated_class.file_name
-		end
-
 	has_associated_file: BOOLEAN = True
 			-- Current is associated to a file/class
-
-feature -- Output
-
-	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
-			-- Build the primary context string so errors can be navigated to
-		do
-			if
-				a_text_formatter /= Void and then
-				attached associated_class as l_class
-			then
-				print_context_class (a_text_formatter, l_class)
-			else
-				Precursor (a_text_formatter)
-			end
-		end
 
 invariant
 	associated_class_not_void: associated_class /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

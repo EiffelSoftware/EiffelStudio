@@ -11,10 +11,26 @@ inherit
 	EIFFEL_WARNING
 		redefine
 			build_explain,
+			error_string,
 			help_file_name,
 			is_defined,
 			print_single_line_error_message,
 			trace
+		end
+
+	EIFFEL_ERROR
+		rename
+			class_c as associated_class
+		undefine
+			associated_class_type,
+			has_associated_file,
+			help_file_name,
+			is_defined,
+			print_single_line_error_message,
+			trace
+		redefine
+			build_explain,
+			error_string
 		end
 
 create
@@ -30,7 +46,32 @@ feature {NONE} -- Initialization
 			set_class (c)
 		end
 
+feature -- Status report
+
+	is_error: BOOLEAN
+			-- Does current represent an error?
+
+feature -- Status setting
+
+	set_error
+			-- Treat the issue as an error.
+		do
+			is_error := True
+		ensure
+			is_error
+		end
+
 feature -- Properties
+
+	error_string: like {ERROR}.error_string
+		do
+			Result :=
+				if is_error then
+					Precursor {EIFFEL_ERROR}
+				else
+					Precursor {EIFFEL_WARNING}
+				end
+		end
 
 	obsolete_class: CLASS_C
 			-- Obsolete class
@@ -132,13 +173,6 @@ feature {NONE} -- Output
 		end
 
 feature {COMPILER_EXPORTER}
-
-	set_class (c: CLASS_C)
-		require
-			valid_c: c /= Void
-		do
-			associated_class := c
-		end
 
 	set_obsolete_class (c: CLASS_C)
 		require

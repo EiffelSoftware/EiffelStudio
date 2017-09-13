@@ -1,11 +1,9 @@
-note
-
-	description:
-		"Warning for potential cat-calls."
+﻿note
+	description: "Warning for potential cat-calls."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class CAT_CALL_WARNING
 
@@ -137,8 +135,8 @@ feature -- Output
 					-- Find out if we should also show the group corresponding to the type
 					-- involved when they have the same name (which would be confusion to the user).
 					--| Note: The same code is present in VUAR2.
-				l_target_type ?= target_type
-				l_source_type ?= source_type
+				l_target_type := {CL_TYPE_A} / target_type
+				l_source_type := {CL_TYPE_A} / source_type
 				if l_target_type /= Void and then l_source_type /= Void then
 					l_same_class_name := l_target_type.base_class.name.is_equal (l_source_type.base_class.name)
 				end
@@ -257,8 +255,8 @@ feature -- Output
 	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
 		do
-			if attached {CLASS_C} associated_class as l_class and then attached called_feature as l_feature and then attached {TEXT_FORMATTER} a_text_formatter as l_formatter then
-				print_context_feature (l_formatter, l_feature, l_class)
+			if attached class_c as l_class and then attached called_feature as l_feature and then attached a_text_formatter then
+				print_context_feature (a_text_formatter, l_feature, l_class)
 			else
 				Precursor (a_text_formatter)
 			end
@@ -283,7 +281,7 @@ invariant
 	covariant_argument_violations_not_void: covariant_argument_violations /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -296,22 +294,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

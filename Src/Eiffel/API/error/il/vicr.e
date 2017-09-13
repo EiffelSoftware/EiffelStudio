@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "`dotnet_constructors' indexing clause refers to a non-existing creation routine"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,7 +9,8 @@ class
 inherit
 	EIFFEL_ERROR
 		redefine
-			build_explain, class_c
+			associated_class_type,
+			build_explain
 		end
 
 create {INTERNAL_COMPILER_STRING_EXPORTER}
@@ -29,11 +30,6 @@ feature {NONE} -- Initialization
 			class_c_set: class_c = a_class
 			routine_name_set: routine_name = a_routine_name
 		end
-
-feature -- Access
-
-	class_c: EIFFEL_CLASS_C
-			-- Class where error is encountered.
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
@@ -58,8 +54,15 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
+feature -- Access
+
+	associated_class_type: EIFFEL_CLASS_C
+			-- <Precursor>
+		do
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -90,5 +93,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class VICR
-
+end

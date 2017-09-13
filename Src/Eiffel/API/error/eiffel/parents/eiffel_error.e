@@ -10,7 +10,10 @@ deferred class EIFFEL_ERROR
 
 inherit
 	COMPILER_ERROR
+		rename
+			associated_class as class_c
 		redefine
+			associated_class_type,
 			trace, has_associated_file,
 			trace_primary_context
 		end
@@ -21,9 +24,6 @@ inherit
 		end
 
 feature -- Properties
-
-	class_c: CLASS_C;
-			-- Class where the error is encountered
 
 	file_name: like {ERROR}.file_name
 			-- File where error is encountered
@@ -84,8 +84,15 @@ feature {COMPILER_EXPORTER}
 			class_c := c
 		end
 
+feature {NONE} -- Typing
+
+	associated_class_type: CLASS_C
+			-- <Precursor>
+		do
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -116,4 +123,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_ERROR
+end

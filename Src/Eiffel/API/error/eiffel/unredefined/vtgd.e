@@ -28,14 +28,14 @@ feature -- Output
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
-			if attached {CLASS_C} associated_class as l_class then
+			if attached class_c as l_class then
 				from
 					error_list.start
 				until
 					error_list.after
 				loop
-					error_list.item.build_explain (a_text_formatter, l_class);
-					error_list.forth;
+					error_list.item.build_explain (a_text_formatter, l_class)
+					error_list.forth
 				end
 			else
 				check False end
@@ -55,7 +55,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

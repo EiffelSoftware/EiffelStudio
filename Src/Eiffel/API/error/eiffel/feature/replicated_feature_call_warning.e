@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Warning for inherited routines which call unqualified replicated features but themselves are not replicated"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,18 +8,23 @@ note
 class REPLICATED_FEATURE_CALL_WARNING
 
 inherit
-	COMPILER_WARNING
+	EIFFEL_WARNING
 		undefine
-			has_associated_file,
+			file_name,
 			is_defined,
 			trace,
 			trace_primary_context,
 			process
+		redefine
+			build_explain
 		end
 
 	FEATURE_ERROR
+		rename
+			class_c as associated_class
 		undefine
-			error_string
+			error_string,
+			has_associated_file
 		redefine
 			build_explain
 		end
@@ -40,7 +45,6 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_feature_not_void: a_feature /= Void
 		do
-			class_c ?= a_class
 			associated_class := a_class
 			e_feature := a_feature.api_feature (a_feature.written_in)
 			callee_feature := a_callee.api_feature (a_feature.written_in)
@@ -66,7 +70,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -79,22 +83,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

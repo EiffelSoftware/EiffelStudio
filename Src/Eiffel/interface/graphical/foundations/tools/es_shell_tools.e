@@ -1,11 +1,9 @@
-note
-	description: "[
-		Access to a development window's collection of tools.
-	]"
+﻿note
+	description: "Access to a development window's collection of tools."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ES_SHELL_TOOLS
@@ -81,7 +79,7 @@ feature {NONE} -- Clean up
 			l_tool: ES_TOOL [EB_TOOL]
 			l_count, i: INTEGER
 			l_remove_indexes: DS_ARRAYED_LIST [INTEGER]
-			l_remove_keys: DS_ARRAYED_LIST [STRING_8]
+			l_remove_keys: DS_ARRAYED_LIST [like requested_tools.key_for_iteration]
 			l_new_tools: ARRAY [ES_TOOL [EB_TOOL]]
 			l_index: INTEGER
 		do
@@ -261,7 +259,7 @@ feature {NONE} -- Access
 			result_contains_attached_items: not Result.has (Void)
 		end
 
-	requested_tools: HASH_TABLE [ARRAY [ES_TOOL [EB_TOOL]], STRING_8]
+	requested_tools: HASH_TABLE [ARRAY [ES_TOOL [EB_TOOL]], READABLE_STRING_32]
 			-- Table of requested, and therefore created, tools.
 		do
 			if not is_recycled then
@@ -301,24 +299,6 @@ feature {NONE} -- Helpers
 		end
 
 feature -- Query
-
-	dynamic_tool_type (a_type: STRING_8): TYPE [ES_TOOL [EB_TOOL]]
-			-- Retrieves a type object dynamically from a string representation of the type.
-			--
-			-- `a_type': A string representation of a type that implemented {ES_TOOL}. e.g. "MY_TOOL" => TYPE [MY_TOOL]
-			-- `Result': A type object representing the string type passed in.
-		local
-			l_internal: like internal
-			l_id: INTEGER
-		do
-			l_internal := internal
-			if l_internal.is_valid_type_string (a_type) then
-				l_id := l_internal.dynamic_type_from_string (a_type)
-				if l_id > 0 then
-					Result ?= l_internal.type_of_type (l_id)
-				end
-			end
-		end
 
 	frozen tool (a_type: TYPE [ES_TOOL [EB_TOOL]]): attached ES_TOOL [EB_TOOL]
 			-- Retrieves an activate tool associated with a particular type.
@@ -527,7 +507,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	tool_id (a_type: TYPE [ES_TOOL [EB_TOOL]]): STRING_8
+	tool_id (a_type: TYPE [ES_TOOL [EB_TOOL]]): READABLE_STRING_32
 			-- Retrieve tool identifier for a given type.
 			--
 			-- `a_type': Tool type to retrieve a ID for.
@@ -535,25 +515,22 @@ feature {NONE} -- Query
 		require
 			a_type_attached: a_type /= Void
 		do
-			Result := a_type.generating_type
+			Result := a_type.name_32
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			result_consistent: Result.is_equal (tool_id (a_type))
 		end
 
-	tool_id_from_tool (a_tool: ES_TOOL [EB_TOOL]): STRING_8
+	tool_id_from_tool (a_tool: ES_TOOL [EB_TOOL]): READABLE_STRING_32
 			-- Retrieve tool identifier for a given tool.
 			--
 			-- `a_tool': Tool to retrieve a ID for.
 			-- `Result': A string identifier identifying the tool type supplied.
 		require
 			a_tool_attached: a_tool /= Void
-		local
-			l_type: TYPE [ES_TOOL [EB_TOOL]]
 		do
-			l_type ?= internal.type_of (a_tool)
-			Result := tool_id (l_type)
+			Result := tool_id (a_tool.generating_type)
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -689,7 +666,7 @@ invariant
 	internal_requested_tools_contains_attached_items: not is_recycled implies not internal_requested_tools.has_item (Void)
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

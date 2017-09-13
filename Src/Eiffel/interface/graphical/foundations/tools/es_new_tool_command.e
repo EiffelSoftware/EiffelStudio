@@ -44,10 +44,10 @@ feature {NONE} -- Initialization
 			l_tool: like new_tool
 		do
 			target_make (a_tool.window)
-			tool_type := a_tool.window.shell_tools.dynamic_tool_type (a_tool.generating_type)
+			tool_type := a_tool.generating_type
 			tooltip := locale_formatter.translation (f_create_new_tool)
 			description := tooltip
-			name := tool_type.generating_type.name_32
+			name := tool_type.name_32
 
 			create l_pixmaps
 			mini_pixmap := l_pixmaps.mini_pixmaps.new_tool_edition_icon

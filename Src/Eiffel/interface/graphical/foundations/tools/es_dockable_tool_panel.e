@@ -305,7 +305,7 @@ feature {NONE} -- Access
             not_result_is_empty: not Result.is_empty
         end
 
-	frozen name: attached STRING
+	frozen name: READABLE_STRING_32
 			-- The tool's associated name, used for modularizing development of a tool.
 		require
 			is_interface_usable: is_interface_usable
@@ -670,8 +670,6 @@ feature {NONE} -- User interface elements
             l_help_button: detachable SD_TOOL_BAR_ITEM
             l_multi: BOOLEAN
             l_command: ES_NEW_TOOL_COMMAND
-            l_tools: ES_SHELL_TOOLS
-            l_type: TYPE [ES_TOOL [EB_TOOL]]
         do
             l_cell := internal_mini_tool_bar_widget
             if l_cell = Void then
@@ -713,11 +711,6 @@ feature {NONE} -- User interface elements
 	                end
 	                if l_multi then
 	                        -- Add new edition button
-	                    l_tools := develop_window.shell_tools
-	                    l_type := l_tools.dynamic_tool_type (tool_descriptor.generating_type)
-	                    check
-	                        l_type_attached: l_type /= Void
-	                    end
 	                    create l_command.make (tool_descriptor)
 	                    auto_recycle (l_command)
 	                    Result.extend (l_command.new_mini_sd_toolbar_item)

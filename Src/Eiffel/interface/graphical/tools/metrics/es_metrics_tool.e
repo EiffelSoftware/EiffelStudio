@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		Tool descriptor for EiffelStudio's project metric analysis tool.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 frozen class
 	ES_METRICS_TOOL
@@ -39,11 +39,8 @@ feature -- Access
 			Result := locale_formatter.translation (t_tool_title)
 		end
 
-	shortcut_preference_name: STRING
+	shortcut_preference_name: STRING_32 = "show_metric_tool"
 			-- <Precursor>
-		do
-			Result := "show_metric_tool"
-		end
 
 feature {NONE} -- Factory
 
@@ -58,7 +55,7 @@ feature {NONE} -- Internationalization
 	t_tool_title: STRING = "Metrics"
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

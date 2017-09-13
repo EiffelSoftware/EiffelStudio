@@ -60,7 +60,7 @@ feature -- Command
 			-- Declared as curl_easy_setopt().
 		require
 			exists: a_curl_handle /= default_pointer
-			valid: a_opt = {CURL_OPT_CONSTANTS}.curlopt_httpheader
+			valid: a_opt = {CURL_OPT_CONSTANTS}.curlopt_httpheader or else a_opt = {CURL_OPT_CONSTANTS}.curlopt_mail_rcpt
 			exists: a_curl_slist /= default_pointer
 		do
 			setopt_void_star (a_curl_handle, a_opt, a_curl_slist)

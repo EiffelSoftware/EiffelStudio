@@ -1018,6 +1018,23 @@ feature -- SSH
 			"return CURLOPT_SSH_PRIVATE_KEYFILE;"
 		end
 
+	curlopt_mail_from: INTEGER
+			-- Declared as CURLOPT_MAIL_FROM
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURLOPT_MAIL_FROM;"
+		end
+
+	curlopt_mail_rcpt: INTEGER
+			-- Declared as CURLOPT_MAIL_RCPT
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURLOPT_MAIL_RCPT;"
+		end
+
+
 feature -- Status report
 
 	is_valid (v: INTEGER): BOOLEAN
@@ -1134,7 +1151,9 @@ feature -- Status report
 						v = curlopt_krblevel or
 						v = curlopt_ssh_auth_types or
 						v = curlopt_ssh_public_keyfile or
-						v = curlopt_ssh_private_keyfile
+						v = curlopt_ssh_private_keyfile or
+						v = curlopt_mail_from or
+						v = curlopt_mail_rcpt
 		end
 
 note

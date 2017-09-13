@@ -179,6 +179,8 @@ feature -- Analysis interface
 			-- to analyze.
 		do
 			classes_to_analyze.wipe_out
+			ignoredby.wipe_out
+			checked_only_by.wipe_out
 		end
 
 	add_whole_system
@@ -291,8 +293,7 @@ feature {NONE} -- Status report
 			Result := a_rule.is_enabled.value
 						and then (system_wide_check or else (not a_rule.is_system_wide))
 						and then is_severity_enabled (a_rule.severity)
-
-						-- TODO Check if ignoredby or checkonly lists.
+				-- TODO Check if ignoredby or checkonly lists.
 		end
 
 feature -- Properties
@@ -375,11 +376,11 @@ feature {NONE} -- Implementation
 			clear_classes_to_analyze
 
 			is_running := False
-			completed_actions.call ([a_exceptions])
+			completed_actions.call (a_exceptions)
 			completed_actions.wipe_out
 		end
 
-	is_violation_valid (a_viol: attached CA_RULE_VIOLATION): BOOLEAN
+	is_violation_valid (a_viol: CA_RULE_VIOLATION): BOOLEAN
 			-- Is the violation `a_viol' valid under the current settings
 			-- such as the rule ignore list of a class, or the library or
 			-- non-library status of a class?
@@ -387,24 +388,23 @@ feature {NONE} -- Implementation
 			l_affected_class: CLASS_C
 			l_rule: CA_RULE
 		do
-			l_affected_class := a_viol.affected_class
-			l_rule := a_viol.rule
-
 			Result := True
-
-			if checked_only_by.at(l_affected_class).is_empty then
-				if  (ignoredby.at (l_affected_class)).has (l_rule.id) then
+			if not a_viol.severity.is_critical then
+				l_affected_class := a_viol.affected_class
+				l_rule := a_viol.rule
+				if checked_only_by [l_affected_class].is_empty then
+					if ignoredby [l_affected_class].has (l_rule.id) then
+						Result := False
+					end
+				elseif  not checked_only_by [l_affected_class].has (l_rule.id) then
 					Result := False
 				end
-			elseif  not checked_only_by.at (l_affected_class).has (l_rule.id) then
-				Result := False
-			end
-			if (not l_rule.checks_library_classes) and then library_class.at (l_affected_class) then
-				Result := False
-			end
-
-			if (not l_rule.checks_nonlibrary_classes) and then nonlibrary_class.at (l_affected_class) then
-				Result := False
+				if not l_rule.checks_library_classes and then library_class [l_affected_class] then
+					Result := False
+				end
+				if not l_rule.checks_nonlibrary_classes and then nonlibrary_class [l_affected_class] then
+					Result := False
+				end
 			end
 		end
 
@@ -444,7 +444,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Class-wide Options (From Indexing Clauses)
 
-	extract_indexes (a_class: attached CLASS_C)
+	extract_indexes (a_class: CLASS_C)
 			-- Extracts options from the indexing clause of class `a_class'.
 		local
 			l_ast: CLASS_AS

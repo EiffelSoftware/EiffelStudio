@@ -1,9 +1,6 @@
-note
+﻿note
 
-	description:
-
-		"Common Eiffel type related routines"
-
+	description: "Common Eiffel type related routines"
 	copyright: "Copyright (c) 2005, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
@@ -131,8 +128,8 @@ feature -- Access
 
 feature {NONE} -- Parsing class types
 
-	base_type (a_name: STRING): TYPE_A
-			-- Type parsed from `a_name'
+	base_type (a_name: READABLE_STRING_32): TYPE_A
+			-- Type parsed from `a_name'.
 			-- If `a_name' is "NONE", return {NONE_A}.
 			-- If `a_name' is an unknown type, return Void.
 			-- The result is resolved in `a_context_class'.
@@ -217,7 +214,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

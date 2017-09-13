@@ -3,9 +3,9 @@ note
 		Tool descriptor for EiffelStudio's groups tree tool.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 frozen class
 	ES_GROUPS_TOOL
@@ -44,11 +44,8 @@ feature -- Access
 			Result := locale_formatter.translation (t_tool_title)
 		end
 
-	shortcut_preference_name: attached STRING
+	shortcut_preference_name: STRING_32 = "show_clusters_tool"
 			-- <Precursor>
-		do
-			Result := "show_clusters_tool"
-		end
 
 feature -- Basic operations
 
@@ -92,7 +89,7 @@ feature {NONE} -- Internationalization
 	t_tool_title: STRING = "Groups"
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

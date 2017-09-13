@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		Tool descriptor for EiffelStudio's external console tool.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 frozen class
 	ES_WEB_BROWSER_TOOL
@@ -44,11 +44,8 @@ feature -- Access
 			Result := locale_formatter.translation (t_tool_title)
 		end
 
-	shortcut_preference_name: attached STRING
+	shortcut_preference_name: STRING_32 = "show_browser_tool"
 			-- <Precursor>
-		do
-			Result := "show_browser_tool"
-		end
 
 feature -- Action
 
@@ -71,7 +68,7 @@ feature {NONE} -- Internationalization
 	t_tool_title: STRING = "Browser"
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

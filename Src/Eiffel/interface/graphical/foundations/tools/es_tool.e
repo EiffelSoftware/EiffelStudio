@@ -114,7 +114,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	name: attached STRING
+	name: attached READABLE_STRING_32
 			-- The tool's associated name, used for modularizing development of a tool.
 			-- Note: the name should be edition independent!
 		require
@@ -175,17 +175,20 @@ feature -- Access
 			result_consistent: Result ~ edition_title
 		end
 
-	shortcut_preference_name: detachable STRING
+	shortcut_preference_name: READABLE_STRING_32
 			-- An optional shortcut preference name, for automatic preference binding.
 			-- Note: The preference should be registered in the default.xml file
 			--       as well as in the {EB_MISC_SHORTCUT_DATA} class.
 		require
 			is_interface_usable: is_interface_usable
+		local
+			s: STRING_32
 		do
-			create Result.make (20)
-			Result.append (once "show_")
-			Result.append (name)
-			Result.append (once "_tool")
+			create s.make (20)
+			s.append (once {STRING_32} "show_")
+			s.append (name)
+			s.append (once {STRING_32} "_tool")
+			Result := s
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 			result_consistent: Result ~ shortcut_preference_name

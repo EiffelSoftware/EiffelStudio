@@ -106,28 +106,30 @@ feature -- Query
 			result_edition_big_enough: Result /= Void implies Result.edition > 0
 		end
 
-	tool_associated_name (a_tool: attached ES_TOOL [EB_TOOL]): attached STRING
+	tool_associated_name (a_tool: attached ES_TOOL [EB_TOOL]): READABLE_STRING_32
 			-- The tool's associated name, used for modularizing development of a tool.
 			--
 			-- `a_tool': A tool descriptor to retrieve a type identifier for.
 			-- `Result': The tool name.
 		require
 			a_tool_is_interface_usable: a_tool.is_interface_usable
+		local
+			s: STRING_32
 		do
-			Result := a_tool.generating_type
-			Result := Result.as_lower
-			if Result.substring (1, (3).min (Result.count)).is_equal (once "es_") then
-					-- Remove ES_ prefix
-				Result.keep_tail (Result.count - 3)
-				if Result.substring ((Result.count - 4).max (1), Result.count).is_equal (once "_tool") then
-						-- Remove _TOOL suffix
-					Result.keep_head (Result.count - 5)
+			s := a_tool.generating_type.name_32.as_lower
+			if s.starts_with (once {STRING_32} "es_") then
+					-- Remove ES_ prefix.
+				s.remove_head (3)
+				if s.ends_with (once {STRING_32} "_tool") then
+						-- Remove _TOOL suffix.
+					s.remove_tail (5)
 				else
 					check use_standard_name_convention: False end
 				end
 			else
 				check use_standard_name_convention: False end
 			end
+			Result := s
 			check not_result_is_empty: not Result.is_empty end
 		ensure
 			result_consistent: Result.is_equal (tool_associated_name (a_tool))

@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Visitor to generate {EXPR_B} objects for AutoTest expressions"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -54,7 +53,7 @@ feature {ITP_EXPRESSION} -- Processing
 			if a_value.value = Void then
 				create {VOID_B} last_expression
 			else
-				l_type := base_type (a_value.value.generating_type)
+				l_type := base_type (a_value.value.generating_type.name_32)
 				check l_type /= Void end
 				if l_type.is_integer or else l_type.is_natural then
 						-- For integer and natural
@@ -125,7 +124,7 @@ invariant
 	load_object_feature_attached: load_object_feature /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

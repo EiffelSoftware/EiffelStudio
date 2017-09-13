@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		Tool descriptor for EiffelStudio's errors and warnings reporting tool.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 frozen class
 	ES_ERROR_LIST_TOOL
@@ -45,11 +45,8 @@ feature -- Access
 			Result := locale_formatter.translation (t_tool_title)
 		end
 
-	shortcut_preference_name: STRING
+	shortcut_preference_name: STRING_32 = "show_errors_and_warnings_tool"
 			-- <Precursor>
-		do
-			Result := "show_errors_and_warnings_tool"
-		end
 
 feature {ES_DOCKABLE_TOOL_PANEL} -- Status report
 
@@ -111,7 +108,7 @@ feature {NONE} -- Internationalization
 	t_tool_title: STRING = "Error List"
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

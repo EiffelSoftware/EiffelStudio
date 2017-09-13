@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		Tool descriptor for EiffelStudio's custom formatter code browsing tool.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 frozen class
 	ES_CUSTOM_FORMATTER_TOOL
@@ -74,7 +74,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	shortcut_preference_name: detachable STRING
+	shortcut_preference_name: detachable READABLE_STRING_32
 			-- An optional shortcut preference name, for automatic preference binding.
 		do
 			--| No shortcut preference for customized tools

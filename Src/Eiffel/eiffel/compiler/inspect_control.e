@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Controler of multi-branch instruction"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -164,7 +164,6 @@ feature {STATIC_ACCESS_AS} -- Visitor
 			constant_i: CONSTANT_I
 			class_c: CLASS_C
 			vuex: VUEX
-			obs_warn: OBS_FEAT_WARN
 			l_old_is_inherited: BOOLEAN
 		do
 				-- Use `AST_FEATURE_CHECKER_GENERATOR' to properly type check the type of the static access
@@ -208,25 +207,10 @@ feature {STATIC_ACCESS_AS} -- Visitor
 						last_unique_constant ?= constant_i
 							-- Calculate byte node
 						last_inspect_value := constant_i.value.inspect_value (type)
-						if
-							feature_i.is_obsolete
-								-- If the obsolete call is in an obsolete class,
-								-- no message is displayed
-							and then not context.current_class.is_obsolete
-								-- The current feature is whether the invariant or
-								-- a non obsolete feature
-							and then not context.current_feature.is_obsolete
-								-- Inherited code is checked in parent class.
-							-- and then not is_inherited
-							and then context.current_class.lace_class.options.is_warning_enabled (w_obsolete_feature)
-						then
-							create obs_warn.make_with_class (context.current_class)
-							obs_warn.set_feature (context.current_feature)
-							obs_warn.set_obsolete_class (class_c)
-							obs_warn.set_obsolete_feature (feature_i)
-							error_handler.insert_warning (obs_warn)
-						end
 						if not is_inherited then
+							feature_checker.set_is_inherited (False)
+							feature_checker.check_obsolescence (feature_i, class_c, l_as.feature_name)
+							feature_checker.set_is_inherited (l_old_is_inherited)
 							feature_checker.set_routine_ids (constant_i.rout_id_set, l_as)
 							l_as.set_class_id (class_c.class_id)
 						end
@@ -387,7 +371,7 @@ invariant
 	intervals_not_void: intervals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

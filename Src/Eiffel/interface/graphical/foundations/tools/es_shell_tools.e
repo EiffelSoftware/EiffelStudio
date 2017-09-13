@@ -161,13 +161,11 @@ feature -- Access
 		require
 			is_interface_usable: is_interface_usable
 		local
-			l_types: like tool_types
 			l_cursor: DS_BILINEAR_CURSOR [TYPE [ES_TOOL [EB_TOOL]]]
 		do
 			Result := internal_all_tools
 			if Result = Void then
-				l_types := tool_types
-				l_cursor := l_types.new_cursor
+				l_cursor := tool_types.new_cursor
 				create Result.make_default
 				from l_cursor.start until l_cursor.after loop
 					Result.append_last (tools (l_cursor.item))
@@ -299,6 +297,24 @@ feature {NONE} -- Helpers
 		end
 
 feature -- Query
+
+	dynamic_tool_type (a_type: READABLE_STRING_GENERAL): TYPE [ES_TOOL [EB_TOOL]]
+			-- Retrieves a type object dynamically from a string representation of the type.
+			--
+			-- `a_type': A string representation of a type that implemented {ES_TOOL}. e.g. "MY_TOOL" => TYPE [MY_TOOL]
+			-- `Result': A type object representing the string type passed in.
+		local
+			l_internal: like internal
+			l_id: INTEGER
+		do
+			l_internal := internal
+			if l_internal.is_valid_type_string (a_type) then
+				l_id := l_internal.dynamic_type_from_string (a_type)
+				if l_id > 0 then
+					Result := {TYPE [ES_TOOL [EB_TOOL]]} / l_internal.type_of_type (l_id)
+				end
+			end
+		end
 
 	frozen tool (a_type: TYPE [ES_TOOL [EB_TOOL]]): attached ES_TOOL [EB_TOOL]
 			-- Retrieves an activate tool associated with a particular type.
@@ -566,11 +582,8 @@ feature -- Basic operation
 			a_type_is_multi_edition_tool: a_edition > 1 implies is_multiple_edition_tool (a_type)
 			a_edition_positive: a_edition > 0
 			a_edition_small_enough: a_edition <= editions_of_tool (a_type, False) + 1
-		local
-			l_tool: detachable like tool
 		do
-			l_tool := tool_edition (a_type, a_edition)
-			l_tool.show (a_activate)
+			tool_edition (a_type, a_edition).show (a_activate)
 		ensure
 			tool_is_instatiated: tool_edition (a_type, a_edition).is_tool_instantiated
 			tool_is_shown: tool_edition (a_type, a_edition).panel.is_visible
@@ -585,11 +598,8 @@ feature -- Basic operation
 		require
 			is_interface_usable: is_interface_usable
 			a_type_attached: a_type /= Void
-		local
-			l_tool: detachable like tool
 		do
-			l_tool := tool_next_available_edition (a_type, a_reuse)
-			l_tool.show (a_activate)
+			tool_next_available_edition (a_type, a_reuse).show (a_activate)
 		ensure
 			tool_is_instatiated: (old tool_next_available_edition (a_type, a_reuse)).is_tool_instantiated
 			tool_is_shown: (old tool_next_available_edition (a_type, a_reuse)).panel.is_visible
@@ -636,7 +646,7 @@ feature {NONE} -- Factory
 			l_internal: like internal
 		do
 			l_internal := internal
-			Result ?= l_internal.new_instance_of (l_internal.generic_dynamic_type (a_type, 1))
+			Result := {ES_TOOL [EB_TOOL]} / l_internal.new_instance_of (l_internal.generic_dynamic_type (a_type, 1))
 			check
 				result_attached: Result /= Void
 				result_is_multiple_edition: a_edition > 1 implies Result.is_multiple_edition

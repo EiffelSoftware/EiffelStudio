@@ -103,6 +103,8 @@ inherit
 			{NONE} all
 		end
 
+	OBSOLETE_CALL_HANDLER
+
 feature -- Initialization
 
 	init (a_context: AST_CONTEXT)
@@ -11801,8 +11803,6 @@ feature {INSPECT_CONTROL} -- Checks for obsolete features
 
 	check_obsolescence (f: FEATURE_I; c: CLASS_C; l: LOCATION_AS)
 			-- Check that feature `f` from type `t` is obsolete and report a warning if so.
-		local
-			obsolete_warning: OBS_FEAT_WARN
 		do
 			if
 					-- Report a warning if the feature is obsolete.
@@ -11813,23 +11813,12 @@ feature {INSPECT_CONTROL} -- Checks for obsolete features
 				and then (attached current_feature as cf implies not cf.is_obsolete)
 					-- Provided that the code is not inherited (obsolescence is reported for immediate code).
 				and then not is_inherited
-					-- And the warning is not disabled.
-				and then context.current_class.is_warning_enabled (w_obsolete_feature)
 					-- And this is not a target of an assignment.
 				and then not is_in_assignment
 					-- Or of a creation instruction.
 				and then not is_target_of_creation_instruction
 			then
-				create obsolete_warning.make_with_class (context.current_class)
-				if attached current_feature as cf then
-					obsolete_warning.set_feature (cf)
-				end
-				obsolete_warning.set_obsolete_class (c)
-				obsolete_warning.set_obsolete_feature (f)
-				if attached l then
-					obsolete_warning.set_location (l)
-				end
-				error_handler.insert_warning (obsolete_warning)
+				report (f, c, current_feature, context.current_class, l, context.current_class.is_warning_enabled (w_obsolete_feature))
 			end
 		end
 

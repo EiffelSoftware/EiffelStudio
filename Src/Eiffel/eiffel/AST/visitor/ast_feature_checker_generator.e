@@ -2388,10 +2388,20 @@ feature {NONE} -- Visitor
 										l_list [i] := l_context.last_conversion_info.byte_node (l_list [i])
 									end
 								else
-										-- Report an error.
-									error_handler.insert_error (create {VWMA_INCOMPATIBLE_EXPRESSION}.make (context, l_element_type, l_type_a, i, l_as.expressions [i].first_token (match_list_of_class (context.written_class.class_id))))
-									l_has_error := True
-									i := nb + 1	-- Exit the loop
+									if attached default_element_type then
+											-- There is no explicit array type and the computed array type is not compatible with the target array type.
+											-- Use the default (computed) array type.
+											-- Note: the byte code for some elements might be changed due to conversion, but it is safe to leave it "as is" because an error will be reported for the incompatible types.
+										l_type_a := default_element_type
+										implicit_type := default_array_type
+									else
+											-- Report an error only for the explicit type.
+											-- For the implicit type the error has been reported above or will be reported where the array is used.
+										error_handler.insert_error (create {VWMA_INCOMPATIBLE_EXPRESSION}.make (context, l_element_type, l_type_a, i, l_as.expressions [i].first_token (match_list_of_class (context.written_class.class_id))))
+										l_has_error := True
+									end
+										-- Exit the loop
+									i := nb + 1
 								end
 							end
 							i := i + 1

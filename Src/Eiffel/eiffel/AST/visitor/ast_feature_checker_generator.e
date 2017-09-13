@@ -11797,7 +11797,7 @@ feature {NONE} -- Type recording
 			last_type := t
 		end
 
-feature {NONE} -- Checks for obsolete features
+feature {INSPECT_CONTROL} -- Checks for obsolete features
 
 	check_obsolescence (f: FEATURE_I; c: CLASS_C; l: LOCATION_AS)
 			-- Check that feature `f` from type `t` is obsolete and report a warning if so.

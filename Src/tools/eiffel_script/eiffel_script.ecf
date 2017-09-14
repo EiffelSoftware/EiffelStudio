@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="eiffel_script" uuid="9838D2ED-9880-4375-9614-02B5DAC86B4F">
+	<target name="eiffel_script">
+		<root class="EIFFEL_SCRIPT" feature="make"/>
+		<setting name="console_application" value="true"/>
+		<setting name="executable_name" value="eiffel"/>
+		<capability>
+			<void_safety support="all"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="conf_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
+		<library name="env" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
+		<cluster name="src" location="src\" recursive="true"/>
+	</target>
+</system>

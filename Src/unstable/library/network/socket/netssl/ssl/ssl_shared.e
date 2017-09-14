@@ -91,9 +91,9 @@ feature {NONE} -- External
 	c_openssl_add_ssl_algorithms
 			-- External call to OpenSSL_add_ssl_algorithms();.
 		external
-			"C inline use %"eif_openssl.h%""
+			"C use %"eif_openssl.h%""
 		alias
-			"OPENSSL_init_ssl(0, NULL)"
+			"OpenSSL_add_ssl_algorithms"
 		end
 
 

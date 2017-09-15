@@ -108,6 +108,16 @@ feature {NONE} -- Initialization
 			settings.initialize_rule_settings (rules)
 		end
 
+feature -- Initialization
+
+	install_obsolete_call_processor
+			-- Register an obsolete call processor of the code analyzer as the one to be used by the compiler.
+		do
+			(create {OBSOLETE_CALL_HANDLER}).install
+				(agent (create {CA_OBSOLETE_FEATURE_CALL_PROCESSOR [like {OBSOLETE_CALL_HANDLER}.context_type]}.make
+					(settings.preference_manager)).process)
+		end
+
 feature -- Analysis interface
 
 	add_start_action (a_action: PROCEDURE)
@@ -483,7 +493,16 @@ feature {NONE} -- Class-wide Options (From Indexing Clauses)
 						across ic.item.index_list as l_list loop
 							l_item := l_list.item.string_value_32
 							l_item.prune_all ('"')
+							l_item.to_upper
 							a_ignoredby.extend (l_item)
+						end
+					elseif l_tag.name_32.is_equal ("ca_only") then
+							-- Class wants to check only certain rules.
+						across ic.item.index_list as l_list loop
+							l_item := l_list.item.string_value_32
+							l_item.prune_all ('"')
+							l_item.to_upper
+							a_check_only.extend (l_item)
 						end
 					elseif l_tag.name_32.is_equal ("ca_library") then
 							-- Class has information on whether it is a library class.
@@ -496,13 +515,6 @@ feature {NONE} -- Class-wide Options (From Indexing Clauses)
 							elseif l_item.is_equal ("false") then
 								nonlibrary_class.force (True, a_class)
 							end
-						end
-					elseif l_tag.name_32.is_equal ("ca_only") then
-							-- Class wants to check only certain rules.
-						across ic.item.index_list as l_list loop
-							l_item := l_list.item.string_value_32
-							l_item.prune_all ('"')
-							a_check_only.extend (l_item)
 						end
 					end
 				end

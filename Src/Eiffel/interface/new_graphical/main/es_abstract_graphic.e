@@ -50,14 +50,10 @@ inherit
 feature {NONE} -- Initialization
 
 	initialize_services
-			-- Initializes graphical services
-		local
-			l_container: attached SERVICE_CONSUMER [SERVICE_CONTAINER_S]
+			-- Initializes graphical services.
 		do
-			create l_container
-			check is_service_available: l_container.is_service_available end
-			if l_container.is_service_available and then attached {SERVICE_CONTAINER_S} l_container.service as l_service then
-				service_initializer.add_core_services (l_service)
+			if attached (create {SERVICE_CONSUMER [SERVICE_CONTAINER_S]}).service as s then
+				service_initializer.add_core_services (s)
 			end
 				-- Initialize prompts.
 			set_prompts (create {EB_PROMPT_PROVIDER})
@@ -68,14 +64,8 @@ feature {NONE} -- Initialization
 		local
 			l_compiler_setting: SETTABLE_COMPILER_OBJECTS
 			l_layout: ES_EIFFEL_LAYOUT
-			l_ui_executor: EB_COMMAND_EXECUTOR
 			pref_strs: PREFERENCE_CONSTANTS
-			fn: PATH
 			new_resources: TTY_RESOURCES
-			eifgen_init: INIT_SERVERS
-			l_external_output_manager: EB_EXTERNAL_OUTPUT_MANAGER
-			l_recent_projects_manager: EB_RECENT_PROJECTS_MANAGER
-			l_graphical_degree_output: ES_GRAPHICAL_DEGREE_OUTPUT
 			preference_access: PREFERENCES
 			l_studio_preferences: EB_PREFERENCES
 		do
@@ -87,15 +77,14 @@ feature {NONE} -- Initialization
 			l_layout.check_environment_variable
 
 			create l_compiler_setting
-			create l_ui_executor
-			l_compiler_setting.set_command_executor (l_ui_executor)
+			l_compiler_setting.set_command_executor (create {EB_COMMAND_EXECUTOR})
 
 				--| Initialization of the run-time, so that at the end of a store/retrieve
 				--| operation (like retrieving or storing the project, creating the CASEGEN
 				--| directory, generating the profile information, ...) the run-time is initialized
 				--| back to the values which permits the compiler to access correctly the EIFGEN
 				--| directory
-			create eifgen_init.make
+			;(create {INIT_SERVERS}.make).do_nothing
 
 				-- Initialization of compiler resources
 			create new_resources.initialize
@@ -104,8 +93,7 @@ feature {NONE} -- Initialization
 			create pref_strs
 				-- Initialize pixmaps
 			pref_strs.Pixmaps_extension_cell.put ("png")
-			fn := eiffel_layout.bitmaps_path.extended ("png")
-			pref_strs.Pixmaps_path_cell.put (fn)
+			pref_strs.Pixmaps_path_cell.put (eiffel_layout.bitmaps_path.extended ("png"))
 
 			if not new_resources.error_occurred then
 				-- One has to quit there.
@@ -118,38 +106,35 @@ feature {NONE} -- Initialization
 			l_compiler_setting.set_preferences (l_studio_preferences)
 
 				-- Create and setup the output manager / Error displayer
-			create l_external_output_manager
-			set_external_output_manager (l_external_output_manager)
+			set_external_output_manager (create {EB_EXTERNAL_OUTPUT_MANAGER})
 
 				-- Set the error display for graphical output
 			eiffel_project.set_error_displayer (create_error_displayer)
 
 				-- Create and setup the degree output window.
 			if not preferences.development_window_data.graphical_output_disabled then
-				create l_graphical_degree_output
-				Eiffel_project.set_degree_output (l_graphical_degree_output)
+				Eiffel_project.set_degree_output (create {ES_GRAPHICAL_DEGREE_OUTPUT})
 			end
 
 				-- Create and setup the recent projects manager
-			create l_recent_projects_manager.make
-			set_recent_projects_manager (l_recent_projects_manager)
+			set_recent_projects_manager (create {EB_RECENT_PROJECTS_MANAGER}.make)
 
 					-- Formatting includes breakpoints
-			set_is_with_breakable;
+			set_is_with_breakable
 
 				-- Initialize compiler encoding converter.
-			(create {SHARED_ENCODING_CONVERTER}).set_encoding_converter (create {EC_ENCODING_CONVERTER}.make)
+			;(create {SHARED_ENCODING_CONVERTER}).set_encoding_converter (create {EC_ENCODING_CONVERTER}.make)
+
+				-- Install code analyzer processor for obsolete calls.
+			;(create {CA_CODE_ANALYZER}.make).install_obsolete_call_processor
 		ensure
 			eiffel_layout_not_void: eiffel_layout /= Void
 		end
 
 	initialize_debugger
 			-- Various initialization of the debugger
-		local
-			dbg: DEBUGGER_MANAGER
 		do
-			create {EB_DEBUGGER_MANAGER} dbg.make
-			dbg.register
+			(create {EB_DEBUGGER_MANAGER}.make).register
 		end
 
 feature {NONE} -- Access
@@ -166,8 +151,6 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			-- Build graphical compiler
 		require
 			an_app_not_void: an_app /= Void
-		local
-			l_conf_constants: CONF_GUI_INTERFACE_CONSTANTS
 		do
 			initialize_services
 
@@ -179,8 +162,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			window_manager.create_window
 
 				-- Initialize the configuration pixmaps
-			create l_conf_constants
-			l_conf_constants.set_pixmaps (pixmaps.configuration_pixmaps)
+			;(create {CONF_GUI_INTERFACE_CONSTANTS}).set_pixmaps (pixmaps.configuration_pixmaps)
 
 				-- Initialize external command manager
 			incoming_command_manager_cell.put (create {ES_INCOMING_COMMAND_MANAGER}.make (create {ES_COMMAND_RECEIVER_CALLBACKS}.make))
@@ -375,14 +357,12 @@ feature {NONE} -- Exception handling
 	try_to_save_session_data
 			-- In case of a crash, try to store the session data.
 		local
-			l_service: attached SERVICE_CONSUMER [SESSION_MANAGER_S]
 			retried: BOOLEAN
 		do
 			if not retried then
-				create l_service
-				if l_service.is_service_available and then l_service.service.is_interface_usable then
+				if attached (create {SERVICE_CONSUMER [SESSION_MANAGER_S]}).service as s and then s.is_interface_usable then
 						-- Stores all session data.
-					l_service.service.store_all
+					s.store_all
 				end
 			else
 				prompts.show_error_prompt (interface_messages.e_save_session_data_failed, parent_for_dialog, Void)

@@ -68,7 +68,6 @@ feature -- Initialization
 			l_layout: ES_EIFFEL_LAYOUT
 			l_eifgen_init: INIT_SERVERS
 			l_preference_access: PREFERENCES
-			new_resources: TTY_RESOURCES
 			l_ec_preferences: EC_PREFERENCES
 			l_compiler_setting: SETTABLE_COMPILER_OBJECTS
 		do
@@ -105,7 +104,7 @@ feature -- Initialization
 			create l_eifgen_init.make
 
 				-- Initialization of compiler resources
-			create new_resources.initialize
+			;(create {TTY_RESOURCES}.initialize).do_nothing
 
 				-- Initialization of compiler resources.
 
@@ -129,6 +128,8 @@ feature -- Initialization
 		do
 				-- Initialize compiler encoding converter.
 			(create {SHARED_ENCODING_CONVERTER}).set_encoding_converter (create {EC_ENCODING_CONVERTER}.make)
+				-- Install code analyzer processor for obsolete calls.
+			;(create {CA_CODE_ANALYZER}.make).install_obsolete_call_processor
 		end
 
 	execute

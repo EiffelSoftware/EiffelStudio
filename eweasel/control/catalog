@@ -501,7 +501,7 @@ test	static-comparison-test				valid215 tcf pass validity
 test	generic-creation-constraint			valid216 tcf fail validity
 test	precursor-once						valid217 tcf fail validity
 test	freezing-like-current				valid218 tcf pass validity
-test	obsolete-warning-in-obsolete-feature	valid219 tcf pass validity
+test	obsolete-warning-in-obsolete-feature	valid219 tcf pass validity obsolete_call
 test	ancestor-anchor-type			valid220 tcf pass validity
 test	vtug2-not-reported-crash			valid221 tcf pass validity
 test	invalid-redefinition			valid222 tcf pass validity

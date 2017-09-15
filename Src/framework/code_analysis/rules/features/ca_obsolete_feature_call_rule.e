@@ -11,10 +11,22 @@ class
 	CA_OBSOLETE_FEATURE_CALL_RULE
 
 inherit
-	CA_OBSOLETE_FEATURE
+	CA_OBSOLETE_FEATURE_CALL_PROCESSOR [TUPLE [
+			obsolete_feature: E_FEATURE;
+			obsolete_class: CLASS_C;
+			caller_names: detachable ITERABLE [FEATURE_NAME];
+			caller_class: CLASS_C;
+			location: LOCATION_AS]]
 		redefine
 			make
 		end
+
+	OBSOLETE_CALL_REPORTER [TUPLE [
+			obsolete_feature: E_FEATURE;
+			obsolete_class: CLASS_C;
+			caller_names: detachable ITERABLE [FEATURE_NAME];
+			caller_class: CLASS_C;
+			location: LOCATION_AS]]
 
 	CA_STANDARD_RULE
 	DATE_VALIDITY_CHECKER
@@ -180,13 +192,6 @@ feature {NONE} -- Rule Checking
 	process_call (routine_id: like {ROUT_ID_SET}.first; class_id: like {CLASS_C}.class_id; call: AST_EIFFEL)
 			-- Process a call to a feature of `routine_id` from class `class_id` at location `call`.
 		local
-			violation: CA_RULE_VIOLATION
-			u: UTF_CONVERTER
-			stamp: TUPLE [message: STRING; date: DATE]
-			d: DATE
-			expires_in: INTEGER
-			obsolete_message: READABLE_STRING_32
-			violation_severity: like severity
 			m: like {FEATURE_I}.obsolete_message
 			f: FEATURE_I
 		do
@@ -212,75 +217,7 @@ feature {NONE} -- Rule Checking
 					end
 				end
 				if attached f and attached m then
-					stamp := date (m)
-					obsolete_message := u.utf_8_string_8_to_string_32 (if attached stamp then stamp.message else m end)
-					if attached stamp then
-						d := stamp.date
-					else
-						d := default_date
-					end
-					expires_in := d.relative_duration (create {DATE}.make_now_utc).days_count
-					if expires_in > 0 then
-						violation_severity := severity_hint
-					end
-					expires_in := expires_in + feature_call_expiration.value
-					if expires_in <= 0 then
-						violation_severity := severity_error
-					end
-					create violation.make_formatted
-						(agent format_elements (?, ca_messages.obsolete_feature_call_title,
-							<<
-								agent (f.e_feature).append_name,
-								agent add_single_line (obsolete_message, ?)
-							>>),
-						agent
-							(callee: E_FEATURE;
-							callee_class: CLASS_C;
-							caller_names: detachable ITERABLE [FEATURE_NAME];
-							caller_class: CLASS_C;
-							callee_message: READABLE_STRING_32;
-							days: INTEGER;
-							t: TEXT_FORMATTER)
-						local
-							affected: ITERABLE [PROCEDURE [TEXT_FORMATTER]]
-						do
-							if attached caller_names then
-								affected := create {ITERABLE_MAP [FEATURE_NAME, PROCEDURE [TEXT_FORMATTER]]}.make
-									(agent (feature_name: FEATURE_NAME; caller: CLASS_C): PROCEDURE [TEXT_FORMATTER] do
-										Result := agent {TEXT_FORMATTER}.add_feature_name (feature_name.visual_name_32, caller)
-									end (?, caller_class), caller_names)
-							else
-								affected := create {ARRAY [PROCEDURE [TEXT_FORMATTER]]}.make_filled
-									(agent {TEXT_FORMATTER}.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_invariant_keyword, Void), 1, 1)
-							end
-							format (t, ca_messages.obsolete_feature_call_violation,
-							<<
-								element (agent callee.append_name),
-								element (agent callee_class.append_name),
-								element_list (affected),
-								element (agent caller_class.append_name),
-								element (agent (formatter: TEXT_FORMATTER; msg: READABLE_STRING_32) do
-									formatter.add_new_line
-									if msg.has ({CHARACTER_32} '%N') then
-										formatter.add_multiline_string (msg, 1)
-									else
-										formatter.add_indent
-										formatter.add_string (msg)
-									end
-								end (?, callee_message))
-							>>)
-							if days > 0 then
-								t.add_new_line
-								format_elements (t, ca_messages.obsolete_feature_call_expires_in (days),
-									<<agent {TEXT_FORMATTER}.add_int (days)>>)
-							end
-						end (f.e_feature, c, feature_names, current_context.checking_class, u.utf_8_string_8_to_string_32 (m), expires_in, ?),
-						Current)
-					violation.set_location (call.first_token (current_context.matchlist))
-					if attached violation_severity then
-						violation.set_severity (violation_severity)
-					end
-					violations.extend (violation)
+					process (m, True, f.e_feature, c, feature_names, current_context.checking_class, call.first_token (current_context.matchlist), Current)
 				end
 			end
 		end
@@ -299,6 +236,74 @@ feature {NONE} -- Formatting
 			else
 				t.add_string (s)
 			end
+		end
+
+feature {NONE} -- Reporting
+
+	report_obsolete_call (obsolete_message: READABLE_STRING_32; clean_message: READABLE_STRING_32; expiration: INTEGER_32; issue_severity: NATURAL_32; context: like context_type)
+			-- <Precursor>
+		local
+			violation: CA_RULE_VIOLATION
+		do
+			create violation.make_formatted
+				(agent format_elements (?, ca_messages.obsolete_feature_call_title,
+					<<
+						agent (context.obsolete_feature).append_name,
+						agent add_single_line (obsolete_message, ?)
+					>>),
+				agent
+					(callee: E_FEATURE;
+					callee_class: CLASS_C;
+					caller_names: detachable ITERABLE [FEATURE_NAME];
+					caller_class: CLASS_C;
+					callee_message: READABLE_STRING_32;
+					days: INTEGER;
+					t: TEXT_FORMATTER)
+				local
+					affected: ITERABLE [PROCEDURE [TEXT_FORMATTER]]
+				do
+					if attached caller_names then
+						affected := create {ITERABLE_MAP [FEATURE_NAME, PROCEDURE [TEXT_FORMATTER]]}.make
+							(agent (feature_name: FEATURE_NAME; caller: CLASS_C): PROCEDURE [TEXT_FORMATTER] do
+								Result := agent {TEXT_FORMATTER}.add_feature_name (feature_name.visual_name_32, caller)
+							end (?, caller_class), caller_names)
+					else
+						affected :=
+							<<agent {TEXT_FORMATTER}.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_invariant_keyword, Void)>>
+					end
+					format (t, ca_messages.obsolete_feature_call_violation,
+					<<
+						element (agent callee.append_name),
+						element (agent callee_class.append_name),
+						element_list (affected),
+						element (agent caller_class.append_name),
+						element (agent (formatter: TEXT_FORMATTER; msg: READABLE_STRING_32) do
+							formatter.add_new_line
+							if msg.has ({CHARACTER_32} '%N') then
+								formatter.add_multiline_string (msg, 1)
+							else
+								formatter.add_indent
+								formatter.add_string (msg)
+							end
+						end (?, callee_message))
+					>>)
+					if days > 0 then
+						t.add_new_line
+						format_elements (t, ca_messages.obsolete_feature_call_expires_in (days),
+							<<agent {TEXT_FORMATTER}.add_int (days)>>)
+					end
+				end (context.obsolete_feature, context.obsolete_class, feature_names, current_context.checking_class, clean_message, expiration, ?),
+				Current)
+			violation.set_location (context.location)
+			inspect issue_severity
+			when obsolete_call_error then
+				violation.set_severity (severity_error)
+			when obsolete_call_warning then
+				violation.set_severity (severity_warning)
+			when obsolete_call_hint then
+				violation.set_severity (severity_hint)
+			end
+			violations.extend (violation)
 		end
 
 note

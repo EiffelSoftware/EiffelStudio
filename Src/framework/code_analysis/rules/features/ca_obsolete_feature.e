@@ -23,6 +23,12 @@ feature {NONE} -- Creation
 				preference_option_name_feature_call_expiration, default_feature_call_expiration)
 			feature_call_expiration.set_default_value (default_feature_call_expiration.out)
 			feature_call_expiration.set_validation_agent (agent is_integer_string_within_bounds (?, 1, {like {DATE_DURATION}.days_count}.max_value))
+			feature_call_expiration.set_restart_required (True)
+			feature_call_suppression_period := l_factory.new_integer_preference_value (m,
+				preference_option_name_feature_call_suppression_period, default_feature_call_suppression_period)
+			feature_call_suppression_period.set_default_value (default_feature_call_suppression_period.out)
+			feature_call_suppression_period.set_validation_agent (agent is_integer_string_within_bounds (?, 1, {like {DATE_DURATION}.days_count}.max_value))
+			feature_call_suppression_period.set_restart_required (True)
 		end
 
 feature {NONE} -- Preferences
@@ -40,11 +46,26 @@ feature {NONE} -- Preferences
 			-- The default call expiration period necessary to trigger a rule violation.
 
 	feature_call_expiration: INTEGER_PREFERENCE
-			-- The call expiration necessary tol trigger a rule violation.
+			-- The call expiration necessary to trigger a rule violation.
+
+	preference_option_name_feature_call_suppression_period: STRING
+			-- A name of a call suppression period option within the corresponding preference namespace.
+		do
+			Result := full_rule_preference_name (option_name_feature_call_suppression_period, {CA_OBSOLETE_FEATURE_CALL_RULE}.name)
+		end
+
+	option_name_feature_call_suppression_period: STRING = "suppression_period"
+			-- A name of a call suppression period option.
+
+	default_feature_call_suppression_period: INTEGER = 183
+			-- The default call suppression period when the rule violation for an obsolete feature call can be disabled.
+
+	feature_call_suppression_period: INTEGER_PREFERENCE
+			-- The call supression period after which the rule violation cannot be disabled anymore.
 
 feature {NONE} -- Date evaluation
 
-	date (m: STRING): detachable TUPLE [message: STRING; date: DATE]
+	date (m: STRING): TUPLE [message: STRING; date: DATE]
 			-- Date specified in the message `m` if any.
 			-- If a date is extracted, the message without date information is returned.
 		local
@@ -87,6 +108,9 @@ feature {NONE} -- Date evaluation
 					j := j - 1
 				end
 				Result := [m.substring (1, j), create {DATE}.make_from_string (date_string, date_code)]
+			else
+					-- Use default values.
+				Result := [m, default_date]
 			end
 		end
 

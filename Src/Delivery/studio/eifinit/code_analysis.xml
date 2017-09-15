@@ -91,7 +91,10 @@
 	<PREF NAME="rule.npath_complexity.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 	<PREF NAME="rule.npath_complexity.threshold" DESCRIPTION="Maximum allowed number of acyclic execution paths through a routine."><INTEGER>1000</INTEGER></PREF>
 	<PREF NAME="rule.obsolete_feature.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.obsolete_feature.expiration" RESTART="true" DESCRIPTION="Period (in days) after which a feature reported with an obsolete error should be removed from the code.%NExample: this value is 183 and the expiration period for an obsolete feature call is 366. Then the obsolete feature is flagged with an error in 1.5 years."><NATURAL>183</NATURAL></PREF>
 	<PREF NAME="rule.obsolete_feature_call.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.obsolete_feature_call.call_expiration" RESTART="true" DESCRIPTION="Period (in days) after which a call to an obsolete feature is reported as an error (rather than a warning or a hint).%NExample: with the value 366, an obsolete feature call is reported as an error in a year."><NATURAL>366</NATURAL></PREF>
+	<PREF NAME="rule.obsolete_feature_call.suppression_period" RESTART="true" DESCRIPTION="Period (in days) during which it is possible to suppress a warning about an obsolete feature call.%NExample: the value for this period is 15 and the feature is obsolete from [2100-01-01]. Then the warning or error cannot be suppressed after [2100-01-15]."><NATURAL>183</NATURAL></PREF>
 	<PREF NAME="rule.possible_side_effect.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.possible_side_effect.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 	<PREF NAME="rule.redundant_object_test.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>

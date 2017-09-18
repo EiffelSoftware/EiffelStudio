@@ -27,13 +27,12 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- Creation
 
 	make
 			-- Instantiate Current object.
 		local
 			arr:  ARRAY [READABLE_STRING_32]
-			args: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			target: detachable PATH
 			v: READABLE_STRING_32
 			i,n: INTEGER
@@ -45,7 +44,6 @@ feature {NONE} -- Initialization
 			launch_params: EIFFEL_SCRIPT_LAUNCH_PARAMETERS
 		do
 			arr := execution_environment.arguments.argument_array
-			create args.make (0)
 			n := arr.upper
 			i := arr.lower + 1 -- Skip executable name.
 			if i > n then
@@ -72,7 +70,7 @@ feature {NONE} -- Initialization
 				when op_launch then
 					if
 						attached {EIFFEL_SCRIPT_LAUNCH_PARAMETERS} params as l_launch_params and then
-						attached l_launch_params.ecf_path as l_ecf
+						attached l_launch_params.ecf_location as l_ecf
 					then
 						is_build_forced := l_launch_params.is_build_forced
 						launch (l_ecf, l_launch_params.args)
@@ -82,7 +80,7 @@ feature {NONE} -- Initialization
 				when op_build then
 					if
 						attached {EIFFEL_SCRIPT_BUILD_PARAMETERS} params as l_build_params and then
-						attached l_build_params.ecf_path as l_ecf
+						attached l_build_params.ecf_location as l_ecf
 					then
 						build (l_ecf, l_build_params.executable_path)
 					else
@@ -92,38 +90,6 @@ feature {NONE} -- Initialization
 					display_usage
 				end
 			end
-		end
-
-	display_usage
-		local
-			cmd: READABLE_STRING_32
-		do
-			cmd := execution_environment.arguments.command_name
-			print ("USAGE:%N")
-			print ("   ")
-			print (cmd)
-			print (" (-v|--verbose) (-h|--help) (-b|--build) <project.ecf> ...%N")
-			print ("   ")
-			print (cmd)
-			print (" build (-v|--verbose) <project.ecf> <output_executable_path> ...%N")
-			print ("%N")
-			print ("COMMANDS:%N")
-			print ("    <project.ecf> ...   : build once and launch <project.ecf> execution.%N")
-			print ("    build               : build project and save executable as <output_executable_path>.%N")
-			print ("%N")
-			print ("OPTIONS:%N")
-			print ("    -o --executable-output <path> : build and save executable as <path>.%N")
-			print ("                                  : note: no execution.!%N")
-			print ("    -b --build                    : force a fresh system build.%N")
-			print ("    -v --verbose                  : verbose output.%N")
-			print ("    -h --help                     : display this help.%N")
-			print ("    ...                           : arguments for the <project.ecf> execution.%N")
-			print ("%N")
-			print ("    Note: you can overwrite default value, using %N")
-			print ("    EIFFEL_SCRIPT_DIR       : root directory for eiffel script app (default under Eiffel user files/.apps) %N")
-			print ("    EIFFEL_SCRIPT_CACHE_DIR : directory caching the compiled executables ($EIFFEL_SCRIPT_DIR/cache) %N")
-			print ("    EIFFEL_SCRIPT_COMP_DIR : directory caching the EIFGENs compilation ($EIFFEL_SCRIPT_DIR/comp) %N")
-			print ("%N")
 		end
 
 feature {NONE} -- Constants	
@@ -182,46 +148,90 @@ feature -- Access
 
 	appcomp_location: PATH
 
-feature -- Execution		
+feature -- Execution
 
-	launch (a_ecf: PATH; args: LIST [READABLE_STRING_GENERAL])
-		require
-			is_ecf: attached a_ecf.extension as ext and then ext.is_case_insensitive_equal_general ("ecf")
+	display_usage
+		local
+			cmd: READABLE_STRING_32
 		do
-			if
-				attached ecf_system (a_ecf) as sys and then
-				attached ecf_target (sys) as tgt
-			then
-				launch_system (sys, tgt, args)
+			cmd := execution_environment.arguments.command_name
+			print ("USAGE:%N")
+			print ("   ")
+			print (cmd)
+			print (" (-v|--verbose) (-h|--help) (-b|--build) <project.ecf> ...%N")
+			print ("   ")
+			print (cmd)
+			print (" build (-v|--verbose) <project.ecf> <output_executable_path> ...%N")
+			print ("%N")
+			print ("COMMANDS:%N")
+			print ("    <project.ecf> ...   : build once and launch <project.ecf> execution.%N")
+			print ("    build               : build project and save executable as <output_executable_path>.%N")
+			print ("%N")
+			print ("OPTIONS:%N")
+			print ("    -o --executable-output <path> : build and save executable as <path>.%N")
+			print ("                                  : note: no execution.!%N")
+			print ("    -b --build                    : force a fresh system build.%N")
+			print ("    -v --verbose                  : verbose output.%N")
+			print ("    -h --help                     : display this help.%N")
+			print ("    ...                           : arguments for the <project.ecf> execution.%N")
+			print ("%N")
+			print ("    Note: you can overwrite default value, using %N")
+			print ("    EIFFEL_SCRIPT_DIR       : root directory for eiffel script app (default under Eiffel user files/.apps) %N")
+			print ("    EIFFEL_SCRIPT_CACHE_DIR : directory caching the compiled executables ($EIFFEL_SCRIPT_DIR/cache) %N")
+			print ("    EIFFEL_SCRIPT_COMP_DIR : directory caching the EIFGENs compilation ($EIFFEL_SCRIPT_DIR/comp) %N")
+			print ("%N")
+		end
+
+	launch (a_ecf: READABLE_STRING_GENERAL; args: LIST [READABLE_STRING_GENERAL])
+		require
+			is_ecf: a_ecf.ends_with (".ecf")
+		local
+			p_ecf: PATH
+		do
+			if a_ecf.starts_with ("iron:") then
+				report_error ("iron locations are not yet supported!%N")
 			else
-				report_error ("Invalid ecf file or missing target!%N")
+				p_ecf := (create {PATH}.make_from_string (a_ecf)).absolute_path.canonical_path
+				if
+					attached ecf_system (p_ecf) as sys and then
+					attached ecf_target (sys) as tgt
+				then
+					launch_system (sys, tgt, args)
+				else
+					report_error ("Invalid ecf file or missing target!%N")
+				end
 			end
 		end
 
-	build (a_ecf: PATH; a_exec_output_path: detachable PATH)
+	build (a_ecf: READABLE_STRING_GENERAL; a_exec_output_path: detachable PATH)
 		require
-			is_ecf: attached a_ecf.extension as ext and then ext.is_case_insensitive_equal_general ("ecf")
+			is_ecf: a_ecf.ends_with (".ecf")
 		local
-			p: PATH
+			p_ecf, p: PATH
 		do
-			if a_exec_output_path /= Void then
-				print ({STRING_32} "Build project " + a_ecf.name + " and save generated executable as " + a_exec_output_path.name + ".%N")
+			if a_ecf.starts_with ("iron:") then
+				report_error ("iron locations are not yet supported!%N")
 			else
-				print ({STRING_32} "Build project " + a_ecf.name + " and save generated executable in current folder.%N")
-			end
-			if
-				attached ecf_system (a_ecf) as sys and then
-				attached ecf_target (sys) as tgt
-			then
+				p_ecf := (create {PATH}.make_from_string (a_ecf)).absolute_path.canonical_path
 				if a_exec_output_path /= Void then
-					p := a_exec_output_path
+					print ({STRING_32} "Build project " + p_ecf.name + " and save generated executable as " + a_exec_output_path.name + ".%N")
 				else
-					p := executable_name (sys, tgt)
+					print ({STRING_32} "Build project " + p_ecf.name + " and save generated executable in current folder.%N")
 				end
-				build_executable (sys, tgt, p)
-				print ({STRING_32} "Executable generated as " + p.name + ".%N")
-			else
-				report_error ("Invalid ecf file or missing target!%N")
+				if
+					attached ecf_system (p_ecf) as sys and then
+					attached ecf_target (sys) as tgt
+				then
+					if a_exec_output_path /= Void then
+						p := a_exec_output_path
+					else
+						p := executable_name (sys, tgt)
+					end
+					build_executable (sys, tgt, p)
+					print ({STRING_32} "Executable generated as " + p.name + ".%N")
+				else
+					report_error ("Invalid ecf file or missing target!%N")
+				end
 			end
 		end
 
@@ -233,15 +243,12 @@ feature {NONE} -- Execution
 			p: PATH
 		do
 			p := executable_location (a_system, a_target)
-			if ut.file_path_exists (p) then
-				if
-					is_build_forced
-					or else is_file_more_recent_than (a_system.file_path, p)
-				then
-						-- ecf file is more recent than cached executable
-					build_executable (a_system, a_target, p)
-				end
-			else
+			if
+				not ut.file_path_exists (p)
+				or else	is_build_forced
+				or else is_file_more_recent_than (a_system.file_path, p)
+			then
+					-- ecf file is more recent than cached executable
 				build_executable (a_system, a_target, p)
 			end
 			if ut.file_path_exists (p) then
@@ -251,7 +258,6 @@ feature {NONE} -- Execution
 
 	build_executable (a_system: CONF_SYSTEM; a_target: CONF_TARGET; a_executable_target_location: PATH)
 		local
-			fac: BASE_PROCESS_FACTORY
 			l_comp_loc: PATH
 			proc: BASE_PROCESS
 			ut: FILE_UTILITIES
@@ -272,8 +278,7 @@ feature {NONE} -- Execution
 			params.extend (l_comp_loc.name)
 			ecb_cmd := eiffel_layout.bin_path.extended ("ecb" + eiffel_layout.executable_suffix)
 				-- NOTE: do not use `eiffel_layout.ec_command_name`, as it may have issue.
-			create fac
-			proc := fac.process_launcher (ecb_cmd.name, params, l_comp_loc.name)
+			proc := (create {BASE_PROCESS_FACTORY}).process_launcher (ecb_cmd.name, params, l_comp_loc.name)
 			if not is_verbose then
 				proc.redirect_output_to_file (l_comp_loc.extended ("build.log").name)
 				proc.redirect_error_to_same_as_output
@@ -301,11 +306,9 @@ feature {NONE} -- Execution
 
 	launch_executable (loc: PATH; args: LIST [READABLE_STRING_GENERAL])
 		local
-			fac: BASE_PROCESS_FACTORY
 			proc: BASE_PROCESS
 		do
-			create fac
-			proc := fac.process_launcher (loc.name, args, Void)
+			proc := (create {BASE_PROCESS_FACTORY}).process_launcher (loc.name, args, Void)
 --			proc.redirect_output_to_stream
 --			proc.redirect_error_to_stream
 --			proc.redirect_input_to_stream
@@ -322,10 +325,8 @@ feature -- Query
 	ecf_system (a_ecf: PATH): detachable CONF_SYSTEM
 		local
 			loader: CONF_LOAD
-			fac: CONF_PARSE_FACTORY
 		do
-			create fac
-			create loader.make (fac)
+			create loader.make (create {CONF_PARSE_FACTORY})
 			loader.retrieve_configuration (a_ecf.name)
 			Result := loader.last_system
 		end
@@ -448,12 +449,8 @@ feature {NONE} -- Implementation
 		end
 
 	is_file_more_recent_than (loc: PATH; ref: PATH): BOOLEAN
-		local
-			f,f_ref: RAW_FILE
 		do
-			create f.make_with_path (loc)
-			create f_ref.make_with_path (ref)
-			Result := f.date > f_ref.date
+			Result := (create {RAW_FILE}.make_with_path (loc)).date > (create {RAW_FILE}.make_with_path (ref)).date
 		end
 
 end

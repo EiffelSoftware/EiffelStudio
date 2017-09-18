@@ -24,11 +24,11 @@ feature {NONE} -- Creation
 		do
 			i := cl_index.item
 			v := arr [i]
-			if ecf_path /= Void then
+			if ecf_location /= Void then
 				set_executable_path (v)
 				cl_index.replace (i + 1)
 			elseif v.ends_with (".ecf") then
-				set_ecf_path (v)
+				set_ecf_location (v)
 				cl_index.replace (i + 1)
 			else
 				Precursor (arr, cl_index)
@@ -37,15 +37,15 @@ feature {NONE} -- Creation
 
 feature -- Access
 
-	ecf_path: detachable PATH
+	ecf_location: detachable IMMUTABLE_STRING_32
 
 	executable_path: detachable PATH
 
 feature -- Element change
 
-	set_ecf_path (v: READABLE_STRING_GENERAL)
+	set_ecf_location (v: READABLE_STRING_GENERAL)
 		do
-			ecf_path := (create {PATH}.make_from_string (v)).absolute_path.canonical_path
+			create ecf_location.make_from_string_general (v)
 		end
 
 	set_executable_path (v: READABLE_STRING_GENERAL)

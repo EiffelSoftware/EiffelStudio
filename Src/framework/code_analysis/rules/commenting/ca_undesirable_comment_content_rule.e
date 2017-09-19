@@ -1,6 +1,6 @@
 ﻿note
 	description: "[
-			RULE #03: Undesirable comment content
+			RULE #037: Undesirable comment content
 			
 			Under some circumstances it might be desirable
 			to keep a certain language level. Imaginable cases

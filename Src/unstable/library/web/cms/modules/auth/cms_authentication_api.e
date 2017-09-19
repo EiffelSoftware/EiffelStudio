@@ -28,7 +28,7 @@ feature -- Token Generation
 				-- Create activation token
 			l_token := new_token
 			l_user_api.new_activation (l_token, u.id)
-			l_url_activate := cms_api.absolute_url ("/account/activate/" + l_token, void)
+			l_url_activate := cms_api.absolute_url ("/account/activate/" + l_token, Void)
 			l_url_reject := cms_api.absolute_url ("/account/reject/" + l_token, Void)
 				-- Send Email to webmaster
 			cms_api.log_debug ("registration", "send_register_email", Void)
@@ -41,6 +41,47 @@ feature -- Token Generation
 			es.send_contact_email (a_email, u, cms_api.absolute_url ("", Void))
 
 			cms_api.log ("registration", {STRING_32} "new user %"" + u.name + "%" <" + a_email + ">", {CMS_LOG}.level_info, Void)
+		end
+
+	activate_user (a_temp_user: CMS_TEMP_USER; a_token: READABLE_STRING_GENERAL)
+		require
+			a_temp_user.has_id
+			not a_temp_user.is_active
+		local
+			l_user_api: CMS_USER_API
+			l_temp_id: INTEGER_64
+			es: CMS_AUTHENTICATION_EMAIL_SERVICE
+		do
+			l_temp_id := a_temp_user.id
+
+					-- Valid user_id			
+			a_temp_user.set_id (0)
+			a_temp_user.mark_active
+			l_user_api := cms_api.user_api
+			l_user_api.new_user_from_temp_user (a_temp_user)
+
+			if
+				not l_user_api.has_error and then
+				attached l_user_api.user_by_name (a_temp_user.name) as l_new_user
+			then
+				if attached a_temp_user.personal_information as l_perso_info then
+						-- Keep personal information in profile item!
+					l_user_api.save_user_profile_item (l_new_user, "personal_information", l_perso_info)
+				end
+					-- Delete temporal User
+				a_temp_user.set_id (l_temp_id)
+				l_user_api.delete_temp_user (a_temp_user)
+				l_user_api.remove_activation (a_token)
+
+					-- Send Email
+				if attached l_new_user.email as l_email then
+					cms_api.log_debug ("activation", "send_contact_activation_confirmation_email", Void)
+					create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (cms_api))
+					es.send_contact_activation_confirmation_email (l_email, l_new_user, cms_api.site_url)
+				end
+			else
+				error_handler.add_custom_error (-1, "activation error", "Activation failed!")
+			end
 		end
 
 	new_token: STRING

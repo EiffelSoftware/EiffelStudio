@@ -575,7 +575,7 @@ feature -- Change Temp User
 			end
 		end
 
-	remove_activation (a_token: READABLE_STRING_32)
+	remove_activation (a_token: READABLE_STRING_GENERAL)
 			-- Remove activation token `a_token', from the user_storage.
 		do
 			user_storage.remove_activation (a_token)

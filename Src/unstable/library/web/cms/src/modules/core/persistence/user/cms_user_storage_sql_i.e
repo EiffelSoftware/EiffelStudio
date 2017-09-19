@@ -1312,7 +1312,7 @@ feature -- New Temp User
 
 feature -- Remove Activation
 
-	remove_activation (a_token: READABLE_STRING_32)
+	remove_activation (a_token: READABLE_STRING_GENERAL)
 			-- <Precursor>.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]

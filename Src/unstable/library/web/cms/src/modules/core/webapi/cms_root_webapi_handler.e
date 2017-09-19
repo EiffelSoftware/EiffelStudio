@@ -21,10 +21,12 @@ feature -- Execution
 		local
 			rep: HM_WEBAPI_RESPONSE
 		do
-			rep := new_webapi_response (req, res)
+			rep := new_response (req, res)
 			rep.add_string_field ("site_name", api.setup.site_name)
 			if attached api.user as u then
 				add_user_links_to (u, rep)
+			elseif api.has_permission ("account register") then
+				rep.add_link ("register", Void, api.webapi_path ("/account/register"))
 			end
 			rep.add_self (req.percent_encoded_path_info)
 			rep.execute

@@ -32,59 +32,52 @@ feature -- API Service
 
 feature -- Factory
 
-	new_webapi_response (req: WSF_REQUEST; res: WSF_RESPONSE): HM_WEBAPI_RESPONSE
+	new_response (req: WSF_REQUEST; res: WSF_RESPONSE): HM_WEBAPI_RESPONSE
 		do
 --			create {MD_WEBAPI_RESPONSE} Result.make (req, res, api)
 			create {JSON_WEBAPI_RESPONSE} Result.make (req, res, api)
 		end
 
-	new_wepapi_error_response (msg: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE): HM_WEBAPI_RESPONSE
+	new_error_response (msg: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE): like new_response
 		do
-			Result := new_webapi_response (req, res)
+			Result := new_response (req, res)
+			Result.set_status_code ({HTTP_STATUS_CODE}.bad_request)
 			if msg /= Void then
 				Result.add_string_field ("error", msg)
 			else
 				Result.add_string_field ("error", "True")
 			end
+			Result.add_self (req.request_uri)
 		end
 
-	send_not_found (m: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			rep: HM_WEBAPI_RESPONSE
+	new_not_found_error_response (m: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE): like new_response
 		do
-			if m /= Void then
-				rep := new_wepapi_error_response (m, req, res)
+			if m = Void then
+				Result := new_error_response ("Not Found", req, res)
 			else
-				rep := new_wepapi_error_response ("Not found", req, res)
+				Result := new_error_response (m, req, res)
 			end
-			rep.set_status_code ({HTTP_STATUS_CODE}.not_found)
-			rep.execute
+			Result.set_status_code ({HTTP_STATUS_CODE}.not_found)
 		end
 
-	send_access_denied (m: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			rep: HM_WEBAPI_RESPONSE
+	new_access_denied_error_response (m: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE): like new_response
 		do
-			if m /= Void then
-				rep := new_wepapi_error_response (m, req, res)
+			if m = Void then
+				Result := new_error_response ("Access denied", req, res)
 			else
-				rep := new_wepapi_error_response ("Access denied", req, res)
+				Result := new_error_response (m, req, res)
 			end
-			rep.set_status_code ({HTTP_STATUS_CODE}.user_access_denied)
-			rep.execute
+			Result.set_status_code ({HTTP_STATUS_CODE}.user_access_denied)
 		end
 
-	send_bad_request (m: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			rep: HM_WEBAPI_RESPONSE
+	new_bad_request_error_response (m: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE): like new_response
 		do
-			if m /= Void then
-				rep := new_wepapi_error_response (m, req, res)
+			if m = Void then
+				Result := new_error_response ("Bad request", req, res)
 			else
-				rep := new_wepapi_error_response ("Bad request", req, res)
+				Result := new_error_response (m, req, res)
 			end
-			rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
-			rep.execute
+			Result.set_status_code ({HTTP_STATUS_CODE}.bad_request)
 		end
 
 feature {NONE} -- Builder

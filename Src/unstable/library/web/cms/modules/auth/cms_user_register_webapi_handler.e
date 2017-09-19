@@ -32,14 +32,14 @@ feature -- Execution
 			if req.is_post_request_method then
 				register_user (req, res)
 			else
-				send_bad_request (Void, req, res)
+				new_bad_request_error_response (Void, req, res).execute
 			end
 		end
 
 	register_user (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			f: CMS_FORM
-			rep: like new_webapi_response
+			rep: like new_response
 			l_user_api: CMS_USER_API
 			u: CMS_TEMP_USER
 			l_exist: BOOLEAN
@@ -60,7 +60,7 @@ feature -- Execution
 				f.extend_text_field ("email", Void)
 				f.extend_text_field ("personal_information", Void)
 
-				rep := new_webapi_response (req, res)
+				rep := new_response (req, res)
 				f.process (rep)
 				if
 					attached f.last_data as fd and then not fd.has_error and then
@@ -83,7 +83,7 @@ feature -- Execution
 							l_exist := True
 						end
 						if fd.has_error or l_exist then
-							send_bad_request ("User name or email is already taken!", req, res)
+							rep := new_bad_request_error_response ("User name or email is already taken!", req, res)
 						else
 								-- New temp user
 							create u.make (l_name)
@@ -92,20 +92,22 @@ feature -- Execution
 							u.set_personal_information (l_personal_information)
 
 							auth_api.register_user (u, l_email, l_personal_information)
+								-- Until it is activated, this is not a real user.
 --							add_user_links_to (u, rep)
 							rep.add_string_field ("status", "succeed")
+							rep.add_string_field ("information", "Waiting for activation")
 							rep.add_self (req.percent_encoded_path_info)
-							rep.execute
 						end
 					else
-						send_bad_request ("Invalid email", req, res)
+						rep := new_access_denied_error_response ("Invalid email", req, res)
 					end
 				else
-					send_bad_request ("There were issue with your application, invalid or missing values.", req, res)
+					rep := new_access_denied_error_response ("There were issue with your application, invalid or missing values.", req, res)
 				end
 			else
-				send_access_denied ("You can also contact the webmaster to ask for an account.", req, res)
+				rep := new_access_denied_error_response ("You can also contact the webmaster to ask for an account.", req, res)
 			end
+			rep.execute
 		end
 
 

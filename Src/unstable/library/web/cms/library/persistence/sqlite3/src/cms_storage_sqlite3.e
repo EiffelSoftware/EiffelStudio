@@ -73,14 +73,25 @@ feature -- Execution
 
 	sql_begin_transaction
 			-- Start a database transtaction.
+		local
+			retried: BOOLEAN
 		do
-			if transaction_depth = 0 then
-				sqlite.begin_transaction (False)
+			if retried then
+					-- Issue .. db locked?
+				sql_rollback_transaction
+				error_handler.add_custom_error (-1, "db error", "Unable to begin transaction..")
+			else
+				if transaction_depth = 0 then
+					sqlite.begin_transaction (False)
+				end
+				transaction_depth := transaction_depth + 1
+				debug ("roc_storage")
+					print ("# sql_begin_transaction (depth="+ transaction_depth.out +").%N")
+				end
 			end
-			transaction_depth := transaction_depth + 1
-			debug ("roc_storage")
-				print ("# sql_begin_transaction (depth="+ transaction_depth.out +").%N")
-			end
+		rescue
+			retried := True
+			retry
 		end
 
 	sql_rollback_transaction

@@ -24,7 +24,7 @@ feature -- Execution
 			elseif req.is_post_request_method then
 				execute_post (req, res)
 			else
-				send_bad_request (Void, req, res)
+				new_bad_request_error_response (Void, req, res).execute
 			end
 		end
 
@@ -43,7 +43,7 @@ feature -- Execution
 				if attached req.query_parameter ("full") as p and then p.is_case_insensitive_equal ("yes") then
 					l_full := True
 				end
-				rep := new_webapi_response (req, res)
+				rep := new_response (req, res)
 				nb := api.user_api.users_count
 				rep.add_integer_64_field ("users_count", nb)
 				create l_params.make (0, nb.to_natural_32)
@@ -77,10 +77,10 @@ feature -- Execution
 				end
 				rep.add_iterator_field ("users", arr)
 				rep.add_self (req.percent_encoded_path_info)
-				rep.execute
 			else
-				send_access_denied (Void, req, res)
+				rep := new_access_denied_error_response (Void, req, res)
 			end
+			rep.execute
 		end
 
 	execute_post (req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -155,17 +155,17 @@ feature -- Execution
 					end
 				end
 				if l_user = Void or else err /= Void then
-					rep := new_wepapi_error_response (err, req, res)
+					rep := new_error_response (err, req, res)
 				else
-					rep := new_webapi_response (req, res)
+					rep := new_response (req, res)
 					rep.add_string_field ("uid", l_user.id.out)
 					add_user_links_to (l_user, rep)
 				end
 				rep.add_self (req.percent_encoded_path_info)
-				rep.execute
 			else
-				send_access_denied (Void, req, res)
+				rep := new_access_denied_error_response (Void, req, res)
 			end
+			rep.execute
 		end
 
 

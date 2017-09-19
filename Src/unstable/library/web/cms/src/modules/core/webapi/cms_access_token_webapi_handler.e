@@ -28,10 +28,10 @@ feature -- Execution
 				elseif req.is_get_request_method then
 					get_access_token (l_uid, req, res)
 				else
-					send_bad_request (Void, req, res)
+					new_bad_request_error_response (Void, req, res).execute
 				end
 			else
-				send_bad_request ("Missing {uid} parameter", req, res)
+				new_bad_request_error_response ("Missing {uid} parameter", req, res).execute
 			end
 		end
 
@@ -52,28 +52,28 @@ feature -- Request execution
 			if attached user_by_uid (a_uid) as l_user then
 				if attached api.user as u then
 					if u.same_as (l_user) or api.user_api.is_admin_user (u) then
-						rep := new_access_token_webapi_response (l_user, user_access_token (l_user), req, res)
+						rep := new_access_token_response (l_user, user_access_token (l_user), req, res)
 						if attached {WSF_STRING} req.item ("destination") as dest then
 							rep.set_redirection (dest.url_encoded_value)
 						end
-						rep.execute
 					else
 							-- Only admin, or current user can see its access_token!
-						send_access_denied (Void, req, res)
+						rep := new_access_denied_error_response (Void, req, res)
 					end
 				else
-					send_access_denied (Void, req, res)
+					rep := new_access_denied_error_response (Void, req, res)
 				end
 			else
-				send_not_found ("User not found", req, res)
+				rep := new_not_found_error_response ("User not found", req, res)
 			end
+			rep.execute
 		end
 
 	post_access_token (a_uid: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute handler for `req' and respond in `res'.
 		local
 			l_access_token: detachable READABLE_STRING_32
-			rep: like new_webapi_response
+			rep: like new_response
 		do
 			if attached user_by_uid (a_uid) as l_user then
 				if attached api.user as u then
@@ -91,21 +91,21 @@ feature -- Request execution
 		--				end
 						set_user_access_token (l_user, l_access_token)
 
-						rep := new_access_token_webapi_response (l_user, l_access_token, req, res)
+						rep := new_access_token_response (l_user, l_access_token, req, res)
 						if attached {WSF_STRING} req.item ("destination") as dest then
 							rep.set_redirection (dest.url_encoded_value)
 						end
-						rep.execute
 					else
 							-- Only admin, or current user can create the user access_token!
-						send_access_denied (Void, req, res)
+						rep := new_access_denied_error_response (Void, req, res)
 					end
 				else
-					send_access_denied (Void, req, res)
+					rep := new_access_denied_error_response (Void, req, res)
 				end
 			else
-				send_not_found ("User not found", req, res)
+				rep := new_not_found_error_response ("User not found", req, res)
 			end
+			rep.execute
 		end
 
 feature {NONE} -- Implementation
@@ -128,11 +128,11 @@ feature {NONE} -- Implementation
 			api.user_api.save_user_profile_item (a_user, "access_token", a_access_token)
 		end
 
-	new_access_token_webapi_response (a_user: CMS_USER; a_access_token: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE): like new_webapi_response
+	new_access_token_response (a_user: CMS_USER; a_access_token: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE): like new_response
 		local
 			tb: STRING_TABLE [detachable ANY]
 		do
-			Result := new_webapi_response (req, res)
+			Result := new_response (req, res)
 			if a_access_token /= Void then
 				Result.add_string_field ("access_token", a_access_token)
 			else

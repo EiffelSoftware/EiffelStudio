@@ -127,6 +127,11 @@ feature -- Execution
 			m: WSF_PAGE_RESPONSE
 		do
 			create m.make_with_body (resource.representation)
+			m.set_status_code (status_code)
+			if attached redirection as loc then
+				m.header.put_location (loc)
+				m.set_status_code ({HTTP_STATUS_CODE}.temp_redirect)
+			end
 			m.header.put_content_type ("application/json")
 			response.send (m)
 		end

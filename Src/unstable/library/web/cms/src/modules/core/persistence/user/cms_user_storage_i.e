@@ -265,7 +265,7 @@ feature -- New Temp User
   		deferred
   		end
 
-	remove_activation (a_token: READABLE_STRING_32)
+	remove_activation (a_token: READABLE_STRING_GENERAL)
 			-- Remove activation by token `a_token'.
 		deferred
 		end

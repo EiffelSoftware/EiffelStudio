@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EiffelVision postscript drawing area implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -424,6 +424,8 @@ feature -- Drawing operations
 			add_ps ("gsave")
 			translate_to (0, 0)
 			font_name := font.name.twin
+				-- White space is not allowed in a font name.
+			font_name.prune_all (' ')
 			font_name.put (font_name.item (1).as_upper, 1)
 			create font_style.make (20)
 			if font.weight = 8 then
@@ -460,7 +462,7 @@ feature -- Drawing operations
 					end
 					add_ps (x.out + " " + ( - y - font.ascent - line_nr * font_height).out + " moveto")
 					line.prepend_character ('(')
-					line.append_string_general (") show)")
+					line.append_string_general (") show")
 					add_ps (line)
 					line_nr := line_nr + 1
 					line.wipe_out
@@ -810,7 +812,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -820,12 +822,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_POSTSCRIPT_DRAWABLE_IMP
-
-
-
-
-
+end

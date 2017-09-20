@@ -215,6 +215,8 @@ feature {NONE} -- Initialization: User interface
 
 	on_after_initialized
 			-- <Precursor>
+		local
+			p: like on_editor_preference_change_agent
 		do
 
 				-- Enable copying to clipboard.
@@ -234,6 +236,10 @@ feature {NONE} -- Initialization: User interface
 			update_message_counters
 
 			Precursor
+
+			p := agent on_editor_preference_change
+			on_editor_preference_change_agent := p
+			preferences.editor_data.post_update_actions.extend (p)
 		end
 
 feature {NONE} -- Clean up
@@ -253,6 +259,9 @@ feature {NONE} -- Clean up
 				s.code_analyzer_connection.is_connected (Current)
 			then
 				s.code_analyzer_connection.disconnect_events (Current)
+			end
+			if attached on_editor_preference_change_agent as p then
+				preferences.editor_data.post_update_actions.prune_all (p)
 			end
 			Precursor
 		end
@@ -1977,6 +1986,39 @@ feature {NONE} -- Preference Handler
 				expand_n_errors := False
 				show_n_errors := 0
 				expand_errors_button.disable_select
+			end
+		end
+
+	on_editor_preference_change_agent: detachable PROCEDURE
+			-- Saved editor preference agent to be recycled.
+			-- See `on_editor_preference_change`.
+
+	on_editor_preference_change
+			-- Update rows to reflect changes in editor preferences (such as new fonf size).
+		local
+			row_index: like {ES_GRID}.row_count
+			row: like {ES_GRID}.row
+			row_height: like {EV_GRID_ROW}.height
+		do
+				-- Update height of all rows.
+			from
+				row_index := grid_events.row_count
+			until
+				row_index <= 0
+			loop
+				row := grid_events.row (row_index)
+				if attached {EB_GRID_EDITOR_TOKEN_ITEM} row.item (description_column) as e then
+					row_height :=
+						e.label_font_height.max
+						(e.required_height_for_text_and_component).max
+						({ES_UI_CONSTANTS}.grid_row_height) + 2
+					if row_height /= row.height then
+						row.set_height (row_height)
+					end
+				end
+				row_index := row_index - 1
+			variant
+				row_index
 			end
 		end
 

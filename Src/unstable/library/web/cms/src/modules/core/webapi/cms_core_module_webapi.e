@@ -25,6 +25,7 @@ feature -- Security
 			Result := Precursor
 			Result.force ("admin users")
 			Result.force ("view users")
+			Result.force ("use access_token")
 		end
 
 feature {NONE} -- Router/administration
@@ -35,11 +36,13 @@ feature {NONE} -- Router/administration
 			l_root: CMS_ROOT_WEBAPI_HANDLER
 		do
 			create l_root.make (a_api)
+			l_root.set_router (a_router)
 			a_router.handle ("", l_root, a_router.methods_get)
 			a_router.handle ("/", l_root, a_router.methods_get)
 			a_router.handle ("/user/{uid}/access_token", create {CMS_ACCESS_TOKEN_WEBAPI_HANDLER}.make (a_api), a_router.methods_get_post)
 			a_router.handle ("/user/{uid}", create {CMS_USER_WEBAPI_HANDLER}.make (a_api), a_router.methods_get)
-			a_router.handle ("/user/", create {CMS_USERS_WEBAPI_HANDLER}.make (a_api), a_router.methods_get_post)
+			a_router.handle ("/user/", create {CMS_USER_WEBAPI_HANDLER}.make (a_api), a_router.methods_get)
+			a_router.handle ("/users/", create {CMS_USERS_WEBAPI_HANDLER}.make (a_api), a_router.methods_get_post)
 		end
 
 feature -- Access: filter
@@ -49,7 +52,6 @@ feature -- Access: filter
 		do
 			create {ARRAYED_LIST [WSF_FILTER]} Result.make (2)
 			Result.extend (create {CMS_ACCESS_TOKEN_WEBAPI_AUTH_FILTER}.make (a_api))
-			Result.extend (create {CMS_BASIC_WEBAPI_AUTH_FILTER}.make (a_api))
 		end
 
 note

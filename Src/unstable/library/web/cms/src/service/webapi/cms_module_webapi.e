@@ -51,13 +51,13 @@ feature {CMS_API, CMS_MODULE_ADMINISTRATION, CMS_MODULE_WEBAPI} -- Access: API
 
 feature -- Status		
 
-	is_initialized: BOOLEAN
+	frozen is_initialized: BOOLEAN
 			-- Is Current module initialized?		
 		do
 			Result := module.is_initialized
 		end
 
-	is_enabled: BOOLEAN
+	frozen is_enabled: BOOLEAN
 			-- Is Current module enabled?
 		do
 			Result := module.is_enabled

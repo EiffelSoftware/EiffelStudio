@@ -31,7 +31,11 @@ feature {NONE} -- Initialization
 			-- This can be used to reset/reinitialize Current with new url
 			-- in the case of redirection.
 		do
-			url := a_url
+			if a_url.starts_with ("http://") or a_url.starts_with ("http://") then
+				url := a_url
+			else
+				url := session.url (a_url, Void)
+			end
 			headers := session.headers.twin
 			if ctx /= Void then
 				context := ctx

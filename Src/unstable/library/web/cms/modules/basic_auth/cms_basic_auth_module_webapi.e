@@ -28,7 +28,7 @@ feature -- Access: filter
 			-- Possibly list of Filter's module.
 		do
 			create {ARRAYED_LIST [WSF_FILTER]} Result.make (1)
-			Result.extend (create {CMS_BASIC_AUTH_FILTER}.make (a_api))
+			Result.extend (create {CMS_BASIC_WEBAPI_AUTH_FILTER}.make (a_api))
 		end
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

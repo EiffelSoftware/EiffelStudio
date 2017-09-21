@@ -16,7 +16,9 @@ inherit
 		redefine
 			make,
 			filters,
-			setup_hooks
+			setup_hooks,
+			install,
+			permissions
 		end
 
 	CMS_WITH_WEBAPI
@@ -35,6 +37,17 @@ feature {NONE} -- Initialization
 			description := "Service to manage basic authentication"
 		end
 
+feature {CMS_API} -- Module management
+
+	install (a_api: CMS_API)
+		do
+			Precursor (a_api)
+			if attached a_api.user_api.anonymous_user_role as ano then
+				ano.add_permission (perm_use_basic_auth)
+				a_api.user_api.save_user_role (ano)
+			end
+		end
+
 feature {CMS_EXECUTION} -- Administration
 
 	webapi: CMS_BASIC_AUTH_MODULE_WEBAPI
@@ -45,6 +58,15 @@ feature {CMS_EXECUTION} -- Administration
 feature -- Access
 
 	name: STRING = "basic_auth"
+
+	permissions: LIST [READABLE_STRING_8]
+			-- List of permission ids, used by this module, and declared.
+		do
+			Result := Precursor
+			Result.force ("use basic_auth")
+		end
+
+	perm_use_basic_auth: STRING = "use basic_auth"
 
 feature -- Access: auth strategy	
 

@@ -38,12 +38,14 @@ feature -- Basic operations
 					api.user_api.is_valid_credential (l_auth_login, l_auth_password) and then
 					attached api.user_api.user_by_name (l_auth_login) as l_user
 				then
-					debug ("refactor_fixme")
-						fixme ("Maybe we need to store in the credentials in a shared context SECURITY_CONTEXT")
-						-- req.set_execution_variable ("security_content", create SECURITY_CONTEXT.make (l_user))
-						-- other authentication filters (OpenID, etc) should implement the same approach.
+					if api.user_has_permission (l_user, {CMS_BASIC_AUTH_MODULE}.perm_use_basic_auth) then
+						debug ("refactor_fixme")
+							fixme ("Maybe we need to store in the credentials in a shared context SECURITY_CONTEXT")
+							-- req.set_execution_variable ("security_content", create SECURITY_CONTEXT.make (l_user))
+							-- other authentication filters (OpenID, etc) should implement the same approach.
+						end
+						set_current_user (l_user)
 					end
-					set_current_user (l_user)
 				else
 					api.logger.put_error (generator + ".execute login_valid failed for: " + l_auth_login, Void)
 				end

@@ -51,7 +51,7 @@ feature -- Request execution
 		do
 			if attached user_by_uid (a_uid) as l_user then
 				if attached api.user as u then
-					if u.same_as (l_user) or api.user_api.is_admin_user (u) then
+					if u.same_as (l_user) and api.has_permission ("use access_token") then
 						rep := new_access_token_response (l_user, user_access_token (l_user), req, res)
 						if attached {WSF_STRING} req.item ("destination") as dest then
 							rep.set_redirection (dest.url_encoded_value)
@@ -77,18 +77,13 @@ feature -- Request execution
 		do
 			if attached user_by_uid (a_uid) as l_user then
 				if attached api.user as u then
-					if u.same_as (l_user) or api.user_api.is_admin_user (u) then
+					if
+						u.same_as (l_user) and api.has_permission ("use access_token")
+					then
 						if attached req.path_parameter ("application") then
 
 						end
-		--				l_access_token := user_access_token (l_user)
 						l_access_token := new_key (40)
-
-		--				if l_access_token /= Void then
-		--					l_access_token := "Updated-" + (create {UUID_GENERATOR}).generate_uuid.out
-		--				else
-		--					l_access_token := "New-" + (create {UUID_GENERATOR}).generate_uuid.out
-		--				end
 						set_user_access_token (l_user, l_access_token)
 
 						rep := new_access_token_response (l_user, l_access_token, req, res)

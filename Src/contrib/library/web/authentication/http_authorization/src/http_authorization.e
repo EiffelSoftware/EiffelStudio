@@ -76,13 +76,13 @@ feature -- Initialization
 			a_http_authorization /= Void implies http_authorization /= Void
 		end
 
-	make_basic_auth (u: READABLE_STRING_32; p: READABLE_STRING_32)
+	make_basic_auth (u: READABLE_STRING_GENERAL; p: READABLE_STRING_GENERAL)
 			-- Create a Basic authentication.
 		do
 			make_custom_auth (u, p, Basic_auth_type)
 		end
 
-	make_custom_auth (u: READABLE_STRING_32; p: READABLE_STRING_32; a_type: READABLE_STRING_8)
+	make_custom_auth (u: READABLE_STRING_GENERAL; p: READABLE_STRING_GENERAL; a_type: READABLE_STRING_8)
 			-- Create a custom `a_type' authentication.
 		require
 			a_type_accepted: a_type.is_case_insensitive_equal (Basic_auth_type)
@@ -90,15 +90,19 @@ feature -- Initialization
 		local
 			t: STRING_8
 			utf: UTF_CONVERTER
+			s: STRING_32
 		do
-			login := u
-			password := p
+			create login.make_from_string_general (u)
+			create password.make_from_string_general (p)
 			create t.make_from_string (a_type)
 			t.left_adjust; t.right_adjust
 			type := t
 			if t.is_case_insensitive_equal (Basic_auth_type) then
 				type := Basic_auth_type
-				create http_authorization.make_from_string ("Basic " + (create {BASE64}).encoded_string (utf.string_32_to_utf_8_string_8 (u + {STRING_32} ":" + p)))
+				create s.make_from_string_general (u)
+				s.extend (':')
+				s.append_string_general (p)
+				create http_authorization.make_from_string ("Basic " + (create {BASE64}).encoded_string (utf.string_32_to_utf_8_string_8 (s)))
 			elseif t.is_case_insensitive_equal (Digest_auth_type) then
 				type := Digest_auth_type
 				to_implement ("HTTP Authorization %""+ t +"%", not yet implemented")
@@ -115,9 +119,9 @@ feature -- Access
 
 	type: READABLE_STRING_8
 
-	login: detachable READABLE_STRING_32
+	login: detachable IMMUTABLE_STRING_32
 
-	password: detachable READABLE_STRING_32
+	password: detachable IMMUTABLE_STRING_32
 
 feature -- Status report
 

@@ -59,6 +59,8 @@ feature -- Status report
 		do
 			if attached claimset.issuer as iss then
 				Result := a_issuer = Void or else a_issuer.same_string (iss)
+			else
+				Result := a_issuer = Void
 			end
 		end
 
@@ -66,6 +68,8 @@ feature -- Status report
 		do
 			if attached claimset.audience as aud then
 				Result := a_audience = Void or else a_audience.same_string (aud)
+			else
+				Result := a_audience = Void
 			end
 		end
 

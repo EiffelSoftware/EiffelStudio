@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Formatter that displays the text of a feature with no analysis."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,6 +18,8 @@ inherit
 			format,
 			make
 		end
+
+	SYSTEM_ENCODINGS
 
 create
 	make
@@ -47,9 +49,11 @@ feature -- Properties
 	symbol: ARRAY [EV_PIXMAP]
 			-- Graphical representation of the command.
 		once
-			create Result.make (1, 2)
-			Result.put (pixmaps.icon_pixmaps.view_editor_feature_icon, 1)
-			Result.put (pixmaps.icon_pixmaps.view_editor_feature_icon, 2)
+			Result :=
+				<<
+					pixmaps.icon_pixmaps.view_editor_feature_icon,
+					pixmaps.icon_pixmaps.view_editor_feature_icon
+				>>
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER
@@ -127,6 +131,7 @@ feature {NONE} -- Implementation
 			end
 			if not last_was_error then
 				editor.set_stone (stone)
+				editor.set_encoding (utf32)
 				editor.load_text (ynk_win.stored_output)
 			end
 		rescue
@@ -146,7 +151,7 @@ feature {NONE} -- Implementation
 			-- Should breakpoints be shown in Current?
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -170,11 +175,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_BASIC_FEATURE_FORMATTER
+end

@@ -63,6 +63,18 @@ feature -- Access
 			valid_result: Result >= 0
 		end
 
+	id_of_32 (s: READABLE_STRING_32): INTEGER
+			-- Id of `s` if inserted, otherwise 0.
+		require
+			s_not_void: s /= Void
+		local
+			u: UTF_CONVERTER
+		do
+			Result := id_of (u.string_32_to_utf_8_string_8 (s))
+		ensure
+			valid_result: Result >= 0
+		end
+
 	item_32 (i: INTEGER): detachable STRING_32
 			-- Access `i'-th element in UTF-32.
 		require

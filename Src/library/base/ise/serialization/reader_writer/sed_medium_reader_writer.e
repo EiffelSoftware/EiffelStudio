@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			-- Initialize current to read or write from `a_medium'.
 		require
 			a_medium_not_void: a_medium /= Void
+			a_medium_support_storable: a_medium.support_storable
 		do
 			make_with_buffer (a_medium, default_buffer_size)
 		ensure
@@ -49,6 +50,7 @@ feature {NONE} -- Initialization
 		require
 			a_medium_not_void: a_medium /= Void
 			a_medium_open_for_reading: a_medium.is_open_read
+			a_medium_support_storable: a_medium.support_storable
 		do
 			make (a_medium)
 			set_for_reading
@@ -62,6 +64,7 @@ feature {NONE} -- Initialization
 		require
 			a_medium_not_void: a_medium /= Void
 			a_medium_open_for_writing: a_medium.is_open_write
+			a_medium_support_storable: a_medium.support_storable
 		do
 			make (a_medium)
 			set_for_writing
@@ -69,6 +72,7 @@ feature {NONE} -- Initialization
 			medium_set: medium = a_medium
 			buffer_size_set: buffer_size = default_buffer_size
 		end
+
 	make_with_buffer (a_medium: IO_MEDIUM; a_buffer_size: INTEGER)
 			-- Initialize current to read or write from `a_medium' using a buffer of size `a_buffer_size'.
 			-- `buffer_size' will be overriden during read operation by the value of `buffer_size' used
@@ -76,6 +80,7 @@ feature {NONE} -- Initialization
 		require
 			a_medium_not_void: a_medium /= Void
 			a_buffer_size_non_negative: a_buffer_size >= 0
+			a_medium_support_storable: a_medium.support_storable
 		do
 			medium := a_medium
 			buffer_size := a_buffer_size
@@ -334,7 +339,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

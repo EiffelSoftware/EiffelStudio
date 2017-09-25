@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that analyze class text to make it clickable and allow automatic completion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -292,16 +292,20 @@ feature {NONE} -- Click ast exploration
 						pos := pos + 1
 					end
 				end
-				create clickable_position_list.make (1, prov_list.count)
-				from
-					prov_list.start
-					pos := 1
-				until
-					prov_list.after
-				loop
-					clickable_position_list.put (prov_list.item, pos)
-					pos := pos + 1
-					prov_list.forth
+				if prov_list.is_empty then
+					create clickable_position_list.make_empty
+				else
+					across
+						prov_list as p
+					from
+							-- Fill the array with the first item and then add all others.
+						create clickable_position_list.make_filled (prov_list.first, 1, prov_list.count)
+						p.forth
+						pos := 2
+					loop
+						clickable_position_list.put (p.item, pos)
+						pos := pos + 1
+					end
 				end
 			end
 		end
@@ -413,7 +417,7 @@ feature {NONE}-- Clickable/Editable implementation
 			token_in_line: line.has_token (token)
 		local
 			l_type: TYPE_A
-			vn: READABLE_STRING_GENERAL
+			vn: READABLE_STRING_32
 			vn_id: INTEGER
 			td: detachable AST_EIFFEL
 		do
@@ -447,7 +451,7 @@ feature {NONE}-- Clickable/Editable implementation
 								-- Search for locals, arguments, ... in current feature.
 								-- TODO: check if there is a simpler solution [2017-04-15].			
 							vn := token.wide_image
-							vn_id := feat.names_heap.id_of (vn.to_string_8) --FIXME: try to reuse existing lookup if possible.
+							vn_id := feat.names_heap.id_of_32 (vn) --FIXME: try to reuse existing lookup if possible.
 							td := Void
 							if vn_id > 0 then
 								if attached feat.locals as l_feat_locals then
@@ -943,10 +947,8 @@ feature {NONE} -- Implementation (`type_from')
 		require
 			a_process_type_not_void: written_class /= Void
 		local
-			type: TYPE_A
 			l_feature: FEATURE_I
 			l_class: CLASS_C
-			l_type_set_a: TYPE_SET_A
 			l_list: LIST [CLASS_C]
 		do
 			if last_was_multi_constrained then
@@ -955,8 +957,7 @@ feature {NONE} -- Implementation (`type_from')
 					-- The objective is to compute `last_target_type' and to get a `E_FEATURE' instance
 					-- of the feature named `a_name' and store it in `feat'.
 				check last_target_type_not_known: last_target_type = Void end
-				l_type_set_a := last_constraints.constraining_types (written_class)
-				l_list := l_type_set_a.associated_classes
+				l_list := last_constraints.constraining_types (written_class).associated_classes
 				from
 					l_list.start
 				until
@@ -979,15 +980,13 @@ feature {NONE} -- Implementation (`type_from')
 				end
 			end
 			if l_feature /= Void then
-				error := error or False
-				type := l_feature.type
+				Result := l_feature.type
 			else
 				error := True
 				written_class := Void
 			end
 				-- Bracket feature is never used by PnD, we ignore it.
 			last_feature := Void
-			Result := type
 		ensure
 			Result_not_void_implies_processed_class_not_void: Result /= Void implies written_class /= Void
 		end
@@ -1578,7 +1577,7 @@ feature {NONE}-- Implementation
 										attached {FORMAL_A} processed_feature.type as l_formal and then
 										type.generics.valid_index (l_formal.position)
 									then
-										type := type.generics @ (l_formal.position)
+										type := type.generics [l_formal.position]
 										error := False
 									end
 								else
@@ -1639,7 +1638,7 @@ feature {NONE}-- Implementation
 										type.has_generics and then
 										type.generics.valid_index (l_formal.position)
 									then
-										type := type.generics @ (l_formal.position)
+										type := type.generics [l_formal.position]
 									end
 								else
 									type := l_processed_feature_type
@@ -1746,7 +1745,7 @@ feature {NONE}-- Implementation
 						if Result.is_formal then
 							formal ?= Result
 							if formal /= Void and then a_type.has_generics and then a_type.generics.valid_index (formal.position) then
-								Result := a_type.generics @ (formal.position)
+								Result := a_type.generics [formal.position]
 							end
 						end
 					end
@@ -1921,11 +1920,8 @@ feature {NONE}-- Implementation
 			a_type_not_void: a_type /= Void
 			a_current_class_not_void: a_current_class /= Void
 			a_feature_not_void: a_feature /= Void
-		local
-			l_feat: FEATURE_I
 		do
-			l_feat := a_feature
-			type_a_checker.init_for_checking (l_feat, a_current_class, Void, Void)
+			type_a_checker.init_for_checking (a_feature, a_current_class, Void, Void)
 			Result := type_a_generator.evaluate_type (a_type, a_current_class)
 			if Result /= Void then
 				Result := type_a_checker.solved (Result, a_type)
@@ -2261,10 +2257,9 @@ feature {NONE} -- Implementation
 		do
 			from
 				i := 2
-				count := positions.count
 				Result := True
 			until
-				(not Result) or else  i > positions.count
+				Result implies i > count
 			loop
 				Result := positions.item (i - 1) < positions.item (i)
 				i := i + 1
@@ -2376,7 +2371,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Constants
 			Result := <<":=", "?=", ";", ",">>
 		end
 
-	infix_groups: LINKED_LIST[ARRAY[STRING]]
+	infix_groups: LINKED_LIST [ARRAY [STRING]]
 			-- list of operators groups, sorted by priority
 		once
 			create Result.make
@@ -2427,4 +2422,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CLASS_INFO_ANALYZER
+end

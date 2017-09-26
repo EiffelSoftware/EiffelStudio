@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Editor token visitor for RTF building."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -56,13 +55,11 @@ feature {NONE} -- Visit
 feature {NONE} -- Implementation
 
 	build_token_text (a_tok: EDITOR_TOKEN)
-			-- Build token RTF text
+			-- Build token RTF text.
 		local
-			l_color: EV_COLOR
 			l_font: EV_FONT
 		do
 			if not a_tok.is_new_line and then not a_tok.wide_image.is_empty then
-				l_color := a_tok.text_color
 				l_font := a_tok.font
 					-- Color
 				text_processing.append (rtf_cf + current_color_number.out)
@@ -256,32 +253,53 @@ feature {NONE} -- RTF Strings
 			rtf_font_name_not_void: Result /= Void
 		end
 
-	rtf_escape_text (a_string: STRING): STRING
+	rtf_escape_text (a_string: READABLE_STRING_32): STRING
 			--
 		require
 			a_string_not_void: a_string /= Void
 		local
-			l_string: STRING
 			i: INTEGER
+			n: like {READABLE_STRING_32}.count
+			c: CHARACTER_32
 		do
-			create l_string.make (a_string.count)
 			from
 				i := 1
+				n := a_string.count
+				create Result.make (n)
 			until
-				i > a_string.count
+				i > n
 			loop
-				if a_string.item (i).code = ('{').code then
-					l_string.append_string ("\{")
-				elseif a_string.item (i).code = ('}').code then
-					l_string.append_string ("\}")
-				elseif a_string.item (i).code = ('\').code then
-					l_string.append_string ("\\")
+				c := a_string [i]
+				if c = {CHARACTER_32} '{' then
+					Result.append_string ("\{")
+				elseif c = {CHARACTER_32} '}' then
+					Result.append_string ("\}")
+				elseif c = {CHARACTER_32} '\' then
+					Result.append_string ("\\")
+				elseif c.natural_32_code <= 127 then
+						-- ASCII.
+					Result.append_character (c.to_character_8)
+				elseif c.natural_32_code <= 0x7FFF then
+						-- Positive Unicode code.
+					Result.append_string ("\u")
+					Result.append_natural_32 (c.natural_32_code)
+					Result.append_character ('?')
+				elseif c.natural_32_code <= 0xFFFF then
+						-- Negative Unicode code.
+					Result.append_string ("\u")
+					Result.append_integer_16 (c.natural_32_code.as_integer_16)
+					Result.append_character ('?')
 				else
-					l_string.append_character (a_string.item (i))
+						-- Surrogate pair (2 negative codes).
+					Result.append_string ("\u")
+					Result.append_integer_16 ((0xD7C0 + (c.natural_32_code |>> 10)).as_integer_16)
+					Result.append_character ('?')
+					Result.append_string ("\u")
+					Result.append_integer_16 ((0xDC00 + (c.natural_32_code & 0x3FF)).as_integer_16)
+					Result.append_character ('?')
 				end
 				i := i + 1
 			end
-			Result := l_string
 		ensure
 			rtf_excape_text_not_void: Result /= Void
 		end
@@ -303,7 +321,7 @@ feature {NONE} -- RTF Strings
 	rtf_header_font_control_word: STRING = "\rtf1\ansi\ansicpg1252\deff0\deflang1033\deflangfe2052";
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

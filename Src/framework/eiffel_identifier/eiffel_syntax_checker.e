@@ -129,14 +129,14 @@ feature -- Status report
 					l_str32 := op.as_string_32
 				end
 					-- Allow Unicode codepoint greater than 255.
-				Result := (free_operators_start.has (op.item (1)) or l_str32.item (1).code > 255)
+				Result := (free_operators_start.has (op.item (1)) or l_str32.item (1).code > 127)
 				from
 					i := 2
 				until
 					not Result or else i > l_str32.count
 				loop
 					cc := l_str32.item (i)
-					Result := is_alpha (cc) or is_digit (cc) or free_operators_characters.has (cc) or not cc.is_character_8
+					Result := is_alpha (cc) or is_digit (cc) or free_operators_characters.has (cc) or cc > {CHARACTER_32} '%/127/'
 					i := i + 1
 				end
 			end
@@ -220,7 +220,7 @@ feature {NONE} -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

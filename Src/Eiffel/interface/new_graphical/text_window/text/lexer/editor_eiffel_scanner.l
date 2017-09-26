@@ -32,8 +32,8 @@ UTF8_char	{UTF8_1}|{UTF8_2}|{UTF8_3}|{UTF8_4}
 NON_ASCII	{UTF8_2}|{UTF8_3}|{UTF8_4}
 UTF8_1		[\x00-\x7F]
 UTF8_2		[\xC2-\xDF]{UTF8_tail}
-UTF8_3		\xE0[\xA0-\xBF]{UTF8_tail})|([\xE1-\xEC]({UTF8_tail}{2,2}))|(\xED[\x80-\x9F]{UTF8_tail})|([\xEE-\xEF]({UTF8_tail}{2,2})
-UTF8_4		\xF4[\x80-\x8F]({UTF8_tail}{2,2}))|([\xF1-\xF3]({UTF8_tail}{3,3}))|(\xF4[\x80-\x8F]({UTF8_tail}{2,2})
+UTF8_3		(\xE0[\xA0-\xBF]{UTF8_tail})|([\xE1-\xEC]({UTF8_tail}{2}))|(\xED[\x80-\x9F]{UTF8_tail})|([\xEE-\xEF]({UTF8_tail}{2}))
+UTF8_4		(\xF0[\x90-\xBF]({UTF8_tail}{2}))|([\xF1-\xF3]({UTF8_tail}{3}))|(\xF4[\x80-\x8F]({UTF8_tail}{2}))
 UTF8_tail	[\x80-\xBF]
 
 %%

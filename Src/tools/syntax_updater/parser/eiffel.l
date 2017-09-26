@@ -40,8 +40,8 @@ UTF8_CHAR	{UTF8_1}|{UTF8_2}|{UTF8_3}|{UTF8_4}
 NON_ASCII	{UTF8_2}|{UTF8_3}|{UTF8_4}
 UTF8_1		[\x00-\x7F]
 UTF8_2		[\xC2-\xDF]{UTF8_TAIL}
-UTF8_3		\xE0[\xA0-\xBF]{UTF8_TAIL})|([\xE1-\xEC]({UTF8_TAIL}{2}))|(\xED[\x80-\x9F]{UTF8_TAIL})|([\xEE-\xEF]({UTF8_TAIL}{2})
-UTF8_4		\xF4[\x80-\x8F]({UTF8_TAIL}{2}))|([\xF1-\xF3]({UTF8_TAIL}{3}))|(\xF4[\x80-\x8F]({UTF8_TAIL}{2})
+UTF8_3		(\xE0[\xA0-\xBF]{UTF8_TAIL})|([\xE1-\xEC]({UTF8_TAIL}{2}))|(\xED[\x80-\x9F]{UTF8_TAIL})|([\xEE-\xEF]({UTF8_TAIL}{2}))
+UTF8_4		(\xF0[\x90-\xBF]({UTF8_TAIL}{2}))|([\xF1-\xF3]({UTF8_TAIL}{3}))|(\xF4[\x80-\x8F]({UTF8_TAIL}{2}))
 UTF8_TAIL	[\x80-\xBF]
 
 SPACE [ \t\x0B\f]|{U_no_break_space}|{U_ogham_space_mark}|{U_en_quad_U_hair_space}|{U_narrow_no_break_space}|{U_medium_mathematical_space}|{U_ideographic_space}

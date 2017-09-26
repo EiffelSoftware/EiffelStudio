@@ -166,6 +166,7 @@ test extended_ascii_string_compatibility        unicode004 tcf pass unicode
 test manifest-string-with-null-character        unicode005 tcf pass unicode
 test invalid-manifest-string-8-with-unicode     unicode006 tcf pass unicode
 test unicode-white-space-character              unicode007 tcf pass unicode
+test unicode-multibyte-utf_8			unicode008 tcf pass unicode
 
 -- Non Conforming Inheritance
 test basic-non-conforming-inheritance			noncon001 tcf pass non-conforming

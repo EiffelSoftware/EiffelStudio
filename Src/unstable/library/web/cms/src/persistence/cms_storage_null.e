@@ -103,18 +103,18 @@ feature -- Logs
 
 feature -- Custom		
 
-	set_custom_value (a_name: READABLE_STRING_8; a_value: attached like custom_value; a_type: detachable READABLE_STRING_8)
-			-- Save data `a_name:a_value' for type `a_type' (or default if none).
+	set_custom_value (a_name: READABLE_STRING_8; a_value: attached like custom_value; a_type: READABLE_STRING_8)
+			-- Save data `a_name:a_value' for type `a_type'.
 		do
 		end
 
-	unset_custom_value (a_name: READABLE_STRING_8; a_type: detachable READABLE_STRING_8)
-			-- Delete data `a_name' for type `a_type' (or default if none).
+	unset_custom_value (a_name: READABLE_STRING_8; a_type: READABLE_STRING_8)
+			-- Delete data `a_name' for type `a_type'.
 		do
 		end
 
-	custom_value (a_name: READABLE_STRING_GENERAL; a_type: detachable READABLE_STRING_8): detachable READABLE_STRING_32
-			-- Data for name `a_name' and type `a_type' (or default if none).
+	custom_value (a_name: READABLE_STRING_GENERAL; a_type: READABLE_STRING_8): detachable READABLE_STRING_32
+			-- Data for name `a_name' and type `a_type'.
 		local
 			s: STRING_32
 		do
@@ -130,7 +130,7 @@ feature -- Custom
 			end
 		end
 
-	custom_values: detachable LIST [TUPLE [name: READABLE_STRING_GENERAL; type: detachable READABLE_STRING_8; value: detachable READABLE_STRING_32]]
+	custom_values: detachable LIST [TUPLE [name: READABLE_STRING_GENERAL; type: READABLE_STRING_8; value: detachable READABLE_STRING_32]]
 			-- Values as list of [name, type, value].
 		do
 		end

@@ -35,7 +35,7 @@ feature -- Access: user
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (select_users_count)
 		end
 
 	users: LIST [CMS_USER]
@@ -45,8 +45,8 @@ feature -- Access: user
 			error_handler.reset
 			write_information_log (generator + ".all_users")
 
+			sql_query (select_users, Void)
 			from
-				sql_query (select_users, Void)
 				sql_start
 			until
 				sql_after or has_error
@@ -56,7 +56,7 @@ feature -- Access: user
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (select_users)
 		end
 
 	user_by_id (a_id: like {CMS_USER}.id): detachable CMS_USER
@@ -74,7 +74,7 @@ feature -- Access: user
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (select_user_by_id)
 		end
 
 	user_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_USER
@@ -92,7 +92,7 @@ feature -- Access: user
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (select_user_by_name)
 		end
 
 	user_by_email (a_email: READABLE_STRING_GENERAL): detachable CMS_USER
@@ -110,7 +110,7 @@ feature -- Access: user
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (select_user_by_email)
 		end
 
 	user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
@@ -128,7 +128,7 @@ feature -- Access: user
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (select_user_by_activation_token)
 		end
 
 	user_by_password_token (a_token: READABLE_STRING_32): detachable CMS_USER
@@ -146,7 +146,7 @@ feature -- Access: user
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (select_user_by_password_token)
 		end
 
 	is_valid_credential (l_auth_login, l_auth_password: READABLE_STRING_32): BOOLEAN
@@ -180,11 +180,11 @@ feature -- Access: user
 			error_handler.reset
 			write_information_log (generator + ".recent_users")
 
+			create l_parameters.make (2)
+			l_parameters.put (a_count, "rows")
+			l_parameters.put (a_lower, "offset")
+			sql_query (sql_select_recent_users, l_parameters)
 			from
-				create l_parameters.make (2)
-				l_parameters.put (a_count, "rows")
-				l_parameters.put (a_lower, "offset")
-				sql_query (sql_select_recent_users, l_parameters)
 				sql_start
 			until
 				sql_after
@@ -194,7 +194,7 @@ feature -- Access: user
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_recent_users)
 		end
 
 feature -- Change: user
@@ -231,12 +231,12 @@ feature -- Change: user
 					a_user.set_id (last_inserted_user_id)
 					update_user_roles (a_user)
 				end
+				sql_finalize_insert (sql_insert_user)
 				if not error_handler.has_error then
 					sql_commit_transaction
 				else
 					sql_rollback_transaction
 				end
-				sql_finalize
 			else
 				-- set error
 				error_handler.add_custom_error (-1, "bad request" , "Missing password or email")
@@ -274,7 +274,7 @@ feature -- Change: user
 				l_parameters.put (l_password_salt, "salt")
 
 				sql_modify (sql_update_user_name, l_parameters)
-				sql_finalize
+				sql_finalize_modify (sql_update_user_name)
 				if not error_handler.has_error then
 					a_user.set_name (a_new_username)
 					update_user_roles (a_user)
@@ -284,7 +284,6 @@ feature -- Change: user
 				else
 					sql_rollback_transaction
 				end
-				sql_finalize
 			else
 					-- set error
 				error_handler.add_custom_error (-1, "bad request" , "Missing password or email")
@@ -327,7 +326,7 @@ feature -- Change: user
 				l_parameters.put (a_user.profile_name, "profile_name")
 
 				sql_modify (sql_update_user, l_parameters)
-				sql_finalize
+				sql_finalize_modify (sql_update_user)
 				if not error_handler.has_error then
 					update_user_roles (a_user)
 				end
@@ -336,7 +335,6 @@ feature -- Change: user
 				else
 					sql_rollback_transaction
 				end
-				sql_finalize
 			else
 					-- set error
 				error_handler.add_custom_error (-1, "bad request" , "Missing password or email")
@@ -353,9 +351,9 @@ feature -- Change: user
 			write_information_log (generator + ".delete_user")
 			create l_parameters.make (1)
 			l_parameters.put (a_user.id, "uid")
-			sql_modify (sql_delete_user, l_parameters)
+			sql_delete (sql_delete_user, l_parameters)
+			sql_finalize_delete (sql_delete_user)
 			sql_commit_transaction
-			sql_finalize
 		end
 
 feature -- Change: roles
@@ -413,7 +411,6 @@ feature -- Change: roles
 			else
 				sql_rollback_transaction
 			end
-			sql_finalize
 		end
 
 	assign_role_to_user (a_role: CMS_USER_ROLE; a_user: CMS_USER)
@@ -424,7 +421,7 @@ feature -- Change: roles
 			l_parameters.put (a_user.id, "uid")
 			l_parameters.put (a_role.id, "rid")
 			sql_insert (sql_insert_role_to_user, l_parameters)
-			sql_finalize
+			sql_finalize_insert (sql_insert_role_to_user)
 		end
 
 	unassign_role_from_user (a_role: CMS_USER_ROLE; a_user: CMS_USER)
@@ -434,8 +431,8 @@ feature -- Change: roles
 			create l_parameters.make (2)
 			l_parameters.put (a_user.id, "uid")
 			l_parameters.put (a_role.id, "rid")
-			sql_modify (sql_delete_role_from_user, l_parameters)
-			sql_finalize
+			sql_delete (sql_delete_role_from_user, l_parameters)
+			sql_finalize_delete (sql_delete_role_from_user)
 		end
 
 feature -- Access: roles and permissions
@@ -453,12 +450,11 @@ feature -- Access: roles and permissions
 				Result := fetch_user_role
 				sql_forth
 				check one_row: sql_after end
-				sql_finalize
-				if Result /= Void and not has_error then
-					fill_user_role (Result)
-				end
 			end
-			sql_finalize
+			sql_finalize_query (select_user_role_by_id)
+			if Result /= Void and not has_error then
+				fill_user_role (Result)
+			end
 		end
 
 	user_role_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_USER_ROLE
@@ -475,12 +471,11 @@ feature -- Access: roles and permissions
 				Result := fetch_user_role
 				sql_forth
 				check one_row: sql_after end
-				sql_finalize
-				if Result /= Void and not has_error then
-					fill_user_role (Result)
-				end
 			end
-			sql_finalize
+			sql_finalize_query (select_user_role_by_name)
+			if Result /= Void and not has_error then
+				fill_user_role (Result)
+			end
 		end
 
 	user_roles_for (a_user: CMS_USER): LIST [CMS_USER_ROLE]
@@ -491,10 +486,10 @@ feature -- Access: roles and permissions
 			write_information_log (generator + ".user_roles_for")
 
 			create {ARRAYED_LIST [CMS_USER_ROLE]} Result.make (0)
+			create l_parameters.make (1)
+			l_parameters.put (a_user.id, "uid")
+			sql_query (select_user_roles_by_user_id, l_parameters)
 			from
-				create l_parameters.make (1)
-				l_parameters.put (a_user.id, "uid")
-				sql_query (select_user_roles_by_user_id, l_parameters)
 				sql_start
 			until
 				sql_after
@@ -504,7 +499,7 @@ feature -- Access: roles and permissions
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (select_user_roles_by_user_id)
 			if not has_error then
 				across Result as ic loop
 					fill_user_role (ic.item)
@@ -520,8 +515,8 @@ feature -- Access: roles and permissions
 			write_information_log (generator + ".user_roles")
 
 			create {ARRAYED_LIST [CMS_USER_ROLE]} Result.make (0)
+			sql_query (select_user_roles, Void)
 			from
-				sql_query (select_user_roles, Void)
 				sql_start
 			until
 				sql_after
@@ -532,7 +527,7 @@ feature -- Access: roles and permissions
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (select_user_roles)
 			if not has_error then
 				across Result as ic loop
 					fill_user_role (ic.item)
@@ -561,10 +556,10 @@ feature -- Access: roles and permissions
 			write_information_log (generator + ".role_permissions_by_id")
 
 			create {ARRAYED_LIST [READABLE_STRING_8]} Result.make (0)
+			create l_parameters.make (1)
+			l_parameters.put (a_role_id, "rid")
+			sql_query (select_role_permissions_by_role_id, l_parameters)
 			from
-				create l_parameters.make (1)
-				l_parameters.put (a_role_id, "rid")
-				sql_query (select_role_permissions_by_role_id, l_parameters)
 				sql_start
 			until
 				sql_after or has_error
@@ -576,7 +571,7 @@ feature -- Access: roles and permissions
 --				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (select_role_permissions_by_role_id)
 		end
 
 	role_permissions: LIST [READABLE_STRING_8]
@@ -587,8 +582,8 @@ feature -- Access: roles and permissions
 
 			create {ARRAYED_LIST [READABLE_STRING_8]} Result.make (0)
 			Result.compare_objects
+			sql_query (select_role_permissions, Void)
 			from
-				sql_query (select_role_permissions, Void)
 				sql_start
 			until
 				sql_after or has_error
@@ -598,7 +593,7 @@ feature -- Access: roles and permissions
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (select_role_permissions)
 		end
 
 feature -- Change: roles and permissions		
@@ -628,7 +623,7 @@ feature -- Change: roles and permissions
 					l_parameters.put (a_user_role.id, "rid")
 					l_parameters.put (a_user_role.name, "name")
 					sql_modify (sql_update_user_role, l_parameters)
-					sql_finalize
+					sql_finalize_modify (sql_update_user_role)
 				end
 				if not a_user_role.permissions.is_empty then
 					-- FIXME: check if this is non set permissions,or none ...
@@ -675,7 +670,7 @@ feature -- Change: roles and permissions
 				create l_parameters.make (1)
 				l_parameters.put (a_user_role.name, "name")
 				sql_insert (sql_insert_user_role, l_parameters)
-				sql_finalize
+				sql_finalize_insert (sql_insert_user_role)
 				if not error_handler.has_error then
 					a_user_role.set_id (last_inserted_user_role_id)
 					across
@@ -699,7 +694,7 @@ feature -- Change: roles and permissions
 			l_parameters.put (a_permission, "permission")
 			l_parameters.put (Void, "module") -- FIXME: unsupported for now!
 			sql_insert (sql_insert_user_role_permission, l_parameters)
-			sql_finalize
+			sql_finalize_insert (sql_insert_user_role_permission)
 		end
 
 	unset_permission_for_role_id (a_permission: READABLE_STRING_8; a_role_id: INTEGER)
@@ -713,8 +708,8 @@ feature -- Change: roles and permissions
 			create l_parameters.make (2)
 			l_parameters.put (a_role_id, "rid")
 			l_parameters.put (a_permission, "permission")
-			sql_modify (sql_delete_user_role_permission, l_parameters)
-			sql_finalize
+			sql_delete (sql_delete_user_role_permission, l_parameters)
+			sql_finalize_delete (sql_delete_user_role_permission)
 		end
 
 	last_inserted_user_role_id: INTEGER_32
@@ -728,7 +723,7 @@ feature -- Change: roles and permissions
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (sql_last_insert_user_role_id)
 		end
 
 
@@ -742,11 +737,11 @@ feature -- Change: roles and permissions
 			write_information_log (generator + ".delete_role")
 			create l_parameters.make (1)
 			l_parameters.put (a_role.id, "rid")
-			sql_modify (sql_delete_role_permissions_by_role_id, l_parameters)
-			sql_finalize
-			sql_modify (sql_delete_role_by_id, l_parameters)
+			sql_delete (sql_delete_role_permissions_by_role_id, l_parameters)
+			sql_finalize_delete (sql_delete_role_permissions_by_role_id)
+			sql_delete (sql_delete_role_by_id, l_parameters)
+			sql_finalize_delete (sql_delete_role_by_id)
 			sql_commit_transaction
-			sql_finalize
 		end
 
 
@@ -767,7 +762,7 @@ feature -- Access: User activation
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_activation_expiration)
 		end
 
 	user_id_by_activation (a_token: READABLE_STRING_32): INTEGER_64
@@ -785,7 +780,7 @@ feature -- Access: User activation
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_userid_activation)
 		end
 
 feature -- Change: User activation
@@ -805,8 +800,8 @@ feature -- Change: User activation
 			l_parameters.put (a_id, "uid")
 			l_parameters.put (l_utc_date, "utc_date")
 			sql_insert (sql_insert_activation, l_parameters)
+			sql_finalize_insert (sql_insert_activation)
 			sql_commit_transaction
-			sql_finalize
 		end
 
 feature -- Change: User password recovery
@@ -826,8 +821,8 @@ feature -- Change: User password recovery
 			l_parameters.put (a_id, "uid")
 			l_parameters.put (l_utc_date, "utc_date")
 			sql_insert (sql_insert_password, l_parameters)
+			sql_finalize_insert (sql_insert_password)
 			sql_commit_transaction
-			sql_finalize
 		end
 
 	remove_password (a_token: READABLE_STRING_32)
@@ -841,8 +836,8 @@ feature -- Change: User password recovery
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
 			sql_modify (sql_remove_password, l_parameters)
+			sql_finalize_modify (sql_remove_password)
 			sql_commit_transaction
-			sql_finalize
 		end
 
 feature {NONE} -- Implementation: User
@@ -864,7 +859,7 @@ feature {NONE} -- Implementation: User
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (select_salt_by_username)
 		end
 
 	fetch_user: detachable CMS_USER
@@ -1061,7 +1056,7 @@ feature -- Acess: Temp users
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (select_temp_users_count)
 		end
 
 	temp_user_by_id (a_uid: like {CMS_USER}.id; a_consumer: READABLE_STRING_GENERAL): detachable CMS_USER
@@ -1084,7 +1079,7 @@ feature -- Acess: Temp users
 					Result := Void
 				end
 			end
-			sql_finalize
+			sql_finalize_query (l_string)
 		end
 
 	temp_user_by_name (a_name: like {CMS_USER}.name): detachable CMS_USER
@@ -1102,7 +1097,7 @@ feature -- Acess: Temp users
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (select_temp_user_by_name)
 		end
 
 	temp_user_by_email (a_email: like {CMS_USER}.email): detachable CMS_USER
@@ -1120,7 +1115,7 @@ feature -- Acess: Temp users
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (select_temp_user_by_email)
 		end
 
 	temp_user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
@@ -1138,7 +1133,7 @@ feature -- Acess: Temp users
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (select_temp_user_by_activation_token)
 		end
 
 	temp_recent_users (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_TEMP_USER]
@@ -1151,11 +1146,11 @@ feature -- Acess: Temp users
 			error_handler.reset
 			write_information_log (generator + ".temp_recent_users")
 
+			create l_parameters.make (2)
+			l_parameters.put (a_count, "rows")
+			l_parameters.put (a_lower, "offset")
+			sql_query (sql_select_temp_recent_users, l_parameters)
 			from
-				create l_parameters.make (2)
-				l_parameters.put (a_count, "rows")
-				l_parameters.put (a_lower, "offset")
-				sql_query (sql_select_temp_recent_users, l_parameters)
 				sql_start
 			until
 				sql_after or has_error
@@ -1165,7 +1160,7 @@ feature -- Acess: Temp users
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_temp_recent_users)
 		end
 
 	token_by_temp_user_id (a_id: like {CMS_USER}.id): detachable STRING
@@ -1185,7 +1180,7 @@ feature -- Acess: Temp users
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (select_token_activation_by_user_id)
 		end
 
 feature {NONE} -- Implementation: User
@@ -1257,12 +1252,12 @@ feature -- New Temp User
   				l_parameters.put (a_temp_user.profile_name, "profile_name")
 
   				sql_insert (sql_insert_user, l_parameters)
+  				sql_finalize_insert (sql_insert_user)
   				if not error_handler.has_error then
   					sql_commit_transaction
   				else
   					sql_rollback_transaction
   				end
-  				sql_finalize
   			else
   				-- set error
   				error_handler.add_custom_error (-1, "bad request" , "Missing password or email")
@@ -1297,13 +1292,13 @@ feature -- New Temp User
 
 				sql_begin_transaction
 				sql_insert (sql_insert_temp_user, l_parameters)
+				sql_finalize_insert (sql_insert_temp_user)
 				if not error_handler.has_error then
 					a_temp_user.set_id (last_inserted_temp_user_id)
 					sql_commit_transaction
 				else
 					sql_rollback_transaction
 				end
-				sql_finalize
 			else
 					-- set error
 				error_handler.add_custom_error (-1, "bad request" , "Missing password or email or personal information")
@@ -1323,8 +1318,8 @@ feature -- Remove Activation
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
 			sql_modify (sql_remove_activation, l_parameters)
+			sql_finalize_modify (sql_remove_activation)
 			sql_commit_transaction
-			sql_finalize
 		end
 
 	delete_temp_user (a_temp_user: CMS_TEMP_USER)
@@ -1337,9 +1332,9 @@ feature -- Remove Activation
 			write_information_log (generator + ".delete_temp_user")
 			create l_parameters.make (1)
 			l_parameters.put (a_temp_user.id, "uid")
-			sql_modify (sql_delete_temp_user, l_parameters)
+			sql_delete (sql_delete_temp_user, l_parameters)
+			sql_finalize_delete (sql_delete_temp_user)
 			sql_commit_transaction
-			sql_finalize
 		end
 
 feature {NONE} -- Implementation
@@ -1355,7 +1350,7 @@ feature {NONE} -- Implementation
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (sql_last_insert_temp_user_id)
 		end
 
 	last_inserted_user_id: INTEGER_64
@@ -1369,7 +1364,7 @@ feature {NONE} -- Implementation
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (sql_last_insert_user_id)
 		end
 
 feature {NONE} -- SQL select

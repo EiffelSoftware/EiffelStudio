@@ -68,13 +68,13 @@ feature -- Logs
 
 feature -- Misc
 
-	set_custom_value (a_name: READABLE_STRING_8; a_value: attached like custom_value; a_type: detachable READABLE_STRING_8)
-			-- Save data `a_name:a_value' for type `a_type' (or default if none).
+	set_custom_value (a_name: READABLE_STRING_8; a_value: attached like custom_value; a_type: READABLE_STRING_8)
+			-- Save data `a_name:a_value' for type `a_type'.
 		deferred
 		end
 
-	unset_custom_value (a_name: READABLE_STRING_8; a_type: detachable READABLE_STRING_8)
-			-- Delete data `a_name' for type `a_type' (or default if none).
+	unset_custom_value (a_name: READABLE_STRING_8; a_type: READABLE_STRING_8)
+			-- Delete data `a_name' for type `a_type'.
 		deferred
 		end
 

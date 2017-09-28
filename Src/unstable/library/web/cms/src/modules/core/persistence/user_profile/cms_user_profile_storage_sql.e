@@ -35,7 +35,7 @@ feature -- Access
 			if not has_error then
 				Result := sql_read_string_32 (2)
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_user_profile_item)
 		end
 
 	user_profile (a_user: CMS_USER): detachable CMS_USER_PROFILE
@@ -63,7 +63,7 @@ feature -- Access
 					sql_forth
 				end
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_user_profile_items)
 		end
 
 	users_with_profile_item (a_item_name: READABLE_STRING_GENERAL; a_value: detachable READABLE_STRING_GENERAL): detachable LIST [CMS_USER]
@@ -98,7 +98,7 @@ feature -- Access
 					sql_forth
 				end
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_users_with_profile_item)
 			if
 				not has_error and
 				l_uids /= Void and
@@ -132,10 +132,11 @@ feature -- Change
 			reset_error
 			if user_profile_item (a_user, a_item_name) = Void then
 				sql_insert (sql_insert_user_profile_item, l_parameters)
+				sql_finalize_insert (sql_insert_user_profile_item)
 			else
 				sql_modify (sql_update_user_profile_item, l_parameters)
+				sql_finalize_modify (sql_update_user_profile_item)
 			end
-			sql_finalize
 		end
 
 	save_user_profile (a_user: CMS_USER; a_profile: CMS_USER_PROFILE)
@@ -164,7 +165,8 @@ feature -- Change
 					l_is_new := True
 				elseif p.has_key (ic.key) then
 					l_is_new := False
-					l_has_diff := attached p.item (ic.key) as l_prev_item and then not l_prev_item.same_string (l_item)
+					l_has_diff := attached p.item (ic.key) as l_prev_item and then 
+									not l_prev_item.same_string (l_item)
 				else
 					l_is_new := True
 				end
@@ -175,13 +177,14 @@ feature -- Change
 
 					if l_is_new then
 						sql_insert (sql_insert_user_profile_item, l_parameters)
+						sql_finalize_insert (sql_insert_user_profile_item)
 					else
 						sql_modify (sql_update_user_profile_item, l_parameters)
+						sql_finalize_modify (sql_update_user_profile_item)
 					end
 					l_parameters.wipe_out
 				end
 			end
-			sql_finalize
 		end
 
 feature {NONE} -- Queries

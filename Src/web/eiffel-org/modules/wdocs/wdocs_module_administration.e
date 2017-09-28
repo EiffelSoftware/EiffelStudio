@@ -16,6 +16,13 @@ inherit
 
 	CMS_HOOK_CACHE
 
+	CMS_HOOK_EXPORT
+
+	WDOCS_MODULE_HELPER
+		undefine
+			percent_encoder
+		end
+
 create
 	make
 
@@ -155,6 +162,7 @@ feature -- Hooks configuration
 				-- Module specific hook, if available.
 			a_hooks.subscribe_to_cache_hook (Current)
 			a_hooks.subscribe_to_menu_system_alter_hook (Current)
+			a_hooks.subscribe_to_export_hook (Current)
 		end
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
@@ -192,6 +200,237 @@ feature -- Hooks configuration
 			if attached module.wdocs_api as l_wdocs_api then
 				l_wdocs_api.reset_cms_menu_cache_for (a_version_id, a_book_name)
 			end
+		end
+
+feature -- Export data
+
+	export_to (a_export_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_export_ctx: CMS_EXPORT_CONTEXT; a_response: CMS_RESPONSE)
+			-- Export data identified by `a_export_id_list',
+			-- or export all data if `a_export_id_list' is Void.
+		local
+			mng: like manager
+			pg: WIKI_BOOK_PAGE
+			d,sd: DIRECTORY
+			xhtml_vis: WDOCS_WIKI_XHTML_GENERATOR
+			f: RAW_FILE
+			l_xhtml: STRING
+			l_version_id: READABLE_STRING_GENERAL
+			l_book_name: READABLE_STRING_8
+			fut: FILE_UTILITIES
+			l_resolver: WDOCS_XHTML_EXPORT_RESOLVER
+			vid: STRING
+			l_map: STRING
+			s: STRING
+		do
+			if
+				a_export_id_list = Void
+				or else across a_export_id_list as ic some ic.item.same_string ("wdoc") end
+			then
+				if
+					a_response.has_permission ("export wdoc") and then
+					attached wdocs_api as l_wdocs_api
+				then
+					mng := manager (Void)
+					l_version_id := mng.version_id
+					a_export_ctx.log ("Exporting wdocs item for version " + utf_8_encoded (l_version_id) + ".")
+					create d.make_with_path (a_export_ctx.location.extended (module.name).extended (l_version_id))
+					if d.exists then
+						d.recursive_delete
+					end
+
+					create l_xhtml.make (1024)
+					create xhtml_vis.make (l_xhtml)
+					create l_resolver.make (mng)
+					xhtml_vis.set_link_resolver (l_resolver)
+					xhtml_vis.set_image_resolver (l_resolver)
+					xhtml_vis.set_file_resolver (l_resolver)
+					xhtml_vis.set_template_resolver (l_resolver)
+					xhtml_vis.code_aliases.force ("eiffel") 	-- Support <eiffel>..</eiffel> as <code lang=eiffel>
+					xhtml_vis.code_aliases.force ("e") 		-- Support <e>..</e> as <code lang=eiffel>
+
+						-- register interwiki mapping,
+						-- and expand "$version" if any.
+					vid := percent_encoder.percent_encoded_string (mng.version_id)
+					across
+						l_wdocs_api.settings.interwiki_mapping as ic
+					loop
+						l_map := ic.item
+						l_map.replace_substring_all ("$version", vid)
+						xhtml_vis.interwiki_mappings.force (l_map, ic.key)
+					end
+
+					copy_directory_to (mng.wiki_database_path.extended ("_images"), d.path.extended ("_images"), True)
+					copy_directory_to (mng.wiki_database_path.extended ("_files"), d.path.extended ("_files"), True)
+
+
+					create f.make_with_path (a_export_ctx.location.extended (module.name).extended (mng.version_id).extended ("index").appended_with_extension ("html"))
+					f.create_read_write
+					f.put_string ("<h1>Documentation</h1><ul>%N")
+					across
+						mng.book_names as ic
+					loop
+						if attached mng.book (ic.item) as bk then
+							f.put_string ("<li><a href=%""+ url_encoded (bk.name) +"/"+ url_encoded (bk.name) +".html%">" + html_encoded (bk.name) + "</a></li>%N")
+						end
+					end
+					f.put_string ("</ul>%N")
+					f.close
+
+					across
+						mng.book_names as ic
+					loop
+						if attached mng.book (ic.item) as bk then
+							l_book_name := bk.name
+							a_export_ctx.log ("Exporting wdoc book '" + l_book_name + "'.")
+
+							create d.make_with_path (a_export_ctx.location.extended (module.name).extended (mng.version_id).extended (bk.name))
+							copy_directory_to (mng.wiki_database_path.extended (l_book_name).extended ("_images"), d.path.extended ("_images"), True)
+							copy_directory_to (mng.wiki_database_path.extended (l_book_name).extended ("_files"), d.path.extended ("_files"), True)
+
+							if not d.exists then
+								d.recursive_create_dir
+							end
+
+							across
+								bk.pages as bk_ic
+							loop
+								pg := bk_ic.item
+								a_export_ctx.log ("Exporting wdoc page '" + utf_8_encoded (pg.title) + "'.")
+
+								check empty_buffer: l_xhtml.is_empty end
+								l_xhtml.wipe_out
+								pg.process (xhtml_vis)
+
+								l_xhtml.append ("<ul class=%"wdocs-nav%">")
+								if
+									l_book_name /= Void and then
+									attached mng.page (pg.parent_key, l_book_name) as l_parent_page and then
+									l_parent_page /= pg
+								then
+									create s.make_empty
+									s.append ("<li><em>Parent</em> &lt;")
+									append_wiki_page_link (l_version_id, l_book_name, l_parent_page, False, mng, s)
+									s.append ("&gt;</li>")
+									l_xhtml.prepend (s)
+									l_xhtml.append (s)
+								end
+
+								pg.sort
+								if attached pg.pages as l_sub_pages then
+									across
+										l_sub_pages as subpg_ic
+									loop
+										l_xhtml.append ("<li> ")
+										append_wiki_page_link (l_version_id, l_book_name, subpg_ic.item, False, mng, l_xhtml)
+										l_xhtml.append ("</li>")
+									end
+								end
+								l_xhtml.append ("</ul>")
+
+
+								create f.make_with_path (d.path.extended (pg.page_id).appended_with_extension ("html")) -- .src
+								if f.exists then
+									a_response.response.put_error ("FILE ALREADY HERE !!!" + f.path.utf_8_name+"%N")
+								end
+								fut.create_directory_path (f.path.parent)
+								f.create_read_write
+								f.put_string (l_xhtml)
+								f.close
+
+								l_xhtml.wipe_out
+							end
+						end
+					end
+				end
+			end
+		end
+
+
+	copy_directory_to (a_from: PATH; a_to: PATH; rec: BOOLEAN)
+		local
+			d: DIRECTORY
+			p,to: PATH
+			f: RAW_FILE
+			fut: FILE_UTILITIES
+		do
+			create d.make_with_path (a_from)
+			if d.exists then
+				fut.create_directory_path (a_to)
+				across
+					d.entries as ic
+				loop
+					if ic.item.is_parent_symbol or ic.item.is_current_symbol then
+					else
+						create f.make_with_path (a_from.extended_path (ic.item))
+						if f.is_directory then
+							if rec then
+								fut.create_directory_path (a_to.extended_path (ic.item))
+								copy_directory_to (f.path, a_to.extended_path (ic.item), rec)
+							end
+						else
+							fut.copy_file_path (f.path, a_to.extended_path (ic.item))
+						end
+					end
+				end
+			end
+		end
+
+	append_wiki_page_link (a_version_id, a_book_id: detachable READABLE_STRING_GENERAL; a_page: WIKI_BOOK_PAGE; is_recursive: BOOLEAN; a_manager: WDOCS_MANAGER; a_output: STRING)
+		local
+			l_pages: detachable LIST [WIKI_BOOK_PAGE]
+		do
+			a_page.sort
+			l_pages := a_page.pages
+			if l_pages /= Void and then l_pages.is_empty then
+				l_pages := Void
+			end
+
+			if a_book_id /= Void then
+				a_output.append ("<a href=%""+ wdocs_page_link_location (a_version_id, a_book_id, a_page.page_id + ".html") + "%"")
+			else
+				a_output.append ("<a href=%"../" + a_page.page_id + ".html" + "%"")
+			end
+			if l_pages /= Void then
+				a_output.append (" class=%"wdocs-folder%"")
+			else
+				a_output.append (" class=%"wdocs-page%"")
+			end
+			a_output.append (">")
+			a_output.append (html_encoder.general_encoded_string (a_manager.wiki_page_link_title (a_page)))
+			a_output.append ("</a>")
+
+			if l_pages /= Void then
+				check pages_not_empty: not l_pages.is_empty end
+				if is_recursive then
+					a_output.append ("<ul>")
+					across
+						l_pages as ic
+					loop
+						a_output.append ("<li>")
+						append_wiki_page_link (a_version_id, a_book_id, ic.item, is_recursive, a_manager, a_output)
+						a_output.append ("</li>")
+					end
+					a_output.append ("</ul>")
+				end
+			end
+		end
+
+	wdocs_book_link_location (a_version_id: detachable READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL): STRING
+		local
+			p: PATH
+		do
+			create p.make_from_string ("..")
+			p := p.extended (a_book_name)
+			Result := p.utf_8_name
+		end
+
+	wdocs_page_link_location (a_version_id: detachable READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL; a_page_name: READABLE_STRING_GENERAL): STRING
+		local
+			p: PATH
+		do
+			create p.make_from_string (wdocs_book_link_location (a_version_id, a_book_name))
+			p := p.extended (a_page_name)
+			Result := p.utf_8_name
 		end
 
 end

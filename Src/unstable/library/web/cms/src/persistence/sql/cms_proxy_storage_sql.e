@@ -41,6 +41,7 @@ feature -- Execution
 
 	sql_begin_transaction
 		do
+				-- FIXME: may raise exception due to locked database...
 			sql_storage.sql_begin_transaction
 		end
 

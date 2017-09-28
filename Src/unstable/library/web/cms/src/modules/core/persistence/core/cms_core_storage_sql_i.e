@@ -53,7 +53,7 @@ feature -- URL aliases
 			end
 			if l_continue then
 				sql_insert (sql_insert_path_alias, l_parameters)
-				sql_finalize
+				sql_finalize_insert (sql_insert_path_alias)
 			end
 		end
 
@@ -80,7 +80,7 @@ feature -- URL aliases
 				l_parameters.put (a_alias, "alias")
 
 				sql_modify (sql_update_path_alias, l_parameters)
-				sql_finalize
+				sql_finalize_modify (sql_update_path_alias)
 			end
 		end
 
@@ -97,7 +97,7 @@ feature -- URL aliases
 					create l_parameters.make (1)
 					l_parameters.put (a_alias, "alias")
 					sql_modify (sql_delete_path_alias, l_parameters)
-					sql_finalize
+					sql_finalize_modify (sql_delete_path_alias)
 				else
 					error_handler.add_custom_error (0, "alias mismatch", "Path alias %"" + a_alias + "%" is not related to source %"" + a_source + "%"!")
 				end
@@ -120,7 +120,7 @@ feature -- URL aliases
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_path_source)
 		end
 
 	source_of_path_alias (a_alias: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
@@ -139,7 +139,7 @@ feature -- URL aliases
 					check one_row: sql_after end
 				end
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_path_alias)
 		end
 
 	path_aliases: STRING_TABLE [READABLE_STRING_8]
@@ -165,7 +165,7 @@ feature -- URL aliases
 					sql_forth
 				end
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_all_path_alias)
 		end
 
 	sql_select_all_path_alias: STRING = "SELECT source, alias, lang FROM path_aliases ORDER BY pid DESC;"
@@ -218,7 +218,7 @@ feature -- Logs
 			end
 			l_parameters.put (now, "date")
 			sql_insert (sql_insert_log, l_parameters)
-			sql_finalize
+			sql_finalize_insert (sql_insert_log)
 		end
 
 	logs (a_category: detachable READABLE_STRING_GENERAL; a_lower: INTEGER; a_count: INTEGER): ARRAYED_LIST [CMS_LOG]
@@ -262,7 +262,7 @@ feature -- Logs
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (l_sql)
 		end
 
 	fetch_log: detachable CMS_LOG
@@ -311,7 +311,7 @@ feature -- Logs
 
 feature -- Misc
 
-	set_custom_value (a_name: READABLE_STRING_8; a_value: attached like custom_value; a_type: detachable READABLE_STRING_8)
+	set_custom_value (a_name: READABLE_STRING_8; a_value: attached like custom_value; a_type: READABLE_STRING_8)
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -319,45 +319,29 @@ feature -- Misc
 			error_handler.reset
 
 			create l_parameters.make (3)
-			if a_type /= Void then
-				l_parameters.put (a_type, "type")
-			else
-				l_parameters.put (a_type, "default")
-			end
+			l_parameters.put (a_type, "type")
 			l_parameters.put (a_name, "name")
 			l_parameters.put (a_value, "value")
+			sql_begin_transaction
 			if attached custom_value (a_name, a_type) as l_value then
 				if a_value.same_string (l_value) then
 						-- already up to date
 				else
 					sql_modify (sql_update_custom_value, l_parameters)
-					sql_finalize
+					sql_finalize_modify (sql_update_custom_value)
 				end
 			else
 				sql_insert (sql_insert_custom_value, l_parameters)
-				sql_finalize
+				sql_finalize_insert (sql_insert_custom_value)
 			end
-		end
-
-	unset_custom_value (a_name: READABLE_STRING_8; a_type: detachable READABLE_STRING_8)
-			-- <Precursor>
-		local
-			l_parameters: STRING_TABLE [detachable ANY]
-		do
-			error_handler.reset
-
-			create l_parameters.make (3)
-			if a_type /= Void then
-				l_parameters.put (a_type, "type")
+			if has_error then
+				sql_rollback_transaction
 			else
-				l_parameters.put (a_type, "default")
+				sql_commit_transaction
 			end
-			l_parameters.put (a_name, "name")
-			sql_modify (sql_delete_custom_value, l_parameters)
-			sql_finalize
 		end
 
-	custom_value (a_name: READABLE_STRING_GENERAL; a_type: detachable READABLE_STRING_8): detachable READABLE_STRING_32
+	unset_custom_value (a_name: READABLE_STRING_8; a_type: READABLE_STRING_8)
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -365,11 +349,21 @@ feature -- Misc
 			error_handler.reset
 
 			create l_parameters.make (2)
-			if a_type /= Void then
-				l_parameters.put (a_type, "type")
-			else
-				l_parameters.put (a_type, "default")
-			end
+			l_parameters.put (a_type, "type")
+			l_parameters.put (a_name, "name")
+			sql_delete (sql_delete_custom_value, l_parameters)
+			sql_finalize_delete (sql_delete_custom_value)
+		end
+
+	custom_value (a_name: READABLE_STRING_GENERAL; a_type: READABLE_STRING_8): detachable READABLE_STRING_32
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+
+			create l_parameters.make (2)
+			l_parameters.put (a_type, "type")
 			l_parameters.put (a_name, "name")
 			sql_query (sql_select_custom_value, l_parameters)
 			if not has_error and not sql_after then
@@ -377,16 +371,16 @@ feature -- Misc
 				sql_forth
 				check one_row: sql_after end
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_custom_value)
 		end
 
-	custom_values: detachable LIST [TUPLE [name: READABLE_STRING_GENERAL; type: detachable READABLE_STRING_8; value: detachable READABLE_STRING_32]]
+	custom_values: detachable LIST [TUPLE [name: READABLE_STRING_GENERAL; type: READABLE_STRING_8; value: detachable READABLE_STRING_32]]
 			-- Values as list of [name, type, value].
 		local
 			l_type, l_name: READABLE_STRING_8
 		do
 			error_handler.reset
-			create {ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; type: detachable READABLE_STRING_8; value: detachable READABLE_STRING_32]]} Result.make (5)
+			create {ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; type: READABLE_STRING_8; value: detachable READABLE_STRING_32]]} Result.make (5)
 			sql_query (sql_select_all_custom_values, Void)
 			if not has_error then
 				from
@@ -406,7 +400,7 @@ feature -- Misc
 					sql_forth
 				end
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_all_custom_values)
 		end
 
 	sql_select_all_custom_values: STRING = "SELECT type, name, value FROM custom_values;"

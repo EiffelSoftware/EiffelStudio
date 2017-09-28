@@ -41,7 +41,7 @@ feature -- Access User
 					l_uid := 0
 				end
 			end
-			sql_finalize
+			sql_finalize_query (Select_user_id_by_token)
 			if l_uid > 0 and attached api as l_cms_api then
 				Result := l_cms_api.user_api.user_by_id (l_uid)
 			end
@@ -64,7 +64,7 @@ feature -- Access User
 					Result := False
 				end
 			end
-			sql_finalize
+			sql_finalize_query (Select_user_token)
 		end
 
 feature -- Change User token
@@ -82,8 +82,8 @@ feature -- Change User token
 			l_parameters.put (create {DATE_TIME}.make_now_utc, "utc_date")
 			sql_begin_transaction
 			sql_insert (sql_insert_session_auth, l_parameters)
+			sql_finalize_insert (sql_insert_session_auth)
 			sql_commit_transaction
-			sql_finalize
 		end
 
 	update_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: CMS_USER)
@@ -99,8 +99,8 @@ feature -- Change User token
 			l_parameters.put (create {DATE_TIME}.make_now_utc, "utc_date")
 			sql_begin_transaction
 			sql_modify (sql_update_session_auth, l_parameters)
+			sql_finalize_modify (sql_update_session_auth)
 			sql_commit_transaction
-			sql_finalize
 		end
 
 feature {NONE} -- SQL statements

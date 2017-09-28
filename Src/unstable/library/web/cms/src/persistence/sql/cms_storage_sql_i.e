@@ -143,6 +143,31 @@ feature -- Operation
 		deferred
 		end
 
+	sql_finalize_query (a_sql_statement: STRING)
+		do
+			sql_finalize_statement (a_sql_statement)
+		end
+
+	sql_finalize_insert (a_sql_statement: STRING)
+		do
+			sql_finalize_statement (a_sql_statement)
+		end
+
+	sql_finalize_modify (a_sql_statement: STRING)
+		do
+			sql_finalize_statement (a_sql_statement)
+		end
+
+	sql_finalize_delete (a_sql_statement: STRING)
+		do
+			sql_finalize_statement (a_sql_statement)
+		end
+
+	sql_finalize_statement (a_sql_statement: STRING)
+		do
+			sql_finalize
+		end
+
 feature -- Helper
 
 	sql_script_content (a_path: PATH): detachable STRING
@@ -181,6 +206,7 @@ feature -- Helper
 			i: INTEGER
 			err: BOOLEAN
 			cl: CELL [INTEGER]
+			l_sql: STRING
 		do
 			reset_error
 			sql_begin_transaction
@@ -194,10 +220,13 @@ feature -- Helper
 			loop
 				if attached next_sql_statement (a_sql_script, i, cl) as s then
 					if not s.is_whitespace then
+						l_sql := sql_statement (s)
 						if s.starts_with ("INSERT") then
-							sql_insert (sql_statement (s), a_params)
+							sql_insert (l_sql, a_params)
+							sql_finalize_insert (l_sql)
 						else
-							sql_modify (sql_statement (s), a_params)
+							sql_modify (l_sql, a_params)
+							sql_finalize_modify (l_sql)
 						end
 						err := err or has_error
 						reset_error
@@ -212,29 +241,34 @@ feature -- Helper
 			else
 				sql_commit_transaction
 			end
-			sql_finalize
 		end
 
 	sql_table_exists (a_table_name: READABLE_STRING_8): BOOLEAN
 			-- Does table `a_table_name' exists?
+		local
+			l_sql: STRING
 		do
 			reset_error
-			sql_query ("SELECT count(*) FROM " + a_table_name + " ;", Void)
+			l_sql := "SELECT count(*) FROM " + a_table_name + " ;"
+			sql_query (l_sql, Void)
 			Result := not has_error
 				-- FIXME: find better solution
-			sql_finalize
+			sql_finalize_query (l_sql)
 			reset_error
 		end
 
 	sql_table_items_count (a_table_name: READABLE_STRING_8): INTEGER_64
 			-- Number of items in table `a_table_name'?
+		local
+			l_sql: STRING
 		do
 			reset_error
-			sql_query ("SELECT count(*) FROM " + a_table_name + " ;", Void)
+			l_sql := "SELECT count(*) FROM " + a_table_name + " ;"
+			sql_query (l_sql, Void)
 			if not has_error then
 				Result := sql_read_integer_64 (1)
 			end
-			sql_finalize
+			sql_finalize_query (l_sql)
 		end
 
 feature -- Access		

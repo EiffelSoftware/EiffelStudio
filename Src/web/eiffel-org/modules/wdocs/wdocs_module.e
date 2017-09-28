@@ -17,7 +17,7 @@ inherit
 			permissions
 		end
 
-	CMS_ADMINISTRABLE
+	CMS_WITH_MODULE_ADMINISTRATION
 
 	CMS_HOOK_BLOCK
 

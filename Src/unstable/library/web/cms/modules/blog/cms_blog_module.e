@@ -17,6 +17,8 @@ inherit
 			blog_api
 		end
 
+	CMS_WITH_MODULE_ADMINISTRATION
+
 	CMS_HOOK_MENU_SYSTEM_ALTER
 
 	CMS_HOOK_RESPONSE_ALTER
@@ -81,12 +83,20 @@ feature {CMS_API} -- Module management
 			end
 		end
 
-feature {CMS_API} -- Access: API
+feature {CMS_API, CMS_MODULE} -- Access: API
 
 	blog_api: detachable CMS_BLOG_API
 			-- <Precursor>
 
 	node_api: detachable CMS_NODE_API
+
+feature {NONE} -- Administration
+
+	administration: CMS_SELF_MODULE_ADMINISTRATION [CMS_BLOG_MODULE]
+			-- Administration module.
+		do
+			create Result.make (Current)
+		end
 
 feature -- Access: router
 

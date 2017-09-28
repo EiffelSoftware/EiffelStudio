@@ -21,6 +21,8 @@ inherit
 
 	CMS_HOOK_IMPORT
 
+	CMS_WITH_MODULE_ADMINISTRATION
+
 	CMS_EXPORT_NODE_UTILITIES
 
 	CMS_IMPORT_NODE_UTILITIES
@@ -112,6 +114,14 @@ feature {CMS_API} -- Module management
 					Precursor {CMS_MODULE} (a_api)
 				end
 			end
+		end
+
+feature {NONE} -- Administration
+
+	administration: CMS_SELF_MODULE_ADMINISTRATION [CMS_PAGE_MODULE]
+			-- Administration module.
+		do
+			create Result.make (Current)
 		end
 
 feature {CMS_API} -- Access: API

@@ -34,13 +34,13 @@ feature
 								attached {JSON_STRING} l_item.item ("name") as l_name and then
 								attached {JSON_NUMBER} l_item.item ("size") as l_size and then
 								attached {JSON_STRING} l_item.item ("sha256") as l_sha256 and then
-								attached {JSON_NUMBER} l_item.item ("major") as l_major and then
-								attached {JSON_NUMBER} l_item.item ("minor") as l_minor and then
+								attached {JSON_STRING} l_item.item ("major") as l_major and then
+								attached {JSON_STRING} l_item.item ("minor") as l_minor and then
 								attached {JSON_NUMBER} l_item.item ("revision") as l_revision and then
 								attached {JSON_STRING} l_item.item ("platform") as l_platform
 							then
-									-- TUPLE [name: STRING; size: INTEGER; sha256: STRING; major: INTEGER; minor: INTEGER; revision: INTEGER; platform: STRING]
-								l_conf.add_element ([l_name.item, l_size.integer_64_item, l_sha256.item, l_major.integer_64_item, l_minor.integer_64_item, l_revision.integer_64_item, l_platform.item])
+									-- TUPLE [name: STRING; size: INTEGER; sha256: STRING; major: STRING; minor: STRING; revision: INTEGER; platform: STRING]
+								l_conf.add_element ([l_name.item, l_size.integer_64_item, l_sha256.item, l_major.item, l_minor.item, l_revision.integer_64_item, l_platform.item])
 							end
 						end
 					end

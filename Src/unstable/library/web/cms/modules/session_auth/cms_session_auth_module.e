@@ -187,43 +187,75 @@ feature {NONE} -- Implementation: routes
 	handle_login_with_session (api: CMS_API; a_session_api: CMS_SESSION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
+			l_username, l_username_or_email, l_password: detachable READABLE_STRING_GENERAL
+			l_user: detachable CMS_USER
+			l_tmp_user: detachable CMS_TEMP_USER
 		do
 			if
-				attached {WSF_STRING} req.form_parameter ("username") as l_username and then
-				attached {WSF_STRING} req.form_parameter ("password") as l_password
+				attached {WSF_STRING} req.form_parameter ("username") as p_username and then
+				attached {WSF_STRING} req.form_parameter ("password") as p_password
 			then
-				if
-					api.user_api.is_valid_credential (l_username.value, l_password.value) and then
-					attached api.user_api.user_by_name (l_username.value) as l_user
-				then
-					a_session_api.process_user_login (l_user, req, res)
-
-					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+				l_username_or_email := p_username.value
+				l_password := p_password.value
+				l_user := api.user_api.user_by_name (l_username_or_email)
+				if l_user = Void then
+					l_user := api.user_api.user_by_email (l_username_or_email)
+				end
+				if l_user = Void then
+					l_tmp_user := api.user_api.temp_user_by_name (l_username_or_email)
+					if l_tmp_user = Void then
+						l_tmp_user := api.user_api.temp_user_by_email (l_username_or_email)
+					end
 					if
-						attached {WSF_STRING} req.item ("destination") as p_destination and then
-						attached p_destination.value as v and then
-						v.is_valid_as_string_8
+						l_tmp_user /= Void and then
+						api.user_api.is_valid_temp_user_credential (l_tmp_user.name, l_password)
 					then
-						r.set_redirection (v.to_string_8)
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+						if attached smarty_template_login_block (req, Current, "login", api) as l_tpl_block then
+							l_tpl_block.set_value (l_username_or_email, "username")
+							l_tpl_block.set_value ("Error: Inactive account (or not yet validated)!", "error")
+							r.add_block (l_tpl_block, "content")
+						end
 					else
-						r.set_redirection ("")
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+						if attached smarty_template_login_block (req, Current, "login", api) as l_tpl_block then
+							l_tpl_block.set_value (l_username_or_email, "username")
+							l_tpl_block.set_value ("Wrong username or password ", "error")
+							r.add_block (l_tpl_block, "content")
+						end
 					end
 				else
-					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-					if attached smarty_template_login_block (req, Current, "login", api) as l_tpl_block then
-						l_tpl_block.set_value (l_username.value, "username")
-						l_tpl_block.set_value ("Wrong: Username or password ", "error")
-						r.add_block (l_tpl_block, "content")
+					l_username := l_user.name
+					if api.user_api.is_valid_credential (l_username, l_password) then
+						a_session_api.process_user_login (l_user, req, res)
+
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+						if
+							attached {WSF_STRING} req.item ("destination") as p_destination and then
+							attached p_destination.value as v and then
+							v.is_valid_as_string_8
+						then
+							r.set_redirection (v.to_string_8)
+						else
+							r.set_redirection ("")
+						end
+					else
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+						if attached smarty_template_login_block (req, Current, "login", api) as l_tpl_block then
+							l_tpl_block.set_value (l_username_or_email, "username")
+							l_tpl_block.set_value ("Wrong username or password ", "error")
+							r.add_block (l_tpl_block, "content")
+						end
 					end
 				end
 				r.execute
 			else
 				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
 				if attached smarty_template_login_block (req, Current, "login", api) as l_tpl_block then
-					if attached {WSF_STRING} req.form_parameter ("username") as l_username then
-						l_tpl_block.set_value (l_username.value, "username")
+					if attached {WSF_STRING} req.form_parameter ("username") as p_username then
+						l_tpl_block.set_value (p_username.value, "username")
 					end
-					l_tpl_block.set_value ("Wrong: Username or password ", "error")
+					l_tpl_block.set_value ("Wrong username or password ", "error")
 					r.add_block (l_tpl_block, "content")
 				end
 				r.execute

@@ -235,7 +235,7 @@ feature -- Change User
 
 feature -- Status report
 
-	is_valid_credential (a_auth_login, a_auth_password: READABLE_STRING_32): BOOLEAN
+	is_valid_credential (a_auth_login, a_auth_password: READABLE_STRING_GENERAL): BOOLEAN
 				-- Is the credentials `a_auth_login' and `a_auth_password' valid?
 		do
 			Result := user_storage.is_valid_credential (a_auth_login, a_auth_password)
@@ -501,6 +501,12 @@ feature -- User status
 
 feature -- Access - Temp User
 
+	is_valid_temp_user_credential (a_auth_login, a_auth_password: READABLE_STRING_GENERAL): BOOLEAN
+				-- Is the credentials `a_auth_login' and `a_auth_password' valid?
+		do
+			Result := user_storage.is_valid_temp_user_credential (a_auth_login, a_auth_password)
+		end
+
 	temp_users_count: INTEGER
 			-- Number of pending users.
 			--! to be accepted or rehected
@@ -508,19 +514,19 @@ feature -- Access - Temp User
 			Result := user_storage.temp_users_count
 		end
 
-	temp_user_by_name (a_username: READABLE_STRING_GENERAL): detachable CMS_USER
+	temp_user_by_name (a_username: READABLE_STRING_GENERAL): detachable CMS_TEMP_USER
 			-- User by name `a_user_name', if any.
 		do
-			Result := user_storage.temp_user_by_name (a_username.as_string_32)
+			Result := user_storage.temp_user_by_name (a_username)
 		end
 
-	temp_user_by_email (a_email: READABLE_STRING_8): detachable CMS_USER
+	temp_user_by_email (a_email: READABLE_STRING_GENERAL): detachable CMS_TEMP_USER
 			-- User by email `a_email', if any.
 		do
 			Result := user_storage.temp_user_by_email (a_email)
 		end
 
-	temp_user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
+	temp_user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_TEMP_USER
 			-- User by activation token `a_token'.
 		do
 			Result := user_storage.temp_user_by_activation_token (a_token)

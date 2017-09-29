@@ -149,23 +149,23 @@ feature -- Access: user
 			sql_finalize_query (select_user_by_password_token)
 		end
 
-	is_valid_credential (l_auth_login, l_auth_password: READABLE_STRING_32): BOOLEAN
+	is_valid_credential (a_auth_login, a_auth_password: READABLE_STRING_GENERAL): BOOLEAN
 		local
 			l_security: SECURITY_PROVIDER
 		do
-			if attached user_salt (l_auth_login) as l_hash then
-				if attached user_by_name (l_auth_login) as l_user then
+			if attached user_salt (a_auth_login) as l_hash then
+				if attached user_by_name (a_auth_login) as l_user then
 					create l_security
 					if
 						attached l_user.hashed_password as l_hashed_password and then
-					   	l_security.password_hash (l_auth_password, l_hash).is_case_insensitive_equal (l_hashed_password)
+					   	l_security.password_hash (a_auth_password, l_hash).is_case_insensitive_equal (l_hashed_password)
 					then
 						Result := True
 					else
 						write_information_log (generator + ".is_valid_credential User: wrong username or password" )
 					end
 				else
-					write_information_log (generator + ".is_valid_credential User:" + l_auth_login + "does not exist" )
+					write_information_log (generator + ".is_valid_credential User:" + a_auth_login + "does not exist" )
 				end
 			end
 		end
@@ -842,7 +842,7 @@ feature -- Change: User password recovery
 
 feature {NONE} -- Implementation: User
 
-	user_salt (a_username: READABLE_STRING_32): detachable READABLE_STRING_8
+	user_salt (a_username: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
 			-- User salt for the given user `a_username', if any.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -860,6 +860,26 @@ feature {NONE} -- Implementation: User
 				check one_row: sql_after end
 			end
 			sql_finalize_query (select_salt_by_username)
+		end
+
+	temp_user_salt (a_username: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
+			-- User salt for the given user `a_username', if any.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+			write_information_log (generator + ".temp_user_salt")
+			create l_parameters.make (1)
+			l_parameters.put (a_username, "name")
+			sql_query (select_temp_user_salt_by_username, l_parameters)
+			if not sql_after then
+				if attached sql_read_string (1) as l_salt then
+					Result := l_salt
+				end
+				sql_forth
+				check one_row: sql_after end
+			end
+			sql_finalize_query (select_temp_user_salt_by_username)
 		end
 
 	fetch_user: detachable CMS_USER
@@ -1044,6 +1064,27 @@ feature {NONE} -- User Password Recovery
 
 feature -- Acess: Temp users
 
+	is_valid_temp_user_credential (a_auth_login, a_auth_password: READABLE_STRING_GENERAL): BOOLEAN
+		local
+			l_security: SECURITY_PROVIDER
+		do
+			if attached temp_user_salt (a_auth_login) as l_hash then
+				if attached temp_user_by_name (a_auth_login) as l_user then
+					create l_security
+					if
+						attached l_user.hashed_password as l_hashed_password and then
+					   	l_security.password_hash (a_auth_password, l_hash).is_case_insensitive_equal (l_hashed_password)
+					then
+						Result := True
+					else
+						write_information_log (generator + ".is_valid_temp_user_credential User: wrong username or password" )
+					end
+				else
+					write_information_log (generator + ".is_valid_temp_user_credential User:" + a_auth_login + "does not exist" )
+				end
+			end
+		end
+
 	temp_users_count: INTEGER
 			-- Number of items users.
 		do
@@ -1059,7 +1100,7 @@ feature -- Acess: Temp users
 			sql_finalize_query (select_temp_users_count)
 		end
 
-	temp_user_by_id (a_uid: like {CMS_USER}.id; a_consumer: READABLE_STRING_GENERAL): detachable CMS_USER
+	temp_user_by_id (a_uid: like {CMS_USER}.id; a_consumer: READABLE_STRING_GENERAL): detachable CMS_TEMP_USER
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -1082,7 +1123,7 @@ feature -- Acess: Temp users
 			sql_finalize_query (l_string)
 		end
 
-	temp_user_by_name (a_name: like {CMS_USER}.name): detachable CMS_USER
+	temp_user_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_TEMP_USER
 			-- User for the given name `a_name', if any.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -1100,7 +1141,7 @@ feature -- Acess: Temp users
 			sql_finalize_query (select_temp_user_by_name)
 		end
 
-	temp_user_by_email (a_email: like {CMS_USER}.email): detachable CMS_USER
+	temp_user_by_email (a_email: READABLE_STRING_GENERAL): detachable CMS_TEMP_USER
 			-- User for the given email `a_email', if any.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -1118,7 +1159,7 @@ feature -- Acess: Temp users
 			sql_finalize_query (select_temp_user_by_email)
 		end
 
-	temp_user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
+	temp_user_by_activation_token (a_token: READABLE_STRING_GENERAL): detachable CMS_TEMP_USER
 			-- User for the given activation token `a_token', if any.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -1386,6 +1427,9 @@ feature {NONE} -- SQL select
 
 	select_temp_user_by_activation_token: STRING = "SELECT u.uid, u.name, u.password, u.salt, u.email, u.application FROM auth_temp_users as u JOIN users_activations as ua ON ua.uid = u.uid and ua.token = :token;"
 			-- Retrieve user by activation token if exist.
+
+	select_temp_user_salt_by_username: STRING = "SELECT salt FROM auth_temp_users WHERE name =:name;"
+			-- Retrieve temp user salt by username if exists.			
 
 	sql_delete_temp_user: STRING = "DELETE FROM auth_temp_users WHERE uid=:uid;"
 

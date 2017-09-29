@@ -1649,7 +1649,7 @@ feature -- Files (commands)
 		local
 			l_args: ARGUMENTS_32
 		once
-			if is_workbench and application_name.same_string ("ec") then
+			if is_workbench and (attached application_name as appname and then appname.same_string ("ec")) then
 					-- We have to launch ourself to perform a compilation that would make sense
 					-- but only if we are the `ec' application, not if we are something else.
 				create l_args

@@ -12,7 +12,7 @@ feature -- Access
 	location: detachable STRING
 			-- product's location.
 
-	files: detachable LIST [TUPLE [name: STRING; size: INTEGER_64; sha256: STRING; major: INTEGER_64; minor: INTEGER_64; revision: INTEGER_64; platform: STRING]]
+	files: detachable LIST [TUPLE [name: STRING; size: INTEGER_64; sha256: STRING; major: STRING; minor: STRING; revision: INTEGER_64; platform: STRING]]
 			-- {"name":"Eiffel_17.11_gpl_100608-linux-x86-suncc.tar.bz2", "size":86943693, "sha256":"f75121ba0f5ba39c1b5bcfc39e498aaa4363b6467fc6800f28fcdbf3be1b4369", "major":17, "minor":11, "revision":100608, "platform":"linux-x86-suncc"},
 
 
@@ -29,7 +29,7 @@ feature -- Element Change
 			location_set: location = a_location
 		end
 
-	add_element (a_element: TUPLE [name: STRING; size: INTEGER_64; sha256: STRING; major: INTEGER_64; minor: INTEGER_64; revision: INTEGER_64; platform: STRING])
+	add_element (a_element: TUPLE [name: STRING; size: INTEGER_64; sha256: STRING; major: STRING; minor: STRING; revision: INTEGER_64; platform: STRING])
 			-- Add a file element 'a_element' description to the list of files 'files'.
 		local
 			l_files: like files
@@ -38,7 +38,7 @@ feature -- Element Change
 			if l_files /= Void then
 				l_files.force (a_element)
 			else
-				create {ARRAYED_LIST [TUPLE [name: STRING; size: INTEGER_64; sha256: STRING; major: INTEGER_64; minor: INTEGER_64; revision: INTEGER_64; platform: STRING]]} l_files.make (1)
+				create {ARRAYED_LIST [TUPLE [name: STRING; size: INTEGER_64; sha256: STRING; major: STRING; minor: STRING; revision: INTEGER_64; platform: STRING]]} l_files.make (1)
 				l_files.force (a_element)
 			end
 			files := l_files
@@ -62,7 +62,7 @@ feature -- Element Change
 				attached files as l_files and then
 				not l_files.is_empty
 			then
-				Result := l_files.at (1).major.out + "." + l_files.at (1).minor.out
+				Result := l_files.at (1).major + "." + l_files.at (1).minor
 			else
 				Result := ""
 			end

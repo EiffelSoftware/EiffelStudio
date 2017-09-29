@@ -8,8 +8,12 @@ class
 
 inherit
 	CMS_MODULE
+		rename
+			module_api as eiffel_download_api
 		redefine
-			setup_hooks
+			initialize,
+			setup_hooks,
+			eiffel_download_api
 		end
 
 	CMS_HOOK_VALUE_TABLE_ALTER
@@ -31,6 +35,10 @@ inherit
 
 	SHARED_LOGGER
 
+	CMS_HOOK_RESPONSE_ALTER
+
+	CMS_ADMINISTRABLE
+
 create
 	make
 
@@ -47,6 +55,27 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: STRING = "eiffel_download"
+
+feature {CMS_EXECUTION} -- Administration
+
+	administration: EIFFEL_DOWNLOAD_MODULE_ADMINISTRATION
+		do
+			create Result.make (Current)
+		end
+
+feature {CMS_API} -- Module Initialization			
+
+	initialize (api: CMS_API)
+			-- <Precursor>
+		do
+			Precursor (api)
+			create eiffel_download_api.make (api)
+		end
+
+feature {CMS_API, CMS_MODULE} -- Access: API
+
+	eiffel_download_api: detachable EIFFEL_DOWNLOAD_API
+			-- Eventual module api.
 
 feature -- Router
 
@@ -71,13 +100,10 @@ feature -- Access: config
 
 	download_configuration: detachable DOWNLOAD_CONFIGURATION
 			-- Configuration for eiffel download.
-
-	get_download_configuration (api: CMS_API)
-			-- Get `download_configuration' value.
 		do
-			write_debug_log (generator + ".get_download_configuration")
-			if download_configuration = Void then
-				download_configuration := (create {DOWNLOAD_JSON_CONFIGURATION}).new_download_configuration (api.module_resource_location (Current, create {PATH}.make_from_string ("downloads_configuration.json")))
+			if attached eiffel_download_api as l_api then
+				l_api.get_download_configuration
+				Result := l_api.download_configuration
 			end
 		end
 
@@ -98,6 +124,7 @@ feature -- Access: config
 		end
 
 	retrieve_products (cfg: DOWNLOAD_CONFIGURATION): detachable LIST[DOWNLOAD_PRODUCT]
+			-- List of potential download products.
 		do
 			if attached cfg.products as l_products then
 				Result := l_products
@@ -108,10 +135,10 @@ feature -- Access: config
 feature -- Hooks
 
 	value_table_alter (a_value: CMS_VALUE_TABLE; a_response: CMS_RESPONSE)
+			-- <Precursor>
 		local
 			l_ua: CMS_USER_AGENT
 		do
-			get_download_configuration (a_response.api)
 			if attached download_configuration as cfg then
 				if
 					attached retrieve_product_gpl (cfg) as l_product and then
@@ -241,8 +268,6 @@ feature {NONE} -- Block view implementation
 					l_tpl_block.set_value (ic.item, ic.key)
 				end
 
-				get_download_configuration (a_response.api)
-
 				if attached download_configuration as cfg then
 					vals.force (retrieve_product_gpl (cfg), "product")
 					vals.force (retrieve_products (cfg), "products")
@@ -286,7 +311,6 @@ feature -- Handler
 			done: BOOLEAN
 		do
 			write_debug_log (generator + ".handle_download")
-			get_download_configuration (api)
 			if attached download_configuration as cfg then
 				create l_ua.make_from_string (req.http_user_agent)
 				write_debug_log (generator + ".handle_download [ User_agent: " + l_ua.user_agent  + " ]")
@@ -394,6 +418,13 @@ feature {NONE}  -- Helper
 			end
 			write_debug_log (generator + ".get_platform [ platform inferred "+  Result  + " ]")
 		end
+
+feature -- Hook
+
+	response_alter (a_response: CMS_RESPONSE)
+		do
+		end
+
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"

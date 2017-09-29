@@ -9,21 +9,26 @@ class
 
 feature -- Access
 
-	new_download_configuration (a_path: PATH): DOWNLOAD_CONFIGURATION
+	build_download_configuration (a_path: PATH; a_configuration: detachable DOWNLOAD_CONFIGURATION): DOWNLOAD_CONFIGURATION
 			-- Build a new download configuration.
 		local
 			l_parser: JSON_PARSER
+			l_conf: DOWNLOAD_CONFIGURATION
 		do
-			create Result
+			if a_configuration /= Void then
+				Result := a_configuration
+			else
+				create Result
+			end
 			if attached json_file_from (a_path) as json_file then
 				l_parser := new_json_parser (json_file)
 				l_parser.parse_content
 				if attached {JSON_OBJECT} l_parser.parsed_json_value as jv and then l_parser.is_parsed then
-					if attached {JSON_STRING} jv.item ("mirror") as l_mirror then
+					if attached {JSON_STRING} jv.item ("mirror") as l_mirror  and Result.mirror = Void then
 						Result.set_mirror (l_mirror.unescaped_string_32)
 					end
-					if attached {JSON_ARRAY} jv.item ("products") as l_products then
-						Result.set_products (new_products (l_products))
+					if attached {JSON_OBJECT} jv.item ("products") as l_products then
+						Result.add_product (new_products (l_products))
 					end
 				end
 			end
@@ -108,72 +113,63 @@ feature {NONE} -- Implemenation: Mirrors
 
 feature {NONE} -- Implemenation: Products
 
-	new_products (a_products: JSON_ARRAY): LIST[DOWNLOAD_PRODUCT]
+	new_products (a_products: JSON_OBJECT): DOWNLOAD_PRODUCT
 		local
 			l_item: DOWNLOAD_PRODUCT
 		do
-			create {ARRAYED_LIST[DOWNLOAD_PRODUCT]} Result.make (2)
-			across
-				a_products as c
-			loop
-				if attached {JSON_OBJECT} c.item as ji then
-					create l_item
-					if attached {JSON_STRING} ji.item ("id") as l_id then
-						l_item.set_id (l_id.item)
-					end
-					if attached {JSON_STRING} ji.item ("name") as l_name then
-						l_item.set_name (l_name.item)
-					end
-					if attached {JSON_STRING} ji.item ("version") as l_version then
-						l_item.set_version (l_version.item)
-					end
-					if attached {JSON_STRING} ji.item ("release") as l_release then
-						l_item.set_release (l_release.item)
-					end
-					if attached {JSON_STRING} ji.item ("date") as l_date then
-						l_item.set_date (l_date.item)
-					end
-					if attached {JSON_STRING} ji.item ("sub_directory") as l_subdirectory then
-						l_item.set_sub_directory (l_subdirectory.item)
-					end
-					if attached {JSON_STRING} ji.item ("number") as l_number then
-						l_item.set_number (l_number.item)
-					end
-					if attached {JSON_STRING} ji.item ("build") as l_build then
-						l_item.set_build (l_build.item)
-					end
-					if attached {JSON_STRING} ji.item ("icon") as l_icon then
-						l_item.set_icon (l_icon.item)
-					end
-					if
-						attached {JSON_STRING} ji.item ("public") as l_public and then
-						l_public.item.is_boolean
-					then
-						l_item.set_public (l_public.item.to_boolean)
-					end
-					if
-						attached {JSON_STRING} ji.item ("for_evaluation") as l_evaluation and then
-						l_evaluation.item.is_boolean
-					then
-						l_item.set_evaluation (l_evaluation.item.to_boolean)
-					end
-					if attached {JSON_STRING} ji.item ("mirrors") as l_mirrors then
-						l_item.set_mirrors (l_mirrors.item)
-					end
-					if
-						attached {JSON_OBJECT} ji.item ("license") as l_license and then
-						attached {JSON_STRING} l_license.item ("name") as l_name and then
-						attached {JSON_STRING} l_license.item ("url") as l_url
-					then
-						l_item.set_license ([l_name.item.as_string_32, l_url.item.as_string_32])
-					end
+			create Result
+			if attached {JSON_STRING} a_products.item ("id") as l_id then
+				Result.set_id (l_id.item)
+			end
+			if attached {JSON_STRING} a_products.item ("name") as l_name then
+				Result.set_name (l_name.item)
+			end
+			if attached {JSON_STRING} a_products.item ("version") as l_version then
+				Result.set_version (l_version.item)
+			end
+			if attached {JSON_STRING} a_products.item ("release") as l_release then
+				Result.set_release (l_release.item)
+			end
+			if attached {JSON_STRING} a_products.item ("date") as l_date then
+				Result.set_date (l_date.item)
+			end
+			if attached {JSON_STRING} a_products.item ("sub_directory") as l_subdirectory then
+				Result.set_sub_directory (l_subdirectory.item)
+			end
+			if attached {JSON_STRING} a_products.item ("number") as l_number then
+				Result.set_number (l_number.item)
+			end
+			if attached {JSON_STRING} a_products.item ("build") as l_build then
+				Result.set_build (l_build.item)
+			end
+			if attached {JSON_STRING} a_products.item ("icon") as l_icon then
+				Result.set_icon (l_icon.item)
+			end
+			if
+				attached {JSON_STRING} a_products.item ("public") as l_public and then
+				l_public.item.is_boolean
+			then
+				Result.set_public (l_public.item.to_boolean)
+			end
+			if
+				attached {JSON_STRING} a_products.item ("for_evaluation") as l_evaluation and then
+				l_evaluation.item.is_boolean
+			then
+				Result.set_evaluation (l_evaluation.item.to_boolean)
+			end
+			if attached {JSON_STRING} a_products.item ("mirrors") as l_mirrors then
+				Result.set_mirrors (l_mirrors.item)
+			end
+			if
+				attached {JSON_OBJECT} a_products.item ("license") as l_license and then
+				attached {JSON_STRING} l_license.item ("name") as l_name and then
+				attached {JSON_STRING} l_license.item ("url") as l_url
+			then
+				Result.set_license ([l_name.item.as_string_32, l_url.item.as_string_32])
+			end
 
-					if	attached {JSON_ARRAY} ji.item ("download") as l_download then
-						l_item.set_downloads (new_product_download (l_download))
-					end
-
-					Result.force (l_item)
-				end
+			if	attached {JSON_ARRAY} a_products.item ("download") as l_download then
+				Result.set_downloads (new_product_download (l_download))
 			end
 		end
 

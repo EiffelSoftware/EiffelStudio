@@ -41,7 +41,7 @@ feature -- Access: user
 		do
 		end
 
-	is_valid_credential (l_auth_login, l_auth_password: READABLE_STRING_32): BOOLEAN
+	is_valid_credential (l_auth_login, l_auth_password: READABLE_STRING_GENERAL): BOOLEAN
 		do
 		end
 
@@ -147,27 +147,31 @@ feature -- Change: User password recovery
 
 feature -- Access: Users
 
+	is_valid_temp_user_credential (l_auth_login, l_auth_password: READABLE_STRING_GENERAL): BOOLEAN
+		do
+		end
+
 	temp_users_count: INTEGER
 			-- <Precursor>
 		do
 		end
 
-	temp_user_by_id (a_uid: like {CMS_USER}.id; a_consumer_table: READABLE_STRING_GENERAL): detachable CMS_USER
+	temp_user_by_id (a_uid: like {CMS_USER}.id; a_consumer_table: READABLE_STRING_GENERAL): detachable CMS_TEMP_USER
 			-- <Precursor>
 		do
 		end
 
-	temp_user_by_name (a_name: like {CMS_USER}.name): detachable CMS_USER
+	temp_user_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_TEMP_USER
 			-- <Precursor>
 		do
 		end
 
-	temp_user_by_email (a_email: like {CMS_USER}.email): detachable CMS_USER
+	temp_user_by_email (a_email: READABLE_STRING_GENERAL): detachable CMS_TEMP_USER
 			-- <Precursor>
 		do
 		end
 
-	temp_user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
+	temp_user_by_activation_token (a_token: READABLE_STRING_GENERAL): detachable CMS_TEMP_USER
 			-- <Precursor>
 		do
 		end
@@ -189,7 +193,6 @@ feature -- Temp Users
 			-- <Precursor>
 		do
   		end
-
 
 	remove_activation (a_token: READABLE_STRING_GENERAL)
 			-- <Precursor>.

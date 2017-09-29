@@ -108,13 +108,6 @@ feature -- CMS response
 			end
 		end
 
-feature -- Webapi processing
-
-	process_webapi_response ()
-		do
-
-		end
-
 feature -- Helpers
 
 	extend_text_field (a_name: READABLE_STRING_8; a_text: detachable READABLE_STRING_GENERAL)

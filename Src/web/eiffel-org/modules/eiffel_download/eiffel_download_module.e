@@ -118,7 +118,7 @@ feature -- Access: config
 	retrieve_product_gpl (cfg: DOWNLOAD_CONFIGURATION): detachable DOWNLOAD_PRODUCT
 			-- Get product.
 		do
-			if attached cfg.products as l_products then
+			if attached retrieve_products (cfg)  as l_products then
 				Result := l_products.at (1)
 			end
 		end
@@ -126,8 +126,19 @@ feature -- Access: config
 	retrieve_products (cfg: DOWNLOAD_CONFIGURATION): detachable LIST[DOWNLOAD_PRODUCT]
 			-- List of potential download products.
 		do
+			Result := products_sorted (cfg)
+		end
+
+	products_sorted (cfg: DOWNLOAD_CONFIGURATION): detachable LIST[DOWNLOAD_PRODUCT]
+		local
+			l_sort: QUICK_SORTER [DOWNLOAD_PRODUCT]
+			l_comp: COMPARABLE_COMPARATOR [DOWNLOAD_PRODUCT]
+		do
 			if attached cfg.products as l_products then
 				Result := l_products
+				create l_comp
+				create l_sort.make (l_comp)
+				l_sort.reverse_sort (Result)
 			end
 		end
 

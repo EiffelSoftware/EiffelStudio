@@ -6,6 +6,10 @@ note
 class
 	DOWNLOAD_PRODUCT
 
+inherit
+
+	COMPARABLE
+
 feature -- Access
 
 	blerb: detachable READABLE_STRING_32
@@ -35,7 +39,6 @@ feature -- Access
 	release: detachable READABLE_STRING_32
 			-- Product release.
 
-
 	version: detachable READABLE_STRING_32
 			-- Product version
 
@@ -54,8 +57,6 @@ feature -- Access
 
 	downloads: detachable LIST [DOWNLOAD_PRODUCT_OPTIONS]
 			-- Possible list of download options.
-
-
 
 feature -- Element change
 
@@ -174,6 +175,23 @@ feature -- Element change
 	set_downloads (a_downloads: like downloads)
 		do
 			downloads := a_downloads
+		end
+
+
+feature -- Comparision
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- Is current object less than `other'?
+		do
+			if
+				attached number as l_number and then
+				attached other.number as l_other_number and then
+		 		l_number < l_other_number
+			then
+				Result := True
+			else
+			   Result := False
+			end
 		end
 
 end

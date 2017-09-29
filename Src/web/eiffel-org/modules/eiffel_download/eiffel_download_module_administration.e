@@ -78,16 +78,15 @@ feature -- Handle
 			end
 			if attached l_tmp then
 				if attached process_uploaded_file (l_tmp) as l_uploaded then
-					-- save the file
-					-- send a valid response
+						-- save the file
+						-- send a valid response
+						-- TODO extract code to save_file with retry a few times in case we can save it.
 					create l_dir.make_with_path (a_api.module_location_by_name ("eiffel_download"))
-						if l_dir.exists then
-							create  {RAW_FILE}l_file.make_with_path (l_dir.path.extended ("downloads_configuration_" + l_uploaded.number + ".json"))
-							l_file.open_write
-							l_file.put_string (l_uploaded.to_json_representation)
-							l_file.flush
-							l_file.close
-						end
+					if l_dir.exists then
+						create {RAW_FILE} l_file.make_open_write (l_dir.path.extended ("downloads_configuration_" + l_uploaded.number + ".json").name.out)
+						l_file.put_string (l_uploaded.to_json_representation)
+						l_file.close
+					end
 					write_debug_log (generator + ".handle_process_update_admin:  Success")
 					r.values.force (False, "has_error")
 					vars.put ("False", "has_error")
@@ -233,6 +232,29 @@ feature {NONE} -- Implementation
 		do
 			if attached a_uploaded_file.tmp_path as l_path then
 				Result := (create {EIFFEL_UPLOAD_JSON_CONFIGURATION}).upload_json_configuration (l_path)
+				delete_uploaded_file (l_path)
 			end
+
+		end
+
+	delete_uploaded_file (p: PATH)
+			-- Remove uploaded temporal file at path `p'.
+		local
+			f: RAW_FILE
+			retried: BOOLEAN
+		do
+			if retried then
+				write_error_log (generator + {STRING_32} "Can not delete file %"" + p.name + "%"")
+			else
+				create f.make_with_path (p)
+				if f.exists then
+					f.delete
+				else
+						-- Not considered as failure.
+				end
+			end
+		rescue
+			retried := True
+			retry
 		end
 end

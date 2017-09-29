@@ -12,11 +12,11 @@ feature -- Access
 	location: detachable STRING
 			-- product's location.
 
-	files: detachable LIST [TUPLE [name: STRING; size: INTEGER_64; sha256: STRING; major: STRING; minor: STRING; revision: INTEGER_64; platform: STRING]]
-			-- {"name":"Eiffel_17.11_gpl_100608-linux-x86-suncc.tar.bz2", "size":86943693, "sha256":"f75121ba0f5ba39c1b5bcfc39e498aaa4363b6467fc6800f28fcdbf3be1b4369", "major":17, "minor":11, "revision":100608, "platform":"linux-x86-suncc"},
-
+	files: detachable LIST [TUPLE [name: STRING; size: INTEGER_64; sha256: STRING; version: STRING; major: STRING; minor: STRING; revision: INTEGER_64; platform: STRING]]
+			-- {"name":"Eiffel_14.05_gpl_95417-freebsd-x86-64.tar.bz2", "size":88997196, "sha256":"8013063380a1faae30e0bc429f3ad1423ea8470045dfa57d0f6f83d901e3982e", "version":"14_05", "major":"14", "minor":"05", "revision":95417, "platform":"freebsd-x86-64"},
 
 	id:  STRING = "eiffelstudio"
+
     name: STRING = "EiffelStudio"
 
 feature -- Element Change
@@ -29,7 +29,7 @@ feature -- Element Change
 			location_set: location = a_location
 		end
 
-	add_element (a_element: TUPLE [name: STRING; size: INTEGER_64; sha256: STRING; major: STRING; minor: STRING; revision: INTEGER_64; platform: STRING])
+	add_element (a_element: TUPLE [name: STRING; size: INTEGER_64; sha256: STRING; version: STRING; major: STRING; minor: STRING; revision: INTEGER_64; platform: STRING])
 			-- Add a file element 'a_element' description to the list of files 'files'.
 		local
 			l_files: like files
@@ -38,14 +38,14 @@ feature -- Element Change
 			if l_files /= Void then
 				l_files.force (a_element)
 			else
-				create {ARRAYED_LIST [TUPLE [name: STRING; size: INTEGER_64; sha256: STRING; major: STRING; minor: STRING; revision: INTEGER_64; platform: STRING]]} l_files.make (1)
+				create {ARRAYED_LIST [TUPLE [name: STRING; size: INTEGER_64; sha256: STRING; version: STRING; major: STRING; minor: STRING; revision: INTEGER_64; platform: STRING]]} l_files.make (1)
 				l_files.force (a_element)
 			end
 			files := l_files
 		end
 
 	version: STRING
-		once
+		do
 			if
 				attached files as l_files and then
 				not l_files.is_empty
@@ -57,17 +57,16 @@ feature -- Element Change
 		end
 
 	number: STRING
-		once
+		do
 			if
 				attached files as l_files and then
 				not l_files.is_empty
 			then
-				Result := l_files.at (1).major + "." + l_files.at (1).minor
+				Result := l_files.at (1).version
 			else
 				Result := ""
 			end
 		end
-
 
 	build: STRING
 		do
@@ -80,7 +79,6 @@ feature -- Element Change
 				Result := ""
 			end
 		end
-
 
 	to_json_representation: STRING_8
 		do

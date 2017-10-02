@@ -210,7 +210,7 @@ feature -- Export data
 		local
 			mng: like manager
 			pg: WIKI_BOOK_PAGE
-			d,sd: DIRECTORY
+			d: DIRECTORY
 			xhtml_vis: WDOCS_WIKI_XHTML_GENERATOR
 			f: RAW_FILE
 			l_xhtml: STRING
@@ -266,6 +266,7 @@ feature -- Export data
 					create f.make_with_path (a_export_ctx.location.extended (module.name).extended (mng.version_id).extended ("index").appended_with_extension ("html"))
 					f.create_read_write
 					f.put_string ("<h1>Documentation</h1><ul>%N")
+
 					across
 						mng.book_names as ic
 					loop
@@ -349,7 +350,6 @@ feature -- Export data
 	copy_directory_to (a_from: PATH; a_to: PATH; rec: BOOLEAN)
 		local
 			d: DIRECTORY
-			p,to: PATH
 			f: RAW_FILE
 			fut: FILE_UTILITIES
 		do

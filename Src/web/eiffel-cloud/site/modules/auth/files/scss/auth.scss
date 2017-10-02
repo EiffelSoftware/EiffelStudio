@@ -1,0 +1,37 @@
+ul.cms-temp-users {
+	
+	list-style-type: none;
+	padding: 3px 3px 3px 3px;
+	border: solid 1px #ccc;
+
+	li{
+		border-top: dotted 1px #ccc;
+		&:first-child {
+			border-top: none;
+		}
+	}
+
+	li.cms_temp_user {
+
+		ul.cms_temp_user_details {
+			list-style-type: none;
+			padding: 3px 3px 3px 3px;
+			border: solid 1px #ccc;
+			
+			li{
+				border-top: dotted 1px #ccc;
+				&:first-child {
+					border-top: none;
+				}
+			}
+			li.cms_temp_user_detail_information::before{
+				content: "[personal information] "
+			}
+			li.cms_temp_user_detail_email::before{
+				content: "[email] "
+			}
+		}		
+	}
+}
+
+

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="testing" uuid="962D1268-FD50-4F0D-98E6-CD23F9CE52E9">
+	<target name="testing">
+		<root class="TEST_ES_CLOUD" feature="make"/>
+		<setting name="console_application" value="false"/>
+		<capability>
+			<void_safety support="all"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
+		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\web\authentication\http_authorization\http_authorization.ecf"/>
+		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client.ecf"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>
+		<cluster name="src" location="src\" recursive="true"/>
+	</target>
+</system>

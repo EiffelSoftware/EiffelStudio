@@ -1,0 +1,20 @@
+ul.cms-nodes {
+  list-style-type: none;
+  padding: 3px 3px 3px 3px;
+  border: solid 1px #ccc;
+}
+ul.cms-nodes li {
+  border-top: dotted 1px #ccc;
+}
+ul.cms-nodes li:first-child {
+  border-top: none;
+}
+ul.cms-nodes li span.author, ul.cms-nodes li span.info {
+  float: right;
+}
+ul.cms-nodes li.cms_type_page a::before {
+  content: "[page] ";
+}
+ul.cms-nodes li.cms_type_blog a::before {
+  content: "[blog] ";
+}

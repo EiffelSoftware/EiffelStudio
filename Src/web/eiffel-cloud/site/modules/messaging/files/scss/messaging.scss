@@ -1,0 +1,18 @@
+.messaging-box {
+	fieldset {
+		display: flex; 
+		flex-wrap: wrap;
+		align-items: flex-start;
+		div {
+			width: 300px;
+		}
+
+		overflow:scroll; 
+		height:50ex;
+		line-height: 2.5ex;
+		input[type="checkbox"] {
+			margin-right: 5px;
+			margin-left: 3px;
+		}
+	}
+}

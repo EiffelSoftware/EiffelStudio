@@ -1,0 +1,28 @@
+ul.cms-temp-users {
+  list-style-type: none;
+  padding: 3px 3px 3px 3px;
+  border: solid 1px #ccc;
+}
+ul.cms-temp-users li {
+  border-top: dotted 1px #ccc;
+}
+ul.cms-temp-users li:first-child {
+  border-top: none;
+}
+ul.cms-temp-users li.cms_temp_user ul.cms_temp_user_details {
+  list-style-type: none;
+  padding: 3px 3px 3px 3px;
+  border: solid 1px #ccc;
+}
+ul.cms-temp-users li.cms_temp_user ul.cms_temp_user_details li {
+  border-top: dotted 1px #ccc;
+}
+ul.cms-temp-users li.cms_temp_user ul.cms_temp_user_details li:first-child {
+  border-top: none;
+}
+ul.cms-temp-users li.cms_temp_user ul.cms_temp_user_details li.cms_temp_user_detail_information::before {
+  content: "[personal information] ";
+}
+ul.cms-temp-users li.cms_temp_user ul.cms_temp_user_details li.cms_temp_user_detail_email::before {
+  content: "[email] ";
+}

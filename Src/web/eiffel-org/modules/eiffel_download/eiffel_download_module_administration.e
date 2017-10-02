@@ -50,7 +50,6 @@ feature -- Handle
 	handle_update_download_admin (a_api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
-			l_html_upload: STRING
 		do
 			write_debug_log (generator + ".handle_update_download_admin")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_api)
@@ -196,7 +195,6 @@ feature -- Hook
 				--  Get block view update object identified by `a_block_id' and associate with `a_response'.
 		local
 			l_tpl_block: detachable CMS_SMARTY_TEMPLATE_BLOCK
-			vals: CMS_VALUE_TABLE
 			res: PATH
 			p: detachable PATH
 		do

@@ -1,0 +1,26 @@
+ul.taxonomy {
+  font-size: 80%;
+  list-style-type: none;
+  font-style: italic;
+  margin: 0;
+}
+ul.taxonomy li {
+  padding: 2px;
+  margin-right: 3px;
+  display: inline-block;
+  border: none;
+}
+ul.taxonomy li a:hover {
+  text-decoration: none;
+}
+ul.taxonomy li:hover {
+  padding: 1px;
+  border-top: solid 1px #66f;
+  border-bottom: solid 1px #66f;
+  background-color: #ddf;
+}
+
+table.taxonomy td {
+  border: solid 1px #ccc;
+  padding: 2px;
+}

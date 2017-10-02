@@ -1,0 +1,63 @@
+.uploaded-files {
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		border: 1px solid black;
+
+		th {
+			padding: 3px 0 3px 5px;
+		}
+
+		td {
+			padding: 3px 0 3px 5px;
+		}
+	}
+
+	a.button{
+		color: black;
+		text-decoration: none;
+		border: solid 1px #999;
+		background-color: #ddd;
+		padding: 2px 4px 2px 4px;
+		&:hover {
+			color: black;
+			border: solid 1px #06f;
+			background-color: #cff;
+		}
+	}
+}
+
+.upload-files {
+	.center {
+		text-align: center;
+		padding: 10px;
+	}
+	a.button{
+		margin: auto;
+		width: 100px;
+
+		color: black;
+		text-decoration: none;
+		border: solid 1px #999;
+		background-color: #ddd;
+		padding: 2px 4px 2px 4px;
+		&:hover {
+			color: black;
+			border: solid 1px #06f;
+			background-color: #cff;
+		}
+	}
+}
+
+
+/******************* Drop Zone *******************/
+
+.dropzone {
+	width: 100%;
+	border: 2px dashed blue;
+	border-radius: 3px;
+	text-align: center;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+

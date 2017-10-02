@@ -1,0 +1,32 @@
+{
+	"database": {
+		"datasource": {
+			"--driver-": "mysql",
+			"driver": "sqlite3",
+			"environment": "sqlite",
+			"-environment": "mysql"
+		},
+		"environments": {
+			"sqlite": {
+				"connection_string":"Driver=SQLite3;Database=./site/database.sqlite;LongNames=0;Timeout=1000;NoTXN=0;SyncPragma=NORMAL;StepAPI=0;"
+			},
+			"mysql": {
+				"connection_string":"Driver=mysql;Server=localhost;Port=3306;Database=roc;Uid=root;Pwd="
+			},
+			"development": {
+				"connection_string":"Server=localhost;Port=3306;Database=roc;Uid=root;Pwd=;"
+				 },
+			"production": {
+				"connection_string":""
+			}
+		}
+	},
+	"smtp": {
+		"server": "localhost"
+		},
+	"logger": { 
+			"level":"DEBUG",
+			"type":"stderr",
+			"backup_count":"4"
+		}
+}

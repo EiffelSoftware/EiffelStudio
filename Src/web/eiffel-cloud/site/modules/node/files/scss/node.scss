@@ -1,0 +1,22 @@
+ul.cms-nodes {
+	
+	list-style-type: none;
+	padding: 3px 3px 3px 3px;
+	border: solid 1px #ccc;
+	li{
+		border-top: dotted 1px #ccc;
+		&:first-child {
+			border-top: none;
+		}
+		span.author, span.info {
+			float: right;
+		}
+	}
+	li.cms_type_page a::before {
+		content: "[page] ";
+	}
+	li.cms_type_blog a::before {
+		content: "[blog] ";
+	}
+}
+

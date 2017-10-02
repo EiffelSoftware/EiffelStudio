@@ -152,10 +152,8 @@ feature -- Access
 			if l_result = Void then
 				create l_result
 				internal_automation := l_result
-				Result := l_result
-			else
-				Result := l_result
 			end
+			Result := l_result
 		end
 
 feature -- Status report

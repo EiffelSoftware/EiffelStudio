@@ -51,6 +51,9 @@
 		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension.ecf" readonly="false"/>
 	</target>
 	<target name="demo_any" extends="common">
+		<capability>
+			<concurrency support="scoop" use="scoop"/>
+		</capability>
 		<library name="any_launcher" location="..\..\launcher\any.ecf" readonly="false"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>

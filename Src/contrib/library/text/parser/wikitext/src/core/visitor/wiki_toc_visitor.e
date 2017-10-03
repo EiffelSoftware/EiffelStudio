@@ -22,9 +22,13 @@ feature {NONE} -- Initialization
 	make
 		do
 			create all_sections.make (0)
+			create root_section_node.make (Void)
+			last_section_node := root_section_node
 		end
 
 feature -- Access
+
+	root_section_node: WIKI_SECTION_NODE
 
 	sections: ARRAYED_LIST [WIKI_SECTION]
 		do
@@ -57,6 +61,8 @@ feature -- Settings
 			-- Relevant, only after call to `import_settings_from'.
 
 feature {NONE} -- Settings
+
+	last_section_node: WIKI_SECTION_NODE
 
 	all_sections: ARRAYED_LIST [WIKI_SECTION]
 
@@ -100,12 +106,21 @@ feature -- Element change
 			auto_toc_disabled := False
 			has_toc_location := False
 			depth_limit := initial_depth_limit
+			create root_section_node.make (Void)
+			last_section_node := root_section_node
 		end
 
 feature -- Visit
 
 	visit_section (a_section: WIKI_SECTION)
+		local
+			t: WIKI_SECTION_NODE
 		do
+			t := last_section_node.item_for_section (a_section)
+			if t /= Void then
+				last_section_node := t
+				t.extend_section (a_section)
+			end
 			all_sections.force (a_section)
 			Precursor (a_section)
 		end
@@ -156,7 +171,7 @@ feature -- Visit
 
 
 note
-	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2017, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

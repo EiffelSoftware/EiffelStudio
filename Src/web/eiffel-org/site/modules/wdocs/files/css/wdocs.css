@@ -7,15 +7,20 @@
   line-height: 1.2em;
   border: solid 1px #ccc;
   font-size: smaller;
+  float: right;
+  clear: right;
+  margin-top: 0px;
+  margin-left: 2em;
+  list-style-position: inside;
 }
 .wiki-toc span.title {
   font-weight: bold;
+  display: block;
+  text-align: center;
+  margin-bottom: 1ex;
 }
 .wiki-toc a {
   text-decoration: none;
-}
-.wiki-toc ol {
-  padding-left: 20px;
 }
 .wiki-toc.horizontal {
   padding: 5px;
@@ -98,6 +103,9 @@
   margin: 10px 22px;
   font-size: 2em;
   vertical-align: middle;
+}
+.wikipage .tpl, .wikipage h1, .wikipage h2, .wikipage h3 {
+  overflow: hidden;
 }
 
 div#content.doc ul.message {

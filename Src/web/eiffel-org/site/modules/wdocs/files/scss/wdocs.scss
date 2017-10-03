@@ -13,8 +13,6 @@
 
 	float: right;
 	clear: right;
-	margin-top: 0px;
-	margin-left: 2em;
 	list-style-position: inside;
 
 	span.title {
@@ -35,6 +33,14 @@
 		}
 	}
 }
+
+/* Override default margins of Table of contents */
+
+div#content .wiki-toc {
+	margin-top: 0px;
+	margin-left: 2em;
+}
+
 .wikipage {
 	p.tpl, div.tpl {
 		margin: 10px 50px 10px 10px;

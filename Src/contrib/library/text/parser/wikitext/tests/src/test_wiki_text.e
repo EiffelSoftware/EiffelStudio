@@ -178,27 +178,27 @@ __TOC__
 end
 }")
 			l_expected_output := "{
-<div class="wikipage"><p>begin
-
+<div class="wikipage">
 <ol class="wiki-toc"><a name="toc"></a><span class="title">Contents</span>
-	<li><a href="#One">One</a></li>
-	<ol>
-		<li><a href="#one.1">one.1</a></li>
-		<li><a href="#one.2">one.2</a></li>
-		<li><a href="#one.3">one.3</a></li>
+<li><a href="#One">One</a><ol>
+	<li><a href="#one.1">one.1</a></li>
+	<li><a href="#one.2">one.2</a></li>
+	<li><a href="#one.3">one.3</a></li>
 	</ol>
-	<li><a href="#Two">Two</a></li>
-	<ol>
-		<li><a href="#two.1">two.1</a></li>
-		<li><a href="#two.2">two.2</a></li>
+</li>
+<li><a href="#Two">Two</a><ol>
+	<li><a href="#two.1">two.1</a></li>
+	<li><a href="#two.2">two.2</a></li>
 	</ol>
-	<li><a href="#Three">Three</a></li>
-	<ol>
-		<li><a href="#three.1">three.1</a></li>
-		<li><a href="#three.2">three.2</a></li>
-		<li><a href="#three.3">three.3</a></li>
+</li>
+<li><a href="#Three">Three</a><ol>
+	<li><a href="#three.1">three.1</a></li>
+	<li><a href="#three.2">three.2</a></li>
+	<li><a href="#three.3">three.3</a></li>
 	</ol>
+</li>
 </ol>
+<p>begin
 
 </p>
 

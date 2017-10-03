@@ -299,6 +299,7 @@ feature -- Processing
 		local
 			it: WIKI_TOC_VISITOR
 			l_sections: LIST [WIKI_SECTION]
+			l_section_node: WIKI_SECTION_NODE
 			curr, prev: NATURAL_8
 			l_is_horizontal: BOOLEAN
 			l_list_tag: STRING
@@ -313,8 +314,9 @@ feature -- Processing
 					l_is_horizontal := it.is_horizontal
 				end
 				l_sections := it.sections
+				l_section_node := it.root_section_node
 				if
-					not l_sections.is_empty and then
+					not l_section_node.is_empty and then
 					(
 							-- TOC is automatically generated for each structure with at least 4 headinds, and if no __NOTOC__ is set.
 						not is_auto_toc
@@ -332,64 +334,61 @@ feature -- Processing
 						output ("<a name=%"toc%"></a>")
 					end
 					output ("<span class=%"title%">Contents</span>%N")
-					indent
+--					indent
 					curr := 1
 					prev := curr
-					across
-						l_sections as ic
-					loop
-						if attached {WIKI_SECTION} ic.item as w_section then
-							curr := w_section.level
-							if curr = prev then
-							elseif curr > prev then
-								from
-								until
-									prev = curr
-								loop
-									output_indentation
-									output ("<" + l_list_tag + ">%N")
-									indent
-									prev := prev + 1
-								end
-							else
-								from
-								until
-									prev = curr
-								loop
-									exdent
-									output_indentation
-									output ("</" + l_list_tag + ">%N")
-									prev := prev - 1
-								end
-							end
-							output_indentation
-							output ("<li>")
-							if attached w_section.text as l_text then
-								output ("<a href=%"#" + anchor_name (l_text.text, True) + "%">")
-								output (l_text.text)
-								output ("</a>")
-							else
-								output ("...")
-							end
-							output ("</li>%N")
-						end
-						prev := curr
-					end
-					curr := 1
-					if prev > curr then
-						from
-						until
-							prev = curr
+					if attached l_section_node.items as l_items and then not l_items.is_empty then
+						across
+							l_items as ic
 						loop
-							exdent
-							output_indentation
-							output ("</" + l_list_tag + ">%N")
-							prev := prev - 1
+							output_section_node (ic.item, l_list_tag)
 						end
 					end
-					exdent
+--					exdent
 					output ("</" + l_list_tag + ">%N")
 				end
+			end
+		end
+
+	output_section_node (a_node: WIKI_SECTION_NODE; a_list_tag: STRING)
+		do
+			if
+				a_node.section = Void and then
+			 	attached a_node.items as l_items and then not l_items.is_empty
+			then
+				across
+					l_items as ic
+				loop
+					output_section_node (ic.item, a_list_tag)
+				end
+			else
+				output_indentation
+				output ("<li>")
+				if
+					attached a_node.section as w_section and then
+					attached w_section.text as l_text
+				then
+					output ("<a href=%"#" + anchor_name (l_text.text, True) + "%">")
+					l_text.process (Current)
+--					output (l_text.text)
+					output ("</a>")
+				else
+--					output ("...")
+				end
+				if attached a_node.items as l_items and then not l_items.is_empty then
+--					output_indentation
+					output ("<" + a_list_tag + ">%N")
+					indent
+					across
+						l_items as ic
+					loop
+						output_section_node (ic.item, a_list_tag)
+					end
+					output_indentation
+					output ("</" + a_list_tag + ">%N")
+					exdent
+				end
+				output ("</li>%N")
 			end
 		end
 

@@ -14,5 +14,6 @@
   margin: 0;
   border: none;
   border-bottom: dotted 1px #ddd;
+  border-radius: 4px;
   background-color: #efefef;
 }

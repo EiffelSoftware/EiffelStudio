@@ -9,8 +9,6 @@
   font-size: smaller;
   float: right;
   clear: right;
-  margin-top: 0px;
-  margin-left: 2em;
   list-style-position: inside;
 }
 .wiki-toc span.title {
@@ -31,6 +29,12 @@
 }
 .wiki-toc.horizontal li::before {
   content: "| ";
+}
+
+/* Override default margins of Table of contents */
+div#content .wiki-toc {
+  margin-top: 0px;
+  margin-left: 2em;
 }
 
 .wikipage p.tpl, .wikipage div.tpl {

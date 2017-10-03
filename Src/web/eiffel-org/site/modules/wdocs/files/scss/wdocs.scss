@@ -36,9 +36,11 @@
 
 /* Override default margins of Table of contents */
 
-div#content .wiki-toc {
-	margin-top: 0px;
-	margin-left: 2em;
+div#content {
+	.wiki-toc {
+		margin-top: 0px;
+		margin-left: 2em;
+	}
 }
 
 .wikipage {
@@ -116,7 +118,7 @@ div#content .wiki-toc {
 		vertical-align:middle;
 	}
 
-	.tpl, h1, h2, h3 {
+	.tpl, h1, h2, h3, code {
 		overflow: hidden;
 	}
 }

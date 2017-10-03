@@ -108,7 +108,7 @@ div#content .wiki-toc {
   font-size: 2em;
   vertical-align: middle;
 }
-.wikipage .tpl, .wikipage h1, .wikipage h2, .wikipage h3 {
+.wikipage .tpl, .wikipage h1, .wikipage h2, .wikipage h3, .wikipage code {
   overflow: hidden;
 }
 

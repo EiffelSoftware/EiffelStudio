@@ -10,14 +10,21 @@
 
 	border: solid 1px #ccc;
 	font-size: smaller;
+
+	float: right;
+	clear: right;
+	margin-top: 0px;
+	margin-left: 2em;
+	list-style-position: inside;
+
 	span.title {
 		font-weight: bold;
+		display: block;
+		text-align: center;
+		margin-bottom: 1ex;
 	}
 	a {
 		text-decoration: none;
-	}
-	ol {
-		padding-left: 20px;
 	}
 	&.horizontal {
 		padding: 5px;
@@ -101,6 +108,10 @@
 		margin:10px 22px;
 		font-size:2em;
 		vertical-align:middle;
+	}
+
+	.tpl, h1, h2, h3 {
+		overflow: hidden;
 	}
 }
 

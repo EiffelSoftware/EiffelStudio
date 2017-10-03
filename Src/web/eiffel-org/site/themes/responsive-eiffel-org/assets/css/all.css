@@ -4868,7 +4868,7 @@ div.container {
 /* line 96, ../scss/all.scss */
 #content h1 {
   color: #1f3d4d;
-  margin: 0 0 35px;
+  margin: 1em 0 35px;
   letter-spacing: 2px;
   font: 36px/36px "museo_slab500", Arial, Helvetica, sans-serif;
 }

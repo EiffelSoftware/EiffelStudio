@@ -20,6 +20,7 @@
 
 body, body.page {
 	background: #0AA694 url(../images/bg-head.jpg);
+	font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif; 
 }
 
 .rss-block, #content{
@@ -142,6 +143,11 @@ div.container{
 	//@include mask;
 	font-size: $base-footer-size;
 	color: $footer-text-color;
+}
+
+a {
+	color: #5082D9;
+	text-decoration: none;
 }
 
 

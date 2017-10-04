@@ -939,6 +939,14 @@ feature -- Setting
 			is_stable_set: is_stable = v
 		end
 
+	set_is_instance_free (v: BOOLEAN)
+			-- Set `is_instance_free` to `v`.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (v, is_instance_free_mask)
+		ensure
+			is_instance_free_set: is_instance_free = v
+		end
+
 	set_is_hidden_in_debugger_call_stack (v: BOOLEAN)
 			-- Set `is_hidden_in_debugger_call_stack' to `v'.
 		do
@@ -1046,6 +1054,7 @@ feature -- Incrementality
 				and then is_object_relative_once = other.is_object_relative_once
 				and then is_constant = other.is_constant
 				and then is_stable = other.is_stable
+				and then is_instance_free = other.is_instance_free
 				and then is_transient = other.is_transient
 				and then alias_name_id = other.alias_name_id
 				and then has_convert_mark = other.has_convert_mark
@@ -1178,10 +1187,13 @@ end
 						is_process_relative = other.is_process_relative and then
 						is_object_relative_once = other.is_object_relative_once
 
-				-- Of the same stability
+				-- Of the same stability.
 			Result := Result and then is_stable = other.is_stable
 
-				-- Of the same volatility
+				-- Of the same use of current object.
+			Result := Result and then is_instance_free = other.is_instance_free
+
+				-- Of the same volatility.
 			Result := Result and then is_transient = other.is_transient
 		end
 
@@ -1368,6 +1380,12 @@ feature -- Conveniences
 			-- (Usually applies to queries.)
 		do
 			Result := feature_flags & is_stable_mask = is_stable_mask
+		end
+
+	is_instance_free: BOOLEAN
+			-- Is feature instance-free, i.e. does not access "Current" and attributes?
+		do
+			Result := feature_flags & is_instance_free_mask /= 0
 		end
 
 	is_hidden_in_debugger_call_stack: BOOLEAN
@@ -3058,6 +3076,7 @@ feature -- Replication
 			other.set_has_convert_mark (has_convert_mark)
 			other.set_has_replicated_ast (has_replicated_ast)
 			other.set_is_stable (is_stable)
+			other.set_is_instance_free (is_instance_free)
 			other.set_is_hidden_in_debugger_call_stack (is_hidden_in_debugger_call_stack)
 			other.set_body_index (body_index)
 			other.set_is_type_evaluation_delayed (is_type_evaluation_delayed)
@@ -3417,9 +3436,46 @@ feature -- Api creation
 			end
 		end
 
+feature {FEATURE_I} -- Feature flags
+
+	is_frozen_mask: NATURAL_64 =					0x0000_0001
+	is_origin_mask: NATURAL_64 =					0x0000_0002
+	is_empty_mask: NATURAL_64 =						0x0000_0004
+	is_infix_mask: NATURAL_64 =						0x0000_0008
+	is_prefix_mask: NATURAL_64 =					0x0000_0010
+	is_require_else_mask: NATURAL_64 =				0x0000_0020
+	is_ensure_then_mask: NATURAL_64 =				0x0000_0040
+	has_precondition_mask: NATURAL_64 =				0x0000_0080
+	has_postcondition_mask: NATURAL_64 =			0x0000_0100
+	is_bracket_mask: NATURAL_64 =					0x0000_0200
+	is_binary_mask: NATURAL_64 =					0x0000_0400
+	is_unary_mask: NATURAL_64 =						0x0000_0800
+	has_convert_mark_mask: NATURAL_64 =				0x0000_1000
+	has_property_mask: NATURAL_64 =					0x0000_2000
+	has_property_getter_mask: NATURAL_64 =			0x0000_4000
+	has_property_setter_mask: NATURAL_64 =			0x0000_8000
+	is_fake_inline_agent_mask: NATURAL_64 =			0x0001_0000
+	has_rescue_clause_mask: NATURAL_64 =			0x0002_0000
+	is_export_status_none_mask: NATURAL_64 =		0x0004_0000
+	has_function_origin_mask: NATURAL_64 =			0x0008_0000 -- Used in ATTRIBUTE_I
+	has_replicated_ast_mask: NATURAL_64 =			0x0010_0000
+	has_body_mask: NATURAL_64 =						0x0020_0000 -- Used in ATTRIBUTE_I
+	is_replicated_directly_mask: NATURAL_64 = 		0x0040_0000
+	from_non_conforming_parent_mask: NATURAL_64 = 	0x0080_0000
+	is_selected_mask: NATURAL_64 = 					0x0100_0000
+	is_stable_mask: NATURAL_64 = 					0x0200_0000 -- Used in ATTRIBUTE_I
+	is_transient_mask: NATURAL_64 = 				0x0400_0000 -- Used in ATTRIBUTE_I
+	is_hidden_mask: NATURAL_64 = 					0x0800_0000 -- Used in ATTRIBUTE_I
+	is_type_evaluation_delayed_mask: NATURAL_64 =	0x1000_0000
+	has_false_postcondition_mask: NATURAL_64 =      0x2000_0000
+	is_hidden_in_debugger_call_stack_mask: NATURAL_64 = 0x4000_0000
+	is_parentheses_mask: NATURAL_64 =					0x8000_0000
+	is_instance_free_mask: NATURAL_64 =				0x1_0000_0000
+			-- Mask used for each feature property.
+
 feature {FEATURE_I} -- Implementation
 
-	feature_flags: NATURAL_32
+	feature_flags: NATURAL_64
 			-- Property of Current feature, i.e. frozen,
 			-- infix, origin, prefix, selected...
 
@@ -3429,40 +3485,6 @@ feature {FEATURE_I} -- Implementation
 		ensure
 			non_void_result: Result /= Void
 		end
-
-	is_frozen_mask: NATURAL_32 =					0x0000_0001
-	is_origin_mask: NATURAL_32 =					0x0000_0002
-	is_empty_mask: NATURAL_32 =						0x0000_0004
-	is_infix_mask: NATURAL_32 =						0x0000_0008
-	is_prefix_mask: NATURAL_32 =					0x0000_0010
-	is_require_else_mask: NATURAL_32 =				0x0000_0020
-	is_ensure_then_mask: NATURAL_32 =				0x0000_0040
-	has_precondition_mask: NATURAL_32 =				0x0000_0080
-	has_postcondition_mask: NATURAL_32 =			0x0000_0100
-	is_bracket_mask: NATURAL_32 =					0x0000_0200
-	is_binary_mask: NATURAL_32 =					0x0000_0400
-	is_unary_mask: NATURAL_32 =						0x0000_0800
-	has_convert_mark_mask: NATURAL_32 =				0x0000_1000
-	has_property_mask: NATURAL_32 =					0x0000_2000
-	has_property_getter_mask: NATURAL_32 =			0x0000_4000
-	has_property_setter_mask: NATURAL_32 =			0x0000_8000
-	is_fake_inline_agent_mask: NATURAL_32 =			0x0001_0000
-	has_rescue_clause_mask: NATURAL_32 =			0x0002_0000
-	is_export_status_none_mask: NATURAL_32 =		0x0004_0000
-	has_function_origin_mask: NATURAL_32 =			0x0008_0000 -- Used in ATTRIBUTE_I
-	has_replicated_ast_mask: NATURAL_32 =			0x0010_0000
-	has_body_mask: NATURAL_32 =						0x0020_0000 -- Used in ATTRIBUTE_I
-	is_replicated_directly_mask: NATURAL_32 = 		0x0040_0000
-	from_non_conforming_parent_mask: NATURAL_32 = 	0x0080_0000
-	is_selected_mask: NATURAL_32 = 					0x0100_0000
-	is_stable_mask: NATURAL_32 = 					0x0200_0000 -- Used in ATTRIBUTE_I
-	is_transient_mask: NATURAL_32 = 				0x0400_0000 -- Used in ATTRIBUTE_I
-	is_hidden_mask: NATURAL_32 = 					0x0800_0000 -- Used in ATTRIBUTE_I
-	is_type_evaluation_delayed_mask: NATURAL_32 =	0x1000_0000
-	has_false_postcondition_mask: NATURAL_32 =      0x2000_0000
-	is_hidden_in_debugger_call_stack_mask: NATURAL_32 = 0x4000_0000
-	is_parentheses_mask: NATURAL_32 =					0x8000_0000
-			-- Mask used for each feature property.
 
 	internal_export_status: like export_status
 			-- Internal export status object. When it is ANY or NONE

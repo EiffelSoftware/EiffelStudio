@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {CMS_SELF_MODULE_ADMINISTRATION}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

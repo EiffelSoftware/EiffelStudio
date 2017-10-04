@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Utilities relative to the Eiffel syntax"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,11 +19,8 @@ feature -- Status report
 			-- according to ECMA-367 Section 8.11.1
 		require
 			ct_not_void: ct /= Void
-		local
-			type_checker: CLASS_TYPE_NAME_SYNTAX_CHECKER
 		do
-			create type_checker
-			Result := type_checker.is_valid_class_type_name (ct)
+			Result := (create {CLASS_TYPE_NAME_SYNTAX_CHECKER}).is_valid_class_type_name (ct)
 		end
 
 	is_valid_class_name (cn: READABLE_STRING_GENERAL): BOOLEAN
@@ -129,7 +126,7 @@ feature -- Status report
 					l_str32 := op.as_string_32
 				end
 					-- Allow Unicode codepoint greater than 255.
-				Result := (free_operators_start.has (op.item (1)) or l_str32.item (1).code > 127)
+				Result := free_operators_start.has (op.item (1)) or l_str32 [1] > {CHARACTER_32} '%/127/'
 				from
 					i := 2
 				until
@@ -251,5 +248,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_SYNTAX_CHECKER
-
+end

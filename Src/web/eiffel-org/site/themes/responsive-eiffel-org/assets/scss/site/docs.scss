@@ -179,14 +179,19 @@
 		background-color: $wdocs-nav-bg-color;
 	}
 
-	.cache-info, .uuid {
+	.wdocs-cache-info, .wdocs-uuid {
 		color: $wdocs-fade;
-		font-size: smaller;
+		font-size: xx-small;
 		text-align: right;
 	}
 }
 
 #content {
+	.wdocs-cache-info {
+		color: $wdocs-fade;
+		font-size: xx-small;
+		text-align: right;
+	}
 	.wiki-toc {
 		@extend %clearfix;
 		clear: both;

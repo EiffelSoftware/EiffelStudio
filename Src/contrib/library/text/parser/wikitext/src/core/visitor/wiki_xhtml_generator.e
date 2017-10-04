@@ -307,12 +307,13 @@ feature -- Processing
 			if attached current_page as pg and then attached pg.structure as l_structure then
 				create it.make
 				it.set_depth_limit (toc_depth_limit)
-				l_structure.process (it)
 				if a_wiki /= Void then
 						-- Useful to get TOC limit and other settings.
 					it.import_settings_from (a_wiki)
 					l_is_horizontal := it.is_horizontal
 				end
+				l_structure.process (it)
+
 				l_sections := it.sections
 				l_section_node := it.root_section_node
 				if
@@ -334,7 +335,6 @@ feature -- Processing
 						output ("<a name=%"toc%"></a>")
 					end
 					output ("<span class=%"title%">Contents</span>%N")
---					indent
 					curr := 1
 					prev := curr
 					if attached l_section_node.items as l_items and then not l_items.is_empty then
@@ -344,7 +344,6 @@ feature -- Processing
 							output_section_node (ic.item, l_list_tag)
 						end
 					end
---					exdent
 					output ("</" + l_list_tag + ">%N")
 				end
 			end
@@ -370,13 +369,11 @@ feature -- Processing
 				then
 					output ("<a href=%"#" + anchor_name (l_text.text, True) + "%">")
 					l_text.process (Current)
---					output (l_text.text)
 					output ("</a>")
 				else
 --					output ("...")
 				end
 				if attached a_node.items as l_items and then not l_items.is_empty then
---					output_indentation
 					output ("<" + a_list_tag + ">%N")
 					indent
 					across

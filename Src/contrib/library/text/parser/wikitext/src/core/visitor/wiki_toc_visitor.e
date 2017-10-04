@@ -116,13 +116,15 @@ feature -- Visit
 		local
 			t: WIKI_SECTION_NODE
 		do
-			t := last_section_node.item_for_section (a_section)
-			if t /= Void then
-				last_section_node := t
-				t.extend_section (a_section)
+			if depth_limit = 0 or else a_section.level <= depth_limit then
+				t := last_section_node.item_for_section (a_section)
+				if t /= Void then
+					last_section_node := t
+					t.extend_section (a_section)
+				end
+				all_sections.force (a_section)
+				Precursor (a_section)
 			end
-			all_sections.force (a_section)
-			Precursor (a_section)
 		end
 
 	visit_magic_word (a_word: WIKI_MAGIC_WORD)

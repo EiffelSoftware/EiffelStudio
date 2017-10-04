@@ -125,6 +125,7 @@ feature -- Execution
 			l_dest_dir: DIRECTORY
 			l_cp_params: ROC_INSTALL_COPY_PARAMETERS
 			i,n: INTEGER
+			l_modules_count, l_themes_count, l_global_file_changes, l_errors_count: INTEGER
 		do
 			create l_module_source_locations.make (1)
 			create l_theme_source_locations.make (1)
@@ -249,6 +250,7 @@ feature -- Execution
 					end
 				end
 			elseif l_config_path /= Void then
+				l_errors_count := l_errors_count + 1
 				localized_print_error ({STRING_32} "Unable to read configuration file %"" + l_config_path.name + "%"!%N")
 			end
 
@@ -270,6 +272,7 @@ feature -- Execution
 						-- Install configuration files.
 					create l_site_dir.make_with_path (l_site_path)
 					if l_site_dir.exists then
+						l_modules_count := l_modules_count + 1
 						create l_modules_dir.make_with_path (l_site_path.extended ("modules"))
 						if not l_modules_dir.exists then
 							l_modules_dir.create_dir
@@ -279,24 +282,38 @@ feature -- Execution
 						if not l_dest_dir.exists then
 							l_dest_dir.create_dir
 						end
-						print ("Install module ")
-						print (l_mod_name)
-						print (" in %"")
-						print (l_dest_dir.path.name)
-						print ("%":%N")
-						install_module_elements (l_mod_name, l_module_source_path, l_dest_dir.path, Void)
---					   	install_module_elements (l_module_source_path, l_dest_dir.path, Config_dir)
---						install_module_elements (l_module_source_path, l_dest_dir.path, Scripts_dir)
---						install_module_elements (l_module_source_path, l_dest_dir.path, Themes_dir)
-
-						print (" - ")
-						print (directories_count.out + " director" + if directories_count > 1 then "ies" else "y" end + ", ")
-						print (files_count.out + " file" + if files_count > 1 then "s" else "" end)
-						if files_changes_count > 0 then
-							print (" (+" + files_changes_count.out + ")")
+						if is_verbose then
+							print ("Install module ")
+							print (l_mod_name)
+							print (" in %"")
+							print (l_dest_dir.path.name)
+							print ("%":%N")
 						end
-						print (".%N")
+						install_module_elements (l_mod_name, l_module_source_path, l_dest_dir.path, Void)
+						l_global_file_changes := l_global_file_changes + files_changes_count
+						if is_verbose then
+							print (" - ")
+							print (directories_count.out + " director" + if directories_count > 1 then "ies" else "y" end + ", ")
+							print (files_count.out + " file" + if files_count > 1 then "s" else "" end)
+							if files_changes_count > 0 then
+								print (" (+" + files_changes_count.out + ")")
+							end
+							print (".%N")
+						elseif files_changes_count > 0 then
+							print ("Install module ")
+							print (l_mod_name)
+							print (" in %"")
+							print (l_dest_dir.path.name)
+							print ("%": ")
+							print (files_changes_count.out)
+							if files_changes_count = 1 then
+								print (" change.%N")
+							else
+								print (" changes.%N")
+							end
+						end
 					else
+						l_errors_count := l_errors_count + 1
 						print ({STRING_32} "The CMS Application located at " + l_cms_path.name + "does not have the site or modules folders.%N")
 					end
 				else
@@ -313,6 +330,7 @@ feature -- Execution
 						-- Install configuration files.
 					create l_site_dir.make_with_path (l_site_path)
 					if l_site_dir.exists then
+						l_themes_count := l_themes_count + 1
 						create l_themes_dir.make_with_path (l_site_path.extended ("themes"))
 						if not l_themes_dir.exists then
 							l_themes_dir.create_dir
@@ -322,25 +340,70 @@ feature -- Execution
 						if not l_dest_dir.exists then
 							l_dest_dir.create_dir
 						end
-						print ("Install theme ")
-						print (l_theme_name)
-						print (" in %"")
-						print (l_dest_dir.path.name)
-						print ("%":%N")
-						install_theme_elements (l_theme_source_path, l_dest_dir.path, Void)
-						print (" - ")
-						print (directories_count.out + " director" + if directories_count > 1 then "ies" else "y" end + ", ")
-						print (files_count.out + " file" + if files_count > 1 then "s" else "" end)
-						if files_changes_count > 0 then
-							print (" (+" + files_changes_count.out + ")")
+						if is_verbose then
+							print ("Install theme ")
+							print (l_theme_name)
+							print (" in %"")
+							print (l_dest_dir.path.name)
+							print ("%":%N")
 						end
-						print (".%N")
+						install_theme_elements (l_theme_source_path, l_dest_dir.path, Void)
+						l_global_file_changes := l_global_file_changes + files_changes_count
+						if is_verbose then
+							print (" - ")
+							print (directories_count.out + " director" + if directories_count > 1 then "ies" else "y" end + ", ")
+							print (files_count.out + " file" + if files_count > 1 then "s" else "" end)
+							if files_changes_count > 0 then
+								print (" (+" + files_changes_count.out + ")")
+							end
+							print (".%N")
+						elseif files_changes_count > 0 then
+							print ("Install theme ")
+							print (l_theme_name)
+							print (" in %"")
+							print (l_dest_dir.path.name)
+							print ("%": ")
+							print (files_changes_count.out)
+							if files_changes_count = 1 then
+								print (" change.%N")
+							else
+								print (" changes.%N")
+							end
+						end
 					else
+						l_errors_count := l_errors_count + 1
 						print ({STRING_32} "The CMS Application located at " + l_cms_path.name + "does not have the site or themes folders.%N")
 					end
 				else
+					l_errors_count := l_errors_count + 1
 					print ("Error: could not retrieve theme name.%N")
 				end
+			end
+			if l_modules_count > 0 then
+				if l_modules_count = 1 then
+					print ("One module updated.%N")
+				else
+					print (l_modules_count.out + " modules updated.%N")
+				end
+			end
+			if l_themes_count > 0 then
+				if l_themes_count = 1 then
+					print ("One theme updated.%N")
+				else
+					print (l_themes_count.out + " themes updated.%N")
+				end
+			end
+			if l_global_file_changes > 0 then
+				if l_global_file_changes = 1 then
+					print ("One file updated.%N")
+				else
+					print (l_global_file_changes.out + " files updated.%N")
+				end
+			else
+				print ("No file updated.%N")
+			end
+			if l_errors_count > 0 then
+				print (l_errors_count.out + " errors.%N")
 			end
 		end
 

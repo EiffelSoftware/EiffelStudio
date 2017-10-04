@@ -1461,7 +1461,7 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 				create l_xhtml.make (l_cache.file_size)
 				l_cache.append_to (l_xhtml)
 
-				l_xhtml.append ("<div class=%"cache-info%">cached: " + l_cache.cache_date_time.out + "</div>")
+				l_xhtml.append ("<div class=%"wdocs-cache-info%">cached: " + l_cache.cache_date_time.out + "</div>")
 			else
 				create l_xhtml.make_empty
 				if not l_version_id.is_case_insensitive_equal (default_version_id) then

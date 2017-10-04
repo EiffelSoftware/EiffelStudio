@@ -128,7 +128,6 @@ feature {NONE} -- Implementation
 			l_routine: ROUTINE_AS
 			l_def_func: DEF_FUNC_I
 			l_def_proc: DEF_PROC_I
-			l_once_func: ONCE_FUNC_I
 			l_proc, l_func: PROCEDURE_I
 			l_extern_proc: EXTERNAL_I
 			l_extern_func: EXTERNAL_FUNC_I
@@ -144,7 +143,6 @@ feature {NONE} -- Implementation
 			l_result: FEATURE_I
 			l_assigner_name_id: INTEGER
 			l_feature_as: FEATURE_AS
-			l_type: TYPE_A
 		do
 			if l_as.assigner /= Void then
 				l_assigner_name_id := l_as.assigner.name_id
@@ -174,8 +172,7 @@ feature {NONE} -- Implementation
 					constant_exists: l_constant /= Void
 					type_exists: l_as.type /= Void
 				end
-				l_type := query_type (l_as.type)
-				l_const.set_type (l_type, l_assigner_name_id)
+				l_const.set_type (query_type (l_as.type), l_assigner_name_id)
 				l_result := l_const
 				l_result.set_is_empty (True)
 
@@ -199,10 +196,11 @@ feature {NONE} -- Implementation
 						l_lang_not_void: l_lang /= Void
 					end
 
-					if l_routine.is_built_in then
-						if attached {BUILT_IN_AS} l_routine.routine_body as l_built_in_as then
-							l_feature_as := l_built_in_as.body
-						end
+					if
+						l_routine.is_built_in and then
+						attached {BUILT_IN_AS} l_routine.routine_body as l_built_in_as
+					then
+						l_feature_as := l_built_in_as.body
 					end
 					if l_feature_as /= Void then
 						process_body_as (l_feature_as.body)
@@ -298,12 +296,10 @@ feature {NONE} -- Implementation
 						l_result.set_is_empty (l_as.content.is_empty)
 					elseif l_routine.is_deferred then
 							-- Deferred function
-						create l_def_func
-						l_func := l_def_func
+						create {DEF_FUNC_I} l_func
 					elseif l_routine.is_once then
 							-- Once function
-						create l_once_func
-						l_func := l_once_func
+						create {ONCE_FUNC_I} l_func
 					elseif l_routine.is_external then
 
 							-- External procedure

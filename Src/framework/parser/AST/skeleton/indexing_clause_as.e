@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of an indexing clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -139,6 +139,12 @@ feature -- Access
 			-- (Used to mark stable attributes.)
 		do
 			Result := has_tag_value (option_header, stable_option_value)
+		end
+
+	is_instance_free: BOOLEAN
+			-- Is feature marked as instance-free?
+		do
+			Result := has_tag_value (option_header, instance_free_option_value)
 		end
 
 	is_transient: BOOLEAN
@@ -380,7 +386,10 @@ feature {NONE} -- Constants
 			-- Value name of `Once_status_header'.
 
 	stable_option_value: STRING = "stable"
-			-- Predefined value of `option_header'.
+			-- Predefined value of `option_header' for stable features.
+
+	instance_free_option_value: STRING = "instance_free"
+			-- Predefined value of `option_header' for instance-free features.
 
 	transient_option_value: STRING = "transient"
 			-- Predefined value of `option_header'.
@@ -534,7 +543,7 @@ feature -- Roundtrip
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

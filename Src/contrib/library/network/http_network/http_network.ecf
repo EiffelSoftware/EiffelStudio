@@ -53,6 +53,7 @@
 				<custom name="httpd_ssl_enabled" value="true"/>
 			</condition>
 		</library>
+		<library name="openssl" location="$ISE_LIBRARY\unstable\library\network\openssl\openssl.ecf"/>
 		<cluster name="network" location=".\src\">
 			<file_rule>
 				<exclude>/http_stream_socket_ext.e$</exclude>

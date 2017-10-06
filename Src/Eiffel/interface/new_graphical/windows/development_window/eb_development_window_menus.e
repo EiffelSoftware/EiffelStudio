@@ -50,6 +50,9 @@ feature -- Query
 	debugging_tools_menu: EV_MENU
 			-- Debugging tools menu item
 
+	cloud_account_menu: ES_CLOUD_ACCOUNT_MENU
+			-- Account menu.
+
 	project_menu: EV_MENU
 			-- Menu for entries relative to the Project.
 
@@ -225,6 +228,14 @@ feature{EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Settings
 			show_favorites_menu_item := a_item
 		ensure
 			set: show_favorites_menu_item = a_item
+		end
+
+	set_account_menu (a_menu: like cloud_account_menu)
+			-- Set `cloud_account_menu'
+		do
+			cloud_account_menu := a_menu
+		ensure
+			set: cloud_account_menu = a_menu
 		end
 
 	set_project_menu (a_menu: like project_menu)
@@ -451,7 +462,7 @@ feature -- Recycle
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

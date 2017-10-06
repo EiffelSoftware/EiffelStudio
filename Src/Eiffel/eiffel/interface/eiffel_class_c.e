@@ -185,7 +185,6 @@ feature -- Action
 		local
 			retried: BOOLEAN
 			l_types: TYPE_LIST
-			cl_type: CLASS_TYPE
 		do
 			if not retried and System.makefile_generator /= Void and then has_types then
 				from
@@ -194,8 +193,7 @@ feature -- Action
 				until
 					l_types.after
 				loop
-					cl_type := l_types.item
-					cl_type.remove_c_generated_files
+					l_types.item.remove_c_generated_files
 					l_types.forth
 				end
 			end
@@ -405,11 +403,12 @@ feature -- Action
 				Tmp_ast_server.put (ast_b)
 			end
 		rescue
-			if Rescue_status.is_error_exception then
-					-- Error happened
-				if old_syntactical_suppliers /= Void then
-					syntactical_suppliers.copy (old_syntactical_suppliers)
-				end
+			if
+				Rescue_status.is_error_exception and then
+				attached old_syntactical_suppliers
+			then
+					-- Error happened.
+				syntactical_suppliers.copy (old_syntactical_suppliers)
 			end
 		end
 
@@ -511,7 +510,6 @@ feature -- Third pass: byte code production and type check
 			body_index: INTEGER
 
 				-- For Concurrent Eiffel
-			def_resc_depend: DEPEND_UNIT
 			type_checked: BOOLEAN
 
 			l_class_error_level, l_error_level: NATURAL
@@ -623,17 +621,15 @@ feature -- Third pass: byte code production and type check
 							-- some of the entities used by it have changed
 							-- of nature (attribute/function versus incrementality).
 						if not (feature_changed or else f_suppliers = Void) then
-							feature_changed := not propagators.melted_empty_intersection (f_suppliers)
-							if not feature_changed then
-								if f_suppliers.has_removed_id then
-									feature_changed := True
-								end
-							end
-							if feature_changed then
-									-- Automatic melting of the feature
-								if new_suppliers = Void then
-									new_suppliers := suppliers.same_suppliers
-								end
+							feature_changed :=
+								not propagators.melted_empty_intersection (f_suppliers) or else
+								f_suppliers.has_removed_id
+							if
+								feature_changed and then
+								not attached new_suppliers
+							then
+									-- Automatic melting of the feature.
+								new_suppliers := suppliers.same_suppliers
 							end
 						end
 
@@ -689,8 +685,7 @@ feature -- Third pass: byte code production and type check
 										not feature_i.is_constant
 									then
 											-- Make it dependent on `default_rescue'
-										create def_resc_depend.make (class_id, def_resc)
-										f_suppliers.extend (def_resc_depend)
+										f_suppliers.extend (create {DEPEND_UNIT}.make (class_id, def_resc))
 									end
 										-- We need to duplicate `f_suppliers' now, otherwise
 										-- we will be wiped out in `ast_context.clear_feature_context'.
@@ -747,30 +742,29 @@ feature -- Third pass: byte code production and type check
 								system.request_freeze
 							end
 							add_feature_to_melted_set (feature_i)
-							if feature_i.is_object_relative_once then
-								if
-									attached object_relative_once_infos as l_obj_once_info_table and then
-									attached l_obj_once_info_table.items_intersecting_with_rout_id_set (feature_i.rout_id_set) as l_obj_once_info_list
-								then
-									from
-										l_obj_once_info_list.start
-									until
-										l_obj_once_info_list.after
-									loop
-										if attached l_obj_once_info_list.item as l_obj_info then
-											l_attribute_i := l_obj_info.called_attribute_i
-											add_feature_to_melted_set (l_attribute_i)
+							if
+								feature_i.is_object_relative_once and then
+								attached object_relative_once_infos as l_obj_once_info_table and then
+								attached l_obj_once_info_table.items_intersecting_with_rout_id_set (feature_i.rout_id_set) as l_obj_once_info_list
+							then
+								from
+									l_obj_once_info_list.start
+								until
+									l_obj_once_info_list.after
+								loop
+									if attached l_obj_once_info_list.item as l_obj_info then
+										l_attribute_i := l_obj_info.called_attribute_i
+										add_feature_to_melted_set (l_attribute_i)
 
-											l_attribute_i := l_obj_info.exception_attribute_i
-											add_feature_to_melted_set (l_attribute_i)
+										l_attribute_i := l_obj_info.exception_attribute_i
+										add_feature_to_melted_set (l_attribute_i)
 
-											if l_obj_info.has_result then
-												l_attribute_i := l_obj_info.result_attribute_i
-												add_feature_to_melted_set (l_attribute_i)
-											end
+										if l_obj_info.has_result then
+											l_attribute_i := l_obj_info.result_attribute_i
+											add_feature_to_melted_set (l_attribute_i)
 										end
-										l_obj_once_info_list.forth
 									end
+									l_obj_once_info_list.forth
 								end
 							end
 						end
@@ -1180,7 +1174,6 @@ feature -- Melting
 	melt_all
 			-- Melt all the features written in the class
 		local
-			c_dep: CLASS_DEPENDANCE
 			tbl: COMPUTED_FEATURE_TABLE
 			feature_i: FEATURE_I
 			l_old_group: CONF_GROUP
@@ -1209,8 +1202,7 @@ feature -- Melting
 				end
 				tbl.forth
 			end
-			c_dep := depend_server.item (class_id)
-			depend_server.put (c_dep)
+			depend_server.put (depend_server.item (class_id))
 
 				-- Melt possible invariant clause
 			if invariant_feature /= Void then
@@ -1603,15 +1595,16 @@ feature {NONE} -- Class initialization
 					error or else j = nb
 				loop
 					next_dec := l_area.item (j)
-					if next_dec /= generic_dec then
-						if next_dec.name.is_equal (generic_name) then
-							create vcfg2
-							vcfg2.set_class (Current)
-							vcfg2.set_formal_name (generic_name.name)
-							vcfg2.set_location (generic_name)
-							Error_handler.insert_error (vcfg2)
-							error := True
-						end
+					if
+						next_dec /= generic_dec and then
+						next_dec.name.is_equal (generic_name)
+					then
+						create vcfg2
+						vcfg2.set_class (Current)
+						vcfg2.set_formal_name (generic_name.name)
+						vcfg2.set_location (generic_name)
+						Error_handler.insert_error (vcfg2)
+						error := True
 					end
 					j := j + 1
 				end
@@ -1651,7 +1644,6 @@ feature {NONE} -- Class initialization
 			-- Check validity formal generic parameter declaration.
 			-- Validity rule VCFG1 (page 52)
 		local
-			generic_dec: FORMAL_DEC_AS
 			generic_name: ID_AS
 			vcfg1: VCFG1
 			l_area: SPECIAL [FORMAL_DEC_AS]
@@ -1663,9 +1655,7 @@ feature {NONE} -- Class initialization
 			until
 				i = nb
 			loop
-				generic_dec := l_area.item (i)
-				generic_name := generic_dec.name
-
+				generic_name := l_area [i].name
 				if Universe.class_named (generic_name.name, cluster) /= Void then
 					create vcfg1
 					vcfg1.set_class (Current)
@@ -2137,7 +2127,6 @@ feature {NONE} -- Backup implementation
 		local
 			l_file_name: PATH
 			l_load: CONF_LOAD
-			l_fact: CONF_COMP_FACTORY
 			l_system: CONF_SYSTEM
 			l_vis: CONF_BACKUP_VISITOR
 			u: FILE_UTILITIES
@@ -2147,8 +2136,7 @@ feature {NONE} -- Backup implementation
 			u.copy_file_path (a_system.file_path, l_file_name)
 
 				-- adapt configuration file
-			create l_fact
-			create l_load.make (l_fact)
+			create l_load.make (create {CONF_COMP_FACTORY})
 			l_load.retrieve_configuration (l_file_name.name)
 			if not l_load.is_error then
 				l_system := l_load.last_system

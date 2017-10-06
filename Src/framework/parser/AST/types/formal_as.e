@@ -1,7 +1,5 @@
-note
-	description:
-			"Abstract description for formal generic type. %
-			%Version for Bench."
+﻿note
+	description: "Abstract description for formal generic type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -12,7 +10,8 @@ class FORMAL_AS
 inherit
 	TYPE_AS
 		redefine
-			first_token, last_token
+			first_token,
+			last_token
 		end
 
 create
@@ -63,6 +62,12 @@ feature -- Roundtrip
 			Result := keyword_from_index (a_list, formal_keyword_index)
 		end
 
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := name.index
+		end
+
 feature -- Properties
 
 	name: ID_AS
@@ -98,14 +103,6 @@ feature -- Roundtrip/Token
 			if Result = Void then
 				Result := name.last_token (a_list)
 			end
-		end
-
-feature -- Roundtrip
-
-	index: INTEGER
-			-- <Precursor>
-		do
-			Result := name.index
 		end
 
 feature -- Comparison
@@ -144,7 +141,7 @@ feature {COMPILER_EXPORTER} -- Settings
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -175,4 +172,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class FORMAL_AS
+end

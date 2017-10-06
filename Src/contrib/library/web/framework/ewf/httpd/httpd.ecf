@@ -7,8 +7,6 @@
 			<exclude>/\.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true">
-		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="http_network" location="..\..\..\..\network\http_network\http_network.ecf" readonly="false"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
@@ -16,8 +14,11 @@
 			<condition>
 				<custom name="ssl_enabled" value="true"/>
 			</condition>
+		</library>
+		<library name="openssl" location="$ISE_LIBRARY\unstable\library\network\openssl\openssl.ecf">
 			<condition>
-				<custom name="httpd_ssl_enabled" value="true"/>
+				<version type="compiler" min="17.10.0.0"/>
+				<custom name="ssl_enabled" value="true"/>
 			</condition>
 		</library>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf">
@@ -35,15 +36,11 @@
 			<cluster name="no_ssl" location="$|no_ssl\" recursive="true">
 				<condition>
 					<custom name="ssl_enabled" excluded_value="true"/>
-					<custom name="httpd_ssl_enabled" excluded_value="true"/>
 				</condition>
 			</cluster>
 			<cluster name="ssl" location="$|ssl\" recursive="true">
 				<condition>
 					<custom name="ssl_enabled" value="true"/>
-				</condition>
-				<condition>
-					<custom name="httpd_ssl_enabled" value="true"/>
 				</condition>
 			</cluster>
 			<cluster name="concurrency_none" location="$|concurrency\none\" recursive="true">

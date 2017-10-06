@@ -61,7 +61,33 @@ feature -- Encoding
 		do
 			create hs256.make_ascii_key (a_secret)
 			hs256.update_from_string (s)
-			Result := hs256.base64_digest --lowercase_hexadecimal_string_digest
+			-- if Version >= EiffelStudio 17.11 then
+			-- 	Result := hs256.base64_digest --lowercase_hexadecimal_string_digest
+			-- else
+			Result := base64_bytes_encoded_string (hs256.digest)
+			-- end
+		end
+
+feature {NONE} -- Implementation
+
+	base64_bytes_encoded_string (a_bytes: SPECIAL [NATURAL_8]): STRING_8
+			-- Base64 string from `a_bytes`.
+			--| Note: to be removed when 17.11 is not latest release anymore.
+		local
+			s: STRING
+			i,n: INTEGER
+		do
+			from
+				i := 1
+				n := a_bytes.count
+				create s.make (n)
+			until
+				i > n
+			loop
+				s.append_code (a_bytes[i - 1])
+				i := i + 1
+			end
+			Result := (create {BASE64}).encoded_string (s)
 		end
 
 feature -- Decoding

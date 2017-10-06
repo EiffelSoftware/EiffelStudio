@@ -376,6 +376,11 @@ feature -- Execution
 				curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_ssl_verifypeer, 0)
 			end
 
+			--| Cipher List
+			if attached session.ciphers_setting as c_list then
+				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_ssl_cipher_list, c_list )
+			end
+
 			--| Request method
 			if request_method.is_case_insensitive_equal ("GET") then
 				curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_httpget, 1)

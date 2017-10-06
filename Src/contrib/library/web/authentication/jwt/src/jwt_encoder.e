@@ -266,11 +266,10 @@ feature {NONE} -- Implementation
 
 	base64_hmacsha256 (s: READABLE_STRING_8; a_secret: READABLE_STRING_8): STRING_8
 		local
-			hs256: HMAC_SHA256
+			ut: JWT_UTILITIES
 		do
-			create hs256.make_ascii_key (a_secret)
-			hs256.update_from_string (s)
-			Result := hs256.base64_digest --lowercase_hexadecimal_string_digest
+			create ut
+			Result := ut.base64_hmacsha256 (s, a_secret)
 		end
 
 end

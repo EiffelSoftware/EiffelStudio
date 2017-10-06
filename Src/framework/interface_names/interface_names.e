@@ -160,7 +160,9 @@ feature -- Button texts
 	b_Display_error_help: STRING_32				do Result := locale.translation("Help Tool")	end
 	b_Project_settings: STRING_32				do Result := locale.translation("Project Settings")	end
 	b_previous: STRING_32 						do Result := locale.translation ("Previous") end
-	b_System_info: STRING_32						do Result := locale.translation("System Info")	end
+	b_purchase: STRING_32 						do Result := locale.translation ("Purchase") end
+	b_quit: STRING_32 							do Result := locale.translation ("Quit") end
+	b_System_info: STRING_32					do Result := locale.translation("System Info")	end
 	b_arrow_back: STRING_32						do Result := locale.translation ("< Back") end
 	b_arrow_next: STRING_32						do Result := locale.translation ("Next >") end
 	b_Bkpt_info: STRING_32						do Result := locale.translation("Breakpoint Info")	end
@@ -1812,6 +1814,7 @@ feature -- Label texts
 	t_viewer_object_internal_title: STRING_32 do Result := locale.translation ("Object Internal") end
 	l_viewer_drop_object_here: STRING_32 do Result := locale.translation ("<< Drop object here >>") end
 	t_viewer_xml_display_title: STRING_32 do Result := locale.translation ("XML display") end
+	t_viewer_json_display_title: STRING_32 do Result := locale.translation ("JSON display") end
 	l_select_viewer: STRING_32 do Result := locale.translation ("Select Viewer") end
 
 	l_When_breakpoint_is_hit: STRING_32	do Result := locale.translation("When the breakpoint is hit:")	end
@@ -2681,6 +2684,35 @@ feature -- Sub titles
 	st_unsaved_changed: STRING_32		do Result := locale.translation ("You have unsaved changes") end
 	st_cleaning_project: STRING_32		do Result := locale.translation ("Cleaning project...") end
 	st_unicode_cannot_save: STRING_32	do Result := locale.translation ("Unicode characters could not be saved.") end
+
+feature -- Startup pages
+
+	l_read_license_text: STRING_32 do Result := locale.translation ("Read License Text") end
+	l_agree_and_continue_with_gpl: STRING_32 do Result := locale.translation ("I agree and continue with GPL Edition") end
+	l_purchase_enterprise_edition: STRING_32 do Result := locale.translation ("Purchase Enterprise edition") end
+	l_login_with_credentials: STRING_32 do Result := locale.translation ("Login with credentials") end
+	l_user_name: STRING_32 do Result := locale.translation ("User Name") end
+	l_password: STRING_32 do Result := locale.translation ("Password") end
+	l_email: STRING_32 do Result := locale.translation ("Email") end
+
+	b_login: STRING_32 do Result := locale.translation ("Login") end
+	b_register: STRING_32 do Result := locale.translation ("Register") end
+	b_skip: STRING_32 do Result := locale.translation ("Skip") end
+	b_guest: STRING_32 do Result := locale.translation ("Guest") end
+
+	l_open_eiffelstudio_account_web_site: STRING_32 do Result := locale.translation ("Open EiffelStudio account website in web browser.") end
+	l_register_new_account: STRING_32 do Result := locale.translation ("Register a new account.") end
+	l_login_with_existing_account: STRING_32 do Result := locale.translation ("You already have an account? Login >>") end
+
+	l_can_login_as_guest_for_n_days (nb_days: INTEGER): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.plural_translation_in_context
+			(once "This is the last day you can still login as guest", once "You can still login as guest for $1 more days", once "eiffel.account", nb_days), nb_days)
+		end
+
+feature -- Account related
+
+	m_account: STRING_32				do Result := locale.translation ("Account") end
 
 feature -- Titles translation needless (Title Original) for preference strings.
 

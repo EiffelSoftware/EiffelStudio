@@ -45,9 +45,11 @@
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 	<target name="es_cloud_standalone" extends="es_cloud_common">
-		<variable name="httpd_ssl_disabled" value="false"/>
 		<library name="standalone_launcher" location="$ISE_LIBRARY\unstable\library\web\cms\launcher\standalone.ecf" readonly="false"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+	<target name="es_cloud_standalone_ssl" extends="es_cloud_standalone">
+		<variable name="ssl_enabled" value="true"/>
 	</target>
 	<target name="es_cloud_cgi" extends="es_cloud_common">
 		<capability>

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "AST representation of a TUPLE type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,8 +11,11 @@ class
 inherit
 	TYPE_AS
 		redefine
+			first_token,
+			has_anchor,
 			is_equivalent,
-			first_token, has_anchor, last_token
+			is_fixed,
+			last_token
 		end
 
 	CLICKABLE_AST
@@ -59,6 +62,17 @@ feature -- Status
 						Result := t.type.has_anchor
 					end
 			)
+		end
+
+	is_fixed: BOOLEAN
+			-- <Precursor>
+		do
+			Result :=
+				across
+					generics as g
+				all
+					g.item.type.is_fixed
+				end
 		end
 
 feature -- Attributes
@@ -219,7 +233,7 @@ invariant
 		not parameters.arguments.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

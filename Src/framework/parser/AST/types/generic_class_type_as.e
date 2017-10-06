@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of generic classes."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,7 +11,12 @@ inherit
 		rename
 			initialize as class_type_initialize
 		redefine
-			has_anchor, process, generics, last_token, dump
+			dump,
+			generics,
+			has_anchor,
+			is_fixed,
+			last_token,
+			process
 		end
 
 create
@@ -41,6 +46,17 @@ feature -- Status
 			if attached generics as g then
 				Result := g.there_exists (agent {TYPE_AS}.has_anchor)
 			end
+		end
+
+	is_fixed: BOOLEAN
+			-- <Precursor>
+		do
+			Result :=
+				across
+					internal_generics as g
+				all
+					g.item.is_fixed
+				end
 		end
 
 feature -- Visitor
@@ -95,17 +111,15 @@ feature -- Conveniences
 			-- Dumped string
 		do
 			Result := Precursor {CLASS_TYPE_AS}
+			across
+				internal_generics as g
 			from
-				internal_generics.start;
 				Result.append (" [")
-			until
-				internal_generics.after
 			loop
-				Result.append (internal_generics.item.dump)
-				if not internal_generics.islast then
+				Result.append (g.item.dump)
+				if not g.is_last then
 					Result.append (", ")
 				end
-				internal_generics.forth
 			end
 			Result.append ("]")
 		end
@@ -114,7 +128,7 @@ invariant
 	internal_generics_not_void: internal_generics /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

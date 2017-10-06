@@ -265,7 +265,7 @@ feature {NONE} -- Print for multiple lines
 			print_short_help (a_text_formatter)
 		end
 
-	frozen print_short_help (a_text_formatter: TEXT_FORMATTER)
+	print_short_help (a_text_formatter: TEXT_FORMATTER)
 			-- Display help in `a_text_formatter'.
 		require
 			valid_st: a_text_formatter /= Void

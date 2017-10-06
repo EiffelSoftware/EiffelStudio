@@ -20,7 +20,7 @@ feature {NONE} -- Creation
 
 feature -- Access
 
-	napplication_item (a_var: READABLE_STRING_GENERAL; a_app: detachable READABLE_STRING_GENERAL; a_version: detachable STRING): detachable STRING_32
+	application_item (a_var: READABLE_STRING_GENERAL; a_app: detachable READABLE_STRING_GENERAL; a_version: detachable STRING): detachable STRING_32
 			-- Variable `a_var' as if we were `a_app' for version `a_version` (formatted as MM.mm).
 		require
 			a_var_ok: a_var /= Void and then not a_var.has ('%U')
@@ -38,14 +38,14 @@ feature -- Access
 			if a_version /= Void then
 				p := eiffel_env.hidden_files_path_for_version (a_version, False)
 			else
-				p := eiffel_env.hidden_files_path (a_version, False)
+				p := eiffel_env.hidden_files_path
 			end
 
 			p := p.extended ("installation")
 			if a_app /= Void then
 				p := p.extended (a_app)
 			end
-			p.extended (l_lowered_var)
+			p := p.extended (l_lowered_var)
 
 			create f.make_with_path (p)
 			if f.exists and then f.is_access_readable then
@@ -61,7 +61,7 @@ feature -- Access
 				f.close
 				Result := utf.utf_8_string_8_to_string_32 (s)
 			end
-		end	
+		end
 
 feature -- Element change
 
@@ -84,7 +84,7 @@ feature -- Element change
 			if a_version /= Void then
 				p := eiffel_env.hidden_files_path_for_version (a_version, True)
 			else
-				p := eiffel_env.hidden_files_path (a_version, True)
+				p := eiffel_env.hidden_files_path
 			end
 			p := p.extended ("installation")
 			if a_app /= Void then
@@ -94,7 +94,7 @@ feature -- Element change
 			if not d.exists then
 				d.recursive_create_dir
 			end
-			p.extended (l_lowered_var)
+			p := p.extended (l_lowered_var)
 
 			create f.make_with_path (p)
 			if a_value /= Void then

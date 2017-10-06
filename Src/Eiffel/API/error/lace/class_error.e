@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Error for a class in a cluster."
@@ -7,7 +7,7 @@ note
 	date: "$Date$";
 	revision: "$Revision $"
 
-class CLASS_ERROR
+deferred class CLASS_ERROR
 
 inherit
 
@@ -15,34 +15,34 @@ inherit
 
 feature -- Properties
 
-	class_name: STRING;
-			-- Class nam involved
+	class_name: STRING
+			-- Class name involved.
 
 feature -- Output
 
 	put_class_name (a_text_formatter: TEXT_FORMATTER)
 		do
-			a_text_formatter.add ("Class name: ");
-			a_text_formatter.add (class_name);
-			a_text_formatter.add_new_line;
-		end;
+			a_text_formatter.add ("Class name: ")
+			a_text_formatter.add (class_name)
+			a_text_formatter.add_new_line
+		end
 
 	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
-			put_cluster_name (a_text_formatter);
-			put_class_name (a_text_formatter);
-		end;
+			put_cluster_name (a_text_formatter)
+			put_class_name (a_text_formatter)
+		end
 
 feature {COMPILER_EXPORTER} -- Setting
 
 	set_class_name (s: STRING)
 			-- Assign `s' to `class_name'.
 		do
-			class_name := s;
-		end;
+			class_name := s
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -73,4 +73,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CLASS_ERROR
+end

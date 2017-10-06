@@ -586,6 +586,10 @@ feature -- Third pass: byte code production and type check
 					l_ast_context.set_current_feature (feature_i)
 					type_checked := False
 
+					if feature_i.is_instance_free and then not is_full_class_checking then
+						error_handler.insert_error (create {VD02}.make (feature_i, Current))
+					end
+
 					if feature_i.to_melt_in (Current) then
 						feature_name_id := feature_i.feature_name_id
 
@@ -619,7 +623,7 @@ feature -- Third pass: byte code production and type check
 							-- some of the entities used by it have changed
 							-- of nature (attribute/function versus incrementality).
 						if not (feature_changed or else f_suppliers = Void) then
-							feature_changed := (not propagators.melted_empty_intersection (f_suppliers))
+							feature_changed := not propagators.melted_empty_intersection (f_suppliers)
 							if not feature_changed then
 								if f_suppliers.has_removed_id then
 									feature_changed := True
@@ -1327,7 +1331,6 @@ feature {NONE} -- Class initialization
 			is_first_compilation, changed_status: BOOLEAN
 			changed_generics, changed_expanded: BOOLEAN
 			gens: like generics
-			l_old_storable_version: like storable_version
 			l_is_code_regeneration_needed: BOOLEAN
 		do
 				-- Assign external name clause
@@ -1353,7 +1356,6 @@ feature {NONE} -- Class initialization
 			end
 
 				-- Record the storable_version if one specified.
-			l_old_storable_version := storable_version
 			if ast_b.top_indexes /= Void then
 				set_storable_version (ast_b.top_indexes.storable_version)
 			elseif ast_b.bottom_indexes /= Void then

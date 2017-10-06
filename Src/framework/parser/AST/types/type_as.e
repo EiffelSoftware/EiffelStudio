@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract class for Eiffel types. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -50,7 +50,7 @@ feature -- Roundtrip
 			i: INTEGER
 		do
 			i := attachment_mark_index
-			if a_list.valid_index (i) and then attached {LEAF_AS} a_list.i_th (i) as m then
+			if a_list.valid_index (i) and then attached a_list [i] as m then
 				Result := m
 			end
 		ensure
@@ -95,7 +95,7 @@ feature -- Roundtrip
 			i: INTEGER
 		do
 			i := variance_mark_index
-			if a_list.valid_index (i) and then attached {LEAF_AS} a_list.i_th (i) as m then
+			if a_list.valid_index (i) and then attached a_list [i] as m then
 				Result := m
 			end
 		ensure
@@ -216,6 +216,12 @@ feature -- Status
 				-- False by default.
 		end
 
+	is_fixed: BOOLEAN
+			-- Is current type fixed, i.e. does not change in any descendant class?
+		do
+				-- False by default.
+		end
+
 feature -- Comparison
 
 	has_same_marks (other: TYPE_AS): BOOLEAN
@@ -310,7 +316,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -341,4 +347,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class TYPE_AS
+end

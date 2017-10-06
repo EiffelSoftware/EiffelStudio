@@ -1,5 +1,5 @@
-note
-	description: "Node for normal class type. Version for Bench."
+﻿note
+	description: "Node for normal class type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -10,8 +10,10 @@ class CLASS_TYPE_AS
 inherit
 	TYPE_AS
 		redefine
+			first_token,
 			is_equivalent,
-			first_token, last_token
+			is_fixed,
+			last_token
 		end
 
 	CLICKABLE_AST
@@ -33,6 +35,14 @@ feature {NONE} -- Initialization
 			class_name := n
 		ensure
 			class_name_set: class_name.name.is_equal (n.name)
+		end
+
+feature -- Status
+
+	is_fixed: BOOLEAN
+			-- <Precursor>
+		do
+			Result := True
 		end
 
 feature -- Visitor
@@ -143,7 +153,7 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -174,4 +184,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CLASS_TYPE_AS
+end

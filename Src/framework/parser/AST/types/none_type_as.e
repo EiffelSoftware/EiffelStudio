@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Node for NONE type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,9 @@ class NONE_TYPE_AS
 inherit
 	TYPE_AS
 		redefine
-			first_token, last_token
+			first_token,
+			is_fixed,
+			last_token
 		end
 
 create
@@ -26,6 +28,11 @@ feature {NONE} -- Initialize
 		ensure
 			class_name_literal_set: class_name_literal = c
 		end
+
+feature -- Status
+
+	is_fixed: BOOLEAN = True
+			-- <Precursor>
 
 feature -- Visitor
 
@@ -83,7 +90,7 @@ invariant
 	class_name_literal_not_void: class_name_literal /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

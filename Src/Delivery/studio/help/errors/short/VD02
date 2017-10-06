@@ -1,0 +1,2 @@
+Error: A class with an instance-free feature should should be compiled with an option "full class checking".
+What to do: Enable the option "full class checking" in the project settings or make sure there are no instance-free features in the class.

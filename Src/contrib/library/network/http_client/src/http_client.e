@@ -16,8 +16,19 @@ feature -- Access
 		deferred
 		end
 
+	get (a_url: READABLE_STRING_8; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT): HTTP_CLIENT_RESPONSE
+		do
+			Result := new_session (a_url).get ("", ctx)
+		end
+
+	custom (a_method: READABLE_STRING_8; a_url: READABLE_STRING_8; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT): HTTP_CLIENT_RESPONSE
+			-- Response for `a_method' request based on `a_url' and optional `ctx'.	
+		do
+			Result := new_session (a_url).custom (a_method, "", ctx)
+		end
+
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

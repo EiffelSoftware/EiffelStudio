@@ -4,10 +4,6 @@
 		<root all_classes="true"/>
 		<option warning="true">
 		</option>
-		<capability>
-			<concurrency support="scoop" use="scoop"/>
-			<void_safety support="all" use="all"/>
-		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>

@@ -54,7 +54,14 @@ feature -- Test
 
 			create jwt_loader
 
-			if attached jwt_loader.token (tok, "secret", Void) as l_tok then
+				-- Use header alg!
+			if attached jwt_loader.token (tok, Void, "secret", Void) as l_tok then
+				assert ("no error", not l_tok.has_error)
+				assert ("same payload", l_tok.claimset.string.same_string (payload))
+			end
+
+				-- Use given alg!
+			if attached jwt_loader.token (tok, jwt.algorithm, "secret", Void) as l_tok then
 				assert ("no error", not l_tok.has_error)
 				assert ("same payload", l_tok.claimset.string.same_string (payload))
 			end
@@ -96,21 +103,21 @@ feature -- Test
 			create jwt_loader
 
 				-- Test with validation + exp
-			if attached jwt_loader.token (tok, "secret", Void) as l_tok then
+			if attached jwt_loader.token (tok, jwt.algorithm, "secret", Void) as l_tok then
 				assert ("no error", not l_tok.has_error)
 				assert ("same payload", l_tok.claimset.string.same_string (payload))
 			end
 
 			create ctx
 			ctx.set_time (now)
-			if attached jwt_loader.token (tok, "secret", ctx) as l_tok then
+			if attached jwt_loader.token (tok, jwt.algorithm, "secret", ctx) as l_tok then
 				assert ("no error", not l_tok.has_error)
 			end
 
 			dt := duplicated_time (now)
 			dt.hour_add (5)
 			ctx.set_time (dt)
-			if attached jwt_loader.token (tok, "secret", ctx) as l_tok then
+			if attached jwt_loader.token (tok, jwt.algorithm, "secret", ctx) as l_tok then
 				assert ("exp error", l_tok.has_error)
 			end
 
@@ -122,7 +129,7 @@ feature -- Test
 			tok := jwt.encoded_string ("secret")
 
 			ctx.set_time (now)
-			if attached jwt_loader.token (tok, "secret", ctx) as l_tok then
+			if attached jwt_loader.token (tok, jwt.algorithm, "secret", ctx) as l_tok then
 				assert ("has nbf error", l_tok.has_error)
 			end
 
@@ -130,7 +137,7 @@ feature -- Test
 			dt.second_add (15)
 			ctx.set_time (dt)
 
-			if attached jwt_loader.token (tok, "secret", ctx) as l_tok then
+			if attached jwt_loader.token (tok, jwt.algorithm, "secret", ctx) as l_tok then
 				assert ("has nbf error", l_tok.has_error)
 			end
 
@@ -138,28 +145,48 @@ feature -- Test
 			dt.minute_add (45)
 			ctx.set_time (dt)
 
-			if attached jwt_loader.token (tok, "secret", ctx) as l_tok then
+			if attached jwt_loader.token (tok, jwt.algorithm, "secret", ctx) as l_tok then
 				assert ("no error", not l_tok.has_error)
 			end
 
 				-- Test Issuer
 			ctx.set_issuer ("urn:foobar")
-			if attached jwt_loader.token (tok, "secret", ctx) as l_tok then
+			if attached jwt_loader.token (tok, jwt.algorithm, "secret", ctx) as l_tok then
 				assert ("has iss error", l_tok.has_error)
 			end
 			ctx.set_issuer ("urn:foo")
-			if attached jwt_loader.token (tok, "secret", ctx) as l_tok then
+			if attached jwt_loader.token (tok, jwt.algorithm, "secret", ctx) as l_tok then
 				assert ("no error", not l_tok.has_error)
 			end
 
 				-- Test Audience
 			ctx.set_audience ("urn:foobar")
-			if attached jwt_loader.token (tok, "secret", ctx) as l_tok then
+			if attached jwt_loader.token (tok, jwt.algorithm, "secret", ctx) as l_tok then
 				assert ("has aud error", l_tok.has_error)
 			end
 			ctx.set_audience ("urn:foo")
-			if attached jwt_loader.token (tok, "secret", ctx) as l_tok then
+			if attached jwt_loader.token (tok, jwt.algorithm, "secret", ctx) as l_tok then
 				assert ("no error", not l_tok.has_error)
+			end
+		end
+
+	test_mismatched_alg_jwt
+		local
+			jwt: JWS
+			payload: STRING
+			tok: STRING
+		do
+			payload := "[
+				{"iss":"joe","exp":1300819380,"http://example.com/is_root":true}
+				]"
+
+			create jwt.make_with_json_payload (payload)
+			jwt.set_algorithm ("none")
+			tok := jwt.encoded_string ("secret")
+
+			if attached (create {JWT_LOADER}).token (tok, "HS256", "secret", Void) as l_tok then
+				assert ("no error", not jwt.has_error)
+				assert ("same payload", l_tok.claimset.string.same_string (payload))
 			end
 		end
 
@@ -177,7 +204,11 @@ feature -- Test
 			jwt.set_algorithm ("none")
 			tok := jwt.encoded_string ("secret")
 
-			if attached (create {JWT_LOADER}).token (tok, "secret", Void) as l_tok then
+			if attached (create {JWT_LOADER}).token (tok, "none", "secret", Void) as l_tok then
+				assert ("no error", not jwt.has_error)
+				assert ("same payload", l_tok.claimset.string.same_string (payload))
+			end
+			if attached (create {JWT_LOADER}).token (tok, Void, "secret", Void) as l_tok then
 				assert ("no error", not jwt.has_error)
 				assert ("same payload", l_tok.claimset.string.same_string (payload))
 			end

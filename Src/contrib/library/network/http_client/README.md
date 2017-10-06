@@ -10,6 +10,9 @@ It provides simple routine to perform http requests, and get response.
 	- Eiffel Net library 
 		- and optionally Eiffel NetSSL library to support `https://...`
 
+* Note: set ciphers setting is supported only with libcurl implementation for now, net implementation
+set all the ciphers as part of the OpenSSL initialization.
+
 This means on Windows, do not forget to copy the libcurl.dll (and related) either in the same directory of the executable, or ensure the .dll are in the PATH environment.
 
 It is possible to exclude the libcurl implementation xor the Eiffel Net implementation:

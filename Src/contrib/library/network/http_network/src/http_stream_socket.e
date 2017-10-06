@@ -9,8 +9,6 @@ class
 inherit
 	NETWORK_STREAM_SOCKET
 
-	HTTP_STREAM_SOCKET_EXT
-
 create
 	make, make_empty,
 	make_client_by_port, make_client_by_address_and_port,

@@ -167,7 +167,7 @@ feature -- Element change
 		end
 
 	set_socket_timeout (a_nb_seconds: like socket_timeout)
-			-- Set `socket_timeout' with `a_nb_seconds'
+			-- Set `socket_timeout' with `a_nb_seconds'.
 		do
 			socket_timeout := a_nb_seconds
 		ensure
@@ -175,7 +175,7 @@ feature -- Element change
 		end
 
 	set_socket_recv_timeout (a_nb_seconds: like socket_recv_timeout)
-			-- Set `socket_recv_timeout' with `a_nb_seconds'
+			-- Set `socket_recv_timeout' with `a_nb_seconds'.
 		do
 			socket_recv_timeout := a_nb_seconds
 		ensure
@@ -183,7 +183,7 @@ feature -- Element change
 		end
 
 	set_keep_alive_timeout (a_seconds: like keep_alive_timeout)
-			-- Set `keep_alive_timeout' with `a_seconds'
+			-- Set `keep_alive_timeout' with `a_seconds'.
 		do
 			keep_alive_timeout := a_seconds
 		ensure
@@ -191,7 +191,7 @@ feature -- Element change
 		end
 
 	set_max_keep_alive_requests (nb: like max_keep_alive_requests)
-			-- Set `max_keep_alive_requests' with `nb'
+			-- Set `max_keep_alive_requests' with `nb'.
 		do
 			max_keep_alive_requests := nb
 		ensure
@@ -254,7 +254,7 @@ feature -- Element change
 		end
 
 	mark_secure
-			-- Set is_secure in True
+			-- Set is_secure in True.
 		do
 			set_is_secure (True)
 		ensure
@@ -287,7 +287,7 @@ feature -- Element change
 		end
 
 	set_secure_protocol (a_version: NATURAL)
-			-- Set `secure_protocol' with `a_version'
+			-- Set `secure_protocol' with `a_version'.
 		do
 			secure_protocol := a_version
 		ensure
@@ -295,18 +295,19 @@ feature -- Element change
 		end
 
 	set_secure_protocol_from_string (a_ssl_version: READABLE_STRING_GENERAL)
-			-- Set `secure_protocol' with `a_ssl_version'
+			-- Set `secure_protocol' with `a_ssl_version'.
 		do
-			if a_ssl_version.is_case_insensitive_equal ("ssl_2_3") then
-				set_secure_protocol_to_ssl_2_or_3
-			elseif a_ssl_version.is_case_insensitive_equal ("tls_1_0") then
-				set_secure_protocol_to_tls_1_0
+			if a_ssl_version.is_case_insensitive_equal ("tls_1_2") then
+				set_secure_protocol_to_tls_1_2
 			elseif a_ssl_version.is_case_insensitive_equal ("tls_1_1") then
 				set_secure_protocol_to_tls_1_1
-			elseif a_ssl_version.is_case_insensitive_equal ("tls_1_2") then
-				set_secure_protocol_to_tls_1_2
+			elseif a_ssl_version.is_case_insensitive_equal ("tls_1_0") then
+				set_secure_protocol_to_tls_1_0
 			elseif a_ssl_version.is_case_insensitive_equal ("dtls_1_0") then
 				set_secure_protocol_to_dtls_1_0
+			elseif a_ssl_version.is_case_insensitive_equal ("ssl_2_3") then
+					-- Obsolete!
+				set_secure_protocol_to_ssl_2_or_3
 			else -- Default
 				set_secure_protocol_to_tls_1_2
 			end
@@ -316,6 +317,8 @@ feature -- SSL Helpers
 
 	set_secure_protocol_to_ssl_2_or_3
 			-- Set `secure_protocol' with `Ssl_23'.
+		obsolete
+			"Use `set_secure_protocol_to_tls_1_2` [2017-06-23]."
 		deferred
 		end
 

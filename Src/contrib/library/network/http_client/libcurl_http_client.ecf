@@ -7,8 +7,6 @@
 			<exclude>/\.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true">
-		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL.ecf"/>
 		<library name="encoder" location="..\..\web\framework\ewf\text\encoder\encoder.ecf"/>
@@ -16,8 +14,8 @@
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
 		<cluster name="src" location=".\src\">
-			<cluster name="implementation" location="$|implementation" recursive="true" hidden="true"/>
-			<cluster name="parameters" location="$|parameters" recursive="true"/>
+			<cluster name="implementation" location="$|implementation\" recursive="true" hidden="true"/>
+			<cluster name="parameters" location="$|parameters\" recursive="true"/>
 			<cluster name="spec_libcurl" location="$|spec\libcurl\" recursive="true"/>
 			<cluster name="default_libcurl" location="$|default\libcurl\"/>
 		</cluster>

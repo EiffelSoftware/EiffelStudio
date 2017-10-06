@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="es_cloud" uuid="DA857F5D-FEEA-4227-BAD5-CD6E2C342716" library_target="es_cloud">
+	<description>ISE Eiffel - Account solution</description>
+	<target name="es_cloud">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false" use_application_options="true"/>
+		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
+		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\web\authentication\http_authorization\http_authorization.ecf"/>
+		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\libcurl_http_client.ecf"/>
+		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf" readonly="false"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>
+		<library name="jwt" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt\jwt.ecf"/>
+		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf" readonly="false" use_application_options="true"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="true"/>
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
+		<library name="uuid" location="$EIFFEL_SRC\library\uuid\uuid.ecf" readonly="false"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
+		<cluster name="cloud" location=".\">
+			<cluster name="service" location="$|service\"/>
+			<cluster name="model" location="$|model\"/>
+			<cluster name="implementation" location="$|implementation\" hidden="true">
+				<cluster name="unix" location="$|spec\unix\">
+					<condition>
+						<platform excluded_value="windows"/>
+					</condition>
+				</cluster>
+				<cluster name="windows" location="$|spec\windows\">
+					<condition>
+						<platform value="windows"/>
+					</condition>
+				</cluster>
+			</cluster>
+		</cluster>
+	</target>
+</system>

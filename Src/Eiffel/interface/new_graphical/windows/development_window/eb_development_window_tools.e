@@ -140,6 +140,20 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	cloud_account_tool: ES_CLOUD_ACCOUNT_TOOL
+			-- Account tool
+		require
+			not_is_recycled: not is_recycled
+		do
+			if attached {like cloud_account_tool} develop_window.shell_tools.tool ({ES_CLOUD_ACCOUNT_TOOL}) as l_tool then
+				Result := l_tool
+			else
+				check tool_not_found: False end
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 	info_tool: ES_INFORMATION_TOOL
 			-- Info tool
 		require
@@ -501,7 +515,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

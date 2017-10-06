@@ -237,6 +237,10 @@ feature {NONE} -- Access
 			l_tools.put_last ({ES_TESTING_RESULTS_TOOL})
 			l_tools.put_last ({ES_WEB_BROWSER_TOOL})
 
+				-- ES Cloud tools
+			l_tools.put_last ({ES_CLOUD_ACCOUNT_TOOL})
+
+
 				-- Custom formatter tools
 				-- FIXME: Custom formatter tools have been tricking to adapt for 6.1. Given the time-frame
 				--        optimizations will be deferred for a later release, hopefully 6.2.

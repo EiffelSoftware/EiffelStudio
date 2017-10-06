@@ -163,6 +163,12 @@ feature -- Commands
 			Result.disable_sensitive
 		end
 
+	show_cloud_account_cmd: EB_SHOW_CLOUD_ACCOUNT_CMD
+			-- Display Cloud Account tool.
+		once
+			create Result.make
+		end
+
 	Show_preferences_cmd: EB_SHOW_PREFERENCES_COMMAND
 			-- Command to Display the User Preferences Editor.
 		once

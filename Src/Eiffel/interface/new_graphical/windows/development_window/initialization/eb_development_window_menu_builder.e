@@ -32,6 +32,7 @@ feature -- Command
 			build_refactoring_menu
 			build_window_menu
 			build_help_menu
+			build_cloud_account_menu
 				-- Build the menu bar.
 			build_menu_bar
 		end
@@ -135,6 +136,7 @@ feature -- Command
 			l_mb.extend (develop_window.menus.tools_menu)
 			l_mb.extend (develop_window.menus.window_menu)
 			l_mb.extend (develop_window.menus.help_menu)
+			l_mb.extend (develop_window.menus.cloud_account_menu)
 
 			develop_window.estudio_debug_cmd.attach_window (develop_window.window)
 		end
@@ -758,6 +760,15 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 				-- The favorites menu is already collected by the favorites manager.
 			auto_recycle (develop_window.menus.favorites_menu)
+		end
+
+	build_cloud_account_menu
+			-- Build the Cloud Account menu
+		local
+			l_menu: ES_CLOUD_ACCOUNT_MENU
+		do
+			create l_menu.make (develop_window.Interface_names.m_account, develop_window)
+			develop_window.menus.set_account_menu (l_menu)
 		end
 
 	build_project_menu

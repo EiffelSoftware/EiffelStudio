@@ -131,6 +131,17 @@ feature {NONE} -- Initialization
 			eiffel_layout_not_void: eiffel_layout /= Void
 		end
 
+	initialize_account
+			-- Initialization for the account system.
+		local
+			ctlr: ES_CLOUD_CONTROLLER
+		do
+			create ctlr
+			if attached ctlr.es_cloud_s.service as s then
+				s.register_observer (ctlr)
+			end
+		end
+
 	initialize_debugger
 			-- Various initialization of the debugger
 		do
@@ -139,10 +150,10 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	service_initializer: attached SERVICE_INITIALIZER
+	service_initializer: SERVICE_INITIALIZER
 			-- Initializer used to register all services.
 		once
-			create {attached ES_SERVICE_INITIALIZER} Result
+			create {ES_SERVICE_INITIALIZER} Result
 		end
 
 feature {NONE} -- Implementation (preparation of all widgets)
@@ -153,8 +164,9 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			an_app_not_void: an_app /= Void
 		do
 			initialize_services
-
 			compiler_initialization
+
+			initialize_account
 
 			initialize_debugger
 
@@ -172,18 +184,58 @@ feature {NONE} -- Implementation (preparation of all widgets)
 				-- Save EIS storage when project is closed.
 			eiffel_project.manager.close_agents.extend (agent eis_manager.save_storage)
 
+			launch_interface
+		end
+
+	launch_interface
+		do
 			if preferences.dialog_data.show_first_launching_dialog then
-				display_first_launching_dialog (agent load_interface)
+				display_first_launching_dialog (agent display_startup_page)
 			else
-				load_interface
+				display_startup_page
 			end
 		end
+
+feature {NONE} -- Welcome dialog
+
+	display_startup_page
+		local
+			pg: ES_STARTUP_PAGE
+			first_window: EB_DEVELOPMENT_WINDOW
+			win: EV_WINDOW
+			w,h: INTEGER
+		do
+			first_window := window_manager.last_created_window
+			check
+				first_window_not_void: first_window /= Void
+			end
+			win := first_window.window
+			w := win.width - 50
+			h := win.height - 50
+
+			create pg.make
+			pg.set_quit_action (agent do (create {EXCEPTIONS}).die (0) end)
+			pg.set_next_action (agent load_interface)
+			pg.dialog.set_position (win.x_position + 25, win.y_position + 25)
+			pg.dialog.set_size (w, h)
+			pg.start (win)
+		end
+
+feature {NONE} -- Implementation: interface loading		
 
 	load_interface
 			-- Start interface according to arguments.
 		local
 			project_index: INTEGER
 		do
+				-- Account manager
+				-- FIXME: find better place.
+			across
+				window_manager.development_windows as ic
+			loop
+				ic.item.menus.cloud_account_menu.update
+			end
+
 				-- If some more arguments were specified, it means that we either asked to retrieve
 				-- an existing project, or to create one.
 			project_index := index_of_word_option ("config")
@@ -396,7 +448,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

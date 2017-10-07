@@ -299,7 +299,9 @@ feature -- Installation
 					if l_installations_href /= Void then
 						ctx.add_form_parameter ("installation_id", a_installation.id)
 						create j_info.make_with_capacity (1)
-						j_info.put_string (a_installation.platform, "platform")
+						if attached a_installation.platform as pf then
+							j_info.put_string (pf, "platform")
+						end
 						ctx.add_form_parameter ("info", j_info.representation)
 						resp := sess.post (l_installations_href, ctx, Void)
 						if
@@ -457,13 +459,15 @@ feature -- Endpoints
 				get_es_cloud_endpoint
 				l_es_cloud_href := endpoint ("es:cloud")
 			end
-			resp := sess.get (l_es_cloud_href, ctx)
-			if
-				attached resp and then not resp.error_occurred and then
-				attached json (resp.body) as j
-			then
-				if attached {JSON_STRING} json_field (j, "_links|es:account|href") as v then
-					Result := v.unescaped_string_8
+			if l_es_cloud_href /= Void then
+				resp := sess.get (l_es_cloud_href, ctx)
+				if
+					attached resp and then not resp.error_occurred and then
+					attached json (resp.body) as j
+				then
+					if attached {JSON_STRING} json_field (j, "_links|es:account|href") as v then
+						Result := v.unescaped_string_8
+					end
 				end
 			end
 		end

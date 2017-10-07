@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_access_token (tok: ES_ACCOUNT_ACCESS_TOKEN)
+	set_access_token (tok: detachable ES_ACCOUNT_ACCESS_TOKEN)
 		do
 			access_token := tok
 		end

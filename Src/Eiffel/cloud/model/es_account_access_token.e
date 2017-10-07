@@ -72,7 +72,7 @@ feature -- Element change
 			expiration_date := dt
 		end
 
-	set_refresh_key (k: READABLE_STRING_8)
+	set_refresh_key (k: detachable READABLE_STRING_8)
 		do
 			refresh_key := k
 		end

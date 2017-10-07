@@ -41,12 +41,10 @@ feature {NONE} -- Creation
 feature {NONE} -- Default
 
 	default_server_url: STRING
-		local
-			env: ES_INSTALLATION_ENVIRONMENT
 		do
 			if
 				is_eiffel_layout_defined and then
-				attached env.application_item ("default_server_url", "es_cloud", eiffel_layout.version_name) as v
+				attached (create {ES_INSTALLATION_ENVIRONMENT}.make (eiffel_layout)).application_item ("default_server_url", "es_cloud", eiffel_layout.version_name) as v
 				and then v.is_valid_as_string_8
 			then
 					-- For now, it is possible to change the server url this way.
@@ -304,7 +302,9 @@ feature -- Connection checking
 			b: BOOLEAN
 		do
 			l_was_available := is_available
-			cell_is_available.item.last_time := Void -- Force new check
+			if attached cell_is_available as cl then
+				cl.item.last_time := Void -- Force new check
+			end
 			b := is_available
 			if l_was_available /= b then
 				on_cloud_available (b)
@@ -315,7 +315,10 @@ feature -- Updating
 
 	update_account_subscription (acc: ES_ACCOUNT)
 		do
-			if attached web_api.plan (acc.access_token.token) as l_plan then
+			if
+				attached acc.access_token as tok and then
+				attached web_api.plan (tok.token) as l_plan
+			then
 				acc.set_plan (l_plan)
 			end
 		end

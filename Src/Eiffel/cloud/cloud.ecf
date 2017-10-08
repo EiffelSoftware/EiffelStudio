@@ -42,4 +42,8 @@
 			</cluster>
 		</cluster>
 	</target>
+	<target name="testing" extends="es_cloud">
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<tests name="tests" location=".\testing" recursive="true"/>
+	</target>
 </system>

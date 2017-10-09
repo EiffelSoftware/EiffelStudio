@@ -1,0 +1,26 @@
+#!/bin/sh
+
+. ./etc.rc
+echo Source from $EIFFEL_SRC
+
+if [ ! -d $roc_cache_dir ];
+then
+	echo Create cache directory
+	mkdir -p $roc_cache_dir
+fi
+if [ ! -d $roc_comp_dir ];
+then
+	echo Create compilation directory
+	mkdir -p $roc_comp_dir
+fi
+ecb -config $EIFFEL_SRC/web/eiffel-cloud/server.ecf -target es_cloud_libfcgi -finalize -c_compile -project_path $roc_comp_dir $*
+
+t_comp_execfilename=$roc_comp_dir/EIFGENs/es_cloud_libfcgi/F_code/es_cloud
+if [ -f $t_comp_execfilename ];
+then
+	cp $t_comp_execfilename $roc_cache_dir/compiled_site_executable
+	\rm -rf $roc_comp_dir/EIFGENs/es_cloud_libfcgi
+else
+	rm $roc_cache_dir/compiled_site_executable
+fi
+

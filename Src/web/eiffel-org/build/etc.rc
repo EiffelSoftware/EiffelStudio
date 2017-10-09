@@ -1,0 +1,13 @@
+# Fill this file to fit your environment
+
+# If ec environment is not set by default, set it up here.
+
+roc_cache_dir=__cache
+roc_comp_dir=$roc_cache_dir/_COMP
+
+# local username, is the user owning the local file.
+local_username=isewww
+
+# httpd_username is the user executing web requests (usually www-data with apache)
+httpd_username=www-data
+

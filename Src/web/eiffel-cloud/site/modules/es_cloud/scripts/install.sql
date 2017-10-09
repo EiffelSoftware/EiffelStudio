@@ -14,7 +14,7 @@ CREATE TABLE es_plan_subscriptions(
 );
 
 CREATE TABLE es_installations(
-  `iid` TEXT PRIMARY KEY NOT NULL ,
+  `iid` VARCHAR(255) PRIMARY KEY NOT NULL ,
   `uid`	INTEGER NOT NULL,
   `info` TEXT NOT NULL,
   `status` INTEGER NOT NULL,

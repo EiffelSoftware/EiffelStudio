@@ -43,9 +43,29 @@ feature -- Access
 			Result := es_cloud_storage.plans
 		end
 
+	plan_by_name (a_name: READABLE_STRING_GENERAL): detachable ES_CLOUD_PLAN
+		do
+			across
+				plans as ic
+			until
+				Result /= Void
+			loop
+				Result := ic.item
+				if not a_name.is_case_insensitive_equal (Result.name) then
+					Result := Void
+				end
+			end
+		end
+
 	user_subscription (a_user: CMS_USER): detachable ES_CLOUD_PLAN_SUBSCRIPTION
 		do
 			Result := es_cloud_storage.user_subscription (a_user)
+			if Result = Void then
+					-- Subscribe to default plan
+				if attached plans as lst and then not lst.is_empty then
+					create Result.make (a_user, lst.first)
+				end
+			end
 		end
 
 	user_installations (a_user: CMS_USER): LIST [ES_CLOUD_INSTALLATION]
@@ -53,9 +73,16 @@ feature -- Access
 			Result := es_cloud_storage.user_installations (a_user)
 		end
 
-feature -- Change		
+feature -- Change	
+
+	save_plan (a_plan: ES_CLOUD_PLAN)
+		do
+			es_cloud_storage.save_plan (a_plan)
+		end
 
 	subscribe_user_to_plan (a_user: CMS_USER; a_plan: ES_CLOUD_PLAN; nb_months: INTEGER)
+		require
+			a_plan.has_id
 		local
 			sub: ES_CLOUD_PLAN_SUBSCRIPTION
 			l_date: DATE

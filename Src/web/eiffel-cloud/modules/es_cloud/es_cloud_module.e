@@ -58,12 +58,17 @@ feature {CMS_API} -- Module Initialization
 			-- <Precursor>
 		do
 			Precursor (api)
-			create es_cloud_api.make (api)
+			if es_cloud_api = Void then
+				create es_cloud_api.make (api)
+			end
 		end
 
 feature {CMS_API} -- Module management
 
 	install (api: CMS_API)
+		local
+			pl: ES_CLOUD_PLAN
+			l_es_cloud_api: like es_cloud_api
 		do
 				-- Schema
 			if attached api.storage.as_sql_storage as l_sql_storage then
@@ -75,6 +80,11 @@ feature {CMS_API} -- Module management
 					Precursor {CMS_MODULE} (api)
 				end
 			end
+			create l_es_cloud_api.make (api)
+			es_cloud_api := l_es_cloud_api
+			create pl.make ("free")
+			pl.set_title ("Free")
+			l_es_cloud_api.save_plan (pl)
 		end
 
 feature {NONE} -- Administration
@@ -112,15 +122,6 @@ feature -- Hooks configuration
 			-- Module hooks configuration.
 		do
 --			a_hooks.subscribe_to_form_alter_hook (Current)
-		end
-
-feature -- Hook
-
-	form_alter (a_form: CMS_FORM; a_form_data: detachable WSF_FORM_DATA; a_response: CMS_RESPONSE)
-			-- Hook execution on form `a_form' and its associated data `a_form_data',
-			-- for related response `a_response'.
-		do
-
 		end
 
 feature -- Hook

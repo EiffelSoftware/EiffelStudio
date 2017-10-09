@@ -56,6 +56,15 @@ feature -- Access
 
 	default_version_id: READABLE_STRING_GENERAL
 
+	default_editing_version_id: READABLE_STRING_GENERAL
+		do
+--			if attached available_versions (False) as lst and then not lst.is_empty then
+--				Result := lst.first
+--			else
+				Result := default_version_id
+--			end
+		end
+
 feature -- Query
 
 	label_of_version (a_version_id: READABLE_STRING_GENERAL): detachable READABLE_STRING_32

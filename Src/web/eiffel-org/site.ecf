@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="eiffel_community_site" uuid="AD6F84E0-E046-4841-9EF5-BD90D508904F">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="eiffel_community_site" uuid="AD6F84E0-E046-4841-9EF5-BD90D508904F">
 	<description>Eiffel.org community site.</description>
 	<target name="eiffel_community_site_common">
 		<file_rule>
@@ -30,15 +30,15 @@
 		<library name="cms_files_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\files\files.ecf" readonly="false"/>
 		<library name="cms_google_search_20_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\google_search_20\google_search_20.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_messaging_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\messaging\messaging.ecf" readonly="false"/>
+		<library name="cms_module_embedded_video" location="$ISE_LIBRARY\unstable\library\web\cms\modules\embedded_video\embedded_video.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_node_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\node\node.ecf" readonly="false"/>
 		<library name="cms_persistence_sqlite3" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\sqlite3\sqlite3.ecf" readonly="false"/>
-		<library name="cms_persistence_store_mysql" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\store_mysql\store_mysql.ecf" readonly="false"/>
+		<library name="cms_persistence_store_mysql" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\store_mysql_fake\store_mysql.ecf" readonly="false"/>
 		<library name="cms_recent_changes_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\recent_changes\recent_changes.ecf" readonly="false"/>
 		<library name="cms_seo_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\seo\seo.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_session_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\session_auth\cms_session_auth.ecf" readonly="false"/>
 		<library name="cms_sitemap_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\sitemap\sitemap.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_taxonomy_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\taxonomy\taxonomy.ecf" readonly="false"/>
-		<library name="cms_module_embedded_video" location="$ISE_LIBRARY\unstable\library\web\cms\modules\embedded_video\embedded_video.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_wikitext_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\wikitext\wikitext.ecf" readonly="false" use_application_options="true"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>
@@ -68,6 +68,9 @@
 	</target>
 	<target name="eiffel_community_site_standalone" extends="eiffel_community_site_common">
 		<root class="EIFFEL_COMMUNITY_WEB" feature="make_and_launch"/>
+		<capability>
+			<concurrency support="scoop"/>
+		</capability>
 		<variable name="httpd_ssl_disabled" value="false"/>
 		<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>

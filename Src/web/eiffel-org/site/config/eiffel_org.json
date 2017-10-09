@@ -1,10 +1,17 @@
 {
 	"database": {
 		"datasource": {
-			"driver": "mysql",
+			"--driver-": "mysql",
+			"-driver": "odbc",
+			"driver": "sqlite3",
+			"environment": "sqlite",
+			"environment": "odbc-sqlite",
 			"environment": "eiffel-org-mysql"
 		},
 		"environments": {
+			"sqlite": {
+				"connection_string":"Driver=SQLite3;Database=./site/database.sqlite;LongNames=0;Timeout=1000;NoTXN=0;SyncPragma=NORMAL;StepAPI=0;"
+			},
 			"odbc-sqlite": {
 				"connection_string":"Driver=SQLite3 ODBC Driver;Database=./site/database.sqlite;LongNames=0;Timeout=1000;NoTXN=0;SyncPragma=NORMAL;StepAPI=0;"
 			},
@@ -26,7 +33,7 @@
 		"server": "localhost"
 		},
 	"logger": { 
-			"level":"DEBUG",
+			"level":"UNKNO",
 			"type":"stderr",
 			"backup_count":"4"
 		}

@@ -1,5 +1,5 @@
 {
-	"email": "webmaster@eiffel.org",
+	"--email": "webmaster@example.com",
 	"subjet": "Thank you for contacting us",
 	"recaptcha": {
 		"site_key":"",

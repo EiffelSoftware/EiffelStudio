@@ -672,7 +672,7 @@ feature {NONE} -- Implementation
 						if wb /= Void and then attached wb.page (a_page_name) as wp then
 							l_parent := wb.page_by_key (wp.parent_key)
 							if l_parent /= Void then
-								create ln.make ({STRING_32} "Parent <" + mng.wiki_page_title (l_parent) + ">", wdocs_page_link_location (a_version_id, wb.name, l_parent.title))
+								create ln.make ({STRING_32} "Back to: " + mng.wiki_page_title (l_parent), wdocs_page_link_location (a_version_id, wb.name, l_parent.title))
 								ln.set_expandable (True)
 								Result.extend (ln)
 

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+. ./etc.rc
+
+echo Source from $EIFFEL_SRC
+svn update $EIFFEL_SRC
+

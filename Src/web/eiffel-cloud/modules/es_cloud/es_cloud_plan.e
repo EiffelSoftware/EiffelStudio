@@ -25,6 +25,11 @@ feature {NONE} -- Creation
 
 feature -- Access
 
+	has_id: BOOLEAN
+		do
+			Result := id > 0
+		end
+
 	id: INTEGER
 
 	name: IMMUTABLE_STRING_8
@@ -32,6 +37,20 @@ feature -- Access
 	title: detachable IMMUTABLE_STRING_32
 
 	description: detachable IMMUTABLE_STRING_32
+
+feature -- Status report	
+
+	same_plan (pl: detachable ES_CLOUD_PLAN): BOOLEAN
+			-- Is Current same plan as `pl`?
+		do
+			if pl /= Void then
+				if has_id then
+					Result := id = pl.id
+				else
+					Result := name.same_string (pl.name)
+				end
+			end
+		end
 
 feature -- Query
 

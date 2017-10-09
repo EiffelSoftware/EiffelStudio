@@ -159,6 +159,35 @@ feature -- Access
 
 feature -- Change
 
+	save_plan (a_plan: ES_CLOUD_PLAN)
+		local
+			l_params: STRING_TABLE [detachable ANY]
+			pid: INTEGER
+			l_name: detachable READABLE_STRING_32
+			pl: ES_CLOUD_PLAN
+			l_is_new: BOOLEAN
+		do
+			l_is_new := not a_plan.has_id
+
+			reset_error
+			if l_is_new then
+				create l_params.make (3)
+			else
+				create l_params.make (4)
+				l_params.force (a_plan.id, "pid")
+			end
+			l_params.force (a_plan.name, "name")
+			l_params.force (a_plan.title, "title")
+			l_params.force (a_plan.description, "description")
+			if l_is_new then
+				sql_insert (sql_insert_plan, l_params)
+				sql_finalize_insert (sql_insert_plan)
+			else
+				sql_modify (sql_update_plan, l_params)
+				sql_finalize_modify (sql_update_plan)
+			end
+		end
+
 	save_subscription (sub: ES_CLOUD_PLAN_SUBSCRIPTION)
 		local
 			l_params: STRING_TABLE [detachable ANY]
@@ -280,9 +309,15 @@ feature {NONE} -- Queries: installations
 
 feature {NONE} -- Queries: plans	
 
-	sql_select_plans: STRING = "SELECT pid, name, title, description FROM es_plan;"
+	sql_select_plans: STRING = "SELECT pid, name, title, description FROM es_plans;"
 
-	sql_select_plan_by_id: STRING = "SELECT pid, name, title, description FROM es_plan WHERE pid=:pid;"
+	sql_select_plan_by_id: STRING = "SELECT pid, name, title, description FROM es_plans WHERE pid=:pid;"
+
+	sql_insert_plan: STRING = "INSERT INTO es_plans (name, title, description) VALUES (:name, :title, :description);"
+
+	sql_update_plan: STRING = "UPDATE es_plans SET name=:name, title=:title, description=:description WHERE pid=:pid;"
+
+--	sql_delete_plan: STRING = "DELETE FROM es_plans WHERE pid=:pid;"
 
 feature {NONE} -- Queries: subscriptions
 

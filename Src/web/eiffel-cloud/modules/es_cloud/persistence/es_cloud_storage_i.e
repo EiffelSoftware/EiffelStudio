@@ -29,6 +29,10 @@ feature -- Access
 
 feature -- Change
 
+	save_plan (a_plan: ES_CLOUD_PLAN)
+		deferred
+		end
+
 	save_subscription (sub: ES_CLOUD_PLAN_SUBSCRIPTION)
 		deferred
 		end

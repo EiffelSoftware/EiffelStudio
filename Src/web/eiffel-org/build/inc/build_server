@@ -1,0 +1,26 @@
+#!/bin/sh
+
+. ./etc.rc
+echo Source from $EIFFEL_SRC
+
+if [ ! -d $roc_cache_dir ];
+then
+	echo Create cache directory
+	mkdir -p $roc_cache_dir
+fi
+if [ ! -d $roc_comp_dir ];
+then
+	echo Create compilation directory
+	mkdir -p $roc_comp_dir
+fi
+ecb -config $EIFFEL_SRC/web/eiffel-org/site.ecf -target eiffel_community_site_libfcgi -finalize -c_compile -project_path $roc_comp_dir $*
+
+t_comp_execfilename=$roc_comp_dir/EIFGENs/eiffel_community_site_libfcgi/F_code/eiffel_community_site
+if [ -f $t_comp_execfilename ];
+then
+	cp $t_comp_execfilename $roc_cache_dir/compiled_site_executable
+	\rm -rf $roc_comp_dir/EIFGENs/eiffel_community_site_libfcgi
+else
+	rm $roc_cache_dir/compiled_site_executable
+fi
+

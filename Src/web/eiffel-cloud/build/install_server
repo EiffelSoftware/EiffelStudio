@@ -5,8 +5,6 @@
 tmp_dir=$roc_cache_dir
 t_site_src=$EIFFEL_SRC/web/eiffel-cloud
 t_site_execname=es_cloud.fcgi
-t_site_system_name=es_cloud
-t_site_target_name=es_cloud_libfcgi
 
 # ROC-CMS install instructions
 # You should not edit below!

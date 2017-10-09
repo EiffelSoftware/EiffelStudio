@@ -6,7 +6,7 @@ roc_cache_dir=__cache
 roc_comp_dir=$roc_cache_dir/_COMP
 
 # local username, is the user owning the local file.
-local_username=isewww
+local_username=$USER
 
 # httpd_username is the user executing web requests (usually www-data with apache)
 httpd_username=www-data

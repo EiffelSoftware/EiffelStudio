@@ -1,0 +1,27 @@
+#!/bin/bash
+
+. ./etc.rc
+
+op=$1
+
+case "$op" in
+	files)
+		sudo -u ${local_username} ./inc/update_source
+		sudo ./install_server
+		;;
+	file)
+		sudo -u ${local_username} ./inc/update_source
+		sudo ./install_server
+		;;
+	server)
+		sudo -u ${local_username} ./inc/build_server -clean
+		sudo ./install_server
+		;;
+
+	*)
+		sudo -u ${local_username} ./inc/update_source
+		sudo -u ${local_username} ./inc/build_server -clean
+		sudo ./install_server
+	;;
+esac
+

@@ -1,0 +1,71 @@
+#!/bin/bash
+
+. ./etc.rc
+
+tmp_dir=$roc_cache_dir
+t_site_src=$EIFFEL_SRC/web/eiffel-org
+t_site_execname=eiffel_org.fcgi
+
+# ROC-CMS install instructions
+# You should not edit below!
+
+# Check required files or folders!
+if [ ! -f $roc_cache_dir/compiled_site_executable ];
+then
+	echo Missing compiled site executable !!!
+	exit
+fi
+if [ ! -d www ];
+then
+	echo Missing www deployment folder !!!
+	exit
+fi
+
+
+if [ -f $tmp_dir/site_executable ];
+then
+	tmp_bak=$tmp_dir/backup/$(date '+%Y%m%d-%Hh')
+	if [ -d $tmp_bak ];
+	then
+		echo "Overwrite previous backup"
+	else
+		sudo -u ${local_username} mkdir -p $tmp_bak
+	fi
+	sudo -u ${local_username} cp $tmp_dir/site_executable $tmp_bak/.
+	sudo -u ${local_username} cp $tmp_dir/_www $tmp_bak/_www
+fi
+
+pkill -9 $t_site_execname
+
+echo Copy compiled site executable
+sudo -u ${local_username} cp $roc_cache_dir/compiled_site_executable $tmp_dir/site_executable
+
+if [ ! -d $tmp_dir/_www ]; then
+	echo Create _www preparation folder
+	sudo -u ${local_username} mkdir $tmp_dir/_www
+fi
+if [ -d $tmp_dir/_www/site ]; then
+	echo Wipe out _www/site folder.
+	sudo -u ${local_username} \rm -rf $tmp_dir/_www/site
+fi
+if [ ! -d $tmp_dir/_www/site ]; then
+	echo Fetch site folder from source code!
+	sudo -u ${local_username} cp -rf $t_site_src/site $tmp_dir/_www/site
+fi
+
+echo Clear any .ini or .json in _www folder!
+sudo -u ${local_username} \rm -rf $tmp_dir/_www/*.ini
+sudo -u ${local_username} \rm -rf $tmp_dir/_www/*.json
+
+if [ -d custom/site ]; then
+	echo Overwrite site with custom settings!
+	sudo -u ${local_username} rsync -ax -v -t  `pwd`/custom/site/ `pwd`/$tmp_dir/_www/site/
+fi
+
+echo Deploy updated site!
+sudo -u ${httpd_username} cp -f $tmp_dir/site_executable www/$t_site_execname
+sudo -u ${httpd_username} rsync -ax -v -t  $tmp_dir/_www/site/ www/site/
+
+echo restart FCGI server
+pkill -9 $t_site_execname
+# apache2ctl restart

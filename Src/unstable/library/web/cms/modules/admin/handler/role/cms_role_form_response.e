@@ -82,7 +82,7 @@ feature -- Process Edit
 			fd: detachable WSF_FORM_DATA
 		do
 			create b.make_empty
-			f := new_edit_form (a_role, request_url (Void), "edit-user")
+			f := new_edit_form (a_role, request_url (Void), "edit-user-role")
 			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.validation_actions.extend (agent edit_form_validate(?,a_role, b))
@@ -111,7 +111,7 @@ feature -- Process Delete
 			fd: detachable WSF_FORM_DATA
 		do
 			create b.make_empty
-			f := new_delete_form (a_role, request_url (Void), "edit-user")
+			f := new_delete_form (a_role, request_url (Void), "delete-user-role")
 			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.process (Current)

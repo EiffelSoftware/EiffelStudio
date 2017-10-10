@@ -36,8 +36,4 @@ feature {NONE} -- Tests
 		once ("OBJECT")
 		end
 
-invariant
-
-	-- Nothing here.
-
 end

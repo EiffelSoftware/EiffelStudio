@@ -30,9 +30,10 @@ feature -- Execution
 					else
 						l_user := u
 					end
-					if
-						l_user /= Void and then
-						(l_user.same_as (u) or else api.has_permissions (<<"view es account", "manage es acounts">>))
+					if l_user = Void then
+						r := new_not_found_error_response ("User not found", req, res)
+					elseif
+						l_user.same_as (u) or else api.has_permissions (<<"view es account", "manage es acounts">>)
 					then
 						r := new_response (req, res)
 						r.add_integer_64_field ("uid", u.id)
@@ -55,10 +56,10 @@ feature -- Execution
 						r.add_link ("es:installations", Void, req.percent_encoded_path_info + "/installations")
 						r.add_self (req.percent_encoded_path_info)
 					else
-						r := new_access_denied_error_response (Void, req, res)
+						r := new_permissions_access_denied_error_response (<<"view es account", "manage es accounts">>, "Access denied for user " + u.id.out + " on user " + l_user.id.out, req, res)
 					end
 				else
-					r := new_access_denied_error_response (Void, req, res)
+					r := new_access_denied_error_response ("No authenticated user!", req, res)
 				end
 			else
 				r := new_bad_request_error_response ("Only GET request!", req, res)

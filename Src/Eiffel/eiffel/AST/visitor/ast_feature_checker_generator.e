@@ -5631,6 +5631,13 @@ feature {NONE} -- Visitor
 		do
 			reset_byte_node
 			l_error_level := error_level
+			if not is_inherited and then attached l_as.indexes as i and then i.is_instance_free then
+				if current_feature.is_attribute then
+					error_handler.insert_error (create {VFFD9X}.make (current_feature, context.current_class, l_as.feature_name))
+				elseif current_feature.is_object_relative_once then
+					error_handler.insert_error (create {VFFD10X}.make (current_feature, context.current_class, l_as.feature_name))
+				end
+			end
 			reset_for_unqualified_call_checking
 			l_as.body.process (Current)
 			if error_level = l_error_level then

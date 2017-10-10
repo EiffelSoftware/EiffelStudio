@@ -16,6 +16,16 @@ feature -- Status report
 		deferred
 		end
 
+	has_error: BOOLEAN
+			-- Last operation reported an error?
+		deferred
+		end
+
+	last_error_message: detachable READABLE_STRING_32
+			-- If `has_error`, error message.
+		deferred
+		end
+
 feature -- Access
 
 	license_accepted: BOOLEAN

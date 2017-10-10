@@ -69,11 +69,11 @@ feature -- Operation
 					elseif cld.is_guest then
 							-- Show profile
 						l_acc_menu_item.set_text ({STRING_32} "Guest Account")
-						l_command_menu_item.enable_sensitive
+						l_acc_menu_item.enable_sensitive
 					else
 							-- Show profile
 						l_acc_menu_item.set_text ({STRING_32} "Login")
-						l_command_menu_item.enable_sensitive
+						l_acc_menu_item.enable_sensitive
 					end
 				else
 						-- Try again	 ?

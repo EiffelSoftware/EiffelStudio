@@ -120,6 +120,7 @@ feature {NONE} -- Action handlers
 			hb: EV_HORIZONTAL_BOX
 			txt: EV_RICH_TEXT
 			q,r: INTEGER_64
+			nb_days: INTEGER_64
 			s: STRING
 			l_dbg: BOOLEAN
 		do
@@ -142,9 +143,16 @@ feature {NONE} -- Action handlers
 							append_bold_text_to ("Plan: ", txt)
 							append_text_to (l_plan.name, txt)
 							append_text_to ("%N", txt)
-							append_bold_text_to ("Days remaining: ", txt)
-							append_text_to (l_plan.days_remaining.out, txt)
-							append_text_to ("%N", txt)
+							nb_days := l_plan.days_remaining
+							if attached l_plan.expiration_date then
+								if nb_days >= 0 then
+									append_bold_text_to ("Days remaining: ", txt)
+									append_text_to (nb_days.out, txt)
+									append_text_to ("%N", txt)
+								else
+									append_bold_text_to ("Subscription: EXPIRED!%N", txt)
+								end
+							end
 						end
 						if l_dbg then
 							if attached acc.installation as l_installation then

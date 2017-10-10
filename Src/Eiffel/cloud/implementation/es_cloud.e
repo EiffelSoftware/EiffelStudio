@@ -96,7 +96,7 @@ feature {NONE} -- Access
 	server_url: READABLE_STRING_8
 			-- Web service url.
 
-	web_api: ES_ACCOUNT_CLOUD_API
+	web_api: ES_CLOUD_API
 
 feature -- Access
 
@@ -152,6 +152,18 @@ feature -- Status report
 
 	is_guest: BOOLEAN
 			-- Is guest?
+
+	has_error: BOOLEAN
+		do
+			Result := web_api.has_error
+		end
+
+	last_error_message: detachable READABLE_STRING_32
+		do
+			if attached web_api.last_error as err then
+				Result := err.message
+			end
+		end
 
 feature {NONE} -- Status report
 
@@ -289,8 +301,10 @@ feature -- Updating
 		do
 			if attached a_token.refresh_key as k then
 				web_api.refresh_token (a_token.token, k, acc)
-				store
-				on_account_updated (acc)
+				if not web_api.has_error then
+					store
+					on_account_updated (acc)
+				end
 			end
 		end
 

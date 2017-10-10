@@ -117,7 +117,6 @@ feature -- Request execution
 			rep: like new_response
 			l_apps: detachable LIST [READABLE_STRING_GENERAL]
 		do
-			api.storage.set_custom_value ("foobar", "test", "TEST")
 			if attached user_by_uid (a_uid) as l_user then
 				if attached api.user as u then
 					if u.same_as (l_user) or api.user_api.is_admin_user (u) then

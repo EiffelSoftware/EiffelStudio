@@ -41,7 +41,7 @@ feature -- Basic operations
 			then
 				tok := l_auth.substring (8, l_auth.count)
 				if attached jwt_auth_api.user_for_token (tok) as l_user then
-					if api.user_has_permission (l_user, "use jwt_access_token") then
+					if api.user_has_permission (l_user, {JWT_AUTH_MODULE_WEBAPI}.perm_use_jwt_auth) then
 						api.set_user (l_user)
 					end
 				end

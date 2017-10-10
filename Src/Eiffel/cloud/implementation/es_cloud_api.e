@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {ES_ACCOUNT_CLOUD_API}."
+	description: "Summary description for {ES_CLOUD_API}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_ACCOUNT_CLOUD_API
+	ES_CLOUD_API
 
 create
 	make
@@ -29,16 +29,15 @@ feature {NONE} -- Creation
 			is_available := False
 			if
 				attached new_http_client_session as sess and then
-				attached sess.get (root_endpoint, Void) as resp and then
-				not resp.error_occurred
+				attached response (sess.get (root_endpoint, Void)) as resp
 			then
-				is_available := True
-				if attached json (resp.body) as j then
-					if attached {JSON_STRING} json_field (j, "_links|register|href") as v then
-						record_endpoint ("roc:register", v.unescaped_string_8)
+				if not has_error then
+					is_available := True
+					if attached resp.string_8_item ("_links|register|href") as v then
+						record_endpoint ("roc:register", v)
 					end
-					if attached {JSON_STRING} json_field (j, "_links|es:cloud|href") as v then
-						record_endpoint ("es:cloud", v.unescaped_string_8)
+					if attached resp.string_8_item ("_links|es:cloud|href") as v then
+						record_endpoint ("es:cloud", v)
 					end
 				end
 			end
@@ -62,14 +61,31 @@ feature -- Access
 
 	server_url: IMMUTABLE_STRING_8
 
+feature -- Errors
+
+	reset_error
+		do
+			last_error := Void
+		ensure
+			no_error: not has_error
+		end
+
+	has_error: BOOLEAN
+		do
+			Result := last_error /= Void
+		end
+
+	last_error: detachable ES_CLOUD_API_ERROR
+
 feature -- Account: register
 
 	register (a_username, a_password: READABLE_STRING_GENERAL; a_email: READABLE_STRING_8): detachable ES_ACCOUNT
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			sess: like new_http_client_session
-			resp: HTTP_CLIENT_RESPONSE
+			resp: like response
 		do
+			reset_error
 			if attached endpoint ("roc:register") as l_url then
 				sess := new_http_client_session
 				if sess /= Void then
@@ -78,18 +94,17 @@ feature -- Account: register
 					ctx.add_form_parameter ("password", a_password)
 					ctx.add_form_parameter ("email", a_email)
 					ctx.add_form_parameter ("personal_information", "Registration submitted via API.")
-					resp := sess.post (l_url, ctx, Void)
-					if
-						not resp.error_occurred and then
-						attached json (resp.body) as j
-					then
+					resp := response (sess.post (l_url, ctx, Void))
+					if not has_error then
 						if
-							attached {JSON_STRING} json_field (j, "status") as j_status and then
-							j_status.unescaped_string_32.same_string_general ("succeed")
+							attached resp.string_32_item ("status") as l_status and then
+							l_status.same_string_general ("succeed")
 						then
 							create Result.make (a_username)
-							if attached {JSON_STRING} json_field (j, "information") as j_info then
-								print (j_info.unescaped_string_8)
+							if attached resp.string_8_item ("information") as l_info then
+								debug
+									print (l_info)
+								end
 							end
 						end
 					end
@@ -103,9 +118,10 @@ feature -- ROC Account
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			sess: like new_http_client_session
-			resp: HTTP_CLIENT_RESPONSE
+			resp: like response
 			l_jwt_access_token_href: detachable READABLE_STRING_8
 		do
+			reset_error
 			sess := new_http_client_session
 			if sess /= Void then
 				ctx := new_jwt_auth_context (a_token)
@@ -115,12 +131,9 @@ feature -- ROC Account
 				if l_jwt_access_token_href /= Void then
 						-- Get new JWT access token, using Basic authorization.
 					ctx.add_form_parameter ("refresh", a_refresh_key)
-					resp := sess.post (l_jwt_access_token_href, ctx, Void)
-					if
-						not resp.error_occurred and then
-						attached json (resp.body) as j
-					then
-						update_account_with_jwt_access_token_from_json (acc, j)
+					resp := response (sess.post (l_jwt_access_token_href, ctx, Void))
+					if not has_error then
+						update_account_with_jwt_access_token_from_response (acc, resp)
 					end
 				end
 			end
@@ -130,10 +143,11 @@ feature -- ROC Account
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			sess: like new_http_client_session
-			resp: HTTP_CLIENT_RESPONSE
+			resp: like response
 			l_es_cloud_href,
-			l_account_href: detachable READABLE_STRING_8
+			l_account_href, l_installation_href: detachable READABLE_STRING_8
 		do
+			reset_error
 			l_es_cloud_href := endpoint ("es:cloud")
 			if l_es_cloud_href = Void then
 				get_es_cloud_endpoint
@@ -145,29 +159,25 @@ feature -- ROC Account
 					ctx := new_jwt_auth_context (a_token)
 					ctx.set_credentials_required (True)
 
-					resp := sess.get (l_es_cloud_href, ctx)
-					if
-						attached resp and then not resp.error_occurred and then
-						attached json (resp.body) as j
-					then
-						if attached {JSON_STRING} json_field (j, "_links|es:account|href") as v then
-							l_account_href := v.unescaped_string_8
+					resp := response (sess.get (l_es_cloud_href, ctx))
+					if not has_error then
+						if attached resp.string_8_item ("_links|es:account|href") as v then
+							l_account_href := v
 						end
-						if attached {JSON_STRING} json_field (j, "_links|es:installations|href") as v then
---							record_endpoint ("es:cloud", v.unescaped_string_8)
+						if attached resp.string_8_item ("_links|es:installations|href") as v then
+							l_installation_href := v
+--							record_endpoint ("es:cloud", v)
 						end
 					end
-					if l_account_href /= Void then
+					if not has_error and then l_account_href /= Void then
 							-- Get new JWT access token, using Basic authorization.
-						resp := sess.get (l_account_href, ctx)
+						resp := response (sess.get (l_account_href, ctx))
 						if
-							not resp.error_occurred and then
-							attached json (resp.body) as j
+							not has_error and then
+							attached account_from_response (resp) as acc
 						then
-							if attached account_from_json (j) as acc then
-								Result := acc
-								Result.set_access_token (create {ES_ACCOUNT_ACCESS_TOKEN}.make (a_token))
-							end
+							Result := acc
+							Result.set_access_token (create {ES_ACCOUNT_ACCESS_TOKEN}.make (a_token))
 						end
 					end
 				end
@@ -178,42 +188,37 @@ feature -- ROC Account
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			sess: like new_http_client_session
-			resp: HTTP_CLIENT_RESPONSE
+			resp: like response
 			l_jwt_access_token_href: detachable READABLE_STRING_8
 		do
+			reset_error
 			sess := new_http_client_session
 			if sess /= Void then
 				ctx := new_basic_auth_context (a_username, a_password)
 				ctx.set_credentials_required (True)
 
-				resp := sess.get (root_endpoint, ctx)
-				if
-					attached resp and then not resp.error_occurred and then
-					attached json (resp.body) as j
-				then
-					if attached {JSON_STRING} json_field (j, "_links|jwt:access_token|href") as v then
-						l_jwt_access_token_href := v.unescaped_string_8
+				resp := response (sess.get (root_endpoint, ctx))
+				if not has_error then
+					if attached resp.string_8_item ("_links|jwt:access_token|href") as v then
+						l_jwt_access_token_href := v
 					end
-					if attached {JSON_STRING} json_field (j, "_links|es:cloud|href") as v then
-						record_endpoint ("es:cloud", v.unescaped_string_8)
+					if attached resp.string_8_item ("_links|es:cloud|href") as v then
+						record_endpoint ("es:cloud", v)
 					end
 				end
 
 				if l_jwt_access_token_href /= Void then
 						-- Get new JWT access token, using Basic authorization.
 					ctx.add_form_parameter ("applications", "es_account_api")
-					resp := sess.post (l_jwt_access_token_href, ctx, Void)
-					if
-						not resp.error_occurred and then
-						attached json (resp.body) as j
-					then
+					resp := response (sess.post (l_jwt_access_token_href, ctx, Void))
+					if not has_error then
 						create Result.make (a_username)
-						if attached {JSON_NUMBER} json_field (j, "user|uid") as j_uid then
-							Result.set_user_id (j_uid.integer_64_item)
-						elseif attached {JSON_STRING} json_field (j, "user|uid") as j_uid then
-							Result.set_user_id (j_uid.item.to_integer_64)
+						if attached resp.integer_64_item ("user|uid") as l_uid then
+							Result.set_user_id (l_uid)
+						elseif attached resp.string_32_item ("user|uid") as s_uid then
+							Result.set_user_id (s_uid.to_integer_64)
 						end
-						update_account_with_jwt_access_token_from_json (Result, j)
+						update_account_with_jwt_access_token_from_response (Result, resp)
 						check Result.access_token /= Void end
 					end
 				end
@@ -225,10 +230,11 @@ feature -- Plan
 	plan (a_token: READABLE_STRING_8): detachable ES_ACCOUNT_PLAN
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
-			resp: HTTP_CLIENT_RESPONSE
+			resp: like response
 			l_es_cloud_href: detachable READABLE_STRING_8
 			l_account_href: READABLE_STRING_8
 		do
+			reset_error
 			if
 				attached new_http_client_session as sess
 			then
@@ -241,22 +247,16 @@ feature -- Plan
 					l_es_cloud_href := endpoint ("es:cloud")
 				end
 				if l_es_cloud_href /= Void then
-					resp := sess.get (l_es_cloud_href, ctx)
-					if
-						attached resp and then not resp.error_occurred and then
-						attached json (resp.body) as j
-					then
-						if attached {JSON_STRING} json_field (j, "_links|es:account|href") as v then
-							l_account_href := v.unescaped_string_8
+					resp := response (sess.get (l_es_cloud_href, ctx))
+					if not has_error then
+						if attached resp.string_8_item ("_links|es:account|href") as v then
+							l_account_href := v
 						end
 					end
 					if l_account_href /= Void then
-						resp := sess.get (l_account_href, ctx)
-						if
-							not resp.error_occurred and then
-							attached json (resp.body) as j
-						then
-							if attached account_from_json (j) as acc then
+						resp := response (sess.get (l_account_href, ctx))
+						if not has_error then
+							if attached account_from_response (resp) as acc then
 								Result := acc.plan
 							end
 						end
@@ -270,11 +270,12 @@ feature -- Installation
 	register_installation (a_token: READABLE_STRING_8; a_installation: ES_ACCOUNT_INSTALLATION): detachable ES_ACCOUNT_INSTALLATION
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
-			resp: HTTP_CLIENT_RESPONSE
+			resp: like response
 			l_es_cloud_href: detachable READABLE_STRING_8
 			l_installations_href, l_new_installation_href: READABLE_STRING_8
 			j_info: JSON_OBJECT
 		do
+			reset_error
 			if
 				attached new_http_client_session as sess
 			then
@@ -287,13 +288,10 @@ feature -- Installation
 					l_es_cloud_href := endpoint ("es:cloud")
 				end
 				if l_es_cloud_href /= Void then
-					resp := sess.get (l_es_cloud_href, ctx)
-					if
-						attached resp and then not resp.error_occurred and then
-						attached json (resp.body) as j
-					then
-						if attached {JSON_STRING} json_field (j, "_links|es:installations|href") as v then
-							l_installations_href := v.unescaped_string_8
+					resp := response (sess.get (l_es_cloud_href, ctx))
+					if not has_error then
+						if attached resp.string_8_item ("_links|es:installations|href") as v then
+							l_installations_href := v
 						end
 					end
 					if l_installations_href /= Void then
@@ -303,35 +301,29 @@ feature -- Installation
 							j_info.put_string (pf, "platform")
 						end
 						ctx.add_form_parameter ("info", j_info.representation)
-						resp := sess.post (l_installations_href, ctx, Void)
-						if
-							not resp.error_occurred and then
-							attached json (resp.body) as j
-						then
-							if attached {JSON_STRING} json_field (j, "_links|es:installation|href") as v then
-								l_new_installation_href := v.unescaped_string_8
+						resp := response (sess.post (l_installations_href, ctx, Void))
+						if not has_error then
+							if attached resp.string_8_item ("_links|es:installation|href") as v then
+								l_new_installation_href := v
 							end
 						end
 						if l_new_installation_href /= Void then
 							ctx := new_jwt_auth_context (a_token)
 							ctx.set_credentials_required (True)
-							resp := sess.get (l_installations_href, ctx)
-							if
-								not resp.error_occurred and then
-								attached json (resp.body) as j
-							then
-								if attached {JSON_STRING} json_field (j, "es:installation|id") as v then
-									create Result.make_with_id (v.unescaped_string_8)
-									if attached {JSON_STRING} json_field (j, "es:installation|is_active") as v_is_active and then v_is_active.unescaped_string_8.is_case_insensitive_equal_general ("no") then
+							resp := response (sess.get (l_installations_href, ctx))
+							if not has_error then
+								if attached resp.string_8_item ("es:installation|id") as v then
+									create Result.make_with_id (v)
+									if resp.string_item_same_caseless_as ("es:installation|is_active", "no") then
 										Result.mark_inactive
 									else
 										Result.mark_active
 									end
-									if attached {JSON_STRING} json_field (j, "es:installation|info") as v_info then
-										Result.set_info (v_info.unescaped_string_8)
+									if attached resp.string_8_item ("es:installation|info") as v_info then
+										Result.set_info (v_info)
 									end
-									if attached {JSON_STRING} json_field (j, "es:installation|creation_date") as v_creation then
-										Result.set_creation_date (date_time_from_string (v_creation.unescaped_string_32))
+									if attached resp.date_time_item ("es:installation|creation_date") as v_creation then
+										Result.set_creation_date (v_creation)
 									end
 								end
 							end
@@ -360,11 +352,12 @@ feature -- Installation
 	installations (a_token: READABLE_STRING_8): detachable LIST [ES_ACCOUNT_INSTALLATION]
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
-			resp: HTTP_CLIENT_RESPONSE
+			resp: like response
 			l_es_cloud_href: detachable READABLE_STRING_8
 			l_installations_href: READABLE_STRING_8
 			inst: ES_ACCOUNT_INSTALLATION
 		do
+			reset_error
 			if
 				attached new_http_client_session as sess
 			then
@@ -377,27 +370,21 @@ feature -- Installation
 					l_es_cloud_href := endpoint ("es:cloud")
 				end
 				if l_es_cloud_href /= Void then
-					resp := sess.get (l_es_cloud_href, ctx)
-					if
-						attached resp and then not resp.error_occurred and then
-						attached json (resp.body) as j
-					then
-						if attached {JSON_STRING} json_field (j, "_links|es:installations|href") as v then
-							l_installations_href := v.unescaped_string_8
+					resp := response (sess.get (l_es_cloud_href, ctx))
+					if not has_error then
+						if attached resp.string_8_item ("_links|es:installations|href") as v then
+							l_installations_href := v
 						end
 					end
 					if l_installations_href /= Void then
-						resp := sess.get (l_installations_href, ctx)
-						if
-							not resp.error_occurred and then
-							attached json (resp.body) as j
-						then
-							if attached {JSON_OBJECT} json_field (j, "es:installations") as j_installations then
-								create {ARRAYED_LIST [ES_ACCOUNT_INSTALLATION]} Result.make (j_installations.count)
+						resp := response (sess.get (l_installations_href, ctx))
+						if not has_error then
+							if attached resp.table_item ("es:installations") as l_installations then
+								create {ARRAYED_LIST [ES_ACCOUNT_INSTALLATION]} Result.make (l_installations.count)
 								across
-									j_installations as ic
+									l_installations as ic
 								loop
-									create inst.make_with_id (ic.key.unescaped_string_8)
+									create inst.make_with_id (ic.key.as_string_8)
 									Result.force (inst)
 								end
 							end
@@ -407,7 +394,13 @@ feature -- Installation
 			end
 		end
 
-feature -- Endpoints
+feature {NONE} -- Endpoints
+
+	response (a_resp: HTTP_CLIENT_RESPONSE): ES_CLOUD_API_RESPONSE
+		do
+			create Result.make (a_resp)
+			last_error := Result.error
+		end
 
 	endpoints_table: detachable STRING_TABLE [IMMUTABLE_STRING_8]
 
@@ -438,12 +431,13 @@ feature -- Endpoints
 			-- Get `is_available` value.
 			if
 				attached new_http_client_session as sess and then
-				attached sess.get (root_endpoint, Void) as resp and then
-				not resp.error_occurred
+				attached response (sess.get (root_endpoint, Void)) as resp
 			then
-				if attached json (resp.body) as j then
-					if attached {JSON_STRING} json_field (j, "_links|es:cloud|href") as v then
-						record_endpoint ("es:cloud", v.unescaped_string_8)
+				if has_error then
+					reset_error
+				else
+					if attached resp.string_8_item ("_links|es:cloud|href") as v then
+						record_endpoint ("es:cloud", v)
 					end
 				end
 			end
@@ -451,7 +445,7 @@ feature -- Endpoints
 
 	es_account_endpoint (sess: HTTP_CLIENT_SESSION; ctx: HTTP_CLIENT_REQUEST_CONTEXT): detachable IMMUTABLE_STRING_8
 		local
-			resp: HTTP_CLIENT_RESPONSE
+			resp: like response
 			l_es_cloud_href: detachable READABLE_STRING_8
 		do
 			l_es_cloud_href := endpoint ("es:cloud")
@@ -460,13 +454,12 @@ feature -- Endpoints
 				l_es_cloud_href := endpoint ("es:cloud")
 			end
 			if l_es_cloud_href /= Void then
-				resp := sess.get (l_es_cloud_href, ctx)
-				if
-					attached resp and then not resp.error_occurred and then
-					attached json (resp.body) as j
-				then
-					if attached {JSON_STRING} json_field (j, "_links|es:account|href") as v then
-						Result := v.unescaped_string_8
+				resp := response (sess.get (l_es_cloud_href, ctx))
+				if has_error then
+					reset_error
+				else
+					if attached resp.string_8_item ("_links|es:account|href") as v then
+						Result := v
 					end
 				end
 			end
@@ -474,15 +467,14 @@ feature -- Endpoints
 
 	jwt_access_token_endpoint (sess: HTTP_CLIENT_SESSION; ctx: HTTP_CLIENT_REQUEST_CONTEXT): detachable IMMUTABLE_STRING_8
 		local
-			resp: HTTP_CLIENT_RESPONSE
+			resp: like response
 		do
-			resp := sess.get (root_endpoint, ctx)
-			if
-				attached resp and then not resp.error_occurred and then
-				attached json (resp.body) as j
-			then
-				if attached {JSON_STRING} json_field (j, "_links|jwt:access_token|href") as v then
-					Result := v.unescaped_string_8
+			resp := response (sess.get (root_endpoint, ctx))
+			if has_error then
+				reset_error
+			else
+				if attached resp.string_8_item ("_links|jwt:access_token|href") as v then
+					Result := v
 				end
 			end
 		end
@@ -523,114 +515,166 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Json handling
 
-	json (s: detachable READABLE_STRING_8): detachable JSON_VALUE
-		local
-			jp: JSON_PARSER
-		do
-			if s /= Void then
-				create jp.make_with_string (s)
-				jp.parse_content
-				if not jp.has_error then
-					Result := jp.parsed_json_value
-				end
-			end
-		end
+--	json (s: detachable READABLE_STRING_8): detachable JSON_VALUE
+--		local
+--			jp: JSON_PARSER
+--		do
+--			if s /= Void then
+--				create jp.make_with_string (s)
+--				jp.parse_content
+--				if not jp.has_error then
+--					Result := jp.parsed_json_value
+--				end
+--			end
+--		end
 
-	json_field (j: detachable JSON_VALUE; a_fn: READABLE_STRING_GENERAL): detachable JSON_VALUE
-		local
-			exp: LIST [READABLE_STRING_GENERAL]
-			l_obj: detachable JSON_OBJECT
-			l_val: detachable JSON_VALUE
-		do
-			if j /= Void then
-				if attached {JSON_OBJECT} j as jo then
-					exp := a_fn.split ('|')
-					from
-						exp.start
-						l_obj := jo
-						l_val := l_obj
-					until
-						exp.after or l_obj = void
-					loop
-						l_val := l_obj.item (exp.item)
-						if exp.islast then
-								-- Result in `l_val`
-						else
-							if attached {JSON_OBJECT} l_val as o then
-								l_obj := o
-							end
-							l_val := Void
-						end
-						exp.forth
-					end
-					Result := l_val
-				end
-			end
-		end
+--	json_field (j: detachable JSON_VALUE; a_fn: READABLE_STRING_GENERAL): detachable JSON_VALUE
+--		local
+--			exp: LIST [READABLE_STRING_GENERAL]
+--			l_obj: detachable JSON_OBJECT
+--			l_val: detachable JSON_VALUE
+--		do
+--			if j /= Void then
+--				if attached {JSON_OBJECT} j as jo then
+--					exp := a_fn.split ('|')
+--					from
+--						exp.start
+--						l_obj := jo
+--						l_val := l_obj
+--					until
+--						exp.after or l_obj = void
+--					loop
+--						l_val := l_obj.item (exp.item)
+--						if exp.islast then
+--								-- Result in `l_val`
+--						else
+--							if attached {JSON_OBJECT} l_val as o then
+--								l_obj := o
+--							end
+--							l_val := Void
+--						end
+--						exp.forth
+--					end
+--					Result := l_val
+--				end
+--			end
+--		end
 
-	date_time_from_string (s: READABLE_STRING_GENERAL): detachable DATE_TIME
-			-- Date time from string `s`, if valid.
-		local
-			hd: HTTP_DATE
-		do
-			create hd.make_from_string (s)
-			check not hd.has_error end
-			if not hd.has_error then
-				Result := hd.date_time
-			end
-		end
+--	date_time_from_string (s: READABLE_STRING_GENERAL): detachable DATE_TIME
+--			-- Date time from string `s`, if valid.
+--		local
+--			hd: HTTP_DATE
+--		do
+--			create hd.make_from_string (s)
+--			check not hd.has_error end
+--			if not hd.has_error then
+--				Result := hd.date_time
+--			end
+--		end
 
-	account_from_json (j: JSON_VALUE): detachable ES_ACCOUNT
+	account_from_response (r: ES_CLOUD_API_RESPONSE): detachable ES_ACCOUNT
 		do
-			if attached {JSON_STRING} json_field (j, "name") as j_name then
-				create Result.make (j_name.unescaped_string_32)
-				if attached {JSON_NUMBER} json_field (j, "uid") as j_uid then
-					Result.set_user_id (j_uid.integer_64_item)
-				elseif attached {JSON_STRING} json_field (j, "uid") as j_uid then
-					Result.set_user_id (j_uid.item.to_integer_64)
+			if attached r.string_32_item ("name") as l_name then
+				create Result.make (l_name)
+				if attached r.integer_64_item ("uid") as l_uid and then l_uid > 0 then
+					Result.set_user_id (l_uid)
+				elseif attached r.string_32_item ("uid") as s_uid then
+					Result.set_user_id (s_uid.to_integer_64)
 				end
 				if
-					attached json_field (j, "es:plan") as j_plan and then
-					attached plan_from_json (j_plan) as l_plan
+					attached r.sub_item ("es:plan") as r_plan and then
+					attached plan_from_response (r_plan) as l_plan
 				then
 					Result.set_plan (l_plan)
 				end
 			end
 		end
 
-	plan_from_json (j: JSON_VALUE): detachable ES_ACCOUNT_PLAN
+--	account_from_json (j: JSON_VALUE): detachable ES_ACCOUNT
+--		do
+--			if attached {JSON_STRING} json_field (j, "name") as j_name then
+--				create Result.make (j_name.unescaped_string_32)
+--				if attached {JSON_NUMBER} json_field (j, "uid") as j_uid then
+--					Result.set_user_id (j_uid.integer_64_item)
+--				elseif attached {JSON_STRING} json_field (j, "uid") as j_uid then
+--					Result.set_user_id (j_uid.item.to_integer_64)
+--				end
+--				if
+--					attached json_field (j, "es:plan") as j_plan and then
+--					attached plan_from_json (j_plan) as l_plan
+--				then
+--					Result.set_plan (l_plan)
+--				end
+--			end
+--		end
+
+	plan_from_response (r: like response): detachable ES_ACCOUNT_PLAN
 		do
-			if attached {JSON_STRING} json_field (j, "name") as j_plan_name then
-				create Result.make (j_plan_name.unescaped_string_8)
-				if attached {JSON_NUMBER} json_field (j, "id") as j_uid then
-					Result.set_plan_id (j_uid.integer_64_item)
-				elseif attached {JSON_STRING} json_field (j, "id") as j_uid then
-					Result.set_plan_id (j_uid.item.to_integer_64)
+			if attached r.string_8_item ("name") as l_plan_name then
+				create Result.make (l_plan_name)
+				if attached r.integer_64_item ("id") as l_uid then
+					Result.set_plan_id (l_uid)
+				elseif attached r.string_32_item ("id") as s_uid then
+					Result.set_plan_id (s_uid.to_integer_64)
 				end
-				if attached {JSON_NUMBER} json_field (j, "days_remaining") as j_days_remaining then
-					Result.set_days_remaining (j_days_remaining.integer_64_item.to_integer_32)
+				if attached r.integer_64_item ("days_remaining") as l_days_remaining then
+					Result.set_days_remaining (l_days_remaining.to_integer_32)
 				end
-				if attached {JSON_STRING} json_field (j, "creation") as j_creation then
-					Result.set_creation_date (date_time_from_string (j_creation.unescaped_string_8))
+				if attached r.date_time_item ("creation") as l_creation then
+					Result.set_creation_date (l_creation)
 				end
-				if attached {JSON_STRING} json_field (j, "expiration") as j_expiration then
-					Result.set_expiration_date (date_time_from_string (j_expiration.unescaped_string_8))
+				if attached r.date_time_item ("expiration") as l_expiration then
+					Result.set_expiration_date (l_expiration)
 				end
 			end
 		end
 
-	update_account_with_jwt_access_token_from_json (acc: ES_ACCOUNT; j: JSON_VALUE)
+--	plan_from_json (j: JSON_VALUE): detachable ES_ACCOUNT_PLAN
+--		do
+--			if attached {JSON_STRING} json_field (j, "name") as j_plan_name then
+--				create Result.make (j_plan_name.unescaped_string_8)
+--				if attached {JSON_NUMBER} json_field (j, "id") as j_uid then
+--					Result.set_plan_id (j_uid.integer_64_item)
+--				elseif attached {JSON_STRING} json_field (j, "id") as j_uid then
+--					Result.set_plan_id (j_uid.item.to_integer_64)
+--				end
+--				if attached {JSON_NUMBER} json_field (j, "days_remaining") as j_days_remaining then
+--					Result.set_days_remaining (j_days_remaining.integer_64_item.to_integer_32)
+--				end
+--				if attached {JSON_STRING} json_field (j, "creation") as j_creation then
+--					Result.set_creation_date (date_time_from_string (j_creation.unescaped_string_8))
+--				end
+--				if attached {JSON_STRING} json_field (j, "expiration") as j_expiration then
+--					Result.set_expiration_date (date_time_from_string (j_expiration.unescaped_string_8))
+--				end
+--			end
+--		end
+
+	update_account_with_jwt_access_token_from_response (acc: ES_ACCOUNT; r: ES_CLOUD_API_RESPONSE)
 		local
 			tok: ES_ACCOUNT_ACCESS_TOKEN
 		do
-			if attached {JSON_STRING} json_field (j, "access_token") as j_access_token then
-				create tok.make (j_access_token.unescaped_string_8)
+			if attached r.string_8_item ("access_token") as l_access_token then
+				create tok.make (l_access_token)
 				acc.set_access_token (tok)
-				if attached {JSON_STRING} json_field (j, "refresh_key") as j_refresh_key then
-					tok.set_refresh_key (j_refresh_key.unescaped_string_8)
+				if attached r.string_8_item ("refresh_key") as l_refresh_key then
+					tok.set_refresh_key (l_refresh_key)
 				end
 			end
 		end
+
+--	update_account_with_jwt_access_token_from_json (acc: ES_ACCOUNT; j: JSON_VALUE)
+--		local
+--			tok: ES_ACCOUNT_ACCESS_TOKEN
+--		do
+--			if attached {JSON_STRING} json_field (j, "access_token") as j_access_token then
+--				create tok.make (j_access_token.unescaped_string_8)
+--				acc.set_access_token (tok)
+--				if attached {JSON_STRING} json_field (j, "refresh_key") as j_refresh_key then
+--					tok.set_refresh_key (j_refresh_key.unescaped_string_8)
+--				end
+--			end
+--		end
 
 note
 	copyright: "Copyright (c) 1984-2017, Eiffel Software"

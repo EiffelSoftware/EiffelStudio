@@ -44,7 +44,8 @@ feature {NONE} -- Initialization
 			lnk: EVS_LINK_LABEL
 			l_width: INTEGER
 			w: EV_WIDGET
-			tf_username, tf_password, tf_email: EV_TEXT_FIELD
+			tf_password: EV_PASSWORD_FIELD
+			tf_username, tf_email: EV_TEXT_FIELD
 			but: EV_BUTTON
 			cbut: EV_CHECK_BUTTON
 			l_focus: detachable EV_WIDGET
@@ -215,12 +216,6 @@ feature {NONE} -- Initialization
 			a_box.set_background_color (colors.stock_colors.white)
 			a_box.propagate_background_color
 		end
-
---	new_space: EV_LABEL
---		do
---			create Result.make_with_text ("XXX")
---			Result.set_background_color (colors.stock_colors.blue)
---		end
 
 feature -- Status report
 

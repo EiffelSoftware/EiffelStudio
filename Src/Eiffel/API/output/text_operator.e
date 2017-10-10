@@ -260,10 +260,11 @@ feature -- Operation
 		deferred
 		end
 
-	add_feature_error (feat: E_FEATURE; str: READABLE_STRING_GENERAL; a_line: INTEGER)
-			-- Put `address' for `e_class'.
+	add_feature_error (f: E_FEATURE; n: READABLE_STRING_GENERAL; a_line: INTEGER)
+			-- Put error of feature `f`, named `n` and located at `a_line`.
 		require
-			valid_str: str /= Void
+			f_attached: attached f
+			n_attached: attached n
 			positive_line: a_line > 0
 		deferred
 		end
@@ -290,7 +291,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

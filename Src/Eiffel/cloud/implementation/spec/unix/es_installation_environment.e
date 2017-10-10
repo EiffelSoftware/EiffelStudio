@@ -59,6 +59,7 @@ feature -- Access
 					s.append (f.last_string)
 				end
 				f.close
+				s.right_adjust
 				Result := utf.utf_8_string_8_to_string_32 (s)
 			end
 		end

@@ -409,11 +409,8 @@ feature -- Text operator
 
 	add_char (c: CHARACTER_32)
 			-- Add `c'.
-		local
-			l_s: STRING_32
 		do
-			create l_s.make_filled (c, 1)
-			process_character_text (l_s)
+			process_character_text (create {STRING_32}.make_filled (c, 1))
 		end
 
 	add_new_line
@@ -477,10 +474,13 @@ feature -- Text operator
 		local
 			l_name: READABLE_STRING_GENERAL
 		do
-			if context_group /= Void and then class_i.is_valid then
-				if attached context_group.name_by_class (class_i.config_class, True) as l_list and then not l_list.is_empty then
-					l_name := l_list.first
-				end
+			if
+				context_group /= Void and then
+				class_i.is_valid and then
+				attached context_group.name_by_class (class_i.config_class, True) as l_list and then
+				not l_list.is_empty
+			then
+				l_name := l_list.first
 			end
 			if l_name = Void then
 				l_name := class_i.name
@@ -519,16 +519,13 @@ feature -- Text operator
 			-- Put feature name of `e_feature', taking reserved words into consideration.
 		local
 			l_is_prefix_infix: BOOLEAN
-			l_keyword: STRING
 			l_prefix_infix: STRING_32
 		do
 				-- Prepare prefix/infix text.
 			if e_feature.is_prefix then
-				l_keyword := ti_prefix_keyword
 				l_prefix_infix := e_feature.prefix_symbol_32
 				l_is_prefix_infix := True
 			elseif e_feature.is_infix then
-				l_keyword := ti_infix_keyword
 				l_prefix_infix := e_feature.infix_symbol_32
 				l_is_prefix_infix := True
 			end
@@ -586,10 +583,10 @@ feature -- Text operator
 			process_column_text (column_num)
 		end
 
-	add_feature_error (feat: E_FEATURE; str: READABLE_STRING_GENERAL; a_line: INTEGER)
-			-- Put error of feature `feat', named `str' and located at `a_line'.
+	add_feature_error (f: E_FEATURE; n: READABLE_STRING_GENERAL; a_line: INTEGER)
+			-- <Precursor>
 		do
-			process_feature_error (str, feat, a_line)
+			process_feature_error (n, f, a_line)
 		end
 
 	add_eis_source (s: READABLE_STRING_GENERAL)

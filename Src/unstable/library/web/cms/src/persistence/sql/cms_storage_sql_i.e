@@ -205,6 +205,7 @@ feature -- Helper
 		local
 			i: INTEGER
 			err: BOOLEAN
+			err_msg: STRING_32
 			cl: CELL [INTEGER]
 			l_sql: STRING
 		do
@@ -228,7 +229,15 @@ feature -- Helper
 							sql_modify (l_sql, a_params)
 							sql_finalize_modify (l_sql)
 						end
-						err := err or has_error
+						if has_error then
+							if err_msg = Void then
+								create err_msg.make_empty
+							else
+								err_msg.append_character ('%N')
+							end
+							err_msg.append (error_handler.as_string_representation)
+							err := True
+						end
 						reset_error
 					end
 					i := i + cl.item
@@ -238,6 +247,7 @@ feature -- Helper
 			end
 			if err then
 				sql_rollback_transaction
+				error_handler.add_custom_error (-1, "execute_sql_script error", err_msg)
 			else
 				sql_commit_transaction
 			end

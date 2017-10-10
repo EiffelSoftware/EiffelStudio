@@ -161,7 +161,6 @@ feature {STATIC_ACCESS_AS} -- Visitor
 	process_static_access_as (l_as: STATIC_ACCESS_AS)
 		local
 			feature_i: FEATURE_I
-			constant_i: CONSTANT_I
 			class_c: CLASS_C
 			vuex: VUEX
 			l_old_is_inherited: BOOLEAN
@@ -184,7 +183,6 @@ feature {STATIC_ACCESS_AS} -- Visitor
 
 				if class_c /= Void then
 					feature_i := class_c.feature_table.item_id (l_as.feature_name.name_id)
-					constant_i ?= feature_i
 
 					if feature_i = Void then
 						report_veen (l_as.feature_name)
@@ -198,14 +196,15 @@ feature {STATIC_ACCESS_AS} -- Visitor
 						vuex.set_exported_feature (feature_i)
 						vuex.set_location (l_as.feature_name)
 						error_handler.insert_error (vuex)
-					elseif constant_i /= Void and then
-						(type.same_as (constant_i.type) or (not constant_i.type.is_enum and then not type.is_enum and then constant_i.value.valid_type (type)))
+					elseif attached {CONSTANT_I} feature_i as constant_i and then
+						(type.same_as (constant_i.type) or
+							(not constant_i.type.is_enum and then not type.is_enum and then constant_i.value.valid_type (type)))
 					then
-							-- Record dependencies
+							-- Record dependencies.
 						context.supplier_ids.extend_depend_unit_with_level (class_c.class_id, constant_i, 0)
-							-- Check if this is a unique constant
+							-- Check if this is a unique constant.
 						last_unique_constant ?= constant_i
-							-- Calculate byte node
+							-- Calculate byte node.
 						last_inspect_value := constant_i.value.inspect_value (type)
 						if not is_inherited then
 							feature_checker.set_is_inherited (False)
@@ -226,7 +225,6 @@ feature {ID_AS} -- Visitor
 	process_id_as (l_as: ID_AS)
 		local
 			feature_i: FEATURE_I
-			constant_i: CONSTANT_I
 		do
 			if is_inherited then
 					-- Locate feature in ancestor. It is guaranteed we can find it, as otherwise
@@ -237,13 +235,12 @@ feature {ID_AS} -- Visitor
 			else
 				feature_i := context.current_class.feature_table.item_id (l_as.name_id)
 			end
-			constant_i ?= feature_i
-			if constant_i /= Void and then constant_i.value.valid_type (type) then
+			if attached {CONSTANT_I} feature_i as constant_i and then constant_i.value.valid_type (type) then
 					-- Record dependencies.
 				context.supplier_ids.extend_depend_unit_with_level (context.current_class.class_id, constant_i, 0)
-					-- Check if this is a unique constant
+					-- Check if this is a unique constant.
 				last_unique_constant ?= constant_i
-					-- Calculate byte node
+					-- Calculate byte node.
 				last_inspect_value := constant_i.value.inspect_value (type)
 			elseif
 				feature_i /= Void or else

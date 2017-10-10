@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_path (p: PATH)
-			-- Create a layour based on a path `p'.
+			-- Create a layout based on a path `p'.
 		do
 			path := p.absolute_path.canonical_path
 			initialize_name
@@ -105,11 +105,18 @@ feature -- Access: internal
 	application_config_path: PATH
 			-- Database Configuration file path.
 		local
-			p: detachable PATH
+			p,p_dft: detachable PATH
+			fut: FILE_UTILITIES
 		do
 			p := internal_application_config_path
 			if p = Void then
 				p := config_path.extended (name + ".json")
+				if not fut.file_path_exists (p) then
+					p_dft := config_path.extended ("env.json")
+					if fut.file_path_exists (p_dft) then
+						p := p_dft
+					end
+				end
 				internal_application_config_path := p
 			end
 			Result := p
@@ -206,6 +213,6 @@ feature {NONE} -- Implementation
 			-- Directory for templates (HTML, etc).
 
 ;note
-	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -851,6 +851,10 @@ feature {NONE} -- Roundtrip
 			l_vpir: VPIR3
 			l_unsupported: NOT_SUPPORTED
 		do
+			if current_feature.is_instance_free then
+				error_handler.insert_error (create {VSTB}.make_inline_agent (current_feature, context.current_class, context.written_class, l_as.first_token (match_list_of_class (context.written_class.class_id))))
+			end
+
 			l_error_level := error_level
 			l_current_class ?= context.current_class
 
@@ -1555,6 +1559,12 @@ feature {NONE} -- Implementation
 							l_vsta2.set_location (l_feature_name)
 							error_handler.insert_error (l_vsta2)
 							reset_types
+						elseif not is_qualified and then current_feature.is_instance_free and then not l_feature.is_instance_free then
+								-- The error for agents is reported elsewhere.
+							if not is_agent then
+								error_handler.insert_error (create {VSTB}.make_feature (l_feature, current_feature, context.current_class, context.written_class, a_name))
+							end
+							reset_types
 						elseif attached old_assigner_source then
 								-- Check if the assigner query is obsolete.
 							check_obsolescence (l_feature, l_last_class, a_name)
@@ -1994,7 +2004,14 @@ feature {NONE} -- Implementation
   								set_type (l_result_type, a_name)
 							end
 							last_calls_target_type := l_last_constrained
-							last_access_writable := l_feature.is_attribute
+							if l_feature.is_attribute then
+								last_access_writable := True
+								if current_feature.is_instance_free then
+									error_handler.insert_error (create {VSTB}.make_attribute (l_feature, current_feature, context.current_class, context.written_class, a_name))
+								end
+							else
+								last_access_writable := False
+							end
 								-- Use feature name and routine IDs before any transformation.
 								-- (E.g., before replacing an assigner query with an assigner command.)
 							last_feature_name_id := l_found_feature.feature_name_id
@@ -2028,27 +2045,7 @@ feature {NONE} -- Implementation
 								if l_generated_result_type = Void then
 									l_generated_result_type := last_type
 								end
-								if not is_static then
-									if is_precursor then
-										l_cl_type_i ?= a_precursor_type
-										l_access := l_feature.access_for_feature (l_generated_result_type, l_cl_type_i, False, False)
-											-- Strange situation where Precursor is an external, then we do as if
-											-- it was a static call.
-										if attached {EXTERNAL_B} l_access as l_ext then
-											l_ext.enable_static_call
-										end
-									else
-										if l_is_multiple_constraint_case then
-											check not l_last_constrained.is_formal end
-											l_access := l_feature.access_for_multi_constraint (l_generated_result_type, l_last_constrained, is_qualified, a_type.is_separate)
-										else
-											l_access := l_feature.access (l_generated_result_type, is_qualified, a_type.is_separate)
-										end
-										if l_is_in_assignment or else l_is_target_of_creation_instruction then
-											l_access.set_is_attachment
-										end
-									end
-								else
+								if is_static then
 									l_access := l_feature.access_for_feature (l_generated_result_type, a_type, is_qualified, a_type.is_separate)
 									if l_is_multiple_constraint_case then
 										check not l_last_constrained.is_formal end
@@ -2056,6 +2053,24 @@ feature {NONE} -- Implementation
 									end
 									if attached {EXTERNAL_B} l_access as l_ext then
 										l_ext.enable_static_call
+									end
+								elseif is_precursor then
+									l_cl_type_i ?= a_precursor_type
+									l_access := l_feature.access_for_feature (l_generated_result_type, l_cl_type_i, False, False)
+										-- Strange situation where Precursor is an external, then we do as if
+										-- it was a static call.
+									if attached {EXTERNAL_B} l_access as l_ext then
+										l_ext.enable_static_call
+									end
+								else
+									if l_is_multiple_constraint_case then
+										check not l_last_constrained.is_formal end
+										l_access := l_feature.access_for_multi_constraint (l_generated_result_type, l_last_constrained, is_qualified, a_type.is_separate)
+									else
+										l_access := l_feature.access (l_generated_result_type, is_qualified, a_type.is_separate)
+									end
+									if l_is_in_assignment or else l_is_target_of_creation_instruction then
+										l_access.set_is_attachment
 									end
 								end
 								l_access.set_parameters (l_parameter_list)
@@ -2660,6 +2675,9 @@ feature {NONE} -- Visitor
 		local
 			l_type: LIKE_CURRENT
 		do
+			if current_feature.is_instance_free then
+				error_handler.insert_error (create {VSTB}.make_current (current_feature, context.current_class, context.written_class, l_as))
+			end
 				-- The type of Current in class X is X .. X.
 			l_type := context.current_class_type.duplicate
 			l_type.set_frozen_mark
@@ -4258,6 +4276,9 @@ feature {NONE} -- Visitor
 								l_type := l_feature.type.actual_type
 								create l_typed_pointer.make_typed (l_type)
 								set_type (l_typed_pointer, l_as)
+								if current_feature.is_instance_free then
+									error_handler.insert_error (create {VSTB}.make_attribute (l_feature, current_feature, context.current_class, context.written_class, l_as.feature_name.internal_name))
+								end
 							else
 								set_type (Pointer_type, l_as)
 							end
@@ -4425,6 +4446,8 @@ feature {NONE} -- Visitor
 									l_is_named_tuple := True
 								end
 							end
+						elseif not l_as.has_target and then current_feature.is_instance_free and then attached l_as.feature_name as feature_name and then not attached {INLINE_AGENT_CREATION_AS} l_as then
+							error_handler.insert_error (create {VSTB}.make_unqualified_agent (l_feature, current_feature, context.current_class, context.written_class, feature_name))
 						end
 
 						if l_feature = Void and then not l_is_named_tuple then

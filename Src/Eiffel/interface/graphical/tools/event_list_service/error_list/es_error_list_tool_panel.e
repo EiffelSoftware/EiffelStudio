@@ -581,7 +581,9 @@ feature {NONE} -- Query
 				if attached {ERROR} l_event_item.data as l_error then
 					l_line := l_error.line
 					if l_line > 0 then
-						if attached {CLASSC_STONE} Result as l_classc_stone then
+						if attached {FEATURE_ERROR} l_error as feature_error and then attached feature_error.written_class as w then
+							create {COMPILED_LINE_STONE} Result.make_with_line (w, l_line, True)
+						elseif attached {CLASSC_STONE} Result as l_classc_stone then
 							create {COMPILED_LINE_STONE} Result.make_with_line (l_classc_stone.e_class, l_line, True)
 						elseif attached {CLASSI_STONE} Result as l_classi_stone then
 							create {UNCOMPILED_LINE_STONE} Result.make_with_line (l_classi_stone.class_i, l_line, True)

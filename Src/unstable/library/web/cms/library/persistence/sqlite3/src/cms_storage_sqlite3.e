@@ -457,12 +457,12 @@ feature -- Conversion
 			until
 				i = 0
 			loop
-				i := a_statement.substring_index ("AUTO_INCREMENT", i)
+				i := a_statement.substring_index ("KEY AUTO_INCREMENT", i)
 				if i > 0 then
 					if Result = a_statement then
 						create Result.make_from_string (a_statement)
 					end
-					Result.remove (i + 4)
+					Result.remove (i + 8)
 					i := i + 14
 				end
 			end

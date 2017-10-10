@@ -1423,7 +1423,8 @@ feature -- Conveniences
 				if System.il_generation and attached {IL_EXTENSION_I} extension as e then
 					not e.need_current (e.type)
 				else
-					is_external and not has_assertion
+					is_external and not has_assertion or else
+					is_instance_free
 				end
 		end
 

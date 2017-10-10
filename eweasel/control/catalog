@@ -2763,7 +2763,7 @@ test	agent-introspection-open-argument	agent015 tcf pass agents library
 
 -- Tests for instance-free features
 test	instance_free-declaration		free001 tcf fail instance_free declaration validity
-test	instance_free-validity			free002 tcf fail instance_free call validity
+test	instance_free-validity			free002 tcf pass instance_free call validity
 
 
 -- Tests for platform specific results

@@ -60,6 +60,30 @@ feature -- Factory
 			Result.set_status_code ({HTTP_STATUS_CODE}.not_found)
 		end
 
+	new_permissions_access_denied_error_response (perms: ITERABLE [READABLE_STRING_GENERAL]; a_mesg: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE): like new_response
+		local
+			m: STRING_32
+			n: INTEGER
+		do
+			if a_mesg /= Void then
+				create m.make_from_string_general (a_mesg)
+				m.append_character ('%N')
+			else
+				create m.make (20)
+			end
+			m.append_string_general ("Permissions: ")
+			n := m.count
+			across
+				perms as ic
+			loop
+				if m.count > n then
+					m.append (",")
+				end
+				m.append_string_general (ic.item)
+			end
+			Result := new_access_denied_error_response (m, req, res)
+		end
+
 	new_access_denied_error_response (m: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE): like new_response
 		do
 			if m = Void then

@@ -105,7 +105,7 @@ feature -- Execution
 					rep := new_access_denied_error_response ("There were issue with your application, invalid or missing values.", req, res)
 				end
 			else
-				rep := new_access_denied_error_response ("You can also contact the webmaster to ask for an account.", req, res)
+				rep := new_permissions_access_denied_error_response (<<"account register">>, "You can also contact the webmaster to ask for an account.", req, res)
 			end
 			rep.execute
 		end

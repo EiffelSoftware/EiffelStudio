@@ -15,7 +15,7 @@ inherit
 
 feature -- Properties
 
-	e_feature: E_FEATURE
+	e_feature: detachable E_FEATURE
 			-- Feature involved in the error
 
 	written_class: CLASS_C
@@ -35,7 +35,7 @@ feature -- Properties
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Propertires
 
-	feature_name: STRING
+	feature_name: detachable STRING
 			-- If e_feature is Void then use feature name
 			-- (if this is Void then feature occurred in
 			-- the invariant)
@@ -76,14 +76,14 @@ feature -- Output
 					end
 					a_text_formatter.add_feature_error (l_feature, e_feature.name_32, line)
 				elseif feature_name /= Void then
-					a_text_formatter.add_feature_error (e_feature, encoding_converter.utf8_to_utf32 (feature_name), line)
+					a_text_formatter.add_feature_name (encoding_converter.utf8_to_utf32 (feature_name), class_c)
 				else
 					a_text_formatter.add ("inheritance or invariant clause")
 				end
 			elseif e_feature /= Void then
 				e_feature.append_name (a_text_formatter)
 			elseif feature_name /= Void then
-				a_text_formatter.add (encoding_converter.utf8_to_utf32 (feature_name))
+				a_text_formatter.add_feature_name (encoding_converter.utf8_to_utf32 (feature_name), class_c)
 			elseif is_class_defined then
 				a_text_formatter.add ("inheritance or invariant clause")
 			else
@@ -139,7 +139,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

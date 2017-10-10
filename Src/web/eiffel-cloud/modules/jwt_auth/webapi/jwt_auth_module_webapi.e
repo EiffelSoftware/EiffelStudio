@@ -36,8 +36,10 @@ feature -- Permissions
 	permissions: LIST [READABLE_STRING_8]
 		do
 			Result := Precursor
-			Result.force ("use jwt_access_token")
+			Result.force (perm_use_jwt_auth)
 		end
+
+	perm_use_jwt_auth: STRING = "use jwt_auth"
 
 feature -- Access: filter
 

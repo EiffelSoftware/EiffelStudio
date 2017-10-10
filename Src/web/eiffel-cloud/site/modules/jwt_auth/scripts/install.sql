@@ -1,8 +1,8 @@
 CREATE TABLE jwt_auth(
   `uid` INTEGER NOT NULL,
-  `token` 	TEXT NOT NULL,
+  `token` VARCHAR(255) NOT NULL,
   `secret` 	TEXT NOT NULL,
   `apps` 	TEXT,
   `refresh`	TEXT NOT NULL,
-  CONSTRAINT PK_uid_key PRIMARY KEY (uid,token)
+  CONSTRAINT PK_uid_token_key PRIMARY KEY (uid,token)
 );

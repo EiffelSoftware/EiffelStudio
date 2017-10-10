@@ -85,6 +85,14 @@ feature {CMS_API} -- Module management
 			create pl.make ("free")
 			pl.set_title ("Free")
 			l_es_cloud_api.save_plan (pl)
+
+			if attached api.user_api.anonymous_user_role as l_anonymous_role then
+					-- By default, add extra permissions to anonymous role.
+				l_anonymous_role.add_permission ("account register")
+				l_anonymous_role.add_permission ("use basic_auth")
+				l_anonymous_role.add_permission ("use jwt_auth")
+				api.user_api.save_user_role (l_anonymous_role)
+			end
 		end
 
 feature {NONE} -- Administration

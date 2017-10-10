@@ -2744,7 +2744,7 @@ test	filename-classname-mismatch-warning	warn001	tcf pass warning
 
 test	ephemeral-basics				ephemeral001 tcf fail ephemeral
 
--- test for agents
+-- Tests for agents
 test	agent-optimization-failure		agent001 tcf pass agents
 test	agent-with-like					agent002 tcf pass agents
 test	agent-with-basic				agent003 tcf fail agents finalizing
@@ -2760,6 +2760,10 @@ test	agent-basic-type-mismatch		agent012 tcf fail used_to_pass agents finalizing
 test	agent-descendant-final-crash	agent013 tcf pass agents finalizing
 test	agent-third-formal-finalization	agent014 tcf pass agents finalizing
 test	agent-introspection-open-argument	agent015 tcf pass agents library
+
+-- Tests for instance-free features
+test	instance_free-declaration		free001 tcf fail instance_free declaration validity
+
 
 -- Tests for platform specific results
 test	print-large-pointer				platform001 tcf pass platform

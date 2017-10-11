@@ -134,7 +134,10 @@ feature -- Hooks configuration
 									local
 										n: INTEGER
 									do
+											-- Only update plan, if validated via the [Save plan] button!
 										if
+											attached i_fd.string_item ("op") as l_op and then
+											l_op.same_string ("Save plan") and then
 											attached i_fd.string_item ("es-plan") as l_plan_name and then
 											attached i_cloud_api.plan_by_name (l_plan_name) as l_new_plan
 										then

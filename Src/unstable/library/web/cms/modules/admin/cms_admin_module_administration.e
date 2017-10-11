@@ -27,7 +27,7 @@ feature -- Security
 			-- List of permission ids, used by this module, and declared.
 		do
 			Result := Precursor
-			Result.force ("view system info")
+			Result.force (perm_view_system_info)
 			Result.force ("access admin")
 			Result.force ("admin users")
 			Result.force ("admin roles")
@@ -39,6 +39,8 @@ feature -- Security
 			Result.force ("admin import")
 			Result.force ("admin formats")
 		end
+
+	perm_view_system_info: STRING = "view system info"
 
 feature {NONE} -- Router/administration
 

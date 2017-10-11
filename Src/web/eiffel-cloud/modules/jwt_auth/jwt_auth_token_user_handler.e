@@ -74,6 +74,7 @@ feature -- Request execution
 				if attached api.user as u then
 					if u.same_as (l_user) or api.user_api.is_admin_user (u) then
 						rep := new_generic_response (req, res)
+						rep.set_title ("JWT tokens")
 						create s.make_empty
 
 						if attached jwt_auth_api.user_tokens (u, Void) as lst then

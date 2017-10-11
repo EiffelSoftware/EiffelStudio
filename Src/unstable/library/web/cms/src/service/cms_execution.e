@@ -387,6 +387,7 @@ feature -- Filters
 		local
 			f, l_filter: detachable WSF_FILTER
 			l_api: like api
+			fut: FILE_UTILITIES
 		do
 			l_api := api
 			l_api.logger.put_debug (generator + ".create_filter", Void)
@@ -396,6 +397,12 @@ feature -- Filters
 			create {CMS_MAINTENANCE_FILTER} f.make (Void, l_api)
 			f.set_next (l_filter)
 			l_filter := f
+
+			if fut.file_exists (".debug") then
+				create {WSF_DEBUG_FILTER} f
+				f.set_next (l_filter)
+				l_filter := f
+			end
 
 --			 	-- Error Filter
 --			create {CMS_ERROR_FILTER} f.make (api)

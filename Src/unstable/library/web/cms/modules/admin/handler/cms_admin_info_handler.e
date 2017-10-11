@@ -24,13 +24,17 @@ feature -- Execution
 			s: STRING
 		do
 			if req.is_get_request_method then
-				r := new_generic_response (req, res)
-				create s.make_empty
-				r.set_title ("System Information")
-				r.add_to_primary_tabs (api.administration_link ("Administration", ""))
-				append_system_info_to (s)
-				r.set_main_content (s)
-				r.execute
+				if api.has_permission ({CMS_ADMIN_MODULE_ADMINISTRATION}.perm_view_system_info) then
+					r := new_generic_response (req, res)
+					create s.make_empty
+					r.set_title ("System Information")
+					r.add_to_primary_tabs (api.administration_link ("Administration", ""))
+					append_system_info_to (s)
+					r.set_main_content (s)
+					r.execute
+				else
+					send_access_denied (req, res)
+				end
 			else
 				send_bad_request (req, res)
 			end

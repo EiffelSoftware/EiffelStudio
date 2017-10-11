@@ -102,7 +102,9 @@ feature -- Change
 				mo := mo \\ 12
 			end
 			create l_date.make (y, mo, l_date.day)
-			sub.set_expiration_date (create {DATE_TIME}.make_by_date_time (l_date, sub.creation_date.time))
+			if nb_months /= 0 then
+				sub.set_expiration_date (create {DATE_TIME}.make_by_date_time (l_date, sub.creation_date.time))
+			end
 			es_cloud_storage.save_subscription (sub)
 		end
 

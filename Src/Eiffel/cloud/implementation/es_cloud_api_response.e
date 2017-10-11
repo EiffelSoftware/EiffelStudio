@@ -23,8 +23,13 @@ feature {NONE} -- Creation
 			elseif attached a_resp.body as s then
 				create jp.make_with_string (s)
 				jp.parse_content
-				if not jp.has_error then
-					make_from_json (jp.parsed_json_value)
+				if
+					not jp.has_error and then
+					attached jp.parsed_json_value as j
+				then
+					make_from_json (j)
+				else
+					create error.make ("Invalid JSON content")
 				end
 			end
 		end

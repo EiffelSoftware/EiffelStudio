@@ -71,13 +71,23 @@ feature -- Execution
 						s.append (html_encoded (sub.plan.title_or_name))
 						s.append ("</td>")
 						s.append ("<td>")
-						if attached sub.expiration_date as dt then
-							s.append (html_encoded (date_time_to_string (dt)))
-						end
-						if sub.days_remaining > 0 then
-							s.append (" ( " + sub.days_remaining.out + " days remaining )")
+						if sub.is_active then
+							if attached sub.expiration_date as dt then
+								s.append (html_encoded (date_time_to_string (dt)))
+								s.append (" ( " + sub.days_remaining.out + " days remaining )")
+							else
+								s.append ("<strong>ACTIVE</strong>")
+								s.append (" (since ")
+								s.append (html_encoded (date_time_to_string (sub.creation_date)))
+								s.append (")")
+							end
 						else
-							s.append (" ( <strong>EXPIRED</strong> )")
+							s.append ("<strong>EXPIRED</strong>")
+							if attached sub.expiration_date as dt then
+								s.append (" (since ")
+								s.append (html_encoded (date_time_to_string (dt)))
+								s.append (")")
+							end
 						end
 						s.append ("</td>")
 	--					s.append ("<td>")

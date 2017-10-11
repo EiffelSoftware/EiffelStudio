@@ -83,17 +83,19 @@ feature -- Execution
 						s.append (api.date_time_to_string (sub.creation_date))
 						s.append ("</li>")
 					end
-					if attached sub.expiration_date as exp then
-						s.append ("<li>Renewal date ")
-						s.append (api.date_time_to_string (exp))
-						s.append ("</li>")
-						if sub.days_remaining > 0 then
-							s.append ("<li>")
+					if sub.is_active then
+						if attached sub.expiration_date as exp then
+							s.append ("<li>Renewal date ")
+							s.append (api.date_time_to_string (exp))
+							s.append (" (")
 							s.append (sub.days_remaining.out)
-							s.append ("  days remaining</li>")
+							s.append (" days remaining)")
+							s.append ("</li>")
 						else
-							s.append ("<li><strong>EXPIRED</strong></li>")
+							s.append ("<li><strong>ACTIVE</strong></li>")
 						end
+					else
+						s.append ("<li><strong>EXPIRED</strong></li>")
 					end
 					s.append ("</ul>")
 				else

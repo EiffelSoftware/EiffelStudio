@@ -8,7 +8,7 @@ CREATE TABLE es_plan_subscriptions(
   `pid` INTEGER AUTO_INCREMENT NOT NULL,
   `uid`	INTEGER NOT NULL,
   `creation` DATETIME NOT NULL,
-  `expiration` DATETIME NOT NULL,
+  `expiration` DATETIME,
   `notes` TEXT,
   CONSTRAINT PK_pid_uid_key PRIMARY KEY (pid,uid)
 );

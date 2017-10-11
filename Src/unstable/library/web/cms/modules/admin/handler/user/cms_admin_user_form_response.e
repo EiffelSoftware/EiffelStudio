@@ -156,14 +156,26 @@ feature -- Form
 
 	edit_form_submit (fd: WSF_FORM_DATA; a_user: detachable CMS_USER; b: STRING)
 		local
-			l_update_roles: BOOLEAN
-			l_update_user: BOOLEAN
+			l_update_password,
+			l_update_roles,
+			l_update_user,
 			l_save_user: BOOLEAN
 			l_user: detachable CMS_USER
 			s: STRING
 			lnk: CMS_LINK
 		do
-
+			l_update_password := attached {WSF_STRING} fd.item ("op") as l_op and then l_op.same_string ("Update Password")
+			if l_update_password then
+				if a_user /= Void then
+					l_user := a_user
+					if l_user.has_id then
+						lnk := api.administration_link (translation ("View", Void),"user/" + l_user.id.out)
+						change_user (fd, a_user)
+						s := "modified"
+						set_redirection (lnk.location)
+					end
+				end
+			end
 			l_update_roles := attached {WSF_STRING} fd.item ("op") as l_op and then l_op.same_string ("Update user role")
 			if l_update_roles then
 				debug ("cms")
@@ -314,6 +326,7 @@ feature -- Form
 			-- and apply this to content type `a_content_type'.
 		local
 			ti: WSF_FORM_TEXT_INPUT
+			tp: WSF_FORM_PASSWORD_INPUT
 			fe: WSF_FORM_EMAIL_INPUT
 			fs: WSF_FORM_FIELD_SET
 			cb: WSF_FORM_CHECKBOX_INPUT
@@ -349,6 +362,20 @@ feature -- Form
 				ts.set_default_value ("Update user")
 				a_form.extend (ts)
 				a_form.extend_html_text ("<hr>")
+
+				if api.has_permission ("admin users") then
+					create fs.make
+					fs.set_legend ("Change Password")
+					create tp.make ("password")
+					tp.set_label ("Password")
+					tp.set_description ("Enter new password for the user.")
+					tp.set_size (20)
+					fs.extend (tp)
+					create ts.make ("op")
+					ts.set_default_value ("Update Password")
+					fs.extend (ts)
+					a_form.extend (fs)
+				end
 
 
 				create fs.make
@@ -463,6 +490,21 @@ feature -- Form
 					else
 						a_form_data.report_error ("Missing User")
 					end
+				elseif f_op.is_case_insensitive_equal_general ("Update Password") then
+					if
+						attached a_form_data.string_item ("user-id") as l_user_id and then
+						attached {CMS_USER} api.user_api.user_by_id (l_user_id.to_integer) as l_user
+					then
+						if attached a_form_data.string_item ("password") as l_password and then not l_password.is_empty then
+							l_user.set_password (l_password)
+							api.user_api.update_user (l_user)
+							if not api.user_api.has_error then
+								add_success_message ("Updated user password")
+							end
+						else
+							a_form_data.report_invalid_field ("password", "Missing password value!")
+						end
+					end
 				elseif f_op.is_case_insensitive_equal_general ("Update user") then
 					if
 						attached a_form_data.string_item ("user-id") as l_user_id and then
@@ -521,9 +563,8 @@ feature -- Form
 						if api.user_api.has_error then
 							-- handle error
 						else
-							add_success_message ("Created user")
+							add_success_message ("Created user <a href=%"" + api.administration_path ("user/" + u.id.out) + "%">" + html_encoded (u.name) + "</a>")
 						end
-
 					else
 						a_form_data.report_invalid_field ("username", "Missing username!")
 						a_form_data.report_invalid_field ("email", "Missing email address!")

@@ -13,7 +13,7 @@ feature -- Tests
 
 	test_localhost_9090
 		local
-			api: ES_ACCOUNT_CLOUD_API
+			api: ES_CLOUD_API
 			tok: detachable READABLE_STRING_8
 		do
 			create api.make ("http://localhost:9090/es")

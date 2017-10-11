@@ -43,6 +43,7 @@ feature -- Execution
 							tb.force (sub.plan.id, "id")
 							tb.force (sub.plan.name, "name")
 							tb.force (date_time_to_string (sub.creation_date), "creation")
+							tb.force (sub.is_active, "is_active")
 							if attached sub.expiration_date as exp then
 								tb.force (date_time_to_string (exp), "expiration")
 								tb.force (sub.days_remaining, "days_remaining")

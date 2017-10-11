@@ -35,27 +35,35 @@ feature -- Status report
 
 	is_active: BOOLEAN
 		do
-			Result := days_remaining /= 0
+			if attached expiration_date as l_exp_date then
+				Result := l_exp_date >= (create {DATE_TIME}.make_now_utc)
+			else
+				Result := True
+			end
 		end
 
 	days_remaining: INTEGER
 			-- Number of days remaining.
-			-- -1 when no experiation dates is given ..
+			-- Relevant only when `expiration_date` is set!
 		local
 			now: DATE_TIME
 			dur: DATE_TIME_DURATION
 			secs: INTEGER_64
+			is_neg: BOOLEAN
 		do
 			create now.make_now_utc
 			if attached expiration_date as exp then
-				if now > exp then
-					Result := 0
-				else
-					secs := exp.relative_duration (now).seconds_count
-					Result := (secs // (60 * 60 * 24)).to_integer_32
+				secs := exp.relative_duration (now).seconds_count
+				if secs < 0 then
+					is_neg := True
+					secs := -secs
+				end
+				Result := (secs // (60 * 60 * 24)).to_integer_32
+				if is_neg then
+					Result := - Result
 				end
 			else
-				Result := -1
+				Result := 0
 			end
 		end
 

@@ -64,6 +64,8 @@ feature -- Access
 					-- Subscribe to default plan
 				if attached plans as lst and then not lst.is_empty then
 					create Result.make (a_user, lst.first)
+						-- Set default plan!
+					es_cloud_storage.save_subscription (Result)
 				end
 			end
 		end

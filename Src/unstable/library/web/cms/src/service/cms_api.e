@@ -731,6 +731,8 @@ feature -- Status Report
 
 	string_representation_of_errors: STRING_32
 			-- String representation of all error(s).
+		require
+			has_error: has_error
 		do
 			Result := error_handler.as_string_representation
 		end

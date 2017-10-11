@@ -27,6 +27,7 @@ feature -- Security
 			-- List of permission ids, used by this module, and declared.
 		do
 			Result := Precursor
+			Result.force ("view system info")
 			Result.force ("access admin")
 			Result.force ("admin users")
 			Result.force ("admin roles")
@@ -45,6 +46,8 @@ feature {NONE} -- Router/administration
 			-- <Precursor>
 		local
 			l_admin_handler: CMS_ADMIN_HANDLER
+
+			l_info_handler: CMS_ADMIN_INFO_HANDLER
 
 			l_modules_handler: CMS_ADMIN_MODULES_HANDLER
 			l_users_handler: CMS_ADMIN_USERS_HANDLER
@@ -66,6 +69,10 @@ feature {NONE} -- Router/administration
 			create l_admin_handler.make (a_api)
 			create l_uri_mapping.make_trailing_slash_ignored ("", l_admin_handler)
 			a_router.map (l_uri_mapping, a_router.methods_get_post)
+
+			create l_info_handler.make (a_api)
+			create l_uri_mapping.make_trailing_slash_ignored ("/info", l_info_handler)
+			a_router.map (l_uri_mapping, a_router.methods_get)
 
 			create l_modules_handler.make (a_api)
 			create l_uri_mapping.make_trailing_slash_ignored ("/modules", l_modules_handler)
@@ -146,27 +153,39 @@ feature -- Hooks
 			if l_api.user_is_authenticated then
 				admin_lnk := a_menu_system.management_menu.new_composite_item ("Admin", l_api.administration_path_location (""))
 
+					-- Global system information
+				create lnk.make ("Info", l_api.administration_path_location ("info"))
+				lnk.set_permission_arguments (<<"view system info">>)
+				lnk.set_weight (-1)
+				admin_lnk.extend (lnk)
+
 				create lnk.make ("Module", l_api.administration_path_location ("modules"))
 				lnk.set_permission_arguments (<<"manage module">>)
+				lnk.set_weight (1)
 				admin_lnk.extend (lnk)
 
 				create lnk.make ("Formats", l_api.administration_path_location ("formats"))
 				lnk.set_permission_arguments (<<"admin formats">>)
+				lnk.set_weight (2)
 				admin_lnk.extend (lnk)
 
 					-- Per module cache permission!
 				create lnk.make ("Cache", l_api.administration_path_location ("cache"))
 				lnk.set_permission_arguments (<<"admin cache">>)
+				lnk.set_weight (3)
 				admin_lnk.extend (lnk)
 
 					-- Per module export permission!
 				create lnk.make ("Export", l_api.administration_path_location ("export"))
 				lnk.set_permission_arguments (<<"admin export">>)
+				lnk.set_weight (8)
 				admin_lnk.extend (lnk)
 					-- Per module import permission!
 				create lnk.make ("Import", l_api.administration_path_location ("import"))
 				lnk.set_permission_arguments (<<"admin import">>)
+				lnk.set_weight (9)
 				admin_lnk.extend (lnk)
+
 			end
 		end
 

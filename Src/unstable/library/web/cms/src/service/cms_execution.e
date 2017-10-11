@@ -49,6 +49,10 @@ feature {NONE} -- Initialization
 			setup_storage (l_setup)
 			setup_modules (l_setup)
 			create api.make (l_setup, request)
+			if api.has_error then
+				response.put_error ("ROC: Error during API initialization!")
+				response.put_error (api.utf_8_encoded (api.string_representation_of_errors))
+			end
 			modules := api.enabled_modules
 
 			initialize_cms

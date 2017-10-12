@@ -12,7 +12,7 @@ feature -- Access
 	mirror: detachable READABLE_STRING_32
 		-- url mirror.
 
-	products: detachable ARRAYED_LIST[DOWNLOAD_PRODUCT]
+	products: detachable ARRAYED_LIST [DOWNLOAD_PRODUCT]
 		-- Possible list of product downloads.
 
 feature -- Element Change

@@ -13,7 +13,6 @@ feature -- Access
 			-- Build a new download configuration.
 		local
 			l_parser: JSON_PARSER
-			l_conf: DOWNLOAD_CONFIGURATION
 		do
 			if a_configuration /= Void then
 				Result := a_configuration
@@ -114,8 +113,6 @@ feature {NONE} -- Implemenation: Mirrors
 feature {NONE} -- Implemenation: Products
 
 	new_products (a_products: JSON_OBJECT): DOWNLOAD_PRODUCT
-		local
-			l_item: DOWNLOAD_PRODUCT
 		do
 			create Result
 			if attached {JSON_STRING} a_products.item ("id") as l_id then

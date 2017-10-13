@@ -100,6 +100,13 @@ feature {NONE} -- Access
 
 feature -- Access
 
+	cloud_identifier: READABLE_STRING_8
+			-- ES cloud identifier.
+			--| Usually the server url.
+		do
+			Result:= server_url
+		end
+
 	version: READABLE_STRING_8
 
 	installation: ES_ACCOUNT_INSTALLATION

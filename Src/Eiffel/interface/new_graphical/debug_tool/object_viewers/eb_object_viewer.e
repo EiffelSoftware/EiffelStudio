@@ -167,8 +167,8 @@ feature -- Properties
 feature {NONE} -- Implementation
 
 	begin_with (s,t: STRING_GENERAL; ignore_leading_blank: BOOLEAN): BOOLEAN
-			-- Does `s' beging with `t' ?
-			-- if `ignore_leading_blank' is True, ignore leading blank character
+			-- Does `s' begin with `t' ?
+			-- if `ignore_leading_blank' is True, ignore leading blank characters.
 		local
 			i, j: INTEGER
 			blank: ARRAY [NATURAL_32]
@@ -205,8 +205,48 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	ends_with (s,t: STRING_GENERAL; ignore_leading_blank: BOOLEAN): BOOLEAN
+			-- Does `s' end with `t' ?
+			-- if `ignore_leading_blank' is True, ignore blank characters.
+		local
+			i, j: INTEGER
+			blank: ARRAY [NATURAL_32]
+		do
+			if t.count <= s.count then
+					--| `s' should contains at least the length of `t'
+					--| even with blank character
+				if ignore_leading_blank then
+					from
+						create blank.make (0, 3)
+						blank.put ((' ').natural_32_code, 0)
+						blank.put (('%T').natural_32_code, 1)
+						blank.put (('%N').natural_32_code, 2)
+						blank.put (('%R').natural_32_code, 3)
+						i := s.count
+					until
+						not s.valid_index (i) or else not blank.has (s.code (i))
+					loop
+						i := i - 1
+					end
+				end
+				if t.count <= s.count - (i - 1) then
+					from
+						i := i - t.count
+						j := 1
+						Result := True
+					until
+						not Result or j > t.count
+					loop
+						Result := s.code (i) = t.code (j)
+						i := i + 1
+						j := j + 1
+					end
+				end
+			end
+		end
+
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

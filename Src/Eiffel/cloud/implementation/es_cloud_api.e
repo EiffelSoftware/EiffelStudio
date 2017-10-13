@@ -130,6 +130,7 @@ feature -- ROC Account
 				l_jwt_access_token_href := jwt_access_token_endpoint (sess, ctx)
 				if l_jwt_access_token_href /= Void then
 						-- Get new JWT access token, using Basic authorization.
+					ctx.add_form_parameter ("token", a_token)
 					ctx.add_form_parameter ("refresh", a_refresh_key)
 					resp := response (sess.post (l_jwt_access_token_href, ctx, Void))
 					if not has_error then

@@ -515,63 +515,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Json handling
 
---	json (s: detachable READABLE_STRING_8): detachable JSON_VALUE
---		local
---			jp: JSON_PARSER
---		do
---			if s /= Void then
---				create jp.make_with_string (s)
---				jp.parse_content
---				if not jp.has_error then
---					Result := jp.parsed_json_value
---				end
---			end
---		end
-
---	json_field (j: detachable JSON_VALUE; a_fn: READABLE_STRING_GENERAL): detachable JSON_VALUE
---		local
---			exp: LIST [READABLE_STRING_GENERAL]
---			l_obj: detachable JSON_OBJECT
---			l_val: detachable JSON_VALUE
---		do
---			if j /= Void then
---				if attached {JSON_OBJECT} j as jo then
---					exp := a_fn.split ('|')
---					from
---						exp.start
---						l_obj := jo
---						l_val := l_obj
---					until
---						exp.after or l_obj = void
---					loop
---						l_val := l_obj.item (exp.item)
---						if exp.islast then
---								-- Result in `l_val`
---						else
---							if attached {JSON_OBJECT} l_val as o then
---								l_obj := o
---							end
---							l_val := Void
---						end
---						exp.forth
---					end
---					Result := l_val
---				end
---			end
---		end
-
---	date_time_from_string (s: READABLE_STRING_GENERAL): detachable DATE_TIME
---			-- Date time from string `s`, if valid.
---		local
---			hd: HTTP_DATE
---		do
---			create hd.make_from_string (s)
---			check not hd.has_error end
---			if not hd.has_error then
---				Result := hd.date_time
---			end
---		end
-
 	account_from_response (r: ES_CLOUD_API_RESPONSE): detachable ES_ACCOUNT
 		do
 			if attached r.string_32_item ("name") as l_name then
@@ -590,24 +533,6 @@ feature {NONE} -- Json handling
 			end
 		end
 
---	account_from_json (j: JSON_VALUE): detachable ES_ACCOUNT
---		do
---			if attached {JSON_STRING} json_field (j, "name") as j_name then
---				create Result.make (j_name.unescaped_string_32)
---				if attached {JSON_NUMBER} json_field (j, "uid") as j_uid then
---					Result.set_user_id (j_uid.integer_64_item)
---				elseif attached {JSON_STRING} json_field (j, "uid") as j_uid then
---					Result.set_user_id (j_uid.item.to_integer_64)
---				end
---				if
---					attached json_field (j, "es:plan") as j_plan and then
---					attached plan_from_json (j_plan) as l_plan
---				then
---					Result.set_plan (l_plan)
---				end
---			end
---		end
-
 	plan_from_response (r: like response): detachable ES_ACCOUNT_PLAN
 		do
 			if attached r.string_8_item ("name") as l_plan_name then
@@ -617,6 +542,8 @@ feature {NONE} -- Json handling
 				elseif attached r.string_32_item ("id") as s_uid then
 					Result.set_plan_id (s_uid.to_integer_64)
 				end
+--				if r.boolean_item_is_true ("is_active") then
+--				end
 				if attached r.integer_64_item ("days_remaining") as l_days_remaining then
 					Result.set_days_remaining (l_days_remaining.to_integer_32)
 				end
@@ -628,27 +555,6 @@ feature {NONE} -- Json handling
 				end
 			end
 		end
-
---	plan_from_json (j: JSON_VALUE): detachable ES_ACCOUNT_PLAN
---		do
---			if attached {JSON_STRING} json_field (j, "name") as j_plan_name then
---				create Result.make (j_plan_name.unescaped_string_8)
---				if attached {JSON_NUMBER} json_field (j, "id") as j_uid then
---					Result.set_plan_id (j_uid.integer_64_item)
---				elseif attached {JSON_STRING} json_field (j, "id") as j_uid then
---					Result.set_plan_id (j_uid.item.to_integer_64)
---				end
---				if attached {JSON_NUMBER} json_field (j, "days_remaining") as j_days_remaining then
---					Result.set_days_remaining (j_days_remaining.integer_64_item.to_integer_32)
---				end
---				if attached {JSON_STRING} json_field (j, "creation") as j_creation then
---					Result.set_creation_date (date_time_from_string (j_creation.unescaped_string_8))
---				end
---				if attached {JSON_STRING} json_field (j, "expiration") as j_expiration then
---					Result.set_expiration_date (date_time_from_string (j_expiration.unescaped_string_8))
---				end
---			end
---		end
 
 	update_account_with_jwt_access_token_from_response (acc: ES_ACCOUNT; r: ES_CLOUD_API_RESPONSE)
 		local
@@ -662,19 +568,6 @@ feature {NONE} -- Json handling
 				end
 			end
 		end
-
---	update_account_with_jwt_access_token_from_json (acc: ES_ACCOUNT; j: JSON_VALUE)
---		local
---			tok: ES_ACCOUNT_ACCESS_TOKEN
---		do
---			if attached {JSON_STRING} json_field (j, "access_token") as j_access_token then
---				create tok.make (j_access_token.unescaped_string_8)
---				acc.set_access_token (tok)
---				if attached {JSON_STRING} json_field (j, "refresh_key") as j_refresh_key then
---					tok.set_refresh_key (j_refresh_key.unescaped_string_8)
---				end
---			end
---		end
 
 note
 	copyright: "Copyright (c) 1984-2017, Eiffel Software"

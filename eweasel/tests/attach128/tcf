@@ -1,0 +1,10 @@
+test_name 	 targeted-assigner-command
+test_description A qualified call in a form of an assigner command should not be allowed on an incompletely initialized object.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VEVI:21
+
+test_end

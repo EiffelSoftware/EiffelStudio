@@ -29,6 +29,15 @@ feature -- Access
 
 	days_remaining: INTEGER
 
+	is_active: BOOLEAN
+		do
+			if attached expiration_date as l_exp then
+				Result := l_exp >= create {DATE_TIME}.make_now_utc
+			else
+				Result := True
+			end
+		end
+
 feature -- Element change
 
 	set_plan_id (a_plan_id: INTEGER_64)

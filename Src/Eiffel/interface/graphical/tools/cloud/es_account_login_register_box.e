@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ES_ACCOUNT_LOGIN_REGISTER_BOX}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -295,11 +294,15 @@ feature -- UI callbacks
 		end
 
 	process_account_loging (a_form: like new_gui_form)
+		local
+			l_style: detachable EV_POINTER_STYLE
 		do
 			if
 				attached gui_form_string_item ("user_name", a_form) as u and then
 				attached gui_form_string_item ("password", a_form) as p
 			then
+				l_style := widget.pointer_style
+				widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
 				if
 					attached es_cloud_s.service as cld and then
 					cld.is_available
@@ -313,6 +316,7 @@ feature -- UI callbacks
 				else
 					on_system_error ("Account service is not available for now (try again later)!")
 				end
+				widget.set_pointer_style (l_style)
 			else
 				check valid_form: True end
 			end
@@ -324,12 +328,17 @@ feature -- UI callbacks
 		end
 
 	process_account_registration (a_form: like new_gui_form)
+		local
+			l_style: detachable EV_POINTER_STYLE
 		do
 			if
 				attached gui_form_string_item ("user_name", a_form) as u and then
 				attached gui_form_string_item ("password", a_form) as p and then
 				attached gui_form_string_item ("email", a_form) as l_email
 			then
+				l_style := widget.pointer_style
+				widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
+
 				if
 					attached es_cloud_s.service as cld and then
 					cld.is_available
@@ -345,6 +354,7 @@ feature -- UI callbacks
 				else
 					on_system_error ("Account service is not available for now (try again later)!")
 				end
+				widget.set_pointer_style (l_style)
 			else
 				check valid_form: True end
 			end

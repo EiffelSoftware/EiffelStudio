@@ -219,14 +219,15 @@ feature {NONE} -- Action handlers
 							if
 								attached {ES_ACCOUNT_ACCESS_TOKEN} acc.access_token as tok
 							then
-								create but.make_with_text_and_action ("Update", agent cld.update_account (acc))
+								create but.make_with_text_and_action ("Update", agent on_account_update (cld, acc))
 								hb.extend (create {EV_CELL})
 								hb.extend (but)
 								layout_constants.set_default_size_for_button (but)
 								hb.disable_item_expand (but)
 
 								if attached tok.has_refresh_key then
-									create but.make_with_text_and_action ("Refresh", agent cld.refresh_token (tok, acc))
+
+									create but.make_with_text_and_action ("Refresh", agent on_account_refresh_token (cld, tok, acc))
 									hb.extend (create {EV_CELL})
 									hb.extend (but)
 									layout_constants.set_default_size_for_button (but)
@@ -235,7 +236,7 @@ feature {NONE} -- Action handlers
 							end
 						end
 
-						create but.make_with_text_and_action ("Logout", agent cld.logout)
+						create but.make_with_text_and_action ("Logout", agent on_logout (cld))
 						hb.extend (create {EV_CELL})
 						hb.extend (but)
 						layout_constants.set_default_size_for_button (but)
@@ -275,6 +276,31 @@ feature {NONE} -- Action handlers
 
 			b.set_background_color (colors.stock_colors.white)
 			b.propagate_background_color
+		end
+
+	on_logout (cld: ES_CLOUD_S)
+		do
+			cld.logout
+		end
+
+	on_account_refresh_token (cld: ES_CLOUD_S; tok: ES_ACCOUNT_ACCESS_TOKEN; acc: ES_ACCOUNT)
+		local
+			l_style: EV_POINTER_STYLE
+		do
+			l_style := widget.pointer_style
+			widget.set_pointer_style (pixmaps.stock_pixmaps.busy_cursor)
+			cld.refresh_token (tok, acc)
+			widget.set_pointer_style (l_style)
+		end
+
+	on_account_update (cld: ES_CLOUD_S; acc: ES_ACCOUNT)
+		local
+			l_style: EV_POINTER_STYLE
+		do
+			l_style := widget.pointer_style
+			widget.set_pointer_style (pixmaps.stock_pixmaps.busy_cursor)
+			cld.update_account (acc)
+			widget.set_pointer_style (l_style)
 		end
 
 feature -- Access: Help

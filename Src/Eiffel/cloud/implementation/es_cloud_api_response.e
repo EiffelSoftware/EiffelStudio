@@ -133,6 +133,20 @@ feature -- Access
 			Result := s /= Void and then a_value.is_case_insensitive_equal (s)
 		end
 
+	boolean_item_is_true (a_name: READABLE_STRING_GENERAL): BOOLEAN
+		do
+			if attached {JSON_BOOLEAN} json_field (json, a_name) as jb then
+				Result := jb.item
+			end
+		end
+
+	boolean_item_is_false (a_name: READABLE_STRING_GENERAL): BOOLEAN
+		do
+			if attached {JSON_BOOLEAN} json_field (json, a_name) as jb then
+				Result := not jb.item
+			end
+		end
+
 feature {NONE} -- Initialize
 
 	json_field (j: detachable JSON_VALUE; a_fn: READABLE_STRING_GENERAL): detachable JSON_VALUE

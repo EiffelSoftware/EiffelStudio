@@ -28,6 +28,12 @@ feature -- Status report
 
 feature -- Access
 
+	cloud_identifier: READABLE_STRING_8
+			-- ES cloud identifier.
+			--| Usually the server url.
+		deferred
+		end
+
 	license_accepted: BOOLEAN
 			-- License accepted by user?
 		deferred

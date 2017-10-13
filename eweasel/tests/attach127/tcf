@@ -1,5 +1,5 @@
 test_name 	 targeted-creation-expanded-argument
-test_description A quialified call on an incompletely initialized object should not be allowed even if that reference is "hidden" in an expanded object.
+test_description A qualified call on an incompletely initialized object should not be allowed even if that reference is "hidden" in an expanded object.
 
 copy_sub	Ace $TEST Ace
 copy_raw	a.e $CLUSTER a.e

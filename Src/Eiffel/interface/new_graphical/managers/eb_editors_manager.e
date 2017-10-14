@@ -75,16 +75,16 @@ feature {NONE} -- Initialization
 			docking_manager := a_dev_win.docking_manager
 			register_action (docking_manager.tab_drop_actions, agent ((a_dev_win.commands).new_tab_cmd).execute_with_stone_content)
 
-			set_veto_pebble_function (agent on_veto_tab_drop_action)
-			docking_manager.tab_drop_actions.set_veto_pebble_function (veto_pebble_function_internal)
+			set_veto_pebble_function (agent veto_pebble_function)
+			docking_manager.tab_drop_actions.set_veto_pebble_function (agent (a: ANY; c: SD_CONTENT): BOOLEAN do Result := veto_pebble_function_internal (a) end)
 
 			if veto_pebble_function_internal = Void then
-				docking_manager.tab_drop_actions.set_veto_pebble_function (agent default_veto_func)
+				docking_manager.tab_drop_actions.set_veto_pebble_function (agent (a: ANY; c: SD_CONTENT): BOOLEAN do Result := veto_pebble_function_internal (a) end)
 			end
 			create_editor
 			register_action (docking_manager.main_area_drop_action, agent create_editor_beside_content (?, Void, False))
 			if veto_pebble_function_internal = Void then
-				docking_manager.main_area_drop_action.set_veto_pebble_function (agent default_veto_func)
+				docking_manager.main_area_drop_action.set_veto_pebble_function (agent veto_pebble_function)
 			end
 			docking_manager.zones.place_holder_widget.file_drop_actions.extend (agent on_file_drop)
 		ensure
@@ -447,16 +447,6 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_veto_tab_drop_action (a_stone: ANY; a_content: SD_CONTENT): BOOLEAN
-			-- Veto function for tab area drop actions
-		do
-			-- `a_content' can be void or its type is editor type
-			Result := a_content = Void or else a_content.type = {SD_ENUMERATION}.editor
-			if Result then
-				Result := default_veto_func (a_stone, a_content)
-			end
-		end
-
 	on_editor_closed (a_editor: EB_SMART_EDITOR)
 			-- Editor is closed
 		require
@@ -527,18 +517,10 @@ feature -- Status report
 	stone_acceptable (a_stone: ANY): BOOLEAN
 			-- Is `a_stone' suitable for a new editor?
 		do
-			if veto_pebble_function_internal /= Void then
-				if last_focused_editor /= Void then
-					Result := veto_pebble_function_internal.item ([a_stone, last_focused_editor.docking_content])
-				else
-					Result := veto_pebble_function_internal.item ([a_stone, Void])
-				end
+			if attached veto_pebble_function_internal as l_veto then
+				Result := l_veto (a_stone)
 			else
-				if last_focused_editor /= Void then
-					Result := default_veto_func (a_stone, last_focused_editor.docking_content)
-				else
-					Result := default_veto_func (a_stone, Void)
-				end
+				Result := veto_pebble_function (a_stone)
 			end
 		end
 
@@ -696,7 +678,7 @@ feature -- Element change
 			create editors_internal.make (5)
 		end
 
-	set_veto_pebble_function (a_func: FUNCTION [ANY, SD_CONTENT, BOOLEAN])
+	set_veto_pebble_function (a_func: PREDICATE [ANY])
 			-- Set veto pebble_function for all editors.
 		require
 			a_func_attached: a_func /= Void
@@ -1443,7 +1425,7 @@ feature {NONE} -- Implementation
 	editor_number_factory: EB_EDITOR_NUMBER_FACTORY
 			-- Produce editor number and internal names.
 
-	veto_pebble_function_internal: FUNCTION [ANY, SD_CONTENT, BOOLEAN]
+	veto_pebble_function_internal: PREDICATE [ANY]
 			-- Veto pebble function.
 
 	close_editor_perform (a_editor: like current_editor)
@@ -1537,7 +1519,7 @@ feature {NONE} -- Implementation
 			last_created_editor.widget.set_minimum_size (0, 0)
 			add_observers (last_created_editor)
 			if veto_pebble_function_internal = Void then
-				last_created_editor.drop_actions.set_veto_pebble_function (agent default_veto_func)
+				last_created_editor.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 			end
 			register_action (last_created_editor.drop_actions, agent on_drop (?, last_created_editor))
 			editors_internal.extend (last_created_editor)
@@ -1579,7 +1561,7 @@ feature {NONE} -- Implementation
 
 			register_action (Result.drop_actions, agent on_drop (?, a_editor))
 			if veto_pebble_function_internal = Void then
-				Result.drop_actions.set_veto_pebble_function (agent default_veto_func)
+				Result.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 			end
 
 			docking_manager.contents.extend (Result)
@@ -1616,7 +1598,7 @@ feature {NONE} -- Implementation
 				-- Note: the parameter `last_create_editor' for agent is fake editor
 			register_action (Result.drop_actions, agent on_drop (?, last_created_editor))
 			if veto_pebble_function_internal = Void then
-				Result.drop_actions.set_veto_pebble_function (agent default_veto_func)
+				Result.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 			end
 
 				-- When fake editor first time showing, we change it to a real one.
@@ -1646,7 +1628,7 @@ feature {NONE} -- Implementation
 
 			register_action (a_content.drop_actions, agent on_drop (?, a_editor))
 			if veto_pebble_function_internal = Void then
-				a_content.drop_actions.set_veto_pebble_function (agent default_veto_func)
+				a_content.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 			end
 
 			a_content.show_actions.wipe_out
@@ -1776,14 +1758,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_veto_func (a_stone: ANY; a_content: SD_CONTENT): BOOLEAN
+	veto_pebble_function (a_stone: ANY): BOOLEAN
 			-- Default veto function
 		do
-			if attached {FILED_STONE} a_stone then
-				Result := True
-			elseif attached {CLUSTER_STONE} a_stone then
-				Result := True
-			end
+			Result := attached {FILED_STONE} a_stone or attached {CLUSTER_STONE} a_stone
 		end
 
 	has_duplicated_stone: BOOLEAN

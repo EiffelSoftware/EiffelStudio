@@ -22,8 +22,6 @@ feature {NONE} -- For weak references
 
 	eif_is_object_id_of_current (an_id: INTEGER): BOOLEAN
 			-- Is `an_id' the associated object ID of `Current'.
-		obsolete
-			"Use `eif_id_object (an_id) = Current' instead [2017-05-31]."
 		require
 			an_id_non_negative: an_id >= 0
 		external
@@ -32,8 +30,6 @@ feature {NONE} -- For weak references
 
 	eif_current_object_id: INTEGER
 			-- New identifier for Current
-		obsolete
-			"Use `eif_object_id (Current)' instead [2017-05-31]."
 		external
 			"built_in"
 		ensure

@@ -21,7 +21,7 @@ feature {NONE} -- Implemention
 			-- service uri set to `a_uri' and default
 			-- timeout.
 		require
-			not_null: a_uri /= void
+			not_null: a_uri /= Void
 			not_empty: not a_uri.is_empty
 		do
 			implementation_service_root := a_uri
@@ -65,9 +65,6 @@ feature -- Access
 				Result := cfg.service_root
 			else
 				Result := implementation_service_root
-			end
-			check Result /= Void then
-				-- Either config or implementation
 			end
 		end
 

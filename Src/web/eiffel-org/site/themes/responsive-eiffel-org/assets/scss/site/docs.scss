@@ -172,26 +172,25 @@
 	dd {
 		font-style: italic;
 	}
+}
 
+#content {
 	.wdocs-nav {
 		border-top: solid 1px #999;
 		color: $wdocs-nav-color;
 		background-color: $wdocs-nav-bg-color;
+		.wdocs-uuid {
+			color: $wdocs-fade;
+			font-size: xx-small;
+			text-align: right;
+		}
 	}
-
-	.wdocs-cache-info, .wdocs-uuid {
-		color: $wdocs-fade;
-		font-size: xx-small;
-		text-align: right;
-	}
-}
-
-#content {
 	.wdocs-cache-info {
 		color: $wdocs-fade;
 		font-size: xx-small;
 		text-align: right;
 	}
+
 	.wiki-toc {
 		@extend %clearfix;
 		clear: both;

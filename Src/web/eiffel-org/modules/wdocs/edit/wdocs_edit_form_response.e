@@ -467,6 +467,7 @@ feature -- Form
 			bt_preview, bt_save: WSF_FORM_SUBMIT_INPUT
 			bt_reset: WSF_FORM_RESET_INPUT
 			th: WSF_FORM_HIDDEN_INPUT
+			fut: FILE_UTILITIES
 		do
 			create f.make (a_url, a_formid)
 			f.set_method_post
@@ -530,7 +531,10 @@ feature -- Form
 				else
 					add_error_message ("Unable to retrieve related wiki text.")
 				end
-				if attached pg.path as l_path then
+				if
+					attached pg.path as l_path and then
+					fut.file_path_exists (l_path)
+				then
 					create th.make_with_text ("modification_date", file_timestamp (l_path).out)
 					f.extend (th)
 				end

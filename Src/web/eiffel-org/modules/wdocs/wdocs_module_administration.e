@@ -88,7 +88,6 @@ feature -- Handler
 		local
 			r: CMS_RESPONSE
 			l_version: detachable READABLE_STRING_GENERAL
-			mng: like manager
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			if req.is_get_request_method then
@@ -96,21 +95,13 @@ feature -- Handler
 					if attached {WSF_STRING} req.path_parameter ("version") as p_version then
 						l_version := p_version.value
 					end
-					mng := manager (l_version)
-					if l_version = Void then
-						l_version := mng.version_id
+					if attached wdocs_api as l_wdocs_api then
+						if l_version /= Void then
+							l_wdocs_api.clear_all_cache_for_version (l_version)
+						else
+							l_wdocs_api.clear_all_cache_for_version (l_wdocs_api.default_version_id)
+						end
 					end
-
-						-- Clear wiki catalog
-					mng.refresh_data
-
-						-- Clear cms menu
-					across
-						mng.book_names as ic
-					loop
-						reset_cached_wdocs_cms_menu (l_version, ic.item, mng)
-					end
-
 					r.set_main_content ("Documentation cache: cleared.")
 					if attached {WSF_STRING} req.query_parameter ("destination") as p_dest then
 						r.set_redirection (p_dest.url_encoded_value)
@@ -183,22 +174,12 @@ feature -- Hooks configuration
 			-- <Precursor>.
 		do
 			if a_response.has_permission ("clear wdocs cache") then
-				if a_cache_id_list = Void and attached manager (Void) as mng then
-					mng.refresh_data
-					across
-						mng.book_names as ic
-					loop
-						reset_cached_wdocs_cms_menu (mng.version_id, ic.item, mng)
+				if a_cache_id_list = Void then
+					if attached wdocs_api as l_wdocs_api then
+						l_wdocs_api.clear_all_caches
 					end
 					a_response.add_notice_message ("Cache cleared from " + name)
 				end
-			end
-		end
-
-	reset_cached_wdocs_cms_menu (a_version_id: READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER)
-		do
-			if attached module.wdocs_api as l_wdocs_api then
-				l_wdocs_api.reset_cms_menu_cache_for (a_version_id, a_book_name)
 			end
 		end
 

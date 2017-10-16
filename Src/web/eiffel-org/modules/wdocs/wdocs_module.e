@@ -1421,7 +1421,7 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 	append_wiki_page_xhtml_to (a_wiki_page: WIKI_BOOK_PAGE; a_page_title: detachable READABLE_STRING_8; a_book_name: detachable READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_output: STRING; req: WSF_REQUEST; a_response: CMS_RESPONSE)
 		local
 			l_cache: detachable WDOCS_FILE_STRING_8_CACHE
-			l_xhtml: detachable STRING_8
+			l_xhtml, l_nav: detachable STRING_8
 			lab: detachable READABLE_STRING_32
 			f: PLAIN_TEXT_FILE
 			l_wiki_page_date_time: detachable DATE_TIME
@@ -1485,15 +1485,16 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 					l_xhtml.append (wiki_to_xhtml (wdocs_api, a_page_title, l_wiki_content, a_wiki_page, a_manager))
 				end
 
-				l_xhtml.append ("<ul class=%"wdocs-nav%">")
+					-- Parent and child navigation
+				create l_nav.make_empty
 				if
 					a_book_name /= Void and then
 					attached a_manager.page (a_wiki_page.parent_key, a_book_name) as l_parent_page and then
 					l_parent_page /= a_wiki_page
 				then
-					l_xhtml.append ("<li><em>Parent</em> &lt;")
-					append_wiki_page_link (req, l_version_id, a_book_name, l_parent_page, False, a_manager, l_xhtml)
-					l_xhtml.append ("&gt;</li>")
+					l_nav.append ("<li><em>Back to:</em> ")
+					append_wiki_page_link (req, l_version_id, a_book_name, l_parent_page, False, a_manager, l_nav)
+					l_nav.append ("</li>")
 				end
 
 				a_wiki_page.sort
@@ -1501,12 +1502,34 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 					across
 						l_sub_pages as ic
 					loop
-						l_xhtml.append ("<li> ")
-						append_wiki_page_link (req, l_version_id, a_book_name, ic.item, False, a_manager, l_xhtml)
-						l_xhtml.append ("</li>")
+						l_nav.append ("<li> ")
+						append_wiki_page_link (req, l_version_id, a_book_name, ic.item, False, a_manager, l_nav)
+						l_nav.append ("</li>")
 					end
 				end
-				l_xhtml.append ("</ul>")
+
+				l_xhtml.append ("<ul class=%"wdocs-nav%">")
+				if not l_nav.is_empty then
+					l_xhtml.append ("<strong>Read more</strong>")
+					l_xhtml.append (l_nav)
+				end
+
+					-- UUID if any...
+				if
+					attached a_wiki_page.metadata ("uuid") as l_uuid
+				then
+					l_xhtml.append ("<div class=%"wdocs-uuid%">")
+					if attached wdocs_api as l_wdocs_api then
+						l_xhtml.append ("<a href=%"")
+						l_xhtml.append (l_wdocs_api.cms_api.location_url (wdocs_page_uuid_link_location (l_version_id, utf_8_encoded (l_uuid)), Void))
+						l_xhtml.append ("%">Permanent link</a>")
+					else
+						l_xhtml.append (utf_8_encoded (l_uuid))
+					end
+					l_xhtml.append ("</div>%N")
+				end
+				l_xhtml.append ("</ul>%N")
+
 				if l_cache /= Void then
 					l_cache.put (l_xhtml)
 				end

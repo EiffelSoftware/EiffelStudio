@@ -74,14 +74,6 @@ feature -- Page processing
 					output_toc (Void, True)
 				end
 				st.process (Current)
-
-				if 
-					attached a_page.metadata ("uuid") as l_uuid
-				then
-					output ("<div class=%"wdocs-uuid%">")
-					output (utf.utf_32_string_to_utf_8_string_8 (l_uuid))
-					output ("</div>")
-				end
 				output ("</div>%N")
 			end
 			current_page := Void

@@ -18,11 +18,13 @@ feature -- Status report
 			-- If `a_reference_date' is attached, cache is expired if `a_reference' is more recent than cached item.
 		local
 			d1, d2: DATE_TIME
+			l_cache_date_time: like cache_date_time
 		do
 			if exists then
+				l_cache_date_time := cache_date_time
 				if
 					a_reference_date /= Void and then
-					a_reference_date > cache_date_time
+					a_reference_date > l_cache_date_time
 				then
 					Result := True
 				else
@@ -31,7 +33,7 @@ feature -- Status report
 					elseif a_duration_in_seconds = 0 then
 						Result := True -- Always expires
 					elseif a_duration_in_seconds > 0 then
-						d1 := cache_date_time
+						d1 := l_cache_date_time
 						d2 := current_date_time
 						d2.second_add (- a_duration_in_seconds) --| do not modify `cache_date_time'
 						Result := d2 > d1 -- cached date + duration is older than current date

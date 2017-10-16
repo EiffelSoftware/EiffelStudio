@@ -90,12 +90,17 @@ feature -- Query
 			d: DIRECTORY
 			s,lab,v: detachable STRING_32
 		do
-			if attached internal_available_versions as l_versions then
+			if a_check_existence and then attached internal_available_existing_versions as l_existing_versions then
+				Result := l_existing_versions
+			elseif not a_check_existence and then attached internal_available_versions as l_versions then
 				Result := l_versions
 			else
 				create Result.make_equal_caseless (3)
-
-				internal_available_versions := Result
+				if a_check_existence then
+					internal_available_existing_versions := Result
+				else
+					internal_available_versions := Result
+				end
 
 				create f.make_with_path (settings.documentation_dir.extended ("versions"))
 				if f.exists and then f.is_access_readable then
@@ -150,7 +155,11 @@ feature -- Query
 feature {NONE} -- Query
 
 	internal_available_versions: detachable like available_versions
-			-- cached version of `available_versions`.
+			-- cached version of `available_versions (False)`.
+
+	internal_available_existing_versions: detachable like available_versions
+			-- cached version of `available_versions (True)`.
+
 
 feature -- Query
 
@@ -206,12 +215,75 @@ feature {NONE} -- Query: cache
 
 feature -- Access: cache system
 
+	clear_all_caches
+			-- Clear all existing wdocs related caches.
+		local
+			retried: BOOLEAN
+			p: PATH
+			d: DIRECTORY
+		do
+			if not retried then
+				internal_available_versions := Void
+				internal_available_existing_versions := Void
+				across
+					available_versions (False) as ic
+				loop
+					clear_all_cache_for_version (ic.key)
+				end
+--					-- FIXME: clear remaining cache data, in case it was not cleared yet.
+--				p := temp_dir.extended ("cache")
+--				create d.make_with_path (p)
+--				if d.exists then
+--					d.recursive_delete
+--				end
+			else
+				error_handler.add_custom_error (-1, "Clearing cache failed!", Void)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	clear_all_cache_for_version (a_version_id: READABLE_STRING_GENERAL)
+			-- Clear all existing wdocs related caches.
+			-- if `a_version_id` is set, clear only cache related to that version
+			-- else clear all known version caches.
+		local
+			retried: BOOLEAN
+			p: PATH
+			d: DIRECTORY
+		do
+			if not retried then
+				if attached manager (a_version_id) as mng then
+						-- Clear wiki catalog
+					mng.refresh_data
+						-- Clear cms menu
+					across
+						mng.book_names as ic
+					loop
+						reset_cms_menu_cache_for (mng.version_id, ic.item)
+					end
+				end
+					-- FIXME: clear remaining cache data, in case it was not cleared yet.
+				p := temp_dir.extended ("cache").extended (a_version_id).extended ("xhtml")
+				create d.make_with_path (p)
+				if d.exists then
+					d.recursive_delete
+				end
+			else
+				error_handler.add_custom_error (-1, "Clearing cache failed!", {STRING_32} "Failed to clear cache for version %""+ a_version_id.as_string_32 +"%"!")
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 	cache_for_wiki_page_xhtml (a_version_id: READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL; a_wiki_page: WIKI_BOOK_PAGE): WDOCS_FILE_STRING_8_CACHE
 		local
 			p: PATH
 			d: DIRECTORY
 		do
-			p := temp_dir.extended ("cache").extended (a_version_id)
+			p := temp_dir.extended ("cache").extended (a_version_id).extended ("xhtml")
 			if a_book_name /= Void then
 				if a_book_name.is_empty then
 					p := p.extended ("_none_")
@@ -223,7 +295,7 @@ feature -- Access: cache system
 			if not d.exists then
 				d.recursive_create_dir
 			end
-			p := p.extended (normalized_fs_text (a_wiki_page.title)).appended_with_extension ("xhtml")
+			p := p.extended (normalized_fs_text (a_wiki_page.key)).appended_with_extension ("xhtml")
 			create Result.make (p)
 		end
 

@@ -114,7 +114,7 @@ feature -- Access URI
 
 feature -- Access date and time
 
-	http_date_format_to_date (s: READABLE_STRING_8): detachable DATE_TIME
+	http_date_format_to_date (s: READABLE_STRING_GENERAL): detachable DATE_TIME
 		local
 			d: HTTP_DATE
 		do

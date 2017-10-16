@@ -290,9 +290,9 @@ feature -- Export data
 									l_parent_page /= pg
 								then
 									create s.make_empty
-									s.append ("<li><em>Parent</em> &lt;")
+									s.append ("<li><em>Back to:</em> ")
 									append_wiki_page_link (l_version_id, l_book_name, l_parent_page, False, mng, s)
-									s.append ("&gt;</li>")
+									s.append ("</li>")
 									l_xhtml.prepend (s)
 									l_xhtml.append (s)
 								end

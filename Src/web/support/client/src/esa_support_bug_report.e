@@ -57,10 +57,10 @@ feature -- Query
 	release: STRING_GENERAL assign set_release
 			-- Eiffel Studio release version
 
-	environment: STRING_GENERAL assign set_environment
+	environment: detachable STRING_GENERAL assign set_environment
 			-- Environment
 
-	to_reproduce: STRING_GENERAL assign set_to_reproduce
+	to_reproduce: detachable STRING_GENERAL assign set_to_reproduce
 			-- Way to reproduce
 
 	confidential: BOOLEAN assign set_confidential
@@ -120,7 +120,7 @@ feature -- Command
 			release_set: release.same_string (a_release)
 		end
 
-	set_environment (a_environment: STRING_GENERAL)
+	set_environment (a_environment: detachable STRING_GENERAL)
 			-- Set `environment' with `a_environment'
 		require
 			a_environment_attached: a_environment /= Void
@@ -128,10 +128,10 @@ feature -- Command
 		do
 			environment := a_environment
 		ensure
-			environment_set: environment.same_string (a_environment)
+			environment_set: a_environment /= Void implies attached environment as e and then e.same_string (a_environment)
 		end
 
-	set_to_reproduce (a_to_reproduce: STRING_GENERAL)
+	set_to_reproduce (a_to_reproduce: detachable STRING_GENERAL)
 			-- Set `to_reproduce' with `a_to_reproduce'
 		require
 			a_to_reproduce_attached: a_to_reproduce /= Void
@@ -139,7 +139,7 @@ feature -- Command
 		do
 			to_reproduce := a_to_reproduce
 		ensure
-			to_reproduce_set: to_reproduce.same_string (a_to_reproduce)
+			to_reproduce_set: a_to_reproduce /= Void implies attached to_reproduce as t and then t.same_string (a_to_reproduce)
 		end
 
 	set_confidential (a_confidential: like confidential)

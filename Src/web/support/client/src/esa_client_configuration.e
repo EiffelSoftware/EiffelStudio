@@ -33,11 +33,15 @@ feature {NONE} -- Implemention
 
 	make_with_config
 			-- Create client configuration from JSON config file.
+		local
+			cfg: like json_configuration
 		do
 			config_mode := True
-			create json_configuration.make (Execution_environment.current_working_path.extended ("esa_config.json"))
-		end
 
+			create cfg.make (Execution_environment.current_working_path.extended ("esa_config.json"))
+			implementation_service_root := cfg.service_root
+			json_configuration := cfg
+		end
 
 	json_configuration: detachable ESA_JSON_CONFIGURATION
 			-- esa configuration file
@@ -47,8 +51,8 @@ feature -- Access
 	connection_timeout: INTEGER
 			-- Maximum time the request is allowed to take.
 		do
-			if config_mode then
-				Result := json_configuration.connection_timeout.as_integer_32
+			if config_mode and then attached json_configuration as cfg then
+				Result := cfg.connection_timeout.as_integer_32
 			else
 				Result := Default_timeout
 			end
@@ -57,10 +61,13 @@ feature -- Access
 	service_root: STRING_8
 			-- Root uri to drive the interaction.
 		do
-			if config_mode then
-				Result := json_configuration.service_root
+			if config_mode and then attached json_configuration as cfg then
+				Result := cfg.service_root
 			else
 				Result := implementation_service_root
+			end
+			check Result /= Void then
+				-- Either config or implementation
 			end
 		end
 

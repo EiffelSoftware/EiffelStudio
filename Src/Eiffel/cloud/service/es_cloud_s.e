@@ -28,9 +28,13 @@ feature -- Status report
 
 feature -- Access
 
-	cloud_identifier: READABLE_STRING_8
-			-- ES cloud identifier.
-			--| Usually the server url.
+	server_url: READABLE_STRING_8
+			-- ES cloud server url.
+		deferred
+		end
+
+	associated_website_url: READABLE_STRING_8
+			-- Web site associated to the cloud webapi.
 		deferred
 		end
 

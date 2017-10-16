@@ -156,7 +156,7 @@ feature {NONE} -- Action handlers
 						end
 						if l_dbg then
 							append_bold_text_to ("Cloud: ", txt)
-							append_text_to (cld.cloud_identifier, txt)
+							append_text_to (cld.server_url, txt)
 							append_text_to ("%N", txt)
 							if attached acc.installation as l_installation then
 								append_bold_text_to ("Installation: ", txt)

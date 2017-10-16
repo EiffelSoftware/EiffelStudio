@@ -152,12 +152,13 @@ feature {NONE} -- Initialization
 --				fr_register.show
 			fr_login.show
 
-
-			create lnk.make_with_text (interface_names.l_open_eiffelstudio_account_web_site)
-			lnk.align_text_left
-			lnk.select_actions.extend (agent on_eiffelstudio_account_website_selected)
-			vb.extend (lnk)
-			vb.disable_item_expand (lnk)
+			if attached es_cloud_s.service as cld then
+				create lnk.make_with_text (interface_names.l_open_eiffelstudio_account_web_site)
+				lnk.align_text_left
+				lnk.select_actions.extend (agent open_url (cld.associated_website_url))
+				vb.extend (lnk)
+				vb.disable_item_expand (lnk)
+			end
 
 
 			if is_offline_allowed then
@@ -226,7 +227,7 @@ feature -- Status report
 
 	is_offline_allowed: BOOLEAN
 		do
-			Result := not is_gpl_edition and False -- FIXME: for now, let's disable offline access.
+			Result := not is_gpl_edition and False  -- FIXME: for now, let's disable offline access.
 		end
 
 	is_guest_logged_in: BOOLEAN
@@ -270,11 +271,6 @@ feature -- Next actions
 		end
 
 feature -- UI callbacks
-
-	on_eiffelstudio_account_website_selected
-		do
-			open_url ("https://www.eiffel.org/")
-		end
 
 	on_user_logged_in (acc: ES_ACCOUNT)
 		require

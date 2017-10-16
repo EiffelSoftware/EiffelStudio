@@ -93,18 +93,35 @@ feature {NONE} -- Access
 	accounts_location: detachable PATH
 			-- Local storage for account related data.
 
-	server_url: READABLE_STRING_8
-			-- Web service url.
-
 	web_api: ES_CLOUD_API
 
 feature -- Access
 
-	cloud_identifier: READABLE_STRING_8
-			-- ES cloud identifier.
-			--| Usually the server url.
+	server_url: READABLE_STRING_8
+			-- Web service url.
+
+	associated_website_url: READABLE_STRING_8
+			-- Web site associated to the cloud webapi.
+		local
+			uri: URI
+			n: INTEGER
 		do
-			Result:= server_url
+			create uri.make_from_string (server_url)
+			if attached uri.path_segments as lst then
+				uri.set_path ("")
+				n := lst.count
+				if n > 1 then
+					across
+						lst as ic
+					until
+						n = 1
+					loop
+						uri.add_unencoded_path_segment (ic.item)
+						n := n - 1
+					end
+				end
+			end
+			Result := uri.string
 		end
 
 	version: READABLE_STRING_8

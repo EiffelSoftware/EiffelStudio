@@ -176,9 +176,22 @@
 
 #content {
 	.wdocs-nav {
+		padding: 5px;
+		margin-top: 0.75em; 
 		border-top: solid 1px #999;
-		color: $wdocs-nav-color;
 		background-color: $wdocs-nav-bg-color;
+		ul {
+			margin: 0 0 0.5em 0;
+			li {
+				margin: 0.3em;
+			}
+		}
+		a {
+			color: $wdocs-nav-color;
+		}
+		.wdocs-nav-section {
+			font-weight: bold;
+		}
 		.wdocs-uuid {
 			color: $wdocs-fade;
 			font-size: xx-small;

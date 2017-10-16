@@ -40,6 +40,8 @@ feature -- Helper
 							i := i + 1
 						end
 						Result.append_character ('_')
+					elseif a_text[i] = ':' then
+						Result.append_character ('-')
 					else
 						Result.append_character (a_text[i])
 						i := i + 1

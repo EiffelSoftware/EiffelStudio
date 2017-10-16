@@ -125,8 +125,14 @@ feature -- Helpers
 			-- Last change date for file `f'.
 		require
 			f.exists
+		local
+			nb: INTEGER
 		do
-			create Result.make_from_epoch (f.date.as_integer_32)
+			nb := f.date
+			if nb = 0 then
+				nb := f.change_date
+			end
+			create Result.make_from_epoch (nb)
 		end
 
 feature {NONE} -- Implementation

@@ -627,6 +627,7 @@ feature {NONE} -- Storage: books
 			-- Reset books data in cache, if any
 		do
 			books_data.reset
+--			reset_book ("")
 			across
 				book_names as ic
 			loop

@@ -50,7 +50,7 @@ feature {NONE} -- Default
 					-- For now, it is possible to change the server url this way.
 				Result := v.to_string_8
 			else
-				Result := "https://api.eiffel.com/es"
+				Result := "https://cloud.eiffel.com/api"
 			end
 		end
 

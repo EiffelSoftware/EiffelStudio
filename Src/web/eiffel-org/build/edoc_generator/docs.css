@@ -1,0 +1,163 @@
+BODY {
+	BACKGROUND-COLOR: white;
+}
+
+A {
+    TEXT-DECORATION: none;
+}
+
+A:hover {
+    TEXT-DECORATION: underline;
+}
+
+.eclass {
+    COLOR: blue;
+    FONT-STYLE: italic;
+}
+
+.neclass {
+    COLOR: black;
+    FONT-STYLE: italic;
+}
+
+.ekeyword {
+    COLOR: navy;
+    FONT-WEIGHT: bold;
+}
+
+.esymbol {
+    COLOR: navy;
+}
+
+.eitag {
+    COLOR: sienna;
+    FONT: 91% "Courier New", serif;
+}
+
+.estring {
+    COLOR: indigo;
+    FONT: 91% "Courier New", serif;
+}
+
+.echar {
+    COLOR: indigo;
+    FONT-WEIGHT: bold;
+}
+
+.enumber {
+    COLOR: indigo;
+    FONT-WEIGHT: bold;
+}
+
+.etag {
+    COLOR: sienna;
+}
+
+.efeature {
+    COLOR: darkgreen;
+    FONT-STYLE: italic;
+}
+
+.nefeature {
+    COLOR: black;
+    FONT-STYLE: italic;
+}
+
+.ecomment {
+    COLOR: red;
+    FONT: 80% "Courier New", serif;
+}
+
+.elocal, .equoted {
+    COLOR: darkred;
+    FONT-STYLE: italic;
+}
+
+.ereserved {
+    COLOR: darkgreen;
+    FONT-STYLE: italic;
+    FONT-WEIGHT: bold;
+}
+
+.egeneric {
+    FONT-STYLE: italic;
+	COLOR: dodgerblue;
+}
+
+.ecluster {
+    COLOR: maroon;
+    FONT-VARIANT: small-caps;
+    FONT-WEIGHT: bold;
+}
+
+.necluster {
+    COLOR: black;
+    FONT-VARIANT: small-caps;
+    FONT-WEIGHT: bold;
+}
+
+.link1 {
+	BACKGROUND-COLOR: #006633;
+	COLOR: white;
+}
+
+.link2 {
+	BACKGROUND-COLOR: #330066;
+	COLOR: white;
+}
+
+.nolink1, .nolink2 {
+	BACKGROUND-COLOR: #FFCC00;
+	COLOR: #330066;
+}
+
+#eiffelsoftware-menu {
+        background:#101010 url(images/bkg.png) repeat-x scroll left bottom;
+        font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
+        font-size:10px;
+        text-align:left;
+        width:100%;
+        line-height:20px;
+        padding: 4px 0 5px 0;
+        margin: 0 0 0 0;
+}
+
+#eiffelsoftware-menu ul {
+        list-style-type:none;
+        z-index:99;
+        margin: 0;
+        padding: 0 0 0 20px;
+}
+#eiffelsoftware-menu div.es-menu-offset {
+        display: inline;
+        float: left;
+        width: 10px;
+}
+#eiffelsoftware-menu div.es-menu-logo {
+        display: inline;
+        float: left;
+        width: 18px;
+        background:#101010 url(images/logo-es.jpg) no-repeat scroll 2px 0 ;
+}
+
+#eiffelsoftware-menu li {
+        display: inline;
+        padding:  0 0.5em;
+        border-left:1px solid #535353;
+}
+#eiffelsoftware-menu li:first-child {
+        border-left:none;
+}
+#eiffelsoftware-menu ul a {
+        border-bottom:medium none;
+        color:#EEEEEE;
+        font-weight:normal;
+        padding: 0 4px 0 4px;
+        text-align:left;
+        text-decoration:none;
+}
+
+#eiffelsoftware-menu ul a:hover {
+        border-bottom: solid medium #969696;
+        color:#ffffff;
+}

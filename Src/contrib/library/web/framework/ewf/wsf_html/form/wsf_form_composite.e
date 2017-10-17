@@ -1,8 +1,7 @@
 note
-	description : "Objects that ..."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description : "Objects containing widget WSF_WIDGET objects, and add specific form support (notion of form fields)."
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	WSF_FORM_COMPOSITE

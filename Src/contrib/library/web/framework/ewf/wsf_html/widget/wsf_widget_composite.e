@@ -1,8 +1,7 @@
 note
-	description : "Objects that ..."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description : "Objects containing WSF_WIDGET objects."
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	WSF_WIDGET_COMPOSITE

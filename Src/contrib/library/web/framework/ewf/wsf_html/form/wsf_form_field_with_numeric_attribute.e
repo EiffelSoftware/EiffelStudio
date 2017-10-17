@@ -39,7 +39,7 @@ feature -- Element Change
 	set_max (a_val: INTEGER)
 			-- Set `max' with `a_val'.
 		do
-			set_max_string(a_val.out)
+			set_max_string (a_val.out)
 		ensure
 			max_set: attached max as l_max implies l_max.same_string (a_val.out)
 		end
@@ -94,7 +94,6 @@ feature -- Element Change
 			step_set: attached step as l_step implies l_step.same_string_general (a_val)
 		end
 
-
 feature {NONE} -- Conversion
 
 	append_numeric_input_attributes_to (a_target: STRING)
@@ -103,7 +102,7 @@ feature {NONE} -- Conversion
 				--min
 			if attached min as l_min then
 				a_target.append (" min=%"")
-				a_target.append(l_min)
+				a_target.append (l_min)
 				a_target.append_character ('%"')
 			end
 

@@ -210,7 +210,6 @@ feature -- Execution
 							l_upload_data := ctx.form_parameters_to_x_www_form_url_encoded_string
 							curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_postfields, l_upload_data)
 							curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_postfieldsize, l_upload_data.count)
-
 						end
 						if l_use_curl_form then
 							create l_form.make

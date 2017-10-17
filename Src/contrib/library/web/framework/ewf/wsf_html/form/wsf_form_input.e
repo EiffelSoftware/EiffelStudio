@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 			name := a_name
 		end
 
-	make_with_text (a_name: like name; a_text: READABLE_STRING_32)
+	make_with_text (a_name: like name; a_text: READABLE_STRING_GENERAL)
 		do
 			make (a_name)
 			set_text_value (a_text)
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text_value (s: detachable READABLE_STRING_32)
+	set_text_value (s: detachable READABLE_STRING_GENERAL)
 		do
 			set_default_value (s)
 		end
@@ -73,9 +73,13 @@ feature -- Element change
 			end
 		end
 
-	set_default_value (v: like default_value)
+	set_default_value (v: detachable READABLE_STRING_GENERAL)
 		do
-			default_value := v
+			if v = Void then
+				default_value := Void
+			else
+				default_value := v.as_string_32
+			end
 		end
 
 feature -- Conversion

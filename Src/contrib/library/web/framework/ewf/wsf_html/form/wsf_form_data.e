@@ -48,7 +48,9 @@ feature -- Access
 
 	item (a_name: READABLE_STRING_GENERAL): detachable WSF_VALUE
 		do
-			Result := items.item (a_name.as_string_8)
+			if a_name.is_valid_as_string_8 then
+				Result := items.item (a_name.to_string_8)
+			end
 		end
 
 	string_item (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32

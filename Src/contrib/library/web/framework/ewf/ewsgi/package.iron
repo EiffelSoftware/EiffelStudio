@@ -6,6 +6,8 @@ project
 	connector_libfcgi = "connectors/libfcgi/libfcgi.ecf"
 	connector_null = "connectors/null/null.ecf"
 	connector_standalone = "connectors/standalone/standalone.ecf"
+	ewsgi_spec = "ewsgi_spec.ecf"
+	connector_nino = "connectors/nino/nino.ecf"
 
 note
 	title: EWSGI

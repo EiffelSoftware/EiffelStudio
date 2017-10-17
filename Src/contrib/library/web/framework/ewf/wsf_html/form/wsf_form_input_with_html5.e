@@ -35,12 +35,17 @@ feature -- Access
 
 feature -- Change element
 
-	set_placeholder (a_placeholder: READABLE_STRING_32)
+	set_placeholder (a_placeholder: detachable READABLE_STRING_GENERAL)
 			-- Set `placeholder' with `a_placeholder'.
 		do
-			placeholder := a_placeholder
+			if a_placeholder = Void then
+				placeholder := Void
+			else
+				placeholder := a_placeholder.as_string_32
+			end
 		ensure
-			placeholder_set: attached placeholder as l_placeholder implies l_placeholder = a_placeholder
+			placeholder_set: (a_placeholder = Void implies placeholder = Void)
+				or (a_placeholder /= Void implies (attached placeholder as l_placeholder and then a_placeholder.same_string (l_placeholder)))
 		end
 
 	enable_autofocus
@@ -91,16 +96,21 @@ feature -- Change element
 			required_flase: not required
 		end
 
-	set_pattern (a_pattern: READABLE_STRING_32)
+	set_pattern (a_pattern: READABLE_STRING_GENERAL)
 			-- Set `pattern' with `a_pattern'.
 			-- Example:[0-9][A-Z]{3}
 			-- Check HTML5 patterns site.
 		note
 			EIS: "name=HTML5 Patterns", "src=http://html5pattern.com/"
 		do
-			pattern := a_pattern
+			if a_pattern = Void then
+				pattern := Void
+			else
+				pattern := a_pattern.as_string_32
+			end
 		ensure
-			pattern_set: attached pattern as l_pattern implies l_pattern = a_pattern
+			pattern_set: (a_pattern = Void implies pattern = Void) or
+				a_pattern /= Void implies attached pattern as l_pattern and then a_pattern.same_string (l_pattern)
 		end
 
 

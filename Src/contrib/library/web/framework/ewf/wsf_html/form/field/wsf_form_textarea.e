@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_value: detachable READABLE_STRING_GENERAL
+	default_value: detachable READABLE_STRING_32
 
 	rows: INTEGER
 
@@ -54,9 +54,13 @@ feature -- Element change
 			end
 		end
 
-	set_default_value (v: like default_value)
+	set_default_value (v: detachable READABLE_STRING_GENERAL)
 		do
-			default_value := v
+			if v = Void then
+				default_value := Void
+			else
+				default_value := v.as_string_32
+			end
 		end
 
 feature -- Conversion

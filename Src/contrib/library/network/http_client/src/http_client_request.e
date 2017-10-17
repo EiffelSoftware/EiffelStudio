@@ -30,12 +30,19 @@ feature {NONE} -- Initialization
 			-- Initialize Current with `a_url' and `ctx'.
 			-- This can be used to reset/reinitialize Current with new url
 			-- in the case of redirection.
+		local
+			i: INTEGER
 		do
-			if a_url.starts_with ("https://") or a_url.starts_with ("http://") then
+			i := a_url.substring_index ("://", 1)
+			if i > 0 then
+				check
+					a_url.substring (1, i).same_string ("http")
+					or a_url.substring (1, i).same_string ("https")
+				end
 				url := a_url
 			else
 				url := session.url (a_url, Void)
-			end
+			end			
 			headers := session.headers.twin
 			if ctx /= Void then
 				context := ctx

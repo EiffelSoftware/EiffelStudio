@@ -103,6 +103,7 @@ feature -- Initialization
 				s.extend (':')
 				s.append_string_general (p)
 				create http_authorization.make_from_string ("Basic " + (create {BASE64}).encoded_string (utf.string_32_to_utf_8_string_8 (s)))
+
 			elseif t.is_case_insensitive_equal (Digest_auth_type) then
 				type := Digest_auth_type
 				to_implement ("HTTP Authorization %""+ t +"%", not yet implemented")

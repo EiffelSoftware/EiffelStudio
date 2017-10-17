@@ -113,7 +113,7 @@ feature -- Access
 					-- Get URL data
 				l_is_https := url.starts_with_general ("https://")
 				create l_uri.make_from_string (url)
-				check valid_url: l_uri.is_valid end
+				check valid_url: l_uri.is_valid end				
 				l_port := l_uri.port
 				if l_port = 0 then
 					if l_is_https then

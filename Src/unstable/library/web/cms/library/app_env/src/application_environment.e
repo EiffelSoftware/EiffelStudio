@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_directory_name (a_dirname: READABLE_STRING_GENERAL)
-			-- Create a layour based on a path `p'.
+			-- Create a layout based on directory name  `a_dirname'.
 		do
 			make_with_path (create {PATH}.make_from_string (a_dirname))
 		end

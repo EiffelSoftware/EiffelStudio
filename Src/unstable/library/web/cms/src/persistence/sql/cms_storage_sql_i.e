@@ -281,7 +281,7 @@ feature -- Helper
 			sql_finalize_query (l_sql)
 		end
 
-feature -- Access		
+feature -- Access
 
 	sql_start
 			-- Set the cursor on first element.
@@ -291,7 +291,7 @@ feature -- Access
 		end
 
 	sql_after: BOOLEAN
-			-- Are there no more items to iterate over?	
+			-- Are there no more items to iterate over?
 		require
 			no_error: not has_error
 		deferred

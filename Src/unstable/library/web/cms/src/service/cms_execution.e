@@ -95,7 +95,7 @@ feature -- Factory
 		deferred
 		end
 
-feature -- Access	
+feature -- Access
 
 	api: CMS_API
 			-- API service.
@@ -361,7 +361,7 @@ feature -- Request execution
 		end
 
 	initialize_administration_execution
-			-- Initialize for administration execution.	
+			-- Initialize for administration execution.
 		do
 			api.switch_to_administration_mode
 			api.initialize_execution

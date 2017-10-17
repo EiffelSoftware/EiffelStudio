@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {CMS_SETUP_DEBUG_INFO}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

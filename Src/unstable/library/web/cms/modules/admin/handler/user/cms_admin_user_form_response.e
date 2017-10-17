@@ -152,7 +152,7 @@ feature -- Process New
 			set_main_content (b)
 		end
 
-feature -- Form	
+feature -- Form
 
 	edit_form_submit (fd: WSF_FORM_DATA; a_user: detachable CMS_USER; b: STRING)
 		local
@@ -376,7 +376,6 @@ feature -- Form
 					fs.extend (ts)
 					a_form.extend (fs)
 				end
-
 
 				create fs.make
 				fs.set_legend ("User Roles")

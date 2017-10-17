@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {CMS_ADMIN_INFO_HANDLER}."
-	author: ""
+	description: "Display information about ROC CMS installation."
 	date: "$Date$"
 	revision: "$Revision$"
 

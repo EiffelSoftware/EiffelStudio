@@ -315,7 +315,7 @@ feature -- Execution initialization
 			setup_formats
 		end
 
-feature {CMS_ACCESS} -- Module management		
+feature {CMS_ACCESS} -- Module management
 
 	install_all_modules
 			-- Install CMS or uninstalled module which are enabled.
@@ -387,9 +387,9 @@ feature -- Access
 			-- Logger
 
 	storage: CMS_STORAGE
-			-- Default persistence storage.	
+			-- Default persistence storage.
 
-feature -- Access: url			
+feature -- Access: url
 
 	base_url: detachable IMMUTABLE_STRING_8
 			-- Base url if any.
@@ -449,7 +449,7 @@ feature {NONE} -- Implementation/WebAPI.
 	webapi_base_path_location: IMMUTABLE_STRING_8
 			-- Webapi path without first slash!
 
-feature -- Access: Administration		
+feature -- Access: Administration
 
 	is_administration_request (req: WSF_REQUEST): BOOLEAN
 		do
@@ -530,7 +530,7 @@ feature -- CMS links
 			Result := link (real_user_display_name (u), "user/" + u.id.out, Void)
 		end
 
-feature -- Helpers: URLs	
+feature -- Helpers: URLs
 
 	location_absolute_url (a_location: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING
 			-- Absolute URL for `a_location'.
@@ -637,7 +637,7 @@ feature {NONE} -- Access: request
 feature -- Content
 
 	content_types: ARRAYED_LIST [CMS_CONTENT_TYPE]
-			-- Available content types	
+			-- Available content types
 
 	add_content_type (a_type: CMS_CONTENT_TYPE)
 			-- Register content type `a_type'.
@@ -901,7 +901,7 @@ feature -- Emails
 		end
 
 	process_emails (lst: ITERABLE [CMS_EMAIL])
-			-- Process collection of email `lst'.	
+			-- Process collection of email `lst'.
 		do
 			across
 				lst as ic
@@ -1133,7 +1133,7 @@ feature -- Hooks
 			end
 		end
 
-feature -- Path aliases	
+feature -- Path aliases
 
 	is_valid_path_alias (a_alias: READABLE_STRING_GENERAL): BOOLEAN
 		do
@@ -1228,7 +1228,7 @@ feature {NONE}-- Implementation
 			-- Cached value for `user_api`.
 
 	internal_response_api: detachable like response_api
-			-- Cached value for `response_api`.			
+			-- Cached value for `response_api`.
 
 feature -- Environment/ theme
 
@@ -1290,7 +1290,7 @@ feature -- Environment/ theme
 			Result := theme_location.extended ("assets")
 		end
 
-feature -- Theming path helpers		
+feature -- Theming path helpers
 
 	theme_location_for (a_theme_name: READABLE_STRING_GENERAL): PATH
 		do
@@ -1540,7 +1540,7 @@ feature -- Site builtin variables
 			end
 		end
 
-feature -- Request utilities		
+feature -- Request utilities
 
 	execution_variable (a_name: READABLE_STRING_GENERAL): detachable ANY
 			-- Execution variable related to `a_name'
@@ -1565,7 +1565,7 @@ feature -- Request utilities
 		end
 
 
-feature {CMS_API_ACCESS, CMS_RESPONSE, CMS_MODULE} -- Request utilities	
+feature {CMS_API_ACCESS, CMS_RESPONSE, CMS_MODULE} -- Request utilities
 
 	current_user (req: WSF_REQUEST): detachable CMS_USER
 			-- Current user or Void in case of Guest user.

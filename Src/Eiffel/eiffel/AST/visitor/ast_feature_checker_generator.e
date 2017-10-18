@@ -1562,7 +1562,12 @@ feature {NONE} -- Implementation
 						elseif not is_qualified_call and then current_feature.is_instance_free and then not l_feature.is_instance_free then
 								-- The error for agents is reported elsewhere.
 							if not is_agent then
-								error_handler.insert_error (create {VSTB}.make_feature (l_feature, current_feature, context.current_class, context.written_class, a_name))
+								error_handler.insert_error
+									(if is_precursor then
+										create {VSTB}.make_precursor (l_feature, current_feature, context.current_class, context.written_class, a_name)
+									else
+										create {VSTB}.make_feature (l_feature, current_feature, context.current_class, context.written_class, a_name)
+									end)
 							end
 							reset_types
 						elseif attached old_assigner_source then
@@ -3219,6 +3224,7 @@ feature {NONE} -- Visitor
 			l_rout_id_set: ROUT_ID_SET
 			l_orig_result_type: TYPE_A
 			l_precursor_keyword: KEYWORD_AS
+			l_error_level: like error_level
 		do
 			if not is_inherited then
 				if current_feature.is_invariant or else current_feature.is_inline_agent then
@@ -3330,16 +3336,18 @@ feature {NONE} -- Visitor
 				l_precursor_id.set_position (l_precursor_keyword.line, l_precursor_keyword.column,
 					l_precursor_keyword.position, l_precursor_keyword.location_count,
 					l_precursor_keyword.character_column, l_precursor_keyword.character_position, l_precursor_keyword.character_count)
+				l_error_level := error_level
 				process_call (context.current_class_type, l_parent_type, l_precursor_id, l_feature_i,
 					l_as.parameters, False, False, False, True, True)
-
-					-- Now `last_type' is the type we got from the processing of `Precursor'. We have to adapt
-					-- it to the current class, but instead of using the malformed `last_type' we use `l_orig_result_type'.
-				set_type (l_orig_result_type.evaluated_type_in_descendant
-					(l_parent_type.base_class, context.current_class, context.current_feature), l_as)
-				if attached last_vuar_error as e and then attached last_type as t then
-						-- Feature without arguments is found, try parenthesis alias on it.
-					look_for_parenthesis_alias (l_as.internal_parameters, e, t)
+				if error_level = l_error_level then
+						-- Now `last_type' is the type we got from the processing of `Precursor'. We have to adapt
+						-- it to the current class, but instead of using the malformed `last_type' we use `l_orig_result_type'.
+					set_type (l_orig_result_type.evaluated_type_in_descendant
+						(l_parent_type.base_class, context.current_class, context.current_feature), l_as)
+					if attached last_vuar_error as e and then attached last_type as t then
+							-- Feature without arguments is found, try parenthesis alias on it.
+						look_for_parenthesis_alias (l_as.internal_parameters, e, t)
+					end
 				end
 			else
 				reset_types

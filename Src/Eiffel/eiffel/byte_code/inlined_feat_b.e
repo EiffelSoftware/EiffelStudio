@@ -137,13 +137,11 @@ feature
 			local_is_current_temporary: BOOLEAN
 			a: ATTRIBUTE_BL
 			access: ACCESS_EXPR_B
-			cl_type_i: CL_TYPE_A
 		do
 				-- First, standard analysis of the call
 			Precursor {FEATURE_BL} (reg)
 			reg_type := reg.c_type
 
-			cl_type_i ?= context_type
 			context.change_class_type_context
 				(system.class_type_of_id (context_type_id), context_cl_type,
 				system.class_type_of_id (written_type_id), written_cl_type)
@@ -263,7 +261,6 @@ feature -- Generation
 					p := parameters
 					l_area := p.area
 					count := p.count
-					p := Void
 				until
 					i = count
 				loop

@@ -26,6 +26,7 @@ feature {NONE} -- Tests
 			a.do_nothing
 			;(agent do end).do_nothing
 			;(agent f).do_nothing
+			Precursor
 			g
 		end
 

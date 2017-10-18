@@ -25,7 +25,7 @@
 			<void_safety support="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf" readonly="false"/>
+		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.ecf" readonly="false"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<tests name="bridge-tests" location=".\bridge\tests\" recursive="true"/>
 		<tests name="concealer-test" location=".\concealer\tests\" recursive="true"/>

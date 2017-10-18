@@ -121,18 +121,14 @@ end
 			-- Analyze feature call on `reg'
 		local
 			tmp_register: REGISTER
-			access_b: ACCESS_B
-			basic_i: BASIC_A
 			l_optimizable: BOOLEAN
-			l_nested: NESTED_B
 		do
 debug
 io.error.put_string ("In feature_bl [analyze_on]: ")
 io.error.put_string (feature_name)
 io.error.put_new_line
 end
-			basic_i ?= context_type
-			if basic_i /= Void and not is_feature_special (True, basic_i) then
+			if attached {BASIC_A} context_type as basic_i and then not is_feature_special (True, basic_i) then
 					-- Get a register to store the metamorphosed basic type,
 					-- on which the attribute access is made. The lifetime of
 					-- this temporary is really short: just the time to make
@@ -151,11 +147,9 @@ end
 				until
 					parameters.after
 				loop
-					access_b ?= parameters.item.expression
-					if access_b = Void or else not access_b.is_attribute then
-						l_nested ?= parameters.item.expression
+					if attached {ACCESS_B} parameters.item.expression as access_b implies not access_b.is_attribute then
 						if
-							l_nested = Void or else
+							attached {NESTED_B} parameters.item.expression as l_nested implies
 							(not (l_nested.target.is_predefined or l_nested.target.is_attribute) or not l_nested.message.is_attribute)
 						then
 							l_optimizable := False
@@ -621,14 +615,20 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Inlining of calls to features from SPECIAL
 
+	context_cl_type: CL_TYPE_A
+			-- A context class type.
+		do
+			Result := context.context_cl_type
+		end
+
 	is_special_actual_expanded_with_references (actual_generic: TYPE_A): BOOLEAN
 			-- Is actual generic parameter `actual_generic' of current type SPECIAL [G] is
 			-- expanded with references?
 		require
-			is_special_context_class_type: context.context_cl_type.base_class.is_special
+			is_special_context_class_type: context_cl_type.base_class.is_special
 		do
 			if actual_generic.is_true_expanded then
-				Result := actual_generic.associated_class_type (context.context_cl_type).skeleton.has_references
+				Result := actual_generic.associated_class_type (context_cl_type).skeleton.has_references
 			end
 		end
 
@@ -1019,7 +1019,7 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

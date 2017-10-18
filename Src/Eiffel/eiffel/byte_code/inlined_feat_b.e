@@ -1,16 +1,23 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class INLINED_FEAT_B
 
 inherit
 	FEATURE_BL
 		redefine
-			enlarged, analyze_on, generate_metamorphose_end,
-			generate_end, fill_from,
+			analyze_on,
+			context_cl_type,
+			enlarged,
+			generate_metamorphose_end,
+			generate_end,
 			generate_parameters,
-			unanalyze, perused,
-			free_register, is_polymorphic
+			fill_from,
+			free_register,
+			is_polymorphic,
+			perused,
+			unanalyze
 		end
 
 feature
@@ -250,7 +257,7 @@ feature -- Generation
 			context.enter_hidden_code
 
 			if parameters /= Void then
-					-- Assign the parameter values to the registers
+					-- Assign the parameter values to the registers.
 				from
 					b_area := temporary_parameters.area
 					p := parameters
@@ -260,17 +267,17 @@ feature -- Generation
 				until
 					i = count
 				loop
-					if (not b_area.item (i)) then
-						expr := l_area.item (i)
-						buf.put_new_line;
-						argument_regs.item (i + 1).print_register;
-						buf.put_string (" = ");
-						expr.print_register;
-						buf.put_character (';');
+					if not b_area [i] then
+						expr := l_area [i]
+						buf.put_new_line
+						argument_regs [i + 1].print_register
+						buf.put_string (" = ")
+						expr.print_register
+						buf.put_character (';')
 					end;
 					i := i + 1
 				end
-			end;
+			end
 
 			context_class_type := system.class_type_of_id (context_type_id)
 			written_class_type := system.class_type_of_id (written_type_id)
@@ -283,14 +290,14 @@ feature -- Generation
 			if local_regs /= Void then
 					-- Set the value of the local registers to the default
 				from
-					i := 1;
+					i := 1
 					count := local_regs.count
 				until
 					i > count
 				loop
 					reset_register_value (byte_code.locals.item (i), local_regs.item (i))
 					i := i + 1
-				end;
+				end
 			end
 
 			if result_reg /= Void then
@@ -489,10 +496,10 @@ feature {NONE} -- Registers
 						end
 					end;
 
-					if (local_reg /= Void) then
-						is_param_temporary_reg := local_reg.is_temporary;
+					if local_reg /= Void then
+						is_param_temporary_reg := local_reg.is_temporary
 						if is_param_temporary_reg then
-							void_reg ?= local_reg;
+							void_reg ?= local_reg
 							is_param_temporary_reg := void_reg = Void
 						else
 							is_param_temporary_reg := local_reg.is_predefined
@@ -553,9 +560,9 @@ feature {NONE} -- Registers
 				until
 					i > count
 				loop
-					if (not temporary_parameters.item (i)) then
-						a.item (i).free_register
-					end;
+					if not temporary_parameters [i] then
+						a [i].free_register
+					end
 					i := i + 1
 				end
 			end
@@ -600,7 +607,9 @@ feature -- Code to inline
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	date: "$Date$"
+	version: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

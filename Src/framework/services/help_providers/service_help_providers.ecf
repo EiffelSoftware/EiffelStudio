@@ -31,7 +31,7 @@
 		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
-		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf"/>
+		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.ecf"/>
 		<library name="service_core" location="$EIFFEL_SRC\framework\services\core\service_core.ecf"/>
 		<library name="service_environment" location="$EIFFEL_SRC\framework\services\environment\service_environment.ecf"/>
 		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander.ecf"/>

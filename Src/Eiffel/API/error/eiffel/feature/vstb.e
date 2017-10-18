@@ -18,6 +18,7 @@ create
 	make_attribute,
 	make_current,
 	make_feature,
+	make_precursor,
 	make_inline_agent,
 	make_unqualified_agent
 
@@ -49,6 +50,7 @@ feature {NONE} -- Creation
 		ensure
 			not_is_agent: not is_agent
 			not_is_attribute: not is_attribute
+			not_is_precursor: not is_precursor
 			e_attribute_unset: not attached e_attribute
 			class_c_set: class_c = c
 			written_class_set: attached written_class
@@ -66,6 +68,7 @@ feature {NONE} -- Creation
 		ensure
 			not_is_agent: not is_agent
 			is_attribute: is_attribute
+			not_is_precursor: not is_precursor
 			e_attribute_set: attached e_attribute
 			class_c_set: class_c = c
 			written_class_set: attached written_class
@@ -82,6 +85,25 @@ feature {NONE} -- Creation
 		ensure
 			not_is_agent: not is_agent
 			not_is_attribute: not is_attribute
+			not_is_precursor: not is_precursor
+			e_attribute_set: attached e_attribute
+			class_c_set: class_c = c
+			written_class_set: attached written_class
+			feature_set: attached e_feature
+			line_set: line = l.line
+			column_set: column = l.column
+		end
+
+	make_precursor (a: FEATURE_I; f: FEATURE_I; c, w: CLASS_C; l: LOCATION_AS)
+			-- Create an error for the case when a non-instance-free precursor `a` is used in an instance-free feature `f` of class `c` in the code in class `w` at location `l`.
+		do
+			make (f, c, w, l)
+			e_attribute := a.e_feature
+			is_precursor := True
+		ensure
+			not_is_agent: not is_agent
+			not_is_attribute: not is_attribute
+			is_precursor: is_precursor
 			e_attribute_set: attached e_attribute
 			class_c_set: class_c = c
 			written_class_set: attached written_class
@@ -98,6 +120,7 @@ feature {NONE} -- Creation
 		ensure
 			is_agent: is_agent
 			not_is_attribute: not is_attribute
+			not_is_precursor: not is_precursor
 			e_attribute_unset: not attached e_attribute
 			class_c_set: class_c = c
 			written_class_set: attached written_class
@@ -115,6 +138,7 @@ feature {NONE} -- Creation
 		ensure
 			is_agent: is_agent
 			not_is_attribute: not is_attribute
+			not_is_precursor: not is_precursor
 			e_attribute_set: attached e_attribute
 			class_c_set: class_c = c
 			written_class_set: attached written_class
@@ -133,11 +157,16 @@ feature {NONE} -- Access
 	e_attribute: detachable E_FEATURE
 			-- A descriptor of an attribute used in the instance-free feature identified by `e_feature`.
 
+	kind: NATURAL
+
 	is_agent: BOOLEAN
 			-- Is agent used?
 
 	is_attribute: BOOLEAN
 			-- Is attribute used?
+
+	is_precursor: BOOLEAN
+			-- Is precursor used?
 
 feature {NONE} -- Output
 
@@ -168,11 +197,28 @@ feature {NONE} -- Output
 								What to do: Remove the attribute {2} from the code or the instance-free mark from the feature declaration.
 							]", "compiler.error"),
 						<<agent e_feature.append_name, agent a.append_name>>)
+				elseif is_precursor then
+						-- Erroneous use of a non-instance-free precursor.
+					format_elements (t, locale.translation_in_context ("[
+								Error: The instance-free feature {1} calls the non-instance free {2}.
+								What to do:
+									- remove the call to the {2} from the code or
+									- remove the instance-free mark from the feature declaration of {1} or
+									- mark the precursor feature {3} as instance-free.
+							]", "compiler.error"),
+						<<
+							agent e_feature.append_name,
+							agent {TEXT_FORMATTER}.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_precursor_keyword, a),
+							agent a.append_name
+						>>)
 				else
 						-- Erroneous use of a non-instance-free feature.
 					format_elements (t, locale.translation_in_context ("[
 								Error: The instance-free feature {1} calls the non-instance free feature {2}.
-								What to do: Remove the non-instance-free feature {2} from the code or the instance-free mark from the feature declaration.
+								What to do:
+									- remove the call to the non-instance-free feature {2} from the code or
+									- remove the instance-free mark from the feature declaration of {1} or
+									- mark the feature {2} as instance-free.
 							]", "compiler.error"),
 						<<agent e_feature.append_name, agent a.append_name>>)
 				end
@@ -202,6 +248,9 @@ feature {NONE} -- Output
 				if is_attribute then
 					format_elements (t, locale.translation_in_context ("The instance-free feature {1} uses the attribute {2}.", "compiler.error"),
 						<<agent e_feature.append_name, agent a.append_name>>)
+				elseif is_precursor then
+					format_elements (t, locale.translation_in_context ("The instance-free feature {1} calls the non-instance-free {2}.", "compiler.error"),
+						<<agent e_feature.append_name, agent {TEXT_FORMATTER}.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_precursor_keyword, a)>>)
 				else
 					format_elements (t, locale.translation_in_context ("The instance-free feature {1} uses the non-instance-free feature {2}.", "compiler.error"),
 						<<agent e_feature.append_name, agent a.append_name>>)
@@ -211,6 +260,13 @@ feature {NONE} -- Output
 					<<agent e_feature.append_name, agent {TEXT_FORMATTER}.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_current, Void)>>)
 			end
 		end
+
+invariant
+	consistent_agent: is_agent implies not (is_attribute or is_precursor)
+	consistent_attribute: is_attribute implies not (is_agent or is_precursor)
+	consistent_precursor: is_precursor implies not (is_agent or is_attribute)
+	feature_attached_if_attribute: is_attribute implies attached e_attribute
+	feature_attached_if_precursor: is_precursor implies attached e_attribute
 
 note
 	copyright:	"Copyright (c) 1984-2017, Eiffel Software"

@@ -290,12 +290,13 @@ feature {NONE} --Implementation
 				l_ret_type := void_type.c_type
 			end
 			if is_manifest_optimizable then
-				create l_arg_types.make (1, optimized_parameters.count + 2)
+				create l_arg_types.make_filled ("EIF_REFERENCE", 1, optimized_parameters.count + 2)
 			else
-				create l_arg_types.make (1, 3)
+				create l_arg_types.make_filled ("EIF_REFERENCE", 1, 3)
 			end
 			l_arg_types.put ("EIF_POINTER", 1)
-			l_arg_types.put ("EIF_REFERENCE", 2)
+				-- "EIF_REFERENCE" is used by default.
+				-- l_arg_types.put ("EIF_REFERENCE", 2)
 			if is_manifest_optimizable then
 				from
 					i := 3
@@ -307,15 +308,15 @@ feature {NONE} --Implementation
 					i := i + 1
 					optimized_parameters.forth
 				end
-			else
-				l_arg_types.put ("EIF_REFERENCE", 3)
+				-- "EIF_REFERENCE" is used by default.
+				-- else
+				-- l_arg_types.put ("EIF_REFERENCE", 3)
 			end
-
 			l_ret_type.generate_function_cast (buffer, l_arg_types, context.workbench_mode)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

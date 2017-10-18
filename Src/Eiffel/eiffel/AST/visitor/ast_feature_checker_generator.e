@@ -1559,7 +1559,7 @@ feature {NONE} -- Implementation
 							l_vsta2.set_location (l_feature_name)
 							error_handler.insert_error (l_vsta2)
 							reset_types
-						elseif not is_qualified and then current_feature.is_instance_free and then not l_feature.is_instance_free then
+						elseif not is_qualified_call and then current_feature.is_instance_free and then not l_feature.is_instance_free then
 								-- The error for agents is reported elsewhere.
 							if not is_agent then
 								error_handler.insert_error (create {VSTB}.make_feature (l_feature, current_feature, context.current_class, context.written_class, a_name))

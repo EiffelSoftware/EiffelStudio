@@ -140,7 +140,8 @@ feature -- Settings
 	is_persistent_connection_supported: BOOLEAN
 			-- Is persistent connection supported?
 		do
-			Result := {HTTPD_SERVER}.is_persistent_connection_supported and then max_keep_alive_requests > 0
+			Result := {HTTPD_SERVER}.is_persistent_connection_supported and then 
+					max_keep_alive_requests /= 0 --| `-1` no limit			
 		end
 
 	is_next_persistent_connection_supported: BOOLEAN
@@ -247,7 +248,8 @@ feature -- Execution
 				l_exit
 			loop
 				n := n + 1
-				if n >= m then
+					-- If `m` is `-1`, no limit for the number of keep_alive requests.
+				if m >= 0 and n >= m then
 					is_next_persistent_connection_supported := False
 				elseif n > 1 and is_verbose then
 					log ("Reuse connection (" + n.out + ")", information_level)

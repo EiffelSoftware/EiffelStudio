@@ -3,9 +3,9 @@
 	<target name="websocket_app">
 		<root class="APPLICATION" feature="make_and_launch"/>
 		<file_rule>
-			<exclude>/\.svn$</exclude>
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.svn$</exclude>
 		</file_rule>
 		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
@@ -16,6 +16,14 @@
 		<library name="standalone_websocket_connector" location="..\..\..\..\library\web\framework\ewf\wsf\connector\standalone_websocket.ecf" readonly="false"/>
 		<library name="wsf" location="..\..\..\..\library\web\framework\ewf\wsf\wsf.ecf"/>
 		<cluster name="app" location=".\" recursive="true"/>
+	</target>
+	<target name="websocket_app_st" extends="websocket_app">
+		<description>Single thread solution. 
+			Warning: as it can not handle concurrent request, it is recommended to set Keep-Alive-Timeout to very low value, as browser will keep persistent connection open too long.
+		</description>
+		<capability>
+			<concurrency use="none"/>
+		</capability>
 	</target>
 	<target name="websocket_app_ssl" extends="websocket_app">
 		<variable name="ssl_enabled" value="true"/>

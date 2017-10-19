@@ -23,7 +23,7 @@
 			<concurrency support="scoop" use="thread"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns.ecf"/>
+		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf">
 			<condition>
 				<concurrency value="thread"/>

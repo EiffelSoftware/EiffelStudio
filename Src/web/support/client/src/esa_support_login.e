@@ -17,10 +17,10 @@ create
 
 feature {NONE} -- Access
 
-	last_username: detachable STRING_GENERAL
+	last_username: detachable IMMUTABLE_STRING_32
 			-- Last logged in user's user name
 
-	last_password: detachable STRING_GENERAL
+	last_password: detachable IMMUTABLE_STRING_32
 			-- Last logged in user's password
 
 	cache_register_url: detachable STRING_8
@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	attempt_logon (a_user, a_pass: STRING_GENERAL; a_remember: BOOLEAN)
+	attempt_logon (a_user, a_pass: READABLE_STRING_GENERAL; a_remember: BOOLEAN)
 			-- Attemps to log a user in
 		require
 			is_support_accessible: is_support_accessible
@@ -67,14 +67,16 @@ feature -- Basic operations
 						is_logged_in := True
 					end
 					if is_logged_in then
-						last_username := a_user
-						last_password := a_pass
+						create last_username.make_from_string_general (a_user)
+						create last_password.make_from_string_general (a_pass)
 					end
 				end
 			end
 		ensure
-			last_username_set: (is_logged_in and last_username = a_user) or (not is_logged_in and last_username = Void)
-			last_password_set: (is_logged_in and last_password = a_pass) or (not is_logged_in and last_password = Void)
+			last_username_set: (is_logged_in and attached last_username as u and then a_user.same_string (u))
+								or (not is_logged_in and last_username = Void)
+			last_password_set: (is_logged_in and attached last_password as p and then a_pass.same_string (p))
+								or (not is_logged_in and last_password = Void)
 		rescue
 			if l_resp /= Void and then l_resp.status /= 200 then
 				is_bad_request := True
@@ -118,7 +120,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	basic_auth (a_user, a_pass: STRING_GENERAL): detachable READABLE_STRING_8
+	basic_auth (a_user, a_pass: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
 			-- Create a basic auth password with `a_user' and `a_pass'.
 		require
 			user_not_void: a_user /= Void

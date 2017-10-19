@@ -66,7 +66,7 @@ feature -- Access: connection
 		end
 
 	max_tcp_clients: INTEGER assign set_max_tcp_clients
-			-- Listen on socket for at most `queue' connections.	
+			-- Listen on socket for at most `max_tcp_clients' connections.	
 		do
 			Result := option_integer_value ("max_tcp_clients", 0)
 		end
@@ -104,9 +104,24 @@ feature -- Access: persistent connection
 			-- Maximum number of requests allowed per persistent connection.
 			-- Recommended a high setting.
 			-- To disable KeepAlive, set `max_keep_alive_requests' to 0.
+			-- To have no limit, set `max_keep_alive_requests' to -1.
 			-- By default: {HTTPD_CONFIGURATION_I}.default_max_keep_alive_requests .	
 		do
 			Result := option_integer_value ("max_keep_alive_requests", 0)
+		end
+
+	persistent_connection_disabled: BOOLEAN
+			-- Persistent connection disabled?
+			-- (or Keep-Alive disabled).
+		do
+			Result := max_keep_alive_requests = 0
+		end
+
+	has_unlimited_keep_alive_requests: BOOLEAN
+			-- Has unlimited count of keep alive requests.
+			-- i.e no limit of number of requests allowed per persistent connection.
+		do
+			Result := max_keep_alive_requests < 0
 		end
 
 feature -- Access: SSL	
@@ -203,6 +218,16 @@ feature -- Element change
 			-- Set `max_keep_alive_requests' with `nb'
 		do
 			set_numeric_option ("max_keep_alive_requests", nb)
+		end
+
+	set_unlimited_keep_alive_requests
+		do
+			set_max_keep_alive_requests (-1)
+		end
+
+	disable_persistent_connection
+		do
+			set_max_keep_alive_requests (0)
 		end
 
 	set_is_secure (b: BOOLEAN)

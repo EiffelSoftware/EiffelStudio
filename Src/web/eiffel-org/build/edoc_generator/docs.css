@@ -1,114 +1,187 @@
-BODY {
-	BACKGROUND-COLOR: white;
+body {
+	font-family: "Source Sans Pro",Sans-Serif;
 }
 
-A {
-    TEXT-DECORATION: none;
+pre {
+	tab-size: 3;
+	-moz-tab-size: 3;
+	-ms-tab-size: 3;
+	-o-tab-size: 3;
+	font-family: "Roboto",Sans-Serif;
+	clear: both;
 }
 
-A:hover {
-    TEXT-DECORATION: underline;
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
 }
 
 .eclass {
-    COLOR: blue;
-    FONT-STYLE: italic;
+	color: blue;
+	font-style: italic;
 }
 
 .neclass {
-    COLOR: black;
-    FONT-STYLE: italic;
+	color: black;
+	font-style: italic;
 }
 
 .ekeyword {
-    COLOR: navy;
-    FONT-WEIGHT: bold;
+	color: navy;
+	font-weight: 500;
 }
 
 .esymbol {
-    COLOR: navy;
+	color: navy;
 }
 
 .eitag {
-    COLOR: sienna;
-    FONT: 91% "Courier New", serif;
+	color: sienna;
+	font-weight: 95%;
 }
 
 .estring {
-    COLOR: indigo;
-    FONT: 91% "Courier New", serif;
+	color: indigo;
+	font-weight: 95%;
 }
 
 .echar {
-    COLOR: indigo;
-    FONT-WEIGHT: bold;
+	color: indigo;
+	font-weight: bold;
 }
 
 .enumber {
-    COLOR: indigo;
-    FONT-WEIGHT: bold;
+	color: MediumOrchid;
+	font-weight: bold;
 }
 
 .etag {
-    COLOR: sienna;
+	color: Teal; /*DarkOliveGreen;*/
 }
 
 .efeature {
-    COLOR: darkgreen;
-    FONT-STYLE: italic;
+	color: darkgreen;
+	font-style: italic;
 }
 
 .nefeature {
-    COLOR: black;
-    FONT-STYLE: italic;
+	color: black;
+	font-style: italic;
 }
 
 .ecomment {
-    COLOR: red;
-    FONT: 80% "Courier New", serif;
+	color: brown;
+	font-weight: 80%;
 }
 
 .elocal, .equoted {
-    COLOR: darkred;
-    FONT-STYLE: italic;
+	color: RoyalBlue;
+	font-style: italic;
 }
 
 .ereserved {
-    COLOR: darkgreen;
-    FONT-STYLE: italic;
-    FONT-WEIGHT: bold;
+	color: darkgreen;
+	font-style: italic;
+	font-weight: bold;
 }
 
 .egeneric {
-    FONT-STYLE: italic;
-	COLOR: dodgerblue;
+	font-style: italic;
+	color: dodgerblue;
 }
 
 .ecluster {
-    COLOR: maroon;
-    FONT-VARIANT: small-caps;
-    FONT-WEIGHT: bold;
+	color: maroon;
+	font-variant: small-caps;
+	font-weight: bold;
 }
 
 .necluster {
-    COLOR: black;
-    FONT-VARIANT: small-caps;
-    FONT-WEIGHT: bold;
+	color: black;
+	font-variant: small-caps;
+	font-weight: bold;
 }
 
-.link1 {
-	BACKGROUND-COLOR: #006633;
-	COLOR: white;
+div.nav {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
 }
 
-.link2 {
-	BACKGROUND-COLOR: #330066;
-	COLOR: white;
+a.nav,
+label.nav,
+span.nav
+{
+	flex-grow: 1;
+	display: block;
+	padding: 1ex 0.5em;
+	text-decoration: none;
+	text-align: center;
 }
 
-.nolink1, .nolink2 {
-	BACKGROUND-COLOR: #FFCC00;
-	COLOR: #330066;
+.nav.goto
+{
+	flex-grow: 10000;
+	text-align: right;
+}
+
+input
+{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 0.2em;
+	margin: 0;
+	border: none;
+}
+
+.nav
+{
+	color: black;
+}
+
+.nav.selected
+{
+	color: white;
+}
+
+.nav.hierarchy
+{
+	background-color: rgb(209,230,220);
+}
+
+.nav.hierarchy:hover {
+	background-color: rgb(163,204,186);
+}
+
+.nav.hierarchy.selected
+{
+	background-color: rgb(85,155,123);
+}
+
+.nav.class
+{
+	background-color: rgb(178,209,240);
+}
+
+.nav.class:hover {
+	background-color: rgb(157,196,236);
+}
+
+.nav.class.selected
+{
+	background-color: rgb(68,143,218);
+}
+
+.nav + pre {
+	padding: 1ex 0.3em;
+}
+
+form + pre + form.nav + pre {
+	padding: 0px;
 }
 
 #eiffelsoftware-menu {

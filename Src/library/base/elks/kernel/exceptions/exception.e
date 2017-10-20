@@ -188,7 +188,7 @@ feature -- Status settings
 				c_description := Void
 			end
 		ensure
-			description_set: (attached a_description as a_des and then attached description as l_des and then l_des.same_string (l_des)) or else
+			description_set: (attached a_description as a_des and then attached description as l_des and then a_des.same_string (l_des)) or else
 							(a_description = Void and then description = Void)
 		end
 

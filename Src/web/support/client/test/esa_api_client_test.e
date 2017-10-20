@@ -62,6 +62,22 @@ feature -- Test routines
 			reporter.report_bug (report)
 		end
 
+
+	test_user_account
+			-- New test routine
+		local
+			cfg: ESA_CLIENT_CONFIGURATION
+			account: ESA_SUPPORT_ACCOUNT
+		do
+			create cfg.make_with_config
+			create account.make (cfg)
+			account.attempt_logon ("test", "test", false) --! Change to a valid user name and password
+			assert ("is logged in", account.is_logged_in)
+			if attached account.account_details as l_account_details then
+				assert ("display name",l_account_details.displayed_name.is_equal ("test test")) --! change to a valid first and last name or update the comparison.
+			end
+		end
+
 end
 
 

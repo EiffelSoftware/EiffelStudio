@@ -11,6 +11,9 @@ class
 inherit
 
 	ESA_SUPPORT_ACCESS
+		redefine
+			initialize_context_header
+		end
 
 create
 	make
@@ -191,49 +194,12 @@ feature -- Access
 
 feature {NONE} -- Retrieve URL
 
-	retrieve_url (a_rel: STRING_8; a_prompt: STRING_8): detachable STRING_8
-			-- Retrieve an Href value from CJ response if any, in other case
-			-- and empty String.
-		local
-			l_resp: ESA_SUPPORT_RESPONSE
-			lnk: CJ_LINK
-			ctx: HTTP_CLIENT_REQUEST_CONTEXT
-			l_found: BOOLEAN
+	initialize_context_header (ctx: HTTP_CLIENT_REQUEST_CONTEXT)
+			-- Intialize context `ctx`.
 		do
-			create ctx.make
 			if attached last_username as u and attached last_password as p then
 				if attached basic_auth (u, p) as l_auth then
 					ctx.add_header ("Authorization", l_auth)
-				end
-			end
-
-			l_resp := get (config.service_root, ctx)
-			if l_resp.status /= 200 then
-				(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
-			else
-				if attached l_resp.collection as l_col and then attached l_col.links as l_links then
-					across
-						l_links as ic
-					until
-						l_found
-					loop
-						lnk := ic.item
-						if lnk.rel.same_string (a_rel) then
-							if
-								a_prompt /= Void and then
-							 	attached lnk.prompt as lnk_prompt and then
-							 	lnk_prompt.same_string (a_prompt)
-							then
-								l_found := True
-								create Result.make_from_string (lnk.href)
-							end
-						end
-					end
-					if Result = Void then
-						create Result.make_empty
-					end
-				else
-					(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
 				end
 			end
 		end

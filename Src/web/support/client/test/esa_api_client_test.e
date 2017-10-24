@@ -78,6 +78,57 @@ feature -- Test routines
 			end
 		end
 
+	test_register_user_missing_data
+			-- New test routine
+		local
+			cfg: ESA_CLIENT_CONFIGURATION
+			register: ESA_SUPPORT_USER_REGISTER
+			user:  ESA_USER_REGISTER
+			retried: BOOLEAN
+			exception: EXCEPTION
+		do
+				-- missing password and check password
+			if not retried then
+				create user.make
+				user.set_first_name ("u1")
+				user.set_last_name ("u2")
+				user.set_email ("u@email.com")
+				user.set_user_name ("uu")
+				create cfg.make_with_config
+				create register.make (cfg)
+				register.user_register (user)
+			else
+				assert ("Check exception",exception /= Void)
+			end
+		rescue
+			retried := True
+			if attached (create {EXCEPTION_MANAGER_FACTORY}).exception_manager.last_exception as l_exception then
+				exception := l_exception
+			end
+			retry
+		end
+
+
+	test_register_user
+			-- New test routine
+		local
+			cfg: ESA_CLIENT_CONFIGURATION
+			register: ESA_SUPPORT_USER_REGISTER
+			user:  ESA_USER_REGISTER
+		do
+			create user.make
+			user.set_first_name ("u")
+			user.set_last_name ("u")
+			user.set_email ("u6@email.com")
+			user.set_user_name ("uu6")
+			user.set_password ("test")
+			user.set_check_password ("test")
+			create cfg.make_with_config
+			create register.make (cfg)
+			register.user_register (user)
+		end
+
+
 end
 
 

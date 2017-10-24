@@ -183,6 +183,59 @@ feature {NONE} -- Constants
 	service_url: STRING = ""
 			-- service url setup.
 
+
+
+feature {NONE} -- Retrieve URL
+
+	retrieve_url (a_rel: STRING_8; a_prompt: STRING_8): detachable STRING_8
+			-- Retrieve an Href value from CJ response if any, in other case
+			-- and empty String.
+		local
+			l_resp: ESA_SUPPORT_RESPONSE
+			lnk: CJ_LINK
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
+			l_found: BOOLEAN
+		do
+			create ctx.make
+			initialize_context_header (ctx)
+
+
+			l_resp := get (config.service_root, ctx)
+			if l_resp.status /= 200 then
+				(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
+			else
+				if attached l_resp.collection as l_col and then attached l_col.links as l_links then
+					across
+						l_links as ic
+					until
+						l_found
+					loop
+						lnk := ic.item
+						if lnk.rel.same_string (a_rel) then
+							if
+								a_prompt /= Void and then
+							 	attached lnk.prompt as lnk_prompt and then
+							 	lnk_prompt.same_string (a_prompt)
+							then
+								l_found := True
+								create Result.make_from_string (lnk.href)
+							end
+						end
+					end
+					if Result = Void then
+						create Result.make_empty
+					end
+				else
+					(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
+				end
+			end
+		end
+
+	initialize_context_header (ctx: HTTP_CLIENT_REQUEST_CONTEXT)
+			-- Intialize context `ctx`.
+		do
+		end
+
 note
 	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

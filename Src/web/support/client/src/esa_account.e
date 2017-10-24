@@ -154,7 +154,7 @@ feature -- Query
 				is_null_or_empty (email))
 		end
 
-	displayed_name: STRING
+	displayed_name: detachable STRING
 			-- Display representation of the name for Current user.
 		do
 			if attached first_name as l_first and then not l_first.is_empty then
@@ -176,7 +176,6 @@ feature -- Query
 				Result := username
 			end
 		end
-
 
 feature {NONE} -- Implementation
 

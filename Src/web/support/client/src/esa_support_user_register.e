@@ -145,10 +145,18 @@ feature {NONE} -- Basic operations
 					then
 						 -- TODO: Improve code.
 						check one_item: l_items.count = 1 end
-						next_action := l_items.at (1).href
-						check one_item_data: l_items.at (1).data.count = 1 end
-						if attached l_items.at (1).data.at (1).value as l_value then
-							message := l_value
+						if attached l_items.first as l_first_item then
+							next_action := l_first_item.href
+						else
+							next_action := Void
+						end
+						if attached l_items.first.data as l_first_data then
+							check one_item_data: l_first_data.count = 1 end
+							if not l_first_data.is_empty and then attached l_first_data.first.value as l_value then
+								message := l_value
+							end
+						else
+							check has_item: False end
 						end
 					end
 				end

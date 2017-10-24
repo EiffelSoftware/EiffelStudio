@@ -80,7 +80,6 @@ RT_LNK struct oastack oms_set;	/* Once manifest strings */
 #define EO_REM		0x0010		/* Object belongs to the remembered set */
 #define EO_NEW		0x0008		/* Object is new, outside scavenge zone */
 #define EO_STACK	0x0004		/* Object is allocated on C stack (not malloc'ed) */
-#define EO_C		EO_STACK	/* For backward compatibility */
 #define EO_EXP		0x0002		/* Object is an expanded one */
 #define EO_COMP		0x0001		/* Composite (has expanded or special) */
 #define EO_MOVED	(EO_NEW | EO_MARK)

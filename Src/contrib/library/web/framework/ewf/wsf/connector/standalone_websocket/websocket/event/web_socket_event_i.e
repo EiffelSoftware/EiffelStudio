@@ -88,6 +88,23 @@ feature -- Websocket events
 		deferred
 		end
 
+feature {WEB_SOCKET} -- Timeout.
+
+	timer_delay: INTEGER
+			-- Maximal duration in seconds between two `on_timeout` event.
+			-- Disable timeout event, by setting it to `0` (default).
+
+	set_timer_delay (nb_secs: INTEGER)
+		do
+			timer_delay := nb_secs
+		end
+
+	on_timer (ws: WEB_SOCKET)
+			-- Called every `timer_delay` seconds.
+			-- Note: redefine to use.
+		do
+		end
+
 feature -- Websocket events: implemented
 
 	on_pong (ws: WEB_SOCKET; a_message: READABLE_STRING_8)
@@ -126,7 +143,7 @@ feature -- Websocket events: implemented
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,7 +1,7 @@
 note
 	description: "[
 			Object representing the websocket connection.
-			It contains the `request` and `response`, and more important the `socket` itself.
+			It contains internally the `request` and `response`, and more important the `socket` itself.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,15 +10,13 @@ class
 	WEB_SOCKET
 
 inherit
+	WEB_SOCKET_WRITER
+
 	WGI_STANDALONE_CONNECTOR_EXPORTER
 
 	WSF_RESPONSE_EXPORTER
 
 	WGI_EXPORTER
-
-	HTTPD_LOGGER_CONSTANTS
-
-	WEB_SOCKET_CONSTANTS
 
 	SHARED_BASE64
 
@@ -32,7 +30,7 @@ feature {NONE} -- Initialization
 			request := req
 			response := res
 			is_verbose := False
-			verbose_level := notice_level
+			verbose_level := {HTTPD_LOGGER_CONSTANTS}.notice_level
 
 			if
 				attached {WGI_STANDALONE_INPUT_STREAM} req.input as r_input
@@ -44,12 +42,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature -- Access		
-
-	socket: HTTPD_STREAM_SOCKET
-			-- Underlying connected socket.
-
-feature {NONE} -- Access		
+feature {NONE} -- Access
 
 	request: WSF_REQUEST
 			-- Associated request.
@@ -75,14 +68,7 @@ feature -- Status
 	has_error: BOOLEAN
 			-- Error occured during processing?
 
-feature -- Socket status
-
-	is_ready_for_reading: BOOLEAN
-			-- Is `socket' ready for reading?
-			--| at this point, socket should be set to blocking.
-		do
-			Result := socket.ready_for_reading
-		end
+feature -- Status report		
 
 	is_open_read: BOOLEAN
 			-- Is `socket' open for reading?
@@ -94,12 +80,6 @@ feature -- Socket status
 			-- Is `socket' open for writing?
 		do
 			Result := socket.is_open_write
-		end
-
-	socket_descriptor: INTEGER
-			-- Descriptor for current `socket'.
-		do
-			Result := socket.descriptor
 		end
 
 feature -- Element change
@@ -129,7 +109,7 @@ feature -- Basic operation
 			end
 		end
 
-feature -- Basic Operation	
+feature {WSF_WEBSOCKET_EXECUTION} -- Basic Operation	
 
 	open_ws_handshake
 			-- The opening handshake is intended to be compatible with HTTP-based
@@ -164,10 +144,10 @@ feature -- Basic Operation
 
 				-- TODO extract to a validator handshake or something like that.
 			if is_verbose then
-				log ("%NReceive <====================", debug_level)
+				log ("%NReceive <====================", {HTTPD_LOGGER_CONSTANTS}.debug_level)
 				if attached req.raw_header_data as rhd then
 					check raw_header_is_valid_as_string_8: rhd.is_valid_as_string_8 end
-					log (rhd.to_string_8, debug_level)
+					log (rhd.to_string_8, {HTTPD_LOGGER_CONSTANTS}.debug_level)
 				end
 			end
 			if
@@ -186,7 +166,7 @@ feature -- Basic Operation
 					attached req.http_host -- Host header must be present
 				then
 					if is_verbose then
-						log ("key " + l_ws_key, debug_level)
+						log ("key " + l_ws_key, {HTTPD_LOGGER_CONSTANTS}.debug_level)
 					end
 						-- Sending the server's opening handshake
 					create l_sha1.make
@@ -198,9 +178,9 @@ feature -- Basic Operation
 					res.header.add_header_key_value ("Sec-WebSocket-Accept", l_key)
 
 					if is_verbose then
-						log ("%N================> Send Handshake", debug_level)
+						log ("%N================> Send Handshake", {HTTPD_LOGGER_CONSTANTS}.debug_level)
 						if attached {HTTP_HEADER} res.header as h then
-							log (h.string, debug_level)
+							log (h.string, {HTTPD_LOGGER_CONSTANTS}.debug_level)
 						end
 					end
 					res.set_status_code_with_reason_phrase (101, "Switching Protocols")
@@ -208,7 +188,7 @@ feature -- Basic Operation
 				else
 					has_error := True
 					if is_verbose then
-						log ("Error (opening_handshake)!!!", debug_level)
+						log ("Error (opening_handshake)!!!", {HTTPD_LOGGER_CONSTANTS}.debug_level)
 					end
 						-- If we cannot complete the handshake, then the server MUST stop processing the client's handshake and return an HTTP response with an
 						-- appropriate error code (such as 400 Bad Request).
@@ -219,79 +199,76 @@ feature -- Basic Operation
 			end
 		end
 
-feature -- Response!
+feature {WEB_SOCKET_HANDLER} -- Networking
 
-	send (a_opcode:INTEGER; a_message: READABLE_STRING_8)
+	socket: HTTPD_STREAM_SOCKET
+			-- Underlying connected socket.
+
+	has_input: BOOLEAN
+			-- Set by `wait_for_input`.
+
+	wait_for_input (cb: detachable WEB_SOCKET_EVENT_I)
 		local
-			i: INTEGER
-			l_chunk_size: INTEGER
-			l_chunk: READABLE_STRING_8
-			l_header_message: STRING
-			l_message_count: INTEGER
-			n: NATURAL_64
-			retried: BOOLEAN
+			l_timeout, nb: INTEGER
+			l_cb_timeout: INTEGER
 		do
-			debug ("ws")
-				print (">>do_send (..., "+ opcode_name (a_opcode) +", ..)%N")
-			end
-			if not retried then
-				create l_header_message.make_empty
-				l_header_message.append_code ((0x80 | a_opcode).to_natural_32)
-				l_message_count := a_message.count
-				n := l_message_count.to_natural_64
-				if l_message_count > 0xffff then
-						--! Improve. this code needs to be checked.
-					l_header_message.append_code ((0 | 127).to_natural_32)
-					l_header_message.append_character ((n |>> 56).to_character_8)
-					l_header_message.append_character ((n |>> 48).to_character_8)
-					l_header_message.append_character ((n |>> 40).to_character_8)
-					l_header_message.append_character ((n |>> 32).to_character_8)
-					l_header_message.append_character ((n |>> 24).to_character_8)
-					l_header_message.append_character ((n |>> 16).to_character_8)
-					l_header_message.append_character ((n |>> 8).to_character_8)
-					l_header_message.append_character ( n.to_character_8)
-				elseif l_message_count > 125 then
-					l_header_message.append_code ((0 | 126).to_natural_32)
-					l_header_message.append_code ((n |>> 8).as_natural_32)
-					l_header_message.append_character (n.to_character_8)
+			has_input := False
+			if cb = Void then
+				has_input := socket.ready_for_reading
+			else
+				l_cb_timeout := cb.timer_delay
+				l_timeout := socket.timeout
+				if l_cb_timeout = 0 then
+						-- timeout event not enabled.
+					has_input := socket.ready_for_reading
 				else
-					l_header_message.append_code (n.as_natural_32)
-				end
-				socket.put_string_8_noexception (l_header_message)
-				if not socket.was_error then
-					l_chunk_size := 16_384 -- 16K TODO: see if we should make it customizable.
-					if l_message_count < l_chunk_size then
-						socket.put_string_8_noexception (a_message)
+					cb.on_timer (Current)
+					if l_cb_timeout > l_timeout then
+							-- event timeout duration is bigger than socket timeout
+							-- thus, no on_timeout before next frame waiting
+						has_input := socket.ready_for_reading
 					else
 						from
-							i := 0
+							l_timeout := socket.timeout
+							nb := l_timeout
+							socket.set_timeout (l_cb_timeout) -- FIXME: for now 1 sec is the smaller timeout we can use.
 						until
-							l_chunk_size = 0 or socket.was_error
+							has_input or nb <= 0
 						loop
-							debug ("ws")
-								print ("Sending chunk " + (i + 1).out + " -> " + (i + l_chunk_size).out +" / " + l_message_count.out + "%N")
+							has_input := socket.ready_for_reading
+							if not has_input then
+									-- Call on_timeout only if there is no input,
+									-- otherwise it was called once before the initial wait.
+								socket.set_timeout (l_timeout)
+								cb.on_timer (Current)
+								socket.set_timeout (l_cb_timeout)
 							end
-							l_chunk := a_message.substring (i + 1, l_message_count.min (i + l_chunk_size))
-							socket.put_string_8_noexception (l_chunk)
-							if l_chunk.count < l_chunk_size then
-								l_chunk_size := 0
-							end
-							i := i + l_chunk_size
+							nb := nb - l_cb_timeout
 						end
-						debug ("ws")
-							print ("Sending chunk done%N")
-						end
+						socket.set_timeout (l_timeout)
 					end
 				end
-
-			else
-					-- FIXME: what should be done on rescue?
 			end
-		rescue
-			retried := True
-			io.put_string ("Internal error in " + generator + ".do_send (conn, a_opcode=" + a_opcode.out + ", a_message) !%N")
-			retry
 		end
+
+
+	socket_descriptor: INTEGER
+			-- Descriptor for current `socket'.
+		do
+			Result := socket.descriptor
+		end
+
+	socket_put_string (s: READABLE_STRING_8)
+		do
+			socket.put_string_8_noexception (s)
+		end
+
+	socket_was_error: BOOLEAN
+		do
+			Result := socket.was_error
+		end
+
+feature {WEB_SOCKET_HANDLER} -- Frame
 
 	next_frame: detachable WEB_SOCKET_FRAME
 			-- TODO Binary messages
@@ -402,7 +379,7 @@ feature -- Response!
 						if Result.is_valid then
 								--| valid frame/fragment
 							if is_verbose then
-								log ("+ frame " + opcode_name (l_opcode) + " (fin=" + l_fin.out + ")", debug_level)
+								log ("+ frame " + opcode_name (l_opcode) + " (fin=" + l_fin.out + ")", {HTTPD_LOGGER_CONSTANTS}.debug_level)
 							end
 
 								-- rsv validation
@@ -420,7 +397,7 @@ feature -- Response!
 							end
 						else
 							if is_verbose then
-								log ("+ INVALID frame " + opcode_name (l_opcode) + " (fin=" + l_fin.out + ")", debug_level)
+								log ("+ INVALID frame " + opcode_name (l_opcode) + " (fin=" + l_fin.out + ")", {HTTPD_LOGGER_CONSTANTS}.debug_level)
 							end
 						end
 
@@ -548,7 +525,7 @@ feature -- Response!
 												end
 											end
 											if is_verbose then
-												log ("  Received " + l_fetch_count.out + " out of " + l_len.out + " bytes <===============", debug_level)
+												log ("  Received " + l_fetch_count.out + " out of " + l_len.out + " bytes <===============", {HTTPD_LOGGER_CONSTANTS}.debug_level)
 											end
 											debug ("ws")
 												print (" -> ")
@@ -580,7 +557,7 @@ feature -- Response!
 					if Result /= Void then
 						if attached Result.error as err then
 							if is_verbose then
-								log ("  !Invalid frame: " + err.string, debug_level)
+								log ("  !Invalid frame: " + err.string, {HTTPD_LOGGER_CONSTANTS}.debug_level)
 							end
 						end
 						if Result.is_injected_control then
@@ -624,8 +601,7 @@ feature -- Response!
 			retry
 		end
 
-
-feature -- Encoding
+feature {NONE} -- Encoding
 
 	digest (a_sha1: SHA1): STRING
 			-- Digest of `a_sha1'.
@@ -672,7 +648,7 @@ feature {NONE} -- Socket helpers
 			end
 		end
 
-feature -- Masking Data Client - Server
+feature {NONE} -- Masking Data Client - Server
 
 	unmask (a_chunk: STRING_8; a_pos: INTEGER; a_key: READABLE_STRING_8)
 		local
@@ -794,7 +770,6 @@ feature {NONE} -- Debug
 				end
 			end
 		end
-
 
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

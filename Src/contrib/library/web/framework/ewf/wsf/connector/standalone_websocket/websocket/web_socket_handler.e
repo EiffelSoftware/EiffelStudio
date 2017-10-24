@@ -59,7 +59,8 @@ feature -- Execution
 				debug ("dbglog")
 					dbglog (generator + ".execute_websocket (loop) WS_REQUEST_HANDLER.process_request {" + ws.socket_descriptor.out + "}")
 				end
-				if ws.is_ready_for_reading then
+				ws.wait_for_input (callbacks)
+				if ws.has_input then
 					l_frame := ws.next_frame
 					if l_frame /= Void and then l_frame.is_valid then
 						if attached l_frame.injected_control_frames as l_injections then
@@ -140,7 +141,7 @@ feature {NONE} -- Logging
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

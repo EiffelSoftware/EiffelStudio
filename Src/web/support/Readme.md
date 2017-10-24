@@ -12,7 +12,7 @@ exit
 sudo apt-get update
 sudo ACCEPT_EULA=Y apt-get install msodbcsql=13.1.4.0-1 unixodbc-dev
 
-If the pakage 13.1.4.0-1 is not found try to use 
+If the package 13.1.4.0-1 is not found try to use 
 sudo ACCEPT_EULA=Y apt-get install msodbcsql unixodbc-dev
 
 

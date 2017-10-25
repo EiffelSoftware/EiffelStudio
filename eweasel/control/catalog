@@ -2765,7 +2765,8 @@ test	agent-introspection-open-argument	agent015 tcf pass agents library
 test	instance_free-declaration		free001 tcf pass instance_free declaration validity
 test	instance_free-validity			free002 tcf pass instance_free call validity
 test	instance_free-call			free003 tcf pass instance_free call execution
-test	instance_free-call-redeclaration	free004 tcf fail instance_free call execution
+test	instance_free-call-redeclaration	free004 tcf fail instance_free call execution anchored_type
+test	instance_free-call-derivation		free005 tcf fail instance_free call execution formal generic
 
 
 -- Tests for platform specific results

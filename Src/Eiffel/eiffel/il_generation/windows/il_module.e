@@ -2737,8 +2737,10 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			token_valid: a_token /= 0
 			type_id_valid: a_type_id > 0
 			feature_id_valid: a_feature_id > 0
-			not_inserted: a_table.item (a_type_id) /= Void implies
-				not a_table.item (a_type_id).has (a_feature_id)
+			not_inserted:
+				attached a_table.item (a_type_id) as feature_table and then feature_table.has (a_feature_id) implies
+				feature_table.item (a_feature_id) & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_member_ref and then
+				a_token & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_method_def
 		local
 			l_hash: HASH_TABLE [INTEGER, INTEGER]
 		do

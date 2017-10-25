@@ -13,7 +13,7 @@ then
 	echo Create compilation directory
 	mkdir -p $roc_comp_dir
 fi
-ecb -config $EIFFEL_SRC/web/eiffel-org/site.ecf -target eiffel_community_site_libfcgi -finalize -c_compile -project_path $roc_comp_dir $*
+ecb -config $EIFFEL_SRC/web/eiffel-org/server.ecf -target eiffel_community_site_libfcgi -finalize -c_compile -project_path $roc_comp_dir $*
 
 t_comp_execfilename=$roc_comp_dir/EIFGENs/eiffel_community_site_libfcgi/F_code/eiffel_community_site
 if [ -f $t_comp_execfilename ];

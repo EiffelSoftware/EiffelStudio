@@ -6,72 +6,81 @@ note
 class
 	ESA_ACCOUNT
 
+create
+	make_with_username
+
+feature {NONE} -- Creation
+
+	make_with_username (a_username: READABLE_STRING_GENERAL)
+		do
+			create username.make_from_string_general (a_username)
+		end
+
 feature -- Access : Personal Information
 
-	username: detachable STRING
-			-- Username.
+	username: IMMUTABLE_STRING_32
+			-- User_name.
 
-	first_name: detachable STRING
+	first_name: detachable IMMUTABLE_STRING_32
 			-- First_name.
 
-	last_name: detachable STRING
+	last_name: detachable IMMUTABLE_STRING_32
 			-- Last_name.	
 
-	email: detachable STRING
+	email: detachable STRING_8
 			-- Email.
 
-	address: detachable STRING
+	address: detachable IMMUTABLE_STRING_32
 			-- Street address.
 
-	city: detachable STRING
+	city: detachable IMMUTABLE_STRING_32
 			-- City.
 
-	country: detachable STRING
+	country: detachable IMMUTABLE_STRING_32
 			-- Country.
 
-	region: detachable STRING
+	region: detachable IMMUTABLE_STRING_32
 			-- Region.
 
-	postal_code: detachable STRING
+	postal_code: detachable IMMUTABLE_STRING_32
 			-- Postal_code.
 
-	telephone: detachable STRING
+	telephone: detachable IMMUTABLE_STRING_32
 			-- Telephone.
 
-	fax: detachable STRING
+	fax: detachable IMMUTABLE_STRING_32
 			-- Fax.
 
-	position: detachable STRING
+	position: detachable IMMUTABLE_STRING_32
 			-- Position.
 
 feature -- Change Element
 
-	set_user_name (a_username: STRING)
-			-- Set 'user_name' with 'a_username'.
+	set_first_name (a_first_name: detachable READABLE_STRING_GENERAL)
+			-- Set `first_name` with `a_first_name`.
 		do
-			username := a_username
+			if a_first_name = Void then
+				first_name := Void
+			else
+				create first_name.make_from_string_general (a_first_name)
+			end
 		ensure
-			username_set : username = a_username
+			first_name_set: a_first_name /= Void implies (attached first_name as n and then a_first_name.same_string (n))
 		end
 
-
-	set_first_name (a_first_name: STRING)
-			-- Set `first_name' to `a_first_name'.
+	set_last_name (a_last_name: detachable READABLE_STRING_GENERAL)
+			-- Set `last_name` with `a_last_name`.
 		do
-			first_name := a_first_name
+			if a_last_name = Void then
+				last_name := Void
+			else
+				create last_name.make_from_string_general (a_last_name)
+			end
 		ensure
-			first_name_set:  first_name = a_first_name
+			last_name_set: a_last_name /= Void implies (attached last_name as n and then a_last_name.same_string (n))
 		end
 
-	set_last_name (a_last_name: STRING)
-			-- Set `last_name' to `a_last_name'.
-		do
-			last_name := a_last_name
-		ensure
-			last_name_set:
-		end
-
-	set_email (a_email: STRING)
+	set_email (a_email: READABLE_STRING_8)
 			-- Set `email' to `a_email'.
 		do
 			email := a_email
@@ -79,68 +88,68 @@ feature -- Change Element
 			email_set: email = a_email
 		end
 
-	set_address (a_address: STRING)
+	set_address (a_address: READABLE_STRING_GENERAL)
 			-- Set Street  `address' to `a_address'.
 		do
-			address := a_address
+			create address.make_from_string_general (a_address)
 		ensure
-			address_set: address = a_address
+			address_set: attached address as v and then a_address.same_string (v)
 		end
 
-	set_city (a_city: STRING)
+	set_city (a_city: READABLE_STRING_GENERAL)
 			-- Set `city' to `a_city'.
 		do
-			city := a_city
+			create city.make_from_string_general (a_city)
 		ensure
-			city_set: city = a_city
+			city_set: attached city as v and then a_city.same_string (v)
 		end
 
-	set_country (a_country: STRING)
+	set_country (a_country: READABLE_STRING_GENERAL)
 			-- Set `country' to `a_country'.
 		do
-			country := a_country
+			create country.make_from_string_general (a_country)
 		ensure
-			country_set: country = a_country
+			country_set: attached country as v and then a_country.same_string (v)
 		end
 
-	set_region (a_region: STRING)
+	set_region (a_region: READABLE_STRING_GENERAL)
 			-- Set `region' to `a_region'.
 		do
-			region := a_region
+			create region.make_from_string_general (a_region)
 		ensure
-			region_set: region = a_region
+			region_set: attached region as v and then a_region.same_string (v)
 		end
 
-	set_postal_code (a_postal_code: STRING)
+	set_postal_code (a_postal_code: READABLE_STRING_GENERAL)
 			-- Postal_code
 		do
-			postal_code := a_postal_code
+			create postal_code.make_from_string_general (a_postal_code)
 		ensure
-			post_code_set: postal_code = a_postal_code
+			post_code_set: attached postal_code as v and then a_postal_code.same_string (v)
 		end
 
-	set_telephone (a_telephone: STRING)
+	set_telephone (a_telephone: READABLE_STRING_GENERAL)
 			-- Set `telephone' to `a_telephone'.
 		do
-			telephone := a_telephone
+			create telephone.make_from_string_general (a_telephone)
 		ensure
-			telephone_set: telephone = a_telephone
+			telephone_set: attached telephone as v and then a_telephone.same_string (v)
 		end
 
-	set_fax ( a_fax : STRING)
+	set_fax (a_fax: READABLE_STRING_GENERAL)
 			-- Set `fax' to `a_fax'.
 		do
-			fax := a_fax
+			create fax.make_from_string_general (a_fax)
 		ensure
-			fax_set: fax = a_fax
+			fax_set: attached fax as v and then a_fax.same_string (v)
 		end
 
-	set_position ( a_position : STRING)
+	set_position (a_position: READABLE_STRING_GENERAL)
 			-- Set `position' to `a_position'.
 		do
-			position := a_position
+			create position.make_from_string_general (a_position)
 		ensure
-			position_set: position = a_position
+			position_set: attached position as v and then a_position.same_string (v)
 		end
 
 feature -- Query
@@ -154,7 +163,7 @@ feature -- Query
 				is_null_or_empty (email))
 		end
 
-	displayed_name: detachable STRING
+	displayed_name: detachable STRING_32
 			-- Display representation of the name for Current user.
 		do
 			if attached first_name as l_first and then not l_first.is_empty then
@@ -179,7 +188,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	is_null_or_empty (a_argument: detachable STRING): BOOLEAN
+	is_null_or_empty (a_argument: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_argument' null or empty?
 		do
 			Result := not  (attached a_argument as l_argument and then not l_argument.is_empty)

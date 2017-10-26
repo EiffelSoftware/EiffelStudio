@@ -74,10 +74,10 @@ feature -- Attributes for externals
 	external_name_id: INTEGER
 			-- Name ID of C external.
 
-	encapsulated: BOOLEAN;
+	encapsulated: BOOLEAN
 			-- Has the feature some assertion declared ?
 
-	is_external: BOOLEAN = True;
+	is_external: BOOLEAN = True
 			-- Access is an external call
 
 	is_static_call: BOOLEAN

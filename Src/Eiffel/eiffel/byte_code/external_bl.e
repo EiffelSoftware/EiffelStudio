@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Enlarged access to a C external"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,11 +19,11 @@ inherit
 			is_polymorphic, has_one_signature
 		end;
 
-	SHARED_TABLE;
+	SHARED_TABLE
 
-	SHARED_DECLARATIONS;
+	SHARED_DECLARATIONS
 
-	EXTERNAL_CONSTANTS;
+	EXTERNAL_CONSTANTS
 
 	SHARED_TYPE_I
 		export
@@ -32,38 +32,38 @@ inherit
 
 feature
 
-	parent: NESTED_BL;
+	parent: NESTED_BL
 			-- Parent of access
 
-	register: REGISTRABLE;
-			-- In which register the expression is stored
+	register: REGISTRABLE
+			-- In which register the expression is stored.
 
-	basic_register: REGISTRABLE;
-			-- Register used to store the metamorphosed simple type
+	basic_register: REGISTRABLE
+			-- Register used to store the metamorphosed simple type.
 
 	set_parent (p: NESTED_BL)
-			-- Assign `p' to `parent'
+			-- Assign `p' to `parent'.
 		do
-			parent := p;
-		end;
+			parent := p
+		end
 
 	set_register (r: REGISTRABLE)
-			-- Set current register to `r'
+			-- Set current register to `r'.
 		do
-			register := r;
-		end;
+			register := r
+		end
 
-	current_needed_for_access: BOOLEAN = False;
-			-- Current is not needed to call an external
+	current_needed_for_access: BOOLEAN = False
+			-- Current is not needed to call an external.
 
 	free_register
-			-- Free registers
+			-- Free registers.
 		do
-			Precursor {EXTERNAL_B};
+			Precursor
 			if basic_register /= Void then
-				basic_register.free_register;
-			end;
-		end;
+				basic_register.free_register
+			end
+		end
 
 	analyze
 			-- Build a proper context for code generation.
@@ -73,9 +73,7 @@ feature
 		end;
 
 	analyze_on (reg: REGISTRABLE)
-			-- Analyze call on an entity held in `reg'.
-		local
-			tmp_register: REGISTER;
+			-- Analyze call on an entity held in `reg`.
 		do
 			if context_type.is_basic and then
 				attached {BASIC_A} context_type as basic_i and then
@@ -85,77 +83,74 @@ feature
 					-- on which the attribute access is made. The lifetime of
 					-- this temporary is really short: just the time to make
 					-- the call...
-				create tmp_register.make (Reference_c_type);
-				basic_register := tmp_register;
-			end;
+				create {REGISTER} basic_register.make (Reference_c_type)
+			end
 			if parameters /= Void then
-				parameters.analyze;
+				parameters.analyze
 					-- If No_register has been propagated, then this call will
 					-- be expanded in line. It might be part of a more complex
 					-- expression, hence temporary registers used by the
 					-- parameters may not be released now.
-				check_dt_current (reg);
+				check_dt_current (reg)
 				if not perused then
-					free_param_registers;
-				end;
+					free_param_registers
+				end
 			else
-				check_dt_current (reg);
-			end;
+				check_dt_current (reg)
+			end
 			if reg.is_current and then (encapsulated or not extension.is_static) then
 				context.mark_current_used
 			end
-		end;
+		end
 
 	check_dt_current (reg: REGISTRABLE)
 			-- Check whether we need to compute the dynamic type of current
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
 		local
-			type_i: TYPE_A;
-			access: ACCESS_B;
-			void_register: REGISTER;
-			is_polymorphic_access: BOOLEAN;
+			type_i: TYPE_A
+			access: ACCESS_B
+			is_polymorphic_access: BOOLEAN
 		do
-			type_i := context_type;
+			type_i := context_type
 			is_polymorphic_access := not is_static_call and then
 					not type_i.is_basic and then
 					Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, True) >= 0;
 			if reg.is_current and is_polymorphic_access then
-				context.add_dt_current;
+				context.add_dt_current
 				context.mark_current_used
-			end;
+			end
 			if not reg.is_predefined and is_polymorphic_access then
 					-- BEWARE!! The function call is polymorphic hence we'll
 					-- need to evaluate `reg' twice: once to get its dynamic
 					-- type and once as a parameter for Current. Hence we
 					-- must make sure it is not held in a No_register--RAM.
-				access ?= reg;		-- Cannot fail
+				access ?= reg		-- Cannot fail
 				if access.register = No_register then
-					access.set_register (void_register);
-					access.get_register;
-				end;
-			end;
-		end;
+					access.set_register (Void)
+					access.get_register
+				end
+			end
+		end
 
 	generate_access
-			-- Generate the external C call
+			-- Generate the external C call.
 		do
-				-- Reset value of variables
+				-- Reset value of variables.
 			is_right_parenthesis_needed.put (False)
-			do_generate (Current_register);
-		end;
+			do_generate (current_register)
+		end
 
 	generate_on (reg: REGISTRABLE)
-			-- Generate call of feature on `reg'
+			-- Generate call of feature on `reg`.
 		do
 				-- Reset value of variables
 			is_right_parenthesis_needed.put (False)
-
-			do_generate (reg);
-		end;
+			do_generate (reg)
+		end
 
 	is_polymorphic: BOOLEAN
-			-- Is access polymorphic ?
+			-- Is access polymorphic?
 		local
 			type_i: TYPE_A
 		do
@@ -191,7 +186,7 @@ feature
 			end
 
 			l_type_i := real_type (type)
-			type_c := l_type_i.c_type;
+			type_c := l_type_i.c_type
 			buf := buffer
 			l_keep := context.final_mode and then system.keep_assertions
 			is_right_parenthesis_needed.put (l_keep)
@@ -234,31 +229,31 @@ feature
 					type_c := reference_c_type
 				end
 
-				buf.put_character ('(');
+				buf.put_character ('(')
 				type_c.generate_function_cast (buf, argument_types, False)
 
 					-- Generate following dispatch:
 					-- table [Actual_offset - base_offset]
-				buf.put_string (table_name);
-				buf.put_character ('[');
+				buf.put_string (table_name)
+				buf.put_character ('[')
 				if reg.is_current then
-					context.generate_current_dtype;
+					context.generate_current_dtype
 				else
-					buf.put_string ({C_CONST}.dtype);
+					buf.put_string ({C_CONST}.dtype)
 					buf.put_character ('(')
-					reg.print_register;
-					buf.put_character (')');
+					reg.print_register
+					buf.put_character (')')
 				end;
-				buf.put_character ('-');
-				buf.put_integer (array_index);
-				buf.put_character (']');
+				buf.put_character ('-')
+				buf.put_integer (array_index)
+				buf.put_character (']')
 
-				buf.put_character (')');
+				buf.put_character (')')
 
 					-- Mark routine table used.
-				Eiffel_table.mark_used (routine_id);
+				Eiffel_table.mark_used (routine_id)
 					-- Remember external routine table declaration
-				Extern_declarations.add_routine_table (table_name);
+				Extern_declarations.add_routine_table (table_name)
 			else
 					-- The call is not polymorphic in the given context,
 					-- so the name can be hardwired. If we check assertions, we need
@@ -286,12 +281,10 @@ feature
 						end
 
 						inline_ext.force_inline_def (l_type_i, internal_name, real_arg_types)
-					else
-						real_arg_types := local_argument_types
 					end
 
 					if
-						not (rout_table.item.access_type_id = Context.original_class_type.type_id) and
+						rout_table.item.access_type_id /= Context.original_class_type.type_id and
 						inline_ext = Void
 					then
 							-- Remember extern routine declaration if not written in same class. But no need
@@ -326,7 +319,7 @@ feature
 					end
 				else
 					if not l_type_i.is_void then
-						type_c.generate_cast (buf);
+						type_c.generate_cast (buf)
 					end
 						 -- Nothing to be done now. Remaining of code generation will be done
 						 -- in `generate_end'.
@@ -402,10 +395,10 @@ feature
 			end
 
 			if put_eif_test then
-				buf.put_string (")")
+				buf.put_character (')')
 			end
 			if is_right_parenthesis_needed.item then
-				buf.put_string (")")
+				buf.put_character (')')
 			end
 		end
 
@@ -451,7 +444,7 @@ feature
 	fill_from (e: EXTERNAL_B)
 			-- Fill current from `e'
 		local
-			expr_b: PARAMETER_B;
+			expr_b: PARAMETER_B
 			l_encapsulated: BOOLEAN
 			l_is_built_in: BOOLEAN
 		do
@@ -459,14 +452,14 @@ feature
 			is_static_call := e.is_static_call
 			static_class_type := e.static_class_type
 			written_in := e.written_in
-			external_name_id := e.external_name_id;
-			type := e.type;
+			external_name_id := e.external_name_id
+			type := e.type
 			set_parameters (e.parameters)
 			l_encapsulated := e.encapsulated
-			extension := e.extension;
+			extension := e.extension
 			l_is_built_in := extension.is_built_in
-			feature_id := e.feature_id;
-			feature_name_id := e.feature_name_id;
+			feature_id := e.feature_id
+			feature_name_id := e.feature_name_id
 			routine_id := e.routine_id
 			if parameters /= Void then
 				from
@@ -475,7 +468,7 @@ feature
 					parameters.after
 				loop
 					expr_b ?= parameters.item
-					parameters.replace (expr_b.enlarged);
+					parameters.replace (expr_b.enlarged)
 					if
 						(not l_is_built_in and not l_encapsulated) and then
 						(not expr_b.is_hector and real_type (expr_b.type).c_type.is_reference)
@@ -486,11 +479,11 @@ feature
 							-- references.
 						l_encapsulated := True
 					end
-					parameters.forth;
+					parameters.forth
 				end
 			end
 			encapsulated := l_encapsulated
-		end;
+		end
 
 feature {NONE} -- Status report
 
@@ -526,7 +519,7 @@ feature {NONE} -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

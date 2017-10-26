@@ -11,13 +11,31 @@ inherit
 	FEATURE_B
 		rename
 			make as make_node
+		undefine
+			analyze,
+			basic_register,
+			free_register,
+			has_one_signature,
+			is_polymorphic,
+			register,
+			set_parent,
+			set_register
 		redefine
-			free_register, has_one_signature,
-			is_feature_call, basic_register, generate_parameters_list,
-			generate_access_on_type, is_polymorphic,
-			set_register, register, set_parent, parent, generate_access,
-			generate_on, analyze_on, analyze,
-			generate_end, set_call_kind, call_kind
+			analyze_on,
+			call_kind,
+			generate_access,
+			generate_access_on_type,
+			generate_end,
+			generate_on,
+			generate_parameters_list,
+			is_feature_call,
+			parent,
+			set_call_kind
+		end
+
+	ROUTINE_BL
+		redefine
+			parent
 		end
 
 	SHARED_DECLARATIONS
@@ -56,40 +74,15 @@ feature {NONE} --Initialisation
 			enlarge_parameters
 		end
 
-feature
+feature -- Access
 
 	parent: NESTED_BL
-			-- Parent of access
+			-- <Precursor>
 
-	register: REGISTRABLE
-			-- In which register the expression is stored
-
-	basic_register: REGISTRABLE
-			-- Register used to store the metamorphosed simple type
-
-	set_register (r: REGISTRABLE)
-			-- Set current register to `r'
-		do
-			register := r
-		end
-
-	set_parent (p: NESTED_BL)
-			-- Assign `p' to `parent'
-		do
-			parent := p
-		end
+feature
 
 	is_feature_call: BOOLEAN = True
 			-- Access is a feature call
-
-	free_register
-			-- Free registers
-		do
-			Precursor
-			if basic_register /= Void then
-				basic_register.free_register
-			end
-		end
 
 feature {CALL_B} -- C code generation: kind of a call
 
@@ -103,20 +96,6 @@ feature {CALL_B} -- C code generation: kind of a call
 		end
 
 feature -- C code generation
-
-	analyze
-			-- Build a proper context for code generation.
-		do
-debug
-io.error.put_string ("In feature_bl%N")
-end
-			analyze_on (Current_register)
-				-- Get a register if none were already propagated
-			get_register
-debug
-io.error.put_string ("Out feature_bl%N")
-end
-		end
 
 	analyze_on (reg: REGISTRABLE)
 			-- Analyze feature call on `reg'
@@ -240,23 +219,6 @@ end
 					access.get_register
 				end
 			end
-		end
-
-	is_polymorphic: BOOLEAN
-			-- Is access polymorphic ?
-		local
-			type_i: TYPE_A
-		do
-			type_i := context_type
-			if not type_i.is_basic and then precursor_type = Void then
-				Result := Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, True) >= 0
-			end
-		end
-
-	has_one_signature: BOOLEAN
-			-- <Precursor>
-		do
-			Result := Eiffel_table.poly_table (routine_id).has_one_signature
 		end
 
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A)

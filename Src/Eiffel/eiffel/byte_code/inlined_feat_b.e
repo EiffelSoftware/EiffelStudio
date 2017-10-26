@@ -68,6 +68,7 @@ feature
 			is_once := f.is_once
 			is_process_relative := f.is_process_relative
 			is_object_relative := f.is_object_relative
+			is_instance_free := f.is_instance_free
 			if f.has_multi_constraint_static then
 				multi_constraint_static := real_type (f.multi_constraint_static)
 			end

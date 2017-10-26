@@ -2051,7 +2051,7 @@ feature {NONE} -- Implementation
 									l_generated_result_type := last_type
 								end
 								if is_static then
-									l_access := l_feature.access_for_feature (l_generated_result_type, a_type, is_qualified, a_type.is_separate)
+									l_access := l_feature.access_for_feature (l_generated_result_type, a_type, is_qualified, a_type.is_separate, True)
 									if l_is_multiple_constraint_case then
 										check not l_last_constrained.is_formal end
 										l_access.set_multi_constraint_static (l_last_constrained)
@@ -2061,7 +2061,7 @@ feature {NONE} -- Implementation
 									end
 								elseif is_precursor then
 									l_cl_type_i ?= a_precursor_type
-									l_access := l_feature.access_for_feature (l_generated_result_type, l_cl_type_i, False, False)
+									l_access := l_feature.access_for_feature (l_generated_result_type, l_cl_type_i, False, False, False)
 										-- Strange situation where Precursor is an external, then we do as if
 										-- it was a static call.
 									if attached {EXTERNAL_B} l_access as l_ext then
@@ -7750,7 +7750,7 @@ feature {NONE} -- Visitor
 								access_expr_b.set_parent (new_cursor_b)
 								new_cursor_b.set_target (access_expr_b)
 							end
-							new_cursor_b.set_message (f.access_for_feature (local_type, Void, True, iteration_type.is_separate))
+							new_cursor_b.set_message (f.access_for_feature (local_type, Void, True, iteration_type.is_separate, False))
 							new_cursor_b.message.set_parent (new_cursor_b)
 
 							create initialization_code.make (2)

@@ -3193,7 +3193,7 @@ feature -- Byte code access
 		require
 			access_type_not_void: access_type /= Void
 		do
-			Result := access_for_feature (access_type, Void, is_qualified, is_separate)
+			Result := access_for_feature (access_type, Void, is_qualified, is_separate, False)
 		ensure
 			Result_exists: Result /= Void
 		end
@@ -3212,12 +3212,14 @@ feature -- Byte code access
 			Result_exists: Result /= Void
 		end
 
-	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN; is_separate: BOOLEAN): ACCESS_B
+	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN; is_separate: BOOLEAN; is_free: BOOLEAN): ACCESS_B
 			-- Byte code access for current feature. Dynamic binding if
 			-- `static_type' is Void, otherwise static binding on `static_type'.
+			-- • is_free – Is the access instance-free?
 		require
 			access_type_not_void: access_type /= Void
-			is_separate_meaningful: -- is_separate implies (is_qualified or is_creation) -- Creation calls are not marked as qualified.
+			-- is_separate_meaningful: is_separate implies (is_qualified or is_creation) -- Creation calls are not marked as qualified.
+			valid_is_instance_free_call: is_free implies has_static_access
 		local
 			is_in_op: BOOLEAN
 			l_type: TYPE_A
@@ -3244,9 +3246,9 @@ feature -- Byte code access
 			if Result = Void then
 				if written_in = System.any_id then
 						-- Feature written in ANY.
-					create {ANY_FEATURE_B} Result.make (Current, l_type, static_type)
+					create {ANY_FEATURE_B} Result.make (Current, l_type, static_type, is_free)
 				else
-					create {FEATURE_B} Result.make (Current, l_type, static_type)
+					create {FEATURE_B} Result.make (Current, l_type, static_type, is_free)
 				end
 			end
 		ensure

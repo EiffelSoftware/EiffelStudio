@@ -74,7 +74,6 @@ feature -- Generation
 			local_list: ARRAYED_LIST [TYPE_A]
 			inh_assert: INHERITED_ASSERTION
 			feat: FEATURE_I
-			class_c: CLASS_C
 			end_of_assertion: IL_LABEL
 			end_of_routine: IL_LABEL
 			l_saved_in_assertion, l_saved_supplier_precondition, l_saved_in_precondition: INTEGER
@@ -93,7 +92,6 @@ feature -- Generation
 				il_generator.generate_once_string_allocation (a_body.once_manifest_string_count)
 			end
 
-			class_c := context.class_type.associated_class
 			local_list := context.local_list
 			local_list.wipe_out
 			feat := Context.current_feature
@@ -1713,10 +1711,11 @@ feature {NONE} -- Visitors
 			l_real_metamorphose: BOOLEAN
 			l_need_generation: BOOLEAN
 			l_target_type, l_precursor_type: CL_TYPE_A
-			l_count: INTEGER
 			l_is_call_on_any: BOOLEAN
 			l_is_nested_call: like is_nested_call
 			l_is_in_creation: like is_in_creation_call
+			l_type: TYPE_A
+			creation_expression: CREATION_EXPR_B
 		do
 			l_is_in_creation := is_in_creation_call
 			l_is_nested_call := is_nested_call
@@ -1725,14 +1724,25 @@ feature {NONE} -- Visitors
 			is_this_argument_current := False
 
 				-- Get type on which call will be performed.
-			l_cl_type ?= a_node.context_type
-			check
-				valid_type: l_cl_type /= Void
+			if a_node.is_instance_free then
+				l_type := context.real_type (a_node.precursor_type)
+				l_cl_type := {CL_TYPE_A} /
+					if l_type.is_multi_constrained then
+						context.real_type (a_node.multi_constraint_static)
+					else
+						l_type
+					end
+				l_type := a_node.precursor_type
+			else
+				l_cl_type ?= a_node.context_type
+				check
+					valid_type: l_cl_type /= Void
+				end
 			end
 
 				-- Get the real type of `Precursor'.
-			if a_node.precursor_type /= Void then
-				l_precursor_type ?= context.real_type (a_node.precursor_type)
+			if attached a_node.precursor_type as p then
+				l_precursor_type ?= context.real_type (p)
 			end
 
 				-- Let's find out if we are performing a call on a basic type
@@ -1787,7 +1797,15 @@ feature {NONE} -- Visitors
 				if a_node.is_first then
 						-- First call in dot expression, we need to generate Current
 						-- only when we do not call a static feature.
-					il_generator.generate_current
+					if a_node.is_instance_free then
+							-- Generate an empty object to be used as a target of the call.
+						create creation_expression
+						creation_expression.set_info (l_type.create_info)
+						creation_expression.set_type (l_type)
+						process_creation_expr_b (creation_expression)
+					else
+						il_generator.generate_current
+					end
 				elseif l_cl_type.is_basic then
 						-- A metamorphose is required to perform call.
 					generate_il_metamorphose (l_cl_type, l_target_type, True)
@@ -1882,7 +1900,6 @@ feature {NONE} -- Visitors
 					else
 						a_node.parameters.process (Current)
 					end
-					l_count := a_node.parameters.count
 				end
 
 				l_return_type := context.real_type (a_node.type)
@@ -2622,8 +2639,8 @@ feature {NONE} -- Visitors
 					-- of `a_node.target' occurred, we need to pop from
 					-- execution stack the value returned by `a_node.target'
 					-- because it is not needed to perform the call to `a_node.message'.
-				l_is_target_generated := (not a_node.target.is_predefined and
-					(a_node.parent /= Void or not a_node.target.is_attribute))
+				l_is_target_generated := not a_node.target.is_predefined and
+					(a_node.parent /= Void or not a_node.target.is_attribute)
 			else
 				l_is_target_generated := True
 			end
@@ -3209,17 +3226,13 @@ feature {NONE} -- Visitors
 
 	process_type_expr_b (a_node: TYPE_EXPR_B)
 			-- Process `a_node'.
-		local
-			l_type_creator: CREATE_INFO
 		do
 			if a_node.is_dotnet_type then
-				il_generator.put_type_instance (
-					context.real_type (a_node.type_type))
+				il_generator.put_type_instance (context.real_type (a_node.type_type))
 			else
 				fixme ("Instance should be unique.")
 				fixme ("We also need to use `a_node.type_type' when it is not an instance of CL_TYPE_A.")
-				l_type_creator := context.real_type (a_node.type_data).create_info
-				l_type_creator.generate_il
+				context.real_type (a_node.type_data).create_info.generate_il
 			end
 		end
 
@@ -3434,7 +3447,7 @@ feature {NONE} -- Implementation
 			is_valid: is_valid
 			a_node_not_void: a_node /= Void
 		do
-			if (System.line_generation or context.workbench_mode) then
+			if System.line_generation or context.workbench_mode then
 				if system.is_precompile_finalized then
 					il_generator.put_ghost_debug_infos (a_node.line_number, n)
 				end
@@ -4002,7 +4015,6 @@ feature {NONE} -- Implementation: assignments
 		local
 			attr: ATTRIBUTE_B
 			loc: LOCAL_B
-			res: RESULT_B
 			cl_type: CL_TYPE_A
 			local_index: INTEGER
 		do
@@ -4052,7 +4064,6 @@ feature {NONE} -- Implementation: assignments
 					il_generator.generate_local_assignment (loc.position)
 				end
 			elseif a_node.is_result then
-				res ?= a_node
 				il_generator.generate_result_assignment
 			end
 		end
@@ -4261,8 +4272,8 @@ feature {NONE} -- Implementation: Feature calls
 			l_return_type: TYPE_A
 			target_feature_id: INTEGER
 		do
-			if a_node.parameters /= Void then
-				l_count := a_node.parameters.count
+			if attached a_node.parameters as p then
+				l_count := p.count
 			end
 
 			l_return_type := context.real_type (a_node.type)
@@ -4274,7 +4285,7 @@ feature {NONE} -- Implementation: Feature calls
 				target_feature_id := a_node.feature_id
 			end
 
-			if a_node.precursor_type /= Void then
+			if a_node.precursor_type /= Void and then not a_node.is_instance_free then
 					-- In IL, if you can call Precursor, it means that parent is
 					-- not expanded and therefore we can safely generate a static
 					-- call to Precursor feature.
@@ -4812,7 +4823,6 @@ feature {NONE} -- Implementation: Feature calls
 				a_feature_name_id = {PREDEFINED_NAMES}.standard_twin_name_id
 		local
 			l_extension: IL_EXTENSION_I
-			l_id: INTEGER
 		do
 				-- No need to check validity of target, it is done by the runtime
 				-- routine we are calling.
@@ -4824,8 +4834,7 @@ feature {NONE} -- Implementation: Feature calls
 			l_extension.set_base_class (runtime_class_name)
 			l_extension.set_type ({SHARED_IL_CONSTANTS}.static_type)
 
-			l_id := {PREDEFINED_NAMES}.system_object_name_id
-			l_extension.set_argument_types (<<l_id>>)
+			l_extension.set_argument_types (<<{PREDEFINED_NAMES}.system_object_name_id>>)
 
 				-- Call routine
 			l_extension.generate_call (False)

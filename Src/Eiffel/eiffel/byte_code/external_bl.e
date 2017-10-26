@@ -9,15 +9,34 @@ class EXTERNAL_BL
 
 inherit
 	EXTERNAL_B
-		redefine
-			free_register,
-			generate_parameters_list, generate_access_on_type,
+		undefine
+			analyze,
 			basic_register,
-			current_needed_for_access, set_parent, parent,
-			set_register, register, generate_access, generate_on,
-			analyze_on, analyze, generate_end,
-			is_polymorphic, has_one_signature
-		end;
+			free_register,
+			has_one_signature,
+			is_polymorphic,
+			register,
+			set_parent,
+			set_register
+		redefine
+			analyze_on,
+			current_needed_for_access,
+			generate_access_on_type,
+			generate_parameters_list,
+			generate_access,
+			generate_end,
+			generate_on,
+			parent,
+			set_register
+		end
+
+	ROUTINE_BL
+		rename
+			precursor_type as static_class_type,
+			set_precursor_type as set_static_class_type
+		redefine
+			parent
+		end
 
 	SHARED_TABLE
 
@@ -30,47 +49,15 @@ inherit
 			{NONE} all
 		end
 
-feature
+feature -- Access
 
 	parent: NESTED_BL
-			-- Parent of access
+			-- <Precursor>
 
-	register: REGISTRABLE
-			-- In which register the expression is stored.
-
-	basic_register: REGISTRABLE
-			-- Register used to store the metamorphosed simple type.
-
-	set_parent (p: NESTED_BL)
-			-- Assign `p' to `parent'.
-		do
-			parent := p
-		end
-
-	set_register (r: REGISTRABLE)
-			-- Set current register to `r'.
-		do
-			register := r
-		end
+feature
 
 	current_needed_for_access: BOOLEAN = False
 			-- Current is not needed to call an external.
-
-	free_register
-			-- Free registers.
-		do
-			Precursor
-			if basic_register /= Void then
-				basic_register.free_register
-			end
-		end
-
-	analyze
-			-- Build a proper context for code generation.
-		do
-			analyze_on (Current_register);
-			get_register;
-		end;
 
 	analyze_on (reg: REGISTRABLE)
 			-- Analyze call on an entity held in `reg`.
@@ -113,9 +100,10 @@ feature
 			is_polymorphic_access: BOOLEAN
 		do
 			type_i := context_type
-			is_polymorphic_access := not is_static_call and then
-					not type_i.is_basic and then
-					Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, True) >= 0;
+			is_polymorphic_access :=
+				not is_static_call and then
+				not type_i.is_basic and then
+				Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, True) >= 0;
 			if reg.is_current and is_polymorphic_access then
 				context.add_dt_current
 				context.mark_current_used
@@ -147,23 +135,6 @@ feature
 				-- Reset value of variables
 			is_right_parenthesis_needed.put (False)
 			do_generate (reg)
-		end
-
-	is_polymorphic: BOOLEAN
-			-- Is access polymorphic?
-		local
-			type_i: TYPE_A
-		do
-			type_i := context_type
-			if not type_i.is_basic and then static_class_type = Void then
-				Result := Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, True) >= 0
-			end
-		end
-
-	has_one_signature: BOOLEAN
-			-- <Precursor>
-		do
-			Result := Eiffel_table.poly_table (routine_id).has_one_signature
 		end
 
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A)

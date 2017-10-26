@@ -251,7 +251,7 @@ feature -- Element Change
 			end
 		end
 
-	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN; is_separate: BOOLEAN): ACCESS_B
+	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN; is_separate: BOOLEAN; is_free: BOOLEAN): ACCESS_B
 			-- Byte code access for current feature
 		local
 			attribute_b: ATTRIBUTE_B
@@ -277,7 +277,7 @@ feature -- Element Change
 				Result := external_b
 			elseif is_qualified and then system.seed_of_routine_id (rout_id_set.first).has_formal then
 					-- Call a generic wrapper.
-				Result := Precursor (access_type, static_type, is_qualified, is_separate)
+				Result := Precursor (access_type, static_type, is_qualified, is_separate, False)
 			else
 				create attribute_b.make (Current)
 				attribute_b.set_type (l_type)

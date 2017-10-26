@@ -27,7 +27,7 @@ feature -- Initialization
 	make (f: FEATURE_I; t: like type; p_type: like precursor_type; a_is_item: BOOLEAN)
 			-- Initialization
 		do
-			make_feature (f, t, p_type)
+			make_feature (f, t, p_type, False)
 			is_item := a_is_item
 		end
 
@@ -108,7 +108,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -148,7 +148,7 @@ feature
 			end
 		end
 
-	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN; is_separate: BOOLEAN): ACCESS_B
+	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN; is_separate: BOOLEAN; is_free: BOOLEAN): ACCESS_B
 			-- Byte code access for current feature
 		local
 			external_b: EXTERNAL_B;
@@ -156,7 +156,7 @@ feature
 		do
 			if system.il_generation and then extension.is_built_in and static_type = Void then
 					-- Builtins that are accessed via an object call in .NET code generation
-				Result := Precursor (access_type, static_type, is_qualified, is_separate)
+				Result := Precursor (access_type, static_type, is_qualified, is_separate, is_free)
 			else
 				if is_qualified then
 						-- To fix eweasel test#term155 we remove all anchors from
@@ -174,6 +174,9 @@ feature
 				external_b.set_external_name_id (external_name_id)
 				external_b.set_encapsulated (encapsulated)
 				external_b.set_extension (extension)
+				if is_free then
+					external_b.enable_instance_free
+				end
 
 				Result := external_b
 			end
@@ -284,7 +287,7 @@ invariant
 	extension_not_void: extension /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -24,7 +24,7 @@ feature -- Status Report
 
 feature -- Access
 
-	access_for_feature (access_type, static_type: TYPE_A; is_qualified: BOOLEAN; is_separate: BOOLEAN): ACCESS_B
+	access_for_feature (access_type, static_type: TYPE_A; is_qualified: BOOLEAN; is_separate: BOOLEAN; is_free: BOOLEAN): ACCESS_B
 			-- New ACCESS_B structure for current deferred routine
 		local
 			external_b: EXTERNAL_B
@@ -51,7 +51,7 @@ feature -- Access
 				external_b.set_extension (extension)
 				Result := external_b
 			else
-				Result := Precursor (access_type, static_type, is_qualified, is_separate)
+				Result := Precursor (access_type, static_type, is_qualified, is_separate, is_free)
 			end
 		end
 
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

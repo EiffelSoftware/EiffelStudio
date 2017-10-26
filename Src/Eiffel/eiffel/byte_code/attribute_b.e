@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Access to an Eiffel attribute"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -117,7 +117,7 @@ feature
 			end
 			if is_initialization_required then
 					-- Call a wrapper that performs the required initialization.
-				create {FEATURE_B} Result.make (context_type.base_class.feature_of_rout_id (routine_id), type, Void)
+				create {FEATURE_B} Result.make (context_type.base_class.feature_of_rout_id (routine_id), type, Void, False)
 				if has_multi_constraint_static then
 					Result.set_multi_constraint_static (multi_constraint_static)
 				end
@@ -204,7 +204,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

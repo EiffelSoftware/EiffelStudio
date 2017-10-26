@@ -259,12 +259,12 @@ feature -- Object relative once
 						l_creation_expr_b.set_creation_instruction (False)
 
 							--| default_create
-						create l_ISE_EXCEPTION_MANAGER_default_create_feature_b.make (l_default_create_fi, l_default_create_fi.type, Void)
+						create l_ISE_EXCEPTION_MANAGER_default_create_feature_b.make (l_default_create_fi, l_default_create_fi.type, Void, False)
 						l_creation_expr_b.set_call (l_ISE_EXCEPTION_MANAGER_default_create_feature_b)
 
 
 							--| {ISE_EXCEPTION_MANAGER}.once_raise (EXCEPTION)
-						create l_ISE_EXCEPTION_MANAGER_once_raise_feature_b.make (l_once_raise_fi, a_byte_code.real_type (l_once_raise_fi.type), Void)
+						create l_ISE_EXCEPTION_MANAGER_once_raise_feature_b.make (l_once_raise_fi, a_byte_code.real_type (l_once_raise_fi.type), Void, False)
 						create l_excep_attr_b.make (l_obj_once_info.exception_attribute_i)
 						l_excep_attr_b.set_type (a_byte_code.real_type (l_obj_once_info.exception_type_a))
 
@@ -325,11 +325,11 @@ feature -- Object relative once
 						l_creation_expr_b.set_creation_instruction (False)
 
 							--| default_create
-						create l_ISE_EXCEPTION_MANAGER_default_create_feature_b.make (l_default_create_fi, l_default_create_fi.type, Void)
+						create l_ISE_EXCEPTION_MANAGER_default_create_feature_b.make (l_default_create_fi, l_default_create_fi.type, Void, False)
 						l_creation_expr_b.set_call (l_ISE_EXCEPTION_MANAGER_default_create_feature_b)
 
 							--| {ISE_EXCEPTION_MANAGER}.last_exception: EXCEPTION
-						create l_ISE_EXCEPTION_MANAGER_last_exception_feature_b.make (l_last_exception_fi, a_byte_code.real_type (l_last_exception_fi.type), Void)
+						create l_ISE_EXCEPTION_MANAGER_last_exception_feature_b.make (l_last_exception_fi, a_byte_code.real_type (l_last_exception_fi.type), Void, False)
 
 							--| Build ... (create {ISE_EXCEPTION_MANAGER}).last_exception returning an EXCEPTION object
 						create l_nested_b
@@ -387,7 +387,7 @@ invariant
 				(not is_process_relative and not is_thread_relative and     is_object_relative)
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

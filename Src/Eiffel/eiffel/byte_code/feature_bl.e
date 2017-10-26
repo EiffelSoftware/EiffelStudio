@@ -51,6 +51,7 @@ feature {NONE} --Initialisation
 			is_once := f.is_once
 			is_process_relative := f.is_process_relative
 			is_object_relative := f.is_object_relative
+			is_instance_free := f.is_instance_free
 			multi_constraint_static := f.multi_constraint_static
 			enlarge_parameters
 		end
@@ -84,7 +85,7 @@ feature
 	free_register
 			-- Free registers
 		do
-			Precursor {FEATURE_B}
+			Precursor
 			if basic_register /= Void then
 				basic_register.free_register
 			end
@@ -120,7 +121,6 @@ end
 	analyze_on (reg: REGISTRABLE)
 			-- Analyze feature call on `reg'
 		local
-			tmp_register: REGISTER
 			l_optimizable: BOOLEAN
 		do
 debug
@@ -135,8 +135,7 @@ end
 					-- the call...
 					-- We need it only when a metamorphose occurs or if we
 					-- are handling BIT objects.
-				create tmp_register.make (Reference_c_type)
-				basic_register := tmp_register
+				create {REGISTER} basic_register.make (Reference_c_type)
 			end
 			if parameters /= Void then
 				-- If we have only one parameter and it is a single access to
@@ -220,12 +219,13 @@ end
 		local
 			type_i: TYPE_A
 			access: ACCESS_B
-			void_register: REGISTER
 			is_polymorphic_access: BOOLEAN
 		do
 			type_i := context_type
-			is_polymorphic_access := not type_i.is_basic and then precursor_type = Void and then
-					Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, True) >= 0
+			is_polymorphic_access :=
+				not type_i.is_basic and then
+				precursor_type = Void and then
+				Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, True) >= 0
 			if reg.is_current and is_polymorphic_access then
 				context.add_dt_current
 			end
@@ -236,7 +236,7 @@ end
 					-- must make sure it is not held in a No_register--RAM.
 				access ?= reg;		-- Cannot fail
 				if access.register = No_register then
-					access.set_register (void_register)
+					access.set_register (Void)
 					access.get_register
 				end
 			end
@@ -404,12 +404,10 @@ end
 			f: FEATURE_I
 			l_index: INTEGER
 			l_keep, is_nested: BOOLEAN
-			l_par: NESTED_BL
 			return_type_string: STRING
 		do
 			l_keep := context.final_mode and then system.keep_assertions
 			is_nested := not is_first
-			l_par := parent
 			array_index := Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, True)
 			buf := buffer
 				-- Tell if we need the extra parenthesis in `generate_end'.
@@ -539,28 +537,24 @@ end
 	generate_parameters_list
 			-- Generate the parameters list for C function call
 		local
-			expr: EXPR_B
 			buf: GENERATION_BUFFER
 			l_area: SPECIAL [EXPR_B]
 			i, nb: INTEGER
-			p: like parameters
 		do
-			if not is_deferred.item then
-				p := parameters
-				if p /= Void then
-					buf := buffer
-					l_area := p.area
-					nb := p.count
-					p := Void
-					from
-					until
-						i = nb
-					loop
-						buf.put_string ({C_CONST}.comma_space)
-						expr := l_area.item (i);	-- Cannot fail
-						expr.print_register
-						i := i + 1
-					end
+			if
+				not is_deferred.item and then
+				attached parameters as p
+			then
+				buf := buffer
+				l_area := p.area
+				nb := p.count
+				from
+				until
+					i = nb
+				loop
+					buf.put_string ({C_CONST}.comma_space)
+					l_area [i].print_register
+					i := i + 1
 				end
 			end
 		end
@@ -569,18 +563,15 @@ end
 		local
 			i, nb: INTEGER
 			l_area: SPECIAL [EXPR_B]
-			p: like parameters
 		do
-			p := parameters
-			if p /= Void then
+			if attached parameters as p then
 				from
 					l_area := p.area
 					nb := p.count
-					p := Void
 				until
 					i = nb
 				loop
-					l_area.put (l_area.item (i).enlarged, i)
+					l_area [i] := l_area [i].enlarged
 					i := i + 1
 				end
 			end

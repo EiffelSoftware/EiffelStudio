@@ -8,14 +8,14 @@
 class FEATURE_B
 
 inherit
-	CALL_ACCESS_B
+	ROUTINE_B
 		redefine
-			is_feature, set_parameters,
-			parameters, enlarged, enlarged_on, context_type,
-			is_feature_special, has_call, allocates_memory,
-			is_unsafe, optimized_byte_node,
-			calls_special_features, is_special_feature,
-			size, pre_inlined_code, inlined_byte_code
+			allocates_memory,
+			enlarged_on,
+			inlined_byte_code,
+			is_feature,
+			is_special_feature,
+			is_unsafe
 		end
 
 	SHARED_TABLE
@@ -29,12 +29,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (f: FEATURE_I; t: like type; p_type: like precursor_type)
-			-- Initialization
+	make (f: FEATURE_I; t: like type; p_type: like precursor_type; is_free: BOOLEAN)
+			-- Create an byte node for a call to the feature `f`.
+			-- Arguments:
+			--	• is_free – Is it an instance-free call?
 		require
 			good_argument: f /= Void
 		local
-			feat: FEATURE_I
 			feat_tbl: FEATURE_TABLE
 		do
 			feature_name_id := f.feature_name_id
@@ -43,19 +44,20 @@ feature {NONE} -- Initialization
 			is_once := f.is_once
 			is_process_relative := f.is_process_relative
 			is_object_relative := f.is_object_relative_once
+			is_instance_free := is_free
 			precursor_type := p_type
 			type := t
 			if System.il_generation then
 				if precursor_type = Void then
 						-- Normal feature call.
-					if f.origin_class_id /= 0 then
-						feature_id := f.origin_feature_id
-						written_in := f.origin_class_id
-					else
+					if f.origin_class_id = 0 then
 							-- Case of a non-external Eiffel routine
 							-- written in an external class.
 						feature_id := f.feature_id
 						written_in := f.written_in
+					else
+						feature_id := f.origin_feature_id
+						written_in := f.origin_class_id
 					end
 				else
 						-- Precursor access, we need to find where body
@@ -66,8 +68,7 @@ feature {NONE} -- Initialization
 						-- to hit the feature table cache.
 					written_in := f.access_in
 					feat_tbl := System.class_of_id (written_in).feature_table
-					feat := feat_tbl.feature_of_rout_id_set (f.rout_id_set)
-					feature_id := feat.feature_id
+					feature_id := feat_tbl.feature_of_rout_id_set (f.rout_id_set).feature_id
 				end
 			else
 				feature_id := f.feature_id
@@ -144,40 +145,9 @@ feature -- Access
 			Result := not (is_process_relative or is_object_relative)
 		end
 
-	parameters: BYTE_LIST [PARAMETER_B]
-			-- Feature parameters: can be Void
-
-	set_parameters (p: like parameters)
-			-- Assign `p' to `parameters'.
-		local
-			i: INTEGER
-		do
-			parameters := p
-			if p /= Void then
-					-- Set all parameter parents to `Current'.
-				from
-					i := p.count
-				until
-					i = 0
-				loop
-					p [i].set_parent (Current)
-					i := i - 1
-				end
-			end
-		end
-
 	is_any_feature: BOOLEAN
 			-- Is Current an instance of ANY_FEATURE_B?
 		do
-		end
-
-	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN
-			-- Search for feature_name in special_routines.
-			-- This is used for simple types only.
-			-- If found return True (and keep reference position).
-			-- Otherwize, return false
-		do
-			Result := special_routines.has (feature_name_id, compilation_type, target_type)
 		end
 
 	is_feature: BOOLEAN = True
@@ -191,35 +161,29 @@ feature -- Access
 			end
 		end
 
-	enlarged: CALL_ACCESS_B
-			-- Enlarge the tree to get more attributes and return the
-			-- new enlarged tree node.
-		do
-			Result := enlarged_on (context_type)
-		end
-
 	enlarged_on (type_i: TYPE_A): CALL_ACCESS_B
 			-- Enlarged byte node evaluated in the context of `type_i'.
 		local
 			l_type: TYPE_A
 			f: FEATURE_I
 		do
-			if not context.is_written_context then
-					-- Ensure the feature is not redeclared into attribute if inherited.
-				if attached {CL_TYPE_A} type_i as c then
-					f := c.base_class.feature_of_rout_id (routine_id)
-					if not f.is_attribute then
+			if
+				not context.is_written_context and then
+				attached {CL_TYPE_A} type_i as c
+			then
+				-- Ensure the feature is not redeclared into attribute if inherited.
+				f := c.base_class.feature_of_rout_id (routine_id)
+				if not f.is_attribute then
+					f := Void
+				elseif context.final_mode and then system.seed_of_routine_id (routine_id).has_formal then
+						-- It was originally a FEATURE_B because its seed had a formal, we still need
+						-- to call the FEATURE_B if and only if it has a conforming expanded descendant.
+					l_type := context.real_type (type)
+					if
+						context.has_expanded_descendants_information and then
+						context.has_expanded_descendants (l_type.type_id (context.context_class_type.type))
+					then
 						f := Void
-					elseif context.final_mode and then system.seed_of_routine_id (routine_id).has_formal then
-							-- It was originally a FEATURE_B because its seed had a formal, we still need
-							-- to call the FEATURE_B if and only if it has a conforming expanded descendant.
-						l_type := context.real_type (type)
-						if
-							context.has_expanded_descendants_information and then
-							context.has_expanded_descendants (l_type.type_id (context.context_class_type.type))
-						then
-							f := Void
-						end
 					end
 				end
 			end
@@ -238,32 +202,11 @@ feature -- Access
 
 feature -- Status report
 
-	has_call: BOOLEAN = True
-			-- <Precursor>
-
 	allocates_memory: BOOLEAN = True
 			-- <Precursor>
 			--| Ideally a feature call does not always allocate memory, but it
 			--| would be quite expensive to compute that information at the moment,
 			--| so we always assume it allocates some.
-
-feature -- Context type
-
-	context_type: TYPE_A
-			-- Context type of the access (properly instantiated)
-		do
-			if precursor_type = Void then
-				Result := Precursor {CALL_ACCESS_B}
-			else
-				Result := Context.real_type (precursor_type)
-				if Result.is_multi_constrained then
-					check
-						has_multi_constraint_static: has_multi_constraint_static
-					end
-					Result := context.real_type (multi_constraint_static)
-				end
-			end
-		end
 
 feature -- Array optimization
 
@@ -272,13 +215,11 @@ feature -- Array optimization
 			cl_type: CL_TYPE_A
 			base_class: CLASS_C
 			f: FEATURE_I
-			dep: DEPEND_UNIT
 		do
 			cl_type ?= context_type -- Cannot fail
 			base_class := cl_type.base_class
 			f := base_class.feature_table.item_id (feature_name_id)
-			create dep.make (base_class.class_id, f)
-			Result := optimizer.special_features.has (dep)
+			Result := optimizer.special_features.has (create {DEPEND_UNIT}.make (base_class.class_id, f))
 		end
 
 	is_unsafe: BOOLEAN
@@ -312,21 +253,6 @@ debug ("OPTIMIZATION")
 end
 		end
 
-	optimized_byte_node: like Current
-		do
-			Result := Current
-			if parameters /= Void then
-				parameters := parameters.optimized_byte_node
-			end
-		end
-
-	calls_special_features (array_desc: INTEGER): BOOLEAN
-		do
-			if parameters /= Void then
-				Result := parameters.calls_special_features (array_desc)
-			end
-		end
-
 feature {NONE} -- Array optimization
 
 	optimizer: ARRAY_OPTIMIZER
@@ -335,34 +261,6 @@ feature {NONE} -- Array optimization
 		end
 
 feature -- Inlining
-
-	size: INTEGER
-		do
-			if parameters /= Void then
-				Result := 1 + parameters.size
-			else
-				Result := 1
-			end
-		end
-
-	pre_inlined_code: CALL_B
-		local
-			inlined_current_b: INLINED_CURRENT_B
-		do
-			if parent /= Void then
-				Result := Current
-			else
-				create parent
-				create inlined_current_b
-				parent.set_target (inlined_current_b)
-				inlined_current_b.set_parent (parent)
-				parent.set_message (Current)
-				Result := parent
-			end
-			if parameters /= Void then
-				set_parameters (parameters.pre_inlined_code)
-			end
-		end
 
 	inlined_byte_code: ACCESS_B
 		local
@@ -700,7 +598,7 @@ feature {NONE} -- Normalization of types
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

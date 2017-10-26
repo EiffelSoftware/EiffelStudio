@@ -104,6 +104,15 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
+	set_content_type (a_content_type: detachable like content_type)
+		do
+			if a_content_type = Void then
+				get_content_type
+			else
+				content_type := a_content_type
+			end
+		end
+
 	set_max_age (sec: INTEGER)
 		do
 			header.put_cache_control ("max-age=" + sec.out)
@@ -227,6 +236,7 @@ feature {WSF_RESPONSE} -- Output
 		do
 			res.set_status_code (status_code)
 			if status_code = {HTTP_STATUS_CODE}.not_found then
+					-- File not found, then no more data.
 			else
 				res.put_header_text (header.string)
 				s := head

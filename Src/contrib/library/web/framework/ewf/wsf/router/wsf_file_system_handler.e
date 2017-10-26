@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 
 	make_with_path (d: like document_root)
 		do
+			initialize
 			max_age := -1
 			if d.is_empty then
 				document_root := execution_environment.current_working_path
@@ -72,6 +73,11 @@ feature {NONE} -- Initialization
 
 	is_hidden: BOOLEAN
 			-- Current mapped handler should be hidden from self documentation		
+
+	initialize
+			-- Initialize Current handler.
+		do
+		end
 
 feature -- Documentation
 
@@ -211,7 +217,7 @@ feature -- Execution
 			fn := resource_filename (uri)
 			create f.make_with_path (fn)
 			if f.exists then
-				if f.is_readable then
+				if f.is_access_readable then
 					if f.is_directory then
 						if index_disabled then
 							process_directory_index_disabled (uri, req, res)
@@ -341,6 +347,8 @@ feature -- Execution
 		end
 
 	process_file (f: FILE; req: WSF_REQUEST; res: WSF_RESPONSE)
+		require
+			f_valid: f.exists and then f.is_access_readable
 		do
 			if
 				attached req.meta_string_variable ("HTTP_IF_MODIFIED_SINCE") as s_if_modified_since and then
@@ -355,6 +363,8 @@ feature -- Execution
 		end
 
 	process_transfert (f: FILE; req: WSF_REQUEST; res: WSF_RESPONSE)
+		require
+			f_valid: f.exists and then f.is_access_readable
 		local
 			ext: READABLE_STRING_32
 			ct: detachable READABLE_STRING_8
@@ -366,7 +376,7 @@ feature -- Execution
 			if ct = Void then
 				ct := {HTTP_MIME_TYPES}.application_force_download
 			end
-			create fres.make_with_content_type (ct, f.path.name)
+			create fres.make_with_content_type_and_path (ct, f.path)
 			fres.set_status_code ({HTTP_STATUS_CODE}.ok)
 
 				-- cache control

@@ -438,7 +438,7 @@ feature
 				until
 					parameters.after
 				loop
-					expr_b ?= parameters.item
+					expr_b := parameters.item
 					parameters.replace (expr_b.enlarged)
 					if
 						(not l_is_built_in and not l_encapsulated) and then

@@ -51,7 +51,7 @@ feature {NONE} -- Creation
 			not_is_agent: not is_agent
 			not_is_attribute: not is_attribute
 			not_is_precursor: not is_precursor
-			e_attribute_unset: not attached e_attribute
+			callee_unset: not attached callee
 			class_c_set: class_c = c
 			written_class_set: attached written_class
 			feature_set: attached e_feature
@@ -63,13 +63,13 @@ feature {NONE} -- Creation
 			-- Create an error for the case when an attribute `a` is used in an instance-free feature `f` of class `c` in the code in class `w` at location `l`.
 		do
 			make (f, c, w, l)
-			e_attribute := a.e_feature
+			callee := a.e_feature
 			is_attribute := True
 		ensure
 			not_is_agent: not is_agent
 			is_attribute: is_attribute
 			not_is_precursor: not is_precursor
-			e_attribute_set: attached e_attribute
+			callee_set: attached callee
 			class_c_set: class_c = c
 			written_class_set: attached written_class
 			feature_set: attached e_feature
@@ -81,12 +81,12 @@ feature {NONE} -- Creation
 			-- Create an error for the case when a non-instance-free feature `a` is used in an instance-free feature `f` of class `c` in the code in class `w` at location `l`.
 		do
 			make (f, c, w, l)
-			e_attribute := a.e_feature
+			callee := a.e_feature
 		ensure
 			not_is_agent: not is_agent
 			not_is_attribute: not is_attribute
 			not_is_precursor: not is_precursor
-			e_attribute_set: attached e_attribute
+			callee_set: attached callee
 			class_c_set: class_c = c
 			written_class_set: attached written_class
 			feature_set: attached e_feature
@@ -98,13 +98,13 @@ feature {NONE} -- Creation
 			-- Create an error for the case when a non-instance-free precursor `a` is used in an instance-free feature `f` of class `c` in the code in class `w` at location `l`.
 		do
 			make (f, c, w, l)
-			e_attribute := a.e_feature
+			callee := a.e_feature
 			is_precursor := True
 		ensure
 			not_is_agent: not is_agent
 			not_is_attribute: not is_attribute
 			is_precursor: is_precursor
-			e_attribute_set: attached e_attribute
+			callee_set: attached callee
 			class_c_set: class_c = c
 			written_class_set: attached written_class
 			feature_set: attached e_feature
@@ -121,7 +121,7 @@ feature {NONE} -- Creation
 			is_agent: is_agent
 			not_is_attribute: not is_attribute
 			not_is_precursor: not is_precursor
-			e_attribute_unset: not attached e_attribute
+			callee_unset: not attached callee
 			class_c_set: class_c = c
 			written_class_set: attached written_class
 			feature_set: attached e_feature
@@ -133,13 +133,13 @@ feature {NONE} -- Creation
 			-- Create an error for the case when an unqualified agent `a` is used in an instance-free feature `f` of class `c` in the code in class `w` at location `l`.
 		do
 			make (f, c, w, l)
-			e_attribute := a.e_feature
+			callee := a.e_feature
 			is_agent := True
 		ensure
 			is_agent: is_agent
 			not_is_attribute: not is_attribute
 			not_is_precursor: not is_precursor
-			e_attribute_set: attached e_attribute
+			callee_set: attached callee
 			class_c_set: class_c = c
 			written_class_set: attached written_class
 			feature_set: attached e_feature
@@ -154,7 +154,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	e_attribute: detachable E_FEATURE
+	callee: detachable E_FEATURE
 			-- A descriptor of an attribute used in the instance-free feature identified by `e_feature`.
 
 	kind: NATURAL
@@ -176,7 +176,7 @@ feature {NONE} -- Output
 			t.add_new_line
 			if is_agent then
 					-- Erroneous use of an agent.
-				if attached e_attribute as a then
+				if attached callee as a then
 					format_elements (t, locale.translation_in_context ("[
 								Implementation contraint: The instance-free feature {1} uses the agent {2} of the unqualified form.
 								What to do: Remove the agent from the code or the instance-free mark from the feature declaration.
@@ -189,7 +189,7 @@ feature {NONE} -- Output
 							]", "compiler.error"),
 						<<agent e_feature.append_name>>)
 				end
-			elseif attached e_attribute as a then
+			elseif attached callee as a then
 				if is_attribute then
 						-- Erroneous use of an attribute.
 					format_elements (t, locale.translation_in_context ("[
@@ -237,14 +237,14 @@ feature {NONE} -- Output
 			-- <Precursor>
 		do
 			if is_agent then
-				if attached e_attribute as a then
+				if attached callee as a then
 					format_elements (t, locale.translation_in_context ("The instance-free feature {1} uses the agent {2} of the unqualified form.", "compiler.error"),
 						<<agent e_feature.append_name, agent a.append_name>>)
 				else
 					format_elements (t, locale.translation_in_context ("The instance-free feature {1} uses an inline agent.", "compiler.error"),
 						<<agent e_feature.append_name>>)
 				end
-			elseif attached e_attribute as a then
+			elseif attached callee as a then
 				if is_attribute then
 					format_elements (t, locale.translation_in_context ("The instance-free feature {1} uses the attribute {2}.", "compiler.error"),
 						<<agent e_feature.append_name, agent a.append_name>>)
@@ -265,8 +265,8 @@ invariant
 	consistent_agent: is_agent implies not (is_attribute or is_precursor)
 	consistent_attribute: is_attribute implies not (is_agent or is_precursor)
 	consistent_precursor: is_precursor implies not (is_agent or is_attribute)
-	feature_attached_if_attribute: is_attribute implies attached e_attribute
-	feature_attached_if_precursor: is_precursor implies attached e_attribute
+	feature_attached_if_attribute: is_attribute implies attached callee
+	feature_attached_if_precursor: is_precursor implies attached callee
 
 note
 	copyright:	"Copyright (c) 1984-2017, Eiffel Software"

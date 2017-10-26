@@ -45,17 +45,13 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	retrieve_account_details: detachable ESA_ACCOUNT
-		local
-			l_account_uri: STRING_GENERAL
 		do
-			l_account_uri := user_account_uri
-			if l_account_uri /= Void then
-				Result := do_get (l_account_uri)
+			if attached user_account_uri as l_uri then
+				Result := do_get (l_uri)
 			end
 		end
 
-
-	do_get (a_target_url: STRING_GENERAL): detachable ESA_ACCOUNT
+	do_get (a_target_url: READABLE_STRING_GENERAL): detachable ESA_ACCOUNT
 	 		-- Get request to retrive the user account.
 	 	require
 			is_support_accessible: is_support_accessible
@@ -67,78 +63,81 @@ feature {NONE} -- Implementation
 		do
 
 			create ctx.make
-			if attached last_username as u and then attached last_password as p then
-				if attached basic_auth (u, p) as l_auth then
-					ctx.add_header ("Authorization", l_auth)
-				end
-			end
+			if
+				attached last_username as u and then
+				attached last_password as p  and then
+				attached basic_auth (u, p) as l_basic_auth
+			then
+				ctx.add_header ("Authorization", l_basic_auth)
 
-			l_resp := get (a_target_url, ctx)
-			if l_resp.status /= 200 then
-				(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
-			else
-				if attached l_resp.collection as l_col then
-					if
-						attached {CJ_TEMPLATE} l_col.template as l_template and then
-						attached {ARRAYED_LIST [CJ_DATA]} l_template.data as l_data
-					then
-						create Result
-						across l_data as ic loop
-							if
-								ic.item.name.same_string ("first_name") and then
-								attached ic.item.value as l_value
-							then
-								Result.set_first_name (l_value)
-							elseif
-								ic.item.name.same_string ("last_name") and then
-								attached ic.item.value as l_value
-							then
-								Result.set_last_name (l_value)
-							elseif
-								ic.item.name.same_string ("user_email") and then
-								attached ic.item.value as l_value
-							then
-								Result.set_email (l_value)
-							elseif
-								ic.item.name.same_string ("country") and then
-								attached ic.item.value as l_value
-							then
-								Result.set_country (l_value)
-							elseif
-								ic.item.name.same_string ("user_region") and then
-								attached ic.item.value as l_value
-							then
-								Result.set_region (l_value)
-							elseif
-								ic.item.name.same_string ("user_position") and then
-								attached ic.item.value as l_value
-							then
-								Result.set_position (l_value)
-							elseif
-								ic.item.name.same_string ("user_city") and then
-								attached ic.item.value as l_value
-							then
-								Result.set_city (l_value)
-							elseif
-								ic.item.name.same_string ("user_address") and then
-								attached ic.item.value as l_value
-							then
-								Result.set_address (l_value)
-							elseif
-								ic.item.name.same_string ("user_post_code") and then
-								attached ic.item.value as l_value
-							then
-								Result.set_postal_code (l_value)
-							elseif
-								ic.item.name.same_string ("user_phone") and then
-								attached ic.item.value as l_value
-							then
-								Result.set_telephone (l_value)
-							elseif
-								ic.item.name.same_string ("user_fax") and then
-								attached ic.item.value as l_value
-							then
-								Result.set_fax (l_value)
+				l_resp := get (a_target_url, ctx)
+				if l_resp.status /= 200 then
+					(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
+				else
+					if attached l_resp.collection as l_col then
+						if
+							attached {CJ_TEMPLATE} l_col.template as l_template and then
+							attached {ARRAYED_LIST [CJ_DATA]} l_template.data as l_data
+						then
+							create Result.make_with_username (u)
+							across l_data as ic loop
+								if
+									ic.item.name.same_string ("first_name") and then
+									attached ic.item.value as l_value
+								then
+									Result.set_first_name (l_value)
+								elseif
+									ic.item.name.same_string ("last_name") and then
+									attached ic.item.value as l_value
+								then
+									Result.set_last_name (l_value)
+								elseif
+									ic.item.name.same_string ("user_email") and then
+									attached ic.item.value as l_value and then
+									l_value.is_valid_as_string_8
+								then
+									Result.set_email (l_value.to_string_8)
+								elseif
+									ic.item.name.same_string ("country") and then
+									attached ic.item.value as l_value
+								then
+									Result.set_country (l_value)
+								elseif
+									ic.item.name.same_string ("user_region") and then
+									attached ic.item.value as l_value
+								then
+									Result.set_region (l_value)
+								elseif
+									ic.item.name.same_string ("user_position") and then
+									attached ic.item.value as l_value
+								then
+									Result.set_position (l_value)
+								elseif
+									ic.item.name.same_string ("user_city") and then
+									attached ic.item.value as l_value
+								then
+									Result.set_city (l_value)
+								elseif
+									ic.item.name.same_string ("user_address") and then
+									attached ic.item.value as l_value
+								then
+									Result.set_address (l_value)
+								elseif
+									ic.item.name.same_string ("user_post_code") and then
+									attached ic.item.value as l_value
+								then
+									Result.set_postal_code (l_value)
+								elseif
+									ic.item.name.same_string ("user_phone") and then
+									attached ic.item.value as l_value
+								then
+									Result.set_telephone (l_value)
+								elseif
+									ic.item.name.same_string ("user_fax") and then
+									attached ic.item.value as l_value
+								then
+									Result.set_fax (l_value)
+								end
 							end
 						end
 					end

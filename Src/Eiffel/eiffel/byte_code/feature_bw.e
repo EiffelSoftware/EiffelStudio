@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Enlarged node for Eiffel feature call in workbench mode."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -77,7 +77,6 @@ feature -- C code generation
 			class_type: CL_TYPE_A;
 			type_i: TYPE_A;
 			access: ACCESS_B;
-			void_register: REGISTER;
 		do
 			type_i := context_type;
 			class_type ?= type_i;
@@ -92,12 +91,12 @@ feature -- C code generation
 						-- must make sure it is not held in a No_register--RAM.
 				 	access ?= reg;	  -- Cannot fail
 					if access.register = No_register then
-						access.set_register (void_register);
-						access.get_register;
-					end;
+						access.set_register (Void)
+						access.get_register
+					end
 				end
-			end;
-		end;
+			end
+		end
 
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A)
 			-- Generate feature call in a `typ' context.
@@ -119,7 +118,7 @@ feature {NONE} -- Implementation
 			-- to be normalized before use.
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

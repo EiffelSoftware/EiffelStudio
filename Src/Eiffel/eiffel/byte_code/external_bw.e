@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Enlarged node for external feature call in workbench mode."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -98,7 +98,6 @@ feature -- Checking
 			type_i: TYPE_A
 			cond: BOOLEAN
 			access: ACCESS_B
-			void_register: REGISTER
 		do
 			if not is_static_call then
 				type_i := context_type
@@ -114,7 +113,7 @@ feature -- Checking
 						-- must make sure it is not held in a No_register--RAM.
 				 	access ?= reg;	  -- Cannot fail
 					if access.register = No_register then
-						access.set_register (void_register)
+						access.set_register (Void)
 						access.get_register
 					end
 				end
@@ -143,7 +142,7 @@ feature {NONE} -- Implementation
 			-- to be normalized before use.
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -174,4 +173,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EXTERNAL_BW
+end

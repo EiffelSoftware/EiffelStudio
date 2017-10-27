@@ -32,6 +32,11 @@ feature -- Tests
 			test_http_client_ssl
 		end
 
+	test_net_abs_url
+		do
+			test_abs_url
+		end
+
 	test_net_headers
 		do
 			test_headers

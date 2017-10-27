@@ -74,6 +74,22 @@ feature -- Test routines
 			end
 		end
 
+	test_abs_url
+		local
+			sess: like new_session
+			h: STRING_8
+			l_url: STRING
+		do
+			sess := new_session ("https://www.eiffel.org")
+			l_url := "/foo/bar"
+			assert ("abs rel", sess.url (l_url, Void).same_string (sess.base_url + l_url))
+
+			l_url := "https://www.eiffel.org/foo/bar"
+			assert ("abs 1", sess.url (l_url, Void).same_string (l_url))
+			l_url := "https://example.com/foo/bar"
+			assert ("abs 2", sess.url (l_url, Void).same_string (l_url))
+		end
+
 	test_headers
 		local
 			res: HTTP_CLIENT_RESPONSE

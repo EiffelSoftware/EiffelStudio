@@ -29,6 +29,11 @@ feature -- Access
 			Result := items.count
 		end
 
+	has (a_parameter_name: READABLE_STRING_GENERAL): BOOLEAN
+		do
+			Result := across items as ic some a_parameter_name.same_string (ic.item.name)  end
+		end
+
 feature -- Element change
 
 	extend, force (i: G)

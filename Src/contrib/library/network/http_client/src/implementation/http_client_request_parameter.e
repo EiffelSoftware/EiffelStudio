@@ -7,6 +7,9 @@ note
 deferred class
 	HTTP_CLIENT_REQUEST_PARAMETER
 
+inherit
+	DEBUG_OUTPUT
+
 feature -- Access
 
 	name: READABLE_STRING_32
@@ -16,6 +19,15 @@ feature -- Access
 	count: INTEGER
 			-- Integer representing the length of source value.
 		deferred
+		end
+
+feature -- Status report
+
+	debug_output: STRING_32
+		do
+			create Result.make_empty
+			Result.append (name)
+			Result.append ("=...")
 		end
 
 feature -- Conversion

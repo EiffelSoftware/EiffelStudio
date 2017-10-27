@@ -118,7 +118,7 @@ feature -- Update
 
 feature -- Account Registration	
 
-	register_account (a_username: READABLE_STRING_GENERAL; a_password: READABLE_STRING_GENERAL; a_email: READABLE_STRING_8)
+	register_account (a_username: READABLE_STRING_GENERAL; a_password: READABLE_STRING_GENERAL; a_email: READABLE_STRING_8; a_additional_values: detachable TABLE_ITERABLE [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL])
 			-- Register a new account for `a_user_name`, and `a_password`,
 			-- on success set `active_account` to new account.
 			-- On error, TODO.

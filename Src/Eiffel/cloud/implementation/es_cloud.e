@@ -363,10 +363,10 @@ feature -- Updating
 
 feature -- Account Registration	
 
-	register_account (a_username: READABLE_STRING_GENERAL; a_password: READABLE_STRING_GENERAL; a_email: READABLE_STRING_8)
+	register_account (a_username: READABLE_STRING_GENERAL; a_password: READABLE_STRING_GENERAL; a_email: READABLE_STRING_8; a_additional_values: detachable TABLE_ITERABLE [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL])
 			-- <Precursor>.
 		do
-			if attached web_api.register (a_username, a_password, a_email) as acc then
+			if attached web_api.register (a_username, a_password, a_email, a_additional_values) as acc then
 				is_guest := False
 				active_account := acc
 				guest_mode_ending_date := Void

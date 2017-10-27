@@ -39,6 +39,10 @@ feature {NONE} -- Creation
 					if attached resp.string_8_item ("_links|es:cloud|href") as v then
 						record_endpoint ("es:cloud", v)
 					end
+					if attached resp.string_8_item ("_links|esa:register|href") as v then
+						record_endpoint ("esa:register", v)
+					end
+
 				end
 			end
 		end
@@ -79,14 +83,48 @@ feature -- Errors
 
 feature -- Account: register
 
-	register (a_username, a_password: READABLE_STRING_GENERAL; a_email: READABLE_STRING_8): detachable ES_ACCOUNT
+	register (a_username, a_password: READABLE_STRING_GENERAL; a_email: READABLE_STRING_8; a_additional_values: detachable TABLE_ITERABLE [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL]): detachable ES_ACCOUNT
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			sess: like new_http_client_session
 			resp: like response
 		do
 			reset_error
-			if attached endpoint ("roc:register") as l_url then
+			if attached endpoint ("esa:register") as l_url then
+					-- Using Eiffel support system.
+				sess := new_http_client_session
+				if sess /= Void then
+					create ctx.make
+					ctx.add_form_parameter ("user_name", a_username)
+					ctx.add_form_parameter ("password", a_password)
+					ctx.add_form_parameter ("email", a_email)
+					ctx.add_form_parameter ("personal_information", "Registration submitted via API.")
+					if attached a_additional_values as tb then
+						across
+							tb as ic
+						loop
+							if not ctx.form_parameters.has (ic.key) then
+								ctx.add_form_parameter (ic.key, ic.item)
+							end
+						end
+					end
+					resp := response (sess.post (l_url, ctx, Void))
+					if not has_error then
+						if
+							attached resp.string_32_item ("status") as l_status and then
+							l_status.same_string_general ("succeed")
+						then
+							create Result.make (a_username)
+							if attached resp.string_8_item ("information") as l_info then
+								debug
+									print (l_info)
+								end
+							end
+						end
+					end
+				end
+			elseif attached endpoint ("roc:register") as l_url then
+					-- Using ROC CMS system.
 				sess := new_http_client_session
 				if sess /= Void then
 					create ctx.make

@@ -61,9 +61,37 @@ feature -- Access
 	url (a_path: READABLE_STRING_8; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT): STRING_8
 			-- Url computed from Current and `ctx' data.
 		do
-			Result := base_url + a_path
+			if is_absolute_url (a_path) then
+					-- Is Absolute url
+				Result := a_path
+			else
+				Result := base_url + a_path
+			end
 			if ctx /= Void then
 				ctx.append_query_parameters_to_url (Result)
+			end
+		end
+
+	is_absolute_url (s: READABLE_STRING_GENERAL): BOOLEAN
+			-- Does `s` represent an absolute url?
+		local
+			i, pos: INTEGER
+			sch: READABLE_STRING_GENERAL
+		do
+			pos := s.substring_index ("://", 1)
+			if pos > 0 then
+				sch := s.head (pos - 1)
+				if not sch.is_whitespace then
+					from
+						i := 1
+						Result := True
+					until
+						not Result or i > sch.count
+					loop
+						Result := sch[i].is_alpha_numeric
+						i := i + 1
+					end
+				end
 			end
 		end
 

@@ -36,13 +36,13 @@ feature {NONE} -- Initialization
 			i := a_url.substring_index ("://", 1)
 			if i > 0 then
 				check
-					a_url.substring (1, i).same_string ("http")
-					or a_url.substring (1, i).same_string ("https")
+					a_url.head (i - 1).same_string ("http")
+					or a_url.head (i - 1).same_string ("https")
 				end
 				url := a_url
 			else
 				url := session.url (a_url, Void)
-			end			
+			end
 			headers := session.headers.twin
 			if ctx /= Void then
 				context := ctx

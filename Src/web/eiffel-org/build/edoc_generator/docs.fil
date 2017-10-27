@@ -18,7 +18,7 @@ class_declaration		|<!DOCTYPE html>%N%
 						%<meta name="generator" content="$generator$">%N%
 						%$html_meta$%
 						%<meta name="viewport" content="width=device-width%, initial-scale=1.0">%N%
-						%<link href="https://fonts.googleapis.com/css?family=Roboto:400%,400i%,500%%7CSource+Sans+Pro:400" rel="stylesheet">%N%
+						%<link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">%N%
 						%<title>$title$</title>%N%
 						%<link rel="stylesheet" href="$root$docs.css" type="text/css">%N%
 						%<script type="text/javascript" src="$root$goto.html"></script>%N%

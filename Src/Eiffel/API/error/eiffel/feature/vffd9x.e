@@ -2,9 +2,9 @@
 
 	description: "Error for a declaration of an instance-free variable attribute."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class VFFD9X
 
@@ -61,8 +61,6 @@ feature {NONE} -- Output
 
 	trace_single_line (t: TEXT_FORMATTER)
 			-- <Precursor>
-		local
-			u: UTF_CONVERTER
 		do
 			format_elements (t, locale.translation_in_context ("The variable attribute {1} is declared as instance-free.", "compiler.error"),
 				<<agent e_feature.append_name>>)

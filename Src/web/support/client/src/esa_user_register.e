@@ -18,85 +18,85 @@ feature {NONE} -- Initialization
 		do
 				-- default values.
 			question := 1
-			create {STRING_32}answer.make_from_string ("Earth")
+			create {IMMUTABLE_STRING_32} answer.make_from_string ("Earth")
 		end
 
 feature -- Access
 
-	first_name: detachable READABLE_STRING_32
-			-- Current first name, if any.
-
-	last_name: detachable READABLE_STRING_32
-			-- Current last name, if any.
-
-	user_name: detachable READABLE_STRING_32
+	user_name: detachable IMMUTABLE_STRING_32
 			-- Current user name, if any.
 
-	email: detachable READABLE_STRING_32
+	email: detachable IMMUTABLE_STRING_32
 			-- Current email, if any.
 
-	password: detachable READABLE_STRING_32
+	password: detachable IMMUTABLE_STRING_32
 			-- Current password, if any.
 
-	check_password: detachable READABLE_STRING_32
+	check_password: detachable IMMUTABLE_STRING_32
 			-- Current check password, if any.
+
+	first_name: detachable IMMUTABLE_STRING_32
+			-- Current first name, if any.
+
+	last_name: detachable IMMUTABLE_STRING_32
+			-- Current last name, if any.
 
 feature  {ESA_SUPPORT_USER_REGISTER} -- Defautl properties
 
 	question: INTEGER
 			-- Current selected question.
 
-	answer: READABLE_STRING_32
+	answer: IMMUTABLE_STRING_32
 			-- Current answer, if any.
 
 feature -- Change Element
 
-	set_first_name (a_first_name: like first_name)
+	set_first_name (a_first_name: READABLE_STRING_GENERAL)
 			-- Set `first_name' with `a_first_name'.
 		do
-			first_name := a_first_name
+			create first_name.make_from_string_general (a_first_name)
 		ensure
-			first_name_set: first_name = a_first_name
+			first_name_set: attached first_name as v and then a_first_name.same_string (v)
 		end
 
-	set_last_name (a_last_name: like last_name)
+	set_last_name (a_last_name: READABLE_STRING_GENERAL)
 			-- Set `last_name' with `a_last_name'.
 		do
-			last_name := a_last_name
+			create last_name.make_from_string_general (a_last_name)
 		ensure
-			last_name_set: last_name = a_last_name
+			last_name_set: attached last_name as v and then a_last_name.same_string (v)
 		end
 
-	set_user_name (a_user_name: like user_name)
+	set_user_name (a_user_name: READABLE_STRING_GENERAL)
 			-- Set `user_name' with `a_user_name'.
 		do
-			user_name := a_user_name
+			create user_name.make_from_string_general (a_user_name)
 		ensure
-			user_name_set: user_name = a_user_name
+			user_name_set: attached user_name as v and then a_user_name.same_string (v)
 		end
 
-	set_email (a_email: like email)
+	set_email (a_email: READABLE_STRING_GENERAL)
 			-- Set `email' with `a_email'.
 		do
-			email := a_email
+			create email.make_from_string_general (a_email)
 		ensure
-			email_set: email = a_email
+			email_set: attached email as v and then a_email.same_string (v)
 		end
 
-	set_password (a_password: like password)
+	set_password (a_password: READABLE_STRING_GENERAL)
 			-- Set `password' with `a_password'.
 		do
-			password := a_password
+			create password.make_from_string_general (a_password)
 		ensure
-			password_set: password = a_password
+			password_set: attached password as v and then a_password.same_string (v)
 		end
 
-	set_check_password (a_check_password: like check_password)
+	set_check_password (a_check_password: READABLE_STRING_GENERAL)
 			-- Set `check_password' with `a_check_password'.
 		do
-			check_password := a_check_password
+			create check_password.make_from_string_general (a_check_password)
 		ensure
-			check_password_set: check_password = a_check_password
+			check_password_set: attached check_password as v and then a_check_password.same_string (v)
 		end
 
 end

@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			l_width: INTEGER
 			w: EV_WIDGET
 			tf_password: EV_PASSWORD_FIELD
-			tf_username, tf_email: EV_TEXT_FIELD
+			tf_username, tf_email, tf_firstname, tf_lastname: EV_TEXT_FIELD
 			but: EV_BUTTON
 			cbut: EV_CHECK_BUTTON
 			l_focus: detachable EV_WIDGET
@@ -115,6 +115,8 @@ feature {NONE} -- Initialization
 			vb_register.set_padding_width (layout_constants.default_padding_size)
 			create tf_username
 			create tf_password
+			create tf_firstname
+			create tf_lastname
 			create tf_email
 			w := tf_username
 			w.set_minimum_width (l_width)
@@ -122,10 +124,24 @@ feature {NONE} -- Initialization
 			w := tf_password
 			w.set_minimum_width (l_width)
 			append_label_and_item_horizontally (interface_names.l_password, w, vb_register)
+
+			w := tf_firstname
+			w.set_minimum_width (l_width)
+			append_label_and_item_horizontally (interface_names.l_first_name, w, vb_register)
+			w := tf_lastname
+			w.set_minimum_width (l_width)
+			append_label_and_item_horizontally (interface_names.l_last_name, w, vb_register)
+
 			w := tf_email
 			w.set_minimum_width (l_width)
 			append_label_and_item_horizontally (interface_names.l_email, w, vb_register)
-			create but.make_with_text_and_action (interface_names.b_register, agent process_account_registration (new_gui_form (<<["user_name", tf_username], ["password", tf_password], ["email", tf_email]>>)))
+			create but.make_with_text_and_action (interface_names.b_register, agent process_account_registration (new_gui_form (<<
+						["user_name", tf_username],
+						["password", tf_password],
+						["first_name", tf_firstname],
+						["last_name", tf_lastname],
+						["email", tf_email]
+					>>)))
 			layout_constants.set_default_width_for_button (but)
 			append_label_and_item_horizontally ("", but, vb_register)
 			create lnk.make_with_text (interface_names.l_login_with_existing_account)
@@ -326,12 +342,19 @@ feature -- UI callbacks
 	process_account_registration (a_form: like new_gui_form)
 		local
 			l_style: detachable EV_POINTER_STYLE
+			tb: STRING_TABLE [READABLE_STRING_GENERAL]
 		do
 			if
 				attached gui_form_string_item ("user_name", a_form) as u and then
 				attached gui_form_string_item ("password", a_form) as p and then
 				attached gui_form_string_item ("email", a_form) as l_email
 			then
+				create tb.make (0)
+				across
+					a_form as ic
+				loop
+					tb.force (ic.item.text, ic.key)
+				end
 				l_style := widget.pointer_style
 				widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
 
@@ -340,7 +363,7 @@ feature -- UI callbacks
 					cld.is_available
 				then
 					if l_email.is_valid_as_string_8 then
-						cld.register_account (u, p, l_email.to_string_8)
+						cld.register_account (u, p, l_email.to_string_8, tb)
 					end
 					if attached cld.active_account as acc then
 						on_user_registered (acc)

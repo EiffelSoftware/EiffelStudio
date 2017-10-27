@@ -38,8 +38,7 @@ feature -- Operation
 
 	update
 		local
-			l_acc_menu_item,
-			l_command_menu_item: EB_COMMAND_MENU_ITEM
+			l_acc_menu_item: EB_COMMAND_MENU_ITEM
 			mi: EV_MENU_ITEM
 			t: EV_TIMEOUT
 			acc: detachable ES_ACCOUNT

@@ -54,6 +54,7 @@ feature -- CMS modules
 			a_setup.register_module (create {CMS_SESSION_AUTH_MODULE}.make)
 
 				-- Webapi Auth
+			a_setup.register_module (create {LOGIN_WITH_ESA_MODULE}.make)
 			a_setup.register_module (create {JWT_AUTH_MODULE}.make)
 
 				-- EiffelStudio

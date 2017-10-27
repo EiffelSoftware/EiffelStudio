@@ -149,23 +149,17 @@ feature -- Access: user
 			sql_finalize_query (select_user_by_password_token)
 		end
 
-	is_valid_credential (a_auth_login, a_auth_password: READABLE_STRING_GENERAL): BOOLEAN
-		local
-			l_security: SECURITY_PROVIDER
+	user_with_credential (a_user_name, a_password: READABLE_STRING_GENERAL): detachable CMS_USER
 		do
-			if attached user_salt (a_auth_login) as l_hash then
-				if attached user_by_name (a_auth_login) as l_user then
-					create l_security
-					if
-						attached l_user.hashed_password as l_hashed_password and then
-					   	l_security.password_hash (a_auth_password, l_hash).is_case_insensitive_equal (l_hashed_password)
-					then
-						Result := True
-					else
-						write_information_log (generator + ".is_valid_credential User: wrong username or password" )
-					end
-				else
-					write_information_log (generator + ".is_valid_credential User:" + a_auth_login + "does not exist" )
+			if
+				attached user_by_name (a_user_name) as l_user and then
+				attached user_salt (a_user_name) as l_hash
+			then
+				if
+					attached l_user.hashed_password as l_hashed_password and then
+				   	(create {SECURITY_PROVIDER}).password_hash (a_password, l_hash).is_case_insensitive_equal (l_hashed_password)
+				then
+					Result := l_user
 				end
 			end
 		end
@@ -1064,23 +1058,19 @@ feature {NONE} -- User Password Recovery
 
 feature -- Acess: Temp users
 
-	is_valid_temp_user_credential (a_auth_login, a_auth_password: READABLE_STRING_GENERAL): BOOLEAN
-		local
-			l_security: SECURITY_PROVIDER
+	temp_user_with_credential (a_user_name, a_password: READABLE_STRING_GENERAL): detachable CMS_TEMP_USER
+			-- Temp user validating the credential `a_user_name` and `a_password`, if any.
+			-- note: can be used to check if credentials are valid.
 		do
-			if attached temp_user_salt (a_auth_login) as l_hash then
-				if attached temp_user_by_name (a_auth_login) as l_user then
-					create l_security
-					if
-						attached l_user.hashed_password as l_hashed_password and then
-					   	l_security.password_hash (a_auth_password, l_hash).is_case_insensitive_equal (l_hashed_password)
-					then
-						Result := True
-					else
-						write_information_log (generator + ".is_valid_temp_user_credential User: wrong username or password" )
-					end
-				else
-					write_information_log (generator + ".is_valid_temp_user_credential User:" + a_auth_login + "does not exist" )
+			if
+				attached temp_user_by_name (a_user_name) as l_user and then
+				attached temp_user_salt (a_user_name) as l_hash
+			then
+				if
+					attached l_user.hashed_password as l_hashed_password and then
+				   	(create {SECURITY_PROVIDER}).password_hash (a_password, l_hash).is_case_insensitive_equal (l_hashed_password)
+				then
+					Result := l_user
 				end
 			end
 		end

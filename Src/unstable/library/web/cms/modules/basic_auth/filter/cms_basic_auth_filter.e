@@ -35,8 +35,7 @@ feature -- Basic operations
 				attached l_auth.password as l_auth_password
 			then
 				if
-					api.user_api.is_valid_credential (l_auth_login, l_auth_password) and then
-					attached api.user_api.user_by_name (l_auth_login) as l_user
+					attached api.user_api.user_with_credential (l_auth_login, l_auth_password) as l_user
 				then
 					if api.user_has_permission (l_user, {CMS_BASIC_AUTH_MODULE}.perm_use_basic_auth) then
 						debug ("refactor_fixme")

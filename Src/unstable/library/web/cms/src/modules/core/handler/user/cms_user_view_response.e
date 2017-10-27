@@ -52,7 +52,7 @@ feature -- Process
 				attached associated_user as l_user
 			then
 				if
-					api.has_permission ("view user")
+					api.has_permission ("view users")
 					or l_user.same_as (user) -- Same user
 				then
 					f := new_view_form (l_user, request.request_uri, "view-user")

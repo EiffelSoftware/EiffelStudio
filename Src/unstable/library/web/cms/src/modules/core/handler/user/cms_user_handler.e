@@ -83,9 +83,9 @@ feature -- HTTP Methods
 		local
 			l_user: detachable CMS_USER
 		do
-			if api.has_permission ("view user") then
-					-- Display existing node
+			if api.has_permission ("view users") then
 				l_user := user_path_parameter (req)
+					-- Display existing node
 				if
 					l_user /= Void
 				then

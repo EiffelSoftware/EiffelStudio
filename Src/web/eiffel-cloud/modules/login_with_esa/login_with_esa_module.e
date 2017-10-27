@@ -74,7 +74,7 @@ feature {CMS_API} -- Module management
 --				if l_sql_storage.has_error then
 --					api.logger.put_error ("Could not initialize database for module [" + name + "]", generating_type)
 --				else
---					Precursor {CMS_MODULE} (api)
+					Precursor {CMS_MODULE} (api)
 --				end
 --			end
 			if

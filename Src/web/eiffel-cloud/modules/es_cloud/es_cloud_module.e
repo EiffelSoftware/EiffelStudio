@@ -56,10 +56,13 @@ feature {CMS_API} -- Module Initialization
 
 	initialize (api: CMS_API)
 			-- <Precursor>
+		local
+			l_es_cloud_api: like es_cloud_api
 		do
 			Precursor (api)
 			if es_cloud_api = Void then
-				create es_cloud_api.make (api)
+				create l_es_cloud_api.make (api)
+				es_cloud_api := l_es_cloud_api
 			end
 		end
 
@@ -80,18 +83,18 @@ feature {CMS_API} -- Module management
 					Precursor {CMS_MODULE} (api)
 				end
 			end
-			create l_es_cloud_api.make (api)
-			es_cloud_api := l_es_cloud_api
-			create pl.make ("free")
-			pl.set_title ("Free")
-			l_es_cloud_api.save_plan (pl)
+			if is_installed (api) then
+				create l_es_cloud_api.make (api)
+				es_cloud_api := l_es_cloud_api
+				create pl.make ("free")
+				pl.set_title ("Free")
+				l_es_cloud_api.save_plan (pl)
 
-			if attached api.user_api.anonymous_user_role as l_anonymous_role then
-					-- By default, add extra permissions to anonymous role.
-				l_anonymous_role.add_permission ("account register")
-				l_anonymous_role.add_permission ("use basic_auth")
-				l_anonymous_role.add_permission ("use jwt_auth")
-				api.user_api.save_user_role (l_anonymous_role)
+				if attached api.user_api.anonymous_user_role as l_anonymous_role then
+						-- By default, add extra permissions to anonymous role.
+					l_anonymous_role.add_permission ("use jwt_auth")
+					api.user_api.save_user_role (l_anonymous_role)
+				end
 			end
 		end
 

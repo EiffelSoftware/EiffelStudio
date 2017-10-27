@@ -23,12 +23,18 @@ feature -- Access
 
 feature -- Element change
 
-	set_personal_information (a_personal_information: like personal_information)
-			-- Assign `personal_information' with `a_personal_information'.
+	set_personal_information (a_personal_information: detachable READABLE_STRING_GENERAL)
+			-- Assign `personal_information` with `a_personal_information`.
 		do
-			personal_information := a_personal_information
+			if a_personal_information = Void then
+				personal_information := Void
+			else
+				personal_information := a_personal_information.as_string_32
+			end
 		ensure
-			personal_information_assigned: personal_information = a_personal_information
+			personal_information_assigned: a_personal_information /= Void 
+					implies (attached personal_information as inf and then 
+								a_personal_information.same_string (inf))
 		end
 
 	set_salt (a_salt: like salt)

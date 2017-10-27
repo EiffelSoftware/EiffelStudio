@@ -70,9 +70,16 @@ feature -- Access
 			password: Result /= Void implies (Result.hashed_password /= Void and Result.password = Void)
 		end
 
-	is_valid_credential (a_u, a_p: READABLE_STRING_GENERAL): BOOLEAN
-			-- Does account with username `a_username' and password `a_password' exist?
+	user_with_credential (a_user_name, a_password: READABLE_STRING_GENERAL): detachable CMS_USER
+			-- User validating the credential `a_user_name` and `a_password`, if any.
+			-- note: can be used to check if credentials are valid.
 		deferred
+		end
+
+	is_valid_credential (a_username, a_password: READABLE_STRING_GENERAL): BOOLEAN
+			-- Does account with username `a_username' and password `a_password' exist?
+		do
+			Result := user_with_credential (a_username, a_password) /= Void
 		end
 
 	users_count: INTEGER
@@ -212,9 +219,16 @@ feature -- Change: User password recovery
 
 feature -- Access: Temp Users
 
-	is_valid_temp_user_credential (a_u, a_p: READABLE_STRING_GENERAL): BOOLEAN
-			-- Does temp account with username `a_username' and password `a_password' exist?
+	temp_user_with_credential (a_user_identifier, a_password: READABLE_STRING_GENERAL): detachable CMS_TEMP_USER
+			-- Temp user validating the credential `a_user_identifier` and `a_password`, if any.
+			-- note: can be used to check if credentials are valid.
 		deferred
+		end
+
+	is_valid_temp_user_credential (a_username, a_password: READABLE_STRING_GENERAL): BOOLEAN
+			-- Does temp account with username `a_username' and password `a_password' exist?
+		do
+			Result := temp_user_with_credential (a_username, a_password) /= Void
 		end
 
 	temp_users_count: INTEGER

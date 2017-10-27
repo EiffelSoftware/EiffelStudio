@@ -15,7 +15,7 @@ create {CMS_AUTHENTICATION_MODULE}
 
 feature -- Token Generation
 
-	register_user (u: CMS_TEMP_USER; a_email: READABLE_STRING_8; a_personal_information: READABLE_STRING_8)
+	register_user (u: CMS_TEMP_USER; a_email: READABLE_STRING_8; a_personal_information: READABLE_STRING_GENERAL)
 		local
 			l_user_api: CMS_USER_API
 			l_url_activate: STRING
@@ -24,7 +24,11 @@ feature -- Token Generation
 			es: CMS_AUTHENTICATION_EMAIL_SERVICE
 		do
 			l_user_api := cms_api.user_api
+			
+				-- New temp user
+			u.set_personal_information (a_personal_information)
 			l_user_api.new_temp_user (u)
+
 				-- Create activation token
 			l_token := new_token
 			l_user_api.new_activation (l_token, u.id)

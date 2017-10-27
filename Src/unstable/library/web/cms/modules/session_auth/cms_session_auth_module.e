@@ -197,38 +197,17 @@ feature {NONE} -- Implementation: routes
 			then
 				l_username_or_email := p_username.value
 				l_password := p_password.value
-				l_user := api.user_api.user_by_name (l_username_or_email)
-				if l_user = Void then
-					l_user := api.user_api.user_by_email (l_username_or_email)
-				end
-				if l_user = Void then
-					l_tmp_user := api.user_api.temp_user_by_name (l_username_or_email)
-					if l_tmp_user = Void then
-						l_tmp_user := api.user_api.temp_user_by_email (l_username_or_email)
-					end
-					if
-						l_tmp_user /= Void and then
-						api.user_api.is_valid_temp_user_credential (l_tmp_user.name, l_password)
-					then
+				l_user := api.user_api.user_with_credential (l_username_or_email, l_password)
+				if l_user /= Void then
+					if attached {CMS_TEMP_USER} l_user as l_temp_user then
 						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 						if attached smarty_template_login_block (req, Current, "login", api) as l_tpl_block then
 							l_tpl_block.set_value (l_username_or_email, "username")
-							l_tpl_block.set_value ("Error: Inactive account (or not yet validated)!", "error")
+							l_tpl_block.set_value ("Error: the account is inactive, or not yet validated!", "error")
 							r.add_block (l_tpl_block, "content")
 						end
 					else
-						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-						if attached smarty_template_login_block (req, Current, "login", api) as l_tpl_block then
-							l_tpl_block.set_value (l_username_or_email, "username")
-							l_tpl_block.set_value ("Wrong username or password ", "error")
-							r.add_block (l_tpl_block, "content")
-						end
-					end
-				else
-					l_username := l_user.name
-					if api.user_api.is_valid_credential (l_username, l_password) then
 						a_session_api.process_user_login (l_user, req, res)
-
 						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 						if
 							attached {WSF_STRING} req.item ("destination") as p_destination and then
@@ -239,13 +218,13 @@ feature {NONE} -- Implementation: routes
 						else
 							r.set_redirection ("")
 						end
-					else
-						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-						if attached smarty_template_login_block (req, Current, "login", api) as l_tpl_block then
-							l_tpl_block.set_value (l_username_or_email, "username")
-							l_tpl_block.set_value ("Wrong username or password ", "error")
-							r.add_block (l_tpl_block, "content")
-						end
+					end
+				else
+					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+					if attached smarty_template_login_block (req, Current, "login", api) as l_tpl_block then
+						l_tpl_block.set_value (l_username_or_email, "username")
+						l_tpl_block.set_value ("Wrong username or password ", "error")
+						r.add_block (l_tpl_block, "content")
 					end
 				end
 				r.execute

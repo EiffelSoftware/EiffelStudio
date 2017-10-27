@@ -41,7 +41,7 @@ feature -- Access: user
 		do
 		end
 
-	is_valid_credential (l_auth_login, l_auth_password: READABLE_STRING_GENERAL): BOOLEAN
+	user_with_credential (a_user_name, a_password: READABLE_STRING_GENERAL): detachable CMS_USER
 		do
 		end
 
@@ -147,7 +147,8 @@ feature -- Change: User password recovery
 
 feature -- Access: Users
 
-	is_valid_temp_user_credential (l_auth_login, l_auth_password: READABLE_STRING_GENERAL): BOOLEAN
+	temp_user_with_credential (a_user_name, a_password: READABLE_STRING_GENERAL): detachable CMS_TEMP_USER
+			-- <Precursor>
 		do
 		end
 

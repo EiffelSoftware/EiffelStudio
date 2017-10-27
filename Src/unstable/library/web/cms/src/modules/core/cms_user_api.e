@@ -29,6 +29,8 @@ feature {NONE} -- Initialization
 			Precursor {CMS_MODULE_API}
 			Precursor {CMS_USER_PROFILE_API}
 			user_storage := storage
+			create credential_validations.make_caseless (1)
+			register_credential_validation (create {CMS_USER_CREDENTIAL_CORE_VALIDATION}.make (cms_api, user_storage))
 		end
 
 feature -- Storage
@@ -233,12 +235,35 @@ feature -- Change User
 			error_handler.append (user_storage.error_handler)
 		end
 
+feature -- Credential validation
+
+	register_credential_validation (a_validation: CMS_USER_CREDENTIAL_VALIDATION)
+		do
+			credential_validations.force (a_validation, a_validation.id)
+		end
+
+	credential_validations: STRING_TABLE [CMS_USER_CREDENTIAL_VALIDATION]
+			-- Credential validation items, used by `user_validating_credential`.
+
 feature -- Status report
 
-	is_valid_credential (a_auth_login, a_auth_password: READABLE_STRING_GENERAL): BOOLEAN
-				-- Is the credentials `a_auth_login' and `a_auth_password' valid?
+	user_with_credential (a_user_identifier, a_password: READABLE_STRING_GENERAL): detachable CMS_USER
+			-- User validating the credential `a_user_identifier` and `a_password`, if any.
+			-- note: can be used to check if credentials are valid.
 		do
-			Result := user_storage.is_valid_credential (a_auth_login, a_auth_password)
+			across
+				credential_validations as ic
+			until
+				Result /= Void
+			loop
+				Result := ic.item.user_with_credential (a_user_identifier, a_password)
+			end
+		end
+
+	is_valid_credential (a_user_identifier: READABLE_STRING_GENERAL; a_password: READABLE_STRING_GENERAL): BOOLEAN
+				-- Is the credentials `a_user_identifier' and `a_password' valid?
+		do
+			Result := user_with_credential (a_user_identifier, a_password) /= Void
 		end
 
 	user_has_permission (a_user: detachable CMS_USER; a_permission: detachable READABLE_STRING_GENERAL): BOOLEAN
@@ -501,10 +526,17 @@ feature -- User status
 
 feature -- Access - Temp User
 
-	is_valid_temp_user_credential (a_auth_login, a_auth_password: READABLE_STRING_GENERAL): BOOLEAN
-				-- Is the credentials `a_auth_login' and `a_auth_password' valid?
+	temp_user_with_credential (a_user_identifier, a_password: READABLE_STRING_GENERAL): detachable CMS_USER
+			-- Temporary user validating the credential `a_user_identifier` and `a_password`, if any.
+			-- note: can be used to check if credentials are valid.
 		do
-			Result := user_storage.is_valid_temp_user_credential (a_auth_login, a_auth_password)
+			Result := user_storage.temp_user_with_credential (a_user_identifier, a_password)
+		end
+
+	is_valid_temp_user_credential (a_user_name: READABLE_STRING_GENERAL; a_password: READABLE_STRING_GENERAL): BOOLEAN
+				-- Is the credentials `a_user_name' and `a_password' valid?
+		do
+			Result := temp_user_with_credential (a_user_name, a_password) /= Void
 		end
 
 	temp_users_count: INTEGER

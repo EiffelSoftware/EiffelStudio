@@ -79,8 +79,10 @@ feature -- Access
 			Result.force ("account activate")
 			Result.force ("account reject")
 			Result.force ("account reactivate")
+			Result.force ("edit own account")
 			Result.force ("change own username")
-			Result.force ("view user")
+			Result.force ("change own password")
+			Result.force ("view users")
 		end
 
 	auth_api: detachable CMS_AUTHENTICATION_API
@@ -303,9 +305,11 @@ feature -- Handler
 				lnk.set_weight (1)
 				r.add_to_primary_tabs (lnk)
 
-				create lnk.make ("Edit", "account/edit")
-				lnk.set_weight (2)
-				r.add_to_primary_tabs (lnk)
+				if r.has_permission ("edit own account") then
+					create lnk.make ("Edit", "account/edit")
+					lnk.set_weight (2)
+					r.add_to_primary_tabs (lnk)
+				end
 			end
 
 			a_auth_api.cms_api.hooks.invoke_form_alter (f, Void, r)
@@ -327,51 +331,59 @@ feature -- Handler
 			lnk: CMS_LOCAL_LINK
 			l_form: CMS_FORM
 		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
-			create b.make_empty
-			l_user := r.user
-			create l_form.make (r.location, edit_account_form_id)
-			if attached smarty_template_block (Current, "account_edit", a_auth_api.cms_api) as l_tpl_block then
-				l_tpl_block.set_weight (-10)
-				r.add_block (l_tpl_block, "content")
-			else
-				debug ("cms")
-					r.add_warning_message ("Error with block [resources_page]")
+			if a_auth_api.cms_api.has_permission ("edit own account") then
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
+				create b.make_empty
+				l_user := r.user
+				create l_form.make (r.location, edit_account_form_id)
+				if attached smarty_template_block (Current, "account_edit", a_auth_api.cms_api) as l_tpl_block then
+					l_tpl_block.set_weight (-10)
+					r.add_block (l_tpl_block, "content")
+				else
+					debug ("cms")
+						r.add_warning_message ("Error with block [resources_page]")
+					end
+					-- Build CMS form...
 				end
-				-- Build CMS form...
-			end
-			create lnk.make ("View", "account/")
-			lnk.set_weight (1)
-			r.add_to_primary_tabs (lnk)
+				create lnk.make ("View", "account/")
+				lnk.set_weight (1)
+				r.add_to_primary_tabs (lnk)
 
-			create lnk.make ("Edit", "account/edit")
-			lnk.set_weight (2)
-			r.add_to_primary_tabs (lnk)
+				create lnk.make ("Edit", "account/edit")
+				lnk.set_weight (2)
+				r.add_to_primary_tabs (lnk)
 
-			if
-				r.has_permission ("change own username") and then
-				attached new_change_username_form (r) as f
-			then
-				f.append_to_html (r.wsf_theme, b)
-			end
-			if attached new_change_profile_name_form (r) as f then
-				f.append_to_html (r.wsf_theme, b)
-			end
-			if attached new_change_password_form (r) as f then
-				f.append_to_html (r.wsf_theme, b)
-			end
-			if attached new_change_email_form (r) as f then
-				f.append_to_html (r.wsf_theme, b)
-			end
+				if
+					r.has_permission ("change own username") and then
+					attached new_change_username_form (r) as f
+				then
+					f.append_to_html (r.wsf_theme, b)
+				end
+				if attached new_change_profile_name_form (r) as f then
+					f.append_to_html (r.wsf_theme, b)
+				end
 
-			l_form.append_to_html (r.wsf_theme, b)
+				if
+					r.has_permission ("change own password") and then
+					attached new_change_password_form (r) as f
+				then
+					f.append_to_html (r.wsf_theme, b)
+				end
+				if attached new_change_email_form (r) as f then
+					f.append_to_html (r.wsf_theme, b)
+				end
 
-			r.set_main_content (b)
+				l_form.append_to_html (r.wsf_theme, b)
 
-			if l_user = Void then
-				r.set_redirection ("account")
+				r.set_main_content (b)
+
+				if l_user = Void then
+					r.set_redirection ("account")
+				end
+				r.execute
+			else
+				a_auth_api.cms_api.response_api.send_access_denied ("Can not edit your acocunt", req, res)
 			end
-			r.execute
 		end
 
 	handle_login (a_auth_api: CMS_AUTHENTICATION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -486,14 +498,12 @@ feature -- Handler
 								--| reCaptcha is not setup, so no verification
 							l_captcha_passed := True
 						end
-						if not l_exist then
+						if l_captcha_passed and then not l_exist then
 								-- New temp user
 							create u.make (l_name)
 							u.set_email (l_email)
 							u.set_password (l_password)
 							u.set_personal_information (l_personal_information)
-							l_user_api.new_temp_user (u)
-
 							a_auth_api.register_user (u, l_email, l_personal_information)
 						else
 							r.set_value (l_name, "name")

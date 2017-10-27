@@ -131,6 +131,7 @@ feature -- Security
 			Result.force ("admin path_alias")
 			Result.force ("edit path_alias")
 			Result.force ("use access_token")
+			Result.force ("view users")
 		end
 
 feature {CMS_EXECUTION} -- Administration
@@ -179,7 +180,6 @@ feature -- Hook
 				end
 			end
 		end
-
 
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

@@ -1,5 +1,5 @@
 body {
-	font-family: "Source Sans Pro",Sans-Serif;
+	font-family: "PT Sans", sans-serif;
 }
 
 pre {
@@ -7,7 +7,9 @@ pre {
 	-moz-tab-size: 3;
 	-ms-tab-size: 3;
 	-o-tab-size: 3;
-	font-family: "Roboto",Sans-Serif;
+	font-family: Tahoma, sans-serif;
+	line-height: 1.35;
+	font-size: 13.6px;
 	clear: both;
 }
 
@@ -22,17 +24,16 @@ a:hover {
 
 .eclass {
 	color: blue;
-	font-style: italic;
 }
 
 .neclass {
 	color: black;
-	font-style: italic;
 }
 
 .ekeyword {
 	color: navy;
-	font-weight: 500;
+	font-weight: bold;
+	font-size: 90%;
 }
 
 .esymbol {
@@ -65,12 +66,10 @@ a:hover {
 
 .efeature {
 	color: darkgreen;
-	font-style: italic;
 }
 
 .nefeature {
 	color: black;
-	font-style: italic;
 }
 
 .ecomment {
@@ -80,17 +79,14 @@ a:hover {
 
 .elocal, .equoted {
 	color: RoyalBlue;
-	font-style: italic;
 }
 
 .ereserved {
 	color: darkgreen;
-	font-style: italic;
 	font-weight: bold;
 }
 
 .egeneric {
-	font-style: italic;
 	color: dodgerblue;
 }
 

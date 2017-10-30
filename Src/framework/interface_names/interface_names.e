@@ -2691,7 +2691,10 @@ feature -- Startup pages
 	l_agree_and_continue_with_gpl: STRING_32 do Result := locale.translation ("I agree and continue with GPL Edition") end
 	l_purchase_enterprise_edition: STRING_32 do Result := locale.translation ("Purchase Enterprise edition") end
 	l_login_with_credentials: STRING_32 do Result := locale.translation ("Login with credentials") end
+
 	l_user_name: STRING_32 do Result := locale.translation ("User Name") end
+	l_first_name: STRING_32 do Result := locale.translation ("First Name") end
+	l_last_name: STRING_32 do Result := locale.translation ("Last Name") end
 	l_password: STRING_32 do Result := locale.translation ("Password") end
 	l_email: STRING_32 do Result := locale.translation ("Email") end
 

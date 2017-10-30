@@ -357,7 +357,7 @@ feature -- Modification
 		local
 			new_options: like options
 		do
-			settings.merge (other.settings)
+			internal_settings.merge (other.settings)
 			new_options := other.options.twin
 			new_options.merge (options)
 			internal_options := new_options
@@ -435,7 +435,7 @@ invariant
 	internal_settings_attached: attached internal_settings
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -203,21 +203,25 @@ feature {NONE} -- Welcome dialog
 			pg: ES_STARTUP_PAGE
 			first_window: EB_DEVELOPMENT_WINDOW
 			win: EV_WINDOW
-			w,h: INTEGER
 		do
 			first_window := window_manager.last_created_window
 			check
 				first_window_not_void: first_window /= Void
 			end
 			win := first_window.window
-			w := win.width - 50
-			h := win.height - 50
 
 			create pg.make
 			pg.set_quit_action (agent do (create {EXCEPTIONS}).die (0) end)
 			pg.set_next_action (agent load_interface)
-			pg.dialog.set_position (win.x_position + 25, win.y_position + 25)
-			pg.dialog.set_size (w, h)
+			pg.dialog.set_size (100, 100)
+			pg.dialog.show_actions.extend_kamikaze (agent (i_dlg: EV_DIALOG; i_win: EV_WINDOW)
+					do
+						i_dlg.set_position (
+								i_win.x_position + (i_win.width - i_dlg.width) // 2,
+								i_win.y_position + (i_win.height - i_dlg.height) // 2
+							)
+					end(pg.dialog, win)
+				)
 			pg.start (win)
 		end
 

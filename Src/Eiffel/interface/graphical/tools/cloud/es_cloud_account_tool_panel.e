@@ -124,7 +124,7 @@ feature {NONE} -- Action handlers
 			s: STRING
 			l_dbg: BOOLEAN
 		do
-			l_dbg := True
+			l_dbg := False
 			b := main_box
 			b.wipe_out
 			if attached es_cloud_s.service as cld then
@@ -264,7 +264,6 @@ feature {NONE} -- Action handlers
 					b.extend (lab)
 					b.disable_item_expand (lab)
 				else
-					on_cloud_available (False)
 					create lab.make_with_text ("Not available, please try again later!")
 					b.extend (lab)
 					create but.make_with_text_and_action ("Retry", agent update)

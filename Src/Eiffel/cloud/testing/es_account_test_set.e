@@ -15,10 +15,14 @@ feature -- Tests
 		local
 			api: ES_CLOUD_API
 			tok: detachable READABLE_STRING_8
+			tb: STRING_TABLE [READABLE_STRING_GENERAL]
 		do
 			create api.make ("http://localhost:9090/es")
 			if api.is_available then
-				if attached api.register ("foo", "bar", "foo@bar") as acc then
+				create tb.make (2)
+				tb.force ("Foo", "first_name")
+				tb.force ("Bar", "last_name")
+				if attached api.register ("foo", "bar", "foo@bar", Void) as acc then
 					-- First time ok, then error...
 				end
 

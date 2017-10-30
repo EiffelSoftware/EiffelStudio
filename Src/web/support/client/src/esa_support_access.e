@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			client.set_timeout (config.connection_timeout)
 			client.set_is_insecure (True)
 			client.set_any_auth_type
+			client.set_ciphers_setting ("TLSv1")
 		end
 
 	config: ESA_CLIENT_CONFIGURATION

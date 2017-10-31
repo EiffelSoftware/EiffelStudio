@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Factory to generate byte node structure"
 	author: ""
 	date: "$Date$"
@@ -157,13 +157,10 @@ feature -- Byte node generation
 		require
 			a_feat_not_void: a_feat /= Void
 			a_target_type_not_void: a_target_type /= Void
-		local
-			l_create_type: CREATE_TYPE
 		do
 			create Result
-			create l_create_type.make (a_target_type.actual_type)
 
-			Result.set_info (l_create_type)
+			Result.set_info (create {CREATE_TYPE}.make (a_target_type.actual_type))
 			Result.set_type (a_target_type)
 
 				-- Create call.

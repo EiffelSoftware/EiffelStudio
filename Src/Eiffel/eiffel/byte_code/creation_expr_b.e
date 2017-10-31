@@ -56,6 +56,7 @@ feature -- C code generation
 		local
 			l_type: CL_TYPE_A
 			has_creation_call: BOOLEAN
+			precursor_type: CL_TYPE_A
 		do
 			create Result
 			Result.set_is_active (is_active)
@@ -80,7 +81,7 @@ feature -- C code generation
 						has_creation_call := True
 					elseif not l_type.base_class.feature_of_rout_id (call.routine_id).is_empty then
 						has_creation_call := True
-						Result.call.set_precursor_type (l_type)
+						precursor_type := l_type
 					elseif is_simple_special_creation then
 							-- We cannot optimize the empty routine `{SPECIAL}.make' as otherwise
 							-- it will simply generate a normal creation in `generate' below.
@@ -94,6 +95,9 @@ feature -- C code generation
 				has_creation_call and then
 				attached {ROUTINE_B} call.enlarged_on (context.real_type (type)) as c
 			then
+				if attached precursor_type then
+					c.set_precursor_type (precursor_type)
+				end
 				Result.set_call (c)
 			end
 			Result.set_creation_instruction (is_creation_instruction)

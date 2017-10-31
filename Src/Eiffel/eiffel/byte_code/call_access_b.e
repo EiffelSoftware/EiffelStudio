@@ -131,7 +131,6 @@ feature -- Byte code generation
 		local
 			type_i: TYPE_A
 			class_type: CL_TYPE_A
-			basic_type: BASIC_A
 			buf: GENERATION_BUFFER
 		do
 			Precursor (reg)
@@ -142,17 +141,19 @@ feature -- Byte code generation
 				-- that we are currently performing a static access call on a feature
 				-- from a basic class. Assuming otherwise is not correct as you
 				-- cannot seriously inherit from a basic class.
-			if type_i.is_basic and then precursor_type = Void then
-				basic_type ?= type_i
-				if not is_feature_special (True, basic_type) then
-					buf := buffer
-					class_type := basic_type.reference_type
-						-- If an invariant is to be checked however, the
-						-- metamorphosis was already made by the invariant
-						-- checking routine.
-					basic_type.metamorphose (basic_register, reg, buf)
-					buf.put_character (';')
-				end
+			if
+				type_i.is_basic and then
+				precursor_type = Void and then
+				attached {BASIC_A} type_i as basic_type and then
+				not is_feature_special (True, basic_type)
+			then
+				buf := buffer
+				class_type := basic_type.reference_type
+					-- If an invariant is to be checked however, the
+					-- metamorphosis was already made by the invariant
+					-- checking routine.
+				basic_type.metamorphose (basic_register, reg, buf)
+				buf.put_character (';')
 			end
 		end
 
@@ -242,7 +243,6 @@ feature -- Byte code generation
 		local
 			type_i: TYPE_A
 			class_type: CL_TYPE_A
-			basic_type: BASIC_A
 			buf: GENERATION_BUFFER
 		do
 			type_i := context_type
@@ -253,25 +253,26 @@ feature -- Byte code generation
 				-- from a basic class. Assuming otherwise is not correct as you
 				-- cannot seriously inherit from a basic class.
 			if type_i.is_basic and then precursor_type = Void then
-				basic_type ?= type_i
-				if is_feature_special (True, basic_type) then
-					generate_special_feature (reg, basic_type)
-				elseif is_attribute then
-						-- The attribute is a value of a basic type.
-					generate_end (reg, basic_type)
-				else
-					buf := buffer
-						-- Generation of metamorphosis is enclosed between (), and
-						-- the expressions are separated with ',' which means the C
-						-- keeps only the last expression, i.e. the function call.
-						-- That way, statements like "s := i.out" are correctly
-						-- generated with a minimum of temporaries.
-					class_type := basic_type.reference_type
-						-- If an invariant is to be checked however, the
-						-- metamorphosis was already made by the invariant
-						-- checking routine.
-					generate_metamorphose_end (basic_register, reg,
-									class_type, basic_type, buf)
+				check attached {BASIC_A} type_i as basic_type then
+					if is_feature_special (True, basic_type) then
+						generate_special_feature (reg, basic_type)
+					elseif is_attribute then
+							-- The attribute is a value of a basic type.
+						generate_end (reg, basic_type)
+					else
+						buf := buffer
+							-- Generation of metamorphosis is enclosed between (), and
+							-- the expressions are separated with ',' which means the C
+							-- keeps only the last expression, i.e. the function call.
+							-- That way, statements like "s := i.out" are correctly
+							-- generated with a minimum of temporaries.
+						class_type := basic_type.reference_type
+							-- If an invariant is to be checked however, the
+							-- metamorphosis was already made by the invariant
+							-- checking routine.
+						generate_metamorphose_end (basic_register, reg,
+										class_type, basic_type, buf)
+					end
 				end
 			else
 				check attached {CL_TYPE_A} type_i as c then
@@ -473,7 +474,6 @@ feature {NONE} -- Separate call
 			buf: GENERATION_BUFFER
 			array_index: INTEGER_32
 			target_type: TYPE_A
-			rout_table: ROUT_TABLE
 			name: STRING
 			is_optimized_result: BOOLEAN
 		do
@@ -511,13 +511,12 @@ feature {NONE} -- Separate call
 				Eiffel_table.mark_used (routine_id)
 					-- Remember extern declaration
 				Extern_declarations.add_routine_table (name)
-			else
+			elseif attached {ROUT_TABLE} Eiffel_table.poly_table (routine_id) as rout_table then
 					-- The call is not polymorphic in the given context,
 					-- so the name can be hardwired, unless we access a
 					-- deferred feature in which case we have to be careful
 					-- and get the routine name of the first entry in the
 					-- routine table.
-				rout_table ?= Eiffel_table.poly_table (routine_id)
 				rout_table.goto_implemented (target_type, context.context_class_type)
 				if rout_table.is_implemented then
 					name := rout_table.feature_name
@@ -606,7 +605,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -637,4 +636,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CALL_ACCESS_B
+end

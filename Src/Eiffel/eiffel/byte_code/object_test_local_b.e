@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Access to an object-test local."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,6 +9,8 @@ class OBJECT_TEST_LOCAL_B
 
 inherit
 	LOCAL_B
+		rename
+			make as make_with_position
 		redefine
 			array_descriptor,
 			assigns_to,
@@ -107,7 +109,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

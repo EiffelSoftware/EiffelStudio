@@ -20,6 +20,21 @@ inherit
 			is_fast_as_local, is_predefined
 		end
 
+create
+	make
+
+feature {NONE} -- Creation
+
+	make (p: INTEGER)
+			-- Initialialize a local variable descriptor with `position' set to `p`.
+		require
+			valid_position: p > 0
+		do
+			position := p
+		ensure
+			position_set: position = p
+		end
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR)
@@ -158,7 +173,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

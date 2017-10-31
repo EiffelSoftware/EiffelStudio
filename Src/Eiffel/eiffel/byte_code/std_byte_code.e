@@ -2089,7 +2089,7 @@ feature {NONE} -- Convenience
 	local_var: LOCAL_B
 			-- Instance used to generate local variable name
 		once
-			create Result
+			create Result.make (1)
 		end
 
 feature {NONE} -- C code generation: wait conditions

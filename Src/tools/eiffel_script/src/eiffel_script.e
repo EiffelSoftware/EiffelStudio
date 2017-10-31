@@ -73,7 +73,7 @@ feature {NONE} -- Creation
 						attached l_launch_params.ecf_location as l_ecf
 					then
 						is_build_forced := l_launch_params.is_build_forced
-						launch (l_ecf, l_launch_params.args)
+						launch (l_ecf, l_launch_params.ecf_target, l_launch_params.args)
 					else
 						display_usage
 					end
@@ -82,7 +82,7 @@ feature {NONE} -- Creation
 						attached {EIFFEL_SCRIPT_BUILD_PARAMETERS} params as l_build_params and then
 						attached l_build_params.ecf_location as l_ecf
 					then
-						build (l_ecf, l_build_params.executable_path)
+						build (l_ecf, l_build_params.ecf_target, l_build_params.executable_path)
 					else
 						display_usage
 					end
@@ -158,10 +158,10 @@ feature -- Execution
 			print ("USAGE:%N")
 			print ("   ")
 			print (cmd)
-			print (" (-v|--verbose) (-h|--help) (-b|--build) <project.ecf> ...%N")
+			print (" (-v|--verbose) (-h|--help) (-b|--build) (--target ecf_target_name) <project.ecf> ...%N")
 			print ("   ")
 			print (cmd)
-			print (" build (-v|--verbose) <project.ecf> <output_executable_path> ...%N")
+			print (" build (-v|--verbose) (--target ecf_target_name) <project.ecf> <output_executable_path> ...%N")
 			print ("%N")
 			print ("COMMANDS:%N")
 			print ("    <project.ecf> ...   : build once and launch <project.ecf> execution.%N")
@@ -170,6 +170,7 @@ feature -- Execution
 			print ("OPTIONS:%N")
 			print ("    -o --executable-output <path> : build and save executable as <path>.%N")
 			print ("                                  : note: no execution.!%N")
+			print ("    --target <ecf-target-name>    : optional target name.%N")
 			print ("    -b --build                    : force a fresh system build.%N")
 			print ("    -v --verbose                  : verbose output.%N")
 			print ("    -h --help                     : display this help.%N")
@@ -182,7 +183,7 @@ feature -- Execution
 			print ("%N")
 		end
 
-	launch (a_ecf: READABLE_STRING_GENERAL; args: LIST [READABLE_STRING_GENERAL])
+	launch (a_ecf: READABLE_STRING_GENERAL; a_target_name: detachable READABLE_STRING_GENERAL; args: LIST [READABLE_STRING_GENERAL])
 		require
 			is_ecf: a_ecf.ends_with (".ecf")
 		local
@@ -194,7 +195,7 @@ feature -- Execution
 				p_ecf := (create {PATH}.make_from_string (a_ecf)).absolute_path.canonical_path
 				if
 					attached ecf_system (p_ecf) as sys and then
-					attached ecf_target (sys) as tgt
+					attached ecf_target (sys, a_target_name) as tgt
 				then
 					launch_system (sys, tgt, args)
 				else
@@ -203,24 +204,36 @@ feature -- Execution
 			end
 		end
 
-	build (a_ecf: READABLE_STRING_GENERAL; a_exec_output_path: detachable PATH)
+	build (a_ecf: READABLE_STRING_GENERAL; a_target_name: detachable READABLE_STRING_GENERAL; a_exec_output_path: detachable PATH)
 		require
 			is_ecf: a_ecf.ends_with (".ecf")
 		local
 			p_ecf, p: PATH
+			s: STRING_32
 		do
 			if a_ecf.starts_with ("iron:") then
 				report_error ("iron locations are not yet supported!%N")
 			else
 				p_ecf := (create {PATH}.make_from_string (a_ecf)).absolute_path.canonical_path
-				if a_exec_output_path /= Void then
-					print ({STRING_32} "Build project " + p_ecf.name + " and save generated executable as " + a_exec_output_path.name + ".%N")
-				else
-					print ({STRING_32} "Build project " + p_ecf.name + " and save generated executable in current folder.%N")
+				create s.make_from_string_general ("Build project ")
+				s.append (p_ecf.name)
+				if a_target_name /= Void then
+					s.append_string_general (" (target:")
+					s.append_string_general (a_target_name)
+					s.append_string_general (")")
 				end
+				s.append_string_general (" and save generated executable")
+				if a_exec_output_path /= Void then
+					s.append_string_general (" as ")
+					s.append (a_exec_output_path.name)
+				else
+					s.append_string_general (" in current folder")
+				end
+				s.append_string_general (".%N")
+				print (s)
 				if
 					attached ecf_system (p_ecf) as sys and then
-					attached ecf_target (sys) as tgt
+					attached ecf_target (sys, a_target_name) as tgt
 				then
 					if a_exec_output_path /= Void then
 						p := a_exec_output_path
@@ -266,14 +279,17 @@ feature {NONE} -- Execution
 			l_compiled_executable: PATH
 			t: CONF_TARGET
 		do
-			l_comp_loc := compilation_location (a_system)
+			l_comp_loc := compilation_location (a_system, a_target.name)
 			ut.create_directory_path (l_comp_loc)
-			create params.make (5)
+			create params.make (10)
 			params.extend ("-config")
 			params.extend (a_system.file_name)
+			params.extend ("-target")
+			params.extend (a_target.name)
 			params.extend ("-finalize")
 			params.extend ("-c_compile")
 			params.extend ("-clean")
+			params.extend ("-batch")
 			params.extend ("-project_path")
 			params.extend (l_comp_loc.name)
 			ecb_cmd := eiffel_layout.bin_path.extended ("ecb" + eiffel_layout.executable_suffix)
@@ -331,18 +347,32 @@ feature -- Query
 			Result := loader.last_system
 		end
 
-	ecf_target (sys: CONF_SYSTEM): detachable CONF_TARGET
+	ecf_target (sys: CONF_SYSTEM; a_target_name: detachable READABLE_STRING_GENERAL): detachable CONF_TARGET
 		do
-			Result := sys.application_target
+			if a_target_name /= Void then
+				across
+					sys.compilable_targets as ic
+				until
+					Result /= Void
+				loop
+					Result := ic.item
+					if not a_target_name.is_case_insensitive_equal (Result.name) then
+						Result := Void
+					end
+				end
+			end
 			if Result = Void then
-				Result := sys.library_target
+				Result := sys.application_target
 				if Result = Void then
-					across
-						sys.compilable_targets as ic
-					until
-						Result /= Void
-					loop
-						Result := ic.item
+					Result := sys.library_target
+					if Result = Void then
+						across
+							sys.compilable_targets as ic
+						until
+							Result /= Void
+						loop
+							Result := ic.item
+						end
 					end
 				end
 			end
@@ -369,7 +399,7 @@ feature -- Query
 			if a_target /= Void then
 				tgt := a_target
 			else
-				tgt := ecf_target (a_system)
+				tgt := ecf_target (a_system, Void)
 			end
 			if
 				tgt /= Void and then
@@ -382,14 +412,14 @@ feature -- Query
 			Result := Result.appended (eiffel_layout.executable_suffix)
 		end
 
-	compilation_location (a_system: CONF_SYSTEM): PATH
+	compilation_location (a_system: CONF_SYSTEM; a_target_name: detachable READABLE_STRING_GENERAL): PATH
 		local
 			l_app_id: STRING_32
 			c,p: CHARACTER_32
 			i,n: INTEGER
 		do
 			if
-				attached ecf_target (a_system) as tgt
+				attached ecf_target (a_system, a_target_name) as tgt
 			then
 				create l_app_id.make_from_string_general (a_system.name)
 				if not a_system.is_generated_uuid then

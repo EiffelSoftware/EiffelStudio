@@ -41,6 +41,9 @@ feature {NONE} -- Creation
 				elseif v.ends_with (".ecf") then
 					set_ecf_location (v)
 					cl_index.replace (i + 1)
+				elseif v.same_string ("--target") then
+					set_ecf_target (arr [i + 1])
+					cl_index.replace (i + 2)
 				else
 					Precursor (arr, cl_index)
 				end
@@ -53,6 +56,8 @@ feature -- Access
 
 	ecf_location: detachable IMMUTABLE_STRING_32
 
+	ecf_target: detachable IMMUTABLE_STRING_32
+
 	args: ARRAYED_LIST [READABLE_STRING_GENERAL]
 
 feature -- Element change
@@ -60,6 +65,11 @@ feature -- Element change
 	set_ecf_location (v: READABLE_STRING_GENERAL)
 		do
 			create ecf_location.make_from_string_general (v)
+		end
+
+	set_ecf_target (v: READABLE_STRING_GENERAL)
+		do
+			create ecf_target.make_from_string_general (v)
 		end
 
 	add_argument (arg: READABLE_STRING_GENERAL)

@@ -200,7 +200,7 @@ feature {NONE} -- Implementation: Byte node
 			a_expr_not_void: a_expr /= Void
 		local
 			l_create_type: CREATE_TYPE
-			l_access: CALL_ACCESS_B
+			l_access: ROUTINE_B
 			l_params: BYTE_LIST [PARAMETER_B]
 			l_param: PARAMETER_B
 			l_target_type: TYPE_A
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation: Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

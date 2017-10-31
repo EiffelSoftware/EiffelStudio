@@ -167,7 +167,9 @@ feature -- Byte node generation
 			Result.set_type (a_target_type)
 
 				-- Create call.
-			Result.set_call (new_feature_b (a_feat, void_type, a_parameters))
+			if attached {ROUTINE_B} new_feature_b (a_feat, void_type, a_parameters) as r then
+				Result.set_call (r)
+			end
 			Result.set_creation_instruction (True)
 		end
 
@@ -180,7 +182,7 @@ feature -- Byte node generation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

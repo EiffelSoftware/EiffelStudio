@@ -2505,6 +2505,7 @@ feature {NONE} -- Implementation
 			l_basic_type: BASIC_A
 			l_inst_cont_type: TYPE_A
 			l_finish_byte_code: BOOLEAN
+			creation_expression: CREATION_EXPR_B
 		do
 			l_inst_cont_type := a_node.context_type
 			if system.is_scoop and then l_inst_cont_type.is_separate then
@@ -2541,7 +2542,19 @@ feature {NONE} -- Implementation
 				if a_node.is_first then
 						--! Cannot melt basic calls hence is_first
 						--! is not used in the above if meta statement.
+					if a_node.is_instance_free then
+							-- Generate an empty object to be used as a target of the call.
+						check
+							instance_free_call_has_precursor_type: attached a_node.precursor_type as p
+						then
+							create creation_expression
+							creation_expression.set_info (p.create_info)
+							creation_expression.set_type (p)
+							process_creation_expr_b (creation_expression)
+						end
+					else
 						ba.append (Bc_current)
+					end
 				else
 					if a_node.parameters /= Void then
 						ba.append (Bc_rotate)
@@ -2569,7 +2582,7 @@ feature {NONE} -- Implementation
 		local
 			l_type: TYPE_A
 		do
-			if a_node.precursor_type /= Void then
+			if a_node.precursor_type /= Void and then not a_node.is_instance_free then
 				l_type := context.real_type (a_node.precursor_type)
 				if l_type.is_multi_constrained then
 					check

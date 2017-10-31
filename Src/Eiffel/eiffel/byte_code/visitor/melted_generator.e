@@ -651,7 +651,7 @@ feature {NONE} -- Visitors
 		local
 			l_special_type: TYPE_A
 			l_class_type: SPECIAL_CLASS_TYPE
-			l_call: CALL_ACCESS_B
+			l_call: ROUTINE_B
 			l_nested: NESTED_B
 			l_is_make_filled: BOOLEAN
 		do
@@ -2493,7 +2493,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make_call_access_b (a_node: CALL_ACCESS_B; code_first, code_next: CHARACTER; is_creation: BOOLEAN; is_active: BOOLEAN)
+	make_call_access_b (a_node: ROUTINE_B; code_first, code_next: CHARACTER; is_creation: BOOLEAN; is_active: BOOLEAN)
 			-- Generate call to EXTERNAL_B/FEATURE_B.
 			-- Generate byte code for a feature call.
 			-- `is_creation' indicates if this is a call to a creation procedure and `is_active' tells that an active region is to be created in case of a separate target type.
@@ -2541,7 +2541,7 @@ feature {NONE} -- Implementation
 				if a_node.is_first then
 						--! Cannot melt basic calls hence is_first
 						--! is not used in the above if meta statement.
-					ba.append (Bc_current)
+						ba.append (Bc_current)
 				else
 					if a_node.parameters /= Void then
 						ba.append (Bc_rotate)
@@ -2564,7 +2564,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make_precursor_byte_code (a_node: CALL_ACCESS_B)
+	make_precursor_byte_code (a_node: ROUTINE_B)
 			-- Generate precursor byte code if needed.
 		local
 			l_type: TYPE_A

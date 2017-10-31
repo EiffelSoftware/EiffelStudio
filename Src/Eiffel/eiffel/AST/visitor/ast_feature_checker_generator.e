@@ -6086,7 +6086,7 @@ feature {NONE} -- Visitor
 			a_creation_type_not_void: a_creation_type /= Void
 			a_location_not_void: a_location /= Void
 		local
-			l_call_access: CALL_ACCESS_B
+			l_call_access: ROUTINE_B
 			l_formal_type: FORMAL_A
 			l_generic_type: GEN_TYPE_A
 			l_formal_dec: FORMAL_CONSTRAINT_AS
@@ -6477,7 +6477,7 @@ feature {NONE} -- Visitor
 	generate_creation (
 			l_is_active: BOOLEAN;
 			l_access: ACCESS_B;
-			l_call_access: CALL_ACCESS_B;
+			l_call_access: ROUTINE_B;
 			l_creation_type: TYPE_A;
 			l_explicit_type: TYPE_A;
 			l: LOCATION_AS)
@@ -6550,7 +6550,6 @@ feature {NONE} -- Visitor
 		local
 			l_access: ACCESS_B
 			l_assign: ASSIGN_B
-			l_call_access: CALL_ACCESS_B
 			l_target_type, l_explicit_type, l_creation_type: TYPE_A
 			l_vgcc3: VGCC3
 			l_vgcc31: VGCC31
@@ -6651,8 +6650,10 @@ feature {NONE} -- Visitor
 							process_abstract_creation (l_creation_type, l_as.call,
 								l_as.target.access_name, l_as.target.start_location)
 
-							if l_needs_byte_node then
-								l_call_access ?= last_byte_node
+							if
+								l_needs_byte_node and then
+								attached {ROUTINE_B} last_byte_node as l_call_access
+							then
 								generate_creation (l_as.is_active, l_access, l_call_access, l_creation_type, l_explicit_type,
 									l_as.target.start_location)
 									-- Set line information for instruction.
@@ -6680,7 +6681,7 @@ feature {NONE} -- Visitor
 
 	process_creation_expr_as (l_as: CREATION_EXPR_AS)
 		local
-			l_call_access: CALL_ACCESS_B
+			l_call_access: ROUTINE_B
 			l_creation_expr: CREATION_EXPR_B
 			l_creation_type: TYPE_A
 			l_create_info: CREATE_INFO

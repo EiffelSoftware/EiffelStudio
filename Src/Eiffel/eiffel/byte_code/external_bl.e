@@ -126,7 +126,12 @@ feature
 		do
 				-- Reset value of variables.
 			is_right_parenthesis_needed.put (False)
-			do_generate (current_register)
+			if attached instance_free_creation as c then
+				c.generate
+				do_generate (c.register)
+			else
+				do_generate (current_register)
+			end
 		end
 
 	generate_on (reg: REGISTRABLE)

@@ -49,6 +49,9 @@ feature -- Access
 	basic_register: REGISTRABLE
 			-- Register used to store the metamorphosed simple type
 
+	instance_free_creation: CREATION_EXPR_B
+			-- An expression to initialize intance-free call.
+
 feature -- Modification
 
 	set_register (r: REGISTRABLE)
@@ -67,14 +70,33 @@ feature -- Code generation
 
 	analyze
 			-- Build a proper context for code generation.
+		local
+			c: like instance_free_creation
 		do
-			analyze_on (Current_register)
+			if is_instance_free then
+					-- Generate an empty object to be used as a target of the call.
+				check
+					instance_free_call_has_precursor_type: attached precursor_type as p
+				then
+					create c
+					c.set_info (p.create_info)
+					c.set_type (p)
+					c.analyze
+					analyze_on (c.register)
+					instance_free_creation := c
+				end
+			else
+				analyze_on (Current_register)
+			end
 			get_register
 		end
 
 	free_register
 			-- Free registers.
 		do
+			if attached instance_free_creation then
+				instance_free_creation.free_register
+			end
 			Precursor
 			if basic_register /= Void then
 				basic_register.free_register

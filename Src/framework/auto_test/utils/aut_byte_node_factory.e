@@ -25,8 +25,7 @@ feature -- Byte node generation
 		require
 			a_position_positive: a_position > 0
 		do
-			create Result
-			Result.set_position (a_position)
+			create Result.make (a_position)
 		ensure
 			result_attached: Result /= Void
 			location_correct: Result.position = a_position
@@ -140,8 +139,7 @@ feature -- Byte node generation
 					a_types.after
 				loop
 					create l_param
-					create l_local
-					l_local.set_position (l_position)
+					create l_local.make (l_position)
 					l_param.set_expression (l_local)
 					l_param.set_attachment_type (a_types.item)
 					Result.extend (l_param)

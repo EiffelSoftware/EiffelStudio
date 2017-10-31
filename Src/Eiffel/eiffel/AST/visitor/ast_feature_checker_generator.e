@@ -2970,8 +2970,7 @@ feature {NONE} -- Visitor
 					l_type := l_local_info.type
 					l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
 					if l_needs_byte_node then
-						create l_local
-						l_local.set_position (l_local_info.position)
+						create l_local.make (l_local_info.position)
 						last_byte_node := l_local
 					end
 
@@ -4207,8 +4206,7 @@ feature {NONE} -- Visitor
 						create l_typed_pointer.make_typed (l_type)
 						set_type (l_typed_pointer, l_as)
 						if l_needs_byte_node then
-							create l_local
-							l_local.set_position (l_local_info.position)
+							create l_local.make (l_local_info.position)
 							create {HECTOR_B} last_byte_node.make_with_type (l_local, l_typed_pointer)
 						end
 					else

@@ -1,9 +1,6 @@
-note
-	description:
-
-		"Serializes request so they can be sent to interpreter"
-
-	copyright: "Copyright (c) 2006, Andreas Leitner and others"
+﻿note
+	description: "Serializes request so they can be sent to interpreter"
+	copyright: "Copyright (c) 2006-2017, Andreas Leitner, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -268,8 +265,7 @@ feature {NONE} -- Byte code generation
 			create l_parameters.make (1)
 
 			create l_local_index_param
-			create l_local
-			l_local.set_position (a_local_index)
+			create l_local.make (a_local_index)
 			l_local_index_param.set_expression (l_local)
 			l_local_index_param.set_attachment_type (a_local_type)
 
@@ -293,8 +289,7 @@ feature {NONE} -- Byte code generation
 			create l_parameters.make (2)
 
 			create l_local_index_param
-			create l_local
-			l_local.set_position (a_local_index)
+			create l_local.make (a_local_index)
 			l_local_index_param.set_expression (l_local)
 			l_local_index_param.set_attachment_type (a_type)
 
@@ -475,7 +470,7 @@ invariant
 	expression_b_visitor_attached: expression_b_visitor /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

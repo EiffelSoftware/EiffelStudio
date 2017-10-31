@@ -130,7 +130,6 @@ feature -- Byte code generation
 			-- inlining
 		local
 			type_i: TYPE_A
-			class_type: CL_TYPE_A
 			buf: GENERATION_BUFFER
 		do
 			Precursor (reg)
@@ -148,7 +147,6 @@ feature -- Byte code generation
 				not is_feature_special (True, basic_type)
 			then
 				buf := buffer
-				class_type := basic_type.reference_type
 					-- If an invariant is to be checked however, the
 					-- metamorphosis was already made by the invariant
 					-- checking routine.

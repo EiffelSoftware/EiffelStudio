@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "To generate pieces of predefined byte code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -62,23 +62,18 @@ feature {NONE} -- Implementation: status report
 			a_expr_not_void: a_expr /= Void
 			a_source_type_not_void: a_source_type /= Void
 			a_target_type_not_void: a_target_type /= Void
-		local
-			l_string_b: STRING_B
-			l_type_expr_b: TYPE_EXPR_B
 		do
 			if
 				System.il_generation and
 				(a_source_type.same_as (String_type) and a_target_type.same_as (System_string_type))
 			then
 					-- Case of .NET string to Eiffel string conversion.
-				l_string_b ?= a_expr
-				Result := l_string_b /= Void
+				Result := attached {STRING_B} a_expr
 			elseif
 				System.il_generation and then
 				(a_source_type.base_class = System.type_class.compiled_class and a_target_type.same_as (System_type_type))
 			then
-				l_type_expr_b ?= a_expr
-				Result := l_type_expr_b /= Void
+				Result := attached {TYPE_EXPR_B} a_expr
 			elseif a_source_type.is_typed_pointer and a_target_type.is_pointer then
 				Result := True
 			elseif is_from_conversion then
@@ -98,8 +93,6 @@ feature {NONE} -- Implementation: Byte node
 			a_target_type_not_void: a_target_type /= Void
 			is_basic_conversion: is_basic_conversion (a_expr, a_source_type, a_target_type, is_from_conversion)
 		local
-			l_string_b: STRING_B
-			l_type_expr_b: TYPE_EXPR_B
 			l_feat: FEATURE_I
 			l_basic_i: BASIC_A
 			l_ref: CL_TYPE_A
@@ -108,22 +101,26 @@ feature {NONE} -- Implementation: Byte node
 				System.il_generation and then
 				(a_source_type.same_as (String_type) and a_target_type.same_as (System_string_type))
 			then
-				l_string_b ?= a_expr
-				check
-					l_string_b_not_void: l_string_b /= Void
+				if attached {STRING_B} a_expr as l_string_b then
+					l_string_b.set_is_dotnet_string (True)
+					Result := l_string_b
+				else
+					check
+						is_string: False
+					end
 				end
-				l_string_b.set_is_dotnet_string (True)
-				Result := l_string_b
 			elseif
 				System.il_generation and then
 				(a_source_type.base_class = System.type_class.compiled_class and a_target_type.same_as (System_type_type))
 			then
-				l_type_expr_b ?= a_expr
-				check
-					l_type_expr_b_not_void: l_type_expr_b /= Void
+				if attached {TYPE_EXPR_B} a_expr as l_type_expr_b then
+					l_type_expr_b.set_is_dotnet_type (True)
+					Result := l_type_expr_b
+				else
+					check
+						is_type_expression: False
+					end
 				end
-				l_type_expr_b.set_is_dotnet_type (True)
-				Result := l_type_expr_b
 			elseif a_source_type.is_typed_pointer and a_target_type.is_pointer then
 				Result := a_expr
 			elseif is_from_conversion then
@@ -199,7 +196,6 @@ feature {NONE} -- Implementation: Byte node
 			a_target_type_not_void: a_target_type /= Void
 			a_expr_not_void: a_expr /= Void
 		local
-			l_create_type: CREATE_TYPE
 			l_access: ROUTINE_B
 			l_params: BYTE_LIST [PARAMETER_B]
 			l_param: PARAMETER_B
@@ -217,8 +213,7 @@ feature {NONE} -- Implementation: Byte node
 			end
 				-- Type used for creating an object should not contain any attachment marks.
 				-- See the implementation {CL_TYPE_A}.create_info.
-			create l_create_type.make (l_target_type.as_attachment_mark_free)
-			Result.set_info (l_create_type)
+			Result.set_info (create {CREATE_TYPE}.make (l_target_type.as_attachment_mark_free))
 			Result.set_type (a_target_type)
 
 				-- Create call.

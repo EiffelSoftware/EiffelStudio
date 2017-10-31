@@ -177,7 +177,12 @@ end
 			is_deferred.put (False)
 			is_direct_once.put (False)
 
-			do_generate (Current_register)
+			if attached instance_free_creation as c then
+				c.generate
+				do_generate (c.register)
+			else
+				do_generate (current_register)
+			end
 		end
 
 	generate_on (reg: REGISTRABLE)
@@ -383,7 +388,7 @@ end
 					buf.put_character ('(')
 				end
 				buf.put_string ("(RTNR")
-			elseif precursor_type = Void and then array_index >= 0 then
+			elseif (precursor_type = Void or else is_instance_free) and then array_index >= 0 then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.

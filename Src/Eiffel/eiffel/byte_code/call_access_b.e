@@ -396,7 +396,7 @@ feature {NONE} -- C code generation
 		do
 			is_nested := not is_first
 			buf := buffer
-			if attached precursor_type as p then
+			if attached precursor_type as p and then not (attached {ROUTINE_B} Current as r and then r.is_instance_free) then
 				l_type := context.real_type (p)
 				if l_type.is_multi_constrained then
 					check
@@ -427,12 +427,17 @@ feature {NONE} -- C code generation
 			buf.put_integer (routine_id)
 			buf.put_two_character (',', ' ')
 			if not is_nested then
-				if precursor_type /= Void then
+				if not attached precursor_type then
+					context.generate_current_dtype
+				elseif attached {ROUTINE_B} Current as r and then r.is_instance_free  then
+					buf.put_string ({C_CONST}.dtype)
+					buf.put_character ('(')
+					t.print_register
+					buf.put_character (')')
+				else
 						-- Use dynamic type of parent instead
 						-- of dynamic type of Current.
 					buf.put_static_type_id (cl_type_i.static_type_id (context.context_class_type.type))
-				else
-					context.generate_current_dtype
 				end
 			elseif call_kind = call_kind_qualified then
 					-- Feature name is used to report a call on a void target.
@@ -441,7 +446,7 @@ feature {NONE} -- C code generation
 				buf.put_two_character (',', ' ')
 				t.print_register
 			else
-				buf.put_string ({C_CONST}.dtype);
+				buf.put_string ({C_CONST}.dtype)
 				buf.put_character ('(')
 				t.print_register
 				buf.put_character (')')

@@ -170,7 +170,7 @@ void *curl_domalloc(size_t wantedsize, int line, const char *source)
     return NULL;
 
   /* alloc at least 64 bytes */
-  size = sizeof(struct memdebug)+wantedsize;
+  size = sizeof(struct memdebug) + wantedsize;
 
   mem = (Curl_cmalloc)(size);
   if(mem) {
@@ -225,9 +225,9 @@ char *curl_dostrdup(const char *str, int line, const char *source)
   if(countcheck("strdup", line, source))
     return NULL;
 
-  len=strlen(str)+1;
+  len = strlen(str) + 1;
 
-  mem=curl_domalloc(len, 0, NULL); /* NULL prevents logging */
+  mem = curl_domalloc(len, 0, NULL); /* NULL prevents logging */
   if(mem)
     memcpy(mem, str, len);
 
@@ -269,9 +269,9 @@ wchar_t *curl_dowcsdup(const wchar_t *str, int line, const char *source)
 void *curl_dorealloc(void *ptr, size_t wantedsize,
                      int line, const char *source)
 {
-  struct memdebug *mem=NULL;
+  struct memdebug *mem = NULL;
 
-  size_t size = sizeof(struct memdebug)+wantedsize;
+  size_t size = sizeof(struct memdebug) + wantedsize;
 
   DEBUGASSERT(wantedsize != 0);
 
@@ -343,12 +343,43 @@ curl_socket_t curl_socket(int domain, int type, int protocol,
     "FD %s:%d socket() = %ld\n" :
     "FD %s:%d socket() = %zd\n";
 
-  curl_socket_t sockfd = socket(domain, type, protocol);
+  curl_socket_t sockfd;
+
+  if(countcheck("socket", line, source))
+    return CURL_SOCKET_BAD;
+
+  sockfd = socket(domain, type, protocol);
 
   if(source && (sockfd != CURL_SOCKET_BAD))
     curl_memlog(fmt, source, line, sockfd);
 
   return sockfd;
+}
+
+ssize_t curl_dosend(int sockfd, const void *buf, size_t len, int flags,
+                    int line, const char *source)
+{
+  ssize_t rc;
+  if(countcheck("send", line, source))
+    return -1;
+  rc = send(sockfd, buf, len, flags);
+  if(source)
+    curl_memlog("SEND %s:%d send(%zu) = %zd\n",
+                source, line, len, rc);
+  return rc;
+}
+
+ssize_t curl_dorecv(int sockfd, void *buf, size_t len, int flags,
+                    int line, const char *source)
+{
+  ssize_t rc;
+  if(countcheck("recv", line, source))
+    return -1;
+  rc = recv(sockfd, buf, len, flags);
+  if(source)
+    curl_memlog("RECV %s:%d recv(%zu) = %zd\n",
+                source, line, len, rc);
+  return rc;
 }
 
 #ifdef HAVE_SOCKETPAIR
@@ -407,7 +438,7 @@ void curl_mark_sclose(curl_socket_t sockfd, int line, const char *source)
 /* this is our own defined way to close sockets on *ALL* platforms */
 int curl_sclose(curl_socket_t sockfd, int line, const char *source)
 {
-  int res=sclose(sockfd);
+  int res = sclose(sockfd);
   curl_mark_sclose(sockfd, line, source);
   return res;
 }
@@ -415,7 +446,7 @@ int curl_sclose(curl_socket_t sockfd, int line, const char *source)
 FILE *curl_fopen(const char *file, const char *mode,
                  int line, const char *source)
 {
-  FILE *res=fopen(file, mode);
+  FILE *res = fopen(file, mode);
 
   if(source)
     curl_memlog("FILE %s:%d fopen(\"%s\",\"%s\") = %p\n",
@@ -428,7 +459,7 @@ FILE *curl_fopen(const char *file, const char *mode,
 FILE *curl_fdopen(int filedes, const char *mode,
                   int line, const char *source)
 {
-  FILE *res=fdopen(filedes, mode);
+  FILE *res = fdopen(filedes, mode);
 
   if(source)
     curl_memlog("FILE %s:%d fdopen(\"%d\",\"%s\") = %p\n",
@@ -444,7 +475,7 @@ int curl_fclose(FILE *file, int line, const char *source)
 
   DEBUGASSERT(file != NULL);
 
-  res=fclose(file);
+  res = fclose(file);
 
   if(source)
     curl_memlog("FILE %s:%d fclose(%p)\n",

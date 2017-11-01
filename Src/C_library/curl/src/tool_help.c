@@ -54,7 +54,7 @@ static const struct helptxt helptext[] = {
    "Append to target file when uploading"},
   {"    --basic",
    "Use HTTP Basic Authentication"},
-  {"    --cacert <CA certificate>",
+  {"    --cacert <file>",
    "CA certificate to verify peer against"},
   {"    --capath <dir>",
    "CA directory to verify peer against"},
@@ -68,6 +68,8 @@ static const struct helptxt helptext[] = {
    "SSL ciphers to use"},
   {"    --compressed",
    "Request compressed response"},
+  {"    --compressed-ssh",
+   "Enable SSH compression"},
   {"-K, --config <file>",
    "Read config from a file"},
   {"    --connect-timeout <seconds>",
@@ -129,9 +131,9 @@ static const struct helptxt helptext[] = {
   {"    --false-start",
    "Enable TLS False Start"},
   {"-F, --form <name=content>",
-   "Specify HTTP multipart POST data"},
+   "Specify multipart MIME data"},
   {"    --form-string <name=string>",
-   "Specify HTTP multipart POST data"},
+   "Specify multipart MIME data"},
   {"    --ftp-account <data>",
    "Account data string"},
   {"    --ftp-alternative-to-user <command>",
@@ -501,7 +503,8 @@ static const struct feat feats[] = {
   {"TLS-SRP",        CURL_VERSION_TLSAUTH_SRP},
   {"HTTP2",          CURL_VERSION_HTTP2},
   {"UnixSockets",    CURL_VERSION_UNIX_SOCKETS},
-  {"HTTPS-proxy",    CURL_VERSION_HTTPS_PROXY}
+  {"HTTPS-proxy",    CURL_VERSION_HTTPS_PROXY},
+  {"MultiSSL",       CURL_VERSION_MULTI_SSL}
 };
 
 void tool_help(void)

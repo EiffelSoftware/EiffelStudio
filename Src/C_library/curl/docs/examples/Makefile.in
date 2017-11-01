@@ -144,22 +144,24 @@ check_PROGRAMS = 10-at-a-time$(EXEEXT) anyauthput$(EXEEXT) \
 	simple$(EXEEXT) simplepost$(EXEEXT) simplessl$(EXEEXT) \
 	sendrecv$(EXEEXT) httpcustomheader$(EXEEXT) certinfo$(EXEEXT) \
 	chkspeed$(EXEEXT) ftpgetinfo$(EXEEXT) ftp-wildcard$(EXEEXT) \
-	smtp-mail$(EXEEXT) smtp-multi$(EXEEXT) smtp-ssl$(EXEEXT) \
-	smtp-tls$(EXEEXT) smtp-vrfy$(EXEEXT) smtp-expn$(EXEEXT) \
-	rtsp$(EXEEXT) externalsocket$(EXEEXT) resolve$(EXEEXT) \
-	progressfunc$(EXEEXT) pop3-retr$(EXEEXT) pop3-list$(EXEEXT) \
-	pop3-uidl$(EXEEXT) pop3-dele$(EXEEXT) pop3-top$(EXEEXT) \
-	pop3-stat$(EXEEXT) pop3-noop$(EXEEXT) pop3-ssl$(EXEEXT) \
-	pop3-tls$(EXEEXT) pop3-multi$(EXEEXT) imap-list$(EXEEXT) \
-	imap-lsub$(EXEEXT) imap-fetch$(EXEEXT) imap-store$(EXEEXT) \
-	imap-append$(EXEEXT) imap-examine$(EXEEXT) \
+	smtp-mail$(EXEEXT) smtp-mime$(EXEEXT) smtp-multi$(EXEEXT) \
+	smtp-ssl$(EXEEXT) smtp-tls$(EXEEXT) smtp-vrfy$(EXEEXT) \
+	smtp-expn$(EXEEXT) rtsp$(EXEEXT) externalsocket$(EXEEXT) \
+	resolve$(EXEEXT) progressfunc$(EXEEXT) pop3-retr$(EXEEXT) \
+	pop3-list$(EXEEXT) pop3-uidl$(EXEEXT) pop3-dele$(EXEEXT) \
+	pop3-top$(EXEEXT) pop3-stat$(EXEEXT) pop3-noop$(EXEEXT) \
+	pop3-ssl$(EXEEXT) pop3-tls$(EXEEXT) pop3-multi$(EXEEXT) \
+	imap-list$(EXEEXT) imap-lsub$(EXEEXT) imap-fetch$(EXEEXT) \
+	imap-store$(EXEEXT) imap-append$(EXEEXT) imap-examine$(EXEEXT) \
 	imap-search$(EXEEXT) imap-create$(EXEEXT) imap-delete$(EXEEXT) \
 	imap-copy$(EXEEXT) imap-noop$(EXEEXT) imap-ssl$(EXEEXT) \
 	imap-tls$(EXEEXT) imap-multi$(EXEEXT) url2file$(EXEEXT) \
 	sftpget$(EXEEXT) ftpsget$(EXEEXT) postinmemory$(EXEEXT) \
 	http2-download$(EXEEXT) http2-upload$(EXEEXT) \
 	http2-serverpush$(EXEEXT) getredirect$(EXEEXT) \
-	ftpuploadfrommem$(EXEEXT)
+	ftpuploadfrommem$(EXEEXT) ftpuploadresume$(EXEEXT) \
+	sslbackend$(EXEEXT) postit2-formadd$(EXEEXT) \
+	multi-formadd$(EXEEXT)
 subdir = docs/examples
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_code_coverage.m4 \
@@ -300,6 +302,13 @@ ftpuploadfrommem_LDADD = $(LDADD)
 @USE_EXPLICIT_LIB_DEPS_FALSE@ftpuploadfrommem_DEPENDENCIES =  \
 @USE_EXPLICIT_LIB_DEPS_FALSE@	$(LIBDIR)/libcurl.la
 @USE_EXPLICIT_LIB_DEPS_TRUE@ftpuploadfrommem_DEPENDENCIES =  \
+@USE_EXPLICIT_LIB_DEPS_TRUE@	$(LIBDIR)/libcurl.la
+ftpuploadresume_SOURCES = ftpuploadresume.c
+ftpuploadresume_OBJECTS = ftpuploadresume.$(OBJEXT)
+ftpuploadresume_LDADD = $(LDADD)
+@USE_EXPLICIT_LIB_DEPS_FALSE@ftpuploadresume_DEPENDENCIES =  \
+@USE_EXPLICIT_LIB_DEPS_FALSE@	$(LIBDIR)/libcurl.la
+@USE_EXPLICIT_LIB_DEPS_TRUE@ftpuploadresume_DEPENDENCIES =  \
 @USE_EXPLICIT_LIB_DEPS_TRUE@	$(LIBDIR)/libcurl.la
 getinfo_SOURCES = getinfo.c
 getinfo_OBJECTS = getinfo.$(OBJEXT)
@@ -489,6 +498,13 @@ multi_double_LDADD = $(LDADD)
 @USE_EXPLICIT_LIB_DEPS_FALSE@	$(LIBDIR)/libcurl.la
 @USE_EXPLICIT_LIB_DEPS_TRUE@multi_double_DEPENDENCIES =  \
 @USE_EXPLICIT_LIB_DEPS_TRUE@	$(LIBDIR)/libcurl.la
+multi_formadd_SOURCES = multi-formadd.c
+multi_formadd_OBJECTS = multi-formadd.$(OBJEXT)
+multi_formadd_LDADD = $(LDADD)
+@USE_EXPLICIT_LIB_DEPS_FALSE@multi_formadd_DEPENDENCIES =  \
+@USE_EXPLICIT_LIB_DEPS_FALSE@	$(LIBDIR)/libcurl.la
+@USE_EXPLICIT_LIB_DEPS_TRUE@multi_formadd_DEPENDENCIES =  \
+@USE_EXPLICIT_LIB_DEPS_TRUE@	$(LIBDIR)/libcurl.la
 multi_post_SOURCES = multi-post.c
 multi_post_OBJECTS = multi-post.$(OBJEXT)
 multi_post_LDADD = $(LDADD)
@@ -601,6 +617,13 @@ postit2_LDADD = $(LDADD)
 @USE_EXPLICIT_LIB_DEPS_FALSE@	$(LIBDIR)/libcurl.la
 @USE_EXPLICIT_LIB_DEPS_TRUE@postit2_DEPENDENCIES =  \
 @USE_EXPLICIT_LIB_DEPS_TRUE@	$(LIBDIR)/libcurl.la
+postit2_formadd_SOURCES = postit2-formadd.c
+postit2_formadd_OBJECTS = postit2-formadd.$(OBJEXT)
+postit2_formadd_LDADD = $(LDADD)
+@USE_EXPLICIT_LIB_DEPS_FALSE@postit2_formadd_DEPENDENCIES =  \
+@USE_EXPLICIT_LIB_DEPS_FALSE@	$(LIBDIR)/libcurl.la
+@USE_EXPLICIT_LIB_DEPS_TRUE@postit2_formadd_DEPENDENCIES =  \
+@USE_EXPLICIT_LIB_DEPS_TRUE@	$(LIBDIR)/libcurl.la
 progressfunc_SOURCES = progressfunc.c
 progressfunc_OBJECTS = progressfunc.$(OBJEXT)
 progressfunc_LDADD = $(LDADD)
@@ -676,6 +699,13 @@ smtp_mail_LDADD = $(LDADD)
 @USE_EXPLICIT_LIB_DEPS_FALSE@	$(LIBDIR)/libcurl.la
 @USE_EXPLICIT_LIB_DEPS_TRUE@smtp_mail_DEPENDENCIES =  \
 @USE_EXPLICIT_LIB_DEPS_TRUE@	$(LIBDIR)/libcurl.la
+smtp_mime_SOURCES = smtp-mime.c
+smtp_mime_OBJECTS = smtp-mime.$(OBJEXT)
+smtp_mime_LDADD = $(LDADD)
+@USE_EXPLICIT_LIB_DEPS_FALSE@smtp_mime_DEPENDENCIES =  \
+@USE_EXPLICIT_LIB_DEPS_FALSE@	$(LIBDIR)/libcurl.la
+@USE_EXPLICIT_LIB_DEPS_TRUE@smtp_mime_DEPENDENCIES =  \
+@USE_EXPLICIT_LIB_DEPS_TRUE@	$(LIBDIR)/libcurl.la
 smtp_multi_SOURCES = smtp-multi.c
 smtp_multi_OBJECTS = smtp-multi.$(OBJEXT)
 smtp_multi_LDADD = $(LDADD)
@@ -703,6 +733,13 @@ smtp_vrfy_LDADD = $(LDADD)
 @USE_EXPLICIT_LIB_DEPS_FALSE@smtp_vrfy_DEPENDENCIES =  \
 @USE_EXPLICIT_LIB_DEPS_FALSE@	$(LIBDIR)/libcurl.la
 @USE_EXPLICIT_LIB_DEPS_TRUE@smtp_vrfy_DEPENDENCIES =  \
+@USE_EXPLICIT_LIB_DEPS_TRUE@	$(LIBDIR)/libcurl.la
+sslbackend_SOURCES = sslbackend.c
+sslbackend_OBJECTS = sslbackend.$(OBJEXT)
+sslbackend_LDADD = $(LDADD)
+@USE_EXPLICIT_LIB_DEPS_FALSE@sslbackend_DEPENDENCIES =  \
+@USE_EXPLICIT_LIB_DEPS_FALSE@	$(LIBDIR)/libcurl.la
+@USE_EXPLICIT_LIB_DEPS_TRUE@sslbackend_DEPENDENCIES =  \
 @USE_EXPLICIT_LIB_DEPS_TRUE@	$(LIBDIR)/libcurl.la
 url2file_SOURCES = url2file.c
 url2file_OBJECTS = url2file.$(OBJEXT)
@@ -748,37 +785,41 @@ am__v_CCLD_1 =
 SOURCES = 10-at-a-time.c anyauthput.c certinfo.c chkspeed.c \
 	cookie_interface.c debug.c externalsocket.c fileupload.c \
 	fopen.c ftp-wildcard.c ftpget.c ftpgetinfo.c ftpgetresp.c \
-	ftpsget.c ftpupload.c ftpuploadfrommem.c getinfo.c \
-	getinmemory.c getredirect.c http-post.c http2-download.c \
-	http2-serverpush.c http2-upload.c httpcustomheader.c httpput.c \
-	https.c imap-append.c imap-copy.c imap-create.c imap-delete.c \
-	imap-examine.c imap-fetch.c imap-list.c imap-lsub.c \
-	imap-multi.c imap-noop.c imap-search.c imap-ssl.c imap-store.c \
-	imap-tls.c multi-app.c multi-debugcallback.c multi-double.c \
+	ftpsget.c ftpupload.c ftpuploadfrommem.c ftpuploadresume.c \
+	getinfo.c getinmemory.c getredirect.c http-post.c \
+	http2-download.c http2-serverpush.c http2-upload.c \
+	httpcustomheader.c httpput.c https.c imap-append.c imap-copy.c \
+	imap-create.c imap-delete.c imap-examine.c imap-fetch.c \
+	imap-list.c imap-lsub.c imap-multi.c imap-noop.c imap-search.c \
+	imap-ssl.c imap-store.c imap-tls.c multi-app.c \
+	multi-debugcallback.c multi-double.c multi-formadd.c \
 	multi-post.c multi-single.c persistant.c pop3-dele.c \
 	pop3-list.c pop3-multi.c pop3-noop.c pop3-retr.c pop3-ssl.c \
 	pop3-stat.c pop3-tls.c pop3-top.c pop3-uidl.c post-callback.c \
-	postinmemory.c postit2.c progressfunc.c resolve.c rtsp.c \
-	sendrecv.c sepheaders.c sftpget.c simple.c simplepost.c \
-	simplessl.c smtp-expn.c smtp-mail.c smtp-multi.c smtp-ssl.c \
-	smtp-tls.c smtp-vrfy.c url2file.c
+	postinmemory.c postit2.c postit2-formadd.c progressfunc.c \
+	resolve.c rtsp.c sendrecv.c sepheaders.c sftpget.c simple.c \
+	simplepost.c simplessl.c smtp-expn.c smtp-mail.c smtp-mime.c \
+	smtp-multi.c smtp-ssl.c smtp-tls.c smtp-vrfy.c sslbackend.c \
+	url2file.c
 DIST_SOURCES = 10-at-a-time.c anyauthput.c certinfo.c chkspeed.c \
 	cookie_interface.c debug.c externalsocket.c fileupload.c \
 	fopen.c ftp-wildcard.c ftpget.c ftpgetinfo.c ftpgetresp.c \
-	ftpsget.c ftpupload.c ftpuploadfrommem.c getinfo.c \
-	getinmemory.c getredirect.c http-post.c http2-download.c \
-	http2-serverpush.c http2-upload.c httpcustomheader.c httpput.c \
-	https.c imap-append.c imap-copy.c imap-create.c imap-delete.c \
-	imap-examine.c imap-fetch.c imap-list.c imap-lsub.c \
-	imap-multi.c imap-noop.c imap-search.c imap-ssl.c imap-store.c \
-	imap-tls.c multi-app.c multi-debugcallback.c multi-double.c \
+	ftpsget.c ftpupload.c ftpuploadfrommem.c ftpuploadresume.c \
+	getinfo.c getinmemory.c getredirect.c http-post.c \
+	http2-download.c http2-serverpush.c http2-upload.c \
+	httpcustomheader.c httpput.c https.c imap-append.c imap-copy.c \
+	imap-create.c imap-delete.c imap-examine.c imap-fetch.c \
+	imap-list.c imap-lsub.c imap-multi.c imap-noop.c imap-search.c \
+	imap-ssl.c imap-store.c imap-tls.c multi-app.c \
+	multi-debugcallback.c multi-double.c multi-formadd.c \
 	multi-post.c multi-single.c persistant.c pop3-dele.c \
 	pop3-list.c pop3-multi.c pop3-noop.c pop3-retr.c pop3-ssl.c \
 	pop3-stat.c pop3-tls.c pop3-top.c pop3-uidl.c post-callback.c \
-	postinmemory.c postit2.c progressfunc.c resolve.c rtsp.c \
-	sendrecv.c sepheaders.c sftpget.c simple.c simplepost.c \
-	simplessl.c smtp-expn.c smtp-mail.c smtp-multi.c smtp-ssl.c \
-	smtp-tls.c smtp-vrfy.c url2file.c
+	postinmemory.c postit2.c postit2-formadd.c progressfunc.c \
+	resolve.c rtsp.c sendrecv.c sepheaders.c sftpget.c simple.c \
+	simplepost.c simplessl.c smtp-expn.c smtp-mail.c smtp-mime.c \
+	smtp-multi.c smtp-ssl.c smtp-tls.c smtp-vrfy.c sslbackend.c \
+	url2file.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -851,7 +892,9 @@ CURL_DISABLE_TFTP = @CURL_DISABLE_TFTP@
 CURL_LT_SHLIB_VERSIONED_FLAVOUR = @CURL_LT_SHLIB_VERSIONED_FLAVOUR@
 CURL_NETWORK_AND_TIME_LIBS = @CURL_NETWORK_AND_TIME_LIBS@
 CURL_NETWORK_LIBS = @CURL_NETWORK_LIBS@
+CURL_WITH_MULTI_SSL = @CURL_WITH_MULTI_SSL@
 CYGPATH_W = @CYGPATH_W@
+DEFAULT_SSL_BACKEND = @DEFAULT_SSL_BACKEND@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
@@ -1030,7 +1073,7 @@ LIBDIR = $(top_builddir)/lib
 # These examples require external dependencies that may not be commonly
 # available on POSIX systems, so don't bother attempting to compile them here.
 COMPLICATED_EXAMPLES = curlgtk.c curlx.c htmltitle.cpp cacertinmem.c       \
-  ftpuploadresume.c ghiper.c hiperfifo.c htmltidy.c multithread.c          \
+  ghiper.c hiperfifo.c htmltidy.c multithread.c          \
   opensslthreadlock.c sampleconv.c synctime.c threaded-ssl.c evhiperfifo.c \
   smooth-gtk-thread.c version-check.pl href_extractor.c asiohiper.cpp      \
   multi-uv.c xmlstream.c usercertinmem.c sessioninfo.c
@@ -1143,6 +1186,10 @@ ftpuploadfrommem$(EXEEXT): $(ftpuploadfrommem_OBJECTS) $(ftpuploadfrommem_DEPEND
 	@rm -f ftpuploadfrommem$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(ftpuploadfrommem_OBJECTS) $(ftpuploadfrommem_LDADD) $(LIBS)
 
+ftpuploadresume$(EXEEXT): $(ftpuploadresume_OBJECTS) $(ftpuploadresume_DEPENDENCIES) $(EXTRA_ftpuploadresume_DEPENDENCIES) 
+	@rm -f ftpuploadresume$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ftpuploadresume_OBJECTS) $(ftpuploadresume_LDADD) $(LIBS)
+
 getinfo$(EXEEXT): $(getinfo_OBJECTS) $(getinfo_DEPENDENCIES) $(EXTRA_getinfo_DEPENDENCIES) 
 	@rm -f getinfo$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(getinfo_OBJECTS) $(getinfo_LDADD) $(LIBS)
@@ -1251,6 +1298,10 @@ multi-double$(EXEEXT): $(multi_double_OBJECTS) $(multi_double_DEPENDENCIES) $(EX
 	@rm -f multi-double$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(multi_double_OBJECTS) $(multi_double_LDADD) $(LIBS)
 
+multi-formadd$(EXEEXT): $(multi_formadd_OBJECTS) $(multi_formadd_DEPENDENCIES) $(EXTRA_multi_formadd_DEPENDENCIES) 
+	@rm -f multi-formadd$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(multi_formadd_OBJECTS) $(multi_formadd_LDADD) $(LIBS)
+
 multi-post$(EXEEXT): $(multi_post_OBJECTS) $(multi_post_DEPENDENCIES) $(EXTRA_multi_post_DEPENDENCIES) 
 	@rm -f multi-post$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(multi_post_OBJECTS) $(multi_post_LDADD) $(LIBS)
@@ -1315,6 +1366,10 @@ postit2$(EXEEXT): $(postit2_OBJECTS) $(postit2_DEPENDENCIES) $(EXTRA_postit2_DEP
 	@rm -f postit2$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(postit2_OBJECTS) $(postit2_LDADD) $(LIBS)
 
+postit2-formadd$(EXEEXT): $(postit2_formadd_OBJECTS) $(postit2_formadd_DEPENDENCIES) $(EXTRA_postit2_formadd_DEPENDENCIES) 
+	@rm -f postit2-formadd$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(postit2_formadd_OBJECTS) $(postit2_formadd_LDADD) $(LIBS)
+
 progressfunc$(EXEEXT): $(progressfunc_OBJECTS) $(progressfunc_DEPENDENCIES) $(EXTRA_progressfunc_DEPENDENCIES) 
 	@rm -f progressfunc$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(progressfunc_OBJECTS) $(progressfunc_LDADD) $(LIBS)
@@ -1359,6 +1414,10 @@ smtp-mail$(EXEEXT): $(smtp_mail_OBJECTS) $(smtp_mail_DEPENDENCIES) $(EXTRA_smtp_
 	@rm -f smtp-mail$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(smtp_mail_OBJECTS) $(smtp_mail_LDADD) $(LIBS)
 
+smtp-mime$(EXEEXT): $(smtp_mime_OBJECTS) $(smtp_mime_DEPENDENCIES) $(EXTRA_smtp_mime_DEPENDENCIES) 
+	@rm -f smtp-mime$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(smtp_mime_OBJECTS) $(smtp_mime_LDADD) $(LIBS)
+
 smtp-multi$(EXEEXT): $(smtp_multi_OBJECTS) $(smtp_multi_DEPENDENCIES) $(EXTRA_smtp_multi_DEPENDENCIES) 
 	@rm -f smtp-multi$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(smtp_multi_OBJECTS) $(smtp_multi_LDADD) $(LIBS)
@@ -1374,6 +1433,10 @@ smtp-tls$(EXEEXT): $(smtp_tls_OBJECTS) $(smtp_tls_DEPENDENCIES) $(EXTRA_smtp_tls
 smtp-vrfy$(EXEEXT): $(smtp_vrfy_OBJECTS) $(smtp_vrfy_DEPENDENCIES) $(EXTRA_smtp_vrfy_DEPENDENCIES) 
 	@rm -f smtp-vrfy$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(smtp_vrfy_OBJECTS) $(smtp_vrfy_LDADD) $(LIBS)
+
+sslbackend$(EXEEXT): $(sslbackend_OBJECTS) $(sslbackend_DEPENDENCIES) $(EXTRA_sslbackend_DEPENDENCIES) 
+	@rm -f sslbackend$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(sslbackend_OBJECTS) $(sslbackend_LDADD) $(LIBS)
 
 url2file$(EXEEXT): $(url2file_OBJECTS) $(url2file_DEPENDENCIES) $(EXTRA_url2file_DEPENDENCIES) 
 	@rm -f url2file$(EXEEXT)
@@ -1401,6 +1464,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ftpsget.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ftpupload.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ftpuploadfrommem.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ftpuploadresume.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getinfo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getinmemory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getredirect.Po@am__quote@
@@ -1428,6 +1492,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/multi-app.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/multi-debugcallback.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/multi-double.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/multi-formadd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/multi-post.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/multi-single.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/persistant.Po@am__quote@
@@ -1443,6 +1508,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pop3-uidl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/post-callback.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/postinmemory.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/postit2-formadd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/postit2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/progressfunc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/resolve.Po@am__quote@
@@ -1455,10 +1521,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/simplessl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/smtp-expn.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/smtp-mail.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/smtp-mime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/smtp-multi.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/smtp-ssl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/smtp-tls.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/smtp-vrfy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sslbackend.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/url2file.Po@am__quote@
 
 .c.o:

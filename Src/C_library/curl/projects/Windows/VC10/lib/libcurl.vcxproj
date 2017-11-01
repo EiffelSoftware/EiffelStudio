@@ -2383,6 +2383,7 @@
     <ClCompile Include="..\..\..\..\lib\md4.c" />
     <ClCompile Include="..\..\..\..\lib\md5.c" />
     <ClCompile Include="..\..\..\..\lib\memdebug.c" />
+    <ClCompile Include="..\..\..\..\lib\mime.c" />
     <ClCompile Include="..\..\..\..\lib\mprintf.c" />
     <ClCompile Include="..\..\..\..\lib\multi.c" />
     <ClCompile Include="..\..\..\..\lib\netrc.c" />
@@ -2510,6 +2511,7 @@
     <ClInclude Include="..\..\..\..\lib\inet_pton.h" />
     <ClInclude Include="..\..\..\..\lib\llist.h" />
     <ClInclude Include="..\..\..\..\lib\memdebug.h" />
+    <ClInclude Include="..\..\..\..\lib\mime.h" />
     <ClInclude Include="..\..\..\..\lib\multihandle.h" />
     <ClInclude Include="..\..\..\..\lib\multiif.h" />
     <ClInclude Include="..\..\..\..\lib\netrc.h" />

@@ -170,8 +170,8 @@ struct OperationConfig {
   time_t condtime;
   struct curl_slist *headers;
   struct curl_slist *proxyheaders;
-  struct curl_httppost *httppost;
-  struct curl_httppost *last_post;
+  curl_mime *mimepost;
+  curl_mime *mimecurrent;
   struct curl_slist *telnet_options;
   struct curl_slist *resolve;
   struct curl_slist *connect_to;
@@ -247,6 +247,7 @@ struct OperationConfig {
                                      from user callbacks */
   curl_error synthetic_error;     /* if non-zero, it overrides any libcurl
                                      error */
+  bool ssh_compression;           /* enable/disable SSH compression */
   struct GlobalConfig *global;
   struct OperationConfig *prev;
   struct OperationConfig *next;   /* Always last in the struct */

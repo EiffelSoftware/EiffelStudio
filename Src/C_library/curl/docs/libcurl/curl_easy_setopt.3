@@ -20,7 +20,7 @@
 .\" *
 .\" **************************************************************************
 .\"
-.TH curl_easy_setopt 3 "April 27, 2017" "libcurl 7.55.1" "libcurl Manual"
+.TH curl_easy_setopt 3 "September 02, 2017" "libcurl 7.56.1" "libcurl Manual"
 
 .SH NAME
 curl_easy_setopt \- set options for a curl easy handle
@@ -412,6 +412,8 @@ Size of file to send. \fICURLOPT_INFILESIZE(3)\fP
 Size of file to send. \fICURLOPT_INFILESIZE_LARGE(3)\fP
 .IP CURLOPT_UPLOAD
 Upload data. See \fICURLOPT_UPLOAD(3)\fP
+.IP CURLOPT_MIMEPOST
+Post/send MIME data. See \fICURLOPT_MIMEPOST(3)\fP
 .IP CURLOPT_MAXFILESIZE
 Maximum file size to get. See \fICURLOPT_MAXFILESIZE(3)\fP
 .IP CURLOPT_MAXFILESIZE_LARGE
@@ -548,6 +550,8 @@ Disable GSS-API delegation. See \fICURLOPT_GSSAPI_DELEGATION(3)\fP
 .SH SSH OPTIONS
 .IP CURLOPT_SSH_AUTH_TYPES
 SSH authentication types. See \fICURLOPT_SSH_AUTH_TYPES(3)\fP
+.IP CURLOPT_SSH_COMPRESSION
+Enable SSH compression. See \fICURLOPT_SSH_COMPRESSION(3)\fP
 .IP CURLOPT_SSH_HOST_PUBLIC_KEY_MD5
 MD5 of host's public key. See \fICURLOPT_SSH_HOST_PUBLIC_KEY_MD5(3)\fP
 .IP CURLOPT_SSH_PUBLIC_KEYFILE

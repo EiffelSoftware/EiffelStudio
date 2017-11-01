@@ -175,6 +175,7 @@ man_MANS =                                      \
   CURLOPT_MAXREDIRS.3                           \
   CURLOPT_MAX_RECV_SPEED_LARGE.3                \
   CURLOPT_MAX_SEND_SPEED_LARGE.3                \
+  CURLOPT_MIMEPOST.3                            \
   CURLOPT_NETRC.3                               \
   CURLOPT_NETRC_FILE.3                          \
   CURLOPT_NEW_DIRECTORY_PERMS.3                 \
@@ -258,6 +259,7 @@ man_MANS =                                      \
   CURLOPT_SOCKS5_GSSAPI_NEC.3                   \
   CURLOPT_SOCKS5_GSSAPI_SERVICE.3               \
   CURLOPT_SSH_AUTH_TYPES.3                      \
+  CURLOPT_SSH_COMPRESSION.3                     \
   CURLOPT_SSH_HOST_PUBLIC_KEY_MD5.3             \
   CURLOPT_SSH_KEYDATA.3                         \
   CURLOPT_SSH_KEYFUNCTION.3                     \

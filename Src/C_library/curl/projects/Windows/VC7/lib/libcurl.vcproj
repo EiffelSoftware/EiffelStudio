@@ -1290,6 +1290,9 @@
 				RelativePath="..\..\..\..\lib\memdebug.c">
 			</File>
 			<File
+				RelativePath="..\..\..\..\lib\mime.c">
+			</File>
+			<File
 				RelativePath="..\..\..\..\lib\mprintf.c">
 			</File>
 			<File
@@ -1595,6 +1598,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\lib\memdebug.h">
+			</File>
+			<File
+				RelativePath="..\..\..\..\lib\mime.h">
 			</File>
 			<File
 				RelativePath="..\..\..\..\lib\multihandle.h">

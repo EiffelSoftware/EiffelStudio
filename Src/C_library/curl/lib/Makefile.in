@@ -223,7 +223,7 @@ am__objects_1 = libcurl_la-file.lo libcurl_la-timeval.lo \
 	libcurl_la-pipeline.lo libcurl_la-dotdot.lo \
 	libcurl_la-x509asn1.lo libcurl_la-http2.lo libcurl_la-smb.lo \
 	libcurl_la-curl_endian.lo libcurl_la-curl_des.lo \
-	libcurl_la-system_win32.lo
+	libcurl_la-system_win32.lo libcurl_la-mime.lo
 am__dirstamp = $(am__leading_dot)dirstamp
 am__objects_2 = vauth/libcurl_la-vauth.lo \
 	vauth/libcurl_la-cleartext.lo vauth/libcurl_la-cram.lo \
@@ -300,7 +300,7 @@ am__objects_7 = libcurlu_la-file.lo libcurlu_la-timeval.lo \
 	libcurlu_la-dotdot.lo libcurlu_la-x509asn1.lo \
 	libcurlu_la-http2.lo libcurlu_la-smb.lo \
 	libcurlu_la-curl_endian.lo libcurlu_la-curl_des.lo \
-	libcurlu_la-system_win32.lo
+	libcurlu_la-system_win32.lo libcurlu_la-mime.lo
 am__objects_8 = vauth/libcurlu_la-vauth.lo \
 	vauth/libcurlu_la-cleartext.lo vauth/libcurlu_la-cram.lo \
 	vauth/libcurlu_la-digest.lo vauth/libcurlu_la-digest_sspi.lo \
@@ -435,7 +435,9 @@ CURL_DISABLE_TFTP = @CURL_DISABLE_TFTP@
 CURL_LT_SHLIB_VERSIONED_FLAVOUR = @CURL_LT_SHLIB_VERSIONED_FLAVOUR@
 CURL_NETWORK_AND_TIME_LIBS = @CURL_NETWORK_AND_TIME_LIBS@
 CURL_NETWORK_LIBS = @CURL_NETWORK_LIBS@
+CURL_WITH_MULTI_SSL = @CURL_WITH_MULTI_SSL@
 CYGPATH_W = @CYGPATH_W@
+DEFAULT_SSL_BACKEND = @DEFAULT_SSL_BACKEND@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
@@ -638,7 +640,6 @@ lib_LTLIBRARIES = libcurl.la
 # $(top_srcdir)/lib for libcurl's lib/curl_setup.h and other "private" files
 # $(top_builddir)/ares is for in-tree c-ares's generated ares_build.h file
 # $(top_srcdir)/ares is for in-tree c-ares's external include files
-
 # This flag accepts an argument of the form current[:revision[:age]]. So,
 # passing -version-info 3:12:1 sets current to 3, revision to 12, and age to
 # 1.
@@ -653,18 +654,7 @@ lib_LTLIBRARIES = libcurl.la
 # For the full guide on libcurl ABI rules, see docs/libcurl/ABI
 AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_builddir)/lib \
 	-I$(top_srcdir)/lib $(am__append_1) -DBUILDING_LIBCURL
-@SONAME_BUMP_FALSE@VERSIONINFO = -version-info 8:0:4
-
-#
-# Bumping of SONAME conditionally may seem like a weird thing to do, and yeah
-# it is. The problem is that we try to avoid the bump as hard as possible, but
-# yet it is still necessary for a few rare situations. The configure script will
-# attempt to figure out these situations, and it can be forced to consider this
-# to be such a case! See README.curl_off_t for further details.
-#
-# This conditional soname bump SHOULD be removed at next "proper" bump.
-#
-@SONAME_BUMP_TRUE@VERSIONINFO = -version-info 9:0:4
+VERSIONINFO = -version-info 9:0:5
 AM_LDFLAGS = 
 AM_CFLAGS = 
 libcurl_la_CPPFLAGS_EXTRA = $(am__append_6) $(am__append_7)
@@ -709,7 +699,8 @@ LIB_CFILES = file.c timeval.c base64.c hostip.c progress.c formdata.c   \
   http_proxy.c non-ascii.c asyn-ares.c asyn-thread.c curl_gssapi.c      \
   http_ntlm.c curl_ntlm_wb.c curl_ntlm_core.c curl_sasl.c rand.c        \
   curl_multibyte.c hostcheck.c conncache.c pipeline.c dotdot.c          \
-  x509asn1.c http2.c smb.c curl_endian.c curl_des.c system_win32.c
+  x509asn1.c http2.c smb.c curl_endian.c curl_des.c system_win32.c      \
+  mime.c
 
 LIB_HFILES = arpa_telnet.h netrc.h file.h timeval.h hostip.h progress.h \
   formdata.h cookie.h http.h sendf.h ftp.h url.h dict.h if2ip.h         \
@@ -728,7 +719,7 @@ LIB_HFILES = arpa_telnet.h netrc.h file.h timeval.h hostip.h progress.h \
   curl_sasl.h curl_multibyte.h hostcheck.h conncache.h                  \
   curl_setup_once.h multihandle.h setup-vms.h pipeline.h dotdot.h       \
   x509asn1.h http2.h sigpipe.h smb.h curl_endian.h curl_des.h           \
-  curl_printf.h system_win32.h rand.h
+  curl_printf.h system_win32.h rand.h mime.h
 
 LIB_RCFILES = libcurl.rc
 CSOURCES = $(LIB_CFILES) $(LIB_VAUTH_CFILES) $(LIB_VTLS_CFILES)
@@ -1020,6 +1011,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurl_la-md4.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurl_la-md5.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurl_la-memdebug.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurl_la-mime.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurl_la-mprintf.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurl_la-multi.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurl_la-netrc.Plo@am__quote@
@@ -1121,6 +1113,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurlu_la-md4.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurlu_la-md5.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurlu_la-memdebug.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurlu_la-mime.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurlu_la-mprintf.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurlu_la-multi.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurlu_la-netrc.Plo@am__quote@
@@ -1941,6 +1934,13 @@ libcurl_la-system_win32.lo: system_win32.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='system_win32.c' object='libcurl_la-system_win32.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcurl_la_CPPFLAGS) $(CPPFLAGS) $(libcurl_la_CFLAGS) $(CFLAGS) -c -o libcurl_la-system_win32.lo `test -f 'system_win32.c' || echo '$(srcdir)/'`system_win32.c
+
+libcurl_la-mime.lo: mime.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcurl_la_CPPFLAGS) $(CPPFLAGS) $(libcurl_la_CFLAGS) $(CFLAGS) -MT libcurl_la-mime.lo -MD -MP -MF $(DEPDIR)/libcurl_la-mime.Tpo -c -o libcurl_la-mime.lo `test -f 'mime.c' || echo '$(srcdir)/'`mime.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcurl_la-mime.Tpo $(DEPDIR)/libcurl_la-mime.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mime.c' object='libcurl_la-mime.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcurl_la_CPPFLAGS) $(CPPFLAGS) $(libcurl_la_CFLAGS) $(CFLAGS) -c -o libcurl_la-mime.lo `test -f 'mime.c' || echo '$(srcdir)/'`mime.c
 
 vauth/libcurl_la-vauth.lo: vauth/vauth.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcurl_la_CPPFLAGS) $(CPPFLAGS) $(libcurl_la_CFLAGS) $(CFLAGS) -MT vauth/libcurl_la-vauth.lo -MD -MP -MF vauth/$(DEPDIR)/libcurl_la-vauth.Tpo -c -o vauth/libcurl_la-vauth.lo `test -f 'vauth/vauth.c' || echo '$(srcdir)/'`vauth/vauth.c
@@ -2816,6 +2816,13 @@ libcurlu_la-system_win32.lo: system_win32.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='system_win32.c' object='libcurlu_la-system_win32.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcurlu_la_CPPFLAGS) $(CPPFLAGS) $(libcurlu_la_CFLAGS) $(CFLAGS) -c -o libcurlu_la-system_win32.lo `test -f 'system_win32.c' || echo '$(srcdir)/'`system_win32.c
+
+libcurlu_la-mime.lo: mime.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcurlu_la_CPPFLAGS) $(CPPFLAGS) $(libcurlu_la_CFLAGS) $(CFLAGS) -MT libcurlu_la-mime.lo -MD -MP -MF $(DEPDIR)/libcurlu_la-mime.Tpo -c -o libcurlu_la-mime.lo `test -f 'mime.c' || echo '$(srcdir)/'`mime.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcurlu_la-mime.Tpo $(DEPDIR)/libcurlu_la-mime.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mime.c' object='libcurlu_la-mime.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcurlu_la_CPPFLAGS) $(CPPFLAGS) $(libcurlu_la_CFLAGS) $(CFLAGS) -c -o libcurlu_la-mime.lo `test -f 'mime.c' || echo '$(srcdir)/'`mime.c
 
 vauth/libcurlu_la-vauth.lo: vauth/vauth.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcurlu_la_CPPFLAGS) $(CPPFLAGS) $(libcurlu_la_CFLAGS) $(CFLAGS) -MT vauth/libcurlu_la-vauth.lo -MD -MP -MF vauth/$(DEPDIR)/libcurlu_la-vauth.Tpo -c -o vauth/libcurlu_la-vauth.lo `test -f 'vauth/vauth.c' || echo '$(srcdir)/'`vauth/vauth.c

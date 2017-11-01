@@ -19,7 +19,7 @@
 .\" * KIND, either express or implied.
 .\" *
 .\" **************************************************************************
-.TH libcurl-symbols 3 "aug  9, 2017" "libcurl 7.41.0" "libcurl symbols"
+.TH libcurl-symbols 3 "okt  4, 2017" "libcurl 7.41.0" "libcurl symbols"
 .SH NAME
 libcurl-symbols \- libcurl symbol version information
 .SH "libcurl symbols"
@@ -357,6 +357,7 @@ Introduced in 7.21.0
 Introduced in 7.21.0
 .IP CURLFORM_ARRAY
 Introduced in 7.9.1
+Deprecated since 7.56.0
 .IP CURLFORM_ARRAY_END
 Introduced in 7.9.1
 Deprecated since 7.9.5
@@ -367,40 +368,58 @@ Deprecated since 7.9.5
 Last used in 7.9.5
 .IP CURLFORM_BUFFER
 Introduced in 7.9.8
+Deprecated since 7.56.0
 .IP CURLFORM_BUFFERLENGTH
 Introduced in 7.9.8
+Deprecated since 7.56.0
 .IP CURLFORM_BUFFERPTR
 Introduced in 7.9.8
+Deprecated since 7.56.0
 .IP CURLFORM_CONTENTHEADER
 Introduced in 7.9.3
+Deprecated since 7.56.0
 .IP CURLFORM_CONTENTLEN
 Introduced in 7.46.0
+Deprecated since 7.56.0
 .IP CURLFORM_CONTENTSLENGTH
 Introduced in 7.9
+Deprecated since 7.56.0
 .IP CURLFORM_CONTENTTYPE
 Introduced in 7.9
+Deprecated since 7.56.0
 .IP CURLFORM_COPYCONTENTS
 Introduced in 7.9
+Deprecated since 7.56.0
 .IP CURLFORM_COPYNAME
 Introduced in 7.9
+Deprecated since 7.56.0
 .IP CURLFORM_END
 Introduced in 7.9
+Deprecated since 7.56.0
 .IP CURLFORM_FILE
 Introduced in 7.9
+Deprecated since 7.56.0
 .IP CURLFORM_FILECONTENT
 Introduced in 7.9.1
+Deprecated since 7.56.0
 .IP CURLFORM_FILENAME
 Introduced in 7.9.6
+Deprecated since 7.56.0
 .IP CURLFORM_NAMELENGTH
 Introduced in 7.9
+Deprecated since 7.56.0
 .IP CURLFORM_NOTHING
 Introduced in 7.9
+Deprecated since 7.56.0
 .IP CURLFORM_PTRCONTENTS
 Introduced in 7.9
+Deprecated since 7.56.0
 .IP CURLFORM_PTRNAME
 Introduced in 7.9
+Deprecated since 7.56.0
 .IP CURLFORM_STREAM
 Introduced in 7.18.2
+Deprecated since 7.56.0
 .IP CURLFTPAUTH_DEFAULT
 Introduced in 7.12.2
 .IP CURLFTPAUTH_SSL
@@ -869,6 +888,7 @@ Introduced in 7.8.1
 Introduced in 7.1
 .IP CURLOPT_HTTPPOST
 Introduced in 7.1
+Deprecated since 7.56.0
 .IP CURLOPT_HTTPPROXYTUNNEL
 Introduced in 7.3
 .IP CURLOPT_HTTPREQUEST
@@ -939,6 +959,8 @@ Introduced in 7.5
 Introduced in 7.15.5
 .IP CURLOPT_MAX_SEND_SPEED_LARGE
 Introduced in 7.15.5
+.IP CURLOPT_MIMEPOST
+Introduced in 7.56.0
 .IP CURLOPT_MUTE
 Introduced in 7.1
 Deprecated since 7.8
@@ -1150,6 +1172,8 @@ Introduced in 7.13.0
 Introduced in 7.12.1
 .IP CURLOPT_SSH_AUTH_TYPES
 Introduced in 7.16.1
+.IP CURLOPT_SSH_COMPRESSION
+Introduced in 7.56.0
 .IP CURLOPT_SSH_HOST_PUBLIC_KEY_MD5
 Introduced in 7.17.1
 .IP CURLOPT_SSH_KEYDATA
@@ -1450,6 +1474,14 @@ Introduced in 7.49.0
 Introduced in 7.25.0
 .IP CURLSSLOPT_NO_REVOKE
 Introduced in 7.44.0
+.IP CURLSSLSET_NO_BACKENDS
+Introduced in 7.56.0
+.IP CURLSSLSET_OK
+Introduced in 7.56.0
+.IP CURLSSLSET_TOO_LATE
+Introduced in 7.56.0
+.IP CURLSSLSET_UNKNOWN_BACKEND
+Introduced in 7.56.0
 .IP CURLUSESSL_ALL
 Introduced in 7.17.0
 .IP CURLUSESSL_CONTROL
@@ -1500,20 +1532,28 @@ Introduced in 7.21.0
 Introduced in 7.21.0
 .IP CURL_FORMADD_DISABLED
 Introduced in 7.12.1
+Deprecated since 7.56.0
 .IP CURL_FORMADD_ILLEGAL_ARRAY
 Introduced in 7.9.8
+Deprecated since 7.56.0
 .IP CURL_FORMADD_INCOMPLETE
 Introduced in 7.9.8
+Deprecated since 7.56.0
 .IP CURL_FORMADD_MEMORY
 Introduced in 7.9.8
+Deprecated since 7.56.0
 .IP CURL_FORMADD_NULL
 Introduced in 7.9.8
+Deprecated since 7.56.0
 .IP CURL_FORMADD_OK
 Introduced in 7.9.8
+Deprecated since 7.56.0
 .IP CURL_FORMADD_OPTION_TWICE
 Introduced in 7.9.8
+Deprecated since 7.56.0
 .IP CURL_FORMADD_UNKNOWN_OPTION
 Introduced in 7.9.8
+Deprecated since 7.56.0
 .IP CURL_GLOBAL_ACK_EINTR
 Introduced in 7.30.0
 .IP CURL_GLOBAL_ALL
@@ -1746,6 +1786,8 @@ Introduced in 7.40.0
 Introduced in 7.11.1
 .IP CURL_VERSION_LIBZ
 Introduced in 7.10
+.IP CURL_VERSION_MULTI_SSL
+Introduced in 7.56.0
 .IP CURL_VERSION_NTLM
 Introduced in 7.10.6
 .IP CURL_VERSION_NTLM_WB
@@ -1770,3 +1812,5 @@ Introduced in 7.28.0
 Introduced in 7.28.0
 .IP CURL_WRITEFUNC_PAUSE
 Introduced in 7.18.0
+.IP CURL_ZERO_TERMINATED
+Introduced in 7.56.0

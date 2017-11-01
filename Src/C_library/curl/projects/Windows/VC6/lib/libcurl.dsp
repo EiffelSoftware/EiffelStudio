@@ -970,6 +970,10 @@ SOURCE=..\..\..\..\lib\memdebug.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\lib\mime.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\lib\mprintf.c
 # End Source File
 # Begin Source File
@@ -1471,6 +1475,10 @@ SOURCE=..\..\..\..\lib\llist.h
 # Begin Source File
 
 SOURCE=..\..\..\..\lib\memdebug.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\lib\mime.h
 # End Source File
 # Begin Source File
 

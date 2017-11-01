@@ -384,12 +384,12 @@ char *curl_pushheader_byname(struct curl_pushheaders *h, const char *header)
     struct HTTP *stream = h->data->req.protop;
     size_t len = strlen(header);
     size_t i;
-    for(i=0; i<stream->push_headers_used; i++) {
+    for(i = 0; i<stream->push_headers_used; i++) {
       if(!strncmp(header, stream->push_headers[i], len)) {
         /* sub-match, make sure that it is followed by a colon */
         if(stream->push_headers[i][len] != ':')
           continue;
-        return &stream->push_headers[i][len+1];
+        return &stream->push_headers[i][len + 1];
       }
     }
   }
@@ -464,7 +464,7 @@ static int push_promise(struct Curl_easy *data,
                               data->multi->push_userp);
 
     /* free the headers again */
-    for(i=0; i<stream->push_headers_used; i++)
+    for(i = 0; i<stream->push_headers_used; i++)
       free(stream->push_headers[i]);
     free(stream->push_headers);
     stream->push_headers = NULL;
@@ -1582,7 +1582,7 @@ static ssize_t http2_recv(struct connectdata *conn, int sockindex,
       failf(data, "nghttp2_session_mem_recv() returned %d:%s\n",
             rv, nghttp2_strerror((int)rv));
       *err = CURLE_RECV_ERROR;
-      return 0;
+      return -1;
     }
     DEBUGF(infof(data, "nghttp2_session_mem_recv() returns %zd\n", rv));
     if(nread == rv) {
@@ -1600,7 +1600,7 @@ static ssize_t http2_recv(struct connectdata *conn, int sockindex,
     rv = h2_session_send(data, httpc->h2);
     if(rv != 0) {
       *err = CURLE_SEND_ERROR;
-      return 0;
+      return -1;
     }
 
     if(should_close_session(httpc)) {
@@ -1955,6 +1955,7 @@ static ssize_t http2_send(struct connectdata *conn, int sockindex,
   switch(conn->data->set.httpreq) {
   case HTTPREQ_POST:
   case HTTPREQ_POST_FORM:
+  case HTTPREQ_POST_MIME:
   case HTTPREQ_PUT:
     if(conn->data->state.infilesize != -1)
       stream->upload_left = conn->data->state.infilesize;

@@ -71,6 +71,7 @@ bool curl_win32_idn_to_ascii(const char *in, char **out);
 #include "netrc.h"
 
 #include "formdata.h"
+#include "mime.h"
 #include "vtls/vtls.h"
 #include "hostip.h"
 #include "transfer.h"
@@ -284,7 +285,7 @@ void Curl_freeset(struct Curl_easy *data)
 {
   /* Free all dynamic strings stored in the data->set substructure. */
   enum dupstring i;
-  for(i=(enum dupstring)0; i < STRING_LAST; i++) {
+  for(i = (enum dupstring)0; i < STRING_LAST; i++) {
     Curl_safefree(data->set.str[i]);
   }
 
@@ -371,7 +372,7 @@ CURLcode Curl_dupset(struct Curl_easy *dst, struct Curl_easy *src)
   memset(dst->set.str, 0, STRING_LAST * sizeof(char *));
 
   /* duplicate all strings */
-  for(i=(enum dupstring)0; i< STRING_LASTZEROTERMINATED; i++) {
+  for(i = (enum dupstring)0; i< STRING_LASTZEROTERMINATED; i++) {
     result = setstropt(&dst->set.str[i], src->set.str[i]);
     if(result)
       return result;
@@ -478,6 +479,8 @@ CURLcode Curl_close(struct Curl_easy *data)
 
   Curl_http2_cleanup_dependencies(data);
   Curl_convert_close(data);
+
+  Curl_mime_cleanpart(&data->set.mimepost);
 
   /* No longer a dirty share, if it exists */
   if(data->share) {
@@ -668,6 +671,8 @@ CURLcode Curl_open(struct Curl_easy **curl)
     result = CURLE_OUT_OF_MEMORY;
   }
 
+  Curl_mime_initpart(&data->set.mimepost, data);
+
   data->state.headerbuff = malloc(HEADERSIZE);
   if(!data->state.headerbuff) {
     DEBUGF(fprintf(stderr, "Error: malloc of headerbuff failed\n"));
@@ -676,7 +681,7 @@ CURLcode Curl_open(struct Curl_easy **curl)
   else {
     result = Curl_init_userdefined(&data->set);
 
-    data->state.headersize=HEADERSIZE;
+    data->state.headersize = HEADERSIZE;
 
     Curl_convert_init(data);
 
@@ -716,13 +721,14 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
   char *argptr;
   CURLcode result = CURLE_OK;
   long arg;
-#ifndef CURL_DISABLE_HTTP
   curl_off_t bigsize;
-#endif
 
   switch(option) {
   case CURLOPT_DNS_CACHE_TIMEOUT:
-    data->set.dns_cache_timeout = va_arg(param, long);
+    arg = va_arg(param, long);
+    if(arg < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.dns_cache_timeout = arg;
     break;
   case CURLOPT_DNS_USE_GLOBAL_CACHE:
     /* remember we want this enabled */
@@ -760,7 +766,10 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
      * Set the absolute number of maximum simultaneous alive connection that
      * libcurl is allowed to have.
      */
-    data->set.maxconnects = va_arg(param, long);
+    arg = va_arg(param, long);
+    if(arg < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.maxconnects = arg;
     break;
   case CURLOPT_FORBID_REUSE:
     /*
@@ -870,7 +879,11 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
      * Option that specifies how quickly an server response must be obtained
      * before it is considered failure. For pingpong protocols.
      */
-    data->set.server_response_timeout = va_arg(param, long) * 1000;
+    arg = va_arg(param, long);
+    if((arg >= 0) && (arg < (INT_MAX/1000)))
+      data->set.server_response_timeout = arg * 1000;
+    else
+      return CURLE_BAD_FUNCTION_ARGUMENT;
     break;
   case CURLOPT_TFTP_NO_OPTIONS:
     /*
@@ -883,7 +896,10 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     /*
      * TFTP option that specifies the block size to use for data transmission.
      */
-    data->set.tftp_blksize = va_arg(param, long);
+    arg = va_arg(param, long);
+    if(arg < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.tftp_blksize = arg;
     break;
   case CURLOPT_DIRLISTONLY:
     /*
@@ -902,13 +918,19 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     /*
      * How do access files over FTP.
      */
-    data->set.ftp_filemethod = (curl_ftpfile)va_arg(param, long);
+    arg = va_arg(param, long);
+    if((arg < CURLFTPMETHOD_DEFAULT) || (arg > CURLFTPMETHOD_SINGLECWD))
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.ftp_filemethod = (curl_ftpfile)arg;
     break;
   case CURLOPT_NETRC:
     /*
      * Parse the $HOME/.netrc file
      */
-    data->set.use_netrc = (enum CURL_NETRC_OPTION)va_arg(param, long);
+    arg = va_arg(param, long);
+    if((arg < CURL_NETRC_IGNORED) || (arg > CURL_NETRC_REQUIRED))
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.use_netrc = (enum CURL_NETRC_OPTION)arg;
     break;
   case CURLOPT_NETRC_FILE:
     /*
@@ -931,7 +953,10 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
      * Set HTTP time condition. This must be one of the defines in the
      * curl/curl.h header file.
      */
-    data->set.timecondition = (curl_TimeCond)va_arg(param, long);
+    arg = va_arg(param, long);
+    if((arg < CURL_TIMECOND_NONE) || (arg > CURL_TIMECOND_LASTMOD))
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.timecondition = (curl_TimeCond)arg;
     break;
   case CURLOPT_TIMEVALUE:
     /*
@@ -947,6 +972,8 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
      */
 #ifdef USE_SSL
     arg = va_arg(param, long);
+    if((arg < CURL_SSLVERSION_DEFAULT) || (arg > CURL_SSLVERSION_TLSv1_3))
+      return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.ssl.primary.version = C_SSLVERSION_VALUE(arg);
     data->set.ssl.primary.version_max = C_SSLVERSION_MAX_VALUE(arg);
 #else
@@ -960,6 +987,8 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
      */
 #ifdef USE_SSL
     arg = va_arg(param, long);
+    if((arg < CURL_SSLVERSION_DEFAULT) || (arg > CURL_SSLVERSION_TLSv1_3))
+      return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.proxy_ssl.primary.version = C_SSLVERSION_VALUE(arg);
     data->set.proxy_ssl.primary.version_max = C_SSLVERSION_MAX_VALUE(arg);
 #else
@@ -1017,7 +1046,10 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
      * The maximum amount of hops you allow curl to follow Location:
      * headers. This should mostly be used to detect never-ending loops.
      */
-    data->set.maxredirs = va_arg(param, long);
+    arg = va_arg(param, long);
+    if(arg < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.maxredirs = arg;
     break;
 
   case CURLOPT_POSTREDIR:
@@ -1032,6 +1064,10 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
      * other - POST is kept as POST after 301 and 302
      */
     arg = va_arg(param, long);
+    if(arg < CURL_REDIR_GET_ALL)
+      /* no return error on too high numbers since the bitmask could be
+         extended in a future */
+      return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.keep_post = arg & CURL_REDIR_POST_ALL;
   }
   break;
@@ -1111,6 +1147,8 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
      * figure it out. Enables binary posts.
      */
     bigsize = va_arg(param, long);
+    if(bigsize < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
 
     if(data->set.postfieldsize < bigsize &&
        data->set.postfields == data->set.str[STRING_COPYPOSTFIELDS]) {
@@ -1147,6 +1185,19 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     data->set.httpreq = HTTPREQ_POST_FORM;
     data->set.opt_no_body = FALSE; /* this is implied */
     break;
+#endif   /* CURL_DISABLE_HTTP */
+
+  case CURLOPT_MIMEPOST:
+    /*
+     * Set to make us do MIME/form POST
+     */
+    result = Curl_mime_set_subparts(&data->set.mimepost,
+                                    va_arg(param, curl_mime *), FALSE);
+    if(!result) {
+      data->set.httpreq = HTTPREQ_POST_MIME;
+      data->set.opt_no_body = FALSE; /* this is implied */
+    }
+    break;
 
   case CURLOPT_REFERER:
     /*
@@ -1176,6 +1227,7 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     data->set.headers = va_arg(param, struct curl_slist *);
     break;
 
+#ifndef CURL_DISABLE_HTTP
   case CURLOPT_PROXYHEADER:
     /*
      * Set a list with proxy headers to use (or replace internals with)
@@ -1327,7 +1379,7 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     }
 
     break;
-#endif /* CURL_DISABLE_COOKIES */
+#endif /* !CURL_DISABLE_COOKIES */
 
   case CURLOPT_HTTPGET:
     /*
@@ -1346,12 +1398,30 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
      * the listed enums in curl/curl.h.
      */
     arg = va_arg(param, long);
+    if(arg < CURL_HTTP_VERSION_NONE)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
 #ifndef USE_NGHTTP2
     if(arg >= CURL_HTTP_VERSION_2)
+      return CURLE_UNSUPPORTED_PROTOCOL;
+#else
+    if(arg > CURL_HTTP_VERSION_2_PRIOR_KNOWLEDGE)
       return CURLE_UNSUPPORTED_PROTOCOL;
 #endif
     data->set.httpversion = arg;
     break;
+
+  case CURLOPT_EXPECT_100_TIMEOUT_MS:
+    /*
+     * Time to wait for a response to a HTTP request containing an
+     * Expect: 100-continue header before sending the data anyway.
+     */
+    arg = va_arg(param, long);
+    if(arg < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.expect_100_timeout = arg;
+    break;
+
+#endif   /* CURL_DISABLE_HTTP */
 
   case CURLOPT_HTTPAUTH:
     /*
@@ -1404,16 +1474,6 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
   }
   break;
 
-  case CURLOPT_EXPECT_100_TIMEOUT_MS:
-    /*
-     * Time to wait for a response to a HTTP request containing an
-     * Expect: 100-continue header before sending the data anyway.
-     */
-    data->set.expect_100_timeout = va_arg(param, long);
-    break;
-
-#endif   /* CURL_DISABLE_HTTP */
-
   case CURLOPT_CUSTOMREQUEST:
     /*
      * Set a custom string to use as request
@@ -1440,7 +1500,10 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     /*
      * Explicitly set HTTP proxy port number.
      */
-    data->set.proxyport = va_arg(param, long);
+    arg = va_arg(param, long);
+    if((arg < 0) || (arg > 65535))
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.proxyport = arg;
     break;
 
   case CURLOPT_PROXYAUTH:
@@ -1523,7 +1586,10 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     /*
      * Set proxy type. HTTP/HTTP_1_0/SOCKS4/SOCKS4a/SOCKS5/SOCKS5_HOSTNAME
      */
-    data->set.proxytype = (curl_proxytype)va_arg(param, long);
+    arg = va_arg(param, long);
+    if((arg < CURLPROXY_HTTP) || (arg > CURLPROXY_SOCKS5_HOSTNAME))
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.proxytype = (curl_proxytype)arg;
     break;
 
   case CURLOPT_PROXY_TRANSFER_MODE:
@@ -1622,7 +1688,10 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     break;
 
   case CURLOPT_FTP_SSL_CCC:
-    data->set.ftp_ccc = (curl_ftpccc)va_arg(param, long);
+    arg = va_arg(param, long);
+    if((arg < CURLFTPSSL_CCC_NONE) || (arg > CURLFTPSSL_CCC_ACTIVE))
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.ftp_ccc = (curl_ftpccc)arg;
     break;
 
   case CURLOPT_FTP_SKIP_PASV_IP:
@@ -1645,42 +1714,60 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
      * If known, this should inform curl about the file size of the
      * to-be-uploaded file.
      */
-    data->set.filesize = va_arg(param, long);
+    arg = va_arg(param, long);
+    if(arg < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.filesize = arg;
     break;
   case CURLOPT_INFILESIZE_LARGE:
     /*
      * If known, this should inform curl about the file size of the
      * to-be-uploaded file.
      */
-    data->set.filesize = va_arg(param, curl_off_t);
+    bigsize = va_arg(param, curl_off_t);
+    if(bigsize < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.filesize = bigsize;
     break;
   case CURLOPT_LOW_SPEED_LIMIT:
     /*
      * The low speed limit that if transfers are below this for
      * CURLOPT_LOW_SPEED_TIME, the transfer is aborted.
      */
-    data->set.low_speed_limit=va_arg(param, long);
+    arg = va_arg(param, long);
+    if(arg < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.low_speed_limit = arg;
     break;
   case CURLOPT_MAX_SEND_SPEED_LARGE:
     /*
      * When transfer uploads are faster then CURLOPT_MAX_SEND_SPEED_LARGE
      * bytes per second the transfer is throttled..
      */
-    data->set.max_send_speed=va_arg(param, curl_off_t);
+    bigsize = va_arg(param, curl_off_t);
+    if(bigsize < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.max_send_speed = bigsize;
     break;
   case CURLOPT_MAX_RECV_SPEED_LARGE:
     /*
      * When receiving data faster than CURLOPT_MAX_RECV_SPEED_LARGE bytes per
      * second the transfer is throttled..
      */
-    data->set.max_recv_speed=va_arg(param, curl_off_t);
+    bigsize = va_arg(param, curl_off_t);
+    if(bigsize < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.max_recv_speed = bigsize;
     break;
   case CURLOPT_LOW_SPEED_TIME:
     /*
      * The low speed time that if transfers are below the set
      * CURLOPT_LOW_SPEED_LIMIT during this time, the transfer is aborted.
      */
-    data->set.low_speed_time=va_arg(param, long);
+    arg = va_arg(param, long);
+    if(arg < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.low_speed_time = arg;
     break;
   case CURLOPT_URL:
     /*
@@ -1699,36 +1786,56 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     /*
      * The port number to use when getting the URL
      */
-    data->set.use_port = va_arg(param, long);
+    arg = va_arg(param, long);
+    if((arg < 0) || (arg > 65535))
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.use_port = arg;
     break;
   case CURLOPT_TIMEOUT:
     /*
      * The maximum time you allow curl to use for a single transfer
      * operation.
      */
-    data->set.timeout = va_arg(param, long) * 1000L;
+    arg = va_arg(param, long);
+    if((arg >= 0) && (arg < (INT_MAX/1000)))
+      data->set.timeout = arg * 1000;
+    else
+      return CURLE_BAD_FUNCTION_ARGUMENT;
     break;
 
   case CURLOPT_TIMEOUT_MS:
-    data->set.timeout = va_arg(param, long);
+    arg = va_arg(param, long);
+    if(arg < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.timeout = arg;
     break;
 
   case CURLOPT_CONNECTTIMEOUT:
     /*
      * The maximum time you allow curl to use to connect.
      */
-    data->set.connecttimeout = va_arg(param, long) * 1000L;
+    arg = va_arg(param, long);
+    if((arg >= 0) && (arg < (INT_MAX/1000)))
+      data->set.connecttimeout = arg * 1000;
+    else
+      return CURLE_BAD_FUNCTION_ARGUMENT;
     break;
 
   case CURLOPT_CONNECTTIMEOUT_MS:
-    data->set.connecttimeout = va_arg(param, long);
+    arg = va_arg(param, long);
+    if(arg < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.connecttimeout = arg;
     break;
 
   case CURLOPT_ACCEPTTIMEOUT_MS:
     /*
      * The maximum time you allow curl to wait for server connect
      */
-    data->set.accepttimeout = va_arg(param, long);
+    arg = va_arg(param, long);
+    if(arg < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.accepttimeout = arg;
     break;
 
   case CURLOPT_USERPWD:
@@ -1875,15 +1982,21 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     break;
   case CURLOPT_RESUME_FROM:
     /*
-     * Resume transfer at the give file position
+     * Resume transfer at the given file position
      */
-    data->set.set_resume_from = va_arg(param, long);
+    arg = va_arg(param, long);
+    if(arg < -1)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.set_resume_from = arg;
     break;
   case CURLOPT_RESUME_FROM_LARGE:
     /*
-     * Resume transfer at the give file position
+     * Resume transfer at the given file position
      */
-    data->set.set_resume_from = va_arg(param, curl_off_t);
+    bigsize = va_arg(param, curl_off_t);
+    if(bigsize < -1)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.set_resume_from = bigsize;
     break;
   case CURLOPT_DEBUGFUNCTION:
     /*
@@ -2112,9 +2225,12 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     break;
   case CURLOPT_GSSAPI_DELEGATION:
     /*
-     * GSS-API credential delegation
+     * GSS-API credential delegation bitmask
      */
-    data->set.gssapi_delegation = va_arg(param, long);
+    arg = va_arg(param, long);
+    if(arg < CURLGSSAPI_DELEGATION_NONE)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.gssapi_delegation = arg;
     break;
   case CURLOPT_SSL_VERIFYPEER:
     /*
@@ -2122,6 +2238,12 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.ssl.primary.verifypeer = (0 != va_arg(param, long)) ?
                                        TRUE : FALSE;
+
+    /* Update the current connection ssl_config. */
+    if(data->easy_conn) {
+      data->easy_conn->ssl_config.verifypeer =
+        data->set.ssl.primary.verifypeer;
+    }
     break;
   case CURLOPT_PROXY_SSL_VERIFYPEER:
     /*
@@ -2129,6 +2251,12 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
      */
     data->set.proxy_ssl.primary.verifypeer =
       (0 != va_arg(param, long))?TRUE:FALSE;
+
+    /* Update the current connection proxy_ssl_config. */
+    if(data->easy_conn) {
+      data->easy_conn->proxy_ssl_config.verifypeer =
+        data->set.proxy_ssl.primary.verifypeer;
+    }
     break;
   case CURLOPT_SSL_VERIFYHOST:
     /*
@@ -2147,6 +2275,12 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     }
 
     data->set.ssl.primary.verifyhost = (0 != arg) ? TRUE : FALSE;
+
+    /* Update the current connection ssl_config. */
+    if(data->easy_conn) {
+      data->easy_conn->ssl_config.verifyhost =
+        data->set.ssl.primary.verifyhost;
+    }
     break;
   case CURLOPT_PROXY_SSL_VERIFYHOST:
     /*
@@ -2165,6 +2299,12 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     }
 
     data->set.proxy_ssl.primary.verifyhost = (0 != arg)?TRUE:FALSE;
+
+    /* Update the current connection proxy_ssl_config. */
+    if(data->easy_conn) {
+      data->easy_conn->proxy_ssl_config.verifyhost =
+        data->set.proxy_ssl.primary.verifyhost;
+    }
     break;
   case CURLOPT_SSL_VERIFYSTATUS:
     /*
@@ -2177,26 +2317,34 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
 
     data->set.ssl.primary.verifystatus = (0 != va_arg(param, long)) ?
                                          TRUE : FALSE;
+
+    /* Update the current connection ssl_config. */
+    if(data->easy_conn) {
+      data->easy_conn->ssl_config.verifystatus =
+        data->set.ssl.primary.verifystatus;
+    }
     break;
   case CURLOPT_SSL_CTX_FUNCTION:
-#ifdef have_curlssl_ssl_ctx
     /*
      * Set a SSL_CTX callback
      */
-    data->set.ssl.fsslctx = va_arg(param, curl_ssl_ctx_callback);
-#else
-    result = CURLE_NOT_BUILT_IN;
+#ifdef USE_SSL
+    if(Curl_ssl->have_ssl_ctx)
+      data->set.ssl.fsslctx = va_arg(param, curl_ssl_ctx_callback);
+    else
 #endif
+      result = CURLE_NOT_BUILT_IN;
     break;
   case CURLOPT_SSL_CTX_DATA:
-#ifdef have_curlssl_ssl_ctx
     /*
      * Set a SSL_CTX callback parameter pointer
      */
-    data->set.ssl.fsslctxp = va_arg(param, void *);
-#else
-    result = CURLE_NOT_BUILT_IN;
+#ifdef USE_SSL
+    if(Curl_ssl->have_ssl_ctx)
+      data->set.ssl.fsslctxp = va_arg(param, void *);
+    else
 #endif
+      result = CURLE_NOT_BUILT_IN;
     break;
   case CURLOPT_SSL_FALSESTART:
     /*
@@ -2210,35 +2358,38 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     data->set.ssl.falsestart = (0 != va_arg(param, long)) ? TRUE : FALSE;
     break;
   case CURLOPT_CERTINFO:
-#ifdef have_curlssl_certinfo
-    data->set.ssl.certinfo = (0 != va_arg(param, long)) ? TRUE : FALSE;
-#else
-    result = CURLE_NOT_BUILT_IN;
+#ifdef USE_SSL
+    if(Curl_ssl->have_certinfo)
+      data->set.ssl.certinfo = (0 != va_arg(param, long)) ? TRUE : FALSE;
+    else
 #endif
+      result = CURLE_NOT_BUILT_IN;
     break;
   case CURLOPT_PINNEDPUBLICKEY:
-#ifdef have_curlssl_pinnedpubkey /* only by supported backends */
     /*
      * Set pinned public key for SSL connection.
      * Specify file name of the public key in DER format.
      */
-    result = setstropt(&data->set.str[STRING_SSL_PINNEDPUBLICKEY_ORIG],
-                       va_arg(param, char *));
-#else
-    result = CURLE_NOT_BUILT_IN;
+#ifdef USE_SSL
+    if(Curl_ssl->have_pinnedpubkey)
+      result = setstropt(&data->set.str[STRING_SSL_PINNEDPUBLICKEY_ORIG],
+                         va_arg(param, char *));
+    else
 #endif
+      result = CURLE_NOT_BUILT_IN;
     break;
   case CURLOPT_PROXY_PINNEDPUBLICKEY:
-#ifdef have_curlssl_pinnedpubkey /* only by supported backends */
     /*
      * Set pinned public key for SSL connection.
      * Specify file name of the public key in DER format.
      */
-    result = setstropt(&data->set.str[STRING_SSL_PINNEDPUBLICKEY_PROXY],
-                       va_arg(param, char *));
-#else
-    result = CURLE_NOT_BUILT_IN;
+#ifdef USE_SSL
+    if(Curl_ssl->have_pinnedpubkey)
+      result = setstropt(&data->set.str[STRING_SSL_PINNEDPUBLICKEY_PROXY],
+                         va_arg(param, char *));
+    else
 #endif
+      result = CURLE_NOT_BUILT_IN;
     break;
   case CURLOPT_CAINFO:
     /*
@@ -2256,30 +2407,32 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
                        va_arg(param, char *));
     break;
   case CURLOPT_CAPATH:
-#ifdef have_curlssl_ca_path /* not supported by all backends */
     /*
      * Set CA path info for SSL connection. Specify directory name of the CA
      * certificates which have been prepared using openssl c_rehash utility.
      */
-    /* This does not work on windows. */
-    result = setstropt(&data->set.str[STRING_SSL_CAPATH_ORIG],
-                       va_arg(param, char *));
-#else
-    result = CURLE_NOT_BUILT_IN;
+#ifdef USE_SSL
+    if(Curl_ssl->have_ca_path)
+      /* This does not work on windows. */
+      result = setstropt(&data->set.str[STRING_SSL_CAPATH_ORIG],
+                         va_arg(param, char *));
+    else
 #endif
+      result = CURLE_NOT_BUILT_IN;
     break;
   case CURLOPT_PROXY_CAPATH:
-#ifdef have_curlssl_ca_path /* not supported by all backends */
     /*
      * Set CA path info for SSL connection proxy. Specify directory name of the
      * CA certificates which have been prepared using openssl c_rehash utility.
      */
-    /* This does not work on windows. */
-    result = setstropt(&data->set.str[STRING_SSL_CAPATH_PROXY],
-                       va_arg(param, char *));
-#else
-    result = CURLE_NOT_BUILT_IN;
+#ifdef USE_SSL
+    if(Curl_ssl->have_ca_path)
+      /* This does not work on windows. */
+      result = setstropt(&data->set.str[STRING_SSL_CAPATH_PROXY],
+                         va_arg(param, char *));
+    else
 #endif
+      result = CURLE_NOT_BUILT_IN;
     break;
   case CURLOPT_CRLFILE:
     /*
@@ -2420,7 +2573,10 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     /*
      * Set the maximum size of a file to download.
      */
-    data->set.max_filesize = va_arg(param, long);
+    arg = va_arg(param, long);
+    if(arg < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.max_filesize = arg;
     break;
 
 #ifdef USE_SSL
@@ -2428,7 +2584,10 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     /*
      * Make transfers attempt to use SSL/TLS.
      */
-    data->set.use_ssl = (curl_usessl)va_arg(param, long);
+    arg = va_arg(param, long);
+    if((arg < CURLUSESSL_NONE) || (arg > CURLUSESSL_ALL))
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.use_ssl = (curl_usessl)arg;
     break;
 
   case CURLOPT_SSL_OPTIONS:
@@ -2448,18 +2607,27 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     /*
      * Set a specific auth for FTP-SSL transfers.
      */
-    data->set.ftpsslauth = (curl_ftpauth)va_arg(param, long);
+    arg = va_arg(param, long);
+    if((arg < CURLFTPAUTH_DEFAULT) || (arg > CURLFTPAUTH_TLS))
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.ftpsslauth = (curl_ftpauth)arg;
     break;
 
   case CURLOPT_IPRESOLVE:
-    data->set.ipver = va_arg(param, long);
+    arg = va_arg(param, long);
+    if((arg < CURL_IPRESOLVE_WHATEVER) || (arg > CURL_IPRESOLVE_V6))
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.ipver = arg;
     break;
 
   case CURLOPT_MAXFILESIZE_LARGE:
     /*
      * Set the maximum size of a file to download.
      */
-    data->set.max_filesize = va_arg(param, curl_off_t);
+    bigsize = va_arg(param, curl_off_t);
+    if(bigsize < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.max_filesize = bigsize;
     break;
 
   case CURLOPT_TCP_NODELAY:
@@ -2544,6 +2712,9 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
 #ifdef USE_LIBSSH2
     /* we only include SSH options if explicitly built to support SSH */
   case CURLOPT_SSH_AUTH_TYPES:
+    arg = va_arg(param, long);
+    if(arg < CURLSSH_AUTH_NONE)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
     data->set.ssh_auth_types = va_arg(param, long);
     break;
 
@@ -2613,14 +2784,20 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     /*
      * Uses these permissions instead of 0644
      */
-    data->set.new_file_perms = va_arg(param, long);
+    arg = va_arg(param, long);
+    if((arg < 0) || (arg > 0777))
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.new_file_perms = arg;
     break;
 
   case CURLOPT_NEW_DIRECTORY_PERMS:
     /*
      * Uses these permissions instead of 0755
      */
-    data->set.new_directory_perms = va_arg(param, long);
+    arg = va_arg(param, long);
+    if((arg < 0) || (arg > 0777))
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.new_directory_perms = arg;
     break;
 
   case CURLOPT_ADDRESS_SCOPE:
@@ -2867,10 +3044,16 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     data->set.tcp_keepalive = (0 != va_arg(param, long)) ? TRUE : FALSE;
     break;
   case CURLOPT_TCP_KEEPIDLE:
-    data->set.tcp_keepidle = va_arg(param, long);
+    arg = va_arg(param, long);
+    if(arg < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.tcp_keepidle = arg;
     break;
   case CURLOPT_TCP_KEEPINTVL:
-    data->set.tcp_keepintvl = va_arg(param, long);
+    arg = va_arg(param, long);
+    if(arg < 0)
+      return CURLE_BAD_FUNCTION_ARGUMENT;
+    data->set.tcp_keepintvl = arg;
     break;
   case CURLOPT_TCP_FASTOPEN:
 #if defined(CONNECT_DATA_IDEMPOTENT) || defined(MSG_FASTOPEN)
@@ -2910,7 +3093,7 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     return CURLE_NOT_BUILT_IN;
 #else
     arg = va_arg(param, long);
-    if((arg>=1) && (arg <= 256))
+    if((arg >= 1) && (arg <= 256))
       data->set.stream_weight = (int)arg;
     break;
 #endif
@@ -2935,6 +3118,9 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
     break;
   case CURLOPT_SUPPRESS_CONNECT_HEADERS:
     data->set.suppress_connect_headers = (0 != va_arg(param, long))?TRUE:FALSE;
+    break;
+  case CURLOPT_SSH_COMPRESSION:
+    data->set.ssh_compression = (0 != va_arg(param, long))?TRUE:FALSE;
     break;
   default:
     /* unknown tag and its companion, just ignore: */
@@ -3273,7 +3459,7 @@ Curl_oldest_idle_connection(struct Curl_easy *data)
   struct curl_hash_iterator iter;
   struct curl_llist_element *curr;
   struct curl_hash_element *he;
-  time_t highscore=-1;
+  time_t highscore =- 1;
   time_t score;
   struct curltime now;
   struct connectdata *conn_candidate = NULL;
@@ -3336,7 +3522,7 @@ find_oldest_idle_connection_in_bundle(struct Curl_easy *data,
                                       struct connectbundle *bundle)
 {
   struct curl_llist_element *curr;
-  time_t highscore=-1;
+  time_t highscore = -1;
   time_t score;
   struct curltime now;
   struct connectdata *conn_candidate = NULL;
@@ -3967,7 +4153,7 @@ int Curl_doing_getsock(struct connectdata *conn,
 CURLcode Curl_protocol_connecting(struct connectdata *conn,
                                   bool *done)
 {
-  CURLcode result=CURLE_OK;
+  CURLcode result = CURLE_OK;
 
   if(conn && conn->handler->connecting) {
     *done = FALSE;
@@ -3986,7 +4172,7 @@ CURLcode Curl_protocol_connecting(struct connectdata *conn,
 
 CURLcode Curl_protocol_doing(struct connectdata *conn, bool *done)
 {
-  CURLcode result=CURLE_OK;
+  CURLcode result = CURLE_OK;
 
   if(conn && conn->handler->doing) {
     *done = FALSE;
@@ -4006,7 +4192,7 @@ CURLcode Curl_protocol_doing(struct connectdata *conn, bool *done)
 CURLcode Curl_protocol_connect(struct connectdata *conn,
                                bool *protocol_done)
 {
-  CURLcode result=CURLE_OK;
+  CURLcode result = CURLE_OK;
 
   *protocol_done = FALSE;
 
@@ -4093,7 +4279,7 @@ static void fix_hostname(struct connectdata *conn, struct hostname *host)
   if(len && (host->name[len-1] == '.'))
     /* strip off a single trailing dot if present, primarily for SNI but
        there's no use for it */
-    host->name[len-1]=0;
+    host->name[len-1] = 0;
 
   /* Check name for non-ASCII and convert hostname to ACE form if we can */
   if(!is_ASCII_name(host->name)) {
@@ -4146,7 +4332,7 @@ static void free_fixed_hostname(struct hostname *host)
     host->encalloc = NULL;
   }
 #elif defined(USE_WIN32_IDN)
-  free(host->encalloc); /* must be freed withidn_free() since this was
+  free(host->encalloc); /* must be freed with free() since this was
                            allocated by curl_win32_idn_to_ascii */
   host->encalloc = NULL;
 #else
@@ -4166,7 +4352,12 @@ static void llist_dtor(void *user, void *element)
  */
 static struct connectdata *allocate_conn(struct Curl_easy *data)
 {
-  struct connectdata *conn = calloc(1, sizeof(struct connectdata));
+#ifdef USE_SSL
+#define SSL_EXTRA + 4 * Curl_ssl->sizeof_ssl_backend_data - sizeof(long long)
+#else
+#define SSL_EXTRA 0
+#endif
+  struct connectdata *conn = calloc(1, sizeof(struct connectdata) + SSL_EXTRA);
   if(!conn)
     return NULL;
 
@@ -4248,6 +4439,23 @@ static struct connectdata *allocate_conn(struct Curl_easy *data)
   conn->proxy_ssl_config.verifyhost = data->set.proxy_ssl.primary.verifyhost;
 
   conn->ip_version = data->set.ipver;
+
+#ifdef USE_SSL
+  /*
+   * To save on malloc()s, the SSL backend-specific data has been allocated
+   * at the end of the connectdata struct.
+   */
+  {
+    char *p = (char *)&conn->align_data__do_not_use;
+    conn->ssl[0].backend = (struct ssl_backend_data *)p;
+    conn->ssl[1].backend =
+      (struct ssl_backend_data *)(p + Curl_ssl->sizeof_ssl_backend_data);
+    conn->proxy_ssl[0].backend =
+      (struct ssl_backend_data *)(p + Curl_ssl->sizeof_ssl_backend_data * 2);
+    conn->proxy_ssl[1].backend =
+      (struct ssl_backend_data *)(p + Curl_ssl->sizeof_ssl_backend_data * 3);
+  }
+#endif
 
 #if !defined(CURL_DISABLE_HTTP) && defined(USE_NTLM) && \
     defined(NTLM_WB_ENABLED)
@@ -4430,7 +4638,7 @@ static CURLcode parseurlandfillconn(struct Curl_easy *data,
 
       /* This cannot be done with strcpy() in a portable manner, since the
          memory areas overlap! */
-      memmove(path, path + 2, strlen(path + 2)+1);
+      memmove(path, path + 2, strlen(path + 2) + 1);
     }
 
     /*
@@ -4471,7 +4679,7 @@ static CURLcode parseurlandfillconn(struct Curl_easy *data,
         ptr++;
 
       /* This cannot be made with strcpy, as the memory chunks overlap! */
-      memmove(path, ptr, strlen(ptr)+1);
+      memmove(path, ptr, strlen(ptr) + 1);
     }
 
 #if !defined(MSDOS) && !defined(WIN32) && !defined(__CYGWIN__)
@@ -4487,7 +4695,7 @@ static CURLcode parseurlandfillconn(struct Curl_easy *data,
   else {
     /* clear path */
     char slashbuf[4];
-    path[0]=0;
+    path[0] = 0;
 
     rc = sscanf(data->change.url,
                 "%15[^\n/:]:%3[/]%[^\n/?#]%[^\n]",
@@ -4572,7 +4780,7 @@ static CURLcode parseurlandfillconn(struct Curl_easy *data,
    */
   at = strchr(conn->host.name, '@');
   if(at)
-    query = strchr(at+1, '?');
+    query = strchr(at + 1, '?');
   else
     query = strchr(conn->host.name, '?');
 
@@ -4590,15 +4798,15 @@ static CURLcode parseurlandfillconn(struct Curl_easy *data,
 
     /* move the existing path plus the zero byte forward, to make room for
        the host-name part */
-    memmove(path+hostlen+1, path, pathlen+1);
+    memmove(path + hostlen + 1, path, pathlen + 1);
 
      /* now copy the trailing host part in front of the existing path */
-    memcpy(path+1, query, hostlen);
+    memcpy(path + 1, query, hostlen);
 
     path[0]='/'; /* prepend the missing slash */
     rebuild_url = TRUE;
 
-    *query=0; /* now cut off the hostname at the ? */
+    *query = 0; /* now cut off the hostname at the ? */
   }
   else if(!path[0]) {
     /* if there's no path set, use a single slash */
@@ -4614,7 +4822,7 @@ static CURLcode parseurlandfillconn(struct Curl_easy *data,
     /* We need this function to deal with overlapping memory areas. We know
        that the memory area 'path' points to is 'urllen' bytes big and that
        is bigger than the path. Use +1 to move the zero byte too. */
-    memmove(&path[1], path, strlen(path)+1);
+    memmove(&path[1], path, strlen(path) + 1);
     path[0] = '/';
     rebuild_url = TRUE;
   }
@@ -4720,7 +4928,7 @@ static CURLcode parseurlandfillconn(struct Curl_easy *data,
       if(*endp == ']') {
         /* The address scope was well formed.  Knock it out of the
            hostname. */
-        memmove(percent, endp, strlen(endp)+1);
+        memmove(percent, endp, strlen(endp) + 1);
         conn->scope_id = (unsigned int)scope;
       }
       else {
@@ -4990,7 +5198,7 @@ static char *detect_proxy(struct connectdata *conn)
   strcpy(envp, "_proxy");
 
   /* read the protocol proxy: */
-  prox=curl_getenv(proxy_env);
+  prox = curl_getenv(proxy_env);
 
   /*
    * We don't try the uppercase version of HTTP_PROXY because of
@@ -5007,7 +5215,7 @@ static char *detect_proxy(struct connectdata *conn)
   if(!prox && !strcasecompare("http_proxy", proxy_env)) {
     /* There was no lowercase variable, try the uppercase version: */
     Curl_strntoupper(proxy_env, proxy_env, sizeof(proxy_env));
-    prox=curl_getenv(proxy_env);
+    prox = curl_getenv(proxy_env);
   }
 
   if(prox)
@@ -5015,7 +5223,7 @@ static char *detect_proxy(struct connectdata *conn)
   else {
     proxy = curl_getenv("all_proxy"); /* default proxy to use */
     if(!proxy)
-      proxy=curl_getenv("ALL_PROXY");
+      proxy = curl_getenv("ALL_PROXY");
   }
 
   return proxy;
@@ -5050,7 +5258,7 @@ static CURLcode parse_proxy(struct Curl_easy *data,
   /* Parse the protocol part if present */
   endofprot = strstr(proxy, "://");
   if(endofprot) {
-    proxyptr = endofprot+3;
+    proxyptr = endofprot + 3;
     if(checkprefix("https", proxy))
       proxytype = CURLPROXY_HTTPS;
     else if(checkprefix("socks5h", proxy))
@@ -5072,13 +5280,14 @@ static CURLcode parse_proxy(struct Curl_easy *data,
   else
     proxyptr = proxy; /* No xxx:// head: It's a HTTP proxy */
 
-#ifndef HTTPS_PROXY_SUPPORT
-  if(proxytype == CURLPROXY_HTTPS) {
-    failf(data, "Unsupported proxy \'%s\'"
-                ", libcurl is built without the HTTPS-proxy support.", proxy);
-    return CURLE_NOT_BUILT_IN;
-  }
+#ifdef USE_SSL
+  if(!Curl_ssl->support_https_proxy)
 #endif
+    if(proxytype == CURLPROXY_HTTPS) {
+      failf(data, "Unsupported proxy \'%s\', libcurl is built without the "
+                  "HTTPS-proxy support.", proxy);
+      return CURLE_NOT_BUILT_IN;
+    }
 
   sockstype = proxytype == CURLPROXY_SOCKS5_HOSTNAME ||
               proxytype == CURLPROXY_SOCKS5 ||
@@ -5299,22 +5508,21 @@ static CURLcode create_conn_helper_init_proxy(struct connectdata *conn)
     }
   }
 
-  no_proxy = curl_getenv("no_proxy");
-  if(!no_proxy)
-    no_proxy = curl_getenv("NO_PROXY");
+  if(!data->set.str[STRING_NOPROXY]) {
+    no_proxy = curl_getenv("no_proxy");
+    if(!no_proxy)
+      no_proxy = curl_getenv("NO_PROXY");
+  }
 
-  if(check_noproxy(conn->host.name, data->set.str[STRING_NOPROXY]) ||
-     (!data->set.str[STRING_NOPROXY] &&
-      check_noproxy(conn->host.name, no_proxy))) {
+  if(check_noproxy(conn->host.name, data->set.str[STRING_NOPROXY] ?
+      data->set.str[STRING_NOPROXY] : no_proxy)) {
     Curl_safefree(proxy);
     Curl_safefree(socksproxy);
   }
-  else if(!proxy && !socksproxy)
 #ifndef CURL_DISABLE_HTTP
+  else if(!proxy && !socksproxy)
     /* if the host is not in the noproxy list, detect proxy. */
     proxy = detect_proxy(conn);
-#else  /* !CURL_DISABLE_HTTP */
-    proxy = NULL;
 #endif /* CURL_DISABLE_HTTP */
 
   Curl_safefree(no_proxy);
@@ -5762,7 +5970,7 @@ static CURLcode parse_remote_port(struct Curl_easy *data,
     char *rest;
     long port;
 
-    port=strtol(portptr+1, &rest, 10);  /* Port number must be decimal */
+    port = strtol(portptr + 1, &rest, 10);  /* Port number must be decimal */
 
     if((port < 0) || (port > 0xffff)) {
       /* Single unix standard says port numbers are 16 bits long */
@@ -6118,7 +6326,7 @@ static CURLcode resolve_server(struct Curl_easy *data,
                                struct connectdata *conn,
                                bool *async)
 {
-  CURLcode result=CURLE_OK;
+  CURLcode result = CURLE_OK;
   time_t timeout_ms = Curl_timeleft(data, NULL, TRUE);
 
   /*************************************************************
@@ -6281,11 +6489,10 @@ static void reuse_conn(struct connectdata *old_conn,
   free_fixed_hostname(&conn->conn_to_host);
   Curl_safefree(conn->host.rawalloc);
   Curl_safefree(conn->conn_to_host.rawalloc);
-  conn->host=old_conn->host;
-  conn->bits.conn_to_host = old_conn->bits.conn_to_host;
+  conn->host = old_conn->host;
   conn->conn_to_host = old_conn->conn_to_host;
-  conn->bits.conn_to_port = old_conn->bits.conn_to_port;
   conn->conn_to_port = old_conn->conn_to_port;
+  conn->remote_port = old_conn->remote_port;
 
   /* persist connection info in session handle */
   Curl_persistconninfo(conn);
@@ -6384,9 +6591,9 @@ static CURLcode create_conn(struct Curl_easy *data,
    * other parts of the code will rely on this fact
    ***********************************************************/
 #define LEAST_PATH_ALLOC 256
-  urllen=strlen(data->change.url);
+  urllen = strlen(data->change.url);
   if(urllen < LEAST_PATH_ALLOC)
-    urllen=LEAST_PATH_ALLOC;
+    urllen = LEAST_PATH_ALLOC;
 
   /*
    * We malloc() the buffers below urllen+2 to make room for 2 possibilities:
@@ -6397,14 +6604,14 @@ static CURLcode create_conn(struct Curl_easy *data,
   Curl_safefree(data->state.pathbuffer);
   data->state.path = NULL;
 
-  data->state.pathbuffer = malloc(urllen+2);
+  data->state.pathbuffer = malloc(urllen + 2);
   if(NULL == data->state.pathbuffer) {
     result = CURLE_OUT_OF_MEMORY; /* really bad error */
     goto out;
   }
   data->state.path = data->state.pathbuffer;
 
-  conn->host.rawalloc = malloc(urllen+2);
+  conn->host.rawalloc = malloc(urllen + 2);
   if(NULL == conn->host.rawalloc) {
     Curl_safefree(data->state.pathbuffer);
     data->state.path = NULL;
@@ -7037,7 +7244,7 @@ CURLcode Curl_init_do(struct Curl_easy *data, struct connectdata *conn)
 
   k->buf = data->state.buffer;
   k->hbufp = data->state.headerbuff;
-  k->ignorebody=FALSE;
+  k->ignorebody = FALSE;
 
   Curl_speedinit(data);
 

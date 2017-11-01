@@ -110,9 +110,10 @@ int test(char *URL)
   void *conv_to_network_cb = NULL;
   void *conv_from_utf8_cb = NULL;
   void *interleavecb = NULL;
-  char *stringpointerextra=(char *)"moooo";
-  struct curl_slist *slist=NULL;
-  struct curl_httppost *httppost=NULL;
+  char *stringpointerextra = (char *)"moooo";
+  struct curl_slist *slist = NULL;
+  struct curl_httppost *httppost = NULL;
+  curl_mime *mimepost = NULL;
   FILE *stream = stderr;
   struct data object;
   char *charp;
@@ -124,6 +125,7 @@ int test(char *URL)
   struct curl_tlssessioninfo *tlssession;
   CURLcode res = CURLE_OK;
   (void)URL; /* not used */
+  global_init(CURL_GLOBAL_ALL);
   easy_init(dep);
   easy_init(curl);
   share = curl_share_init();
@@ -2332,6 +2334,24 @@ int test(char *URL)
   res = curl_easy_setopt(curl, CURLOPT_SOCKS5_AUTH, HI);
   if(UNEX(res)) {
     err("SOCKS5_AUTH", res, __LINE__); goto test_cleanup; }
+  res = curl_easy_setopt(curl, CURLOPT_SSH_COMPRESSION, 0L);
+  if(UNEX(res)) {
+    err("SSH_COMPRESSION", res, __LINE__); goto test_cleanup; }
+  res = curl_easy_setopt(curl, CURLOPT_SSH_COMPRESSION, 22L);
+  if(UNEX(res)) {
+    err("SSH_COMPRESSION", res, __LINE__); goto test_cleanup; }
+  res = curl_easy_setopt(curl, CURLOPT_SSH_COMPRESSION, LO);
+  if(UNEX(res)) {
+    err("SSH_COMPRESSION", res, __LINE__); goto test_cleanup; }
+  res = curl_easy_setopt(curl, CURLOPT_SSH_COMPRESSION, HI);
+  if(UNEX(res)) {
+    err("SSH_COMPRESSION", res, __LINE__); goto test_cleanup; }
+  res = curl_easy_setopt(curl, CURLOPT_MIMEPOST, mimepost);
+  if(UNEX(res)) {
+    err("MIMEPOST", res, __LINE__); goto test_cleanup; }
+  res = curl_easy_setopt(curl, CURLOPT_MIMEPOST, NULL);
+  if(UNEX(res)) {
+    err("MIMEPOST", res, __LINE__); goto test_cleanup; }
   res = curl_easy_getinfo(curl, CURLINFO_EFFECTIVE_URL, &charp);
   if(UNEX(res)) {
     geterr("EFFECTIVE_URL", res, __LINE__); goto test_cleanup; }
@@ -2507,6 +2527,7 @@ test_cleanup:
   curl_easy_cleanup(curl);
   curl_easy_cleanup(dep);
   curl_share_cleanup(share);
+  curl_global_cleanup();
 
   return (int)res;
 }

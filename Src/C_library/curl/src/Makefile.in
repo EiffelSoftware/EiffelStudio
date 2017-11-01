@@ -135,22 +135,22 @@ am__libcurltool_la_SOURCES_DIST = slist_wc.c tool_binmode.c \
 	tool_convert.c tool_dirhie.c tool_doswin.c tool_easysrc.c \
 	tool_formparse.c tool_getparam.c tool_getpass.c tool_help.c \
 	tool_helpers.c tool_homedir.c tool_hugehelp.c tool_libinfo.c \
-	tool_main.c tool_metalink.c tool_mfiles.c tool_msgs.c \
-	tool_operate.c tool_operhlp.c tool_panykey.c tool_paramhlp.c \
-	tool_parsecfg.c tool_strdup.c tool_setopt.c tool_sleep.c \
-	tool_urlglob.c tool_util.c tool_vms.c tool_writeout.c \
-	tool_xattr.c ../lib/strtoofft.c ../lib/nonblock.c \
-	../lib/warnless.c slist_wc.h tool_binmode.h tool_bname.h \
-	tool_cb_dbg.h tool_cb_hdr.h tool_cb_prg.h tool_cb_rea.h \
-	tool_cb_see.h tool_cb_wrt.h tool_cfgable.h tool_convert.h \
-	tool_dirhie.h tool_doswin.h tool_easysrc.h tool_formparse.h \
-	tool_getparam.h tool_getpass.h tool_help.h tool_helpers.h \
-	tool_homedir.h tool_hugehelp.h tool_libinfo.h tool_main.h \
-	tool_metalink.h tool_mfiles.h tool_msgs.h tool_operate.h \
-	tool_operhlp.h tool_panykey.h tool_paramhlp.h tool_parsecfg.h \
-	tool_sdecls.h tool_setopt.h tool_setup.h tool_sleep.h \
-	tool_strdup.h tool_urlglob.h tool_util.h tool_version.h \
-	tool_vms.h tool_writeout.h tool_xattr.h
+	tool_main.c tool_metalink.c tool_msgs.c tool_operate.c \
+	tool_operhlp.c tool_panykey.c tool_paramhlp.c tool_parsecfg.c \
+	tool_strdup.c tool_setopt.c tool_sleep.c tool_urlglob.c \
+	tool_util.c tool_vms.c tool_writeout.c tool_xattr.c \
+	../lib/strtoofft.c ../lib/nonblock.c ../lib/warnless.c \
+	slist_wc.h tool_binmode.h tool_bname.h tool_cb_dbg.h \
+	tool_cb_hdr.h tool_cb_prg.h tool_cb_rea.h tool_cb_see.h \
+	tool_cb_wrt.h tool_cfgable.h tool_convert.h tool_dirhie.h \
+	tool_doswin.h tool_easysrc.h tool_formparse.h tool_getparam.h \
+	tool_getpass.h tool_help.h tool_helpers.h tool_homedir.h \
+	tool_hugehelp.h tool_libinfo.h tool_main.h tool_metalink.h \
+	tool_msgs.h tool_operate.h tool_operhlp.h tool_panykey.h \
+	tool_paramhlp.h tool_parsecfg.h tool_sdecls.h tool_setopt.h \
+	tool_setup.h tool_sleep.h tool_strdup.h tool_urlglob.h \
+	tool_util.h tool_version.h tool_vms.h tool_writeout.h \
+	tool_xattr.h
 am__objects_1 = libcurltool_la-slist_wc.lo \
 	libcurltool_la-tool_binmode.lo libcurltool_la-tool_bname.lo \
 	libcurltool_la-tool_cb_dbg.lo libcurltool_la-tool_cb_hdr.lo \
@@ -164,10 +164,9 @@ am__objects_1 = libcurltool_la-slist_wc.lo \
 	libcurltool_la-tool_help.lo libcurltool_la-tool_helpers.lo \
 	libcurltool_la-tool_homedir.lo libcurltool_la-tool_hugehelp.lo \
 	libcurltool_la-tool_libinfo.lo libcurltool_la-tool_main.lo \
-	libcurltool_la-tool_metalink.lo libcurltool_la-tool_mfiles.lo \
-	libcurltool_la-tool_msgs.lo libcurltool_la-tool_operate.lo \
-	libcurltool_la-tool_operhlp.lo libcurltool_la-tool_panykey.lo \
-	libcurltool_la-tool_paramhlp.lo \
+	libcurltool_la-tool_metalink.lo libcurltool_la-tool_msgs.lo \
+	libcurltool_la-tool_operate.lo libcurltool_la-tool_operhlp.lo \
+	libcurltool_la-tool_panykey.lo libcurltool_la-tool_paramhlp.lo \
 	libcurltool_la-tool_parsecfg.lo libcurltool_la-tool_strdup.lo \
 	libcurltool_la-tool_setopt.lo libcurltool_la-tool_sleep.lo \
 	libcurltool_la-tool_urlglob.lo libcurltool_la-tool_util.lo \
@@ -205,14 +204,13 @@ am__objects_6 = curl-slist_wc.$(OBJEXT) curl-tool_binmode.$(OBJEXT) \
 	curl-tool_helpers.$(OBJEXT) curl-tool_homedir.$(OBJEXT) \
 	curl-tool_hugehelp.$(OBJEXT) curl-tool_libinfo.$(OBJEXT) \
 	curl-tool_main.$(OBJEXT) curl-tool_metalink.$(OBJEXT) \
-	curl-tool_mfiles.$(OBJEXT) curl-tool_msgs.$(OBJEXT) \
-	curl-tool_operate.$(OBJEXT) curl-tool_operhlp.$(OBJEXT) \
-	curl-tool_panykey.$(OBJEXT) curl-tool_paramhlp.$(OBJEXT) \
-	curl-tool_parsecfg.$(OBJEXT) curl-tool_strdup.$(OBJEXT) \
-	curl-tool_setopt.$(OBJEXT) curl-tool_sleep.$(OBJEXT) \
-	curl-tool_urlglob.$(OBJEXT) curl-tool_util.$(OBJEXT) \
-	curl-tool_vms.$(OBJEXT) curl-tool_writeout.$(OBJEXT) \
-	curl-tool_xattr.$(OBJEXT)
+	curl-tool_msgs.$(OBJEXT) curl-tool_operate.$(OBJEXT) \
+	curl-tool_operhlp.$(OBJEXT) curl-tool_panykey.$(OBJEXT) \
+	curl-tool_paramhlp.$(OBJEXT) curl-tool_parsecfg.$(OBJEXT) \
+	curl-tool_strdup.$(OBJEXT) curl-tool_setopt.$(OBJEXT) \
+	curl-tool_sleep.$(OBJEXT) curl-tool_urlglob.$(OBJEXT) \
+	curl-tool_util.$(OBJEXT) curl-tool_vms.$(OBJEXT) \
+	curl-tool_writeout.$(OBJEXT) curl-tool_xattr.$(OBJEXT)
 am__objects_7 = ../lib/curl-strtoofft.$(OBJEXT) \
 	../lib/curl-nonblock.$(OBJEXT) ../lib/curl-warnless.$(OBJEXT)
 am__objects_8 = $(am__objects_6) $(am__objects_7) $(am__objects_3)
@@ -377,7 +375,9 @@ CURL_DISABLE_TFTP = @CURL_DISABLE_TFTP@
 CURL_LT_SHLIB_VERSIONED_FLAVOUR = @CURL_LT_SHLIB_VERSIONED_FLAVOUR@
 CURL_NETWORK_AND_TIME_LIBS = @CURL_NETWORK_AND_TIME_LIBS@
 CURL_NETWORK_LIBS = @CURL_NETWORK_LIBS@
+CURL_WITH_MULTI_SSL = @CURL_WITH_MULTI_SSL@
 CYGPATH_W = @CYGPATH_W@
+DEFAULT_SSL_BACKEND = @DEFAULT_SSL_BACKEND@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
@@ -612,7 +612,6 @@ CURL_CFILES = \
 	tool_libinfo.c \
 	tool_main.c \
 	tool_metalink.c \
-	tool_mfiles.c \
 	tool_msgs.c \
 	tool_operate.c \
 	tool_operhlp.c \
@@ -653,7 +652,6 @@ CURL_HFILES = \
 	tool_libinfo.h \
 	tool_main.h \
 	tool_metalink.h \
-	tool_mfiles.h \
 	tool_msgs.h \
 	tool_operate.h \
 	tool_operhlp.h \
@@ -862,7 +860,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/curl-tool_libinfo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/curl-tool_main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/curl-tool_metalink.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/curl-tool_mfiles.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/curl-tool_msgs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/curl-tool_operate.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/curl-tool_operhlp.Po@am__quote@
@@ -901,7 +898,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurltool_la-tool_libinfo.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurltool_la-tool_main.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurltool_la-tool_metalink.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurltool_la-tool_mfiles.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurltool_la-tool_msgs.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurltool_la-tool_operate.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcurltool_la-tool_operhlp.Plo@am__quote@
@@ -1108,13 +1104,6 @@ libcurltool_la-tool_metalink.lo: tool_metalink.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tool_metalink.c' object='libcurltool_la-tool_metalink.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcurltool_la_CPPFLAGS) $(CPPFLAGS) $(libcurltool_la_CFLAGS) $(CFLAGS) -c -o libcurltool_la-tool_metalink.lo `test -f 'tool_metalink.c' || echo '$(srcdir)/'`tool_metalink.c
-
-libcurltool_la-tool_mfiles.lo: tool_mfiles.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcurltool_la_CPPFLAGS) $(CPPFLAGS) $(libcurltool_la_CFLAGS) $(CFLAGS) -MT libcurltool_la-tool_mfiles.lo -MD -MP -MF $(DEPDIR)/libcurltool_la-tool_mfiles.Tpo -c -o libcurltool_la-tool_mfiles.lo `test -f 'tool_mfiles.c' || echo '$(srcdir)/'`tool_mfiles.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcurltool_la-tool_mfiles.Tpo $(DEPDIR)/libcurltool_la-tool_mfiles.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tool_mfiles.c' object='libcurltool_la-tool_mfiles.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcurltool_la_CPPFLAGS) $(CPPFLAGS) $(libcurltool_la_CFLAGS) $(CFLAGS) -c -o libcurltool_la-tool_mfiles.lo `test -f 'tool_mfiles.c' || echo '$(srcdir)/'`tool_mfiles.c
 
 libcurltool_la-tool_msgs.lo: tool_msgs.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libcurltool_la_CPPFLAGS) $(CPPFLAGS) $(libcurltool_la_CFLAGS) $(CFLAGS) -MT libcurltool_la-tool_msgs.lo -MD -MP -MF $(DEPDIR)/libcurltool_la-tool_msgs.Tpo -c -o libcurltool_la-tool_msgs.lo `test -f 'tool_msgs.c' || echo '$(srcdir)/'`tool_msgs.c
@@ -1570,20 +1559,6 @@ curl-tool_metalink.obj: tool_metalink.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tool_metalink.c' object='curl-tool_metalink.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(curl_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o curl-tool_metalink.obj `if test -f 'tool_metalink.c'; then $(CYGPATH_W) 'tool_metalink.c'; else $(CYGPATH_W) '$(srcdir)/tool_metalink.c'; fi`
-
-curl-tool_mfiles.o: tool_mfiles.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(curl_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT curl-tool_mfiles.o -MD -MP -MF $(DEPDIR)/curl-tool_mfiles.Tpo -c -o curl-tool_mfiles.o `test -f 'tool_mfiles.c' || echo '$(srcdir)/'`tool_mfiles.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/curl-tool_mfiles.Tpo $(DEPDIR)/curl-tool_mfiles.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tool_mfiles.c' object='curl-tool_mfiles.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(curl_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o curl-tool_mfiles.o `test -f 'tool_mfiles.c' || echo '$(srcdir)/'`tool_mfiles.c
-
-curl-tool_mfiles.obj: tool_mfiles.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(curl_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT curl-tool_mfiles.obj -MD -MP -MF $(DEPDIR)/curl-tool_mfiles.Tpo -c -o curl-tool_mfiles.obj `if test -f 'tool_mfiles.c'; then $(CYGPATH_W) 'tool_mfiles.c'; else $(CYGPATH_W) '$(srcdir)/tool_mfiles.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/curl-tool_mfiles.Tpo $(DEPDIR)/curl-tool_mfiles.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='tool_mfiles.c' object='curl-tool_mfiles.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(curl_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o curl-tool_mfiles.obj `if test -f 'tool_mfiles.c'; then $(CYGPATH_W) 'tool_mfiles.c'; else $(CYGPATH_W) '$(srcdir)/tool_mfiles.c'; fi`
 
 curl-tool_msgs.o: tool_msgs.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(curl_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT curl-tool_msgs.o -MD -MP -MF $(DEPDIR)/curl-tool_msgs.Tpo -c -o curl-tool_msgs.o `test -f 'tool_msgs.c' || echo '$(srcdir)/'`tool_msgs.c

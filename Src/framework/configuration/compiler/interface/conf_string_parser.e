@@ -36,6 +36,7 @@ feature -- Basic operations
 			value: READABLE_STRING_32
 			valid_values: ITERABLE [READABLE_STRING_GENERAL]
 			is_value_checked: BOOLEAN
+			is_value_case_sensitive: BOOLEAN
 		do
 				-- Reset previous error message (if any).
 			error := Void
@@ -52,19 +53,23 @@ feature -- Basic operations
 					error := conf_interface_names.e_parse_string_missing_value (option)
 				else
 						-- The option name is not found.
-					error := conf_interface_names.e_parse_string_unknown_name (input.head (delimiter_index - 1))
+					error := conf_interface_names.e_parse_string_unknown_name (input.head (delimiter_index - 1), available_configuration_option_names)
 				end
 			elseif delimiter_index = 1 then
 				error := conf_interface_names.e_parse_string_missing_name (input)
 			else
 				option := setting_name (input, 1, delimiter_index - 1)
 				if attached option then
-					if boolean_settings.has_key (option) then
-						valid_values := configuration_boolean_values
-					elseif option.same_string_general (s_concurrency) then
+					is_value_case_sensitive := True
+					if option.same_string_general (s_concurrency) then
 						valid_values := concurrency_names
+						is_value_case_sensitive := False
 					elseif option.same_string_general (s_platform) then
 						valid_values := platform_names
+						is_value_case_sensitive := False
+					elseif boolean_settings.has_key (option) then
+						valid_values := configuration_boolean_values
+						is_value_case_sensitive := False
 					elseif option.same_string_general (s_msil_generation_type) then
 						valid_values := msil_generation_type_values
 						value := msil_generation_type_value (input, delimiter_index + 1, input.count)
@@ -84,7 +89,7 @@ feature -- Basic operations
 							-- There is nothing to be done.
 					elseif attached valid_values then
 							-- Check if value is a valid constant.
-						value := value_from_list (valid_values, input, delimiter_index)
+						value := value_from_list (valid_values, input, delimiter_index, is_value_case_sensitive)
 					else
 							-- The setting value is an arbitrary string.
 						value := input.substring (delimiter_index + 1, input.count)
@@ -99,7 +104,7 @@ feature -- Basic operations
 					end
 				else
 						-- The option name is not found.
-					error := conf_interface_names.e_parse_string_unknown_name (input.head (delimiter_index - 1))
+					error := conf_interface_names.e_parse_string_unknown_name (input.head (delimiter_index - 1), available_configuration_option_names)
 				end
 			end
 		end
@@ -117,29 +122,57 @@ feature {NONE} -- Access
 
 feature {NONE} -- Search
 
-	value_from_list (list: ITERABLE [READABLE_STRING_GENERAL]; input: READABLE_STRING_32; delimiter_index: INTEGER): detachable READABLE_STRING_32
+	available_configuration_option_names: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			-- Available option names.
+		do
+			create Result.make (10)
+			Result.force (s_concurrency)
+			Result.force (s_platform)
+
+			across
+				boolean_options as ic
+			loop
+				Result.force (ic.item)
+			end
+			Result.force (s_msil_generation_type)
+			Result.force (s_msil_clr_version)
+			Result.force (s_msil_classes_per_module)
+			Result.force (s_inlining_size)
+			Result.force ("...") --  arbitrary option name
+		end
+
+	value_from_list (list: ITERABLE [READABLE_STRING_GENERAL]; input: READABLE_STRING_32; delimiter_index: INTEGER; is_value_case_sensitive: BOOLEAN): detachable READABLE_STRING_32
 			-- A value specified in string `input' after value delimited index `delimited_index' that matches one of values specified in `list' (if any).
+			-- If `is_value_case_sensitive` is False, compare name caseless, otherwise compare strictly.
 		require
 			valid_delimter_index: input.valid_index (delimiter_index) and input.valid_index (delimiter_index + 1)
 		local
-			n: INTEGER
+			l_name_count, l_input_count: INTEGER
+			l_found: BOOLEAN
 		do
 				-- Value substring length.
-			n := input.count - delimiter_index
+			l_input_count := input.count
+			l_name_count := l_input_count - delimiter_index
 			across
 				list as c
+			until
+				Result /= Void
 			loop
-				if
-					c.item.count = n and then
-					c.item.same_characters (input, delimiter_index + 1, input.count, 1)
-				then
-					Result := c.item.as_string_32
+				if c.item.count = l_name_count then
+					if is_value_case_sensitive then
+						l_found := c.item.same_characters (input, delimiter_index + 1, l_input_count, 1)
+					else
+						l_found := c.item.same_caseless_characters (input, delimiter_index + 1, l_input_count, 1)
+					end
+					if l_found then
+						Result := c.item.as_string_32
+					end
 				end
 			end
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

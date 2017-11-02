@@ -1151,27 +1151,42 @@ feature -- String parse errors
 			Result := locale.formatted_string (locale.translation ("Missing value for configuration option %"$1%""), [option])
 		end
 
-	e_parse_string_unknown_name (option_name: READABLE_STRING_GENERAL): READABLE_STRING_32
+	e_parse_string_unknown_name (option_name: READABLE_STRING_GENERAL; a_available_options: detachable ITERABLE [READABLE_STRING_GENERAL]): READABLE_STRING_32
 			-- An error for a unknown configuration name.
+		local
+			s: STRING_32
 		do
-			Result := locale.formatted_string (locale.translation ("Unknown configuration option %"$1%""), [option_name])
+			if a_available_options /= Void then
+				create s.make_empty
+				across
+					a_available_options as ic
+				loop
+					if not s.is_empty then
+						s.append (", ")
+					end
+					s.append_string_general (ic.item)
+				end
+				Result := locale.formatted_string (locale.translation ("Unknown configuration option %"$1%" (Available options: $2)"), [option_name, s])
+			else
+				Result := locale.formatted_string (locale.translation ("Unknown configuration option %"$1%""), [option_name])
+			end
 		end
 
 	e_parse_string_invalid_value (option_name, option_value: READABLE_STRING_GENERAL;
 		expected_values: detachable ITERABLE [READABLE_STRING_GENERAL]): READABLE_STRING_32
 			-- An error for an invalid option value `option_value' of an option `option_name'.
 		local
-			e: STRING_GENERAL
+			e: STRING_32
 		do
 			if attached expected_values then
-				create {STRING_32} e.make_empty
+				create e.make_empty
 				across
 					expected_values as c
 				loop
 					if not e.is_empty then
 						e.append (", ")
 					end
-					e.append (c.item)
+					e.append_string_general (c.item)
 				end
 				Result := locale.formatted_string (locale.translation ("Invalid value for configuration option %"$1%": %"$2%" (Expected values: $3)"), [option_name, option_value, e])
 			else

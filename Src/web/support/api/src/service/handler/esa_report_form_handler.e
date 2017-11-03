@@ -104,7 +104,7 @@ feature {NONE} -- Edit Report Problem
 		do
 			create l_rhf
 			if attached {WSF_STRING} req.path_parameter ("id") as l_id and then l_id.is_integer then
-				if attached {STRING_32} current_user_name (req) as l_user then
+				if attached {READABLE_STRING_32} current_user_name (req) as l_user then
 						-- Logged in user
 					if attached  current_media_type (req) as l_type then
 						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).report_form (req, res, edit_form (l_id.integer_value))

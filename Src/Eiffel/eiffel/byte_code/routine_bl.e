@@ -30,6 +30,7 @@ inherit
 			analyze,
 			basic_register,
 			free_register,
+			generate_parameters,
 			has_one_signature,
 			is_polymorphic,
 			parent,
@@ -100,6 +101,16 @@ feature -- Code generation
 			Precursor
 			if basic_register /= Void then
 				basic_register.free_register
+			end
+		end
+
+	generate_parameters (reg: REGISTRABLE)
+			-- <Precursor>
+			-- Prepare an instance-free target if needed.
+		do
+			Precursor (reg)
+			if attached instance_free_creation as c then
+				instance_free_creation.generate
 			end
 		end
 

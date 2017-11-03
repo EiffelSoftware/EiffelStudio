@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class OPT_FEAT_BL
 
 inherit
@@ -14,6 +15,7 @@ inherit
 			generate_on, basic_register, generate_access,
 			register, analyze_on, set_register,
 			is_feature_call, generate_special_feature, set_parent,
+			generate_parameters,
 			generate_parameters_list, generate_access_on_type,
 			call_kind, set_call_kind
 		redefine
@@ -33,7 +35,7 @@ inherit
 
 feature
 
-	parent: NESTED_BL;
+	parent: NESTED_BL
 
 	fill_from (f: OPT_FEAT_B)
 		do
@@ -53,7 +55,7 @@ feature
 			array_desc.analyze
 			analyze_on (Current_register)
 			get_register
-		end;
+		end
 
 feature -- Code generation
 
@@ -63,22 +65,22 @@ feature -- Code generation
 
 	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN
 		do
-		end;
+		end
 
 	external_reg_name (id: INTEGER): STRING
 			-- Register name which will be effectively generated at the C level.
 		do
-			create Result.make (0);
+			create Result.make (0)
 			if id = 0 then
-				Result.append ("tmp_result");
+				Result.append ("tmp_result")
 			elseif id < 0 then
 					-- local
-				Result.append ("loc");
-				Result.append_integer (-id);
+				Result.append ("loc")
+				Result.append_integer (-id)
 			else
 					-- Argument
-				Result.append ("arg");
-				Result.append_integer (id);
+				Result.append ("arg")
+				Result.append_integer (id)
 			end
 		end
 
@@ -87,17 +89,17 @@ feature -- Code generation
 			-- result we need to return `Result' and not `tmp_result' because the
 			-- hash_code is based on `Result'.
 		do
-			create Result.make (0);
+			create Result.make (0)
 			if id = 0 then
-				Result.append ("Result");
+				Result.append ("Result")
 			elseif id < 0 then
 					-- local
-				Result.append ("loc");
-				Result.append_integer (-id);
+				Result.append ("loc")
+				Result.append_integer (-id)
 			else
 					-- Argument
-				Result.append ("arg");
-				Result.append_integer (id);
+				Result.append ("arg")
+				Result.append_integer (id)
 			end
 		end
 
@@ -106,34 +108,34 @@ feature -- Code generation
 			if context.byte_code.is_process_or_thread_relative_once and then id = 0 then
 				buf.put_string ("Result")
 			else
-				buf.put_string (internal_reg_name (id));
+				buf.put_string (internal_reg_name (id))
 			end
 		end
 
 	type_c (id: INTEGER): TYPE_C
 		do
-			Result := System.remover.array_optimizer.array_item_type (id);
+			Result := System.remover.array_optimizer.array_item_type (id)
 		end
 
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A)
 		local
 			expr: EXPR_B
-			id: INTEGER;
+			id: INTEGER
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			id := array_desc.array_descriptor;
+			id := array_desc.array_descriptor
 			if is_item then
 				if access_area then
-					buf.put_string ("RTAA(");
+					buf.put_string ("RTAA(")
 				else
-					buf.put_string ("RTAUA(");
+					buf.put_string ("RTAUA(")
 				end;
 			else
 				if access_area then
-					buf.put_string ("RTAP(");
+					buf.put_string ("RTAP(")
 				else
-					buf.put_string ("RTAUP(");
+					buf.put_string ("RTAUP(")
 				end;
 			end;
 			type_c (id).generate (buf)
@@ -163,8 +165,9 @@ feature -- Code generation
 		do
 			generate_end (gen_reg, class_type)
 		end
+
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

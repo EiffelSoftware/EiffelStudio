@@ -20,6 +20,7 @@ inherit
 			generate_access,
 			generate_access_on_type,
 			generate_end,
+			generate_parameters,
 			generate_parameters_list,
 			basic_register,
 			is_feature_call,

@@ -13,6 +13,7 @@ inherit
 			analyze,
 			basic_register,
 			free_register,
+			generate_parameters,
 			has_one_signature,
 			is_polymorphic,
 			register,
@@ -127,7 +128,6 @@ feature
 				-- Reset value of variables.
 			is_right_parenthesis_needed.put (False)
 			if attached instance_free_creation as c then
-				c.generate
 				do_generate (c.register)
 			else
 				do_generate (current_register)

@@ -69,7 +69,7 @@ feature -- HTTP Methods
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
 			create l_rhf
-			if attached {STRING_32} current_user_name (req) as l_user and then
+			if attached {READABLE_STRING_32} current_user_name (req) as l_user and then
 			   attached {WSF_STRING} req.path_parameter("id") as l_id and then l_id.is_integer then
 				if attached current_media_type (req) as l_type then
 					log.write_information (generator + ".do_get Processing request: User:" + l_user + " Id:" + l_id.value)
@@ -95,7 +95,7 @@ feature -- HTTP Methods
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
 			create l_rhf
-			if attached {STRING_32} current_user_name (req) as l_user then
+			if attached {READABLE_STRING_32} current_user_name (req) as l_user then
 				if attached current_media_type (req) as l_type then
 					api_service.commit_problem_report (extract_form_data(req, l_type))
 					log.write_information (generator +"do_post Send email to report number:" + api_service.last_problem_report_number.out)

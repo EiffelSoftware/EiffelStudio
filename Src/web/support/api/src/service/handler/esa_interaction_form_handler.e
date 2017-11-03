@@ -184,7 +184,7 @@ feature -- New Report Problem
 			create l_rhf
 			media_variants := media_type_variants (req)
 			if
-				attached {STRING_32} current_user_name (req) as l_user and then
+				attached {READABLE_STRING_32} current_user_name (req) as l_user and then
 			 	api_service.is_report_visible (l_user, a_report_id)
 			then
 					-- Logged in user with access to the given report id.
@@ -291,7 +291,7 @@ feature -- Initialize Report Problem
 			l_role: USER_ROLE
 		do
 			create l_rhf
-			if attached {STRING_32} current_user_name (req) as l_user then
+			if attached {READABLE_STRING_32} current_user_name (req) as l_user then
 					-- Logged in user
 				l_temp_interaction_id := api_service.new_interaction_id (l_user, a_report_id)
 				if attached current_media_type (req) as l_type then

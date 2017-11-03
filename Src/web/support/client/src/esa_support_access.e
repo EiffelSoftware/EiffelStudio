@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 			client := (create {DEFAULT_HTTP_CLIENT}).new_session (service_url)
 			client.set_timeout (config.connection_timeout)
 			client.set_is_insecure (True)
+			client.set_ciphers_setting ("TLSv1")
 			client.set_any_auth_type
 			client.set_ciphers_setting ("TLSv1")
 		end

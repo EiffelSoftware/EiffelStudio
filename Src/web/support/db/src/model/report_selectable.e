@@ -43,7 +43,7 @@ feature -- Element Change
 			-- Set `synopsis' with `a_synopsis'.		
 		deferred
 		ensure
-			synopsis_set: synopsis.same_string (a_synopsis)
+			synopsis_set: synopsis.is_case_insensitive_equal (a_synopsis)
 		end
 
 end

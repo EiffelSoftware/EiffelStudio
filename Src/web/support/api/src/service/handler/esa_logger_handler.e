@@ -68,7 +68,7 @@ feature -- HTTP Methods
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
 			if
-				attached {STRING_32} current_user_name (req) as l_user and then
+				attached {READABLE_STRING_32} current_user_name (req) as l_user and then
 		  	    api_service.role (l_user).is_administrator
 			then
 				compute_response_get_txt (req, res, read_log_file)

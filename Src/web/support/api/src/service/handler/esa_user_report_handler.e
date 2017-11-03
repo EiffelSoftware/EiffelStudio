@@ -75,7 +75,7 @@ feature -- HTTP Methods
 			l_input_validator: ESA_REPORT_INPUT_VALIDATOR
 		do
 			create l_rhf
-			if attached {STRING_32} current_user_name (req) as l_user then
+			if attached {READABLE_STRING_32} current_user_name (req) as l_user then
 					-- Logged in user
 				log.write_information (generator+".do_get Processing request with user:" + l_user  )
 				if attached current_media_type (req) as l_type then

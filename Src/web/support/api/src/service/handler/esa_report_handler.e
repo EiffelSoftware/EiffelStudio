@@ -289,7 +289,7 @@ feature -- Implementation
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
-				if attached {STRING_32} current_user_name (req) as l_user and then api_service.is_active (l_user) then
+				if attached {READABLE_STRING_32} current_user_name (req) as l_user and then api_service.is_active (l_user) then
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).update_report_responsible (req, res,build_redirect_uri (req, l_type))
 				else
 						-- The user is not active anymore, send response with an error.

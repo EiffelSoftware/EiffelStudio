@@ -56,7 +56,7 @@ feature -- HTTP Methods
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
-				if attached current_user (req) as l_user then
+				if attached {USER} current_user (req) as l_user and then api_service.is_active (l_user.name) then
 					create l_account.make_from_user_info (api_service.user_account_information (l_user.name))
 					l_account.set_countries (api_service.countries)
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).account_information_page (req, res, l_account)

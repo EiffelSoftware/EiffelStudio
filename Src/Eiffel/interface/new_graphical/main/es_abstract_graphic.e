@@ -237,7 +237,9 @@ feature {NONE} -- Implementation: interface loading
 			across
 				window_manager.development_windows as ic
 			loop
-				ic.item.menus.cloud_account_menu.update
+				if attached ic.item.menus.cloud_account_menu as cld_menu then
+					cld_menu.update
+				end
 			end
 
 				-- If some more arguments were specified, it means that we either asked to retrieve

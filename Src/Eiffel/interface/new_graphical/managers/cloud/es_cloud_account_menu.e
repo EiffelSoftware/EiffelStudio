@@ -10,11 +10,6 @@ class
 inherit
 	EV_MENU
 
-	SHARED_ES_CLOUD_SERVICE
-		undefine
-			is_equal, default_create, copy
-		end
-
 	EB_RECYCLABLE
 		undefine
 			is_equal, default_create, copy
@@ -25,12 +20,15 @@ create
 
 feature {NONE} -- Initialize
 
-	make (a_text: READABLE_STRING_GENERAL; a_win: EB_DEVELOPMENT_WINDOW)
+	make (a_cloud_service: ES_CLOUD_S; a_text: READABLE_STRING_GENERAL; a_win: EB_DEVELOPMENT_WINDOW)
 		do
+			es_cloud := a_cloud_service
 			develop_window := a_win
 			make_with_text (a_text)
 			disable_sensitive
 		end
+
+	es_cloud: ES_CLOUD_S
 
 	develop_window: EB_DEVELOPMENT_WINDOW
 
@@ -42,55 +40,54 @@ feature -- Operation
 			mi: EV_MENU_ITEM
 			t: EV_TIMEOUT
 			acc: detachable ES_ACCOUNT
+			cld: like es_cloud
 		do
 			wipe_out
-			if attached es_cloud_s.service as cld then
-				enable_sensitive
+			enable_sensitive
 
-				l_acc_menu_item := develop_window.show_cloud_account_cmd.new_menu_item
-				auto_recycle (l_acc_menu_item)
-				extend (l_acc_menu_item)
-				l_acc_menu_item.disable_sensitive
+			cld := es_cloud
 
-				if cld.is_available then
-					acc := cld.active_account
-					if acc /= Void then
-							-- Show profile
-						l_acc_menu_item.set_text ({STRING_32} "My Account (" + acc.username + ")")
-						l_acc_menu_item.enable_sensitive
+			l_acc_menu_item := develop_window.show_cloud_account_cmd.new_menu_item
+			auto_recycle (l_acc_menu_item)
+			extend (l_acc_menu_item)
+			l_acc_menu_item.disable_sensitive
 
-						create mi.default_create
-						auto_recycle (mi)
-						extend (mi)
-						mi.set_text ("Logout ...")
-						mi.select_actions.extend (agent cld.logout)
+			if cld.is_available then
+				acc := cld.active_account
+				if acc /= Void then
+						-- Show profile
+					l_acc_menu_item.set_text ({STRING_32} "My Account (" + acc.username + ")")
+					l_acc_menu_item.enable_sensitive
 
-					elseif cld.is_guest then
-							-- Show profile
-						l_acc_menu_item.set_text ({STRING_32} "Guest Account")
-						l_acc_menu_item.enable_sensitive
-					else
-							-- Show profile
-						l_acc_menu_item.set_text ({STRING_32} "Login")
-						l_acc_menu_item.enable_sensitive
-					end
-				else
-						-- Try again	 ?
-					create t
-					t.actions.extend (agent cld.check_cloud_availability)
---					t.actions.extend (agent update)
-					t.actions.extend (agent t.destroy)
-					t.set_interval (60 * 1_000) -- 60 * 1000 ms
-
-						-- Check availability
-					create mi.make_with_text ("Check")
-					mi.select_actions.extend (agent t.destroy)
-					mi.select_actions.extend (agent cld.check_cloud_availability)
+					create mi.default_create
 					auto_recycle (mi)
 					extend (mi)
+					mi.set_text ("Logout ...")
+					mi.select_actions.extend (agent cld.logout)
+
+				elseif cld.is_guest then
+						-- Show profile
+					l_acc_menu_item.set_text ({STRING_32} "Guest Account")
+					l_acc_menu_item.enable_sensitive
+				else
+						-- Show profile
+					l_acc_menu_item.set_text ({STRING_32} "Login")
+					l_acc_menu_item.enable_sensitive
 				end
 			else
-				disable_sensitive
+					-- Try again	 ?
+				create t
+				t.actions.extend (agent cld.check_cloud_availability)
+--					t.actions.extend (agent update)
+				t.actions.extend (agent t.destroy)
+				t.set_interval (60 * 1_000) -- 60 * 1000 ms
+
+					-- Check availability
+				create mi.make_with_text ("Check")
+				mi.select_actions.extend (agent t.destroy)
+				mi.select_actions.extend (agent cld.check_cloud_availability)
+				auto_recycle (mi)
+				extend (mi)
 			end
 		end
 

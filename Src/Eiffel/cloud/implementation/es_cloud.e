@@ -67,12 +67,14 @@ feature {NONE} -- Initialization
 	get_local_installation (env: EIFFEL_ENV)
 		local
 			inst: ES_INSTALLATION_ENVIRONMENT
+			s: detachable READABLE_STRING_32
 		do
 			create inst.make (eiffel_layout)
-			if attached inst.application_item ("installation_id", env.product_name, env.version_name) as v then
-				create installation.make_with_id (v)
+			s := inst.application_item ("installation_id", env.product_name, env.version_name)
+			if s /= Void and then s.has_substring (env.version_name) and then s.is_valid_as_string_8 then
+				create installation.make_with_id (s.to_string_8)
 			else
-				create installation.make_with_id (env.product_name + "--" + env.eiffel_platform + "--" + (create {UUID_GENERATOR}).generate_uuid.out)
+				create installation.make_with_id (env.product_name + "_" + env.version_name + "--" + env.eiffel_platform + "--" + (create {UUID_GENERATOR}).generate_uuid.out)
 				inst.set_application_item ("installation_id", env.product_name, env.version_name, installation.id)
 			end
 			installation.set_platform (env.eiffel_platform)
@@ -128,9 +130,6 @@ feature -- Access
 
 	installation: ES_ACCOUNT_INSTALLATION
 			-- <Precursor>
-
-	license_accepted: BOOLEAN
-			-- License accepted by user?
 
 	active_account: detachable ES_ACCOUNT
 			-- Active account if logged in, otherwise Void.
@@ -214,15 +213,6 @@ feature -- Get status
 			end
 		end
 
-feature -- Element change
-
-	accept_license
-			-- Set `license_accepted` to `True`.
-		do
-			license_accepted := True
-			store
-		end
-
 feature -- Sign
 
 	login_as_guest
@@ -252,7 +242,7 @@ feature -- Sign
 				active_account := acc
 				guest_mode_ending_date := Void
 				remaining_days_for_guest := 0
-				update_account_subscription (acc)
+				update_account (acc)
 				store
 				on_account_logged_in (acc)
 			else
@@ -270,7 +260,7 @@ feature -- Sign
 				active_account := acc
 				guest_mode_ending_date := Void
 				remaining_days_for_guest := 0
-				update_account_subscription (acc)
+				update_account (acc)
 				store
 				on_account_logged_in (acc)
 			else
@@ -281,13 +271,28 @@ feature -- Sign
 
 	logout
 		do
+			if
+				attached active_account as acc and then
+				attached acc.access_token as tok
+			then
+				web_api.logout (tok.token)
+			end
 			active_account := Void
 			is_guest := False
 			store
 			on_account_logged_out
 		end
 
-feature -- Updating		
+feature -- Updating	
+
+	ping_installation (a_account: ES_ACCOUNT)
+		do
+			if
+				attached a_account.access_token as tok
+			then
+				web_api.ping_installation (tok.token, installation)
+			end
+		end
 
 	update_account (a_account: ES_ACCOUNT)
 		do
@@ -307,6 +312,7 @@ feature -- Updating
 				if attached web_api.installation (tok.token, installation.id) as inst then
 						-- Ok good.
 					a_account.set_installation (inst)
+					ping_installation (acc)
 				elseif attached	web_api.register_installation (tok.token, installation) as inst then
 					a_account.set_installation (inst)
 				else
@@ -346,18 +352,6 @@ feature -- Connection checking
 			b := is_available
 			if l_was_available /= b then
 				on_cloud_available (b)
-			end
-		end
-
-feature -- Updating
-
-	update_account_subscription (acc: ES_ACCOUNT)
-		do
-			if
-				attached acc.access_token as tok and then
-				attached web_api.plan (tok.token) as l_plan
-			then
-				acc.set_plan (l_plan)
 			end
 		end
 
@@ -402,7 +396,6 @@ feature -- Storage
 							else
 								active_account := Void
 							end
-							license_accepted := d.license_accepted
 							guest_mode_ending_date := d.guest_mode_ending_date
 							guest_mode_loging_count := d.guest_mode_loging_count
 						end
@@ -438,7 +431,6 @@ feature -- Storage
 					if ensure_parent_exists (p) then
 						create d
 						d.active_account := active_account
-						d.license_accepted := license_accepted
 						d.guest_mode_ending_date := guest_mode_ending_date
 						d.guest_mode_loging_count := guest_mode_loging_count
 						f.open_write

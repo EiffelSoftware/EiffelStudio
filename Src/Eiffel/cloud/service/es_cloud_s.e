@@ -38,11 +38,6 @@ feature -- Access
 		deferred
 		end
 
-	license_accepted: BOOLEAN
-			-- License accepted by user?
-		deferred
-		end
-
 	is_guest: BOOLEAN
 			-- Is guest?
 		deferred
@@ -71,15 +66,6 @@ feature -- Access
 	guest_mode_loging_count: INTEGER
 			-- Number of loging as guest.
 		deferred
-		end
-
-feature -- Element change
-
-	accept_license
-			-- Set `license_accepted` to `b`.
-		deferred
-		ensure
-			license_accepted: license_accepted
 		end
 
 feature -- Sign in

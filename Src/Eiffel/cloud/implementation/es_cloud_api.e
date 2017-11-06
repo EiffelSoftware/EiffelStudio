@@ -157,16 +157,13 @@ feature -- ROC Account
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			sess: like new_http_client_session
 			resp: like response
-			l_jwt_access_token_href: detachable READABLE_STRING_8
 		do
 			reset_error
 			sess := new_http_client_session
 			if sess /= Void then
 				ctx := new_jwt_auth_context (a_token)
-				ctx.set_credentials_required (True)
 
-				l_jwt_access_token_href := jwt_access_token_endpoint (sess, ctx)
-				if l_jwt_access_token_href /= Void then
+				if attached jwt_access_token_endpoint (sess, ctx) as l_jwt_access_token_href then
 						-- Get new JWT access token, using Basic authorization.
 					ctx.add_form_parameter ("token", a_token)
 					ctx.add_form_parameter ("refresh", a_refresh_key)
@@ -181,43 +178,23 @@ feature -- ROC Account
 	account (a_token: READABLE_STRING_8): detachable ES_ACCOUNT
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
-			sess: like new_http_client_session
 			resp: like response
-			l_es_cloud_href,
-			l_account_href, l_installation_href: detachable READABLE_STRING_8
+			l_account_href: detachable READABLE_STRING_8
 		do
 			reset_error
-			l_es_cloud_href := endpoint ("es:cloud")
-			if l_es_cloud_href = Void then
-				get_es_cloud_endpoint
-				l_es_cloud_href := endpoint ("es:cloud")
-			end
-			if l_es_cloud_href /= Void then
-				sess := new_http_client_session
-				if sess /= Void then
+			if attached new_http_client_session as sess then
+				l_account_href := es_account_endpoint_for_token (a_token, sess)
+				if l_account_href /= Void then
 					ctx := new_jwt_auth_context (a_token)
-					ctx.set_credentials_required (True)
 
-					resp := response (sess.get (l_es_cloud_href, ctx))
-					if not has_error then
-						if attached resp.string_8_item ("_links|es:account|href") as v then
-							l_account_href := v
-						end
-						if attached resp.string_8_item ("_links|es:installations|href") as v then
-							l_installation_href := v
---							record_endpoint ("es:cloud", v)
-						end
-					end
-					if not has_error and then l_account_href /= Void then
-							-- Get new JWT access token, using Basic authorization.
-						resp := response (sess.get (l_account_href, ctx))
-						if
-							not has_error and then
-							attached account_from_response (resp) as acc
-						then
-							Result := acc
-							Result.set_access_token (create {ES_ACCOUNT_ACCESS_TOKEN}.make (a_token))
-						end
+						-- Get new JWT access token, using Basic authorization.
+					resp := response (sess.get (l_account_href, ctx))
+					if
+						not has_error and then
+						attached account_from_response (resp) as acc
+					then
+						Result := acc
+						Result.set_access_token (create {ES_ACCOUNT_ACCESS_TOKEN}.make (a_token))
 					end
 				end
 			end
@@ -234,7 +211,6 @@ feature -- ROC Account
 			sess := new_http_client_session
 			if sess /= Void then
 				ctx := new_basic_auth_context (a_username, a_password)
-				ctx.set_credentials_required (True)
 
 				resp := response (sess.get (root_endpoint, ctx))
 				if not has_error then
@@ -264,40 +240,33 @@ feature -- ROC Account
 			end
 		end
 
+	logout (a_token: READABLE_STRING_8)
+		local
+		do
+			-- To implement!
+			reset_error
+			endpoints_table.wipe_out
+		end
+
 feature -- Plan
 
 	plan (a_token: READABLE_STRING_8): detachable ES_ACCOUNT_PLAN
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			resp: like response
-			l_es_cloud_href: detachable READABLE_STRING_8
 			l_account_href: READABLE_STRING_8
 		do
 			reset_error
 			if
 				attached new_http_client_session as sess
 			then
+				l_account_href := es_account_endpoint_for_token (a_token, sess)
 				ctx := new_jwt_auth_context (a_token)
-				ctx.set_credentials_required (True)
-
-				l_es_cloud_href := endpoint ("es:cloud")
-				if l_es_cloud_href = Void then
-					get_es_cloud_endpoint
-					l_es_cloud_href := endpoint ("es:cloud")
-				end
-				if l_es_cloud_href /= Void then
-					resp := response (sess.get (l_es_cloud_href, ctx))
+				if l_account_href /= Void then
+					resp := response (sess.get (l_account_href, ctx))
 					if not has_error then
-						if attached resp.string_8_item ("_links|es:account|href") as v then
-							l_account_href := v
-						end
-					end
-					if l_account_href /= Void then
-						resp := response (sess.get (l_account_href, ctx))
-						if not has_error then
-							if attached account_from_response (resp) as acc then
-								Result := acc.plan
-							end
+						if attached account_from_response (resp) as acc then
+							Result := acc.plan
 						end
 					end
 				end
@@ -310,7 +279,6 @@ feature -- Installation
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			resp: like response
-			l_es_cloud_href: detachable READABLE_STRING_8
 			l_installations_href, l_new_installation_href: READABLE_STRING_8
 			j_info: JSON_OBJECT
 		do
@@ -319,62 +287,61 @@ feature -- Installation
 				attached new_http_client_session as sess
 			then
 				ctx := new_jwt_auth_context (a_token)
-				ctx.set_credentials_required (True)
 
-				l_es_cloud_href := endpoint ("es:cloud")
-				if l_es_cloud_href = Void then
-					get_es_cloud_endpoint
-					l_es_cloud_href := endpoint ("es:cloud")
-				end
-				if l_es_cloud_href /= Void then
-					resp := response (sess.get (l_es_cloud_href, ctx))
+				l_installations_href := es_account_installations_endpoint_for_token (a_token, sess)
+				if l_installations_href /= Void then
+					ctx.add_form_parameter ("installation_id", a_installation.id)
+					create j_info.make_with_capacity (1)
+					if attached a_installation.platform as pf then
+						j_info.put_string (pf, "platform")
+					end
+					ctx.add_form_parameter ("info", j_info.representation)
+					resp := response (sess.post (l_installations_href, ctx, Void))
 					if not has_error then
-						if attached resp.string_8_item ("_links|es:installations|href") as v then
-							l_installations_href := v
+						if attached resp.string_8_item ("_links|es:installation|href") as v then
+							l_new_installation_href := v
+							record_endpoint_for_token (a_token, {STRING_32} "_links|es:installation|href;installation=" + a_installation.id, l_new_installation_href)
 						end
 					end
-					if l_installations_href /= Void then
-						ctx.add_form_parameter ("installation_id", a_installation.id)
-						create j_info.make_with_capacity (1)
-						if attached a_installation.platform as pf then
-							j_info.put_string (pf, "platform")
-						end
-						ctx.add_form_parameter ("info", j_info.representation)
-						resp := response (sess.post (l_installations_href, ctx, Void))
+					if l_new_installation_href /= Void then
+						ctx := new_jwt_auth_context (a_token)
+
+						resp := response (sess.get (l_new_installation_href, ctx))
 						if not has_error then
-							if attached resp.string_8_item ("_links|es:installation|href") as v then
-								l_new_installation_href := v
-							end
-						end
-						if l_new_installation_href /= Void then
-							ctx := new_jwt_auth_context (a_token)
-							ctx.set_credentials_required (True)
-							resp := response (sess.get (l_installations_href, ctx))
-							if not has_error then
-								if attached resp.string_8_item ("es:installation|id") as v then
-									create Result.make_with_id (v)
-									if resp.string_item_same_caseless_as ("es:installation|is_active", "no") then
-										Result.mark_inactive
-									else
-										Result.mark_active
-									end
-									if attached resp.string_8_item ("es:installation|info") as v_info then
-										Result.set_info (v_info)
-									end
-									if attached resp.date_time_item ("es:installation|creation_date") as v_creation then
-										Result.set_creation_date (v_creation)
-									end
-								end
-							end
+							Result := installation_from_response (resp)
 						end
 					end
 				end
 			end
 		end
 
-	installation (a_token: READABLE_STRING_8; a_installation_id: READABLE_STRING_GENERAL): detachable ES_ACCOUNT_INSTALLATION
+	ping_installation (a_token: READABLE_STRING_8; a_installation: ES_ACCOUNT_INSTALLATION)
+		local
+			inst: like installation
 		do
-			if attached installations (a_token) as lst then
+			inst := register_installation (a_token, a_installation)
+		end
+
+	installation (a_token: READABLE_STRING_8; a_installation_id: READABLE_STRING_GENERAL): detachable ES_ACCOUNT_INSTALLATION
+		local
+			l_installation_href: READABLE_STRING_8
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
+			resp: like response
+		do
+			l_installation_href := endpoint_for_token (a_token, {STRING_32} "_links|es:installation|href;installation=" + a_installation_id.as_string_32)
+			if l_installation_href /= Void then
+				reset_error
+				if
+					attached new_http_client_session as sess
+				then
+					ctx := new_jwt_auth_context (a_token)
+
+					resp := response (sess.get (l_installation_href, ctx))
+					if not has_error then
+						Result := installation_from_response (resp)
+					end
+				end
+			elseif attached installations (a_token) as lst then
 				across
 					lst as ic
 				until
@@ -392,7 +359,6 @@ feature -- Installation
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			resp: like response
-			l_es_cloud_href: detachable READABLE_STRING_8
 			l_installations_href: READABLE_STRING_8
 			inst: ES_ACCOUNT_INSTALLATION
 		do
@@ -401,31 +367,17 @@ feature -- Installation
 				attached new_http_client_session as sess
 			then
 				ctx := new_jwt_auth_context (a_token)
-				ctx.set_credentials_required (True)
-
-				l_es_cloud_href := endpoint ("es:cloud")
-				if l_es_cloud_href = Void then
-					get_es_cloud_endpoint
-					l_es_cloud_href := endpoint ("es:cloud")
-				end
-				if l_es_cloud_href /= Void then
-					resp := response (sess.get (l_es_cloud_href, ctx))
+				l_installations_href := es_account_installations_endpoint_for_token (a_token, sess)
+				if l_installations_href /= Void then
+					resp := response (sess.get (l_installations_href, ctx))
 					if not has_error then
-						if attached resp.string_8_item ("_links|es:installations|href") as v then
-							l_installations_href := v
-						end
-					end
-					if l_installations_href /= Void then
-						resp := response (sess.get (l_installations_href, ctx))
-						if not has_error then
-							if attached resp.table_item ("es:installations") as l_installations then
-								create {ARRAYED_LIST [ES_ACCOUNT_INSTALLATION]} Result.make (l_installations.count)
-								across
-									l_installations as ic
-								loop
-									create inst.make_with_id (ic.key.as_string_8)
-									Result.force (inst)
-								end
+						if attached resp.table_item ("es:installations") as l_installations then
+							create {ARRAYED_LIST [ES_ACCOUNT_INSTALLATION]} Result.make (l_installations.count)
+							across
+								l_installations as ic
+							loop
+								create inst.make_with_id (ic.key.as_string_8)
+								Result.force (inst)
 							end
 						end
 					end
@@ -435,13 +387,14 @@ feature -- Installation
 
 feature {NONE} -- Endpoints
 
-	response (a_resp: HTTP_CLIENT_RESPONSE): ES_CLOUD_API_RESPONSE
-		do
-			create Result.make (a_resp)
-			last_error := Result.error
-		end
-
 	endpoints_table: detachable STRING_TABLE [IMMUTABLE_STRING_8]
+
+	endpoint (rel: READABLE_STRING_GENERAL): detachable IMMUTABLE_STRING_8
+		do
+			if attached endpoints_table as tb then
+				Result := tb.item (rel)
+			end
+		end
 
 	record_endpoint (rel: READABLE_STRING_GENERAL; a_href: IMMUTABLE_STRING_8)
 		local
@@ -455,21 +408,10 @@ feature {NONE} -- Endpoints
 			tb.force (a_href, rel)
 		end
 
-	endpoint (rel: READABLE_STRING_GENERAL): detachable IMMUTABLE_STRING_8
-		local
-			tb: like endpoints_table
-		do
-			tb := endpoints_table
-			if tb /= Void then
-				Result := tb.item (rel)
-			end
-		end
-
-	get_es_cloud_endpoint
+	get_es_cloud_endpoint (sess: attached like new_http_client_session)
 		do
 			-- Get `is_available` value.
 			if
-				attached new_http_client_session as sess and then
 				attached response (sess.get (root_endpoint, Void)) as resp
 			then
 				if has_error then
@@ -482,27 +424,17 @@ feature {NONE} -- Endpoints
 			end
 		end
 
-	es_account_endpoint (sess: HTTP_CLIENT_SESSION; ctx: HTTP_CLIENT_REQUEST_CONTEXT): detachable IMMUTABLE_STRING_8
-		local
-			resp: like response
-			l_es_cloud_href: detachable READABLE_STRING_8
+	es_cloud_endpoint (sess: attached like new_http_client_session): detachable IMMUTABLE_STRING_8
 		do
-			l_es_cloud_href := endpoint ("es:cloud")
-			if l_es_cloud_href = Void then
-				get_es_cloud_endpoint
-				l_es_cloud_href := endpoint ("es:cloud")
-			end
-			if l_es_cloud_href /= Void then
-				resp := response (sess.get (l_es_cloud_href, ctx))
-				if has_error then
-					reset_error
-				else
-					if attached resp.string_8_item ("_links|es:account|href") as v then
-						Result := v
-					end
-				end
+			reset_error
+			Result := endpoint ("es:cloud")
+			if Result = Void then
+				get_es_cloud_endpoint (sess)
+				Result := endpoint ("es:cloud")
 			end
 		end
+
+feature {NONE} -- JWT endpoints
 
 	jwt_access_token_endpoint (sess: HTTP_CLIENT_SESSION; ctx: HTTP_CLIENT_REQUEST_CONTEXT): detachable IMMUTABLE_STRING_8
 		local
@@ -518,7 +450,109 @@ feature {NONE} -- Endpoints
 			end
 		end
 
+feature {NONE} -- Endpoints for token		
+
+	endpoints_table_for_tokens: detachable STRING_TABLE [attached like endpoints_table]
+			-- endpoints table indexed by token.
+
+	wipe_endpoints_for_token (a_token: READABLE_STRING_8)
+		local
+			tbtoks: like endpoints_table_for_tokens
+		do
+			tbtoks := endpoints_table_for_tokens
+			if tbtoks /= Void then
+				tbtoks.remove (a_token)
+				if tbtoks.is_empty then
+					endpoints_table_for_tokens := Void
+				end
+			end
+		end
+
+	record_endpoint_for_token (a_token: READABLE_STRING_8; rel: READABLE_STRING_GENERAL; a_href: IMMUTABLE_STRING_8)
+			-- Record endpoint associated with `a_token`.
+		local
+			tbtoks: like endpoints_table_for_tokens
+			tb: like endpoints_table
+		do
+			tbtoks := endpoints_table_for_tokens
+			if tbtoks = Void then
+				create tbtoks.make_caseless (1)
+				endpoints_table_for_tokens := tbtoks
+			end
+			tb := tbtoks.item (a_token)
+			if tb = Void then
+				create tb.make_caseless (1)
+				tbtoks.force (tb, a_token)
+			end
+			tb.force (a_href, rel)
+		end
+
+	endpoint_for_token (a_token: READABLE_STRING_8; rel: READABLE_STRING_GENERAL): detachable IMMUTABLE_STRING_8
+		do
+			if
+				attached endpoints_table_for_tokens as tbtoks and then
+				attached tbtoks.item (a_token) as tb
+			then
+				Result := tb.item (rel)
+			end
+		end
+
+	get_es_account_endpoints_for_token (a_token: READABLE_STRING_8; sess: attached like new_http_client_session)
+		local
+			resp: like response
+			l_es_cloud_href, l_account_href, l_installation_href: detachable READABLE_STRING_8
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
+		do
+			reset_error
+			l_es_cloud_href := endpoint ("es:cloud")
+			if l_es_cloud_href = Void then
+				get_es_cloud_endpoint (sess)
+				l_es_cloud_href := endpoint ("es:cloud")
+			end
+			if l_es_cloud_href /= Void then
+				ctx := new_jwt_auth_context (a_token)
+
+				resp := response (sess.get (l_es_cloud_href, ctx))
+				if has_error then
+					reset_error
+				else
+					if attached resp.string_8_item ("_links|es:account|href") as v then
+						l_account_href := v
+						record_endpoint_for_token (a_token, "_links|es:account|href", l_account_href)
+					end
+					if attached resp.string_8_item ("_links|es:installations|href") as v then
+						l_installation_href := v
+						record_endpoint_for_token (a_token, "_links|es:installations|href", l_installation_href)
+					end
+				end
+			end
+		end
+
+	es_account_endpoint_for_token (a_token: READABLE_STRING_8; sess: HTTP_CLIENT_SESSION): detachable IMMUTABLE_STRING_8
+		do
+			Result := endpoint_for_token (a_token, "_links|es:account|href")
+			if Result = Void then
+				get_es_account_endpoints_for_token (a_token, sess)
+				Result := endpoint_for_token (a_token, "_links|es:account|href")
+			end
+		end
+
+	es_account_installations_endpoint_for_token (a_token: READABLE_STRING_8; sess: HTTP_CLIENT_SESSION): detachable IMMUTABLE_STRING_8
+		do
+			Result := endpoint_for_token (a_token, "_links|es:installations|href")
+			if Result = Void then
+				get_es_account_endpoints_for_token (a_token, sess)
+				Result := endpoint_for_token (a_token, "_links|es:installations|href")
+			end
+		end
+
 feature {NONE} -- Implementation
+
+	response (a_resp: HTTP_CLIENT_RESPONSE): ES_CLOUD_API_RESPONSE
+		do
+			create Result.make (a_resp)
+			last_error := Result.error
+		end
 
 	new_http_client_session: detachable HTTP_CLIENT_SESSION
 		local
@@ -538,7 +572,7 @@ feature {NONE} -- Implementation
 	new_basic_auth_context (u,p: READABLE_STRING_GENERAL): HTTP_CLIENT_REQUEST_CONTEXT
 		do
 			create Result.make
---			Result.set_credentials_required (True)
+			Result.set_credentials_required (True)
 			if attached (create {HTTP_AUTHORIZATION}.make_basic_auth (u.as_string_32, p.as_string_32)).http_authorization as l_auth then
 				Result.add_header ("Authorization", l_auth)
 			else
@@ -550,6 +584,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 			Result.add_header ("Authorization", "Bearer " + tok)
+			Result.set_credentials_required (True)
 		end
 
 feature {NONE} -- Json handling
@@ -604,6 +639,26 @@ feature {NONE} -- Json handling
 				acc.set_access_token (tok)
 				if attached r.string_8_item ("refresh_key") as l_refresh_key then
 					tok.set_refresh_key (l_refresh_key)
+				end
+			end
+		end
+
+	installation_from_response (resp: like response): detachable ES_ACCOUNT_INSTALLATION
+		require
+			no_error: not has_error
+		do
+			if attached resp.string_8_item ("es:installation|id") as v then
+				create Result.make_with_id (v)
+				if resp.string_item_same_caseless_as ("es:installation|is_active", "no") then
+					Result.mark_inactive
+				else
+					Result.mark_active
+				end
+				if attached resp.string_8_item ("es:installation|info") as v_info then
+					Result.set_info (v_info)
+				end
+				if attached resp.date_time_item ("es:installation|creation_date") as v_creation then
+					Result.set_creation_date (v_creation)
 				end
 			end
 		end

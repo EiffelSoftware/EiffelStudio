@@ -29,8 +29,11 @@ feature {NONE} -- Execution
 	execute
 			-- Execute command.
 		do
-			if attached window_manager.last_focused_development_window as win then
-				win.tools.cloud_account_tool.show (True)
+			if
+				attached window_manager.last_focused_development_window as win and then
+				attached win.tools.cloud_account_tool as l_tool
+			then
+				l_tool.show (True)
 			end
 		end
 

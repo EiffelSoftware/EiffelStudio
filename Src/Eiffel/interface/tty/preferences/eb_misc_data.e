@@ -175,6 +175,27 @@ feature -- Value
 			Result := support_url_preference.value
 		end
 
+	license_accepted: BOOLEAN
+			-- License is accepted?
+		do
+			Result := license_accepted_preference.value
+		end
+
+	es_cloud_enabled: BOOLEAN
+			-- EiffelStudio enabled?
+		do
+			Result := es_cloud_enabled_preference.value
+		end
+
+feature -- Element change
+
+	set_license_accepted (b: BOOLEAN)
+			-- Set License accepted to `b`.
+			-- Hidden.
+		do
+			license_accepted_preference.set_value (b)
+		end
+
 feature -- Preference
 
 	acrobat_reader_preference: STRING_PREFERENCE
@@ -193,6 +214,8 @@ feature -- Preference
 	eis_path_preference: STRING_32_PREFERENCE
 	use_postscript_preference: BOOLEAN_PREFERENCE
 	support_url_preference: STRING_32_PREFERENCE
+	license_accepted_preference: BOOLEAN_PREFERENCE
+	es_cloud_enabled_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -212,6 +235,8 @@ feature {NONE} -- Preference Strings
 	eis_path_preference_string: STRING = "general.eis_path"
 	use_postscript_preference_string: STRING = "general.use_postscript"
 	support_url_preference_string: STRING = "general.support_url"
+	license_accepted_preference_string: STRING = "general.license_accepted"
+	es_cloud_enabled_preference_string: STRING = "general.es_cloud_enabled"
 
 feature {NONE} -- Implementation
 
@@ -257,9 +282,15 @@ feature {NONE} -- Implementation
 
 			use_postscript_preference := l_manager.new_boolean_preference_value (l_manager, use_postscript_preference_string, False)
 
-			support_url_preference := l_manager.new_string_32_preference_value (l_manager, support_url_preference_string, {STRING_32} "https://www2.eiffel.com/support")
+			support_url_preference := l_manager.new_string_32_preference_value (l_manager, support_url_preference_string, {STRING_32} "https://support.eiffel.com/")
 			support_url_preference.set_hidden (True)
 
+			license_accepted_preference := l_manager.new_boolean_preference_value (l_manager, license_accepted_preference_string, False)
+			license_accepted_preference.set_hidden (True)
+
+			es_cloud_enabled_preference := l_manager.new_boolean_preference_value (l_manager, es_cloud_enabled_preference_string, False)
+			es_cloud_enabled_preference.set_hidden (True)
+			es_cloud_enabled_preference.set_restart_required (True)
 		end
 
 	preferences: PREFERENCES
@@ -385,9 +416,11 @@ invariant
 	eis_preference_not_void: eis_path_preference /= Void
 	use_postscript_preference_not_void: use_postscript_preference /= Void
 	support_url_preference_not_void:  support_url_preference /= Void
+	license_accepted_preference_not_void: license_accepted_preference /= Void
+	es_cloud_enabled_preference_not_void: es_cloud_enabled_preference /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

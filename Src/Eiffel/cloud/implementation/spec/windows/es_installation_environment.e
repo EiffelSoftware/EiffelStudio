@@ -61,7 +61,6 @@ feature -- Element change
 			a_version_ok: a_version /= Void implies not a_version.is_whitespace
 		local
 			l_reg: WEL_REGISTRY
-			l_key: detachable WEL_REGISTRY_KEY_VALUE
 			l_eiffel: STRING_32
 			l_lowered_var: READABLE_STRING_GENERAL
 			val: WEL_REGISTRY_KEY_VALUE

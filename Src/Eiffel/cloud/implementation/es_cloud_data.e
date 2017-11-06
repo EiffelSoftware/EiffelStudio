@@ -11,9 +11,6 @@ feature -- Access
 
 	installation: detachable READABLE_STRING_8 assign set_installation
 
-	license_accepted: BOOLEAN assign set_license_accepted
-			-- License accepted by user?
-
 	active_account: detachable ES_ACCOUNT assign set_active_account
 			-- Active account if logged in, otherwise Void.
 
@@ -26,11 +23,6 @@ feature -- Element change
 	set_installation (v: like installation)
 		do
 			installation := v
-		end
-
-	set_license_accepted (v: like license_accepted)
-		do
-			license_accepted := v
 		end
 
 	set_active_account (v: like active_account)

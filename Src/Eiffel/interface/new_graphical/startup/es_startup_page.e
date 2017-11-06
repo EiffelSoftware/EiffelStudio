@@ -53,15 +53,14 @@ feature -- Execution
 	start (win: EV_WINDOW)
 		do
 			if is_gpl_edition then
-				if is_logged_in then
-					on_next
-				else
-					if license_accepted then
-						switch_to_account_page
-					else
-						switch_to_gpl_agreement_page
-					end
+				if not license_accepted then
+					switch_to_gpl_agreement_page
 					show_modal_to_window (win)
+				elseif is_cloud_enabled and not is_logged_in then
+					switch_to_account_page
+					show_modal_to_window (win)
+				else
+					on_next
 				end
 			else
 				on_next
@@ -218,11 +217,12 @@ feature -- Status
 
 	license_accepted: BOOLEAN
 		do
-			if attached es_cloud_s.service as cld then
-				Result := cld.license_accepted
-			else
-				check es_cloud_service_available: False end
-			end
+			Result := preferences.misc_data.license_accepted
+		end
+
+	is_cloud_enabled: BOOLEAN
+		do
+			Result := es_cloud_s.service /= Void
 		end
 
 	is_logged_in: BOOLEAN
@@ -230,7 +230,8 @@ feature -- Status
 			if attached es_cloud_s.service as cld then
 				Result := cld.active_account /= Void
 			else
-				check es_cloud_service_available: False end
+					-- ES Cloud is not activated!
+				Result := True
 			end
 		end
 
@@ -257,18 +258,19 @@ feature -- Event: license
 
 	on_gpl_usage_accepted
 		do
-			if attached es_cloud_s.service as cld then
-				cld.accept_license
-			end
-			if is_logged_in then
-				on_next
+			preferences.misc_data.set_license_accepted (True)
+			if is_cloud_enabled then
+				if is_logged_in then
+					on_next
+				else
+					switch_to_account_page
+				end
 			else
-				switch_to_account_page
+				on_next
 			end
 		end
 
 	on_purchase_selected
-		local
 		do
 			open_url ("https://www.eiffel.com/eiffelstudio/purchase/")
 		end

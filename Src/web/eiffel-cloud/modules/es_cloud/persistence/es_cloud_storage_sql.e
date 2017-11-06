@@ -118,6 +118,7 @@ feature -- Access
 					Result.set_info (sql_read_string_32 (3))
 					Result.set_status (sql_read_integer_32 (4))
 					Result.set_creation_date (sql_read_date_time (5))
+					Result.set_access_date (sql_read_date_time (6))
 				end
 			end
 			sql_finalize_query (sql_select_user_installation)
@@ -147,6 +148,7 @@ feature -- Access
 						inst.set_info (sql_read_string_32 (3))
 						inst.set_status (sql_read_integer_32 (4))
 						inst.set_creation_date (sql_read_date_time (5))
+						inst.set_access_date (sql_read_date_time (6))
 						Result.force (inst)
 					else
 						check valid_record: False end
@@ -241,7 +243,7 @@ feature -- Change
 			l_is_new := user_installation (inst.user, inst.installation_id) = Void
 
 			reset_error
-			create l_params.make (5)
+			create l_params.make (6)
 			l_params.force (inst.installation_id, "iid")
 			l_params.force (inst.user.id, "uid")
 			l_params.force (inst.info, "info")
@@ -251,6 +253,7 @@ feature -- Change
 			else
 				l_params.force (create {DATE_TIME}.make_now_utc, "creation")
 			end
+			l_params.force (create {DATE_TIME}.make_now_utc, "access")
 
 			if l_is_new then
 				sql_insert (sql_insert_installation, l_params)
@@ -297,13 +300,13 @@ feature {NONE} -- Fetcher
 
 feature {NONE} -- Queries: installations
 
-	sql_select_user_installation: STRING = "SELECT iid, uid, info, status FROM es_installations WHERE iid=:iid AND uid=:uid;"
+	sql_select_user_installation: STRING = "SELECT iid, uid, info, status, creation, access FROM es_installations WHERE iid=:iid AND uid=:uid;"
 
-	sql_select_installations: STRING = "SELECT iid, uid, info, status, creation FROM es_installations;"
+	sql_select_installations: STRING = "SELECT iid, uid, info, status, creation, access FROM es_installations;"
 
-	sql_insert_installation: STRING = "INSERT INTO es_installations (iid, uid, info, status, creation) VALUES (:iid, :uid, :info, :status, :creation);"
+	sql_insert_installation: STRING = "INSERT INTO es_installations (iid, uid, info, status, creation, access) VALUES (:iid, :uid, :info, :status, :creation, :access);"
 
-	sql_update_installation: STRING = "UPDATE es_installations SET info=:info, status=:status WHERE iid=:iid AND uid=:uid;"
+	sql_update_installation: STRING = "UPDATE es_installations SET info=:info, status=:status, access=:access WHERE iid=:iid AND uid=:uid;"
 
 	sql_delete_installation: STRING = "DELETE FROM es_installations WHERE iid=:iid AND uid=:uid;"
 

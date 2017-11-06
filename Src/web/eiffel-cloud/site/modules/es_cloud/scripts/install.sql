@@ -18,5 +18,6 @@ CREATE TABLE es_installations(
   `uid`	INTEGER NOT NULL,
   `info` TEXT NOT NULL,
   `status` INTEGER NOT NULL,
-  `creation` DATETIME NOT NULL
+  `creation` DATETIME NOT NULL,
+  `access` DATETIME
 );

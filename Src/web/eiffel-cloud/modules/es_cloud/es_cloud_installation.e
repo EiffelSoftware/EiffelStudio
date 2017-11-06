@@ -31,6 +31,8 @@ feature -- Access
 
 	creation_date: detachable DATE_TIME
 
+	access_date: detachable DATE_TIME
+
 feature -- status report
 
 	is_active: BOOLEAN
@@ -62,6 +64,11 @@ feature -- Element change
 	set_creation_date (dt: like creation_date)
 		do
 			creation_date := dt
+		end
+
+	set_access_date (dt: like access_date)
+		do
+			access_date := dt
 		end
 
 end

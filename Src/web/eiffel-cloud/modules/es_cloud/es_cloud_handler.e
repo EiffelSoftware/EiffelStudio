@@ -67,6 +67,16 @@ feature -- Execution
 					loop
 						s.append ("<li>")
 						s.append (html_encoded (ic.item.installation_id))
+						if attached ic.item.creation_date as l_creation_date then
+							s.append (" <span class=%"creation%">")
+							s.append (date_time_to_string (l_creation_date))
+							s.append ("</span>")
+						end
+						if attached ic.item.access_date as l_access_date then
+							s.append (" <span class=%"access%">")
+							s.append (date_time_to_string (l_access_date))
+							s.append ("</span>")
+						end
 						s.append ("</li>%N")
 					end
 					s.append ("</ul></p>")

@@ -126,14 +126,13 @@ end
 				until
 					parameters.after
 				loop
-					if attached {ACCESS_B} parameters.item.expression as access_b implies not access_b.is_attribute then
-						if
-							attached {NESTED_B} parameters.item.expression as l_nested implies
-							(not (l_nested.target.is_predefined or l_nested.target.is_attribute) or not l_nested.message.is_attribute)
-						then
-							l_optimizable := False
-							parameters.finish
-						end
+					if
+						(attached {ACCESS_B} parameters.item.expression as access_b implies not access_b.is_attribute) and then
+						(attached {NESTED_B} parameters.item.expression as l_nested implies
+							(not (l_nested.target.is_predefined or l_nested.target.is_attribute) or not l_nested.message.is_attribute))
+					then
+						l_optimizable := False
+						parameters.finish
 					end
 					parameters.forth
 				end
@@ -177,12 +176,12 @@ end
 			is_right_parenthesis_needed.put (False)
 			is_deferred.put (False)
 			is_direct_once.put (False)
-
-			if attached instance_free_creation as c then
-				do_generate (c.register)
-			else
-				do_generate (current_register)
-			end
+			do_generate
+				(if attached instance_free_creation as c then
+					c.register
+				else
+					current_register
+				end)
 		end
 
 	generate_on (reg: REGISTRABLE)
@@ -202,7 +201,6 @@ end
 			-- `reg' is the entity on which the access is made.
 		local
 			type_i: TYPE_A
-			access: ACCESS_B
 			is_polymorphic_access: BOOLEAN
 		do
 			type_i := context_type
@@ -213,16 +211,18 @@ end
 			if reg.is_current and is_polymorphic_access then
 				context.add_dt_current
 			end
-			if not reg.is_predefined and is_polymorphic_access then
+			if
+				not reg.is_predefined and
+				is_polymorphic_access and then
+				attached {ACCESS_B} reg as access and then
+				access.register = No_register
+			then
 					-- BEWARE!! The function call is polymorphic hence we'll
 					-- need to evaluate `reg' twice: once to get its dynamic
 					-- type and once as a parameter for Current. Hence we
 					-- must make sure it is not held in a No_register--RAM.
-				access ?= reg;		-- Cannot fail
-				if access.register = No_register then
-					access.set_register (Void)
-					access.get_register
-				end
+				access.set_register (Void)
+				access.get_register
 			end
 		end
 
@@ -359,13 +359,12 @@ end
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A)
 			-- Generate feature call in a `typ' context
 		local
-			internal_name		: STRING
-			table_name			: STRING
-			rout_table			: ROUT_TABLE
+			internal_name: STRING
+			table_name: STRING
 			type_i: TYPE_A
-			type_c				: TYPE_C
-			buf					: GENERATION_BUFFER
-			array_index			: INTEGER
+			type_c: TYPE_C
+			buf: GENERATION_BUFFER
+			array_index: INTEGER
 			local_argument_types: ARRAY [STRING]
 			entry: ROUT_ENTRY
 			f: FEATURE_I
@@ -448,36 +447,39 @@ end
 					-- deferred feature in which case we have to be careful
 					-- and get the routine name of the first entry in the
 					-- routine table.
-				rout_table ?= Eiffel_table.poly_table (routine_id)
-				rout_table.goto_implemented (typ, context.context_class_type)
+				if attached {ROUT_TABLE} Eiffel_table.poly_table (routine_id) as rout_table then
+					rout_table.goto_implemented (typ, context.context_class_type)
+					if rout_table.is_implemented then
+						internal_name := rout_table.feature_name
 
-				if rout_table.is_implemented then
-					internal_name := rout_table.feature_name
+						entry := rout_table.item
+						l_index := entry.body_index
 
-					entry := rout_table.item
-					l_index := entry.body_index
-
-					f := system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id)
-					if f.is_process_or_thread_relative_once and then context.is_once_call_optimized then
-							-- Routine contracts (require, ensure, invariant) should not be checked
-							-- and value of already called once routine can be retrieved from memory
-						is_direct_once.put (True)
-						context.generate_once_optimized_call_start (type_c, l_index, is_process_relative, is_object_relative, buf)
-					end
-
-					local_argument_types := argument_types
-					if rout_table.item.access_type_id /= Context.original_class_type.type_id then
-							-- Remember extern routine declaration
-						if context.workbench_mode then
-							return_type_string := "EIF_TYPED_VALUE"
-						else
-							return_type_string := type_c.c_string
-						end
-						Extern_declarations.add_routine_with_signature (return_type_string,
-								internal_name, local_argument_types)
+						f := system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id)
 						if f.is_process_or_thread_relative_once and then context.is_once_call_optimized then
-							Extern_declarations.add_once (type_c, l_index, is_process_relative, is_object_relative)
+								-- Routine contracts (require, ensure, invariant) should not be checked
+								-- and value of already called once routine can be retrieved from memory
+							is_direct_once.put (True)
+							context.generate_once_optimized_call_start (type_c, l_index, is_process_relative, is_object_relative, buf)
 						end
+
+						local_argument_types := argument_types
+						if rout_table.item.access_type_id /= Context.original_class_type.type_id then
+								-- Remember extern routine declaration
+							if context.workbench_mode then
+								return_type_string := "EIF_TYPED_VALUE"
+							else
+								return_type_string := type_c.c_string
+							end
+							Extern_declarations.add_routine_with_signature (return_type_string,
+									internal_name, local_argument_types)
+							if f.is_process_or_thread_relative_once and then context.is_once_call_optimized then
+								Extern_declarations.add_once (type_c, l_index, is_process_relative, is_object_relative)
+							end
+						end
+					else
+							-- Call to a deferred feature without implementation
+						is_deferred.put (True)
 					end
 				else
 						-- Call to a deferred feature without implementation
@@ -583,10 +585,13 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 			-- Is actual generic parameter `actual_generic' of current type SPECIAL [G] is
 			-- expanded with references?
 		require
-			is_special_context_class_type: context_cl_type.base_class.is_special
+			is_special_context_class_type: attached context_type.base_class as c and then c.is_special
 		do
-			if actual_generic.is_true_expanded then
-				Result := actual_generic.associated_class_type (context_cl_type).skeleton.has_references
+			if
+				actual_generic.is_true_expanded and then
+				attached actual_generic.associated_class_type (context_type) as c
+			then
+				Result := c.skeleton.has_references
 			end
 		end
 

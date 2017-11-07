@@ -22,6 +22,14 @@ feature -- Response
 			Result_attached: Result /= Void
 		end
 
+feature -- Execution
+
+	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Execute request handler	
+		do
+			res.send (response (req))
+		end
+
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -11,16 +11,6 @@ deferred class
 inherit
 	DEBUG_OUTPUT
 
-feature {NONE} -- Initialization
-
-	make (a_resource: READABLE_STRING_8; h: like handler)
-			-- Create mapping based on resource `a_resource' and handler `h'.
-		require
-			a_resource_attached: a_resource /= Void
-			h_attached: h /= Void
-		deferred
-		end
-
 feature -- Access
 
 	associated_resource: READABLE_STRING_8

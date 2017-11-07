@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<title>EWF simple_file example</title>
+	</head>
+
+	<body>
+		<h1>EWF simple_file example</h1>
+		<p>This is a static html file served by EWF.</p>
+		<p>Try to <a href="nowhere.html">get lost</a>.</p>
+		<div width="45%" style="display: inline-block; border: solid 1px black; padding: 10px; margin: 10px;">
+		<h2>Without any compression</h2>
+		<a href="ewf.png"><img src="ewf.png"/></a>
+		<p>This is the real Eiffel tower.</p>
+		<a href="eiffel.jpg"><img src="eiffel.jpg"/></a>
+		<p>Try to <a href="big_file2.html">load a big file</a>.</p>
+		</div>
+
+		<div width="45%" style="display: inline-block; border: solid 1px black; padding: 10px; margin: 10px;">
+		<h2>With gzip compression</h2>
+		<a href="compressed/ewf.png"><img src="compressed/ewf.png"/></a>
+		<p>This is the real Eiffel tower.</p>
+		<a href="compressed/eiffel.jpg"><img src="compressed/eiffel.jpg"/></a>
+		<p>Try to <a href="compressed/big_file2.html">load a compressed big file</a>.</p>
+		</div>
+	</body>
+
+</html>

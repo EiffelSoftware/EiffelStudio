@@ -8,28 +8,12 @@ deferred class
 	WSF_URI_TEMPLATE_RESPONSE_HANDLER
 
 inherit
+	WSF_EXECUTE_RESPONSE_HANDLER
+
 	WSF_URI_TEMPLATE_HANDLER
 
-feature -- Response
-
-	response (req: WSF_REQUEST): WSF_RESPONSE_MESSAGE
-		require
-			is_valid_context: is_valid_context (req)
-		deferred
-		ensure
-			Result_attached: Result /= Void
-		end
-
-feature -- Execution
-
-	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler	
-		do
-			res.send (response (req))
-		end
-
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

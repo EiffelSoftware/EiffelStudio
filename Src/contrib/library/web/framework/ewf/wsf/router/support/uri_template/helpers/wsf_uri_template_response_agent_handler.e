@@ -8,31 +8,15 @@ class
 	WSF_URI_TEMPLATE_RESPONSE_AGENT_HANDLER
 
 inherit
+	WSF_EXECUTE_RESPONSE_AGENT_HANDLER
+
 	WSF_URI_TEMPLATE_RESPONSE_HANDLER
 
 create
 	make
 
-feature -- Initialization
-
-	make (act: like action)
-		do
-			action := act
-		end
-
-feature -- Access
-
-	action: FUNCTION [TUPLE [req: WSF_REQUEST], WSF_RESPONSE_MESSAGE]
-
-feature -- Execution
-
-	response (req: WSF_REQUEST): WSF_RESPONSE_MESSAGE
-		do
-			Result := action.item ([req])
-		end
-
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

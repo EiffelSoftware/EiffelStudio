@@ -8,7 +8,7 @@ deferred class
 	WSF_ROUTING_HANDLER
 
 inherit
-	WSF_HANDLER
+	WSF_EXECUTE_HANDLER
 
 feature {NONE} -- Initialization
 

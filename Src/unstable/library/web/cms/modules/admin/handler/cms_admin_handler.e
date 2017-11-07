@@ -24,7 +24,8 @@ inherit
 			execute as uri_template_execute,
 			new_mapping as new_uri_template_mapping
 		select
-			new_uri_template_mapping
+			new_uri_template_mapping,
+			uri_template_execute
 		end
 
 	WSF_RESOURCE_HANDLER_HELPER

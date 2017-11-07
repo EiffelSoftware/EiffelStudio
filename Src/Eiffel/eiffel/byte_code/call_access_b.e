@@ -396,7 +396,10 @@ feature {NONE} -- C code generation
 		do
 			is_nested := not is_first
 			buf := buffer
-			if attached precursor_type as p and then not (attached {ROUTINE_B} Current as r and then r.is_instance_free) then
+			if
+				attached precursor_type as p and then
+				(not (attached {ROUTINE_B} Current as r and then r.is_instance_free) or else p.is_basic or else p.is_standalone)
+			then
 				l_type := context.real_type (p)
 				if l_type.is_multi_constrained then
 					check
@@ -427,9 +430,9 @@ feature {NONE} -- C code generation
 			buf.put_integer (routine_id)
 			buf.put_two_character (',', ' ')
 			if not is_nested then
-				if not attached precursor_type then
+				if not attached precursor_type as p then
 					context.generate_current_dtype
-				elseif attached {ROUTINE_B} Current as r and then r.is_instance_free  then
+				elseif attached {ROUTINE_B} Current as r and then r.is_instance_free  and then not p.is_basic and then not p.is_standalone then
 					buf.put_string ({C_CONST}.dtype)
 					buf.put_character ('(')
 					t.print_register

@@ -10,6 +10,11 @@ class
 
 inherit
 	CMS_HANDLER
+	
+	WSF_EXECUTE_HANDLER
+		select
+			execute
+		end
 
 	WSF_URI_HANDLER
 		rename
@@ -22,8 +27,7 @@ inherit
 			execute as uri_template_execute,
 			new_mapping as new_uri_template_mapping
 		select
-			new_uri_template_mapping,
-			uri_template_execute
+			new_uri_template_mapping
 		end
 
 	WSF_RESOURCE_HANDLER_HELPER

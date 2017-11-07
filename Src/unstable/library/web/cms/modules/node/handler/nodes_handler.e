@@ -9,6 +9,11 @@ class
 inherit
 	CMS_NODE_HANDLER
 
+	WSF_EXECUTE_HANDLER
+		select
+			execute
+		end
+		
 	WSF_URI_HANDLER
 		rename
 			new_mapping as new_uri_mapping,

@@ -50,6 +50,7 @@ feature -- Status report
 feature -- Execution
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Execute `req' responding in `res'.
 		local
 			fut: FILE_UTILITIES
 			l_exec_path: PATH

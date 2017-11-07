@@ -8,7 +8,7 @@ deferred class
 	WSF_ROUTING_HANDLER
 
 inherit
-	WSF_EXECUTE_HANDLER
+	WSF_HANDLER
 
 feature {NONE} -- Initialization
 
@@ -48,7 +48,10 @@ feature -- Element change
 feature -- Execution
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler
+			-- Execute `req' responding in `res'.
+		require
+			req_attached: req /= Void
+			res_attached: res /= Void
 		local
 			sess: WSF_ROUTER_SESSION
 		do
@@ -60,7 +63,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

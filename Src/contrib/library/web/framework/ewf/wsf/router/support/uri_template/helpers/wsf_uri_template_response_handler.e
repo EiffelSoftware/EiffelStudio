@@ -8,9 +8,19 @@ deferred class
 	WSF_URI_TEMPLATE_RESPONSE_HANDLER
 
 inherit
-	WSF_EXECUTE_RESPONSE_HANDLER
+	WSF_RESPONSE_HANDLER
 
 	WSF_URI_TEMPLATE_HANDLER
+
+feature -- Response
+
+	response (req: WSF_REQUEST): WSF_RESPONSE_MESSAGE
+		require
+			is_valid_context: is_valid_context (req)
+		deferred
+		ensure
+			Result_attached: Result /= Void
+		end
 
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"

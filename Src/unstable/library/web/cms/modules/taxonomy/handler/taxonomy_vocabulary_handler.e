@@ -16,11 +16,6 @@ inherit
 			module_api as taxonomy_api
 		end
 
-	WSF_EXECUTE_HANDLER
-		select
-			execute
-		end
-
 	WSF_URI_HANDLER
 		rename
 			execute as uri_execute,

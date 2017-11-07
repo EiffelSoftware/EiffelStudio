@@ -9,11 +9,6 @@ class
 inherit
 	CMS_HANDLER
 
-	WSF_EXECUTE_HANDLER
-		select
-			execute
-		end
-
 	WSF_URI_HANDLER
 		rename
 			execute as uri_execute,

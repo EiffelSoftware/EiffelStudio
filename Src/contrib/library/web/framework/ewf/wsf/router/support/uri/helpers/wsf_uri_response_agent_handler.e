@@ -11,7 +11,9 @@ inherit
 	WSF_EXECUTE_RESPONSE_AGENT_HANDLER
 
 	WSF_URI_RESPONSE_HANDLER
-
+		undefine
+			execute
+		end
 create
 	make
 

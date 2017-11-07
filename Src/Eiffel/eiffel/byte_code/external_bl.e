@@ -97,7 +97,6 @@ feature
 			-- `reg' is the entity on which the access is made.
 		local
 			type_i: TYPE_A
-			access: ACCESS_B
 			is_polymorphic_access: BOOLEAN
 		do
 			type_i := context_type
@@ -109,16 +108,18 @@ feature
 				context.add_dt_current
 				context.mark_current_used
 			end
-			if not reg.is_predefined and is_polymorphic_access then
+			if
+				not reg.is_predefined and
+				is_polymorphic_access and then
+				attached {ACCESS_B} reg as access and then
+				access.register = No_register
+			then
 					-- BEWARE!! The function call is polymorphic hence we'll
 					-- need to evaluate `reg' twice: once to get its dynamic
 					-- type and once as a parameter for Current. Hence we
 					-- must make sure it is not held in a No_register--RAM.
-				access ?= reg		-- Cannot fail
-				if access.register = No_register then
-					access.set_register (Void)
-					access.get_register
-				end
+				access.set_register (Void)
+				access.get_register
 			end
 		end
 
@@ -127,11 +128,12 @@ feature
 		do
 				-- Reset value of variables.
 			is_right_parenthesis_needed.put (False)
-			if attached instance_free_creation as c then
-				do_generate (c.register)
-			else
-				do_generate (current_register)
-			end
+			do_generate
+				(if attached instance_free_creation as c then
+					c.register
+				else
+					current_register
+				end)
 		end
 
 	generate_on (reg: REGISTRABLE)
@@ -151,10 +153,7 @@ feature
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
 			local_argument_types, real_arg_types: like argument_types
-			rout_table: ROUT_TABLE
 			internal_name: STRING
-			inline_ext: INLINE_EXTENSION_I
-			return_type_string: STRING
 			l_keep, is_nested: BOOLEAN
 		do
 			check
@@ -219,7 +218,7 @@ feature
 					buf.put_character ('(')
 					reg.print_register
 					buf.put_character (')')
-				end;
+				end
 				buf.put_character ('-')
 				buf.put_integer (array_index)
 				buf.put_character (']')
@@ -237,8 +236,10 @@ feature
 
 					-- In the case of encapsulated externals, we call the associated
 					-- encapsulation.
-				if is_encapsulation_required or else extension.is_inline then
-					rout_table ?= Eiffel_table.poly_table (routine_id)
+				if
+					(is_encapsulation_required or else extension.is_inline) and then
+					attached {ROUT_TABLE} Eiffel_table.poly_table (routine_id) as rout_table
+				then
 					rout_table.goto_implemented (typ, context.context_class_type)
 					check
 						is_valid_routine: rout_table.is_implemented
@@ -247,31 +248,26 @@ feature
 
 					local_argument_types := argument_types
 
-					if inline_needed (typ) then
-						inline_ext ?= extension
+					if
+						inline_needed (typ) and then
+						attached {INLINE_EXTENSION_I} extension as inline_ext
+					then
 						if local_argument_types.count > 1 then
 							real_arg_types := local_argument_types.subarray (local_argument_types.lower + 1, local_argument_types.upper)
 							real_arg_types.rebase (1)
 						else
 							create real_arg_types.make_empty
 						end
-
 						inline_ext.force_inline_def (l_type_i, internal_name, real_arg_types)
-					end
-
-					if
-						rout_table.item.access_type_id /= Context.original_class_type.type_id and
-						inline_ext = Void
-					then
+							-- No need for a function cast since the inline routine is defined
+							-- prior to the call.
+						internal_name := inline_ext.inline_name (internal_name)
+					elseif rout_table.item.access_type_id /= Context.original_class_type.type_id then
 							-- Remember extern routine declaration if not written in same class. But no need
 							-- doing this for an inline C/C++ since the code of the inline routine will be
 							-- generated again.
-						if context.workbench_mode then
-							return_type_string := "EIF_TYPED_VALUE"
-						else
-							return_type_string := type_c.c_string
-						end
-						Extern_declarations.add_routine_with_signature (return_type_string,
+						Extern_declarations.add_routine_with_signature
+							(if context.workbench_mode then "EIF_TYPED_VALUE" else type_c.c_string end,
 								internal_name, local_argument_types)
 					end
 
@@ -286,13 +282,7 @@ feature
 						end
 					end
 
-					if inline_ext /= Void then
-							-- No need for a function cast since the inline routine is defined
-							-- prior to the call.
-						buf.put_string (inline_ext.inline_name (internal_name))
-					else
-						buf.put_string (internal_name)
-					end
+					buf.put_string (internal_name)
 				else
 					if not l_type_i.is_void then
 						type_c.generate_cast (buf)
@@ -313,11 +303,6 @@ feature
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A)
 			-- Generate final portion of C code.
 		local
-			cpp_ext: CPP_EXTENSION_I
-			macro_ext: MACRO_EXTENSION_I
-			struct_ext: STRUCT_EXTENSION_I
-			c_ext: C_EXTENSION_I
-			l_built_in: BUILT_IN_EXTENSION_I
 			buf: GENERATION_BUFFER
 			l_type: TYPE_A
 			l_args: like argument_types
@@ -335,27 +320,19 @@ feature
 				check
 					not_dll: not extension.is_dll
 				end
-				if extension.is_macro then
-					macro_ext ?= extension
+				if attached {MACRO_EXTENSION_I} extension as macro_ext then
 					macro_ext.generate_access (external_name, parameters, l_type)
-				elseif extension.is_struct then
-					struct_ext ?= extension
+				elseif attached {STRUCT_EXTENSION_I} extension as struct_ext then
 					struct_ext.generate_access (external_name, parameters, l_type)
 				elseif extension.is_inline then
 					buf.put_character ('(')
 					generate_parameters_list
 					buf.put_character (')')
-				elseif extension.is_cpp then
-					cpp_ext ?= extension
+				elseif attached {CPP_EXTENSION_I} extension as cpp_ext then
 					cpp_ext.generate_access (external_name, parameters, l_type)
-				elseif extension.is_built_in then
-					l_built_in ?= extension
-					l_built_in.generate_access (external_name, written_in, gen_reg, parameters, l_type)
-				else
-					c_ext ?= extension
-					check
-						is_c_extension: c_ext /= Void
-					end
+				elseif attached {BUILT_IN_EXTENSION_I} extension as built_in_ext then
+					built_in_ext.generate_access (external_name, written_in, gen_reg, parameters, l_type)
+				elseif attached {C_EXTENSION_I} extension as c_ext then
 						-- Remove `Current' from argument types.
 					l_args := argument_types
 					if argument_types.count > 1 then
@@ -364,6 +341,10 @@ feature
 						create l_args.make_empty
 					end
 					c_ext.generate_access (external_name, parameters, l_args, l_type)
+				else
+					check
+						is_expected_extension: False
+					end
 				end
 			else
 					-- Call is done like a normal Eiffel routine call.

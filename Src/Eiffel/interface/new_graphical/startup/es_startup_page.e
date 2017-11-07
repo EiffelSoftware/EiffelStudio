@@ -56,9 +56,19 @@ feature -- Execution
 				if not license_accepted then
 					switch_to_gpl_agreement_page
 					show_modal_to_window (win)
-				elseif is_cloud_enabled and not is_logged_in then
-					switch_to_account_page
-					show_modal_to_window (win)
+				elseif is_cloud_enabled then
+					if is_logged_in then
+						if
+							attached es_cloud_s.service as cld and then
+							attached cld.active_account as acc
+						then
+							cld.on_account_logged_in (acc)
+						end
+						on_next
+					else
+						switch_to_account_page
+						show_modal_to_window (win)
+					end
 				else
 					on_next
 				end

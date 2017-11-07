@@ -13,6 +13,8 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
+	SHARED_ES_CLOUD_SERVICE
+
 create
 	make
 
@@ -136,7 +138,9 @@ feature -- Command
 			l_mb.extend (develop_window.menus.tools_menu)
 			l_mb.extend (develop_window.menus.window_menu)
 			l_mb.extend (develop_window.menus.help_menu)
-			l_mb.extend (develop_window.menus.cloud_account_menu)
+			if attached develop_window.menus.cloud_account_menu as l_cloud_menu then
+				l_mb.extend (l_cloud_menu)
+			end
 
 			develop_window.estudio_debug_cmd.attach_window (develop_window.window)
 		end
@@ -767,8 +771,10 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 		local
 			l_menu: ES_CLOUD_ACCOUNT_MENU
 		do
-			create l_menu.make (develop_window.Interface_names.m_account, develop_window)
-			develop_window.menus.set_account_menu (l_menu)
+			if attached es_cloud_s.service  as l_cloud_service then
+				create l_menu.make (l_cloud_service, develop_window.Interface_names.m_account, develop_window)
+				develop_window.menus.set_account_menu (l_menu)
+			end
 		end
 
 	build_project_menu

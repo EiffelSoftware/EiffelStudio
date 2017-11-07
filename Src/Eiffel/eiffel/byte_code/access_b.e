@@ -379,8 +379,8 @@ feature -- C generation
 		require
 			reg_not_void: reg /= Void
 		do
-			if parameters /= Void then
-				parameters.generate
+			if attached parameters as p then
+				p.generate
 			end
 		end
 

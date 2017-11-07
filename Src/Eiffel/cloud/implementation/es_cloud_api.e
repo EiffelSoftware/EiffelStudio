@@ -241,11 +241,10 @@ feature -- ROC Account
 		end
 
 	logout (a_token: READABLE_STRING_8)
-		local
 		do
 			-- To implement!
 			reset_error
-			endpoints_table.wipe_out
+			endpoints_table_for_tokens := Void
 		end
 
 feature -- Plan
@@ -315,11 +314,29 @@ feature -- Installation
 			end
 		end
 
-	ping_installation (a_token: READABLE_STRING_8; a_installation: ES_ACCOUNT_INSTALLATION)
+	ping_installation (a_token: READABLE_STRING_8; a_installation_id: READABLE_STRING_8)
 		local
-			inst: like installation
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
+			resp: like response
+			l_installations_href: READABLE_STRING_8
 		do
-			inst := register_installation (a_token, a_installation)
+			reset_error
+			if
+				attached new_http_client_session as sess
+			then
+				ctx := new_jwt_auth_context (a_token)
+
+				l_installations_href := es_account_installations_endpoint_for_token (a_token, sess)
+				if l_installations_href /= Void then
+					ctx.add_form_parameter ("operation", "ping")
+					ctx.add_form_parameter ("installation_id", a_installation_id)
+					resp := response (sess.post (l_installations_href, ctx, Void))
+					if has_error then
+							-- Too bad, but not critical
+						reset_error
+					end
+				end
+			end
 		end
 
 	installation (a_token: READABLE_STRING_8; a_installation_id: READABLE_STRING_GENERAL): detachable ES_ACCOUNT_INSTALLATION

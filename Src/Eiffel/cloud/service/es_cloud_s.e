@@ -92,6 +92,10 @@ feature -- Sign in
 
 feature -- Update
 
+	ping_installation (a_account: ES_ACCOUNT)
+		deferred
+		end
+
 	update_account (acc: ES_ACCOUNT)
 		deferred
 		end

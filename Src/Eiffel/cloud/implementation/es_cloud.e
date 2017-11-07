@@ -283,14 +283,17 @@ feature -- Sign
 			on_account_logged_out
 		end
 
-feature -- Updating	
+feature -- Updating
 
 	ping_installation (a_account: ES_ACCOUNT)
+		local
+			p: ES_CLOUD_ASYNC_PING
 		do
 			if
 				attached a_account.access_token as tok
 			then
-				web_api.ping_installation (tok.token, installation)
+				create p.make (tok, installation, server_url)
+				p.execute
 			end
 		end
 
@@ -312,7 +315,6 @@ feature -- Updating
 				if attached web_api.installation (tok.token, installation.id) as inst then
 						-- Ok good.
 					a_account.set_installation (inst)
-					ping_installation (acc)
 				elseif attached	web_api.register_installation (tok.token, installation) as inst then
 					a_account.set_installation (inst)
 				else

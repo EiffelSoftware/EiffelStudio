@@ -1,72 +1,49 @@
 note
-	description: "Summary description for {ES_CLOUD_CONTROLLER}."
-	author: ""
+	description: "Asynchronous call to ping_installation."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_CLOUD_CONTROLLER
+	ES_CLOUD_ASYNC_PING
 
-inherit
-	ES_CLOUD_OBSERVER
-		redefine
-			on_account_logged_in,
-			on_account_logged_out,
-			on_account_updated,
-			on_cloud_available
-		end
+create
+	make
 
-	SHARED_ES_CLOUD_SERVICE
+feature {NONE} -- Initialization
 
-	EB_SHARED_WINDOW_MANAGER
-
-feature -- Events
-
-	on_cloud_available (a_is_available: BOOLEAN)
+	make (a_token: ES_ACCOUNT_ACCESS_TOKEN; a_installation: ES_ACCOUNT_INSTALLATION; a_server_url: READABLE_STRING_8)
 		do
-			update_account_menu
+			create token.make_from_string (a_token.token)
+			create installation_id.make_from_string (a_installation.id)
+			create server_url.make_from_string (a_server_url)
 		end
 
-	on_account_logged_in (acc: ES_ACCOUNT)
-		do
-			on_account_changed (acc)
-			if attached es_cloud_s.service as cld then
-				cld.ping_installation (acc)
-			end
-		end
+	token: IMMUTABLE_STRING_8
 
-	on_account_logged_out
-		do
-			on_account_changed (Void)
-		end
+	installation_id: IMMUTABLE_STRING_8
 
-	on_account_updated (acc: detachable ES_ACCOUNT)
-		do
-			on_account_changed (acc)
-		end
+	server_url: IMMUTABLE_STRING_8
 
-feature -- Callbacks		
+feature -- Access
 
-	on_account_changed (acc: detachable ES_ACCOUNT)
-		do
-			update_account_menu
-		end
-
-feature -- Operations
-
-	update_account_menu
+	execute
 		local
-			w: EB_DEVELOPMENT_WINDOW
+			wt: WORKER_THREAD
 		do
-			if attached window_manager.development_windows as win_lst then
-				across
-					win_lst as ic
-				loop
-					w := ic.item
-					w.menus.cloud_account_menu.update
-					w.tools.cloud_account_tool.update
-				end
-			end
+			create wt.make (agent ping_installation)
+			wt.launch
+		end
+
+	ping_installation
+		local
+			wapi: ES_CLOUD_API
+		do
+			print ("Going to ping%N")
+			(create {EXECUTION_ENVIRONMENT}).sleep (10_000_000_000)
+			create wapi.make (server_url)
+			print ("Pinging%N")
+			wapi.ping_installation (token, installation_id)
+			print ("Ping done.%N")
 		end
 
 note

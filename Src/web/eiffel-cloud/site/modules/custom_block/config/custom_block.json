@@ -1,0 +1,10 @@
+{
+	"blocks": {
+		"cloud_front":	{
+			"is_raw": "yes",
+			"region": "content",
+			"weight": 0,
+			"conditions": ["is_front"]
+		}
+	}
+}

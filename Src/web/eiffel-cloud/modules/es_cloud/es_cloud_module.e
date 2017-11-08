@@ -142,8 +142,9 @@ feature -- Hook
 			b: CMS_CONTENT_BLOCK
 		do
 			if a_response.is_front then
-				create b.make_raw ("Welcome", Void, "<h1>Hello EiffelStudio users</h1><p><a href=%""+ a_response.url ("/cloud", Void) +"%">Go to Cloud page...</a>", Void)
-				a_response.add_block (b, "content")
+				a_response.set_value (a_response.url ("/cloud", Void), "escloud_url")
+--				create b.make_raw ("Welcome", Void, "<h1>Hello EiffelStudio users</h1><p><a href=%""+ a_response.url ("/cloud", Void) +"%">Go to Cloud page...</a>", Void)
+--				a_response.add_block (b, "content")
 			end
 		end
 

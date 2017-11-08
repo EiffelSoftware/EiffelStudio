@@ -1,0 +1,74 @@
+@import "common.scss";
+
+#main
+	{
+		.es-message {
+      @extend .box;
+      font-size: xx-large;
+			border: solid 3px #ccc;
+			background-color: #ddd;
+			width: 60%;
+			padding: 20px;
+			margin-left: auto;
+			margin-right: auto;
+      font-family: roboto;
+		}
+    div.es-plans {
+      li.es-plan-box {
+        @extend .box;
+        list-style: none;
+        display: inline-flex;
+      }
+    }
+		div.es-installations {
+			&>p {
+				font-weight: bold;
+			}
+			span {
+				float: right;
+				border: dotted 1px #bbb;
+				padding: 0 5px 0 5px;
+				margin-left: 10px;
+				background-color: #ddd;
+				clear: both;
+			}
+			span.creation {
+				font-size: smaller;
+				&:before {
+					content: "Created: ";
+				}
+			}
+			span.access {
+				font-size: smaller;
+				&:before {
+					content: "Last-Access: ";
+				}
+			}
+			li {
+				list-style: none;
+				padding: 3px 5px;
+				margin-bottom: 5px;
+				border-left: solid 5px orange;
+        border-top: dotted 1px orange;
+			}
+	 }
+	 div.es-subscription {
+		 &>p {
+			 font-weight: bold;
+		 }
+     li {
+       list-style: none;
+     }
+		 li.status {
+			 padding-left: 5px;
+			 &.success {
+				 color: #0a0;
+			   border-left: solid 5px #090;
+			 }
+			 &.warning {
+				 color: #990;
+				 border-left: solid 5px #900;
+			 }
+	 	  }
+	 }
+}

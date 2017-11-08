@@ -3,10 +3,10 @@ before_script:
     - export current_dir=$PWD ; echo current_dir=$current_dir ; cd ..
     - curl -sSL https://www.eiffel.org/setup/install.sh | bash -s nightly > eiffel.rc
     - source ./eiffel.rc
-    - export EIFFEL_SRC=$PWD/Src
-    - export ISE_EIFFEL=$EIFFEL_SRC
     - echo `ec -version`
     - cd $current_dir
+    - export EIFFEL_SRC=$PWD/Src
+    - export ISE_LIBRARY=$EIFFEL_SRC
     - echo Check projects compilation status...
     
 branches:

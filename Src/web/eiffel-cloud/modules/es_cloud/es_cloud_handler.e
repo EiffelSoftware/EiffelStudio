@@ -51,12 +51,14 @@ feature -- Execution
 			l_plan: detachable ES_CLOUD_PLAN
 		do
 			r := new_generic_response (req, res)
-			s := "<h1>EiffelStudio Cloud</h1>"
+			r.set_title ("EiffelStudio account")
+			s := ""
 
 			if attached api.user as u then
-				s.append ("<p>Welcome user "+ api.html_encoded (api.real_user_display_name (u)) +"</p>")
+				s.append ("<p class=%"es-message%">User "+ api.html_encoded (api.real_user_display_name (u)) +"</p>")
 					-- Plan
 					-- Installation ...
+				s.append ("<div class=%"es-installations%">")
 				if
 					attached es_cloud_api.user_installations (u) as l_installations and then
 					not l_installations.is_empty
@@ -65,7 +67,7 @@ feature -- Execution
 					across
 						l_installations as ic
 					loop
-						s.append ("<li>")
+						s.append ("<li class=%"es-installation%">")
 						s.append (html_encoded (ic.item.installation_id))
 						if attached ic.item.creation_date as l_creation_date then
 							s.append (" <span class=%"creation%">")
@@ -83,50 +85,53 @@ feature -- Execution
 				else
 					s.append ("<p>EiffelStudio is not yet installed.</p>")
 				end
+				s.append ("</div>")
+				s.append ("<div class=%"es-subscription%">")
 				if attached es_cloud_api.user_subscription (u) as sub then
 					l_plan := sub.plan
-					s.append ("You are subscribed to plan: <strong>")
+					s.append ("<p>You are subscribed to plan: <span class=%"es-plan-title%">")
 					s.append (html_encoded (l_plan.title_or_name))
-					s.append ("</strong><ul>")
-					debug
-						s.append ("<li>Started ")
-						s.append (api.date_time_to_string (sub.creation_date))
-						s.append ("</li>")
-					end
+					s.append ("</span>")
+					s.append ("<ul>")
+					s.append ("<li class=%"creation%">Started ")
+					s.append (api.date_time_to_string (sub.creation_date))
+					s.append ("</li>")
 					if sub.is_active then
 						if attached sub.expiration_date as exp then
-							s.append ("<li>Renewal date ")
+							s.append ("<li class=%"expiration%">Renewal date ")
 							s.append (api.date_time_to_string (exp))
 							s.append (" (")
 							s.append (sub.days_remaining.out)
 							s.append (" days remaining)")
 							s.append ("</li>")
 						else
-							s.append ("<li><strong>ACTIVE</strong></li>")
+							s.append ("<li class=%"status success%">ACTIVE</li>")
 						end
 					else
-						s.append ("<li><strong>EXPIRED</strong></li>")
+						s.append ("<li class=%"status warning%">EXPIRED</li>")
 					end
 					s.append ("</ul>")
 				else
 					s.append ("Please subscribe to a plan ...")
 				end
+				s.append ("</div>")
 			else
 				s.append ("<p>Please Login or Register...</p>")
 			end
 			if l_plan = Void then
-				s.append ("<ul><strong>Plans</strong>")
+				s.append ("<div class=%"es-plans%">")
+				s.append ("<strong>Plans</strong><ul>")
 				across
 					es_cloud_api.plans as ic
 				loop
 					l_plan := ic.item
-					s.append ("<li>")
+					s.append ("<li class=%"es-plan-box%">")
 					s.append (html_encoded (l_plan.title_or_name))
 					s.append ("</li>")
 				end
 				s.append ("</ul>")
+				s.append ("</div>")
 			end
-
 			r.set_main_content (s)
 			r.execute
 		end

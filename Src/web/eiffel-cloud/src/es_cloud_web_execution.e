@@ -64,15 +64,15 @@ feature -- CMS modules
 				-- User
 
 				-- Nodes
---			a_setup.register_module (create {CMS_NODE_MODULE}.make)
---			a_setup.register_module (create {CMS_PAGE_MODULE}.make)
+			a_setup.register_module (create {CMS_NODE_MODULE}.make)
+			a_setup.register_module (create {CMS_PAGE_MODULE}.make)
 --			a_setup.register_module (create {CMS_BLOG_MODULE}.make)
 
 				-- Files
 --			a_setup.register_module (create {CMS_FILES_MODULE}.make)
 
 				-- Contact
---			a_setup.register_module (create {CMS_CONTACT_MODULE}.make)
+			a_setup.register_module (create {CMS_CONTACT_MODULE}.make)
 
 				-- Misc
 --			a_setup.register_module (create {CMS_SEO_MODULE}.make)
@@ -84,7 +84,7 @@ feature -- CMS modules
 
 				-- Wiki
 --			a_setup.register_module (create {WIKITEXT_MODULE}.make)
---			a_setup.register_module (create {EMBEDDED_VIDEO_MODULE}.make)
+			a_setup.register_module (create {EMBEDDED_VIDEO_MODULE}.make)
 
 				-- Recent changes
 --			a_setup.register_module (create {CMS_RECENT_CHANGES_MODULE}.make)
@@ -93,9 +93,9 @@ feature -- CMS modules
 --			a_setup.register_module (create {FEED_AGGREGATOR_MODULE}.make)
 
 				-- Miscellanious
---			a_setup.register_module (create {CMS_MESSAGING_MODULE}.make)
+			a_setup.register_module (create {CMS_MESSAGING_MODULE}.make)
 --			a_setup.register_module (create {GOOGLE_CUSTOM_SEARCH_MODULE_20}.make)
---			a_setup.register_module (create {CMS_CUSTOM_BLOCK_MODULE}.make)
+			a_setup.register_module (create {CMS_CUSTOM_BLOCK_MODULE}.make)
 
 
 				-- Dev

@@ -1,0 +1,72 @@
+@import "common.scss";
+@import "cloud.scss";
+
+$header-text-fgcolor: yellow;
+$header-bgcolor: black;
+$header-hover-bgcolor: #333;
+
+body {
+	margin: 0;
+	background-color: white;
+	font-family: roboto;
+}
+
+a {
+	color: blue;
+	text-decoration: none;
+}
+
+div.error {
+	color: red;
+	background-color: #fdd;
+	/* border: solid 1px #f00; */
+	padding: 10px;
+}
+
+div.login-box {
+	@extend .box;
+	border: solid 3px #6a6;
+	background-color: #eee;
+}
+
+#header {
+	background-color: $header-bgcolor;
+	color: $header-text-fgcolor;
+	font-family: roboto;
+	font-size: x-large;
+	padding: 10px;
+	#menu-bar {
+	}
+	ul.horizontal {
+		li {
+			margin-right: 10px;
+			margin-bottom: 5px;
+			padding: 5px 10px;
+			display: inline-block;
+			border: solid 1px #ffc;
+			a {
+					color: $header-text-fgcolor;
+			}
+			&.active {
+				border: solid 2px #ffc;
+			}
+			&:hover {
+				a {
+					color: #ff0;
+				}
+				background-color: $header-hover-bgcolor;
+				border-bottom: solid 5px $header-text-fgcolor;
+				margin-bottom: 0;
+			}
+		}
+	}
+}
+div#content {
+	max-width: 800px;
+	padding: 10px;
+	margin-left: auto;
+	margin-right: auto;
+}
+div#footer {
+	background-color: #006;
+}

@@ -7,6 +7,7 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.svn$</exclude>
 			<exclude>tests</exclude>
+			<exclude>examples</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="patterns" location=".\" recursive="true"/>

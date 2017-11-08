@@ -1,8 +1,8 @@
 language: eiffel
 before_script:
     - export current_dir=$PWD ; echo current_dir=$current_dir ; cd ..
-    - curl -sSL https://www.eiffel.org/setup/install.sh | bash -s nightly
-    - source eiffel_latest.rc
+    - curl -sSL https://www.eiffel.org/setup/install.sh | bash -s nightly > eiffel.rc
+    - source ./eiffel.rc
     - export EIFFEL_SRC=$PWD/Src
     - export ISE_EIFFEL=$EIFFEL_SRC
     - echo `ec -version`

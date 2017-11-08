@@ -1,0 +1,21 @@
+language: eiffel
+before_script:
+    - export current_dir=$PWD ; echo current_dir=$current_dir ; cd ..
+    - curl -sSL https://www.eiffel.org/setup/install.sh | bash -s nightly
+    - source eiffel_latest.rc
+    - echo `ec -version`
+    - cd $current_dir
+    - echo Check projects compilation status...
+    
+branches:
+    only:
+        - master
+        - develop
+
+git:
+    depth: 1
+  
+script: 
+    - compile_all -ecb -melt -list_failures -log_verbose -clean -options dotnet=false -l Src/Eiffel
+group: stable
+os: linux

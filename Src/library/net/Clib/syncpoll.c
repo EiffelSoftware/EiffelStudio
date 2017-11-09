@@ -94,7 +94,7 @@ EIF_INTEGER c_select_poll(EIF_INTEGER fd)
 	fd_set fdmask;
 	struct timeval timeout;
 
-	timeout.tv_sec = (unsigned long) 0;
+	timeout.tv_sec = (long) 0;
 	timeout.tv_usec = (long) 0;
 
 	FD_ZERO(&fdmask);
@@ -105,17 +105,17 @@ EIF_INTEGER c_select_poll(EIF_INTEGER fd)
 	return (FD_ISSET(fd, &fdmask));
 }
 
-EIF_INTEGER c_select_poll_with_timeout_timeval(EIF_INTEGER fd, 
+EIF_INTEGER c_select_poll_with_timeout_timespec(EIF_INTEGER fd, 
 		                               EIF_BOOLEAN read_mode,
-									   EIF_INTEGER timeout_sec, EIF_INTEGER timeout_usec)
-	/*x Get read/write status for socket fd within `timeout_sec' seconds and `timeout_usec` microseconds*/
+									   EIF_INTEGER timeout_sec, EIF_INTEGER timeout_nano_sec)
+	/*x Get read/write status for socket fd within `timeout_sec' seconds and `timeout_nano_sec` nanoseconds*/
 {
 	fd_set fdmask;
 	struct timeval tmout;
 	int res;
 
-	tmout.tv_sec = (unsigned long) timeout_sec;
-	tmout.tv_usec = (long) timeout_usec;
+	tmout.tv_sec = (long) timeout_sec;
+	tmout.tv_usec = (long) (timeout_nano_sec / 1000); /* 1 microsecond = 1000 nanoseconds */
 
 	FD_ZERO(&fdmask);
 	FD_SET(fd, &fdmask);
@@ -135,19 +135,19 @@ EIF_INTEGER c_select_poll_with_timeout(EIF_INTEGER fd,
 									   EIF_INTEGER timeout)
 	/*x Get read/write status for socket fd within `timeout' seconds */
 {
-	return c_select_poll_with_timeout_timeval(fd, read_mode, timeout, 0);
+	return c_select_poll_with_timeout_timespec(fd, read_mode, timeout, 0);
 }
 
-EIF_INTEGER c_check_exception_with_timeout_timeval(EIF_INTEGER fd, 
-									       EIF_INTEGER timeout_sec, EIF_INTEGER timeout_usec)
-	/*x Get exception status for socket fd within `timeout_sec' seconds and `timeout_usec` microseconds */
+EIF_INTEGER c_check_exception_with_timeout_timespec(EIF_INTEGER fd, 
+									       EIF_INTEGER timeout_sec, EIF_INTEGER timeout_nano_sec)
+	/*x Get exception status for socket fd within `timeout_sec' seconds and `timeout_nano_sec` nanoseconds */
 {
 	fd_set fdmask;
 	struct timeval tmout;
 	int res;
 
-	tmout.tv_sec = (unsigned long) timeout_sec;
-	tmout.tv_usec = (long) timeout_usec;
+	tmout.tv_sec = (long) timeout_sec;
+	tmout.tv_usec = (long) (timeout_nano_sec / 1000); /* 1 microsecond = 1000 nanoseconds */
 
 	FD_ZERO(&fdmask);
 	FD_SET(fd, &fdmask);
@@ -163,7 +163,7 @@ EIF_INTEGER c_check_exception_with_timeout(EIF_INTEGER fd,
 									       EIF_INTEGER timeout)
 	/*x Get exception status for socket fd within `timeout' seconds */
 {
-	return c_check_exception_with_timeout_timeval(fd, timeout, 0);
+	return c_check_exception_with_timeout_timespec(fd, timeout, 0);
 }
 
 EIF_INTEGER c_is_blocking(EIF_INTEGER fd)

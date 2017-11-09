@@ -141,7 +141,7 @@ feature -- Status report
 		local
 			retval: INTEGER
 		do
-			retval := c_select_poll_with_timeout_timeval (descriptor, True, timeout, timeout_usecs)
+			retval := c_select_poll_with_timeout_timespec (descriptor, True, timeout, timeout_nano_seconds)
 			Result := (retval > 0)
 		end
 
@@ -152,7 +152,7 @@ feature -- Status report
 		local
 			retval: INTEGER
 		do
-			retval := c_select_poll_with_timeout_timeval (descriptor, False, timeout, timeout_usecs)
+			retval := c_select_poll_with_timeout_timespec (descriptor, False, timeout, timeout_nano_seconds)
 			Result := (retval > 0)
 		end
 
@@ -163,15 +163,16 @@ feature -- Status report
 		local
 			retval: INTEGER
 		do
-			retval := c_check_exception_with_timeout_timeval (descriptor, timeout, timeout_usecs)
+			retval := c_check_exception_with_timeout_timespec (descriptor, timeout, timeout_nano_seconds)
 			Result := (retval > 0)
 		end
 
 	timeout: INTEGER
 			-- Duration of timeout in seconds
 
-	timeout_usecs: INTEGER
-			-- Additional microseconds to `timeout`.
+	timeout_nano_seconds: INTEGER
+			-- Additional nanoseconds to `timeout`.
+			-- between 0 and < 1_000_000_000 nanoseconds = 1 second.
 
 	recv_timeout: INTEGER
 			-- Receive timeout in seconds on Current socket.
@@ -181,10 +182,10 @@ feature -- Status report
 			result_not_negative: Result >= 0
 		end
 
-	recv_timeout_in_ms: INTEGER
-			-- Receive timeout in milliseconds on Current socket.
+	recv_timeout_in_ns: INTEGER_64
+			-- Receive timeout in nanoseconds on Current socket.
 		do
-			Result := c_get_sock_recv_timeout_ms (descriptor, level_sol_socket)
+			Result := c_get_sock_recv_timeout_ns (descriptor, level_sol_socket)
 		ensure
 			result_not_negative: Result >= 0
 		end
@@ -197,10 +198,10 @@ feature -- Status report
 			result_not_negative: Result >= 0
 		end
 
-	send_timeout_in_ms: INTEGER
-			-- Send timeout in milliseconds on Current socket.
+	send_timeout_in_ns: INTEGER_64
+			-- Send timeout in nanoseconds on Current socket.
 		do
-			Result := c_get_sock_send_timeout_ms (descriptor, level_sol_socket)
+			Result := c_get_sock_send_timeout_ns (descriptor, level_sol_socket)
 		ensure
 			result_not_negative: Result >= 0
 		end
@@ -233,16 +234,16 @@ feature -- Status setting
 			timeout_set: timeout = n or timeout = default_timeout
 		end
 
-	set_fine_timeout (nb_secs: INTEGER; nb_usecs: INTEGER)
+	set_fine_timeout (nb_secs: INTEGER; nb_nano_seconds: INTEGER)
 		require
 			nb_secs_non_negative: nb_secs >= 0
-			nb_usecs_valid: nb_usecs >= 0 and nb_usecs < 1_000_000 -- less than 1 second!
+			nb_nano_seconds_valid: nb_nano_seconds >= 0 and nb_nano_seconds < 1_000_000_000 -- less than 1 second!
 		do
-			if nb_secs = 0 and nb_usecs = 0 then
+			if nb_secs = 0 and nb_nano_seconds = 0 then
 				timeout := default_timeout
 			else
 				timeout := nb_secs
-				timeout_usecs := nb_usecs
+				timeout_nano_seconds := nb_nano_seconds
 			end
 		end
 
@@ -255,13 +256,13 @@ feature -- Status setting
 			set_fine_recv_timeout (a_timeout_seconds, 0)
 		end
 
-	set_fine_recv_timeout (a_timeout_seconds, a_timeout_useconds: INTEGER)
-			-- Set the receive timeout with `a_timeout_seconds` seconds and `a_timeout_useconds` microseconds on Current socket.
+	set_fine_recv_timeout (a_timeout_seconds: INTEGER; a_timeout_nano_seconds: INTEGER)
+			-- Set the receive timeout with `a_timeout_seconds` seconds and `a_timeout_nano_seconds` microseconds on Current socket.
 			-- if `0' the related operations will never timeout.
 		require
-			positive_timeout: a_timeout_seconds >= 0 and a_timeout_useconds >= 0
+			positive_timeout: a_timeout_seconds >= 0 and a_timeout_nano_seconds >= 0 and a_timeout_nano_seconds < 1_000_000_000
 		do
-			c_set_sock_recv_timeout_timeval (descriptor, level_sol_socket, a_timeout_seconds, a_timeout_useconds)
+			c_set_sock_recv_timeout_timespec (descriptor, level_sol_socket, a_timeout_seconds, a_timeout_nano_seconds)
 		end
 
 	set_send_timeout (a_timeout_seconds: INTEGER)
@@ -273,13 +274,13 @@ feature -- Status setting
 			set_fine_send_timeout (a_timeout_seconds, 0)
 		end
 
-	set_fine_send_timeout (a_timeout_seconds, a_timeout_useconds: INTEGER)
-			-- Set the send timeout with `a_timeout_seconds` seconds and `a_timeout_useconds` microseconds on Current socket.
+	set_fine_send_timeout (a_timeout_seconds: INTEGER; a_timeout_nano_seconds: INTEGER)
+			-- Set the send timeout with `a_timeout_seconds` seconds and `a_timeout_nano_seconds` microseconds on Current socket.
 			-- if `0' the related operations will never timeout.
 		require
-			positive_timeout: a_timeout_seconds >= 0 and a_timeout_useconds >= 0
+			positive_timeout: a_timeout_seconds >= 0 and a_timeout_nano_seconds >= 0 and a_timeout_nano_seconds < 1_000_000_000
 		do
-			c_set_sock_send_timeout_timeval (descriptor, level_sol_socket, a_timeout_seconds, a_timeout_useconds)
+			c_set_sock_send_timeout_timespec (descriptor, level_sol_socket, a_timeout_seconds, a_timeout_nano_seconds)
 		end
 
 	set_non_blocking
@@ -362,14 +363,14 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Externals
 
-	c_set_sock_recv_timeout_timeval (a_fd, level: INTEGER; a_timeout_seconds, a_timeout_useconds: INTEGER)
-		-- C routine to set socket option `SO_RCVTIMEO' with `a_timeout_seconds` and `a_timeout_useconds`.
+	c_set_sock_recv_timeout_timespec (a_fd, level: INTEGER; a_timeout_seconds: INTEGER; a_timeout_nano_seconds: INTEGER)
+		-- C routine to set socket option `SO_RCVTIMEO' with `a_timeout_seconds` and `a_timeout_nano_seconds`.
 		external
 			"C"
 		end
 
-	c_get_sock_recv_timeout_ms (a_fd, level: INTEGER): INTEGER
-			-- C routine to get socket option SO_RCVTIMEO of timeout value in milliseconds.
+	c_get_sock_recv_timeout_ns (a_fd, level: INTEGER): INTEGER_64
+			-- C routine to get socket option SO_RCVTIMEO of timeout value in nanoѕeconds.
 		external
 			"C"
 		end
@@ -380,14 +381,14 @@ feature {NONE} -- Externals
 			"C"
 		end
 
-	c_set_sock_send_timeout_timeval (a_fd, level: INTEGER; a_timeout_seconds, a_timeout_useconds: INTEGER)
-			-- C routine to set socket option `SO_SNDTIME` with `a_timeout_seconds` and `a_timeout_useconds`.
+	c_set_sock_send_timeout_timespec (a_fd, level: INTEGER; a_timeout_seconds: INTEGER; a_timeout_nano_seconds: INTEGER)
+			-- C routine to set socket option `SO_SNDTIME` with `a_timeout_seconds` and `a_timeout_nano_seconds`.
 		external
 			"C"
 		end
 
-	c_get_sock_send_timeout_ms (a_fd, level: INTEGER): INTEGER
-			-- C routine to get socket option SO_SNDTIMEO of timeout value in milliseconds.
+	c_get_sock_send_timeout_ns (a_fd, level: INTEGER): INTEGER_64
+			-- C routine to get socket option SO_SNDTIMEO of timeout value in nanoѕeconds.
 		external
 			"C"
 		end
@@ -405,26 +406,26 @@ feature {NONE} -- Externals
 			"en_socket_close"
 		end
 
-	c_select_poll_with_timeout_timeval (an_fd: INTEGER; is_read_mode: BOOLEAN;
-								a_timeout_secs, a_timeout_usecs: INTEGER): INTEGER
+	c_select_poll_with_timeout_timespec (an_fd: INTEGER; is_read_mode: BOOLEAN;
+				a_timeout_secs: INTEGER; a_timeout_nano_seconds: INTEGER): INTEGER
 		external
 			"C blocking"
 		end
 
 	c_select_poll_with_timeout (an_fd: INTEGER; is_read_mode: BOOLEAN;
-								a_timeout_secs: INTEGER): INTEGER
+				a_timeout_secs: INTEGER): INTEGER
 		external
 			"C blocking"
 		end
 
-	c_check_exception_with_timeout_timeval (an_fd: INTEGER;
-								a_timeout_secs, a_timeout_usecs: INTEGER): INTEGER
+	c_check_exception_with_timeout_timespec (an_fd: INTEGER;
+				a_timeout_secs: INTEGER; a_timeout_nano_seconds: INTEGER): INTEGER
 		external
 			"C blocking"
 		end
 
 	c_check_exception_with_timeout (an_fd: INTEGER;
-								a_timeout_secs: INTEGER): INTEGER
+				a_timeout_secs: INTEGER): INTEGER
 		external
 			"C blocking"
 		end
@@ -438,7 +439,7 @@ feature {NONE} -- Externals
 
 invariant
 
-	timeout_set: timeout > 0 or timeout_usecs > 0
+	timeout_set: timeout > 0 or (timeout_nano_seconds > 0 and timeout_nano_seconds < 1_000_000_000)
 	correct_exist: not is_created implies is_closed and not exists
 
 note

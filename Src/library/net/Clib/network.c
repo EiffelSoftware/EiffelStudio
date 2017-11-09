@@ -1176,8 +1176,10 @@ EIF_INTEGER c_set_sock_opt_linger(EIF_INTEGER fd, EIF_BOOLEAN flag, EIF_INTEGER 
 	return (EIF_INTEGER) result;
 }
 
-EIF_INTEGER c_get_sock_recv_timeout_ms(EIF_INTEGER fd, EIF_INTEGER level)
-	/* get socket fd SO_RCVTIMEO options in milliseconds */
+/* SO_RCVTIMEO */
+
+EIF_INTEGER_64 c_get_sock_recv_timeout_ns(EIF_INTEGER fd, EIF_INTEGER level)
+	/* get socket fd SO_RCVTIMEO options in nanoseconds */
 {
 #ifdef EIF_VMS
 	size_t asize;
@@ -1189,44 +1191,46 @@ EIF_INTEGER c_get_sock_recv_timeout_ms(EIF_INTEGER fd, EIF_INTEGER level)
 	int arg;
 	asize = sizeof(arg);
 	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_RCVTIMEO, (char *) &arg, &asize));
-	return (EIF_INTEGER) arg; 
+	return (EIF_INTEGER_64) (arg * 10e5); /* 1 millisecond = 1000000 nanoseconds */
 #else
 	struct timeval tv;
 	asize = sizeof(struct timeval);
 	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_RCVTIMEO, &tv, &asize));
-	return (EIF_INTEGER) (1000 * tv.tv_sec + tv.tv_usec / 1000);
+	return (EIF_INTEGER_64) (10e8 * tv.tv_sec + 1000 * tv.tv_usec);
+#endif
+}
+
+void c_set_sock_recv_timeout_timespec(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER recv_timeout_seconds, EIF_INTEGER recv_timeout_nano_seconds)
+	/* set socket SO_RCVTIMEO option to recv_timeout_seconds and recv_timeout_nano_seconds */
+{
+#ifdef EIF_WINDOWS
+	int arg = (int) (1000 * recv_timeout_seconds) + (int)(recv_timeout_nano_seconds / 10e5); /* Timeout in milliseconds: 1000000 nanoseconds =  1 millisecond */
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_RCVTIMEO, (char *) &arg, sizeof(arg)));
+#else
+	struct timeval tv;
+	tv.tv_sec = (long) recv_timeout_seconds; 
+	tv.tv_usec = (long) (recv_timeout_nano_seconds / 1000); /* 1 microsecond = 1000 nanoseconds */
+
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_RCVTIMEO, &tv, sizeof(struct timeval)));
 #endif
 }
 
 EIF_INTEGER c_get_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level)
 	/* get socket fd SO_RCVTIMEO options in seconds */
 {
-	return (EIF_INTEGER) (c_get_sock_recv_timeout_ms(fd, level) / 1000); /* Convert milliseconds to seconds */
-}
-
-void c_set_sock_recv_timeout_timeval(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER recv_timeout_seconds, EIF_INTEGER recv_timeout_useconds)
-	/* set socket SO_RCVTIMEO option to recv_timeout_seconds and recv_timeout_useconds */
-{
-#ifdef EIF_WINDOWS
-	int arg = (int) (1000 * recv_timeout_seconds) + (int)(recv_timeout_useconds / 1000); /* Timeout in milliseconds */
-	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_RCVTIMEO, (char *) &arg, sizeof(arg)));
-#else
-	struct timeval tv;
-	tv.tv_sec = (int) recv_timeout_seconds;  /* Timeout 1 second = 1000 milliseconds */
-	tv.tv_usec = (int) recv_timeout_useconds; /* 1 millisecond = 1000 microseconds */
-
-	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_RCVTIMEO, &tv, sizeof(struct timeval)));
-#endif
+	return (EIF_INTEGER) (c_get_sock_recv_timeout_ns(fd, level) / 10e8); /* Convert nanoseconds to seconds */
 }
 
 void c_set_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER recv_timeout_seconds)
 	/* set socket SO_RCVTIMEO option to recv_timeout_seconds */
 {
-	c_set_sock_recv_timeout_timeval(fd, level, recv_timeout_seconds, 0);
+	c_set_sock_recv_timeout_timespec(fd, level, recv_timeout_seconds, 0);
 }
 
-EIF_INTEGER c_get_sock_send_timeout_ms(EIF_INTEGER fd, EIF_INTEGER level)
-	/* get socket fd SO_SNDTIMEO options in milliseconds */
+/* SO_SNDTIMEO */
+
+EIF_INTEGER_64 c_get_sock_send_timeout_ns(EIF_INTEGER fd, EIF_INTEGER level)
+	/* get socket fd SO_SNDTIMEO options in nanoseconds */
 {
 #ifdef EIF_VMS
 	size_t asize;
@@ -1238,39 +1242,40 @@ EIF_INTEGER c_get_sock_send_timeout_ms(EIF_INTEGER fd, EIF_INTEGER level)
 	int arg;
 	asize = sizeof(arg);
 	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_SNDTIMEO, (char *) &arg, &asize));
-	return (EIF_INTEGER) arg;
+	return (EIF_INTEGER_64) (arg * 10e5); /* 1 millisecond = 1000000 nanoseconds */
 #else
 	struct timeval tv;
 	asize = sizeof(struct timeval);
 	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_SNDTIMEO, &tv, &asize));
-	return (EIF_INTEGER) (1000 * tv.tv_sec + tv.tv_usec / 1000);
+	return (EIF_INTEGER_64) (10e8 * tv.tv_sec + 1000 * tv.tv_usec); /* 1 second = 1000000000 nanoseconds, and 1 microsecond = 1000 nanoseconds */
+#endif
+}
+
+void c_set_sock_send_timeout_timespec(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER send_timeout_seconds, EIF_INTEGER send_timeout_nano_seconds)
+	/* set socket SO_SNDTIMEO option to send_timeout_nano_seconds */
+{
+#ifdef EIF_WINDOWS
+	int arg = (int) (1000 * send_timeout_seconds) + (int) (send_timeout_nano_seconds / 10e5); /* Timeout in milliseconds: 1 second = 1000 milliseconds = 10e6 microseconds = 10e9 nanoseconds */
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_SNDTIMEO, (char *) &arg, sizeof(arg)));
+#else
+	struct timeval tv;
+	tv.tv_sec = (long) send_timeout_seconds;   
+	tv.tv_usec = (long) (send_timeout_nano_seconds / 1000); /* 1 microsecond = 1000 nanoseconds */
+
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_SNDTIMEO, &tv, sizeof(struct timeval)));
 #endif
 }
 
 EIF_INTEGER c_get_sock_send_timeout(EIF_INTEGER fd, EIF_INTEGER level)
 	/* get socket fd SO_SNDTIMEO options in seconds */
 {
-	return (EIF_INTEGER) (c_get_sock_send_timeout_ms(fd, level) / 1000); /* Convert milliseconds to seconds */
-}
-
-void c_set_sock_send_timeout_timeval(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER send_timeout_seconds, EIF_INTEGER send_timeout_useconds)
-	/* set socket SO_SNDTIMEO option to send_timeout_milliseconds */
-{
-#ifdef EIF_WINDOWS
-	int arg = (int) (1000 * send_timeout_seconds) + (int) (send_timeout_useconds / 1000); /* Timeout in milliseconds: 1 second = 1000 milliseconds; and 1 millisecond = 1000 microseconds */
-	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_SNDTIMEO, (char *) &arg, sizeof(arg)));
-#else
-	struct timeval tv;
-	tv.tv_sec = (int) send_timeout_seconds;   /* Timeout 1 second = 1000 milliseconds */
-	tv.tv_usec = (int) send_timeout_useconds; /* 1 millisecond = 1000 microseconds */
-
-	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_SNDTIMEO, &tv, sizeof(struct timeval)));
-#endif
+	return (EIF_INTEGER) (c_get_sock_send_timeout_ns(fd, level) / 10e8); /* Convert milliseconds to seconds */
 }
 
 void c_set_sock_send_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER send_timeout_seconds)
+	/* set socket SO_SNDTIMEO option to send_timeout_seconds */
 {
-	c_set_sock_send_timeout_timeval(fd, level, send_timeout_seconds, 0);
+	c_set_sock_send_timeout_timespec(fd, level, send_timeout_seconds, 0);
 }
 
 /********************************************************/

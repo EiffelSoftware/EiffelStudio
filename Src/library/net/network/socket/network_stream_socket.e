@@ -52,9 +52,9 @@ feature {NONE} -- Initialization
 			type := sock_stream;
 			create last_string.make_empty
 			timeout := default_timeout
-			timeout_usecs := 0
+			timeout_nano_seconds := 0
 		ensure
-			timeout_set_to_default: timeout = default_timeout and timeout_usecs = 0
+			timeout_set_to_default: timeout = default_timeout and timeout_nano_seconds = 0
 			no_socket_created: not is_created
 		end
 
@@ -66,7 +66,7 @@ feature -- Initialization
 			make_empty
 			make_socket
 		ensure
-			timeout_set_to_default: timeout = default_timeout and timeout_usecs = 0
+			timeout_set_to_default: timeout = default_timeout and timeout_nano_seconds = 0
 			socket_created: is_created
 		end
 
@@ -144,7 +144,7 @@ feature {NETWORK_STREAM_SOCKET} -- Initialization
 			is_open_read := True
 			is_open_write := True
 			timeout := default_timeout
-			timeout_usecs := 0
+			timeout_nano_seconds := 0
 			create last_string.make_empty
 		ensure
 			address_set: address ~ a_address

@@ -105,17 +105,17 @@ EIF_INTEGER c_select_poll(EIF_INTEGER fd)
 	return (FD_ISSET(fd, &fdmask));
 }
 
-EIF_INTEGER c_select_poll_with_timeout(EIF_INTEGER fd, 
+EIF_INTEGER c_select_poll_with_timeout_timeval(EIF_INTEGER fd, 
 		                               EIF_BOOLEAN read_mode,
-									   EIF_INTEGER timeout)
-	/*x Get read/write status for socket fd within `timeout' seconds */
+									   EIF_INTEGER timeout_sec, EIF_INTEGER timeout_usec)
+	/*x Get read/write status for socket fd within `timeout_sec' seconds and `timeout_usec` microseconds*/
 {
 	fd_set fdmask;
 	struct timeval tmout;
 	int res;
 
-	tmout.tv_sec = (unsigned long) timeout;
-	tmout.tv_usec = (long) 0;
+	tmout.tv_sec = (unsigned long) timeout_sec;
+	tmout.tv_usec = (long) timeout_usec;
 
 	FD_ZERO(&fdmask);
 	FD_SET(fd, &fdmask);
@@ -130,16 +130,24 @@ EIF_INTEGER c_select_poll_with_timeout(EIF_INTEGER fd,
 	return (FD_ISSET(fd, &fdmask));
 }
 
-EIF_INTEGER c_check_exception_with_timeout(EIF_INTEGER fd, 
-									       EIF_INTEGER timeout)
-	/*x Get exception status for socket fd within `timeout' seconds */
+EIF_INTEGER c_select_poll_with_timeout(EIF_INTEGER fd, 
+		                               EIF_BOOLEAN read_mode,
+									   EIF_INTEGER timeout)
+	/*x Get read/write status for socket fd within `timeout' seconds */
+{
+	return c_select_poll_with_timeout_timeval(fd, read_mode, timeout, 0);
+}
+
+EIF_INTEGER c_check_exception_with_timeout_timeval(EIF_INTEGER fd, 
+									       EIF_INTEGER timeout_sec, EIF_INTEGER timeout_usec)
+	/*x Get exception status for socket fd within `timeout_sec' seconds and `timeout_usec` microseconds */
 {
 	fd_set fdmask;
 	struct timeval tmout;
 	int res;
 
-	tmout.tv_sec = (unsigned long) timeout;
-	tmout.tv_usec = (long) 0;
+	tmout.tv_sec = (unsigned long) timeout_sec;
+	tmout.tv_usec = (long) timeout_usec;
 
 	FD_ZERO(&fdmask);
 	FD_SET(fd, &fdmask);
@@ -149,6 +157,13 @@ EIF_INTEGER c_check_exception_with_timeout(EIF_INTEGER fd,
 	if (res < 0)
 		eio();
 	return (FD_ISSET(fd, &fdmask));
+}
+
+EIF_INTEGER c_check_exception_with_timeout(EIF_INTEGER fd, 
+									       EIF_INTEGER timeout)
+	/*x Get exception status for socket fd within `timeout' seconds */
+{
+	return c_check_exception_with_timeout_timeval(fd, timeout, 0);
 }
 
 EIF_INTEGER c_is_blocking(EIF_INTEGER fd)

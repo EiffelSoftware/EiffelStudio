@@ -252,16 +252,16 @@ feature -- Status setting
 		require
 			positive_timeout: a_timeout_seconds >= 0
 		do
-			c_set_sock_recv_timeout (descriptor, level_sol_socket, a_timeout_seconds)
+			set_fine_recv_timeout (a_timeout_seconds, 0)
 		end
 
-	set_recv_timeout_in_ms (a_timeout_milliseconds: INTEGER)
-			-- Set the receive timeout in milliseconds on Current socket.
+	set_fine_recv_timeout (a_timeout_seconds, a_timeout_useconds: INTEGER)
+			-- Set the receive timeout with `a_timeout_seconds` seconds and `a_timeout_useconds` microseconds on Current socket.
 			-- if `0' the related operations will never timeout.
 		require
-			positive_timeout: a_timeout_milliseconds >= 0
+			positive_timeout: a_timeout_seconds >= 0 and a_timeout_useconds >= 0
 		do
-			c_set_sock_recv_timeout_ms (descriptor, level_sol_socket, a_timeout_milliseconds)
+			c_set_sock_recv_timeout_timeval (descriptor, level_sol_socket, a_timeout_seconds, a_timeout_useconds)
 		end
 
 	set_send_timeout (a_timeout_seconds: INTEGER)
@@ -270,17 +270,17 @@ feature -- Status setting
 		require
 			positive_timeout: a_timeout_seconds >= 0
 		do
-			c_set_sock_send_timeout (descriptor, level_sol_socket, a_timeout_seconds)
-		end		
+			set_fine_send_timeout (a_timeout_seconds, 0)
+		end
 
-	set_send_timeout_in_ms (a_timeout_milliseconds: INTEGER)
-			-- Set the send timeout in milliseconds on Current socket.
+	set_fine_send_timeout (a_timeout_seconds, a_timeout_useconds: INTEGER)
+			-- Set the send timeout with `a_timeout_seconds` seconds and `a_timeout_useconds` microseconds on Current socket.
 			-- if `0' the related operations will never timeout.
 		require
-			positive_timeout: a_timeout_milliseconds >= 0
+			positive_timeout: a_timeout_seconds >= 0 and a_timeout_useconds >= 0
 		do
-			c_set_sock_send_timeout_ms (descriptor, level_sol_socket, a_timeout_milliseconds)
-		end		
+			c_set_sock_send_timeout_timeval (descriptor, level_sol_socket, a_timeout_seconds, a_timeout_useconds)
+		end
 
 	set_non_blocking
 			-- <Precursor>
@@ -362,8 +362,8 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Externals
 
-	c_set_sock_recv_timeout_ms (a_fd, level: INTEGER; a_timeout_milliseconds: INTEGER)
-			-- C routine to set socket option `SO_RCVTIMEO' with `a_timeout_milliseconds' milliseconds.
+	c_set_sock_recv_timeout_timeval (a_fd, level: INTEGER; a_timeout_seconds, a_timeout_useconds: INTEGER)
+		-- C routine to set socket option `SO_RCVTIMEO' with `a_timeout_seconds` and `a_timeout_useconds`.
 		external
 			"C"
 		end
@@ -374,32 +374,20 @@ feature {NONE} -- Externals
 			"C"
 		end
 
-	c_set_sock_send_timeout_ms (a_fd, level: INTEGER; a_timeout_milliseconds: INTEGER)
-			-- C routine to set socket option `SO_SNDTIMEO' with `a_timeout_milliseconds' milliseconds.
-		external
-			"C"
-		end
-
-	c_get_sock_send_timeout_ms (a_fd, level: INTEGER): INTEGER
-			-- C routine to get socket option SO_SNDTIMEO of timeout value in milliseconds.
-		external
-			"C"
-		end
-
-	c_set_sock_recv_timeout (a_fd, level: INTEGER; a_timeout_seconds: INTEGER)
-			-- C routine to set socket option `SO_RCVTIMEO' with `a_timeout_seconds' seconds.
-		external
-			"C"
-		end
-
 	c_get_sock_recv_timeout (a_fd, level: INTEGER): INTEGER
 			-- C routine to get socket option SO_RCVTIMEO of timeout value in seconds.
 		external
 			"C"
 		end
 
-	c_set_sock_send_timeout (a_fd, level: INTEGER; a_timeout_seconds: INTEGER)
-			-- C routine to set socket option `SO_SNDTIMEO' with `a_timeout_seconds' seconds.
+	c_set_sock_send_timeout_timeval (a_fd, level: INTEGER; a_timeout_seconds, a_timeout_useconds: INTEGER)
+			-- C routine to set socket option `SO_SNDTIME` with `a_timeout_seconds` and `a_timeout_useconds`.
+		external
+			"C"
+		end
+
+	c_get_sock_send_timeout_ms (a_fd, level: INTEGER): INTEGER
+			-- C routine to get socket option SO_SNDTIMEO of timeout value in milliseconds.
 		external
 			"C"
 		end
@@ -454,7 +442,7 @@ invariant
 	correct_exist: not is_created implies is_closed and not exists
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

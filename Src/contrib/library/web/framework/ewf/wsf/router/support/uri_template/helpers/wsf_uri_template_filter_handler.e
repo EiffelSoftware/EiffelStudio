@@ -8,21 +8,12 @@ deferred class
 	WSF_URI_TEMPLATE_FILTER_HANDLER
 
 inherit
-	WSF_FILTER_HANDLER [WSF_URI_TEMPLATE_HANDLER]
+	WSF_EXECUTE_FILTER_HANDLER
 
 	WSF_URI_TEMPLATE_HANDLER
 
-feature -- Execution
-
-	execute_next (req: WSF_REQUEST; res: WSF_RESPONSE)
-		do
-			if attached next as n then
-				n.execute (req, res)
-			end
-		end
-
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

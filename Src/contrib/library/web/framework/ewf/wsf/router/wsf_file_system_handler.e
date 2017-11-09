@@ -103,7 +103,7 @@ feature -- Access
 			-- Function to evaluate if a path is ignored or not during autoindex.
 			-- If `index_ignores' is Void and `index_ignores_function' is Void, use default ignore rules.
 
-	directory_index: detachable ARRAY [READABLE_STRING_8]
+	directory_index: detachable ITERABLE [READABLE_STRING_GENERAL]
 			-- File serve if a directory index is requested.
 
 	not_found_handler: detachable PROCEDURE [TUPLE [uri: READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE]]
@@ -130,7 +130,7 @@ feature -- Element change
 	set_directory_index (idx: like directory_index)
 			-- Set `directory_index' as `idx'
 		do
-			if idx = Void or else idx.is_empty then
+			if idx = Void then
 				directory_index := Void
 			else
 				directory_index := idx

@@ -50,8 +50,9 @@ feature -- Query
 	debugging_tools_menu: EV_MENU
 			-- Debugging tools menu item
 
-	cloud_account_menu: ES_CLOUD_ACCOUNT_MENU
+	cloud_account_menu: detachable ES_CLOUD_ACCOUNT_MENU
 			-- Account menu.
+			-- Could be Void if cloud service not activated.
 
 	project_menu: EV_MENU
 			-- Menu for entries relative to the Project.

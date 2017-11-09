@@ -30,6 +30,9 @@ feature -- Events
 	on_account_logged_in (acc: ES_ACCOUNT)
 		do
 			on_account_changed (acc)
+			if attached es_cloud_s.service as cld then
+				cld.ping_installation (acc)
+			end
 		end
 
 	on_account_logged_out

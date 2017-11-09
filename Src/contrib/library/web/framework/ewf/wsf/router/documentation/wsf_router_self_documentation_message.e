@@ -221,17 +221,19 @@ feature {WSF_RESPONSE} -- Output
 
 				l_url := Void
 				s.append ("<li>")
-				s.append ("<code>")
-				if doc_url_supported then
-					s.append ("<a class=%"mappingresource%" href=%"")
-					s.append (doc_url (m.associated_resource))
-					s.append ("%">")
-					s.append (m.associated_resource)
-					s.append ("</a>")
-				else
-					s.append (m.associated_resource)
+				if attached m.associated_resource as l_associated_resource then
+					s.append ("<code>")
+					if doc_url_supported then
+						s.append ("<a class=%"mappingresource%" href=%"")
+						s.append (doc_url (l_associated_resource))
+						s.append ("%">")
+						s.append (l_associated_resource)
+						s.append ("</a>")
+					else
+						s.append (l_associated_resource)
+					end
+					s.append ("</code>")
 				end
-				s.append ("</code>")
 
 				if meths /= Void then
 					s.append (" [")
@@ -291,7 +293,11 @@ feature {WSF_RESPONSE} -- Output
 				s.append ("</li>%N")
 			else
 				debug
-					s.append ("<li>" + m.associated_resource + " is HIDDEN</li>%N")
+					if attached m.associated_resource as l_associated_resource then
+						s.append ("<li>" + l_associated_resource + " is HIDDEN</li>%N")
+					else
+						s.append ("<li>HIDDEN</li>%N")
+					end
 				end
 			end
 		end

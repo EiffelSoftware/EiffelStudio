@@ -7,7 +7,6 @@ class
 	CMS_ADMIN_ROLES_HANDLER
 
 inherit
-
 	CMS_HANDLER
 
 	WSF_URI_HANDLER

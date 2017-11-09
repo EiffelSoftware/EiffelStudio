@@ -57,6 +57,22 @@ inherit
 create
 	init
 
+feature {NONE} -- Creation
+
+	init (a: AGENT_CALL_B)
+		do
+			fill_from (a)
+			if
+				system.in_final_mode and then
+				not (system.keep_assertions and then rout_class.lace_class.options.assertions.is_precondition)
+			then
+				create_optimized_parameters
+				if is_manifest_optimizable then
+					set_parameters (optimized_parameters)
+				end
+			end
+		end
+
 feature -- Code generation
 
 	generate_on (reg: REGISTRABLE)
@@ -108,8 +124,6 @@ feature -- Code generation
 
 	analyze_on (reg: REGISTRABLE)
 			-- Analyze agent call on `reg'
-		local
-			tmp_register: REGISTER
 		do
 			Precursor{FEATURE_BL}(reg)
 			if is_manifest_optimizable then
@@ -128,29 +142,13 @@ feature -- Code generation
 				if is_item then
 					get_register
 				else
-					create tmp_register.make (last_result_b.type.c_type)
-					set_register (tmp_register)
+					set_register (create {REGISTER}.make (last_result_b.type.c_type))
 				end
 			end
 		end
 
 	check_dt_current (reg: REGISTRABLE)
 		do
-		end
-
-	init (a: AGENT_CALL_B)
-		do
-			fill_from (a)
-
-			if
-				system.in_final_mode and then
-				not (system.keep_assertions and then rout_class.lace_class.options.assertions.is_precondition)
-			then
-				create_optimized_parameters
-				if is_manifest_optimizable then
-					set_parameters (optimized_parameters)
-				end
-			end
 		end
 
 	enlarged: CALL_ACCESS_B
@@ -256,7 +254,7 @@ feature {NONE} --Implementation
 				if attached {TUPLE_CONST_B} l_first_parameter.expression as l_manifest_tuple then
 					is_manifest_optimizable := True
 					from
-						l_exprs ?= l_manifest_tuple.expressions
+						l_exprs := l_manifest_tuple.expressions
 						l_exprs.start
 						create optimized_parameters.make (l_exprs.count)
 						l_cl_type := context.class_type.type

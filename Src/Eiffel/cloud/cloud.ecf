@@ -17,7 +17,12 @@
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>
 		<library name="jwt" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt\jwt.ecf"/>
 		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.ecf" readonly="false" use_application_options="true"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="true"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf">
+			<condition>
+				<concurrency value="thread"/>
+			</condition>
+		</library>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
 		<library name="uuid" location="$EIFFEL_SRC\library\uuid\uuid.ecf" readonly="false"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
@@ -37,6 +42,16 @@
 				<cluster name="windows" location="$|spec\windows\">
 					<condition>
 						<platform value="windows"/>
+					</condition>
+				</cluster>
+				<cluster name="concurrency_none" location="$|concurrency\none\">
+					<condition>
+						<concurrency excluded_value="thread"/>
+					</condition>
+				</cluster>
+				<cluster name="concurrency_thread" location="$|concurrency\thread\">
+					<condition>
+						<concurrency value="thread"/>
 					</condition>
 				</cluster>
 			</cluster>

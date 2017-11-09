@@ -8,6 +8,8 @@ class
 	WSF_URI_TEMPLATE_AGENT_HANDLER
 
 inherit
+	WSF_EXECUTE_AGENT_HANDLER
+
 	WSF_URI_TEMPLATE_HANDLER
 
 create
@@ -16,26 +18,8 @@ create
 convert
 	make ({PROCEDURE [WSF_REQUEST, WSF_RESPONSE]})
 
-feature {NONE} -- Initialization
-
-	make (a_action: like action)
-		do
-			action := a_action
-		end
-
-feature -- Access	
-
-	action: PROCEDURE [TUPLE [request: WSF_REQUEST; response: WSF_RESPONSE]]
-
-feature -- Execution
-
-	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-		do
-			action.call ([req, res])
-		end
-
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

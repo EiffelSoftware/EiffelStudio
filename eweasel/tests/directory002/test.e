@@ -42,28 +42,28 @@ feature {NONE} -- Creation
 				{STRING_32} "Вложенный файл.текст",
 				3)
 			directory.delete_content_with_action (agent actual_entries.append ({LIST [READABLE_STRING_GENERAL]} ?), Void, 0)
-			report (<<>>)
+			report ({ARRAY [ARRAY [PATH]]} <<>>)
 				-- Delete a directory completely without output.
 			create_entries (
 				{STRING_32} "Другая директория",
 				{STRING_32} "Другой файл.текст",
 				4)
 			directory.recursive_delete_with_action (agent actual_entries.append ({LIST [READABLE_STRING_GENERAL]} ?), Void, 0)
-			report (<<>>)
+			report ({ARRAY [ARRAY [PATH]]} <<>>)
 				-- Delete contents of a directory without output.
 			create_entries (
 				{STRING_32} "Вложенная директория",
 				{STRING_32} "Вложенный файл.текст",
 				5)
 			directory.delete_content
-			report (<<>>)
+			report ({ARRAY [ARRAY [PATH]]} <<>>)
 				-- Delete a directory completely without output.
 			create_entries (
 				{STRING_32} "Другая директория",
 				{STRING_32} "Другой файл.текст",
 				6)
 			directory.recursive_delete
-			report (<<>>)
+			report ({ARRAY [ARRAY [PATH]]} <<>>)
 		end
 
 feature {NONE} -- Access

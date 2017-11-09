@@ -140,7 +140,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	cloud_account_tool: ES_CLOUD_ACCOUNT_TOOL
+	cloud_account_tool: detachable ES_CLOUD_ACCOUNT_TOOL
 			-- Account tool
 		require
 			not_is_recycled: not is_recycled
@@ -148,10 +148,8 @@ feature -- Access
 			if attached {like cloud_account_tool} develop_window.shell_tools.tool ({ES_CLOUD_ACCOUNT_TOOL}) as l_tool then
 				Result := l_tool
 			else
-				check tool_not_found: False end
+					-- Cloud service is not activated!
 			end
-		ensure
-			result_attached: Result /= Void
 		end
 
 	info_tool: ES_INFORMATION_TOOL

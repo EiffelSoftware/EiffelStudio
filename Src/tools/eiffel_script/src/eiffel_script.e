@@ -1,6 +1,10 @@
 note
 	description: "[
-			Enter class description here!
+			Tool to build+execute an Eiffel project (via ecf file).
+			Then the executable is stored in a cache.
+			The executable is recompiled if changes occurred (for now, just looking at ecf modification time).
+						
+			In addition, it provides operation to just "build" the project.
 		]"
 
 class
@@ -153,8 +157,16 @@ feature -- Execution
 	display_usage
 		local
 			cmd: READABLE_STRING_32
+			p: PATH
 		do
 			cmd := execution_environment.arguments.command_name
+			create p.make_from_string (cmd)
+			if attached p.entry as e then
+				cmd := e.name
+				if attached e.extension as ext then
+					cmd := cmd.head (cmd.count - 1 - ext.count)
+				end
+			end
 			print ("USAGE:%N")
 			print ("   ")
 			print (cmd)

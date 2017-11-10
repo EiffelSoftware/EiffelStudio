@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of an external procedure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 			generate, duplicate, extension,
 			access_for_feature, is_external,
 			set_renamed_name_id, external_name_id,
-			init_arg, new_deferred
+			init_arg, new_deferred, is_target_free
 		end
 
 create
@@ -129,18 +129,22 @@ feature
 				-- system unless we use the same scheme as for the `standard'
 				-- externals.
 			--if b then
-				--System.set_freeze (True);
-			--end;
-		end;
+				--System.set_freeze (True)
+			--end
+		end
 
-	is_external: BOOLEAN
-			-- Is the feature an external one ?
+	is_external: BOOLEAN = True
+			-- Is the feature an external one?
+
+	is_target_free: BOOLEAN
+			-- <Precursor>
 		do
-			Result := True;
-		end;
+				-- External features without assertions have no unqualified calls.
+			Result := not has_assertion or else Precursor
+		end
 
 	external_name_id: INTEGER
-			-- External_name ID
+			-- External_name ID.
 		do
 			Result := external_alias_name_id
 			if Result = 0 then

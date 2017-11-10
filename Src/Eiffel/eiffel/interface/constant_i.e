@@ -16,7 +16,7 @@ inherit
 			assigner_name_id, transfer_to, transfer_from, access_for_feature, melt, generate,
 			is_once, redefinable, is_constant,
 			set_type, type, generate_il, to_generate_in,
-			new_rout_entry, extension
+			new_rout_entry, extension, is_target_free
 		end
 
 	ENCAPSULATED_I
@@ -24,7 +24,7 @@ inherit
 			assigner_name_id, transfer_to, transfer_from, do_check_types, access_for_feature, equiv,
 			melt, generate, is_once, redefinable, is_constant,
 			set_type, type, generate_il, to_generate_in,
-			new_rout_entry, extension
+			new_rout_entry, extension, is_target_free
 		select
 			do_check_types, equiv
 		end
@@ -73,6 +73,10 @@ feature -- Status report
 
 	redefinable: BOOLEAN = False
 			-- Is a constant redefinable ?
+
+	is_target_free: BOOLEAN = True
+			-- <Precursor>
+			-- Constants have no unqualified calls.
 
 feature -- Settings
 

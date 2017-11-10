@@ -11,6 +11,7 @@ inherit
 			enlarged,
 			has_call,
 			is_feature_special,
+			is_target_type_fixed,
 			optimized_byte_node,
 			parameters,
 			pre_inlined_code,
@@ -22,6 +23,37 @@ feature -- Status report
 
 	is_instance_free: BOOLEAN
 			-- Is the call instance-free, i.e. does not need a target object?
+
+	is_target_free: BOOLEAN
+			-- Is the feature independent on the target type of the call?
+			-- (An instance-free feature can depend on the target type if it makes unqualifed calls to features that are redeclared in descendants.)
+		do
+			Result :=
+				attached precursor_type as p and then
+				(p.is_basic or else
+				attached p.base_class as b and then b.feature_of_rout_id (routine_id).is_target_free or else
+				attached multi_constraint_static as t and then attached t.base_class as b and then b.feature_of_rout_id (routine_id).is_target_free)
+		end
+
+	is_class_target_needed: BOOLEAN
+			-- Does a call need a class target rather than an object target?
+			-- The class target may be required for instance-free calls that depend on the target type.
+		do
+			Result := is_instance_free and then not is_target_free
+		ensure
+			is_instance_free: Result implies is_instance_free
+			not_is_target_free: Result implies not is_target_free
+		end
+
+	is_target_type_fixed: BOOLEAN
+			-- <Precursor>
+		do
+			Result :=
+				attached precursor_type as p and then
+					(not is_class_target_needed or else
+					p.is_basic or else
+					p.is_standalone)
+		end
 
 	has_call: BOOLEAN = True
 			-- <Precursor>

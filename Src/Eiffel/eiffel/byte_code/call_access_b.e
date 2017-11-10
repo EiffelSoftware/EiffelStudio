@@ -67,6 +67,14 @@ feature -- Access
 			Result := enlarged
 		end
 
+feature -- Status report
+
+	is_target_type_fixed: BOOLEAN
+			-- Is target type known at compile time?
+		do
+			Result := attached precursor_type
+		end
+
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
 	feature_name: STRING
@@ -398,7 +406,7 @@ feature {NONE} -- C code generation
 			buf := buffer
 			if
 				attached precursor_type as p and then
-				(not (attached {ROUTINE_B} Current as r and then r.is_instance_free) or else p.is_basic or else p.is_standalone)
+				is_target_type_fixed
 			then
 				l_type := context.real_type (p)
 				if l_type.is_multi_constrained then
@@ -430,17 +438,17 @@ feature {NONE} -- C code generation
 			buf.put_integer (routine_id)
 			buf.put_two_character (',', ' ')
 			if not is_nested then
-				if not attached precursor_type as p then
+				if not attached precursor_type then
 					context.generate_current_dtype
-				elseif attached {ROUTINE_B} Current as r and then r.is_instance_free  and then not p.is_basic and then not p.is_standalone then
+				elseif is_target_type_fixed then
+						-- Use dynamic type of parent instead
+						-- of dynamic type of Current.
+					buf.put_static_type_id (cl_type_i.static_type_id (context.context_class_type.type))
+				else
 					buf.put_string ({C_CONST}.dtype)
 					buf.put_character ('(')
 					t.print_register
 					buf.put_character (')')
-				else
-						-- Use dynamic type of parent instead
-						-- of dynamic type of Current.
-					buf.put_static_type_id (cl_type_i.static_type_id (context.context_class_type.type))
 				end
 			elseif call_kind = call_kind_qualified then
 					-- Feature name is used to report a call on a void target.
@@ -484,14 +492,13 @@ feature {NONE} -- Separate call
 			is_optimized_result: BOOLEAN
 		do
 				-- Generate the feature name.
-
 			buf := buffer
 			target_type := context_type
 			array_index := Eiffel_table.is_polymorphic (routine_id, target_type, Context.context_class_type, True)
 			if array_index = -2 then
 					-- Call to a deferred feature without implementation
 				buf.put_string ("NULL")
-			elseif precursor_type = Void and then array_index >= 0 then
+			elseif array_index >= 0 and then not is_target_type_fixed then
 					-- The call is polymorphic, so generate access to the
 					-- routine table.
 					-- Feature may return a reference that needs to be used as a basic one.

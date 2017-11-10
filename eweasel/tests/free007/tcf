@@ -1,0 +1,14 @@
+test_name 	 instance_free-external-assertion
+test_description Inherited assertions should be taken into account when deciding whether an external feature can be called as instance-free.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 a.e $CLUSTER a.e
+copy_raw 	 b.e $CLUSTER b.e
+copy_raw 	 c.e $CLUSTER c.e
+copy_raw 	 d.e $CLUSTER d.e
+copy_raw 	 test.e $CLUSTER test.e
+
+compile_frozen
+compile_result 	 validity_error TEST VSTA VSTA
+
+test_end

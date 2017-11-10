@@ -1428,6 +1428,14 @@ feature -- Conveniences
 				end
 		end
 
+	is_target_free: BOOLEAN
+			-- Does the feature depend on the target type of the call?
+			-- (It can be instance-free, but depend on the target type.)
+		do
+				-- IL externals have no unqualified calls if they do not need current object.
+			Result := System.il_generation and attached {IL_EXTENSION_I} extension as e and then not e.need_current (e.type)
+		end
+
 	frozen has_precondition: BOOLEAN
 			-- Is feature declaring some preconditions ?
 		do

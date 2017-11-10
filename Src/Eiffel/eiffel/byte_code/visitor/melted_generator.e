@@ -2542,7 +2542,7 @@ feature {NONE} -- Implementation
 				if a_node.is_first then
 						--! Cannot melt basic calls hence is_first
 						--! is not used in the above if meta statement.
-					if a_node.is_instance_free then
+					if a_node.is_class_target_needed then
 							-- Generate an empty object to be used as a target of the call.
 						check
 							instance_free_call_has_precursor_type: attached a_node.precursor_type as p
@@ -2582,7 +2582,7 @@ feature {NONE} -- Implementation
 		local
 			l_type: TYPE_A
 		do
-			if a_node.precursor_type /= Void and then not a_node.is_instance_free then
+			if a_node.is_target_type_fixed then
 				l_type := context.real_type (a_node.precursor_type)
 				if l_type.is_multi_constrained then
 					check

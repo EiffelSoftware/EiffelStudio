@@ -1724,265 +1724,257 @@ feature {NONE} -- Visitors
 			is_this_argument_current := False
 
 				-- Get type on which call will be performed.
-			if a_node.is_instance_free then
-				l_type := context.real_type (a_node.precursor_type)
-				l_cl_type := {CL_TYPE_A} /
-					if l_type.is_multi_constrained then
-						context.real_type (a_node.multi_constraint_static)
-					else
-						l_type
-					end
-				l_type := a_node.precursor_type
-			else
-				l_cl_type ?= a_node.context_type
-				check
-					valid_type: l_cl_type /= Void
+			if attached {CL_TYPE_A} a_node.context_type as ct then
+				l_cl_type := ct
+					-- Get the real type of `Precursor'.
+				if attached a_node.precursor_type as p then
+					l_precursor_type ?= context.real_type (p)
 				end
-			end
 
-				-- Get the real type of `Precursor'.
-			if attached a_node.precursor_type as p then
-				l_precursor_type ?= context.real_type (p)
-			end
-
-				-- Let's find out if we are performing a call on a basic type
-				-- or on an enum type. This happens only when we are calling
-				-- magically added feature on basic types.
-			if il_special_routines.has (a_node.feature_name_id, l_cl_type) then
-				if a_node.is_first then
-						-- Because the code is generated for a basic type,
-						-- the value has to be loaded.
-					il_generator.generate_current_as_basic
-				end
-				il_special_routines.generate_il (Current, a_node, l_cl_type, a_node.parameters)
-			else
-				l_is_call_on_any := a_node.is_any_feature and l_precursor_type = Void
-					-- Find location of feature.
-				if not l_is_call_on_any and l_cl_type.is_expanded and not l_cl_type.is_true_external then
-					if l_cl_type.base_class.is_typed_pointer then
-							-- Use non-generic class POINTER because TYPED_POINTER is not generated.
-						l_cl_type := system.pointer_class.compiled_class.actual_type
+					-- Let's find out if we are performing a call on a basic type
+					-- or on an enum type. This happens only when we are calling
+					-- magically added feature on basic types.
+				if il_special_routines.has (a_node.feature_name_id, l_cl_type) then
+					if a_node.is_first then
+							-- Because the code is generated for a basic type,
+							-- the value has to be loaded.
+						il_generator.generate_current_as_basic
 					end
-					l_target_type := l_cl_type
+					il_special_routines.generate_il (Current, a_node, l_cl_type, a_node.parameters)
 				else
-					l_target_type := l_cl_type.implemented_type (a_node.written_in)
-				end
-				check
-					target_type_not_void: l_target_type /= Void
-				end
-
-				l_class_c := l_cl_type.base_class
-
-				if l_class_c.is_native_array then
-					check
-						not_expanded: not l_cl_type.is_expanded
-					end
-					l_native_array_class_type ?= l_cl_type.associated_class_type (context.context_class_type.type)
-					check
-						native_array_class_type_not_void: l_native_array_class_type /= Void
-					end
-				end
-
-				l_invariant_checked := (context.workbench_mode or
-					l_class_c.assertion_level.is_invariant) and then not a_node.is_first
-					and then (l_native_array_class_type = Void)
-
-				if l_cl_type.is_expanded then
-						-- Current type is expanded. We need to find out if
-						-- we need to generate a box operation, meaning that
-						-- the feature is inherited from a non-expanded class.
-					l_real_metamorphose := need_real_metamorphose (a_node, l_cl_type)
-				end
-
-				if a_node.is_first then
-						-- First call in dot expression, we need to generate Current
-						-- only when we do not call a static feature.
-					if a_node.is_instance_free then
-							-- Generate an empty object to be used as a target of the call.
-						create creation_expression
-						creation_expression.set_info (l_type.create_info)
-						creation_expression.set_type (l_type)
-						process_creation_expr_b (creation_expression)
-					else
-						il_generator.generate_current
-					end
-				elseif l_cl_type.is_basic then
-						-- A metamorphose is required to perform call.
-					generate_il_metamorphose (l_cl_type, l_target_type, True)
-				end
-
-				if l_invariant_checked then
-					generate_il_call_invariant_leading (l_cl_type, not l_is_in_creation)
-				end
-
-					-- Box value type if the call is made to the predefined feature from ANY
-					-- This has to be done before calculating feature arguments
-				if l_is_call_on_any then
-					if l_cl_type.is_true_expanded then
-						if not l_cl_type.is_enum then
-							il_generator.generate_load_from_address (l_cl_type)
+					l_is_call_on_any := a_node.is_any_feature and l_precursor_type = Void
+						-- Find location of feature.
+					if not l_is_call_on_any and l_cl_type.is_expanded and not l_cl_type.is_true_external then
+						if l_cl_type.base_class.is_typed_pointer then
+								-- Use non-generic class POINTER because TYPED_POINTER is not generated.
+							l_cl_type := system.pointer_class.compiled_class.actual_type
 						end
-						il_generator.generate_metamorphose (l_cl_type)
-					elseif l_cl_type.is_basic and then a_node.is_first then
-						il_generator.generate_load_from_address_as_object (l_cl_type)
-						il_generator.generate_metamorphose (l_cl_type)
-					end
-				elseif not a_node.is_first and then l_cl_type.is_basic then
-						-- Address of a value is required.
-						il_generator.generate_load_address (l_cl_type)
-				elseif a_node.is_first and then l_precursor_type /= Void and then context.context_class_type.is_expanded then
-					check
-						precursor_not_expanded: not l_precursor_type.is_expanded
-					end
-					if context.context_class_type.is_basic then
-						il_generator.generate_load_from_address_as_object (context.context_cl_type)
-						il_generator.generate_metamorphose (context.context_cl_type)
+						l_target_type := l_cl_type
 					else
-						il_generator.generate_load_from_address (context.context_class_type.type)
-						il_generator.generate_metamorphose (context.context_class_type.type)
+						l_target_type := l_cl_type.implemented_type (a_node.written_in)
 					end
-					il_generator.generate_check_cast (context.context_class_type.type, l_precursor_type)
-				end
-
-				if l_class_c.is_special then
 					check
-						not_expanded: not l_cl_type.is_expanded
+						target_type_not_void: l_target_type /= Void
 					end
-					l_special_array_class_type ?= l_cl_type.associated_class_type (context.context_class_type.type)
-					check
-						special_array_class_type_not_void: l_special_array_class_type /= Void
-					end
-					inspect
-						a_node.feature_name_id
-					when
-						{PREDEFINED_NAMES}.Item_name_id,
-						{PREDEFINED_NAMES}.Infix_at_name_id,
-						{PREDEFINED_NAMES}.at_name_id,
-						{PREDEFINED_NAMES}.Put_name_id
-					then
-						l_special_array_class_type.prepare_generate_il (a_node.feature_name_id, l_cl_type)
-						l_is_special_handled := True
-					else
-					end
-				end
 
-				if a_node.parameters /= Void then
-						-- Generate parameters if any.
-					if
-						l_native_array_class_type /= Void and then
-						a_node.feature_name_id = {PREDEFINED_NAMES}.put_name_id
-					then
+					l_class_c := l_cl_type.base_class
+
+					if l_class_c.is_native_array then
 						check
-							parameters_count_is_two: a_node.parameters.count = 2
+							not_expanded: not l_cl_type.is_expanded
 						end
-						a_node.parameters.i_th (1).process (Current)
-						if context.real_type (a_node.parameters.i_th (2).type).is_true_expanded then
-							l_native_array_class_type.generate_il_put_preparation (l_cl_type, context.context_class_type.type)
-						end
-						a_node.parameters.i_th (2).process (Current)
-					elseif l_is_call_on_any then
-							-- Run-time features work on arguments of reference type only
-						from
-							a_node.parameters.start
-						until
-							a_node.parameters.after
-						loop
-							if
-								attached {CL_TYPE_A} context.real_type (a_node.parameters.item.attachment_type) as l_arg_type and then
-								l_arg_type.is_expanded
-							then
-								generate_expression_il_for_type (a_node.parameters.item, l_arg_type.reference_type)
-							else
-								a_node.parameters.item.process (Current)
-							end
-							a_node.parameters.forth
-						end
-					else
-						a_node.parameters.process (Current)
-					end
-				end
-
-				l_return_type := context.real_type (a_node.type)
-					-- Special handling when precursor has a different expanded status
-					-- than current type. We need to find out the return type of the Precursor.
-				if l_precursor_type /= Void and then context.context_class_type.is_expanded then
-					context.change_class_type_context (
-						l_precursor_type.associated_class_type (context.context_class_type.type),
-						l_precursor_type.instantiated_in (context.context_class_type.type),
-						l_precursor_type.associated_class_type (context.context_class_type.type),
-						l_precursor_type.instantiated_in (context.context_class_type.type))
-					l_orig_return_type := context.real_type (a_node.type)
-					context.restore_class_type_context
-				else
-					l_orig_return_type := l_return_type
-				end
-
-				l_need_generation := True
-
-				if l_native_array_class_type /= Void then
-					l_need_generation := False
-					l_native_array_class_type.generate_il (a_node.feature_name_id, l_cl_type, context.context_class_type.type)
-					if System.il_verifiable then
-						if
-							not l_return_type.is_expanded and then
-							not l_return_type.is_none and then
-							not l_return_type.is_void
-						then
-							il_generator.generate_check_cast (Void, l_return_type)
+						l_native_array_class_type ?= l_cl_type.associated_class_type (context.context_class_type.type)
+						check
+							native_array_class_type_not_void: l_native_array_class_type /= Void
 						end
 					end
-				elseif l_is_special_handled then
-					l_special_array_class_type.generate_il (a_node.feature_name_id, l_cl_type, context.context_class_type.type)
-					l_need_generation := False
-					if System.il_verifiable then
-						if
-							not l_return_type.is_expanded and then
-							not l_return_type.is_none and then
-							not l_return_type.is_void
-						then
-							il_generator.generate_check_cast (Void, l_return_type)
-						end
-					end
-				end
 
-				if l_need_generation then
-						-- Perform call to feature
-					if l_is_call_on_any then
-						generate_il_any_call (a_node, l_target_type, l_cl_type,
-							l_cl_type.is_reference or else l_real_metamorphose)
-					else
-						if l_cl_type.is_true_expanded then
-							generate_il_normal_call (a_node, l_cl_type, False)
+					l_invariant_checked := (context.workbench_mode or
+						l_class_c.assertion_level.is_invariant) and then not a_node.is_first
+						and then (l_native_array_class_type = Void)
+
+					if l_cl_type.is_expanded then
+							-- Current type is expanded. We need to find out if
+							-- we need to generate a box operation, meaning that
+							-- the feature is inherited from a non-expanded class.
+						l_real_metamorphose := need_real_metamorphose (a_node, l_cl_type)
+					end
+
+					if a_node.is_first then
+							-- First call in dot expression, we need to generate Current
+							-- only when we do not call a static feature.
+						if a_node.is_class_target_needed then
+								-- Generate an empty object to be used as a target of the call.
+							create creation_expression
+							l_type := a_node.precursor_type
+							creation_expression.set_info (l_type.create_info)
+							creation_expression.set_type (l_type)
+							process_creation_expr_b (creation_expression)
 						else
-							generate_il_normal_call (a_node, l_target_type,
+							il_generator.generate_current
+						end
+					elseif l_cl_type.is_basic then
+							-- A metamorphose is required to perform call.
+						generate_il_metamorphose (l_cl_type, l_target_type, True)
+					end
+
+					if l_invariant_checked then
+						generate_il_call_invariant_leading (l_cl_type, not l_is_in_creation)
+					end
+
+						-- Box value type if the call is made to the predefined feature from ANY
+						-- This has to be done before calculating feature arguments
+					if l_is_call_on_any then
+						if l_cl_type.is_true_expanded then
+							if not l_cl_type.is_enum then
+								il_generator.generate_load_from_address (l_cl_type)
+							end
+							il_generator.generate_metamorphose (l_cl_type)
+						elseif l_cl_type.is_basic and then a_node.is_first then
+							il_generator.generate_load_from_address_as_object (l_cl_type)
+							il_generator.generate_metamorphose (l_cl_type)
+						end
+					elseif not a_node.is_first and then l_cl_type.is_basic then
+							-- Address of a value is required.
+							il_generator.generate_load_address (l_cl_type)
+					elseif a_node.is_first and then l_precursor_type /= Void and then context.context_class_type.is_expanded then
+						check
+							precursor_not_expanded: not l_precursor_type.is_expanded
+						end
+						if context.context_class_type.is_basic then
+							il_generator.generate_load_from_address_as_object (context.context_cl_type)
+							il_generator.generate_metamorphose (context.context_cl_type)
+						else
+							il_generator.generate_load_from_address (context.context_class_type.type)
+							il_generator.generate_metamorphose (context.context_class_type.type)
+						end
+						il_generator.generate_check_cast (context.context_class_type.type, l_precursor_type)
+					end
+
+					if l_class_c.is_special then
+						check
+							not_expanded: not l_cl_type.is_expanded
+						end
+						l_special_array_class_type ?= l_cl_type.associated_class_type (context.context_class_type.type)
+						check
+							special_array_class_type_not_void: l_special_array_class_type /= Void
+						end
+						inspect
+							a_node.feature_name_id
+						when
+							{PREDEFINED_NAMES}.Item_name_id,
+							{PREDEFINED_NAMES}.Infix_at_name_id,
+							{PREDEFINED_NAMES}.at_name_id,
+							{PREDEFINED_NAMES}.Put_name_id
+						then
+							l_special_array_class_type.prepare_generate_il (a_node.feature_name_id, l_cl_type)
+							l_is_special_handled := True
+						else
+						end
+					end
+
+					if a_node.parameters /= Void then
+							-- Generate parameters if any.
+						if
+							l_native_array_class_type /= Void and then
+							a_node.feature_name_id = {PREDEFINED_NAMES}.put_name_id
+						then
+							check
+								parameters_count_is_two: a_node.parameters.count = 2
+							end
+							a_node.parameters.i_th (1).process (Current)
+							if context.real_type (a_node.parameters.i_th (2).type).is_true_expanded then
+								l_native_array_class_type.generate_il_put_preparation (l_cl_type, context.context_class_type.type)
+							end
+							a_node.parameters.i_th (2).process (Current)
+						elseif l_is_call_on_any then
+								-- Run-time features work on arguments of reference type only
+							from
+								a_node.parameters.start
+							until
+								a_node.parameters.after
+							loop
+								if
+									attached {CL_TYPE_A} context.real_type (a_node.parameters.item.attachment_type) as l_arg_type and then
+									l_arg_type.is_expanded
+								then
+									generate_expression_il_for_type (a_node.parameters.item, l_arg_type.reference_type)
+								else
+									a_node.parameters.item.process (Current)
+								end
+								a_node.parameters.forth
+							end
+						else
+							a_node.parameters.process (Current)
+						end
+					end
+
+					l_return_type := context.real_type (a_node.type)
+						-- Special handling when precursor has a different expanded status
+						-- than current type. We need to find out the return type of the Precursor.
+					if l_precursor_type /= Void and then context.context_class_type.is_expanded then
+						context.change_class_type_context (
+							l_precursor_type.associated_class_type (context.context_class_type.type),
+							l_precursor_type.instantiated_in (context.context_class_type.type),
+							l_precursor_type.associated_class_type (context.context_class_type.type),
+							l_precursor_type.instantiated_in (context.context_class_type.type))
+						l_orig_return_type := context.real_type (a_node.type)
+						context.restore_class_type_context
+					else
+						l_orig_return_type := l_return_type
+					end
+
+					l_need_generation := True
+
+					if l_native_array_class_type /= Void then
+						l_need_generation := False
+						l_native_array_class_type.generate_il (a_node.feature_name_id, l_cl_type, context.context_class_type.type)
+						if System.il_verifiable then
+							if
+								not l_return_type.is_expanded and then
+								not l_return_type.is_none and then
+								not l_return_type.is_void
+							then
+								il_generator.generate_check_cast (Void, l_return_type)
+							end
+						end
+					elseif l_is_special_handled then
+						l_special_array_class_type.generate_il (a_node.feature_name_id, l_cl_type, context.context_class_type.type)
+						l_need_generation := False
+						if System.il_verifiable then
+							if
+								not l_return_type.is_expanded and then
+								not l_return_type.is_none and then
+								not l_return_type.is_void
+							then
+								il_generator.generate_check_cast (Void, l_return_type)
+							end
+						end
+					end
+
+					if l_need_generation then
+							-- Perform call to feature
+						if l_is_call_on_any then
+							generate_il_any_call (a_node, l_target_type, l_cl_type,
 								l_cl_type.is_reference or else l_real_metamorphose)
+						else
+							if l_cl_type.is_true_expanded then
+								generate_il_normal_call (a_node, l_cl_type, False)
+							else
+								generate_il_normal_call (a_node, l_target_type,
+									l_cl_type.is_reference or else l_real_metamorphose)
+							end
+						end
+					end
+					if l_invariant_checked then
+						generate_il_call_invariant_trailing (l_cl_type, l_return_type)
+					end
+
+					if
+						l_precursor_type /= Void and then l_orig_return_type /= l_return_type and then
+						not l_orig_return_type.is_expanded and then l_return_type.is_expanded
+					then
+							-- Return type of precursor is not expanded, we need to make
+							-- an expanded out of it. Because the way it works, the value
+							-- we get from the Precursor call must be a boxed value.
+						il_generator.generate_check_cast (l_orig_return_type, l_return_type)
+						if l_return_type.is_basic then
+							il_generator.generate_load_address (l_return_type)
+							il_generator.generate_load_from_address_as_basic (l_return_type)
+						else
+							il_generator.generate_unmetamorphose (l_return_type)
+						end
+					elseif l_is_nested_call then
+						l_return_type := context.real_type (a_node.type)
+						if l_return_type.is_true_expanded and then not l_return_type.base_class.is_enum then
+								-- Pointer to value type is required.
+								generate_il_metamorphose (l_return_type, l_return_type, True)
 						end
 					end
 				end
-				if l_invariant_checked then
-					generate_il_call_invariant_trailing (l_cl_type, l_return_type)
-				end
-
-				if
-					l_precursor_type /= Void and then l_orig_return_type /= l_return_type and then
-					not l_orig_return_type.is_expanded and then l_return_type.is_expanded
-				then
-						-- Return type of precursor is not expanded, we need to make
-						-- an expanded out of it. Because the way it works, the value
-						-- we get from the Precursor call must be a boxed value.
-					il_generator.generate_check_cast (l_orig_return_type, l_return_type)
-					if l_return_type.is_basic then
-						il_generator.generate_load_address (l_return_type)
-						il_generator.generate_load_from_address_as_basic (l_return_type)
-					else
-						il_generator.generate_unmetamorphose (l_return_type)
-					end
-				elseif l_is_nested_call then
-					l_return_type := context.real_type (a_node.type)
-					if l_return_type.is_true_expanded and then not l_return_type.base_class.is_enum then
-							-- Pointer to value type is required.
-							generate_il_metamorphose (l_return_type, l_return_type, True)
-					end
+			else
+				check
+					is_valid_context_type: False
 				end
 			end
 		end
@@ -4285,7 +4277,7 @@ feature {NONE} -- Implementation: Feature calls
 				target_feature_id := a_node.feature_id
 			end
 
-			if a_node.precursor_type /= Void and then not a_node.is_instance_free then
+			if a_node.is_target_type_fixed then
 					-- In IL, if you can call Precursor, it means that parent is
 					-- not expanded and therefore we can safely generate a static
 					-- call to Precursor feature.

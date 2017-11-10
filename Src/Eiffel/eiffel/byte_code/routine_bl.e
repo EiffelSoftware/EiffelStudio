@@ -74,16 +74,7 @@ feature -- Code generation
 		local
 			c: like instance_free_creation
 		do
-			if
-				is_instance_free and then
-				not precursor_type.is_basic and then
-				(context.workbench_mode or else not
-				(attached precursor_type.base_class as b and then b.feature_of_rout_id (routine_id).is_constant or else
-				attached multi_constraint_static as t and then attached t.base_class as b and then b.feature_of_rout_id (routine_id).is_constant))
-			then
-				debug ("to_implement")
-					;(create {REFACTORING_HELPER}).to_implement ("Avoid passing a target for an instance-free call is the target does not make unqualified calls.")
-				end
+			if is_class_target_needed then
 					-- Generate an empty object to be used as a target of the call.
 				check
 					instance_free_call_has_precursor_type: attached precursor_type as p

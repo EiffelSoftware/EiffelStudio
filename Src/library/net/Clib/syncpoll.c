@@ -116,6 +116,12 @@ EIF_INTEGER c_select_poll_with_timeout_timespec(EIF_INTEGER fd,
 
 	tmout.tv_sec = (long) timeout_sec;
 	tmout.tv_usec = (long) (timeout_nano_sec / 1000); /* 1 microsecond = 1000 nanoseconds */
+	if (tmout.tv_sec == 0 && tmout.tv_usec == 0 && timeout_nano_sec > 0) {
+			/* timeout values are above zero, but less than 1 microsecond
+			 * then set to 1 microsecond to avoid eventual special behavior for 0 timeouts).
+			 */
+		tmout.tv_usec = (long) 1;
+	}
 
 	FD_ZERO(&fdmask);
 	FD_SET(fd, &fdmask);
@@ -148,6 +154,12 @@ EIF_INTEGER c_check_exception_with_timeout_timespec(EIF_INTEGER fd,
 
 	tmout.tv_sec = (long) timeout_sec;
 	tmout.tv_usec = (long) (timeout_nano_sec / 1000); /* 1 microsecond = 1000 nanoseconds */
+	if (tmout.tv_sec == 0 && tmout.tv_usec == 0 && timeout_nano_sec > 0) {
+			/* timeout values are above zero, but less than 1 microsecond
+			 * then set to 1 microsecond to avoid eventual special behavior for 0 timeouts).
+			 */
+		tmout.tv_usec = (long) 1;
+	}
 
 	FD_ZERO(&fdmask);
 	FD_SET(fd, &fdmask);

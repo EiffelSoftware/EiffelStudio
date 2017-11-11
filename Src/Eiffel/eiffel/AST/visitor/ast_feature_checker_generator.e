@@ -1559,7 +1559,7 @@ feature {NONE} -- Implementation
 							l_vsta2.set_location (l_feature_name)
 							error_handler.insert_error (l_vsta2)
 							reset_types
-						elseif not is_qualified_call and then current_feature.is_instance_free and then not l_feature.is_instance_free then
+						elseif not is_qualified_call and then current_feature.is_instance_free and then not (l_feature.is_instance_free or else l_feature.is_target_free) then
 								-- The error for agents is reported elsewhere.
 							if not is_agent then
 								error_handler.insert_error
@@ -2011,7 +2011,7 @@ feature {NONE} -- Implementation
 							last_calls_target_type := l_last_constrained
 							if l_feature.is_attribute then
 								last_access_writable := True
-								if current_feature.is_instance_free then
+								if not is_qualified and then current_feature.is_instance_free then
 									error_handler.insert_error (create {VSTB}.make_attribute (l_feature, current_feature, context.current_class, context.written_class, a_name))
 								end
 							else
@@ -3997,6 +3997,7 @@ feature {NONE} -- Visitor
 			l_feat_name: ID_AS
 			l_location: LOCATION_AS
 			l_error_level: like error_level
+			l_is_qualified_call: BOOLEAN
 		do
 			l_error_level := error_level
 			l_as.expr.process (Current)
@@ -4023,7 +4024,10 @@ feature {NONE} -- Visitor
 						l_feat_name.set_position (l_location.line, l_location.column,
 							l_location.position + l_location.location_count, 0,
 							l_location.character_column, l_location.character_position + l_location.character_count, 0)
+						l_is_qualified_call := is_qualified_call
+						is_qualified_call := True
 						process_call (last_type, Void, l_feat_name, l_feat, Void, False, False, True, False, False)
+						is_qualified_call := l_is_qualified_call
 					else
 							-- We should not get there, but just in case we generate an internal
 							-- error message.

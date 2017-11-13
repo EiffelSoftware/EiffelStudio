@@ -117,7 +117,7 @@ feature -- Conversion
 
 	unescaped_string_8: STRING_8
 			-- Unescaped ascii string from `item'.
-			--| note: valid only if `item' does not encode any unicode character.
+			--| note: valid only if `item' does not encode any unicode character which is not a valid CHARACTER_8 value.
 		local
 			s: like item
 		do
@@ -149,7 +149,7 @@ feature -- Conversion
 
 	unescape_to_string_8 (a_output: STRING_8)
 			-- Unescape string `item' into `a_output'.
-			--| note: valid only if `item' does not encode any unicode character.
+			--| note: valid only if `item' does not encode any unicode character which is not a valid CHARACTER_8 value.
 		local
 			s: like item
 			i, n: INTEGER

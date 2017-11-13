@@ -59,19 +59,19 @@
 								</div>
 								<div class="col-xs-4">
 									<label class="label label-primary-api-default" has-success has-feedback itemprop="release">Release:</label>
-									<span>{$release/}</span>
+									<span>{htmlentities}{$release/}{/htmlentities}</span>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-xs-12">
 									<label class="label label-primary-api-default" itemprop="environment">Environment:</label>
-									<span>{$environment/}</span>
+									<span>{htmlentities}{$environment/}{/htmlentities}</span>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-xs-12">
 									<label class="label label-primary-api-default" has-success has-feedback itemprop="synopsis">Synopsis:</label>
-									<span>{$synopsis/}</span>
+									<span>{htmlentities}{$synopsis/}{/htmlentities}</span>
 								</div>
 							</div>
 							{if isset="$attachments"}

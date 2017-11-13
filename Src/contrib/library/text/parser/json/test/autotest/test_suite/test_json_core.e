@@ -648,6 +648,51 @@ feature -- Test
 			end
 		end
 
+	test_json_string_8_and_unicode
+		local
+			js: detachable JSON_STRING
+			ucs: detachable STRING_32
+			jrep, s: STRING
+			parser: JSON_PARSER
+		do
+			s := "begin \u003e end"
+			jrep := "begin > end"
+			create js.make_from_escaped_json_string (s)
+			assert ("js.unescaped_string_8.same_string (" + jrep + ")", js.unescaped_string_8.same_string (jrep))
+			assert ("js.unescaped_string_32.same_string_general (" + jrep + ")", js.unescaped_string_32.same_string_general (jrep))
+
+			s := "begin \u003e"
+			jrep := "begin >"
+			create js.make_from_escaped_json_string (s)
+			assert ("js.unescaped_string_8.same_string (" + jrep + ")", js.unescaped_string_8.same_string (jrep))
+			assert ("js.unescaped_string_32.same_string_general (" + jrep + ")", js.unescaped_string_32.same_string_general (jrep))
+
+			s := "\u003e end"
+			jrep := "> end"
+			create js.make_from_escaped_json_string (s)
+			assert ("js.unescaped_string_8.same_string (" + jrep + ")", js.unescaped_string_8.same_string (jrep))
+			assert ("js.unescaped_string_32.same_string_general (" + jrep + ")", js.unescaped_string_32.same_string_general (jrep))
+
+			s := "\u003e\u003e\u003e"
+			jrep := ">>>"
+			create js.make_from_escaped_json_string (s)
+			assert ("js.unescaped_string_8.same_string (" + jrep + ")", js.unescaped_string_8.same_string (jrep))
+			assert ("js.unescaped_string_32.same_string_general (" + jrep + ")", js.unescaped_string_32.same_string_general (jrep))
+
+			s := "bad unicode \u003"
+			jrep := "bad unicode \u003"
+			create js.make_from_escaped_json_string (s)
+			assert ("bad unicode js.unescaped_string_8.same_string (" + jrep + ")", js.unescaped_string_8.same_string (jrep))
+			assert ("bad unicode js.unescaped_string_32.same_string_general (" + jrep + ")", js.unescaped_string_32.same_string_general (jrep))
+
+			s := "test \u2639 :( "
+			jrep := "test \u2639 :( "
+			create js.make_from_escaped_json_string (s)
+			assert ("non char8 unicode js.unescaped_string_8.same_string (" + jrep + ")", js.unescaped_string_8.same_string (jrep))
+			assert ("non char8 unicode js.unescaped_string_32.same_string_general (...)", js.unescaped_string_32.same_string_general ({STRING_32} "test %/9785/ :( "))
+
+		end
+
 	test_json_string_and_special_characters
 		local
 			js: detachable JSON_STRING

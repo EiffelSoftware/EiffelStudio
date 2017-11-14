@@ -1432,15 +1432,15 @@ feature {NONE} -- Debugged objects grid Implementation
 		do
 			inspect a_id
 			when position_stack then
-				create Result.make_as_stack
+				create {ES_OBJECTS_GRID_STACK_LINE} Result.make
 			when position_current then
-				create Result.make_as_current_object
+				create {ES_OBJECTS_GRID_CURRENT_LINE} Result.make
 			when position_arguments then
-				create Result.make_as_arguments
+				create {ES_OBJECTS_GRID_ARGUMENTS_LINE} Result.make
 			when position_locals then
-				create Result.make_as_locals
+				create {ES_OBJECTS_GRID_LOCALS_LINE} Result.make
 			when position_result then
-				create Result.make_as_result
+				create {ES_OBJECTS_GRID_RESULT_LINE} Result.make
 			when position_dropped then
 --				create Result.make_as_dropped
 			else
@@ -1537,7 +1537,7 @@ invariant
 	objects_grids_not_void: (is_initialized and is_interface_usable) implies objects_grids /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

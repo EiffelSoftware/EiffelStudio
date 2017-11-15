@@ -465,7 +465,13 @@ feature {NONE} -- Action handlers
 						shrink_timer.actions.extend (agent on_shrink_interval_expired_for_collapse)
 					else
 						if support_login.is_bad_request then
-							l_error_info := "Unable to login due to network problem. Please try again later."
+							if attached support_login.last_error as ll_error then
+								l_error_info := "Unable to login due to network problem. Please try again later."
+								l_error_info.append ("%N")
+								l_error_info.append (ll_error)
+							else
+								l_error_info := "Unable to login due to network problem. Please try again later."
+							end
 						else
 							l_error_info := "Unable to login with the specified user name and password. Please check and try again."
 						end
@@ -947,7 +953,11 @@ feature {NONE} -- Reporting
 				l_transistion.hide
 
 				if support_login.is_bad_request then
-					create l_error.make_standard ("Unable to submit bug report due to network problem. Please try again later.")
+					if attached support_login.last_error as ll_error then
+						create l_error.make_standard ("Unable to submit bug report due to network problem. Please try again later.%N" + ll_error)
+					else
+						create l_error.make_standard ("Unable to submit bug report due to network problem. Please try again later.")
+					end
 					l_error.show (dialog)
 				else
 					create l_thanks.make_standard (locale_formatter.translation (lb_submitted))
@@ -1038,7 +1048,7 @@ invariant
 	shrink_interval_positive: shrink_interval > 0
 
 ;note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

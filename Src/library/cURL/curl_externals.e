@@ -97,6 +97,25 @@ feature -- Command
 			end
 		end
 
+	error_message (a_code: INTEGER): READABLE_STRING_32
+			-- error message given the code 'a_code' if any or return
+			-- an Unknown error.
+		local
+			l_api: POINTER
+			l_cstring: C_STRING
+			l_pointer: POINTER
+		do
+			create {STRING_32} Result.make_from_string ("Unknown Error")
+			l_api := api_loader.api_pointer ("curl_easy_strerror")
+			if l_api /= default_pointer then
+				l_pointer := c_curl_easy_strerror (l_api, a_code)
+				if l_pointer /= default_pointer then
+					create l_cstring.make_by_pointer (l_pointer)
+					create {STRING_32} Result.make_from_string (l_cstring.string)
+				end
+			end
+		end
+
 feature -- Query
 
 	is_dynamic_library_exists: BOOLEAN
@@ -236,6 +255,21 @@ feature {NONE} -- C externals
 			"[
 				(FUNCTION_CAST(void *, (struct curl_slist *)) $a_api)
 											((struct curl_slist *)$a_list_pointer);
+			]"
+		end
+
+	c_curl_easy_strerror (a_api: POINTER; a_code: INTEGER): POINTER
+			-- Declared as CURL_EXTERN const char *curl_easy_strerror(CURLcode);
+		require
+			exists: a_api /= default_pointer
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+			{
+				return (FUNCTION_CAST(void *, (long)) $a_api)
+											((long) $a_code);
+			}
 			]"
 		end
 

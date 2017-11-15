@@ -34,6 +34,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	last_error: detachable READABLE_STRING_32
+			-- last error detail, if any.
+
 	client: HTTP_CLIENT_SESSION
 			-- Http client session.
 
@@ -58,6 +61,10 @@ feature -- Access
 				l_http_response.append ("Status: " + g_response.status.out + "%N")
 				l_http_response.append (g_response.raw_header)
 				l_status := g_response.status
+				if attached g_response.error_message as l_message then
+					l_http_response.append (" ")
+					l_http_response.append (l_message)
+				end
 				if attached g_response.body as l_body then
 					l_http_response.append ("%N%N")
 					l_http_response.append (l_body)
@@ -204,7 +211,11 @@ feature {NONE} -- Retrieve URL
 
 			l_resp := get (config.service_root, ctx)
 			if l_resp.status /= 200 then
-				(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
+				if attached l_resp.http_response as l_message then
+					(create {EXCEPTIONS}).raise ("Connection error: HTTP " + l_message)
+				else
+					(create {EXCEPTIONS}).raise ("Connection error: HTTP Status" + l_resp.status.out)
+				end
 			else
 				if attached l_resp.collection as l_col and then attached l_col.links as l_links then
 					across

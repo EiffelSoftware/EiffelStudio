@@ -34,6 +34,12 @@ feature -- Basic operations
 				fill_bug_report (a_report)
 			end
 		rescue
+			if
+				attached {EXCEPTION} (create {EXCEPTION_MANAGER}).last_exception as l_exception and then
+				attached l_exception.description as l_description
+			then
+					create {STRING_32} last_error.make_from_string_general (l_description)
+			end
 			is_bad_request := True
 			retried := True
 			retry
@@ -159,7 +165,11 @@ feature {NONE} -- Basic operations
 			if l_resp = Void then
 				(create {EXCEPTIONS}).raise ("Connection error: missing URL for the report form.")
 			elseif l_resp.status /= 200 then
-				(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
+				if attached l_resp.http_response as l_message then
+					(create {EXCEPTIONS}).raise ("Connection error: HTTP " + l_message)
+				else
+					(create {EXCEPTIONS}).raise ("Connection error: HTTP Status" + l_resp.status.out)
+				end
 			else
 				if attached l_resp.collection as l_col and then attached l_col.links as l_links then
 					across
@@ -205,7 +215,6 @@ feature {NONE} -- Basic operations
 		do
 			create l_tpl.make
 
-
 				-- confirm
 			create l_data.make_with_name ("confirm")
 			l_data.set_value (a_value) -- EiffelStudio
@@ -221,7 +230,11 @@ feature {NONE} -- Basic operations
 
 			l_resp := create_with_template (a_target_url, l_tpl, ctx)
 			if l_resp.status /= 200 then
-				(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
+				if attached l_resp.http_response as l_message then
+					(create {EXCEPTIONS}).raise ("Connection error: HTTP " + l_message)
+				else
+					(create {EXCEPTIONS}).raise ("Connection error: HTTP Status" + l_resp.status.out)
+				end
 			else
 				if attached l_resp.collection as l_col then
 					if attached {ARRAYED_LIST [CJ_ITEM]} l_col.items as l_items and then
@@ -259,7 +272,11 @@ feature {NONE} -- Html contents
 			l_resp := get (a_uri, ctx)
 
 			if l_resp.status /= 200 then
-				(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
+				if attached l_resp.http_response as l_message then
+					(create {EXCEPTIONS}).raise ("Connection error: HTTP " + l_message)
+				else
+					(create {EXCEPTIONS}).raise ("Connection error: HTTP Status" + l_resp.status.out)
+				end
 			else
 				if attached l_resp.collection as l_col then
 					create {STRING_32} Result.make_from_string (l_col.href)

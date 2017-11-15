@@ -55,6 +55,7 @@ feature -- Basic operations
 			l_resp: ESA_SUPPORT_RESPONSE
 		do
 			is_logged_in := False
+			last_error := Void
 			if not retried then
 				is_bad_request := False
 				create ctx.make
@@ -98,6 +99,7 @@ feature -- Basic operations
 			l_resp: ESA_SUPPORT_RESPONSE
 		do
 			is_logged_in := False
+			last_error := Void
 			if not retried then
 				if
 					attached logoff_url as l_url and
@@ -152,6 +154,12 @@ feature -- Access
 				Result := cache_logon_url
 			end
 		rescue
+			if
+				attached {EXCEPTION} (create {EXCEPTION_MANAGER}).last_exception as l_exception and then
+				attached l_exception.description as l_description
+			then
+				create {STRING_32} last_error.make_from_string_general (l_description)
+			end
 			is_bad_request := True
 			retried := True
 			retry
@@ -169,6 +177,12 @@ feature -- Access
 				Result := cache_logoff_url
 			end
 		rescue
+			if
+				attached {EXCEPTION} (create {EXCEPTION_MANAGER}).last_exception as l_exception and then
+				attached l_exception.description as l_description
+			then
+				create {STRING_32} last_error.make_from_string_general (l_description)
+			end
 			is_bad_request := True
 			retried := True
 			retry
@@ -187,6 +201,12 @@ feature -- Access
 				Result := cache_register_url
 			end
 		rescue
+			if
+				attached {EXCEPTION} (create {EXCEPTION_MANAGER}).last_exception as l_exception and then
+				attached l_exception.description as l_description
+			then
+				create {STRING_32} last_error.make_from_string_general (l_description)
+			end
 			is_bad_request := True
 			retried := True
 			retry

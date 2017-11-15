@@ -352,6 +352,7 @@ feature {NONE} -- Action handlers
 					l_description.append (locale_formatter.formatted_translation (lb_status_bar_text, [l_message]))
 					l_description.append_character ('%N')
 				end
+
 				last_description := l_description
 			end
 			create l_dialog.make (support_login, l_description)
@@ -398,7 +399,7 @@ invariant
 	support_login_attached: is_interface_usable implies support_login /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

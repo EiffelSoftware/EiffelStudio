@@ -57,6 +57,9 @@ feature {NONE} -- Initialization
 			l_lib_indexer.register_observer (Current)
 
 			is_verbose := True
+			is_stopping_at_library := True
+			is_indexing_class := True
+			is_ignoring_redirection := True
 		end
 
 feature -- Access
@@ -67,6 +70,10 @@ feature -- Settings
 
 	is_stopping_at_library: BOOLEAN
 
+	is_indexing_class: BOOLEAN
+
+	is_ignoring_redirection: BOOLEAN
+
 	is_verbose: BOOLEAN
 
 feature -- Change
@@ -74,6 +81,16 @@ feature -- Change
 	set_is_stopping_at_library (b: BOOLEAN)
 		do
 			is_stopping_at_library := b
+		end
+
+	set_is_indexing_class (b: BOOLEAN)
+		do
+			is_indexing_class := b
+		end
+
+	set_is_ignoring_redirection (b: BOOLEAN)
+		do
+			is_ignoring_redirection := b
 		end
 
 	set_is_verbose (b: BOOLEAN)
@@ -90,6 +107,8 @@ feature -- Change
 			l_lib_indexer := library_indexer
 			l_lib_indexer.reset
 			l_lib_indexer.set_is_stopping_at_library (is_stopping_at_library)
+			l_lib_indexer.set_is_indexing_class (is_indexing_class)
+			l_lib_indexer.set_is_ignoring_redirection (is_ignoring_redirection)
 			l_lib_indexer.scan (a_folders, flag_is_recursive)
 			l_lib_indexer.execute
 		end

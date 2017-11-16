@@ -22,7 +22,9 @@ inherit
 		redefine
 			process_target,
 			process_library,
-			process_cluster
+			process_cluster,
+			process_test_cluster,
+			process_override
 		end
 
 	EIFFEL_LAYOUT
@@ -54,6 +56,7 @@ feature {NONE} -- Initialization
 	initialize_defaults
 		do
 			is_any_setting := True
+			is_ignoring_redirection := False
 
 			is_il_generation := False
 			build := {CONF_CONSTANTS}.Build_workbench
@@ -97,11 +100,25 @@ feature -- Settings
 
 	is_stopping_at_library: BOOLEAN
 
+	is_indexing_class: BOOLEAN
+
+	is_ignoring_redirection: BOOLEAN
+
 feature -- Settings change
 
 	set_is_stopping_at_library (b: BOOLEAN)
 		do
 			is_stopping_at_library := b
+		end
+
+	set_is_indexing_class (b: BOOLEAN)
+		do
+			is_indexing_class := b
+		end
+
+	set_is_ignoring_redirection (b: BOOLEAN)
+		do
+			is_ignoring_redirection := b
 		end
 
 feature -- Change
@@ -217,23 +234,22 @@ feature -- Visitor
 				last_target := a_target
 
 				if is_any_setting then
-					if is_stopping_at_library then
-						across
-							a_target.libraries as ic
-						loop
-							visit_library (ic.item)
-						end
-					else
+					if is_indexing_class or not is_stopping_at_library then
 						across
 							a_target.clusters as ic
 						loop
 							visit_cluster (ic.item)
 						end
 						across
-							a_target.libraries as ic
+							a_target.overrides as ic
 						loop
-							visit_library (ic.item)
+							visit_cluster (ic.item)
 						end
+					end
+					across
+						a_target.libraries as ic
+					loop
+						visit_library (ic.item)
 					end
 				else
 					l_state := conf_state_from_target (a_target)
@@ -251,27 +267,26 @@ feature -- Visitor
 							end
 						end
 					else
-						if is_stopping_at_library then
-							across
-								a_target.libraries as ic
-							loop
-								visit_library (ic.item)
-							end
-						else
+						if is_indexing_class or not is_stopping_at_library then
 							across
 								a_target.clusters as ic
 							loop
 								visit_cluster (ic.item)
 							end
-
---							create vb.make_build (l_state, a_target, ecf_conf_factory)
---							l_system.process (vb)
---							a_target.process (Current)
 							across
-								a_target.libraries as ic
+								a_target.overrides as ic
 							loop
-								visit_library (ic.item)
+								visit_cluster (ic.item)
 							end
+						end
+
+--						create vb.make_build (l_state, a_target, ecf_conf_factory)
+--						l_system.process (vb)
+--						a_target.process (Current)
+						across
+							a_target.libraries as ic
+						loop
+							visit_library (ic.item)
 						end
 						Precursor (a_target)
 					end
@@ -286,11 +301,16 @@ feature -- Visitor
 		end
 
 	visit_library (a_library: CONF_LIBRARY)
+		local
+			l_last_target: like last_target
 		do
 			if is_stopping_at_library then
 					-- Do not visit clusters, ...
 			else
 				Precursor (a_library)
+				l_last_target := last_target
+				visit_ecf_file (a_library.location.evaluated_path)
+				last_target := l_last_target
 			end
 		end
 
@@ -304,6 +324,11 @@ feature -- Visitor
 				end
 			end
 			Precursor (a_cluster)
+		end
+
+	visit_override (a_override_cluster: CONF_OVERRIDE)
+		do
+			visit_cluster (a_override_cluster)
 		end
 
 	visit_class (a_class: CONF_CLASS)
@@ -329,6 +354,18 @@ feature -- Conf visitor
 		do
 			visit_cluster (a_cluster)
 			Precursor (a_cluster)
+		end
+
+	process_test_cluster (a_test_cluster: CONF_TEST_CLUSTER)
+			-- <Precursor>
+		do
+			visit_cluster (a_test_cluster)
+		end
+
+	process_override (a_override: CONF_OVERRIDE)
+			-- Visit `a_override'.
+		do
+			visit_cluster (a_override)
 		end
 
 feature {NONE} -- Helper
@@ -375,9 +412,13 @@ feature {NONE} -- Helper
 		do
 			if not retried then
 				l_reader := ecf_reader
+					-- Ignore redirection!
 				l_reader.retrieve_configuration (a_file_name.name)
 				if not l_reader.is_error then
-					Result := l_reader.last_system
+					if not is_ignoring_redirection or else l_reader.last_redirection = Void then
+							-- Ignore redirection if asked. 
+						Result := l_reader.last_system
+					end
 				else
 --					if l_reader.is_invalid_xml then
 --						error_handler.add_error (create {SCIX}.make (a_file_name, 0, Void), False)

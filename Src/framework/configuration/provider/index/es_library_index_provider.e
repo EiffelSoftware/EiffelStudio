@@ -100,6 +100,10 @@ feature -- Access
 				if Result = Void then
 					create Result.make (ctx)
 					create dbm.make_with_database (Result)
+						-- Per library, we want only system classes (not all subclasses).
+					dbm.set_is_stopping_at_library (True)
+					dbm.set_is_indexing_class (True) 
+
 					dbm.import_folders (<<
 								eiffel_layout.library_path,
 								eiffel_layout.eiffel_library.extended ("contrib").extended ("library"),

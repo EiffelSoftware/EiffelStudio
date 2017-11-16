@@ -58,14 +58,21 @@ feature -- Visit
 
 	on_cluster (a_cluster: CONF_CLUSTER)
 		do
+			on_group (a_cluster)
+		end
 
+	on_override (a_override: CONF_OVERRIDE)
+		do
+			on_group (a_override)
+		end
+
+	on_group (a_group: CONF_GROUP)
+		do
 		end
 
 	on_class (a_class: CONF_CLASS)
 		do
 		end
-
-
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"

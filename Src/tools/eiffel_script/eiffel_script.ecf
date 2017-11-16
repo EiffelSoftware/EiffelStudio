@@ -5,12 +5,14 @@
 		<setting name="console_application" value="true"/>
 		<setting name="executable_name" value="eiffel"/>
 		<capability>
-			<void_safety support="all"/>
+			<concurrency support="none"/>
+			<void_safety support="initialization"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="conf_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
 		<library name="env" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
+		<library name="package_visitor" location="$EIFFEL_SRC\framework\packages\visitor\package_visitor.ecf" readonly="false"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
 		<cluster name="src" location="src\" recursive="true"/>
 	</target>

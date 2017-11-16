@@ -29,6 +29,8 @@ feature {NONE} -- Initialization
 			print ("Please enter a text: ")
 			io.read_line
 			print ("> " + io.last_string)
+
+			print ("%NBye.%N")
 		end
 
 end

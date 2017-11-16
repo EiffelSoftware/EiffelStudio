@@ -53,6 +53,17 @@ iff not exist compile_all.exe then
 endiff
 move compile_all.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
 
+remtrace Recompile eiffel tool
+cdd %EIFFEL_SRC\tools\eiffel_script
+clean_project
+finalize eiffel_script.ecf
+cleanup_eiffel eiffel_script eiffel.exe
+iff not exist eiffel.exe then
+	remtrace Could not finalize a new eiffel tool
+	CANCEL
+endiff
+move eiffel.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+
 remtrace Recompile eiffel_image_embedder
 cdd %EIFFEL_SRC\tools\eiffel_image_embedder
 clean_project

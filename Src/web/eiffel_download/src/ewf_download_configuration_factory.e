@@ -20,7 +20,7 @@ feature -- Configuration
 			email_service: EMAIL_SERVICE
 			database_service: detachable DATABASE_SERVICE
 			download_service: DOWNLOAD_SERVICE
-		once("PROCESS")
+		once("THREAD")
 			if attached separate_character_option_value ('d') as l_dir then
 				create l_layout.make_with_path (create {PATH}.make_from_string (l_dir))
 			else

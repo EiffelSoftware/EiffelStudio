@@ -77,6 +77,7 @@ feature {NONE} -- Creation
 						attached l_launch_params.ecf_location as l_ecf
 					then
 						is_build_forced := l_launch_params.is_build_forced
+						check_level := l_launch_params.check_level
 						launch (l_ecf, l_launch_params.ecf_target, l_launch_params.args)
 					else
 						display_usage
@@ -148,6 +149,13 @@ feature -- Access
 
 	is_build_forced: BOOLEAN
 
+	check_level: NATURAL_8
+
+	is_deep_check: BOOLEAN
+		do
+			Result := check_level > 0
+		end
+
 	appcache_location: PATH
 
 	appcomp_location: PATH
@@ -168,31 +176,41 @@ feature -- Execution
 				end
 			end
 			print ("USAGE:%N")
-			print ("   ")
+			print ("  ")
 			print (cmd)
-			print (" (-v|--verbose) (-h|--help) (-b|--build) (--target ecf_target_name) <project.ecf> ...%N")
-			print ("   ")
+			print (" (-v|--verbose) (-h|--help) (-b|--build) (--check class,project) (--target ecf_target_name) <project.ecf> ...%N")
+			print ("  ")
 			print (cmd)
 			print (" build (-v|--verbose) (--target ecf_target_name) <project.ecf> <output_executable_path> ...%N")
 			print ("%N")
-			print ("COMMANDS:%N")
-			print ("    <project.ecf> ...   : build once and launch <project.ecf> execution.%N")
-			print ("    build               : build project and save executable as <output_executable_path>.%N")
-			print ("%N")
-			print ("OPTIONS:%N")
-			print ("    -o --executable-output <path> : build and save executable as <path>.%N")
-			print ("                                  : note: no execution.!%N")
-			print ("    --target <ecf-target-name>    : optional target name.%N")
-			print ("    -b --build                    : force a fresh system build.%N")
-			print ("    -v --verbose                  : verbose output.%N")
-			print ("    -h --help                     : display this help.%N")
-			print ("    ...                           : arguments for the <project.ecf> execution.%N")
-			print ("%N")
-			print ("    Note: you can overwrite default value, using %N")
-			print ("    EIFFEL_SCRIPT_DIR       : root directory for eiffel script app (default under Eiffel user files/.apps) %N")
-			print ("    EIFFEL_SCRIPT_CACHE_DIR : directory caching the compiled executables ($EIFFEL_SCRIPT_DIR/cache) %N")
-			print ("    EIFFEL_SCRIPT_COMP_DIR : directory caching the EIFGENs compilation ($EIFFEL_SCRIPT_DIR/comp) %N")
-			print ("%N")
+			print ("[
+COMMANDS:
+  <project.ecf> ...   : build once and launch <project.ecf> execution.
+  build               : build project and save executable as <output_executable_path>.
+
+OPTIONS:
+  --target <ecf-target-name>    : optional target name.
+  --check <level>               : check level for recompilation, either class (default), or project.
+                                : class   = check timestamp of system class files, 
+                                :           and ecf files for included libraries 
+                                :          (ignoring classes from libraries).
+                                : project = only check the timestamp of main project ecf file.
+
+  -b --build                    : force a fresh system build.
+  -o --executable-output <path> : build and save executable as <path>.
+                                : without any execution.!
+
+  -v --verbose                  : verbose output.
+  -h --help                     : display this help.
+  ...                           : arguments for the <project.ecf> execution.
+
+Note: you can overwrite default value, using
+  EIFFEL_SCRIPT_DIR       : root directory for eiffel script app (default under Eiffel user files/.apps) 
+  EIFFEL_SCRIPT_CACHE_DIR : directory caching the compiled executables ($EIFFEL_SCRIPT_DIR/cache) 
+  EIFFEL_SCRIPT_COMP_DIR : directory caching the EIFGENs compilation ($EIFFEL_SCRIPT_DIR/comp) 
+  
+]")
+
 		end
 
 	launch (a_ecf: READABLE_STRING_GENERAL; a_target_name: detachable READABLE_STRING_GENERAL; args: LIST [READABLE_STRING_GENERAL])
@@ -227,6 +245,7 @@ feature -- Execution
 				report_error ("iron locations are not yet supported!%N")
 			else
 				p_ecf := (create {PATH}.make_from_string (a_ecf)).absolute_path.canonical_path
+
 				create s.make_from_string_general ("Build project ")
 				s.append (p_ecf.name)
 				if a_target_name /= Void then
@@ -260,7 +279,7 @@ feature -- Execution
 			end
 		end
 
-feature {NONE} -- Execution		
+feature {NONE} -- Execution
 
 	launch_system (a_system: CONF_SYSTEM; a_target: CONF_TARGET; args: LIST [READABLE_STRING_GENERAL])
 		local
@@ -272,6 +291,7 @@ feature {NONE} -- Execution
 				not ut.file_path_exists (p)
 				or else	is_build_forced
 				or else is_file_more_recent_than (a_system.file_path, p)
+				or else (check_level /= {EIFFEL_SCRIPT_LAUNCH_PARAMETERS}.check_level_project and then is_project_more_recent_than (a_system, a_target, p))
 			then
 					-- ecf file is more recent than cached executable
 				build_executable (a_system, a_target, p)
@@ -324,12 +344,26 @@ feature {NONE} -- Execution
 					ut.copy_file_path (l_compiled_executable, a_executable_target_location)
 					log ("Build succeed!!!%N")
 					rmdir (l_comp_loc)
+
+					build_compilation_index (a_system, a_target)
 				else
 					report_error ("Build failed!")
 				end
 			else
 				report_error ("Unable to start building the executable!")
 			end
+		end
+
+	build_compilation_index (a_system: CONF_SYSTEM; a_target: CONF_TARGET)
+		local
+			l_idx_location: PATH
+			idx: EIFFEL_SCRIPT_COMPILATION_INDEX_BUILDER
+		do
+			log ("Building compilation index...%N")
+			create idx.make
+			idx.process (a_target)
+			l_idx_location := index_location (a_system, a_target)
+			idx.compilation_index.save_to (l_idx_location)
 		end
 
 	launch_executable (loc: PATH; args: LIST [READABLE_STRING_GENERAL])
@@ -400,6 +434,20 @@ feature -- Query
 				l_app_id.append_string_general (a_system.uuid.out)
 			end
 			Result := appcache_location.extended (l_app_id).extended_path (executable_name (a_system, a_target))
+		end
+
+	index_location (a_system: CONF_SYSTEM; a_target: detachable CONF_TARGET): PATH
+		local
+			l_app_id: STRING_32
+			l_index_name: PATH
+		do
+			create l_app_id.make_from_string_general (a_system.name)
+			if not a_system.is_generated_uuid then
+				l_app_id.append_character ('.')
+				l_app_id.append_string_general (a_system.uuid.out)
+			end
+			l_index_name := executable_name (a_system, a_target).appended_with_extension ("idx")
+			Result := appcache_location.extended (l_app_id).extended_path (l_index_name)
 		end
 
 	executable_name (a_system: CONF_SYSTEM; a_target: detachable CONF_TARGET): PATH
@@ -493,6 +541,25 @@ feature {NONE} -- Implementation
 	is_file_more_recent_than (loc: PATH; ref: PATH): BOOLEAN
 		do
 			Result := (create {RAW_FILE}.make_with_path (loc)).date > (create {RAW_FILE}.make_with_path (ref)).date
+		end
+
+	is_project_more_recent_than (a_system: CONF_SYSTEM; a_target: CONF_TARGET; ref: PATH): BOOLEAN
+		local
+			idx: EIFFEL_SCRIPT_COMPILATION_INDEX
+			loc: PATH
+			fut: FILE_UTILITIES
+		do
+			Result := is_file_more_recent_than (a_system.file_path, ref)
+			if not Result then
+				loc := index_location (a_system, a_target)
+				if fut.file_path_exists (loc) then
+					log ("Checking if recompilation is needed...%N")
+					create idx.make_from_path (index_location (a_system, a_target))
+					Result := idx.is_project_more_recent_than (ref)
+				else
+					Result := True
+				end
+			end
 		end
 
 end

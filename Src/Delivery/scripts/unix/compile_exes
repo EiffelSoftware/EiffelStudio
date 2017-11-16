@@ -290,6 +290,11 @@ cd $EXPORT_DIR/bin
 untgz_ccode compile_all
 move compile_all $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/compile_all
 
+remtrace Recompile eiffel script tool
+cd $EXPORT_DIR/bin
+untgz_ccode eiffel
+move eiffel $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/eiffel
+
 remtrace Recompile Eiffel Image Embedder
 cd $EXPORT_DIR/bin
 untgz_ccode eimgemb

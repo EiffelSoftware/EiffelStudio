@@ -38,6 +38,18 @@ fi
 clean_project
 move compile_all.tar.bz2 $EXPORT_DIR/bin
 
+remtrace Recompile eiffel tool
+cd $EIFFEL_SRC/tools/eiffel_script
+clean_project
+finalize eiffel_script.ecf eiffel_script
+tgz_ccode eiffel_script eiffel.tar.bz2
+if [ ! -f eiffel.tar.bz2 ]; then
+	echo Could not finalize a new eiffel tool 
+	CANCEL
+fi
+clean_project
+move eiffel.tar.bz2 $EXPORT_DIR/bin
+
 remtrace Recompile eiffel_image_embedder
 cd $EIFFEL_SRC/tools/eiffel_image_embedder
 clean_project

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="ewf_download" uuid="29827A00-7218-4463-940B-6C25CE548EA9" library_target="ewf_download">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="ewf_download" uuid="29827A00-7218-4463-940B-6C25CE548EA9" library_target="ewf_download">
 	<target name="common" abstract="true">
 		<file_rule>
 			<exclude>/.svn$</exclude>
@@ -22,6 +22,7 @@
 		<library name="smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf.ecf"/>
+		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension.ecf"/>
 	</target>
 	<target name="ewf_download_any" extends="common">
 		<root class="EWF_DOWNLOAD_API" feature="make_and_launch"/>

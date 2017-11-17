@@ -9,7 +9,7 @@ class
 	EJSON
 
 obsolete
-	"This JSON converter design has issues [Sept/2014]."
+	"Use JSON_SERIALIZATION as replacement [2014-10-01]."
 
 inherit
 
@@ -20,6 +20,8 @@ feature -- Access
 	value (an_object: detachable ANY): detachable JSON_VALUE
 			-- JSON value from Eiffel object. Raises an "eJSON exception" if
 			-- unable to convert value.
+		obsolete
+			"Use JSON_SERIALIZATION as replacement [2017-11-15]."
 		local
 			i: INTEGER
 			ja: JSON_ARRAY
@@ -91,6 +93,8 @@ feature -- Access
 			-- Eiffel object from JSON value. If `base_class' /= Void an eiffel
 			-- object based on `base_class' will be returned. Raises an "eJSON
 			-- exception" if unable to convert value.
+		obsolete
+			"Use JSON_SERIALIZATION as replacement [2017-11-15]."
 		local
 			i: INTEGER
 			ll: LINKED_LIST [detachable ANY]
@@ -163,6 +167,8 @@ feature -- Access
 			-- Eiffel object from JSON representation. If `base_class' /= Void an
 			-- Eiffel object based on `base_class' will be returned. Raises an
 			-- "eJSON exception" if unable to convert value.
+		obsolete
+			"Use JSON_SERIALIZATION as replacement [2017-11-15]."
 		require
 			json_not_void: json /= Void
 		do
@@ -175,6 +181,8 @@ feature -- Access
 
 	converter_for (an_object: ANY): detachable JSON_CONVERTER
 			-- Converter for objects. Returns Void if none found.
+		obsolete
+			"Use JSON_SERIALIZATION as replacement [2017-11-15]."
 		require
 			an_object_not_void: an_object /= Void
 		do
@@ -187,6 +195,8 @@ feature -- Access
 			-- A JSON (Dojo style) reference object using `s' as the
 			-- reference value. The caller is responsable for ensuring
 			-- the validity of `s' as a json reference.
+		obsolete
+			"Use JSON_SERIALIZATION as replacement [2017-11-15]."
 		require
 			s_not_void: s /= Void
 		local
@@ -203,6 +213,8 @@ feature -- Access
 			-- strings in `l' as reference values. The caller is responsable
 			-- for ensuring the validity of all strings in `l' as json
 			-- references.
+		obsolete
+			"Use JSON_SERIALIZATION as replacement [2017-11-15]."
 		require
 			l_not_void: l /= Void
 		local
@@ -223,6 +235,8 @@ feature -- Change
 
 	add_converter (jc: JSON_CONVERTER)
 			-- Add the converter `jc'.
+		obsolete
+			"Use JSON_SERIALIZATION as replacement [2017-11-15]."
 		require
 			jc_not_void: jc /= Void
 		do
@@ -269,6 +283,6 @@ feature {NONE} -- Implementation (JSON parser)
 		end
 
 note
-	copyright: "2010-2014, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end -- class EJSON

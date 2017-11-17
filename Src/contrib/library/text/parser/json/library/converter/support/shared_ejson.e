@@ -15,13 +15,15 @@ class
 	SHARED_EJSON
 
 obsolete
-	"This JSON converter design has issues [Sept/2014]."
+	"This JSON converter design has issues [2014-10-01]."
 
 feature -- Access
 
 	json: EJSON
 			-- A shared EJSON instance with default converters for
 			--LINKED_LIST [ANY] and HASH_TABLE [ANY, HASHABLE]
+		obsolete
+			"Use JSON_SERIALIZATION as replacement [2017-11-15]."			
 		local
 			jalc: JSON_ARRAYED_LIST_CONVERTER
 			jllc: JSON_LINKED_LIST_CONVERTER

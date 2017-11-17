@@ -736,7 +736,7 @@ feature {NONE} -- Scopes
 			end
 		end
 
-	add_scope_iteration (identifier: ID_AS)
+	add_scope_iteration (identifier: detachable ID_AS)
 			-- Add a scope of an iteration cursor `identifier`.
 		do
 			if attached identifier as i then
@@ -744,7 +744,7 @@ feature {NONE} -- Scopes
 			end
 		end
 
-	add_scope_separate (identifier: ID_AS)
+	add_scope_separate (identifier: detachable ID_AS)
 			-- Add a scope of a separate variable `identifier`.
 		do
 			if attached identifier as i then
@@ -752,7 +752,7 @@ feature {NONE} -- Scopes
 			end
 		end
 
-	add_scope_test (identifier: ID_AS)
+	add_scope_test (identifier: detachable ID_AS)
 			-- Add a scope of an object test local `identifier`.
 		do
 			if attached identifier as i then

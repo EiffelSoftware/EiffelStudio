@@ -31,11 +31,8 @@ feature {NONE} -- Initialization
 
 	make
 			-- Create a new pure Eiffel parser.
-		local
-			l_factory: AST_FACTORY
 		do
-			create l_factory
-			make_with_factory (l_factory)
+			make_with_factory (create {AST_FACTORY})
 		end
 
 	make_with_factory (a_factory: AST_FACTORY)
@@ -49,6 +46,9 @@ feature {NONE} -- Initialization
 			create feature_stack.make (1)
 			create suppliers
 			create formal_parameters.make (Initial_formal_parameters_capacity)
+
+			create scopes.make (10)
+			create scope_identifiers.make (10)
 
 			make_parser_skeleton
 			make_eiffel_scanner_with_factory (a_factory)
@@ -159,6 +159,8 @@ feature -- Initialization
 			Precursor
 			create suppliers
 			feature_stack.wipe_out
+			scopes.wipe_out
+			scope_identifiers.wipe_out
 			add_feature_frame
 			is_supplier_recorded := True
 			is_constraint_renaming := False
@@ -290,8 +292,8 @@ feature -- Parsing (Unknown encoding)
 				detected_encoding := encoding_converter.detected_encoding
 				detected_bom := encoding_converter.last_bom
 			end
-			if attached a_class as l_class then
-				l_class.set_encoding_and_bom (detected_encoding, detected_bom)
+			if attached a_class then
+				a_class.set_encoding_and_bom (detected_encoding, detected_bom)
 			end
 					-- Only if we can get a buffer can we parse, otherwise it is an error
 			if attached l_input_buffer then
@@ -345,8 +347,8 @@ feature -- Parsing (Unknown encoding)
 				detected_encoding := encoding_converter.detected_encoding
 				detected_bom := encoding_converter.last_bom
 			end
-			if attached a_class as l_class then
-				l_class.set_encoding_and_bom (detected_encoding, detected_bom)
+			if attached a_class then
+				a_class.set_encoding_and_bom (detected_encoding, detected_bom)
 			end
 			if l_input_buffer /= Void then
 				input_buffer := l_input_buffer
@@ -391,8 +393,8 @@ feature -- Parsing (Known encoding)
 			input_buffer := l_input_buffer
 			detected_encoding := encoding_converter.detected_encoding
 			detected_bom := encoding_converter.last_bom
-			if attached a_class as l_class then
-				l_class.set_encoding_and_bom (detected_encoding, detected_bom)
+			if attached a_class then
+				a_class.set_encoding_and_bom (detected_encoding, detected_bom)
 			end
 
 				-- Abstracted from 'yy_load_input_buffer' to reuse local
@@ -430,8 +432,8 @@ feature -- Parsing (Known encoding)
 
 			detected_encoding := utf8
 			detected_bom := Void
-			if attached a_class as l_class then
-				l_class.set_encoding_and_bom (detected_encoding, detected_bom)
+			if attached a_class then
+				a_class.set_encoding_and_bom (detected_encoding, detected_bom)
 			end
 
 				-- Abstracted from 'yy_load_input_buffer' to reuse local
@@ -652,6 +654,112 @@ feature -- Modification
 			end
 		end
 
+feature {NONE} -- Scopes
+
+	scope_identifiers: ARRAYED_STACK [TUPLE [identifier: like {ID_AS}.name_id; identifier_kind: NATURAL_8]]
+			-- Identifiers with scopes placed according to their nesting with associated kind:
+			-- • formal argument;
+			-- • local variable;
+			-- • object test local;
+			-- • iteration cursor;
+			-- • separate variable.
+
+	scopes: ARRAYED_STACK [like {ARRAYED_STACK [TUPLE]}.count]
+			-- The number of elements in `scope_identifiers` before entering current scope.
+
+	scope_kind_argument: NATURAL_8 = 1
+			-- Scope kind for a formal argument.
+
+	scope_kind_local: NATURAL_8 = 2
+			-- Scope kind for a local variable.
+
+	scope_kind_test: NATURAL_8 = 3
+			-- Scope kind for an object test local.
+
+	scope_kind_iteration: NATURAL_8 = 4
+			-- Scope kind for an iteration cursor.
+
+	scope_kind_separate: NATURAL_8 = 5
+			-- Scope kind for a separate variable.
+
+	enter_scope
+			-- Enter a new scope of identifiers.
+		do
+			scopes.put (scope_identifiers.count)
+		ensure
+			is_scope_added: scopes.count = old scopes.count + 1
+			is_scope_nested: scopes.item >= old if scopes.is_empty then 0 else scopes.item end
+			is_scope_consistent: scopes.item = scope_identifiers.count
+		end
+
+	leave_scope
+			-- Leave the current scope of identifiers.
+		require
+			has_scopes: not scopes.is_empty
+			is_scope_consistent: scopes.item <= scope_identifiers.count
+		local
+			count: like scopes.item
+		do
+			from
+				scopes.remove
+				count := scope_identifiers.count - if scopes.is_empty then 0 else scopes.item end
+			invariant
+				count = scope_identifiers.count - if scopes.is_empty then 0 else scopes.item end
+			until
+				count <= 0
+			loop
+				scope_identifiers.remove
+				count := count - 1
+			end
+		ensure
+			is_scope_removed: scopes.count + 1 = old scopes.count
+			is_scope_consistent: scope_identifiers.count = if scopes.is_empty then 0 else scopes.item end
+		end
+
+	add_scope_arguments (identifiers: ARRAYED_LIST [like {ID_AS}.name_id])
+			-- Add scopes of formal arguments `ids`.
+		do
+			across
+				identifiers as identifier
+			loop
+				scope_identifiers.put (identifier.item, scope_kind_argument)
+			end
+		end
+
+	add_scope_locals (identifiers: ARRAYED_LIST [like {ID_AS}.name_id])
+			-- Add scopes of local variables `ids`.
+		do
+			across
+				identifiers as identifier
+			loop
+				scope_identifiers.put (identifier.item, scope_kind_local)
+			end
+		end
+
+	add_scope_iteration (identifier: ID_AS)
+			-- Add a scope of an iteration cursor `identifier`.
+		do
+			if attached identifier as i then
+				scope_identifiers.put (i.name_id, scope_kind_iteration)
+			end
+		end
+
+	add_scope_separate (identifier: ID_AS)
+			-- Add a scope of a separate variable `identifier`.
+		do
+			if attached identifier as i then
+				scope_identifiers.put (i.name_id, scope_kind_separate)
+			end
+		end
+
+	add_scope_test (identifier: ID_AS)
+			-- Add a scope of an object test local `identifier`.
+		do
+			if attached identifier as i then
+				scope_identifiers.put (i.name_id, scope_kind_test)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	id_level: INTEGER
@@ -867,11 +975,8 @@ feature {NONE} -- Counters
 			-- Increment `counter_value'.
 		require
 			counters_not_empty: not counters.is_empty
-		local
-			a_value: INTEGER
 		do
-			a_value := counters.item
-			counters.replace (a_value + 1)
+			counters.replace (counters.item + 1)
 		ensure
 			same_counters_count: counters.count = old counters.count
 			one_more: counter_value = old counter_value + 1
@@ -881,11 +986,8 @@ feature {NONE} -- Counters
 			-- Increment `counter2_value'.
 		require
 			counters2_not_empty: not counters2.is_empty
-		local
-			a_value: INTEGER
 		do
-			a_value := counters2.item
-			counters2.replace (a_value + 1)
+			counters2.replace (counters2.item + 1)
 		ensure
 			same_counters2_count: counters2.count = old counters2.count
 			one_more: counter2_value = old counter2_value + 1
@@ -895,11 +997,8 @@ feature {NONE} -- Counters
 			-- Increment `once_manifest_string_counter_value'.
 		require
 			once_manifest_string_counters_not_empty: not once_manifest_string_counters.is_empty
-		local
-			a_value: INTEGER
 		do
-			a_value := once_manifest_string_counters.item
-			once_manifest_string_counters.replace (a_value + 1)
+			once_manifest_string_counters.replace (once_manifest_string_counters.item + 1)
 		ensure
 			same_once_manifest_string_counters_count: once_manifest_string_counters.count = old once_manifest_string_counters.count
 			one_more: once_manifest_string_counter_value = old once_manifest_string_counter_value + 1
@@ -1052,11 +1151,8 @@ feature {AST_FACTORY} -- Error handling
 
 	report_basic_generic_type_error
 			-- Basic types cannot have generic devivation.
-		local
-			an_error: BASIC_GEN_TYPE_ERR
 		do
-			create an_error.make (line, column, filename, "")
-			report_one_error (an_error)
+			report_one_error (create {BASIC_GEN_TYPE_ERR}.make (line, column, filename, ""))
 		end
 
 	report_one_error (a_error: ERROR)
@@ -1109,7 +1205,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -76,6 +76,7 @@ feature -- Implementing DIGEST
 			h4 := 0x10325476
 			h5 := 0xc3d2e1f0
 			schedule_offset := 0
+			schedule.fill_with ({NATURAL_32} 0, 0, schedule.upper)
 		ensure
 			byte_count = 0
 			buffer_offset = 0

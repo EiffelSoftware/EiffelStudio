@@ -87,6 +87,7 @@ feature
 
 	reset
 		do
+			byte_count := 0
 			buffer_offset := 0
 			h1 := 0x6a09e667
 			h2 := 0xbb67ae85
@@ -99,6 +100,7 @@ feature
 			schedule_offset := 0
 			schedule.fill_with ({NATURAL_32} 0, 0, schedule.upper)
 		ensure
+			byte_count = 0
 			buffer_reset: buffer_offset = 0
 			schedule_reset: schedule_offset = 0
 		end

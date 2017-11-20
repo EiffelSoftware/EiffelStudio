@@ -59,6 +59,26 @@ feature
 			assert ("test_rfc_4231_2", hmac.hmac ~ expected)
 		end
 
+	test_rfc_4231_2_ascii_reset
+		local
+			hmac: HMAC_SHA256
+			expected: INTEGER_X
+		do
+			create hmac.make_ascii_key ("Jefe")
+			hmac.reset
+			hmac.sink_string ("what do ya want for nothing?")
+			hmac.finish
+			create expected.make_from_hex_string ("5bdcc146bf60754e6a042426089575c75a003f089d2739839dec58b964ec3843")
+			assert ("test_rfc_4231_2", hmac.hmac ~ expected)
+
+			hmac.reset
+			hmac.sink_string ("what do ya want for nothing?")
+			hmac.finish
+			create expected.make_from_hex_string ("5bdcc146bf60754e6a042426089575c75a003f089d2739839dec58b964ec3843")
+			assert ("test_rfc_4231_2", hmac.hmac ~ expected)
+
+		end
+
 	test_rfc_4231_3
 		local
 			hmac: HMAC_SHA256

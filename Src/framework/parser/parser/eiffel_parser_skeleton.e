@@ -739,24 +739,24 @@ feature {NONE} -- Scopes
 	add_scope_iteration (identifier: detachable ID_AS)
 			-- Add a scope of an iteration cursor `identifier`.
 		do
-			if attached identifier as i then
-				scope_identifiers.put (i.name_id, scope_kind_iteration)
+			if attached identifier then
+				scope_identifiers.put (identifier.name_id, scope_kind_iteration)
 			end
 		end
 
 	add_scope_separate (identifier: detachable ID_AS)
 			-- Add a scope of a separate variable `identifier`.
 		do
-			if attached identifier as i then
-				scope_identifiers.put (i.name_id, scope_kind_separate)
+			if attached identifier then
+				scope_identifiers.put (identifier.name_id, scope_kind_separate)
 			end
 		end
 
 	add_scope_test (identifier: detachable ID_AS)
 			-- Add a scope of an object test local `identifier`.
 		do
-			if attached identifier as i then
-				scope_identifiers.put (i.name_id, scope_kind_test)
+			if attached identifier then
+				scope_identifiers.put (identifier.name_id, scope_kind_test)
 			end
 		end
 

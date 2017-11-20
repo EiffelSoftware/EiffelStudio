@@ -79,6 +79,7 @@ feature
 			h2 := 0xefcdab89
 			h3 := 0x98badcfe
 			h4 := 0x10325476
+			schedule.fill_with ({NATURAL_32} 0, 0, schedule.upper)
 		ensure
 			byte_count = 0
 			schedule_offset = 0

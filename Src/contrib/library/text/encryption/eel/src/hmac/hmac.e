@@ -98,6 +98,7 @@ feature -- Access
 		do
 			message_hash.reset
 			finished := False
+			feed_inner_mix
 		ensure
 			not finished
 		end

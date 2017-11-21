@@ -51,10 +51,9 @@ feature {NONE} -- Initialization
 			family := af_inet
 			type := sock_stream;
 			create last_string.make_empty
-			timeout := default_timeout
-			timeout_additional_nano_seconds := 0
+			timeout_ns := one_second_in_nanoseconds * default_timeout.to_natural_64
 		ensure
-			timeout_set_to_default: timeout = default_timeout and timeout_additional_nano_seconds = 0
+			timeout_set_to_default: timeout_ns = one_second_in_nanoseconds * default_timeout.to_natural_64
 			no_socket_created: not is_created
 		end
 
@@ -66,7 +65,7 @@ feature -- Initialization
 			make_empty
 			make_socket
 		ensure
-			timeout_set_to_default: timeout = default_timeout and timeout_additional_nano_seconds = 0
+			timeout_set_to_default: timeout_ns = one_second_in_nanoseconds * default_timeout.to_natural_64
 			socket_created: is_created
 		end
 
@@ -143,8 +142,7 @@ feature {NETWORK_STREAM_SOCKET} -- Initialization
 			is_created := True
 			is_open_read := True
 			is_open_write := True
-			timeout := default_timeout
-			timeout_additional_nano_seconds := 0
+			timeout_ns := one_second_in_nanoseconds * default_timeout.to_natural_64
 			create last_string.make_empty
 		ensure
 			address_set: address ~ a_address

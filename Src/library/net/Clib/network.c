@@ -1192,12 +1192,12 @@ EIF_NATURAL_64 c_get_sock_opt_timeo(EIF_INTEGER fd, EIF_INTEGER level, int optna
 #ifdef EIF_WINDOWS
 	int arg;
 	asize = sizeof(arg);
-	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) optname, (char *) &arg, &asize));
+	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, optname, (char *) &arg, &asize));
 	return RTU64C(1000000) * arg; /* 1 millisecond = 1000000 nanoseconds */
 #else
 	struct timeval tv;
 	asize = sizeof(struct timeval);
-	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) optname, &tv, &asize));
+	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, optname, &tv, &asize));
 	/* 1 second = 1000000000 nanoseconds, and 1 microsecond = 1000 nanoseconds */
 	return RTU64C(1000000000) * tv.tv_sec + RTU64C(1000) * tv.tv_usec;
 #endif
@@ -1207,54 +1207,26 @@ void c_set_sock_opt_timeo(EIF_INTEGER fd, EIF_INTEGER level, int optname, EIF_NA
 	/* set socket `optname` option to timeout_nano_seconds */
 {
 #ifdef EIF_WINDOWS
-	int arg = (int)(timeout_nano_seconds / 1000000); /* Timeout in milliseconds: 1000000 nanoseconds =  1 millisecond */
-	if ((arg == 0) && (timeout_nano_seconds > 0)) {
+	int arg = (int)(timeout_nano_seconds / 1000000); /* Timeout in milliseconds: 1 millisecond = 1000000 nanoseconds */
+	if ((arg == 0) && (timeout_nano_seconds != 0)) {
 			/* timeout values are above zero, but less than 1 millisecond
 			 * then set to 1 millisecond to avoid eventual special behavior for 0 timeouts).
 			 */
 		arg = (int) 1;
 	}
-	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) optname, (char *) &arg, sizeof(arg)));
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, optname, (char *) &arg, sizeof(arg)));
 #else
 	struct timeval tv;
 	tv.tv_sec = (long) (timeout_nano_seconds / RTU64C(1000000000)); 
 	tv.tv_usec = (long) (timeout_nano_seconds % RTU64C(1000)); /* 1 microsecond = 1000 nanoseconds */
 	if ((tv.tv_sec == 0 && tv.tv_usec == 0) && (timeout_nano_seconds > 0)) {
-			/* timeout values are above zero, but less than 1 microsecond
+			/* timeout values are not zero, but less than 1 microsecond
 			 * then set to 1 microsecond to avoid eventual special behavior for 0 timeouts).
 			 */
 		tv.tv_usec = (long) 1;
 	}
-	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) optname, &tv, sizeof(struct timeval)));
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, optname, &tv, sizeof(struct timeval)));
 #endif
-}
-
-/* SO_RCVTIMEO */
-
-EIF_NATURAL_64 c_get_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level)
-	/* get socket fd SO_RCVTIMEO options in nanoseconds */
-{
-	return c_get_sock_opt_timeo(fd, level, SO_RCVTIMEO);
-}
-
-void c_set_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_NATURAL_64 recv_timeout_nano_seconds)
-	/* set socket SO_RCVTIMEO option to recv_timeout_nano_seconds */
-{
-	c_set_sock_opt_timeo(fd, level, SO_RCVTIMEO, recv_timeout_nano_seconds);
-}
-
-/* SO_SNDTIMEO */
-
-EIF_NATURAL_64 c_get_sock_send_timeout(EIF_INTEGER fd, EIF_INTEGER level)
-	/* get socket fd SO_SNDTIMEO options in nanoseconds */
-{
-	return c_get_sock_opt_timeo(fd, level, SO_SNDTIMEO);
-}
-
-void c_set_sock_send_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_NATURAL_64 send_timeout_nano_seconds)
-	/* set socket SO_SNDTIMEO option to send_timeout_nano_seconds */
-{
-	c_set_sock_opt_timeo(fd, level, SO_SNDTIMEO, send_timeout_nano_seconds);
 }
 
 /********************************************************/

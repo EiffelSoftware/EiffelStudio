@@ -113,8 +113,14 @@ EIF_INTEGER c_select_poll_with_timeout(EIF_INTEGER fd,
 	fd_set fdmask;
 	struct timeval tmout;
 	int res;
-
-	tmout.tv_sec = (long) (timeout_nano_sec / RTU64C(1000000000));
+	EIF_NATURAL_64 sec;
+	sec = timeout_nano_sec / RTU64C(1000000000);
+	if (sec > LONG_MAX) {
+		/* Overflown, use max value instead */
+		tmout.tv_sec = (long) LONG_MAX;
+	} else {
+		tmout.tv_sec = (long) sec;
+	}
 	tmout.tv_usec = (long) (timeout_nano_sec % RTU64C(1000)); /* 1 microsecond = 1000 nanoseconds */
 	if (tmout.tv_sec == 0 && tmout.tv_usec == 0 && timeout_nano_sec != 0) {
 			/* timeout values are above zero, but less than 1 microsecond
@@ -143,8 +149,14 @@ EIF_INTEGER c_check_exception_with_timeout(EIF_INTEGER fd,
 	fd_set fdmask;
 	struct timeval tmout;
 	int res;
-
-	tmout.tv_sec = (long) (timeout_nano_sec / RTU64C(1000000000));
+	EIF_NATURAL_64 sec;
+	sec = timeout_nano_sec / RTU64C(1000000000);
+	if (sec > LONG_MAX) {
+		/* Overflown, use max value instead */
+		tmout.tv_sec = (long) LONG_MAX;
+	} else {
+		tmout.tv_sec = (long) sec;
+	}
 	tmout.tv_usec = (long) (timeout_nano_sec % RTU64C(1000)); /* 1 microsecond = 1000 nanoseconds */
 	if (tmout.tv_sec == 0 && tmout.tv_usec == 0 && timeout_nano_sec != 0) {
 			/* timeout values are above zero, but less than 1 microsecond

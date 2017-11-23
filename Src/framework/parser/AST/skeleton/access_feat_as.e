@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Abstract description of an access to an Eiffel feature (note %
 		%that this access cannot be the first call of a nested %
@@ -148,22 +148,12 @@ feature -- Roundtrip/Token
 			end
 		end
 
-feature -- Delayed calls
-
-	is_delayed : BOOLEAN
-			-- Is this access delayed?
-		do
-			-- Default: No
-		end
-
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := Precursor (other) and then
-				equivalent (parameters, other.parameters) and then
-				is_delayed = other.is_delayed
+			Result := Precursor (other) and then equivalent (parameters, other.parameters)
 		end
 
 feature -- Setting
@@ -258,7 +248,7 @@ invariant
 	parameter_count_correct: (parameters /= Void implies parameter_count > 0) and (parameters = Void implies parameter_count = 0)
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,7 +1,7 @@
 ﻿note
 	description: "Representation of an Eiffel feature."
 
-class E_FEATURE
+deferred class E_FEATURE
 
 inherit
 	COMPARABLE
@@ -193,6 +193,12 @@ feature -- Properties
 			-- Is current feature an attribute with body?
 		do
 			-- Do nothing
+		end
+
+	is_instance_free: BOOLEAN
+			-- Is current feature instance-free, i.e. can be called on a class type rather than on object?
+		do
+			-- False by default
 		end
 
 	is_constant: BOOLEAN

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of an eiffel constant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,10 @@ inherit
 
 	E_FEATURE
 		redefine
-			assigner_name, is_constant, type
+			assigner_name,
+			is_constant,
+			is_instance_free,
+			type
 		end
 
 create
@@ -19,6 +22,9 @@ create
 	make
 
 feature -- Properties
+
+	is_instance_free: BOOLEAN = True
+			-- <Precursor>
 
 	is_constant: BOOLEAN = True
 			-- Is current a function
@@ -69,7 +75,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -100,4 +106,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class E_CONSTANT
+end

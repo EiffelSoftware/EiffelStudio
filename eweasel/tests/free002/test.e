@@ -24,6 +24,8 @@ feature {NONE} -- Tests
 		do
 			Current.do_nothing
 			a.do_nothing
+			;($Current).do_nothing
+			;($a).do_nothing
 			;(agent do end).do_nothing
 			;(agent f).do_nothing
 			Precursor

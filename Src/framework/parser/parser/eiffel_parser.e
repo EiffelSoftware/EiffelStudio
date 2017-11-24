@@ -9035,7 +9035,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-set_id_level (Assert_level) 
+set_id_level (Precondition_level) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp74 := yyvsp74 + 1
@@ -9081,7 +9081,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-set_id_level (Assert_level) 
+set_id_level (Precondition_level) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp74 := yyvsp74 + 1
@@ -9152,7 +9152,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-set_id_level (Assert_level) 
+set_id_level (Postcondition_level) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp44 := yyvsp44 + 1
@@ -9198,7 +9198,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-set_id_level (Assert_level) 
+set_id_level (Postcondition_level) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp44 := yyvsp44 + 1
@@ -17333,7 +17333,7 @@ end
 				inspect id_level
 				when Normal_level then
 					yyval23 := ast_factory.new_access_id_as (yyvs2.item (yyvsp2), yyvs98.item (yyvsp98))
-				when Assert_level then
+				when Precondition_level, Postcondition_level then
 					yyval23 := ast_factory.new_access_assert_as (yyvs2.item (yyvsp2), yyvs98.item (yyvsp98))
 				when Invariant_level then
 					yyval23 := ast_factory.new_access_inv_as (yyvs2.item (yyvsp2), yyvs98.item (yyvsp98), Void)

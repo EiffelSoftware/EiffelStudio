@@ -1564,14 +1564,14 @@ Instruction_impl: Creation
 Precondition: -- Empty
 			-- { $$ := Void }
 	|	TE_REQUIRE
-			{ set_id_level (Assert_level) }
+			{ set_id_level (Precondition_level) }
 		Assertion
 			{
 				set_id_level (Normal_level)
 				$$ := ast_factory.new_require_as ($3, $1)
 			}
 	|	TE_REQUIRE TE_ELSE
-			{ set_id_level (Assert_level) }
+			{ set_id_level (Precondition_level) }
 		Assertion
 			{
 				set_id_level (Normal_level)
@@ -1582,14 +1582,14 @@ Precondition: -- Empty
 Postcondition: -- Empty
 			-- { $$ := Void }
 	|	TE_ENSURE
-			{ set_id_level (Assert_level) }
+			{ set_id_level (Postcondition_level) }
 		Assertion
 			{
 				set_id_level (Normal_level)
 				$$ := ast_factory.new_ensure_as ($3, $1)
 			}
 	|	TE_ENSURE TE_THEN
-			{ set_id_level (Assert_level) }
+			{ set_id_level (Postcondition_level) }
 		Assertion
 			{
 				set_id_level (Normal_level)
@@ -1652,7 +1652,6 @@ Assertion_clause: Expression ASemi
 			$$ := ast_factory.new_tagged_as ($1, Void, $2)
 		}
 	;
-
 
 -- Type
 -- Note that only `Type' should be used in other constructs. If something else is used, please make
@@ -3427,7 +3426,7 @@ A_feature: Feature_name_for_call Parameters
 				inspect id_level
 				when Normal_level then
 					$$ := ast_factory.new_access_id_as ($1, $2)
-				when Assert_level then
+				when Precondition_level, Postcondition_level then
 					$$ := ast_factory.new_access_assert_as ($1, $2)
 				when Invariant_level then
 					$$ := ast_factory.new_access_inv_as ($1, $2, Void)

@@ -763,18 +763,20 @@ feature {NONE} -- Scopes
 feature {NONE} -- Implementation
 
 	id_level: INTEGER
-			-- Boolean for controlling the semantic
-			-- action of rule `A_feature'
+			-- Boolean for controlling the semantic action of rule `A_feature'.
 		require
 			not feature_stack.is_empty
 		do
 			Result := feature_stack.item.id_level
+		ensure
+			is_valid_id_level: is_valid_id_level (Result)
 		end
 
 	set_id_level (a_id_level: INTEGER)
-			-- Sets the current id_level to `a_id_level'
+			-- Set the current id_level to `a_id_level'.
 		require
 			not feature_stack.is_empty
+			is_valid_id_level: is_valid_id_level (a_id_level)
 		do
 			feature_stack.item.id_level := a_id_level
 		end
@@ -1179,6 +1181,27 @@ feature{NONE} -- Roundtrip
 	temp_address_current_as: detachable ADDRESS_CURRENT_AS
 	temp_address_result_as: detachable ADDRESS_RESULT_AS
 
+feature {NONE} -- Status report
+
+	is_valid_id_level (l: like id_level): BOOLEAN
+			-- Is ID level `l` valid?
+		do
+			inspect l
+			when
+				Normal_level,
+				Precondition_level,
+				Postcondition_level,
+				Invariant_level
+			then
+				Result := True
+			else
+					-- Result := False
+			end
+		ensure
+			definition: Result =
+				(<<Normal_level, Precondition_level, Postcondition_level, Invariant_level>>).has (l)
+		end
+
 feature {NONE} -- Constants
 
 	Initial_counters_capacity: INTEGER = 20
@@ -1189,15 +1212,15 @@ feature {NONE} -- Constants
 				-- (See `eif_rtlimits.h')
 
 	Normal_level: INTEGER = 0
-	Assert_level: INTEGER = 1
-	Invariant_level: INTEGER = 2
+	Precondition_level: INTEGER = 1
+	Postcondition_level: INTEGER = 2
+	Invariant_level: INTEGER = 3
 
 invariant
 
 	suppliers_not_void: suppliers /= Void
 	formal_parameters_not_void: formal_parameters /= Void
-	valid_id_level: (id_level = Normal_level) or
-		(id_level = Assert_level) or (id_level = Invariant_level)
+	valid_id_level: is_valid_id_level (id_level)
 	is_external_class_not_set: not il_parser implies not is_external_class
 	is_partial_class_not_set: not il_parser implies not is_partial_class
 	once_manifest_string_counters_not_empty: not once_manifest_string_counters.is_empty

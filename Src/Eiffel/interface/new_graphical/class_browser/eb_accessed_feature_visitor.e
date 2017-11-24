@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Visitor to check accessors for a given feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -263,8 +262,8 @@ feature{NONE} -- Implementation/Process
 
 	process_tagged_as (l_as: TAGGED_AS)
 		do
-			if l_as.expr /= Void then
-				l_as.expr.process (Current)
+			if attached l_as.expr as e then
+				e.process (Current)
 			end
 		end
 
@@ -351,16 +350,18 @@ feature{NONE} -- Implementation/Process
 		do
 			Precursor (l_as)
 			l_atom := l_as.lower
-			if l_atom.is_id then
-				if is_accessor (e_feature, last_class_c.class_id, l_atom.string_value) then
-					accessors.extend ([l_atom, last_class_c])
-				end
+			if
+				l_atom.is_id and then
+				is_accessor (e_feature, last_class_c.class_id, l_atom.string_value)
+			then
+				accessors.extend ([l_atom, last_class_c])
 			end
 			l_atom := l_as.upper
-			if l_atom /= Void then
-				if is_accessor (e_feature, last_class_c.class_id, l_atom.string_value) then
-					accessors.extend ([l_atom, last_class_c])
-				end
+			if
+				attached l_atom and then
+				is_accessor (e_feature, last_class_c.class_id, l_atom.string_value)
+			then
+				accessors.extend ([l_atom, last_class_c])
 			end
 		end
 
@@ -377,28 +378,26 @@ feature{NONE} -- Implementation
 			last_class_c_set: last_class_c = a_class
 		end
 
-	ancestor_version_with_different_name (a_feature: E_FEATURE; a_class_id: INTEGER): E_FEATURE
-			-- Ancestor feature (version from class whose id is `a_class_id') of `a_feature' with a different name
+	ancestor_version_with_different_name (a_feature: E_FEATURE; a_class_id: INTEGER): detachable E_FEATURE
+			-- Ancestor feature (version from class whose id is `a_class_id') of `a_feature' with a different name.
 		require
 			a_feature_attached: a_feature /= Void
 		local
-			l_class: CLASS_C
 			l_retried: BOOLEAN
 		do
 				-- Fixme: This protection is to avoid a strange crash when invoking `ancestor_version' on `a_feature'.
 				-- Try to find the real reason later.
-			if not l_retried then
-				l_class := system.class_of_id (a_class_id)
-				if l_class /= Void then
-					Result := a_feature.ancestor_version (l_class)
-					if Result /= Void then
-						if
-							Result.name.is_case_insensitive_equal (a_feature.name) and then
-							((not Result.has_alias_name) and then (not a_feature.has_alias_name))
-						then
-							Result := Void
-						end
-					end
+			if
+				not l_retried and then
+				attached system.class_of_id (a_class_id) as l_class
+			then
+				Result := a_feature.ancestor_version (l_class)
+				if
+					attached Result and then
+					Result.name.is_case_insensitive_equal (a_feature.name) and then
+					((not Result.has_alias_name) and then (not a_feature.has_alias_name))
+				then
+					Result := Void
 				end
 			end
 		rescue
@@ -411,7 +410,7 @@ invariant
 	ancestor_class_id_set_attached: ancestor_class_id_set /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2017, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

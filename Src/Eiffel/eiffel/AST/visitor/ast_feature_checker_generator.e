@@ -4127,6 +4127,9 @@ feature {NONE} -- Visitor
 		local
 			l_typed_pointer: TYPED_POINTER_A
 		do
+			if current_feature.is_instance_free then
+				error_handler.insert_error (create {VSTB}.make_current (current_feature, context.current_class, context.written_class, l_as.current_keyword))
+			end
 			create l_typed_pointer.make_typed (context.current_class_type)
 			set_type (l_typed_pointer, l_as)
 			instantiator.dispatch (l_typed_pointer, context.current_class)

@@ -77,6 +77,9 @@ indexing
 
 #include <string.h>
 
+#define nanoseconds_in_second RTU64C(1000000000)
+#define nanoseconds_in_microsecond RTU64C(1000)
+
 EIF_INTEGER c_syncpoll(EIF_INTEGER fd)
 	/*x Synchronously poll a socket without modifying buffer
 	    expecting 1 for something, 0 for eof, -1 for error */
@@ -107,22 +110,22 @@ EIF_INTEGER c_select_poll(EIF_INTEGER fd)
 
 EIF_INTEGER c_select_poll_with_timeout(EIF_INTEGER fd, 
 		                               EIF_BOOLEAN read_mode,
-									   EIF_NATURAL_64 timeout_nano_sec)
-	/*x Get read/write status for socket fd within `timeout_nano_sec` nanoseconds*/
+									   EIF_NATURAL_64 timeout_ns)
+	/*x Get read/write status for socket fd within `timeout_ns` nanoseconds*/
 {
 	fd_set fdmask;
 	struct timeval tmout;
 	int res;
-	EIF_NATURAL_64 sec;
-	sec = timeout_nano_sec / RTU64C(1000000000);
-	if (sec > LONG_MAX) {
+	EIF_NATURAL_64 n64;
+	n64 = timeout_ns / nanoseconds_in_second;
+	if (n64 > LONG_MAX) {
 		/* Overflown, use max value instead */
 		tmout.tv_sec = (long) LONG_MAX;
 	} else {
-		tmout.tv_sec = (long) sec;
+		tmout.tv_sec = (long) n64;
 	}
-	tmout.tv_usec = (long) (timeout_nano_sec % RTU64C(1000)); /* 1 microsecond = 1000 nanoseconds */
-	if (tmout.tv_sec == 0 && tmout.tv_usec == 0 && timeout_nano_sec != 0) {
+	tmout.tv_usec = (long) ((timeout_ns % nanoseconds_in_second) / nanoseconds_in_microsecond);
+	if (tmout.tv_sec == 0 && tmout.tv_usec == 0 && timeout_ns != 0) {
 			/* timeout values are above zero, but less than 1 microsecond
 			 * then set to 1 microsecond to avoid eventual special behavior for 0 timeouts).
 			 */
@@ -143,22 +146,22 @@ EIF_INTEGER c_select_poll_with_timeout(EIF_INTEGER fd,
 }
 
 EIF_INTEGER c_check_exception_with_timeout(EIF_INTEGER fd, 
-									       EIF_NATURAL_64 timeout_nano_sec)
-	/*x Get exception status for socket fd within `timeout_nano_sec` nanoseconds */
+									       EIF_NATURAL_64 timeout_ns)
+	/*x Get exception status for socket fd within `timeout_ns` nanoseconds */
 {
 	fd_set fdmask;
 	struct timeval tmout;
 	int res;
-	EIF_NATURAL_64 sec;
-	sec = timeout_nano_sec / RTU64C(1000000000);
-	if (sec > LONG_MAX) {
+	EIF_NATURAL_64 n64;
+	n64 = timeout_ns / nanoseconds_in_second;
+	if (n64 > LONG_MAX) {
 		/* Overflown, use max value instead */
 		tmout.tv_sec = (long) LONG_MAX;
 	} else {
-		tmout.tv_sec = (long) sec;
+		tmout.tv_sec = (long) n64;
 	}
-	tmout.tv_usec = (long) (timeout_nano_sec % RTU64C(1000)); /* 1 microsecond = 1000 nanoseconds */
-	if (tmout.tv_sec == 0 && tmout.tv_usec == 0 && timeout_nano_sec != 0) {
+	tmout.tv_usec = (long) ((timeout_ns % nanoseconds_in_second) / nanoseconds_in_microsecond);
+	if (tmout.tv_sec == 0 && tmout.tv_usec == 0 && timeout_ns != 0) {
 			/* timeout values are above zero, but less than 1 microsecond
 			 * then set to 1 microsecond to avoid eventual special behavior for 0 timeouts).
 			 */

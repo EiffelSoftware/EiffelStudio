@@ -4635,7 +4635,11 @@ feature {NONE} -- Implementation: helpers
 			end
 			l_text_formatter_decorator.new_expression
 			l_text_formatter_decorator.indent
-			l_as.expr.process (Current)
+			if attached l_as.expr as e then
+				e.process (Current)
+			elseif l_as.is_class then
+				l_text_formatter_decorator.process_keyword_text (ti_class_keyword, Void)
+			end
 			l_text_formatter_decorator.exdent
 			l_text_formatter_decorator.commit
 		end

@@ -219,7 +219,7 @@ create
 %type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 365
+%expect 366
 
 %%
 
@@ -1640,16 +1640,32 @@ Assertion_list: Assertion_clause
 			}
 	;
 
-Assertion_clause: Expression ASemi
-			{ $$ := ast_factory.new_tagged_as (Void, $1, Void) }
+Assertion_clause:
+		Expression ASemi
+			{ $$ := ast_factory.new_tagged_as (Void, $1, Void, Void) }
+	|	TE_CLASS ASemi
+			{
+				if id_level = Postcondition_level then
+					$$ := ast_factory.new_tagged_as (Void, Void, $1, Void)
+				else
+					raise_error
+				end
+			}
 	|	Identifier_as_lower TE_COLON Expression ASemi
-			{ $$ := ast_factory.new_tagged_as ($1, $3, $2) }
+			{ $$ := ast_factory.new_tagged_as ($1, $3, Void, $2) }
+	|	Identifier_as_lower TE_COLON TE_CLASS ASemi
+			{
+				if id_level = Postcondition_level then
+					$$ := ast_factory.new_tagged_as ($1, Void, $3, $2)
+				else
+					raise_error
+				end
+			}
 	|	Identifier_as_lower TE_COLON ASemi
-			--- { $$ := Void }
 		{
-			-- Always create an object here for roundtrip parser.
-			-- This "fake" assertion will be filtered out later.
-			$$ := ast_factory.new_tagged_as ($1, Void, $2)
+				-- Always create an object here for roundtrip parser.
+				-- This "fake" assertion will be filtered out later.
+			$$ := ast_factory.new_tagged_as ($1, Void, Void, $2)
 		}
 	;
 
@@ -4039,7 +4055,7 @@ Remove_counter: { remove_counter }
 %%
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -4070,5 +4086,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_PARSER
-
+end

@@ -1088,6 +1088,7 @@ feature {CLASS_AS} -- Routine
 		do
 			print_inline (l_as.tag)
 			print_inline (l_as.colon_symbol (match_list))
+			print_inline_indented (l_as.class_keyword (match_list))
 			print_inline_indented (l_as.expr)
 		end
 

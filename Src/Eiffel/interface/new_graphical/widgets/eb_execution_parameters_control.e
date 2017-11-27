@@ -11,7 +11,7 @@ note
 	revision: "$Revision$"
 
 class
-	EB_DEBUGGING_OPTIONS_CONTROL
+	EB_EXECUTION_PARAMETERS_CONTROL
 
 inherit
 	ES_WIDGET [EV_VERTICAL_BOX]
@@ -92,7 +92,7 @@ feature -- Interface access
 			end
 		end
 
-feature {EB_ARGUMENT_DIALOG} -- Storage
+feature {EB_EXECUTION_PARAMETERS_DIALOG} -- Storage
 
 	load_dbg_options
 			-- Retrieve and initialize the arguments from user options.
@@ -740,7 +740,7 @@ feature -- Data change
 			end
 		end
 
-feature {EB_ARGUMENT_DIALOG} -- Status change
+feature {EB_EXECUTION_PARAMETERS_DIALOG} -- Status change
 
 	import_export_file_location_suggestion: detachable PATH
 		local
@@ -1055,6 +1055,7 @@ feature {NONE} -- Profile actions
 								change_args_on (a_gi.text, a_prof)
 							end (p, gti)
 					)
+				gi.pointer_double_press_actions.extend (agent safe_activate_editing (gti, ?,?,?,?,?,?,?,?))
 				srow.set_item (2, gti)
 
 					--| Working directory						
@@ -1076,6 +1077,7 @@ feature {NONE} -- Profile actions
 								end (p, gdi)
 					)
 				gdi.set_start_path (default_working_path)
+				gi.pointer_double_press_actions.extend (agent safe_activate_editing (gdi, ?,?,?,?,?,?,?,?))
 				srow.set_item (2, gdi)
 
 					--| Environment
@@ -1088,6 +1090,7 @@ feature {NONE} -- Profile actions
 				end
 
 				create gli.make_with_text (interface_names.l_add_a_valuable)
+				gi.pointer_double_press_actions.extend (agent safe_activate_editing (gli, ?,?,?,?,?,?,?,?))
 				gli.set_tooltip (interface_names.f_add_a_new_variable)
 
 				gli.pointer_button_press_actions.force_extend (agent on_environment_variables_row_clicked (srow, ?,?,?))
@@ -1808,7 +1811,7 @@ feature {NONE} -- Implementation
 			acc.actions.extend (agent (a_gi: EV_GRID_ITEM)
 				do
 					inside_row_operation := True
-						-- We need to protect the case when `gi' has already been deactivated.
+						-- We need to protect the case when `a_gi' has already been deactivated.
 					if not a_gi.is_destroyed and then a_gi.is_parented then
 						a_gi.activate
 					end
@@ -1816,6 +1819,20 @@ feature {NONE} -- Implementation
 				end (gi)
 			)
 			pop.accelerators.extend (acc)
+		end
+
+	safe_activate_editing (gi: EV_GRID_ITEM; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
+			-- Activate `gi` if possible.
+			--| Note: this is used to enter editing mode on `gi` when double-clicking on associated label item.
+		do
+				-- We need to protect the case when `gi' has already been deactivated.
+			if
+				a_button = {EV_POINTER_CONSTANTS}.left and then
+				not gi.is_destroyed and then
+				gi.is_parented
+			then
+				gi.activate
+			end
 		end
 
 note

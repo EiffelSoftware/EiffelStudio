@@ -10,7 +10,7 @@ note
 	revision: "$Revision$"
 
 class
-	EB_ARGUMENT_DIALOG
+	EB_EXECUTION_PARAMETERS_DIALOG
 
 inherit
 	EV_TITLED_WINDOW
@@ -248,7 +248,7 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Properties
 
-	debugging_options_control: EB_DEBUGGING_OPTIONS_CONTROL
+	debugging_options_control: EB_EXECUTION_PARAMETERS_CONTROL
 			-- Widget holding all arguments information.
 
 	run: PROCEDURE [DEBUGGER_EXECUTION_PROFILE]

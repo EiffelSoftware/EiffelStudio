@@ -1876,10 +1876,12 @@ feature -- Access
 			end
 		end
 
-	new_tagged_as (t: detachable ID_AS; e: detachable EXPR_AS; s_as: detachable SYMBOL_AS): detachable TAGGED_AS
+	new_tagged_as (t: detachable ID_AS; e: detachable EXPR_AS; c: detachable KEYWORD_AS; s_as: detachable SYMBOL_AS): detachable TAGGED_AS
 			-- New TAGGED AST node
 		do
-			if t /= Void or e /= Void then
+			if attached c then
+				create Result.make_class (t, c, s_as)
+			elseif t /= Void or e /= Void then
 				create Result.initialize (t, e, s_as)
 			end
 		end
@@ -2103,7 +2105,7 @@ feature {NONE} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

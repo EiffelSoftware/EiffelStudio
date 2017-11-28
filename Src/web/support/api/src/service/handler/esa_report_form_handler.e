@@ -180,7 +180,7 @@ feature {NONE} -- New Report Problem
 		do
 			create l_rhf
 			media_variants := media_type_variants (req)
-			if attached {STRING_32} current_user_name (req) as l_user then
+			if attached {READABLE_STRING_32} current_user_name (req) as l_user then
 					-- Logged in user
 				to_implement ("Check user roles")
 				create l_user_agent.make_from_string (req.http_user_agent)
@@ -211,7 +211,7 @@ feature {NONE} -- Update Report Problem
 		do
 			create l_rhf
 			if attached {WSF_STRING} req.path_parameter ("id") as l_id and then l_id.is_integer then
-				if attached {STRING_32} current_user_name (req) as l_user then
+				if attached {READABLE_STRING_32} current_user_name (req) as l_user then
 						-- Logged in user
 					to_implement ("Check user roles")
 					if attached current_media_type (req) as l_type then
@@ -280,7 +280,7 @@ feature -- Initialize Report Problem
 			l_form: ESA_REPORT_FORM_VIEW
 		do
 			create l_rhf
-			if attached {STRING_32} current_user_name (req) as l_user then
+			if attached {READABLE_STRING_32} current_user_name (req) as l_user then
 					-- Logged in user
 					-- Extract data from the req
 				l_temp_report_id := api_service.new_problem_report_id (l_user)

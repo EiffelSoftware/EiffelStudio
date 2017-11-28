@@ -99,7 +99,7 @@ feature -- HTTP Methods
 		do
 			create l_rhf
 			if
-				attached {STRING_32} current_user_name (req) as l_user and then
+				attached {READABLE_STRING_32} current_user_name (req) as l_user and then
 				attached {WSF_STRING} req.path_parameter("report_id") as l_report_id and then l_report_id.is_integer
 			then
 				if attached current_media_type (req) as l_type then

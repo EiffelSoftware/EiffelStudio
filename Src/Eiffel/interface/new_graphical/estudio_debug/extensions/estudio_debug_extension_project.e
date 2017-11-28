@@ -14,6 +14,16 @@ inherit
 			new_menu_item
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -32,6 +42,10 @@ feature -- Execution
 		do
 			create l_menu_item.make_with_text_and_action ("Replay Backup", agent on_replay_backup)
 			a_menu.extend (l_menu_item)
+
+			create l_menu_item.make_with_text_and_action ("Recompile from Scratch", agent on_recompile_from_scratch)
+			a_menu.extend (l_menu_item)
+
 
 			a_menu.extend (create {EV_MENU_SEPARATOR})
 
@@ -90,6 +104,23 @@ feature {NONE} -- Actions
 			replay_window.window.raise
 		end
 
+	on_recompile_from_scratch
+		local
+			p_ecf: PATH
+		do
+			if attached workbench as wb then
+				create p_ecf.make_from_string (wb.lace.file_name)
+				(create {COMMAND_EXECUTOR}).execute (eiffel_layout.studio_command_line (p_ecf, wb.lace.target_name, wb.lace.project_path, True, True) + " -melt")
+				on_quit
+			end
+		end
+
+	on_quit
+			-- Called when the user selects the Quit button
+		do
+			(create {EXCEPTIONS}).die (-1)
+		end
+
 feature -- Access
 
 	menu_path: ARRAY [STRING]
@@ -132,7 +163,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

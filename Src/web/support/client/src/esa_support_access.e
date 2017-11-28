@@ -126,45 +126,16 @@ feature -- Status report
 			support_accessible: Result implies client.is_available
 		end
 
-feature {NONE} -- Implementation
-
-	shared_ejson: SHARED_EJSON
-			-- Json configuration
-		once
-			fixme ("Refactor code: update class to remove the use of obsolete code.")
-			create Result
-		end
-
-	initialize_json_converters
-			-- json converters initialization.
-		once
-			fixme ("Refactor code: update class to remove the use of obsolete code.")
-			if attached shared_ejson.json as j then
-				j.add_converter (create {CJ_COLLECTION_JSON_CONVERTER}.make)
-				j.add_converter (create {CJ_DATA_JSON_CONVERTER}.make)
-				j.add_converter (create {CJ_ERROR_JSON_CONVERTER}.make)
-				j.add_converter (create {CJ_ITEM_JSON_CONVERTER}.make)
-				j.add_converter (create {CJ_QUERY_JSON_CONVERTER}.make)
-				j.add_converter (create {CJ_TEMPLATE_JSON_CONVERTER}.make)
-				j.add_converter (create {CJ_LINK_JSON_CONVERTER}.make)
-				if j.converter_for (create {ARRAYED_LIST [detachable ANY]}.make (0)) = Void then
-					j.add_converter (create {CJ_ARRAYED_LIST_JSON_CONVERTER}.make)
-				end
-			end
-		end
-
 feature -- Access
 
 	cj_collection (j: JSON_VALUE): detachable CJ_COLLECTION
 			-- collection json represenation.
 		local
-			conv: CJ_COLLECTION_JSON_CONVERTER
+			factory: CJ_COLLECTION_FACTORY
 		do
-			fixme ("Refactor code: update class to remove the use of obsolete code.")
 			if attached {JSON_OBJECT} j as jo then
-				initialize_json_converters
-				create conv.make
-				Result := conv.from_json (jo)
+				create factory
+				Result := factory.to_collection (jo)
 			end
 		end
 
@@ -180,11 +151,10 @@ feature -- Access
 
 	cj_template_to_json (tpl: CJ_TEMPLATE): detachable JSON_VALUE
 		local
-			conv: CJ_TEMPLATE_JSON_CONVERTER
+			factory: CJ_COLLECTION_FACTORY
 		do
-			initialize_json_converters
-			create conv.make
-			Result := conv.to_json (tpl)
+			create factory
+			Result := factory.template_to_json (tpl)
 		end
 
 feature {NONE} -- Constants

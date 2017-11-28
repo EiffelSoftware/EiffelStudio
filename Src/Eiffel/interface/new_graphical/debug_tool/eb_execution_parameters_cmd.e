@@ -7,7 +7,7 @@ note
 	revision: "$Revision$"
 
 class
-	EB_DEBUG_OPTIONS_CMD
+	EB_EXECUTION_PARAMETERS_CMD
 
 inherit
 	ES_DBG_TOOLBARABLE_AND_MENUABLE_COMMAND
@@ -52,18 +52,18 @@ feature -- Formatting
 	open_execution_parameters_dialog (a_cmd: PROCEDURE [DEBUGGER_EXECUTION_PROFILE])
 			-- Show the arguments dialog
 		local
-			args_dialog: EB_ARGUMENT_DIALOG
+			dlg: EB_EXECUTION_PARAMETERS_DIALOG
 			dev: EV_WINDOW
 		do
 			if attached {EB_DEVELOPMENT_WINDOW} window_manager.last_focused_window as window then
 				dev := window.window
-				if not argument_dialog_is_valid then
-					create args_dialog.make (window, a_cmd)
-					set_argument_dialog (args_dialog)
+				if not execution_parameters_dialog_is_valid then
+					create dlg.make (window, a_cmd)
+					set_execution_parameters_dialog (dlg)
 				else
-					argument_dialog.update
+					execution_parameters_dialog.update
 				end
-				argument_dialog.raise
+				execution_parameters_dialog.raise
 			end
 		end
 
@@ -114,7 +114,7 @@ feature {NONE} -- Attributes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

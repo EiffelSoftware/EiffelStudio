@@ -1339,31 +1339,21 @@ feature {NONE} -- Implementation
 
 	synchronize_breakpoints_action (a_window: EB_WINDOW)
 			-- Action to synchronize `a_window' regarding the breakpoints data.
-		local
-			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			conv_dev ?= a_window
-			if conv_dev /= Void then
-				conv_dev.tools.breakpoints_tool.synchronize
+			if attached {EB_DEVELOPMENT_WINDOW} a_window as a_dev_window then
+				a_dev_window.tools.breakpoints_tool.synchronize
 			end
 		end
 
 	synchronize_action (a_window: EB_WINDOW)
 			-- Action to be performed on `item' in `refresh'.
-		local
-			conv_dev: EB_DEVELOPMENT_WINDOW
-			conv_dyn: EB_DYNAMIC_LIB_WINDOW
 		do
-			conv_dev ?= a_window
-			if conv_dev /= Void then
-				conv_dev.synchronize
+			if attached {EB_DEVELOPMENT_WINDOW} a_window as a_dev_window then
+				a_dev_window.synchronize
+			elseif attached {EB_DYNAMIC_LIB_WINDOW} a_window as conv_dyn then
+				conv_dyn.synchronize
 			else
-				conv_dyn ?= a_window
-				if conv_dyn /= Void then
-					conv_dyn.synchronize
-				else
-					a_window.refresh
-				end
+				a_window.refresh
 			end
 			notify_observers (a_window, Notify_changed_window)
 		end
@@ -1373,9 +1363,8 @@ feature {NONE} -- Implementation
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			conv_dev ?= a_window
-			if conv_dev /= Void then
-				conv_dev.editors_manager.backup_all
+			if attached {EB_DEVELOPMENT_WINDOW} a_window as a_dev_window then
+				a_dev_window.editors_manager.backup_all
 				not_backuped := not_backuped + conv_dev.editors_manager.not_backuped
 			end
 		end
@@ -1385,9 +1374,8 @@ feature {NONE} -- Implementation
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			conv_dev ?= a_window
-			if conv_dev /= Void then
-				conv_dev.quick_refresh_editors
+			if attached {EB_DEVELOPMENT_WINDOW} a_window as a_dev_window then
+				a_dev_window.quick_refresh_editors
 			end
 		end
 
@@ -1396,46 +1384,41 @@ feature {NONE} -- Implementation
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			conv_dev ?= a_window
-			if conv_dev /= Void then
-				conv_dev.quick_refresh_margins
+			if attached {EB_DEVELOPMENT_WINDOW} a_window as a_dev_window then
+				a_dev_window.quick_refresh_margins
 			end
 		end
 
 	raise_unsaved_action (a_window: EB_WINDOW)
 			-- Action to be performed on `item' in `raise_non_saved'.
-		local
-			a_dev: EB_DEVELOPMENT_WINDOW
 		do
-			a_dev ?= a_window
-			if a_dev /= Void and then a_dev.changed then
+			if attached {EB_DEVELOPMENT_WINDOW} a_window as a_dev_window and then a_dev_window.changed then
 				a_window.show
 			end
 		end
 
 	save_action (a_window: EB_WINDOW)
 			-- Action to be performed on `item' in `save_all'.
-		local
-			l_dev_window: EB_DEVELOPMENT_WINDOW
-			conv_dll: EB_DYNAMIC_LIB_WINDOW
 		do
-			l_dev_window ?= a_window
-			if l_dev_window /= Void and then l_dev_window.any_editor_changed then
-				l_dev_window.save_all
+			if
+				attached {EB_DEVELOPMENT_WINDOW} a_window as a_dev_window and then
+				a_dev_window.any_editor_changed
+			then
+				a_dev_window.save_all
 			end
-			conv_dll ?= a_window
-			if conv_dll /= Void and then conv_dll.changed then
-				conv_dll.save
+			if
+				attached {EB_DYNAMIC_LIB_WINDOW} a_window as dyn_window and then
+				dyn_window.changed
+			then
+				dyn_window.save
 			end
 		end
 
 	save_before_compiling_action (a_window: EB_WINDOW)
 			-- Action to be performed on `item' in `save_all_before_compiling'.
-		local
-			a_dev_window: EB_DEVELOPMENT_WINDOW
 		do
-			a_dev_window ?= a_window
-			if a_dev_window /= Void and then
+			if
+				attached {EB_DEVELOPMENT_WINDOW} a_window as a_dev_window and then
 			   	a_dev_window.editors_manager.changed
 			then
 				a_dev_window.save_before_compiling
@@ -1444,55 +1427,40 @@ feature {NONE} -- Implementation
 
 	create_project_action (a_window: EB_WINDOW)
 			-- Action to be performed on `a_window' in `create_project'.
-		local
-			a_dev_window: EB_DEVELOPMENT_WINDOW
 		do
-			a_dev_window ?= a_window
-			if a_dev_window /= Void then
+			if attached {EB_DEVELOPMENT_WINDOW} a_window as a_dev_window then
 				a_dev_window.agents.on_project_created
 			end
 		end
 
 	load_project_action (a_window: EB_WINDOW)
 			-- Action to be performed on `a_window' in `load_project'.
-		local
-			a_dev_window: EB_DEVELOPMENT_WINDOW
 		do
-			a_dev_window ?= a_window
-			if a_dev_window /= Void then
+			if attached {EB_DEVELOPMENT_WINDOW} a_window as a_dev_window then
 				a_dev_window.agents.on_project_loaded
 			end
 		end
 
 	unload_project_action (a_window: EB_WINDOW)
 			-- Action to be performed on `a_window' in `unload_project'.
-		local
-			a_dev_window: EB_DEVELOPMENT_WINDOW
 		do
-			a_dev_window ?= a_window
-			if a_dev_window /= Void then
+			if attached {EB_DEVELOPMENT_WINDOW} a_window as a_dev_window then
 				a_dev_window.agents.on_project_unloaded
 			end
 		end
 
 	c_compilation_start_action (a_window: EB_WINDOW)
 			-- Action to be performed on `a_window' when freezing or finalizing starts.
-		local
-			a_dev_window: EB_DEVELOPMENT_WINDOW
 		do
-			a_dev_window ?= a_window
-			if a_dev_window /= Void then
+			if attached {EB_DEVELOPMENT_WINDOW} a_window as a_dev_window then
 				a_dev_window.agents.on_c_compilation_starts
 			end
 		end
 
 	c_compilation_stop_action (a_window: EB_WINDOW)
 			-- Action to be performed on `a_window' when freezing or finalizing stops.
-		local
-			a_dev_window: EB_DEVELOPMENT_WINDOW
 		do
-			a_dev_window ?= a_window
-			if a_dev_window /= Void then
+			if attached {EB_DEVELOPMENT_WINDOW} a_window as a_dev_window then
 				a_dev_window.agents.on_c_compilation_stops
 			end
 		end

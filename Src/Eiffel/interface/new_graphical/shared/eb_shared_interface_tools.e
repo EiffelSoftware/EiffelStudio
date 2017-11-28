@@ -63,16 +63,16 @@ feature {NONE} -- Shared tools access
 			Result := (dynamic_lib_window /= Void) and then	(not dynamic_lib_window.destroyed)
 		end
 
-	argument_dialog: EB_ARGUMENT_DIALOG
+	execution_parameters_dialog: EB_EXECUTION_PARAMETERS_DIALOG
 			-- Project argument dialog
 		do
-			Result := Argument_dialog_cell.item
+			Result := execution_parameters_dialog_cell.item
 		end
 
-	argument_dialog_is_valid: BOOLEAN
-			-- Is `argument_dialog' valid?
+	execution_parameters_dialog_is_valid: BOOLEAN
+			-- Is `execution_parameters_dialog' valid?
 		do
-			Result := argument_dialog /= Void
+			Result := execution_parameters_dialog /= Void
 		end
 
 feature {NONE} -- Shared tools change
@@ -83,10 +83,10 @@ feature {NONE} -- Shared tools change
 			Dynamic_lib_window_cell.put (a_dynamic_lib_window)
 		end
 
-	set_argument_dialog (a_argument_dialog: EB_ARGUMENT_DIALOG)
-			-- Makes 'a_argument_dialog' shared argument dialog.
+	set_execution_parameters_dialog (a_dialog: EB_EXECUTION_PARAMETERS_DIALOG)
+			-- Makes 'a_dialog' shared argument dialog.
 		do
-			Argument_dialog_cell.put (a_argument_dialog)
+			execution_parameters_dialog_cell.put (a_dialog)
 		end
 
 feature {NONE} -- Implementation
@@ -97,14 +97,14 @@ feature {NONE} -- Implementation
 			create Result.put (Void)
 		end
 
-	Argument_dialog_cell: CELL [EB_ARGUMENT_DIALOG]
+	execution_parameters_dialog_cell: CELL [EB_EXECUTION_PARAMETERS_DIALOG]
 			-- Cell for argument dialog
 		once
 			create Result.put (Void)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

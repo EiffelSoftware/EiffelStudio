@@ -19,7 +19,7 @@ feature -- Query
 	editors_widget: EV_VERTICAL_BOX
 			-- Editors widget.
 
-	arguments_dialog: EB_ARGUMENT_DIALOG
+	execution_parameters_dialog: EB_EXECUTION_PARAMETERS_DIALOG
 			-- The arguments dialog for current, if any
 
 	goto_dialog: EB_GOTO_DIALOG

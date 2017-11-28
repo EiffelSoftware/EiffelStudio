@@ -128,6 +128,7 @@ feature -- Button texts
 	b_Compile: STRING_32							do Result := locale.translation("Compile")	end
 	b_Launch: STRING_32							do Result := locale.translation("Start")	end
 	b_Restart: STRING_32							do Result := locale.translation("Restart") end
+	b_Restart_now: STRING_32						do Result := locale.translation("Restart Now") end
 	b_Break: STRING_32							do Result := locale.translation("Break")	end
 	b_Continue: STRING_32						do Result := locale.translation("Continue")	end
 	b_Finalize: STRING_32						do Result := locale.translation("Finalize")	end

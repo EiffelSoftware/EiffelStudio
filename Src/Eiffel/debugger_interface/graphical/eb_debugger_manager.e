@@ -452,7 +452,7 @@ feature {EB_EXEC_FORMAT_CMD, EB_DOCKING_LAYOUT_MANAGER, ES_DBG_TOOLBARABLE_AND_M
 	assertion_checking_handler_cmd: EB_ASSERTION_CHECKING_HANDLER_CMD
 			-- Command to disable/restore assertion checking on the debuggee
 
-	options_cmd: EB_DEBUG_OPTIONS_CMD
+	options_cmd: EB_EXECUTION_PARAMETERS_CMD
 			-- Command to open the execution parameter dialog
 
 	stop_cmd: EB_EXEC_STOP_CMD

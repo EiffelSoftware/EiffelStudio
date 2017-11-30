@@ -117,15 +117,12 @@ feature {NONE} -- Agents
 			-- Called if we remove a renaminge.
 		require
 			initialized: is_initialized
-		local
-			l_item: TEXT_PROPERTY [STRING_GENERAL]
 		do
-			if grid.single_selected_row /= Void then
-				l_item ?= grid.single_selected_row.item (Old_name_column)
+			if
+				grid.single_selected_row /= Void and then
+				attached {STRING_PROPERTY} grid.single_selected_row.item (Old_name_column) as l_item
+			then
 				value.remove (l_item.value)
-				if value.is_empty then
-					value := Void
-				end
 				refresh
 			end
 		end
@@ -284,7 +281,7 @@ invariant
 	elements: is_initialized implies grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

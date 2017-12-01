@@ -3,7 +3,9 @@
 		Automatically generated class for EiffelStudio 16x16 icons.
 	]"
 	generator: "Eiffel Matrix Generator"
-	command_line: "emcgen $EIFFEL_SRC/Delivery/studio/bitmaps/png/16x16.ini -f $EIFFEL_SRC/tools/eiffel_matrix_code_generator/frames/studio.e.frame"
+	command_line: "[
+		emcgen %EIFFEL_SRC%\Delivery\studio\bitmaps\png\16x16.ini -f %EIFFEL_SRC%\tools\eiffel_matrix_code_generator\frames\studio.e.frame --output_file %EIFFEL_SRC%\Eiffel\interface\new_graphical\shared\es_pixmaps_16x16.e
+		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
@@ -1180,6 +1182,46 @@ feature -- Icons
 			Result := named_icon_buffer (feature_group_name)
 		ensure
 			feature_group_icon_buffer_attached: Result /= Void
+		end
+
+	frozen feature_constant_icon: EV_PIXMAP
+			-- Access to 'constant' pixmap.
+		require
+			has_named_icon: has_named_icon (feature_constant_name)
+		once
+			Result := named_icon (feature_constant_name)
+		ensure
+			feature_constant_icon_attached: Result /= Void
+		end
+
+	frozen feature_constant_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'constant' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (feature_constant_name)
+		once
+			Result := named_icon_buffer (feature_constant_name)
+		ensure
+			feature_constant_icon_buffer_attached: Result /= Void
+		end
+
+	frozen feature_obsolete_constant_icon: EV_PIXMAP
+			-- Access to 'obsolete constant' pixmap.
+		require
+			has_named_icon: has_named_icon (feature_obsolete_constant_name)
+		once
+			Result := named_icon (feature_obsolete_constant_name)
+		ensure
+			feature_obsolete_constant_icon_attached: Result /= Void
+		end
+
+	frozen feature_obsolete_constant_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'obsolete constant' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (feature_obsolete_constant_name)
+		once
+			Result := named_icon_buffer (feature_obsolete_constant_name)
+		ensure
+			feature_obsolete_constant_icon_buffer_attached: Result /= Void
 		end
 
 	frozen top_level_folder_clusters_icon: EV_PIXMAP
@@ -8682,6 +8724,26 @@ feature -- Icons
 			overlay_refresh_left_icon_buffer_attached: Result /= Void
 		end
 
+	frozen overlay_instance_free_icon: EV_PIXMAP
+			-- Access to 'instance free' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_instance_free_name)
+		once
+			Result := named_icon (overlay_instance_free_name)
+		ensure
+			overlay_instance_free_icon_attached: Result /= Void
+		end
+
+	frozen overlay_instance_free_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'instance free' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_instance_free_name)
+		once
+			Result := named_icon_buffer (overlay_instance_free_name)
+		ensure
+			overlay_instance_free_icon_buffer_attached: Result /= Void
+		end
+
 	frozen errors_and_warnings_next_error_icon: EV_PIXMAP
 			-- Access to 'next error' pixmap.
 		require
@@ -9227,16 +9289,15 @@ feature -- Icons: Animations
 	frozen compile_animation_anim: ARRAY [EV_PIXMAP]
 			-- Access to 'compile_animation' pixmap animation items.
 		once
-			Result := <<
-				named_icon (compile_animation_1_name),
-				named_icon (compile_animation_2_name),
-				named_icon (compile_animation_3_name),
-				named_icon (compile_animation_4_name),
-				named_icon (compile_animation_5_name),
-				named_icon (compile_animation_6_name),
-				named_icon (compile_animation_7_name),
-				named_icon (compile_animation_8_name)
-			>>
+			create Result.make (1, 8)
+				Result.put (named_icon (compile_animation_1_name), 1)
+			Result.put (named_icon (compile_animation_2_name), 2)
+			Result.put (named_icon (compile_animation_3_name), 3)
+			Result.put (named_icon (compile_animation_4_name), 4)
+			Result.put (named_icon (compile_animation_5_name), 5)
+			Result.put (named_icon (compile_animation_6_name), 6)
+			Result.put (named_icon (compile_animation_7_name), 7)
+			Result.put (named_icon (compile_animation_8_name), 8)
 		ensure
 			compile_animation_anim_attached: Result /= Void
 		end
@@ -9244,16 +9305,15 @@ feature -- Icons: Animations
 	frozen compile_animation_buffer_anim: ARRAY [EV_PIXEL_BUFFER]
 			-- Access to 'compile_animation' pixel buffer animation items.
 		once
-			Result := <<
-				named_icon_buffer (compile_animation_1_name),
-				named_icon_buffer (compile_animation_2_name),
-				named_icon_buffer (compile_animation_3_name),
-				named_icon_buffer (compile_animation_4_name),
-				named_icon_buffer (compile_animation_5_name),
-				named_icon_buffer (compile_animation_6_name),
-				named_icon_buffer (compile_animation_7_name),
-				named_icon_buffer (compile_animation_8_name)
-			>>
+			create Result.make (1, 8)
+				Result.put (named_icon_buffer (compile_animation_1_name), 1)
+			Result.put (named_icon_buffer (compile_animation_2_name), 2)
+			Result.put (named_icon_buffer (compile_animation_3_name), 3)
+			Result.put (named_icon_buffer (compile_animation_4_name), 4)
+			Result.put (named_icon_buffer (compile_animation_5_name), 5)
+			Result.put (named_icon_buffer (compile_animation_6_name), 6)
+			Result.put (named_icon_buffer (compile_animation_7_name), 7)
+			Result.put (named_icon_buffer (compile_animation_8_name), 8)
 		ensure
 			compile_animation_buffer_anim_attached: Result /= Void
 		end
@@ -9261,13 +9321,12 @@ feature -- Icons: Animations
 	frozen run_animation_anim: ARRAY [EV_PIXMAP]
 			-- Access to 'run_animation' pixmap animation items.
 		once
-			Result := <<
-				named_icon (run_animation_1_name),
-				named_icon (run_animation_2_name),
-				named_icon (run_animation_3_name),
-				named_icon (run_animation_4_name),
-				named_icon (run_animation_5_name)
-			>>
+			create Result.make (1, 5)
+				Result.put (named_icon (run_animation_1_name), 1)
+			Result.put (named_icon (run_animation_2_name), 2)
+			Result.put (named_icon (run_animation_3_name), 3)
+			Result.put (named_icon (run_animation_4_name), 4)
+			Result.put (named_icon (run_animation_5_name), 5)
 		ensure
 			run_animation_anim_attached: Result /= Void
 		end
@@ -9275,13 +9334,12 @@ feature -- Icons: Animations
 	frozen run_animation_buffer_anim: ARRAY [EV_PIXEL_BUFFER]
 			-- Access to 'run_animation' pixel buffer animation items.
 		once
-			Result := <<
-				named_icon_buffer (run_animation_1_name),
-				named_icon_buffer (run_animation_2_name),
-				named_icon_buffer (run_animation_3_name),
-				named_icon_buffer (run_animation_4_name),
-				named_icon_buffer (run_animation_5_name)
-			>>
+			create Result.make (1, 5)
+				Result.put (named_icon_buffer (run_animation_1_name), 1)
+			Result.put (named_icon_buffer (run_animation_2_name), 2)
+			Result.put (named_icon_buffer (run_animation_3_name), 3)
+			Result.put (named_icon_buffer (run_animation_4_name), 4)
+			Result.put (named_icon_buffer (run_animation_5_name), 5)
 		ensure
 			run_animation_buffer_anim_attached: Result /= Void
 		end
@@ -9345,6 +9403,8 @@ feature -- Constants: Icon names
 	feature_obsolete_deferred_assigner_name: STRING = "feature obsolete deferred assigner"
 	feature_local_variable_name: STRING = "feature local variable"
 	feature_group_name: STRING = "feature group"
+	feature_constant_name: STRING = "feature constant"
+	feature_obsolete_constant_name: STRING = "feature obsolete constant"
 	top_level_folder_clusters_name: STRING = "top level folder clusters"
 	top_level_folder_overrides_name: STRING = "top level folder overrides"
 	top_level_folder_library_name: STRING = "top level folder library"
@@ -9720,6 +9780,7 @@ feature -- Constants: Icon names
 	overlay_clusters_left_name: STRING = "overlay clusters left"
 	overlay_editor_left_name: STRING = "overlay editor left"
 	overlay_refresh_left_name: STRING = "overlay refresh left"
+	overlay_instance_free_name: STRING = "overlay instance free"
 	errors_and_warnings_next_error_name: STRING = "errors and warnings next error"
 	errors_and_warnings_previous_error_name: STRING = "errors and warnings previous error"
 	errors_and_warnings_next_warning_name: STRING = "errors and warnings next warning"
@@ -9810,6 +9871,8 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 19, {NATURAL_8} 3], feature_obsolete_deferred_assigner_name)
 			a_table.put ([{NATURAL_8} 20, {NATURAL_8} 3], feature_local_variable_name)
 			a_table.put ([{NATURAL_8} 21, {NATURAL_8} 3], feature_group_name)
+			a_table.put ([{NATURAL_8} 22, {NATURAL_8} 3], feature_constant_name)
+			a_table.put ([{NATURAL_8} 23, {NATURAL_8} 3], feature_obsolete_constant_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 4], top_level_folder_clusters_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 4], top_level_folder_overrides_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 4], top_level_folder_library_name)
@@ -10185,6 +10248,7 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 21, {NATURAL_8} 21], overlay_clusters_left_name)
 			a_table.put ([{NATURAL_8} 22, {NATURAL_8} 21], overlay_editor_left_name)
 			a_table.put ([{NATURAL_8} 23, {NATURAL_8} 21], overlay_refresh_left_name)
+			a_table.put ([{NATURAL_8} 24, {NATURAL_8} 21], overlay_instance_free_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 22], errors_and_warnings_next_error_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 22], errors_and_warnings_previous_error_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 22], errors_and_warnings_next_warning_name)

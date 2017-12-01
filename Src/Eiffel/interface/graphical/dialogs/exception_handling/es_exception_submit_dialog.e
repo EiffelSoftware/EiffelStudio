@@ -113,7 +113,7 @@ feature {NONE} -- Initialization
 			l_hbox.extend (remember_me_check)
 			l_hbox.disable_item_expand (remember_me_check)
 
-			if not session_manager.is_service_available then
+			if session_manager.service = Void then
 					-- Remembering the user's details uses the session manager service, so if it's unavailble then
 					-- we there is no point showing the check mark
 				remember_me_check.hide
@@ -351,8 +351,8 @@ feature {NONE} -- Implementation: access
 			is_user_remembered: is_user_remembered
 		do
 			if
-				session_manager.is_service_available and then
-				attached {STRING_GENERAL} session_data.value (username_session_id) as s
+				attached session_manager.service as l_session_service and then
+				attached {STRING_GENERAL} session_data (l_session_service).value (username_session_id) as s
 			then
 				Result := s
 			else
@@ -370,8 +370,8 @@ feature {NONE} -- Implementation: access
 			is_user_remembered: is_user_remembered
 		do
 			if
-				session_manager.is_service_available and then
-				attached {STRING_GENERAL} session_data.value (password_session_id) as s
+				attached session_manager.service as l_session_service and then
+				attached {STRING_GENERAL} session_data (l_session_service).value (password_session_id) as s
 			then
 				Result := s
 			else
@@ -402,8 +402,8 @@ feature {NONE} -- Status report
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized or is_initializing
 		do
-			if session_manager.is_service_available then
-				if attached {BOOLEAN_REF} session_data.value_or_default (remembered_session_id, False) as l_ref then
+			if attached session_manager.service as l_session_service then
+				if attached {BOOLEAN_REF} session_data (l_session_service).value_or_default (remembered_session_id, False) as l_ref then
 					Result := l_ref.item
 				end
 			end
@@ -551,20 +551,22 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 		local
 			l_remember: BOOLEAN
+			l_session_data: like session_data
 		do
-			if session_manager.is_service_available then
+			if attached session_manager.service as l_session_service then
+				l_session_data := session_data (l_session_service)
 				l_remember := remember_me_check.is_selected
-				session_data.set_value (l_remember, remembered_session_id)
+				l_session_data.set_value (l_remember, remembered_session_id)
 				if l_remember then
-					session_data.set_value (username_text.text, username_session_id)
-					session_data.set_value (password_text.text, password_session_id)
+					l_session_data.set_value (username_text.text, username_session_id)
+					l_session_data.set_value (password_text.text, password_session_id)
 				else
 						-- Clear remembered data
-					session_data.set_value (Void, username_session_id)
-					session_data.set_value (Void, password_session_id)
+					l_session_data.set_value (Void, username_session_id)
+					l_session_data.set_value (Void, password_session_id)
 				end
 					-- Store session information incase user selects to quit ES.
-				session_manager.service.store (session_data)
+				l_session_service.store (l_session_data)
 			end
 		end
 

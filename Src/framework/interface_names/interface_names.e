@@ -754,6 +754,7 @@ feature -- Accelerator, focus label and menu name
 	m_Showindexing: STRING_32			do Result := locale.translation("&Indexing clauses")	end
 	m_show_invariants: STRING_32			do Result := locale.translation("In&variants")	end
 	m_Showonces: STRING_32				do Result := locale.translation("O&nce/Constants")	end
+	m_Show_instance_free: STRING_32		do Result := locale.translation("Instance-free")	end
 	m_Showpast: STRING_32				do Result := locale.translation("&Ancestor Versions")	end
 	m_Showroutines: STRING_32			do Result := locale.translation("&Routines")	end
 	m_Showshort: STRING_32				do Result := locale.translation("C&ontract")	end
@@ -1567,6 +1568,7 @@ feature -- Label texts
 	l_On_object: STRING_32				do Result := locale.translation("On object")	end
 	l_As_object: STRING_32				do Result := locale.translation("As object")	end
 	l_Onces: STRING_32					do Result := locale.translation("Once routines and constants")	end
+	l_Instance_free_routines: STRING_32					do Result := locale.translation("Instance-free routines")	end
 	l_Once_routines: STRING_32			do Result := locale.translation("Once routines")	end
 	l_Constant_features: STRING_32		do Result := locale.translation("Constants")	end
 	l_only_classes_in_same_cluster: STRING_32			do Result := locale.translation("Only classes in same cluster")	end

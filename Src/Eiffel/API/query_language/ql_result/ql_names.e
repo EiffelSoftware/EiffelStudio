@@ -120,6 +120,7 @@ feature -- Criterion names
 	ql_cri_is_implementor: STRING = "is_implementor_of"
 	ql_cri_is_infix: STRING = "is_infix"
 	ql_cri_is_once: STRING = "is_once"
+	ql_cri_is_instance_free: STRING = "is_instance_free"
 	ql_cri_is_origin: STRING = "is_origin"
 	ql_cri_is_prefix: STRING = "is_prefix"
 	ql_cri_is_procedure: STRING = "is_procedure"
@@ -571,7 +572,7 @@ feature -- Access
 	ql_no_tag: STRING_32 = "no tag";
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

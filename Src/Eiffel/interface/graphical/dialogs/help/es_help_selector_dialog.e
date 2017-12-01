@@ -100,9 +100,9 @@ feature {NONE} -- User interface initialization
 		do
 			Precursor {ES_DIALOG}
 
-			if session_manager.is_service_available then
+			if attached session_manager.service as l_session_service then
 					-- Set UI based on session data
-				if attached {BOOLEAN_REF} session_data.value_or_default (close_on_launch_session_id, True) as l_close then
+				if attached {BOOLEAN_REF} session_data (l_session_service).value_or_default (close_on_launch_session_id, True) as l_close then
 					if l_close.item then
 						close_on_launch_check.enable_select
 					else
@@ -291,8 +291,8 @@ feature {NONE} -- Action handlers
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		do
-			if session_manager.is_service_available then
-				session_data.set_value (close_on_launch_check.is_selected, close_on_launch_session_id)
+			if attached session_manager.service as l_session_service then
+				session_data (l_session_service).set_value (close_on_launch_check.is_selected, close_on_launch_session_id)
 			end
 		end
 
@@ -394,7 +394,7 @@ invariant
 	links_contains_valid_items: is_initializing and is_interface_usable implies not links.for_all (agent is_context_valid)
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -457,7 +457,7 @@ feature{NONE} -- Implementation
 				l_path_style.set_item (item)
 				l_path_style.set_is_folder_displayed (False)
 				base_text.append (l_path_style.text)
-				grid_item_internal.set_pixmap (pixmap_for_query_lanaguage_item (item))
+				grid_item_internal.set_pixmap (pixmap_for_query_language_item (item))
 
 						-- For referencer class row, we setup a tooltip to display path of that class.
 				if row_type = referencer_class_row_type then

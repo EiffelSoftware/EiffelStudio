@@ -26,7 +26,7 @@ feature{NONE} -- Initialization
 	make
 			-- Initialize.
 		do
-			create agent_table.make (50)
+			create agent_table.make (53)
 			agent_table.put (agent new_false_criterion, c_false)
 			agent_table.put (agent new_has_arguments_criterion, c_has_argument)
 			agent_table.put (agent new_has_assertion_criterion, c_has_assertion)
@@ -54,6 +54,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_is_invariant_criterion, c_is_invariant_feature)
 			agent_table.put (agent new_is_obsolete_criterion, c_is_obsolete)
 			agent_table.put (agent new_is_once_criterion, c_is_once)
+			agent_table.put (agent new_is_instance_free_criterion, c_is_instance_free)
 			agent_table.put (agent new_is_origin_criterion, c_is_origin)
 			agent_table.put (agent new_is_prefix_criterion, c_is_prefix)
 			agent_table.put (agent new_is_procedure_criterion, c_is_procedure)
@@ -80,7 +81,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_value_criterion, c_value_of_metric_is)
 			agent_table.put (agent new_value_criterion, c_is_satisfied_by)
 
-			create name_table.make (50)
+			create name_table.make (53)
 			name_table.put (c_false, query_language_names.ql_cri_false)
 			name_table.put (c_has_argument, query_language_names.ql_cri_has_argument)
 			name_table.put (c_has_assertion, query_language_names.ql_cri_has_assertion)
@@ -107,6 +108,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_is_invariant_feature, query_language_names.ql_cri_is_invariant_feature)
 			name_table.put (c_is_obsolete, query_language_names.ql_cri_is_obsolete)
 			name_table.put (c_is_once, query_language_names.ql_cri_is_once)
+			name_table.put (c_is_instance_free, query_language_names.ql_cri_is_instance_free)
 			name_table.put (c_is_origin, query_language_names.ql_cri_is_origin)
 			name_table.put (c_is_prefix, query_language_names.ql_cri_is_prefix)
 			name_table.put (c_is_procedure, query_language_names.ql_cri_is_procedure)
@@ -360,6 +362,14 @@ feature{NONE} -- New criterion
 			-- New criterion to test if a feature is once
 		do
 			create Result.make (agent is_once_agent, True)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_is_instance_free_criterion: QL_SIMPLE_FEATURE_CRITERION
+			-- New criterion to test if a feature is instance-free
+		do
+			create Result.make (agent is_instance_free_agent, True)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -628,6 +638,7 @@ feature -- Criterion index
 	c_value_of_metric_is: INTEGER = 50
 	c_is_effective: INTEGER = 51
 	c_is_satisfied_by: INTEGER = 52
+	c_is_instance_free: INTEGER = 53 -- FIXME jfiat [2017/11/30] : is it safe to change value?
 
 feature{NONE} -- Implementation
 
@@ -969,6 +980,16 @@ feature{NONE} -- Implementation
 			Result := a_item.is_real_feature and then a_item.e_feature.is_once
 		end
 
+	is_instance_free_agent (a_item: QL_FEATURE): BOOLEAN
+			-- Agent to test if `a_item' is instance-free
+			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
+		do
+			Result := a_item.is_real_feature and then a_item.e_feature.is_instance_free
+		end
+
 	is_origin_agent (a_item: QL_FEATURE): BOOLEAN
 			-- Agent to test if `a_item' is origin
 			-- Require compiled: True
@@ -1069,7 +1090,7 @@ feature{NONE} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -114,13 +114,15 @@ feature {NONE} -- Access
 			result_consistent: Result = foundation_widget
 		end
 
-	frozen session_data: SESSION_I
+	frozen session_data (a_session_service: SESSION_MANAGER_S): SESSION_I
 			-- Provides access to the environment session data
 		require
 			is_interface_usable: is_interface_usable
-			is_session_manager_available: session_manager.is_service_available
+--			is_session_manager_available: session_manager.is_service_available
+--			has_service: attached session_manager.service
+			a_session_service_attached: a_session_service /= Void
 		do
-			Result := session_manager.service.retrieve (False)
+			Result := a_session_service.retrieve (False)
 		ensure
 			result_attached: Result /= Void
 			result_is_interface_usable: Result.is_interface_usable
@@ -132,7 +134,7 @@ feature -- Status report
 			-- Indicates if the user interface has been initialized
 
 	is_shown: BOOLEAN
-			-- Indicates if foundataion tool is current visible
+			-- Indicates if foundation tool is current visible
 		do
 			if is_interface_usable and then is_initialized then
 				Result := not foundation_widget.is_destroyed and then foundation_widget.is_displayed
@@ -332,7 +334,7 @@ feature {NONE} -- Action Handlers
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

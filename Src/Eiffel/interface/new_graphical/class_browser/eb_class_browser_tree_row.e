@@ -114,7 +114,7 @@ feature -- Access
 			if class_item_internal = Void then
 				l_complete_generic_class_style := complete_generic_class_no_star_style
 				create l_class_item_internal
-				l_class_item_internal.set_pixmap (pixmap_for_query_lanaguage_item (class_item))
+				l_class_item_internal.set_pixmap (pixmap_for_query_language_item (class_item))
 				l_complete_generic_class_style.set_ql_class (class_item)
 				if is_collapsed then
 					l_text_style := plain_text_style
@@ -145,7 +145,7 @@ feature -- Access
 				path_grid_item_internal.set_text_with_tokens (l_path_style.text)
 				path_grid_item_internal.set_image (path_grid_item_internal.text)
 				if class_item.parent /= Void then
-					path_grid_item_internal.set_pixmap (pixmap_for_query_lanaguage_item (class_item.parent))
+					path_grid_item_internal.set_pixmap (pixmap_for_query_language_item (class_item.parent))
 				else
 					path_grid_item_internal.set_pixmap (pixmaps.icon_pixmaps.general_blank_icon)
 				end

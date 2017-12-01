@@ -1,8 +1,8 @@
-note
-	description	: "AST representation of an `ensure' structure."
+﻿note
+	description: "AST representation of an `ensure' structure."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
+	date: "$Date$"
 	revision	: "$Revision$"
 
 class ENSURE_AS
@@ -16,16 +16,20 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (a: like assertions; k_as: like ensure_keyword)
+	make (a: like assertions; c: BOOLEAN; k_as: like ensure_keyword)
 			-- Create new REQUIRE AST node.
+		require
+			consistent_assertions: c = (attached a and then across a as p some p.item.is_class end)
 		do
 			initialize (a)
+			is_class := c
 			if k_as /= Void then
 				ensure_keyword_index := k_as.index
 			end
 		ensure
+			is_class_set: is_class = c
 			ensure_keyword_set: k_as /= Void implies ensure_keyword_index = k_as.index
 		end
 
@@ -64,6 +68,9 @@ feature -- Properties
 			-- Do nothing
 		end
 
+	is_class: BOOLEAN
+			-- Is there a postcondition "class" in the list?
+
 feature -- Roundtrip/Location
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
@@ -96,8 +103,11 @@ feature -- Roundtrip/Location
 			end
 		end
 
+invariant
+	is_class_consistent: is_class = (attached  full_assertion_list as a and then across a as p some p.item.is_class end)
+
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -128,4 +138,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ENSURE_AS
+end

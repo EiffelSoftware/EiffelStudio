@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "AST representation of a `ensure then' structure."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,16 +19,19 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (a: like assertions; k_as, l_as: like then_keyword)
-			-- Create new REQUIRE AST node.
+	make (a: like assertions; c: BOOLEAN; k_as, l_as: like then_keyword)
+			-- Create new ENSURE_THEN AST node with marking it as a class postcondition iff `c` is `True`.
+		require
+			consistent_assertions: c = (attached a and then across a as p some p.item.is_class end)
 		do
-			ensure_make (a, k_as)
+			ensure_make (a, c, k_as)
 			if l_as /= Void then
 				then_keyword_index := l_as.index
 			end
 		ensure
+			is_class_set: is_class = c
 			then_keyword_set: l_as /= Void implies then_keyword_index = l_as.index
 		end
 
@@ -80,7 +83,7 @@ feature -- Roundtrip/Token
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -111,4 +114,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ENSURE_THEN_AS
+end

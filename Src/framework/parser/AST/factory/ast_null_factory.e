@@ -723,12 +723,12 @@ feature -- Access
 		do
 		end
 
-	new_ensure_as (a: detachable EIFFEL_LIST [TAGGED_AS]; k_as: detachable KEYWORD_AS): detachable ENSURE_AS
+	new_ensure_as (a: detachable EIFFEL_LIST [TAGGED_AS]; c: BOOLEAN; k_as: detachable KEYWORD_AS): detachable ENSURE_AS
 			-- New ENSURE AST node
 		do
 		end
 
-	new_ensure_then_as (a: detachable EIFFEL_LIST [TAGGED_AS]; k_as, l_as: detachable KEYWORD_AS): detachable ENSURE_THEN_AS
+	new_ensure_then_as (a: detachable EIFFEL_LIST [TAGGED_AS]; c: BOOLEAN; k_as, l_as: detachable KEYWORD_AS): detachable ENSURE_THEN_AS
 			-- New ENSURE THEN AST node
 		do
 		end

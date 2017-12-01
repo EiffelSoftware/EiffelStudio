@@ -760,6 +760,28 @@ feature {NONE} -- Scopes
 			end
 		end
 
+feature {NONE} -- Feature status
+
+	is_class_feature: BOOLEAN
+			-- Is current feature a class feature, i.e. has a class postcondition?
+		require
+			not feature_stack.is_empty
+		do
+			Result := feature_stack.item.is_class
+		end
+
+feature {NONE} -- Feature status modification
+
+	set_is_class_feature (value: BOOLEAN)
+			-- Set `is_class_feature` to `value`.
+		require
+			not feature_stack.is_empty
+		do
+			feature_stack.item.is_class := value
+		ensure
+			is_class_feature_set: is_class_feature = value
+		end
+
 feature {NONE} -- Implementation
 
 	id_level: INTEGER
@@ -779,6 +801,8 @@ feature {NONE} -- Implementation
 			is_valid_id_level: is_valid_id_level (a_id_level)
 		do
 			feature_stack.item.id_level := a_id_level
+		ensure
+			id_level_set: id_level = a_id_level
 		end
 
 	fbody_pos: INTEGER
@@ -796,14 +820,14 @@ feature {NONE} -- Implementation
 			feature_stack.item.fbody_pos := a_fbody_pos
 		end
 
-	feature_stack: ARRAYED_STACK [TUPLE [id_level, fbody_pos: INTEGER]]
+	feature_stack: ARRAYED_STACK [TUPLE [id_level, fbody_pos: INTEGER; is_class: BOOLEAN]]
 			-- id_level and fbody_pos are needed per feature body. Since there are inline agents
 			-- we need a stack of them. It may be, that there is no feature at all when its used
 			-- for an invariant. We never remove the first element of the stack.
 
 	add_feature_frame
 		do
-			feature_stack.force ([Normal_level, 0])
+			feature_stack.force ([Normal_level, 0, False])
 			add_once_manifest_string_counter
 		end
 

@@ -992,10 +992,11 @@ feature -- Access
 	set_expanded_class_type (a_type: detachable TYPE_AS; is_expanded: BOOLEAN; s_as: detachable KEYWORD_AS)
 			-- Set expanded status of `a_type' if it is an instance of CLASS_TYPE_AS.
 		do
-			if is_expanded then
-				if attached {CLASS_TYPE_AS} a_type as l_class_type then
-					l_class_type.set_is_expanded (True, s_as)
-				end
+			if
+				is_expanded and then
+				attached {CLASS_TYPE_AS} a_type as l_class_type
+			then
+				l_class_type.set_is_expanded (True, s_as)
 			end
 		end
 
@@ -1351,16 +1352,16 @@ feature -- Access
 			end
 		end
 
-	new_ensure_as (a: detachable EIFFEL_LIST [TAGGED_AS]; k_as: detachable KEYWORD_AS): detachable ENSURE_AS
+	new_ensure_as (a: detachable EIFFEL_LIST [TAGGED_AS]; c: BOOLEAN; k_as: detachable KEYWORD_AS): detachable ENSURE_AS
 			-- New ENSURE AST node
 		do
-			create Result.make (a, k_as)
+			create Result.make (a, c, k_as)
 		end
 
-	new_ensure_then_as (a: detachable EIFFEL_LIST [TAGGED_AS]; k_as, l_as: detachable KEYWORD_AS): detachable ENSURE_THEN_AS
+	new_ensure_then_as (a: detachable EIFFEL_LIST [TAGGED_AS]; c: BOOLEAN; k_as, l_as: detachable KEYWORD_AS): detachable ENSURE_THEN_AS
 			-- New ENSURE THEN AST node
 		do
-			create Result.make (a, k_as, l_as)
+			create Result.make (a, c, k_as, l_as)
 		end
 
 	new_export_item_as (c: detachable CLIENT_AS; f: detachable FEATURE_SET_AS): detachable EXPORT_ITEM_AS

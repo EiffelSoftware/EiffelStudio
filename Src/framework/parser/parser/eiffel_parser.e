@@ -9138,7 +9138,7 @@ debug ("GEYACC")
 end
 
 				set_id_level (Normal_level)
-				yyval44 := ast_factory.new_ensure_as (yyvs120.item (yyvsp120), yyvs12.item (yyvsp12))
+				yyval44 := ast_factory.new_ensure_as (yyvs120.item (yyvsp120), is_class_feature, yyvs12.item (yyvsp12))
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
@@ -9184,7 +9184,7 @@ debug ("GEYACC")
 end
 
 				set_id_level (Normal_level)
-				yyval44 := ast_factory.new_ensure_then_as (yyvs120.item (yyvsp120), yyvs12.item (yyvsp12 - 1), yyvs12.item (yyvsp12))
+				yyval44 := ast_factory.new_ensure_then_as (yyvs120.item (yyvsp120), is_class_feature, yyvs12.item (yyvsp12 - 1), yyvs12.item (yyvsp12))
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
@@ -9396,6 +9396,7 @@ end
 
 				if id_level = Postcondition_level then
 					yyval80 := ast_factory.new_tagged_as (Void, Void, yyvs12.item (yyvsp12), Void)
+					set_is_class_feature (True)
 				else
 					raise_error
 				end
@@ -9456,6 +9457,7 @@ end
 
 				if id_level = Postcondition_level then
 					yyval80 := ast_factory.new_tagged_as (yyvs2.item (yyvsp2), Void, yyvs12.item (yyvsp12), yyvs4.item (yyvsp4 - 1))
+					set_is_class_feature (True)
 				else
 					raise_error
 				end

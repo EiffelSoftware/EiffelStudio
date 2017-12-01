@@ -1586,14 +1586,14 @@ Postcondition: -- Empty
 		Assertion
 			{
 				set_id_level (Normal_level)
-				$$ := ast_factory.new_ensure_as ($3, $1)
+				$$ := ast_factory.new_ensure_as ($3, is_class_feature, $1)
 			}
 	|	TE_ENSURE TE_THEN
 			{ set_id_level (Postcondition_level) }
 		Assertion
 			{
 				set_id_level (Normal_level)
-				$$ := ast_factory.new_ensure_then_as ($4, $1, $2)
+				$$ := ast_factory.new_ensure_then_as ($4, is_class_feature, $1, $2)
 			}
 	;
 
@@ -1647,6 +1647,7 @@ Assertion_clause:
 			{
 				if id_level = Postcondition_level then
 					$$ := ast_factory.new_tagged_as (Void, Void, $1, Void)
+					set_is_class_feature (True)
 				else
 					raise_error
 				end
@@ -1657,6 +1658,7 @@ Assertion_clause:
 			{
 				if id_level = Postcondition_level then
 					$$ := ast_factory.new_tagged_as ($1, Void, $3, $2)
+					set_is_class_feature (True)
 				else
 					raise_error
 				end

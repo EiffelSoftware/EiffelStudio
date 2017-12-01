@@ -194,7 +194,6 @@ feature -- Access
 		require
 			a_class_not_void: a_class /= Void
 		local
-			a_dev: EB_DEVELOPMENT_WINDOW
 			l_index: INTEGER
 		do
 			create {ARRAYED_LIST [EB_DEVELOPMENT_WINDOW]} Result.make (managed_windows.count)
@@ -204,8 +203,7 @@ feature -- Access
 			until
 				managed_windows.after
 			loop
-				a_dev ?= managed_windows.item
-				if a_dev /= Void then
+				if attached {EB_DEVELOPMENT_WINDOW} managed_windows.item as a_dev then
 					if a_dev.editors_manager.is_class_editing (a_class) then
 						Result.extend (a_dev)
 					end
@@ -262,7 +260,6 @@ feature {EB_SHARED_INTERFACE_TOOLS, EB_COMMAND} -- Access
 	all_modified_classes: ARRAYED_LIST [CLASS_I]
 			-- Retrieves a list of all modified classes
 		local
-			a_dev: EB_DEVELOPMENT_WINDOW
 			l_index: INTEGER
 		do
 			create Result.make (0)
@@ -272,8 +269,10 @@ feature {EB_SHARED_INTERFACE_TOOLS, EB_COMMAND} -- Access
 			until
 				managed_windows.after
 			loop
-				a_dev ?= managed_windows.item
-				if a_dev /= Void and not a_dev.is_recycled then
+				if
+					attached {EB_DEVELOPMENT_WINDOW} managed_windows.item as a_dev and then
+					not a_dev.is_recycled
+				then
 					if a_dev.editors_manager.changed then
 						Result.append (a_dev.editors_manager.changed_classes)
 					end
@@ -292,7 +291,6 @@ feature -- Status report
 	development_windows_count: INTEGER
 			-- number of visible development windows
 		local
-			a_dev: EB_DEVELOPMENT_WINDOW
 			l_index: INTEGER
 		do
 			from
@@ -301,8 +299,7 @@ feature -- Status report
 			until
 				managed_windows.after
 			loop
-				a_dev ?= managed_windows.item
-				if a_dev /= Void then
+				if attached {EB_DEVELOPMENT_WINDOW} managed_windows.item then
 					Result := Result + 1
 				end
 				managed_windows.forth
@@ -319,7 +316,6 @@ feature -- Status report
 	has_modified_windows: BOOLEAN
 			-- Are there any window having been modified and not yet saved?
 		local
-			a_dev: EB_DEVELOPMENT_WINDOW
 			l_index: INTEGER
 		do
 			from
@@ -328,8 +324,7 @@ feature -- Status report
 			until
 				Result or else managed_windows.after
 			loop
-				a_dev ?= managed_windows.item
-				if a_dev /= Void then
+				if attached {EB_DEVELOPMENT_WINDOW} managed_windows.item as a_dev then
 					Result := a_dev.any_editor_changed
 				end
 				managed_windows.forth
@@ -340,7 +335,7 @@ feature -- Status report
 			managed_windows.go_i_th (l_index)
 		end
 
-	development_window_from_window (a_window: EV_WINDOW): EB_DEVELOPMENT_WINDOW
+	development_window_from_window (a_window: EV_WINDOW): detachable EB_DEVELOPMENT_WINDOW
 			-- Return the development window whose widget is `a_window'.
 		local
 			l_index: INTEGER
@@ -354,16 +349,17 @@ feature -- Status report
 			loop
 				if
 					managed_windows.item /= Void and then
-					managed_windows.item.window = a_window
+					managed_windows.item.window = a_window and then
+					attached {EB_DEVELOPMENT_WINDOW} managed_windows.item as dev
 				then
-					Result ?= managed_windows.item
+					Result := dev
 				end
 				managed_windows.forth
 			end
 			managed_windows.go_i_th (l_index)
 		end
 
-	last_focused_development_window: EB_DEVELOPMENT_WINDOW
+	last_focused_development_window: detachable EB_DEVELOPMENT_WINDOW
 			-- Return the development window which last had the keyboard focus.
 		do
 			from
@@ -371,7 +367,9 @@ feature -- Status report
 			until
 				Result /= Void or else focused_windows.before
 			loop
-				Result ?= focused_windows.item
+				if attached {EB_DEVELOPMENT_WINDOW} focused_windows.item as dev then
+					Result := dev
+				end
 				focused_windows.back
 			end
 			if Result = Void then
@@ -379,7 +377,7 @@ feature -- Status report
 			end
 		end
 
-	last_focused_window: EB_WINDOW
+	last_focused_window: detachable EB_WINDOW
 			-- Return the window which last had the keyboard focus.
 			-- Return Void if no window is focused.
 		local
@@ -393,24 +391,22 @@ feature -- Status report
 			end
 		end
 
-	a_development_window: EB_DEVELOPMENT_WINDOW
+	a_development_window: detachable EB_DEVELOPMENT_WINDOW
 			-- Return a random development window
 		local
-			conv_dev: EB_DEVELOPMENT_WINDOW
-			found: BOOLEAN
 			l_index: INTEGER
 		do
 			from
 				l_index := managed_windows.index
 				managed_windows.start
 			until
-				managed_windows.after or found
+				managed_windows.after or Result /= Void
 			loop
-				conv_dev ?= managed_windows.item
-				found := (conv_dev /= Void)
+				if attached {EB_DEVELOPMENT_WINDOW} managed_windows.item as dev then
+					Result := dev
+				end
 				managed_windows.forth
 			end
-			Result := conv_dev
 			managed_windows.go_i_th (l_index)
 		end
 
@@ -427,7 +423,9 @@ feature -- Query
 			l_windows := managed_windows
 			i := l_windows.index
 			from l_windows.start until l_windows.after or Result /= Void loop
-				Result ?= l_windows.item
+				if attached {like development_window_from_id} l_windows.item as res then
+					Result := res
+				end
 				if Result /= Void and then Result.window_id /= a_window_id then
 					Result := Void
 					l_windows.forth
@@ -695,7 +693,6 @@ feature -- Actions on all windows
 			a_value_valid: a_value >= 0 and then a_value <= 100
 		local
 			l_managed_windows: like managed_windows
-			cv_dev: EB_DEVELOPMENT_WINDOW
 			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 		do
 			from
@@ -707,8 +704,10 @@ feature -- Actions on all windows
 			until
 				l_managed_windows.after
 			loop
-				cv_dev ?= l_managed_windows.item
-				if cv_dev /= Void and then not cv_dev.destroyed then
+				if
+					attached {EB_DEVELOPMENT_WINDOW} l_managed_windows.item as cv_dev and then
+					not cv_dev.destroyed
+				then
 					l_status_bar := cv_dev.status_bar
 					l_status_bar.display_message (m)
 					l_status_bar.progress_bar.reset
@@ -734,7 +733,10 @@ feature -- Actions on all windows
 			until
 				l_managed_windows.after
 			loop
-				if attached {EB_DEVELOPMENT_WINDOW} l_managed_windows.item as cv_dev and then not cv_dev.destroyed then
+				if
+					attached {EB_DEVELOPMENT_WINDOW} l_managed_windows.item as cv_dev and then
+					not cv_dev.destroyed
+				then
 					cv_dev.status_bar.display_message (m)
 				end
 				l_managed_windows.forth
@@ -747,7 +749,6 @@ feature -- Actions on all windows
 			a_value_valid: a_value >= 0 and then a_value <= 100
 		local
 			l_managed_windows: like managed_windows
-			cv_dev: EB_DEVELOPMENT_WINDOW
 			pb: EB_PERCENT_PROGRESS_BAR
 		do
 			from
@@ -759,8 +760,10 @@ feature -- Actions on all windows
 			until
 				l_managed_windows.after
 			loop
-				cv_dev ?= l_managed_windows.item
-				if cv_dev /= Void and then not cv_dev.destroyed then
+				if
+					attached {EB_DEVELOPMENT_WINDOW} l_managed_windows.item as cv_dev and then
+					not cv_dev.destroyed
+				then
 					pb := cv_dev.status_bar.progress_bar
 					pb.reset
 					pb.set_value (a_value)
@@ -777,7 +780,6 @@ feature -- Actions on all windows
 			mess_not_empty: not mess.is_empty
 		local
 			l_managed_windows: like managed_windows
-			cv_dev: EB_DEVELOPMENT_WINDOW
 		do
 			from
 					-- Make a twin of the list incase window is destroyed during
@@ -788,8 +790,10 @@ feature -- Actions on all windows
 			until
 				l_managed_windows.after
 			loop
-				cv_dev ?= l_managed_windows.item
-				if cv_dev /= Void and then not cv_dev.destroyed then
+				if
+					attached {EB_DEVELOPMENT_WINDOW} l_managed_windows.item as cv_dev and then
+					not cv_dev.destroyed
+				then
 					if cv_dev.status_bar.message.is_empty then
 						cv_dev.status_bar.display_message (mess)
 						state_message_waiting_count := 0
@@ -808,7 +812,6 @@ feature -- Actions on all windows
 	for_all_development_windows (p: PROCEDURE [EB_DEVELOPMENT_WINDOW])
 			-- Call `p' on all development windows.
 		local
-			cv_dev: EB_DEVELOPMENT_WINDOW
 			l_index: INTEGER
 		do
 			from
@@ -817,8 +820,7 @@ feature -- Actions on all windows
 			until
 				managed_windows.after
 			loop
-				cv_dev ?= managed_windows.item
-				if cv_dev /= Void then
+				if attached {EB_DEVELOPMENT_WINDOW} managed_windows.item as cv_dev then
 					p.call ([cv_dev])
 				end
 				managed_windows.forth
@@ -983,10 +985,8 @@ feature -- Access: session data
 			-- Try to recreate previous project session, if any.
 		local
 			l_i, l_window_count: INTEGER
-			l_window_count_ref: INTEGER_32_REF
 			l_retried: BOOLEAN
 			l_managed_windows: like managed_windows
-			l_dl_window: EB_DYNAMIC_LIB_WINDOW
 			l_dev_window: EB_DEVELOPMENT_WINDOW
 		do
 			check system_defined: eiffel_project.system_defined end
@@ -1003,20 +1003,21 @@ feature -- Access: session data
 					l_managed_windows.after
 				loop
 					if l_managed_windows.item /= Void then
-						l_dl_window ?= l_managed_windows.item
-						if l_dl_window /= Void then
+						if attached {EB_DYNAMIC_LIB_WINDOW} l_managed_windows.item as l_dl_window then
 							destroy_window (l_dl_window)
 						end
-						if l_dev_window = Void then
-							l_dev_window ?= l_managed_windows.item
+						if
+							l_dev_window = Void and then
+							attached {EB_DEVELOPMENT_WINDOW} l_managed_windows.item as dev
+						then
+							l_dev_window := dev
 						end
 					end
 					l_managed_windows.forth
 				end
 
 				check at_least_one_develop_window: l_dev_window /= Void end
-				l_window_count_ref ?= l_dev_window.project_session_data.value (l_dev_window.development_window_data.development_window_count_id)
-				if l_window_count_ref /= Void then
+				if attached {INTEGER_32_REF} l_dev_window.project_session_data.value (l_dev_window.development_window_data.development_window_count_id) as l_window_count_ref then
 					l_window_count := l_window_count_ref.item
 				end
 				if l_window_count = 0 then
@@ -1046,9 +1047,12 @@ feature -- Access: session data
 					l_i > l_window_count
 				loop
 					if not l_managed_windows.after then
-						l_dev_window ?= l_managed_windows.item
-						check l_dev_window /= Void end
-						load_window_session_data (l_dev_window)
+						if attached {EB_DEVELOPMENT_WINDOW} l_managed_windows.item as dev then
+							l_dev_window := dev
+							load_window_session_data (dev)
+						else
+							check is_dev_window: False end
+						end
 						l_managed_windows.forth
 					else
 						load_window_session_data (Void)
@@ -1371,8 +1375,6 @@ feature {NONE} -- Implementation
 
 	quick_refresh_action (a_window: EB_WINDOW)
 			-- Action to be performed on `a_window' in `quich_refresh_all_editors'.
-		local
-			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
 			if attached {EB_DEVELOPMENT_WINDOW} a_window as a_dev_window then
 				a_dev_window.quick_refresh_editors
@@ -1381,8 +1383,6 @@ feature {NONE} -- Implementation
 
 	quick_refresh_margin_action (a_window: EB_WINDOW)
 			-- Action to be performed on `a_window' in `quick_refresh_all_margins'.
-		local
-			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
 			if attached {EB_DEVELOPMENT_WINDOW} a_window as a_dev_window then
 				a_dev_window.quick_refresh_margins

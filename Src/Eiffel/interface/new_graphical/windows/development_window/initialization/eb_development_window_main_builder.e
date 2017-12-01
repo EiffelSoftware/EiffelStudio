@@ -551,6 +551,7 @@ feature -- Command
 			l_managed_class_formatters.extend (create {EB_CREATORS_FORMATTER}.make (develop_window))
 			l_managed_class_formatters.extend (create {EB_DEFERREDS_FORMATTER}.make (develop_window))
 			l_managed_class_formatters.extend (create {EB_ONCES_FORMATTER}.make (develop_window))
+			l_managed_class_formatters.extend (create {EB_INSTANCE_FREE_FEATURE_FORMATTER}.make (develop_window))
 			l_managed_class_formatters.extend (create {EB_EXTERNALS_FORMATTER}.make (develop_window))
 			l_managed_class_formatters.extend (create {EB_EXPORTED_FORMATTER}.make (develop_window))
 

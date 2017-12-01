@@ -68,7 +68,7 @@ feature -- Initialization
 					ql_name_style.set_item (a_item)
 					set_text_with_tokens (ql_name_style.text)
 				end
-				set_pixmap (pixmap_for_query_lanaguage_item (a_item))
+				set_pixmap (pixmap_for_query_language_item (a_item))
 				set_image (a_item.name)
 			else
 					-- Initialize current as a path item.

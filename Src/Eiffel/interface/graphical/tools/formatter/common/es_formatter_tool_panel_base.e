@@ -47,9 +47,9 @@ feature{NONE} -- Initialization
 	initialize
 			-- Initialize.
 		do
-			create {LINKED_LIST [EB_FORMATTER]} formatters.make
-			create {LINKED_LIST [EB_FORMATTER]} customized_formatters.make
-			create {LINKED_LIST [EB_FORMATTER]} layout_formatters.make
+			create {ARRAYED_LIST [EB_FORMATTER]} formatters.make (10)
+			create {ARRAYED_LIST [EB_FORMATTER]} customized_formatters.make (10)
+			create {ARRAYED_LIST [EB_FORMATTER]} layout_formatters.make (10)
 			on_customized_formatter_loaded_agent := agent on_customized_formatter_loaded
 			customized_formatter_manager.change_actions.extend (on_customized_formatter_loaded_agent)
 

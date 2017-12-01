@@ -99,11 +99,11 @@ feature {NONE} -- Initialization
 
 			if
 				is_size_and_position_remembered and then
-	       		attached session_manager.service
+	       		attached session_manager.service as l_session_service
 	       	then
 
        				-- Retrieve persisted session data size/position information
-       			if attached {TUPLE [x, y, width, height: INTEGER]} session_data.value (dialog_session_id) as l_sp_info then
+       			if attached {TUPLE [x, y, width, height: INTEGER]} session_data (l_session_service).value (dialog_session_id) as l_sp_info then
        					-- Previous session data is available
 --	       				create l_screen
 -- Currently the saved position is not used because it should be saved relative to the parent window.
@@ -128,7 +128,7 @@ feature {NONE} -- Initialization
 							create l_screen
 							a_ia_session.set_value ([dialog.x_position.max (l_screen.virtual_left), dialog.y_position.max (0), dialog.width, dialog.height], dialog_session_id)
        					end
-       				end (session_data))
+       				end (session_data (l_session_service)))
        		end
         end
 
@@ -1108,7 +1108,7 @@ invariant
 	button_actions_attached: button_actions /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

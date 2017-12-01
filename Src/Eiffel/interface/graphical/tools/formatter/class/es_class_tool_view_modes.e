@@ -63,6 +63,9 @@ feature -- Access
 	exported: NATURAL_8 = 0x27
 			-- Class fully exported features mode
 
+	instance_free: NATURAL_8 = 0x28
+			-- Instance free routines mode			
+
 	custom: NATURAL_8 = 0xFF
 			-- Custom formatter mode
 
@@ -95,7 +98,7 @@ feature -- Query
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

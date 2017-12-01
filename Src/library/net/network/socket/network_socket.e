@@ -239,6 +239,8 @@ feature -- Status setting
 			is_valid_timeout_ns: is_valid_timeout_ns (a_timeout_nanoseconds)
 		do
 			if a_timeout_nanoseconds = 0 then
+					-- FIXME: check why 0 is not currently accepted [2017-12-01]
+					--		  note that changing this may be a breaking change.
 				timeout_ns := one_second_in_nanoseconds * default_timeout.to_natural_64
 			else
 				timeout_ns := a_timeout_nanoseconds
@@ -365,10 +367,10 @@ feature {NONE} -- Implementation
 			n64: NATURAL_64
 		do
 			n64 := ns // one_second_in_nanoseconds
-			if n64 > {INTEGER}.max_value then
+			if n64 > {INTEGER}.max_value.to_natural_64 then
 				Result := {INTEGER}.max_value
 			else
-				Result := (n64).to_integer_32
+				Result := n64.to_integer_32
 			end
 		end
 
@@ -402,7 +404,7 @@ feature -- Validation
 			--|      and as NATURAL_64's max value is bigger     = 18_446_744_073_709_551_615
 			--|      features dealing with timeout in nanoseconds have related preconditions.
 		do
-			Result := 0 < ns and then ns <= max_timeout_ns_value
+			Result := 0 <= ns and then ns <= max_timeout_ns_value
 		end
 
 feature {NONE} -- Externals

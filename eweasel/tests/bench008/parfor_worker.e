@@ -36,7 +36,7 @@ feature
          i: INTEGER
          x, y: INTEGER
       do
-         create Result.make (1, nelts)
+         create Result.make_filled ([0, 0], 1, nelts)
 
          from i := 1
          until i > nelts
@@ -63,8 +63,8 @@ feature
       p1, p2: TUPLE [x,y : INTEGER]
       i, j: INTEGER
     do
-      create matrix.make (to_local_row (final), nelts)
-      create vector.make (1, to_local_row (final))
+      create matrix.make_filled (0.0, to_local_row (final), nelts)
+      create vector.make_filled (0.0, 1, to_local_row (final))
 
       from i := start
       until i > final

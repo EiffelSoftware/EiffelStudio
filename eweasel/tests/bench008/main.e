@@ -30,13 +30,13 @@ feature
       nelts := read_integer
 
       
-      create x_points.make (1, nelts)
-      create y_points.make (1, nelts)
+      create x_points.make_filled (0, 1, nelts)
+      create y_points.make_filled (0, 1, nelts)
 
       read_vector_of_points(nelts, x_points, y_points)
         
-      create result_vector.make_filled(0.0, 1, nelts)
-      create result_matrix.make (nelts, nelts)
+      create result_vector.make_filled (0.0, 1, nelts)
+      create result_matrix.make_filled (0.0, nelts, nelts)
 
       outer (nelts)
       local_matrix := get_matrix (nelts)
@@ -75,7 +75,7 @@ feature
     local
       i: INTEGER
     do
-      create Result.make (1, a_nelts)
+      create Result.make_filled (0.0, 1, a_nelts)
       from i := 1
       until i > num_workers
       loop
@@ -100,7 +100,7 @@ feature
     local
       i: INTEGER
     do
-      create Result.make (a_nelts, a_nelts)
+      create Result.make_filled (0.0, a_nelts, a_nelts)
       from i := 1
       until i > num_workers
       loop

@@ -19,7 +19,7 @@ feature
         try
                 do
                         precursor
-                        io.put_string ((create {like hamster}).generating_type)
+                        print ((create {like hamster}).generating_type)
                         io.put_new_line
                 end
 

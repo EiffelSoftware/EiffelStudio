@@ -10,7 +10,7 @@ feature
       ncols := a_ncols
       seed := a_seed.to_natural_32
 
-      create matrix.make (height, ncols)
+      create matrix.make_filled (0, height, ncols)
     end
 
   

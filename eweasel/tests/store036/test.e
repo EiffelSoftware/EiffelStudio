@@ -11,7 +11,7 @@ feature {NONE} -- Initialization
 			l_object: ANY
 			l_file: RAW_FILE
 		do
-			create l_file.make ("file.store")
+			create l_file.make_with_name ("file.store")
 			l_file.open_read
 			l_object := l_file.retrieved
 			l_file.close

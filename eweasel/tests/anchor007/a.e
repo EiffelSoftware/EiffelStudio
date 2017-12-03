@@ -18,21 +18,21 @@ feature {NONE} -- Creation
 
 	make
 		do
-			io.put_string ("{A}.like a: " + (create {like a}).generating_type + "%N")
-			io.put_string ("{A}.like a.g: " + (create {like a.g}).generating_type + "%N")
-			io.put_string ("{A}.like a.h: " + (create {like a.h}).generating_type + "%N")
-			io.put_string ("{A}.like b.g: " + (create {like b.g}).generating_type + "%N")
-			io.put_string ("{A}.like b.h: " + (create {like b.h}).generating_type + "%N")
+			io.put_string ("{A}.like a: " + (create {like a}).generating_type.name + "%N")
+			io.put_string ("{A}.like a.g: " + (create {like a.g}).generating_type.name + "%N")
+			io.put_string ("{A}.like a.h: " + (create {like a.h}).generating_type.name + "%N")
+			io.put_string ("{A}.like b.g: " + (create {like b.g}).generating_type.name + "%N")
+			io.put_string ("{A}.like b.h: " + (create {like b.h}).generating_type.name + "%N")
 			create a
 			create ag
 			create ah
 			create bg
 			create bh
-			io.put_string ("{A}.a: " + a.generating_type + "%N")
-			io.put_string ("{A}.ag: " + ag.generating_type + "%N")
-			io.put_string ("{A}.ah: " + ah.generating_type + "%N")
-			io.put_string ("{A}.bg: " + bg.generating_type + "%N")
-			io.put_string ("{A}.bh: " + bh.generating_type + "%N")
+			io.put_string ("{A}.a: " + a.generating_type.name + "%N")
+			io.put_string ("{A}.ag: " + ag.generating_type.name + "%N")
+			io.put_string ("{A}.ah: " + ah.generating_type.name + "%N")
+			io.put_string ("{A}.bg: " + bg.generating_type.name + "%N")
+			io.put_string ("{A}.bh: " + bh.generating_type.name + "%N")
 		end
 	
 feature -- Access

@@ -177,13 +177,14 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			dir: KL_DIRECTORY
 			l_dir: STRING
+			u: UTF_CONVERTER
 		do
 			from
 				i := 1
 			until
 				i > argument_count
 			loop
-				l_dir := Execution_environment.interpreted_string (argument (i).as_string_8_conversion)
+				l_dir := Execution_environment.interpreted_string (u.string_32_to_utf_8_string_8 (argument (i)))
 				create dir.make (l_dir)
 				if dir.exists then
 					test_recursive (l_dir)

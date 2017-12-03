@@ -45,7 +45,7 @@ feature {NONE} -- Output
 	print_type (a: ANY)
 			-- Print type of `a'.
 		do
-			io.put_string (a.generating_type)
+			print (a.generating_type)
 			io.put_new_line
 		end
 

@@ -183,7 +183,7 @@ feature
   get_vector (nrows, ncols: INTEGER;
               workers: LIST [separate PARFOR_WORKER]): ARRAY2 [INTEGER]
     do
-      create Result.make (nrows, ncols)
+      create Result.make_filled (0, nrows, ncols)
       across workers as wc loop
         get_sub_vector (nrows, ncols, Result, wc.item)
       end

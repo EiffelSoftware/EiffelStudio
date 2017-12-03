@@ -35,7 +35,7 @@ feature -- Initialization
 			i, nb: INTEGER
 		do
 			if not retried then
-				create l_spec.make (1, 100)
+				create l_spec.make_filled (Void, 1, 100)
 				from
 					i := 1
 					nb := 100

@@ -14,7 +14,7 @@ feature {NONE} -- Initialization
 			file : RAW_FILE
 			stored_object : STORABLE
 		do
-			create file.make("data")
+			create file.make_with_name ("data")
 			if file.exists then
 				if not file.is_closed then
 					file.close

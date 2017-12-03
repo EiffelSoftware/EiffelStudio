@@ -76,7 +76,7 @@ feature -- Initialization
 			until
 				i > nb
 			loop
-				io.put_string (t.generic_parameter_type (i))
+				io.put_string (t.generic_parameter_type (i).name)
 				io.put_new_line
 				i := i + 1
 			end

@@ -74,8 +74,7 @@ feature {NONE} -- Initialization
 			until
 				False
 			loop
-				if l_socket.retrieved.generating_type /~ "ARRAY [STRING]"
-				then
+				if not l_socket.retrieved.generating_type.name_32.same_string ({STRING_32} "ARRAY [STRING]") then
 					do_nothing
 				end
 			end

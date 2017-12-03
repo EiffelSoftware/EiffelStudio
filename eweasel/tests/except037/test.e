@@ -197,7 +197,7 @@ feature
 
 	print_exception (a_ex: EXCEPTION)
 		do
-			print (a_ex.generating_type + ": ")
+			print (a_ex.generating_type.name_32 + {STRING_32} ": ")
 			if a_ex.description /= Void then
 				print (a_ex.description)
 			end

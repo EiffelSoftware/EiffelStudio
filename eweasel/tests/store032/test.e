@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 
 			create l_file.make_open_read ("file1")
 			if attached l_file.retrieved as l_data then
-				io.put_string (l_data.generating_type)
+				print (l_data.generating_type)
 				io.put_new_line
 			end
 			l_file.close

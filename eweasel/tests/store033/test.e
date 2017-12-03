@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 		do
 			create l_file.make_open_read (a_file_name)
 			if attached {DISPENSER [INTEGER]} l_file.retrieved as l_data then
-				io.put_string (l_data.generating_type)
+				print (l_data.generating_type)
 				io.put_character (':')
 				print_list (l_data.linear_representation)
 			end

@@ -1,5 +1,6 @@
 
 --| Copyright (c) 2008, David Hollenberg, USC Information Sciences Institute
+--| Copyright (c) 2017, Eiffel Software
 --| All rights reserved.
 
 class TEST
@@ -10,7 +11,7 @@ feature {NONE}
 
 	make is
 		do
-			x := ({NONE}).attempt ("Weasel")
+			x := ({NONE}).attempted ("Weasel")
 			if x /= Void then
 				print ("Value is not Void%N")
 				print (x)

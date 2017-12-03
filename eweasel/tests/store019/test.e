@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 				create l_file.make_create_read_write (storage_file_name)
 				create l_writer.make (l_file)
 				create l_facility
-				l_facility.independent_store (l_tuple, l_writer, True)
+				l_facility.store (l_tuple, l_writer)
 				l_file.close
 			end
 		rescue

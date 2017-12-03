@@ -13,7 +13,7 @@ feature -- Initialization
 			l_any: ANY
 			l_file: RAW_FILE
 		do
-			create l_file.make ("output.data")
+			create l_file.make_with_name ("output.data")
 
 				-- Basic store
 			l_file.open_write

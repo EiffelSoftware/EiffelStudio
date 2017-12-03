@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			a: ANY
 			l_file: RAW_FILE
 		do
-			create l_file.make (s)
+			create l_file.make_with_name (s)
 			l_file.open_read
 			a := l_file.retrieved
 			l_file.close

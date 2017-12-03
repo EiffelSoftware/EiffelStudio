@@ -5,7 +5,7 @@ feature
 	
 	try
 		do
-			create {like a} a.make (1, 2)
+			create {like a} a.make_empty
 			print (a.generating_type); io.new_line
 		end
 

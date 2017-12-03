@@ -36,7 +36,7 @@ feature -- {NONE} -- Creation
 					when 'I' then
 							-- Stdin is not redirected.
 							-- Delete an output file.
-						create f.make (output_file_name)
+						create f.make_with_name (output_file_name)
 						if f.path_exists then
 							f.delete
 						end

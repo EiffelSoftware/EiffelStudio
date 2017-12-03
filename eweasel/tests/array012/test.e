@@ -30,7 +30,7 @@ feature {NONE} -- Creation
 			array: ARRAY [INTEGER]
 			index_set: INTEGER_INTERVAL
 		do
-			create array.make (-1, -2)
+			create array.make_filled (0, -1, -2)
 			index_set := array.index_set
 		end
 
@@ -40,7 +40,7 @@ feature {NONE} -- Creation
 		local
 			array: ARRAY [INTEGER]
 		do
-			create array.make (1, 10)
+			create array.make_filled (0, 1, 10)
 			array.remove_head (11)
 		end
 

@@ -25,13 +25,13 @@ feature
 		do
 			t := [Precursor]
 
-			io.put_string (t.generating_type)
+			print (t.generating_type)
 			io.put_new_line
 
-			io.put_string (([Precursor]).generating_type)
+			print (([Precursor]).generating_type)
 			io.put_new_line
 
-			io.put_string ((<< Precursor >>).generating_type)
+			print ((<< Precursor >>).generating_type)
 			io.put_new_line
 		end
 

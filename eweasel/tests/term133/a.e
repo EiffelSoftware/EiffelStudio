@@ -5,10 +5,10 @@ feature -- Tests
 	test (name: STRING) is
 			-- Run test cases assuming that name of `G' is `name'.
 		do
-			do_test (create {ARRAY [ARRAY         [G]]}.make (1, 0), "ARRAY",         name)
-$NA			do_test (create {ARRAY [NATIVE_ARRAY  [G]]}.make (1, 0), "NATIVE_ARRAY",  name)
-			do_test (create {ARRAY [TUPLE         [G]]}.make (1, 0), "TUPLE",         name)
-			do_test (create {ARRAY [TYPED_POINTER [G]]}.make (1, 0), "TYPED_POINTER", name)
+			do_test (create {ARRAY [ARRAY         [G]]}.make_empty, "ARRAY",         name)
+$NA			do_test (create {ARRAY [NATIVE_ARRAY  [G]]}.make_empty, "NATIVE_ARRAY",  name)
+			do_test (create {ARRAY [TUPLE         [G]]}.make_empty, "TUPLE",         name)
+			do_test (create {ARRAY [TYPED_POINTER [G]]}.make_empty, "TYPED_POINTER", name)
 		end
 
 
@@ -25,7 +25,7 @@ feature {NONE} -- Implementation
 			actual: STRING
 			expected: STRING
 		do
-			actual := a.generating_type
+			actual := a.generating_type.name_32.as_string_8
 			expected := "ARRAY [" + middle + " [" + inner + "]]"
 			if not actual.is_equal (expected) then
 				io.put_string ("Expected: %"")

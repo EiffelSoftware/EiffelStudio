@@ -12,7 +12,7 @@ feature
 		local
 			y: ARRAY [NONE]
 		do
-			create y.make (1, 2)
+			create y.make_filled (Void, 1, 2)
 			y.put (Void, 1)
 			y.put (Void, 2)
 			x := y

@@ -12,17 +12,17 @@ feature {NONE} -- Initialization
 	make
 			-- Run application.
 		local
-			l_file_name: FILE_NAME
-			l_wdir: STRING
+			l_path: PATH
+			l_wdir: READABLE_STRING_32
 			l_file: RAW_FILE
 			i: INTEGER
 		do
-			l_wdir := command_line.argument (1)
-			if command_line.argument_count > 1 then
-				i := command_line.argument (2).to_integer
-				create l_file_name.make_from_string (l_wdir)
-				l_file_name.extend (file_name (i))
-				create l_file.make_open_write (l_file_name)
+			l_wdir := arguments.argument (1)
+			if arguments.argument_count > 1 then
+				i := arguments.argument (2).to_integer
+				create l_path.make_from_string (l_wdir)
+				create l_file.make_with_path (l_path.extended (file_name (i)))
+				l_file.open_write
 				l_file.independent_store (["STRING"])
 				l_file.close
 			else
@@ -33,9 +33,9 @@ feature {NONE} -- Initialization
 				loop
 					print (file_name (i))
 					print (": ")
-					create l_file_name.make_from_string (l_wdir)
-					l_file_name.extend (file_name (i))
-					create l_file.make_open_read (l_file_name)
+					create l_path.make_from_string (l_wdir)
+					create l_file.make_with_path (l_path.extended (file_name (i)))
+					l_file.open_read
 					if attached {TUPLE [string: detachable STRING]} l_file.retrieved as l_retrieved then
 						print (l_retrieved.string)
 					end

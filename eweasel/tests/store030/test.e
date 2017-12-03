@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			if l_is_storing then
 				l_file.open_write
 				l_reader_writer.set_for_writing
-				independent_store (a, l_reader_writer, True)
+				store (a, l_reader_writer)
 				l_file.close
 			end
 

@@ -10,11 +10,11 @@ feature {NONE} -- Creation
 			create anchor_3
 			create anchor_4
 			create anchor_8
-			io.put_string ((create {A [detachable G]}).generating_type)
+			print ((create {A [detachable G]}).generating_type)
 			io.put_new_line
-			io.put_string ((create {A [attached G]}).generating_type)
+			print ((create {A [attached G]}).generating_type)
 			io.put_new_line
-			io.put_string ((create {A [G]}).generating_type)
+			print ((create {A [G]}).generating_type)
 			io.put_new_line
 			test_anchors
 			test_single_generic (is_attached)

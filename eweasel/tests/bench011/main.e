@@ -29,7 +29,7 @@ feature
       ncols := read_integer
       s := read_integer
 
-      create matrix.make (nrows,ncols)
+      create matrix.make_filled (0, nrows,ncols)
       workers := randmat(nrows, s)
 
       fetch_workers (workers)

@@ -127,7 +127,7 @@ feature {NONE} -- Output
 			-- Verify for `object' that its value `is_expected'
 			-- and output the corresponding message.
 		do
-			io.put_string (object.generating_type)
+			print (object.generating_type)
 			if is_expected then
 				io.put_string (": OK")
 			else

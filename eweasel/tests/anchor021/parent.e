@@ -4,7 +4,7 @@ feature
 
         try
                 do
-                        io.put_string ((create {like wimp}).generating_type)
+                        print ((create {like wimp}).generating_type)
                         io.put_new_line
                 end
 

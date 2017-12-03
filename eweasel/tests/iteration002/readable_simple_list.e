@@ -10,8 +10,12 @@ create
 feature {NONE} -- Initialization
 
 	make
+	local
+		value: detachable READABLE_G
 	do
-		create list.make(1, 0)
+		check attached value then
+			create list.make_filled (value, 1, 0)
+		end
 	end
 
 feature -- Iteration

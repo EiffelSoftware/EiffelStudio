@@ -19,10 +19,10 @@ feature
 
 	value: H
 		do
-			io.put_string (([Precursor]).generating_type)
+			print (([Precursor]).generating_type)
 			io.put_new_line
 
-			io.put_string ((<< Precursor >>).generating_type)
+			print ((<< Precursor >>).generating_type)
 			io.put_new_line
 		end
 

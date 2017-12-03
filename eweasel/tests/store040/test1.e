@@ -15,7 +15,7 @@ feature
 
 	make
 		do
-			create s.make (1, 10)
+			create s.make_filled (Void, 1, 10)
 		end
 
 end

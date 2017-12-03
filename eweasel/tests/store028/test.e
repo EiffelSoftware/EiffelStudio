@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				create l_file.make (storage_file_name)
+				create l_file.make_with_name (storage_file_name)
 				l_file.open_read
 				if attached {A [TUPLE [STRING, INTEGER]]} l_file.retrieved as l_a then
 					print (l_a.generating_type)

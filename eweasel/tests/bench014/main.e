@@ -33,10 +33,10 @@ feature
       create x_vector.make_empty
       create y_vector.make_empty
       
-      create matrix.make (nrows, ncols)
+      create matrix.make_filled (0, nrows, ncols)
       read_matrix(nrows, ncols, matrix)
       
-      create mask.make (nrows, ncols)
+      create mask.make_filled (0, nrows, ncols)
       read_mask(nrows, ncols, mask)
       
       nelts := read_integer

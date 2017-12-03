@@ -8,7 +8,7 @@ feature
 			t: like g.foo
 		do
 			create t$(CREATION_PROCEDURE)
-			io.put_string (t.generating_type)
+			print (t.generating_type)
 			io.put_new_line
 		end
 

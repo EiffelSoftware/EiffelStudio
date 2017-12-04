@@ -1184,7 +1184,7 @@ EIF_INTEGER c_set_sock_opt_linger(EIF_INTEGER fd, EIF_BOOLEAN flag, EIF_INTEGER 
 #define nanoseconds_in_millisecond 	RTU64C(1000000)
 #define nanoseconds_in_microsecond 	RTU64C(1000)
 
-EIF_NATURAL_64 c_get_sock_opt_timeo(EIF_INTEGER fd, EIF_INTEGER level, int optname)
+EIF_NATURAL_64 c_get_sock_opt_timeout(EIF_INTEGER fd, EIF_INTEGER level, int optname)
 	/* Get socket fd timeval `optname` option in nanoseconds */
 {
 #ifdef EIF_VMS
@@ -1206,7 +1206,7 @@ EIF_NATURAL_64 c_get_sock_opt_timeo(EIF_INTEGER fd, EIF_INTEGER level, int optna
 #endif
 }
 
-void c_set_sock_opt_timeo(EIF_INTEGER fd, EIF_INTEGER level, int optname, EIF_NATURAL_64 timeout_ns)
+void c_set_sock_opt_timeout(EIF_INTEGER fd, EIF_INTEGER level, int optname, EIF_NATURAL_64 timeout_ns)
 	/* Set socket `optname` option to timeout_ns */
 {
 #ifdef EIF_WINDOWS
@@ -1220,7 +1220,7 @@ void c_set_sock_opt_timeo(EIF_INTEGER fd, EIF_INTEGER level, int optname, EIF_NA
 	}
 	if (arg == 0 && timeout_ns != 0) {
 			/* timeout values are above zero, but less than 1 millisecond
-			 * then set to 1 millisecond to avoid eventual special behavior for 0 timeouts).
+			 * then set to 1 millisecond as a timeout of 0 may indicate an infinite time-out period).
 			 */
 		arg = 1;
 	}
@@ -1230,8 +1230,8 @@ void c_set_sock_opt_timeo(EIF_INTEGER fd, EIF_INTEGER level, int optname, EIF_NA
 	tv.tv_sec = (long) (timeout_ns / nanoseconds_in_second); 
 	tv.tv_usec = (long) ((timeout_ns % nanoseconds_in_second) / nanoseconds_in_microsecond);
 	if (tv.tv_sec == 0 && tv.tv_usec == 0 && timeout_ns != 0) {
-			/* timeout values are not zero, but less than 1 microsecond
-			 * then set to 1 microsecond to avoid eventual special behavior for 0 timeouts).
+			/* timeout values are above zero, but less than 1 microsecond
+			 * then set to 1 microsecond as a timeout of 0 may indicate an infinite time-out period).
 			 */
 		tv.tv_usec = 1;
 	}

@@ -166,21 +166,21 @@ feature {NETWORK_STREAM_SOCKET} -- Initialization
 feature
 
 	connect_timeout: INTEGER
-		-- The connect timeout in milliseconds
+			-- The connect timeout in milliseconds
 
-	set_connect_timeout (a_timeout: INTEGER)
+	set_connect_timeout (a_timeout_ms: INTEGER)
 			--  Sets the connect timeout in milliseconds
 		do
-			connect_timeout := a_timeout
+			connect_timeout := a_timeout_ms
 		end
 
 	accept_timeout: INTEGER
-		-- The connect timeout in milliseconds
+			-- The connect timeout in milliseconds
 
-	set_accept_timeout (a_timeout: INTEGER)
+	set_accept_timeout (a_timeout_ms: INTEGER)
 			--  Sets the accept timeout in milliseconds
 		do
-			accept_timeout := a_timeout
+			accept_timeout := a_timeout_ms
 		end
 
 	listen (queue: INTEGER)

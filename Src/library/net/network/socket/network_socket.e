@@ -167,6 +167,14 @@ feature -- Status report
 			Result := retval > 0
 		end
 
+	is_default_timeout: BOOLEAN
+			-- Is `timeout_ns` the default timeout?	
+		do
+			Result := timeout_ns = one_second_in_nanoseconds * default_timeout.to_natural_64
+		end
+
+feature -- Access: Timeout
+
 	timeout: INTEGER
 			-- Duration of timeout in seconds
 		obsolete
@@ -235,6 +243,14 @@ feature -- Status setting
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr, 0)
 		end
 
+	set_default_timeout
+			-- Set timeout to default.
+		do
+			timeout_ns := one_second_in_nanoseconds * default_timeout.to_natural_64
+		ensure
+			timeout_set_to_default: is_default_timeout
+		end
+
 	set_timeout (n: INTEGER)
 			-- Set timeout to `n' seconds.
 		obsolete
@@ -244,7 +260,7 @@ feature -- Status setting
 		do
 			set_timeout_ns (n.to_natural_64)
 		ensure
-			timeout_set: timeout = n or timeout = default_timeout
+			timeout_set: timeout = n
 		end
 
 	set_timeout_ns (a_timeout_nanoseconds: NATURAL_64)
@@ -253,13 +269,7 @@ feature -- Status setting
 		require
 			is_valid_timeout_ns: is_valid_timeout_ns (a_timeout_nanoseconds)
 		do
-			if a_timeout_nanoseconds = 0 then
-					-- FIXME: check why 0 is not currently accepted [2017-12-01]
-					--		  note that changing this may be a breaking change.
-				timeout_ns := one_second_in_nanoseconds * default_timeout.to_natural_64
-			else
-				timeout_ns := a_timeout_nanoseconds
-			end
+			timeout_ns := a_timeout_nanoseconds
 		end
 
 	set_recv_timeout (a_timeout_seconds: INTEGER)

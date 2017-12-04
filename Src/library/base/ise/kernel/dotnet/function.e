@@ -105,6 +105,27 @@ feature -- Removal
 			last_result := l_result
 		end
 
+feature -- Extended operations
+
+	flexible_item (a: detachable separate TUPLE): RESULT_TYPE
+			-- Result of calling function with `a' as arguments.
+			-- Compared to `item' the type of `a' may be different from `{OPEN_ARGS}'.
+		require
+			valid_operands: valid_operands (a)
+		local
+			default_arguments: detachable OPEN_ARGS
+		do
+			if not attached a then
+				Result := item (default_arguments)
+			else
+				check
+					from_precondition: attached {OPEN_ARGS} new_tuple_from_tuple (({OPEN_ARGS}).type_id, a) as x
+				then
+					Result := item (x)
+				end
+			end
+		end
+
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"

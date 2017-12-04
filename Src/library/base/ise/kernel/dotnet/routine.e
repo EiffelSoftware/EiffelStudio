@@ -17,6 +17,14 @@ inherit
 			is_equal, copy
 		end
 
+	REFLECTOR
+		export
+			{NONE} all
+		redefine
+			copy,
+			is_equal
+		end
+
 feature -- Initialization
 
 	adapt (other: like Current)
@@ -285,6 +293,27 @@ feature -- Basic operations
 			valid_operands: valid_operands (operands)
 			callable: callable
 		deferred
+		end
+
+feature -- Extended operations
+
+	flexible_call (a: detachable separate TUPLE)
+			-- Call routine with arguments `a'.
+			-- Compared to `call' the type of `a' may be different from `{OPEN_ARGS}'.
+		require
+			valid_operands: valid_operands (a)
+		local
+			default_arguments: detachable OPEN_ARGS
+		do
+			if not attached a then
+				call (default_arguments)
+			else
+				check
+					from_precondition: attached {OPEN_ARGS} new_tuple_from_tuple (({OPEN_ARGS}).type_id, a) as x
+				then
+					call (x)
+				end
+			end
 		end
 
 feature -- Obsolete

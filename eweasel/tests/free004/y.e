@@ -10,11 +10,11 @@ feature
 
 	h
 			-- <Precursor>
-		note
-			option: instance_free
 		do
 			;(create {X}).io.put_string ("Y")
 			;(create {X}).io.put_new_line
+		ensure then
+			is_instance_free: class
 		end
 
 end

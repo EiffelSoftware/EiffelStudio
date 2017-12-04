@@ -4,19 +4,19 @@ feature
 
 	f
 			-- Call `g` redeclared in a descendant.
-		note
-			option: instance_free
 		do
 			g.h
 			{like g}.h
+		ensure
+			is_instance_free: class
 		end
 
 	g: X
 			-- An instance-free function redeclared in a descendant.
-		note
-			option: instance_free
 		do
 			create Result
+		ensure
+			is_instance_free: class
 		end
 
 end

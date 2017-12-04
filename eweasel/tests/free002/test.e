@@ -19,8 +19,6 @@ feature {NONE} -- Creation
 feature {NONE} -- Tests
 
 	f
-		note
-			option: instance_free
 		do
 			Current.do_nothing
 			a.do_nothing
@@ -30,6 +28,8 @@ feature {NONE} -- Tests
 			;(agent f).do_nothing
 			Precursor
 			g
+		ensure then
+			is_instance_free: class
 		end
 
 	g

@@ -13,27 +13,27 @@ feature {NONE} -- Creation
 feature {NONE} -- Tests
 
 	x: detachable TEST
-		note
-			option: instance_free
 		attribute
+		ensure
+			is_class: class
 		end
 
 	y: detachable TEST
-		note
-			option: "instance_free"
 		attribute
+		ensure
+			is_class: class
 		end
 
 	z
-		note
-			option: instance_free
 		once ("OBJECT")
+		ensure
+			is_class: class
 		end
 
 	w
-		note
-			option: "instance_free"
 		once ("OBJECT")
+		ensure
+			is_class: class
 		end
 
 end

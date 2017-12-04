@@ -10,10 +10,10 @@ feature
 
 	g: Y
 			-- <Precursor>
-		note
-			option: instance_free
 		do
 			create Result
+		ensure then
+			is_instance_free: class
 		end
 
 end

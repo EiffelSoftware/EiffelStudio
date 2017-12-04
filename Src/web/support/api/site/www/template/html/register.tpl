@@ -19,7 +19,10 @@
 								<label class="control-label-api" itemprop="first_name" >First Name</label>
 							</div>
 							<div class="col-xs-6">
-								<input type="text" class="form-control" id="first_name" name="first_name" rel="popover" data-content="Enter your first" data-original-title="First Name" placeholder="Enter First Name" value="{$form.first_name/}" required />
+								<input type="text" class="form-control" id="first_name" name="first_name" rel="popover" data-content="Enter your first" data-original-title="First Name" placeholder="Enter First Name" value="{$form.first_name/}"  maxlength="50" required />
+							</div>
+							<div class="col-xs-2">
+								<small><p>Note: First Name size cannot exceed 50 characters.</p></small>
 							</div>
 						</div>
 						<div class="row">
@@ -27,7 +30,10 @@
 								<label class="control-label-api" itemprop="last_name">Last Name</label>
 							</div>
 							<div class="col-xs-6">
-								<input type="text" class="form-control" id="last_name" name="last_name" rel="popover" data-content="Enter your last name" data-original-title="Last Name" placeholder="Enter Last Name"value="{$form.last_name/}" required />
+								<input type="text" class="form-control" id="last_name" name="last_name" rel="popover" data-content="Enter your last name" data-original-title="Last Name" placeholder="Enter Last Name"value="{$form.last_name/}" maxlength="50" required  />
+							</div>
+							<div class="col-xs-2">
+								<small><p>Note: Last Name size cannot exceed 50 characters.</p></small>
 							</div>
 						</div>
 						<div class="row">
@@ -35,7 +41,10 @@
 								<label class="control-label-api" itemprop="email">Email</label>
 							</div>
 							<div class="col-xs-6">
-								<input type="email" class="form-control" id="user_email" name="user_email" rel="popover" data-content="What’s your email address?" data-original-title="Email" placeholder="email@example.com" value="{$form.email/}" required />
+								<input type="email" class="form-control" id="user_email" name="user_email" rel="popover" data-content="What’s your email address?" data-original-title="Email" placeholder="email@example.com" value="{$form.email/}" maxlength="100" required />
+							</div>
+							<div class="col-xs-2">
+								<small><p>Note: User email size cannot exceed 100 characters.</p></small>
 							</div>
 						</div>
 						<div class="row">
@@ -43,7 +52,10 @@
 								<label class="control-label-api" itemprop="user_name">User Name</label>
 							</div>
 							<div class="col-xs-6">
-								<input type="text" class="form-control" id="user_name" name="user_name" rel="popover" data-content="Enter your user_name" data-original-title="User Name" placeholder="Enter User Name"value="{$form.user_name/}" required />
+								<input type="text" class="form-control" id="user_name" name="user_name" rel="popover" data-content="Enter your user_name" data-original-title="User Name" placeholder="Enter User Name"value="{$form.user_name/}" maxlength="100" required />
+							</div>
+							<div class="col-xs-2">
+								<small><p>Note: User name size cannot exceed 100 characters.</p></small>
 							</div>
 						</div>
 						<div class="row">

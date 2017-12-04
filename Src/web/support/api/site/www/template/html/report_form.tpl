@@ -137,7 +137,8 @@
 										<label class="control-label" has-success has-feedback itemprop="release" data-original-title="<p>Release or version number of the Eiffel product. Please be as specific as possible. For example, 5.6.0919 is better than 5.6.</p>">Release</label>
 									</div>
 									<div class="col-xs-4">
-										<input list="releases" type="text" id="release" name="release" class="form-control" value="{$release/}" placeholder="14.05" required form="report">
+										<input list="releases" type="text" id="release" name="release" class="form-control" value="{$release/}" placeholder="14.05"  maxlength="50" required form="report">
+										<small><p>Note: Release size cannot exceed 50 characters.</p></small>
 									</div>
 									<datalist id="releases">
 										{foreach from="$releases" item="item"}
@@ -150,14 +151,16 @@
 						<div class="row" has-error>
 							<label class="control-label" has-success has-feedback itemprop="synopsis" data-original-title="<p>One-line summary of the problem. This information will be used as the subject of the problem and it should be short, but still descriptive enough to be different from other problem report subjects.</p>">Synopsis</label>
 							<div class="controls">
-								<input type="text" id="synopsis" name="synopsis" class="form-control" value="{$synopsis/}" required>
+								<input type="text" id="synopsis" name="synopsis" class="form-control" value="{$synopsis/}" maxlength="100" required>
+								<small><p>Note: Synopsis size cannot exceed 100 characters.</p></small>
 							</div>
 						</div>
 
 						<div class="row">
 							<label class="control-label" itemprop="environment" data-original-title="<p>Description of the environment where the problem occured: machine architecture, operating system, host and target types, libraries, pathnames, etc. On Unix, in addition to other information, execute the command uname -a and copy the result here.</p>">Environment</label>
 							<div class="controls">
-								<input type="text" class="form-control" id="environment" name="environment" rows="3" placeholder="Windows 8.1" required form="report" value="{$environment/}">
+								<input type="text" class="form-control" id="environment" name="environment" rows="3" placeholder="Windows 8.1" required form="report"  maxlength="200" value="{$environment/}">
+								<small><p>Note: Environment size cannot exceed 200 characters.</p></small>
 							</div>
 						</div>
 

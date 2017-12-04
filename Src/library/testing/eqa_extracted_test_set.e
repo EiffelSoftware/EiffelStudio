@@ -237,17 +237,12 @@ feature {NONE} -- Basic operations
 		require
 			a_routine_attached: a_routine /= Void
 			a_operands_attached: a_operands /= Void
-		local
-			l_new: TUPLE
 		do
-				-- FIXME: get rid of `empty_operands` usage. [2017-05-03].
-			l_new := a_routine.empty_operands
-			check l_new /= Void end
-			if a_operands.count < l_new.count then
-				assert_32 ("size of operands not correct", False)
+			if a_routine.valid_operands (a_operands) then
+				a_routine.flexible_call (a_operands)
+			else
+				assert_32 ("Correct operands for a feature call", False)
 			end
-			set_tuple_attributes (l_new, a_operands, 0)
-			a_routine.call (l_new)
 		end
 
 feature {NONE} -- Object initialization

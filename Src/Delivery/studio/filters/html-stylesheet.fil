@@ -29,7 +29,7 @@ class_declaration		|<!DOCTYPE html>%N%
 						%</body>%N%
 						%</html>%N
 
-feature_declaration		|<A NAME="f_$feature$"></A>*
+feature_declaration		|<a name="f_$feature$"></a>*
 
 -- Hyperlinking items:
 menu_bar				|</pre><form class="nav" onsubmit="go_to('$root$'%,this.c.value);return false;">%N%
@@ -43,38 +43,38 @@ class_menu_item			|<a class="nav class" href="$file$">*</a>%N
 menu_item_disabled		|<span class="nav hierarchy selected">*</span>%N
 class_menu_item_disabled|<span class="nav class selected">*</span>%N
 
-cluster_name			|<A CLASS="ecluster" HREF="$file$">*</A>
+cluster_name			|<a class="ecluster" href="$file$">*</a>
 
 -- Skip origin comments. Display a tooltip instead.
 origin_comment			|
-tooltip					|<SPAN TITLE="$tooltip$">*</SPAN>
+tooltip					|<span title="$tooltip$">*</span>
 
 -- Use possible hyperlinks inside strings and comments:
-comment_url				|<A CLASS="ecomment" HREF="$file$">*</A>
-string_url				|<A CLASS="estring" HREF="$file$">*</A>
+comment_url				|<a class="ecomment" href="$file$">*</a>
+string_url				|<a class="estring" href="$file$">*</a>
 
-features				|<A CLASS="efeature" HREF="$file$#f_$feature$">*</A>
-keyword_features		|<A CLASS="ekeyword" HREF="$file$#f_$feature$">*</A>
-symbol_features			|<A CLASS="esymbol" HREF="$file$#f_$feature$">*</A>
-class_name				|<A CLASS="eclass" HREF="$file$">*</A>
+features				|<a class="efeature" href="$file$#f_$feature$">*</a>
+keyword_features		|<a class="ekeyword" href="$file$#f_$feature$">*</a>
+symbol_features			|<a class="esymbol" href="$file$#f_$feature$">*</a>
+class_name				|<a class="eclass" href="$file$">*</a>
 
 -- Eiffel syntax items:
-non_generated_cluster	|<SPAN CLASS="necluster">*</SPAN>
-non_generated_class		|<SPAN CLASS="neclass">*</SPAN>
-non_generated_feature	|<SPAN CLASS="nefeature">*</SPAN>
-keyword					|<SPAN CLASS="ekeyword">*</SPAN>
-reserved_word			|<SPAN CLASS="ereserved">*</SPAN>
-symbol					|<SPAN CLASS="esymbol">*</SPAN>
-comment					|<SPAN CLASS="ecomment">*</SPAN>
-quoted					|<SPAN CLASS="equoted">*</SPAN>
-string					|<SPAN CLASS="estring">*</SPAN>
-character				|<SPAN CLASS="echar">*</SPAN>
-number					|<SPAN CLASS="enumber">*</SPAN>
-local_symbol			|<SPAN CLASS="elocal">*</SPAN>
-assertion_tag			|<SPAN CLASS="etag">*</SPAN>
-indexing_tag			|<SPAN CLASS="eitag">*</SPAN>
-generic					|<SPAN CLASS="egeneric">*</SPAN>
-.						|<SPAN CLASS="edot">*</SPAN>
+non_generated_cluster	|<span class="necluster">*</span>
+non_generated_class		|<span class="neclass">*</span>
+non_generated_feature	|<span class="nefeature">*</span>
+keyword					|<span class="ekeyword">*</span>
+reserved_word			|<span class="ereserved">*</span>
+symbol					|<span class="esymbol">*</span>
+comment					|<span class="ecomment">*</span>
+quoted					|<span class="equoted">*</span>
+string					|<span class="estring">*</span>
+character				|<span class="echar">*</span>
+number					|<span class="enumber">*</span>
+local_symbol			|<span class="elocal">*</span>
+assertion_tag			|<span class="etag">*</span>
+indexing_tag			|<span class="eitag">*</span>
+generic					|<span class="egeneric">*</span>
+.						|<span class="edot">*</span>
 
 -- Whitespace
 new_line				|*
@@ -90,9 +90,9 @@ escape&					|&#38;
 escape"					|&quot;
 
 --!-----------------------------------------------------------------------------
---! Eiffel Software
---! 356 Storke Road, Goleta, CA 93117 USA
---! Telephone 805-685-1006, Fax 805-685-6869
---! Website http://www.eiffel.com
---! Customer support http://support.eiffel.com
+--!	Eiffel Software
+--!	5949 Hollister Ave., Goleta, CA 93117 USA
+--!	Telephone 805-685-1006, Fax 805-685-6869
+--!	Website http://www.eiffel.com
+--!	Customer support http://support.eiffel.com
 --!-----------------------------------------------------------------------------

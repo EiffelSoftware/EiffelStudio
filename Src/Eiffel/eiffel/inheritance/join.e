@@ -38,7 +38,7 @@ feature -- Checking
 			feature_with_assigner: FEATURE_I
 		do
 				-- The signature of the chosen feature in the
-				-- context of `feat_tbl' has ben already evluated by
+				-- context of `feat_tbl' has ben already evaluated by
 				-- feature `check_types' of FEATURE_TABLE. (See class
 				-- INHERIT_TABLE).
 			from
@@ -49,10 +49,10 @@ feature -- Checking
 					deferred_features.first.a_feature = new_feature
 				end
 				if new_feature.assigner_name_id /= 0 then
-						-- Record assigner command for comparison with other features
+						-- Record assigner command for comparison with other features.
 					feature_with_assigner := new_feature
 				end
-					-- Go to the second item in the list
+					-- Go to the second item in the list.
 				deferred_features.start
 				deferred_features.forth
 			until
@@ -84,7 +84,7 @@ feature -- Checking
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

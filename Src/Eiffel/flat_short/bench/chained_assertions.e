@@ -149,8 +149,9 @@ feature -- Output
 							-- Only postconditions inherited from definition of routine
 							-- are activated, the other one coming from the other branches are not
 							-- taken into account.
-						item.format_postcondition (ctxt,
-							inherited_body and then not l_feature_written_class.simple_conform_to (item.origin.written_class))
+						item.format_postcondition (ctxt, inherited_body and then
+								not l_feature_written_class.simple_conform_to (item.origin.written_class)
+							)
 						l_begin_count := l_begin_count - 1
 						ctxt.commit
 					end
@@ -175,7 +176,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

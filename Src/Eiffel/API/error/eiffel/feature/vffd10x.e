@@ -61,8 +61,6 @@ feature {NONE} -- Output
 
 	trace_single_line (t: TEXT_FORMATTER)
 			-- <Precursor>
-		local
-			u: UTF_CONVERTER
 		do
 			format_elements (t, locale.translation_in_context ("The object-relative once feature {1} is declared as instance-free.", "compiler.error"),
 				<<agent e_feature.append_name>>)

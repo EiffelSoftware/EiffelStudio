@@ -2442,6 +2442,10 @@ end
 					-- Report that assigner commands are not the same
 				Error_handler.insert_error (create {VDRD8_NEW}.make (system.current_class, Current, old_feature))
 			end
+				-- Check instance-free status.
+			if is_instance_free /= old_feature.is_instance_free then
+				error_handler.insert_error (create {VDRD9_NEW}.make (system.current_class, Current, old_feature))
+			end
 		end
 
 	delayed_check_same_signature (old_feature: FEATURE_I; t: FEATURE_TABLE)
@@ -2533,6 +2537,10 @@ end
 			if not is_same_alias (old_feature) then
 					-- Report that aliases are not the same
 				Error_handler.insert_error (create {VDJR2_NEW}.make (system.current_class, Current, old_feature))
+			end
+				-- Check instance-free status.
+			if is_instance_free /= old_feature.is_instance_free then
+				error_handler.insert_error (create {VDJR4_NEW}.make (system.current_class, Current, old_feature))
 			end
 		end
 

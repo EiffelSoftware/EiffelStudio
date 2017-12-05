@@ -584,7 +584,7 @@ feature -- Third pass: byte code production and type check
 					l_ast_context.set_current_feature (feature_i)
 					type_checked := False
 
-					if feature_i.is_instance_free and then not is_full_class_checking then
+					if feature_i.is_class and then not is_full_class_checking then
 						error_handler.insert_error (create {VD02}.make (feature_i, Current))
 					end
 

@@ -851,7 +851,7 @@ feature {NONE} -- Roundtrip
 			l_vpir: VPIR3
 			l_unsupported: NOT_SUPPORTED
 		do
-			if current_feature.is_instance_free then
+			if current_feature.is_class then
 				error_handler.insert_error (create {VSTB}.make_inline_agent (current_feature, context.current_class, context.written_class, l_as.first_token (match_list_of_class (context.written_class.class_id))))
 			end
 
@@ -1559,7 +1559,7 @@ feature {NONE} -- Implementation
 							l_vsta2.set_location (l_feature_name)
 							error_handler.insert_error (l_vsta2)
 							reset_types
-						elseif not is_qualified_call and then current_feature.is_instance_free and then not (l_feature.is_instance_free or else l_feature.is_target_free) then
+						elseif not is_qualified_call and then current_feature.is_class and then not (l_feature.is_class or else l_feature.is_target_free) then
 								-- The error for agents is reported elsewhere.
 							if not is_agent then
 								error_handler.insert_error
@@ -2011,7 +2011,7 @@ feature {NONE} -- Implementation
 							last_calls_target_type := l_last_constrained
 							if l_feature.is_attribute then
 								last_access_writable := True
-								if not is_qualified and then current_feature.is_instance_free then
+								if not is_qualified and then current_feature.is_class then
 									error_handler.insert_error (create {VSTB}.make_attribute (l_feature, current_feature, context.current_class, context.written_class, a_name))
 								end
 							else
@@ -2680,7 +2680,7 @@ feature {NONE} -- Visitor
 		local
 			l_type: LIKE_CURRENT
 		do
-			if current_feature.is_instance_free then
+			if current_feature.is_class then
 				error_handler.insert_error (create {VSTB}.make_current (current_feature, context.current_class, context.written_class, l_as))
 			end
 				-- The type of Current in class X is X .. X.
@@ -4127,7 +4127,7 @@ feature {NONE} -- Visitor
 		local
 			l_typed_pointer: TYPED_POINTER_A
 		do
-			if current_feature.is_instance_free then
+			if current_feature.is_class then
 				error_handler.insert_error (create {VSTB}.make_current (current_feature, context.current_class, context.written_class, l_as.current_keyword))
 			end
 			create l_typed_pointer.make_typed (context.current_class_type)
@@ -4289,7 +4289,7 @@ feature {NONE} -- Visitor
 								l_type := l_feature.type.actual_type
 								create l_typed_pointer.make_typed (l_type)
 								set_type (l_typed_pointer, l_as)
-								if current_feature.is_instance_free then
+								if current_feature.is_class then
 									error_handler.insert_error (create {VSTB}.make_attribute (l_feature, current_feature, context.current_class, context.written_class, l_as.feature_name.internal_name))
 								end
 							else
@@ -4459,7 +4459,7 @@ feature {NONE} -- Visitor
 									l_is_named_tuple := True
 								end
 							end
-						elseif not l_as.has_target and then current_feature.is_instance_free and then attached l_as.feature_name as feature_name and then not attached {INLINE_AGENT_CREATION_AS} l_as then
+						elseif not l_as.has_target and then current_feature.is_class and then attached l_as.feature_name as feature_name and then not attached {INLINE_AGENT_CREATION_AS} l_as then
 							error_handler.insert_error (create {VSTB}.make_unqualified_agent (l_feature, current_feature, context.current_class, context.written_class, feature_name))
 						end
 
@@ -5644,7 +5644,7 @@ feature {NONE} -- Visitor
 		do
 			reset_byte_node
 			l_error_level := error_level
-			if current_feature.is_instance_free then
+			if current_feature.is_class then
 				if current_feature.is_attribute then
 					error_handler.insert_error (create {VFFD9X}.make (current_feature, context.current_class, l_as.feature_name))
 				elseif current_feature.is_object_relative_once then

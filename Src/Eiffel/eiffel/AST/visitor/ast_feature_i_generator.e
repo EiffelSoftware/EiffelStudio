@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				if attached l_routine.postcondition as postcondition and then postcondition.is_class then
-					l_result.set_is_instance_free (True)
+					l_result.set_is_class (True)
 				end
 			else
 				check

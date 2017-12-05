@@ -939,12 +939,12 @@ feature -- Setting
 			is_stable_set: is_stable = v
 		end
 
-	set_is_instance_free (v: BOOLEAN)
-			-- Set `is_instance_free` to `v`.
+	set_is_class (v: BOOLEAN)
+			-- Set `is_class` to `v`.
 		do
-			feature_flags := feature_flags.set_bit_with_mask (v, is_instance_free_mask)
+			feature_flags := feature_flags.set_bit_with_mask (v, is_class_mask)
 		ensure
-			is_instance_free_set: is_instance_free = v
+			is_class_set: is_class = v
 		end
 
 	set_is_hidden_in_debugger_call_stack (v: BOOLEAN)
@@ -1054,7 +1054,7 @@ feature -- Incrementality
 				and then is_object_relative_once = other.is_object_relative_once
 				and then is_constant = other.is_constant
 				and then is_stable = other.is_stable
-				and then is_instance_free = other.is_instance_free
+				and then is_class = other.is_class
 				and then is_transient = other.is_transient
 				and then alias_name_id = other.alias_name_id
 				and then has_convert_mark = other.has_convert_mark
@@ -1191,7 +1191,7 @@ end
 			Result := Result and then is_stable = other.is_stable
 
 				-- Of the same use of current object.
-			Result := Result and then is_instance_free = other.is_instance_free
+			Result := Result and then is_class = other.is_class
 
 				-- Of the same volatility.
 			Result := Result and then is_transient = other.is_transient
@@ -1382,10 +1382,11 @@ feature -- Conveniences
 			Result := feature_flags & is_stable_mask = is_stable_mask
 		end
 
-	is_instance_free: BOOLEAN
-			-- Is feature instance-free, i.e. does not access "Current" and attributes?
+	is_class: BOOLEAN
+			-- Is feature declared as a class one?
+			-- See also: `set_is_class`.
 		do
-			Result := feature_flags & is_instance_free_mask /= 0
+			Result := feature_flags & is_class_mask /= 0
 		end
 
 	is_hidden_in_debugger_call_stack: BOOLEAN
@@ -1424,7 +1425,7 @@ feature -- Conveniences
 					not e.need_current (e.type)
 				else
 					is_external and not has_assertion or else
-					is_instance_free
+					is_class
 				end
 		end
 
@@ -2443,7 +2444,7 @@ end
 				Error_handler.insert_error (create {VDRD8_NEW}.make (system.current_class, Current, old_feature))
 			end
 				-- Check instance-free status.
-			if is_instance_free /= old_feature.is_instance_free then
+			if is_class /= old_feature.is_class then
 				error_handler.insert_error (create {VDRD9_NEW}.make (system.current_class, Current, old_feature))
 			end
 		end
@@ -2539,7 +2540,7 @@ end
 				Error_handler.insert_error (create {VDJR2_NEW}.make (system.current_class, Current, old_feature))
 			end
 				-- Check instance-free status.
-			if is_instance_free /= old_feature.is_instance_free then
+			if is_class /= old_feature.is_class then
 				error_handler.insert_error (create {VDJR4_NEW}.make (system.current_class, Current, old_feature))
 			end
 		end
@@ -3093,7 +3094,7 @@ feature -- Replication
 			other.set_has_convert_mark (has_convert_mark)
 			other.set_has_replicated_ast (has_replicated_ast)
 			other.set_is_stable (is_stable)
-			other.set_is_instance_free (is_instance_free)
+			other.set_is_class (is_class)
 			other.set_is_hidden_in_debugger_call_stack (is_hidden_in_debugger_call_stack)
 			other.set_body_index (body_index)
 			other.set_is_type_evaluation_delayed (is_type_evaluation_delayed)
@@ -3489,7 +3490,7 @@ feature {FEATURE_I} -- Feature flags
 	has_false_postcondition_mask: NATURAL_64 =      0x2000_0000
 	is_hidden_in_debugger_call_stack_mask: NATURAL_64 = 0x4000_0000
 	is_parentheses_mask: NATURAL_64 =					0x8000_0000
-	is_instance_free_mask: NATURAL_64 =				0x1_0000_0000
+	is_class_mask: NATURAL_64 =				0x1_0000_0000
 			-- Mask used for each feature property.
 
 feature {FEATURE_I} -- Implementation

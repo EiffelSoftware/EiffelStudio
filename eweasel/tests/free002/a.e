@@ -8,6 +8,7 @@ feature {NONE} -- Tests
 		do
 		ensure
 			not attached a
+			class
 		end
 
 	a: detachable TEST

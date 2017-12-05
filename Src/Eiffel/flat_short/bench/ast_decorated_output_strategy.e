@@ -4706,6 +4706,7 @@ feature {NONE} -- Implementation: helpers
 			i, l_count: INTEGER
 			not_first: BOOLEAN
 			l_text_formatter_decorator: like text_formatter_decorator
+			l_tagged_as: TAGGED_AS
 		do
 			l_text_formatter_decorator := text_formatter_decorator
 			from
@@ -4720,10 +4721,14 @@ feature {NONE} -- Implementation: helpers
 				end
 				l_text_formatter_decorator.begin
 				l_text_formatter_decorator.new_expression
-				if hide_breakable_marks then
-					format_tagged_as (l_as.i_th (i), True)
+				l_tagged_as := l_as.i_th (i)
+				if
+					hide_breakable_marks
+					or l_tagged_as.is_class
+				then
+					format_tagged_as (l_tagged_as, True)
 				else
-					l_as.i_th (i).process (Current)
+					l_tagged_as.process (Current)
 				end
 				not_first := True
 				l_text_formatter_decorator.commit
@@ -4776,7 +4781,7 @@ feature {NONE} -- Implementation: helpers
 			source_cl, target_cl: CLASS_C
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
-			if l_as.assertions /= Void then
+			if attached l_as.full_assertion_list as l_assertions then
 				l_text_formatter_decorator := text_formatter_decorator
 				l_text_formatter_decorator.begin
 				l_text_formatter_decorator.process_keyword_text (a_keyword, Void)
@@ -4792,7 +4797,7 @@ feature {NONE} -- Implementation: helpers
 				l_text_formatter_decorator.indent
 				l_text_formatter_decorator.put_new_line
 				l_text_formatter_decorator.set_new_line_between_tokens
-				format_assertions (l_as.assertions, False)
+				format_assertions (l_assertions, False)
 				l_text_formatter_decorator.exdent
 				l_text_formatter_decorator.set_first_assertion (False)
 				l_text_formatter_decorator.commit

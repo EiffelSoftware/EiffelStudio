@@ -102,6 +102,7 @@ feature -- Visit nodes
 		do
 			l_path := a_library.path
 			create l_load.make (factory)
+			l_load.set_parent_target (application_target)
 			l_load.retrieve_uuid (l_path)
 			if attached l_load.last_error as l_load_last_error then
 				if attached {CONF_ERROR_FILE} l_load_last_error as l_ferr then
@@ -250,7 +251,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

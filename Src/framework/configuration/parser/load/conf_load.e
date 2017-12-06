@@ -86,6 +86,17 @@ feature -- Access
 	last_uuid: detachable UUID
 			-- The last retrieved uuid.
 
+	parent_target: detachable CONF_TARGET
+			-- Associated target, when loading a library ecf file for a target.
+
+feature -- Element change
+
+	set_parent_target (a_target: like parent_target)
+			-- Set `parent_target` to `a_target`.
+		do
+			parent_target := a_target
+		end
+
 feature -- Basic operation
 
 	retrieve_configuration (a_file: READABLE_STRING_32)
@@ -282,11 +293,20 @@ feature {NONE} -- Implementation
 			l_err: CONF_ERROR_UUID
 			redir: detachable ARRAYED_LIST [PATH]
 			l_previous: detachable TUPLE [file: READABLE_STRING_32; uuid: UUID]
+			l_redirected_location: like last_redirected_location
 		do
 			create l_callback.make_with_file (a_file)
 			parse_file (a_file, l_callback)
 			if attached l_callback.last_redirected_location as l_new_location then
-				last_redirected_location := conf_redirection_location_for_file (l_new_location, a_file)
+				if attached parent_target as tgt then
+					l_redirected_location := conf_redirection_location_for_file (
+							factory.new_location_from_full_path (l_new_location.as_string_32, tgt).evaluated_path.name,
+							a_file
+						)
+				else
+					l_redirected_location := conf_redirection_location_for_file (l_new_location, a_file)
+				end
+				last_redirected_location := l_redirected_location
 			end
 			if l_callback.is_error then
 				is_error := True
@@ -340,6 +360,16 @@ feature {NONE} -- Implementation
 				end
 				if not is_error then
 					if attached l_callback.last_redirected_location as l_new_location then
+							-- Warning: do not reuse `last_redirected_location`, 
+							--	as it is the first redirection, here we really care about `l_callback.last_redirected_location`.
+						if attached parent_target as tgt then
+							l_redirected_location := conf_redirection_location_for_file (
+									factory.new_location_from_full_path (l_new_location.as_string_32, tgt).evaluated_path.name,
+									a_file
+								)
+						else
+							l_redirected_location := conf_redirection_location_for_file (l_new_location, a_file)
+						end
 							--| `a_file' is a redirection
 							--| then check the ecf at the `l_new_location'
 						redir := a_redirections
@@ -347,7 +377,7 @@ feature {NONE} -- Implementation
 							create redir.make (1)
 						end
 						if is_following_redirection then
-							retrieve_redirected_uuid (a_file, l_new_location, redir, l_previous)
+							retrieve_redirected_uuid (a_file, l_redirected_location.name, redir, l_previous)
 						end
 					elseif l_previous /= Void then
 						last_uuid := l_previous.uuid
@@ -543,7 +573,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -9,6 +9,6 @@ copy_raw 	 d.e $CLUSTER d.e
 copy_raw 	 test.e $CLUSTER test.e
 
 compile_frozen
-compile_result 	 validity_error TEST VSTA VSTA
+compile_result 	 validity_error TEST VSTA(2):11 VSTA(2):12
 
 test_end

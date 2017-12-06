@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class ASSERT_ID_SET
 
 inherit
@@ -106,6 +107,9 @@ feature -- Status Report
 	has_precondition: BOOLEAN
 			-- Has the set any precondition (inner or inherited)?
 
+	has_postcondition: BOOLEAN
+			-- Has the set any postcondition (inner or inherited)?
+
 	has_false_postcondition: BOOLEAN
 			-- Has the set any false postcondition (inner or inherited)?
 
@@ -117,6 +121,14 @@ feature -- Status Setting
 			has_precondition := b
 		ensure
 			has_precondition_set: has_precondition = b
+		end
+
+	set_has_postcondition (b: BOOLEAN)
+			-- Set `has_postcondition' to `b'.
+		do
+			has_postcondition := b
+		ensure
+			has_postcondition_set: has_postcondition = b
 		end
 
 	set_has_false_postcondition (b: BOOLEAN)
@@ -208,7 +220,7 @@ feature -- Comparison
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

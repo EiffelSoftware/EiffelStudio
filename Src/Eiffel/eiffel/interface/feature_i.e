@@ -1418,14 +1418,14 @@ feature -- Conveniences
 			-- Can Current be access in a static manner?
 		do
 			Result :=
-				is_constant or else
+				is_class or else
+				is_constant and then not has_combined_assertion or else
 					 -- Static access only if it is a C external (IL_EXTENSION_I = Void)
 					 -- or if IL external does not need an object.
 				if System.il_generation and attached {IL_EXTENSION_I} extension as e then
 					not e.need_current (e.type)
 				else
-					is_external and not has_assertion or else
-					is_class
+					is_external and not has_combined_assertion
 				end
 		end
 
@@ -1467,6 +1467,14 @@ feature -- Conveniences
 			-- Is feature declaring some pre or post conditions ?
 		do
 			Result := has_postcondition or else has_precondition
+		end
+
+	has_combined_assertion: BOOLEAN
+			-- Does feature have combined precondition or combined postcondition?
+		do
+			Result :=has_precondition or else has_postcondition or else
+				attached assert_id_set as a and then
+					(a.has_precondition or else a.has_postcondition)
 		end
 
 	frozen is_require_else: BOOLEAN

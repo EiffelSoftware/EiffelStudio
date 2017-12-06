@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Process redefined features. Formulate the assertion id set for a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -70,6 +70,7 @@ feature {NONE} -- Implementation
 			info: INH_ASSERT_INFO
 			new_assert_id_set: ASSERT_ID_SET
 			has_precondition: BOOLEAN
+			has_postcondition: BOOLEAN
 			has_false_postcondition: BOOLEAN
 			feat_assert_id_set: ASSERT_ID_SET
 			processed_features: ARRAYED_LIST [INTEGER]
@@ -83,6 +84,9 @@ feature {NONE} -- Implementation
 
 				-- By default, we suppose that the feature defines preconditions.
 			has_precondition := True
+
+				-- By default there is a postcondition if the feature defines it.
+			has_postcondition := new_feat.has_postcondition
 
 				-- By default there is no false postcondition.
 			-- has_false_postcondition := False
@@ -119,11 +123,22 @@ feature {NONE} -- Implementation
 					(feat_assert_id_set /= Void and then feat_assert_id_set.has_precondition)
 				)
 
+					-- A feature has a postcondition if it or any ancestor
+					-- has a postcondition.
+				has_postcondition := has_postcondition or else
+					feat.has_postcondition or else
+					(attached feat_assert_id_set as s and then s.has_postcondition)
+
 					-- A feature has a false postcondition if it or any ancestor
 					-- has a false postcondition.
 				has_false_postcondition := has_false_postcondition or else
 					feat.has_false_postcondition or else
 					(attached feat_assert_id_set as s and then s.has_false_postcondition)
+
+					-- Propagate class status of the feature.
+				if feat.is_class then
+					new_feat.set_is_class (True)
+				end
 
 					-- Prepare next iteration.
 				features.forth
@@ -131,6 +146,9 @@ feature {NONE} -- Implementation
 
 				-- Set the calculated precondition status.
 			new_assert_id_set.set_has_precondition (has_precondition)
+
+				-- Set the calculated postcondition status.
+			new_assert_id_set.set_has_postcondition (has_postcondition)
 
 				-- Set the calculated false postcondition status.
 			new_assert_id_set.set_has_false_postcondition (has_false_postcondition)
@@ -160,7 +178,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

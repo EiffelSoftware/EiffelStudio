@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 			r: like row
 		do
 			if cse /= Void then
-				if attached cse.routine_i as l_routine_i and then l_routine_i.is_instance_free then
+				if attached cse.routine as l_routine and then l_routine.is_instance_free then
 						-- Do not show Current object for instance free call!
 				elseif debugger_manager.is_dotnet_project then
 					app := debugger_manager.application

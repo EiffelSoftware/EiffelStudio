@@ -140,7 +140,7 @@ feature
 			-- <Precursor>
 		do
 				-- External features without assertions have no unqualified calls.
-			Result := not has_assertion or else Precursor
+			Result := not has_combined_assertion or else Precursor
 		end
 
 	external_name_id: INTEGER

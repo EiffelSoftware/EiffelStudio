@@ -294,13 +294,19 @@ feature {NONE} -- Implementation
 			redir: detachable ARRAYED_LIST [PATH]
 			l_previous: detachable TUPLE [file: READABLE_STRING_32; uuid: UUID]
 			l_redirected_location: like last_redirected_location
+			l_file_parent: PATH
 		do
+			l_file_parent := (create {PATH}.make_from_string (a_file)).parent -- Directory location containing `a_file`.
+
 			create l_callback.make_with_file (a_file)
 			parse_file (a_file, l_callback)
 			if attached l_callback.last_redirected_location as l_new_location then
 				if attached parent_target as tgt then
 					l_redirected_location := conf_redirection_location_for_file (
-							factory.new_location_from_full_path (l_new_location.as_string_32, tgt).evaluated_path.name,
+							factory.new_location_from_full_path (
+									l_new_location.as_string_32,
+									tgt
+								).evaluated_path_relative_to_location (l_file_parent).name,
 							a_file
 						)
 				else
@@ -360,11 +366,14 @@ feature {NONE} -- Implementation
 				end
 				if not is_error then
 					if attached l_callback.last_redirected_location as l_new_location then
-							-- Warning: do not reuse `last_redirected_location`, 
+							-- Warning: do not reuse `last_redirected_location`,
 							--	as it is the first redirection, here we really care about `l_callback.last_redirected_location`.
 						if attached parent_target as tgt then
 							l_redirected_location := conf_redirection_location_for_file (
-									factory.new_location_from_full_path (l_new_location.as_string_32, tgt).evaluated_path.name,
+									factory.new_location_from_full_path (
+											l_new_location.as_string_32,
+											tgt
+										).evaluated_path_relative_to_location (l_file_parent).name,
 									a_file
 								)
 						else

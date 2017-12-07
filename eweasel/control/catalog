@@ -2770,7 +2770,7 @@ test	instance_free-call-derivation		free005 tcf pass instance_free call executio
 test	instance_free-call-on-deferred		free006 tcf fail instance_free call execution
 test	instance_free-external-assertion	free007 tcf pass instance_free call validity
 test	instance_free-redeclaration		free008 tcf pass instance_free declaration validity
-test	instance_free-merging			free009 tcf fail instance_free declaration validity
+test	instance_free-merging			free009 tcf pass instance_free declaration validity
 
 -- Tests for platform specific results
 test	print-large-pointer				platform001 tcf pass platform

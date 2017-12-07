@@ -2977,6 +2977,7 @@ feature -- Undefinition
 			Result.set_body_index (body_index)
 			Result.set_has_precondition (has_precondition)
 			Result.set_has_postcondition (has_postcondition)
+			Result.set_is_class (is_class)
 			Result.set_has_false_postcondition (has_false_postcondition)
 			Result.set_is_bracket (is_bracket)
 			Result.set_is_parentheses (is_parentheses)

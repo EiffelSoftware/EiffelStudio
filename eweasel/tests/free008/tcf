@@ -1,0 +1,11 @@
+test_name 	 instance_free-redeclaration
+test_description Certain features such as attributes or object-relative onces cannot be redeclarations of instance-free features.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 a.e $CLUSTER a.e
+copy_raw 	 test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	 validity_error TEST ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9)
+
+test_end

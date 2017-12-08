@@ -1,26 +1,22 @@
 ﻿note
+	description: "[
+			Error for a declaration of an instance-free feature.
+		
+			The specific reason of the error is detailed in descendants.
+		]"
 
-	description: "Error for a declaration of an instance-free variable attribute."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
-
-class VFFD9X
+deferred class VUCR
 
 inherit
 
 	FEATURE_ERROR
-		redefine
+		undefine
 			print_short_help,
 			trace_single_line
 		end
 
 	INTERNAL_COMPILER_STRING_EXPORTER
 	SHARED_NAMES_HEAP
-
-create
-	make
 
 feature {NONE} -- Creation
 
@@ -43,33 +39,15 @@ feature {NONE} -- Creation
 
 feature -- Properties
 
-	code: STRING = "VFFD9x"
+	code: STRING = "VUCR"
 			-- <Precursor>
-
-feature {NONE} -- Output
-
-	print_short_help (t: TEXT_FORMATTER)
-			-- <Precursor>
-		do
-			t.add_new_line
-			t.add (locale.translation_in_context ("[
-				Error: An variable attribute cannot be declared as instance-free.
-				What to do: Remove the value "instance_free" from the note tag "option".
-			]", "compiler.error"))
-			t.add_new_line
-		end
-
-	trace_single_line (t: TEXT_FORMATTER)
-			-- <Precursor>
-		do
-			format_elements (t, locale.translation_in_context ("The variable attribute {1} is declared as instance-free.", "compiler.error"),
-				<<agent e_feature.append_name>>)
-		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	date: "$Date$";
+	revision: "$Revision $"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

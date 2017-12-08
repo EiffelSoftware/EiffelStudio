@@ -5646,9 +5646,9 @@ feature {NONE} -- Visitor
 			l_error_level := error_level
 			if current_feature.is_class then
 				if current_feature.is_attribute then
-					error_handler.insert_error (create {VFFD9X}.make (current_feature, context.current_class, l_as.feature_name))
+					error_handler.insert_error (create {VUCR_ATTRIBUTE}.make (current_feature, context.current_class, l_as.feature_name))
 				elseif current_feature.is_object_relative_once then
-					error_handler.insert_error (create {VFFD10X}.make (current_feature, context.current_class, l_as.feature_name))
+					error_handler.insert_error (create {VUCR_ONCE}.make (current_feature, context.current_class, l_as.feature_name))
 				end
 			end
 			reset_for_unqualified_call_checking

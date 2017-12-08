@@ -3,7 +3,9 @@
 		Automatically generated class for EiffelStudio ${PIXEL_WIDTH}x${PIXEL_HEIGHT} icons.
 	]"
 	generator: "Eiffel Matrix Generator"
-	command_line: "${COMMAND_LINE}"
+	command_line: "[
+		${COMMAND_LINE}
+		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date: $"

@@ -15,9 +15,6 @@ inherit
 			trace_single_line
 		end
 
-	INTERNAL_COMPILER_STRING_EXPORTER
-	SHARED_NAMES_HEAP
-
 feature {NONE} -- Creation
 
 	make (f: FEATURE_I; c: CLASS_C; l: LOCATION_AS)

@@ -139,8 +139,14 @@ feature
 	is_target_free: BOOLEAN
 			-- <Precursor>
 		do
-				-- External features without assertions have no unqualified calls.
-			Result := not has_combined_assertion or else Precursor
+			Result :=
+				if System.il_generation and attached {IL_EXTENSION_I} extension as e then
+						-- External IL static features do not need a target.
+					e.is_static
+				else
+						-- External features without assertions have no unqualified calls.
+					not has_combined_assertion
+				end
 		end
 
 	external_name_id: INTEGER

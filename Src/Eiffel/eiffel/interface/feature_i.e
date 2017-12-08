@@ -1424,10 +1424,15 @@ feature -- Conveniences
 					 -- Static access only if it is a C external (IL_EXTENSION_I = Void)
 					 -- or if IL external does not need an object.
 				if System.il_generation and attached {IL_EXTENSION_I} extension as e then
-					not e.need_current (e.type)
+					e.is_static
 				else
 					is_external and not has_combined_assertion
 				end
+		ensure
+			true_if_is_instance_free: is_instance_free implies Result
+			true_if_safe_external:
+				(is_external and not has_combined_assertion and
+				not (System.il_generation and attached {IL_EXTENSION_I} extension)) implies Result
 		end
 
 	is_instance_free: BOOLEAN
@@ -1438,6 +1443,10 @@ feature -- Conveniences
 				is_class or else
 					-- IL externals are instance-free if they are static.
 				System.il_generation and attached {IL_EXTENSION_I} extension as e and then e.is_static
+		ensure
+			true_if_class: is_class implies Result
+			true_if_safe_constant: (is_constant and then not has_combined_assertion) implies Result
+			true_if_static_member: (System.il_generation and attached {IL_EXTENSION_I} extension as e and then e.is_static) implies Result
 		end
 
 	is_target_free: BOOLEAN
@@ -1446,7 +1455,13 @@ feature -- Conveniences
 			-- See also: `is_class`, `has_static_access`, `is_instance_free`.
 		do
 				-- IL externals have no unqualified calls if they do not need current object.
-			Result := System.il_generation and attached {IL_EXTENSION_I} extension as e and then not e.need_current (e.type)
+			Result := System.il_generation and attached {IL_EXTENSION_I} extension as e and then e.is_static
+		ensure
+			true_if_safe_constant: (is_constant and then not has_combined_assertion) implies Result
+			true_if_static_member: (System.il_generation and attached {IL_EXTENSION_I} extension as e and then e.is_static) implies Result
+			true_if_safe_external:
+				(is_external and not has_combined_assertion and
+				not (System.il_generation and attached {IL_EXTENSION_I} extension)) implies Result
 		end
 
 	frozen has_precondition: BOOLEAN

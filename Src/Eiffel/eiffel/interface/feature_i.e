@@ -1430,9 +1430,7 @@ feature -- Conveniences
 				end
 		ensure
 			true_if_is_instance_free: is_instance_free implies Result
-			true_if_safe_external:
-				(is_external and not has_combined_assertion and
-				not (System.il_generation and attached {IL_EXTENSION_I} extension)) implies Result
+			true_if_is_target_free: is_target_free implies Result
 		end
 
 	is_instance_free: BOOLEAN

@@ -98,7 +98,6 @@ feature {NONE} -- Evaluation
 			-- Compute the value of the last message of `Current'.
 		local
 			l_error_occurred: BOOLEAN
-			dobj: DEBUGGED_OBJECT
 			prev_byte_code: detachable BYTE_CODE
 		do
 				--| Clean tmp evaluation.
@@ -111,21 +110,8 @@ feature {NONE} -- Evaluation
 				init_context_with_current_callstack
 			elseif on_class then
 				init_context_address_with_current_callstack
-				context.set_data (Void, context.class_c, Void, Void, Void, 0, 0)
-				apply_context
 			elseif on_object then
-				if attached debugger_manager.object_manager as objman and then objman.is_valid_and_known_object_address (context.address) then
-					dobj := objman.debugged_object (context.address, 0, 0)
-				else
-					dobj := Void
-				end
-				if dobj = Void or else dobj.is_erroneous then
-					dbg_error_handler.notify_error_expression (Debugger_names.msg_error_during_context_preparation (Debugger_names.msg_error_unable_to_get_valid_target_for (context.address.output)))
-				else
-					context.set_data (Void, dobj.dynamic_class, dobj.class_type, Void, Void, 0, 0)
-					apply_context
-				end
-				dobj := Void
+				init_context_on_object_with_current_callstack
 			end
 
 			debug ("debugger_evaluator")
@@ -2325,6 +2311,27 @@ feature -- Context: Element change
 			end
 		end
 
+	init_context_on_object_with_current_callstack
+			-- Init context on object with data from current callstack
+			-- i.e: current debugging context
+		local
+			dobj: DEBUGGED_OBJECT
+		do
+			init_context_with_current_callstack
+
+			if attached debugger_manager.object_manager as objman and then objman.is_valid_and_known_object_address (context.address) then
+				dobj := objman.debugged_object (context.address, 0, 0)
+			else
+				dobj := Void
+			end
+			if dobj = Void or else dobj.is_erroneous then
+				dbg_error_handler.notify_error_expression (Debugger_names.msg_error_during_context_preparation (Debugger_names.msg_error_unable_to_get_valid_target_for (context.address.output)))
+			else
+				context.set_data (context.feature_i, dobj.dynamic_class, dobj.class_type, context.local_table, context.object_test_locals, context.breakable_index, context.bp_nested_index)
+				apply_context
+			end
+		end
+
 	init_context_address_with_current_callstack
 			-- Init context address with data from current callstack
 			-- i.e: current debugging context
@@ -2337,6 +2344,8 @@ feature -- Context: Element change
 			if cse /= Void then
 				context.set_address (cse.object_address)
 			end
+			context.set_data (Void, context.class_c, Void, Void, Void, 0, 0)
+			apply_context
 		end
 
 	apply_context
@@ -2533,7 +2542,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

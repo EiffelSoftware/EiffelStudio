@@ -13,18 +13,46 @@ inherit
 			do_check_types as old_do_check_types,
 			equiv as basic_equiv
 		redefine
-			assigner_name_id, transfer_to, transfer_from, access_for_feature, melt, generate,
-			is_once, redefinable, is_constant,
-			set_type, type, generate_il, to_generate_in,
-			new_rout_entry, extension, is_target_free
+			access_for_feature,
+			assigner_name_id,
+			extension,
+			generate,
+			generate_il,
+			is_constant,
+			is_instance_free,
+			is_once,
+			is_target_free,
+			melt,
+			new_rout_entry,
+			redefinable,
+			set_type,
+			to_generate_in,
+			transfer_from,
+			transfer_to,
+			type
 		end
 
 	ENCAPSULATED_I
 		redefine
-			assigner_name_id, transfer_to, transfer_from, do_check_types, access_for_feature, equiv,
-			melt, generate, is_once, redefinable, is_constant,
-			set_type, type, generate_il, to_generate_in,
-			new_rout_entry, extension, is_target_free
+			access_for_feature,
+			assigner_name_id,
+			do_check_types,
+			equiv,
+			extension,
+			generate,
+			generate_il,
+			is_constant,
+			is_instance_free,
+			is_once,
+			is_target_free,
+			melt,
+			new_rout_entry,
+			redefinable,
+			set_type,
+			to_generate_in,
+			transfer_from,
+			transfer_to,
+			type
 		select
 			do_check_types, equiv
 		end
@@ -69,14 +97,22 @@ feature -- Access
 feature -- Status report
 
 	is_constant: BOOLEAN = True
-			-- Is the current feature a constant one ?
+			-- Is the current feature a constant one?
 
 	redefinable: BOOLEAN = False
-			-- Is a constant redefinable ?
+			-- Is a constant redefinable?
 
-	is_target_free: BOOLEAN = True
+	is_instance_free: BOOLEAN
 			-- <Precursor>
-			-- Constants have no unqualified calls.
+		do
+			Result := not has_combined_assertion
+		end
+
+	is_target_free: BOOLEAN
+			-- <Precursor>
+		do
+			Result := not has_combined_assertion
+		end
 
 feature -- Settings
 

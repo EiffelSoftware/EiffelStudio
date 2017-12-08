@@ -1416,6 +1416,7 @@ feature -- Conveniences
 
 	has_static_access: BOOLEAN
 			-- Can Current be access in a static manner?
+			-- See also: `is_class`, `is_instance_free`, `is_target_free`.
 		do
 			Result :=
 				is_class or else
@@ -1429,9 +1430,20 @@ feature -- Conveniences
 				end
 		end
 
+	is_instance_free: BOOLEAN
+			-- Is feature instance-free (as specified in the standard)?
+			-- See also: `is_class`, `has_static_access`, `is_target_free`.
+		do
+			Result :=
+				is_class or else
+					-- IL externals are instance-free if they are static.
+				System.il_generation and attached {IL_EXTENSION_I} extension as e and then e.is_static
+		end
+
 	is_target_free: BOOLEAN
 			-- Does the feature depend on the target type of the call?
 			-- (It can be instance-free, but depend on the target type.)
+			-- See also: `is_class`, `has_static_access`, `is_instance_free`.
 		do
 				-- IL externals have no unqualified calls if they do not need current object.
 			Result := System.il_generation and attached {IL_EXTENSION_I} extension as e and then not e.need_current (e.type)

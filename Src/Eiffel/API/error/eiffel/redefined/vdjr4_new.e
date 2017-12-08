@@ -7,6 +7,7 @@ class VDJR4_NEW
 inherit
 	VDJR_NEW
 		redefine
+			build_explain,
 			print_error_message,
 			print_single_line_error_message
 		end
@@ -29,15 +30,19 @@ feature {NONE} -- Output
 			t.add_new_line
 			format_elements (t, locale.translation_in_context
 					({STRING_32} "[
-						Joined features {1} and {2} have different instance-free status.
+						Joined features {1} from class {3} and {2} from class {4} have different instance-free status.
 						
 						What to do:
 							• make sure both features have the same instance-free status or
 							• avoid joining them.
 					]",
 					"eiffel.error"),
-				<<agent feature_1.append_name, agent feature_2.append_name>>
-			)
+				<<
+					agent feature_1.append_name,
+					agent feature_2.append_name,
+					agent (feature_1.written_class).append_name,
+					agent (feature_2.written_class).append_name
+				>>)
 				-- Make sure any other information about the error comes at a new line.
 			t.add_new_line
 			t.add_new_line
@@ -47,9 +52,39 @@ feature {NONE} -- Output
 			-- <Precursor>
 		do
 			format_elements (t, locale.translation_in_context
-					("Joined features {1} and {2} are not both instance-free.",
+					("Joined features {1} and {2} from classes {3} and {4} are not both instance-free.",
 					"eiffel.error"),
-				<<agent feature_1.append_name, agent feature_2.append_name>>)
+				<<
+					agent feature_1.append_name,
+					agent feature_2.append_name,
+					agent (feature_1.written_class).append_name,
+					agent (feature_2.written_class).append_name
+				>>)
+		end
+
+	build_explain (t: TEXT_FORMATTER)
+			-- <Precursor>
+		do
+			print_status (feature_1, t)
+			print_status (feature_2, t)
+		end
+
+	print_status (f: E_FEATURE; t: TEXT_FORMATTER)
+			-- Report an instance-free status of the feature `f` using `t`.
+		do
+			format_elements (t,
+				if f.is_instance_free then
+					locale.translation_in_context
+						("Feature {1} from class {2} is instance-free.", "eiffel.error")
+				else
+					locale.translation_in_context
+						("Feature {1} from class {2} is not instance-free.", "eiffel.error")
+				end,
+				<<
+					agent f.append_name,
+					agent (f.written_class).append_name
+				>>)
+				t.add_new_line
 		end
 
 note

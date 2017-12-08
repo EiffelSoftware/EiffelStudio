@@ -1,4 +1,4 @@
-note
+﻿note
 	description:"Actual type like Current."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 			base_class, associated_class_type, internal_conform_to, conformance_type, convert_to,
 			generics, has_associated_class, has_associated_class_type, formal_instantiated_in,
 			instantiated_in, duplicate, set_separate_mark, recomputed_in,
-			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference, is_ephemeral,
+			is_basic, is_expanded, is_external, is_like_current, is_none, is_reference,
 			meta_type, set_actual_type, evaluated_type_in_descendant, is_tuple,
 			set_attached_mark, set_detachable_mark, set_is_implicitly_attached,
 			unset_is_implicitly_attached, description, description_with_detachable_type,
@@ -137,14 +137,6 @@ feature -- Properties
 		do
 			if conformance_type /= Void then
 				Result := conformance_type.is_expanded
-			end
-		end
-
-	is_ephemeral: BOOLEAN
-			-- <Precursor>
-		do
-			if attached conformance_type as t then
-				Result := t.is_ephemeral
 			end
 		end
 
@@ -779,7 +771,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

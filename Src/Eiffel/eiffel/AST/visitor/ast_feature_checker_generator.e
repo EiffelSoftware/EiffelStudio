@@ -1551,7 +1551,7 @@ feature {NONE} -- Implementation
 					else
 							-- A feature is found.
 						l_found_feature := l_feature
-						if is_static and then not (l_last_class.is_ephemeral or l_feature.has_static_access) then
+						if is_static and then not l_feature.has_static_access then
 								-- Not a valid feature for static access.	
 							create l_vsta2
 							context.init_error (l_vsta2)

@@ -10,7 +10,7 @@ class CL_TYPE_A
 inherit
 	DEANCHORED_TYPE_A
 		redefine
-			is_expanded, is_reference, valid_generic, is_ephemeral,
+			is_expanded, is_reference, valid_generic,
 			meta_type, same_as, good_generics, error_generics,
 			has_expanded, internal_is_valid_for_class, convert_to,
 			description, description_with_detachable_type,
@@ -112,12 +112,6 @@ feature -- Properties
 		do
 			l_mark := declaration_mark
 			Result := l_mark = expanded_mark or else (l_mark = no_mark and then class_declaration_mark = expanded_mark)
-		end
-
-	is_ephemeral: BOOLEAN
-			-- <Precursor>
-		do
-			Result := base_class.is_ephemeral
 		end
 
 	is_reference: BOOLEAN

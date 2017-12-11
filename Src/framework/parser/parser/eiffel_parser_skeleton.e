@@ -55,8 +55,7 @@ feature {NONE} -- Initialization
 
 			formal_parameters.compare_objects
 			is_supplier_recorded := True
-				-- Keep one element in it.
-			once_manifest_string_counters.force (0)
+
 			add_feature_frame
 		end
 
@@ -161,13 +160,12 @@ feature -- Initialization
 			feature_stack.wipe_out
 			scopes.wipe_out
 			scope_identifiers.wipe_out
-			add_feature_frame
 			is_supplier_recorded := True
 			is_constraint_renaming := False
 			object_test_locals := Void
 			counters.wipe_out
 			counters2.wipe_out
-			reset_once_manifest_string_counter
+			once_manifest_string_counters.wipe_out
 			last_rsqure.wipe_out
 			current_class := Void
 			is_ignoring_attachment_marks := False
@@ -180,6 +178,8 @@ feature -- Initialization
 			expanded_keyword := Void
 			external_keyword := Void
 			frozen_keyword := Void
+				-- Add a frame for a top-level feature.
+			add_feature_frame
 		end
 
 feature -- Status report
@@ -826,17 +826,47 @@ feature {NONE} -- Implementation
 			-- for an invariant. We never remove the first element of the stack.
 
 	add_feature_frame
+			-- Add a new frame to process a feature.
 		do
 			feature_stack.force ([Normal_level, 0, False])
 			add_once_manifest_string_counter
+		ensure
+			feature_stack_allocated: feature_stack.count = old feature_stack.count + 1
+			default_id_level: id_level = normal_level
+			default_fbody_pos: fbody_pos = 0
+			default_is_class_feature: not is_class_feature
+			once_manifest_string_counters_allocated: once_manifest_string_counters.count = old once_manifest_string_counters.count + 1
+			default_once_manifest_string_counter_value: once_manifest_string_counter_value = 0
 		end
 
 	remove_feature_frame
+			-- Add a frame to process a feature.
 		require
 			feature_stack.count > 1
+			once_manifest_string_counters.count > 1
 		do
 			feature_stack.remove
 			remove_once_manifest_string_counter
+		ensure
+			feature_stack_descreased: feature_stack.count = old feature_stack.count - 1
+			once_manifest_string_counters_descreased: once_manifest_string_counters.count = old once_manifest_string_counters.count - 1
+		end
+
+	reset_feature_frame
+			-- Reset a top-level frame to the default state.
+			-- This has to be done before processing a new top-level feature.
+		require
+			feature_stack_allocated: not feature_stack.is_empty
+			default_id_level: id_level = normal_level
+			once_manifest_string_counters_allocated: not once_manifest_string_counters.is_empty
+		do
+			once_manifest_string_counters.replace (0)
+			set_is_class_feature (False)
+		ensure
+			feature_stack_unchanged: feature_stack.count = old feature_stack.count
+			default_is_class_feature: not is_class_feature
+			once_manifest_string_counters_unchanged: once_manifest_string_counters.count = old once_manifest_string_counters.count
+			default_once_manifest_string_counter_value: once_manifest_string_counter_value = 0
 		end
 
 	is_deferred: BOOLEAN
@@ -956,14 +986,6 @@ feature {NONE} -- Counters
 			once_manifest_string_counters.force (0)
 		ensure
 			one_more: once_manifest_string_counters.count = old once_manifest_string_counters.count + 1
-			value_zero: once_manifest_string_counter_value = 0
-		end
-
-	reset_once_manifest_string_counter
-			-- Reset the value of `once_manifest_string_counter_value'
-		do
-			once_manifest_string_counters.replace (0)
-		ensure
 			value_zero: once_manifest_string_counter_value = 0
 		end
 

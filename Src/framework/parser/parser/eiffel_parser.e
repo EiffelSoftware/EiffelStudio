@@ -7968,7 +7968,7 @@ end
 				else
 					yyval77 := ast_factory.new_routine_as (temp_string_as1, yyvs74.item (yyvsp74), yyvs124.item (yyvsp124), yyvs76.item (yyvsp76), yyvs44.item (yyvsp44), Void, yyvs12.item (yyvsp12), once_manifest_string_counter_value, fbody_pos, temp_keyword_as, Void, object_test_locals)
 				end
-				reset_once_manifest_string_counter
+				reset_feature_frame
 				object_test_locals := Void
 				leave_scope -- For local variables.
 			
@@ -13481,7 +13481,7 @@ end
 
 				set_id_level (Normal_level)
 				yyval63 := ast_factory.new_invariant_as (yyvs120.item (yyvsp120), once_manifest_string_counter_value, yyvs12.item (yyvsp12), object_test_locals)
-				reset_once_manifest_string_counter
+				reset_feature_frame
 				object_test_locals := Void
 			
 if yy_parsing_status >= yyContinue then

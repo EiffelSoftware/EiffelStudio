@@ -1433,7 +1433,7 @@ Routine:
 				else
 					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $5, $6, $7, Void, $9, once_manifest_string_counter_value, fbody_pos, temp_keyword_as, Void, object_test_locals)
 				end
-				reset_once_manifest_string_counter
+				reset_feature_frame
 				object_test_locals := Void
 				leave_scope -- For local variables.
 			}
@@ -2794,7 +2794,7 @@ Class_invariant: -- Empty
 			{
 				set_id_level (Normal_level)
 				$$ := ast_factory.new_invariant_as ($3, once_manifest_string_counter_value, $1, object_test_locals)
-				reset_once_manifest_string_counter
+				reset_feature_frame
 				object_test_locals := Void
 			}
 	;

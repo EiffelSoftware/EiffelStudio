@@ -125,12 +125,12 @@ feature -- Status report
 
 	is_valid_peer_address (addr: attached separate like address): BOOLEAN
 		do
-			Result := (addr.family = af_inet or else addr.family = af_inet6)
+			Result := addr.family = af_inet or else addr.family = af_inet6
 		end
 
 	is_valid_family (addr: attached like address): BOOLEAN
 		do
-			Result := (addr.family = af_inet or else addr.family = af_inet6)
+			Result := addr.family = af_inet or else addr.family = af_inet6
 		end
 
 	ready_for_reading: BOOLEAN
@@ -141,8 +141,8 @@ feature -- Status report
 		local
 			retval: INTEGER
 		do
-			retval := c_select_poll_with_timeout (descriptor, True, timeout)
-			Result := (retval > 0)
+			retval := c_select_poll_with_timeout (descriptor, True, timeout_ns)
+			Result := retval > 0
 		end
 
 	ready_for_writing: BOOLEAN
@@ -152,8 +152,8 @@ feature -- Status report
 		local
 			retval: INTEGER
 		do
-			retval := c_select_poll_with_timeout (descriptor, False, timeout)
-			Result := (retval > 0)
+			retval := c_select_poll_with_timeout (descriptor, False, timeout_ns)
+			Result := retval > 0
 		end
 
 	has_exception_state: BOOLEAN
@@ -163,27 +163,66 @@ feature -- Status report
 		local
 			retval: INTEGER
 		do
-			retval := c_check_exception_with_timeout (descriptor, timeout)
-			Result := (retval > 0)
+			retval := c_check_exception_with_timeout (descriptor, timeout_ns)
+			Result := retval > 0
 		end
+
+	is_default_timeout: BOOLEAN
+			-- Is `timeout_ns` the default timeout?	
+		do
+			Result := timeout_ns = one_second_in_nanoseconds * default_timeout.to_natural_64
+		end
+
+feature -- Access: Timeout
 
 	timeout: INTEGER
 			-- Duration of timeout in seconds
+		obsolete
+			"Use `timeout_ns` using nanoseconds [2018-01-15]"
+		local
+			ns: like timeout_ns
+		do
+			ns := timeout_ns
+			Result := nanoseconds_to_seconds (timeout_ns)
+			if Result = 0 and ns > 0 then
+					-- As 0 may have different meaning, use the closest non zero possible value.
+				Result := 1
+			end
+		end
+
+	timeout_ns: NATURAL_64
+			-- Duration of timeout in nanoseconds.
 
 	recv_timeout: INTEGER
 			-- Receive timeout in seconds on Current socket.
+		obsolete
+			"Use `recv_timeout_ns` using nanoseconds [2018-01-15]"
 		do
-			Result := c_get_sock_recv_timeout (descriptor, level_sol_socket)
+			Result := nanoseconds_to_seconds (recv_timeout_ns)
 		ensure
 			result_not_negative: Result >= 0
+		end
+
+	recv_timeout_ns: NATURAL_64
+			-- Receive timeout in nanoseconds on Current socket.
+		do
+			Result := c_get_sock_opt_timeout (descriptor, level_sol_socket, so_rcv_timeo)
 		end
 
 	send_timeout: INTEGER
 			-- Send timeout in seconds on Current socket.
+		obsolete
+			"Use `send_timeout_ns` using nanoseconds [2018-01-15]"
 		do
-			Result := c_get_sock_send_timeout (descriptor, level_sol_socket)
+			Result := nanoseconds_to_seconds (send_timeout_ns)
 		ensure
 			result_not_negative: Result >= 0
+		end
+
+	send_timeout_ns: NATURAL_64
+			-- Send timeout in nanoseconds on Current socket.
+		do
+			Result := c_get_sock_opt_timeout (descriptor, level_sol_socket, so_snd_timeo)
 		end
 
 feature -- Status setting
@@ -194,7 +233,7 @@ feature -- Status setting
 			socket_exists: exists
 		do
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr, 1)
-		end;
+		end
 
 	do_not_reuse_address
 			-- Turn `reuse_address' option off.
@@ -202,39 +241,78 @@ feature -- Status setting
 			socket_exists: exists
 		do
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr, 0)
-		end;
+		end
+
+	set_default_timeout
+			-- Set timeout to default.
+		do
+			timeout_ns := one_second_in_nanoseconds * default_timeout.to_natural_64
+		ensure
+			timeout_set_to_default: is_default_timeout
+		end
 
 	set_timeout (n: INTEGER)
 			-- Set timeout to `n' seconds.
+		obsolete
+			"Use `set_timeout_ns (ns)` [2018-01-15]"
 		require
 			non_negative: n >= 0
 		do
-			if n > 0 then
-				timeout := n
-			else
-				timeout := default_timeout
-			end
+			set_timeout_ns (n.to_natural_64)
 		ensure
-			timeout_set: timeout = n or timeout = default_timeout
+			timeout_set: timeout = n
+		end
+
+	set_timeout_ns (a_timeout_nanoseconds: NATURAL_64)
+			-- Set timeout with to `a_timeout_nanoseconds` nanoseconds.
+			-- Warning: the timeout granularity of the platform may not be nanoseconds, but micro or milliseconds.
+		require
+			is_valid_timeout_ns: is_valid_timeout_ns (a_timeout_nanoseconds)
+		do
+			timeout_ns := a_timeout_nanoseconds
 		end
 
 	set_recv_timeout (a_timeout_seconds: INTEGER)
 			-- Set the receive timeout in seconds on Current socket.
-			-- if `0' the related operations will never timeout.
+			-- If `0' the related operations will never timeout.
+		obsolete
+			"Use `set_recv_timeout_ns` using nanoseconds [2018-01-15]"
 		require
-			positive_timeout: a_timeout_seconds >= 0
+			non_negative_timeout: a_timeout_seconds >= 0
 		do
-			c_set_sock_recv_timeout (descriptor, level_sol_socket, a_timeout_seconds)
+			set_recv_timeout_ns (one_second_in_nanoseconds * a_timeout_seconds.to_natural_64)
+		end
+
+	set_recv_timeout_ns (a_timeout_nanoseconds: NATURAL_64)
+			-- Set the receive timeout with `a_timeout_nanoseconds` nanoseconds on Current socket.
+			-- If `0' the related operations will never timeout.
+			-- Warning: the timeout granularity of the platform may not be nanoseconds, but micro or milliseconds.
+		require
+			is_valid_timeout_ns: is_valid_timeout_ns (a_timeout_nanoseconds)
+		do
+			c_set_sock_opt_timeout (descriptor, level_sol_socket, so_rcv_timeo, a_timeout_nanoseconds)
 		end
 
 	set_send_timeout (a_timeout_seconds: INTEGER)
-			-- Set the send timeout in milliseconds on Current socket.
-			-- if `0' the related operations will never timeout.
+			-- Set the send timeout in seconds on Current socket.
+			-- If `0' the related operations will never timeout.
+		obsolete
+			"Use `set_send_timeout_ns` using nanoseconds [2018-01-15]"
 		require
-			positive_timeout: a_timeout_seconds >= 0
+			non_negative_timeout: a_timeout_seconds >= 0
 		do
-			c_set_sock_send_timeout (descriptor, level_sol_socket, a_timeout_seconds)
-		end		
+			set_send_timeout_ns (one_second_in_nanoseconds * a_timeout_seconds.to_natural_64)
+		end
+
+	set_send_timeout_ns (a_timeout_nanoseconds: NATURAL_64)
+			-- Set the send timeout with `a_timeout_nanoseconds` nanoseconds on Current socket.
+			-- If `0' the related operations will never timeout.
+			-- Warning: the timeout granularity of the platform may not be nanoseconds, but micro or milliseconds.
+		require
+			is_valid_timeout_ns: is_valid_timeout_ns (a_timeout_nanoseconds)
+		do
+			c_set_sock_opt_timeout (descriptor, level_sol_socket, so_snd_timeo, a_timeout_nanoseconds)
+		end
 
 	set_non_blocking
 			-- <Precursor>
@@ -309,33 +387,70 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+	nanoseconds_to_seconds (ns: NATURAL_64): INTEGER
+			-- Number of seconds in `ns` nanoseconds in seconds (that fits in INTEGER_32 value).
+			-- Warning: Result can not be more than {INTEGER}.max_value.
+		local
+			n64: NATURAL_64
+		do
+			n64 := ns // one_second_in_nanoseconds
+			if n64 > {INTEGER}.max_value.to_natural_64 then
+				Result := {INTEGER}.max_value
+			else
+				Result := n64.to_integer_32
+			end
+		ensure
+			non_negative: Result >= 0
+			coherent: Result.to_natural_64 * one_second_in_nanoseconds <= ns
+		end
+
 feature {NONE} -- Constants
 
-	default_timeout: INTEGER = 20
+	default_timeout: INTEGER
 			-- Default timeout duration in seconds
+
+	one_second_in_nanoseconds: NATURAL_64 = 1_000_000_000
+			-- Number of nanoseconds in one second.
+
+	max_timeout_ns_value: NATURAL_64 = 2_147_483_647_999_999_999
+			-- Maximum value for a timeout in nanoseconds.
+			-- See `is_valid_timeout_ns` for explanation.
+
+feature -- Validation			
+
+	is_valid_timeout_ns (ns: NATURAL_64): BOOLEAN
+			--| Note: internally (C API), the ns timeout is splitted into:
+			--|  - a long value `tv_sec` : number of seconds
+			--|  - a long value `tv_usec`: number of microseconds (with struct timeval)
+			--| or in the future 
+			--|  - a long value `tv_nsec`: number of nanoseconds  (with struct timespec)
+			--| tv_usec or tv_nsec should be >= 0 and < equivalent of 1 second.
+			--| tv_usec < 1_000_000
+			--| tv_nsec < 1_000_000_000
+			--| so there is no issue with NATURAL_64 for usec or nsec
+			--| but, then, there is restriction for the seconds value which is coded as long int
+			--|  and long values (32 bits) are between -2_147_483_647 and +2_147_483_647 (i.e 2e31 - 1 = {INTEGER_32}.max_value).
+			--|  then, the `seconds` part of the timeout <= +2_147_483_647, and then expressed in nanoseconds, and taking into account
+			--|  the usec or nsec part, the timeout should not be greater than:
+			--|     +2_147_483_647 * 1_000_000_000 + 999_999_999 =  2_147_483_647_999_999_999
+			--|      and as NATURAL_64's max value is bigger     = 18_446_744_073_709_551_615
+			--|      features dealing with timeout in nanoseconds have related preconditions.
+		do
+			Result := 0 <= ns and then ns <= max_timeout_ns_value
+		end
 
 feature {NONE} -- Externals
 
-	c_set_sock_recv_timeout (a_fd, level: INTEGER; a_timeout_seconds: INTEGER)
-			-- C routine to set socket option `SO_RCVTIMEO' with `a_timeout_seconds' seconds.
+	c_set_sock_opt_timeout (a_fd, level: INTEGER; a_timeo_opt: INTEGER; a_timeout_nanoseconds: NATURAL_64)
+			-- C routine to set socket option `$a_timeo_opt' with `a_timeout_nanoseconds`.
+		require
+			is_valid_timeout_ns: is_valid_timeout_ns (a_timeout_nanoseconds)
 		external
 			"C"
 		end
 
-	c_get_sock_recv_timeout (a_fd, level: INTEGER): INTEGER
-			-- C routine to get socket option SO_RCVTIMEO of timeout value in seconds.
-		external
-			"C"
-		end
-
-	c_set_sock_send_timeout (a_fd, level: INTEGER; a_timeout_seconds: INTEGER)
-			-- C routine to set socket option `SO_SNDTIMEO' with `a_timeout_seconds' seconds.
-		external
-			"C"
-		end
-
-	c_get_sock_send_timeout (a_fd, level: INTEGER): INTEGER
-			-- C routine to get socket option SO_SNDTIMEO of timeout value in seconds.
+	c_get_sock_opt_timeout (a_fd, level: INTEGER; a_timeo_opt: INTEGER): NATURAL_64
+			-- C routine to get socket option `$a_timeo_opt' of timeout value in nanoseconds.
 		external
 			"C"
 		end
@@ -348,13 +463,16 @@ feature {NONE} -- Externals
 		end
 
 	c_select_poll_with_timeout (an_fd: INTEGER; is_read_mode: BOOLEAN;
-								timeout_secs: INTEGER): INTEGER
+				a_timeout_nanoseconds: NATURAL_64): INTEGER
+		require
+			is_valid_timeout_ns: is_valid_timeout_ns (a_timeout_nanoseconds)
 		external
 			"C blocking"
 		end
 
-	c_check_exception_with_timeout (an_fd: INTEGER;
-								timeout_secs: INTEGER): INTEGER
+	c_check_exception_with_timeout (an_fd: INTEGER; a_timeout_nanoseconds: NATURAL_64): INTEGER
+		require
+			is_valid_timeout_ns: is_valid_timeout_ns (a_timeout_nanoseconds)
 		external
 			"C blocking"
 		end
@@ -368,11 +486,11 @@ feature {NONE} -- Externals
 
 invariant
 
-	timeout_set: timeout > 0
+	timeout_ns_set: timeout_ns /= 0
 	correct_exist: not is_created implies is_closed and not exists
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -381,9 +499,6 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class NETWORK_SOCKET
 

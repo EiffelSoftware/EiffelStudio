@@ -51,9 +51,9 @@ feature {NONE} -- Initialization
 			family := af_inet
 			type := sock_stream;
 			create last_string.make_empty
-			timeout := default_timeout
+			timeout_ns := one_second_in_nanoseconds * default_timeout.to_natural_64
 		ensure
-			timeout_set_to_default: timeout = default_timeout
+			timeout_set_to_default: timeout_ns = one_second_in_nanoseconds * default_timeout.to_natural_64
 			no_socket_created: not is_created
 		end
 
@@ -65,7 +65,7 @@ feature -- Initialization
 			make_empty
 			make_socket
 		ensure
-			timeout_set_to_default: timeout = default_timeout
+			timeout_set_to_default: timeout_ns = one_second_in_nanoseconds * default_timeout.to_natural_64
 			socket_created: is_created
 		end
 
@@ -142,7 +142,7 @@ feature {NETWORK_STREAM_SOCKET} -- Initialization
 			is_created := True
 			is_open_read := True
 			is_open_write := True
-			timeout := default_timeout
+			timeout_ns := one_second_in_nanoseconds * default_timeout.to_natural_64
 			create last_string.make_empty
 		ensure
 			address_set: address ~ a_address
@@ -166,21 +166,21 @@ feature {NETWORK_STREAM_SOCKET} -- Initialization
 feature
 
 	connect_timeout: INTEGER
-		-- The connect timeout in milliseconds
+			-- The connect timeout in milliseconds
 
-	set_connect_timeout (a_timeout: INTEGER)
+	set_connect_timeout (a_timeout_ms: INTEGER)
 			--  Sets the connect timeout in milliseconds
 		do
-			connect_timeout := a_timeout
+			connect_timeout := a_timeout_ms
 		end
 
 	accept_timeout: INTEGER
-		-- The connect timeout in milliseconds
+			-- The connect timeout in milliseconds
 
-	set_accept_timeout (a_timeout: INTEGER)
+	set_accept_timeout (a_timeout_ms: INTEGER)
 			--  Sets the accept timeout in milliseconds
 		do
-			accept_timeout := a_timeout
+			accept_timeout := a_timeout_ms
 		end
 
 	listen (queue: INTEGER)

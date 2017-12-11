@@ -33,16 +33,13 @@ feature {NONE} -- Initialization
 	make_for_feature (feat: FEATURE_I; ast: FEATURE_AS)
 			-- Initialize Current with feature `feat'
 			-- and ast structure `ast'.
-		local
-			rout_as: ROUTINE_AS
 		do
-			if ast /= Void then
-				rout_as ?= ast.body.content
-
-				if rout_as /= Void then
-					precondition := rout_as.precondition
-					postcondition := rout_as.postcondition
-				end
+			if
+				ast /= Void and then
+				attached {ROUTINE_AS} ast.body.content as rout_as
+			then
+				precondition := rout_as.precondition
+				postcondition := rout_as.postcondition
 			end
 			origin := feat
 		end
@@ -120,7 +117,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

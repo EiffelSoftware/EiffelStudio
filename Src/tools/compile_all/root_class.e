@@ -157,7 +157,11 @@ feature {NONE} -- Implementation
 			localized_print (" / ")
 			io.put_integer (total_count)
 			localized_print("  (")
-			io.put_integer (((passed_compilations_count / total_count) * 100).truncated_to_integer)
+			if total_count = 0 then
+				io.put_integer (100)
+			else
+				io.put_integer (((passed_compilations_count / total_count) * 100).truncated_to_integer)
+			end
 			localized_print ("%%)")
 			io.put_new_line
 
@@ -166,7 +170,11 @@ feature {NONE} -- Implementation
 			localized_print (" / ")
 			io.put_integer (total_count)
 			localized_print ("  (")
-			io.put_integer (((failed_compilations_count / total_count) * 100).truncated_to_integer)
+			if total_count = 0 then
+				io.put_integer (100)
+			else
+				io.put_integer (((failed_compilations_count / total_count) * 100).truncated_to_integer)
+			end
 			localized_print ("%%)")
 			io.put_new_line
 
@@ -175,7 +183,11 @@ feature {NONE} -- Implementation
 			localized_print (" / ")
 			io.put_integer (total_count)
 			localized_print ("  (")
-			io.put_integer (((ignored_compilations_count / total_count) * 100).truncated_to_integer)
+			if total_count = 0 then
+				io.put_integer (100)
+			else
+				io.put_integer (((ignored_compilations_count / total_count) * 100).truncated_to_integer)
+			end
 			localized_print ("%%)")
 			io.put_new_line
 
@@ -354,9 +366,9 @@ feature {NONE} -- Implementation
 				create l_loader.make (create {CONF_PARSE_FACTORY})
 				l_loader.retrieve_configuration (a_file.name)
 				if l_loader.is_error then
-					display_error ({STRING_32} "Could not retrieve configuration "+a_file.name+"!")
+					display_error ({STRING_32} "Could not retrieve configuration " + a_file.name + "!")
 				elseif l_loader.last_redirection /= Void then
-					display_error ({STRING_32} "Ignore redirection configuration "+a_file.name+"!")
+					display_error ({STRING_32} "Ignore redirection configuration " + a_file.name + "!")
 				else
 					l_skip_dotnet := arguments.skip_dotnet
 					l_platform := arguments.platform_option

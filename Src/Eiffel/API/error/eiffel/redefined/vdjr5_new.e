@@ -2,7 +2,7 @@
 
 	description: "Features with different instance-free status cannot be joined."
 
-class VDJR4_NEW
+class VDJR5_NEW
 
 inherit
 	VDJR_NEW
@@ -18,7 +18,7 @@ create {COMPILER_EXPORTER}
 
 feature -- Access
 
-	subcode: INTEGER = 4
+	subcode: INTEGER = 5
 			-- <Precursor>
 
 feature {NONE} -- Output

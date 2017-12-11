@@ -2574,7 +2574,7 @@ end
 			end
 				-- Check instance-free status.
 			if is_class /= old_feature.is_class then
-				error_handler.insert_error (create {VDJR4_NEW}.make (system.current_class, Current, old_feature))
+				error_handler.insert_error (create {VDJR5_NEW}.make (system.current_class, Current, old_feature))
 			end
 		end
 

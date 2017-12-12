@@ -6,6 +6,6 @@ copy_raw 	 a.e $CLUSTER a.e
 copy_raw 	 test.e $CLUSTER test.e
 
 compile_melted
-compile_result 	 validity_error A VSTB:7 VSTB:10; TEST VSTB:23 VSTB:24 VSTB:25 VSTB:26 VSTB:27 VSTB:28 VSTB:29
+compile_result 	 validity_error A VUCR:7 VUCR:10; TEST VUCR:23 VUCR:24 VUCR:25 VUCR:26 VUCR:27 VUCR:28 VUCR:29
 
 test_end

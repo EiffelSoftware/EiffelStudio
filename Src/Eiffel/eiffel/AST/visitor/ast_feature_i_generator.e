@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				if attached l_routine.postcondition as postcondition and then postcondition.is_class then
-					l_result.set_is_class (True)
+					l_result.set_has_class_postcondition (True)
 				end
 			else
 				check

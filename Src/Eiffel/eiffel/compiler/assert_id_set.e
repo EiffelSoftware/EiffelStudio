@@ -52,13 +52,15 @@ feature -- Status report
 			-- Is the body id `body_index' present in the set?
 		local
 			i: INTEGER
+			b: like {INH_ASSERT_INFO}.body_index
 		do
 			from
+				b := assert.body_index
 				i := 1
 			until
 				i > count or else Result
 			loop
-				Result := item (i).body_index = assert.body_index
+				Result := item (i).body_index = b
 				i := i + 1
 			end
 		end
@@ -165,17 +167,15 @@ feature -- Comparison
 			-- Has `other' the same content than Current ?
 		local
 			i: INTEGER
-			local_copy: like Current
 		do
-			if (other /= Void) and then count = other.count then
+			if other /= Void and then count = other.count then
 				from
-					local_copy := Current
 					i := 1
 					Result := True
 				until
 					i > count or else not Result
 				loop
-					Result := other.has_assert (local_copy.item (i))
+					Result := other.has_assert (item (i))
 					i := i + 1
 				end
 			end

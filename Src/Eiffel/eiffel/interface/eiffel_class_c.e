@@ -584,10 +584,6 @@ feature -- Third pass: byte code production and type check
 					l_ast_context.set_current_feature (feature_i)
 					type_checked := False
 
-					if feature_i.is_class and then not is_full_class_checking then
-						error_handler.insert_error (create {VD02}.make (feature_i, Current))
-					end
-
 					if feature_i.to_melt_in (Current) then
 						feature_name_id := feature_i.feature_name_id
 

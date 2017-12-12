@@ -939,12 +939,12 @@ feature -- Setting
 			is_stable_set: is_stable = v
 		end
 
-	set_is_class (v: BOOLEAN)
-			-- Set `is_class` to `v`.
+	set_has_class_postcondition (v: BOOLEAN)
+			-- Set `has_class_postcondition` to `v`.
 		do
-			feature_flags := feature_flags.set_bit_with_mask (v, is_class_mask)
+			feature_flags := feature_flags.set_bit_with_mask (v, has_class_postcondition_mask)
 		ensure
-			is_class_set: is_class = v
+			has_class_postcondition_set: has_class_postcondition = v
 		end
 
 	set_is_hidden_in_debugger_call_stack (v: BOOLEAN)
@@ -1049,12 +1049,12 @@ feature -- Incrementality
 				and then has_precondition = other.has_precondition
 				and then has_postcondition = other.has_postcondition
 				and then has_false_postcondition = other.has_false_postcondition
+				and then has_class_postcondition = other.has_class_postcondition
 				and then is_once = other.is_once
 				and then is_process_relative = other.is_process_relative
 				and then is_object_relative_once = other.is_object_relative_once
 				and then is_constant = other.is_constant
 				and then is_stable = other.is_stable
-				and then is_class = other.is_class
 				and then is_transient = other.is_transient
 				and then alias_name_id = other.alias_name_id
 				and then has_convert_mark = other.has_convert_mark
@@ -1382,11 +1382,20 @@ feature -- Conveniences
 			Result := feature_flags & is_stable_mask = is_stable_mask
 		end
 
+	has_class_postcondition: BOOLEAN
+			-- Does feature have a class postcondition?
+			-- See also: `set_has_class_postcondition`, `is_class`.
+		do
+			Result := feature_flags & has_class_postcondition_mask /= 0
+		end
+
 	is_class: BOOLEAN
 			-- Is feature declared as a class one?
-			-- See also: `set_is_class`.
+			-- See also: `has_class_postcondition`, `is_instance_free`.
 		do
-			Result := feature_flags & is_class_mask /= 0
+			Result :=
+				has_class_postcondition or else
+				attached assert_id_set as a and then a.has_class_postcondition
 		end
 
 	is_hidden_in_debugger_call_stack: BOOLEAN
@@ -3002,7 +3011,7 @@ feature -- Undefinition
 			Result.set_body_index (body_index)
 			Result.set_has_precondition (has_precondition)
 			Result.set_has_postcondition (has_postcondition)
-			Result.set_is_class (is_class)
+			Result.set_has_class_postcondition (has_class_postcondition)
 			Result.set_has_false_postcondition (has_false_postcondition)
 			Result.set_is_bracket (is_bracket)
 			Result.set_is_parentheses (is_parentheses)
@@ -3128,7 +3137,7 @@ feature -- Replication
 			other.set_has_convert_mark (has_convert_mark)
 			other.set_has_replicated_ast (has_replicated_ast)
 			other.set_is_stable (is_stable)
-			other.set_is_class (is_class)
+			other.set_has_class_postcondition (has_class_postcondition)
 			other.set_is_hidden_in_debugger_call_stack (is_hidden_in_debugger_call_stack)
 			other.set_body_index (body_index)
 			other.set_is_type_evaluation_delayed (is_type_evaluation_delayed)
@@ -3524,7 +3533,7 @@ feature {FEATURE_I} -- Feature flags
 	has_false_postcondition_mask: NATURAL_64 =      0x2000_0000
 	is_hidden_in_debugger_call_stack_mask: NATURAL_64 = 0x4000_0000
 	is_parentheses_mask: NATURAL_64 =					0x8000_0000
-	is_class_mask: NATURAL_64 =				0x1_0000_0000
+	has_class_postcondition_mask: NATURAL_64 =				0x1_0000_0000
 			-- Mask used for each feature property.
 
 feature {FEATURE_I} -- Implementation

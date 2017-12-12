@@ -67,10 +67,10 @@ feature {NONE} -- Implementation
 		local
 			feat: FEATURE_I
 			feat_body_index: INTEGER
-			info: INH_ASSERT_INFO
 			new_assert_id_set: ASSERT_ID_SET
 			has_precondition: BOOLEAN
 			has_postcondition: BOOLEAN
+			has_class_postcondition: BOOLEAN
 			has_false_postcondition: BOOLEAN
 			feat_assert_id_set: ASSERT_ID_SET
 			processed_features: ARRAYED_LIST [INTEGER]
@@ -87,6 +87,9 @@ feature {NONE} -- Implementation
 
 				-- By default there is a postcondition if the feature defines it.
 			has_postcondition := new_feat.has_postcondition
+
+				-- By default there is no class postcondition.
+			-- has_class_postcondition := False
 
 				-- By default there is no false postcondition.
 			-- has_false_postcondition := False
@@ -127,18 +130,19 @@ feature {NONE} -- Implementation
 					-- has a postcondition.
 				has_postcondition := has_postcondition or else
 					feat.has_postcondition or else
-					(attached feat_assert_id_set as s and then s.has_postcondition)
+					(attached feat_assert_id_set and then feat_assert_id_set.has_postcondition)
+
+					-- A feature has a class postcondition if it or any ancestor
+					-- has a class postcondition.
+				has_class_postcondition := has_class_postcondition or else
+					feat.has_class_postcondition or else
+					(attached feat_assert_id_set and then feat_assert_id_set.has_class_postcondition)
 
 					-- A feature has a false postcondition if it or any ancestor
 					-- has a false postcondition.
 				has_false_postcondition := has_false_postcondition or else
 					feat.has_false_postcondition or else
-					(attached feat_assert_id_set as s and then s.has_false_postcondition)
-
-					-- Propagate class status of the feature.
-				if feat.is_class then
-					new_feat.set_is_class (True)
-				end
+					(attached feat_assert_id_set and then feat_assert_id_set.has_false_postcondition)
 
 					-- Prepare next iteration.
 				features.forth
@@ -149,6 +153,9 @@ feature {NONE} -- Implementation
 
 				-- Set the calculated postcondition status.
 			new_assert_id_set.set_has_postcondition (has_postcondition)
+
+				-- Set the calculated class postcondition status.
+			new_assert_id_set.set_has_class_postcondition (has_class_postcondition)
 
 				-- Set the calculated false postcondition status.
 			new_assert_id_set.set_has_false_postcondition (has_false_postcondition)
@@ -165,8 +172,7 @@ feature {NONE} -- Implementation
 
 				if not processed_features.has(feat_body_index) then
 						-- Add assert info of feat.
-					create info.make (feat)
-					new_assert_id_set.force (info)
+					new_assert_id_set.force (create {INH_ASSERT_INFO}.make (feat))
 					processed_features.extend (feat_body_index)
 				end
 

@@ -61,19 +61,19 @@ feature -- Element change
 feature -- Status report
 
 	full: BOOLEAN
-			-- Is the set full ?
+			-- Is the set full?
 		do
 			Result := count = array_count
 		end
 
 	empty: BOOLEAN
-			-- Is the set empty ?
+			-- Is the set empty?
 		do
 			Result := count = 0
 		end
 
 	has (assert: INH_ASSERT_INFO): BOOLEAN
-			-- Is the body id `body_index' present in the set ?
+			-- Is the body id `body_index' present in the set?
 		local
 			i: INTEGER
 		do
@@ -102,13 +102,14 @@ feature -- Status report
 			end
 		end
 
-feature -- Status Report
-
 	has_precondition: BOOLEAN
 			-- Has the set any precondition (inner or inherited)?
 
 	has_postcondition: BOOLEAN
 			-- Has the set any postcondition (inner or inherited)?
+
+	has_class_postcondition: BOOLEAN
+			-- Has the set any class postcondition (inner or inherited)?
 
 	has_false_postcondition: BOOLEAN
 			-- Has the set any false postcondition (inner or inherited)?
@@ -129,6 +130,14 @@ feature -- Status Setting
 			has_postcondition := b
 		ensure
 			has_postcondition_set: has_postcondition = b
+		end
+
+	set_has_class_postcondition (b: BOOLEAN)
+			-- Set `has_class_postcondition' to `b'.
+		do
+			has_class_postcondition := b
+		ensure
+			has_class_postcondition_set: has_class_postcondition = b
 		end
 
 	set_has_false_postcondition (b: BOOLEAN)

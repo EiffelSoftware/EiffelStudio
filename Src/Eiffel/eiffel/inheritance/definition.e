@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Definition of deferred inherited features by another non-deferred%N%
 			%inherited feature."
 	legal: "See notice at end of class."
@@ -106,9 +106,8 @@ feature -- Checking
 			l_new_feature: FEATURE_I
 		do
 			l_new_feature := new_feature
-			if l_new_feature.is_routine then
+			if not l_new_feature.is_routine then
 				-- Nothing needed for routines, however this check prevents checking for both attribute and constant separately.
-			else
 				if l_new_feature.is_attribute then
 					l_attribute ?= l_new_feature
 					if not old_features.all_attributes then
@@ -200,7 +199,7 @@ feature -- Checking
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -231,4 +230,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class DEFINITION
+end

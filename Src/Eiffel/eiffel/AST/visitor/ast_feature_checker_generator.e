@@ -852,7 +852,7 @@ feature {NONE} -- Roundtrip
 			l_unsupported: NOT_SUPPORTED
 		do
 			if current_feature.is_class then
-				error_handler.insert_error (create {VSTB}.make_inline_agent (current_feature, context.current_class, context.written_class, l_as.first_token (match_list_of_class (context.written_class.class_id))))
+				error_handler.insert_error (create {VUCR_BODY}.make_inline_agent (current_feature, context.current_class, context.written_class, l_as.first_token (match_list_of_class (context.written_class.class_id))))
 			end
 
 			l_error_level := error_level
@@ -1553,20 +1553,31 @@ feature {NONE} -- Implementation
 						l_found_feature := l_feature
 						if is_static and then not l_feature.has_static_access then
 								-- Not a valid feature for static access.	
+								-- TODO
 							create l_vsta2
 							context.init_error (l_vsta2)
 							l_vsta2.set_non_static_feature (l_feature)
 							l_vsta2.set_location (l_feature_name)
 							error_handler.insert_error (l_vsta2)
 							reset_types
-						elseif not is_qualified_call and then current_feature.is_class and then not (l_feature.is_class or else l_feature.is_target_free) then
+--						elseif is_static and then l_last_class.is_deferred then
+--								-- Instance-free calls are not allowed on deferred classes.
+--								-- TODO
+--						elseif is_static and then l_last_type.is_none then
+--								-- Instance-free calls are not allowed on type 'NONE'.
+--								-- TODO
+--						elseif is_static and then not attached {CL_TYPE_A} l_last_type then
+--								-- Instance-free calls are not supported on formal generic and anchored types.
+--								-- TODO
+						elseif not is_qualified_call and then current_feature.is_class and then not l_feature.has_static_access then
 								-- The error for agents is reported elsewhere.
 							if not is_agent then
 								error_handler.insert_error
 									(if is_precursor then
-										create {VSTB}.make_precursor (l_feature, current_feature, context.current_class, context.written_class, a_name)
+											-- TODO
+										create {VUCR_BODY}.make_precursor (l_feature, current_feature, context.current_class, context.written_class, a_name)
 									else
-										create {VSTB}.make_feature (l_feature, current_feature, context.current_class, context.written_class, a_name)
+										create {VUCR_BODY}.make_feature (l_feature, current_feature, context.current_class, context.written_class, a_name)
 									end)
 							end
 							reset_types
@@ -1611,6 +1622,17 @@ feature {NONE} -- Implementation
 							end
 						end
 						if error_level = l_error_level then
+							if is_static and then not l_feature.is_instance_free then
+									-- The instance-free call is OK, but the called feature is not instance-free.
+									-- TODO
+--								error_handler.insert_warning (create {VUNO_NOT_INSTANCE_FREE}.make
+--									(l_feature, current_feature, context.current_class, context.written_class, a_name))
+							elseif not is_qualified_call and then current_feature.is_class and then not l_feature.is_instance_free then
+									-- The unqualified call is OK, but the called feature is not instance-free.
+									-- TODO
+--								error_handler.insert_warning (create {VUCR_UNQUALIFIED}.make
+--									(l_feature, current_feature, context.current_class, context.written_class, a_name))
+							end
 							if not system.il_generation then
 								if l_feature.is_inline_agent then
 									l_seed := l_feature
@@ -2012,7 +2034,7 @@ feature {NONE} -- Implementation
 							if l_feature.is_attribute then
 								last_access_writable := True
 								if not is_qualified and then current_feature.is_class then
-									error_handler.insert_error (create {VSTB}.make_attribute (l_feature, current_feature, context.current_class, context.written_class, a_name))
+									error_handler.insert_error (create {VUCR_BODY}.make_attribute (l_feature, current_feature, context.current_class, context.written_class, a_name))
 								end
 							else
 								last_access_writable := False
@@ -2681,7 +2703,7 @@ feature {NONE} -- Visitor
 			l_type: LIKE_CURRENT
 		do
 			if current_feature.is_class then
-				error_handler.insert_error (create {VSTB}.make_current (current_feature, context.current_class, context.written_class, l_as))
+				error_handler.insert_error (create {VUCR_BODY}.make_current (current_feature, context.current_class, context.written_class, l_as))
 			end
 				-- The type of Current in class X is X .. X.
 			l_type := context.current_class_type.duplicate
@@ -4128,7 +4150,7 @@ feature {NONE} -- Visitor
 			l_typed_pointer: TYPED_POINTER_A
 		do
 			if current_feature.is_class then
-				error_handler.insert_error (create {VSTB}.make_current (current_feature, context.current_class, context.written_class, l_as.current_keyword))
+				error_handler.insert_error (create {VUCR_BODY}.make_current (current_feature, context.current_class, context.written_class, l_as.current_keyword))
 			end
 			create l_typed_pointer.make_typed (context.current_class_type)
 			set_type (l_typed_pointer, l_as)
@@ -4290,7 +4312,7 @@ feature {NONE} -- Visitor
 								create l_typed_pointer.make_typed (l_type)
 								set_type (l_typed_pointer, l_as)
 								if current_feature.is_class then
-									error_handler.insert_error (create {VSTB}.make_attribute (l_feature, current_feature, context.current_class, context.written_class, l_as.feature_name.internal_name))
+									error_handler.insert_error (create {VUCR_BODY}.make_attribute (l_feature, current_feature, context.current_class, context.written_class, l_as.feature_name.internal_name))
 								end
 							else
 								set_type (Pointer_type, l_as)
@@ -4460,7 +4482,7 @@ feature {NONE} -- Visitor
 								end
 							end
 						elseif not l_as.has_target and then current_feature.is_class and then attached l_as.feature_name as feature_name and then not attached {INLINE_AGENT_CREATION_AS} l_as then
-							error_handler.insert_error (create {VSTB}.make_unqualified_agent (l_feature, current_feature, context.current_class, context.written_class, feature_name))
+							error_handler.insert_error (create {VUCR_BODY}.make_unqualified_agent (l_feature, current_feature, context.current_class, context.written_class, feature_name))
 						end
 
 						if l_feature = Void and then not l_is_named_tuple then

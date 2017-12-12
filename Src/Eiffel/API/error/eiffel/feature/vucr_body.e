@@ -5,13 +5,12 @@
 	date: "$Date$"
 	revision: "$Revision$"
 
-class VSTB
+class VUCR_BODY
 
 inherit
-	FEATURE_ERROR
-		redefine
-			print_short_help,
-			trace_single_line
+	VUCR
+		rename
+			make as make_vucr
 		end
 
 create
@@ -31,10 +30,8 @@ feature {NONE} -- Creation
 			c_attached: attached c
 			l_attached: attached l
 		do
-			class_c := c
+			make_vucr (f, c, l)
 			written_class := if attached w then w else f.written_class end
-			set_feature (f)
-			set_location (l)
 		ensure
 			class_c_set: class_c = c
 			written_class_set: attached written_class
@@ -146,11 +143,6 @@ feature {NONE} -- Creation
 			line_set: line = l.line
 			column_set: column = l.column
 		end
-
-feature -- Access
-
-	code: STRING = "VSTB"
-			-- <Precursor>
 
 feature {NONE} -- Access
 

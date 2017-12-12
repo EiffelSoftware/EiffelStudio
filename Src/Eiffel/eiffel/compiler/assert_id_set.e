@@ -37,19 +37,7 @@ feature -- Access
 	Chunk: INTEGER = 5
 			-- Array chunk
 
-	first: INH_ASSERT_INFO
-			-- First routine id
-		do
-			Result := item (1)
-		end
-
 feature -- Element change
-
-	set_count (i: INTEGER)
-			-- Assign `i' to `count'.
-		do
-			count := i
-		end
 
 	wipe_out
 			-- Clear the structure.
@@ -59,18 +47,6 @@ feature -- Element change
 		end
 
 feature -- Status report
-
-	full: BOOLEAN
-			-- Is the set full?
-		do
-			Result := count = array_count
-		end
-
-	empty: BOOLEAN
-			-- Is the set empty?
-		do
-			Result := count = 0
-		end
 
 	has (assert: INH_ASSERT_INFO): BOOLEAN
 			-- Is the body id `body_index' present in the set?
@@ -149,19 +125,6 @@ feature -- Status Setting
 		end
 
 feature -- Basic operations
-
-	put (assert: INH_ASSERT_INFO)
-			-- Insert routine id `rout_id' in the set if not already
-			-- present.
-		require
-			not_full: not full
-		do
-			if not has (assert) then
-					-- Body index `body_index' is not present in the set
-				count := count + 1
-				array_put (assert, count)
-			end
-		end
 
 	force (assert: INH_ASSERT_INFO)
 			-- Insert body index `body_index' in the set if not already

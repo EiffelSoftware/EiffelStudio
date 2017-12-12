@@ -1497,10 +1497,10 @@ feature -- Conveniences
 				(attached assert_id_set as a and then a.has_false_postcondition)
 		end
 
-	has_assertion: BOOLEAN
-			-- Is feature declaring some pre or post conditions ?
+	has_printable_assertion: BOOLEAN
+			-- Is feature declaring some pre or post conditions that can be output?
 		do
-			Result := has_postcondition or else has_precondition
+			Result := has_postcondition or else has_precondition or else has_class_postcondition
 		end
 
 	has_combined_assertion: BOOLEAN

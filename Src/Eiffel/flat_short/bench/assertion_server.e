@@ -1,9 +1,9 @@
-note
-	description	: "Server for pre and post conditions."
+﻿note
+	description: "Server for pre and post conditions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ASSERTION_SERVER
 
@@ -91,7 +91,7 @@ feature -- Initialization
 			end
 
 			if
-				(f.has_assertion or f.is_instance_free) and then
+				f.has_printable_assertion and then
 				not processed_features.has (f.body_index)
 			then
 				create assertion.make_for_feature (f, ast)
@@ -126,16 +126,16 @@ feature -- Element change
 			valid_adapter: feat_adapter /= Void
 			valid_body_index: feat_adapter.body_index /= 0
 		local
-			assert_id_set		: ASSERT_ID_SET
-			i					: INTEGER
-			inh_f				: INH_ASSERT_INFO
-			chained_assert		: CHAINED_ASSERTIONS
-			other_feat_as		: FEATURE_AS
-			feat				: FEATURE_I
-			source_feature		: FEATURE_I
-			assertion			: ROUTINE_ASSERTIONS
-			target_feat			: FEATURE_I
-			inh_feat_adapter	: FEATURE_ADAPTER
+			assert_id_set: ASSERT_ID_SET
+			i: INTEGER
+			inh_f: INH_ASSERT_INFO
+			chained_assert: CHAINED_ASSERTIONS
+			other_feat_as: FEATURE_AS
+			feat: FEATURE_I
+			source_feature: FEATURE_I
+			assertion: ROUTINE_ASSERTIONS
+			target_feat: FEATURE_I
+			inh_feat_adapter: FEATURE_ADAPTER
 			processed_features: ARRAYED_LIST [INTEGER]
 				-- feature already processed. To avoid displaying the same
 				-- pre/postcondition several times if there was a repeated
@@ -181,7 +181,7 @@ feature -- Element change
 				end
 				source_feature := feat_adapter.source_feature
 				if
-					(source_feature.has_assertion or source_feature.is_instance_free) and then
+					source_feature.has_printable_assertion and then
 					not processed_features.has (source_feature.body_index)
 				then
 					create assertion.make_for_feature (source_feature, feat_adapter.ast)

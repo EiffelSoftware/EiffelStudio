@@ -480,7 +480,7 @@ end
 				loop
 					f := t.item_for_iteration;
 					if id = f.written_in and then
-						f.has_assertion
+						f.has_printable_assertion
 					then
 						create f_adapter;
 						f_adapter.register_for_assertions (f);

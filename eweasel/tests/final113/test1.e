@@ -1,5 +1,5 @@
-
 class TEST1
+
 feature
 
 	try
@@ -7,12 +7,12 @@ feature
 			a: ANY
 		do
 			a := value
-			io.put_string (a.generating_type); io.new_line
+			print (a.generating_type); io.put_new_line
 		end
 
 	value: ANY
 		attribute 
 			Result := "Hamster"
 		end
-end
 
+end

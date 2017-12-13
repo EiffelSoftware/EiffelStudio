@@ -1,6 +1,6 @@
 note
 	description: "[
-					Default implementation of CURL_FUNCTION.
+					Default implementation of CURL_STATIC_FUNCTION.
 																				]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -8,10 +8,11 @@ note
 	revision: "$Revision$"
 
 class
-	CURL_DEFAULT_FUNCTION
+	CURL_STATIC_DEFAULT_FUNCTION
+
 
 inherit
-	CURL_FUNCTION
+	CURL_STATIC_FUNCTION
 
 create
 	make
@@ -91,7 +92,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

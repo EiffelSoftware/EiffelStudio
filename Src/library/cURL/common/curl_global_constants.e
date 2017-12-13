@@ -1,66 +1,65 @@
 note
 	description: "[
-					cURL form constants.
-					For more informaton see:
-					http://curl.haxx.se/libcurl/c/curl_formadd.html
-																		]"
+					cURL library constants used by curl_global_init ()
+																				]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2017-08-24 05:03:16 -0300 (ju. 24 de ago. de 2017) $"
+	revision: "$Revision: 100665 $"
 
 class
-	CURL_FORM_CONSTANTS
+	CURL_GLOBAL_CONSTANTS
 
 feature -- Query
 
-	curlform_copyname: INTEGER
-			-- Declared as CURLFORM_COPYNAME
+	curl_global_ssl: NATURAL_64
+			-- Delcared as CURL_GLOBAL_SSL
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				CURLFORM_COPYNAME
+				return CURL_GLOBAL_SSL;
 			]"
 		end
 
-	curlform_copycontents: INTEGER
-			-- Declared as CURLFORM_COPYCONTENTS
+	curl_global_win32: NATURAL_64
+			-- Delcared as CURL_GLOBAL_WIN32
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				CURLFORM_COPYCONTENTS
+				return CURL_GLOBAL_WIN32;
 			]"
 		end
 
-	curlform_end: INTEGER
-			-- Declared as CURLFORM_END
+	curl_global_all: NATURAL_64
+			-- Delcared as CURL_GLOBAL_ALL
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				CURLFORM_END
+				return CURL_GLOBAL_ALL;
 			]"
 		end
 
-	curlform_file: INTEGER
-			-- Declared as CURLFORM_FILE
+	curl_global_nothing: NATURAL_64
+			-- Delcared as CURL_GLOBAL_NOTHING
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				CURLFORM_FILE
+				return CURL_GLOBAL_NOTHING;
 			]"
 		end
 
-	is_valid (a_integer: INTEGER): BOOLEAN
-			-- If `a_integer' valid?
-		do
-			Result := 	a_integer = curlform_copycontents or
-						a_integer = curlform_copyname or
-						a_integer =	curlform_end or
-						a_integer = curlform_file
+	curl_global_default: NATURAL_64
+			-- Delcared as CURL_GLOBAL_DEFAULT
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				return CURL_GLOBAL_DEFAULT;
+			]"
 		end
 
 note
@@ -76,3 +75,4 @@ note
 		]"
 
 end
+

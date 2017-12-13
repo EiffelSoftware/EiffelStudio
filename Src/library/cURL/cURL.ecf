@@ -13,6 +13,8 @@
 		<option warning="true" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
+		
+		
 		<external_include location="$(ISE_LIBRARY)\library\cURL\spec\include">
 			<condition>
 				<platform value="windows"/>
@@ -35,15 +37,28 @@
 				<concurrency excluded_value="none"/>
 			</condition>
 		</external_object>
+
+
 		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\eiffel_curl.lib">
 			<condition>
+				<custom name="static_curl_enabled" excluded_value="true"/>
 				<platform value="windows"/>
 				<concurrency value="none"/>
 				<dotnet value="false"/>
 			</condition>
 		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\eiffel_curl_static.lib">
+			<condition>
+				<custom name="static_curl_enabled" value="true"/>
+				<platform value="windows"/>
+				<concurrency value="none"/>
+				<dotnet value="false"/>
+			</condition>
+		</external_object>
+
 		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mteiffel_curl.lib">
 			<condition>
+				<custom name="static_curl_enabled" excluded_value="true"/>
 				<platform value="windows"/>
 				<concurrency excluded_value="none"/>
 				<dotnet value="false"/>
@@ -51,14 +66,34 @@
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ileiffel_curl.lib">
 			<condition>
+				<custom name="static_curl_enabled" excluded_value="true"/>
 				<platform value="windows"/>
 				<dotnet value="true"/>
 			</condition>
 		</external_object>
+				<external_object location="$(ISE_LIBRARY)\C_library\curl\builds\libcurl-vc-x64-release-static-sspi-winssl\lib\libcurl_a.lib">
+			<condition>
+				<custom name="static_curl_enabled" value="true"/>
+			</condition>
+		</external_object>
+		<external_cflag value="-DCURL_STATICLIB ">
+			<condition>
+				<custom name="static_curl_enabled" value="true"/>
+				<platform value="windows"/>			
+			</condition>
+		</external_cflag>
+
+
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="api_wrapper" location="$ISE_LIBRARY\library\api_wrapper\api_wrapper.ecf"/>
+		<library name="api_wrapper" location="$ISE_LIBRARY\library\api_wrapper\api_wrapper.ecf">
+			<condition>
+				<custom name="static_curl_enabled" excluded_value="true"/>
+			</condition>
+		</library>	
 		<library name="clibs_libcurl" location="$ISE_LIBRARY\C_library\curl\clibs_libcurl.ecf"/>
-		<cluster name="curl" location=".\" recursive="true">
+		<cluster name="curl" location=".\" >
+			<cluster name="common" location="$|common\" recursive="true"/>
+			<cluster name="implementation" location="$|implementation\" recursive="true"/>
 			<file_rule>
 				<exclude>/Clib$</exclude>
 				<exclude>/spec$</exclude>
@@ -86,6 +121,17 @@
 					<custom name="vision_implementation" excluded_value="cocoa"/>
 				</condition>
 			</file_rule>
+			<cluster name="dynamic" location="$|dynamic\">
+				<condition>
+					<custom name="static_curl_enabled" excluded_value="true"/>
+				</condition>
+			</cluster>
+			<cluster name="static" location="$|static\">
+				<condition>
+					<custom name="dll_curl_enabled" excluded_value="true"/>
+				</condition>
+			</cluster>
+	
 		</cluster>
 	</target>
 	<target name="curl_dotnet" extends="curl">

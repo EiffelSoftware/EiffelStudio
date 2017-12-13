@@ -5,8 +5,8 @@ note
 																					]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2011-09-27 05:06:20 -0300 (ma. 27 de sep. de 2011) $"
+	revision: "$Revision: 87340 $"
 
 class
 	CURL_CODES

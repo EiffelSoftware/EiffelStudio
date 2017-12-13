@@ -9,30 +9,63 @@ CFLAGS = -I"$rt_include" -I..$(DIR)spec$(DIR)include -I. \
 JCFLAGS = $(CFLAGS) $optimize $ccflags 
 JMTCFLAGS = $(CFLAGS) $optimize $mtccflags 
 JILCFLAGS = $(CFLAGS) $optimize $mtccflags  -DEIF_IL_DLL
+JSTFLAGS = -MT $(CFLAGS) $optimize $ccflags -DCURL_STATICLIB
+JMTSTFLAGS = -MT $(CFLAGS) $optimize $mtccflags  -DCURL_STATICLIB
 LN = copy
 MV = $mv
 RM = $del
 MAKE = $make
 MKDIR = $mkdir
 LINK = $link32
+EIF_STATIC_CURL_LIB = $(ISE_LIBRARY)$(DIR)C_library$(DIR)curl$(DIR)builds$(DIR)libcurl-vc-x64-release-static-sspi-winssl$(DIR)lib$(DIR)libcurl_a.lib
 DLL_FLAGS = $dll_flags
 DLL_LIBS = $dll_libs
 OBJECTS = eiffel_curl.$obj
 MT_OBJECTS = MTeiffel_curl.$obj
 IL_OBJECTS = ILeiffel_curl.$obj
+STATIC_OBJECTS = eiffel_curl_static.$obj
+MT_STATIC_OBJECTS = MTeiffel_curl_static.$obj
+LNKLIB = $link32 /lib
+LNK = $(LNKLIB) $(EIF_STATIC_CURL_LIB)
 
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
 all:: $output_libraries
 	$(MAKE) clean
-
-standard:: eiffel_curl.lib ileiffel_curl.lib
-mtstandard:: mteiffel_curl.lib
+    @echo "CFLAGS"
+    @echo $(CFLAGS)
+    @echo "JCFLAGS"
+    @echo $(JCFLAGS)
+    @echo "DLL_FLAGS"
+    @echo $(DLL_FLAGS)
+    @echo "DLL_LIBS"
+    @echo $(DLL_LIBS)
+    @echo "JMTCFLAGS"
+    @echo $(JMTCFLAGS)
+    @echo "OBJECTS"
+    @echo $(OBJECTS)
+    @echo $alib_line
+    @echo "LINK"
+	@echo $(LINK)
+ 
+standard:: eiffel_curl.lib ileiffel_curl.lib eiffel_curl_static.lib
+mtstandard:: mteiffel_curl.lib MTeiffel_curl_Static.lib
 
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
+
+
+eiffel_curl_static.lib: $(STATIC_OBJECTS) 
+	$alib_line
+	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
+	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
+
+MTeiffel_curl_static.lib: $(MT_STATIC_OBJECTS)
+	$alib_line
+	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
+	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@	
 
 eiffel_curl.lib: $(OBJECTS)
 	$alib_line
@@ -48,6 +81,13 @@ ileiffel_curl.lib: $(IL_OBJECTS)
 	$alib_line
 	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
+
+#Static targets.
+eiffel_curl_static.$obj: eiffel_curl.c
+	$(CC) $(JSTFLAGS) $(OUTPUT_CMD)$@ -c $?
+
+MTeiffel_curl_static.$obj: eiffel_curl.c
+	$(CC) $(JMTSTFLAGS) $(OUTPUT_CMD)$@ -c $?
 
 #Multithreaded targets.
 MTeiffel_curl.$obj: eiffel_curl.c

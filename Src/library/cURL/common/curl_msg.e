@@ -2,8 +2,8 @@ note
 	description: "[
 		C CURLMSG enum
 	]"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2017-08-24 05:03:16 -0300 (ju. 24 de ago. de 2017) $"
+	revision: "$Revision: 100665 $"
 
 class
 	CURL_MSG

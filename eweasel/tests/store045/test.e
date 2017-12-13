@@ -36,13 +36,13 @@ feature -- Initialization
 			across l_objects as l_item loop
 				io.put_string ("Retrieved " + l_item.key + "%N")
 				if attached {STORABLE_TEST} l_item.item as l_stored_obj then
-					io.put_string (l_stored_obj.r.generating_type)
+					print (l_stored_obj.r.generating_type)
 					io.put_new_line
-					io.put_string (l_stored_obj.p.generating_type)
+					print (l_stored_obj.p.generating_type)
 					io.put_new_line
-					io.put_string (l_stored_obj.f.generating_type)
+					print (l_stored_obj.f.generating_type)
 					io.put_new_line
-					io.put_string (l_stored_obj.pr.generating_type)
+					print (l_stored_obj.pr.generating_type)
 					io.put_new_line
 				else
 					io.put_string ("Not of a valid type%N")

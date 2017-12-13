@@ -209,7 +209,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTCCL(c) same as RTRCL, but first checks if `x' is expanded
  */
 #define RTCL(x)		rtclone(x)
-#define RTCCL(x)	((x && eif_is_expanded(HEADER(x)->ov_flags))? RTRCL(x): (x))
+#define RTCCL(x)	(((x) && eif_is_expanded(HEADER(x)->ov_flags))? RTRCL(x): (x))
 #ifdef WORKBENCH
 #	define RTRCL(x)	((egc_twin(x)).it_r)
 #else

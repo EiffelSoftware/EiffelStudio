@@ -8,6 +8,7 @@ before_script:
     - export EIFFEL_SRC=$PWD/Src
     - export EWEASEL=$PWD/eweasel
     - export ISE_LIBRARY=$EIFFEL_SRC
+    - export XEBRA_LIBRARY=$EIFFEL_SRC/framework/web/xebra/eiffel_projects/library
     - echo Check projects compilation status...
     
 branches:

@@ -44,12 +44,14 @@ feature -- Interactive with C
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
-			{
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
+				#ifdef CURL_STATICLIB
+					curl_easy_setopt ((CURL *) $a_curl_handle, (CURLoption)CURLOPT_PROGRESSFUNCTION, curl_progress_function);
+				#else
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
 												((CURL *) $a_curl_handle,
 												(CURLoption)CURLOPT_PROGRESSFUNCTION,
 												curl_progress_function);
-			}
+				#endif
 			]"
 		end
 
@@ -62,13 +64,14 @@ feature -- Interactive with C
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
-			{
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
+				#ifdef CURL_STATICLIB
+					curl_easy_setopt ((CURL *) $a_curl_handle,(CURLoption)CURLOPT_DEBUGFUNCTION,curl_debug_function);
+				#else
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
 												((CURL *) $a_curl_handle,
 												(CURLoption)CURLOPT_DEBUGFUNCTION,
 												curl_debug_function);
-																													
-			}
+				#endif																									
 			]"
 		end
 
@@ -81,12 +84,16 @@ feature -- Interactive with C
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
-			{
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
+			
+				#ifdef CURL_STATICLIB
+					curl_easy_setopt ((CURL *) $a_curl_handle,(CURLoption)CURLOPT_WRITEFUNCTION,curl_write_function);
+				#else
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
 												((CURL *) $a_curl_handle,
 												(CURLoption)CURLOPT_WRITEFUNCTION,
 												curl_write_function);
-			}
+				#endif								
+
 			]"
 		end
 
@@ -99,12 +106,14 @@ feature -- Interactive with C
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
-			{
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
+				#ifdef CURL_STATICLIB
+					curl_easy_setopt ((CURL *) $a_curl_handle,(CURLoption)CURLOPT_READFUNCTION,	curl_read_function);
+				#else
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
 												((CURL *) $a_curl_handle,
 												(CURLoption)CURLOPT_READFUNCTION,
 												curl_read_function);
-			}
+				#endif
 			]"
 		end
 

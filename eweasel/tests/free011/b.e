@@ -20,6 +20,24 @@ feature {NONE} -- Tests
 			is_class: class
 		end
 
+	k1
+		do
+		ensure
+			is_class: class
+		end
+
+	k2
+		do
+		ensure
+			is_class: class
+		end
+
+	k3
+		deferred
+		ensure
+			is_class: class
+		end
+
 	q1
 		do
 		ensure
@@ -33,6 +51,24 @@ feature {NONE} -- Tests
 		end
 
 	q3
+		deferred
+		ensure
+			is_class: class
+		end
+
+	s1
+		do
+		ensure
+			is_class: class
+		end
+
+	s2
+		do
+		ensure
+			is_class: class
+		end
+
+	s3
 		deferred
 		ensure
 			is_class: class

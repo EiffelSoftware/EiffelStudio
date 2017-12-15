@@ -10,6 +10,30 @@ feature {NONE} -- Tests
 		once ("OBJECT")
 		end
 
+	e1
+		external "C inline"
+			alias "return"
+		end
+
+	e2
+		external "C inline"
+			alias "return"
+		end
+
+	i1
+		external "C inline"
+			alias "return"
+		ensure
+			is_class: class
+		end
+
+	i2
+		external "C inline"
+			alias "return"
+		ensure
+			is_class: class
+		end
+
 	p1
 		do
 		end
@@ -20,6 +44,24 @@ feature {NONE} -- Tests
 
 	p3
 		deferred
+		end
+
+	q1
+		do
+		ensure
+			is_class: class
+		end
+
+	q2
+		do
+		ensure
+			is_class: class
+		end
+
+	q3
+		deferred
+		ensure
+			is_class: class
 		end
 
 end

@@ -26,6 +26,42 @@ feature {NONE} -- Tests
 			is_class: class
 		end
 
+	c1: INTEGER_8
+		do
+		ensure
+			is_class: class
+		end
+
+	c2: INTEGER_8
+		deferred
+		ensure
+			is_class: class
+		end
+
+	e1
+		do
+		ensure
+			is_class: class
+		end
+
+	e2
+		deferred
+		ensure
+			is_class: class
+		end
+
+	i1
+		do
+		ensure
+			is_class: class
+		end
+
+	i2
+		deferred
+		ensure
+			is_class: class
+		end
+
 	o1
 		do
 		ensure
@@ -45,6 +81,18 @@ feature {NONE} -- Tests
 		end
 
 	p2
+		deferred
+		ensure
+			is_class: class
+		end
+
+	q1
+		do
+		ensure
+			is_class: class
+		end
+
+	q2
 		deferred
 		ensure
 			is_class: class

@@ -6,6 +6,6 @@ copy_raw 	 a.e $CLUSTER a.e
 copy_raw 	 test.e $CLUSTER test.e
 
 compile_melted
-compile_result 	 validity_error TEST ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9)
+compile_result 	 validity_error TEST VUCR:23 VUCR:25 VUCR:29 VUCR:31 VUCR:35 VUCR:37 VUCR:74 VUCR:78 VUCR:82
 
 test_end

@@ -30,11 +30,11 @@ feature {NONE} -- Output
 			t.add_new_line
 			format_elements (t, locale.translation_in_context
 					({STRING_32} "[
-						Redeclaration {1} from class {3} and its precursor {2} from class {4} have different instance-free status.
+						Class routine {1} has precursor {2} from class {4} that is not instance-free.
 						
 						What to do:
-							• make sure the precursor has the same instance-free status as the redeclaration or
-							• make sure the redeclaration has the same instance-free status as the precursor or
+							• make sure the precursor is instance-free or
+							• make sure the redeclaration is not a class routine or
 							• remove the redeclaration.
 					]",
 					"eiffel.error"),
@@ -53,7 +53,7 @@ feature {NONE} -- Output
 			-- <Precursor>
 		do
 			format_elements (t, locale.translation_in_context
-					("Redeclaration {1} and its precursor from class {4} are not both instance-free.",
+					("Precursor {2} from class {4} of class routine {1} is not instance-free.",
 					"eiffel.error"),
 				<<
 					agent feature_1.append_name,
@@ -66,26 +66,20 @@ feature {NONE} -- Output
 	build_explain (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			print_status (feature_1, t)
-			print_status (feature_2, t)
-		end
-
-	print_status (f: E_FEATURE; t: TEXT_FORMATTER)
-			-- Report an instance-free status of the feature `f` using `t`.
-		do
-			format_elements (t,
-				if f.is_instance_free then
-					locale.translation_in_context
-						("Feature {1} from class {2} is instance-free.", "eiffel.error")
-				else
-					locale.translation_in_context
-						("Feature {1} from class {2} is not instance-free.", "eiffel.error")
-				end,
+			format_elements (t, locale.translation_in_context
+					("Feature {1} from class {2} has a class postcondition.", "eiffel.error"),
 				<<
-					agent f.append_name,
-					agent (f.written_class).append_name
+					agent feature_1.append_name,
+					agent (feature_1.written_class).append_name
 				>>)
-				t.add_new_line
+			t.add_new_line
+			format_elements (t, locale.translation_in_context
+					("Feature {1} from class {2} is not instance-free.", "eiffel.error"),
+				<<
+					agent feature_2.append_name,
+					agent (feature_2.written_class).append_name
+				>>)
+			t.add_new_line
 		end
 
 note

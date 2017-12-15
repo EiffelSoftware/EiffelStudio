@@ -39,7 +39,7 @@ feature -- Interactive with C
 				-- Setting CURLOPT_PROGRESSFUNCTION option of `a_curl_handle'.
 				-- We need this function since cURL need a c function pointer as value.
 		require
-			exists: a_setopt_api /= default_pointer
+			exists: a_setopt_api /= default_pointer or is_static
 		external
 			"C inline use <eiffel_curl.h>"
 		alias
@@ -59,7 +59,7 @@ feature -- Interactive with C
 				-- Setting CURLOPT_DEBUGFUNCTION option of `a_curl_handle'.
 				-- We need this function since cURL need a c function pointer as value.
 		require
-			exists: a_curl_handle /= default_pointer
+			exists: a_curl_handle /= default_pointer or is_static
 		external
 			"C inline use <eiffel_curl.h>"
 		alias
@@ -71,7 +71,7 @@ feature -- Interactive with C
 												((CURL *) $a_curl_handle,
 												(CURLoption)CURLOPT_DEBUGFUNCTION,
 												curl_debug_function);
-				#endif																									
+				#endif
 			]"
 		end
 
@@ -79,7 +79,7 @@ feature -- Interactive with C
 				-- Setting CURLOPT_WRITEFUNCTION option of `a_curl_handle'.
 				-- We need this function since cURL need a c function pointer as value.
 		require
-			exists: a_setopt_api /= default_pointer
+			exists: a_setopt_api /= default_pointer or is_static
 		external
 			"C inline use <eiffel_curl.h>"
 		alias
@@ -92,7 +92,7 @@ feature -- Interactive with C
 												((CURL *) $a_curl_handle,
 												(CURLoption)CURLOPT_WRITEFUNCTION,
 												curl_write_function);
-				#endif								
+				#endif
 
 			]"
 		end
@@ -101,7 +101,7 @@ feature -- Interactive with C
 				-- Setting CURLOPT_READFUNCTION option of `a_curl_handle'.
 				-- We need this function since cURL need a c function pointer as value.
 		require
-			exists: a_setopt_api /= default_pointer
+			exists: a_setopt_api /= default_pointer or is_static
 		external
 			"C inline use <eiffel_curl.h>"
 		alias
@@ -115,6 +115,14 @@ feature -- Interactive with C
 												curl_read_function);
 				#endif
 			]"
+		end
+
+feature -- Query
+
+	is_static: BOOLEAN
+			-- is CURL_STATICLIB defined?
+		do
+			Result := (create {CURL_UTILITY}).is_static
 		end
 
 feature -- cURL curl_easy_setopt functions

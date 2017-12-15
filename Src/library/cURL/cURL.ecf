@@ -41,6 +41,15 @@
 				<dotnet value="false"/>
 			</condition>
 		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\MTeiffel_curl_static.lib">
+			<condition>
+				<custom name="static_curl_enabled" value="true"/>
+				<platform value="windows"/>
+				<concurrency excluded_value="none"/>
+				<dotnet value="false"/>
+			</condition>
+		</external_object>
+
 		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mteiffel_curl.lib">
 			<condition>
 				<custom name="static_curl_enabled" excluded_value="true"/>

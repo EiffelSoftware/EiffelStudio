@@ -30,10 +30,10 @@ feature {NONE} -- Output
 			t.add_new_line
 			format_elements (t, locale.translation_in_context
 					({STRING_32} "[
-						Joined features {1} from class {3} and {2} from class {4} have different instance-free status.
+						A class feature {1} from class {3} is joined with a feature {2} from class {4} that is not instance-free.
 						
 						What to do:
-							• make sure both features have the same instance-free status or
+							• make sure that if one of joined features has a class postcondition, the other one is instance-free or
 							• avoid joining them.
 					]",
 					"eiffel.error"),
@@ -52,7 +52,7 @@ feature {NONE} -- Output
 			-- <Precursor>
 		do
 			format_elements (t, locale.translation_in_context
-					("Joined features {1} and {2} from classes {3} and {4} are not both instance-free.",
+					("Class feature {1} from {3} is joined with a non-instance-free feature {2} from {4}.",
 					"eiffel.error"),
 				<<
 					agent feature_1.append_name,
@@ -65,26 +65,20 @@ feature {NONE} -- Output
 	build_explain (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			print_status (feature_1, t)
-			print_status (feature_2, t)
-		end
-
-	print_status (f: E_FEATURE; t: TEXT_FORMATTER)
-			-- Report an instance-free status of the feature `f` using `t`.
-		do
-			format_elements (t,
-				if f.is_instance_free then
-					locale.translation_in_context
-						("Feature {1} from class {2} is instance-free.", "eiffel.error")
-				else
-					locale.translation_in_context
-						("Feature {1} from class {2} is not instance-free.", "eiffel.error")
-				end,
+			format_elements (t, locale.translation_in_context
+					("Feature {1} from class {2} has a class postcondition.", "eiffel.error"),
 				<<
-					agent f.append_name,
-					agent (f.written_class).append_name
+					agent feature_1.append_name,
+					agent (feature_1.written_class).append_name
 				>>)
-				t.add_new_line
+			t.add_new_line
+			format_elements (t, locale.translation_in_context
+					("Feature {1} from class {2} is not instance-free.", "eiffel.error"),
+				<<
+					agent feature_2.append_name,
+					agent (feature_2.written_class).append_name
+				>>)
+			t.add_new_line
 		end
 
 note

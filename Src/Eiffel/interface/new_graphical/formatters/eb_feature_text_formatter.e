@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Formatter displaying feature information in a text area."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Xavier Rousselot"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -85,8 +86,10 @@ feature -- Status setting
 			format
 			ensure_display_in_widget_owner
 		ensure
-			feature_set: a_feature = associated_feature
-			cmd_created_if_possible: (a_feature = Void) = (feature_cmd = Void)
+			feature_set:
+				attached a_feature.associated_class as c and then c.has_feature_table implies
+				associated_feature = a_feature
+			cmd_created_if_possible: (associated_feature = Void) = (feature_cmd = Void)
 		end
 
 feature -- Setting
@@ -182,7 +185,7 @@ feature {NONE} -- Implementation
 			-- Exception trace
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -213,5 +216,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_FEATURE_TEXT_FORMATTER
-
+end

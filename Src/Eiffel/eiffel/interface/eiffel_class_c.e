@@ -713,12 +713,17 @@ feature -- Third pass: byte code production and type check
 							else
 								-- Check the conflicts between local variable names
 								-- and feature names
-								-- FIX ME: ONLY needed when new features are inserted in the feature table
+								-- FIXME: ONLY needed when new features are inserted in the feature table
 								check_local_names_needed := True
 							end
 						else
-								-- is_routine = False
-							record_suppliers (feature_i, dependances)
+								-- The content is not going to be checked.
+							if feature_i.is_class and then feature_i.is_attribute then
+								error_handler.insert_error (create {VUCR_ATTRIBUTE}.make (feature_i, Current, ast.feature_with_name (feature_i.feature_name_id).feature_names.first.internal_name))
+								type_check_error := True
+							else
+								record_suppliers (feature_i, dependances)
+							end
 						end
 
 						if

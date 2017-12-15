@@ -25,6 +25,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_ERROR_HANDLER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -33,6 +38,13 @@ feature -- Status Report
 	is_valid_old_features (old_feats: like old_features): BOOLEAN
 			-- Is `old_feats' valid for Current?
 		do
+			Result := True
+		end
+
+	is_inherited: BOOLEAN
+			-- Is `new_feature` an inherited one?
+		do
+				-- `True` for joining.
 			Result := True
 		end
 
@@ -58,12 +70,18 @@ feature -- Checking
 				--! Hence, we need to update the new_feature
 				--| so it is referenced correctly.
 			new_feature_info.set_a_feature (new_feat)
-			deferred_features := old_features.deferred_features
-			if deferred_features.count > 0 then
-				check_list (deferred_features, feat_tbl)
-			end
 			features := old_features.features
-			if features.count > 0 then
+			deferred_features := old_features.deferred_features
+				-- Check one of the lists of the other one is empty
+			if deferred_features.is_empty then
+				check_list (features, feat_tbl)
+			elseif features.is_empty then
+				check_list (deferred_features, feat_tbl)
+			else
+					-- Combine two lists and check them together.
+					-- (This is needed to perform validity checks properly.)
+				features := features.twin
+				features.append (deferred_features)
 				check_list (features, feat_tbl)
 			end
 		end
@@ -76,7 +94,21 @@ feature -- Checking
 			not_empty: not feats.is_empty
 		local
 			i: INHERIT_INFO
+			f: FEATURE_I
+			g: FEATURE_I
+			has_class: BOOLEAN
+			has_object: BOOLEAN
 		do
+			f := new_feature
+			if f.is_class then
+					-- One of the features has a class postcondition.
+				has_class := True
+			elseif not f.is_instance_free then
+					-- If this a redeclaration, the class status can be taken from one of the precursors.
+					-- So, the feature may be instance-free even if it is not declared so explicitly.
+					-- For inherited features the (non-)instance-free status cannot change., so it is recorder here.
+				has_object := is_inherited
+			end
 			from
 				feats.start
 			until
@@ -86,8 +118,47 @@ feature -- Checking
 				if i.a_feature_needs_instantiation then
 					i.delayed_instantiate_a_feature
 				end
-				new_feature.delayed_check_signature (i.internal_a_feature, tbl)
+				g := i.internal_a_feature
+				if g.is_class then
+						-- One of the features has a class postcondition.
+					has_class := True
+				elseif not g.is_instance_free then
+						-- One of the features is not instance-free.
+					has_object := True
+				end
+				f.delayed_check_signature (g, tbl)
 				feats.forth
+			end
+				-- It's an error to mix both, features with class postconditions and non-instance-free ones.
+			if has_class and has_object then
+				if is_inherited then
+						-- A join error.
+						-- Find a class feature.
+					across
+						feats as h
+					until
+						f.is_class
+					loop
+						f := h.item.internal_a_feature
+					end
+						-- Report an error.
+					across
+						feats as h
+					loop
+						if not h.item.internal_a_feature.is_instance_free then
+							error_handler.insert_error (create {VDJR5_NEW}.make (system.current_class, f, h.item.internal_a_feature))
+						end
+					end
+				else
+						-- A redeclaration error.
+					across
+						feats as h
+					loop
+						if not h.item.internal_a_feature.is_instance_free then
+							error_handler.insert_error (create {VDRD9_NEW}.make (system.current_class, f, h.item.internal_a_feature))
+						end
+					end
+				end
 			end
 		end
 

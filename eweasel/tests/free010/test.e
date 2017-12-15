@@ -15,6 +15,14 @@ feature {NONE} -- Creation
 
 feature {NONE} -- Tests
 
+	e1
+		do
+		end
+
+	e2
+		do
+		end
+
 	o1
 		do
 		end

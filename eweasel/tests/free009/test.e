@@ -3,7 +3,7 @@ class TEST
 inherit
 	A
 		undefine
-			a1, a2, o1, p1
+			a1, a2, c1, e1, i1, o1, p1, q1
 		end
 
 	B

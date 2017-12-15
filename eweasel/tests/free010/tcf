@@ -8,6 +8,6 @@ copy_raw 	 c.e $CLUSTER c.e
 copy_raw 	 test.e $CLUSTER test.e
 
 compile_melted
-compile_result 	 validity_error C ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5)
+compile_result 	 validity_error C ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5)
 
 test_end

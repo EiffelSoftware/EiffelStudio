@@ -2,6 +2,30 @@ deferred class A
 
 feature {NONE} -- Tests
 
+	e1
+		do
+		ensure
+			is_class: class
+		end
+
+	e2
+		deferred
+		ensure
+			is_class: class
+		end
+
+	i1
+		do
+		ensure
+			is_class: class
+		end
+
+	i2
+		deferred
+		ensure
+			is_class: class
+		end
+
 	o1
 		do
 		ensure
@@ -27,6 +51,24 @@ feature {NONE} -- Tests
 		end
 
 	p3
+		deferred
+		ensure
+			is_class: class
+		end
+
+	q1
+		do
+		ensure
+			is_class: class
+		end
+
+	q2
+		deferred
+		ensure
+			is_class: class
+		end
+
+	q3
 		deferred
 		ensure
 			is_class: class

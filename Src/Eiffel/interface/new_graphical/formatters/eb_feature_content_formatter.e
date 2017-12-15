@@ -2,7 +2,6 @@ note
 	description: "Formatter displaying feature information in a grid view."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -113,7 +112,8 @@ feature -- Status setting
 			format
 			ensure_display_in_widget_owner
 		ensure
-			feature_set: a_feature = associated_feature
+			feature_set: a_feature.associated_class.has_feature_table implies associated_feature = a_feature
+			feature_unset: a_feature.associated_class.has_feature_table or else not attached associated_feature
 		end
 
 feature {NONE} -- Recyclable
@@ -175,7 +175,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

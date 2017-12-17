@@ -1941,11 +1941,12 @@ feature {NONE} -- Constants
 	switch_prefixes: ARRAY [CHARACTER_32]
 			-- Prefixes used to indicate a command line switch.
 		once
-			if {PLATFORM}.is_windows then
-				Result := <<'-', '/'>>
-			else
-				Result := <<'-'>>
-			end
+			Result :=
+				if {PLATFORM}.is_windows then
+					{ARRAY [CHARACTER_32]} <<'-', '/'>>
+				else
+					{ARRAY [CHARACTER_32]} <<'-'>>
+				end
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty

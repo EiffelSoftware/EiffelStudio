@@ -1,5 +1,9 @@
 ﻿note
 	description: "Type checking and code generation of BYTE_NODE tree."
+	ca_ignore:
+		"CA011", "CA011 – too many arguments",
+		"CA032", "CA032 – too long routine",
+		"CA033", "CA033 – too long class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -1195,7 +1199,6 @@ feature {NONE} -- Implementation
 			l_result_type, l_pure_result_type: TYPE_A
 			l_generated_result_type: TYPE_A
 			l_veen: VEEN
-			l_vsta2: VSTA2
 			l_vica2: VICA2
 			l_cl_type_i: CL_TYPE_A
 			l_parameter: PARAMETER_B
@@ -1553,28 +1556,21 @@ feature {NONE} -- Implementation
 						l_found_feature := l_feature
 						if is_static and then not l_feature.has_static_access then
 								-- Not a valid feature for static access.	
-								-- TODO
-							create l_vsta2
-							context.init_error (l_vsta2)
-							l_vsta2.set_non_static_feature (l_feature)
-							l_vsta2.set_location (l_feature_name)
-							error_handler.insert_error (l_vsta2)
+							error_handler.insert_error (create {VUNO_FEATURE}.make (l_feature, current_feature, context.current_class, context.written_class, l_feature_name))
 							reset_types
---						elseif is_static and then l_last_class.is_deferred then
---								-- Instance-free calls are not allowed on deferred classes.
---								-- TODO
---						elseif is_static and then l_last_type.is_none then
---								-- Instance-free calls are not allowed on type 'NONE'.
---								-- TODO
---						elseif is_static and then not attached {CL_TYPE_A} l_last_type then
---								-- Instance-free calls are not supported on formal generic and anchored types.
---								-- TODO
+						elseif is_static and then not attached {CL_TYPE_A} l_last_type and then not l_feature.is_target_free then
+								-- Instance-free calls are not supported on formal generic and anchored types.
+							error_handler.insert_error (create {VUNO_NOT_CLASS_TYPE}.make (l_last_type, current_feature, context.current_class, context.written_class, a_name))
+							reset_types
+						elseif is_static and then l_last_class.is_deferred and then not l_feature.is_target_free then
+								-- Instance-free calls are not allowed on deferred classes.
+							error_handler.insert_error (create {VUNO_DEFERRED}.make (l_last_class, current_feature, context.current_class, context.written_class, a_name))
+							reset_types
 						elseif not is_qualified_call and then current_feature.is_class and then not l_feature.has_static_access then
 								-- The error for agents is reported elsewhere.
 							if not is_agent then
 								error_handler.insert_error
 									(if is_precursor then
-											-- TODO
 										create {VUCR_BODY}.make_precursor (l_feature, current_feature, context.current_class, context.written_class, a_name)
 									else
 										create {VUCR_BODY}.make_feature (l_feature, current_feature, context.current_class, context.written_class, a_name)
@@ -1624,14 +1620,20 @@ feature {NONE} -- Implementation
 						if error_level = l_error_level then
 							if is_static and then not l_feature.is_instance_free then
 									-- The instance-free call is OK, but the called feature is not instance-free.
-									-- TODO
---								error_handler.insert_warning (create {VUNO_NOT_INSTANCE_FREE}.make
---									(l_feature, current_feature, context.current_class, context.written_class, a_name))
-							elseif not is_qualified_call and then current_feature.is_class and then not l_feature.is_instance_free then
+								error_handler.insert_warning (create {VUNO_NOT_INSTANCE_FREE}.make (l_feature, current_feature, context.current_class, context.written_class, l_feature_name))
+							elseif
+								not is_qualified_call and then
+								current_feature.is_class and then
+								not l_feature.is_instance_free and then
+								not is_agent
+							then
 									-- The unqualified call is OK, but the called feature is not instance-free.
-									-- TODO
---								error_handler.insert_warning (create {VUCR_UNQUALIFIED}.make
---									(l_feature, current_feature, context.current_class, context.written_class, a_name))
+								error_handler.insert_warning
+									(if is_precursor then
+										create {VUCR_BODY_WARNING}.make_precursor (l_feature, current_feature, context.current_class, context.written_class, a_name)
+									else
+										create {VUCR_BODY_WARNING}.make_feature (l_feature, current_feature, context.current_class, context.written_class, a_name)
+									end)
 							end
 							if not system.il_generation then
 								if l_feature.is_inline_agent then
@@ -2353,7 +2355,7 @@ feature {NONE} -- Visitor
 				end
 			elseif
 					-- Look at the target type to see if it can be used to compute target type.
-					-- TODO [2017-11-30]: Remove this branch when all source code is updated.
+					-- TODO on [2018-01-30]: Remove this branch when all source code is updated.
 				attached current_target_type as t and then
 				attached {GEN_TYPE_A} t.conformance_type as g and then
 					-- Check that it is either an ARRAY, or a NATIVE_ARRAY when used
@@ -2401,7 +2403,7 @@ feature {NONE} -- Visitor
 							-- Either an explicit array type is specified or the computed array type is not useable for all elements.
 							-- Check conformance and conversion rules for the explicit array type or for the target type.
 						if attached default_element_type then
-								-- TODO [2019-05-30]: Remove this branch when all source code is updated.
+								-- TODO on [2019-06-30]: Remove this branch when all source code is updated.
 								-- The implicit type is required to compute array type, it should be replaced with an explicit one.
 							if (create {DATE}.make (2017, 11, 30)).relative_duration (create {DATE}.make_now_utc).days_count + 366  + 183 <= 0 then
 									-- Report an error.

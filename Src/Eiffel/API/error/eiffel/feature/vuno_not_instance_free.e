@@ -1,64 +1,34 @@
-note
-	description: "Error when feature is not valid for static access."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+﻿note
+	description: "Same as VUNO_FEATURE, but it is a warning rather than an error."
 
-class VSTA2
+class VUNO_NOT_INSTANCE_FREE
 
 inherit
-	FEATURE_ERROR
-		redefine
-			build_explain, is_defined, subcode
+	VUNO_FEATURE
+		undefine
+			error_string,
+			has_associated_file
 		end
 
-feature -- Access
-
-	code: STRING = "VSTA"
-			-- Error code
-
-	subcode: INTEGER = 2
-
-	non_static_feature: E_FEATURE
-			-- Name of routine on which non-valid static access is performed.
-
-feature -- Status report
-
-	is_defined: BOOLEAN
-			-- Is the error fully defined?
-		do
-			Result := is_class_defined and then
-				non_static_feature /= Void
-		ensure then
-			valid_non_static_feature: Result implies non_static_feature /= Void
+	EIFFEL_WARNING
+		rename
+			associated_class as class_c
+		undefine
+			file_name,
+			print_short_help,
+			trace,
+			trace_primary_context,
+			trace_single_line
 		end
 
-feature -- Output
+create
+	make
 
-	build_explain (a_text_formatter: TEXT_FORMATTER)
-		local
-			ec: CLASS_C
-		do
-			ec := non_static_feature.written_class
-			a_text_formatter.add ("Not valid for static call: ")
-			non_static_feature.append_name (a_text_formatter)
-			a_text_formatter.add (" from ")
-			ec.append_name (a_text_formatter)
-			a_text_formatter.add_new_line
-		end
-
-feature -- Setting
-
-	set_non_static_feature (f: FEATURE_I)
-		require
-			valid_f: f /= Void
-		do
-			non_static_feature := f.api_feature (f.written_in)
-		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -89,4 +59,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class VSTA2
+end

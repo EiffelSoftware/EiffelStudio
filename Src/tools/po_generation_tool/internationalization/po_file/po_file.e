@@ -39,7 +39,7 @@ feature	{NONE} -- Initialization
 
 		    headers.add_header ("Last-Translator", "YOUR NAME HERE")
 		    headers.add_header ("Language-Team", "YOUR TEAM HERE")
-		    headers.add_header ("Plural-Forms", "nplurals=2; plural=n>1;")
+		    headers.add_header ("Plural-Forms", "nplurals=2; plural=(n != 1);")
 		    headers.add_header ("MIME-Version", "1.0")
 		end
 

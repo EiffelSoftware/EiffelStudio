@@ -19,7 +19,7 @@ compile_result 	validity_error TEST1 VQMC
 define		FEATURE "ermine: like {TEST1}.default.out do end"
 copy_sub 	test1.e $CLUSTER test1.e
 resume_compile
-compile_result 	validity_error TEST2 VSTA(2)
+compile_result 	validity_error TEST2 VUNO:10
 
 define		FEATURE "ermine: like {TEST1}.default.out.count = 13"
 copy_sub 	test1.e $CLUSTER test1.e

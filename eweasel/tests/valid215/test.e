@@ -20,6 +20,8 @@ feature -- Externals
 			"C inline"
 		alias
 			"return 1"
+		ensure
+			is_class: class
 		end
 
 end

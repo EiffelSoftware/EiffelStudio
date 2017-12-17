@@ -31,6 +31,8 @@ feature
 			"C | %"eif_path_name.h%""
 		alias
 			"eif_home_dir_supported"
+		ensure
+			is_class: class
 		end
 
 	root_directory_supported: BOOLEAN
@@ -39,6 +41,8 @@ feature
 			"C | %"eif_path_name.h%""
 		alias
 			"eif_root_dir_supported"
+		ensure
+			is_class: class
 		end
 
 	case_sensitive_path_names: BOOLEAN
@@ -47,6 +51,8 @@ feature
 			"C | %"eif_path_name.h%""
 		alias
 			"eif_case_sensitive_path_names"
+		ensure
+			is_class: class
 		end
 
 feature {NONE} -- Implementation
@@ -56,11 +62,15 @@ feature {NONE} -- Implementation
 			"C | %"eif_dir.h%""
 		alias
 			"eif_dir_separator"
+		ensure
+			is_class: class
 		end
 
 	eif_current_dir_representation: STRING
 		external
 			"C | %"eif_path_name.h%""
+		ensure
+			is_class: class
 		end
 
 end -- class OPERATING_ENVIRONMENT

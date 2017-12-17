@@ -33,6 +33,8 @@ feature {TEST} -- Access
 		obsolete "External. [$(YESTERDAY)]"
 		external "C inline"
 			alias "return 1;"
+		ensure
+			is_class: class
 		end
 
 	attr: TEST assign put
@@ -94,6 +96,8 @@ feature {TEST} -- Modification
 
 	put_boolean (b: BOOLEAN)
 		do
+		ensure
+			is_class: class
 		end
 
 	put (t: TEST)

@@ -94,6 +94,8 @@ feature {TEST} -- Modification
 
 	put_boolean (b: BOOLEAN)
 		do
+		ensure
+			is_class: class
 		end
 
 	put (t: TEST)

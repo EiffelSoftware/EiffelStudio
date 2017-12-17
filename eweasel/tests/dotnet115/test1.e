@@ -10,6 +10,8 @@ feature
 			"[
 				printf ("Coucou\n");
 			]"
+		ensure
+			is_class: class
 		end
 
 end

@@ -10,5 +10,7 @@ feature
 			"C inline"
 		alias
 			"return 31;"
+		ensure
+			is_class: class
 		end
 end

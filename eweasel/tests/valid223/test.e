@@ -11,6 +11,8 @@ feature
 			"C inline"
 		alias
 			""
+		ensure
+			is_class: class
 		end
 
 	make is

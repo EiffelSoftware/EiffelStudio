@@ -87,6 +87,8 @@ feature {TEST} -- Modification
 			-- An obsolete assigner.
 		obsolete "Boolean. [$(YESTERDAY)]"
 		do
+		ensure
+			is_class: class
 		end
 
 	put (t: TEST)

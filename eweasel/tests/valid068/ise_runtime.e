@@ -1,4 +1,4 @@
-indexing
+﻿indexing
 	description: "[
 		Set of features to access ISE runtime functionality.
 		To be used at your own risk.
@@ -17,6 +17,8 @@ feature -- Feature specific to ISE runtime.
 			"C signature (EIF_REFERENCE): EIF_REFERENCE use %"eif_copy.h%""
 		alias
 			"eclone"
+		ensure
+			is_class: class
 		end
 
 	frozen c_conforms_to (obj1, obj2: POINTER): BOOLEAN is
@@ -26,6 +28,8 @@ feature -- Feature specific to ISE runtime.
 			"C macro use %"eif_plug.h%""
 		alias
 			"econfg"
+		ensure
+			is_class: class
 		end
 
 	frozen c_same_type (obj1, obj2: POINTER): BOOLEAN is
@@ -35,6 +39,8 @@ feature -- Feature specific to ISE runtime.
 			"C macro use %"eif_plug.h%""
 		alias
 			"estypeg"
+		ensure
+			is_class: class
 		end
 
 	frozen c_standard_is_equal (target, source: POINTER): BOOLEAN is
@@ -43,6 +49,8 @@ feature -- Feature specific to ISE runtime.
 			"C signature (EIF_REFERENCE, EIF_REFERENCE): EIF_BOOLEAN use %"eif_equal.h%""
 		alias
 			"eequal"
+		ensure
+			is_class: class
 		end
 
 	frozen c_standard_copy (source, target: POINTER) is
@@ -51,6 +59,8 @@ feature -- Feature specific to ISE runtime.
 			"C signature (EIF_REFERENCE, EIF_REFERENCE) use %"eif_copy.h%""
 		alias
 			"ecopy"
+		ensure
+			is_class: class
 		end
 
 	frozen c_deep_clone (other: POINTER): ANY is
@@ -60,6 +70,8 @@ feature -- Feature specific to ISE runtime.
 			"C signature (EIF_REFERENCE): EIF_REFERENCE use %"eif_copy.h%""
 		alias
 			"edclone"
+		ensure
+			is_class: class
 		end
 
 	frozen c_deep_equal (a: POINTER; b: like a): BOOLEAN is
@@ -69,24 +81,32 @@ feature -- Feature specific to ISE runtime.
 			"C signature (EIF_REFERENCE, EIF_REFERENCE): EIF_BOOLEAN use %"eif_equal.h%""
 		alias
 			"ediso"
+		ensure
+			is_class: class
 		end
 
 	frozen c_tagged_out (o: ANY): STRING is
 			-- Printable representation of current object
 		external
 			"C use %"eif_out.h%""
+		ensure
+			is_class: class
 		end
 
 	frozen c_generator_of_type (type_id: INTEGER): STRING is
 			-- Name of the generating class of current object
 		external
 			"C use %"eif_out.h%""
+		ensure
+			is_class: class
 		end
 
 	frozen c_generator (o: POINTER): STRING is
 			-- Name of the generating class of current object
 		external
 			"C macro use %"eif_out.h%""
+		ensure
+			is_class: class
 		end
 
 	frozen check_assert (b: BOOLEAN): BOOLEAN is
@@ -94,6 +114,8 @@ feature -- Feature specific to ISE runtime.
 			"C use %"eif_copy.h%""
 		alias
 			"c_check_assert"
+		ensure
+			is_class: class
 		end
 
  	frozen c_generating_type (obj: POINTER): STRING is
@@ -101,6 +123,8 @@ feature -- Feature specific to ISE runtime.
  			"C macro use %"eif_gen_conf.h%""
  		alias
  			"eif_gen_typename"
+		ensure
+			is_class: class
  		end
 
  	frozen c_generating_type_of_type (type_id: INTEGER): STRING is
@@ -108,12 +132,16 @@ feature -- Feature specific to ISE runtime.
  			"C signature (int16): EIF_REFERENCE use %"eif_gen_conf.h%""
  		alias
  			"eif_gen_typename_of_type"
+		ensure
+			is_class: class
  		end
 
 	frozen sp_count (sp_obj: POINTER): INTEGER is
 			-- Count of special object
 		external
 			"C signature (EIF_REFERENCE): EIF_INTEGER use %"eif_plug.h%""
+		ensure
+			is_class: class
 		end
 
 feature -- Internal C routines
@@ -124,6 +152,8 @@ feature -- Internal C routines
 			"C signature (char *): EIF_INTEGER use %"eif_cecil.h%""
 		alias
 			"eif_type_id"
+		ensure
+			is_class: class
 		end
 
 	frozen dynamic_type (object: POINTER): INTEGER is
@@ -132,6 +162,8 @@ feature -- Internal C routines
 			"C macro signature (EIF_REFERENCE): EIF_INTEGER use %"eif_macros.h%""
 		alias
 			"Dftype"
+		ensure
+			is_class: class
 		end
 		
-end -- class ISE_RUNTIME
+end

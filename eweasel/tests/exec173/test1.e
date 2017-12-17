@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2017 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -23,6 +23,8 @@ feature
 			return $n;
 #endif
 		]"
+		ensure
+			is_class: class
 		end
 
 	value2: G

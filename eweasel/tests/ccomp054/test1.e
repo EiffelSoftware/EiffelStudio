@@ -15,6 +15,8 @@ feature
 #endif
 					return 5;
 			]"
+		ensure
+			is_class: class
 		end
 		
 	

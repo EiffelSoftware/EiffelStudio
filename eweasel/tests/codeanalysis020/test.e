@@ -77,6 +77,8 @@ feature {TEST} -- Test
 		obsolete "External. [$(YESTERDAY)]"
 		external "C inline"
 			alias "return;"
+		ensure
+			is_class: class
 		end
 
 	attr: TEST

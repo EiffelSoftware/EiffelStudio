@@ -40,8 +40,8 @@ feature -- Properties
 			-- <Precursor>
 
 note
-	date: "$Date$";
-	revision: "$Revision $"
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

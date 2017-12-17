@@ -23,7 +23,7 @@ compare		exec_output1 output
 define BODY "do end"
 copy_sub 	test1.e $CLUSTER test1.e
 compile_melted
-compile_result 	validity_error TEST VSTA(2)
+compile_result 	validity_error TEST VUNO:13
 
 define BODY "13"
 copy_sub 	test1.e $CLUSTER test1.e

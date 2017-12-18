@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-12-18 12:48+0300\n"
+"PO-Revision-Date: 2017-12-18 16:55+0300\n"
 "Last-Translator: Alexander Kogtenkov <kwaxer@mail.ru>\n"
 "Language-Team: Eiffel Software and others\n"
 "Language: en\n"
@@ -17112,6 +17112,16 @@ msgctxt "wizard"
 msgid "Error writing file"
 msgstr ""
 
+#. Source code: t.add (locale.translation_in_context ("[
+#: vd02.e:53
+msgctxt "compiler.error"
+msgid ""
+"Error: A class with a feature used in a non-object call should be compiled "
+"with an option \"Full class checking\".\n"
+"What to do: Enable the option \"Full class checking\" in the project "
+"settings or remove the non-object call to the feature."
+msgstr ""
+
 #. Source code: do Result := locale.formatted_string (locale.translation ("Error: Call on void target for `$1'."), [fname]) end
 #: debugger_names.e:369
 msgid "Error: Call on void target for `$1'."
@@ -19490,6 +19500,14 @@ msgstr ""
 #. Source code: b_eval_detailled_error_message: STRING_32	do Result := locale.translation("Full Error Message")	end
 #: interface_names.e:88
 msgid "Full Error Message"
+msgstr ""
+
+#. Source code: ("Full class checking is required for class {1} with feature {2} used in a non-object call.", "compiler.error"),
+#: vd02.e:64
+msgctxt "compiler.error"
+msgid ""
+"Full class checking is required for class {1} with feature {2} used in a non-"
+"object call."
 msgstr ""
 
 #. Source code: assembly_name_description: STRING_32 do Result := locale.translation ("Full name of the assembly as found in the GAC.")	end
@@ -30804,6 +30822,12 @@ msgstr ""
 #. Source code: l_setter: STRING_32					do Result := locale.translation ("Setter") end
 #: interface_names.e:1628
 msgid "Setter"
+msgstr ""
+
+#. Source code: ("Setting {1} cannot be changed.", "compiler.error"),
+#: vd83.e:95
+msgctxt "compiler.error"
+msgid "Setting {1} cannot be changed."
 msgstr ""
 
 #. Source code: l_settings: STRING_32				do Result := locale.translation ("Settings") end

@@ -378,7 +378,7 @@ feature{NONE} -- Initialization
 		local
 			l_hash_table: HASH_TABLE [FUNCTION [EB_METRIC_CRITERION], STRING]
 		do
-			create l_hash_table.make (53)
+			create l_hash_table.make (54)
 			criterion_table.put (l_hash_table, feature_scope)
 
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_false), query_language_names.ql_cri_false)
@@ -389,6 +389,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_has_indexing), query_language_names.ql_cri_has_indexing)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_has_local), query_language_names.ql_cri_has_local)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_has_postcondition), query_language_names.ql_cri_has_postcondition)
+			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_has_class_postcondition), query_language_names.ql_cri_has_class_postcondition)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_has_precondition), query_language_names.ql_cri_has_precondition)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_has_rescue), query_language_names.ql_cri_has_rescue)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_attribute), query_language_names.ql_cri_is_attribute)

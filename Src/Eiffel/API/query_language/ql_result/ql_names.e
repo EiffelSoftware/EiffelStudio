@@ -110,6 +110,7 @@ feature -- Criterion names
 	ql_cri_has_comment: STRING = "has_comment"
 	ql_cri_has_local: STRING = "has_local"
 	ql_cri_has_postcondition: STRING = "has_postcondition"
+	ql_cri_has_class_postcondition: STRING = "has_class_postcondition"
 	ql_cri_has_precondition: STRING = "has_precondition"
 	ql_cri_has_rescue: STRING = "has_rescue"
 	ql_cri_is_attribute: STRING = "is_attribute"

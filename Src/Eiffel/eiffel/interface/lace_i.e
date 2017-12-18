@@ -928,7 +928,7 @@ feature {NONE} -- Implementation
 					system.set_absent_explicit_assertion (l_b)
 				elseif not is_force_new_target then
 						-- Value cannot be changed in a compiled system.
-					Error_handler.insert_error (create {VD83}.make (s_absent_explicit_assertion, system.absent_explicit_assertion.out.as_lower, l_b.out.as_lower))
+					Error_handler.insert_error (create {VD83}.make_error (s_absent_explicit_assertion, system.absent_explicit_assertion.out.as_lower, l_b.out.as_lower))
 				end
 			end
 

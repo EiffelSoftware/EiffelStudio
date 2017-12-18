@@ -909,6 +909,29 @@ feature {NONE} -- Implementation
 
 			l_settings := a_target.settings
 
+			l_s := l_settings.item (s_absent_explicit_assertion)
+			if attached l_s and then not l_s.is_boolean then
+					-- Invalid setting value.
+				create vd15
+				vd15.set_option_name (s_absent_explicit_assertion)
+				vd15.set_option_value (l_s)
+				Error_handler.insert_error (vd15)
+			else
+				l_b :=
+					if attached l_s then
+						l_s.to_boolean
+					else
+						true_boolean_settings.has (s_absent_explicit_assertion)
+					end
+				if l_b = system.absent_explicit_assertion or else not workbench.has_compilation_started then
+						-- Set the value of the setting for fresh compilation.
+					system.set_absent_explicit_assertion (l_b)
+				elseif not is_force_new_target then
+						-- Value cannot be changed in a compiled system.
+					Error_handler.insert_error (create {VD83}.make (s_absent_explicit_assertion, system.absent_explicit_assertion.out.as_lower, l_b.out.as_lower))
+				end
+			end
+
 			l_s := l_settings.item (s_address_expression)
 			if l_s /= Void then
 				if l_s.is_boolean then

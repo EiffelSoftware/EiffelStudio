@@ -17,7 +17,8 @@ inherit
 	LACE_WARNING
 		redefine
 			build_explain,
-			error_string
+			error_string,
+			trace_single_line
 		end
 
 create
@@ -62,7 +63,7 @@ feature -- Properties
 	is_error: BOOLEAN
 			-- Does issue report represent an error rather than a warning?
 
-feature -- Output
+feature {NONE} -- Output
 
 	error_string: STRING
 		do
@@ -87,8 +88,16 @@ feature -- Output
 			st.add_new_line
 		end
 
+	trace_single_line (t: TEXT_FORMATTER)
+			-- <Precursor>
+		do
+			format_elements (t, locale.translation_in_context
+				("Setting {1} cannot be changed.", "compiler.error"),
+					<<agent {TEXT_FORMATTER}.add_string (setting)>>)
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

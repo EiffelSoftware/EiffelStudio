@@ -16,6 +16,9 @@ feature -- Access
 	remover_off: BOOLEAN
 			-- Is the remover off (by specifying the Ace option)
 
+	absent_explicit_assertion: BOOLEAN
+			-- Can assertions be derived from the code rather than taken solely from the assertion clauses?
+
 	array_optimization_on: BOOLEAN
 			-- Is array optimization on?
 
@@ -182,6 +185,14 @@ feature -- Access: IL code generation
 			-- Should compiler take optimized precompile assembly?
 
 feature -- Update
+
+	set_absent_explicit_assertion (v: BOOLEAN)
+			-- Set `absent_explicit_assertion` to `v`.
+		do
+			absent_explicit_assertion := v
+		ensure
+			absent_explicit_assertion_set: absent_explicit_assertion = v
+		end
 
 	set_use_cluster_as_namespace (v: BOOLEAN)
 			-- Set `use_cluster_as_namespace' to `v'.
@@ -421,7 +432,7 @@ feature -- Update
 		do
 			has_expanded := True
 		ensure
-			has_expanded_set: has_expanded = True
+			has_expanded_set: has_expanded
 		end
 
 	set_line_generation (b: BOOLEAN)
@@ -611,7 +622,7 @@ feature {SYSTEM_I} -- Implementation
 			-- Is the system a multithreaded one?
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

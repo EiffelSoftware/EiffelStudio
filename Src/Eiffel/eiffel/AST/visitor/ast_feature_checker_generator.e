@@ -1554,30 +1554,44 @@ feature {NONE} -- Implementation
 					else
 							-- A feature is found.
 						l_found_feature := l_feature
-						if is_static and then not l_feature.has_static_access then
-								-- Not a valid feature for static access.	
-							error_handler.insert_error (create {VUNO_FEATURE}.make (l_feature, current_feature, context.current_class, context.written_class, l_feature_name))
-							reset_types
-						elseif is_static and then not attached {CL_TYPE_A} l_last_type and then not l_feature.is_target_free then
-								-- Instance-free calls are not supported on formal generic and anchored types.
-							error_handler.insert_error (create {VUNO_NOT_CLASS_TYPE}.make (l_last_type, current_feature, context.current_class, context.written_class, a_name))
-							reset_types
-						elseif is_static and then l_last_class.is_deferred and then not l_feature.is_target_free then
-								-- Instance-free calls are not allowed on deferred classes.
-							error_handler.insert_error (create {VUNO_DEFERRED}.make (l_last_class, current_feature, context.current_class, context.written_class, a_name))
-							reset_types
+						if is_static then
+							if not l_feature.has_static_access then
+									-- Not a valid feature for static access.
+								check_instance_free (l_feature, l_last_class,
+									agent error_handler.insert_error (create {VUNO_FEATURE}.make
+										(l_feature, current_feature, context.current_class, context.written_class, l_feature_name)),
+									l_feature_name)
+							end
+							if not l_feature.is_target_free then
+								if not attached {CL_TYPE_A} l_last_type then
+										-- Instance-free calls are not supported on formal generic and anchored types.
+									error_handler.insert_error (create {VUNO_NOT_CLASS_TYPE}.make (l_last_type, current_feature, context.current_class, context.written_class, a_name))
+								elseif l_last_class.is_deferred then
+										-- Instance-free calls are not allowed on deferred classes.
+									error_handler.insert_error (create {VUNO_DEFERRED}.make (l_last_class, current_feature, context.current_class, context.written_class, a_name))
+								end
+							end
+							if error_level /= l_error_level then
+								reset_types
+							end
 						elseif not is_qualified_call and then current_feature.is_class and then not l_feature.has_static_access then
 								-- The error for agents is reported elsewhere.
 							if not is_agent then
-								error_handler.insert_error
-									(if is_precursor then
-										create {VUCR_BODY}.make_precursor (l_feature, current_feature, context.current_class, context.written_class, a_name)
+								check_instance_free (l_feature, context.current_class,
+									if is_precursor then
+										agent error_handler.insert_error (create {VUCR_BODY}.make_precursor
+											(l_feature, current_feature, context.current_class, context.written_class, a_name))
 									else
-										create {VUCR_BODY}.make_feature (l_feature, current_feature, context.current_class, context.written_class, a_name)
-									end)
+										agent error_handler.insert_error (create {VUCR_BODY}.make_feature
+											(l_feature, current_feature, context.current_class, context.written_class, a_name))
+									end,
+									l_feature_name)
+								if error_level /= l_error_level then
+									reset_types
+								end
 							end
-							reset_types
-						elseif attached old_assigner_source then
+						end
+						if attached old_assigner_source then
 								-- Check if the assigner query is obsolete.
 							check_obsolescence (l_feature, l_last_class, a_name)
 								-- Transform a query into an assigner command call if necessary.
@@ -11713,6 +11727,23 @@ feature {NONE} -- Implementation: catcall check
 				Result := Void
 			elseif Result = Void then
 				create Result.make (0)
+			end
+		end
+
+feature {NONE} -- Instance-free checks
+
+	check_instance_free (f: FEATURE_I; c: CLASS_C; e: PROCEDURE; l: LOCATION_AS)
+			-- Check that feature `f` of class `c` is correctly called as instance-free at location `l` and report an error by calling `e` if not.
+		do
+			if not system.absent_explicit_assertion then
+					-- Assertions are specified explicitly. Raise an error.
+				e.call
+			elseif not c.is_full_class_checking then
+					-- Full class checking of the target class is required.
+				error_handler.insert_error (create {VD02}.make (f, c, context.written_class, l))
+			else
+					-- Look into the code to see if `f` can be used as instance-free with the target class `c`.
+				e.call
 			end
 		end
 

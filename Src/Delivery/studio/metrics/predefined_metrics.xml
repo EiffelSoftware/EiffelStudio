@@ -152,6 +152,12 @@
 			<normal_criterion negation="False" name="has_postcondition" unit="feature"></normal_criterion>
 		</criterion>
 	</basic_metric>
+	<basic_metric name="Class-Postcondition equipped features" unit="feature">
+		<description>Number of features which have class postconditions</description>
+		<criterion>
+			<normal_criterion negation="False" name="has_class_postcondition" unit="feature"></normal_criterion>
+		</criterion>
+	</basic_metric>
 	<basic_metric name="Precondition equipped features" unit="feature">
 		<description>Number of features which have precondtions</description>
 		<criterion>

@@ -738,7 +738,7 @@ feature {NONE} -- Implementation of data retrieval
 							elseif l_str ~ "false" or else l_str ~ "no" then
 								current_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_none)
 							end
-						elseif valid_setting (l_name) and l_value /= Void then
+						elseif is_setting_known (l_name) and l_value /= Void then
 							current_target.add_setting (l_name, l_value.value.as_string_32)
 						end
 					end
@@ -923,7 +923,7 @@ invariant
 	extension_name_not_empty: not extension_name.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

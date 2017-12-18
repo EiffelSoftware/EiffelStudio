@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-12-18 12:52+0300\n"
+"PO-Revision-Date: 2017-12-18 16:54+0300\n"
 "Last-Translator: Alexander Kogtenkov <kwaxer@mail.ru>\n"
 "Language-Team: Eiffel Software and others <support@eiffel.com>\n"
 "Language: ru\n"
@@ -17855,6 +17855,20 @@ msgctxt "wizard"
 msgid "Error writing file"
 msgstr "Ошибка записи в файл"
 
+#. Source code: t.add (locale.translation_in_context ("[
+#: vd02.e:53
+msgctxt "compiler.error"
+msgid ""
+"Error: A class with a feature used in a non-object call should be compiled "
+"with an option \"Full class checking\".\n"
+"What to do: Enable the option \"Full class checking\" in the project "
+"settings or remove the non-object call to the feature."
+msgstr ""
+"Ошибка: Класс с компонентом, используемым в безобъектном вызове, должен "
+"компилироваться с опцией «Полная проверка класса».\n"
+"Как исправить: Включите опцию «Полная проверка класса» в установках проекта "
+"или удалите безобъектный вызов компонента."
+
 #. Source code: do Result := locale.formatted_string (locale.translation ("Error: Call on void target for `$1'."), [fname]) end
 #: debugger_names.e:369
 msgid "Error: Call on void target for `$1'."
@@ -20350,6 +20364,16 @@ msgstr "Полная проверка класса"
 #: interface_names.e:88
 msgid "Full Error Message"
 msgstr "Полное сообщение об ошибке"
+
+#. Source code: ("Full class checking is required for class {1} with feature {2} used in a non-object call.", "compiler.error"),
+#: vd02.e:64
+msgctxt "compiler.error"
+msgid ""
+"Full class checking is required for class {1} with feature {2} used in a non-"
+"object call."
+msgstr ""
+"Полная проверка класса требуется для класса {1} с компонентом {2}, "
+"используемым в безобъектном вызове."
 
 #. Source code: assembly_name_description: STRING_32 do Result := locale.translation ("Full name of the assembly as found in the GAC.")	end
 #: conf_interface_names.e:287
@@ -32069,6 +32093,12 @@ msgstr "Сетсвана/тсвана (ЮАР)"
 #: interface_names.e:1628
 msgid "Setter"
 msgstr "Присваивающий компонент"
+
+#. Source code: ("Setting {1} cannot be changed.", "compiler.error"),
+#: vd83.e:95
+msgctxt "compiler.error"
+msgid "Setting {1} cannot be changed."
+msgstr "Установка {1} не может быть изменена."
 
 #. Source code: l_settings: STRING_32				do Result := locale.translation ("Settings") end
 #: interface_names.e:1678

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-12-17 17:18+0300\n"
+"PO-Revision-Date: 2017-12-18 12:52+0300\n"
 "Last-Translator: Alexander Kogtenkov <kwaxer@mail.ru>\n"
 "Language-Team: Eiffel Software and others <support@eiffel.com>\n"
 "Language: ru\n"
@@ -2316,17 +2316,17 @@ msgid ".NET Assembly Filename Error"
 msgstr "Ошибка имени файла сборки .NET"
 
 #. Source code: option_namespace_name: STRING_32 do Result := locale.translation (".NET Namespace")	end
-#: conf_interface_names.e:334
+#: conf_interface_names.e:339
 msgid ".NET Namespace"
 msgstr "Пространство имён .NET"
 
 #. Source code: target_dotnet_naming_convention_name: STRING_32 do Result := locale.translation (".NET Naming Convention")	end
-#: conf_interface_names.e:127
+#: conf_interface_names.e:132
 msgid ".NET Naming Convention"
 msgstr "Соглашение об именовании .NET"
 
 #. Source code: target_msil_clr_version_name: STRING_32 do Result := locale.translation (".NET Runtime Version")	end
-#: conf_interface_names.e:147
+#: conf_interface_names.e:152
 msgid ".NET Runtime Version"
 msgstr "Версия .NET"
 
@@ -2372,12 +2372,12 @@ msgid "<< Drop object here >>"
 msgstr "<< Бросить объект сюда >>"
 
 #. Source code: dial_cond_version_clr: STRING_32 do Result := locale.translation ("<= MSIL CLR version <= ")	end
-#: conf_interface_names.e:530
+#: conf_interface_names.e:535
 msgid "<= MSIL CLR version <= "
 msgstr "<= версия MSIL CLR <= "
 
 #. Source code: dial_cond_version_compiler: STRING_32 do Result := locale.translation ("<= compiler version <= ")	end
-#: conf_interface_names.e:529
+#: conf_interface_names.e:534
 msgid "<= compiler version <= "
 msgstr "<= версия компилятора <= "
 
@@ -2818,8 +2818,13 @@ msgstr "О $1"
 msgid "About DialogBox"
 msgstr "Диалог «О программе»"
 
+#. Source code: target_absent_explicit_assertion_name: STRING_32 do Result := locale.translation ("Absent Explicit Assertion")	end
+#: conf_interface_names.e:113
+msgid "Absent Explicit Assertion"
+msgstr "С отсутствующими явными утверждениями"
+
 #. Source code: target_library_root_description: STRING_32 do Result := locale.translation ("Absolute path to use as base for relative paths.")	end
-#: conf_interface_names.e:164
+#: conf_interface_names.e:169
 msgid "Absolute path to use as base for relative paths."
 msgstr ""
 "Абсолютный путь для использования как базового для относительных путей."
@@ -2969,12 +2974,12 @@ msgid "Add All"
 msgstr "Добавить все"
 
 #. Source code: group_add_assembly: STRING_32 do Result := locale.translation ("Add Assembly")	end
-#: conf_interface_names.e:262
+#: conf_interface_names.e:267
 msgid "Add Assembly"
 msgstr "Добавить сборку"
 
 #. Source code: external_add_cflag: STRING_32 do Result := locale.translation ("Add C flag")	end
-#: conf_interface_names.e:200
+#: conf_interface_names.e:205
 msgid "Add C flag"
 msgstr "Добавить флаг C компилятора"
 
@@ -2989,7 +2994,7 @@ msgid "Add Client-Supplier Relation Between '$1' and '$2'"
 msgstr "Добавить связь клиент-поставщик между  '$1' и '$2'"
 
 #. Source code: group_add_cluster: STRING_32 do Result := locale.translation ("Add Cluster")	end
-#: conf_interface_names.e:259
+#: conf_interface_names.e:264
 msgid "Add Cluster"
 msgstr "Добавить кластер"
 
@@ -2999,7 +3004,7 @@ msgid "Add Existing Class"
 msgstr "Добавить существующий класс"
 
 #. Source code: external_add_include: STRING_32 do Result := locale.translation ("Add Include")	end
-#: conf_interface_names.e:199
+#: conf_interface_names.e:204
 msgid "Add Include"
 msgstr "Добавить Include"
 
@@ -3019,12 +3024,12 @@ msgid "Add L&ibrary..."
 msgstr "Добавить &библиотеку..."
 
 #. Source code: external_add_library: STRING_32 do Result := locale.translation ("Add Library")	end
-#: conf_interface_names.e:202
+#: conf_interface_names.e:207
 msgid "Add Library"
 msgstr "Добавить библиотеку"
 
 #. Source code: external_add_make: STRING_32 do Result := locale.translation ("Add Make")	end
-#: conf_interface_names.e:205
+#: conf_interface_names.e:210
 msgid "Add Make"
 msgstr "Добавить Make"
 
@@ -3039,32 +3044,32 @@ msgid "Add Non-conforming Inheritance Relation Between '$1' and '$2'"
 msgstr "Добавить связь скрытого наследования между '$1' и '$2'"
 
 #. Source code: external_add_object: STRING_32 do Result := locale.translation ("Add Object")	end
-#: conf_interface_names.e:201
+#: conf_interface_names.e:206
 msgid "Add Object"
 msgstr "Добавить объект"
 
 #. Source code: group_add_override: STRING_32 do Result := locale.translation ("Add Override")	end
-#: conf_interface_names.e:261
+#: conf_interface_names.e:266
 msgid "Add Override"
 msgstr "Добавить переопределение"
 
 #. Source code: dialog_create_override_title: STRING_32 do Result := locale.translation ("Add Override Cluster")	end
-#: conf_interface_names.e:777
+#: conf_interface_names.e:782
 msgid "Add Override Cluster"
 msgstr "Добавить переопределяющий кластер"
 
 #. Source code: task_add_post: STRING_32 do Result := locale.translation ("Add Post Compilation Task")	end
-#: conf_interface_names.e:225
+#: conf_interface_names.e:230
 msgid "Add Post Compilation Task"
 msgstr "Добавить задачу после компиляции"
 
 #. Source code: task_add_pre: STRING_32 do Result := locale.translation ("Add Pre Compilation Task")	end
-#: conf_interface_names.e:224
+#: conf_interface_names.e:229
 msgid "Add Pre Compilation Task"
 msgstr "Добавить задачу перед компиляцией"
 
 #. Source code: group_add_precompile: STRING_32 do Result := locale.translation ("Add Precompile")	end
-#: conf_interface_names.e:264
+#: conf_interface_names.e:269
 msgid "Add Precompile"
 msgstr "Добавить прекомпилированный модуль"
 
@@ -3074,7 +3079,7 @@ msgid "Add Project..."
 msgstr "Добавить проект..."
 
 #. Source code: external_add_resource: STRING_32 do Result := locale.translation ("Add Resource")	end
-#: conf_interface_names.e:203
+#: conf_interface_names.e:208
 msgid "Add Resource"
 msgstr "Добавить ресурс"
 
@@ -3089,7 +3094,7 @@ msgid "Add Selection To"
 msgstr "Добавить выделенное  к"
 
 #. Source code: group_add_subcluster: STRING_32 do Result := locale.translation ("Add Sub cluster")	end
-#: conf_interface_names.e:260
+#: conf_interface_names.e:265
 msgid "Add Sub cluster"
 msgstr "Добавить подкластер"
 
@@ -3187,7 +3192,7 @@ msgid "Add an assembly"
 msgstr "Добавить сборку"
 
 #. Source code: dial_cond_add_and_term: STRING_32 do Result := locale.translation ("Add and-term")	end
-#: conf_interface_names.e:536
+#: conf_interface_names.e:541
 msgid "Add and-term"
 msgstr "Добавить выражение «И»"
 
@@ -3197,7 +3202,7 @@ msgid "Add breakpoint"
 msgstr "Добавить точку останова"
 
 #. Source code: dialog_visible_add_class: STRING_32 do Result := locale.translation ("Add class")	end
-#: conf_interface_names.e:562
+#: conf_interface_names.e:567
 msgid "Add class"
 msgstr "Добавить класс"
 
@@ -3247,7 +3252,7 @@ msgid "Add existing class"
 msgstr "Добавить существующий класс"
 
 #. Source code: dialog_visible_add_feature: STRING_32 do Result := locale.translation ("Add feature")	end
-#: conf_interface_names.e:563
+#: conf_interface_names.e:568
 msgid "Add feature"
 msgstr "Добавить компонент"
 
@@ -3267,7 +3272,7 @@ msgid "Add frozen feature stubs"
 msgstr "Добавить заглушки замороженных компонентов"
 
 #. Source code: external_add_linker_flag: STRING_32 do Result := locale.translation ("Add linker flag")	end
-#: conf_interface_names.e:204
+#: conf_interface_names.e:209
 msgid "Add linker flag"
 msgstr "Добавить флаг компоновщика"
 
@@ -3277,7 +3282,7 @@ msgid "Add new constant value retriever"
 msgstr "Добавить новый считыватель значения константы"
 
 #. Source code: dialog_external_add: STRING_32 do Result := locale.translation ("Add new external")	end
-#: conf_interface_names.e:579
+#: conf_interface_names.e:584
 msgid "Add new external"
 msgstr "Добавить новый внешний элемент"
 
@@ -3292,7 +3297,7 @@ msgid "Add new stone handler"
 msgstr "Добавить новый обработчик значка"
 
 #. Source code: dialog_task_add: STRING_32 do Result := locale.translation ("Add new task")	end
-#: conf_interface_names.e:575
+#: conf_interface_names.e:580
 msgid "Add new task"
 msgstr "Добавить новую задачу"
 
@@ -3307,7 +3312,7 @@ msgid "Add new variable"
 msgstr "Добавить новую переменную"
 
 #. Source code: dialog_file_rule_add_rule: STRING_32 do Result := locale.translation ("Add rule")	end
-#: conf_interface_names.e:551
+#: conf_interface_names.e:556
 msgid "Add rule"
 msgstr "Добавить правило"
 
@@ -3385,7 +3390,7 @@ msgid "Address Bar"
 msgstr "Адресная панель "
 
 #. Source code: target_address_expression_name: STRING_32 do Result := locale.translation ("Address Expression")	end
-#: conf_interface_names.e:113
+#: conf_interface_names.e:118
 msgid "Address Expression"
 msgstr "Адресное выражение"
 
@@ -3558,7 +3563,7 @@ msgstr ""
 "Их следует удалить или проверить выражение на ошибки."
 
 #. Source code: locale.translation ("All void safety rules are satisfied")
-#: conf_interface_names.e:423
+#: conf_interface_names.e:428
 msgid "All void safety rules are satisfied"
 msgstr "Все правила ссылочной безопасности удовлетворены."
 
@@ -4241,7 +4246,7 @@ msgid "And"
 msgstr "И"
 
 #. Source code: dial_cond_and_term_1: STRING_32 do Result := locale.translation ("And-term 1")	end
-#: conf_interface_names.e:538
+#: conf_interface_names.e:543
 msgid "And-term 1"
 msgstr "Выражение \"И\" №1"
 
@@ -4309,7 +4314,7 @@ msgstr[1] "Применить $1 исправления"
 msgstr[2] "Применить $1 исправлений"
 
 #. Source code: option_msil_application_optimize_name: STRING_32 do Result := locale.translation ("Apply .NET Application Optimizations")	end
-#: conf_interface_names.e:331
+#: conf_interface_names.e:336
 msgid "Apply .NET Application Optimizations"
 msgstr "Применить оптимизации приложения .NET"
 
@@ -4462,12 +4467,12 @@ msgid "Are brackets and parentheses closed automatically?"
 msgstr "Скобки закрываются автоматически?"
 
 #. Source code: option_debug_description: STRING_32 do Result := locale.translation ("Are debug clauses globally enabled?")	end
-#: conf_interface_names.e:338
+#: conf_interface_names.e:343
 msgid "Are debug clauses globally enabled?"
 msgstr "Инструкции отладки разрешены глобально?"
 
 #. Source code: option_full_class_checking_description: STRING_32 do Result := locale.translation ("Are features of parent classes rechecked in current class?")	end
-#: conf_interface_names.e:329
+#: conf_interface_names.e:334
 msgid "Are features of parent classes rechecked in current class?"
 msgstr "Проверять компоненты предка в текущем классе?"
 
@@ -4478,17 +4483,27 @@ msgid "Are quotes closed automatically?"
 msgstr "Кавычки закрываются автоматически?"
 
 #. Source code: target_address_expression_description: STRING_32 do Result := locale.translation ("Are simplified address expressions enabled?")	end
-#: conf_interface_names.e:114
+#: conf_interface_names.e:119
 msgid "Are simplified address expressions enabled?"
 msgstr "Разрешены упрощённые адресные выражения?"
 
+#. Source code: target_absent_explicit_assertion_description: STRING_32 do Result := locale.translation ("[
+#: conf_interface_names.e:114
+msgid ""
+"Are some assertions inferred automatically?\n"
+"This experimental setting causes much longer (re-)compilation."
+msgstr ""
+"Выводятся ли некоторые утверждения автоматически?\n"
+"Эта экспериментальная установка приводит к гораздо более длительной "
+"(повторной) компиляции."
+
 #. Source code: cluster_recursive_description: STRING_32 do Result := locale.translation ("Are sub folders recursively included?")	end
-#: conf_interface_names.e:271
+#: conf_interface_names.e:276
 msgid "Are sub folders recursively included?"
 msgstr "Включать подпапки рекурсивно?"
 
 #. Source code: option_warnings_description: STRING_32 do Result := locale.translation ("Are warnings enabled?")	end
-#: conf_interface_names.e:342
+#: conf_interface_names.e:347
 msgid "Are warnings enabled?"
 msgstr "Предупреждения разрешены?"
 
@@ -4530,17 +4545,17 @@ msgstr ""
 "разрушенным классам и потере информации!"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Are you sure you want to remove $1 and any children of it?"), [a_group])
-#: conf_interface_names.e:502
+#: conf_interface_names.e:507
 msgid "Are you sure you want to remove $1 and any children of it?"
 msgstr "Вы действительно хотите удалить $1 и всех его детей?"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Are you sure you want to remove $1?"), [a_target])
-#: conf_interface_names.e:497
+#: conf_interface_names.e:502
 msgid "Are you sure you want to remove $1?"
 msgstr "Вы действительно хотите удалить $1?"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Are you sure you want to remove the reference to $1?"), [a_group])
-#: conf_interface_names.e:506
+#: conf_interface_names.e:511
 msgid "Are you sure you want to remove the reference to $1?"
 msgstr "Вы действительно хотите удалить ссылку на $1?"
 
@@ -4674,12 +4689,12 @@ msgid "Assamese (India)"
 msgstr "Ассамский (Индия)"
 
 #. Source code: group_assembly_tree: STRING_32 do Result := locale.translation ("Assemblies")	end
-#: conf_interface_names.e:228
+#: conf_interface_names.e:233
 msgid "Assemblies"
 msgstr "Сборки"
 
 #. Source code: group_assembly: STRING_32 do Result := locale.translation ("Assembly")	end
-#: conf_interface_names.e:234
+#: conf_interface_names.e:239
 msgid "Assembly"
 msgstr "Сборка"
 
@@ -4689,27 +4704,27 @@ msgid "Assembly "
 msgstr "Сборка "
 
 #. Source code: assembly_culture_name: STRING_32 do Result := locale.translation ("Assembly Culture")	end
-#: conf_interface_names.e:283
+#: conf_interface_names.e:288
 msgid "Assembly Culture"
 msgstr "Культура сборки"
 
 #. Source code: dialog_create_assembly_a_key: STRING_32 do Result := locale.translation ("Assembly Key")	end
-#: conf_interface_names.e:767
+#: conf_interface_names.e:772
 msgid "Assembly Key"
 msgstr "Ключ сборки"
 
 #. Source code: assembly_name_name: STRING_32 do Result := locale.translation ("Assembly Name")	end
-#: conf_interface_names.e:281
+#: conf_interface_names.e:286
 msgid "Assembly Name"
 msgstr "Имя сборки"
 
 #. Source code: assembly_public_key_token_name: STRING_32 do Result := locale.translation ("Assembly Public Key Token")	end
-#: conf_interface_names.e:287
+#: conf_interface_names.e:292
 msgid "Assembly Public Key Token"
 msgstr "Свёртка открытого ключа сборки"
 
 #. Source code: assembly_version_name: STRING_32 do Result := locale.translation ("Assembly Version")	end
-#: conf_interface_names.e:285
+#: conf_interface_names.e:290
 msgid "Assembly Version"
 msgstr "Версия сборки"
 
@@ -4768,7 +4783,7 @@ msgstr ""
 "присваивания опечатка."
 
 #. Source code: Result.force (locale.translation ("Assignment on Formal/Expanded"), w_vjrv)
-#: conf_interface_names.e:460
+#: conf_interface_names.e:465
 msgid "Assignment on Formal/Expanded"
 msgstr "Присваивание формальному параметру/развёрнутому типу"
 
@@ -4798,7 +4813,7 @@ msgid "Attachment marks in type name are not supported"
 msgstr "Метки прикрепления в имени типа не поддерживаются"
 
 #. Source code: locale.translation ("Attachment status is respected in type conformance checks"),
-#: conf_interface_names.e:420
+#: conf_interface_names.e:425
 msgid "Attachment status is respected in type conformance checks"
 msgstr "Проверки согласованности учитывают статус прикрепления"
 
@@ -4862,7 +4877,7 @@ msgid "Attribute '"
 msgstr "Атрибут '"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Attribute '$1' is no longer supported for this element."), [an_attribute])
-#: conf_interface_names.e:846
+#: conf_interface_names.e:851
 msgid "Attribute '$1' is no longer supported for this element."
 msgstr "Атрибут '$1' больше не поддерживается для этого элемента."
 
@@ -6061,7 +6076,7 @@ msgid "Autocomplete when?"
 msgstr "Завершать when?"
 
 #. Source code: target_automatic_backup_name: STRING_32 do Result := locale.translation ("Automatic Backup")	end
-#: conf_interface_names.e:115
+#: conf_interface_names.e:120
 msgid "Automatic Backup"
 msgstr "Автоматическое резервное копирование"
 
@@ -6090,7 +6105,7 @@ msgid ""
 msgstr "Автоматически раскрывать ошибки с отображением полной информации о них"
 
 #. Source code: target_automatic_backup_description: STRING_32 do Result := locale.translation ("Automatically generate a backup during recompilation?")	end
-#: conf_interface_names.e:116
+#: conf_interface_names.e:121
 msgid "Automatically generate a backup during recompilation?"
 msgstr "Создавать резервную копию автоматически во время перекомпиляции?"
 
@@ -6200,7 +6215,7 @@ msgid "Back"
 msgstr "Назад"
 
 #. Source code: dialog_create_back_to_previous_tab: STRING_32 do Result := locale.translation ("Back to libraries")	end
-#: conf_interface_names.e:607
+#: conf_interface_names.e:612
 msgid "Back to libraries"
 msgstr "Назад к библиотекам"
 
@@ -6972,7 +6987,7 @@ msgid "Bug Information"
 msgstr "Информацию об ошибке"
 
 #. Source code: dial_cond_build: STRING_32 do Result := locale.translation ("Build")	end
-#: conf_interface_names.e:522
+#: conf_interface_names.e:527
 msgid "Build"
 msgstr "Собрать"
 
@@ -6982,7 +6997,7 @@ msgid "Building flat view ..."
 msgstr "Строится плоская форма..."
 
 #. Source code: dialog_create_searching_please_wait_message: STRING_32 do Result := locale.translation ("Building list of available libraries...")	end
-#: conf_interface_names.e:612
+#: conf_interface_names.e:617
 msgid "Building list of available libraries..."
 msgstr "Строится список доступных библиотек..."
 
@@ -7042,12 +7057,12 @@ msgid "C Output"
 msgstr "Вывод C"
 
 #. Source code: external_cflag: STRING_32 do Result := locale.translation ("C flag")	end
-#: conf_interface_names.e:184
+#: conf_interface_names.e:189
 msgid "C flag"
 msgstr "Флаг C компилятора"
 
 #. Source code: external_cflag_tree: STRING_32 do Result := locale.translation ("C flags")	end
-#: conf_interface_names.e:192
+#: conf_interface_names.e:197
 msgid "C flags"
 msgstr "Флаги C компилятора"
 
@@ -7093,7 +7108,7 @@ msgstr ""
 "Нажмите Cancel, чтобы открыть консоль командной строки.\n"
 
 #. Source code: target_cls_compliant_name: STRING_32 do Result := locale.translation ("CLS Compliant")	end
-#: conf_interface_names.e:123
+#: conf_interface_names.e:128
 msgid "CLS Compliant"
 msgstr "Совместимый с CLS"
 
@@ -7267,18 +7282,18 @@ msgstr ""
 "Невозможно добавить кластер в кластер $1, потому что он только для чтения."
 
 #. Source code: cluster_dependency_group_not_exist: STRING_32 do Result := locale.translation ("Cannot add dependency. There is no group with this name.") end
-#: conf_interface_names.e:809
+#: conf_interface_names.e:814
 msgid "Cannot add dependency. There is no group with this name."
 msgstr "Невозможно добавить зависимость. Группа с этим именем не существует."
 
 #. Source code: override_group_not_exist: STRING_32 do Result := locale.translation ("Cannot add override. There is no group with this name.") end
-#: conf_interface_names.e:810
+#: conf_interface_names.e:815
 msgid "Cannot add override. There is no group with this name."
 msgstr ""
 "Невозможно добавить переопределение. Группа с этим именем не существует."
 
 #. Source code: target_add_duplicate: STRING_32 do Result := locale.translation ("Cannot add target because there is already a target with the same name.") end
-#: conf_interface_names.e:790
+#: conf_interface_names.e:795
 msgid "Cannot add target because there is already a target with the same name."
 msgstr ""
 "Невозможно добавить задание, потому что задание с таким именем уже есть."
@@ -7378,12 +7393,12 @@ msgid "Cannot find complete dynamic type of an expanded type."
 msgstr "Не удаётся найти полный динамический тип развёрнутого типа."
 
 #. Source code: e_parse_incorrect_build_mult: STRING_32 do Result := locale.translation ("Cannot have multiple build specifications in one condition.") end
-#: conf_interface_names.e:1060
+#: conf_interface_names.e:1065
 msgid "Cannot have multiple build specifications in one condition."
 msgstr "Нельзя указывать несколько спецификаций сборки в одном условии."
 
 #. Source code: e_parse_incorrect_platform_mult: STRING_32 do Result := locale.translation ("Cannot have multiple platform specifications in one condition.") end
-#: conf_interface_names.e:1052
+#: conf_interface_names.e:1057
 msgid "Cannot have multiple platform specifications in one condition."
 msgstr "Нельзя указывать несколько спецификаций платформы в одном условии."
 
@@ -7431,7 +7446,7 @@ msgid "Cannot override -experiment with -compat."
 msgstr "Невозможно переопределить -experiment с помощью -compat."
 
 #. Source code: e_internal_parse_error: STRING_32 do Result := locale.translation ("Cannot parse configuration file. Unknown internal error.") end
-#: conf_interface_names.e:830
+#: conf_interface_names.e:835
 msgid "Cannot parse configuration file. Unknown internal error."
 msgstr "Не удаётся разобрать файл конфигурации. Неизвестная внутренняя ошибка."
 
@@ -7466,41 +7481,41 @@ msgstr ""
 "Удостоверьтесь, что установка не испорчена."
 
 #. Source code: group_name_empty: STRING_32 do Result := locale.translation ("Cannot rename group because the name is empty.") end
-#: conf_interface_names.e:803
+#: conf_interface_names.e:808
 msgid "Cannot rename group because the name is empty."
 msgstr "Невозможно переименовать группу, потому что имя пусто."
 
 #. Source code: group_name_invalid: STRING_32 do Result := locale.translation ("Cannot rename group because the name is not valid.") end
-#: conf_interface_names.e:801
+#: conf_interface_names.e:806
 msgid "Cannot rename group because the name is not valid."
 msgstr "Невозможно переименовать группу, потому что имя недопустимо."
 
 #. Source code: group_name_duplicate: STRING_32 do Result := locale.translation ("Cannot rename group because there is already a target with the new name.") end
-#: conf_interface_names.e:802
+#: conf_interface_names.e:807
 msgid ""
 "Cannot rename group because there is already a target with the new name."
 msgstr ""
 "Невозможно переименовать группу, потому что уже есть задание с таким именем."
 
 #. Source code: target_name_empty: STRING_32 do Result := locale.translation ("Cannot rename target because the name is empty.") end
-#: conf_interface_names.e:800
+#: conf_interface_names.e:805
 msgid "Cannot rename target because the name is empty."
 msgstr "Невозможнопереименовать задание, потому что имя пусто."
 
 #. Source code: target_name_invalid: STRING_32 do Result := locale.translation ("Cannot rename target because the name is invalid.") end
-#: conf_interface_names.e:798
+#: conf_interface_names.e:803
 msgid "Cannot rename target because the name is invalid."
 msgstr "Невозможно переименовать задание, потому что имя недопустимо."
 
 #. Source code: target_name_duplicate: STRING_32 do Result := locale.translation ("Cannot rename target because there is already a target with the new name.") end
-#: conf_interface_names.e:799
+#: conf_interface_names.e:804
 msgid ""
 "Cannot rename target because there is already a target with the new name."
 msgstr ""
 "Невозможно переименовать задание, потому что задание с таким именем уже есть."
 
 #. Source code: root_no_class: STRING_32 do Result := locale.translation ("Cannot specify root cluster or root procedure without a root class. Use all classes, specify a root class or specify nothing.") end
-#: conf_interface_names.e:804
+#: conf_interface_names.e:809
 msgid ""
 "Cannot specify root cluster or root procedure without a root class. Use all "
 "classes, specify a root class or specify nothing."
@@ -7525,7 +7540,7 @@ msgid "Capability"
 msgstr "Возможности"
 
 #. Source code: ("[
-#: conf_interface_names.e:1267
+#: conf_interface_names.e:1272
 msgctxt "configuration"
 msgid ""
 "Capability \"$1\" of current target has value \"$3\" insufficient for "
@@ -7541,7 +7556,7 @@ msgstr ""
 "\tФайл: $6"
 
 #. Source code: ("[
-#: conf_interface_names.e:1284
+#: conf_interface_names.e:1289
 msgctxt "configuration"
 msgid ""
 "Capability \"$1\" of dependent target has value \"$2\" insufficient for "
@@ -7567,7 +7582,7 @@ msgstr ""
 "\tФайл: $5"
 
 #. Source code: ("[
-#: conf_interface_names.e:1242
+#: conf_interface_names.e:1247
 msgctxt "configuration"
 msgid ""
 "Capability \"$1\" of supplier target has value \"$2\" insuffient for client "
@@ -7651,12 +7666,12 @@ msgid "Catalan (Catalan)"
 msgstr "Каталанский (Каталония)"
 
 #. Source code: option_catcall_detection_name: STRING_32 do Result := locale.translation ("Catcall detection") end
-#: conf_interface_names.e:344
+#: conf_interface_names.e:349
 msgid "Catcall detection"
 msgstr "Обнаружение CAT-вызовов"
 
 #. Source code: option_catcall_detection_description: STRING_32 do Result := locale.translation ({STRING_32} "[
-#: conf_interface_names.e:345
+#: conf_interface_names.e:350
 msgid ""
 "Catcall detection level the source code provides:\n"
 " • No - Catcall detection is disabled, frozen and variant annotations are "
@@ -7758,7 +7773,7 @@ msgid "Check"
 msgstr "check"
 
 #. Source code: option_check_name: STRING_32 do Result := locale.translation_in_context ("Check", "configuration.parser")	end
-#: conf_interface_names.e:315
+#: conf_interface_names.e:320
 msgctxt "configuration.parser"
 msgid "Check"
 msgstr "Проверка"
@@ -7780,7 +7795,7 @@ msgid "Check"
 msgstr "check"
 
 #. Source code: target_check_vape_name: STRING_32 do Result := locale.translation ("Check VAPE")	end
-#: conf_interface_names.e:119
+#: conf_interface_names.e:124
 msgid "Check VAPE"
 msgstr "Проверять VAPE"
 
@@ -7804,7 +7819,7 @@ msgid "Check defined warnings when archive is recalculated?"
 msgstr "Проверять определённые предупреждения, когда архив перевычисляется?"
 
 #. Source code: target_check_for_void_target_name: STRING_32 do Result := locale.translation ("Check for Void target")	end
-#: conf_interface_names.e:117
+#: conf_interface_names.e:122
 msgid "Check for Void target"
 msgstr "Проверка на несуществующую цель"
 
@@ -8120,7 +8135,7 @@ msgid "Class Header"
 msgstr "Заголовок класса"
 
 #. Source code: group_class_option_name: STRING_32 do Result := locale.translation ("Class Options")	end
-#: conf_interface_names.e:255
+#: conf_interface_names.e:260
 msgid "Class Options"
 msgstr "Настройки класса"
 
@@ -8257,7 +8272,7 @@ msgid "Class list view"
 msgstr "Поле списка классов"
 
 #. Source code: dialog_class_option_class_name: STRING_32 do Result := locale.translation ("Class name")	end
-#: conf_interface_names.e:781
+#: conf_interface_names.e:786
 msgid "Class name"
 msgstr "Имя класса"
 
@@ -8318,7 +8333,7 @@ msgid "Class naming convention violated"
 msgstr "Нарушено соглашение об именовании классов"
 
 #. Source code: ("[
-#: conf_interface_names.e:1202
+#: conf_interface_names.e:1207
 msgctxt "configuration"
 msgid ""
 "Class option \"$1\" has value \"$2\" insufficient for its cluster value "
@@ -8386,7 +8401,7 @@ msgstr ""
 "\t• удалите переопределение."
 
 #. Source code: group_class_option_description: STRING_32 do Result := locale.translation ("Class specific options.")	end
-#: conf_interface_names.e:256
+#: conf_interface_names.e:261
 msgid "Class specific options."
 msgstr "Настройки класса."
 
@@ -8519,7 +8534,7 @@ msgid "Class:"
 msgstr "Класс:"
 
 #. Source code: dialog_search_classes: STRING_32 do Result := locale.translation ("Classes")	end
-#: conf_interface_names.e:600
+#: conf_interface_names.e:605
 msgid "Classes"
 msgstr "Классы"
 
@@ -8530,7 +8545,7 @@ msgid "Classes categorized folder"
 msgstr "Папки физического разделения классов"
 
 #. Source code: target_msil_classes_per_module_name: STRING_32 do Result := locale.translation ("Classes per Module")	end
-#: conf_interface_names.e:145
+#: conf_interface_names.e:150
 msgid "Classes per Module"
 msgstr "Классов в модуле"
 
@@ -8545,7 +8560,7 @@ msgid "Classes under test"
 msgstr "Классы в тесте"
 
 #. Source code: cluster_visible_description: STRING_32 do Result := locale.translation ("Classes visible for external code.")	end
-#: conf_interface_names.e:277
+#: conf_interface_names.e:282
 msgid "Classes visible for external code."
 msgstr "Классы, видимые для внешнего кода."
 
@@ -8592,7 +8607,7 @@ msgid "Classic debugger"
 msgstr "Отладчик (\"классический\" режим)"
 
 #. Source code: Result.force (locale.translation ("Classname/filename mismatch"), w_classname_filename_mismatch)
-#: conf_interface_names.e:463
+#: conf_interface_names.e:468
 msgid "Classname/filename mismatch"
 msgstr "Несоответствие имён класса и файла"
 
@@ -9001,7 +9016,7 @@ msgid "Cluster:"
 msgstr "Кластер:"
 
 #. Source code: group_cluster_tree: STRING_32 do Result := locale.translation ("Clusters")	end
-#: conf_interface_names.e:227
+#: conf_interface_names.e:232
 msgid "Clusters"
 msgstr "Кластеры"
 
@@ -9525,7 +9540,7 @@ msgid "Combinable nested conditionals"
 msgstr "Комбинируемые вложенные условные инструкции"
 
 #. Source code: task_command_name: STRING_32 do Result := locale.translation ("Command")	end
-#: conf_interface_names.e:214
+#: conf_interface_names.e:219
 msgid "Command"
 msgstr "Команда"
 
@@ -9608,7 +9623,7 @@ msgid "Command terminated"
 msgstr "Команда остановлена"
 
 #. Source code: task_command_description: STRING_32 do Result := locale.translation ("Command to execute.")	end
-#: conf_interface_names.e:215
+#: conf_interface_names.e:220
 msgid "Command to execute."
 msgstr "Команда для выполнения."
 
@@ -9865,13 +9880,13 @@ msgid "Compiler"
 msgstr "Компилятор"
 
 #. Source code: locale.translation_in_context ("Complete", "configuration.catcall_detection")
-#: conf_interface_names.e:357
+#: conf_interface_names.e:362
 msgctxt "configuration.catcall_detection"
 msgid "Complete"
 msgstr "Полное"
 
 #. Source code: locale.translation_in_context ("Complete", "configuration.void_safety")
-#: conf_interface_names.e:405
+#: conf_interface_names.e:410
 msgctxt "configuration.void_safety"
 msgid "Complete"
 msgstr "Полная"
@@ -9949,18 +9964,18 @@ msgstr ""
 "массива-приёмника."
 
 #. Source code: dial_cond_concurrency: STRING_32 do Result := locale.translation ("Concurrency")	end
-#: conf_interface_names.e:524
+#: conf_interface_names.e:529
 msgid "Concurrency"
 msgstr "Параллелизм"
 
 #. Source code: option_concurrency_name: STRING_32 do Result := locale.translation_in_context ("Concurrency", "configuration") end
-#: conf_interface_names.e:366
+#: conf_interface_names.e:371
 msgctxt "configuration"
 msgid "Concurrency"
 msgstr "Параллелизм"
 
 #. Source code: option_concurrency_description: STRING_32 do Result := locale.translation_in_context ({STRING_32} "[
-#: conf_interface_names.e:367
+#: conf_interface_names.e:372
 msgctxt "configuration"
 msgid ""
 "Concurrency mode:\n"
@@ -9991,7 +10006,7 @@ msgid "Concurrency: \tYes\n"
 msgstr "Параллелизм: \tДа\n"
 
 #. Source code: external_condition_name: STRING_32 do Result := locale.translation ("Condition")	end
-#: conf_interface_names.e:180
+#: conf_interface_names.e:185
 msgid "Condition"
 msgstr "Условие"
 
@@ -10013,7 +10028,7 @@ msgid ""
 msgstr "Выражение условной инструкции проверяет неравенство вместо равенства."
 
 #. Source code: dialog_file_rule_condition: STRING_32 do Result := locale.translation ("Condition:")	end
-#: conf_interface_names.e:549
+#: conf_interface_names.e:554
 msgid "Condition:"
 msgstr "Условие:"
 
@@ -10026,17 +10041,17 @@ msgid "Conditional computes only boolean"
 msgstr "Условная инструкция вычисляет только булевское значение"
 
 #. Source code: external_condition_description: STRING_32 do Result := locale.translation ("Conditions for this external.")	end
-#: conf_interface_names.e:181
+#: conf_interface_names.e:186
 msgid "Conditions for this external."
 msgstr "Условия этого внешнего элемента."
 
 #. Source code: group_condition_description: STRING_32 do Result := locale.translation ("Conditions for this group to be used.")	end
-#: conf_interface_names.e:246
+#: conf_interface_names.e:251
 msgid "Conditions for this group to be used."
 msgstr "Условия, которые должны использоваться для этой группы."
 
 #. Source code: task_condition_description: STRING_32 do Result := locale.translation ("Conditions for this task to be executed.")	end
-#: conf_interface_names.e:223
+#: conf_interface_names.e:228
 msgid "Conditions for this task to be executed."
 msgstr "Условия, которые должны исполняться для этой задачи."
 
@@ -10288,13 +10303,13 @@ msgid "Confirmation"
 msgstr "Подтверждение"
 
 #. Source code: locale.translation_in_context ("Conformance", "configuration.catcall_detection"),
-#: conf_interface_names.e:356
+#: conf_interface_names.e:361
 msgctxt "configuration.catcall_detection"
 msgid "Conformance"
 msgstr "Соответствие"
 
 #. Source code: locale.translation_in_context ("Conformance", "configuration.void_safety"),
-#: conf_interface_names.e:402
+#: conf_interface_names.e:407
 msgctxt "configuration.void_safety"
 msgid "Conformance"
 msgstr "Соответствие"
@@ -10311,7 +10326,7 @@ msgid "Console"
 msgstr "Консоль"
 
 #. Source code: target_console_application_name: STRING_32 do Result := locale.translation ("Console Application")	end
-#: conf_interface_names.e:121
+#: conf_interface_names.e:126
 msgid "Console Application"
 msgstr "Консольное приложение"
 
@@ -11116,7 +11131,7 @@ msgid "Culture"
 msgstr "Культура"
 
 #. Source code: assembly_culture_description: STRING_32 do Result := locale.translation ("Culture of the assembly.")	end
-#: conf_interface_names.e:284
+#: conf_interface_names.e:289
 msgid "Culture of the assembly."
 msgstr "Культура сборки."
 
@@ -11237,12 +11252,12 @@ msgid "Cursor position (line:column)"
 msgstr "Положение курсора (строка:столбец)"
 
 #. Source code: dialog_create_library_custom_location: STRING_32 do Result := locale.translation ("Custom")	end
-#: conf_interface_names.e:590
+#: conf_interface_names.e:595
 msgid "Custom"
 msgstr "Настройка"
 
 #. Source code: dial_cond_custom: STRING_32 do Result := locale.translation ("Custom (Intersection)")	end
-#: conf_interface_names.e:531
+#: conf_interface_names.e:536
 msgid "Custom (Intersection)"
 msgstr "Пользовательское (пересечение)"
 
@@ -12849,7 +12864,7 @@ msgid "Deactivate execution replay mode"
 msgstr "Деактивировать режим воспроизведения выполнения"
 
 #. Source code: target_dead_code_removal_name: STRING_32 do Result := locale.translation ("Dead Code Removal")	end
-#: conf_interface_names.e:125
+#: conf_interface_names.e:130
 msgid "Dead Code Removal"
 msgstr "Удаление мёртвого кода"
 
@@ -13147,7 +13162,7 @@ msgid "Deeply nested conditionals"
 msgstr "Глубоко вложенные условные инструкции"
 
 #. Source code: capability_toggle_default_name: READABLE_STRING_32 do REsult := locale.translation_in_context ("Default", "configuration.capability") end
-#: conf_interface_names.e:306
+#: conf_interface_names.e:311
 msgctxt "configuration.capability"
 msgid "Default"
 msgstr "По умолчанию"
@@ -13191,7 +13206,7 @@ msgid "Default feature formatter index"
 msgstr "Индекс форматировщика компонента по умолчанию"
 
 #. Source code: dialog_create_library_defaults: STRING_32 do Result := locale.translation ("Default libraries")	end
-#: conf_interface_names.e:584
+#: conf_interface_names.e:589
 msgid "Default libraries"
 msgstr "Библиотеки по умолчанию"
 
@@ -13244,7 +13259,7 @@ msgid "Default number of watch tools."
 msgstr "Число панелей наблюдения по умолчанию."
 
 #. Source code: dialog_create_precompile_defaults: STRING_32 do Result := locale.translation ("Default precompiles")	end
-#: conf_interface_names.e:754
+#: conf_interface_names.e:759
 msgid "Default precompiles"
 msgstr "Прекомпилированные модули по умолчанию."
 
@@ -13424,7 +13439,7 @@ msgid "Denominator metric is missing."
 msgstr "Отсутствует знаменатель метрики."
 
 #. Source code: cluster_dependencies_name: STRING_32 do Result := locale.translation ("Dependencies")	end
-#: conf_interface_names.e:274
+#: conf_interface_names.e:279
 msgid "Dependencies"
 msgstr "Зависимости"
 
@@ -13488,12 +13503,12 @@ msgid "Description"
 msgstr "Описание"
 
 #. Source code: external_description_description: STRING_32 do Result := locale.translation ("Description of the external.")	end
-#: conf_interface_names.e:179
+#: conf_interface_names.e:184
 msgid "Description of the external."
 msgstr "Описание внешнего элемента."
 
 #. Source code: group_description_description: STRING_32 do Result := locale.translation ("Description of the group.")	end
-#: conf_interface_names.e:244
+#: conf_interface_names.e:249
 msgid "Description of the group."
 msgstr "Описание группы."
 
@@ -13508,12 +13523,12 @@ msgid "Description of the target."
 msgstr "Описание задания."
 
 #. Source code: task_description_description: STRING_32 do Result := locale.translation ("Description of the task.")	end
-#: conf_interface_names.e:217
+#: conf_interface_names.e:222
 msgid "Description of the task."
 msgstr "Описание задачи."
 
 #. Source code: dialog_file_rule_description: STRING_32 do Result := locale.translation ("Description:")	end
-#: conf_interface_names.e:548
+#: conf_interface_names.e:553
 msgid "Description:"
 msgstr "Описание:"
 
@@ -14019,12 +14034,12 @@ msgid "Directory rememberd to be reused for the next basic project creation."
 msgstr "Каталог для создания базового проекта в следующий раз."
 
 #. Source code: group_eifgens_location_description: STRING_32 do Result := locale.translation ("Directory where the EIFGENs folder is.")	end
-#: conf_interface_names.e:258
+#: conf_interface_names.e:263
 msgid "Directory where the EIFGENs folder is."
 msgstr "Каталог, в котором находится папка EIFGENs."
 
 #. Source code: task_working_directory_description: STRING_32 do Result := locale.translation ("Directory where the command will be executed.")	end
-#: conf_interface_names.e:219
+#: conf_interface_names.e:224
 msgid "Directory where the command will be executed."
 msgstr "Каталог, где будет выполняться команда."
 
@@ -14506,14 +14521,14 @@ msgid "Display limit reached"
 msgstr "Достигнуто ограничение отображения"
 
 #. Source code: dialog_display_configuration_tooltip: STRING_32 do Result := locale.translation ("Display locations of configuration files used for libraries lookup.")	end
-#: conf_interface_names.e:610
+#: conf_interface_names.e:615
 msgid "Display locations of configuration files used for libraries lookup."
 msgstr ""
 "Показывать расположение файлов конфигурации, использованных для поиска "
 "библиотек."
 
 #. Source code: option_trace_description: STRING_32 do Result := locale.translation ("Display name of all called features during execution?")	end
-#: conf_interface_names.e:327
+#: conf_interface_names.e:332
 msgid "Display name of all called features during execution?"
 msgstr "Показывать имена всех компонентов, вызванных во время выполнения?"
 
@@ -14783,7 +14798,7 @@ msgid "Does text cursor blink?"
 msgstr "Текстовый курсор мигает?"
 
 #. Source code: task_succeed_description: STRING_32 do Result := locale.translation ("Does this task have to finish successful for the compilation to continue?")	end
-#: conf_interface_names.e:221
+#: conf_interface_names.e:226
 msgid ""
 "Does this task have to finish successful for the compilation to continue?"
 msgstr ""
@@ -14974,7 +14989,7 @@ msgid "Dynamic Library Builder"
 msgstr "Построитель динамической библиотеки"
 
 #. Source code: target_dynamic_runtime_name: STRING_32 do Result := locale.translation ("Dynamic Runtime")	end
-#: conf_interface_names.e:129
+#: conf_interface_names.e:134
 msgid "Dynamic Runtime"
 msgstr "Динамическая система времени выполнения"
 
@@ -14996,7 +15011,7 @@ msgid "Dynamic library window width"
 msgstr "Ширина окна динамических библиотек"
 
 #. Source code: dial_cond_dynamic_runtime: STRING_32 do Result := locale.translation ("Dynamic runtime")	end
-#: conf_interface_names.e:527
+#: conf_interface_names.e:532
 msgid "Dynamic runtime"
 msgstr "Динамическая система времени выполнения"
 
@@ -15041,7 +15056,7 @@ msgid "EAC Browser"
 msgstr "Обозреватель EAC"
 
 #. Source code: group_eifgens_location_name: STRING_32 do Result := locale.translation ("EIFGENs location")	end
-#: conf_interface_names.e:257
+#: conf_interface_names.e:262
 msgid "EIFGENs location"
 msgstr "Расположение EIFGENs"
 
@@ -15106,7 +15121,7 @@ msgid "Edit Layout"
 msgstr "Редактировать компоновку"
 
 #. Source code: library_edit_configuration: STRING_32 do Result := locale.translation ("Edit Library Configuration")	end
-#: conf_interface_names.e:266
+#: conf_interface_names.e:271
 msgid "Edit Library Configuration"
 msgstr "Редактировать конфигурацию библиотеки"
 
@@ -15142,7 +15157,7 @@ msgid "Edit command"
 msgstr "Редактировать команду"
 
 #. Source code: dialog_file_rule_edit_condition: STRING_32 do Result := locale.translation ("Edit condition")	end
-#: conf_interface_names.e:550
+#: conf_interface_names.e:555
 msgid "Edit condition"
 msgstr "Редактировать условие"
 
@@ -17408,7 +17423,7 @@ msgid "Enable/Remove Breakpoint Here"
 msgstr "Разрешить/удалить здесь точку останова"
 
 #. Source code: option_debug_name: STRING_32 do Result := locale.translation ("Enabled")	end
-#: conf_interface_names.e:337
+#: conf_interface_names.e:342
 msgid "Enabled"
 msgstr "Разрешено"
 
@@ -17452,12 +17467,12 @@ msgid "Enforce 'l_' prefix."
 msgstr "Навязывать префикс 'l_'."
 
 #. Source code: target_check_vape_description: STRING_32 do Result := locale.translation ("Enforce VAPE validity constraint?")	end
-#: conf_interface_names.e:120
+#: conf_interface_names.e:125
 msgid "Enforce VAPE validity constraint?"
 msgstr "Проверять ограничение правила VAPE?"
 
 #. Source code: target_enforce_unique_class_names_description: STRING_32 do Result := locale.translation ("Enforce all class names to be system wide unique?")	end
-#: conf_interface_names.e:132
+#: conf_interface_names.e:137
 msgid "Enforce all class names to be system wide unique?"
 msgstr "Требовать, чтобы все имена классов были уникальны в системе?"
 
@@ -17480,7 +17495,7 @@ msgid "Enforce prefix"
 msgstr "Навязывать префикс"
 
 #. Source code: target_enforce_unique_class_names_name: STRING_32 do Result := locale.translation ("Enforce unique class names")	end
-#: conf_interface_names.e:131
+#: conf_interface_names.e:136
 msgid "Enforce unique class names"
 msgstr "Обеспечивать уникальность имён классов"
 
@@ -17570,7 +17585,7 @@ msgid "English (Zimbabwe)"
 msgstr "Английский (Зимбабве)"
 
 #. Source code: option_ensure_name: STRING_32 do Result := locale.translation ("Ensure")	end
-#: conf_interface_names.e:313
+#: conf_interface_names.e:318
 msgid "Ensure"
 msgstr "Постусловие"
 
@@ -17656,7 +17671,7 @@ msgid "Enter the name of the new folder: "
 msgstr "Введите имя новой папки: "
 
 #. Source code: locale.translation ("Entities of attached type are properly initialized"),
-#: conf_interface_names.e:421
+#: conf_interface_names.e:426
 msgid "Entities of attached type are properly initialized"
 msgstr "Переменные прикреплённого типа правильно инициализируются"
 
@@ -17937,7 +17952,7 @@ msgid "Error: issue with attribute `$1'."
 msgstr "Ошибка: проблема с атрибутом `$1'."
 
 #. Source code: iron_box_missing_package_error_message: STRING_32 do Result := locale.translation ("Error: missing package.") end
-#: conf_interface_names.e:677
+#: conf_interface_names.e:682
 msgid "Error: missing package."
 msgstr "Ошибка: отсутствующий пакет."
 
@@ -18000,17 +18015,17 @@ msgid "Estudio dbg menu enabled"
 msgstr "Показывать меню отладки"
 
 #. Source code: option_check_description: STRING_32 do Result := locale.translation ("Evaluate check assertions?")	end
-#: conf_interface_names.e:316
+#: conf_interface_names.e:321
 msgid "Evaluate check assertions?"
 msgstr "Вычислять утверждения проверок?"
 
 #. Source code: option_invariant_description: STRING_32 do Result := locale.translation ("Evaluate invariant assertions?")	end
-#: conf_interface_names.e:318
+#: conf_interface_names.e:323
 msgid "Evaluate invariant assertions?"
 msgstr "Вычислять инварианты?"
 
 #. Source code: option_loop_description: STRING_32 do Result := locale.translation ("Evaluate loop assertions?")	end
-#: conf_interface_names.e:320
+#: conf_interface_names.e:325
 msgid "Evaluate loop assertions?"
 msgstr "Вычислять утверждения цикла?"
 
@@ -18025,17 +18040,17 @@ msgid "Evaluate metric: "
 msgstr "Вычислить метрику: "
 
 #. Source code: option_ensure_description: STRING_32 do Result := locale.translation ("Evaluate postcondition assertions?")	end
-#: conf_interface_names.e:314
+#: conf_interface_names.e:319
 msgid "Evaluate postcondition assertions?"
 msgstr "Вычислять постусловия?"
 
 #. Source code: option_sup_require_description: STRING_32 do Result := locale.translation ("Evaluate precondition assertions of suppliers?")	end
-#: conf_interface_names.e:322
+#: conf_interface_names.e:327
 msgid "Evaluate precondition assertions of suppliers?"
 msgstr "Вычислять предусловия поставщика?"
 
 #. Source code: option_require_description: STRING_32 do Result := locale.translation ("Evaluate precondition assertions?")	end
-#: conf_interface_names.e:312
+#: conf_interface_names.e:317
 msgid "Evaluate precondition assertions?"
 msgstr "Вычислять предусловия?"
 
@@ -18125,7 +18140,7 @@ msgid "Exception Handling ..."
 msgstr "Обработка исключений..."
 
 #. Source code: target_exception_trace_name: STRING_32 do Result := locale.translation ("Exception Trace")	end
-#: conf_interface_names.e:133
+#: conf_interface_names.e:138
 msgid "Exception Trace"
 msgstr "Трасса исключения"
 
@@ -18195,7 +18210,7 @@ msgid "Exclude Rules"
 msgstr "Правила исключения"
 
 #. Source code: dial_cond_platforms_exclude: STRING_32 do Result := locale.translation ("Exclude platform(s)")	end
-#: conf_interface_names.e:520
+#: conf_interface_names.e:525
 msgid "Exclude platform(s)"
 msgstr "Исключить платформу(-ы)"
 
@@ -18205,7 +18220,7 @@ msgid "Exclude selection"
 msgstr "Исключить выборку"
 
 #. Source code: dial_cond_concurrency_exclude: STRING_32 do Result := locale.translation ("Exclude value(s)")	end
-#: conf_interface_names.e:525
+#: conf_interface_names.e:530
 msgid "Exclude value(s)"
 msgstr "Исключить значение(-я)"
 
@@ -18227,7 +18242,7 @@ msgid "Excluded indexing items"
 msgstr "Исключаемые элементы индексирования"
 
 #. Source code: dialog_file_rule_excludes: STRING_32 do Result := locale.translation ("Excludes:")	end
-#: conf_interface_names.e:546
+#: conf_interface_names.e:551
 msgid "Excludes:"
 msgstr "Исключить:"
 
@@ -18735,7 +18750,7 @@ msgid "External editor not defined"
 msgstr "Внешний редактор не задан"
 
 #. Source code: e_parse_external_outside_target_element: STRING_32 do Result := locale.translation ("External element found outside a target element.") end
-#: conf_interface_names.e:1117
+#: conf_interface_names.e:1122
 msgid "External element found outside a target element."
 msgstr "Внешний элемент вне элемента задания."
 
@@ -18824,7 +18839,7 @@ msgid "Failures"
 msgstr "Неудачи"
 
 #. Source code: boolean_false: STRING_32 do Result := locale.translation ("False") end
-#: conf_interface_names.e:1310
+#: conf_interface_names.e:1315
 msgid "False"
 msgstr "Нет"
 
@@ -19477,7 +19492,7 @@ msgid "File rename"
 msgstr "Переименование файла"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("File rule $1"), [a_number.out])
-#: conf_interface_names.e:555
+#: conf_interface_names.e:560
 msgid "File rule $1"
 msgstr "Файловое правило $1"
 
@@ -20014,7 +20029,7 @@ msgstr ""
 "может быть присвоено результату напрямую."
 
 #. Source code: target_force_32bits_name: STRING_32 do Result := locale.translation ("Force 32bits")	end
-#: conf_interface_names.e:169
+#: conf_interface_names.e:174
 msgid "Force 32bits"
 msgstr "Установить для 32 бит"
 
@@ -20029,7 +20044,7 @@ msgid "Force Exit"
 msgstr "Принудительный выход"
 
 #. Source code: target_force_32bits_description: STRING_32 do Result := locale.translation ("Force compilation for 32bits?")	end
-#: conf_interface_names.e:170
+#: conf_interface_names.e:175
 msgid "Force compilation for 32bits?"
 msgstr "Установить компиляцию для 32 бит?"
 
@@ -20327,7 +20342,7 @@ msgstr ""
 "across)"
 
 #. Source code: option_full_class_checking_name: STRING_32 do Result := locale.translation ("Full Class Checking")	end
-#: conf_interface_names.e:328
+#: conf_interface_names.e:333
 msgid "Full Class Checking"
 msgstr "Полная проверка класса"
 
@@ -20337,7 +20352,7 @@ msgid "Full Error Message"
 msgstr "Полное сообщение об ошибке"
 
 #. Source code: assembly_name_description: STRING_32 do Result := locale.translation ("Full name of the assembly as found in the GAC.")	end
-#: conf_interface_names.e:282
+#: conf_interface_names.e:287
 msgid "Full name of the assembly as found in the GAC."
 msgstr "Полное имя сборки в GAC."
 
@@ -20574,7 +20589,7 @@ msgid "Generate default feature clauses"
 msgstr "Генерировать разделы компонентов по умолчанию"
 
 #. Source code: target_line_generation_description: STRING_32 do Result := locale.translation ("Generate extra information for external debuggers?")	end
-#: conf_interface_names.e:142
+#: conf_interface_names.e:147
 msgid "Generate extra information for external debuggers?"
 msgstr "Генерировать дополнительную информацию для внешних отладчиков?"
 
@@ -20608,7 +20623,7 @@ msgid "Generate profile from Run-time information record"
 msgstr "Генерировать профайл из записи времени выполнения"
 
 #. Source code: option_profile_description: STRING_32 do Result := locale.translation ("Generate profiling information?")	end
-#: conf_interface_names.e:325
+#: conf_interface_names.e:330
 msgid "Generate profiling information?"
 msgstr "Генерировать информацию для профилирования?"
 
@@ -20684,7 +20699,7 @@ msgid "Generation Error"
 msgstr "Ошибка генерации"
 
 #. Source code: target_msil_generation_type_name: STRING_32 do Result := locale.translation ("Generation Type")	end
-#: conf_interface_names.e:149
+#: conf_interface_names.e:154
 msgid "Generation Type"
 msgstr "Тип генерации"
 
@@ -21025,7 +21040,7 @@ msgid "Group metrics by unit"
 msgstr "Группировать метрики по единицам измерения"
 
 #. Source code: ("[
-#: conf_interface_names.e:1223
+#: conf_interface_names.e:1228
 msgctxt "configuration"
 msgid ""
 "Group option \"$1\" has value \"$2\" insufficient for value \"$4\" of a "
@@ -21053,12 +21068,12 @@ msgid "Groups"
 msgstr "Группы"
 
 #. Source code: cluster_dependencies_description: STRING_32 do Result := locale.translation ("Groups this cluster depends on.")	end
-#: conf_interface_names.e:275
+#: conf_interface_names.e:280
 msgid "Groups this cluster depends on."
 msgstr "Группы, на которые зависит этот кластер."
 
 #. Source code: override_override_description: STRING_32 do Result := locale.translation ("Groups this override is overriding.")	end
-#: conf_interface_names.e:291
+#: conf_interface_names.e:296
 msgid "Groups this override is overriding."
 msgstr "Группы, перекрываемые этим переопределением."
 
@@ -21200,7 +21215,7 @@ msgid "Hexadecimal/Decimal formating"
 msgstr "Шестнадцатеричная/десятичная нотация"
 
 #. Source code: cluster_hidden_name: STRING_32 do Result := locale.translation ("Hidden")	end
-#: conf_interface_names.e:272
+#: conf_interface_names.e:277
 msgid "Hidden"
 msgstr "Скрытый"
 
@@ -21411,12 +21426,12 @@ msgid "I&nterrupt Execution"
 msgstr "&Прервать выполнение"
 
 #. Source code: target_il_verifiable_name: STRING_32 do Result := locale.translation ("IL Verifiable")	end
-#: conf_interface_names.e:135
+#: conf_interface_names.e:140
 msgid "IL Verifiable"
 msgstr "Верифицируемый IL"
 
 #. Source code: dialog_create_iron_packages: STRING_32 do Result := locale.translation ("IRON packages")	end
-#: conf_interface_names.e:606
+#: conf_interface_names.e:611
 msgid "IRON packages"
 msgstr "Пакеты iron"
 
@@ -21782,7 +21797,7 @@ msgid "Inactive subqueries"
 msgstr "Неактивные подзапросы"
 
 #. Source code: external_include: STRING_32 do Result := locale.translation ("Include")	end
-#: conf_interface_names.e:183
+#: conf_interface_names.e:188
 msgid "Include"
 msgstr "Включить"
 
@@ -21827,17 +21842,17 @@ msgid "Include:"
 msgstr "Включить:"
 
 #. Source code: external_include_tree: STRING_32 do Result := locale.translation ("Includes")	end
-#: conf_interface_names.e:191
+#: conf_interface_names.e:196
 msgid "Includes"
 msgstr "Включения"
 
 #. Source code: dialog_file_rule_includes: STRING_32 do Result := locale.translation ("Includes:")	end
-#: conf_interface_names.e:547
+#: conf_interface_names.e:552
 msgid "Includes:"
 msgstr "Включить:"
 
 #. Source code: Result.force (locale.translation ("Incompatible Types Equality"), w_vweq)
-#: conf_interface_names.e:459
+#: conf_interface_names.e:464
 msgid "Incompatible Types Equality"
 msgstr "Равенство несовместимых типов"
 
@@ -21876,22 +21891,22 @@ msgid "Inconsistent hash code redeclaration"
 msgstr "Несогласованное переопределение `hash_code`"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Incorrect class name $1 in visible clause ."), [a_class])
-#: conf_interface_names.e:1037
+#: conf_interface_names.e:1042
 msgid "Incorrect class name $1 in visible clause ."
 msgstr "Неверное имя класса $1 в разделе видимости."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Incorrect feature name $1 in visible clause ."), [a_feature])
-#: conf_interface_names.e:1033
+#: conf_interface_names.e:1038
 msgid "Incorrect feature name $1 in visible clause ."
 msgstr "Неверное имя компонента $1 в разделе видимости."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Incorrect system tag $1 invalid UUID specified."), [a_name])
-#: conf_interface_names.e:865
+#: conf_interface_names.e:870
 msgid "Incorrect system tag $1 invalid UUID specified."
 msgstr "Неверный элемент system \"$1\": указан недопустимый UUID."
 
 #. Source code: e_parse_incorrect_system_no_name: STRING_32 do Result := locale.translation ("Incorrect system tag, no name specified.") end
-#: conf_interface_names.e:857
+#: conf_interface_names.e:862
 msgid "Incorrect system tag, no name specified."
 msgstr "Неверный элемент system: не указано имя."
 
@@ -22003,7 +22018,7 @@ msgid "Info"
 msgstr "Информация"
 
 #. Source code: dialog_create_library_information: STRING_32 do Result := locale.translation ("Information")	end
-#: conf_interface_names.e:587
+#: conf_interface_names.e:592
 msgid "Information"
 msgstr "Информация"
 
@@ -22145,7 +22160,7 @@ msgstr ""
 "удалено."
 
 #. Source code: capability_toggle_inherited_name: READABLE_STRING_32 do REsult := locale.translation_in_context ("Inherited", "configuration.capability") end
-#: conf_interface_names.e:307
+#: conf_interface_names.e:312
 msgctxt "configuration.capability"
 msgid "Inherited"
 msgstr "Унаследованное значение"
@@ -22252,7 +22267,7 @@ msgid "Initial status of whole word."
 msgstr "Начальное состояние \"Слово целиком\"."
 
 #. Source code: locale.translation_in_context ("Initialization", "configuration.void_safety"),
-#: conf_interface_names.e:403
+#: conf_interface_names.e:408
 msgctxt "configuration.void_safety"
 msgid "Initialization"
 msgstr "Инициализация"
@@ -22263,12 +22278,12 @@ msgid "Initializing Documentation."
 msgstr "Инициализируется документация."
 
 #. Source code: target_inlining_name: STRING_32 do Result := locale.translation ("Inlining")	end
-#: conf_interface_names.e:137
+#: conf_interface_names.e:142
 msgid "Inlining"
 msgstr "Подстановка"
 
 #. Source code: target_inlining_size_name: STRING_32 do Result := locale.translation ("Inlining Size")	end
-#: conf_interface_names.e:139
+#: conf_interface_names.e:144
 msgid "Inlining Size"
 msgstr "Величина подстановки"
 
@@ -22334,17 +22349,17 @@ msgid "Inspect instruction has no 'when' branch"
 msgstr "Инструкция ветвления без ветки 'when'"
 
 #. Source code: iron_box_install_label: STRING_32 do Result := locale.translation ("Install") end
-#: conf_interface_names.e:666
+#: conf_interface_names.e:671
 msgid "Install"
 msgstr "Установить"
 
 #. Source code: iron_box_installation_label: STRING_32 do Result := locale.translation ("Installation") end
-#: conf_interface_names.e:660
+#: conf_interface_names.e:665
 msgid "Installation"
 msgstr "Установка"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Installation of package: $1"), [a_package_id])
-#: conf_interface_names.e:738
+#: conf_interface_names.e:743
 msgid "Installation of package: $1"
 msgstr "Установка пакета \"$1\""
 
@@ -22354,7 +22369,7 @@ msgid "Installed Versions"
 msgstr "Установленные версии"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("[
-#: conf_interface_names.e:693
+#: conf_interface_names.e:698
 msgid ""
 "Installed in folder \"$1\" .\n"
 "$2 associated ecf files:\n"
@@ -22648,32 +22663,32 @@ msgid "Invalid UUID: $1"
 msgstr "Некорректный UUID: $1"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid action tag $1."), [an_action])
-#: conf_interface_names.e:905
+#: conf_interface_names.e:910
 msgid "Invalid action tag $1."
 msgstr "Неверный тег action \"$1\"."
 
 #. Source code: Result := locale.translation ("Invalid action tag.")
-#: conf_interface_names.e:913
+#: conf_interface_names.e:918
 msgid "Invalid action tag."
 msgstr "Неверный тег action."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid assembly name $1."), [a_group])
-#: conf_interface_names.e:957
+#: conf_interface_names.e:962
 msgid "Invalid assembly name $1."
 msgstr "Неверное имя сборки $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid assembly tag $1 no location specified."), [an_assembly])
-#: conf_interface_names.e:961
+#: conf_interface_names.e:966
 msgid "Invalid assembly tag $1 no location specified."
 msgstr "Неверный элемент assembly \"$1\": не указан атрибут location."
 
 #. Source code: e_parse_incorrect_assembly_no_name: STRING_32 do Result := locale.translation ("Invalid assembly tag no name specified.") end
-#: conf_interface_names.e:954
+#: conf_interface_names.e:959
 msgid "Invalid assembly tag no name specified."
 msgstr "Неверный элемент assembly: не указано имя."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid assembly tag there is already a group with the name $1."), [a_group])
-#: conf_interface_names.e:965
+#: conf_interface_names.e:970
 msgid "Invalid assembly tag there is already a group with the name $1."
 msgstr "Неверный тег assembly: уже есть группа с именем $1."
 
@@ -22683,12 +22698,12 @@ msgid "Invalid attribute \"$1\"."
 msgstr "Недопустимый атрибут \"$1\"."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid attribute '$1'"), [an_attribute])
-#: conf_interface_names.e:842
+#: conf_interface_names.e:847
 msgid "Invalid attribute '$1'"
 msgstr "Недопустимый атрибут \"$1\""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid build $1."), [a_build])
-#: conf_interface_names.e:1065
+#: conf_interface_names.e:1070
 msgid "Invalid build $1."
 msgstr "Неверная сборка $1."
 
@@ -22702,67 +22717,67 @@ msgstr ""
 "\n"
 
 #. Source code: e_parse_incorrect_class_opt: STRING_32 do Result := locale.translation ("Invalid class_option tag.") end
-#: conf_interface_names.e:1018
+#: conf_interface_names.e:1023
 msgid "Invalid class_option tag."
 msgstr "Неверный тег class_option."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid cluster name $1."), [a_group])
-#: conf_interface_names.e:971
+#: conf_interface_names.e:976
 msgid "Invalid cluster name $1."
 msgstr "Неверное имя кластера $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid cluster tag $1 no location specified."), [a_cluster])
-#: conf_interface_names.e:975
+#: conf_interface_names.e:980
 msgid "Invalid cluster tag $1 no location specified."
 msgstr "Неверный элемент cluster \"$1\": не указан атрибут location."
 
 #. Source code: e_parse_incorrect_cluster_no_name: STRING_32 do Result := locale.translation ("Invalid cluster tag no name specified.") end
-#: conf_interface_names.e:968
+#: conf_interface_names.e:973
 msgid "Invalid cluster tag no name specified."
 msgstr "Неверный элемент cluster: не указано имя."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid cluster tag there is already a group with the name $1."), [a_group])
-#: conf_interface_names.e:979
+#: conf_interface_names.e:984
 msgid "Invalid cluster tag there is already a group with the name $1."
 msgstr "Неверный тег cluster: уже есть группа с именем $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid concurrency condition $1."), [a_concurrency])
-#: conf_interface_names.e:1071
+#: conf_interface_names.e:1076
 msgid "Invalid concurrency condition $1."
 msgstr "Неверное условие параллельности $1."
 
 #. Source code: e_parse_incorrect_condition: STRING_32 do Result := locale.translation ("Invalid condition tag.") end
-#: conf_interface_names.e:1050
+#: conf_interface_names.e:1055
 msgid "Invalid condition tag."
 msgstr "Неверный тег condition."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid content: $1"), [a_content])
-#: conf_interface_names.e:854
+#: conf_interface_names.e:859
 msgid "Invalid content: $1"
 msgstr "Недопустимое содержимое: $1"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid debug tag $1."), [a_debug])
-#: conf_interface_names.e:999
+#: conf_interface_names.e:1004
 msgid "Invalid debug tag $1."
 msgstr "Неверный тег debug \"$1\"."
 
 #. Source code: e_parse_incorrect_debug_no_name: STRING_32 do Result := locale.translation ("Invalid debug tag.") end
-#: conf_interface_names.e:996
+#: conf_interface_names.e:1001
 msgid "Invalid debug tag."
 msgstr "Неверный тег debug."
 
 #. Source code: e_parse_incorrect_description: STRING_32 do Result := locale.translation ("Invalid description tag.") end
-#: conf_interface_names.e:1110
+#: conf_interface_names.e:1115
 msgid "Invalid description tag."
 msgstr "Неверный тег описания."
 
 #. Source code: e_parse_incorrect_external: STRING_32 do Result := locale.translation ("Invalid external tag.") end
-#: conf_interface_names.e:901
+#: conf_interface_names.e:906
 msgid "Invalid external tag."
 msgstr "Неверный тег external."
 
 #. Source code: e_parse_incorrect_file_rule: STRING_32 do Result := locale.translation ("Invalid file_rule tag.") end
-#: conf_interface_names.e:899
+#: conf_interface_names.e:904
 msgid "Invalid file_rule tag."
 msgstr "Неверный тег file_rule."
 
@@ -22777,72 +22792,72 @@ msgid "Invalid item"
 msgstr "Неверный элемент"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid library name $1."), [a_group])
-#: conf_interface_names.e:925
+#: conf_interface_names.e:930
 msgid "Invalid library name $1."
 msgstr "Неверное имя библиотеки $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid library tag $1."), [a_library])
-#: conf_interface_names.e:929
+#: conf_interface_names.e:934
 msgid "Invalid library tag $1."
 msgstr "Неверный тег library \"$1\"."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid library tag there is already a group with the name $1."), [a_group])
-#: conf_interface_names.e:933
+#: conf_interface_names.e:938
 msgid "Invalid library tag there is already a group with the name $1."
 msgstr "Неверный тег library: уже есть группа с именем $1."
 
 #. Source code: e_parse_incorrect_library_no_name: STRING_32 do Result := locale.translation ("Invalid library tag.") end
-#: conf_interface_names.e:922
+#: conf_interface_names.e:927
 msgid "Invalid library tag."
 msgstr "Неверный тег library."
 
 #. Source code: e_parse_incorrect_mapping: STRING_32 do Result := locale.translation ("Invalid mapping tag.") end
-#: conf_interface_names.e:1108
+#: conf_interface_names.e:1113
 msgid "Invalid mapping tag."
 msgstr "Неверный тег mapping."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid maximum version number in version condition: "), [a_version])
-#: conf_interface_names.e:1082
+#: conf_interface_names.e:1087
 msgid "Invalid maximum version number in version condition: "
 msgstr "Недопустимое число максимальной версии в условии версии: "
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid minimum version number in version condition: "), [a_version])
-#: conf_interface_names.e:1078
+#: conf_interface_names.e:1083
 msgid "Invalid minimum version number in version condition: "
 msgstr "Недопустимое число минимальной версии в условии версии: "
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid or empty value for '$1'"), [an_attribute])
-#: conf_interface_names.e:838
+#: conf_interface_names.e:843
 msgid "Invalid or empty value for '$1'"
 msgstr "Недопустимое или пустое значение для '$1'"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid override name $1."), [a_group])
-#: conf_interface_names.e:985
+#: conf_interface_names.e:990
 msgid "Invalid override name $1."
 msgstr "Неверное имя переопределения $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid override tag $1 no location specified."), [an_override])
-#: conf_interface_names.e:989
+#: conf_interface_names.e:994
 msgid "Invalid override tag $1 no location specified."
 msgstr "Неверный элемент override $1: не указан атрибут location."
 
 #. Source code: e_parse_incorrect_override_no_name: STRING_32 do Result := locale.translation ("Invalid override tag no name specified.") end
-#: conf_interface_names.e:982
+#: conf_interface_names.e:987
 msgid "Invalid override tag no name specified."
 msgstr "Неверный элемент override: не указано имя."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid override tag there is already a group with the name $1."), [a_group])
-#: conf_interface_names.e:993
+#: conf_interface_names.e:998
 msgid "Invalid override tag there is already a group with the name $1."
 msgstr "Неверный тег override: уже есть группа с именем $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid overrides tag in group $1."), [a_group])
-#: conf_interface_names.e:1047
+#: conf_interface_names.e:1052
 msgid "Invalid overrides tag in group $1."
 msgstr "Неверный элемент override в группе $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid platform $1."), [a_platform])
-#: conf_interface_names.e:1057
+#: conf_interface_names.e:1062
 msgid "Invalid platform $1."
 msgstr "Недопустимая платформа $1."
 
@@ -22852,12 +22867,12 @@ msgid "Invalid platform argument"
 msgstr "Недопустимое значение аргумента платформы."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid precompile name $1."), [a_group])
-#: conf_interface_names.e:939
+#: conf_interface_names.e:944
 msgid "Invalid precompile name $1."
 msgstr "Неверное имя прекомпилированной библиотеки $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid precompile tag $1, there is already another precompile specified $2."), [a_precompile, an_other_precompile])
-#: conf_interface_names.e:951
+#: conf_interface_names.e:956
 msgid ""
 "Invalid precompile tag $1, there is already another precompile specified $2."
 msgstr ""
@@ -22865,83 +22880,83 @@ msgstr ""
 "\"$2\"."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid precompile tag $1."), [a_precompile])
-#: conf_interface_names.e:943
+#: conf_interface_names.e:948
 msgid "Invalid precompile tag $1."
 msgstr "Неверный тег precompile $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid precompile tag there is already a group with the name $1."), [a_group])
-#: conf_interface_names.e:947
+#: conf_interface_names.e:952
 msgid "Invalid precompile tag there is already a group with the name $1."
 msgstr "Неверный тег precompile: уже есть группа с именем $1."
 
 #. Source code: e_parse_incorrect_precompile_no_name: STRING_32 do Result := locale.translation ("Invalid precompile tag.") end
-#: conf_interface_names.e:936
+#: conf_interface_names.e:941
 msgid "Invalid precompile tag."
 msgstr "Неверный тег precompile."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" (error position: $3): $2."), [regexp, description, position])
-#: conf_interface_names.e:1133
+#: conf_interface_names.e:1138
 msgid "Invalid regular expression \"$1\" (error position: $3): $2."
 msgstr "Недопустимое регулярное выражение «$1» (позиция ошибки: $3): $2."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" (error position: $4) in %"$2%": $3."), [regexp, file, description, position])
-#: conf_interface_names.e:1125
+#: conf_interface_names.e:1130
 msgid "Invalid regular expression \"$1\" (error position: $4) in \"$2\": $3."
 msgstr ""
 "Недопустимое регулярное выражение «$1» (позиция ошибки: $4) в «$2»: $3."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" in %"$2%"."), [regexp, file])
-#: conf_interface_names.e:1128
+#: conf_interface_names.e:1133
 msgid "Invalid regular expression \"$1\" in \"$2\"."
 msgstr "Недопустимое регулярное выражение «$1» в «$2»."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" in %"$2%": $3."), [regexp, file, description])
-#: conf_interface_names.e:1123
+#: conf_interface_names.e:1128
 msgid "Invalid regular expression \"$1\" in \"$2\": $3."
 msgstr "Недопустимое регулярное выражение «$1» в «$2»: $3."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%": $2."), [regexp, description])
-#: conf_interface_names.e:1131
+#: conf_interface_names.e:1136
 msgid "Invalid regular expression \"$1\": $2."
 msgstr "Недопустимое регулярное выражение «$1»: $2."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid regular expression: %"$1%"."), [regexp])
-#: conf_interface_names.e:1136
+#: conf_interface_names.e:1141
 msgid "Invalid regular expression: \"$1\"."
 msgstr "Недопустимое регулярное выражение: «$1»."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid renaming tag, no new name specified for $1."), [an_old])
-#: conf_interface_names.e:1011
+#: conf_interface_names.e:1016
 msgid "Invalid renaming tag, no new name specified for $1."
 msgstr "Неверный элемент renaming: не указано новое имя для \"$1\"."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid renaming tag, no old name specified for $1."), [a_new])
-#: conf_interface_names.e:1015
+#: conf_interface_names.e:1020
 msgid "Invalid renaming tag, no old name specified for $1."
 msgstr "Неверный элемент renaming: не указано старое имя для \"$1\"."
 
 #. Source code: e_parse_incorrect_renaming_no_name: STRING_32 do Result := locale.translation ("Invalid renaming tag.") end
-#: conf_interface_names.e:1008
+#: conf_interface_names.e:1013
 msgid "Invalid renaming tag."
 msgstr "Неверный тег renaming."
 
 #. Source code: e_parse_incorrect_root_class: STRING_32 do Result := locale.translation ("Invalid root class.") end
-#: conf_interface_names.e:886
+#: conf_interface_names.e:891
 msgid "Invalid root class."
 msgstr "Недопустимый корневой класс."
 
 #. Source code: e_parse_incorrect_root_cluster: STRING_32 do Result := locale.translation ("Invalid root cluster.") end
-#: conf_interface_names.e:885
+#: conf_interface_names.e:890
 msgid "Invalid root cluster."
 msgstr "Недопустимый корневой кластер."
 
 #. Source code: e_parse_incorrect_root_feature: STRING_32 do Result := locale.translation ("Invalid root procedure.") end
-#: conf_interface_names.e:887
+#: conf_interface_names.e:892
 msgid "Invalid root procedure."
 msgstr "Недопустимая корневая процедура."
 
 #. Source code: e_parse_incorrect_root: STRING_32 do Result := locale.translation ("Invalid root tag.") end
-#: conf_interface_names.e:884
+#: conf_interface_names.e:889
 msgid "Invalid root tag."
 msgstr "Недопустимый корневой тег."
 
@@ -22952,12 +22967,12 @@ msgid "Invalid rule name"
 msgstr "Недопустимое имя правила"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid setting tag $1."), [a_setting])
-#: conf_interface_names.e:892
+#: conf_interface_names.e:897
 msgid "Invalid setting tag $1."
 msgstr "Неверный тег setting $1."
 
 #. Source code: e_parse_incorrect_setting_no_name: STRING_32 do Result := locale.translation ("Invalid setting tag, no name specified.") end
-#: conf_interface_names.e:889
+#: conf_interface_names.e:894
 msgid "Invalid setting tag, no name specified."
 msgstr "Неверный элемент setting: не указано имя."
 
@@ -22968,7 +22983,7 @@ msgid "Invalid settings for rule \"$1\""
 msgstr "Недопустимые настройки правила «$1»"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid system name $1."), [a_system])
-#: conf_interface_names.e:860
+#: conf_interface_names.e:865
 msgid "Invalid system name $1."
 msgstr "Неверное имя системы $1."
 
@@ -22983,12 +22998,12 @@ msgid "Invalid tag/tag position \"$1\"."
 msgstr "Неверный тег/положение тега \"$1\"."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid tag/tag position '$1'"), [a_tag])
-#: conf_interface_names.e:834
+#: conf_interface_names.e:839
 msgid "Invalid tag/tag position '$1'"
 msgstr "Неверный тег/положение тега \"$1\"."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid target name $1."), [a_target])
-#: conf_interface_names.e:880
+#: conf_interface_names.e:885
 msgid "Invalid target name $1."
 msgstr "Неверное имя задания $1."
 
@@ -22998,22 +23013,22 @@ msgid "Invalid target, select the target you want: "
 msgstr "Задание указано неверно, выберите задание: "
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid uses tag in group $1."), [a_group])
-#: conf_interface_names.e:1042
+#: conf_interface_names.e:1047
 msgid "Invalid uses tag in group $1."
 msgstr "Неверный тег/положение тега \"$1\"."
 
 #. Source code: e_parse_incorrect_root_all: STRING_32 do Result := locale.translation ("Invalid value for all_classes attribute in root tag.") end
-#: conf_interface_names.e:883
+#: conf_interface_names.e:888
 msgid "Invalid value for all_classes attribute in root tag."
 msgstr "Недопустимое значение атрибута all_classes в элементе root."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid value for configuration option %"$1%": %"$2%""), [option_name, option_value])
-#: conf_interface_names.e:1193
+#: conf_interface_names.e:1198
 msgid "Invalid value for configuration option \"$1\": \"$2\""
 msgstr "Недопустимое значение опции конфигурации \"$1\": \"$2\""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid value for configuration option %"$1%": %"$2%" (Expected values: $3)"), [option_name, option_value, e])
-#: conf_interface_names.e:1191
+#: conf_interface_names.e:1196
 msgid ""
 "Invalid value for configuration option \"$1\": \"$2\" (Expected values: $3)"
 msgstr ""
@@ -23021,42 +23036,42 @@ msgstr ""
 "$3)"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid value for setting $1."), [a_setting])
-#: conf_interface_names.e:896
+#: conf_interface_names.e:901
 msgid "Invalid value for setting $1."
 msgstr "Недопустимое значение установки \"$1\"."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid variable tag $1."), [a_variable])
-#: conf_interface_names.e:919
+#: conf_interface_names.e:924
 msgid "Invalid variable tag $1."
 msgstr "Неверный тег variable $1."
 
 #. Source code: e_parse_incorrect_variable_no_name: STRING_32 do Result := locale.translation ("Invalid variable tag.") end
-#: conf_interface_names.e:916
+#: conf_interface_names.e:921
 msgid "Invalid variable tag."
 msgstr "Неверный тег variable."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid version type $1 in version condition."), [a_type])
-#: conf_interface_names.e:1091
+#: conf_interface_names.e:1096
 msgid "Invalid version type $1 in version condition."
 msgstr "Недопустимый тип версии $1 в условии версии."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid visible tag on $1."), [a_parent])
-#: conf_interface_names.e:1029
+#: conf_interface_names.e:1034
 msgid "Invalid visible tag on $1."
 msgstr "Неверный тег/положение тега \"$1\"."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid warning tag $1."), [a_warning])
-#: conf_interface_names.e:1005
+#: conf_interface_names.e:1010
 msgid "Invalid warning tag $1."
 msgstr "Неверный тег warning $1."
 
 #. Source code: e_parse_incorrect_warning_no_name: STRING_32 do Result := locale.translation ("Invalid warning tag.") end
-#: conf_interface_names.e:1002
+#: conf_interface_names.e:1007
 msgid "Invalid warning tag."
 msgstr "Неверный тег warning."
 
 #. Source code: option_invariant_name: STRING_32 do Result := locale.translation ("Invariant")	end
-#: conf_interface_names.e:317
+#: conf_interface_names.e:322
 msgid "Invariant"
 msgstr "Инвариант класса"
 
@@ -23183,7 +23198,7 @@ msgid "Is force debug mode"
 msgstr "Установлен режим отладки"
 
 #. Source code: iron_box_package_installed_label: STRING_32 do Result := locale.translation ("Is installed") end
-#: conf_interface_names.e:674
+#: conf_interface_names.e:679
 msgid "Is installed"
 msgstr "Установлено"
 
@@ -23230,12 +23245,12 @@ msgid "Is signature enabled"
 msgstr "Показывать сигнатуру"
 
 #. Source code: target_console_application_description: STRING_32 do Result := locale.translation ("Is the project a console application?")	end
-#: conf_interface_names.e:122
+#: conf_interface_names.e:127
 msgid "Is the project a console application?"
 msgstr "Проект - консольное приложение?"
 
 #. Source code: cluster_hidden_description: STRING_32 do Result := locale.translation ("Is this a hidden cluster that can not be used if the system is used as a library?")	end
-#: conf_interface_names.e:273
+#: conf_interface_names.e:278
 msgid ""
 "Is this a hidden cluster that can not be used if the system is used as a "
 "library?"
@@ -23254,7 +23269,7 @@ msgid "Is this formatter of per EiffelStudio scope or per target scope?"
 msgstr "Этот форматировщик на область EiffelStudion или на область задания?"
 
 #. Source code: group_readonly_description: STRING_32 do Result := locale.translation ("Is this group read only?")	end
-#: conf_interface_names.e:248
+#: conf_interface_names.e:253
 msgid "Is this group read only?"
 msgstr "Эта группа только для чтения?"
 
@@ -23528,7 +23543,7 @@ msgid "Keep working directory of unresolved tests"
 msgstr "Сохранять рабочий каталог неизвестных тестов"
 
 #. Source code: target_msil_key_file_name_description: STRING_32 do Result := locale.translation ("Key to be able to add the generated binary to the Global Assembly Cache (GAC). %NChose a new, non existing filename to create a new key file.")	end
-#: conf_interface_names.e:152
+#: conf_interface_names.e:157
 msgid ""
 "Key to be able to add the generated binary to the Global Assembly Cache "
 "(GAC). \n"
@@ -23637,7 +23652,7 @@ msgid "Language"
 msgstr "Язык"
 
 #. Source code: tab_language_name: READABLE_STRING_32 do Result := locale.translation_in_context ("Language", "configuration") end
-#: conf_interface_names.e:300
+#: conf_interface_names.e:305
 msgctxt "configuration"
 msgid "Language"
 msgstr "Язык"
@@ -23850,7 +23865,7 @@ msgid "Left margin width"
 msgstr "Ширина левого поля"
 
 #. Source code: external_library_tree: STRING_32 do Result := locale.translation ("Libraries")	end
-#: conf_interface_names.e:194
+#: conf_interface_names.e:199
 msgid "Libraries"
 msgstr "Библиотеки"
 
@@ -23860,7 +23875,7 @@ msgid "Libraries to precompile:"
 msgstr "Библиотеки для прекомпиляции:"
 
 #. Source code: external_library: STRING_32 do Result := locale.translation ("Library")	end
-#: conf_interface_names.e:186
+#: conf_interface_names.e:191
 msgid "Library"
 msgstr "Библиотека"
 
@@ -23880,7 +23895,7 @@ msgid "Library Readonly"
 msgstr "Библиотека только для чтения"
 
 #. Source code: target_library_root_name: STRING_32 do Result := locale.translation ("Library Root")	end
-#: conf_interface_names.e:163
+#: conf_interface_names.e:168
 msgid "Library Root"
 msgstr "Корень библиотеки"
 
@@ -23890,7 +23905,7 @@ msgid "Library Target"
 msgstr "Задание библиотеки"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("[
-#: conf_interface_names.e:1022
+#: conf_interface_names.e:1027
 msgid "Library option \"$1\" cannot be overridden outside the library."
 msgstr "Опция библиотеки \"$1\" не может быть переопределена вне библитеки."
 
@@ -23900,7 +23915,7 @@ msgid "Library target UUID \"$1\" is invalid."
 msgstr "UUID библиотеки \"$1\" недопустим."
 
 #. Source code: library_target_override: STRING_32 do Result := locale.translation ("Library target cannot be used because it contains overrides which is forbidden.") end
-#: conf_interface_names.e:789
+#: conf_interface_names.e:794
 msgid ""
 "Library target cannot be used because it contains overrides which is "
 "forbidden."
@@ -23929,7 +23944,7 @@ msgid "Line"
 msgstr "Строка"
 
 #. Source code: target_line_generation_name: STRING_32 do Result := locale.translation ("Line Generation")	end
-#: conf_interface_names.e:141
+#: conf_interface_names.e:146
 msgid "Line Generation"
 msgstr "Генерация номеров строк"
 
@@ -24059,12 +24074,12 @@ msgid "Linked token editing enabled"
 msgstr "Разрешено связывание идентификаторов"
 
 #. Source code: external_linker_flag: STRING_32 do Result := locale.translation ("Linker flag") end
-#: conf_interface_names.e:188
+#: conf_interface_names.e:193
 msgid "Linker flag"
 msgstr "Флаг компоновщика"
 
 #. Source code: external_linker_flag_tree: STRING_32 do Result := locale.translation ("Linker flags")	end
-#: conf_interface_names.e:196
+#: conf_interface_names.e:201
 msgid "Linker flags"
 msgstr "Флаги компоновщика"
 
@@ -24319,17 +24334,17 @@ msgid "Location of the configuration file."
 msgstr "Расположение файла конфигурации."
 
 #. Source code: external_location_description: STRING_32 do Result := locale.translation ("Location of the external.")	end
-#: conf_interface_names.e:175
+#: conf_interface_names.e:180
 msgid "Location of the external."
 msgstr "Расположение внешнего элемента."
 
 #. Source code: group_location_description: STRING_32 do Result := locale.translation ("Location of this group.")	end
-#: conf_interface_names.e:250
+#: conf_interface_names.e:255
 msgid "Location of this group."
 msgstr "Расположение этой группы."
 
 #. Source code: target_metadata_cache_path_description: STRING_32 do Result := locale.translation ("Location where information about external assemblies is stored.")	end
-#: conf_interface_names.e:144
+#: conf_interface_names.e:149
 msgid "Location where information about external assemblies is stored."
 msgstr "Место, где хранится информация о внешних сборках."
 
@@ -24339,7 +24354,7 @@ msgid "Location: "
 msgstr "Расположение: "
 
 #. Source code: dialog_display_configuration_title: STRING_32 do Result := locale.translation ("Locations of configuration files") end
-#: conf_interface_names.e:614
+#: conf_interface_names.e:619
 msgid "Locations of configuration files"
 msgstr "Расположение файлов конфигурации"
 
@@ -24426,7 +24441,7 @@ msgid "Long multi branch"
 msgstr "Длинная инструкция множественного ветвления"
 
 #. Source code: option_loop_name: STRING_32 do Result := locale.translation ("Loop")	end
-#: conf_interface_names.e:319
+#: conf_interface_names.e:324
 msgid "Loop"
 msgstr "Цикл"
 
@@ -24607,12 +24622,12 @@ msgstr ""
 "линейной метрики."
 
 #. Source code: external_make: STRING_32 do Result := locale.translation ("Makefile")	end
-#: conf_interface_names.e:189
+#: conf_interface_names.e:194
 msgid "Makefile"
 msgstr "Makefile"
 
 #. Source code: external_make_tree: STRING_32 do Result := locale.translation ("Makefiles")	end
-#: conf_interface_names.e:197
+#: conf_interface_names.e:202
 msgid "Makefiles"
 msgstr "Дерево Makefile'ов"
 
@@ -24652,7 +24667,7 @@ msgid "Maltese (Malta)"
 msgstr "Мальтийский (Мальта)"
 
 #. Source code: dialog_search_library_iron_package_manage_button_tooltip: STRING_32 do Result := locale.translation ("Manage IRON packages with the associated IRON tool") end
-#: conf_interface_names.e:593
+#: conf_interface_names.e:598
 msgid "Manage IRON packages with the associated IRON tool"
 msgstr "Управлять пакетами IRON с помощью связанного инструмента"
 
@@ -24690,7 +24705,7 @@ msgid "Manual Test"
 msgstr "Ручной тест"
 
 #. Source code: target_edit_manually: STRING_32 do Result := locale.translation ("Manually Edit Configuration")	end
-#: conf_interface_names.e:172
+#: conf_interface_names.e:177
 msgid "Manually Edit Configuration"
 msgstr "Редактировать конфигурацию вручную"
 
@@ -24801,7 +24816,7 @@ msgid "Max slice"
 msgstr "Максимальная часть"
 
 #. Source code: target_inlining_size_description: STRING_32 do Result := locale.translation ("Maximal number of instructions in a feature for the feature to be inlined.")	end
-#: conf_interface_names.e:140
+#: conf_interface_names.e:145
 msgid ""
 "Maximal number of instructions in a feature for the feature to be inlined."
 msgstr ""
@@ -25088,7 +25103,7 @@ msgstr ""
 "вычисление выполняется."
 
 #. Source code: target_metadata_cache_path_name: STRING_32 do Result := locale.translation ("Metadata Cache Path")	end
-#: conf_interface_names.e:143
+#: conf_interface_names.e:148
 msgid "Metadata Cache Path"
 msgstr "Путь кэша метаданных"
 
@@ -25392,7 +25407,7 @@ msgid "Minimum nested branches and loops threshold"
 msgstr "Минимальный порог вложенных ветвлений и циклов"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Minimum version cannot be greater than maximum version in version condition $1."), [a_type])
-#: conf_interface_names.e:1095
+#: conf_interface_names.e:1100
 msgid ""
 "Minimum version cannot be greater than maximum version in version condition "
 "$1."
@@ -25401,7 +25416,7 @@ msgstr ""
 "$1."
 
 #. Source code: version_min_max: STRING_32 do Result := locale.translation ("Minimum version cannot be greater than maximum version.") end
-#: conf_interface_names.e:788
+#: conf_interface_names.e:793
 msgid "Minimum version cannot be greater than maximum version."
 msgstr "Минимальная версия не может быть больше максимальной версии."
 
@@ -25412,7 +25427,7 @@ msgid "Missing 'is_equal' redefinition"
 msgstr "Пропущено переопределение 'is_equal'"
 
 #. Source code: Result.force (locale.translation ("Missing Class Export"), w_export_class_missing)
-#: conf_interface_names.e:458
+#: conf_interface_names.e:463
 msgid "Missing Class Export"
 msgstr "Экспорт отсутствующего класса"
 
@@ -25425,7 +25440,7 @@ msgid "Missing argument semicolon"
 msgstr "Пропущенная точка с запятой в аргументах"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Missing attribute '$1'"), [an_attribute])
-#: conf_interface_names.e:850
+#: conf_interface_names.e:855
 msgid "Missing attribute '$1'"
 msgstr "Отсутствует атрибут '$1'"
 
@@ -25540,17 +25555,17 @@ msgid "Missing library argument."
 msgstr "Пропущен аргумент библиотеки."
 
 #. Source code: Result.force (locale.translation ("Missing manifest array type"), w_manifest_array_type)
-#: conf_interface_names.e:464
+#: conf_interface_names.e:469
 msgid "Missing manifest array type"
 msgstr "Отсутствует тип явно заданного массива"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Missing name for configuration option %"$1%""), [option])
-#: conf_interface_names.e:1145
+#: conf_interface_names.e:1150
 msgid "Missing name for configuration option \"$1\""
 msgstr "Пропущено имя опции конфигурации \"$1\""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Missing parent target: $1 in target $2"), [a_parent, a_target])
-#: conf_interface_names.e:875
+#: conf_interface_names.e:880
 msgid "Missing parent target: $1 in target $2"
 msgstr "Нет родительского задания $1 в задании $2"
 
@@ -25595,7 +25610,7 @@ msgid "Missing type in local declaration list: {1}"
 msgstr "Пропущен тип в списке определения локальных переменных: {1}"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Missing value for configuration option %"$1%""), [option])
-#: conf_interface_names.e:1151
+#: conf_interface_names.e:1156
 msgid "Missing value for configuration option \"$1\""
 msgstr "Пропущено значение опции конфигурации \"$1\""
 
@@ -25792,17 +25807,17 @@ msgid ""
 msgstr "Перемещение папки в своего потомка невозможно."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Multiple note elements under $1."), [a_name])
-#: conf_interface_names.e:1114
+#: conf_interface_names.e:1119
 msgid "Multiple note elements under $1."
 msgstr "Несколько элементов note в $1."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Multiple targets with name $1."), [a_target])
-#: conf_interface_names.e:870
+#: conf_interface_names.e:875
 msgid "Multiple targets with name $1."
 msgstr "Несколько заданий с именем $1."
 
 #. Source code: task_succeed_name: STRING_32 do Result := locale.translation ("Must succeed")	end
-#: conf_interface_names.e:220
+#: conf_interface_names.e:225
 msgid "Must succeed"
 msgstr "Должно завершиться успешно"
 
@@ -25818,7 +25833,7 @@ msgid "NATIVE_ARRAY is not yet fully supported."
 msgstr "NATIVE_ARRAY ещё полностью не поддерживается."
 
 #. Source code: dialog_renaming_create_new: STRING_32 do Result := locale.translation ("NEW_NAME")	end
-#: conf_interface_names.e:571
+#: conf_interface_names.e:576
 msgid "NEW_NAME"
 msgstr "НОВОЕ_ИМЯ"
 
@@ -25850,7 +25865,7 @@ msgid "Name of the generated binary."
 msgstr "Имя сгенерированного исполняемого модуля."
 
 #. Source code: group_name_description: STRING_32 do Result := locale.translation ("Name of the group.")	end
-#: conf_interface_names.e:242
+#: conf_interface_names.e:247
 msgid "Name of the group."
 msgstr "Имя группы."
 
@@ -25870,7 +25885,7 @@ msgid "Name:"
 msgstr "Имя:"
 
 #. Source code: dialog_visible_name: STRING_32 do Result := locale.translation ("Name: ")	end
-#: conf_interface_names.e:560
+#: conf_interface_names.e:565
 msgid "Name: "
 msgstr "Имя:"
 
@@ -25892,7 +25907,7 @@ msgstr ""
 "одну букву."
 
 #. Source code: option_namespace_description: STRING_32 do Result := locale.translation ("Namespace for .NET")	end
-#: conf_interface_names.e:335
+#: conf_interface_names.e:340
 msgid "Namespace for .NET"
 msgstr "Пространство имён .NET"
 
@@ -26065,7 +26080,7 @@ msgid "New Feature"
 msgstr "Новый компонент"
 
 #. Source code: mapping_new_name: STRING_32 do Result := locale.translation ("New Name")	end
-#: conf_interface_names.e:494
+#: conf_interface_names.e:499
 msgid "New Name"
 msgstr "Новое имя"
 
@@ -26175,7 +26190,7 @@ msgid "New metric"
 msgstr "Новая метрика"
 
 #. Source code: dialog_renaming_new_name: STRING_32 do Result := locale.translation ("New name")	end
-#: conf_interface_names.e:569
+#: conf_interface_names.e:574
 msgid "New name"
 msgstr "Новое имя"
 
@@ -26424,7 +26439,7 @@ msgid "No issues."
 msgstr "Проблем нет."
 
 #. Source code: assembly_no_location: STRING_32 do Result := locale.translation ("No location specified.") end
-#: conf_interface_names.e:826
+#: conf_interface_names.e:831
 msgid "No location specified."
 msgstr "Не указано расположение."
 
@@ -26444,12 +26459,12 @@ msgid "No metric is selected."
 msgstr "Никаой метрики не выбрано."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("No minimum or maximum version in version condition $1 specified."), [a_version])
-#: conf_interface_names.e:1087
+#: conf_interface_names.e:1092
 msgid "No minimum or maximum version in version condition $1 specified."
 msgstr "Не указана минимальная или максимальная версии в условии версии $1."
 
 #. Source code: e_parse_incorrect_custom_no_name: STRING_32 do Result := locale.translation ("No name attribute in custom condition.") end
-#: conf_interface_names.e:1098
+#: conf_interface_names.e:1103
 msgid "No name attribute in custom condition."
 msgstr "Отсутствует атрибут name в пользовательском условии."
 
@@ -26537,18 +26552,18 @@ msgstr ""
 "имеет процедуру создания без аргументов."
 
 #. Source code: e_parse_incorrect_dotnet: STRING_32 do Result := locale.translation ("No valid value specified in .NET condition.") end
-#: conf_interface_names.e:1073
+#: conf_interface_names.e:1078
 msgid "No valid value specified in .NET condition."
 msgstr "Не указано допустимое значение в условии .NET."
 
 #. Source code: e_parse_incorrect_dynamic_runtime: STRING_32 do Result := locale.translation ("No valid value specified in dynamic runtime condition.") end
-#: conf_interface_names.e:1074
+#: conf_interface_names.e:1079
 msgid "No valid value specified in dynamic runtime condition."
 msgstr ""
 "Не указано допустимое значение в условии динамической системы выполнения."
 
 #. Source code: e_parse_incorrect_multithreaded : STRING_32 do Result := locale.translation ("No valid value specified in multithreaded condition.") end
-#: conf_interface_names.e:1068
+#: conf_interface_names.e:1073
 msgid "No valid value specified in multithreaded condition."
 msgstr "Не указано допустимое значение в условии многопоточности."
 
@@ -26566,17 +26581,17 @@ msgstr ""
 "Опции: "
 
 #. Source code: e_parse_incorrect_build_none: STRING_32 do Result := locale.translation ("No value or excluded-value specified in build condition.") end
-#: conf_interface_names.e:1062
+#: conf_interface_names.e:1067
 msgid "No value or excluded-value specified in build condition."
 msgstr "Нет атрибута value или excluded_value в условии сборки."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("No value or excluded-value specified in custom condition $1."), [a_custom])
-#: conf_interface_names.e:1101
+#: conf_interface_names.e:1106
 msgid "No value or excluded-value specified in custom condition $1."
 msgstr "Нет атрибута value или excluded_value в пользовательском условии $1."
 
 #. Source code: e_parse_incorrect_platform_none: STRING_32 do Result := locale.translation ("No value or excluded-value specified in platform condition.") end
-#: conf_interface_names.e:1054
+#: conf_interface_names.e:1059
 msgid "No value or excluded-value specified in platform condition."
 msgstr "Нет атрибута value или excluded_value в условии платформы."
 
@@ -26600,7 +26615,7 @@ msgstr ""
 "$1."
 
 #. Source code: e_parse_incorrect_version_no_type: STRING_32 do Result := locale.translation ("No version type specified in version condition.") end
-#: conf_interface_names.e:1084
+#: conf_interface_names.e:1089
 msgid "No version type specified in version condition."
 msgstr "Тип версии не указан в условии версии."
 
@@ -26621,7 +26636,7 @@ msgid "Non Critical"
 msgstr "Некритический"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Non boolean value for succeed attribute of action $1."), [an_action])
-#: conf_interface_names.e:909
+#: conf_interface_names.e:914
 msgid "Non boolean value for succeed attribute of action $1."
 msgstr "Не булевское значение атрибута succeed действия $1."
 
@@ -26661,19 +26676,19 @@ msgid "None"
 msgstr "Отсутствуют"
 
 #. Source code: locale.translation_in_context ("None", "configuration.catcall_detection"),
-#: conf_interface_names.e:355
+#: conf_interface_names.e:360
 msgctxt "configuration.catcall_detection"
 msgid "None"
 msgstr "Отсутствует"
 
 #. Source code: locale.translation_in_context ("None", "configuration.concurrency"),
-#: conf_interface_names.e:378
+#: conf_interface_names.e:383
 msgctxt "configuration.concurrency"
 msgid "None"
 msgstr "Отсутствует"
 
 #. Source code: locale.translation_in_context ("None", "configuration.void_safety"),
-#: conf_interface_names.e:401
+#: conf_interface_names.e:406
 msgctxt "configuration.void_safety"
 msgid "None"
 msgstr "Отсутствует"
@@ -26749,7 +26764,7 @@ msgid "Not yet called"
 msgstr "Пока не вызван"
 
 #. Source code: iron_box_package_not_yet_installed_label: STRING_32 do Result := locale.translation ("Not yet installed") end
-#: conf_interface_names.e:675
+#: conf_interface_names.e:680
 msgid "Not yet installed"
 msgstr "Ещё не установлено"
 
@@ -26824,7 +26839,7 @@ msgid "Number of cached formatted text in history."
 msgstr "Число запоминаемого отформатированного текста в истории."
 
 #. Source code: target_msil_classes_per_module_description: STRING_32 do Result := locale.translation ("Number of classes generated per .NET module during incremental compilation. Increasing this value will slow down the incremental recompilation, but speed up the time to load the assembly while debugging in workbench mode.")	end
-#: conf_interface_names.e:146
+#: conf_interface_names.e:151
 msgid ""
 "Number of classes generated per .NET module during incremental compilation. "
 "Increasing this value will slow down the incremental recompilation, but "
@@ -26965,12 +26980,12 @@ msgid "OK"
 msgstr "Да"
 
 #. Source code: dialog_renaming_create_old: STRING_32 do Result := locale.translation ("OLD_NAME")	end
-#: conf_interface_names.e:570
+#: conf_interface_names.e:575
 msgid "OLD_NAME"
 msgstr "СТАРОЕ_ИМЯ"
 
 #. Source code: external_object: STRING_32 do Result := locale.translation ("Object")	end
-#: conf_interface_names.e:185
+#: conf_interface_names.e:190
 msgid "Object"
 msgstr "Объект"
 
@@ -27081,12 +27096,12 @@ msgid "Obsolete"
 msgstr "obsolete"
 
 #. Source code: Result.force (locale.translation ("Obsolete Classes"), w_obsolete_class)
-#: conf_interface_names.e:454
+#: conf_interface_names.e:459
 msgid "Obsolete Classes"
 msgstr "Устаревшие классы"
 
 #. Source code: Result.force (locale.translation ("Obsolete Features"), w_obsolete_feature)
-#: conf_interface_names.e:455
+#: conf_interface_names.e:460
 msgid "Obsolete Features"
 msgstr "Устаревшие компоненты"
 
@@ -27166,7 +27181,7 @@ msgstr ""
 "скобках. Используется значение по умолчанию [{1}]."
 
 #. Source code: option_syntax_obsolete_name: STRING_32 do Result := locale.translation ("Obsolete syntax") end
-#: conf_interface_names.e:443
+#: conf_interface_names.e:448
 msgid "Obsolete syntax"
 msgstr "Старый синтаксис"
 
@@ -27201,17 +27216,17 @@ msgstr ""
 "является признаком ошибки."
 
 #. Source code: mapping_old_name: STRING_32 do Result := locale.translation ("Old Name")	end
-#: conf_interface_names.e:493
+#: conf_interface_names.e:498
 msgid "Old Name"
 msgstr "Старое имя"
 
 #. Source code: Result.force (locale.translation ("Old Syntax"), w_syntax)
-#: conf_interface_names.e:456
+#: conf_interface_names.e:461
 msgid "Old Syntax"
 msgstr "Старый синтаксис"
 
 #. Source code: target_old_verbatim_strings_name: STRING_32 do Result := locale.translation ("Old Verbatim Strings")	end
-#: conf_interface_names.e:155
+#: conf_interface_names.e:160
 msgid "Old Verbatim Strings"
 msgstr "Старые дословные строки"
 
@@ -27228,7 +27243,7 @@ msgid "Old class name"
 msgstr "Старое имя класса"
 
 #. Source code: dialog_renaming_old_name: STRING_32 do Result := locale.translation ("Old name")	end
-#: conf_interface_names.e:568
+#: conf_interface_names.e:573
 msgid "Old name"
 msgstr "Старое имя"
 
@@ -27586,7 +27601,7 @@ msgid "Options"
 msgstr "Настройки"
 
 #. Source code: Result.force (locale.translation ("Options Unknown Class"), w_option_unknown_class)
-#: conf_interface_names.e:462
+#: conf_interface_names.e:467
 msgid "Options Unknown Class"
 msgstr "Настройки неизвестного класса"
 
@@ -27641,7 +27656,7 @@ msgid "Oriya (India)"
 msgstr "Ория (Индия)"
 
 #. Source code: dial_cond_other: STRING_32 do Result := locale.translation ("Other")	end
-#: conf_interface_names.e:521
+#: conf_interface_names.e:526
 msgid "Other"
 msgstr "Другие"
 
@@ -27756,7 +27771,7 @@ msgid "Overflow Prevention"
 msgstr "Предупреждение переполнения"
 
 #. Source code: group_override: STRING_32 do Result := locale.translation ("Override")	end
-#: conf_interface_names.e:237
+#: conf_interface_names.e:242
 msgid "Override"
 msgstr "Переопределение"
 
@@ -27773,17 +27788,17 @@ msgid "Override tab behavior"
 msgstr "Переопределить поведение вкладки"
 
 #. Source code: target_platform_description: STRING_32 do Result := locale.translation ("Override the detected platform to use in conditions.")	end
-#: conf_interface_names.e:158
+#: conf_interface_names.e:163
 msgid "Override the detected platform to use in conditions."
 msgstr "Переопределить выявленную платформу для использования в условиях."
 
 #. Source code: group_override_tree: STRING_32 do Result := locale.translation ("Overrides")	end
-#: conf_interface_names.e:231
+#: conf_interface_names.e:236
 msgid "Overrides"
 msgstr "Переопределения"
 
 #. Source code: override_override_name: STRING_32 do Result := locale.translation ("Overriding")	end
-#: conf_interface_names.e:290
+#: conf_interface_names.e:295
 msgid "Overriding"
 msgstr "Переопределение"
 
@@ -27808,17 +27823,17 @@ msgid "PID"
 msgstr "Процессор"
 
 #. Source code: iron_box_package_label: STRING_32 do Result := locale.translation ("Package") end
-#: conf_interface_names.e:658
+#: conf_interface_names.e:663
 msgid "Package"
 msgstr "Пакет"
 
 #. Source code: iron_box_package_status_label: STRING_32 do Result := locale.translation ("Package Status") end
-#: conf_interface_names.e:650
+#: conf_interface_names.e:655
 msgid "Package Status"
 msgstr "Состояние пакета"
 
 #. Source code: dialog_search_library_iron_package_manage_button_label: STRING_32 do Result := locale.translation ("Packages") end
-#: conf_interface_names.e:592
+#: conf_interface_names.e:597
 msgid "Packages"
 msgstr "Пакеты"
 
@@ -28081,7 +28096,7 @@ msgid "Places the current feature in the contract editor for edition"
 msgstr "Поместить текущий компонент в редактор контрактов для редактирования"
 
 #. Source code: target_platform_name: STRING_32 do Result := locale.translation ("Platform")	end
-#: conf_interface_names.e:157
+#: conf_interface_names.e:162
 msgid "Platform"
 msgstr "Платформа"
 
@@ -28091,7 +28106,7 @@ msgid "Platform option requires a platform name."
 msgstr "Опции платформы необходимо имя платформы."
 
 #. Source code: dial_cond_platforms: STRING_32 do Result := locale.translation ("Platforms")	end
-#: conf_interface_names.e:519
+#: conf_interface_names.e:524
 msgid "Platforms"
 msgstr "Платформы"
 
@@ -28435,12 +28450,12 @@ msgstr ""
 "проверить его текущее состояние."
 
 #. Source code: task_post: STRING_32 do Result := locale.translation ("Post Compilation")	end
-#: conf_interface_names.e:211
+#: conf_interface_names.e:216
 msgid "Post Compilation"
 msgstr "После компиляции"
 
 #. Source code: task_post_tree: STRING_32 do Result := locale.translation ("Post Compilation Tasks")	end
-#: conf_interface_names.e:208
+#: conf_interface_names.e:213
 msgid "Post Compilation Tasks"
 msgstr "Действия после компиляции"
 
@@ -28450,12 +28465,12 @@ msgid "Pr&operties"
 msgstr "&Установки"
 
 #. Source code: task_pre: STRING_32 do Result := locale.translation ("Pre Compilation")	end
-#: conf_interface_names.e:210
+#: conf_interface_names.e:215
 msgid "Pre Compilation"
 msgstr "До компиляции"
 
 #. Source code: task_pre_tree: STRING_32 do Result := locale.translation ("Pre Compilation Tasks")	end
-#: conf_interface_names.e:207
+#: conf_interface_names.e:212
 msgid "Pre Compilation Tasks"
 msgstr "Задачи перед компиляцией"
 
@@ -28490,7 +28505,7 @@ msgid "Precompilations done !"
 msgstr "Прекомпиляции завершены!"
 
 #. Source code: group_precompile_tree: STRING_32 do Result := locale.translation ("Precompile")	end
-#: conf_interface_names.e:230
+#: conf_interface_names.e:235
 msgid "Precompile"
 msgstr "Прекомпилировать"
 
@@ -28555,12 +28570,12 @@ msgid "Preferences"
 msgstr "Параметры"
 
 #. Source code: group_prefix_name: STRING_32 do Result := locale.translation ("Prefix")	end
-#: conf_interface_names.e:251
+#: conf_interface_names.e:256
 msgid "Prefix"
 msgstr "Префикс"
 
 #. Source code: group_prefix_description: STRING_32 do Result := locale.translation ("Prefix which all classes in this group get.")	end
-#: conf_interface_names.e:252
+#: conf_interface_names.e:257
 msgid "Prefix which all classes in this group get."
 msgstr "Префикс, который получают все классы этой группы."
 
@@ -28679,7 +28694,7 @@ msgid "Product"
 msgstr "Продукт"
 
 #. Source code: option_profile_name: STRING_32 do Result := locale.translation ("Profile")	end
-#: conf_interface_names.e:324
+#: conf_interface_names.e:329
 msgid "Profile"
 msgstr "Профилировать"
 
@@ -28853,7 +28868,7 @@ msgid "Properties"
 msgstr "Установки"
 
 #. Source code: tab_properties_name: READABLE_STRING_32 do Result := locale.translation_in_context ("Properties", "configuration") end
-#: conf_interface_names.e:299
+#: conf_interface_names.e:304
 msgctxt "configuration"
 msgid "Properties"
 msgstr "Свойства"
@@ -28893,7 +28908,7 @@ msgid "Protocol"
 msgstr "Протокол"
 
 #. Source code: option_syntax_provisional_name: STRING_32 do Result := locale.translation ("Provisional syntax") end
-#: conf_interface_names.e:446
+#: conf_interface_names.e:451
 msgid "Provisional syntax"
 msgstr "Временный синтаксис"
 
@@ -28909,7 +28924,7 @@ msgid "Public Key"
 msgstr "Общедоступный ключ"
 
 #. Source code: assembly_public_key_token_description: STRING_32 do Result := locale.translation ("Public key token that identifies the asssembly.")	end
-#: conf_interface_names.e:288
+#: conf_interface_names.e:293
 msgid "Public key token that identifies the asssembly."
 msgstr "Свёртка открытого ключа, который идентифицирует эту сборку."
 
@@ -29124,7 +29139,7 @@ msgid "Read License Text"
 msgstr "Прочитать текст лицензии"
 
 #. Source code: group_readonly_name: STRING_32 do Result := locale.translation ("Read Only")	end
-#: conf_interface_names.e:247
+#: conf_interface_names.e:252
 msgid "Read Only"
 msgstr "Только для чтения"
 
@@ -29203,7 +29218,7 @@ msgid "Record/Replay Execution"
 msgstr "Записать/воспроизвести выполнение"
 
 #. Source code: cluster_recursive_name: STRING_32 do Result := locale.translation ("Recursive")	end
-#: conf_interface_names.e:270
+#: conf_interface_names.e:275
 msgid "Recursive"
 msgstr "Рекурсивно"
 
@@ -29370,12 +29385,12 @@ msgid "Referenced metric(s): $1 not selected."
 msgstr "Указанная(-ые) метрика(-и) $1 не выбрана."
 
 #. Source code: dialog_create_refresh: STRING_32 do Result := locale.translation ("Refresh")	end
-#: conf_interface_names.e:608
+#: conf_interface_names.e:613
 msgid "Refresh"
 msgstr "Обновить"
 
 #. Source code: dialog_create_refresh_tooltip: STRING_32 do Result := locale.translation ("Refresh list of libraries.")	end
-#: conf_interface_names.e:609
+#: conf_interface_names.e:614
 msgid "Refresh list of libraries."
 msgstr "Обновить список библиотек."
 
@@ -29486,7 +29501,7 @@ msgstr ""
 "Этот файл уже существует. Перезаписать?"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Removal of package: $1"), [a_package_id])
-#: conf_interface_names.e:743
+#: conf_interface_names.e:748
 msgid "Removal of package: $1"
 msgstr "Удаление пакета: $1"
 
@@ -29576,7 +29591,7 @@ msgid "Remove anchor"
 msgstr "Убрать якорь"
 
 #. Source code: dial_cond_remove_and_term: STRING_32 do Result := locale.translation ("Remove and-term")	end
-#: conf_interface_names.e:537
+#: conf_interface_names.e:542
 msgid "Remove and-term"
 msgstr "Удалить выражение «И»"
 
@@ -29641,7 +29656,7 @@ msgid "Remove feature '"
 msgstr "Удалить компонент '"
 
 #. Source code: remove_group_text: STRING_32 do Result := locale.translation ("Remove group")	end
-#: conf_interface_names.e:783
+#: conf_interface_names.e:788
 msgid "Remove group"
 msgstr "Удалить группу"
 
@@ -29677,7 +29692,7 @@ msgid "Remove right angles"
 msgstr "Убрать угловые скобки"
 
 #. Source code: dialog_file_rule_remove_rule: STRING_32 do Result := locale.translation ("Remove rule")	end
-#: conf_interface_names.e:552
+#: conf_interface_names.e:557
 msgid "Remove rule"
 msgstr "Удалить правило"
 
@@ -29858,7 +29873,7 @@ msgid "Rename File"
 msgstr "Переименовать файл"
 
 #. Source code: dialog_visible_renamed_name: STRING_32 do Result := locale.translation ("Renamed name: ")	end
-#: conf_interface_names.e:561
+#: conf_interface_names.e:566
 msgid "Renamed name: "
 msgstr "Имя после переименования: "
 
@@ -29874,17 +29889,17 @@ msgstr ""
 "Переименовывает только вхождения имени класса в скомпилированных классах."
 
 #. Source code: group_renaming_name: STRING_32 do Result := locale.translation ("Renaming")	end
-#: conf_interface_names.e:253
+#: conf_interface_names.e:258
 msgid "Renaming"
 msgstr "Переименование"
 
 #. Source code: Result.force (locale.translation ("Renaming Unknown Class"), w_renaming_unknown_class)
-#: conf_interface_names.e:461
+#: conf_interface_names.e:466
 msgid "Renaming Unknown Class"
 msgstr "Переименование неизвестного класса"
 
 #. Source code: group_renaming_description: STRING_32 do Result := locale.translation ("Renaming of classes in this group.")	end
-#: conf_interface_names.e:254
+#: conf_interface_names.e:259
 msgid "Renaming of classes in this group."
 msgstr "Переименование классов в этой группе."
 
@@ -30044,7 +30059,7 @@ msgid "Report warnings."
 msgstr "Сообщать предупреждения."
 
 #. Source code: iron_box_repositories_label: STRING_32 do Result := locale.translation ("Repositories") end
-#: conf_interface_names.e:656
+#: conf_interface_names.e:661
 msgid "Repositories"
 msgstr "Хранилища"
 
@@ -30059,7 +30074,7 @@ msgid "Repulsion:"
 msgstr "Отталкивание:"
 
 #. Source code: option_require_name: STRING_32 do Result := locale.translation ("Require")	end
-#: conf_interface_names.e:311
+#: conf_interface_names.e:316
 msgid "Require"
 msgstr "Предусловие"
 
@@ -30169,12 +30184,12 @@ msgid "Resize to visible content"
 msgstr "Изменить размер до видимого содержимого"
 
 #. Source code: external_resource: STRING_32 do Result := locale.translation ("Resource")	end
-#: conf_interface_names.e:187
+#: conf_interface_names.e:192
 msgid "Resource"
 msgstr "Ресурс"
 
 #. Source code: external_resource_tree: STRING_32 do Result := locale.translation ("Resources")	end
-#: conf_interface_names.e:195
+#: conf_interface_names.e:200
 msgid "Resources"
 msgstr "Ресурсы"
 
@@ -30421,7 +30436,7 @@ msgid "Root class .NET name"
 msgstr ".NET имя корневого класса"
 
 #. Source code: root_none: STRING_32 do Result := locale.translation ("Root class has to be specified if the target is not extended by another target.") end
-#: conf_interface_names.e:805
+#: conf_interface_names.e:810
 msgid ""
 "Root class has to be specified if the target is not extended by another "
 "target."
@@ -30435,7 +30450,7 @@ msgid "Root class name"
 msgstr "Имя корневого класса"
 
 #. Source code: root_invalid_class: STRING_32 do Result := locale.translation ("Root class name is invalid.") end
-#: conf_interface_names.e:807
+#: conf_interface_names.e:812
 msgid "Root class name is invalid."
 msgstr "Недопустимое имя корневого класса."
 
@@ -30450,7 +30465,7 @@ msgid "Root class: "
 msgstr "Корневой класс: "
 
 #. Source code: root_invalid_cluster: STRING_32 do Result := locale.translation ("Root cluster name is invalid.") end
-#: conf_interface_names.e:806
+#: conf_interface_names.e:811
 msgid "Root cluster name is invalid."
 msgstr "Недопустимое имя корневого кластера."
 
@@ -30470,7 +30485,7 @@ msgid "Root feature: "
 msgstr "Корневой компонент: "
 
 #. Source code: root_invalid_feature: STRING_32 do Result := locale.translation ("Root procedure name is invalid.") end
-#: conf_interface_names.e:808
+#: conf_interface_names.e:813
 msgid "Root procedure name is invalid."
 msgstr "Недопустимое имя корневой процедуры."
 
@@ -30990,7 +31005,7 @@ msgid "S&ystem Info"
 msgstr "&Информация о системе"
 
 #. Source code: locale.translation_in_context ("SCOOP", "configuration.concurrency")
-#: conf_interface_names.e:379
+#: conf_interface_names.e:384
 msgctxt "configuration.concurrency"
 msgid "SCOOP"
 msgstr "SCOOP"
@@ -31001,7 +31016,7 @@ msgid "SOURCE name attribute expected"
 msgstr "Ожидается атрибут с именем SOURCE"
 
 #. Source code: Result.force (locale.translation ("Same UUID"), w_same_uuid)
-#: conf_interface_names.e:457
+#: conf_interface_names.e:462
 msgid "Same UUID"
 msgstr "Одинаковый UUID"
 
@@ -31238,7 +31253,7 @@ msgid "Search backwards"
 msgstr "Обратный поиск"
 
 #. Source code: dialog_search_library_by_class: STRING_32 do Result := locale.translation ("Search class")	end
-#: conf_interface_names.e:597
+#: conf_interface_names.e:602
 msgid "Search class"
 msgstr "Искать класс"
 
@@ -31264,18 +31279,18 @@ msgid "Search forward"
 msgstr "Искать вперёд"
 
 #. Source code: dialog_search_library_in: STRING_32 do Result := locale.translation ("Search in")	end
-#: conf_interface_names.e:595
+#: conf_interface_names.e:600
 msgid "Search in"
 msgstr "Искать в"
 
 #. Source code: dialog_search_library_by_class_tooltip: STRING_32 do Result := locale.translation ("Search library by class name (wildchar supported).")	end
-#: conf_interface_names.e:598
+#: conf_interface_names.e:603
 msgid "Search library by class name (wildchar supported)."
 msgstr ""
 "Искать библиотеку по имени класса (поддерживаются символы подстановки)."
 
 #. Source code: dialog_search_library_in_tooltip: STRING_32 do Result := locale.translation ("Search library using criteria on metadata (name, description, tags, ...)")	end
-#: conf_interface_names.e:596
+#: conf_interface_names.e:601
 msgid ""
 "Search library using criteria on metadata (name, description, tags, ...)"
 msgstr ""
@@ -31288,7 +31303,7 @@ msgid "Search new class and compile"
 msgstr "Найти новый класс и откомпилировать"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("[
-#: conf_interface_names.e:619
+#: conf_interface_names.e:624
 msgid ""
 "Search paths for libraries are specified in the configuration file:\n"
 "   $1\n"
@@ -31316,7 +31331,7 @@ msgstr ""
 "   $4"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("[
-#: conf_interface_names.e:635
+#: conf_interface_names.e:640
 msgid ""
 "Search paths for library ECFs are specified in the configuration file:\n"
 "\t$1\n"
@@ -32338,7 +32353,7 @@ msgid "Severity:"
 msgstr "Серьёзность:"
 
 #. Source code: target_shared_library_definition_name: STRING_32 do Result := locale.translation ("Shared Library Definition")	end
-#: conf_interface_names.e:159
+#: conf_interface_names.e:164
 msgid "Shared Library Definition"
 msgstr "Определение совместно-используемой библиотеки"
 
@@ -33042,7 +33057,7 @@ msgid "Should EiffelStudio Debug menu be shown"
 msgstr "Следует показывать меню отладки"
 
 #. Source code: target_exception_trace_description: STRING_32 do Result := locale.translation ("Should a complete exception trace be generated in the finalized version?")	end
-#: conf_interface_names.e:134
+#: conf_interface_names.e:139
 msgid ""
 "Should a complete exception trace be generated in the finalized version?"
 msgstr "Следует генерировать полную трассу исключения в окончательной версии?"
@@ -33089,7 +33104,7 @@ msgstr ""
 "Необходимо распределять классы по физическим папкам, где они размещены?"
 
 #. Source code: target_use_cluster_name_as_namespace_description: STRING_32 do Result := locale.translation ("Should cluster names be used as namespaces?")	end
-#: conf_interface_names.e:166
+#: conf_interface_names.e:171
 msgid "Should cluster names be used as namespaces?"
 msgstr "Следует имена классов использовать как пространства имён?"
 
@@ -33128,7 +33143,7 @@ msgid "Should file be renamed to a new name?"
 msgstr "Необходимо переименовать файл?"
 
 #. Source code: target_cls_compliant_description: STRING_32 do Result := locale.translation ("Should generated assemblies be marked as CLS compliant?")	end
-#: conf_interface_names.e:124
+#: conf_interface_names.e:129
 msgid "Should generated assemblies be marked as CLS compliant?"
 msgstr "Должны ли сгенерированные сборки отмечаться как CLS-совместимые?"
 
@@ -33139,17 +33154,17 @@ msgid "Should inheritance classes be displayed?"
 msgstr "Следует показывать классы наследования?"
 
 #. Source code: target_inlining_description: STRING_32 do Result := locale.translation ("Should inlining be enabled?")	end
-#: conf_interface_names.e:138
+#: conf_interface_names.e:143
 msgid "Should inlining be enabled?"
 msgstr "Разрешить подстановку?"
 
 #. Source code: target_dotnet_naming_convention_description: STRING_32 do Result := locale.translation ("Should names follow the .NET naming convention?")	end
-#: conf_interface_names.e:128
+#: conf_interface_names.e:133
 msgid "Should names follow the .NET naming convention?"
 msgstr "Должны ли имена следовать соглашениям об именовании .NET?"
 
 #. Source code: target_use_all_cluster_name_as_namespace_description: STRING_32 do Result := locale.translation ("Should names of folders in recursive clusters be used as namespaces?")	end
-#: conf_interface_names.e:168
+#: conf_interface_names.e:173
 msgid "Should names of folders in recursive clusters be used as namespaces?"
 msgstr ""
 "Следует ли использовать имена папок в рекурсивных кластерах как пространства "
@@ -33288,12 +33303,12 @@ msgstr ""
 "(, ), {, }, [, ], << or >>?"
 
 #. Source code: target_il_verifiable_description: STRING_32 do Result := locale.translation ("Should the generated binary be IL verifiable?")	end
-#: conf_interface_names.e:136
+#: conf_interface_names.e:141
 msgid "Should the generated binary be IL verifiable?"
 msgstr "Следует генерировать верифицируемый IL код?"
 
 #. Source code: target_dynamic_runtime_description: STRING_32 do Result := locale.translation ("Should the generated executable use a shared library of the runtime?")	end
-#: conf_interface_names.e:130
+#: conf_interface_names.e:135
 msgid "Should the generated executable use a shared library of the runtime?"
 msgstr ""
 "Должен ли исполняемый модуль использовать разделяемую библиотеку системы "
@@ -33306,7 +33321,7 @@ msgid "Should the info about the agent object be displayed?"
 msgstr "Следует показывать информацию об объекте-агенте?"
 
 #. Source code: library_use_application_options_description: STRING_32 do Result := locale.translation ("Should this library use options from the application instead of from the library?")	end
-#: conf_interface_names.e:268
+#: conf_interface_names.e:273
 msgid ""
 "Should this library use options from the application instead of from the "
 "library?"
@@ -33321,7 +33336,7 @@ msgid "Should trailing blanks be auto-removed when saving?"
 msgstr "Следует удалять пробелы на конце при сохранении?"
 
 #. Source code: target_dead_code_removal_description: STRING_32 do Result := locale.translation ("Should unused code be removed?")	end
-#: conf_interface_names.e:126
+#: conf_interface_names.e:131
 msgid "Should unused code be removed?"
 msgstr "Следует удалять неиспользуемый код?"
 
@@ -33998,7 +34013,7 @@ msgid "Shows contextual help documentation, if available."
 msgstr "Показывает контекстную подсказку, если она доступна."
 
 #. Source code: target_msil_key_file_name_name: STRING_32 do Result := locale.translation ("Signing Key")	end
-#: conf_interface_names.e:151
+#: conf_interface_names.e:156
 msgid "Signing Key"
 msgstr "Ключ подписи"
 
@@ -34388,7 +34403,7 @@ msgid "Spanish (Venezuela)"
 msgstr "Испанский (Венесуэла)"
 
 #. Source code: cluster_mapping_description: STRING_32 do Result := locale.translation ("Special type mappings.")	end
-#: conf_interface_names.e:279
+#: conf_interface_names.e:284
 msgid "Special type mappings."
 msgstr "Отображение типов."
 
@@ -34414,7 +34429,7 @@ msgstr ""
 "форматировщик бесполезным"
 
 #. Source code: option_msil_application_optimize_description: STRING_32 do Result := locale.translation ("Specifies if any applicable .NET application-oriented optimizations should be applied to a finalized compilation.")	end
-#: conf_interface_names.e:332
+#: conf_interface_names.e:337
 msgid ""
 "Specifies if any applicable .NET application-oriented optimizations should "
 "be applied to a finalized compilation."
@@ -34497,7 +34512,7 @@ msgstr ""
 "Опция: "
 
 #. Source code: target_shared_library_definition_description: STRING_32 do Result := locale.translation ("Specify the file the compiler uses to generate the exported functions.")	end
-#: conf_interface_names.e:162
+#: conf_interface_names.e:167
 msgid "Specify the file the compiler uses to generate the exported functions."
 msgstr ""
 "Указать файл, который использует компилятор, чтобы генерировать "
@@ -34561,7 +34576,7 @@ msgid "Standard Buttons"
 msgstr "Стандартные кнопки"
 
 #. Source code: option_syntax_standard_name: STRING_32 do Result := locale.translation ("Standard syntax") end
-#: conf_interface_names.e:445
+#: conf_interface_names.e:450
 msgid "Standard syntax"
 msgstr "Стандартный синтаксис"
 
@@ -34880,7 +34895,7 @@ msgid "Supercluster depth"
 msgstr "Глубина надкластера"
 
 #. Source code: option_sup_require_name: STRING_32 do Result := locale.translation ("Supplier Precondition")	end
-#: conf_interface_names.e:321
+#: conf_interface_names.e:326
 msgid "Supplier Precondition"
 msgstr "Предусловие поставщика"
 
@@ -34906,7 +34921,7 @@ msgid "Suppliers"
 msgstr "Поставщики"
 
 #. Source code: capability_header_capable_of_name: READABLE_STRING_32 do Result := locale.translation_in_context ("Support", "configuration.capability") end
-#: conf_interface_names.e:304
+#: conf_interface_names.e:309
 msgctxt "configuration.capability"
 msgid "Support"
 msgstr "Поддерживается"
@@ -35073,7 +35088,7 @@ msgid "Syntactical supplier of "
 msgstr "Синтаксический поставщик "
 
 #. Source code: option_syntax_name: STRING_32 do Result := locale.translation ("Syntax") end
-#: conf_interface_names.e:435
+#: conf_interface_names.e:440
 msgid "Syntax"
 msgstr "Синтаксис"
 
@@ -35243,7 +35258,7 @@ msgid "Tamil (India)"
 msgstr "Тамильский (Индия)"
 
 #. Source code: properties_target_name: STRING_32 do Result := locale.translation ("Target")	end
-#: conf_interface_names.e:295
+#: conf_interface_names.e:300
 msgid "Target"
 msgstr "Задание"
 
@@ -35276,17 +35291,17 @@ msgstr ""
 "Выберите одно задание из:"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Target cannot be removed because $1 extends it."), [other_target])
-#: conf_interface_names.e:795
+#: conf_interface_names.e:800
 msgid "Target cannot be removed because $1 extends it."
 msgstr "Нельзя удалить задание, потому что $1 расширяет его."
 
 #. Source code: target_remove_last: STRING_32 do Result := locale.translation ("Target cannot be removed because it is the last target.") end
-#: conf_interface_names.e:792
+#: conf_interface_names.e:797
 msgid "Target cannot be removed because it is the last target."
 msgstr "Нельзя удалить задание, потому что оно является последним."
 
 #. Source code: target_remove_library_target: STRING_32 do Result := locale.translation ("Target cannot be removed because it is the library target.") end
-#: conf_interface_names.e:791
+#: conf_interface_names.e:796
 msgid "Target cannot be removed because it is the library target."
 msgstr "Нельзя удалить задание, потому что оно является библиотечным."
 
@@ -35329,7 +35344,7 @@ msgid "Target used if system is used as a library."
 msgstr "Задание, используемое, если система используется как библиотека."
 
 #. Source code: e_parse_incorrect_target_no_name: STRING_32 do Result := locale.translation ("Target without a name specified.") end
-#: conf_interface_names.e:877
+#: conf_interface_names.e:882
 msgid "Target without a name specified."
 msgstr "Свойство указано без имени."
 
@@ -36138,27 +36153,27 @@ msgid "The name of identifier '"
 msgstr "Имя идентификатора '"
 
 #. Source code: invalid_assembly_name: STRING_32 do Result := locale.translation ("The name of the assembly is invalid.") end
-#: conf_interface_names.e:811
+#: conf_interface_names.e:816
 msgid "The name of the assembly is invalid."
 msgstr "Имя сборки \"$1\" недопустимо."
 
 #. Source code: invalid_cluster_name: STRING_32 do Result := locale.translation ("The name of the cluster is invalid.") end
-#: conf_interface_names.e:812
+#: conf_interface_names.e:817
 msgid "The name of the cluster is invalid."
 msgstr "Имя кластера недопустимо."
 
 #. Source code: invalid_library_name: STRING_32 do Result := locale.translation ("The name of the library is invalid.") end
-#: conf_interface_names.e:813
+#: conf_interface_names.e:818
 msgid "The name of the library is invalid."
 msgstr "Имя библиотеки недопустимо."
 
 #. Source code: invalid_override_name: STRING_32 do Result := locale.translation ("The name of the override is invalid.") end
-#: conf_interface_names.e:814
+#: conf_interface_names.e:819
 msgid "The name of the override is invalid."
 msgstr "Имя переопределения недопустимо."
 
 #. Source code: invalid_precompile_name: STRING_32 do Result := locale.translation ("The name of the precompile is invalid.") end
-#: conf_interface_names.e:815
+#: conf_interface_names.e:820
 msgid "The name of the precompile is invalid."
 msgstr "Имя прекомпилированной библиотеки недопустимо."
 
@@ -36320,7 +36335,7 @@ msgstr ""
 "Нажмите Назад и выберите допустимое имя корневого класса."
 
 #. Source code: file_is_not_a_library: STRING_32 do Result := locale.translation ("The selected configuration file is not a library.%NPlease make sure the library is a valid Eiffel Configuration File and is has a library target.") end
-#: conf_interface_names.e:823
+#: conf_interface_names.e:828
 msgid ""
 "The selected configuration file is not a library.\n"
 "Please make sure the library is a valid Eiffel Configuration File and is has "
@@ -36350,7 +36365,7 @@ msgid "The selected file '$1' is not a valid .NET assembly."
 msgstr "Выбранный файл '$1' не является допустимой сборкой .NET."
 
 #. Source code: add_non_void_safe_library: STRING_32 do Result := locale.translation ("The selected library is not Void-Safe-compatible with the current target. Do you still want to utilize it?%N%NNote: Using non-Void-Safe-compatible libraries in a void-safe system can cause library incompatibilities.") end
-#: conf_interface_names.e:824
+#: conf_interface_names.e:829
 msgid ""
 "The selected library is not Void-Safe-compatible with the current target. Do "
 "you still want to utilize it?\n"
@@ -36587,7 +36602,7 @@ msgstr ""
 "Компонент с таким именем уже есть в классе $1. Это привело бы к конфликту."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("There is already a group with name %"$1%"."), [a_group])
-#: conf_interface_names.e:821
+#: conf_interface_names.e:826
 msgid "There is already a group with name \"$1\"."
 msgstr "Группа с именем \"$1\" уже есть."
 
@@ -37010,7 +37025,7 @@ msgstr ""
 "и все предыдущие установки будут перезаписаны. Вы уверены?"
 
 #. Source code: locale.translation_in_context ("Thread", "configuration.concurrency"),
-#: conf_interface_names.e:377
+#: conf_interface_names.e:382
 msgctxt "configuration.concurrency"
 msgid "Thread"
 msgstr "Потоки"
@@ -37029,7 +37044,7 @@ msgid "Threshold"
 msgstr "Порог"
 
 #. Source code: target_check_for_void_target_description: STRING_32 do Result := locale.translation ("Throw a call on Void target exception?")	end
-#: conf_interface_names.e:118
+#: conf_interface_names.e:123
 msgid "Throw a call on Void target exception?"
 msgstr "Возбуждать исключение при вызове по несуществующей цели?"
 
@@ -37104,7 +37119,7 @@ msgid "To do:"
 msgstr "Необходимо сделать:"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("[
-#: conf_interface_names.e:702
+#: conf_interface_names.e:707
 msgid ""
 "To install:\n"
 "- use the graphical tool\n"
@@ -37115,7 +37130,7 @@ msgstr ""
 "- или команду: \"iron install $1\""
 
 #. Source code: Result := locale.translation ("To install: select and click button [Install].")
-#: conf_interface_names.e:733
+#: conf_interface_names.e:738
 msgid "To install: select and click button [Install]."
 msgstr "Чтобы установить, нажмите кнопку \"Установить\"."
 
@@ -37703,7 +37718,7 @@ msgid "Top-level"
 msgstr "Верхний уровень"
 
 #. Source code: target_total_order_on_reals: STRING_32 do Result := locale.translation ("Total Order on REALs") end
-#: conf_interface_names.e:160
+#: conf_interface_names.e:165
 msgid "Total Order on REALs"
 msgstr "Полный порядок на вещественных числах"
 
@@ -37723,7 +37738,7 @@ msgid "Total progress: $1%"
 msgstr "Общее продвижение: $1%"
 
 #. Source code: option_trace_name: STRING_32 do Result := locale.translation ("Trace")	end
-#: conf_interface_names.e:326
+#: conf_interface_names.e:331
 msgid "Trace"
 msgstr "Трасса"
 
@@ -37733,13 +37748,13 @@ msgid "Trademark"
 msgstr "Торговая марка"
 
 #. Source code: locale.translation_in_context ("Transitional", "configuration.void_safety"),
-#: conf_interface_names.e:404
+#: conf_interface_names.e:409
 msgctxt "configuration.void_safety"
 msgid "Transitional"
 msgstr "Переходная"
 
 #. Source code: option_syntax_transitional_name: STRING_32 do Result := locale.translation ("Transitional syntax") end
-#: conf_interface_names.e:444
+#: conf_interface_names.e:449
 msgid "Transitional syntax"
 msgstr "Переходный синтаксис"
 
@@ -37901,7 +37916,7 @@ msgid "Trigger zoom out editor's font."
 msgstr "Включить уменьшение шрифта редактора."
 
 #. Source code: boolean_true: STRING_32 do Result := locale.translation ("True") end
-#: conf_interface_names.e:1308
+#: conf_interface_names.e:1313
 msgid "True"
 msgstr "Да"
 
@@ -37966,7 +37981,7 @@ msgstr ""
 "оператор 'and then'."
 
 #. Source code: task_type_name: STRING_32 do Result := locale.translation ("Type")	end
-#: conf_interface_names.e:212
+#: conf_interface_names.e:217
 msgid "Type"
 msgstr "Тип"
 
@@ -38009,7 +38024,7 @@ msgid "Type input data here"
 msgstr "Введите входные данные здесь"
 
 #. Source code: target_msil_generation_type_description: STRING_32 do Result := locale.translation ("Type of binary to generate.")	end
-#: conf_interface_names.e:150
+#: conf_interface_names.e:155
 msgid "Type of binary to generate."
 msgstr "Тип исполняемого модуля для генерации."
 
@@ -38024,12 +38039,12 @@ msgid "Type of test"
 msgstr "Тип теста"
 
 #. Source code: group_type_description: STRING_32 do Result := locale.translation ("Type of the group.")	end
-#: conf_interface_names.e:240
+#: conf_interface_names.e:245
 msgid "Type of the group."
 msgstr "Тип группы."
 
 #. Source code: task_type_description: STRING_32 do Result := locale.translation ("Type of the task.")	end
-#: conf_interface_names.e:213
+#: conf_interface_names.e:218
 msgid "Type of the task."
 msgstr "Тип задачи."
 
@@ -38763,12 +38778,12 @@ msgid "Unknown cluster name"
 msgstr "Неизвестное имя кластера"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Unknown configuration option %"$1%""), [option_name])
-#: conf_interface_names.e:1171
+#: conf_interface_names.e:1176
 msgid "Unknown configuration option \"$1\""
 msgstr "Неизвестная опция конфигурации \"$1\""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Unknown configuration option %"$1%" (Available options: $2)"), [option_name, s])
-#: conf_interface_names.e:1169
+#: conf_interface_names.e:1174
 msgid "Unknown configuration option \"$1\" (Available options: $2)"
 msgstr "Неизвестная опция конфигурации \"$1\" (Доступные опции: $2)"
 
@@ -38841,7 +38856,7 @@ msgid "Unnamed"
 msgstr "Без имени"
 
 #. Source code: option_unnamed_debug_name: STRING_32 do Result := locale.translation ("Unnamed Debugs")	end
-#: conf_interface_names.e:339
+#: conf_interface_names.e:344
 msgid "Unnamed Debugs"
 msgstr "Безымянные инструкции отладки"
 
@@ -38955,7 +38970,7 @@ msgid "Until"
 msgstr "until"
 
 #. Source code: Result.force (locale.translation ("Unused Locals"), w_unused_local)
-#: conf_interface_names.e:452
+#: conf_interface_names.e:457
 msgid "Unused Locals"
 msgstr "Неиспользованные локальные переменные"
 
@@ -38974,7 +38989,7 @@ msgid "Unused argument"
 msgstr "Неиспользуемый аргумент"
 
 #. Source code: Result.force (locale.translation ("Unused attribute body"), w_vwab)
-#: conf_interface_names.e:453
+#: conf_interface_names.e:458
 msgid "Unused attribute body"
 msgstr "Неиспользуемое тело атрибута"
 
@@ -39003,7 +39018,7 @@ msgid "Up to depth of"
 msgstr "До глубины"
 
 #. Source code: iron_box_update_label: STRING_32 do Result := locale.translation ("Update") end
-#: conf_interface_names.e:670
+#: conf_interface_names.e:675
 msgid "Update"
 msgstr "Обновить"
 
@@ -39044,7 +39059,7 @@ msgid "Updating $1"
 msgstr "Обновление $1"
 
 #. Source code: Result := locale.translation ("Updating IRON")
-#: conf_interface_names.e:748
+#: conf_interface_names.e:753
 msgid "Updating IRON"
 msgstr "Обновление iron"
 
@@ -39093,23 +39108,23 @@ msgstr ""
 "\t"
 
 #. Source code: capability_header_if_root_name: READABLE_STRING_32 do Result := locale.translation_in_context ("Use", "configuration.capability") end
-#: conf_interface_names.e:305
+#: conf_interface_names.e:310
 msgctxt "configuration.capability"
 msgid "Use"
 msgstr "Используется"
 
 #. Source code: library_use_application_options_name: STRING_32 do Result := locale.translation ("Use Application Options")	end
-#: conf_interface_names.e:267
+#: conf_interface_names.e:272
 msgid "Use Application Options"
 msgstr "Использовать опции приложения"
 
 #. Source code: target_use_cluster_name_as_namespace_name: STRING_32 do Result := locale.translation ("Use Cluster Name as Namespace")	end
-#: conf_interface_names.e:165
+#: conf_interface_names.e:170
 msgid "Use Cluster Name as Namespace"
 msgstr "Использовать имя кластера как имя пространства имён"
 
 #. Source code: target_msil_use_optimized_precompile_name: STRING_32 do Result := locale.translation ("Use Optimized Precompile")	end
-#: conf_interface_names.e:153
+#: conf_interface_names.e:158
 msgid "Use Optimized Precompile"
 msgstr "Использовать оптимизированный прекомпилированный модуль"
 
@@ -39120,12 +39135,12 @@ msgid "Use Pick and Drop mode? Contextual mode if false."
 msgstr "Использовать режим \"взять - отпустить\"? Контекстный режим, если Нет."
 
 #. Source code: target_use_all_cluster_name_as_namespace_name: STRING_32 do Result := locale.translation ("Use Recursive Cluster Name as Namespace")	end
-#: conf_interface_names.e:167
+#: conf_interface_names.e:172
 msgid "Use Recursive Cluster Name as Namespace"
 msgstr "Использовать рекурсивное имя кластера как пространство имён"
 
 #. Source code: target_msil_use_optimized_precompile_description: STRING_32 do Result := locale.translation ("Use an optimized version of a precompile?")	end
-#: conf_interface_names.e:154
+#: conf_interface_names.e:159
 msgid "Use an optimized version of a precompile?"
 msgstr "Использовать оптимизированную версию прекомпилированного модуля?"
 
@@ -39580,7 +39595,7 @@ msgid "Use tab for indentation"
 msgstr "Использовать табуляцию для отступа"
 
 #. Source code: target_old_verbatim_strings_description: STRING_32 do Result := locale.translation ("Use the old format for verbatim strings?")	end
-#: conf_interface_names.e:156
+#: conf_interface_names.e:161
 msgid "Use the old format for verbatim strings?"
 msgstr "Использовать старый формат дословных строк?"
 
@@ -39845,7 +39860,7 @@ msgid "VALUE: "
 msgstr "ЗНАЧЕНИЕ: "
 
 #. Source code: external_value_name: STRING_32 do Result := locale.translation ("Value")	end
-#: conf_interface_names.e:176
+#: conf_interface_names.e:181
 msgid "Value"
 msgstr "Значение"
 
@@ -39939,7 +39954,7 @@ msgid "Value \"$2\" of attribute \"$1\" is invalid. An integer is expected."
 msgstr "Значение \"$2\" атрибута \"$1\" недопустимо. Ожидается целое число."
 
 #. Source code: e_parse_incorrect_build_conflict: STRING_32 do Result := locale.translation ("Value and exclude attribute in build condition cannot appear at the same time.") end
-#: conf_interface_names.e:1061
+#: conf_interface_names.e:1066
 msgid ""
 "Value and exclude attribute in build condition cannot appear at the same "
 "time."
@@ -39948,7 +39963,7 @@ msgstr ""
 "сборки."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Value and exclude attribute in custom condition $1 cannot appear at the same time."), [a_custom])
-#: conf_interface_names.e:1105
+#: conf_interface_names.e:1110
 msgid ""
 "Value and exclude attribute in custom condition $1 cannot appear at the same "
 "time."
@@ -39957,7 +39972,7 @@ msgstr ""
 "пользовательском условии $1."
 
 #. Source code: e_parse_incorrect_platform_conflict: STRING_32 do Result := locale.translation ("Value and exclude attribute in platform condition cannot appear at the same time.") end
-#: conf_interface_names.e:1053
+#: conf_interface_names.e:1058
 msgid ""
 "Value and exclude attribute in platform condition cannot appear at the same "
 "time."
@@ -39971,7 +39986,7 @@ msgid "Value of element $1 is not valid."
 msgstr "Значение элемента $1 недопустимо."
 
 #. Source code: external_value_description: STRING_32 do Result := locale.translation ("Value of the external.")	end
-#: conf_interface_names.e:177
+#: conf_interface_names.e:182
 msgid "Value of the external."
 msgstr "Значение параметра."
 
@@ -40000,7 +40015,7 @@ msgid "Value:"
 msgstr "Значение:"
 
 #. Source code: dial_cond_custom_variable: STRING_32 do Result := locale.translation ("Variable")	end
-#: conf_interface_names.e:534
+#: conf_interface_names.e:539
 msgid "Variable"
 msgstr "Переменная"
 
@@ -40057,7 +40072,7 @@ msgid "Variant"
 msgstr "variant"
 
 #. Source code: option_syntax_description: STRING_32 do Result := locale.translation ({STRING_32} "[
-#: conf_interface_names.e:436
+#: conf_interface_names.e:441
 msgid ""
 "Variant of syntax used in source code:\n"
 " • Obsolete syntax - Favor obsolete syntax over standard with more recent "
@@ -40091,17 +40106,17 @@ msgid "Version information."
 msgstr "Информация о версии."
 
 #. Source code: version_valid_format: STRING_32 do Result := locale.translation ("Version is not valid. It has to be in the form XXX.XXX.XXX.XXX") end
-#: conf_interface_names.e:787
+#: conf_interface_names.e:792
 msgid "Version is not valid. It has to be in the form XXX.XXX.XXX.XXX"
 msgstr "Версия недопустима. Она должна быть в формате XXX.XXX.XXX.XXX"
 
 #. Source code: target_msil_clr_version_description: STRING_32 do Result := locale.translation ("Version of the .NET runtime to use.")	end
-#: conf_interface_names.e:148
+#: conf_interface_names.e:153
 msgid "Version of the .NET runtime to use."
 msgstr "Версия .NET, которую необходимо использовать."
 
 #. Source code: assembly_version_description: STRING_32 do Result := locale.translation ("Version of the assembly.")	end
-#: conf_interface_names.e:286
+#: conf_interface_names.e:291
 msgid "Version of the assembly."
 msgstr "Версия сборки."
 
@@ -40227,7 +40242,7 @@ msgid "Viewpoints: "
 msgstr "Точки зрения: "
 
 #. Source code: cluster_visible_name: STRING_32 do Result := locale.translation ("Visible Classes")	end
-#: conf_interface_names.e:276
+#: conf_interface_names.e:281
 msgid "Visible Classes"
 msgstr "Видимые классы"
 
@@ -40243,22 +40258,22 @@ msgid "Void check using 'is_equal'"
 msgstr "Проверка на несуществующую цель при использовании 'is_equal'"
 
 #. Source code: option_void_safety_name: STRING_32 do Result := locale.translation ("Void safety") end
-#: conf_interface_names.e:388
+#: conf_interface_names.e:393
 msgid "Void safety"
 msgstr "Ссылочная безопасность"
 
 #. Source code: locale.translation ("Void safety is not guaranteed"),
-#: conf_interface_names.e:419
+#: conf_interface_names.e:424
 msgid "Void safety is not guaranteed"
 msgstr "Ссылочная безопасность не гарантируется"
 
 #. Source code: Result := locale.translation ("Void safety level the source code provides:%N") +
-#: conf_interface_names.e:390
+#: conf_interface_names.e:395
 msgid "Void safety level the source code provides:\n"
 msgstr "Уровень ссылочной безопасности, обеспечиваемый исходным кодом:\n"
 
 #. Source code: locale.translation ("Void safety rules are satisfied except for initialization checks for unqualified agents and allowing CAPs for preconditions and check instructions"),
-#: conf_interface_names.e:422
+#: conf_interface_names.e:427
 msgid ""
 "Void safety rules are satisfied except for initialization checks for "
 "unqualified agents and allowing CAPs for preconditions and check instructions"
@@ -40268,7 +40283,7 @@ msgstr ""
 "предусловий и инструкций проверки"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("[
-#: conf_interface_names.e:711
+#: conf_interface_names.e:716
 msgid ""
 "WARNING: package \"$2\" is conflicting with package \"$3\".\n"
 "\n"
@@ -40306,74 +40321,74 @@ msgid "W_code"
 msgstr "W_code"
 
 #. Source code: iron_box_package_waiting_for_data_message: STRING_32 do Result := locale.translation ("Waiting for data ...") end
-#: conf_interface_names.e:652
+#: conf_interface_names.e:657
 msgid "Waiting for data ..."
 msgstr "Ожидание данных..."
 
 #. Source code: Result.force (locale.translation ("Warn about assignment attempts on formal or expanded targets (VJRV)?"), w_vjrv)
-#: conf_interface_names.e:479
+#: conf_interface_names.e:484
 msgid "Warn about assignment attempts on formal or expanded targets (VJRV)?"
 msgstr ""
 "Предупреждать о попытках присваивания формальному параметру/развёрнутому "
 "типу (VJRV)?"
 
 #. Source code: Result.force (locale.translation ("Warn about attribute bodies that are never executed?"), w_vwab)
-#: conf_interface_names.e:472
+#: conf_interface_names.e:477
 msgid "Warn about attribute bodies that are never executed?"
 msgstr "Предупреждать о телах атрибутов, которые никогда не выполняются?"
 
 #. Source code: Result.force (locale.translation ("Warn about class options of unknown classes?"), w_option_unknown_class)
-#: conf_interface_names.e:481
+#: conf_interface_names.e:486
 msgid "Warn about class options of unknown classes?"
 msgstr "Предупреждать о настройках для неизвестных классов?"
 
 #. Source code: Result.force (locale.translation ("Warn about classes where the filename does not match the classname?"), w_classname_filename_mismatch)
-#: conf_interface_names.e:482
+#: conf_interface_names.e:487
 msgid "Warn about classes where the filename does not match the classname?"
 msgstr "Предупреждать о классах, где имя файла не соответствует имени класса?"
 
 #. Source code: Result.force (locale.translation ("Warn about different files with the same UUID?"), w_same_uuid)
-#: conf_interface_names.e:476
+#: conf_interface_names.e:481
 msgid "Warn about different files with the same UUID?"
 msgstr "Предупреждать о различных файлах с одинаковым UUID?"
 
 #. Source code: Result.force (locale.translation ("Warn about incompatible types in equality comparisons (VWEQ)?"), w_vweq)
-#: conf_interface_names.e:478
+#: conf_interface_names.e:483
 msgid "Warn about incompatible types in equality comparisons (VWEQ)?"
 msgstr "Предупреждать о несовместимых типах в сравнениях на равенство (VWEQ)?"
 
 #. Source code: Result.force (locale.translation ("Warn about locals that are not used?"), w_unused_local)
-#: conf_interface_names.e:471
+#: conf_interface_names.e:476
 msgid "Warn about locals that are not used?"
 msgstr "Предупреждать о неиспользованных локальных переменных?"
 
 #. Source code: Result.force (locale.translation ("Warn about missing classes in export clauses (VTCM)?"), w_export_class_missing)
-#: conf_interface_names.e:477
+#: conf_interface_names.e:482
 msgid "Warn about missing classes in export clauses (VTCM)?"
 msgstr "Предупреждать об отсутствующих классах в предложениях экспорта (VTCM)?"
 
 #. Source code: Result.force (locale.translation ("Warn about missing manifest array type?"), w_manifest_array_type)
-#: conf_interface_names.e:483
+#: conf_interface_names.e:488
 msgid "Warn about missing manifest array type?"
 msgstr "Предупреждать об отсутствующем типе явно заданного массива?"
 
 #. Source code: Result.force (locale.translation ("Warn about renamings of unknown classes?"), w_renaming_unknown_class)
-#: conf_interface_names.e:480
+#: conf_interface_names.e:485
 msgid "Warn about renamings of unknown classes?"
 msgstr "Предупреждать о переименовании неизвестных классов?"
 
 #. Source code: Result.force (locale.translation ("Warn about usage of obsolete classes?"), w_obsolete_class)
-#: conf_interface_names.e:473
+#: conf_interface_names.e:478
 msgid "Warn about usage of obsolete classes?"
 msgstr "Предупреждать об использовании устаревших классов?"
 
 #. Source code: Result.force (locale.translation ("Warn about usage of obsolete features?"), w_obsolete_feature)
-#: conf_interface_names.e:474
+#: conf_interface_names.e:479
 msgid "Warn about usage of obsolete features?"
 msgstr "Предупреждать об использовании устаревших компонентов?"
 
 #. Source code: Result.force (locale.translation ("Warn about usage of old syntax?"), w_syntax)
-#: conf_interface_names.e:475
+#: conf_interface_names.e:480
 msgid "Warn about usage of old syntax?"
 msgstr "Предупреждать об использовании старого синтаксиса?"
 
@@ -40567,7 +40582,7 @@ msgid "When Hits ..."
 msgstr "При попадании..."
 
 #. Source code: target_total_order_on_reals_description: STRING_32 do Result := locale.translation ("When enabled NaN values will be lower than any other real values, and comparing NaN with another NaN will yield True and not False as usually done in IEEE arithmetic.") end
-#: conf_interface_names.e:161
+#: conf_interface_names.e:166
 msgid ""
 "When enabled NaN values will be lower than any other real values, and "
 "comparing NaN with another NaN will yield True and not False as usually done "
@@ -40785,7 +40800,7 @@ msgid "Workbench mode"
 msgstr "Рабочий режим"
 
 #. Source code: task_working_directory_name: STRING_32 do Result := locale.translation ("Working Directory")	end
-#: conf_interface_names.e:218
+#: conf_interface_names.e:223
 msgid "Working Directory"
 msgstr "Рабочий каталог"
 
@@ -41387,7 +41402,7 @@ msgid "configuration"
 msgstr "конфигурация"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("conflicting with $1"), [a_location])
-#: conf_interface_names.e:723
+#: conf_interface_names.e:728
 msgid "conflicting with $1"
 msgstr "Конфликт с $1"
 
@@ -41497,7 +41512,7 @@ msgid "domain"
 msgstr "область"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("double-click to install $1"), [a_location])
-#: conf_interface_names.e:728
+#: conf_interface_names.e:733
 msgid "double-click to install $1"
 msgstr "щёлкните дважды, чтобы установить $1"
 
@@ -41613,7 +41628,7 @@ msgid "formal type is not yet supported"
 msgstr "Формальный тип ещё не поддерживается"
 
 #. Source code: Result := locale.formatted_string (locale.plural_translation ("found one class", "found $1 classes", nb), [nb])
-#: conf_interface_names.e:602
+#: conf_interface_names.e:607
 msgid "found one class"
 msgid_plural "found $1 classes"
 msgstr[0] "найден $1 класс"
@@ -41759,12 +41774,12 @@ msgid "name"
 msgstr "имя"
 
 #. Source code: dial_cond_new_custom: STRING_32 do Result := locale.translation ("new")	end
-#: conf_interface_names.e:532
+#: conf_interface_names.e:537
 msgid "new"
 msgstr "новый"
 
 #. Source code: dial_cond_new_custom_value: STRING_32 do Result := locale.translation ("new_value")	end
-#: conf_interface_names.e:533
+#: conf_interface_names.e:538
 msgid "new_value"
 msgstr "новое_значение"
 
@@ -41815,7 +41830,7 @@ msgid "offset $1"
 msgstr "смещение $1"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("or And-term $1"), [a_number.out])
-#: conf_interface_names.e:541
+#: conf_interface_names.e:546
 msgid "or And-term $1"
 msgstr "или выражение \"И\" $1"
 

@@ -110,6 +110,11 @@ feature -- Target names and descriptions
 	target_dialog_root_feature: STRING_32 do Result := locale.translation ("Root Procedure")	end
 	target_dialog_root_all: STRING_32 do Result := locale.translation ("Compile All Classes?")	end
 
+	target_absent_explicit_assertion_name: STRING_32 do Result := locale.translation ("Absent Explicit Assertion")	end
+	target_absent_explicit_assertion_description: STRING_32 do Result := locale.translation ("[
+			Are some assertions inferred automatically?
+			This experimental setting causes much longer (re-)compilation.
+		]")	end
 	target_address_expression_name: STRING_32 do Result := locale.translation ("Address Expression")	end
 	target_address_expression_description: STRING_32 do Result := locale.translation ("Are simplified address expressions enabled?")	end
 	target_automatic_backup_name: STRING_32 do Result := locale.translation ("Automatic Backup")	end

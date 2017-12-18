@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A command line switch configuration setting validator that checks if a setting is seting is the correct way
 		and is a valid configuration setting.
@@ -39,7 +39,7 @@ feature -- Validation
 					l_name_attached: l_name /= Void
 					not_l_name_is_empty: not l_name.is_empty
 				end
-				l_valid := validator.valid_setting (l_name)
+				l_valid := validator.is_setting_known (l_name)
 				if not l_valid then
 					invalidate_option ("Setting '" + l_name + "' is not a reconized compiler configuration setting.")
 				end
@@ -58,7 +58,7 @@ feature {NONE} -- Configuration validity
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -89,4 +89,4 @@ feature {NONE} -- Configuration validity
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {SETTING_ARGUMENT_VALIDATOR}
+end

@@ -18,7 +18,7 @@ feature -- Boolean values
 
 	configuration_boolean_values: ARRAYED_LIST [READABLE_STRING_32]
 			-- All possible configuration boolean values.
-		do
+		once
 			create Result.make (2)
 			Result.extend (configuration_value_false)
 			Result.extend (configuration_value_true)
@@ -85,6 +85,7 @@ feature -- Settings
 	s_address_expression: STRING = "address_expression"
 	s_array_optimization: STRING = "array_optimization"
 	s_automatic_backup: STRING = "automatic_backup"
+	s_absent_explicit_assertion: STRING = "absent_explicit_assertion"
 	s_check_for_void_target: STRING = "check_for_void_target"
 	s_check_for_catcall_at_runtime: STRING = "check_for_catcall_at_runtime"
 	s_check_generic_creation_constraint: STRING = "check_generic_creation_constraint"

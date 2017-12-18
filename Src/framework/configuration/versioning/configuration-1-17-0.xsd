@@ -256,6 +256,7 @@
 
 	<xs:simpleType name="available_settings">
 		<xs:restriction base = "xs:string">
+			  <xs:enumeration value = "absent_explicit_assertion"/>
 			  <xs:enumeration value = "address_expression"/>
 			  <xs:enumeration value = "array_optimization"/>
 			  <xs:enumeration value = "automatic_backup"/>

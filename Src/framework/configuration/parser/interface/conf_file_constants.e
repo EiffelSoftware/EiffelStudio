@@ -158,10 +158,10 @@ feature {NONE} -- Constants
 		end
 
 	namespace_1_17_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-17-0"
-			-- Namespace of the 17.11 release.
+			-- Namespace of the 18.01 release.
 
 	schema_1_17_0: STRING_32
-			-- Schema of the 17.11 release.
+			-- Schema of the 18.01 release.
 		once
 			Result := namespace_1_17_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd"
 		end

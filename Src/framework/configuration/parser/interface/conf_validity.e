@@ -90,10 +90,29 @@ feature -- Basic validity queries
 			valid_regexp: not attached Result implies valid_regexp (a_regexp)
 		end
 
-	valid_setting (a_setting: READABLE_STRING_GENERAL): BOOLEAN
-			-- Is `a_setting' a valid setting?
+	is_setting_known (s: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is setting `s` known?
 		do
-			Result := a_setting /= Void and then (a_setting.is_valid_as_string_8 and then valid_settings.has (a_setting.to_string_8))
+			Result := attached s and then s.is_valid_as_string_8 and then known_settings.has (s.to_string_8)
+		end
+
+	is_boolean_setting_known (s: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is setting `s` known?
+		do
+			Result := attached s and then s.is_valid_as_string_8 and then boolean_settings.has (s.to_string_8)
+		end
+
+	valid_setting (s: READABLE_STRING_GENERAL; n: detachable like latest_namespace): BOOLEAN
+			-- Is `s` a valid setting in the namespace `n`?
+		local
+			v: STRING_8
+		do
+			if attached s and then s.is_valid_as_string_8 then
+				v := s.to_string_8
+				Result :=
+					is_after_or_equal (n, namespace_1_17_0) and then valid_settings_1_17_0.has (v) or else
+					is_before_or_equal (n, namespace_1_16_0) and then valid_settings.has (v)
+			end
 		end
 
 	valid_version_type (a_version_type: STRING_32): BOOLEAN
@@ -396,8 +415,14 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
+	known_settings: SEARCH_TABLE [STRING]
+			-- The names of known settings.
+		once
+			Result := valid_settings_1_17_0
+		end
+
 	valid_settings: SEARCH_TABLE [STRING]
-			-- The codes of valid settings.
+			-- The codes of valid settings in the namespace below `namespace_1_17_0`.
 		once
 			create Result.make (40)
 			Result.force (s_address_expression)
@@ -445,13 +470,21 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
+	valid_settings_1_17_0: SEARCH_TABLE [STRING]
+			-- The codes of valid settings in `namespace_1_17_0` and above.
+		once
+			Result := valid_settings.twin
+			Result.force (s_absent_explicit_assertion)
+		end
+
 	boolean_settings: STRING_TABLE [BOOLEAN]
 			-- Settings that have a boolean value.
 		once
-			create Result.make (27)
+			create Result.make (28)
 			Result.force (True, s_address_expression)
 			Result.force (True, s_array_optimization)
 			Result.force (True, s_automatic_backup)
+			Result.force (True, s_absent_explicit_assertion)
 			Result.force (True, s_check_for_catcall_at_runtime)
 			Result.force (True, s_check_for_void_target)
 			Result.force (True, s_check_generic_creation_constraint)

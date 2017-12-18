@@ -21,14 +21,11 @@ feature -- Command
 		local
 			l_ptr: POINTER
 		do
-				-- curl_global_init
-			if is_static then
-				c_curl_global_init (default_pointer, {CURL_GLOBAL_CONSTANTS}.curl_global_all);
+			l_ptr := api_loader.api_pointer ("curl_global_init")
+			if l_ptr /= default_pointer then
+				c_curl_global_init (l_ptr, {CURL_GLOBAL_CONSTANTS}.curl_global_all);
 			else
-				l_ptr := api_loader.api_pointer ("curl_global_init")
-				if l_ptr /= default_pointer then
-					c_curl_global_init (l_ptr, {CURL_GLOBAL_CONSTANTS}.curl_global_all);
-				end
+				c_curl_global_init (default_pointer, {CURL_GLOBAL_CONSTANTS}.curl_global_all);
 			end
 		end
 
@@ -37,13 +34,11 @@ feature -- Command
 		local
 			l_ptr: POINTER
 		do
-			if is_static then
-				c_curl_global_cleanup (default_pointer)
+			l_ptr := api_loader.api_pointer ("curl_global_cleanup")
+			if l_ptr /= default_pointer then
+				c_curl_global_cleanup (l_ptr);
 			else
-				l_ptr := api_loader.api_pointer ("curl_global_cleanup")
-				if l_ptr /= default_pointer then
-					c_curl_global_cleanup (l_ptr);
-				end
+				c_curl_global_cleanup (default_pointer)
 			end
 		end
 
@@ -83,15 +78,13 @@ feature -- Command
 			l_c_string: C_STRING
 			l_api: POINTER
 		do
-			if is_static then
+			l_api := api_loader.api_pointer ("curl_slist_append")
+			if l_api /= default_pointer then
 				create l_c_string.make (a_string)
 				Result := c_slist_append (l_api, a_list, l_c_string.item)
 			else
-				l_api := api_loader.api_pointer ("curl_slist_append")
-				if l_api /= default_pointer then
-					create l_c_string.make (a_string)
-					Result := c_slist_append (l_api, a_list, l_c_string.item)
-				end
+				create l_c_string.make (a_string)
+				Result := c_slist_append (l_api, a_list, l_c_string.item)
 			end
 		end
 
@@ -105,13 +98,11 @@ feature -- Command
 		local
 			l_api: POINTER
 		do
-			if is_static then
-				c_slist_free_all (default_pointer, a_curl_slist)
+			l_api := api_loader.api_pointer ("curl_slist_free_all")
+			if l_api /= default_pointer then
+				c_slist_free_all (l_api, a_curl_slist)
 			else
-				l_api := api_loader.api_pointer ("curl_slist_free_all")
-				if l_api /= default_pointer then
-					c_slist_free_all (l_api, a_curl_slist)
-				end
+				c_slist_free_all (default_pointer, a_curl_slist)
 			end
 		end
 
@@ -124,13 +115,11 @@ feature -- Command
 			l_pointer: POINTER
 		do
 			create {STRING_32} Result.make_from_string ("Unknown Error")
-			if is_static then
-				l_pointer := c_curl_easy_strerror (default_pointer, a_code)
+			l_api := api_loader.api_pointer ("curl_easy_strerror")
+			if l_api /= default_pointer then
+				l_pointer := c_curl_easy_strerror (l_api, a_code)
 			else
-				l_api := api_loader.api_pointer ("curl_easy_strerror")
-				if l_api /= default_pointer then
-					l_pointer := c_curl_easy_strerror (l_api, a_code)
-				end
+				l_pointer := c_curl_easy_strerror (default_pointer, a_code)
 			end
 			if l_pointer /= default_pointer then
 				create l_cstring.make_by_pointer (l_pointer)
@@ -164,19 +153,17 @@ feature {CURL_FORM} -- Internal command
 		local
 			l_api: POINTER
 		do
-			if is_static then
-				c_formfree (default_pointer, a_curl_form)
+			l_api := api_loader.api_pointer ("curl_formfree")
+			if l_api /= default_pointer then
+				c_formfree (l_api, a_curl_form)
 			else
-				l_api := api_loader.api_pointer ("curl_formfree")
-				if l_api /= default_pointer then
-					c_formfree (l_api, a_curl_form)
-				end
+				c_formfree (default_pointer, a_curl_form)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	api_loader: DYNAMIC_MODULE
+	api_loader: MODULE_LOADER
 			-- Module name.
 		local
 			l_utility: CURL_UTILITY
@@ -191,17 +178,15 @@ feature {NONE} -- Implementation
 			l_c_string_1, l_c_string_2: C_STRING
 			l_api: POINTER
 		do
-			if is_static then
+			l_api := api_loader.api_pointer ("curl_formadd");
+			if l_api /= default_pointer then
+				create l_c_string_1.make (a_arg_1_value)
+				create l_c_string_2.make (a_arg_2_value)
+				c_formadd_string_string (l_api, a_form, a_last_pointer, a_arg_1, l_c_string_1.item, a_arg_2, l_c_string_2.item, a_arg_3)
+			else
 				create l_c_string_1.make (a_arg_1_value)
 				create l_c_string_2.make (a_arg_2_value)
 				c_formadd_string_string (default_pointer, a_form, a_last_pointer, a_arg_1, l_c_string_1.item, a_arg_2, l_c_string_2.item, a_arg_3)
-			else
-				l_api := api_loader.api_pointer ("curl_formadd");
-				if l_api /= default_pointer then
-					create l_c_string_1.make (a_arg_1_value)
-					create l_c_string_2.make (a_arg_2_value)
-					c_formadd_string_string (l_api, a_form, a_last_pointer, a_arg_1, l_c_string_1.item, a_arg_2, l_c_string_2.item, a_arg_3)
-				end
 			end
 		end
 
@@ -232,7 +217,7 @@ feature {NONE} -- C externals
 																						(int)$a_arg_2,
 																						(char *)$a_arg_2_value,
 																						(int)$a_arg_3);
-				#endif																		
+				#endif
 
 			]"
 		end
@@ -251,7 +236,7 @@ feature {NONE} -- C externals
 				#else
 					(FUNCTION_CAST(void, (struct curl_httppost *)) $a_api)
 												((struct curl_httppost *) $a_curl_form);
-				#endif			
+				#endif
 			]"
 		end
 
@@ -303,7 +288,7 @@ feature {NONE} -- C externals
 					return (FUNCTION_CAST(void *, (struct curl_slist *, const char *)) $a_api)
 												((struct curl_slist *)$a_list_pointer, 
 												(const char *)$a_string);
-				#endif		     
+				#endif
 			]"
 		end
 
@@ -337,7 +322,7 @@ feature {NONE} -- C externals
 				#else	
 					return (FUNCTION_CAST(void *, (long)) $a_api)
 												((long) $a_code);
-				#endif								
+				#endif
 			]"
 		end
 

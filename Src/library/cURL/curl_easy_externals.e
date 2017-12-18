@@ -21,14 +21,11 @@ feature -- Command
 		local
 			l_api: POINTER
 		do
-				-- curl_easy_init
-			if is_static then
-				Result := c_init (default_pointer)
+			l_api := api_loader.api_pointer ("curl_easy_init")
+			if l_api /= default_pointer then
+				Result := c_init (l_api)
 			else
-				l_api := api_loader.api_pointer ("curl_easy_init")
-				if l_api /= default_pointer then
-					Result := c_init (l_api)
-				end
+				Result := c_init (default_pointer)
 			end
 		ensure
 			exists: Result /= default_pointer
@@ -44,16 +41,13 @@ feature -- Command
 			l_api: POINTER
 			l_c_str: C_STRING
 		do
-				-- curl_easy_setopt
-			if is_static then
+			l_api := api_loader.api_pointer ("curl_easy_setopt")
+			if l_api /= default_pointer then
+				create l_c_str.make (a_string)
+				c_setopt (l_api, a_curl_handle, a_opt, l_c_str.item)
+			else
 				create l_c_str.make (a_string)
 				c_setopt (default_pointer, a_curl_handle, a_opt, l_c_str.item)
-			else
-				l_api := api_loader.api_pointer ("curl_easy_setopt")
-				if l_api /= default_pointer then
-					create l_c_str.make (a_string)
-					c_setopt (l_api, a_curl_handle, a_opt, l_c_str.item)
-				end
 			end
 		end
 
@@ -86,14 +80,11 @@ feature -- Command
 		local
 			l_api: POINTER
 		do
-				-- curl_easy_setopt
-			if is_static then
-				c_setopt_int (default_pointer, a_curl_handle, a_opt, a_curl_string.object_id)
+			l_api := api_loader.api_pointer ("curl_easy_setopt")
+			if l_api /= default_pointer then
+				c_setopt_int (l_api, a_curl_handle, a_opt, a_curl_string.object_id)
 			else
-				l_api := api_loader.api_pointer ("curl_easy_setopt")
-				if l_api /= default_pointer then
-					c_setopt_int (l_api, a_curl_handle, a_opt, a_curl_string.object_id)
-				end
+				c_setopt_int (default_pointer, a_curl_handle, a_opt, a_curl_string.object_id)
 			end
 		end
 
@@ -105,14 +96,11 @@ feature -- Command
 		local
 			l_api: POINTER
 		do
-				-- curl_easy_setopt
-			if is_static then
-				c_setopt_int (default_pointer, a_curl_handle, a_opt, a_integer)
+			l_api := api_loader.api_pointer ("curl_easy_setopt")
+			if l_api /= default_pointer then
+				c_setopt_int (l_api, a_curl_handle, a_opt, a_integer)
 			else
-				l_api := api_loader.api_pointer ("curl_easy_setopt")
-				if l_api /= default_pointer then
-					c_setopt_int (l_api, a_curl_handle, a_opt, a_integer)
-				end
+				c_setopt_int (default_pointer, a_curl_handle, a_opt, a_integer)
 			end
 		end
 
@@ -134,15 +122,11 @@ feature -- Command
 		local
 			l_api: POINTER
 		do
-			if is_static then
-				Result := c_perform (default_pointer, a_curl_handle)
+			l_api := api_loader.api_pointer ("curl_easy_perform")
+			if l_api /= default_pointer then
+				Result := c_perform (l_api, a_curl_handle)
 			else
-				l_api := api_loader.api_pointer ("curl_easy_perform")
-				if l_api /= default_pointer then
-					Result := c_perform (l_api, a_curl_handle)
-				else
-					Result := {CURL_CODES}.eiffelcurle_error_occurred
-				end
+				Result := c_perform (default_pointer, a_curl_handle)
 			end
 		end
 
@@ -153,13 +137,11 @@ feature -- Command
 		local
 			l_api: POINTER
 		do
-			if is_static then
-				c_cleanup (default_pointer, a_curl_handle)
+			l_api := api_loader.api_pointer ("curl_easy_cleanup")
+			if l_api /= default_pointer then
+				c_cleanup (l_api, a_curl_handle)
 			else
-				l_api := api_loader.api_pointer ("curl_easy_cleanup")
-				if l_api /= default_pointer then
-					c_cleanup (l_api, a_curl_handle)
-				end
+				c_cleanup (default_pointer, a_curl_handle)
 			end
 		end
 
@@ -185,7 +167,31 @@ feature -- Query
 			d: REAL_64
 		do
 			a_data.replace (Void)
-			if is_static then
+			l_api := api_loader.api_pointer ("curl_easy_getinfo")
+			if l_api /= default_pointer then
+				if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
+					create mp.make ({PLATFORM}.integer_32_bytes)
+				elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
+					create mp.make ({PLATFORM}.pointer_bytes)
+				elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
+					create mp.make ({PLATFORM}.real_64_bytes)
+				end
+				if mp /= Void then
+					Result := c_getinfo (l_api, a_curl_handle, a_info, mp.item)
+					if Result = {CURL_CODES}.curle_ok then
+						if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
+							l := mp.read_integer_32 (0)
+							a_data.put (l)
+						elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
+							create cs.make_shared_from_pointer (mp.read_pointer (0))
+							a_data.put (cs.string)
+						elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
+							d := mp.read_real_64 (0)
+							a_data.put (d)
+						end
+					end
+				end
+			else
 				if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
 					create mp.make ({PLATFORM}.integer_32_bytes)
 				elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
@@ -205,32 +211,6 @@ feature -- Query
 						elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
 							d := mp.read_real_64 (0)
 							a_data.put (d)
-						end
-					end
-				end
-			else
-				l_api := api_loader.api_pointer ("curl_easy_getinfo")
-				if l_api /= default_pointer then
-					if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
-						create mp.make ({PLATFORM}.integer_32_bytes)
-					elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
-						create mp.make ({PLATFORM}.pointer_bytes)
-					elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
-						create mp.make ({PLATFORM}.real_64_bytes)
-					end
-					if mp /= Void then
-						Result := c_getinfo (l_api, a_curl_handle, a_info, mp.item)
-						if Result = {CURL_CODES}.curle_ok then
-							if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
-								l := mp.read_integer_32 (0)
-								a_data.put (l)
-							elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
-								create cs.make_shared_from_pointer (mp.read_pointer (0))
-								a_data.put (cs.string)
-							elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
-								d := mp.read_real_64 (0)
-								a_data.put (d)
-							end
 						end
 					end
 				end
@@ -281,13 +261,11 @@ feature -- Special setting
 		local
 			l_api: POINTER
 		do
-			if is_static then
-				curl_function.c_set_write_function (default_pointer, a_curl_handle)
+			l_api := api_loader.api_pointer ("curl_easy_setopt")
+			if l_api /= default_pointer then
+				curl_function.c_set_write_function (l_api, a_curl_handle)
 			else
-				l_api := api_loader.api_pointer ("curl_easy_setopt")
-				if l_api /= default_pointer then
-					curl_function.c_set_write_function (l_api, a_curl_handle)
-				end
+				curl_function.c_set_write_function (default_pointer, a_curl_handle)
 			end
 		end
 
@@ -300,13 +278,11 @@ feature -- Special setting
 		local
 			l_api: POINTER
 		do
-			if is_static then
-				curl_function.c_set_read_function (default_pointer, a_curl_handle)
+			l_api := api_loader.api_pointer ("curl_easy_setopt")
+			if l_api /= default_pointer then
+				curl_function.c_set_read_function (l_api, a_curl_handle)
 			else
-				l_api := api_loader.api_pointer ("curl_easy_setopt")
-				if l_api /= default_pointer then
-					curl_function.c_set_read_function (l_api, a_curl_handle)
-				end
+				curl_function.c_set_read_function (default_pointer, a_curl_handle)
 			end
 		end
 
@@ -317,13 +293,11 @@ feature -- Special setting
 		local
 			l_api: POINTER
 		do
-			if is_static then
-				curl_function.c_set_progress_function (default_pointer, a_curl_handle)
+			l_api := api_loader.api_pointer ("curl_easy_setopt")
+			if l_api /= default_pointer then
+				curl_function.c_set_progress_function (l_api, a_curl_handle)
 			else
-				l_api := api_loader.api_pointer ("curl_easy_setopt")
-				if l_api /= default_pointer then
-					curl_function.c_set_progress_function (l_api, a_curl_handle)
-				end
+				curl_function.c_set_progress_function (default_pointer, a_curl_handle)
 			end
 		end
 
@@ -334,13 +308,11 @@ feature -- Special setting
 		local
 			l_api: POINTER
 		do
-			if is_static then
-				curl_function.c_set_debug_function (default_pointer, a_curl_handle)
+			l_api := api_loader.api_pointer ("curl_easy_setopt")
+			if l_api /= default_pointer then
+				curl_function.c_set_debug_function (l_api, a_curl_handle)
 			else
-				l_api := api_loader.api_pointer ("curl_easy_setopt")
-				if l_api /= default_pointer then
-					curl_function.c_set_debug_function (l_api, a_curl_handle)
-				end
+				curl_function.c_set_debug_function (default_pointer, a_curl_handle)
 			end
 		end
 
@@ -349,7 +321,7 @@ feature {NONE} -- Implementation
 	internal_curl_function: detachable CURL_FUNCTION
 			-- cURL functions.
 
-	api_loader: DYNAMIC_MODULE
+	api_loader: MODULE_LOADER
 			-- Module name.
 		local
 			l_utility: CURL_UTILITY
@@ -366,14 +338,11 @@ feature {NONE} -- Implementation
 		local
 			l_api: POINTER
 		do
-				-- curl_easy_setopt
-			if is_static then
-				c_setopt (default_pointer, a_curl_handle, a_opt, a_data)
+			l_api := api_loader.api_pointer ("curl_easy_setopt")
+			if l_api /= default_pointer then
+				c_setopt (l_api, a_curl_handle, a_opt, a_data)
 			else
-				l_api := api_loader.api_pointer ("curl_easy_setopt")
-				if l_api /= default_pointer then
-					c_setopt (l_api, a_curl_handle, a_opt, a_data)
-				end
+				c_setopt (default_pointer, a_curl_handle, a_opt, a_data)
 			end
 		end
 

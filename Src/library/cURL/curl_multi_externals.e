@@ -25,13 +25,11 @@ feature -- Command
 		local
 			l_api: POINTER
 		do
-			if is_static then
-				item := c_init (default_pointer)
+			l_api := api_loader.api_pointer ("curl_multi_init")
+			if l_api /= default_pointer then
+				item := c_init (l_api)
 			else
-				l_api := api_loader.api_pointer ("curl_multi_init")
-				if l_api /= default_pointer then
-					item := c_init (l_api)
-				end
+				item := c_init (default_pointer)
 			end
 		end
 
@@ -43,13 +41,11 @@ feature -- Command
 		local
 			l_api: POINTER
 		do
-			if is_static then
-				c_add_handle (default_pointer, item, a_easy_handle)
+			l_api := api_loader.api_pointer ("curl_multi_add_handle")
+			if l_api /= default_pointer then
+				c_add_handle (l_api, item, a_easy_handle)
 			else
-				l_api := api_loader.api_pointer ("curl_multi_add_handle")
-				if l_api /= default_pointer then
-					c_add_handle (l_api, item, a_easy_handle)
-				end
+				c_add_handle (default_pointer, item, a_easy_handle)
 			end
 		end
 
@@ -61,13 +57,11 @@ feature -- Command
 		local
 			l_api: POINTER
 		do
-			if is_static then
-				c_remove_handle (default_pointer, item, a_easy_handle)
+			l_api := api_loader.api_pointer ("curl_multi_remove_handle")
+			if l_api /= default_pointer then
+				c_remove_handle (l_api, item, a_easy_handle)
 			else
-				l_api := api_loader.api_pointer ("curl_multi_remove_handle")
-				if l_api /= default_pointer then
-					c_remove_handle (l_api, item, a_easy_handle)
-				end
+				c_remove_handle (default_pointer, item, a_easy_handle)
 			end
 		end
 
@@ -80,13 +74,11 @@ feature -- Command
 		local
 			l_api: POINTER
 		do
-			if is_static then
-				Result := c_cleanup (default_pointer, item)
+			l_api := api_loader.api_pointer ("curl_multi_cleanup")
+			if l_api /= default_pointer then
+				Result := c_cleanup (l_api, item)
 			else
-				l_api := api_loader.api_pointer ("curl_multi_cleanup")
-				if l_api /= default_pointer then
-					Result := c_cleanup (l_api, item)
-				end
+				Result := c_cleanup (default_pointer, item)
 			end
 		end
 
@@ -100,15 +92,13 @@ feature -- Command
 			l_api: POINTER
 			l_running_handle: INTEGER
 		do
-			if is_static then
-				Result := c_perform (default_pointer, item, $l_running_handle)
+			l_api := api_loader.api_pointer ("curl_multi_perform")
+			if l_api /= default_pointer then
+				Result := c_perform (l_api, item, $l_running_handle)
 				a_running_handle.put (l_running_handle)
 			else
-				l_api := api_loader.api_pointer ("curl_multi_perform")
-				if l_api /= default_pointer then
-					Result := c_perform (l_api, item, $l_running_handle)
-					a_running_handle.put (l_running_handle)
-				end
+				Result := c_perform (default_pointer, item, $l_running_handle)
+				a_running_handle.put (l_running_handle)
 			end
 		end
 
@@ -129,15 +119,13 @@ feature -- Command
 			l_api: POINTER
 			l_msgs_in_queue: INTEGER
 		do
-			if is_static then
-				Result := c_info_read (default_pointer, item, $l_msgs_in_queue)
+			l_api := api_loader.api_pointer ("curl_multi_info_read")
+			if l_api /= default_pointer then
+				Result := c_info_read (l_api, item, $l_msgs_in_queue)
 				a_msgs_in_queue.put (l_msgs_in_queue)
 			else
-				l_api := api_loader.api_pointer ("curl_multi_info_read")
-				if l_api /= default_pointer then
-					Result := c_info_read (l_api, item, $l_msgs_in_queue)
-					a_msgs_in_queue.put (l_msgs_in_queue)
-				end
+				Result := c_info_read (default_pointer, item, $l_msgs_in_queue)
+				a_msgs_in_queue.put (l_msgs_in_queue)
 			end
 		end
 
@@ -285,7 +273,7 @@ feature {NONE} -- C externals
 
 feature {NONE} -- Implementation
 
-	api_loader: DYNAMIC_MODULE
+	api_loader: MODULE_LOADER
 			-- Module name.
 		local
 			l_utility: CURL_UTILITY

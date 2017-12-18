@@ -1,5 +1,5 @@
 ﻿note
-	description	: "Command to precompile the Eiffel code."
+	description: "Command to precompile the Eiffel code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 	is_dotnet_project: BOOLEAN
 			-- is current loaded ace a .net project
 		do
-			Result := lace.target.setting_boolean ("msil_generation")
+			Result := lace.target.setting_msil_generation
 		end
 
 	pixmap: EV_PIXMAP
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -182,4 +182,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_PRECOMPILE_PROJECT_CMD
+end

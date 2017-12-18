@@ -47,7 +47,7 @@ feature -- Access: settings
 	setting_boolean (a_name: STRING): BOOLEAN
 			-- Get value of boolean setting with `a_name'.
 		require
-			a_name_valid: valid_setting (a_name)
+			a_name_valid: is_boolean_setting_known (a_name)
 		local
 			l_settings: like settings
 		do
@@ -62,6 +62,12 @@ feature -- Access: settings
 			end
 		end
 
+	setting_absent_explicit_assertion: BOOLEAN
+			-- Value of the setting "absent_explicit_assertion".
+		do
+			Result := setting_boolean (s_absent_explicit_assertion)
+		end
+
 	setting_address_expression: BOOLEAN
 			-- Value of the address_expression setting.
 		do
@@ -72,6 +78,12 @@ feature -- Access: settings
 			-- Value of the array_optimization setting.
 		do
 			Result := setting_boolean (s_array_optimization)
+		end
+
+	setting_automatic_backup: BOOLEAN
+			-- Value for the automatic_backup setting.
+		do
+			Result := setting_boolean (s_automatic_backup)
 		end
 
 	setting_check_for_void_target: BOOLEAN
@@ -344,12 +356,6 @@ feature -- Access: settings
 			Result := setting_boolean (s_use_all_cluster_name_as_namespace)
 		end
 
-	setting_automatic_backup: BOOLEAN
-			-- Value for the automatic_backup setting.
-		do
-			Result := setting_boolean (s_automatic_backup)
-		end
-
 feature -- Modification
 
 	force (other: CONF_TARGET_SETTINGS)
@@ -399,7 +405,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 	update_setting (a_name, a_value: READABLE_STRING_32)
 			-- Update/add/remove a setting.
 		require
-			a_name_valid: a_name /= Void and then valid_setting (a_name)
+			a_name_valid: a_name /= Void and then is_setting_known (a_name)
 		do
 			if a_value = Void or else a_value.is_empty then
 				internal_settings.remove (a_name)

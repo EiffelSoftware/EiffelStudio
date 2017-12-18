@@ -327,7 +327,6 @@ feature -- Callbacks
 			l_group: detachable CONF_GROUP
 			l_error: CONF_ERROR_GRUNDEF
 			l_e_ov: CONF_ERROR_OVERRIDE
-			l_element: CONF_NOTE_ELEMENT
 			l_current_target: like current_target
 			l_current_cluster: like current_cluster
 		do
@@ -347,8 +346,7 @@ feature -- Callbacks
 						process_include_content
 					else
 						if note_level > 0 then
-							l_element := current_element_under_note.item
-							l_element.set_content (current_content)
+							current_element_under_note.item.set_content (current_content)
 						else
 							set_parse_error_message (conf_interface_names.e_parse_invalid_content (current_content))
 						end
@@ -851,7 +849,7 @@ feature {NONE} -- Implementation attribute processing
 		do
 			if attached current_attributes.item (at_name) as l_name then
 				if attached current_attributes.item (at_value) as l_value then
-					if not valid_setting (l_name) then
+					if not valid_setting (l_name, current_namespace) then
 						set_parse_error_message (conf_interface_names.e_parse_incorrect_setting (l_name))
 					else
 						if attached current_target as l_current_target then

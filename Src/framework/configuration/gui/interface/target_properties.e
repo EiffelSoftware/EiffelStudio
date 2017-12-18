@@ -249,6 +249,11 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 			properties.current_section.expand
+				-- Absent explicit assertion.
+			l_bool_prop := new_boolean_property (conf_interface_names.target_absent_explicit_assertion_name, current_target.setting_absent_explicit_assertion)
+			l_bool_prop.set_description (conf_interface_names.target_absent_explicit_assertion_description)
+			add_boolean_setting_actions (l_bool_prop, s_absent_explicit_assertion)
+			properties.add_property (l_bool_prop)
 
 				-- Sources section.
 			properties.add_section (conf_interface_names.section_sources)
@@ -502,7 +507,7 @@ feature {NONE} -- Implementation helper
 			-- Add actions that deal with string settings.
 		require
 			a_property_not_void: a_property /= Void
-			a_name_valid: valid_setting (a_name)
+			a_name_valid: is_setting_known (a_name)
 			current_target_not_void: current_target /= Void
 		do
 			a_property.set_refresh_action (agent (current_target.settings).item (a_name))
@@ -520,7 +525,7 @@ feature {NONE} -- Implementation helper
 			-- Add actions that deal with boolean settings.
 		require
 			a_property_not_void: a_property /= Void
-			a_name_valid: valid_setting (a_name)
+			a_name_valid: is_setting_known (a_name)
 			current_target_not_void: current_target /= Void
 		do
 			a_property.set_refresh_action (agent current_target.setting_boolean (a_name))
@@ -539,7 +544,7 @@ feature {NONE} -- Inheritance handling
 	update_inheritance_setting (a_name: STRING_32; a_property: PROPERTY)
 			-- Enable inheritance/override on `a_property' accordint to the setting `a_name'.
 		require
-			a_name_valid: valid_setting (a_name)
+			a_name_valid: is_setting_known (a_name)
 			a_property_not_void: a_property /= Void
 			current_target_not_void: current_target /= Void
 		do
@@ -621,7 +626,7 @@ feature {NONE} -- Configuration setting
 	set_string_setting (a_name: STRING_32; a_default: STRING_32; a_value: READABLE_STRING_32)
 			-- Set a string setting with `a_name' to `a_value'.
 		require
-			a_name_valid: valid_setting (a_name)
+			a_name_valid: is_setting_known (a_name)
 			current_target: current_target /= Void
 		do
 			if current_target.extends = Void and then equal (a_value, a_default) and current_target.internal_settings.has (a_name) then
@@ -634,7 +639,7 @@ feature {NONE} -- Configuration setting
 	set_boolean_setting (a_name: STRING; a_default: BOOLEAN; a_value: BOOLEAN)
 			-- Set a boolean setting with `a_name' to `a_value'.
 		require
-			a_name_valid: valid_setting (a_name)
+			a_name_valid: is_setting_known (a_name)
 			current_target: current_target /= Void
 		do
 			if current_target.extends = Void and then a_value = a_default and current_target.internal_settings.has (a_name) then
@@ -692,7 +697,7 @@ feature {NONE} -- Validation and warning generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

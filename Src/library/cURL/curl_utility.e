@@ -12,49 +12,29 @@ class
 
 feature -- Query
 
---	api_loader: DYNAMIC_MODULE
---			-- API dynamic loader
---		local
---			l_platform: PLATFORM
---		once
---			create l_platform
---			if l_platform.is_unix or l_platform.is_mac then
---				create Result.make_with_version (module_name, "4")
---				if not Result.is_interface_usable then
---					Result.unload
---					create Result.make_with_version (module_name, "3")
---				end
---			else
---				check is_window: l_platform.is_windows end
---				create Result.make (module_name)
---			end
---		ensure
---			not_void: Result /= Void
---		end
-
-	 api_loader: MODULE_LOADER
-            -- API dynamic loader
-        local
-            l_platform: PLATFORM
-        once
-            if is_static then
-            	create {STATIC_MODULE} Result
-            else
-                create l_platform
-                if l_platform.is_unix or l_platform.is_mac then
-                    create {DYNAMIC_MODULE} Result.make_with_version (module_name, "4")
-                    if not Result.is_interface_usable then
-                        Result.unload
-                        create {DYNAMIC_MODULE} Result.make_with_version (module_name, "3")
-                    end
-                else
-                    check is_window: l_platform.is_windows end
-                    create {DYNAMIC_MODULE} Result.make (module_name)
-                end
-            end
-        ensure
-            not_void: Result /= Void
-        end
+	api_loader: MODULE_LOADER
+				-- API dynamic loader
+		local
+			l_platform: PLATFORM
+		once
+			if is_static then
+				create {STATIC_MODULE} Result
+			else
+				create l_platform
+				if l_platform.is_unix or l_platform.is_mac then
+					create {DYNAMIC_MODULE} Result.make_with_version (module_name, "4")
+					if not Result.is_interface_usable then
+						Result.unload
+						create {DYNAMIC_MODULE} Result.make_with_version (module_name, "3")
+					end
+				else
+					check is_window: l_platform.is_windows end
+					create {DYNAMIC_MODULE} Result.make (module_name)
+				end
+			end
+		ensure
+			not_void: Result /= Void
+		end
 
 	module_name: STRING
 			-- Module name.

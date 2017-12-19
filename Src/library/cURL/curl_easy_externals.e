@@ -22,11 +22,7 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_init")
-			if l_api /= default_pointer then
-				Result := c_init (l_api)
-			else
-				Result := c_init (default_pointer)
-			end
+			Result := c_init (l_api)
 		ensure
 			exists: Result /= default_pointer
 		end
@@ -42,13 +38,8 @@ feature -- Command
 			l_c_str: C_STRING
 		do
 			l_api := api_loader.api_pointer ("curl_easy_setopt")
-			if l_api /= default_pointer then
-				create l_c_str.make (a_string)
-				c_setopt (l_api, a_curl_handle, a_opt, l_c_str.item)
-			else
-				create l_c_str.make (a_string)
-				c_setopt (default_pointer, a_curl_handle, a_opt, l_c_str.item)
-			end
+			create l_c_str.make (a_string)
+			c_setopt (l_api, a_curl_handle, a_opt, l_c_str.item)
 		end
 
 	setopt_form (a_curl_handle: POINTER; a_opt: INTEGER; a_form: CURL_FORM)
@@ -81,11 +72,7 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_setopt")
-			if l_api /= default_pointer then
-				c_setopt_int (l_api, a_curl_handle, a_opt, a_curl_string.object_id)
-			else
-				c_setopt_int (default_pointer, a_curl_handle, a_opt, a_curl_string.object_id)
-			end
+			c_setopt_int (l_api, a_curl_handle, a_opt, a_curl_string.object_id)
 		end
 
 	setopt_integer (a_curl_handle: POINTER; a_opt: INTEGER; a_integer: INTEGER)
@@ -97,11 +84,7 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_setopt")
-			if l_api /= default_pointer then
-				c_setopt_int (l_api, a_curl_handle, a_opt, a_integer)
-			else
-				c_setopt_int (default_pointer, a_curl_handle, a_opt, a_integer)
-			end
+			c_setopt_int (l_api, a_curl_handle, a_opt, a_integer)
 		end
 
 	setopt_file (a_curl_handle: POINTER; a_opt: INTEGER; a_file: FILE)
@@ -123,11 +106,7 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_perform")
-			if l_api /= default_pointer then
-				Result := c_perform (l_api, a_curl_handle)
-			else
-				Result := c_perform (default_pointer, a_curl_handle)
-			end
+			Result := c_perform (l_api, a_curl_handle)
 		end
 
 	cleanup (a_curl_handle: POINTER)
@@ -138,11 +117,7 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_cleanup")
-			if l_api /= default_pointer then
-				c_cleanup (l_api, a_curl_handle)
-			else
-				c_cleanup (default_pointer, a_curl_handle)
-			end
+			c_cleanup (l_api, a_curl_handle)
 		end
 
 feature -- Query
@@ -168,50 +143,25 @@ feature -- Query
 		do
 			a_data.replace (Void)
 			l_api := api_loader.api_pointer ("curl_easy_getinfo")
-			if l_api /= default_pointer then
-				if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
-					create mp.make ({PLATFORM}.integer_32_bytes)
-				elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
-					create mp.make ({PLATFORM}.pointer_bytes)
-				elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
-					create mp.make ({PLATFORM}.real_64_bytes)
-				end
-				if mp /= Void then
-					Result := c_getinfo (l_api, a_curl_handle, a_info, mp.item)
-					if Result = {CURL_CODES}.curle_ok then
-						if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
-							l := mp.read_integer_32 (0)
-							a_data.put (l)
-						elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
-							create cs.make_shared_from_pointer (mp.read_pointer (0))
-							a_data.put (cs.string)
-						elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
-							d := mp.read_real_64 (0)
-							a_data.put (d)
-						end
-					end
-				end
-			else
-				if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
-					create mp.make ({PLATFORM}.integer_32_bytes)
-				elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
-					create mp.make ({PLATFORM}.pointer_bytes)
-				elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
-					create mp.make ({PLATFORM}.real_64_bytes)
-				end
-				if mp /= Void then
-					Result := c_getinfo (default_pointer, a_curl_handle, a_info, mp.item)
-					if Result = {CURL_CODES}.curle_ok then
-						if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
-							l := mp.read_integer_32 (0)
-							a_data.put (l)
-						elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
-							create cs.make_shared_from_pointer (mp.read_pointer (0))
-							a_data.put (cs.string)
-						elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
-							d := mp.read_real_64 (0)
-							a_data.put (d)
-						end
+			if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
+				create mp.make ({PLATFORM}.integer_32_bytes)
+			elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
+				create mp.make ({PLATFORM}.pointer_bytes)
+			elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
+				create mp.make ({PLATFORM}.real_64_bytes)
+			end
+			if mp /= Void then
+				Result := c_getinfo (l_api, a_curl_handle, a_info, mp.item)
+				if Result = {CURL_CODES}.curle_ok then
+					if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
+						l := mp.read_integer_32 (0)
+						a_data.put (l)
+					elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
+						create cs.make_shared_from_pointer (mp.read_pointer (0))
+						a_data.put (cs.string)
+					elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
+						d := mp.read_real_64 (0)
+						a_data.put (d)
 					end
 				end
 			end
@@ -262,11 +212,7 @@ feature -- Special setting
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_setopt")
-			if l_api /= default_pointer then
-				curl_function.c_set_write_function (l_api, a_curl_handle)
-			else
-				curl_function.c_set_write_function (default_pointer, a_curl_handle)
-			end
+			curl_function.c_set_write_function (l_api, a_curl_handle)
 		end
 
 	set_read_function (a_curl_handle: POINTER)
@@ -279,11 +225,7 @@ feature -- Special setting
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_setopt")
-			if l_api /= default_pointer then
-				curl_function.c_set_read_function (l_api, a_curl_handle)
-			else
-				curl_function.c_set_read_function (default_pointer, a_curl_handle)
-			end
+			curl_function.c_set_read_function (l_api, a_curl_handle)
 		end
 
 	set_progress_function (a_curl_handle: POINTER)
@@ -294,11 +236,7 @@ feature -- Special setting
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_setopt")
-			if l_api /= default_pointer then
-				curl_function.c_set_progress_function (l_api, a_curl_handle)
-			else
-				curl_function.c_set_progress_function (default_pointer, a_curl_handle)
-			end
+			curl_function.c_set_progress_function (l_api, a_curl_handle)
 		end
 
 	set_debug_function (a_curl_handle: POINTER)
@@ -309,11 +247,7 @@ feature -- Special setting
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_setopt")
-			if l_api /= default_pointer then
-				curl_function.c_set_debug_function (l_api, a_curl_handle)
-			else
-				curl_function.c_set_debug_function (default_pointer, a_curl_handle)
-			end
+			curl_function.c_set_debug_function (l_api, a_curl_handle)
 		end
 
 feature {NONE} -- Implementation
@@ -339,11 +273,7 @@ feature {NONE} -- Implementation
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_setopt")
-			if l_api /= default_pointer then
-				c_setopt (l_api, a_curl_handle, a_opt, a_data)
-			else
-				c_setopt (default_pointer, a_curl_handle, a_opt, a_data)
-			end
+			c_setopt (l_api, a_curl_handle, a_opt, a_data)
 		end
 
 feature {NONE} -- C externals

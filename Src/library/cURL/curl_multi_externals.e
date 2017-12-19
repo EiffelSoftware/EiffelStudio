@@ -26,11 +26,7 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_init")
-			if l_api /= default_pointer then
-				item := c_init (l_api)
-			else
-				item := c_init (default_pointer)
-			end
+			item := c_init (l_api)
 		end
 
 	add_handle (a_easy_handle: POINTER)
@@ -42,11 +38,7 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_add_handle")
-			if l_api /= default_pointer then
-				c_add_handle (l_api, item, a_easy_handle)
-			else
-				c_add_handle (default_pointer, item, a_easy_handle)
-			end
+			c_add_handle (l_api, item, a_easy_handle)
 		end
 
 	remove_handle (a_easy_handle: POINTER)
@@ -58,11 +50,7 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_remove_handle")
-			if l_api /= default_pointer then
-				c_remove_handle (l_api, item, a_easy_handle)
-			else
-				c_remove_handle (default_pointer, item, a_easy_handle)
-			end
+			c_remove_handle (l_api, item, a_easy_handle)
 		end
 
 	cleanup: INTEGER
@@ -75,11 +63,7 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_cleanup")
-			if l_api /= default_pointer then
-				Result := c_cleanup (l_api, item)
-			else
-				Result := c_cleanup (default_pointer, item)
-			end
+			Result := c_cleanup (l_api, item)
 		end
 
 	perform (a_running_handle: CELL [INTEGER]): INTEGER
@@ -93,13 +77,8 @@ feature -- Command
 			l_running_handle: INTEGER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_perform")
-			if l_api /= default_pointer then
-				Result := c_perform (l_api, item, $l_running_handle)
-				a_running_handle.put (l_running_handle)
-			else
-				Result := c_perform (default_pointer, item, $l_running_handle)
-				a_running_handle.put (l_running_handle)
-			end
+			Result := c_perform (l_api, item, $l_running_handle)
+			a_running_handle.put (l_running_handle)
 		end
 
 	info_read (a_msgs_in_queue: CELL [INTEGER]): POINTER
@@ -120,13 +99,8 @@ feature -- Command
 			l_msgs_in_queue: INTEGER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_info_read")
-			if l_api /= default_pointer then
-				Result := c_info_read (l_api, item, $l_msgs_in_queue)
-				a_msgs_in_queue.put (l_msgs_in_queue)
-			else
-				Result := c_info_read (default_pointer, item, $l_msgs_in_queue)
-				a_msgs_in_queue.put (l_msgs_in_queue)
-			end
+			Result := c_info_read (l_api, item, $l_msgs_in_queue)
+			a_msgs_in_queue.put (l_msgs_in_queue)
 		end
 
 	is_dynamic_library_exists: BOOLEAN

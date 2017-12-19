@@ -4,8 +4,8 @@ note
 																		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2013-05-20 20:15:17 -0300 (lu. 20 de may. de 2013) $"
+	revision: "$Revision: 92557 $"
 
 class
 	CURL_UTILITY
@@ -42,7 +42,7 @@ feature -- Query
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -6,8 +6,8 @@ note
 																		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2017-11-15 08:06:25 -0300 (mi., 15 nov. 2017) $"
+	revision: "$Revision: 101044 $"
 
 class
 	CURL_EXTERNALS
@@ -272,7 +272,6 @@ feature {NONE} -- C externals
 			}
 			]"
 		end
-
 note
 	library:   "cURL: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"

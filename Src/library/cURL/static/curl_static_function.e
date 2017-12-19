@@ -17,7 +17,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	CURL_FUNCTION
+	CURL_STATIC_FUNCTION
 
 inherit
 	DISPOSABLE
@@ -35,25 +35,20 @@ feature -- Interactive with C
 			c_set_debug_function_address ($debug_function)
 		end
 
-	c_set_progress_function (a_setopt_api: POINTER; a_curl_handle: POINTER)
+	c_set_progress_function (a_curl_handle: POINTER)
 				-- Setting CURLOPT_PROGRESSFUNCTION option of `a_curl_handle'.
 				-- We need this function since cURL need a c function pointer as value.
 		require
-			exists: a_setopt_api /= default_pointer
+			exists: a_curl_handle /= default_pointer
 		external
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
-			{
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
-												((CURL *) $a_curl_handle,
-												(CURLoption)CURLOPT_PROGRESSFUNCTION,
-												curl_progress_function);
-			}
+				curl_easy_setopt ((CURL *) $a_curl_handle,(CURLoption)CURLOPT_PROGRESSFUNCTION, curl_progress_function);
 			]"
 		end
 
-	c_set_debug_function (a_setopt_api: POINTER; a_curl_handle: POINTER)
+	c_set_debug_function (a_curl_handle: POINTER)
 				-- Setting CURLOPT_DEBUGFUNCTION option of `a_curl_handle'.
 				-- We need this function since cURL need a c function pointer as value.
 		require
@@ -62,49 +57,29 @@ feature -- Interactive with C
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
-			{
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
-												((CURL *) $a_curl_handle,
-												(CURLoption)CURLOPT_DEBUGFUNCTION,
-												curl_debug_function);
-																													
-			}
+				curl_easy_setopt ((CURL *) $a_curl_handle,(CURLoption)CURLOPT_DEBUGFUNCTION, curl_debug_function);
 			]"
 		end
 
-	c_set_write_function (a_setopt_api: POINTER; a_curl_handle: POINTER)
+	c_set_write_function (a_curl_handle: POINTER)
 				-- Setting CURLOPT_WRITEFUNCTION option of `a_curl_handle'.
 				-- We need this function since cURL need a c function pointer as value.
-		require
-			exists: a_setopt_api /= default_pointer
 		external
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
-			{
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
-												((CURL *) $a_curl_handle,
-												(CURLoption)CURLOPT_WRITEFUNCTION,
-												curl_write_function);
-			}
+				curl_easy_setopt ((CURL *) $a_curl_handle,(CURLoption)CURLOPT_WRITEFUNCTION, curl_write_function);
 			]"
 		end
 
-	c_set_read_function (a_setopt_api: POINTER; a_curl_handle: POINTER)
+	c_set_read_function (a_curl_handle: POINTER)
 				-- Setting CURLOPT_READFUNCTION option of `a_curl_handle'.
 				-- We need this function since cURL need a c function pointer as value.
-		require
-			exists: a_setopt_api /= default_pointer
 		external
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
-			{
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
-												((CURL *) $a_curl_handle,
-												(CURLoption)CURLOPT_READFUNCTION,
-												curl_read_function);
-			}
+				curl_easy_setopt ((CURL *) $a_curl_handle,(CURLoption)CURLOPT_READFUNCTION,	curl_read_function);
 			]"
 		end
 

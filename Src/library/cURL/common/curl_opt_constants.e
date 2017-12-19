@@ -9,8 +9,8 @@ note
 				]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2017-09-13 10:16:04 -0300 (mi. 13 de sep. de 2017) $"
+	revision: "$Revision: 100756 $"
 
 class
 	CURL_OPT_CONSTANTS

@@ -9,8 +9,8 @@ note
 		More info:
 		http://curl.haxx.se/libcurl/c/curl_multi_info_read.html
 	]"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2017-08-24 05:03:16 -0300 (ju. 24 de ago. de 2017) $"
+	revision: "$Revision: 100665 $"
 
 class
 	CURL_MSG_STRUCT

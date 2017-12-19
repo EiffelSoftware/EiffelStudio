@@ -3,8 +3,8 @@ note
 		The generic return code used by functions in the libcurl multi interface.
 		Also consider curl_multi_strerror(3).
 	]"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2013-05-20 20:15:17 -0300 (lu. 20 de may. de 2013) $"
+	revision: "$Revision: 92557 $"
 
 class
 	CURL_MULTI_CODES

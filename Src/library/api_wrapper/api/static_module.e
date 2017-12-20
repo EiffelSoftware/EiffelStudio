@@ -1,5 +1,5 @@
 note
-	description: "Objec representing {STATIC_MODULE}."
+	description: "Object representing {STATIC_MODULE}."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,7 +11,7 @@ inherit
 feature -- Query
 
 	api_pointer (a_api_name: READABLE_STRING_8): POINTER
-			-- Retrieve an API function/variable pointer given an API name.
+			-- Retrieve an API function/variable pointer given an API name 'a_api_name'.
 		do
 				-- default pointer in Static Mode.
 			Result := default_pointer

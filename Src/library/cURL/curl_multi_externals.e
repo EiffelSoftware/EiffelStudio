@@ -26,7 +26,9 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_init")
-			item := c_init (l_api)
+			if l_api /= default_pointer or is_static then
+				item := c_init (l_api)
+			end
 		end
 
 	add_handle (a_easy_handle: POINTER)
@@ -38,7 +40,9 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_add_handle")
-			c_add_handle (l_api, item, a_easy_handle)
+			if l_api /= default_pointer or is_static then
+				c_add_handle (l_api, item, a_easy_handle)
+			end
 		end
 
 	remove_handle (a_easy_handle: POINTER)
@@ -50,7 +54,9 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_remove_handle")
-			c_remove_handle (l_api, item, a_easy_handle)
+			if l_api /= default_pointer or is_static then
+				c_remove_handle (l_api, item, a_easy_handle)
+			end
 		end
 
 	cleanup: INTEGER
@@ -63,7 +69,9 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_cleanup")
-			Result := c_cleanup (l_api, item)
+			if l_api /= default_pointer or is_static then
+				Result := c_cleanup (l_api, item)
+			end
 		end
 
 	perform (a_running_handle: CELL [INTEGER]): INTEGER
@@ -77,8 +85,10 @@ feature -- Command
 			l_running_handle: INTEGER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_perform")
-			Result := c_perform (l_api, item, $l_running_handle)
-			a_running_handle.put (l_running_handle)
+			if l_api /= default_pointer or is_static then
+				Result := c_perform (l_api, item, $l_running_handle)
+				a_running_handle.put (l_running_handle)
+			end
 		end
 
 	info_read (a_msgs_in_queue: CELL [INTEGER]): POINTER
@@ -99,8 +109,10 @@ feature -- Command
 			l_msgs_in_queue: INTEGER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_info_read")
-			Result := c_info_read (l_api, item, $l_msgs_in_queue)
-			a_msgs_in_queue.put (l_msgs_in_queue)
+			if l_api /= default_pointer or is_static then
+				Result := c_info_read (l_api, item, $l_msgs_in_queue)
+				a_msgs_in_queue.put (l_msgs_in_queue)
+			end
 		end
 
 	is_dynamic_library_exists: BOOLEAN

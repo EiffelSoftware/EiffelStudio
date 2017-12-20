@@ -1,5 +1,5 @@
 note
-	description: "Generic {MODULE_LOADER} representing an dynamic loaded library or static librart."
+	description: "Generic {MODULE_LOADER} representing a dynamic loaded library or static library."
 	date: "$Date$"
 	revision: "$Revision$"
 

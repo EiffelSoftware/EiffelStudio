@@ -259,7 +259,7 @@ end
 			if not ignored then
 				define_value ("", yyvs2.item (yyvsp2))
 			end
-ec
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1

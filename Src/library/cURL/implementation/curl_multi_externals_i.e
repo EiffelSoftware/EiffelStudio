@@ -10,8 +10,41 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	CURL_MULTI_EXTERNALS
+deferred class
+	CURL_MULTI_EXTERNALS_I
+
+feature -- Status report
+
+	is_api_available: BOOLEAN
+			-- Is cURL API available?
+		deferred
+		end
+
+feature -- Function pointer
+
+	curl_multi_init_ptr: POINTER
+		deferred
+		end
+
+	curl_multi_add_handle_ptr: POINTER
+		deferred
+		end
+
+	curl_multi_remove_handle_ptr: POINTER
+		deferred
+		end
+
+	curl_multi_cleanup_ptr: POINTER
+		deferred
+		end
+
+	curl_multi_perform_ptr: POINTER
+		deferred
+		end
+
+	curl_multi_info_read_ptr: POINTER
+		deferred
+		end
 
 feature -- Command
 
@@ -21,63 +54,49 @@ feature -- Command
 			-- This feature maybe failed in some cases: cannot find required DLL, etc.
 			-- Then the post condition would be violated.
 		require
-			dynamic_library_exists: is_dynamic_library_exists or is_static
-		local
-			l_api: POINTER
+			is_api_available: is_api_available
 		do
-			l_api := api_loader.api_pointer ("curl_multi_init")
-			item := c_init (l_api)
+			item := c_init (curl_multi_init_ptr)
 		end
 
 	add_handle (a_easy_handle: POINTER)
 			-- Add an easy handle to a multi session.
 		require
-			dynamic_library_exists: is_dynamic_library_exists or is_static
+			is_api_available: is_api_available
 			is_multi_handle_exists: is_exists
-		local
-			l_api: POINTER
 		do
-			l_api := api_loader.api_pointer ("curl_multi_add_handle")
-			c_add_handle (l_api, item, a_easy_handle)
+			c_add_handle (curl_multi_add_handle_ptr, item, a_easy_handle)
 		end
 
 	remove_handle (a_easy_handle: POINTER)
 			-- Remove an easy handle from a multi session.
 		require
-			dynamic_library_exists: is_dynamic_library_exists or is_static
+			is_api_available: is_api_available
 			is_multi_handle_exists: is_exists
-		local
-			l_api: POINTER
 		do
-			l_api := api_loader.api_pointer ("curl_multi_remove_handle")
-			c_remove_handle (l_api, item, a_easy_handle)
+			c_remove_handle (curl_multi_remove_handle_ptr, item, a_easy_handle)
 		end
 
 	cleanup: INTEGER
 			-- Close down a multi session.
 			-- Result is one value from {CURL_MULTI_CODES}.
 		require
-			dynamic_library_exists: is_dynamic_library_exists or is_static
+			is_api_available: is_api_available
 			is_multi_handle_exists: is_exists
-		local
-			l_api: POINTER
 		do
-			l_api := api_loader.api_pointer ("curl_multi_cleanup")
-			Result := c_cleanup (l_api, item)
+			Result := c_cleanup (curl_multi_cleanup_ptr, item)
 		end
 
 	perform (a_running_handle: CELL [INTEGER]): INTEGER
 			-- Reads/writes available data from each easy handle.
 			-- Result is one value from {CURL_MULTI_CODES}.
 		require
-			dynamic_library_exists: is_dynamic_library_exists or is_static
+			is_api_available: is_api_available
 			is_multi_handle_exists: is_exists
 		local
-			l_api: POINTER
 			l_running_handle: INTEGER
 		do
-			l_api := api_loader.api_pointer ("curl_multi_perform")
-			Result := c_perform (l_api, item, $l_running_handle)
+			Result := c_perform (curl_multi_perform_ptr, item, $l_running_handle)
 			a_running_handle.put (l_running_handle)
 		end
 
@@ -92,29 +111,14 @@ feature -- Command
 			-- so calling this function again will not return the same message again. It will instead
 			-- return new messages at each new invoke until the queue is emptied.
 		require
-			dynamic_library_exists: is_dynamic_library_exists or is_static
+			is_api_available: is_api_available
 			is_multi_handle_exists: is_exists
 		local
-			l_api: POINTER
 			l_msgs_in_queue: INTEGER
 		do
-			l_api := api_loader.api_pointer ("curl_multi_info_read")
-			Result := c_info_read (l_api, item, $l_msgs_in_queue)
+			Result := c_info_read (curl_multi_info_read_ptr, item, $l_msgs_in_queue)
 			a_msgs_in_queue.put (l_msgs_in_queue)
 		end
-
-	is_dynamic_library_exists: BOOLEAN
-			-- Are required .dll/.so files available?
-		do
-			Result := api_loader.is_interface_usable
-		end
-
-	is_static: BOOLEAN
-			-- is CURL_STATICLIB defined?
-		do
-			Result := (create {CURL_UTILITY}).is_static
-		end
-
 
 -- Feature not yet wrapped/tested
 --	curl_multi_assign
@@ -130,7 +134,7 @@ feature -- Query
 	is_exists: BOOLEAN
 			-- If C pointer exists?
 		do
-			Result := item /= default_pointer
+			Result := not item.is_default_pointer
 		end
 
 feature {NONE} -- Implementation
@@ -143,119 +147,83 @@ feature {NONE} -- C externals
 	c_init (a_api: POINTER): POINTER
 			-- Declared as curl_multi_init ().
 		require
-			exists: a_api /= default_pointer or is_static
+			exists: not a_api.is_default_pointer
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				#ifdef CURL_STATICLIB
-					curl_multi_init ();
-				#else
-					return (FUNCTION_CAST(CURLM *, ()) $a_api)();
-				#endif
+				return (FUNCTION_CAST(CURLM *, ()) $a_api)();
 			]"
 		end
 
 	c_cleanup (a_api: POINTER; a_multi_handle: POINTER): INTEGER
 			-- Declared as curl_multi_cleanup ().
 		require
-			exists: a_api /= default_pointer or is_static
+			exists: not a_api.is_default_pointer
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				#ifdef CURL_STATICLIB
-					return curl_multi_cleanup ((CURLM *)$a_multi_handle);
-				#else
-					return (FUNCTION_CAST(CURLMcode, (CURLM *)) $a_api)
-														((CURLM *)$a_multi_handle);
-				#endif
+				return (FUNCTION_CAST(CURLMcode, (CURLM *)) $a_api)
+													((CURLM *)$a_multi_handle);
 			]"
 		end
 
 	c_add_handle (a_api: POINTER; a_multi_handle: POINTER; a_easy_handle: POINTER)
 			-- Declared as curl_multi_add_handle ().
 		require
-			exists: a_api /= default_pointer or is_static
+			exists: not a_api.is_default_pointer
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				#ifdef CURL_STATICLIB
-					curl_multi_add_handle ((CURLM *) $a_multi_handle,(CURL *) $a_easy_handle);
-				#else
-					(FUNCTION_CAST(void, (CURLM *, CURL *)) $a_api)
-												((CURLM *) $a_multi_handle,
-												(CURL *) $a_easy_handle);
-				#endif
+				(FUNCTION_CAST(void, (CURLM *, CURL *)) $a_api)
+											((CURLM *) $a_multi_handle,
+											(CURL *) $a_easy_handle);
 			]"
 		end
 
 	c_remove_handle (a_api: POINTER; a_multi_handle: POINTER; a_easy_handle: POINTER)
 			-- Declared as curl_multi_remove_handle ().
 		require
-			exists: a_api /= default_pointer or is_static
+			exists: not a_api.is_default_pointer
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				#ifdef CURL_STATICLIB
-					curl_multi_remove_handle ((CURLM *) $a_multi_handle,(CURL *) $a_easy_handle);
-				#else
-					(FUNCTION_CAST(void, (CURLM *, CURL *)) $a_api)
-												((CURLM *) $a_multi_handle,
-												(CURL *) $a_easy_handle);
-				#endif
+				(FUNCTION_CAST(void, (CURLM *, CURL *)) $a_api)
+											((CURLM *) $a_multi_handle,
+											(CURL *) $a_easy_handle);
 			]"
 		end
 
 	c_perform (a_api: POINTER; a_multi_handle: POINTER; a_running_handles: TYPED_POINTER [INTEGER]): INTEGER
 			-- Declared as curl_multi_perform.
 		require
-			exists: a_api /= default_pointer or is_static
+			exists: not a_api.is_default_pointer
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				#ifdef CURL_STATICLIB
-					return curl_multi_perform ((CURLM *) $a_multi_handle,(int *) $a_running_handles);
-				#else
-					return (FUNCTION_CAST(CURLMcode, (CURLM *, int *)) $a_api)
-												((CURLM *) $a_multi_handle,
-												(int *) $a_running_handles);
-				#endif
+				return (FUNCTION_CAST(CURLMcode, (CURLM *, int *)) $a_api)
+											((CURLM *) $a_multi_handle,
+											(int *) $a_running_handles);
 			]"
 		end
 
 	c_info_read (a_api: POINTER; a_multi_handle: POINTER; a_msgs_in_queue: TYPED_POINTER [INTEGER]): POINTER
 				-- Declared as curl_multi_info_read.
 		require
-			exists: a_api /= default_pointer or is_static
+			exists: not a_api.is_default_pointer
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				#ifdef CURL_STATICLIB
-					return curl_multi_info_read ((CURLM *) $a_multi_handle,	(int *) $a_msgs_in_queue);
-				#else
-					return (FUNCTION_CAST(CURLMsg *, (CURLM *, int *)) $a_api)
-												((CURLM *) $a_multi_handle,
-												(int *) $a_msgs_in_queue);
-				#endif
+				return (FUNCTION_CAST(CURLMsg *, (CURLM *, int *)) $a_api)
+											((CURLM *) $a_multi_handle,
+											(int *) $a_msgs_in_queue);
 			]"
 		end
-
-feature {NONE} -- Implementation
-
-	api_loader: MODULE_LOADER
-			-- Module name.
-		local
-			l_utility: CURL_UTILITY
-		once
-			create l_utility
-			Result := l_utility.api_loader
-		end
-
 
 note
 	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"

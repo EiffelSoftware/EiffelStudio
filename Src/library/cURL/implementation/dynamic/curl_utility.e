@@ -39,7 +39,7 @@ feature -- Query
 	module_name: STRING
 			-- Module name.
 		once
-				Result := "libcurl"
+			Result := "libcurl"
 		ensure
 			not_void: Result /= Void
 		end
@@ -47,21 +47,21 @@ feature -- Query
 	is_static: BOOLEAN
 			-- Is CURL_STATICLIB defined?
 		do
-			Result := 1 = c_is_static
+			Result := c_is_static
 		end
 
 feature {NONE} -- C externals
 
-	c_is_static: INTEGER
-			-- Return 1 if CURL_STATICLIB is defined, 0 in other case.
+	c_is_static: BOOLEAN
+			-- Return True if CURL_STATICLIB is defined, False in other case.
 		external
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
 				#ifdef CURL_STATICLIB
-					return 1;
+					return EIF_TRUE;
 				#else
-					return 0;
+					return EIF_FALSE;
 				#endif
 			]"
 		end

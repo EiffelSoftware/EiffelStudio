@@ -20,7 +20,7 @@ feature -- Status report
 
 	is_api_available: BOOLEAN
 		do
-			Result := True
+			Result := {CURL_UTILITY}.is_static
 		end
 
 feature -- Function pointer

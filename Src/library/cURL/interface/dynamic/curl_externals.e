@@ -23,6 +23,8 @@ feature -- Status report
 		end
 
 	is_dynamic_library_exists: BOOLEAN
+		obsolete
+			"Use is_api_available [2018-01-15]"
 		do
 			Result := api_loader.is_interface_usable
 		end

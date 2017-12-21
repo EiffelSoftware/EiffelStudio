@@ -17,10 +17,12 @@ feature -- Status report
 	is_api_available: BOOLEAN
 			-- Is API available?
 		deferred
-		end	
+		end
 
 	is_dynamic_library_exists: BOOLEAN
 			-- If dll/so files exist?
+		obsolete
+			"Use is_api_available [2018-01-15]"
 		deferred
 		end
 

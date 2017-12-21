@@ -259,7 +259,7 @@ end
 			if not ignored then
 				define_value ("", yyvs2.item (yyvsp2))
 			end
-		
+ec
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
@@ -275,7 +275,7 @@ end
 			if not ignored then
 				undefine_value (yyvs2.item (yyvsp2))
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
@@ -291,7 +291,7 @@ end
 			if not ignored then
 				process_include (yyvs2.item (yyvsp2))
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
@@ -308,7 +308,7 @@ end
 			if not ignored and not yyvs3.item (yyvsp3) then
 				ignored_level := if_level
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
@@ -325,7 +325,7 @@ end
 			if not ignored and yyvs3.item (yyvsp3) then
 				ignored_level := if_level
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -1
@@ -339,7 +339,7 @@ debug ("GEYACC")
 end
 
 			yyval3 := is_defined (yyvs2.item (yyvsp2))
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp3 := yyvsp3 + 1
@@ -360,7 +360,7 @@ debug ("GEYACC")
 end
 
 			yyval3 := yyvs3.item (yyvsp3)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
@@ -373,7 +373,7 @@ debug ("GEYACC")
 end
 
 			yyval3 := yyvs3.item (yyvsp3 - 1) and yyvs3.item (yyvsp3)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -387,7 +387,7 @@ debug ("GEYACC")
 end
 
 			yyval3 := yyvs3.item (yyvsp3 - 1) or yyvs3.item (yyvsp3)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp3 := yyvsp3 -1
@@ -401,7 +401,7 @@ debug ("GEYACC")
 end
 
 			yyval3 := not yyvs3.item (yyvsp3)
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -417,7 +417,7 @@ end
 				ignored_level := 0
 			end
 			if_level := if_level - 1
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -434,7 +434,7 @@ end
 			elseif ignored_level = if_level then
 				ignored_level := 0
 			end
-		
+
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
@@ -769,11 +769,9 @@ feature -- Error handling
 			-- Report a syntax error.
 		local
 			an_error: UT_SYNTAX_ERROR
-			file_buffer: YY_FILE_BUFFER
 			filename: STRING
 		do
-			file_buffer ?= input_buffer
-			if file_buffer /= Void then
+			if attached {YY_FILE_BUFFER} input_buffer as file_buffer then
 				filename := file_buffer.file.name
 			else
 				filename := "string"
@@ -847,7 +845,7 @@ feature -- Output
 
 	echo
 			-- Output `text' using feature `output'.
-			-- Do not echo if option -M has been 
+			-- Do not echo if option -M has been
 			-- specified on the command-line.
 		do
 			if not makefile_dependencies then

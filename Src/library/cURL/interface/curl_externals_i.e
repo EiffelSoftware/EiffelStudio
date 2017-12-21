@@ -12,6 +12,18 @@ note
 deferred class
 	CURL_EXTERNALS_I
 
+feature -- Status report
+
+	is_api_available: BOOLEAN
+			-- Is API available?
+		deferred
+		end	
+
+	is_dynamic_library_exists: BOOLEAN
+			-- If dll/so files exist?
+		deferred
+		end
+
 feature -- Function pointer
 
 	curl_global_init_ptr: POINTER
@@ -135,15 +147,6 @@ feature {CURL_FORM} -- Internal command
 		end
 
 feature {NONE} -- Implementation
-
---	api_loader: MODULE_LOADER
---			-- Module name.
---		local
---			l_utility: CURL_UTILITY
---		once
---			create l_utility
---			Result := l_utility.api_loader
---		end
 
 	internal_formadd_string_string (a_form: TYPED_POINTER [POINTER]; a_last_pointer: TYPED_POINTER [POINTER]; a_arg_1: INTEGER; a_arg_1_value: READABLE_STRING_GENERAL; a_arg_2: INTEGER; a_arg_2_value: READABLE_STRING_GENERAL; a_arg_3: INTEGER)
 			-- Declared as curl_formadd ().

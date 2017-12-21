@@ -15,6 +15,18 @@ class
 inherit
 	CURL_EXTERNALS_I
 
+feature -- Status report
+
+	is_api_available: BOOLEAN
+		do
+			Result := {CURL_UTILITY}.is_static
+		end
+
+	is_dynamic_library_exists: BOOLEAN
+		do
+			Result := False
+		end
+
 feature -- Function pointer
 
 	curl_global_init_ptr: POINTER

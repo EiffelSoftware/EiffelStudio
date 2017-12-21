@@ -105,12 +105,12 @@
 					<custom name="vision_implementation" excluded_value="cocoa"/>
 				</condition>
 			</file_rule>
-			<cluster name="curl_dynamic" location="$|implementation\dynamic">
+			<cluster name="curl_dynamic" location="$|interface\dynamic">
 				<condition>
 					<custom name="static_curl_enabled" excluded_value="true"/>
 				</condition>
 			</cluster>
-			<cluster name="curl_static" location="$|implementation\static">
+			<cluster name="curl_static" location="$|interface\static">
 				<condition>
 					<custom name="static_curl_enabled" value="true"/>
 				</condition>

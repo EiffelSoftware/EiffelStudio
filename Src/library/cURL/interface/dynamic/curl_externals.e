@@ -15,6 +15,18 @@ class
 inherit
 	CURL_EXTERNALS_I
 
+feature -- Status report
+
+	is_api_available: BOOLEAN
+		do
+			Result := is_dynamic_library_exists
+		end
+
+	is_dynamic_library_exists: BOOLEAN
+		do
+			Result := api_loader.is_interface_usable
+		end
+
 feature -- Function pointer
 
 	curl_global_init_ptr: POINTER
@@ -50,14 +62,6 @@ feature -- Function pointer
 	curl_formadd_ptr: POINTER
 		do
 			Result := api_loader.api_pointer ("curl_formadd")
-		end
-
-feature -- Query
-
-	is_api_available: BOOLEAN
-			-- If dll/so files exist?
-		do
-			Result := api_loader.is_interface_usable
 		end
 
 feature {NONE} -- Implementation

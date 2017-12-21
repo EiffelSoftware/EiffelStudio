@@ -78,8 +78,8 @@
 		<cluster name="curl" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/Clib$</exclude>
-				<exclude>/spec$</exclude>
 				<exclude>/dynamic$</exclude>
+				<exclude>/spec$</exclude>
 				<exclude>/static$</exclude>
 			</file_rule>
 			<file_rule>
@@ -105,12 +105,12 @@
 					<custom name="vision_implementation" excluded_value="cocoa"/>
 				</condition>
 			</file_rule>
-			<cluster name="curl_dynamic" location="$|interface\dynamic">
+			<cluster name="interface_dynamic" location="$|interface\dynamic\">
 				<condition>
 					<custom name="static_curl_enabled" excluded_value="true"/>
 				</condition>
 			</cluster>
-			<cluster name="curl_static" location="$|interface\static">
+			<cluster name="interface_static" location="$|interface\static\">
 				<condition>
 					<custom name="static_curl_enabled" value="true"/>
 				</condition>

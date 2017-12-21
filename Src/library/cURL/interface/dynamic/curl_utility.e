@@ -44,28 +44,6 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	is_static: BOOLEAN
-			-- Is CURL_STATICLIB defined?
-		do
-			Result := c_is_static
-		end
-
-feature {NONE} -- C externals
-
-	c_is_static: BOOLEAN
-			-- Return True if CURL_STATICLIB is defined, False in other case.
-		external
-			"C inline use <eiffel_curl.h>"
-		alias
-			"[
-				#ifdef CURL_STATICLIB
-					return EIF_TRUE;
-				#else
-					return EIF_FALSE;
-				#endif
-			]"
-		end
-
 note
 	library:   "cURL: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"

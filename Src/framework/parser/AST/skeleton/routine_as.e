@@ -150,6 +150,14 @@ feature -- Attributes
 	object_test_locals: detachable ARRAYED_LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
 			-- Object test locals mentioned in the routine
 
+feature -- Status report
+
+	has_class_postcondition: BOOLEAN
+			-- Is there a class postcondition?
+		do
+			Result := attached postcondition as p and then p.is_class
+		end
+
 feature -- Location
 
 	body_start_position: INTEGER
@@ -391,7 +399,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

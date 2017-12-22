@@ -1,7 +1,9 @@
-note
-	description: "Description of the supplier of a class: each feature%
-				%name written in the associated class is associated to%
-				%a supplier list (list of ids), indexed by body index."
+﻿note
+	description: "[
+		Description of the supplier of a class: each feature
+		name written in the associated class is associated to
+		a supplier list (list of ids), indexed by body index.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -61,7 +63,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

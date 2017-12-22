@@ -36,7 +36,7 @@ feature -- Access
 			create Result.make ("12x12")
 		end
 
-	icon_pixmaps: attached ES_CUSTOM_PIXMAPS_16X16
+	icon_pixmaps: attached ES_PIXMAPS_16X16
 			-- Normal sized icon pixmaps (16px)
 		once
 			create Result.make ("16x16")

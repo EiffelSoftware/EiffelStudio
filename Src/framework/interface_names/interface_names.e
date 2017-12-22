@@ -1568,7 +1568,7 @@ feature -- Label texts
 	l_On_object: STRING_32				do Result := locale.translation("On object")	end
 	l_As_object: STRING_32				do Result := locale.translation("As object")	end
 	l_Onces: STRING_32					do Result := locale.translation("Once routines and constants")	end
-	l_Instance_free_routines: STRING_32					do Result := locale.translation("Instance-free routines")	end
+	l_Instance_free_routines: STRING_32					do Result := locale.translation("Instance-free features")	end
 	l_Once_routines: STRING_32			do Result := locale.translation("Once routines")	end
 	l_Constant_features: STRING_32		do Result := locale.translation("Constants")	end
 	l_only_classes_in_same_cluster: STRING_32			do Result := locale.translation("Only classes in same cluster")	end

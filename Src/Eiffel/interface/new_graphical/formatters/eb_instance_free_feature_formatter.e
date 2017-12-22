@@ -22,7 +22,7 @@ feature -- Properties
 			pix: EV_PIXMAP
 		once
 			create Result.make (1, 2)
-			pix := pixmaps.icon_pixmaps.instance_free_icon (pixmaps.icon_pixmaps.class_features_routine_icon)
+			pix := pixmaps.icon_pixmaps.class_features_instance_free_routine_icon
 			Result.put (pix, 1)
 			Result.put (pix, 2)
 		end
@@ -30,7 +30,7 @@ feature -- Properties
 	pixel_buffer: EV_PIXEL_BUFFER
 			-- Graphical representation of the command.
 		once
-			Result := pixmaps.icon_pixmaps.instance_free_icon_buffer (pixmaps.icon_pixmaps.class_features_routine_icon_buffer)
+			Result := pixmaps.icon_pixmaps.class_features_instance_free_routine_icon_buffer
 		end
 
 	menu_name: STRING_GENERAL

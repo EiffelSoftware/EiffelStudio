@@ -267,6 +267,9 @@ feature -- Query (Pixmap)
 					Result := pixmaps.icon_pixmaps.feature_assigner_icon
 				end
 			end
+			if a_feature_as.is_constant or (a_routine /= Void and then a_routine.has_class_postcondition) then
+				Result := pixmaps.icon_pixmaps.instance_free_icon (Result)
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -503,7 +506,6 @@ feature -- Query (Pixel buffer)
 			if a_feature.is_instance_free then
 				Result := pixmaps.icon_pixmaps.instance_free_icon_buffer (Result)
 			end
-
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -586,6 +588,9 @@ feature -- Query (Pixel buffer)
 				else
 					Result := pixmaps.icon_pixmaps.feature_assigner_icon_buffer
 				end
+			end
+			if a_feature_as.is_constant or (a_routine /= Void and then a_routine.has_class_postcondition) then
+				Result := pixmaps.icon_pixmaps.instance_free_icon_buffer (Result)
 			end
 		ensure
 			result_not_void: Result /= Void

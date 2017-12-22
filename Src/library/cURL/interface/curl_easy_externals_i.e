@@ -262,7 +262,12 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				return (FUNCTION_CAST(CURL *, ()) $a_api)();
+				#ifdef CURL_STATICLIB
+					return (FUNCTION_CAST(CURL *, ()) $a_api)();
+				#else
+					/* Using the proper calling convention for dynamic module */
+					return (FUNCTION_CAST(CURL *, ()) $a_api)();
+				#endif
 			]"
 		end
 
@@ -275,7 +280,12 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				(FUNCTION_CAST(void, (CURL *)) $a_api)((CURL *)$a_curl_handle);
+				#ifdef CURL_STATICLIB
+					(FUNCTION_CAST(void, (CURL *)) $a_api)((CURL *)$a_curl_handle);
+				#else
+						/* Using proper calling convention for dynamic module */
+					(FUNCTION_CAST(void, (CURL *)) $a_api)((CURL *)$a_curl_handle);
+				#endif
 			]"
 		end
 
@@ -288,7 +298,12 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				return (FUNCTION_CAST(CURLcode, (CURL *)) $a_api)
+				#ifdef CURL_STATICLIB
+					return (FUNCTION_CAST(CURLcode, (CURL *)) $a_api)
+				#else
+						/* Using proper calling convention for dynamic module */
+					return (FUNCTION_CAST(CURLcode, (CURL *)) $a_api)
+				#endif
 											((CURL *) $a_curl_handle);
 			]"
 		end
@@ -303,7 +318,12 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_api)
+				#ifdef CURL_STATICLIB
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_api)
+				#else
+						/* Using proper calling convention for dynamic module */
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_api)
+				#endif
 											((CURL *) $a_curl_handle,
 											(CURLoption)$a_opt,
 											$a_data);
@@ -321,7 +341,12 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_api)
+				#ifdef CURL_STATICLIB
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_api)
+				#else
+						/* Using proper calling convention for dynamic module */
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_api)
+				#endif
 														((CURL *) $a_curl_handle,
 														(CURLoption)$a_opt,
 														$a_data);
@@ -339,7 +364,12 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				return (FUNCTION_CAST(CURLcode, (CURL *, CURLINFO info, ...)) $a_api)
+				#ifdef CURL_STATICLIB
+					return (FUNCTION_CAST(CURLcode, (CURL *, CURLINFO info, ...)) $a_api)
+				#else
+						/* Using proper calling convention for dynamic module */
+					return (FUNCTION_CAST(CURLcode, (CURL *, CURLINFO info, ...)) $a_api)
+				#endif
 											((CURL *) $a_curl_handle,
 											(CURLINFO)$a_opt,
 											$a_data);

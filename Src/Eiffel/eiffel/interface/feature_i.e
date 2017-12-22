@@ -3271,7 +3271,7 @@ feature -- Byte code access
 		require
 			access_type_not_void: access_type /= Void
 			-- is_separate_meaningful: is_separate implies (is_qualified or is_creation) -- Creation calls are not marked as qualified.
-			valid_is_instance_free_call: is_free implies has_static_access
+			valid_is_instance_free_call: is_free implies (has_static_access or else system.absent_explicit_assertion)
 		local
 			is_in_op: BOOLEAN
 			l_type: TYPE_A

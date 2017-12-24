@@ -38,13 +38,13 @@ inherit
 create
 	make, make_from_context
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Initialization
 		do
 			create register_server.make (c_nb_types * 2)
-			create local_vars.make (1, 50)
+			create local_vars.make_filled (False, 1, 50)
 			create local_index_table.make (10)
 			create associated_register_table.make (10)
 			create local_list.make (10)
@@ -915,8 +915,8 @@ feature -- Access: once manifest strings
 			end
 			routine_once_manifest_strings.put ([value, is_string_32], number)
 		ensure
-			registered: (once_manifest_string_value (number).value = value and then
-						once_manifest_string_value (number).is_string_32 = is_string_32)
+			registered: once_manifest_string_value (number).value = value and then
+						once_manifest_string_value (number).is_string_32 = is_string_32
 
 		end
 
@@ -1203,7 +1203,7 @@ feature {NONE} -- Registers: implementation
 	register_sk_values: ARRAY [STRING]
 			-- SK values of registers indexed by their level
 		once
-			create Result.make (1, c_nb_types * 2)
+			create Result.make_filled ("SK_REF",  1, c_nb_types * 2)
 			Result.put ("SK_INT8", c_int8)
 			Result.put ("SK_INT16", c_int16)
 			Result.put ("SK_INT32", c_int32)
@@ -1218,7 +1218,7 @@ feature {NONE} -- Registers: implementation
 			Result.put ("SK_CHAR8", c_char)
 			Result.put ("SK_CHAR32", c_wide_char)
 			Result.put ("SK_POINTER", c_pointer)
-			Result.put ("SK_REF", c_ref)
+			-- Result.put ("SK_REF", c_ref) -- Used to initialize the array
 				-- Registers for passing typed arguments.
 			Result.put ("SK_INT8", c_nb_types + c_int8)
 			Result.put ("SK_INT16", c_nb_types + c_int16)
@@ -1234,7 +1234,7 @@ feature {NONE} -- Registers: implementation
 			Result.put ("SK_CHAR8", c_nb_types + c_char)
 			Result.put ("SK_CHAR32", c_nb_types + c_wide_char)
 			Result.put ("SK_POINTER", c_nb_types + c_pointer)
-			Result.put ("SK_REF", c_nb_types + c_ref)
+			-- Result.put ("SK_REF", c_nb_types + c_ref) -- Used to initialize the array
 		end
 
 feature -- Access
@@ -1356,28 +1356,26 @@ feature -- Access
 			class_type_not_void: class_type /= Void
 			context_class_type_not_void: current_type /= Void
 		do
-				-- If code is inherited, we first find out the type.
-			if class_type /= context_class_type then
-				if system.il_generation then
-						-- Currently our .NET code generation does things in a strange way and sometime
-						-- we already have resolved a type for the descendant class but the resolved type
-						-- does not make sense for the ancestor version (case where descendant is generic
-						-- but not the ancestor (See eweasel test#exec055, test#melt069 on .NET).
-					if type.is_valid_for_class (class_type.associated_class) then
-						Result := type.evaluated_type_in_descendant (class_type.associated_class,
-							context_class_type.associated_class, current_feature)
-					else
-						check
-							generating_expanded: context_class_type.is_expanded
-						end
-						Result := type
-					end
-				else
+				-- If code is inherited, we find out the type.
+			if class_type = context_class_type then
+				Result := type
+			elseif system.il_generation then
+					-- Currently our .NET code generation does things in a strange way and sometime
+					-- we already have resolved a type for the descendant class but the resolved type
+					-- does not make sense for the ancestor version (case where descendant is generic
+					-- but not the ancestor (See eweasel test#exec055, test#melt069 on .NET).
+				if type.is_valid_for_class (class_type.associated_class) then
 					Result := type.evaluated_type_in_descendant (class_type.associated_class,
 						context_class_type.associated_class, current_feature)
+				else
+					check
+						generating_expanded: context_class_type.is_expanded
+					end
+					Result := type
 				end
 			else
-				Result := type
+				Result := type.evaluated_type_in_descendant (class_type.associated_class,
+					context_class_type.associated_class, current_feature)
 			end
 				-- And then we instantiate it in the context of `context_cl_type'.
 			Result := real_type_in (Result, context_cl_type)
@@ -1407,12 +1405,12 @@ feature -- Access
 			class_type_not_void: class_type /= Void
 			context_class_type_not_void: context_class_type /= Void
 		do
-				-- If code is inherited, we first find out the type.
-			if class_type /= context_class_type then
+			if class_type = context_class_type then
+				Result := type
+			else
+					-- If code is inherited, we find out the type.
 				Result := type.evaluated_type_in_descendant (class_type.associated_class,
 					context_class_type.associated_class, current_feature)
-			else
-				Result := type
 			end
 		end
 
@@ -1883,15 +1881,8 @@ feature -- Access
 			-- Set `need_gc_hook' for current instance of BYTE_CODE
 			-- If `has_assertions_checking_enabled', `need_gc_hook' is set to True.
 		local
-			l_assign: ASSIGN_BL
-			reverse_b: REVERSE_BL
-			call: CALL_B
-			expr_b: EXPR_B
-			creation_expr: CREATION_EXPR_B
-			instruction_call: INSTR_CALL_B
-			attribute_b: ATTRIBUTE_B
-			compound: BYTE_LIST [BYTE_NODE]
 			byte_node: BYTE_NODE
+			expr_b: EXPR_B
 			tmp: BOOLEAN
 		do
 				-- We won't need any RTLI if the only statement is an expanded
@@ -1911,24 +1902,23 @@ feature -- Access
 			if not tmp and then assertion_type /= In_invariant then
 				tmp := True
 					-- Not in an invariant generation
-				compound := byte_code.compound
-				if compound /= Void and then compound.count = 1 then
+				if attached byte_code.compound as compound and then compound.count = 1 then
 					byte_node := compound.first
-					l_assign ?= byte_node
-					if l_assign /= Void then
+					if attached {ASSIGN_BL} byte_node as l_assign then
 						if l_assign.expand_return then
 								-- Assignment in Result is expanded in a return instruction
 							tmp := False
 						elseif not l_assign.source.allocates_memory_for_type (real_type (l_assign.target.type)) then
-							reverse_b ?= l_assign
 								-- FIXME: Manu 05/31/2002: we should try to optimize
 								-- so that not all reverse assignment prevent the optimization
 								-- to be made.
-							call ?= l_assign.source
-							if call /= Void and then call.is_single and then reverse_b = Void then
+							if
+								attached {CALL_B} l_assign.source as call and then
+								call.is_single and then
+								not attached {REVERSE_BL} l_assign
+							then
 									-- Simple assignment of a single call
-								creation_expr ?= call
-								if creation_expr /= Void or has_invariant then
+								if attached {CREATION_EXPR_B} call as creation_expr or has_invariant then
 										-- We do not optimize if we are handling a creation expression or
 										-- if invariant checking is enabled.
 									tmp := True
@@ -1945,8 +1935,7 @@ feature -- Access
 											real_type (call.type).is_basic
 
 										if not tmp then
-											attribute_b ?= call
-											if attribute_b /= Void then
+											if attached {ATTRIBUTE_B} call then
 													-- An attribute access is always safe
 												tmp := False
 											else
@@ -1960,23 +1949,26 @@ feature -- Access
 									end
 								end
 							else
-								expr_b ?= l_assign.source
+								expr_b := l_assign.source
 								tmp := expr_b.has_call or expr_b.allocates_memory or else expr_b.allocates_memory_for_type (real_type (l_assign.target.type))
 							end
 						end
-					else
-						instruction_call ?= byte_node
-						if instruction_call /= Void then
-							if instruction_call.call.is_single then
-									-- A single instruction call
-								tmp := has_invariant
-							end
-						end
+					elseif
+						attached {INSTR_CALL_B} byte_node as instruction_call and then
+						instruction_call.call.is_single and then
+						(not attached {NESTED_B} instruction_call.call as nested or else
+						not nested.target.is_result or else
+						not real_type (nested.target.type).is_true_expanded)
+					then
+							-- A single instruction call on a non-expanded Result.
+						tmp := has_invariant
 					end
 				end
 			end
 			need_gc_hook := tmp
 		end
+
+feature {NONE} -- Nesting: initialization
 
 	make_from_context (other: like Current)
 			-- Save context for later restoration. This makes the
@@ -1987,6 +1979,8 @@ feature -- Access
 			local_index_table := other.local_index_table.twin
 			associated_register_table := other.associated_register_table.twin
 		end
+
+feature -- Nesting
 
 	restore (saved_context: like Current)
 			-- Restore the saved context after an analyze followed by an
@@ -2008,6 +2002,8 @@ feature -- Access
 			precondition_object_test_local_offset := saved_context.precondition_object_test_local_offset
 			postcondition_object_test_local_offset := saved_context.postcondition_object_test_local_offset
 		end
+
+feature -- Code generation
 
 	generate_dtype_declaration (is_process_or_thread_relative_once: BOOLEAN)
 			-- Declare the 'dtype' variable which holds the pre-computed
@@ -2512,7 +2508,6 @@ feature -- C code generation: locals
 			wkb_mode: BOOLEAN
 			used_upper: INTEGER
 			l_loc_name: STRING
-			l_type: CL_TYPE_A
 			l_class_type: CLASS_TYPE
 			local_types: LIST [TYPE_A]
 			modifier: STRING
@@ -2550,13 +2545,15 @@ feature -- C code generation: locals
 						create l_loc_name.make (6)
 						l_loc_name.append ("sloc")
 						l_loc_name.append_integer (i)
-						l_type ?= type_i
-						check
-								-- Only a CL_TYPE_A could be an expanded
-							l_type_not_void: l_type /= Void
+						if attached {CL_TYPE_A} type_i as l_type then
+							l_class_type := l_type.associated_class_type (context_class_type.type)
+							l_class_type.generate_expanded_structure_declaration (buf, l_loc_name)
+						else
+							check
+									-- Only a CL_TYPE_A could be an expanded
+								expected_type: False
+							end
 						end
-						l_class_type := l_type.associated_class_type (context_class_type.type)
-						l_class_type.generate_expanded_structure_declaration (buf, l_loc_name)
 					end
 					buf.put_new_line
 					type_i.c_type.generate (buf)
@@ -2570,8 +2567,7 @@ feature -- C code generation: locals
 					if type_i.is_true_expanded then
 						type_i.c_type.generate_cast (buf)
 						buf.put_string (l_loc_name)
-						buf.put_string (".data")
-						buf.put_character (';')
+						buf.put_string (".data;")
 					else
 						type_i.c_type.generate_cast (buf)
 						buf.put_two_character ('0', ';')

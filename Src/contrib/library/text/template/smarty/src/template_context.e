@@ -18,8 +18,6 @@ feature
 			create archives.make (10)
 			create template_custom_action_items.make (3)
 			template_custom_action_items.compare_objects
-			create template_custom_actions.make (0)
-			template_custom_actions.compare_objects
 		end
 
 	clear_values
@@ -147,12 +145,6 @@ feature -- Specific custom actions
 			a_id /= Void
 		do
 			Result := template_custom_action_items.item (a_id)
-			if
-				Result = Void and then
-				attached template_custom_actions.item (a_id) as fct
-			then
-				create {TEMPLATE_CUSTOM_FUNCTION_ACTION} Result.make (fct)
-			end
 		end
 
 	add_template_custom_action (act: TEMPLATE_CUSTOM_ACTION; a_id: STRING)
@@ -169,13 +161,7 @@ feature -- Specific custom actions
 		require
 			a_id /= Void
 		do
-			Result := template_custom_action_items.has (a_id) or template_custom_actions.has (a_id)
-		end
-
-	template_custom_actions: HASH_TABLE [FUNCTION [STRING, STRING_TABLE [STRING], STRING], STRING]
-		obsolete
-			"Use template_custom_action_items [2016-12-01]"
-		attribute
+			Result := template_custom_action_items.has (a_id)
 		end
 
 feature -- Option

@@ -353,6 +353,7 @@ feature -- Basic operations
 			-- some `p' of type `POINTER'.)
 		do
 		ensure
+			is_class: class
 			-- Result = Result.default
 		end
 

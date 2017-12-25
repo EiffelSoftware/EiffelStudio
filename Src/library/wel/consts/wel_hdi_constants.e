@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Mask flags that indicate which of the %
 					 %structure members of WEL_HD_ITEM contain valid data."
 	legal: "See notice at end of class."
@@ -16,6 +16,8 @@ feature -- Access
 			"C [macro %"cctrl.h%"]"
 		alias
 			"HDI_BITMAP"
+		ensure
+			is_class: class
 		end
 
 	frozen Hdi_format: INTEGER
@@ -23,6 +25,8 @@ feature -- Access
 			"C [macro %"cctrl.h%"]"
 		alias
 			"HDI_FORMAT"
+		ensure
+			is_class: class
 		end
 
 	frozen Hdi_height: INTEGER
@@ -30,6 +34,8 @@ feature -- Access
 			"C [macro %"cctrl.h%"]"
 		alias
 			"HDI_HEIGHT"
+		ensure
+			is_class: class
 		end
 
 	frozen Hdi_lparam: INTEGER
@@ -37,6 +43,8 @@ feature -- Access
 			"C [macro %"cctrl.h%"]"
 		alias
 			"HDI_LPARAM"
+		ensure
+			is_class: class
 		end
 
 	frozen Hdi_text: INTEGER
@@ -44,6 +52,8 @@ feature -- Access
 			"C [macro %"cctrl.h%"]"
 		alias
 			"HDI_TEXT"
+		ensure
+			is_class: class
 		end
 
 	frozen Hdi_width: INTEGER
@@ -51,28 +61,28 @@ feature -- Access
 			"C [macro %"cctrl.h%"]"
 		alias
 			"HDI_WIDTH"
+		ensure
+			is_class: class
 		end
-		
+
 	frozen Hdi_image: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"HDI_IMAGE"
+		ensure
+			is_class: class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_HDI_CONSTANTS
-
+end

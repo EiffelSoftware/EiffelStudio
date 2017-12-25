@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Raster operations constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -60,26 +60,24 @@ feature -- Access
 	--| Constants for mask_blt only
 
 	frozen Maskcopy: INTEGER
-			-- Use SRCCOPY for foreground and R2_NOOP for background
+			-- Use SRCCOPY for foreground and R2_NOOP for background.
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"MAKEROP4(SRCCOPY, 0xAA0029)"
+		ensure
+			is_class: class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_RASTER_OPERATIONS_CONSTANTS
-
+end

@@ -1,6 +1,4 @@
-note
-	description: "[
-		]"
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -12,9 +10,9 @@ class
 inherit
 	ICOR_OBJECT
 
-create 
+create
 	make_by_pointer
-	
+
 feature {ICOR_EXPORTER} -- Access extra
 
 	set_debug_state_as_suspended
@@ -86,11 +84,11 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_get_debug_state (item, $Result)
 		ensure
-			state_valid: 	Result = enum_cor_debug_thread_state__thread_run 
+			state_valid: 	Result = enum_cor_debug_thread_state__thread_run
 					or else	Result = enum_cor_debug_thread_state__thread_suspend
 			success: last_call_success = 0
 		end
-		
+
 	get_user_state: INTEGER
 			-- GetUserState returns the user state of the thread, that is, the state
 			-- which it has when the program being debugged examines it.	
@@ -100,7 +98,7 @@ feature {ICOR_EXPORTER} -- Access
 --			state_valid: Result = enum_cor_debug_thread_state__thread_run or else
 --							Result = enum_cor_debug_thread_state__thread_suspend
 			success: last_call_success = 0
-		end		
+		end
 
 	get_current_exception: ICOR_DEBUG_VALUE
 			-- WARNING: Should be called inside Callback !
@@ -129,7 +127,7 @@ feature {ICOR_EXPORTER} -- Access
 			if p /= default_pointer then
 				create Result.make_by_pointer (p)
 			end
-			
+
 			debug ("DEBUGGER_EIFNET_DATA")
 				l_app_domain := get_app_domain
 				l_enum := l_app_domain.enumerate_steppers
@@ -158,7 +156,7 @@ feature {ICOR_EXPORTER} -- Access
 				create Result.make_by_pointer (p)
 			end
 		end
-		
+
 	get_active_frame: ICOR_DEBUG_FRAME
 		local
 			p: POINTER
@@ -170,9 +168,9 @@ feature {ICOR_EXPORTER} -- Access
 		end
 
 	create_eval: ICOR_DEBUG_EVAL
-			 -- CreateEval creates an evaluation object which operates on the 
+			 -- CreateEval creates an evaluation object which operates on the
 			 -- given thread.  The Eval will push a new chain on the thread before
-			 -- doing its computation.  
+			 -- doing its computation.
 			 --
 			 -- Note that this interrupts the computation currently
 			 -- being performed on the thread until the eval completes.
@@ -206,6 +204,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetProcess"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_id (obj: POINTER; a_p_thread_id: TYPED_POINTER [INTEGER]): INTEGER
@@ -216,6 +216,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetID"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_app_domain (obj: POINTER; a_p_app_domain: TYPED_POINTER [POINTER]): INTEGER
@@ -226,6 +228,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetAppDomain"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_set_debug_state (obj: POINTER; a_p_state: INTEGER): INTEGER
@@ -236,6 +240,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"SetDebugState"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_debug_state (obj: POINTER; a_p_state: POINTER): INTEGER
@@ -246,6 +252,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetDebugState"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_user_state (obj: POINTER; a_p_state: POINTER): INTEGER
@@ -256,6 +264,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetUserState"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_current_exception (obj: POINTER; a_p_ex: TYPED_POINTER [POINTER]): INTEGER
@@ -266,6 +276,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetCurrentException"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_clear_current_exception (obj: POINTER): INTEGER
@@ -276,6 +288,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"ClearCurrentException"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_create_stepper (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
@@ -286,6 +300,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"CreateStepper"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_enumerate_chains (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
@@ -296,6 +312,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"EnumerateChains"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_active_chain (obj: POINTER; a_p_active_chain: TYPED_POINTER [POINTER]): INTEGER
@@ -306,6 +324,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetActiveChain"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_active_frame (obj: POINTER; a_p_active_frame: TYPED_POINTER [POINTER]): INTEGER
@@ -316,6 +336,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetActiveFrame"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_create_eval (obj: POINTER; a_p_eval: TYPED_POINTER [POINTER]): INTEGER
@@ -326,6 +348,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"CreateEval"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_object (obj: POINTER; a_p_obj: TYPED_POINTER [POINTER]): INTEGER
@@ -336,31 +360,39 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetObject"
+		ensure
+			is_class: class
 		end
 
 feature -- External macro (enum)
 
 	frozen enum_cor_debug_thread_state__thread_run: INTEGER
-			-- 
+			--
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"THREAD_RUN"
-		end		
-		
+		ensure
+			is_class: class
+		end
+
 	frozen enum_cor_debug_thread_state__thread_suspend: INTEGER
-			-- 
+			--
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"THREAD_SUSPEND"
+		ensure
+			is_class: class
 		end
-		
+
 	enum_cor_debug_user_state__user_stop_requested: INTEGER --		= 0x01,
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_STOP_REQUESTED"
+		ensure
+			is_class: class
 		end
 
 	enum_cor_debug_user_state__user_suspend_requested: INTEGER --	= 0x02,
@@ -368,6 +400,8 @@ feature -- External macro (enum)
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_SUSPEND_REQUESTED"
+		ensure
+			is_class: class
 		end
 
 	enum_cor_debug_user_state__user_background: INTEGER --			= 0x04,
@@ -375,6 +409,8 @@ feature -- External macro (enum)
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_BACKGROUND"
+		ensure
+			is_class: class
 		end
 
 	enum_cor_debug_user_state__user_unstarted: INTEGER --			= 0x08,
@@ -382,6 +418,8 @@ feature -- External macro (enum)
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_UNSTARTED"
+		ensure
+			is_class: class
 		end
 
 	enum_cor_debug_user_state__user_stopped: INTEGER --			= 0x10,
@@ -389,6 +427,8 @@ feature -- External macro (enum)
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_STOPPED"
+		ensure
+			is_class: class
 		end
 
 	enum_cor_debug_user_state__user_wait_sleep_join: INTEGER --	= 0x20,
@@ -396,6 +436,8 @@ feature -- External macro (enum)
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_WAIT_SLEEP_JOIN"
+		ensure
+			is_class: class
 		end
 
 	enum_cor_debug_user_state__user_suspended: INTEGER --			= 0x40		
@@ -403,10 +445,12 @@ feature -- External macro (enum)
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_SUSPENDED"
+		ensure
+			is_class: class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -419,23 +463,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class ICOR_DEBUG_THREAD
-
+end

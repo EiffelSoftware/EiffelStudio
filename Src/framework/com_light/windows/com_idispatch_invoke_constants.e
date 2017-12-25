@@ -19,10 +19,13 @@ feature -- Query
 	valid_type (a_type: INTEGER): BOOLEAN
 			-- Is `a_type' valid?
 		do
-			Result := a_type = dispatch_method or
+			Result :=
+				a_type = dispatch_method or
 				a_type = dispatch_propertyget or
 				a_type = dispatch_propertyput or
 				a_type = dispatch_propertyputref
+		ensure
+			is_class: class
 		end
 
 note

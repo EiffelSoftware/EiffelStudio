@@ -1,6 +1,4 @@
-note
-	description: "[
-		]"
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -156,6 +154,8 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"Continue"
+		ensure
+			is_class: class
 		end
 
 	cpp_detach (obj: POINTER): INTEGER
@@ -166,6 +166,8 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"Detach"
+		ensure
+			is_class: class
 		end
 
 	cpp_stop (obj: POINTER; a_timeout: INTEGER): INTEGER
@@ -177,6 +179,8 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"Stop"
+		ensure
+			is_class: class
 		end
 
 	cpp_is_running (obj: POINTER; a_is_running: TYPED_POINTER [INTEGER]): INTEGER
@@ -189,6 +193,8 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"IsRunning"
+		ensure
+			is_class: class
 		end
 
 	cpp_has_queued_callbacks (obj: POINTER; a_icd_th_p: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER
@@ -200,6 +206,8 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"HasQueuedCallbacks"
+		ensure
+			is_class: class
 		end
 
 	cpp_terminate (obj: POINTER; a_exitcode: INTEGER): INTEGER
@@ -211,6 +219,8 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"Terminate"
+		ensure
+			is_class: class
 		end
 
 	cpp_enumerate_threads (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
@@ -221,6 +231,8 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"EnumerateThreads"
+		ensure
+			is_class: class
 		end
 
 --	cpp_set_all_threads_debug_state (obj: POINTER; a_state: INTEGER; a_p_except_thread: POINTER): INTEGER is
@@ -231,6 +243,8 @@ feature {NONE} -- Implementation
 --			]"
 --		alias
 --			"SetAllThreadsDebugState"
+--		ensure
+--			is_class: class
 --		end
 
 feature {ICOR_EXPORTER} -- Query
@@ -240,10 +254,12 @@ feature {ICOR_EXPORTER} -- Query
 			"C++ inline use %"cli_debugger_utils.h%""
 		alias
 			"((ICorDebugController *) $obj)->QueryInterface (IID_ICorDebugController, (void **) $a_p)"
+		ensure
+			is_class: class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -256,23 +272,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class ICOR_DEBUG_CONTROLLER
-
+end

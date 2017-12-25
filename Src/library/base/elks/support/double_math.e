@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "[
-		Basic mathematical operations, double-precision.
-		This class may be used as ancestor by classes needing its facilities.
+			Basic mathematical operations, double-precision.
+			This class may be used as ancestor by classes needing its facilities.
 		]"
 
 	library: "Free implementation of ELKS library"
@@ -31,6 +31,8 @@ feature -- Access
 			"C signature (double): double use <math.h>"
 		alias
 			"cos"
+		ensure
+			is_class: class
 		end
 
 	arc_cosine (v: REAL_64): REAL_64
@@ -40,6 +42,8 @@ feature -- Access
 			"C signature (double): double use <math.h>"
 		alias
 			"acos"
+		ensure
+			is_class: class
 		end
 
 	sine (v: REAL_64): REAL_64
@@ -49,6 +53,8 @@ feature -- Access
 			"C signature (double): double use <math.h>"
 		alias
 			"sin"
+		ensure
+			is_class: class
 		end
 
 	arc_sine (v: REAL_64): REAL_64
@@ -58,6 +64,8 @@ feature -- Access
 			"C signature (double): double use <math.h>"
 		alias
 			"asin"
+		ensure
+			is_class: class
 		end
 
 	tangent (v: REAL_64): REAL_64
@@ -67,6 +75,8 @@ feature -- Access
 			"C signature (double): double use <math.h>"
 		alias
 			"tan"
+		ensure
+			is_class: class
 		end
 
 	arc_tangent (v: REAL_64): REAL_64
@@ -76,36 +86,48 @@ feature -- Access
 			"C signature (double): double use <math.h>"
 		alias
 			"atan"
+		ensure
+			is_class: class
 		end
 
 	sqrt (v: REAL_64): REAL_64
 			-- Square root of `v'
 		external
 			"C signature (double): double use <math.h>"
+		ensure
+			is_class: class
 		end
 
 	exp (x: REAL_64): REAL_64
 			-- Exponential of `v'.
 		external
 			"C signature (double): double use <math.h>"
+		ensure
+			is_class: class
 		end
 
 	log (v: REAL_64): REAL_64
 			-- Natural logarithm of `v'
 		external
 			"C signature (double): double use <math.h>"
+		ensure
+			is_class: class
 		end
 
 	log10 (v: REAL_64): REAL_64
 			-- Base 10 logarithm of `v'
 		external
 			"C signature (double): double use <math.h>"
+		ensure
+			is_class: class
 		end
 
 	floor (v: REAL_64): REAL_64
 			-- Greatest integral less than or equal to `v'
 		external
 			"C signature (double): double use <math.h>"
+		ensure
+			is_class: class
 		end
 
 	ceiling (v: REAL_64): REAL_64
@@ -114,6 +136,8 @@ feature -- Access
 			"C signature (double): double use <math.h>"
 		alias
 			"ceil"
+		ensure
+			is_class: class
 		end
 
 	dabs (v: REAL_64): REAL_64
@@ -122,10 +146,12 @@ feature -- Access
 			"C signature (double): double use <math.h>"
 		alias
 			"fabs"
+		ensure
+			is_class: class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

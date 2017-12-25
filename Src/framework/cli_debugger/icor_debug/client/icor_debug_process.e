@@ -1,6 +1,4 @@
-note
-	description: "[
-		]"
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -11,13 +9,13 @@ class
 
 inherit
 	ICOR_DEBUG_CONTROLLER
-		export 
+		export
 			{ANY} item
 		end
 
-create 
+create
 	make_by_pointer
-	
+
 feature {ICOR_EXPORTER} -- Access
 
 	get_id: INTEGER
@@ -39,7 +37,7 @@ feature {ICOR_EXPORTER} -- Access
 	get_thread (a_thread_id: INTEGER): ICOR_DEBUG_THREAD
 			-- Debuggee Thread for `a_thread_id'
 		local
-			p: POINTER			
+			p: POINTER
 		do
 			last_call_success := cpp_get_thread (item, a_thread_id, $p)
 			if p /= default_pointer then
@@ -47,7 +45,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		ensure
 			success: last_call_success = 0
-		end		
+		end
 
 	enumerate_app_domains: ICOR_DEBUG_APP_DOMAIN_ENUM
 		local
@@ -79,8 +77,10 @@ feature {ICOR_EXPORTER} -- Get Handle
 			]"
 		alias
 			"GetHandle"
+		ensure
+			is_class: class
 		end
-	
+
 feature {NONE} -- Implementation
 
 	cpp_get_id (obj: POINTER; a_p_id: TYPED_POINTER [INTEGER]): INTEGER
@@ -91,8 +91,10 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"GetID"
+		ensure
+			is_class: class
 		end
-		
+
 	cpp_get_thread (obj: POINTER; a_thread_id: INTEGER; a_p_thread: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
@@ -101,7 +103,9 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"GetThread"
-		end		
+		ensure
+			is_class: class
+		end
 
 	cpp_enumerate_app_domains (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
@@ -111,6 +115,8 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"EnumerateAppDomains"
+		ensure
+			is_class: class
 		end
 
 	cpp_get_helper_thread_id (obj: POINTER; a_p_id: TYPED_POINTER [INTEGER]): INTEGER
@@ -121,10 +127,12 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"GetHelperThreadID"
+		ensure
+			is_class: class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -137,23 +145,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class ICOR_DEBUG_PROCESS
-
+end

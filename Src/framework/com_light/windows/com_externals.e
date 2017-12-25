@@ -28,6 +28,8 @@ feature -- Disposal
 			"C++ IUnknown use %"unknwn.h%""
 		alias
 			"Release"
+		ensure
+			is_class: class
 		end
 
 feature -- AddRef
@@ -38,6 +40,8 @@ feature -- AddRef
 			"C++ IUnknown use %"unknwn.h%""
 		alias
 			"AddRef"
+		ensure
+			is_class: class
 		end
 
 feature -- Initialization
@@ -47,6 +51,8 @@ feature -- Initialization
 			"C inline use %"unknwn.h%""
 		alias
 			"CoUninitialize()"
+		ensure
+			is_class: class
 		end
 
 	frozen com_initialize: INTEGER
@@ -54,6 +60,8 @@ feature -- Initialization
 			"C inline use %"unknwn.h%""
 		alias
 			"CoInitialize(NULL)"
+		ensure
+			is_class: class
 		end
 
 	frozen com_initialize_multithreaded: INTEGER
@@ -61,6 +69,8 @@ feature -- Initialization
 			"C++ inline use %"objbase.h%""
 		alias
 			"CoInitializeEx(NULL, COINIT_MULTITHREADED)"
+		ensure
+			is_class: class
 		end
 
 	frozen com_initialize_apartmentthreaded: INTEGER
@@ -68,6 +78,8 @@ feature -- Initialization
 			"C++ inline use %"objbase.h%""
 		alias
 			"CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)"
+		ensure
+			is_class: class
 		end
 
 	frozen com_S_OK, frozen s_ok: INTEGER
@@ -75,6 +87,8 @@ feature -- Initialization
 			"C macro use %"objbase.h%""
 		alias
 			"S_OK"
+		ensure
+			is_class: class
 		end
 
 	frozen com_S_FALSE, frozen s_false: INTEGER
@@ -82,6 +96,8 @@ feature -- Initialization
 			"C macro use %"unknwn.h%""
 		alias
 			"S_FALSE"
+		ensure
+			is_class: class
 		end
 
 	frozen com_RPC_E_CHANGED_MODE: INTEGER
@@ -89,6 +105,8 @@ feature -- Initialization
 			"C macro use %"unknwn.h%""
 		alias
 			"RPC_E_CHANGED_MODE"
+		ensure
+			is_class: class
 		end
 
 feature -- HRESULT
@@ -98,6 +116,8 @@ feature -- HRESULT
 			"C macro use %"unknwn.h%""
 		alias
 			"REGDB_E_CLASSNOTREG"
+		ensure
+			is_class: class
 		end
 
 	frozen com_CLASS_E_NOAGGREGATION: INTEGER
@@ -105,6 +125,8 @@ feature -- HRESULT
 			"C macro use %"unknwn.h%""
 		alias
 			"CLASS_E_NOAGGREGATION"
+		ensure
+			is_class: class
 		end
 
 	frozen com_E_NOINTERFACE: INTEGER
@@ -119,6 +141,8 @@ feature -- HRESULT
 			"C macro use %"unknwn.h%""
 		alias
 			"E_POINTER"
+		ensure
+			is_class: class
 		end
 
 	frozen com_DISP_E_BADPARAMCOUNT: INTEGER
@@ -126,6 +150,8 @@ feature -- HRESULT
 			"C macro use %"unknwn.h%""
 		alias
 			"DISP_E_BADPARAMCOUNT"
+		ensure
+			is_class: class
 		end
 
 	frozen com_DISP_E_BADVARTYPE: INTEGER
@@ -133,6 +159,8 @@ feature -- HRESULT
 			"C macro use %"unknwn.h%""
 		alias
 			"DISP_E_BADVARTYPE"
+		ensure
+			is_class: class
 		end
 
 	frozen com_DISP_E_EXCEPTION: INTEGER
@@ -140,6 +168,8 @@ feature -- HRESULT
 			"C macro use %"unknwn.h%""
 		alias
 			"DISP_E_EXCEPTION"
+		ensure
+			is_class: class
 		end
 
 	frozen com_DISP_E_MEMBERNOTFOUND: INTEGER
@@ -147,6 +177,8 @@ feature -- HRESULT
 			"C macro use %"unknwn.h%""
 		alias
 			"DISP_E_MEMBERNOTFOUND"
+		ensure
+			is_class: class
 		end
 
 	frozen com_DISP_E_NONAMEDARGS: INTEGER
@@ -154,6 +186,8 @@ feature -- HRESULT
 			"C macro use %"unknwn.h%""
 		alias
 			"DISP_E_NONAMEDARGS"
+		ensure
+			is_class: class
 		end
 
 	frozen com_DISP_E_OVERFLOW: INTEGER
@@ -161,6 +195,8 @@ feature -- HRESULT
 			"C macro use %"unknwn.h%""
 		alias
 			"DISP_E_OVERFLOW"
+		ensure
+			is_class: class
 		end
 
 	frozen com_DISP_E_PARAMNOTFOUND: INTEGER
@@ -168,6 +204,8 @@ feature -- HRESULT
 			"C macro use %"unknwn.h%""
 		alias
 			"DISP_E_PARAMNOTFOUND"
+		ensure
+			is_class: class
 		end
 
 	frozen com_DISP_E_TYPEMISMATCH: INTEGER
@@ -175,6 +213,8 @@ feature -- HRESULT
 			"C macro use %"unknwn.h%""
 		alias
 			"DISP_E_TYPEMISMATCH"
+		ensure
+			is_class: class
 		end
 
 	frozen com_DISP_E_UNKNOWNINTERFACE: INTEGER
@@ -182,6 +222,8 @@ feature -- HRESULT
 			"C macro use %"unknwn.h%""
 		alias
 			"DISP_E_UNKNOWNINTERFACE"
+		ensure
+			is_class: class
 		end
 
 	frozen com_DISP_E_UNKNOWNLCID: INTEGER
@@ -189,6 +231,8 @@ feature -- HRESULT
 			"C macro use %"unknwn.h%""
 		alias
 			"DISP_E_UNKNOWNLCID"
+		ensure
+			is_class: class
 		end
 
 	frozen com_DISP_E_PARAMNOTOPTIONAL: INTEGER
@@ -196,6 +240,8 @@ feature -- HRESULT
 			"C macro use %"unknwn.h%""
 		alias
 			"DISP_E_PARAMNOTOPTIONAL"
+		ensure
+			is_class: class
 		end
 
 feature -- VARTYPE constants

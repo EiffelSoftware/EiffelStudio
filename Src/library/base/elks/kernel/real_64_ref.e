@@ -67,18 +67,24 @@ feature -- Access
 			-- Representation of not a number (NaN)
 		external
 			"built_in static"
+		ensure
+			is_class: class
 		end
 
 	negative_infinity: REAL_64
 			-- Representation of negative infinity
 		external
 			"built_in static"
+		ensure
+			is_class: class
 		end
 
 	positive_infinity: REAL_64
 			-- Representation of positive infinity
 		external
 			"built_in static"
+		ensure
+			is_class: class
 		end
 
 	min_value: REAL_64 = -1.7976931348623157081452e+308

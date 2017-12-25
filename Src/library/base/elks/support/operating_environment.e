@@ -15,12 +15,16 @@ feature
 			--| To build portable path names, use PATH_NAME and its descendants.
 		once
 			Result := c_dir_separator
+		ensure
+			is_class: class
 		end
 
 	Current_directory_name_representation: STRING
 			-- Representation of the current directory
 		once
 			Result := eif_current_dir_representation
+		ensure
+			is_class: class
 		end
 
 	home_directory_supported: BOOLEAN
@@ -29,6 +33,8 @@ feature
 			"C use %"eif_path_name.h%""
 		alias
 			"eif_home_dir_supported"
+		ensure
+			is_class: class
 		end
 
 	root_directory_supported: BOOLEAN
@@ -37,6 +43,8 @@ feature
 			"C use %"eif_path_name.h%""
 		alias
 			"eif_root_dir_supported"
+		ensure
+			is_class: class
 		end
 
 	case_sensitive_path_names: BOOLEAN
@@ -45,6 +53,8 @@ feature
 			"C use %"eif_path_name.h%""
 		alias
 			"eif_case_sensitive_path_names"
+		ensure
+			is_class: class
 		end
 
 feature {NONE} -- Implementation
@@ -54,15 +64,19 @@ feature {NONE} -- Implementation
 			"C use %"eif_dir.h%""
 		alias
 			"eif_dir_separator"
+		ensure
+			is_class: class
 		end
 
 	eif_current_dir_representation: STRING
 		external
 			"C use %"eif_path_name.h%""
+		ensure
+			is_class: class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

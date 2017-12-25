@@ -103,6 +103,8 @@ feature {NONE} -- Implementation
 			"C signature (LPWSTR): EIF_POINTER use %"OleAuto.h%""
 		alias
 			"SysAllocString"
+		ensure
+			is_class: class
 		end
 
 	c_bytes_length (astring: POINTER): INTEGER
@@ -111,6 +113,8 @@ feature {NONE} -- Implementation
 			"C signature (BSTR): EIF_INTEGER use %"OleAuto.h%""
 		alias
 			"SysStringByteLen"
+		ensure
+			is_class: class
 		end
 
 	c_free_bstr (abstr: POINTER)
@@ -119,6 +123,8 @@ feature {NONE} -- Implementation
 			"C signature (BSTR) use %"OleAuto.h%""
 		alias
 			"SysFreeString"
+		ensure
+			is_class: class
 		end
 
 	frozen character_size: INTEGER
@@ -127,7 +133,10 @@ feature {NONE} -- Implementation
 			"C macro use <tchar.h>"
 		alias
 			"sizeof(OLECHAR)"
+		ensure
+			is_class: class
 		end
+
 note
 	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

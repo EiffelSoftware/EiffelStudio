@@ -1,6 +1,4 @@
-note
-	description: "[
-		]"
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -376,6 +374,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetProcess"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_base_address (obj: POINTER; a_p: TYPED_POINTER [NATURAL_64]): INTEGER
@@ -386,6 +386,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetBaseAddress"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_assembly (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
@@ -396,6 +398,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetAssembly"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_name (obj: POINTER; a_cchname: NATURAL_32; a_pcchname: TYPED_POINTER [NATURAL_32]; a_szname: POINTER): INTEGER
@@ -406,6 +410,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetName"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_enable_jit_debugging (obj: POINTER; a_bool1, a_bool2: INTEGER): INTEGER
@@ -416,6 +422,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"EnableJITDebugging"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_enable_class_load_callbacks (obj: POINTER; a_bool: INTEGER): INTEGER
@@ -426,6 +434,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"EnableClassLoadCallbacks"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_function_from_token (obj: POINTER; a_token: NATURAL_32; a_p_function: TYPED_POINTER [POINTER]): INTEGER
@@ -436,6 +446,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetFunctionFromToken"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_class_from_token (obj: POINTER; a_token: NATURAL_32; a_p: TYPED_POINTER [POINTER]): INTEGER
@@ -446,6 +458,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetClassFromToken"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_create_breakpoint (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
@@ -456,6 +470,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"CreateBreakpoint"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_meta_data_interface (obj: POINTER; a_refiid: POINTER; a_result_p: TYPED_POINTER [POINTER]): INTEGER
@@ -468,6 +484,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetMetaDataInterface"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_token (obj: POINTER; a_p: TYPED_POINTER [NATURAL_32]): INTEGER
@@ -478,6 +496,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetToken"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_is_dynamic (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER
@@ -488,6 +508,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"IsDynamic"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_global_variable_value (obj: POINTER; a_index: NATURAL_32; a_p: TYPED_POINTER [POINTER]): INTEGER
@@ -498,6 +520,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetGlobalVariableValue"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_get_size (obj: POINTER; a_result: TYPED_POINTER [NATURAL_32]): INTEGER
@@ -508,6 +532,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetSize"
+		ensure
+			is_class: class
 		end
 
 	frozen cpp_is_in_memory (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER
@@ -518,6 +544,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"IsInMemory"
+		ensure
+			is_class: class
 		end
 
 feature {NONE} -- IID ...
@@ -534,6 +562,8 @@ feature {NONE} -- IID ...
    				((ICorDebugModule*)$a_obj)->GetMetaDataInterface(IID_IMetaDataImport,
                                            (IUnknown**)$a_ptr)
 			]"
+		ensure
+			is_class: class
 		end
 
 feature {NONE} -- Internal data
@@ -541,7 +571,7 @@ feature {NONE} -- Internal data
 	internal_md_import: detachable MD_IMPORT;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -554,23 +584,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class ICOR_DEBUG_MODULE
-
+end

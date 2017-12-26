@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "AST representation of a once routines."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -179,17 +179,20 @@ feature -- Status report
 		end
 
 	has_key_process (a_feature_as: FEATURE_AS): BOOLEAN
+			-- Does feature has a once key "PROCESS"?
 		do
 			Result := has_key (once_key_process)
 					or (attached a_feature_as.indexes as l_indexes and then l_indexes.has_global_once)
 		end
 
 	has_key_thread: BOOLEAN
+			-- Does feature has a once key "THREAD"?
 		do
 			Result := has_key (once_key_thread)
 		end
 
 	has_key_object: BOOLEAN
+			-- Does feature has a once key "OBJECT"?
 		do
 			Result := has_key (once_key_object)
 		end
@@ -235,7 +238,7 @@ feature {NONE} -- Constants
 	once_key_object: STRING = "OBJECT"
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -266,4 +269,4 @@ feature {NONE} -- Constants
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ONCE_AS
+end

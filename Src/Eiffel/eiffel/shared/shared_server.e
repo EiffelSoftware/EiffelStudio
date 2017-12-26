@@ -1,7 +1,7 @@
 note
+	description: "Shared access to servers."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Shared access to servers
 
 class SHARED_SERVER
 
@@ -84,7 +84,9 @@ feature {NONE}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	date: "$Date$";
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

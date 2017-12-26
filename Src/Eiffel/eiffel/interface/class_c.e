@@ -582,6 +582,20 @@ feature -- Building conformance table
 			end
 		end
 
+feature -- Type checking
+
+	check_instance_free_usage (c: AST_INSTANCE_FREE_CHECKER)
+			-- Check if features declared as class ones as well as those used in instance-free calls
+			-- are instance-free using instance-free checker `c`.
+		require
+			absent_explicit_assertion: system.absent_explicit_assertion
+			system_defined: workbench.system_defined
+			has_feature_table: has_feature_table
+			not_precompiled: not is_precompiled
+		do
+				-- Nothing here.
+		end
+
 feature -- Expanded rules validity
 
 	check_expanded

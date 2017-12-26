@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Properties of the memory management mechanism.
 		This class may be used as ancestor by classes needing its facilities.
@@ -178,13 +178,15 @@ feature {NONE} -- C externals
 			"C inline use %"eif_memory.h%""
 		alias
 			"return sizeof(struct emallinfo);"
+		ensure
+			is_class: class
 		end
 
 invariant
 	consistent_memory: total64 = free64 + used64 + overhead64
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

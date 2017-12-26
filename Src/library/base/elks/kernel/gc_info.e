@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Garbage collector statistics.
 			This class may be used as ancestor by classes needing its facilities.
@@ -214,6 +214,8 @@ feature {NONE} -- C externals
 			"C inline use %"eif_memory.h%""
 		alias
 			"return sizeof(struct gacstat);"
+		ensure
+			is_class: class
 		end
 
 	c_count (a_ptr: POINTER): INTEGER
@@ -361,7 +363,7 @@ feature {NONE} -- C externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

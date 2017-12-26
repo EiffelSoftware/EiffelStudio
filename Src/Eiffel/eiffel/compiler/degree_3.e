@@ -50,6 +50,7 @@ feature -- Processing
 			l_system: like system
 			l_error_handler: like error_handler
 			l_full_class_checking_agent: PROCEDURE [CLASS_C]
+			instance_free_checker: AST_INSTANCE_FREE_CHECKER
 		do
 			l_degree_output := degree_output
 			l_system := system
@@ -111,11 +112,17 @@ feature -- Processing
 			end
 
 			if not l_error_handler.has_error then
+				if system.absent_explicit_assertion then
+					create instance_free_checker.make
+				end
 				across
 					classes as cc
 				loop
-					if attached cc.item as c then
+					if attached cc.item as c and then not c.is_precompiled then
 						system.creation_server.check_initialization (c)
+						if attached instance_free_checker then
+							c.check_instance_free_usage (instance_free_checker)
+						end
 					end
 				end
 			end
@@ -274,7 +281,7 @@ invariant
 	ignored_classes_not_void: ignored_classes /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

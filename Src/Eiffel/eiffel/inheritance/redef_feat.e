@@ -72,6 +72,7 @@ feature {NONE} -- Implementation
 			has_postcondition: BOOLEAN
 			has_class_postcondition: BOOLEAN
 			has_false_postcondition: BOOLEAN
+			has_non_object_call: BOOLEAN
 			feat_assert_id_set: ASSERT_ID_SET
 			processed_features: ARRAYED_LIST [INTEGER]
 		do
@@ -93,6 +94,9 @@ feature {NONE} -- Implementation
 
 				-- By default there is no false postcondition.
 			-- has_false_postcondition := False
+
+				-- By default there are non-object calls if the feature makes them.
+			has_non_object_call := new_feat.has_immediate_non_object_call_in_assertion
 
 				-- We will loop twice on the list of features.
 				-- First we will add the inherited assertions of each feature.
@@ -144,6 +148,12 @@ feature {NONE} -- Implementation
 					feat.has_false_postcondition or else
 					(attached feat_assert_id_set and then feat_assert_id_set.has_false_postcondition)
 
+					-- A feature makes a non-object call if it or any ancestor
+					-- makes such a call.
+				has_non_object_call := has_non_object_call or else
+					feat.has_immediate_non_object_call_in_assertion or else
+					(attached feat_assert_id_set and then feat_assert_id_set.has_non_object_call)
+
 					-- Prepare next iteration.
 				features.forth
 			end
@@ -159,6 +169,9 @@ feature {NONE} -- Implementation
 
 				-- Set the calculated false postcondition status.
 			new_assert_id_set.set_has_false_postcondition (has_false_postcondition)
+
+				-- Set the calculated non-object call status.
+			new_assert_id_set.set_has_non_object_call (has_non_object_call)
 
 				-- Second loop: Add the inner assertions.
 			from

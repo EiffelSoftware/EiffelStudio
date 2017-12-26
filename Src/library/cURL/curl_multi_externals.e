@@ -26,9 +26,8 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_init")
-			if l_api /= default_pointer or is_static then
-				item := c_init (l_api)
-			end
+			check l_api /= default_pointer or is_static end
+			item := c_init (l_api)
 		end
 
 	add_handle (a_easy_handle: POINTER)
@@ -40,9 +39,8 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_add_handle")
-			if l_api /= default_pointer or is_static then
-				c_add_handle (l_api, item, a_easy_handle)
-			end
+			check l_api /= default_pointer or is_static end
+			c_add_handle (l_api, item, a_easy_handle)
 		end
 
 	remove_handle (a_easy_handle: POINTER)
@@ -54,9 +52,8 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_remove_handle")
-			if l_api /= default_pointer or is_static then
-				c_remove_handle (l_api, item, a_easy_handle)
-			end
+			check l_api /= default_pointer or is_static end
+			c_remove_handle (l_api, item, a_easy_handle)
 		end
 
 	cleanup: INTEGER
@@ -69,9 +66,8 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_cleanup")
-			if l_api /= default_pointer or is_static then
-				Result := c_cleanup (l_api, item)
-			end
+			check l_api /= default_pointer or is_static end
+			Result := c_cleanup (l_api, item)
 		end
 
 	perform (a_running_handle: CELL [INTEGER]): INTEGER
@@ -85,10 +81,9 @@ feature -- Command
 			l_running_handle: INTEGER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_perform")
-			if l_api /= default_pointer or is_static then
-				Result := c_perform (l_api, item, $l_running_handle)
-				a_running_handle.put (l_running_handle)
-			end
+			check l_api /= default_pointer or is_static end
+			Result := c_perform (l_api, item, $l_running_handle)
+			a_running_handle.put (l_running_handle)
 		end
 
 	info_read (a_msgs_in_queue: CELL [INTEGER]): POINTER
@@ -109,10 +104,9 @@ feature -- Command
 			l_msgs_in_queue: INTEGER
 		do
 			l_api := api_loader.api_pointer ("curl_multi_info_read")
-			if l_api /= default_pointer or is_static then
-				Result := c_info_read (l_api, item, $l_msgs_in_queue)
-				a_msgs_in_queue.put (l_msgs_in_queue)
-			end
+			check l_api /= default_pointer or is_static end
+			Result := c_info_read (l_api, item, $l_msgs_in_queue)
+			a_msgs_in_queue.put (l_msgs_in_queue)
 		end
 
 	is_dynamic_library_exists: BOOLEAN

@@ -22,9 +22,8 @@ feature -- Command
 			l_ptr: POINTER
 		do
 			l_ptr := api_loader.api_pointer ("curl_global_init")
-			if l_ptr /= default_pointer or is_static then
-				c_curl_global_init (l_ptr, {CURL_GLOBAL_CONSTANTS}.curl_global_all)
-			end
+			check l_ptr /= default_pointer or is_static end
+			c_curl_global_init (l_ptr, {CURL_GLOBAL_CONSTANTS}.curl_global_all)
 		end
 
 	global_cleanup
@@ -33,9 +32,8 @@ feature -- Command
 			l_ptr: POINTER
 		do
 			l_ptr := api_loader.api_pointer ("curl_global_cleanup")
-			if l_ptr /= default_pointer or is_static then
-				c_curl_global_cleanup (l_ptr)
-			end
+			check l_ptr /= default_pointer or is_static end
+			c_curl_global_cleanup (l_ptr)
 		end
 
 	formadd_string_string (a_form: CURL_FORM; a_last_pointer: CURL_FORM; a_arg_1: INTEGER; a_arg_1_value: READABLE_STRING_GENERAL; a_arg_2: INTEGER; a_arg_2_value: READABLE_STRING_GENERAL; a_arg_3: INTEGER)
@@ -75,10 +73,9 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_slist_append")
-			if l_api /= default_pointer or is_static then
-				create l_c_string.make (a_string)
-				Result := c_slist_append (l_api, a_list, l_c_string.item)
-			end
+			check l_api /= default_pointer or is_static end
+			create l_c_string.make (a_string)
+			Result := c_slist_append (l_api, a_list, l_c_string.item)
 		end
 
 	slist_free_all (a_curl_slist: POINTER)
@@ -92,9 +89,8 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_slist_free_all")
-			if l_api /= default_pointer or is_static then
-				c_slist_free_all (l_api, a_curl_slist)
-			end
+			check l_api /= default_pointer or is_static end
+			c_slist_free_all (l_api, a_curl_slist)
 		end
 
 	error_message (a_code: INTEGER): READABLE_STRING_32
@@ -107,12 +103,12 @@ feature -- Command
 		do
 			create {STRING_32} Result.make_from_string ("Unknown Error")
 			l_api := api_loader.api_pointer ("curl_easy_strerror")
-			if l_api /= default_pointer or is_static then
-				l_pointer := c_curl_easy_strerror (l_api, a_code)
-				if l_pointer /= default_pointer then
-					create l_cstring.make_by_pointer (l_pointer)
-					create {STRING_32} Result.make_from_string (l_cstring.string)
-				end
+			check l_api /= default_pointer or is_static end
+
+			l_pointer := c_curl_easy_strerror (l_api, a_code)
+			if l_pointer /= default_pointer then
+				create l_cstring.make_by_pointer (l_pointer)
+				create {STRING_32} Result.make_from_string (l_cstring.string)
 			end
 		end
 
@@ -143,9 +139,8 @@ feature {CURL_FORM} -- Internal command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_formfree")
-			if l_api /= default_pointer or is_static then
-				c_formfree (l_api, a_curl_form)
-			end
+			check l_api /= default_pointer or is_static end
+			c_formfree (l_api, a_curl_form)
 		end
 
 feature {NONE} -- Implementation
@@ -166,11 +161,11 @@ feature {NONE} -- Implementation
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_formadd")
-			if l_api /= default_pointer or is_static then
-				create l_c_string_1.make (a_arg_1_value)
-				create l_c_string_2.make (a_arg_2_value)
-				c_formadd_string_string (l_api, a_form, a_last_pointer, a_arg_1, l_c_string_1.item, a_arg_2, l_c_string_2.item, a_arg_3)
-			end
+			check l_api /= default_pointer or is_static end
+
+			create l_c_string_1.make (a_arg_1_value)
+			create l_c_string_2.make (a_arg_2_value)
+			c_formadd_string_string (l_api, a_form, a_last_pointer, a_arg_1, l_c_string_1.item, a_arg_2, l_c_string_2.item, a_arg_3)
 		end
 
 feature {NONE} -- C externals

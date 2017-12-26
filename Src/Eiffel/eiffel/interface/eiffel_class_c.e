@@ -14,6 +14,7 @@ inherit
 			group as cluster
 		redefine
 			apply_msil_application_optimizations,
+			check_instance_free_usage,
 			cluster, original_class,
 			is_eiffel_class_c,
 			eiffel_class_c,
@@ -34,11 +35,6 @@ inherit
 		end
 
 	SHARED_GENERATION
-
---	KL_SHARED_FILE_SYSTEM
---		export
---			{NONE} all
---		end
 
 create
 	make
@@ -1307,6 +1303,31 @@ feature
 			end
 		ensure
 			feature_table_file_id_positive: Result > 0
+		end
+
+feature -- Type checking
+
+	check_instance_free_usage (c: AST_INSTANCE_FREE_CHECKER)
+			-- <Precursor>
+		local
+			features: COMPUTED_FEATURE_TABLE
+			f: FEATURE_I
+			i: INTEGER
+		do
+			features := feature_table.features
+			from
+				i := features.count
+			until
+				i <= 0
+			loop
+				f := features [i]
+				if f.is_class then
+					c.verify_class_feature (f, Current)
+				elseif f.has_non_object_call then
+					c.verify_non_object_calls (f, Current)
+				end
+				i := i - 1
+			end
 		end
 
 feature {NONE} -- Class initialization	

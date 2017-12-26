@@ -11735,15 +11735,12 @@ feature {NONE} -- Instance-free checks
 	check_instance_free (f: FEATURE_I; c: CLASS_C; e: PROCEDURE; l: LOCATION_AS)
 			-- Check that feature `f` of class `c` is correctly called as instance-free at location `l` and report an error by calling `e` if not.
 		do
-			if not system.absent_explicit_assertion then
+			if not system.absent_explicit_assertion or else c.is_precompiled then
 					-- Assertions are specified explicitly. Raise an error.
 				e.call
 			elseif not c.is_full_class_checking then
 					-- Full class checking of the target class is required.
 				error_handler.insert_error (create {VD02}.make (f, c, context.written_class, l))
-			else
-					-- Look into the code to see if `f` can be used as instance-free with the target class `c`.
-				e.call
 			end
 		end
 

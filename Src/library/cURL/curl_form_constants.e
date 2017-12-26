@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
-					cURL form constants.
-					For more informaton see:
-					http://curl.haxx.se/libcurl/c/curl_formadd.html
-																		]"
+			cURL form constants.
+			For more informaton see:
+			http://curl.haxx.se/libcurl/c/curl_formadd.html
+		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
@@ -22,6 +22,8 @@ feature -- Query
 			"[
 				CURLFORM_COPYNAME
 			]"
+		ensure
+			is_class: class
 		end
 
 	curlform_copycontents: INTEGER
@@ -32,6 +34,8 @@ feature -- Query
 			"[
 				CURLFORM_COPYCONTENTS
 			]"
+		ensure
+			is_class: class
 		end
 
 	curlform_end: INTEGER
@@ -42,6 +46,8 @@ feature -- Query
 			"[
 				CURLFORM_END
 			]"
+		ensure
+			is_class: class
 		end
 
 	curlform_file: INTEGER
@@ -52,15 +58,18 @@ feature -- Query
 			"[
 				CURLFORM_FILE
 			]"
+		ensure
+			is_class: class
 		end
 
 	is_valid (a_integer: INTEGER): BOOLEAN
 			-- If `a_integer' valid?
 		do
-			Result := 	a_integer = curlform_copycontents or
-						a_integer = curlform_copyname or
-						a_integer =	curlform_end or
-						a_integer = curlform_file
+			Result :=
+				a_integer = curlform_copycontents or
+				a_integer = curlform_copyname or
+				a_integer = curlform_end or
+				a_integer = curlform_file
 		end
 
 note

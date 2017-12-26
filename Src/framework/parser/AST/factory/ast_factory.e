@@ -1836,15 +1836,15 @@ feature -- Access
 			l: detachable LOCAL_DEC_LIST_AS; b: detachable ROUT_BODY_AS; po: detachable ENSURE_AS;
 			r: detachable EIFFEL_LIST [INSTRUCTION_AS]; end_loc: detachable KEYWORD_AS;
 			oms_count, a_pos: INTEGER; k_as, r_as: detachable KEYWORD_AS;
-			object_test_locals: detachable ARRAYED_LIST [TUPLE [ID_AS, TYPE_AS]]): detachable ROUTINE_AS
-
-			-- New ROUTINE AST node
+			object_test_locals: detachable ARRAYED_LIST [TUPLE [ID_AS, TYPE_AS]];
+			n, a: BOOLEAN): detachable ROUTINE_AS
+			-- New ROUTINE AST node.
 		require
 			valid_oms_count: oms_count >= 0
 			a_pos_positive: a_pos > 0
 		do
 			if b /= Void and end_loc /= Void then
-				create Result.initialize (o, pr, l, b, po, r, end_loc, oms_count, a_pos, k_as, r_as, object_test_locals)
+				create Result.initialize (o, pr, l, b, po, r, end_loc, oms_count, a_pos, k_as, r_as, object_test_locals, n, a)
 			end
 		end
 

@@ -770,6 +770,22 @@ feature {NONE} -- Feature status
 			Result := feature_stack.item.is_class
 		end
 
+	has_non_object_call: BOOLEAN
+			-- Is there a non-object call in the current feature?
+		require
+			not feature_stack.is_empty
+		do
+			Result := feature_stack.item.has_non_object_call
+		end
+
+	has_non_object_call_in_assertion: BOOLEAN
+			-- Is there a non-object call in the current feature precondition or postcondition?
+		require
+			not feature_stack.is_empty
+		do
+			Result := feature_stack.item.has_non_object_call_in_assertion
+		end
+
 feature {NONE} -- Feature status modification
 
 	set_is_class_feature (value: BOOLEAN)
@@ -780,6 +796,26 @@ feature {NONE} -- Feature status modification
 			feature_stack.item.is_class := value
 		ensure
 			is_class_feature_set: is_class_feature = value
+		end
+
+	set_has_non_object_call (value: BOOLEAN)
+			-- Set `has_non_object_call` to `value`.
+		require
+			not feature_stack.is_empty
+		do
+			feature_stack.item.has_non_object_call := value
+		ensure
+			has_non_object_call_set: has_non_object_call = value
+		end
+
+	set_has_non_object_call_in_assertion (value: BOOLEAN)
+			-- Set `has_non_object_call_in_assertion` to `value`.
+		require
+			not feature_stack.is_empty
+		do
+			feature_stack.item.has_non_object_call_in_assertion := value
+		ensure
+			has_non_object_call_in_assertion_set: has_non_object_call_in_assertion = value
 		end
 
 feature {NONE} -- Implementation
@@ -820,7 +856,11 @@ feature {NONE} -- Implementation
 			feature_stack.item.fbody_pos := a_fbody_pos
 		end
 
-	feature_stack: ARRAYED_STACK [TUPLE [id_level, fbody_pos: INTEGER; is_class: BOOLEAN]]
+	feature_stack: ARRAYED_STACK [TUPLE [id_level, fbody_pos: INTEGER;
+			is_class: BOOLEAN;
+			has_non_object_call: BOOLEAN;
+			has_non_object_call_in_assertion: BOOLEAN
+		]]
 			-- id_level and fbody_pos are needed per feature body. Since there are inline agents
 			-- we need a stack of them. It may be, that there is no feature at all when its used
 			-- for an invariant. We never remove the first element of the stack.
@@ -828,13 +868,15 @@ feature {NONE} -- Implementation
 	add_feature_frame
 			-- Add a new frame to process a feature.
 		do
-			feature_stack.force ([Normal_level, 0, False])
+			feature_stack.force ([Normal_level, 0, False, False, False])
 			add_once_manifest_string_counter
 		ensure
 			feature_stack_allocated: feature_stack.count = old feature_stack.count + 1
 			default_id_level: id_level = normal_level
 			default_fbody_pos: fbody_pos = 0
 			default_is_class_feature: not is_class_feature
+			default_has_non_object_call: not has_non_object_call
+			default_has_non_object_call_in_assertion: not has_non_object_call_in_assertion
 			once_manifest_string_counters_allocated: once_manifest_string_counters.count = old once_manifest_string_counters.count + 1
 			default_once_manifest_string_counter_value: once_manifest_string_counter_value = 0
 		end
@@ -862,9 +904,13 @@ feature {NONE} -- Implementation
 		do
 			once_manifest_string_counters.replace (0)
 			set_is_class_feature (False)
+			set_has_non_object_call (False)
+			set_has_non_object_call_in_assertion (False)
 		ensure
 			feature_stack_unchanged: feature_stack.count = old feature_stack.count
 			default_is_class_feature: not is_class_feature
+			default_has_non_object_call: not has_non_object_call
+			default_has_non_object_call_in_assertion: not has_non_object_call_in_assertion
 			once_manifest_string_counters_unchanged: once_manifest_string_counters.count = old once_manifest_string_counters.count
 			default_once_manifest_string_counter_value: once_manifest_string_counter_value = 0
 		end

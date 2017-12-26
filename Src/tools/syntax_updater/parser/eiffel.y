@@ -1429,9 +1429,9 @@ Routine:
 					temp_keyword_as := Void
 				end
 				if attached $8 as l_rescue then
-					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $5, $6, $7, l_rescue.second, $9, once_manifest_string_counter_value, fbody_pos, temp_keyword_as, l_rescue.first, object_test_locals)
+					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $5, $6, $7, l_rescue.second, $9, once_manifest_string_counter_value, fbody_pos, temp_keyword_as, l_rescue.first, object_test_locals, has_non_object_call, has_non_object_call_in_assertion)
 				else
-					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $5, $6, $7, Void, $9, once_manifest_string_counter_value, fbody_pos, temp_keyword_as, Void, object_test_locals)
+					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $5, $6, $7, Void, $9, once_manifest_string_counter_value, fbody_pos, temp_keyword_as, Void, object_test_locals, has_non_object_call, has_non_object_call_in_assertion)
 				end
 				reset_feature_frame
 				object_test_locals := Void
@@ -3389,9 +3389,25 @@ A_precursor: TE_PRECURSOR Parameters
 	;
 
 A_static_call: New_a_static_call
-			{ $$ := $1 }
+			{
+				inspect id_level
+				when Precondition_level, Postcondition_level then
+					set_has_non_object_call_in_assertion (True)
+				else
+					set_has_non_object_call (True)
+				end
+				$$ := $1
+			}
 	|	Old_a_static_call
-			{ $$ := $1 }
+			{
+				inspect id_level
+				when Precondition_level, Postcondition_level then
+					set_has_non_object_call_in_assertion (True)
+				else
+					set_has_non_object_call (True)
+				end
+				$$ := $1
+			}
 	;
 
 New_a_static_call:

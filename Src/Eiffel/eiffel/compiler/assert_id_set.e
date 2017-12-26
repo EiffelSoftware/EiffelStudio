@@ -92,6 +92,9 @@ feature -- Status report
 	has_false_postcondition: BOOLEAN
 			-- Has the set any false postcondition (inner or inherited)?
 
+	has_non_object_call: BOOLEAN
+			-- Are there non-object calls in preconditions or postconditions (inner or inherited)?
+
 feature -- Status Setting
 
 	set_has_precondition (b: BOOLEAN)
@@ -124,6 +127,14 @@ feature -- Status Setting
 			has_false_postcondition := b
 		ensure
 			has_false_postcondition_set: has_false_postcondition = b
+		end
+
+	set_has_non_object_call (b: BOOLEAN)
+			-- Set `has_non_object_call' to `b'.
+		do
+			has_non_object_call := b
+		ensure
+			has_non_object_call_set: has_non_object_call = b
 		end
 
 feature -- Basic operations

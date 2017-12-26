@@ -947,6 +947,22 @@ feature -- Setting
 			has_class_postcondition_set: has_class_postcondition = v
 		end
 
+	set_has_immediate_non_object_call (v: BOOLEAN)
+			-- Set `has_immediate_non_object_call` to `v`.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (v, has_non_object_call_mask)
+		ensure
+			has_immediate_non_object_call_set: has_immediate_non_object_call = v
+		end
+
+	set_has_immediate_non_object_call_in_assertion (v: BOOLEAN)
+			-- Set `has_immediate_non_object_call_in_assertion` to `v`.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (v, has_non_object_call_in_assertion_mask)
+		ensure
+			has_immediate_non_object_call_in_assertion_set: has_immediate_non_object_call_in_assertion = v
+		end
+
 	set_is_hidden_in_debugger_call_stack (v: BOOLEAN)
 			-- Set `is_hidden_in_debugger_call_stack' to `v'.
 		do
@@ -1380,6 +1396,29 @@ feature -- Conveniences
 			-- (Usually applies to queries.)
 		do
 			Result := feature_flags & is_stable_mask = is_stable_mask
+		end
+
+	has_non_object_call: BOOLEAN
+			-- Is there a non-object call in the feature?
+			-- See also: `has_immediate_non_object_call`, `has_immediate_non_object_call_in_assertion`.
+		do
+			Result :=
+				has_immediate_non_object_call or else
+				attached assert_id_set as a and then a.has_non_object_call
+		end
+
+	has_immediate_non_object_call: BOOLEAN
+			-- Is there a non-object call in the feature without taking inherited assertions into account?
+			-- See also: `set_immediate_has_non_object_call`, `has_immediate_non_object_call_in_assertion`.
+		do
+			Result := feature_flags & has_non_object_call_mask /= 0
+		end
+
+	has_immediate_non_object_call_in_assertion: BOOLEAN
+			-- Is there a non-object call in the immediate routine precondition or postcondition?
+			-- See also: `set_immediate_has_non_object_call_in_assertion`, `has_immediate_non_object_call`.
+		do
+			Result := feature_flags & has_non_object_call_in_assertion_mask /= 0
 		end
 
 	has_class_postcondition: BOOLEAN
@@ -3005,6 +3044,8 @@ feature -- Undefinition
 			Result.set_has_postcondition (has_postcondition)
 			Result.set_has_class_postcondition (has_class_postcondition)
 			Result.set_has_false_postcondition (has_false_postcondition)
+			Result.set_has_immediate_non_object_call (has_immediate_non_object_call)
+			Result.set_has_immediate_non_object_call_in_assertion (has_immediate_non_object_call_in_assertion)
 			Result.set_is_bracket (is_bracket)
 			Result.set_is_parentheses (is_parentheses)
 			Result.set_is_binary (is_binary)
@@ -3130,6 +3171,8 @@ feature -- Replication
 			other.set_has_replicated_ast (has_replicated_ast)
 			other.set_is_stable (is_stable)
 			other.set_has_class_postcondition (has_class_postcondition)
+			other.set_has_immediate_non_object_call (has_immediate_non_object_call)
+			other.set_has_immediate_non_object_call_in_assertion (has_immediate_non_object_call_in_assertion)
 			other.set_is_hidden_in_debugger_call_stack (is_hidden_in_debugger_call_stack)
 			other.set_body_index (body_index)
 			other.set_is_type_evaluation_delayed (is_type_evaluation_delayed)
@@ -3525,7 +3568,9 @@ feature {FEATURE_I} -- Feature flags
 	has_false_postcondition_mask: NATURAL_64 =      0x2000_0000
 	is_hidden_in_debugger_call_stack_mask: NATURAL_64 = 0x4000_0000
 	is_parentheses_mask: NATURAL_64 =					0x8000_0000
-	has_class_postcondition_mask: NATURAL_64 =				0x1_0000_0000
+	has_class_postcondition_mask: NATURAL_64 =				0x0001_0000_0000
+	has_non_object_call_mask: NATURAL_64 =				0x0002_0000_0000
+	has_non_object_call_in_assertion_mask: NATURAL_64 =				0x0004_0000_0000
 			-- Mask used for each feature property.
 
 feature {FEATURE_I} -- Implementation

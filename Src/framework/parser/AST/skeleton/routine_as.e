@@ -1,5 +1,6 @@
 ﻿note
 	description	: "Abstract description of the content of a standard feature"
+	ca_ignore: "CA011", "CA011 – too many arguments"
 
 class ROUTINE_AS
 
@@ -20,8 +21,12 @@ feature {NONE} -- Initialization
 		l: like internal_locals; b: like routine_body; po: like postcondition;
 		r: like rescue_clause; ek: like end_keyword;
 		oms_count: like once_manifest_string_count; a_pos: like body_start_position; k_as, r_as: like obsolete_keyword;
-		ot_locals: like object_test_locals)
+		ot_locals: like object_test_locals;
+		n, a: BOOLEAN)
 			-- Create a new ROUTINE AST node.
+			-- Arguments:
+			-- 	• `n`	Does routine has a non-object call?
+			-- 	• `a`	Do routine precondition or postcondition have a non-object call?
 		require
 			b_not_void: b /= Void
 			ek_not_void: ek /= Void
@@ -44,6 +49,8 @@ feature {NONE} -- Initialization
 				rescue_keyword_index := r_as.index
 			end
 			object_test_locals := ot_locals
+			has_non_object_call := n
+			has_non_object_call_in_assertion := a
 		ensure
 			obsolete_message_set: obsolete_message = o
 			precondition_set: precondition = pr
@@ -57,6 +64,8 @@ feature {NONE} -- Initialization
 			obsolete_keyword_set: k_as /= Void implies obsolete_keyword_index = k_as.index
 			rescue_keyword_set: r_as /= Void implies rescue_keyword_index = r_as.index
 			object_test_locals_set: object_test_locals = ot_locals
+			has_non_object_call_set: has_non_object_call = n
+			has_non_object_call_in_assertion_set: has_non_object_call_in_assertion = a
 		end
 
 feature -- Visitor
@@ -104,8 +113,6 @@ feature -- Roundtrip
 			Result := routine_body.index
 		end
 
-feature -- Roundtrip
-
 	internal_locals: detachable LOCAL_DEC_LIST_AS
 			-- Local declarations, in which keyword "local" is stored
 
@@ -150,14 +157,6 @@ feature -- Attributes
 	object_test_locals: detachable ARRAYED_LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
 			-- Object test locals mentioned in the routine
 
-feature -- Status report
-
-	has_class_postcondition: BOOLEAN
-			-- Is there a class postcondition?
-		do
-			Result := attached postcondition as p and then p.is_class
-		end
-
 feature -- Location
 
 	body_start_position: INTEGER
@@ -199,7 +198,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-feature -- Properties
+feature -- Status report
 
 	is_require_else: BOOLEAN
 			-- Is the precondition block of the content preceded by
@@ -285,6 +284,18 @@ feature -- Properties
 			Result := routine_body.is_built_in
 		end
 
+	has_class_postcondition: BOOLEAN
+			-- Is there a class postcondition?
+		do
+			Result := attached postcondition as p and then p.is_class
+		end
+
+	has_non_object_call: BOOLEAN
+			-- Is there a non-object call in the routine?
+
+	has_non_object_call_in_assertion: BOOLEAN
+			-- Is there a non-object call in the routine precondition or postcondition?
+
 feature -- Access
 
 	number_of_breakpoint_slots: INTEGER
@@ -333,7 +344,7 @@ feature -- test for empty body
 
 	is_empty : BOOLEAN
 		do
-			Result := (routine_body = Void) or else (routine_body.is_empty)
+			Result := attached routine_body as b implies b.is_empty
 		end
 
 feature {COMPILER_EXPORTER} -- Element Change
@@ -370,9 +381,7 @@ feature -- default rescue
 
 	create_default_rescue (def_resc_name_id: INTEGER)
 		local
-			def_resc_id   : ID_AS
-			def_resc_call : ACCESS_ID_AS
-			def_resc_instr: INSTR_CALL_AS
+			def_resc_id: ID_AS
 			l_result: like rescue_clause
 		do
 			if rescue_clause = Void and then
@@ -384,10 +393,8 @@ feature -- default rescue
 						l_end_keyword.character_column, l_end_keyword.character_position,
 						l_end_keyword.character_count)
 				end
-				create def_resc_call.initialize (def_resc_id, Void)
-				create def_resc_instr.initialize (def_resc_call)
 				create l_result.make (1)
-				l_result.extend (def_resc_instr)
+				l_result.extend (create {INSTR_CALL_AS}.initialize (create {ACCESS_ID_AS}.initialize (def_resc_id, Void)))
 				rescue_clause := l_result
 			end
 		end

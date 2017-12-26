@@ -7964,9 +7964,9 @@ end
 					temp_keyword_as := Void
 				end
 				if attached yyvs16.item (yyvsp16) as l_rescue then
-					yyval77 := ast_factory.new_routine_as (temp_string_as1, yyvs74.item (yyvsp74), yyvs124.item (yyvsp124), yyvs76.item (yyvsp76), yyvs44.item (yyvsp44), l_rescue.second, yyvs12.item (yyvsp12), once_manifest_string_counter_value, fbody_pos, temp_keyword_as, l_rescue.first, object_test_locals)
+					yyval77 := ast_factory.new_routine_as (temp_string_as1, yyvs74.item (yyvsp74), yyvs124.item (yyvsp124), yyvs76.item (yyvsp76), yyvs44.item (yyvsp44), l_rescue.second, yyvs12.item (yyvsp12), once_manifest_string_counter_value, fbody_pos, temp_keyword_as, l_rescue.first, object_test_locals, has_non_object_call, has_non_object_call_in_assertion)
 				else
-					yyval77 := ast_factory.new_routine_as (temp_string_as1, yyvs74.item (yyvsp74), yyvs124.item (yyvsp124), yyvs76.item (yyvsp76), yyvs44.item (yyvsp44), Void, yyvs12.item (yyvsp12), once_manifest_string_counter_value, fbody_pos, temp_keyword_as, Void, object_test_locals)
+					yyval77 := ast_factory.new_routine_as (temp_string_as1, yyvs74.item (yyvsp74), yyvs124.item (yyvsp124), yyvs76.item (yyvsp76), yyvs44.item (yyvsp44), Void, yyvs12.item (yyvsp12), once_manifest_string_counter_value, fbody_pos, temp_keyword_as, Void, object_test_locals, has_non_object_call, has_non_object_call_in_assertion)
 				end
 				reset_feature_frame
 				object_test_locals := Void
@@ -17131,7 +17131,14 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval71 := yyvs71.item (yyvsp71) 
+				inspect id_level
+				when Precondition_level, Postcondition_level then
+					set_has_non_object_call_in_assertion (True)
+				else
+					set_has_non_object_call (True)
+				end
+				yyval71 := yyvs71.item (yyvsp71)
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
@@ -17148,7 +17155,14 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval71 := yyvs71.item (yyvsp71) 
+				inspect id_level
+				when Precondition_level, Postcondition_level then
+					set_has_non_object_call_in_assertion (True)
+				else
+					set_has_non_object_call (True)
+				end
+				yyval71 := yyvs71.item (yyvsp71)
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)

@@ -27,7 +27,6 @@
 		<library name="gobo_structure" location="gobo_structure.ecf"/>
 		<library name="gobo_utility" location="gobo_utility.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<cluster name="override_generated" location="override\generated\library\parse\" recursive="true"/>
 		<cluster name="parse" location="$ISE_LIBRARY\contrib\library\gobo\library\parse\src\" recursive="true">
 			<option namespace="Parse">
 			</option>

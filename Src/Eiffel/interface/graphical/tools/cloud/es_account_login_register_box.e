@@ -161,11 +161,10 @@ feature {NONE} -- Initialization
 				-- Layout
 			vb.extend (fr_login)
 			vb.disable_item_expand (fr_login)
-
 			vb.extend (fr_register)
 			vb.disable_item_expand (fr_register)
 
---				fr_register.show
+--			fr_register.show
 			fr_login.show
 
 			if attached es_cloud_s.service as cld then
@@ -435,6 +434,7 @@ feature {NONE} -- Implementation
 			a_container.disable_item_expand (hb)
 
 			create lab.make_with_text (a_label_text)
+			lab.align_text_right
 			hb.extend (lab)
 --			hb.disable_item_expand (lab)
 			hb.extend (a_item)
@@ -505,7 +505,7 @@ feature {NONE} -- Implementation
 
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

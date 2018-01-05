@@ -34,18 +34,16 @@ feature {NONE} -- Initialization
 	build_interface
 		local
 			cl: EV_CELL
-			l_center: ES_CENTER_WIDGET
 		do
 			create dialog.make_with_title ("EiffelStudio Startup")
 			dialog.set_icon_pixmap (Pixmaps.icon_pixmaps.general_dialog_icon)
 			dialog.set_icon_name ("Startup")
 			create cl
 			main_box := cl
-			create l_center.make_with_widget (cl)
-			dialog.extend (l_center)
+			dialog.extend (cl)
 
-			l_center.set_background_color (colors.stock_colors.white)
-			l_center.propagate_background_color
+			cl.set_background_color (colors.stock_colors.white)
+			cl.propagate_background_color
 		end
 
 feature -- Execution
@@ -125,7 +123,6 @@ We look forward to your contributions
 				txt.set_text (l_agreement_text)
 				vb.extend (txt)
 				txt.set_minimum_height (220)
-				vb.disable_item_expand (txt)
 				create lnk.make_with_text (interface_names.l_read_license_text)
 				lnk.align_text_left
 				lnk.select_actions.extend (agent on_license_selected)
@@ -134,6 +131,8 @@ We look forward to your contributions
 
 				create hb
 				vb.extend (hb)
+				vb.disable_item_expand (hb)
+
 				hb.extend (create {EV_CELL})
 
 					-- Vertical menu of buttons.
@@ -180,6 +179,7 @@ We look forward to your contributions
 			hb.set_padding_width (layout_constants.default_padding_size)
 			main_box.replace (hb)
 
+				-- Logo column
 			create vb
 			eiffel_image :=	Pixmaps.bm_About.twin
 			eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
@@ -188,14 +188,11 @@ We look forward to your contributions
 			vb.disable_item_expand (eiffel_image)
 			vb.extend (create {EV_CELL})
 
-			hb.extend (create {EV_CELL})
 			hb.extend (vb)
 			hb.disable_item_expand (vb)
 
 			create vb
 			hb.extend (vb)
-			hb.disable_item_expand (vb)
-			hb.extend (create {EV_CELL})
 
 			vb.set_padding_width (layout_constants.default_padding_size)
 
@@ -203,12 +200,11 @@ We look forward to your contributions
 			wid.next_actions.extend (agent on_next)
 			vb.extend (wid)
 			vb.disable_item_expand (wid)
+			vb.extend (create {EV_CELL})
 
 			create but.make_with_text_and_action (interface_names.b_quit, agent on_quit)
 			layout_constants.set_default_width_for_button (but)
 			append_label_and_item_horizontally ("", but, vb)
-
-			vb.extend (create {EV_CELL})
 
 			if l_focus /= Void then
 				l_focus.set_focus
@@ -325,25 +321,6 @@ feature -- Change
 			quit_action := act
 		end
 
-feature {NONE} -- Implementation: form
-
---	new_gui_form (arr: ITERABLE [TUPLE [name: READABLE_STRING_GENERAL; text: EV_TEXTABLE]]): STRING_TABLE [EV_TEXTABLE]
---		do
---			create Result.make_caseless (1)
---			across
---				arr as ic
---			loop
---				Result.force (ic.item.text, ic.item.name)
---			end
---		end
-
---	gui_form_string_item (a_name: READABLE_STRING_GENERAL; a_form: like new_gui_form): detachable READABLE_STRING_32
---		do
---			if attached a_form.item (a_name) as t then
---				Result := t.text
---			end
---		end
-
 feature {NONE} -- Implementation		
 
 	open_url (a_url: READABLE_STRING_8)
@@ -382,23 +359,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
---	append_vertical_menu_items (a_items: ITERABLE [TUPLE [label: READABLE_STRING_GENERAL; w: EV_WIDGET]]; a_box: EV_BOX)
---		local
---			vb: EV_VERTICAL_BOX
---			but: EV_BUTTON
---		do
---			create vb
---			vb.set_padding_width (layout_constants.default_padding_size)
---			vb.set_border_width (layout_constants.default_border_size)
---			a_box.extend (vb)
---			a_box.disable_item_expand (vb)
---			across
---				a_items as ic
---			loop
---				append_label_and_item_horizontally (ic.item.label, ic.item.w, vb)
---			end
---		end
-
 	append_label_and_item_horizontally (a_label_text: READABLE_STRING_GENERAL; a_item: EV_WIDGET; a_container: EV_VERTICAL_BOX)
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -415,29 +375,8 @@ feature {NONE} -- Implementation
 			hb.disable_item_expand (a_item)
 		end
 
---	popup_message (msg: READABLE_STRING_GENERAL)
---		local
---			popup: EV_POPUP_WINDOW
---			lab: EV_LABEL
---		do
-
---			create popup.make_with_shadow
---			create lab.make_with_text (msg)
---			popup.extend (lab)
---			popup.set_size (200, 50)
---			popup.set_position (dialog.x_position + (dialog.width - popup.width) // 2, dialog.y_position + (dialog.height - popup.height) // 2)
---			lab.pointer_button_release_actions.extend (agent (i_popup: EV_POPUP_WINDOW; x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
---				do
---					i_popup.destroy
---				end (popup, ?, ?, ?, ?, ?, ?, ?, ?))
---			popup.show_relative_to_window (dialog)
---		end
-
-invariant
---	invariant_clause: True
-
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

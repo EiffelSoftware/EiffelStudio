@@ -35,6 +35,5 @@
 				<exclude>/skeleton$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="override_generated" location="override\generated\library\lexical\" recursive="true"/>
 	</target>
 </system>

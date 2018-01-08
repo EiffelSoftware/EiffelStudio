@@ -27,12 +27,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_comm: like support_login; a_last_description: like last_description)
+	make (a_support_url: like support_url; a_comm: like support_login; a_last_description: like last_description)
 			-- Set `last_description' with `a_description', `a_last_description' can be void
 		require
 			a_comm_attached: a_comm /= Void
 			a_comm_is_support_accessible: a_comm.is_support_accessible
 		do
+			support_url := a_support_url
 			support_login := a_comm
 			last_description := a_last_description
 
@@ -339,6 +340,9 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation: access
+
+	support_url: STRING
+			-- Support site url.
 
 	support_login: ESA_SUPPORT_BUG_REPORTER
 			-- Reporter used to report bugs to the support system
@@ -1001,7 +1005,7 @@ feature {NONE} -- Internationalization
 	lb_submitted: STRING
 		once
 			Result := "The submitted report is now available at "
-			Result.append (preferences.misc_data.support_url.string)
+			Result.append (support_url)
 		end
 
 	lb_submitting: STRING = "Submitting bug report, please wait..."
@@ -1021,9 +1025,8 @@ feature {NONE} -- Internationalization
 	e_submit_error: STRING
 		once
 			Result := "There was a problem submitting the problem report. Please retry or submit it manually at "
-			Result.append (preferences.misc_data.support_url.string)
+			Result.append (support_url)
 		end
-
 
 feature {NONE} -- Constants
 
@@ -1050,7 +1053,7 @@ invariant
 	shrink_interval_positive: shrink_interval > 0
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

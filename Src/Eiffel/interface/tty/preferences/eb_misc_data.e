@@ -169,12 +169,6 @@ feature -- Value
 			Result := eis_path_preference.value
 		end
 
-	support_url: STRING_32
-			-- Support service url
-		do
-			Result := support_url_preference.value
-		end
-
 	license_accepted: BOOLEAN
 			-- License is accepted?
 		do
@@ -213,7 +207,6 @@ feature -- Preference
 	pnd_preference: BOOLEAN_PREFERENCE
 	eis_path_preference: STRING_32_PREFERENCE
 	use_postscript_preference: BOOLEAN_PREFERENCE
-	support_url_preference: STRING_32_PREFERENCE
 	license_accepted_preference: BOOLEAN_PREFERENCE
 	es_cloud_enabled_preference: BOOLEAN_PREFERENCE
 
@@ -234,7 +227,6 @@ feature {NONE} -- Preference Strings
 	pnd_preference_string: STRING = "general.pick_and_drop_(pnd)_mode"
 	eis_path_preference_string: STRING = "general.eis_path"
 	use_postscript_preference_string: STRING = "general.use_postscript"
-	support_url_preference_string: STRING = "general.support_url"
 	license_accepted_preference_string: STRING = "general.license_accepted"
 	es_cloud_enabled_preference_string: STRING = "general.es_cloud_enabled"
 
@@ -281,9 +273,6 @@ feature {NONE} -- Implementation
 			end
 
 			use_postscript_preference := l_manager.new_boolean_preference_value (l_manager, use_postscript_preference_string, False)
-
-			support_url_preference := l_manager.new_string_32_preference_value (l_manager, support_url_preference_string, {STRING_32} "https://support.eiffel.com/")
-			support_url_preference.set_hidden (True)
 
 			license_accepted_preference := l_manager.new_boolean_preference_value (l_manager, license_accepted_preference_string, False)
 			license_accepted_preference.set_hidden (True)
@@ -415,7 +404,6 @@ invariant
 	pnd_preference_not_void: pnd_preference /= Void
 	eis_preference_not_void: eis_path_preference /= Void
 	use_postscript_preference_not_void: use_postscript_preference /= Void
-	support_url_preference_not_void:  support_url_preference /= Void
 	license_accepted_preference_not_void: license_accepted_preference /= Void
 	es_cloud_enabled_preference_not_void: es_cloud_enabled_preference /= Void
 

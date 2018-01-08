@@ -69,7 +69,7 @@ feature {NONE} -- Initialize
 			-- Note: No user interface initialization should be done here! Use `build_dialog_interface' instead
 		do
 			Precursor {ES_ERROR_PROMPT}
-			create support_login.make (create {ESA_CLIENT_CONFIGURATION}.make (preferences.misc_data.support_url.string))
+			create support_login.make (create {ESA_CLIENT_CONFIGURATION}.make (support_url))
 		end
 
 	build_prompt_interface (a_container: EV_VERTICAL_BOX)
@@ -165,6 +165,9 @@ feature -- Access
 
 	support_login: ESA_SUPPORT_BUG_REPORTER
 			-- Support site login proxy communicator
+
+	support_url: STRING = "https://support.eiffel.com/"
+			-- Official support site url.
 
 feature {NONE} -- Access
 
@@ -355,7 +358,7 @@ feature {NONE} -- Action handlers
 
 				last_description := l_description
 			end
-			create l_dialog.make (support_login, l_description)
+			create l_dialog.make (support_url, support_login, l_description)
 			l_dialog.show (dialog)
 			if l_dialog.dialog_result = l_dialog.dialog_buttons.ok_button then
 				if l_dialog.is_submit_successed then
@@ -399,7 +402,7 @@ invariant
 	support_login_attached: is_interface_usable implies support_login /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

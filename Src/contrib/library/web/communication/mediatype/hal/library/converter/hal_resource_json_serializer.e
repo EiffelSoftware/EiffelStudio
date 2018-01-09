@@ -21,26 +21,15 @@ feature -- Convertion
 		do
 			if attached {HAL_RESOURCE} obj as o then
 				create jo.make
-				if 
-					attached o.links as l_links and then
-					not l_links.is_empty
-				then
-					jo.put (to_json_links (l_links, ctx), links_key)
-				end
-				if 
-					attached o.embedded_resource as l_embedded_resource and then
-					not l_embedded_resource.is_empty
-				then
+				jo.put (to_json_links (o.links, ctx), links_key)
+				if attached o.embedded_resource as l_embedded_resource then
 					jo.put (to_json_embedded_resource (l_embedded_resource, ctx), embedded_key)
 				end
-				if 
-					attached o.fields as l_fields and then
-					not l_fields.is_empty
-				then
+				if attached o.fields as l_fields then
 					across
 						l_fields as ic
 					loop
-						jo.put_string (ic.item, ic.key)
+						jo.put (to_json_value (ic.item), ic.key)
 					end
 				end
 				Result := jo
@@ -65,19 +54,15 @@ feature {NONE} -- Converter implementation
 		local
 			l_result_arr: JSON_ARRAY
 		do
-			if a_resource.count = 1 then
-				Result := to_json (a_resource.first, ctx)
-			else
-				create {JSON_ARRAY} l_result_arr.make_empty
-				across
-					a_resource as ic
-				loop
-					if attached to_json (ic.item, ctx) as l_iter then
-						l_result_arr.add (l_iter)
-					end
+			create {JSON_ARRAY} l_result_arr.make_empty
+			across
+				a_resource as ic
+			loop
+				if attached to_json (ic.item, ctx) as l_iter then
+					l_result_arr.add (l_iter)
 				end
-				Result := l_result_arr
 			end
+			Result := l_result_arr
 		end
 
 	to_json_links (a_links: TABLE_ITERABLE [HAL_LINK, READABLE_STRING_GENERAL]; ctx: JSON_SERIALIZER_CONTEXT): JSON_OBJECT
@@ -120,10 +105,7 @@ feature {NONE} -- Converter implementation
 			l_result_arr: JSON_ARRAY
 		do
 			create {JSON_ARRAY} l_result_arr.make_empty
-			if 
-				attached a_link.attributes as l_attribs and then
-				not l_attribs.is_empty
-			then
+			if attached a_link.attributes as l_attribs then
 				across
 					l_attribs as ic
 				loop
@@ -146,8 +128,8 @@ feature {NONE} -- Converter implementation
 			if attached a_link_attribute.title as l_title then
 				Result.put_string (l_title, title_key)
 			end
-			if a_link_attribute.templated then
-				Result.put_boolean (True, templated_key)
+			if attached a_link_attribute.templated as l_templated then
+				Result.put_boolean (l_templated, templated_key)
 			end
 			if attached a_link_attribute.deprecation as l_deprecation then
 				Result.put_string (l_deprecation, deprecation_key)
@@ -159,6 +141,27 @@ feature {NONE} -- Converter implementation
 				Result.put_string (l_profile, profile_key)
 			end
 
+		end
+
+	to_json_value (a_obj: detachable ANY): JSON_VALUE
+			-- Convert an object `a_obj' to JSON_VALUE representation.
+		local
+			obj: ANY
+			conv_to: JSON_REFLECTOR_SERIALIZER
+			ctx: detachable JSON_SERIALIZER_CONTEXT
+		do
+			obj := a_obj
+
+				-- Auto serialization, handling table iterable as JSON Object, and iterable as ARRAY. Without typename.
+			create conv_to
+			create ctx
+			ctx.set_pretty_printing
+			ctx.set_is_type_name_included (False)
+			ctx.set_default_serializer (create {JSON_REFLECTOR_SERIALIZER})
+			ctx.register_serializer (create {TABLE_ITERABLE_JSON_SERIALIZER [detachable ANY, READABLE_STRING_GENERAL]}, {TABLE_ITERABLE [detachable ANY, READABLE_STRING_GENERAL]})
+			ctx.register_serializer (create {ITERABLE_JSON_SERIALIZER [detachable ANY]}, {ITERABLE [detachable ANY]})
+
+			Result := conv_to.to_json (obj, ctx)
 		end
 
 feature {NONE} -- Implementation: RESOURCE
@@ -182,7 +185,7 @@ feature {NONE} -- Implementation: LINK
 
 	ref_key: JSON_STRING
 		once
-			create Result.make_from_string ("ref")
+			create Result.make_from_String ("ref")
 		end
 
 feature {NONE} -- Implementation: LINK_ATTRIBUTE

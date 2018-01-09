@@ -1,0 +1,39 @@
+{
+  "_links" : {
+    "curies" : [ {
+      "href" : "https://example.com/apidocs/ns/{rel}",
+      "name" : "ns",
+      "templated" : true
+    }, {
+      "href" : "https://example.com/apidocs/role/{rel}",
+      "name" : "role",
+      "templated" : true
+    } ],
+    "self" : {
+      "href" : "https://example.com/api/customer/123456"
+    },
+    "ns:parent" : {
+      "href" : "https://example.com/api/customer/1234",
+      "name" : "bob",
+      "title" : "The Parent",
+      "hreflang" : "en"
+    },
+    "ns:users" : {
+      "href" : "https://example.com/api/customer/123456?users"
+    }
+  },
+  "_embedded" : {
+    "ns:user" : {
+      "_links" : {
+        "self" : {
+          "href" : "https://example.com/user/11"
+        }
+      },
+      "age" : 32,
+      "expired" : false,
+      "id" : 11,
+      "name" : "Example User",
+      "optional" : true
+    }
+  }
+}

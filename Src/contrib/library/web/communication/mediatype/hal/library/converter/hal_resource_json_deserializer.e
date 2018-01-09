@@ -18,6 +18,8 @@ feature -- Conversion
 		local
 			l_list: LIST [HAL_RESOURCE]
 			js: JSON_STRING
+			l_table: STRING_TABLE [detachable ANY]
+			l_array: ARRAY [detachable ANY]
 		do
 			if attached {JSON_OBJECT} a_json as j then
 				create Result.make
@@ -30,15 +32,32 @@ feature -- Conversion
 						attached j.item (js) as j_rep
 					then
 						if attached {JSON_STRING} j_rep as js_rep then
-							Result.add_field (js.item, js_rep.unescaped_string_32)
+							Result.add_string_field (js.item, js_rep.unescaped_string_32)
 						elseif attached {JSON_NUMBER} j_rep as jn_rep then
-							Result.add_field (js.item, jn_rep.item)
+							if jn_rep.is_integer then
+								Result.add_integer_field (js.item, jn_rep.integer_64_item)
+							elseif jn_rep.is_double then
+								Result.add_real_field (js.item, jn_rep.real_64_item)
+							else -- natural	
+								Result.add_natural_field (js.item, jn_rep.natural_64_item)
+							end
 						elseif attached {JSON_BOOLEAN} j_rep as jb_rep then
-							Result.add_field (js.item, jb_rep.item.out)
+							Result.add_boolean_field (js.item, jb_rep.item)
 						elseif attached {JSON_NULL} j_rep as jnull then
-							Result.add_field (js.item, "null")
+							Result.add_null_field (js.item)
 						else
-							Result.add_field (js.item, j_rep.representation)
+								-- HAL reference fields: JSON_OBJECT or JSON_ARRAY
+							if attached {JSON_OBJECT} j_rep as j_object then
+								create l_table.make (1)
+								add_reference_field (j_object, l_table)
+								Result.add_object_field (js.item, l_table)
+							elseif attached {JSON_ARRAY} j_rep as j_array  then
+								create l_array.make_filled ({ANY}, 1, j_array.count)
+								add_reference_field (j_array, l_array)
+								Result.add_array_field (js.item, l_array)
+							else
+								check known_json_value: False end
+							end
 						end
 					end
 				end
@@ -147,6 +166,102 @@ feature {NONE} -- Converter implementation
 				end
 				if attached {JSON_STRING} j.item (profile_key) as j_profile then
 					Result.set_profile (j_profile.item)
+				end
+			end
+		end
+
+	add_reference_field (a_value: JSON_VALUE; a_reference: ANY )
+			-- Add the field represented by `a_value' (a JSON_OBJECT or JSON_ARRAY)
+			-- into the corresponding `a_reference' data structure (STRING_TABLE [ANY]
+			-- or ARRAY [ANY]).
+			-- Raise a developer exception if it found an unexpected value.
+
+		local
+			js: JSON_STRING
+			l_table: STRING_TABLE [detachable ANY]
+			l_array: ARRAY [detachable ANY]
+			i: INTEGER
+		do
+			if
+				attached {JSON_OBJECT} a_value as j and then
+				attached {STRING_TABLE [detachable ANY]} a_reference as a_table
+			then
+				across
+					j.current_keys as ic
+				loop
+					js := ic.item
+					if
+						attached j.item (js) as j_rep
+					then
+						if attached {JSON_STRING} j_rep as js_rep then
+							a_table.force (js_rep.unescaped_string_32, js.item)
+						elseif attached {JSON_NUMBER} j_rep as jn_rep then
+							if jn_rep.is_integer then
+								a_table.force (jn_rep.integer_64_item, js.item)
+							elseif jn_rep.is_double then
+								a_table.force (jn_rep.real_64_item, js.item)
+							else -- natural	
+								a_table.force (jn_rep.natural_64_item, js.item)
+							end
+						elseif attached {JSON_BOOLEAN} j_rep as jb_rep then
+							a_table.force (jb_rep.item, js.item)
+						elseif attached {JSON_NULL} j_rep as jnull then
+							a_table.force ("null",js.item)
+						else
+								-- JSON_OBJECT
+							if attached {JSON_OBJECT} j_rep as j_object then
+								create l_table.make (1)
+								add_reference_field (j_object, l_table)
+								a_table.force (l_table, js.item)
+								-- JSON_ARRAY
+							elseif attached {JSON_ARRAY} j_rep as j_array  then
+								create l_array.make_filled ({ANY}, 1, j_array.count)
+								add_reference_field (j_array, l_array)
+								a_table.force (l_array, js.item)
+							else
+									-- Unexpected value
+								check known_json_value: False end
+							end
+						end
+					end
+				end
+			elseif
+				attached {JSON_ARRAY} a_value as j_array and then
+				attached {ARRAY [detachable ANY]} a_reference as a_array
+			then
+				i := 1
+				across j_array as ic  loop
+					if attached {JSON_STRING} ic.item as js_rep then
+						a_array.force (js_rep, i)
+					elseif attached {JSON_NUMBER} ic.item as jn_rep then
+						if jn_rep.is_integer then
+							a_array.force (jn_rep.integer_64_item, i)
+						elseif jn_rep.is_double then
+							a_array.force (jn_rep.real_64_item, i)
+						else -- natural	
+							a_array.force (jn_rep.natural_64_item, i)
+						end
+					elseif attached {JSON_BOOLEAN} ic.item as jb_rep then
+						a_array.force (jb_rep.item, i)
+					elseif attached {JSON_NULL} ic.item as jnull then
+						a_array.force ("null", i)
+					else
+							-- JSON_OBJECT
+						if attached {JSON_OBJECT} ic.item as j_object then
+							create l_table.make (1)
+							add_reference_field (ic.item, l_table)
+							a_array.force (l_table, i)
+							-- JSON_ARRAY
+						elseif attached {JSON_ARRAY} ic.item as j_arr  then
+							create l_array.make_filled ({ANY}, 1, j_array.count)
+							add_reference_field (j_array, l_array)
+							a_array.force (l_array, i)
+						else
+								-- Unexpected value
+							check known_json_value: False end
+						end
+					end
+					i := i + 1
 				end
 			end
 		end

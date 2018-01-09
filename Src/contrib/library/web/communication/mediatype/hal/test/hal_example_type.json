@@ -1,0 +1,11 @@
+ {
+     "_links": {
+       "self": { "href": "/test" },
+       "next": { "href": "/test?page=2" },
+       "find": { "href": "/tes{?id}", "templated": true }
+     },
+     "id": 1,
+     "price": 20,
+     "name": "T-Shit",
+     "new": true 
+   }

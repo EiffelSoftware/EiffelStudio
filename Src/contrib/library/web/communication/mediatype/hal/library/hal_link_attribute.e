@@ -128,7 +128,7 @@ feature -- Element change
 		do
 			create {STRING_32} title.make_from_string_general (a_title)
 		ensure
-			assigned: title = a_title
+			assigned: attached title as l_title and then l_title.is_case_insensitive_equal_general (a_title)
 		end
 
 	set_hreflang (a_hreflang: STRING)

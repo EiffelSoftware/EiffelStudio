@@ -24,7 +24,10 @@ feature {NONE} -- Initialization
 				status: INTEGER
 				signature: POINTER
 				c_string: C_STRING
+				l_example_gcm: EXAMPLE_GCM
 		do
+			create l_example_gcm.make
+
 			 -- First step: create an EC_KEY object (note: this part is not ECDSA specific)
 			ec_key := {SSL_ECC}.c_ec_key_new
 			check not_null_ec_key: ec_key /= default_pointer end

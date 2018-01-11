@@ -133,7 +133,7 @@ feature -- Status Report
 			-- are subsequently changed.
 		local
 			a_character_index: INTEGER
-			a_text_iter: POINTER
+			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
 			a_text_attributes: POINTER
 			previous_text_attributes: POINTER
 			previous_font_family, font_family: STRING_32
@@ -145,7 +145,7 @@ feature -- Status Report
 			from
 				font_family_contiguous := True
 				a_character_index := start_index + 1
-				a_text_iter := a_text_iter.memory_alloc ({EV_GTK_TEXT_ITER_STRUCT}.structure_size)
+				create a_text_iter.make
 				{GTK2}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, start_index - 1)
 				previous_text_attributes := gtk_text_view_get_default_attributes (text_view)
 				a_change := gtk_text_iter_get_attributes (a_text_iter.item, previous_text_attributes)
@@ -229,8 +229,6 @@ feature -- Status Report
 			end
 
 			gtk_text_attributes_free (previous_text_attributes)
-
-			a_text_iter.memory_free
 
 			create Result.make_with_flags ((511).bit_xor (non_contiguous_range_information))
 				-- 511 is the mask value for character format constants
@@ -937,7 +935,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

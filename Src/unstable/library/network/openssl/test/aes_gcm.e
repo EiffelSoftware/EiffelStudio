@@ -199,4 +199,107 @@ feature -- Encypt - Decrypt
 
 
 
+
+
+
+
+--
+--        // Data from server
+--        String ivFromHttpHeader = "000000000000000000000000";
+--        String authTagFromHttpHeader = "CE573FB7A41AB78E743180DC83FF09BD";
+--        String httpBody = "0A3471C72D9BE49A8520F79C66BBD9A12FF9";
+--
+--        // Convert data to process
+--        byte[] key = DatatypeConverter.parseHexBinary(keyFromConfiguration);
+--        byte[] iv = DatatypeConverter.parseHexBinary(ivFromHttpHeader);
+--        byte[] authTag = DatatypeConverter.parseHexBinary(authTagFromHttpHeader);
+--        byte[] encryptedText = DatatypeConverter.parseHexBinary(httpBody);
+
+	gcm_decrypt_2
+			-- https://docs.acaptureservices.com/tutorials/webhooks/decryption-example
+		local
+			l_ctx: POINTER --EVP_CIPHER_CTX
+			l_outlen, l_tmplen: INTEGER
+			l_outbuf: MANAGED_POINTER
+			l_res: INTEGER
+			m_key: MANAGED_POINTER
+			m_iv: MANAGED_POINTER
+			m_ct: MANAGED_POINTER
+			l_index: INTEGER
+			m_tag: MANAGED_POINTER
+			l_converter: BYTE_ARRAY_CONVERTER
+		do
+				--// Data from configuration
+				--String keyFromConfiguration = "000102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f";
+			create l_converter.make_from_hex_string ("000102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f")
+			create m_key.make_from_array (l_converter.to_natural_8_array)
+
+				--  String ivFromHttpHeader = "000000000000000000000000";
+			create l_converter.make_from_hex_string ("000000000000000000000000")
+			create m_iv.make_from_array (l_converter.to_natural_8_array)
+
+				--  String authTagFromHttpHeader = "CE573FB7A41AB78E743180DC83FF09BD";
+			create l_converter.make_from_hex_string ("CE573FB7A41AB78E743180DC83FF09BD")
+			create m_tag.make_from_array (l_converter.to_natural_8_array)
+
+				-- Encrypted text String httpBody = "0A3471C72D9BE49A8520F79C66BBD9A12FF9"
+			create l_converter.make_from_hex_string ("0A3471C72D9BE49A8520F79C66BBD9A12FF9")
+			create m_ct.make_from_array (l_converter.to_natural_8_array)
+
+			create l_outbuf.make_from_array (create {ARRAY [NATURAL_8]}.make_filled (0, 1, 1024))
+
+				-- Initialize the context
+			l_ctx := {SSL_EVP}.c_evp_cipher_ctx_new
+
+				--    /* Select cipher */
+				--    EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL);
+			l_res := {SSL_EVP}.c_evp_decryptinit_ex (l_ctx, {SSL_EVP}.c_evp_aes_256_gcm, default_pointer, default_pointer, default_pointer)
+
+				--    /* Set IV length, omit for 96 bits */
+				--    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, sizeof(gcm_iv), NULL);
+			l_res := {SSL_EVP}.c_evp_cipher_ctx_ctrl (l_ctx, {SSL_EVP}.c_evp_ctrl_aead_set_ivlen, m_iv.count, default_pointer)
+
+				--    /* Specify key and IV */
+				--    EVP_DecryptInit_ex(ctx, NULL, NULL, gcm_key, gcm_iv);
+			l_res := {SSL_EVP}.c_evp_decryptinit_ex (l_ctx, default_pointer, default_pointer, m_key.item, m_iv.item)
+
+
+				--    /* Decrypt plaintext */
+				--    EVP_DecryptUpdate(ctx, outbuf, &outlen, gcm_ct, sizeof(gcm_ct));
+				--    printf("Ciphertext:\n");
+				--    BIO_dump_fp(stdout, gcm_ct, sizeof(gcm_ct));
+			print ("Ciphertext: ")
+			l_res := {SSL_EVP}.bio_dump_fp (io.output.file_pointer, m_ct.item, m_ct.count)
+			io.put_new_line
+
+			l_res := {SSL_EVP}.c_evp_decryptupdate (l_ctx, l_outbuf.item, $l_outlen, m_ct.item, m_ct.count)
+
+				--    /* Output decrypted block */
+				--    printf("Plaintext:\n");
+				--    BIO_dump_fp(stdout, outbuf, outlen);
+			print ("Plain text: ")
+			l_res := {SSL_EVP}.bio_dump_fp (io.output.file_pointer, l_outbuf.item, l_outlen)
+			io.put_new_line
+
+				--    /* Set expected tag value. */
+				--    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, sizeof(gcm_tag),
+				--                        (void *)gcm_tag);
+			l_res := {SSL_EVP}.c_evp_cipher_ctx_ctrl (l_ctx, {SSL_EVP}.c_evp_ctrl_aead_set_tag, m_tag.count, m_tag.item)
+
+				--    /* Finalise: note get no output for GCM */
+				--    rv = EVP_DecryptFinal_ex(ctx, outbuf, &outlen);
+			l_res := {SSL_EVP}.c_evp_decryptfinal_ex (l_ctx, l_outbuf.item, $l_outlen)
+			--    /*
+			--     * Print out return value. If this is not successful authentication
+			--     * failed and plaintext is not trustworthy.
+			--     */
+			--    printf("Tag Verify %s\n", rv > 0 ? "Successful!" : "Failed!");
+
+			print ("Tag Verify: " + l_res.out)
+			{SSL_EVP}.c_evp_cipher_ctx_free (l_ctx)
+
+		end
+
+
+
 end

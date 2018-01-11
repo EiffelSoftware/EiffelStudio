@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			create l_aes_gcm
 			l_aes_gcm.gcm_encrypt
 			io.put_new_line
-			l_aes_gcm.gcm_decrypt
+			l_aes_gcm.gcm_decrypt_2
 			create l_example_gcm.make
 
 			 -- First step: create an EC_KEY object (note: this part is not ECDSA specific)

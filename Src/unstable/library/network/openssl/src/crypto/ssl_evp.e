@@ -31,6 +31,15 @@ feature -- C externals
 			"return EVP_aes_128_gcm();"
 		end
 
+	c_evp_aes_256_gcm: POINTER
+			-- Function AES Galois Counter Mode (GCM) for 256.
+			-- Return an pointer to an EVP_CIPHER.
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_aes_256_gcm();"
+		end
+
 	c_evp_decryptinit_ex (a_ctx: POINTER; a_type: POINTER; a_impl: POINTER; a_key: POINTER; a_iv: POINTER): INTEGER
 			--	 int EVP_DecryptInit_ex(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
 			--         ENGINE *impl, unsigned char *key, unsigned char *iv);
@@ -75,6 +84,26 @@ feature -- C externals
 			"return EVP_CTRL_GCM_SET_TAG"
 		end
 
+	c_evp_ctrl_aead_set_ivlen: INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_CTRL_AEAD_SET_IVLEN"
+		end
+
+	c_evp_ctrl_aead_get_tag: INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_CTRL_AEAD_GET_TAG"
+		end
+
+	c_evp_ctrl_aead_set_tag: INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_CTRL_AEAD_SET_TAG"
+		end
 
 
 	c_evp_decryptupdate (a_ctx: POINTER; a_out: POINTER; a_outl: TYPED_POINTER [INTEGER]; a_in: POINTER; a_inl: INTEGER): INTEGER
@@ -98,7 +127,6 @@ feature -- C externals
 			  ]"
 		end
 
-
 	c_evp_decryptfinal (a_ctx: POINTER; a_outm: POINTER; a_outl: TYPED_POINTER [INTEGER]): INTEGER
 			-- int EVP_DecryptFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *outm,
 			--         int *outl);
@@ -108,10 +136,47 @@ feature -- C externals
 			"return EVP_DecryptFinal((EVP_CIPHER_CTX *)$a_ctx, (unsigned char *)$a_outm, (int *)$a_outl);"
 		end
 
+	c_evp_encryptinit_ex (a_ctx: POINTER;  a_cipher: POINTER; a_impl: POINTER;  a_key: POINTER; a_iv: POINTER): INTEGER
+			--	int EVP_EncryptInit_ex(EVP_CIPHER_CTX *ctx,
+			--                                  const EVP_CIPHER *cipher, ENGINE *impl,
+			--                                  const unsigned char *key,
+			--                                  const unsigned char *iv);	
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_EncryptInit_ex((EVP_CIPHER_CTX *)$a_ctx, (const EVP_CIPHER *)$a_cipher, (ENGINE *)$a_impl, (const unsigned char *)$a_key, (const unsigned char *)$a_iv);"
+		end
+
+	c_evp_encryptupdate	(a_ctx: POINTER; a_out: POINTER; a_outl: TYPED_POINTER [INTEGER]; a_in: POINTER; a_inl: INTEGER): INTEGER
+			--	int EVP_EncryptUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out,
+			--                                 int *outl, const unsigned char *in, int inl);
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_EncryptUpdate((EVP_CIPHER_CTX *)$a_ctx, (unsigned char *)$a_out, (int *)$a_outl, (const unsigned char *)$a_in, (int)$a_inl);"
+		end
+
+
+	c_evp_encryptfinal_ex (a_ctx: POINTER; a_out: POINTER; a_outl: TYPED_POINTER [INTEGER]):INTEGER
+			--	int EVP_EncryptFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *out,
+			--                                   int *outl);	
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_EncryptFinal_ex((EVP_CIPHER_CTX *)$a_ctx, (unsigned char *)$a_out, (int *)$a_outl);"
+		end
+
 	c_evp_cipher_ctx_free (a_ctx: POINTER)
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
 			"EVP_CIPHER_CTX_free($a_ctx);"
+		end
+
+	BIO_dump_fp (fp: POINTER; s: POINTER; len: INTEGER): INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return BIO_dump_fp((FILE *)$fp, (const char *)$s, (int)$len);"
 		end
 end

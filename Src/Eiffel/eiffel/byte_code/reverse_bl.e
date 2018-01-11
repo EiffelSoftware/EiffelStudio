@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Enlarged byte code for reverse assignment"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -247,7 +247,7 @@ feature
 					if not target.is_predefined then
 						buf.put_character (';')
 						buf.put_new_line
-						buf.put_string ("RTAR(")
+						buf.put_string ({C_CONST}.rtar_open)
 						l_context.Current_register.print_register
 						buf.put_string ({C_CONST}.comma_space)
 						print_register
@@ -264,7 +264,7 @@ feature
 				if not target.is_predefined then
 					buf.put_character (';')
 					buf.put_new_line
-					buf.put_string ("RTAR(")
+					buf.put_string ({C_CONST}.rtar_open)
 					l_context.Current_register.print_register
 					buf.put_string ({C_CONST}.comma_space)
 					source_print_register
@@ -276,10 +276,10 @@ feature
 			end
 
 			info.generate_end (buf)
-		end;
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

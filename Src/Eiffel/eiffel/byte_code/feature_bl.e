@@ -970,7 +970,7 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 				buf.put_character (';')
 				if type_c.level = C_ref then
 					buf.put_new_line
-					buf.put_string ("RTAR(")
+					buf.put_string ({C_CONST}.rtar_open)
 					target_register.print_register
 					buf.put_character (',')
 					parameters [1].print_register
@@ -982,7 +982,7 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

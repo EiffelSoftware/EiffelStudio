@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Enlarged byte code for assignment"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -208,25 +208,23 @@ feature
 						source.propagate (No_register)
 						register := target
 						register_for_metamorphosis := True
-					else
+					elseif
 							-- Do not propagate something expanded as the
 							-- routines in NESTED_BL and friends won't know
 							-- how to deal with that (they do real assignments,
 							-- not copies). In case target is expanded, we
 							-- do not propagate anything in the source.
-						if not target_type.is_true_expanded then
-								-- If there is invariant checking and the target
-								-- is used in the source, do not propagate.
-								-- Case: p := p.right in a list and p becomes
-								-- void...
-							if not ((context.workbench_mode or else
-								context.assertion_level.is_invariant) and
-								source.used (target))
-							then
-								source.propagate (target)
-								target_propagated := context.propagated
-							end
-						end
+						not target_type.is_true_expanded and then
+							-- If there is invariant checking and the target
+							-- is used in the source, do not propagate.
+							-- Case: p := p.right in a list and p becomes
+							-- void...
+						not ((context.workbench_mode or else
+							context.assertion_level.is_invariant) and
+							source.used (target))
+					then
+						source.propagate (target)
+						target_propagated := context.propagated
 					end
 				else
 						-- This is an assignment in an attribute.
@@ -488,7 +486,7 @@ feature
 					source.print_register
 					buf.put_character (';')
 					buf.put_new_line
-					buf.put_string ("RTAR(")
+					buf.put_string ({C_CONST}.rtar_open)
 					context.Current_register.print_register
 					buf.put_string ({C_CONST}.comma_space)
 					print_register
@@ -499,7 +497,7 @@ feature
 					l_void ?= source
 					if l_void = Void then
 						buf.put_new_line
-						buf.put_string ("RTAR(")
+						buf.put_string ({C_CONST}.rtar_open)
 						context.Current_register.print_register
 						buf.put_string ({C_CONST}.comma_space)
 						source_print_register
@@ -688,11 +686,10 @@ feature
 		local
 			binary: BINARY_B
 			other: EXPR_B
-			int: INTEGER_CONSTANT
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			binary ?= source;	-- Cannot fail
+			binary ?= source	-- Cannot fail
 			inspect
 				simple_op_assignment
 			when Left_simple_op then
@@ -711,9 +708,9 @@ feature
 				target.print_register
 			end
 				-- Detection of <expr> +/- 1
-			int ?= other
 			if
-				binary.is_additive and then not (int = Void)
+				binary.is_additive and then
+				attached {INTEGER_CONSTANT} other as int
 				and then int.is_one
 			then
 				binary.generate_plus_plus
@@ -725,7 +722,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Enlarged byte code for manifest arrays"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -207,17 +207,16 @@ feature {NONE} -- C code generation
 			-- Generate the registers for the expressions
 			-- to fill the manifest array.
 		local
-			expr: EXPR_B;
-			actual_type: TYPE_A;
-			is_expanded: BOOLEAN;
-			position: INTEGER;
+			expr: EXPR_B
+			is_expanded: BOOLEAN
+			position: INTEGER
 			buf: GENERATION_BUFFER
 			l_target_type: CL_TYPE_A
 			l_exp_class_type: CLASS_TYPE
 		do
 			is_expanded := target_type.is_true_expanded;
 			buf := buffer
-			if (is_expanded and then expressions.count > 0) then
+			if is_expanded and then expressions.count > 0 then
 				buf.put_new_line;
 				buf.put_character ('{');
 				buf.indent;
@@ -227,15 +226,14 @@ feature {NONE} -- C code generation
 				buf.put_string ("elem_size = RT_SPECIAL_ELEM_SIZE(")
 				array_area_reg.print_register;
 				buf.put_two_character (')', ';')
-			end;
+			end
 			from
-				expressions.start;
-				position := 0;
+				expressions.start
+				position := 0
 			until
 				expressions.after
 			loop
 				expr ?= expressions.item;
-				actual_type := context.real_type (expr.type);
 				expr.generate_for_type (item_register, target_type)
 				buf.put_new_line
 				if is_expanded then
@@ -291,7 +289,7 @@ feature {NONE} -- C code generation
 					if target_type.is_reference then
 						buf.put_character (';');
 						buf.put_new_line
-						buf.put_string ("RTAR(");
+						buf.put_string ({C_CONST}.rtar_open);
 						array_area_reg.print_register;
 						buf.put_character (',');
 						item_print_register (expr, target_type)
@@ -308,7 +306,7 @@ feature {NONE} -- C code generation
 				expressions.forth
 				position := position + 1
 			end
-			if (is_expanded and expressions.count > 0) then
+			if is_expanded and expressions.count > 0 then
 				buf.exdent
 				buf.put_new_line
 				buf.put_character ('}')
@@ -341,9 +339,9 @@ feature {NONE} -- C code generation
 			buffer.put_string (")")
 
 				-- Generate the arguments
-			buffer.put_character ('(');
-			array_area_reg.print_register;
-			buffer.put_two_character (')', ';');
+			buffer.put_character ('(')
+			array_area_reg.print_register
+			buffer.put_two_character (')', ';')
 
 				-- Remember extern routine declaration
 				-- Since `make_from_special' from ARRAY is a procedure, the return type is `Void_type'
@@ -357,14 +355,10 @@ feature {NONE} -- C code generation
 				-- Generate code to call the make routine
 				-- of the manifest array in workbench mode.
 		local
-			f_table: FEATURE_TABLE;
-			feat_i: FEATURE_I;
-			base_class: CLASS_C
+			feat_i: FEATURE_I
 			buf: GENERATION_BUFFER
 		do
-			base_class := real_ty.base_class
-			f_table := base_class.feature_table
-			feat_i := f_table.item_id ({PREDEFINED_NAMES}.to_array_name_id)
+			feat_i := real_ty.base_class.feature_table.item_id ({PREDEFINED_NAMES}.to_array_name_id)
 			buf := buffer
 			buf.put_new_line
 			print_register
@@ -423,7 +417,7 @@ feature {REGISTRABLE} -- C code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

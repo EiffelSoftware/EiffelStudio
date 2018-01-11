@@ -1012,6 +1012,8 @@ feature{MYSQLI_EXTERNALS} -- Sizes of Structs
 			"C inline use %"mysql.h%""
 		alias
 			"return (EIF_INTEGER)sizeof(MYSQL_BIND)"
+		ensure
+			is_class: class
 		end
 
 	size_of_mysql_time_struct: INTEGER

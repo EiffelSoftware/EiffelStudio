@@ -411,14 +411,14 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 			l_total_count: NATURAL
 		do
 				-- Perform bindings
-			if attached a_bindings as l_bindings then
+			if a_bindings /= Void then
 				from
-					i := l_bindings.lower
-					i_upper := l_bindings.upper
+					i := a_bindings.lower
+					i_upper := a_bindings.upper
 				until
 					i > i_upper
 				loop
-					if attached l_bindings[i] as l_arg then
+					if attached a_bindings[i] as l_arg then
 						l_arg_variable := l_arg.variable
 						create l_arg_id.make (l_arg_variable)
 						l_arg_index := sqlite3_bind_parameter_index (sqlite_api, internal_stmt, l_arg_id.item)
@@ -753,7 +753,7 @@ invariant
 	internal_thread_id_set: {PLATFORM}.is_thread_capable implies internal_thread_id /= 0
 
 ;note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

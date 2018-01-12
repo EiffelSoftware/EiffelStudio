@@ -2,8 +2,12 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="curl" uuid="D51EF190-6157-4B47-8E73-FA93DCBB7A71" library_target="curl">
 	<target name="curl">
 		<description>cURL: libcURL wrapper library for Eiffel.
-      Copyright (c) 1984-2006, Eiffel Software and others.
-      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+         Copyright (c) 1984-2006, Eiffel Software and others.
+         Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).
+         The library support two modes: dynamic mode (by default) or static mode.
+         To use it as static mode set in your client ecf set the following variable
+     	 static_curl_enabled to true
+       </description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/EIFGEN.{0,1}$</exclude>
@@ -23,6 +27,15 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_include>
+
+		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\eiffel_curl.lib">
+			<condition>
+				<platform value="windows"/>
+				<concurrency value="none"/>
+				<dotnet value="false"/>
+			</condition>
+		</external_object>
+
 		<external_object location="$(ISE_LIBRARY)/library/cURL/spec/$(ISE_PLATFORM)/lib/eiffel_curl.o">
 			<condition>
 				<platform excluded_value="windows"/>
@@ -35,15 +48,33 @@
 				<concurrency excluded_value="none"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\eiffel_curl.lib">
+		<external_object location="-lcurl">
 			<condition>
+				<platform excluded_value="windows"/>
+				<custom name="static_curl_enabled" value="true"/>
+			</condition>
+		</external_object>
+		
+		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\eiffel_curl_static.lib">
+			<condition>
+				<custom name="static_curl_enabled" value="true"/>
 				<platform value="windows"/>
 				<concurrency value="none"/>
 				<dotnet value="false"/>
 			</condition>
 		</external_object>
+		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\MTeiffel_curl_static.lib">
+			<condition>
+				<custom name="static_curl_enabled" value="true"/>
+				<platform value="windows"/>
+				<concurrency excluded_value="none"/>
+				<dotnet value="false"/>
+			</condition>
+		</external_object>
+
 		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mteiffel_curl.lib">
 			<condition>
+				<custom name="static_curl_enabled" excluded_value="true"/>
 				<platform value="windows"/>
 				<concurrency excluded_value="none"/>
 				<dotnet value="false"/>
@@ -51,10 +82,22 @@
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ileiffel_curl.lib">
 			<condition>
+				<custom name="static_curl_enabled" excluded_value="true"/>
 				<platform value="windows"/>
 				<dotnet value="true"/>
 			</condition>
 		</external_object>
+				<external_object location="$(ISE_LIBRARY)\C_library\curl\builds\libcurl-vc-x64-release-static-sspi-winssl\lib\libcurl_a.lib">
+			<condition>
+				<custom name="static_curl_enabled" value="true"/>
+			</condition>
+		</external_object>
+		<external_cflag value="-DCURL_STATICLIB ">
+			<condition>
+				<custom name="static_curl_enabled" value="true"/>
+			</condition>
+		</external_cflag>
+
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="api_wrapper" location="$ISE_LIBRARY\library\api_wrapper\api_wrapper.ecf"/>
 		<library name="clibs_libcurl" location="$ISE_LIBRARY\C_library\curl\clibs_libcurl.ecf"/>

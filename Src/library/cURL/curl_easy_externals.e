@@ -17,14 +17,13 @@ feature -- Command
 	init: POINTER
 			-- Declared as curl_easy_init().
 		require
-			dynamic_library_exists: is_dynamic_library_exists
+			dynamic_library_exists: is_dynamic_library_exists or is_static
 		local
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_init")
-			if l_api /= default_pointer then
-				Result := c_init (l_api)
-			end
+			check l_api /= default_pointer or is_static end
+			Result := c_init (l_api)
 		ensure
 			exists: Result /= default_pointer
 		end
@@ -40,10 +39,9 @@ feature -- Command
 			l_c_str: C_STRING
 		do
 			l_api := api_loader.api_pointer ("curl_easy_setopt")
-			if l_api /= default_pointer then
-				create l_c_str.make (a_string)
-				c_setopt (l_api, a_curl_handle, a_opt, l_c_str.item)
-			end
+			check l_api /= default_pointer or is_static end
+			create l_c_str.make (a_string)
+			c_setopt (l_api, a_curl_handle, a_opt, l_c_str.item)
 		end
 
 	setopt_form (a_curl_handle: POINTER; a_opt: INTEGER; a_form: CURL_FORM)
@@ -76,9 +74,8 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_setopt")
-			if l_api /= default_pointer then
-				c_setopt_int (l_api, a_curl_handle, a_opt, a_curl_string.object_id)
-			end
+			check l_api /= default_pointer or is_static end
+			c_setopt_int (l_api, a_curl_handle, a_opt, a_curl_string.object_id)
 		end
 
 	setopt_integer (a_curl_handle: POINTER; a_opt: INTEGER; a_integer: INTEGER)
@@ -90,9 +87,8 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_setopt")
-			if l_api /= default_pointer then
-				c_setopt_int (l_api, a_curl_handle, a_opt, a_integer)
-			end
+			check l_api /= default_pointer or is_static end
+			c_setopt_int (l_api, a_curl_handle, a_opt, a_integer)
 		end
 
 	setopt_file (a_curl_handle: POINTER; a_opt: INTEGER; a_file: FILE)
@@ -114,11 +110,8 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_perform")
-			if l_api /= default_pointer then
-				Result := c_perform (l_api, a_curl_handle)
-			else
-				Result := {CURL_CODES}.eiffelcurle_error_occurred
-			end
+			check l_api /= default_pointer or is_static end
+			Result := c_perform (l_api, a_curl_handle)
 		end
 
 	cleanup (a_curl_handle: POINTER)
@@ -129,9 +122,8 @@ feature -- Command
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_cleanup")
-			if l_api /= default_pointer then
-				c_cleanup (l_api, a_curl_handle)
-			end
+			check l_api /= default_pointer or is_static end
+			c_cleanup (l_api, a_curl_handle)
 		end
 
 feature -- Query
@@ -157,27 +149,27 @@ feature -- Query
 		do
 			a_data.replace (Void)
 			l_api := api_loader.api_pointer ("curl_easy_getinfo")
-			if l_api /= default_pointer then
-				if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
-					create mp.make ({PLATFORM}.integer_32_bytes)
-				elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
-					create mp.make ({PLATFORM}.pointer_bytes)
-				elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
-					create mp.make ({PLATFORM}.real_64_bytes)
-				end
-				if mp /= Void then
-					Result := c_getinfo (l_api, a_curl_handle, a_info, mp.item)
-					if Result = {CURL_CODES}.curle_ok then
-						if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
-							l := mp.read_integer_32 (0)
-							a_data.put (l)
-						elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
-							create cs.make_shared_from_pointer (mp.read_pointer (0))
-							a_data.put (cs.string)
-						elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
-							d := mp.read_real_64 (0)
-							a_data.put (d)
-						end
+			check l_api /= default_pointer or is_static end
+
+			if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
+				create mp.make ({PLATFORM}.integer_32_bytes)
+			elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
+				create mp.make ({PLATFORM}.pointer_bytes)
+			elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
+				create mp.make ({PLATFORM}.real_64_bytes)
+			end
+			if mp /= Void then
+				Result := c_getinfo (l_api, a_curl_handle, a_info, mp.item)
+				if Result = {CURL_CODES}.curle_ok then
+					if a_info & {CURL_INFO_CONSTANTS}.curlinfo_long /= 0 then
+						l := mp.read_integer_32 (0)
+						a_data.put (l)
+					elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_string /= 0 then
+						create cs.make_shared_from_pointer (mp.read_pointer (0))
+						a_data.put (cs.string)
+					elseif a_info & {CURL_INFO_CONSTANTS}.curlinfo_double /= 0 then
+						d := mp.read_real_64 (0)
+						a_data.put (d)
 					end
 				end
 			end
@@ -187,6 +179,12 @@ feature -- Query
 			-- If dll/so files exist?
 		do
 			Result := api_loader.is_interface_usable
+		end
+
+	is_static: BOOLEAN
+			-- is CURL_STATICLIB defined?
+		do
+			Result := (create {CURL_UTILITY}).is_static
 		end
 
 feature -- Special setting
@@ -222,9 +220,8 @@ feature -- Special setting
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_setopt")
-			if l_api /= default_pointer then
-				curl_function.c_set_write_function (l_api, a_curl_handle)
-			end
+			check l_api /= default_pointer or is_static end
+			curl_function.c_set_write_function (l_api, a_curl_handle)
 		end
 
 	set_read_function (a_curl_handle: POINTER)
@@ -237,9 +234,8 @@ feature -- Special setting
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_setopt")
-			if l_api /= default_pointer then
-				curl_function.c_set_read_function (l_api, a_curl_handle)
-			end
+			check l_api /= default_pointer or is_static end
+			curl_function.c_set_read_function (l_api, a_curl_handle)
 		end
 
 	set_progress_function (a_curl_handle: POINTER)
@@ -250,9 +246,8 @@ feature -- Special setting
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_setopt")
-			if l_api /= default_pointer then
-				curl_function.c_set_progress_function (l_api, a_curl_handle)
-			end
+			check l_api /= default_pointer or is_static end
+			curl_function.c_set_progress_function (l_api, a_curl_handle)
 		end
 
 	set_debug_function (a_curl_handle: POINTER)
@@ -263,9 +258,8 @@ feature -- Special setting
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_setopt")
-			if l_api /= default_pointer then
-				curl_function.c_set_debug_function (l_api, a_curl_handle)
-			end
+			check l_api /= default_pointer or is_static end
+			curl_function.c_set_debug_function (l_api, a_curl_handle)
 		end
 
 feature {NONE} -- Implementation
@@ -273,7 +267,7 @@ feature {NONE} -- Implementation
 	internal_curl_function: detachable CURL_FUNCTION
 			-- cURL functions.
 
-	api_loader: DYNAMIC_MODULE
+	api_loader: MODULE_LOADER
 			-- Module name.
 		local
 			l_utility: CURL_UTILITY
@@ -285,15 +279,14 @@ feature {NONE} -- Implementation
 	setopt_void_star (a_curl_handle: POINTER; a_opt: INTEGER; a_data:POINTER)
 			-- Declared as curl_easy_setopt().
 		require
-			exists: a_curl_handle /= default_pointer
+			exists: a_curl_handle /= default_pointer or is_static
 			valid: (create {CURL_OPT_CONSTANTS}).is_valid (a_opt)
 		local
 			l_api: POINTER
 		do
 			l_api := api_loader.api_pointer ("curl_easy_setopt")
-			if l_api /= default_pointer then
-				c_setopt (l_api, a_curl_handle, a_opt, a_data)
-			end
+			check l_api /= default_pointer or is_static end
+			c_setopt (l_api, a_curl_handle, a_opt, a_data)
 		end
 
 feature {NONE} -- C externals
@@ -301,58 +294,72 @@ feature {NONE} -- C externals
 	c_init (a_api: POINTER): POINTER
 			-- Declared curl_easy_init ().
 		require
-			exists: a_api /= default_pointer
+			exists: a_api /= default_pointer or is_static
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				return (FUNCTION_CAST(CURL *, ()) $a_api)();
+				#ifdef CURL_STATICLIB
+					return curl_easy_init ();		
+				#else
+					return (FUNCTION_CAST(CURL *, ()) $a_api)();
+				#endif
 			]"
 		end
 
 	c_cleanup (a_api: POINTER; a_curl_handle: POINTER)
 			-- Decalred as curl_easy_cleanup ().
 		require
-			exists: a_api /= default_pointer
+			exists: a_api /= default_pointer or is_static
 			exists: a_curl_handle /= default_pointer
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				(FUNCTION_CAST(void, (CURL *)) $a_api)((CURL *)$a_curl_handle);
+				#ifdef CURL_STATICLIB
+					curl_easy_cleanup ((CURL *)$a_curl_handle);
+				#else
+					(FUNCTION_CAST(void, (CURL *)) $a_api)((CURL *)$a_curl_handle);
+				#endif
 			]"
 		end
 
 	c_perform (a_api: POINTER; a_curl_handle: POINTER): INTEGER
 			-- Declared as curl_easy_perform().
 		require
-			exists: a_api /= default_pointer
+			exists: a_api /= default_pointer or is_static
 			exists: a_curl_handle /= default_pointer
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				return (FUNCTION_CAST(CURLcode, (CURL *)) $a_api)
+				#ifdef CURL_STATICLIB
+					curl_easy_perform ((CURL *) $a_curl_handle);
+				#else
+					return (FUNCTION_CAST(CURLcode, (CURL *)) $a_api)
 											((CURL *) $a_curl_handle);
+				#endif
 			]"
 		end
 
 	c_setopt_int (a_api: POINTER; a_curl_handle: POINTER; a_opt: INTEGER; a_data: INTEGER)
 			-- Same as `c_setopt' except we can pass `a_data' as integer.
 		require
-			exists: a_api /= default_pointer
+			exists: a_api /= default_pointer or is_static
 			exists: a_curl_handle /= default_pointer
 			valid: (create {CURL_OPT_CONSTANTS}).is_valid (a_opt)
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-			{
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_api)
+				#ifdef CURL_STATICLIB
+					curl_easy_setopt ((CURL *) $a_curl_handle,(CURLoption)$a_opt,$a_data);
+				#else
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_api)
 												((CURL *) $a_curl_handle,
 												(CURLoption)$a_opt,
-												$a_data);			
-			}
+												$a_data);
+				#endif
 			]"
 		end
 
@@ -360,19 +367,21 @@ feature {NONE} -- C externals
 			-- C implementation of `setopt_void_star'.
 			-- Declared as curl_easy_setopt ().
 		require
-			exists: a_api /= default_pointer
+			exists: a_api /= default_pointer or is_static
 			exists: a_curl_handle /= default_pointer
 			valid: (create {CURL_OPT_CONSTANTS}).is_valid (a_opt)
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-			{
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_api)
-												((CURL *) $a_curl_handle,
-												(CURLoption)$a_opt,
-												$a_data);			
-			}
+				#ifdef CURL_STATICLIB
+					curl_easy_setopt ((CURL *) $a_curl_handle, (CURLoption)$a_opt,$a_data);
+				#else
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_api)
+															((CURL *) $a_curl_handle,
+															(CURLoption)$a_opt,
+															$a_data);			
+				#endif
 			]"
 		end
 
@@ -380,17 +389,21 @@ feature {NONE} -- C externals
 			-- C implementation of `curl_easy_getinfo'.
 			-- Declared as curl_easy_setopt ().
 		require
-			exists: a_api /= default_pointer
+			exists: a_api /= default_pointer or is_static
 			exists: a_curl_handle /= default_pointer
 			valid: (create {CURL_OPT_CONSTANTS}).is_valid (a_opt)
 		external
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				return (FUNCTION_CAST(CURLcode, (CURL *, CURLINFO info, ...)) $a_api)
+				#ifdef CURL_STATICLIB
+					return curl_easy_setopt ((CURL *) $a_curl_handle, (CURLINFO)$a_opt,	$a_data);
+				#else
+					return (FUNCTION_CAST(CURLcode, (CURL *, CURLINFO info, ...)) $a_api)
 												((CURL *) $a_curl_handle,
 												(CURLINFO)$a_opt,
 												$a_data);
+				#endif
 			]"
 		end
 

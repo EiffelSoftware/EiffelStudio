@@ -197,24 +197,6 @@ feature -- Encypt - Decrypt
 
 		end
 
-
-
-
-
-
-
---
---        // Data from server
---        String ivFromHttpHeader = "000000000000000000000000";
---        String authTagFromHttpHeader = "CE573FB7A41AB78E743180DC83FF09BD";
---        String httpBody = "0A3471C72D9BE49A8520F79C66BBD9A12FF9";
---
---        // Convert data to process
---        byte[] key = DatatypeConverter.parseHexBinary(keyFromConfiguration);
---        byte[] iv = DatatypeConverter.parseHexBinary(ivFromHttpHeader);
---        byte[] authTag = DatatypeConverter.parseHexBinary(authTagFromHttpHeader);
---        byte[] encryptedText = DatatypeConverter.parseHexBinary(httpBody);
-
 	gcm_decrypt_2
 			-- https://docs.acaptureservices.com/tutorials/webhooks/decryption-example
 		local

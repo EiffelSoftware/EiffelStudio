@@ -162,10 +162,15 @@ feature -- Storage
 				j.append_character ('}')
 			end
 
-			if l_package /= Void and then attached l_package.json_item as l_json then
+			if
+				l_package /= Void and then
+				attached l_package.json_item as l_json and then
+				l_json.is_valid_as_string_8
+			then
+					-- FIXME: check if `l_json` is valid JSON value as well [2018-01-15]
 				j.append_character (',')
 				j.append ("%"package%":")
-				j.append (l_json)
+				j.append (l_json.to_string_8)
 			end
 
 			j.append_character ('}')
@@ -305,7 +310,7 @@ feature {NONE} -- Helpers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

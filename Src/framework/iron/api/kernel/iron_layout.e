@@ -244,21 +244,28 @@ feature {NONE} -- Implementation
 			create Result.make_from_string (safe_name (repo.location_string))
 		end
 
-	safe_name (a_name: READABLE_STRING_32): STRING_8
+	safe_name (a_name: READABLE_STRING_GENERAL): STRING_8
+		local
+			i,n: INTEGER
+			c: CHARACTER_32
 		do
 			create Result.make (a_name.count)
-			across
-				a_name as c
+			from
+				i := 1
+				n := a_name.count
+			until
+				i > n
 			loop
-				inspect c.item
+				c := a_name[i]
+				inspect c
 				when ':', '/' then
 					Result.append_character ('_')
 				when 'a' .. 'z' then
-					Result.append_character (c.item.to_character_8)
+					Result.append_character (c.to_character_8)
 				when 'A' .. 'Z' then
-					Result.append_character (c.item.to_character_8)
+					Result.append_character (c.to_character_8)
 				when '0' .. '9' then
-					Result.append_character (c.item.to_character_8)
+					Result.append_character (c.to_character_8)
 				when '!', '@', '?' then
 					Result.append_character ('+')
 				when '-' then
@@ -266,12 +273,13 @@ feature {NONE} -- Implementation
 				else
 					Result.append_character ('_')
 				end
+				i := i + 1
 			end
 		end
 
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

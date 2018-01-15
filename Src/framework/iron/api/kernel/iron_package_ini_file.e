@@ -70,8 +70,8 @@ feature -- Conversion
 		do
 			if attached item ("id") as l_id and then l_id.is_valid_as_string_8 then
 				create Result.make (l_id.to_string_8, a_repo)
-			elseif attached item ("name") as l_name then
-				create Result.make (l_name + "@" + a_repo.location_string, a_repo)
+			elseif attached item ("name") as l_name and then l_name.is_valid_as_string_8 then
+				create Result.make (l_name.to_string_8 + "@" + a_repo.location_string, a_repo)
 			else
 				create Result.make_empty (a_repo)
 			end
@@ -151,7 +151,7 @@ feature -- Storage
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -160,7 +160,7 @@ feature {ANY} -- Size
 	managed_pointer: MANAGED_POINTER
 			-- <Precursor>
 
-feature {} -- Implementation
+feature {NONE} -- Implementation
 
 	any_data: detachable ANY
 			-- Reference to the data feed at creation time using `with_data'
@@ -176,6 +176,8 @@ feature {} -- Implementation
 			"C inline use <zmq.h>"
 		alias
 			"sizeof(zmq_msg_t)"
+		ensure
+			is_class: class
 		end
 
 feature {NONE} -- Exceptions
@@ -186,7 +188,7 @@ feature {NONE} -- Exceptions
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

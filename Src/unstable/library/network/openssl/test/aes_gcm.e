@@ -6,8 +6,6 @@ note
 class
 	AES_GCM
 
-
-
 feature -- Data
 
 	gcm_key: ARRAY [NATURAL_8]
@@ -31,17 +29,17 @@ feature -- Data
 
 	gcm_aad: ARRAY [NATURAL_8]
 		do
-			Result := <<0x4d, 0x23, 0xc3, 0xce, 0xc3, 0x34, 0xb4, 0x9b, 0xdb, 0x37, 0x0c, 0x43,  0x7f, 0xec, 0x78, 0xde>>
+			Result := {ARRAY [NATURAL_8]}<<0x4d, 0x23, 0xc3, 0xce, 0xc3, 0x34, 0xb4, 0x9b, 0xdb, 0x37, 0x0c, 0x43,  0x7f, 0xec, 0x78, 0xde>>
 		end
 
 	gcm_ct: ARRAY [NATURAL_8]
 		do
-			Result := <<0xf7, 0x26, 0x44, 0x13, 0xa8, 0x4c, 0x0e, 0x7c, 0xd5, 0x36, 0x86, 0x7e,0xb9, 0xf2, 0x17, 0x36>>
+			Result := {ARRAY [NATURAL_8]}<<0xf7, 0x26, 0x44, 0x13, 0xa8, 0x4c, 0x0e, 0x7c, 0xd5, 0x36, 0x86, 0x7e,0xb9, 0xf2, 0x17, 0x36>>
 		end
 
 	gcm_tag: ARRAY [NATURAL_8]
 		do
-			Result := <<0x67, 0xba, 0x05, 0x10, 0x26, 0x2a, 0xe4, 0x87, 0xd7, 0x37, 0xee, 0x62,0x98, 0xf7, 0x7e, 0x0c>>
+			Result := {ARRAY [NATURAL_8]}<<0x67, 0xba, 0x05, 0x10, 0x26, 0x2a, 0xe4, 0x87, 0xd7, 0x37, 0xee, 0x62,0x98, 0xf7, 0x7e, 0x0c>>
 		end
 
 
@@ -51,7 +49,7 @@ feature -- Encypt - Decrypt
 	gcm_encrypt
 		local
 			l_ctx: POINTER --EVP_CIPHER_CTX
-			l_outlen, l_tmplen: INTEGER
+			l_outlen: INTEGER
 			l_outbuf: MANAGED_POINTER
 			l_res: INTEGER
 			m_key: MANAGED_POINTER
@@ -123,14 +121,13 @@ feature -- Encypt - Decrypt
 	gcm_decrypt
 		local
 			l_ctx: POINTER --EVP_CIPHER_CTX
-			l_outlen, l_tmplen: INTEGER
+			l_outlen: INTEGER
 			l_outbuf: MANAGED_POINTER
 			l_res: INTEGER
 			m_key: MANAGED_POINTER
 			m_iv: MANAGED_POINTER
 			m_aad: MANAGED_POINTER
 			m_ct: MANAGED_POINTER
-			l_index: INTEGER
 			m_tag: MANAGED_POINTER
 		do
 			create l_outbuf.make_from_array (create {ARRAY [NATURAL_8]}.make_filled (0, 1, 1024))
@@ -201,13 +198,12 @@ feature -- Encypt - Decrypt
 			-- https://docs.acaptureservices.com/tutorials/webhooks/decryption-example
 		local
 			l_ctx: POINTER --EVP_CIPHER_CTX
-			l_outlen, l_tmplen: INTEGER
+			l_outlen: INTEGER
 			l_outbuf: MANAGED_POINTER
 			l_res: INTEGER
 			m_key: MANAGED_POINTER
 			m_iv: MANAGED_POINTER
 			m_ct: MANAGED_POINTER
-			l_index: INTEGER
 			m_tag: MANAGED_POINTER
 			l_converter: BYTE_ARRAY_CONVERTER
 		do

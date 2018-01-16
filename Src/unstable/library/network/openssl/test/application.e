@@ -17,22 +17,34 @@ feature {NONE} -- Initialization
 
 	make
 			-- Run application.
+		do
+			test_gcm
+			test_ecc
+		end
+
+feature -- Tests
+
+	test_gcm
 		local
-				ec_key: POINTER
-				ec_group: POINTER
-				group_status: INTEGER
-				status: INTEGER
-				signature: POINTER
-				c_string: C_STRING
-				l_example_gcm: EXAMPLE_GCM
-				l_aes_gcm: AES_GCM
+			l_example_gcm: EXAMPLE_GCM
+			l_aes_gcm: AES_GCM
 		do
 			create l_aes_gcm
 			l_aes_gcm.gcm_encrypt
 			io.put_new_line
 			l_aes_gcm.gcm_decrypt_2
 			create l_example_gcm.make
+		end
 
+	test_ecc
+		local
+			ec_key: POINTER
+			ec_group: POINTER
+			group_status: INTEGER
+			status: INTEGER
+			signature: POINTER
+			c_string: C_STRING
+		do
 			 -- First step: create an EC_KEY object (note: this part is not ECDSA specific)
 			ec_key := {SSL_ECC}.c_ec_key_new
 			check not_null_ec_key: ec_key /= default_pointer end

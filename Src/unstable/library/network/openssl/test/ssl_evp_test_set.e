@@ -15,8 +15,6 @@ inherit
 
 feature -- Test routines
 
-feature -- Test routines
-
 	test_evp_cipher_ctx
 
 		do

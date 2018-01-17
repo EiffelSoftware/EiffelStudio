@@ -47,6 +47,8 @@ feature -- Test routines
 			create l_gcm
 			assert ("Expected value={%"type%":%"PAYMENT%"}",l_gcm.decrypt ("000102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f", "000000000000000000000000", "CE573FB7A41AB78E743180DC83FF09BD", "0A3471C72D9BE49A8520F79C66BBD9A12FF9", Void).same_string_general ("{%"type%":%"PAYMENT%"}"))
 		end
+
+
 end
 
 

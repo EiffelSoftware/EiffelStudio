@@ -18,6 +18,8 @@ feature -- Access
 			l_aad: MANAGED_POINTER
 			l_converter: BYTE_ARRAY_CONVERTER
 		do
+				-- TODO aes gcm has 128, 192 and 256. at the moment using 256.
+				-- we can add a new param algorithm <<128, 192 or 256).
 				-- String Key
 			create l_converter.make_from_hex_string (a_key)
 			create l_key.make_from_array (l_converter.to_natural_8_array)
@@ -42,6 +44,36 @@ feature -- Access
 			Result := gcm_decrypt_impl (l_key, l_iv, l_tag, l_ct, l_aad)
 		end
 
+
+	encrypt (a_key: READABLE_STRING_8; a_iv: READABLE_STRING_8; a_text: READABLE_STRING_8; a_aad: detachable READABLE_STRING_8): READABLE_STRING_8
+		local
+			l_key: MANAGED_POINTER
+			l_iv: MANAGED_POINTER
+			l_aad: MANAGED_POINTER
+			l_pt: MANAGED_POINTER
+			l_converter: BYTE_ARRAY_CONVERTER
+		do
+				-- TODO need to be tested.
+				-- String Key
+			create l_converter.make_from_hex_string (a_key)
+			create l_key.make_from_array (l_converter.to_natural_8_array)
+
+				--  String iv
+			create l_converter.make_from_hex_string (a_iv)
+			create l_iv.make_from_array (l_converter.to_natural_8_array)
+
+				-- Plain text
+			create l_converter.make_from_hex_string (a_text)
+			create l_pt.make_from_array (l_converter.to_natural_8_array)
+
+
+			if attached a_aad  then
+				create l_converter.make_from_hex_string (a_aad)
+				create l_aad.make_from_array (l_converter.to_natural_8_array)
+			end
+
+			Result := gcm_encrypt_impl (l_key, l_iv, l_pt, l_aad)
+		end
 
 
 feature {NONE} -- Implementation
@@ -109,11 +141,11 @@ feature {NONE} -- Implementation
 				--    rv = EVP_DecryptFinal_ex(ctx, outbuf, &outlen);
 			l_tmplen := l_outlen
 			l_res := {SSL_EVP}.c_evp_decryptfinal_ex (l_ctx, l_outbuf.item, $l_outlen)
-			--    /*
-			--     * Print out return value. If this is not successful authentication
-			--     * failed and plaintext is not trustworthy.
-			--     */
-			--    printf("Tag Verify %s\n", rv > 0 ? "Successful!" : "Failed!");
+				--    /*
+				--     * Print out return value. If this is not successful authentication
+				--     * failed and plaintext is not trustworthy.
+				--     */
+				--    printf("Tag Verify %s\n", rv > 0 ? "Successful!" : "Failed!");
 			debug
 				print ("Tag Verify: " + l_res.out)
 			end
@@ -133,8 +165,88 @@ feature {NONE} -- Implementation
 			{SSL_EVP}.c_evp_cipher_ctx_free (l_ctx)
 
 			Result := l_result
-
 		end
 
+
+	gcm_encrypt_impl (l_key, l_iv, l_pt: MANAGED_POINTER; l_aad: detachable MANAGED_POINTER): READABLE_STRING_8
+		local
+			l_ctx: POINTER --EVP_CIPHER_CTX
+			l_outlen: INTEGER
+			l_outbuf: MANAGED_POINTER
+			l_res: INTEGER
+			l_index: INTEGER
+			l_tmplen: INTEGER
+			l_result: STRING_8
+		do
+				-- TODO: test
+			create l_outbuf.make_from_array (create {ARRAY [NATURAL_8]}.make_filled (0, 1, 1024))
+
+				-- Initialize the context
+			l_ctx := {SSL_EVP}.c_evp_cipher_ctx_new
+
+				--    /* Set cipher type and mode */
+				--    EVP_EncryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL);
+			l_res := {SSL_EVP}.c_evp_encryptinit_ex (l_ctx, {SSL_EVP}.c_evp_aes_256_gcm, default_pointer,default_pointer,default_pointer)
+
+				--    /* Set IV length if default 96 bits is not appropriate */
+				--    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, sizeof(gcm_iv), NULL);
+			l_res := {SSL_EVP}.c_evp_cipher_ctx_ctrl (l_ctx, {SSL_EVP}.c_evp_ctrl_aead_set_ivlen, l_iv.count, default_pointer)
+
+				--    /* Initialise key and IV */
+				--    EVP_EncryptInit_ex(ctx, NULL, NULL, gcm_key, gcm_iv);
+			l_res := {SSL_EVP}.c_evp_encryptinit_ex (l_ctx, default_pointer, default_pointer, l_key.item, l_iv.item)
+
+				--    /* Zero or more calls to specify any AAD */
+				--    EVP_EncryptUpdate(ctx, NULL, &outlen, gcm_aad, sizeof(gcm_aad));
+			if attached l_aad then
+				l_res := {SSL_EVP}.c_evp_encryptupdate (l_ctx, default_pointer, $l_outlen, l_aad.item, l_aad.count)
+			end
+
+				--    /* Encrypt plaintext */
+				--    EVP_EncryptUpdate(ctx, outbuf, &outlen, gcm_pt, sizeof(gcm_pt));
+			debug
+				print ("Plain Text: ")
+				l_res := {SSL_EVP}.BIO_dump_fp (io.output.file_pointer, l_pt.item, l_pt.count)
+				io.put_new_line
+			end
+
+			l_res := {SSL_EVP}.c_evp_encryptupdate (l_ctx, l_outbuf.item, $l_outlen, l_pt.item, l_pt.count)
+
+				--    printf("Ciphertext:\n");
+				--    BIO_dump_fp(stdout, outbuf, outlen);
+			debug
+				print ("Ciphertext: ")
+				l_res := {SSL_EVP}.BIO_dump_fp (io.output.file_pointer, l_outbuf.item, l_outlen)
+				io.put_new_line
+			end
+
+			l_tmplen := l_outlen
+			--    /* Finalise: note get no output for GCM */
+				--    EVP_EncryptFinal_ex(ctx, outbuf, &outlen);
+			l_res := {SSL_EVP}.c_evp_encryptfinal_ex (l_ctx, l_outbuf.item, $l_outlen)
+
+				--    /* Get tag */
+				--    EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG, 16, outbuf);
+			l_res := {SSL_EVP}.c_evp_cipher_ctx_ctrl (l_ctx, {SSL_EVP}.c_evp_ctrl_aead_get_tag,16, l_outbuf.item)
+
+				-- To be check
+			create l_result.make_empty
+			from
+			until
+				l_index >= 16
+			loop
+				l_result.append_character (l_outbuf.read_character (l_index))
+				l_index := l_index + 1
+			end
+			Result := l_result
+
+			debug
+				io.put_new_line
+					-- tag
+				print ("Tag: ")
+				l_res := {SSL_EVP}.BIO_dump_fp (io.output.file_pointer, l_outbuf.item, 16)
+			end
+			{SSL_EVP}.c_evp_cipher_ctx_free (l_ctx)
+		end
 
 end

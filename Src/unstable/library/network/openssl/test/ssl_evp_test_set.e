@@ -12,6 +12,13 @@ class
 
 inherit
 	EQA_TEST_SET
+		select
+			default_create
+		end
+	SSL_SHARED
+		rename
+			default_create as dc_shared
+		end
 
 feature -- Test routines
 
@@ -46,6 +53,22 @@ feature -- Test routines
 		do
 			create l_gcm
 			assert ("Expected value={%"type%":%"PAYMENT%"}",l_gcm.decrypt ("000102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f", "000000000000000000000000", "CE573FB7A41AB78E743180DC83FF09BD", "0A3471C72D9BE49A8520F79C66BBD9A12FF9", Void).same_string_general ("{%"type%":%"PAYMENT%"}"))
+		end
+
+
+	test_cypher_decrypt
+		note
+			eis: "name=example", "src=https://docs.acaptureservices.com/tutorials/webhooks/decryption-example","protocol=uri"
+		local
+			l_cipher: SSL_CIPHER
+		do
+			initialize_ssl
+			l_cipher := (create {SSL_CIPHER_FACTORY}).aes_256_gcm
+			l_cipher.initialize ("000102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f", "000000000000000000000000", False)
+			l_cipher.update ("CE573FB7A41AB78E743180DC83FF09BD")
+			l_cipher.update ("0A3471C72D9BE49A8520F79C66BBD9A12FF9")
+			l_cipher.finish
+			assert ("Expected value={%"type%":%"PAYMENT%"}",l_cipher.string_output.same_string_general ("{%"type%":%"PAYMENT%"}"))
 		end
 
 

@@ -31,6 +31,15 @@ feature -- C externals
 			"return EVP_aes_128_gcm();"
 		end
 
+	c_evp_aes_192_gcm: POINTER
+			-- Function AES Galois Counter Mode (GCM) for 192.
+			-- Return an pointer to an EVP_CIPHER.
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_aes_192_gcm();"
+		end
+
 	c_evp_aes_256_gcm: POINTER
 			-- Function AES Galois Counter Mode (GCM) for 256.
 			-- Return an pointer to an EVP_CIPHER.

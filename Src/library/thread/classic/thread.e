@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Class defining an Eiffel thread."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -74,10 +74,8 @@ feature -- Basic operations
 		require
 			is_exit_supported: is_exit_supported
 			self: current_thread_id = thread_id
-		external
-			"C use %"eif_threads.h%""
-		alias
-			"eif_thr_exit"
+		do
+			c_exit
 		end
 
 	sleep (nanoseconds: INTEGER_64)
@@ -90,6 +88,19 @@ feature -- Basic operations
 			(create {EXECUTION_ENVIRONMENT}).sleep (nanoseconds)
 		end
 
+feature {NONE} -- Basic operations
+
+	c_exit
+			-- Implementation of `exit`.
+		require
+			is_exit_supported: is_exit_supported
+			self: -- current_thread_id = thread_id
+		external
+			"C use %"eif_threads.h%""
+		alias
+			"eif_thr_exit"
+		end
+
 feature -- Status report
 
 	is_exit_supported: BOOLEAN
@@ -97,6 +108,8 @@ feature -- Status report
 		do
 				-- True for classic Eiffel, False in .NET
 			Result := True
+		ensure
+			is_class: class
 		end
 
 	is_launchable: BOOLEAN
@@ -175,7 +188,7 @@ feature {NONE} -- Implementation
 			terminated := b
 			launch_mutex.unlock
 		end
-		
+
 	launch_mutex: MUTEX
 			-- Mutex used to ensure that no two threads call `launch' or `launch_with_attributes'
 			-- on the same object. This ensures the validity of querying `thread_id' from
@@ -228,7 +241,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

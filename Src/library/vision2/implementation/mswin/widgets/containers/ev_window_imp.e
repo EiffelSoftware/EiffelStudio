@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel Vision window. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -1450,10 +1450,8 @@ feature {NONE} -- Features that should be directly implemented by externals
 
 	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER
 			-- SDK GetNextDlgGroupItem
-		external
-			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
-		alias
-			"GetNextDlgTabItem"
+		do
+			Result := {WEL_CONTROL}.c_cwin_get_next_dlgtabitem (hdlg, hctl, previous)
 		end
 
 	get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER
@@ -1521,11 +1519,11 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- <Precursor>
 		do
 				-- Windows and descendents are not shown by default.
-			Result := False
+			-- Result := False
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1535,19 +1533,5 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_WINDOW_IMP
-
-
-
-
-
-
-
-
-
-
-
+end
 

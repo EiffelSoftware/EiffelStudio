@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Utility for timeout conversion."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -59,6 +59,8 @@ feature -- Validation
 			--|      features dealing with timeout in nanoseconds have related preconditions.
 		do
 			Result := 0 <= ns and then ns <= max_timeout_ns_value
+		ensure
+			is_class: class
 		end
 
 note

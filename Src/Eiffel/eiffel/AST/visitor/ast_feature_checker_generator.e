@@ -856,7 +856,7 @@ feature {NONE} -- Roundtrip
 			l_unsupported: NOT_SUPPORTED
 		do
 			if current_feature.is_class then
-				error_handler.insert_error (create {VUCR_BODY}.make_inline_agent (current_feature, context.current_class, context.written_class, l_as.first_token (match_list_of_class (context.written_class.class_id))))
+				report_vucr (create {VUCR_BODY}.make_inline_agent (current_feature, context.current_class, context.written_class, l_as.first_token (match_list_of_class (context.written_class.class_id))))
 			end
 
 			l_error_level := error_level
@@ -1579,10 +1579,10 @@ feature {NONE} -- Implementation
 							if not is_agent then
 								check_instance_free (l_feature, context.current_class,
 									if is_precursor then
-										agent error_handler.insert_error (create {VUCR_BODY}.make_precursor
+										agent report_vucr (create {VUCR_BODY}.make_precursor
 											(l_feature, current_feature, context.current_class, context.written_class, a_name))
 									else
-										agent error_handler.insert_error (create {VUCR_BODY}.make_feature
+										agent report_vucr (create {VUCR_BODY}.make_feature
 											(l_feature, current_feature, context.current_class, context.written_class, a_name))
 									end,
 									l_feature_name)
@@ -2050,7 +2050,7 @@ feature {NONE} -- Implementation
 							if l_feature.is_attribute then
 								last_access_writable := True
 								if not is_qualified and then current_feature.is_class then
-									error_handler.insert_error (create {VUCR_BODY}.make_attribute (l_feature, current_feature, context.current_class, context.written_class, a_name))
+									report_vucr (create {VUCR_BODY}.make_attribute (l_feature, current_feature, context.current_class, context.written_class, a_name))
 								end
 							else
 								last_access_writable := False
@@ -2719,7 +2719,7 @@ feature {NONE} -- Visitor
 			l_type: LIKE_CURRENT
 		do
 			if current_feature.is_class then
-				error_handler.insert_error (create {VUCR_BODY}.make_current (current_feature, context.current_class, context.written_class, l_as))
+				report_vucr (create {VUCR_BODY}.make_current (current_feature, context.current_class, context.written_class, l_as))
 			end
 				-- The type of Current in class X is X .. X.
 			l_type := context.current_class_type.duplicate
@@ -4166,7 +4166,7 @@ feature {NONE} -- Visitor
 			l_typed_pointer: TYPED_POINTER_A
 		do
 			if current_feature.is_class then
-				error_handler.insert_error (create {VUCR_BODY}.make_current (current_feature, context.current_class, context.written_class, l_as.current_keyword))
+				report_vucr (create {VUCR_BODY}.make_current (current_feature, context.current_class, context.written_class, l_as.current_keyword))
 			end
 			create l_typed_pointer.make_typed (context.current_class_type)
 			set_type (l_typed_pointer, l_as)
@@ -4328,7 +4328,7 @@ feature {NONE} -- Visitor
 								create l_typed_pointer.make_typed (l_type)
 								set_type (l_typed_pointer, l_as)
 								if current_feature.is_class then
-									error_handler.insert_error (create {VUCR_BODY}.make_attribute (l_feature, current_feature, context.current_class, context.written_class, l_as.feature_name.internal_name))
+									report_vucr (create {VUCR_BODY}.make_attribute (l_feature, current_feature, context.current_class, context.written_class, l_as.feature_name.internal_name))
 								end
 							else
 								set_type (Pointer_type, l_as)
@@ -4498,7 +4498,7 @@ feature {NONE} -- Visitor
 								end
 							end
 						elseif not l_as.has_target and then current_feature.is_class and then attached l_as.feature_name as feature_name and then not attached {INLINE_AGENT_CREATION_AS} l_as then
-							error_handler.insert_error (create {VUCR_BODY}.make_unqualified_agent (l_feature, current_feature, context.current_class, context.written_class, feature_name))
+							report_vucr (create {VUCR_BODY}.make_unqualified_agent (l_feature, current_feature, context.current_class, context.written_class, feature_name))
 						end
 
 						if l_feature = Void and then not l_is_named_tuple then
@@ -11732,6 +11732,27 @@ feature {NONE} -- Implementation: catcall check
 
 feature {NONE} -- Instance-free checks
 
+	report_vucr (e: VUCR)
+			-- Report a VUCR error `e` taking into account the possibility of compiling old code
+			-- not adpated to the new rule that an external feature is automatically a class one.
+		require
+			current_feature_is_class: current_feature.is_class
+		do
+				-- TODO: Report only errors after 18.01 release.
+			if
+				{EIFFEL_CONSTANTS}.major_version >18 or else
+				{EIFFEL_CONSTANTS}.major_version = 18 and then
+				{EIFFEL_CONSTANTS}.minor_version >= 3 or else
+				current_feature.has_class_postcondition
+			then
+					-- Report an error after 18.01 release or if the feature is internal.
+				error_handler.insert_error (e)
+			else
+					-- Report a warning for the external feature in 18.01 release.
+				error_handler.insert_warning (e)
+			end
+		end
+
 	check_instance_free (f: FEATURE_I; c: CLASS_C; e: PROCEDURE; l: LOCATION_AS)
 			-- Check that feature `f` of class `c` is correctly called as instance-free at location `l` and report an error by calling `e` if not.
 		do
@@ -11919,7 +11940,7 @@ feature {INSPECT_CONTROL} -- Checks for obsolete features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

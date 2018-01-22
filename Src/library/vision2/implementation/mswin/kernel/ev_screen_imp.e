@@ -18,8 +18,6 @@ inherit
 		end
 
 	EV_DRAWABLE_IMP
-		rename
-			cwin_set_cursor_position as set_pointer_position
 		redefine
 			interface, destroy,
 			make
@@ -238,6 +236,12 @@ feature -- Status report
 
 feature -- Basic operation
 
+	set_pointer_position (x, y: INTEGER)
+			-- <Precursor>
+		do
+			cwin_set_cursor_position (x, y)
+		end
+
 	set_default_colors
 			-- Set foreground and background color to their default values.
 		local
@@ -364,10 +368,8 @@ feature -- Measurement
 
 	redraw
 			-- Force screen to redraw itself.
-		external
-			"C inline use %"wel.h%""
-		alias
-			"InvalidateRect(NULL, NULL, FALSE)"
+		do
+			{WEL_WINDOW}.cwin_invalidate_rect (default_pointer, default_pointer, False)
 		end
 
 feature -- Status setting
@@ -433,7 +435,7 @@ invariant
 	dc_not_void: dc /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -443,17 +445,5 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_SCREEN_IMP
-
-
-
-
-
-
-
-
-
+end
 

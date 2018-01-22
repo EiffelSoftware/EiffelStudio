@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract notions of a window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -2475,6 +2475,8 @@ feature {NONE} -- Externals
 			"C [macro %"wel.h%"] (HWND, int)"
 		alias
 			"ShowWindow"
+		ensure
+			is_class: class
 		end
 
 	cwin_is_window_visible (hwnd: POINTER): BOOLEAN
@@ -2551,15 +2553,6 @@ feature {NONE} -- Externals
 			"C [macro %"wel.h%"] (TRACKMOUSEEVENT*): EIF_BOOLEAN"
 		alias
 			"_TrackMouseEvent"
-		end
-
-	cwin_invalidate_rect (hwnd, a_rect: POINTER;
-			erase_background: BOOLEAN)
-			-- SDK InvalidateRect
-		external
-			"C [macro %"wel.h%"] (HWND, RECT *, BOOL)"
-		alias
-			"InvalidateRect"
 		end
 
 	cwin_invalidate_rgn (hwnd, a_region: POINTER;
@@ -2771,8 +2764,18 @@ feature {NONE} -- Externals
 			"GetMessagePos"
 		end
 
+feature {WEL_INPUT_EVENT} -- Externals
+
+	cwin_invalidate_rect (hwnd, a_rect: POINTER; erase_background: BOOLEAN)
+			-- SDK InvalidateRect
+		external
+			"C [macro %"wel.h%"] (HWND, RECT *, BOOL)"
+		alias
+			"InvalidateRect"
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,5 +1,5 @@
-
 class TEST1
+
 inherit
 	TEST2
 		redefine
@@ -8,8 +8,8 @@ inherit
 feature
 
 	is_valid: INTEGER
-		external "C inline"
-		alias "47 + 13"
+		do
+			Result := 47 + 13
 		end
 	
 	try
@@ -18,4 +18,3 @@ feature
 		end
 
 end
-

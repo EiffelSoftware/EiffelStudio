@@ -1398,6 +1398,31 @@ feature -- Conveniences
 			Result := feature_flags & is_stable_mask = is_stable_mask
 		end
 
+	is_hidden_in_debugger_call_stack: BOOLEAN
+			-- Is feature hidden in debugger call stack tool?
+		do
+			if attached written_class as cl and then cl.is_hidden_in_debugger_call_stack then
+				Result := True
+			else
+				Result := feature_flags & is_hidden_in_debugger_call_stack_mask = is_hidden_in_debugger_call_stack_mask
+			end
+		end
+
+	is_transient: BOOLEAN
+			-- Is feature transient, i.e. never stored in storables?
+			-- (Usually applies to attributes.)
+		do
+			-- False by default
+		end
+
+	is_hidden: BOOLEAN
+			-- Is attribute hidden for implementation purpose
+			-- such as once per object's attributes.
+			-- (Usually applies to attributes.)
+		do
+			-- False by default
+		end
+
 	has_non_object_call: BOOLEAN
 			-- Is there a non-object call in the feature?
 			-- See also: `has_immediate_non_object_call`, `has_immediate_non_object_call_in_assertion`.
@@ -1422,7 +1447,8 @@ feature -- Conveniences
 		end
 
 	has_class_postcondition: BOOLEAN
-			-- Does feature have a class postcondition?
+			-- Does feature have an immediate class postcondition?
+			-- (There could also be inherited class postconditions not reported by this query.)
 			-- See also: `set_has_class_postcondition`, `is_class`.
 		do
 			Result := feature_flags & has_class_postcondition_mask /= 0
@@ -1435,31 +1461,6 @@ feature -- Conveniences
 			Result :=
 				has_class_postcondition or else
 				attached assert_id_set as a and then a.has_class_postcondition
-		end
-
-	is_hidden_in_debugger_call_stack: BOOLEAN
-			-- Is feature hidden in debugger call stack tool?
-		do
-			if attached written_class as cl and then cl.is_hidden_in_debugger_call_stack then
-				Result := True
-			else
-				Result := feature_flags & is_hidden_in_debugger_call_stack_mask = is_hidden_in_debugger_call_stack_mask
-			end
-		end
-
-	is_transient: BOOLEAN
-			-- Is feature transient, i.e. never stored in storables?
-			-- (Usually applies to attributes.)
-		do
-			-- False by default
-		end
-
-	is_hidden: BOOLEAN
-			-- Is attribute hidden for implementation purpose
-			-- such as once per object's attributes.
-			-- (Usually applies to attributes.)
-		do
-			-- False by default
 		end
 
 	has_static_access: BOOLEAN
@@ -3637,7 +3638,7 @@ invariant
 	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0 or is_fake_inline_agent
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

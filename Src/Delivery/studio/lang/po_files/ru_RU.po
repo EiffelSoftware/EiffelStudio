@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-12-18 16:54+0300\n"
+"PO-Revision-Date: 2018-01-22 09:32+0300\n"
 "Last-Translator: Alexander Kogtenkov <kwaxer@mail.ru>\n"
 "Language-Team: Eiffel Software and others <support@eiffel.com>\n"
 "Language: ru\n"
@@ -37791,7 +37791,7 @@ msgstr "Переходный синтаксис"
 #. Source code: l_Tree_view: STRING_32				do Result := locale.translation ("Tree View") end
 #: interface_names.e:1759
 msgid "Tree View"
-msgstr "Поле дерева"
+msgstr "В виде дерева"
 
 #. <PREF NAME="tools.metric_tool.tree_view_for_metric_history" DESCRIPTION="Is tree view used to display metric history?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:121

@@ -779,7 +779,7 @@ feature{NONE} -- Implementation
 		do
 			Result := a_item.is_real_feature and then
 					attached a_item.e_feature.associated_feature_i as fi and then
-					fi.has_class_postcondition
+					fi.has_immediate_class_postcondition
 		end
 
 	has_precondition_agent (a_item: QL_FEATURE): BOOLEAN

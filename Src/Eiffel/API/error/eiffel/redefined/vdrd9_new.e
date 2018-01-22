@@ -67,14 +67,14 @@ feature {NONE} -- Output
 			-- <Precursor>
 		do
 			format_elements (t, locale.translation_in_context
-					("Feature {1} from class {2} has a class postcondition.", "eiffel.error"),
+					("{1} from class {2} is a class feature.", "eiffel.error"),
 				<<
 					agent feature_1.append_name,
 					agent (feature_1.written_class).append_name
 				>>)
 			t.add_new_line
 			format_elements (t, locale.translation_in_context
-					("Feature {1} from class {2} is not instance-free.", "eiffel.error"),
+					("{1} from class {2} is not an instance-free feature.", "eiffel.error"),
 				<<
 					agent feature_2.append_name,
 					agent (feature_2.written_class).append_name
@@ -85,7 +85,7 @@ feature {NONE} -- Output
 note
 	date: "$Date$";
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

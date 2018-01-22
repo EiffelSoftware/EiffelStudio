@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 					-- A feature has a class postcondition if it or any ancestor
 					-- has a class postcondition.
 				has_class_postcondition := has_class_postcondition or else
-					feat.has_class_postcondition or else
+					feat.has_immediate_class_postcondition or else
 					(attached feat_assert_id_set and then feat_assert_id_set.has_class_postcondition)
 
 					-- A feature has a false postcondition if it or any ancestor

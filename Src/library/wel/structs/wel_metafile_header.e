@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {WEL_METAFILE_HEADER}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -140,13 +138,20 @@ feature -- Access
 feature -- Measurements
 
 	structure_size: INTEGER
+			-- <Precursor>
+		do
+			Result := c_structure_size
+		end
+
+feature {NONE} -- C externals
+
+	c_structure_size: INTEGER
+			-- Implementation of `c_structure_size`.
 		external
 			"C inline use %"wel_gdi_plus.h%""
 		alias
 			"return sizeof(ENHMETAHEADER3);"
 		end
-
-feature {NONE} -- C externals
 
 	c_itype (a_ptr: POINTER): NATURAL_32
 		external
@@ -254,4 +259,14 @@ feature {NONE} -- C externals
 			"return &((ENHMETAHEADER3 *) $a_ptr)->szlMillimeters;"
 		end
 
+note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

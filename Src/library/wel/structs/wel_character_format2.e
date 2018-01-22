@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Contains information about charformat 2 formating
 		attributes in a rich edit control. Corresponds to the
@@ -16,17 +16,17 @@ class
 inherit
 	WEL_CHARACTER_FORMAT
 		redefine
-			structure_size
+			c_structure_size
 		end
 
 create
 	make,
 	make_by_pointer
 
-feature -- Measurement
+feature {NONE} -- Measurement
 
-	structure_size: INTEGER
-			-- Size to allocate (in bytes)
+	c_structure_size: INTEGER
+			-- Implementation of `structure_size`.
 		external
 			"C [macro %"redit.h%"]"
 		alias
@@ -201,7 +201,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

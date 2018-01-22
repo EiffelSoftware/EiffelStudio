@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {WEL_MONITOR}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -52,13 +50,19 @@ feature -- Measurement
 
 	structure_size: INTEGER
 			-- <Precursor>
+		do
+			Result := c_structure_size
+		end
+
+feature {NONE} -- Implementation
+
+	c_structure_size: INTEGER
+			-- Implementation of `structure_size`.
 		external
 			"C [macro <windows.h>]"
 		alias
 			"sizeof (MONITORINFO)"
 		end
-
-feature {NONE} -- Implementation
 
 	cwin_monitorinfo_set_size (ptr: POINTER; value: INTEGER)
 		external
@@ -89,7 +93,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

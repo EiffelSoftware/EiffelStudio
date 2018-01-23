@@ -15,17 +15,17 @@ copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_frozen
-compile_result 	 validity_error TEST VUNO:13
+compile_result 	 ok
 
 define		 FROZEN "frozen"
 copy_sub 	 test1.e  $CLUSTER test1.e
-resume_compile
-compile_result 	 validity_error TEST VUNO:13
+compile_frozen
+compile_result 	 ok
 
 define		 ASSERTION ""
 copy_sub 	 test1.e  $CLUSTER test1.e
-resume_compile
-compile_result 	 validity_warning TEST VUNO:13
+compile_frozen
+compile_result 	 ok
 
 c_compile_work
 c_compile_result ok

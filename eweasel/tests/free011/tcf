@@ -7,6 +7,6 @@ copy_raw 	 b.e $CLUSTER b.e
 copy_raw 	 test.e $CLUSTER test.e
 
 compile_melted
-compile_result 	 validity_error TEST ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9)
+compile_result 	 validity_error TEST ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9) ECMA-VDRD(9)
 
 test_end

@@ -1,4 +1,3 @@
-
 class TEST
 
 create
@@ -49,14 +48,18 @@ feature
 	
 	show_pre (b: BOOLEAN): BOOLEAN
 		do
-			print ("Checking precondition%N")
+			;(0).print ("Checking precondition%N")
 			Result := b
+		ensure
+			is_class: class
 		end
 	
 	show_post (b: BOOLEAN): BOOLEAN
 		do
-			print ("Checking postcondition%N")
+			;(0).print ("Checking postcondition%N")
 			Result := b
+		ensure
+			is_class: class
 		end
 invariant
 	valid: show_inv (True)

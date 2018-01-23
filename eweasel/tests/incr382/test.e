@@ -12,6 +12,11 @@ feature
 		end
 
 	stoat (a, b: INTEGER)
+		do
+			weasel (a, b)
+		end
+	
+	weasel (a, b: INTEGER)
 		external "C inline"
 		alias "[
 			printf("%d %d\n", $a, $b);

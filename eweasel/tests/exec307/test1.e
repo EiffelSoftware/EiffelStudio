@@ -34,6 +34,8 @@ feature
 
 	value8: INTEGER
 		deferred
+		ensure
+			is_class: class
 		end
 
 end

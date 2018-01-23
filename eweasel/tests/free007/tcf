@@ -9,6 +9,6 @@ copy_raw 	 d.e $CLUSTER d.e
 copy_raw 	 test.e $CLUSTER test.e
 
 compile_frozen
-compile_result 	 validity_error TEST VUNO:11 VUNO:12
+compile_result 	 ok
 
 test_end

@@ -1,30 +1,34 @@
-
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2018 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 class TEST
+
 inherit	
 	SHARED
-creation
+
+create
 	make
+
 feature
-	make is
+
+	make
 		do
-			Current.weasel;
+			Current.weasel
 		end
 	
 	weasel is
 		require
-			pre: show ("Precondition");
+			pre: show ("Precondition")
 		external "C"
-		alias "eif_gc_run"
+			alias "eif_gc_run"
 		ensure
-			post1: show ("Postcondition");
-			post2: equal (True, old show ("Old expression"))
+			post1: show ("Postcondition")
+			post2: (0).equal (True, old show ("Old expression"))
 		end
 		
 invariant
-	inv1: show ("Invariant");
+	inv1: show ("Invariant")
+
 end

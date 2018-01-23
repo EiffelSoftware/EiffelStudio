@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="6f945f53-41b5-4dd6-87d5-665efc980481">
 	<target name="test">
-		<description>--| Copyright (c) 1993-2006 University of Southern California and contributors.
+		<description>--| Copyright (c) 1993-2018 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -8,7 +8,7 @@
 		<root cluster="root_cluster" class="test" feature="make"/>
 		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="false" invariant="true" loop="false"/>
-		<warning name="syntax" enabled="false"/></option>
+		</option>
 		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING

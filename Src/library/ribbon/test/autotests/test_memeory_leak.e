@@ -1,7 +1,5 @@
-note
-	description: "[
-		Eiffel tests that can be executed by testing tool.
-	]"
+﻿note
+	description: "Eiffel tests that can be executed by testing tool."
 	author: "EiffelStudio test wizard"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -94,10 +92,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dll_des: STRING
+	dll_des: STRING_32
 			-- Test folder
 		once
-			if attached Env.get ("ISE_LIBRARY") as l_v then
+			if attached Env.item ("ISE_LIBRARY") as l_v then
 				Result := l_v.twin
 				Result.append_character (Operating_environment.Directory_separator)
 				Result.append ("library")
@@ -118,10 +116,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dll_name: STRING
+	dll_name: STRING_32
 			-- Test folder
 		once
-			if attached Env.get ("ISE_LIBRARY") as l_v then
+			if attached Env.item ("ISE_LIBRARY") as l_v then
 				Result := l_v.twin
 				Result.append_character (Operating_environment.Directory_separator)
 				Result.append ("library")

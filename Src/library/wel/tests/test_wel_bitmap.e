@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tests for bitmaps"
 	author: "Daniel Furrer <daniel.furrer@gmail.com>"
 	date: "$Date$"
@@ -35,7 +35,6 @@ feature {NONE} -- Implementation
 			l_file: RAW_FILE
 			l_dib: WEL_DIB
 			l_window: WEL_FRAME_WINDOW
-			l_info: WEL_BITMAP_INFO
 		do
 			create l_window.make_top ("test")
 			create l_dc.make (l_window)
@@ -106,7 +105,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

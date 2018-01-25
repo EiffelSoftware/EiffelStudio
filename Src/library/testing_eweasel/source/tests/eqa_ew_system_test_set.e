@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
-					A Eweasel system test set base on Testing library
-					
-					For old version, please check {EW_EIFFEL_EWEASEL_TEST}
-																			]"
+			A Eweasel system test set base on Testing library
+			
+			For old version, please check {EW_EIFFEL_EWEASEL_TEST}
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test"
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			l_exec_env: EXECUTION_ENVIRONMENT
 			l_test_name, l_ise_platform: READABLE_STRING_32
 			l_path: STRING_32
-			l_ew_test_name: STRING
+			l_ew_test_name: STRING_32
 		do
 
 			ecf_name := "Ace"
@@ -144,7 +144,7 @@ feature {NONE} -- Initialization
 			l_ew_test_name.to_lower
 
 				-- Now we can initialize the source/target directories
-			l_path := file_system.build_path_from_key ("EWEASEL", << "tests", l_ew_test_name >>)
+			l_path := file_system.build_path_from_key ("EWEASEL", <<{STRING_32} "tests", l_ew_test_name>>)
 			l_env.put (l_path, {EQA_SYSTEM_TEST_SET}.source_path_key)
 			l_env.put (l_path, {EQA_EW_PREDEFINED_VARIABLES}.source_dir_name)
 
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 			-- File name prefix for execution output
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

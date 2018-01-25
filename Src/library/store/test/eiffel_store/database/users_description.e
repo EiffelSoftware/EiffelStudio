@@ -1,5 +1,4 @@
-note
-	description: "Description of class USERS"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -65,16 +64,16 @@ feature -- Access
 			Result.extend (Datetime)
 		end
 
-	description_list: ARRAYED_LIST [STRING]
+	description_list: ARRAYED_LIST [STRING_32]
 			-- Feature name list. Can be interpreted as a list
 			-- or a hash-table.
 		once
 			create Result.make (Attribute_number)
-			Result.extend ("Userid")
-			Result.extend ("Name")
-			Result.extend ("Username")
-			Result.extend ("Email")
-			Result.extend ("Datetime")
+			Result.extend ({STRING_32} "Userid")
+			Result.extend ({STRING_32} "Name")
+			Result.extend ({STRING_32} "Username")
+			Result.extend ({STRING_32} "Email")
+			Result.extend ({STRING_32} "Datetime")
 		end
 
 	type_list: ARRAYED_LIST [INTEGER]
@@ -137,37 +136,28 @@ feature -- Access
 			-- `value' must be of type STRING, INTEGER, BOOLEAN, CHARACTER,
 			-- DOUBLE or DATE_TIME. References are made automatically from
 			-- expanded types.
-		local
-			integer_value: INTEGER_REF
-			date_time_value: DATE_TIME
-			string_value: STRING
 		do
 			inspect i
 				when Name then
-					string_value ?= value
-					if attached string_value as l_string then
-						users.set_name (string_value)
+					if attached {STRING} value as l_string then
+						users.set_name (l_string)
 					end
 				when Username then
-					string_value ?= value
-					if attached string_value as l_string then
-						users.set_username (string_value)
+					if attached {STRING} value as l_string then
+						users.set_username (l_string)
 					end
 				when Email then
-					string_value ?= value
-					if attached string_value as l_string then
-						users.set_email (string_value)
+					if attached {STRING} value as l_string then
+						users.set_email (l_string)
 					end
 				when Userid then
-					integer_value ?= value
-					if integer_value /= Void then
+					if attached {INTEGER_REF} value as integer_value then
 						users.set_userid (integer_value.item)
 					else
 						users.set_userid (0)
 					end
 				when Datetime then
-					date_time_value ?= value
-					if attached date_time_value as l_value then
+					if attached {DATE_TIME} value as l_value then
 						users.set_datetime (l_value)
 					end
 			end

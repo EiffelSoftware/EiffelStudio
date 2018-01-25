@@ -1,13 +1,10 @@
-note
-	description: "[
-					Generic operating system services
-																								]"
+﻿note
+	description: "Generic operating system services"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test"
 	date: "$Date$"
 	revision: "$Revision$"
-
 
 deferred class
 	EQA_EW_OPERATING_SYSTEM
@@ -25,6 +22,8 @@ feature -- Date and time
 			-- Current time in seconds since the start of
 			-- the epoch (00:00:00 GMT,  Jan.  1,  1970)
 		deferred
+		ensure
+			is_class: class
 		end
 
 feature -- Sleeping
@@ -42,7 +41,7 @@ feature -- Sleeping
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

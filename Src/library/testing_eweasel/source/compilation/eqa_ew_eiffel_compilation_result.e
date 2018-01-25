@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
-					An Eiffel compilation result
-					
-					For old version, please check {EW_EIFFEL_COMPILATION_RESULT}
-																							]"
+			An Eiffel compilation result
+			
+			For old version, please check {EW_EIFFEL_COMPILATION_RESULT}
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test"
@@ -447,7 +447,6 @@ feature {NONE} -- Implementation
 			-- Dose list match?
 		local
 			l_count1, l_count2: INTEGER
-			l_different: BOOLEAN
 		do
 			if a_list1 = Void and a_list2 = Void then
 				Result := True
@@ -474,7 +473,7 @@ feature {NONE} -- Implementation
 			-- Raw output of compiler, if not Void
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

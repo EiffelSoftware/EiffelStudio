@@ -65,7 +65,6 @@ feature -- Repository Store
 
 	test_repository_store
 		local
-			l_handler: DATABASE_HANDLER_IMPL
 			l_connection: DATABASE_CONNECTION
 			l_executor: DATABASE_EXECUTOR
 			l_user1: NEW_USERS
@@ -101,7 +100,6 @@ feature -- SQL safe and unsafe queries
 		local
 			l_connection: DATABASE_CONNECTION
 			db_selection: DB_SELECTION
-			l_query: STRING
 		do
 			create {DATABASE_CONNECTION_MYSQL} l_connection.login_with_connection_string (connection_string_mysql_server)
 			create db_selection.make
@@ -530,6 +528,5 @@ feature -- Connection String
 	connection_string_mysql_server:STRING = "Driver={mysql};Server=$SERVER;Port=$PORT;Database=$DATABASE;Uid=$USER;Pwd=$PASSWORD;"
 		--		-- MySQL server: Update the string with your Database settings.
 		-- example:"Driver={mysql};Server=localhost;Port=3306;Database=test;Uid=root;Pwd=;"
-
 
 end

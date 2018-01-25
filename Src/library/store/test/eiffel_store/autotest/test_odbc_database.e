@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {TEST_ODB_DATABASE}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,7 +24,6 @@ feature {NONE} -- Prepare
 	on_prepare
 			-- <Precursor>
 		local
-			l_handler: DATABASE_HANDLER_IMPL
 			l_executor: DATABASE_EXECUTOR
 			l_user1: NEW_USERS
 		do
@@ -110,7 +108,6 @@ feature -- Tests using NULL
 	test_update_with_null
 		local
 			l_handler: DATABASE_HANDLER_IMPL
-			l_user: NEW_USERS
 		do
 				-- Database with one user
 			assert ("count = 1", count_users = 1)
@@ -196,7 +193,6 @@ feature  {NONE} -- Helper
 	count_users: INTEGER_64
 		local
 			l_handler: DATABASE_HANDLER_IMPL
-			l_user: NEW_USERS
 		do
 			create l_handler.make (odbc_connection)
 			l_handler.set_query (query_count_users)
@@ -209,4 +205,5 @@ feature  {NONE} -- Helper
 
 			end
 		end
+
 end

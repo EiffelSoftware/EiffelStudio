@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represents a character separated list of types"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -109,7 +109,7 @@ feature -- Basic operations
 			is_valid_code: is_valid_code (code)
 		local
 			table_feature_list: ARRAYED_LIST [INTEGER]
-			table_descr_list: ARRAYED_LIST [STRING]
+			table_descr_list: ARRAYED_LIST [STRING_32]
 		do
 			table_feature_list := tables.description (code).attribute_code_list
 			table_descr_list := tables.description (code).description_list
@@ -197,7 +197,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -207,11 +207,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-end -- class DV_STRING_LIST
-
-
-
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Description of a table."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ feature -- Access (table description)
 		deferred
 		end
 
-	description_list: ARRAYED_LIST [STRING]
+	description_list: ARRAYED_LIST [STRING_32]
 			-- Feature name list. Can be interpreted as a list
 			-- or a hash-table.
 		deferred
@@ -225,7 +225,7 @@ feature -- Access (table row values)
 			not_void: Result /= Void
 		end
 
-	mapped_list (action: FUNCTION [STRING, STRING]): ARRAYED_LIST [STRING]
+	mapped_list (action: FUNCTION [STRING_32, STRING_32]): ARRAYED_LIST [STRING_32]
 			-- Feature list mapped with `action'.
 			-- This can be useful to create tags or parameter names.
 		require
@@ -274,7 +274,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -284,9 +284,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DB_TABLE_DESCRIPTION
-
-
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Database Manager using database structure description."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -367,7 +367,7 @@ feature -- Basic operations
 			select_query_prepared: select_query_prepared
 			column_list_not_void: column_list /= Void
 		local
-			descr_list: ARRAYED_LIST [STRING]
+			descr_list: ARRAYED_LIST [STRING_32]
 		do
 				-- implied by precondition `select_query_prepared'
 			check attached select_table_descr as l_select_table_descr then
@@ -615,7 +615,7 @@ feature {NONE} -- Update implementation
 			updater_not_void: updater /= Void
 			table_description_not_void: table_descr /= Void
 		local
-			name_list: ARRAYED_LIST [STRING]
+			name_list: ARRAYED_LIST [STRING_32]
 			i: INTEGER
 		do
 			name_list := update_parameters (table_descr.Table_code)
@@ -636,8 +636,8 @@ feature {NONE} -- Update implementation
 			has_id: td.id_code /= td.No_id
 		local
 			code: INTEGER
-			parameter_list: ARRAYED_LIST [STRING]
-			attribute_list: ARRAYED_LIST [STRING]
+			parameter_list: ARRAYED_LIST [STRING_32]
+			attribute_list: ARRAYED_LIST [STRING_32]
 			l_has_id,
 			l_do_append: BOOLEAN
 		do
@@ -669,7 +669,7 @@ feature {NONE} -- Update implementation
 			Result.append (" where " + td.id_name + " = :" + parameter (td.id_name))
 		end
 
-	update_parameters (code: INTEGER): ARRAYED_LIST [STRING]
+	update_parameters (code: INTEGER): ARRAYED_LIST [STRING_32]
 			-- Parameters names for an update on table with `code'.
 			-- Parameters contain the required ':' prefix to tell
 			-- EiffelCommerce it is a parameter.
@@ -684,12 +684,12 @@ feature {NONE} -- Update implementation
 			end
 		end
 
-	parameter (s: STRING): STRING
+	parameter (s: STRING_32): STRING_32
 			-- Prepend "N_" to `s'.
 		require
 			s_not_void: s /= Void
 		do
-			Result := "N_" + s
+			Result := {STRING_32} "N_" + s
 		end
 
 feature {NONE} -- Creation implementation
@@ -859,7 +859,7 @@ feature {NONE} -- Implementation
 	repository_table: ARRAY [detachable DB_REPOSITORY]
 			-- Table that stores loaded repository.
 
-	update_parameters_table: ARRAY [detachable ARRAYED_LIST [STRING]]
+	update_parameters_table: ARRAY [detachable ARRAYED_LIST [STRING_32]]
 			-- Table that stores parameters/map names for a database update.
 
 	updater_table: ARRAY [detachable DB_CHANGE]
@@ -966,7 +966,7 @@ feature {NONE} -- Error messages
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -976,4 +976,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class DATABASE_MANAGER
+end

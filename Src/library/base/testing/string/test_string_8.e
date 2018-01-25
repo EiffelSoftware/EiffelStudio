@@ -291,12 +291,12 @@ feature -- Tests
 			s: STRING_8
 		do
 			s := "abcdef"
-			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			s.from_c (l_ptr.item)
 			check_boolean ("from_c", s.is_equal ("0123456"))
 
 			s := "abcdef"
-			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			s.from_c (l_ptr.item)
 			check_boolean ("from_c", s.is_empty)
 		end
@@ -306,7 +306,7 @@ feature -- Tests
 			l_ptr: MANAGED_POINTER
 			s: STRING_8
 		do
-			create l_ptr.make_from_array (<<65,66,67,68>>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} <<65,66,67,68>>)
 			create s.make (2)
 
 			s.from_c_substring (l_ptr.item, 3, 3)
@@ -1074,21 +1074,21 @@ feature -- Tests
 			l_ptr: MANAGED_POINTER
 			s: STRING_8
 		do
-			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			create s.make_from_c (l_ptr.item)
 			check_boolean ("make_from_c", s.is_equal ("0123456"))
 
-			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			create s.make_from_c (l_ptr.item)
 			check_boolean ("make_from_c", s.is_empty)
 
 			s := "abcdef"
-			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			s.make_from_c (l_ptr.item)
 			check_boolean ("make_from_c", s.is_equal ("0123456"))
 
 			s := "abcdef"
-			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			s.make_from_c (l_ptr.item)
 			check_boolean ("make_from_c", s.is_empty)
 		end
@@ -1099,7 +1099,7 @@ feature -- Tests
 			s: STRING_8
 		do
 				-- Creation `make_from_c_substring`
-			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			create s.make_from_c_substring (l_ptr.item, 2, 5)
 			check_boolean ("make_from_c_substring", s.is_equal ("1234"))
 
@@ -1113,17 +1113,17 @@ feature -- Tests
 			check_boolean ("make_from_c_substring", s.is_equal ("0123456%U"))
 
 
-			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			create s.make_from_c_substring (l_ptr.item, 2, 8)
 			check_boolean ("make_from_c_substring", s.is_equal ("0123456"))
 
-			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 0, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 0, 48, 49, 50, 51, 0, 52, 53, 54, 0 >>)
 			create s.make_from_c_substring (l_ptr.item, 1, 10)
 			check_boolean ("make_from_c_substring", s.is_equal ("%U0123%U456%U"))
 
 				-- Procedure `make_from_c_substring`
 			s := "abcdef"
-			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			s.make_from_c_substring (l_ptr.item, 2, 5)
 			check_boolean ("make_from_c_substring", s.is_equal ("1234"))
 
@@ -1137,12 +1137,12 @@ feature -- Tests
 
 
 			s := "abcdef"
-			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			s.make_from_c_substring (l_ptr.item, 2, 8)
 			check_boolean ("make_from_c_substring", s.is_equal ("0123456"))
 
 			s := "abcdef"
-			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 0, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 0, 48, 49, 50, 51, 0, 52, 53, 54, 0 >>)
 			s.make_from_c_substring (l_ptr.item, 1, 10)
 			check_boolean ("make_from_c_substring", s.is_equal ("%U0123%U456%U"))
 		end
@@ -2525,10 +2525,8 @@ feature -- Tests
 			check_equality ("wipe_out", s, "")
 		end
 
-
-
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

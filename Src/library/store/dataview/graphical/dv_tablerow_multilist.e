@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			-- Set column titles with names of attributes which codes are in `attr_codes_list'.
 		local
 			ind: INTEGER
-			table_descr_l: ARRAYED_LIST [STRING]
+			table_descr_l: ARRAYED_LIST [STRING_32]
 		do
 			table_descr_l := tables.obj (table_code).table_description.description_list
 			from

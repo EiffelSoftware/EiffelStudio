@@ -28,6 +28,7 @@ feature -- Initialization
 			l_outl: INTEGER
 			l_bytes: INTEGER
 		do
+
 				-- Create and initialise the context
 			l_ctx := {SSL_EVP}.c_evp_cipher_ctx_new
 				-- Select cipher

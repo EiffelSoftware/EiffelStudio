@@ -9,226 +9,63 @@ class
 	SSL_CIPHER
 
 create
-	make_by_pointer
+	make
 
-feature {NONE} -- Creation Procedure
+feature {NONE} -- Initialization
 
-	make_by_pointer (a_pointer: POINTER)
-			-- Create an object cipher with `a_pointer'
+	make (a_algo: SSL_ALGORITHM; a_mode: SSL_MODE)
+			-- Create an object with algorithm `a_algo' and mode `a_mode'
 		do
-			item := a_pointer
+			algorithm := a_algo
+			mode := a_mode
 		ensure
-			item_not_default: item /= default_pointer
+			valid_mode: a_mode.validate_for_aglorithm (a_algo)
 		end
-
-	item: POINTER
-			-- pointer to an EVP_CIPHER.
-
-	ctx: detachable POINTER
-			-- pointer to the cipher context.
-			-- EVP_CIPHER_CTX.			
 
 feature -- Access
 
-	key: detachable READABLE_STRING_8
-			-- string representing the key.
-		note
-			option: stable
-		attribute
-		end
+	algorithm: SSL_ALGORITHM
+			--  cryptographic algorithm.
 
-	iv: detachable READABLE_STRING_8
-			-- string representing the initalization vector.
-		note
-			option: stable
-		attribute
-		end
+	mode: SSL_MODE
+			-- mode to be used by the crypto algorithm.
 
-	encrypt: BOOLEAN
-			--  True: encrypting, otherwise decrypting.
+feature -- Encryptor
 
-	iv_length: INTEGER
-			-- iv length of the current cipher algorithm.
-		do
-			Result := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_iv_length (item)
-		end
-
-	key_length: INTEGER
-			-- key length of the current cipher algorithm.
-		do
-			Result := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_key_length (item)
-		end
-
-	flags: NATURAL_64
-			-- flag of the current cipher algorithm.
-		do
-			Result := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_flags (item)
-		end
-
-	block_size: INTEGER
-			-- block size of the cipher algorithm.
-
-	finalized: BOOLEAN
-			-- is the cipher operation already completed?		
-
-feature -- Error
-
-	error: detachable READABLE_STRING_8
-		-- last error.
-
-
-feature -- Initialization
-
-	initialize (a_key: READABLE_STRING_8; a_iv: READABLE_STRING_8; a_encrypt: BOOLEAN)
-			-- Initialize cipher instance.
-			-- with key `a_key', initialization vectionr iv `a_iv' and encrypt mode `encrypt'.
-		require
-			valid_id_length: (create {BYTE_ARRAY_CONVERTER}.make_from_string (a_iv)).count = iv_length
+	encryptor: SSL_CIPHER_CONTEXT
+			-- get a encryption cipher context instance.
 		local
-			l_key:  MANAGED_POINTER
-			l_iv: MANAGED_POINTER
-			l_res: INTEGER
+				l_ctx: SSL_CIPHER_CONTEXT_EXTERNALS
 		do
-			clean_context
+			create l_ctx.make (algorithm, mode, {SSL_CIPHER_CONTEXT_EXTERNALS}.encrypt)
+			Result := wrap_context (l_ctx, True)
+		end
 
-			encrypt := a_encrypt
 
-				-- create cipher context
-			ctx := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_new
-			if ctx /= default_pointer then
-				create l_key.make_from_array ((create {BYTE_ARRAY_CONVERTER}.make_from_string (a_key)).to_natural_8_array)
-				create l_iv.make_from_array ((create {BYTE_ARRAY_CONVERTER}.make_from_string (a_iv)).to_natural_8_array)
-				if l_key.count /= key_length then
-					if 	(flags & 8 ) /= 0	then
-						-- Variable key length cipher.
+feature -- Decryptor
 
-					else
-						error := "Invalid key length for this algorithm"
-					end
+	decryptor: SSL_CIPHER_CONTEXT
+			-- get a decryption cipher context instance.
+		local
+			l_ctx: SSL_CIPHER_CONTEXT_EXTERNALS
+		do
+			create l_ctx.make (algorithm, mode, {SSL_CIPHER_CONTEXT_EXTERNALS}.decrypt)
+			Result := wrap_context (l_ctx, False)
+		end
+
+
+feature {NONE} -- Implementation
+
+	wrap_context (a_ctx: SSL_CIPHER_CONTEXT_EXTERNALS; a_encrypt: BOOLEAN): SSL_CIPHER_CONTEXT
+		do
+			if attached {SSL_MODE_WITH_AUTHENTICATION_TAG} mode as l_mode then
+				if a_encrypt then
+					create {SSL_AEAD_ENCRYPTION_CONTEXT_IMPL} Result.make (a_ctx)
 				else
-					l_res:= {SSL_CRYPTO_EXTERNALS}.c_evp_cipherinit_ex (ctx, item, default_pointer, l_key.item, l_iv.item, encrypt.to_integer)
-					if l_res = 0 then
-						clean_context
-						error := "Unable to initialize cipher"
-					else
-						block_size := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_block_size (item)
-					    finalized := False
-					end
+					create {SSL_AEAD_CIPHER_CONTEXT_IMPL} Result.make (a_ctx)
 				end
 			else
-				error := "Unable to create cipher context"
+				create {SSL_CIPHER_CONTEXT_IMPL} Result.make (a_ctx)
 			end
 		end
-
-
-feature -- Update
-
-	update (a_data: READABLE_STRING_8)
-			-- Process the ecryption/decryption.
-			-- data `a_data' part of the plain text/ciphertext to process.
-			-- Update outptut_buffer with part of ciphercext/plain text.
-		require
-			updates_allowed: not finalized
-		local
-			l_len: INTEGER
-			l_buffer: MANAGED_POINTER
-			l_data: MANAGED_POINTER
-			l_res: INTEGER
-			l_output_buffer: MANAGED_POINTER
-		do
-
-			if a_data.count > 0 then
-				create l_data.make_from_array ((create {BYTE_ARRAY_CONVERTER}.make_from_string (a_data)).to_natural_8_array)
-				create l_buffer.make_from_array (create {ARRAY [NATURAL_8]}.make_filled (0, 1, block_size + l_data.count))
-
-				l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipherupdate (ctx, l_buffer.item, $l_len, l_data.item, l_data.count)
-				if l_res <= 0 then
-					clean_context
-					error := "problem processing data"
-				else
-					l_output_buffer := output_buffer
-					if attached l_output_buffer then
-						l_output_buffer.append (l_buffer)
-					else
-						create l_output_buffer.make (l_buffer.count)
-						l_output_buffer.copy (l_buffer)
-						output_buffer := l_output_buffer
-					end
-				end
-			else
-			 	-- do nothing.
-			end
-		end
-
-
-feature -- Finish
-
-	finish
-			-- Finalizes processing, encrypting or decrypting.
-		require
-			not_finalized: not finalized
-		local
-			l_buffer: MANAGED_POINTER
-			l_len: INTEGER
-			l_output_buffer: MANAGED_POINTER
-			l_res: INTEGER
-		do
-			create l_buffer.make_from_array (create {ARRAY [NATURAL_8]}.make_filled (0, 1, block_size))
-			finalized := True
-			l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipherfinal_ex (ctx, l_buffer.item, $l_len)
-			if l_res = 0 then
-				clean_context
-				error := "Unable to finalize cipher"
-			else
-
-				l_output_buffer := output_buffer
-				if attached l_output_buffer then
-					l_output_buffer.append (l_buffer)
-				else
-					error:= "Unexpected error"
-				end
-			end
-		end
-
-feature -- Output
-
-	output_buffer: detachable MANAGED_POINTER
-			-- part of ciphercext/plain text.
-
-	string_output: READABLE_STRING_8
-			-- String representation of cyphertext/plain text.
-		local
-			l_index: INTEGER
-			l_result: STRING_8
-		do
-			create l_result.make_empty
-			if attached output_buffer as l_buffer then
-				from
-				until
-					l_index >= l_buffer.count
-				loop
-					l_result.append_character(l_buffer.read_character (l_index))
-					l_index := l_index + 1
-				end
-			end
-			Result := l_result
-		end
-
-
-
-feature -- Clean
-
-	clean_context
-			-- Cleans up the cipher context.
-		local
-			l_res: INTEGER
-		do
-			if attached ctx as l_ctx then
-				l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_reset (l_ctx)
-				{SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_free (l_ctx)
-				ctx := default_pointer
-				finalized := True
-			end
-		end
-
 end

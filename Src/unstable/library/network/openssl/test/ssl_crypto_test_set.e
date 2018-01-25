@@ -24,6 +24,7 @@ feature -- Test
 		local
 			c_name: C_STRING
 		do
+			initialize_ssl
 				-- DES
 			create c_name.make ("DES")
 			assert ("Not default pointer DES", {SSL_CRYPTO_EXTERNALS}.c_evp_get_cipherbyname (c_name.item) /= default_pointer)
@@ -31,6 +32,9 @@ feature -- Test
 				-- UNKOWN
 			create c_name.make ("UNKOWN")
 			assert ("default pointer UNKOWN", {SSL_CRYPTO_EXTERNALS}.c_evp_get_cipherbyname (c_name.item) = default_pointer)
+
+			create c_name.make ("aes-256-gcm")
+			assert ("default pointer AES-256-GCM", {SSL_CRYPTO_EXTERNALS}.c_evp_get_cipherbyname (c_name.item) /= default_pointer)
 
 		end
 

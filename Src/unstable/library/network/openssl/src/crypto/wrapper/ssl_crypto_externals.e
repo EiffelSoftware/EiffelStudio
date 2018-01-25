@@ -237,4 +237,34 @@ feature -- Access
 			]"
 		end
 
+	c_evp_cipher_ctx_ctrl (a_ctx: POINTER; a_type: INTEGER; a_arg: INTEGER; a_ptr: POINTER): INTEGER
+			-- allows various cipher specific parameters to be determined and set.
+			--	int EVP_CIPHER_CTX_ctrl(EVP_CIPHER_CTX *ctx, int type, int arg, void *ptr);
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_CIPHER_CTX_ctrl((EVP_CIPHER_CTX *)$a_ctx, (int)$a_type, (int) $a_arg, (void *) $a_ptr);"
+		end
+
+	c_evp_ctrl_aead_set_ivlen: INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_CTRL_AEAD_SET_IVLEN"
+		end
+
+	c_evp_ctrl_aead_get_tag: INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_CTRL_AEAD_GET_TAG"
+		end
+
+	c_evp_ctrl_aead_set_tag: INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_CTRL_AEAD_SET_TAG"
+		end
+
 end

@@ -2540,7 +2540,7 @@ msgid "Account"
 msgstr ""
 
 #. Source code: t_account_access: STRING = "Account Access"
-#: es_exception_submit_dialog.e:990
+#: es_exception_submit_dialog.e:994
 msgid "Account Access"
 msgstr ""
 
@@ -6911,7 +6911,7 @@ msgid "Browser"
 msgstr ""
 
 #. Source code: t_bug_information: STRING = "Bug Information"
-#: es_exception_submit_dialog.e:991
+#: es_exception_submit_dialog.e:995
 msgid "Bug Information"
 msgstr ""
 
@@ -11070,7 +11070,7 @@ msgid "Criterion unit \"$1\" is different from basic metric unit \"$2\"."
 msgstr ""
 
 #. Source code: 
-#: es_exception_submit_dialog.e:1016
+#: es_exception_submit_dialog.e:1020
 msgid "Critical"
 msgstr ""
 
@@ -18841,12 +18841,12 @@ msgid "Enter or select a name to save the current layout as."
 msgstr ""
 
 #. Source code: lb_enter_bug_information: STRING = "Enter supplementary bug information"
-#: es_exception_submit_dialog.e:995
+#: es_exception_submit_dialog.e:999
 msgid "Enter supplementary bug information"
 msgstr ""
 
 #. Source code: lb_enter_synopsis: STRING = "Enter synopsis"
-#: es_exception_submit_dialog.e:996
+#: es_exception_submit_dialog.e:1000
 msgid "Enter synopsis"
 msgstr ""
 
@@ -19116,7 +19116,7 @@ msgstr ""
 #: vucr_attribute.e:19
 msgctxt "compiler.error"
 msgid ""
-"Error: Variable attribute {1} cannot be a class routine.\n"
+"Error: Variable attribute {1} cannot be a class feature.\n"
 "What to do: Remove the class postcondition."
 msgstr ""
 
@@ -20558,18 +20558,6 @@ msgstr ""
 #: vuno_feature.e:61
 msgctxt "compiler.error"
 msgid "Feature {1} cannot be used in a non-object call."
-msgstr ""
-
-#. Source code: ("Feature {1} from class {2} has a class postcondition.", "eiffel.error"),
-#: vdjr5_new.e:69
-msgctxt "eiffel.error"
-msgid "Feature {1} from class {2} has a class postcondition."
-msgstr ""
-
-#. Source code: ("Feature {1} from class {2} is not instance-free.", "eiffel.error"),
-#: vdjr5_new.e:76
-msgctxt "eiffel.error"
-msgid "Feature {1} from class {2} is not instance-free."
 msgstr ""
 
 #. Source code: l_Feature_colon: STRING_32			do Result := locale.translation("Feature:")	end
@@ -22849,7 +22837,7 @@ msgid ""
 msgstr ""
 
 #. Source code: lb_register_account: STRING = "If you do not already have an account, please register "
-#: es_exception_submit_dialog.e:1008
+#: es_exception_submit_dialog.e:1012
 msgid "If you do not already have an account, please register "
 msgstr ""
 
@@ -23692,9 +23680,9 @@ msgstr ""
 msgid "Instance-free"
 msgstr ""
 
-#. Source code: l_Instance_free_routines: STRING_32					do Result := locale.translation("Instance-free routines")	end
+#. Source code: l_Instance_free_routines: STRING_32					do Result := locale.translation("Instance-free features")	end
 #: interface_names.e:1571
-msgid "Instance-free routines"
+msgid "Instance-free features"
 msgstr ""
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -24572,7 +24560,7 @@ msgid "Is assigner enabled"
 msgstr ""
 
 #. Source code: lb_is_compiling: STRING = "Is compiling: $1"
-#: es_exception_dialog.e:393
+#: es_exception_dialog.e:396
 msgid "Is compiling: $1"
 msgstr ""
 
@@ -25092,7 +25080,7 @@ msgid "Last browsed cluster directory"
 msgstr ""
 
 #. Source code: lb_last_degree: STRING = "Last compilation degree: $1"
-#: es_exception_dialog.e:394
+#: es_exception_dialog.e:397
 msgid "Last compilation degree: $1"
 msgstr ""
 
@@ -25108,7 +25096,7 @@ msgid "Last imported metric definition directory"
 msgstr ""
 
 #. Source code: lb_last_processed_class: STRING = "Last known class processed: $1"
-#: es_exception_dialog.e:395
+#: es_exception_dialog.e:398
 msgid "Last known class processed: $1"
 msgstr ""
 
@@ -25197,7 +25185,7 @@ msgid "Last saved stack path"
 msgstr ""
 
 #. Source code: lb_status_bar_text: STRING = "Last status message: $1"
-#: es_exception_dialog.e:396
+#: es_exception_dialog.e:399
 msgid "Last status message: $1"
 msgstr ""
 
@@ -25757,12 +25745,12 @@ msgid "Lock the Tools"
 msgstr ""
 
 #. Source code: b_submit: STRING = "Submit"
-#: es_exception_submit_dialog.e:1013
+#: es_exception_submit_dialog.e:1017
 msgid "Log out"
 msgstr ""
 
 #. Source code: b_log_out: STRING = "Log out"
-#: es_exception_submit_dialog.e:1012
+#: es_exception_submit_dialog.e:1016
 msgid "Login"
 msgstr ""
 
@@ -25923,7 +25911,7 @@ msgid "Make attribute constant"
 msgstr ""
 
 #. Source code: lb_make_public: STRING = "Make bug publicly available"
-#: es_exception_submit_dialog.e:997
+#: es_exception_submit_dialog.e:1001
 msgid "Make bug publicly available"
 msgstr ""
 
@@ -27658,7 +27646,7 @@ msgid "No breakpoints"
 msgstr ""
 
 #. Source code: w_no_description: STRING = "No bug description has been supplied. Submitting a report without additional details can make it hard to reproduce.%N%NDo you want to continue submitting a bug report?"
-#: es_exception_submit_dialog.e:1020
+#: es_exception_submit_dialog.e:1024
 msgid ""
 "No bug description has been supplied. Submitting a report without additional "
 "details can make it hard to reproduce.\n"
@@ -27990,7 +27978,7 @@ msgid "No when part"
 msgstr ""
 
 #. Source code: i_non_critical: STRING = "Non Critical"
-#: es_exception_submit_dialog.e:1018
+#: es_exception_submit_dialog.e:1022
 msgid "Non Critical"
 msgstr ""
 
@@ -29270,7 +29258,7 @@ msgid "Password"
 msgstr ""
 
 #. Source code: lb_password: STRING = "Password:"
-#: es_exception_submit_dialog.e:998
+#: es_exception_submit_dialog.e:1002
 msgid "Password:"
 msgstr ""
 
@@ -30095,7 +30083,7 @@ msgid "Project already exists"
 msgstr ""
 
 #. Source code: lb_was_compiled: STRING = "Project compiled: $1"
-#: es_exception_dialog.e:392
+#: es_exception_dialog.e:395
 msgid "Project compiled: $1"
 msgstr ""
 
@@ -30122,7 +30110,7 @@ msgid "Project is not readable. Check permissions."
 msgstr ""
 
 #. Source code: lb_project_loaded: STRING = "Project loaded: $1"
-#: es_exception_dialog.e:391
+#: es_exception_dialog.e:394
 msgid "Project loaded: $1"
 msgstr ""
 
@@ -30793,7 +30781,7 @@ msgid "Remember location"
 msgstr ""
 
 #. Source code: lb_remember_me: STRING = "Remember me"
-#: es_exception_submit_dialog.e:999
+#: es_exception_submit_dialog.e:1003
 msgid "Remember me"
 msgstr ""
 
@@ -33388,7 +33376,7 @@ msgid "Serbian (Serbia and Montenegro, Latin)"
 msgstr ""
 
 #. Source code: i_non_critical: STRING = "Non Critical"
-#: es_exception_submit_dialog.e:1017
+#: es_exception_submit_dialog.e:1021
 msgid "Serious"
 msgstr ""
 
@@ -33874,7 +33862,7 @@ msgid "Severity score."
 msgstr ""
 
 #. Source code: lb_severity: STRING = "Severity:"
-#: es_exception_submit_dialog.e:1000
+#: es_exception_submit_dialog.e:1004
 msgid "Severity:"
 msgstr ""
 
@@ -36433,12 +36421,12 @@ msgid "Subcluster depth"
 msgstr ""
 
 #. Source code: i_critical: STRING = "Critical"
-#: es_exception_submit_dialog.e:1014
+#: es_exception_submit_dialog.e:1018
 msgid "Submit"
 msgstr ""
 
 #. Source code: lb_submitting: STRING = "Submitting bug report, please wait..."
-#: es_exception_submit_dialog.e:1007
+#: es_exception_submit_dialog.e:1011
 msgid "Submitting bug report, please wait..."
 msgstr ""
 
@@ -37214,7 +37202,7 @@ msgid "Thai (Thailand)"
 msgstr ""
 
 #. Source code: tt_thank_you: STRING = "Thank you for the bug report"
-#: es_exception_submit_dialog.e:993
+#: es_exception_submit_dialog.e:997
 msgid "Thank you for the bug report"
 msgstr ""
 
@@ -37825,7 +37813,7 @@ msgid ""
 msgstr ""
 
 #. Source code: Result := "The submitted report is now available at "
-#: es_exception_submit_dialog.e:1003
+#: es_exception_submit_dialog.e:1007
 msgid "The submitted report is now available at "
 msgstr ""
 
@@ -38043,7 +38031,7 @@ msgid ""
 msgstr ""
 
 #. Source code: Result := "There was a problem submitting the problem report. Please retry or submit it manually at "
-#: es_exception_submit_dialog.e:1023
+#: es_exception_submit_dialog.e:1027
 msgid ""
 "There was a problem submitting the problem report. Please retry or submit it "
 "manually at "
@@ -41180,7 +41168,7 @@ msgid "User-defined tags"
 msgstr ""
 
 #. Source code: lb_username: STRING = "Username:"
-#: es_exception_submit_dialog.e:1009
+#: es_exception_submit_dialog.e:1013
 msgid "Username:"
 msgstr ""
 
@@ -43007,7 +42995,7 @@ msgid "group item"
 msgstr ""
 
 #. Source code: b_login: STRING = "Login"
-#: es_exception_submit_dialog.e:1011
+#: es_exception_submit_dialog.e:1015
 msgid "here"
 msgstr ""
 
@@ -43631,6 +43619,18 @@ msgstr ""
 #. Source code: e_feature_already_exists: STRING = "{$1} already contains a feature named $2."
 #: es_feature_name_validator.e:85
 msgid "{$1} already contains a feature named $2."
+msgstr ""
+
+#. Source code: ("{1} from class {2} is a class feature.", "eiffel.error"),
+#: vdjr5_new.e:69
+msgctxt "eiffel.error"
+msgid "{1} from class {2} is a class feature."
+msgstr ""
+
+#. Source code: ("{1} from class {2} is not an instance-free feature.", "eiffel.error"),
+#: vdjr5_new.e:76
+msgctxt "eiffel.error"
+msgid "{1} from class {2} is not an instance-free feature."
 msgstr ""
 
 #. Source code: do Result := translation_in_context ("{REAL}.nan comparison", once "code_analyzer") end

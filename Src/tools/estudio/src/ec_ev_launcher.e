@@ -26,13 +26,6 @@ inherit
 			launch as ev_launch
 		end
 
-	EIFFEL_LAYOUT
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-
 create
 	make
 
@@ -40,12 +33,7 @@ feature {NONE} -- Creation
 
 	make
 			-- Creation method
-		local
-			l_layout: ESTUDIO_EIFFEL_LAYOUT
 		do
-			create l_layout
-				-- the user can define some variables on the command line so we do the check after we have handled this
-			set_eiffel_layout (l_layout)
 			default_create
 			uncaught_exception_actions.extend (agent handle_exceptions)
 			Precursor
@@ -141,7 +129,7 @@ feature {NONE} -- Exception
 			-- Dialog used for showing uncaught exceptions.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

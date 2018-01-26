@@ -36,17 +36,17 @@ feature {NONE} -- Initialization
 			object_grid.column (3).set_title ("Delta/Start Object")
 			object_grid.column (4).set_title ("Phyiscal Size")
 			object_grid.column (5).set_title ("Average/Deep Physical Size")
-			object_grid.column (1).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (1))
-			object_grid.column (2).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (2))
-			object_grid.column (3).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (3))
-			object_grid.column (4).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (4))
-			object_grid.column (5).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (5))
+			object_grid.column (1).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (1, ?, ?, ?, ?, ?, ?, ?, ?))
+			object_grid.column (2).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (2, ?, ?, ?, ?, ?, ?, ?, ?))
+			object_grid.column (3).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (3, ?, ?, ?, ?, ?, ?, ?, ?))
+			object_grid.column (4).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (4, ?, ?, ?, ?, ?, ?, ?, ?))
+			object_grid.column (5).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (5, ?, ?, ?, ?, ?, ?, ?, ?))
 
-			object_grid.column (1).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (1))
-			object_grid.column (2).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (2))
-			object_grid.column (3).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (3))
-			object_grid.column (4).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (4))
-			object_grid.column (5).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (5))
+			object_grid.column (1).header_item.pointer_double_press_actions.extend (agent adjust_column_width (1, ?, ?, ?, ?, ?, ?, ?, ?))
+			object_grid.column (2).header_item.pointer_double_press_actions.extend (agent adjust_column_width (2, ?, ?, ?, ?, ?, ?, ?, ?))
+			object_grid.column (3).header_item.pointer_double_press_actions.extend (agent adjust_column_width (3, ?, ?, ?, ?, ?, ?, ?, ?))
+			object_grid.column (4).header_item.pointer_double_press_actions.extend (agent adjust_column_width (4, ?, ?, ?, ?, ?, ?, ?, ?))
+			object_grid.column (5).header_item.pointer_double_press_actions.extend (agent adjust_column_width (5, ?, ?, ?, ?, ?, ?, ?, ?))
 
 			object_grid.set_pick_and_drop_mode
 			object_grid.set_item_pebble_function (agent pick_item)
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			object_grid_deny_curosor_set: object_grid.deny_cursor /= Void
 		end
 
-	adjust_column_width (a_column_index: INTEGER)
+	adjust_column_width (a_column_index: INTEGER; x, y, b: INTEGER_32; x_tilt, y_tilt, p: REAL_64; screen_x, screen_y: INTEGER_32)
 			-- adjust a column width to fix the max width of the item its contain
 		require
 			a_column_index_valid: column_index_valid (a_column_index)
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_grid_header_click (a_column_index: INTEGER)
+	on_grid_header_click (a_column_index: INTEGER; x, y, b: INTEGER_32; x_tilt, y_tilt, p: REAL_64; screen_x, screen_y: INTEGER_32)
 			-- User click on the column header of index `a_column_index'.
 		require
 			a_column_index_valid: column_index_valid (a_column_index)
@@ -818,7 +818,7 @@ invariant
 	object_grid_not_void: object_grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

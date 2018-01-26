@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represent a checkbox in a grid."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 			default_create
 			expose_actions.extend (agent draw_overlay_pixmap)
-			pointer_button_press_actions.force_extend (agent handle_pointer_pressed)
+			pointer_button_press_actions.extend (agent handle_pointer_pressed)
 
 			set_required_width (40)
 		end
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 	tree_line_enabled: BOOLEAN
 		-- Should a tree line be drawn all the way to the check box.
 
-	handle_pointer_pressed
+	handle_pointer_pressed (x, y, b: INTEGER_32; x_tilt, y_tilt, p: REAL_64; screen_x, screen_y: INTEGER_32)
 			-- Handle user press event.
 		do
 			internal_selected := not internal_selected
@@ -240,7 +240,7 @@ invariant
 	selected_changed_actions_not_void: selected_changed_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

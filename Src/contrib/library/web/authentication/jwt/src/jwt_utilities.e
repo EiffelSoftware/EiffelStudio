@@ -61,7 +61,7 @@ feature -- Encoding
 		do
 			create hs256.make_ascii_key (a_secret)
 			hs256.update_from_string (s)
-			-- if Version >= EiffelStudio 17.11 then
+			-- if Version >= EiffelStudio 18.01 then
 			-- 	Result := hs256.base64_digest --lowercase_hexadecimal_string_digest
 			-- else
 			Result := base64_bytes_encoded_string (hs256.digest)
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 
 	base64_bytes_encoded_string (a_bytes: SPECIAL [NATURAL_8]): STRING_8
 			-- Base64 string from `a_bytes`.
-			--| Note: to be removed when 17.11 is not latest release anymore.
+			--| Note: to be removed when 18.01 is not latest release anymore.
 		local
 			s: STRING
 			i,n: INTEGER

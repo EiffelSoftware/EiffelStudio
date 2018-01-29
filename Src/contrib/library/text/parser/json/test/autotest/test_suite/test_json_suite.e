@@ -62,6 +62,51 @@ feature -- Tests Pass
 			end
 		end
 
+	test_json_and_special_character
+		local
+			parse_json: like new_json_parser
+			utf: UTF_CONVERTER
+			s: READABLE_STRING_8
+		do
+			s := "{ %"null_char%": %"null%Uchar%" }"
+			parse_json := new_json_parser (s)
+			parse_json.parse_content
+			assert ("null_char.json has error", parse_json.is_valid) -- Flexible parsing
+
+			s := "{ %"null_char%": %"null\u0000char%" }"
+			parse_json := new_json_parser (s)
+			parse_json.parse_content
+			assert ("null_char.json is valid", parse_json.is_valid)
+
+			if attached {JSON_OBJECT} parse_json.parsed_json_value as jo and then attached {JSON_STRING} jo.item ("null_char") as js then
+				assert ("null_char", js.unescaped_string_32.same_string_general ({STRING_32} "null%Uchar"))
+			else
+				assert ("null_char", False)
+ 			end
+
+			s := "{ %"new_line_and_tab%": %"new%Nline, and%Ttab%" }"
+			parse_json := new_json_parser (s)
+			parse_json.parse_content
+			assert ("new_line_and_tab.json has error", parse_json.has_error)
+
+			s := "{ %"single_backslash_char%": %"single\char%" }"
+			parse_json := new_json_parser (s)
+			parse_json.parse_content
+			assert ("new_line_and_tab.json has error", parse_json.has_error)
+
+			s := "{ %"new_line_and_tab%": %"new\nline, and\ttab%" }"
+			parse_json := new_json_parser (s)
+			parse_json.parse_content
+			assert ("new_line_and_tab.json is valid", parse_json.is_valid)
+
+			if attached {JSON_OBJECT} parse_json.parsed_json_value as jo and then attached {JSON_STRING} jo.item ("new_line_and_tab") as js then
+				assert ("new_line_and_tab", js.unescaped_string_32.same_string_general ({STRING_32} "new%Nline, and%Ttab"))
+			else
+				assert ("new_line_and_tab", False)
+ 			end
+ 		end
+
+
 	test_json_utf_8_pass1
 		local
 			parse_json: like new_json_parser

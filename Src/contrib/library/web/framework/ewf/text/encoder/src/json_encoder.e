@@ -48,6 +48,7 @@ feature -- Encoder
 				if uc.is_character_8 then
 					c := uc.to_character_8
 					inspect c
+					when '%U' then Result.append_string ("\u0000")
 					when '%"' then Result.append_string ("\%"")
 					when '\' then Result.append_string ("\\")
 					when '%B' then Result.append_string ("\b")

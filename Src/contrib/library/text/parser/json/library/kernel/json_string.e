@@ -472,6 +472,8 @@ feature {NONE} -- Implementation
 				if uc.is_character_8 then
 					c := uc.to_character_8
 					inspect c
+					when '%U' then
+						Result.append_string ("\u0000")
 					when '%"' then
 						Result.append_string ("\%"")
 					when '\' then
@@ -528,6 +530,6 @@ invariant
 	item_not_void: item /= Void
 
 note
-	copyright: "2010-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

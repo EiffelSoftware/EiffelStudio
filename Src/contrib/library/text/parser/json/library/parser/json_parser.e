@@ -3,6 +3,7 @@ note
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=RFC7159", "protocol=URI", "src=https://tools.ietf.org/html/rfc7159"
 
 class
 	JSON_PARSER
@@ -340,6 +341,9 @@ feature {NONE} -- Implementation: parsing
 						if is_special_character (c) and c /= '/' then
 							has_more := False
 							report_error ("Input String is not well formed JSON, found [" + c.out + " ]")
+						elseif c = '%U' then
+								--| Accepts null character in string value.
+							l_json_string.append_character (c)
 						else
 							l_json_string.append_character (c)
 						end
@@ -674,6 +678,6 @@ feature {NONE} -- Constants
 	null_id: STRING = "null"
 
 note
-	copyright: "2010-2017, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

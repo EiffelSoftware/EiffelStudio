@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel Vision Environment. Cocoa implementation."
 	author: "Daniel Furrer"
 	keywords: "environment, global, system"
@@ -40,7 +40,7 @@ feature -- Access
 			-- on current platform, in the form of their three letter extension.
 			-- e.g. PNG, BMP, ICO
 		once
-			Result := create {ARRAYED_LIST [STRING_32]}.make_from_array (<<"PNG">>)
+			Result := create {ARRAYED_LIST [STRING_32]}.make_from_array (<<{STRING_32} "PNG">>)
 			Result.compare_objects
 		end
 
@@ -79,7 +79,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -88,4 +88,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class EV_ENVIRONMENT_IMP
+end

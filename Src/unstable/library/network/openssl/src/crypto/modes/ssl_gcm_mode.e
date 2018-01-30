@@ -2,7 +2,7 @@ note
 	description: "[
 				GCM (Galois Counter Mode) is a mode of operation for block ciphers. 
 				An AEAD (authenticated encryption with additional data) mode is a type of block cipher mode that simultaneously encrypts the message as well as authenticating it. 
-				Additional unencrypted data may also be authenticated	
+				Additional unencrypted data may also be authenticated
 			]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +21,7 @@ create
 	make
 
 feature {NONE} -- Intialization
+
 	make (a_iv: READABLE_STRING_8; a_tag: detachable READABLE_STRING_32)
 			-- Initialize gcm mode with
 			-- initialiazation_vector `a_iv'

@@ -3,6 +3,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	EIS: "name=OpenSSL modes", "src=https://wiki.openssl.org/index.php/Manual:Des_modes(3)", "protocol=uri"
+	EIS: "name=SSL_MODE", "src=https://cryptography.io/en/latest/hazmat/primitives/symmetric-encryption/?highlight=cipher.Mode#cryptography.hazmat.primitives.ciphers.modes.Mode", "protocol=uri"
 
 deferred class
 	SSL_MODE

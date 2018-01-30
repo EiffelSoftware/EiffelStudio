@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {SSL_BLOCK_CIPHER_ALGORITHM}."
+	description: "{
+		Represent a block cipher algorithm.
+	}"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {SSL_MODE_WITH_NONCE}."
+	description: "Object representing a cipher mode with a nonce."
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=SSL_MODE_WITH_NONCE", "src=https://cryptography.io/en/latest/hazmat/primitives/symmetric-encryption/?highlight=cipher.Mode#cryptography.hazmat.primitives.ciphers.modes.ModeWithNonce", "protocol=uri"
 
 deferred class
 	SSL_MODE_WITH_NONCE

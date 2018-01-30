@@ -27,6 +27,7 @@ feature -- Access
 		end
 
 	key_size: INTEGER
+			-- key size of the current algorithm.
 		do
 			Result := key_bytes.count * 8
 		end
@@ -34,6 +35,7 @@ feature -- Access
 feature -- Status Report
 
 	verify_key_size: BOOLEAN
+			-- has the current algorithm a valid key size?
 		do
 			if key_sizes.has (key_size) then
 				Result := True

@@ -56,21 +56,6 @@ feature -- Test routines
 		end
 
 
-	test_cypher_decrypt
-		note
-			eis: "name=example", "src=https://docs.acaptureservices.com/tutorials/webhooks/decryption-example","protocol=uri"
-		local
-			l_cipher: SSL_CIPHER
-		do
-			initialize_ssl
---			l_cipher := (create {SSL_CIPHER_FACTORY}).aes_256_gcm
---			l_cipher.initialize ("000102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f", "000000000000000000000000", False)
---			l_cipher.update ("CE573FB7A41AB78E743180DC83FF09BD")
---			l_cipher.update ("0A3471C72D9BE49A8520F79C66BBD9A12FF9")
---			l_cipher.finish
---			assert ("Expected value={%"type%":%"PAYMENT%"}",l_cipher.string_output.same_string_general ("{%"type%":%"PAYMENT%"}"))
-
-		end
 
 
 	test_cipher_object

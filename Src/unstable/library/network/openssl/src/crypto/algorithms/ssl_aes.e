@@ -38,11 +38,13 @@ feature -- Access
 			-- <Precursor>
 
 	key_sizes: ARRAY [INTEGER]
+			-- <Precursor>
 		do
 			Result := {ARRAY[INTEGER]}<<128,192,256,512>>
 		end
 
 	key_bytes: MANAGED_POINTER
+			-- <Precursor>
 		do
 			create Result.make_from_array((create {BYTE_ARRAY_CONVERTER}.make_from_hex_string (key)).to_natural_8_array)
 		end

@@ -1,7 +1,9 @@
 note
-	description: "Summary description for {SSL_CRYPTO_EXTERNALS}."
+	description: "Open SSL Crypto Externals"
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=LibCrypto API", "src=https://wiki.openssl.org/index.php/Libcrypto_API", "protocol=uri"
+	EIS: "name=EVP", "src=https://wiki.openssl.org/index.php/EVP", "protocol=uri"
 
 class
 	SSL_CRYPTO_EXTERNALS

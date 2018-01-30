@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {SSL_CIPHER_ALGORITHM}."
+	description: "{
+		Represent a Cipher Algorithm
+	}"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,7 +11,7 @@ deferred class
 feature -- Access
 
 	name: STRING
-			-- name of the algorithm
+			-- name of the algorithm.
 		deferred
 		end
 

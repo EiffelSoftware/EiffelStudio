@@ -1,10 +1,14 @@
 note
-	description: "Summary description for {SSL_CIPHER_CONTEXT_EXTERNALS}."
+	description: "Object representing a low level cipher context with direct access to the Crypto Externals"
 	date: "$Date$"
 	revision: "$Revision$"
-
+	EIS: "name=Cipher Context", "src=https://github.com/pyca/cryptography/blob/master/src/cryptography/hazmat/backends/openssl/ciphers.py", "protocol=uri"
 class
 	SSL_CIPHER_CONTEXT_EXTERNALS
+
+inherit
+
+	SSL_SHARED_EXCEPTIONS
 
 create
 	make
@@ -17,7 +21,9 @@ feature {NONE} -- Initialization
 			-- if 1 encrytp, 0 decrypt.
 		local
 			l_res: INTEGER
+			l_description: STRING
 		do
+				-- clean conext, reset, free and void.
 			clean_context
 
 			cipher := a_cipher
@@ -35,7 +41,6 @@ feature {NONE} -- Initialization
 
 			evp_cipher := cipher_by_name (cipher, mode)
 			if evp_cipher /= default_pointer then
-
 				if attached {SSL_MODE_WITH_INITIALIZATION_VECTOR} mode as l_mode then
 					iv_nonce := l_mode.initialization_vector
 				elseif attached {SSL_MODE_WITH_TWEAK} mode as l_mode then
@@ -63,7 +68,6 @@ feature {NONE} -- Initialization
 		     	check success: l_res /= 0 end
 
 				if attached {SSL_GCM_MODE} mode as l_mode then
-
 					if attached iv_nonce as l_iv_nonce then
 						l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_ctrl(ctx, {SSL_CRYPTO_EXTERNALS}.C_EVP_CTRL_AEAD_SET_IVLEN, l_iv_nonce.count, default_pointer)
     	 	    		check success: l_res /= 0 end
@@ -74,7 +78,10 @@ feature {NONE} -- Initialization
 							tag := l_tag
 						end
         	    	else
+        	    		-- Note:
         	    		-- iv_nonce not attached
+        	    		-- should we call c_evp_cipher_ctx_ctrl with iv_nonce with 0 like
+        	    		-- l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_ctrl(ctx, {SSL_CRYPTO_EXTERNALS}.C_EVP_CTRL_AEAD_SET_IVLEN, 0 , default_pointer)
         	    	end
 				end
 
@@ -87,10 +94,17 @@ feature {NONE} -- Initialization
 				 	--Disable padding here as it's handled higher up in the API.
        			l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_set_padding(ctx, 0)
 			else
-				-- TODO add error handling.
-				-- Unsupported algorithm, cipher {cipher}
-				-- in {mode} mode is not supported.
-
+					-- Note: at the moment Error Handling is using Excpetion.
+				create l_description.make_from_string ("Cipher ")
+				if attached {SSL_CIPHER_ALGORITHM} a_cipher as l_algo then
+					l_description.append (l_algo.name)
+				else
+					l_description.append ("Unknown")
+				end
+				l_description.append (" in ")
+				l_description.append (a_mode.name)
+				l_description.append (" mode is not supported")
+				raise_exception (l_description)
 			end
 		end
 
@@ -158,27 +172,36 @@ feature -- Finalize
 			l_outlen: INTEGER
 			l_res: INTEGER
 			l_tag_buff: MANAGED_POINTER
-		do
+			do
 			create Result.make (0)
 			if
 				operation = decrypt and then
 				attached {SSL_MODE_WITH_AUTHENTICATION_TAG} mode as l_mode and then
 			   	tag = Void
 			then
-				-- TODO handle error
-				-- Authentication tag must be provided when decrypting
+				raise_exception ("Authentication tag tag must be provided when decrypting")
 			else
 				create l_buffer.make (block_size_bytes)
 				l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipherfinal_ex(ctx, l_buffer.item, $l_outlen)
 				if l_res = 0 then
-					-- todo HANDLE ERROR
-					-- check error
+					if
+						{SSL_ERROR_FACTORY}.retrieve_errors = Void and then
+						attached {SSL_GCM_MODE} mode as l_mode
+					then
+						raise_exception ("Invalid Tag")
+					else
+						if
+							attached {LIST [SSL_ERROR]} ({SSL_ERROR_FACTORY}.retrieve_errors)  as l_errors  and then
+							(l_errors.at(1).lib_and_reason_match ({SSL_ERROR_EXTERNALS}.ERR_LIB_EVP, {SSL_ERROR_EXTERNALS}.EVP_R_DATA_NOT_MULTIPLE_OF_BLOCK_LENGTH))
+						then
+							raise_exception ("The length of the provided data is not a multiple of the block length.")
+						end
+					end
 				else
 					if l_outlen > 0 then
 						create Result.make_from_array (l_buffer.read_array (0, l_outlen))
 					end
 				end
-
 				if
 					attached {SSL_GCM_MODE} mode and then
 					operation = encrypt

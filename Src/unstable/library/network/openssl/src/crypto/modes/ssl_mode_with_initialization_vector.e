@@ -1,7 +1,8 @@
 note
-	description: "Summary description for {SSL_MODE_WITH_INITIALIZATION_VECTOR}."
+	description: "Object representing a cipher mode with an initialization vector"
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=SSL_MODE_WITH_INITIALIZATION_VECTOR", "src=https://cryptography.io/en/latest/hazmat/primitives/symmetric-encryption/?highlight=cipher.Mode#cryptography.hazmat.primitives.ciphers.modes.ModeWithInitializationVector", "protocol=uri"
 
 deferred class
 	SSL_MODE_WITH_INITIALIZATION_VECTOR
@@ -19,6 +20,7 @@ feature -- Status Report
 
 	check_iv_length (a_algo: SSL_ALGORITHM): BOOLEAN
 		do
+				-- Todo check if this is the right place to add this feature.
 			if
 				attached {SSL_BLOCK_CIPHER_ALGORITHM} a_algo as l_algo and then
 				attached initialization_vector as l_vector and then

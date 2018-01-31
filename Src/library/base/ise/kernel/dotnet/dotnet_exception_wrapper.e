@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Ancestor of all exception classes to adapt .NET exceptions to Eiffel ones."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -36,6 +36,8 @@ feature -- Access
 	local_get_base_exception: detachable NATIVE_EXCEPTION
 			-- get_base_exception of local exception
 		deferred
+		ensure
+			is_class: class
 		end
 
 	source: detachable SYSTEM_STRING
@@ -51,6 +53,8 @@ feature -- Access
 	local_source: detachable SYSTEM_STRING
 			-- source of local exception
 		deferred
+		ensure
+			is_class: class
 		end
 
 	stack_trace: detachable SYSTEM_STRING
@@ -66,6 +70,8 @@ feature -- Access
 	local_stack_trace: detachable SYSTEM_STRING
 			-- stack_trace of local exception
 		deferred
+		ensure
+			is_class: class
 		end
 
 feature -- Status setting
@@ -83,6 +89,8 @@ feature -- Status setting
 	local_set_source (value: like local_source)
 			-- set_source of local exception
 		deferred
+		ensure
+			is_class: class
 		end
 
 feature -- Access
@@ -92,11 +100,11 @@ feature -- Access
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

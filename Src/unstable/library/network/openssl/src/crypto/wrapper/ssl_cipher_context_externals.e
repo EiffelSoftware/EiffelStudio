@@ -9,6 +9,7 @@ class
 inherit
 
 	SSL_SHARED_EXCEPTIONS
+	SSL_CIPHER_CONTEXT
 
 create
 	make
@@ -151,7 +152,7 @@ feature -- Update
 		end
 
 	update_into (a_data, a_buffer: MANAGED_POINTER): INTEGER
-		require
+		require else
 			valid_size: a_buffer.count >= a_data.count + block_size_bytes - 1
 		local
 			l_outlen: INTEGER

@@ -29,6 +29,9 @@ feature -- Update
 			-- a_data (bytes) – The data you wish to pass into the context.
 			-- a_ buf – A writable buffer that the data will be written into.
 			--			This buffer should be len(data) + n - 1 bytes where n is the block size (in bytes) of the cipher and mode combination.
+			-- Note: we need to find a way to express an abstract precondition like
+			--                 valid_size: a_buffer.count >= a_data.count + block_size_bytes - 1
+			--  is_valid_size (a_buff_size, a_data_size): BOOLEAN
 		deferred
 		end
 
@@ -39,5 +42,4 @@ feature -- Finalize
 			-- Once finalize is called this object can no longer be used.
 		deferred
 		end
-
 end

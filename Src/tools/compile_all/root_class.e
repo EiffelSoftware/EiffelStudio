@@ -1,7 +1,8 @@
-note
-	description	: "System's root class"
+﻿note
+	description	: "System's root class."
 	date: "$Date$"
 	revision: "$Revision$"
+	ca_ignore: "CA033", "CA033 — too long class"
 
 class
 	ROOT_CLASS
@@ -66,7 +67,7 @@ feature {NONE} -- Implementation: results
 			internal_error_compilations_count := internal_error_compilations_count + 1
 		end
 
-	report_passed (a_action_mode: READABLE_STRING_8; a_target: CONF_TARGET)
+	report_passed (a_action_mode: READABLE_STRING_32; a_target: CONF_TARGET)
 			-- Report passed compilation
 		do
 			passed_compilations_count := passed_compilations_count + 1
@@ -108,6 +109,8 @@ feature {NONE} -- Implementation
 
 	path_regexp_ignored (p: READABLE_STRING_32): BOOLEAN
 			-- Is path ignored in relation with `regexp_ignores'?
+		local
+			u: UTF_CONVERTER
 		do
 			if
 				attached regexp_ignores as l_regexp_ignores
@@ -118,7 +121,7 @@ feature {NONE} -- Implementation
 					l_regexp_ignores.after or Result
 				loop
 					if attached l_regexp_ignores.item as rexp then
-						rexp.match (p)
+						rexp.match (u.string_32_to_utf_8_string_8 (p))
 						Result := rexp.has_matched
 						rexp.wipe_out
 					end
@@ -133,14 +136,12 @@ feature {NONE} -- Implementation
 			arguments_attached: arguments /= Void
 		local
 			loc: PATH
-			l_env: EXECUTION_ENVIRONMENT
 		do
 			if attached arguments.ignore as l_ignore then
 				load_ignores (l_ignore)
 			end
 			if arguments.is_ecb then
-				create l_env
-				l_env.put ("ecb", "EC_NAME")
+				;(create {EXECUTION_ENVIRONMENT}).put ("ecb", "EC_NAME")
 			end
 			set_interface_texts_from_argument (arguments)
 			loc := arguments.location
@@ -314,8 +315,6 @@ feature {NONE} -- Implementation
 			l_dir: DIRECTORY
 			l_file: RAW_FILE
 			l_fn: PATH
-			l_sorter: QUICK_SORTER [PATH]
-			l_comparer: COMPARABLE_COMPARATOR [PATH]
 			l_entries: ARRAYED_LIST [PATH]
 		do
 			if not path_regexp_ignored (a_directory.name) then
@@ -326,9 +325,7 @@ feature {NONE} -- Implementation
 						-- Process only if the directory is not excluded.
 						-- 1 - process config files with an ecf extension
 					l_entries := l_dir.entries
-					create l_comparer
-					create l_sorter.make (l_comparer)
-					l_sorter.sort (l_entries)
+					;(create {QUICK_SORTER [PATH]}.make (create {COMPARABLE_COMPARATOR [PATH]})).sort (l_entries)
 					across l_entries as l_entry loop
 						if not l_entry.item.is_current_symbol and not l_entry.item.is_parent_symbol then
 							l_fn := a_directory.extended_path (l_entry.item)
@@ -436,7 +433,7 @@ feature {NONE} -- Implementation
 				end
 				if arguments.is_finalize then
 					b := compilation ("finalize", l_is_clean, a_target, a_dir) and then b
-					l_is_clean := False --| Clean only once
+					-- l_is_clean := False --| Clean only once: not used afterwards.
 				end
 				if not b and arguments.has_keep_failed then
 					--| Keep failed
@@ -480,7 +477,6 @@ feature {NONE} -- Implementation
 			l_state: CONF_STATE
 			l_vis: CONF_PARSE_VISITOR
 			l_version: STRING_TABLE [CONF_VERSION]
-			l_system, l_target: STRING_32
 			l_file: PLAIN_TEXT_FILE
 			l_platform_id: INTEGER
 		do
@@ -502,8 +498,6 @@ feature {NONE} -- Implementation
 				-- setup ISE_PRECOMP
 			eiffel_layout.set_precompile (a_target.setting_msil_generation)
 
-			l_system := a_target.system.name
-			l_target := a_target.name
 			output_action (interface_text_parsing, a_target)
 
 			create l_vis.make_build (l_state, a_target, create {CONF_PARSE_FACTORY})
@@ -540,19 +534,14 @@ feature {NONE} -- Implementation
 			l_args: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_prc_factory: PROCESS_FACTORY
 			l_prc_launcher: PROCESS
-			l_system, l_target: STRING_32
 			l_file: PATH
-			l_dir: DIRECTORY
 			l_info_file: RAW_FILE
 			l_info_filename: PATH
-			l_action: READABLE_STRING_8
+			l_action: READABLE_STRING_32
 			rescued: BOOLEAN
 			u: UTF_CONVERTER
 		do
 			if not rescued then
-				l_system := a_target.system.name
-				l_target := a_target.name
-
 				create l_args.make (10)
 				l_args.extend ("-config")
 				l_args.extend (a_target.system.file_name)
@@ -582,8 +571,7 @@ feature {NONE} -- Implementation
 				l_args.extend ("-project_path")
 				if attached arguments.compilation_dir as l_compile_dir then
 					l_info_filename := compilation_directory (a_target, l_compile_dir, a_dir)
-					create l_dir.make_with_path (l_info_filename)
-					mkdir (l_dir)
+					mkdir (create {DIRECTORY}.make_with_path (l_info_filename))
 					create l_info_file.make_with_path (l_info_filename.extended ("ecf_location"))
 					l_info_file.create_read_write
 					l_info_file.put_string (u.utf_8_bom_to_string_8)
@@ -645,7 +633,7 @@ feature {NONE} -- Implementation
 				l_prc_launcher.set_separate_console (False)
 				l_prc_launcher.launch
 
-				check result_unset: Result = False end
+				check result_unset: not Result end
 				if l_prc_launcher.launched then
 					l_prc_launcher.wait_for_exit
 					if l_prc_launcher.exit_code = 0 then
@@ -855,7 +843,7 @@ feature {NONE} -- Interface text
 			localized_print (interface_text_ignored)
 		end
 
-	output_action (a_action: READABLE_STRING_8; a_target: CONF_TARGET)
+	output_action (a_action: READABLE_STRING_32; a_target: CONF_TARGET)
 			-- Display in the console the output progress report for compilations
 		local
 			l_system: CONF_SYSTEM
@@ -977,7 +965,7 @@ feature {NONE} -- Directory manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

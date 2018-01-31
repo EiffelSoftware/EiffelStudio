@@ -270,7 +270,6 @@ feature {NONE} -- Persistence
 				if attached (create {USER_OPTIONS_FACTORY}).mapped_uuid (fn) as l_mapped_uuid then
 					Result := l_mapped_uuid.out
 				else
-					check has_known_ecf: False end
 						-- Without any uuid to reuse,
 						-- let's generate a unique identifier based on compacted ecf filename.
 					from
@@ -500,7 +499,7 @@ feature {NONE} -- Implementation: xml
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

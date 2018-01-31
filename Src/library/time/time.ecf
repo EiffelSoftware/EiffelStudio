@@ -57,5 +57,8 @@
 	</target>
 	<target name="time_dotnet" extends="time">
 		<setting name="msil_generation" value="true"/>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
 	</target>
 </system>

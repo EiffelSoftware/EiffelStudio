@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="web_browser" uuid="60E0F1EB-8BCD-4EF1-B0EE-0174435F6D7F" library_target="web_browser">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="web_browser" uuid="60E0F1EB-8BCD-4EF1-B0EE-0174435F6D7F" library_target="web_browser">
 	<target name="web_browser">
 		<description>Web Browser: Multiplatform web browser extension of Vision2 library for Eiffel. Based on Webkit-1.0 on Linux; IE core on Windows.
       Copyright (c) 1984-2012, Eiffel Software and others.
@@ -85,6 +85,9 @@
 	</target>
 	<target name="web_browser_dotnet" extends="web_browser">
 		<setting name="msil_generation" value="true"/>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
 	</target>
 	<target name="web_browser_cocoa" extends="web_browser">
 		<setting name="platform" value="macintosh"/>

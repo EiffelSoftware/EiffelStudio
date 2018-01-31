@@ -6693,11 +6693,8 @@ feature {NONE} -- Visitor
 							process_abstract_creation (l_creation_type, l_as.call,
 								l_as.target.access_name, l_as.target.start_location)
 
-							if
-								l_needs_byte_node and then
-								attached {ROUTINE_B} last_byte_node as l_call_access
-							then
-								generate_creation (l_as.is_active, l_access, l_call_access, l_creation_type, l_explicit_type,
+							if l_needs_byte_node then
+								generate_creation (l_as.is_active, l_access, {ROUTINE_B} / last_byte_node, l_creation_type, l_explicit_type,
 									l_as.target.start_location)
 									-- Set line information for instruction.
 								l_assign ?= last_byte_node

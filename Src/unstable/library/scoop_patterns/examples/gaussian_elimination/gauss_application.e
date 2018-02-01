@@ -16,9 +16,9 @@ feature -- Predefined matrices.
 		attribute
 			Result :=
 				<<
-				<<  2,  1, -1,  8 >>,
-				<< -3, -1,  2, -11>>,
-				<< -2,  1,  2, -3 >>
+				{ARRAY [REAL_64]} <<  2,  1, -1,  8 >>,
+				{ARRAY [REAL_64]} << -3, -1,  2, -11>>,
+				{ARRAY [REAL_64]} << -2,  1,  2, -3 >>
 				>>
 		end
 
@@ -26,9 +26,9 @@ feature -- Predefined matrices.
 		attribute
 			Result :=
 				<<
-				<< 1,  3,  1,  9 >>,
-				<< 1,  1, -1,  1 >>,
-				<< 3, 11, 5,  35 >>
+				{ARRAY [REAL_64]} << 1,  3,  1,  9 >>,
+				{ARRAY [REAL_64]} << 1,  1, -1,  1 >>,
+				{ARRAY [REAL_64]} << 3, 11, 5,  35 >>
 				>>
 		end
 
@@ -36,9 +36,9 @@ feature -- Predefined matrices.
 		attribute
 			Result :=
 				<<
-				<< 0,  2,  3,  4 >>,
-				<< 1,  1,  1,  2 >>,
-				<< 3,  3,  1,  0 >>
+				{ARRAY [REAL_64]} << 0,  2,  3,  4 >>,
+				{ARRAY [REAL_64]} << 1,  1,  1,  2 >>,
+				{ARRAY [REAL_64]} << 3,  3,  1,  0 >>
 				>>
 		end
 
@@ -46,9 +46,9 @@ feature -- Predefined matrices.
 		attribute
 			Result :=
 				<<
-				<< 1,  1,  1,  2 >>,
-				<< 1,  1,  1,  3 >>,
-				<< 1,  1,  1,  4 >>
+				{ARRAY [REAL_64]} << 1,  1,  1,  2 >>,
+				{ARRAY [REAL_64]} << 1,  1,  1,  3 >>,
+				{ARRAY [REAL_64]} << 1,  1,  1,  4 >>
 				>>
 		end
 

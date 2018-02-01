@@ -79,7 +79,7 @@ feature -- Execution
 		local
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
-			txt: ES_SCROLLABLE_LABEL
+			txt: EV_TEXT
 			l_agreement_text: STRING
 			lnk: EVS_LINK_LABEL
 			eiffel_image: EV_PIXMAP

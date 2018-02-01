@@ -29,7 +29,7 @@ feature {CP_DYNAMIC_TYPE_IMPORTER} -- Initialization
 	make_from_separate (other: separate LINEAR_EQUATION)
 			-- <Precursor>
 		local
-			idx, l_count: INTEGER
+			l_count: INTEGER
 		do
 			l_count := other.count
 			make_filled (l_count)

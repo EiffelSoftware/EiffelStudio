@@ -31,9 +31,12 @@ feature {NONE} -- Initialization
 
 	apply_workaround
 			-- Due to issue with Eiffel cURL on Windows 32bits
-			-- we need to do the following workaround
+			-- we need to do the following workaround.
+		local
+			add: detachable INET_ADDRESS
 		once
-			if attached (create {INET_ADDRESS_FACTORY}).create_localhost then
+			if {PLATFORM}.is_windows then
+				add := (create {INET_ADDRESS_FACTORY}).create_localhost
 			end
 		end
 
@@ -449,7 +452,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

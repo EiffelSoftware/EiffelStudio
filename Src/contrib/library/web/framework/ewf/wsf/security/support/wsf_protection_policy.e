@@ -460,7 +460,6 @@ feature {NONE} -- Implementation
 		require
 			all_protections_valid: across a_protections as ic all ic.item.is_valid end
 		local
-			v: WSF_STRING
 			prot: WSF_PROTECTION
 		do
 			if a_value /= Void then
@@ -478,7 +477,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

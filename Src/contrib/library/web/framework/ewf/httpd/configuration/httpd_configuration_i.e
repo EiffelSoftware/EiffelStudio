@@ -296,6 +296,8 @@ feature -- Element change
 
 	set_secure_protocol_from_string (a_ssl_version: READABLE_STRING_GENERAL)
 			-- Set `secure_protocol' with `a_ssl_version'.
+		local
+			err: DEVELOPER_EXCEPTION
 		do
 			if a_ssl_version.is_case_insensitive_equal ("tls_1_2") then
 				set_secure_protocol_to_tls_1_2
@@ -307,7 +309,9 @@ feature -- Element change
 				set_secure_protocol_to_dtls_1_0
 			elseif a_ssl_version.is_case_insensitive_equal ("ssl_2_3") then
 					-- Obsolete!
-				set_secure_protocol_to_ssl_2_or_3
+				create err
+				err.set_description ("SSL_2 or SSL_3 are not supported anymore, upgrate to TLS set_secure_protocol_to_tls_1_2")
+				err.raise
 			else -- Default
 				set_secure_protocol_to_tls_1_2
 			end
@@ -343,7 +347,7 @@ feature -- SSL Helpers
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

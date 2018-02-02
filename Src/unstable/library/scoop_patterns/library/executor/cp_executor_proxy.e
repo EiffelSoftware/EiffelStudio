@@ -40,8 +40,6 @@ feature -- Basic operations
 
 	put_and_get_promise (a_task: separate CP_TASK): CP_PROMISE_PROXY
 			-- Execute `a_task' asynchronously and return a promise.
-		local
-			l_promise: separate CP_SHARED_PROMISE
 		do
 			Result := new_promise
 			a_task.set_promise (Result.subject)

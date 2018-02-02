@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_with_id (a_id: like id; a_category: like category; a_message: like message; a_level: like level; a_date: detachable like date)
+	 make_with_id (a_id: like id; a_category: like category; a_message: like message; a_level: like level; a_date: detachable like date)
 		do
 			id := a_id
 			make (a_category, a_message, a_level, a_date)
@@ -125,6 +125,6 @@ feature -- Constants
 	level_debug: INTEGER = 8
 
 note
-	copyright: "2011-2016, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

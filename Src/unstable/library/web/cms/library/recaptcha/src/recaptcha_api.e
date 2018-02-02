@@ -17,14 +17,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_secret_key, a_response: READABLE_STRING_8)
+	make (a_secret_key: READABLE_STRING_8; a_response: READABLE_STRING_GENERAL)
 			-- Create an object Recaptcha with secret key `a_secret_key' and response token `a_response'.
 		do
 			secret := a_secret_key
 			response := a_response
 		ensure
-			secret_set: secret.same_string (a_secret_key)
-			response_set: response.same_string (a_response)
+			secret_set: a_secret_key.same_string (secret)
+			response_set: a_response.same_string (response)
 		end
 
 feature -- Access
@@ -35,7 +35,7 @@ feature -- Access
 	secret: READABLE_STRING_8
 			-- Required. The shared key between your site and ReCAPTCHA.
 
-	response: READABLE_STRING_8
+	response: READABLE_STRING_GENERAL
 			-- Required. The user response token provided by the reCAPTCHA to the user and provided to your site on.
 
 	remoteip: detachable READABLE_STRING_8
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2017 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2018 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

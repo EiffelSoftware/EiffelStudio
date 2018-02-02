@@ -485,7 +485,7 @@ feature -- Handler
 								l_exist := True
 							end
 							if attached recaptcha_secret_key (a_auth_api.cms_api) as l_recaptcha_key then
-								if attached {WSF_STRING} req.form_parameter ("g-recaptcha-response") as l_recaptcha_response and then is_captcha_verified (l_recaptcha_key, l_recaptcha_response.url_encoded_value) then
+								if attached {WSF_STRING} req.form_parameter ("g-recaptcha-response") as l_recaptcha_response and then is_captcha_verified (l_recaptcha_key, l_recaptcha_response.value) then
 									l_captcha_passed := True
 								else
 										--| Bad or missing captcha
@@ -1195,12 +1195,12 @@ feature -- Response Alter
 
 feature {NONE} -- Implementation
 
-	is_captcha_verified (a_secret, a_response: READABLE_STRING_8): BOOLEAN
+	is_captcha_verified (a_secret: READABLE_STRING_8; a_response: READABLE_STRING_GENERAL): BOOLEAN
 		local
 			api: RECAPTCHA_API
 			l_errors: STRING
 		do
-			write_debug_log (generator + ".is_captcha_verified with response: [" + a_response + "]")
+			write_debug_log (generator + ".is_captcha_verified with response: [" + utf_8_encoded (a_response) + "]")
 			create api.make (a_secret, a_response)
 			Result := api.verify
 			if not Result and then attached api.errors as l_api_errors then

@@ -106,11 +106,11 @@ feature -- Handler
 					r.set_value (l_query.value, "cms_search_query")
 					create l_parameters.make (l_key, l_cx, l_query.url_encoded_value )
 					if
-						attached {WSF_STRING} req.query_parameter ("start") as l_index and then
-					  	attached {WSF_STRING} req.query_parameter ("num") as l_num
+						attached {WSF_STRING} req.query_parameter ("start") as l_index and then l_index.is_integer and then
+					  	attached {WSF_STRING} req.query_parameter ("num") as l_num and then l_num.is_integer
 					then
-						l_parameters.set_start (l_index.value)
-						l_parameters.set_num (l_num.value)
+						l_parameters.set_start (l_index.integer_value) -- String holding numeric value
+						l_parameters.set_num (l_num.integer_value) -- String holding numeric value
 					end
 					create l_search.make (l_parameters)
 					l_search.search

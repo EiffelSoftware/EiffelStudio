@@ -130,11 +130,11 @@ feature {NONE} -- Implementation
 				-- num
 			if attached query_parameter.num as l_num then
 				Result.append ("&num=")
-				Result.append (l_num)
+				Result.append_integer (l_num)
 			end
 			if attached query_parameter.start as l_start then
 				Result.append ("&start=")
-				Result.append (l_start)
+				Result.append_integer (l_start)
 			end
 		end
 
@@ -223,7 +223,7 @@ feature {NONE} -- JSON Keys
 	items_key: STRING = "items"
 
 note
-	copyright: "2011-2015 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2018 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -276,7 +276,7 @@ feature -- Generate Salt
 		do
 			if hashed.is_valid_as_string_8 then
 				h := hashed.to_string_8
-				Result := h.same_string (hashed_password_unicode (plaintext, h))
+				Result := h.same_string (hashed_password_unicode (plaintext, h.to_string_32))
 			end
 		end
 
@@ -944,7 +944,7 @@ feature -- bcrypt modified version of base64 encoding
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

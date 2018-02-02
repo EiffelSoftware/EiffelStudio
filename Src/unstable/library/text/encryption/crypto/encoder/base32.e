@@ -86,19 +86,19 @@ feature -- base32 encoder
 			until
 				i > n
 			loop
-				i1 := s.item_code (i)
+				i1 := s.code (i).as_integer_32
 				if i < n then
 					i := i + 1
-					i2 := s.item_code (i)
+					i2 := s.code (i).as_integer_32
 					if i < n then
 						i := i + 1
-						i3 := s.item_code (i)
+						i3 := s.code (i).as_integer_32
 						if i < n then
 							i := i + 1
-							i4 := s.item_code (i)
+							i4 := s.code (i).as_integer_32
 							if i < n then
 								i := i + 1
-								i5 := s.item_code (i)
+								i5 := s.code (i).as_integer_32
 							else
 								i5 := -1
 							end
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

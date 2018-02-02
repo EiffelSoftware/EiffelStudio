@@ -131,10 +131,10 @@ feature -- Hash password
 		end
 
 	hashed_password (password: READABLE_STRING_8; salt: READABLE_STRING_8): STRING_8
-			-- Hash a password using the OpenBSD bcrypt scheme
-			-- password  the password to hash
-			-- salt  the salt to hash with (perhaps generated using BRCRYPT.new_salt)
-			-- Result the hased password.
+			-- Hashed `password` with salt `salt` using OpenBSD bcrypt scheme.
+			-- Note:
+			--		`password` and `salt` are UTF-8 string values.
+			-- 		`salt` could be generated using BRCRYPT.new_salt
 		require
 			valid_salt_length: salt.count > 28
 			valid_salt_version: is_valid_salt_version (salt)
@@ -272,12 +272,9 @@ feature -- Generate Salt
 	is_valid_password_unicode (plaintext: READABLE_STRING_32; hashed: READABLE_STRING_32): BOOLEAN
 			-- Unicode version of is_valid_password.
 		local
-			h: READABLE_STRING_8
+			h: READABLE_STRING_8			
 		do
-			if hashed.is_valid_as_string_8 then
-				h := hashed.to_string_8
-				Result := h.same_string (hashed_password_unicode (plaintext, h.to_string_32))
-			end
+			Result := hashed.same_string_general (hashed_password_unicode (plaintext, hashed))
 		end
 
 	is_valid_password_general (plaintext: READABLE_STRING_GENERAL; hashed: READABLE_STRING_GENERAL): BOOLEAN

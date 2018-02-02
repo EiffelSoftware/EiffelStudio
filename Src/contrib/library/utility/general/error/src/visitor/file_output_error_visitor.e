@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "File error output visitor"
 	date: "$Date$"
 	revision: "$Revision$"

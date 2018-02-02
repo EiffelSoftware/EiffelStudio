@@ -1,4 +1,4 @@
-﻿note
+note
 	description : "Error list iterator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

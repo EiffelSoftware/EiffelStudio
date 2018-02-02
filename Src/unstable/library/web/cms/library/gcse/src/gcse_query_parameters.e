@@ -192,41 +192,38 @@ feature -- Optional Parameters
 
 
 
-	num	: detachable STRING_8
-		-- Number of search results to return.
-		-- Valid values are integers between 1 and 10, inclusive.
+	num	: INTEGER
+			-- Number of search results to return.
+			-- Valid values are integers between 1 and 10, inclusive.
 
-	start: detachable STRING_8
+	start: INTEGER
 			--	The index of the first result to return.
-
 
 feature -- Change Elements
 
-	set_num (a_num: READABLE_STRING_8)
+	set_num (a_num: INTEGER)
 		require
-			is_number: a_num.is_integer
-			valid_range: a_num.to_integer >= 1 and then a_num.to_integer <= 10
+			valid_range: a_num >= 1 and then a_num <= 10
 		do
 			num := a_num
 		ensure
 			num_set: num = a_num
-			valid_rage_set: attached num as l_num and then l_num.to_integer >= 1 and then l_num.to_integer <= 10
+			valid_rage_set: num >= 1 and num <= 10
 		end
 
 
-	set_start (a_start: READABLE_STRING_8)
+	set_start (a_start: INTEGER)
 		require
-			is_number: a_start.is_integer
-			valid_start: a_start.to_integer >= 1
+			valid_start: a_start >= 1
 		do
 			start := a_start
 		ensure
 			start_set: start = a_start
-			valid_start_set: attached start as l_start and then l_start.to_integer >= 1
+			valid_start_set: start >= 1
 		end
 
 note
-	copyright: "2011-2015 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2018 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

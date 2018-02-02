@@ -134,10 +134,10 @@ feature -- Execution
 								lst as ic
 							loop
 								if attached ic.item.field as l_field then
-									err.append (l_field.name + ": ")
+									err.append_string_general (l_field.name + ": ")
 								end
 								if attached ic.item.message as msg then
-									err.append (msg)
+									err.append_string_general (msg)
 								end
 							end
 						else
@@ -170,6 +170,6 @@ feature -- Execution
 
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

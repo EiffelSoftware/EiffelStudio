@@ -319,19 +319,6 @@ $(document).ready(function() {
 			end
 		end
 
-feature {NONE} -- Helpers
-
-	form_parameters_as_string (req: WSF_REQUEST): STRING
-		do
-			create Result.make_empty
-			across req.form_parameters as ic loop
-				Result.append (ic.item.key)
-				Result.append_character ('=')
-				Result.append_string (ic.item.string_representation)
-				Result.append_character ('%N')
-			end
-		end
-
 feature {NONE} -- Contact Message
 
 	resolved_template_text (api: CMS_API; a_text: READABLE_STRING_GENERAL; a_target_user: detachable CMS_USER): STRING_8

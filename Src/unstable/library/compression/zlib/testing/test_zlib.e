@@ -99,9 +99,10 @@ feature -- Test deflate
 			create l_zlib
 			create l_def_zstream.make -- Initialize z_stream
 
+
 				-- create buffers
-			create l_buff_in.make (1, 2048)
-			create l_buff_out.make (1, 2048)
+			create l_buff_in.make_filled (create {CHARACTER},1, 2048)
+			create l_buff_out.make_filled (create {CHARACTER},1, 2048)
 
 			fill_buffer (l_buff_in, l_string)
 
@@ -132,7 +133,7 @@ feature -- Test deflate
 
 				-- Inflate
 			create l_inf_zstream.make
-			create l_buff_inf.make (1, 2048)
+			create l_buff_inf.make_filled (create {CHARACTER}, 1, 2048)
 
 
 			l_inf_zstream.set_available_input (l_def_zstream.total_output)

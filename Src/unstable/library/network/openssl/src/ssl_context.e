@@ -245,8 +245,6 @@ feature -- Access
 			-- Set the value of the servername extension `a_server_name' to send in the client hello.
 		local
 			c_string: C_STRING
-			err: INTEGER
-			l_exception: DEVELOPER_EXCEPTION
 		do
 			create c_string.make (a_server_name)
 			if attached last_ssl as l_ssl then

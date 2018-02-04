@@ -39,17 +39,15 @@ feature -- Interactive with C
 				-- Setting CURLOPT_PROGRESSFUNCTION option of `a_curl_handle'.
 				-- We need this function since cURL need a c function pointer as value.
 		require
-			exists: a_setopt_api /= default_pointer
+			exists: not a_setopt_api.is_default_pointer
 		external
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
-			{
 				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
-												((CURL *) $a_curl_handle,
-												(CURLoption)CURLOPT_PROGRESSFUNCTION,
-												curl_progress_function);
-			}
+											((CURL *) $a_curl_handle,
+											(CURLoption)CURLOPT_PROGRESSFUNCTION,
+											curl_progress_function);
 			]"
 		end
 
@@ -57,18 +55,16 @@ feature -- Interactive with C
 				-- Setting CURLOPT_DEBUGFUNCTION option of `a_curl_handle'.
 				-- We need this function since cURL need a c function pointer as value.
 		require
-			exists: a_curl_handle /= default_pointer
+			api_exists: not a_setopt_api.is_default_pointer
+			exists: not a_curl_handle.is_default_pointer
 		external
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
-			{
 				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
-												((CURL *) $a_curl_handle,
-												(CURLoption)CURLOPT_DEBUGFUNCTION,
-												curl_debug_function);
-																													
-			}
+											((CURL *) $a_curl_handle,
+											(CURLoption)CURLOPT_DEBUGFUNCTION,
+											curl_debug_function);
 			]"
 		end
 
@@ -76,17 +72,15 @@ feature -- Interactive with C
 				-- Setting CURLOPT_WRITEFUNCTION option of `a_curl_handle'.
 				-- We need this function since cURL need a c function pointer as value.
 		require
-			exists: a_setopt_api /= default_pointer
+			api_exists: not a_setopt_api.is_default_pointer
 		external
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
-			{
 				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
-												((CURL *) $a_curl_handle,
-												(CURLoption)CURLOPT_WRITEFUNCTION,
-												curl_write_function);
-			}
+											((CURL *) $a_curl_handle,
+											(CURLoption)CURLOPT_WRITEFUNCTION,
+											curl_write_function);
 			]"
 		end
 
@@ -94,17 +88,15 @@ feature -- Interactive with C
 				-- Setting CURLOPT_READFUNCTION option of `a_curl_handle'.
 				-- We need this function since cURL need a c function pointer as value.
 		require
-			exists: a_setopt_api /= default_pointer
+			api_exists: not a_setopt_api.is_default_pointer
 		external
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
-			{
 				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
-												((CURL *) $a_curl_handle,
-												(CURLoption)CURLOPT_READFUNCTION,
-												curl_read_function);
-			}
+											((CURL *) $a_curl_handle,
+											(CURLoption)CURLOPT_READFUNCTION,
+											curl_read_function);
 			]"
 		end
 

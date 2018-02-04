@@ -12,21 +12,21 @@ class
 
 feature -- Query
 
-	api_loader: DYNAMIC_MODULE
-			-- API dynamic loader
+	api_loader: MODULE_LOADER
+				-- API dynamic loader
 		local
 			l_platform: PLATFORM
 		once
 			create l_platform
 			if l_platform.is_unix or l_platform.is_mac then
-				create Result.make_with_version (module_name, "4")
+				create {DYNAMIC_MODULE} Result.make_with_version (module_name, "4")
 				if not Result.is_interface_usable then
 					Result.unload
-					create Result.make_with_version (module_name, "3")
+					create {DYNAMIC_MODULE} Result.make_with_version (module_name, "3")
 				end
 			else
 				check is_window: l_platform.is_windows end
-				create Result.make (module_name)
+				create {DYNAMIC_MODULE} Result.make (module_name)
 			end
 		ensure
 			not_void: Result /= Void
@@ -35,14 +35,14 @@ feature -- Query
 	module_name: STRING
 			-- Module name.
 		once
-				Result := "libcurl"
+			Result := "libcurl"
 		ensure
 			not_void: Result /= Void
 		end
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

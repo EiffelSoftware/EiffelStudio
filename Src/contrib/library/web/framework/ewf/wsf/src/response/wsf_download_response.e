@@ -51,7 +51,6 @@ feature {NONE} -- Initialization
 			create h.make
 			header := h
 			h.put_content_type (content_type)
-			h.put_transfer_encoding_binary
 			h.put_content_length (filesize (file_path))
 			h.put_content_disposition ("attachment", "filename=%""+ base_name +"%"")
 			if attached filedate (file_path) as dt then
@@ -215,22 +214,14 @@ feature -- Implementation: output
 			create f.make_with_path (fn)
 			check f.exists and then f.is_readable end
 
-			f.open_read
-			from
-			until
-				f.exhausted
-			loop
-				f.read_stream (4_096)
-				res.put_string (f.last_string)
-			end
-			f.close
+			res.put_file_content (f, 0, f.count)
 		end
 
 invariant
 	status_code_set: status_code /= 0
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

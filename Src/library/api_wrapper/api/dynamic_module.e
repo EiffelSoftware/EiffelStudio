@@ -16,7 +16,6 @@ inherit
 		rename
 			make as make_api
 		end
-	MODULE_LOADER
 
 create
 	make,
@@ -95,8 +94,8 @@ invariant
 	not_minimum_version_is_empty: attached minimum_version implies not minimum_version.is_empty
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

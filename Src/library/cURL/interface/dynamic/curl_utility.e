@@ -12,7 +12,7 @@ class
 
 feature -- Query
 
-	api_loader: MODULE_LOADER
+	api_loader: DYNAMIC_MODULE
 				-- API dynamic loader
 		local
 			l_platform: PLATFORM

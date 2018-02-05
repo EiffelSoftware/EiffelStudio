@@ -68,7 +68,7 @@ feature -- Function pointer
 
 feature {NONE} -- Implementation
 
-	api_loader: MODULE_LOADER
+	api_loader: DYNAMIC_MODULE
 			-- Module name.
 		local
 			l_utility: CURL_UTILITY

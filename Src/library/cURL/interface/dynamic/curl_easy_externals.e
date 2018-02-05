@@ -44,16 +44,24 @@ feature -- Function pointer
 
 feature -- Status report
 
-	is_api_available: BOOLEAN
+	is_dynamic_library_exists: BOOLEAN
 			-- If dll/so files exist?
+		obsolete
+			"Use is_api_available [2018-02-15]"
+		do
+			Result := is_api_available
+		end
+
+	is_api_available: BOOLEAN
+			-- <Precursor>.
+			-- i.e if dll/so file exists.
 		do
 			Result := api_loader.is_interface_usable
 		end
 
-
 feature {NONE} -- Implementation
 
-	api_loader: MODULE_LOADER
+	api_loader: DYNAMIC_MODULE
 			-- Module name.
 		local
 			l_utility: CURL_UTILITY

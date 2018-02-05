@@ -16,14 +16,7 @@ class
 inherit
 	CURL_MULTI_EXTERNALS_I
 
-feature -- Status report
-
-	is_api_available: BOOLEAN
-			-- Is cURL API available?
-			-- Are required .dll/.so files available?
-		do
-			Result := api_loader.is_interface_usable
-		end
+	CURL_DYNAMIC_EXTERNALS_I
 
 feature -- Function pointer
 
@@ -57,19 +50,8 @@ feature -- Function pointer
 			Result := api_loader.api_pointer ("curl_multi_info_read")
 		end
 
-feature {NONE} -- Implementation
-
-	api_loader: DYNAMIC_MODULE
-			-- Module name.
-		local
-			l_utility: CURL_UTILITY
-		once
-			create l_utility
-			Result := l_utility.api_loader
-		end
-
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "[
-					New eweasel test instructions base on Testing library
-					Inherit this class to call eweasel testing instructions
-					
-					For old version instructions, please check {EW_EQA_TEST_CONTROL_INSTRUCTIONS}
-																								]"
+			New eweasel test instructions base on Testing library
+			Inherit this class to call eweasel testing instructions
+			
+			For old version instructions, please check {EW_EQA_TEST_CONTROL_INSTRUCTIONS}
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test"
@@ -555,7 +555,7 @@ feature {NONE} -- Implementation
 	test_set: EQA_EW_SYSTEM_TEST_SET
 			-- Test set that current managed
 		require
-			valid: attached (({EQA_EW_SYSTEM_TEST_SET}).attempt (Current))
+			valid: attached ({EQA_EW_SYSTEM_TEST_SET} / Current)
 		do
 			check attached {like test_set} Current as l_result then
 				Result := l_result
@@ -565,7 +565,7 @@ feature {NONE} -- Implementation
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

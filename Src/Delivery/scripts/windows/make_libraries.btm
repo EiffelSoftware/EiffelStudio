@@ -49,6 +49,8 @@ remtrace obsolete
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/obsolete obsolete
 remtrace parse
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/parse parse
+remtrace patterns
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/patterns patterns
 remtrace preferences
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/preferences preferences
 remtrace process

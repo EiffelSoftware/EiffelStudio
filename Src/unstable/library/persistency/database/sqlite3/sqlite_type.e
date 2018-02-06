@@ -18,6 +18,8 @@ feature -- Access
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_INTEGER"
+		ensure
+			is_class: class
 		end
 
 	float: INTEGER
@@ -26,6 +28,8 @@ feature -- Access
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_FLOAT"
+		ensure
+			is_class: class
 		end
 
 	text: INTEGER
@@ -34,6 +38,8 @@ feature -- Access
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_TEXT"
+		ensure
+			is_class: class
 		end
 
 	blob: INTEGER
@@ -42,6 +48,8 @@ feature -- Access
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_BLOB"
+		ensure
+			is_class: class
 		end
 
 	null: INTEGER
@@ -50,6 +58,8 @@ feature -- Access
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_NULL"
+		ensure
+			is_class: class
 		end
 
 feature -- Status
@@ -62,10 +72,12 @@ feature -- Status
 					or a_type = text
 					or a_type = blob
 					or a_type = null
+		ensure
+			is_class: class
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

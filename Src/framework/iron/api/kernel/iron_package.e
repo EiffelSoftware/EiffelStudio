@@ -171,7 +171,7 @@ feature -- Access
 			end
 			Result.append_character (' ')
 			Result.append_character ('(')
-			Result.append (l_repo_location)
+			Result.append_string_general (l_repo_location)
 			Result.append_character (')')
 
 			if l_title /= Void then
@@ -185,8 +185,8 @@ feature -- Access
 				across
 					associated_paths as c
 				loop
-					Result.append (repository.location_string)
-					Result.append (c.item)
+					Result.append_string_general (repository.location_string)
+					Result.append_string_general (c.item)
 					Result.append_character (' ')
 				end
 			end
@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

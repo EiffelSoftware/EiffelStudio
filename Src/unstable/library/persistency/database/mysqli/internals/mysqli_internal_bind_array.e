@@ -1,6 +1,5 @@
 note
-	description: "MYSQL_BIND C Struct Wrapper"
-	author: "haroth@student.ethz.ch"
+	description: "Array of MYSQL_BIND C Struct item."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,10 +7,13 @@ class
 	MYSQLI_INTERNAL_BIND_ARRAY
 
 inherit
-	MEMORY_STRUCTURE
+	MANAGED_POINTER
 	MYSQLI_EXTERNALS
+		undefine
+			is_equal, copy
+		end
 
-create{MYSQLI_EXTERNALS}
+create {MYSQLI_EXTERNALS}
 	make_with_size
 
 feature{NONE}
@@ -19,15 +21,10 @@ feature{NONE}
 	make_with_size (a_size: like size)
 		do
 			size := a_size
-			make
+			make (a_size * size_of_mysql_bind_struct)
 		end
 
-feature
-
-	structure_size: INTEGER
-		do
-			Result := size_of_mysql_bind_struct * size
-		end
+feature -- Access
 
 	size: INTEGER
 

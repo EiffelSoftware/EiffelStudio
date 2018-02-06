@@ -133,8 +133,8 @@ feature -- Handle
 										attached fd.string_item ("api_key") as l_api_key and then
 										attached fd.string_item ("api_secret") as l_api_secret
 									then
-										i_cons.set_api_key (l_api_key)
-										i_cons.set_api_secret (l_api_secret)
+										i_cons.set_api_key (utf_8_encoded (l_api_key)) -- Key are usually ascii or utf-8 encoded.
+										i_cons.set_api_secret (utf_8_encoded (l_api_secret)) -- API Secret are usually ascii or utf-8 encoded.
 										i_oauth20_api.save_oauth_consumer (i_cons)
 										l_output.append ("<p>Consumer saved...</p>")
 									end

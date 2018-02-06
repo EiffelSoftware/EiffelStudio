@@ -79,7 +79,7 @@ feature -- Execution
 		local
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
-			txt: ES_SCROLLABLE_LABEL
+			txt: EV_TEXT
 			l_agreement_text: STRING
 			lnk: EVS_LINK_LABEL
 			eiffel_image: EV_PIXMAP
@@ -163,6 +163,7 @@ We look forward to your contributions
 			end
 			main_box.set_background_color (colors.stock_colors.white)
 			main_box.propagate_background_color
+			txt.set_foreground_color (colors.stock_colors.black)
 		end
 
 	switch_to_account_page

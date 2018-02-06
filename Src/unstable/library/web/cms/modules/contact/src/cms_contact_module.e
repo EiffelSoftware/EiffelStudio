@@ -409,9 +409,9 @@ feature {NONE} -- Helpers
 		do
 			create Result.make_empty
 			across req.form_parameters as ic loop
-				Result.append (ic.item.key)
+				Result.append (utf_8_encoded (ic.item.key))
 				Result.append_character ('=')
-				Result.append_string (ic.item.string_representation)
+				Result.append_string (utf_8_encoded (ic.item.string_representation))
 				Result.append_character ('%N')
 			end
 		end
@@ -495,12 +495,12 @@ feature {NONE} -- Contact Message
 
 feature {NONE} -- Google recaptcha uri template
 
-	is_captcha_verified (a_secret, a_response: READABLE_STRING_8): BOOLEAN
+	is_captcha_verified (a_secret: READABLE_STRING_8; a_response: READABLE_STRING_GENERAL): BOOLEAN
 		local
 			api: RECAPTCHA_API
 			l_errors: STRING
 		do
-			write_debug_log (generator + ".is_captcha_verified with response: [" + a_response + "]")
+			write_debug_log (generator + ".is_captcha_verified with response: [" + utf_8_encoded (a_response) + "]")
 			create api.make (a_secret, a_response)
 			Result := api.verify
 			if not Result and then attached api.errors as l_api_errors then

@@ -427,7 +427,7 @@ feature -- Element Change
 					buffer.put_string (typed_field)
 					buffer.put_character (';')
 					buffer.put_new_line
-					buffer.put_string ("RTAR(")
+					buffer.put_string ({C_CONST}.rtar_open)
 					buffer.put_string ({C_CONST}.current_name)
 					buffer.put_two_character (',', ' ')
 					buffer.put_character ('r')
@@ -691,7 +691,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

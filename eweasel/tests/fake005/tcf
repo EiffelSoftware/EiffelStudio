@@ -100,10 +100,10 @@ compile_result 	syntax_error TEST 15
 
 copy_raw	 test_rev26.e $CLUSTER test.e
 resume_compile
-compile_result 	validity_error TEST VXRC
+compile_result 	ok
 
 copy_raw	 test_rev27.e $CLUSTER test.e
-resume_compile
+compile_melted
 compile_result 	validity_error TEST VXRC
 
 copy_raw	 test_rev28.e $CLUSTER test.e

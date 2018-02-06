@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "System's root class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -64,10 +64,10 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	result_file_name (t:I18N_DICTIONARY;plural_form,datalength,seed:INTEGER; a_name: STRING): STRING
+	result_file_name (t:I18N_DICTIONARY;plural_form,datalength,seed:INTEGER; a_name: STRING): STRING_32
 			-- This is a hack, since no such facility found in the testing framework, for a file name located in the source class directory.
 		do
-			if attached env.get ("ISE_LIBRARY") as l_env then
+			if attached env.item ("ISE_LIBRARY") as l_env then
 				Result := l_env.twin
 				Result.append_character (Operating_environment.directory_separator)
 				Result.append ("library")
@@ -91,9 +91,9 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- set current_folder
 
-	directory_name (t:I18N_DICTIONARY;plural_form,datalength,seed:INTEGER): STRING
+	directory_name (t:I18N_DICTIONARY;plural_form,datalength,seed:INTEGER): STRING_32
 		do
-			Result := t.generating_type + "_PF"+plural_form.out+"_LEN"+datalength.out+"_S"+seed.out
+			Result := t.generating_type.name_32 + "_PF"+plural_form.out + "_LEN" + datalength.out + "_S" + seed.out
 		end
 
 	set_current_folder (t:I18N_DICTIONARY;plural_form,datalength,seed:INTEGER)
@@ -121,13 +121,13 @@ feature {NONE}	-- Data generation
 			singular:READABLE_STRING_GENERAL
 			translated_singular, original_plural: READABLE_STRING_GENERAL
 			file: PLAIN_TEXT_FILE
-			l_name, l_generated_name: STRING
+			l_name, l_generated_name: STRING_32
 			l_fn: STRING
 		do
 			if attached current_folder as l_current_folder then
 				l_fn := "data_file"
 				create random.set_seed (seed)
-				l_generated_name := l_current_folder.name+Operating_environment.Directory_separator.out+l_fn
+				l_generated_name := l_current_folder.path.appended (l_fn).name
 				create file.make_create_read_write (l_generated_name)
 				from
 					i:=1
@@ -201,13 +201,13 @@ data_query(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 			random: RANDOM
 			output_file: PLAIN_TEXT_FILE
 
-			l_name, l_generated_name: STRING
+			l_name, l_generated_name: STRING_32
 			l_fn: STRING
 		do
 			if attached current_folder as l_current_folder then
 				l_fn := "query_yes_file"
 				create random.set_seed (seed)
-				l_generated_name := l_current_folder.name+Operating_environment.Directory_separator.out+l_fn
+				l_generated_name := l_current_folder.path.appended (l_fn).name
 				create output_file.make_create_read_write (l_generated_name)
 				from
 					i:=1
@@ -260,7 +260,7 @@ data_query(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 
 				l_fn := "query_non_file"
 				create random.set_seed (seed+1)
-				l_generated_name := l_current_folder.name+Operating_environment.Directory_separator.out+l_fn
+				l_generated_name := l_current_folder.path.appended (l_fn).name
 				create output_file.make_create_read_write (l_generated_name)
 				from
 					i:=1
@@ -322,14 +322,14 @@ feature {NONE} -- Data access
 			random: RANDOM
 			output_file: PLAIN_TEXT_FILE
 
-			l_name, l_generated_name: STRING
+			l_name, l_generated_name: STRING_32
 			l_fn: STRING
 		do
 			if attached current_folder as l_current_folder then
 				-- get data with its existent elems
 				l_fn := "get_data_file"
 				create random.set_seed (seed)
-				l_generated_name := l_current_folder.name+Operating_environment.Directory_separator.out+l_fn
+				l_generated_name := l_current_folder.path.appended (l_fn).name
 				create output_file.make_create_read_write (l_generated_name)
 				from
 					i:=1
@@ -392,7 +392,7 @@ feature {NONE} -- Data access
 
 				l_fn := "get_data_non_file"
 				create random.set_seed (seed+1)
-				l_generated_name := l_current_folder.name+Operating_environment.Directory_separator.out+l_fn
+				l_generated_name := l_current_folder.path.appended (l_fn).name
 				create output_file.make_create_read_write (l_generated_name)
 				from
 					i:=1
@@ -455,10 +455,9 @@ feature {NONE} -- access
 												Operating_environment.Directory_separator.out
 		end
 
-
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -468,7 +467,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DICTIONARY_TEST
+end

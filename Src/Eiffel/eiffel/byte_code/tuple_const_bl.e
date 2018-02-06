@@ -47,7 +47,6 @@ feature
 	analyze
 			-- Analyze expression
 		local
-			real_ty: TUPLE_TYPE_A
 			expr_type: TYPE_A
 			expr: EXPR_B
 			i: INTEGER
@@ -55,8 +54,6 @@ feature
 		do
 			info := info.updated_info
 			info.analyze
-
-			real_ty ?= context.real_type (type)
 
 			get_register
 			from
@@ -107,11 +104,8 @@ feature
 
 	generate
 			-- Generate expression
-		local
-			workbench_mode: BOOLEAN
 		do
-			workbench_mode := context.workbench_mode
-			generate_tuple_creation (workbench_mode)
+			generate_tuple_creation (context.workbench_mode)
 			fill_tuple
 		end
 
@@ -188,7 +182,7 @@ feature {NONE} -- C code generation
 						-- since the array contains references
 					if not actual_type.is_basic then
 						buf.put_new_line
-						buf.put_string ("RTAR(")
+						buf.put_string ({C_CONST}.rtar_open)
 						print_register
 						buf.put_character (',')
 						if metamorphosed then
@@ -214,7 +208,7 @@ feature {REGISTRABLE} -- C code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

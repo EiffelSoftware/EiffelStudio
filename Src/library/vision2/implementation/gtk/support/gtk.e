@@ -51,8 +51,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					return gtk_settings_get_default();
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -66,8 +64,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					gtk_settings_set_string_property ((GtkSettings*) $a_settings, (gchar*) $a_property, (gchar*) $a_value, (gchar*) $a_origin);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -81,8 +77,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					gdk_window_process_all_updates();
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -96,8 +90,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					gtk_window_set_skip_taskbar_hint ((GtkWindow*) $a_window, (gboolean) $a_setting);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -111,8 +103,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					gtk_window_set_skip_pager_hint ((GtkWindow*) $a_window, (gboolean) $a_setting);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -126,8 +116,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					return GDK_COLORSPACE_RGB;
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -141,8 +129,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_get_pixels ((GdkPixbuf*) $a_pixbuf);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -156,8 +142,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_copy ((GdkPixbuf*)$a_pixbuf);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -171,8 +155,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_get_width ((GdkPixbuf*)$a_pixbuf);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -186,8 +168,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_get_height ((GdkPixbuf*)$a_pixbuf);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -201,8 +181,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_get_rowstride ((GdkPixbuf*)$a_pixbuf);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -216,8 +194,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_get_n_channels ((GdkPixbuf*)$a_pixbuf);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -231,8 +207,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_get_bits_per_sample ((GdkPixbuf*)$a_pixbuf);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -246,8 +220,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_new_from_file ((char*) $a_filename, (GError**) $a_error);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -261,8 +233,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1 && GTK_MINOR_VERSION > 13
 					return gdk_pixbuf_new_from_stream ((GInputStream *)$a_input_stream, (GCancellable *)$a_cancellable, (GError **)$a_error);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -275,8 +245,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_new_from_xpm_data ((const char**) $a_data);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -305,11 +273,7 @@ feature
 		alias
 			"[
 				#if GTK_MAJOR_VERSION > 1
-					ensure
-						is_class: class
 					gdk_pixbuf_render_pixmap_and_mask ((GdkPixbuf*) $a_pixbuf, (GdkPixmap**) $a_pixmap, (GdkBitmap**) $a_mask, (int) $alpha_threshold);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -323,8 +287,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					return gdk_pixbuf_new ((GdkColorspace) $a_colorspace, (gboolean) $a_has_alpha, (int) $a_bits_per_sample, (int) $a_width, (int) $a_height);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -338,8 +300,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 						return gdk_pixbuf_new_subpixbuf ((GdkPixbuf*)$a_pixbuf, (int) $src_x, (int) $src_y, (int) $width, (int) $height);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -353,8 +313,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 						gdk_pixbuf_fill ((GdkPixbuf*)$a_pixbuf, (guint32) $rgba);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure
@@ -2612,8 +2570,6 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION > 1
 					gtk_menu_shell_cancel((GtkMenuShell*)$a_menu_shell);
-				ensure
-					is_class: class
 				#endif
 			]"
 		ensure

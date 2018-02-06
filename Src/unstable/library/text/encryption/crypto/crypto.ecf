@@ -22,4 +22,9 @@
 		<cluster name="crypto_encoder" location=".\encoder\" hidden="true"/>
 		<cluster name="crypto_support" location=".\support\" hidden="true"/>
 	</target>
+	<target name="crypto_tests" extends="crypto">
+		<root class="TEST_MESSAGE_DIGEST" feature="make"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<tests name="tests" location=".\tests" recursive="true"/>
+	</target>
 </system>

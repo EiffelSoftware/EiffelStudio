@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Multi column list displaying database table rows."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,18 +45,18 @@ feature -- Status report
 			Result := table_code /= No_code
 		end
 
-	has_select_action (action: PROCEDURE): BOOLEAN
+	has_select_action (action: PROCEDURE [EV_MULTI_COLUMN_LIST_ROW]): BOOLEAN
 			-- Does list of actions executed when an item is selected
 			-- contain `action'?
 		do
-			Result := select_actions.has (agent select_actions.wrapper (?, action))
+			Result := select_actions.has (action)
 		end
 
-	has_deselect_action (action: PROCEDURE): BOOLEAN
+	has_deselect_action (action: PROCEDURE [EV_MULTI_COLUMN_LIST_ROW]): BOOLEAN
 			-- Does list of actions executed when an item is deselected
 			-- contain `action'?
 		do
-			Result := deselect_actions.has (agent deselect_actions.wrapper (?, action))
+			Result := deselect_actions.has (action)
 		end
 
 feature -- Access
@@ -159,16 +159,16 @@ feature -- Basic operations
 			end
 		end
 
-	extend_select_actions (action: PROCEDURE)
+	extend_select_actions (action: PROCEDURE [EV_MULTI_COLUMN_LIST_ROW])
 			-- Extend list of actions executed when an item is selected.
 		do
-			select_actions.force_extend (action)
+			select_actions.extend (action)
 		end
 
-	extend_deselect_actions (action: PROCEDURE)
+	extend_deselect_actions (action: PROCEDURE [EV_MULTI_COLUMN_LIST_ROW])
 			-- Extend list of actions executed when an item is deselected.
 		do
-			deselect_actions.force_extend (action)
+			deselect_actions.extend (action)
 		end
 
 	set_value_list_redirector (vlr: DV_VALUE_LIST_REDIRECTOR)
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			-- Set column titles with names of attributes which codes are in `attr_codes_list'.
 		local
 			ind: INTEGER
-			table_descr_l: ARRAYED_LIST [STRING]
+			table_descr_l: ARRAYED_LIST [STRING_32]
 		do
 			table_descr_l := tables.obj (table_code).table_description.description_list
 			from
@@ -223,11 +223,11 @@ feature {NONE} -- Implementation
 	value_list_redirector: detachable DV_VALUE_LIST_REDIRECTOR
 			-- Value list redirector.
 
-	No_code: INTEGER = 0;
+	No_code: INTEGER = 0
 			-- No `table_code' has been set yet.
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -237,11 +237,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-end -- class DV_TABLEROW_MULTILIST
-
-
-
+end

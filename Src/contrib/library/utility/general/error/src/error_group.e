@@ -1,4 +1,4 @@
-﻿note
+note
 	description : "Objects that represent a group of errors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

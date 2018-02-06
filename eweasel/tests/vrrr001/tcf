@@ -1,5 +1,4 @@
-
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2018 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -26,7 +25,7 @@ resume_compile
 compile_result 	 validity_error TEST1 VXRC
 
 define		 LOCALS ""
-define		 RESCUE "rescue io.putstring ("In rescue clause%N");"
+define		 RESCUE "rescue (0).io.putstring ("In rescue clause%N");"
 copy_sub 	 test1.e  $CLUSTER test1.e
 resume_compile
 compile_result 	 validity_error TEST1 VXRC

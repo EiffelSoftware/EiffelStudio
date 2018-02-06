@@ -1,11 +1,12 @@
-note
-	description: "Summary description for {DATABASE_STORE_PROCEDURE}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	DATABASE_STORE_PROCEDURE
+
+inherit
+	LOCALIZED_PRINTER
 
 create
 	data_reader, data_writer, new_store_2, new_store
@@ -119,15 +120,15 @@ feature {NONE} -- Intialization
 			l_proc.load
 
 			if l_proc.exists then
-				if l_proc.text /= Void then
-					io.putstring ("Stored procedure text: ")
-					io.putstring (l_proc.text)
-					io.new_line
+				if attached l_proc.text_32 as t then
+					io.put_string ("Stored procedure text: ")
+					localized_print (t)
+					io.put_new_line
 				end
 			else
-			create l_db_change.make
-			l_db_change.set_query (a_store)
-			l_db_change.execute_query
+				create l_db_change.make
+				l_db_change.set_query (a_store)
+				l_db_change.execute_query
 				if l_db_change.is_ok then
 					l_proc.load
 					io.putstring ("Procedure created.%N")

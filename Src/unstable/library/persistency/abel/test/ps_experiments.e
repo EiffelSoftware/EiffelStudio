@@ -129,7 +129,7 @@ feature
 			end
 
 			traversal.set_root_object (container)
-			traversal.set_object_action (agent (a:ANY) do print (a) end)
+			traversal.set_on_processing_object_action (agent (a:REFLECTED_OBJECT) do print (a) end)
 			traversal.traverse
 
 			reflection.set_object (box)

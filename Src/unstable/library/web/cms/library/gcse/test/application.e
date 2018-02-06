@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 				end
 
 				if attached l_result.next_page as l_page then
-					l_parameters.set_start (l_page.start_index.out)
+					l_parameters.set_start (l_page.start_index)
 					gcse.search
 				end
 			end

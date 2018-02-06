@@ -939,12 +939,12 @@ feature -- Setting
 			is_stable_set: is_stable = v
 		end
 
-	set_has_class_postcondition (v: BOOLEAN)
-			-- Set `has_class_postcondition` to `v`.
+	set_has_immediate_class_postcondition (v: BOOLEAN)
+			-- Set `has_immediate_class_postcondition` to `v`.
 		do
 			feature_flags := feature_flags.set_bit_with_mask (v, has_class_postcondition_mask)
 		ensure
-			has_class_postcondition_set: has_class_postcondition = v
+			has_immediate_class_postcondition_set: has_immediate_class_postcondition = v
 		end
 
 	set_has_immediate_non_object_call (v: BOOLEAN)
@@ -1065,7 +1065,7 @@ feature -- Incrementality
 				and then has_precondition = other.has_precondition
 				and then has_postcondition = other.has_postcondition
 				and then has_false_postcondition = other.has_false_postcondition
-				and then has_class_postcondition = other.has_class_postcondition
+				and then has_immediate_class_postcondition = other.has_immediate_class_postcondition
 				and then is_once = other.is_once
 				and then is_process_relative = other.is_process_relative
 				and then is_object_relative_once = other.is_object_relative_once
@@ -1398,45 +1398,6 @@ feature -- Conveniences
 			Result := feature_flags & is_stable_mask = is_stable_mask
 		end
 
-	has_non_object_call: BOOLEAN
-			-- Is there a non-object call in the feature?
-			-- See also: `has_immediate_non_object_call`, `has_immediate_non_object_call_in_assertion`.
-		do
-			Result :=
-				has_immediate_non_object_call or else
-				attached assert_id_set as a and then a.has_non_object_call
-		end
-
-	has_immediate_non_object_call: BOOLEAN
-			-- Is there a non-object call in the feature without taking inherited assertions into account?
-			-- See also: `set_immediate_has_non_object_call`, `has_immediate_non_object_call_in_assertion`.
-		do
-			Result := feature_flags & has_non_object_call_mask /= 0
-		end
-
-	has_immediate_non_object_call_in_assertion: BOOLEAN
-			-- Is there a non-object call in the immediate routine precondition or postcondition?
-			-- See also: `set_immediate_has_non_object_call_in_assertion`, `has_immediate_non_object_call`.
-		do
-			Result := feature_flags & has_non_object_call_in_assertion_mask /= 0
-		end
-
-	has_class_postcondition: BOOLEAN
-			-- Does feature have a class postcondition?
-			-- See also: `set_has_class_postcondition`, `is_class`.
-		do
-			Result := feature_flags & has_class_postcondition_mask /= 0
-		end
-
-	is_class: BOOLEAN
-			-- Is feature declared as a class one?
-			-- See also: `has_class_postcondition`, `is_instance_free`.
-		do
-			Result :=
-				has_class_postcondition or else
-				attached assert_id_set as a and then a.has_class_postcondition
-		end
-
 	is_hidden_in_debugger_call_stack: BOOLEAN
 			-- Is feature hidden in debugger call stack tool?
 		do
@@ -1460,6 +1421,54 @@ feature -- Conveniences
 			-- (Usually applies to attributes.)
 		do
 			-- False by default
+		end
+
+	has_non_object_call: BOOLEAN
+			-- Is there a non-object call in the feature?
+			-- See also: `has_immediate_non_object_call`, `has_immediate_non_object_call_in_assertion`.
+		do
+			Result :=
+				has_immediate_non_object_call or else
+				attached assert_id_set as a and then a.has_non_object_call
+		end
+
+	has_immediate_non_object_call: BOOLEAN
+			-- Is there a non-object call in the feature without taking inherited assertions into account?
+			-- See also: `set_immediate_has_non_object_call`, `has_immediate_non_object_call_in_assertion`.
+		do
+			Result := feature_flags & has_non_object_call_mask /= 0
+		end
+
+	has_immediate_non_object_call_in_assertion: BOOLEAN
+			-- Is there a non-object call in the immediate routine precondition or postcondition?
+			-- See also: `set_immediate_has_non_object_call_in_assertion`, `has_immediate_non_object_call`.
+		do
+			Result := feature_flags & has_non_object_call_in_assertion_mask /= 0
+		end
+
+	has_immediate_class_postcondition: BOOLEAN
+			-- Does feature have an immediate class postcondition?
+			-- (There could also be inherited class postconditions not reported by this query.)
+			-- See also: `set_has_immediate_class_postcondition`, `has_class_postcondition`.
+		do
+			Result := feature_flags & has_class_postcondition_mask /= 0
+		end
+
+	has_class_postcondition: BOOLEAN
+			-- Does feature have a (immediate or inherited) class postcondition?
+			-- See also: `has_immediate_class_postcondition`, `is_class`.
+		do
+			Result :=
+				has_immediate_class_postcondition or else
+				attached assert_id_set as a and then a.has_class_postcondition
+		end
+
+	is_class: BOOLEAN
+			-- Is feature declared as a class one?
+			-- See also: `has_class_postcondition`, `is_instance_free`.
+		do
+				-- By default a feature is a class one if it has a class postcondition.
+			Result := has_class_postcondition
 		end
 
 	has_static_access: BOOLEAN
@@ -1539,7 +1548,7 @@ feature -- Conveniences
 	has_printable_assertion: BOOLEAN
 			-- Is feature declaring some pre or post conditions that can be output?
 		do
-			Result := has_postcondition or else has_precondition or else has_class_postcondition
+			Result := has_postcondition or else has_precondition or else has_immediate_class_postcondition
 		end
 
 	has_combined_assertion: BOOLEAN
@@ -3042,7 +3051,7 @@ feature -- Undefinition
 			Result.set_body_index (body_index)
 			Result.set_has_precondition (has_precondition)
 			Result.set_has_postcondition (has_postcondition)
-			Result.set_has_class_postcondition (has_class_postcondition)
+			Result.set_has_immediate_class_postcondition (has_immediate_class_postcondition)
 			Result.set_has_false_postcondition (has_false_postcondition)
 			Result.set_has_immediate_non_object_call (has_immediate_non_object_call)
 			Result.set_has_immediate_non_object_call_in_assertion (has_immediate_non_object_call_in_assertion)
@@ -3170,7 +3179,7 @@ feature -- Replication
 			other.set_has_convert_mark (has_convert_mark)
 			other.set_has_replicated_ast (has_replicated_ast)
 			other.set_is_stable (is_stable)
-			other.set_has_class_postcondition (has_class_postcondition)
+			other.set_has_immediate_class_postcondition (has_immediate_class_postcondition)
 			other.set_has_immediate_non_object_call (has_immediate_non_object_call)
 			other.set_has_immediate_non_object_call_in_assertion (has_immediate_non_object_call_in_assertion)
 			other.set_is_hidden_in_debugger_call_stack (is_hidden_in_debugger_call_stack)
@@ -3637,7 +3646,7 @@ invariant
 	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0 or is_fake_inline_agent
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

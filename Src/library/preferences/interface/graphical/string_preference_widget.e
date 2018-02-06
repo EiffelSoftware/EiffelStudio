@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "[
-		Default widget for viewing and editing preferences represented in string
-		format (i.e. STRING, INTEGER and ARRAY preferences).
+			Default widget for viewing and editing preferences represented in string
+			format (i.e. STRING, INTEGER and ARRAY preferences).
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -68,7 +68,8 @@ feature {NONE} -- Implementation
 			create change_item_widget
 			change_item_widget.deactivate_actions.extend (agent update_changes)
 			change_item_widget.set_text (preference.text_value)
-			change_item_widget.pointer_button_press_actions.force_extend (agent activate)
+			change_item_widget.pointer_button_press_actions.extend
+				(agent (x, y, b: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32) do activate end)
 		end
 
 	activate
@@ -89,7 +90,7 @@ feature {NONE} -- Implementation
         end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -99,7 +100,5 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
+end
 
-
-
-end -- class STRING_PREFERENCE_WIDGET

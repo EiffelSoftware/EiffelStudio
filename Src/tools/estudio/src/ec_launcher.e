@@ -23,7 +23,12 @@ feature -- Initialization
 
 	make
 			-- Creation procedure.
+		local
+			l_layout: ESTUDIO_EIFFEL_LAYOUT
 		do
+			create l_layout
+			set_eiffel_layout (l_layout)
+
 			is_splashing := True
 
 				--| Now get the estudio environment and arguments for `ec'
@@ -554,7 +559,7 @@ feature {NONE} -- Implementations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

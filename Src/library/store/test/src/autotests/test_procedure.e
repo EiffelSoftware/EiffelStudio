@@ -141,7 +141,7 @@ feature {NONE} -- Test procedure
 		do
 			l_object := create_data
 			l_proc := prepare_procedure (procedure_name, basic_select_select_data,
-				 <<"a_title", "a_author", "a_year", "a_int_16", "a_int_32", "a_int_64", "a_real_32_t", "a_real_64_t", "a_numeric_t">>,
+				 {ARRAY [STRING_32]} <<"a_title", "a_author", "a_year", "a_int_16", "a_int_32", "a_int_64", "a_real_32_t", "a_real_64_t", "a_numeric_t">>,
 				 <<l_object.title, l_object.author, l_object.year, l_object.int_16, l_object.int_32, l_object.int_64, l_object.real_32_t, l_object.real_64_t, l_object.numeric_t>>)
 			if l_proc.exists then
 
@@ -186,7 +186,7 @@ feature {NONE} -- Test procedure
 		do
 			l_object := create_data
 			l_proc := prepare_procedure (procedure_name, basic_select_select_data,
-				 <<"a_title">>,
+				 <<{STRING_32} "a_title">>,
 				 <<l_object.title>>)
 
 					-- Oracle does not support Unicode at the moment.

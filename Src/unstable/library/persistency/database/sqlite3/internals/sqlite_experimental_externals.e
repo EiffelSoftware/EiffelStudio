@@ -17,10 +17,12 @@ feature -- Externals
 			"C inline use <sqlite3.h>"
 		alias
 			"return (EIF_INTEGER)sqlite3_config((int)$a_config);"
+		ensure
+			is_class: class
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

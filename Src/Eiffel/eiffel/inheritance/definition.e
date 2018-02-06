@@ -97,12 +97,14 @@ feature -- Checking
 			f: FEATURE_I
 			g: FEATURE_I
 			has_class: BOOLEAN
+			has_class_internal: BOOLEAN
 			has_object: BOOLEAN
 		do
 			f := new_feature
 			if f.is_class then
 					-- One of the features has a class postcondition.
 				has_class := True
+				has_class_internal := f.has_class_postcondition
 			elseif not f.is_instance_free then
 					-- If this a redeclaration, the class status can be taken from one of the precursors.
 					-- So, the feature may be instance-free even if it is not declared so explicitly.
@@ -120,8 +122,9 @@ feature -- Checking
 				end
 				g := i.internal_a_feature
 				if g.is_class then
-						-- One of the features has a class postcondition.
+						-- One of the features is a class one.
 					has_class := True
+					has_class_internal := has_class_internal or else g.has_class_postcondition
 				elseif not g.is_instance_free then
 						-- One of the features is not instance-free.
 					has_object := True
@@ -129,7 +132,7 @@ feature -- Checking
 				f.delayed_check_signature (g, tbl)
 				feats.forth
 			end
-				-- It's an error to mix both, features with class postconditions and non-instance-free ones.
+				-- It's an error to mix both, class features and non-instance-free ones.
 			if has_class and has_object then
 				if is_inherited then
 						-- A join error.
@@ -137,7 +140,7 @@ feature -- Checking
 					across
 						feats as h
 					until
-						f.is_class
+						f.is_class and then (has_class_internal implies f.has_class_postcondition)
 					loop
 						f := h.item.internal_a_feature
 					end
@@ -146,7 +149,17 @@ feature -- Checking
 						feats as h
 					loop
 						if not h.item.internal_a_feature.is_instance_free then
-							error_handler.insert_error (create {VDJR5_NEW}.make (system.current_class, f, h.item.internal_a_feature))
+								-- TODO: Report only errors after 18.01 release.
+							if
+								{EIFFEL_CONSTANTS}.major_version >18 or else
+								{EIFFEL_CONSTANTS}.major_version = 18 and then
+								{EIFFEL_CONSTANTS}.minor_version >= 3 or else
+								has_class_internal
+							then
+								error_handler.insert_error (create {VDJR5_NEW}.make (system.current_class, f, h.item.internal_a_feature))
+							else
+								error_handler.insert_warning (create {VDJR5_NEW}.make (system.current_class, f, h.item.internal_a_feature))
+							end
 						end
 					end
 				else
@@ -155,7 +168,17 @@ feature -- Checking
 						feats as h
 					loop
 						if not h.item.internal_a_feature.is_instance_free then
-							error_handler.insert_error (create {VDRD9_NEW}.make (system.current_class, f, h.item.internal_a_feature))
+								-- TODO: Report only errors after 18.01 release.
+							if
+								{EIFFEL_CONSTANTS}.major_version >18 or else
+								{EIFFEL_CONSTANTS}.major_version = 18 and then
+								{EIFFEL_CONSTANTS}.minor_version >= 3 or else
+								has_class_internal
+							then
+								error_handler.insert_error (create {VDRD9_NEW}.make (system.current_class, f, h.item.internal_a_feature))
+							else
+								error_handler.insert_warning (create {VDRD9_NEW}.make (system.current_class, f, h.item.internal_a_feature))
+							end
 						end
 					end
 				end
@@ -270,7 +293,7 @@ feature -- Checking
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

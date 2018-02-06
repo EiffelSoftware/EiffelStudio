@@ -1,5 +1,5 @@
 ﻿note
-	description: "Error for a declaration of an object-relative once as instance-free."
+	description: "Error for a declaration of an object-relative once as a class feature."
 
 class VUCR_ONCE
 
@@ -37,7 +37,7 @@ feature {NONE} -- Output
 note
 	date: "$Date$";
 	revision: "$Revision $"
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

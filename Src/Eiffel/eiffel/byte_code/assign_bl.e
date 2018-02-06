@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Enlarged byte code for assignment"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -165,7 +165,6 @@ feature
 	analyze
 			-- Analyze assignment
 		local
-			string_b: STRING_B
 			source_has_gcable: BOOLEAN
 			result_used: BOOLEAN
 			source_type: TYPE_A
@@ -193,8 +192,8 @@ feature
 			end
 			create saved_context.make_from_context (context)
 
+			source_type := context.real_type (source.type)
 			if simple_op_assignment = No_simple_op then
-				source_type := context.real_type (source.type)
 				if target.is_predefined then
 					result_used := target.is_result
 						-- We won't attempt a propagation of the target if the
@@ -208,25 +207,23 @@ feature
 						source.propagate (No_register)
 						register := target
 						register_for_metamorphosis := True
-					else
+					elseif
 							-- Do not propagate something expanded as the
 							-- routines in NESTED_BL and friends won't know
 							-- how to deal with that (they do real assignments,
 							-- not copies). In case target is expanded, we
 							-- do not propagate anything in the source.
-						if not target_type.is_true_expanded then
-								-- If there is invariant checking and the target
-								-- is used in the source, do not propagate.
-								-- Case: p := p.right in a list and p becomes
-								-- void...
-							if not ((context.workbench_mode or else
-								context.assertion_level.is_invariant) and
-								source.used (target))
-							then
-								source.propagate (target)
-								target_propagated := context.propagated
-							end
-						end
+						not target_type.is_true_expanded and then
+							-- If there is invariant checking and the target
+							-- is used in the source, do not propagate.
+							-- Case: p := p.right in a list and p becomes
+							-- void...
+						not ((context.workbench_mode or else
+							context.assertion_level.is_invariant) and
+							source.used (target))
+					then
+						source.propagate (target)
+						target_propagated := context.propagated
 					end
 				else
 						-- This is an assignment in an attribute.
@@ -268,15 +265,14 @@ feature
 				-- If the source is a string constant and the target is not
 				-- predefined, then a RTAP will be generated and the RTMS
 				-- must NOT be expanded in line (side effect in macro).
-			if not target.is_predefined then
-				string_b ?= source
-				if
-					string_b /= Void and then string_b.register = No_register
-				then
-						-- Take a register to hold the value of the string.
-					get_register
-					register.free_register
-				end
+			if
+				not target.is_predefined and then
+				(attached {STRING_B} source as string_b and then string_b.register = No_register or else
+				target_type.is_reference and then source_type.is_reference and then source.is_dynamic_clone_required (source_type))
+			then
+					-- Take a register to hold the value of the string or of a cloned expanded object.
+				get_register
+				register.free_register
 			end
 			if target_type.is_true_expanded then
 					-- Take a register to hold the value of the cloned expanded object.
@@ -462,7 +458,6 @@ feature
 			buf: GENERATION_BUFFER
 			target_c_type: TYPE_C
 			source_type: TYPE_A
-			l_void: VOID_B
 		do
 			buf := buffer
 			generate_special (how)
@@ -481,31 +476,38 @@ feature
 					-- For strings constants, we have to be careful. Put its
 					-- address in a temporary register before RTAR can
 					-- handle it (it evaluates its arguments more than once).
+					-- The same applies to expanded objects returned by reference expressions.
 				if register /= Void and not register_for_metamorphosis then
 					buf.put_new_line
 					print_register
 					buf.put_string (" = ")
-					source.print_register
+					source_type := context.real_type (source.type)
+					if
+						how = Simple_assignment and then
+						not attached {STRING_B} source and then
+						source_type.is_reference
+					then
+						source.generate_dynamic_clone (source, source_type)
+					else
+						source.print_register
+					end
 					buf.put_character (';')
 					buf.put_new_line
-					buf.put_string ("RTAR(")
+					buf.put_string ({C_CONST}.rtar_open)
 					context.Current_register.print_register
 					buf.put_string ({C_CONST}.comma_space)
 					print_register
 					buf.put_character (')')
 					buf.put_character (';')
-				else
+				elseif not attached {VOID_B} source then
 						-- Optimization: If source is `Void' then there is nothing to remember.
-					l_void ?= source
-					if l_void = Void then
-						buf.put_new_line
-						buf.put_string ("RTAR(")
-						context.Current_register.print_register
-						buf.put_string ({C_CONST}.comma_space)
-						source_print_register
-						buf.put_character (')')
-						buf.put_character (';')
-					end
+					buf.put_new_line
+					buf.put_string ({C_CONST}.rtar_open)
+					context.Current_register.print_register
+					buf.put_string ({C_CONST}.comma_space)
+					source_print_register
+					buf.put_character (')')
+					buf.put_character (';')
 				end
 			end
 			if how = Copy_assignment then
@@ -523,50 +525,46 @@ feature
 				end
 				generate_expanded_assignment
 			elseif how = Unmetamorphose_assignment then
+				buf.put_new_line
 				if context.real_type (target.type).is_basic then
 						-- Reattachment of reference type to basic.
-					buf.put_new_line
 					target.print_register
 					buf.put_string (" = *")
 					target.c_type.generate_access_cast (buf)
 					buf.put_character ('(')
 					source.print_register
-					buf.put_two_character (')', ';')
 				else
 						-- Reattachment of reference type to expanded.
-					buf.put_new_line
 					buf.put_string ("RTXA(")
 					source.print_register
 					buf.put_string ({C_CONST}.comma_space)
 					target.print_register
-					buf.put_two_character (')', ';')
 				end
-			else
-				if how = Simple_assignment or need_aging_tests then
-					buf.put_new_line
-					target.print_register
-					buf.put_string (" = ")
-						-- Always ensure that we perform a cast to type of target.
-						-- Cast in case of basic type will never loose information
-						-- as it has been validated by the Eiffel compiler.
-					target_c_type.generate_cast (buf)
-					if need_aging_tests and then register /= Void and not register_for_metamorphosis then
-						print_register
-					else
-						source_type := context.real_type (source.type)
-						if how = Simple_assignment and then source_type.is_reference then
-								-- Support boxed expanded types.
-							if register_for_metamorphosis then
-								source.generate_dynamic_clone (Current, source_type)
-							else
-								source.generate_dynamic_clone (source, source_type)
-							end
+				buf.put_two_character (')', ';')
+			elseif how = Simple_assignment or need_aging_tests then
+				buf.put_new_line
+				target.print_register
+				buf.put_string (" = ")
+					-- Always ensure that we perform a cast to type of target.
+					-- Cast in case of basic type will never loose information
+					-- as it has been validated by the Eiffel compiler.
+				target_c_type.generate_cast (buf)
+				if need_aging_tests and then register /= Void and not register_for_metamorphosis then
+					print_register
+				else
+					source_type := context.real_type (source.type)
+					if how = Simple_assignment and then source_type.is_reference then
+							-- Support expanded types.
+						if register_for_metamorphosis then
+							source.generate_dynamic_clone (Current, source_type)
 						else
-							source_print_register
+							source.generate_dynamic_clone (source, source_type)
 						end
+					else
+						source_print_register
 					end
-					buf.put_character (';')
 				end
+				buf.put_character (';')
 			end
 		end
 
@@ -688,11 +686,10 @@ feature
 		local
 			binary: BINARY_B
 			other: EXPR_B
-			int: INTEGER_CONSTANT
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			binary ?= source;	-- Cannot fail
+			binary ?= source	-- Cannot fail
 			inspect
 				simple_op_assignment
 			when Left_simple_op then
@@ -711,9 +708,9 @@ feature
 				target.print_register
 			end
 				-- Detection of <expr> +/- 1
-			int ?= other
 			if
-				binary.is_additive and then not (int = Void)
+				binary.is_additive and then
+				attached {INTEGER_CONSTANT} other as int
 				and then int.is_one
 			then
 				binary.generate_plus_plus
@@ -725,7 +722,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

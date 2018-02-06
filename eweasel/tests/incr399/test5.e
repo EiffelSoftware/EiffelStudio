@@ -1,10 +1,12 @@
-
 class TEST5
+
 feature
+
 	value: INTEGER
 		-- once ("OBJECT")
 			-- Result := 25
-		external "C inline"
-		alias "14"
+		do
+			Result := 14
 		end
+
 end

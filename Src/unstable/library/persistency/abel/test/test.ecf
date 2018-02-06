@@ -15,7 +15,7 @@
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<capability>
-			<concurrency use="none"/>
+			<concurrency support="none" use="none"/>
 		</capability>
 		<library name="abel_backend_couchdb" location="$ISE_LIBRARY\unstable\library\persistency\abel\backend_couchdb\backend_couchdb.ecf" readonly="false"/>
 		<library name="abel_connector_mysql" location="$ISE_LIBRARY\unstable\library\persistency\abel\connector_mysql\connector_mysql.ecf" readonly="false"/>

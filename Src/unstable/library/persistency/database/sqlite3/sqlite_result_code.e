@@ -30,6 +30,8 @@ feature -- Constants: Success
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_OK"
+		ensure
+			is_class: class
 		end
 
 feature -- Constants: Failure
@@ -41,6 +43,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_ERROR"
+		ensure
+			is_class: class
 		end
 
 	e_internal: INTEGER
@@ -50,6 +54,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_INTERNAL"
+		ensure
+			is_class: class
 		end
 
 	e_perm: INTEGER
@@ -59,6 +65,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_PERM"
+		ensure
+			is_class: class
 		end
 
 	e_abort: INTEGER
@@ -68,6 +76,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_ABORT"
+		ensure
+			is_class: class
 		end
 
 	e_busy: INTEGER
@@ -77,6 +87,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_BUSY"
+		ensure
+			is_class: class
 		end
 
 	e_locked: INTEGER
@@ -86,6 +98,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_LOCKED"
+		ensure
+			is_class: class
 		end
 
 	e_no_mem: INTEGER
@@ -95,6 +109,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_NOMEM"
+		ensure
+			is_class: class
 		end
 
 	e_read_only: INTEGER
@@ -104,6 +120,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_READONLY"
+		ensure
+			is_class: class
 		end
 
 	e_interrupt: INTEGER
@@ -113,6 +131,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_INTERRUPT"
+		ensure
+			is_class: class
 		end
 
 	e_io_err: INTEGER
@@ -122,6 +142,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_IOERR"
+		ensure
+			is_class: class
 		end
 
 	e_corrupt: INTEGER
@@ -131,6 +153,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_CORRUPT"
+		ensure
+			is_class: class
 		end
 
 	e_not_found: INTEGER
@@ -140,6 +164,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_NOTFOUND"
+		ensure
+			is_class: class
 		end
 
 	e_full: INTEGER
@@ -149,6 +175,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_FULL"
+		ensure
+			is_class: class
 		end
 
 	e_cant_open: INTEGER
@@ -158,6 +186,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_CANTOPEN"
+		ensure
+			is_class: class
 		end
 
 	e_protocol: INTEGER
@@ -167,6 +197,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_PROTOCOL"
+		ensure
+			is_class: class
 		end
 
 	e_empty: INTEGER
@@ -176,6 +208,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_EMPTY"
+		ensure
+			is_class: class
 		end
 
 	e_schema: INTEGER
@@ -185,6 +219,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_SCHEMA"
+		ensure
+			is_class: class
 		end
 
 	e_too_big: INTEGER
@@ -194,6 +230,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_TOOBIG"
+		ensure
+			is_class: class
 		end
 
 	e_constraint: INTEGER
@@ -203,6 +241,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_CONSTRAINT"
+		ensure
+			is_class: class
 		end
 
 	e_mismatch: INTEGER
@@ -212,6 +252,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_MISMATCH"
+		ensure
+			is_class: class
 		end
 
 	e_misuse: INTEGER
@@ -221,6 +263,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_MISUSE"
+		ensure
+			is_class: class
 		end
 
 	e_nolfs: INTEGER
@@ -230,6 +274,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_NOLFS"
+		ensure
+			is_class: class
 		end
 
 	e_auth: INTEGER
@@ -239,6 +285,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_AUTH"
+		ensure
+			is_class: class
 		end
 
 	e_format: INTEGER
@@ -248,6 +296,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_FORMAT"
+		ensure
+			is_class: class
 		end
 
 	e_range: INTEGER
@@ -257,6 +307,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_RANGE"
+		ensure
+			is_class: class
 		end
 
 	e_not_a_db: INTEGER
@@ -266,6 +318,8 @@ feature -- Constants: Failure
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_NOTADB"
+		ensure
+			is_class: class
 		end
 
 feature -- Constants: Success
@@ -277,6 +331,8 @@ feature -- Constants: Success
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_ROW"
+		ensure
+			is_class: class
 		end
 
 	done: INTEGER
@@ -286,6 +342,8 @@ feature -- Constants: Success
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_DONE"
+		ensure
+			is_class: class
 		end
 
 feature -- Status
@@ -322,6 +380,8 @@ feature -- Status
 					or a_code = e_not_a_db
 					or a_code = row
 					or a_code = done
+		ensure
+			is_class: class
 		end
 
 ;note

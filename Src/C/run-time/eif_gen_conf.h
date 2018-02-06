@@ -80,12 +80,12 @@ RT_LNK EIF_TYPE eif_gen_param (EIF_TYPE_INDEX dftype, uint32 pos);
 #define eif_gen_param_id(enc_ftype, pos)	eif_encoded_type(eif_gen_param(eif_decoded_type(enc_ftype).id,pos))
 
 /* Detachable version of a type. */
-rt_public EIF_TYPE eif_non_attached_type2 (EIF_TYPE ftype);
-rt_public EIF_TYPE eif_attached_type2 (EIF_TYPE ftype);
-rt_public EIF_BOOLEAN eif_is_attached_type2 (EIF_TYPE ftype);
-rt_public EIF_BOOLEAN eif_gen_has_default (EIF_TYPE dftype);
-rt_public EIF_BOOLEAN eif_gen_is_deferred (EIF_TYPE_INDEX dftype);
-rt_public EIF_BOOLEAN eif_gen_is_expanded (EIF_TYPE_INDEX dftype);
+RT_LNK EIF_TYPE eif_non_attached_type2 (EIF_TYPE ftype);
+RT_LNK EIF_TYPE eif_attached_type2 (EIF_TYPE ftype);
+RT_LNK EIF_BOOLEAN eif_is_attached_type2 (EIF_TYPE ftype);
+RT_LNK EIF_BOOLEAN eif_gen_has_default (EIF_TYPE dftype);
+RT_LNK EIF_BOOLEAN eif_gen_is_deferred (EIF_TYPE_INDEX dftype);
+RT_LNK EIF_BOOLEAN eif_gen_is_expanded (EIF_TYPE_INDEX dftype);
 
 /* Compatibility routines. */
 #define eif_is_attached_type(ftype)	eif_is_attached_type2(eif_decoded_type(ftype))

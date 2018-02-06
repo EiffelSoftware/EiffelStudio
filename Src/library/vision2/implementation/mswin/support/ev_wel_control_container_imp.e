@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"A common class for the heirs of the WEL_CONTROL_WINDOW."
 	legal: "See notice at end of class."
@@ -307,15 +307,13 @@ feature {NONE} -- Features that should be directly implemented by externals.
 		end
 
 	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER
-			-- SDK GetNextDlgGroupItem
-		external
-			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
-		alias
-			"GetNextDlgTabItem"
+			-- SDK GetNextDlgTabItem
+		do
+			Result := {WEL_CONTROL}.c_cwin_get_next_dlgtabitem (hdlg, hctl, previous)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -325,15 +323,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_WEL_CONTROL_CONTAINER_IMP
-
-
-
-
-
-
-
-
-
-
-
+end

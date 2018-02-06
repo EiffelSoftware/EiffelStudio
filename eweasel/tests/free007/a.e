@@ -8,16 +8,11 @@ feature
 		deferred
 		ensure
 			postcondition
+			is_class: class
 		end
 
-	precondition: BOOLEAN
-		do
-			Result := True
-		end
+	precondition: BOOLEAN = True
 
-	postcondition: BOOLEAN
-		do
-			Result := True
-		end
+	postcondition: BOOLEAN = True
 
 end

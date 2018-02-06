@@ -744,12 +744,27 @@ feature -- Test
 			js: detachable JSON_STRING
 			s,j: STRING
 		do
+			s := "foo\%Tbar"
+			j := "foo\\\tbar"
+			create js.make_from_string (s)
+			assert ("string %"" + s + "%" to json %"" + j + "%"", js.item.same_string (j))
+			create js.make_from_escaped_json_string (js.item)
+			assert ("json %"" + j + "%" to string %"" + s + "%"", js.unescaped_string_8.same_string (s))
+
+			j := "foo\%Tbar"
+			create js.make_from_escaped_json_string (js.item)
+			--| ERROR but accepted as "foo\\\t"
+			assert ("json %"" + j + "%" to string %"" + s + "%"", js.unescaped_string_8.same_string (s))
+
+
 			s := "foo%Tbar"
 			j := "foo\tbar"
 			create js.make_from_string (s)
 			assert ("string %"" + s + "%" to json %"" + j + "%"", js.item.same_string (j))
 			create js.make_from_escaped_json_string (js.item)
 			assert ("json %"" + j + "%" to string %"" + s + "%"", js.unescaped_string_8.same_string (s))
+
+
 
 			s := "tab=%T cr=%R newline=%N backslash=%H slash=/ end"
 			j := "tab=\t cr=\r newline=\n backslash=\\ slash=/ end"
@@ -788,6 +803,23 @@ feature -- Test
 			create js.make_from_escaped_json_string (js.item)
 			assert ("js.item.same_string (%"<script>tab=\t<\/script>%")", js.item.same_string ("<script>tab=\t</script>"))
 			assert ("js.unescaped_string_8.same_string (%"<script>tab=%%T</script>%")", js.unescaped_string_8.same_string ("<script>tab=%T</script>"))
+
+		end
+
+	test_json_string_and_null_character
+		local
+			js: detachable JSON_STRING
+			s,j: STRING
+		do
+			s := "foo%Ubar"
+			j := "foo\u0000bar"
+			create js.make_from_string (s)
+			assert ("string %"" + s + "%" to json %"" + j + "%"", js.item.same_string (j))
+			create js.make_from_escaped_json_string (js.item)
+			assert ("json %"" + j + "%" to string %"" + s + "%"", js.unescaped_string_8.same_string (s))
+
+			create js.make_from_escaped_json_string (s)
+			assert ("json %"" + j + "%" to string %"" + s + "%"", js.unescaped_string_8.same_string (s))
 
 		end
 

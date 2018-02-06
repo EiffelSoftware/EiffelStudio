@@ -17,6 +17,8 @@ feature -- Constants
 			"C inline use <sqlite3.h>"
 		alias
 			"return SQLITE_OPEN_READONLY"
+		ensure
+			is_class: class
 		end
 
 	read_write: INTEGER
@@ -24,6 +26,8 @@ feature -- Constants
 			"C inline use <sqlite3.h>"
 		alias
 			"return SQLITE_OPEN_READWRITE"
+		ensure
+			is_class: class
 		end
 
 	create_read_write: INTEGER
@@ -31,6 +35,8 @@ feature -- Constants
 			"C inline use <sqlite3.h>"
 		alias
 			"return SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE"
+		ensure
+			is_class: class
 		end
 
 feature -- Status
@@ -41,10 +47,12 @@ feature -- Status
 			Result :=  a_mode = read_only
 					or a_mode = read_write
 					or a_mode = create_read_write
+		ensure
+			is_class: class
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

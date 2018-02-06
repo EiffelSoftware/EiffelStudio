@@ -1,8 +1,6 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -40,7 +38,7 @@ feature	{NONE} -- Implementation
 			-- Full name.
 			-- This is a hack, since no such facility found in the testing framework, for a file name located in the source class directory.
 		do
-			if attached env.get ("ISE_LIBRARY") as l_env then
+			if attached env.item ("ISE_LIBRARY") as l_env then
 				Result := l_env.twin
 				Result.append_character (Operating_environment.directory_separator)
 				Result.append ("library")
@@ -95,7 +93,7 @@ feature	{NONE} -- Implementation
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -104,8 +102,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

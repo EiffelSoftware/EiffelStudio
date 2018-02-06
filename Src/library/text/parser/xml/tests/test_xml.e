@@ -187,13 +187,13 @@ feature -- Test routines
 			f.close
 		end
 
-	generate_ecf_truncated_at_size (fn: PATH; a_size: INTEGER; a_end: READABLE_STRING_8)
+	generate_ecf_truncated_at_size (fn: PATH; a_size: INTEGER; a_end: READABLE_STRING_32)
 		local
 			s: STRING_32
 			f: RAW_FILE
-			t: READABLE_STRING_8
+			t: READABLE_STRING_32
 		do
-			t := "</system>"
+			t := {STRING_32} "</system>"
 
 			s := ecf_content_with_size (a_size - a_end.count + t.count)
 			s.replace_substring_all (t, a_end)
@@ -442,7 +442,7 @@ feature -- Test routines
 			create vis_uc
 
 			create l_input.make_with_path (xml_file_name ("truncated_at_chunk-ecf.xml"))
-			generate_ecf_truncated_at_size (xml_file_name ("truncated_at_chunk-ecf.xml"), l_input.chunk_size, "</foo_bar>")
+			generate_ecf_truncated_at_size (xml_file_name ("truncated_at_chunk-ecf.xml"), l_input.chunk_size, {STRING_32} "</foo_bar>")
 
 			l_input.open_read
 			l_input.start

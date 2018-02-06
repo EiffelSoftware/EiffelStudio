@@ -15,9 +15,6 @@ feature {NONE} -- Initialization
 			-- Run application.
 		local
 			example_loader: detachable separate ANY
-			compile_helper_1: DOWNLOAD_APPLICATION
-			compile_helper_2: CP_AGENT_IMPORTER
-			mem: MEMORY
 		do
 			example_loader := create {PRODUCER_CONSUMER}.make
 			example_loader := create {ECHO_APPLICATION}.make

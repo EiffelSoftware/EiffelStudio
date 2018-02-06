@@ -629,11 +629,11 @@ feature -- Test
 			l_ptr: MANAGED_POINTER
 			s: IMMUTABLE_STRING_8
 		do
-			create l_ptr.make_from_array (<< 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			create s.make_from_c (l_ptr.item)
 			check_boolean ("make_from_c", s.is_equal ("0123456"))
 
-			create l_ptr.make_from_array (<< 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
+			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			create s.make_from_c (l_ptr.item)
 			check_boolean ("make_from_c", s.is_empty)
 		end

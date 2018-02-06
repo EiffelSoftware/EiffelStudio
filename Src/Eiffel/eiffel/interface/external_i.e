@@ -10,11 +10,21 @@ class EXTERNAL_I
 inherit
 	PROCEDURE_I
 		redefine
-			transfer_to, transfer_from, equiv, update_api,
-			generate, duplicate, extension,
-			access_for_feature, is_external,
-			set_renamed_name_id, external_name_id,
-			init_arg, new_deferred, is_target_free
+			access_for_feature,
+			duplicate,
+			equiv,
+			extension,
+			generate,
+			is_external,
+			external_name_id,
+			init_arg,
+			is_class,
+			is_target_free,
+			new_deferred,
+			set_renamed_name_id,
+			transfer_from,
+			transfer_to,
+			update_api
 		end
 
 create
@@ -136,6 +146,15 @@ feature
 	is_external: BOOLEAN = True
 			-- Is the feature an external one?
 
+	is_class: BOOLEAN
+			-- <Precursor>
+		local
+			e: like extension
+		do
+			e := extension
+			Result := e.is_built_in implies e.is_static
+		end
+
 	is_target_free: BOOLEAN
 			-- <Precursor>
 		do
@@ -145,7 +164,9 @@ feature
 					e.is_static
 				else
 						-- External features without assertions have no unqualified calls.
-					not has_combined_assertion
+					not has_combined_assertion and then
+						-- And they cannot access Current if they are class features.
+					is_class
 				end
 		end
 
@@ -297,7 +318,7 @@ invariant
 	extension_not_void: extension /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

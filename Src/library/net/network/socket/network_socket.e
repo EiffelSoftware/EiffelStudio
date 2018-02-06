@@ -23,6 +23,8 @@ deferred class NETWORK_SOCKET inherit
 			exists, make_socket, address_type, is_valid_peer_address, connect, is_valid_family
 		end
 
+	SOCKET_TIMEOUT_UTILITIES
+
 feature
 
 	exists: BOOLEAN
@@ -170,7 +172,7 @@ feature -- Status report
 	is_default_timeout: BOOLEAN
 			-- Is `timeout_ns` the default timeout?	
 		do
-			Result := timeout_ns = one_second_in_nanoseconds * default_timeout.to_natural_64
+			Result := timeout_ns = seconds_to_nanoseconds (default_timeout)
 		end
 
 feature -- Access: Timeout
@@ -246,7 +248,7 @@ feature -- Status setting
 	set_default_timeout
 			-- Set timeout to default.
 		do
-			timeout_ns := one_second_in_nanoseconds * default_timeout.to_natural_64
+			timeout_ns := seconds_to_nanoseconds (default_timeout)
 		ensure
 			timeout_set_to_default: is_default_timeout
 		end
@@ -258,7 +260,7 @@ feature -- Status setting
 		require
 			non_negative: n >= 0
 		do
-			set_timeout_ns (n.to_natural_64)
+			set_timeout_ns (seconds_to_nanoseconds (n))
 		ensure
 			timeout_set: timeout = n
 		end
@@ -280,7 +282,7 @@ feature -- Status setting
 		require
 			non_negative_timeout: a_timeout_seconds >= 0
 		do
-			set_recv_timeout_ns (one_second_in_nanoseconds * a_timeout_seconds.to_natural_64)
+			set_recv_timeout_ns (seconds_to_nanoseconds (a_timeout_seconds))
 		end
 
 	set_recv_timeout_ns (a_timeout_nanoseconds: NATURAL_64)
@@ -301,7 +303,7 @@ feature -- Status setting
 		require
 			non_negative_timeout: a_timeout_seconds >= 0
 		do
-			set_send_timeout_ns (one_second_in_nanoseconds * a_timeout_seconds.to_natural_64)
+			set_send_timeout_ns (seconds_to_nanoseconds (a_timeout_seconds))
 		end
 
 	set_send_timeout_ns (a_timeout_nanoseconds: NATURAL_64)
@@ -387,57 +389,10 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	nanoseconds_to_seconds (ns: NATURAL_64): INTEGER
-			-- Number of seconds in `ns` nanoseconds in seconds (that fits in INTEGER_32 value).
-			-- Warning: Result can not be more than {INTEGER}.max_value.
-		local
-			n64: NATURAL_64
-		do
-			n64 := ns // one_second_in_nanoseconds
-			if n64 > {INTEGER}.max_value.to_natural_64 then
-				Result := {INTEGER}.max_value
-			else
-				Result := n64.to_integer_32
-			end
-		ensure
-			non_negative: Result >= 0
-			coherent: Result.to_natural_64 * one_second_in_nanoseconds <= ns
-		end
-
 feature {NONE} -- Constants
 
 	default_timeout: INTEGER
 			-- Default timeout duration in seconds
-
-	one_second_in_nanoseconds: NATURAL_64 = 1_000_000_000
-			-- Number of nanoseconds in one second.
-
-	max_timeout_ns_value: NATURAL_64 = 2_147_483_647_999_999_999
-			-- Maximum value for a timeout in nanoseconds.
-			-- See `is_valid_timeout_ns` for explanation.
-
-feature -- Validation			
-
-	is_valid_timeout_ns (ns: NATURAL_64): BOOLEAN
-			--| Note: internally (C API), the ns timeout is splitted into:
-			--|  - a long value `tv_sec` : number of seconds
-			--|  - a long value `tv_usec`: number of microseconds (with struct timeval)
-			--| or in the future 
-			--|  - a long value `tv_nsec`: number of nanoseconds  (with struct timespec)
-			--| tv_usec or tv_nsec should be >= 0 and < equivalent of 1 second.
-			--| tv_usec < 1_000_000
-			--| tv_nsec < 1_000_000_000
-			--| so there is no issue with NATURAL_64 for usec or nsec
-			--| but, then, there is restriction for the seconds value which is coded as long int
-			--|  and long values (32 bits) are between -2_147_483_647 and +2_147_483_647 (i.e 2e31 - 1 = {INTEGER_32}.max_value).
-			--|  then, the `seconds` part of the timeout <= +2_147_483_647, and then expressed in nanoseconds, and taking into account
-			--|  the usec or nsec part, the timeout should not be greater than:
-			--|     +2_147_483_647 * 1_000_000_000 + 999_999_999 =  2_147_483_647_999_999_999
-			--|      and as NATURAL_64's max value is bigger     = 18_446_744_073_709_551_615
-			--|      features dealing with timeout in nanoseconds have related preconditions.
-		do
-			Result := 0 <= ns and then ns <= max_timeout_ns_value
-		end
 
 feature {NONE} -- Externals
 
@@ -490,7 +445,7 @@ invariant
 	correct_exist: not is_created implies is_closed and not exists
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

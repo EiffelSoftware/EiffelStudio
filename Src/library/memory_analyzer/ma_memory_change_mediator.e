@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Save memory states at differents point and analyze the difference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -103,7 +103,7 @@ feature -- Command
 				)
 		end
 
-	adjust_column_width (a_column_index: INTEGER; a_grid: EV_GRID)
+	adjust_column_width (a_column_index: INTEGER; a_grid: EV_GRID; x, y, b: INTEGER_32; x_tilt, y_tilt, p: REAL_64; screen_x, screen_y: INTEGER_32)
 			-- Adjust a column width to fix the max width of the item its contain.
 		do
 			if a_grid.row_count > 0 then
@@ -239,19 +239,19 @@ feature {NONE} -- Implemention
 			grid_from_state.column (2).set_title ("Objects count")
 			grid_from_state.column (3).set_title ("Eiffel memory used")
 			grid_from_state.column (4).set_title ("C memory used")
-			grid_from_state.column (1).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (1, grid_from_state))
-			grid_from_state.column (2).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (2, grid_from_state))
-			grid_from_state.column (3).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (3, grid_from_state))
-			grid_from_state.column (4).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (4, grid_from_state))
+			grid_from_state.column (1).header_item.pointer_double_press_actions.extend (agent adjust_column_width (1, grid_from_state, ?, ?, ?, ?, ?, ?, ?, ?))
+			grid_from_state.column (2).header_item.pointer_double_press_actions.extend (agent adjust_column_width (2, grid_from_state, ?, ?, ?, ?, ?, ?, ?, ?))
+			grid_from_state.column (3).header_item.pointer_double_press_actions.extend (agent adjust_column_width (3, grid_from_state, ?, ?, ?, ?, ?, ?, ?, ?))
+			grid_from_state.column (4).header_item.pointer_double_press_actions.extend (agent adjust_column_width (4, grid_from_state, ?, ?, ?, ?, ?, ?, ?, ?))
 
 			grid_to_state.insert_new_column (1)
 			grid_to_state.insert_new_column (2)
 			grid_to_state.insert_new_column (3)
 			grid_to_state.insert_new_column (4)
-			grid_to_state.column (1).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (1, grid_to_state))
-			grid_to_state.column (2).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (2, grid_to_state))
-			grid_to_state.column (3).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (3, grid_to_state))
-			grid_to_state.column (4).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (4, grid_to_state))
+			grid_to_state.column (1).header_item.pointer_double_press_actions.extend (agent adjust_column_width (1, grid_to_state, ?, ?, ?, ?, ?, ?, ?, ?))
+			grid_to_state.column (2).header_item.pointer_double_press_actions.extend (agent adjust_column_width (2, grid_to_state, ?, ?, ?, ?, ?, ?, ?, ?))
+			grid_to_state.column (3).header_item.pointer_double_press_actions.extend (agent adjust_column_width (3, grid_to_state, ?, ?, ?, ?, ?, ?, ?, ?))
+			grid_to_state.column (4).header_item.pointer_double_press_actions.extend (agent adjust_column_width (4, grid_to_state, ?, ?, ?, ?, ?, ?, ?, ?))
 			grid_to_state.column (1).set_title ("To state")
 			grid_to_state.column (2).set_title ("Objects count")
 			grid_to_state.column (3).set_title ("Eiffel memory used")
@@ -261,17 +261,17 @@ feature {NONE} -- Implemention
 			grid_changed.insert_new_column (2)
 			grid_changed.column (1).set_title ("Object type")
 			grid_changed.column (2).set_title ("Delta")
-			grid_changed.column (1).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (1))
-			grid_changed.column (2).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (2))
-			grid_changed.column (1).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (1, grid_changed))
-			grid_changed.column (2).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (2, grid_changed))
+			grid_changed.column (1).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (1, ?, ?, ?, ?, ?, ?, ?, ?))
+			grid_changed.column (2).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (2, ?, ?, ?, ?, ?, ?, ?, ?))
+			grid_changed.column (1).header_item.pointer_double_press_actions.extend (agent adjust_column_width (1, grid_changed, ?, ?, ?, ?, ?, ?, ?, ?))
+			grid_changed.column (2).header_item.pointer_double_press_actions.extend (agent adjust_column_width (2, grid_changed, ?, ?, ?, ?, ?, ?, ?, ?))
 		ensure
 			grid_from_state_column_set: grid_from_state.column_count = 4
 			grid_to_state_column_set: grid_to_state.column_count = 4
 			grid_changed_column_set: grid_changed.column_count = 2
 		end
 
-	on_grid_header_click (a_column_index: INTEGER)
+	on_grid_header_click (a_column_index: INTEGER; x, y, b: INTEGER_32; x_tilt, y_tilt, p: REAL_64; screen_x, screen_y: INTEGER_32)
 			-- User click on the column header of index `a_column_index'.
 		require
 			a_column_index_positive: a_column_index > 0
@@ -398,7 +398,7 @@ invariant
 	grid_increased_not_void: grid_changed /= Void
 	grid_data_not_void: grid_data /= Void
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -407,8 +407,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

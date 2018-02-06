@@ -42,7 +42,6 @@ feature -- Basic operations
 			-- <Precursor>
 		local
 			l_file: PLAIN_TEXT_FILE
-			l_content: STRING
 		do
 			create l_file.make_open_read (path)
 			l_file.read_stream (l_file.count)

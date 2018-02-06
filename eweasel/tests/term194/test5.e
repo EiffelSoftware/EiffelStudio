@@ -1,5 +1,5 @@
-
 class TEST5
+
 inherit
 	PARENT
 	TEST2
@@ -14,9 +14,9 @@ inherit
 		redefine
 			value
 		end
+
 feature
-	value: INTEGER
-		external "C inline"
-		alias "7"
-		end
+
+	value: INTEGER = 7
+
 end

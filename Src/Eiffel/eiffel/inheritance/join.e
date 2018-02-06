@@ -38,6 +38,7 @@ feature -- Checking
 			feature_with_assigner: FEATURE_I
 			f: FEATURE_I
 			has_class: BOOLEAN
+			has_class_internal: BOOLEAN
 			has_object: BOOLEAN
 		do
 				-- The signature of the chosen feature in the
@@ -46,8 +47,9 @@ feature -- Checking
 				-- INHERIT_TABLE).
 			f := new_feature
 			if f.is_class then
-					-- One of the features has a class postcondition.
+					-- One of the features is a class one.
 				has_class := True
+				has_class_internal := f.has_class_postcondition
 			else
 					-- One of the features is not instance-free.
 				has_object := not f.is_instance_free
@@ -76,6 +78,7 @@ feature -- Checking
 				if old_feat.is_class then
 						-- One of the features has a class postcondition.
 					has_class := True
+					has_class_internal := has_class_internal or else old_feat.has_class_postcondition
 				elseif not old_feat.is_instance_free then
 						-- One of the features is not instance-free.
 					has_object := True
@@ -105,7 +108,7 @@ feature -- Checking
 				across
 					deferred_features as h
 				until
-					f.is_class
+					f.is_class and then (has_class_internal implies f.has_class_postcondition)
 				loop
 					f := h.item.internal_a_feature
 				end
@@ -114,14 +117,24 @@ feature -- Checking
 					deferred_features as h
 				loop
 					if not h.item.internal_a_feature.is_instance_free then
-						error_handler.insert_error (create {VDJR5_NEW}.make (system.current_class, f, h.item.internal_a_feature))
+							-- TODO: Report only errors after 18.01 release.
+						if
+							{EIFFEL_CONSTANTS}.major_version >18 or else
+							{EIFFEL_CONSTANTS}.major_version = 18 and then
+							{EIFFEL_CONSTANTS}.minor_version >= 3 or else
+							has_class_internal
+						then
+							error_handler.insert_error (create {VDJR5_NEW}.make (system.current_class, f, h.item.internal_a_feature))
+						else
+							error_handler.insert_warning (create {VDJR5_NEW}.make (system.current_class, f, h.item.internal_a_feature))
+						end
 					end
 				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

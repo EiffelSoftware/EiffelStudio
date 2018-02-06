@@ -1,24 +1,28 @@
-
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2018 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 class TEST
-inherit TEST2
+
+inherit
+
+	TEST2
 		redefine
 			d
 		end
-creation
+
+create
 	make
+
 feature
 	
-	make is
+	make
 		do
-		end;
+		end
 	
-	d: INTEGER is
-		external
-			"C"
-		end;
-end 
+	d: INTEGER
+		do
+		end
+
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel Vision menu item list. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -252,6 +252,8 @@ feature {EV_ANY_I} -- Implementation
 
 	eif_object_from_c (a_c_object: POINTER): detachable EV_ANY_IMP
 		deferred
+		ensure
+			is_class: class
 		end
 
 	c_object: POINTER
@@ -263,7 +265,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MENU_ITEM_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -273,4 +275,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_MENU_ITEM_LIST_IMP
+end

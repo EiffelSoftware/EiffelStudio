@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Eiffel tests that can be executed by testing tool.
 	]"
@@ -60,8 +60,8 @@ feature -- Test routines
 			create_echo_process (l_args)
 			l_process := current_process
 			l_file := create_temporary_file ("stdout")
-			l_process.redirect_output_to_file (l_file.name)
-			print (l_file.name)
+			l_process.redirect_output_to_file (l_file.path.name)
+			print (l_file.path.name)
 			l_process.launch
 			check_successful_exit
 			compare_file_content (l_file, l_args.first)
@@ -86,8 +86,8 @@ feature -- Test routines
 			create_echo_process (l_args)
 			l_process := current_process
 			l_file := create_temporary_file ("stderr")
-			l_process.redirect_error_to_file (l_file.name)
-			print (l_file.name)
+			l_process.redirect_error_to_file (l_file.path.name)
+			print (l_file.path.name)
 			l_process.launch
 			check_successful_exit
 			compare_file_content (l_file, l_args.i_th (2))
@@ -116,7 +116,7 @@ feature -- Test routines
 			l_file.put_string ("ARGUMENT2%N")
 			l_file.put_string ("quit%N")
 			l_file.close
-			l_process.redirect_input_to_file (l_file.name)
+			l_process.redirect_input_to_file (l_file.path.name)
 			launch_process
 			compare_output ("ARGUMENT1%N", False)
 			compare_output ("ARGUMENT2%N", False)
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 					fn.add_extension (a_extension)
 				end
 				s := fn.string
-				create f.make (fn.string)
+				create f.make_with_name (fn.string)
 				if f.exists then
 					i := i + 1
 					f := Void
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

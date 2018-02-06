@@ -17,6 +17,8 @@ feature -- Constants
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_CONFIG_SINGLETHREAD"
+		ensure
+			is_class: class
 		end
 
 	multi_threaded: INTEGER
@@ -24,6 +26,8 @@ feature -- Constants
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_CONFIG_MULTITHREAD"
+		ensure
+			is_class: class
 		end
 
 	multi_threaded_serialized: INTEGER
@@ -31,6 +35,8 @@ feature -- Constants
 			"C macro use <sqlite3.h>"
 		alias
 			"SQLITE_CONFIG_SERIALIZED"
+		ensure
+			is_class: class
 		end
 
 feature -- Status
@@ -41,10 +47,12 @@ feature -- Status
 			Result :=  a_mode = single_threaded
 					or a_mode = multi_threaded
 					or a_mode = multi_threaded_serialized
+		ensure
+			is_class: class
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

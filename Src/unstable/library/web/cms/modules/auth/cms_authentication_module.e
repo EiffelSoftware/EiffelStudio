@@ -454,72 +454,77 @@ feature -- Handler
 			l_captcha_passed: BOOLEAN
 			l_email: READABLE_STRING_8
 		do
-			if
-				a_auth_api.cms_api.has_permission ("account register") and then
-				req.is_post_request_method
-			then
-				create f.make (req.percent_encoded_path_info, "roccms-user-register")
-				f.extend_text_field ("name", Void)
-				f.extend_password_field ("password", Void)
-				f.extend_text_field ("email", Void)
-				f.extend_text_field ("personal_information", Void)
-
-
+			if a_auth_api.cms_api.has_permission ("account register") then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
-				f.process (r)
-				if
-					attached f.last_data as fd and then not fd.has_error and then
-					attached fd.string_item ("name") as l_name and then
-					attached fd.string_item ("password") as l_password and then
-					attached fd.string_item ("email") as s_email and then
-					attached fd.string_item ("personal_information") as l_personal_information
-				then
-					if s_email.is_valid_as_string_8 then
-						l_email := s_email.to_string_8
-						l_user_api := a_auth_api.cms_api.user_api
-						if attached l_user_api.user_by_name (l_name) or else attached l_user_api.temp_user_by_name (l_name) then
-								-- Username already exist.
-							r.set_value ("User name already exists!", "error_name")
-							l_exist := True
-						end
-						if attached l_user_api.user_by_email (l_email) or else attached l_user_api.temp_user_by_email (l_email) then
-								-- Email already exists.
-							r.set_value ("An account is already associated with that email address!", "error_email")
-							l_exist := True
-						end
-						if attached recaptcha_secret_key (a_auth_api.cms_api) as l_recaptcha_key then
-							if attached {WSF_STRING} req.form_parameter ("g-recaptcha-response") as l_recaptcha_response and then is_captcha_verified (l_recaptcha_key, l_recaptcha_response.url_encoded_value) then
-								l_captcha_passed := True
-							else
-									--| Bad or missing captcha
-								l_captcha_passed := False
+				if req.is_post_request_method then
+					create f.make (req.percent_encoded_path_info, "roccms-user-register")
+					f.extend_text_field ("name", Void)
+					f.extend_password_field ("password", Void)
+					f.extend_text_field ("email", Void)
+					f.extend_text_field ("personal_information", Void)
+
+					f.process (r)
+					if
+						attached f.last_data as fd and then not fd.has_error and then
+						attached fd.string_item ("name") as l_name and then
+						attached fd.string_item ("password") as l_password and then
+						attached fd.string_item ("email") as s_email and then
+						attached fd.string_item ("personal_information") as l_personal_information
+					then
+						if s_email.is_valid_as_string_8 then
+							l_email := s_email.to_string_8
+							l_user_api := a_auth_api.cms_api.user_api
+							if attached l_user_api.user_by_name (l_name) or else attached l_user_api.temp_user_by_name (l_name) then
+									-- Username already exist.
+								r.set_value ("User name already exists!", "error_name")
+								l_exist := True
 							end
-						else
-								--| reCaptcha is not setup, so no verification
-							l_captcha_passed := True
-						end
-						if l_captcha_passed and then not l_exist then
-								-- New temp user
-							create u.make (l_name)
-							u.set_email (l_email)
-							u.set_password (l_password)
-							u.set_personal_information (l_personal_information)
-							a_auth_api.register_user (u, l_email, l_personal_information)
+							if attached l_user_api.user_by_email (l_email) or else attached l_user_api.temp_user_by_email (l_email) then
+									-- Email already exists.
+								r.set_value ("An account is already associated with that email address!", "error_email")
+								l_exist := True
+							end
+							if attached recaptcha_secret_key (a_auth_api.cms_api) as l_recaptcha_key then
+								if attached {WSF_STRING} req.form_parameter ("g-recaptcha-response") as l_recaptcha_response and then is_captcha_verified (l_recaptcha_key, l_recaptcha_response.value) then
+									l_captcha_passed := True
+								else
+										--| Bad or missing captcha
+									l_captcha_passed := False
+								end
+							else
+									--| reCaptcha is not setup, so no verification
+								l_captcha_passed := True
+							end
+							if l_captcha_passed and then not l_exist then
+									-- New temp user
+								create u.make (l_name)
+								u.set_email (l_email)
+								u.set_password (l_password)
+								u.set_personal_information (l_personal_information)
+								a_auth_api.register_user (u, l_email, l_personal_information)
+							else
+								r.set_value (l_name, "name")
+								r.set_value (l_email, "email")
+								r.set_value (l_personal_information, "personal_information")
+								r.set_status_code ({HTTP_CONSTANTS}.bad_request)
+							end
 						else
 							r.set_value (l_name, "name")
 							r.set_value (l_email, "email")
 							r.set_value (l_personal_information, "personal_information")
 							r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 						end
+						r.execute
 					else
-						r.set_value (l_name, "name")
-						r.set_value (l_email, "email")
-						r.set_value (l_personal_information, "personal_information")
-						r.set_status_code ({HTTP_CONSTANTS}.bad_request)
+						a_auth_api.cms_api.response_api.send_bad_request ("There were issue with your application, invalid or missing values.", req, res)
 					end
-					r.execute
 				else
-					a_auth_api.cms_api.response_api.send_bad_request ("There were issue with your application, invalid or missing values.", req, res)
+						-- Using registration block ... return empty content for now.
+						-- FIXME: find a way to know if block will be displayed, if not generate default web form.
+						-- maybe using block is also not recommended for this part.
+					r.add_to_primary_tabs (create {CMS_LOCAL_LINK}.make ("Sign in", "account/"))
+					r.set_title ("Register an account")
+					r.execute
 				end
 			else
 				a_auth_api.cms_api.response_api.send_permissions_access_denied ("You can also contact the webmaster to ask for an account.", Void, req, res)
@@ -1190,12 +1195,12 @@ feature -- Response Alter
 
 feature {NONE} -- Implementation
 
-	is_captcha_verified (a_secret, a_response: READABLE_STRING_8): BOOLEAN
+	is_captcha_verified (a_secret: READABLE_STRING_8; a_response: READABLE_STRING_GENERAL): BOOLEAN
 		local
 			api: RECAPTCHA_API
 			l_errors: STRING
 		do
-			write_debug_log (generator + ".is_captcha_verified with response: [" + a_response + "]")
+			write_debug_log (generator + ".is_captcha_verified with response: [" + utf_8_encoded (a_response) + "]")
 			create api.make (a_secret, a_response)
 			Result := api.verify
 			if not Result and then attached api.errors as l_api_errors then

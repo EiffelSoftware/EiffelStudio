@@ -1,5 +1,5 @@
 ﻿note
-	description: "Error for a declaration of an object-relative once as instance-free."
+	description: "Error for a declaration of a variable attribute as a class feature."
 
 class VUCR_ATTRIBUTE
 
@@ -17,7 +17,7 @@ feature {NONE} -- Output
 		do
 			t.add_new_line
 			format_elements (t, locale.translation_in_context ("[
-					Error: Variable attribute {1} cannot be a class routine.
+					Error: Variable attribute {1} cannot be a class feature.
 					What to do: Remove the class postcondition.
 				]", "compiler.error"),
 				<<agent e_feature.append_name>>)
@@ -35,7 +35,7 @@ feature {NONE} -- Output
 note
 	date: "$Date$";
 	revision: "$Revision $"
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

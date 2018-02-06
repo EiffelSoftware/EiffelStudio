@@ -144,9 +144,7 @@
 	<xs:complexType name="capability">
 		<xs:all>
 			<xs:element name="catcall_detection" type="capability.catcall_detection" minOccurs="0"/>
-			<xs:element name="code" type="capability.code" minOccurs="0"/>
 			<xs:element name="concurrency" type="capability.concurrency" minOccurs="0"/>
-			<xs:element name="platform" type="capability.platform" minOccurs="0"/>
 			<xs:element name="void_safety" type="capability.void_safety" minOccurs="0"/>
 		</xs:all>
 	</xs:complexType>
@@ -171,24 +169,6 @@
 		</xs:attribute>
 	</xs:complexType>
 	
-	<xs:complexType name="capability.code">
-		<xs:attribute name="support" type="code_list" use="optional" default="standard">
-			<xs:annotation>
-				<xs:documentation>
-					An unordered capability, multiple values can be specified at the same time.
-					If unspecified, any code kind is supported.
-				</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="use" type="code_value" use="optional">
-			<xs:annotation>
-				<xs:documentation>
-					A code kind to be used when an associated target is used as a root.
-				</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-	</xs:complexType>
-
 	<xs:complexType name="capability.concurrency">
 		<xs:attribute name="support" type="concurrency_value" use="optional" default="scoop">
 			<xs:annotation>
@@ -204,24 +184,6 @@
 			<xs:annotation>
 				<xs:documentation>
 					Concurrency value to be used when an associated target is used as a root.
-				</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-	</xs:complexType>
-
-	<xs:complexType name="capability.platform">
-		<xs:attribute name="support" type="platform_list" use="optional">
-			<xs:annotation>
-				<xs:documentation>
-					An unordered capability, multiple values can be specified at the same time.
-					If unspecified, any platform is supported.
-				</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="use" type="platform_list" use="optional">
-			<xs:annotation>
-				<xs:documentation>
-					A platform to be used when an associated target is used as a root.
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
@@ -262,16 +224,16 @@
 			  <xs:enumeration value = "check_for_void_target"/>
 			  <xs:enumeration value = "check_generic_creation_constraint"/>
 			  <xs:enumeration value = "check_vape"/>
-			  <xs:enumeration value = "console_application"/>
 			  <xs:enumeration value = "cls_compliant"/>
+			  <xs:enumeration value = "console_application"/>
 			  <xs:enumeration value = "dead_code_removal"/>
 			  <xs:enumeration value = "dotnet_naming_convention"/>
 			  <xs:enumeration value = "dynamic_runtime"/>
 			  <xs:enumeration value = "enforce_unique_class_names"/>
 			  <xs:enumeration value = "exception_trace"/>
 			  <xs:enumeration value = "executable_name"/>
+			  <xs:enumeration value = "external_runtime"/>
 			  <xs:enumeration value = "force_32bits"/>
-			  <xs:enumeration value = "old_feature_replication"/>
 			  <xs:enumeration value = "il_verifiable"/>
 			  <xs:enumeration value = "inlining"/>
 			  <xs:enumeration value = "inlining_size"/>
@@ -283,15 +245,17 @@
 			  <xs:enumeration value = "msil_classes_per_module"/>
 			  <xs:enumeration value = "msil_clr_version"/>
 			  <xs:enumeration value = "msil_culture"/>
+			  <xs:enumeration value = "msil_generation"/>
 			  <xs:enumeration value = "msil_generation_type"/>
 			  <xs:enumeration value = "msil_key_file_name"/>
 			  <xs:enumeration value = "msil_use_optimized_precompile"/>
+			  <xs:enumeration value = "old_feature_replication"/>
 			  <xs:enumeration value = "old_verbatim_strings"/>
-			  <xs:enumeration value = "external_runtime"/>
+			  <xs:enumeration value = "platform"/>
 			  <xs:enumeration value = "shared_library_definition"/>
 			  <xs:enumeration value = "total_order_on_reals"/>
-			  <xs:enumeration value = "use_cluster_name_as_namespace"/>
 			  <xs:enumeration value = "use_all_cluster_name_as_namespace"/>
+			  <xs:enumeration value = "use_cluster_name_as_namespace"/>
 	    </xs:restriction>
 	</xs:simpleType>
 
@@ -316,19 +280,19 @@
 
 	<xs:simpleType name="available_warnings">
 		<xs:restriction base = "xs:string">
-			  <xs:enumeration value = "unused_local"/>
-			  <xs:enumeration value = "vwab"/>
+			  <xs:enumeration value = "export_class_missing"/>
 			  <xs:enumeration value = "obsolete_class"/>
 			  <xs:enumeration value = "obsolete_feature"/>
-			  <xs:enumeration value = "once_in_generic"/>
-			  <xs:enumeration value = "syntax"/>
 			  <xs:enumeration value = "old_verbatim_strings"/>
-			  <xs:enumeration value = "same_uuid"/>
-			  <xs:enumeration value = "export_class_missing"/>
-			  <xs:enumeration value = "vweq"/>
-			  <xs:enumeration value = "vjrv"/>
-			  <xs:enumeration value = "renaming_unknown_class"/>
+			  <xs:enumeration value = "once_in_generic"/>
 			  <xs:enumeration value = "option_unknown_class"/>
+			  <xs:enumeration value = "renaming_unknown_class"/>
+			  <xs:enumeration value = "same_uuid"/>
+			  <xs:enumeration value = "syntax"/>
+			  <xs:enumeration value = "unused_local"/>
+			  <xs:enumeration value = "vjrv"/>
+			  <xs:enumeration value = "vwab"/>
+			  <xs:enumeration value = "vweq"/>
 	    </xs:restriction>
 	</xs:simpleType>
 

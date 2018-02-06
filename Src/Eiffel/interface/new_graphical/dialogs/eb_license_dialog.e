@@ -68,6 +68,7 @@ feature -- Initialization
 
 			create license_text.make_with_text (license_info)
 			license_text.set_background_color (White)
+			license_text.set_foreground_color (black)
 			license_text.disable_edit
 			license_text.set_minimum_width (450)
 			license_text.set_minimum_height (200)
@@ -144,7 +145,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

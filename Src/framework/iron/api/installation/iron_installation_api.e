@@ -211,7 +211,7 @@ feature -- Query
 			iri: IRI
 			p: INTEGER
 			l_path: READABLE_STRING_8
-			l_package_name: READABLE_STRING_32
+			l_package_name: READABLE_STRING_GENERAL
 			l_project_path: READABLE_STRING_8
 			l_package_full_path: STRING_8
 			l_repo_uri_string: READABLE_STRING_8
@@ -573,7 +573,7 @@ invariant
 	available_packages /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

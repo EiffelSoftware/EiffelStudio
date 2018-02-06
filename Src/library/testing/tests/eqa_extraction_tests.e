@@ -1,8 +1,5 @@
-note
-	description: "[
-		Regression tests for {EQA_EXTRACTED_TEST_SET}.
-	]"
-	author: ""
+﻿note
+	description: "Regression tests for {EQA_EXTRACTED_TEST_SET}."
 	date: "$Date$"
 	revision: "$Revision$"
 	testing: "covers/{EQA_EXTRACTED_TEST_SET}"
@@ -139,10 +136,10 @@ feature -- Status report
 
 feature {NONE} -- Access
 
-	context: attached ARRAY [attached TUPLE [type: attached TYPE [ANY]; attributes: attached TUPLE; inv: BOOLEAN]]
+	context: attached ARRAY [TUPLE [type: TYPE [ANY]; attributes: TUPLE; inv: BOOLEAN]]
 			-- <Precursor>
 		do
-			Result := <<
+			Result := {ARRAY [TUPLE [type: TYPE [ANY]; attributes: TUPLE; inv: BOOLEAN]]} <<
 				[{attached EQA_TEST_OBJECT}, [
 						"a_string",    "#2",
 						"a_current",   "#1",
@@ -164,7 +161,7 @@ feature {NONE} -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

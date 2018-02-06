@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			A widget containing a tree/grid view of application preferences.  Provides a
 			list to view preference information and ability to edit the preferences using popup floating widgets.  Also allows
@@ -182,8 +182,9 @@ feature {NONE} -- Initialization
 			grid.pointer_double_press_item_actions.extend (agent on_grid_item_double_pressed)
 			grid.key_press_actions.extend (agent on_grid_key_pressed)
 
-			grid.header.pointer_double_press_actions.force_extend (agent on_header_double_clicked)
-			grid.header.item_resize_end_actions.force_extend (agent on_header_item_resize)
+			grid.header.pointer_double_press_actions.extend
+				(agent (x, y, b: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32) do on_header_double_clicked end)
+			grid.header.item_resize_end_actions.extend (agent on_header_item_resize)
 			grid.header.item_pointer_button_press_actions.extend (agent on_header_item_single_clicked)
 
 			restore_button.select_actions.extend (agent on_restore)
@@ -193,7 +194,7 @@ feature {NONE} -- Initialization
 			apply_or_close_button.select_actions.extend (agent on_apply_or_close)
 			description_location.key_press_actions.extend (agent on_description_key_pressed)
 			description_text.key_press_actions.extend (agent on_description_key_pressed)
-			l_box.resize_actions.force_extend (agent on_resize)
+			l_box.resize_actions.extend (agent (x, y, w, h: INTEGER_32) do on_resize end)
 			view_toggle_button.select_actions.extend (agent toggle_view)
 
 				--| Filter
@@ -728,7 +729,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_header_item_resize
+	on_header_item_resize (h: EV_HEADER_ITEM)
 			-- Header was double-clicked.
 		local
 			div_index: INTEGER
@@ -1741,7 +1742,7 @@ invariant
 	has_preferences: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1751,5 +1752,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class PREFERENCES_GRID_CONTROL
-
+end

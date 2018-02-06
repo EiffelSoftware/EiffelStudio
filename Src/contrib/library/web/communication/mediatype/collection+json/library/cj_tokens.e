@@ -11,87 +11,87 @@ feature -- Tokens
 
 	code_key: JSON_STRING
 		once
-			create Result.make_json ("code")
+			create Result.make_from_string ("code")
 		end
 
 	collection_key: JSON_STRING
 		once
-			create Result.make_json ("collection")
+			create Result.make_from_string ("collection")
 		end
 
 	data_key: JSON_STRING
 		once
-			create Result.make_json ("data")
+			create Result.make_from_string ("data")
 		end
 
 	error_key: JSON_STRING
 		once
-			create Result.make_json ("error")
+			create Result.make_from_string ("error")
 		end
 
 	href_key: JSON_STRING
 		once
-			create Result.make_json ("href")
+			create Result.make_from_string ("href")
 		end
 
 	items_key: JSON_STRING
 		once
-			create Result.make_json ("items")
+			create Result.make_from_string ("items")
 		end
 
 	links_key: JSON_STRING
 		once
-			create Result.make_json ("links")
+			create Result.make_from_string ("links")
 		end
 
 	message_key: JSON_STRING
 		once
-			create Result.make_json ("message")
+			create Result.make_from_string ("message")
 		end
 
 	name_key: JSON_STRING
 		once
-			create Result.make_json ("name")
+			create Result.make_from_string ("name")
 		end
 
 	prompt_key: JSON_STRING
 		once
-			create Result.make_json ("prompt")
+			create Result.make_from_string ("prompt")
 		end
 
 	queries_key: JSON_STRING
 		once
-			create Result.make_json ("queries")
+			create Result.make_from_string ("queries")
 		end
 
 	rel_key: JSON_STRING
 		once
-			create Result.make_json ("rel")
+			create Result.make_from_string ("rel")
 		end
 
 	render_key: JSON_STRING
 		once
-			create Result.make_json ("render")
+			create Result.make_from_string ("render")
 		end
 
 	template_key: JSON_STRING
 		once
-			create Result.make_json ("template")
+			create Result.make_from_string ("template")
 		end
 
 	title_key: JSON_STRING
 		once
-			create Result.make_json ("title")
+			create Result.make_from_string ("title")
 		end
 
 	value_key: JSON_STRING
 		once
-			create Result.make_json ("value")
+			create Result.make_from_string ("value")
 		end
 
 	version_key: JSON_STRING
 		once
-			create Result.make_json ("version")
+			create Result.make_from_string ("version")
 		end
 
 note

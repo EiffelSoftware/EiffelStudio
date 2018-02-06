@@ -920,8 +920,9 @@ feature -- Graphical interface
 			wd: EV_WARNING_DIALOG
 		do
 			create wd.make_with_text (a_message)
-			wd.pointer_button_release_actions.force_extend (agent wd.destroy)
-			wd.key_press_actions.force_extend (agent wd.destroy)
+			wd.pointer_button_release_actions.extend
+				(agent (x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32; d: EV_WARNING_DIALOG) do d.destroy end (?, ?, ?, ?, ?, ?, ?, ?, wd))
+			wd.key_press_actions.extend (agent (k: EV_KEY; d: EV_WARNING_DIALOG) do d.destroy end (?, wd))
 			if attached reference_window as l_window then
 				wd.show_modal_to_window (l_window)
 			end
@@ -1933,7 +1934,7 @@ invariant
 	buffered_line_not_void: is_initialized implies buffered_line /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

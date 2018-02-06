@@ -1388,6 +1388,7 @@ test	memory-leak-with-dynamic-dispatch	runtime018	tcf pass runtime
 test	special-expanded-referring-new-object	runtime019	tcf fail used_to_pass runtime special
 test	standard-stream-redirection		runtime020	tcf pass runtime console file input output library
 test	generational-gc-expanded-semantics	runtime021	tcf pass runtime gc expanded reattachment
+test	gc-tracking-in-expanded-argument	runtime022	tcf fail runtime gc expanded argument
 
 -- Thread
 test	cond-timedwait-failure		thread001	tcf pass multithreaded
@@ -2740,6 +2741,8 @@ test	expanded-with-references-crash					expanded008 tcf pass expanded
 test	external-with-expanded-crash					expanded009 tcf pass expanded
 test	expanded-attribute-crash-with-tiny				expanded010 tcf fail used_to_pass expanded
 test	expanded-result-not-gc-tracked					expanded011 tcf pass expanded
+test	basic-value-creation						expanded012 tcf fail basic expanded
+test	basic-value-set_item						expanded013 tcf fail basic expanded
 
 test	filename-classname-mismatch-warning	warn001	tcf pass warning
 

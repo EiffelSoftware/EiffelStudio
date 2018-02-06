@@ -163,6 +163,7 @@ We look forward to your contributions
 			end
 			main_box.set_background_color (colors.stock_colors.white)
 			main_box.propagate_background_color
+			txt.set_foreground_color (colors.stock_colors.black)
 		end
 
 	switch_to_account_page

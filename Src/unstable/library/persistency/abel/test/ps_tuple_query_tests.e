@@ -24,6 +24,7 @@ feature
 			query:PS_TUPLE_QUERY [TEST_PERSON]
 			res: LINKED_LIST [TUPLE [STRING, STRING, INTEGER]]
 			transaction: PS_TRANSACTION
+			l_cursor: ITERATION_CURSOR [TUPLE]
 		do
 			repository.wipe_out
 			transaction := repository.new_transaction
@@ -42,8 +43,9 @@ feature
 				and  query.projection [3].is_equal ("items_owned"))
 
 			transaction.execute_tuple_query (query)
+			l_cursor := query.new_cursor
 
-			assert ("Query result is empty", not query.stable_cursor.after)
+			assert ("Query result is empty", not l_cursor.after)
 
 			across query as q
 			loop
@@ -76,6 +78,7 @@ feature
 		local
 			query:PS_TUPLE_QUERY [TEST_PERSON]
 			transaction: PS_TRANSACTION
+			l_cursor: ITERATION_CURSOR [TUPLE]
 		do
 			repository.wipe_out
 			transaction := repository.new_transaction
@@ -88,11 +91,12 @@ feature
 			create query.make_with_criterion (factory.new_predefined ("last_name", factory.equals, test_data.people.first.last_name))
 
 			transaction.execute_tuple_query (query)
+			l_cursor := query.new_cursor
 
-			assert ("Result is empty", not query.stable_cursor.after)
-			assert ("Tuple type is wrong", attached {TUPLE [STRING, STRING, INTEGER]} query.stable_cursor.item)
+			assert ("Result is empty", not l_cursor.after)
+			assert ("Tuple type is wrong", attached {TUPLE [STRING, STRING, INTEGER]} l_cursor.item)
 
-			check attached {TUPLE [STRING, STRING, INTEGER]} query.stable_cursor.item as res then
+			check attached {TUPLE [STRING, STRING, INTEGER]} l_cursor.item as res then
 
 				assert ("Data is wrong",
 					res [1] ~ test_data.people.first.first_name
@@ -101,8 +105,8 @@ feature
 					)
 			end
 
-			query.stable_cursor.forth
-			assert ("Too many items", query.stable_cursor.after)
+			l_cursor.forth
+			assert ("Too many items", l_cursor.after)
 			query.close
 			transaction.commit
 		end
@@ -114,6 +118,7 @@ feature
 			query:PS_TUPLE_QUERY [TEST_PERSON]
 			projection: ARRAYED_LIST [STRING]
 			transaction: PS_TRANSACTION
+			l_cursor: ITERATION_CURSOR [TUPLE]
 		do
 			repository.wipe_out
 			transaction := repository.new_transaction
@@ -128,17 +133,18 @@ feature
 			query.set_projection (projection)
 
 			transaction.execute_tuple_query (query)
+			l_cursor := query.new_cursor
 
-			assert ("Result is empty", not query.stable_cursor.after)
-			assert ("Tuple type is wrong", attached {TUPLE [STRING]} query.stable_cursor.item
-						and not attached {TUPLE [STRING, STRING]} query.stable_cursor.item)
+			assert ("Result is empty", not l_cursor.after)
+			assert ("Tuple type is wrong", attached {TUPLE [STRING]} l_cursor.item
+						and not attached {TUPLE [STRING, STRING]} l_cursor.item)
 
-			check attached {TUPLE [STRING]} query.stable_cursor.item as res then
+			check attached {TUPLE [STRING]} l_cursor.item as res then
 				assert ("Data is wrong", res [1] ~ test_data.people.first.last_name)
 			end
 
-			query.stable_cursor.forth
-			assert ("Too many items", query.stable_cursor.after)
+			l_cursor.forth
+			assert ("Too many items", l_cursor.after)
 		end
 
 	test_query_criteria_not_in_projection
@@ -147,6 +153,7 @@ feature
 			query:PS_TUPLE_QUERY [TEST_PERSON]
 			projection: ARRAYED_LIST [STRING]
 			transaction: PS_TRANSACTION
+			l_cursor: ITERATION_CURSOR [TUPLE]
 		do
 			repository.wipe_out
 			transaction := repository.new_transaction
@@ -161,17 +168,18 @@ feature
 			query.set_projection (projection)
 
 			transaction.execute_tuple_query (query)
+			l_cursor := query.new_cursor
 
-			assert ("Result is empty", not query.stable_cursor.after)
-			assert ("Tuple type is wrong", attached {TUPLE [STRING]} query.stable_cursor.item
-						and not attached {TUPLE [STRING, STRING]} query.stable_cursor.item)
+			assert ("Result is empty", not l_cursor.after)
+			assert ("Tuple type is wrong", attached {TUPLE [STRING]} l_cursor.item
+						and not attached {TUPLE [STRING, STRING]} l_cursor.item)
 
-			check attached {TUPLE [STRING]} query.stable_cursor.item as res then
+			check attached {TUPLE [STRING]} l_cursor.item as res then
 				assert ("Data is wrong", res [1] ~ test_data.people.first.first_name)
 			end
 
-			query.stable_cursor.forth
-			assert ("Too many items", query.stable_cursor.after)
+			l_cursor.forth
+			assert ("Too many items", l_cursor.after)
 			query.close
 			transaction.commit
 		end
@@ -183,6 +191,7 @@ feature
 			query: PS_TUPLE_QUERY [REFERENCE_CLASS_1]
 			res: LINKED_LIST [TUPLE [INTEGER]]
 			transaction: PS_TRANSACTION
+			l_cursor: ITERATION_CURSOR [TUPLE]
 		do
 			repository.wipe_out
 			transaction := repository.new_transaction
@@ -194,8 +203,9 @@ feature
 			assert ("Wrong default projection", query.projection.count = 1 and then	query.projection [1].is_equal ("ref_class_id"))
 
 			transaction.execute_tuple_query (query)
+			l_cursor := query.new_cursor
 
-			assert ("Result is empty", not query.stable_cursor.after)
+			assert ("Result is empty", not l_cursor.after)
 
 			across query as q
 			loop
@@ -227,6 +237,7 @@ feature
 			res: LINKED_LIST [TUPLE [INTEGER, detachable REFERENCE_CLASS_1]]
 			projection: ARRAYED_LIST [STRING]
 			transaction: PS_TRANSACTION
+			l_cursor: ITERATION_CURSOR [TUPLE]
 		do
 			repository.wipe_out
 			transaction := repository.new_transaction
@@ -237,8 +248,9 @@ feature
 			query.set_projection (projection)
 
 			transaction.execute_tuple_query (query)
+			l_cursor := query.new_cursor
 
-			assert ("Result is empty", not query.stable_cursor.after)
+			assert ("Result is empty", not l_cursor.after)
 
 			across query as q
 			loop
@@ -271,6 +283,7 @@ feature
 			query: PS_TUPLE_QUERY [REFERENCE_CLASS_1]
 			projection: ARRAYED_LIST [STRING]
 			transaction: PS_TRANSACTION
+			l_cursor: ITERATION_CURSOR [TUPLE]
 		do
 			repository.wipe_out
 			transaction := repository.new_transaction
@@ -279,20 +292,23 @@ feature
 			create projection.make_from_array (<<"ref_class_id", "refer">>)
 			query.set_projection (projection)
 
+
 			transaction.execute_tuple_query (query)
 
-			assert ("Result is empty", not query.stable_cursor.after)
+			l_cursor := query.new_cursor
 
-			assert ("Tuple type is wrong", attached {TUPLE [INTEGER, detachable REFERENCE_CLASS_1]} query.stable_cursor.item)
-			check attached {TUPLE [INTEGER, detachable REFERENCE_CLASS_1]} query.stable_cursor.item as tup then
+			assert ("Result is empty", not l_cursor.after)
+
+			assert ("Tuple type is wrong", attached {TUPLE [INTEGER, detachable REFERENCE_CLASS_1]} l_cursor.item)
+			check attached {TUPLE [INTEGER, detachable REFERENCE_CLASS_1]} l_cursor.item as tup then
 
 				assert ("ref_class_id is wrong", tup.integer_item (1) = test_data.reference_cycle.ref_class_id)
 				assert ("attribute refer is Void", attached {REFERENCE_CLASS_1} tup [2])
 				assert ("Data is wrong", deep_equal (tup [2], test_data.reference_cycle.refer))
 			end
 
-			query.stable_cursor.forth
-			assert ("Too many items", query.stable_cursor.after)
+			l_cursor.forth
+			assert ("Too many items", l_cursor.after)
 			query.close
 			transaction.commit
 		end

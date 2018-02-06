@@ -20,6 +20,8 @@ feature {PS_REPOSITORY_TESTS}
 			check_failure (
 				agent (q1, q2: PS_QUERY [TEST_PERSON]; tx1, tx2: PS_TRANSACTION)
 						-- Simulate a lost update situation.
+					local
+						l_cursor1, l_cursor2: ITERATION_CURSOR [TEST_PERSON]
 					do
 							-- T1 reads
 							-- T2 reads, updates and commits
@@ -27,18 +29,21 @@ feature {PS_REPOSITORY_TESTS}
 							--> At least one transaction has to fail.
 
 						tx1.execute_query (q1)
+						l_cursor1 := q1.new_cursor
+
 
 							-- The next step may abort in lock-based systems
 						tx2.execute_query (q2)
+						l_cursor2 := q2.new_cursor
 
-						q2.stable_cursor.item.add_item
-						tx2.update (q2.stable_cursor.item)
+						l_cursor2.item.add_item
+						tx2.update (l_cursor2.item)
 						q2.close
 						tx2.commit
 
 
-						q1.stable_cursor.item.add_item
-						tx1.update (q1.stable_cursor.item)
+						l_cursor1.item.add_item
+						tx1.update (l_cursor1.item)
 						q1.close
 						tx1.commit
 
@@ -54,6 +59,8 @@ feature {PS_REPOSITORY_TESTS}
 			check_failure (
 				agent (q1, q2: PS_QUERY [TEST_PERSON]; tx1, tx2: PS_TRANSACTION)
 						-- Simulate a dirty read situation.
+					local
+						l_cursor: ITERATION_CURSOR [TEST_PERSON]
 					do
 							-- T1 reads and updates
 							-- T2 reads
@@ -61,15 +68,17 @@ feature {PS_REPOSITORY_TESTS}
 							--> T2 either reads an old value, or fails.
 
 						tx1.execute_query (q1)
-						q1.stable_cursor.item.add_item
-						tx1.update (q1.stable_cursor.item)
+						l_cursor := q1.new_cursor
+						l_cursor.item.add_item
+						tx1.update (l_cursor.item)
 						q1.close
 
 							-- The next step may abort in lock-based systems
 						tx2.execute_query (q2)
+						l_cursor := q2.new_cursor
 
 							-- In Snapshot Isolation, T2 has to read an old value.
-						assert ("A dirty read has happened", q2.stable_cursor.item.items_owned = 0)
+						assert ("A dirty read has happened", l_cursor.item.items_owned = 0)
 
 						tx1.rollback
 						q2.close
@@ -84,6 +93,8 @@ feature {PS_REPOSITORY_TESTS}
 			check_failure (
 				agent (q1, q2: PS_QUERY [TEST_PERSON]; tx1, tx2: PS_TRANSACTION)
 						-- Simulate a non-repeatable read situation.
+					local
+						l_cursor: ITERATION_CURSOR [TEST_PERSON]
 					do
 							-- T1 reads
 							-- T2 reads, updates and commits
@@ -95,9 +106,10 @@ feature {PS_REPOSITORY_TESTS}
 
 							-- The next step may abort in lock-based systems
 						tx2.execute_query (q2)
+						l_cursor := q2.new_cursor
 
-						q2.stable_cursor.item.add_item
-						tx2.update (q2.stable_cursor.item)
+						l_cursor.item.add_item
+						tx2.update (l_cursor.item)
 						q2.close
 						tx2.commit
 
@@ -119,6 +131,7 @@ feature {PS_REPOSITORY_TESTS}
 			q1, q2: PS_QUERY [TEST_PERSON]
 
 			transaction: PS_TRANSACTION
+			l_cursor1, l_cursor2: ITERATION_CURSOR [TEST_PERSON]
 		do
 			create some_person.make ("first_name", "last_name", 0)
 
@@ -128,15 +141,17 @@ feature {PS_REPOSITORY_TESTS}
 
 			transaction.insert (some_person)
 			transaction.execute_query (q1)
+			l_cursor1 := q1.new_cursor
 
-			assert ("Person not inserted", not q1.stable_cursor.after)
-			retrieved_person := q1.stable_cursor.item
+			assert ("Person not inserted", not l_cursor1.after)
+			retrieved_person := l_cursor1.item
 
 			q1.close
 			transaction.rollback
 
 			repository.execute_query (q2)
-			assert ("Result not empty", q2.stable_cursor.after)
+			l_cursor2 := q2.new_cursor
+			assert ("Result not empty", l_cursor2.after)
 
 			transaction.prepare
 			assert ("Person not properly removed", not transaction.is_persistent (some_person) and not transaction.is_persistent (retrieved_person))
@@ -155,6 +170,7 @@ feature {PS_REPOSITORY_TESTS}
 			q1, q2: PS_QUERY [TEST_PERSON]
 
 			transaction: PS_TRANSACTION
+			l_cursor1, l_cursor2: ITERATION_CURSOR [TEST_PERSON]
 		do
 			create some_person.make ("first_name", "last_name", 0)
 			transaction := repository.new_transaction
@@ -167,20 +183,23 @@ feature {PS_REPOSITORY_TESTS}
 			create q2.make
 
 			transaction.execute_query (q1)
+			l_cursor1 := q1.new_cursor
 
-			q1.stable_cursor.item.add_item
-			transaction.update (q1.stable_cursor.item)
+			l_cursor1.item.add_item
+			transaction.update (l_cursor1.item)
 
 			transaction.execute_query (q2)
+			l_cursor2 := q2.new_cursor
 
-			assert ("Not updated correctly", q2.stable_cursor.item.is_deep_equal (q1.stable_cursor.item))
+			assert ("Not updated correctly", l_cursor2.item.is_deep_equal (l_cursor1.item))
 
 			q1.close
 			q2.reset
 			transaction.rollback
 
 			repository.execute_query (q2)
-			assert ("Update not rolled back", q2.stable_cursor.item.is_deep_equal (some_person))
+			l_cursor2 := q2.new_cursor
+			assert ("Update not rolled back", l_cursor2.item.is_deep_equal (some_person))
 			q2.close
 			repository.wipe_out
 		end

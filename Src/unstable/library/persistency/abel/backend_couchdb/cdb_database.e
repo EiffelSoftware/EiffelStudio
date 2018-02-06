@@ -171,7 +171,7 @@ feature --standard curl operations
 		do
 			create Result.make_empty
 			l_end_point := endpoint + uri + options
-			if curl.is_dynamic_library_exists then
+			if curl.is_api_available then
 				create l_curl_string.make_empty
 				curl.global_init
 				curl_handle := curl_easy.init
@@ -203,7 +203,7 @@ feature --standard curl operations
 		do
 			create Result.make_empty
 			l_end_point := endpoint + "/" + a_uri
-			if curl_easy.is_dynamic_library_exists then
+			if curl_easy.is_api_available then
 				create l_curl_string.make_empty
 				curl_handle := curl_easy.init
 				curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_ssl_verifypeer, 0)
@@ -232,7 +232,7 @@ feature --standard curl operations
 		do
 			create Result.make_empty
 			l_end_point := endpoint + "/" + a_uri
-			if curl_easy.is_dynamic_library_exists then
+			if curl_easy.is_api_available then
 				create l_curl_string.make_empty
 				create curl_slist.default_create
 				curl_handle := curl_easy.init
@@ -277,7 +277,7 @@ feature --standard curl operations
 			if not a_rev.is_empty then
 				l_end_point.append ("?rev=" + a_rev)
 			end
-			if curl_easy.is_dynamic_library_exists then
+			if curl_easy.is_api_available then
 				create l_curl_string.make_empty
 				curl_handle := curl_easy.init
 				curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_ssl_verifypeer, 0)

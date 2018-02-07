@@ -1,5 +1,5 @@
-note
-	description : "The SCOOP email downloader tutorial root class."
+﻿note
+	description: "The SCOOP email downloader tutorial root class."
 	author: "Chandrakana Nandi"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -153,8 +153,8 @@ feature -- Tutorial: Type system
 
 	play6
 			-- Show characteristics of the SCOOP typesystem.
-		local
-			c: CLIENT
+--		local
+--			c: CLIENT
 		do
 				-- Uncomment to get a compiler error.
 --			c := client
@@ -208,4 +208,3 @@ feature -- Tutorial: automatic conversion
 		end
 
 end
-

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "The main window for the vision2 widget test."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -99,17 +99,19 @@ feature {NONE} -- Initialization
 			create tree_item1.make_with_text ("Containers")
 			tree_item.extend (tree_item1)
 
-			create containers.make_from_array (<<create {EV_CELL},
-												create {EV_FIXED},
-												create {EV_FRAME},
-												create {EV_HORIZONTAL_SPLIT_AREA},
-												create {EV_HORIZONTAL_BOX},
-												create {EV_NOTEBOOK},
-												create {EV_SCROLLABLE_AREA},
-												create {EV_TABLE},
-												create {EV_VERTICAL_BOX},
-												create {EV_VERTICAL_SPLIT_AREA},
-												create {EV_VIEWPORT}>>);
+			create containers.make_from_array
+				({ARRAY [EV_WIDGET]}
+				<<create {EV_CELL},
+					create {EV_FIXED},
+					create {EV_FRAME},
+					create {EV_HORIZONTAL_SPLIT_AREA},
+					create {EV_HORIZONTAL_BOX},
+					create {EV_NOTEBOOK},
+					create {EV_SCROLLABLE_AREA},
+					create {EV_TABLE},
+					create {EV_VERTICAL_BOX},
+					create {EV_VERTICAL_SPLIT_AREA},
+					create {EV_VIEWPORT}>>);
 			from
 				counter := 1
 			until
@@ -125,30 +127,32 @@ feature {NONE} -- Initialization
 			create tree_item1.make_with_text ("Primitives")
 			tree_item.extend (tree_item1)
 
-			create primitives.make_from_array (<<create {EV_BUTTON},
-												create {EV_CHECK_BUTTON},
-												create {EV_COMBO_BOX},
-												create {EV_HORIZONTAL_PROGRESS_BAR},
-												create {EV_HORIZONTAL_RANGE},
-												create {EV_HORIZONTAL_SEPARATOR},
-												create {EV_LABEL},
-												create {EV_LIST},
-												create {EV_MULTI_COLUMN_LIST},
-												create {EV_PASSWORD_FIELD},
-												create {EV_PIXMAP},
-												create {EV_RADIO_BUTTON},
-												create {EV_SPIN_BUTTON},
-												create {EV_TEXT},
-												create {EV_TEXT_FIELD},
-												create {EV_TOGGLE_BUTTON},
-												create {EV_TOOL_BAR},
-												create {EV_TREE},
-												create {EV_VERTICAL_PROGRESS_BAR},
-												create {EV_VERTICAL_RANGE},
-												create {EV_VERTICAL_SEPARATOR},
-												create {EV_DRAWING_AREA},
-												create {EV_VERTICAL_SCROLL_BAR},
-												create {EV_HORIZONTAL_SCROLL_BAR}>>)
+			create primitives.make_from_array
+				({ARRAY [EV_WIDGET]}
+				<<create {EV_BUTTON},
+					create {EV_CHECK_BUTTON},
+					create {EV_COMBO_BOX},
+					create {EV_HORIZONTAL_PROGRESS_BAR},
+					create {EV_HORIZONTAL_RANGE},
+					create {EV_HORIZONTAL_SEPARATOR},
+					create {EV_LABEL},
+					create {EV_LIST},
+					create {EV_MULTI_COLUMN_LIST},
+					create {EV_PASSWORD_FIELD},
+					create {EV_PIXMAP},
+					create {EV_RADIO_BUTTON},
+					create {EV_SPIN_BUTTON},
+					create {EV_TEXT},
+					create {EV_TEXT_FIELD},
+					create {EV_TOGGLE_BUTTON},
+					create {EV_TOOL_BAR},
+					create {EV_TREE},
+					create {EV_VERTICAL_PROGRESS_BAR},
+					create {EV_VERTICAL_RANGE},
+					create {EV_VERTICAL_SEPARATOR},
+					create {EV_DRAWING_AREA},
+					create {EV_VERTICAL_SCROLL_BAR},
+					create {EV_HORIZONTAL_SCROLL_BAR}>>)
 			from
 				counter  := 1
 			until
@@ -339,7 +343,7 @@ feature {NONE} -- Implementation
 	Scrollable_area_width: INTEGER = 230;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -349,6 +353,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class MAIN_WINDOW
-
+end

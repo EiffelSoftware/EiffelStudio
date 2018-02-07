@@ -1,9 +1,9 @@
-note
+﻿note
 	description	: "Default widget for viewing and editing color preferences."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DIRECTORY_RESOURCE_WIDGET
@@ -37,7 +37,7 @@ feature -- Basic operations
 	show
 			-- Show widget
 		do
-			show_change_item_widget
+			show_change_item_widget (0, 0, 0, 0, 0, 0, 0, 0)
 		end
 
 feature {PREFERENCE_VIEW} -- Commands
@@ -93,10 +93,10 @@ feature {NONE} -- Implementation
 			change_item_widget := l_change_item_widget
 			l_change_item_widget.expose_actions.extend (agent on_directory_item_exposed (?))
 			l_change_item_widget.set_data (preference)
-			l_change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
+			l_change_item_widget.pointer_double_press_actions.extend (agent show_change_item_widget)
 		end
 
-	show_change_item_widget
+	show_change_item_widget (x, y, b: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32)
 			-- Show change widget
 		do
 			change
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			-- Directory dialog from which we can select a color.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -137,5 +137,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class DIRECTORY_PREFERENCE_WIDGET
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Customized dialog for showing preferences.  This dialog show preferences on the left side as a pixmap and
 			then the child prefences to the right in separate frames for a nicer look.
@@ -256,13 +256,14 @@ feature {NONE} -- Implementation
 							create l_hbox
 							l_filename := l_exec.current_working_path.extended (l_pref_parent_short_name.to_string_32 + {STRING_32} ".png")
 							l_root_pixmap.set_with_named_path (l_filename)
-							l_root_pixmap.pointer_button_press_actions.force_extend (agent (a_pre: attached like selected_preference_name)
+							l_root_pixmap.pointer_button_press_actions.extend
+								(agent (a_pre: attached like selected_preference_name; x, y, b: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; s_x, s_y: INTEGER_32)
 										require
 											a_pre_attached: a_pre /= Void
 										do
 											selected_preference_name := a_pre;
 											fill_container (a_pre)
-										end (l_pref_parent_short_name)
+										end (l_pref_parent_short_name, ?, ?, ?, ?, ?, ?, ?, ?)
 									)
 							l_hbox.extend (l_root_pixmap)
 							l_hbox.set_minimum_size (120, 120)
@@ -386,7 +387,7 @@ feature {NONE} -- Private Attributes
 			-- Column padding width
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -396,6 +397,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class CUSTOM_PREFERENCE_DIALOG
-
+end

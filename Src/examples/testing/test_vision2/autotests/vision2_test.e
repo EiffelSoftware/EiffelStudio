@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Eiffel tests that can be executed by testing tool.
 	]"
@@ -86,8 +86,8 @@ feature {NONE} -- Implementation
 			-- Report failure in vision2
 		do
 			if attached first_recorded_exception as l_exception then
-				if attached l_exception.message as l_message then
-					assert (l_message, False)
+				if attached l_exception.description as d then
+					assert_32 (d, False)
 				else
 					assert ("Caught Exception", False)
 				end
@@ -113,9 +113,8 @@ feature {NONE} -- Access
 		attribute
 		end
 
-
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -125,5 +124,3 @@ note
 			Customer support http://support.eiffel.com
 		]"
 end
-
-

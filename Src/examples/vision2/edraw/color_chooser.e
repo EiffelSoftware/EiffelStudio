@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Objects that lets user select a color."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -35,7 +34,6 @@ feature {NONE} -- Initialization
 			table: EV_TABLE
 			button: EV_LABEL
 			choose: EV_BUTTON
-			pixmap: EV_PIXMAP
 			i: INTEGER
 		do
 			Precursor {EV_FRAME} (a_text)
@@ -57,7 +55,7 @@ feature {NONE} -- Initialization
 								button.set_background_color (l_color)
 							end
 							button.set_minimum_size (button_size, button_size)
-							button.pointer_button_release_actions.force_extend (agent on_button_select (button))
+							button.pointer_button_release_actions.extend (agent on_button_select (button, ?, ?, ?, ?, ?, ?, ?, ?))
 
 						table.add (button, ((i-1) \\ 3) + 1, ((i - 1) // 3)  + 1, 1, 1)
 						button_list.extend (button)
@@ -67,13 +65,13 @@ feature {NONE} -- Initialization
 					end
 
 					create button
-					button.pointer_button_release_actions.force_extend (agent on_button_select (button))
+					button.pointer_button_release_actions.extend (agent on_button_select (button, ?, ?, ?, ?, ?, ?, ?, ?))
 					table.add (button, 3, 3, 1, 1)
 					button_list.extend (button)
 
 					create button
 					button.set_minimum_size (button_size, button_size)
-					button.pointer_button_release_actions.force_extend (agent on_button_select (button))
+					button.pointer_button_release_actions.extend (agent on_button_select (button, ?, ?, ?, ?, ?, ?, ?, ?))
 					table.add (button, 1, 4, 1, 1)
 					button_list.extend (button)
 
@@ -106,7 +104,7 @@ feature -- Element change
 			color := a_color
 			last_choosen_color := a_color
 			button_list.last.set_background_color (a_color)
-			on_button_select (button_list.last)
+			on_button_select (button_list.last, 0, 0, 0, 0, 0, 0, 0, 0)
 		ensure
 			set: color ~ a_color
 		end
@@ -176,7 +174,7 @@ feature {NONE} -- Implementation
 	button_size: INTEGER = 20
 			-- The size of the colored pixmaps on the buttons
 
-	on_button_select (l_button: EV_LABEL)
+	on_button_select (l_button: EV_LABEL; x, y, b: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; s_x, s_y: INTEGER_32)
 			-- Button with `button_nr' in `button_list' was selected.
 		do
 			color := l_button.background_color
@@ -213,14 +211,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	last_choosen_color: EV_COLOR;
+	last_choosen_color: EV_COLOR
 			-- Last color selected over color dialog by user.
 
 invariant
 	button_list_proper_count: button_list.count = 10
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -230,5 +228,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class COLOR_CHOOSER
+end

@@ -1,15 +1,16 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class
 	GAME
 
 inherit
 	GAME_CONSTANTS
 
-create 
+create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (no_cards: INTEGER)
@@ -18,21 +19,19 @@ feature {NONE} -- Initialization
 			maximum_number_of_cards: no_cards < 53
 			minimum_number_of_cards: no_cards > 0
 		local
-			a_column: column [INTEGER]
 			i: INTEGER
 		do
-			create columns.make (1, Number_of_columns)
+			create columns.make_empty
 			create the_card_numbers.make
-			create xcells.make (1, Number_of_cells)
-			create home_cells.make (1, Number_of_cells)
+			create xcells.make_filled (0, 1, Number_of_cells)
+			create home_cells.make_filled (0, 1, Number_of_cells)
 			number_of_cards := no_cards
 			from
 				i := 1
 			until
 				i > Number_of_columns
 			loop
-				create a_column.make
-				columns.force (a_column, i)
+				columns.force (create {COLUMN [INTEGER]}.make, i)
 				i := i + 1
 			end
 			from
@@ -102,7 +101,7 @@ feature -- Status report
 							Result := True
 						end
 					end
-				end	
+				end
 			end
 		end
 
@@ -135,7 +134,7 @@ feature -- Access
 	the_cards: ARRAY [CARD]
 			-- The cards in the game
 
-	columns: ARRAY [column [INTEGER]]
+	columns: ARRAY [COLUMN [INTEGER]]
 			-- The columns in the game
 
 	state_change: INTEGER
@@ -155,7 +154,7 @@ feature -- Access
 			valid_column_greater: a_column > 0
 			not_empty: not (columns @ a_column).is_empty
 		do
-				Result := ((columns @ a_column).the_top) = a_card.card_number
+				Result := (columns @ a_column).the_top = a_card.card_number
 		end
 
 	card_from_xcell (cell_number: INTEGER): INTEGER
@@ -292,7 +291,7 @@ feature -- Element change
 					j := 0
 					the_card_numbers.start
 				until
-					j >= i 
+					j >= i
 				loop
 					the_card_numbers.forth
 					j := j + 1
@@ -310,7 +309,7 @@ feature -- Element change
 		end
 
 	change_state
-			-- Changes the state 
+			-- Changes the state
 		require
 			legal_argument: state_change /= 0 and state_change < 6
 			legal_candidate: legal_candidate
@@ -322,8 +321,8 @@ feature -- Element change
 			a_column2: INTEGER
 		do
 			inspect state_change
-	
-				when 1 then						
+
+				when 1 then
 			-- Moving from a column to a home_cell
 					a_column := column (go_from)
 					a_home_cell := home_cell (go_to)
@@ -331,7 +330,7 @@ feature -- Element change
 					remove_top_from_column (a_column)
 					insert_in_home_cell (a_home_cell,a_card_number)
 					state_change := 0
-				when 2 then		
+				when 2 then
 			-- Moving from a column to a column
 					a_column := column (go_from)
 					a_column2 := column (go_to)
@@ -491,18 +490,17 @@ feature {NONE} -- Implementation
 		require
 			less_or_equal_maximum_number_of_cards: number_of_cards <= Maximum_number_of_cards
 			greater_or_equal_minimum_number_of_cards: number_of_cards >= 1
-		local 
+		local
 			i: INTEGER
-			a_card: CARD
 		do
-			create the_cards.make (4, number_of_cards + 3)
+			create the_cards.make_empty
+			the_cards.rebase (4)
 			from
 				i := 4
 			until
 				i > number_of_cards + 3
 			loop
-				create a_card.make (i)
-				the_cards.force (a_card, i)
+				the_cards.force (create {CARD}.make (i), i)
 				i := i + 1
 			end
 		end
@@ -523,7 +521,7 @@ feature {NONE} -- Implementation
 			card_number1_less_than: a_card_number1 <= number_of_cards + Card_offset
 			card_number2_less_than: a_card_number2 <= number_of_cards + Card_offset
 		do
-			Result := (a_card_number1 \\ 4 = a_card_number2 \\ 4)
+			Result := a_card_number1 \\ 4 = a_card_number2 \\ 4
 		end
 
 	color_difference (a_card_number1, a_card_number2: INTEGER): BOOLEAN
@@ -533,17 +531,17 @@ feature {NONE} -- Implementation
 			card_number1_less_than: a_card_number1 <= number_of_cards + Card_offset
 			card_number2_less_than: a_card_number2 <= number_of_cards + Card_offset
 		do
-			Result := ((a_card_number1 + a_card_number2) \\ 2 /= 0)
+			Result := (a_card_number1 + a_card_number2) \\ 2 /= 0
 		end
 
 	difference (a_card_number1, a_card_number2: INTEGER): INTEGER
-			-- What is the difference in value of 
+			-- What is the difference in value of
 			-- `a_card_number2' and `a_card_number1'
 		require
 			card_number1_less_than: a_card_number1 <= number_of_cards + Card_offset
 			card_number2_less_than: a_card_number2 <= number_of_cards + Card_offset
 		do
-			Result := (a_card_number2 // 4 - a_card_number1 // 4)
+			Result := a_card_number2 // 4 - a_card_number1 // 4
 		end
 
 	legal_from_xcell_or_column_To_Home:BOOLEAN
@@ -554,7 +552,7 @@ feature {NONE} -- Implementation
 			Result := (difference (card_from (go_to), card_from (go_from)) = 1)
 				and same_kind (card_from (go_from), card_from (go_to))
 		end
-	
+
 	legal_from_column_to_xcell: BOOLEAN
 			-- Is it legal to move from a column
 			-- to a xcell with current source and
@@ -569,14 +567,14 @@ feature {NONE} -- Implementation
 			-- to a column with current source and
 			-- destination?
 		do
-			Result := (difference (card_from (go_from), card_from (go_to)) = 1) 
+			Result := (difference (card_from (go_from), card_from (go_to)) = 1)
 				and color_difference (card_from(go_from), card_from (go_to))
 				and card_from (go_from) /= 0
 				or (card_from (go_from) /= 0 and card_from (go_to) = 0)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -586,6 +584,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class GAME
-
+end

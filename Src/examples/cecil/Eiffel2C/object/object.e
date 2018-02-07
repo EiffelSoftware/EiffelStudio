@@ -1,13 +1,16 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class
 	OBJECT
-inherit 
+
+inherit
 	DISPOSABLE
 
 create
 	make
+
 feature	-- Initialization
 
 	make(s: STRING)
@@ -29,21 +32,28 @@ feature	-- Display
 		end
 
 feature	 -- Access
-	
+
 	string: STRING
 			-- String identifier
-	
-feature	-- Externals
+
+feature -- Removal
 
 	dispose
+		do
+			c_dispose
+		end
+
+feature {NONE} -- Externals
+
+	c_dispose
 		external
 			"C | %"fext.h%""
 		alias
 			"notice_dispose"
 		end
-	
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -53,6 +63,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end	
-
+end

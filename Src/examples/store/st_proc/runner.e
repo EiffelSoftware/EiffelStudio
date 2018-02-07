@@ -1,4 +1,4 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -35,7 +35,7 @@ feature {NONE}
 
 	book: BOOK2
 
-feature
+feature {NONE} -- Creation
 
 	make
 		local
@@ -105,14 +105,14 @@ feature {NONE}
 			create l_proc.make (Proc_name)
 			proc := l_proc
 			l_proc.load
-			l_proc.set_arguments_32 (
-				<<"author", "price", "pub_date">>,
+			l_proc.set_arguments_32
+				({ARRAY [STRING_32]} <<"author", "price", "pub_date">>,
 				<<author, price, pub_date >>)
 
 			if l_proc.exists then
-				if l_proc.text_32 /= Void then
+				if attached l_proc.text_32 as t then
 					io.putstring ("Stored procedure text: ")
-					localized_print (l_proc.text_32)
+					localized_print (t)
 					io.new_line
 				end
 			else
@@ -182,7 +182,7 @@ feature {NONE}
 	Proc_name: STRING = "DB_BOOK_PROC";
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

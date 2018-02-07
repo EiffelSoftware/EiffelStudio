@@ -33,7 +33,7 @@ feature -- Access
 			Result := medium.retrieved
 		end
 
-	retrieve_by_name (file_name: STRING): detachable ANY
+	retrieve_by_name (file_name: READABLE_STRING_GENERAL): detachable ANY
 			-- Retrieve object structure, from external
 			-- representation previously stored in a file
 			-- called `file_name'.
@@ -132,7 +132,7 @@ feature -- Element change
 			medium.independent_store (Current)
 		end
 
-	store_by_name (file_name: STRING)
+	store_by_name (file_name: READABLE_STRING_GENERAL)
 			-- Produce on file called `file_name' an external
 			-- representation of the entire object structure
 			-- reachable from current object.
@@ -160,7 +160,7 @@ feature -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

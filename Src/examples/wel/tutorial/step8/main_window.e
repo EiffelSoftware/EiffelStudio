@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class
 	MAIN_WINDOW
 
@@ -122,7 +123,6 @@ feature {NONE} -- Implementation
 			-- Paint the lines.
 		local
 			a_line: LINE
-			a_pen: WEL_PEN
 			first_point: BOOLEAN
 		do
 			from
@@ -134,8 +134,7 @@ feature {NONE} -- Implementation
 					first_point := True
 					a_line := lines.item
 					a_line.start
-					create a_pen.make_solid (a_line.width, black)
-					paint_dc.select_pen (a_pen)
+					paint_dc.select_pen (create {WEL_PEN}.make_solid (a_line.width, black))
 				until
 					a_line.off
 				loop
@@ -176,7 +175,7 @@ feature {NONE} -- Implementation
 				end
 				l_open_dialog.activate (Current)
 				if l_open_dialog.selected then
-					if attached {like lines} lines.retrieve_by_name (l_open_dialog.file_name) as l_lines then
+					if attached {like lines} lines.retrieve_by_name (l_open_dialog.file_path.name) as l_lines then
 						lines := l_lines
 					else
 						create lines.make
@@ -193,7 +192,7 @@ feature {NONE} -- Implementation
 				end
 				l_save_dialog.activate (Current)
 				if l_save_dialog.selected then
-					lines.store_by_name (l_save_dialog.file_name)
+					lines.store_by_name (l_save_dialog.file_path.name)
 				end
 			when Cmd_exit then
 				if closeable then
@@ -230,7 +229,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -240,6 +239,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class MAIN_WINDOW
-
+end

@@ -30,7 +30,7 @@ feature {NONE}
 
 	book: BOOK3
 
-feature
+feature {NONE} -- Creation
 
 	make
 		local
@@ -107,7 +107,7 @@ feature {NONE}
 			if l_proc.exists then
 				if attached l_proc.text_32 as l_text then
 					io.putstring ("Stored procedure text: ")
-					io.putstring (l_text)
+					localized_print (l_text)
 					io.new_line
 				end
 			else
@@ -151,7 +151,7 @@ feature {NONE}
 	Proc_name: STRING_32 = "DB_BOOK_PROC_2";
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

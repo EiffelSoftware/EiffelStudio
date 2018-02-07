@@ -58,17 +58,18 @@ feature -- Initialization
 				-- Create controls.
 			eiffel_image := Pixmaps.bm_About.twin
 			eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
-			eiffel_image.set_background_color (White)
+			eiffel_image.set_background_color (Default_background_color)
 			create eiffel_image_box
 			eiffel_image_box.extend (eiffel_image)
 			eiffel_image_box.disable_item_expand (eiffel_image)
 			create white_cell
-			white_cell.set_background_color (white)
+			white_cell.set_background_color (Default_background_color)
 			eiffel_image_box.extend (white_cell)
 
 			create license_text.make_with_text (license_info)
-			license_text.set_background_color (White)
-			license_text.set_foreground_color (black)
+			license_text.set_background_color (Default_background_color)
+			license_text.set_foreground_color (default_foreground_color)
+
 			license_text.disable_edit
 			license_text.set_minimum_width (450)
 			license_text.set_minimum_height (200)
@@ -77,14 +78,15 @@ feature -- Initialization
 
 				-- Box with text.
 			create eiffel_text_box
-			eiffel_text_box.set_background_color (White)
+			eiffel_text_box.set_background_color (Default_background_color)
+			eiffel_text_box.set_foreground_color (default_foreground_color)
 			eiffel_text_box.set_padding (Layout_constants.Default_padding_size)
-			eiffel_text_box.set_background_color (White)
 			eiffel_text_box.extend (license_text)
 
 				-- Texts box			
 			create texts_box
-			texts_box.set_background_color (White)
+			texts_box.set_background_color (Default_background_color)
+			texts_box.set_foreground_color (default_foreground_color)
 			texts_box.extend (eiffel_text_box)
 
 				-- Box with left image + text

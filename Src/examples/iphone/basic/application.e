@@ -1,7 +1,7 @@
-note
-	description : "basic application root class"
-	date        : "$Date$"
-	revision    : "$Revision$"
+﻿note
+	description: "basic application root class"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	APPLICATION
@@ -20,13 +20,15 @@ feature {NONE} -- Initialization
 
 	make
 			-- Run application.
+		local
+			u: UTF_CONVERTER
 		do
 			create application
 			application.post_launch_actions.extend (agent on_launch)
 			application.launch
 		rescue
 			if attached last_exception as l_exception then
-				put_string (l_exception.exception_trace)
+				put_string (u.string_32_to_utf_8_string_8 (l_exception.trace))
 			end
 		end
 

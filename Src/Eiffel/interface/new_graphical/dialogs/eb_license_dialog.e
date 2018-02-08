@@ -93,7 +93,7 @@ feature -- Initialization
 			create hbox
 			hbox.set_padding (Layout_constants.Default_padding_size)
 			hbox.set_border_width (Layout_constants.Default_border_size)
-			hbox.set_background_color (White)
+			hbox.set_background_color (Default_background_color)
 			hbox.extend (eiffel_image_box)
 			hbox.disable_item_expand (eiffel_image_box)
 			hbox.extend (texts_box)

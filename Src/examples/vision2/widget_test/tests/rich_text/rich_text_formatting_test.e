@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that show basic character formatting of EV_RICH_TEXT."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 		redefine
 			default_create
 		end
-		
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -22,8 +22,6 @@ feature {NONE} -- Initialization
 			vertical_box: EV_VERTICAL_BOX
 			horizontal_box: EV_HORIZONTAL_BOX
 			font_families: LINEAR [STRING_32]
-			environment: EV_ENVIRONMENT
-			list_item: EV_LIST_ITEM
 		do
 			create rich_text
 			create vertical_box
@@ -40,35 +38,33 @@ feature {NONE} -- Initialization
 			horizontal_box.disable_item_expand (bold_button)
 			horizontal_box.extend (italic_button)
 			horizontal_box.disable_item_expand (italic_button)
-			
-			
+
+
 			rich_text.set_minimum_size (300, 300)
 			rich_text.set_text ("Select some of this text, and use the two buttons to enable/disable bold and italic formatting.")
 			rich_text.selection_change_actions.extend (agent selection_changed)
 			rich_text.caret_move_actions.extend (agent caret_moved)
 			rich_text.set_font (default_font)
 			rich_text.set_current_format (create {EV_CHARACTER_FORMAT}.make_with_font (default_font))
-			
+
 					-- Now load all available fonts into `font_selection' combo box.
-			create environment
-			font_families := environment.font_families
+			font_families := (create {EV_ENVIRONMENT}).font_families
 			create font_names.make (50)
 			from
 				font_families.start
 			until
 				font_families.off
 			loop
-				create list_item.make_with_text (font_families.item)
-				font_selection.extend (list_item)
+				font_selection.extend (create {EV_LIST_ITEM}.make_with_text (font_families.item))
 				font_names.put (font_selection.count, font_families.item)
 				font_families.forth
 			end
-			
+
 			widget := vertical_box
 		end
-		
+
 feature {NONE} -- Implementation
-		
+
 	selection_changed
 			-- Update control buttons based on current selection in `rich_text'.
 		local
@@ -80,7 +76,7 @@ feature {NONE} -- Implementation
 					-- Check for having a selection, as `selection_change_actions' are
 					-- also fired when going from having a slection to no selection.
 				character_format := rich_text.selected_character_format
-				formatting := rich_text.character_format_range_information (rich_text.selection_start, rich_text.selection_end + 1)
+				formatting := rich_text.character_format_range_information (rich_text.start_selection, rich_text.end_selection)
 				if formatting.font_family then
 					font_selection.i_th (font_names.item (character_format.font.name.out)).enable_select
 				else
@@ -101,17 +97,15 @@ feature {NONE} -- Implementation
 				resume_events
 			end
 		end
-		
+
 	caret_moved (new_position: INTEGER)
 			-- Update control buttons based on `new_position' of caret.
 		local
 			character_format: EV_CHARACTER_FORMAT
-			font: EV_FONT
 		do
 			character_format := rich_text.character_format (rich_text.caret_position)
-			font := character_format.font
 			block_events
-			
+
 			if character_format.font.weight = {EV_FONT_CONSTANTS}.weight_regular then
 				bold_button.disable_select
 			else
@@ -136,19 +130,19 @@ feature {NONE} -- Implementation
 			font: EV_FONT
 		do
 			if rich_text.has_selection then
-				character_format := rich_text.character_format (rich_text.selection_start)
+				character_format := rich_text.character_format (rich_text.start_selection)
 			else
 				character_format := rich_text.character_format (rich_text.caret_position)
 			end
-			
+
 			font := character_format.font
 			font.preferred_families.wipe_out
 			font.preferred_families.extend (font_selection.selected_item.text)
 			character_format.set_font (font)
-			
+
 			if rich_text.has_selection then
 				create format_range.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.font_family)
-				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, character_format, format_range)
+				rich_text.modify_region (rich_text.start_selection, rich_text.end_selection, character_format, format_range)
 			else
 				rich_text.set_current_format (character_format)
 			end
@@ -165,11 +159,11 @@ feature {NONE} -- Implementation
 			font: EV_FONT
 		do
 			if rich_text.has_selection then
-				character_format := rich_text.character_format (rich_text.selection_start)
+				character_format := rich_text.character_format (rich_text.start_selection)
 			else
 				character_format := rich_text.character_format (rich_text.caret_position)
 			end
-			
+
 			font := character_format.font
 			if bold_button.is_selected then
 				font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
@@ -177,16 +171,16 @@ feature {NONE} -- Implementation
 				font.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
 			end
 			character_format.set_font (font)
-			
+
 			if rich_text.has_selection then
 				create format_range.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.font_weight)
-				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, character_format, format_range)
+				rich_text.modify_region (rich_text.start_selection, rich_text.end_selection, character_format, format_range)
 			else
 				rich_text.set_current_format (character_format)
 			end
 			rich_text.set_focus
 		end
-		
+
 	modify_italic
 			-- Update current italic formatting based on state of `italic_button'.
 		local
@@ -195,11 +189,11 @@ feature {NONE} -- Implementation
 			font: EV_FONT
 		do
 			if rich_text.has_selection then
-				character_format := rich_text.character_format (rich_text.selection_start)
+				character_format := rich_text.character_format (rich_text.start_selection)
 			else
 				character_format := rich_text.character_format (rich_text.caret_position)
 			end
-			
+
 			font := character_format.font
 			if italic_button.is_selected then
 				font.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
@@ -207,16 +201,16 @@ feature {NONE} -- Implementation
 				font.set_shape ({EV_FONT_CONSTANTS}.shape_regular)
 			end
 			character_format.set_font (font)
-			
+
 			if rich_text.has_selection then
 				create format_range.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.font_shape)
-				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, character_format, format_range)
+				rich_text.modify_region (rich_text.start_selection, rich_text.end_selection, character_format, format_range)
 			else
 				rich_text.set_current_format (character_format)
 			end
 			rich_text.set_focus
 		end
-		
+
 	block_events
 			-- Block events for control widgets.
 		do
@@ -224,7 +218,7 @@ feature {NONE} -- Implementation
 			italic_button.select_actions.block
 			font_selection.select_actions.block
 		end
-		
+
 	resume_events
 			-- Resume events for control widgets.
 		do
@@ -235,10 +229,7 @@ feature {NONE} -- Implementation
 
 	default_font: EV_FONT
 			-- Default font used.
-		local
-			environment: EV_ENVIRONMENT
 		once
-			create environment
 			create Result
 				-- Now add three common font faces to `preferred_families'.
 				-- The first found on the current platform is used.
@@ -250,21 +241,21 @@ feature {NONE} -- Implementation
 
 	rich_text: EV_RICH_TEXT
 		-- Widget that test is to be performed on.
-		
+
 	bold_button: EV_TOGGLE_BUTTON
 		-- Button to control bold status of text.
-		
+
 	italic_button: EV_TOGGLE_BUTTON
 		-- Button to control italic status of text.
-		
+
 	font_selection: EV_COMBO_BOX
 		-- Combo box to select current font.
-		
+
 	font_names: HASH_TABLE [INTEGER, STRING_32];
 		-- Quick look up to retrieve font index in `font_selection'.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -274,5 +265,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class RICH_TEXT_FORMATTING_TEST
+end

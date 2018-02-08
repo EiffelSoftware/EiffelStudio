@@ -1,8 +1,8 @@
 note
 	description: "[
-		Objects that demonstrate how to set up an EV_GRID in an item view
-		layout.
-			]"
+			Objects that demonstrate how to set up an EV_GRID in an item view
+			layout.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -16,7 +16,7 @@ inherit
 		redefine
 			default_create
 		end
-		
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			until
 				a_x > 5
 			loop
-				from	
+				from
 					a_y :=1
 				until
 					a_y > 5
@@ -62,8 +62,8 @@ feature {NONE} -- Initialization
 				a_x := a_x + 1
 			end
 			grid.set_row_height (grid.column (1).width)
-			grid.resize_actions.force_extend (agent move_items)
-			
+			grid.resize_actions.extend (agent move_items)
+
 			widget := grid
 		end
 
@@ -84,11 +84,11 @@ feature {NONE} -- Initialization
 			layout.set_text_y (layout.pixmap_y + an_item.pixmap.height + an_item.spacing)
 		end
 
-	move_items
+	move_items (x, y, w, h: INTEGER_32)
 			-- Respond to the resizing of the grid, by updating the positions
 			-- of all items contained so that they always occupy the total width.
 			-- This may not be visible in the example, as the width of the grid is
-			-- fixed horizontally. 
+			-- fixed horizontally.
 		local
 			l_width: INTEGER
 			an_x, a_y: INTEGER
@@ -142,14 +142,14 @@ feature {NONE} -- Initialization
 				grid.remove_row (grid.row_count)
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	grid: EV_GRID;
 		-- Widget that test is to be performed on.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -159,5 +159,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class GRID_ICON_VIEW_TEST
+end

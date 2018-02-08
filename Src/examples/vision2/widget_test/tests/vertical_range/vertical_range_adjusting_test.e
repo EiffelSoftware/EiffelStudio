@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that test EV_VERTICAL_RANGE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 		redefine
 			default_create
 		end
-		
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -23,33 +23,33 @@ feature {NONE} -- Initialization
 			label: EV_LABEL
 		do
 			create vertical_box
-			
+
 			create range
 			range.set_minimum_height (250)
-			range.pointer_motion_actions.force_extend (agent adjust_progress)
-			
+			range.pointer_motion_actions.extend (agent adjust_progress)
+
 			vertical_box.extend (range)
 			create label.make_with_text ("Move mouse over range")
 			vertical_box.extend (label)
 			vertical_box.disable_item_expand (label)
-			
+
 			widget := vertical_box
 		end
 
 feature {NONE} -- Implementation
-		
-	adjust_progress (x, y: INTEGER)
+
+	adjust_progress (x, y: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Set `value' of `range' based on `x'.
 			-- The default value_range of a progress bar is 0-100.
 		do
 			range.set_value (((y / range.height) * 100).truncated_to_integer)
 		end
-		
+
 	range: EV_VERTICAL_RANGE;
 		-- Widget that test is to be performed on.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -59,5 +59,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class VERTICAL_RANGE_ADJUSTING_TEST
+end

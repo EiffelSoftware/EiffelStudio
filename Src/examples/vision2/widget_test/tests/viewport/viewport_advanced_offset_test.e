@@ -1,6 +1,5 @@
-note
-	description: "Objects that test an EV_VIEWPORT by allowing%
-		% you to adjust the offset."
+﻿note
+	description: "Objects that test an EV_VIEWPORT by allowing you to adjust the offset."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -14,7 +13,7 @@ inherit
 		redefine
 			default_create
 		end
-		
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -31,37 +30,36 @@ feature {NONE} -- Initialization
 			vertical_box.extend (viewport)
 			viewport.set_minimum_size (image_width // 3, image_height // 3)
 			create horizontal_box
-			small_image.pointer_motion_actions.force_extend (agent modify_offset)
+			small_image.pointer_motion_actions.extend (agent modify_offset)
 			horizontal_box.extend (small_image)
 			create label.make_with_text ("Set viewport position%NBy moving over small image.")
 			horizontal_box.extend (label)
 			horizontal_box.disable_item_expand (small_image)
 			vertical_box.extend (horizontal_box)
 			vertical_box.disable_item_expand (horizontal_box)
-			
+
 			widget := vertical_box
 		end
-		
-	modify_offset (x, y: INTEGER)
+
+	modify_offset (x, y: INTEGER; x_tilt, y_tilt, p: REAL_64; s_x, s_y: INTEGER_32)
 			-- Assign an offset to `viewport' based on `x' and `y'.
 		do
 			viewport.set_offset ((x * 6 - small_image_width).max (0).min (image_width - 300),
 				(y* 6 - small_image_height).max (0).min (image_height - 200))
 		end
-		
-		
+
 feature {NONE} -- Implementation
 
 	viewport: EV_VIEWPORT
 		-- Widget that test is to be performed on.
-	
+
 	image_width: INTEGER = 900
 	image_height: INTEGER = 600
-	
+
 	half_image_width: INTEGER
 			-- Half `image_width'.		
 		do
-			Result := image_width // 2	
+			Result := image_width // 2
 		end
 
 	half_image_height: INTEGER
@@ -69,19 +67,19 @@ feature {NONE} -- Implementation
 		do
 			Result := image_width // 2
 		end
-		
+
 	small_image_width: INTEGER
 			-- Once sixth `image_width'.
 		do
 			Result := 900 // 6
 		end
-		
+
 	small_image_height: INTEGER
 			-- Once sixth `image_height'.
 		do
 			Result := 600 // 6
 		end
-	
+
 	build_images
 			-- `Result' is image used for test. The way
 			-- in which this is generated is not important, but the
@@ -137,12 +135,12 @@ feature {NONE} -- Implementation
 				counter := counter - 1
 			end
 		end
-		
+
 	small_image, large_image: EV_PIXMAP;
 		-- Images for test.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -152,5 +150,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class VIEWPORT_ADVANCED_OFFSET_TEST
+end

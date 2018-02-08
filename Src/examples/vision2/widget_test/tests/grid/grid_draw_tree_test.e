@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
-		Objects that test EV_GRID tree functionality. Press and hold the left mouse button
-		on any item in the tree and drag the mouse to draw a subrow tree structure which is
-		filled into the tree upon release of the mouse button.
-		Clicking the header of the first column clears all rows except the first.
+			Objects that test EV_GRID tree functionality. Press and hold the left mouse button
+			on any item in the tree and drag the mouse to draw a subrow tree structure which is
+			filled into the tree upon release of the mouse button.
+			Clicking the header of the first column clears all rows except the first.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			grid.pointer_button_press_item_actions.extend (agent draw_tree_item_press)
 			grid.pointer_button_release_item_actions.extend (agent draw_tree_item_release)
 			grid.pointer_motion_item_actions.extend (agent draw_tree_item_motion)
-			grid.column (1).header_item.pointer_button_press_actions.force_extend (agent clear_all_rows_except_first)
+			grid.column (1).header_item.pointer_button_press_actions.extend (agent clear_all_rows_except_first)
 
 			widget := grid
 		end
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	clear_all_rows_except_first
+	clear_all_rows_except_first (x, y, b: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32)
 			-- Remove all rows from `grid' except the first.
 		local
 			i: INTEGER
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -210,5 +210,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class GRID_DRAW_TREE_TEST
+end

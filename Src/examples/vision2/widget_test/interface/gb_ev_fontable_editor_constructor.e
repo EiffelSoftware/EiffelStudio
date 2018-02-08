@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Builds an attribute editor for modification of objects of type EV_FONTABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -76,7 +75,7 @@ feature {NONE} -- Implementation
 			create font_dialog
 			font_dialog.set_font (first.font)
 			font_dialog.show_modal_to_window (parent_window (parent_editor))
-			if font_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+			if font_dialog.selected_button_name.same_string ((create {EV_DIALOG_NAMES}).ev_ok) then
 				for_all_objects (agent {EV_FONTABLE}.set_font (font_dialog.font))
 			end
 		end
@@ -103,7 +102,7 @@ feature {NONE} -- Implementation
 	preferred_family_string: STRING = "Preferred_family";
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -113,5 +112,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class GB_EV_FONTABLE_EDITOR_CONSTRUCTOR
+end

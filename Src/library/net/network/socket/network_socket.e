@@ -441,7 +441,7 @@ feature {NONE} -- Externals
 
 invariant
 
-	timeout_ns_set: timeout_ns /= 0
+	timeout_set: timeout_ns /= 0 implies timeout > 0
 	correct_exist: not is_created implies is_closed and not exists
 
 note

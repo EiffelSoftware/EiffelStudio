@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="string" uuid="D5DC6332-A847-4505-962D-12A1E85C74FB">
 	<target name="string">
 		<root class="ROOT_CLASS" feature="make"/>
-		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
+		<option warning="true">
 			<assertions precondition="true"/>
 		</option>
 		<capability>
@@ -11,6 +11,6 @@
 		</capability>
 		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<cluster name="root_cluster" location="$ISE_EIFFEL\examples\com\wizard\e2idl\eproject\"/>
+		<cluster name="root_cluster" location="."/>
 	</target>
 </system>

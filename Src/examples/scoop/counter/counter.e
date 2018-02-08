@@ -1,8 +1,8 @@
 note
-	description	: "Objects that implement counters"
-	author		: "Volkan Arslan, Yann Mueller, Piotr Nienaltowski."
-	date		: "$Date: 18.05.2007$"
-	revision	: "1.0.0"
+	description: "Objects that implement counters"
+	author: "Volkan Arslan, Yann Mueller, Piotr Nienaltowski."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	COUNTER
@@ -44,7 +44,7 @@ feature -- Basic operations
 	run (a_count: INTEGER)
 			-- Increment counter `a_count' times.
 		do
-			across (1 |..| a_count) as ic
+			across 1 |..| a_count as ic
 			loop
 				increment
 				output
@@ -60,7 +60,7 @@ feature -- Basic operations
 			create res.make_empty
 			res.append ("Value of counter " + identifier.out + " with speed " + (speed // 1_000_000).out + " ms is: " + value.out + "%N")
 			print (res)
-			res.clear_all
+			res.wipe_out
 		end
 
 	increment

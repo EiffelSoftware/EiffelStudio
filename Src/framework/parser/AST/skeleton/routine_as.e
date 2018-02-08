@@ -1,6 +1,6 @@
 ﻿note
-	description	: "Abstract description of the content of a standard feature"
-	ca_ignore: "CA011", "CA011 – too many arguments"
+	description: "Abstract description of the content of a standard feature"
+	ca_ignore: "CA011", "CA011 — too many arguments"
 
 class ROUTINE_AS
 
@@ -406,7 +406,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

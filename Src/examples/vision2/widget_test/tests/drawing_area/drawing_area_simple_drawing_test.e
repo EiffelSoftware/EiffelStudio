@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that demonstrate EV_DRAWING_AREA."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -7,13 +7,13 @@ note
 
 class
 	DRAWING_AREA_SIMPLE_DRAWING_TEST
-	
+
 inherit
 	COMMON_TEST
 		redefine
 			default_create
 		end
-		
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -29,19 +29,19 @@ feature {NONE} -- Initialization
 				"%NTry moving another window over the drawing area.")
 			vertical_box.extend (label)
 			vertical_box.disable_item_expand (label)
-			
+
 			drawing_area.set_minimum_size (250, 250)
-			drawing_area.pointer_button_press_actions.force_extend (agent draw_rectangle )
+			drawing_area.pointer_button_press_actions.extend (agent draw_rectangle)
 			widget := vertical_box
 		end
-		
+
 feature {NONE} -- Implementation
 
 	drawing_area: EV_DRAWING_AREA
 		-- Widget that test is to be performed on.
-	
-	draw_rectangle (an_x, a_y, a_button: INTEGER)
-			-- Draw a rectangle on `drawing_area' at position 
+
+	draw_rectangle (an_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
+			-- Draw a rectangle on `drawing_area' at position
 			-- (`an_x', `a_y') if left button pressed,
 			-- otherwise if right button pressed then clear.
 		do
@@ -56,10 +56,9 @@ feature {NONE} -- Implementation
 				drawing_area.clear
 			end
 		end
-		
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -69,5 +68,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class DRAWING_AREA_SIMPLE_DRAWING_TEST
+end

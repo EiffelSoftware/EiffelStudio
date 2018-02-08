@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that demonstrate EV_DRAWING_AREA."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -7,13 +7,13 @@ note
 
 class
 	DRAWING_AREA_CLIPPED_TEST
-	
+
 inherit
 	COMMON_TEST
 		redefine
 			default_create
 		end
-		
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -21,18 +21,18 @@ feature {NONE} -- Initialization
 		do
 			create drawing_area
 			drawing_area.set_minimum_size (300, 300)
-			drawing_area.expose_actions.force_extend (agent redraw_figures)
+			drawing_area.expose_actions.extend (agent redraw_figures)
 			widget := drawing_area
 		end
-		
+
 feature {NONE} -- Implementation
 
 	drawing_area: EV_DRAWING_AREA
 		-- Widget that test is to be performed on.
-	
-	redraw_figures
+
+	redraw_figures (x, y, w, h: INTEGER_32)
 			-- Clear `drawing_area' and draw set of figures.
-			-- A drawing area does not keep its current image 
+			-- A drawing area does not keep its current image
 			-- internally, and therefore must be redrawn each time
 			-- it requests this, via the `expose_actions'.
 		local
@@ -60,9 +60,9 @@ feature {NONE} -- Implementation
 			end
 			drawing_area.remove_clip_area
 		end
-		
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -72,5 +72,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class DRAWING_AREA_CLIPPED_TEST
+end

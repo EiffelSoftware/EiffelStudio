@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Builds an attribute editor for modification of objects of type EV_TEXTABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -85,14 +84,14 @@ feature {NONE} -- Implementation
 				set_object (actual_object)
 				objects.extend (an_object)
 				objects.extend (vision2_object)
-				user_event_widget.change_actions.force_extend (agent start_timer)
+				user_event_widget.change_actions.extend (agent start_timer)
 			end
 		end
 
 	has_user_events: BOOLEAN = True
 		-- Does `Current' have user events which must be set?
 
-	start_timer
+	start_timer (x, y, b: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32)
 			-- Start a timer, which is used as a delay between an event begin
 			-- received by `user_event_widget' and `check_state'.
 		local
@@ -130,7 +129,7 @@ feature {NONE} -- Implementation
 	Text_string: STRING = "Text";
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -161,5 +160,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class GB_EV_TEXTABLE_EDITOR_CONSTRUCTOR
+end

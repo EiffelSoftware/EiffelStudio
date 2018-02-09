@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Builds an attribute editor for modification of objects of type EV_DESELECTABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,10 +18,10 @@ feature -- Access
 
 	ev_type: EV_DESELECTABLE
 		-- Vision2 type represented by `Current'.
-		
+
 	type: STRING = "EV_DESELECTABLE"
 		-- String representation of object_type modifyable by `Current'.
-		
+
 	attribute_editor: GB_OBJECT_EDITOR_ITEM
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
@@ -37,10 +36,10 @@ feature -- Access
 			Result.extend (check_button)
 			check_button.select_actions.extend (agent toggle_selected)
 			check_button.select_actions.extend (agent update_editors)
-			
+
 			update_attribute_editor
 		end
-		
+
 	update_attribute_editor
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
@@ -53,28 +52,26 @@ feature -- Access
 			end
 			check_button.select_actions.resume
 		end
-		
+
 	set_up_user_events (actual_object: GB_OBJECT; vision2_object, an_object: like ev_type)
 			-- Add events necessary for `vision2_object'.
-		local
-			widget: EV_WIDGET
 		do
 				--| For now, just deal with widgets. At some point items may be supported also.
 			user_event_widget := vision2_object
-			widget ?= vision2_object
-			check
-				we_are_dealing_with_a_widget: widget /= Void
-			end
 			set_object (actual_object)
 			objects.extend (an_object)
 			objects.extend (vision2_object)
-			widget.pointer_button_release_actions.force_extend (agent start_timer)
-			widget.key_release_actions.force_extend (agent start_timer)
+			if attached {EV_WIDGET} vision2_object as w then
+				w.pointer_button_release_actions.extend (agent (x, y, b: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32) do start_timer end)
+				w.key_release_actions.extend (agent (k: EV_KEY) do start_timer end)
+			else
+				check is_widget: False end
+			end
 		end
-		
+
 	has_user_events: BOOLEAN = True
 		-- Does `Current' have user events which must be set?
-		
+
 	start_timer
 			-- Start a timer which is used to delay execution of `check_state'
 			-- until after the staate has changed.
@@ -85,7 +82,7 @@ feature -- Access
 			timer.actions.extend (agent check_state)
 			timer.actions.extend (agent timer.destroy)
 		end
-		
+
 	check_state
 			--  Check state of `user_event_widget' and update first object in response.
 		require
@@ -99,8 +96,8 @@ feature -- Access
 				update_editors
 			end
 		end
-			
-	user_event_widget: like ev_type	
+
+	user_event_widget: like ev_type
 
 feature {NONE} -- Implementation
 
@@ -113,7 +110,7 @@ feature {NONE} -- Implementation
 
 	check_button: EV_CHECK_BUTTON
 		-- Check button used for setting attribute.
-	
+
 	toggle_selected
 			-- Update sensitive state.
 		do
@@ -125,11 +122,11 @@ feature {NONE} -- Implementation
 		end
 
 	-- Constants for XML
-	
+
 	is_selected_string: STRING = "Is_selected";
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -160,5 +157,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class GB_EV_DESELECTABLE_EDITOR_CONSTRUCTOR
+end

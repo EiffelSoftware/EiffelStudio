@@ -1649,7 +1649,7 @@ rt_private EIF_TYPE rt_id_of (struct rt_id_of_context *a_context, const EIF_TYPE
 			*outtab = save_outtab;
 			result.id = gdp->dftype;
 		}
-	} else if (!RT_CONF_IS_NONE_TYPE(result.id)) {
+	} else {
 			/* Perform some normalization on annotations. */
 		l_dtype = eif_cid_map[result.id];
 		if (EIF_IS_EXPANDED_TYPE(System (l_dtype))) {

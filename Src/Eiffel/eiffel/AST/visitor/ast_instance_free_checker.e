@@ -170,15 +170,21 @@ feature {AST_EIFFEL} -- Visitor
 	process_access_assert_as (a: ACCESS_ASSERT_AS)
 			-- <Precursor>
 		do
-				-- Check if `a` does not require an object.
-			process_access (a, a)
+				-- Ignore non-feature accesses.
+			if a.is_feature then
+					-- Check if `a` does not require an object.
+				process_access (a, a)
+			end
 		end
 
 	process_access_id_as (a: ACCESS_ID_AS)
 			-- <Precursor>
 		do
-				-- Check if `a` does not require an object.
-			process_access (a, a)
+				-- Ignore non-feature accesses.
+			if a.is_feature then
+					-- Check if `a` does not require an object.
+				process_access (a, a)
+			end
 		end
 
 	process_agent_routine_creation_as (a: AGENT_ROUTINE_CREATION_AS)
@@ -311,7 +317,7 @@ feature {NONE} -- Checking
 		require
 			multiple_type_constraint_workaround: a = l
 		do
-			if not is_object then
+			if not is_object and then is_class_feature_verification then
 				verify_access (a, l)
 			end
 		end
@@ -388,7 +394,7 @@ feature {NONE} -- Processed features: modification
 ;note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

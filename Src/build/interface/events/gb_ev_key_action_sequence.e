@@ -1,14 +1,13 @@
-note
+﻿note
 	description: "Objects that represent EV_KEY_ACTION_SEQUENCE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	GB_EV_KEY_ACTION_SEQUENCE
-	
+
 inherit
 	GB_EV_ACTION_SEQUENCE
 
@@ -20,16 +19,16 @@ feature -- Access
 			create Result.make (0)
 			Result.extend ("EV_KEY")
 		end
-	
+
 	argument_names: ARRAYED_LIST [STRING]
 			-- All argument names of action sequence represented by `Current'.
 		once
 			create Result.make (0)
 			Result.extend ("a_key")
 		end
-		
+
 	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [EV_KEY]
-			-- `Result' is agent which will display all arguments passed to an 
+			-- `Result' is agent which will display all arguments passed to an
 			-- action sequence represented by `Current', using name `name' and
 			-- outputs to `string_handler'.
 		require
@@ -40,18 +39,18 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 feature {NONE} -- Implementation
 
 	internal_display_agent (a_key: EV_KEY; name: STRING; string_handler: ORDERED_STRING_HANDLER)
 			-- Display all other arguments of `Current' on `string_handler', prepended
 			-- with `name' fired.
 		do
-			string_handler.record_string (name + " fired.%Nkey : " + a_key.out)
+			string_handler.record_string (name + " fired.%Nkey : " + a_key.text)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -82,5 +81,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class GB_EV_KEY_ACTION_SEQUENCE
+end

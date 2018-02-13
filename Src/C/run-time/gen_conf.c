@@ -1650,15 +1650,23 @@ rt_private EIF_TYPE rt_id_of (struct rt_id_of_context *a_context, const EIF_TYPE
 			result.id = gdp->dftype;
 		}
 	} else {
-			/* Perform some normalization on annotations. */
-		l_dtype = eif_cid_map[result.id];
-		if (EIF_IS_EXPANDED_TYPE(System (l_dtype))) {
-				/* Type was computed and is expanded, it does not carry the attachment mark.
-				 * See eweasel test#reflection005 when processing A [C [STRING], ANY]. */
-			result.annotations &= ~(DETACHABLE_FLAG | ATTACHED_FLAG | FROZEN_FLAG);
-		} else if (EIF_IS_FROZEN_TYPE(System (l_dtype))) {
-				/* Type is a frozen class, no need for the frozen annotation. */
-			result.annotations &= ~FROZEN_FLAG;
+			/* Perform some normalization on annotations if type is not NONE.
+			 * See eweasel test#exec373.
+			 */
+		if (result.id <= MAX_DTYPE)
+		{
+			l_dtype = eif_cid_map[result.id];
+			if (EIF_IS_EXPANDED_TYPE(System (l_dtype))) {
+					/* Type was computed and is expanded, it does not carry the attachment mark.
+					 * See eweasel test#reflection005 when processing A [C [STRING], ANY]. */
+				result.annotations &= ~(DETACHABLE_FLAG | ATTACHED_FLAG | FROZEN_FLAG);
+			} else if (EIF_IS_FROZEN_TYPE(System (l_dtype))) {
+					/* Type is a frozen class, no need for the frozen annotation. */
+				result.annotations &= ~FROZEN_FLAG;
+			}
+		} else {
+			CHECK("NONE type", RT_CONF_IS_NONE_TYPE(result.id));
+			/* FIXME: If it has the frozen flag, should we clean it? */
 		}
 	}
 

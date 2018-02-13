@@ -1860,6 +1860,7 @@ test	conditional-expression-type-computation	exec369 tcf pass execution conditio
 test	conditional-expression-expanded-type	exec370 tcf pass execution conditional expression
 test	old-expression-in-feature-body		exec371 tcf fail execution old expression
 test	target-manifest-array-type-computation	exec372 tcf pass execution manifest array
+test	type-with-none				exec373	tcf pass execution conformance
 
 -- Once specific
 

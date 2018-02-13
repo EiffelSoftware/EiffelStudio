@@ -2,7 +2,7 @@
 	description: "Interpreter declarations and definitions."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2018, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -44,10 +44,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#ifndef EIF_THREADS
-extern struct opstack op_stack;               /* Operational stack */
 #endif
 
 /* Requesting values via ivalue() */

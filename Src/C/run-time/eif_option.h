@@ -2,7 +2,7 @@
 	description: "Include file for options queries in workbench mode."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2018, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -129,11 +129,10 @@ RT_LNK void initprf(void);				/* Generates table for profiling */
 RT_LNK void start_profile(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtype);			/* Starts profiling of a certain feature */
 RT_LNK void stop_profile(void);			/* Stops profiling of a certain feature */
 
-rt_public void prof_stack_rewind(struct prof_info *old_top); /* Stops all timer counts in
-						 * the stack items,
-						 * updates the table, and
-						 * pops the items from the stack
-						 */
+/**
+ * Stop all timer counts in the stack items, update the table, and pop the items from the stack.
+ */
+RT_LNK void prof_stack_rewind(struct prof_info *old_top);
 
 RT_LNK EIF_BOOLEAN eif_is_tracing_enabled(void);
 RT_LNK void eif_enable_tracing(void);

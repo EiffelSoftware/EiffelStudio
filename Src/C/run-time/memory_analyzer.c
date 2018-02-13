@@ -2,7 +2,7 @@
 	description: "Memory Analyzer"
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2009, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2018, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -39,6 +39,7 @@ doc:<file name="memory_analyzer.c" header="eif_memory_analyzer.h" version="$Id$"
 */
 
 #include "eif_memory.h"
+#include "eif_memory_analyzer.h"
 #include "rt_traverse.h"
 #include "rt_garcol.h"
 #include "rt_types.h"

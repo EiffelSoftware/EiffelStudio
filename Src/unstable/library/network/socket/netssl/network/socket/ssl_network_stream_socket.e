@@ -118,7 +118,11 @@ feature -- Input
 				attached l_context.last_ssl as l_ssl
 			then
 				create ext.make_empty (nb_char + 1)
-				return_val := l_ssl.read (ext.item , nb_char)
+				if is_blocking then
+					return_val := l_ssl.read (ext.item , nb_char)
+				else
+					return_val := ssl_read_non_blocking (l_ssl, ext.item , nb_char)
+				end
 				bytes_read := return_val
 				if return_val >= 0 then
 					ext.set_count (return_val)
@@ -148,7 +152,11 @@ feature -- Input
 				until
 					l_read = nb_bytes or l_last_read <= 0
 				loop
-					l_last_read := l_ssl.read (p + start_pos + l_read, nb_bytes - l_read)
+					if is_blocking then
+						l_last_read := l_ssl.read (p + start_pos + l_read, nb_bytes - l_read)
+					else
+						l_last_read := ssl_read_non_blocking (l_ssl, p + start_pos + l_read, nb_bytes - l_read)
+					end
 					if l_last_read >= 0 then
 						l_read := l_read + l_last_read
 					end
@@ -174,7 +182,11 @@ feature -- Output
 			then
 				ext_data := a_packet.data.item
 				count := a_packet.count
-				l_bytes_sent := l_ssl.write (ext_data, count)
+				if is_blocking then
+					l_bytes_sent := l_ssl.write (ext_data, count)
+				else
+					l_bytes_sent := ssl_write_non_blocking (l_ssl, ext_data, count)
+				end
 			else
 				check has_last_ssl: False end
 			end
@@ -196,7 +208,12 @@ feature -- Output
 				attached context as l_context and then
 				attached l_context.last_ssl as l_ssl
 			then
-				l_bytes_sent := l_ssl.write (a_pointer + a_offset, a_byte_count)
+				if is_blocking then
+					l_bytes_sent := l_ssl.write (a_pointer + a_offset, a_byte_count)
+				else
+					l_bytes_sent := ssl_write_non_blocking (l_ssl, a_pointer + a_offset, a_byte_count)
+				end
+
 			else
 				check has_last_ssl: False end
 			end
@@ -256,8 +273,154 @@ feature {NONE} -- Implementation
 			end
 		end
 
+
+feature {NONE} -- Implementation
+
+	ssl_write_non_blocking (a_ssl: SSL; a_pointer: POINTER; nb_bytes: INTEGER): INTEGER
+		note
+			EIS: "name:=SSL_Read", "src=http://jmarshall.com/stuff/handling-nbio-errors-in-openssl.html", "protocol=uri"
+			EIS: "name=An Introduction to OpenSSL Programming, Part I of II", "src=http://www.linuxjournal.com/article/4822", "protocol=uri"
+			EIS: "name=An Introduction to OpenSSL Programming, Part II of II", "src=http://www.linuxjournal.com/node/5487/print", "protocol=uri"
+		local
+			l_error: INTEGER
+			exit: BOOLEAN
+			write_blocked: BOOLEAN
+		do
+			debug
+				print ("%N -----------------------------%N")
+				print (generator +  ".ssl_write")
+				print ("%N -----------------------------%N")
+			end
+
+			from
+				write_blocked := True
+			until
+				exit or (not write_blocked)
+			loop
+				write_blocked := False
+				Result := a_ssl.write (a_pointer, nb_bytes)
+				if Result < 0 then
+					l_error := a_ssl.ssl_get_error (Result)
+					if l_error = {SSL}.ssl_error_none then
+						exit := True
+						debug
+							print("%NSSL c_ssl_error_none%N")
+						end
+					elseif l_error = {SSL}.ssl_error_zero_return then
+						exit := True
+						debug
+							print("%NSSL c_ssl_error_zero_return%N")
+						end
+					elseif l_error = {SSL}.ssl_want_read then
+							-- We get a WANT_READ if we're
+							-- trying to rehandshake and we block on
+							-- write during the current connection.
+							--
+							-- We need to wait on the socket to be readable
+							-- but reinitiate our write when it is.
+						write_blocked := False
+						debug
+							print("%NSSL c_ssl_want_read%N")
+						end
+					elseif l_error = {SSL}.ssl_error_want_write then
+							--  have blocked
+						write_blocked := True
+						debug
+							print("%NSSL c_ssl_error_want_write%N")
+						end
+					elseif l_error = {SSL}.ssl_error_syscall then
+						exit := True
+						debug
+							print("%NSSL c_ssl_error_syscall%N")
+						end
+					else
+						-- some other error
+						exit := True
+						debug
+							print("%NSSL Unknown error%N")
+						end
+					end
+				end
+			end
+		end
+
+	ssl_read_non_blocking (a_ssl: SSL; a_pointer: POINTER; nb_bytes: INTEGER): INTEGER
+			-- Read at most `nb_bytes' into `a_pointer' from this SSL socket
+		note
+			EIS: "name:=SSL_Read", "src=http://jmarshall.com/stuff/handling-nbio-errors-in-openssl.html", "protocol=uri"
+			EIS: "name=An Introduction to OpenSSL Programming, Part I of II", "src=http://www.linuxjournal.com/article/4822", "protocol=uri"
+			EIS: "name=An Introduction to OpenSSL Programming, Part II of II", "src=http://www.linuxjournal.com/node/5487/print", "protocol=uri"
+		local
+			l_error: INTEGER
+			exit: BOOLEAN
+			read_blocked: BOOLEAN
+			ssl_pending: BOOLEAN
+		do
+			debug
+				print ("%N -----------------------------%N")
+				print (generator +  ".ssl_read")
+				print ("%N -----------------------------%N")
+			end
+
+			from
+				ssl_pending := True
+			until
+				exit or (not read_blocked and then not ssl_pending)
+			loop
+				read_blocked := False
+				Result := a_ssl.read (a_pointer, nb_bytes)
+					l_error := a_ssl.ssl_get_error (Result)
+					if l_error = {SSL}.ssl_error_none then
+						exit := True
+						debug
+							print("%NSSL c_ssl_error_none%N")
+						end
+					elseif l_error = {SSL}.ssl_error_zero_return then
+						exit := True
+						debug
+							print("%NSSL c_ssl_error_zero_return%N")
+						end
+					elseif l_error = {SSL}.ssl_want_read then
+						read_blocked := True
+						debug
+							print("%NSSL c_ssl_want_read%N")
+						end
+					elseif l_error = {SSL}.ssl_error_want_write then
+						read_blocked := False
+						debug
+							print("%NSSL c_ssl_error_want_write%N")
+						end
+					elseif l_error = {SSL}.ssl_error_syscall then
+						exit := True
+						debug
+							print("%NSSL c_ssl_error_syscall%N")
+						end
+					else
+							-- some other error
+						exit := True
+						debug
+							print("%NSSL Unknown error%N")
+						end
+					end
+
+					if not exit then
+						if  a_ssl.ssl_pending  > 0  then
+							ssl_pending := True
+							debug
+								print ("%NSSL pending True")
+							end
+						else
+							ssl_pending := False
+							debug
+								print ("%NSSL pending False")
+							end
+						end
+					end
+			end
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

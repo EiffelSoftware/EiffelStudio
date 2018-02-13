@@ -2,7 +2,7 @@
 	description: "Declarations for plugging routines and structures."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2018, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -79,7 +79,7 @@ RT_LNK EIF_REFERENCE cr_exp(EIF_TYPE_INDEX type);	/* Creation of expanded object
 RT_LNK void init_exp(EIF_REFERENCE obj);		/* Initialization of expanded objects */
 
 #ifdef WORKBENCH
-extern void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent);				/* Composite objects initialization */
+RT_LNK void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent);				/* Composite objects initialization */
 #endif
 
 /* Array of class node (indexed by dynamic type). It is statically allocated
@@ -124,4 +124,3 @@ RT_LNK void rt_norout(EIF_REFERENCE);		/* No function pointer */
 #endif
 
 #endif
-

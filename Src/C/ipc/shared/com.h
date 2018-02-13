@@ -2,7 +2,7 @@
 	description: "Common communication routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2018, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -68,10 +68,4 @@ extern void register_packet_functions (EIF_PSTREAM sp, void(*p_send_fct)(EIF_PST
 #endif
 		) ;
 		
-#ifdef EIF_WINDOWS
-extern int recv_packet(EIF_PSTREAM s, Request *dans, BOOL reset); /* Receive IDR packet from ised */
-#else
-extern int recv_packet(EIF_PSTREAM s, Request *dans);		/* Receive IDR packet from ised */	
-#endif
-
 #endif

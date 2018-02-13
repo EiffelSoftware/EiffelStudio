@@ -1,9 +1,9 @@
 ﻿note
 	description: "[
-		Makefile generation control. The generated Makefile.SH is to be run through
-		/bin/sh to get properly instantiated for a given platform. A partial linking
-		of `Packet_number' files is done, as needed to avoid kernel internal argument
-		space overflow.
+			Makefile generation control. The generated Makefile.SH is to be run through
+			/bin/sh to get properly instantiated for a given platform. A partial linking
+			of `Packet_number' files is done, as needed to avoid kernel internal argument
+			space overflow.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -95,15 +95,15 @@ feature -- Initialization
 				basket_nb := 1 + System.static_type_id_counter.current_count // Packet_number
 				system_basket_nb := 1
 			end
-			create object_baskets.make (1, basket_nb)
-			from i := 1 until i > basket_nb loop
+			create object_baskets.make_filled (create {LINKED_LIST [STRING]}.make, 1, basket_nb)
+			from i := 2 until i > basket_nb loop
 				create basket.make
 				object_baskets.put (basket, i)
 				i := i + 1
 			end
 
-			create system_baskets.make (1, system_basket_nb)
-			from i := 1 until i > system_basket_nb loop
+			create system_baskets.make_filled (create {LINKED_LIST [STRING]}.make, 1, system_basket_nb)
+			from i := 2 until i > system_basket_nb loop
 				create basket.make
 				system_baskets.put (basket, i)
 				i := i + 1
@@ -363,11 +363,10 @@ feature -- Actual generation
 		local
 			basket: LINKED_LIST [STRING]
 		do
-			create system_baskets.make (1, 0)
-			create object_baskets.make (1, 1)
+			create system_baskets.make_empty
 			create basket.make
 			basket.extend (System.name + ".o")
-			object_baskets.put (basket, 1)
+			object_baskets := <<basket>>
 
 			make_file := make_f (system.in_final_mode)
 
@@ -555,73 +554,8 @@ feature -- Generation, Header
 				%CC = $cc%N%
 				%CPP = $cpp%N")
 
-			if System.in_final_mode then
-				make_file.put_string ("CFLAGS = $optimize ")
-			else
-				make_file.put_string ("CFLAGS = $wkoptimize ")
-			end
-
-			if System.il_generation then
-				make_file.put_string ("$il_flags ")
-			end
-
-			if System.has_multithreaded then
-				make_file.put_string ("$mtccflags $large ")
-			else
-				make_file.put_string ("$ccflags $large ")
-			end
-
-			if System.has_dynamic_runtime then
-				make_file.put_string ("$shared_flags ")
-			end
-
-			if not System.uses_ise_gc_runtime then
-				make_file.put_string ("-DNO_ISE_GC ")
-			end
-
-			if not System.check_for_void_target then
-					-- Disable check for Void target.
-				make_file.put_string ("-DEIF_NO_RTCV ")
-			end
-
-			if not system.total_order_on_reals then
-				make_file.put_string ("-DEIF_IEEE_BEHAVIOR ")
-			end
-
-			generate_specific_defines
-			make_file.put_string ("-I%"$rt_include%" ")
-			make_file.put_string ("-I. %H$(INCLUDE_PATH)%N")
-
-			if System.in_final_mode then
-				make_file.put_string ("CPPFLAGS = $optimize ")
-			else
-				make_file.put_string ("CPPFLAGS = $wkoptimize ")
-			end
-
-			if System.il_generation then
-				make_file.put_string ("$il_flags ")
-			end
-
-			if System.has_multithreaded then
-				make_file.put_string ("$mtcppflags $large ")
-			else
-				make_file.put_string ("$cppflags $large ")
-			end
-
-			if not System.uses_ise_gc_runtime then
-				make_file.put_string ("-DNO_ISE_GC ")
-			end
-
-			if not System.check_for_void_target then
-					-- Disable check for Void target.
-				make_file.put_string ("-DEIF_NO_RTCV ")
-			end
-
-
-			generate_specific_defines
-
-			make_file.put_string ("-I%"$rt_include%" ")
-			make_file.put_string ("-I. %H$(INCLUDE_PATH)%N")
+			generate_cflags ("CFLAGS", "ccflags")
+			generate_cflags ("CPPFLAGS", "cppflags")
 
 			make_file.put_string ("LDFLAGS = $ldflags%N")
 
@@ -705,6 +639,51 @@ feature -- Generation, Header
 				%$spitshell >>Makefile <<'!NO!SUBS!'%N")
 		end
 
+feature {NONE} -- Generation, Header
+
+	generate_cflags (name: STRING; option: STRING)
+			-- Generate CFLAGS of name `name` with specific options `option` in the format
+			-- "name = ... (mt)option ...".
+		require
+			valid_name: name.same_string ("CFLAGS") or name.same_string ("CPPFLAGS")
+			valid_option: option.same_string ("ccflags") or option.same_string ("cppflags")
+			consistent_name_and_option: name.same_string ("CFLAGS") implies option.same_string ("ccflags")
+		do
+			make_file.put_string (name)
+
+			make_file.put_string (if System.in_final_mode then " = $optimize " else " = $wkoptimize " end)
+
+			if System.il_generation then
+				make_file.put_string ("$il_flags ")
+			end
+
+			make_file.put_string (if System.has_multithreaded then "$mt" else "$" end)
+			make_file.put_string (option)
+			make_file.put_string (" $large ")
+
+			if System.has_dynamic_runtime then
+				make_file.put_string ("$shared_flags ")
+			end
+
+			if not System.uses_ise_gc_runtime then
+				make_file.put_string ("-DNO_ISE_GC ")
+			end
+
+			if not System.check_for_void_target then
+					-- Disable check for Void target.
+				make_file.put_string ("-DEIF_NO_RTCV ")
+			end
+
+			if not system.total_order_on_reals then
+				make_file.put_string ("-DEIF_IEEE_BEHAVIOR ")
+			end
+
+			generate_specific_defines
+
+			make_file.put_string ("-I%"$rt_include%" ")
+			make_file.put_string ("-I. %H$(INCLUDE_PATH)%N")
+		end
+
 feature -- Generation, Object list(s)
 
 	generate_macro (mname: STRING; basket: LINKED_LIST [STRING])
@@ -715,25 +694,21 @@ feature -- Generation, Object list(s)
 		do
 			make_file.put_string (mname)
 			make_file.put_string (" = ")
+			across
+				basket as b
 			from
-				basket.start
 				size := mname.count + 3
-			until
-				basket.after
 			loop
-				file_name := basket.item
+				file_name := b.item
 				size := size + file_name.count + 1
 				if size > 78 then
 					make_file.put_character (Continuation)
 					make_file.put_new_line
 					make_file.put_character ('%T')
 					size := 8 + file_name.count + 1
-					make_file.put_string (file_name)
-				else
-					make_file.put_string (file_name)
 				end
+				make_file.put_string (file_name)
 				make_file.put_character (' ')
-				basket.forth
 			end
 			make_file.put_new_line
 			make_file.put_new_line
@@ -962,7 +937,6 @@ feature -- Generation (Linking rules)
 			-- (dependencies for final executable).
 		local
 			l_baskets: like system_baskets
-			l_basket: LIST [STRING]
 		do
 			if system_baskets.count > 1 then
 					-- System object files.
@@ -970,20 +944,16 @@ feature -- Generation (Linking rules)
 				generate_basket_objects (l_baskets, system_object_prefix)
 			end
 
-				-- Generate `system_baskets.item (1)' now.
+				-- Generate `system_baskets [1]' now.
 				-- It is needed because on some platforms (e.g SGI) Eobj1.o is too big
 				-- to be linked.
-			l_basket := system_baskets.item (1)
-			from
-				l_basket.start
-			until
-				l_basket.after
+			across
+				system_baskets [1] as b
 			loop
 				make_file.put_character (' ')
 				make_file.put_string (packet_name (system_object_prefix, 1))
 				make_file.put_character ('/')
-				make_file.put_string (l_basket.item)
-				l_basket.forth
+				make_file.put_string (b.item)
 			end
 		end
 
@@ -1072,7 +1042,6 @@ feature -- Generation (Linking rules)
 		local
 			i, nb: INTEGER
 			emain_file: STRING
-			l_basket: LIST [STRING]
 		do
 			emain_file := "emain.template"
 
@@ -1130,15 +1099,12 @@ feature -- Generation (Linking rules)
 				make_file.new_line
 			end
 
-			l_basket := system_baskets.item (1)
-			from
-				l_basket.start
-			until
-				l_basket.after
+			across
+				system_baskets [1] as b
 			loop
 				make_file.put_string (packet_name (system_object_prefix, 1))
 				make_file.put_character ('/')
-				make_file.put_string (l_basket.item)
+				make_file.put_string (b.item)
 				make_file.put_string (": Makefile ")
 				make_file.put_string (packet_name (system_object_prefix, 1))
 				make_file.put_string ("/Makefile ")
@@ -1152,9 +1118,8 @@ feature -- Generation (Linking rules)
 				make_file.put_string ("%N%Tcd ")
 				make_file.put_string (packet_name (system_object_prefix, 1))
 				make_file.put_string (" ; $(MAKE) ")
-				make_file.put_string (l_basket.item)
+				make_file.put_string (b.item)
 				make_file.put_string ("%N%N")
-				l_basket.forth
 			end
 
 			from
@@ -1386,7 +1351,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -2,7 +2,7 @@
 	description: "Thread management routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2016, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2018, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -40,6 +40,8 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 
 #include "eif_portable.h"
 #include "eif_eiffel.h"
+#include "eif_macros.h"
+#include "eif_globals.h"
 #include "rt_threads.h"
 #include "eif_posix_threads.h"
 #include "rt_lmalloc.h"

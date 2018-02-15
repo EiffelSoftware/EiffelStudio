@@ -140,13 +140,16 @@ feature {NONE} -- Basic operations
 		local
 			l_url: URI_LAUNCHER
 			l_default_browser: like default_uri_browser
+			l_path_uri: STRING_8
 		do
+			create l_path_uri.make_from_string (a_uri)
+			l_path_uri.prepend ("file:///")
 			create l_url
 			l_default_browser := default_uri_browser --preferences.misc_data.internet_browser_preference.string_value
 			if l_default_browser /= Void and then not l_default_browser.is_empty then
-				is_launched := l_url.launch_with_default_app (a_uri, l_default_browser)
+				is_launched := l_url.launch_with_default_app (l_path_uri, l_default_browser)
 			else
-				is_launched := l_url.launch (a_uri)
+				is_launched := l_url.launch (l_path_uri)
 
 					-- This check is here because it lets us know if the preference wasn't initialized.
 				check False end
@@ -206,7 +209,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

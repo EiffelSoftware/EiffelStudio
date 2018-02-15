@@ -35,8 +35,8 @@ feature {NONE} -- Initialization: Services
 			l_container: SERVICE_CONSUMER [SERVICE_CONTAINER_S]
 		do
 			create l_container
-			check is_service_available: l_container.is_service_available end
-			if l_container.is_service_available and then attached {SERVICE_CONTAINER_S} l_container.service as l_service then
+			check is_service_available: attached l_container.service end
+			if attached l_container.service as l_service then
 				service_initializer.add_core_services (l_service)
 			end
 		end

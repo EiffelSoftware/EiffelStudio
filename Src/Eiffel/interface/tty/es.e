@@ -1,11 +1,15 @@
 ﻿note
-	description:
-		"Batch compiler without invoking the -loop. This is the root%
-		%class for the personal version (which does allow c compilation)."
+	description: "[
+			Batch compiler without invoking the -loop.
+			This is the root class for the personal version (which does allow c compilation).
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+	ca_ignore:
+		"CA032", "CA032 — very long feature",
+		"CA033", "CA033 — very long class"
 
 class
 	ES
@@ -47,8 +51,6 @@ inherit
 
 	SYSTEM_CONSTANTS
 
-	EIFFEL_LAYOUT
-
 	SHARED_BATCH_NAMES
 
 	SHARED_COMPILER_PROFILE
@@ -60,7 +62,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Initialization
@@ -68,8 +70,6 @@ feature -- Initialization
 			l_layout: ES_EIFFEL_LAYOUT
 			l_eifgen_init: INIT_SERVERS
 			l_preference_access: PREFERENCES
-			l_ec_preferences: EC_PREFERENCES
-			l_compiler_setting: SETTABLE_COMPILER_OBJECTS
 		do
 				-- Code analysis command state is kept in a separate object
 				-- that accumulates the corresponding requests.
@@ -110,9 +110,7 @@ feature -- Initialization
 
 			create l_preference_access.make_with_defaults_and_location_and_version (
 				<<eiffel_layout.general_preferences.name, eiffel_layout.platform_preferences.name>>, eiffel_layout.eiffel_preferences, version_2_0)
-			create l_ec_preferences.make (l_preference_access)
-			create l_compiler_setting
-			l_compiler_setting.set_preferences (l_ec_preferences)
+			;(create {SETTABLE_COMPILER_OBJECTS}).set_preferences (create {EC_PREFERENCES}.make (l_preference_access))
 
 				-- Remaining initialization			
 			initialize
@@ -138,9 +136,7 @@ feature -- Initialization
 		local
 			temp: STRING
 			new_resources: TTY_RESOURCES
-			file_degree_output: FILE_DEGREE_OUTPUT
 			compilation: EWB_COMP
-			e_displayer: DEFAULT_ERROR_DISPLAYER
 			l_loader: EC_PROJECT_LOADER
 			l_generated_name: PATH
 			u: FILE_UTILITIES
@@ -170,11 +166,9 @@ feature -- Initialization
 						end
 
 							--| Initialization of the display
-						create e_displayer.make (Error_window);
-						Eiffel_project.set_error_displayer (e_displayer)
+						Eiffel_project.set_error_displayer (create {DEFAULT_ERROR_DISPLAYER}.make (Error_window))
 						if output_file_option then
-							create file_degree_output.make (output_file_name)
-							Eiffel_project.set_degree_output (file_degree_output)
+							Eiffel_project.set_degree_output (create {FILE_DEGREE_OUTPUT}.make (output_file_name))
 						end
 						degree_output.is_verbose := verbose_option
 
@@ -551,33 +545,23 @@ feature {NONE} -- Output
 			-- Print the help.
 		local
 			command_list: SORTED_TWO_WAY_LIST [STRING]
-			keys: ARRAY [STRING]
-			i, nb: INTEGER
 			cmd_name: STRING
 		do
 			print_usage
-			localized_print (ewb_names.options);
+			localized_print (ewb_names.options)
 			localized_print (ewb_names.default_quick_melt_the_system)
 
 			create command_list.make
-			keys := help_messages.current_keys
-			from
-				i := keys.lower
-				nb := keys.upper
-			until
-				i > nb
+			across
+				help_messages.current_keys as k
 			loop
-				command_list.extend (keys @ i)
-				i := i + 1
+				command_list.extend (k.item)
 			end
-			from
-				command_list.start
-			until
-				command_list.after
+			across
+				command_list as c
 			loop
-				cmd_name := command_list.item
+				cmd_name := c.item
 				print_one_help (cmd_name, help_messages.item (cmd_name))
-				command_list.forth
 			end
 		end
 
@@ -760,8 +744,9 @@ feature {NONE} -- Update
 				end
 
 			elseif
-				(option.same_string_general ("-dversions") or option.same_string_general ("-aversions") or
-				option.same_string_general ("-implementers"))
+				option.same_string_general ("-dversions") or
+				option.same_string_general ("-aversions") or
+				option.same_string_general ("-implementers")
 			then
 				if command /= Void then
 					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
@@ -947,8 +932,9 @@ feature {NONE} -- Update
 				is_finish_freezing_called := True
 
 			elseif
-				(option.same_string_general ("-flat") or option.same_string_general ("-short") or
-				option.same_string_general ("-flatshort"))
+				option.same_string_general ("-flat") or
+				option.same_string_general ("-short") or
+				option.same_string_general ("-flatshort")
 			then
 				if command /= Void then
 					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
@@ -1053,8 +1039,10 @@ feature {NONE} -- Update
 					option_error_message := locale.translation ("Missing filter name for option -filter.")
 				end
 			elseif
-				(option.same_string_general ("-ancestors") or option.same_string_general ("-clients") or
-				option.same_string_general ("-suppliers") or option.same_string_general ("-descendants"))
+				option.same_string_general ("-ancestors") or
+				option.same_string_general ("-clients") or
+				option.same_string_general ("-suppliers") or
+				option.same_string_general ("-descendants")
 			then
 				if command /= Void then
 					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
@@ -1460,11 +1448,12 @@ feature {NONE} -- Update
 				if command /= Void then
 					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
 				else
-					if current_option < argument_count then
-						if argument (current_option + 1).same_string_general ("-keep") then
-							current_option := current_option + 1
-							keep := True
-						end
+					if
+						current_option < argument_count and then
+						argument (current_option + 1).same_string_general ("-keep")
+					then
+						current_option := current_option + 1
+						keep := True
 					end
 					if is_precompiling then
 						create {EWB_FINALIZE_PRECOMP} command.make (keep)
@@ -1517,7 +1506,6 @@ feature {NONE} -- Implementation
 		local
 			l_real_64: REAL_64
 			l_unit: STRING
-			l_formatter: FORMAT_DOUBLE
 		do
 			if a_value > (1024 ^ 3) then
 					-- Display in GB
@@ -1536,8 +1524,7 @@ feature {NONE} -- Implementation
 				l_unit := "   "
 			end
 
-			create l_formatter.make (6, 2)
-			io.put_string (l_formatter.formatted (l_real_64))
+			io.put_string ((create {FORMAT_DOUBLE}.make (6, 2)).formatted (l_real_64))
 			io.put_string (l_unit)
 		end
 
@@ -1561,7 +1548,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,8 +1,6 @@
-note
-	description:
-		"Data resources"
+﻿note
+	description: "Data resources"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -240,6 +238,8 @@ feature -- Access: timeout
 					-- As 0 may have different meaning, use the closest non zero possible value.
 				Result := 1
 			end
+		ensure
+			timeout_positive: timeout_ns /= 0 implies Result > 0
 		end
 
 	timeout_ns: NATURAL_64
@@ -467,7 +467,6 @@ feature {NONE} -- Constants
 invariant
 
 	address_assigned: address /= Void
-	timeout_set: timeout_ns > 0 implies timeout > 0
 	packet_constraint: not (has_packet xor last_packet /= Void)
 	pending_constraint: is_packet_pending implies
 						(is_open and is_readable and transfer_initiated)
@@ -486,8 +485,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DATA_RESOURCE
-
+end

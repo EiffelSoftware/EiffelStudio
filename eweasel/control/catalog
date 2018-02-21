@@ -1389,6 +1389,7 @@ test	special-expanded-referring-new-object	runtime019	tcf fail used_to_pass runt
 test	standard-stream-redirection		runtime020	tcf pass runtime console file input output library
 test	generational-gc-expanded-semantics	runtime021	tcf pass runtime gc expanded reattachment
 test	gc-tracking-in-expanded-argument	runtime022	tcf fail runtime gc expanded argument
+test	gc-tracking-in-expanded-argument-copy	runtime023	tcf fail runtime gc expanded argument copy twin
 
 -- Thread
 test	cond-timedwait-failure		thread001	tcf pass multithreaded

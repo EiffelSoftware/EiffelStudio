@@ -61,9 +61,9 @@ feature -- Query
 				from
 					Result := Current
 				until
-					Result = Void or else Result.level <= a_section.level - 1
+					Result = Void or else Result.level <= a_section.level - 1 
 				loop
-					Result := parent
+					Result := Result.parent
 				end
 			else
 				Result := Current

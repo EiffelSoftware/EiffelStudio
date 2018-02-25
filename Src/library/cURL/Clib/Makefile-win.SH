@@ -33,24 +33,9 @@ LNK = $(LNKLIB) $(EIF_STATIC_CURL_LIB)
 
 all:: $output_libraries
 	$(MAKE) clean
-    @echo "CFLAGS"
-    @echo $(CFLAGS)
-    @echo "JCFLAGS"
-    @echo $(JCFLAGS)
-    @echo "DLL_FLAGS"
-    @echo $(DLL_FLAGS)
-    @echo "DLL_LIBS"
-    @echo $(DLL_LIBS)
-    @echo "JMTCFLAGS"
-    @echo $(JMTCFLAGS)
-    @echo "OBJECTS"
-    @echo $(OBJECTS)
-    @echo $alib_line
-    @echo "LINK"
-	@echo $(LINK)
  
 standard:: eiffel_curl.lib ileiffel_curl.lib eiffel_curl_static.lib
-mtstandard:: mteiffel_curl.lib MTeiffel_curl_Static.lib
+mtstandard:: mteiffel_curl.lib MTeiffel_curl_static.lib
 
 clean:
 	$(RM) *.$obj

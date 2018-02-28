@@ -23,7 +23,7 @@ feature -- Processing
 			-- A procedure to process the osbolete message `message` with the flag indicating whether the warning is enabled `is_warning_enabled`
 			-- and report it using one of `report_error`, `report_warning` or `report_hint` accordingly.
 		local
-			stamp: TUPLE [message: STRING; date: DATE]
+			stamp: like date
 			expires_in: INTEGER
 			clean_message: READABLE_STRING_32
 			obsolete_message: READABLE_STRING_32

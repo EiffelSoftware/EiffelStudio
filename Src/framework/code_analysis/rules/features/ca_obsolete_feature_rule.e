@@ -110,21 +110,15 @@ feature {NONE} -- Rule Checking
 	process_routine (r: ROUTINE_AS)
 			-- Process a routine `r`.
 		local
-			stamp: TUPLE [message: STRING; date: DATE]
-			d: DATE
+			stamp: like date
 			expires_in: INTEGER
 			violation: CA_RULE_VIOLATION
 		do
 			if attached r.obsolete_message as m then
 				stamp := date (m.value)
-				if attached stamp then
-					d := stamp.date
-				else
-					d := default_date
-				end
-				expires_in := d.relative_duration (create {DATE}.make_now_utc).days_count
+				expires_in := stamp.date.relative_duration (create {DATE}.make_now_utc).days_count
 				if attached feature_names as names then
-					if not attached stamp then
+					if not stamp.is_specified then
 						create violation.make_formatted
 							(agent format
 								(?,

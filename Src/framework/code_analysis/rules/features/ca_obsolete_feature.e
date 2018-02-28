@@ -65,9 +65,10 @@ feature {NONE} -- Preferences
 
 feature {NONE} -- Date evaluation
 
-	date (m: STRING): TUPLE [message: STRING; date: DATE]
+	date (m: STRING): TUPLE [message: STRING; date: DATE; is_specified: BOOLEAN]
 			-- Date specified in the message `m` if any.
-			-- If a date is extracted, the message without date information is returned.
+			-- If a date is extracted to `Result.date`, the message without date information is returned in `Result.message`, and `Result.is_specified` is set to `True`.
+			-- If no date is extracted, the original message is returned in `Result.message`, `Result.date` is set to the default date, and `Result.is_specified` is set to `False`.
 		local
 			i, j: like {STRING}.count
 			c: CHARACTER
@@ -107,10 +108,10 @@ feature {NONE} -- Date evaluation
 				loop
 					j := j - 1
 				end
-				Result := [m.substring (1, j), create {DATE}.make_from_string (date_string, date_code)]
+				Result := [m.substring (1, j), create {DATE}.make_from_string (date_string, date_code), True]
 			else
 					-- Use default values.
-				Result := [m, default_date]
+				Result := [m, default_date, False]
 			end
 		end
 

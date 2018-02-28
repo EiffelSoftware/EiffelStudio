@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "BSTR string for COM Interop"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -60,13 +60,13 @@ feature -- Access
 
 feature -- Basic Operations
 
-	string: STRING_8
-			-- Return all characters even null character truncated to STRING_8.
+	string: READABLE_STRING_32
+			-- Return all characters (even null characters).
 		require
 			exists: exists
 		do
 			Result := (create {WEL_STRING}.make_by_pointer_and_count (
-				item, bytes_count)).substring_8 (1, bytes_count // character_size)
+				item, bytes_count)).substring (1, bytes_count // character_size)
 		ensure
 			valid_count: Result.count = (bytes_count // character_size)
 		end
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

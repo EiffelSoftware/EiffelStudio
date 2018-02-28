@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "BSTR string for COM Interop"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 inherit
 	COM_BSTR_STRING
 		rename
-			string as full_string_8
+			string as full_string
 		end
 
 create
@@ -62,7 +62,7 @@ feature -- Basic Operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -93,4 +93,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ISE_COM_CACHE_MANAGER_INTERFACE
+end

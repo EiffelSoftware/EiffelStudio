@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Body of an Eiffel method."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 				token & {MD_TOKEN_TYPES}.Md_mask = {MD_TOKEN_TYPES}.Md_method_def
 		do
 			create item.make (Chunk_size)
-			create labels.make (1, 5)
-			create labels_stack_depth.make (1, 5)
+			create labels.make_empty
+			create labels_stack_depth.make_empty
 			create exception_block.make
 			create once_catch_block.make
 			create once_finally_block.make
@@ -215,11 +215,12 @@ feature -- Settings
 			l_block: MD_EXCEPTION_CATCH
 			i: INTEGER
 		do
-			create old_exception_catch_blocks.make (0, a_count - 1)
+			create l_block.make
+			create old_exception_catch_blocks.make_filled (l_block, 0, a_count - 1)
 			from
-				i := 0
+				i := 1
 			until
-				i = a_count
+				i >= a_count
 			loop
 				create l_block.make
 				old_exception_catch_blocks.put (l_block, i)
@@ -772,7 +773,7 @@ invariant
 	once_finally_block_not_void: once_finally_block /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -803,4 +804,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class MD_METHOD_BODY
+end

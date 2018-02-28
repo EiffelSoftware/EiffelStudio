@@ -5,7 +5,7 @@
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="false">
+		<option warning="true">
 		</option>
 		<capability>
 			<concurrency support="none"/>

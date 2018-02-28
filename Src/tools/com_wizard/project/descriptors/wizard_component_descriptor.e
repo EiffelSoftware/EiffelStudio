@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Component"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -19,12 +19,12 @@ feature -- Access
 	type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			-- Type library descriptor
 
-	c_declaration_header_file_name: STRING
+	c_declaration_header_file_name: STRING_32
 			-- C declaration header file name
 
 feature -- Element Change
 
-	set_c_declaration_header_file_name (a_name: STRING)
+	set_c_declaration_header_file_name (a_name: like c_declaration_header_file_name)
 			-- Set `c_declaration_header_file_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
@@ -33,7 +33,7 @@ feature -- Element Change
 		ensure
 			c_declaration_header_file_name_set: c_declaration_header_file_name = a_name
 		end
-		
+
 	set_type_library (a_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR)
 			-- Set `type_library_descriptor' with `a_descriptor'.
 		require
@@ -45,7 +45,7 @@ feature -- Element Change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -58,23 +58,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_COMPONENT_DESCRIPTOR
 
-
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Store and retrieve profile items.%
 					%A Profile is a set of values for all entries in GUI"
 	legal: "See notice at end of class."
@@ -45,7 +45,7 @@ feature -- Access
 			end
 		end
 
-	active_profile: STRING
+	active_profile: STRING_32
 			-- Active profile
 
 	active_profile_change_actions: LIST [ROUTINE]
@@ -119,7 +119,7 @@ feature -- Basic Operations
 			end
 		end
 
-	search_active_profile (a_name: STRING)
+	search_active_profile (a_name: STRING_32)
 			-- Search items of active profile if any for item with name `a_name'.
 			-- Set `found_item' and `found' accordingly.
 		require
@@ -180,7 +180,7 @@ feature {WIZARD_MAIN_WINDOW} -- Implementation
 
 feature {NONE} -- Implementation
 
-	initialize_profile (a_profile: STRING)
+	initialize_profile (a_profile: STRING_32)
 			-- Initialize `a_profile' with values taken from `default_profile'.
 		do
 			set_active_profile (default_profile)
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			set_active_profile (a_profile)
 		end
 
-	save_active_profile_as (a_profile: STRING)
+	save_active_profile_as (a_profile: STRING_32)
 			-- Save current profile with name `a_profile'.
 		require
 			non_void_profile_name: a_profile /= Void
@@ -227,7 +227,7 @@ invariant
 	non_void_active_profile_change_actions: active_profile_change_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -257,6 +257,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_PROFILE_MANAGER
 
-
+end

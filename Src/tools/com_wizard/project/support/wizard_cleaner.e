@@ -39,7 +39,7 @@ feature -- Basic Operations
 	clean_all
 			-- Delete temporary generated files.
 		local
-			a_directory_name: STRING
+			a_directory_name: STRING_32
 		do
 			delete_file (Generated_iid_file_name)
 			delete_file (Generated_header_file_name)
@@ -73,7 +73,7 @@ feature -- Basic Operations
 			delete_file (a_directory_name)
 		end
 
-	clean_directory (a_directory_name: STRING)
+	clean_directory (a_directory_name: STRING_32)
 			-- Delete all files and subdirectories from directory `a_directory_name'
 		require
 			non_void_directory_name: a_directory_name /= Void
@@ -81,27 +81,30 @@ feature -- Basic Operations
 		local
 			a_directory: DIRECTORY
 			a_file: RAW_FILE
-			a_working_directory, a_file_name: STRING
-			a_file_list: LIST [STRING]
+			a_working_directory: PATH
+			a_file_name: STRING_32
+			a_file_list: LIST [PATH]
+			n: READABLE_STRING_32
 		do
 			create a_directory.make (a_directory_name)
 			if a_directory.exists then
-				a_working_directory := Env.current_working_directory
-				Env.change_working_directory (a_directory_name)
-				a_file_list := a_directory.linear_representation
+				a_working_directory := Env.current_working_path
+				Env.change_working_path (create {PATH}.make_from_string (a_directory_name))
+				a_file_list := a_directory.entries
 				from
 					a_file_list.start
 				until
 					a_file_list.after
 				loop
-					if 
-						not a_file_list.item.is_equal (".") or
-						not a_file_list.item.is_equal ("..")
+					n := a_file_list.item.name
+					if
+						not n.same_string_general (".") or
+						not n.same_string_general ("..")
 					then
 						a_file_name := a_directory_name.twin
 						a_file_name.append_character (Directory_separator)
-						a_file_name.append (a_file_list.item)
-						create a_file.make (a_file_name)
+						a_file_name.append (n)
+						create a_file.make_with_name (a_file_name)
 						if a_file.exists then
 							if a_file.is_directory then
 								clean_directory (a_file_name)
@@ -111,28 +114,29 @@ feature -- Basic Operations
 					end
 					a_file_list.forth
 				end
-				Env.change_working_directory (a_working_directory)
+				Env.change_working_path (a_working_directory)
 				check
 					directory_empty: a_directory.is_empty
 				end
 			end
 		end
-		
-	delete_object_files (a_directory_name: STRING)
+
+	delete_object_files (a_directory_name: STRING_32)
 			-- Delete all object files in directory `a_directory_name'.
 		require
 			non_void_directory_name: a_directory_name /= Void
 			valid_directory_name: not a_directory_name.is_empty
-		local	
-			a_file_list: LIST [STRING]
+		local
+			a_file_list: LIST [PATH]
 			a_directory: DIRECTORY
-			a_working_directory, a_file_name: STRING
+			a_working_directory: PATH
+			a_file_name: STRING_32
 		do
 			create a_directory.make (a_directory_name)
 			if a_directory.exists then
-				a_working_directory := Env.current_working_directory
-				Env.change_working_directory (a_directory_name)
-				a_file_list := a_directory.linear_representation
+				a_working_directory := Env.current_working_path
+				Env.change_working_path (create {PATH}.make_from_string (a_directory_name))
+				a_file_list := a_directory.entries
 				from
 					a_file_list.start
 				until
@@ -141,16 +145,16 @@ feature -- Basic Operations
 					if is_object_file (a_file_list.item) then
 						a_file_name := a_directory_name.twin
 						a_file_name.append_character (Directory_separator)
-						a_file_name.append (a_file_list.item)
+						a_file_name.append (a_file_list.item.name)
 						delete_file (a_file_name)
 					end
 					a_file_list.forth
 				end
-				Env.change_working_directory (a_working_directory)
+				Env.change_working_path (a_working_directory)
 			end
 		end
 
-	delete_file (a_file_name: STRING)
+	delete_file (a_file_name: STRING_32)
 			-- Delete file `a_file_name'.
 		local
 			a_file: RAW_FILE
@@ -158,7 +162,7 @@ feature -- Basic Operations
 		do
 			if not retried then
 				if a_file_name /= Void and then not a_file_name.is_empty then
-					create a_file.make (a_file_name)
+					create a_file.make_with_name (a_file_name)
 					if a_file.exists then
 						a_file.delete
 					end
@@ -170,7 +174,7 @@ feature -- Basic Operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -183,22 +187,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_CLEANER
 
+end

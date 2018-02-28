@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "C/C++ directive (e.g. #ifdef, #ifndef, #else, ...)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$ $"
-	revision: "$  $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WIZARD_WRITER_C_DIRECTIVE
@@ -21,16 +21,16 @@ feature {NONE} -- Initialization
 		require
 			non_void_body: a_body /= Void
 			valid_syntax: not (a_body.item (1) = '%R') and not (a_body.item (1) = '#') and
-							not (a_body.item (a_body.count) = '%N') 
+							not (a_body.item (a_body.count) = '%N')
 		do
 			body := a_body
 		ensure
 			body_set: body.is_equal (a_body)
 		end
-			
+
 feature -- Access
 
-	generated_code: STRING
+	generated_code: STRING_32
 			-- Generated code
 		do
 			Result := Sharp.twin
@@ -53,7 +53,7 @@ feature -- Element Change
 		require
 			non_void_body: a_body /= Void
 			valid_syntax: not (a_body.item (1) = '%R') and not (a_body.item (1) = '#') and
-							not (a_body.item (a_body.count) = '%N') 
+							not (a_body.item (a_body.count) = '%N')
 		do
 			body := a_body
 		ensure
@@ -61,7 +61,7 @@ feature -- Element Change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -74,22 +74,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_WRITER_C_DIRECTIVE
 
+end

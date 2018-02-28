@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Common parents to all text boxes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -73,10 +73,10 @@ feature -- Initialization
 
 feature -- Access
 
-	value: STRING
+	value: READABLE_STRING_32
 			-- Combo box selected entry
 		do
-			Result := text_combo.text.as_string_8_conversion
+			Result := text_combo.text
 		end
 
 	profile_item: WIZARD_PROFILE_ITEM
@@ -185,8 +185,8 @@ feature {NONE} -- Events Handling
 				Profile_manager.save_active_profile
 			end
 			l_text := text_combo.text
-			if text_processor /= Void then
-				l_status := text_processor.item ([l_text.as_string_8_conversion])
+			if attached text_processor as p then
+				l_status := p (l_text)
 				if l_status.is_error then
 					text_combo.set_foreground_color (Invalid_value_color)
 					text_combo.set_tooltip (l_status.error_message)
@@ -247,7 +247,7 @@ feature {NONE} -- Events Handling
 
 feature {NONE} -- Private Access
 
-	text_processor: FUNCTION [STRING, WIZARD_VALIDITY_STATUS]
+	text_processor: FUNCTION [READABLE_STRING_32, WIZARD_VALIDITY_STATUS]
 			-- Process combo text upon changes
 			-- Return validity status
 
@@ -281,7 +281,7 @@ feature {NONE} -- Private Access
 			-- Cell for `save_on_return'
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -311,6 +311,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_TEXT_BOX
 
-
+end

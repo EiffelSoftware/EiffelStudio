@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel class feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	generated_code: STRING
+	generated_code: STRING_32
 			-- Generated code
 		do
 			Result := Tab.twin
@@ -161,7 +161,7 @@ feature -- Access
 
 	is_deferred: BOOLEAN
 			-- Is feature is_deferred?
-	
+
 	is_once: BOOLEAN
 			-- Is feature a once?
 
@@ -175,22 +175,22 @@ feature -- Access
 			-- Feature arguments
 			-- Each element contains both name and type
 			-- E.g.: ("arg1: TYPE1", "arg2, arg3: TYPE2")
-	
+
 	local_variables: LIST [STRING]
 			-- Feature local variables
 			-- Each element contains both name and type
 			-- E.g.: ("arg1: TYPE1", "arg2, arg3: TYPE2")
-			
+
 	result_type: STRING
 			-- Feature result type
-	
+
 	preconditions: LIST [WIZARD_WRITER_ASSERTION]
 			-- Preconditions
 
 	postconditions: LIST [WIZARD_WRITER_ASSERTION]
 			-- Postconditions
 
-	body: STRING
+	body: STRING_32
 			-- Feature body
 
 	comment: STRING
@@ -221,7 +221,7 @@ feature -- Element Change
 		ensure
 			added: arguments.last = a_argument
 		end
-	
+
 	add_local_variable (a_variable: STRING)
 			-- Add `a_variable' to `local_variables'.
 		require
@@ -246,7 +246,7 @@ feature -- Element Change
 		ensure
 			result_type_set: result_type.is_equal (a_result_type)
 		end
-	
+
 	add_precondition (a_precondition: WIZARD_WRITER_ASSERTION)
 			-- Add `a_precondition' to `preconditions'.
 		require
@@ -258,7 +258,7 @@ feature -- Element Change
 		ensure
 			precondition_set: preconditions.last = a_precondition
 		end
-	
+
 	add_postcondition (a_postcondition: WIZARD_WRITER_ASSERTION)
 			-- Add `a_postcondition' to `postconditions'.
 		require
@@ -270,7 +270,7 @@ feature -- Element Change
 		ensure
 			postcondition_set: postconditions.last = a_postcondition
 		end
-	
+
 	set_body (a_body: like body)
 			-- Set `body' with `a_body'.
 		require
@@ -283,7 +283,7 @@ feature -- Element Change
 		ensure
 			body_set: body.is_equal (a_body)
 		end
-	
+
 	set_comment (a_comment: like comment)
 			-- Set `comment' with `a_comment'.
 		require
@@ -305,7 +305,7 @@ feature -- Element Change
 		ensure
 			is_deferred: is_deferred
 		end
-	
+
 	set_effective
 			-- Set `is_deferred', `is_once' and `is_external' to False.
 		do
@@ -365,7 +365,7 @@ invariant
 										(is_once implies (not constant and not is_deferred and not is_external))
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -378,22 +378,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_WRITER_FEATURE
 
+end

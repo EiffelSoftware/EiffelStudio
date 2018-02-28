@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	destination_folder: STRING
+	destination_folder: STRING_32
 			-- Destination folder
 
 feature -- Element Settings
@@ -207,7 +207,7 @@ feature {NONE} -- GUI Events Handling
 	on_open_eiffelstudio
 			-- Called by `select_actions' of `open_eiffelstudio_button'.
 		local
-			l_folder, l_cmd: STRING
+			l_folder, l_cmd: STRING_32
 		do
 			l_folder := Environment.destination_folder.twin
 			if Environment.is_client then
@@ -280,7 +280,7 @@ feature {NONE} -- GUI Events Handling
 
 feature {NONE} -- Implementation
 
-	add_title (a_title: STRING)
+	add_title (a_title: STRING_32)
 			-- Append title `a_title' to content of `output_text'.
 		require
 			non_void_title: a_title /= Void
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 			update_output
 		end
 
-	add_error (a_error: STRING)
+	add_error (a_error: STRING_32)
 			-- Append error `a_error' to content of `output_text'.
 		require
 			non_void_error: a_error /= Void
@@ -308,7 +308,7 @@ feature {NONE} -- Implementation
 			update_output
 		end
 
-	add_warning (a_warning: STRING)
+	add_warning (a_warning: STRING_32)
 			-- Append warning `a_warning' to content of `output_text'.
 		require
 			non_void_warning: a_warning /= Void
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 			update_output
 		end
 
-	add_message (a_message: STRING)
+	add_message (a_message: STRING_32)
 			-- Append message `a_message' to content of `output_text'.
 		require
 			non_void_message: a_message /= Void
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 			update_output
 		end
 
-	add_text (a_text: STRING)
+	add_text (a_text: STRING_32)
 			-- Append text `a_text' to content of `output_text'.
 		require
 			non_void_text: a_text /= Void
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			update_output
 		end
 
-	append_text (a_text: STRING)
+	append_text (a_text: STRING_32)
 			-- Append `a_text' to `text', wrap lines of more than 1024 characters.
 		require
 			non_void_text: a_text /= Void
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 			-- Append `a_text' to content of `output_text' using format `a_format'.
 		local
 			l_visible_lines, i, l_index: INTEGER
-			l_displayed_text: STRING
+			l_displayed_text: STRING_32
 		do
 			l_visible_lines := output_text.visible_lines_count
 			from
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	eiffelstudio_command (a_folder: STRING): STRING
+	eiffelstudio_command (a_folder: READABLE_STRING_32): READABLE_STRING_32
 			-- Launch EiffelBench with first project in `a_folder'
 		require
 			non_void_folder: a_folder /= Void
@@ -394,22 +394,20 @@ feature {NONE} -- Implementation
 		local
 			l_directory: DIRECTORY
 			l_file_list: ARRAYED_LIST [PATH]
-			l_found: BOOLEAN
-			l_file: STRING
 			u: FILE_UTILITIES
 		do
 			create l_directory.make (a_folder)
 			if l_directory.exists then
 				l_file_list := u.ends_with (l_directory.path, ".ecf", 0)
 				if not l_file_list.is_empty then
-					Result := eiffel_layout.studio_command_line (l_file_list.first, Void, Void, True, False).as_string_8_conversion
+					Result := eiffel_layout.studio_command_line (l_file_list.first, Void, Void, True, False)
 				end
 			end
 		end
 
 feature {NONE} -- Private Access
 
-	internal_text: STRING
+	internal_text: STRING_32
 			-- Output text
 
 	output_text: WIZARD_TEXT
@@ -424,7 +422,7 @@ feature {NONE} -- Private Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -454,6 +452,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_OUTPUT_BOX
 
-
+end

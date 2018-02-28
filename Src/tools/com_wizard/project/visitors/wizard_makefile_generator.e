@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Makefile generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -43,7 +43,7 @@ inherit
 
 feature -- Basic operations
 
-	generate (a_folder_name, a_library_name: STRING)
+	generate (a_folder_name, a_library_name: STRING_32)
 			-- Generates `Makefile' in folder `a_folder_name'.
 		require
 			a_folder_name_attached: a_folder_name /= Void
@@ -52,16 +52,16 @@ feature -- Basic operations
 			not_a_library_name_is_empty: not a_library_name.is_empty
 		local
 			a_directory: DIRECTORY
-			a_file_list: LIST [STRING]
-			a_working_directory: STRING
-			obj_list: STRING
-			wobj_list: STRING
-			files: ARRAYED_LIST [STRING]
+			a_file_list: LIST [PATH]
+			a_working_directory: PATH
+			obj_list: STRING_32
+			wobj_list: STRING_32
+			files: ARRAYED_LIST [READABLE_STRING_32]
 		do
-			a_working_directory := Env.current_working_directory.twin
+			a_working_directory := Env.current_working_path
 			create a_directory.make_open_read (a_folder_name)
-			a_file_list := a_directory.linear_representation
-			Env.change_working_directory (a_folder_name)
+			a_file_list := a_directory.entries
+			Env.change_working_path (create {PATH}.make_from_string (a_folder_name))
 			from
 				a_file_list.start
 				create obj_list.make (100)
@@ -71,9 +71,9 @@ feature -- Basic operations
 				a_file_list.after or environment.abort
 			loop
 				if is_c_file (a_file_list.item) then
-					obj_list.append (c_to_obj (a_file_list.item) + Space + "\%N")
-					wobj_list.append ("w" + c_to_obj (a_file_list.item) + Space + "\%N")
-					files.extend (a_file_list.item)
+					obj_list.append (c_to_obj (a_file_list.item.name) + Space + "\%N")
+					wobj_list.append ("w" + c_to_obj (a_file_list.item.name) + Space + "\%N")
+					files.extend (a_file_list.item.name)
 				end
 				a_file_list.forth
 			end
@@ -82,12 +82,12 @@ feature -- Basic operations
 				save_file (make_file (files, a_library_name, "msc", True), "Makefile-mt.msc")
 				save_file (environment_set_string (msc_compiler) + "%Nnmake /f Makefile.msc%Nnmake /f Makefile-mt.msc", "make_msc.bat")
 			end
-			Env.change_working_directory (a_working_directory)
+			Env.change_working_path (a_working_directory)
 		end
 
 feature {NONE} -- Basic operations
 
-	make_file (a_file_list: LIST [STRING]; a_library_name, a_c_compiler: STRING; a_multi_threaded: BOOLEAN): STRING
+	make_file (a_file_list: LIST [READABLE_STRING_32]; a_library_name, a_c_compiler: STRING; a_multi_threaded: BOOLEAN): STRING
 			-- Makefile text.
 		require
 			a_file_list_attached: a_file_list /= Void
@@ -98,9 +98,6 @@ feature {NONE} -- Basic operations
 			a_c_compiler_attached: a_c_compiler /= Void
 			not_a_c_compiler_is_empty: not a_c_compiler.is_empty
 			a_c_compiler_is_valid: a_c_compiler.is_equal (msc_compiler)
-		local
-			l_cursor: CURSOR
-			l_file: STRING
 		do
 			create Result.make (1000)
 			Result.append ("# ecom.lib - Makefile for EiffelCOM Generated C/C++ Object File%N%NMV = copy%N")
@@ -143,7 +140,7 @@ feature {NONE} -- Basic operations
 			valid_make_file: not Result.is_empty
 		end
 
-	save_file (a_content: READABLE_STRING_GENERAL; a_file_name: STRING)
+	save_file (a_content: READABLE_STRING_GENERAL; a_file_name: READABLE_STRING_32)
 			-- Save file with content `content' and file name `a_file_name'.
 		require
 			a_content_attached: a_content /= Void
@@ -154,12 +151,20 @@ feature {NONE} -- Basic operations
 			retried: BOOLEAN
 			l_file: PLAIN_TEXT_FILE
 			l_path: PATH
+			u: UTF_CONVERTER
 		do
 			if not retried then
 				l_path := env.current_working_path.extended (a_file_name)
 				create l_file.make_with_path (l_path)
 				l_file.open_write
-				l_file.put_string (a_content.as_string_8_conversion)
+				l_file.put_string
+					(if attached {READABLE_STRING_32} a_content as s32 then
+						u.string_32_to_utf_8_string_8 (s32)
+					elseif attached {READABLE_STRING_8} a_content as s8 then
+						s8
+					else
+						u.utf_32_string_to_utf_8_string_8 (a_content)
+					end)
 				l_file.close
 			else
 				environment.set_abort (Makefile_write_error)
@@ -220,7 +225,7 @@ feature {NONE} -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	object_files (a_files: LIST [STRING]; a_workbench: BOOLEAN): STRING
+	object_files (a_files: LIST [READABLE_STRING_32]; a_workbench: BOOLEAN): STRING_32
 			-- Retrieve a list of object files
 		require
 			a_files_attached: a_files /= Void
@@ -248,7 +253,7 @@ feature {NONE} -- Query
 			a_files_unmoved: a_files.cursor.is_equal (old a_files.cursor)
 		end
 
-	wobj_generation (a_files: LIST [STRING]): STRING
+	wobj_generation (a_files: LIST [READABLE_STRING_32]): STRING_32
 			-- String to generate wobj generation string.
 		require
 			a_files_attached: a_files /= Void
@@ -270,12 +275,12 @@ feature {NONE} -- Query
 			a_files_unmoved: a_files.cursor.is_equal (old a_files.cursor)
 		end
 
-	wobj_string (a_c_file_name: STRING): STRING
+	wobj_string (a_c_file_name: READABLE_STRING_32): STRING_32
 			-- String to generate wobj file.
 		require
 			a_c_file_name_attached: a_c_file_name /= Void
 			not_a_c_file_name_is_empty: not a_c_file_name.is_empty
-			a_c_file_name_is_valid_name: is_c_file (a_c_file_name)
+			a_c_file_name_is_valid_name: is_c_file (create {PATH}.make_from_string (a_c_file_name))
 		do
 			create Result.make (100)
 			Result.append (workbench_prefix)
@@ -337,7 +342,7 @@ feature {NONE} -- Constants
 			-- Multithreaded library name suffix
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -367,6 +372,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_MAKEFILE_GENERATOR
 
-
+end

@@ -47,7 +47,7 @@ feature -- Basic Operations
 	update_environment
 			-- Update `environment' according to text fields contents.
 		local
-			l_text: STRING
+			l_text: STRING_32
 		do
 			l_text := epr_box.value
 			if is_valid_file (l_text) then
@@ -81,7 +81,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	eiffel_target_validity (a_target: STRING): WIZARD_VALIDITY_STATUS
+	eiffel_target_validity (a_target: READABLE_STRING_32): WIZARD_VALIDITY_STATUS
 			-- Is `a_target' valid?
 			-- Setup environment accordingly.
 		do
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			set_status (Result)
 		end
 
-	eiffel_project_validity (a_project_file: STRING): WIZARD_VALIDITY_STATUS
+	eiffel_project_validity (a_project_file: READABLE_STRING_32): WIZARD_VALIDITY_STATUS
 			-- Is `a_project_file' a valid eiffel project file?
 			-- Setup environment accordingly.
 		do
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			set_status (Result)
 		end
 
-	ecf_file_validity (a_file: STRING): WIZARD_VALIDITY_STATUS
+	ecf_file_validity (a_file: READABLE_STRING_32): WIZARD_VALIDITY_STATUS
 			-- Is `a_file' a valid eiffel ecf file?
 			-- Setup environment accordingly.
 		do
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 			set_status (Result)
 		end
 
-	eiffel_class_validity (a_eiffel_class: STRING): WIZARD_VALIDITY_STATUS
+	eiffel_class_validity (a_eiffel_class: READABLE_STRING_32): WIZARD_VALIDITY_STATUS
 			-- Is `a_eiffel_class' a valid eiffel class?
 			-- Setup environment accordingly.
 		do
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			set_status (Result)
 		end
 
-	cluster_validity (a_cluster: STRING): WIZARD_VALIDITY_STATUS
+	cluster_validity (a_cluster: READABLE_STRING_32): WIZARD_VALIDITY_STATUS
 			-- Is `a_cluster' a valid eiffel cluster?
 			-- Setup environment accordingly.
 		do
@@ -147,29 +147,29 @@ feature {NONE} -- Implementation
 			set_status (Result)
 		end
 
-	is_valid_eiffel_identifier (a_string: STRING): BOOLEAN
+	is_valid_eiffel_identifier (a_string: READABLE_STRING_32): BOOLEAN
 			-- Is `a_string' a valid eiffel identifier?
 		local
-			i, l_count: INTEGER;
-			l_char: CHARACTER
+			i, l_count: INTEGER
+			l_char: CHARACTER_32
 		do
 			l_count := a_string.count
-			if l_count /= 0 and then a_string.item(1).is_alpha then
+			if l_count /= 0 and then a_string [1].is_alpha and then a_string.code (1) < 128 then
 				from
 					Result := True
 					i := 2
 				until
 					i > l_count or else not Result
 				loop
-					l_char := a_string.item (i)
-					Result := l_char.is_alpha or else l_char = '_' or else l_char.is_digit
+					l_char := a_string [i]
+					Result := l_char < {CHARACTER_32} '%/128/' and (l_char.is_alpha or else l_char = '_' or else l_char.is_digit)
 					i := i + 1
 				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -182,23 +182,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_EIFFEL_PROJECT_BOX
 
-
+end

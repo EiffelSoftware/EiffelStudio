@@ -13,7 +13,7 @@ inherit
 
 create
 	make
-		
+
 feature {NONE} -- Initialization
 
 	make
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	generated_code: STRING
+	generated_code: STRING_32
 			-- Generated code
 		do
 			Result := Tab.twin
@@ -39,7 +39,7 @@ feature -- Access
 				Result.append (New_line_tab_tab)
 				if not sources.is_empty then
 					Result.append (Rename_keyword)
-						sources.start 
+						sources.start
 						destinations.start
 						Result.append (New_line_tab_tab_tab)
 						Result.append (sources.item)
@@ -149,16 +149,16 @@ feature -- Access
 				Result.append (End_keyword)
 			end
 		end
-	
+
 	can_generate: BOOLEAN
 			-- Can Eiffel code by generated
 		do
 			Result := name /= Void
 		end
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Inherited class name
-	
+
 	sources: LIST [STRING]
 			-- Rename clause sources
 
@@ -170,10 +170,10 @@ feature -- Access
 
 	undefines: LIST [STRING]
 			-- Undefined features
-	
+
 	redefines: LIST [STRING]
 			-- Redefined features
-	
+
 	selects: LIST [STRING]
 			-- Selected features
 
@@ -181,7 +181,7 @@ feature -- Element Change
 
 	set_name (a_name: like name)
 			-- Set `name' with `a_name'.
-		require	
+		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		do
@@ -189,7 +189,7 @@ feature -- Element Change
 		ensure
 			name_set: name.is_equal (a_name)
 		end
-		
+
 	add_rename (source, destination: STRING)
 			-- Add renaming clause with source `source' and destination `destination'.
 		require
@@ -202,7 +202,7 @@ feature -- Element Change
 			sources.extend (source)
 			destinations.extend (destination)
 		end
-	
+
 	add_redefine (a_feature: STRING)
 			-- Add redefine clause for feature `a_feature'.
 		require
@@ -213,7 +213,7 @@ feature -- Element Change
 		ensure
 			added: redefines.last = a_feature
 		end
-	
+
 	add_export (features: LIST [STRING]; a_class: STRING)
 			-- Add export clause for features `features' exported to `class'.
 		require
@@ -227,7 +227,7 @@ feature -- Element Change
 			create export_directive.make (features, a_class)
 			exports.extend (export_directive)
 		end
-	
+
 	add_undefine (a_feature: STRING)
 			-- Add undefine clause for feature `a_feature'.
 		require
@@ -238,7 +238,7 @@ feature -- Element Change
 		ensure
 			added: undefines.last.is_equal (a_feature)
 		end
-	
+
 	add_select_clause (a_feature: STRING)
 			-- Add select clause with feature `a_feature'.
 		require
@@ -251,11 +251,11 @@ feature -- Element Change
 		end
 
 invariant
-	
+
 		valid_rename_clauses: sources.count = destinations.count
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -268,22 +268,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_WRITER_INHERIT_CLAUSE
 
+end

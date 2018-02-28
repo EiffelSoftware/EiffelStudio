@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "C record generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ inherit
 	WIZARD_TYPE_GENERATOR
 
 	WIZARD_RECORD_GENERATOR
-	
+
 	ECOM_VAR_TYPE
 		export
 			{NONE} all
@@ -29,7 +29,8 @@ feature -- Access
 	generate (a_descriptor: WIZARD_RECORD_DESCRIPTOR)
 			-- Generate c client for record.
 		local
-			l_struct_def, l_header, l_file_name: STRING
+			l_struct_def, l_header: STRING
+			l_file_name: STRING_32
 			l_visitor: WIZARD_DATA_TYPE_VISITOR
 			l_type: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			l_fields: SORTED_TWO_WAY_LIST [WIZARD_RECORD_FIELD_DESCRIPTOR]
@@ -41,13 +42,13 @@ feature -- Access
 			c_writer_impl.set_header_file_name (impl_header_file_name (a_descriptor.c_header_file_name))
 			c_writer_impl.add_import (a_descriptor.c_header_file_name)
 			l_fields := a_descriptor.fields
-			if not a_descriptor.is_union then 
+			if not a_descriptor.is_union then
 				l_fields.sort
 			end
 			c_writer.add_other_forward (forward_definition (a_descriptor))
 
 			create l_struct_def.make (1000)
-			
+
 			l_struct_def.append ("namespace ")
 			l_struct_def.append (a_descriptor.namespace)
 			l_struct_def.append ("%N{%N")
@@ -65,7 +66,7 @@ feature -- Access
 			until
 				l_fields.after
 			loop
-				l_visitor := l_fields.item.data_type.visitor 
+				l_visitor := l_fields.item.data_type.visitor
 				l_struct_def.append ("%T")
 				l_struct_def.append (l_visitor.c_type)
 				l_struct_def.append (" ")
@@ -115,7 +116,7 @@ feature {NONE} -- Implementation
 			l_type: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			l_user_type : WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
 			l_descriptor: WIZARD_RECORD_DESCRIPTOR
-			l_file: STRING
+			l_file: STRING_32
 		do
 			l_type ?= a_descriptor
 			if l_type /= Void then
@@ -132,7 +133,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	forward_definition (a_descriptor: WIZARD_RECORD_DESCRIPTOR): STRING
 			-- Forward definition.
 		require
@@ -172,7 +173,7 @@ feature {NONE} -- Implementation
 			Result.append (" ")
 			Result.append (a_descriptor.c_type_name)
 			Result.append (";")
-			
+
 			if l_namespace /= Void and then not l_namespace.is_empty then
 				Result.append ("%N}")
 			end
@@ -217,8 +218,8 @@ feature {NONE} -- Implementation
 				Result.append (l_c_type)
 				Result.append (" *)_ptr_)->")
 				Result.append (a_field_descriptor.name)
-				Result.append (")")				
-			else 
+				Result.append (")")
+			else
 				if (l_visitor.vt_type = Vt_bool) then
 					Result.append (l_visitor.cecil_type)
 				else
@@ -266,7 +267,7 @@ feature {NONE} -- Implementation
 			i, array_count, l_count: INTEGER
 		do
 			macro_name := macro_setter_name (a_record_descriptor.name, a_field_descriptor)
-			l_visitor := a_field_descriptor.data_type.visitor 
+			l_visitor := a_field_descriptor.data_type.visitor
 			c_type := (a_record_descriptor.namespace + "::" + a_record_descriptor.c_type_name)
 
 			create Result.make (1000)
@@ -327,7 +328,7 @@ feature {NONE} -- Implementation
 				Result.append (l_visitor.c_type)
 				Result.append ("))")
 			else
-				if l_visitor.need_free_memory then					
+				if l_visitor.need_free_memory then
 					if l_visitor.need_generate_free_memory then
 						Result.append (l_visitor.ce_mapper.variable_name)
 						Result.append (".")
@@ -338,7 +339,7 @@ feature {NONE} -- Implementation
 					Result.append (" *)_ptr_)->")
 					Result.append (a_field_descriptor.name)
 					Result.append ("), ")
-				end				
+				end
 				Result.append ("(((")
 				Result.append (c_type)
 				Result.append (" *)_ptr_)->")
@@ -376,7 +377,7 @@ feature {NONE} -- Implementation
 						Result.append (", NULL")
 					end
 					Result.append (")")
-				end	
+				end
 			end
 			Result.append (")")
 		ensure
@@ -385,7 +386,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -398,23 +399,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_RECORD_C_GENERATOR
 
-
+end

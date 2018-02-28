@@ -72,7 +72,7 @@ feature -- Element Settings
 			wel_text_edit.set_font (a_font)
 		end
 
-	set_text (a_text: STRING)
+	set_text (a_text: STRING_32)
 			-- Set rich edit text with `a_text'
 		require
 			non_void_text: a_text /= Void
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -165,6 +165,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_TEXT
 
-
+end

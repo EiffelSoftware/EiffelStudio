@@ -283,7 +283,7 @@ feature -- Finding specific item in MetaData
 
 feature -- Obtaining Properties of a Specified Object
 
-	get_typedef_props (a_tok: NATURAL_32): detachable STRING
+	get_typedef_props (a_tok: NATURAL_32): detachable STRING_32
 			-- Get information stored in metadata for `a_tok'
 		local
 			mp_name: MANAGED_POINTER
@@ -295,7 +295,7 @@ feature -- Obtaining Properties of a Specified Object
 
 			last_call_success := cpp_get_typedef_props (item, a_tok, mp_name.item, 255, $l_rsize, l_flag, $l_tkext)
 			if mp_name.item /= Default_pointer then
-				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string_32
 			end
 		end
 
@@ -307,7 +307,7 @@ feature -- Obtaining Properties of a Specified Object
 			last_call_success := cpp_get_interface_impl_props (item, a_interface_impl, $Result, $l_interf_tok)
 		end
 
-	get_member_props (a_tok: NATURAL_32): detachable TUPLE [name:STRING; flag:INTEGER]
+	get_member_props (a_tok: NATURAL_32): detachable TUPLE [name: STRING_32; flag: INTEGER]
 			-- Get member 's name property
 		local
 			mp_name: MANAGED_POINTER
@@ -328,11 +328,11 @@ feature -- Obtaining Properties of a Specified Object
 				l_sig, $l_sigsize,
 				$l_code_rva, l_pdwimpl_flags, l_cplustype_flag, l_cst_ppvalue, $l_pcchvalue)
 			if mp_name.item /= Default_pointer then
-				Result := [(create {UNI_STRING}.make_by_pointer (mp_name.item)).string, l_flag]
+				Result := [(create {UNI_STRING}.make_by_pointer (mp_name.item)).string_32, l_flag]
 			end
 		end
 
-	get_method_props (a_tok: NATURAL_32): detachable STRING
+	get_method_props (a_tok: NATURAL_32): detachable STRING_32
 			-- Get method 's name property
 		local
 			mp_name: MANAGED_POINTER
@@ -349,11 +349,11 @@ feature -- Obtaining Properties of a Specified Object
 			last_call_success := cpp_get_method_props (item, a_tok, $l_r_classtoken, mp_name.item, 255, $l_rsize,
 				l_flag, l_sig, $l_sigsize, $l_rva, $l_pdw)
 			if mp_name.item /= Default_pointer then
-				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string_32
 			end
 		end
 
-	get_field_props (a_tok: NATURAL_32): detachable STRING
+	get_field_props (a_tok: NATURAL_32): detachable STRING_32
 			-- Get field 's name property
 		local
 			mp_name: MANAGED_POINTER
@@ -371,11 +371,11 @@ feature -- Obtaining Properties of a Specified Object
 				$last_get_field_dwattr, l_sig, $l_sigsize, l_pdwdef_type, l_ppvalue, $l_pcbvalue)
 
 			if mp_name.item /= Default_pointer then
-				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string_32
 			end
 		end
 
-	get_property_props (a_tok: NATURAL_32): detachable TUPLE [name: STRING; getter: NATURAL_32; flag: INTEGER]
+	get_property_props (a_tok: NATURAL_32): detachable TUPLE [name: STRING_32; getter: NATURAL_32; flag: INTEGER]
 			-- Get field 's name property
 		local
 			mp_name: MANAGED_POINTER
@@ -402,7 +402,7 @@ feature -- Obtaining Properties of a Specified Object
 				$l_setter, $l_getter, l_mp_tokens.item, l_cmax, $l_pcothermethod
 				)
 			if mp_name.item /= Default_pointer then
-				Result := [(create {UNI_STRING}.make_by_pointer (mp_name.item)).string, l_getter, last_get_property_flags]
+				Result := [(create {UNI_STRING}.make_by_pointer (mp_name.item)).string_32, l_getter, last_get_property_flags]
 			end
 		end
 
@@ -885,7 +885,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			from
-				create Result.make (1, a_count)
+				create Result.make_filled (0, 1, a_count)
 				i := 1
 			until
 				i > a_count
@@ -919,7 +919,7 @@ feature {NONE} -- Implementation : helper
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -951,4 +951,3 @@ note
 		]"
 
 end
-

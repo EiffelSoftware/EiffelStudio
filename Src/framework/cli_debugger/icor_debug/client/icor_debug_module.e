@@ -347,7 +347,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Access
 
-	get_name: detachable STRING
+	get_name: detachable STRING_32
 			-- GetName returns the name of the Module
 		local
 			p_cchname: NATURAL_32
@@ -358,7 +358,7 @@ feature {NONE} -- Access
 
 			last_call_success := cpp_get_name (item, 256, $p_cchname, mp_name.item)
 			if mp_name.item /= Default_pointer then
-				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string_32
 			end
 		ensure
 			success: last_call_success = 0
@@ -571,7 +571,7 @@ feature {NONE} -- Internal data
 	internal_md_import: detachable MD_IMPORT;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

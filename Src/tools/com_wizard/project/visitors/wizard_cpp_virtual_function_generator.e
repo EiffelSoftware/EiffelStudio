@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Cpp virtual function generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -29,7 +29,7 @@ feature -- Basic operations
 			non_void_descriptor: a_descriptor /= Void
 		local
 			l_visitor: WIZARD_DATA_TYPE_VISITOR
-			l_header_file: STRING
+			l_header_file: STRING_32
 		do
 			func_desc := a_descriptor
 
@@ -41,7 +41,7 @@ feature -- Basic operations
 			ccom_feature_writer.set_name (func_desc.name)
 			ccom_feature_writer.set_comment (func_desc.description)
 
-			l_visitor := func_desc.return_type.visitor 
+			l_visitor := func_desc.return_type.visitor
 			set_vtable_function_return_type
 			l_header_file := l_visitor.c_declaration_header_file_name
 			if l_header_file /= Void and then not l_header_file.is_empty then
@@ -59,7 +59,8 @@ feature -- Basic operations
 		require
 			non_void_descriptor: a_descriptor /= Void
 		local
-			signature, l_header_file: STRING
+			signature: STRING
+			l_header_file: STRING_32
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			func_desc := a_descriptor
@@ -83,7 +84,7 @@ feature -- Basic operations
 				until
 					func_desc.arguments.off
 				loop
-					visitor := func_desc.arguments.item.type.visitor 
+					visitor := func_desc.arguments.item.type.visitor
 
 					signature.append (visitor.c_type)
 					if visitor.is_array_type then
@@ -100,7 +101,7 @@ feature -- Basic operations
 					func_desc.arguments.forth
 				end
 
-				visitor := a_descriptor.return_type.visitor 
+				visitor := a_descriptor.return_type.visitor
 
 				if visitor.c_type.is_equal ("void") then
 					-- Remove the last comma
@@ -111,7 +112,7 @@ feature -- Basic operations
 					signature.append (visitor.c_type)
 					signature.append (" *ret_value")
 				end
-					
+
 				l_header_file := visitor.c_declaration_header_file_name
 				if l_header_file /= Void and then not l_header_file.is_empty then
 					c_header_files.force (l_header_file)
@@ -130,7 +131,7 @@ feature -- Basic operations
 			a_visitor: WIZARD_DATA_TYPE_VISITOR
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
-			l_header_file: STRING
+			l_header_file: STRING_32
 		do
 			a_visitor := a_descriptor.visitor
 			l_header_file := a_visitor.c_definition_header_file_name
@@ -140,7 +141,7 @@ feature -- Basic operations
 					pointed_descriptor ?= a_descriptor
 					if pointed_descriptor /= Void then
 						interface_descriptor := pointed_descriptor.interface_descriptor
-						forward_declarations.force 
+						forward_declarations.force
 							(forward_interface_declaration (interface_descriptor.c_type_name, interface_descriptor.namespace))
 							c_header_files_after.force (l_header_file)
 					else
@@ -160,9 +161,9 @@ feature -- Basic operations
 			create interface_declaration.make (a_name, a_namespace, True)
 			Result := interface_declaration.generated_code
 		end
-		
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -175,23 +176,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_CPP_VIRTUAL_FUNCTION_GENERATOR
 
-
+end

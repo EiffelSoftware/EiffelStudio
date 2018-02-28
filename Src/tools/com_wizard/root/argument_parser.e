@@ -1,11 +1,9 @@
-note
-	description: "[
-		Application argument parser
-	]"
+﻿note
+	description: "Application argument parser"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ARGUMENT_PARSER
@@ -69,7 +67,7 @@ feature -- Access
 			Result := has_option (server_switch)
 		end
 
-	library_definition: STRING
+	library_definition: READABLE_STRING_32
 			-- Library definition file
 		require
 			successful: is_successful
@@ -87,7 +85,7 @@ feature -- Access
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
-			result_exists: (create {RAW_FILE}.make (Result)).exists
+			result_exists: (create {RAW_FILE}.make_with_name (Result)).exists
 		end
 
 	use_destination_folder: BOOLEAN
@@ -99,8 +97,8 @@ feature -- Access
 			Result := has_option (destination_switch)
 		end
 
-	destination: STRING
-			-- Location to generated code with
+	destination: READABLE_STRING_32
+			-- Location to generated code with.
 		require
 			successful: is_successful
 			generating_code: generate_for_client or generate_for_server or add_to_eiffel_project
@@ -109,7 +107,7 @@ feature -- Access
 			if has_option (destination_switch) then
 				Result := option_of_name (destination_switch).value
 			else
-				Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+				Result := (create {EXECUTION_ENVIRONMENT}).current_working_path.name
 			end
 		ensure
 			result_attached: Result /= Void
@@ -161,7 +159,7 @@ feature -- Access
 			Result := has_option (add_to_project_switch)
 		end
 
-	eiffel_configuration_file: STRING
+	eiffel_configuration_file: READABLE_STRING_32
 			-- Path to an Eiffel project file
 		require
 			successful: is_successful
@@ -171,10 +169,10 @@ feature -- Access
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
-			result_exists: (create {RAW_FILE}.make (Result)).exists
+			result_exists: (create {RAW_FILE}.make_with_name (Result)).exists
 		end
 
-	eiffel_target: STRING
+	eiffel_target: READABLE_STRING_32
 			-- Target found in `eiffel_configuration_file'
 		require
 			successful: is_successful
@@ -195,7 +193,7 @@ feature -- Access
 			Result := has_option (eiffel_project_path_switch)
 		end
 
-	eiffel_project_path: STRING
+	eiffel_project_path: READABLE_STRING_32
 			-- Path to an Eiffel project file
 		require
 			successful: is_successful
@@ -206,7 +204,7 @@ feature -- Access
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
-			result_exists: (create {RAW_FILE}.make (Result)).exists
+			result_exists: (create {RAW_FILE}.make_with_name (Result)).exists
 		end
 
 	use_facade_class: BOOLEAN
@@ -218,7 +216,7 @@ feature -- Access
 			Result := has_option (facade_switch)
 		end
 
-	facade_class: STRING
+	facade_class: READABLE_STRING_32
 			-- Facade class used to expose features from COM
 		require
 			successful: is_successful
@@ -241,7 +239,7 @@ feature -- Access
 			Result := has_option (cluster_switch)
 		end
 
-	facade_class_cluster: STRING
+	facade_class_cluster: READABLE_STRING_32
 			-- Cluster containing `facade_class'
 		require
 			successful: is_successful
@@ -284,12 +282,23 @@ feature {NONE} -- Post Processing
 					-- No logo for graphical version of wizard.
 				is_logo_information_suppressed := show_graphical_wizard
 			end
+			if
+				is_successful and then not is_help_usage_displayed and then
+				not (add_to_eiffel_project or show_graphical_wizard or generate_for_client or generate_for_server)
+			then
+				add_error (e_switch_group_unrecognized_error)
+			end
 		end
 
-feature {NONE} -- Usage
+feature -- Usage
 
 	name: STRING_8 = "Eiffel COM Wizard"
 			-- Full name of application
+
+	copyright: STRING = "Copyright Eiffel Software 2005-2018. All Rights Reserved."
+			-- <Precursor>
+
+feature {NONE} -- Usage
 
 	version: STRING_8
 			-- Version number of application
@@ -300,14 +309,11 @@ feature {NONE} -- Usage
 			Result.append ((create {EIFFEL_CONSTANTS}).two_digit_minimum_minor_version)
 			Result.append_character ('.')
 				-- We put (9999 + 1) because if we were to put 10000 the 4 zeros
-				-- will get replaced by the delivery scripts (see comments for `svn_revision'.
+				-- will get replaced by the delivery scripts (see comments for `svn_revision').
 			Result.append_integer (svn_revision // (9999 + 1))
 			Result.append_character ('.')
 			Result.append_integer (svn_revision \\ (9999 + 1))
 		end
-
-	copyright: STRING = "Copyright Eiffel Software 2005-2017. All Rights Reserved."
-			-- <Precursor>
 
 	svn_revision: INTEGER
 			-- SVN revision that build the compiler.
@@ -319,8 +325,6 @@ feature {NONE} -- Usage
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
-		local
-			l_ecf_switch: STRING
 		once
 			create Result.make (0)
 			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (server_switch, "Build a new Eiffel COM component using a specified library definition.", False, False, "LIBRARY", "A Type Library (*.tlb) or IDL File (*.idl).", False))
@@ -395,7 +399,7 @@ invariant
 			(generate_for_server and not (add_to_eiffel_project or show_graphical_wizard or generate_for_client))
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

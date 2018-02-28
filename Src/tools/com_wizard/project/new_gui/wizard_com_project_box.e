@@ -58,7 +58,7 @@ feature -- Basic Operations
 	update_environment
 			-- Update `environment' according to active file name.
 		local
-			l_file_name: STRING
+			l_file_name: STRING_32
 		do
 			l_file_name := definition_file_box.value.as_lower
 			if is_valid_file (l_file_name) then
@@ -114,7 +114,7 @@ feature {NONE} -- Events Handling
 
 feature {NONE} -- Implementation
 
-	definition_file_validity (a_file_name: STRING): WIZARD_VALIDITY_STATUS
+	definition_file_validity (a_file_name: READABLE_STRING_32): WIZARD_VALIDITY_STATUS
 			-- Is `a_file_name' a valid definition file?
 			-- Show marshaller box if `a_file_name' corresponds to an IDL file.
 		do
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -158,6 +158,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_COM_PROJECT_BOX
 
-
+end

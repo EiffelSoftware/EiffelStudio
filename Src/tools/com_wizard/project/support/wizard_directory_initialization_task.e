@@ -2,8 +2,8 @@ note
 	description: "Task used for initializing directories where EiffelCOM Wizard will generate files"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$date"
-	revision: "$revision"
+	date: "$Date$"
+	revision: "$Revision: "
 
 class
 	WIZARD_DIRECTORY_INITIALIZATION_TASK
@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 			-- Implementation of `execute'.
 			-- Use `step' `steps_count' times unless `stop' is called.
 		local
-			l_path, l_path2: STRING
+			l_path, l_path2: STRING_32
 		do
 			l_path := environment.destination_folder.twin
 			initialize_subdirectory (l_path, "Common")
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 			progress_report.step
 		end
 
-	initialize_clib_include (a_path: STRING)
+	initialize_clib_include (a_path: STRING_32)
 			-- Initialize sub-directories `Clib' and `Include' of directory `a_path'.
 		require
 			non_void_path: a_path /= Void
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			initialize_subdirectory (a_path, "Include")
 		end
 
-	initialize_subdirectory (a_path, a_subdirectory: STRING)
+	initialize_subdirectory (a_path, a_subdirectory: STRING_32)
 			-- Initialize sub-directory `a_subdirectory' from directory `a_path'.
 		require
 			non_void_path: a_path /= Void
@@ -83,24 +83,26 @@ feature {NONE} -- Implementation
 			non_void_subdirectory: a_subdirectory /= Void
 			valid_subdirectory: not a_subdirectory.is_empty
 		local
-			l_path: STRING
+			l_path: STRING_32
 		do
 			create l_path.make (a_path.count + a_subdirectory.count)
 			l_path.append (a_path)
 			l_path.append (a_subdirectory)
 			initialize_directory (l_path)
 		end
-	
-	initialize_directory (a_path: STRING)
+
+	initialize_directory (a_path: READABLE_STRING_32)
 			-- Initialize directory `a_path'
 		require
 			non_void_path: a_path /= Void
 		local
 			l_file: RAW_FILE
-			l_string: STRING
+			l_string: STRING_32
 			l_directory: DIRECTORY
+			p: PATH
 		do
-			create l_file.make (a_path)
+			create p.make_from_string (a_path)
+			create l_file.make_with_path (p)
 			if l_file.exists then
 				if not l_file.is_directory then
 					if environment.backup then
@@ -108,19 +110,17 @@ feature {NONE} -- Implementation
 						l_string.append (a_path)
 						message_output.add_warning (l_string)
 						message_output.add_message ("File backed up with extension %".bac%"")
-						l_string := a_path.twin
-						l_string.append (".bac")
-						file_copy (a_path, l_string)
+						file_copy (p, p.appended_with_extension ("bac"))
 					end
-					file_delete (a_path)
-					create l_directory.make (a_path)
+					file_delete (p)
+					create l_directory.make_with_path (p)
 					check
 						not_exists: not l_directory.exists
 					end
 					l_directory.create_dir
 				end
 			else
-				create l_directory.make (a_path)
+				create l_directory.make_with_path (p)
 				check
 					not_exists: not l_directory.exists
 				end
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 	end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -142,22 +142,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_DIRECTORY_INITIALIZATION_TASK
 
+end

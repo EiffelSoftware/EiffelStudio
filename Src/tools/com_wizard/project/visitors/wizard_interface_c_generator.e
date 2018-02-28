@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Interface c generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -7,17 +7,17 @@ note
 
 deferred class
 	WIZARD_INTERFACE_C_GENERATOR
-	
+
 inherit
 	WIZARD_CPP_WRITER_GENERATOR
 
 	WIZARD_GUID_GENERATOR
-		export 
+		export
 			{NONE} all
 		end
 
 	ECOM_FUNC_KIND
-		export 
+		export
 			{NONE} all
 		end
 
@@ -27,7 +27,7 @@ feature -- Access
 			-- Generate c writer.
 		local
 			l_func_generator: WIZARD_CPP_VIRTUAL_FUNCTION_GENERATOR
-			l_header_file: STRING
+			l_header_file: STRING_32
 			l_interface: WIZARD_INTERFACE_DESCRIPTOR
 			l_functions: SORTED_TWO_WAY_LIST [WIZARD_FUNCTION_DESCRIPTOR]
 			l_function: WIZARD_FUNCTION_DESCRIPTOR
@@ -87,7 +87,7 @@ feature -- Access
 					l_disp_functions.forth
 				end
 			end
-			
+
 			l_properties := a_descriptor.properties
 			if l_properties /= Void and then not l_properties.is_empty then
 				from
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 	add_include_file (a_file: STRING)
 			-- Add include file.
 		require
@@ -164,9 +164,9 @@ feature {NONE} -- Implementation
 		ensure
 			added: cpp_class_writer.import_files.has (a_file)
 		end
-		
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -179,23 +179,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_INTERFACE_C_GENERATOR
 
-
+end

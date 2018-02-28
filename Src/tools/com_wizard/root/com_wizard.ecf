@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="com_wizard" uuid="5CA9BF2F-458B-408E-A3C0-9F2A6679A98A">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="com_wizard" uuid="5CA9BF2F-458B-408E-A3C0-9F2A6679A98A">
 	<target name="com_wizard">
 		<root class="WIZARD_APPLICATION" feature="make"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="false" syntax="transitional">
+		<option trace="false" profile="false" debug="false" warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="True"/>
@@ -19,13 +19,13 @@
 			<void_safety support="none"/>
 		</capability>
 		<external_object location="htmlhelp.lib"/>
-		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf" readonly="false"/>
+		<library name="argument_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="com" location="$ISE_LIBRARY\library\com\com.ecf" readonly="false" use_application_options="true"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="date_time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
-		<library name="finish_freezing" location="${EIFFEL_SRC}\tools\finish_freezing\finish_freezing-unsafe.ecf"/>
+		<library name="finish_freezing" location="${EIFFEL_SRC}\tools\finish_freezing\finish_freezing.ecf"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>

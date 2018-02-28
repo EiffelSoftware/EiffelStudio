@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "System descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,7 +8,7 @@ note
 class
 	WIZARD_SYSTEM_DESCRIPTOR
 
-inherit 
+inherit
 	WIZARD_SPECIAL_TYPE_LIBRARIES
 
 	WIZARD_SHARED_DATA
@@ -68,7 +68,7 @@ feature -- Access
 	has_library (guid: ECOM_GUID): BOOLEAN
 			-- Does `library_descriptors' have library descriptor with GUID `guid'?
 		do
-			Result := library_descriptors.has (guid.to_string)
+			Result := library_descriptors.has (guid.to_string.to_string_8)
 		end
 
 	library_descriptor (guid: ECOM_GUID): WIZARD_TYPE_LIBRARY_DESCRIPTOR
@@ -76,7 +76,7 @@ feature -- Access
 		require
 			has_library: has_library (guid)
 		do
-			Result := library_descriptors.item (guid.to_string)
+			Result := library_descriptors.item (guid.to_string.to_string_8)
 		ensure
 			valid_descriptor: Result /= Void
 		end
@@ -120,7 +120,7 @@ feature -- Access
 	c_types: HASH_TABLE [STRING, STRING]
 			-- List ot C types in system.
 
-	name: STRING 
+	name: STRING
 			-- System name.
 
 	type_lib_guid: ECOM_GUID
@@ -152,7 +152,7 @@ feature -- Basic operations
 			type_lib_guid := l_descriptor.guid
 			name := l_descriptor.name.twin
 			add_library_descriptor (l_descriptor)
-			
+
 			-- Pass 1: generate raw descriptors except coclasses
 			l_descriptor.generate
 			progress_report.step
@@ -169,7 +169,7 @@ feature -- Basic operations
 				forth
 			end
 			progress_report.step
-			
+
 			-- Pass 3: Build interface vtable and IDispatch feature tables
 			from
 				start
@@ -202,7 +202,7 @@ feature -- Basic operations
 				forth
 			end
 			progress_report.step
-			
+
 			-- Pass 5: Resolve coclass (Eiffel and C) feature names clashes
 			from
 				start
@@ -229,7 +229,7 @@ feature -- Basic operations
 			non_void_descriptor: a_descriptor /= Void
 			not_has_descriptor: not has_library (a_descriptor.guid)
 		do
-			library_descriptors.put (a_descriptor, a_descriptor.guid.to_string)
+			library_descriptors.put (a_descriptor, a_descriptor.guid.to_string.to_string_8)
 		ensure
 			has_descriptor: has_library (a_descriptor.guid)
 		end
@@ -317,7 +317,7 @@ invariant
 	valid_eiffel_names: eiffel_names /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -330,23 +330,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_SYSTEM_DESCRIPTOR
 
-
+end

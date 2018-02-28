@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "C++ client function generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,9 +10,9 @@ class
 
 inherit
 	WIZARD_CPP_FUNCTION_GENERATOR
-	
+
 	WIZARD_VARIABLE_NAME_MAPPER
-	
+
 	ECOM_VAR_TYPE
 
 feature -- Basic operations
@@ -27,7 +27,7 @@ feature -- Basic operations
 			l_arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
 			l_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			l_visitor, l_pointed_visitor: WIZARD_DATA_TYPE_VISITOR
-			l_header_file: STRING
+			l_header_file: STRING_32
 		do
 			create Result.make (1000)
 			l_arguments := a_function.arguments
@@ -93,7 +93,7 @@ feature -- Basic operations
 			valid_return_type: a_visitor.vt_type /= Vt_void
 			non_void_feature_writer: ccom_feature_writer /= Void
 		local
-			l_header_file: STRING
+			l_header_file: STRING_32
 		do
 			if a_visitor.is_basic_type or a_visitor.is_enumeration or a_visitor.vt_type = Vt_bool then
 				ccom_feature_writer.set_result_type (a_visitor.cecil_type)
@@ -105,9 +105,9 @@ feature -- Basic operations
 				c_header_files.extend (l_header_file)
 			end
 		end
-		
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -120,23 +120,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_CPP_CLIENT_FUNCTION_GENERATOR
 
-
+end

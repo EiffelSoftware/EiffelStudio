@@ -74,31 +74,31 @@ feature -- Basic Operations
 
 feature {NONE} -- Helpers
 
-	is_valid_folder (a_folder: STRING): BOOLEAN
+	is_valid_folder (a_folder: READABLE_STRING_32): BOOLEAN
 			-- Is `a_folder' a valid folder?
 		require
 			non_void_path: a_folder /= Void
 		local
-			l_expanded_path: STRING
+			l_expanded_path: READABLE_STRING_32
 		do
 			if a_folder.count > 1 then
 				l_expanded_path := environment.expanded_path (a_folder)
-				Result := not l_expanded_path.is_empty and then (create {DIRECTORY}.make (l_expanded_path)).exists
+				Result := not l_expanded_path.is_empty and then (create {DIRECTORY}.make_with_name (l_expanded_path)).exists
 			end
 		end
 
-	is_valid_file (a_file: STRING): BOOLEAN
+	is_valid_file (a_file: READABLE_STRING_32): BOOLEAN
 			-- Is `a_folder' a valid folder?
 		require
 			non_void_path: a_file /= Void
 		local
-			l_expanded_path: STRING
+			l_expanded_path: READABLE_STRING_32
 			l_file: RAW_FILE
 		do
 			if a_file.count > 1 then
 				l_expanded_path := environment.expanded_path (a_file)
 				if not l_expanded_path.is_empty then
-					create l_file.make (l_expanded_path)
+					create l_file.make_with_name (l_expanded_path)
 					Result := l_file.exists and then not l_file.is_directory
 				end
 			end
@@ -114,7 +114,7 @@ invariant
 	no_error_iff_is_valid: is_valid = errors.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -127,23 +127,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_VALIDITY_CHECKER
 
-
+end

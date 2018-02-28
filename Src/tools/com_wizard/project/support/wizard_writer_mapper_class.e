@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			is_ec := True
 			initialize
 		end
-		
+
 	make_ce
 			-- Initialize `id'.
 		do
@@ -37,11 +37,11 @@ feature {NONE} -- Initialization
 			is_ec := False
 			initialize
 		end
-	
+
 	initialize
 			-- Initialize instance according to `is_ec' and `id'.
 		local
-			l_header_file_name, l_header, l_source: STRING
+			l_header_file_name, l_header, l_source: STRING_32
 			l_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR
 		do
 			create variable_name.make (240)
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 				l_header.append (")")
 			end
 			set_header (l_header)
-			
+
 			set_name (l_header_file_name.twin)
 			l_header_file_name.append (Header_file_extension)
 			set_definition_header_file_name (l_header_file_name)
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 			l_source.append (semicolon)
 			add_other_source (l_source)
 		end
-		
+
 feature -- Access
 
 	id: INTEGER
@@ -114,7 +114,7 @@ feature -- Access
 
 	variable_name: STRING
 			-- Variable name
-	
+
 	functions_count: INTEGER
 			-- Functions count
 
@@ -135,28 +135,28 @@ feature {NONE} -- Implementation
 			Result := Ec_counter_cell.item + 1
 			Ec_counter_cell.set_item (Result)
 		end
-	
+
 	Ec_counter_cell: INTEGER_REF
 			-- Cell for `Ec_counter'.
 		once
 			create Result
 		end
-		
+
 	Ce_counter: INTEGER
 			-- Incremental counter
 		do
 			Result := Ce_counter_cell.item + 1
 			Ce_counter_cell.set_item (Result)
 		end
-	
+
 	Ce_counter_cell: INTEGER_REF
 			-- Cell for `Ce_counter'.
 		once
 			create Result
 		end
-		
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -169,21 +169,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

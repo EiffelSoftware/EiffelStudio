@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Allows persisting and retrieving combo content from and to registry"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -66,7 +66,6 @@ feature -- Basic Operations
 			-- Add entry `a_entry' to combo box `a_combo' if not there already.
 			-- Persist combo box strings.
 		local
-			l_save_routine: ROUTINE [LIST [STRING]]
 			l_item: EV_LIST_ITEM
 			l_entry: STRING_32
 			l_has_entry: BOOLEAN
@@ -89,9 +88,8 @@ feature -- Basic Operations
 					create l_item.make_with_text (a_entry)
 					a_combo.put_front (l_item)
 				end
-				l_save_routine ?= a_combo.data
-				if l_save_routine /= Void then
-					l_save_routine.call ([a_combo.strings_8])
+				if attached {ROUTINE [LIST [STRING_32]]} a_combo.data as l_save_routine then
+					l_save_routine.call (a_combo.strings)
 				end
 			end
 		end
@@ -129,7 +127,7 @@ feature {NONE} -- Private Access
 			-- Maximum combo entries
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -159,6 +157,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_SAVED_SETTINGS
 
-
+end

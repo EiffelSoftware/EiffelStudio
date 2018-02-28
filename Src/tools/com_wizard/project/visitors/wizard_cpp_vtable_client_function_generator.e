@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			out_value, signature, free_memory, variables, return_value: STRING
 			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 			visitor: WIZARD_DATA_TYPE_VISITOR
-			tmp_name, l_header_file: STRING
+			l_header_file: STRING_32
 		do
 			Result := check_interface_pointer (a_interface_name, a_variable_name)
 			create return_value.make (10000)
@@ -167,10 +167,6 @@ feature {NONE} -- Implementation
 							variables.append ("%N%T")
 							if is_paramflag_fout (arguments.item.flags) then
 								out_value.append ( out_set_up (arguments.item.name, arguments.item.type.type, visitor))
-							else
-								create tmp_name.make (100)
-								tmp_name.append ("tmp_")
-								tmp_name.append (arguments.item.name)
 							end
 						end
 						if visitor.need_free_memory and not visitor.is_interface_pointer and not visitor.is_coclass_pointer then
@@ -599,7 +595,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -612,23 +608,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_CPP_VTABLE_CLIENT_FUNCTION_GENERATOR
 
-
+end

@@ -246,7 +246,7 @@ feature {NONE} -- Special childrens
 			l_getter_token: NATURAL_32
 			l_icd_func: ICOR_DEBUG_FUNCTION
 			l_error_message: STRING
-			t: TUPLE [name: STRING; getter: NATURAL_32; flag: INTEGER]
+			t: TUPLE [name: STRING_32; getter: NATURAL_32; flag: INTEGER]
 			l_dbg_evaluator: EIFNET_DEBUGGER_EVALUATOR
 		do
 			l_md_import := l_icd_module.interface_md_import
@@ -336,7 +336,7 @@ feature -- Properties
 			-- Value info of object.
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

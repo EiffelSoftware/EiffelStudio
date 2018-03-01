@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 			algorithm := a_algo
 			mode := a_mode
 		ensure
-			valid_mode: a_mode.validate_for_aglorithm (a_algo)
+			valid_mode: a_mode.is_valid_for_algorithm (a_algo)
 		end
 
 feature -- Access
@@ -37,7 +37,7 @@ feature -- Encryptor
 		local
 				l_ctx: SSL_CIPHER_CONTEXT_EXTERNALS
 		do
-			create l_ctx.make (algorithm, mode, {SSL_CIPHER_CONTEXT_EXTERNALS}.encrypt)
+			create l_ctx.make (algorithm, mode, {SSL_CIPHER_CONTEXT_EXTERNALS}.encrypt_mode)
 			Result := wrap_context (l_ctx, True)
 		end
 
@@ -49,7 +49,7 @@ feature -- Decryptor
 		local
 			l_ctx: SSL_CIPHER_CONTEXT_EXTERNALS
 		do
-			create l_ctx.make (algorithm, mode, {SSL_CIPHER_CONTEXT_EXTERNALS}.decrypt)
+			create l_ctx.make (algorithm, mode, {SSL_CIPHER_CONTEXT_EXTERNALS}.decrypt_mode)
 			Result := wrap_context (l_ctx, False)
 		end
 

@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {SSL_CIPHER_CONTEXT_IMPL}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,7 +9,7 @@ class
 inherit
 
 	SSL_CIPHER_CONTEXT
-	
+
 	SSL_SHARED_EXCEPTIONS
 
 create
@@ -25,46 +24,56 @@ feature {NONE} -- Initialization
 			ctx_set: ctx = a_ctx
 		end
 
-feature -- Access
+feature {NONE} -- Implementation
 
 	ctx: SSL_CIPHER_CONTEXT_EXTERNALS
 
 feature -- Update
 
-	update (a_data: MANAGED_POINTER): MANAGED_POINTER
+	update_with_hex_string (a_data: READABLE_STRING_8)
 			-- <Precursor>.
 		local
 			l_expection: DEVELOPER_EXCEPTION
 		do
-			create Result.make (0)
 			if ctx.finalized then
 				raise_exception ("Context was already finalized")
 			else
-		      	Result := ctx.update(a_data)
+		      	ctx.update_with_hex_string(a_data)
 		    end
 		end
 
-   update_into(a_data, a_buf: MANAGED_POINTER): INTEGER
-			-- <Precursor>	
+feature -- Status Report
+
+	is_finalized: BOOLEAN
+			-- Is the context finalized?		
 		do
-			if ctx.finalized then
-					-- Context was already finalized
-				raise_exception ("Context was already finalized")
-			else
-		      	Result := ctx.update_into(a_data, a_buf)
-		    end
+			Result := ctx.finalized
 		end
 
 feature -- Finalize
 
-   finalize: MANAGED_POINTER
+	finalize
 			-- <Precursor>
 		do
-			create Result.make (0)
 			if ctx.finalized then
 				raise_exception ("Context was already finalized")
 			end
-			Result := ctx.finalize
+			ctx.finalize
 			ctx.clean_context
 		end
+
+feature -- Results
+
+	hex_string: STRING
+			-- <Precursor>
+		do
+			Result := ctx.hex_string
+		end
+
+	string: STRING
+			-- <Precursor>
+		do
+			Result := ctx.string
+		end
+
 end

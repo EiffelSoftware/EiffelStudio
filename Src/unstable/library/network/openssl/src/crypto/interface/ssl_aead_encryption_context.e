@@ -10,10 +10,22 @@ note
 deferred class
 	SSL_AEAD_ENCRYPTION_CONTEXT
 
-feature -- Tag
 
-	tag: detachable MANAGED_POINTER
-			-- Returns tag value as bytes. This is only available after encryption is finalized.
+feature -- Status Report
+
+	is_finalized: BOOLEAN
+			-- Is encryption finalized?		
 		deferred
 		end
+
+feature -- Tag
+
+	tag_hex_string: detachable STRING
+			-- Returns tag value as hex string. This is only available after encryption is finalized.
+		require
+			is_finalized: is_finalized
+		deferred
+		end
+
+
 end

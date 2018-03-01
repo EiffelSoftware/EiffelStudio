@@ -29,10 +29,13 @@ feature {NONE} -- Initialization
 			updated_setted: updated = False
 		end
 
-feature -- Access
+
+feature {NONE} -- Implementation
 
 	ctx: SSL_CIPHER_CONTEXT_EXTERNALS
 			-- cipher context.	
+
+feature -- Access
 
 	bytes_processed: INTEGER
 			-- number of bytes processed.
@@ -40,11 +43,29 @@ feature -- Access
 	aad_bytes_processed: INTEGER
 			-- number of aad bytes processed.
 
-	tag: detachable MANAGED_POINTER
-
 	updated: BOOLEAN
 
+	tag_hex_string: detachable STRING
+			-- <Precursor>
+		local
+			l_buffer: MANAGED_POINTER
+			l_byte_array: BYTE_ARRAY_CONVERTER
+		do
+			if attached tag as l_tag then
+				create l_byte_array.make (l_tag.count)
+				l_byte_array.append_bytes (l_tag.read_array (0, l_tag.count))
+				Result := l_byte_array.to_hex_string
+				Result.to_lower
+			end
+		end
+
 feature -- Status Report
+
+	is_finalized: BOOLEAN
+			-- <Precursor>		
+		do
+			Result := ctx.finalized
+		end
 
 	check_limit (a_data_size: INTEGER)
 		local
@@ -56,6 +77,7 @@ feature -- Status Report
 			else
 				updated := True
 				bytes_processed := bytes_processed + a_data_size
+				-- TODO: test the following validation.
 --				if bytes_processed > ctx.mode.MAX_ENCRYPTED_BYTES then
 --					create l_description.make_from_string (ctx.mode.name)
 --					l_description.append_string (" has a maximum encrypted byte limit of ")
@@ -67,49 +89,45 @@ feature -- Status Report
 
 feature -- Update
 
-	update (a_data: MANAGED_POINTER): MANAGED_POINTER
+	update_with_hex_string (a_data: READABLE_STRING_8)
 			-- <Precursor>
 		do
-			check_limit (a_data.count)
-			Result := ctx.update (a_data)
+			check_limit (a_data.count // 2)
+			ctx.update_with_hex_string (a_data)
 		end
 
-   update_into(a_data, a_buf: MANAGED_POINTER): INTEGER
-			-- <Precursor>
-		do
-			check_limit (a_data.count)
-			Result := ctx.update_into (a_data, a_buf)
-		end
+feature {NONE} -- Tag implementation
+
+	tag: detachable MANAGED_POINTER
+			-- tag value as bytes. This is only available after encryption is finalized.
 
 feature -- Finalize
 
-   finalize: MANAGED_POINTER
+	finalize
 			-- <Precursor>
 		do
-			create Result.make (0)
 			if ctx.finalized then
 				raise_exception ("Context was already finalized.")
 			else
-				Result := ctx.finalize
+				ctx.finalize
 				tag := ctx.tag
 				ctx.clean_context
 			end
 		end
 
-	finalize_with_tag (a_tag: MANAGED_POINTER): MANAGED_POINTER
+	finalize_with_tag_hex_string (a_tag: READABLE_STRING_8)
 			-- <Precursor>
 		do
-			create Result.make (0)
 			if ctx.finalized then
 				raise_exception ("Context was already finalized.")
 			else
-				Result := ctx.finalize_with_tag (a_tag)
+				ctx.finalize_with_tag_hex_string (a_tag)
 				tag := ctx.tag
 				ctx.clean_context
 			end
 		end
 
-	authenticate_additional_data (a_data: MANAGED_POINTER)
+	aad_hex_string (a_data: READABLE_STRING_8)
 			-- <Precursor>
 		local
 			l_description: STRING
@@ -121,14 +139,28 @@ feature -- Finalize
 				raise_exception ("Update has been called on this context.")
 			end
 
-			aad_bytes_processed := aad_bytes_processed + a_data.count
+			aad_bytes_processed := aad_bytes_processed + (a_data.count // 2)
+			-- TODO: test the following validation.
 --			if aad_bytes_processed > ctx.mode.MAX_AAD_BYTES then
 --				create l_description.make_from_string (ctx.mode.name)
 --				l_description.append_string (" has a maximum AAD byte limit of ")
 --				l_description.append_string (ctx.mode.MAX_AAD_BYTES)
 --				raise_exception (l_description)
 --			end
-			ctx.authenticate_additional_data (a_data)
+			ctx.aad_hex_string (a_data)
+		end
+
+feature -- Results
+
+	hex_string: STRING
+			-- <Precursor>
+		do
+			Result := ctx.hex_string
+		end
+	
+	string: STRING
+		do
+			Result := ctx.string
 		end
 
 end

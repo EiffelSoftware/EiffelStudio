@@ -37,9 +37,7 @@ feature -- Status Report
 	verify_key_size: BOOLEAN
 			-- has the current algorithm a valid key size?
 		do
-			if key_sizes.has (key_size) then
-				Result := True
-			end
+			Result := key_sizes.has (key_size)
 		end
 
 end

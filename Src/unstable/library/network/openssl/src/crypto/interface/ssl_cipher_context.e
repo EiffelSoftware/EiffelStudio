@@ -17,29 +17,45 @@ deferred class
 
 feature -- Update
 
-	update (a_data: MANAGED_POINTER): MANAGED_POINTER
-			-- Processes the provided bytes `a_bytes' through the cipher and returns the results as bytes.
+	update_with_hex_string (a_data: READABLE_STRING_8)
+			-- Processes the provided bytes `a_data' through the cipher and returns the results as bytes.
 			-- a_data (bytes) – The data you wish to pass into the context.
+		require
+				is_not_finalized: not is_finalized
 		deferred
 		end
 
-   update_into(a_data, a_buf: MANAGED_POINTER): INTEGER
-			-- Processes the provided bytes 'a_data' and writes the resulting data into the
-			-- provided buffer `a_buf'. Returns the number of bytes written.
-			-- a_data (bytes) – The data you wish to pass into the context.
-			-- a_ buf – A writable buffer that the data will be written into.
-			--			This buffer should be len(data) + n - 1 bytes where n is the block size (in bytes) of the cipher and mode combination.
-			-- Note: we need to find a way to express an abstract precondition like
-			--                 valid_size: a_buffer.count >= a_data.count + block_size_bytes - 1
-			--  is_valid_size (a_buff_size, a_data_size): BOOLEAN
+feature -- Status Report
+
+	is_finalized: BOOLEAN
+			-- Is the context finalized?		
 		deferred
 		end
 
 feature -- Finalize
 
-   finalize: MANAGED_POINTER
-			-- Returns the results of processing the final block as bytes.
+	finalize
+			-- Process the final block as bytes.
 			-- Once finalize is called this object can no longer be used.
+			-- The output will be available in `hex_string`.
+		require
+			is_not_finalized: not is_finalized
+		deferred
+		end
+
+feature -- Results
+
+	hex_string: STRING
+			-- Returns the results of processing the final block as a hex string.
+		require
+			is_finalized: is_finalized
+		deferred
+		end
+
+	string: STRING
+			-- Returns the results of processing the final block as a hex string.
+		require
+			is_finalized: is_finalized
 		deferred
 		end
 end

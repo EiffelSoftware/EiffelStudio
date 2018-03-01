@@ -14,8 +14,8 @@ feature
 		deferred
 		end
 
-	validate_for_aglorithm (a_algo: SSL_ALGORITHM): BOOLEAN
-			--  Checks that all the necessary invariants of this (mode, algorithm)
+	is_valid_for_algorithm (a_algo: SSL_ALGORITHM): BOOLEAN
+			--  Checks that all the necessary invariants of this mode, algorithm `a_algo`
         	--	combination are met.
 		deferred
 		end

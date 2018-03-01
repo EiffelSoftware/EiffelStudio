@@ -15,10 +15,10 @@ deferred class
 
 feature -- Finalize
 
-    finalize_with_tag (a_tag: MANAGED_POINTER): MANAGED_POINTER
-			--	Returns the results of processing the final block as bytes and allows
+    finalize_with_tag_hex_string (a_tag: READABLE_STRING_8)
+			--	Process the final block as bytes and allows
 			--	delayed passing of the authentication tag.
-			--  tag `a_tag'(bytes) – The tag bytes to verify after decryption.
+			--  tag `a_tag'(as hex string) – The tag bytes to verify after decryption.
 		deferred
 		end
 

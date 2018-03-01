@@ -16,17 +16,14 @@ inherit
 
 feature -- Test routines
 
-
 	test_gcm_ciphertext_with_no_aad
 		local
 			cipher: SSL_CIPHER
 			l_algo: SSL_AES
 			l_mode: SSL_GCM_MODE
 			l_encryptor: SSL_CIPHER_CONTEXT
-			l_computed_ct: MANAGED_POINTER
 			l_index: INTEGER
 			l_value: STRING
-			byte_array: BYTE_ARRAY_CONVERTER
 		do
 				-- Code in Python
 				--	 def test_gcm_ciphertext_with_no_aad(self, backend):
@@ -50,28 +47,112 @@ feature -- Test routines
 			create l_mode.make ("8b23299fde174053f3d652ba", Void)
 			create cipher.make (l_algo, l_mode)
 			l_encryptor := cipher.encryptor
-			l_computed_ct := l_encryptor.update (create {MANAGED_POINTER}.make_from_array ((create {BYTE_ARRAY_CONVERTER}.make_from_hex_string ("28286a321293253c3e0aa2704a278032")).to_natural_8_array))
-			l_computed_ct.append (l_encryptor.finalize)
+			l_encryptor.update_with_hex_string ("28286a321293253c3e0aa2704a278032")
+			l_encryptor.finalize
 
-				-- check ct
-			create byte_array.make (l_computed_ct.count)
-			byte_array.append_bytes (l_computed_ct.read_array (0, l_computed_ct.count))
-			l_value := byte_array.to_hex_string
-			l_value.to_lower
-			assert ("Expected ct:5a3c1cf1985dbb8bed818036fdd5ab42",l_value.same_string_general ("5a3c1cf1985dbb8bed818036fdd5ab42"))
+			assert ("Expected ct:5a3c1cf1985dbb8bed818036fdd5ab42",l_encryptor.hex_string.same_string_general ("5a3c1cf1985dbb8bed818036fdd5ab42"))
 
-				-- check tag
 			if
 				attached {SSL_AEAD_ENCRYPTION_CONTEXT} l_encryptor as l_encryptor_tag and then
-				attached l_encryptor_tag.tag as l_tag
+				attached l_encryptor_tag.tag_hex_string as l_tag
 			then
-				create byte_array.make (l_tag.count)
-				byte_array.append_bytes (l_tag.read_array (0, l_tag.count))
-				l_value := byte_array.to_hex_string
-				l_value.to_lower
-				assert ("Expected tag:23c7ab0f952b7091cd324835043b5eb5",l_value.same_string_general ("23c7ab0f952b7091cd324835043b5eb5"))
+				assert ("Expected tag:23c7ab0f952b7091cd324835043b5eb5",l_tag.same_string_general ("23c7ab0f952b7091cd324835043b5eb5"))
 			else
 				assert ("Expected tag", False)
+			end
+		end
+
+
+	test_gcm_ciphertext_with_only_aad
+		local
+			cipher: SSL_CIPHER
+			l_algo: SSL_AES
+			l_mode: SSL_GCM_MODE
+			l_encryptor: SSL_CIPHER_CONTEXT
+			l_index: INTEGER
+			l_value: STRING
+		do
+			-- Code in Python
+			--  def test_gcm_tag_with_only_aad(self, backend):
+			--        key = binascii.unhexlify(b"5211242698bed4774a090620a6ca56f3")
+			--        iv = binascii.unhexlify(b"b1e1349120b6e832ef976f5d")
+			--        aad = binascii.unhexlify(b"b6d729aab8e6416d7002b9faa794c410d8d2f193")
+			--        tag = binascii.unhexlify(b"0f247e7f9c2505de374006738018493b")
+
+			--        cipher = base.Cipher(
+			--            algorithms.AES(key),
+			--            modes.GCM(iv),
+			--            backend=backend
+			--        )
+			--        encryptor = cipher.encryptor()
+			--        encryptor.authenticate_additional_data(aad)
+			--        encryptor.finalize()
+			--        assert encryptor.tag == tag		
+			create l_algo.make ("5211242698bed4774a090620a6ca56f3")
+			create l_mode.make ("b1e1349120b6e832ef976f5d", "0f247e7f9c2505de374006738018493b" )
+			create cipher.make (l_algo, l_mode)
+			l_encryptor := cipher.encryptor
+			if attached {SSL_AEAD_CIPHER_CONTEXT_IMPL} l_encryptor as ll_encryptor then
+				ll_encryptor.aad_hex_string ("b6d729aab8e6416d7002b9faa794c410d8d2f193")
+				ll_encryptor.finalize
+				if attached ll_encryptor.tag_hex_string as l_tag then
+					assert ("Expected tag: 0f247e7f9c2505de374006738018493b", l_tag.same_string ("0f247e7f9c2505de374006738018493b"))
+				end
+			end
+		end
+
+	test_gcm_tag_encrypt_decrypt
+		local
+			cipher: SSL_CIPHER
+			l_algo: SSL_AES
+			l_mode: SSL_GCM_MODE
+			l_encryptor, l_decryptor: SSL_CIPHER_CONTEXT
+			l_index: INTEGER
+			l_value: STRING
+			tag: STRING_32
+		do
+				-- Code in Python
+				--    def test_gcm_tag_decrypt_mode(self, backend):
+				--        key = binascii.unhexlify(b"5211242698bed4774a090620a6ca56f3")
+				--        iv = binascii.unhexlify(b"b1e1349120b6e832ef976f5d")
+				--        aad = binascii.unhexlify(b"b6d729aab8e6416d7002b9faa794c410d8d2f193")
+
+				--        encryptor = base.Cipher(
+				--            algorithms.AES(key),
+				--            modes.GCM(iv),
+				--            backend=backend
+				--        ).encryptor()
+				--        encryptor.authenticate_additional_data(aad)
+				--        encryptor.finalize()
+				--        tag = encryptor.tag
+
+				--        decryptor = base.Cipher(
+				--            algorithms.AES(key),
+				--            modes.GCM(iv, tag),
+				--            backend=backend
+				--        ).decryptor()
+				--        decryptor.authenticate_additional_data(aad)
+				--        decryptor.finalize()
+
+
+			create l_algo.make ("5211242698bed4774a090620a6ca56f3")
+			create l_mode.make ("b1e1349120b6e832ef976f5d", Void)
+			create cipher.make (l_algo, l_mode)
+			l_encryptor := cipher.encryptor
+			if attached {SSL_AEAD_CIPHER_CONTEXT_IMPL} l_encryptor as ll_encryptor then
+				ll_encryptor.aad_hex_string ("b6d729aab8e6416d7002b9faa794c410d8d2f193")
+				ll_encryptor.finalize
+				if attached ll_encryptor.tag_hex_string as l_tag then
+					tag := l_tag
+				end
+			end
+
+			create l_mode.make ("b1e1349120b6e832ef976f5d", tag)
+			create cipher.make (l_algo, l_mode)
+			l_decryptor := cipher.decryptor
+			if attached {SSL_AEAD_CIPHER_CONTEXT_IMPL} l_decryptor as ll_decryptor then
+				ll_decryptor.aad_hex_string ("b6d729aab8e6416d7002b9faa794c410d8d2f193")
+				ll_decryptor.finalize
 			end
 		end
 
@@ -79,28 +160,19 @@ feature -- Test routines
 		note
 			eis: "name=acaptureservices example", "src=https://docs.acaptureservices.com/tutorials/webhooks/decryption-example","protocol=uri"
 		local
-			l_cipher: SSL_CIPHER
-			l_cipher_external: SSL_CIPHER_CONTEXT_EXTERNALS
-			l_result: MANAGED_POINTER
-			l_index: INTEGER
-			l_value: STRING
+			l_decryptor: SSL_CIPHER_CONTEXT
+			cipher: SSL_CIPHER
+			l_algo: SSL_AES
+			l_mode: SSL_GCM_MODE
 		do
-			create l_cipher.make (create {SSL_AES}.make ("000102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f"), create {SSL_GCM_MODE}.make ("000000000000000000000000","CE573FB7A41AB78E743180DC83FF09BD"))
+			create l_algo.make ("000102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f")
+			create l_mode.make ("000000000000000000000000", "CE573FB7A41AB78E743180DC83FF09BD")
+			create cipher.make (l_algo, l_mode)
+			l_decryptor := cipher.decryptor
+			l_decryptor.update_with_hex_string ("0A3471C72D9BE49A8520F79C66BBD9A12FF9")
+			l_decryptor.finalize
 
-			create l_cipher_external.make (l_cipher.algorithm, l_cipher.mode, 0)
-			l_result := l_cipher_external.update (create {MANAGED_POINTER}.make_from_array ((create {BYTE_ARRAY_CONVERTER}.make_from_hex_string ("0A3471C72D9BE49A8520F79C66BBD9A12FF9")).to_natural_8_array))
-			l_result.append (l_cipher_external.finalize)
-
-			create l_value.make_empty
-			from
-			until
-				l_index >= l_result.count
-			loop
-				l_value.append_character (l_result.read_character (l_index))
-				l_index := l_index + 1
-			end
-			assert ("Expected value={%"type%":%"PAYMENT%"}",l_value.same_string_general ("{%"type%":%"PAYMENT%"}"))
-
+			assert ("Expected value={%"type%":%"PAYMENT%"}",l_decryptor.string.same_string_general ("{%"type%":%"PAYMENT%"}"))
 		end
 
 

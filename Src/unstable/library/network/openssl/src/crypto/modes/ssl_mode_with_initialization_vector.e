@@ -18,7 +18,7 @@ feature -- Access
 
 feature -- Status Report
 
-	check_iv_length (a_algo: SSL_ALGORITHM): BOOLEAN
+	is_valid_iv_length (a_algo: SSL_ALGORITHM): BOOLEAN
 		do
 				-- Todo check if this is the right place to add this feature.
 			if

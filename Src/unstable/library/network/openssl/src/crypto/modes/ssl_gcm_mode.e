@@ -48,23 +48,26 @@ feature -- Access
 
 feature -- Validate algorithm
 
-	validate_for_aglorithm (a_algo: SSL_ALGORITHM): BOOLEAN
+	is_valid_for_algorithm (a_algo: SSL_ALGORITHM): BOOLEAN
 			-- <Precursor>
 		do
-			Result := check_aes_key_length (a_algo)
+			Result := is_valid_aes_key (a_algo)
 		end
 
 feature -- Status Report
 
-	check_aes_key_length (a_algo: SSL_ALGORITHM): BOOLEAN
+	is_valid_aes_key (a_algo: SSL_ALGORITHM): BOOLEAN
 		do
-			Result := True
 			if
 				attached {SSL_CIPHER_ALGORITHM} a_algo as l_algo and then
 				l_algo.key_size > 256 and then l_algo.name.same_string ("AES")
 			then
 				Result := False
 					-- Only 128, 192, and 256 bit keys are allowed for this AES mode
+			elseif 	attached {SSL_CIPHER_ALGORITHM} a_algo as l_algo and then
+				l_algo.key_size <= 256 and then l_algo.name.same_string ("AES")
+			then
+				Result := True
 			end
 		end
 

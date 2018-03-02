@@ -18,23 +18,11 @@ feature {NONE} -- Initialization
 	make
 			-- Run application.
 		do
-			test_gcm
 			test_ecc
 		end
 
 feature -- Tests
 
-	test_gcm
-		local
-			l_example_gcm: EXAMPLE_GCM
-			l_aes_gcm: AES_GCM
-		do
-			create l_aes_gcm
-			l_aes_gcm.gcm_encrypt
-			io.put_new_line
-			l_aes_gcm.gcm_decrypt_2
-			create l_example_gcm.make
-		end
 
 	test_ecc
 		local

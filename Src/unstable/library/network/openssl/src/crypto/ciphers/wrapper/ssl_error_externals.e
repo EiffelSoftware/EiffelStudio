@@ -11,9 +11,17 @@ class
 
 feature -- Constants
 
-	ERR_LIB_EVP: INTEGER = 6
+	ERR_LIB_EVP: INTEGER
+		external "C inline use %"eif_openssl.h%""
+		alias
+			"ERR_LIB_EVP"
+		end
 
-	EVP_R_DATA_NOT_MULTIPLE_OF_BLOCK_LENGTH: INTEGER = 138
+	EVP_R_DATA_NOT_MULTIPLE_OF_BLOCK_LENGTH: INTEGER
+		external "C inline use %"eif_openssl.h%""
+		alias
+			"EVP_R_DATA_NOT_MULTIPLE_OF_BLOCK_LENGTH"
+		end
 
 feature -- Errors
 

@@ -41,7 +41,6 @@ feature -- Encryptor
 			Result := wrap_context (l_ctx, True)
 		end
 
-
 feature -- Decryptor
 
 	decryptor: SSL_CIPHER_CONTEXT
@@ -52,7 +51,6 @@ feature -- Decryptor
 			create l_ctx.make (algorithm, mode, {SSL_CIPHER_CONTEXT_EXTERNALS}.decrypt_mode)
 			Result := wrap_context (l_ctx, False)
 		end
-
 
 feature {NONE} -- Implementation
 

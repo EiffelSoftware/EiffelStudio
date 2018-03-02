@@ -22,8 +22,6 @@ feature -- Test routines
 			l_algo: SSL_AES
 			l_mode: SSL_GCM_MODE
 			l_encryptor: SSL_CIPHER_CONTEXT
-			l_index: INTEGER
-			l_value: STRING
 		do
 				-- Code in Python
 				--	 def test_gcm_ciphertext_with_no_aad(self, backend):
@@ -69,8 +67,6 @@ feature -- Test routines
 			l_algo: SSL_AES
 			l_mode: SSL_GCM_MODE
 			l_encryptor: SSL_CIPHER_CONTEXT
-			l_index: INTEGER
-			l_value: STRING
 		do
 			-- Code in Python
 			--  def test_gcm_tag_with_only_aad(self, backend):
@@ -93,7 +89,7 @@ feature -- Test routines
 			create cipher.make (l_algo, l_mode)
 			l_encryptor := cipher.encryptor
 			if attached {SSL_AEAD_CIPHER_CONTEXT_IMPL} l_encryptor as ll_encryptor then
-				ll_encryptor.aad_hex_string ("b6d729aab8e6416d7002b9faa794c410d8d2f193")
+				ll_encryptor.authenticate_additional_data_hex_string ("b6d729aab8e6416d7002b9faa794c410d8d2f193")
 				ll_encryptor.finalize
 				if attached ll_encryptor.tag_hex_string as l_tag then
 					assert ("Expected tag: 0f247e7f9c2505de374006738018493b", l_tag.same_string ("0f247e7f9c2505de374006738018493b"))
@@ -107,8 +103,6 @@ feature -- Test routines
 			l_algo: SSL_AES
 			l_mode: SSL_GCM_MODE
 			l_encryptor, l_decryptor: SSL_CIPHER_CONTEXT
-			l_index: INTEGER
-			l_value: STRING
 			tag: STRING_32
 		do
 				-- Code in Python
@@ -140,7 +134,7 @@ feature -- Test routines
 			create cipher.make (l_algo, l_mode)
 			l_encryptor := cipher.encryptor
 			if attached {SSL_AEAD_CIPHER_CONTEXT_IMPL} l_encryptor as ll_encryptor then
-				ll_encryptor.aad_hex_string ("b6d729aab8e6416d7002b9faa794c410d8d2f193")
+				ll_encryptor.authenticate_additional_data_hex_string ("b6d729aab8e6416d7002b9faa794c410d8d2f193")
 				ll_encryptor.finalize
 				if attached ll_encryptor.tag_hex_string as l_tag then
 					tag := l_tag
@@ -151,7 +145,7 @@ feature -- Test routines
 			create cipher.make (l_algo, l_mode)
 			l_decryptor := cipher.decryptor
 			if attached {SSL_AEAD_CIPHER_CONTEXT_IMPL} l_decryptor as ll_decryptor then
-				ll_decryptor.aad_hex_string ("b6d729aab8e6416d7002b9faa794c410d8d2f193")
+				ll_decryptor.authenticate_additional_data_hex_string ("b6d729aab8e6416d7002b9faa794c410d8d2f193")
 				ll_decryptor.finalize
 			end
 		end

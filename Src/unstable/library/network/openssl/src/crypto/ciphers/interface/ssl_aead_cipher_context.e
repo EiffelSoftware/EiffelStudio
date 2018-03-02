@@ -17,7 +17,7 @@ deferred class
 
 feature -- Aditional data
 
-	aad_hex_string (a_data: READABLE_STRING_8)
+	authenticate_additional_data_hex_string (a_data: READABLE_STRING_8)
 			--	Any data `a_data' as hex string, that you wish to authenticate but not encrypt.
 		deferred
 		end

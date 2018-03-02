@@ -25,13 +25,11 @@ feature {NONE} -- Intialization
 	make (a_iv: READABLE_STRING_8; a_tag: detachable READABLE_STRING_32)
 			-- Initialize gcm mode with
 			-- initialiazation_vector `a_iv'
-		local
-			l_converter: BYTE_ARRAY_CONVERTER
 		do
 				-- convert the `a_iv' hex string to byte array.
 			create initialization_vector.make_from_array ((create {BYTE_ARRAY_CONVERTER}.make_from_hex_string (a_iv)).to_natural_8_array)
 			if attached a_tag then
-				create tag.make_from_array ((create {BYTE_ARRAY_CONVERTER}.make_from_hex_string (a_tag)).to_natural_8_array)
+				create tag.make_from_array ((create {BYTE_ARRAY_CONVERTER}.make_from_hex_string (a_tag.to_string_8)).to_natural_8_array)
 			end
 		end
 

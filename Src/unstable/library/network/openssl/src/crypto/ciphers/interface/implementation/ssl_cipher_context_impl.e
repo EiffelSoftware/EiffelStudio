@@ -32,8 +32,6 @@ feature -- Update
 
 	update_with_hex_string (a_data: READABLE_STRING_8)
 			-- <Precursor>.
-		local
-			l_expection: DEVELOPER_EXCEPTION
 		do
 			if ctx.finalized then
 				raise_exception ("Context was already finalized")

@@ -53,7 +53,7 @@ feature -- Results
 		end
 
 	string: STRING
-			-- Returns the results of processing the final block as a hex string.
+			-- Returns the results of processing the final block as string.
 		require
 			is_finalized: is_finalized
 		deferred

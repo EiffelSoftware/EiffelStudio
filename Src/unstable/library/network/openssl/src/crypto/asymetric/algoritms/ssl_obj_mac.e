@@ -8,6 +8,9 @@ class
 
 feature -- Access
 
-	NID_secp192k1: INTEGER= 711
-
+	NID_secp192k1: INTEGER 
+		external "C inline use %"eif_openssl.h%""
+		alias
+			"NID_secp192k1"
+		end
 end

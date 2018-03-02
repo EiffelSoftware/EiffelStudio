@@ -48,7 +48,6 @@ feature -- Access
 	tag_hex_string: detachable STRING
 			-- <Precursor>
 		local
-			l_buffer: MANAGED_POINTER
 			l_byte_array: BYTE_ARRAY_CONVERTER
 		do
 			if attached tag as l_tag then
@@ -127,7 +126,7 @@ feature -- Finalize
 			end
 		end
 
-	aad_hex_string (a_data: READABLE_STRING_8)
+	authenticate_additional_data_hex_string (a_data: READABLE_STRING_8)
 			-- <Precursor>
 		local
 			l_description: STRING
@@ -157,7 +156,7 @@ feature -- Results
 		do
 			Result := ctx.hex_string
 		end
-	
+
 	string: STRING
 		do
 			Result := ctx.string

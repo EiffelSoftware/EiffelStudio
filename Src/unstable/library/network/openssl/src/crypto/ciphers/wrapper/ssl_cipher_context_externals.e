@@ -11,8 +11,6 @@ inherit
 
 	SSL_SHARED_EXCEPTIONS
 
-	SSL_CIPHER_CONTEXT
-
 create
 	make
 
@@ -143,7 +141,6 @@ feature -- Access
 	hex_string: STRING
 			-- <Precursor>
 		local
-			l_buffer: MANAGED_POINTER
 			l_byte_array: BYTE_ARRAY_CONVERTER
 		do
 			if attached computed_value as l_value then
@@ -194,7 +191,7 @@ feature -- Update
 		end
 
 	update_into (a_data, a_buffer: MANAGED_POINTER): INTEGER
-		require else
+		require
 			valid_size: a_buffer.count >= a_data.count + block_size_bytes - 1
 		local
 			l_outlen: INTEGER

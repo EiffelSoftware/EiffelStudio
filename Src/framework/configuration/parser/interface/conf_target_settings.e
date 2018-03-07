@@ -217,18 +217,6 @@ feature -- Access: settings
 			Result_not_void: Result /= Void
 		end
 
-	setting_msil_assembly_compatibility: STRING_32
-			-- Value for the msil_assembly_compatibility setting.
-		do
-			if attached settings.item (s_msil_assembly_compatibility) as l_item then
-				Result := l_item
-			else
-				create Result.make_empty
-			end
-		ensure
-			Result_not_void: Result /= Void
-		end
-
 	setting_msil_classes_per_module: NATURAL_16
 			-- Value for the msil_classes_per_module setting.
 		do
@@ -441,7 +429,7 @@ invariant
 	internal_settings_attached: attached internal_settings
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

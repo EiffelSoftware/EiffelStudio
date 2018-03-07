@@ -55,7 +55,7 @@ feature -- Validation
 		end
 
 	verify_non_object_calls (f: FEATURE_I; c: CLASS_C)
-			-- Check whether non-object calls a feature `f` from a class `c` use only features that do not require an object
+			-- Check whether non-object calls in a feature `f` from a class `c` use only features that do not require an object
 			-- and report an error if this is not the case.
 			-- Use `verify_class_feature` instead if `f` is declared as a class feature.
 		require

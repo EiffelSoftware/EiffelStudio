@@ -16,6 +16,8 @@ feature -- Access
 
 	arguments: ARGUMENTS_32
 			-- Arguments that were used to start current execution.
+		note
+			option: instance_free
 		once
 			create Result
 		end
@@ -327,6 +329,37 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	available_cpu_count: NATURAL_32
+			-- Number of available CPUs.
+		external
+			"C inline use <eif_system.h>"
+		alias
+			"[
+				#ifdef EIF_WINDOWS
+					SYSTEM_INFO SysInfo;
+					ZeroMemory (&SysInfo, sizeof (SYSTEM_INFO));
+					GetSystemInfo (&SysInfo);
+					return (EIF_NATURAL_32) SysInfo.dwNumberOfProcessors;
+				#elif defined(EIF_VMS) || defined(EIF_MACOSX)
+						/* FreeBSD, MacOS X, NetBSD, OpenBSD, etc. */
+					int nm [2];
+					size_t len = 4;
+					uint32_t count;
+					nm [0] = CTL_HW; nm [1] = HW_AVAILCPU;
+					sysctl (nm, 2, &count, &len, NULL, 0);
+					if(count < 1) {
+						nm[1] = HW_NCPU;
+						sysctl(nm, 2, &count, &len, NULL, 0);
+						if (count < 1) {count = 1;}
+					}
+					return (EIF_NATURAL_32) count;
+				#else
+					/* Linux, Solaris, AIX and Mac OS X >=10.4 (i.e. Tiger onwards) */
+					return (EIF_NATURAL_32) sysconf(_SC_NPROCESSORS_ONLN);
+				#endif
+			]"
+		end
+
 feature -- Status
 
 	return_code: INTEGER
@@ -420,6 +453,8 @@ feature -- Status setting
 			non_negative_nanoseconds: nanoseconds >= 0
 		do
 			eif_sleep (nanoseconds)
+		ensure
+			class
 		end
 
 feature {NONE} -- Implementation
@@ -577,10 +612,12 @@ feature {NONE} -- External
 			non_negative_nanoseconds: nanoseconds >= 0
 		external
 			"C blocking use %"eif_misc.h%""
+		ensure
+			class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

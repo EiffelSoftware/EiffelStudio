@@ -28,7 +28,7 @@ feature {NONE} -- Namespace checks
 		do
 			Result := is_before_or_equal (namespace, n)
 		ensure
-			definition: Result = ((attached namespace as l_namespace and then is_namespace_known (l_namespace)) implies is_before_or_equal (namespace, n))
+			definition: Result = is_before_or_equal (namespace, n)
 		end
 
 	includes_this_or_after (n: like latest_namespace): BOOLEAN
@@ -40,11 +40,25 @@ feature {NONE} -- Namespace checks
 		do
 			Result := is_after_or_equal (namespace, n)
 		ensure
-			definition: Result = ((attached namespace as l_namespace and then is_namespace_known (l_namespace)) implies is_after_or_equal (namespace, n))
+			definition: Result = is_after_or_equal (namespace, n)
+		end
+
+	includes_this_or_between (n1, n2: like latest_namespace): BOOLEAN
+			-- Is current `namespace' less or equal to `n1` and greater or equal to `n2`?
+			-- (Excludes unknown namespaces.)
+		require
+			n1_attached: attached n1
+			n1_known: is_namespace_known (n1)
+			n2_attached: attached n2
+			n2_known: is_namespace_known (n2)
+		do
+			Result := is_between_or_equal (namespace, n1, n2)
+		ensure
+			definition: Result = is_between_or_equal (namespace, n1, n2)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1276,11 +1276,6 @@ feature {NONE} -- Implementation
 				system.set_metadata_cache_path (l_s)
 			end
 
-			l_s := l_settings.item (s_msil_assembly_compatibility)
-			if l_s /= Void then
-				system.set_msil_assembly_compatibility (l_s)
-			end
-
 			l_s := l_settings.item (s_msil_classes_per_module)
 			if l_s /= Void then
 				if l_s.is_natural_16 and then l_s.to_natural_16 > 0 then
@@ -1608,7 +1603,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -16,8 +16,6 @@ feature -- Access
 
 	arguments: ARGUMENTS_32
 			-- Arguments that were used to start current execution.
-		note
-			option: instance_free
 		once
 			create Result
 		end
@@ -340,8 +338,8 @@ feature -- Access
 					ZeroMemory (&SysInfo, sizeof (SYSTEM_INFO));
 					GetSystemInfo (&SysInfo);
 					return (EIF_NATURAL_32) SysInfo.dwNumberOfProcessors;
-				#elif defined(EIF_VMS) || defined(EIF_MACOSX)
-						/* FreeBSD, MacOS X, NetBSD, OpenBSD, etc. */
+				#elif defined(EIF_MACOSX)
+						/* MacOS X < 10.4 */
 					int nm [2];
 					size_t len = 4;
 					uint32_t count;
@@ -354,7 +352,7 @@ feature -- Access
 					}
 					return (EIF_NATURAL_32) count;
 				#else
-					/* Linux, Solaris, AIX and Mac OS X >=10.4 (i.e. Tiger onwards) */
+						/* Linux, Solaris, AIX, Mac OS X >=10.4 (i.e. Tiger onwards), ... */
 					return (EIF_NATURAL_32) sysconf(_SC_NPROCESSORS_ONLN);
 				#endif
 			]"
@@ -453,8 +451,6 @@ feature -- Status setting
 			non_negative_nanoseconds: nanoseconds >= 0
 		do
 			eif_sleep (nanoseconds)
-		ensure
-			class
 		end
 
 feature {NONE} -- Implementation
@@ -612,8 +608,6 @@ feature {NONE} -- External
 			non_negative_nanoseconds: nanoseconds >= 0
 		external
 			"C blocking use %"eif_misc.h%""
-		ensure
-			class
 		end
 
 note

@@ -1,10 +1,8 @@
-note
-	description:
-		"Allow generation of specific formats (troff, mif, TEX,%
-		%PostScript) for output of clickable, short, flat and flat-short"
+﻿note
+	description: "Allow generation of specific formats (troff, mif, TEX, PostScript) for output of clickable, short, flat and flat-short."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class
@@ -54,12 +52,9 @@ feature {NONE} -- Initialization
 			-- Make a new text filter with information read from `filtername'.
 		require
 			filtername_not_void: filtername /= Void
-		local
-			full_pathname: PATH
 		do
 			if not filtername.is_empty then
-				full_pathname := eiffel_layout.filter_path.extended (filtername + ".fil")
-				make_from_path (full_pathname)
+				make_from_path (eiffel_layout.filter_path.extended (filtername + ".fil"))
 			else
 				make_from_path (create {PATH}.make_from_string (filtername))
 			end
@@ -71,7 +66,7 @@ feature {NONE} -- Initialization
 			filename_not_void: filename /= Void;
 		do
 			create format_table.make (50)
-			create escape_characters.make (0, {CHARACTER}.max_value + 1)
+			create escape_characters.make_filled (Void, 0, {CHARACTER}.max_value + 1)
 			if not filename.is_empty then
 				read_formats (filename)
 			end
@@ -231,18 +226,15 @@ feature -- Status setting
 feature -- Status report
 
 	is_html: BOOLEAN
-		local
-			s: STRING_32
 		do
-			s := file_suffix.as_lower
-			Result := file_suffix.same_string_general ("html")
+			Result := file_suffix.as_lower.same_string_general ("html")
 		end
 
 	skipping: BOOLEAN
 			-- Is skiping processing?
 			-- Some stucture might be hidden by users.
 
-feature -- Text processing
+feature -- Text processing: escaping
 
 	escaped_text (str: READABLE_STRING_GENERAL): STRING_32
 			-- New string where characters of `str' are escaped.
@@ -582,7 +574,6 @@ feature -- Text processing
 		local
 			format: CELL2 [STRING_32, STRING_32];
 			i: INTEGER
-			str: STRING_32
 		do
 			if not skipping then
 				if format_table.has_key (f_Tab) then
@@ -592,19 +583,18 @@ feature -- Text processing
 					until
 						i > a_indent_depth
 					loop
-						image_append (format.item1);
+						image_append (format.item1)
 						if format.item2 /= Void then
-							image.append_string_general ("%T");
+							image.append_string_general ("%T")
 							image_append (format.item2)
-						end;
+						end
 						i := i + 1
 					end
 				else
-					str := indentation (a_indent_depth)
-					image.append (str)
+					image.append (indentation (a_indent_depth))
 				end
 			end
-		end;
+		end
 
 	process_filter_item (text: READABLE_STRING_GENERAL; is_before: BOOLEAN)
 			-- Mark appearing before or after major syntactic constructs.
@@ -788,14 +778,11 @@ feature -- Text processing
 			a_group_not_void: a_group /= Void
 		local
 			real_feature: E_FEATURE
-			written_class: CLASS_C
 			feat_suffix: STRING_32
 			l_class_i : CLASS_I
 			path_pre: STRING_32
 			l_name: STRING_32
 		do
-			written_class := f.written_class
-
 				-- Reading from feature table is time consuming,
 				-- If we find a better way, 10% we will gain.
 			real_feature := f.written_feature
@@ -1008,36 +995,37 @@ feature -- Text processing
 			i: INTEGER
 			replacing: BOOLEAN
 		do
-			if not skipping then
-				if format_table.has_key (f_Multiple_spaces) then
-					format := format_table.found_item
-					rep := format.item1
-					if format.item2 /= Void then
-						rep.extend (' ')
-						rep.append (format.item2)
-					end
-					from
-						i := 1
-					until
-						i > s.count
-					loop
-						if s @ i = ' ' then
-							if replacing then
-								s.remove (i)
-								if i > s.count then
-									s.append (rep)
-								else
-									s.insert_string (rep, i)
-								end
-								i := i + rep.count
+			if
+				not skipping and then
+				format_table.has_key (f_Multiple_spaces)
+			then
+				format := format_table.found_item
+				rep := format.item1
+				if format.item2 /= Void then
+					rep.extend (' ')
+					rep.append (format.item2)
+				end
+				from
+					i := 1
+				until
+					i > s.count
+				loop
+					if s [i] = ' ' then
+						if replacing then
+							s.remove (i)
+							if i > s.count then
+								s.append (rep)
 							else
-								replacing := True
-								i := i + 1
+								s.insert_string (rep, i)
 							end
+							i := i + rep.count
 						else
-							replacing := False
+							replacing := True
 							i := i + 1
 						end
+					else
+						replacing := False
+						i := i + 1
 					end
 				end
 			end
@@ -1260,4 +1248,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class TEXT_FILTER
+end

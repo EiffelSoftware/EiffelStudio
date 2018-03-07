@@ -144,7 +144,8 @@ feature -- Access
 			p: JSON_PARSER
 		do
 			create p.make_with_string (s)
-			if attached p.parse as v and then p.is_parsed then
+			p.parse_content
+			if p.is_valid and then attached p.parsed_json_value as v then
 				Result := v
 			end
 		end

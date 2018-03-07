@@ -35,10 +35,10 @@ feature -- Basic operations
 			end
 		rescue
 			if
-				attached {EXCEPTION} (create {EXCEPTION_MANAGER}).last_exception as l_exception and then
+				attached (create {EXCEPTION_MANAGER}).last_exception as l_exception and then
 				attached l_exception.description as l_description
 			then
-					create {STRING_32} last_error.make_from_string_general (l_description)
+				create {STRING_32} last_error.make_from_string_general (l_description)
 			end
 			is_bad_request := True
 			retried := True

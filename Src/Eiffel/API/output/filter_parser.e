@@ -1,42 +1,40 @@
-note
-
-	description:
-		"Parser of file descriptions which allow generation of%
-		%specific formats (troff, mif, TEX, PostScript) for%
-		%output of clickable, short, flat and flat-short."
+﻿note
+	description: "[
+			Parser of file descriptions which allow generation of specific formats (troff, mif, TEX, PostScript)
+			for output of clickable, short, flat and flat-short.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class FILTER_PARSER
+deferred class FILTER_PARSER
 
 feature {NONE} -- Formats
 
-	format_table: HASH_TABLE [CELL2 [STRING_32, STRING_32], STRING_32];
+	format_table: HASH_TABLE [CELL2 [STRING_32, STRING_32], STRING_32]
 			-- User-specified formats
 
-	escape_characters: ARRAY [STRING_32];
-			-- User-specified escape characters
+	escape_characters: ARRAY [detachable STRING_32]
+			-- User-specified escape characters.
 
 	read_formats (filename: PATH)
 			-- Parse `filename' and fill `format_table' with
 			-- the user-specified format.
 		require
-			filename_not_void: filename /= Void;
+			filename_not_void: filename /= Void
 			not_filename_empty: not filename.is_empty
 		local
-			construct, before, after: STRING_32;
-			construct_list: LINKED_LIST [STRING_32];
-			in_construct, in_before: BOOLEAN;
-			new_format: CELL2 [STRING_32, STRING_32];
-			normal_format: BOOLEAN;
-			escape_char: CHARACTER_32;
+			construct, before, after: STRING_32
+			construct_list: LINKED_LIST [STRING_32]
+			in_construct, in_before: BOOLEAN
+			normal_format: BOOLEAN
+			escape_char: CHARACTER_32
 			escape: STRING_32
 		do
-			create filter_file.make_with_path (filename);
+			create filter_file.make_with_path (filename)
 			if filter_file.exists and then filter_file.is_readable then
-				filter_file.open_read;
+				filter_file.open_read
 				if filter_file.readable then
 					from
 						line_nb := 1
@@ -44,12 +42,12 @@ feature {NONE} -- Formats
 						filter_file.end_of_file
 					loop
 						from
-							in_construct := True;
-							in_before := False;
-							create construct.make (10);
-							create construct_list.make;
-							before := Void;
-							after := Void;
+							in_construct := True
+							in_before := False
+							create construct.make (10)
+							create construct_list.make
+							before := Void
+							after := Void
 							get_next_character
 						until
 							read_error or else
@@ -63,11 +61,11 @@ feature {NONE} -- Formats
 										-- synoymn constructs i.e c1, c2
 									create construct.make (0)
  								elseif last_char_read = '|' then
-									in_construct := False;
-									in_before := True;
+									in_construct := False
+									in_before := True
 									create before.make (5)
 								else
-									syntax_error ("%"|%" expected");
+									syntax_error ("%"|%" expected")
 									read_error := True
 								end
 							elseif in_before then
@@ -77,91 +75,87 @@ feature {NONE} -- Formats
 									in_before := False;
 									create after.make (5)
 								else
-									syntax_error ("%"*%" expected");
+									syntax_error ("%"*%" expected")
 									read_error := True
 								end
 							else
 								if not is_last_meta then
 									after.extend (last_char_read)
 								else
-									syntax_error ("End of line expected");
+									syntax_error ("End of line expected")
 									read_error := True
 								end
-							end;
+							end
 							if not read_error then
 								get_next_character
 							end
-						end;
+						end
 						if not read_error then
-							construct_list.extend (construct);
+							construct_list.extend (construct)
 							from
 								construct_list.start
 							until
 								construct_list.after
 							loop
-								construct := construct_list.item;
-								normal_format := True;
-								construct.left_adjust;
+								construct := construct_list.item
+								normal_format := True
+								construct.left_adjust
 								if construct.count >= 7 then
-									escape := construct.substring (1, 6);
-									escape.to_lower;
+									escape := construct.substring (1, 6)
+									escape.to_lower
 									if escape.is_equal ("escape") then
 										normal_format := False;
 										if before /= Void and after = Void then
-											escape_char :=
-												construct.item (construct.count);
-											construct.right_adjust;
+											escape_char := construct.item (construct.count)
+											construct.right_adjust
 											if construct.count > 6 then
-												escape_char :=
-													construct.item (construct.count)
+												escape_char := construct.item (construct.count)
 											end;
 											escape_characters.put (before, escape_char.code)
 										else
-											syntax_error
-													("Escape character expected")
+											syntax_error ("Escape character expected")
 										end
 									end
-								end;
+								end
 								if normal_format then
-									construct.right_adjust;
-									construct.to_lower;
+									construct.right_adjust
+									construct.to_lower
 									if
 										not construct.is_empty and then
 										before /= Void
 									then
-										create new_format.make (before, after);
-										format_table.force (new_format, construct)
+										format_table.force (create {CELL2 [STRING_32, STRING_32]}.make (before, after), construct)
 									elseif construct.is_empty and before /= Void then
 										syntax_error ("Construct expected")
 									elseif not construct.is_empty and before = Void then
 										syntax_error ("Appearance expected")
 									end
-								end;
+								end
 								construct_list.forth
 							end
 						else
 								-- Go to the beginning of the next line
-							read_error := False;
-							char_in_buffer := False;
-							filter_file.read_line;
+							read_error := False
+							char_in_buffer := False
+							filter_file.read_line
 							line_nb := line_nb + 1
 						end
-					end;
-				end;
+					end
+				end
 				filter_file.close
 			else
-				io.error.put_string ("Warning: Cannot read filter ");
-				io.error.put_string (filename.out);
+				io.error.put_string ("Warning: Cannot read filter ")
+				io.error.put_string (filename.out)
 				io.error.put_new_line
 			end
-		end;
+		end
 
 	get_next_character
 			-- Go forth one position in the filter file.
 			-- Interprete special characters. Put the
 			-- read character in last_char_read.
 		do
-			is_last_meta := False;
+			is_last_meta := False
 			if not char_in_buffer then
 				filter_file.read_character
 			else
@@ -172,7 +166,7 @@ feature {NONE} -- Formats
 				when '%%' then
 					filter_file.read_character;
 					if filter_file.end_of_file then
-						syntax_error ("End of line expected");
+						syntax_error ("End of line expected")
 						read_error := True
 					else
 						inspect filter_file.last_character
@@ -181,7 +175,7 @@ feature {NONE} -- Formats
 						when 't', 'T' then
 							last_char_read := '%T'
 						when '%N' then
-							line_nb := line_nb + 1;
+							line_nb := line_nb + 1
 							from
 								filter_file.read_character
 							until
@@ -195,8 +189,8 @@ feature {NONE} -- Formats
 								filter_file.end_of_file or else
 								filter_file.last_character /= '%%'
 							then
-								syntax_error ("%"%%%" expected");
-								read_error := True;
+								syntax_error ("%"%%%" expected")
+								read_error := True
 								if
 									not filter_file.end_of_file and then
 									filter_file.last_character = '%N'
@@ -211,20 +205,20 @@ feature {NONE} -- Formats
 						end
 					end
 				when ',', '|', '*' then
-					last_char_read := filter_file.last_character;
+					last_char_read := filter_file.last_character
 					is_last_meta := True
 				when '%N' then
-					last_char_read := filter_file.last_character;
-					is_last_meta := True;
+					last_char_read := filter_file.last_character
+					is_last_meta := True
 					line_nb := line_nb + 1
 				when '-' then
-					filter_file.read_character;
+					filter_file.read_character
 					if not filter_file.end_of_file then
 						if filter_file.last_character = '-' then
 								-- This is a comment. Skip the end of the line.
 							filter_file.read_line;
-							line_nb := line_nb + 1;
-							last_char_read := '%N';
+							line_nb := line_nb + 1
+							last_char_read := '%N'
 							is_last_meta := True
 						else
 							char_in_buffer := True;
@@ -237,27 +231,27 @@ feature {NONE} -- Formats
 					last_char_read := filter_file.last_character
 				end
 			else
-				last_char_read := '%N';
+				last_char_read := '%N'
 				is_last_meta := True
 			end
-		end;
+		end
 
-	filter_file: PLAIN_TEXT_FILE;
+	filter_file: PLAIN_TEXT_FILE
 			-- File containing the filter specifications
 
-	last_char_read: CHARACTER;
+	last_char_read: CHARACTER
 			-- Last character read
 
-	read_error: BOOLEAN;
+	read_error: BOOLEAN
 			-- Did an error occurred during the line parsing?
 
-	char_in_buffer: BOOLEAN;
+	char_in_buffer: BOOLEAN
 			-- Has `filter_file.last_character' been used yet?
 
-	is_last_meta: BOOLEAN;
+	is_last_meta: BOOLEAN
 			-- Is last character read a meta character?
 
-	line_nb: INTEGER;
+	line_nb: INTEGER
 			-- Number of the line currently parsed
 
 	syntax_error (message: STRING)
@@ -265,22 +259,22 @@ feature {NONE} -- Formats
 		require
 			message_not_void: message /= Void
 		do
-			io.error.put_string ("Warning: filter ");
-			io.error.put_string (filter_file.path.out);
-			io.error.put_string ("%N%TSyntax error, line ");
+			io.error.put_string ("Warning: filter ")
+			io.error.put_string (filter_file.path.out)
+			io.error.put_string ("%N%TSyntax error, line ")
 			if last_char_read = '%N' then
-				io.error.put_integer (line_nb - 1);
-				io.error.put_string (" near ");
+				io.error.put_integer (line_nb - 1)
+				io.error.put_string (" near ")
 				io.error.put_string ("End of line")
 			else
-				io.error.put_integer (line_nb);
-				io.error.put_string (" near ");
-				io.error.put_character ('%"');
-				io.error.put_character (last_char_read);
+				io.error.put_integer (line_nb)
+				io.error.put_string (" near ")
+				io.error.put_character ('%"')
+				io.error.put_character (last_char_read)
 				io.error.put_character ('%"')
 			end;
-			io.error.put_string (": ");
-			io.error.put_string (message);
+			io.error.put_string (": ")
+			io.error.put_string (message)
 			io.error.put_new_line
 		end;
 
@@ -291,7 +285,7 @@ invariant
 	escape_characters_capacity_valid: escape_characters.capacity > {CHARACTER}.max_value
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -322,4 +316,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class FILTER_PARSER
+end

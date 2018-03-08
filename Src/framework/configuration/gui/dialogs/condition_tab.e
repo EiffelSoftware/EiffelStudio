@@ -700,23 +700,31 @@ feature {NONE} -- Implementation
 					loop
 						create l_text.make ("")
 						l_text.pointer_button_press_actions.wipe_out
-						l_text.pointer_double_press_actions.force_extend (agent l_text.activate)
+						l_text.pointer_double_press_actions.extend (agent (ia_x, ia_y, ia_button: INTEGER; ia_x_tilt, ia_y_tilt, ia_pressure: DOUBLE; ia_screen_x, ia_screen_y: INTEGER; ia_text: STRING_PROPERTY)
+								do
+									ia_text.activate
+								end(?,?,?,?,?,?,?,?,l_text)
+							)
 						l_text.set_value (l_key)
-						l_text.change_value_actions.extend (agent update_variable ({STRING_32} ?, l_key, l_values.key_for_iteration))
+						l_text.change_value_actions.extend (agent update_variable ({like {STRING_PROPERTY}.value} ?, l_key, l_values.key_for_iteration))
 						custom.set_item (1, i, l_text)
-						create l_choice.make_with_choices ("", create {ARRAYED_LIST [STRING_32]}.make_from_array ({ARRAY [STRING_32]} <<"=", "/=">>))
+						create l_choice.make_with_choices ("", create {ARRAYED_LIST [READABLE_STRING_32]}.make_from_array ({ARRAY [READABLE_STRING_32]} <<"=", "/=">>))
 						if l_values.item_for_iteration then
 							l_choice.set_value ("/=")
 						else
 							l_choice.set_value ("=")
 						end
-						l_choice.change_value_actions.extend (agent update_invert ({STRING_32} ?, l_values.key_for_iteration, l_key))
+						l_choice.change_value_actions.extend (agent update_invert ({like {STRING_CHOICE_PROPERTY}.value} ?, l_values.key_for_iteration, l_key))
 						custom.set_item (2, i, l_choice)
 						create l_text.make ("")
 						l_text.pointer_button_press_actions.wipe_out
-						l_text.pointer_double_press_actions.force_extend (agent l_text.activate)
+						l_text.pointer_double_press_actions.extend (agent (ia_x, ia_y, ia_button: INTEGER; ia_x_tilt, ia_y_tilt, ia_pressure: DOUBLE; ia_screen_x, ia_screen_y: INTEGER; ia_text: STRING_PROPERTY)
+										do
+											ia_text.activate
+										end(?,?,?,?,?,?,?,?,l_text)
+									)
 						l_text.set_value (l_values.key_for_iteration)
-						l_text.change_value_actions.extend (agent update_value ({STRING_32} ?, l_values.key_for_iteration , l_key))
+						l_text.change_value_actions.extend (agent update_value ({like {STRING_PROPERTY}.value} ?, l_values.key_for_iteration , l_key))
 						custom.set_item (3, i, l_text)
 						i := i + 1
 						l_values.forth
@@ -745,7 +753,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

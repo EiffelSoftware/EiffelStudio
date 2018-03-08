@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class
 	WIZARD_COMPILER
 
@@ -75,7 +76,7 @@ feature -- Basic Operations
 			-- Set `environment.type_library_file_name' with
 			-- resulting type library file name.
 		local
-			l_text: STRING
+			l_text: STRING_32
 			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
 			l_text := Idl_compiler.twin
@@ -88,7 +89,7 @@ feature -- Basic Operations
 			l_text.append (".tlb")
 			environment.set_type_library_file_name (l_text)
 
-			Env.change_working_directory (environment.destination_folder)
+			Env.change_working_path (create {PATH}.make_from_string (environment.destination_folder))
 			generate_command_line_file (Idl_compiler_command_line, Temporary_input_file_name)
 			if not environment.abort then
 				l_text := Idl_compiler.twin
@@ -106,7 +107,7 @@ feature -- Basic Operations
 	compile_iid
 			-- Compile iid C file.
 		do
-			if (create {RAW_FILE}.make (Generated_iid_file_name)).exists then
+			if (create {RAW_FILE}.make_with_name (Generated_iid_file_name)).exists then
 				compile_file (Generated_iid_file_name)
 			end
 		end
@@ -114,7 +115,7 @@ feature -- Basic Operations
 	compile_ps
 			-- Compile proxy/stub C file.
 		do
-			if (create {RAW_FILE}.make (Generated_ps_file_name)).exists then
+			if (create {RAW_FILE}.make_with_name (Generated_ps_file_name)).exists then
 				compile_file (Generated_ps_file_name)
 			end
 		end
@@ -122,7 +123,7 @@ feature -- Basic Operations
 	compile_data
 			-- Compile dlldata C file.
 		do
-			if (create {RAW_FILE}.make (Generated_dlldata_file_name)).exists then
+			if (create {RAW_FILE}.make_with_name (Generated_dlldata_file_name)).exists then
 				compile_file (Generated_dlldata_file_name)
 			end
 		end
@@ -130,7 +131,7 @@ feature -- Basic Operations
 	link
 			-- Create proxy/stub dll.
 		local
-			l_string: STRING
+			l_string: STRING_32
 			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
 			generate_def_file
@@ -180,7 +181,6 @@ feature -- Basic Operations
 			ace_file_generated: ace_file_generated
 			resource_file_generated: resource_file_generated
 		local
-			l_directory: DIRECTORY
 			l_cmd: STRING_32
 			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
@@ -204,10 +204,10 @@ feature -- Basic Operations
 			valid_folder: not a_folder.is_empty
 		local
 			l_directory: DIRECTORY
-			l_local_folder, l_file: STRING
-			l_file_list: LIST [STRING]
+			l_local_folder: STRING_32
+			l_file: PATH
+			l_file_list: LIST [PATH]
 			l_found: BOOLEAN
-			l_count: INTEGER
 		do
 			l_local_folder := a_folder.twin
 			l_local_folder.append_character (Directory_separator)
@@ -223,14 +223,13 @@ feature -- Basic Operations
 			create l_directory.make (l_local_folder)
 			if l_directory.exists then
 				from
-					l_file_list := l_directory.linear_representation
+					l_file_list := l_directory.entries
 					l_file_list.start
 				until
 					l_file_list.after or l_found
 				loop
 					l_file := l_file_list.item
-					l_count := l_file.count
-					l_found := l_count > 3 and then (l_file.substring_index (".exe", l_count - 3) = l_count - 3 or l_file.substring_index (".dll", l_count - 3) = l_count - 3)
+					l_found := l_file.has_extension ("exe") or l_file.has_extension ("dll")
 					l_file_list.forth
 				end
 			end
@@ -242,7 +241,7 @@ feature -- Basic Operations
 	register_ps
 			-- Register generated proxy stub.
 		local
-			l_string: STRING
+			l_string: STRING_32
 			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
 			l_string := "regsvr32 /s "
@@ -254,7 +253,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	proxy_stub_file_name: STRING
+	proxy_stub_file_name: STRING_32
 			-- Proxy/Stub fil name
 		once
 			Result := environment.destination_folder.twin
@@ -267,8 +266,8 @@ feature {NONE} -- Implementation
 		local
 			l_file: PLAIN_TEXT_FILE
 		do
-			Env.change_working_directory (environment.destination_folder)
-			create l_file.make (Def_file_name)
+			Env.change_working_path (create {PATH}.make_from_string (environment.destination_folder))
+			create l_file.make_with_name (Def_file_name)
 			if not l_file.exists then
 				l_file.make_create_read_write (Def_file_name)
 				l_file.put_string ("DESCRIPTION %"EiffelCOM Generated Component%"%N")
@@ -281,10 +280,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	Idl_compiler_command_line: STRING
+	Idl_compiler_command_line: STRING_32
 			-- MIDL command line
 		local
-			l_dest: STRING
+			l_dest: STRING_32
 		do
 			Result := Common_idl_compiler_options.twin
 			Result.append (" %"")
@@ -307,29 +306,29 @@ feature {NONE} -- Implementation
 			Result.append ("%"")
 		end
 
-	Linker_command_line: STRING
+	Linker_command_line: STRING_32
 			-- Link command line
 		local
-			l_string: STRING
+			l_string: STRING_32
 		do
 			Result := Common_linker_options.twin
 			Result.append (" /nologo ")
 			Result.append (" /out:%"")
 			Result.append (Proxy_stub_file_name)
 			Result.append ("%"")
-			if (create {RAW_FILE}.make (environment.destination_folder + Generated_dlldata_file_name)).exists then
+			if (create {RAW_FILE}.make_with_name (environment.destination_folder + Generated_dlldata_file_name)).exists then
 				Result.append (" /def:%"")
 				Result.append (Def_file_name.twin)
 				Result.append ("%"")
 			end
-			if (create {RAW_FILE}.make (environment.destination_folder + Generated_iid_file_name)).exists then
+			if (create {RAW_FILE}.make_with_name (environment.destination_folder + Generated_iid_file_name)).exists then
 				l_string := environment.destination_folder.twin
 				l_string.append (c_to_obj (Generated_iid_file_name))
 				Result.append (" %"")
 				Result.append (l_string)
 				Result.append ("%"")
 			end
-			if (create {RAW_FILE}.make (environment.destination_folder + Generated_ps_file_name)).exists then
+			if (create {RAW_FILE}.make_with_name (environment.destination_folder + Generated_ps_file_name)).exists then
 				l_string := environment.destination_folder.twin
 				l_string.append_character (Directory_separator)
 				l_string.append (c_to_obj (Generated_ps_file_name))
@@ -337,7 +336,7 @@ feature {NONE} -- Implementation
 				Result.append (l_string)
 				Result.append ("%"")
 			end
-			if (create {RAW_FILE}.make (environment.destination_folder + Generated_dlldata_file_name)).exists then
+			if (create {RAW_FILE}.make_with_name (environment.destination_folder + Generated_dlldata_file_name)).exists then
 				l_string := environment.destination_folder.twin
 				l_string.append (c_to_obj (Generated_dlldata_file_name))
 				Result.append (" %"")
@@ -362,7 +361,7 @@ feature {NONE} -- Implementation
 			Result.append (" -batch -c_compile")
 		end
 
-	user_def_file_name: STRING
+	user_def_file_name: STRING_32
 			-- ".def" file name used for DLL compilation
 		do
 			Result := environment.project_name.twin
@@ -408,7 +407,7 @@ feature {NONE} -- Implementation
 			-- Lace `visible' keyword
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -438,6 +437,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_COMPILER
 
-
+end

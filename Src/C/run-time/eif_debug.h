@@ -2,7 +2,7 @@
 	description: "Data structures and functions used by debugger."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2018, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -135,11 +135,11 @@ extern void dmove(int offset);							/* Move active routine cursor */
  *  RTDBGAA  notify RT_ debugger when Attrib is changed
  */
 
-extern void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, int i3);
-extern void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_pos, int a_routine_id, EIF_TYPE_INDEX a_dyn_type,
+RT_LNK void rt_ext_notify_event (int op, EIF_REFERENCE ref, int i1, int i2, int i3);
+RT_LNK void rt_ext_notify_assign (int op, int dep, EIF_REFERENCE ref, long a_pos, int a_routine_id, EIF_TYPE_INDEX a_dyn_type,
 		uint32 a_rt_type, char a_expanded, char a_precompiled, char a_melted);
-extern int rt_dbg_set_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, EIF_TYPED_VALUE* new_value);
-extern EIF_REFERENCE rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, uint32 a_rt_type);
+RT_LNK int rt_dbg_set_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, EIF_TYPED_VALUE* new_value);
+RT_LNK EIF_REFERENCE rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type, uint32 loc_number, uint32 a_rt_type);
 		
 #define RT_ENTER_EIFFELCODE is_inside_rt_eiffel_code++
 #define RT_EXIT_EIFFELCODE is_inside_rt_eiffel_code--

@@ -74,7 +74,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- <Precursor>
 		do
-			Result := Precursor (other) and validity_code.is_equal (other.validity_code)
+			Result := Precursor (other) and validity_code.same_string (other.validity_code)
 		end
 
 	is_less alias "<" (other: like Current): BOOLEAN
@@ -99,7 +99,7 @@ invariant
 
 note
 	copyright: "[
-			Copyright (c) 1984-2017, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"

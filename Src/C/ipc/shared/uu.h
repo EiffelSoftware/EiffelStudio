@@ -2,7 +2,7 @@
 	description: "Declarations for `uu.c'."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2018, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -40,7 +40,5 @@
 extern int uuencode_buffer_size (int);
 extern char *uuencode_str (char *, int);
 extern char *uudecode_str (char*);
-
-void eraise (const char*, long);
 
 #endif

@@ -167,9 +167,6 @@ feature -- Access: IL code generation
 	msil_version: STRING_32
 			-- Version of current assembly.
 
-	msil_assembly_compatibility: STRING_32
-			-- Compatibility of current assembly with other assemblies.
-
 	msil_key_file_name: PATH
 			-- Location of key pair used to sign current generated assembly.
 
@@ -319,17 +316,6 @@ feature -- Update
 			msil_version := vers
 		ensure
 			msil_version_set: msil_version = vers
-		end
-
-	set_msil_assembly_compatibility (comp: like msil_assembly_compatibility)
-			-- Set `msil_assembly_compatibility' with `comp'.
-		require
-			comp_not_void: comp /= Void
-			comp_not_empty: not comp.is_empty
-		do
-			msil_assembly_compatibility := comp
-		ensure
-			msil_assembly_compatibility_set: msil_assembly_compatibility = comp
 		end
 
 	set_msil_key_file_name (a_file_name: like msil_key_file_name)
@@ -622,7 +608,7 @@ feature {SYSTEM_I} -- Implementation
 			-- Is the system a multithreaded one?
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

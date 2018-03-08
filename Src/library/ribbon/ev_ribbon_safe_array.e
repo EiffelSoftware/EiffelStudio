@@ -61,7 +61,7 @@ feature {NONE} -- Externals
 	c_safe_array_create_vector (a_var_type: NATURAL_16; a_lower_bound: INTEGER_64; a_elements: NATURAL_32): POINTER
 			-- Creates a one-dimensional array. A safe array created with SafeArrayCreateVector is a fixed size, so the constant FADF_FIXEDSIZE is always set.
 		external
-			"C inline use <windows.h>"
+			"C inline use <OleAuto.h>"
 		alias
 			"[
 			{
@@ -75,7 +75,7 @@ feature {NONE} -- Externals
 	c_safe_array_access_data (a_psa: POINTER; a_ppv_data: TYPED_POINTER [POINTER]): NATURAL_16
 			-- Increments the lock count of an array, and retrieves a pointer to the array data.
 		external
-			"C inline use <windows.h>"
+			"C inline use <OleAuto.h>"
 		alias
 			"[
 			{
@@ -88,7 +88,7 @@ feature {NONE} -- Externals
 	c_safe_array_unaccess_data (a_psa: POINTER): NATURAL_16
 			-- Decrements the lock count of an array, and invalidates the pointer retrieved by SafeArrayAccessData.
 		external
-			"C inline use <windows.h>"
+			"C inline use <OleAuto.h>"
 		alias
 			"[
 			{
@@ -98,7 +98,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -51,25 +51,25 @@ feature -- Access
 	marshaller_generated: BOOLEAN
 			-- Should standard marshaller be generated?
 
-	eiffel_class_name: STRING
+	eiffel_class_name: READABLE_STRING_32
 			-- Eiffel class name to generate IDL
 
-	class_cluster_name: STRING
+	class_cluster_name: READABLE_STRING_32
 			-- Cluster to which Eiffel class belongs
 
-	eiffel_project_path: STRING
+	eiffel_project_path: READABLE_STRING_32
 			-- Eiffel project name
 
-	eiffel_target: STRING
+	eiffel_target: READABLE_STRING_32
 			-- Eiffel target name
 
-	idl_file_name: STRING
+	idl_file_name: READABLE_STRING_32
 			-- Path to definition file
 
-	proxy_stub_file_name: STRING
+	proxy_stub_file_name: READABLE_STRING_32
 			-- Path to Proxy/Stub dll
 
-	type_library_file_name: STRING
+	type_library_file_name: READABLE_STRING_32
 			-- Path to type library
 
 	is_in_process: BOOLEAN
@@ -78,10 +78,10 @@ feature -- Access
 	is_out_of_process: BOOLEAN
 			-- Should out of process server code be generated?
 
-	destination_folder: STRING
+	destination_folder: STRING_32
 			-- Path to destination folder
 
-	project_name: STRING
+	project_name: STRING_32
 			-- Project name
 
 	idl: BOOLEAN
@@ -93,7 +93,7 @@ feature -- Access
 	error_code: INTEGER
 			-- Last error code
 
-	error_data: STRING
+	error_data: READABLE_STRING_32
 			-- Error data if any
 
 	compile_eiffel: BOOLEAN
@@ -108,7 +108,7 @@ feature -- Access
 	cleanup: BOOLEAN
 			-- Should destination folder be cleaned up prior to generation?
 
-	error_message: STRING
+	error_message: STRING_32
 			-- Error message
 		require
 			has_error: abort and is_valid_error_code (error_code)
@@ -122,13 +122,13 @@ feature -- Access
 			non_void_message: Result /= Void
 		end
 
-	expanded_path (a_path: STRING): STRING
+	expanded_path (a_path: READABLE_STRING_32): STRING_32
 			-- Expand all environment variables in `a_path'.
 		require
 			non_void_path: a_path /= Void
 		local
-			l_list: LIST [STRING]
-			l_value: STRING
+			l_list: LIST [READABLE_STRING_32]
+			l_value: STRING_32
 		do
 			if not a_path.has ('$') then
 				-- Optimization
@@ -142,7 +142,7 @@ feature -- Access
 						l_value := l_list.item
 						if l_value.count > 0 and then l_value.item (1) = '$' then
 							l_value.keep_tail (l_value.count - 1)
-							l_value := get (l_value)
+							l_value := item (l_value)
 						end
 						if l_value /= Void then
 							Result.append (l_value)
@@ -156,7 +156,7 @@ feature -- Access
 					l_value := l_list.item
 					if l_value.count > 0 and then l_value.item (1) = '$' then
 						l_value.keep_tail (l_value.count - 1)
-						l_value := get (l_value)
+						l_value := item (l_value)
 					end
 					if l_value /= Void then
 						Result.append (l_value)
@@ -168,7 +168,7 @@ feature -- Access
 			non_void_expanded_path: Result /= Void
 		end
 
-	Source_ecf_file_name: STRING
+	Source_ecf_file_name: READABLE_STRING_32
 			-- Name of the configuration file of an existing project where we add a new component.
 
 	Ecf_file_name: PATH
@@ -183,7 +183,7 @@ feature -- Access
 			Result := Result.appended_with_extension ("ecf")
 		end
 
-	Workbench_ace_file_name: STRING
+	Workbench_ace_file_name: STRING_32
 			-- Ace file name
 		require
 			non_void_project_name: project_name /= Void
@@ -192,7 +192,7 @@ feature -- Access
 			Result.append (".workbench.ace")
 		end
 
-	Final_ace_file_name: STRING
+	Final_ace_file_name: STRING_32
 			-- Ace file name
 		require
 			non_void_project_name: project_name /= Void
@@ -507,13 +507,13 @@ feature -- Element Change
 			abort_request_actions_mutex.unlock
 		end
 
-	valid_characters (a_name: STRING): BOOLEAN
+	valid_characters (a_name: STRING_32): BOOLEAN
 			-- Does `a_name' contain valid characters for a c++ identifier
 		require
 			initialized_name: a_name /= void
 		local
 			i, nb: INTEGER
-			l_char: CHARACTER
+			l_char: CHARACTER_32
 		do
 			if not a_name.is_empty and then (a_name.item (1).is_alpha or a_name.item (1) = '_') then
 				from
@@ -537,7 +537,7 @@ feature {NONE} -- Implementation
 	update_idl_file_name
 			-- Update `idl_file_name' according to `is_eiffel_interface', `destination_folder' and `eiffel_class_name'.
 		local
-			l_idl_file_name: STRING
+			l_idl_file_name: STRING_32
 		do
 			if is_eiffel_interface and destination_folder /= Void and eiffel_class_name /= Void then
 				l_idl_file_name := destination_folder.twin
@@ -560,7 +560,7 @@ invariant
 	valid_eiffel_compilation_choice: compile_eiffel implies compile_c
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -590,5 +590,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_ENVIRONMENT
 
+end

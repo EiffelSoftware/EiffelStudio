@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-01-26 14:49+0300\n"
+"PO-Revision-Date: 2018-02-28 16:44+0300\n"
 "Last-Translator: Alexander Kogtenkov <kwaxer@mail.ru>\n"
 "Language-Team: Eiffel Software and others <support@eiffel.com>\n"
 "Language: ru\n"
@@ -18909,7 +18909,7 @@ msgstr "Компонент"
 #: interface_names.e:2083
 msgctxt "eiffelstudio.formatter.column_name"
 msgid "Feature"
-msgstr "Копонент"
+msgstr "Компонент"
 
 #. <PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.feature.autocomplete_feature" DESCRIPTION="Autocomplete feature?"><BOOLEAN>True</BOOLEAN></PREF>
 #. <PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.feature.use_default_feature" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -28011,7 +28011,7 @@ msgid ""
 "error in a year."
 msgstr ""
 "Период (в днях), после которого вызов устаревшего компонента выдаётся как "
-"ошибка (а не предупреждени или подсказка).\n"
+"ошибка (а не предупреждение или подсказка).\n"
 "Пример: при значении 366, вызов устаревшего компонента выдаётся как ошибка "
 "через год."
 
@@ -41337,7 +41337,7 @@ msgstr "Всегда сохранять изменённую метрику"
 #. Source code: ca_class_help: READABLE_STRING_GENERAL do Result := locale.translation ("analyze code of a class or of all non-library classes (-all)") end
 #: shared_ewb_help.e:33
 msgid "analyze code of a class or of all non-library classes (-all)"
-msgstr "анализироват ькод класса или всех не-библиотечных классов (-all)"
+msgstr "анализировать код класса или всех не-библиотечных классов (-all)"
 
 #. Source code: l_auto: STRING_32					do Result := locale.translation ("auto") end
 #: interface_names.e:1168

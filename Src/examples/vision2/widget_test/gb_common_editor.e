@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Objects that provide common features for object editors."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -46,32 +45,20 @@ feature -- Access
 	parent_window (widget: EV_WIDGET): EV_WINDOW
 			-- `Result' is window parent of `widget'.
 			-- `Void' if none.
-		local
-			window: EV_WINDOW
 		do
-			window ?= widget.parent
-			if window = Void then
-				if widget.parent /= Void then
-					Result := parent_window (widget.parent)
-				end
-			else
-				Result := window
+			Result := {EV_WINDOW} / widget.parent
+			if not attached Result and then attached widget.parent as p then
+				Result := parent_window (p)
 			end
 		end
 
 	parent_dialog (widget: EV_WIDGET): EV_DIALOG
 			-- `Result' is dialog parent of `widget'.
 			-- `Void' if none.
-		local
-			dialog: EV_DIALOG
 		do
-			dialog ?= widget.parent
-			if dialog = Void then
-				if widget.parent /= Void then
-					Result := parent_dialog (widget.parent)
-				end
-			else
-				Result := dialog
+			Result := {EV_DIALOG} / widget.parent
+			if not attached Result and then attached widget.parent as p then
+				Result := parent_dialog (p)
 			end
 		end
 
@@ -118,16 +105,13 @@ feature -- Status setting
 			-- For every item in `b' of type EV_LABEL, align the test left.
 		require
 			box_not_void: b /= Void
-		local
-			label: EV_LABEL
 		do
 			from
 				b.start
 			until
 				b.off
 			loop
-				label ?= b.item
-				if label /= Void then
+				if attached {EV_LABEL} b.item as label then
 					label.align_text_left
 				end
 				b.forth
@@ -153,11 +137,8 @@ feature -- Status setting
 			-- `Result' is list item with text matching class name of `container'.
 		require
 			container_not_void: container /= Void
-		local
-			widget: EV_WIDGET
 		do
-			widget := container.item
-			create Result.make_with_text (class_name (widget))
+			create Result.make_with_text (class_name (container.item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -166,38 +147,23 @@ feature -- Basic operations
 
 	for_all_objects (p: PROCEDURE)
 			-- Call `p' on every item in `objects'.
-		local
-			l_tuple: TUPLE
 		do
 			from
 				objects.start
 			until
 				objects.off
 			loop
-				l_tuple := p.empty_operands
-				if l_tuple.count = 1 then
-					l_tuple.put (objects.item, 1)
-				else
-					check l_tuple.count = 0 end
-				end
-				p.call (l_tuple)
+				p.flexible_call (objects.item)
 				objects.forth
 			end
 		end
 
 	for_first_object (p: PROCEDURE)
 			-- Call `p' on the first_item in `objects'.
-		local
-			l_tuple: TUPLE
 		do
-			objects.start
-			l_tuple := p.empty_operands
-			if l_tuple.count = 1 then
-				l_tuple.put (objects.item, 1)
-			else
-				check l_tuple.count = 0 end
+			if not objects.is_empty then
+				p.flexible_call (objects.first)
 			end
-			p.call (l_tuple)
 		end
 
 feature {NONE} -- Implementation
@@ -234,7 +200,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -244,5 +210,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class GB_COMMON_EDITOR
+end

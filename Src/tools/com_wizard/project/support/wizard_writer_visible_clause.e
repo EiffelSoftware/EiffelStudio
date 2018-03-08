@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Visible clause writer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -24,7 +24,7 @@ feature -- Initialization
 
 feature -- Access
 
-	generated_code: STRING
+	generated_code: STRING_32
 			-- Generated code
 		do
 			create Result.make (100)
@@ -89,7 +89,7 @@ invariant
 	non_void_features: exported_features /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -119,5 +119,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_WRITER_VISIBLE_CLAUSE
 
+end

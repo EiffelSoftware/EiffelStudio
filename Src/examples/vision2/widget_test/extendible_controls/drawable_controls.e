@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that create controls to extend a certain widget type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,27 +26,18 @@ feature {NONE} -- Initialization
 
 	make_with_control (a_drawable: EV_DRAWABLE; editor: GB_OBJECT_EDITOR)
 			-- Create `Current'.
-		local
-			pixmap: EV_PIXMAP
-			drawing_area: EV_DRAWING_AREA
 		do
 			drawable := a_drawable
 			default_create
-			pixmap ?= drawable
-			if pixmap /= Void then
+			if attached {EV_PIXMAP} drawable as pixmap then
 				pixmap.set_size (300, 300)
-				pixmap.pointer_button_press_actions.force_extend (agent perform_drawing)
+				pixmap.pointer_button_press_actions.extend (agent perform_drawing)
 				widget := pixmap
+			elseif attached {EV_DRAWING_AREA} drawable as drawing_area then
+				drawing_area.pointer_button_press_actions.extend (agent perform_drawing)
+				widget := drawing_area
 			else
-				drawing_area ?= drawable
-				if drawing_area /= Void then
-					drawing_area.pointer_button_press_actions.force_extend (agent perform_drawing)
-					widget := drawing_area
-				else
-					check
-						False
-					end
-				end
+				check False end
 			end
 			object_editor := editor
 		end
@@ -118,7 +109,7 @@ feature {NONE} -- Initialization
 			horizontal_box.extend (cell)
 			horizontal_box.set_padding (5)
 			horizontal_box.disable_item_expand (horizontal_box.first)
-			line_width.change_actions.force_extend (agent update_line_width)
+			line_width.change_actions.extend (agent update_line_width)
 			main_vertical_box.extend (horizontal_box)
 
 			update_labels_minimum_width (main_vertical_box)
@@ -167,7 +158,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	perform_drawing (x, y: INTEGER)
+	perform_drawing (x, y, b: INTEGER; x_tilt, y_tilt, pressure: REAL_64; s_x, s_y: INTEGER)
 			-- A button press has been received by `drawable', so draw appropriate
 			-- figure.
 		do
@@ -212,19 +203,17 @@ feature {NONE} -- Implementation
 
 	parent_argument_holder (a_radio_button: EV_RADIO_BUTTON)
 			-- Ensure `argument_holder' is parented in the same parent as `a_radio_button',
-			-- at the following position. Also perform adjustment of all labels, so they have the same width:
-		local
-			a_parent: EV_VERTICAL_BOX
-			original_index: INTEGER
+			-- at the following position. Also perform adjustment of all labels, so they have the same width.
 		do
 			update_labels_minimum_width (argument_holder)
-			a_parent ?= a_radio_button.parent
-			check
-				parent_is_vertical_box: a_parent /= Void
+			if attached {EV_VERTICAL_BOX} a_radio_button.parent as a_parent then
+				a_parent.go_i_th (a_parent.index_of (a_radio_button, 1))
+				a_parent.put_right (argument_holder)
+			else
+				check
+					parent_is_vertical_box: False
+				end
 			end
-			original_index := a_parent.index_of (a_radio_button, 1)
-			a_parent.go_i_th (original_index)
-			a_parent.put_right (argument_holder)
 			parent_window (Current).unlock_update
 		end
 
@@ -232,8 +221,6 @@ feature {NONE} -- Implementation
 			-- Update all labels parented at the second level in `box'.
 		local
 			label_width: INTEGER
-			box: EV_HORIZONTAL_BOX
-			label: EV_LABEL
 		do
 				-- Update widths of all labels
 			from
@@ -241,12 +228,12 @@ feature {NONE} -- Implementation
 			until
 				vertical_box.off
 			loop
-				box ?= vertical_box.item
-				if box /= Void then
-					label ?= box.first
-					if label /= Void and then label.minimum_width > label_width then
-						label_width := label.minimum_width
-					end
+				if
+					attached {EV_HORIZONTAL_BOX} vertical_box.item as box and then
+					attached {EV_LABEL} box.first as label and then
+					label.minimum_width > label_width
+				then
+					label_width := label.minimum_width
 				end
 				vertical_box.forth
 			end
@@ -255,12 +242,11 @@ feature {NONE} -- Implementation
 			until
 				vertical_box.off
 			loop
-				box ?= vertical_box.item
-				if box /= Void then
-					label ?= box.first
-					if label /= Void then
-						label.set_minimum_width (label_width)
-					end
+				if
+					attached {EV_HORIZONTAL_BOX} vertical_box.item as box and then
+					attached {EV_LABEL} box.first as label
+				then
+					label.set_minimum_width (label_width)
 				end
 				vertical_box.forth
 			end
@@ -520,12 +506,11 @@ feature {NONE} -- Implementation
 			information_dialog.show_modal_to_window (parent_window (Current))
 		end
 
-	update_line_width
+	update_line_width (v: INTEGER_32)
 			-- Update width of line used on `drawable' to value of `line_width'.
 		do
 			drawable.set_line_width (line_width.value)
 		end
-
 
 	update_tiled_status
 			-- Update `drawable' to use tiling dependent on state
@@ -699,7 +684,7 @@ invariant
 	drawable_not_void: drawable /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -709,5 +694,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class EXTENDIBLE_CONTROLS
+end

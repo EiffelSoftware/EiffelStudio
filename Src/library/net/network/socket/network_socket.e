@@ -1,11 +1,9 @@
-note
+﻿note
 
-	description:
-		"A network socket."
-	legal: "See notice at end of class.";
-
-	status: "See notice at end of class.";
-	date: "$Date$";
+	description: "A network socket."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class NETWORK_SOCKET inherit
@@ -185,11 +183,13 @@ feature -- Access: Timeout
 			ns: like timeout_ns
 		do
 			ns := timeout_ns
-			Result := nanoseconds_to_seconds (timeout_ns)
+			Result := nanoseconds_to_seconds (ns)
 			if Result = 0 and ns > 0 then
 					-- As 0 may have different meaning, use the closest non zero possible value.
 				Result := 1
 			end
+		ensure
+			timeout_positive: timeout_ns /= 0 implies Result > 0
 		end
 
 	timeout_ns: NATURAL_64
@@ -441,7 +441,6 @@ feature {NONE} -- Externals
 
 invariant
 
-	timeout_ns_set: timeout_ns /= 0
 	correct_exist: not is_created implies is_closed and not exists
 
 note
@@ -455,5 +454,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class NETWORK_SOCKET
-
+end

@@ -1220,6 +1220,8 @@ feature {NONE} -- Implementation
 			l_is_controlled: BOOLEAN
 			is_target_known: BOOLEAN
 			tuple_argument_number: INTEGER
+			w: like {ERROR_HANDLER}.warning_level
+			has_vucr: BOOLEAN
 		do
 				-- Reset any previously reported VUAR error.
 			last_vuar_error := Void
@@ -1577,6 +1579,7 @@ feature {NONE} -- Implementation
 						elseif not is_qualified_call and then current_feature.is_class and then not l_feature.has_static_access then
 								-- The error for agents is reported elsewhere.
 							if not is_agent then
+								w := error_handler.warning_level
 								check_instance_free (l_feature, context.current_class,
 									if is_precursor then
 										agent report_vucr (create {VUCR_BODY}.make_precursor
@@ -1588,6 +1591,8 @@ feature {NONE} -- Implementation
 									l_feature_name)
 								if error_level /= l_error_level then
 									reset_types
+								else
+									has_vucr := w /= error_handler.warning_level
 								end
 							end
 						end
@@ -1636,6 +1641,7 @@ feature {NONE} -- Implementation
 									-- The instance-free call is OK, but the called feature is not instance-free.
 								error_handler.insert_warning (create {VUNO_NOT_INSTANCE_FREE}.make (l_feature, current_feature, context.current_class, context.written_class, l_feature_name))
 							elseif
+								not has_vucr and then
 								not is_qualified_call and then
 								current_feature.is_class and then
 								not l_feature.is_instance_free and then

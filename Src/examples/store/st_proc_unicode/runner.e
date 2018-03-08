@@ -37,7 +37,7 @@ feature {NONE}
 
 	book: BOOK3
 
-feature
+feature {NONE} -- Creation
 
 	make
 		local
@@ -109,14 +109,14 @@ feature {NONE}
 			create l_proc.make (Proc_name)
 			proc := l_proc
 			l_proc.load
-			l_proc.set_arguments (
-				<<"title", "price", "pub_date">>,
+			l_proc.set_arguments_32
+				({ARRAY [STRING_32]} <<"title", "price", "pub_date">>,
 				<<title, price, pub_date >>)
 
 			if l_proc.exists then
-				if l_proc.text /= Void then
+				if attached l_proc.text_32 as t then
 					io.putstring ("Stored procedure text: ")
-					io.putstring (l_proc.text)
+					localized_print (t)
 					io.new_line
 				end
 			else
@@ -171,7 +171,7 @@ feature {NONE}
 	Proc_name: STRING_32 = "DB_BOOK_PROC_2";
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -181,7 +181,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class RUNNER
-
-
+end

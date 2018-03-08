@@ -5,12 +5,12 @@
         {
             "id": "eiffelstudio_ent",
             "name": "EiffelStudio",
-            "version": "17.05 Enterprise Evaluation Edition",
+            "version": "18.01 Enterprise Evaluation Edition",
             "release": "Official Release",
-            "date": "Spring 2017",
-            "sub_directory": "17.05",
-            "number": "17.05",
-            "build" : "Build_100416",
+            "date": "Winter 2018",
+            "sub_directory": "18.01",
+            "number": "18.01",
+            "build" : "Build_101424",
             "icon": "eiffelstudio_ent.png",
             "public": "true",
             "for_evaluation": "true",
@@ -21,98 +21,21 @@
             },
             "blerb": "<h2>EiffelStudio: A Contract for Success</h2>\n<p>\nTake full advantage of the power of Object Technology ... and more\n<p>\nEiffelStudio is more than just an IDE. With EiffelStudio you can model your\nsystem as you think - capturing your requirements and your thought processes in\nEiffel. Then, when you are ready to design, you build upon the model you just\ncreated, still with EiffelStudio. And then you implement, in EiffelStudio. You\nnever need to throw anything out and start over. You don't need extra tools to\nbe able to go back and make changes in architecture safely. Roundtrip\nengineering? It's built in by design. Testing, metrics and productivity tools?\nThey're built in. What about debugging? EiffelStudio native Design by Contract™\nmechanism prevents 90% of the bugs from ever occurring - and what bugs remain\nare easily traced and fixed. If you are using other languages and tools chances\nare that EiffelStudio will interface with the code you already have.\n<p>\nWe thank you for downloading EiffelStudio. If you have questions please post\nthem to our <a href=\"http://groups.eiffel.com\">user mailing-list</a>.\n<p>\nEnjoy EiffelStudio and if you do let your friends know!\n<p>",
             "download": [
-                {
-                    "platform": "freebsd-x86-64",
-                    "filename": "Eiffel_17.05_ent_100416-freebsd-x86-64.tar.bz2",
-					"size": "101413362",
-                    "hash": "c68fc87ce5c3d314d6d106dbd6831dc0a08e3dc91a46c508e0e91c37e3cf25cf",
-                    "cdkey": "11212-62314-81707-49121-92557-42101"
-                },
-                {
-                    "platform": "freebsd-x86",
-                    "filename": "Eiffel_17.05_ent_100416-freebsd-x86.tar.bz2",
-					"size": "99928412",
-                    "hash": "923c8da5c3aaba11ea01fd81d9f181a5b1210959d49933522e0583a4d1c22431",
-                    "cdkey": "11212-62314-81707-49121-92557-42101"
-                },
-                {
-                    "platform": "linux-armv6",
-                    "filename": "Eiffel_17.05_ent_100416-linux-armv6.tar.bz2",
-					"size": "98786575",
-                    "hash": "4f8d6598f863cdf318d974c93311490802b6a65819e643eab8ee767f78044ba2",
-                    "cdkey": "11212-62314-81707-49121-92557-42101"
-                },
-
-                {
-                    "platform": "linux-x86-64",
-                    "filename": "Eiffel_17.05_ent_100416-linux-x86-64.tar.bz2",
-					"size": "108041877",
-                    "hash": "52e043c237576c62cfba37d4fa5cfc053fda6662f5cba56f5a93ce5f56145908",
-                    "cdkey": "11212-62314-81707-49121-92557-42101"
-                },
-                {
-                    "platform": "linux-x86",
-                    "filename": "Eiffel_17.05_ent_100416-linux-x86.tar.bz2",
-					"size": "95106667",
-                    "hash": "3922f7c90fb3e0b48b197e20f024642b2b0cc2f613db5a15e24202254512b5bb",
-                    "cdkey": "11212-62314-81707-49121-92557-42101"
-                },
-                {
-                    "platform": "macosx-x86-64",
-                    "filename": "Eiffel_17.05_ent_100416-macosx-x86-64.tar.bz2",
-					"size": "93032678",
-                    "hash": "69d4d2fed4344f36b6b130f8d971363a42e2f9be3ec3cb65dffd03ada0a98f60",
-                    "cdkey": "11212-62314-81707-49121-92557-42101"
-                },
-                {
-                    "platform": "openbsd-x86-64",
-                    "filename": "Eiffel_17.05_ent_100416-openbsd-x86-64.tar.bz2",
-					"size": "117608339",
-                    "hash": "fabd5f402ee0b56373d861146c148d9ae2266b4717dd273be61b8f93805a7b93",
-                    "cdkey": "11212-62314-81707-49121-92557-42101"
-                },
-                {
-                    "platform": "solaris-sparc-64",
-                    "filename": "Eiffel_17.05_ent_100416-solaris-sparc-64.tar.bz2",
-					"size": "114823542",
-                    "hash": "bca37a853054a3c1507050ba7cc13677562c23c339a78a751ede5200475bdb51",
-                    "cdkey": "11212-62314-81707-49121-92557-42101"
-                },
-                {
-                    "platform": "solaris-sparc",
-                    "filename": "Eiffel_17.05_ent_100416-solaris-sparc.tar.bz2",
-					"size": "113082554",
-                    "hash": "a0e959b1f56c50aa68d2681df6f8cee0a808dff3dfae5d4402c05d8be4bbfa6f",
-                    "cdkey": "11212-62314-81707-49121-92557-42101"
-                },
-                {
-                    "platform": "solaris-x86-64",
-                    "filename": "Eiffel_17.05_ent_100416-solaris-x86-64.tar.bz2",
-					"size": "97903254",
-                    "hash": "f10ef872020026ae9954d03a0c11ebe4e5379ed93042dd463ae86d899f115140",
-                    "cdkey": "11212-62314-81707-49121-92557-42101"
-                },
-                {
-                    "platform": "solaris-x86",
-                    "filename": "Eiffel_17.05_ent_100416-solaris-x86.tar.bz2",
-					"size": "88606974",
-                    "hash": "9a16436cb25d8fbdc8f296c75e9e7420fb21384295bb90a5aa5e44dec879a117",
-                    "cdkey": "11212-62314-81707-49121-92557-42101"
-                },
-                {
-                    "platform": "win64",
-                    "filename": "Eiffel_17.05_ent_100416-win64.msi",
-					"size": "149186032",
-                    "hash": "936ee7452362c9cfb1de247c43af235f53a52fd77ab1851d77bb3593663646ca",
-                    "cdkey": "11212-62314-81707-49121-92557-42101"
-                },
-                {
-                    "platform": "windows",
-                    "filename": "Eiffel_17.05_ent_100416-windows.msi",
-					"size": "135287416",
-                    "hash": "ee752bfb850d241b7b82eeb9e5a1eab596e2a11bfb5778eb1cc1c3dbd956ba6a",
-                    "cdkey": "11212-62314-81707-49121-92557-42101"
-                }
+            {"filename":"Eiffel_18.01_ent_101424-solaris-sparc.tar.bz2", "size":"117208834", "hash":"7c276a012a65572dd57f52e1e97da3ff8caa5c44c5ea699863bb89971e6318f0", "platform":"solaris-sparc", "cdkey" : "27248-98318-61109-20451-92391-61211" },
+            {"filename":"Eiffel_18.01_ent_101424-win64.msi", "size":"153702163", "hash":"fe0b6e937cde6fc6bd6df8afb0cb27396cf4b5b5ecff36240d73734863e40b09", "platform":"win64", "cdkey" : "27248-98318-61109-20451-92391-61211" },
+            {"filename":"Eiffel_18.01_ent_101424-linux-x86-64.tar.bz2", "size":"111744681", "hash":"67d0b5ec224ef908140877b536cb4308915af860df2ccb7dcbe10bb5815100d0", "platform":"linux-x86-64", "cdkey" : "27248-98318-61109-20451-92391-61211" },
+            {"filename":"Eiffel_18.01_ent_101424-solaris-x86.tar.bz2", "size":"91870711", "hash":"f0c279366d4ab592e518c390721ce4c1f07edf2c4b859760be5f3adaa16d9321", "platform":"solaris-x86", "cdkey" : "27248-98318-61109-20451-92391-61211" },
+            {"filename":"Eiffel_18.01_ent_101424-linux-armv6.tar.bz2", "size":"102258684", "hash":"1270ff0470e469db950b828d0f9614d3b1e36fa47f64ec82848de8ec16edd53d", "platform":"linux-armv6", "cdkey" : "27248-98318-61109-20451-92391-61211" },
+            {"filename":"Eiffel_18.01_ent_101424-freebsd-x86.tar.bz2", "size":"103487701", "hash":"a8e6b972f0ba15a202db9c5d9835acf4ec1b0198de55689467ab339a9200c3e8", "platform":"freebsd-x86", "cdkey" : "27248-98318-61109-20451-92391-61211" },
+            {"filename":"Eiffel_18.01_ent_101424-solaris-sparc-64.tar.bz2", "size":"119241676", "hash":"94c87669e61896c565bf1f25e50a2485e3121010c7fb65041fff51f2e9b18bb7", "platform":"solaris-sparc-64", "cdkey" : "27248-98318-61109-20451-92391-61211" },
+            {"filename":"Eiffel_18.01_ent_101424-freebsd-x86-64.tar.bz2", "size":"105041316", "hash":"71930ef02900360b8bfcd74e7412f99871b61594dc2d6f0228e98ce91c5bbc34", "platform":"freebsd-x86-64", "cdkey" : "27248-98318-61109-20451-92391-61211" },
+            {"filename":"Eiffel_18.01_ent_101424-linux-x86-64-suncc.tar.bz2", "size":"102170443", "hash":"3ab177f24a11a6e3e10fd785a4c85829b56f00b0c04a9677fb2fb8880d808876", "platform":"linux-x86-64-suncc", "cdkey" : "27248-98318-61109-20451-92391-61211" },
+            {"filename":"Eiffel_18.01_ent_101424-linux-x86-suncc.tar.bz2", "size":"91223254", "hash":"462221302efd3b241ada4d1a457a63a43030b60f39e2f71b6793f3f17fe1708b", "platform":"linux-x86-suncc", "cdkey" : "27248-98318-61109-20451-92391-61211" },
+            {"filename":"Eiffel_18.01_ent_101424-linux-x86.tar.bz2", "size":"98397419", "hash":"908a540750a06588ee8f1d08e6a08efa78ea7e42fbdf4322cd13a1d60c0c2c46", "platform":"linux-x86", "cdkey" : "27248-98318-61109-20451-92391-61211" },
+            {"filename":"Eiffel_18.01_ent_101424-windows.msi", "size":"139442132", "hash":"aa0551f162916007b0677b37518c8f56e6843fdc69a545e8385c8b52fd8e2e32", "platform":"windows", "cdkey" : "27248-98318-61109-20451-92391-61211" },
+            {"filename":"Eiffel_18.01_ent_101424-openbsd-x86-64.tar.bz2", "size":"121505918", "hash":"5632673445fa750a63bfe27f3320d79e2f4533bfd93cb5cfec992245041a8ae3", "platform":"openbsd-x86-64", "cdkey" : "27248-98318-61109-20451-92391-61211" },
+            {"filename":"Eiffel_18.01_ent_101424-solaris-x86-64.tar.bz2", "size":"101612660", "hash":"20ba6b8c8de466c98bfadfeb3f86d47fa9899167d22cdc104ada35ad79168ddd", "platform":"solaris-x86-64", "cdkey" : "27248-98318-61109-20451-92391-61211" },
+            {"filename":"Eiffel_18.01_ent_101424-macosx-x86-64.tar.bz2", "size":"96967195", "hash":"4729a95833c81978fab9a19f0f3afdf4075ca9df0d6833c5e2fa9a0d9ece0e1d", "platform":"macosx-x86-64", "cdkey" : "27248-98318-61109-20451-92391-61211" }
             ]
         }
     ]

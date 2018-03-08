@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ feature -- Basic operations
 			-- Generate IDL file
 		local
 			l_dir: DIRECTORY
-			l_cmd: STRING
+			l_cmd: STRING_32
 			l_data: EI_CLASS_DATA_INPUT
 			l_idl_file, l_file: PLAIN_TEXT_FILE
 			l_midl_lib: EI_MIDL_LIBRARY
@@ -66,7 +66,7 @@ feature -- Basic operations
 				l_cmd.append (" -use_settings")
 			end
 
-			create l_file.make (Output_file_name)
+			create l_file.make_with_name (Output_file_name)
 			if l_file.exists then
 				l_file.delete
 			end
@@ -110,19 +110,18 @@ feature {NONE} -- Basic operations
 			end
 		rescue
 			environment.set_abort (File_write_error)
-			environment.set_error_data ((create {EXECUTION_ENVIRONMENT}).current_working_directory + "\" + Output_file_name)
+			environment.set_error_data ((create {EXECUTION_ENVIRONMENT}).current_working_path.extended (Output_file_name).name)
 			l_retried := True
 		end
 
-	Output_file_name: STRING
+	Output_file_name: READABLE_STRING_32
 			-- Intermediate file for IDL generator.
 		once
-			Result := environment.destination_folder.twin
-			Result.append ("idl\e2idl.output")
+			Result := environment.destination_folder + "idl\e2idl.output"
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -135,23 +134,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_IDL_GENERATOR
 
-
+end

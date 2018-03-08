@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class
 	WIZARD_C_COMPILER
 
@@ -44,7 +45,7 @@ inherit
 
 feature -- Basic Operations
 
-	compile_folder (a_folder_name: STRING; a_multi_threaded: BOOLEAN)
+	compile_folder (a_folder_name: READABLE_STRING_32; a_multi_threaded: BOOLEAN)
 			-- Compiler C files in folder `a_folder_name'.
 			-- Report progress with `a_progress_report' if not void.
 		require
@@ -74,20 +75,25 @@ feature -- Basic Operations
 				l_process_launcher.launch (l_string, a_folder_name, agent message_output.add_text)
 				if not l_process_launcher.last_launch_successful or not l_directory.has_entry (eiffel_layout.get_environment_32 ({EIFFEL_CONSTANTS}.ise_c_compiler_env)) then
 					environment.set_abort (C_compilation_failed)
-					environment.set_error_data ("in folder " + Env.current_working_directory + "\" + a_folder_name)
+					environment.set_error_data ({STRING_32} "in folder " +
+						if (create {PATH}.make_from_string (a_folder_name)).has_root then
+							a_folder_name
+						else
+							Env.current_working_path.extended (a_folder_name).name
+						end)
 				end
 				environment.remove_abort_request_action
 			end
 			l_directory.close
 		end
 
-	compile_file (a_file_name: STRING)
+	compile_file (a_file_name: READABLE_STRING_32)
 			-- Compile C file `a_file_name'.
 		require
 			non_void_file_name: a_file_name /= Void
-			valid_file_name: is_c_file (a_file_name)
+			valid_file_name: is_c_file (create {PATH}.make_from_string (a_file_name))
 		local
-			l_string: STRING
+			l_string: STRING_32
 			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
 			generate_command_line_file (C_compiler_command_line (a_file_name), Temporary_input_file_name)
@@ -97,7 +103,7 @@ feature -- Basic Operations
 				l_string.append (last_make_command)
 				create l_process_launcher
 				l_process_launcher.run_hidden
-				l_process_launcher.launch (l_string, Env.current_working_directory, agent message_output.add_text)
+				l_process_launcher.launch (l_string, Env.current_working_path.name, agent message_output.add_text)
 				if not l_process_launcher.last_launch_successful then
 					environment.set_abort (C_compilation_failed)
 					environment.set_error_data ("file " + a_file_name)
@@ -113,24 +119,22 @@ feature {NONE} -- Implementation
 	Lib_out_option: STRING = "/OUT:"
 			-- Lib out option
 
-	last_make_command: STRING
+	last_make_command: STRING_32
 			-- Input to compiler
 			-- Set by `generate_make_file'.
 
-	generate_command_line_file (content, a_file_name: STRING)
+	generate_command_line_file (content, a_file_name: READABLE_STRING_32)
 			-- Generate command line with content `content' and file name `a_file_name'.
 			-- Set `last_make_command' with argument to pass to compiler.
 		local
 			retried: BOOLEAN
 			a_file: PLAIN_TEXT_FILE
-			a_string: STRING
+			u: UTF_CONVERTER
 		do
 			if not retried then
-				a_string := Env.current_working_directory.twin
-				a_string.append_character (Directory_separator)
-				a_string.append (a_file_name)
-				create a_file.make_open_write (a_string)
-				a_file.put_string (content)
+				create a_file.make_with_path (Env.current_working_path.extended (a_file_name))
+				a_file.open_write
+				a_file.put_string (u.utf_32_string_to_utf_8_string_8 (content))
 				last_make_command := At_sign.twin
 				last_make_command.append (a_file_name)
 				a_file.close
@@ -144,18 +148,18 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	C_compiler_command_line (a_file_name: STRING): STRING
+	C_compiler_command_line (a_file_name: READABLE_STRING_32): STRING_32
 			-- Cl command line used to compile Proxy Stub
 		do
-			Result := Common_c_compiler_options.twin.as_string_8_conversion
+			Result := Common_c_compiler_options.twin
 			Result.append (" /nologo ")
-			Result.append (Env.current_working_directory.twin)
+			Result.append (Env.current_working_path.name)
 			Result.append_character (Directory_separator)
 			Result.append (a_file_name)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -185,6 +189,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_C_COMPILER
 
-
+end

@@ -2309,6 +2309,7 @@ feature {NONE} -- Processing of options
 			new_options: CONF_TARGET_OPTION
 		do
 			if
+				a_namespace.same_string (namespace_1_18_0) or else
 				a_namespace.same_string (namespace_1_17_0) or else
 				a_namespace.same_string (namespace_1_16_0)
 			then
@@ -3188,7 +3189,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

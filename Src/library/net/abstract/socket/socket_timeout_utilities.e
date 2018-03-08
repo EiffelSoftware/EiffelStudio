@@ -30,12 +30,15 @@ feature -- Time helpers
 		ensure
 			non_negative: Result >= 0
 			coherent: Result.to_natural_64 * one_second_in_nanoseconds <= ns
+			is_class: class
 		end
 
 	seconds_to_nanoseconds (s: INTEGER): NATURAL_64
 			-- Number of nanoseconds in `s` seconds (that fits in NATURAL_64 value).
 		do
 			Result := one_second_in_nanoseconds * s.to_natural_64
+		ensure
+			is_class: class
 		end
 
 feature -- Validation			

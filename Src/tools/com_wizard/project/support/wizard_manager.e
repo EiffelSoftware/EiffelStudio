@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Code generation manager."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -153,9 +153,15 @@ feature {NONE} -- Implementation
 		local
 			l_setup: COMPILER_SETUP
 			l_path: STRING_32
+			l_layout: WIZARD_EIFFEL_LAYOUT
 		do
 			l_path := env.item ("PATH")
 			l_path.append (";")
+			if not is_eiffel_layout_defined then
+				create l_layout
+				l_layout.check_environment_variable
+				set_eiffel_layout (l_layout)
+			end
 			l_path.append (eiffel_layout.bin_path.name)
 			env.put (l_path, "PATH")
 			create l_setup.initialize (smart_checking, not {PLATFORM}.is_64_bits)
@@ -202,7 +208,7 @@ feature {NONE} -- Implementation
 			-- Agent used to raise events
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -232,5 +238,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_MANAGER
 
+end

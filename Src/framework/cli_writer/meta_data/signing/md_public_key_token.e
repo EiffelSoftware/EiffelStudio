@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A public key token"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 create
 	make_from_array,
 	make_from_string
-	
+
 feature {NONE} -- Initialize
 
 	make_from_array (data: ARRAY [NATURAL_8])
@@ -21,7 +21,7 @@ feature {NONE} -- Initialize
 		do
 			create item.make_from_array (data)
 		end
-		
+
 	make_from_string (data: STRING)
 			-- Initialize `item' with content of `data' expressed in hexadecimal.
 		require
@@ -33,7 +33,7 @@ feature {NONE} -- Initialize
 			i, nb: INTEGER
 		do
 			nb := data.count
-			create l_data.make (1, data.count // 2)
+			create l_data.make_filled (0, 1, data.count // 2)
 			from
 				i := 1
 			until
@@ -45,7 +45,7 @@ feature {NONE} -- Initialize
 			end
 			make_from_array (l_data)
 		end
-		
+
 	read_hexa_value (s: STRING): INTEGER
 			-- Convert `s' hexadecimal value into an integer representation.
 		require
@@ -84,7 +84,7 @@ feature {NONE} -- Initialize
 				end
 				i := i + 1
 			end
-			
+
 			Result := last_integer
 		end
 
@@ -95,9 +95,9 @@ feature -- Access
 
 invariant
 	item_not_void: item /= Void
-	
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -110,22 +110,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class MD_PUBLIC_KEY_TOKEN

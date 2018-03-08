@@ -27,7 +27,7 @@ inherit
 		end
 
 	WIZARD_VARIABLE_NAME_MAPPER
-	
+
 feature -- Access
 
 	ce_function_name: STRING
@@ -75,23 +75,23 @@ feature -- Access
 	ec_function_return_type: STRING
 			-- Return type Eiffel to C conversion function.
 
-	c_type: STRING 
+	c_type: STRING
 			-- C type name.
 
 	c_post_type: STRING
 			-- Only used for C arrays to specify array dimensions
 			-- Otherwise is_empty
 
-	eiffel_type: STRING 
+	eiffel_type: STRING
 			-- Eiffel class name
 
 	inherit_from: STRING
 			-- Eiffel class name, from which user of this type should inherit
-	
-	c_definition_header_file_name: STRING
+
+	c_definition_header_file_name: STRING_32
 			-- Filename of C definition header file
 
-	c_declaration_header_file_name: STRING
+	c_declaration_header_file_name: STRING_32
 			-- Filename of C declaration header file
 			-- Note: same as `c_definition_header_file_name' for types other than interfaces
 
@@ -148,7 +148,7 @@ feature -- Access
 	writable: BOOLEAN
 			-- Can it be data type of out parameter?
 
-feature -- Basic operations 
+feature -- Basic operations
 
 	set_visitor_atributes (a_visitor: WIZARD_DATA_TYPE_VISITOR)
 			-- Initialize `a_visitor' attributes.
@@ -173,7 +173,7 @@ feature -- Basic operations
 			a_visitor.set_need_generate_ec (need_generate_ec)
 			a_visitor.set_need_generate_free_memory (need_generate_free_memory)
 			a_visitor.set_need_free_memory (need_free_memory)
-			
+
 			if need_free_memory then
 				a_visitor.set_free_memory_function_name (free_memory_function_name)
 			end
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			create Result
 			Result.set_item (1)
 		end
-		
+
 invariant
 
 	basic_type: is_basic_type implies (not is_array_basic_type and not is_interface and not is_interface_pointer
@@ -252,45 +252,45 @@ invariant
 							and not is_coclass_pointer_pointer
 							and not is_structure and not is_structure_pointer and not is_enumeration)
 
-	structure: is_structure implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and 
-							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and 
+	structure: is_structure implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and
 							not is_interface and not is_interface_pointer and not is_structure_pointer and not is_enumeration)
 
-	structure_pointer: is_structure_pointer implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and 
-							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and 
+	structure_pointer: is_structure_pointer implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and
 							not is_interface and not is_interface_pointer and not is_structure and not is_enumeration)
 
-	interface: is_interface implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and 
-							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and 
+	interface: is_interface implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and
 							not is_structure and not is_structure_pointer and not is_interface_pointer and not is_enumeration)
 
-	interface_pointer: is_interface_pointer implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and 
-							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and 
+	interface_pointer: is_interface_pointer implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and
 							not is_structure and not is_structure_pointer and not is_interface and not is_enumeration)
 
-	interface_pointer_pointer: is_interface_pointer_pointer implies (not is_basic_type and not is_array_basic_type and 
-							not is_coclass and not is_coclass_pointer and not is_interface_pointer and not is_coclass_pointer_pointer and 
+	interface_pointer_pointer: is_interface_pointer_pointer implies (not is_basic_type and not is_array_basic_type and
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer and not is_coclass_pointer_pointer and
 							not is_structure and not is_structure_pointer and not is_interface and not is_enumeration)
 
-	coclass: is_coclass implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and 
-							not is_interface and not is_coclass_pointer and not is_interface_pointer_pointer and 
+	coclass: is_coclass implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and
+							not is_interface and not is_coclass_pointer and not is_interface_pointer_pointer and
 							not is_structure and not is_structure_pointer and not is_interface_pointer and not is_enumeration)
 
-	coclass_pointer: is_coclass_pointer implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and 
-							not is_coclass and not is_interface_pointer and not is_interface_pointer_pointer and 
+	coclass_pointer: is_coclass_pointer implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and
+							not is_coclass and not is_interface_pointer and not is_interface_pointer_pointer and
 							not is_structure and not is_structure_pointer and not is_interface and not is_enumeration)
 
-	coclass_pointer_pointer: is_coclass_pointer_pointer implies (not is_basic_type and not is_array_basic_type and 
-							not is_coclass and not is_coclass_pointer and not is_interface_pointer and not is_interface_pointer_pointer and 
+	coclass_pointer_pointer: is_coclass_pointer_pointer implies (not is_basic_type and not is_array_basic_type and
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer and not is_interface_pointer_pointer and
 							not is_structure and not is_structure_pointer and not is_interface and not is_enumeration)
-						
+
 	enumeration: is_enumeration implies (not is_basic_type and not is_basic_type_ref and not is_array_basic_type and
-							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and 
-							not is_coclass_pointer_pointer and 
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and
+							not is_coclass_pointer_pointer and
 							not is_structure and not is_structure_pointer and not is_interface and not is_interface_pointer)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -303,23 +303,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_DATA_TYPE_GENERATOR
 
-
+end

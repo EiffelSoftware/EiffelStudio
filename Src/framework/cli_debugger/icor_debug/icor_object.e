@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Represents abstraction of ICorDebug.. classes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,6 +21,13 @@ inherit
 		end
 
 	ICOR_EXPORTER
+		export
+			{NONE} all
+		redefine
+			out
+		end
+
+	LOCALIZED_PRINTER
 		export
 			{NONE} all
 		redefine
@@ -143,11 +150,11 @@ feature -- Ref management
 			check item /= Default_pointer end
 
 			debug ("COM_OBJECT")
-				io.error.put_string ("Entering ["+ generating_type +"].add_ref ... on " + item.out + "%N")
+				localized_print_error ({STRING_32} "Entering ["+ generating_type.name_32 +"].add_ref ... on " + item.out + "%N")
 			end
 			l_nb_ref := {CLI_COM}.add_ref (item)
 			debug ("COM_OBJECT")
-				io.error.put_string ("Quitting ["+ generating_type +"].add_ref [" + l_nb_ref.out + "] on " + item.out + "%N")
+				localized_print_error ({STRING_32} "Quitting ["+ generating_type.name_32 +"].add_ref [" + l_nb_ref.out + "] on " + item.out + "%N")
 			end
 		end
 
@@ -158,11 +165,11 @@ feature -- Ref management
 		do
 			check item /= Default_pointer end
 			debug ("COM_OBJECT")
-				io.error.put_string ("Entering [" + generating_type + "].release ... on " + item.out + "%N")
+				localized_print_error ({STRING_32} "Entering [" + generating_type.name_32 + "].release ... on " + item.out + "%N")
 			end
 			l_nb_ref := {CLI_COM}.release (item)
 			debug ("COM_OBJECT")
-				io.error.put_string ("Quitting [" + generating_type + "].release [" + l_nb_ref.out + "] on " + item.out + "%N")
+				localized_print_error ({STRING_32} "Quitting [" + generating_type.name_32 + "].release [" + l_nb_ref.out + "] on " + item.out + "%N")
 			end
 			if l_nb_ref = 0 then
 				item := default_pointer
@@ -198,7 +205,7 @@ feature {ICOR_EXPORTER} -- Access
 	out: STRING
 			-- Output value
 		do
-			create Result.make_from_string (generating_type)
+			create Result.make_from_string (generating_type.name_32.out)
 			Result.append_character ('[')
 			Result.append_string (item.out)
 			Result.append_character (']')
@@ -269,7 +276,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -282,23 +289,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class ICOR_OBJECT
-
+end

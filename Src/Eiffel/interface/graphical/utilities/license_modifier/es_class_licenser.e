@@ -178,14 +178,14 @@ feature -- Basic operatons
 							if not l_mod.is_valid_license (l_license) then
 									-- Render the invalid license template.
 								l_license := locale_formatter.translation (invalid_license_license)
-								if wizard_enginer.is_service_available then
+								if attached wizard_enginer.service as wizard_enginer_service then
 									create l_parameters.make (1)
 									if l_use_old_syntax then
 										l_parameters.force ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
 									else
 										l_parameters.force ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, note_keyword_symbol)
 									end
-									l_license := wizard_enginer.service.render_template (l_license, l_parameters)
+									l_license := wizard_enginer_service.render_template (l_license, l_parameters)
 								else
 									l_license := Void
 								end
@@ -203,9 +203,9 @@ feature -- Basic operatons
 					end
 				else
 						-- The class contains sytax errors
-					if logger.is_service_available then
+					if attached logger.service as logger_service then
 							-- Log error.
-						logger.service.put_message_format_with_severity (
+						logger_service.put_message_format_with_severity (
 							"Unable to apply license because class {1} contains syntax errors.",
 							[a_class.name],
 							{ENVIRONMENT_CATEGORIES}.editor,
@@ -214,9 +214,9 @@ feature -- Basic operatons
 				end
 			else
 					-- There was an exception
-				if logger.is_service_available then
+				if attached logger.service as logger_service then
 						-- Log error.
-					logger.service.put_message_format_with_severity (
+					logger_service.put_message_format_with_severity (
 						"Unable to apply license to class {1} because of an internal exception.",
 						[a_class.name],
 						{ENVIRONMENT_CATEGORIES}.editor,
@@ -246,7 +246,7 @@ feature {NONE} -- Basic operation
 		do
 			if not retried then
 				if (create {RAW_FILE}.make_with_path (a_file_name)).exists then
-					if wizard_enginer.is_service_available then
+					if attached wizard_enginer.service as wizard_enginer_service then
 							-- Set up wizard parameters
 						create l_parameters.make (2)
 						l_parameters.force ((create {DATE}.make_now).year, year_symbol)
@@ -257,7 +257,7 @@ feature {NONE} -- Basic operation
 						end
 
 							-- Render template
-						Result := wizard_enginer.service.render_template_from_file (a_file_name, l_parameters)
+						Result := wizard_enginer_service.render_template_from_file (a_file_name, l_parameters)
 						if Result /= Void then
 							Result.right_adjust
 							Result.left_adjust
@@ -340,7 +340,7 @@ feature {NONE} -- Internationalization
 			-- Default invalid license.
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

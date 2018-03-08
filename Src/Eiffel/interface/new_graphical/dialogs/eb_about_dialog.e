@@ -60,32 +60,35 @@ feature -- Initialization
 			hsep: EV_HORIZONTAL_SEPARATOR
 			ok_button: EV_BUTTON
 			white_cell: EV_CELL
+			bg: EV_COLOR
 		do
 			default_create
 			set_title (Interface_names.t_About)
 
+			bg := Color_read_write
+
 				-- Create controls.
 			eiffel_image := Pixmaps.bm_About.twin
 			eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
-			eiffel_image.set_background_color (White)
+			eiffel_image.set_background_color (bg)
 			create eiffel_image_box
 			eiffel_image_box.extend (eiffel_image)
 			eiffel_image_box.disable_item_expand (eiffel_image)
 			create white_cell
-			white_cell.set_background_color (white)
+			white_cell.set_background_color (bg)
 			eiffel_image_box.extend (white_cell)
 
 			create info_label.make_with_text (t_info)
 			info_label.align_text_left
-			info_label.set_background_color (White)
+			info_label.set_background_color (bg)
 			create version_label.make_with_text (t_Version_info)
 			version_label.align_text_left
-			version_label.set_background_color (White)
+			version_label.set_background_color (bg)
 			create copyright_label.make_with_text (t_Copyright_info)
 			copyright_label.align_text_left
-			copyright_label.set_background_color (White)
+			copyright_label.set_background_color (bg)
 			create registration_label.make_with_text (registration_info)
-			registration_label.set_background_color (White)
+			registration_label.set_background_color (bg)
 			registration_label.disable_edit
 			registration_label.set_minimum_height (100)
 			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent destroy)
@@ -93,9 +96,8 @@ feature -- Initialization
 
 				-- Box with text.
 			create eiffel_text_box
-			eiffel_text_box.set_background_color (White)
+			eiffel_text_box.set_background_color (bg)
 			eiffel_text_box.set_padding (Layout_constants.Default_padding_size)
-			eiffel_text_box.set_background_color (White)
 			eiffel_text_box.extend (version_label)
 			eiffel_text_box.disable_item_expand (version_label)
 			eiffel_text_box.extend (copyright_label)
@@ -106,14 +108,14 @@ feature -- Initialization
 
 				-- Texts box			
 			create texts_box
-			texts_box.set_background_color (White)
+			texts_box.set_background_color (bg)
 			texts_box.extend (eiffel_text_box)
 
 				-- Box with left image + text
 			create hbox
 			hbox.set_padding (Layout_constants.Default_padding_size)
 			hbox.set_border_width (Layout_constants.Default_border_size)
-			hbox.set_background_color (White)
+			hbox.set_background_color (bg)
 			hbox.extend (eiffel_image_box)
 			hbox.disable_item_expand (eiffel_image_box)
 			hbox.extend (texts_box)
@@ -191,13 +193,13 @@ feature {NONE} -- Constant strings
 			Result.append_character ('%N')
 			Result.append_character ('%N')
 			Result.append ("[
-					Web Customer Support: http://support.eiffel.com
-					Visit Eiffel on the Web: http://www.eiffel.com
+					Web Customer Support: https://support.eiffel.com
+					Visit Eiffel on the Web: https://www.eiffel.com
 				]")
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

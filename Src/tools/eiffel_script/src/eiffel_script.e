@@ -162,57 +162,6 @@ feature -- Access
 
 feature -- Execution
 
-	display_usage
-		local
-			cmd: READABLE_STRING_32
-			p: PATH
-		do
-			cmd := execution_environment.arguments.command_name
-			create p.make_from_string (cmd)
-			if attached p.entry as e then
-				cmd := e.name
-				if attached e.extension as ext then
-					cmd := cmd.head (cmd.count - 1 - ext.count)
-				end
-			end
-			print ("USAGE:%N")
-			print ("  ")
-			print (cmd)
-			print (" (-v|--verbose) (-h|--help) (-b|--build) (--check class,project) (--target ecf_target_name) <project.ecf> ...%N")
-			print ("  ")
-			print (cmd)
-			print (" build (-v|--verbose) (--target ecf_target_name) <project.ecf> <output_executable_path> ...%N")
-			print ("%N")
-			print ("[
-COMMANDS:
-  <project.ecf> ...   : build once and launch <project.ecf> execution.
-  build               : build project and save executable as <output_executable_path>.
-
-OPTIONS:
-  --target <ecf-target-name>    : optional target name.
-  --check <level>               : check level for recompilation, either class (default), or project.
-                                : class   = check timestamp of system class files, 
-                                :           and ecf files for included libraries 
-                                :          (ignoring classes from libraries).
-                                : project = only check the timestamp of main project ecf file.
-
-  -b --build                    : force a fresh system build.
-  -o --executable-output <path> : build and save executable as <path>.
-                                : without any execution.!
-
-  -v --verbose                  : verbose output.
-  -h --help                     : display this help.
-  ...                           : arguments for the <project.ecf> execution.
-
-Note: you can overwrite default value, using
-  EIFFEL_SCRIPT_DIR       : root directory for eiffel script app (default under Eiffel user files/.apps) 
-  EIFFEL_SCRIPT_CACHE_DIR : directory caching the compiled executables ($EIFFEL_SCRIPT_DIR/cache) 
-  EIFFEL_SCRIPT_COMP_DIR : directory caching the EIFGENs compilation ($EIFFEL_SCRIPT_DIR/comp) 
-  
-]")
-
-		end
-
 	launch (a_ecf: READABLE_STRING_GENERAL; a_target_name: detachable READABLE_STRING_GENERAL; args: LIST [READABLE_STRING_GENERAL])
 		require
 			is_ecf: a_ecf.ends_with (".ecf")
@@ -342,6 +291,8 @@ feature {NONE} -- Execution
 				then
 					ut.create_directory_path (a_executable_target_location.parent)
 					ut.copy_file_path (l_compiled_executable, a_executable_target_location)
+					ensure_build_is_executable (a_executable_target_location)
+
 					log ("Build succeed!!!%N")
 					rmdir (l_comp_loc)
 
@@ -380,6 +331,14 @@ feature {NONE} -- Execution
 			else
 				report_error ("Could not launch execution!")
 			end
+		end
+
+	ensure_build_is_executable (a_path: PATH)
+		local
+			f: RAW_FILE
+		do
+			create f.make_with_path (a_path)
+			f.add_permission ("u", "rwx")
 		end
 
 feature -- Query
@@ -561,5 +520,59 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+feature -- Usage
+
+	display_usage
+		local
+			cmd: READABLE_STRING_32
+			p: PATH
+		do
+			cmd := execution_environment.arguments.command_name
+			create p.make_from_string (cmd)
+			if attached p.entry as e then
+				cmd := e.name
+				if attached e.extension as ext then
+					cmd := cmd.head (cmd.count - 1 - ext.count)
+				end
+			end
+			print ("USAGE:%N")
+			print ("  ")
+			print (cmd)
+			print (" (-v|--verbose) (-h|--help) (-b|--build) (--check class,project) (--target ecf_target_name) <project.ecf> ...%N")
+			print ("  ")
+			print (cmd)
+			print (" build (-v|--verbose) (--target ecf_target_name) <project.ecf> <output_executable_path> ...%N")
+			print ("%N")
+			print ("[
+COMMANDS:
+  <project.ecf> ...   : build once and launch <project.ecf> execution.
+  build               : build project and save executable as <output_executable_path>.
+
+OPTIONS:
+  --target <ecf-target-name>    : optional target name.
+  --check <level>               : check level for recompilation, either class (default), or project.
+                                : class   = check timestamp of system class files, 
+                                :           and ecf files for included libraries 
+                                :          (ignoring classes from libraries).
+                                : project = only check the timestamp of main project ecf file.
+
+  -b --build                    : force a fresh system build.
+  -o --executable-output <path> : build and save executable as <path>.
+                                : without any execution.!
+
+  -v --verbose                  : verbose output.
+  -h --help                     : display this help.
+  ...                           : arguments for the <project.ecf> execution.
+
+Note: you can overwrite default value, using
+  EIFFEL_SCRIPT_DIR       : root directory for eiffel script app (default under Eiffel user files/.apps) 
+  EIFFEL_SCRIPT_CACHE_DIR : directory caching the compiled executables ($EIFFEL_SCRIPT_DIR/cache) 
+  EIFFEL_SCRIPT_COMP_DIR : directory caching the EIFGENs compilation ($EIFFEL_SCRIPT_DIR/comp) 
+  
+]")
+
+		end
+
 
 end

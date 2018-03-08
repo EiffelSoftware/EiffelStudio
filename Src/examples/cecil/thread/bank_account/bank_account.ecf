@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="bank_account" uuid="4D8A50AE-6363-4159-93A0-6724537F09B6">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="bank_account" uuid="4D8A50AE-6363-4159-93A0-6724537F09B6">
 	<target name="classic">
 		<root cluster="root_cluster" class="BANK_ACCOUNT" feature="make"/>
 		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
@@ -33,10 +33,9 @@
 		<precompile name="base-mt_pre" location="$ISE_PRECOMP\base-mt.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
 			<visible class="BOOLEAN_REF"/>
-		</library>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf">
 			<visible class="MUTEX"/>
 		</library>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<cluster name="root_cluster" location=".\">
 			<visible class="DEPOSITOR"/>
 			<visible class="WITHDRAWER"/>

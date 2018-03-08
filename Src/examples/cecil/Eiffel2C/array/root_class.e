@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class
 	ROOT_CLASS
 
@@ -11,15 +12,15 @@ feature	-- Initialization
 
 	a: ARRAY [INTEGER]
 	any: ANY
-	
+
 	make
-		local 
+		local
 			i : INTEGER
 		do
 			io.put_string ("This example create n array on the Eiffel side and print it on the C side%N");
-			io.put_string ("Enter 10 integers: %N")	
-			create a. make (1, 10)
-			from 
+			io.put_string ("Enter 10 integers: %N")
+			create a.make_filled (0, 1, 10)
+			from
 				i := 1
 			until
 				i > 10
@@ -30,7 +31,7 @@ feature	-- Initialization
 			end
 
 			any := a.to_c
-			c_print ($any)	
+			c_print ($any)
 		end
 
 feature --External
@@ -41,7 +42,7 @@ feature --External
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -51,6 +52,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class ROOT_CLASS
-
+end

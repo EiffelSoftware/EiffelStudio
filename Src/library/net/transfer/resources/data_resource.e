@@ -1,8 +1,6 @@
-note
-	description:
-		"Data resources"
+﻿note
+	description: "Data resources"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,11 +15,6 @@ deferred class DATA_RESOURCE inherit
 	HASHABLE
 		redefine
 			is_equal, is_hashable
-		end
-
-	SOCKET_TIMEOUT_UTILITIES
-		redefine
-			is_equal
 		end
 
 feature {NONE} -- Initialization
@@ -240,11 +233,13 @@ feature -- Access: timeout
 			ns: like timeout_ns
 		do
 			ns := timeout_ns
-			Result := nanoseconds_to_seconds (timeout_ns)
+			Result := {SOCKET_TIMEOUT_UTILITIES}.nanoseconds_to_seconds (timeout_ns)
 			if Result = 0 and ns > 0 then
 					-- As 0 may have different meaning, use the closest non zero possible value.
 				Result := 1
 			end
+		ensure
+			timeout_positive: timeout_ns /= 0 implies Result > 0
 		end
 
 	timeout_ns: NATURAL_64
@@ -371,16 +366,16 @@ feature -- Status setting
 		require
 			non_negative: n >= 0
 		do
-			set_timeout_ns (seconds_to_nanoseconds (n))
+			set_timeout_ns ({SOCKET_TIMEOUT_UTILITIES}.seconds_to_nanoseconds (n))
 		ensure
-			timeout_set: timeout_ns = seconds_to_nanoseconds (n)
+			timeout_set: timeout_ns = {SOCKET_TIMEOUT_UTILITIES}.seconds_to_nanoseconds (n)
 		end
 
 	set_timeout_ns (a_timeout_nanoseconds: NATURAL_64)
 			-- Set timeout with to `a_timeout_nanoseconds` nanoseconds.
 			-- Warning: the timeout granularity of the platform may not be nanoseconds, but micro or milliseconds.
 		require
-			is_valid_timeout_ns: is_valid_timeout_ns (a_timeout_nanoseconds)
+			is_valid_timeout_ns: {SOCKET_TIMEOUT_UTILITIES}.is_valid_timeout_ns (a_timeout_nanoseconds)
 		do
 			timeout_ns := a_timeout_nanoseconds
 		ensure
@@ -472,7 +467,6 @@ feature {NONE} -- Constants
 invariant
 
 	address_assigned: address /= Void
-	timeout_ns_non_negative: timeout_ns /= 0
 	packet_constraint: not (has_packet xor last_packet /= Void)
 	pending_constraint: is_packet_pending implies
 						(is_open and is_readable and transfer_initiated)
@@ -491,8 +485,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DATA_RESOURCE
-
+end

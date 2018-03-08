@@ -182,7 +182,6 @@ feature -- Visit nodes
 			l_name: ARRAYED_LIST [READABLE_STRING_8]
 			l_val: ARRAYED_LIST [detachable READABLE_STRING_GENERAL]
 			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
-			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 		do
 			current_target := a_target
 			append_text_indent ("<target")
@@ -245,48 +244,48 @@ feature -- Visit nodes
 				create l_val.make (2)
 				l_settings := a_target.internal_settings
 				create l_sorted_list.make_from_array (l_settings.current_keys)
-				create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
-				l_sorter.sort (l_sorted_list)
+				;(create {QUICK_SORTER [READABLE_STRING_GENERAL]}.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})).sort (l_sorted_list)
 				l_sorted_list.start
 			until
 				l_sorted_list.after
 			loop
-				l_val.wipe_out
-				l_val.force (l_sorted_list.item_for_iteration)
-				if attached l_settings.item (l_sorted_list.item_for_iteration) as l_setting_item then
-						-- l_sorted_list is built from l_settings.current_keys, then l_settings has related item
-					l_val.force (l_setting_item)
+				if valid_setting (l_sorted_list.item_for_iteration, namespace) then
+					l_val.wipe_out
+					l_val.force (l_sorted_list.item_for_iteration)
+					if attached l_settings.item (l_sorted_list.item_for_iteration) as l_setting_item then
+							-- l_sorted_list is built from l_settings.current_keys, then l_settings has related item
+						l_val.force (l_setting_item)
+					end
+					append_tag ({STRING_32} "setting", Void, l_name, l_val)
 				end
-				append_tag ({STRING_32} "setting", Void, l_name, l_val)
 				l_sorted_list.forth
 			end
 			if
 				attached a_target.internal_options as o and then
 				attached o.concurrency_capability as concurrency_capability and then
-				concurrency_capability.is_root_set
+				concurrency_capability.is_root_set and then
+				includes_this_or_before (namespace_1_15_0)
 			then
 					-- Before `namespace_1_15_0' inclusively this was a setting.
 					-- In `namespace_1_16_0' and above this is a capaility that is handled elsewhere.
-				if includes_this_or_before (namespace_1_15_0) then
-					if includes_this_or_after (namespace_1_7_0) then
-							-- Use "concurrency" setting.
-						l_val.wipe_out
-						l_val.force (s_concurrency)
-						l_val.force (concurrency_capability.custom_root)
+				if includes_this_or_after (namespace_1_7_0) then
+						-- Use "concurrency" setting.
+					l_val.wipe_out
+					l_val.force (s_concurrency)
+					l_val.force (concurrency_capability.custom_root)
+				else
+						-- Use "multithreaded" setting.
+					l_val.wipe_out
+					l_val.force (s_multithreaded)
+					if concurrency_capability.custom_root_index = {CONF_TARGET_OPTION}.concurrency_index_none then
+						l_val.force ("false")
 					else
-							-- Use "multithreaded" setting.
-						l_val.wipe_out
-						l_val.force (s_multithreaded)
-						if concurrency_capability.custom_root_index = {CONF_TARGET_OPTION}.concurrency_index_none then
-							l_val.force ("false")
-						else
-								-- There is no way to specify all concurrent variants,
-								-- so only multithreaded variant is used.
-							l_val.force ("true")
-						end
+							-- There is no way to specify all concurrent variants,
+							-- so only multithreaded variant is used.
+						l_val.force ("true")
 					end
-					append_tag ({STRING_32} "setting", Void, l_name, l_val)
 				end
+				append_tag ({STRING_32} "setting", Void, l_name, l_val)
 			end
 			if
 				includes_this_or_after (namespace_1_16_0) and then
@@ -404,7 +403,7 @@ feature -- Visit nodes
 			-- Visit `a_cluster'.
 		do
 				-- ignore subclusters, except if we are handling one.
-			if (a_cluster.parent = Void or current_is_subcluster) then
+			if a_cluster.parent = Void or current_is_subcluster then
 				current_is_subcluster := False
 				if a_cluster.is_test_cluster then
 					append_pre_group ("tests", a_cluster)
@@ -475,12 +474,10 @@ feature {NONE} -- Implementation
 			a_groups_not_void: a_groups /= Void
 		local
 			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
-			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 		do
 			from
 				create l_sorted_list.make_from_array (a_groups.current_keys)
-				create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
-				l_sorter.sort (l_sorted_list)
+				;(create {QUICK_SORTER [READABLE_STRING_GENERAL]}.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})).sort (l_sorted_list)
 				l_sorted_list.start
 			until
 				l_sorted_list.after
@@ -1400,7 +1397,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

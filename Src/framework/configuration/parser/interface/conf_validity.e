@@ -53,7 +53,7 @@ feature -- Basic validity queries
 		do
 			Result :=
 				is_after_or_equal (a_namespace, namespace_1_17_0) and then valid_warnings_1_17_0.has (a_warning) or else
-				is_after_or_equal (a_namespace, namespace_1_10_0) and then is_before_or_equal (a_namespace, namespace_1_16_0) and then valid_warnings_1_10_0.has (a_warning) or else
+				is_between_or_equal (a_namespace, namespace_1_10_0, namespace_1_16_0) and then valid_warnings_1_10_0.has (a_warning) or else
 				is_before_or_equal (a_namespace, namespace_1_9_0) and then valid_warnings_default.has (a_warning)
 		end
 
@@ -110,7 +110,8 @@ feature -- Basic validity queries
 			if attached s and then s.is_valid_as_string_8 then
 				v := s.to_string_8
 				Result :=
-					is_after_or_equal (n, namespace_1_17_0) and then valid_settings_1_17_0.has (v) or else
+					is_after_or_equal (n, namespace_1_18_0) and then valid_settings_1_18_0.has (v) or else
+					is_between_or_equal (n, namespace_1_17_0, namespace_1_17_0) and then valid_settings_1_17_0.has (v) or else
 					is_before_or_equal (n, namespace_1_16_0) and then valid_settings.has (v)
 			end
 		end
@@ -419,6 +420,11 @@ feature {NONE} -- Implementation
 			-- The names of known settings.
 		once
 			Result := valid_settings_1_17_0
+		ensure
+			known_settings_old: across valid_settings as s all Result.has (s.item) end
+			known_settings_1_17_0: across valid_settings_1_17_0 as s all Result.has (s.item) end
+			known_settings_1_18_0: across valid_settings_1_18_0 as s all Result.has (s.item) end
+			known_settings_valid: across Result as s all valid_settings.has (s.item) or else valid_settings_1_17_0.has (s.item) or else valid_settings_1_18_0.has (s.item) end
 		end
 
 	valid_settings: SEARCH_TABLE [STRING]
@@ -471,10 +477,17 @@ feature {NONE} -- Implementation
 		end
 
 	valid_settings_1_17_0: SEARCH_TABLE [STRING]
-			-- The codes of valid settings in `namespace_1_17_0` and above.
+			-- The codes of valid settings in `namespace_1_17_0`.
 		once
 			Result := valid_settings.twin
 			Result.force (s_absent_explicit_assertion)
+		end
+
+	valid_settings_1_18_0: SEARCH_TABLE [STRING]
+			-- The codes of valid settings in `namespace_1_18_0` and above.
+		once
+			Result := valid_settings_1_17_0.twin
+			Result.remove (s_msil_assembly_compatibility)
 		end
 
 	boolean_settings: STRING_TABLE [BOOLEAN]
@@ -538,9 +551,9 @@ feature {NONE} -- Implementation
 			valid_end_index: string.valid_index (end_index)
 			valid_start_index_end_index: start_index <= end_index
 		do
-			Result := key_name (string, start_index, end_index, valid_settings)
+			Result := key_name (string, start_index, end_index, known_settings)
 		ensure
-			valid_setting: attached Result implies valid_settings.has (Result)
+			valid_setting: attached Result implies is_setting_known (Result)
 		end
 
 	key_name (string: READABLE_STRING_32; start_index, end_index: INTEGER; keys: ITERABLE [READABLE_STRING_GENERAL]): detachable READABLE_STRING_32
@@ -647,7 +660,7 @@ feature {NONE} -- Option names
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

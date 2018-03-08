@@ -1,7 +1,5 @@
 ﻿note
-
-	description:
-		"Resource table hashed on resource name."
+	description: "Resource table hashed on resource name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -149,16 +147,14 @@ feature -- Access
 						last_pos := pos
 					end
 				end
+				across
+					a_list as l
 				from
-					create Result.make (1, a_list.count)
-					a_list.start
+					create Result.make_empty
 					pos := 1
-				until
-					a_list.after
 				loop
-					Result.put (a_list.item, pos)
+					Result.force (l.item, pos)
 					pos := pos + 1
-					a_list.forth
 				end
 			end
 		end
@@ -193,7 +189,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

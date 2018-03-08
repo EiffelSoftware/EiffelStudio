@@ -1,11 +1,11 @@
-note
+﻿note
 	description	: "[
-						cURL https://curl.haxx.se/libcurl/c/smtp-mail.html
-						For original C version, please see:
-						https://curl.haxx.se/libcurl/c/smtp-mail.html
-						This is a simple example showing how to send mail using libcurl's SMTP
-						capabilities.
-					]"
+			cURL https://curl.haxx.se/libcurl/c/smtp-mail.html
+			For original C version, please see:
+			https://curl.haxx.se/libcurl/c/smtp-mail.html
+			This is a simple example showing how to send mail using libcurl's SMTP
+			capabilities.
+		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
@@ -18,7 +18,7 @@ class
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Run application.
@@ -31,7 +31,6 @@ feature -- Initialization
 			curl_externals: CURL_EXTERNALS
 			payload_data: CURL_PAYLOAD_DATA_FUNCTION
 			l_message: STRING
-			l_upload: FILE
 		do
 			io.put_string ("Eiffel cURL SMTP example showing how to send e-mails.")
 			io.put_new_line
@@ -97,30 +96,29 @@ feature -- Initialization
 feature {NONE} -- Implementation
 
 	curl_easy: CURL_EASY_EXTERNALS
-			-- cURL easy externals
+			-- cURL easy externals.
 		once
 			create Result
 		end
 
-	curl_handle: POINTER;
-			-- cURL handle
-
+	curl_handle: POINTER
+			-- cURL handle.
 
 	message: STRING  = "[
-  Date: Mon, 29 Nov 2010 21:54:29 +1100
-  To:  $TO
-  From:  $FROM (Example User)
-  Cc: $CC (Another example User)
-  Subject: SMTP example message
-  
-  The body of the message starts here
-  
-  It could be a lot of lines, could be MIME encoded, whatever.
-  Check RFC5322.
-  ]"
+		Date: Mon, 29 Nov 2010 21:54:29 +1100
+		To:  $TO
+		From:  $FROM (Example User)
+		Cc: $CC (Another example User)
+		Subject: SMTP example message
+		
+		The body of the message starts here
+		
+		It could be a lot of lines, could be MIME encoded, whatever.
+		Check RFC5322.
+	]"
 
 note
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -130,4 +128,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class APPLICATION
+end

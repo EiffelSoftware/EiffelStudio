@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Expose features to persist and retrieve data to and from registry"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -165,7 +165,7 @@ feature -- Basic Operations
 			a_list.compare_objects
 			save_string (encoded_list (a_list), a_key)
 		ensure
-			saved: is_saved_list (a_key) and then saved_list (a_key).is_equal (a_list)
+			saved: is_saved_list (a_key) and then a_list.is_equal (saved_list (a_key))
 		end
 
 	remove_entry (a_key: READABLE_STRING_GENERAL)
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -235,6 +235,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_REGISTRY_STORE
 
-
+end

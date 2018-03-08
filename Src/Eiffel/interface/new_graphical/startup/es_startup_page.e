@@ -42,8 +42,7 @@ feature {NONE} -- Initialization
 			main_box := cl
 			dialog.extend (cl)
 
-			cl.set_background_color (colors.stock_colors.white)
-			cl.propagate_background_color
+			cl.set_background_color (colors.stock_colors.default_background_color)
 		end
 
 feature -- Execution
@@ -85,7 +84,11 @@ feature -- Execution
 			eiffel_image: EV_PIXMAP
 			but: EV_BUTTON
 			l_focus: detachable EV_WIDGET
+			bg,fg: EV_COLOR
 		do
+			bg := colors.stock_colors.color_read_write
+			fg := colors.stock_colors.default_foreground_color
+
 			create hb
 			hb.set_border_width (layout_constants.default_border_size)
 			hb.set_padding_width (layout_constants.default_padding_size)
@@ -95,7 +98,8 @@ feature -- Execution
 				create vb
 				eiffel_image :=	Pixmaps.bm_About.twin
 				eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
-				eiffel_image.set_background_color (colors.stock_colors.white)
+				eiffel_image.set_background_color (bg)
+				eiffel_image.set_foreground_color (fg)
 				vb.extend (eiffel_image)
 				vb.disable_item_expand (eiffel_image)
 				vb.extend (create {EV_CELL})
@@ -121,6 +125,8 @@ We look forward to your contributions
 				]"
 
 				txt.set_text (l_agreement_text)
+				txt.set_background_color (bg)
+				txt.set_foreground_color (fg)
 				vb.extend (txt)
 				txt.set_minimum_height (220)
 				create lnk.make_with_text (interface_names.l_read_license_text)
@@ -161,9 +167,10 @@ We look forward to your contributions
 			if l_focus /= Void then
 				l_focus.set_focus
 			end
-			main_box.set_background_color (colors.stock_colors.white)
+			main_box.set_background_color (bg)
 			main_box.propagate_background_color
-			txt.set_foreground_color (colors.stock_colors.black)
+			main_box.set_foreground_color (fg)
+			main_box.propagate_foreground_color
 		end
 
 	switch_to_account_page
@@ -174,7 +181,10 @@ We look forward to your contributions
 			but: EV_BUTTON
 			l_focus: detachable EV_WIDGET
 			wid: ES_ACCOUNT_LOGIN_REGISTER_BOX
+			bg,fg: EV_COLOR
 		do
+			bg := colors.stock_colors.color_read_write
+			fg := colors.stock_colors.default_foreground_color
 			create hb
 			hb.set_border_width (layout_constants.default_border_size)
 			hb.set_padding_width (layout_constants.default_padding_size)
@@ -182,9 +192,9 @@ We look forward to your contributions
 
 				-- Logo column
 			create vb
-			eiffel_image :=	Pixmaps.bm_About.twin
+			eiffel_image :=	Pixmaps.bm_about.twin
 			eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
-			eiffel_image.set_background_color (colors.stock_colors.white)
+			eiffel_image.set_background_color (bg)
 			vb.extend (eiffel_image)
 			vb.disable_item_expand (eiffel_image)
 			vb.extend (create {EV_CELL})
@@ -210,8 +220,10 @@ We look forward to your contributions
 			if l_focus /= Void then
 				l_focus.set_focus
 			end
-			main_box.set_background_color (colors.stock_colors.white)
+			main_box.set_background_color (bg)
 			main_box.propagate_background_color
+			main_box.set_background_color (fg)
+			main_box.propagate_foreground_color
 		end
 
 feature -- Status

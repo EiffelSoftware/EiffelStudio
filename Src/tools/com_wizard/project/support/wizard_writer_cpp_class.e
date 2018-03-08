@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "C++ code writer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	generated_code: STRING
+	generated_code: STRING_32
 			-- Generated code
 		local
 			l_writers: LIST [WIZARD_WRITER_C_FUNCTION]
@@ -145,7 +145,7 @@ feature -- Access
 			end
 		end
 
-	declaration_header_file_name: STRING
+	declaration_header_file_name: STRING_32
 			-- Declaration header file name
 
 	generated_declaration_header_file: STRING
@@ -353,7 +353,7 @@ feature -- Access
 	can_generate: BOOLEAN
 			-- Can code be generated?
 		do
-			Result := name /= Void and header /= Void 
+			Result := name /= Void and header /= Void
 				and definition_header_file_name /= Void and then not definition_header_file_name.is_empty
 				and (not abstract implies not constructors.is_empty)
 		end
@@ -363,10 +363,10 @@ feature -- Access
 
 	namespace: STRING
 			-- Namespace.
-		
-	members: HASH_TABLE [LIST [WIZARD_WRITER_C_MEMBER], INTEGER]  
+
+	members: HASH_TABLE [LIST [WIZARD_WRITER_C_MEMBER], INTEGER]
 			-- C++ class members
-	
+
 	functions: HASH_TABLE [LIST [WIZARD_WRITER_C_FUNCTION], INTEGER]
 			-- C++ class functions
 
@@ -381,11 +381,11 @@ feature -- Access
 
 	constructors: LIST [WIZARD_WRITER_CPP_CONSTRUCTOR]
 			-- List of constructors
-			
+
 	destructor_body: STRING
 			-- Destructor code
 
-	abstract: BOOLEAN 
+	abstract: BOOLEAN
 			-- Is class abstruct?
 
 	ordered_elements: LIST [WIZARD_WRITER]
@@ -429,7 +429,7 @@ feature -- Element Change
 		ensure
 			declaration_header_file_name_set: declaration_header_file_name = a_name
 		end
-		
+
 	add_constructor (a_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR)
 			-- Add `a_constructor' to class constructors.
 		require
@@ -468,7 +468,7 @@ feature -- Element Change
 		ensure
 			added: members.has (a_export_status) and then members.item (a_export_status).last = a_member
 		end
-	
+
 	add_function (a_function: WIZARD_WRITER_C_FUNCTION; a_export_status: INTEGER)
 			-- Add `a_function' to functions.
 		require
@@ -484,7 +484,7 @@ feature -- Element Change
 		ensure
 			added: functions.has (a_export_status) and then functions.item (a_export_status).last = a_function
 		end
-	
+
 	set_header (a_header: like header)
 			-- Set `header' with `a_header'.
 		require
@@ -545,7 +545,7 @@ feature -- Element Change
 
 feature -- Basic Operations
 
-	save_declaration_header_file (a_header_file: STRING)
+	save_declaration_header_file (a_header_file: READABLE_STRING_32)
 			-- Save declaration header file into `a_header_file'.
    		require
    			can_generate: can_generate
@@ -555,7 +555,7 @@ feature -- Basic Operations
 			end
 	 	end
 
-	save_definition_header_file (a_header_file: STRING)
+	save_definition_header_file (a_header_file: READABLE_STRING_32)
 			-- Save definition header file into `a_header_file'.
    		require
    			can_generate: can_generate
@@ -589,7 +589,7 @@ feature {NONE} -- Implementation
 			end
 			Result.append ("%N")
 		end
-					
+
 	generated_function_code (a_function: WIZARD_WRITER_C_FUNCTION): STRING
 			-- Generated code
 		require
@@ -606,7 +606,7 @@ feature {NONE} -- Implementation
 			Result.append ("::")
 			Result.append (a_function.name)
 			Result.append ("(")
-			if a_function.signature /= Void then 
+			if a_function.signature /= Void then
 				Result.append (" ")
 				Result.append (a_function.signature)
 				Result.append (" ")
@@ -632,7 +632,7 @@ invariant
 	non_void_constructors: constructors /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -645,22 +645,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_WRITER_CPP_CLASS
 
+end

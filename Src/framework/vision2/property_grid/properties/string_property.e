@@ -43,7 +43,7 @@ feature -- Specialized update
 			-- Set `value' to `a_value' and propagate the change if it the new value is different from the old one.
 		local
 			l_val: like displayed_value
-			tu: TUPLE [detachable READABLE_STRING_32]
+			tu: TUPLE [like value]
 		do
 			if not equal (value, a_value) then
 				value := a_value
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

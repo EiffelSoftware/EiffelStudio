@@ -44,6 +44,11 @@ feature {NONE} -- Initialization
 			create {XML_DISPLAY_VIEWER_BOX} v.make (Current, for_tool)
 			v.set_auto_selectable (False)
 			add_viewer (v, vr)
+			
+			create {JSON_DISPLAY_VIEWER_BOX} v.make (Current, for_tool)
+			v.set_auto_selectable (False)
+			add_viewer (v, vr)
+
 			create {OBJECT_BROWSER_VIEWER_BOX} v.make (Current, for_tool)
 			add_viewer (v, Void)
 			create {OBJECT_INTERNAL_VIEWER_BOX} v.make (Current, for_tool)
@@ -473,7 +478,7 @@ invariant
 	valid_stone: has_object implies is_stone_valid (current_object)
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -129,11 +129,11 @@ feature -- Commands
 
 			if is_valid_start_symbol then
 				parsed_json_value := next_json_value
-				if extra_elements then
-					report_error ("Remaining element outside the main json value!")
+				if not has_error and extra_elements then
+					report_error_at ("Remaining element outside the main json value", index)
 				end
 			else
-				report_error ("Syntax error unexpected token, expecting `{' or `['")
+				report_error_at ("Syntax error unexpected token, expecting '{' or '['", index)
 			end
 			is_parsed := is_valid
 		end
@@ -148,6 +148,22 @@ feature -- Element change
 		do
 			has_error := True
 			errors.force (e)
+		ensure
+			has_error: has_error
+			is_not_valid: not is_valid
+		end
+
+	report_error_at (e: STRING; pos: INTEGER)
+			-- Report error `e` at position `pos`.
+		require
+			e_not_void: e /= Void
+			pos_valid: pos > 0
+		do
+			if pos > 0 then
+				report_error (e + " (position: " + index.out + ")")
+			else
+				report_error (e)
+			end
 		ensure
 			has_error: has_error
 			is_not_valid: not is_valid
@@ -235,7 +251,7 @@ feature {NONE} -- Implementation: parsing
 						next
 						next
 					else
-						report_error ("JSON is not well formed in parse")
+						report_error_at ("JSON value is not well formed", index)
 						Result := Void
 					end
 				end
@@ -276,7 +292,7 @@ feature {NONE} -- Implementation: parsing
 						next
 						skip_white_spaces
 					else
-						report_error ("%N Input string is a not well formed JSON, expected: : found: " + actual.out)
+						report_error_at ("%N Input string is a not well formed JSON, expected [:] found [" + actual.out + "]", index)
 						has_more := False
 					end
 					l_value := next_json_value
@@ -288,7 +304,7 @@ feature {NONE} -- Implementation: parsing
 							has_more := False
 						elseif actual /= token_comma then
 							has_more := False
-							report_error ("JSON Object syntactically malformed expected , found: [" + actual.out + "]")
+							report_error_at ("JSON Object syntactically malformed expected , found [" + actual.out + "]", index)
 						end
 					else
 						has_more := False
@@ -328,11 +344,11 @@ feature {NONE} -- Implementation: parsing
 								l_json_string.append (l_unicode)
 							else
 								has_more := False
-								report_error ("Input String is not well formed JSON, expected a Unicode value, found [" + c.out + " ]")
+								report_error_at ("Input string is not well formed JSON, expected Unicode value, found [" + c.out + "]", index)
 							end
 						elseif (not is_special_character (c) and not is_special_control (c)) or c = '%N' then
 							has_more := False
-							report_error ("Input String is not well formed JSON, found [" + c.out + " ]")
+							report_error_at ("Input string is not well formed JSON, found [" + c.out + "]", index)
 						else
 							l_json_string.append_character ('\')
 							l_json_string.append_character (c)
@@ -340,7 +356,7 @@ feature {NONE} -- Implementation: parsing
 					else
 						if is_special_character (c) and c /= '/' then
 							has_more := False
-							report_error ("Input String is not well formed JSON, found [" + c.out + " ]")
+							report_error_at ("Input string is not well formed JSON, found [" + c.out + "]", index)
 						elseif c = '%U' then
 								--| Accepts null character in string value.
 							l_json_string.append_character (c)
@@ -389,11 +405,11 @@ feature {NONE} -- Implementation: parsing
 							flag := False
 						elseif c /= token_comma then
 							flag := False
-							report_error ("Array is not well formed JSON,  found [" + c.out + " ]")
+							report_error_at ("Array is not well formed JSON, found [" + c.out + "]", index)
 						end
 					else
 						flag := False
-						report_error ("Array is not well formed JSON,  found [" + actual.out + " ]")
+						report_error_at ("Array is not well formed JSON, found [" + actual.out + "]", index)
 					end
 				end
 			end
@@ -431,7 +447,7 @@ feature {NONE} -- Implementation: parsing
 					create Result.make_real (sb.to_double)
 				end
 			else
-				report_error ("Expected a number, found: [ " + sb + " ]")
+				report_error_at ("Expected a number, found [" + sb + "]", index)
 			end
 		end
 

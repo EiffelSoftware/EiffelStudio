@@ -10,6 +10,7 @@ class
 inherit
 
 	SSL_SHARED_EXCEPTIONS
+	SSL_SHARED
 
 create
 	make
@@ -24,11 +25,13 @@ feature {NONE} -- Initialization
 			l_res: INTEGER
 			l_description: STRING
 		do
+
 				-- clean conext, reset, free and void.
 			clean_context
 			cipher := a_cipher
 			mode := a_mode
 			operation := a_operation
+			initialize_ssl
 			tag := Void
 			if attached {SSL_BLOCK_CIPHER_ALGORITHM} cipher as l_algo then
 				block_size_bytes := l_algo.block_size // 8
@@ -63,12 +66,12 @@ feature {NONE} -- Initialization
 				end
 				if attached {SSL_GCM_MODE} mode as l_mode then
 					if attached iv_nonce as l_iv_nonce then
-						l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_ctrl (ctx, {SSL_CRYPTO_EXTERNALS}.C_EVP_CTRL_AEAD_SET_IVLEN, l_iv_nonce.count, default_pointer)
+						l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_ctrl (ctx, {SSL_CRYPTO_EXTERNALS}.C_EVP_CTRL_GCM_SET_IVLEN, l_iv_nonce.count, default_pointer)
 						check
 							success: l_res /= 0
 						end
 						if attached l_mode.tag as l_tag then
-							l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_ctrl (ctx, {SSL_CRYPTO_EXTERNALS}.C_EVP_CTRL_AEAD_SET_TAG, l_tag.count, l_tag.item)
+							l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_ctrl (ctx, {SSL_CRYPTO_EXTERNALS}.C_EVP_CTRL_GCM_SET_TAG, l_tag.count, l_tag.item)
 							check
 								success: l_res /= 0
 							end
@@ -252,7 +255,7 @@ feature -- Finalize
 				end
 				if attached {SSL_GCM_MODE} mode and then operation = encrypt_mode then
 					create l_tag_buff.make (block_size_bytes)
-					l_res := {SSL_CRYPTO_EXTERNALS}.c_EVP_CIPHER_CTX_ctrl (ctx, {SSL_CRYPTO_EXTERNALS}.C_EVP_CTRL_AEAD_GET_TAG, block_size_bytes, l_tag_buff.item)
+					l_res := {SSL_CRYPTO_EXTERNALS}.c_EVP_CIPHER_CTX_ctrl (ctx, {SSL_CRYPTO_EXTERNALS}.C_EVP_CTRL_GCM_GET_TAG, block_size_bytes, l_tag_buff.item)
 					check
 						success: l_res /= 0
 					end
@@ -281,7 +284,7 @@ feature -- Finalize
 		local
 			l_res: INTEGER
 		do
-			l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_ctrl (ctx, {SSL_CRYPTO_EXTERNALS}.C_EVP_CTRL_AEAD_SET_TAG, a_tag.count, a_tag.item)
+			l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_ctrl (ctx, {SSL_CRYPTO_EXTERNALS}.C_EVP_CTRL_GCM_SET_TAG, a_tag.count, a_tag.item)
 			check
 				success: l_res /= 0
 			end
@@ -345,9 +348,9 @@ feature -- Clean context
 		local
 			l_res: INTEGER
 		do
-			if attached ctx as l_ctx then
-				l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_reset (l_ctx)
-				{SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_free (l_ctx)
+			if  ctx  /= default_pointer then
+				l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_reset (ctx)
+				{SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_free (ctx)
 				ctx := default_pointer
 			end
 		end

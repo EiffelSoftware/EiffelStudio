@@ -26,12 +26,12 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\unstable\library\network\openssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\libcryptoMT.lib">
+		<external_object location="$(ISE_LIBRARY)\unstable\library\network\openssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\libeay32.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\unstable\library\network\openssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\libsslMT.lib">
+		<external_object location="$(ISE_LIBRARY)\unstable\library\network\openssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\ssleay32.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>

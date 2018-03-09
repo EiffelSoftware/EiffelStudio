@@ -235,7 +235,7 @@ feature -- Access
 			"C inline use %"eif_openssl.h%""
 		alias
 			"[
-				return EVP_CIPHER_CTX_reset((EVP_CIPHER_CTX *)$a_ctx);
+				return EVP_CIPHER_CTX_cleanup((EVP_CIPHER_CTX *)$a_ctx);
 			]"
 		end
 
@@ -248,25 +248,50 @@ feature -- Access
 			"return EVP_CIPHER_CTX_ctrl((EVP_CIPHER_CTX *)$a_ctx, (int)$a_type, (int) $a_arg, (void *) $a_ptr);"
 		end
 
-	c_evp_ctrl_aead_set_ivlen: INTEGER
+
+--  GCM and OCB Modes are not supported in 1.0.2
+--	c_evp_ctrl_aead_set_ivlen: INTEGER
+--		external
+--			"C inline use %"eif_openssl.h%""
+--		alias
+--			"return EVP_CTRL_AEAD_SET_IVLEN"
+--		end
+
+	c_evp_ctrl_gcm_set_ivlen: INTEGER
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
-			"return EVP_CTRL_AEAD_SET_IVLEN"
+			"return EVP_CTRL_GCM_SET_IVLEN"
 		end
 
-	c_evp_ctrl_aead_get_tag: INTEGER
+--  GCM and OCB Modes are not supported in 1.0.2
+--	c_evp_ctrl_aead_get_tag: INTEGER
+--		external
+--			"C inline use %"eif_openssl.h%""
+--		alias
+--			"return EVP_CTRL_AEAD_GET_TAG"
+--		end
+
+	c_evp_ctrl_gcm_get_tag: INTEGER
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
-			"return EVP_CTRL_AEAD_GET_TAG"
+			"return EVP_CTRL_GCM_GET_TAG"
 		end
 
-	c_evp_ctrl_aead_set_tag: INTEGER
+--  GCM and OCB Modes are not supported in 1.0.2
+--	c_evp_ctrl_aead_set_tag: INTEGER
+--		external
+--			"C inline use %"eif_openssl.h%""
+--		alias
+--			"return EVP_CTRL_AEAD_SET_TAG"
+--		end
+
+	c_evp_ctrl_gcm_set_tag: INTEGER
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
-			"return EVP_CTRL_AEAD_SET_TAG"
+			"return EVP_CTRL_GCM_SET_TAG"
 		end
 
 end

@@ -123,7 +123,7 @@ feature -- C externals
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
-			"ECDSA_SIG_get0($a_sig, $a_pr, $a_ps)"
+			"//ECDSA_SIG_get0($a_sig, $a_pr, $a_ps)"
 		end
 end
 

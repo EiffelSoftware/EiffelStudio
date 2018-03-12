@@ -1,4 +1,4 @@
 #!/bin/sh
 cd $1
 shift
-finish_freezing $*
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing $*

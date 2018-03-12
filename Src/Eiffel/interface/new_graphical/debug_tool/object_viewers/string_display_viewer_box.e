@@ -21,6 +21,8 @@ inherit
 
 	EB_CONSTANTS
 
+	ES_SHARED_FONTS_AND_COLORS
+
 	SHARED_DEBUGGER_MANAGER
 
 	EB_SHARED_WINDOW_MANAGER
@@ -66,10 +68,14 @@ feature {NONE} -- Implementation
 			create editor
 			editor.set_minimum_height (100)
 			editor.set_background_color (No_text_background_color)
+			editor.set_font (preferences.editor_data.font)
+
 			editor.enable_word_wrapping
 			editor.disable_edit
 			editor.drop_actions.extend (agent on_stone_dropped)
 			editor.drop_actions.set_veto_pebble_function (agent is_valid_stone)
+			editor.caret_move_actions.extend (agent on_caret_moved)
+
 			vb.extend (editor)
 
 				-- By default, make a tab be the width of 8 spaces.
@@ -140,6 +146,9 @@ feature {NONE} -- Implementation
 			tbb: SD_TOOL_BAR_BUTTON
 			tbtgb: SD_TOOL_BAR_TOGGLE_BUTTON
 			tbw: SD_TOOL_BAR_WIDGET_ITEM
+			lab: EV_LABEL
+			l_pos_txt: EV_LABEL
+			l_char_txt: EV_LABEL
 		do
 			if tool_bar = Void then
 				create l_tbw.make (create {SD_TOOL_BAR}.make)
@@ -176,6 +185,44 @@ feature {NONE} -- Implementation
 				tbb.select_actions.extend (agent copy_button_selected)
 				tbb.set_tooltip (interface_names.l_copy_text_to_clipboard)
 				l_tb.extend (tbb)
+
+				l_tb.extend (create {SD_TOOL_BAR_SEPARATOR}.make)
+
+				create lab.make_with_text ("Character: ")
+				lab.set_minimum_width (lab.font.string_width (lab.text))
+				lab.align_text_left
+				lab.align_text_vertical_center
+				create tbw.make (lab)
+				l_tb.extend (tbw)
+
+				create l_char_txt
+				l_char_txt.set_foreground_color (colors.stock_colors.blue)
+				l_char_txt.set_minimum_width (l_char_txt.font.string_width ("U+12345 %%/12345/ '##'"))
+				l_char_txt.align_text_left
+				l_char_txt.align_text_vertical_center
+
+				character_text := l_char_txt
+				create tbw.make (l_char_txt)
+				tbw.set_name ("character")
+				l_tb.extend (tbw)
+
+				create lab.make_with_text (" at index ")
+				lab.set_minimum_width (lab.font.string_width (lab.text))
+				lab.align_text_left
+				lab.align_text_vertical_center
+				create tbw.make (lab)
+				l_tb.extend (tbw)
+
+				create l_pos_txt
+				l_pos_txt.set_foreground_color (colors.stock_colors.blue)
+				l_pos_txt.set_minimum_width (l_pos_txt.font.string_width ("123456"))
+				l_pos_txt.align_text_left
+				l_pos_txt.align_text_vertical_center
+
+				position_text := l_pos_txt
+				create tbw.make (l_pos_txt)
+				tbw.set_name ("index")
+				l_tb.extend (tbw)
 
 				l_tb.compute_minimum_size
 			end
@@ -229,6 +276,12 @@ feature -- Access
 
 	widget: EV_WIDGET
 
+	position_text: EV_TEXTABLE
+			-- Label to display position information if any.
+
+	character_text: EV_TEXTABLE
+			-- Label to display current character information if any.
+
 	slices_box: EV_WIDGET
 			-- Slices box
 
@@ -245,6 +298,7 @@ feature -- Change
 		do
 			lower_slice_field.set_text (a_lower.out)
 			upper_slice_field.set_text (a_upper.out)
+			set_limits (a_lower, a_upper)
 		end
 
 feature {NONE} -- Implementation
@@ -295,6 +349,14 @@ feature {NONE} -- Implementation
 			create Result
 			Result.set_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			Result.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			Result.set_font (Preferences.editor_data.font)
+		end
+
+	Escape_format: EV_CHARACTER_FORMAT
+		once
+			create Result
+			Result.set_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			Result.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 210, 96))
 			Result.set_font (Preferences.editor_data.font)
 		end
 
@@ -360,6 +422,8 @@ feature -- Change
 			l_real_str_length: INTEGER
 			l_length_str: STRING_32
 			l_endpos: INTEGER
+			n: INTEGER
+			lst: like escaped_characters_positions
 		do
 			editor.remove_text
 			editor.enable_edit
@@ -371,7 +435,15 @@ feature -- Change
 					retrieve_dump_value
 					if current_dump_value /= Void then
 						l_trunc_str := current_dump_value.formatted_truncated_string_representation (slice_min, slice_max)
-						set_slices_text (slice_min, slice_min + l_trunc_str.count - 1)
+--						format_string_for_unicode_output (l_trunc_str)
+						search_for_escaped_characters (l_trunc_str)
+						lst := escaped_characters_positions
+						if lst /= Void then
+							n := lst.count
+						else
+							n := 0
+						end
+						set_slices_text (slice_min, slice_min + l_trunc_str.count - n - 1)
 
 						l_endpos := l_trunc_str.count + 1
 						editor.set_text (l_trunc_str)
@@ -379,21 +451,28 @@ feature -- Change
 
 						l_real_str_length := current_dump_value.last_string_representation_length
 						if slice_min > 0 then
-							editor.prepend_text ("... ")
-							editor.format_region (1, 5, Limits_format)
-							l_endpos := l_endpos + 4
+							editor.prepend_text (lower_slice_marker)
+							editor.format_region (1, 1 + lower_slice_marker.count, Limits_format)
+							l_endpos := l_endpos + lower_slice_marker.count
 						end
 						if slice_max >= 0 and then (slice_max + 1 < l_real_str_length) then
-							editor.append_text (" ...")
-							l_endpos := l_endpos + 4
-							editor.format_region (l_endpos - 4, l_endpos, Limits_format)
+							editor.append_text (upper_slice_marker)
+							l_endpos := l_endpos + upper_slice_marker.count
+							editor.format_region (l_endpos - upper_slice_marker.count, l_endpos, Limits_format)
 						else
 --							editor.format_region (l_endpos, l_endpos, Limits_format)
 							debug ("refactor_fixme")
 								fixme ("this violate assertion, but this is due to a vision2 issue of trailing %%U")
 							end
 						end
-						l_trunc_str := editor.text
+
+						if lst /= Void then
+							across
+								lst as ic
+							loop
+								editor.format_region (ic.item, ic.item + 2, Escape_format)
+							end
+						end
 
 						editor.set_background_color (No_text_background_color)
 						l_length_str := Interface_names.l_viewer_string_display_full_string_length (l_real_str_length)
@@ -412,28 +491,94 @@ feature -- Change
 			-- Destroy Current
 		do
 			reset
-			if widget /= Void then
-				widget.destroy
+			if attached widget as w then
+				w.destroy
 				widget := Void
 			end
 		end
 
+feature {NONE} -- Implementation: escaped character in the formatted content.
+
+	escaped_characters_positions: detachable ARRAYED_LIST [INTEGER]
+
+	search_for_escaped_characters (s: READABLE_STRING_GENERAL)
+		local
+			lst: like escaped_characters_positions
+			i: INTEGER
+		do
+			lst := escaped_characters_positions
+			if lst /= Void then
+				lst.wipe_out
+			end
+			from
+				i := 1
+			until
+				i > s.count
+			loop
+				inspect s[i]
+				when '%%' then
+					if lst = Void then
+						create lst.make (1)
+					end
+					lst.extend (i)
+					i := i + 1
+				else
+				end
+				i := i + 1
+			end
+			escaped_characters_positions := lst
+		end
+
+	extra_escape_characters_count_until (pos: INTEGER): INTEGER
+		do
+			if attached escaped_characters_positions as lst then
+				across
+					lst as ic
+				until
+					ic.item >= pos
+				loop
+					Result := Result + 1
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
+
+	lower_slice_marker: STRING_32
+		once
+			Result := {STRING_32} "%/8230/"
+		end
+
+	upper_slice_marker: STRING_32
+		once
+			Result := {STRING_32} "%/8230/"
+		end
 
 	is_in_default_state: BOOLEAN
 		do
 			Result := True
 		end
 
-	parent_window (w: EV_WIDGET): EV_WINDOW
+	parent_window (a_widget: detachable EV_WIDGET): detachable EV_WINDOW
+			-- Locates parent window of `a_widget', if the widget has been parented.
+			--
+			-- `a_widget': A widget to locate a top level window for.
 		local
-			p: EV_WIDGET
+			l_parent: detachable EV_WIDGET
 		do
-			p := w.parent
-			if p /= Void then
-				Result ?= p
-				if Result = Void then
-					Result := parent_window (p)
+			if a_widget /= Void and then not a_widget.is_destroyed then
+					-- Perform a loop rather than recursion that is much slower.
+				from
+					l_parent := a_widget
+				until
+					l_parent = Void or else Result /= Void
+				loop
+					if attached {EV_WINDOW} l_parent as l_window then
+						Result := l_window
+					else
+							-- Go one level up
+						l_parent := l_parent.parent
+					end
 				end
 			end
 		end
@@ -465,6 +610,97 @@ feature {NONE} -- Event handling
 			-- Called by `return_actions' of `lower_slice_field'.
 		do
 			set_slice_selected
+		end
+
+	on_caret_moved (pos: INTEGER)
+		local
+			idx, n: INTEGER
+			txt: READABLE_STRING_32
+			s,hex: STRING_32
+			c: CHARACTER_32
+			l_is_escaped: BOOLEAN
+			l_is_out_of_range: BOOLEAN
+			l_pos_text: like position_text
+			l_char_text: like character_text
+		do
+			txt := editor.text
+			idx := slice_min + pos - extra_escape_characters_count_until (pos)
+			if slice_min > 0 then
+				n := lower_slice_marker.count
+				l_is_out_of_range := pos <= lower_slice_marker.count
+				idx := idx - n
+			end
+			if not l_is_out_of_range then
+				l_is_out_of_range := pos > slice_max - slice_min + 1 + n
+			end
+			l_pos_text := position_text
+			l_char_text := character_text
+			if l_is_out_of_range then
+				if l_pos_text /= Void then
+					l_pos_text.remove_text
+				end
+				if l_char_text /= Void then
+					l_char_text.remove_text
+				end
+			else
+				if l_pos_text /= Void then
+					l_pos_text.set_text (idx.out)
+				end
+				if
+					txt.valid_index (pos)
+				then
+					c := txt[pos]
+					if pos > 1 and then txt[pos - 1] = '%%' then
+						l_is_escaped := True
+					end
+					if c = '%%' and not l_is_escaped then
+						if txt.valid_index (pos + 1) then
+							c := txt[pos + 1]
+							l_is_escaped := True
+						end
+					end
+					if l_is_escaped then
+						inspect c
+						when 'R' then
+							c := '%R'
+						when 'U' then
+							c := '%U'
+						when '%%' then
+							c := '%%'
+						else
+						end
+					end
+					create s.make_from_string ("U+")
+					hex := c.natural_32_code.to_hex_string
+					from until hex.count <= 4 or hex[1] /= '0' loop
+						hex.remove_head (1)
+					end
+					s.append (hex)
+					s.append_string_general (" %%/")
+					s.append_natural_32 (c.natural_32_code)
+					s.append ("/")
+					if not c.is_control then
+						s.append_string_general (" '")
+						inspect
+							c
+						when '%T' then
+							s.append_string_general ("%%T")
+						when '%N' then
+							s.append_string_general ("%%N")
+						else
+							s.append_character (c)
+						end
+						s.append_string_general ("'")
+					end
+					if l_char_text /= Void then
+						l_char_text.set_text (s)
+					end
+				else
+					if l_char_text /= Void then
+						l_char_text.remove_text
+					end
+				end
+			end
 		end
 
 	set_slice_selected
@@ -551,8 +787,39 @@ feature {NONE} -- Event handling
 			destroy
 		end
 
+--feature -- Display
+
+--	format_string_for_unicode_output (s32: STRING_32)
+--		local
+--			i: INTEGER
+--		do
+--			from
+--				i := 1
+--			until
+--				i > s32.count
+--			loop
+--				inspect s32[i]
+----				when '%U' then
+----					s32.put ('U', i)
+----					s32.insert_character ('%%', i)
+----					i := i + 2
+--				when '%R' then
+--					s32.put ('%/9229/', i) -- U+240D   CR symbol replacement.
+--					i := i + 1
+----				when '%%' then
+----					if i + 1 <= s32.count and then s32.item (i + 1) = 'R' then
+----						s32.insert_character ('%%', i)
+----						i := i + 1
+----					end
+----					i := i + 1
+--				else
+--					i := i + 1
+--				end
+--			end
+--		end
+
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

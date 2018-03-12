@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
 	<target name="common">
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
@@ -159,7 +159,6 @@
 			</condition>
 		</external_object>
 		<variable name="batch_framework" value="false"/>
-		<library name="es_cloud" location="$EIFFEL_SRC\Eiffel\cloud\cloud.ecf" readonly="false" use_application_options="true"/>
 		<library name="auto_test" location="$EIFFEL_SRC\framework\auto_test\auto_test.ecf" readonly="false" use_application_options="true"/>
 		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light.ecf" readonly="false" use_application_options="true"/>
 		<library name="command_tunnel" location="$EIFFEL_SRC\framework\command_tunnel\command_tunnel.ecf" readonly="false" use_application_options="true"/>
@@ -172,6 +171,7 @@
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking.ecf" readonly="false" use_application_options="true"/>
 		<library name="dotnet_assembly_information" location="$EIFFEL_SRC\dotnet\assembly_info\dotnet_assembly_information.ecf" readonly="false" use_application_options="true"/>
 		<library name="editor" location="$ISE_LIBRARY\library\editor\editor.ecf" readonly="false"/>
+		<library name="es_cloud" location="$EIFFEL_SRC\Eiffel\cloud\cloud.ecf" readonly="false" use_application_options="true"/>
 		<library name="esa_api_client" location="$EIFFEL_SRC\web\support\client\esa_client.ecf"/>
 		<library name="fast_ini" location="$EIFFEL_SRC\framework\file_formats\fast_ini\fast_ini.ecf" readonly="false" use_application_options="true"/>
 		<library name="framework_text" location="$EIFFEL_SRC\framework\base\text\text.ecf" readonly="false" use_application_options="true"/>
@@ -189,6 +189,7 @@
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
 		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.ecf" readonly="false"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>
 		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf" readonly="false"/>
 		<library name="memory_analyzer" location="$ISE_LIBRARY\library\memory_analyzer\memory_analyzer.ecf" readonly="false"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf" readonly="false"/>
@@ -208,6 +209,7 @@
 		<library name="tagging-ev" location="$EIFFEL_SRC\framework\tagging\ev\tagging-ev.ecf" readonly="false" use_application_options="true"/>
 		<library name="testing_engine" location="$EIFFEL_SRC\framework\testing\testing.ecf" readonly="false" use_application_options="true"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" readonly="false"/>
+		<library name="uri" location="$EIFFEL_SRC\library\text\uri\uri.ecf" />
 		<library name="uri_launcher" location="$EIFFEL_SRC\framework\uri_launcher\uri_launcher.ecf" use_application_options="true"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="false"/>
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf" readonly="false" use_application_options="true"/>

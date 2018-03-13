@@ -1,0 +1,11 @@
+test_name 	 ca-self-comparison
+test_description A warning about self comparison should not be issued for computations (i.e. routine calls).
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+
+analyze_code rule "CA071"
+analyze_code_result violation "TEST CA071:22 CA071:24 CA071:27 CA071:32 CA071:34 CA071:37 CA071:38 CA071:40 CA071:43 CA071:45 CA071:48 CA071:54 CA071:75 CA071:76 CA071:77 CA071:78 CA071:79 CA071:80 CA071:81 CA071:82 CA071:93 CA071:95 CA071:98 CA071:103 CA071:105 CA071:108"
+
+test_end

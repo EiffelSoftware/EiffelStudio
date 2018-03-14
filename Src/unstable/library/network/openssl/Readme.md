@@ -1,4 +1,141 @@
-Eiffel OpenSSL ECDSA Wrapper
+# Eiffel OpenSSL wrapper 
+	
+	Status: working on Windows and Linux
+	
+	Contributors:
+	- Guus Leeuw jr. (itpassion.com)
+		- Jocelyn Fiat (eiffel.com)
+	- Javier Velilla (eiffel.com)
+	
+	
+How to build OpenSSL on Windows.
+================================
+	
+Requirements.
+      * Perl Installation    : http://www.activestate.com/activeperl/downloads
+      * OpenSSL source code  : http://www.openssl.org/source/
+      * C compiler
+
+
+How to build OpenSSL with VisualStudio  
+======================================
+Tutorial :http://developer.covenanteyes.com/building-openssl-for-visual-studio/
+
+Building OpenSSL for Visual Studio on Windows:
+
+      Visual Studio 2010/2017 (this will likely work with older versions as well).
+
+Setting up for the build
+
+Unzip the OpenSSL source code into two different folders, one for the 32-bit build and one for the 64-bit build. 
+So, for example, you might end up with C:\openssl-src-32 and C:\openssl-src-64.
+
+Building the 32-bit static libraries
+
+Open the Visual Studio Command Prompt (2010/2017)5.
+cd to your OpenSSL source folder for 32-bit (e.g. cd C:\openssl-src-32).
+Run the following: 
+
+1: perl Configure VC-WIN32 --prefix=C:\Build-OpenSSL-VC-32
+2: ms\do_nasm.bat (check https://github.com/openssl/openssl/issues/4540)
+3: nmake -f ms\nt.mak 
+4: nmake -f ms\nt.mak install
+
+Your outputs will be in C:\Build-OpenSSL-VC-32.
+
+Building the 32-bit static libraries with debug symbols
+
+These steps will embed the debug symbols directly into the .lib files. Don’t expect to see any .pdb files.
+
+Open the Visual Studio Command Prompt (2010/2017).
+cd to your OpenSSL source folder for 32-bit (e.g. cd C:\openssl-src-32).
+Run the following:
+
+
+1: perl Configure debug-VC-WIN32 --prefix=C:\Build-OpenSSL-VC-32-dbg
+2: ms\do_nasm.bat
+
+In a text editor (like Notepad), open ms\nt.mak and replace all occurrences of /Zi with /Z7. There should be three replacements.
+Run the following:
+
+
+1: nmake -f ms\nt.mak
+2: nmake -f ms\nt.mak install
+Your outputs will be in C:\Build-OpenSSL-VC-32-dbg. Make sure you rename them to something like libeay32-debug.lib and ssleay32-debug.lib.
+
+Building the 64-bit static libraries
+
+Open the Visual Studio x64 Win64 Command Prompt (2010/2017/2017) (in the Start menu).
+cd to your OpenSSL source folder for 64-bit (e.g. cd C:\openssl-src-64).
+Run the following:
+
+1: perl Configure VC-WIN64A --prefix=C:\Build-OpenSSL-VC-64
+2: ms\do_win64a
+3: nmake -f ms\nt.mak
+4: nmake -f ms\nt.mak install
+
+Your outputs will be in C:\Build-OpenSSL-VC-64.
+
+Note: The outputs of the 64-bit build are still named libeay32.lib and ssleay32.lib. You’ll have to rename them more sensibly yourself.
+
+Building the 64-bit static libraries with debug symbols
+
+These steps will embed the debug symbols directly into the .lib files. Don’t expect to see any .pdb files.
+
+Open the Visual Studio x64 Win64 Command Prompt (2010/2017).
+cd to your OpenSSL source folder for 64-bit (e.g. cd C:\openssl-src-64).
+Run the following:
+
+
+1: perl Configure debug-VC-WIN64A --prefix=C:\Build-OpenSSL-VC-64-dbg
+2: ms\do_win64a
+
+In a text editor (like Notepad), open ms\nt.mak and replace all occurrences of /Zi with /Z7 except on the line starting with ASM. There should be two replacements. 
+Run the following:
+
+
+
+1: nmake -f ms\nt.mak
+2: nmake -f ms\nt.mak install
+Your outputs will be in C:\Build-OpenSSL-VC-64-dbg. Make sure you rename them to something like libeay64-debug.lib and ssleay64-debug.lib
+
+
+
+Building OpenSSL with MingGW
+============================
+Tutorial: https://github.com/freelan-developers/freelan-buildtools/blob/6ffc5f758ab1f240fe1f052e77e7a5a814578184/INSTALL.md
+
+Windows 32/64 bits - MinGW
+
+You must run these commands from a MSys console.
+
+For 32 bits:
+
+        perl Configure mingw no-shared no-asm --prefix=/c/OpenSSL
+
+For 64 bits:
+
+        perl Configure mingw64 no-shared no-asm --prefix=/C/OpenSSL-x64
+
+Then:
+
+        make depend
+
+        make
+
+        make install
+
+
+The make depend line is only needed on the most recent OpenSSL version if you specified any of the no-... options.
+
+Note that this will compile OpenSSL in static mode.
+
+If at some point you get a "make (e=2):" error, ensure you don't have another "make.exe" in your PATH or just type /bin/make instead of make.
+	
+
+
+
+Eiffel OpenSSL Crypto and ECDSA Wrapper
 ============================
 
 Proof of concpet
@@ -12,8 +149,5 @@ Documentation
 https://www.openssl.org/docs/man1.1.0/crypto/ECDSA_do_sign.html
 https://wiki.openssl.org/index.php/Elliptic_Curve_Cryptography
 https://wiki.openssl.org/index.php/Elliptic_Curve_Diffie_Hellman
-
-
-
 
 

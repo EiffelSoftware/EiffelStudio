@@ -186,6 +186,54 @@ feature -- Status Report
 	ssl_error_number: INTEGER
 			-- Returned error number.
 
+	ssl_pending: INTEGER
+			-- SSL_pending() returns the number of bytes which are available inside ssl for immediate read.	
+		do
+			Result := c_ssl_pending (ptr)
+		end
+
+feature -- SSL Errors
+
+	ssl_want_read : INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"SSL_ERROR_WANT_READ"
+		end
+
+	ssl_error_none: INTEGER
+	 	external "C inline use %"eif_openssl.h%""
+	 	alias
+	 		"SSL_ERROR_NONE"
+	 	end
+
+	ssl_error_zero_return: INTEGER
+	 	external "C inline use %"eif_openssl.h%""
+	 	alias
+	 		"SSL_ERROR_ZERO_RETURN"
+	 	end
+
+	ssl_error_want_write: INTEGER
+	 	external "C inline use %"eif_openssl.h%""
+	 	alias
+	 		"SSL_ERROR_WANT_WRITE"
+	 	end
+
+	 ssl_error_syscall: INTEGER
+	 	external "C inline use %"eif_openssl.h%""
+	 	alias
+	 		"SSL_ERROR_SYSCALL"
+	 	end
+
+	 ssl_get_error (a_err: INTEGER): INTEGER
+	 		-- int SSL_get_error(const SSL *ssl, int ret);
+			-- SSL_get_error() returns a result code (suitable for the C "switch" statement) for a preceding call to SSL_connect(), SSL_accept(), SSL_do_handshake(), SSL_read(), SSL_peek(), or SSL_write() on ssl.
+			-- The value returned by that TLS/SSL I/O function must be passed to SSL_get_error() in parameter ret.
+		do
+			Result := c_ssl_get_error (ptr, a_err)
+		end
+
+
 feature {NONE} -- Implementation	
 
 	ssl_socket_error: detachable STRING
@@ -277,6 +325,22 @@ feature {NONE} -- Externals
 		alias
 			"SSL_write"
 		end
+
+	c_ssl_get_error (an_ssl_ptr: POINTER; a_err: INTEGER): INTEGER
+			-- External call to SSL_write
+		external
+			"C use %"eif_openssl.h%""
+		alias
+			"SSL_get_error"
+		end
+
+	 c_ssl_pending (a_ssl: POINTER): INTEGER
+	 		-- SSL_pending() returns the number of bytes which are available inside ssl for immediate read.	
+	 	external "C inline use %"eif_openssl.h%""
+	 	alias
+	 		"return SSL_pending((const SSL *)$a_ssl);"
+	 	end
+
 
 note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"

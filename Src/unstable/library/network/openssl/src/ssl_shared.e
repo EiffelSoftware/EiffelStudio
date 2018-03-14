@@ -85,7 +85,7 @@ feature {NONE} -- External
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
-			"OPENSSL_init_ssl(0, NULL)"
+			"SSL_library_init()"
 		end
 
 	c_openssl_add_ssl_algorithms

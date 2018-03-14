@@ -3,6 +3,7 @@
 	author: "Stefan Zurfluh", "Eiffel Software"
 	date: "$Date$"
 	revision: "$Revision$"
+	ca_ignore: "CA033", "CA033 — very long class"
 
 frozen class
 	CA_MESSAGES
@@ -424,12 +425,6 @@ feature -- Rule Violations
 	simplifiable_boolean_violation: STRING_32
 		do Result := translation_in_context ("This negated boolean expression can be%
 			% simplified by removing the negation and%Nusing the inverse comparison operator.", once "code_analyzer.violation") end
-
-	self_comparison_violation_1: STRING_32
-		do Result := translation_in_context ("' compared to itself always evaluates to the same boolean value.", once "code_analyzer.violation") end
-
-	self_comparison_violation_2: STRING_32
-		do Result := translation_in_context (" Here, since it is the loop stop condition the loop will not terminate.", once "code_analyzer.violation") end
 
 	wrong_loop_iteration_violation_1: STRING_32
 		do Result := translation_in_context ("Wrong comparison suspected in loop stop condition.", once "code_analyzer.violation") end

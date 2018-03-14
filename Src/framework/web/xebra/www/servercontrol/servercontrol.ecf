@@ -9,7 +9,11 @@
 		<capability>
 			<concurrency support="thread"/>
 		</capability>
-		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf"/>
+		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf">
+			<condition>
+				<custom name="ISE_NO_PRECOMPILE" excluded_value="true"/>
+			</condition>
+		</precompile>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="xebra_common" location="$XEBRA_LIBRARY\xebra_common\xebra_common.ecf" readonly="false">
 			<option>

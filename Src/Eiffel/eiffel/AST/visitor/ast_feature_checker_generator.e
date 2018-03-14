@@ -1,13 +1,5 @@
 ﻿note
 	description: "Type checking and code generation of BYTE_NODE tree."
-	ca_ignore:
-		"CA011", "CA011 – too many arguments",
-		"CA032", "CA032 – too long routine",
-		"CA033", "CA033 – too long class"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	AST_FEATURE_CHECKER_GENERATOR
@@ -48,11 +40,6 @@ inherit
 		end
 
 	SHARED_INSTANTIATOR
-		export
-			{NONE} all
-		end
-
-	SHARED_EVALUATOR
 		export
 			{NONE} all
 		end
@@ -11943,6 +11930,12 @@ feature {INSPECT_CONTROL} -- Checks for obsolete features
 		end
 
 note
+	ca_ignore:
+		"CA011", "CA011 — too many arguments",
+		"CA032", "CA032 — too long routine",
+		"CA033", "CA033 — too long class"
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

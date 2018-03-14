@@ -17,13 +17,21 @@ feature {NONE} -- Initialization
 
 	make
 			-- Run application.
+		do
+			test_ecc
+		end
+
+feature -- Tests
+
+
+	test_ecc
 		local
-				ec_key: POINTER
-				ec_group: POINTER
-				group_status: INTEGER
-				status: INTEGER
-				signature: POINTER
-				c_string: C_STRING
+			ec_key: POINTER
+			ec_group: POINTER
+			group_status: INTEGER
+			status: INTEGER
+			signature: POINTER
+			c_string: C_STRING
 		do
 			 -- First step: create an EC_KEY object (note: this part is not ECDSA specific)
 			ec_key := {SSL_ECC}.c_ec_key_new

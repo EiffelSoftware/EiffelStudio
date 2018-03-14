@@ -257,8 +257,6 @@ feature -- Status Report
 	last_ssl: detachable SSL
 			-- The SSL Structure created by `create_ssl'.
 
-feature {NONE} -- Implementation
-
 feature {NONE} -- Attributes
 
 	ctx: POINTER

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract description of a formal generic parameter. %
 				%Instances produced by Yacc. Version for Bench."
 	legal: "See notice at end of class."
@@ -161,7 +161,6 @@ constraint_types (a_context_class: CLASS_C): TYPE_SET_A
 		require
 			a_context_class_not_void: a_context_class /= Void
 		local
-			class_type: CL_TYPE_A
 			l_constraint_types: TYPE_SET_A
 		do
 			l_constraint_types := constraint_types (a_context_class)
@@ -172,9 +171,7 @@ constraint_types (a_context_class: CLASS_C): TYPE_SET_A
 				until
 					l_constraint_types.after
 				loop
-					class_type ?= l_constraint_types.item
-
-					if class_type /= Void then
+					if attached {CL_TYPE_A} l_constraint_types.item as class_type then
 						Result := Result and class_type.base_class.has_feature_table
 					end
 					l_constraint_types.forth
@@ -195,7 +192,6 @@ constraint_types (a_context_class: CLASS_C): TYPE_SET_A
 			has_computed_feature_table: has_computed_feature_table (a_context_class)
 		local
 			l_constraint_types: TYPE_SET_A
-			class_type: CL_TYPE_A
 			feature_name: ID_AS
 			feat_table: FEATURE_TABLE
 			l_renaming: RENAMING_A
@@ -213,10 +209,9 @@ constraint_types (a_context_class: CLASS_C): TYPE_SET_A
 				l_constraint_types.after
 			loop
 				l_constraint_types_item := l_constraint_types.item
-				class_type ?= l_constraint_types_item.type
 				l_renaming := l_constraint_types_item.renaming
 
-				if class_type /= Void then
+				if attached {CL_TYPE_A} l_constraint_types_item.type as class_type then
 					feat_table := class_type.base_class.feature_table
 					check
 							-- A feature table associated to `class_type' should
@@ -228,7 +223,7 @@ constraint_types (a_context_class: CLASS_C): TYPE_SET_A
 					until
 						creation_feature_list.after
 					loop
-						feature_name := creation_feature_list.item.internal_name
+						feature_name := creation_feature_list.item.feature_name
 						if l_renaming /= Void then
 							feat_table.search_id_under_renaming (feature_name.name_id, l_renaming)
 						else
@@ -237,7 +232,7 @@ constraint_types (a_context_class: CLASS_C): TYPE_SET_A
 						if feat_table.found_item /= Void then
 							Result.extend ([l_constraint_types_item, feat_table.found_item])
 								-- We will not set has_default_create in the multi constraint case if
-							l_is_version_of_default_create := (feat_table.found_item.rout_id_set.first = System.default_create_rout_id)
+							l_is_version_of_default_create := feat_table.found_item.rout_id_set.first = System.default_create_rout_id
 							if
 								l_is_version_of_default_create and then
 								not l_has_more_than_one_version_default_create
@@ -298,7 +293,6 @@ feature -- Output
 			non_void_st: a_text_formatter /= Void
 			a_context_class_not_void: a_context_class /= Void
 		local
-			c_name: STRING
 			eiffel_name: STRING
 			l_type_set: TYPE_SET_A
 			l_feature: E_FEATURE
@@ -314,8 +308,7 @@ feature -- Output
 				a_text_formatter.process_keyword_text (ti_expanded_keyword, Void)
 				a_text_formatter.add_space
 			end
-			c_name := name.name.as_upper
-			a_text_formatter.process_generic_text (c_name)
+			a_text_formatter.process_generic_text (name.name.as_upper)
 			if has_constraint then
 				a_text_formatter.add_space
 				a_text_formatter.process_symbol_text (ti_Constraint)
@@ -336,8 +329,8 @@ feature -- Output
 							creation_feature_list.after
 						loop
 							a_text_formatter.add_space
-							eiffel_name := creation_feature_list.item.internal_name.name
-							l_feature := l_type_set.e_feature_state_by_name_id (creation_feature_list.item.internal_name.name_id).feature_item
+							eiffel_name := creation_feature_list.item.feature_name.name
+							l_feature := l_type_set.e_feature_state_by_name_id (creation_feature_list.item.feature_name.name_id).feature_item
 							if l_feature /= Void then
 								a_text_formatter.process_feature_text (eiffel_name, l_feature, false)
 							else
@@ -445,7 +438,7 @@ feature -- Validity checking
 										l_error_level := error_handler.error_level
 										check_constraint_renaming (a_context_class2)
 											-- No erros should occur.
-										Result := (l_error_level = error_handler.error_level)
+										Result := l_error_level = error_handler.error_level
 									end).item ([a_context_class])
 		local
 
@@ -469,7 +462,7 @@ feature -- Validity checking
 			until
 				creation_feature_list.after
 			loop
-				l_original_feature_name_id := creation_feature_list.item.internal_name.name_id
+				l_original_feature_name_id := creation_feature_list.item.feature_name.name_id
 				l_result := l_flat_constraints.feature_i_state_by_name_id (l_original_feature_name_id)
 				if l_result.features_found_count = 1 then
 					-- Ok, we found exactly one feature, this means our constraint is met and we're fine.
@@ -496,11 +489,8 @@ feature -- Validity checking
 			-- of the generic parameter.
 		require
 			feature_exists: f /= Void
-		local
-			p: detachable PROCEDURE_I
 		do
-			p ?= f
-			Result := p /= Void
+			Result := attached {PROCEDURE_I} f
 		end
 
 feature {NONE} -- Implementation
@@ -649,36 +639,33 @@ feature {NONE} -- Implementation
 		local
 			l_renaming_cache: ARRAY [RENAMING_A]
 			l_renaming: RENAMING_A
-			l_renamings: EIFFEL_LIST [RENAME_AS]
 			l_vtgc2: VTGC2
 		do
 			l_renaming_cache := a_context_class.constraint_renaming (Current)
-			l_renaming := l_renaming_cache.item (a_constraint_position)
-			if l_renaming = Void then
-				if a_rename_clause /= Void then
-					l_renamings := a_rename_clause.content
-					if l_renamings /= Void then
-						create l_renaming.make (l_renamings, a_constraint)
-						if l_renaming.has_error then
-							create l_vtgc2
-							l_vtgc2.set_class (a_context_class)
-							l_vtgc2.set_formal_constraint (Current)
-							l_vtgc2.set_constraint (a_constraint, a_constraint_position)
-							l_vtgc2.set_renaming (a_rename_clause)
-							l_vtgc2.set_features_renamed_multiple_times (l_renaming.error_report.renamed_multiple_times)
-							l_vtgc2.set_features_renamed_to_the_same_name (l_renaming.error_report.renamed_to_same_name)
-							l_vtgc2.set_non_existent_features (l_renaming.error_report.non_existent)
-							error_handler.insert_error (l_vtgc2)
-						else
-							l_renaming_cache.put (l_renaming, a_constraint_position)
-						end
-					end
+			if
+				not attached l_renaming_cache.item (a_constraint_position) and then
+				attached a_rename_clause and then
+				attached a_rename_clause.content as l_renamings
+			then
+				create l_renaming.make (l_renamings, a_constraint)
+				if l_renaming.has_error then
+					create l_vtgc2
+					l_vtgc2.set_class (a_context_class)
+					l_vtgc2.set_formal_constraint (Current)
+					l_vtgc2.set_constraint (a_constraint, a_constraint_position)
+					l_vtgc2.set_renaming (a_rename_clause)
+					l_vtgc2.set_features_renamed_multiple_times (l_renaming.error_report.renamed_multiple_times)
+					l_vtgc2.set_features_renamed_to_the_same_name (l_renaming.error_report.renamed_to_same_name)
+					l_vtgc2.set_non_existent_features (l_renaming.error_report.non_existent)
+					error_handler.insert_error (l_vtgc2)
+				else
+					l_renaming_cache.put (l_renaming, a_constraint_position)
 				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1046,34 +1046,32 @@ feature -- Third pass: byte code production and type check
 				ast_context.set_current_feature (l_ca_feature)
 				feature_checker.init (ast_context)
 			end
-			if l_ast.custom_attributes /= Void then
-
-				feature_checker.custom_attributes_type_check_and_code (l_ca_feature, l_ast.custom_attributes)
-				custom_attributes ?= feature_checker.last_byte_node
+			if attached l_ast.custom_attributes as ca then
+				feature_checker.custom_attributes_type_check_and_code (l_ca_feature, ca)
+				custom_attributes := {BYTE_LIST [BYTE_NODE]} / feature_checker.last_byte_node
 			else
 				custom_attributes := Void
 			end
-			if l_ast.interface_custom_attributes /= Void then
-				feature_checker.custom_attributes_type_check_and_code (l_ca_feature, l_ast.interface_custom_attributes)
-				interface_custom_attributes ?= feature_checker.last_byte_node
+			if attached l_ast.interface_custom_attributes as ca then
+				feature_checker.custom_attributes_type_check_and_code (l_ca_feature, ca)
+				interface_custom_attributes := {BYTE_LIST [BYTE_NODE]} / feature_checker.last_byte_node
 			else
 				interface_custom_attributes := Void
 			end
-			if l_ast.class_custom_attributes /= Void then
-				feature_checker.custom_attributes_type_check_and_code (l_ca_feature,
-					l_ast.class_custom_attributes)
-				class_custom_attributes ?= feature_checker.last_byte_node
+			if attached l_ast.class_custom_attributes as ca then
+				feature_checker.custom_attributes_type_check_and_code (l_ca_feature, ca)
+				class_custom_attributes := {BYTE_LIST [BYTE_NODE]} / feature_checker.last_byte_node
 			else
 				class_custom_attributes := Void
 			end
-			if system.is_compiled_root_class (Current) then
+			if
+				system.is_compiled_root_class (Current) and then
+				attached l_ast.assembly_custom_attributes as ca
+			then
 					-- We are processing the root class, let's figure out if there are some
 					-- assembly custom attributes.
-				if l_ast.assembly_custom_attributes /= Void then
-					feature_checker.custom_attributes_type_check_and_code (l_ca_feature,
-						l_ast.assembly_custom_attributes)
-					assembly_custom_attributes ?= feature_checker.last_byte_node
-				end
+				feature_checker.custom_attributes_type_check_and_code (l_ca_feature, ca)
+				assembly_custom_attributes := {BYTE_LIST [BYTE_NODE]} / feature_checker.last_byte_node
 			else
 				assembly_custom_attributes := Void
 			end
@@ -1341,7 +1339,6 @@ feature {NONE} -- Class initialization
 			old_is_expanded: BOOLEAN
 			old_is_deferred: BOOLEAN
 			l_class: CLASS_C
-			l_eiffel_class: EIFFEL_CLASS_C
 			is_first_compilation, changed_status: BOOLEAN
 			changed_generics, changed_expanded: BOOLEAN
 			gens: like generics
@@ -1475,8 +1472,7 @@ feature {NONE} -- Class initialization
 							-- contain reference to the type and because it switched from
 							-- expanded to non and vice versa, the type description have to change.
 							-- This fixes eweasel test#incr306, test#incr316 and test#final069.
-						l_eiffel_class ?= l_class
-						if l_eiffel_class /= Void then
+						if attached {EIFFEL_CLASS_C} l_class as l_eiffel_class then
 							l_eiffel_class.set_new_byte_code_needed (True)
 						end
 					else
@@ -1555,8 +1551,7 @@ feature {NONE} -- Class initialization
 						-- all syntactical clients.
 						-- We need to recompile the features because their code might still contain
 						-- reference to the former generics. This fixes eweasel test#incr279.
-					l_eiffel_class ?= l_class
-					if l_eiffel_class /= Void then
+					if attached {EIFFEL_CLASS_C} l_class as l_eiffel_class then
 						l_eiffel_class.set_new_byte_code_needed (True)
 					end
 					syntactical_clients.forth
@@ -1586,8 +1581,9 @@ feature {NONE} -- Class initialization
 			error: BOOLEAN
 			l_area: SPECIAL [FORMAL_DEC_AS]
 			i, j, nb: INTEGER
-			duplicate_name: SEARCH_TABLE [STRING]
-			f_list: EIFFEL_LIST [FEATURE_NAME]
+			duplicate_name: SEARCH_TABLE [like {ID_AS}.name_id]
+			name_id: like {ID_AS}.name_id
+			f_list: EIFFEL_LIST [FEAT_NAME_ID_AS]
 		do
 			from
 				l_area := generics.area
@@ -1646,14 +1642,15 @@ feature {NONE} -- Class initialization
 					until
 						f_list.after
 					loop
-						if duplicate_name.has (f_list.item.internal_name.name) then
+						name_id := f_list.item.feature_name.name_id
+						if duplicate_name.has (name_id) then
 							create vgcp3
 							vgcp3.set_class (Current)
-							vgcp3.set_feature_name (f_list.item.internal_name.name)
+							vgcp3.set_feature_name (f_list.item.feature_name.name)
 							vgcp3.set_location (f_list.item.start_location)
 							Error_handler.insert_error (vgcp3)
 						else
-							duplicate_name.put (f_list.item.internal_name.name)
+							duplicate_name.put (name_id)
 						end
 						f_list.forth
 					end
@@ -1694,7 +1691,6 @@ feature {NONE} -- Class initialization
 			-- I.e. that the specified creation procedures does exist
 			-- in the constraint class.
 		local
-			generic_dec: FORMAL_CONSTRAINT_AS
 			l_area: SPECIAL [FORMAL_DEC_AS]
 			i, nb: INTEGER
 		do
@@ -1705,13 +1701,15 @@ feature {NONE} -- Class initialization
 			until
 				i = nb
 			loop
-				generic_dec ?= l_area.item (i)
-				check
-					generic_dec_not_void: generic_dec /= Void
-				end
-				if generic_dec.has_constraint and then generic_dec.has_creation_constraint then
-						-- `check_constraint_genericity' has already been called in degree4
-					generic_dec.check_constraint_creation (Current)
+				if attached {FORMAL_CONSTRAINT_AS} l_area.item (i) as generic_dec then
+					if generic_dec.has_constraint and then generic_dec.has_creation_constraint then
+							-- `check_constraint_genericity' has already been called in degree4
+						generic_dec.check_constraint_creation (Current)
+					end
+				else
+					check
+						is_formal_constraint_as: False
+					end
 				end
 				i := i + 1
 			end
@@ -1769,17 +1767,17 @@ feature {NONE} -- Class initialization
 	check_constraint_renaming
 			-- Check validity of constraint renaming
 		do
-				Inst_context.set_group (cluster)
-			generics.do_all (
-				agent (a_generic_dec: FORMAL_DEC_AS)
-					local
-						l_formal_constraint_as: FORMAL_CONSTRAINT_AS
-					do
-						l_formal_constraint_as ?= a_generic_dec
-						if l_formal_constraint_as /= Void and then l_formal_constraint_as.has_constraint then
-							l_formal_constraint_as.check_constraint_renaming (Current)
-						end
-					end)
+			Inst_context.set_group (cluster)
+			across
+				generics as g
+			loop
+				if
+					attached {FORMAL_CONSTRAINT_AS} g.item as f and then
+					f.has_constraint
+				then
+					f.check_constraint_renaming (Current)
+				end
+			end
 		end
 
 feature -- Supplier checking
@@ -2180,7 +2178,8 @@ invariant
 	inline_agent_table_not_void: inline_agent_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	ca_ignore: "CA033", "CA033 — very long class"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

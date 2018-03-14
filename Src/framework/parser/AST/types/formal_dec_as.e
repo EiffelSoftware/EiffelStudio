@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract description of a formal generic parameter."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -147,7 +147,7 @@ feature -- Attributes
 	constraints: CONSTRAINT_LIST_AS
 			-- Constraints of the formal generic
 
-	creation_feature_list: detachable EIFFEL_LIST [FEATURE_NAME]
+	creation_feature_list: detachable EIFFEL_LIST [FEAT_NAME_ID_AS]
 			-- Constraint on the creation routines of the constraint
 
 feature -- Roundtrip/Token
@@ -295,7 +295,7 @@ feature -- Status
 				until
 					Result or else l_creation_list.after
 				loop
-					Result := l_creation_list.item.internal_name.name_id = a_feature_name_id
+					Result := l_creation_list.item.feature_name.name_id = a_feature_name_id
 					l_creation_list.forth
 				end
 			end
@@ -410,17 +410,14 @@ feature -- Output
 
 				Result.append (constraints.dump (false))
 				if attached creation_feature_list as l_creation_list and then not l_creation_list.is_empty then
-					from
-						l_creation_list.start
-						Result.append (" create ")
-						Result.append (l_creation_list.item.visual_name)
-						l_creation_list.forth
-					until
-						l_creation_list.after
+					Result.append (" create ")
+					across
+						l_creation_list as c
 					loop
-						Result.append (", ")
-						Result.append (l_creation_list.item.visual_name)
-						l_creation_list.forth
+						if not c.is_first then
+							Result.append (", ")
+						end
+						Result.append (c.item.visual_name)
 					end
 					Result.append (" end")
 				end
@@ -432,7 +429,8 @@ invariant
 	formal_not_void: formal /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	ca_ignore: "CA011", "CA011 — too many arguments"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -463,4 +461,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class FORMAL_DEC_AS
+end

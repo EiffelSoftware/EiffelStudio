@@ -462,9 +462,6 @@ feature {NONE} -- Validation
 			a_psr_not_void: a_psr /= Void
 		do
 				-- We cannot validate the name easily, so we assume it is correct.
-			if for_integer then
-			else
-			end
 			is_valid_integer_real := True
 		end
 
@@ -1196,6 +1193,16 @@ feature -- Access
 			list_full: Result /= Void implies Result.capacity = n and Result.all_default
 		end
 
+	new_eiffel_list_feature_name_id (n: INTEGER): detachable EIFFEL_LIST [FEAT_NAME_ID_AS]
+			-- New empty list of `{FEATURE_NAME_ID_AS}`.
+		require
+			n_non_negative: n >= 0
+		do
+			create Result.make_filled (n)
+		ensure
+			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+		end
+
 	new_eiffel_list_formal_dec_as (n: INTEGER): detachable FORMAL_GENERIC_LIST_AS
 			-- New empty list of FORMAL_DEC_AS
 		require
@@ -1454,7 +1461,7 @@ feature -- Access
 			end
 		end
 
-	new_formal_dec_as (f: detachable FORMAL_AS; c: detachable CONSTRAINT_LIST_AS; cf: detachable EIFFEL_LIST [FEATURE_NAME]; c_as: detachable SYMBOL_AS; ck_as, ek_as: detachable KEYWORD_AS): detachable FORMAL_DEC_AS
+	new_formal_dec_as (f: detachable FORMAL_AS; c: detachable CONSTRAINT_LIST_AS; cf: detachable EIFFEL_LIST [FEAT_NAME_ID_AS]; c_as: detachable SYMBOL_AS; ck_as, ek_as: detachable KEYWORD_AS): detachable FORMAL_DEC_AS
 			-- New FORMAL_DECLARATION AST node
 		do
 			if f /= Void then
@@ -2089,7 +2096,7 @@ feature -- Access
 			end
 		end
 
-	new_creation_constrain_triple (fl: detachable EIFFEL_LIST [FEATURE_NAME]; c_as, e_as: detachable KEYWORD_AS): detachable CREATION_CONSTRAIN_TRIPLE
+	new_creation_constrain_triple (fl: detachable EIFFEL_LIST [FEAT_NAME_ID_AS]; c_as, e_as: detachable KEYWORD_AS): detachable CREATION_CONSTRAIN_TRIPLE
 			-- New CREATION_CONSTRAIN_TRIPLE object
 		do
 			create Result.make (fl, c_as, e_as)
@@ -2104,9 +2111,12 @@ feature {NONE} -- Implementation
 		end
 
 note
+	ca_ignore:
+		"CA011", "CA011 — too many arguments",
+		"CA033", "CA033 — very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

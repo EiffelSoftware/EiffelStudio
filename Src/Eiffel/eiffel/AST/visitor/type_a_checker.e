@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Check validity of a TYPE_A object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -295,8 +295,6 @@ feature -- Special checking
 			a_type_not_void: a_type /= Void
 			a_error_handler_not_void: a_error_handler /= Void
 		local
-			l_class_type: CLASS_TYPE_AS
-			l_class_type_generics: TYPE_LIST_AS
 			l_associated_class: CLASS_C
 			l_temp, l_cl_generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			l_class_i: CLASS_I
@@ -309,16 +307,14 @@ feature -- Special checking
 			l_pos: INTEGER
 			l_cursor1, l_cursor2: INTEGER
 			l_is_tuple_type : BOOLEAN
-			l_gen_type: GEN_TYPE_A
 			l_type_a: TYPE_A
 			l_generics: TYPE_LIST_AS
 		do
-			l_class_type ?= a_type
 			l_type_a := type_a_generator.evaluate_type (a_type, a_context_class)
 				-- Type was previously checked in `{CLASS_C}.check_types_in_constraint'
 			check not l_type_a.has_like and l_type_a.is_class_valid end
 				-- Check if there is no anchor (has_like) and no bit symbol (is_class_valid) in the constraint type.
-			if l_class_type /= Void then
+			if attached {CLASS_TYPE_AS} a_type as l_class_type then
 				l_cluster := a_context_class.group
 				l_class_i := universe.class_named (l_class_type.class_name.name, l_cluster)
 				if l_class_i = Void then
@@ -333,8 +329,7 @@ feature -- Special checking
 					l_is_tuple_type := l_associated_class.is_tuple
 					l_cl_generics := l_associated_class.generics
 						-- The generic parameters to check (INTEGER in the example above).
-					l_class_type_generics := l_class_type.generics
-					if l_class_type_generics /= Void then
+					if attached l_class_type.generics as l_class_type_generics then
 						if not l_is_tuple_type then
 							from
 								l_temp := l_cl_generics
@@ -348,61 +343,61 @@ feature -- Special checking
 								l_temp.forth
 							end
 							l_temp.go_i_th (l_pos)
-							from
-								l_gen_type ?= l_type_a
-								check
-										-- Should be not Void since we have
-										-- some generic parameters
-									l_gen_type_not_void: l_gen_type /= Void
-								end
-								l_cursor1 := l_class_type_generics.index
-								l_class_type_generics.start
-								if
-									a_context_class.lace_class.is_obsolete_routine_type and then
-									(l_associated_class.class_id = system.routine_class_id or
-									l_associated_class.class_id = system.procedure_class_id or
-									l_associated_class.class_id = system.predicate_class_id or
-									l_associated_class.class_id = system.function_class_id)
-								then
-										-- Ignore the first actual parameter.
-									l_class_type_generics.forth
-								end
-								l_cl_generics.start
-								l_pos := 1
-							until
-								l_class_type_generics.after or else l_has_error
-							loop
-								l_error_level := a_error_handler.error_level
-								l_t1 := l_class_type_generics.item
-								check_constraint_type (a_context_class, l_t1, a_error_handler)
-								l_has_error := a_error_handler.error_level /= l_error_level
-								if not l_has_error then
-									l_t1_a := type_a_generator.evaluate_type (l_t1, a_context_class)
-									from
-										l_cursor2 := l_cl_generics.item.constraints.index
-										l_cl_generics.item.constraints.start
-									until
-										l_cl_generics.item.constraints.after or l_has_error
-									loop
-										l_t2 := l_cl_generics.item.constraints.item.type
-										if l_t2 /= Void then
-											l_t2_a := type_a_generator.evaluate_type (l_t2, l_associated_class)
-											l_t2_a := l_t2_a.instantiated_in (l_type_a)
-											if l_t2_a /= Void then
-												l_t1_a.check_const_gen_conformance
-													(l_gen_type, l_t2_a, a_context_class, l_pos)
-												l_has_error := a_error_handler.error_level /= l_error_level
-											end
-										end
-										l_cl_generics.item.constraints.forth
+							if attached {GEN_TYPE_A} l_type_a as l_gen_type then
+								from
+									l_cursor1 := l_class_type_generics.index
+									l_class_type_generics.start
+									if
+										a_context_class.lace_class.is_obsolete_routine_type and then
+										(l_associated_class.class_id = system.routine_class_id or
+										l_associated_class.class_id = system.procedure_class_id or
+										l_associated_class.class_id = system.predicate_class_id or
+										l_associated_class.class_id = system.function_class_id)
+									then
+											-- Ignore the first actual parameter.
+										l_class_type_generics.forth
 									end
-									l_cl_generics.item.constraints.go_i_th (l_cursor2)
+									l_cl_generics.start
+									l_pos := 1
+								until
+									l_class_type_generics.after or else l_has_error
+								loop
+									l_error_level := a_error_handler.error_level
+									l_t1 := l_class_type_generics.item
+									check_constraint_type (a_context_class, l_t1, a_error_handler)
+									l_has_error := a_error_handler.error_level /= l_error_level
+									if not l_has_error then
+										l_t1_a := type_a_generator.evaluate_type (l_t1, a_context_class)
+										from
+											l_cursor2 := l_cl_generics.item.constraints.index
+											l_cl_generics.item.constraints.start
+										until
+											l_cl_generics.item.constraints.after or l_has_error
+										loop
+											l_t2 := l_cl_generics.item.constraints.item.type
+											if l_t2 /= Void then
+												l_t2_a := type_a_generator.evaluate_type (l_t2, l_associated_class)
+												l_t2_a := l_t2_a.instantiated_in (l_type_a)
+												if l_t2_a /= Void then
+													l_t1_a.check_const_gen_conformance
+														(l_gen_type, l_t2_a, a_context_class, l_pos)
+													l_has_error := a_error_handler.error_level /= l_error_level
+												end
+											end
+											l_cl_generics.item.constraints.forth
+										end
+										l_cl_generics.item.constraints.go_i_th (l_cursor2)
+									end
+									l_pos := l_pos + 1
+									l_class_type_generics.forth
+									l_cl_generics.forth
 								end
-								l_pos := l_pos + 1
-								l_class_type_generics.forth
-								l_cl_generics.forth
+								l_class_type_generics.go_i_th (l_cursor1)
+							else
+								check
+									from_postcondition_of_l_class_type_generics: False
+								end
 							end
-							l_class_type_generics.go_i_th (l_cursor1)
 						else
 								-- TUPLE: has no generics
 							from
@@ -525,7 +520,9 @@ feature {TYPE_A} -- Visitors
 				-- be invalid (check done in `update_like_feature') in case
 				-- it is not a function anymore.
 			l_orig_class_id := a_type.class_id
-			if current_class.class_id /= l_orig_class_id then
+			if current_class.class_id = l_orig_class_id then
+				l_anchor_feature := current_feature_table.item_id (a_type.feature_name_id)
+			else
 				check attached System.class_of_id (l_orig_class_id) as c then
 						-- Make sure the feature table of `c' is up-to-date.
 					if is_delayed implies c.degree_4_processed then
@@ -540,8 +537,6 @@ feature {TYPE_A} -- Visitors
 						is_postponed := True
 					end
 				end
-			else
-				l_anchor_feature := current_feature_table.item_id (a_type.feature_name_id)
 			end
 			if l_anchor_feature /= Void then
 					-- Check if anchor feature type is up-to-date.
@@ -679,12 +674,7 @@ feature {TYPE_A} -- Visitors
 					end
 				else
 					l_argument_position := current_feature.argument_position (a_type.anchor_name_id)
-					if l_argument_position /= 0 then
-						create l_like_argument
-						l_like_argument.set_position (l_argument_position)
-						l_like_argument.set_marks_from (a_type)
-						update_like_argument (current_feature, l_like_argument)
-					else
+					if l_argument_position = 0 then
 						last_type := Void
 						if has_error_reporting then
 							create l_veen
@@ -696,6 +686,11 @@ feature {TYPE_A} -- Visitors
 							end
 							error_handler.insert_error (l_veen)
 						end
+					else
+						create l_like_argument
+						l_like_argument.set_position (l_argument_position)
+						l_like_argument.set_marks_from (a_type)
+						update_like_argument (current_feature, l_like_argument)
 					end
 				end
 			end
@@ -709,6 +704,12 @@ feature {TYPE_A} -- Visitors
 			create r.make (t.qualifier, t.chain, current_class.class_id)
 			r.set_marks_from (t)
 			update_immediate_qualified_anchored_type (r)
+		end
+
+	process_unknown (t: UNKNOWN_TYPE_A)
+			-- <Precursor>
+		do
+			last_type := t
 		end
 
 	process_void_a (a_type: VOID_A)
@@ -738,7 +739,7 @@ feature {NONE} -- Implementation
 					create l_vtat1a
 					l_vtat1a.set_type (a_type)
 					l_vtat1a.set_class (current_class)
-					l_vtat1a.set_argument_name (a_feature.arguments.item_name (a_type.position))
+					l_vtat1a.set_argument_name (a_feature.arguments.item_name_32 (a_type.position))
 					l_vtat1a.set_feature (a_feature)
 					error_handler.insert_error (l_vtat1a)
 				end
@@ -791,7 +792,6 @@ feature {NONE} -- Implementation
 			routine_id: SPECIAL [INTEGER]
 			n: INTEGER
 			e: like error_handler.error_level
-			a: LIKE_CURRENT
 			ast: detachable QUALIFIED_ANCHORED_TYPE_AS
 			saved_ast: like associated_type_ast
 		do
@@ -860,8 +860,7 @@ feature {NONE} -- Implementation
 							if attached last_type as r and then current_class /= c then
 									-- `r' references a type, relative to parent.
 									-- Let's make it relative to current class.
-								create a.make (c.actual_type)
-								last_type := r.instantiation_in (a, f.written_in)
+								last_type := r.instantiation_in (create {LIKE_CURRENT}.make (c.actual_type), f.written_in)
 							end
 							current_class := saved_class
 							current_actual_type := saved_actual_type
@@ -933,7 +932,6 @@ feature {NONE} -- Implementation
 			saved_feature: like current_feature
 			name: SPECIAL [INTEGER]
 			n: INTEGER
-			a: LIKE_CURRENT
 		do
 			t.qualifier.process (Current)
 			if is_delayed then
@@ -969,8 +967,7 @@ feature {NONE} -- Implementation
 						if attached last_type as r and then current_class /= c then
 								-- `r' references a type, relative to parent.
 								-- Let's make it relative to current class.
-							create a.make (c.actual_type)
-							last_type := r.instantiation_in (a, f.written_in)
+							last_type := r.instantiation_in (create {LIKE_CURRENT}.make (c.actual_type), f.written_in)
 						end
 						current_class := saved_class
 						current_actual_type := saved_actual_type
@@ -1041,9 +1038,7 @@ feature {NONE} -- Implementation
 				f.type.process (Current)
 					-- Update anchored type controler
 				l_like_control.remove_feature
-				if not attached last_type as a then
-						-- Nothing to be done, error if any was already reported.
-				elseif a.is_void then
+				if attached last_type as a and then a.is_void then
 					last_type := Void
 					if has_error_reporting then
 						fixme ("What is the error for an anchor to a procedure")
@@ -1055,8 +1050,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
-feature {NONE} -- Implementation
 
 	record_exp_dependance (a_class: CLASS_C)
 		local
@@ -1093,7 +1086,8 @@ invariant
 	is_current_actual_type_correct: attached current_class as c implies attached current_actual_type as t and then t.same_as (current_class.actual_type)
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	ca_ignore: "CA033", "CA033 — very long class"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

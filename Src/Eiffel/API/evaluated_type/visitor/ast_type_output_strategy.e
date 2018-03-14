@@ -1,5 +1,5 @@
-note
-	description: "Formats TYPE_A instances using TEXT_FORMATTER"
+﻿note
+	description: "Formats TYPE_A instances using TEXT_FORMATTER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -196,7 +196,7 @@ feature {TYPE_A} -- Visitors
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
 			if current_feature /= Void and then current_feature.argument_count <= a_type.position then
-				text_formatter.process_local_text (Void, current_feature.arguments.item_name (a_type.position))
+				text_formatter.process_local_text (Void, current_feature.arguments.item_name_32 (a_type.position))
 			else
 				text_formatter.add (ti_argument_index)
 				text_formatter.add_int (a_type.position)
@@ -395,6 +395,12 @@ feature {TYPE_A} -- Visitors
 			end
 		end
 
+	process_unknown (t: UNKNOWN_TYPE_A)
+			-- <Precursor>
+		do
+			text_formatter.process_symbol_text (ti_question)
+		end
+
 	process_void_a (a_type: VOID_A)
 			-- Process `a_type'.
 		do
@@ -429,7 +435,7 @@ feature {NONE} -- Generic visitors
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

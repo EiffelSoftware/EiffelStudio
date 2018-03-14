@@ -302,6 +302,12 @@ feature {TYPE_A} -- Type visitor
 			suggested_type := a_type
 		end
 
+	process_unknown (t: UNKNOWN_TYPE_A)
+			-- <Precursor>
+		do
+			suggested_type := t
+		end
+
 	process_void_a (a_type: VOID_A)
 			-- <Precursor>
 		do
@@ -311,7 +317,7 @@ feature {TYPE_A} -- Type visitor
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

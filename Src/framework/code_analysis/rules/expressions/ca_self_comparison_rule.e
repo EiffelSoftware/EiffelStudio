@@ -7,7 +7,7 @@
 			thus redundant. In an Until expression it may lead to non-termination.
 			Usually it is a typing error.
 		]"
-	author: "Stefan Zurfluh"
+	author: "Stefan Zurfluh", "Eiffel Software"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -33,13 +33,14 @@ feature {NONE} -- Activation
 
 	register_actions (a_checker: attached CA_ALL_RULES_CHECKER)
 		do
-			a_checker.add_bin_eq_pre_action (agent process_bin_eq)
-			a_checker.add_bin_ge_pre_action (agent process_bin_ge)
-			a_checker.add_bin_gt_pre_action (agent process_bin_gt)
-			a_checker.add_bin_le_pre_action (agent process_bin_le)
-			a_checker.add_bin_lt_pre_action (agent process_bin_lt)
-			a_checker.add_loop_pre_action (agent pre_process_loop)
-			a_checker.add_loop_post_action (agent post_process_loop)
+			a_checker.add_bin_eq_pre_action (agent process_comparison ({BIN_EQ_AS}?))
+			a_checker.add_bin_ne_pre_action (agent process_comparison ({BIN_NE_AS}?))
+			a_checker.add_bin_ge_pre_action (agent process_comparison ({BIN_GE_AS}?))
+			a_checker.add_bin_gt_pre_action (agent process_comparison ({BIN_GT_AS}?))
+			a_checker.add_bin_le_pre_action (agent process_comparison ({BIN_LE_AS}?))
+			a_checker.add_bin_lt_pre_action (agent process_comparison ({BIN_LT_AS}?))
+			a_checker.add_bin_not_tilde_post_action (agent process_comparison ({BIN_NOT_TILDE_AS}?))
+			a_checker.add_bin_tilde_post_action (agent process_comparison ({BIN_TILDE_AS}?))
 		end
 
 feature -- Properties
@@ -48,6 +49,7 @@ feature -- Properties
 			-- <Precursor>
 
 	title: STRING_32
+			--<Precursor>
 		do
 			Result := ca_names.self_comparison_title
 		end
@@ -56,122 +58,108 @@ feature -- Properties
 			-- <Precursor>
 
 	description: STRING_32
+			--<Precursor>
 		do
 			Result :=  ca_names.self_comparison_description
 		end
 
-	format_violation_description (a_violation: attached CA_RULE_VIOLATION; a_formatter: attached TEXT_FORMATTER)
+	format_violation_description (a_violation: CA_RULE_VIOLATION; a_formatter: TEXT_FORMATTER)
+			-- Ignore the old-style output.
+		do
+		end
+
+feature {NONE} -- Context analysis
+
+	process_comparison (a: BINARY_AS)
+			-- Checks `a' for rule violations.
 		local
-			l_info: LINKED_LIST [ANY]
+			violation: CA_RULE_VIOLATION
+			value: PROCEDURE [TEXT_FORMATTER]
 		do
-			l_info := a_violation.long_description_info
-			a_formatter.add ("'")
-			if l_info.count >= 1 and then attached {READABLE_STRING_GENERAL} l_info.first as l_name then
-				a_formatter.add_local (l_name)
-			end
-			a_formatter.add (ca_messages.self_comparison_violation_1)
-
-			l_info.compare_objects
-			if l_info.has ("loop_stop") then
-					-- Dangerous loop stop condition.
-				a_formatter.add (ca_messages.self_comparison_violation_2)
-			end
-		end
-
-feature {NONE} -- Checking the rule
-
-	in_loop: BOOLEAN
-			-- Are we within a loop?
-
-	pre_process_loop (a_loop: LOOP_AS)
-			-- Checking a loop `a_loop' for self-comparisons needs more work. If the until expression
-			-- is a self-comparison that does not compare for equality then the loop will
-			-- not terminate, which is more severe consequence compared to other self-comparisons.
-		local
-			l_viol: CA_RULE_VIOLATION
-		do
-			if attached {BINARY_AS} a_loop.stop as l_bin then
-				analyze_self (l_bin)
-				if is_self then
-					create l_viol.make_with_rule (Current)
-					l_viol.set_location (a_loop.stop.start_location)
-					l_viol.long_description_info.extend (self_name)
-					if not attached {BIN_EQ_AS} l_bin then
-							-- It is only a dangerous loop stop condition if we do not have
-							-- an equality comparison.
-						l_viol.long_description_info.extend ("loop_stop")
-					end
-					violations.extend (l_viol)
-					in_loop := True
-				end
-			end
-		end
-
-	post_process_loop (a_loop: LOOP_AS)
-			-- Reset the within-loop flag.
-		do in_loop := False end
-
-	process_bin_eq (a_bin_eq: BIN_EQ_AS)
-		do
-			process_comparison (a_bin_eq)
-		end
-
-	process_bin_ge (a_bin_ge: BIN_GE_AS)
-		do
-			process_comparison (a_bin_ge)
-		end
-
-	process_bin_gt (a_bin_gt: BIN_GT_AS)
-		do
-			process_comparison (a_bin_gt)
-		end
-
-	process_bin_le (a_bin_le: BIN_LE_AS)
-		do
-			process_comparison (a_bin_le)
-		end
-
-	process_bin_lt (a_bin_lt: BIN_LT_AS)
-		do
-			process_comparison (a_bin_lt)
-		end
-
-	process_comparison (a_comparison: BINARY_AS)
-			-- Checks `a_comparison' for rule violations.
-		local
-			l_viol: CA_RULE_VIOLATION
-		do
-			if not in_loop then
-				analyze_self (a_comparison)
-				if is_self then
-					create l_viol.make_with_rule (Current)
-					l_viol.set_location (a_comparison.start_location)
-					l_viol.long_description_info.extend (self_name)
-					violations.extend (l_viol)
-				end
-			end
-		end
-
-	analyze_self (a_bin: attached BINARY_AS)
-			-- Is `a_bin' a self-comparison?
-		do
-			is_self := False
-
 			if
-				attached {EXPR_CALL_AS} a_bin.left as l_e1
-				and then attached {ACCESS_ID_AS} l_e1.call as l_l
-				and then attached {EXPR_CALL_AS} a_bin.right as l_e2
-				and then attached {ACCESS_ID_AS} l_e2.call as l_r
+				attached {EXPR_CALL_AS} a.left as e1 and then
+				attached {ACCESS_AS} e1.call as call1 and then
+				attached {EXPR_CALL_AS} a.right as e2
 			then
-				is_self := l_l.feature_name.is_equal (l_r.feature_name)
-				self_name := l_l.access_name_32
+				if
+					attached {ACCESS_FEAT_AS} call1 as l and then
+					attached {ACCESS_FEAT_AS} e2.call as r and then
+					l.feature_name.is_equal (r.feature_name)
+				then
+					if l.is_feature then
+							-- It's a feature. Check that it is an attribute rather than a routine.
+						if
+							system.has_class_of_id (l.class_id) and then
+							attached system.class_of_id (l.class_id) as c and then
+							attached c.feature_of_rout_id (l.routine_ids.first) as f and then
+							not f.is_routine
+						then
+							value := agent {TEXT_FORMATTER}.process_feature_text (l.feature_name.name_32, f.e_feature, True)
+						end
+					else
+							-- It's a named local (including argument, object-test local, separate variable, iteration cursor).
+						value := agent {TEXT_FORMATTER}.process_local_text (l.feature_name, l.feature_name.name_32)
+					end
+				elseif attached {CURRENT_AS} call1 and then attached {CURRENT_AS} e2.call then
+					value := agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_current, Void)
+				elseif attached {RESULT_AS} call1 and then attached {RESULT_AS} e2.call then
+					value := agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_result, Void)
+				elseif
+					attached {PRECURSOR_AS} call1 as l and then
+					attached {PRECURSOR_AS} e2.call as r and then
+					system.has_class_of_id (l.class_id) and then
+					attached system.class_of_id (l.class_id) as c and then
+					attached c.feature_of_rout_id (l.routine_ids.first) as f and then
+					f.is_attribute and then
+					l.class_id = r.class_id
+				then
+					value := agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_precursor_keyword, f.e_feature)
+				end
+				if attached value then
+					create violation.make_formatted (
+						agent format (?,
+							ca_messages.locale.translation_in_context ("{1} is compared to itself.", once "code_analysis.violation"),
+							<<element (value)>>),
+						agent format (?,
+							ca_messages.locale.translation_in_context ("Self-comparison: {1} compared to itself always evaluates to the same boolean value.", once "code_analysis.violation"),
+							<<element (value)>>),
+						Current)
+					violation.set_location (current_context.matchlist [a.operator_index])
+					violations.extend (violation)
+				end
 			end
 		end
 
-	is_self: BOOLEAN
-			-- Is `a_bin' from last call to `analyze_self' a self-comparison?
-
-	self_name: detachable STRING_32
-			-- Name of the self-compared variable.
+note
+	copyright:	"Copyright (c) 2014-2018, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

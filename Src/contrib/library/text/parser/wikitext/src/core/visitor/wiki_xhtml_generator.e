@@ -668,6 +668,8 @@ feature -- Template
 	visit_template (a_template: WIKI_TEMPLATE)
 		local
 			witem: WIKI_ITEM
+			s: STRING
+			wstr: WIKI_STRING
 			l_is_first: BOOLEAN
 		do
 			if
@@ -684,9 +686,9 @@ feature -- Template
 			elseif a_template.name.is_case_insensitive_equal_general ("TOC limit") then
 					-- ignore
 			else
-
 				output ("<div class=%"wiki-template " + a_template.name + "%" class=%"inline%">")
 				output ("<strong>" + a_template.name + "</strong>: ")
+				create s.make_empty
 				if attached a_template.parameters as l_params then
 					l_is_first := True
 					across
@@ -695,11 +697,13 @@ feature -- Template
 						if l_is_first then
 							l_is_first := False
 						else
-							output (" | ")
+							s.append (" | ")
 						end
-						visit_string (create {WIKI_STRING}.make (ic.item))
+						s.append (ic.item)
 					end
 				end
+				witem := a_template.text (s)
+				witem.process (Current)
 				output ("</div>")
 			end
 		end
@@ -1211,7 +1215,7 @@ feature -- Implementation
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2018, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

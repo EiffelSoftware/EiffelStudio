@@ -76,8 +76,6 @@ feature -- Comparison
 			Result := True
 		end
 
-feature -- Comparison
-
 	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		do
@@ -98,13 +96,13 @@ feature -- Output
 	dump: STRING
 			-- <Precursor>
 		do
-			Result := "unknown"
+			Result := "?"
 		end
 
 	ext_append_to (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C)
 			-- <Precursor>
 		do
-			a_text_formatter.add (once "unknown")
+			a_text_formatter.add (once "?")
 		end
 
 feature {TYPE_A} -- Helpers
@@ -119,7 +117,7 @@ feature {TYPE_A} -- Helpers
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

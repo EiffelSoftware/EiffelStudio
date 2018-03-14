@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Visitor for {TYPE_A} objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -265,6 +265,15 @@ feature {TYPE_A} -- Visitor
 		deferred
 		end
 
+	process_unknown (t: UNKNOWN_TYPE_A)
+			-- Process `t'.
+		require
+			is_valid: is_valid
+			t_attached: attached t
+			t_valid: is_type_valid (t)
+		deferred
+		end
+
 	process_void_a (a_type: VOID_A)
 			-- Process `a_type'.
 		require
@@ -275,7 +284,7 @@ feature {TYPE_A} -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

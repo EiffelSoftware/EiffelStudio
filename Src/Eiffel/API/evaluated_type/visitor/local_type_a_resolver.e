@@ -228,6 +228,12 @@ feature {TYPE_A} -- Visitor
 			last_type := a_type
 		end
 
+	process_unknown (t: UNKNOWN_TYPE_A)
+			-- <Precursor>
+		do
+			last_type := t
+		end
+
 	process_void_a (a_type: VOID_A)
 			-- <Precursor>
 		do
@@ -242,7 +248,7 @@ feature {NONE} -- Traversal
 ;note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

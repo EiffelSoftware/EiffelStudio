@@ -256,6 +256,12 @@ feature {TYPE_A} -- Visitors
 			ctxt.process_string_text (a_type.dump, Void)
 		end
 
+	process_unknown (t: UNKNOWN_TYPE_A)
+			-- <Precursor>
+		do
+			ctxt.process_symbol_text (ti_question)
+		end
+
 	process_void_a (a_type: VOID_A)
 			-- Process `a_type'.
 		do

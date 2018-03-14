@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Feature lookup facility for {TYPE_A}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -73,7 +73,8 @@ feature -- Status report
 				not t.is_like_argument and then
 				not t.is_void and then
 				not attached {UNEVALUATED_LIKE_TYPE} t and then
-				not attached {UNEVALUATED_QUALIFIED_ANCHORED_TYPE} t
+				not attached {UNEVALUATED_QUALIFIED_ANCHORED_TYPE} t and then
+				(attached {UNKNOWN_TYPE_A} t implies attached {LOCAL_TYPE_A} t)
 			then
 				Result := t.is_valid_for_class (c)
 			end
@@ -443,6 +444,12 @@ feature {TYPE_A} -- Visitor
 			check valid_t: False end
 		end
 
+	process_unknown (t: UNKNOWN_TYPE_A)
+			-- <Precursor>
+		do
+			check valid_t: False end
+		end
+
 	process_void_a (t: VOID_A)
 			-- <Precursor>
 		do
@@ -450,7 +457,7 @@ feature {TYPE_A} -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

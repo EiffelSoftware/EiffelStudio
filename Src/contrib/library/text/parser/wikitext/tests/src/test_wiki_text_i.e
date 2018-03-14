@@ -45,6 +45,8 @@ feature -- Resolver
 		do
 			if a_template.name.is_case_insensitive_equal_general ("rule") then
 				Result := "Template#" + a_template.name + "%Nname={{{name}}} %Ntext={{{text}}}%N"
+			elseif a_template.name.is_case_insensitive_equal_general ("unknown") then
+				-- Unknown template case.
 			elseif a_template.name.is_case_insensitive_equal_general ("toc") then
 			else
 				Result := "Template#" + a_template.name + "%N1={{{1}}} %N2={{{2}}} %N3={{{3}}}%N"

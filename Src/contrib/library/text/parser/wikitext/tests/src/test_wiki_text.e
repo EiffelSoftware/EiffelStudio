@@ -545,6 +545,35 @@ text=bar
 			assert ("o", same_output (o, l_expected_output))
 		end
 
+	test_template_with_unknown_name
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			l_expected_output: STRING
+		do
+			create t.make_from_string ("[
+==test==
+{{unknown| [[Breakpoint commands|Breakpoint commands]], [[Breakpoint information command|Breakpoint information command]] }}
+
+==end==
+			]")
+
+			l_expected_output := "[
+
+<a name="test"></a><h2>test</h2>
+<p><div class="wiki-template unknown" class="inline"><strong>unknown</strong>:  <a href="Breakpoint commands" class="wiki_link wiki_notfound">Breakpoint commands</a>, <a href="Breakpoint information command" class="wiki_link wiki_notfound">Breakpoint information command</a> </div>
+</p>
+
+<a name="end"></a><h2>end</h2>
+
+]"
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", same_output (o, l_expected_output))
+		end
+
 	test_template_with_trailing_space
 		local
 			t: WIKI_CONTENT_TEXT

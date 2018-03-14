@@ -43,6 +43,8 @@ inherit
 			process_bin_le_as,
 			process_bin_lt_as,
 			process_bin_ne_as,
+			process_bin_not_tilde_as,
+			process_bin_tilde_as,
 			process_body_as,
 			process_bracket_as,
 			process_case_as,
@@ -119,6 +121,10 @@ feature {NONE} -- Initialization
 			create bin_lt_post_actions
 			create bin_ne_pre_actions
 			create bin_ne_post_actions
+			create bin_not_tilde_pre_actions
+			create bin_not_tilde_post_actions
+			create bin_tilde_pre_actions
+			create bin_tilde_post_actions
 			create body_pre_actions
 			create body_post_actions
 			create bracket_pre_actions
@@ -321,6 +327,26 @@ feature {CA_STANDARD_RULE} -- Adding agents
 	add_bin_ne_post_action (a_action: attached PROCEDURE [BIN_NE_AS])
 		do
 			bin_ne_post_actions.extend (a_action)
+		end
+
+	add_bin_not_tilde_pre_action (a: PROCEDURE [BIN_NOT_TILDE_AS])
+		do
+			bin_not_tilde_pre_actions.extend (a)
+		end
+
+	add_bin_not_tilde_post_action (a: PROCEDURE [BIN_NOT_TILDE_AS])
+		do
+			bin_not_tilde_post_actions.extend (a)
+		end
+
+	add_bin_tilde_pre_action (a: PROCEDURE [BIN_TILDE_AS])
+		do
+			bin_tilde_pre_actions.extend (a)
+		end
+
+	add_bin_tilde_post_action (a: PROCEDURE [BIN_TILDE_AS])
+		do
+			bin_tilde_post_actions.extend (a)
 		end
 
 	add_body_pre_action (a_action: attached PROCEDURE [BODY_AS])
@@ -673,6 +699,10 @@ feature {NONE} -- Agent lists
 
 	bin_ne_pre_actions, bin_ne_post_actions: ACTION_SEQUENCE [TUPLE [BIN_NE_AS]]
 
+	bin_not_tilde_pre_actions, bin_not_tilde_post_actions: ACTION_SEQUENCE [TUPLE [BIN_NOT_TILDE_AS]]
+
+	bin_tilde_pre_actions, bin_tilde_post_actions: ACTION_SEQUENCE [TUPLE [BIN_TILDE_AS]]
+
 	body_pre_actions, body_post_actions: ACTION_SEQUENCE [TUPLE [BODY_AS]]
 
 	bracket_pre_actions, bracket_post_actions: ACTION_SEQUENCE [TUPLE [BRACKET_AS]]
@@ -863,6 +893,22 @@ feature {NONE} -- Processing
 			bin_ne_pre_actions.call ([a_bin_ne])
 			Precursor (a_bin_ne)
 			bin_ne_post_actions.call ([a_bin_ne])
+		end
+
+	process_bin_not_tilde_as (a: BIN_NOT_TILDE_AS)
+			-- <Precursor>
+		do
+			bin_not_tilde_pre_actions.call (a)
+			Precursor (a)
+			bin_not_tilde_post_actions.call (a)
+		end
+
+	process_bin_tilde_as (a: BIN_TILDE_AS)
+			-- <Precursor>
+		do
+			bin_tilde_pre_actions.call (a)
+			Precursor (a)
+			bin_tilde_post_actions.call (a)
 		end
 
 	process_body_as (a_body: BODY_AS)
@@ -1113,7 +1159,8 @@ feature {NONE} -- Processing
 		end
 
 note
-	copyright:	"Copyright (c) 2014-2017, Eiffel Software"
+	ca_ignore: "CA033", "CA033 — very long class"
+	copyright:	"Copyright (c) 2014-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

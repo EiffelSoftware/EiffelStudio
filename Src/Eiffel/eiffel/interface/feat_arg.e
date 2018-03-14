@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Arguments of a FEATURE_I"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,11 +23,6 @@ inherit
 		end
 
 	SHARED_WORKBENCH
-		undefine
-			copy, is_equal
-		end
-
-	SHARED_EVALUATOR
 		undefine
 			copy, is_equal
 		end
@@ -92,11 +87,25 @@ feature -- Access
 
 	item_name (i: INTEGER): STRING
 			-- Name of argument at position `i'.
+		obsolete
+			"Use `item_name_32` instead. [2018-05-31]"
 		require
 			index_positive: i >= 1
 			index_small_enough: i <= count
 		do
 			Result := Names_heap.item (argument_names.item (i - 1))
+		ensure
+			Result_not_void: Result /= Void
+			Result_not_empty: not Result.is_empty
+		end
+
+	item_name_32 (i: INTEGER): STRING_32
+			-- Name of argument at position `i'.
+		require
+			index_positive: i >= 1
+			index_small_enough: i <= count
+		do
+			Result := Names_heap.item_32 (argument_names.item (i - 1))
 		ensure
 			Result_not_void: Result /= Void
 			Result_not_empty: not Result.is_empty
@@ -117,20 +126,18 @@ feature -- Access
 	pattern_types: detachable ARRAY [TYPE_A]
 			-- Pattern types of arguments
 		local
-			l_area: SPECIAL [TYPE_A]
-			r_area: SPECIAL [TYPE_A]
+			a: SPECIAL [TYPE_A]
 			i, nb: INTEGER
 		do
 			nb := count
 			if nb > 0 then
 				from
-					l_area := area
-					create Result.make (1, nb)
-					r_area := Result.area
+					create Result.make_from_array (to_array.twin)
+					a := Result.area
 				until
 					i = nb
 				loop
-					r_area.put (l_area.item (i).meta_type, i)
+					a.put (a.item (i).meta_type, i)
 					i := i + 1
 				end
 			end
@@ -200,11 +207,9 @@ feature -- Checking
 			a_area: like argument_names
 			l_area: SPECIAL [TYPE_A]
 			i, nb: INTEGER
-			arg_eval: ARG_EVALUATOR
 			l_names_heap: like Names_heap
 		do
 			from
-				arg_eval := Arg_evaluator
 				a_area := argument_names
 				l_names_heap := Names_heap
 				l_area := area
@@ -214,9 +219,8 @@ feature -- Checking
 			loop
 					-- Process anchored type for argument types
 				argument_name := l_names_heap.item (a_area.item (i))
-				arg_eval.set_argument_name (argument_name)
 				if associated_class = f.written_class then
-					solved_type ?= l_area.item (i)
+					solved_type := l_area.item (i)
 						-- Check validity of an expanded type
 					if 	solved_type.has_expanded then
 						if 	solved_type.expanded_deferred then
@@ -244,35 +248,11 @@ feature -- Checking
 			end
 		end
 
-	solve_types (feat_tbl: FEATURE_TABLE f: FEATURE_I)
-			-- Evaluates argument types in the context of `feat_tbl'.
-			-- | Take care of possible anchored types.
-		local
-			l_area: SPECIAL [TYPE_A]
-			i, nb: INTEGER
-			arg_eval: ARG_EVALUATOR
-			l_solved_type: TYPE_A
-		do
-			from
-				arg_eval := Arg_evaluator
-				l_area := area
-				nb := count
-			until
-				i = nb
-			loop
-				l_solved_type := arg_eval.evaluated_type (l_area.item (i), feat_tbl, f)
-				check l_solved_type_not_void: l_solved_type /= Void end
-				l_area.put (l_solved_type, i)
-				i := i + 1
-			end
-		end
-
 feature -- Status report
 
 	is_valid: BOOLEAN
 			-- All the types are still in the system
 		local
-			type_a: TYPE_A
 			l_area: SPECIAL [TYPE_A]
 			i, nb: INTEGER
 		do
@@ -283,8 +263,7 @@ feature -- Status report
 			until
 				i = nb or else not Result
 			loop
-				type_a ?= l_area.item (i)
-				Result := type_a.is_valid
+				Result := attached l_area.item (i) as t and then t.is_valid
 				i := i + 1
 			end
 		end
@@ -358,7 +337,7 @@ invariant
 	argument_names_not_void: argument_names /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -389,4 +368,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- end of class FEAT_ARG
+end

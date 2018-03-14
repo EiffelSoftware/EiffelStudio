@@ -61,6 +61,8 @@ feature -- Attributes
 	generics: detachable TYPE_LIST_AS
 			-- Possible generical parameters
 		do
+		ensure
+			generic_class_type: attached Result implies attached {GENERIC_CLASS_TYPE_AS} Current
 		end
 
 	is_class: BOOLEAN = True
@@ -153,7 +155,7 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

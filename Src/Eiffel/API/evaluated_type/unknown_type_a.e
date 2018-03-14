@@ -102,7 +102,7 @@ feature -- Output
 	ext_append_to (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C)
 			-- <Precursor>
 		do
-			a_text_formatter.add (once "?")
+			a_text_formatter.process_symbol_text (once "?")
 		end
 
 feature {TYPE_A} -- Helpers

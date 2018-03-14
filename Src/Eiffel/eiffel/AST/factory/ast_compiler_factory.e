@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Factory for compiler which generates descendants of certain AST classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -245,7 +245,7 @@ feature -- Access
 			end
 		end
 
-	new_formal_dec_as (f: detachable FORMAL_AS; c: detachable CONSTRAINT_LIST_AS; cf: detachable EIFFEL_LIST [FEATURE_NAME]; c_as: detachable SYMBOL_AS; ck_as, ek_as: detachable KEYWORD_AS): detachable FORMAL_CONSTRAINT_AS
+	new_formal_dec_as (f: detachable FORMAL_AS; c: detachable CONSTRAINT_LIST_AS; cf: detachable EIFFEL_LIST [FEAT_NAME_ID_AS]; c_as: detachable SYMBOL_AS; ck_as, ek_as: detachable KEYWORD_AS): detachable FORMAL_CONSTRAINT_AS
 			-- New FORMAL_DECLARATION AST node
 		do
 			if f /= Void then
@@ -370,7 +370,10 @@ feature {NONE} -- Validation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	ca_ignore:
+		"CA011", "CA011 — too many arguments",
+		"CA033", "CA033 — very long class"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

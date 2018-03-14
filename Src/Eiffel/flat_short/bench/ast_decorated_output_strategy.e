@@ -869,15 +869,15 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator := text_formatter_decorator
 			if l_as.is_argument then
 				if not expr_type_visiting then
-					format_local_with_name (current_feature.arguments.item_name (l_as.argument_position))
+					format_local_with_as (create {ID_AS}.initialize_from_id (current_feature.arguments.item_id (l_as.argument_position)))
 				end
 			elseif l_as.is_local then
 				if not expr_type_visiting then
-					format_local_with_name (l_as.access_name_8)
+					format_local_with_as (l_as.feature_name)
 				end
 			elseif l_as.is_object_test_local then
 				if not expr_type_visiting then
-					format_local_with_name (l_as.access_name_8)
+					format_local_with_as (l_as.feature_name)
 				end
 			elseif l_as.is_tuple_access then
 				if not expr_type_visiting then
@@ -1711,7 +1711,6 @@ feature {NONE} -- Implementation
 
 	process_address_current_as (l_as: ADDRESS_CURRENT_AS)
 		local
-			l_type: TYPE_A
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			if not expr_type_visiting then
@@ -1721,8 +1720,7 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.set_without_tabs
 				l_text_formatter_decorator.process_keyword_text (ti_current, Void)
 			end
-			l_type ?= current_class.actual_type
-			create {TYPED_POINTER_A} last_type.make_typed (l_type)
+			create {TYPED_POINTER_A} last_type.make_typed (current_class.actual_type)
 		end
 
 	process_address_as (l_as: ADDRESS_AS)
@@ -1758,7 +1756,7 @@ feature {NONE} -- Implementation
 					if l_feat /= Void then
 						format_feature_name (l_as.feature_name.internal_name.name_32, l_feat, False)
 					else
-						format_local_with_name (l_as.feature_name.internal_name.name_8)
+						format_local_with_as (l_as.feature_name.internal_name)
 					end
 					l_text_formatter_decorator.commit
 				end
@@ -3751,7 +3749,7 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.put_space
 						l_text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
 						l_text_formatter_decorator.put_space
-						feature_name ?= l_as.creation_feature_list.item
+						feature_name := l_as.creation_feature_list.item
 						append_feature_by_id (feature_name, l_constrained_type, l_constrained_type_set)
 						l_as.creation_feature_list.forth
 					until
@@ -3759,7 +3757,7 @@ feature {NONE} -- Implementation
 					loop
 						l_text_formatter_decorator.process_symbol_text (ti_comma)
 						l_text_formatter_decorator.put_space
-						feature_name ?= l_as.creation_feature_list.item
+						feature_name := l_as.creation_feature_list.item
 						append_feature_by_id (feature_name, l_constrained_type, l_constrained_type_set)
 						l_as.creation_feature_list.forth
 					end
@@ -4929,16 +4927,17 @@ feature {NONE} -- Implementation: helpers
 			-- Formal constraint class from `a_type_feature_i'.
 		local
 			l_type: TYPE_A
-			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
 			l_type := a_type_feature_i.type
 			if attached {FORMAL_A} l_type as l_formal then
 				check
 					current_class_has_generics: current_class.generics /= Void
 				end
-				l_formal_dec ?= current_class.generics.i_th (l_formal.position)
-				check l_formal_dec_not_void: l_formal_dec /= Void end
-				Result := l_formal_dec.constraint_type (current_class).type.base_class
+				if attached {FORMAL_CONSTRAINT_AS} current_class.generics.i_th (l_formal.position) as l_formal_dec then
+					Result := l_formal_dec.constraint_type (current_class).type.base_class
+				else
+					check is_formal_constraint: False end
+				end
 			else
 				Result := l_type.base_class
 			end
@@ -5230,12 +5229,11 @@ feature {NONE} -- Implementation: helpers
 			is_local_id := False
 		end
 
-	format_local_with_name (a_name: STRING_8)
-			-- Format local with name `a_name'.
-			-- `a_name' is in UTF-8.
+	format_local_with_as (a: ID_AS)
+			-- Format local with name `a`.
 		do
 			is_local_id := True
-			;(create {ID_AS}.initialize (a_name)).process (Current)
+			a.process (Current)
 			is_local_id := False
 		end
 
@@ -5257,6 +5255,7 @@ invariant
 	separate_argument_locals_for_current_scope_not_void: separate_argument_locals_for_current_scope /= Void
 
 note
+	ca_ignore: "CA033", "CA033 — very long class"
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2017, Eiffel Software"

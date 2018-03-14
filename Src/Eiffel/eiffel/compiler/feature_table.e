@@ -1,8 +1,8 @@
-note
-description: "[
-		Class for a feature table: it is basically a hash table of entries
-		the real feature name available in the corresponding classes, and of items
-		the feature id corresponding to the names (id of instance of FEATURE_I).
+﻿note
+	description: "[
+			Class for a feature table: it is basically a hash table of entries
+			the real feature name available in the corresponding classes, and of items
+			the feature id corresponding to the names (id of instance of FEATURE_I).
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -353,11 +353,9 @@ feature {NONE} -- HASH_TABLE like features
 					once_per_object_count := once_per_object_count - 1
 				end
 				l_id := old_feature.id
-				if l_id > 0 then
-					if not tmp_feature_server.aliased_features.has (l_id) then
-							-- We do not want aliased features to be removed from disk.
-						tmp_feature_server.remove (l_id)
-					end
+				if l_id > 0 and then not tmp_feature_server.aliased_features.has (l_id) then
+						-- We do not want aliased features to be removed from disk.
+					tmp_feature_server.remove (l_id)
 				end
 					-- Remove old alias name
 				alias_name_id := old_feature.alias_name_id
@@ -548,7 +546,7 @@ feature -- Settings
 			-- case of an empty feature table.
 		do
 			is_computed := True
-			create feature_id_table.make (0, -1)
+			create feature_id_table.make_empty
 			create body_index_table.make (0)
 			create feature_table.make (0)
 			feature_table.set_id (feat_tbl_id)
@@ -568,15 +566,13 @@ feature -- Comparison
 			is_computed: is_computed
 			other_is_computed: other.is_computed
 		local
-			feature_name_id: INTEGER
 			f1, f2: FEATURE_I
-			depend_unit: DEPEND_UNIT
 			ext_i: EXTERNAL_I
 			c: CLASS_C
 			is_freeze_requested: BOOLEAN
 		do
 			c := system.class_of_id (feat_tbl_id)
-			if other.count = 0 then
+			if other.is_empty then
 				Result := False
 				if not system.is_freeze_requested and then c.has_visible then
 						-- Ensure the system is frozen for CECIL.
@@ -591,8 +587,7 @@ feature -- Comparison
 					after
 				loop
 					f1 := item_for_iteration
-					feature_name_id := f1.feature_name_id
-					f2 := other.item_id (feature_name_id)
+					f2 := other.item_id (f1.feature_name_id)
 					if f2 = Void then
 							-- Old feature is not in Current feature table, this
 							-- is not equivalent
@@ -632,8 +627,7 @@ feature -- Comparison
 							Result := False
 								-- One day, I changed `f2' by `f1' and the eweasel test#incr139 was broken,
 								-- so I guess this is why we have to use `f2'.
-							create depend_unit.make (feat_tbl_id, f2)
-							pass2_ctrl.propagators.extend (depend_unit)
+							pass2_ctrl.propagators.extend (create {DEPEND_UNIT}.make (feat_tbl_id, f2))
 							if not is_freeze_requested and then c.visible_level.is_visible (f1, feat_tbl_id) then
 									-- Regenerate C code for visible feature so that it can be accessed via CECIL.
 								system.request_freeze
@@ -659,7 +653,6 @@ end
 			-- `other' and the current one.
 		local
 			old_feature_i, new_feature_i: FEATURE_I
-			feature_name_id: INTEGER
 			propagators, melted_propagators: TWO_WAY_SORTED_SET [DEPEND_UNIT]
 			removed_features: SEARCH_TABLE [INTEGER]
 			depend_unit: DEPEND_UNIT
@@ -680,9 +673,8 @@ end
 			loop
 					-- Old feature
 				old_feature_i := item_for_iteration
-				feature_name_id := old_feature_i.feature_name_id
 					-- New feature
-				new_feature_i := other.item_id (feature_name_id)
+				new_feature_i := other.item_id (old_feature_i.feature_name_id)
 				if new_feature_i = Void then
 					is_anchor_changed := True
 				else
@@ -733,19 +725,20 @@ end
 						old_feature_i.export_status.equiv (new_feature_i.export_status)
 				end
 
-				if old_feature_i.written_in = feat_tbl_id or else old_feature_i.is_replicated_directly then
+				if
+					(old_feature_i.written_in = feat_tbl_id or else old_feature_i.is_replicated_directly) and then
+					old_feature_i.is_c_external
+				then
 						-- Previous feature generated for current class.
-					if old_feature_i.is_c_external then
-						debug ("ACTIVITY")
-							io.error.put_string ("Remove external: ")
-							io.error.put_string (old_feature_i.feature_name)
-							io.error.put_new_line
-						end
-							-- Delete one occurrence of an external feature. Freeze is taken
-							-- care by EXTERNALS.is_equivalent queried by SYSTEM_I.
-						external_i ?= old_feature_i
-						pass_control.remove_external (external_i)
+					debug ("ACTIVITY")
+						io.error.put_string ("Remove external: ")
+						io.error.put_string (old_feature_i.feature_name)
+						io.error.put_new_line
 					end
+						-- Delete one occurrence of an external feature. Freeze is taken
+						-- care by EXTERNALS.is_equivalent queried by SYSTEM_I.
+					external_i ?= old_feature_i
+					pass_control.remove_external (external_i)
 				end
 
 				if old_feature_i.written_in = feat_tbl_id or else old_feature_i.is_replicated_directly then
@@ -864,7 +857,7 @@ end
 				create feature_table.make (nb)
 				feature_table.set_id (feat_tbl_id)
 				create select_table.make (nb, Current)
-				create feature_id_table.make (1, nb)
+				create feature_id_table.make_filled (0, 1, nb)
 				create body_index_table.make (nb)
 				internal_table_start
 			until
@@ -968,7 +961,6 @@ end
 			associated_class.changed
 		local
 			a_class: CLASS_C
-			feature_i: FEATURE_I
 		do
 			from
 				start
@@ -976,8 +968,7 @@ end
 			until
 				after
 			loop
-				feature_i := item_for_iteration
-				feature_i.delayed_update_instantiator2 (a_class)
+				item_for_iteration.delayed_update_instantiator2 (a_class)
 				forth
 			end
 		end
@@ -989,7 +980,6 @@ end
 			l_written_class: CLASS_C
 			fi, feature_i: FEATURE_I
 			desc: ATTR_DESC
-			l_ext: IL_EXTENSION_I
 			l_opo_counter, l_opo_count: INTEGER
 			l_attribute_counter, l_attribute_count: INTEGER
 			opo_info_table, old_opo_info_table: detachable OBJECT_RELATIVE_ONCE_INFO_TABLE
@@ -1034,7 +1024,7 @@ end
 			end
 
 			if l_attribute_count + l_opo_count + n > 0 then
-				create Result.make (l_attribute_count + (l_opo_count.max (n)) * 3)
+				create Result.make (l_attribute_count + l_opo_count.max (n) * 3)
 			else
 				Result := empty_skeleton
 			end
@@ -1134,14 +1124,14 @@ end
 									l_ancestors_once_infos.remove_items_intersecting_with_rout_id_set (opo_info.rout_id_set)
 								end
 
-								if not opo_reused then
-									if l_written_class /= associated_class then
-										if l_ancestor_once_info = Void then
-												--| Reuse ancestor's routine ids.
-											l_ancestor_once_info := l_written_class.object_relative_once_info_of_rout_id_set (opo_info.rout_id_set)
-											check l_ancestor_once_info_attached: l_ancestor_once_info /= Void end
-										end
-									end
+								if
+									not opo_reused and then
+									l_written_class /= associated_class and then
+									l_ancestor_once_info = Void
+								then
+										--| Reuse ancestor's routine ids.
+									l_ancestor_once_info := l_written_class.object_relative_once_info_of_rout_id_set (opo_info.rout_id_set)
+									check l_ancestor_once_info_attached: l_ancestor_once_info /= Void end
 								end
 								add_object_relative_once_to_skeleton (Result, l_associated_class, l_once_i, opo_info, opo_reused, l_ancestor_once_info)
 							end
@@ -1236,10 +1226,7 @@ end
 					if feature_i.is_attribute then
 							-- Increase attribute counter so we only iterate the number of attributes available
 						l_attribute_counter := l_attribute_counter + 1
-						l_ext ?= feature_i.extension
-						if
-							(l_ext = Void or else l_ext.type /= {SHARED_IL_CONSTANTS}.static_field_type)
-						then
+						if attached {IL_EXTENSION_I} feature_i.extension as l_ext implies l_ext.type /= {SHARED_IL_CONSTANTS}.static_field_type then
 								-- We do not take IL static fields, only attributes of a class.
 							desc := feature_i.type.description
 							desc.set_feature_id (feature_i.feature_id)
@@ -1366,7 +1353,6 @@ end
 			tab: ARRAY [FEATURE_I]
 			feat: FEATURE_I
 			i, nb: INTEGER
-			rout_id: INTEGER
 		do
 			tab := routine_id_array
 			nb := tab.upper
@@ -1385,13 +1371,7 @@ end
 				if feat = Void then
 					buffer.put_integer (0)
 				else
-					rout_id := feat.rout_id_set.first
-					buffer.put_integer (rout_id)
-debug
-buffer.put_string (" /* `")
-buffer.put_string (feat.feature_name)
-buffer.put_string ("' */")
-end
+					buffer.put_integer (feat.rout_id_set.first)
 				end
 				if i < nb then
 					buffer.put_character (',')
@@ -1405,7 +1385,6 @@ end
 			-- Routine id array
 		local
 			feature_i: FEATURE_I
-			eiffel_class: EIFFEL_CLASS_C
 			l_feature_table: HASH_TABLE [FEATURE_I, INTEGER]
 		do
 			create Result.make (0, associated_class.feature_id_counter.value)
@@ -1418,9 +1397,8 @@ end
 				Result.put (feature_i, feature_i.feature_id)
 				forth
 			end
-			eiffel_class ?= associated_class
 
-			if eiffel_class /= Void and then eiffel_class.has_inline_agents then
+			if attached {EIFFEL_CLASS_C} associated_class as eiffel_class and then eiffel_class.has_inline_agents then
 				from
 					l_feature_table := eiffel_class.inline_agent_table
 					l_feature_table.start
@@ -1599,7 +1577,6 @@ feature -- Code generation
 		require
 			c_not_void: c /= Void
 		local
-			eiffel_class: EIFFEL_CLASS_C
 			l_feature_i: FEATURE_I
 			l_table: COMPUTED_FEATURE_TABLE
 			l_id_set: ROUT_ID_SET
@@ -1638,8 +1615,7 @@ feature -- Code generation
 				i := i + 1
 			end
 
-			eiffel_class ?= c
-			if eiffel_class /= Void and then eiffel_class.has_inline_agents then
+			if attached {EIFFEL_CLASS_C} c as eiffel_class and then eiffel_class.has_inline_agents then
 				from
 					l_inline_agent_table := eiffel_class.inline_agent_table
 					l_inline_agent_table.start
@@ -1697,7 +1673,7 @@ invariant
 	related_select_table: is_computed implies select_table.feature_table = Current
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

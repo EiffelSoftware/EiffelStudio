@@ -1,9 +1,9 @@
 ﻿note
 	description: "Error for a feature call: type mismatch on one argument."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class VUAR2
 
@@ -34,13 +34,13 @@ feature {NONE} -- Creation
 		do
 			if attached f then
 				set_called_feature (f, c.class_id)
-				set_argument_name (f.arguments.item_name (i))
+				argument_name := f.arguments.item_name_32 (i)
 			elseif attached u then
-				set_argument_name (u.name_32)
+				argument_name := u.name_32
 			end
-			set_argument_position (i)
-			set_actual_type (a)
-			set_formal_type (t)
+			argument_position := i
+			actual_type := a
+			formal_type := t
 			set_location (l)
 			context.init_error (Current)
 		end
@@ -48,20 +48,21 @@ feature {NONE} -- Creation
 feature -- Properties
 
 	subcode: INTEGER
+			-- <Precursor>
 		do
 			Result := 2
 		end
 
-	argument_name: STRING
-			-- Name of the involved argument
+	argument_name: READABLE_STRING_32
+			-- Name of the involved argument.
 
 	argument_position: INTEGER
 
 	formal_type: TYPE_A
-			-- Formal type of the argument
+			-- Formal type of the argument.
 
 	actual_type: TYPE_A
-			-- Actual type of the call
+			-- Actual type of the call.
 
 feature -- Status report
 
@@ -138,33 +139,9 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
-feature {NONE} -- Setting
-
-	set_argument_name (n: STRING)
-			-- Assign `n' to `argument_name'.
-		do
-			argument_name := n
-		end
-
-	set_argument_position (i: INTEGER)
-		do
-			argument_position := i
-		end
-
-	set_formal_type (t: TYPE_A)
-			-- Assign `t' to `formal_type'.
-		do
-			formal_type := t
-		end
-
-	set_actual_type (a: TYPE_A)
-			-- Assign `a' to `actual_type'.
-		do
-			actual_type := a
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	ca_ignore: "CA011", "CA011 — too many arguments"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -195,4 +172,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class VUAR2
+end

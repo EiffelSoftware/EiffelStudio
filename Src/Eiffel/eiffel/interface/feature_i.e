@@ -28,8 +28,6 @@ inherit
 
 	SHARED_TYPES
 
-	SHARED_EVALUATOR
-
 	SHARED_TABLE
 
 	SHARED_AST_CONTEXT
@@ -2692,12 +2690,25 @@ end
 			-- | Take care of possible anchored types
 		local
 			l_solved_type: TYPE_A
+			l_area: SPECIAL [TYPE_A]
+			i, nb: INTEGER
 		do
-			l_solved_type := Result_evaluator.evaluated_type (type, feat_tbl, Current)
+			type_a_checker.init_with_feature_table (Current, feat_tbl, error_handler)
+			l_solved_type := type_a_checker.check_and_solved (type, Void)
 			check l_solved_type_not_void: l_solved_type /= Void end
 			set_type (l_solved_type, assigner_name_id)
-			if arguments /= Void then
-				arguments.solve_types (feat_tbl, Current)
+			if attached arguments as a then
+				from
+					l_area := a.area
+					nb := a.count
+				until
+					i = nb
+				loop
+					l_solved_type := type_a_checker.check_and_solved (l_area [i], Void)
+					check l_solved_type_not_void: l_solved_type /= Void end
+					l_area.put (l_solved_type, i)
+					i := i + 1
+				end
 			end
 		end
 
@@ -3646,6 +3657,9 @@ invariant
 	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0 or is_fake_inline_agent
 
 note
+	ca_ignore:
+		"CA033", "CA033 — very long class",
+		"CA082", "CA082 — missing redeclaration of `is_equal`"
 	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

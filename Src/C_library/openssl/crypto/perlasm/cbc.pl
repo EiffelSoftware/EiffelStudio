@@ -1,4 +1,11 @@
-#!/usr/local/bin/perl
+#! /usr/bin/env perl
+# Copyright 1995-2016 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the OpenSSL license (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 # void des_ncbc_encrypt(input, output, length, schedule, ivec, enc)
 # des_cblock (*input);
@@ -150,7 +157,7 @@ sub cbc
 &set_label("PIC_point");
 	&blindpop("edx");
 	&lea("ecx",&DWP(&label("cbc_enc_jmp_table")."-".&label("PIC_point"),"edx"));
-	&mov($count,&DWP(0,"ecx",$count,4))
+	&mov($count,&DWP(0,"ecx",$count,4));
 	&add($count,"edx");
 	&xor("ecx","ecx");
 	&xor("edx","edx");
@@ -158,7 +165,6 @@ sub cbc
 	&jmp_ptr($count);
 
 &set_label("ej7");
-	&xor("edx",		"edx") if $ppro; # ppro friendly
 	&movb(&HB("edx"),	&BP(6,$in,"",0));
 	&shl("edx",8);
 &set_label("ej6");
@@ -170,7 +176,6 @@ sub cbc
 	&jmp(&label("ejend"));
 &set_label("ej3");
 	&movb(&HB("ecx"),	&BP(2,$in,"",0));
-	&xor("ecx",		"ecx") if $ppro; # ppro friendly
 	&shl("ecx",8);
 &set_label("ej2");
 	&movb(&HB("ecx"),	&BP(1,$in,"",0));

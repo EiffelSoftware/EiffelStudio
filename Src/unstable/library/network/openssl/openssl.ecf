@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="openssl" uuid="22EE78DC-1AC1-4EBC-8AA9-9E8D6B8C3989" library_target="openssl">
 	<target name="openssl">
-			<description>Eiffel OpenSSL Wrap library.
-      Copyright (c) 1984-2006, Eiffel Software and others.
+		<description>Eiffel OpenSSL Wrap library.
+      Copyright (c) 1984-2018, Eiffel Software and others.
       Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
 		<file_rule>
@@ -26,13 +26,12 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-	
-		<external_object location="$(ISE_LIBRARY)\unstable\library\network\openssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\libcryptoMT.lib">
+		<external_object location="$(ISE_LIBRARY)\unstable\library\network\openssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\libcrypto.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\unstable\library\network\openssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\libsslMT.lib">
+		<external_object location="$(ISE_LIBRARY)\unstable\library\network\openssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\libssl.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>
@@ -70,5 +69,15 @@
 				</condition>
 			</cluster>
 		</cluster>
+		<cluster name="support" location="support\" recursive="true" hidden="true"/>
+	</target>
+	<target name="openssl_tests" extends="openssl">
+		<root class="APPLICATION" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<cluster name="test" location=".\test\" recursive="true"/>
 	</target>
 </system>

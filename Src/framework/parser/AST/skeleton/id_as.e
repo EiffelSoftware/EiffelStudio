@@ -44,13 +44,6 @@ inherit
 			is_equal
 		end
 
-	SHARED_ENCODING_CONVERTER
-		export
-			{NONE} all
-		redefine
-			is_equal
-		end
-
 create {INTERNAL_COMPILER_STRING_EXPORTER}
 	initialize
 
@@ -117,12 +110,12 @@ feature -- Update
 				l_index < 0
 			loop
 				l_code := l_area [l_index]
-				if l_code /= l_code.as_upper then
+				if l_code = l_code.as_upper then
+					l_index := l_index - 1
+				else
 						-- Character is lower case so we make sure `Current' is correctly initialized.
 					l_needs_uppering := True
 					l_index := -1
-				else
-					l_index := l_index - 1
 				end
 			end
 			if l_needs_uppering then
@@ -147,12 +140,12 @@ feature -- Update
 				l_index < 0
 			loop
 				l_code := l_area [l_index]
-				if l_code /= l_code.as_lower then
+				if l_code = l_code.as_lower then
+					l_index := l_index - 1
+				else
 						-- Character is upper case so we make sure `Current' is correctly initialized.
 					l_needs_lowering := True
 					l_index := -1
-				else
-					l_index := l_index - 1
 				end
 			end
 			if l_needs_lowering then
@@ -168,7 +161,7 @@ feature -- Access
 	name_32: STRING_32
 			-- Name of this id.
 		do
-			Result := encoding_converter.utf8_to_utf32 (name)
+			Result := names_heap.item_32 (name_id)
 		end
 
 	name_8: STRING_8
@@ -176,7 +169,7 @@ feature -- Access
 			-- Exposed UTF-8 name.
 			-- This is useful for class name which is ASCII compatible.
 		do
-			Result := name
+			Result := names_heap.item (name_id)
 		ensure then
 			Result_ok: Result /= Void and then not Result.is_empty
 		end
@@ -187,11 +180,9 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			-- Name of this id.
 		do
 			Result := names_heap.item (name_id)
-			if not attached Result then
-					-- Per invariant of class.
-				check has_name_id: False end
-				Result := "_Invalid_name"
-			end
+		ensure then
+			attached_name: attached Result
+			non_empty_name: not Result.is_empty
 		end
 
 feature -- Visitor
@@ -236,7 +227,7 @@ invariant
 	name_id_in_bounds: names_heap.valid_index (name_id)
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

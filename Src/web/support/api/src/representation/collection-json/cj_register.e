@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 				until
 					l_errors.after
 				loop
-					l_error.append (l_errors.item_for_iteration)
+					l_error.append (l_errors.item_for_iteration.to_string_8)
 					l_errors.forth
 					if not l_errors.after then
 						l_error.append (" , ")

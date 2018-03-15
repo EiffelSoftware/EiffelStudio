@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 		local
 		do
 					-- Get local host name needed in creation of SMTP_PROTOCOL.
-			create {NOTIFICATION_SMTP_MAILER} smtp_protocol.make (a_smtp_server)
+			create {NOTIFICATION_SMTP_MAILER} smtp_protocol.make (a_smtp_server.to_string_8)
 			set_successful
 		end
 
@@ -217,9 +217,9 @@ feature -- Basic Operations
 				attached a_user.email as ll_email
 			then
 				create l_content.make (2048)
-				l_content.append (a_user_name)
+				l_content.append (a_user_name.to_string_8)
 				l_content.append (" has made you the responsible for problem report '")
-				l_content.append (a_report.synopsis)
+				l_content.append (a_report.synopsis.to_string_8)
 				l_content.append ("'.%N%N")
 				l_content.append ( report_email_links (a_url + "/report_detail", a_report.number))
 
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 			create Result.make (1024)
 			Result.append_character ('[')
 			if attached a_report.category as l_category then
-				Result.append (l_category.synopsis)
+				Result.append (l_category.synopsis.to_string_8)
 			end
 			Result.append (" #")
 			Result.append_integer (a_report.number)
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 				Result.append_integer (a_interactions_count)
 			end
 			Result.append ("] ")
-			Result.append (a_report.synopsis)
+			Result.append (a_report.synopsis.to_string_8)
 		end
 
 	recipients_to_array (a_recipients: LIST [STRING]; a_emails: STRING_TABLE[STRING]): ARRAY [STRING]
@@ -331,30 +331,30 @@ feature {NONE} -- Implementation
 				attached a_report.contact as l_contact and then
 				attached l_contact.name as l_name
 			then
-				Result.append (l_name)
+				Result.append (l_name.to_string_8)
 			end
 			Result.append ("%NClass: ")
 			if attached a_report.report_class as l_class then
-				Result.append (l_class.synopsis)
+				Result.append (l_class.synopsis.to_string_8)
 			end
 			Result.append ("%NSeverity: ")
 			if attached a_report.severity as l_severity then
-				Result.append (l_severity.synopsis)
+				Result.append (l_severity.synopsis.to_string_8)
 			end
 			Result.append ("%NCategory: ")
 			if
 				attached a_report.category as l_category and then
 				attached l_category.synopsis as l_synopsis
 			then
-				Result.append (l_synopsis)
+				Result.append (l_synopsis.to_string_8)
 			end
 			Result.append ("%NRelease: ")
 			if attached a_report.release as l_release then
-				Result.append (l_release)
+				Result.append (l_release.to_string_8)
 			end
 			Result.append ("%NEnvironment: ")
 			if attached a_report.environment as l_env then
-				Result.append (l_env)
+				Result.append (l_env.to_string_8)
 			end
 			Result.append ("%N%NDescription:%N")
 			if attached a_report.description as l_description  then
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 							Result.append ("/report_interaction/")
 							Result.append_integer (ic2.item.id)
 							Result.append ("/")
-							Result.append (ic2.item.name)
+							Result.append (ic2.item.name.to_string_8)
 							Result.append ("%N")
 						end
 					end
@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 			end
 
 			if attached a_report_interaction.content as l_content then
-				Result.append ((create{UTF8_ENCODER}).decoded_string (l_content))
+				Result.append ((create{UTF8_ENCODER}).decoded_string (l_content.to_string_8))
 				Result.append ("%N%N")
 			end
 

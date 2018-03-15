@@ -19,10 +19,7 @@ feature -- View
 
 	home_page_redirect (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Home redirect
-		local
-			l_hp: HTML_HOME
 		do
-
 			if attached req.http_host as l_host then
 				compute_response_redirect (req, res, absolute_host(req,""))
 			end
@@ -226,7 +223,7 @@ feature -- View
 		do
 			create l_error.make_from_string ("Bad Request -")
 			across a_error as c loop
-				l_error.append (c.item)
+				l_error.append (c.item.to_string_8)
 				l_error.append (",")
 			end
 			if attached req.http_host as l_host then
@@ -607,7 +604,7 @@ feature -- Response
 			create h.make
 			h.put_content_type ("application/vnd.collection+json")
 			h.put_current_date
-			h.put_location (a_location)
+			h.put_location (a_location.to_string_8)
 			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
 			res.put_header_text (h.string)
 		end

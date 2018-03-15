@@ -526,7 +526,7 @@ feature -- Basic Operations
 			attached_to_reproduce: a_to_reproduce /= Void
 		do
 			log.write_debug (generator+".initialize_problem_report report_id" + a_report_id.out + " priority_id:" + a_priority_id + " category_id:" + a_category_id + " class_id:" + a_class_id + " confidential:" + a_confidential + " synopsis:" + a_synopsis + " release:" + a_release + " environment:" + a_environment + " description:" + a_description + " to_reprodude:" + a_to_reproduce)
-			data_provider.initialize_problem_report (a_report_id, a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential, a_synopsis, a_release, a_environment, a_description, a_to_reproduce)
+			data_provider.initialize_problem_report (a_report_id, a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential.to_string_32, a_synopsis, a_release, a_environment, a_description, a_to_reproduce)
 			post_data_provider_execution
 		end
 

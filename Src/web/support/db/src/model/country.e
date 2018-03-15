@@ -35,10 +35,10 @@ feature -- Access
 		do
 			create Result.make_empty
 			Result.append (" Id: ")
-			Result.append (id)
+			Result.append (id.to_string_8)
 			Result.append (" Name: ")
 			Result.append("%N")
-			Result.append (name)
+			Result.append (name.to_string_8)
 		end
 
 end

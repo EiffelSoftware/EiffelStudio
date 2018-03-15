@@ -247,7 +247,7 @@ feature -- Access
 		do
 			log.write_information (generator + ".question_from_email")
 			create l_parameters.make (1)
-			l_parameters.put (string_parameter (a_email, 100), {DATA_PARAMETERS_NAMES}.username_param)
+			l_parameters.put (string_parameter (a_email.to_string_32, 100), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetQuestionFromEmail", l_parameters))
 			db_handler.execute_reader
 			if not db_handler.after then

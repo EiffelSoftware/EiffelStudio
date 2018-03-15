@@ -48,7 +48,7 @@ feature -- Errors
 		do
 			create Result.make_empty
 			across errors as c loop
-				Result.append (c.item)
+				Result.append (c.item.to_string_8)
 				Result.append ("%N")
 			end
 		end

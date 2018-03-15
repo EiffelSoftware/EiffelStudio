@@ -105,7 +105,7 @@ feature {NONE} -- JSON
 
 	new_json_parser (a_string: STRING): JSON_PARSER
 		do
-			create Result.make_parser (a_string)
+			create Result.make_with_string (a_string)
 		end
 
 end

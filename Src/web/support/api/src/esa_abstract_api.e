@@ -76,7 +76,7 @@ feature -- Access
 				loop
 					s.append (c.item.url_encoded_name)
 					s.append ("=")
-					s.append (c.item.string_representation)
+					s.append (c.item.string_representation.to_string_8)
 					s.append ("<br/>")
 				end
 				if s.is_empty then

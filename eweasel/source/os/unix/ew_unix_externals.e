@@ -44,12 +44,14 @@ feature -- File descriptors
   				}
 			]"
 		end;
-	
-		
+
+
 	valid_file_descriptor (fd: INTEGER): BOOLEAN
 			-- Is `fd' in the range of valid file descriptors?
 		do
 			Result := fd >= 0
+		ensure
+			is_class: class
 		end
 
 	Invalid_file_descriptor: INTEGER = -1;
@@ -57,7 +59,7 @@ feature -- File descriptors
 
 
 feature -- Date and time
-	
+
 	current_time_in_seconds: INTEGER
 			-- Current time in seconds since the start of
 			-- the epoch (00:00:00 GMT,  Jan.  1,  1970)
@@ -162,7 +164,7 @@ feature -- Memory allocation and setting
 		end;
 
 	unix_set_arg_value (arg_array: POINTER; pos: INTEGER; arg: POINTER)
-			-- Set the element of `arg_array' at position `pos' 
+			-- Set the element of `arg_array' at position `pos'
 			-- (relative to 0) to `arg'
 		external
 			"C inline"

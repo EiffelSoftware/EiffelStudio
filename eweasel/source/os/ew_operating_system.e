@@ -92,6 +92,8 @@ feature -- Date and time
 			-- Current time in seconds since the start of
 			-- the epoch (00:00:00 GMT,  Jan.  1,  1970)
 		deferred
+		ensure
+			is_class: class
 		end
 
 feature -- Sleeping

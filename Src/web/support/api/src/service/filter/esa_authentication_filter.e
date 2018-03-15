@@ -53,7 +53,7 @@ feature -- Basic operations
 				if
 					attached {WSF_STRING} req.cookie (esa_session_token) as l_esa_auth_session_token
 				then
-					if attached api_service.user_by_session_token (l_esa_auth_session_token.value) as l_user then
+					if attached api_service.user_by_session_token (l_esa_auth_session_token.value.to_string_8) as l_user then
 						req.set_execution_variable ("user", l_user)
 					else
 						log.write_error (generator + ".execute login_valid failed for: " + Esa_session_token )

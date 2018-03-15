@@ -88,7 +88,7 @@ feature -- Implementation
 					attached a_form.report as l_report and then
 					attached l_report.contact as l_contact
 				then
-					Result := Result or else a_user.same_string (l_contact.name)
+					Result := Result or else a_user.same_string (l_contact.name.to_string_8)
 				end
 
 			end

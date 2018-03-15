@@ -39,7 +39,7 @@ feature -- Output
 			Result.append(" Id: ")
 			Result.append(id.out)
 			Result.append(" Question: ")
-			Result.append (question)
+			Result.append (question.to_string_8)
 			Result.append("%N")
 
 		end

@@ -84,7 +84,7 @@ feature -- HTTP Methods
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).reminder_page (req, res, l_error)
 				else
 					if
-						attached api_service.question_from_email (l_email) and then
+						attached api_service.question_from_email (l_email.to_string_8) and then
 						attached api_service.user_from_email (l_email) as l_user
 					then
 							-- Email address exist send email with a link

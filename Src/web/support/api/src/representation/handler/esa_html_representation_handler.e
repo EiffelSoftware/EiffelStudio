@@ -33,10 +33,7 @@ feature -- View
 
 	home_page_redirect (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Home redirect
-		local
-			l_hp: HTML_HOME
 		do
-
 			if attached req.http_host as l_host then
 				compute_response_redirect (req, res, absolute_host(req,""))
 			end
@@ -666,7 +663,7 @@ feature -- Response
 			create h.make
 			h.put_content_type_text_html
 			h.put_current_date
-			h.put_location (a_location)
+			h.put_location (a_location.to_string_8)
 			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
 			res.put_header_text (h.string)
 		end

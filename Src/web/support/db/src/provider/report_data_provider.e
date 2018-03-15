@@ -56,7 +56,7 @@ feature -- Access
 				l_query.replace_substring_all ("$ORD1", "DESC")
 				l_query.replace_substring_all ("$ORD2", "ASC")
 			end
-			l_query.replace_substring_all ("$Column", l_encoder.encode (string_parameter (a_column, 30)))
+			l_query.replace_substring_all ("$Column", l_encoder.encode (string_parameter (a_column, 30)).to_string_8)
 
 			-- Filter search.
 			if
@@ -113,7 +113,7 @@ feature -- Access
 				l_query.replace_substring_all ("$ORD1", "DESC")
 				l_query.replace_substring_all ("$ORD2", "ASC")
 			end
-			l_query.replace_substring_all ("$Column", l_encode.encode (string_parameter (a_column, 30)))
+			l_query.replace_substring_all ("$Column", l_encode.encode (string_parameter (a_column.to_string_32, 30)).to_string_8)
 
 				-- Filter search.
 			if
@@ -133,7 +133,7 @@ feature -- Access
 			end
 
 			--| Need to be updated to build the set based on user selection.
-			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status) + ")")
+			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status.to_string_32) + ")")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			create Result.make (db_handler, agent new_report)
@@ -207,7 +207,7 @@ feature -- Access
 				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
 			end
 
-			l_query.replace_substring_all ("$Column", l_encode.encode (string_parameter (a_column, 30)))
+			l_query.replace_substring_all ("$Column", l_encode.encode (string_parameter (a_column, 30)).to_string_8)
 			if a_order = 1 then
 				l_query.replace_substring_all ("$ORD1", "ASC")
 				l_query.replace_substring_all ("$ORD2", "DESC")
@@ -1023,7 +1023,7 @@ feature -- Basic Operations
 				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
 			end
 				--| Need to be updated to build the set based on user selection.
-			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status) + ")")
+			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status.to_string_32) + ")")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			if not db_handler.after then

@@ -91,7 +91,7 @@ feature -- Output
 	string_8: STRING_8
 			-- String representation.
 		do
-			create Result.make_from_string (name)
+			create Result.make_from_string (name.to_string_8)
 			Result.append (" (" + id.out + ")")
 			if role_id > 0 then
 				Result.append (" Role:" + role_id.out)

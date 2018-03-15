@@ -190,6 +190,7 @@ create
 %type <detachable EIFFEL_LIST [FEATURE_AS]>		Feature_declaration_list
 %type <detachable EIFFEL_LIST [FEATURE_CLAUSE_AS]>	Features Feature_clause_list
 %type <detachable EIFFEL_LIST [FEATURE_NAME]>		Feature_list Feature_list_impl New_feature_list
+%type <detachable EIFFEL_LIST [FEAT_NAME_ID_AS]>		Creation_list Creation_list_impl
 %type <detachable EIFFEL_LIST [NAMED_EXPRESSION_AS]>	Separate_argument_list
 %type <detachable CREATION_CONSTRAIN_TRIPLE>	Creation_constraint
 %type <detachable UNDEFINE_CLAUSE_AS>	Undefine Undefine_opt
@@ -1218,6 +1219,35 @@ Convert_feature: Feature_name TE_LPARAN TE_LCURLY Type_list TE_RCURLY TE_RPARAN
 				-- procedure.
 			$$ := ast_factory.new_convert_feat_as (False, $1, $4, Void, Void, $2, $3, $5)
 		}
+	;
+
+Creation_list: Add_counter Creation_list_impl Remove_counter
+		{ $$ := $2 }
+	;
+
+Creation_list_impl: Identifier_as_lower
+			{
+				$$ := ast_factory.new_eiffel_list_feature_name_id (counter_value + 1)
+				if
+					attached $$ as l_list and then
+					attached $1 as l_val and then
+					attached ast_factory.new_feature_name_id_as (l_val) as l_id
+				then
+					l_list.reverse_extend (l_id)
+				end
+			}
+	|	Identifier_as_lower TE_COMMA Increment_counter Creation_list_impl
+			{
+				$$ := $4
+				if
+					attached $$ as l_list and then
+					attached $1 as l_val and then
+					attached ast_factory.new_feature_name_id_as (l_val) as l_id
+				then
+					l_list.reverse_extend (l_id)
+					ast_factory.reverse_extend_separator (l_list, $2)
+				end
+			}
 	;
 
 Feature_list: Add_counter Feature_list_impl Remove_counter
@@ -2535,7 +2565,7 @@ Multiple_constraint_list:	Single_constraint
 
 Creation_constraint: -- Empty
 			-- { $$ := Void }
-	|	TE_CREATE Feature_list TE_END
+	|	TE_CREATE Creation_list TE_END
 			{
 				$$ := ast_factory.new_creation_constrain_triple ($2, $1, $3)
 			}

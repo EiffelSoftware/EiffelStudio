@@ -162,6 +162,12 @@ feature -- Access
 			-- Name of this id.
 		do
 			Result := names_heap.item_32 (name_id)
+			if not attached Result then
+				check
+					from_class_invariant_and_postcondition_of_names_heap_item: False
+				then
+				end
+			end
 		end
 
 	name_8: STRING_8
@@ -170,6 +176,12 @@ feature -- Access
 			-- This is useful for class name which is ASCII compatible.
 		do
 			Result := names_heap.item (name_id)
+			if not attached Result then
+				check
+					from_class_invariant_and_postcondition_of_names_heap_item: False
+				then
+				end
+			end
 		ensure then
 			Result_ok: Result /= Void and then not Result.is_empty
 		end
@@ -180,6 +192,12 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			-- Name of this id.
 		do
 			Result := names_heap.item (name_id)
+			if not attached Result then
+				check
+					from_class_invariant_and_postcondition_of_names_heap_item: False
+				then
+				end
+			end
 		ensure then
 			attached_name: attached Result
 			non_empty_name: not Result.is_empty

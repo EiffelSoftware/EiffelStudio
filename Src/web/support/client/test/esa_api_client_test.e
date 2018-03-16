@@ -39,7 +39,7 @@ feature -- Test routines
 				-- Launch the esa_api
 			create cfg.make_with_config
 			create login.make (cfg)
-			login.attempt_logon ("jvelilla", "maradona00", false)
+			login.attempt_logon ("javierv", "test", false)
 			assert ("is logged in", login.is_logged_in)
 
 			login.force_logout

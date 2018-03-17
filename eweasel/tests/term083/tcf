@@ -1,5 +1,4 @@
-
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2018 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -13,6 +12,6 @@ copy_sub 	 Ace $TEST Ace
 copy_raw	 test.e $CLUSTER test.e
 copy_raw	 test1.e $CLUSTER test1.e
 compile_melted
-compile_result 	validity_error TEST1 VTGC(3)
+compile_result 	syntax_error TEST1 7
 	
 test_end

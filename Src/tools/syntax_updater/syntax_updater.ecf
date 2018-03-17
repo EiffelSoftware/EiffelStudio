@@ -23,7 +23,7 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</pre_compile_action>
-		<pre_compile_action working_directory=".\parser\" command="nmake" succeed="true">
+		<pre_compile_action working_directory=".\parser\" command="nmake" succeed="false">
 			<description>Generate Parser Files</description>
 			<condition>
 				<platform value="windows"/>

@@ -26,11 +26,11 @@ compare		 exec_output1 output
 define ASSERTION "post: show ("post", True)"
 copy_sub 	test1.e $CLUSTER test1.e
 compile_frozen
-compile_result 	validity_warning TEST1 VUCR:14
+compile_result 	validity_error TEST1 VUCR:14
 
 define ASSERTION ""
 copy_sub 	test1.e $CLUSTER test1.e
-compile_frozen
+resume_compile
 compile_result 	ok
 
 c_compile_work

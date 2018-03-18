@@ -7,4 +7,4 @@ fi
 
 . $(dirname $0)/set_eweasel_env
 
-eweasel-mt $EWEASEL_ARGS -keep failed -catalog $1
+$EWEASEL/spec/$ISE_PLATFORM/bin/eweasel-mt $EWEASEL_ARGS -keep failed -catalog $1

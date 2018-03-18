@@ -7,4 +7,4 @@ fi
 
 . $(dirname $0)/set_eweasel_env
 
-eweasel-mt $EWEASEL_ARGS -order -keep failed -filter "kw $1" -catalog $EWEASEL/control/catalog
+$EWEASEL/spec/$ISE_PLATFORM/bin/eweasel-mt $EWEASEL_ARGS -order -keep failed -filter "kw $1" -catalog $EWEASEL/control/catalog

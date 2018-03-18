@@ -28,13 +28,6 @@ rd /q /s EIFGENs
 del eweasel.rc
 del eweasel-mt.rc
 
-rem Convert a few test files to DOS format.
-cd /d %EWEASEL%\tests\exec081
-gvim.exe -c "set ff=dos" -c "wq" output
-
-cd /d %EWEASEL%\tests\freez004
-gvim.exe -c "set ff=dos" -c "wq" output
-
 cd /d %PWD%
 
 :END

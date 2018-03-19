@@ -1,0 +1,10 @@
+test_name 	 ca-inequality-in-conditional
+test_description A warning about inequality used in a conditional instruction or expression with an alternative branch.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+analyze_code rule "CA046"
+analyze_code_result violation "TEST CA046:17 CA046:37 CA046:58 CA046:75"
+
+test_end

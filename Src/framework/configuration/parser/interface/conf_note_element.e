@@ -88,7 +88,7 @@ feature -- Access
 	element_name: STRING_32
 			-- Name of the element
 
-	attributes: STRING_TABLE [STRING_32]
+	attributes: STRING_TABLE [READABLE_STRING_32]
 			-- Attributes
 
 	content: STRING_32

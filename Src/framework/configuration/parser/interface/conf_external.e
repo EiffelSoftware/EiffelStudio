@@ -10,6 +10,10 @@ class
 
 inherit
 	CONF_CONDITIONED
+		redefine
+			add_condition,
+			set_conditions
+		end
 
 create
 	make
@@ -70,17 +74,20 @@ feature -- Access, stored in configuration file
 
 	location: like internal_location
 			-- The file location.
+		local
+			s: STRING_32
 		do
-			Result := internal_location.twin
+			create s.make_from_string (internal_location)
 			if attached target.library_root as l_path then
-				Result.replace_substring_all ({STRING_32} "$ECF_CONFIG_PATH", l_path.name)
-				Result.replace_substring_all ({STRING_32} "$(ECF_CONFIG_PATH)", l_path.name)
+				s.replace_substring_all ({STRING_32} "$ECF_CONFIG_PATH", l_path.name)
+				s.replace_substring_all ({STRING_32} "$(ECF_CONFIG_PATH)", l_path.name)
 			end
+			Result := s
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	description: detachable STRING_32
+	description: detachable READABLE_STRING_32
 			-- A description about the external.
 
 	target: CONF_TARGET
@@ -106,9 +113,36 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			description_set: description = a_description
 		end
 
+feature {CONF_ACCESS} -- Status update
+
+	add_condition (a_condition: CONF_CONDITION)
+			-- Add `a_condition'.
+		do
+			Precursor (a_condition)
+			if attached target as tgt then
+				a_condition.set_target (tgt)
+			end
+		end
+
+	set_conditions (a_conditions: like internal_conditions)
+			-- Set `internal_conditions' to `a_conditions'.
+		do
+			Precursor (a_conditions)
+			if
+				attached target as tgt and
+				a_conditions /= Void and then not a_conditions.is_empty
+			then
+				across
+					a_conditions as ic
+				loop
+					ic.item.set_target (tgt)
+				end
+			end
+		end
+
 feature {CONF_ACCESS} -- Implementation
 
-	internal_location: STRING_32
+	internal_location: READABLE_STRING_32
 			-- The file location.
 
 invariant
@@ -116,7 +150,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

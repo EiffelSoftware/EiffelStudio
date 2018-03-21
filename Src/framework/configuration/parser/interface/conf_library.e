@@ -65,7 +65,7 @@ feature -- Access, in compiled only, not stored to configuration file
 	library_target: detachable CONF_TARGET
 			-- The library target.
 
-	mapping: STRING_TABLE [STRING_32]
+	mapping: STRING_TABLE [READABLE_STRING_32]
 			-- We use the one from the target.
 		do
 			if attached library_target as l_library_target then
@@ -203,7 +203,7 @@ invariant
 	library_target_set: classes_set implies library_target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			grid.set_item (2, 1, enable_item)
 
 			create source_item.make ("...", completion_provider)
-			source_item.pointer_double_press_actions.force_extend (agent source_item.activate)
+			source_item.activate_when_pointer_is_double_pressed
 			grid.set_item (2, 2, source_item)
 
 			create l_bordered.make (grid)
@@ -230,7 +230,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -196,7 +196,7 @@ feature -- Access
 		deferred
 		end
 
-	string_representation: STRING_32
+	string_representation: READABLE_STRING_32
 			-- Text of current item
 		deferred
 		ensure
@@ -314,7 +314,7 @@ invariant
 	sorting_order_index_valid: is_sorting_order_index_valid (sorting_order_index)
 
 note
-        copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2018, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

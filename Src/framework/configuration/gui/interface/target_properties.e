@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 			l_string_prop.set_description (conf_interface_names.target_name_description)
 			l_string_prop.set_value (current_target.name)
 			l_string_prop.validate_value_actions.extend (agent check_target_name)
-			l_string_prop.change_value_actions.extend (agent current_target.set_name)
+			l_string_prop.change_value_actions.extend (agent current_target.set_name ({READABLE_STRING_32}?))
 			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_string_prop)
 				-- Description.
@@ -61,8 +61,8 @@ feature {NONE} -- Implementation
 			if current_target.description /= Void then
 				l_mls_prop.set_value (current_target.description)
 			end
-			l_mls_prop.change_value_actions.extend (agent current_target.set_description)
-			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+			l_mls_prop.change_value_actions.extend (agent current_target.set_description ({READABLE_STRING_32}?))
+			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 				-- Abstract target.
 			l_bool_prop := new_boolean_property (conf_interface_names.target_abstract_name, current_target.is_abstract)
@@ -541,7 +541,7 @@ feature {NONE} -- Implementation helper
 
 feature {NONE} -- Inheritance handling
 
-	update_inheritance_setting (a_name: STRING_32; a_property: PROPERTY)
+	update_inheritance_setting (a_name: READABLE_STRING_32; a_property: PROPERTY)
 			-- Enable inheritance/override on `a_property' accordint to the setting `a_name'.
 		require
 			a_name_valid: is_setting_known (a_name)
@@ -604,7 +604,7 @@ feature {NONE} -- Inheritance handling
 
 feature {NONE} -- Configuration setting
 
-	set_compilation_mode (a_mode: STRING_32)
+	set_compilation_mode (a_mode: READABLE_STRING_32)
 			-- Set settings for `a_mode'.
 		require
 			current_target_not_void: current_target /= Void
@@ -623,7 +623,7 @@ feature {NONE} -- Configuration setting
 			end
 		end
 
-	set_string_setting (a_name: STRING_32; a_default: STRING_32; a_value: READABLE_STRING_32)
+	set_string_setting (a_name: READABLE_STRING_32; a_default: READABLE_STRING_32; a_value: READABLE_STRING_32)
 			-- Set a string setting with `a_name' to `a_value'.
 		require
 			a_name_valid: is_setting_known (a_name)
@@ -672,7 +672,7 @@ feature {NONE} -- Validation and warning generation
 			end
 		end
 
-	valid_classes_per_module (a_value: STRING_32): BOOLEAN
+	valid_classes_per_module (a_value: READABLE_STRING_32): BOOLEAN
 			-- Is `a_value' a correct value for the classes per module setting?
 		require
 			current_target: current_target /= Void
@@ -684,7 +684,7 @@ feature {NONE} -- Validation and warning generation
 			end
 		end
 
-	valid_inlining_size (a_value: STRING_32): BOOLEAN
+	valid_inlining_size (a_value: READABLE_STRING_32): BOOLEAN
 			-- Is `a_value' a correct value for the classes per module setting?
 		require
 			current_target: current_target /= Void
@@ -697,7 +697,7 @@ feature {NONE} -- Validation and warning generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

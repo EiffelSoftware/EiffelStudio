@@ -226,8 +226,8 @@ feature -- Access queries
 			Result := l_accessible_groups_cache
 		end
 
-	mapping: STRING_TABLE [STRING_32]
-			-- Special classes name mapping (eg. STRING => STRING_32).
+	mapping: STRING_TABLE [READABLE_STRING_32]
+			-- Special classes name mapping (eg. "STRING" => "STRING_32").
 		once
 				-- there are no mappings for assemblies
 			create Result.make_equal (0)

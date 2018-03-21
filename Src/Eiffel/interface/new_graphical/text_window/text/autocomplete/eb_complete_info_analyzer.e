@@ -440,7 +440,7 @@ feature -- Class names completion
 		require
 			a_group_not_void: a_group /= Void
 		local
-			l_mapping_names: STRING_TABLE [STRING_32]
+			l_mapping_names: STRING_TABLE [READABLE_STRING_32]
 			l_item: STRING
 		do
 			Result := group.accessible_classes
@@ -1575,7 +1575,7 @@ feature {NONE} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

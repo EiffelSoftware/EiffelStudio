@@ -203,7 +203,7 @@ feature -- Access queries
 			end
 		end
 
-	mapping: STRING_TABLE [STRING_32]
+	mapping: STRING_TABLE [READABLE_STRING_32]
 			-- Special classes name mapping (eg. STRING => STRING_32).
 		local
 			l_cached_mapping: like cached_mapping
@@ -586,7 +586,7 @@ invariant
 	parent_child_relationship: attached parent as p implies (attached p.children as p_children and then p_children.has (Current))
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

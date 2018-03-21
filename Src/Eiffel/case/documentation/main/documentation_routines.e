@@ -157,7 +157,7 @@ feature -- Access
 		local
 			l_name: STRING_32
 			l_group_type: STRING_32
-			l_desc: detachable STRING_32
+			l_desc: detachable READABLE_STRING_32
 		do
 			l_group_type := type_of_group (group)
 			l_name := group_name_presentation ({STRING_32}".", {STRING_32}"", group)
@@ -709,7 +709,7 @@ feature {NONE} -- Indexing clauses
 		local
 			content, t: STRING_32
 			exc: like excluded_indexing_items
-			l_description: detachable STRING_32
+			l_description: detachable READABLE_STRING_32
 		do
 			create Result.make (20)
 			exc := excluded_indexing_items
@@ -917,7 +917,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

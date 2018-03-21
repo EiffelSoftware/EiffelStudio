@@ -34,16 +34,16 @@ feature {NONE} -- Implementation
 			l_library: CONF_LIBRARY
 			l_file_rule_prop: FILE_RULE_PROPERTY
 			l_list_prop: LIST_PROPERTY
-			l_deps_list: ARRAYED_LIST [STRING_32]
+			l_deps_list: ARRAYED_LIST [READABLE_STRING_32]
 			l_dep_dialog: GROUPS_LIST_DIALOG
 			l_over: ARRAYED_LIST [CONF_GROUP]
-			l_over_list: ARRAYED_LIST [STRING_32]
+			l_over_list: ARRAYED_LIST [READABLE_STRING_32]
 			l_over_dialog: GROUPS_LIST_DIALOG
-			l_rename_prop: DIALOG_PROPERTY [STRING_TABLE [STRING_32]]
-			l_mapping_prop: DIALOG_PROPERTY [STRING_TABLE [STRING_32]]
+			l_rename_prop,
+			l_mapping_prop: DIALOG_PROPERTY [STRING_TABLE [READABLE_STRING_32]]
 			l_class_opt_prop: DIALOG_PROPERTY [STRING_TABLE [CONF_OPTION]]
 			l_class_opt_dial: CLASS_OPTION_DIALOG
-			l_vis_prop: DIALOG_PROPERTY [STRING_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]]]
+			l_vis_prop: DIALOG_PROPERTY [STRING_TABLE [TUPLE [class_renamed: READABLE_STRING_32; features: STRING_TABLE [READABLE_STRING_32]]]]
 			l_vis_dial: VISIBLE_DIALOG
 			l_visible: CONF_VISIBLE
 			l_precompile: CONF_PRECOMPILE
@@ -101,9 +101,9 @@ feature {NONE} -- Implementation
 			create l_text_prop.make (conf_interface_names.group_name_name)
 			l_text_prop.set_description (conf_interface_names.group_name_description)
 			l_text_prop.set_value (a_group.name)
-			l_text_prop.validate_value_actions.extend (agent check_group_name ({STRING_32} ?, a_group, a_target))
+			l_text_prop.validate_value_actions.extend (agent check_group_name ({READABLE_STRING_32} ?, a_group, a_target))
 			l_text_prop.change_value_actions.extend (agent a_group.set_name)
-			l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (True)))
+			l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32} ?, agent handle_value_changes (True)))
 			properties.add_property (l_text_prop)
 
 				-- Description.
@@ -113,8 +113,8 @@ feature {NONE} -- Implementation
 			if a_group.description /= Void then
 				l_mls_prop.set_value (a_group.description)
 			end
-			l_mls_prop.change_value_actions.extend (agent a_group.set_description)
-			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+			l_mls_prop.change_value_actions.extend (agent a_group.set_description ({READABLE_STRING_32}?))
+			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 
 				-- Location.
@@ -123,18 +123,18 @@ feature {NONE} -- Implementation
 				l_dir_prop.set_target (a_target)
 				l_dir_prop.set_description (conf_interface_names.group_location_description)
 				l_dir_prop.set_value (a_group.location.original_path)
-				l_dir_prop.validate_value_actions.extend (agent is_not_void ({STRING_32}?))
+				l_dir_prop.validate_value_actions.extend (agent is_not_void ({READABLE_STRING_32}?))
 				l_dir_prop.change_value_actions.extend (agent update_group_location (a_group, ?, a_target))
-				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (True)))
+				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (True)))
 				properties.add_property (l_dir_prop)
 			else
 				create l_file_prop.make (conf_interface_names.group_location_name)
 				l_file_prop.set_target (a_target)
 				l_file_prop.set_description (conf_interface_names.group_location_description)
 				l_file_prop.set_value (a_group.location.original_path)
-				l_file_prop.validate_value_actions.extend (agent is_not_void ({STRING_32}?))
+				l_file_prop.validate_value_actions.extend (agent is_not_void ({READABLE_STRING_32}?))
 				l_file_prop.change_value_actions.extend (agent update_group_location (a_group, ?, a_target))
-				l_file_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (True)))
+				l_file_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (True)))
 				if a_group.is_assembly then
 					l_file_prop.add_filters (all_assemblies_filter, all_assemblies_description)
 					l_file_prop.add_filters (all_files_filter, all_files_description)
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 					l_dir_prop.set_value (l_precompile.eifgens_location.original_path)
 				end
 				l_dir_prop.change_value_actions.extend (agent update_eifgens_location (l_precompile, ?, a_target))
-				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (True)))
+				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (True)))
 				properties.add_property (l_dir_prop)
 			end
 
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 				l_list_prop.set_description (conf_interface_names.override_override_description)
 				l_list_prop.set_value (l_over_list)
 				l_list_prop.change_value_actions.extend (agent update_overrides (l_override, ?, a_target))
-				l_list_prop.change_value_actions.extend (agent change_no_argument_wrapper ({LIST [STRING_32]}?, agent handle_value_changes (False)))
+				l_list_prop.change_value_actions.extend (agent change_no_argument_wrapper ({LIST [READABLE_STRING_32]}?, agent handle_value_changes (False)))
 				properties.add_property (l_list_prop)
 			end
 
@@ -221,29 +221,29 @@ feature {NONE} -- Implementation
 				create l_text_prop.make (conf_interface_names.assembly_name_name)
 				l_text_prop.set_description (conf_interface_names.assembly_name_description)
 				l_text_prop.set_value (l_assembly.assembly_name)
-				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_name ({STRING_32} ?))
-				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
+				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_name ({READABLE_STRING_32} ?))
+				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32} ?, agent handle_value_changes (False)))
 				properties.add_property (l_text_prop)
 					-- Assembly culture.
 				create l_text_prop.make (conf_interface_names.assembly_culture_name)
 				l_text_prop.set_description (conf_interface_names.assembly_culture_description)
 				l_text_prop.set_value (l_assembly.assembly_culture)
-				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_culture ({STRING_32} ?))
-				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
+				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_culture ({READABLE_STRING_32} ?))
+				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32} ?, agent handle_value_changes (False)))
 				properties.add_property (l_text_prop)
 					-- Assembly version.
 				create l_text_prop.make (conf_interface_names.assembly_version_name)
 				l_text_prop.set_description (conf_interface_names.assembly_version_description)
 				l_text_prop.set_value (l_assembly.assembly_version)
-				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_version ({STRING_32} ?))
-				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
+				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_version ({READABLE_STRING_32} ?))
+				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32} ?, agent handle_value_changes (False)))
 				properties.add_property (l_text_prop)
 					-- Assembly public key token.
 				create l_text_prop.make (conf_interface_names.assembly_public_key_token_name)
 				l_text_prop.set_description (conf_interface_names.assembly_public_key_token_description)
 				l_text_prop.set_value (l_assembly.assembly_public_key_token)
-				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_public_key ({STRING_32} ?))
-				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
+				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_public_key ({READABLE_STRING_32} ?))
+				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32} ?, agent handle_value_changes (False)))
 				properties.add_property (l_text_prop)
 			end
 
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 						l_mapping_prop.set_value (l_cluster.mapping)
 					end
 					l_mapping_prop.change_value_actions.extend (agent l_cluster.set_mapping)
-					l_mapping_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_TABLE [STRING_32]}?, agent handle_value_changes (True)))
+					l_mapping_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_TABLE [READABLE_STRING_32]}?, agent handle_value_changes (True)))
 					properties.add_property (l_mapping_prop)
 				end
 			end
@@ -318,14 +318,14 @@ feature {NONE} -- Implementation
 				create l_text_prop.make (conf_interface_names.group_prefix_name)
 				l_text_prop.set_description (conf_interface_names.group_prefix_description)
 				l_text_prop.set_value (l_virtual_group.name_prefix)
-				l_text_prop.validate_value_actions.extend (agent (a_name: STRING_32): BOOLEAN
+				l_text_prop.validate_value_actions.extend (agent (a_name: READABLE_STRING_32): BOOLEAN
 					require
 						a_name_not_void: a_name /= Void
 					do
 						Result := a_name = Void or a_name.is_empty or (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_name)
 					end)
 				l_text_prop.change_value_actions.extend (agent l_virtual_group.set_name_prefix)
-				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (True)))
+				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32} ?, agent handle_value_changes (True)))
 				properties.add_property (l_text_prop)
 
 					-- Renaming.
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 					l_rename_prop.set_value (l_virtual_group.renaming)
 				end
 				l_rename_prop.change_value_actions.extend (agent l_virtual_group.set_renaming)
-				l_rename_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_TABLE [STRING_32]}?, agent handle_value_changes (True)))
+				l_rename_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_TABLE [READABLE_STRING_32]}?, agent handle_value_changes (True)))
 				properties.add_property (l_rename_prop)
 			end
 			if attached l_cluster then
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 				l_list_prop.set_description (conf_interface_names.cluster_dependencies_description)
 				l_list_prop.set_value (l_deps_list)
 				l_list_prop.change_value_actions.extend (agent update_dependencies (l_cluster, ?, a_target))
-				l_list_prop.change_value_actions.extend (agent change_no_argument_wrapper ({LIST [STRING_32]}?, agent handle_value_changes (True)))
+				l_list_prop.change_value_actions.extend (agent change_no_argument_wrapper ({LIST [READABLE_STRING_32]}?, agent handle_value_changes (True)))
 				properties.add_property (l_list_prop)
 			end
 
@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 				l_vis_prop.set_display_agent (agent output_visible)
 				l_vis_prop.set_value (l_visible.visible)
 				l_vis_prop.change_value_actions.extend (agent l_visible.set_visible)
-				l_vis_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_TABLE [EQUALITY_TUPLE [TUPLE [STRING_32, STRING_TABLE [STRING_32]]]]}?, agent handle_value_changes (False)))
+				l_vis_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_TABLE [TUPLE [READABLE_STRING_32, STRING_TABLE [READABLE_STRING_32]]]}?, agent handle_value_changes (False)))
 				properties.add_property (l_vis_prop)
 			end
 
@@ -397,7 +397,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Configuration settings
 
-	update_group_location (a_group: CONF_GROUP; a_location: STRING_32; a_target: CONF_TARGET)
+	update_group_location (a_group: CONF_GROUP; a_location: READABLE_STRING_32; a_target: CONF_TARGET)
 			-- Update location of `a_group' to be `a_location'.
 		require
 			a_group: a_group /= Void
@@ -417,7 +417,7 @@ feature {NONE} -- Configuration settings
 			end
 		end
 
-	update_eifgens_location (a_precompile: CONF_PRECOMPILE; a_location: STRING_32; a_target: CONF_TARGET)
+	update_eifgens_location (a_precompile: CONF_PRECOMPILE; a_location: READABLE_STRING_32; a_target: CONF_TARGET)
 			-- Update eifgens location of `a_precompile' to be `a_location'.
 		require
 			a_precompile: a_precompile /= Void
@@ -433,7 +433,7 @@ feature {NONE} -- Configuration settings
 			end
 		end
 
-	update_dependencies (a_cluster: CONF_CLUSTER; a_dependencies: LIST [STRING_32]; a_target: CONF_TARGET)
+	update_dependencies (a_cluster: CONF_CLUSTER; a_dependencies: LIST [READABLE_STRING_32]; a_target: CONF_TARGET)
 			-- Update dependencies of `a_cluster'.
 		require
 			a_target_not_void: a_target /= Void
@@ -454,7 +454,7 @@ feature {NONE} -- Configuration settings
 			end
 		end
 
-	update_overrides (an_override: CONF_OVERRIDE; an_overriding: LIST [STRING_32]; a_target: CONF_TARGET)
+	update_overrides (an_override: CONF_OVERRIDE; an_overriding: LIST [READABLE_STRING_32]; a_target: CONF_TARGET)
 			-- Update groups we override of `a_cluster'.
 		require
 			a_target_not_void: a_target /= Void
@@ -477,7 +477,7 @@ feature {NONE} -- Configuration settings
 
 feature {NONE} -- Output generation
 
-	output_renaming (a_table: STRING_TABLE [STRING_32]): STRING_32
+	output_renaming (a_table: STRING_TABLE [READABLE_STRING_32]): STRING_32
 			-- Generate a text representation of `a_table'.
 		do
 			if a_table /= Void and then not a_table.is_empty then
@@ -519,7 +519,7 @@ feature {NONE} -- Output generation
 			end
 		end
 
-	output_visible (a_visible: STRING_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]]): STRING_32
+	output_visible (a_visible: STRING_TABLE [TUPLE [class_renamed: READABLE_STRING_32; features: STRING_TABLE [READABLE_STRING_32]]]): STRING_32
 			-- Generate a text representation for `a_visible'.
 		do
 			if a_visible /= Void and then not a_visible.is_empty then
@@ -541,7 +541,7 @@ feature {NONE} -- Output generation
 
 feature {NONE} -- Validation and warning generation
 
-	check_group_name (a_name: STRING_GENERAL; a_group: CONF_GROUP; a_target: CONF_TARGET): BOOLEAN
+	check_group_name (a_name: READABLE_STRING_GENERAL; a_group: CONF_GROUP; a_target: CONF_TARGET): BOOLEAN
 			-- Is `a_name' a valid name for `a_group' in `a_target'?
 		require
 			a_target: a_target /= Void
@@ -549,7 +549,7 @@ feature {NONE} -- Validation and warning generation
 			a_name_valid_as_string_8: a_name.is_valid_as_string_8
 		local
 			l_groups: STRING_TABLE [CONF_GROUP]
-			l_name: STRING_GENERAL
+			l_name: READABLE_STRING_GENERAL
 		do
 			l_groups := a_target.groups
 			l_name := a_name.as_lower
@@ -585,7 +585,7 @@ feature {NONE} -- Inheritance handling
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

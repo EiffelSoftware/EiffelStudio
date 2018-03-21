@@ -679,7 +679,7 @@ feature {NONE} -- Implementation
 		local
 			space_delimiter: STRING
 		do
-			if attached condition.item as i and then attached i.value as v then
+			if attached condition as i and then attached i.value as v then
 				append_text_indent ("<")
 				append_text (name)
 				if i.invert then
@@ -714,7 +714,7 @@ feature {NONE} -- Implementation
 			l_condition: CONF_CONDITION
 			l_done: BOOLEAN
 			l_custs: like {CONF_CONDITION}.custom
-			l_custom: STRING_TABLE [BOOLEAN]
+			l_custom: STRING_TABLE [CONF_CONDITION_CUSTOM_ATTRIBUTES]
 			l_name: STRING
 			l_ver: like {CONF_CONDITION}.version.item
 		do
@@ -746,7 +746,7 @@ feature {NONE} -- Implementation
 								append_condition_list (c, agent get_concurrency_name, "concurrency")
 							else
 									-- Use "multithreaded" condition.
-								append_text_indent ("<multithreaded value=%""+ (c.item.value.has (concurrency_none) = c.item.invert).out.as_lower+"%"/>%N")
+								append_text_indent ("<multithreaded value=%""+ (c.value.has (concurrency_none) = c.invert).out.as_lower+"%"/>%N")
 							end
 						end
 
@@ -764,10 +764,10 @@ feature {NONE} -- Implementation
 						loop
 							l_ver := ic_versons.item
 							append_text_indent ("<version type=%""+ ic_versons.key +"%"")
-							if attached l_ver.item.min as l_ver_min then
+							if attached l_ver.min as l_ver_min then
 								append_text (" min=%""+ l_ver_min.version+"%"")
 							end
-							if attached l_ver.item.max as l_ver_max then
+							if attached l_ver.max as l_ver_max then
 								append_text (" max=%""+ l_ver_max.version +"%"")
 							end
 							append_text ("/>%N")
@@ -785,7 +785,7 @@ feature {NONE} -- Implementation
 							until
 								l_custom.after
 							loop
-								if l_custom.item_for_iteration then
+								if l_custom.item_for_iteration.inverted then
 									l_name := "excluded_value"
 								else
 									l_name := "value"
@@ -793,6 +793,16 @@ feature {NONE} -- Implementation
 								append_text_indent ("<custom")
 								append_text_attribute ("name", l_custs.key_for_iteration)
 								append_text_attribute (l_name, l_custom.key_for_iteration)
+								if l_custom.item_for_iteration.is_case_insensitive then
+									append_text_attribute ("match", "case-insensitive")
+								elseif l_custom.item_for_iteration.is_wildcard then
+									append_text_attribute ("match", "wildcar")
+								elseif l_custom.item_for_iteration.is_regular_expression then
+									append_text_attribute ("match", "regexp")
+								else
+										-- Default
+									append_text_attribute ("match", "case-sensitive")
+								end
 								append_text ("/>%N")
 								l_custom.forth
 							end
@@ -809,7 +819,7 @@ feature {NONE} -- Implementation
 			indent_back: indent = old indent
 		end
 
-	append_mapping (a_mapping: detachable STRING_TABLE [STRING_32])
+	append_mapping (a_mapping: detachable STRING_TABLE [READABLE_STRING_32])
 			-- Append `a_mapping'.
 		do
 			if a_mapping /= Void then
@@ -962,11 +972,11 @@ feature {NONE} -- Implementation
 	append_general_options (an_options: CONF_OPTION)
 			-- Append `an_options' in an already open option element.
 		local
-			l_str: detachable STRING_32
+			l_str: detachable READABLE_STRING_32
 			l_debugs, l_warnings: detachable STRING_TABLE [BOOLEAN]
 			l_assertions: detachable CONF_ASSERTIONS
 			l_a_name: ARRAYED_LIST [STRING]
-			l_a_val: ARRAYED_LIST [STRING_32]
+			l_a_val: ARRAYED_LIST [READABLE_STRING_32]
 			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 			w: READABLE_STRING_GENERAL
@@ -1141,15 +1151,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_visible (a_visible: STRING_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: detachable STRING_TABLE [STRING_32]]]])
+	append_visible (a_visible: STRING_TABLE [TUPLE [class_renamed: READABLE_STRING_32; features: detachable STRING_TABLE [READABLE_STRING_32]]])
 			-- Append visible rules.
 		require
 			a_visible_not_void: a_visible /= Void
 		local
-			l_vis_feat: detachable STRING_TABLE [STRING_32]
+			l_vis_feat: detachable STRING_TABLE [READABLE_STRING_32]
 			l_class: READABLE_STRING_GENERAL
 			l_feat: detachable READABLE_STRING_GENERAL
-			l_feat_rename, l_class_rename: detachable STRING_32
+			l_feat_rename, l_class_rename: detachable READABLE_STRING_32
 		do
 			from
 				a_visible.start
@@ -1157,8 +1167,8 @@ feature {NONE} -- Implementation
 				a_visible.after
 			loop
 				l_class := a_visible.key_for_iteration
-				l_class_rename := a_visible.item_for_iteration.item.class_renamed
-				l_vis_feat := a_visible.item_for_iteration.item.features
+				l_class_rename := a_visible.item_for_iteration.class_renamed
+				l_vis_feat := a_visible.item_for_iteration.features
 				if l_vis_feat /= Void then
 					from
 						l_vis_feat.start
@@ -1207,13 +1217,13 @@ feature {NONE} -- Implementation
 			a_group_not_void: a_group /= Void
 			a_tag_ok: a_tag /= Void and then not a_tag.is_empty
 		local
-			l_str: STRING_32
+			l_str: READABLE_STRING_32
 		do
 			l_str := a_group.location.original_path
 			if l_str.is_empty then
 				l_str := "none"
 			end
-			append_text_indent ("<"+a_tag)
+			append_text_indent ("<" + a_tag)
 			append_text_attribute ("name", a_group.name)
 			append_text_attribute ("location", l_str)
 			if not a_group.is_library and a_group.internal_read_only then
@@ -1301,7 +1311,7 @@ feature {NONE} -- Implementation
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
-			l_visible: detachable STRING_TABLE [EQUALITY_TUPLE [TUPLE [STRING_32, detachable STRING_TABLE [STRING_32]]]]
+			l_visible: detachable STRING_TABLE [TUPLE [READABLE_STRING_32, detachable STRING_TABLE [READABLE_STRING_32]]]
 		do
 			append_file_rule (a_cluster.internal_file_rule)
 			append_mapping (a_cluster.internal_mapping)

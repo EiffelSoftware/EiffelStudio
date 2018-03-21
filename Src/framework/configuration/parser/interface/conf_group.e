@@ -10,6 +10,10 @@ deferred class
 
 inherit
 	CONF_CONDITIONED
+		redefine
+			add_condition,
+			set_conditions
+		end
 
 	CONF_VISITABLE
 
@@ -130,10 +134,10 @@ feature -- Status update
 
 feature -- Access, stored in configuration file
 
-	name: STRING_32
+	name: READABLE_STRING_32
 			-- The name of the group.
 
-	description: detachable STRING_32
+	description: detachable READABLE_STRING_32
 			-- A description about the group.
 
 	location: CONF_LOCATION
@@ -174,7 +178,7 @@ feature -- Access queries
 			Result := attached overriders as l_overriders and then not l_overriders.is_empty
 		end
 
-	mapping: STRING_TABLE [STRING_32]
+	mapping: STRING_TABLE [READABLE_STRING_32]
 			-- Special classes name mapping (eg. STRING => STRING_32).
 		deferred
 		ensure
@@ -383,12 +387,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			name_set: name = a_name
 		end
 
-	set_description (a_description: like description)
+	set_description (a_description: READABLE_STRING_GENERAL)
 			-- Set `description' to `a_description'.
 		do
-			description := a_description
+			if a_description /= Void then
+				create {STRING_32} description.make_from_string_general (a_description)
+			else
+				description := Void
+			end
 		ensure
-			description_set: description = a_description
+			description_set: a_description /= Void implies attached description as d and then a_description.same_string (d)
 		end
 
 	set_location (a_location: like location)
@@ -453,6 +461,33 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		ensure
 			internal_class_options_set: attached internal_class_options as el_internal_class_options
 			added: el_internal_class_options.has (a_class) and then el_internal_class_options.item (a_class) = a_option
+		end
+
+feature {CONF_ACCESS} -- Status update
+
+	add_condition (a_condition: CONF_CONDITION)
+			-- Add `a_condition'.
+		do
+			Precursor (a_condition)
+			if attached target as tgt then
+				a_condition.set_target (tgt)
+			end
+		end
+
+	set_conditions (a_conditions: like internal_conditions)
+			-- Set `internal_conditions' to `a_conditions'.
+		do
+			Precursor (a_conditions)
+			if
+				attached target as tgt and
+				a_conditions /= Void and then not a_conditions.is_empty
+			then
+				across
+					a_conditions as ic
+				loop
+					ic.item.set_target (tgt)
+				end
+			end
 		end
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
@@ -662,7 +697,7 @@ invariant
 	is_error_same_as_last_error: is_error = (last_error /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

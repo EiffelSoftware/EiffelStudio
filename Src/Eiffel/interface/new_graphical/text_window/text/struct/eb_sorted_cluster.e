@@ -50,8 +50,6 @@ feature -- Statusupdate
 			l_cluster: CONF_CLUSTER
 			l_library: CONF_LIBRARY
 			l_assembly: CONF_ASSEMBLY
-			l_phys_as: CONF_PHYSICAL_ASSEMBLY
-			l_class_i: CLASS_I
 			l_lib_target: CONF_TARGET
 			l_ass_dep: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, INTEGER]
 			l_libs: LIST [CONF_GROUP]
@@ -75,7 +73,7 @@ feature -- Statusupdate
 					name_prefix := parent.name_prefix
 					renaming := parent.renaming
 				else
-					create name_prefix.make_empty
+					create {STRING_32} name_prefix.make_empty
 					create renaming.make (0)
 				end
 
@@ -87,7 +85,7 @@ feature -- Statusupdate
 					-- get renaming/prefix
 				name_prefix := l_library.name_prefix
 				if name_prefix = Void then
-					create name_prefix.make_empty
+					create {STRING_32} name_prefix.make_empty
 				end
 				renaming := l_library.renaming
 				if renaming = Void then
@@ -150,22 +148,24 @@ feature -- Statusupdate
 
 				name_prefix := l_assembly.name_prefix
 				if name_prefix = Void then
-					create name_prefix.make_empty
+					create {STRING_32} name_prefix.make_empty
 				end
 				renaming := l_assembly.renaming
 				if renaming = Void then
 					create renaming.make (0)
 				end
 			elseif is_physical_assembly then
-				l_phys_as ?= actual_group
-				l_ass_dep := l_phys_as.dependencies
-				if l_ass_dep /= Void then
-					assemblies := build_groups (l_ass_dep.linear_representation)
+				if
+					attached {CONF_PHYSICAL_ASSEMBLY} actual_group as l_phys_as and then
+					attached l_phys_as.dependencies as l_phys_dep
+				then
+					assemblies := build_groups (l_phys_dep.linear_representation)
 				else
+					check is_physical_assembly: attached {CONF_PHYSICAL_ASSEMBLY} actual_group end
 					create assemblies.make_default
 				end
 
-				create name_prefix.make_empty
+				create {STRING_32} name_prefix.make_empty
 				create renaming.make (0)
 			end
 
@@ -179,13 +179,13 @@ feature -- Statusupdate
 				until
 					l_classes.after
 				loop
-					l_class_i ?= l_classes.item
-					check
-						class_i: l_class_i /= Void
-					end
-						-- only add valid classes
-					if l_class_i.is_valid then
-						classes.force_last (l_class_i)
+					if attached {CLASS_I} l_classes.item as l_class_i then
+							-- only add valid classes
+						if l_class_i.is_valid then
+							classes.force_last (l_class_i)
+						end
+					else
+						check class_i: False end
 					end
 					l_classes.forth
 				end
@@ -254,10 +254,10 @@ feature -- Access
 			end
 		end
 
-	name_prefix: STRING_32
+	name_prefix: READABLE_STRING_32
 			-- Name prefix to be added to classes.
 
-	renaming: STRING_TABLE [STRING_32]
+	renaming: STRING_TABLE [READABLE_STRING_32]
 			-- Renamings to be applied to classes.
 
 	actual_group: CONF_GROUP
@@ -463,7 +463,7 @@ invariant
 	name_prefxi_not_void: is_initialized implies name_prefix /= Void
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

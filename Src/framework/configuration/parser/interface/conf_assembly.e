@@ -30,7 +30,7 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_from_gac (a_name: STRING_32; an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: READABLE_STRING_32; a_target: CONF_TARGET)
+	make_from_gac (a_name: READABLE_STRING_32; an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: READABLE_STRING_32; a_target: CONF_TARGET)
 			-- Create.
 		require
 			a_name_not_void: a_name /= Void
@@ -113,7 +113,7 @@ feature -- Access queries
 			end
 		end
 
-	mapping: STRING_TABLE [STRING_32]
+	mapping: STRING_TABLE [READABLE_STRING_32]
 			-- Special classes name mapping (eg. STRING => STRING_32).
 		once
 				-- There are no mappings for assemblies
@@ -277,7 +277,7 @@ feature -- Visit
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

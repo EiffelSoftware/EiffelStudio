@@ -7,7 +7,7 @@ class
 	MULTILINE_STRING_PROPERTY
 
 inherit
-	DIALOG_PROPERTY [STRING_32]
+	DIALOG_PROPERTY [READABLE_STRING_32]
 		redefine
 			dialog,
 			convert_to_data
@@ -22,13 +22,16 @@ feature {NONE} -- Implementation
 
 	convert_to_data (a_string: like displayed_value): like value
 			-- Convert displayed data into data.
+		local
+			s32: STRING_32
 		do
-			Result := a_string.twin
-			Result.replace_substring_all ("%%N", "%N")
+			create s32.make_from_string (a_string)
+			s32.replace_substring_all ("%%N", "%N")
+			Result := s32
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

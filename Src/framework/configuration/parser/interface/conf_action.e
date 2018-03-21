@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access, stored in configuration file
 
-	command: STRING_32
+	command: READABLE_STRING_32
 			-- The command to execute.
 
 	working_directory: detachable CONF_DIRECTORY_LOCATION
@@ -41,7 +41,7 @@ feature -- Access, stored in configuration file
 	must_succeed: BOOLEAN
 			-- Does the command have to be successful to continue?
 
-	description: detachable STRING_32
+	description: detachable READABLE_STRING_32
 			-- A description about the command.
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
@@ -84,7 +84,7 @@ invariant
 	command_ok: command /= Void and then not command.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

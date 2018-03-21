@@ -45,13 +45,13 @@ inherit
 
 feature -- Access, stored in configuration file
 
-	original_path: STRING_32
+	original_path: READABLE_STRING_32
 			-- Path without resolved variables and parent cluster path.
 			-- Directory separators are always using the Windows one, i.e. '\'.
 
 feature -- Access queries
 
-	original_file: like original_path
+	original_file: STRING_32
 			-- The file part of `original_path'.
 		local
 			cnt, i: INTEGER
@@ -91,7 +91,7 @@ feature -- Access queries
 			l_relative_base: like original_path
 			l_offset: INTEGER
 			l_stop: BOOLEAN
-			l_result: like original_path
+			l_result: STRING_32
 			l_root: detachable PATH
 		do
 			create l_result.make_from_string (original_path)
@@ -147,7 +147,7 @@ feature -- Access queries
 							l_value := once {STRING_32} ""
 						end
 							-- we don't want to update stored values, this is done when the project is loaded
-						target.environ_variables.put (l_value, l_key)
+						target.record_environ_variable (l_value, l_key)
 					end
 					l_result.replace_substring (to_internal_format (l_value), i, j)
 				end
@@ -270,7 +270,7 @@ feature {CONF_ERROR} -- Implementation, attributes stored in configuration file
 
 feature {NONE} -- Implementation
 
-	to_internal_format (a_path: READABLE_STRING_GENERAL): like original_path
+	to_internal_format (a_path: READABLE_STRING_GENERAL): STRING_32
 			-- Convert `a_path' into the internal representation.
 			--| The internal format uses the windows format for directory separator.
 		require
@@ -307,7 +307,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

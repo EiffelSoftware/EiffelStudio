@@ -2018,24 +2018,17 @@ feature {NONE} -- Implementation
 	build_name (a_pebble: ANY)
 			-- Build name of `a_pebble'.
 		local
-			l_classi_stone: CLASSI_STONE
-			l_feature_stone: FEATURE_STONE
-			l_cluster_stone: CLUSTER_STONE
-			l_target_stone: TARGET_STONE
 			l_group: CONF_GROUP
 		do
-			l_feature_stone ?= a_pebble
-			if l_feature_stone /= Void then
+			if attached {FEATURE_STONE} a_pebble as l_feature_stone then
 				last_name := l_feature_stone.feature_name
 				last_type := names.l_feature
 			else
-				l_classi_stone ?= a_pebble
-				if l_classi_stone /= Void then
+				if attached {CLASSI_STONE} a_pebble as l_classi_stone then
 					last_name := l_classi_stone.class_name
 					last_type := names.t_context_menu_class
 				else
-					l_cluster_stone ?= a_pebble
-					if l_cluster_stone /= Void then
+					if attached {CLUSTER_STONE} a_pebble as l_cluster_stone then
 						last_name := l_cluster_stone.group.name
 						l_group := l_cluster_stone.group
 						if l_group.is_cluster then
@@ -2047,16 +2040,13 @@ feature {NONE} -- Implementation
 						else
 							last_type := Void
 						end
+					elseif attached {TARGET_STONE} a_pebble as l_target_stone then
+						last_name := l_target_stone.target.name
+						last_type := names.l_target
 					else
-						l_target_stone ?= a_pebble
-						if l_target_stone /= Void then
-							last_name := l_target_stone.target.name
-							last_type := names.l_target
-						else
-								-- Other stones
-							last_name := Void
-							last_type := Void
-						end
+							-- Other stones
+						last_name := Void
+						last_type := Void
 					end
 				end
 			end
@@ -2091,7 +2081,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_menu_item (a_name: STRING_GENERAL): EV_MENU_ITEM
+	new_menu_item (a_name: READABLE_STRING_GENERAL): EV_MENU_ITEM
 			-- New menu item with `a_name'.
 		do
 			if a_name /= Void then
@@ -2137,7 +2127,7 @@ invariant
 	dev_window_not_void: dev_window /= Void
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

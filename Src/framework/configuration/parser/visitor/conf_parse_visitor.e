@@ -123,7 +123,7 @@ feature -- Visit nodes
 						-- compiler specific condition which is always false (as if library was excluded
 						-- from current build).
 					create l_cond.make
-					l_cond.add_custom ("backup_ignore_bad_library", "false", False)
+					l_cond.add_custom ("backup_ignore_bad_library", "false", create {CONF_CONDITION_CUSTOM_ATTRIBUTES})
 					a_library.set_conditions (Void)
 					a_library.add_condition (l_cond)
 				else
@@ -251,7 +251,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

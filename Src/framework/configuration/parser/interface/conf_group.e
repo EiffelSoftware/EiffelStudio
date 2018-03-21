@@ -387,7 +387,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			name_set: name = a_name
 		end
 
-	set_description (a_description: READABLE_STRING_GENERAL)
+	set_description (a_description: detachable READABLE_STRING_GENERAL)
 			-- Set `description' to `a_description'.
 		do
 			if a_description /= Void then

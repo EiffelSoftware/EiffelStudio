@@ -121,25 +121,26 @@ feature{NONE} -- Implementation
 	class_possibilities: like completion_possibilities
 			-- Class possibilities.
 		local
-			l_generator: QL_CLASS_DOMAIN_GENERATOR
-			l_class_domain: QL_CLASS_DOMAIN
 			l_index: INTEGER
 		do
-			create l_generator.make (Void, True)
-			l_class_domain ?= system_target_domain.new_domain (l_generator)
-
-			create Result.make (1, l_class_domain.count)
-			from
-				l_class_domain.start
-				l_index := 1
-			until
-				l_class_domain.after
-			loop
-				Result.put (create {EB_CLASS_FOR_COMPLETION}.make (l_class_domain.item.class_i, Void), l_index)
-				l_index := l_index + 1
-				l_class_domain.forth
+			if attached {QL_CLASS_DOMAIN} system_target_domain.new_domain (create {QL_CLASS_DOMAIN_GENERATOR}.make (Void, True)) as l_class_domain then
+				create Result.make (1, l_class_domain.count)
+				from
+					l_class_domain.start
+					l_index := 1
+				until
+					l_class_domain.after
+				loop
+					Result.put (create {EB_CLASS_FOR_COMPLETION}.make (l_class_domain.item.class_i, Void), l_index)
+					l_index := l_index + 1
+					l_class_domain.forth
+				end
+				Result.sort
+			else
+				check is_class_domain: False end
+				create Result.make_empty
+				Result.rebase (1)
 			end
-			Result.sort
 		ensure
 			result_attached: Result /= Void
 		end
@@ -156,21 +157,27 @@ feature{NONE} -- Implementation
 		do
 			if a_class.has_feature_table then
 				l_feature_table := a_class.feature_table
-				create Result.make (1, l_feature_table.count)
-				from
-					l_feature_table.start
-					l_index := 1
-				until
-					l_feature_table.after
-				loop
-					l_feature := l_feature_table.item_for_iteration.e_feature
-					create l_feature_item.make (l_feature, Void, False, is_upper_required (l_feature))
-					l_feature_item.set_insert_name (l_feature.name_32)
-					Result.put (l_feature_item, l_index)
-					l_index := l_index + 1
-					l_feature_table.forth
+
+				if l_feature_table.is_empty then
+					create Result.make_empty
+					Result.rebase (1)
+				else
+					create Result.make_filled (create {NAME_FOR_COMPLETION}.make ("dummy"), 1, l_feature_table.count)
+					from
+						l_feature_table.start
+						l_index := 1
+					until
+						l_feature_table.after
+					loop
+						l_feature := l_feature_table.item_for_iteration.e_feature
+						create l_feature_item.make (l_feature, Void, False, is_upper_required (l_feature))
+						l_feature_item.set_insert_name (l_feature.name_32)
+						Result.put (l_feature_item, l_index)
+						l_index := l_index + 1
+						l_feature_table.forth
+					end
+					Result.sort
 				end
-				Result.sort
 			else
 				create Result.make_empty
 			end
@@ -189,20 +196,20 @@ feature{NONE} -- Implementation
 	placeholder_possibilities: like completion_possibilities
 			-- Possibilities for placeholders such as $file, $path.
 		do
-			create Result.make (1, 13)
-			Result.put (create {NAME_FOR_COMPLETION}.make ("$file_name"), 1)
-			Result.put (create {NAME_FOR_COMPLETION}.make ("$path"), 2)
-			Result.put (create {NAME_FOR_COMPLETION}.make ("$file"), 3)
-			Result.put (create {NAME_FOR_COMPLETION}.make ("$class_name"), 4)
-			Result.put (create {NAME_FOR_COMPLETION}.make ("$directory_name"), 5)
-			Result.put (create {NAME_FOR_COMPLETION}.make ("$group_name"), 6)
-			Result.put (create {NAME_FOR_COMPLETION}.make ("$group_directory"), 7)
-			Result.put (create {NAME_FOR_COMPLETION}.make ("$line"), 8)
-			Result.put (create {NAME_FOR_COMPLETION}.make ("$project_directory"), 9)
-			Result.put (create {NAME_FOR_COMPLETION}.make ("$target_directory"), 10)
-			Result.put (create {NAME_FOR_COMPLETION}.make ("$f_code"), 11)
-			Result.put (create {NAME_FOR_COMPLETION}.make ("$w_code"), 12)
-			Result.put (create {NAME_FOR_COMPLETION}.make ("$target_name"), 13)
+			create Result.make_filled (create {NAME_FOR_COMPLETION}.make ("$file_name"), 1, 13)
+--			Result.put (create {NAME_FOR_COMPLETION}.make ("$file_name"), 1)
+			Result.force (create {NAME_FOR_COMPLETION}.make ("$path"), 2)
+			Result.force (create {NAME_FOR_COMPLETION}.make ("$file"), 3)
+			Result.force (create {NAME_FOR_COMPLETION}.make ("$class_name"), 4)
+			Result.force (create {NAME_FOR_COMPLETION}.make ("$directory_name"), 5)
+			Result.force (create {NAME_FOR_COMPLETION}.make ("$group_name"), 6)
+			Result.force (create {NAME_FOR_COMPLETION}.make ("$group_directory"), 7)
+			Result.force (create {NAME_FOR_COMPLETION}.make ("$line"), 8)
+			Result.force (create {NAME_FOR_COMPLETION}.make ("$project_directory"), 9)
+			Result.force (create {NAME_FOR_COMPLETION}.make ("$target_directory"), 10)
+			Result.force (create {NAME_FOR_COMPLETION}.make ("$f_code"), 11)
+			Result.force (create {NAME_FOR_COMPLETION}.make ("$w_code"), 12)
+			Result.force (create {NAME_FOR_COMPLETION}.make ("$target_name"), 13)
 			Result.sort
 		ensure
 			result_attached: Result /= Void
@@ -350,7 +357,7 @@ invariant
 	factory_attached: factory /= Void
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

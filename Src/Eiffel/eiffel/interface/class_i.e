@@ -181,7 +181,7 @@ feature -- Access
 	visible_level: VISIBLE_I
 			-- Visible level
 		local
-			l_vis: STRING_TABLE [STRING_32]
+			l_vis: STRING_TABLE [READABLE_STRING_32]
 			l_sel: VISIBLE_SELEC_I
 			l_ren: HASH_TABLE [STRING, STRING]
 			l_vis_feat: SEARCH_TABLE [STRING]
@@ -189,7 +189,7 @@ feature -- Access
 			u: UTF_CONVERTER
 		do
 			if visible /= Void then
-				l_vis := visible.item.features
+				l_vis := visible.features
 				if l_vis = Void then
 					Result := create {VISIBLE_EXPORT_I}
 				else
@@ -400,7 +400,7 @@ feature -- Access
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
-	visible: detachable EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: detachable STRING_TABLE [STRING_32]]]
+	visible: detachable TUPLE [class_renamed: READABLE_STRING_32; features: detachable STRING_TABLE [READABLE_STRING_32]]
 			-- The visible features.
 		deferred
 		end
@@ -669,7 +669,7 @@ invariant
 	compiled_class_connection: is_compiled implies compiled_class.original_class = Current
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

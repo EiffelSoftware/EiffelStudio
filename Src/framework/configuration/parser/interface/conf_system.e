@@ -73,10 +73,10 @@ feature -- Status
 
 feature -- Access, stored in configuration file
 
-	name: STRING_32
+	name: READABLE_STRING_32
 			-- Name of the system.
 
-	description: detachable STRING_32
+	description: detachable READABLE_STRING_32
 			-- A description about the system.
 
 	uuid: UUID
@@ -354,7 +354,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		do
 			name := a_name.as_lower
 		ensure
-			name_set: name.is_case_insensitive_equal (a_name)
+			name_set: name.is_case_insensitive_equal_general (a_name)
 		end
 
 	set_readonly (a_readonly: like is_readonly)
@@ -417,7 +417,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			library_target := a_target
 		end
 
-	set_library_target_by_name (a_target: detachable STRING_32)
+	set_library_target_by_name (a_target: detachable READABLE_STRING_32)
 			-- Set `library_target' to `a_target'.
 		require
 			a_target_valid: a_target /= Void and then not a_target.is_empty implies targets.has (a_target)
@@ -514,7 +514,7 @@ invariant
 	valid_level: valid_level
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

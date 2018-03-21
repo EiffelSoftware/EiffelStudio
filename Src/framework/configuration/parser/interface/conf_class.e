@@ -85,7 +85,7 @@ feature -- Access, in compiled only, not stored to configuration file
 			Result_assertions: Result.assertions /= Void
 		end
 
-	visible: detachable EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: detachable STRING_TABLE [STRING_32]]]
+	visible: detachable TUPLE [class_renamed: READABLE_STRING_32; features: detachable STRING_TABLE [READABLE_STRING_32]]
 			-- The visible features.
 
 	is_valid: BOOLEAN
@@ -256,12 +256,12 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			-- Add visible rules to `visible'. Set `is_error' and `last_error' if there is a conflict.
 		require
 			a_vis_not_void: a_vis /= Void
-			a_renamed_not_void: a_vis.item.class_renamed /= Void
+			a_renamed_not_void: a_vis.class_renamed /= Void
 		local
-			l_vis_check, l_vis_other: detachable STRING_TABLE [STRING_32]
-			l_other: detachable STRING_32
+			l_vis_check, l_vis_other: detachable STRING_TABLE [READABLE_STRING_32]
+			l_other: detachable READABLE_STRING_32
 			l_error: BOOLEAN
-			l_visible_item_features, l_vis_item_features: detachable STRING_TABLE [STRING_32]
+			l_visible_item_features, l_vis_item_features: detachable STRING_TABLE [READABLE_STRING_32]
 			l_visible: like visible
 		do
 				-- easy case first, most of the time this will be the only thing that is needed to do
@@ -270,9 +270,9 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 				visible := a_vis
 			else
 					-- check final external class name
-				if l_visible.item.class_renamed.is_equal (a_vis.item.class_renamed) then
-					l_visible_item_features := l_visible.item.features
-					l_vis_item_features := a_vis.item.features
+				if l_visible.class_renamed.is_equal (a_vis.class_renamed) then
+					l_visible_item_features := l_visible.features
+					l_vis_item_features := a_vis.features
 					if l_vis_item_features = Void and l_visible_item_features = Void then
 							-- done, both are Void
 					else
@@ -299,12 +299,12 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 								end
 								if l_error then
 										-- conflict, conflicting feature renamings
-									last_error := create {CONF_ERROR_VISI_CONFL02}.make (l_visible.item.class_renamed)
+									last_error := create {CONF_ERROR_VISI_CONFL02}.make (l_visible.class_renamed)
 								else
 										-- merge
 										-- twin because we may change something
 									l_visible_item_features := l_visible_item_features.twin
-									l_visible.item.features := l_visible_item_features
+									l_visible.features := l_visible_item_features
 									l_visible_item_features.merge (l_vis_item_features)
 								end
 							else
@@ -329,12 +329,12 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 									end
 									if l_error then
 											-- conflict, all features visible vs some features visible with renaming
-										last_error := create {CONF_ERROR_VISI_CONFL01}.make (l_visible.item.class_renamed)
+										last_error := create {CONF_ERROR_VISI_CONFL01}.make (l_visible.class_renamed)
 									else
 											-- done, everything is visible and we had no renamings
 											-- twin because we may change something
 										l_visible := l_visible.twin
-										l_visible.item.features := Void
+										l_visible.features := Void
 										visible := l_visible
 									end
 								end
@@ -343,7 +343,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 					end
 				else
 						-- conflict, different final external class name
-					last_error := create {CONF_ERROR_VISI_CONFL03}.make (l_visible.item.class_renamed, a_vis.item.class_renamed)
+					last_error := create {CONF_ERROR_VISI_CONFL03}.make (l_visible.class_renamed, a_vis.class_renamed)
 				end
 			end
 		end
@@ -550,7 +550,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

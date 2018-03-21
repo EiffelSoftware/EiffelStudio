@@ -783,7 +783,7 @@ feature {NONE} -- Implementation functions
 			l_cl_c: CLASS_C
 			l_assert_level: ASSERTION_I
 			l_format_context: TEXT_FORMATTER_DECORATOR
-			l_description: STRING_32
+			l_description: READABLE_STRING_32
 			n: INTEGER
 			l_is_void_safe: BOOLEAN
 		do
@@ -1407,7 +1407,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

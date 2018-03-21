@@ -1314,7 +1314,7 @@ feature -- Boolean values
 
 	boolean_false: STRING_32 do Result := locale.translation ("False") end
 
-	boolean_values: HASH_TABLE [BOOLEAN, STRING_32]
+	boolean_values: STRING_TABLE [BOOLEAN]
 			-- Boolean values mapping
 		once
 			create Result.make (2)
@@ -1323,7 +1323,7 @@ feature -- Boolean values
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

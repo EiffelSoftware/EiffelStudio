@@ -59,11 +59,8 @@ feature {NONE} -- Implementation
 
 	veto_pebble_function (a_any: ANY): BOOLEAN
 			-- Veto pebble function
-		local
-			l_classi_stone: CLASSI_STONE
 		do
-			l_classi_stone ?= a_any
-			if l_classi_stone /= Void then
+			if attached {CLASSI_STONE} a_any as l_classi_stone then
 				Result := Precursor {EB_FORMATTER}(a_any)
 			end
 		end
@@ -86,7 +83,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

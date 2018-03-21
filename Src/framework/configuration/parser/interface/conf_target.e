@@ -37,7 +37,7 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING_32; a_system: CONF_SYSTEM)
+	make (a_name: READABLE_STRING_32; a_system: CONF_SYSTEM)
 			-- Create with `a_name'.
 		require
 			a_name_ok: a_name /= Void and not a_name.is_empty
@@ -66,16 +66,16 @@ feature {NONE} -- Initialization
 			create environ_variables.make (1)
 			system := a_system
 		ensure
-			name_set: name /= Void and then name.is_equal (a_name.as_lower)
+			name_set: name /= Void and then name.is_case_insensitive_equal_general (a_name)
 			system_set: system = a_system
 		end
 
 feature -- Access, stored in configuration file
 
-	name: STRING_32
+	name: READABLE_STRING_32
 			-- Name of the target.
 
-	description: detachable STRING_32
+	description: detachable READABLE_STRING_32
 			-- A description about the target.
 
 	extends: detachable CONF_TARGET
@@ -91,6 +91,14 @@ feature -- Access, in compiled only, not stored to configuration file
 
 	environ_variables: STRING_TABLE [READABLE_STRING_32]
 			-- Saved environment variables.
+
+	record_environ_variable (a_value: READABLE_STRING_32; a_key: READABLE_STRING_GENERAL)
+		require
+			a_value_set: a_value /= Void
+			a_key_set: a_key /= Void and then not a_key.is_whitespace
+		do
+			environ_variables.put (a_value, a_key)
+		end
 
 	library_root: detachable PATH
 			-- Root location to use for relative paths, defaults to the location of the configuration file.
@@ -270,7 +278,7 @@ feature -- Access queries
 			end
 		end
 
-	settings: STRING_TABLE [STRING_32]
+	settings: STRING_TABLE [READABLE_STRING_32]
 			-- Settings.
 		do
 			if attached extends as l_extends then
@@ -401,7 +409,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	mapping: STRING_TABLE [STRING_32]
+	mapping: STRING_TABLE [READABLE_STRING_32]
 			-- Special classes name mapping (eg. STRING => STRING_32)
 		do
 			if attached extends as l_extends then
@@ -442,11 +450,14 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Set `name' to `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
+		local
+			l_lowered_name: like name
 		do
+			l_lowered_name := a_name.as_lower
 			if attached system as l_system then
-				l_system.targets.replace_key (a_name.as_lower, name)
+				l_system.targets.replace_key (l_lowered_name, name)
 			end
-			name := a_name.as_lower
+			name := l_lowered_name
 		ensure
 			name_set: name.is_case_insensitive_equal (a_name) and name.is_equal (name.as_lower)
 		end
@@ -1189,7 +1200,7 @@ invariant
 	environ_variables_not_void: environ_variables /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

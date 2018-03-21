@@ -43,7 +43,7 @@ feature -- Attributes
 
 feature -- Access
 
-	name_in_upper: STRING_32
+	name_in_upper: READABLE_STRING_32
 			-- Cluster name in upper case
 		do
 			Result := cluster_name.as_upper
@@ -52,7 +52,7 @@ feature -- Access
 	actual_namespace: STRING
 			-- Associated full namespace of current cluster.
 		local
-			l_local_namespace: STRING_32
+			l_local_namespace: READABLE_STRING_32
 		do
 			if is_precompile then
 				Result := internal_actual_namespace
@@ -105,7 +105,7 @@ feature {NONE} -- Internal implementation cache
 			-- Cached version of `actual_namespace'
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -95,7 +95,7 @@ feature{NONE} -- Implemenation
 				else
 					conf_target := target_of_id (id)
 					if conf_target /= Void then
-						string_representation_internal := conf_target.name
+						create string_representation_internal.make_from_string (conf_target.name)
 						query_language_target := query_target_item_from_conf_target (conf_target)
 					else
 						if last_target_name /= Void and then not last_target_name.is_empty then
@@ -116,7 +116,7 @@ feature{NONE} -- Implemenation
 			-- Query language target represented by Current
 
 note
-        copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2018, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

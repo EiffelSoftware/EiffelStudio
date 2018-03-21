@@ -539,17 +539,19 @@ feature {NONE} -- Conversion from earlier version
 			c_attached: attached c
 		local
 			i, n: INTEGER
+			p: STRING_32
 		do
 			if
 				attached current_external as e and then
 				includes_this_or_before (namespace_1_9_0) and then
-				attached e.internal_location as p and then
-				not p.has ('%"') and then
-				(p.has (' ') or else p.has ('%T'))
+				attached e.internal_location as l_internal_location and then
+				not l_internal_location.has ('%"') and then
+				(l_internal_location.has (' ') or else l_internal_location.has ('%T'))
 			then
 					-- The early version of ECF did not distinguish between
 					-- include paths and C compiler flags as well as
 					-- object/library paths and linker flags.
+				create p.make_from_string (l_internal_location)
 				p.left_adjust
 				p.right_adjust
 				if e.is_include then
@@ -1909,7 +1911,11 @@ feature {NONE} -- Implementation attribute processing
 		local
 			l_cond: like current_condition
 		do
-			create l_cond.make
+			if attached current_target as tgt then
+				create l_cond.make_with_target (tgt)
+			else
+				create l_cond.make
+			end
 			current_condition := l_cond
 
 			if not is_error then
@@ -2187,6 +2193,7 @@ feature {NONE} -- Implementation attribute processing
 			current_condition_set: a_current_condition /= Void
 		local
 			l_name, l_value, l_excluded_value: like current_attributes.item
+			d: CONF_CONDITION_CUSTOM_ATTRIBUTES
 		do
 			l_name := current_attributes.item (at_name)
 			if l_name = Void then
@@ -2194,18 +2201,29 @@ feature {NONE} -- Implementation attribute processing
 			else
 				l_value := current_attributes.item (at_value)
 				l_excluded_value := current_attributes.item (at_excluded_value)
-				if l_value /= Void and l_excluded_value /= Void then
+				if (l_value = Void and l_excluded_value = Void) or (l_value /= Void and l_excluded_value /= Void)then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_custom_conflict (l_name))
-				elseif l_value = Void and l_excluded_value = Void then
-					set_parse_error_message (conf_interface_names.e_parse_incorrect_custom_none (l_name))
 				else
+					create d
+					if attached current_attributes.item (at_match) as l_match then
+						if l_match.is_case_insensitive_equal_general ("wildcard") then
+							d.set_is_wildcard (True)
+						elseif l_match.is_case_insensitive_equal_general ("case-insensitive") then
+							d.set_is_case_insensitive (True)
+						elseif l_match.is_case_insensitive_equal_general ("regexp") then
+							d.set_is_regular_expression (True)
+						elseif l_match.is_case_insensitive_equal_general ("case-sensitive") then
+							d.set_is_case_sensitive (True)
+						end
+					end
 					if l_value /= Void then
-						a_current_condition.add_custom (l_name, l_value, False)
+						a_current_condition.add_custom (l_name, l_value, d)
 					elseif l_excluded_value /= Void then
-						a_current_condition.add_custom (l_name, l_excluded_value, True)
+						d.inverted := True
+						a_current_condition.add_custom (l_name, l_excluded_value, d)
 					else
 						check
-							code_implie_value_or_excluded_value_attached: False
+							code_implie_value_or_excluded_value_set: False
 						end
 					end
 				end
@@ -2545,7 +2563,7 @@ feature {NONE} -- Note Implementation
 			last_undefined_tag_number := Result
 		end
 
-	current_attributes_undefined: STRING_TABLE [STRING_32]
+	current_attributes_undefined: STRING_TABLE [READABLE_STRING_32]
 			-- The values of the current attributes.
 			-- Undefined attributes.
 
@@ -3065,12 +3083,17 @@ feature {NONE} -- Implementation state transitions
 
 				-- custom
 				-- * name
+				-- * caseless_name
 				-- * value
 				-- * excluded_value
-			create l_attr.make (3)
+				-- * regexp
+				-- * excluded_regexp
+
+			create l_attr.make (4)
+			l_attr.force (at_name, "name")
 			l_attr.force (at_value, "value")
 			l_attr.force (at_excluded_value, "excluded_value")
-			l_attr.force (at_name, "name")
+			l_attr.force (at_match, "match")
 			Result.force (l_attr, t_custom)
 
 				-- uses/overrides

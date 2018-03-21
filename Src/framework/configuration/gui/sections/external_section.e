@@ -50,7 +50,7 @@ feature -- Access
 	conf_external: CONF_EXTERNAL
 			-- External for which information are displayed.
 
-	name: STRING_GENERAL
+	name: READABLE_STRING_32
 			-- Name of the section.
 		local
 			i, j: like {STRING}.index_of_code
@@ -157,7 +157,7 @@ invariant
 	external_not_void: conf_external /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -722,7 +722,7 @@ feature {NONE} -- Implementation
 					ln.set_text (last_state.system.name)
 					if not last_state.has_missing_target_error then
 						lt.pointer_button_press_actions.wipe_out
-						lt.pointer_button_press_actions.force_extend (agent on_choose_target (lt))
+						lt.pointer_button_press_actions.extend (agent (x, y, b: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32; ia_lt: EV_GRID_CHOICE_ITEM) do on_choose_target (ia_lt) end(?,?,?,?,?,?,?,?,lt))
 						lt.deactivate_actions.wipe_out
 						lt.deactivate_actions.extend (agent on_target_selected (lt.row))
 						update_targets (lt)
@@ -1271,7 +1271,7 @@ invariant
 	post_project_selected_actions_not_void: post_project_selected_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -30,7 +30,7 @@ feature -- Visit nodes
 			-- Visit `a_group'.
 		local
 			l_name: READABLE_STRING_GENERAL
-			l_map: STRING_TABLE [STRING_32]
+			l_map: STRING_TABLE [READABLE_STRING_32]
 			l_options: CONF_OPTION
 		do
 			if attached a_group.classes as l_classes then
@@ -78,6 +78,7 @@ feature -- Visit nodes
 				end
 
 			else
+					-- FIXME: it seems it could be Void, if the group is empty!
 				check
 					l_classes_not_void: False
 				end
@@ -85,7 +86,7 @@ feature -- Visit nodes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

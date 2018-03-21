@@ -9,7 +9,7 @@ class
 	VISIBLE_DIALOG
 
 inherit
-	PROPERTY_DIALOG [STRING_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]]]
+	PROPERTY_DIALOG [STRING_TABLE [TUPLE [class_renamed: READABLE_STRING_32; features: STRING_TABLE [READABLE_STRING_32]]]]
 		redefine
 			initialize
 		end
@@ -144,7 +144,7 @@ feature {NONE} -- Agents
 			-- Show information about `a_feature' in `a_class'.
 		require
 			a_class_ok: a_class /= Void and then value /= Void and then value.has (a_class)
-			a_feature_ok: a_feature /= Void and then value.item (a_class).item.features /= Void and then value.item (a_class).item.features.has (a_feature)
+			a_feature_ok: a_feature /= Void and then value.item (a_class).features /= Void and then value.item (a_class).features.has (a_feature)
 		do
 			current_class := a_class.as_string_32
 			current_feature := a_feature.as_string_32
@@ -156,14 +156,14 @@ feature {NONE} -- Agents
 	remove
 			-- Remove `current_class' or `current_feature'.
 		local
-			l_features: STRING_TABLE [STRING_32]
+			l_features: STRING_TABLE [READABLE_STRING_32]
 		do
 			if value /= Void then
 				if current_feature /= Void then
-					l_features := value.item (current_class).item.features
+					l_features := value.item (current_class).features
 					l_features.remove (current_feature)
 					if l_features.is_empty then
-						value.item (current_class).item.features := Void
+						value.item (current_class).features := Void
 					end
 					refresh
 				elseif current_class /= Void then
@@ -180,6 +180,8 @@ feature {NONE} -- Agents
 			-- Add a new class.
 		local
 			l_name, l_vis_name: STRING_32
+			tu: like value.item
+			tb: detachable STRING_TABLE [READABLE_STRING_32]
 		do
 			l_name := original_name.text.as_upper
 			l_vis_name := renamed_name.text.as_upper
@@ -190,8 +192,9 @@ feature {NONE} -- Agents
 				if value = Void then
 					create value.make_equal (1)
 				end
-
-				value.force (create {EQUALITY_TUPLE [TUPLE [STRING_32, STRING_TABLE [STRING_32]]]}.make ([l_vis_name, Void]), l_name)
+				tu := [l_vis_name, tb]
+				tu.compare_objects
+				value.force (tu, l_name)
 				original_name.set_text ("")
 				renamed_name.set_text ("")
 				current_class := l_name
@@ -202,8 +205,8 @@ feature {NONE} -- Agents
 	add_feature
 			-- Add a new feature.
 		local
-			l_name, l_vis_name: STRING_32
-			l_feats: STRING_TABLE [STRING_32]
+			l_name, l_vis_name: READABLE_STRING_32
+			l_feats: STRING_TABLE [READABLE_STRING_32]
 		do
 			if current_class /= Void and then value /= Void and then value.has (current_class) then
 				l_name := original_name.text.as_lower
@@ -211,11 +214,11 @@ feature {NONE} -- Agents
 				if l_vis_name.is_empty then
 					l_vis_name := l_name
 				end
-				l_feats := value.item (current_class).item.features
+				l_feats := value.item (current_class).features
 				if is_valid_feature_name (l_name) and then is_valid_feature_name (l_vis_name) and then (l_feats = Void or else not l_feats.has (l_name)) then
 					if l_feats = Void then
 						create l_feats.make_equal (1)
-						value.item (current_class).item.features := l_feats
+						value.item (current_class).features := l_feats
 					end
 
 					l_feats.force (l_vis_name, l_name)
@@ -240,10 +243,10 @@ feature {NONE} -- Implementation
 		local
 			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_class_item, l_feat_item: EV_TREE_ITEM
-			l_rena: EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]
-			l_feat: STRING_TABLE [STRING_32]
+			l_rena: TUPLE [class_renamed: READABLE_STRING_32; features: STRING_TABLE [READABLE_STRING_32]]
+			l_feat: STRING_TABLE [READABLE_STRING_32]
 			l_class: READABLE_STRING_GENERAL
-			l_vis_name: STRING_32
+			l_vis_name: READABLE_STRING_32
 			l_feat_name: READABLE_STRING_GENERAL
 			l_cur_class: BOOLEAN
 			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
@@ -269,7 +272,7 @@ feature {NONE} -- Implementation
 					l_sorted_list.after
 				loop
 					l_class := l_sorted_list.item_for_iteration
-					l_vis_name := value.item (l_class).item.class_renamed
+					l_vis_name := value.item (l_class).class_renamed
 					if l_vis_name /= Void and then not l_vis_name.same_string_general (l_class) then
 						create l_class_item.make_with_text (l_class+" ("+l_vis_name+")")
 					else
@@ -287,8 +290,8 @@ feature {NONE} -- Implementation
 							l_cur_class := True
 						end
 					end
-					if l_rena /= Void and then l_rena.item.features /= Void then
-						l_feat := l_rena.item.features
+					if l_rena /= Void and then l_rena.features /= Void then
+						l_feat := l_rena.features
 						from
 							l_feat.start
 						until
@@ -324,7 +327,7 @@ invariant
 	elements: is_initialized implies tree /= Void and original_name /= Void and renamed_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

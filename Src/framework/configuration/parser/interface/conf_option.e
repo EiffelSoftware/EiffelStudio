@@ -244,10 +244,10 @@ feature -- Access, stored in configuration file
 	assertions: detachable CONF_ASSERTIONS
 			-- The assertion settings.
 
-	namespace: detachable STRING_32
+	namespace: detachable READABLE_STRING_32
 			-- .NET namespace that is computed on demand.
 
-	local_namespace: detachable STRING_32
+	local_namespace: detachable READABLE_STRING_32
 			-- .NET namespace set in configuration file
 
 	is_profile: BOOLEAN
@@ -277,7 +277,7 @@ feature -- Access, stored in configuration file
 	is_obsolete_routine_type: BOOLEAN
 			-- Is an obsolete routine type declaration used?
 
-	description: detachable STRING_32
+	description: detachable READABLE_STRING_32
 			-- A description about the options.
 
 feature -- Access: syntax
@@ -802,7 +802,7 @@ invariant
 	debugs_compare_objects: attached debugs as l_d implies l_d.object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1288,14 +1288,14 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 				l_var_key := l_vars.key_for_iteration
 				l_item.set_value (l_var_key)
 				l_item.pointer_button_press_actions.wipe_out
-				l_item.pointer_double_press_actions.force_extend (agent l_item.activate)
-				l_item.change_value_actions.extend (agent update_variable_key (l_var_key, {STRING_32} ?))
+				l_item.activate_when_pointer_is_double_pressed
+				l_item.change_value_actions.extend (agent update_variable_key (l_var_key, {READABLE_STRING_32} ?))
 				grid.set_item (1, i + 1, l_item)
 				create l_item.make ("")
 				l_item.set_value (l_vars.item_for_iteration)
 				l_item.pointer_button_press_actions.wipe_out
-				l_item.pointer_double_press_actions.force_extend (agent l_item.activate)
-				l_item.change_value_actions.extend (agent update_variable_value (l_var_key, {STRING_32} ?))
+				l_item.activate_when_pointer_is_double_pressed
+				l_item.change_value_actions.extend (agent update_variable_value (l_var_key, {READABLE_STRING_32} ?))
 				grid.set_item (2, i + 1, l_item)
 				l_inh_vars.search (l_var_key)
 				if l_inh_vars.found then
@@ -1326,7 +1326,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			is_initialized: is_initialized
 			not_refreshing: not is_refreshing
 		local
-			l_vars, l_inh_vars: STRING_TABLE [STRING_32]
+			l_vars, l_inh_vars: STRING_TABLE [READABLE_STRING_32]
 			i: INTEGER
 			l_item: STRING_PROPERTY
 			l_var_key: READABLE_STRING_GENERAL
@@ -1356,13 +1356,13 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 				l_var_key := l_vars.key_for_iteration
 				l_item.set_value (l_var_key)
 				l_item.pointer_button_press_actions.wipe_out
-				l_item.pointer_double_press_actions.force_extend (agent l_item.activate)
+				l_item.activate_when_pointer_is_double_pressed
 				l_item.change_value_actions.extend (agent update_mapping_key (l_var_key, ?))
 				grid.set_item (1, i + 1, l_item)
 				create l_item.make ("")
 				l_item.set_value (l_vars.item_for_iteration)
 				l_item.pointer_button_press_actions.wipe_out
-				l_item.pointer_double_press_actions.force_extend (agent l_item.activate)
+				l_item.activate_when_pointer_is_double_pressed
 				l_item.change_value_actions.extend (agent update_mapping_value (l_var_key, ?))
 				grid.set_item (2, i + 1, l_item)
 				l_inh_vars.search (l_var_key)
@@ -1448,7 +1448,7 @@ feature {NONE} -- Implementation
 		do
 				-- check if the name of the current selected section has changed and update
 			if attached {CONFIGURATION_SECTION} section_tree.selected_item as l_section then
-				if not l_section.name.as_string_32.is_equal (l_section.text.as_string_32) then
+				if not l_section.name.same_string (l_section.text) then
 					l_section.set_text (l_section.name)
 				end
 					-- for groups, update the pixmap
@@ -1505,7 +1505,7 @@ feature {NONE} -- Implementation
 			create l_string_prop.make (conf_interface_names.system_name_name)
 			l_string_prop.set_description (conf_interface_names.system_name_description)
 			l_string_prop.set_value (conf_system.name)
-			l_string_prop.validate_value_actions.extend (agent (s: STRING_32): BOOLEAN
+			l_string_prop.validate_value_actions.extend (agent (s: READABLE_STRING_32): BOOLEAN
 				require
 					s_not_void: s /= Void
 				do
@@ -1518,7 +1518,7 @@ feature {NONE} -- Implementation
 				do
 					set_title (conf_interface_names.configuration_title (s))
 				end)
-			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
+			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32} ?, agent handle_value_changes (False)))
 			properties.add_property (l_string_prop)
 
 				-- description
@@ -1528,8 +1528,8 @@ feature {NONE} -- Implementation
 			if conf_system.description /= Void then
 				l_mls_prop.set_value (conf_system.description)
 			end
-			l_mls_prop.change_value_actions.extend (agent conf_system.set_description)
-			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+			l_mls_prop.change_value_actions.extend (agent conf_system.set_description ({READABLE_STRING_32}?))
+			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 
 				-- library target
@@ -1610,8 +1610,14 @@ feature {NONE} -- Implementation
 				l_dir_prop.set_description (conf_interface_names.external_location_description)
 				l_dir_prop.enable_text_editing
 				l_dir_prop.set_value (an_external.location)
-				l_dir_prop.change_value_actions.extend (agent an_external.set_location)
-				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+				l_dir_prop.change_value_actions.extend (agent (v: detachable READABLE_STRING_32; ian_external: CONF_EXTERNAL)
+							do
+								if v /= Void then
+									ian_external.set_location (v)
+								end
+							end(?, an_external)
+						)
+				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
 				properties.add_property (l_dir_prop)
 			elseif an_external.is_cflag or else an_external.is_linker_flag then
 					-- Value is a string.
@@ -1628,7 +1634,7 @@ feature {NONE} -- Implementation
 				l_file_prop.enable_text_editing
 				l_file_prop.set_value (an_external.location)
 				l_file_prop.change_value_actions.extend ( agent an_external.set_location)
-				l_file_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+				l_file_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
 				if an_external.is_resource then
 					l_file_prop.add_filters (text_files_filter, text_files_description)
 					l_file_prop.add_filters (resx_files_filter, resx_files_description)
@@ -1645,7 +1651,7 @@ feature {NONE} -- Implementation
 				l_mls_prop.set_value (an_external.description)
 			end
 			l_mls_prop.change_value_actions.extend (agent an_external.set_description)
-			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 
 				-- Condition.
@@ -1687,14 +1693,14 @@ feature {NONE} -- Implementation
 			create l_prop.make (conf_interface_names.task_command_name)
 			l_prop.set_description (conf_interface_names.task_command_description)
 			l_prop.set_value (a_task.command)
-			l_prop.validate_value_actions.extend (agent (a_name: STRING_32): BOOLEAN
+			l_prop.validate_value_actions.extend (agent (a_name: READABLE_STRING_32): BOOLEAN
 					require
 						a_name_not_void: a_name /= Void
 					do
 						Result := not a_name.is_empty
 					end)
 			l_prop.change_value_actions.extend (agent a_task.set_command)
-			l_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+			l_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_prop)
 
 				-- description
@@ -1705,18 +1711,18 @@ feature {NONE} -- Implementation
 				l_mls_prop.set_value (a_task.description)
 			end
 			l_mls_prop.change_value_actions.extend (agent a_task.set_description)
-			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 
 				-- working directory
 			create l_dir_prop.make (conf_interface_names.task_working_directory_name)
 			l_dir_prop.set_target (current_target)
 			l_dir_prop.set_description (conf_interface_names.task_working_directory_description)
-			if a_task.working_directory /= Void then
-				l_dir_prop.set_value (a_task.working_directory.original_path)
+			if attached a_task.working_directory as wd then
+				l_dir_prop.set_value (wd.original_path)
 			end
 			l_dir_prop.enable_text_editing
-			l_dir_prop.change_value_actions.extend (agent (a_dir: STRING_32; ia_task: CONF_ACTION)
+			l_dir_prop.change_value_actions.extend (agent (a_dir: detachable READABLE_STRING_32; ia_task: CONF_ACTION)
 				do
 					if a_dir = Void or else a_dir.is_empty then
 						ia_task.set_working_directory (Void)
@@ -1725,7 +1731,7 @@ feature {NONE} -- Implementation
 					end
 				end (?, a_task)
 			)
-			l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+			l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_dir_prop)
 
 				-- must succeed
@@ -1768,7 +1774,7 @@ feature {NONE} -- Configuration setting
 			variables: grid /= Void
 		do
 			if grid.has_selected_row then
-				if attached {TEXT_PROPERTY [STRING_GENERAL]} grid.selected_rows.first.item (1) as l_item then
+				if attached {TEXT_PROPERTY [READABLE_STRING_GENERAL]} grid.selected_rows.first.item (1) as l_item then
 					check
 						valid_value: l_item.value /= Void
 					end
@@ -1824,7 +1830,7 @@ feature {NONE} -- Configuration setting
 			variables: grid /= Void
 		do
 			if grid.has_selected_row then
-				if attached {TEXT_PROPERTY [STRING_GENERAL]} grid.selected_rows.first.item (1) as l_item then
+				if attached {TEXT_PROPERTY [READABLE_STRING_GENERAL]} grid.selected_rows.first.item (1) as l_item then
 					current_target.remove_mapping (l_item.text)
 				else
 					check expected_selected_row_item_type: False end
@@ -1833,7 +1839,7 @@ feature {NONE} -- Configuration setting
 			end
 		end
 
-	update_mapping_key (an_old_key: READABLE_STRING_GENERAL; a_new_key: STRING_32)
+	update_mapping_key (an_old_key: READABLE_STRING_GENERAL; a_new_key: READABLE_STRING_32)
 			-- Update key part of a mapping.
 		require
 			current_target: current_target /= Void
@@ -1846,7 +1852,7 @@ feature {NONE} -- Configuration setting
 			show_properties_target_mapping (current_target)
 		end
 
-	update_mapping_value (a_key: READABLE_STRING_GENERAL; a_value: STRING_32)
+	update_mapping_value (a_key: READABLE_STRING_GENERAL; a_value: READABLE_STRING_32)
 			-- Update value part of a mapping.
 		require
 			current_target: current_target /= Void
@@ -1861,7 +1867,7 @@ feature {NONE} -- Configuration setting
 
 feature {NONE} -- Validation and warning generation
 
-	check_library_target (a_target: STRING_32): BOOLEAN
+	check_library_target (a_target: READABLE_STRING_32): BOOLEAN
 			-- Is `a_target' a valid library target?
 		require
 			target_of_system: a_target /= Void and then not a_target.is_empty implies conf_system.targets.has (a_target)
@@ -1905,7 +1911,7 @@ invariant
 	selected_target_ok: selected_target /= Void and then not selected_target.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

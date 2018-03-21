@@ -40,13 +40,13 @@ feature -- Access
 	name: STRING
 			-- Name of Current formatter
 
-	header: STRING
+	header: READABLE_STRING_32
 			-- Name of Current formatter
 
-	temp_header: STRING
+	temp_header: READABLE_STRING_32
 			-- Name of Current formatter
 
-	tooltip: STRING_32
+	tooltip: READABLE_STRING_32
 			-- Name of Current formatter
 
 	pixmap_location: PATH
@@ -238,7 +238,7 @@ invariant
 	sorting_orders_attached: sorting_orders /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

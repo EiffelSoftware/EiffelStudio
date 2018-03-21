@@ -786,7 +786,7 @@ feature {NONE} -- Event handler
 		do
 			Result := extended_new_subrow (a_row)
 			if a_parent_class_i /= Void then
-				pix := pixel_buffer_from_class_i (a_parent_class_i)
+				pix := pixmap_from_class_i (a_parent_class_i)
 			end
 			add_tree_item_for_parent (Result, a_parent, a_parent_class_i, s, pix)
 		ensure
@@ -1094,7 +1094,7 @@ feature {NONE} -- Tree item factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

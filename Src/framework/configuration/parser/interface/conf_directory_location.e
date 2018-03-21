@@ -62,18 +62,21 @@ feature {CONF_ACCESS} -- Update stored in configuration file.
 			-- file =
 		require
 			a_path_not_void: a_path /= Void
+		local
+			s: like to_internal_format
 		do
-			original_path := to_internal_format (a_path)
-			if original_path.count = 0 then
-				original_path.append_character ('.')
+			s := to_internal_format (a_path)
+			if s.is_empty then
+				s.append_character ('.')
 			end
-			if original_path.item (original_path.count) /= '\' then
-				original_path.append_character ('\')
+			if s[s.count] /= '\' then
+				s.append_character ('\')
 			end
+			original_path := s
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

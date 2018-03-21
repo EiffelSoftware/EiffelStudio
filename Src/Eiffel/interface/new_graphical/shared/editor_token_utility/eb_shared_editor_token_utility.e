@@ -67,7 +67,7 @@ feature -- Editor token
 			result_attached: Result /= Void
 		end
 
-	editor_tokens_for_string (a_string: STRING_GENERAL): LIST [EDITOR_TOKEN]
+	editor_tokens_for_string (a_string: READABLE_STRING_GENERAL): LIST [EDITOR_TOKEN]
 			-- Editor token representation of `a_string'
 		require
 			a_string_attached: a_string /= Void
@@ -258,7 +258,7 @@ feature -- Editor token appearance
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -7,7 +7,7 @@ class
 	TEXT_EDITOR_DIALOG
 
 inherit
-	PROPERTY_DIALOG [STRING_32]
+	PROPERTY_DIALOG [READABLE_STRING_32]
 		redefine
 			create_interface_objects,
 			initialize,
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			element_container.extend (text_editor)
 
 			show_actions.extend (agent text_editor.set_focus)
-			data_change_actions.extend (agent text_editor.set_text ({STRING_32}?))
+			data_change_actions.extend (agent text_editor.set_text ({READABLE_STRING_32}?))
 		end
 
 feature {NONE} -- GUI elements
@@ -56,7 +56,7 @@ invariant
 	elements: is_initialized implies text_editor /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

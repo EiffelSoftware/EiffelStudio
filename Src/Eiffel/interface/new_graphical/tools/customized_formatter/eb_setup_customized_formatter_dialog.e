@@ -85,7 +85,7 @@ feature{NONE} -- Actions
 			refresh_grid_for_descriptor (a_descriptor)
 		end
 
-	on_data_change (a_new_data: STRING_32; a_setter: PROCEDURE [STRING]; a_refresher: PROCEDURE)
+	on_data_change (a_new_data: READABLE_STRING_32; a_setter: PROCEDURE [STRING]; a_refresher: PROCEDURE)
 			-- Action to be performed when `a_new_data' changes.
 			-- Invoke `a_setter' to set this new data.
 			-- After setting, invoke `a_referesh' to refresh Current dialog if `a_refresher' is not Void.
@@ -100,7 +100,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_data_32_change (a_new_data: STRING_32; a_setter: PROCEDURE [READABLE_STRING_32]; a_refresher: PROCEDURE)
+	on_data_32_change (a_new_data: READABLE_STRING_32; a_setter: PROCEDURE [READABLE_STRING_32]; a_refresher: PROCEDURE)
 			-- Action to be performed when `a_new_data' changes.
 			-- Invoke `a_setter' to set this new data.
 			-- After setting, invoke `a_referesh' to refresh Current dialog if `a_refresher' is not Void.
@@ -115,7 +115,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_data_general_change (a_new_data: STRING_32; a_setter: PROCEDURE [READABLE_STRING_GENERAL]; a_refresher: PROCEDURE)
+	on_data_general_change (a_new_data: READABLE_STRING_32; a_setter: PROCEDURE [READABLE_STRING_GENERAL]; a_refresher: PROCEDURE)
 			-- Action to be performed when `a_new_data' changes.
 			-- Invoke `a_setter' to set this new data.
 			-- After setting, invoke `a_referesh' to refresh Current dialog if `a_refresher' is not Void.
@@ -139,14 +139,14 @@ feature{NONE} -- Actions
 			a_descriptor.set_is_filter_enabled (a_filter)
 		end
 
-	on_scope_change  (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_scope: STRING_32)
+	on_scope_change  (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_scope: READABLE_STRING_32)
 			-- Action to be performed if formatter scope status changed for `a_descrptor' from `property_grid'
 		require
 			a_descriptor_attached: a_descriptor /= Void
 			a_scope_attached: a_scope /= Void
 		do
 			set_has_changed (True)
-			if a_scope.is_equal (interface_names.l_eiffelstudio) then
+			if a_scope.same_string (interface_names.l_eiffelstudio) then
 				a_descriptor.enable_global_scope
 			else
 				a_descriptor.enable_target_scope
@@ -621,7 +621,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

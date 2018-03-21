@@ -235,7 +235,7 @@ feature {NONE} -- Modification: optimization properties
 				l_string_prop.set_value (an_options.local_namespace)
 			end
 			l_string_prop.change_value_actions.extend (agent an_options.set_local_namespace)
-			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
 			if not a_il_generation then
 				l_string_prop.enable_readonly
 			end
@@ -609,7 +609,7 @@ feature {NONE} -- Modification
 				l_choice_prop.set_value (l_choice_prop.item_strings [option.index])
 			end
 			l_choice_prop.change_value_actions.put_front (
-				agent (o: CONF_VALUE_CHOICE; content: ARRAYED_LIST [STRING_32]; value: detachable READABLE_STRING_32)
+				agent (o: CONF_VALUE_CHOICE; content: ARRAYED_LIST [READABLE_STRING_32]; value: detachable READABLE_STRING_32)
 					local
 						i: INTEGER
 					do
@@ -652,7 +652,7 @@ feature {NONE} -- Modification
 			l_choice_prop.disable_text_editing
 			if inherited_capability /= Void then
 				l_choice_prop.set_refresh_action (
-					agent (content: ARRAYED_LIST [STRING_32]; i: CONF_ORDERED_CAPABILITY): STRING_32
+					agent (content: ARRAYED_LIST [READABLE_STRING_32]; i: CONF_ORDERED_CAPABILITY): READABLE_STRING_32
 						do
 							Result := content [i.root_index]
 						end
@@ -706,7 +706,7 @@ feature {NONE} -- Modification
 			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
 			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent l_choice_prop.redraw))
 			l_choice_prop.validate_value_actions.extend
-				(agent (o: CONF_ORDERED_CAPABILITY; content: ARRAYED_LIST [STRING_32]; value: detachable READABLE_STRING_32): BOOLEAN
+				(agent (o: CONF_ORDERED_CAPABILITY; content: ARRAYED_LIST [READABLE_STRING_32]; value: detachable READABLE_STRING_32): BOOLEAN
 					do
 						Result :=
 							attached value and then
@@ -824,7 +824,7 @@ feature {NONE} -- Refresh displayed data.
 			-- Last added choice property
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

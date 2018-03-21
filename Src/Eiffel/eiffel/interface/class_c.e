@@ -2043,13 +2043,13 @@ feature -- Convenience features
 	external_name: STRING
 			-- External name.
 		local
-			l_vis: EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: STRING_TABLE [STRING_32]]]
+			l_vis: TUPLE [class_renamed: READABLE_STRING_32; features: STRING_TABLE [READABLE_STRING_32]]
 			u: UTF_CONVERTER
 		do
 			l_vis := lace_class.visible
 			if l_vis /= Void then
 					-- Compile keeps its internal data in UTF-8.
-				Result := u.utf_32_string_to_utf_8_string_8 (l_vis.item.class_renamed)
+				Result := u.utf_32_string_to_utf_8_string_8 (l_vis.class_renamed)
 			else
 				Result := name
 			end
@@ -5252,7 +5252,7 @@ invariant
 	-- has_ast: has_ast
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

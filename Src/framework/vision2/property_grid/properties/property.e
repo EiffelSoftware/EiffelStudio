@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			-- Initialize
 		do
 			Precursor
-			pointer_button_press_actions.force_extend (agent activate)
+			activate_when_pointer_is_pressed
 		end
 
 feature  -- Access
@@ -180,6 +180,24 @@ feature -- Actions
 			end
 		end
 
+	activate_when_pointer_is_pressed
+		do
+			pointer_button_press_actions.extend (agent (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
+					do
+						activate
+					end
+				)
+		end
+
+	activate_when_pointer_is_double_pressed
+		do
+			pointer_double_press_actions.extend (agent (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
+					do
+						activate
+					end
+				)
+		end
+
 feature {NONE} -- Actions
 
 	show_inheritance_menu
@@ -220,7 +238,7 @@ feature {NONE} -- Contract
 			-- Default state.
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

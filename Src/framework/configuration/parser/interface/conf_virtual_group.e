@@ -16,24 +16,29 @@ inherit
 
 feature -- Access, stored in configuration file
 
-	renaming: detachable STRING_TABLE [STRING_32]
+	renaming: detachable STRING_TABLE [READABLE_STRING_32]
 			-- Mapping of renamed classes from the old name to the new name.
 
-	name_prefix: detachable STRING_32
+	name_prefix: detachable READABLE_STRING_32
 			-- An optional name prefix for this group.
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_name_prefix (a_name_prefix: like name_prefix)
 			-- Set `name_prefix' to `a_name_prefix'.
+		local
+			np: STRING_32
 		do
-			name_prefix := a_name_prefix
 			if a_name_prefix /= Void then
+				create np.make_from_string (a_name_prefix)
 					--| FIXME: check if this is expected to upper the argument.
-				a_name_prefix.to_upper
+				np.to_upper
+				name_prefix := np
+			else
+				name_prefix := Void
 			end
 		ensure
-			name_prefix_set: name_prefix = a_name_prefix
+			name_prefix_set: (create {STRING_EQUALITY_TESTER}).test (name_prefix, a_name_prefix)
 		end
 
 	set_renaming (a_renaming: like renaming)
@@ -44,13 +49,13 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			renaming_set: renaming = a_renaming
 		end
 
-	add_renaming (an_old_name: READABLE_STRING_GENERAL; a_new_name: STRING_32)
+	add_renaming (an_old_name: READABLE_STRING_GENERAL; a_new_name: READABLE_STRING_32)
 			-- Add a renaming.
 		require
 			an_old_name_ok: an_old_name /= Void and then not an_old_name.is_empty
-			an_old_name_upper: an_old_name.is_equal (an_old_name.as_upper)
+			an_old_name_upper: an_old_name.same_string (an_old_name.as_upper)
 			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
-			a_new_name_upper: a_new_name.is_equal (a_new_name.as_upper)
+			a_new_name_upper: a_new_name.same_string (a_new_name.as_upper)
 		local
 			l_renaming: like renaming
 		do
@@ -66,10 +71,10 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		end
 
 invariant
-	name_prefix_upper: attached name_prefix as l_name_prefix implies l_name_prefix.is_equal (l_name_prefix.as_upper)
+	name_prefix_upper: attached name_prefix as l_name_prefix implies l_name_prefix.same_string (l_name_prefix.as_upper)
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

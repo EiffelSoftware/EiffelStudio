@@ -442,10 +442,20 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="available_match_types">
+		<xs:restriction base = "xs:string">
+			  <xs:enumeration value = "case-sensitive"/>
+			  <xs:enumeration value = "case-insensitive"/>
+			  <xs:enumeration value = "wildcard"/>
+			  <xs:enumeration value = "regexp"/>
+	    </xs:restriction>
+	</xs:simpleType>
+
 	<xs:complexType name="custom">
 		<xs:attribute name="name" type="xs:string"/>
 		<xs:attribute name="value" type="xs:string" use="optional"/>
 		<xs:attribute name="excluded_value" type="xs:string" use="optional"/>
+		<xs:attribute name="match" type="available_match_types" use="optional"/>
 	</xs:complexType>
 
 	<xs:complexType name="external_location">

@@ -58,7 +58,7 @@ feature -- Access
 	version_count: INTEGER
 			-- Number of versions for caller/callee
 
-	reference_type_name: STRING_GENERAL
+	reference_type_name: READABLE_STRING_GENERAL
 			-- Name of reference type, such as caller, callee.
 		do
 			Result := reference_type_name_internal
@@ -573,7 +573,7 @@ invariant
 	row_table_attached: row_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

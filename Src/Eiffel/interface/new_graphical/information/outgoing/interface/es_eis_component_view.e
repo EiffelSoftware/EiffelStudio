@@ -553,7 +553,7 @@ feature {NONE} -- Item callbacks
 		do
 		end
 
-	on_source_changed (a_value: STRING_32; a_item: EV_GRID_ITEM)
+	on_source_changed (a_value: READABLE_STRING_32; a_item: EV_GRID_ITEM)
 			-- On source changed
 		do
 		end
@@ -1264,7 +1264,7 @@ invariant
 	eis_grid_not_void: eis_grid /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

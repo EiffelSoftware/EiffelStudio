@@ -55,34 +55,36 @@ feature -- Helper
 			a_name_not_void: a_name /= Void
 			a_group_not_void: a_group /= Void
 		local
-			l_cluster: CONF_CLUSTER
 			l_lib: CONF_LIBRARY
-			l_name: STRING_32
+			l_name: READABLE_STRING_32
 			l_sep: BOOLEAN
 			l_target: CONF_TARGET
 			l_libs: ARRAYED_LIST [CONF_LIBRARY]
 		do
 			l_sep := not a_name.is_empty
 			if a_group.is_cluster then
-				l_cluster ?= a_group
-				if l_sep then
-					l_name := l_cluster.name + sep + a_name
-				else
-					l_name := l_cluster.name
-				end
-				if l_cluster.parent /= Void then
-					Result := group_name_presentation (sep, l_name, l_cluster.parent)
-				else
-					l_target := a_group.target
-					l_libs := l_target.system.used_in_libraries
-					if l_libs /= Void and then not l_libs.is_empty then
-						l_lib := l_libs.first
-					end
-					if l_lib /= Void then
-						Result := group_name_presentation (sep, l_name, l_lib)
+				if attached {CONF_CLUSTER} a_group as l_cluster then
+					if l_sep then
+						l_name := l_cluster.name + sep + a_name
 					else
-						Result := l_name
+						l_name := l_cluster.name
 					end
+					if attached l_cluster.parent as l_cluster_parent then
+						Result := group_name_presentation (sep, l_name, l_cluster_parent)
+					else
+						l_target := a_group.target
+						l_libs := l_target.system.used_in_libraries
+						if l_libs /= Void and then not l_libs.is_empty then
+							l_lib := l_libs.first
+						end
+						if l_lib /= Void then
+							Result := group_name_presentation (sep, l_name, l_lib)
+						else
+							Result := l_name
+						end
+					end
+				else
+					check is_cluster: False end
 				end
 			elseif a_group.is_library or a_group.is_assembly or a_group.is_physical_assembly then
 				l_target := a_group.target
@@ -105,7 +107,7 @@ feature -- Helper
 			group_name_presentation_not_void: Result /= Void
 		end
 
-	path_representation (sep: STRING_32; a_name: STRING_32; a_group: CONF_GROUP; dotdot_path: BOOLEAN): STRING_32
+	path_representation (sep: READABLE_STRING_32; a_name: READABLE_STRING_32; a_group: CONF_GROUP; dotdot_path: BOOLEAN): READABLE_STRING_32
 			-- Path representation
 			-- If dotdot, we do ../../ instead of name/name/
 		require
@@ -114,19 +116,18 @@ feature -- Helper
 			a_group_not_void: a_group /= Void
 			dotdot_implies_a_name_dotdot: dotdot_path implies (a_name.is_empty or a_name.has_substring (".."))
 		local
-			l_cluster: CONF_CLUSTER
-			l_name: STRING_32
+			l_name: READABLE_STRING_32
 		do
 			if a_group.is_cluster then
-				l_cluster ?= a_group
-				if l_cluster.parent /= Void then
+				if attached {CONF_CLUSTER} a_group as l_cluster and then attached l_cluster.parent as l_cluster_parent then
 					if dotdot_path then
 						l_name := once ".."
 					else
-						l_name := l_cluster.parent.name
+						l_name := l_cluster_parent.name
 					end
-					Result := path_representation (sep, l_name, l_cluster.parent, dotdot_path) + sep + a_name
+					Result := path_representation (sep, l_name, l_cluster_parent, dotdot_path) + sep + a_name
 				else
+					check is_cluster: attached {CONF_CLUSTER} a_group end
 					Result := a_name
 				end
 			elseif a_group.is_library or a_group.is_assembly or a_group.is_physical_assembly then
@@ -141,36 +142,40 @@ feature -- Helper
 		require
 			a_group_not_void: a_group /= Void
 		local
-			l_cluster: CONF_CLUSTER
-			l_lib: CONF_LIBRARY
 			l_clusters: STRING_TABLE [CONF_CLUSTER]
 			l_clu: ARRAYED_LIST [CONF_CLUSTER]
 		do
 			create Result.make (10)
 			if a_group.classes_set then
 				if a_group.is_cluster then
-					l_cluster ?= a_group
-					l_clu := l_cluster.children
-					if l_clu /= Void then
-						from
-							l_clu.start
-						until
-							l_clu.after
-						loop
-							Result.extend (l_clu.item)
-							l_clu.forth
+					if attached {CONF_CLUSTER} a_group as l_cluster then
+						l_clu := l_cluster.children
+						if l_clu /= Void then
+							from
+								l_clu.start
+							until
+								l_clu.after
+							loop
+								Result.extend (l_clu.item)
+								l_clu.forth
+							end
 						end
+					else
+						check is_cluster: False end
 					end
 				elseif a_group.is_library then
-					l_lib ?= a_group
-					l_clusters := l_lib.library_target.clusters
-					from
-						l_clusters.start
-					until
-						l_clusters.after
-					loop
-						Result.extend (l_clusters.item_for_iteration)
-						l_clusters.forth
+					if attached {CONF_LIBRARY} a_group as l_lib then
+						l_clusters := l_lib.library_target.clusters
+						from
+							l_clusters.start
+						until
+							l_clusters.after
+						loop
+							Result.extend (l_clusters.item_for_iteration)
+							l_clusters.forth
+						end
+					else
+						check is_library: False end
 					end
 				end
 			end
@@ -184,7 +189,6 @@ feature -- Helper
 			-- Top level clusters in the system
 		local
 			l_groups: ARRAYED_LIST [CONF_GROUP]
-			l_cluster: CONF_CLUSTER
 		do
 			create Result.make (10)
 			l_groups := eiffel_universe.groups
@@ -194,8 +198,10 @@ feature -- Helper
 				l_groups.after
 			loop
 				if l_groups.item.is_cluster then
-					l_cluster ?= l_groups.item
-					if l_cluster.parent /= Void then
+					if
+						attached {CONF_CLUSTER} l_groups.item as l_cluster and then
+						l_cluster.parent /= Void
+					then
 						Result.extend (l_cluster)
 					end
 				else
@@ -220,7 +226,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

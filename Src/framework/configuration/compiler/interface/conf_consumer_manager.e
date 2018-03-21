@@ -277,8 +277,8 @@ feature {NONE} -- Implementation
 			a_assembly_physical_assembly_set: a_assembly.physical_assembly /= Void
 		local
 			l_classes, l_new_classes: detachable STRING_TABLE [CONF_CLASS]
-			l_renamings: detachable STRING_TABLE [STRING_32]
-			l_prefix: detachable STRING_32
+			l_renamings: detachable STRING_TABLE [READABLE_STRING_32]
+			l_prefix: detachable READABLE_STRING_32
 			l_name: STRING_32
 		do
 			l_classes := a_assembly.physical_assembly.classes
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation
 						l_classes.after
 					loop
 						if attached {CONF_CLASS_ASSEMBLY} l_classes.item_for_iteration as l_class then
-							l_name := l_class.name.twin
+							create l_name.make_from_string (l_class.name)
 							if
 								l_renamings /= Void and then
 								attached l_renamings.item (l_name) as l_found_item
@@ -896,7 +896,7 @@ invariant
 	consume_assembly_observer_not_void: consume_assembly_observer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -7,7 +7,7 @@ class
 	LIST_PROPERTY
 
 inherit
-	DIALOG_PROPERTY [LIST [STRING_32]]
+	DIALOG_PROPERTY [LIST [READABLE_STRING_32]]
 		redefine
 			displayed_value,
 			dialog
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 			-- Dialog to change values
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

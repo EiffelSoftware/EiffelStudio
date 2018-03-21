@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 			loop
 				create li.make_with_text (platform_names.item_for_iteration)
 				platforms.extend (li)
-				if data.platform /= Void and then data.platform.item.value.has (platform_names.key_for_iteration) then
+				if data.platform /= Void and then data.platform.value.has (platform_names.key_for_iteration) then
 					platforms.check_item (li)
 				end
 				platform_names.forth
@@ -118,7 +118,7 @@ feature {NONE} -- Initialization
 			platforms.set_minimum_size (105, 75)
 			create exclude_platforms.make_with_text (conf_interface_names.dial_cond_platforms_exclude)
 			vb.extend (exclude_platforms)
-			if data.platform /= Void and then data.platform.item.invert then
+			if data.platform /= Void and then data.platform.invert then
 				exclude_platforms.enable_select
 			end
 
@@ -136,7 +136,7 @@ feature {NONE} -- Initialization
 			loop
 				create li.make_with_text (conf_interface_names.dial_cond_concurrency_value (concurrency_names.item_for_iteration))
 				concurrency.extend (li)
-				if data.concurrency /= Void and then data.concurrency.item.value.has (concurrency_names.key_for_iteration) then
+				if data.concurrency /= Void and then data.concurrency.value.has (concurrency_names.key_for_iteration) then
 					concurrency.check_item (li)
 				end
 				concurrency_names.forth
@@ -145,7 +145,7 @@ feature {NONE} -- Initialization
 			concurrency.set_minimum_size (105, 75)
 			create exclude_concurrency.make_with_text (conf_interface_names.dial_cond_concurrency_exclude)
 			vb.extend (exclude_concurrency)
-			if data.concurrency /= Void and then data.concurrency.item.invert then
+			if data.concurrency /= Void and then data.concurrency.invert then
 				exclude_concurrency.enable_select
 			end
 
@@ -168,14 +168,14 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (builds)
 			if data.build /= Void then
 				build_enabled.enable_select
-				if data.build.item.invert then
-					if data.build.item.value.first = build_workbench then
+				if data.build.invert then
+					if data.build.value.first = build_workbench then
 						builds.last.enable_select
 					else
 						builds.first.enable_select
 					end
 				else
-					if data.build.item.value.first = build_workbench then
+					if data.build.value.first = build_workbench then
 						builds.first.enable_select
 					else
 						builds.last.enable_select
@@ -545,12 +545,14 @@ feature {NONE} -- Actions
 			a_old_key_ok: a_old_key /= Void and then data.custom /= Void and then data.custom.has (a_old_key)
 			a_old_value_ok: a_old_value /= Void and then attached data.custom.item (a_old_key) as l_item and then l_item.has (a_old_value)
 		local
-			l_invert: BOOLEAN
+			d: CONF_CONDITION_CUSTOM_ATTRIBUTES
 		do
 			if not a_new_key.is_empty and then not a_new_key.same_string (a_old_key) then
-				l_invert := data.exclusion_value (a_old_key, a_old_value)
+				create d -- FIXME
+				d.inverted := data.exclusion_value (a_old_key, a_old_value)
+--				l_is_regexp := data.is_regexp_value (a_old_key, a_old_value)
 				data.remove_custom (a_old_key, a_old_value)
-				data.add_custom (a_new_key, a_old_value, l_invert)
+				data.add_custom (a_new_key, a_old_value, d)
 			end
 			fill_custom
 		end
@@ -560,10 +562,14 @@ feature {NONE} -- Actions
 		require
 			a_key_ok: a_key /= Void and then data.custom /= Void and then data.custom.has (a_key)
 			a_value_ok: a_value /= Void and then attached data.custom.item (a_key) as l_item and then l_item.has (a_value)
-			a_invert_value_ok: a_invert_value /= Void and then (a_invert_value.same_string ("=") or a_invert_value.same_string ("/="))
+			a_invert_value_ok: a_invert_value /= Void and then (a_invert_value.starts_with ("=") or a_invert_value.starts_with ("/="))
+		local
+			d: CONF_CONDITION_CUSTOM_ATTRIBUTES
 		do
 			data.remove_custom (a_key, a_value)
-			data.add_custom (a_key, a_value, a_invert_value.same_string ("/="))
+			create d -- FIXME
+			d.inverted := a_invert_value.starts_with ("/=")
+			data.add_custom (a_key, a_value, d)
 		end
 
 	update_value (a_value: READABLE_STRING_GENERAL; a_old_value: READABLE_STRING_GENERAL; a_key: READABLE_STRING_GENERAL)
@@ -574,11 +580,17 @@ feature {NONE} -- Actions
 			a_value_not_void: a_value /= Void
 		local
 			l_invert: BOOLEAN
+			l_is_regexp: BOOLEAN
+			d: CONF_CONDITION_CUSTOM_ATTRIBUTES
 		do
 			if not a_value.is_empty then
 				l_invert := data.exclusion_value (a_key, a_old_value)
+				l_is_regexp := data.is_regexp_value (a_key, a_old_value)
 				data.remove_custom (a_key, a_old_value)
-				data.add_custom (a_key, a_value, l_invert)
+				create d -- FIXME
+				d.inverted := l_invert
+				d.is_regular_expression := l_is_regexp
+				data.add_custom (a_key, a_value, d)
 					-- We need to update closed arguments of updating routines.
 				fill_custom
 			end
@@ -587,7 +599,7 @@ feature {NONE} -- Actions
 	add_custom
 			-- Add a new custom condition.
 		do
-			data.add_custom (conf_interface_names.dial_cond_new_custom, Conf_interface_names.dial_cond_new_custom_value, False)
+			data.add_custom (conf_interface_names.dial_cond_new_custom, Conf_interface_names.dial_cond_new_custom_value, create {CONF_CONDITION_CUSTOM_ATTRIBUTES})
 			fill_custom
 		end
 
@@ -599,8 +611,8 @@ feature {NONE} -- Actions
 			if custom.has_selected_row then
 				l_row := custom.selected_rows.first
 				if
-					attached {TEXT_PROPERTY [STRING_GENERAL]} l_row.item (1) as l_key and then
-					attached {TEXT_PROPERTY [STRING_GENERAL]} l_row.item (3) as l_value
+					attached {TEXT_PROPERTY [READABLE_STRING_GENERAL]} l_row.item (1) as l_key and then
+					attached {TEXT_PROPERTY [READABLE_STRING_GENERAL]} l_row.item (3) as l_value
 				then
 					data.remove_custom (l_key.value, l_value.value)
 				end
@@ -623,22 +635,22 @@ feature {NONE} -- Implementation
 	fill_compiler_version
 			-- Fill fields with the constraints for the compiler version.
 		local
-			l_version: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
+			l_version: TUPLE [min: CONF_VERSION; max: CONF_VERSION]
 		do
 			l_version := data.version.item (v_compiler)
 			if l_version = Void then
 				version_min_compiler.set_text ("")
 				version_max_compiler.set_text ("")
 			else
-				if l_version.item.min = Void then
+				if l_version.min = Void then
 					version_min_compiler.set_text ("")
 				else
-					version_min_compiler.set_text (l_version.item.min.version)
+					version_min_compiler.set_text (l_version.min.version)
 				end
-				if l_version.item.max = Void then
+				if l_version.max = Void then
 					version_max_compiler.set_text ("")
 				else
-					version_max_compiler.set_text (l_version.item.max.version)
+					version_max_compiler.set_text (l_version.max.version)
 				end
 			end
 		end
@@ -646,22 +658,22 @@ feature {NONE} -- Implementation
 	fill_msil_clr_version
 			-- Fill fields with the constraints for the msil clr version.
 		local
-			l_version: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
+			l_version: TUPLE [min: CONF_VERSION; max: CONF_VERSION]
 		do
 			l_version := data.version.item (v_msil_clr)
 			if l_version = Void then
 				version_min_msil_clr.set_text ("")
 				version_max_msil_clr.set_text ("")
 			else
-				if l_version.item.min = Void then
+				if l_version.min = Void then
 					version_min_msil_clr.set_text ("")
 				else
-					version_min_msil_clr.set_text (l_version.item.min.version)
+					version_min_msil_clr.set_text (l_version.min.version)
 				end
-				if l_version.item.max = Void then
+				if l_version.max = Void then
 					version_max_msil_clr.set_text ("")
 				else
-					version_max_msil_clr.set_text (l_version.item.max.version)
+					version_max_msil_clr.set_text (l_version.max.version)
 				end
 			end
 		end
@@ -674,7 +686,8 @@ feature {NONE} -- Implementation
 			l_choice: STRING_CHOICE_PROPERTY
 			i: INTEGER
 			l_key: READABLE_STRING_GENERAL
-			l_values: STRING_TABLE [BOOLEAN]
+			l_values: STRING_TABLE [CONF_CONDITION_CUSTOM_ATTRIBUTES]
+			l_custom_item: CONF_CONDITION_CUSTOM_ATTRIBUTES
 		do
 			custom.wipe_out
 			custom.enable_last_column_use_all_width
@@ -700,29 +713,38 @@ feature {NONE} -- Implementation
 					loop
 						create l_text.make ("")
 						l_text.pointer_button_press_actions.wipe_out
-						l_text.pointer_double_press_actions.extend (agent (ia_x, ia_y, ia_button: INTEGER; ia_x_tilt, ia_y_tilt, ia_pressure: DOUBLE; ia_screen_x, ia_screen_y: INTEGER; ia_text: STRING_PROPERTY)
-								do
-									ia_text.activate
-								end(?,?,?,?,?,?,?,?,l_text)
-							)
+						l_text.activate_when_pointer_is_double_pressed
 						l_text.set_value (l_key)
 						l_text.change_value_actions.extend (agent update_variable ({like {STRING_PROPERTY}.value} ?, l_key, l_values.key_for_iteration))
 						custom.set_item (1, i, l_text)
-						create l_choice.make_with_choices ("", create {ARRAYED_LIST [READABLE_STRING_32]}.make_from_array ({ARRAY [READABLE_STRING_32]} <<"=", "/=">>))
-						if l_values.item_for_iteration then
-							l_choice.set_value ("/=")
+						create l_choice.make_with_choices ("", create {ARRAYED_LIST [READABLE_STRING_32]}.make_from_array ({ARRAY [READABLE_STRING_32]} <<"=", "/=", "caseless-match", "caseless-mismatch", "regexp-match", "regexp-mismatch", "wildcard-match", "wildcard-mismatch">>))
+						l_custom_item := l_values.item_for_iteration
+						if l_custom_item.inverted then
+							if l_custom_item.is_regular_expression then
+								l_choice.set_value ("regexp-mismatch")
+							elseif l_custom_item.is_wildcard then
+								l_choice.set_value ("wildcard-mismatch")
+							elseif l_custom_item.is_case_insensitive then
+								l_choice.set_value ("caseless-mismatch")
+							else
+								l_choice.set_value ("/=")
+							end
 						else
-							l_choice.set_value ("=")
+							if l_custom_item.is_regular_expression then
+								l_choice.set_value ("regexp-match")
+							elseif l_custom_item.is_wildcard then
+								l_choice.set_value ("wildcard-match")
+							elseif l_custom_item.is_case_insensitive then
+								l_choice.set_value ("caseless-match")
+							else
+								l_choice.set_value ("=")
+							end
 						end
 						l_choice.change_value_actions.extend (agent update_invert ({like {STRING_CHOICE_PROPERTY}.value} ?, l_values.key_for_iteration, l_key))
 						custom.set_item (2, i, l_choice)
 						create l_text.make ("")
 						l_text.pointer_button_press_actions.wipe_out
-						l_text.pointer_double_press_actions.extend (agent (ia_x, ia_y, ia_button: INTEGER; ia_x_tilt, ia_y_tilt, ia_pressure: DOUBLE; ia_screen_x, ia_screen_y: INTEGER; ia_text: STRING_PROPERTY)
-										do
-											ia_text.activate
-										end(?,?,?,?,?,?,?,?,l_text)
-									)
+						l_text.activate_when_pointer_is_double_pressed
 						l_text.set_value (l_values.key_for_iteration)
 						l_text.change_value_actions.extend (agent update_value ({like {STRING_PROPERTY}.value} ?, l_values.key_for_iteration , l_key))
 						custom.set_item (3, i, l_text)
@@ -734,7 +756,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	boolean_list: ARRAY [STRING_GENERAL]
+	boolean_list: ARRAY [READABLE_STRING_GENERAL]
 			-- Array with boolean names
 		do
 			Result := <<conf_interface_names.boolean_true, conf_interface_names.boolean_false>>
@@ -743,7 +765,7 @@ feature {NONE} -- Implementation
 			Result_has_two_value: Result @ 1 /= Void and Result @ 2 /= Void
 		end
 
-	boolean_value_from_name (a_string: STRING_GENERAL): BOOLEAN
+	boolean_value_from_name (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Boolean value from translated string.
 		require
 			a_string_not_void: a_string /= Void

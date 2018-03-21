@@ -55,21 +55,21 @@ feature{NONE} -- Node processors
 			-- Action to be performed when start tag of "tooltip" finishes.
 		do
 			check not formatters.is_empty end
-			content_receiver.extend (agent (formatters.last).set_tooltip ({STRING_32}?))
+			content_receiver.extend (agent (formatters.last).set_tooltip ({STRING_32}?)) -- Constraint to STRING_32 as content_receiver.content is a STRING_32.
 		end
 
 	on_header_start
 			-- Action to be performed when start tag of "header" finishes.
 		do
 			check not formatters.is_empty end
-			content_receiver.extend (agent (formatters.last).set_header ({STRING_32}?))
+			content_receiver.extend (agent (formatters.last).set_header ({STRING_32}?)) -- Constraint to STRING_32 as content_receiver.content is a STRING_32.
 		end
 
 	on_temp_header_start
 			-- Action to be performed when start tag of "temp_header" finishes.
 		do
 			check not formatters.is_empty end
-			content_receiver.extend (agent (formatters.last).set_temp_header ({STRING_32}?))
+			content_receiver.extend (agent (formatters.last).set_temp_header ({STRING_32}?)) -- Constraint to STRING_32 as content_receiver.content is a STRING_32.
 		end
 
 	on_pixmap_start
@@ -291,7 +291,7 @@ invariant
 	tool_receiver_attached: tool_receiver /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

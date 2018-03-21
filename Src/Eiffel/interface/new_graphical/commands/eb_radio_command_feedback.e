@@ -41,7 +41,7 @@ feature -- Status setting
 			if
 				combo /= Void and then
 				(combo.text.is_empty or else
-				not combo.text.is_equal(capital_command_name))
+				not combo.text.same_string_general (capital_command_name))
 			then
 				combo.change_actions.block
 				combo.set_text (capital_command_name)
@@ -50,12 +50,12 @@ feature -- Status setting
 		ensure
 			button_selected: not safety_flag and button /= Void implies button.is_selected
 			menu_selected: not safety_flag and menu_item /= Void implies menu_item.is_selected
-			combo_updated: not safety_flag and combo /= Void implies combo.text.is_equal (capital_command_name)
+			combo_updated: not safety_flag and combo /= Void implies combo.text.same_string_general (capital_command_name)
 		end
 
 feature -- Interface
 
-	command_name: STRING_GENERAL
+	command_name: READABLE_STRING_GENERAL
 			-- Name of current command throughout the interface (in lower case).
 		deferred
 		ensure
@@ -63,12 +63,12 @@ feature -- Interface
 			lower_case: is_lower_case (Result)
 		end
 
-	capital_command_name: STRING_GENERAL
+	capital_command_name: READABLE_STRING_GENERAL
 			-- Name of current command throughout the interface (in lower case, but the first letter).
 		deferred
 		end
 
-	menu_name: STRING_GENERAL
+	menu_name: READABLE_STRING_GENERAL
 			-- String representation in the associated menu.
 		deferred
 		ensure
@@ -101,13 +101,13 @@ feature -- Access
 			elseif menu_item /= Void then
 				Result := menu_item.is_selected
 			elseif combo /= Void then
-				Result := combo.text.is_equal (capital_command_name)
+				Result := combo.text.same_string_general (capital_command_name)
 			end
 		end
 
 feature -- Implementation
 
-	valid_string (str: STRING_GENERAL): BOOLEAN
+	valid_string (str: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `str' neither Void nor empty
 			-- It used to be nor filled with blanks with STRING_8
 			--| Cannot be in a non exported part because post conditions use it.
@@ -115,7 +115,7 @@ feature -- Implementation
 			Result := str /= Void and then not str.is_empty
 		end
 
-	is_lower_case (str: STRING_GENERAL): BOOLEAN
+	is_lower_case (str: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `str' lower case?
 			--| Cannot be in a non exported part because post conditions use it.
 		do
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			-- Are we modifying the select status? (to prevent stack overflows)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -162,22 +162,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_RADIO_COMMAND_FEEDBACK

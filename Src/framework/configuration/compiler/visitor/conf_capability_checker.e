@@ -336,7 +336,7 @@ feature {NONE} -- Traversal
 					end
 				until
 					Result = {CONF_TARGET_OPTION}.concurrency_index_thread or else
-					across cs as c some attached c.item.concurrency as s implies (s.item.value.has (value) xor s.item.invert) end
+					across cs as ic some attached ic.item.concurrency as s implies (s.value.has (value) xor s.invert) end
 				loop
 						-- Move to the smaller capability.
 					inspect Result
@@ -354,7 +354,7 @@ feature {NONE} -- Traversal
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

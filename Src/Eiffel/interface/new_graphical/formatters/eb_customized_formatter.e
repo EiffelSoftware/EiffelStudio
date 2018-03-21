@@ -40,15 +40,19 @@ feature{NONE} -- Initialization
 
 	old_make (a_manager: like manager)
 			-- Create a formatter associated with `a_manager'.
+		local
+			s: STRING_32
 		do
 			Precursor (a_manager)
-			if tooltip /= Void and then not tooltip.is_empty then
-				capital_command_name.append ("%N")
-				capital_command_name.append (tooltip)
+			if attached tooltip as tt and then not tt.is_whitespace then
+				create s.make_from_string_general (capital_command_name)
+				s.append ("%N")
+				s.append (tt)
+				set_capital_command_name (s)
 			end
 		end
 
-	make (a_manager: like manager; a_cmd_name: STRING_GENERAL; a_header: like header; a_temp_header: like temp_header; a_menu_name: like menu_name; a_metric: like metric; a_viewer: like viewer; a_icon_location: like icon_location; a_tooltip: like tooltip)
+	make (a_manager: like manager; a_cmd_name: READABLE_STRING_GENERAL; a_header: like header; a_temp_header: like temp_header; a_menu_name: like menu_name; a_metric: like metric; a_viewer: like viewer; a_icon_location: like icon_location; a_tooltip: like tooltip)
 			-- Initialize Current.
 		require
 			a_manager_attached: a_manager /= Void
@@ -77,7 +81,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	capital_command_name: STRING_GENERAL
+	capital_command_name: READABLE_STRING_GENERAL
 			-- Name of current command throughout the interface (in lower case).
 		do
 			Result := command_name_internal
@@ -93,10 +97,10 @@ feature -- Access
 			end
 		end
 
-	tooltip: STRING_32
+	tooltip: READABLE_STRING_32
 			-- Tooltip
 
-	header: STRING_GENERAL
+	header: READABLE_STRING_GENERAL
 			-- Text displayed in the ouput_line when current formatter is displayed.
 		local
 			l_header: STRING_32
@@ -111,14 +115,13 @@ feature -- Access
 			end
 		end
 
-	temp_header: STRING_GENERAL
+	temp_header: READABLE_STRING_GENERAL
 			-- Text displayed in the ouput_line when current formatter is working.
 		local
 			l_temp_header: STRING_32
 		do
 			if stone /= Void then
-				l_temp_header := temp_header_internal.as_string_32
-				check l_temp_header /= Void end
+				create l_temp_header.make_from_string_general (temp_header_internal)
 				l_temp_header.replace_substring_all (placeholder, name_of_stone (stone))
 				Result := l_temp_header
 			else
@@ -133,7 +136,7 @@ feature -- Access
 			Result := "cus"
 		end
 
-	menu_name: STRING_GENERAL
+	menu_name: READABLE_STRING_GENERAL
 			-- String representation in the associated menu.
 		do
 			Result := menu_name_internal.twin
@@ -146,9 +149,7 @@ feature -- Access
 				if not is_pixmap_loaded then
 					load_pixmap
 				end
-				create symbol_internal.make (1, 2)
-				symbol_internal.put (pixmap, 1)
-				symbol_internal.put (pixmap, 2)
+				create symbol_internal.make_filled (pixmap, 1, 2)
 			end
 			Result := symbol_internal
 		end
@@ -178,11 +179,14 @@ feature -- Access
 	valid_stone_function: FUNCTION [STONE, BOOLEAN]
 			-- Function to check if given stone is suitable for Current formatter
 
-	name: STRING_GENERAL
+	name: READABLE_STRING_GENERAL
 			-- Name of Current formatter
+		local
+			s: STRING_32
 		do
-			Result := ("custom_").as_string_32
-			Result.append (command_name)
+			create s.make_from_string_general ("custom_")
+			s.append_string_general (command_name)
+			Result := s
 		end
 
 	viewer: STRING
@@ -460,6 +464,14 @@ feature -- Setting
 			end
 		end
 
+	set_capital_command_name (s: READABLE_STRING_GENERAL)
+			-- Set `capital_command_name` to `s`.
+		do
+			command_name_internal := s
+		ensure
+			capital_command_name.same_string (s)
+		end
+
 feature{NONE} -- Implementation/Data
 
 	command_name_internal: like command_name
@@ -477,10 +489,10 @@ feature{NONE} -- Implementation/Data
 	pixmap: EV_PIXMAP
 			-- Customized pixmap for Current formatter
 
-	placeholder: STRING_GENERAL
+	placeholder: STRING_32
 			-- Placeholder for header/temp_header replacement.
 		do
-			create {STRING_32} Result.make_from_string ("$target")
+			create Result.make_from_string_general ("$target")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -598,7 +610,7 @@ invariant
 	menu_name_internal_attached: menu_name_internal /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

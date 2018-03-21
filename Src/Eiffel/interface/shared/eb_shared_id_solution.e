@@ -15,9 +15,9 @@ inherit
 
 feature -- Access names
 
-	last_target_uuid: STRING_32
-	last_target_name: STRING_32
-	last_group_name: STRING_32
+	last_target_uuid: READABLE_STRING_32
+	last_target_name: READABLE_STRING_32
+	last_group_name: READABLE_STRING_32
 	last_folder_path: STRING_32
 	last_class_name: STRING_32
 	last_feature_name: STRING_32
@@ -797,7 +797,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

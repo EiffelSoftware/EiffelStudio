@@ -15,6 +15,9 @@ note
 deferred class
 	SSL_AEAD_CIPHER_CONTEXT
 
+inherit
+	SSL_CIPHER_CONTEXT
+
 feature -- Aditional data
 
 	authenticate_additional_data_hex_string (a_data: READABLE_STRING_8)

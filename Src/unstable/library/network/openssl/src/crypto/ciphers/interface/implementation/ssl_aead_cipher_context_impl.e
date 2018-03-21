@@ -7,10 +7,10 @@ class
 	SSL_AEAD_CIPHER_CONTEXT_IMPL
 
 inherit
-
-	SSL_CIPHER_CONTEXT
 	SSL_AEAD_CIPHER_CONTEXT
+
 	SSL_AEAD_DECRYPTION_CONTEXT
+	
 	SSL_SHARED_EXCEPTIONS
 
 create
@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 			ctx_setted: ctx = a_ctx
 			updated_setted: updated = False
 		end
-
 
 feature {NONE} -- Implementation
 

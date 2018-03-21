@@ -6,7 +6,6 @@ note
 class
 	SSL_SHARED_EXCEPTIONS
 
-
 feature -- Exception
 
 	raise_exception (a_description: STRING_8)

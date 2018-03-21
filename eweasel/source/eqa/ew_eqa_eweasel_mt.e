@@ -1,9 +1,8 @@
-note
+﻿note
 	description: "Summary description for {EWEASEL_63}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	keywords: "Eiffel test"
 
 class
 	EW_EQA_EWEASEL_MT
@@ -20,25 +19,21 @@ feature {NONE} -- Initialization
 
 	make_empty
 			-- Creation method
-		local
-			l_factory: EW_EQA_TEST_FACTORY
 		do
-			create {ARRAYED_LIST [STRING]} test_catalog_names.make (5)
-
-			create l_factory
-			environment := l_factory.environment
+			create {ARRAYED_LIST [like test_catalog_names.item]} test_catalog_names.make (5)
+			environment := (create {EW_EQA_TEST_FACTORY}).environment
 			create test_suite_options.make
 			set_output (create {EW_EWEASEL_OUTPUT_CONTROL}.make (io))
 		end
 
 feature -- Command to replace parse arguments
 
-	define (a_var, a_val: STRING)
+	define (a_var, a_val: READABLE_STRING_32)
 			-- Define a environment variable
 		require
 			not_void: a_val /= Void and a_var /= Void
 		do
-			environment.define (a_var, a_val);
+			environment.define (a_var, a_val)
 		end
 
 	define_file (a_var: STRING; a_path: ARRAY [STRING])
@@ -47,33 +42,20 @@ feature -- Command to replace parse arguments
 			not_void: a_var /= Void
 			not_void: a_path /= Void
 		local
-			l_item: STRING
-			l_index, l_count: INTEGER
-			l_file_name: FILE_NAME
 			l_factory: EW_EQA_TEST_FACTORY
-			l_subsituted: STRING
+			p: PATH
 		do
-			from
-				create l_factory
-				l_count := a_path.upper
-				l_index := a_path.lower
-			until
-				l_index > l_count
+			create p.make_empty
+			create l_factory
+			across
+				a_path as i
 			loop
-				l_item := a_path.item (l_index)
-
-				l_subsituted := l_factory.environment.substitute_recursive (l_item)
-
-				a_path.put (l_subsituted, l_index)
-
-				l_index := l_index + 1
+				p := p.extended (l_factory.environment.substitute_recursive (i.item))
 			end
-			create l_file_name.make
-			l_file_name.extend_from_array (a_path)
-			environment.define (a_var, l_file_name)
+			environment.define (a_var.as_string_32, p.name)
 		end
 
-	init (a_file_name: STRING)
+	init (a_file_name: READABLE_STRING_32)
 			-- Set initial control file
 		require
 			not_void: a_file_name /= Void
@@ -81,14 +63,14 @@ feature -- Command to replace parse arguments
 			initial_control_file := a_file_name
 		end
 
-	catalog (a_file_name: STRING)
+	catalog (a_file_name: PATH)
 			-- Set catalog file
 			-- Not used in 6.3
 		do
 			test_catalog_names.extend (a_file_name)
 		end
 
-	output_arg (a_dir: STRING)
+	output_arg (a_dir: READABLE_STRING_32)
 			-- Set output argument
 			-- See {EWEASEL}.parse_arguments
 		require
@@ -103,22 +85,15 @@ feature -- Start eweasel
 			-- Execute all tests in `a_catalog'
 			-- Not used in 6.3
 		local
-			l_suite: EW_EIFFEL_TEST_SUITE;
 			l_tests: ARRAYED_LIST [EW_NAMED_EIFFEL_TEST]
 		do
-			from
-				create l_tests.make (100)
-				a_catalog.start
-			until
-				a_catalog.after
+			create l_tests.make (100)
+			across
+				a_catalog as c
 			loop
-				l_tests.append (a_catalog.item.all_tests)
-
-				a_catalog.forth
+				l_tests.append (c.item.all_tests)
 			end
-
-			l_suite := new_test_suite (l_tests, test_suite_options)
-			l_suite.execute (test_suite_options);
+			new_test_suite (l_tests, test_suite_options).execute (test_suite_options)
 		end
 
 feature -- Not implemented
@@ -179,10 +154,12 @@ feature -- Not implemented
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -203,11 +180,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
-
-
-
-
-
 
 end

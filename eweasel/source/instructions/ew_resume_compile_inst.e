@@ -1,14 +1,13 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	keywords: "Eiffel test"
 
 class EW_RESUME_COMPILE_INST
 
 inherit
-	EW_COMPILE_INST;
-	EW_OS_ACCESS;
+	EW_COMPILE_INST
+	EW_OS_ACCESS
 
 feature
 
@@ -19,26 +18,28 @@ feature
 		local
 			compilation: EW_EIFFEL_COMPILATION
 		do
-			compilation := test.e_compilation;
+			compilation := test.e_compilation
 			if compilation = Void then
-				execute_ok := False;
-				failure_explanation := "no compilation has been started";
+				execute_ok := False
+				failure_explanation := {STRING_32} "no compilation has been started"
 			elseif not compilation.suspended then
-				execute_ok := False;
-				failure_explanation := "compilation not suspended";
+				execute_ok := False
+				failure_explanation := {STRING_32} "compilation not suspended"
 			else
-				test.set_e_compile_start_time (os.current_time_in_seconds);
-				compilation.resume;
-				test.set_e_compilation_result (compilation.next_compile_result);
-				execute_ok := True;
+				test.set_e_compile_start_time (os.current_time_in_seconds)
+				compilation.resume
+				test.set_e_compilation_result (compilation.next_compile_result)
+				execute_ok := True
 			end
-		end;
+		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -59,11 +60,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
-
-
-
-
-
 
 end

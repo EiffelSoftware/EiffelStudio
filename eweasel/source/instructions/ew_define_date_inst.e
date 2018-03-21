@@ -23,12 +23,12 @@ inherit
 
 feature
 
-	inst_initialize (line: STRING)
+	inst_initialize (line: READABLE_STRING_32)
 			-- Initialize instruction from `line'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
 		local
-			args: LIST [STRING]
+			args: LIST [READABLE_STRING_32]
 			count: INTEGER
 			date: DATE
 		do
@@ -36,20 +36,20 @@ feature
 			args := broken_into_words (line)
 			count := args.count
 			if count /= 2 then
-				failure_explanation := "argument count must be 2"
-			elseif args.first.item (1) = Substitute_char then
-				failure_explanation := "variable being defined cannot start with "
+				failure_explanation := {STRING_32} "argument count must be 2"
+			elseif args.first [1] = Substitute_char then
+				failure_explanation := {STRING_32} "variable being defined cannot start with "
 				failure_explanation.extend (Substitute_char)
 			elseif not args.last.is_integer_16 then
-				failure_explanation := "allowed value should be a number of days from today in range "
+				failure_explanation := {STRING_32} "allowed value should be a number of days from today in range "
 				failure_explanation.append_integer_16 ({INTEGER_16}.min_value)
-				failure_explanation.append ("..")
+				failure_explanation.append ({STRING_32} "..")
 				failure_explanation.append_integer_16 ({INTEGER_16}.max_value)
 			else
 				variable := args.first
 				create date.make_now_utc
 				date.add (create {DATE_DURATION}.make_by_days (args.last.to_integer))
-				value := date.formatted_out ("yyyy-mm-dd")
+				value := from_utf_8 (date.formatted_out ("yyyy-mm-dd"))
 				init_ok := True
 			end
 			if init_ok then
@@ -71,10 +71,10 @@ feature
 
 feature {NONE}
 
-	variable: STRING
+	variable: READABLE_STRING_32
 			-- Name of environment value.
 
-	value: STRING
+	value: READABLE_STRING_32
 			-- Value to be given to environment value.
 
 ;note

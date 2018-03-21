@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Generic operating system services"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "October 7, 1997"
+	status: "See notice at end of class."
 
 deferred class EW_OPERATING_SYSTEM
 
@@ -18,39 +17,40 @@ inherit
 
 feature -- Path name operations
 
-	null_file_name: STRING
+	null_file_name: READABLE_STRING_32
 			-- File name which represents null input or output
 		deferred
 		end
 
-	full_file_name (dir_name, f_name: STRING): STRING
+	full_file_name (dir_name, f_name: READABLE_STRING_32): READABLE_STRING_32
 			-- Full name of file in directory `dir_name'
 			-- with name `f_name'.
 		require
-			dir_name_not_void: dir_name /= Void;
-			file_name_not_void: f_name /= Void;
-		deferred
+			dir_name_not_void: dir_name /= Void
+			file_name_not_void: f_name /= Void
+		do
+			Result := (create {PATH}.make_from_string (dir_name)).extended (f_name).name
 		ensure
 			result_exists: Result /= Void
-		end;
+		end
 
-	executable_full_file_name (dir_name, f_name: STRING): STRING
+	executable_full_file_name (dir_name, f_name: READABLE_STRING_32): READABLE_STRING_32
 			-- Full name of file in directory `dir_name'
 			-- with name `f_name'.
 		require
-			dir_name_not_void: dir_name /= Void;
-			file_name_not_void: f_name /= Void;
+			dir_name_not_void: dir_name /= Void
+			file_name_not_void: f_name /= Void
 		deferred
 		ensure
 			result_exists: Result /= Void
-		end;
+		end
 
-	full_directory_name (dir_name, subdir: STRING): STRING
+	full_directory_name (dir_name, subdir: READABLE_STRING_32): READABLE_STRING_32
 			-- Full name of subdirectory `subdir' of directory
 			-- `dir_name'
 		require
-			dir_name_not_void: dir_name /= Void;
-			subdir_not_void: subdir /= Void;
+			dir_name_not_void: dir_name /= Void
+			subdir_not_void: subdir /= Void
 		deferred
 		ensure
 			result_exists: Result /= Void
@@ -58,7 +58,7 @@ feature -- Path name operations
 
 feature -- File operations
 
-	delete_directory_tree (dir_name: STRING)
+	delete_directory_tree (dir_name: READABLE_STRING_32)
 			-- Try to delete the directory tree rooted at
 			-- `dir_name'.  Ignore any errors
 		require
@@ -76,7 +76,7 @@ feature -- File operations
 					sleep (150_000_000)
 				end
 					-- Let's delete the directory now.
-				create l_dir.make (dir_name)
+				create l_dir.make_with_name (dir_name)
 				if l_dir.exists then
 					l_dir.recursive_delete
 				end
@@ -103,18 +103,17 @@ feature -- Sleeping
 			-- Actual time could be longer or shorter
 		require
 			nonnegative_time: n >= 0;
-		local
-			nanosecs: INTEGER_64
 		do
-			nanosecs := (n * 1_000_000 + 0.5).truncated_to_integer_64
-			sleep (nanosecs)
+			sleep ((n * 1_000_000 + 0.5).truncated_to_integer_64)
 		end;
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -136,5 +135,4 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
 
-
-end -- class OPERATING_SYSTEM
+end

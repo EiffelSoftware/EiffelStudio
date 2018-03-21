@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	If_ (a_name, a_controlled_instruction: STRING)
+	If_ (a_name, a_controlled_instruction: READABLE_STRING_32)
 			--	If the substitution variable <name> has a value (or does not
 			--	have a value, for an "if not" instruction), execute
 			--	<controlled_instruction>.  Otherwise, skip controlled
@@ -40,7 +40,7 @@ feature -- Command
 			l_inst.execute (catalog_file)
 		end
 
-	if_not (a_name, a_controlled_instruction: STRING)
+	if_not (a_name, a_controlled_instruction: READABLE_STRING_32)
 			-- Similiar to `If_' except if the substitution variable <name>
 			-- does not have a value execute <controlled_instruction>.
 		require
@@ -50,11 +50,11 @@ feature -- Command
 			l_inst: EW_CATALOG_INSTRUCTION
 		do
 			l_inst := test_catalog_command_table.item (If_keyword)
-			catalog_file.set_argument ("not " + a_name + " " + a_controlled_instruction)
+			catalog_file.set_argument ({STRING_32} "not " + a_name + " " + a_controlled_instruction)
 			l_inst.execute (catalog_file)
 		end
 
-	source_path (a_path: STRING)
+	source_path (a_path: PATH)
 			--	Specifies that <directory-name> is the full path name of the
 			--	directory in which the source directories for subsequent tests
 			--	reside.  Remains effective until another `source_path' occurs.
@@ -62,14 +62,13 @@ feature -- Command
 			not_void: a_path /= Void
 		local
 			l_inst: EW_CATALOG_INSTRUCTION
-
 		do
 			l_inst := test_catalog_command_table.item (source_path_keyword)
-			catalog_file.set_argument (a_path)
+			catalog_file.set_argument (a_path.name)
 			l_inst.execute (catalog_file)
 		end
 
-	test (a_test_name, a_test_folder_name, a_arguments: STRING)
+	test (a_test_name, a_test_folder_name, a_arguments: READABLE_STRING_32)
 			--	Defines a test, giving it the name <test-name> and specifying
 			--	the last component of the source directory path name.  This
 			--	test name is not required to match the test name specified in

@@ -16,10 +16,9 @@ feature
 			-- Set `execute_ok' to indicate whether
 			-- execution was successful.
 		do
-			failure_explanation := "unknown test catalog instruction %"" + tcf.command + "%"";
-			execute_ok := False;
-		end;
-
+			failure_explanation := {STRING_32} "unknown test catalog instruction %"" + tcf.command + "%""
+			execute_ok := False
+		end
 
 note
 	copyright: "[

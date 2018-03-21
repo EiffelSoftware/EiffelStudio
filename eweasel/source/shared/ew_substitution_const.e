@@ -1,31 +1,32 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	keywords: "Eiffel test"
 
 class EW_SUBSTITUTION_CONST
 
 feature {NONE}
 
-	Substitute_char: CHARACTER = '$';
+	Substitute_char: CHARACTER_32 = '$'
 			-- Character which triggers environment variable
 			-- substitution
 
-	Quote_char: CHARACTER = '"';
+	Quote_char: CHARACTER = '"'
 			-- Character which is used for quoting environment
 			-- variable values
-	
-	Left_group_char: CHARACTER = '(';
-	Right_group_char: CHARACTER = ')';
+
+	Left_group_char: CHARACTER_32 = '('
+	Right_group_char: CHARACTER_32 = ')'
 			-- Characters which are used for setting environment
 			-- variable name off from surrounding text
-	
-note
+
+;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

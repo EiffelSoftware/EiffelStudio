@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Unix-specific operating system services"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "October 7, 1997"
 
 class EW_UNIX_OS
 
@@ -18,31 +17,17 @@ inherit
 
 feature -- Path names
 
-	null_file_name: STRING = "/dev/null"
+	null_file_name: STRING_32 = "/dev/null"
 			-- File name which represents null input or output
 
-	full_file_name (dir_name, f_name: STRING): STRING
-			-- Full name of file in directory `dir_name'
-			-- with name `f_name'.
-		do
-			create Result.make (dir_name.count + f_name.count + 1)
-			if not dir_name.is_empty then
-				Result.append (dir_name)
-				if dir_name.item (dir_name.count) /= Directory_separator then
-					Result.extend (Directory_separator)
-				end
-			end
-			Result.append (f_name)
-		end
-
-	executable_full_file_name (dir_name, f_name: STRING): STRING
+	executable_full_file_name (dir_name, f_name: READABLE_STRING_32): READABLE_STRING_32
 			-- Full name of file in directory `dir_name'
 			-- with name `f_name'.
 		do
 			Result := full_file_name (dir_name, f_name)
 		end
 
-	full_directory_name (dir_name, subdir: STRING): STRING
+	full_directory_name (dir_name, subdir: READABLE_STRING_32): READABLE_STRING_32
 			-- Full name of subdirectory `subdir' of directory
 			-- `dir_name'
 		do
@@ -73,7 +58,7 @@ feature -- Process operations
 			process_id_nonnegative: Result >= 0
 		end
 
-	exec_process (prog_file: STRING; args: ARRAY [STRING]; envs: POINTER; close_nonstd_files: BOOLEAN)
+	exec_process (prog_file: READABLE_STRING_32; args: ARRAY [READABLE_STRING_32]; envs: POINTER; close_nonstd_files: BOOLEAN)
 			-- Overlay the process with a new process,
 			-- which will execute program `prog_file' with
 			-- arguments `args'.  If `close_nonstd_files'
@@ -91,17 +76,18 @@ feature -- Process operations
 			k, count, lower: INTEGER
 			pname, area: ANY
 			arguments, arg_copy, null_ptr: POINTER
+			u: UTF_CONVERTER
 		do
 			count := args.count
 			lower := args.lower
-			pname := prog_file.to_c
+			pname := u.string_32_to_utf_8_string_8 (prog_file).to_c
 			arguments := unix_allocate_arg_memory (count + 1)
 			from
 				k := 1
 			until
 				k > count
 			loop
-				area := args.item (lower + k - 1).to_c
+				area := u.string_32_to_utf_8_string_8 (args.item (lower + k - 1)).to_c
 				arg_copy := str_dup ($area)
 				unix_set_arg_value (arguments, k - 1, arg_copy)
 				k := k + 1
@@ -164,10 +150,12 @@ feature -- Process operations
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -189,5 +177,4 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
 
-
-end -- class UNIX_OS
+end

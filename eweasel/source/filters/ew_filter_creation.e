@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Creation of Eiffel test filter"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "93/10/15"
+	status: "See notice at end of class."
 
 class EW_FILTER_CREATION
 
@@ -11,54 +10,59 @@ inherit
 
 feature -- Filtering
 
-	string_to_filter (s: STRING): EW_EIFFEL_TEST_FILTER
+	string_to_filter (s: READABLE_STRING_32): EW_EIFFEL_TEST_FILTER
 			-- Filter `s' represents (Void if none - i.e. if
 			-- `s' is invalid).
 		local
-			words: LIST [STRING];
+			words: LIST [READABLE_STRING_32]
+			value: READABLE_STRING_32
 		do
-			words := broken_into_words (s);
+			words := broken_into_words (s)
 			if words.count >= 1 then
-				filter_type := words.first
-				filter_type.to_lower;
+				filter_type := words.first.as_lower
 				filter_count := words.count - 1
 				is_filter_type_known := True
-				if equal (filter_type, "test") then
-					if filter_count = 1 then
-						create {EW_FILTER_TEST_NAME} Result.make (words.i_th (2));
+				if filter_count = 1 then
+					value := words [2]
+				end
+				if filter_type.same_string ({STRING_32} "test") then
+					if attached value then
+						create {EW_FILTER_TEST_NAME} Result.make (value)
 					end
-				elseif equal (filter_type, "dir") or equal (filter_type, "directory") then
-					if filter_count = 1 then
-						create {EW_FILTER_TEST_DIRECTORY} Result.make (words.i_th (2));
+				elseif filter_type.same_string ({STRING_32} "dir") or filter_type.same_string ({STRING_32} "directory") then
+					if attached value then
+						create {EW_FILTER_TEST_DIRECTORY} Result.make (value)
 					end
-				elseif equal (filter_type, "kw") or equal (filter_type, "keyword") then
-					if filter_count = 1 then
-						create {EW_FILTER_KEYWORD} Result.make (words.i_th (2));
+				elseif filter_type.same_string ({STRING_32} "kw") or filter_type.same_string ({STRING_32} "keyword") then
+					if attached value then
+						create {EW_FILTER_KEYWORD} Result.make (value)
 					end
 				else
 					is_filter_type_known := False
 				end
 			else
-				filter_type := ""
+				filter_type := {STRING_32} ""
 				filter_count := 0
 			end
 		end
 
-	filter_type: STRING
+	filter_type: READABLE_STRING_32
 			-- Type of filter or Void if none
 
 	is_filter_type_known: BOOLEAN
 			-- Is type of filter a known type?
 
-	filter_count: INTEGER;
+	filter_count: INTEGER
 			-- Number of values (test names or test directories or
 			-- test keywords) supplied with filter
 
-note
+;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -79,6 +83,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

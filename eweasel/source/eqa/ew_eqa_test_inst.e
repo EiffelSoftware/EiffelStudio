@@ -1,9 +1,8 @@
-note
+﻿note
 	description: "Summary description for {TEST_INST_63}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	keywords: "Eiffel test"
 
 class
 	EW_EQA_TEST_INST
@@ -37,56 +36,53 @@ feature -- Access
 	execute (tcf: EW_TEST_CATALOG_FILE)
 			-- <Precursor>
 		local
-			orig_args, dir_name, test_name, src_dir: STRING;
-			tcf_name: STRING;
-			args: LIST [STRING];
-			dir, file: RAW_FILE;
+			orig_args, dir_name, src_dir: STRING_32
+			test_name: READABLE_STRING_32
+			-- tcf_name: STRING
+			args: LIST [READABLE_STRING_32]
 			test: EW_EQA_NAMED_EIFFEL_TEST
-			keywords: LINKED_LIST [STRING];
-			l_factory: EW_EQA_TEST_FACTORY
+			keywords: LINKED_LIST [READABLE_STRING_32]
 		do
-			orig_args := tcf.arguments.twin
-			orig_args.left_adjust;
-			orig_args.right_adjust;
-			args := broken_into_words (tcf.environment.substitute (orig_args));
+			create orig_args.make_from_string (tcf.arguments)
+			orig_args.adjust
+			args := broken_into_words (tcf.environment.substitute (orig_args))
 			if args.count < 3 then
-				failure_explanation := "must be at least 3 arguments";
-				execute_ok := False;
+				failure_explanation := {STRING_32} "must be at least 3 arguments"
+				execute_ok := False
 			else
-				test_name := args.i_th (1);
-				src_dir := args.i_th (2);
-				tcf_name := args.i_th (3);
-				dir_name := os.full_directory_name (tcf.source_path, src_dir);
-				create dir.make (dir_name);
-				tcf_name := os.full_file_name (dir_name, tcf_name);
-				create file.make (tcf_name);
-				create keywords.make;
+				test_name := args [1]
+				src_dir := args [2]
+				-- tcf_name := args [3]
+				dir_name := os.full_directory_name (tcf.source_path, src_dir)
+				-- tcf_name := os.full_file_name (dir_name, tcf_name)
+				create keywords.make
 				from
-					args.go_i_th (4);
+					args.go_i_th (4)
 				until
 					args.after
 				loop
-					keywords.extend (args.item);
-					args.forth;
-				end;
+					keywords.extend (args.item)
+					args.forth
+				end
 
-			--	If we use control_file, it should looks like following
-			--	check ready: control_file /= Void end
-			--	create test.make_63 (test_name, src_dir, dir_name, control_file, keywords);
+					--	If we use control_file, it should looks like following
+					--	check ready: control_file /= Void end
+				create test.make_63 (test_name, src_dir, dir_name, control_file, keywords)
 
-				create l_factory
-				l_factory.environment.define (Source_dir_name, dir_name)
+				;(create {EW_EQA_TEST_FACTORY}).environment.define (Source_dir_name, dir_name)
 
-				tcf.set_last_test (test);
-				execute_ok := True;
+				tcf.set_last_test (test)
+				execute_ok := True
 			end
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

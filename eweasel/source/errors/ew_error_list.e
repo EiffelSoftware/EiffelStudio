@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "An Eiffel test error list"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "93/08/30"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EW_ERROR_LIST
 
@@ -12,63 +13,48 @@ inherit
 create
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make
 		do
-			create list.make;
-		end;
-
-feature -- Properties
+			create list.make
+		end
 
 feature -- Modification
-	
+
 	add (err: EW_ERROR)
 		do
-			list.extend (err);
-		end;
-	
-	add_list (other: EW_ERROR_LIST)
-			-- Add `other' to end of `Current'
-		local
-			other_list: LINKED_LIST [EW_ERROR];
-		do
-			from
-				other_list := other.list;
-				other_list.start;
-			until
-				other_list.after
-			loop	
-				list.extend (other_list.item);
-				other_list.forth;
-			end	
+			list.extend (err)
 		end
-	
+
+	add_list (other: EW_ERROR_LIST)
+			-- Add `other' to end of `Current'.
+		do
+			list.append (other.list)
+		end
+
 feature -- Display
-	
+
 	display
 			-- Display `Current' in order.
 		do
-			from
-				list.start
-			until
-				list.after
+			across
+				list as l
 			loop
-				list.item.display
+				l.item.display
 				output.append_new_line
-				list.forth
 			end
 		end
-	
+
 feature {EW_ERROR_LIST} -- Implementation
 
-	list: LINKED_LIST [EW_ERROR];
-	
-note
+	list: LINKED_LIST [EW_ERROR]
+
+;note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -89,6 +75,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

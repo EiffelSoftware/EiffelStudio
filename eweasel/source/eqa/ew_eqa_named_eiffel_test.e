@@ -1,9 +1,8 @@
-note
+﻿note
 	description: "Summary description for {NAMED_EIFFEL_TEST_63}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	keywords: "Eiffel test"
 
 class
 	EW_EQA_NAMED_EIFFEL_TEST
@@ -16,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_63 (a_name, a_last_directory, a_src_directory: STRING; a_tcf: EW_EQA_TEST_CONTROL_INSTRUCTIONS; a_keys: LIST [STRING])
+	make_63 (a_name, a_last_directory, a_src_directory: READABLE_STRING_32; a_tcf: EW_EQA_TEST_CONTROL_INSTRUCTIONS; a_keys: LIST [READABLE_STRING_32])
 			-- Creation method
 		do
 			test_name := a_name
@@ -32,10 +31,13 @@ feature {NONE} -- Implementation
 			-- Related test control instructions
 
 ;note
+	ca_ignore: "CA011", "CA011 — too many arguments"
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -56,11 +58,5 @@ feature {NONE} -- Implementation
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
-
-
-
-
-
 
 end

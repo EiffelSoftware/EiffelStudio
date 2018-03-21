@@ -24,35 +24,34 @@ feature -- Execution
 			-- `pass_count' and the number which failed in
 			-- `fail_count'.
 		local
-			test: EW_NAMED_EIFFEL_TEST;
-			test_dir, compiler_dir: STRING;
+			test: EW_NAMED_EIFFEL_TEST
+			test_dir: READABLE_STRING_32
 		do
 			from
-				test_list.start;
+				test_list.start
 			until
 				test_list.after
 			loop
-				test := test_list.item;
+				test := test_list.item
 				if opts.filter.selects (test) then
-					announce_start (test);
+					announce_start (test)
 					if test.execution_allowed then
-						test.execute (initial_environment (test));
+						test.execute (initial_environment (test))
 						test_dir := os.full_directory_name (test_suite_directory, test.last_source_directory_component);
 						if opts.keep_all or (opts.keep_passed and test.last_ok) or (opts.keep_failed and not test.last_ok) then
 							if opts.is_cleanup_requested then
-								compiler_dir := os.full_directory_name (test_dir, Eiffel_gen_directory)
-								os.delete_directory_tree (compiler_dir)
+								os.delete_directory_tree (os.full_directory_name (test_dir, Eiffel_gen_directory))
 							end
 						else
 							os.delete_directory_tree (test_dir)
 						end
-					end;
-					update_statistics (test);
-					display_results (test);
-				end;
-				test_list.forth;
+					end
+					update_statistics (test)
+					display_results (test)
+				end
+				test_list.forth
 				output.update
-			end;
+			end
 			if opts.display_summary then
 				display_summary
 			end

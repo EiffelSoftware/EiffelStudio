@@ -1,10 +1,8 @@
-note
+﻿note
 	description: "Test instruction for source code formatting."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "$Date$"
-	revision: "$Revision$"
+	keywords: "Eiffel test"
 
 class EW_PRETTIFY_INST
 
@@ -18,15 +16,15 @@ inherit
 
 feature -- Initialization
 
-	inst_initialize (line: STRING)
+	inst_initialize (line: READABLE_STRING_32)
 			-- <Precursor>
 		local
-			args: LIST [STRING]
+			args: LIST [READABLE_STRING_32]
 		do
 			args := broken_into_words (line)
 			if args.count < 2 or args.count > 3 then
 				init_ok := False
-				failure_explanation := "expected arguments: input_file_before_format output_file_after_format [compiler_output]"
+				failure_explanation := {STRING_32} "expected arguments: input_file_before_format output_file_after_format [compiler_output]"
 			else
 				file_name_before_format := args [1]
 				file_name_after_format := args [2]
@@ -37,19 +35,19 @@ feature -- Initialization
 			end
 		end;
 
-	compiler_arguments (test: EW_EIFFEL_EWEASEL_TEST; env: EW_TEST_ENVIRONMENT): LINKED_LIST [STRING]
+	compiler_arguments (test: EW_EIFFEL_EWEASEL_TEST; env: EW_TEST_ENVIRONMENT): LINKED_LIST [READABLE_STRING_32]
 			-- <Precursor>
 		do
 			Result := Precursor (test, env)
-			Result.extend ("-pretty")
+			Result.extend ({STRING_32} "-pretty")
 			Result.extend (os.full_file_name (test.environment.value (Cluster_dir_name), file_name_before_format))
 			Result.extend (os.full_file_name (test.environment.value (Output_dir_name), file_name_after_format))
 		end
 
-	compilation_options (a_test: EW_EIFFEL_EWEASEL_TEST): LIST [STRING]
+	compilation_options (a_test: EW_EIFFEL_EWEASEL_TEST): LIST [READABLE_STRING_32]
 			-- <Precursor>
 		once
-			create {LINKED_LIST [STRING]} Result.make
+			create {LINKED_LIST [READABLE_STRING_32]} Result.make
 		end
 
 feature -- Execution
@@ -71,15 +69,17 @@ feature -- Execution
 
 feature -- Access
 
-	file_name_before_format: STRING;
+	file_name_before_format: READABLE_STRING_32
 			-- Name of the source file to be formatted.
 
-	file_name_after_format: STRING;
+	file_name_after_format: READABLE_STRING_32
 			-- Name of the file for the formatted code.
 
-note
+;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 2011, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
 	license: "Your use of this work is governed under the terms of the GNU General Public License version 2"

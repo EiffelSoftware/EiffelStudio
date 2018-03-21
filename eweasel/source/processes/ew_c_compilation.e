@@ -1,9 +1,8 @@
-note
+﻿note
 	description: "A C compilation"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	status: "See notice at end of class."
+	keywords: "Eiffel test"
 
 class EW_C_COMPILATION
 
@@ -20,37 +19,37 @@ inherit
 create
 	make
 
-feature
+feature {NONE} -- Creation
 
-	make (dir, save, freeze_cmd: STRING env_vars: HASH_TABLE [STRING, STRING]; max_procs: INTEGER)
+	make (dir, save, freeze_cmd: READABLE_STRING_32 env_vars: like {EW_TEST_ENVIRONMENT}.environment_variables; max_procs: INTEGER)
 			-- Start a new process to do any necessary
 			-- C compilations (freezing) in directory `dir',
-			-- using at most `max_procs' simultaneous processes
-			-- to do C compilations.
-			-- Write all output from the new process to
-			-- file `save'.
+			-- using at most `max_procs' simultaneous processes to do C compilations.
+			-- Write all output from the new process to file `save'.
 		require
-			directory_not_void: dir /= Void;
-			save_name_not_void: save /= Void;
+			directory_not_void: dir /= Void
+			save_name_not_void: save /= Void
 		local
-			args: LINKED_LIST [STRING];
-			l_cmd: STRING
+			args: LINKED_LIST [READABLE_STRING_32]
+			l_cmd: READABLE_STRING_32
 		do
 			create args.make
 			if {PLATFORM}.is_windows then
-				args.extend ("-location")
+				args.extend ({STRING_32} "-location")
 				l_cmd := freeze_cmd
 			else
-				args.extend (freeze_cmd);
+				args.extend (freeze_cmd)
 				l_cmd := shell_command
 			end
-			args.extend (dir);
+			args.extend (dir)
 			if max_procs > 0 then
-				args.extend ("-nproc");
-				args.extend (max_procs.out);
+				args.extend ({STRING_32} "-nproc")
+				args.extend (create {STRING_32}.make_from_string_general (max_procs.out))
 			end
-			process_make (l_cmd, args, env_vars, Void, Void, save);
-		end;
+			process_make (l_cmd, args, env_vars, Void, Void, save)
+		end
+
+feature
 
 	next_compile_result_type: EW_C_COMPILATION_RESULT
 			-- <Precursor>
@@ -61,14 +60,17 @@ feature
 
 feature {NONE} -- Constant strings
 
-	Shell_command: STRING = "/bin/sh";
+	Shell_command: STRING_32 = "/bin/sh"
 			-- Unix way to start finish_freezing as it is a shell script.
 
-note
+;note
+	ca_ignore: "CA011", "CA011 — too many arguments"
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -89,6 +91,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

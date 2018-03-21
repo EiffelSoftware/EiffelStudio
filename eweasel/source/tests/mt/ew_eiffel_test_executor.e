@@ -1,9 +1,8 @@
-note
+﻿note
 	description: "A worker that (separate thread of control) that %
 		%executes named Eiffel tests"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "September 13, 2001"
+	status: "See notice at end of class."
 
 class EW_EIFFEL_TEST_EXECUTOR
 
@@ -32,9 +31,9 @@ feature -- Execution
 			queue_exists: queue /= Void
 			test_suite_exists: test_suite /= Void
 		local
-			test: EW_NAMED_EIFFEL_TEST;
+			test: EW_NAMED_EIFFEL_TEST
 			done: BOOLEAN
-			test_dir, compiler_dir: STRING;
+			test_dir: READABLE_STRING_32
 		do
 			register
 			debug ("threaded_eweasel")
@@ -57,8 +56,7 @@ feature -- Execution
 						test_dir := os.full_directory_name (test_suite.test_suite_directory, test.last_source_directory_component);
 						if options.keep_all or (options.keep_passed and test.last_ok) or (options.keep_failed and not test.last_ok) then
 							if options.is_cleanup_requested then
-								compiler_dir := os.full_directory_name (test_dir, Eiffel_gen_directory)
-								os.delete_directory_tree (compiler_dir)
+								os.delete_directory_tree (os.full_directory_name (test_dir, Eiffel_gen_directory))
 							end
 						else
 							os.delete_directory_tree (test_dir)
@@ -108,10 +106,12 @@ feature -- Modification
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -132,6 +132,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

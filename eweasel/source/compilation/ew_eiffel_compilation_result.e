@@ -1,9 +1,7 @@
 ﻿note
 	description: "An Eiffel compilation result"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
 
 class EW_EIFFEL_COMPILATION_RESULT
 
@@ -13,7 +11,7 @@ inherit
 			update
 		end
 
-	EW_STRING_UTILITIES;
+	EW_STRING_UTILITIES
 	EW_EIFFEL_COMPILER_CONSTANTS
 
 feature -- Properties
@@ -76,10 +74,10 @@ feature -- Properties
 	raw_compiler_output: STRING
 			-- Raw output of compiler, if not Void
 
-	summary: STRING
+	summary: STRING_32
 			-- Summary of `Current'
 		local
-			status: STRING
+			status: STRING_32
 		do
 			create Result.make_empty
 			if attached syntax_errors as errors then
@@ -101,49 +99,49 @@ feature -- Properties
 				end
 			end
 
-			create status.make (0);
+			create status.make_empty
 			if has_command_line_option_error then
-				status.append ("command_line_option_error ")
+				status.append ({STRING_32} "command_line_option_error ")
 			end
 			if compilation_paused then
-				status.append ("paused ");
+				status.append ({STRING_32} "paused ");
 			end;
 			if compilation_aborted then
-				status.append ("aborted ");
+				status.append ({STRING_32} "aborted ");
 			end;
 			if compilation_finished then
-				status.append ("completed ");
+				status.append ({STRING_32} "completed ");
 			end;
 			if missing_precompile then
-				status.append ("missing_precompile ");
-			end;
+				status.append ({STRING_32} "missing_precompile ")
+			end
 			if execution_failure then
-				status.append ("system_failed ");
-			end;
+				status.append ({STRING_32} "system_failed ")
+			end
 			if had_exception then
-				status.append ("had_exception ");
+				status.append ({STRING_32} "had_exception ")
 				if exception_tag /= Void then
-					status.append ("(")
-					status.append (exception_tag)
-					status.append (") ")
+					status.append ({STRING_32} "(")
+					status.append (from_utf_8 (exception_tag))
+					status.append ({STRING_32} ") ")
 				end
 			end
 			if had_panic then
-				status.append ("had_panic ")
+				status.append ({STRING_32} "had_panic ")
 			end
 			if illegal_instruction then
-				status.append ("illegal_instruction ")
+				status.append ({STRING_32} "illegal_instruction ")
 			end
 			if status.is_empty then
-				status.append ("unknown	")
+				status.append ({STRING_32} "unknown	")
 				if raw_compiler_output /= Void then
 					status.extend ('%N')
-					status.append ("Raw compiler output:")
+					status.append ({STRING_32} "Raw compiler output:")
 					status.extend ('%N')
-					status.append (raw_compiler_output)
+					status.append (from_utf_8 (raw_compiler_output))
 				end
 			end
-			status.prepend ("%TFinal status:  ")
+			status.prepend ({STRING_32} "%TFinal status:  ")
 			Result.append (status)
 		end
 
@@ -353,90 +351,88 @@ feature {NONE} -- Implementation
 		require
 			line_not_void: line /= Void;
 		do
-			add_syntax_error (new_syntax_warning (line));
+			add_syntax_error (new_syntax_warning (line))
 		end;
 
 	new_syntax_error (line: STRING): EW_EIFFEL_SYNTAX_ERROR
 		require
 			line_not_void: line /= Void;
 		local
-			words: LIST [STRING];
-			line_no, kind: STRING;
-			class_name: STRING;
-			count: INTEGER;
+			words: LIST [STRING]
+			line_no, kind: STRING
+			class_name: STRING
+			count: INTEGER
 		do
-			words := broken_into_words (line);
-			count := words.count;
+			words := broken_into_words_8 (line)
+			count := words.count
 			if count >= 5 then
-				line_no := words.i_th (5);
-			end;
+				line_no := words [5]
+			end
 			if count >= 7 then
-				kind := words.i_th (7);
-				kind.to_lower;
-				if equal (kind, "class") then
+				kind := words [7]
+				kind.to_lower
+				if kind.same_string ("class") then
 					if count >= 8 then
-						class_name := words.i_th (8);
+						class_name := words [8]
 					else
-						create class_name.make (0);
+						class_name := ""
 					end
-				elseif equal (kind, "ace") then
-					create class_name.make (0);
-				elseif equal (kind, "cluster_properties") then
-					create class_name.make (0);
-					class_name.append ("_USE_FILE");
+				elseif kind.same_string ("ace") then
+					class_name := ""
+				elseif kind.same_string ("cluster_properties") then
+					class_name := "_USE_FILE"
 				else
-					create class_name.make (0);
-					class_name.append ("%"UNKNOWN%"");
-				end;
+					class_name := "%"UNKNOWN%""
+				end
 			else
-				create class_name.make (0);
-			end;
-			create Result.make (class_name)
-			if is_integer (line_no) then
-				Result.set_line_number (line_no.to_integer);
-			end;
-		end;
+				create class_name.make_empty
+			end
+			create Result.make (from_utf_8 (class_name))
+			if line_no.is_integer then
+				Result.set_line_number (line_no.to_integer)
+			end
+		end
 
 	new_syntax_warning (line: STRING): EW_EIFFEL_SYNTAX_ERROR
 		require
-			line_not_void: line /= Void;
+			line_not_void: line /= Void
 		local
-			words: LIST [STRING];
-			line_no, kind: STRING;
-			class_name: STRING;
-			count: INTEGER;
+			words: LIST [STRING]
+			line_no, kind: STRING
+			class_name: STRING
+			count: INTEGER
 		do
-			words := broken_into_words (line);
-			count := words.count;
+			words := broken_into_words_8 (line)
+			count := words.count
 			if count >= 6 then
-				line_no := words.i_th (6);
-			end;
+				line_no := words.i_th (6)
+			end
 			if count >= 8 then
-				kind := words.i_th (8);
-				kind.to_lower;
-				if equal (kind, "class") then
+				kind := words.i_th (8)
+				kind.to_lower
+				if kind.same_string ("class") then
 					if count >= 9 then
-						class_name := words.i_th (9);
+						class_name := words.i_th (9)
 					else
-						create class_name.make (0);
+						create class_name.make (0)
 					end
-				elseif equal (kind, "ace") then
-					create class_name.make (0);
-				elseif equal (kind, "cluster_properties") then
-					create class_name.make (0);
-					class_name.append ("_USE_FILE");
+				elseif kind.same_string ("ace") then
+					create class_name.make (0)
+				elseif kind.same_string ("cluster_properties") then
+					create class_name.make (0)
+					class_name.append ("_USE_FILE")
 				else
-					create class_name.make (0);
-					class_name.append ("%"UNKNOWN%"");
-				end;
+					create class_name.make (0)
+					class_name.append ("%"UNKNOWN%"")
+				end
 			else
-				create class_name.make (0);
-			end;
-			create Result.make (class_name)
-			if is_integer (line_no) then
-				Result.set_line_number (line_no.to_integer);
-			end;
-		end;
+				create class_name.make (0)
+			end
+			create Result.make (from_utf_8 (class_name))
+			if line_no.is_integer then
+				Result.set_line_number (line_no.to_integer)
+			end
+		end
 
 	analyze_validity_error (line: STRING)
 		require
@@ -449,7 +445,7 @@ feature {NONE} -- Implementation
 		require
 			line_not_void: line /= Void
 		do
-			create Result.make (create {STRING}.make_empty, broken_into_words (line) [3])
+			create Result.make (create {STRING_32}.make_empty, broken_into_words (from_utf_8 (line)) [3])
 		end
 
 	analyze_error_line (line: STRING)
@@ -460,16 +456,16 @@ feature {NONE} -- Implementation
 			value: STRING
 		do
 			if is_prefix (Class_name_prefix, line) then
-				words := broken_into_words (line)
+				words := broken_into_words_8 (line)
 				if words.count >= 2 then
 					value := words [2]
 					check
 						last_validity_error_not_void: last_validity_error /= Void
 					end
-					last_validity_error.set_class_name (value)
+					last_validity_error.set_class_name (from_utf_8 (value))
 				end
 			elseif is_prefix (line_prefix, line) then
-				words := broken_into_words (line)
+				words := broken_into_words_8 (line)
 				if words.count >= 2 then
 					value := words [2]
 					check
@@ -530,8 +526,10 @@ feature {NONE} -- Implementation
 			end
 		end
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2017, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"

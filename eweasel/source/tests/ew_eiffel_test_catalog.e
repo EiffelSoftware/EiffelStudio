@@ -1,78 +1,78 @@
-note
+﻿note
 	description: "An Eiffel test catalog"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "93/07/16"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EW_EIFFEL_TEST_CATALOG
 
 create
-	
+
 	make
 
-feature  -- Creation
+feature {NONE}  -- Creation
 
 	make (tests: LIST [EW_NAMED_EIFFEL_TEST])
 			-- Create `Current' with `tests'.
 		require
-			test_list_not_void: tests /= Void;
+			test_list_not_void: tests /= Void
 		do
-			all_tests := tests;
-		end;
-
+			all_tests := tests
+		end
 
 feature -- Properties	
 
-	all_tests: LIST [EW_NAMED_EIFFEL_TEST];
+	all_tests: LIST [EW_NAMED_EIFFEL_TEST]
 			-- List of all tests
-	
-	tests_matching_one_keyword (keys: LIST [STRING]): LIST [EW_NAMED_EIFFEL_TEST]
+
+	tests_matching_one_keyword (keys: LIST [READABLE_STRING_32]): LIST [EW_NAMED_EIFFEL_TEST]
 			-- List of all tests whose keyword list contains
 			-- at least one of the keywords in `keys'.
 		require
-			keywords_not_void: keys /= Void;
+			keywords_not_void: keys /= Void
 		local
-			test: EW_NAMED_EIFFEL_TEST;
+			test: EW_NAMED_EIFFEL_TEST
 		do
 			from
-				create {LINKED_LIST [EW_NAMED_EIFFEL_TEST]} Result.make;
-				all_tests.start;
+				create {LINKED_LIST [EW_NAMED_EIFFEL_TEST]} Result.make
+				all_tests.start
 			until
 				all_tests.after
 			loop
-				test := all_tests.item;
+				test := all_tests.item
 				if test.has_one_keyword (keys) then
-					Result.extend (test);
+					Result.extend (test)
 				end
 			end
-		end;
+		end
 
-	tests_matching_all_keywords (keys: LIST [STRING]): LIST [EW_NAMED_EIFFEL_TEST]
+	tests_matching_all_keywords (keys: LIST [READABLE_STRING_32]): LIST [EW_NAMED_EIFFEL_TEST]
 			-- List of all tests whose keyword list contains
 			-- all of the keywords in `keys'.
 		require
-			keywords_not_void: keys /= Void;
+			keywords_not_void: keys /= Void
 		local
-			test: EW_NAMED_EIFFEL_TEST;
+			test: EW_NAMED_EIFFEL_TEST
 		do
 			from
-				create {LINKED_LIST [EW_NAMED_EIFFEL_TEST]} Result.make;
-				all_tests.start;
+				create {LINKED_LIST [EW_NAMED_EIFFEL_TEST]} Result.make
+				all_tests.start
 			until
 				all_tests.after
 			loop
-				test := all_tests.item;
+				test := all_tests.item
 				if test.has_all_keywords (keys) then
-					Result.extend (test);
+					Result.extend (test)
 				end
 			end
-		end;
+		end
 
-note
+;note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -93,6 +93,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

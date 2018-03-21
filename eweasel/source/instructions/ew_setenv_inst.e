@@ -1,8 +1,7 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "August 20, 2003"
+	keywords: "Eiffel test"
 
 class EW_SETENV_INST
 
@@ -23,79 +22,83 @@ inherit
 
 feature
 
-	inst_initialize (line: STRING)
+	inst_initialize (line: READABLE_STRING_32)
 			-- Initialize instruction from `line'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
 		local
-			args: LIST [STRING];
-			count, pos: INTEGER;
+			args: LIST [READABLE_STRING_32]
+			count, pos: INTEGER
+			s: STRING_32
 		do
-			args := broken_into_words (line);
-			count := args.count;
+			args := broken_into_words (line)
+			count := args.count
 			if count < 2 then
-				failure_explanation := "argument count must be at least 2";
-				init_ok := False;
+				failure_explanation := {STRING_32} "argument count must be at least 2"
+				init_ok := False
 			elseif args.first.has ('%/0/') then
-				create failure_explanation.make (0);
-				failure_explanation.append ("environment variable name contains null character");
-				init_ok := False;
+				failure_explanation := {STRING_32} "environment variable name contains null character"
+				init_ok := False
 			elseif args.i_th (2).has ('%/0/') then
-				create failure_explanation.make (0);
-				failure_explanation.append ("environment variable value contains null character");
-				init_ok := False;
+				failure_explanation := {STRING_32} "environment variable value contains null character"
+				init_ok := False
 			elseif count = 2 then
-				variable := args.i_th (1);
-				value := args.i_th (2);
-				init_ok := True;
+				variable := args [1]
+				value := args [2]
+				init_ok := True
 			else
-				pos :=  first_white_position (line);
-				variable := line.substring (1, pos - 1);
-				value := line.substring (pos, line.count);
-				value.left_adjust;
-				value.right_adjust;
-				init_ok := True;
-			end;
+				pos :=  first_white_position (line)
+				variable := line.substring (1, pos - 1)
+				s := line.substring (pos, line.count)
+				s.adjust
+				value := s
+				init_ok := True
+			end
 			if init_ok then
-				if value.item (1) = Quote_char and 
-				   value.item (value.count) = Quote_char then
-					value.remove (value.count);
-					value.remove (1);
-				elseif value.item (1) = Quote_char or 
-				   value.item (value.count) = Quote_char then
-					failure_explanation := "value must be quoted on both ends or on neither end";
-					init_ok := False;
-				end;
-			end;
-		end;
+				if
+					value.item (1) = Quote_char and
+					value.item (value.count) = Quote_char
+				then
+					value := value.substring (2, value.count - 1)
+				elseif
+					value.item (1) = Quote_char or
+					value.item (value.count) = Quote_char
+				then
+					failure_explanation := {STRING_32} "value must be quoted on both ends or on neither end"
+					init_ok := False
+				end
+			end
+		end
 
 	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'
 		do
-			test.environment.add_environment_variable (variable, value);
+			test.environment.add_environment_variable (variable, value)
 			execute_ok := True
-		end;
+		end
 
 	init_ok: BOOLEAN;
 			-- Was last call to `initialize' successful?
-	
+
 	execute_ok: BOOLEAN
 			-- Was last call to `execute' successful?
 
 feature {NONE}
-	
-	variable: STRING;
+
+	variable: READABLE_STRING_32
 			-- Name of environment variable
-	
-	value: STRING;
+
+	value: READABLE_STRING_32
 			-- Value to be given to environment variable
-	
-note
+
+;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

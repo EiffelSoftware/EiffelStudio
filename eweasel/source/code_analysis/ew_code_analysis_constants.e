@@ -24,26 +24,30 @@ feature -- Output messages
 
 feature -- Violation types
 
-	Error: STRING = "Error"
+	Error: STRING_32 = "Error"
 
-	Warning: STRING = "Warning"
+	Warning: STRING_32 = "Warning"
 
-	Suggestion: STRING = "Suggestion"
+	Suggestion: STRING_32 = "Suggestion"
 
-	Hint: STRING = "Hint"
+	Hint: STRING_32 = "Hint"
 
-	is_valid_violation_type (a_type: STRING): BOOLEAN
+	is_valid_violation_type (a_type: READABLE_STRING_32): BOOLEAN
 		do
-			Result := a_type ~ Error or a_type ~ Warning or a_type ~ Suggestion or a_type ~ Hint
+			Result :=
+				a_type.same_string (error) or else
+				a_type.same_string (warning) or else
+				a_type.same_string (suggestion) or else
+				a_type.same_string (hint)
 		end
 
-	Error_short: STRING = "E"
+	error_short: STRING = "E"
 
-	Warning_short: STRING = "W"
+	warning_short: STRING = "W"
 
-	Suggestion_short: STRING = "S"
+	suggestion_short: STRING = "S"
 
-	Hint_short: STRING = "H"
+	hint_short: STRING = "H"
 
 	Unknown_violation_type_short: STRING = "?"
 
@@ -52,7 +56,7 @@ feature -- Violation types
 			Result := a_type ~ Error_short or a_type ~ Warning_short or a_type ~ Suggestion_short or a_type ~ Hint_short
 		end
 
-	long_violation_type (a_type: STRING): STRING
+	long_violation_type (a_type: STRING): READABLE_STRING_32
 			-- Convert a short violation type string to the long form.
 		require
 			valid_short: is_valid_short_violation_type (a_type)
@@ -72,7 +76,7 @@ feature -- Violation types
 			correct: short_violation_type (Result).same_string (a_type)
 		end
 
-	short_violation_type (a_type: STRING): STRING
+	short_violation_type (a_type: READABLE_STRING_32): STRING
 			-- Convert a long violation type string to the short form.
 		require
 			valid: is_valid_violation_type (a_type)

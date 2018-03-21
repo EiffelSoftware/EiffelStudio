@@ -3,7 +3,6 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test"
-	date: "$Date$"
 
 class
 	EW_CODE_ANALYSIS_VIOLATION
@@ -35,7 +34,7 @@ feature {NONE} -- Initialization
 		do
 		end
 
-	make_with_everything (a_class_name: STRING; a_line_number: INTEGER; a_rule_id, a_type, a_message: STRING)
+	make_with_everything (a_class_name: STRING; a_line_number: INTEGER; a_rule_id: READABLE_STRING_32; a_type: READABLE_STRING_32; a_message: READABLE_STRING_32)
 		require
 			valid_type: a_type = Void or is_valid_violation_type (a_type)
 		do
@@ -50,44 +49,44 @@ feature -- Properties
 
 		-- All of these can in principle be Void if unknown.
 
-	class_name: detachable STRING
+	class_name: detachable READABLE_STRING_8
 			-- Class in which the violation occurred.
 
 	line_number: INTEGER
 			-- Line number on which the violation occurred.
 
-	rule_id: detachable STRING
+	rule_id: detachable READABLE_STRING_32
 			-- ID of the violated rule.
 
-	type: detachable STRING
+	type: detachable READABLE_STRING_32
 			-- Type of the violation (hint, suggestion, warning or error).
 
-	message: detachable STRING
+	message: detachable READABLE_STRING_32
 			-- Message of the violation.
 
-	summary: STRING
+	summary: STRING_32
 		do
-			create Result.make (0)
+			create Result.make_empty
 			Result.append_string (type)
 			if attached class_name and then not class_name.is_empty then
-				Result.append (" in class ")
-				Result.append_string (class_name)
+				Result.append ({STRING_32} " in class ")
+				Result.append_string (from_utf_8 (class_name))
 				if line_number /= 0 then
-					Result.append (" at line ")
+					Result.append ({STRING_32} " at line ")
 					Result.append_integer (line_number)
 				end
 			end
-			Result.append (". ")
+			Result.append ({STRING_32} ". ")
 			Result.append_string (rule_id)
-			if rule_id /= Void and then not rule_id.is_empty and message /= Void and then not message.is_empty then
-				Result.append (": ")
+			if attached rule_id as r and then not r.is_empty and attached message as m and then not m.is_empty then
+				Result.append ({STRING_32} ": ")
 			end
 			Result.append_string (message)
 		end
 
 feature -- Modification
 
-	set_class_name (a_name: STRING)
+	set_class_name (a_name: like class_name)
 		do
 			class_name := a_name
 		end
@@ -97,19 +96,19 @@ feature -- Modification
 			line_number := a_line_number
 		end
 
-	set_rule_id (a_rule_id: STRING)
+	set_rule_id (a_rule_id: like rule_id)
 		do
 			rule_id := a_rule_id
 		end
 
-	set_type (a_type: STRING)
+	set_type (a_type: like type)
 		require
 			valid_type: a_type = Void or is_valid_violation_type (a_type)
 		do
 			type := a_type
 		end
 
-	set_message (a_message: STRING)
+	set_message (a_message: READABLE_STRING_32)
 		do
 			message := a_message
 		end
@@ -190,10 +189,13 @@ invariant
 	valid_type: is_valid_violation_type (type)
 
 note
+	ca_ignore: "CA011", "CA011 — too many arguments"
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-		Copyright (c) 1984-2017, University of Southern California and contributors.
-		All rights reserved.
-	]"
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			All rights reserved.
+		]"
 	license: "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

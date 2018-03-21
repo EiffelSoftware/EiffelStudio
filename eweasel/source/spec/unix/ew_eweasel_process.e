@@ -1,9 +1,8 @@
-note
+﻿note
 	description: "An independent process used by EiffelWeasel"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	keywords: "Eiffel test";
-	date: "October 14, 1997"
+	status: "See notice at end of class."
+	keywords: "Eiffel test"
 
 class EW_EWEASEL_PROCESS
 
@@ -22,7 +21,7 @@ inherit
 
 feature -- Creation
 
-	make (cmd: STRING; args: LIST [STRING]; env_vars: HASH_TABLE [STRING, STRING]; inf, outf, savef: STRING)
+	make (cmd: READABLE_STRING_32; args: LIST [READABLE_STRING_32]; env_vars: like {EW_TEST_ENVIRONMENT}.environment_variables; inf, outf, savef: READABLE_STRING_32)
 			-- Start a new process to run command `cmd'
 			-- with arguments `args'.  The new process
 			-- will gets its input from file `inf' and
@@ -41,18 +40,18 @@ feature -- Creation
 			command_not_void: cmd /= Void;
 			arguments_not_void: args /= Void;
 		local
-			arg_array: ARRAY [STRING]
+			arg_array: ARRAY [READABLE_STRING_32]
 			k, count: INTEGER
 		do
 			debug
 				io.put_string ("%NStart: " );
-				io.put_string (cmd); io.put_character (' ');
+				io.put_string ((create {UTF_CONVERTER}).string_32_to_utf_8_string_8 (cmd)); io.put_character (' ');
 				from
 					args.start;
 				until
 					args.after
 				loop
-					io.put_string (args.item); io.put_character (' ');
+					io.put_string ((create {UTF_CONVERTER}).string_32_to_utf_8_string_8 (args.item)); io.put_character (' ');
 					args.forth;
 				end
 				io.put_string ("End%N" );
@@ -195,7 +194,7 @@ feature {NONE} -- Implementation
 			-- File to which output read from process is written,
 			-- if not void
 
-	savefile_name: STRING
+	savefile_name: READABLE_STRING_32
 			-- Name of file to which output read from process
 			-- is written, if not Void
 
@@ -308,10 +307,12 @@ invariant
 		not unix_os.valid_file_descriptor (Invalid_file_descriptor);
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -332,6 +333,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

@@ -1,44 +1,44 @@
-note
+﻿note
 	description: "String constants for configuration files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	EWEASEL_CONFIGURATION_CONSTANTS
 
 feature -- Access
 
-	root_tag: STRING = "configuration"
-	
-	control_file_tag: STRING = "init_control_file"
-	
-	catalog_file_tag: STRING = "catalog_file"
-	
-	output_location_tag: STRING = "output_location"
-	
-	keep_tag: STRING = "keep"
-	
-	keep_eifgens_tag: STRING = "keep_eifgens_tag"
-	
-	include_tag: STRING = "include_dir"
-	
-	installation_tag: STRING = "eiffel_inst_dir"
+	root_tag: STRING_32 = "configuration"
 
-	weasel_installation_tag: STRING = "eweasel_inst_dir"
-	
-	platform_tag: STRING = "platform"
-	
-	platform_type_tag: STRING = "platform_type"
-	
-	compiler_version_tag: STRING = "compiler_version";
+	control_file_tag: STRING_32 = "init_control_file"
 
-note
+	catalog_file_tag: STRING_32 = "catalog_file"
+
+	output_location_tag: STRING_32 = "output_location"
+
+	keep_tag: STRING_32 = "keep"
+
+	keep_eifgens_tag: STRING_32 = "keep_eifgens_tag"
+
+	include_tag: STRING_32 = "include_dir"
+
+	installation_tag: STRING_32 = "eiffel_inst_dir"
+
+	weasel_installation_tag: STRING_32 = "eweasel_inst_dir"
+
+	platform_tag: STRING_32 = "platform"
+
+	platform_type_tag: STRING_32 = "platform_type"
+
+	compiler_version_tag: STRING_32 = "compiler_version"
+
+;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

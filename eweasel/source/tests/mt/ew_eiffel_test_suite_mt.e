@@ -1,9 +1,7 @@
 ﻿note
 	description: "An Eiffel test suite - multi-threaded version"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
 
 class EW_EIFFEL_TEST_SUITE_MT
 
@@ -42,13 +40,11 @@ feature -- Execution
 			debug ("threaded_eweasel")
 				print_debug_main ("Started adding tests selected by filter to test queue")
 			end
-			from
-				num_threads := 0
-				test_list.start;
-			until
-				test_list.after
+			num_threads := 0
+			across
+				test_list as t
 			loop
-				test := test_list.item;
+				test := t.item
 				if opts.filter.selects (test) then
 					debug ("threaded_eweasel")
 						print_debug_main ("Adding " + test.last_source_directory_component + " to test queue")
@@ -71,9 +67,8 @@ feature -- Execution
 							print_debug_main ("Launched thread "	+ num_threads.out)
 						end
 					end
-				end;
-				test_list.forth;
-			end;
+				end
+			end
 			debug ("threaded_eweasel")
 				print_debug_main ("Done adding tests selected by filter to test queue")
 			end
@@ -119,10 +114,12 @@ feature -- Execution
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2017, University of Southern California, Eiffel Software, and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

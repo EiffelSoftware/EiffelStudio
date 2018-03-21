@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "An Eiffel test parse error explanation"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "93/08/30"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EW_PARSE_ERROR
 
@@ -10,17 +11,17 @@ inherit
 	EW_ERROR
 
 create
-	make, make_empty
+	make, make_with_reason
 
 feature -- Properties
-	
+
 	error_type: STRING = "Parse";
 
 note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -41,6 +42,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

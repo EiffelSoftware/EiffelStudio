@@ -2,8 +2,6 @@
 	description: "An Eiffel syntax error"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class EW_EIFFEL_SYNTAX_ERROR
 
@@ -27,25 +25,26 @@ feature {NONE} -- Initialization
 
 feature -- Summary
 
-	summary: STRING
+	summary: STRING_32
 		do
-			create Result.make (0);
-			Result.append ("Syntax error in ");
-			if equal (class_name, "") then
-				Result.append ("Ace")
-			elseif equal (class_name, "_USE_FILE") then
-				Result.append ("%"Use%" file")
+			Result := {STRING_32} "Syntax error in "
+			if class_name.is_empty then
+				Result.append ({STRING_32} "Ace")
+			elseif class_name.same_string ({STRING_32} "_USE_FILE") then
+				Result.append ({STRING_32} "%"Use%" file")
 			else
-				Result.append ("class ")
+				Result.append ({STRING_32} "class ")
 				Result.append (class_name)
 			end;
-			Result.append (" at line ")
+			Result.append ({STRING_32} " at line ")
 			Result.append_integer (line_number)
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2017, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"

@@ -41,16 +41,6 @@ feature -- Command
 			eweasel_test_cell.item.set_env (environment)
 		end
 
-	replace_environments_in_default (a_var: STRING_8): STRING
-			--
-		require
-			not_void: a_var /= Void and then not a_var.is_empty
-		do
-			Result := environment.replaced_variable (a_var)
-		ensure
-			not_void: Result /= Void
-		end
-
 feature {NONE} -- Implementation
 
 	environment_cell: CELL [EW_TEST_ENVIRONMENT]

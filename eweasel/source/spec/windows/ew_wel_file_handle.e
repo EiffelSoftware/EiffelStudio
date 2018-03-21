@@ -1,16 +1,14 @@
-note
+﻿note
 	description: "Manipulate Windows handle to file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	EW_WEL_FILE_HANDLE
 
 feature -- Factory
 
-	open_file_inheritable (a_filename: STRING): POINTER
+	open_file_inheritable (a_filename: READABLE_STRING_32): POINTER
 			-- Open a file `a_filename' and made returned handle inheritable by child
 			-- process if any, so that it can be read from by child.
 		require
@@ -31,7 +29,7 @@ feature -- Factory
 				{WEL_FILE_CONSTANTS}.file_attribute_normal, default_pointer)
 		end
 
-	create_file_inheritable (a_filename: STRING; is_append: BOOLEAN): POINTER
+	create_file_inheritable (a_filename: READABLE_STRING_32; is_append: BOOLEAN): POINTER
 			-- If not `is_append' create a file `a_filename' and overwrite if it exists.
 			-- Otherwise append to existing file.
 		require
@@ -188,8 +186,7 @@ feature -- Element change
 	flush (a_handle: POINTER)
 			-- Flush buffered data.
 		do
-			if cwin_flush_file_buffers (a_handle) then
-			end
+			cwin_flush_file_buffers (a_handle).do_nothing
 		end
 
 	put_string (a_handle: POINTER; a_string: STRING)
@@ -274,10 +271,13 @@ feature {NONE} -- Implementation
 		end
 
 note
+	ca_ignore: "CA011", "CA011 — too many arguments"
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -299,5 +299,4 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
 
-
-end -- class WEL_FILE_HANDLE
+end

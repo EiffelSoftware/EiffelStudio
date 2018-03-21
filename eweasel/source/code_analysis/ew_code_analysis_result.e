@@ -1,9 +1,8 @@
-note
+﻿note
 	description: "The result of an execution of the code analysis."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "$Date$"
+	keywords: "Eiffel test"
 
 class
 	EW_CODE_ANALYSIS_RESULT
@@ -36,9 +35,9 @@ feature -- Properties
 	has_violations: BOOLEAN
 			-- One or more violations were reported
 		do
-			Result := (violations /= Void)
+			Result := attached violations
 		ensure
-			violation_list_not_empty: not (Result and then violations.is_empty)
+			violation_list_not_empty: Result implies (attached violations as vs and then not vs.is_empty)
 		end
 
 	analysis_argument_warning: BOOLEAN
@@ -79,31 +78,31 @@ feature -- Properties
 					l_count := l_count + 1
 				end
 			end
-			Result := (l_count = 1)
+			Result := l_count = 1
 		end
 
-	status: STRING
+	status: STRING_32
 		do
 			if not is_status_known then
-				Result := "Unknown status or parse error"
+				Result := {STRING_32} "Unknown status or parse error"
 			elseif analysis_clean then
-				Result := "No violations"
+				Result := {STRING_32} "No violations"
 			elseif has_violations then
-				Result := "One or more violations found"
+				Result := {STRING_32} "One or more violations found"
 			elseif not_run then
-				Result := "Analysis not run"
+				Result := {STRING_32} "Analysis not run"
 			end
 			if analysis_argument_warning then
-				Result.append ("; unrecognized argument warning")
+				Result.append ({STRING_32} "; unrecognized argument warning")
 			end
 			if analysis_class_warning then
-				Result.append ("; class not found warning")
+				Result.append ({STRING_32} "; class not found warning")
 			end
 			if analysis_rule_warning then
-				Result.append ("; forced rule not found warning")
+				Result.append ({STRING_32} "; forced rule not found warning")
 			end
 			if analysis_preference_warning then
-				Result.append ("; forced preference not found warning")
+				Result.append ({STRING_32} "; forced preference not found warning")
 			end
 		ensure
 			result_exists: Result /= Void
@@ -112,20 +111,20 @@ feature -- Properties
 	violations: SORTED_TWO_WAY_LIST [EW_CODE_ANALYSIS_VIOLATION];
 		-- Validity errors reported by compiler
 
-	summary: STRING
+	summary: STRING_32
 			-- String summarizing the status of `Current'
 		do
 			Result := Precursor
-			Result.append ("%N%T")
-			Result.append ("Code analysis summary: ")
-			Result.append (status + "%N%T")
+			Result.append ({STRING_32} "%N%T")
+			Result.append ({STRING_32} "Code analysis summary: ")
+			Result.append (status + {STRING_32} "%N%T")
 			if has_violations then
 				across
 					violations as ic
 				loop
-					Result.append (ic.item.summary + "%N%T")
+					Result.append (ic.item.summary + {STRING_32} "%N%T")
 				end
-				Result.append ("%N")
+				Result.append ({STRING_32} "%N")
 			end
 		end
 
@@ -168,7 +167,7 @@ feature -- Modification
 		do
 			analysis_clean := True
 		ensure
-			analysis_clean = True
+			analysis_clean
 		end
 
 	set_argument_warning
@@ -176,7 +175,7 @@ feature -- Modification
 		do
 			analysis_argument_warning := True
 		ensure
-			analysis_argument_warning = True
+			analysis_argument_warning
 		end
 
 	set_class_warning
@@ -184,7 +183,7 @@ feature -- Modification
 		do
 			analysis_class_warning := True
 		ensure
-			analysis_class_warning = True
+			analysis_class_warning
 		end
 
 	set_rule_warning
@@ -192,7 +191,7 @@ feature -- Modification
 		do
 			analysis_rule_warning := True
 		ensure
-			analysis_rule_warning = True
+			analysis_rule_warning
 		end
 
 	set_preference_warning
@@ -200,16 +199,19 @@ feature -- Modification
 		do
 			analysis_preference_warning := True
 		ensure
-			analysis_preference_warning = True
+			analysis_preference_warning
 		end
 
 	add_violation (a_violation: EW_CODE_ANALYSIS_VIOLATION)
 		local
+			vs: like violations
 		do
-			if violations = Void then
-				create violations.make
+			vs := violations
+			if not attached vs then
+				create vs.make
+				violations := vs
 			end
-			violations.extend (a_violation)
+			vs.extend (a_violation)
 		end
 
 	sort
@@ -287,7 +289,7 @@ feature {NONE} -- Implementation
 			end
 			l_message := a_line.substring (l_substring_info.char_2_index + 1, a_line.count)
 			l_message.adjust
-			create l_violation.make_with_everything (last_class_with_messages, l_line_number, l_rule_id, long_violation_type (l_short_type), l_message)
+			create l_violation.make_with_everything (last_class_with_messages, l_line_number, from_utf_8 (l_rule_id), long_violation_type (l_short_type), from_utf_8 (l_message))
 			add_violation (l_violation)
 		end
 
@@ -318,34 +320,30 @@ feature {NONE} -- Implementation
 
 	list_matches_pattern (a_main_list, a_pattern_list: LIST [EW_CODE_ANALYSIS_VIOLATION]): BOOLEAN
 			-- Does the list of violation `a_main_list' match the list of violation patterns `a_pattern_list'?
-		local
-			l_main_count, l_pattern_count: INTEGER
 		do
-			Result := True
 			if attached a_main_list then
-				l_main_count := a_main_list.count
-			end
-			if attached a_pattern_list then
-				l_pattern_count := a_pattern_list.count
-			end
-			if l_main_count /= l_pattern_count then
-				Result := False
-			elseif l_main_count = 0 and l_pattern_count = 0 then
-				Result := True
+				if attached a_pattern_list then
+					if a_main_list.count = a_pattern_list.count then
+						Result := True
+						from
+							a_main_list.start
+							a_pattern_list.start
+						until
+							a_main_list.after or a_pattern_list.after
+						loop
+							Result := Result and a_main_list.item.matches_pattern (a_pattern_list.item)
+							a_main_list.forth
+							a_pattern_list.forth
+						end
+						check
+							a_main_list.after and a_pattern_list.after
+						end
+					end
+				else
+					Result := a_main_list.is_empty
+				end
 			else
-				from
-					a_main_list.start
-					a_pattern_list.start
-				until
-					a_main_list.after or a_pattern_list.after
-				loop
-					Result := Result and a_main_list.item.matches_pattern (a_pattern_list.item)
-					a_main_list.forth
-					a_pattern_list.forth
-				end
-				check
-					a_main_list.after and a_pattern_list.after
-				end
+				Result := attached a_pattern_list implies a_pattern_list.is_empty
 			end
 		end
 
@@ -353,10 +351,12 @@ invariant
 	violation_list_not_empty: attached violations implies not violations.is_empty
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-		Copyright (c) 1984-2015, University of Southern California and contributors.
-		All rights reserved.
-	]"
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			All rights reserved.
+		]"
 	license: "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 					This file is part of the EiffelWeasel Eiffel Regression Tester.

@@ -18,24 +18,24 @@ inherit
 
 feature
 
-	inst_initialize (line: STRING)
+	inst_initialize (line: READABLE_STRING_32)
 			-- Initialize instruction from `line'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
 		local
-			args: LIST [STRING];
+			args: LIST [READABLE_STRING_32]
 		do
-			args := broken_into_words (line);
-			if args.count /= 3 then
-				failure_explanation := "argument count is not 3";
-				init_ok := False;
+			args := broken_into_words (line)
+			if args.count = 3 then
+				inst_initialize_with (args [1], args [2], args [3])
+				init_ok := True
 			else
-				inst_initialize_with (args.i_th (1), args.i_th (2), args.i_th (3))
-				init_ok := True;
+				failure_explanation := {STRING_32} "argument count is not 3"
+				init_ok := False
 			end
-		end;
+		end
 
-	inst_initialize_with (a_source_file, a_dest_directory, a_dest_file: STRING)
+	inst_initialize_with (a_source_file, a_dest_directory, a_dest_file: READABLE_STRING_32)
 			-- Initialize with arguments
 		require
 			not_void: a_source_file /= Void
@@ -52,7 +52,7 @@ feature
 			-- instructions of `test'.
 			-- Set `execute_ok' to indicate whether successful.
 		local
-			src_name, dest_name: STRING
+			src_name, dest_name: READABLE_STRING_32
 			src, dir, dest: like new_file
 			before_date, after_date: INTEGER
 			orig_date, final_date: INTEGER
@@ -113,28 +113,28 @@ feature
 
 					check_dates (test.e_compile_start_time, orig_date, final_date, before_date, after_date, dest_name)
 
-					test.unset_copy_wait;
+					test.unset_copy_wait
 				end
-				execute_ok := True;
+				execute_ok := True
 			elseif not src.exists then
-				failure_explanation := "source file not found";
+				failure_explanation := {STRING_32} "source file not found"
 			elseif not src.is_plain then
-				failure_explanation := "source file not a plain file";
+				failure_explanation := {STRING_32} "source file not a plain file"
 			elseif not dir.exists then
-				failure_explanation := "destination directory not found";
+				failure_explanation := {STRING_32} "destination directory not found"
 			elseif not dir.is_directory then
-				failure_explanation := "destination directory not a directory";
+				failure_explanation := {STRING_32} "destination directory not a directory"
 			end
 
-		end;
+		end
 
-	check_dates (start_date, orig_date, final_date, before_date, after_date: INTEGER fname: STRING)
+	check_dates (start_date, orig_date, final_date, before_date, after_date: INTEGER fname: READABLE_STRING_32)
 		do
 			if final_date <= orig_date then
 				output.append_new_line
 				output.append_error ("ERROR: final date " + final_date.out +
 					" not greater than original date " +
-					orig_date.out + " for file " + fname, True)
+					orig_date.out + " for file " + fname.out, True)
 				output.append ("Compile start = " + start_date.out +
 					" Before = " + before_date.out +
 					" After = " + after_date.out, True)
@@ -158,29 +158,29 @@ feature -- Properties
 	is_fast: BOOLEAN
 			-- Should "speed" mode be used?
 		do
-			Result := item (Eweasel_fast_name) /= Void
+			Result := attached item (Eweasel_fast_name)
 		end;
 
 feature {NONE}  -- Implementation
 
-	ensure_dir_exists (dir_name: STRING)
+	ensure_dir_exists (dir_name: READABLE_STRING_32)
 			-- Try to ensure that directory `dir_name' exists
 			-- (it is not guaranteed to exist at exit).
 		require
 			name_not_void: dir_name /= Void
 		local
-			dir: DIRECTORY;
-			tried: BOOLEAN;
+			dir: DIRECTORY
+			tried: BOOLEAN
 		do
 			if not tried then
-				create dir.make (dir_name);
+				create dir.make (dir_name)
 				if not dir.exists then
-					dir.create_dir;
+					dir.create_dir
 				end;
 			end
 		rescue
-			tried := True;
-			retry;
+			tried := True
+			retry
 		end
 
 	copy_file (src: like new_file; env: EW_TEST_ENVIRONMENT; dest: like new_file)
@@ -189,50 +189,50 @@ feature {NONE}  -- Implementation
 			-- only if `substitute' is true) to
 			-- file `dest'.
 		require
-			source_not_void: src /= Void;
-			destination_not_void: dest /= Void;
-			environment_not_void: env /= Void;
-			source_is_closed: src.is_closed;
-			destination_is_closed: dest.is_closed;
+			source_not_void: src /= Void
+			destination_not_void: dest /= Void
+			environment_not_void: env /= Void
+			source_is_closed: src.is_closed
+			destination_is_closed: dest.is_closed
 		local
-			line: STRING;
+			line: STRING
 		do
 			from
-				src.open_read;
-				dest.open_write;
+				src.open_read
+				dest.open_write
 			until
 				src.end_of_file
 			loop
-				src.read_line;
+				src.read_line
 				if substitute then
-					line := env.substitute (src.last_string);
+					line := to_utf_8 (env.substitute (from_utf_8 (src.last_string)))
 				else
-					line := src.last_string;
-				end;
-				if not src.end_of_file then
-					dest.put_string (line);
-					dest.new_line;
-				elseif not line.is_empty then
-					dest.put_string (line);
+					line := src.last_string
 				end
-			end;
-			src.close;
-			dest.flush;
-			dest.close;
-		end;
+				if not src.end_of_file then
+					dest.put_string (line)
+					dest.new_line
+				elseif not line.is_empty then
+					dest.put_string (line)
+				end
+			end
+			src.close
+			dest.flush
+			dest.close
+		end
 
 feature {NONE}
 
-	source_file: STRING;
+	source_file: READABLE_STRING_32
 			-- Name of source file (always in source directory)
 
-	dest_file: STRING;
+	dest_file: READABLE_STRING_32
 			-- Name of destination file
 
-	dest_directory: STRING;
+	dest_directory: READABLE_STRING_32
 			-- Name of destination directory
 
-	new_file (a_file_name: STRING): FILE
+	new_file (a_file_name: READABLE_STRING_32): FILE
 			-- Create an instance of FILE.
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -248,6 +248,7 @@ feature {NONE}
 		end
 
 note
+	ca_ignore: "CA011", "CA011 — too many arguments"
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[

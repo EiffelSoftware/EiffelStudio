@@ -1,5 +1,4 @@
-note
-	date: "October 9, 1997";
+﻿note
 	description: "A Unix process"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,6 +15,7 @@ inherit
 				reset_all_default, reset_default, is_caught,
 				c_signal_map, c_signal_name
 		end
+
 	EW_UNIX_OS
 		rename
 			send_signal as unix_send_signal,
@@ -24,20 +24,23 @@ inherit
 			{ANY} valid_file_descriptor
 			{NONE} all
 		end
+
 	OPERATING_ENVIRONMENT
 		export
 			{NONE} all
 		end
+
 	MEMORY
 		export
 			{NONE} all
 		end
-create
+
+create {EW_UNIX_OS_ACCESS}
 	make
 
-feature {EW_UNIX_OS} -- Creation
+feature {NONE} -- Creation
 
-	make (fname: STRING)
+	make (fname: READABLE_STRING_32)
 			-- Create a process object which represents an
 			-- independent process that can execute the
 			-- program residing in file `fname'
@@ -45,14 +48,14 @@ feature {EW_UNIX_OS} -- Creation
 			file_name_exists: fname /= Void
 			file_name_not_empty: not fname.is_empty
 		do
-			initialize (fname);
+			initialize (fname)
 		ensure
 			file_name_set: program_file_name.is_equal (fname)
-		end;
+		end
 
 feature -- Initialization
 
-	initialize (fname: STRING)
+	initialize (fname: READABLE_STRING_32)
 			-- Initialize `Current' with program residing
 			-- in file `fname'
 		require
@@ -60,25 +63,25 @@ feature -- Initialization
 			file_name_not_empty: not fname.is_empty
 			process_not_executing: not is_executing
 		do
-			program_file_name := fname;
-			is_executing := False;
-			process_id := 0;
-			in_child := False;
-			status := 0;
-			input_file_name := Void;
-			output_file_name := Void;
-			error_file_name := Void;
-			input_piped := False;
-			output_piped := False;
-			error_piped := False;
-			child_input_file := Void;
-			child_output_file := Void;
-			child_error_file := Void;
-			arguments := Void;
-			process_name := Void;
-			input_descriptor := Invalid_file_descriptor;
-			output_descriptor := Invalid_file_descriptor;
-			error_descriptor := Invalid_file_descriptor;
+			program_file_name := fname
+			is_executing := False
+			process_id := 0
+			in_child := False
+			status := 0
+			input_file_name := Void
+			output_file_name := Void
+			error_file_name := Void
+			input_piped := False
+			output_piped := False
+			error_piped := False
+			child_input_file := Void
+			child_output_file := Void
+			child_error_file := Void
+			arguments := Void
+			process_name := Void
+			input_descriptor := Invalid_file_descriptor
+			output_descriptor := Invalid_file_descriptor
+			error_descriptor := Invalid_file_descriptor
 		ensure
 			file_name_set: program_file_name.is_equal (fname)
 			leave_input_unchanged: input_file_name = Void
@@ -102,100 +105,100 @@ feature -- Initialization
 
 feature -- Properties
 
-	program_file_name: STRING;
+	program_file_name: READABLE_STRING_32
 			-- Name of file containing program which will be
 			-- executed when process is spawned
 
-	process_name: STRING;
+	process_name: STRING_32
 			-- Name to be assigned to process.  Passed as
 			-- argument 0 when process is spawned.  If Void,
 			-- then last component of `program_file_name'
 			-- is passed
 
-	arguments: ARRAY [STRING];
+	arguments: ARRAY [READABLE_STRING_32]
 			-- Arguments to passed to process when it is spawned,
 			-- not including argument 0 (which is conventionally
 			-- the name of the program).  If Void or if count
 			-- is zero, then no arguments are passed
 
-	environment_variables: HASH_TABLE [STRING, STRING];
+	environment_variables: like {EW_TEST_ENVIRONMENT}.environment_variables
 			-- Environment variables and the values to
 			-- which they should be set in spawned process
 
-	close_nonstandard_files: BOOLEAN;
+	close_nonstandard_files: BOOLEAN
 			-- Should nonstandard files (files other than
 			-- standard input, standard output and standard
 			-- error) be closed in the spawned process?
 
-	input_descriptor: INTEGER;
+	input_descriptor: INTEGER
 			-- Descriptor to be used as standard input in
 			-- spawned process, if value is valid descriptor
 
-	output_descriptor: INTEGER;
+	output_descriptor: INTEGER
 			-- Descriptor to be used as standard output in
 			-- spawned process, if value is valid descriptor
 
-	error_descriptor: INTEGER;
+	error_descriptor: INTEGER
 			-- Descriptor to be used as standard error in
 			-- spawned process, if value is valid descriptor
 
-	input_file_name: STRING;
+	input_file_name: READABLE_STRING_32
 			-- Name of file to be used as standard input in
 			-- spawned process if `input_descriptor' is not a
 			-- valid descriptor and `input_piped' is false.
 			-- A Void value leaves standard input same as
 			-- parent's and an empty string closes standard input
 
-	output_file_name: STRING;
+	output_file_name: READABLE_STRING_32
 			-- Name of file to be used as standard output in
 			-- spawned process if `output_descriptor' is not a
 			-- valid descriptor and `output_piped' is false.
 			-- A Void value leaves standard output same as
 			-- parent's and an empty string closes standard output
 
-	error_file_name: STRING;
+	error_file_name: READABLE_STRING_32
 			-- Name of file to be used as standard error in
 			-- spawned process if `error_descriptor' is not a
 			-- valid descriptor and `error_piped' is false.
 			-- A Void value leaves standard error same as
 			-- parent's and an empty string closes standard error
 
-	input_piped: BOOLEAN;
+	input_piped: BOOLEAN
 			-- Should standard input for spawned process
 			-- come from a pipe connected to parent,
 			-- instead of from a file descriptor or named file?
 
-	output_piped: BOOLEAN;
+	output_piped: BOOLEAN
 			-- Should standard output for spawned process go to a
 			-- pipe connected to parent, instead of to a
 			-- file descriptor or named file?
 
-	error_piped: BOOLEAN;
+	error_piped: BOOLEAN
 			-- Should standard error for spawned process go to a
 			-- pipe connected to parent, instead of to a
 			-- file descriptor or named file?
 
-	error_same_as_output: BOOLEAN;
+	error_same_as_output: BOOLEAN
 			-- Should standard error for spawned process be
 			-- the same as standard output (i.e., identical
 			-- file descriptor)?
 
 feature -- Execution properties
 
-	is_executing: BOOLEAN;
+	is_executing: BOOLEAN
 			-- Is process represented by `Current' currently
 			-- executing?
 
-	process_id: INTEGER;
+	process_id: INTEGER
 			-- Process id of last child process spawned or
 			-- 0 if no processes have been spawned.
 
-	in_child: BOOLEAN;
+	in_child: BOOLEAN
 			-- Are we currently executing in the spawned child
 			-- process?  Intended only for use after
 			-- a spawn call which raises an exception
 
-	status: INTEGER;
+	status: INTEGER
 			-- Status from last child process that reported
 			-- status (0 if none)
 
@@ -237,7 +240,7 @@ feature -- Execution properties
 
 feature -- Modification
 
-	set_arguments (args: ARRAY [STRING])
+	set_arguments (args: ARRAY [READABLE_STRING_32])
 			-- Set `arguments' to `args'
 		require
 			process_not_executing: not is_executing
@@ -247,12 +250,12 @@ feature -- Modification
 			arguments_set: arguments = args
 		end
 
-	set_environment_variables (vars: HASH_TABLE [STRING, STRING])
+	set_environment_variables (vars: like {EW_TEST_ENVIRONMENT}.environment_variables)
 			-- Set `environment_variables' to `vars'
 		require
 			process_not_executing: not is_executing
 		do
-			environment_variables := vars;
+			environment_variables := vars
 		ensure
 			environment_variables_set: environment_variables = vars
 		end
@@ -262,12 +265,12 @@ feature -- Modification
 		require
 			process_not_executing: not is_executing
 		do
-			close_nonstandard_files := b;
+			close_nonstandard_files := b
 		ensure
 			value_set: close_nonstandard_files = b
 		end
 
-	set_input_file_name (fname: STRING)
+	set_input_file_name (fname: READABLE_STRING_32)
 			-- Set `input_file_name' to `fname', which must
 			-- be the name of an existing file readable by
 			-- the parent process
@@ -275,15 +278,15 @@ feature -- Modification
 			process_not_executing: not is_executing
 		do
 			input_file_name := fname
-			input_descriptor := Invalid_file_descriptor;
-			input_piped := False;
+			input_descriptor := Invalid_file_descriptor
+			input_piped := False
 		ensure
 			file_name_set: equal (input_file_name, fname)
 			input_not_descriptor: not valid_file_descriptor (input_descriptor)
 			input_not_piped: not input_piped
 		end
 
-	set_output_file_name (fname: STRING)
+	set_output_file_name (fname: READABLE_STRING_32)
 			-- Set `output_file_name' to `fname', which must
 			-- be the name of a file writable by the parent
 			-- process.  File is created if it does not exist
@@ -292,15 +295,15 @@ feature -- Modification
 			process_not_executing: not is_executing
 		do
 			output_file_name := fname
-			output_descriptor := Invalid_file_descriptor;
-			output_piped := False;
+			output_descriptor := Invalid_file_descriptor
+			output_piped := False
 		ensure
 			file_name_set: equal (output_file_name, fname)
 			output_not_descriptor: not valid_file_descriptor (output_descriptor)
 			output_not_piped: not output_piped
 		end
 
-	set_error_file_name (fname: STRING)
+	set_error_file_name (fname: READABLE_STRING_32)
 			-- Set `error_file_name' to `fname', which must
 			-- be the name of a file writable by the parent
 			-- process.  File is created if it does not exist
@@ -309,9 +312,9 @@ feature -- Modification
 			process_not_executing: not is_executing
 		do
 			error_file_name := fname
-			error_descriptor := Invalid_file_descriptor;
-			error_piped := False;
-			error_same_as_output := False;
+			error_descriptor := Invalid_file_descriptor
+			error_piped := False
+			error_same_as_output := False
 		ensure
 			file_name_set: equal (error_file_name, fname)
 			error_not_descriptor: not valid_file_descriptor (error_descriptor)
@@ -324,8 +327,8 @@ feature -- Modification
 		require
 			process_not_executing: not is_executing
 		do
-			input_piped := True;
-			input_descriptor := Invalid_file_descriptor;
+			input_piped := True
+			input_descriptor := Invalid_file_descriptor
 			input_file_name := Void
 		ensure
 			piped_input_set: input_piped
@@ -338,8 +341,8 @@ feature -- Modification
 		require
 			process_not_executing: not is_executing
 		do
-			output_piped := True;
-			output_descriptor := Invalid_file_descriptor;
+			output_piped := True
+			output_descriptor := Invalid_file_descriptor
 			output_file_name := Void
 		ensure
 			piped_output_set: output_piped
@@ -352,10 +355,10 @@ feature -- Modification
 		require
 			process_not_executing: not is_executing
 		do
-			error_piped := True;
-			error_descriptor := Invalid_file_descriptor;
+			error_piped := True
+			error_descriptor := Invalid_file_descriptor
 			error_file_name := Void
-			error_same_as_output := False;
+			error_same_as_output := False
 		ensure
 			piped_error_set: error_piped
 			error_not_file: error_file_name = Void
@@ -451,12 +454,12 @@ feature {NONE} -- Implementation
 			-- `arguments' as the rest of the arguments
 		local
 			k, count, lower, pos: INTEGER
-			pname: STRING
-			a: ARRAY [STRING]
+			pname: like process_name
+			a: ARRAY [READABLE_STRING_32]
 		do
 			if arguments /= Void then
-				count := arguments.count + 1;
-				lower := arguments.lower;
+				count := arguments.count + 1
+				lower := arguments.lower
 			else
 				count := 1
 				lower := 1	-- Not applicable
@@ -493,7 +496,7 @@ feature {NONE} -- Implementation
 			shared_input_pipe := Void
 			in_file := Void
 			if input_piped then
-				shared_input_pipe := new_pipe;
+				shared_input_pipe := new_pipe
 			elseif valid_file_descriptor (input_descriptor) then
 				-- No action
 			elseif input_file_name = Void then
@@ -501,7 +504,7 @@ feature {NONE} -- Implementation
 			elseif input_file_name.is_empty then
 				-- No action
 			else 	-- input_file_name is non-empty
-				create in_file.make (input_file_name)
+				create in_file.make_with_name (input_file_name)
 				if in_file.exists then
 					in_file.open_read
 				else
@@ -513,7 +516,7 @@ feature {NONE} -- Implementation
 			shared_output_pipe := Void
 			out_file := Void
 			if output_piped then
-				shared_output_pipe := new_pipe;
+				shared_output_pipe := new_pipe
 			elseif valid_file_descriptor (output_descriptor) then
 				-- No action
 			elseif output_file_name = Void then
@@ -521,7 +524,7 @@ feature {NONE} -- Implementation
 			elseif output_file_name.is_empty then
 				-- No action
 			else 	-- output_file_name is non-empty
-				create out_file.make_open_write (output_file_name);
+				create out_file.make_open_write (output_file_name)
 			end
 
 			child_error_file := Void
@@ -538,7 +541,7 @@ feature {NONE} -- Implementation
 			elseif error_file_name.is_empty then
 				-- No action
 			else 	-- error_file_name is non-empty
-				create err_file.make_open_write (error_file_name);
+				create err_file.make_open_write (error_file_name)
 			end
 		end
 
@@ -546,7 +549,7 @@ feature {NONE} -- Implementation
 			-- Setup files for parent after doing fork
 		do
 			if input_piped then
-				create child_input_file.make ("Input_to_child");
+				create child_input_file.make_with_name ("Input_to_child");
 				child_input_file.fd_open_write (shared_input_pipe.write_descriptor)
 				shared_input_pipe.erase_write_descriptor
 				shared_input_pipe.close_read_descriptor
@@ -563,7 +566,7 @@ feature {NONE} -- Implementation
 			in_file := Void
 
 			if output_piped then
-				create child_output_file.make ("Output_from_child");
+				create child_output_file.make_with_name ("Output_from_child");
 				child_output_file.fd_open_read (shared_output_pipe.read_descriptor)
 				shared_output_pipe.erase_read_descriptor
 				shared_output_pipe.close_write_descriptor
@@ -582,7 +585,7 @@ feature {NONE} -- Implementation
 			if error_same_as_output then
 				-- No action
 			elseif error_piped then
-				create child_error_file.make ("Error_from_child");
+				create child_error_file.make_with_name ("Error_from_child")
 				child_error_file.fd_open_read (shared_error_pipe.read_descriptor)
 				shared_error_pipe.erase_read_descriptor
 				shared_error_pipe.close_write_descriptor
@@ -606,49 +609,45 @@ feature {NONE} -- Implementation
 			--| Note that memory will be leaked if not use for spawning the process.
 		local
 			l_ptr: MANAGED_POINTER
-			l_cstr: C_STRING
 			l_cstr_ptr: POINTER
 			i, nb: INTEGER
-			l_str: STRING
+			l_str: STRING_32
+			u: UTF_CONVERTER
+			s8: STRING_8
 		do
 			if attached environment_variables as l_tbl and then not l_tbl.is_empty then
 					-- Estimate the number of environment variables that will be stored.
-				from
-					l_tbl.start
-				until
-					l_tbl.after
+				across
+					l_tbl as t
 				loop
-					if l_tbl.key_for_iteration /= Void and then l_tbl.item_for_iteration /= Void then
+					if attached t.item and then attached t.key then
 						nb := nb + 1
 					end
-					l_tbl.forth
 				end
 					-- We allocate `Result', then use a MANAGED_POINTER to fill its content.
 				Result := Result.memory_alloc ((nb + 1) * {PLATFORM}.pointer_bytes)
 				create l_ptr.share_from_pointer (Result, (nb + 1) * {PLATFORM}.pointer_bytes)
+				across
+					l_tbl as t
 				from
-					l_tbl.start
 					i := 0
-				until
-					l_tbl.after
 				loop
 					if
-						attached l_tbl.key_for_iteration as l_key and then
-						attached l_tbl.item_for_iteration as l_value
+						attached t.key as l_key and then
+						attached t.item as l_value
 					then
 						create l_str.make (l_key.count + l_value.count + 1)
 						l_str.append (l_key)
 						l_str.append_character ('=')
 						l_str.append (l_value)
+						s8 := u.string_32_to_utf_8_string_8 (l_str)
 							-- We allocate memory ourself so that the C_STRING object does not
 							-- free the memory.
-						l_cstr_ptr := l_cstr_ptr.memory_alloc (l_str.count + 1)
-						create l_cstr.make_shared_from_pointer_and_count (l_cstr_ptr, l_str.count)
-						l_cstr.set_string (l_str)
+						l_cstr_ptr := l_cstr_ptr.memory_alloc (s8.count + 1)
+						;(create {C_STRING}.make_shared_from_pointer_and_count (l_cstr_ptr, s8.count)).set_string (s8)
 						l_ptr.put_pointer (l_cstr_ptr, i * {PLATFORM}.pointer_bytes)
 						i := i + 1
 					end
-					l_tbl.forth
 				end
 				l_ptr.put_pointer (default_pointer, i * {PLATFORM}.pointer_bytes)
 			end
@@ -753,7 +752,7 @@ feature {NONE} -- Implementation
 	shared_error_pipe: EW_UNIX_PIPE
 			-- Pipe to be used by child process for standard error
 
-	arguments_for_exec: ARRAY [STRING]
+	arguments_for_exec: ARRAY [READABLE_STRING_32]
 			-- Arguments to be passed to `exec_process'
 
 	child_input_file: RAW_FILE;
@@ -827,10 +826,12 @@ invariant
 	valid_stderr_descriptor: valid_file_descriptor (Stderr_descriptor)
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -852,5 +853,4 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
 
-
-end -- class UNIX_PROCESS
+end

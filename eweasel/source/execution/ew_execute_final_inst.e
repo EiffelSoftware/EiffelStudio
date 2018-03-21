@@ -10,11 +10,11 @@ inherit
 	EW_EXECUTE_INST
 
 feature {NONE} -- Implementation
-	
-	execution_dir_name: STRING
+
+	execution_dir_name: READABLE_STRING_32
 			-- Name of directory where executable resides
 		once
-			Result := Final_execution_dir_name; 
+			Result := Final_execution_dir_name
 		end
 
 note

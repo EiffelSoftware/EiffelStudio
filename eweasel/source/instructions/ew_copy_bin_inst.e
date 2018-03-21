@@ -1,13 +1,11 @@
-note
+﻿note
 	description: "Copy file using RAW_FILE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	EW_COPY_BIN_INST
-	
+
 inherit
 	EW_COPY_INST
 		redefine
@@ -16,7 +14,7 @@ inherit
 
 feature -- Properties
 
-	substitute: BOOLEAN = True;
+	substitute: BOOLEAN = True
 			-- Do not substitute lines of copied files
 
 feature {NONE} -- Implementation
@@ -34,16 +32,18 @@ feature {NONE} -- Implementation
 			dest.close
 		end
 
-	new_file (a_file_name: STRING): RAW_FILE
+	new_file (a_file_name: READABLE_STRING_32): RAW_FILE
 		do
-			create Result.make (a_file_name)
+			create Result.make_with_name (a_file_name)
 		end
-		
+
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

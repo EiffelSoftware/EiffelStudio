@@ -5,8 +5,6 @@
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	EWEASEL_WINDOW
@@ -15,6 +13,12 @@ inherit
 	EWEASEL_WINDOW_IMP
 
 	EW_SHARED_OBJECTS
+		undefine
+			default_create,
+			copy
+		end
+
+	EW_STRING_UTILITIES
 		undefine
 			default_create,
 			copy
@@ -70,35 +74,33 @@ feature {NONE} -- Configuration
 			configuration.set_keep_eifgens (keep_eifgen_check_buttons.is_selected)
 			if keep_check_button.is_selected then
 				if all_test_keep_radio.is_selected then
-					configuration.set_keep_tests ("all")
+					configuration.set_keep_tests ({STRING_32} "all")
 				elseif passed_test_keep_radio.is_selected then
-					configuration.set_keep_tests ("passed")
+					configuration.set_keep_tests ({STRING_32} "passed")
 				elseif failed_test_keep_radio.is_selected then
-					configuration.set_keep_tests ("failed")
+					configuration.set_keep_tests ({STRING_32} "failed")
 				end
 			else
-				configuration.set_keep_tests ("none")
+				configuration.set_keep_tests ({STRING_32} "none")
 			end
 		end
 
 	open_configuration
 			-- Open an previously saved configuration
 		local
-			l_filename: STRING
 			l_configuration: like configuration
 		do
 			l_configuration := configuration
 			configuration := Void
-			l_filename := open_file
-			if l_filename /= Void then
+			if attached open_file as l_filename then
 				create configuration.make (l_filename)
 				if configuration.is_valid then
 					update_interface
 					save_menu_item.enable_sensitive
-					output.append ("New configuration loaded from " + l_filename + "%N", True)
+					output.append_32 ({STRING_32} "New configuration loaded from " + l_filename + "%N", True)
 				else
 					configuration := l_configuration
-					output.append_error ("Could not open configuration file at " + l_filename + "%N", True)
+					output.append_error_32 ({STRING_32} "Could not open configuration file at " + l_filename + "%N", True)
 				end
 			end
 		end
@@ -124,10 +126,10 @@ feature {NONE} -- Configuration
 			l_save_dialog.filters.extend (["*.xml", "Files of type (" + l_filter + ")"])
 			l_save_dialog.show_modal_to_window (Current)
 			if l_save_dialog.selected_button_name.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_save) then
-				if l_save_dialog.file_name.substring_index_in_bounds (l_filter, l_save_dialog.file_name.count - l_filter.count, l_save_dialog.file_name.count) /= 0 then
-					create configuration.make_new (l_save_dialog.file_name)
-				else
+				if l_save_dialog.file_name.substring_index_in_bounds (l_filter, l_save_dialog.file_name.count - l_filter.count, l_save_dialog.file_name.count) = 0 then
 					create configuration.make_new (l_save_dialog.file_name + l_filter)
+				else
+					create configuration.make_new (l_save_dialog.file_name)
 				end
 				save_configuration
 			end
@@ -140,60 +142,45 @@ feature {NONE} -- File
 
 	set_include_directory
 			-- Select a new include/control directory
-		local
-			l_dir_name: STRING
 		do
-			l_dir_name := open_directory
-			if l_dir_name /= Void then
-				output.append ("New include directory specified at " + l_dir_name, True)
+			if attached open_directory as l_dir_name then
+				output.append_32 ({STRING_32} "New include directory specified at " + l_dir_name, True)
 				include_directory_text_field.set_text (l_dir_name)
 			end
 		end
 
 	set_ise_eiffel_directory
 			-- Select a new ISE_EIFFEL directory
-		local
-			l_dir_name: STRING
 		do
-			l_dir_name := open_directory
-			if l_dir_name /= Void then
-				output.append ("New ISE_EIFFEL directory specified at " + l_dir_name, True)
+			if attached open_directory as l_dir_name then
+				output.append_32 ({STRING_32} "New ISE_EIFFEL directory specified at " + l_dir_name, True)
 				ise_eiffel_var_text_field.set_text (l_dir_name)
 			end
 		end
 
 	set_eweasel_directory
 			-- Select a new EWEASEL directory
-		local
-			l_dir_name: STRING
 		do
-			l_dir_name := open_directory
-			if l_dir_name /= Void then
-				output.append ("New EWEASEL location specified at " + l_dir_name, True)
+			if attached open_directory as l_dir_name then
+				output.append_32 ({STRING_32} "New EWEASEL location specified at " + l_dir_name, True)
 				eweasel_directory_text_field.set_text (l_dir_name)
 			end
 		end
 
 	set_test_output_directory
 			-- Select a new test output directory
-		local
-			l_dir_name: STRING
 		do
-			l_dir_name := open_directory
-			if l_dir_name /= Void then
-				output.append ("New test output directory specified at " + l_dir_name, True)
+			if attached open_directory as l_dir_name then
+				output.append_32 ({STRING_32} "New test output directory specified at " + l_dir_name, True)
 				test_output_directory_text_field.set_text (l_dir_name)
 			end
 		end
 
 	set_control_file
 			-- Select a new control file for test initialization
-		local
-			l_file_name: STRING
 		do
-			l_file_name := open_file
-			if l_file_name /= Void then
-				output.append ("New control file specified at " + l_file_name, True)
+			if attached  open_file as l_file_name then
+				output.append_32 ({STRING_32} "New control file specified at " + l_file_name, True)
 				control_file_text_field.set_text (l_file_name)
 			end
 		end
@@ -201,12 +188,12 @@ feature {NONE} -- File
 	load_catalog
 			-- Load a new catalog of tests
 		local
-			l_file_name: STRING
+			l_file_name: READABLE_STRING_32
 		do
 			if configuration /= Void and then configuration.is_valid then
 				l_file_name := open_file
 				if l_file_name /= Void then
-					load_tests (l_file_name)
+					load_tests (create {PATH}.make_from_string (l_file_name))
 					display_tests
 					configuration.set_catalog_file (l_file_name)
 				end
@@ -233,7 +220,7 @@ feature {NONE} -- File
 		do
 			if attached save_file as n then
 				create l_file.make_open_write (n)
-				l_file.put_string (output_text.text)
+				l_file.put_string (to_utf_8 (output_text.text))
 				l_file.close
 			end
 		end
@@ -276,15 +263,15 @@ feature {NONE} -- Implementation (GUI)
 			control_file_text_field.set_text (configuration.control_file)
 			ise_eiffel_var_text_field.set_text (configuration.eiffel_installation_directory)
 			eweasel_directory_text_field.set_text (configuration.eweasel_installation_directory)
-			if configuration.keep_tests.is_equal ("none") then
+			if configuration.keep_tests.same_string ({STRING_32} "none") then
 				keep_check_button.disable_select
 			else
 				keep_check_button.enable_select
-				if configuration.keep_tests.is_equal ("all") then
+				if configuration.keep_tests.same_string ({STRING_32} "all") then
 					all_test_keep_radio.enable_select
-				elseif configuration.keep_tests.is_equal ("failed") then
+				elseif configuration.keep_tests.same_string ({STRING_32} "failed") then
 					failed_test_keep_radio.enable_select
-				elseif configuration.keep_tests.is_equal ("passed") then
+				elseif configuration.keep_tests.same_string ({STRING_32} "passed") then
 					passed_test_keep_radio.enable_select
 				end
 			end
@@ -293,17 +280,17 @@ feature {NONE} -- Implementation (GUI)
 			else
 				keep_eifgen_check_buttons.disable_select
 			end
-			if configuration.platform_type.is_equal ("windows") then
+			if configuration.platform_type.same_string ({STRING_32} "windows") then
 				platform_combo_box.i_th (1).enable_select
-			elseif configuration.platform_type.is_equal ("win64") then
+			elseif configuration.platform_type.same_string ({STRING_32} "win64") then
 				platform_combo_box.i_th (1).enable_select
-			elseif configuration.platform_type.is_equal ("dotnet") then
+			elseif configuration.platform_type.same_string ({STRING_32} "dotnet") then
 				platform_combo_box.i_th (2).enable_select
-			elseif configuration.platform_type.is_equal ("unix") then
+			elseif configuration.platform_type.same_string ({STRING_32} "unix") then
 				platform_combo_box.i_th (3).enable_select
 			end
 			if configuration.catalog_file /= Void then
-				load_tests (configuration.catalog_file)
+				load_tests (create {PATH}.make_from_string (configuration.catalog_file))
 				display_tests
 			end
 		end
@@ -318,7 +305,7 @@ feature {NONE} -- Implementation (GUI)
 			end
 		end
 
-	open_file: STRING
+	open_file: READABLE_STRING_32
 			-- Open an file from dialog and return filename.  Void otherwise.
 		local
 			l_open_dialog: EV_FILE_OPEN_DIALOG
@@ -342,14 +329,14 @@ feature {NONE} -- Implementation (GUI)
 			end
 		end
 
-	open_directory: STRING
+	open_directory: READABLE_STRING_32
 			-- Open an directory from dialog and return directory name.  Void otherwise.
 		local
 			l_open_dialog: EV_DIRECTORY_DIALOG
 		do
 			create l_open_dialog
 			l_open_dialog.show_modal_to_window (Current)
-			if l_open_dialog.selected_button_name.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+			if l_open_dialog.selected_button_name.same_string_general ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 				Result := l_open_dialog.directory
 			end
 		end
@@ -361,14 +348,12 @@ feature {NONE} -- Implementation (GUI)
 			l_list_item: EV_MULTI_COLUMN_LIST_ROW
 		do
 			if tests /= Void and then not tests.is_empty then
-				from
-					tests_list.wipe_out
-					tests.start
-					tests_list.set_column_titles (<<"Name", "Type">>)
-				until
-					tests.after
+				tests_list.wipe_out
+				tests_list.set_column_titles (<<"Name", "Type">>)
+				across
+					tests as t
 				loop
-					l_test := tests.item
+					l_test := t.item
 					create l_list_item
 					l_list_item.extend (l_test.test_name)
 					l_list_item.set_data (l_test)
@@ -376,7 +361,6 @@ feature {NONE} -- Implementation (GUI)
 						l_list_item.extend (l_test.keywords.i_th (2))
 					end
 					tests_list.extend (l_list_item)
-					tests.forth
 				end
 			end
 		end
@@ -386,112 +370,81 @@ feature {NONE} -- Implementation
 	eweasel: EW_EWEASEL_MT
 			-- Eweasel
 
-	eweasel_args: ARRAY [STRING]
+	eweasel_args: ARRAY [READABLE_STRING_32]
 			-- Arguments for eweasel built from gui values
 		require
 			has_configuration: configuration /= Void
 			configuration_valid: configuration.is_valid
 		local
-			l_string: STRING
-			l_arr: ARRAYED_LIST [STRING]
+			l_string: READABLE_STRING_32
+			l_arr: ARRAYED_LIST [READABLE_STRING_32]
 		do
 			create l_arr.make (20)
 
 				-- Application
-			l_string :=  ((create {EXECUTION_ENVIRONMENT}).command_line.command_line)
-			l_arr.extend (l_string)
+			l_arr.extend ((create {EXECUTION_ENVIRONMENT}).arguments.command_line)
 
-			l_string :=  "-define"
-			l_arr.extend (l_string)
-			l_string :=  "EWEASEL"
-			l_arr.extend (l_string)
-			l_string :=  configuration.eweasel_installation_directory
-			l_arr.extend (l_string)
+			l_arr.extend ({STRING_32} "-define")
+			l_arr.extend ({STRING_32} "EWEASEL")
+			l_arr.extend (configuration.eweasel_installation_directory)
 
-			l_string :=  "-init"
-			l_arr.extend (l_string)
-			l_string :=  configuration.control_file
-			l_arr.extend (l_string)
+			l_arr.extend ({STRING_32} "-init")
+			l_arr.extend (configuration.control_file)
 
-			l_string :=  "-output"
-			l_arr.extend (l_string)
-			l_string :=  configuration.output_directory
-			l_arr.extend (l_string)
+			l_arr.extend ({STRING_32} "-output")
+			l_arr.extend (configuration.output_directory)
 
-			l_string :=  "-define"
-			l_arr.extend (l_string)
-			l_string :=  "ISE_EIFFEL"
-			l_arr.extend (l_string)
-			l_string :=  configuration.eiffel_installation_directory
-			l_arr.extend (l_string)
+			l_arr.extend ({STRING_32} "-define")
+			l_arr.extend ({STRING_32} "ISE_EIFFEL")
+			l_arr.extend (configuration.eiffel_installation_directory)
 
-			l_string :=  "-define"
-			l_arr.extend (l_string)
-			l_string :=  "ISE_PLATFORM"
-			l_arr.extend (l_string)
+			l_arr.extend ({STRING_32} "-define")
+			l_arr.extend ({STRING_32} "ISE_PLATFORM")
+			l_arr.extend (configuration.platform_type)
+
+			l_arr.extend ({STRING_32} "-define")
+			l_arr.extend ({STRING_32} "INCLUDE")
+			l_arr.extend (configuration.include_directory)
+
+			l_arr.extend ({STRING_32} "-define")
+			l_arr.extend ({STRING_32} "PLATFORM_TYPE")
 			l_string :=  configuration.platform_type
+			l_string :=
+				if l_string.is_case_insensitive_equal ({STRING_32} "dotnet") then
+					{STRING_32} "DOTNET"
+				elseif l_string.is_case_insensitive_equal ({STRING_32} "win64") or l_string.is_case_insensitive_equal ({STRING_32} "windows") then
+					{STRING_32} "WINDOWS"
+				else
+					{STRING_32} "UNIX"
+				end
 			l_arr.extend (l_string)
 
-			l_string :=  "-define"
+			l_arr.extend ({STRING_32} "-define")
 			l_arr.extend (l_string)
-			l_string :=  "INCLUDE"
-			l_arr.extend (l_string)
-			l_string :=  configuration.include_directory
-			l_arr.extend (l_string)
-
-			l_string :=  "-define"
-			l_arr.extend (l_string)
-			l_string :=  "PLATFORM_TYPE"
-			l_arr.extend (l_string)
-			l_string :=  configuration.platform_type
-			if l_string.is_case_insensitive_equal ("dotnet") then
-				l_string := "DOTNET"
-			elseif l_string.is_case_insensitive_equal ("win64") or l_string.is_case_insensitive_equal ("windows") then
-				l_string := "WINDOWS"
-			else
-				l_string := "UNIX"
-			end
-			l_arr.extend (l_string)
-
-			l_arr.extend ("-define")
-			l_arr.extend (l_string)
-			l_arr.extend ("1")
+			l_arr.extend ({STRING_32} "1")
 
 			if configuration.catalog_file /= Void then
-				l_string :=  "-catalog"
-				l_arr.extend (l_string)
-				l_string := configuration.catalog_file
-				l_arr.extend (l_string)
+				l_arr.extend ({STRING_32} "-catalog")
+				l_arr.extend (configuration.catalog_file)
 			end
 
 			if not configuration.keep_eifgens then
-				l_string := "-clean"
-				l_arr.extend (l_string)
+				l_arr.extend ({STRING_32} "-clean")
 			end
 
-			if not configuration.keep_tests.is_equal ("none") then
-				l_string := "-keep"
-				l_arr.extend (l_string)
-				l_string := configuration.keep_tests
-				l_arr.extend (l_string)
+			if not configuration.keep_tests.same_string ({STRING_32} "none") then
+				l_arr.extend ({STRING_32} "-keep")
+				l_arr.extend (configuration.keep_tests)
 			end
 
-			create Result.make_empty
+			Result := l_arr.to_array
 			Result.rebase (0)
-			from
-				l_arr.start
-			until
-				l_arr.after
-			loop
-				Result.force (l_arr.item, l_arr.index - 1)
-				l_arr.forth
-			end
 		end
 
 	tests: ARRAYED_LIST [EW_NAMED_EIFFEL_TEST]
 			-- Loaded tests
 
-	load_tests (file: STRING)
+	load_tests (file: PATH)
 			-- Load tests from test catalog file
 		local
 			tcf: EW_TEST_CATALOG_FILE
@@ -502,7 +455,7 @@ feature {NONE} -- Implementation
 			if tcf.last_ok then
 				create tests.make (tcf.last_catalog.all_tests.count)
 				tests.append (tcf.last_catalog.all_tests)
-				output.append ("Catalog loaded " + file, True)
+				output.append_32 ({STRING_32} "Catalog loaded " + file.name, True)
 			else
 				output.append_error ("Error parsing test catalog, unable to open", True)
 			end
@@ -511,7 +464,6 @@ feature {NONE} -- Implementation
 	save_tests (a_filename: READABLE_STRING_32)
 			-- Save SELECTED tests into a new catalog.
 		local
-			l_tests: ARRAYED_LIST [EW_NAMED_EIFFEL_TEST]
 			l_catalog: PLAIN_TEXT_FILE
 		do
 			if a_filename /= Void then
@@ -521,30 +473,27 @@ feature {NONE} -- Implementation
 					l_catalog.put_new_line
 					l_catalog.put_new_line
 
-					from
-						create l_tests.make (tests_list.selected_items.count)
-						tests_list.start
-					until
-						tests_list.after
+					across
+						tests_list as t
 					loop
-						if tests_list.item.is_selected then
-							if attached {EW_NAMED_EIFFEL_TEST} tests_list.item.data as l_test then
-								l_catalog.put_string ("test%T")
-								l_catalog.put_string (l_test.test_name + "%T")
-								l_catalog.put_string (l_test.last_source_directory_component + "%T")
-								l_catalog.put_string ("tcf ")
-								from
-									l_test.keywords.start
-								until
-									l_test.keywords.after
-								loop
-									l_catalog.put_string (l_test.keywords.item + " ")
-									l_test.keywords.forth
-								end
-								l_catalog.put_new_line
+						if
+							t.item.is_selected and then
+							attached {EW_NAMED_EIFFEL_TEST} t.item.data as l_test
+						then
+							l_catalog.put_string ("test%T")
+							l_catalog.put_string (to_utf_8 (l_test.test_name) + "%T")
+							l_catalog.put_string (to_utf_8 (l_test.last_source_directory_component) + "%T")
+							l_catalog.put_string ("tcf ")
+							from
+								l_test.keywords.start
+							until
+								l_test.keywords.after
+							loop
+								l_catalog.put_string (to_utf_8 (l_test.keywords.item) + " ")
+								l_test.keywords.forth
 							end
+							l_catalog.put_new_line
 						end
-						tests_list.forth
 					end
 					l_catalog.close
 				else
@@ -558,17 +507,17 @@ feature {NONE} -- Implementation
 		require
 			eweasel_ready: eweasel /= Void and configuration.is_valid
 		local
-			l_old_catalog_file: STRING
+			l_old_catalog_file: READABLE_STRING_32
 			l_temp_file: PLAIN_TEXT_FILE
 		do
 			update_configuration
 			if eweasel.args_ok then
 				if tests_list.selected_item /= Void then
-					create l_temp_file.make_create_read_write ("temp_catalog")
+					create l_temp_file.make_create_read_write ({STRING_32} "temp_catalog")
 					l_old_catalog_file := configuration.catalog_file
-					configuration.set_catalog_file ("temp_catalog")
+					configuration.set_catalog_file ({STRING_32} "temp_catalog")
 					save_tests (l_temp_file.path.name)
-					load_tests (l_temp_file.name)
+					load_tests (l_temp_file.path)
 					eweasel.execute
 					configuration.set_catalog_file (l_old_catalog_file)
 					l_temp_file.close
@@ -580,8 +529,10 @@ feature {NONE} -- Implementation
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2017, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"

@@ -1,9 +1,7 @@
-note
+﻿note
 	description: "Configuration settings"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	EWEASEL_CONFIGURATION
@@ -15,19 +13,19 @@ create
 	make,
 	make_new
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_filename: STRING)
+	make (a_filename: READABLE_STRING_32)
 			-- New configuration loaded from file in `a_filename'
 		require
 			name_not_void: a_filename /= Void
-			file_exists: (create {PLAIN_TEXT_FILE}.make (a_filename)).exists
+			file_exists: (create {PLAIN_TEXT_FILE}.make_with_name (a_filename)).exists
 		do
-			create file.make (a_filename)
+			create file.make_with_name (a_filename)
 			parse_file_info
 		end
 
-	make_new (a_filename: STRING)
+	make_new (a_filename: READABLE_STRING_32)
 			-- New configuration
 		require
 			name_not_void: a_filename /= Void
@@ -60,7 +58,7 @@ feature -- Storage
 
 				-- Keep EIFGENs
 			create l_element.make (l_root, keep_eifgens_tag, l_ns)
-			l_element.put_first (create {XML_CHARACTER_DATA}.make (l_element, keep_eifgens.out))
+			l_element.put_first (create {XML_CHARACTER_DATA}.make (l_element, create {STRING_32}.make_from_string_general (keep_eifgens.out)))
 			l_root.put_last (l_element)
 
 				-- Platform
@@ -107,31 +105,31 @@ feature -- Storage
 
 feature -- Access
 
-	output_directory: STRING
+	output_directory: READABLE_STRING_32
 			-- Location of output directory for test execution
 
-	keep_tests: STRING
+	keep_tests: READABLE_STRING_32
 			-- Argument to indicate what to do with test directories
 
 	keep_eifgens: BOOLEAN
 			-- Should compiled test EIFGENS be removed after execution?
 
-	platform_type: STRING
+	platform_type: READABLE_STRING_32
 			-- Compilation platform for test execution
 
-	include_directory: STRING
+	include_directory: READABLE_STRING_32
 			-- Include directory
 
-	eiffel_installation_directory: STRING
+	eiffel_installation_directory: READABLE_STRING_32
 			-- Eiffel installation directory
 
-	eweasel_installation_directory: STRING
+	eweasel_installation_directory: READABLE_STRING_32
 			-- Eweasel installation directory
 
-	control_file: STRING
+	control_file: READABLE_STRING_32
 			-- Control file location
 
-	catalog_file: STRING
+	catalog_file: READABLE_STRING_32
 			-- Catalog file location	
 
 feature -- Query
@@ -150,7 +148,7 @@ feature -- Query
 
 feature -- Status Setting
 
-	set_output_directory (a_dir: STRING)
+	set_output_directory (a_dir: like output_directory)
 			-- Set output directory
 		require
 			dir_not_void: a_dir /= Void
@@ -161,7 +159,7 @@ feature -- Status Setting
 			dir_set: output_directory = a_dir
 		end
 
-	set_platform_type (a_platform: STRING)
+	set_platform_type (a_platform: like platform_type)
 			-- Set platform type
 		require
 			platform_not_void: a_platform /= Void
@@ -172,7 +170,7 @@ feature -- Status Setting
 			platform_set: platform_type = a_platform
 		end
 
-	set_keep_tests (a_identifier: STRING)
+	set_keep_tests (a_identifier: like keep_tests)
 			-- Set keep test option
 		require
 			identifer_not_void: a_identifier /= Void
@@ -191,7 +189,7 @@ feature -- Status Setting
 			keep_set: keep_eifgens = a_flag
 		end
 
-	set_include_directory (a_dir: STRING)
+	set_include_directory (a_dir: like include_directory)
 			-- Set include directory
 		require
 			dir_not_void: a_dir /= Void
@@ -202,7 +200,7 @@ feature -- Status Setting
 			dir_set: include_directory = a_dir
 		end
 
-	set_eiffel_installation_directory (a_dir: STRING)
+	set_eiffel_installation_directory (a_dir: like eiffel_installation_directory)
 			-- Set eiffel_installation directory
 		require
 			dir_not_void: a_dir /= Void
@@ -213,7 +211,7 @@ feature -- Status Setting
 			dir_set: eiffel_installation_directory = a_dir
 		end
 
-	set_eweasel_installation_directory (a_dir: STRING)
+	set_eweasel_installation_directory (a_dir: like eweasel_installation_directory)
 			-- Set eweasel_installation directory
 		require
 			dir_not_void: a_dir /= Void
@@ -224,7 +222,7 @@ feature -- Status Setting
 			dir_set: eweasel_installation_directory = a_dir
 		end
 
-	set_control_file (a_file: STRING)
+	set_control_file (a_file: like control_file)
 			-- Set control file location
 		require
 			file_not_void: a_file /= Void
@@ -235,7 +233,7 @@ feature -- Status Setting
 			file_set: control_file = a_file
 		end
 
-	set_catalog_file (a_file: STRING)
+	set_catalog_file (a_file: like catalog_file)
 			-- Set control file location
 		require
 			file_not_void: a_file /= Void
@@ -273,8 +271,6 @@ feature {NONE} -- Implementation
 			-- Read element `e'
 		require
 			e_not_void: e /= Void
-		local
-			l_elements: LIST [XML_ELEMENT]
 		do
 				-- Output directory
 			if e.name.is_equal (output_location_tag) then
@@ -288,7 +284,7 @@ feature {NONE} -- Implementation
 
 				-- Keep EIFGENS
 			if e.name.is_equal (keep_eifgens_tag) then
-				set_keep_eifgens (e.text.is_equal ("True"))
+				set_keep_eifgens (e.text.is_case_insensitive_equal ({STRING_32} "True"))
 			end
 
 				-- Platform type
@@ -322,22 +318,20 @@ feature {NONE} -- Implementation
 			end
 
 				-- Process sub_elements
-			l_elements := e.elements
-			from
-				l_elements.start
-			until
-				l_elements.after
+			across
+				e.elements as es
 			loop
-				process_element (l_elements.item_for_iteration)
-				l_elements.forth
+				process_element (es.item)
 			end
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -359,5 +353,4 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
 
-
-end -- class EWEASEL_CONFIGURATION
+end

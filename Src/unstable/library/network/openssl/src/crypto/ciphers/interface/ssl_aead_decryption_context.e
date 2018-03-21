@@ -12,6 +12,8 @@
 deferred class
 	SSL_AEAD_DECRYPTION_CONTEXT
 
+inherit
+	SSL_CIPHER_CONTEXT
 
 feature -- Finalize
 

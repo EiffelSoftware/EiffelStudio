@@ -238,12 +238,12 @@ feature -- Finalize
 				create l_buffer.make (block_size_bytes)
 				l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipherfinal_ex (ctx, l_buffer.item, $l_outlen)
 				if l_res = 0 then
-					if {SSL_ERROR_FACTORY}.errors = Void and then attached {SSL_GCM_MODE} mode as l_mode then
-						raise_exception ("Invalid Tag")
-					else
-						if attached {LIST [SSL_ERROR]} ({SSL_ERROR_FACTORY}.errors) as l_errors and then (l_errors.at (1).lib_and_reason_match ({SSL_ERROR_EXTERNALS}.ERR_LIB_EVP, {SSL_ERROR_EXTERNALS}.EVP_R_DATA_NOT_MULTIPLE_OF_BLOCK_LENGTH)) then
+					if attached {LIST [SSL_ERROR]} ({SSL_ERROR_FACTORY}.errors) as l_errors then
+						if l_errors.at (1).lib_and_reason_match ({SSL_ERROR_EXTERNALS}.ERR_LIB_EVP, {SSL_ERROR_EXTERNALS}.EVP_R_DATA_NOT_MULTIPLE_OF_BLOCK_LENGTH) then
 							raise_exception ("The length of the provided data is not a multiple of the block length.")
 						end
+					elseif attached {SSL_GCM_MODE} mode as l_mode then
+						raise_exception ("Invalid Tag")
 					end
 				else
 					if l_outlen > 0 then

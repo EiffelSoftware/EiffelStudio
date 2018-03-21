@@ -9,7 +9,6 @@ class
 	SSL
 
 inherit
-
 	SSL_SHARED
 
 create
@@ -130,7 +129,6 @@ feature -- Access
 			c_ssl_shutdown (ptr)
 		end
 
-
 	context_pointer: POINTER
 			-- Get ssl context from the current ssl structure pointer
 		do
@@ -202,25 +200,29 @@ feature -- SSL Errors
 		end
 
 	ssl_error_none: INTEGER
-	 	external "C inline use %"eif_openssl.h%""
+	 	external
+	 		"C inline use %"eif_openssl.h%""
 	 	alias
 	 		"SSL_ERROR_NONE"
 	 	end
 
 	ssl_error_zero_return: INTEGER
-	 	external "C inline use %"eif_openssl.h%""
+	 	external
+	 		"C inline use %"eif_openssl.h%""
 	 	alias
 	 		"SSL_ERROR_ZERO_RETURN"
 	 	end
 
 	ssl_error_want_write: INTEGER
-	 	external "C inline use %"eif_openssl.h%""
+	 	external
+	 		"C inline use %"eif_openssl.h%""
 	 	alias
 	 		"SSL_ERROR_WANT_WRITE"
 	 	end
 
 	 ssl_error_syscall: INTEGER
-	 	external "C inline use %"eif_openssl.h%""
+	 	external
+	 		"C inline use %"eif_openssl.h%""
 	 	alias
 	 		"SSL_ERROR_SYSCALL"
 	 	end
@@ -232,7 +234,6 @@ feature -- SSL Errors
 		do
 			Result := c_ssl_get_error (ptr, a_err)
 		end
-
 
 feature {NONE} -- Implementation	
 
@@ -336,11 +337,11 @@ feature {NONE} -- Externals
 
 	 c_ssl_pending (a_ssl: POINTER): INTEGER
 	 		-- SSL_pending() returns the number of bytes which are available inside ssl for immediate read.	
-	 	external "C inline use %"eif_openssl.h%""
+	 	external
+	 		"C inline use %"eif_openssl.h%""
 	 	alias
 	 		"return SSL_pending((const SSL *)$a_ssl);"
 	 	end
-
 
 note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"

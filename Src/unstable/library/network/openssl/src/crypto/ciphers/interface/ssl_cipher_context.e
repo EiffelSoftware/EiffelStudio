@@ -46,16 +46,17 @@ feature -- Finalize
 feature -- Results
 
 	hex_string: STRING
-			-- Returns the results of processing the final block as a hex string.
+			-- Hexadecimal string representation of processed final block.
 		require
 			is_finalized: is_finalized
 		deferred
 		end
 
 	string: STRING
-			-- Returns the results of processing the final block as string.
+			-- String representation of processed final block.
 		require
 			is_finalized: is_finalized
 		deferred
 		end
+
 end

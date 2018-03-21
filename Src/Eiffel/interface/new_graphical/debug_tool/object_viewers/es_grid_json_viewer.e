@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Component to display valid JSON in GRID"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -90,15 +90,13 @@ feature -- Loading
 	load_string (s: READABLE_STRING_GENERAL)
 		local
 			p: JSON_PARSER
-			j: detachable JSON_VALUE
 		do
 			grid.set_row_count_to (0)
 			if s /= Void and then not s.is_empty then
 				create p.make_with_string (s.as_string_8)
 				p.parse_content
 				if p.is_parsed and then p.is_valid then
-					j := p.parsed_json_value
-					load_json (j)
+					load_json (p.parsed_json_value)
 				else
 					clear
 					on_error ("Invalid JSON content!")
@@ -121,7 +119,6 @@ feature -- Loading
 			f: RAW_FILE
 			s: STRING
 			p: JSON_PARSER
-			j: detachable JSON_VALUE
 		do
 			grid.set_row_count_to (0)
 			create f.make_with_name (fn)
@@ -139,8 +136,7 @@ feature -- Loading
 				create p.make_with_string (s)
 				p.parse_content
 				if p.is_parsed and then p.is_valid then
-					j := p.parsed_json_value
-					load_json (j)
+					load_json (p.parsed_json_value)
 				else
 					clear
 					on_error ("Invalid JSON content!")
@@ -266,7 +262,6 @@ feature -- Visitor Pattern
 		local
 			r: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
-			l_item: EV_GRID_ITEM
 		do
 			current_depth := current_depth + 1
 			r := next_row
@@ -276,7 +271,6 @@ feature -- Visitor Pattern
 
 			lab.set_foreground_color (key_color)
 			if a_parent_type = json_array_type then
---				lab.align_text_right
 				lab.set_foreground_color (info_color)
 			end
 
@@ -545,11 +539,9 @@ feature {NONE} -- Row management
 
 	new_string_value_label (js: JSON_STRING; r: EV_GRID_ROW): EV_GRID_LABEL_ITEM
 		local
-			s: READABLE_STRING_GENERAL
 			lab: EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM
 		do
-			s := js.unescaped_string_32
-			create lab.make_with_text (s)
+			create lab.make_with_text (js.unescaped_string_32)
 			lab.set_font (value_font)
 			if attached string_pixmap as pix then
 				lab.set_pixmaps_on_right_count (1)
@@ -608,20 +600,13 @@ feature {NONE} -- Row management
 		end
 
 	new_row: EV_GRID_ROW
-		local
-			p: detachable EV_GRID_ROW
-			r: EV_GRID_ROW
 		do
 			if grid.row_count = 0 then
 				grid.insert_new_row (1)
+			elseif attached last_row.parent_row as p then
+				p.insert_subrow (p.subrow_count + 1)
 			else
-				r := last_row
-				p := r.parent_row
-				if p /= Void then
-					p.insert_subrow (p.subrow_count + 1)
-				else
-					grid.insert_new_row (grid.row_count + 1)
-				end
+				grid.insert_new_row (grid.row_count + 1)
 			end
 			Result := last_row
 		end

@@ -548,9 +548,10 @@ feature {NONE} -- Actions
 			d: CONF_CONDITION_CUSTOM_ATTRIBUTES
 		do
 			if not a_new_key.is_empty and then not a_new_key.same_string (a_old_key) then
-				create d -- FIXME
-				d.inverted := data.exclusion_value (a_old_key, a_old_value)
---				l_is_regexp := data.is_regexp_value (a_old_key, a_old_value)
+				d := data.custom_attributes_for (a_old_key, a_old_value)
+				if d = Void then
+					create d
+				end
 				data.remove_custom (a_old_key, a_old_value)
 				data.add_custom (a_new_key, a_old_value, d)
 			end
@@ -584,12 +585,11 @@ feature {NONE} -- Actions
 			d: CONF_CONDITION_CUSTOM_ATTRIBUTES
 		do
 			if not a_value.is_empty then
-				l_invert := data.exclusion_value (a_key, a_old_value)
-				l_is_regexp := data.is_regexp_value (a_key, a_old_value)
+				d := data.custom_attributes_for (a_key, a_old_value)
 				data.remove_custom (a_key, a_old_value)
-				create d -- FIXME
-				d.inverted := l_invert
-				d.is_regular_expression := l_is_regexp
+				if d = Void then
+					create d
+				end
 				data.add_custom (a_key, a_value, d)
 					-- We need to update closed arguments of updating routines.
 				fill_custom
@@ -597,7 +597,7 @@ feature {NONE} -- Actions
 		end
 
 	add_custom
-			-- Add a new custom condition.
+			-- Add a new custom conditfion.
 		do
 			data.add_custom (conf_interface_names.dial_cond_new_custom, Conf_interface_names.dial_cond_new_custom_value, create {CONF_CONDITION_CUSTOM_ATTRIBUTES})
 			fill_custom

@@ -60,6 +60,7 @@ inherit
 			process_feature_clause_as,
 			process_id_as,
 			process_if_as,
+			process_if_expression_as,
 			process_inline_agent_creation_as,
 			process_inspect_as,
 			process_instr_call_as,
@@ -155,6 +156,8 @@ feature {NONE} -- Initialization
 			create id_post_actions
 			create if_pre_actions
 			create if_post_actions
+			create if_expression_pre_actions
+			create if_expression_post_actions
 			create inline_agent_creation_pre_actions
 			create inline_agent_creation_post_actions
 			create inspect_pre_actions
@@ -499,6 +502,16 @@ feature {CA_STANDARD_RULE} -- Adding agents
 			if_post_actions.extend (a_action)
 		end
 
+	add_if_expression_pre_action (a: attached PROCEDURE [IF_EXPRESSION_AS])
+		do
+			if_expression_pre_actions.extend (a)
+		end
+
+	add_if_expression_post_action (a: attached PROCEDURE [IF_EXPRESSION_AS])
+		do
+			if_expression_post_actions.extend (a)
+		end
+
 	add_inline_agent_creation_pre_action (a_action: PROCEDURE [INLINE_AGENT_CREATION_AS])
 		do
 			inline_agent_creation_pre_actions.extend (a_action)
@@ -732,6 +745,8 @@ feature {NONE} -- Agent lists
 	id_pre_actions, id_post_actions: ACTION_SEQUENCE [TUPLE [ID_AS]]
 
 	if_pre_actions, if_post_actions: ACTION_SEQUENCE [TUPLE [IF_AS]]
+
+	if_expression_pre_actions, if_expression_post_actions: ACTION_SEQUENCE [TUPLE [IF_EXPRESSION_AS]]
 
 	inline_agent_creation_pre_actions, inline_agent_creation_post_actions: ACTION_SEQUENCE [TUPLE [INLINE_AGENT_CREATION_AS]]
 
@@ -1022,6 +1037,13 @@ feature {NONE} -- Processing
 			if_pre_actions.call ([a_if])
 			Precursor (a_if)
 			if_post_actions.call ([a_if])
+		end
+
+	process_if_expression_as (a: IF_EXPRESSION_AS)
+		do
+			if_expression_pre_actions.call (a)
+			Precursor (a)
+			if_expression_post_actions.call (a)
 		end
 
 	process_inline_agent_creation_as (a: INLINE_AGENT_CREATION_AS)

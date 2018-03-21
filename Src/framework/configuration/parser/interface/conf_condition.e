@@ -199,20 +199,14 @@ feature -- Queries
 			end
 		end
 
-	exclusion_value (a_key, a_value: READABLE_STRING_GENERAL): BOOLEAN
+	custom_attributes_for (a_key, a_value: READABLE_STRING_GENERAL): detachable CONF_CONDITION_CUSTOM_ATTRIBUTES
 			-- Exclusion value of `a_key' and `a_value' pair
 		require
 			a_key_ok: a_key /= Void and then custom.has (a_key.as_lower)
 		do
-			Result := attached custom.item (a_key.as_lower) as l_item and then l_item.item (a_value).inverted
-		end
-
-	is_regexp_value (a_key, a_value: READABLE_STRING_GENERAL): BOOLEAN
-			-- Is regexp value of `a_key' and `a_value' pair
-		require
-			a_key_ok: a_key /= Void and then custom.has (a_key.as_lower)
-		do
-			Result := attached custom.item (a_key.as_lower) as l_item and then l_item.item (a_value).is_regular_expression
+			if attached custom.item (a_key.as_lower) as tb then
+				Result := tb.item (a_value)
+			end
 		end
 
 feature -- Update

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Help provider to launch raw URI"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -104,9 +104,10 @@ feature {NONE} -- Helpers
 			if attached internal_environment as l_result then
 				Result := l_result
 			elseif
-				(attached {SITE [SERVICE_PROVIDER_I]} site as l_site) and then
+					-- The object test is required to access the feature `{SITE}.is_sited` that is not exported by the descendant.
+				attached {SITE [SERVICE_PROVIDER_I]} site as l_site and then
 				l_site.is_sited and then
-				(attached l_site.site as l_provider)
+				attached l_site.site as l_provider
 			then
 					-- Use the localized service provider.
 				create Result.make_with_provider (l_provider)
@@ -138,19 +139,15 @@ feature {NONE} -- Basic operations
 			a_uri_attached: a_uri /= Void
 			not_a_url_is_empty: not a_uri.is_empty
 		local
-			l_url: URI_LAUNCHER
-			l_default_browser: like default_uri_browser
-			l_path_uri: STRING_8
+			uri_launcher: URI_LAUNCHER
+			l_path_uri: STRING_32
 		do
-			create l_path_uri.make_from_string (a_uri)
-			l_path_uri.prepend ("file:///")
-			create l_url
-			l_default_browser := default_uri_browser --preferences.misc_data.internet_browser_preference.string_value
-			if l_default_browser /= Void and then not l_default_browser.is_empty then
-				is_launched := l_url.launch_with_default_app (l_path_uri, l_default_browser)
+			l_path_uri := {STRING_32} "file:///" + a_uri
+			create uri_launcher
+			if attached default_uri_browser as l_default_browser and then not l_default_browser.is_empty then
+				is_launched := uri_launcher.launch_with_default_app (l_path_uri, l_default_browser)
 			else
-				is_launched := l_url.launch (l_path_uri)
-
+				is_launched := uri_launcher.launch (l_path_uri)
 					-- This check is here because it lets us know if the preference wasn't initialized.
 				check False end
 			end
@@ -167,12 +164,10 @@ feature {NONE} -- Variable expansion
 			a_uris_contains_valid_items: not a_uri.is_empty
 		local
 			l_uri: STRING_32
-			l_expander: STRING_AGENT_EXPANDER
 		do
 				-- Escape '%%' before processing
 			a_uri.replace_substring_all ("%%", "%%%%")
-			create l_expander
-			l_uri := l_expander.expand_string_32 (a_uri, agent variable, False, True)
+			l_uri := (create {STRING_AGENT_EXPANDER}).expand_string_32 (a_uri, agent variable, False, True)
 			a_uri.wipe_out
 			a_uri.append (l_uri)
 		end

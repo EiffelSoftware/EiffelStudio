@@ -1,15 +1,14 @@
-note
+﻿note
 	description: "An Eiffel test catalog test instruction"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "93/08/30"
+	status: "See notice at end of class."
 
 class EW_TEST_INST
 
 inherit
-	EW_CATALOG_INSTRUCTION;
-	EW_OS_ACCESS;
-	EW_STRING_UTILITIES;
+	EW_CATALOG_INSTRUCTION
+	EW_OS_ACCESS
+	EW_STRING_UTILITIES
 
 feature
 
@@ -18,49 +17,44 @@ feature
 			-- Set `execute_ok' to indicate whether
 			-- execution was successful.
 		local
-			orig_args, dir_name, test_name, src_dir: STRING;
-			tcf_name: STRING;
-			args: LIST [STRING];
-			dir, file: RAW_FILE;
-			test: EW_NAMED_EIFFEL_TEST;
-			keywords: LINKED_LIST [STRING];
+			dir_name: READABLE_STRING_32
+			src_dir: READABLE_STRING_32
+			orig_args: STRING_32
+			test_name: READABLE_STRING_32
+			args: LIST [READABLE_STRING_32]
+			keywords: LINKED_LIST [READABLE_STRING_32]
 		do
-			orig_args := tcf.arguments.twin
-			orig_args.left_adjust;
-			orig_args.right_adjust;
-			args := broken_into_words (tcf.environment.substitute (orig_args));
+			create orig_args.make_from_string (tcf.arguments)
+			orig_args.adjust
+			args := broken_into_words (orig_args)
 			if args.count < 3 then
-				failure_explanation := "must be at least 3 arguments";
-				execute_ok := False;
+				failure_explanation := {STRING_32} "must be at least 3 arguments"
+				execute_ok := False
 			else
-				test_name := args.i_th (1);
-				src_dir := args.i_th (2);
-				tcf_name := args.i_th (3);
-				dir_name := os.full_directory_name (tcf.source_path, src_dir);
-				create dir.make (dir_name);
-				tcf_name := os.full_file_name (dir_name, tcf_name);
-				create file.make (tcf_name);
-				create keywords.make;
+				test_name := tcf.environment.substitute (args [1])
+				src_dir := tcf.environment.substitute (args [2])
+				dir_name := os.full_directory_name (tcf.source_path, src_dir)
+				create keywords.make
 				from
-					args.go_i_th (4);
+					args.go_i_th (4)
 				until
 					args.after
 				loop
-					keywords.extend (args.item);
-					args.forth;
-				end;
-				create test.make (test_name, src_dir, dir_name, tcf_name, keywords);
-				tcf.set_last_test (test);
-				execute_ok := True;
+					keywords.extend (tcf.environment.substitute (args.item))
+					args.forth
+				end
+				tcf.set_last_test (create {EW_NAMED_EIFFEL_TEST}.make (test_name, src_dir, dir_name, os.full_file_name (dir_name, tcf.environment.substitute (args [3])), keywords))
+				execute_ok := True
 			end
-		end;
-
+		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -81,6 +75,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

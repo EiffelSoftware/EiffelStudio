@@ -1,34 +1,33 @@
-note
+﻿note
 	description: "An Eiffel test suite"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "93/09/14"
+	status: "See notice at end of class."
 
 deferred class EW_EIFFEL_TEST_SUITE
 
 inherit
-	EW_EIFFEL_TEST_CONSTANTS;
-	EW_PREDEFINED_VARIABLES;
-	EW_OS_ACCESS;
-	EXCEPTIONS;
+	EW_EIFFEL_TEST_CONSTANTS
+	EW_PREDEFINED_VARIABLES
+	EW_OS_ACCESS
+	EXCEPTIONS
 	EW_SHARED_OBJECTS
 	REFACTORING_HELPER
 
 feature  -- Creation
 
-	make (list: LIST [EW_NAMED_EIFFEL_TEST]; dir: STRING; env: EW_TEST_ENVIRONMENT)
+	make (list: LIST [EW_NAMED_EIFFEL_TEST]; dir: READABLE_STRING_32; env: EW_TEST_ENVIRONMENT)
 			-- Create `Current' with list of Eiffel tests `list',
 			-- test suite directory `dir' and intiial
 			-- environment for each test `env'.
 		require
-			test_list_not_void: list /= Void;
-			directory_not_void: dir /= Void;
-			environment_not_void: env /= Void;
+			test_list_not_void: list /= Void
+			directory_not_void: dir /= Void
+			environment_not_void: env /= Void
 		do
-			test_list := list;
-			test_suite_directory := dir;
-			test_suite_environment := env;
-		end;
+			test_list := list
+			test_suite_directory := dir
+			test_suite_environment := env
+		end
 
 feature -- Execution
 
@@ -40,40 +39,40 @@ feature -- Execution
 			-- `pass_count' and the number which failed in
 			-- `fail_count'.
 		require
-			options_not_void: opts /= Void;
+			options_not_void: opts /= Void
 		deferred
 		end
 
 feature -- Statistics	
 
-	pass_count: INTEGER;
+	pass_count: INTEGER
 			-- Number of tests which have passed so far
 
-	fail_count: INTEGER;
+	fail_count: INTEGER
 			-- Number of tests which have failed so far
 
-	manual_count: INTEGER;
+	manual_count: INTEGER
 			-- Number of tests which were not executed because
 			-- they were marked as requiring manual execution
 
-	skip_count: INTEGER;
+	skip_count: INTEGER
 			-- Number of tests which were not executed because
 			-- they were marked as "skip" (does not include
 			-- any tests which require manual execution)
 
 feature {NONE} -- Implementation	
 
-	test_list: LIST [EW_NAMED_EIFFEL_TEST];
+	test_list: LIST [EW_NAMED_EIFFEL_TEST]
 			-- List of all tests to be performed.
 
-	test_suite_environment: EW_TEST_ENVIRONMENT;
+	test_suite_environment: EW_TEST_ENVIRONMENT
 			-- Common environment shared by all tests in the
 			-- test suite (possibly augmented by other
 			-- definitions before each test is started).
 
 feature {EW_EIFFEL_TEST_EXECUTOR} -- Implementation	
 
-	test_suite_directory: STRING;
+	test_suite_directory: READABLE_STRING_32
 			-- Name of the directory in which test
 			-- suite is to be executed.  Each test is
 			-- conducted in a sub-directory of the test
@@ -86,44 +85,44 @@ feature {EW_EIFFEL_TEST_EXECUTOR} -- Implementation
 		require
 			test_not_void: test /= Void
 		local
-			test_dir, gen_dir, exec_dir: STRING;
+			test_dir, gen_dir, exec_dir: READABLE_STRING_32
 		do
 			Result := test_suite_environment.deep_twin
-			test_dir := os.full_directory_name (test_suite_directory, test.last_source_directory_component);
-			associate (Result, Test_dir_name, test_dir);
-			associate (Result, Cluster_dir_name, os.full_directory_name (test_dir, "clusters"));
-			associate (Result, Output_dir_name, os.full_directory_name (test_dir, "output"));
+			test_dir := os.full_directory_name (test_suite_directory, test.last_source_directory_component)
+			associate (Result, Test_dir_name, test_dir)
+			associate (Result, Cluster_dir_name, os.full_directory_name (test_dir, {STRING_32} "clusters"))
+			associate (Result, Output_dir_name, os.full_directory_name (test_dir, {STRING_32} "output"))
 			fixme ("set correct directory depending on used target")
 			gen_dir := os.full_directory_name (test_dir, Eiffel_gen_directory)
 			gen_dir := os.full_directory_name (gen_dir, Default_target_name)
-			exec_dir := os.full_directory_name (gen_dir, Work_c_code_directory);
-			Result.define (Work_execution_dir_name, exec_dir);
-			exec_dir := os.full_directory_name (gen_dir, Final_c_code_directory);
-			Result.define (Final_execution_dir_name, exec_dir);
+			exec_dir := os.full_directory_name (gen_dir, Work_c_code_directory)
+			Result.define (Work_execution_dir_name, exec_dir)
+			exec_dir := os.full_directory_name (gen_dir, Final_c_code_directory)
+			Result.define (Final_execution_dir_name, exec_dir)
 		ensure
 			result_not_void: Result /= Void
-		end;
+		end
 
-feature {NONE} -- Implementation	
-
-	associate (env: EW_TEST_ENVIRONMENT; var, dir: STRING)
+	associate (env: EW_TEST_ENVIRONMENT; var: READABLE_STRING_32; dir: READABLE_STRING_32)
 			-- Define an environment variable `var' in the
 			-- environment `env' to have
 			-- value `dir', which must be a directory name.
 			-- Create the directory `dir' if it does not exist.
 		require
-			environment_not_void: env /= Void;
-			var_name_not_void: var /= Void;
-			directory_not_void: dir /= Void;
+			environment_not_void: env /= Void
+			var_name_not_void: var /= Void
+			directory_not_void: dir /= Void
 		local
-			d: DIRECTORY;
+			d: DIRECTORY
 		do
-				env.define (var, dir);
-				create d.make (dir);
+				env.define (var, dir)
+				create d.make_with_name (dir)
 				if not d.exists then
-					d.create_dir;
-				end;
-		end;
+					d.create_dir
+				end
+		end
+
+feature {NONE} -- Output	
 
 	announce_start (test: EW_NAMED_EIFFEL_TEST)
 			-- Announce the start of execution of `test'
@@ -131,44 +130,44 @@ feature {NONE} -- Implementation
 			test_not_void: test /= Void
 		do
 			output.append ("Test ", False)
-			output.append (test.test_name, False);
-			output.append (" (", False);
-			output.append (test.last_source_directory_component, False);
-			output.append (")", False);
-			output.flush;
-		end;
+			output.append_32 (test.test_name, False)
+			output.append (" (", False)
+			output.append_32 (test.last_source_directory_component, False)
+			output.append (")", False)
+			output.flush
+		end
 
 	display_results (test: EW_NAMED_EIFFEL_TEST)
-			-- Display the status of execution of `test'
+			-- Display the status of execution of `test'.
 		require
 			test_not_void: test /= Void
 		do
-			if test.last_test /= Void and then not equal (test.last_test.test_name, test.test_name) then
+			if attached test.last_test as t and then not t.test_name.same_string_general (test.test_name) then
 					-- Test has different name than named test
-				output.append (" [", False);
-				output.append (test.last_test.test_name, False);
-				output.append ("]", False);
-			end;
-			output.append (": ", False);
+				output.append (" [", False)
+				output.append_32 (t.test_name, False)
+				output.append ("]", False)
+			end
+			output.append (": ", False)
 			if test.manual_execution_required then
-				output.append ("manual", True);
+				output.append ("manual", True)
 			elseif test.skip_requested then
-				output.append ("skipped", True);
+				output.append ("skipped", True)
 			elseif test.last_ok then
-				output.append ("passed", True);
+				output.append ("passed", True)
 			else
-				output.append_error ("failed", True);
-				output.append ("%TDescription: ", False);
+				output.append_error ("failed", True)
+				output.append ("%TDescription: ", False)
 				if test.last_test /= Void then
-					output.append (test.last_test.test_description, False);
+					output.append_32 (test.last_test.test_description, False)
 				else
 					output.append ("(Not available)", False)
-				end;
-				output.append_new_line;
-				test.errors.display;
-			end;
-			output.flush;
-		end;
+				end
+				output.append_new_line
+				test.errors.display
+			end
+			output.flush
+		end
 
 	update_statistics (test: EW_NAMED_EIFFEL_TEST)
 			-- Update cumulative statistics for a test,
@@ -178,15 +177,15 @@ feature {NONE} -- Implementation
 			test_not_void: test /= Void
 		do
 			if test.manual_execution_required then
-				manual_count := manual_count + 1;
+				manual_count := manual_count + 1
 			elseif test.skip_requested then
-				skip_count := skip_count + 1;
+				skip_count := skip_count + 1
 			elseif test.last_ok then
-				pass_count := pass_count + 1;
+				pass_count := pass_count + 1
 			else
-				fail_count := fail_count + 1;
-			end;
-		end;
+				fail_count := fail_count + 1
+			end
+		end
 
 	display_summary
 			-- Display a summary of results of executing
@@ -194,18 +193,18 @@ feature {NONE} -- Implementation
 		local
 			total: INTEGER
 		do
-			total := pass_count + fail_count + manual_count + skip_count;
-			output.append_new_line;
+			total := pass_count + fail_count + manual_count + skip_count
+			output.append_new_line
 			if total = 0 then
-				output.append ("No tests selected", True);
+				output.append ("No tests selected", True)
 			else
-				display_stats_if_nonzero ("Passed", pass_count, total);
-				display_stats_if_nonzero ("Failed", fail_count, total);
-				display_stats_if_nonzero ("Manual", manual_count, total);
-				display_stats_if_nonzero ("Skipped", skip_count, total);
-			end;
-			output.append_new_line;
-		end;
+				display_stats_if_nonzero ("Passed", pass_count, total)
+				display_stats_if_nonzero ("Failed", fail_count, total)
+				display_stats_if_nonzero ("Manual", manual_count, total)
+				display_stats_if_nonzero ("Skipped", skip_count, total)
+			end
+			output.append_new_line
+		end
 
 	display_stats_if_nonzero (status: STRING; num, total: INTEGER)
 			-- Display statistics for tests.  `num' tests out
@@ -213,32 +212,30 @@ feature {NONE} -- Implementation
 			-- status `status'.
 		do
 			if num > 0 then
-				output.append (status, False);
-				output.append (":  ", False);
-				output.append (num.out, False);
-				output.append (" / ", False);
-				output.append (total.out, False);
-				output.append ("  (", False);
-				output.append (percent (num, total).out, False);
-				output.append ("%%)", True);
+				output.append (status, False)
+				output.append (":  ", False)
+				output.append (num.out, False)
+				output.append (" / ", False)
+				output.append (total.out, False)
+				output.append ("  (", False)
+				output.append (percent (num, total).out, False)
+				output.append ("%%)", True)
 			end
 		end;
 
 	percent (num, denom: INTEGER): INTEGER
 			-- Percentage represented by `num' / `denom'
-		local
-			n, d: REAL;
 		do
-			n := num;
-			d := denom;
-			Result := (n / d * 100.0 + .49999).rounded;
-		end;
+			Result := (num.to_real / denom.to_real * 100.0 + .49999).rounded
+		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2011, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

@@ -1,5 +1,4 @@
-note
-	date: "October 8, 1997";
+﻿note
 	description: "An unnamed Unix pipe used for interprocess communication"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,10 +18,10 @@ inherit
 			{NONE} all
 		end
 
-create
+create {EW_UNIX_OS}
 	make
 
-feature {EW_UNIX_OS} -- Creation
+feature {NONE} -- Creation
 
 	make (read_fd, write_fd: INTEGER)
 			-- Create a pipe object which represents the
@@ -32,19 +31,19 @@ feature {EW_UNIX_OS} -- Creation
 			valid_read_desc: read_fd >= 0
 			valid_write_desc: write_fd >= 0
 		do
-			read_descriptor := read_fd;
-			write_descriptor := write_fd;
+			read_descriptor := read_fd
+			write_descriptor := write_fd
 		ensure
 			read_desc_set: read_descriptor = read_fd
 			write_desc_set: write_descriptor = write_fd
-		end;
+		end
 
 feature -- Attributes
 
-	read_descriptor: INTEGER;
+	read_descriptor: INTEGER
 			-- Descriptor to be used for reading from pipe
 
-	write_descriptor: INTEGER;
+	write_descriptor: INTEGER
 			-- Descriptor to be used for writing to pipe
 
 feature -- Modification
@@ -54,7 +53,7 @@ feature -- Modification
 			-- if it is open
 		do
 			if read_descriptor /= Invalid_file_descriptor then
-				close_file_descriptor (read_descriptor);
+				close_file_descriptor (read_descriptor)
 				erase_read_descriptor
 			end
 		end
@@ -64,7 +63,7 @@ feature -- Modification
 			-- if it is open
 		do
 			if write_descriptor /= Invalid_file_descriptor then
-				close_file_descriptor (write_descriptor);
+				close_file_descriptor (write_descriptor)
 				erase_write_descriptor
 			end
 		end
@@ -95,12 +94,13 @@ feature {NONE} -- Cleanup
 			close_write_descriptor
 		end
 
-
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -122,5 +122,4 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
 
-
-end -- class UNIX_PIPE
+end

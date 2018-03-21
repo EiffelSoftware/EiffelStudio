@@ -1,34 +1,35 @@
-note
+﻿note
 	description: "Eiffel test constants"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "93/08/30"
+	status: "See notice at end of class."
 
 class EW_EIFFEL_TEST_CONSTANTS
 
 feature {NONE}  -- Defaults
 
-	Default_ace_name: STRING = "Ace";
+	Default_ace_name: STRING_32 = "Ace"
 
-	Default_system_name: STRING = "test";
+	Default_system_name: STRING_32 = "test"
 
-	Default_target_name: STRING = "test";
+	Default_target_name: STRING_32 = "test"
 
 feature {NONE}  -- Miscellaneous constants
 
-	Eiffel_gen_directory: STRING = "EIFGENs";
+	Eiffel_gen_directory: STRING_32 = "EIFGENs"
 
-	Work_c_code_directory: STRING = "W_code";
+	Work_c_code_directory: STRING_32 = "W_code"
 
-	Final_c_code_directory: STRING = "F_code";
+	Final_c_code_directory: STRING_32 = "F_code"
 
-	Eiffel_project_extension: STRING = ".epr";
+	Eiffel_project_extension: STRING_32 = "epr"
 
-note
+;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2011, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

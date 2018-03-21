@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "An Eiffel test filter which selects all tests with a particular test directory"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,11 +11,10 @@ inherit
 create
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (dir: STRING)
-			-- Create filter which selects tests whose
-			-- test directory is `dir'
+	make (dir: READABLE_STRING_32)
+			-- Create filter which selects tests whose test directory is `dir`.
 		do
 			test_directory := dir
 		end
@@ -25,19 +24,21 @@ feature -- Filtering
 	selects (test: EW_NAMED_EIFFEL_TEST): BOOLEAN
 			-- Does `Current' select `test' for execution?
 		do
-			Result := equal (test.last_source_directory_component, test_directory)
+			Result := test.last_source_directory_component.same_string_general (test_directory)
 		end
 
 feature {NONE} -- Implementation
 
-	test_directory: STRING;
-			-- Directory test must have in order for test to be selected
+	test_directory: READABLE_STRING_32
+			-- Directory test must have in order for test to be selected.
 
-note
+;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -58,6 +59,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

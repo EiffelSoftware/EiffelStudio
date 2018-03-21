@@ -2,8 +2,6 @@
 	description: "The EiffelWeasel automatic tester"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class EW_EWEASEL
 
@@ -13,10 +11,11 @@ inherit
 	EW_FILTER_CREATION
 	EXCEPTIONS
 	EW_SHARED_OBJECTS
+	EXECUTION_ENVIRONMENT
 
 feature  -- Creation
 
-	make (args: ARRAY [STRING])
+	make (args: ARRAY [READABLE_STRING_32])
 			-- Make
 		do
 			is_logo_enabled := True
@@ -32,11 +31,11 @@ feature  -- Creation
 			end
 		end
 
-	make_and_execute (args: ARRAY [STRING])
+	make_and_execute
 			-- Make and execute tests in catalog file
 		do
 			is_logo_enabled := True
-			make (args)
+			make (arguments.argument_array)
 			if args_ok then
 				execute
 			end
@@ -70,49 +69,47 @@ feature -- Status
 
 feature  {NONE} -- Implementation
 
-	parse_arguments (args: ARRAY [STRING])
+	parse_arguments (args: ARRAY [READABLE_STRING_32])
 			-- Parse arguments `args' and execute any defines.
 			-- Set `args_ok' to indicate whether the
 			-- arguments were OK.
 		local
 			k, count, n: INTEGER
-			first_char, flag, type: STRING
-			l_max_threads, l_max_c_processes: STRING
+			flag, type: READABLE_STRING_32
+			l_max_threads, l_max_c_processes: READABLE_STRING_32
 			f: EW_EIFFEL_TEST_FILTER
 		do
 			from
 				count := args.count - 1
 				create environment.make (0)
 				create test_suite_options.make
-				create {ARRAYED_LIST [STRING]} test_catalog_names.make (5)
+				create {ARRAYED_LIST [PATH]} test_catalog_names.make (5)
 				args_ok := True
 				k := 1
 			until
 				k > count or not args_ok
 			loop
-				first_char := args.item (k).substring (1, 1)
-				if equal (first_char, "-") then
-					flag := args.item (k).substring (2, args.item (k).count)
-					if equal (flag, "define") then
+				if args [k].starts_with_general ("-") then
+					flag := args [k].substring (2, args [k].count)
+					if flag.same_string_general ("define") then
 						if count >= k + 2 then
-							environment.define (args.item (k + 1), args.item (k + 2))
+							environment.define (args [k + 1], args [k + 2])
 							k := k + 3
 						else
 							args_ok := False
 						end
-					elseif equal (flag, "keep") then
+					elseif flag.same_string_general ("keep") then
 						if count >= k + 1 then
 							k := k + 1
-							type := args.item (k)
-							first_char := type.substring (1, 1)
-							if equal (first_char, "-") then
+							type := args [k]
+							if type.starts_with_general ("-") then
 								test_suite_options.set_keep_all
 								k := k - 1
-							elseif equal (type, "all") then
+							elseif type.same_string_general ("all") then
 								test_suite_options.set_keep_all
-							elseif equal (type, "passed") then
+							elseif type.same_string_general ("passed") then
 								test_suite_options.set_keep_passed
-							elseif equal (type, "failed") then
+							elseif type.same_string_general ("failed") then
 								test_suite_options.set_keep_failed
 							else
 								args_ok := False
@@ -121,39 +118,39 @@ feature  {NONE} -- Implementation
 							test_suite_options.set_keep_all
 						end
 						k := k + 1
-					elseif equal (flag, "clean") then
+					elseif flag.same_string_general ("clean") then
 						test_suite_options.set_cleanup_requested (True)
 						k := k + 1
-					elseif equal (flag, "noclean") then
+					elseif flag.same_string_general ("noclean") then
 						test_suite_options.set_cleanup_requested (False)
 						k := k + 1
-					elseif equal (flag, "help") then
+					elseif flag.same_string_general ("help") then
 						display_usage
 						die (0)
-					elseif equal (flag, "init") then
+					elseif flag.same_string_general ("init") then
 						if count >= k + 1 then
-							initial_control_file := args.item (k + 1)
+							initial_control_file := args [k + 1]
 							k := k + 2
 						else
 							args_ok := False
 						end
-					elseif equal (flag, "catalog") then
+					elseif flag.same_string_general ("catalog") then
 						if count >= k + 1 then
-							test_catalog_names.extend (args.item (k + 1))
+							test_catalog_names.extend (create {PATH}.make_from_string (args [k + 1]))
 							k := k + 2
 						else
 							args_ok := False
 						end
-					elseif equal (flag, "output") then
+					elseif flag.same_string_general ("output") then
 						if count >= k + 1 then
-							test_suite_directory := args.item (k + 1)
+							test_suite_directory := args [k + 1]
 							k := k + 2
 						else
 							args_ok := False
 						end
-					elseif equal (flag, "filter") then
+					elseif flag.same_string_general ("filter") then
 						if count >= k + 1 then
-							f := string_to_filter (args.item (k + 1))
+							f := string_to_filter (args [k + 1])
 							if f /= Void then
 								test_suite_options.set_filter (f)
 								k := k + 2
@@ -162,15 +159,15 @@ feature  {NONE} -- Implementation
 									output.append_error ("No filter type specified", True)
 								elseif not is_filter_type_known then
 									output.append_error ("Filter type `", False)
-									output.append_error (filter_type, False)
+									output.append_error (to_utf_8 (filter_type), False)
 									output.append_error ("' is not valid", True)
 								elseif filter_count = 0 then
 									output.append_error ("No filter values specified for filter type `", False)
-									output.append_error (filter_type, False)
+									output.append_error (to_utf_8 (filter_type), False)
 									output.append_error ("'", True)
 								elseif filter_count > 1 then
 									output.append_error (filter_count.out + " filter values specified for filter type `", False)
-									output.append_error (filter_type, False)
+									output.append_error (to_utf_8 (filter_type), False)
 									output.append_error ("' - not currently supported", True)
 								end
 								args_ok := False
@@ -178,15 +175,15 @@ feature  {NONE} -- Implementation
 						else
 							args_ok := False
 						end
-					elseif equal (flag, "order") then
+					elseif flag.same_string_general ("order") then
 						test_suite_options.set_results_in_catalog_order (True)
 						k := k + 1
-					elseif equal (flag, "noorder") then
+					elseif flag.same_string_general ("noorder") then
 						test_suite_options.set_results_in_catalog_order (False)
 						k := k + 1
-					elseif equal (flag, "max_threads") then
+					elseif flag.same_string_general ("max_threads") then
 						if count >= k + 1 then
-							l_max_threads := args.item (k + 1)
+							l_max_threads := args [k + 1]
 							if l_max_threads.is_integer then
 								n := l_max_threads.to_integer
 								if n >= -1 then
@@ -203,9 +200,9 @@ feature  {NONE} -- Implementation
 						else
 							args_ok := False
 						end
-					elseif equal (flag, "max_c_processes") then
+					elseif flag.same_string_general ("max_c_processes") then
 						if count >= k + 1 then
-							l_max_c_processes := args.item (k + 1)
+							l_max_c_processes := args [k + 1]
 							if l_max_c_processes.is_integer then
 								n := l_max_c_processes.to_integer
 								if n >= -1 then
@@ -222,15 +219,15 @@ feature  {NONE} -- Implementation
 						else
 							args_ok := False
 						end
-					elseif equal (flag, "nologo") then
+					elseif flag.same_string_general ("nologo") then
 						k := k + 1
 						is_logo_enabled := False
-					elseif equal (flag, "nosummary") then
+					elseif flag.same_string_general ("nosummary") then
 						k := k + 1
 						test_suite_options.set_display_summary (False)
 					else
 						output.append_error ("Unknown option: ", False)
-						output.append (args.item (k), True)
+						output.append_32 (args [k], True)
 						args_ok := False
 					end
 				else
@@ -269,11 +266,11 @@ feature  {NONE} -- Implementation
 		local
 			dir: DIRECTORY
 		do
-			create dir.make (test_suite_directory)
+			create dir.make_with_name (test_suite_directory)
 			if not dir.exists then
 				args_ok := False
 				output.append_error ("Directory not found: ", False)
-				output.append (test_suite_directory, False)
+				output.append_32 (test_suite_directory, False)
 				output.append_new_line
 			else
 				args_ok := True
@@ -297,7 +294,7 @@ feature  {NONE} -- Implementation
 			if not tcf.last_ok then
 				args_ok := False
 				output.append_error ("Error in initial control file ", False)
-				output.append (initial_control_file, True)
+				output.append_32 (initial_control_file, True)
 				tcf.errors.display
 			else
 				args_ok := True
@@ -311,8 +308,8 @@ feature  {NONE} -- Implementation
 			-- with test suite directory `test_suite_directory'.
 			-- Display test results.
 		require
-			catalog_names_not_void: test_catalog_names /= Void
-			catalog_names_not_empty: not test_catalog_names.is_empty
+			catalog_names_not_void: attached test_catalog_names as ts
+			catalog_names_not_empty: not ts.is_empty
 			environment_not_void: environment /= Void
 			directory_not_void: test_suite_directory /= Void
 		local
@@ -321,32 +318,35 @@ feature  {NONE} -- Implementation
 			ok: BOOLEAN
 			tests: ARRAYED_LIST [EW_NAMED_EIFFEL_TEST]
 		do
-			from
-				ok := True
-				create tests.make (100)
-				test_catalog_names.start
-			until
-				test_catalog_names.after or not ok
-			loop
-				create tcf.make (test_catalog_names.item)
-				tcf.parse (environment)
-				if tcf.last_ok then
-					tests.append (tcf.last_catalog.all_tests)
-				else
-					ok := False
-					tcf.errors.display
+			check
+				from_precondition: attached test_catalog_names as ts
+			then
+				across
+					ts as t
+				from
+					ok := True
+					create tests.make (100)
+				until
+					not ok
+				loop
+					create tcf.make (t.item)
+					tcf.parse (environment)
+					if tcf.last_ok then
+						tests.append (tcf.last_catalog.all_tests)
+					else
+						ok := False
+						tcf.errors.display
+					end
 				end
-				test_catalog_names.forth
-			end
-
-			if ok then
-				suite := new_test_suite (tests, test_suite_options)
-				suite.execute (test_suite_options)
-				if suite.fail_count > 0 then
-						-- Some tests are failing, we exit with an error code
-						-- matching the number of failures (but limited to 255
-						-- since on UNIX it is limited from 0 to 255.
-					(create {EXCEPTIONS}).die (suite.fail_count.min (255))
+				if ok then
+					suite := new_test_suite (tests, test_suite_options)
+					suite.execute (test_suite_options)
+					if suite.fail_count > 0 then
+							-- Some tests are failing, we exit with an error code
+							-- matching the number of failures (but limited to 255
+							-- since on UNIX it is limited from 0 to 255.
+						(create {EXCEPTIONS}).die (suite.fail_count.min (255))
+					end
 				end
 			end
 		end
@@ -440,16 +440,16 @@ feature  {NONE} -- Implementation
 		deferred
 		end
 
-	initial_control_file: STRING
+	initial_control_file: READABLE_STRING_32
 			-- Name of control file to be read initially,
 			-- to set up the environment with which all
 			-- tests are to be started.
 
-	test_catalog_names: LIST [STRING]
+	test_catalog_names: LIST [PATH]
 			-- Name of the test catalog file, which lists
 			-- all possible tests.
 
-	test_suite_directory: STRING
+	test_suite_directory: READABLE_STRING_32
 			-- Name of the test directory.  Each test is
 			-- conducted in a sub-directory of the test
 			-- directory.
@@ -458,8 +458,10 @@ feature  {NONE} -- Implementation
 			-- Options in effect for execution of test suite
 
 ;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2017, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
 	license: "Your use of this work is governed under the terms of the GNU General Public License version 2"

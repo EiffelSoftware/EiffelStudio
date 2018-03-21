@@ -1,59 +1,60 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	keywords: "Eiffel test"
 
 deferred class EW_COMPILE_INST
 
 inherit
-	EW_TEST_INSTRUCTION;
-	EW_STRING_UTILITIES;
+	EW_TEST_INSTRUCTION
+	EW_STRING_UTILITIES
 
 feature
 
-	inst_initialize (line: STRING)
+	inst_initialize (line: READABLE_STRING_32)
 			-- Initialize instruction from `line'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
 		local
-			args: LIST [STRING];
+			args: LIST [READABLE_STRING_32]
 		do
-			args := broken_into_words (line);
+			args := broken_into_words (line)
 			if args.count > 1 then
-				init_ok := False;
-				failure_explanation := "must supply 0 or 1 argument";
+				init_ok := False
+				failure_explanation := {STRING_32} "must supply 0 or 1 argument"
 			elseif args.count = 1 then
-				output_file_name := args.first;
-				init_ok := True;
+				output_file_name := args.first
+				init_ok := True
 			else
-				init_ok := True;
+				init_ok := True
 			end
-		end;
+		end
 
 	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.
 			-- Set `execute_ok' to indicate whether successful.
 		deferred
-		end;
-	
-	init_ok: BOOLEAN;
+		end
+
+	init_ok: BOOLEAN
 			-- Was last call to `initialize' successful?
-	
-	execute_ok: BOOLEAN;
+
+	execute_ok: BOOLEAN
 			-- Was last call to `execute' successful?
 
 feature {NONE} -- Implementation
 
-	output_file_name: STRING;
+	output_file_name: READABLE_STRING_32
 			-- Name of file where output from compile is
 			-- to be placed
-note
+;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

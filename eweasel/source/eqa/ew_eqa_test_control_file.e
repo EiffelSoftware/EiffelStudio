@@ -1,9 +1,8 @@
-note
+﻿note
 	description: "Summary description for {TEST_CONTROL_FILE_63}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	keywords: "Eiffel test"
 
 class
 	EW_EQA_TEST_CONTROL_FILE
@@ -27,8 +26,7 @@ feature {NONE} -- Initialization
 		do
 			instructions := a_instructions
 			environment := a_env
-			file_name := "in_memory" -- FIXIT: Change to class name
-
+			file_name := {STRING_32} "in_memory" -- FIXIT: Change to class name
 			make_for_convertion
 		end
 
@@ -57,29 +55,26 @@ feature -- Command
 			last_test := l_test
 		end
 
-	parse_file (a_filename: STRING): LIST [EW_TEST_INSTRUCTION]
+	parse_file (a_filename: PATH): LIST [EW_TEST_INSTRUCTION]
 			-- Parse testing instructions in `a_filename'
 			-- Result is list of testing instructions
 		require
 			not_void: a_filename /= Void
-		local
-			l_factory: EW_EQA_TEST_FACTORY
 		do
-			file_name := a_filename
-
-			create l_factory
-			parse (l_factory.environment)
-
+			file_name := a_filename.name
+			parse ((create {EW_EQA_TEST_FACTORY}).environment)
 			Result := instructions
 		ensure
 			not_void: Result /= Void
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

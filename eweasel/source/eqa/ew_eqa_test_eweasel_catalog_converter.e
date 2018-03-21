@@ -1,7 +1,5 @@
-note
+﻿note
 	description: "Used by {EW_EQA_TEST_EWEASEL_TCF_CONVERTER} only"
-	date: "$Date$"
-	revision: "$Revision$"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test"
@@ -11,17 +9,13 @@ class
 
 feature -- Command
 
-	convert_catalog (a_input_file: STRING)
+	convert_catalog (a_input_file: PATH)
 			-- Convert `a_input_file' which is eweasel testing catalog file
 		require
 			not_void: a_input_file /= Void
-		local
-
-			l_factory: EW_EQA_TEST_FACTORY
 		do
 			create catalog_file.make (a_input_file)
-			create l_factory
-			catalog_file.parse (l_factory.environment)
+			catalog_file.parse ((create {EW_EQA_TEST_FACTORY}).environment)
 		ensure
 			ready: is_ready
 		end
@@ -81,10 +75,12 @@ feature {NONE} -- Implementation
 			-- Related catalog file
 
 ;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -105,11 +101,5 @@ feature {NONE} -- Implementation
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
-
-
-
-
-
 
 end

@@ -1,9 +1,7 @@
 ﻿note
 	description: "An Eiffel syntax error"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
 
 deferred class
 	EW_EIFFEL_ERROR
@@ -16,7 +14,7 @@ inherit
 
 feature -- Properties
 
-	class_name: STRING
+	class_name: READABLE_STRING_32
 			-- Class in which error occurred.
 
 	line_number: INTEGER
@@ -54,14 +52,15 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN
 		do
-			Result := equal (class_name, other.class_name) and
+			Result :=
+				other.class_name.same_string (class_name) and
 				line_number = other.line_number
 		end
 
 	is_less alias "<" (other: like Current): BOOLEAN
 		do
 			Result := class_name < other.class_name or else
-				(equal (class_name, other.class_name) and line_number < other.line_number)
+				(other.class_name.same_string (class_name) and line_number < other.line_number)
 		end
 
 	matches_pattern (other: like Current): BOOLEAN
@@ -69,13 +68,13 @@ feature -- Comparison
 			-- equal to those in `Current'?
 		do
 			Result :=
-				equal (class_name, other.class_name) and
+				other.class_name.same_string (class_name) and
 				(other.line_number = 0 or else line_number = other.line_number)
 		end
 
 feature -- Output
 
-	summary: STRING
+	summary: STRING_32
 			-- Short description of the error.
 		deferred
 		end
@@ -84,10 +83,12 @@ invariant
 	class_name_not_void: class_name /= Void
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2017, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

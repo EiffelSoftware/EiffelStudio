@@ -1,8 +1,7 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	keywords: "Eiffel test"
 
 class EW_UNDEFINE_INST
 
@@ -13,54 +12,55 @@ inherit
 
 feature
 
-	inst_initialize (line: STRING)
+	inst_initialize (line: READABLE_STRING_32)
 			-- Initialize instruction from `line'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
 		local
-			args: LIST [STRING];
+			args: LIST [READABLE_STRING_32]
 		do
-			args := broken_into_words (line);
+			args := broken_into_words (line)
 			if args.count /= 1 then
-				failure_explanation := "exactly one argument required";
-				init_ok := False;
-			elseif args.first.item (1) = Substitute_char then
-				create failure_explanation.make (0);
-				failure_explanation.append ("variable being undefined cannot start with ");
-				failure_explanation.extend (Substitute_char);
-				init_ok := False;
+				failure_explanation := {STRING_32} "exactly one argument required"
+				init_ok := False
+			elseif args.first [1] = Substitute_char then
+				failure_explanation := {STRING_32} "variable being undefined cannot start with "
+				failure_explanation.extend (Substitute_char)
+				init_ok := False
 			else
-				variable := args.first;
-				init_ok := True;
-			end;
-			if init_ok then
-				init_environment.remove (variable);
+				variable := args.first
+				init_ok := True
 			end
-		end;
+			if init_ok then
+				init_environment.remove (variable)
+			end
+		end
 
 	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.
 		do
-			test.environment.remove (variable);
-		end;
+			test.environment.remove (variable)
+		end
 
-	init_ok: BOOLEAN;
+	init_ok: BOOLEAN
 			-- Was last call to `initialize' successful?
-	
-	execute_ok: BOOLEAN = True;
+
+	execute_ok: BOOLEAN = True
 			-- Calls to `execute' are always successful.
 
 feature {NONE}
-	
-	variable: STRING;
+
+	variable: READABLE_STRING_32
 			-- Name of environment variable
-	
-note
+
+;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

@@ -18,22 +18,22 @@ inherit
 
 feature
 
-	inst_initialize (a_parameter: STRING)
+	inst_initialize (a_parameter: READABLE_STRING_32)
 			-- Initialize instruction from `a_parameter'.
 			-- Set `init_ok' to indicate whether initialization
 			-- was successful.
 		local
-			l_args: LIST [STRING]
+			l_args: LIST [READABLE_STRING_32]
 		do
 			l_args := broken_into_words (a_parameter)
 			if l_args.count >= 1 and l_args.count <= 2 then
 				init_ok := True
-				ace_name := l_args.i_th (1)
+				ace_name := l_args [1]
 				if l_args.count = 2 then
-					target_name := l_args.i_th (2)
+					target_name := l_args [2]
 				end
 			else
-				failure_explanation := "argument count is not 1 (config file name) or 2 (config file name and target name) "
+				failure_explanation := {STRING_32} "argument count is not 1 (config file name) or 2 (config file name and target name) "
 				init_ok := False
 			end
 		end
@@ -56,10 +56,10 @@ feature
 
 feature {NONE}
 
-	ace_name: STRING
+	ace_name: READABLE_STRING_32
 			-- Name of Ace file for Eiffel compilations.
 
-	target_name: STRING
+	target_name: READABLE_STRING_32
 			-- Target name within config file `ace_name'
 ;note
 	copyright: "[

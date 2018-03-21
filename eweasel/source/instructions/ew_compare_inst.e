@@ -1,9 +1,7 @@
 ﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "$Date$"
-	revision: "$Revision$"
+	keywords: "Eiffel test"
 
 class EW_COMPARE_INST
 
@@ -15,12 +13,12 @@ inherit
 
 feature
 
-	inst_initialize (line: STRING)
+	inst_initialize (line: READABLE_STRING_32)
 			-- Initialize instruction from `line'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
 		local
-			args: LIST [STRING]
+			args: LIST [READABLE_STRING_32]
 		do
 			args := broken_into_words (line)
 			if args.count = 2 then
@@ -28,7 +26,7 @@ feature
 				expected_output_file := args [2]
 				init_ok := True
 			else
-				failure_explanation := "argument count must be 2"
+				failure_explanation := {STRING_32} "argument count must be 2"
 				init_ok := False
 			end
 		end
@@ -38,24 +36,21 @@ feature
 			-- instructions of `test'.
 			-- Set `execute_ok' to indicate whether successful.
 		local
-			act_name, exp_name: STRING
 			actual, expected: RAW_FILE
 		do
 			execute_ok := False
-			act_name := os.full_file_name (test.environment.value (Output_dir_name), actual_output_file)
-			exp_name := os.full_file_name (test.environment.value (Source_dir_name), expected_output_file)
-			create actual.make (act_name)
-			create expected.make (exp_name)
+			create actual.make_with_name (os.full_file_name (test.environment.value (Output_dir_name), actual_output_file))
+			create expected.make_with_name (os.full_file_name (test.environment.value (Source_dir_name), expected_output_file))
 			if not actual.exists then
-				failure_explanation := "file with actual output not found"
+				failure_explanation := {STRING_32} "file with actual output not found"
 			elseif not actual.is_plain then
-				failure_explanation := "file with actual output not a plain file"
+				failure_explanation := {STRING_32} "file with actual output not a plain file"
 			elseif not expected.exists then
-				failure_explanation := "file with expected output not found"
+				failure_explanation := {STRING_32} "file with expected output not found"
 			elseif not expected.is_plain then
-				failure_explanation := "file with expected output not a plain file"
+				failure_explanation := {STRING_32} "file with expected output not a plain file"
 			elseif not equal_files (actual, expected) then
-				failure_explanation := "files being compared do not have identical contents"
+				failure_explanation := {STRING_32} "files being compared do not have identical contents"
 			else
 				execute_ok := True
 			end
@@ -127,14 +122,15 @@ feature {NONE}  -- Implementation
 
 feature {NONE}
 
-	actual_output_file: STRING
+	actual_output_file: READABLE_STRING_32
 			-- Name of file with actual output
 
-	expected_output_file: STRING;
+	expected_output_file: READABLE_STRING_32
 			-- Name of file with expected output
 
-
-note
+;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
 			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.

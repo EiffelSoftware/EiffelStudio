@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "[
-					Setup Unix environment variables before running eweasel tests
-																					]"
+			Setup Unix environment variables before running eweasel tests
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,20 +26,20 @@ feature -- Command
 		do
 			create l_eweasel.make_empty
 
-			l_eweasel.output_arg (output_path)
+			l_eweasel.output_arg (output_path.name)
 
-			l_eweasel.define ("ISE_EIFFEL", ise_eiffel)
+			l_eweasel.define ({STRING_32} "ISE_EIFFEL", ise_eiffel)
 
-			l_eweasel.init ("$ISE_EIFFEL/control/init")
+			l_eweasel.init ({STRING_32} "$ISE_EIFFEL/control/init")
 
 			-- Copy from $EWEASEL\bin\run_eweasel_filter
-			l_eweasel.define ("ISE_PLATFORM", ise_platform)
-			l_eweasel.define ("EWEASEL", "$ISE_EIFFEL/eweasel")
-			l_eweasel.define ("INCLUDE", "$EWEASEL/control")
-			l_eweasel.define ("EWEASEL_PLATFORM", "UNIX")
-			l_eweasel.define ("UNIX", "1")
-			l_eweasel.define ("PLATFORM_TYPE", "unix")
-			l_eweasel.define ("EWEASEL_DOTNET_SETTING", "")
+			l_eweasel.define ({STRING_32} "ISE_PLATFORM", ise_platform)
+			l_eweasel.define ({STRING_32} "EWEASEL", {STRING_32} "$ISE_EIFFEL/eweasel")
+			l_eweasel.define ({STRING_32} "INCLUDE", {STRING_32} "$EWEASEL/control")
+			l_eweasel.define ({STRING_32} "EWEASEL_PLATFORM", {STRING_32} "UNIX")
+			l_eweasel.define ({STRING_32} "UNIX", {STRING_32} "1")
+			l_eweasel.define ({STRING_32} "PLATFORM_TYPE", {STRING_32} "unix")
+			l_eweasel.define ({STRING_32} "EWEASEL_DOTNET_SETTING", {STRING_32} "")
 
 			-- Copy from $EWEASEL\control\unix_platform
 			l_eweasel.define_file ("EWEASEL_COMPILE",	<<"$ISE_EIFFEL", "studio", "spec", "$ISE_PLATFORM", "bin", "ec">>)
@@ -51,11 +51,11 @@ feature -- Command
 			l_eweasel.define_file ("PRECOMPILED_BASE_MT", <<"$ISE_PRECOMP", "base-mt.ecf">>)
 
 			-- Copy from $EWEASEL/control/unix_platform
-			l_eweasel.define ("KERNEL_CLASSIC", "<cluster name=%"kernel%" location=%"$ISE_LIBRARY\library\base\elks\kernel%"/><cluster name=%"exceptions%" location=%"$ISE_LIBRARY\library\base\ise\kernel\exceptions%"/><cluster name=%"elks_exceptions%" location=%"$ISE_LIBRARY\library\base\elks\kernel\exceptions%"/>")
-			l_eweasel.define ("KERNEL_DOTNET", "")
-			l_eweasel.define ("SUPPORT_DOTNET", "")
-			l_eweasel.define ("EWEASEL_DOTNET_SETTING", "")
-			l_eweasel.define ("KERNEL_DOTNET_NO_EXCEPTION", "")
+			l_eweasel.define ({STRING_32} "KERNEL_CLASSIC", {STRING_32} "<cluster name=%"kernel%" location=%"$ISE_LIBRARY\library\base\elks\kernel%"/><cluster name=%"exceptions%" location=%"$ISE_LIBRARY\library\base\ise\kernel\exceptions%"/><cluster name=%"elks_exceptions%" location=%"$ISE_LIBRARY\library\base\elks\kernel\exceptions%"/>")
+			l_eweasel.define ({STRING_32} "KERNEL_DOTNET", {STRING_32} "")
+			l_eweasel.define ({STRING_32} "SUPPORT_DOTNET", {STRING_32} "")
+			l_eweasel.define ({STRING_32} "EWEASEL_DOTNET_SETTING", {STRING_32} "")
+			l_eweasel.define ({STRING_32} "KERNEL_DOTNET_NO_EXCEPTION", {STRING_32} "")
 
 			-- Copy from $EWEASEL/control/standard
 			l_eweasel.define_file ("BASE", <<"$ISE_LIBRARY", "library", "base", "elks">>)

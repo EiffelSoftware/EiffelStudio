@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "The EiffelWeasel automatic tester - multi-threaded version"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "2008/06/03"
+	status: "See notice at end of class."
 
 class EW_EWEASEL_MT
 
@@ -26,10 +25,12 @@ feature  {NONE} -- Implementation
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -50,6 +51,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

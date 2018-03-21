@@ -1,10 +1,8 @@
-note
+﻿note
 	description: "Instructions that removes an environment variable from the environment"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class EW_UNSETENV_INST
 
@@ -25,23 +23,22 @@ inherit
 
 feature
 
-	inst_initialize (line: STRING)
+	inst_initialize (line: READABLE_STRING_32)
 			-- Initialize instruction from `line'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
 		local
-			args: LIST [STRING]
+			args: LIST [READABLE_STRING_32]
 		do
 			args := broken_into_words (line)
 			if args.count /= 1 then
-				failure_explanation := "argument count must be at least 1"
+				failure_explanation := {STRING_32} "argument count must be at least 1"
 				init_ok := False
 			elseif args.first.has ('%/0/') then
-				create failure_explanation.make (0)
-				failure_explanation.append ("environment variable name contains null character")
+				failure_explanation :={STRING_32} "environment variable name contains null character"
 				init_ok := False
 			else
-				variable := args.i_th (1)
+				variable := args [1]
 				init_ok := True
 			end
 		end
@@ -62,16 +59,16 @@ feature
 
 feature {NONE}
 
-	variable: STRING
+	variable: READABLE_STRING_32
 			-- Name of environment variable
 
-invariant
-
-note
+;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

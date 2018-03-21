@@ -1,17 +1,16 @@
-note
+﻿note
 	description: "[
-					Helper to setup environment values before running eweasel test cases
-																							]"
+			Helper to setup environment values before running eweasel test cases
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	keywords: "Eiffel test"
 
 class
 	EW_EQA_WINDOWS_SETUP
 
 inherit
-	ANY
+	EW_STRING_UTILITIES
 
 	EW_OS_ACCESS
 		export
@@ -47,69 +46,59 @@ feature {NONE} -- Initialization
 
 feature -- Config
 
-	ise_eiffel: STRING
+	ise_eiffel: READABLE_STRING_32
 			-- ISE_EIFFEL environment variable
 		require
 			environment_set: is_environment_set
-		local
-			l_env: EXECUTION_ENVIRONMENT
 		once
-			create l_env
-			Result := l_env.get ("ISE_EIFFEL")
+			Result := (create {EXECUTION_ENVIRONMENT}).item ("ISE_EIFFEL")
 		ensure
 			not_void: Result /= Void
 		end
 
-	ise_platform: STRING
+	ise_platform: READABLE_STRING_32
 			-- ISE_PLATFORM environment variable
 		require
 			environment_set: is_environment_set
-		local
-			l_env: EXECUTION_ENVIRONMENT
 		once
-			create l_env
-			Result := l_env.get ("ISE_PLATFORM")
+			Result := (create {EXECUTION_ENVIRONMENT}).item ("ISE_PLATFORM")
 		ensure
 			not_void: Result /= Void
 		end
 
-	output_path: DIRECTORY_NAME
+	output_path: PATH
 			-- eweasel output path
 		require
 			environment_set: is_environment_set
 		once
-			Result := eweasel_path.twin
-			Result.extend ("tmp")
+			Result := eweasel_path.extended ("tmp")
 		end
 
-	source_directory: DIRECTORY_NAME
+	source_directory: PATH
 			-- Test case source path
 		require
 			environment_set: is_environment_set
 		once
-			Result := eweasel_path.twin
-			Result.extend ("tests")
+			Result := eweasel_path.extended ("tests")
 		ensure
 			not_void: Result /= Void
 		end
 
-	eweasel_path: DIRECTORY_NAME
+	eweasel_path: PATH
 			-- EWEASEL environment path
 		require
 			environment_set: is_environment_set
-		local
-			l_string: STRING
-			l_env: EXECUTION_ENVIRONMENT
 		once
-			create l_env
-			l_string := l_env.get ("EWEASEL")
-			check not_void: l_string /= Void end
-			create Result.make_from_string (l_string)
+			if attached (create {EXECUTION_ENVIRONMENT}).item ("EWEASEL") as e then
+				create Result.make_from_string (e)
+			else
+				create Result.make_empty
+			end
 		ensure
 			not_void: Result /= Void
 		end
 
-	setup_one_test_case (a_test_name, a_test_folder_name, a_arguments: STRING)
+	setup_one_test_case (a_test_name, a_test_folder_name, a_arguments: READABLE_STRING_32)
 			-- Setup for one test case
 		require
 			not_void: a_test_name /= Void
@@ -119,7 +108,7 @@ feature -- Config
 			l_factory: EW_EQA_TEST_FACTORY
 			l_temp_dir: DIRECTORY
 		do
-			create l_temp_dir.make (output_path)
+			create l_temp_dir.make_with_path (output_path)
 			if not l_temp_dir.exists then
 				l_temp_dir.create_dir
 			end
@@ -138,42 +127,32 @@ feature -- Config
 
 feature -- Query
 
-	is_file_exists (a_tcf_file: STRING): BOOLEAN
+	is_file_exists (a_tcf_file: READABLE_STRING_32): BOOLEAN
 			-- If `a_tcf_file' exists
 		require
 			not_void: a_tcf_file /= Void
-		local
-			l_file: PLAIN_TEXT_FILE
 		do
-			create l_file.make (a_tcf_file)
-			Result := l_file.exists
+			Result := (create {PLAIN_TEXT_FILE}.make_with_name (a_tcf_file)).exists
 		end
 
-	is_dir_exists (a_dir: STRING): BOOLEAN
+	is_dir_exists (a_dir: PATH): BOOLEAN
 			-- If `a_dir' exists
 		require
 			not_void: a_dir /= Void
-		local
-			l_dir: DIRECTORY
 		do
-			create l_dir.make (a_dir)
-			Result := l_dir.exists
+			Result := (create {DIRECTORY}.make_with_path (a_dir)).exists
 		end
 
 	is_environment_set: BOOLEAN
 			-- If environment set?
 		local
 			l_env: EXECUTION_ENVIRONMENT
-			l_ise_eiffel_set: BOOLEAN
-			l_eweasel_set: BOOLEAN
 		do
 			create l_env
-			l_ise_eiffel_set := l_env.item ("ISE_EIFFEL") /= Void
-			l_eweasel_set := l_env.item ("EWEASEL") /= Void
-			Result := l_ise_eiffel_set and l_eweasel_set
+			Result := attached l_env.item ("ISE_EIFFEL") and attached l_env.item ("EWEASEL")
 		end
 
-	all_converted_classes: ARRAYED_SET [STRING]
+	all_converted_classes: ARRAYED_SET [READABLE_STRING_32]
 			-- All converted classes
 
 feature -- Command
@@ -185,19 +164,19 @@ feature -- Command
 		do
 			create l_eweasel_63.make_empty
 
-			l_eweasel_63.output_arg (output_path)
+			l_eweasel_63.output_arg (output_path.name)
 
-			l_eweasel_63.define ("ISE_EIFFEL", ise_eiffel)
+			l_eweasel_63.define ({STRING_32} "ISE_EIFFEL", ise_eiffel)
 
-			l_eweasel_63.init ("$ISE_EIFFEL\eweasel\control\init")
+			l_eweasel_63.init ({STRING_32} "$ISE_EIFFEL\eweasel\control\init")
 
-			l_eweasel_63.define ("ISE_PLATFORM", ise_platform)
-			l_eweasel_63.define ("EWEASEL", "$ISE_EIFFEL\eweasel")
-			l_eweasel_63.define ("INCLUDE", "$EWEASEL\control")
-			l_eweasel_63.define ("EWEASEL_PLATFORM", "WINDOWS")
-			l_eweasel_63.define ("WINDOWS", "1")
-			l_eweasel_63.define ("PLATFORM_TYPE", "$EWEASEL_PLATFORM")
-			l_eweasel_63.define ("EWEASEL_DOTNET_SETTING", "")
+			l_eweasel_63.define ({STRING_32} "ISE_PLATFORM", ise_platform)
+			l_eweasel_63.define ({STRING_32} "EWEASEL", {STRING_32} "$ISE_EIFFEL\eweasel")
+			l_eweasel_63.define ({STRING_32} "INCLUDE", {STRING_32} "$EWEASEL\control")
+			l_eweasel_63.define ({STRING_32} "EWEASEL_PLATFORM", {STRING_32} "WINDOWS")
+			l_eweasel_63.define ({STRING_32} "WINDOWS", {STRING_32} "1")
+			l_eweasel_63.define ({STRING_32} "PLATFORM_TYPE", {STRING_32} "$EWEASEL_PLATFORM")
+			l_eweasel_63.define ({STRING_32} "EWEASEL_DOTNET_SETTING", {STRING_32} "")
 
 			-- Copy from $EWEASEL\control\windows_platform
 			l_eweasel_63.define_file ("EWEASEL_COMPILE", <<"$ISE_EIFFEL", "studio", "spec", "$ISE_PLATFORM", "bin", "ec.exe">>)
@@ -210,11 +189,11 @@ feature -- Command
 			l_eweasel_63.define_file ("PRECOMPILED_STORE", <<"$ISE_EIFFEL", "precomp", "spec", "$ISE_PLATFORM", "store">>)
 
 			-- Copy from $EWEASEL/control/windows_platform
-			l_eweasel_63.define ("KERNEL_CLASSIC", "<cluster name=%"kernel%" location=%"$ISE_LIBRARY\library\base\elks\kernel%"/><cluster name=%"exceptions%" location=%"$ISE_LIBRARY\library\base\ise\kernel\exceptions%"/><cluster name=%"elks_exceptions%" location=%"$ISE_LIBRARY\library\base\elks\kernel\exceptions%"/>")
-			l_eweasel_63.define ("KERNEL_DOTNET", "")
-			l_eweasel_63.define ("SUPPORT_DOTNET", "")
-			l_eweasel_63.define ("EWEASEL_DOTNET_SETTING", "")
-			l_eweasel_63.define ("KERNEL_DOTNET_NO_EXCEPTION", "")
+			l_eweasel_63.define ({STRING_32} "KERNEL_CLASSIC", {STRING_32} "<cluster name=%"kernel%" location=%"$ISE_LIBRARY\library\base\elks\kernel%"/><cluster name=%"exceptions%" location=%"$ISE_LIBRARY\library\base\ise\kernel\exceptions%"/><cluster name=%"elks_exceptions%" location=%"$ISE_LIBRARY\library\base\elks\kernel\exceptions%"/>")
+			l_eweasel_63.define ({STRING_32} "KERNEL_DOTNET", {STRING_32} "")
+			l_eweasel_63.define ({STRING_32} "SUPPORT_DOTNET", {STRING_32} "")
+			l_eweasel_63.define ({STRING_32} "EWEASEL_DOTNET_SETTING", {STRING_32} "")
+			l_eweasel_63.define ({STRING_32} "KERNEL_DOTNET_NO_EXCEPTION", {STRING_32} "")
 
 			-- Copy from $EWEASEL/control/standard
 			l_eweasel_63.define_file ("BASE", <<"$ISE_LIBRARY", "library", "base", "elks">>)
@@ -259,27 +238,24 @@ feature -- Command
 			source_path (source_directory)
 		end
 
-	convert_tcf_in_folder (a_dir: STRING; a_test_name: STRING)
+	convert_tcf_in_folder (a_dir: PATH; a_test_name: STRING)
 			-- Convert `a_tcf_file' to normal Eiffel class if there is a tcf under `a_dir'
 		require
 			not_void: a_dir /= Void
 --			is_dir_exists: is_dir_exists (a_dir)
 			not_void: a_test_name /= Void
 		local
-			l_file_name: FILE_NAME
 			l_file: PLAIN_TEXT_FILE
 		do
-			create l_file_name.make_from_string (a_dir)
-			l_file_name.set_file_name ("tcf")
-			create l_file.make (l_file_name)
+			create l_file.make_with_path (a_dir.extended ("tcf"))
 			if l_file.exists then
-				converter.append_one_test_routine (l_file_name, a_test_name)
+				converter.append_one_test_routine (l_file.path, a_test_name)
 			else
-				print ("%NError: tcf file not exists in dir: " + a_dir)
+				print ("%NError: tcf file not exists in dir: " + a_dir.name)
 			end
 		end
 
-	convert_all_tcf_in (a_dir: STRING; a_output_file_path: STRING; a_output_file_prefix: STRING)
+	convert_all_tcf_in (a_dir: PATH; a_output_file_path: PATH; a_output_file_prefix: READABLE_STRING_32)
 			-- Convert all tcf files in `a_dir'
 			-- This feature will place all tests under a dir to one Eiffel testing class
 		require
@@ -289,57 +265,40 @@ feature -- Command
 			not_void: a_output_file_prefix /= Void
 		local
 			l_dir: DIRECTORY
-			l_list: ARRAYED_LIST [STRING_8]
-			l_sorted_list: SORTED_TWO_WAY_LIST [STRING_8]
-			l_dir_name: DIRECTORY_NAME
-			l_current_test_prefix: STRING
-			l_class_name: STRING
-			l_all_test_case_file_name: FILE_NAME
+			l_sorted_list: SORTED_TWO_WAY_LIST [PATH]
+			l_current_test_prefix: READABLE_STRING_32
+			l_class_name: READABLE_STRING_32
+			p: PATH
+			last_test_prefix: READABLE_STRING_32 -- Last test case prefix
 		do
-			create l_dir.make (a_dir)
+			create l_dir.make_with_path (a_dir)
 			l_dir.open_read
-
-			from
-				create converter.make_default
-				converter.set_ignore_non_exist_test_cases (True)
-
-				from
-                    -- Sort all items in `l_dir'
-                    -- Otherwise, on Windows, items in `l_dir' is alphabetical, but not case for Unix platforms.
-                    -- Un-sorted list will cause eweasel converter contain only one test case in one generated Eiffel class.
-					l_list := l_dir.linear_representation
-					create l_sorted_list.make
-					l_list.start
-				until
-					l_list.after
-				loop
-					l_sorted_list.extend (l_list.item)
-
-					l_list.forth
-				end
-				check same_size: l_list.count = l_sorted_list.count end
-
-				l_sorted_list.start
-				last_test_prefix := test_case_prefix (l_sorted_list.item)
-			until
-				l_sorted_list.after
+				-- Sort all items in `l_dir'
+				-- Otherwise, on Windows, items in `l_dir' is alphabetical, but not case for Unix platforms.
+				-- Un-sorted list will cause eweasel converter contain only one test case in one generated Eiffel class.
+			create l_sorted_list.make
+			across
+				l_dir.entries as e
 			loop
-				create l_dir_name.make_from_string (a_dir)
-				l_dir_name.extend (l_sorted_list.item)
-
-				l_current_test_prefix := test_case_prefix (l_sorted_list.item)
+				l_sorted_list.extend (e.item)
+			end
+			create converter.make_default
+			converter.set_ignore_non_exist_test_cases (True)
+			across
+				l_sorted_list as e
+			from
+				last_test_prefix := test_case_prefix (e.item.name)
+			loop
+				p := e.item
+				l_current_test_prefix := test_case_prefix (p.name)
 				if not last_test_prefix.is_equal (l_current_test_prefix) and converter.is_flush_needed then
-					check first_time_must_pass: l_sorted_list.index /= 1 end
+					check first_time_must_pass: not e.is_first end
 					l_class_name := a_output_file_prefix + "_" + last_test_prefix
 					converter.flush_to_output_file (file_name (a_output_file_path, a_output_file_prefix, last_test_prefix), l_class_name)
 					all_converted_classes.extend (l_class_name)
-					last_test_prefix := l_current_test_prefix
 				end
 				last_test_prefix := l_current_test_prefix
-
-				convert_tcf_in_folder (l_dir_name, l_sorted_list.item)
-
-				l_sorted_list.forth
+				convert_tcf_in_folder (l_dir.path.extended_path (p), p.utf_8_name)
 			end
 
 			if converter.is_flush_needed then
@@ -349,42 +308,35 @@ feature -- Command
 				all_converted_classes.extend (l_class_name)
 			end
 
-			-- Finally, generate a class which contain all class names
-			create l_all_test_case_file_name.make_from_string (a_output_file_path)
-			l_all_test_case_file_name.set_file_name ("all_eweasel_test_cases.e")
-			write_all_converted_classes_to_file (l_all_test_case_file_name)
+				-- Finally, generate a class which contain all class names
+			write_all_converted_classes_to_file (a_output_file_path.extended ("all_eweasel_test_cases.e"))
 		end
 
-	write_all_converted_classes_to_file (a_output_file: FILE_NAME)
+	write_all_converted_classes_to_file (a_output_file: PATH)
 			-- Write all cnverted classes to `a_output_file'
 		require
 			a_output_file_not_void: a_output_file /= Void
 			all_converted_classes_not_void: all_converted_classes /= Void
 		local
-			l_content: STRING
-			l_converted_classes: like all_converted_classes
-			l_item: STRING
+			l_content: STRING_32
+			l_item: READABLE_STRING_32
 		do
-			from
-				l_converted_classes := all_converted_classes
-				l_converted_classes.start
-				create l_content.make_empty
-			until
-				l_converted_classes.after
+			create l_content.make_empty
+			across
+				all_converted_classes as c
 			loop
-				l_item := l_converted_classes.item
-				l_content.append ("%N%T" + l_item.as_lower + ": " + l_item.as_upper)
-
-				l_converted_classes.forth
+				l_item := c.item
+				l_content.append ({STRING_32} "%N%T")
+				l_content.append (l_item.as_lower)
+				l_content.append ({STRING_32} ": ")
+				l_content.append (l_item.as_upper)
 			end
-
-			l_content := converter.all_eweasel_test_case_template_content (l_content)
-			converter.write_content_to_file (l_content, a_output_file)
+			converter.write_content_to_file (converter.all_eweasel_test_case_template_content (to_utf_8 (l_content)), a_output_file)
 		end
 
 feature {NONE} -- Implementation
 
-	initial_environment (a_env: EW_TEST_ENVIRONMENT; a_test_dir_name: STRING)
+	initial_environment (a_env: EW_TEST_ENVIRONMENT; a_test_dir_name: READABLE_STRING_32)
 			-- Initial environment environment in which to
 			-- execute `test'.  The result may be safely
 			-- modified by the caller.
@@ -392,14 +344,12 @@ feature {NONE} -- Implementation
 		require
 			test_not_void: a_env /= Void
 		local
-			l_test_dir, l_gen_dir, l_exec_dir: STRING
-			l_path: DIRECTORY_NAME
+			l_test_dir, l_gen_dir, l_exec_dir: READABLE_STRING_32
 		do
-			create l_path.make_from_string (output_path)
-			l_test_dir := os.full_directory_name (l_path, a_test_dir_name) -- See {EWEASEL_TEST_CATALOG_SAMPLE}
+			l_test_dir := os.full_directory_name (output_path.name, a_test_dir_name) -- See {EWEASEL_TEST_CATALOG_SAMPLE}
 			associate (a_env, Test_dir_name, l_test_dir)
-			associate (a_env, Cluster_dir_name, os.full_directory_name (l_test_dir, "clusters"))
-			associate (a_env, Output_dir_name, os.full_directory_name (l_test_dir, "output"))
+			associate (a_env, Cluster_dir_name, os.full_directory_name (l_test_dir, {STRING_32} "clusters"))
+			associate (a_env, Output_dir_name, os.full_directory_name (l_test_dir, {STRING_32} "output"))
 			-- fixme ("set correct directory depending on used target")
 			l_gen_dir := os.full_directory_name (l_test_dir, Eiffel_gen_directory)
 			l_gen_dir := os.full_directory_name (l_gen_dir, Default_target_name)
@@ -409,7 +359,7 @@ feature {NONE} -- Implementation
 			a_env.define (Final_execution_dir_name, l_exec_dir)
 		end
 
-	associate (env: EW_TEST_ENVIRONMENT; var, dir: STRING)
+	associate (env: EW_TEST_ENVIRONMENT; var, dir: READABLE_STRING_32)
 			-- Define an environment variable `var' in the
 			-- environment `env' to have
 			-- value `dir', which must be a directory name.
@@ -422,7 +372,7 @@ feature {NONE} -- Implementation
 			d: DIRECTORY
 		do
 			env.define (var, dir)
-			create d.make (dir)
+			create d.make_with_name (dir)
 			if not d.exists then
 				d.create_dir
 			end
@@ -431,28 +381,27 @@ feature {NONE} -- Implementation
 	converter: EW_EQA_TEST_EWEASEL_TCF_CONVERTER
 			-- For convert all tests under a folder
 
-	file_name (a_output_file_path: STRING; a_output_file_prefix: STRING; a_test_prefix: STRING): FILE_NAME
+	file_name (a_output_file_path: PATH; a_output_file_prefix: READABLE_STRING_32; a_test_prefix: READABLE_STRING_32): PATH
 			-- Join `a_output_file_path', `a_output_file_prefix' and `a_test_prefix' as a file name
 		require
 			not_void: a_output_file_path /= Void
 			not_void: a_output_file_prefix /= Void
 			not_void: a_test_prefix /= Void
 		do
-			create Result.make_from_string (a_output_file_path)
-			Result.set_file_name (a_output_file_prefix + "_" + a_test_prefix + ".e")
+			Result := a_output_file_path.extended (a_output_file_prefix + "_" + a_test_prefix).appended_with_extension ("e")
 		ensure
 			not_void: Result /= Void
 		end
 
-	test_case_prefix (a_full_test_case_name: STRING): STRING
+	test_case_prefix (a_full_test_case_name: READABLE_STRING_32): STRING_32
 			-- Find test case prefix in `a_full_test_case_name'
 		require
 			not_void: a_full_test_case_name /= Void
 		local
 			l_count: INTEGER
-			l_char: CHARACTER
+			l_char: CHARACTER_32
 		do
-			-- We find digit here
+				-- We find digit here.
 			from
 				l_count := 1
 				create Result.make_empty
@@ -463,23 +412,19 @@ feature {NONE} -- Implementation
 				if not l_char.is_digit then
 					Result.append_character (l_char)
 				end
-
 				l_count := l_count + 1
 			end
-
 		ensure
 			not_void: Result /= Void
 		end
 
-	last_test_prefix: STRING
-			-- Last test case prefix
-			-- Maybe void if not set
-
 ;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2011, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

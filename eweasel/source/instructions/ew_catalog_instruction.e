@@ -21,16 +21,16 @@ feature
 
 
 feature -- Status
-	
-	execute_ok: BOOLEAN;
+
+	execute_ok: BOOLEAN
 			-- Was last call to `execute' successful?
 
-	failure_explanation: STRING;
+	failure_explanation: READABLE_STRING_32
 			-- Explanation of why last
 			-- `execute' which was not OK (Void
 			-- if no explanation available)
-	
-note
+
+;note
 	copyright: "[
 			Copyright (c) 1984-2007, University of Southern California and contributors.
 			All rights reserved.

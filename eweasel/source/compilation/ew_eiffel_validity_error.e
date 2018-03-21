@@ -35,12 +35,12 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	validity_code: STRING
+	validity_code: READABLE_STRING_32
 			-- Validity code which was violated.
 
 feature -- Modification
 
-	set_validity_code (a_code: STRING)
+	set_validity_code (a_code: like validity_code)
 		require
 			a_code_not_void: a_code /= Void
 		do
@@ -51,20 +51,19 @@ feature -- Modification
 
 feature -- Summary
 
-	summary: STRING
+	summary: STRING_32
 		do
-			create Result.make (0);
-			Result.append ("Validity error");
-			if not equal (class_name, "")  then
-				Result.append (" in class ");
-				Result.append (class_name);
+			Result := {STRING_32} "Validity error"
+			if not class_name.is_empty  then
+				Result.append ({STRING_32} " in class ")
+				Result.append (class_name)
 			end;
-			Result.append (" code ");
-			if validity_code /= Void then
-				Result.append (validity_code)
+			Result.append ({STRING_32} " code ")
+			if attached validity_code as v then
+				Result.append (v)
 			end
 			if has_line_number then
-				Result.append (" at line ")
+				Result.append ({STRING_32} " at line ")
 				Result.append_integer (line_number)
 			end
 		end

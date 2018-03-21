@@ -1,28 +1,28 @@
-note
+﻿note
 	description: "Copy file using PLAIN_TEXT_FILE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class
 	EW_COPY_TEXT_INST
-	
+
 inherit
 	EW_COPY_INST
 
 feature {NONE} -- Implementation
 
-	new_file (a_file_name: STRING): PLAIN_TEXT_FILE
+	new_file (a_file_name: READABLE_STRING_32): PLAIN_TEXT_FILE
 		do
-			create Result.make (a_file_name)
+			create Result.make_with_name (a_file_name)
 		end
-		
+
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

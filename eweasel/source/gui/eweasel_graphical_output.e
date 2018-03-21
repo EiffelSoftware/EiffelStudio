@@ -1,9 +1,7 @@
-note
+﻿note
 	description: "Controller of all graphical output."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	EWEASEL_GRAPHICAL_OUTPUT
@@ -23,7 +21,7 @@ inherit
 create
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make (a_interface: EV_RICH_TEXT)
 			-- Create
@@ -96,10 +94,12 @@ invariant
 	has_interface: interface /= Void
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -121,5 +121,4 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
 
-
-end -- class EWEASEL_GRAPHICAL_OUTPUT
+end

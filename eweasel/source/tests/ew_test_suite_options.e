@@ -8,35 +8,34 @@
 class EW_TEST_SUITE_OPTIONS
 
 create
-
 	make
 
-feature  -- Creation
+feature {NONE} -- Creation
 
 	make
 		do
-			create {EW_FILTER_ALL} filter;
+			create {EW_FILTER_ALL} filter
 			max_threads := -1
 			display_summary := True
-		end;
+		end
 
 feature  -- Properties
 
-	keep_all: BOOLEAN;
+	keep_all: BOOLEAN
 			-- Should output from all tests be retained,
 			-- regardless of whether they passed or failed?
 
-	keep_passed: BOOLEAN;
+	keep_passed: BOOLEAN
 			-- Should output from only passed tests be retained?
 
-	keep_failed: BOOLEAN;
+	keep_failed: BOOLEAN
 			-- Should output from only failed tests be retained?
 
-	is_cleanup_requested: BOOLEAN;
+	is_cleanup_requested: BOOLEAN
 			-- Should EIFGEN tree for retained directories
 			-- be deleted?
 
-	filter: EW_EIFFEL_TEST_FILTER;
+	filter: EW_EIFFEL_TEST_FILTER
 			-- Execute only tests selected by this filter
 
 	max_threads: INTEGER
@@ -66,7 +65,7 @@ feature -- Modification
 			keep_failed := False
 		ensure
 			keep_option_set: keep_all
-		end;
+		end
 
 	set_keep_passed
 		do
@@ -75,7 +74,7 @@ feature -- Modification
 			keep_failed := False
 		ensure
 			keep_option_set: keep_passed
-		end;
+		end
 
 	set_keep_failed
 		do
@@ -84,40 +83,40 @@ feature -- Modification
 			keep_failed := True
 		ensure
 			keep_option_set: keep_failed
-		end;
+		end
 
 	set_cleanup_requested (b: BOOLEAN)
 		do
 			is_cleanup_requested := b
-		end;
+		end
 
 	set_filter (f: EW_EIFFEL_TEST_FILTER)
 		do
-			filter := f;
+			filter := f
 		ensure
 			filter_set: filter = f
-		end;
+		end
 
 	set_max_threads (n: INTEGER)
 		do
 			max_threads := n
 		ensure
 			max_threads_set: max_threads = n
-		end;
+		end
 
 	set_max_c_processes (n: INTEGER)
 		do
 			max_c_processes := n
 		ensure
 			max_c_processes_set: max_c_processes = n
-		end;
+		end
 
 	set_results_in_catalog_order (b: BOOLEAN)
 		do
 			results_in_catalog_order := b
 		ensure
 			results_in_catalog_order_set: results_in_catalog_order = b
-		end;
+		end
 
 	set_display_summary (value: BOOLEAN)
 			-- Set `display_summary` to `value`.
@@ -129,9 +128,9 @@ feature -- Modification
 
 note
 	copyright: "[
-			Copyright (c) 1984-2017, University of Southern California, Eiffel Software, and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

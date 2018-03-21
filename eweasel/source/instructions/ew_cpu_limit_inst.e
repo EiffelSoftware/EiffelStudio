@@ -1,54 +1,57 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	keywords: "Eiffel test"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EW_CPU_LIMIT_INST
 
 inherit
-	EW_TEST_INSTRUCTION;
-	EW_STRING_UTILITIES;
+	EW_TEST_INSTRUCTION
+	EW_STRING_UTILITIES
 
 feature
 
-	inst_initialize (limit: STRING)
+	inst_initialize (limit: READABLE_STRING_32)
 			-- Initialize instruction from `limit'.  Set
 			-- `init_ok' to indicate whether
 			-- initialization was successful.
 		do
-			if limit.count = 0 or first_white_position (limit) > 0 
-			   or else not is_integer (limit) then
-				init_ok := False;
-				failure_explanation := "need exactly one integer argument";
+			if
+				limit.is_empty or
+				first_white_position (limit) > 0 or else
+				not limit.is_integer
+			then
+				init_ok := False
+				failure_explanation := {STRING_32} "need exactly one integer argument"
 			else
-				cpu_limit := limit.to_integer;
-				init_ok := True;
+				cpu_limit := limit.to_integer
+				init_ok := True
 			end
-		end;
+		end
 
 	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.  Always successful.
 		do
-			test.set_cpu_limit (cpu_limit);
-		end;
+			test.set_cpu_limit (cpu_limit)
+		end
 
-	init_ok: BOOLEAN;
+	init_ok: BOOLEAN
 			-- Was last call to `initialize' successful?
-	
-	execute_ok: BOOLEAN = True;
+
+	execute_ok: BOOLEAN = True
 			-- Calls to `execute' are always successful.
 
 feature {NONE}
-	
+
 	cpu_limit: INTEGER;
 			-- CPU limit in seconds for spawned processes
-	
-	
+
 note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California and contributors.
 			All rights reserved.
 			]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
@@ -71,11 +74,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
-
-
-
-
-
 
 end

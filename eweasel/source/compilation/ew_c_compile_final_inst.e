@@ -1,8 +1,8 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	keywords: "Eiffel test"
+date: "93/08/30"
 
 class EW_C_COMPILE_FINAL_INST
 
@@ -11,17 +11,19 @@ inherit
 
 feature {NONE} -- Implementation
 
-	compilation_dir_name: STRING
+	compilation_dir_name: READABLE_STRING_32
 			-- Name of directory where compilation is to be done
 		once
-			Result := Final_execution_dir_name; 
-		end;
+			Result := Final_execution_dir_name
+		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

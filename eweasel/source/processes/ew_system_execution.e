@@ -1,10 +1,8 @@
-note
+﻿note
 	description: "An Eiffel system execution"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class EW_SYSTEM_EXECUTION
 
@@ -23,7 +21,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (prog: STRING; args: LINKED_LIST [STRING]; env_vars: HASH_TABLE [STRING, STRING]; execute_cmd, dir, inf, outf, savef: STRING)
+	make (prog: READABLE_STRING_32; args: LINKED_LIST [READABLE_STRING_32]; env_vars: like {EW_TEST_ENVIRONMENT}.environment_variables; execute_cmd, dir, inf, outf, savef: READABLE_STRING_32)
 			-- Start a new process to execute `prog' with
 			-- arguments `args' using execution command
 			-- `execute_cmd' in directory `dir'.
@@ -39,12 +37,12 @@ feature {NONE} -- Creation
 			directory_not_void: dir /= Void
 			save_name_not_void: savef /= Void
 		local
-			real_args: LINKED_LIST [STRING]
+			real_args: LINKED_LIST [READABLE_STRING_32]
 		do
 			create real_args.make
 			if {PLATFORM}.is_windows then
 					-- On Windows we need the /c arguments to the DOS command.
-				real_args.extend ("/c")
+				real_args.extend ({STRING_32} "/c")
 			end
 			real_args.extend (execute_cmd)
 			real_args.extend (dir)
@@ -63,26 +61,29 @@ feature {NONE} -- Creation
 
 feature {NONE} -- Constant strings
 
-	shell_command: STRING
+	shell_command: READABLE_STRING_32
 			-- Path to shell command on Windows.
 		once
 			if {PLATFORM}.is_windows then
-				Result := (create {EXECUTION_ENVIRONMENT}).get ("COMSPEC")
+				Result := (create {EXECUTION_ENVIRONMENT}).item ("COMSPEC")
 				if Result = Void then
 						-- If not defined use the Windows NT/2k/XP command line tool
 						-- which should be in the path of the user.
-					Result := "cmd.exe"
+					Result := {STRING_32} "cmd.exe"
 				end
 			else
-				Result := "/bin/sh"
+				Result := {STRING_32} "/bin/sh"
 			end
 		ensure
 			shell_command_not_void: Result /= Void
 		end
 
 note
+	ca_ignore: "CA011", "CA011 — too many arguments"
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2017, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
 	license: "Your use of this work is governed under the terms of the GNU General Public License version 2"

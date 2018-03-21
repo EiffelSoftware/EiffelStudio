@@ -1,11 +1,13 @@
-note
+﻿note
 	description: "A queue of named Eiffel tests that can be extended %
 		%by multiple threads and worked on by multiple threads"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "September 13, 2001"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EW_EIFFEL_TEST_QUEUE
+
 inherit
 	ANY
 	EW_SHARED_THREAD_DEBUGGING
@@ -16,7 +18,7 @@ inherit
 create
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make
 		do
@@ -27,7 +29,6 @@ feature -- Creation
 			create more_waiting_tests.make
 			create more_completed_tests.make
 		end
-
 
 feature -- Properties
 
@@ -371,9 +372,9 @@ feature {NONE} -- Obsolete
 
 note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -394,6 +395,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

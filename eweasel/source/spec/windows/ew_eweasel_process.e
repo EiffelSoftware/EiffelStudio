@@ -3,8 +3,6 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class EW_EWEASEL_PROCESS
 
@@ -33,7 +31,7 @@ inherit
 
 feature -- Creation
 
-	make (cmd: STRING; args: LIST [STRING]; a_env_vars: HASH_TABLE [STRING, STRING]; inf, outf, savef: STRING)
+	make (cmd: READABLE_STRING_32; args: LIST [READABLE_STRING_32]; a_env_vars: like {EW_TEST_ENVIRONMENT}.environment_variables; inf, outf, savef: READABLE_STRING_32)
 			-- Start a new process to run command `cmd'
 			-- with arguments `args'.  The new process
 			-- will gets its input from file `inf' and
@@ -52,21 +50,18 @@ feature -- Creation
 			command_not_void: cmd /= Void
 			arguments_not_void: args /= Void
 		local
-			cmd_line: STRING
+			cmd_line: STRING_32
 		do
 			debug
 				output.append_new_line
 				output.append ("Start: ", False)
-				output.append (cmd, False)
+				output.append_32 (cmd, False)
 				output.append (" ", False)
-				from
-					args.start
-				until
-					args.after
+				across
+					args as a
 				loop
-					output.append (args.item, False)
+					output.append_32 (a.item, False)
 					output.append (" ", False)
-					args.forth
 				end
 				output.append ("End", False)
 				output.append_new_line
@@ -110,12 +105,9 @@ feature -- Control
 			-- Send characters in `s' to process
 		require
 			string_not_void: s /= Void
-		local
-			l_file_handle: EW_WEL_FILE_HANDLE
 		do
 			if input_pipe_needed then
-				create l_file_handle
-				l_file_handle.put_string (std_input, s)
+				(create {EW_WEL_FILE_HANDLE}).put_string (std_input, s)
 			end
 		end
 
@@ -198,17 +190,17 @@ feature {NONE} -- Implementation
 	output_pipe_needed: BOOLEAN
 			-- Is a pipe needed to read output from current process?
 
-	input_file_name: STRING
+	input_file_name: READABLE_STRING_32
 			-- Name if any of input file
 
-	output_file_name: STRING
+	output_file_name: READABLE_STRING_32
 			-- Name if any of output file
 
 	savefile: RAW_FILE
 			-- File to which output read from process is written,
 			-- if not void
 
-	savefile_name: STRING
+	savefile_name: READABLE_STRING_32
 			-- Name of file to which output read from process
 			-- is written, if not Void
 
@@ -356,7 +348,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Command-line
 
-	append_command_line_argument (argument: READABLE_STRING_8; line: STRING)
+	append_command_line_argument (argument: READABLE_STRING_32; line: STRING_32)
 			-- Append `argument' to command line `line' using Windows command-line escaping convention
 			-- used by Windows API call "CommandLineToArgvW".
 			-- The feature does not add any space before argument, this has to be done by the caller to separate arguments.
@@ -417,7 +409,7 @@ feature {NONE} -- Command-line
 			end
 		end
 
-	control_characters: STRING = " %T%N%/11/%""
+	control_characters: STRING_32 = " %T%N%/11/%""
 			-- Characters that need escaping:
 			-- - space
 			-- - hotizontal tab
@@ -426,8 +418,11 @@ feature {NONE} -- Command-line
 			-- - double quote
 
 ;note
+	ca_ignore: "CA011", "CA011 — too many arguments"
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2016, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"

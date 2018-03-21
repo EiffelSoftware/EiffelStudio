@@ -1,8 +1,7 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	keywords: "Eiffel test"
 
 class EW_TEST_NAME_INST
 
@@ -11,40 +10,43 @@ inherit
 
 feature
 
-	inst_initialize (tname: STRING)
+	inst_initialize (tname: READABLE_STRING_32)
 			-- Initialize instruction from `tname'.
 		do
-			if tname.count = 0 then
-				init_ok := False;
-				failure_explanation := "no test name supplied";
+			if tname.is_empty then
+				init_ok := False
+				failure_explanation := {STRING_32} "no test name supplied"
 			else
-				test_name := tname;
-				init_ok := True;
+				test_name := tname
+				init_ok := True
 			end
-		end;
+		end
 
 	execute (test: EW_EIFFEL_EWEASEL_TEST)
 			-- Execute `Current' as one of the
 			-- instructions of `test'.
 		do
-			test.set_test_name (test_name);
-		end;
+			test.set_test_name (test_name)
+		end
 
-	init_ok: BOOLEAN;
+	init_ok: BOOLEAN
 			-- Was last call to `initialize' successful?
-	
-	execute_ok: BOOLEAN = True;
+
+	execute_ok: BOOLEAN = True
 			-- Calls to `execute' always succeed.
 
 feature {NONE}
-	
-	test_name: STRING;
+
+	test_name: READABLE_STRING_32
 			-- Name of this test
-note
+
+;note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -65,6 +67,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

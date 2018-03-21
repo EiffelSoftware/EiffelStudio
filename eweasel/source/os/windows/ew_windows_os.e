@@ -1,52 +1,34 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	EW_WINDOWS_OS
-	
+
 inherit
 	EW_OPERATING_SYSTEM
 
-
 feature -- Path name operations
 
-	null_file_name: STRING = "nul"
+	null_file_name: STRING_32 = "nul"
 			-- File name which represents null input or output
-	
-	full_file_name (dir_name, f_name: STRING): STRING
+
+	executable_full_file_name (dir_name, f_name: READABLE_STRING_32): READABLE_STRING_32
 			-- Full name of file in directory `dir_name'
 			-- with name `f_name'.
 		do
-			create Result.make (dir_name.count + f_name.count + 1)
-			if not dir_name.is_empty then
-				Result.append (dir_name)
-				if dir_name.item (dir_name.count) /= Directory_separator then
-					Result.extend (Directory_separator)
-				end
-			end
-			Result.append (f_name)
+			Result := full_file_name (dir_name, f_name) + ".exe"
 		end
 
-	executable_full_file_name (dir_name, f_name: STRING): STRING
-			-- Full name of file in directory `dir_name'
-			-- with name `f_name'.
-		do
-			Result := full_file_name (dir_name, f_name)
-			Result.append (".exe")
-		end
-
-	full_directory_name (dir_name, subdir: STRING): STRING
-			-- Full name of subdirectory `subdir' of directory 
+	full_directory_name (dir_name, subdir: READABLE_STRING_32): READABLE_STRING_32
+			-- Full name of subdirectory `subdir' of directory
 			-- `dir_name'
 		do
 			Result := full_file_name (dir_name, subdir)
 		end
 
 feature -- Date and time
-	
+
 	current_time_in_seconds: INTEGER
 			-- Current time in seconds since the start of
 			-- the epoch (00:00:00 GMT,  Jan.  1,  1970)
@@ -63,12 +45,13 @@ feature -- Date and time
 			"time(NULL)"
 		end
 
-
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -90,5 +73,4 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
 
-
-end -- class WINDOWS_OS
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Helper for routines in INTERNAL class."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -29,8 +29,7 @@ feature -- Status report
 		do
 			if s /= Void and then not s.is_empty then
 				create l_class_type_name.make_from_string_general (s)
-				l_class_type_name.left_adjust
-				l_class_type_name.right_adjust
+				l_class_type_name.adjust
 
 					-- Let's see if it is a generic type.
 				l_start_pos := l_class_type_name.index_of ('[', 1)
@@ -47,8 +46,7 @@ feature -- Status report
 					then
 							-- A well formed generic class.
 						l_type_name := l_class_type_name.substring (1, l_start_pos - 1)
-						l_type_name.left_adjust
-						l_type_name.right_adjust
+						l_type_name.adjust
 
 						if is_valid_identifier (l_type_name) then
 							l_parameters := parameters_decomposition (
@@ -224,7 +222,7 @@ feature {NONE} -- Type creation
 	type_keyword: STRING = "TYPE";
 			-- Used for creating type objects.
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

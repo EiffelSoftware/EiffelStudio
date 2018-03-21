@@ -6,6 +6,26 @@
 			condition that checks for inequality is not optimal for readability.
 			Instead an equality comparison should be made. Refactoring by negating
 			the condition and by switching the instructions solves this issue.
+			
+			Do not report anything if there are Elseif parts, because
+				if a /= b then
+					-- 1
+				elseif x then
+					-- 2
+				else
+					-- 3
+				end
+			would have to be changed to
+				if a = b then
+					if x then
+						-- 2
+					else
+						-- 3
+					end
+				else
+					-- 1
+				end
+			that is less readable due to additional nesting.
 		]"
 	author: "Stefan Zurfluh"
 	revised_by: "Alexander Kogtenkov"
@@ -34,28 +54,49 @@ feature {NONE} -- Initialization
 	register_actions (a_checker: attached CA_ALL_RULES_CHECKER)
 		do
 			a_checker.add_if_pre_action (agent process_if)
+			a_checker.add_if_expression_pre_action (agent process_if_expression)
 		end
 
 feature {NONE} -- Rule checking	
 
-	process_if (a_if: IF_AS)
-			-- Checks whether `a_if' follows the pattern that leads to a rule violation.
-		local
-			l_viol: CA_RULE_VIOLATION
+	process_if (a: IF_AS)
+			-- Checks whether `a` follows the pattern that leads to a rule violation.
 		do
-				-- Only look at if-else instructions. (Whether there exists an 'elseif' is
-				-- not relevant to this rule.)
+				-- Only look at instructions with Else part but without Elseif parts.
+			if attached a.else_part and then not attached a.elsif_list then
+				check_condition (a.condition)
+			end
+		end
+
+	process_if_expression (a: IF_EXPRESSION_AS)
+			-- Checks whether `a` follows the pattern that leads to a rule violation.
+		do
+				-- Only look at expressions without Elseif parts.
+			if not attached a.elsif_list then
+				check_condition (a.condition)
+			end
+		end
+
+	check_condition (e: EXPR_AS)
+			-- Check if `e` is inquality and report an issue in that case.
+		local
+			v: CA_RULE_VIOLATION
+		do
 			if
-				a_if.else_part /= Void
-				and then attached {BIN_NE_AS} a_if.condition as l_c
-				and then (not attached {VOID_AS} l_c.right)
+				attached {BIN_NE_AS} e as c and then
+				not attached {VOID_AS} c.right
 			then
 					-- The if condition is of the form 'a /= b' or 'a /~ b'. Comparing to Void, however, is ignored
 					-- for the sake of intuition: "if c /= Void then" is preferrable (note: the 'attached' syntax
 					-- will not be discussed here and is not part of this rule).
-				create l_viol.make_with_rule (Current)
-				l_viol.set_location (l_c.start_location)
-				violations.extend (l_viol)
+				create v.make_formatted (
+					agent format (?,
+						ca_messages.locale.translation_in_context ("{1} used in if-then-else.", once "code_analyzer.violation"),
+						<<element (agent {TEXT_FORMATTER}.process_symbol_text (c.op_name.name_32))>>),
+					agent format (?, ca_messages.if_else_not_equal_violation, <<>>),
+					Current)
+				v.set_location (current_context.matchlist [c.operator_index])
+				violations.extend (v)
 			end
 		end
 
@@ -79,10 +120,9 @@ feature -- Properties
 	id: STRING_32 = "CA046"
 			-- <Precursor>
 
-	format_violation_description (a_violation: attached CA_RULE_VIOLATION; a_formatter: attached TEXT_FORMATTER)
-			-- Generates a formatted rule violation description for `a_formatter' based on `a_violation'.
+	format_violation_description (v: CA_RULE_VIOLATION; f: TEXT_FORMATTER)
+			-- Ignore the old-style output.
 		do
-			a_formatter.add (ca_messages.if_else_not_equal_violation)
 		end
 
 end

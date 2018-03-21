@@ -219,7 +219,7 @@ feature {NONE} -- Update filter
 			l_style: EV_POINTER_STYLE
 		do
 			l_style := widget.pointer_style
-			widget.set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
+			widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
 
 			update
 
@@ -592,7 +592,7 @@ feature -- Events
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

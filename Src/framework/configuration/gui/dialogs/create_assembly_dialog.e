@@ -160,7 +160,7 @@ feature {NONE} -- Initialization
 					l_old_style: like pointer_style
 				do
 					l_old_style := pointer_style
-					set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
+					set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
 
 					populate_assemblies
 
@@ -386,7 +386,7 @@ feature {NONE} -- Actions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

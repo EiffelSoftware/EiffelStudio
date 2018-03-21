@@ -773,7 +773,7 @@ feature {NONE} -- Basic operation
 			repopulate_requested := False
 			if not retried and attached lib_manager as l_lib_manager then
 				l_style := pointer_style
-				set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
+				set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
 				create popup.make_with_shadow
 				create bb
 				bb.set_border_width (1)
@@ -843,7 +843,7 @@ invariant
 	target_set_in_boxes: search_results_box.target = target
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

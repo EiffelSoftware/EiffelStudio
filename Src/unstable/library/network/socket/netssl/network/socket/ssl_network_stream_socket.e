@@ -408,12 +408,12 @@ feature {NONE} -- Implementation
 						if  a_ssl.ssl_pending  > 0  then
 							ssl_pending := True
 							debug
-								print ("%NSSL pending True")
+								print ("%NSSL pending True%N")
 							end
 						else
 							ssl_pending := False
 							debug
-								print ("%NSSL pending False")
+								print ("%NSSL pending False%N")
 							end
 						end
 					end

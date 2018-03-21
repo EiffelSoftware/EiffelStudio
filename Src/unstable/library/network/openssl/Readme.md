@@ -1,4 +1,4 @@
-# OpenSSL support for EiffelNet #
+# OpenSSL support #
 
 Status: working on Windows and Linux
 
@@ -24,18 +24,18 @@ It has 32 and 64 version for different versions of Microsoft Visual Studio.
 
 2. Static Library (/MT) or Dynamic Library(/MD)
 ================================================
-For static library use the configuration file <<net_ssl-safe.ecf>> or <<net_ssl.ecf>>
-Copy the static libraries (libcryptoMT.lib and libsslMT.lib) that you get from step 1
-to $(ISE_LIBRARY)\unstable\library\network\socket\netssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\
+For static library use the configuration file `net_ssl-safe.ecf` or `net_ssl.ecf`
+Copy the static libraries (`libcryptoMT.lib` and `libsslMT.lib`) that you get from step 1
+to `$(ISE_LIBRARY)\unstable\library\network\socket\netssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\`
 
-If you want to use the static version check if you have in your path <<crypt32.lib>>, 
+If you want to use the static version check if you have in your path `crypt32.lib`, 
 in other case check the following link to learn more about how to install Windows Platform SDK.
 https://msdn.microsoft.com/en-us/library/ms759194(v=vs.85).aspx.
 
 
-For dynamic library use the configuration file <<net_ssl_dynamic.ecf>>
-Copy the dynamic library (libcryptoMT.lib and libsslMT.lib) that you get from step 1
-to $(ISE_LIBRARY)\unstable\library\network\socket\netssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\)
+For dynamic library use the configuration file `net_ssl_dynamic.ecf`
+Copy the dynamic library (`libcryptoMT.lib` and `libsslMT.lib`) that you get from step 1
+to `$(ISE_LIBRARY)\unstable\library\network\socket\netssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\` .
 When you use this option does not forget to have the dll in the PATH of the corresponding project,
 you can get the dll's files from step1.
 
@@ -63,9 +63,9 @@ So, for example, you might end up with C:\openssl-src-32 and C:\openssl-src-64.
 Example:
 Building the 64-bit static libraries
 
-To build a 64-Bit static library (/MT) use the option <<no-shared>> with VC-WIN64A
+To build a 64-Bit static library (/MT) use the option `no-shared` with VC-WIN64A
 
-Note: To build a 64-Bit shared library (/MD) use the option <<shared>> with VC-WIN64A
+Note: To build a 64-Bit shared library (/MD) use the option `shared` with VC-WIN64A
 
 Open the Visual Studio Command Prompt. (Be sure to open the corrent command prompt)
 Check Configure file under OpenSSL distribution to read different types of configurations.
@@ -90,27 +90,28 @@ Proof of concpet
 
 Documentation
 =============
-https://www.openssl.org/docs/man1.1.0/crypto/ECDSA_do_sign.html
-https://wiki.openssl.org/index.php/Elliptic_Curve_Cryptography
-https://wiki.openssl.org/index.php/Elliptic_Curve_Diffie_Hellman
+- https://www.openssl.org/docs/man1.1.0/crypto/ECDSA_do_sign.html
+- https://wiki.openssl.org/index.php/Elliptic_Curve_Cryptography
+- https://wiki.openssl.org/index.php/Elliptic_Curve_Diffie_Hellman
 
 
 
 #How to use the latest OpenSSL 1.1.0g on Ubuntu
 ================================================
 
+```bash
 $>wget https://www.openssl.org/source/openssl-1.1.0g.tar.gz
 $>tar xzvf openssl-1.1.0f.tar.gz
 $>cd openssl-1.1.0g
 $>./Configure is now
-	$>./config -Wl,--enable-new-dtags,-rpath,`$(LIBRPATH)`
-	$>make
-	$>sudo make install
+$>./config -Wl,--enable-new-dtags,-rpath,`$(LIBRPATH)`
+$>make
+$>sudo make install
 
-	$>openssl version -a    
+$>openssl version -a    
 
-	If you have an already installed OpenSSL library remove it using
+$>echo	If you have an already installed OpenSSL library remove it using
 
-	$>sudo apt-get remove libssl-dev
-
+$>sudo apt-get remove libssl-dev
+```
 

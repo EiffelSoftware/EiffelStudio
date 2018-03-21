@@ -67,8 +67,6 @@ feature -- Status Report
 		end
 
 	check_limit (a_data_size: INTEGER)
-		local
-			l_description: STRING
 		do
 				-- TODO review this.
 			if ctx.finalized then
@@ -128,8 +126,6 @@ feature -- Finalize
 
 	authenticate_additional_data_hex_string (a_data: READABLE_STRING_8)
 			-- <Precursor>
-		local
-			l_description: STRING
 		do
 			if ctx.finalized then
 				raise_exception ("Context was already finalized.")

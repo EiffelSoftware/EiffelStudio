@@ -455,7 +455,7 @@ feature -- Rule Violations
 			%within a%Ndeferred class it should be considered to be declared as deferred.", once "code_analyzer.violation") end
 
 	if_else_not_equal_violation: STRING_32
-		do Result := translation_in_context ("Condition of if-else instruction checks for inequality rather than equality.", once "code_analyzer.violation") end
+		do Result := translation_in_context ("Conditional instruction or expression with 2 branches checks for inequality rather than equality.", once "code_analyzer.violation") end
 
 	short_circuit_if_violation: STRING_32
 		do Result := translation_in_context ("These two nested if instructions may be %

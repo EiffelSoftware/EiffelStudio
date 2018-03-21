@@ -118,11 +118,7 @@ feature -- Input
 				attached l_context.last_ssl as l_ssl
 			then
 				create ext.make_empty (nb_char + 1)
-				if is_blocking then
-					return_val := l_ssl.read (ext.item , nb_char)
-				else
-					return_val := ssl_read_non_blocking (l_ssl, ext.item , nb_char)
-				end
+				return_val := ssl_read (l_ssl, ext.item, nb_char)
 				bytes_read := return_val
 				if return_val >= 0 then
 					ext.set_count (return_val)
@@ -152,11 +148,7 @@ feature -- Input
 				until
 					l_read = nb_bytes or l_last_read <= 0
 				loop
-					if is_blocking then
-						l_last_read := l_ssl.read (p + start_pos + l_read, nb_bytes - l_read)
-					else
-						l_last_read := ssl_read_non_blocking (l_ssl, p + start_pos + l_read, nb_bytes - l_read)
-					end
+					l_last_read := ssl_read (l_ssl, p + start_pos + l_read, nb_bytes - l_read)
 					if l_last_read >= 0 then
 						l_read := l_read + l_last_read
 					end
@@ -182,11 +174,7 @@ feature -- Output
 			then
 				ext_data := a_packet.data.item
 				count := a_packet.count
-				if is_blocking then
-					l_bytes_sent := l_ssl.write (ext_data, count)
-				else
-					l_bytes_sent := ssl_write_non_blocking (l_ssl, ext_data, count)
-				end
+				l_bytes_sent := ssl_write (l_ssl, ext_data, count)
 			else
 				check has_last_ssl: False end
 			end
@@ -208,12 +196,7 @@ feature -- Output
 				attached context as l_context and then
 				attached l_context.last_ssl as l_ssl
 			then
-				if is_blocking then
-					l_bytes_sent := l_ssl.write (a_pointer + a_offset, a_byte_count)
-				else
-					l_bytes_sent := ssl_write_non_blocking (l_ssl, a_pointer + a_offset, a_byte_count)
-				end
-
+				l_bytes_sent := ssl_write (l_ssl, a_pointer + a_offset, a_byte_count)
 			else
 				check has_last_ssl: False end
 			end
@@ -275,6 +258,15 @@ feature {NONE} -- Implementation
 
 
 feature {NONE} -- Implementation
+
+	ssl_write (a_ssl: SSL; a_data: POINTER; count: INTEGER): INTEGER
+		do
+			if is_blocking then
+				Result := a_ssl.write (a_data, count)
+			else
+				Result := ssl_write_non_blocking (a_ssl, a_data, count)
+			end
+		end
 
 	ssl_write_non_blocking (a_ssl: SSL; a_pointer: POINTER; nb_bytes: INTEGER): INTEGER
 		note
@@ -341,6 +333,15 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
+			end
+		end
+
+	ssl_read (a_ssl: SSL; a_item: POINTER; nb_char: INTEGER): INTEGER
+		do
+			if is_blocking then
+				Result := a_ssl.read (a_item, nb_char)
+			else
+				Result := ssl_read_non_blocking (a_ssl, a_item, nb_char)
 			end
 		end
 

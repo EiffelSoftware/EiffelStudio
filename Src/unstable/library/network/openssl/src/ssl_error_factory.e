@@ -8,7 +8,7 @@ class
 
 feature -- Errors
 
-	retrieve_errors: detachable LIST [SSL_ERROR]
+	errors: detachable LIST [SSL_ERROR]
 		local
 			l_code: NATURAL_64
 			l_result: LIST [SSL_ERROR]

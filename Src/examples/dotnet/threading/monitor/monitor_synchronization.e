@@ -4,7 +4,7 @@ note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	MONITOR_SYNCHRONIZATION
 
@@ -53,7 +53,7 @@ feature -- Access
 		ensure
 			non_void_result: Result /= Void
 		end
-		
+
 	num_operations: INTEGER
 			-- number of access to the resource.
 
@@ -68,14 +68,16 @@ feature -- Access
 feature -- Basic Operation
 
 	update_resource (a_state: SYSTEM_OBJECT)
-			-- The callback method's signature MUST match that of a TIMER_CALLBACK 
+			-- The callback method's signature MUST match that of a TIMER_CALLBACK
 			-- delegate (it takes an SYSTEM_OBJECT parameter and returns void)
 		local
-			l_state: INTEGER
 			return: BOOLEAN
 		do
-			l_state ?= a_state
-			res.access_resource (l_state)
+			if attached {INTEGER} a_state as l_int_state then
+				res.access_resource (l_int_state)
+			else
+				res.access_resource (0)
+			end
 			if {INTERLOCKED}.decrement ($num_operations) <= 0 then
 				return := async_operations.set
 			end

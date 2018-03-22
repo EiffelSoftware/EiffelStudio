@@ -21,7 +21,7 @@ feature -- Test routines
 			cipher: SSL_CIPHER
 			l_algo: SSL_AES
 			l_mode: SSL_GCM_MODE
-			l_encryptor: SSL_CIPHER_CONTEXT
+			l_encryptor: SSL_CIPHER_CONTEXT_I
 		do
 				-- Code in Python
 				--	 def test_gcm_ciphertext_with_no_aad(self, backend):
@@ -51,7 +51,7 @@ feature -- Test routines
 			assert ("Expected ct:5a3c1cf1985dbb8bed818036fdd5ab42",l_encryptor.hex_string.same_string_general ("5a3c1cf1985dbb8bed818036fdd5ab42"))
 
 			if
-				attached {SSL_AEAD_ENCRYPTION_CONTEXT} l_encryptor as l_encryptor_tag and then
+				attached {SSL_AEAD_ENCRYPTION_CONTEXT_I} l_encryptor as l_encryptor_tag and then
 				attached l_encryptor_tag.tag_hex_string as l_tag
 			then
 				assert ("Expected tag:23c7ab0f952b7091cd324835043b5eb5",l_tag.same_string_general ("23c7ab0f952b7091cd324835043b5eb5"))
@@ -66,7 +66,7 @@ feature -- Test routines
 			cipher: SSL_CIPHER
 			l_algo: SSL_AES
 			l_mode: SSL_GCM_MODE
-			l_encryptor: SSL_CIPHER_CONTEXT
+			l_encryptor: SSL_CIPHER_CONTEXT_I
 		do
 			-- Code in Python
 			--  def test_gcm_tag_with_only_aad(self, backend):
@@ -88,7 +88,7 @@ feature -- Test routines
 			create l_mode.make ("b1e1349120b6e832ef976f5d", "0f247e7f9c2505de374006738018493b" )
 			create cipher.make (l_algo, l_mode)
 			l_encryptor := cipher.encryptor
-			if attached {SSL_AEAD_CIPHER_CONTEXT_IMPL} l_encryptor as ll_encryptor then
+			if attached {SSL_AEAD_CIPHER_CONTEXT} l_encryptor as ll_encryptor then
 				ll_encryptor.authenticate_additional_data_hex_string ("b6d729aab8e6416d7002b9faa794c410d8d2f193")
 				ll_encryptor.finalize
 				if attached ll_encryptor.tag_hex_string as l_tag then
@@ -102,7 +102,7 @@ feature -- Test routines
 			cipher: SSL_CIPHER
 			l_algo: SSL_AES
 			l_mode: SSL_GCM_MODE
-			l_encryptor, l_decryptor: SSL_CIPHER_CONTEXT
+			l_encryptor, l_decryptor: SSL_CIPHER_CONTEXT_I
 			tag: STRING_32
 		do
 				-- Code in Python
@@ -133,7 +133,7 @@ feature -- Test routines
 			create l_mode.make ("b1e1349120b6e832ef976f5d", Void)
 			create cipher.make (l_algo, l_mode)
 			l_encryptor := cipher.encryptor
-			if attached {SSL_AEAD_CIPHER_CONTEXT_IMPL} l_encryptor as ll_encryptor then
+			if attached {SSL_AEAD_CIPHER_CONTEXT} l_encryptor as ll_encryptor then
 				ll_encryptor.authenticate_additional_data_hex_string ("b6d729aab8e6416d7002b9faa794c410d8d2f193")
 				ll_encryptor.finalize
 				if attached ll_encryptor.tag_hex_string as l_tag then
@@ -144,9 +144,9 @@ feature -- Test routines
 			create l_mode.make ("b1e1349120b6e832ef976f5d", tag)
 			create cipher.make (l_algo, l_mode)
 			l_decryptor := cipher.decryptor
-			if attached {SSL_AEAD_CIPHER_CONTEXT_IMPL} l_decryptor as ll_decryptor then
+			if attached {SSL_AEAD_CIPHER_CONTEXT} l_decryptor as ll_decryptor then
 				ll_decryptor.authenticate_additional_data_hex_string ("b6d729aab8e6416d7002b9faa794c410d8d2f193")
-				ll_decryptor.finalize
+				l_decryptor.finalize
 			end
 		end
 
@@ -154,7 +154,7 @@ feature -- Test routines
 		note
 			eis: "name=acaptureservices example", "src=https://docs.acaptureservices.com/tutorials/webhooks/decryption-example","protocol=uri"
 		local
-			l_decryptor: SSL_CIPHER_CONTEXT
+			l_decryptor: SSL_CIPHER_CONTEXT_I
 			cipher: SSL_CIPHER
 			l_algo: SSL_AES
 			l_mode: SSL_GCM_MODE

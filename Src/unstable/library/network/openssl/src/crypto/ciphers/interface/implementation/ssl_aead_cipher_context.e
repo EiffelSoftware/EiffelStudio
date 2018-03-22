@@ -1,16 +1,17 @@
 note
-	description: "Summary description for {SSL_AEAD_CIPHER_CONTEXT_IMPL}."
+	description: "Summary description for {SSL_AEAD_CIPHER_CONTEXT}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SSL_AEAD_CIPHER_CONTEXT_IMPL
-
-inherit
 	SSL_AEAD_CIPHER_CONTEXT
 
-	SSL_AEAD_DECRYPTION_CONTEXT
-	
+inherit
+
+	SSL_AEAD_DECRYPTION_CONTEXT_I
+
+	SSL_AEAD_CIPHER_CONTEXT_I
+
 	SSL_SHARED_EXCEPTIONS
 
 create

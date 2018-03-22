@@ -1,13 +1,13 @@
 note
-	description: "Summary description for {SSL_CIPHER_CONTEXT_IMPL}."
+	description: "Summary description for {SSL_CIPHER_CONTEXT}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SSL_CIPHER_CONTEXT_IMPL
+	SSL_CIPHER_CONTEXT
 
 inherit
-	SSL_CIPHER_CONTEXT
+	SSL_CIPHER_CONTEXT_I
 
 	SSL_SHARED_EXCEPTIONS
 

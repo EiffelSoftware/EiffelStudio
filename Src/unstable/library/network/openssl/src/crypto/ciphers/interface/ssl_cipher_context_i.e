@@ -13,7 +13,7 @@
 	EIS: "name=SSL_CIPHER_CONTEXT", "src=https://cryptography.io/en/latest/hazmat/primitives/symmetric-encryption/?highlight=aeadciphercontext#cryptography.hazmat.primitives.ciphers.CipherContext", "protocol=uri"
 
 deferred class
-	SSL_CIPHER_CONTEXT
+	SSL_CIPHER_CONTEXT_I
 
 feature -- Update
 

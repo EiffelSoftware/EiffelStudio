@@ -13,10 +13,10 @@ note
 	EIS: "name=AEADCipherContext", "src=https://cryptography.io/en/latest/hazmat/primitives/symmetric-encryption/?highlight=aeadciphercontext#cryptography.hazmat.primitives.ciphers.AEADCipherContext", "protocol=uri"
 
 deferred class
-	SSL_AEAD_CIPHER_CONTEXT
+	SSL_AEAD_CIPHER_CONTEXT_I
 
 inherit
-	SSL_CIPHER_CONTEXT
+	SSL_CIPHER_CONTEXT_I
 
 feature -- Aditional data
 

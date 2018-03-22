@@ -8,8 +8,10 @@ note
 	revision: "$Revision$"
 	EIS: "name=AEAD_ENCRYPTION_CONTEXT", "src=https://cryptography.io/en/latest/hazmat/primitives/symmetric-encryption/?highlight=aeadciphercontext#cryptography.hazmat.primitives.ciphers.AEADEncryptionContext", "protocol=uri"
 deferred class
-	SSL_AEAD_ENCRYPTION_CONTEXT
+	SSL_AEAD_ENCRYPTION_CONTEXT_I
 
+inherit
+	SSL_CIPHER_CONTEXT_I
 
 feature -- Status Report
 

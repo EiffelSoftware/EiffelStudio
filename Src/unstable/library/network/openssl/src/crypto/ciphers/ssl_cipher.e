@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Encryptor
 
-	encryptor: SSL_CIPHER_CONTEXT
+	encryptor: SSL_CIPHER_CONTEXT_I
 			-- get a encryption cipher context instance.
 		local
 				l_ctx: SSL_CIPHER_CONTEXT_EXTERNALS
@@ -43,7 +43,7 @@ feature -- Encryptor
 
 feature -- Decryptor
 
-	decryptor: SSL_CIPHER_CONTEXT
+	decryptor: SSL_CIPHER_CONTEXT_I
 			-- get a decryption cipher context instance.
 		local
 			l_ctx: SSL_CIPHER_CONTEXT_EXTERNALS
@@ -54,16 +54,16 @@ feature -- Decryptor
 
 feature {NONE} -- Implementation
 
-	wrap_context (a_ctx: SSL_CIPHER_CONTEXT_EXTERNALS; a_encrypt: BOOLEAN): SSL_CIPHER_CONTEXT
+	wrap_context (a_ctx: SSL_CIPHER_CONTEXT_EXTERNALS; a_encrypt: BOOLEAN): SSL_CIPHER_CONTEXT_I
 		do
 			if attached {SSL_MODE_WITH_AUTHENTICATION_TAG} mode as l_mode then
 				if a_encrypt then
-					create {SSL_AEAD_ENCRYPTION_CONTEXT_IMPL} Result.make (a_ctx)
+					create {SSL_AEAD_ENCRYPTION_CONTEXT} Result.make (a_ctx)
 				else
-					create {SSL_AEAD_CIPHER_CONTEXT_IMPL} Result.make (a_ctx)
+					create {SSL_AEAD_CIPHER_CONTEXT} Result.make (a_ctx)
 				end
 			else
-				create {SSL_CIPHER_CONTEXT_IMPL} Result.make (a_ctx)
+				create {SSL_CIPHER_CONTEXT} Result.make (a_ctx)
 			end
 		end
 end

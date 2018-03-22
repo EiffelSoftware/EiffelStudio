@@ -25,7 +25,7 @@ feature -- Test routines
 				-- Launch the esa_api
 			create cfg.make_with_config
 			create login.make (cfg)
-			login.attempt_logon ("bad_user", "bad_user", false)
+			login.attempt_logon ("bad_user", "bad_user", False)
 			assert ("Not logged in", not login.is_logged_in)
 		end
 
@@ -39,7 +39,7 @@ feature -- Test routines
 				-- Launch the esa_api
 			create cfg.make_with_config
 			create login.make (cfg)
-			login.attempt_logon ("javierv", "test", false)
+			login.attempt_logon ("javierv", "test", False)
 			assert ("is logged in", login.is_logged_in)
 
 			login.force_logout
@@ -58,7 +58,7 @@ feature -- Test routines
 			report.set_to_reproduce ("to_reproduce")
 			create cfg.make_with_config
 			create reporter.make (cfg)
-			reporter.attempt_logon ("javierv", "test", false)
+			reporter.attempt_logon ("javierv", "test", False)
 			reporter.report_bug (report)
 		end
 
@@ -71,7 +71,7 @@ feature -- Test routines
 		do
 			create cfg.make_with_config
 			create account.make (cfg)
-			account.attempt_logon ("test", "test", false) --! Change to a valid user name and password
+			account.attempt_logon ("test", "test", False) --! Change to a valid user name and password
 			assert ("is logged in", account.is_logged_in)
 			if attached account.account_details as l_account_details then
 				assert ("display name",l_account_details.displayed_name.is_equal ("test test")) --! change to a valid first and last name or update the comparison.

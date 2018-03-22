@@ -53,15 +53,13 @@ feature {NONE} -- Initialization
 			-- Setup `router'
 		local
 			fhdl: WSF_FILE_SYSTEM_HANDLER
-			doc: WSF_ROUTER_SELF_DOCUMENTATION_HANDLER
 		do
 
 				-- HTML uri/uri templates.
-			map_uri_agent_with_request_methods ("/", agent handle_home, router.methods_get)
-			map_uri_agent_with_request_methods ("", agent handle_home, router.methods_get)
-			map_uri_agent_with_request_methods ("/download", agent handle_download, router.methods_post)
-			map_uri_agent_with_request_methods ("/confirm_download", agent handle_confirm_download, router.methods_get)
-			create doc.make (router)
+			map_uri_agent ("/", agent handle_home, router.methods_get)
+			map_uri_agent ("", agent handle_home, router.methods_get)
+			map_uri_agent ("/download", agent handle_download, router.methods_post)
+			map_uri_agent ("/confirm_download", agent handle_confirm_download, router.methods_get)
 
 			create fhdl.make_hidden_with_path (layout.www_path)
 			fhdl.disable_index
@@ -69,7 +67,7 @@ feature {NONE} -- Initialization
 				do
 					execute_default (ia_req, ia_res)
 				end)
-			router.handle_with_request_methods ("/", fhdl, router.methods_GET)
+			router.handle ("/", fhdl, router.methods_GET)
 
 		end
 

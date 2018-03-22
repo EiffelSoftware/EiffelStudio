@@ -522,6 +522,7 @@ feature {NONE} -- Implementation of data retrieval
 			l_loader: CONF_LOAD
 			l_libs: STRING_TABLE [CONF_LIBRARY]
 			l_pre_lib: CONF_LIBRARY
+			l_lib_name: STRING_32
 		do
 			if a_defaults /= Void then
 				from
@@ -649,7 +650,9 @@ feature {NONE} -- Implementation of data retrieval
 										l_libs.after
 									loop
 										l_pre_lib := l_libs.item_for_iteration
-										l_pre_lib.name.prepend ("pre_")
+										create l_lib_name.make_from_string_general (l_pre_lib.name)
+										l_lib_name.prepend ("pre_")
+										l_pre_lib.set_name (l_lib_name)
 										current_target.add_library (l_pre_lib)
 										l_libs.forth
 									end
@@ -923,7 +926,7 @@ invariant
 	extension_name_not_empty: not extension_name.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

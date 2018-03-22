@@ -489,7 +489,10 @@ feature -- Completion-clickable initialization / update
 			end
 
 			click_tool.build_completion_list (cursor)
-			if click_tool.completion_possibilities /= Void then
+			if
+				attached click_tool.completion_possibilities as l_completion_possibilities and then
+				not l_completion_possibilities.is_empty
+			then
 				auto_complete_possible := True
 			elseif add_point then
 					-- We should have added a point.
@@ -1045,7 +1048,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

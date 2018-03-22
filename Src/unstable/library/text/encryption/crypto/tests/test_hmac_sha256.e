@@ -68,9 +68,16 @@ feature -- Test routines
 
 
 			create hmac.make_ascii_key ("Jefe")
+			hmac.reset
 			hmac.update_from_string ("what do ya want for nothing?")
 			expected := "5bdcc146bf60754e6a042426089575c75a003f089d2739839dec58b964ec3843"
 			assert ("test_rfc_4231_2", hmac.digest_as_string.is_case_insensitive_equal (expected))
+
+			hmac.reset
+			hmac.update_from_string ("what do ya want for nothing?")
+			expected := "5bdcc146bf60754e6a042426089575c75a003f089d2739839dec58b964ec3843"
+			assert ("test_rfc_4231_2", hmac.digest_as_string.is_case_insensitive_equal (expected))
+
 		end
 
 	test_rfc_4231_3
@@ -118,7 +125,7 @@ feature -- Test routines
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

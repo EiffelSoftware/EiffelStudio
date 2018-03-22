@@ -5,7 +5,7 @@ class
 	APPLICATION
 
 inherit
-	ARGUMENTS
+	ARGUMENTS_32
 
 create
 	make
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			end
 
 			l_setup.setup
-			l_setup.convert_all_tcf_in (a_top_source_dir, a_dest_test_case_dir, "test")
+			l_setup.convert_all_tcf_in (a_top_source_dir, a_dest_test_case_dir, {STRING_32} "test")
 		end
 
 ;note

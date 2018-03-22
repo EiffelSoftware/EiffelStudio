@@ -117,6 +117,7 @@ feature {NONE} -- Initialization
 			conf_lib: CONF_LIBRARY
 			uuidgen: UUID_GENERATOR
 			l_desc: STRING_32
+			l_system_name: READABLE_STRING_8
 		do
 			tb := new_ecf_table
 			if not dirs.is_empty then
@@ -138,8 +139,18 @@ feature {NONE} -- Initialization
 
 			create conf_fac
 			create uuidgen
-			conf := conf_fac.new_system_with_file_name (a_output.name, "all", uuidgen.generate_uuid)
-			tgt := conf_fac.new_target ("all", conf)
+			if
+				attached a_output.entry as e and then
+				attached e.name as l_output_name and then
+				l_output_name.is_valid_as_string_8 and then
+				not l_output_name.starts_with_general ("all")
+			then
+				l_system_name := "all_" + l_output_name.to_string_8
+			else
+				l_system_name := "all"
+			end
+			conf := conf_fac.new_system_with_file_name (a_output.name, l_system_name, uuidgen.generate_uuid)
+			tgt := conf_fac.new_target (l_system_name, conf)
 			tgt.set_root (conf_fac.new_root (Void, Void, Void, True))
 			conf.add_target (tgt)
 
@@ -186,6 +197,7 @@ feature {NONE} -- Initialization
 					else
 						conf_lib := conf_fac.new_library (l_name + "-" + nb.out, utf.string_32_to_utf_8_string_8 (p_name), tgt)
 					end
+					conf_lib.set_readonly (False)
 					tgt.add_library (conf_lib)
 				else
 
@@ -520,7 +532,7 @@ feature {NONE} -- Path manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

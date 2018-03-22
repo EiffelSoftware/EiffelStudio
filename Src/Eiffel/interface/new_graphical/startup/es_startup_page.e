@@ -125,6 +125,7 @@ We look forward to your contributions
 				]"
 
 				txt.set_text (l_agreement_text)
+				txt.disable_edit
 				txt.set_background_color (bg)
 				txt.set_foreground_color (fg)
 				vb.extend (txt)
@@ -169,8 +170,6 @@ We look forward to your contributions
 			end
 			main_box.set_background_color (bg)
 			main_box.propagate_background_color
-			main_box.set_foreground_color (fg)
-			main_box.propagate_foreground_color
 		end
 
 	switch_to_account_page
@@ -181,10 +180,9 @@ We look forward to your contributions
 			but: EV_BUTTON
 			l_focus: detachable EV_WIDGET
 			wid: ES_ACCOUNT_LOGIN_REGISTER_BOX
-			bg,fg: EV_COLOR
+			bg: EV_COLOR
 		do
 			bg := colors.stock_colors.color_read_write
-			fg := colors.stock_colors.default_foreground_color
 			create hb
 			hb.set_border_width (layout_constants.default_border_size)
 			hb.set_padding_width (layout_constants.default_padding_size)
@@ -222,8 +220,6 @@ We look forward to your contributions
 			end
 			main_box.set_background_color (bg)
 			main_box.propagate_background_color
-			main_box.set_background_color (fg)
-			main_box.propagate_foreground_color
 		end
 
 feature -- Status

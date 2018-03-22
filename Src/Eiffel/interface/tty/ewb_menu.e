@@ -12,57 +12,68 @@ note
 class EWB_MENU
 
 inherit
+	ARRAY [detachable EWB_CMD]
+		rename
+			make as make_array
+		end
 
-	ARRAY [EWB_CMD]
 	SHARED_EWB_HELP
 		undefine
 			copy, is_equal
 		end
+
 	SHARED_EWB_CMD_NAMES
 		undefine
 			copy, is_equal
 		end
+
 	SHARED_EWB_ABBREV
 		undefine
 			copy, is_equal
 		end
 create
-
 	make
+
+feature {NONE} -- Initialization
+
+	make (min_index, max_index: INTEGER)
+		do
+			make_filled (Void, min_index, max_index)
+		end
 
 feature -- Properties
 
 	is_main: BOOLEAN
 
-	parent: EWB_MENU
+	parent: detachable EWB_MENU
 
 feature -- Access
 
-	abbrev_item (abb: CHARACTER): EWB_CMD
+	abbrev_item (abb: CHARACTER): detachable EWB_CMD
 			-- Command with abbreviated character `abb'
 		local
 			i: INTEGER
-			cmd: EWB_CMD
 		do
 			from
 				i := lower
 			until
 				i > upper or else Result /= Void
 			loop
-				cmd := item (i);
-				if cmd.abbreviation = abb then
+				if
+					attached item (i) as cmd and then
+					cmd.abbreviation = abb
+				then
 					Result := cmd
 				else
 					i := i + 1
-				end;
-			end;
-		end;
+				end
+			end
+		end
 
-	cmd_name_item (cmd_name: STRING): EWB_CMD
+	cmd_name_item (cmd_name: STRING): detachable EWB_CMD
 			-- Command with command name `cmd_name'
 		local
 			i: INTEGER
-			cmd: EWB_CMD
 			s : STRING
 		do
 			from
@@ -71,20 +82,22 @@ feature -- Access
 			until
 				i > upper or else Result /= Void
 			loop
-				cmd := item (i);
-				if cmd.name.is_equal (s) then
+				if
+					attached item (i) as cmd and then
+					cmd.name.same_string (s)
+				then
 					Result := cmd
 				else
 					i := i + 1
-				end;
-			end;
-		end;
+				end
+			end
+		end
 
-	option_item (cmd_name: STRING): EWB_CMD
+	option_item (cmd_name: STRING): detachable EWB_CMD
 			-- Command with command name `cmd_name'.
 		do
 			if cmd_name.count = 1 then
-				Result := abbrev_item (cmd_name.item(1).lower)
+				Result := abbrev_item (cmd_name.item (1).lower)
 			else
 				Result := cmd_name_item (cmd_name)
 			end
@@ -103,9 +116,9 @@ feature -- Element change
 				i > upper or else item (i) = Void
 			loop
 				i := i + 1
-			end;
+			end
 			put (cmd, i)
-		end;
+		end
 
 feature -- Setting
 
@@ -116,8 +129,8 @@ feature -- Setting
 
 	set_parent (new_parent: EWB_MENU)
 		do
-			parent := new_parent;
-		end;
+			parent := new_parent
+		end
 
 feature -- Output
 
@@ -132,22 +145,26 @@ feature -- Output
 			until
 				i > upper
 			loop
-				cmd := item (i);
-				print_one_help (cmd.name, cmd.help_message, cmd.abbreviation);
+				cmd := item (i)
+				if cmd /= Void then
+					print_one_help (cmd.name, cmd.help_message, cmd.abbreviation)
+				else
+					check has_command: False end
+				end
 				i := i + 1
-			end;
-			io.put_new_line;
-			print_one_help (loop_help_cmd_name, loop_help_help, help_abb);
+			end
+			io.put_new_line
+			print_one_help (loop_help_cmd_name, loop_help_help, help_abb)
 			if not is_main then
-				print_one_help (main_cmd_name, main_help, main_abb);
-			end;
-			if parent /= Void and then not parent.is_main then
-				print_one_help (parent_cmd_name, parent_help, parent_abb);
-			end;
-			print_one_help (quit_cmd_name, quit_help, quit_abb);
-			print_one_help (yank_cmd_name, yank_help, yank_abb);
-			io.put_new_line;
-		end;
+				print_one_help (main_cmd_name, main_help, main_abb)
+			end
+			if attached parent as l_parent and then not l_parent.is_main then
+				print_one_help (parent_cmd_name, parent_help, parent_abb)
+			end
+			print_one_help (quit_cmd_name, quit_help, quit_abb)
+			print_one_help (yank_cmd_name, yank_help, yank_abb)
+			io.put_new_line
+		end
 
 feature {NONE} -- Implementation
 
@@ -160,27 +177,29 @@ feature {NONE} -- Implementation
 		do
 				-- First letter in upper case
 			s := opt.twin
-			s.put (s.item (1).upper, 1);
+			if not s.is_empty then
+				s.put (s[1].upper, 1)
+			end
 
-			io.put_string ("%T(");
-			io.put_character (abb.upper);
-			io.put_string (") ");
-			io.put_string (s);
+			io.put_string ("%T(")
+			io.put_character (abb.upper)
+			io.put_string (") ")
+			io.put_string (s)
 			from
 				i := s.count+1
 			until
 				i > 13
 			loop
 				io.put_character (' ')
-				i := i + 1;
+				i := i + 1
 			end;
-			io.put_string (": ");
-			localized_print (txt);
+			io.put_string (": ")
+			localized_print (txt)
 			io.put_string (".%N")
-		end;
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -193,22 +212,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EWB_MENU

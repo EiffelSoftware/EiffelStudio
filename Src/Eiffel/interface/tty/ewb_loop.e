@@ -185,18 +185,18 @@ feature -- Initialization
 			c_menu_not_void: Result /= Void
 		end
 
-	menu_commands: ARRAY [EWB_MENU]
+	menu_commands: ARRAYED_LIST [EWB_MENU]
 			-- Menu commands
 		once
-			create Result.make (1, 8)
-			Result.put (main_menu, 1)
-			Result.put (system_menu, 2)
-			Result.put (class_menu, 3)
-			Result.put (feature_menu, 4)
-			Result.put (compile_menu, 5)
-			Result.put (profile_menu, 6)
-			Result.put (documentation_menu, 7)
-			Result.put (switches_menu, 8)
+			create Result.make (8)
+			Result.force (main_menu)
+			Result.force (system_menu)
+			Result.force (class_menu)
+			Result.force (feature_menu)
+			Result.force (compile_menu)
+			Result.force (profile_menu)
+			Result.force (documentation_menu)
+			Result.force (switches_menu)
 		ensure
 			menu_commands_not_void: menu_commands /= Void
 		end
@@ -430,8 +430,7 @@ feature -- Command loop
 				-- Set the output window to yank_window
 			set_output_window (yank_window)
 			from
-				if menu_commands = Void then end
-				menu_command_list := menu_commands.item (1)
+				menu_command_list := menu_commands.first
 				display_header
 				display_commands
 			until
@@ -448,7 +447,7 @@ feature -- Command loop
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,7 +1,5 @@
-note
-	description : "eweasel_converter application root class"
-	date        : "$Date$"
-	revision    : "$Revision$"
+﻿note
+	description: "eweasel_converter application root class"
 
 class
 	APPLICATION
@@ -31,7 +29,7 @@ feature {NONE} -- Implementation
 		local
 			l_src_option, l_dest_option: detachable ARGUMENT_OPTION
 			l_src, l_dest: DIRECTORY
-			l_src_name, l_dest_name: DIRECTORY_NAME
+			l_src_name, l_dest_name: PATH
 		do
 			if a_parser.is_successful then
 				l_src_option := a_parser.source_option
@@ -59,7 +57,7 @@ feature {NONE} -- Implementation
 	argument_parser: ARGUMENT_PARSER
 			-- Argument parser
 
-	convert_test_cases_in (a_top_source_dir: DIRECTORY_NAME; a_dest_test_case_dir: DIRECTORY_NAME)
+	convert_test_cases_in (a_top_source_dir: PATH; a_dest_test_case_dir: PATH)
 			-- Convert all test cases in `a_top_source_dir'
 		require
 			a_top_source_dir_not_void: a_top_source_dir /= Void
@@ -82,7 +80,9 @@ feature {NONE} -- Implementation
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

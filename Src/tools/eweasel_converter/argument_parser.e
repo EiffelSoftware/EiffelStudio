@@ -1,9 +1,4 @@
-note
-	description: "Summary description for {ARUGMENT_PARSER}."
-	date: "$Date$"
-	revision: "$Revision$"
-
-class
+﻿class
 	ARGUMENT_PARSER
 
 inherit
@@ -44,10 +39,10 @@ feature {NONE} -- Usage
 	name: STRING = "Eiffel Eweasel Converter"
 			-- <Precursor>
 
-	version: STRING = "1.0.1"
+	version: STRING = "1.0.2"
 			-- <Precursor>
 
-	copyright: STRING = "Copyright Eiffel Software 2009-2017. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 2009-2018. All Rights Reserved."
 			-- <Precursor>
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
@@ -73,7 +68,9 @@ feature {NONE} -- Usage
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -9,7 +9,7 @@ class
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_configuration: DOWNLOAD_CONFIGURATION)
 			-- Create an object with a download configuration.
@@ -39,7 +39,7 @@ feature -- Implementation
 	retrieve_product_enterprise: detachable DOWNLOAD_PRODUCT
 		do
 			if attached configuration.products as l_products then
-				Result := l_products.at (1)
+				Result := l_products [1]
 			end
 		end
 

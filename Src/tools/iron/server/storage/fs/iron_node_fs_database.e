@@ -126,9 +126,9 @@ feature -- User
 			if not u.is_empty and then attached iron_info (user_path (u)) as inf then
 				if p /= Void then
 					if attached inf.item ("encrypted_password") as enc_pwd then
-						Result := enc_pwd.same_string (encrypted_password (p))
+						Result := enc_pwd.same_string_general (encrypted_password (p))
 					elseif attached inf.item ("password") as pwd then
-						Result := encrypted_password (pwd).same_string (encrypted_password (p))
+						Result := encrypted_password (pwd).same_string_general (encrypted_password (p))
 					end
 				end
 			end
@@ -1451,7 +1451,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

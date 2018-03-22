@@ -147,7 +147,7 @@ feature {NONE} -- Actions
 		do
 			if not retried then
 				l_pointer := dialog.pointer_style
-				dialog.set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
+				dialog.set_pointer_style (pixmaps.stock_pixmaps.busy_cursor)
 
 				update_preferences
 
@@ -185,7 +185,7 @@ invariant
 	cancel_button_not_void: cancel_button /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

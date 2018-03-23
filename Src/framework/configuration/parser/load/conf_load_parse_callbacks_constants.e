@@ -96,7 +96,7 @@ feature {NONE} -- Implementation constants
 	at_name: INTEGER = 1001
 	at_uuid: INTEGER = 1002
 	at_library_target: INTEGER = 1003
-	at_eifgen: INTEGER = 1004
+	at_extends_location: INTEGER = 1004
 	at_extends: INTEGER = 1005
 	at_cluster: INTEGER = 1006
 	at_class: INTEGER = 1007

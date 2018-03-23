@@ -77,7 +77,28 @@
 			<xs:element name="override" type="override" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="required"/>
-		<xs:attribute name="extends" type="xs:string" use="optional"/>
+		<xs:attribute name="extends" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					An optional name of a target to be used as a parent of the current one:
+						- another target of the current system if the attribute `extends_location` is not specified;
+						- a specified target of another system if the attribute `extends_location` is specified;
+						- a library target of another system if this attribute is not specified and the attribute `extends_location` is specified.
+					It is taken from the 
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="extends_location" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					An optional name of a target to be used as a parent of the current one:
+						- another target of the current system if the attribute `extends_location` is not specified;
+						- a specified target of another system if the attribute `extends_location` is specified;
+						- a library target of another system if this attribute is not specified and the attribute `extends_location` is specified.
+					It is taken from the 
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 		<xs:attribute name="abstract" type="xs:boolean" use="optional"/>
 	</xs:complexType>
 
@@ -455,7 +476,7 @@
 		<xs:attribute name="name" type="xs:string"/>
 		<xs:attribute name="value" type="xs:string" use="optional"/>
 		<xs:attribute name="excluded_value" type="xs:string" use="optional"/>
-		<xs:attribute name="match" type="available_match_types" use="optional"/>
+		<xs:attribute name="match" type="available_match_types" use="optional" default="case-sensitive"/>
 	</xs:complexType>
 
 	<xs:complexType name="external_location">

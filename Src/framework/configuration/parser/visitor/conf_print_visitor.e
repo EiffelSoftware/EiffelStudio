@@ -717,10 +717,8 @@ feature {NONE} -- Implementation
 		local
 			l_condition: CONF_CONDITION
 			l_done: BOOLEAN
-			l_custs: like {CONF_CONDITION}.custom
-			l_custom: STRING_TABLE [CONF_CONDITION_CUSTOM_ATTRIBUTES]
-			l_name: STRING
 			l_ver: like {CONF_CONDITION}.version.item
+			flag: CONF_CONDITION_CUSTOM_ATTRIBUTES
 		do
 			if a_conditions /= Void then
 					-- assembly and only the default rule? => don't print it
@@ -777,40 +775,21 @@ feature {NONE} -- Implementation
 							append_text ("/>%N")
 						end
 
-						from
-							l_custs := l_condition.custom
-							l_custs.start
-						until
-							l_custs.after
+						across
+							l_condition.custom as cc
 						loop
-							l_custom := l_custs.item_for_iteration
-							from
-								l_custom.start
-							until
-								l_custom.after
+							across
+								cc.item as value
 							loop
-								if l_custom.item_for_iteration.inverted then
-									l_name := "excluded_value"
-								else
-									l_name := "value"
+								append_tag_open (tag_custom)
+								append_text_attribute (att_name, cc.key)
+								flag := value.item
+								append_text_attribute (if flag.inverted then att_excluded_value else att_value end, value.key)
+								if flag.is_match_set and then includes_this_or_after (namespace_1_18_0) then
+									append_text_attribute (att_match, match_value (flag.match_kind))
 								end
-								append_text_indent ("<custom")
-								append_text_attribute ("name", l_custs.key_for_iteration)
-								append_text_attribute (l_name, l_custom.key_for_iteration)
-								if l_custom.item_for_iteration.is_case_insensitive then
-									append_text_attribute ("match", "case-insensitive")
-								elseif l_custom.item_for_iteration.is_wildcard then
-									append_text_attribute ("match", "wildcar")
-								elseif l_custom.item_for_iteration.is_regular_expression then
-									append_text_attribute ("match", "regexp")
-								else
-										-- Default
-									append_text_attribute ("match", "case-sensitive")
-								end
-								append_text ("/>%N")
-								l_custom.forth
+								append_tag_close_empty
 							end
-							l_custs.forth
 						end
 
 						indent := indent - 1
@@ -1407,6 +1386,29 @@ feature {NONE} -- Implementation
 					indent := indent - 1
 					append_text ("/>%N")
 				end
+			end
+		end
+
+feature {NONE} -- Match attribute
+
+	match_value (match_kind: like {CONF_CONDITION_CUSTOM_ATTRIBUTES}.match_kind): READABLE_STRING_32
+			-- A configuration representation of a match attribute value `match_kind` of a custom condition.
+		require
+			is_match_kind_known:
+				match_kind = {CONF_CONDITION_CUSTOM_ATTRIBUTES}.case_sensitive_matching or
+				match_kind = {CONF_CONDITION_CUSTOM_ATTRIBUTES}.case_insensitive_matching or
+				match_kind = {CONF_CONDITION_CUSTOM_ATTRIBUTES}.regexp_matching or
+				match_kind = {CONF_CONDITION_CUSTOM_ATTRIBUTES}.wildcard_matching
+		do
+			inspect match_kind
+			when {CONF_CONDITION_CUSTOM_ATTRIBUTES}.case_sensitive_matching then
+				Result := val_match_case_sensitive
+			when {CONF_CONDITION_CUSTOM_ATTRIBUTES}.case_insensitive_matching then
+				Result := val_match_case_insensitive
+			when {CONF_CONDITION_CUSTOM_ATTRIBUTES}.regexp_matching then
+				Result := val_match_regexp
+			when {CONF_CONDITION_CUSTOM_ATTRIBUTES}.wildcard_matching then
+				Result := val_match_wildcard
 			end
 		end
 

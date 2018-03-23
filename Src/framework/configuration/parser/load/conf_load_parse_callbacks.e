@@ -2222,14 +2222,13 @@ feature {NONE} -- Implementation attribute processing
 				else
 					create d
 					if attached current_attributes.item (at_match) as l_match then
-						if l_match.is_case_insensitive_equal_general ("wildcard") then
-							d.set_is_wildcard (True)
-						elseif l_match.is_case_insensitive_equal_general ("case-insensitive") then
-							d.set_is_case_insensitive (True)
-						elseif l_match.is_case_insensitive_equal_general ("regexp") then
-							d.set_is_regular_expression (True)
-						elseif l_match.is_case_insensitive_equal_general ("case-sensitive") then
-							d.set_is_case_sensitive (True)
+						if includes_this_or_after (namespace_1_18_0) then
+							match_kind.search (l_match)
+							if match_kind.found then
+								d.set_match (match_kind.found_item)
+							end
+						else
+							report_unknown_attribute (att_match)
 						end
 					end
 					if l_value /= Void then
@@ -2269,6 +2268,31 @@ feature {NONE} -- Implementation attribute processing
 					check precondition__cluster_or_target: False end -- precondition
 				end
 			end
+		end
+
+feature {NONE} -- Custom conditions
+
+	match_kind: STRING_TABLE [like {CONF_CONDITION_CUSTOM_ATTRIBUTES}.match_kind]
+			-- Match kind indexed by the corresponding match attribute value.
+		once
+			create Result.make_caseless (4)
+			Result.extend ({CONF_CONDITION_CUSTOM_ATTRIBUTES}.case_sensitive_matching, val_match_case_sensitive)
+			Result.extend ({CONF_CONDITION_CUSTOM_ATTRIBUTES}.case_insensitive_matching, val_match_case_insensitive)
+			Result.extend ({CONF_CONDITION_CUSTOM_ATTRIBUTES}.regexp_matching, val_match_regexp)
+			Result.extend ({CONF_CONDITION_CUSTOM_ATTRIBUTES}.wildcard_matching, val_match_wildcard)
+		ensure
+			known_count: Result.count = 4
+			known_kinds: across Result as c all {CONF_CONDITION_CUSTOM_ATTRIBUTES}.is_known_match_kind (c.item) end
+			known_keys:
+				Result.has (val_match_case_sensitive) and
+				Result.has (val_match_case_insensitive) and
+				Result.has (val_match_regexp) and
+				Result.has (val_match_wildcard)
+			known_items:
+				Result.item (val_match_case_sensitive) = {CONF_CONDITION_CUSTOM_ATTRIBUTES}.case_sensitive_matching and
+				Result.item (val_match_case_insensitive) = {CONF_CONDITION_CUSTOM_ATTRIBUTES}.case_insensitive_matching and
+				Result.item (val_match_regexp) = {CONF_CONDITION_CUSTOM_ATTRIBUTES}.regexp_matching and
+				Result.item (val_match_wildcard) = {CONF_CONDITION_CUSTOM_ATTRIBUTES}.wildcard_matching
 		end
 
 feature {NONE} -- Implementation content processing
@@ -3104,10 +3128,10 @@ feature {NONE} -- Implementation state transitions
 				-- * excluded_value
 				-- * match
 			create l_attr.make (4)
-			l_attr.force (at_name, "name")
-			l_attr.force (at_value, "value")
-			l_attr.force (at_excluded_value, "excluded_value")
-			l_attr.force (at_match, "match")
+			l_attr.force (at_name, att_name)
+			l_attr.force (at_value, att_value)
+			l_attr.force (at_excluded_value, att_excluded_value)
+			l_attr.force (at_match, att_match)
 			Result.force (l_attr, t_custom)
 
 				-- uses/overrides

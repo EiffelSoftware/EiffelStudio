@@ -81,6 +81,12 @@ feature -- Access, stored in configuration file
 	extends: detachable CONF_TARGET
 			-- If we extend another target, this is the other target.
 
+	extends_location: detachable READABLE_STRING_32
+			-- An optional location of a configuration with the target specified by `extends` or with a default remote target.
+
+	is_library_parent: BOOLEAN
+			-- Does `extends` refer to a library target corresponding to `extends_location` rather than to a specific target?
+
 	system: CONF_SYSTEM
 			-- The associated system
 
@@ -105,17 +111,11 @@ feature -- Access, in compiled only, not stored to configuration file
 			--| note: it is also use to replace $ECF_CONFIG_PATH value.
 		require
 			location_set: system.is_location_set
-		local
-			l_fac: CONF_PARSE_FACTORY
-			l_target: CONF_TARGET
-			l_dir: CONF_DIRECTORY_LOCATION
 		do
 			if attached settings.item (s_library_root) as l_item then
 					-- create a new target instead of using Current because we could end in an infinite recursion otherwise.
-				create l_fac
-				l_target := l_fac.new_target ("dummy", system)
-				create l_dir.make (l_item, l_target)
-				Result := l_dir.evaluated_path
+				Result := (create {CONF_DIRECTORY_LOCATION}.make
+					(l_item, (create {CONF_PARSE_FACTORY}).new_target ("dummy", system))).evaluated_path
 			else
 				Result := system.directory
 			end
@@ -128,21 +128,16 @@ feature -- Access queries
 	child_targets: LIST [CONF_TARGET]
 			-- Targets that extend this target.
 		local
-			l_targets: STRING_TABLE [CONF_TARGET]
 			l_target: CONF_TARGET
 		do
-			create {ARRAYED_LIST [CONF_TARGET]}Result.make (5)
-			from
-				l_targets := system.targets
-				l_targets.start
-			until
-				l_targets.after
+			create {ARRAYED_LIST [CONF_TARGET]} Result.make (5)
+			across
+				system.targets as t
 			loop
-				l_target := l_targets.item_for_iteration
+				l_target := t.item
 				if l_target.extends = Current then
 					Result.force (l_target)
 				end
-				l_targets.forth
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -480,6 +475,24 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			parent_set: extends = a_target
 		end
 
+	set_parent_location (a_target_location: like extends_location)
+			-- Set `extends_location` to `a_target_location`.
+		require
+			a_target_location_not_void: attached a_target_location
+		do
+			extends_location := a_target_location
+		ensure
+			parent_location_set: extends_location = a_target_location
+		end
+
+	set_is_library_parent (value: like is_library_parent)
+			-- Set `is_library_parent` to `value`.
+		do
+			is_library_parent := value
+		ensure
+			is_library_parent_set: is_library_parent = value
+		end
+
 	set_parent_by_name (a_target: STRING)
 			-- Set `parent' to `a_target'.
 		require
@@ -494,9 +507,15 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		end
 
 	remove_parent
-			-- Remove the parent target.
+			-- Remove the parent of the target (if any).
 		do
 			extends := Void
+			extends_location := Void
+			is_library_parent := False
+		ensure
+			extends_unset: not attached extends
+			extends_location_unset: not attached extends_location
+			not_is_library_parent: not is_library_parent
 		end
 
 	set_version (a_version: like version)

@@ -10,7 +10,12 @@
 		<capability>
 			<concurrency support="thread"/>
 		</capability>
-		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf"/>
+		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf">
+			<condition>
+				<custom name="ISE_NO_PRECOMP" excluded_value="true"/>
+			</condition>
+		</precompile>
+
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf"/>

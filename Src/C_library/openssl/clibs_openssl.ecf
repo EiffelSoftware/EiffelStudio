@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="clibs_openssl" uuid="B844718C-416F-4D50-8ADE-91F3DBB9CC08" library_target="clibs_openssl">
+	<target name="clibs_openssl">
+		<root all_classes="true"/>
+		<external_include location="$(ISE_LIBRARY)\C_library\openssl\include">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="/usr/local/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+	</target>
+</system>

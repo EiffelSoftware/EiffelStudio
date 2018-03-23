@@ -1,13 +1,20 @@
-#!/usr/local/bin/perl
+#! /usr/bin/env perl
+# Copyright 1995-2016 The OpenSSL Project Authors. All Rights Reserved.
 #
+# Licensed under the OpenSSL license (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 # The inner loop instruction sequence and the IP/FP modifications are from
 # Svend Olaf Mikkelsen <svolaf@inet.uni-c.dk>
-# I've added the stuff needed for crypt() but I've not worried about making
-# things perfect.
-#
 
-push(@INC,"perlasm","../../perlasm");
+$0 =~ m/(.*[\/\\])[^\/\\]+$/; $dir=$1;
+push(@INC,"${dir}","${dir}../../perlasm");
 require "x86asm.pl";
+
+$output=pop;
+open STDOUT,">$output";
 
 &asm_init($ARGV[0],"crypt586.pl");
 
@@ -18,11 +25,13 @@ $R="esi";
 &fcrypt_body("fcrypt_body");
 &asm_finish();
 
+close STDOUT;
+
 sub fcrypt_body
 	{
 	local($name,$do_ip)=@_;
 
-	&function_begin($name,"EXTRN   _DES_SPtrans:DWORD");
+	&function_begin($name);
 
 	&comment("");
 	&comment("Load the 2 words");

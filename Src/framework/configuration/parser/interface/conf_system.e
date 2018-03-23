@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		The configuration system. Every configuration file corresponds to one CONF_SYSTEM object.
 		It can be loaded from a configuration file by using CONF_LOAD and stored to a configuration file
@@ -33,7 +33,8 @@ feature {NONE} -- Initialization
 			a_name_ok: a_name /= Void and not a_name.is_empty
 			a_uuid_ok: a_uuid /= Void
 		do
-			create targets.make (1)
+				-- TODO: remove case conversion when working with keys of `targets`.
+			create targets.make_caseless (1)
 			create target_order.make (1)
 			create all_libraries.make_equal (0)
 			name := a_name.as_lower

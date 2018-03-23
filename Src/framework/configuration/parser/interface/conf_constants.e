@@ -170,6 +170,13 @@ feature -- Capability attribute names
 	ca_support: STRING_32 = "support"
 	ca_use: STRING_32 = "use"
 
+feature -- Target attribute names
+
+	ta_abstract: STRING_32 = "abstract"
+	ta_extends: STRING_32 = "extends"
+	ta_extends_location: STRING_32 = "extends_location"
+	ta_name: STRING_32 = "name"
+
 feature -- Debug
 
 	unnamed_debug: STRING = "__unnamed_debug__"
@@ -211,7 +218,7 @@ feature -- Extension
 			-- File extension for an Eiffel source file without the dot
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -177,6 +177,24 @@ feature -- Target attribute names
 	ta_extends_location: STRING_32 = "extends_location"
 	ta_name: STRING_32 = "name"
 
+feature -- Custom condition names
+
+	tag_custom: STRING_32 = "custom"
+
+feature -- Custom condition attribute names
+
+	att_name: STRING_32 = "name"
+	att_value: STRING_32 = "value"
+	att_excluded_value: STRING_32 = "excluded_value"
+	att_match: STRING_32 = "match"
+
+feature -- Custom condition attribute values
+
+	val_match_case_sensitive: STRING_32 = "case-sensitive"
+	val_match_case_insensitive: STRING_32 = "case-insensitive"
+	val_match_regexp: STRING_32 = "regexp"
+	val_match_wildcard: STRING_32 = "wildcard"
+
 feature -- Debug
 
 	unnamed_debug: STRING = "__unnamed_debug__"

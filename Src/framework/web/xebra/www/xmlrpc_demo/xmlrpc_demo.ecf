@@ -10,7 +10,11 @@
 			<concurrency support="thread"/>
 			<void_safety support="transitional"/>
 		</capability>
-		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf"/>
+		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf">
+			<condition>
+				<custom name="ISE_NO_PRECOMP" excluded_value="true"/>
+			</condition>
+		</precompile>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="xebra_http" location="$XEBRA_LIBRARY\xebra_http\xebra_http.ecf" readonly="false"/>
 		<library name="xebra_web_application" location="$XEBRA_LIBRARY\xebra_web_application\xebra_web_application.ecf" readonly="false"/>

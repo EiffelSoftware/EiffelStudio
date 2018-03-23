@@ -8,7 +8,11 @@
 		<capability>
 			<concurrency support="thread" use="thread"/>
 		</capability>
-		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf"/>
+		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf">
+			<condition>
+				<custom name="ISE_NO_PRECOMP" excluded_value="true"/>
+			</condition>
+		</precompile>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="xebra_ast_elements" location="$XEBRA_LIBRARY\xebra_ast_elements\xebra_ast_elements.ecf" readonly="false"/>
 		<library name="xebra_taglibrary_base" location="$XEBRA_LIBRARY\xebra_taglibrary_base\xebra_taglibrary_base.ecf"/>

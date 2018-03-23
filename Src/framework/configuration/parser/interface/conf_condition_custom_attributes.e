@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Attributes related to condition on custom variables."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,34 +10,69 @@ feature -- Access
 
 	inverted: BOOLEAN assign set_inverted
 
-	is_regular_expression: BOOLEAN assign set_is_regular_expression
+	is_case_sensitive: BOOLEAN
+		do
+			inspect match_kind
+			when
+				default_matching,
+				case_sensitive_matching
+			then
+				Result := True
+			else
+				-- False otherwise.
+			end
+		end
+
+	is_case_insensitive: BOOLEAN
+		do
+			Result := match_kind = case_insensitive_matching
+		end
+
+	is_regular_expression: BOOLEAN
 		do
 			Result := match_kind = regexp_matching
 		end
 
-	is_wildcard: BOOLEAN assign set_is_wildcard
+	is_wildcard: BOOLEAN
 		do
 			Result := match_kind = wildcard_matching
 		end
 
-	is_case_sensitive: BOOLEAN assign set_is_case_sensitive
+feature -- Status report
+
+	is_known_match_kind (m: like match_kind): BOOLEAN
+			-- Is match kind value `m` known?
 		do
-			Result := match_kind = case_sensitive_matching
+			inspect m
+			when
+				case_sensitive_matching,
+				case_insensitive_matching,
+				regexp_matching,
+				wildcard_matching
+			then
+				Result := True
+			else
+				-- False otherwise.
+			end
+		ensure
+			instance_free: class
 		end
 
-	is_case_insensitive: BOOLEAN assign set_is_case_insensitive
+	is_match_set: BOOLEAN
+			-- Has an explicit match value been set?
 		do
-			Result := match_kind = case_insensitive_matching
+			Result := is_known_match_kind (match_kind)
 		end
 
 feature -- Comparison type
 
 	match_kind: NATURAL_8
 
-	case_sensitive_matching: NATURAL_8 = 0 -- Default
-	case_insensitive_matching: NATURAL_8 = 1
-	regexp_matching: NATURAL_8 = 2
-	wildcard_matching: NATURAL_8 = 3
+	default_matching: NATURAL_8 = 0
+	case_sensitive_matching: NATURAL_8 = 1
+	case_insensitive_matching: NATURAL_8 = 2
+	regexp_matching: NATURAL_8 = 3
+	wildcard_matching: NATURAL_8 = 4
 
 feature -- Element change
 
@@ -46,44 +81,31 @@ feature -- Element change
 			inverted := b
 		end
 
-	set_is_regular_expression (b: like is_regular_expression)
+	set_match (m: like match_kind)
+			-- Set `match_kind` to `m`.
+		require
+			is_known_match_kind: is_known_match_kind (m)
 		do
-			if b then
-				match_kind := regexp_matching
-			elseif match_kind = regexp_matching then
-				match_kind := 0
-			end
+			match_kind := m
+		ensure
+			match_kind_set: match_kind = m
 		end
 
-	set_is_wildcard (b: like is_wildcard)
+	unset_match
+			-- Unset `match_kind`.
 		do
-			if b then
-				match_kind := wildcard_matching
-			elseif match_kind = wildcard_matching then
-				match_kind := 0
-			end
-		end
-
-	set_is_case_sensitive (b: like is_case_sensitive)
-		do
-			if b then
-				match_kind := case_sensitive_matching
-			elseif match_kind = case_sensitive_matching then
-				match_kind := 0
-			end
-		end
-
-	set_is_case_insensitive (b: like is_case_insensitive)
-		do
-			if b then
-				match_kind := case_insensitive_matching
-			elseif match_kind = case_insensitive_matching then
-				match_kind := 0
-			end
+			match_kind := default_matching
+		ensure
+			match_kind_unset: not is_match_set
 		end
 
 invariant
-	(is_regular_expression xor is_case_sensitive xor is_case_insensitive)
+	single_match_value: 1 =
+		is_case_sensitive.to_integer +
+		is_case_insensitive.to_integer +
+		is_regular_expression.to_integer +
+		is_wildcard.to_integer
+
 note
 	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

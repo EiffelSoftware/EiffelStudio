@@ -710,6 +710,7 @@ feature {NONE} -- Implementation attribute processing
 			l_target: detachable CONF_TARGET
 			l_lower_name: STRING_32
 			l_current_target: like current_target
+			l_parent_system: CONF_SYSTEM
 		do
 			if attached last_system as l_last_system then
 				if attached current_attributes.item (at_name) as l_name then
@@ -728,7 +729,7 @@ feature {NONE} -- Implementation attribute processing
 						if l_abstract.is_boolean then
 							l_current_target.set_abstract (l_abstract.to_boolean)
 						else
-							set_parse_error_message (conf_interface_names.e_parse_invalid_value ("abstract"))
+							set_parse_error_message (conf_interface_names.e_parse_invalid_value (ta_abstract))
 						end
 					end
 					if attached current_library_target as l_current_library_target and then l_lower_name.same_string_general (l_current_library_target) then
@@ -736,16 +737,31 @@ feature {NONE} -- Implementation attribute processing
 						current_library_target := Void
 					end
 					l_last_system.add_target (l_current_target)
+					if attached current_attributes.item (at_extends_location) as l_extends_location then
+						if includes_this_or_after (namespace_1_18_0) then
+							l_current_target.set_parent_location (l_extends_location)
+								-- TODO: Load the configuration specified by `l_extends_location` and set `l_parent_system`. Report an error otherwise.
+						else
+							report_unknown_attribute (ta_extends_location)
+						end
+					end
 					if attached current_attributes.item (at_extends) as l_extends then
+						if not attached l_parent_system then
+								-- Use the current system if a parent one is not specified
+							l_parent_system := l_last_system
+						end
 							-- Target are known internally in lower case,
 							-- so we should respect this (see bug#12698).
-						l_target := l_last_system.targets.item (l_extends.as_lower)
+						l_target := l_parent_system.targets.item (l_extends.as_lower)
 						if l_target /= Void and then l_target /= l_current_target then
 							l_current_target.set_parent (l_target)
 							group_list := l_target.groups
 						else
 							set_parse_error_message (conf_interface_names.e_parse_incorrect_target_parent (l_extends, l_name))
 						end
+					elseif attached l_parent_system then
+							-- TODO: initialize `l_current_target.extends` with the library target of `l_extends_location`, report an error otherwise.
+						l_current_target.set_is_library_parent (True)
 					end
 				else
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_target_no_name)
@@ -2838,13 +2854,14 @@ feature {NONE} -- Implementation state transitions
 
 				-- target
 				-- * name
-				-- * eifgen
 				-- * extends
+				-- * extends_location
+				-- * abstract
 			create l_attr.make (4)
-			l_attr.force (at_name, "name")
-			l_attr.force (at_eifgen, "eifgen")
-			l_attr.force (at_extends, "extends")
-			l_attr.force (at_abstract, "abstract")
+			l_attr.force (at_name, ta_name)
+			l_attr.force (at_extends, ta_extends)
+			l_attr.force (at_extends_location, ta_extends_location)
+			l_attr.force (at_abstract, ta_abstract)
 			Result.force (l_attr, t_target)
 
 				-- note
@@ -3083,12 +3100,9 @@ feature {NONE} -- Implementation state transitions
 
 				-- custom
 				-- * name
-				-- * caseless_name
 				-- * value
 				-- * excluded_value
-				-- * regexp
-				-- * excluded_regexp
-
+				-- * match
 			create l_attr.make (4)
 			l_attr.force (at_name, "name")
 			l_attr.force (at_value, "value")

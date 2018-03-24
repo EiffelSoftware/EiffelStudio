@@ -211,37 +211,35 @@ feature {NONE} -- Implementation
 			a_consumed_ok: a_consumed /= Void
 		local
 			l_guid: READABLE_STRING_32
-			l_result: detachable like get_physical_assembly
 		do
 				-- see if we already have information about this assembly
 			l_guid := a_consumed.unique_id
-			l_result := assemblies.item (l_guid)
-			if l_result = Void then
+			Result := assemblies.item (l_guid)
+			if Result = Void then
 					-- see if we have information from a previous compilation
-				if attached {like get_physical_assembly} old_assemblies.item (l_guid) as l_as_i then
-					l_result := l_as_i
+				if attached old_assemblies as a and then attached {like get_physical_assembly} a.item (l_guid) as l_as_i then
+					Result := l_as_i
 				else
 					check old_unset: old_assemblies.item (l_guid) = Void end
 				end
-				if l_result /= Void then
+				if attached Result then
 					old_assemblies.remove (l_guid)
-					l_result.set_target (application_target)
+					Result.set_target (application_target)
 						-- has the assembly been modified?
-					if l_result.has_date_changed then
+					if Result.has_date_changed then
 							-- update information
-						l_result.set_consumed_assembly (a_consumed)
-						rebuild_classes (l_result)
-						l_result.set_date
+						Result.set_consumed_assembly (a_consumed)
+						rebuild_classes (Result)
+						Result.set_date
 					end
 				else
 						-- create a new physical assembly
-					l_result := factory.new_physical_assembly (a_consumed, full_cache_path, application_target)
-					rebuild_classes (l_result)
+					Result := factory.new_physical_assembly (a_consumed, full_cache_path, application_target)
+					rebuild_classes (Result)
 				end
-				assemblies.force (l_result, l_guid)
-				linear_assemblies.force (l_result)
+				assemblies.force (Result, l_guid)
+				linear_assemblies.force (Result)
 			end
-			Result := l_result
 		ensure
 			Result_valid: Result /= Void and then Result.is_valid
 			Result_computed: Result.classes_set
@@ -806,11 +804,13 @@ feature {NONE} -- helpers
 				l_assemblies.forth
 			end
 
-			across
-				old_assemblies as ic
-			loop
-				if not l_guids.has (ic.item.guid) then
-					add_error (create {CONF_METADATA_CORRUPT})
+			if attached old_assemblies as a then
+				across
+					a as ic
+				loop
+					if not l_guids.has (ic.item.guid) then
+						add_error (create {CONF_METADATA_CORRUPT})
+					end
 				end
 			end
 		end
@@ -858,8 +858,8 @@ feature {NONE} -- Contract
 			-- Are `old_assemblies' valid?
 		do
 			Result := True
-			if old_assemblies /= Void then
-				Result := old_assemblies.linear_representation.for_all (agent (a_assembly: CONF_PHYSICAL_ASSEMBLY_INTERFACE): BOOLEAN
+			if attached old_assemblies as a then
+				Result := a.linear_representation.for_all (agent (a_assembly: CONF_PHYSICAL_ASSEMBLY_INTERFACE): BOOLEAN
 					do
 						Result := a_assembly.classes_set
 					end)

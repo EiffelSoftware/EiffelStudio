@@ -88,8 +88,8 @@ feature -- Visit nodes
 			create l_fact
 			create l_load.make (l_fact)
 			l_load.retrieve_uuid (a_library.path)
-			if not l_load.is_error then
-				create l_loc.make ("..\"+l_load.last_uuid.out+"\"+backup_adapted_config_file, a_library.target)
+			if not l_load.is_error and then attached l_load.last_uuid as uuid then
+				create l_loc.make ("..\"+uuid.out+"\"+backup_adapted_config_file, a_library.target)
 				a_library.set_location (l_loc)
 			end
 		end
@@ -126,7 +126,7 @@ feature -- Visit nodes
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represent an included assembly"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			assembly_version := an_assembly_version
 			assembly_culture := an_assembly_culture
 			assembly_public_key_token := an_assembly_key
-			create location.make ("", a_target)
+			create location.make ({STRING_32} "", a_target)
 			is_non_local_assembly := True
 		ensure
 			is_valid: is_valid

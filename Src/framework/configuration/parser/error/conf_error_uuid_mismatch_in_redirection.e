@@ -37,25 +37,25 @@ feature -- Access
 		do
 			Result := {STRING_32} "UUID mismatched in configuration file redirection:%N"
 			if attached redirected_file as f then
-				Result.append ({STRING_32} " - %"" + f + "%"")
+				Result.append ({STRING_32} " - %"" + f + {STRING_32} "%"")
 				Result.append_character ('%N')
 			end
-			Result.append ("   uuid=")
+			Result.append ({STRING_32} "   uuid=")
 			if attached redirected_file_uuid as u1 then
-				Result.append (u1.out)
+				Result.append (u1.string)
 			else
-				Result.append ("none")
+				Result.append ({STRING_32} "none")
 			end
 			Result.append_character ('%N')
 			if attached file as f then
-				Result.append ({STRING_32} " - %"" + f + "%"")
+				Result.append ({STRING_32} " - %"" + f + {STRING_32} "%"")
 				Result.append_character ('%N')
 			end
-			Result.append ("   uuid=")
+			Result.append ({STRING_32} "   uuid=")
 			if attached file_uuid as u2 then
-				Result.append (u2.out)
+				Result.append (u2.string)
 			else
-				Result.append ("none")
+				Result.append ({STRING_32} "none")
 			end
 		end
 
@@ -66,7 +66,7 @@ invariant
 	file_attached: file /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

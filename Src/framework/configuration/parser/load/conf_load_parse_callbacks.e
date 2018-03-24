@@ -1039,7 +1039,7 @@ feature {NONE} -- Implementation attribute processing
 		do
 			l_succeed := current_attributes.item (at_succeed)
 			if l_succeed = Void then
-				l_succeed := "false"
+				l_succeed := {STRING_32} "false"
 			end
 			if
 				attached current_attributes.item (at_command) as l_command and

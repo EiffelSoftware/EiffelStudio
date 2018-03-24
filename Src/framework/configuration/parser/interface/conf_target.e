@@ -115,7 +115,7 @@ feature -- Access, in compiled only, not stored to configuration file
 			if attached settings.item (s_library_root) as l_item then
 					-- create a new target instead of using Current because we could end in an infinite recursion otherwise.
 				Result := (create {CONF_DIRECTORY_LOCATION}.make
-					(l_item, (create {CONF_PARSE_FACTORY}).new_target ("dummy", system))).evaluated_path
+					(l_item, (create {CONF_PARSE_FACTORY}).new_target ({STRING_32} "dummy", system))).evaluated_path
 			else
 				Result := system.directory
 			end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "File open error."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -64,11 +64,11 @@ feature -- Access
 				Result.append ({STRING_32} "%N")
 				i := l_orig_file.index_of (':', 6)
 				if i > 0 then
-					Result.append ({STRING} "Missing iron package %"" + l_orig_file.substring (6, i - 1) + {STRING_32} "%".%N")
-					Result.append ({STRING} "To fix, install from command line: iron install " + l_orig_file.substring (6, i - 1))
+					Result.append ({STRING_32} "Missing iron package %"" + l_orig_file.substring (6, i - 1) + {STRING_32} "%".%N")
+					Result.append ({STRING_32} "To fix, install from command line: iron install " + l_orig_file.substring (6, i - 1))
 					Result.append ({STRING_32} "%N")
 				else
-					Result.append ({STRING} "Fix iron location, install missing package, or fix the configuration file.")
+					Result.append ({STRING_32} "Fix iron location, install missing package, or fix the configuration file.")
 					Result.append ({STRING_32} "%N")
 				end
 			else
@@ -106,7 +106,7 @@ feature -- Update
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

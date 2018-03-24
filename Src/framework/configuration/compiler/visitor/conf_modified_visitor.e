@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Get the classes that have been modified."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -60,7 +60,7 @@ feature -- Visit nodes
 			then
 				on_process_group (a_library)
 				processed_libraries.force (t.system.uuid)
-				a_library.library_target.process (Current)
+				t.process (Current)
 			end
 		end
 
@@ -192,8 +192,8 @@ feature {NONE} -- Implementation
 							if not l_class.is_overriden then
 								modified_classes.extend (l_class)
 							end
-						elseif l_class.does_override then
-							l_class.overrides.do_if (agent modified_classes.extend, agent {CONF_CLASS}.is_compiled)
+						elseif attached l_class.overrides as overrides then
+							overrides.do_if (agent modified_classes.extend, agent {CONF_CLASS}.is_compiled)
 						end
 					end
 					l_classes.forth
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 				if is_force_rebuild then
 					create l_path.make_from_string (a_path)
 					l_path := l_path.extended (a_file)
-					is_force_rebuild := not a_cluster.classes_by_filename.has (l_path)
+					is_force_rebuild := attached a_cluster.classes_by_filename as classes_by_filename implies not classes_by_filename.has (l_path)
 				end
 			end
 		end
@@ -221,7 +221,7 @@ invariant
 	process_group_observer_not_void: process_group_observer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

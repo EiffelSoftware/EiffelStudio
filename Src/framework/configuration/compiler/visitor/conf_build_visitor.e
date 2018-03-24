@@ -686,7 +686,7 @@ feature {NONE} -- Implementation
 				l_file_path := l_file_path.extended (a_file)
 					-- try to get it directly from old_group by filename
 				if
-					l_old_group /= Void and then
+					attached l_old_group_classes_by_filename and then
 					attached l_old_group_classes_by_filename.item (l_file_path) as l_old_class
 				then
 					l_class := l_old_class

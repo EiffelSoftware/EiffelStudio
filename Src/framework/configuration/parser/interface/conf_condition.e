@@ -407,7 +407,7 @@ feature -- Update
 			custom_empty: custom.is_empty
 		end
 
-	unset_version (a_type: STRING)
+	unset_version (a_type: READABLE_STRING_32)
 			-- Unset version constraint.
 		require
 			valid_type: valid_version_type (a_type)

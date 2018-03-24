@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "The root feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		do
 			is_all_root := a_all_root
 			if a_all_root then
-				class_type_name := "ANY"
+				class_type_name := {STRING_32} "ANY"
 			else
 				if a_cluster /= Void then
 					cluster_name := a_cluster.as_lower
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 					class_type_name := a_class_type.as_upper
 				else
 					check precondition__a_class_ok: False end
-					class_type_name := "ANY"
+					class_type_name := {STRING_32} "ANY"
 				end
 			end
 		ensure
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 					l_cluster_name.same_string (a_cluster.as_lower))
 			class_type_name_not_void: class_type_name /= Void
 			class_set: not a_all_root implies (a_class_type /= Void and then class_type_name.same_string (a_class_type.as_upper))
-			class_set: a_all_root implies class_type_name.same_string ("ANY")
+			class_set: a_all_root implies class_type_name.same_string ({STRING_32} "ANY")
 			feature_set: not a_all_root implies (a_feature = Void and feature_name = Void) or
 				(a_feature /= Void and then attached feature_name as l_feature_name and then
 					l_feature_name.same_string (a_feature.as_lower))
@@ -148,7 +148,7 @@ invariant
 	feature_name_lower: attached feature_name as inv_feature_name implies inv_feature_name.same_string (inv_feature_name.as_lower)
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1167,7 +1167,7 @@ feature -- String parse errors
 					a_available_options as ic
 				loop
 					if not s.is_empty then
-						s.append (", ")
+						s.append ({STRING_32} ", ")
 					end
 					s.append_string_general (ic.item)
 				end
@@ -1189,7 +1189,7 @@ feature -- String parse errors
 					expected_values as c
 				loop
 					if not e.is_empty then
-						e.append (", ")
+						e.append ({STRING_32} ", ")
 					end
 					e.append_string_general (c.item)
 				end

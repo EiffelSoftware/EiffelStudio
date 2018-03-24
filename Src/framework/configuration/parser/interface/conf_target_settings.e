@@ -265,7 +265,7 @@ feature -- Access: settings
 				check l_found_item.is_case_insensitive_equal_general ("exe") or l_found_item.is_case_insensitive_equal_general ("dll") end
 				Result := l_found_item
 			else
-				Result := "exe"
+				Result := {STRING_32} "exe"
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -296,7 +296,7 @@ feature -- Access: settings
 				check get_platform (l_found_item) /= 0 end
 				Result := l_found_item.as_lower
 			else
-				Result := ""
+				Result := {STRING_32} ""
 			end
 		ensure
 			Result_not_void: Result /= Void

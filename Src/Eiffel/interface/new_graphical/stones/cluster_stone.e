@@ -90,7 +90,7 @@ feature -- Access
 
 	stone_signature: STRING_32
 		do
-			Result := group.name.twin
+			create Result.make_from_string (group.name)
 		end
 
 	header: STRING_GENERAL
@@ -104,7 +104,7 @@ feature -- Access
 	history_name: STRING_32
 			-- What represents `Current' in the history.
 		do
-			Result := "[" + stone_signature + "]"
+			Result := {STRING_32} "[" + stone_signature + {STRING_32} "]"
 		end
 
 	stone_cursor: EV_POINTER_STYLE
@@ -219,7 +219,7 @@ invariant
 	path_not_void: path /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

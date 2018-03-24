@@ -24,6 +24,12 @@ feature -- Boolean values
 			Result.extend (configuration_value_true)
 		end
 
+	configuration_boolean_value (v: BOOLEAN): READABLE_STRING_32
+			-- A string representation of the value `v`.
+		do
+			Result := if v then configuration_value_true else configuration_value_false end
+		end
+
 feature -- Platforms
 
 	Pf_windows: INTEGER = 0x0001

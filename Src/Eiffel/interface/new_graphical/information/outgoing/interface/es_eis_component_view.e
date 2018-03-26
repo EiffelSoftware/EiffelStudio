@@ -417,8 +417,8 @@ feature {NONE} -- Events
 			l_column: INTEGER
 			l_descend_order: BOOLEAN
 		do
-			if session_manager.is_service_available then
-				l_session := session_manager.service.retrieve (False)
+			if attached session_manager.service as l_session_service then
+				l_session := l_session_service.retrieve (False)
 				l_column := sorting_column
 				l_descend_order := descend_order
 				if l_column = a_column_index then
@@ -598,8 +598,8 @@ feature {NONE} -- Access
 		local
 			l_session: SESSION_I
 		do
-			if session_manager.is_service_available then
-				l_session := session_manager.service.retrieve (False)
+			if attached session_manager.service as l_session_service then
+				l_session := l_session_service.retrieve (False)
 				if attached {INTEGER_REF} l_session.value_or_default (eis_entry_grid_sorting_column_session_id, False) as lt_column then
 					Result := lt_column.item
 				end
@@ -616,8 +616,8 @@ feature {NONE} -- Access
 		local
 			l_session: SESSION_I
 		do
-			if session_manager.is_service_available then
-				l_session := session_manager.service.retrieve (False)
+			if attached session_manager.service as l_session_service then
+				l_session := l_session_service.retrieve (False)
 				if attached {BOOLEAN_REF} l_session.value_or_default (eis_entry_grid_sorting_order_session_id, False) as lt_order then
 					Result := lt_order.item
 				end

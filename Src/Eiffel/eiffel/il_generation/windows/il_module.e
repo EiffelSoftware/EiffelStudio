@@ -1191,19 +1191,18 @@ feature -- Metadata description
 			external_class_type: class_type.is_external or else class_type.is_basic
 		local
 			class_c: CLASS_C
-			l_native_array: NATIVE_ARRAY_CLASS_TYPE
 			name: STRING
 			l_type_token: INTEGER
 			l_nested_parent_class: CLASS_C
-			l_external_class: EXTERNAL_CLASS_C
 			l_nested_parent_class_token: INTEGER
 			l_uni_string: UNI_STRING
 			l_sig: MD_TYPE_SIGNATURE
 		do
 			class_c := class_type.associated_class
-			l_native_array ?= class_type
-
-			if l_native_array /= Void or else is_by_ref_type (class_type.type) then
+			if
+				attached {NATIVE_ARRAY_CLASS_TYPE} class_type
+				or else is_by_ref_type (class_type.type)
+			then
 					-- Generate association with a NATIVE_ARRAY [] or TYPED_POINTER []
 				create l_sig.make
 				set_signature_type (l_sig, class_type.type, class_type)
@@ -1214,8 +1213,7 @@ feature -- Metadata description
 				internal_external_token_mapping.put (l_type_token, name)
 			else
 				name := class_type.associated_class.external_class_name.twin
-				l_external_class ?= class_c
-				if l_external_class /= Void and then l_external_class.is_nested then
+				if attached {EXTERNAL_CLASS_C} class_c as l_external_class and then l_external_class.is_nested then
 					l_nested_parent_class := l_external_class.enclosing_class
 					create l_uni_string.make (l_nested_parent_class.types.first.full_il_type_name)
 					l_nested_parent_class_token := md_emit.define_type_ref (l_uni_string,
@@ -1390,7 +1388,6 @@ feature -- Metadata description
 			l_single_inheritance_parent_id: like single_inheritance_parent_id
 			l_has_an_eiffel_parent: BOOLEAN
 			interface_class_type: CLASS_TYPE
-			gen_type: GEN_TYPE_A
 		do
 			parents := class_c.conforming_parents
 			from
@@ -1498,8 +1495,7 @@ feature -- Metadata description
 						interface_class_type := class_c.types.search_item (Void, class_type.type.reference_type)
 						l_parents.force (actual_class_type_token (interface_class_type.static_type_id), i)
 						i := i + 1
-						if class_c.is_generic then
-							gen_type ?= interface_class_type.type
+						if class_c.is_generic and attached {GEN_TYPE_A} interface_class_type.type as gen_type then
 							create parent_count.put (i)
 							gen_type.enumerate_interfaces (
 								agent (c: CLASS_TYPE; p: ARRAY [INTEGER]; k: CELL [INTEGER])
@@ -1518,8 +1514,7 @@ feature -- Metadata description
 						if not for_interface then
 							l_parents.force (actual_class_type_token (class_type.static_type_id), i)
 							i := i + 1
-						elseif class_c.is_generic then
-							gen_type ?= class_type.type
+						elseif class_c.is_generic and attached {GEN_TYPE_A} interface_class_type.type as gen_type then
 							create parent_count.put (i)
 							gen_type.enumerate_interfaces (
 								agent (c: CLASS_TYPE; p: ARRAY [INTEGER]; k: CELL [INTEGER])
@@ -1737,7 +1732,6 @@ feature -- Metadata description
 			l_creators: ARRAY [STRING]
 			l_creators_count: INTEGER
 			l_feature: FEATURE_I
-			l_il_extension: IL_EXTENSION_I
 			l_define_default_ctor: BOOLEAN
 			l_feat_arg: FEAT_ARG
 			l_creators_table: HASH_TABLE [EXPORT_I, STRING]
@@ -1796,8 +1790,7 @@ feature -- Metadata description
 						else
 							l_sig := default_sig
 						end
-						if l_feature.is_il_external then
-							l_il_extension ?= l_feature.extension
+						if l_feature.is_il_external and attached {IL_EXTENSION_I} l_feature.extension as l_il_extension then
 							if l_eiffel_constructor then
 								define_constructor (class_type, l_sig, is_reference, l_il_extension.token, feature_token (class_type.static_type_id, l_feature.feature_id), l_feature.feature_id)
 							else
@@ -2814,13 +2807,10 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			l_indexes: INDEXING_CLAUSE_AS
 			l_info: ARRAY [STRING_32]
 			l_name, l_key_string, l_culture, l_version_string: READABLE_STRING_32
-			l_external_class: EXTERNAL_CLASS_C
 			l_assembly: ASSEMBLY_I
 			l_precompiled_assembly: ASSEMBLY_INFO
-			l_native_array: NATIVE_ARRAY_CLASS_TYPE
 		do
-			l_native_array ?= a_class_type
-			if l_native_array /= Void then
+			if attached {NATIVE_ARRAY_CLASS_TYPE} a_class_type as l_native_array then
 				l_token := assembly_token (l_native_array.deep_il_element_type.associated_class_type (Void))
 			elseif a_class_type.is_generated and then not is_used_as_external then
 					-- We need to find in which module it is being defined. If no `module_ref'
@@ -2840,8 +2830,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 					l_culture := l_precompiled_assembly.culture
 					l_key_string := l_precompiled_assembly.public_key_token
 				else
-					l_external_class ?= a_class_type.associated_class
-					if l_external_class /= Void then
+					if attached {EXTERNAL_CLASS_C} a_class_type.associated_class as l_external_class then
 							-- When it is an XML represented external class.
 						l_assembly := l_external_class.lace_class.assembly
 						l_name := l_assembly.assembly_name
@@ -2889,14 +2878,14 @@ feature {NONE} -- Once per modules being generated.
 			is_generated: is_generated
 			a_type_count_positive: a_type_count > 0
 		do
-			create class_data_mapping.make (0, system.class_counter.count)
-			create class_mapping.make (0, a_type_count)
-			create single_parent_mapping.make (0, a_type_count)
+			create class_data_mapping.make_filled (0, 0, system.class_counter.count)
+			create class_mapping.make_filled (0, 0, a_type_count)
+			create single_parent_mapping.make_filled (0, 0, a_type_count)
 			create internal_external_token_mapping.make (a_type_count)
-			create internal_invariant_token.make (0, a_type_count)
-			create internal_constructor_token.make (0, a_type_count)
+			create internal_invariant_token.make_filled (0, 0, a_type_count)
+			create internal_constructor_token.make_filled (0, 0, a_type_count)
 			create internal_constructors.make (0, a_type_count)
-			create internal_assemblies.make (0, a_type_count)
+			create internal_assemblies.make_filled (0, 0, a_type_count)
 			create internal_module_references.make (10)
 			create defined_assemblies.make (10)
 			create internal_features.make (0, a_type_count)
@@ -3574,11 +3563,8 @@ feature {NONE} -- Convenience
 			-- Is `a_type' an out parameter type?
 		require
 			a_type_not_void: a_type /= Void
-		local
-			l_ptr_type: TYPED_POINTER_A
 		do
-			l_ptr_type ?= a_type
-			Result := l_ptr_type /= Void
+			Result := attached {TYPED_POINTER_A} a_type
 		end
 
 	by_ref_type (a_type: TYPE_A): TYPE_A
@@ -3586,11 +3572,12 @@ feature {NONE} -- Convenience
 		require
 			a_type_not_void: a_type /= Void
 			is_by_ref_type: is_by_ref_type (a_type)
-		local
-			l_typed_pointer: TYPED_POINTER_A
 		do
-			l_typed_pointer ?= a_type
-			Result := l_typed_pointer.generics.first
+			if attached {TYPED_POINTER_A} a_type as l_typed_pointer then
+				Result := l_typed_pointer.generics.first
+			else
+				check is_by_ref_type: False end
+			end
 		ensure
 			by_ref_type_not_void: Result /= Void
 		end
@@ -3667,7 +3654,7 @@ invariant
 	dll_or_console_valid: not is_assembly_module implies (is_dll and is_console_application)
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

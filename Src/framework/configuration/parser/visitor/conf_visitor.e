@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Visitor to visit configuration."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -139,6 +139,8 @@ feature {NONE} -- Implementation
 		do
 			add_error (an_error)
 			raise_error
+		ensure
+			False
 		end
 
 	add_warning (a_warning: CONF_ERROR)
@@ -174,6 +176,8 @@ feature {NONE} -- Implementation
 			create l_conf_exception
 			l_conf_exception.set_description (configuration_error_tag)
 			l_conf_exception.raise
+		ensure
+			False
 		end
 
 feature {NONE} -- Implementation
@@ -182,7 +186,7 @@ feature {NONE} -- Implementation
 			-- Tag used when raising an exception error.
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

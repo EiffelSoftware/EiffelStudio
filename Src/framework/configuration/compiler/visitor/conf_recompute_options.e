@@ -39,7 +39,6 @@ feature -- Visit nodes
 		require else
 			new_target_group_equivalent: new_target.is_group_equivalent (a_target)
 		local
-			l_pre, l_old_pre: detachable CONF_PRECOMPILE
 			l_new_target: like new_target
 		do
 			if not is_error then
@@ -77,12 +76,10 @@ feature -- Visit nodes
 				a_target.set_post_compile (l_new_target.internal_post_compile_action)
 				a_target.set_file_rules (l_new_target.internal_file_rule)
 
-				l_pre := a_target.precompile
-				if l_pre /= Void then
-					l_old_pre := l_new_target.precompile
-					check
-						l_old_pre_not_void: l_old_pre /= Void
-					end
+				if
+					attached a_target.precompile as l_pre and then
+					attached l_new_target.precompile as l_old_pre
+				then
 					l_pre.set_options (l_old_pre.internal_options)
 					l_pre.set_class_options (l_old_pre.internal_class_options)
 				end
@@ -166,7 +163,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

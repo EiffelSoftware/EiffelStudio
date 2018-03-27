@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Read content of Eiffel Assembly Cache"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -69,27 +69,26 @@ feature -- Access
 			valid_path: not a_path.is_empty
 			is_initialized: is_initialized
 		local
-			l_path: detachable PATH
+			l_path: PATH
 			l_consumed_assemblies: like assemblies
 			l_assembly: CONSUMED_ASSEMBLY
-			l_info: like info
 		do
-			l_info := info
-			check l_info_attached: l_info /= Void end
-			l_consumed_assemblies := l_info.assemblies
-			from
-				l_consumed_assemblies.start
-			until
-				l_consumed_assemblies.after or Result /= Void
-			loop
-				l_assembly := l_consumed_assemblies.item
-				if l_path = Void then
-					l_path := l_assembly.format_path (a_path).canonical_path
+			if attached info as l_info then
+				l_consumed_assemblies := l_info.assemblies
+				from
+					l_consumed_assemblies.start
+				until
+					l_consumed_assemblies.after or Result /= Void
+				loop
+					l_assembly := l_consumed_assemblies.item
+					if l_path = Void then
+						l_path := l_assembly.format_path (a_path).canonical_path
+					end
+					if l_assembly.has_same_path (l_path) then
+						Result := l_assembly
+					end
+					l_consumed_assemblies.forth
 				end
-				if l_assembly.has_same_path (l_path) then
-					Result := l_assembly
-				end
-				l_consumed_assemblies.forth
 			end
 		end
 
@@ -132,20 +131,17 @@ feature -- Access
 			valid_assembly: is_assembly_in_cache (a_assembly.gac_path, True)
 			non_void_referenced_type: a_crt /= Void
 		local
-			l_ca_mapping: detachable CONSUMED_ASSEMBLY_MAPPING
 			l_name: STRING
 		do
-			l_ca_mapping := assembly_mapping_from_consumed_assembly (a_assembly)
-			check l_ca_mapping_attached: l_ca_mapping /= Void end
-
-			if a_crt.is_by_ref then
-				l_name := a_crt.name.twin
-				l_name.keep_head (l_name.count - 1)
-			else
-				l_name := a_crt.name
+			if attached assembly_mapping_from_consumed_assembly (a_assembly) as l_ca_mapping then
+				if a_crt.is_by_ref then
+					l_name := a_crt.name.twin
+					l_name.keep_head (l_name.count - 1)
+				else
+					l_name := a_crt.name
+				end
+				Result := consumed_type_from_dotnet_type_name (l_ca_mapping.assemblies @ a_crt.assembly_id, l_name)
 			end
-
-			Result := consumed_type_from_dotnet_type_name (l_ca_mapping.assemblies @ a_crt.assembly_id, l_name)
 		end
 
 	assembly_mapping_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): detachable CONSUMED_ASSEMBLY_MAPPING
@@ -257,40 +253,35 @@ feature -- Status Report
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 		local
-			l_ca: detachable CONSUMED_ASSEMBLY
 			l_consume_path: PATH
 			l_file_info: SYSTEM_FILE_INFO
 			l_dir_info: DIRECTORY_INFO
-			l_so: detachable SYSTEM_OBJECT
-			l_reason: detachable STRING
-			l_type: detachable SYSTEM_TYPE
+			l_so: SYSTEM_OBJECT
+			l_reason: STRING
 		do
-			l_ca := consumed_assembly_from_path (a_path)
-			if l_ca /= Void and then l_ca.is_consumed then
+			if attached consumed_assembly_from_path (a_path) as l_ca and then l_ca.is_consumed then
 				l_consume_path := absolute_assembly_path_from_consumed_assembly (l_ca)
-
 				create l_dir_info.make (l_consume_path.name)
 				create l_file_info.make (l_ca.location.name)
 				Result := not l_dir_info.exists or {SYSTEM_DATE_TIME}.compare (l_file_info.last_write_time, l_dir_info.creation_time) > 0
 				if not Result then
 						-- now check in consumer is newer
 					l_so := Current
-					l_type := l_so.get_type
-					check l_type_attached: l_type /= Void end
-					create l_file_info.make (assembly_location (l_type).name)
-					Result := {SYSTEM_DATE_TIME}.compare (l_file_info.last_write_time, l_dir_info.creation_time) > 0
-					if Result then
-						l_reason := "The consumer is newer than the generate contents."
+					if attached l_so.get_type as l_type then
+						check l_type_attached: l_type /= Void end
+						create l_file_info.make (assembly_location (l_type).name)
+						Result := {SYSTEM_DATE_TIME}.compare (l_file_info.last_write_time, l_dir_info.creation_time) > 0
+						if Result then
+							l_reason := "The consumer is newer than the generated contents."
+						end
 					end
 				else
 					l_reason := "The contents of the assembly manifest has changed."
 				end
 			end
-
 			debug ("assemblies_are_never_stale")
 				Result := False
 			end
-
 			if Result then
 				check
 					l_reason_not_void: l_reason /= Void
@@ -423,19 +414,19 @@ feature {NONE} -- Implementation
 			-- Get the location of assembly  in which `a_type' belongs.
 		require
 			a_type_attached: a_type /= Void
-		local
-			l_ass: detachable ASSEMBLY
-			l_path: detachable SYSTEM_STRING
 		do
-			l_ass := a_type.assembly
-			check l_ass_attached: l_ass /= Void end
-			l_path := l_ass.location
-			check l_path_attached: l_path /= Void end
-			create Result.make_from_string (create {STRING_32}.make_from_cil (l_path))
+			if attached a_type.assembly as a then
+				create Result.make_from_string (create {STRING_32}.make_from_cil (a.location))
+			else
+				check
+					from_documentation: False
+				then
+				end
+			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -466,5 +457,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class CACHE_READER
+end

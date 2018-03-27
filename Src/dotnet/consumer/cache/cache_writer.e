@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Allows for adding/removing assemblies from the EAC"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -100,18 +100,18 @@ feature -- Basic Operations
 		local
 			l_string_tuple: TUPLE [STRING_32]
 			l_assembly_folder: PATH
-			l_ca: detachable CONSUMED_ASSEMBLY
-			l_assembly: detachable ASSEMBLY
+			l_ca: CONSUMED_ASSEMBLY
+			l_assembly: ASSEMBLY
 			l_old_assembly: ASSEMBLY
-			l_name: detachable ASSEMBLY_NAME
+			l_name: ASSEMBLY_NAME
 			l_consumer: ASSEMBLY_CONSUMER
 			l_dir: DIRECTORY
-			l_names: detachable NATIVE_ARRAY [detachable ASSEMBLY_NAME]
-			l_info: detachable CACHE_INFO
+			l_names: NATIVE_ARRAY [detachable ASSEMBLY_NAME]
+			l_info: CACHE_INFO
 			l_assembly_path: PATH
 			l_assembly_location: STRING_32
 			l_assembly_info_updated: BOOLEAN
-			l_lower_path: detachable PATH
+			l_lower_path: PATH
 			l_reader: like cache_reader
 			l_reason: SYSTEM_STRING
 			retried: BOOLEAN
@@ -205,11 +205,15 @@ feature -- Basic Operations
 					then
 							-- unconsume stale assembly
 						unconsume_assembly (l_lower_path)
-						l_name := l_assembly.get_name
-						check l_name_attached: l_name /= Void end
-						l_ca.set_culture (culture_from_info (l_name.culture_info))
-						l_ca.set_version (version_from_info (l_name.version))
-						l_ca.set_key (public_key_token_from_array (l_name.get_public_key_token))
+						if attached l_assembly.get_name as n then
+							l_ca.set_culture (culture_from_info (n.culture_info))
+							l_ca.set_version (version_from_info (n.version))
+							l_ca.set_key (public_key_token_from_array (n.get_public_key_token))
+						else
+							check
+								get_name_attached: False
+							end
+						end
 					end
 
 						-- Reset update (for optimizations)
@@ -669,9 +673,7 @@ feature {NONE} -- Implementation
 			valid_path: not a_path.is_empty
 			valid_assembly_path: assembly_loader.load_from_gac_or_path (a_path.name) /= Void
 		local
-			l_assembly: detachable ASSEMBLY
-			l_name: detachable ASSEMBLY_NAME
-			l_ass_name: detachable SYSTEM_STRING
+			l_ass_name: SYSTEM_STRING
 			l_assembly_name: STRING_32
 			l_key: STRING_32
 			l_culture: STRING_32
@@ -679,10 +681,11 @@ feature {NONE} -- Implementation
 			l_is_in_gac: BOOLEAN
 			folder_name: STRING_32
 		do
-			l_assembly := assembly_loader.load_from_gac_or_path (a_path.name)
-			if l_assembly /= Void and then attached l_assembly.location as l_location then
-				l_name := l_assembly.get_name
-				check l_name_attached: l_name /= Void end
+			if
+				attached assembly_loader.load_from_gac_or_path (a_path.name) as l_assembly and then
+				attached l_assembly.location as l_location and then
+				attached l_assembly.get_name as l_name
+			then
 				l_key := public_key_token_from_array (l_name.get_public_key_token)
 				l_culture := culture_from_info (l_name.culture_info)
 				l_is_in_gac := l_assembly.global_assembly_cache
@@ -798,18 +801,19 @@ feature {NONE} -- Implementation
 
  	culture_from_info (a_info: detachable CULTURE_INFO): STRING_32
  			-- Returns culture string from `a_info'
- 		local
- 			l_info_name: detachable SYSTEM_STRING
  		do
- 			if a_info /= Void then
- 				l_info_name := a_info.to_string
- 				check l_info_attached: l_info_name /= Void end
+ 			if not attached a_info then
+ 				Result := neutral_culture
+ 			elseif attached a_info.to_string as l_info_name then
  				Result := l_info_name
 	 			if Result.is_empty then
 	 				Result := neutral_culture
 	 			end
  			else
- 				Result := neutral_culture
+ 				check
+ 					to_string_attached: False
+ 				then
+ 				end
  			end
 		ensure
 			result_not_void: Result /= Void
@@ -821,15 +825,16 @@ feature {NONE} -- Implementation
 
 	version_from_info (a_info: detachable VERSION): STRING_32
  			-- Returns culture string from `a_info'
-  		local
- 			l_info_name: detachable SYSTEM_STRING
 		do
- 			if a_info /= Void then
- 				l_info_name := a_info.to_string
- 				check l_info_attached: l_info_name /= Void end
- 				Result := l_info_name
- 			else
+ 			if not attached a_info then
  				create Result.make_empty
+ 			elseif attached a_info.to_string as l_info_name then
+	 			Result := l_info_name
+	 		else
+	 			check
+	 				to_string_attached: False
+	 			then
+	 			end
  			end
 		ensure
 			result_not_void: Result /= Void
@@ -863,7 +868,7 @@ invariant
 	non_void_cache_reader: cache_reader /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -894,5 +899,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class CACHE_WRITER
+end

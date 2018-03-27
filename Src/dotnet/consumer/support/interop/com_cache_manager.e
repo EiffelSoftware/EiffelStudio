@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "COM interface for metadata consumer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,20 +40,27 @@ feature -- Basic Exportations
 		local
 			l_sub: AR_RESOLVE_SUBSCRIBER
 			l_resolver: AR_RESOLVER
-			l_current_domain: detachable APP_DOMAIN
+			l_current_domain: APP_DOMAIN
 		do
 			create l_sub.make
 			create l_resolver.make_with_name ({STRING_32} "Initializing Resolver")
 			l_current_domain := {APP_DOMAIN}.current_domain
-			check l_current_domainattached: l_current_domain /= Void end
-			l_sub.subscribe (l_current_domain, l_resolver)
+			if attached l_current_domain then
+				l_sub.subscribe (l_current_domain, l_resolver)
+			else
+				check
+					current_domain_attached: False
+				end
+			end
 
 				-- Turn of all security to prevent any security exceptions
 			{SECURITY_MANAGER}.set_security_enabled (False)
 
 			is_initialized := True
 
-			l_current_domain.add_domain_unload (create {EVENT_HANDLER}.make (Current, $on_unload_top_level_domain))
+			if attached l_current_domain then
+				l_current_domain.add_domain_unload (create {EVENT_HANDLER}.make (Current, $on_unload_top_level_domain))
+			end
 		end
 
 	initialize_with_path (a_path: SYSTEM_STRING)
@@ -166,75 +173,92 @@ feature {NONE} -- Implementation
 		note
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		local
-			l_inst_obj_handle: detachable OBJECT_HANDLE
-			l_lifetime_lease: detachable ILEASE
-			l_marshal: detachable MARSHAL_CACHE_MANAGER
-			l_assembly: detachable ASSEMBLY
-			l_location: detachable SYSTEM_STRING
-			l_full_name: detachable SYSTEM_STRING
+			l_location: SYSTEM_STRING
+			l_full_name: SYSTEM_STRING
 			l_subscription: AR_RESOLVE_SUBSCRIBER
 			l_resolver: AR_RESOLVER
 			l_type: SYSTEM_TYPE
-			l_app_domain, l_current_domain: detachable APP_DOMAIN
+			l_current_domain: APP_DOMAIN
 		do
-			if attached internal_marshalled_cache_manager as l_result then
-				Result := l_result
-			else
+			Result := internal_marshalled_cache_manager
+			if not attached Result then
 				check
 					app_domain_not_exists: app_domain = Void
 				end
-				l_app_domain := {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer" + create {STRING_8}.make_from_cil ({GUID}.new_guid.to_string), Void, Void)
-				check l_app_domain_attached: l_app_domain /= Void end
-				app_domain := l_app_domain
+				if attached {APP_DOMAIN}.create_domain ("EiffelSoftware.MetadataConsumer" + create {STRING_8}.make_from_cil ({GUID}.new_guid.to_string), Void, Void) as l_app_domain then
+					app_domain := l_app_domain
 
-					-- ensure that no decendant is mistaken by creating an instance of `COM_CACHE_MANAGER'.
-				l_type := {COM_CACHE_MANAGER}
-				l_assembly := l_type.assembly
-				check l_assembly_attached: l_assembly /= Void end
-				l_location := l_assembly.location
-					-- Watch out here, we create a .NET type of an Eiffel type, usually it is the interface type
-					-- that we get, but in this case, MARSHAL_CACHE_MANAGER inheriting from a .NET type, interface
-					-- and implementation are actually the same type.
-				l_type := {MARSHAL_CACHE_MANAGER}
-				l_full_name := l_type.full_name
-				l_inst_obj_handle ?= l_app_domain.create_instance_from (l_location, l_full_name)
+						-- ensure that no decendant is mistaken by creating an instance of `COM_CACHE_MANAGER'.
+					l_type := {COM_CACHE_MANAGER}
+					if attached l_type.assembly as l_assembly then
+						l_location := l_assembly.location
+					else
+						check
+							from_documentation_assembly_attached: False
+						then
+						end
+					end
+						-- Watch out here, we create a .NET type of an Eiffel type, usually it is the interface type
+						-- that we get, but in this case, MARSHAL_CACHE_MANAGER inheriting from a .NET type, interface
+						-- and implementation are actually the same type.
+					l_type := {MARSHAL_CACHE_MANAGER}
+					l_full_name := l_type.full_name
+					if
+						attached l_app_domain.create_instance_from (l_location, l_full_name) as l_inst_obj_handle and then
+						attached {ILEASE} l_inst_obj_handle.get_lifetime_service as l_lifetime_lease
+					then
+							-- Add a lifetime lease sponsor for {OBJECT_HANDLER}.
+						l_lifetime_lease.register (Current)
+							-- Note: When trying to unwrap a dynamically created object using
+							-- APP_DOMAIN.create_instance_from, OBJECT_HANDLE.unwrap will try
+							-- to relocate the assembly (using a display name instead of the path
+							-- used to create the instance?!? Using COM interop it will look
+							-- in the application base. For EiffelStudio this works fine because
+							-- it resides in the application base. However with Eiffel ENViSioN!
+							-- devenv location is the application base, which is not where the
+							-- consumer is installed to.
+						create l_subscription.make
+						create l_resolver.make
+						l_current_domain := {APP_DOMAIN}.current_domain
+						if attached l_current_domain then
+							l_subscription.subscribe (l_current_domain, l_resolver)
+						else
+							check
+								current_domain_attached: False
+							then
+							end
+						end
 
-					-- Add a lifetime lease sponsor for {OBJECT_HANDLER}.
-				check l_inst_obj_handle_attached: l_inst_obj_handle /= Void end
-				l_lifetime_lease ?= l_inst_obj_handle.get_lifetime_service
-				check l_lifetime_lease_attached: l_lifetime_lease /= Void end
-				l_lifetime_lease.register (Current)
-
-					-- Note: When trying to unwrap a dynamically created object using
-					-- APP_DOMAIN.create_instance_from, OBJECT_HANDLE.unwrap will try
-					-- to relocate the assembly (using a display name instead of the path
-					-- used to create the instance?!? Using COM interop it will look
-					-- in the application base. For EiffelStudio this works fine because
-					-- it resides in the application base. However with Eiffel ENViSioN!
-					-- devenv location is the application base, which is not where the
-					-- consumer is installed to.
-				create l_subscription.make
-				create l_resolver.make
-				l_current_domain := {APP_DOMAIN}.current_domain
-				check l_current_domain_attached: l_current_domain /= Void end
-				l_subscription.subscribe (l_current_domain, l_resolver)
-
-				Result := l_inst_obj_handle
-				l_marshal ?= Result.unwrap
-				check
-					unwrapped: l_marshal /= Void
-				end
-
-					-- clean up resolver because it's no longer needed
-				l_subscription.unsubscribe (l_current_domain, l_resolver)
-
-				if attached eac_path as l_path then
-					l_marshal.initialize_with_path (l_path)
+						Result := l_inst_obj_handle
+						if attached {MARSHAL_CACHE_MANAGER} Result.unwrap as l_marshal then
+								-- clean up resolver because it's no longer needed
+							l_subscription.unsubscribe (l_current_domain, l_resolver)
+							if attached eac_path as l_path then
+								l_marshal.initialize_with_path (l_path)
+							else
+								l_marshal.initialize
+							end
+							if l_marshal.is_initialized then
+								internal_marshalled_cache_manager := Result
+							end
+						else
+								-- clean up resolver because it's no longer needed
+							l_subscription.unsubscribe (l_current_domain, l_resolver)
+							check
+								marshal_cache_manager_attached: False
+							end
+						end
+					else
+						check
+							instance_handle_attached: False
+						then
+						end
+					end
 				else
-					l_marshal.initialize
-				end
-				if l_marshal.is_initialized then
-					internal_marshalled_cache_manager := Result
+					check
+						create_domain_attached: False
+					then
+					end
 				end
 			end
 		ensure
@@ -271,7 +295,7 @@ feature {NONE} -- Implementation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -302,5 +326,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class COM_CACHE_MANAGER
+end

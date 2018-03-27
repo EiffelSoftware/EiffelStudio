@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Provide reflection mechanisms to inspect EAC"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,13 +26,15 @@ feature -- Redefined
 			l_cache: like types_cache
 		do
 			l_cache := types_cache
-			l_cache.search (t.full_name)
-			if l_cache.found then
-				Result := l_cache.found_item
-			else
-				Result := Precursor {CACHE_READER} (t)
-				if Result /= Void then
-					l_cache.put (Result, t.full_name)
+			if attached t.full_name as n then
+				l_cache.search (n)
+				if l_cache.found then
+					Result := l_cache.found_item
+				else
+					Result := Precursor (t)
+					if attached Result then
+						l_cache.put (Result, n)
+					end
 				end
 			end
 		end
@@ -56,7 +58,7 @@ feature -- Redefined
 
 feature -- Initialization
 
-	initialize_cache (a_path: STRING)
+	initialize_cache (a_path: PATH)
 			-- initialize cache with a binary file containing
 			-- specifics consumed types.
 		require
@@ -64,11 +66,11 @@ feature -- Initialization
 			not_empty_path: not a_path.is_empty
 		local
 			l_raw_file: RAW_FILE
-			l_consumed_types: detachable LINKED_LIST [CONSUMED_TYPE]
+			l_consumed_types: LINKED_LIST [CONSUMED_TYPE]
 			l_cache: like types_cache
 		do
-			if {SYSTEM_FILE}.exists (a_path.to_cil) then
-				create l_raw_file.make (a_path)
+			if {SYSTEM_FILE}.exists (a_path.name.to_cil) then
+				create l_raw_file.make_with_path (a_path)
 				l_raw_file.open_read
 				l_consumed_types ?= l_raw_file.retrieved
 				l_cache := types_cache
@@ -127,7 +129,7 @@ feature -- Access
 				ct := consumed_type (t)
 			end
 			if attached t.assembly as l_assembly and then attached l_assembly.location as l_ass_location then
-				ca := consumed_assembly_from_path (l_ass_location)
+				ca := consumed_assembly_from_path (create {PATH}.make_from_string (create {IMMUTABLE_STRING_32}.make_from_cil (l_ass_location)))
 			end
 			if ca /= Void then
 				am := assembly_mapping_array (ca)
@@ -154,7 +156,7 @@ feature -- Access
 									found := crt.name.to_cil.equals (args.item (j - 1).full_name) and then
 										attached args.item (j - 1).assembly as l_assembly and then
 										attached l_assembly.location as l_ass_location and then
-										(am.i_th (crt.assembly_id) ~ consumed_assembly_from_path (l_ass_location))
+										am.i_th (crt.assembly_id) ~ consumed_assembly_from_path (create {PATH}.make_from_string (create {IMMUTABLE_STRING_32}.make_from_cil (l_ass_location)))
 									j := j + 1
 								end
 							end
@@ -185,7 +187,7 @@ feature -- Access
 										found := crt.name.to_cil.equals (args.item (j - 1).full_name) and then
 											attached args.item (j - 1).assembly as l_assembly and then
 											attached l_assembly.location as l_ass_location and then
-											(am.i_th (crt.assembly_id) ~ consumed_assembly_from_path (l_ass_location))
+											am.i_th (crt.assembly_id) ~ consumed_assembly_from_path (create {PATH}.make_from_string (create {IMMUTABLE_STRING_32}.make_from_cil (l_ass_location)))
 										j := j + 1
 									end
 								end
@@ -217,7 +219,7 @@ feature -- Access
 											found := crt.name.to_cil.equals (args.item (j - 1).full_name) and then
 												attached args.item (j - 1).assembly as l_assembly and then
 												attached l_assembly.location as l_ass_location and then
-												(am.i_th (crt.assembly_id) ~ consumed_assembly_from_path (l_ass_location))
+												am.i_th (crt.assembly_id) ~ consumed_assembly_from_path (create {PATH}.make_from_string (create {IMMUTABLE_STRING_32}.make_from_cil (l_ass_location)))
 											j := j + 1
 										end
 									end
@@ -349,24 +351,26 @@ feature -- Access
 			non_void_dotnet_feature_name: dotnet_feature_name /= Void
 			not_empty_dotnet_feature_name: not dotnet_feature_name.is_empty
 		local
-			ct: detachable CONSUMED_TYPE
-			fields: detachable ARRAYED_LIST [CONSUMED_FIELD]
-			procedures: detachable ARRAYED_LIST [CONSUMED_PROCEDURE]
-			functions: detachable ARRAYED_LIST [CONSUMED_FUNCTION]
-			constructors: detachable ARRAYED_LIST [CONSUMED_CONSTRUCTOR]
+			ct: CONSUMED_TYPE
+			fields: ARRAYED_LIST [CONSUMED_FIELD]
+			procedures: ARRAYED_LIST [CONSUMED_PROCEDURE]
+			functions: ARRAYED_LIST [CONSUMED_FUNCTION]
+			constructors: ARRAYED_LIST [CONSUMED_CONSTRUCTOR]
 			i: INTEGER
 			l_cache: like types_cache
 		do
 			create {ARRAYED_LIST [CONSUMED_ENTITY]} Result.make (24)
 
 			l_cache := types_cache
-			l_cache.search (t.full_name)
-			if l_cache.found then
-				ct := l_cache.found_item
-			else
-				ct := consumed_type (t)
-				if ct /= Void then
-					l_cache.put (ct, t.full_name)
+			if attached t.full_name as n then
+				l_cache.search (n)
+				if l_cache.found then
+					ct := l_cache.found_item
+				else
+					ct := consumed_type (t)
+					if attached ct then
+						l_cache.put (ct, n)
+					end
 				end
 			end
 			if ct /= Void then
@@ -438,7 +442,7 @@ feature -- Implementation
 			create Result.make (Max_cache_items)
 		end
 
-	assembly_types_cache: CACHE [CONSUMED_ASSEMBLY_TYPES, STRING]
+	assembly_types_cache: CACHE [CONSUMED_ASSEMBLY_TYPES, PATH]
 			-- Cache of assembly types
 		once
 			create Result.make (15)
@@ -448,17 +452,17 @@ feature {NONE} -- Implementation
 
 	constructor_name: STRING = ".ctor"
 
-	assemblies_mappings_cache: CACHE [ARRAYED_LIST [CONSUMED_ASSEMBLY], STRING]
+	assemblies_mappings_cache: CACHE [ARRAYED_LIST [CONSUMED_ASSEMBLY], PATH]
 			-- Cache for assemblies ids mappings
 		once
 			create Result.make (max_cache_items)
 		end
 
-	max_cache_items: INTEGER = 40;
+	max_cache_items: INTEGER = 40
 			-- Maximum number of types stored in local cache
 
-note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+;note
+	copyright:	"Copyright (c) 1984-20186, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

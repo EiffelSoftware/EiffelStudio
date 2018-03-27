@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Generate Eiffel arguments from .NET arguments"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,43 +24,40 @@ feature -- Access
 		local
 			i, count: INTEGER
 			en, dn: STRING
-			params: detachable NATIVE_ARRAY [detachable PARAMETER_INFO]
-			p: detachable PARAMETER_INFO
-			t: detachable SYSTEM_TYPE
 		do
-			params := info.get_parameters
-			check params_attached: params /= Void end
 			create Result.make_empty
-			from
-				i := 0
-				count := params.count
-			until
-				i >= count
-			loop
-				p := params.item (i)
-				check p_attached: p /= Void end
-				if attached p.name as l_arg_name then
-					dn := l_arg_name
-					en := formatted_argument_name (dn, i + 1)
-					if dn.is_empty then
-						dn := en.twin
+			if attached info.get_parameters as params then
+				from
+					i := 0
+					count := params.count
+				until
+					i >= count
+				loop
+					if attached params.item (i) as p then
+						if attached p.name as l_arg_name then
+							dn := l_arg_name
+							en := formatted_argument_name (dn, i + 1)
+							if dn.is_empty then
+								dn := en.twin
+							end
+						else
+							en := formatted_argument_name ("", i + 1)
+							dn := en.twin
+						end
+						if attached p.parameter_type as t then
+							Result.force (create {CONSUMED_ARGUMENT}.make (dn, en,
+								referenced_type_from_type (t)), i + 1)
+						end
 					end
-				else
-					en := formatted_argument_name ("", i + 1)
-					dn := en.twin
+					i := i + 1
 				end
-				t := p.parameter_type
-				check t_attached: t /= Void end
-				Result.force (create {CONSUMED_ARGUMENT}.make (dn, en,
-					referenced_type_from_type (t)), i + 1)
-				i := i + 1
 			end
 		ensure
 			non_void_arguments: Result /= Void
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

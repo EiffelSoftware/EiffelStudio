@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Method to be consumed in Eiffel, intermediate structure used to solve overloading"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -69,10 +69,6 @@ feature -- Access
 
 	starting_resolution_name: STRING
 			-- .NET Name used to perform overloading resolution
-		local
-			l_params: detachable NATIVE_ARRAY [detachable PARAMETER_INFO]
-			l_param: detachable PARAMETER_INFO
-			l_type: detachable SYSTEM_TYPE
 		do
 			if attached internal_start_name as l_result then
 				Result := l_result
@@ -81,20 +77,28 @@ feature -- Access
 				if is_get_property and then Result.substring_index ("get_", 1) = 1 then
 					Result.remove_head (4)
 				elseif is_conversion_operator then
-					l_params := internal_method.get_parameters
-					check l_params_attached: l_params /= Void end
-					l_param := l_params.item (0)
-					check l_param_attached: l_param /= Void end
-					l_type := l_param.parameter_type
-					check l_type_attached: l_type /= Void end
-					if l_type.equals_type (internal_method.reflected_type) then
-						Result := to_conversion_name.twin
-						l_type := internal_method.return_type
-						check l_type_attached: l_type /= Void end
-						Result.append (formatted_variable_type_name (referenced_type_from_type (l_type).name))
+					if
+						attached internal_method.get_parameters as l_params and then
+						attached l_params.item (0) as l_param and then
+						attached l_param.parameter_type as l_type
+					then
+						if l_type.equals_type (internal_method.reflected_type) then
+							Result := to_conversion_name.twin
+							if attached internal_method.return_type as t then
+								Result.append (formatted_variable_type_name (referenced_type_from_type (t).name))
+							else
+								check
+									return_type_attached: False
+								end
+							end
+						else
+							Result := from_conversion_name.twin
+							Result.append (formatted_variable_type_name (referenced_type_from_type (l_type).name))
+						end
 					else
-						Result := from_conversion_name.twin
-						Result.append (formatted_variable_type_name (referenced_type_from_type (l_type).name))
+						check
+							parameter_type_attached: False
+						end
 					end
 				end
 				if is_com_interface_member then
@@ -122,12 +126,8 @@ feature -- Access
 
 	is_com_interface_member: BOOLEAN
 			-- Is member from a COM interface	
-		local
-			l_source_type: detachable SYSTEM_TYPE
 		do
-			l_source_type := internal_method.declaring_type
-			check l_source_type_attached: l_source_type /= Void end
-			Result := l_source_type.is_interface and l_source_type.is_import
+			Result := attached internal_method.declaring_type as l_source_type and then l_source_type.is_interface and then l_source_type.is_import
 		end
 
 	com_member_suffix: STRING
@@ -135,40 +135,44 @@ feature -- Access
 		require
 			is_com_interface_member: is_com_interface_member
 		local
-			l_type: detachable SYSTEM_TYPE
-			l_name: detachable SYSTEM_STRING
 			l_count, i: INTEGER
 			l_stop: BOOLEAN
 		do
-			l_type := internal_method.declaring_type
-			check l_type_attached: l_type /= Void end
-			l_name := l_type.name
-			check l_name_attached: l_name /= Void end
-			if attached {STRING_8} suffix_table.item (l_name) as l_result then
-				Result := l_result
-			else
-				if attached l_type.get_interfaces as l_interfaces and then l_interfaces.count > 0 then
-						-- Only version if a COM interface inherits another interface.
-						-- There is no need to check if the inherited interfaces are COM interfaces, becasue they should be. If not
-						-- then the COM binary will no load.
-					l_count := l_name.length - 1
-					from i := l_count until i < 0 or l_stop loop
-						if l_name.chars (i).is_digit then
-							i := i - 1
-						else
-							l_stop := True
-							i := i + 1
+			if
+				attached internal_method.declaring_type as l_type and then
+				attached l_type.name as l_name
+			then
+				if attached {STRING_8} suffix_table.item (l_name) as l_result then
+					Result := l_result
+				else
+					if attached l_type.get_interfaces as l_interfaces and then l_interfaces.count > 0 then
+							-- Only version if a COM interface inherits another interface.
+							-- There is no need to check if the inherited interfaces are COM interfaces, becasue they should be. If not
+							-- then the COM binary will no load.
+						l_count := l_name.length - 1
+						from i := l_count until i < 0 or l_stop loop
+							if l_name.chars (i).is_digit then
+								i := i - 1
+							else
+								l_stop := True
+								i := i + 1
+							end
 						end
-					end
-					if i <= l_count then
-						create Result.make_from_cil ({SYSTEM_STRING}.concat_string_string ("_", l_name.substring (i)))
+						if i <= l_count then
+							create Result.make_from_cil ({SYSTEM_STRING}.concat_string_string ("_", l_name.substring (i)))
+						else
+							create Result.make_empty
+						end
 					else
 						create Result.make_empty
 					end
-				else
-					create Result.make_empty
+					suffix_table.add (l_name, Result)
 				end
-				suffix_table.add (l_name, Result)
+			else
+				check
+					from_documentation: False
+				then
+				end
 			end
 		end
 
@@ -219,12 +223,12 @@ feature {NONE} -- Constants
 
 	Void_type: SYSTEM_TYPE
 			-- Void .NET type
-		local
-			l_result: detachable SYSTEM_TYPE
 		once
-			l_result := {SYSTEM_TYPE}.get_type_string (("System.Void").to_cil)
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			Result := {SYSTEM_TYPE}.get_type_string (("System.Void").to_cil)
+			check
+				from_documentation: attached Result
+			then
+			end
 		end
 
 	op_implicit: SYSTEM_STRING = "op_Explicit"
@@ -236,7 +240,7 @@ feature {NONE} -- Constants
 			-- Generated name corresponding to `op_xx'.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -267,5 +271,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class METHOD_SOLVER
+end

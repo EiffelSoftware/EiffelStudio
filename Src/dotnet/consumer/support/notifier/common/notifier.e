@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A notifier to informing users what assemblies are being consumed"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,29 +21,24 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize notifier
 		local
-			l_thread: detachable SYSTEM_THREAD
 			l_start: THREAD_START
+			t: SYSTEM_THREAD
 		do
 				-- To make void-safe happy.
-			l_thread := {SYSTEM_THREAD}.current_thread
-			check l_thread_attached: l_thread /= Void end
-			application_thread := l_thread
-
-				-- Create the real thread
-			create l_start.make (Current, $on_init)
-			create l_thread.make (l_start)
-			application_thread := l_thread
-			l_thread.priority := {THREAD_PRIORITY}.highest
-			l_thread.name := "Notifer"
-			l_thread.start
-
-			from
-				l_thread := {SYSTEM_THREAD}.current_thread
-				check l_thread_attached: l_thread /= Void end
-			until
-				attached notify_form as l_form and then l_form.visible
-			loop
-				l_thread.sleep (10)
+			check attached {SYSTEM_THREAD}.current_thread as l_thread then
+				application_thread := l_thread
+					-- Create the real thread
+				create l_start.make (Current, $on_init)
+				create t.make (l_start)
+				t.priority := {THREAD_PRIORITY}.highest
+				t.name := "Notifer"
+				t.start
+				from
+				until
+					attached notify_form as l_form and then l_form.visible
+				loop
+					l_thread.sleep (10)
+				end
 			end
 		ensure
 			application_thread_attached: application_thread /= Void
@@ -61,7 +56,6 @@ feature {NONE} -- Initialization
 			create l_context.make_from_main_form (l_notify_form)
 			{WINFORMS_APPLICATION}.add_idle (create {EVENT_HANDLER}.make (Current, $on_idle))
 			{WINFORMS_APPLICATION}.run (l_context)
-			l_notify_form.dispose
 		end
 
 	on_idle (a_sender: detachable SYSTEM_OBJECT; a_args: detachable EVENT_ARGS)
@@ -80,7 +74,11 @@ feature -- Clean Up
 			if attached notify_form then
 				{WINFORMS_APPLICATION}.exit
 			end
-			if application_thread.is_alive then
+			if
+				attached {SYSTEM_THREAD}.current_thread as t and then
+				t.managed_thread_id /= application_thread.managed_thread_id and then
+				application_thread.is_alive
+			then
 				application_thread.join
 			end
 			is_zombie := True
@@ -147,7 +145,7 @@ invariant
 	notify_form_attached: not is_zombie implies notify_form /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -178,4 +176,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class NOTIFIER
+end

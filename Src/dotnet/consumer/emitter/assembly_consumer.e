@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
-					Generate XML from given .NET assembly.
-					The XML can be used to consume the types
-					defined in the assembly from Eiffel.
-					]"
+			Generate XML from given .NET assembly.
+			The XML can be used to consume the types
+			defined in the assembly from Eiffel.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -177,58 +177,56 @@ feature {NONE} -- Implementation
 		require
 			non_void_assembly: ass /= Void
 		local
-			modules: detachable NATIVE_ARRAY [detachable MODULE]
 			i, j, type_count, module_count, generated_count: INTEGER
 			done: BOOLEAN
 			type_consumer: TYPE_CONSUMER
 			module_types: NATIVE_ARRAY [detachable SYSTEM_TYPE]
-			t: detachable SYSTEM_TYPE
+			t: SYSTEM_TYPE
 			type_name: TYPE_NAME_SOLVER
 			simple_name, dotnet_name: STRING
 			list: SORTED_TWO_WAY_LIST [TYPE_NAME_SOLVER]
-			used_names: detachable HASH_TABLE [STRING, STRING]
+			used_names: HASH_TABLE [STRING, STRING]
 			names: HASH_TABLE [SORTED_TWO_WAY_LIST [TYPE_NAME_SOLVER], STRING]
 			l_string_tuple: like string_tuple
 		do
-			modules := ass.get_modules
-			check modules_attached: modules /= Void end
-			module_count := modules.count
 			create names.make (1024)
-			l_string_tuple := string_tuple
-			from
-				i := 0
-			until
-				i >= module_count or done
-			loop
-				if attached modules.item (i) as l_module then
-					from
-						module_types := fetch_module_types (l_module)
-						type_count := module_types.count
-						j := 0
-					until
-						j >= type_count
-					loop
-						t := module_types.item (j)
-						if t /= Void and then is_consumed_type (t) then
-							generated_count := generated_count + 1
-							create type_name.make (t)
-							simple_name := type_name.simple_name
-							names.search (simple_name)
-							if names.found and attached names.found_item as l_names then
-								l_names.extend (type_name)
-							else
-								create list.make
-								list.extend (type_name)
-								names.put (list, simple_name)
+			if attached ass.get_modules as modules then
+				module_count := modules.count
+				from
+					i := 0
+				until
+					i >= module_count or done
+				loop
+					if attached modules.item (i) as l_module then
+						from
+							module_types := fetch_module_types (l_module)
+							type_count := module_types.count
+							j := 0
+						until
+							j >= type_count
+						loop
+							t := module_types.item (j)
+							if t /= Void and then is_consumed_type (t) then
+								generated_count := generated_count + 1
+								create type_name.make (t)
+								simple_name := type_name.simple_name
+								names.search (simple_name)
+								if names.found and attached names.found_item as l_names then
+									l_names.extend (type_name)
+								else
+									create list.make
+									list.extend (type_name)
+									names.put (list, simple_name)
+								end
 							end
+							j := j + 1
 						end
-						j := j + 1
 					end
+					if attached status_querier as l_status_querier then
+						done := l_status_querier.item (Void)
+					end
+					i := i + 1
 				end
-				if attached status_querier as l_status_querier then
-					done := l_status_querier.item (Void)
-				end
-				i := i + 1
 			end
 
 			create used_names.make (generated_count)
@@ -258,6 +256,7 @@ feature {NONE} -- Implementation
 			used_names := Void
 
 			from
+				l_string_tuple := string_tuple
 				names.start
 			until
 				names.after or done
@@ -357,7 +356,7 @@ feature {NONE} -- Implementation
 								l_error_printer.call (l_string_tuple)
 							else
 								if attached status_printer as l_status_printer then
-									l_string_tuple.put ({STRING_32} "Written " + s.name, 1)
+									l_string_tuple.put ({STRING_32} "Written " + s.name + ": " + type.dotnet_name, 1)
 									l_status_printer.call (l_string_tuple)
 								end
 								if attached status_querier as l_status_querier then
@@ -439,7 +438,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -470,5 +469,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class ASSEMBLY_CONSUMER
+end

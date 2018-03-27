@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Emitter (consumer) application entry point for command-line execution."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -97,7 +97,10 @@ feature {NONE} -- Initialization
 					end
 				end
 				l_domain := {APP_DOMAIN}.current_domain
-				check domain_attached: l_domain /= Void end
+				check
+					from_documentation_current_domain_attached: attached l_domain
+				then
+				end
 				resolve_subscriber.subscribe (l_domain, l_resolver)
 				assembly_loader.set_resolver (l_resolver)
 
@@ -406,7 +409,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -437,4 +440,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {APPLICATION}
+end

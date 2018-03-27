@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A type consumer used to consume only the basic type information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,22 +23,26 @@ feature -- Initialization
 			-- Initialize type consumer for type `t' with eiffel name `en'.
 		local
 			dotnet_name: STRING
-			l_declaring_type: detachable SYSTEM_TYPE
 		do
 			create overload_solver.make
 			create reserved_names.make (0)
 			create dotnet_name.make_from_cil (t.full_name)
 			if t.is_nested_public or t.is_nested_family or t.is_nested_fam_or_assem then
 					-- `t.declaring_type' contains enclosing type of current nested type.
-				l_declaring_type := t.declaring_type
-				check
-					l_declaring_type_attached: l_declaring_type /= Void
-					is_declaring_type_consumed: is_consumed_type (l_declaring_type)
+				if attached t.declaring_type as l_declaring_type then
+					check
+						is_declaring_type_consumed: is_consumed_type (l_declaring_type)
+					end
+					create {CONSUMED_NESTED_TYPE} consumed_type.make (
+						dotnet_name, en, t.is_interface, t.is_abstract,
+						False, t.is_value_type, t.is_enum, Void, create {ARRAYED_LIST [CONSUMED_REFERENCED_TYPE]}.make (0),
+						referenced_type_from_type (l_declaring_type))
+				else
+					check
+						declaring_type_attached: False
+					then
+					end
 				end
-				create {CONSUMED_NESTED_TYPE} consumed_type.make (
-					dotnet_name, en, t.is_interface, t.is_abstract,
-					False, t.is_value_type, t.is_enum, Void, create {ARRAYED_LIST [CONSUMED_REFERENCED_TYPE]}.make (0),
-					referenced_type_from_type (l_declaring_type))
 			else
 				create consumed_type.make (dotnet_name, en, t.is_interface, t.is_abstract,
 					False, t.is_value_type, t.is_enum, Void, create {ARRAYED_LIST [CONSUMED_REFERENCED_TYPE]}.make (0))
@@ -54,7 +58,7 @@ feature -- Initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -85,4 +89,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {TYPE_INFO_ONLY_CONSUMER}
+end

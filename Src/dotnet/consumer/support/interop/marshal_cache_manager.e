@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Marshalled interface for the Emitter"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -118,25 +118,27 @@ feature -- Lifetime Services
 
 	initialize_lifetime_service: SYSTEM_OBJECT
 			-- Obtains a lifetime service object to control the lifetime policy for this instance
-		local
-			l_lease: detachable ILEASE
 		do
-			l_lease ?= Precursor {MARSHAL_BY_REF_OBJECT}
-			check l_lease_attached: l_lease /= Void end
-
-			l_lease.initial_lease_time := {TIME_SPAN}.zero
-			Result := l_lease
+			if attached {ILEASE} Precursor {MARSHAL_BY_REF_OBJECT} as l_lease then
+				l_lease.initial_lease_time := {TIME_SPAN}.zero
+				Result := l_lease
+			else
+				check
+					from_documentation: False
+				then
+				end
+			end
 		ensure then
 			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Implementation
 
-	implementation: detachable CACHE_MANAGER;
+	implementation: detachable CACHE_MANAGER
 			-- Access to `CACHE_MANAGER'.
 
-note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+;note
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -167,5 +169,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class MARSHAL_CACHE_MANAGER
+end

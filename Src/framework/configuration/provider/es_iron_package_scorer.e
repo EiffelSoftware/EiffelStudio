@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {ES_IRON_PACKAGE_SCORER}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,10 +13,8 @@ feature -- Conversion
 	scored_list (a_query: READABLE_STRING_GENERAL; a_packages: LIST [IRON_PACKAGE]; a_keep_all: BOOLEAN): LIST [SCORED_VALUE [IRON_PACKAGE]]
 		local
 			l_filter_engine: detachable KMP_WILD
-			l_scores: LIST [SCORED_VALUE [IRON_PACKAGE]]
 			f: STRING_32
 			l_package: IRON_PACKAGE
-			k: detachable READABLE_STRING_GENERAL
 		do
 			if a_packages.is_empty then
 				create {ARRAYED_LIST [SCORED_VALUE [IRON_PACKAGE]]} Result.make (0)
@@ -67,8 +64,6 @@ feature -- Conversion
 		end
 
 	scores_factory: SCORER_CRITERIA_FACTORY [IRON_PACKAGE]
-		local
-			l_name_crit: SCORER_CRITERIA_AGENT [IRON_PACKAGE]
 		once
 			create Result.make
 			Result.register_builder ("name", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_PACKAGE]
@@ -204,7 +199,7 @@ feature -- Conversion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

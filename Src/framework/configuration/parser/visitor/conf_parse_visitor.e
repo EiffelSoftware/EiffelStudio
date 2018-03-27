@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Visitor that parses all needed configuration files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -55,16 +55,14 @@ feature -- Visit nodes
 	process_target (a_target: CONF_TARGET)
 			-- Visit `a_target'.
 		local
-			l_pre: detachable CONF_PRECOMPILE
 			l_libs: HASH_TABLE [CONF_TARGET, UUID]
 		do
 			if not is_error then
 					-- set application target
 				a_target.system.set_application_target (application_target)
 
-				l_pre := a_target.precompile
-				if l_pre /= Void then
-					l_pre.process (Current)
+				if attached a_target.precompile as p and then p.is_enabled (state) then
+					p.process (Current)
 				end
 
 				a_target.libraries.linear_representation.do_if (agent {CONF_LIBRARY}.process (Current), agent {CONF_LIBRARY}.is_enabled (state))
@@ -152,17 +150,18 @@ feature -- Visit nodes
 						l_existing_target.base.system.set_level (level + 1)
 					end
 
-					if application_target.options.is_warning_enabled (w_same_uuid) then
-						if not (create {PATH}.make_from_string (l_path)).is_same_file_as (l_existing_target.base.system.file_path) then
-								-- Check for redirection cases.
-							if
-								attached l_load.last_redirected_location as l_new_path and then
-								l_new_path.is_same_file_as (l_existing_target.base.system.file_path)
-							then
-									-- Ok same final file, as it is an ecf redirection
-							else
-								add_warning (create {CONF_ERROR_UUIDFILE}.make (a_library.target.system.file_name, l_path, l_existing_target.parent.system.file_name, l_existing_target.base.system.file_name))
-							end
+					if
+						application_target.options.is_warning_enabled (w_same_uuid) and then
+						not (create {PATH}.make_from_string (l_path)).is_same_file_as (l_existing_target.base.system.file_path)
+					then
+							-- Check for redirection cases.
+						if
+							attached l_load.last_redirected_location as l_new_path and then
+							l_new_path.is_same_file_as (l_existing_target.base.system.file_path)
+						then
+								-- Ok same final file, as it is an ecf redirection.
+						else
+							add_warning (create {CONF_ERROR_UUIDFILE}.make (a_library.target.system.file_name, l_path, l_existing_target.parent.system.file_name, l_existing_target.base.system.file_name))
 						end
 					end
 				else
@@ -211,16 +210,16 @@ feature -- Visit nodes
 			-- Visit `a_precompile'.
 		do
 				-- if precompile has all_libraries set, use those
-			if attached a_precompile.library_target as l_precomp_target and then attached l_precomp_target.system.all_libraries as l_libs then
-				from
-					l_libs.start
-				until
-					l_libs.after
+			if
+				attached a_precompile.library_target as l_precomp_target and then
+				attached l_precomp_target.system.all_libraries as l_libs
+			then
+				across
+					l_libs as l
 				loop
-					l_libs.item_for_iteration.system.set_application_target (application_target)
-					libraries.force ([application_target, l_libs.item_for_iteration], l_libs.key_for_iteration)
-					processed_targets.force (l_libs.item_for_iteration)
-					l_libs.forth
+					l.item.system.set_application_target (application_target)
+					libraries.force ([application_target, l.item], l.key)
+					processed_targets.force (l.item)
 				end
 			end
 			process_library (a_precompile)

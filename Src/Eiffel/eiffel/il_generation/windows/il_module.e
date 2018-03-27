@@ -1153,7 +1153,7 @@ feature -- Code generation
 			l_debug_info: MANAGED_POINTER
 			l_dbg_directory: CLI_DEBUG_DIRECTORY
 		do
-			create l_pe_file.make (module_file_name, is_dll or is_console_application, is_dll, is_32bits)
+			create l_pe_file.make (module_file_name, is_dll or is_console_application, is_dll, is_32bits, md_emit)
 			if is_debug_info_enabled then
 				create l_dbg_directory.make
 				l_debug_info := dbg_writer.debug_info (l_dbg_directory)
@@ -1163,7 +1163,6 @@ feature -- Code generation
 			if public_key /= Void then
 				l_pe_file.set_public_key (public_key, a_signing)
 			end
-			l_pe_file.set_emitter (md_emit)
 			l_pe_file.set_method_writer (method_writer)
 			if resources /= Void then
 				l_pe_file.set_resources (resources)

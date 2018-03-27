@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Summary description for {LIBRARY_INFO}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -46,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: READABLE_STRING_8
+	name: READABLE_STRING_32
 
 	uuid: UUID
 
@@ -100,7 +99,7 @@ feature -- Change
 			dependencies.force ([a_lib.name, a_lib.location.original_path, a_lib.location.evaluated_path])
 		end
 
-feature -- Status report
+feature {NONE} -- Output
 
 	debug_output: STRING_32
 		do
@@ -115,7 +114,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

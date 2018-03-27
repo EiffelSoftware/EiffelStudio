@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {ES_IRON_SERVICE}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -93,7 +92,6 @@ feature {NONE} -- Package management
 		local
 			l_prc_factory: PROCESS_FACTORY
 			l_prc_launcher: PROCESS
-			l_done_handler: ROUTINE
 			args: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_output: STRING
 		do
@@ -166,10 +164,8 @@ feature -- Access: Api
 
 	internal_installation_api: detachable IRON_INSTALLATION_API
 
-invariant
-
-note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+;note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

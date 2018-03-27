@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {ES_LIBRARY_SCORER}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,10 +13,8 @@ feature -- Conversion
 	scored_list (a_query: READABLE_STRING_GENERAL; a_libs: LIST [CONF_SYSTEM_VIEW]; a_keep_all: BOOLEAN): LIST [SCORED_VALUE [CONF_SYSTEM_VIEW]]
 		local
 			l_filter_engine: detachable KMP_WILD
-			l_scores: LIST [SCORED_VALUE [CONF_SYSTEM_VIEW]]
 			f: STRING_32
 			cfg: CONF_SYSTEM_VIEW
-			k: detachable READABLE_STRING_GENERAL
 		do
 			if a_libs.is_empty then
 				create {ARRAYED_LIST [SCORED_VALUE [CONF_SYSTEM_VIEW]]} Result.make (0)
@@ -63,7 +60,6 @@ feature -- Conversion
 			l_scores: LIST [SCORED_VALUE [CONF_SYSTEM_VIEW]]
 			f: STRING_32
 			cfg: CONF_SYSTEM_VIEW
-			k: detachable READABLE_STRING_GENERAL
 		do
 			Result := a_libs
 			create {ARRAYED_LIST [CONF_SYSTEM_VIEW]} Result.make (a_libs.count)
@@ -173,8 +169,6 @@ feature -- Conversion
 		end
 
 	scores_factory: SCORER_CRITERIA_FACTORY [CONF_SYSTEM_VIEW]
-		local
-			l_name_crit: SCORER_CRITERIA_AGENT [CONF_SYSTEM_VIEW]
 		once
 			create Result.make
 			Result.register_builder ("name", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [CONF_SYSTEM_VIEW]
@@ -310,7 +304,7 @@ feature -- Conversion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

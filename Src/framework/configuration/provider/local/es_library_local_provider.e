@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {ES_LIBRARY_LOCAL_PROVIDER}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -78,7 +77,6 @@ feature {NONE} -- Access
 			l_dir: DIRECTORY
 			l_libraries: STRING_TABLE [BOOLEAN]
 			l_lib_path: STRING_32
-			l_location: CONF_DIRECTORY_LOCATION
 		do
 			l_real_path := real_directory_path (a_target, a_path)
 			create l_dir.make_with_path (l_real_path)
@@ -224,7 +222,7 @@ feature {NONE} -- Access
 
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

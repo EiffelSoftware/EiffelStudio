@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Iterator that iterates through a configuration, looking only at objects that are enabled for the current platform/build."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,13 +41,11 @@ feature -- Visit nodes
 	process_target (a_target: CONF_TARGET)
 			-- Visit `a_target'.
 		local
-			l_pre: detachable CONF_PRECOMPILE
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				l_pre := a_target.precompile
-				if l_pre /= Void and then l_pre.is_enabled (state) then
-					l_pre.process (Current)
+				if attached a_target.precompile as p and then p.is_enabled (state) then
+					p.process (Current)
 				end
 				a_target.libraries.linear_representation.do_if (agent {CONF_LIBRARY}.process (Current), agent {CONF_LIBRARY}.is_enabled (state))
 				a_target.assemblies.linear_representation.do_if (agent {CONF_ASSEMBLY}.process (Current), agent {CONF_ASSEMBLY}.is_enabled (state))
@@ -69,7 +67,7 @@ invariant
 	state_not_void: state /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

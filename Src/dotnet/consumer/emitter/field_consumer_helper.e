@@ -15,12 +15,11 @@ feature {NONE} -- Query
 		require
 			a_fi_attached: a_fi /= Void
 			a_fi_is_literal: a_fi.is_literal
-		local
-			l_obj: detachable SYSTEM_OBJECT
 		do
-			l_obj := a_fi.get_raw_constant_value
-			check l_obj_attached: l_obj /= Void end
-			Result := l_obj
+			Result := a_fi.get_raw_constant_value
+			if not attached Result then
+				check False then end
+			end
 		end
 
 note

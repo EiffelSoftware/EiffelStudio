@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "{CONSUMED_TYPE} factory"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,16 +45,16 @@ feature {NONE} -- Initialization
 			valid_eiffel_name: not en.is_empty
 		local
 			dotnet_name: STRING
-			inter: detachable NATIVE_ARRAY [detachable SYSTEM_TYPE]
+			inter: NATIVE_ARRAY [detachable SYSTEM_TYPE]
 			interfaces: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE]
-			parent: detachable CONSUMED_REFERENCED_TYPE
+			parent: CONSUMED_REFERENCED_TYPE
 			i, nb, count: INTEGER
-			parent_type, l_decl_type: detachable SYSTEM_TYPE
+			parent_type: SYSTEM_TYPE
 			l_force_sealed: BOOLEAN
-			l_members: detachable NATIVE_ARRAY [detachable MEMBER_INFO]
-			l_constructors: detachable NATIVE_ARRAY [detachable CONSTRUCTOR_INFO]
-			l_properties: detachable NATIVE_ARRAY [detachable PROPERTY_INFO]
-			l_events: detachable NATIVE_ARRAY [detachable EVENT_INFO]
+			l_members: NATIVE_ARRAY [detachable MEMBER_INFO]
+			l_constructors: NATIVE_ARRAY [detachable CONSTRUCTOR_INFO]
+			l_properties: NATIVE_ARRAY [detachable PROPERTY_INFO]
+			l_events: NATIVE_ARRAY [detachable EVENT_INFO]
 			l_members_count: INTEGER
 		do
 			create overload_solver.make
@@ -102,15 +102,20 @@ feature {NONE} -- Initialization
 
 			if t.is_nested_public or t.is_nested_family or t.is_nested_fam_or_assem then
 					-- `t.declaring_type' contains enclosing type of current nested type.
-				l_decl_type := t.declaring_type
-				check
-					l_decl_type_attached: l_decl_type /= Void
-					is_declaring_type_consumed: is_consumed_type (l_decl_type)
+				if attached t.declaring_type as l_decl_type then
+					check
+						is_declaring_type_consumed: is_consumed_type (l_decl_type)
+					end
+					create {CONSUMED_NESTED_TYPE} consumed_type.make (
+						dotnet_name, en, t.is_interface, (not l_force_sealed and then t.is_abstract),
+						l_force_sealed, t.is_value_type, t.is_enum, parent, interfaces,
+						referenced_type_from_type (l_decl_type))
+				else
+					check
+						declaring_type_attached: False
+					then
+					end
 				end
-				create {CONSUMED_NESTED_TYPE} consumed_type.make (
-					dotnet_name, en, t.is_interface, (not l_force_sealed and then t.is_abstract),
-					l_force_sealed, t.is_value_type, t.is_enum, parent, interfaces,
-					referenced_type_from_type (l_decl_type))
 			else
 				create consumed_type.make (dotnet_name, en, t.is_interface, (not l_force_sealed and then t.is_abstract),
 					l_force_sealed, t.is_value_type, t.is_enum, parent, interfaces)
@@ -214,23 +219,16 @@ feature -- Basic Operation
 			l_fields: ARRAYED_LIST [CONSUMED_FIELD]
 			l_functions, l_other_functions: ARRAYED_LIST [CONSUMED_FUNCTION]
 			l_procedures: ARRAYED_LIST [CONSUMED_PROCEDURE]
-			cons: detachable CONSTRUCTOR_INFO
-			l_field: detachable FIELD_INFO
-			l_meth: detachable METHOD_INFO
-			l_property: detachable PROPERTY_INFO
-			l_event: detachable EVENT_INFO
-			l_member: detachable MEMBER_INFO
+			cons: CONSTRUCTOR_INFO
 			l_setter: CONSUMED_PROCEDURE
 			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]
 			l_events: ARRAYED_LIST [CONSUMED_EVENT]
 			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
 			is_enum: BOOLEAN
-			underlying_enum_type: detachable CONSUMED_REFERENCED_TYPE
+			underlying_enum_type: CONSUMED_REFERENCED_TYPE
 
-			cp_function: detachable CONSUMED_FUNCTION
-			cp_procedure: detachable CONSUMED_PROCEDURE
-			cp_property: detachable CONSUMED_PROPERTY
-			cp_event: detachable CONSUMED_EVENT
+			cp_function: CONSUMED_FUNCTION
+			cp_procedure: CONSUMED_PROCEDURE
 			cp_field: CONSUMED_FIELD
 		do
 			if not rescued then
@@ -277,63 +275,68 @@ feature -- Basic Operation
 				until
 					i = nb
 				loop
-					l_member := internal_members.item (i)
-					if l_member /= Void then
+					if attached internal_members.item (i) as l_member then
 						if l_member.member_type = {MEMBER_TYPES}.method then
-							l_meth ?= l_member
-							check
-								is_method: l_meth /= Void
-							end
-							if not is_property_or_event (l_meth) then
-								if is_function (l_meth) then
-									cp_function := consumed_function (l_meth, False)
-									if cp_function /= Void then
-										l_functions.extend (cp_function)
+							if attached {METHOD_INFO} l_member as l_meth then
+								if not is_property_or_event (l_meth) then
+									if is_function (l_meth) then
+										cp_function := consumed_function (l_meth, False)
+										if cp_function /= Void then
+											l_functions.extend (cp_function)
+										end
+									else
+										cp_procedure := consumed_procedure (l_meth, False)
+										if cp_procedure /= Void then
+											l_procedures.extend (cp_procedure)
+										end
 									end
 								else
-									cp_procedure := consumed_procedure (l_meth, False)
-									if cp_procedure /= Void then
-										l_procedures.extend (cp_procedure)
+									-- The method will be added at the same time than the property or the event.
+								end
+							else
+								check
+									is_method_info: False
+								end
+							end
+						elseif l_member.member_type = {MEMBER_TYPES}.field then
+							if attached {FIELD_INFO} l_member as l_field then
+								if is_enum and then not l_field.is_literal and attached l_field.field_type as l_field_type then
+										-- Get base type of enumeration
+									underlying_enum_type := referenced_type_from_type (l_field_type)
+								end
+								if is_consumed_field (l_field) then
+									cp_field := consumed_field (l_field)
+									l_fields.extend (cp_field)
+									if is_public_field (l_field) and not is_init_only_field (l_field) then
+										l_setter := attribute_setter_feature (l_field, l_fields.last.eiffel_name)
+										cp_field.set_setter (l_setter)
+										l_procedures.extend (l_setter)
 									end
 								end
 							else
-								-- The method will be added at the same time than the property or the event.
-							end
-						elseif l_member.member_type = {MEMBER_TYPES}.field then
-							l_field ?= l_member
-							check
-								is_field: l_field /= Void
-							end
-							if is_enum and then not l_field.is_literal and attached l_field.field_type as l_field_type then
-									-- Get base type of enumeration
-								underlying_enum_type := referenced_type_from_type (l_field_type)
-							end
-							if is_consumed_field (l_field) then
-								cp_field := consumed_field (l_field)
-								l_fields.extend (cp_field)
-								if is_public_field (l_field) and not is_init_only_field (l_field) then
-									l_setter := attribute_setter_feature (l_field, l_fields.last.eiffel_name)
-									cp_field.set_setter (l_setter)
-									l_procedures.extend (l_setter)
+								check
+									is_field_info: False
 								end
 							end
 						elseif l_member.member_type = {MEMBER_TYPES}.property then
-							l_property ?= l_member
-							check
-								is_property: l_property /= Void
-							end
-							cp_property := consumed_property (l_property)
-							if cp_property /= Void then
-								l_properties.extend (cp_property)
+							if attached {PROPERTY_INFO} l_member as l_property then
+								if attached consumed_property (l_property) as cp_property then
+									l_properties.extend (cp_property)
+								end
+							else
+								check
+									is_property_info: False
+								end
 							end
 						elseif l_member.member_type = {MEMBER_TYPES}.event then
-							l_event ?= l_member
-							check
-								is_event: l_event /= Void
-							end
-							cp_event := consumed_event (l_event)
-							if cp_event /= Void then
-								l_events.extend (cp_event)
+							if attached {EVENT_INFO} l_member as l_event then
+								if attached consumed_event (l_event) as cp_event then
+									l_events.extend (cp_event)
+								end
+							else
+								check
+									is_event_info: False
+								end
 							end
 						end
 					end
@@ -389,9 +392,9 @@ feature -- Basic Operation
 			-- Add all methods (properties, events, procedures and functions) in overload_solver.
 		local
 			i, nb: INTEGER
-			l_member: detachable MEMBER_INFO
-			l_property: detachable PROPERTY_INFO
-			l_event: detachable EVENT_INFO
+			l_member: MEMBER_INFO
+			l_property: PROPERTY_INFO
+			l_event: EVENT_INFO
 			l_properties: NATIVE_ARRAY [detachable PROPERTY_INFO]
 			l_events: NATIVE_ARRAY [detachable EVENT_INFO]
 			l_members: NATIVE_ARRAY [detachable MEMBER_INFO]
@@ -463,66 +466,69 @@ feature {NONE} -- Implementation
 			is_consumed_field: is_consumed_field (info)
 		local
 			dotnet_name: STRING
-			l_type, l_field_type: detachable SYSTEM_TYPE
-			l_value: detachable SYSTEM_OBJECT
+			l_value: SYSTEM_OBJECT
 			l_code: TYPE_CODE
 		do
 			create dotnet_name.make_from_cil (info.name)
-			l_type := info.declaring_type
-			l_field_type := info.field_type
-			check
-				l_type_attached: l_type /= Void
-				l_field_type_attached: l_field_type /= Void
-			end
-			if info.is_literal then
-				l_value := field_value (info)
-				if l_field_type.is_enum then
-						-- Conversion to integer is required to get associated value of `info',
-						-- Otherwise we simply get an object where calling `ToString' on it
-						-- will print out field name.
-					l_code := {SYSTEM_CONVERT}.get_type_code (l_value)
-					inspect l_code
-					when {TYPE_CODE}.int_16 then
-						l_value := {SYSTEM_CONVERT}.to_int_16 (l_value)
-					when {TYPE_CODE}.int_32 then
-						l_value := {SYSTEM_CONVERT}.to_int_32 (l_value)
-					when {TYPE_CODE}.int_64 then
-						l_value := {SYSTEM_CONVERT}.to_int_64 (l_value)
-					when {TYPE_CODE}.u_int_16 then
-						l_value := {SYSTEM_CONVERT}.to_u_int_16 (l_value)
-					when {TYPE_CODE}.u_int_32 then
-						l_value := {SYSTEM_CONVERT}.to_u_int_32 (l_value)
-					when {TYPE_CODE}.u_int_64 then
-						l_value := {SYSTEM_CONVERT}.to_u_int_64 (l_value)
-					when {TYPE_CODE}.double then
-						l_value := {SYSTEM_CONVERT}.to_double (l_value)
-					when {TYPE_CODE}.single then
-						l_value := {SYSTEM_CONVERT}.to_single (l_value)
-					when {TYPE_CODE}.char then
-						l_value := {SYSTEM_CONVERT}.to_char (l_value)
-					when {TYPE_CODE}.boolean then
-						l_value := {SYSTEM_CONVERT}.to_boolean (l_value)
-					else
-						l_value := {SYSTEM_CONVERT}.to_int_32 (l_value)
+			if
+				attached info.declaring_type as l_type and then
+				attached info.field_type as l_field_type
+			then
+				if info.is_literal then
+					l_value := field_value (info)
+					if l_field_type.is_enum then
+							-- Conversion to integer is required to get associated value of `info',
+							-- Otherwise we simply get an object where calling `ToString' on it
+							-- will print out field name.
+						l_code := {SYSTEM_CONVERT}.get_type_code (l_value)
+						inspect l_code
+						when {TYPE_CODE}.int_16 then
+							l_value := {SYSTEM_CONVERT}.to_int_16 (l_value)
+						when {TYPE_CODE}.int_32 then
+							l_value := {SYSTEM_CONVERT}.to_int_32 (l_value)
+						when {TYPE_CODE}.int_64 then
+							l_value := {SYSTEM_CONVERT}.to_int_64 (l_value)
+						when {TYPE_CODE}.u_int_16 then
+							l_value := {SYSTEM_CONVERT}.to_u_int_16 (l_value)
+						when {TYPE_CODE}.u_int_32 then
+							l_value := {SYSTEM_CONVERT}.to_u_int_32 (l_value)
+						when {TYPE_CODE}.u_int_64 then
+							l_value := {SYSTEM_CONVERT}.to_u_int_64 (l_value)
+						when {TYPE_CODE}.double then
+							l_value := {SYSTEM_CONVERT}.to_double (l_value)
+						when {TYPE_CODE}.single then
+							l_value := {SYSTEM_CONVERT}.to_single (l_value)
+						when {TYPE_CODE}.char then
+							l_value := {SYSTEM_CONVERT}.to_char (l_value)
+						when {TYPE_CODE}.boolean then
+							l_value := {SYSTEM_CONVERT}.to_boolean (l_value)
+						else
+							l_value := {SYSTEM_CONVERT}.to_int_32 (l_value)
+						end
 					end
+					create {CONSUMED_LITERAL_FIELD} Result.make (
+						unique_feature_name (dotnet_name),
+						dotnet_name,
+						referenced_type_from_type (l_field_type),
+						info.is_static,
+						info.is_public,
+						literal_field_value (l_value),
+						referenced_type_from_type (l_type))
+				else
+					create Result.make (
+						unique_feature_name (dotnet_name),
+						dotnet_name,
+						referenced_type_from_type (l_field_type),
+						info.is_static,
+						info.is_public,
+						info.is_init_only,
+						referenced_type_from_type (l_type))
 				end
-				create {CONSUMED_LITERAL_FIELD} Result.make (
-					unique_feature_name (dotnet_name),
-					dotnet_name,
-					referenced_type_from_type (l_field_type),
-					info.is_static,
-					info.is_public,
-					literal_field_value (l_value),
-					referenced_type_from_type (l_type))
 			else
-				create Result.make (
-					unique_feature_name (dotnet_name),
-					dotnet_name,
-					referenced_type_from_type (l_field_type),
-					info.is_static,
-					info.is_public,
-					info.is_init_only,
-					referenced_type_from_type (l_type))
+				check
+					from_documentation: False
+				then
+				end
 			end
 		end
 
@@ -531,36 +537,37 @@ feature {NONE} -- Implementation
 		require
 			non_void_info: info /= Void
 		local
-			l_unique_eiffel_name: detachable STRING
+			l_unique_eiffel_name: STRING
 			l_dotnet_name: STRING
-			l_info_name: detachable SYSTEM_STRING
-			l_decl_type: detachable SYSTEM_TYPE
 		do
 			if is_consumed_method (info) then
-				l_info_name := info.name
-				l_decl_type := info.declaring_type
-				check
-					l_info_name_attached: l_info_name /= Void
-					l_decl_type_attached: l_decl_type /= Void
+				if
+					attached info.name as l_info_name and then
+					attached info.declaring_type as l_decl_type
+				then
+					create l_dotnet_name.make_from_cil (l_info_name)
+					l_unique_eiffel_name := overload_solver.unique_eiffel_name (l_info_name, info.get_parameters, info.return_type, l_decl_type)
+					if l_unique_eiffel_name = Void then
+						create l_unique_eiffel_name.make_from_cil (l_info_name)
+					end
+					create Result.make (
+						l_unique_eiffel_name,
+						l_dotnet_name,
+						formatted_feature_name (l_dotnet_name),
+						arguments (info),
+						info.is_final,
+						info.is_static,
+						info.is_abstract,
+						info.is_public,
+						(info.attributes.to_integer & {METHOD_ATTRIBUTES}.new_slot.to_integer) = {METHOD_ATTRIBUTES}.new_slot.to_integer,
+						info.is_virtual,
+						property_or_event,
+						referenced_type_from_type (l_decl_type))
+				else
+					check
+						from_documentation: False
+					end
 				end
-				create l_dotnet_name.make_from_cil (l_info_name)
-				l_unique_eiffel_name := overload_solver.unique_eiffel_name (l_info_name, info.get_parameters, info.return_type, l_decl_type)
-				if l_unique_eiffel_name = Void then
-					create l_unique_eiffel_name.make_from_cil (l_info_name)
-				end
-				create Result.make (
-					l_unique_eiffel_name,
-					l_dotnet_name,
-					formatted_feature_name (l_dotnet_name),
-					arguments (info),
-					info.is_final,
-					info.is_static,
-					info.is_abstract,
-					info.is_public,
-					(info.attributes.to_integer & {METHOD_ATTRIBUTES}.new_slot.to_integer) = {METHOD_ATTRIBUTES}.new_slot.to_integer,
-					info.is_virtual,
-					property_or_event,
-					referenced_type_from_type (l_decl_type))
 			end
 		end
 
@@ -569,41 +576,41 @@ feature {NONE} -- Implementation
 		require
 			non_void_info: info /= Void
 		local
-			l_unique_eiffel_name: detachable STRING
+			l_unique_eiffel_name: STRING
 			l_dotnet_name: STRING
-			l_info_name: detachable SYSTEM_STRING
-			l_decl_type, l_ret_type: detachable SYSTEM_TYPE
 		do
 			if is_consumed_method (info) then
-				l_info_name := info.name
-				l_decl_type := info.declaring_type
-				l_ret_type := info.return_type
-				check
-					l_info_name_attached: l_info_name /= Void
-					l_decl_type_attached: l_decl_type /= Void
-					l_ret_type_attached: l_ret_type /= Void
+				if
+					attached info.name as l_info_name and then
+					attached info.declaring_type as l_decl_type and then
+					attached info.return_type as l_ret_type
+				then
+					create l_dotnet_name.make_from_cil (l_info_name)
+					l_unique_eiffel_name := overload_solver.unique_eiffel_name (l_info_name, info.get_parameters, l_ret_type, l_decl_type)
+					if l_unique_eiffel_name = Void then
+						create l_unique_eiffel_name.make_from_cil (l_info_name)
+					end
+					create Result.make (
+						l_unique_eiffel_name,
+						l_dotnet_name,
+						formatted_feature_name (l_dotnet_name),
+						arguments (info),
+						referenced_type_from_type (l_ret_type),
+						info.is_final,
+						info.is_static,
+						info.is_abstract,
+						is_infix (info),
+						is_prefix (info),
+						info.is_public,
+						(info.attributes.to_integer & {METHOD_ATTRIBUTES}.new_slot.to_integer) = {METHOD_ATTRIBUTES}.new_slot.to_integer,
+						info.is_virtual,
+						property_or_event,
+						referenced_type_from_type (l_decl_type))
+				else
+					check
+						from_documentation: False
+					end
 				end
-				create l_dotnet_name.make_from_cil (l_info_name)
-				l_unique_eiffel_name := overload_solver.unique_eiffel_name (l_info_name, info.get_parameters, l_ret_type, l_decl_type)
-				if l_unique_eiffel_name = Void then
-					create l_unique_eiffel_name.make_from_cil (l_info_name)
-				end
-				create Result.make (
-					l_unique_eiffel_name,
-					l_dotnet_name,
-					formatted_feature_name (l_dotnet_name),
-					arguments (info),
-					referenced_type_from_type (l_ret_type),
-					info.is_final,
-					info.is_static,
-					info.is_abstract,
-					is_infix (info),
-					is_prefix (info),
-					info.is_public,
-					(info.attributes.to_integer & {METHOD_ATTRIBUTES}.new_slot.to_integer) = {METHOD_ATTRIBUTES}.new_slot.to_integer,
-					info.is_virtual,
-					property_or_event,
-					referenced_type_from_type (l_decl_type))
 			end
 		end
 
@@ -612,13 +619,10 @@ feature {NONE} -- Implementation
 		require
 			non_void_property_info: info /= Void
 		local
-			dotnet_name: STRING
-			l_getter: detachable CONSUMED_FUNCTION
-			l_setter: detachable CONSUMED_PROCEDURE
-			l_info: detachable METHOD_INFO
-			l_type: detachable SYSTEM_TYPE
+			l_getter: CONSUMED_FUNCTION
+			l_setter: CONSUMED_PROCEDURE
+			l_info: METHOD_INFO
 		do
-			create dotnet_name.make_from_cil (info.name)
 			if info.can_read then
 				l_info := property_getter (info)
 				if l_info /= Void then
@@ -631,19 +635,22 @@ feature {NONE} -- Implementation
 					l_setter := consumed_procedure (l_info, True)
 				end
 			end
-			check
-				is_property: l_info /= Void
-			end
-			if l_getter /= Void or l_setter /= Void then
-				l_type := info.declaring_type
-				check l_type_attached: l_type /= Void end
-				create Result.make (
-					dotnet_name,
-					l_info.is_public,
-					l_info.is_static,
-					referenced_type_from_type (l_type),
-					l_getter,
-					l_setter)
+			if attached l_info then
+				if l_getter /= Void or l_setter /= Void then
+					if attached info.declaring_type as l_type then
+						create Result.make (
+							create {STRING}.make_from_cil (info.name),
+							l_info.is_public,
+							l_info.is_static,
+							referenced_type_from_type (l_type),
+							l_getter,
+							l_setter)
+					else
+						check
+							from_documentation_declaring_type_attached: False
+						end
+					end
+				end
 			end
 		end
 
@@ -652,10 +659,9 @@ feature {NONE} -- Implementation
 		require
 			non_void_event_info: info /= Void
 		local
-			l_add_method, l_remove_method, l_raise_method: detachable METHOD_INFO
+			l_add_method, l_remove_method, l_raise_method: METHOD_INFO
 			dotnet_name: STRING
-			l_raiser, l_adder, l_remover: detachable CONSUMED_PROCEDURE
-			l_type: detachable SYSTEM_TYPE
+			l_raiser, l_adder, l_remover: CONSUMED_PROCEDURE
 		do
 			l_add_method := info.get_add_method_boolean (True)
 			l_remove_method := info.get_remove_method_boolean (True)
@@ -673,16 +679,20 @@ feature {NONE} -- Implementation
 
 			create dotnet_name.make_from_cil (info.name)
 			if l_remover /= Void or l_raiser /= Void or l_adder /= Void then
-				l_type := info.declaring_type
-				check l_type_attached: l_type /= Void end
-				create Result.make (
-					dotnet_name,
-					True,
-					referenced_type_from_type (l_type),
-					l_raiser,
-					l_adder,
-					l_remover
-					)
+				if attached info.declaring_type as l_type then
+					create Result.make (
+						dotnet_name,
+						True,
+						referenced_type_from_type (l_type),
+						l_raiser,
+						l_adder,
+						l_remover
+						)
+				else
+					check
+						from_documentation_declaring_type_attached: False
+					end
+				end
 			end
 		end
 
@@ -691,7 +701,7 @@ feature {NONE} -- Implementation
 		require
 			a_type_attached: a_type /= Void
 		local
-			l_base: detachable SYSTEM_TYPE
+			l_base: SYSTEM_TYPE
 		do
 			l_base := a_type.base_type
 			if l_base /= Void then
@@ -859,7 +869,7 @@ feature {NONE} -- Status Setting.
 		require
 			non_void_info: info /= Void
 		local
-			l_info: detachable METHOD_INFO
+			l_info: METHOD_INFO
 		do
 			if info.can_read then
 				l_info := property_getter (info)
@@ -902,8 +912,8 @@ feature {NONE} -- Status Setting.
 		require
 			non_void_info: info /= Void
 		local
-			l_key: detachable SYSTEM_STRING
-			l_dotnet_name: detachable SYSTEM_STRING
+			l_key: SYSTEM_STRING
+			l_dotnet_name: SYSTEM_STRING
 		do
 			if is_consumed_method (info) then
 				l_dotnet_name := info.name
@@ -922,22 +932,23 @@ feature {NONE} -- Status Setting.
 		require
 			non_void_info: info /= Void
 		local
-			l_key: detachable SYSTEM_STRING
-			l_dotnet_name: detachable SYSTEM_STRING
+			l_key: SYSTEM_STRING
+			l_dotnet_name: SYSTEM_STRING
 			l_index: INTEGER
 		do
 			l_dotnet_name := info.name
-			check l_dotnet_name_attached: l_dotnet_name /= Void end
-			l_index := l_dotnet_name.last_index_of_character ('.')
-			if l_index > 0 then
-				l_dotnet_name := l_dotnet_name.substring (l_index + 1)
-			end
-			create l_key.make_from_c_and_count (' ', 0)
-			l_key := l_key.concat_string_string (l_dotnet_name, key_args (info.get_parameters))
-			if properties_and_events.contains_key (l_key) then
-				Result := True
+			if attached l_dotnet_name then
+				l_index := l_dotnet_name.last_index_of_character ('.')
+				if l_index > 0 then
+					l_dotnet_name := l_dotnet_name.substring (l_index + 1)
+				end
+				create l_key.make_from_c_and_count (' ', 0)
+				l_key := l_key.concat_string_string (l_dotnet_name, key_args (info.get_parameters))
+				Result := properties_and_events.contains_key (l_key)
 			else
-				Result := False
+				check
+					from_documentation_name_attached: False
+				end
 			end
 		end
 
@@ -983,12 +994,14 @@ feature {NONE} -- Status Setting.
 
 	Void_type: SYSTEM_TYPE
 			-- Void .NET type
-		local
-			l_type: detachable SYSTEM_TYPE
 		once
-			l_type := {SYSTEM_TYPE}.get_type ("System.Void")
-			check l_type_attached: l_type /= Void end
-			Result := l_type
+			Result := {SYSTEM_TYPE}.get_type ("System.Void")
+			if not attached Result then
+				check
+					void_type_exists: False
+				then
+				end
+			end
 		end
 
 	Operator_name_prefix: SYSTEM_STRING = "op_"
@@ -1003,13 +1016,13 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			-- Updates members of interface to present a flat list of members and to include members of System.Object.
 		local
 			l_members: like internal_members
-			l_method, l_obj_method: detachable METHOD_INFO
+			l_obj_method: METHOD_INFO
 			l_processed: HASHTABLE
 			i, j, k, nb: INTEGER
 			l_matched: BOOLEAN
 			l_object_methods: like Object_methods
 			l_meth_name: STRING
-			l_params, l_obj_params: detachable NATIVE_ARRAY [detachable PARAMETER_INFO]
+			l_params, l_obj_params: NATIVE_ARRAY [detachable PARAMETER_INFO]
 		do
 			create l_processed.make_from_capacity (10)
 
@@ -1027,8 +1040,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			until
 				i > nb
 			loop
-				l_method ?= l_members.item (i)
-				if l_method /= Void then
+				if attached {METHOD_INFO} l_members.item (i) as l_method then
 					l_meth_name := object_key_name (l_method)
 					l_obj_method := l_object_methods.item (l_meth_name)
 					if l_obj_method /= Void then
@@ -1088,12 +1100,12 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			l_merged_members: NATIVE_ARRAY [MEMBER_INFO]
 			l_merged_properties: NATIVE_ARRAY [PROPERTY_INFO]
 			l_merged_events: NATIVE_ARRAY [EVENT_INFO]
-			l_interfaces: detachable NATIVE_ARRAY [detachable SYSTEM_TYPE]
+			l_interfaces: NATIVE_ARRAY [detachable SYSTEM_TYPE]
 			i, nb: INTEGER
-			l_interface: detachable SYSTEM_TYPE
-			l_members: detachable NATIVE_ARRAY [detachable MEMBER_INFO]
-			l_properties: detachable NATIVE_ARRAY [detachable PROPERTY_INFO]
-			l_events: detachable NATIVE_ARRAY [detachable EVENT_INFO]
+			l_interface: SYSTEM_TYPE
+			l_members: NATIVE_ARRAY [detachable MEMBER_INFO]
+			l_properties: NATIVE_ARRAY [detachable PROPERTY_INFO]
+			l_events: NATIVE_ARRAY [detachable EVENT_INFO]
 		do
 			l_members := t.get_members_binding_flags ({BINDING_FLAGS}.instance |
 					{BINDING_FLAGS}.static | {BINDING_FLAGS}.public |
@@ -1157,8 +1169,8 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			-- List of members of System.Object.
 		local
 			l_type: SYSTEM_TYPE
-			l_methods: detachable NATIVE_ARRAY [detachable METHOD_INFO]
-			l_meth: detachable METHOD_INFO
+			l_methods: NATIVE_ARRAY [detachable METHOD_INFO]
+			l_meth: METHOD_INFO
 			i, nb: INTEGER
 		once
 			l_type := {SYSTEM_OBJECT}
@@ -1198,41 +1210,26 @@ feature {NONE} -- Added features of System.Object to Interfaces
 		require
 			a_method_attached: a_method /= Void
 		local
-			l_params: detachable NATIVE_ARRAY [detachable PARAMETER_INFO]
-			l_param: detachable PARAMETER_INFO
-			l_res: detachable STRING_BUILDER
-			l_result: detachable SYSTEM_STRING
 			l_count, i: INTEGER
 		do
-			create l_res.make (30)
-			l_res := l_res.append (a_method.name)
-			check l_res_attached: l_res /= Void end
-			l_res := l_res.append ('(')
-			check l_res_attached: l_res /= Void end
-			l_params := a_method.get_parameters
-			if l_params /= Void then
+			create Result.make_from_cil (a_method.name)
+			Result.append_character ('(')
+			if attached a_method.get_parameters as l_params then
 				from
 					l_count := l_params.length
 				until
 					i = l_count
 				loop
-					l_param := l_params.item (i)
-					i := i + 1
-					if l_param /= Void and then attached l_param.parameter_type as l_type then
-						l_res := l_res.append (l_type.name)
-						check l_res_attached: l_res /= Void end
-						if i < l_count then
-							l_res := l_res.append (',')
-							check l_res_attached: l_res /= Void end
+					if attached l_params.item (i) as l_param and then attached l_param.parameter_type as l_type then
+						if i > 0 then
+							Result.append_character (',')
 						end
+						Result.append (create {STRING}.make_from_cil (l_type.name))
 					end
+					i := i + 1
 				end
 			end
-			l_res := l_res.append (')')
-			check l_res_attached: l_res /= Void end
-			l_result := l_res.to_string
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			Result.append_character (')')
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -1344,32 +1341,36 @@ feature {NONE} -- Added features for ENUM types.
 			non_void_field: a_field /= Void and then a_field.name /= Void
 			public_field: is_public_field (a_field)
 			valid_field_name: a_field_name /= Void and then not a_field_name.is_empty
-		local
-			l_eiffel_name: STRING
-			l_arg: CONSUMED_ARGUMENT
-			l_type: detachable SYSTEM_TYPE
-			l_dotnet_field_name: detachable SYSTEM_STRING
 		do
-			l_eiffel_name := "set_" + a_field_name + "_field"
-			l_type := a_field.field_type
-			check l_type_attached: l_type /= Void end
-			create l_arg.make ("a_value", "a_value", referenced_type_from_type (l_type))
-			l_dotnet_field_name := a_field.name
-			check l_dotnet_field_name_attached: l_dotnet_field_name /= Void end
-			create Result.make_attribute_setter (l_eiffel_name, l_dotnet_field_name,
-												l_arg,
-												internal_referenced_type,
-												a_field.is_static)
+			if
+				attached a_field.field_type as l_type and then
+				attached a_field.name as l_dotnet_field_name
+			then
+				create Result.make_attribute_setter
+					("set_" + a_field_name + "_field",
+					l_dotnet_field_name,
+					create {CONSUMED_ARGUMENT}.make ("a_value", "a_value", referenced_type_from_type (l_type)),
+					internal_referenced_type,
+					a_field.is_static)
+			else
+				check
+					from_documentation_field_type_and_name_attached: False
+				then
+				end
+			end
 		end
 
 	integer_type: CONSUMED_REFERENCED_TYPE
 			-- Referenced type of `System.Int32'.
-		local
-			l_type: detachable SYSTEM_TYPE
 		do
-			l_type := {SYSTEM_TYPE}.get_type ("System.Int32")
-			check l_type_attached: l_type /= Void end
-			Result := referenced_type_from_type (l_type)
+			if attached {SYSTEM_TYPE}.get_type ("System.Int32") as t then
+				Result := referenced_type_from_type (t)
+			else
+				check
+					has_int_32: False
+				then
+				end
+			end
 		ensure
 			integer_type_not_void: integer_type /= Void
 		end
@@ -1379,19 +1380,15 @@ feature {NONE} -- Added features for ENUM types.
 		require
 			val_not_void: val /= Void
 		local
-			l_type: detachable SYSTEM_TYPE
-			d: REAL_64
-			r: REAL_32
+			l_type: SYSTEM_TYPE
 		do
 			l_type := val.get_type
 				-- Note: The following code still use assignment attempt because
 				-- using object test does not work as it test for exact types whereas
 				-- assignment attempt was also doing some magic conversion.
-			if l_type ~ Double_type then
-				d ?= val
+			if l_type ~ Double_type and then attached {REAL_64} val as d then
 				Result := bytes_to_string ({BIT_CONVERTER}.get_bytes_double (d))
-			elseif l_type ~ Real_type then
-				r ?= val
+			elseif l_type ~ Real_type and then attached {REAL_32} val as r then
 				Result := bytes_to_string ({BIT_CONVERTER}.get_bytes_real (r))
 			else
 				create Result.make_from_cil (val.to_string)
@@ -1425,24 +1422,16 @@ feature {NONE} -- Added features for ENUM types.
 			converted: Result /= Void
 		end
 
-	Double_type: SYSTEM_TYPE
+	Double_type: detachable SYSTEM_TYPE
 			-- typeof (double)
-		local
-			l_type: detachable SYSTEM_TYPE
 		once
-			l_type := {SYSTEM_TYPE}.get_type_string (("System.Double").to_cil)
-			check l_type_attached: l_type /= Void end
-			Result := l_type
+			Result := {SYSTEM_TYPE}.get_type_string (("System.Double").to_cil)
 		end
 
-	Real_type: SYSTEM_TYPE
+	Real_type: detachable SYSTEM_TYPE
 			-- typeof (float)
-		local
-			l_type: detachable SYSTEM_TYPE
 		once
-			l_type := {SYSTEM_TYPE}.get_type_string (("System.Single").to_cil)
-			check l_type_attached: l_type /= Void end
-			Result := l_type
+			Result := {SYSTEM_TYPE}.get_type_string (("System.Single").to_cil)
 		end
 
 	enum_type: SYSTEM_TYPE
@@ -1462,7 +1451,7 @@ feature {NONE} -- Added features for ENUM types.
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1493,5 +1482,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class TYPE_CONSUMER
+end

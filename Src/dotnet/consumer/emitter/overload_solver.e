@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Solve overloading for a given .NET type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -323,28 +323,35 @@ feature {NONE} -- Internal Statur Setting
 			non_void_meth: meth /= Void
 			is_consumed_method: is_consumed_method (meth)
 		local
+			l_dn_name: SYSTEM_STRING
 			l_len: INTEGER
-			l_dn_name: detachable SYSTEM_STRING
 			name: STRING
 			l_list: SORTED_TWO_WAY_LIST [METHOD_SOLVER]
 		do
 			l_dn_name := meth.name
-			check l_dn_name_attached: l_dn_name /= Void end
-			if get_property then
-				l_len := get_prefix.length
-				if l_dn_name.length > l_len and then {SYSTEM_STRING}.compare (get_prefix, l_dn_name.substring (0, l_len), True) = 0 then
-					l_dn_name := l_dn_name.substring (l_len)
-					check l_dn_name_attached: l_dn_name /= Void end
+			if attached l_dn_name then
+				if get_property then
+					l_len := get_prefix.length
+					if l_dn_name.length > l_len and then {SYSTEM_STRING}.compare (get_prefix, l_dn_name.substring (0, l_len), True) = 0 then
+						l_dn_name := l_dn_name.substring (l_len)
+						if not attached l_dn_name then
+							check from_documentation: False then end
+						end
+					end
 				end
-			end
-			name := l_dn_name
-			method_table.search (name)
-			if method_table.found and then attached method_table.found_item as l_found_item then
-				l_found_item.extend (create {METHOD_SOLVER}.make (meth, get_property))
+				name := l_dn_name
+				method_table.search (name)
+				if method_table.found and then attached method_table.found_item as l_found_item then
+					l_found_item.extend (create {METHOD_SOLVER}.make (meth, get_property))
+				else
+					create l_list.make
+					method_table.put (l_list, name)
+					l_list.extend (create {METHOD_SOLVER}.make (meth, get_property))
+				end
 			else
-				create l_list.make
-				method_table.put (l_list, name)
-				l_list.extend (create {METHOD_SOLVER}.make (meth, get_property))
+				check
+					method_name_attached: False
+				end
 			end
 		end
 
@@ -357,7 +364,7 @@ feature {NONE} -- Implementation
 			-- Get property prefix
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -388,5 +395,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class OVERLOAD_SOLVER
+end

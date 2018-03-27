@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A utility class for loading assemblies"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -58,12 +58,14 @@ feature {ASSEMBLY_LOADER} -- Access
 
 	my_domain: APP_DOMAIN
 			-- Retrieves domain in which loader is running in
-		local
-			l_result: detachable APP_DOMAIN
 		do
-			l_result := {APP_DOMAIN}.current_domain
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			Result := {APP_DOMAIN}.current_domain
+			if not attached Result then
+				check
+					from_documentation: False
+				then
+				end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -136,38 +138,41 @@ feature -- Basic operations
 		require
 			a_name_attached: a_name /= Void
 		local
-			l_name: detachable SYSTEM_STRING
 			l_asms: like loaded_assemblies
-			l_domain: detachable APP_DOMAIN
-			l_resolver: like resolver
-			l_fn: detachable READABLE_STRING_GENERAL
+			l_fn: READABLE_STRING_GENERAL
 			retried: BOOLEAN
 			retried_again: BOOLEAN
 		do
 			if not retried_again then
 				l_asms := loaded_assemblies
-				l_name := a_name.full_name
-				check l_name_attached: l_name /= Void end
-				if attached l_asms.item (create {STRING_32}.make_from_cil (l_name)) as l_item then
-					Result := l_item
-				else
-					l_resolver := resolver
-					retried := l_resolver = Void
-					if l_resolver /= Void then
-							-- Use resolver to find best path possible	
-						l_domain := {APP_DOMAIN}.current_domain
-						check l_domain_attached: l_domain /= Void end
-						if attached l_resolver.resolve_by_assembly_name (l_domain, a_name) as l_path then
-							l_fn := l_path.name
-							Result := load_from (l_fn)
+				if attached a_name.full_name as l_name then
+					if attached l_asms.item (create {STRING_32}.make_from_cil (l_name)) as l_item then
+						Result := l_item
+					else
+						if attached resolver as l_resolver then
+								-- Use resolver to find best path possible	
+							if attached {APP_DOMAIN}.current_domain as l_domain then
+								if attached l_resolver.resolve_by_assembly_name (l_domain, a_name) as l_path then
+									l_fn := l_path.name
+									Result := load_from (l_fn)
+								end
+							else
+								check
+									current_domain_attached: False
+								end
+							end
 						end
 						retried := True
+						if Result = Void then
+								-- Fail safe.
+							create {STRING_32} l_fn.make_from_cil (l_name)
+							Result := dotnet_load (l_name)
+							l_asms.force (Result, l_fn)
+						end
 					end
-					if Result = Void and retried then
-							-- Fail safe.
-						create {STRING_32} l_fn.make_from_cil (l_name)
-						Result := dotnet_load (l_name)
-						l_asms.force (Result, l_fn)
+				else
+					check
+						full_name_attached: False
 					end
 				end
 			end
@@ -184,19 +189,20 @@ feature -- Basic operations
 			a_path_attached: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
 			a_path_exists: (create {RAW_FILE}.make_with_name (a_path)).exists
-		local
-			l_result: detachable ASSEMBLY
-			l_name: detachable ASSEMBLY_NAME
 		do
 			Result := load_from (a_path)
 			if Result /= Void then
 					-- Attempt to locate in GAC (without a resolver! - do not set active resolver because
 					-- the CLR should only resolve in GAC)
-				l_name := Result.get_name
-				check l_name_attached: l_name /= Void end
-				l_result := gac_loader.load (l_name)
-				if l_result /= Void and then l_result.global_assembly_cache then
-					Result := l_result
+				if attached Result.get_name as l_name then
+					if attached gac_loader.load (l_name) as a and then a.global_assembly_cache then
+						Result := a
+					end
+				else
+					check
+						get_name_attached: False
+					then
+					end
 				end
 			end
 		end
@@ -206,42 +212,39 @@ feature -- Domain
 	gac_loader: ASSEMBLY_LOADER
 			-- Loader used to load GAC only assemblies
 		local
-			l_type: detachable SYSTEM_TYPE
-			l_new_dom: detachable APP_DOMAIN
-			l_hnd: detachable OBJECT_HANDLE
-			l_lease: detachable ILEASE
 			l_obj: SYSTEM_OBJECT
-			l_loader: detachable ASSEMBLY_LOADER
-			l_ass: detachable ASSEMBLY
 		do
 			if attached internal_gac_loader as l_gac_loader then
 				Result := l_gac_loader
 			else
 				l_obj := Current
-				l_type := l_obj.get_type
-				l_new_dom := {APP_DOMAIN}.create_domain (gac_domain_name)
-				check
-					l_type_attached: l_type /= Void
-					l_new_dom_attached: l_new_dom /= Void
+				if
+					attached l_obj.get_type as l_type and then
+					attached l_type.assembly as l_ass and then
+					attached {APP_DOMAIN}.create_domain (gac_domain_name) as l_new_dom and then
+					attached l_new_dom.create_instance_from (l_ass.location, l_type.full_name) as l_hnd and then
+					attached {ILEASE} l_hnd.get_lifetime_service as l_lease
+				then
+						-- Extend life time of created object.
+					l_lease.register (Current)
+						-- Unwrap.
+					if attached {ASSEMBLY_LOADER} l_hnd.unwrap as l_loader then
+						internal_gac_loader := l_loader
+						Result := l_loader
+					else
+						check
+							from_documentation: False
+						then
+						end
+					end
+						-- Add event handler for parent domain unloads.
+					l_new_dom.add_domain_unload (Result.new_gac_domain_unload_delelgate)
+				else
+					check
+						from_documentation: False
+					then
+					end
 				end
-				l_ass := l_type.assembly
-				check l_ass_attached: l_ass /= Void end
-				l_hnd := l_new_dom.create_instance_from (l_ass.location, l_type.full_name)
-				check l_hnd_attached: l_hnd /= Void end
-
-					-- Extend life time of created object
-				l_lease ?= l_hnd.get_lifetime_service
-				check l_lease_attached: l_lease /= Void end
-				l_lease.register (Current)
-
-					-- Unwrap
-				l_loader ?= l_hnd.unwrap
-				check l_loader_attached: l_loader /= Void end
-				internal_gac_loader := l_loader
-				Result := l_loader
-
-					-- Add event handler for parent domain unloads
-				l_new_dom.add_domain_unload (Result.new_gac_domain_unload_delelgate)
 			end
 		ensure
 			result_attached: Result /= Void
@@ -262,14 +265,16 @@ feature -- Lifetime services
 
 	initialize_lifetime_service: SYSTEM_OBJECT
 			-- Obtains a lifetime service object to control the lifetime policy for this instance
-		local
-			l_lease: detachable ILEASE
 		do
-			l_lease ?= Precursor {MARSHAL_BY_REF_OBJECT}
-			check l_lease_attached: l_lease /= Void end
-
-			l_lease.initial_lease_time := {TIME_SPAN}.zero
-			Result := l_lease
+			if attached {ILEASE} Precursor {MARSHAL_BY_REF_OBJECT} as l_lease then
+				l_lease.initial_lease_time := {TIME_SPAN}.zero
+				Result := l_lease
+			else
+				check
+					from_documentation: False
+				then
+				end
+			end
 		ensure then
 			result_attached: Result /= Void
 		end
@@ -321,7 +326,7 @@ feature {ASSEMBLY_LOADER} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -352,4 +357,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {ASSEMBLY_LOADER}
+end

@@ -19,17 +19,12 @@ feature -- Access
 			-- a different user causes a security exception. This means that concurrent
 			-- cache access by different users is not supported.
 		local
-			l_cr: CACHE_READER
-			l_result: detachable SYSTEM_STRING
+			r: STRING_32
 		once
-			create l_cr
-			l_result := l_cr.eiffel_assembly_cache_path.name.to_cil
-			check l_result_attached: l_result /= Void end
-			l_result := l_result.replace_character (':', '!')
-			check l_result_attached: l_result /= Void end
-			l_result := l_result.replace_character ('\', '!')
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			create r.make_from_string ((create {CACHE_READER}).eiffel_assembly_cache_path.name)
+			r.replace_substring_all ({STRING_32} ":", {STRING_32} "!")
+			r.replace_substring_all ({STRING_32} "\", {STRING_32} "!")
+			Result := r.to_cil
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: Result.length > 0

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Simplistic interface for client assemblies"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -109,12 +109,20 @@ feature -- Basic Oprtations
 				end
 				l_resolver.add_resolve_path_from_file_name (l_loc)
 				l_current_domain := {APP_DOMAIN}.current_domain
-				check l_current_domain_attached: l_current_domain /= Void end
-				resolve_subscriber.subscribe (l_current_domain, l_resolver)
+				if attached l_current_domain then
+					resolve_subscriber.subscribe (l_current_domain, l_resolver)
+				else
+					check
+						from_documentation: False
+					then
+					end
+				end
 				assembly_loader.set_resolver (l_resolver)
 				cache_writer.add_assembly_ex (l_loc, a_info_only, Void, create {ARRAYED_LIST [READABLE_STRING_32]}.make (0))
 				assembly_loader.set_resolver (Void)
-				resolve_subscriber.unsubscribe (l_current_domain, l_resolver)
+				if attached l_current_domain then
+					resolve_subscriber.unsubscribe (l_current_domain, l_resolver)
+				end
 			end
 		ensure
 			successful: is_successful
@@ -131,7 +139,7 @@ feature -- Basic Oprtations
 			l_processed: ARRAYED_LIST [READABLE_STRING_32]
 			l_refs: LIST [READABLE_STRING_32]
 			l_files: ARRAYED_LIST [READABLE_STRING_32]
-			l_current_domain: detachable APP_DOMAIN
+			l_current_domain: APP_DOMAIN
 		do
 			is_successful := True
 			create last_error_message.make_empty
@@ -162,8 +170,14 @@ feature -- Basic Oprtations
 
 			create l_resolver.make (l_files)
 			l_current_domain := {APP_DOMAIN}.current_domain
-			check l_current_domain_attached: l_current_domain /= Void end
-			resolve_subscriber.subscribe (l_current_domain, l_resolver)
+			if attached l_current_domain then
+				resolve_subscriber.subscribe (l_current_domain, l_resolver)
+			else
+				check
+					from_documentation: False
+				then
+				end
+			end
 
 			create l_processed.make (l_paths.count * 3)
 			l_processed.compare_objects
@@ -180,7 +194,9 @@ feature -- Basic Oprtations
 				l_resolver.remove_resolve_path_from_file_name (l_paths.item)
 				l_paths.forth
 			end
-			resolve_subscriber.unsubscribe (l_current_domain, l_resolver)
+			if attached l_current_domain then
+				resolve_subscriber.unsubscribe (l_current_domain, l_resolver)
+			end
 		ensure
 			successful: is_successful
 		end
@@ -298,7 +314,7 @@ invariant
 	cache_writer_not_void: cache_writer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -329,5 +345,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class CACHE_MANAGER
+end

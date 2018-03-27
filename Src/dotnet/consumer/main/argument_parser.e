@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Argument parser for Eiffel metadata consumer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -171,7 +171,7 @@ feature {NONE} -- Usage
 			end
 		end
 
-	copyright: STRING = "Copyright Eiffel Software 2006-2017. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 2006-2018. All Rights Reserved."
 			-- <Precursor>
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
@@ -221,7 +221,7 @@ feature {NONE} -- Switches
 			-- Description of loose argument, used in usage information
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -252,4 +252,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {ARGUMENT_PARSER}
+end

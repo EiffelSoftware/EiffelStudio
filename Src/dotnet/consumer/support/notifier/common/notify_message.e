@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A notifier icon message for consumption."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -79,9 +79,8 @@ feature -- Access
 		local
 			l_functions: like functions
 			l_pattern: SYSTEM_DLL_REGEX
-			l_match: detachable SYSTEM_DLL_MATCH
-			l_var: detachable SYSTEM_STRING
-			l_func: detachable SYSTEM_STRING
+			l_var: SYSTEM_STRING
+			l_func: SYSTEM_STRING
 			l_value: STRING_32
 			l_count: INTEGER
 			i: INTEGER
@@ -97,9 +96,8 @@ feature -- Access
 					l_matches.count > 0
 				then
 					from l_count := l_matches.count until i = l_count loop
-						l_match := l_matches.item (i)
-						check l_match_attached: l_match /= Void end
 						if
+							attached l_matches.item (i) as l_match and then
 							attached l_match.groups as l_groups and then
 							attached l_groups.item (0) as l_group
 						then
@@ -210,24 +208,24 @@ feature {NONE} -- Implementation
 
 	current_assembly: ASSEMBLY
 			-- Executing assembly
-		local
-			l_assembly: detachable ASSEMBLY
 		once
-			l_assembly := ({like Current}).to_cil.assembly
-			check l_assembly_attached: l_assembly /= Void end
-			Result := l_assembly
+			Result := ({like Current}).to_cil.assembly
+			check
+				from_documentation: attached Result
+			then
+			end
 		ensure
 			Result_attached: Result /= Void
 		end
 
 	current_assembly_name: ASSEMBLY_NAME
 			-- Name of executing assembly
-		local
-			l_name: detachable ASSEMBLY_NAME
 		once
-			l_name := current_assembly.get_name
-			check l_name_attached: l_name /= Void end
-			Result := l_name
+			Result := current_assembly.get_name
+			check
+				from_documentation: attached Result
+			then
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -251,7 +249,7 @@ invariant
 	not_message_template_is_empty: not message_template.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -282,4 +280,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class NOTIFY_MESSAGE
+end

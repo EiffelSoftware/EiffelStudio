@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Assembly description to be persisted in XML"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -127,17 +127,10 @@ feature -- Access
 			-- New string containing terse printable representation
 			-- of current object
 			-- Eg: "A, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+		local
+			u: UTF_CONVERTER
 		do
-			create Result.make (name.count + location.name.count + 11)
-			Result.append (name)
-			Result.append (", Version=")
-			Result.append (version)
-			Result.append (", Culture=")
-			Result.append (culture)
-			Result.append (", PublicKeyToken=")
-			Result.append (key)
-			Result.append (", CodeBase=")
-			Result.append (location.utf_8_name)
+			Result := u.string_32_to_utf_8_string_8 (text)
 		end
 
 feature -- Status Setting
@@ -289,7 +282,7 @@ invariant
 	valid_folder_name: not folder_name.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -320,5 +313,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class CONSUMED_ASSEMBLY
+end

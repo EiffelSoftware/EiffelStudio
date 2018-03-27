@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Intermediate representation of constructors used to solve overloading"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -56,15 +56,13 @@ feature -- Access
 			-- Generate consumed constructor from `name' and `internal_constructor'.
 		require
 			name_set: name /= Void
-		local
-			l_name: like name
-			l_type: detachable SYSTEM_TYPE
 		do
-			l_name := name
-			check l_name_attached: l_name /= Void end
-			l_type := internal_constructor.declaring_type
-			check l_type_attached: l_type /= Void end
-			create Result.make (l_name, arguments, is_public, referenced_type_from_type (l_type))
+			check
+				from_precondition: attached name as n
+				from_documentation: attached internal_constructor.declaring_type as t
+			then
+				create Result.make (n, arguments, is_public, referenced_type_from_type (t))
+			end
 		ensure
 			non_void_constructor: Result /= Void
 		end
@@ -96,7 +94,7 @@ feature {CONSTRUCTOR_SOLVER} -- Implementation
 			-- Constructor info
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -127,5 +125,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class CONSTRUCTOR_SOLVER
+end

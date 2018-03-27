@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Print in output the comments corresponding to a_member."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Julien"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -90,25 +91,27 @@ feature -- Basic Operations
 			l_full_dotnet_type_name ?= l_static_type.item (2)
 			l_consumed_assembly ?= l_static_type.item (1)
 
-			create l_assembly_info.make (Void)
-			l_signature := (create {SIGNATURE}).xml_signature_member (a_member, l_full_dotnet_type_name)
-			l_member_info := l_assembly_info.find_feature (l_consumed_assembly.name, l_full_dotnet_type_name, l_signature)
-			if l_member_info /= Void then
-				display (l_member_info)
-			else
-				create l_member_info.make
-				l_member_info.set_name (a_full_dotnet_type_name + "." + l_signature)
-				if l_signature.is_equal ((create {ENUM_TYPE}).from_integer_signature) then
-					l_member_info.set_summary ((create {ENUM_TYPE}).from_integer_comment)
-					display (l_member_info)
-				elseif l_signature.is_equal ((create {ENUM_TYPE}).to_integer_signature) then
-					l_member_info.set_summary ((create {ENUM_TYPE}).to_integer_comment)
-					display (l_member_info)
-				elseif l_signature.is_equal ((create {ENUM_TYPE}).or_signature) then
-					l_member_info.set_summary ((create {ENUM_TYPE}).or_comment)
+			if attached l_full_dotnet_type_name then
+				create l_assembly_info.make (Void)
+				l_signature := (create {SIGNATURE}).xml_signature_member (a_member, l_full_dotnet_type_name)
+				l_member_info := l_assembly_info.find_feature (l_consumed_assembly.name, l_full_dotnet_type_name, l_signature)
+				if l_member_info /= Void then
 					display (l_member_info)
 				else
-					clear_comments
+					create l_member_info.make
+					l_member_info.set_name (a_full_dotnet_type_name + "." + l_signature)
+					if l_signature.is_equal ((create {ENUM_TYPE}).from_integer_signature) then
+						l_member_info.set_summary ((create {ENUM_TYPE}).from_integer_comment)
+						display (l_member_info)
+					elseif l_signature.is_equal ((create {ENUM_TYPE}).to_integer_signature) then
+						l_member_info.set_summary ((create {ENUM_TYPE}).to_integer_comment)
+						display (l_member_info)
+					elseif l_signature.is_equal ((create {ENUM_TYPE}).or_signature) then
+						l_member_info.set_summary ((create {ENUM_TYPE}).or_comment)
+						display (l_member_info)
+					else
+						clear_comments
+					end
 				end
 			end
 		end
@@ -230,7 +233,7 @@ feature {NONE} -- Basic Operations
 			comments_area.disable_edit
 		end
 
-	immediate_type_feature (an_assembly: CONSUMED_ASSEMBLY; a_member: CONSUMED_ENTITY; a_full_dotnet_type: STRING): TUPLE [CONSUMED_ASSEMBLY, STRING]
+	immediate_type_feature (an_assembly: CONSUMED_ASSEMBLY; a_member: CONSUMED_ENTITY; a_full_dotnet_type: STRING): detachable TUPLE [CONSUMED_ASSEMBLY, STRING]
 			-- Return the `full_dotnet_type' where `a_member' is declared.
 		require
 			non_void_an_assembly: an_assembly /= Void
@@ -302,7 +305,7 @@ invariant
 	non_void_comments_area: comments_area /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -333,6 +336,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class DISPLAY_COMMENTS
-
+end

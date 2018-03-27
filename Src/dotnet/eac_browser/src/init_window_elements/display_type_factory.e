@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Print in lines the eiffel type with all its eiffel features corresponding to the given dotnet type name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Julien"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -76,16 +77,15 @@ feature {NONE} -- Implementation
 	internal_print_type
 			-- Print in `lines' features corresponding to `dotnet_type_name'.
 		do
-			if type /= Void then
+			if attached type as t then
 				print_header
-				print_constructors (type.type.constructors)
-				print_attributes (type.type.fields)
-				print_procedures (type.type.procedures)
-				print_functions (type.type.functions)
-				print_properties (type.type.properties)
-				print_events (type.type.events)
+				if attached t.type.constructors as c then print_constructors (c) end
+				if attached t.type.fields as f then print_attributes (f) end
+				if attached t.type.procedures as p then print_procedures (p) end
+				if attached t.type.functions as f then print_functions (f) end
+				if attached t.type.properties as p then print_properties (p) end
+				if attached t.type.events as e then print_events (e) end
 			end
-
 		end
 
 	print_header
@@ -101,9 +101,9 @@ feature {NONE} -- Implementation
 			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (Tabulation, Text_color))
 			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Parent: " , Text_color))
 
-			if type.type.parent /= Void then
-				create l_entity.make_with_image_and_color (type.type.parent.name, eiffel_feature_color)
-				l_entity.set_data (type.type.parent)
+			if attached type.type.parent as p then
+				create l_entity.make_with_image_and_color (p.name, eiffel_feature_color)
+				l_entity.set_data (p)
 				l_line.entities.extend (l_entity)
 			else
 				l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("No parent" , Text_color))
@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 				or else i > array.count
 			loop
 				if not array.i_th (i).is_property_or_event then
-					functions_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (array.i_th (i)))
+					functions_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_function (array.i_th (i)))
 				end
 
 				i := i + 1
@@ -440,8 +440,8 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			l_returned_type: CONSUMED_REFERENCED_TYPE
 			l_array_returned_type: CONSUMED_ARRAY_TYPE
-			properties_list: LINKED_LIST [COMPARABLE_CONSUMED_FUNCTION]
-			properties: SORTABLE_ARRAY [COMPARABLE_CONSUMED_FUNCTION]
+			properties_list: LINKED_LIST [CONSUMED_MEMBER]
+			properties: SORTABLE_ARRAY [CONSUMED_MEMBER]
 			output_string: STRING
 			l_entity: ENTITY_LINE
 			a_property: CONSUMED_PROPERTY
@@ -462,11 +462,11 @@ feature {NONE} -- Implementation
 				or else i > array.count
 			loop
 				a_property := array.i_th (i)
-				if a_property.getter /= Void then
-					properties_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (a_property.getter))
+				if attached a_property.getter as f then
+					properties_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_function (f))
 				end
-				if a_property.setter /= Void then
-					properties_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (a_property.setter))
+				if attached a_property.setter as p then
+					properties_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (p))
 				end
 
 				i := i + 1
@@ -537,8 +537,8 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			l_returned_type: CONSUMED_REFERENCED_TYPE
 			l_array_returned_type: CONSUMED_ARRAY_TYPE
-			events_list: LINKED_LIST [COMPARABLE_CONSUMED_FUNCTION]
-			events: SORTABLE_ARRAY [COMPARABLE_CONSUMED_FUNCTION]
+			events_list: LINKED_LIST [COMPARABLE_CONSUMED_PROCEDURE]
+			events: SORTABLE_ARRAY [COMPARABLE_CONSUMED_PROCEDURE]
 			output_string: STRING
 			l_entity: ENTITY_LINE
 			an_event: CONSUMED_EVENT
@@ -559,14 +559,14 @@ feature {NONE} -- Implementation
 				or else i > array.count
 			loop
 				an_event := array.i_th (i)
-				if an_event.adder /= Void then
-					events_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (an_event.adder))
+				if attached an_event.adder as p then
+					events_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (p))
 				end
-				if an_event.remover /= Void then
-					events_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (an_event.remover))
+				if attached an_event.remover as p then
+					events_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (p))
 				end
-				if an_event.raiser /= Void then
-					events_list.extend (create {COMPARABLE_CONSUMED_FUNCTION}.make_with_consumed_procedure (an_event.raiser))
+				if attached an_event.raiser as p then
+					events_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (p))
 				end
 
 				i := i + 1
@@ -749,7 +749,7 @@ invariant
 	non_void_feature_selected: feature_selected /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -780,6 +780,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class DISPLAY_TYPE_FACTORY
-
+end

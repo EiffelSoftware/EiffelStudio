@@ -1,7 +1,8 @@
-note
+﻿note
 	description: "Path to various EAC files"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -76,7 +77,7 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
-	absolute_type_path (assembly_relative_path: STRING; a_dotnet_type_name: STRING): STRING
+	absolute_type_path (assembly_relative_path: STRING; a_dotnet_type_name: STRING): detachable STRING
 			-- Path to file describing `a_dotnet_type_name' relative to `Eac_path'.
 			-- Return Void if `a_dotnet_type_name' is not in EAC.
 		require
@@ -100,7 +101,7 @@ feature -- Access
 			valid_path: Result /= Void implies (create {RAW_FILE}.make (Result)).exists
 		end
 
-	absolute_referenced_assemblies_path (an_assembly: CONSUMED_ASSEMBLY): STRING
+	absolute_referenced_assemblies_path (an_assembly: CONSUMED_ASSEMBLY): detachable STRING
 			-- Path to file describing `a_dotnet_type_name' relative to `Eac_path'
 			-- Return Void if `an_assembly' is not in EAC.
 		require
@@ -124,7 +125,7 @@ feature -- Access
 
 feature -- Access
 
-	absolute_info_assembly_path (an_assembly: CONSUMED_ASSEMBLY): STRING
+	absolute_info_assembly_path (an_assembly: CONSUMED_ASSEMBLY): detachable STRING
 			-- Path to file describing `a_dotnet_type_name' relative to `Eac_path'.
 			-- Return Void if `an_assembly' is not in EAC.
 		require
@@ -154,7 +155,7 @@ feature -- Access
 			valid_path: Result /= Void implies (create {RAW_FILE}.make (Result)).exists
 		end
 
-	absolute_info_assemblies_path: STRING
+	absolute_info_assemblies_path: detachable STRING
 			-- Absolute path to EAC assemblies file info.
 		once
 			create Result.make (Eiffel_path.count + Eac_path.count + Info_path.count)
@@ -202,5 +203,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class CACHE_PATH
+end

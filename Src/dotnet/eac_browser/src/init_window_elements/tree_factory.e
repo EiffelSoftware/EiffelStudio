@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Print in output the eiffel type with all its eiffelfeatures corresponding to given dotnet type name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Julien"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -76,9 +77,8 @@ feature {MAIN_WINDOW} -- Initialization tree
 					unclassified_assemblies.extend (tree_item1)
 					ci.assemblies.forth
 				end
+				tree_item.append (classify_assemblies (unclassified_assemblies))
 			end
-
-			tree_item.append (classify_assemblies (unclassified_assemblies))
 
 			tree_item.expand
 			edit.edit_info_assemblies
@@ -100,7 +100,6 @@ feature {NONE} -- Add element to tree
 		local
 			counter: INTEGER
 			eac: EAC_BROWSER
-			cat: CONSUMED_ASSEMBLY_TYPES
 			l_namespaces: ARRAY [STRING]
 			l_namespace_name: STRING
 			l_namespace_node: EV_COMPARABLE_TREE_ITEM
@@ -122,23 +121,24 @@ feature {NONE} -- Add element to tree
 				des_dlg.set_progress_bar (30)
 
 				create eac
-				cat := eac.consumed_assembly (an_assembly)
-				l_namespaces := cat.namespaces
-				from
-					counter := 1
-					create l_namespaces_list.make
-				until
-					counter >= l_namespaces.count
-				loop
-					des_dlg.set_progress_bar (30 + (counter * 70 / l_namespaces.count).rounded)
+				if attached eac.consumed_assembly (an_assembly) as cat then
+					l_namespaces := cat.namespaces
+					from
+						counter := 1
+						create l_namespaces_list.make
+					until
+						counter >= l_namespaces.count
+					loop
+						des_dlg.set_progress_bar (30 + (counter * 70 / l_namespaces.count).rounded)
 
-					l_namespace_name := l_namespaces.item (counter)
-					l_namespace_node := initialize_tree_item_namespace (l_namespace_name)
-					add_types_branches (an_assembly, l_namespace_node, l_namespace_name, cat)
-					l_namespaces_list.extend (l_namespace_node)
-					counter := counter + 1
+						l_namespace_name := l_namespaces.item (counter)
+						l_namespace_node := initialize_tree_item_namespace (l_namespace_name)
+						add_types_branches (an_assembly, l_namespace_node, l_namespace_name, cat)
+						l_namespaces_list.extend (l_namespace_node)
+						counter := counter + 1
+					end
+					tree_item_parent.append (classify_namespaces (l_namespaces_list))
 				end
-				tree_item_parent.append (classify_namespaces (l_namespaces_list))
 
 				des_dlg.destroy
 			end
@@ -158,6 +158,8 @@ feature {NONE} -- Add element to tree
 			l_type_node: EV_COMPARABLE_TREE_ITEM
 			types_array: SORTABLE_ARRAY [EV_COMPARABLE_TREE_ITEM]
 			types_list: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
+			d: like {CONSUMED_ASSEMBLY_TYPES}.dotnet_names.item
+			e: like {CONSUMED_ASSEMBLY_TYPES}.eiffel_names.item
 		do
 			indices_types := cat.namespace_types (a_namespace_name)
 			from
@@ -166,7 +168,15 @@ feature {NONE} -- Add element to tree
 			until
 				i > indices_types.count
 			loop
-				l_type_node := initialize_tree_item_type (an_assembly, cat.dotnet_names.item (indices_types.item (i)), cat.eiffel_names.item (indices_types.item (i)), cat.flags.item (indices_types.item (i)))
+				d := cat.dotnet_names.item (indices_types.item (i))
+				if not attached d then
+					d := "CIL_name_" + indices_types.item (i).out
+				end
+				e := cat.eiffel_names.item (indices_types.item (i))
+				if not attached e then
+					e := "Eiffel_name_" + indices_types.item (i).out
+				end
+				l_type_node := initialize_tree_item_type (an_assembly, d, e, cat.flags.item (indices_types.item (i)))
 				types_array.put (l_type_node, i)
 				i := i + 1
 			end
@@ -481,6 +491,7 @@ feature {NONE} -- Add element to tree
 --			referenced_assemblies: CONSUMED_ASSEMBLY_MAPPING
 			l_referenced_assembly: CONSUMED_ASSEMBLY
 			cat: CONSUMED_ASSEMBLY_TYPES
+			n: like {CONSUMED_ASSEMBLY_TYPES}.eiffel_names.item
 		do
 			if tree_item_parent.count = 1 and then tree_item_parent.first.text.is_equal (Fictive_element) then
 					-- remove element that served to show the cross to expand tree.
@@ -509,7 +520,11 @@ feature {NONE} -- Add element to tree
 								i := i + 1
 							end
 						end
-						l_node := initialize_tree_item_type (l_referenced_assembly, ancestors.item.name, cat.eiffel_names.item (i), cat.flags.item (i))
+						n := cat.eiffel_names.item (i)
+						if not attached n then
+							n := "Eiffel_name_" + i.out
+						end
+						l_node := initialize_tree_item_type (l_referenced_assembly, ancestors.item.name, n, cat.flags.item (i))
 						add_choise_type (l_referenced_assembly, l_node, ancestors.item.name)
 						tree_item_parent.extend (l_node)
 					end
@@ -858,7 +873,7 @@ feature {NONE} -- Edit
 				l_tree_node := parent_window.widget_tree.selected_item
 				l_tree_item ?= parent_window.widget_tree.selected_item
 				if l_tree_item /= Void then
-					if l_tree_item.data /= Void and then l_tree_item.text.same_type (l_tree_item.data) then
+					if attached l_tree_item.data as d and then l_tree_item.text.same_type (d) then
 					   	temp_string ?= l_tree_item.data
 					   	if temp_string /= Void and then l_tree_item.text.is_equal (temp_string) then
 							l_parent_tree_item ?= l_tree_item.parent
@@ -940,7 +955,7 @@ invariant
 	non_void_current_window: parent_window /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -971,5 +986,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- TREE_FACTORY
+end

@@ -1,9 +1,8 @@
-note
-	description: "[
-					Find features names in EAC
-				]"
+﻿note
+	description: "Find features names in EAC"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -44,7 +43,7 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
-	find_eiffel_type_name_in_assembly (an_assembly: CONSUMED_ASSEMBLY; an_eiffel_type_name: STRING): SPECIFIC_TYPE
+	find_eiffel_type_name_in_assembly (an_assembly: CONSUMED_ASSEMBLY; an_eiffel_type_name: STRING): detachable SPECIFIC_TYPE
 			-- Return the `full_dotnet_type_name' corresponding to `an_eiffel_type_name'.
 		require
 			non_void_assembly: an_assembly /= Void
@@ -54,7 +53,6 @@ feature -- Access
 			i: INTEGER
 			eac: EAC_BROWSER
 			cat: CONSUMED_ASSEMBLY_TYPES
-			ct: CONSUMED_TYPE
 		do
 			create eac
 			cat := eac.consumed_assembly (an_assembly)
@@ -63,8 +61,12 @@ feature -- Access
 			until
 				i > cat.eiffel_names.count or Result /= Void
 			loop
-				if cat.eiffel_names.item (i).is_equal (an_eiffel_type_name) then
-					ct := eac.consumed_type (an_assembly, cat.dotnet_names.item (i))
+				if
+					attached cat.eiffel_names.item (i) as e and then
+					e.same_string (an_eiffel_type_name) and then
+					attached cat.dotnet_names.item (i) as d and then
+					attached eac.consumed_type (an_assembly, d) as ct
+				then
 					create Result.make (an_assembly, ct)
 				end
 					-- add type in cache
@@ -76,7 +78,7 @@ feature -- Access
 		end
 
 
-	find_eiffel_feature_name_in_assembly (an_assembly: CONSUMED_ASSEMBLY; an_eiffel_feature_name: STRING): STRING
+	find_eiffel_feature_name_in_assembly (an_assembly: CONSUMED_ASSEMBLY; an_eiffel_feature_name: STRING): detachable STRING
 			-- Return the `dotnet_feature_name' corresponding to `an_eiffel_feature_name'.
 		require
 			non_void_assembly: an_assembly /= Void
@@ -96,19 +98,21 @@ feature -- Access
 				i > cat.dotnet_names.count or Result /= Void
 			loop
 				full_dotnet_type_name := cat.dotnet_names.item (i)
-				Result := find_eiffel_feature_name_in_type (an_assembly, full_dotnet_type_name, an_eiffel_feature_name)					-- add type in cache
+				if attached full_dotnet_type_name then
+					Result := find_eiffel_feature_name_in_type (an_assembly, full_dotnet_type_name, an_eiffel_feature_name)					-- add type in cache
+				end
 --				if not cache.Types.has (full_dotnet_type_name) then
 --					cache.Types.extend (cat.eiffel_names.item (i), full_dotnet_type_name)
 --				end
 				i := i + 1
 			end
 
-			if result /= Void then
+			if attached Result then
 				Result := full_dotnet_type_name + ": " + Result
 			end
 		end
 
-	find_eiffel_feature_name_in_type (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING; an_eiffel_feature_name: STRING): STRING
+	find_eiffel_feature_name_in_type (an_assembly: CONSUMED_ASSEMBLY; a_dotnet_type_name: STRING; an_eiffel_feature_name: STRING): detachable STRING
 			-- Return the `dotnet_feature_name' corresponding to `an_eiffel_feature_name'.
 		require
 			non_void_assembly: an_assembly /= Void
@@ -135,11 +139,17 @@ feature -- Access
 					i := i + 1
 				end
 				if Result = Void then
-					Result := search_in_arrayed_list (l_type.fields, an_eiffel_feature_name)
+					if attached l_type.fields as l then
+						Result := search_in_arrayed_list (l, an_eiffel_feature_name)
+					end
 					if Result = Void then
-						Result := search_in_arrayed_list (l_type.functions, an_eiffel_feature_name)
+						if attached l_type.functions as l then
+							Result := search_in_arrayed_list (l, an_eiffel_feature_name)
+						end
 						if Result = Void then
-							Result := search_in_arrayed_list (l_type.procedures, an_eiffel_feature_name)
+							if attached l_type.procedures as l then
+								Result := search_in_arrayed_list (l, an_eiffel_feature_name)
+							end
 						end
 					end
 				end
@@ -154,7 +164,7 @@ feature -- Access
 
 feature {NONE} --Implementation
 
-	search_in_arrayed_list (array: ARRAYED_LIST [CONSUMED_MEMBER]; an_eiffel_feature_name: STRING): STRING
+	search_in_arrayed_list (array: ARRAYED_LIST [CONSUMED_MEMBER]; an_eiffel_feature_name: STRING): detachable STRING
 			-- search `an_eiffel_feature_name' in `array'.
 		require
 			non_void_array: array /= Void
@@ -187,9 +197,8 @@ feature -- Name
 			non_void_a_full_dotnet_type_name: a_full_dotnet_type_name /= Void
 			not_empty_a_full_dotnet_type_name: not a_full_dotnet_type_name.is_empty
 		do
-			if types.has (a_full_dotnet_type_name) then
-				Result := types.item (a_full_dotnet_type_name)
-			else
+			Result := types.item (a_full_dotnet_type_name)
+			if not attached Result then
 				Result := search_eiffel_type_name (an_assembly, a_full_dotnet_type_name)
 			end
 		ensure
@@ -228,12 +237,12 @@ feature -- Name
 					j > cat.dotnet_names.count
 				loop
 					l_dotnet_type_name := cat.dotnet_names.item (j)
-					if l_dotnet_type_name /= Void and then l_dotnet_type_name.is_equal (a_dotnet_type_name) then
+					if attached l_dotnet_type_name and then l_dotnet_type_name.is_equal (a_dotnet_type_name) then
 						Result := cat.eiffel_names.item (j)
 					end
 						-- Put in cache all types found
-					if not types.has (l_dotnet_type_name) and then l_dotnet_type_name /= Void and then cat.eiffel_names.item (j) /= Void then
-						types.extend (cat.eiffel_names.item (j), l_dotnet_type_name)
+					if attached l_dotnet_type_name and then not types.has (l_dotnet_type_name) and then attached cat.eiffel_names.item (j) as e then
+						types.extend (e, l_dotnet_type_name)
 					end
 					j := j + 1
 				end
@@ -249,7 +258,7 @@ feature -- Name
 
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -280,5 +289,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class FINDER
+end

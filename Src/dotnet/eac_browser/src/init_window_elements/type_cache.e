@@ -1,34 +1,25 @@
-note
+﻿note
 	description: "Last type printed in output"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Julien"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	TYPE_CACHE
 
---create
---	make
---	
---feature -- Initialization
---
---	make is
---			--
---		do
---		end
-
 feature -- Access
 
-	factory_display: DISPLAY_TYPE_FACTORY 
+	factory_display: detachable DISPLAY_TYPE_FACTORY
 			-- type currently displayed.
 		do
 			Result := internal_factory_display.item
 		end
 
 feature -- Status Setting
-	
+
 	set_factory_display (a_factory_display: DISPLAY_TYPE_FACTORY)
 			-- put `a_factory_display' in `internal_factory_display'.
 		require
@@ -38,22 +29,20 @@ feature -- Status Setting
 		ensure
 			factory_display_set: factory_display = a_factory_display
 		end
-		
+
 
 feature {NONE} -- Initialization
 
-	internal_factory_display: CELL [DISPLAY_TYPE_FACTORY]
+	internal_factory_display: CELL [detachable DISPLAY_TYPE_FACTORY]
 			-- Internal representation of `factory_display'.
 		once
 			create Result.put (Void)
 		ensure
 			non_void_result: Result /= Void
 		end
-		
-invariant
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -84,5 +73,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class TYPE_CACHE
+end

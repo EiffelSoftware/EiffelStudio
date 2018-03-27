@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Print in output the eiffel type with all its eiffelfeatures corresponding to given dotnet type name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Julien"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -150,7 +151,7 @@ feature -- Access
 
 feature -- Color edit
 
-	internal_color_output: CELL [DISPLAY_TYPE]
+	internal_color_output: CELL [detachable DISPLAY_TYPE]
 			-- Type to diplay.
 		once
 			create Result.put (Void)
@@ -190,11 +191,8 @@ feature -- Color edit
 
 	color_refresh_type
 			-- Refresh type displayed in `color_edit_comments_area'.
-		local
-			output: DISPLAY_TYPE
 		do
-			output := internal_color_output.item
-			if output /= Void then
+			if attached internal_color_output.item as output then
 				output.refresh
 			end
 		end
@@ -281,7 +279,7 @@ invariant
 	non_void_parent_window: parent_window /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -312,5 +310,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- EDIT_FACTORY
+end

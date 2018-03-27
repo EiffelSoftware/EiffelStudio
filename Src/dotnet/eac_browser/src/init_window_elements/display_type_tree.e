@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Print in output the eiffel type with all its eiffel features corresponding to the given dotnet type name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Julien"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -38,7 +39,7 @@ feature -- Access
 	right_tree: EV_TREE
 			-- right tree to print type.
 
-	assembly_of_type: CONSUMED_ASSEMBLY
+	assembly_of_type: detachable CONSUMED_ASSEMBLY
 			-- Assembly_of_type.
 
 feature -- Basic Operations
@@ -63,7 +64,6 @@ feature -- Basic Operations
 			non_void_assembly_of_dotnet_type: assembly_of_dotnet_type /= Void
 			non_void_a_full_dotnet_type_name: a_full_dotnet_type_name /= Void
 		local
-			ct: CONSUMED_TYPE
 			eac: EAC_BROWSER
 			l_node: EV_COMPARABLE_TREE_ITEM
 			l_entities: ARRAYED_LIST [CONSUMED_ENTITY]
@@ -78,52 +78,52 @@ feature -- Basic Operations
 
 			right_tree.wipe_out
 			create eac
-			ct := eac.consumed_type (assembly_of_dotnet_type, a_full_dotnet_type_name);
+			if attached eac.consumed_type (assembly_of_dotnet_type, a_full_dotnet_type_name) as ct then
+					-- Set current type.
+				(create {SESSION}).set_current_type (ct)
+					-- Enable sensitive informations tag.
+				parent_window.notebook.i_th (4).enable_sensitive
 
-				-- Set current type.
-			(create {SESSION}).set_current_type (ct);
-				-- Enable sensitive informations tag.
-			parent_window.notebook.i_th (4).enable_sensitive
-
-			l_entities := ct.entities
-			from
-				l_entities.start
-				create l_features.make
-				create l_properties.make
-				create l_events.make
-			until
-				l_entities.after
-			loop
-				if l_entities.item.is_method or l_entities.item.is_field then
-					l_feature ?= l_entities.item
-					if l_feature /= Void then
-						l_node := initialize_tree_item_feature (l_feature, a_full_dotnet_type_name)
-						l_features.extend (l_node)
+				l_entities := ct.entities
+				from
+					l_entities.start
+					create l_features.make
+					create l_properties.make
+					create l_events.make
+				until
+					l_entities.after
+				loop
+					if l_entities.item.is_method or l_entities.item.is_field then
+						l_feature ?= l_entities.item
+						if l_feature /= Void then
+							l_node := initialize_tree_item_feature (l_feature, a_full_dotnet_type_name)
+							l_features.extend (l_node)
+						end
+					elseif l_entities.item.is_property then
+						l_property ?= l_entities.item
+						if l_property /= Void then
+							l_node := initialize_tree_item_property (l_property, a_full_dotnet_type_name)
+							l_properties.extend (l_node)
+						end
+					elseif l_entities.item.is_field then
+						l_field ?= l_entities.item
+						if l_field /= Void then
+							l_node := initialize_tree_item_feature (l_field, a_full_dotnet_type_name)
+							l_features.extend (l_node)
+						end
+					elseif l_entities.item.is_event then
+						l_event ?= l_entities.item
+						if l_event /= Void then
+							l_node := initialize_tree_item_event (l_event, a_full_dotnet_type_name)
+							l_events.extend (l_node)
+						end
 					end
-				elseif l_entities.item.is_property then
-					l_property ?= l_entities.item
-					if l_property /= Void then
-						l_node := initialize_tree_item_property (l_property, a_full_dotnet_type_name)
-						l_properties.extend (l_node)
-					end
-				elseif l_entities.item.is_field then
-					l_field ?= l_entities.item
-					if l_feature /= Void then
-						l_node := initialize_tree_item_feature (l_field, a_full_dotnet_type_name)
-						l_features.extend (l_node)
-					end
-				elseif l_entities.item.is_event then
-					l_event ?= l_entities.item
-					if l_event /= Void then
-						l_node := initialize_tree_item_event (l_event, a_full_dotnet_type_name)
-						l_events.extend (l_node)
-					end
+					l_entities.forth
 				end
-				l_entities.forth
+				right_tree.append (classify_tree_nodes (l_features))
+				right_tree.append (classify_tree_nodes (l_properties))
+				right_tree.append (classify_tree_nodes (l_events))
 			end
-			right_tree.append (classify_tree_nodes (l_features))
-			right_tree.append (classify_tree_nodes (l_properties))
-			right_tree.append (classify_tree_nodes (l_events))
 		end
 
 	print_type_inherited_features (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING)
@@ -207,7 +207,7 @@ feature -- Basic Operations
 					or else i > ct.constructors.count
 				loop
 					create l_constructor_node.make_with_text (eiffel_signature_constructor (assembly_of_dotnet_type, ct.constructors.i_th (i)))
-					l_constructor_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (assembly_of_type, ct.constructors.i_th (i), a_full_dotnet_type_name))
+					l_constructor_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (assembly_of_dotnet_type, ct.constructors.i_th (i), a_full_dotnet_type_name))
 					if l_ico /= Void then
 						l_constructor_node.set_pixmap (l_ico)
 					end
@@ -468,12 +468,15 @@ feature {NONE} -- Implementation
 			l_icon_path: STRING
 			l_ico: EV_PIXMAP
 		do
-			create Result.make_with_text (eiffel_signature_constructor (assembly_of_type, a_member))
-
 			l_icon_path := Path_icon_constructor
 
-				-- Add action to node
-			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (assembly_of_type, a_member, a_full_dotnet_type_name))
+			if attached assembly_of_type as a then
+				create Result.make_with_text (eiffel_signature_constructor (a, a_member))
+					-- Add action to node
+				Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (a, a_member, a_full_dotnet_type_name))
+			else
+				create Result
+			end
 
 				-- Add type icon.
 			l_ico := load_icon (l_icon_path)
@@ -493,56 +496,58 @@ feature {NONE} -- Implementation
 		local
 			l_icon_path: STRING
 			l_tree_node: EV_TREE_ITEM
-			l_ico: EV_PIXMAP
 		do
 			create Result.make_with_text (signature_member (a_member))
 
-			create l_tree_node.make_with_text (eiffel_signature_member (assembly_of_type, a_member))
-			Result.extend (l_tree_node)
-			l_ico := load_icon (Path_eiffel_feature)
-			if l_ico /= Void then
-				l_tree_node.set_pixmap (l_ico)
-			end
-
-			if a_member.is_public then
-				if a_member.is_attribute then
-					if a_member.is_constant then
-						l_icon_path := Path_icon_public_constant
-					else
-						l_icon_path := Path_icon_public_attribute
-					end
-				elseif a_member.is_event then
-					l_icon_path := Path_icon_public_event
-				elseif a_member.is_method then
-					l_icon_path := Path_icon_public_function
-				elseif a_member.is_property then
-					l_icon_path := Path_icon_public_property
+			if attached assembly_of_type as a then
+				create l_tree_node.make_with_text (eiffel_signature_member (a, a_member))
+				Result.extend (l_tree_node)
+				if attached load_icon (Path_eiffel_feature) as l_ico then
+					l_tree_node.set_pixmap (l_ico)
 				end
-			else
-					-- Protected feature
-				if a_member.is_attribute then
-					if a_member.is_constant then
-						l_icon_path := Path_icon_protected_constant
-					else
-						l_icon_path := Path_icon_protected_attribute
-					end
-				elseif a_member.is_event then
-					l_icon_path := Path_icon_protected_event
-				elseif a_member.is_method then
-					l_icon_path := Path_icon_protected_function
-				elseif a_member.is_property then
-					l_icon_path := Path_icon_protected_property
-				end
-			end
 
-				-- Add action to nodes
-			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_feature_information (assembly_of_type, a_member, a_full_dotnet_type_name))
-			Result.expand_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_feature_information (assembly_of_type, a_member, a_full_dotnet_type_name))
-			l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_feature_information (assembly_of_type, a_member, a_full_dotnet_type_name))
+				if a_member.is_public then
+					if a_member.is_attribute then
+						if a_member.is_constant then
+							l_icon_path := Path_icon_public_constant
+						else
+							l_icon_path := Path_icon_public_attribute
+						end
+					elseif a_member.is_event then
+						l_icon_path := Path_icon_public_event
+					elseif a_member.is_method then
+						l_icon_path := Path_icon_public_function
+					elseif a_member.is_property then
+						l_icon_path := Path_icon_public_property
+					end
+				else
+						-- Protected feature
+					if a_member.is_attribute then
+						if a_member.is_constant then
+							l_icon_path := Path_icon_protected_constant
+						else
+							l_icon_path := Path_icon_protected_attribute
+						end
+					elseif a_member.is_event then
+						l_icon_path := Path_icon_protected_event
+					elseif a_member.is_method then
+						l_icon_path := Path_icon_protected_function
+					elseif a_member.is_property then
+						l_icon_path := Path_icon_protected_property
+					end
+				end
+
+					-- Add action to nodes
+				Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_feature_information (a, a_member, a_full_dotnet_type_name))
+				Result.expand_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_feature_information (a, a_member, a_full_dotnet_type_name))
+				l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_feature_information (a, a_member, a_full_dotnet_type_name))
+			end
 
 				-- Add type icon.
-			l_ico := load_icon (l_icon_path)
-			if l_ico /= Void then
+			if
+				attached l_icon_path as p and then
+				attached load_icon (p) as l_ico
+			then
 				Result.set_pixmap (l_ico)
 			end
 		ensure
@@ -562,29 +567,31 @@ feature {NONE} -- Implementation
 		do
 			create Result.make_with_text (a_property.dotnet_name)
 
-			l_ico := load_icon (Path_eiffel_feature)
-			if a_property.getter /= Void then
-				create l_tree_node.make_with_text (eiffel_signature_member (assembly_of_type, a_property.getter))
-				Result.extend (l_tree_node)
-				if l_ico /= Void then
-					l_tree_node.set_pixmap (l_ico)
+			if attached assembly_of_type as a then
+				l_ico := load_icon (Path_eiffel_feature)
+				if attached a_property.getter as m then
+					create l_tree_node.make_with_text (eiffel_signature_member (a, m))
+					Result.extend (l_tree_node)
+					if l_ico /= Void then
+						l_tree_node.set_pixmap (l_ico)
+					end
+						-- Add action to node
+					l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_property_information (a, a_property, a_full_dotnet_type_name))
 				end
-					-- Add action to node
-				l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_property_information (assembly_of_type, a_property, a_full_dotnet_type_name))
-			end
-			if a_property.setter /= Void then
-				create l_tree_node.make_with_text (eiffel_signature_member (assembly_of_type, a_property.setter))
-				Result.extend (l_tree_node)
-				if l_ico /= Void then
-					l_tree_node.set_pixmap (l_ico)
+				if attached a_property.setter as m then
+					create l_tree_node.make_with_text (eiffel_signature_member (a, m))
+					Result.extend (l_tree_node)
+					if l_ico /= Void then
+						l_tree_node.set_pixmap (l_ico)
+					end
+						-- Add action to node
+					l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_property_information (a, a_property, a_full_dotnet_type_name))
 				end
-					-- Add action to node
-				l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_property_information (assembly_of_type, a_property, a_full_dotnet_type_name))
-			end
 
-				-- Add action to principal node
-			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_property_information (assembly_of_type, a_property, a_full_dotnet_type_name))
-			Result.expand_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_property_information (assembly_of_type, a_property, a_full_dotnet_type_name))
+					-- Add action to principal node
+				Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_property_information (a, a_property, a_full_dotnet_type_name))
+				Result.expand_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_property_information (a, a_property, a_full_dotnet_type_name))
+			end
 
 			if a_property.is_public then
 				l_icon_path := Path_icon_public_property
@@ -614,37 +621,39 @@ feature {NONE} -- Implementation
 			create Result.make_with_text (an_event.dotnet_name)
 
 			l_ico := load_icon (Path_eiffel_feature)
-			if an_event.raiser /= Void then
-				create l_tree_node.make_with_text (eiffel_signature_member (assembly_of_type, an_event.raiser))
-				Result.extend (l_tree_node)
-				if l_ico /= Void then
-					l_tree_node.set_pixmap (l_ico)
+			if attached assembly_of_type as a then
+				if attached an_event.raiser as m then
+					create l_tree_node.make_with_text (eiffel_signature_member (a, m))
+					Result.extend (l_tree_node)
+					if l_ico /= Void then
+						l_tree_node.set_pixmap (l_ico)
+					end
+						-- Add action to node
+					l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_event_information (a, an_event, a_full_dotnet_type_name))
 				end
-					-- Add action to node
-				l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_event_information (assembly_of_type, an_event, a_full_dotnet_type_name))
-			end
-			if an_event.remover /= Void then
-				create l_tree_node.make_with_text (eiffel_signature_member (assembly_of_type, an_event.remover))
-				Result.extend (l_tree_node)
-				if l_ico /= Void then
-					l_tree_node.set_pixmap (l_ico)
+				if attached an_event.remover as m then
+					create l_tree_node.make_with_text (eiffel_signature_member (a, m))
+					Result.extend (l_tree_node)
+					if l_ico /= Void then
+						l_tree_node.set_pixmap (l_ico)
+					end
+						-- Add action to node
+					l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_event_information (a, an_event, a_full_dotnet_type_name))
 				end
-					-- Add action to node
-				l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_event_information (assembly_of_type, an_event, a_full_dotnet_type_name))
-			end
-			if an_event.adder /= Void then
-				create l_tree_node.make_with_text (eiffel_signature_member (assembly_of_type, an_event.adder))
-				Result.extend (l_tree_node)
-				if l_ico /= Void then
-					l_tree_node.set_pixmap (l_ico)
+				if attached an_event.adder as m then
+					create l_tree_node.make_with_text (eiffel_signature_member (a, m))
+					Result.extend (l_tree_node)
+					if l_ico /= Void then
+						l_tree_node.set_pixmap (l_ico)
+					end
+						-- Add action to node
+					l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_event_information (a, an_event, a_full_dotnet_type_name))
 				end
-					-- Add action to node
-				l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_event_information (assembly_of_type, an_event, a_full_dotnet_type_name))
-			end
 
-				-- Add action to principal node
-			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_event_information (assembly_of_type, an_event, a_full_dotnet_type_name))
-			Result.expand_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_event_information (assembly_of_type, an_event, a_full_dotnet_type_name))
+					-- Add action to principal node
+				Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_event_information (a, an_event, a_full_dotnet_type_name))
+				Result.expand_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_event_information (a, an_event, a_full_dotnet_type_name))
+			end
 
 			if an_event.is_public then
 				l_icon_path := Path_icon_public_event
@@ -701,7 +710,7 @@ invariant
 	non_void_right_tree: right_tree /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -732,6 +741,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class DISPLAY_TYPE_TREE
-
+end

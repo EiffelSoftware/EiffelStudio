@@ -8,7 +8,7 @@ note
 
 class
 	ENTITY_LINE
-	
+
 create
 	make,
 	make_with_image_and_color,
@@ -26,7 +26,7 @@ feature -- Initialization
 			non_void_image: image /= Void
 			non_void_font: font /= Void
 		end
-		
+
 	make_with_image_and_color (an_image: STRING; a_foreground_color: EV_COLOR)
 			-- Initialiaze `image' and `foreground_color'.
 		require
@@ -62,16 +62,16 @@ feature -- Access
 
 	image: STRING
 			-- entity text.
-	
+
 	foreground_color: EV_COLOR
 			-- foreground color of entity.		
-	
+
 	font: EV_FONT
 			-- entity font.
-	
-	data: ANY
+
+	data: detachable ANY
 			-- data associated to entity.
-			
+
 feature -- Status Setting
 
 	set_data (a_data: like data)
@@ -81,7 +81,7 @@ feature -- Status Setting
 		ensure
 			data_set: data = a_data
 		end
-			
+
 invariant
 	non_void_image: image /= Void
 	non_void_foreground_color: foreground_color /= Void

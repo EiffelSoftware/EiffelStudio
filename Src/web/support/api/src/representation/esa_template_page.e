@@ -59,7 +59,6 @@ feature -- Status
 			Result := layout.cj_template_path
 		end
 
-
 feature -- Process
 
 	process

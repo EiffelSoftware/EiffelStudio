@@ -41,8 +41,10 @@ feature -- Basic operations
 			append_iterable_to ("Query parameters", req.query_parameters, s)
 			append_iterable_to ("Form parameters", req.form_parameters, s)
 
-			if not s.is_empty then
-				log.write_debug (generator + ".execute" + s)
+			debug
+				if not s.is_empty then
+					log.write_debug (generator + ".execute" + s)
+				end
 			end
 			execute_next (req, res)
 		end

@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Keep session parameter."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Julien"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,18 +12,17 @@ class
 
 feature -- Access
 
-	current_assembly: CONSUMED_ASSEMBLY
+	current_assembly: detachable CONSUMED_ASSEMBLY
 			-- Current assembly.
 		do
 			Result := internal_current_assembly.item
 		end
 
-	current_type: CONSUMED_TYPE
+	current_type: detachable CONSUMED_TYPE
 			-- Current type.
 		do
 			Result := internal_current_type.item
 		end
-
 
 feature -- Status Setting
 
@@ -49,28 +49,26 @@ feature -- Status Setting
 			current_type_set: current_type = an_type
 		end
 
-
 feature {NONE} -- Implementation
-	
-	internal_current_assembly: CELL [CONSUMED_ASSEMBLY]
+
+	internal_current_assembly: CELL [detachable CONSUMED_ASSEMBLY]
 			-- Internal representation of `current_assembly'.
 		once
 			Create Result.put (Void)
 		ensure
 			non_void_result: Result /= Void
 		end
-		
-	internal_current_type: CELL [CONSUMED_TYPE]
+
+	internal_current_type: CELL [detachable CONSUMED_TYPE]
 			-- Internal representation of `current_type'.
 		once
 			Create Result.put (Void)
 		ensure
 			non_void_result: Result /= Void
 		end
-		
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

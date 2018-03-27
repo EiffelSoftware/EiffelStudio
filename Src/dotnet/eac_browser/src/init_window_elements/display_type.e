@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Print in output the eiffel type with all its eiffel features corresponding to the given dotnet type name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Julien"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -52,7 +53,7 @@ feature -- Access
 	horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR
 			-- horizontal scroll bar.
 
-	assembly_of_type: CONSUMED_ASSEMBLY
+	assembly_of_type: detachable CONSUMED_ASSEMBLY
 			-- assembly where is located `dotnet_type_name'.
 
 	feature_selected: STRING
@@ -206,7 +207,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Scroolbar Setting
 
-	pick_action (a_x, a_y: INTEGER): SPECIFIC_TYPE
+	pick_action (a_x, a_y: INTEGER): detachable SPECIFIC_TYPE
 			-- action performed for a pick action in `output'.
 		local
 			current_x_position, current_y_position: INTEGER
@@ -237,13 +238,13 @@ feature {NONE} -- Scroolbar Setting
 						if current_y_position <= a_y and current_y_position + Nb_pixel_line >= a_y and
 						   current_x_position <= a_x and current_x_position + l_entity.font.string_width (l_entity.image) >= a_x then
 							l_data ?= l_entity.data
-							if l_data /= Void then
+							if l_data /= Void and then attached assembly_of_type as a then
 								create eac
-								Result := eac.find_consumed_type (assembly_of_type, l_data)
+								Result := eac.find_consumed_type (a, l_data)
 								output.set_foreground_color (Selected_feature_color)
 								output.fill_rectangle (current_x_position, current_y_position, l_entity.font.string_width (l_entity.image), Nb_pixel_line)
 								output.set_foreground_color (Text_color)
-								output.draw_text_top_left (current_x_position, current_y_position, eiffel_type_name (assembly_of_type, l_data.name))
+								output.draw_text_top_left (current_x_position, current_y_position, eiffel_type_name (a, l_data.name))
 							end
 						end
 						current_x_position := current_x_position + l_entity.font.string_width (l_entity.image)
@@ -442,7 +443,7 @@ invariant
 	non_void_a_horizontal_scroll_bar: horizontal_scroll_bar /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -473,6 +474,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class DISPLAY_TYPE
-
+end

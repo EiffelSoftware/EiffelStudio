@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Path to access icon"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Julien"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -53,7 +54,7 @@ feature -- Implementation
 		ensure
 			non_void_result: Result /= Void
 		end
-	
+
 	Path_icon_all_features: STRING
 			-- Path of inherited features icon.
 		once
@@ -61,7 +62,7 @@ feature -- Implementation
 		ensure
 			non_void_result: Result /= Void
 		end
-	
+
 	Path_icon_ancestors: STRING
 			-- Path of inherited features icon.
 		once
@@ -79,7 +80,7 @@ feature -- Class Icon
 		ensure
 			non_void_result: Result /= Void
 		end
-		
+
 	Path_icon_interface_class: STRING
 			-- Path of interface class icon.
 		once
@@ -122,7 +123,7 @@ feature -- Eiffel Icon
 		ensure
 			non_void_result: Result /= Void
 		end
-		
+
 
 feature -- Public Icons
 
@@ -141,7 +142,7 @@ feature -- Public Icons
 		ensure
 			non_void_result: Result /= Void
 		end
-			
+
 	Path_icon_public_function: STRING
 			-- Path of function icon.
 		once
@@ -165,7 +166,7 @@ feature -- Public Icons
 		ensure
 			non_void_result: Result /= Void
 		end
-			
+
 	Path_icon_public_event: STRING
 			-- Path of property icon.
 		once
@@ -191,7 +192,7 @@ feature -- Private Icons
 		ensure
 			non_void_result: Result /= Void
 		end
-			
+
 	Path_icon_private_function: STRING
 			-- Path of function icon.
 		once
@@ -215,7 +216,7 @@ feature -- Private Icons
 		ensure
 			non_void_result: Result /= Void
 		end
-			
+
 	Path_icon_private_event: STRING
 			-- Path of property icon.
 		once
@@ -233,7 +234,7 @@ feature -- Protected Icons
 		ensure
 			non_void_result: Result /= Void
 		end
-		
+
 	Path_icon_protected_procedure: STRING
 			-- Path of procedure icon.
 		once
@@ -241,7 +242,7 @@ feature -- Protected Icons
 		ensure
 			non_void_result: Result /= Void
 		end
-			
+
 	Path_icon_protected_function: STRING
 			-- Path of function icon.
 		once
@@ -265,7 +266,7 @@ feature -- Protected Icons
 		ensure
 			non_void_result: Result /= Void
 		end
-			
+
 	Path_icon_protected_event: STRING
 			-- Path of property icon.
 		once
@@ -274,10 +275,10 @@ feature -- Protected Icons
 			non_void_result: Result /= Void
 		end
 
-		
+
 feature {NONE} -- Implementation
 
-	load_icon (a_path: STRING): EV_PIXMAP
+	load_icon (a_path: STRING): detachable EV_PIXMAP
 			-- load icon from `a_path'.
 		require
 			non_void_a_path: a_path /= Void
@@ -304,27 +305,27 @@ feature {NONE} -- Implementation
 
 	Eiffel_path: STRING
 			-- Path to Eiffel installation.
-		local   
+		local
 			retried: BOOLEAN
 --			l_str: SYSTEM_STRING
---			l_registry_key: REGISTRY_KEY   
+--			l_registry_key: REGISTRY_KEY
 --			l_obj: SYSTEM_OBJECT
 		once
-			if not retried then   
+			if not retried then
 				Result := (create {EXECUTION_ENVIRONMENT}).get (Ise_eiffel_key)
---				if Result = Void then   
---					l_registry_key := feature {REGISTRY}.local_machine   
---					l_registry_key := l_registry_key.open_sub_key (("SOFTWARE").to_cil)   
---					l_registry_key := l_registry_key.open_sub_key (("ISE").to_cil)   
---					l_registry_key := l_registry_key.open_sub_key (("Eiffel52").to_cil)   
---					l_registry_key := l_registry_key.open_sub_key (("emitter").to_cil)   
---					l_obj := l_registry_key.get_value (Ise_eiffel_key.to_cil)   
---					l_str ?= l_obj   
+--				if Result = Void then
+--					l_registry_key := feature {REGISTRY}.local_machine
+--					l_registry_key := l_registry_key.open_sub_key (("SOFTWARE").to_cil)
+--					l_registry_key := l_registry_key.open_sub_key (("ISE").to_cil)
+--					l_registry_key := l_registry_key.open_sub_key (("Eiffel52").to_cil)
+--					l_registry_key := l_registry_key.open_sub_key (("emitter").to_cil)
+--					l_obj := l_registry_key.get_value (Ise_eiffel_key.to_cil)
+--					l_str ?= l_obj
 --
---					if l_str /= Void then   
---					 create Result.make_from_cil (l_str)   
---					end   
---				end 
+--					if l_str /= Void then
+--					 create Result.make_from_cil (l_str)
+--					end
+--				end
 
 				check
 					Ise_eiffel_defined: Result /= Void
@@ -332,21 +333,25 @@ feature {NONE} -- Implementation
 				if Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator then
 					Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
 				end
-			else   
-				-- FIXME: Manu 05/14/2002: we should raise an error here.   
-				io.error.put_string ("ISE_EIFFEL environment variable is not defined!%N")   
-			end 
+			else
+				-- FIXME: Manu 05/14/2002: we should raise an error here.
+				io.error.put_string ("ISE_EIFFEL environment variable is not defined!%N")
+				check
+					ISE_EIFFEL_is_set: False
+				then
+				end
+			end
 		ensure
 			exist: Result /= Void
-			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator 
-		rescue   
-			retried := True   
-			retry   
+			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
+		rescue
+			retried := True
+			retry
 		end
-		
+
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -377,5 +382,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- ICON_PATH
+end

@@ -41,6 +41,10 @@ feature -- Initialization
 			arguments := a_consumed_procedure.arguments
 			declared_type := a_consumed_procedure.declared_type
 			a := a_consumed_procedure.arguments
+			d := a_consumed_procedure.declared_type
+			e := a_consumed_procedure.eiffel_name
+			n := a_consumed_procedure.dotnet_name
+			q := a_consumed_procedure.dotnet_eiffel_name
 		ensure
 			eiffel_name_set: eiffel_name = a_consumed_procedure.eiffel_name
 			dotnet_name_set: dotnet_name = a_consumed_procedure.dotnet_name

@@ -6,7 +6,7 @@
 		},
 		"environments": {
 			"test": {
-                "connection_string":"Server=JVELILLA;Database=support;Uid=jv;Pwd=test;TrustedConnection=Yes"
+                "connection_string":"Server=SQLSERVER;Database=Support;TrustedConnection=Yes"
 			},
 			"development": {
 				"connection_string":"Server=sql.ise;Database=ESA_DB_TEST;Uid=XXX;Pwd=YYY;"
@@ -18,7 +18,8 @@
 	},
 	"logger": { 
 			"level":"debug",
-			"backup_count":"4"
+			"backup_count":"4",
+			"path": "logs/"
 		},
 	"smtp": {
 		"server": "localhost",
@@ -29,6 +30,5 @@
 		"remember_me":604800
 	},
 	"versions":["17.05","17.01","16.05","15.12","15.01","14.05","13.11"]
-
 }
 

@@ -42,7 +42,10 @@ feature -- Access
 			-- When non-zero, the value specifies the maximum number of backup files.
 
 	level: INTEGER
-		-- Logger level.
+			-- Logger level.
+
+	path: detachable PATH
+			-- optional path where to have logs. 	
 
 feature -- Element Change
 
@@ -76,5 +79,11 @@ feature -- Element Change
 			else
 				level := 0
 			end
+		end
+
+	set_path (a_path: detachable PATH)
+			-- Set `path' with 'a_path'.
+		do
+			path := a_path
 		end
 end

@@ -359,7 +359,6 @@ feature {NONE} --Implementation
 			end
 		end
 
-
 	build_redirect_uri (req: WSF_REQUEST; a_type: STRING): STRING
 					--	<input type="hidden" name="page" value="{$index/}"/>
 					--  <input type="hidden" name="category" value="{$view.selected_category/}"/>

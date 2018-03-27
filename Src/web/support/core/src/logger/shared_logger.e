@@ -29,19 +29,32 @@ feature -- Logger
 					--| Initialize the logging facility
 			create Result.make
 			create l_environment
+
+			l_path := create {PATH}.make_current
 			if attached separate_character_option_value ('d') as l_dir then
 				l_path := create {PATH}.make_from_string (l_dir)
-				create l_log_writer.make_at_location (l_path.extended ("..").appended ("\api.log"))
-			else
-				l_path := create {PATH}.make_current
-				create l_log_writer.make_at_location (l_path.extended("api.log"))
-			end
-			l_log_writer.set_max_file_size ({NATURAL_64}1024*1204)
-			if attached separate_character_option_value ('d') as l_dir then
 				l_logger_config := new_logger_level_configuration (l_path.extended("config").extended ("application_configuration.json"))
 			else
 				l_logger_config := new_logger_level_configuration (l_path.extended ("site").extended("config").extended ("application_configuration.json"))
 			end
+
+			if attached separate_character_option_value ('d') as l_dir then
+				l_path := create {PATH}.make_from_string (l_dir)
+				create l_log_writer.make_at_location (l_path.extended ("..").appended ("\api.log"))
+			else
+				if attached {PATH} l_logger_config.path as l_log_path then
+					if l_log_path.is_absolute then
+						create l_log_writer.make_at_location (l_log_path.extended ("api.log"))
+					else
+						l_path := create {PATH}.make_current
+						create l_log_writer.make_at_location (l_path.extended_path (l_log_path).extended ("api.log"))
+					end
+				else
+						-- by default logs are located the current directory /logs/api.log
+					create l_log_writer.make_at_location (l_path.extended("logs").extended("api.log"))
+				end
+			end
+			l_log_writer.set_max_file_size ({NATURAL_64}1024*1204)
 			l_log_writer.set_max_backup_count (l_logger_config.backup_count)
 			set_logger_level (l_log_writer, l_logger_config.level)
 			log.register_log_writer (l_log_writer)
@@ -85,10 +98,13 @@ feature {NONE} -- JSON
 			create Result
 			if attached json_file_from (a_path) as json_file then
 			 l_parser := new_json_parser (json_file)
-			 if  attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_parsed and then
+			 if  attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_valid and then
 			     attached {JSON_OBJECT} jv.item ("logger") as l_logger and then
 			     attached {JSON_STRING} l_logger.item ("backup_count") as l_count and then
 			     attached {JSON_STRING} l_logger.item ("level") as l_level then
+			     if attached {JSON_STRING} l_logger.item ("path") as l_path then
+			     	Result.set_path(create {PATH}.make_from_string (l_path.item))
+			     end
 			     Result.set_level (l_level.item)
 			     if l_count.item.is_natural then
 			     	Result.set_backup_count (l_count.item.to_natural)

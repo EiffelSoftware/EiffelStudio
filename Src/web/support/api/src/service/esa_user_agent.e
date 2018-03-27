@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ESA_USER_AGENT}."
+	description: "Object {ESA_USER_AGENT} responsible to detect the user agent, operating system, 32 or 64 bits."
 	date: "$Date$"
 	revision: "$Revision$"
 	EIS: "name=Wikipedia", "src=http://en.wikipedia.org/wiki/User_agent", "protocol=url"

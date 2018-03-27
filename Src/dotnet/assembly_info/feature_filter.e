@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class
 	FEATURE_FILTER
 
@@ -27,6 +28,7 @@ feature -- Initialization
 			create a_parameter.make
 			create current_comment.make_empty
 			create current_tag.make (10)
+			create {XM_CALLBACKS_NULL} next.make
 		ensure then
 			non_void_a_member: a_member /= Void
 			non_void_a_parameter: a_parameter /= Void
@@ -239,7 +241,8 @@ invariant
 	non_void_current_tag: current_tag /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	revised_by: "Alexander Kogtenkov"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -270,5 +273,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class FEATURE_FILTER
+end

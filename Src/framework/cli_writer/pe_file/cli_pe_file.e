@@ -19,12 +19,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like file_name; console_app, dll_app, is_32bits_app: BOOLEAN)
+	make (a_name: like file_name; console_app, dll_app, is_32bits_app: BOOLEAN; e: like emitter)
 			-- Create new PE file with name `a_name'.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 			valid_app_type: dll_app implies console_app
+			emitter_attached: attached e
 		local
 			l_characteristics: INTEGER_16
 		do
@@ -33,6 +34,7 @@ feature {NONE} -- Initialization
 			is_dll := dll_app
 			is_console := console_app
 			is_32bits := is_32bits_app
+			emitter := e
 
 				-- PE file header basic initialization.
 			create pe_header.make
@@ -92,9 +94,6 @@ feature -- Status
 	file_name: READABLE_STRING_GENERAL
 			-- Name of current PE file on disk.
 
-	has_debug_info: BOOLEAN
-			-- Does current have some debug info?
-
 	has_strong_name: BOOLEAN
 			-- Does current have a strong name signature?
 
@@ -119,8 +118,8 @@ feature -- Access
 	code: detachable MANAGED_POINTER
 			-- CLI code instruction stream.
 
-	debug_directory: CLI_DEBUG_DIRECTORY
-	debug_info: MANAGED_POINTER
+	debug_directory: detachable CLI_DEBUG_DIRECTORY
+	debug_info: detachable MANAGED_POINTER
 			-- Data for storing debug information in PE files.
 
 	strong_name_directory: detachable CLI_DIRECTORY
@@ -161,16 +160,6 @@ feature -- Settings
 			method_writer_set: method_writer = m
 		end
 
-	set_emitter (e: like emitter)
-			-- Set `emitter' to `e'.
-		require
-			e_not_void: e /= Void
-		do
-			emitter := e
-		ensure
-			emitter_set: emitter = e
-		end
-
 	set_entry_point_token (token: INTEGER)
 			-- Set `token' as entry point of current CLI image.
 		require
@@ -190,7 +179,6 @@ feature -- Settings
 		do
 			debug_directory := a_cli_debug_directory
 			debug_info := a_debug_info
-			has_debug_info := True
 		ensure
 			debug_directory_set: debug_directory = a_cli_debug_directory
 			debug_info_set: debug_info = a_debug_info
@@ -268,10 +256,13 @@ feature -- Saving
 				l_pe_file.put_managed_pointer (method_writer.item, 0, code_size)
 			end
 
-			if has_debug_info then
-				l_pe_file.put_managed_pointer (debug_directory, 0, debug_directory.count)
-				l_pe_file.put_managed_pointer (debug_info, 0, debug_info.count)
-				l_size := padding (debug_directory.count + debug_info.count, 16)
+			if
+				attached debug_directory as d and then
+				attached debug_info as i
+			then
+				l_pe_file.put_managed_pointer (d, 0, d.count)
+				l_pe_file.put_managed_pointer (i, 0, i.count)
+				l_size := padding (d.count + i.count, 16)
 				if l_size > 0 then
 					create l_padding.make (l_size)
 					l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
@@ -363,8 +354,11 @@ feature {NONE} -- Saving
 				code_size := 0
 			end
 
-			if has_debug_info then
-				debug_size := pad_up (debug_directory.count + debug_info.count, 16)
+			if
+				attached debug_directory as d and then
+				attached debug_info as i
+			then
+				debug_size := pad_up (d.count + i.count, 16)
 			else
 				debug_size := 0
 			end
@@ -440,17 +434,20 @@ feature {NONE} -- Saving
 			reloc_directory.set_rva (reloc_rva)
 			reloc_directory.set_data_size (reloc_size)
 
-			if has_debug_info then
+			if
+				attached debug_directory as d and then
+				attached debug_info as i
+			then
 				l_debug_directory := optional_header.directory (
 					{CLI_DIRECTORY_CONSTANTS}.Image_directory_entry_debug)
 				l_debug_directory.set_rva (text_rva + iat.count + cli_header.count + code_size)
-				l_debug_directory.set_data_size (debug_directory.count)
+				l_debug_directory.set_data_size (d.count)
 
-				debug_directory.set_address_of_data (text_rva + iat.count + cli_header.count +
-					code_size + debug_directory.count)
-				debug_directory.set_pointer_to_data (headers_size_on_disk + iat.count +
-					cli_header.count + code_size + debug_directory.count)
-				debug_directory.set_size (debug_info.count)
+				d.set_address_of_data (text_rva + iat.count + cli_header.count +
+					code_size + d.count)
+				d.set_pointer_to_data (headers_size_on_disk + iat.count +
+					cli_header.count + code_size + d.count)
+				d.set_size (i.count)
 			end
 
 			iat_directory := optional_header.directory (
@@ -569,7 +566,7 @@ invariant
 	public_key_not_void: (is_valid and has_strong_name) implies public_key /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

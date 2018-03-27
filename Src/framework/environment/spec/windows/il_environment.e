@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Information about current .NET environment"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,18 +19,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_version: READABLE_STRING_GENERAL)
+	make (a_version: detachable READABLE_STRING_GENERAL)
 			-- Create an instance of IL_ENVIRONMENT targeting a specific .NET version `a_version'.
 			-- If `a_version' is not specified we currently take `default_version'.
 			-- Set `version' with `a_version'.
 		do
-			if a_version /= Void then
+			if attached a_version then
 				create version.make_from_string_general (a_version)
 			else
 				version := default_version
 			end
 		ensure
-			version_set: version /= Void and (a_version /= Void implies version.same_string_general (a_version))
+			version_set: attached version and (attached a_version implies version.same_string_general (a_version))
 		end
 
 	default_create
@@ -369,7 +369,7 @@ invariant
 		version.item (3) = '.' and version.item (4).is_digit)
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -400,4 +400,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class IL_ENVIRONMENT
+end

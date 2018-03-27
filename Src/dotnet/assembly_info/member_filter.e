@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class
 	MEMBER_FILTER
 
@@ -22,6 +23,9 @@ feature -- Initialization
 		do
 			create xml_members.make (10000)
 			create current_tag.make (10)
+			create {XM_CALLBACKS_NULL} next.make
+			create parser.make
+			create current_xml_member.make
 		ensure then
 			non_void_xml_members: xml_members /= Void
 			non_void_current_tag: current_tag /= Void
@@ -146,7 +150,8 @@ invariant
 	non_void_current_tag: current_tag /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	revised_by: "Alexander Kogtenkov"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -177,5 +182,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class MEMBER_FILTER
+end

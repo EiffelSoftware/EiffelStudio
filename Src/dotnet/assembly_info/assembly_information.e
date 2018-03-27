@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (a_version: STRING)
+	make (a_version: like runtime_version)
 		do
 			create xml_file_path.make_empty
 			runtime_version := a_version
@@ -36,28 +36,30 @@ feature -- Initialization
 			l_parser: XM_EIFFEL_PARSER
 			l_file: RAW_FILE
 			l_offset: INTEGER
+			mp: like member_parser
 		do
 			if not retried and then not Member_parser_table.has (an_assembly_name) then
 				xml_file_path := path_to_assembly_doc (an_assembly_name)
 
 					-- get position of '<' because there could be some numbers for the encoding that are not taken into account by the positions returned by gobo
 				create l_file.make_with_path (xml_file_path)
-				create member_parser.make
+				create mp.make
+				member_parser := mp
 				if l_file.exists and then l_file.is_readable then
 					l_file.open_read
 					l_file.read_stream (5)
 					l_file.close
 					l_offset := l_file.last_string.index_of ('<', 1)
 					if l_offset > 0 then
-						member_parser.set_offset (l_offset - 1)
+						mp.set_offset (l_offset - 1)
 					end
 
 					create l_xml_file.make_with_path (xml_file_path)
 					l_xml_file.open_read
 					create l_parser.make
 					l_parser.set_string_mode_mixed
-					member_parser.set_parser (l_parser)
-					l_parser.set_callbacks (standard_callbacks_pipe (<<member_parser>>))
+					mp.set_parser (l_parser)
+					l_parser.set_callbacks (standard_callbacks_pipe (<<mp>>))
 					l_parser.parse_from_stream (l_xml_file)
 					l_xml_file.close
 					check
@@ -65,7 +67,7 @@ feature -- Initialization
 					end
 				end
 
-				Member_parser_table.put (member_parser, an_assembly_name)
+				Member_parser_table.put (mp, an_assembly_name)
 				initialized := True
 			elseif not Member_parser_table.has (an_assembly_name) then
 				Member_parser_table.put (Void, an_assembly_name)
@@ -85,7 +87,7 @@ feature {NONE} -- Access
 	initialized: BOOLEAN
 			-- Did Current initialize correctly?
 
-	member_parser_table: HASH_TABLE [MEMBER_FILTER, STRING]
+	member_parser_table: HASH_TABLE [detachable MEMBER_FILTER, STRING]
 			-- Caching member_parser already calculated.
 		once
 			create Result.make (20)
@@ -93,18 +95,18 @@ feature {NONE} -- Access
 			non_void_result: Result /= Void
 		end
 
-	member_parser: MEMBER_FILTER
+	member_parser: detachable MEMBER_FILTER
 			-- Current member parser.
 
 	xml_file_path: PATH
 			-- Path to current xml document.
 
-	runtime_version: STRING
+	runtime_version: detachable READABLE_STRING_32
 			-- Runtime version where we look for XML documentation associated to Microsoft assemblies.
 
 feature -- Basic Operations
 
-	find_type (assembly_type_name, a_full_dotnet_type: READABLE_STRING_32): MEMBER_INFORMATION
+	find_type (assembly_type_name, a_full_dotnet_type: READABLE_STRING_32): detachable MEMBER_INFORMATION
 			-- Find comments relative to `a_full_dotnet_type'.
 		require
 			non_void_assembly_type_name: assembly_type_name /= Void
@@ -114,11 +116,12 @@ feature -- Basic Operations
 		local
 			l_full_dotnet_type: STRING_32
 		do
-			if not Member_parser_table.has (assembly_type_name) then
-				initialize (assembly_type_name)
-			else
+			Member_parser_table.search (assembly_type_name)
+			if Member_parser_table.found then
 				xml_file_path := path_to_assembly_doc (assembly_type_name)
-				member_parser := Member_parser_table.item (assembly_type_name)
+				member_parser := member_parser_table.found_item
+			else
+				initialize (assembly_type_name)
 			end
 			if not xml_file_path.is_empty and member_parser /= Void then
 				create l_full_dotnet_type.make_from_string (a_full_dotnet_type)
@@ -130,7 +133,7 @@ feature -- Basic Operations
 			end
 		end
 
-	find_feature (assembly_type_name, a_full_dotnet_type: READABLE_STRING_32; a_member_signature: STRING): MEMBER_INFORMATION
+	find_feature (assembly_type_name, a_full_dotnet_type: READABLE_STRING_32; a_member_signature: STRING): detachable MEMBER_INFORMATION
 			-- Find comments of feature of `a_full_dotnet_type' corresponding to `a_feature_signature'.
 			-- Constructor signature: #ctor[(TYPE,TYPE,...)]
 			-- Feature signature: feature_name[(TYPE,TYPE,...)]
@@ -147,14 +150,15 @@ feature -- Basic Operations
 			retried: BOOLEAN
 		do
 			if not retried then
-				if not Member_parser_table.has (assembly_type_name) then
-					initialize (assembly_type_name)
-				else
+				member_parser_table.search (assembly_type_name)
+				if member_parser_table.found then
 					xml_file_path := path_to_assembly_doc (assembly_type_name)
-					member_parser := Member_parser_table.item (assembly_type_name)
+					member_parser := member_parser_table.found_item
 					initialized := True
+				else
+					initialize (assembly_type_name)
 				end
-				if initialized then
+				if initialized and then attached member_parser then
 					create l_full_dotnet_type.make_from_string (a_full_dotnet_type)
 					if l_full_dotnet_type.has ('+') then
 							-- Replace '+' by '.' for nested types.
@@ -261,7 +265,7 @@ feature {NONE} -- Status Setting
 
 feature {NONE} -- Implementation
 
-	find_member (a_full_dotnet_type: STRING; a_member_signature: STRING): MEMBER_INFORMATION
+	find_member (a_full_dotnet_type: STRING; a_member_signature: STRING): detachable MEMBER_INFORMATION
 			-- Find comments of feature of `a_full_dotnet_type' corresponding to `a_member_signature'.
 		require
 			non_void_a_full_dotnet_type: a_full_dotnet_type /= Void
@@ -278,36 +282,38 @@ feature {NONE} -- Implementation
 			l_xml_members: HASH_TABLE [XML_MEMBER, STRING]
 			l_xml_member: XML_MEMBER
 		do
-			if a_member_signature.is_empty then
-				l_key_member := a_full_dotnet_type
-			else
-				create l_key_member.make (a_full_dotnet_type.count + a_member_signature.count + 1)
-				l_key_member.append (a_full_dotnet_type)
-				l_key_member.append_character ('.')
-				l_key_member.append (a_member_signature)
-			end
-			l_xml_members := member_parser.Xml_members
-			l_xml_members.search (l_key_member)
-			if l_xml_members.found then
-				create f.make_with_path (xml_file_path)
-				f.open_read
-				l_xml_member := l_xml_members.found_item
-				f.go (l_xml_member.pos_in_file)
-				f.read_stream (l_xml_member.number_of_char)
-				if f.last_string /= Void then
-					l_last_str := f.last_string
-					l_last_str.prepend ("<THE_MEMBER>")
-					l_last_str.append ("%N</THE_MEMBER>%N")
+			if attached member_parser as mp then
+				if a_member_signature.is_empty then
+					l_key_member := a_full_dotnet_type
+				else
+					create l_key_member.make (a_full_dotnet_type.count + a_member_signature.count + 1)
+					l_key_member.append (a_full_dotnet_type)
+					l_key_member.append_character ('.')
+					l_key_member.append (a_member_signature)
+				end
+				l_xml_members := mp.Xml_members
+				l_xml_members.search (l_key_member)
+				if l_xml_members.found then
+					create f.make_with_path (xml_file_path)
+					f.open_read
+					l_xml_member := l_xml_members.found_item
+					f.go (l_xml_member.pos_in_file)
+					f.read_stream (l_xml_member.number_of_char)
+					if f.last_string /= Void then
+						l_last_str := f.last_string
+						l_last_str.prepend ("<THE_MEMBER>")
+						l_last_str.append ("%N</THE_MEMBER>%N")
 
-					create l_parser.make
-					create l_feature_filter.make
-					l_parser.set_callbacks (callbacks_pipe (<<l_feature_filter>>))
-					l_parser.parse_from_string (l_last_str)
-					check
-						ok_parsing: l_parser.is_correct
-					end
-					if l_feature_filter.A_member.name.is_equal (l_key_member) then
-						Result := l_feature_filter.A_member
+						create l_parser.make
+						create l_feature_filter.make
+						l_parser.set_callbacks (callbacks_pipe (<<l_feature_filter>>))
+						l_parser.parse_from_string (l_last_str)
+						check
+							ok_parsing: l_parser.is_correct
+						end
+						if l_feature_filter.A_member.name.is_equal (l_key_member) then
+							Result := l_feature_filter.A_member
+						end
 					end
 				end
 			end
@@ -317,7 +323,7 @@ invariant
 	non_void_xml_file_path: xml_file_path /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -348,5 +354,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class ASSEMBLY_INFORMATION
+end

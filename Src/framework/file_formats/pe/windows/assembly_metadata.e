@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A C/C++ interop structure corresponding to ASSEMBYMETADATA in cor.h
 	]"
@@ -73,16 +73,14 @@ feature -- Access
 			Result := get_revision_number (item)
 		end
 
-	locales: LIST [STRING_32]
+	locales: detachable LIST [STRING_32]
 			-- A list of locale names conforming to the RFC1766 specification specifying the locales.
 		local
 			l_p: POINTER
-			l_str: WEL_STRING
 		do
 			l_p := get_locale (item)
 			if l_p /= default_pointer then
-				create l_str.share_from_pointer (l_p)
-				Result := l_str.string.split (';')
+				Result := (create {WEL_STRING}.share_from_pointer (l_p)).string.split (';')
 			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
@@ -203,7 +201,7 @@ feature {NONE} -- Extenral access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -234,4 +232,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {ASSEMBLY_METADATA}
+end

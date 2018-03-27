@@ -23,28 +23,26 @@ feature {NONE} -- Initialize
 			not_a_runtime_version_is_empty: not a_runtime_version.is_empty
 		local
 			l_reg: WEL_REGISTRY
-			l_val: WEL_REGISTRY_KEY_VALUE
 			l_p: POINTER
 			l_dir: STRING_32
-			l_dll: WEL_DLL
 			l_dis: like dispenser
 			l_cache: like assembly_cache
 		do
 			create l_reg
 			l_p := l_reg.open_key ({WEL_REGISTRY}.hkey_local_machine, "SOFTWARE\Microsoft\.NETFramework", {WEL_REGISTRY_ACCESS_MODE}.key_read)
 			if l_p /= default_pointer then
-				l_val := l_reg.key_value (l_p, "InstallRoot")
-				if l_val.type = {WEL_REGISTRY_KEY_VALUE}.reg_sz then
+				if
+					attached l_reg.key_value (l_p, "InstallRoot") as l_val and then
+					l_val.type = {WEL_REGISTRY_KEY_VALUE}.reg_sz
+				then
 					l_dir := l_val.string_value
 					l_dir.prune_all_trailing ('\')
 					l_dir.prune_all_trailing ('/')
 					if (create {DIRECTORY}.make (l_dir)).exists then
 						l_dir.append ("\" + a_runtime_version + "\")
 						add_runtime_path (l_dir)
-
-							-- Check DLL exists
-						create l_dll.make ("mscorsn.dll")
-						strong_name_retriveable := l_dll.exists
+							-- Check DLL exists.
+						strong_name_retriveable := (create {WEL_DLL}.make ("mscorsn.dll")).exists
 					end
 				end
 				l_reg.close_key (l_p)
@@ -79,7 +77,7 @@ feature -- Clean up
 
 feature -- Basic operations
 
-	retrieve_assembly_properties (a_file_name: READABLE_STRING_GENERAL): ASSEMBLY_PROPERTIES
+	retrieve_assembly_properties (a_file_name: READABLE_STRING_GENERAL): detachable ASSEMBLY_PROPERTIES
 			-- Retrieves assembly properties for `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -115,18 +113,18 @@ feature -- Basic operations
 
 				l_res := cpp_assembly_props (l_scope, $l_hash, l_name.item, $l_name_len, $l_flags, l_amd)
 				if l_res = 0 then
-					if strong_name_retriveable then
-						if strong_name_token_from_assembly (l_fn.item, $l_p, $l_bytes_len) then
-							create l_bytes.make_from_pointer (l_p, l_bytes_len.to_integer_32)
-							l_len := l_bytes_len.to_integer_32
-							create l_key.make_filled (0, 1, l_len)
-							from until i = l_len  loop
-								l_key.put (l_bytes.read_natural_8 (i), i + 1)
-								i := i + 1
-							end
-							strong_name_free_buffer (l_p)
-							l_p := default_pointer
+					if
+						strong_name_retriveable and then
+						strong_name_token_from_assembly (l_fn.item, $l_p, $l_bytes_len)
+					then
+						create l_bytes.make_from_pointer (l_p, l_bytes_len.to_integer_32)
+						l_len := l_bytes_len.to_integer_32
+						create l_key.make_filled (0, 1, l_len)
+						from until i = l_len  loop
+							l_key.put (l_bytes.read_natural_8 (i), i + 1)
+							i := i + 1
 						end
+						strong_name_free_buffer (l_p)
 					end
 
 					l_name.set_count (l_name_len.to_integer_32)
@@ -177,7 +175,6 @@ feature {NONE} -- Caching
 			l_access: EXECUTION_ENVIRONMENT
 			l_name, l_path, l_new_path: STRING_32
 			l_wname, l_wpath: WEL_STRING
-			l_done: BOOLEAN
 		do
 			if not added_paths.has (a_path) then
 				create l_access
@@ -199,7 +196,7 @@ feature {NONE} -- Caching
 					-- Really set the variable because on .NET ENVIRONMENT_ACCESS.put does not work.
 				create l_wname.make (l_name)
 				create l_wpath.make (l_new_path)
-				l_done := c_set_environment_variable (l_wname.item, l_wpath.item)
+				c_set_environment_variable (l_wname.item, l_wpath.item).do_nothing
 
 				added_paths.force (True, a_path)
 			end

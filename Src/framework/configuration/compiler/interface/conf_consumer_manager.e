@@ -105,12 +105,13 @@ feature -- Observers
 
 feature -- Commands
 
-	build_assemblies (a_new_assemblies: like new_assemblies; an_old_assemblies: detachable STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE])
+	build_assemblies (a_new_assemblies: attached like new_assemblies; an_old_assemblies: detachable STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE])
 			-- Build information about `a_new_assemblies' from the metadata cache and `an_old_assemblies' and store them in `assemblies'.
 		require
 			a_new_assemblies_not_void: a_new_assemblies /= Void
 		local
 			l_retried: BOOLEAN
+			o: like old_assemblies
 		do
 			if not l_retried then
 					-- load information from metadata cache, consume if the metadata cache does not yet exist
@@ -122,28 +123,30 @@ feature -- Commands
 					cache_retrieved: cache_content /= Void
 				end
 
-				if an_old_assemblies /= Void then
-					old_assemblies := an_old_assemblies
+				o := an_old_assemblies
+				if attached o then
+					old_assemblies := o
 					check_old_assemblies_in_cache
-					old_assemblies.linear_representation.do_all (agent {CONF_PHYSICAL_ASSEMBLY}.reset_assemblies)
+					o.linear_representation.do_all (agent {CONF_PHYSICAL_ASSEMBLY}.reset_assemblies)
 				else
-					create old_assemblies.make (0)
+					create o.make (0)
+					old_assemblies := o
 				end
 				new_assemblies := a_new_assemblies
-				create assemblies.make (old_assemblies.count)
+				create assemblies.make (o.count)
 				linear_assemblies.wipe_out
 
 					-- go through all the assemblies and update the information if necessary
 				from
-					new_assemblies.start
+					a_new_assemblies.start
 				until
-					new_assemblies.after
+					a_new_assemblies.after
 				loop
 						-- build the assembly,
 						-- consume if necessary
-					build_assembly (new_assemblies.item_for_iteration)
+					build_assembly (a_new_assemblies.item_for_iteration)
 
-					new_assemblies.forth
+					a_new_assemblies.forth
 				end
 
 					-- build/add dependencies
@@ -156,8 +159,8 @@ feature -- Commands
 					linear_assemblies.forth
 				end
 			end
-			if internal_il_emitter.item /= Void then
-				il_emitter.unload
+			if attached internal_il_emitter.item as e then
+				e.unload
 			end
 		ensure
 			assemblies_set: not is_error implies assemblies /= Void
@@ -165,7 +168,10 @@ feature -- Commands
 			check
 				is_error: is_error
 			end
-			if attached {CONF_EXCEPTION} exception_manager.last_exception.original as lt_ex then
+			if
+				attached exception_manager.last_exception as x and then
+				attached {CONF_EXCEPTION} x.original as lt_ex
+			then
 				l_retried := True
 				retry
 			end
@@ -209,36 +215,43 @@ feature {NONE} -- Implementation
 			-- Get the physical assembly for `a_consumed'.
 		require
 			a_consumed_ok: a_consumed /= Void
+			assemblies_attached: attached assemblies
 		local
 			l_guid: READABLE_STRING_32
 		do
-				-- see if we already have information about this assembly
-			l_guid := a_consumed.unique_id
-			Result := assemblies.item (l_guid)
-			if Result = Void then
-					-- see if we have information from a previous compilation
-				if attached old_assemblies as a and then attached {like get_physical_assembly} a.item (l_guid) as l_as_i then
-					Result := l_as_i
-				else
-					check old_unset: old_assemblies.item (l_guid) = Void end
-				end
-				if attached Result then
-					old_assemblies.remove (l_guid)
-					Result.set_target (application_target)
-						-- has the assembly been modified?
-					if Result.has_date_changed then
-							-- update information
-						Result.set_consumed_assembly (a_consumed)
-						rebuild_classes (Result)
-						Result.set_date
+			check
+				from_precondition: attached assemblies as a
+			then
+					-- see if we already have information about this assembly
+				l_guid := a_consumed.unique_id
+				Result := a.item (l_guid)
+				if Result = Void then
+						-- see if we have information from a previous compilation
+					if attached old_assemblies as o and then attached {like get_physical_assembly} o.item (l_guid) as l_as_i then
+						Result := l_as_i
+					else
+						check old_unset: attached old_assemblies as o implies not attached o.item (l_guid) end
 					end
-				else
-						-- create a new physical assembly
-					Result := factory.new_physical_assembly (a_consumed, full_cache_path, application_target)
-					rebuild_classes (Result)
+					if attached Result then
+						if attached old_assemblies as o then
+							o.remove (l_guid)
+						end
+						Result.set_target (application_target)
+							-- has the assembly been modified?
+						if Result.has_date_changed then
+								-- update information
+							Result.set_consumed_assembly (a_consumed)
+							rebuild_classes (Result)
+							Result.set_date
+						end
+					else
+							-- create a new physical assembly
+						Result := factory.new_physical_assembly (a_consumed, full_cache_path, application_target)
+						rebuild_classes (Result)
+					end
+					a.force (Result, l_guid)
+					linear_assemblies.force (Result)
 				end
-				assemblies.force (Result, l_guid)
-				linear_assemblies.force (Result)
 			end
 		ensure
 			Result_valid: Result /= Void and then Result.is_valid
@@ -250,6 +263,7 @@ feature {NONE} -- Implementation
 			-- Build information for `a_assembly'.
 		require
 			a_assembly_ok: a_assembly /= Void and then a_assembly.is_valid
+			assemblies_attached: attached assemblies
 		local
 			l_physical_assembly: CONF_PHYSICAL_ASSEMBLY
 		do
@@ -274,13 +288,15 @@ feature {NONE} -- Implementation
 			a_assembly_ok: a_assembly /= Void and then a_assembly.is_valid
 			a_assembly_physical_assembly_set: a_assembly.physical_assembly /= Void
 		local
-			l_classes, l_new_classes: detachable STRING_TABLE [CONF_CLASS]
-			l_renamings: detachable STRING_TABLE [READABLE_STRING_32]
-			l_prefix: detachable READABLE_STRING_32
+			l_new_classes: STRING_TABLE [CONF_CLASS]
+			l_renamings: STRING_TABLE [READABLE_STRING_32]
+			l_prefix: READABLE_STRING_32
 			l_name: STRING_32
 		do
-			l_classes := a_assembly.physical_assembly.classes
-			if l_classes /= Void then
+			if
+				attached a_assembly.physical_assembly as a and then
+				attached a.classes as l_classes
+			then
 				l_renamings := a_assembly.renaming
 				l_prefix := a_assembly.name_prefix
 
@@ -328,6 +344,7 @@ feature {NONE} -- Implementation
 			-- Build dependencies for `an_assembly'.
 		require
 			an_assembly_ok: an_assembly /= Void
+			assemblies_attached: attached assemblies
 		local
 			l_guid, l_dep_guid: READABLE_STRING_32
 			l_reader: EIFFEL_DESERIALIZER
@@ -530,28 +547,25 @@ feature {NONE} -- retrieving information from cache
 			a_location_set: a_location /= Void and then not a_location.is_empty
 		local
 			l_formated_location: PATH
-			l_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			l_as: CONSUMED_ASSEMBLY
 		do
 				-- find the assembly in the cache
-			l_formated_location := a_location.canonical_path
-			from
-				l_assemblies := cache_content.assemblies
-				l_assemblies.start
-			until
-				l_assemblies.after
-			loop
-				l_as := l_assemblies.item
-				if l_as.has_same_path (l_formated_location) then
-					Result := l_as
-					l_assemblies.finish
+			if attached cache_content as c then
+				l_formated_location := a_location.canonical_path
+				across
+					c.assemblies as a
+				until
+					attached Result
+				loop
+					l_as := a.item
+					if l_as.has_same_path (l_formated_location) then
+						Result := l_as
+					end
 				end
-				l_assemblies.forth
-			end
-
-				-- check if the cache information is up to date
-			if Result /= Void and then not is_cache_up_to_date (Result) then
-				Result := Void
+					-- check if the cache information is up to date
+				if Result /= Void and then not is_cache_up_to_date (Result) then
+					Result := Void
+				end
 			end
 		end
 
@@ -561,32 +575,29 @@ feature {NONE} -- retrieving information from cache
 			cache_content_set: cache_content /= Void
 			an_assembly_ok: an_assembly /= Void and then an_assembly.is_non_local_assembly
 		local
-			l_name, l_version, l_culture, l_key: detachable READABLE_STRING_32
-			l_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			l_as: CONSUMED_ASSEMBLY
 		do
-			l_name := an_assembly.assembly_name
-			l_version := an_assembly.assembly_version
-			l_culture := an_assembly.assembly_culture
-			l_key := an_assembly.assembly_public_key_token
-			if l_name /= Void and l_version /= Void and l_culture /= Void and l_key /= Void then
-				from
-					l_assemblies := cache_content.assemblies
-					l_assemblies.start
-				until
-					Result /= Void or l_assemblies.after
-				loop
-					l_as := l_assemblies.item
-					if l_as.has_same_gac_information (l_name, l_version, l_culture, l_key) then
-						Result := l_as
-						l_assemblies.finish
+			if
+				attached an_assembly.assembly_name as l_name and
+				attached an_assembly.assembly_version as l_version and
+				attached an_assembly.assembly_culture as l_culture and
+				attached an_assembly.assembly_public_key_token as l_key
+			then
+				if attached cache_content as c then
+					across
+						c.assemblies as cache_assemblies
+					until
+						attached Result
+					loop
+						l_as := cache_assemblies.item
+						if l_as.has_same_gac_information (l_name, l_version, l_culture, l_key) then
+							Result := l_as
+						end
 					end
-					l_assemblies.forth
-				end
-
-					-- check if the cache information is up to date
-				if Result /= Void and then not is_cache_up_to_date (Result) then
-					Result := Void
+						-- check if the cache information is up to date
+					if Result /= Void and then not is_cache_up_to_date (Result) then
+						Result := Void
+					end
 				end
 			else
 				check precondition__an_assembly_ok: False end
@@ -604,38 +615,38 @@ feature {NONE} -- Consuming
 			l_paths: STRING_32
 			l_path: READABLE_STRING_GENERAL
 			l_unique_paths: STRING_TABLE [BOOLEAN]
-			l_emitter: like il_emitter
 		do
 			create l_unique_paths.make_caseless (10)
 
 			on_consume_assemblies
-			l_emitter := il_emitter
-			create l_paths.make_empty
-			across an_assemblies as l_assembly loop
-				l_a := l_assembly.item
-				if l_a.is_non_local_assembly then
-					if
-						attached l_a.assembly_name as l_assembly_name and
-						attached l_a.assembly_version as l_assembly_version and
-						attached l_a.assembly_culture as l_assembly_culture and
-						attached l_a.assembly_public_key_token as l_assembly_public_key_token
-					then
-						l_emitter.consume_assembly (l_assembly_name, l_assembly_version, l_assembly_culture, l_assembly_public_key_token, True)
+			if attached il_emitter as l_emitter then
+				create l_paths.make_empty
+				across an_assemblies as l_assembly loop
+					l_a := l_assembly.item
+					if l_a.is_non_local_assembly then
+						if
+							attached l_a.assembly_name as l_assembly_name and
+							attached l_a.assembly_version as l_assembly_version and
+							attached l_a.assembly_culture as l_assembly_culture and
+							attached l_a.assembly_public_key_token as l_assembly_public_key_token
+						then
+							l_emitter.consume_assembly (l_assembly_name, l_assembly_version, l_assembly_culture, l_assembly_public_key_token, True)
+						else
+							check is_non_local_assembly: False end
+						end
 					else
-						check is_non_local_assembly: False end
-					end
-				else
-					l_path := l_a.location.evaluated_path.name
-					if not l_unique_paths.has (l_path) then
-						l_unique_paths.force (True, l_path)
-						l_paths.append_string_general (l_path)
-						l_paths.append_character (';')
+						l_path := l_a.location.evaluated_path.name
+						if not l_unique_paths.has (l_path) then
+							l_unique_paths.force (True, l_path)
+							l_paths.append_string_general (l_path)
+							l_paths.append_character (';')
+						end
 					end
 				end
-			end
-			if not l_paths.is_empty then
-				l_paths.remove_tail (1)
-				l_emitter.consume_assembly_from_path (l_paths, True, Void)
+				if not l_paths.is_empty then
+					l_paths.remove_tail (1)
+					l_emitter.consume_assembly_from_path (l_paths, True, Void)
+				end
 			end
 			retrieve_cache
 			if cache_content = Void then
@@ -654,7 +665,6 @@ feature {NONE} -- Consuming
 			l_paths: STRING_32
 			l_path: READABLE_STRING_GENERAL
 			l_unique_paths: STRING_TABLE [BOOLEAN]
-			l_emitter: like il_emitter
 		do
 			create l_unique_paths.make_caseless (10)
 
@@ -673,8 +683,9 @@ feature {NONE} -- Consuming
 			end
 			if not l_paths.is_empty then
 				l_paths.remove_tail (1)
-				l_emitter := il_emitter
-				l_emitter.consume_assembly_from_path (l_paths, True, Void)
+				if attached il_emitter as l_emitter then
+					l_emitter.consume_assembly_from_path (l_paths, True, Void)
+				end
 			end
 			retrieve_cache
 			if cache_content = Void then
@@ -688,12 +699,10 @@ feature {NONE} -- Consuming
 			-- Consume `an_assembly' which was specified without a location.
 		require
 			an_assembly_ok: an_assembly /= Void and then an_assembly.is_non_local_assembly
-		local
-			l_emitter: like il_emitter
 		do
 			on_consume_assemblies
-			l_emitter := il_emitter
 			if
+				attached il_emitter as l_emitter and then
 				(attached an_assembly.assembly_name as l_assembly_name and then not l_assembly_name.is_empty) and
 				(attached an_assembly.assembly_version as l_assembly_version and then not l_assembly_version.is_empty) and
 				(attached an_assembly.assembly_culture as l_assembly_culture and then not l_assembly_culture.is_empty) and
@@ -789,19 +798,22 @@ feature {NONE} -- helpers
 			old_assemblies_not_void: old_assemblies /= Void
 			cache_content_not_void: cache_content /= Void
 		local
-			l_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			l_guids: SEARCH_TABLE [READABLE_STRING_32]
 		do
 				-- build list of guids in cache
-			from
-				l_assemblies := cache_content.assemblies
-				create l_guids.make (l_assemblies.count)
-				l_assemblies.start
-			until
-				l_assemblies.after
-			loop
-				l_guids.force (l_assemblies.item.unique_id)
-				l_assemblies.forth
+			if
+				attached cache_content as c and then
+				attached c.assemblies as cache_assemblies
+			then
+				across
+					cache_assemblies as a
+				from
+					create l_guids.make (cache_assemblies.count)
+				loop
+					l_guids.force (a.item.unique_id)
+				end
+			else
+				create l_guids.make (0)
 			end
 
 			if attached old_assemblies as a then
@@ -842,15 +854,17 @@ feature {NONE} -- Contract
 	assemblies_valid: BOOLEAN
 			-- Are `assemblies' valid?
 		do
-			Result := True
-			if not linear_assemblies.is_empty then
-				Result := assemblies /= Void and then assemblies.count = linear_assemblies.count and then
-					linear_assemblies.for_all (agent (a_assembly: CONF_PHYSICAL_ASSEMBLY): BOOLEAN
-						do
-							Result := a_assembly.is_valid and a_assembly.classes_set and assemblies.has_key (a_assembly.guid) and then assemblies.found_item = a_assembly
-						end)
+			if linear_assemblies.is_empty then
+				Result := attached assemblies as a implies a.is_empty
 			else
-				Result := assemblies = Void or else assemblies.is_empty
+				Result :=
+					attached assemblies as a and then
+					a.count = linear_assemblies.count and then
+					across
+						linear_assemblies as l
+					all
+						l.item.is_valid and l.item.classes_set and a.item (l.item.guid) = l.item
+					end
 			end
 		end
 

@@ -55,6 +55,7 @@ feature -- Status Report
 			l_retried: BOOLEAN
 			l_file: KL_BINARY_INPUT_FILE
 			gobo: GOBO_FILE_UTILITIES
+			e: like error_message
 		do
 			if not l_retried then
 				l_file := gobo.make_binary_input_file (a_file)
@@ -67,12 +68,13 @@ feature -- Status Report
 					l_errors := Error_handler.error_list
 					if l_errors /= Void and then not l_errors.is_empty then
 						if attached {SYNTAX_ERROR} l_errors.first as l_syntax_error then
-							create error_message.make (256)
-							error_message.append ({STRING_32} "Syntax error at line ")
-							error_message.append_string_general (l_syntax_error.line.out)
+							create e.make (256)
+							error_message := e
+							e.append ({STRING_32} "Syntax error at line ")
+							e.append_string_general (l_syntax_error.line.out)
 							if not l_syntax_error.error_message.is_empty then
-								error_message.append ({STRING_32} ": ")
-								error_message.append_string_general (l_syntax_error.error_message)
+								e.append ({STRING_32} ": ")
+								e.append_string_general (l_syntax_error.error_message)
 							end
 						else
 							error_message := {STRING_32} "Syntax error"
@@ -89,8 +91,10 @@ feature -- Status Report
 							if l_match_list /= Void then
 								create l_new_pragma.make (300)
 								l_new_pragma.append ("--#line ")
-								l_new_pragma.append ((l_features.first_token (l_match_list).line - 1).out)
-								l_new_pragma.append (first_line_pragma.substring (l_index - 1, first_line_pragma.count))
+								if attached l_features.first_token (l_match_list) as first_token then
+									l_new_pragma.append ((first_token.line - 1).out)
+								end
+								l_new_pragma.append (l_first_line_pragma.substring (l_index - 1, l_first_line_pragma.count))
 								l_new_pragma.append (line_return)
 								l_features.prepend_text (l_new_pragma, l_match_list)
 							else
@@ -129,8 +133,12 @@ feature -- Status Report
 			l_ast := ast_from_file (a_file_names.item)
 			if successful and then l_ast /= Void then
 				l_match_list := roundtrip_eiffel_parser.match_list
-				if l_match_list /= Void and l_ast.is_partial then
-					l_ast.class_keyword (l_match_list).replace_text ("class", l_match_list)
+				if
+					l_match_list /= Void and then
+					l_ast.is_partial and then
+					attached l_ast.class_keyword (l_match_list) as class_keyword
+				then
+					class_keyword.replace_text ("class", l_match_list)
 				end
 				l_is_deferred := l_ast.is_deferred
 				l_is_expanded := l_ast.is_expanded
@@ -160,11 +168,19 @@ feature -- Status Report
 					a_file_names.forth
 				end
 				if successful and l_match_list /= Void then
-					if not l_ast.is_deferred and l_is_deferred then
-						l_ast.class_keyword (l_match_list).prepend_text ("deferred ", l_match_list)
+					if
+						not l_ast.is_deferred and
+						l_is_deferred and then
+						attached l_ast.class_keyword (l_match_list) as class_keyword
+					then
+						class_keyword.prepend_text ("deferred ", l_match_list)
 					end
-					if not l_ast.is_expanded and l_is_expanded then
-						l_ast.class_keyword (l_match_list).prepend_text ("expanded ", l_match_list)
+					if
+						not l_ast.is_expanded and
+						l_is_expanded and then
+						attached l_ast.class_keyword (l_match_list) as class_keyword
+					then
+						class_keyword.prepend_text ("expanded ", l_match_list)
 					end
 					class_text := l_ast.text (l_match_list)
 				else
@@ -185,15 +201,12 @@ feature {NONE} -- Implementation
 			attached_new_match_list: a_new_match_list /= Void
 			attached_ast: a_ast /= Void
 			attached_new_ast: a_new_ast /= Void
-		local
-			l_ast: AST_EIFFEL
 		do
 			if attached a_new_ast.features as l_new_features then
 				if attached a_ast.features as l_features then
 					l_features.append_text (l_new_features.text (a_new_match_list), a_match_list)
-				else
-					l_ast := post_features_ast (a_ast)
-					l_ast.prepend_text (a_new_ast.features.text (a_new_match_list), a_match_list)
+				elseif attached a_new_ast.features as features then
+					post_features_ast (a_ast).prepend_text (features.text (a_new_match_list), a_match_list)
 				end
 			end
 		end
@@ -221,23 +234,23 @@ feature {NONE} -- Implementation
 			attached_new_match_list: a_new_match_list /= Void
 			attached_ast: a_ast /= Void
 			attached_new_ast: a_new_ast /= Void
-		local
-			l_list: detachable EIFFEL_LIST [TAGGED_AS]
-			l_invariant, l_new_invariant: detachable INVARIANT_AS
 		do
-			l_new_invariant := a_new_ast.invariant_part
-			if l_new_invariant /= Void then
-				l_invariant := a_ast.internal_invariant
-				if l_invariant /= Void then
-					l_list := l_invariant.full_assertion_list
-					if l_list /= Void and then not l_list.is_empty and then l_list.i_th (l_list.count).expr = Void then
+			if attached a_new_ast.invariant_part as l_new_invariant then
+				if attached a_ast.internal_invariant as l_invariant then
+					if
+						attached l_invariant.full_assertion_list as l_list and then
+						not l_list.is_empty and then
+						l_list.i_th (l_list.count).expr = Void
+					then
 						l_list.i_th (l_list.count).replace_text ("", a_match_list)
 					end
 					l_invariant.append_text (line_return, a_match_list)
 					l_invariant.append_text ("%T", a_match_list)
-					l_invariant.append_text (l_new_invariant.assertion_list.text (a_new_match_list), a_match_list)
-				else
-					a_ast.features.append_text (a_new_ast.invariant_part.text (a_new_match_list) + line_return, a_match_list)
+					if attached l_new_invariant.assertion_list as l then
+						l_invariant.append_text (l.text (a_new_match_list), a_match_list)
+					end
+				elseif attached a_ast.features as features then
+					features.append_text (l_new_invariant.text (a_new_match_list) + line_return, a_match_list)
 				end
 			end
 		end
@@ -265,13 +278,10 @@ feature {NONE} -- Implementation
 			attached_new_ast: a_new_ast /= Void
 		local
 			l_mod: ERT_EIFFEL_LIST_MODIFIER
-			l_indexes, l_new_indexes: detachable INDEXING_CLAUSE_AS
 			l_count: INTEGER
 		do
-			l_new_indexes := a_new_ast.top_indexes
-			l_indexes := a_ast.internal_top_indexes
-			if l_new_indexes /= Void then
-				if l_indexes /= Void then
+			if attached a_new_ast.top_indexes as l_new_indexes then
+				if attached a_ast.internal_top_indexes as l_indexes then
 					l_count := l_indexes.count
 					create l_mod.make (l_indexes, a_match_list)
 					l_mod.set_separator_32 (line_return + "%T")
@@ -284,8 +294,8 @@ feature {NONE} -- Implementation
 						l_new_indexes.forth
 					end
 					l_mod.apply
-				else
-					a_ast.first_token (a_match_list).prepend_text (a_new_ast.internal_top_indexes.text (a_new_match_list) + line_return + line_return, a_match_list)
+				elseif attached a_ast.first_token (a_match_list) as first_token then
+					first_token.prepend_text (l_new_indexes.text (a_new_match_list) + line_return + line_return, a_match_list)
 				end
 			end
 		end
@@ -301,7 +311,6 @@ feature {NONE} -- Implementation
 			l_mod: ERT_EIFFEL_LIST_MODIFIER
 			l_new_creator: CREATE_AS
 			l_index: INTEGER
-			l_list, l_new_list: detachable EIFFEL_LIST [FEATURE_NAME]
 		do
 			if attached a_new_ast.creators as l_new_creators then
 				if attached a_ast.creators as l_creators then
@@ -312,32 +321,27 @@ feature {NONE} -- Implementation
 					loop
 						l_new_creator := l_new_creators.item
 						l_index := equiv_client_index (l_new_creator, l_creators)
-						if l_index > 0 then
-							l_list := l_creators.i_th (l_index).feature_list
-							if l_list /= Void then
-								create l_mod.make (l_list, a_match_list)
-								l_mod.set_separator_32 (", ")
-								l_new_list := l_new_creator.feature_list
-								from
-									l_new_list.start
-								until
-									l_new_list.after
-								loop
-									l_mod.append (l_new_list.item.text (a_new_match_list))
-									l_new_list.forth
-								end
-								l_mod.apply
-							end
-						else
+						if l_index <= 0 then
 							create l_mod.make (l_creators, a_match_list)
 							l_mod.set_separator_32 (line_return)
 							l_mod.append (l_new_creator.text (a_new_match_list))
 							l_mod.apply
+						elseif attached l_creators.i_th (l_index).feature_list as l_list then
+							create l_mod.make (l_list, a_match_list)
+							l_mod.set_separator_32 (", ")
+							if attached l_new_creator.feature_list as l_new_list then
+								across
+									l_new_list as n
+								loop
+									l_mod.append (n.item.text (a_new_match_list))
+								end
+							end
+							l_mod.apply
 						end
 						l_new_creators.forth
 					end
-				else
-					a_ast.features.prepend_text (a_new_ast.creators.text (a_new_match_list) + line_return + line_return, a_match_list)
+				elseif attached a_ast.features as features then
+					features.prepend_text (l_new_creators.text (a_new_match_list) + line_return + line_return, a_match_list)
 				end
 			end
 		end
@@ -422,11 +426,11 @@ feature {NONE} -- Implementation
 								l_read.append_character (c.to_character_8)
 							end
 						end
+						if l_read.substring_index ("--#line ", 1) = 1 then
+							first_line_pragma := l_read
+						end
 					end
 					l_file.close
-					if l_read.substring (1, 8).is_equal ("--#line ") then
-						first_line_pragma := l_read
-					end
 				end
 			end
 		rescue
@@ -461,10 +465,10 @@ invariant
 	successful_iff_attached_class_text_and_name: successful = (class_text /= Void)
 	error_message_void_iff_successful: successful = (error_message = Void)
 	valid_line_return: line_return.same_string ("%N") or line_return.same_string ("%R%N")
-	valid_first_line_pragma: first_line_pragma /= Void implies first_line_pragma.substring (1, 8).is_equal ("--#line ")
+	valid_first_line_pragma: attached first_line_pragma as p implies p.substring (1, 8).is_equal ("--#line ")
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Dialog to display output of an external process."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,13 @@ inherit
 		end
 
 	EB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			copy, default_create
+		end
+
+	SHARED_LOCALE
 		export
 			{NONE} all
 		undefine
@@ -101,12 +108,12 @@ feature -- Update
 	append_text (a_text: STRING)
 			-- Append `a_text' to the displayed text.
 		local
-			l_txt: like a_text
+			s: STRING_32
 		do
 			if is_displayed then
-				l_txt := a_text.twin
-				l_txt.prune_all ('%R')
-				text_field.append_text (l_txt)
+				s := console_encoding_to_utf32 (console_encoding, a_text)
+				s.prune_all ('%R')
+				text_field.append_text (s)
 				text_field.scroll_to_end
 			end
 		end
@@ -145,7 +152,7 @@ invariant
 	initialized: text_field /= Void and mutex /= Void and action_queue /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

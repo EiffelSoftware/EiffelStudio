@@ -589,7 +589,7 @@ feature -- Access
 				elseif a_group.is_assembly or a_group.is_physical_assembly then
 					Result := folder_namespace_icon
 				else
-					check should_not_reach: False end
+					check should_not_reach: False then end
 				end
 			else
 				if a_group.is_override then
@@ -627,7 +627,7 @@ feature -- Access
 				elseif a_group.is_assembly or a_group.is_physical_assembly then
 					Result := folder_assembly_icon
 				else
-					check should_not_reach: False end
+					check should_not_reach: False then end
 				end
 			end
 		ensure
@@ -635,7 +635,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

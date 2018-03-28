@@ -112,9 +112,11 @@ feature {NONE} -- Implementation
 			toolbar.remove_button.select_actions.extend (agent ask_remove_group)
 			toolbar.remove_button.enable_sensitive
 
-			toolbar.edit_library.select_actions.wipe_out
-			toolbar.edit_library.select_actions.extend (agent edit_configuration)
-			toolbar.edit_library.enable_sensitive
+			if not group.is_readonly then
+				toolbar.edit_library.select_actions.wipe_out
+				toolbar.edit_library.select_actions.extend (agent edit_configuration)
+				toolbar.edit_library.enable_sensitive
+			end
 		end
 
 note

@@ -46,7 +46,7 @@ feature -- Initialization
 			md_assembly_info.set_minor_version (0)
 			md_assembly_info.set_build_number (3300)
 			create md_pub_key_token.make_from_array (
-				<<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
+				{ARRAY [NATURAL_8]} <<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
 			mscorlib_token := md_emit.define_assembly_ref (create {UNI_STRING}.make ("mscorlib"),
 				md_assembly_info, md_pub_key_token)
 
@@ -161,14 +161,13 @@ feature -- Initialization
 			body.put_opcode ({MD_OPCODES}.Ret)
 			method_writer.write_current_body
 
-			create l_pe_file.make ("test.dll", True, True, False)
-			l_pe_file.set_emitter (md_emit)
+			create l_pe_file.make ("test.dll", True, True, False, md_emit)
 			l_pe_file.set_method_writer (method_writer)
 			l_pe_file.save
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -181,22 +180,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class ROOT_CLASS

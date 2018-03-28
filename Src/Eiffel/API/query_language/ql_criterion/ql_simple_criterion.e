@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Symple criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -50,15 +49,9 @@ feature -- Evaluate
 
 	is_satisfied_by (a_item: like item_type): BOOLEAN
 			-- Evaluate `a_item'.
-		local
-			l_evaluate_agent: like evaluate_agent
-			l_tuple: TUPLE [value: like item_type]
 		do
-			l_evaluate_agent := evaluate_agent
-			if l_evaluate_agent /= Void  then
-				l_tuple := l_evaluate_agent.empty_operands
-				l_tuple.value := a_item
-				Result := l_evaluate_agent.item (l_tuple)
+			if attached evaluate_agent as a then
+				Result := a.flexible_item (a_item)
 			end
 		end
 
@@ -84,7 +77,7 @@ invariant
 --	evaluate_agent_attached: evaluate_agent /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -114,7 +107,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

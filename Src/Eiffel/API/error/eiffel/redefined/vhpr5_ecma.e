@@ -1,12 +1,12 @@
-note
+﻿note
 
 	description: "[
-		Error for invalid parent type: different generic derivations
-		of the same class are used in Parent parts.
+			Error for invalid parent type: different generic derivations
+			of the same class are used in Parent parts.
 		]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class VHPR5_ECMA
@@ -25,30 +25,31 @@ create
 
 feature {NONE} -- Creation
 
-	make (c: CLASS_C; t1, t2: CL_TYPE_A; l: LOCATION_AS)
+	make (c: CLASS_C; t1, t2: CL_TYPE_A; l: detachable LOCATION_AS)
 			-- Create error object for class `c' with offending
 			-- parent types `t1' and `t2' at location `l'.
 		require
 			c_attached: c /= Void
 			t1_attached: t1 /= Void
 			t2_attached: t2 /= Void
-			l_attached: l /= Void
 		do
 			set_class (c)
 			parent_type_1 := t1
 			parent_type_2 := t2
-			set_location (l)
+			if attached l then
+				set_location (l)
+			end
 		ensure
 			class_c_set: class_c = c
 			parent_type_1_set: parent_type_1 = t1
 			parent_type_2_set: parent_type_2 = t2
-			line_set: line = l.line
-			column_set: column = l.column
+			line_set: attached l implies line = l.line
+			column_set: attached l implies column = l.column
 		end
 
 feature -- Error code
 
-	code: STRING = "ECMA-VHPR";
+	code: STRING = "ECMA-VHPR"
 			-- Error code
 
 	subcode: INTEGER = 5
@@ -70,14 +71,14 @@ feature -- Output
 
 feature {NONE} -- Data
 
-	parent_type_1: CL_TYPE_A;
+	parent_type_1: CL_TYPE_A
 			-- Parent type involved in the error
 
-	parent_type_2: CL_TYPE_A;
+	parent_type_2: CL_TYPE_A
 			-- Parent type involved in the error
 
-note
-	copyright:	"Copyright (c) 2006, Eiffel Software"
+;note
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -90,22 +91,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

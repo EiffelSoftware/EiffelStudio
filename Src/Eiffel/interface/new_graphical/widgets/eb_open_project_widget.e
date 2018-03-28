@@ -543,7 +543,7 @@ feature {NONE} -- Initialization
 			create li
 			l_row.set_item (name_column_index, li)
 			create lc
-			lc.pointer_button_press_actions.force_extend (agent on_choose_target (lc))
+			lc.pointer_button_press_actions.extend (agent on_choose_target (?, ?, ?, ?, ?, ?, ?, ?, lc))
 			l_row.set_item (target_column_index, lc)
 			create li.make_with_text (a_project_file.name)
 			l_row.set_item (path_column_index, li)
@@ -722,7 +722,7 @@ feature {NONE} -- Implementation
 					ln.set_text (last_state.system.name)
 					if not last_state.has_missing_target_error then
 						lt.pointer_button_press_actions.wipe_out
-						lt.pointer_button_press_actions.extend (agent (x, y, b: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32; ia_lt: EV_GRID_CHOICE_ITEM) do on_choose_target (ia_lt) end(?,?,?,?,?,?,?,?,lt))
+						lt.pointer_button_press_actions.extend (agent on_choose_target (?,?,?,?,?,?,?,?,lt))
 						lt.deactivate_actions.wipe_out
 						lt.deactivate_actions.extend (agent on_target_selected (lt.row))
 						update_targets (lt)
@@ -1147,7 +1147,7 @@ feature {NONE} -- Actions
 			last_clean_state := clean_button.is_selected
 		end
 
-	on_choose_target (a_item: EV_GRID_CHOICE_ITEM)
+	on_choose_target (x, y, b: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32; a_item: EV_GRID_CHOICE_ITEM)
 			-- Activate the combo enabling user to choose project's target
 		require
 			a_item_not_void: a_item /= Void

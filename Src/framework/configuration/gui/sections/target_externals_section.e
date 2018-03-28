@@ -26,8 +26,8 @@ feature -- Access
 	includes: like internal_includes
 			-- Include externals.
 		do
-			if internal_includes /= Void and then has (internal_includes) then
-				Result := internal_includes
+			if attached internal_includes as i and then has (i) then
+				Result := i
 			end
 		end
 
@@ -42,24 +42,24 @@ feature -- Access
 	objects: like internal_objects
 			-- Object externals.
 		do
-			if internal_objects /= Void and then has (internal_objects) then
-				Result := internal_objects
+			if attached internal_objects as o and then has (o) then
+				Result := o
 			end
 		end
 
 	libraries: like internal_libraries
 			-- Library externals.
 		do
-			if internal_libraries /= Void and then has (internal_libraries) then
-				Result := internal_libraries
+			if attached internal_libraries as l and then has (l) then
+				Result := l
 			end
 		end
 
 	resources: like internal_resources
 			-- Resource externals.
 		do
-			if internal_resources /= Void and then has (internal_resources) then
-				Result := internal_resources
+			if attached internal_resources as i and then has (i) then
+				Result := i
 			end
 		end
 
@@ -74,8 +74,8 @@ feature -- Access
 	makefiles: like internal_makefiles
 			-- Make externals.
 		do
-			if internal_makefiles /= Void and then has (internal_makefiles) then
-				Result := internal_makefiles
+			if attached internal_makefiles as m and then has (m) then
+				Result := m
 			end
 		end
 
@@ -95,79 +95,107 @@ feature -- Element update
 
 	add_include
 			-- Add a new include external.
+		local
+			i: like includes
 		do
-			if includes = Void then
-				create internal_includes.make (target, configuration_window)
+			i := includes
+			if not attached i then
+				create i.make (target, configuration_window)
+				internal_includes := i
 				order_headers
-				extend (internal_includes)
+				extend (i)
 			end
-			internal_includes.add_external
+			i.add_external
 		end
 
 	add_cflag
 			-- Add a new C flag external.
+		local
+			f: like cflag
 		do
-			if cflag = Void then
-				create internal_cflag.make (target, configuration_window)
+			f := cflag
+			if not attached f then
+				create f.make (target, configuration_window)
+				internal_cflag := f
 				order_headers
-				extend (internal_cflag)
+				extend (f)
 			end
-			internal_cflag.add_external
+			f.add_external
 		end
 
 	add_object
 			-- Add a new object external.
+		local
+			o: like objects
 		do
-			if objects = Void then
-				create internal_objects.make (target, configuration_window)
+			o := objects
+			if not attached o then
+				create o.make (target, configuration_window)
+				internal_objects := o
 				order_headers
-				extend (internal_objects)
+				extend (o)
 			end
-			internal_objects.add_external
+			o.add_external
 		end
 
 	add_library
 			-- Add a new library external.
+		local
+			l: like libraries
 		do
-			if libraries = Void then
-				create internal_libraries.make (target, configuration_window)
+			l := libraries
+			if not attached l then
+				create l.make (target, configuration_window)
+				internal_libraries := l
 				order_headers
-				extend (internal_libraries)
+				extend (l)
 			end
-			internal_libraries.add_external
+			l.add_external
 		end
 
 	add_resource
 			-- Add a new resource external.
+		local
+			r: like resources
 		do
-			if resources = Void then
-				create internal_resources.make (target, configuration_window)
+			r := resources
+			if not attached r then
+				create r.make (target, configuration_window)
+				internal_resources := r
 				order_headers
-				extend (internal_resources)
+				extend (r)
 			end
-			internal_resources.add_external
+			r.add_external
 		end
 
 	add_linker_flag
 			-- Add a new linker flag external.
+		local
+			f: like linker_flag
 		do
-			if linker_flag = Void then
-				create internal_linker_flag.make (target, configuration_window)
+			f := linker_flag
+			if not attached f then
+				create f.make (target, configuration_window)
+				internal_linker_flag := f
 				order_headers
-				extend (internal_linker_flag)
+				extend (f)
 			end
-			internal_linker_flag.add_external
+			f.add_external
 		end
 
 	add_make
 			-- Add a new make external.
+		local
+			m: like makefiles
 		do
-			if makefiles = Void then
-				create internal_makefiles.make (target, configuration_window)
+			m := makefiles
+			if not attached m then
+				create m.make (target, configuration_window)
+				internal_makefiles := m
 				order_headers
-				extend (internal_makefiles)
+				extend (m)
 			end
-			internal_makefiles.add_external
+			m.add_external
 		end
 
 	set_includes (a_externals: ARRAYED_LIST [CONF_EXTERNAL_INCLUDE])
@@ -368,25 +396,25 @@ feature -- Simple operations
 
 feature {NONE} -- Implementation
 
-	internal_includes: TARGET_INCLUDE_EXTERNALS_SECTION
+	internal_includes: detachable TARGET_INCLUDE_EXTERNALS_SECTION
 			-- Include externals (Could still be present even if it removed from Current)
 
-	internal_cflag: TARGET_CFLAG_EXTERNALS_SECTION
+	internal_cflag: detachable TARGET_CFLAG_EXTERNALS_SECTION
 			-- C flag externals (Could still be present even if it removed from Current)
 
-	internal_objects: TARGET_OBJECT_EXTERNALS_SECTION
+	internal_objects: detachable TARGET_OBJECT_EXTERNALS_SECTION
 			-- Object externals (Could still be present even if it removed from Current)
 
-	internal_libraries: TARGET_LIBRARY_EXTERNALS_SECTION
+	internal_libraries: detachable TARGET_LIBRARY_EXTERNALS_SECTION
 			-- Library externals (Could still be present even if it removed from Current)
 
-	internal_resources: TARGET_RESOURCE_EXTERNALS_SECTION
+	internal_resources: detachable TARGET_RESOURCE_EXTERNALS_SECTION
 			-- Resource externals (Could still be present even if it removed from Current)
 
-	internal_linker_flag: TARGET_LINKER_FLAG_EXTERNALS_SECTION
+	internal_linker_flag: detachable TARGET_LINKER_FLAG_EXTERNALS_SECTION
 			-- Linker flag externals (Could still be present even if it removed from Current)
 
-	internal_makefiles: TARGET_MAKE_EXTERNALS_SECTION
+	internal_makefiles: detachable TARGET_MAKE_EXTERNALS_SECTION
 			-- Make externals (Could still be present even if it removed from Current)
 
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE

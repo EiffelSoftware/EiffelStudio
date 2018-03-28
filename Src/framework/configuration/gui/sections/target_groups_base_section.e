@@ -1,5 +1,4 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -32,16 +31,13 @@ feature -- Element update
 			-- Add a new external.
 		local
 			l_dial: like add_dialog_type
-			l_group: like conf_item_type
 			l_group_sec: like section_item_type
 		do
 			l_dial := create_add_dialog
 			l_dial.show_modal_to_window (configuration_window)
-			if l_dial.is_ok then
-				l_group := l_dial.last_group
-
+			if attached l_dial.last_group as g then
 					-- create and select the section
-				l_group_sec := create_group_section (l_group)
+				l_group_sec := create_group_section (g)
 				extend (l_group_sec)
 				expand
 				l_group_sec.enable_select
@@ -110,21 +106,33 @@ feature {NONE} -- Type anchors
 
 	add_dialog_type: ADD_GROUP_DIALOG
 			-- Type of the dialog to create a new item.
+		require
+			is_executable: False
 		deferred
+		ensure
+			is_executable: False
 		end
 
 	conf_item_type: CONF_GROUP
 			-- Type of configuration objects represented.
+		require
+			is_executable: False
 		deferred
+		ensure
+			is_executable: False
 		end
 
 	section_item_type: GROUP_SECTION
 			-- Type of sections contained.
+		require
+			is_executable: False
 		deferred
+		ensure
+			is_executable: False
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Property for msil key files, that allow to choose an existing file or if an non existing file is choosen it will be created."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,12 +10,25 @@ class
 
 inherit
 	FILE_PROPERTY
+		rename
+			make as make_property
 		redefine
 			dialog_ok
 		end
 
 create
 	make
+
+feature {NONE} -- Creation
+
+	make (version: like il_version; property_name: like name)
+			-- Create a new key file property of name `property_name` with version `version`.
+		do
+			make_property (property_name)
+			il_version := version
+		ensure
+			il_version_set: il_version = version
+		end
 
 feature -- Access
 
@@ -46,15 +59,17 @@ feature {NONE} -- Actions
 				il_version_set: il_version /= Void and then not il_version.is_empty
 			end
 			Precursor {FILE_PROPERTY}(a_dial)
-			create l_file.make_with_name (value)
-			if not l_file.exists and l_file.is_creatable then
-				create l_key_generator
-				l_key_generator.generate_key (value, il_version)
+			if attached value as v then
+				create l_file.make_with_name (v)
+				if not l_file.exists and l_file.is_creatable then
+					create l_key_generator
+					l_key_generator.generate_key (v, il_version)
+				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -67,21 +82,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

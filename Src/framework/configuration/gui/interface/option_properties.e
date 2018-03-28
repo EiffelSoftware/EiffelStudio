@@ -36,10 +36,10 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	window: EV_WINDOW
+	window: detachable EV_WINDOW
 			-- Window to show errors modal. If `Void' it will be shown using the default from ES_PROMPT_PROVIDER.
 
-	properties: PROPERTY_GRID
+	properties: detachable PROPERTY_GRID
 			-- Grid where properties get added.
 
 	debug_clauses: ARRAYED_LIST [STRING]
@@ -467,9 +467,11 @@ feature {NONE} -- Modification
 					-- Search if it is a warning that we show in the UI.
 					-- (we hide the obsolete warnings in the UI).
 				conf_interface_names.warning_names.search (l_warning)
-				if conf_interface_names.warning_names.found then
-					l_bool_prop := new_boolean_property (conf_interface_names.warning_names.found_item, an_inherited_options.is_warning_enabled (l_warning))
-					l_bool_prop.set_description (conf_interface_names.warning_descriptions.item (l_warning))
+				if attached conf_interface_names.warning_names.item (l_warning) as n then
+					l_bool_prop := new_boolean_property (n, an_inherited_options.is_warning_enabled (l_warning))
+					if attached conf_interface_names.warning_descriptions.item (l_warning) as d then
+						l_bool_prop.set_description (d)
+					end
 					l_bool_prop.change_value_actions.extend (agent an_options.add_warning (l_warning, ?))
 					l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 					properties.add_property (l_bool_prop)
@@ -820,10 +822,10 @@ feature {NONE} -- Refresh displayed data.
 		do
 		end
 
-	last_added_choice_property: detachable STRING_CHOICE_PROPERTY;
+	last_added_choice_property: detachable STRING_CHOICE_PROPERTY
 			-- Last added choice property
 
-note
+;note
 	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

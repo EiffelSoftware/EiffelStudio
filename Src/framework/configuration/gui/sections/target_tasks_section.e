@@ -1,5 +1,4 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -35,19 +34,19 @@ feature -- Access
 			Result := conf_pixmaps.project_settings_tasks_icon
 		end
 
-	pre_tasks: TARGET_PRE_TASKS_SECTION
+	pre_tasks: detachable TARGET_PRE_TASKS_SECTION
 			-- Header for pre compilation tasks.
 		do
-			if internal_pre_tasks /= Void and then has (internal_pre_tasks) then
-				Result := internal_pre_tasks
+			if attached internal_pre_tasks as t and then has (t) then
+				Result := t
 			end
 		end
 
-	post_tasks: TARGET_POST_TASKS_SECTION
+	post_tasks: detachable TARGET_POST_TASKS_SECTION
 			-- Header for post compilation tasks.
 		do
-			if internal_post_tasks /= Void and then has (internal_post_tasks) then
-				Result := internal_post_tasks
+			if attached internal_post_tasks as t and then has (t) then
+				Result := t
 			end
 		end
 
@@ -85,39 +84,49 @@ feature -- Element update
 
 	add_pre_compilation
 			-- Add a new pre compilation task.
+		local
+			t: like pre_tasks
 		do
-			if pre_tasks = Void then
-				create internal_pre_tasks.make (target, configuration_window)
-				put_front (internal_pre_tasks)
+			t := pre_tasks
+			if not attached t then
+				create t.make (target, configuration_window)
+				internal_pre_tasks := t
+				put_front (t)
 			end
-			internal_pre_tasks.add_task
+			t.add_task
 		end
 
 	add_post_compilation
 			-- Add a new post compilation task.
+		local
+			t: like post_tasks
 		do
-			if post_tasks = Void then
-				create internal_post_tasks.make (target, configuration_window)
-				extend (internal_post_tasks)
+			t := post_tasks
+			if not attached t then
+				create t.make (target, configuration_window)
+				internal_post_tasks := t
+				extend (t)
 			end
-			internal_post_tasks.add_task
+			t.add_task
 		end
 
 	set_pre_compilation (a_tasks: ARRAYED_LIST [CONF_ACTION])
 			-- Set pre compilation tasks to `a_tasks'.
 		local
 			l_task: TASK_SECTION
+			t: like internal_pre_tasks
 		do
 			if a_tasks /= Void and then not a_tasks.is_empty then
-				create internal_pre_tasks.make (target, configuration_window)
-				put_front (internal_pre_tasks)
+				create t.make (target, configuration_window)
+				internal_pre_tasks := t
+				put_front (t)
 				from
 					a_tasks.start
 				until
 					a_tasks.after
 				loop
 					create l_task.make (a_tasks.item, conf_interface_names.task_pre, target, configuration_window)
-					internal_pre_tasks.extend (l_task)
+					t.extend (l_task)
 					a_tasks.forth
 				end
 			end
@@ -127,17 +136,19 @@ feature -- Element update
 			-- Set post compilation tasks to `a_tasks'.
 		local
 			l_task: TASK_SECTION
+			t: like internal_post_tasks
 		do
 			if a_tasks /= Void and then not a_tasks.is_empty then
-				create internal_post_tasks.make (target, configuration_window)
-				extend (internal_post_tasks)
+				create t.make (target, configuration_window)
+				internal_post_tasks := t
+				extend (t)
 				from
 					a_tasks.start
 				until
 					a_tasks.after
 				loop
 					create l_task.make (a_tasks.item, conf_interface_names.task_post, target, configuration_window)
-					internal_post_tasks.extend (l_task)
+					t.extend (l_task)
 					a_tasks.forth
 				end
 			end
@@ -145,10 +156,10 @@ feature -- Element update
 
 feature {NONE} -- Implementation
 
-	internal_pre_tasks: TARGET_PRE_TASKS_SECTION
+	internal_pre_tasks: detachable TARGET_PRE_TASKS_SECTION
 			-- Header for pre compilation tasks. (Could still be present even if it removed from Current)
 
-	internal_post_tasks: TARGET_POST_TASKS_SECTION
+	internal_post_tasks: detachable TARGET_POST_TASKS_SECTION
 			-- Header for post compilation tasks. (Could still be present even if it removed from Current)
 
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE

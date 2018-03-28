@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represent system section of a configuration."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -92,8 +92,10 @@ feature -- Element update
 			system.add_target (l_target)
 
 				-- add and display the section
-			configuration_window.add_target_sections (l_target, parent)
-			parent.last.enable_select
+			if attached parent as p then
+				configuration_window.add_target_sections (l_target, p)
+				p.last.enable_select
+			end
 		end
 
 feature {NONE} -- Implementation

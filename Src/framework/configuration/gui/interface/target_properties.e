@@ -71,8 +71,7 @@ feature {NONE} -- Implementation
 			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_bool_prop)
 				-- Root.
-			create l_root_dial
-			l_root_dial.set_target (current_target)
+			create l_root_dial.make (current_target)
 			create l_root_prop.make_with_dialog (conf_interface_names.target_root_name, l_root_dial)
 			l_root_prop.set_description (conf_interface_names.target_root_description)
 			l_root_prop.set_refresh_action (agent current_target.root)
@@ -475,13 +474,12 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_choice_prop)
 
-			create l_key_file_prop.make (conf_interface_names.target_msil_key_file_name_name)
-			l_key_file_prop.set_description (conf_interface_names.target_msil_key_file_name_description)
 			l_il_version := current_target.setting_msil_clr_version
 			if l_il_version.is_empty then
 				l_il_version := l_il_env.default_version
 			end
-			l_key_file_prop.set_il_version (l_il_version)
+			create l_key_file_prop.make (l_il_version, conf_interface_names.target_msil_key_file_name_name)
+			l_key_file_prop.set_description (conf_interface_names.target_msil_key_file_name_description)
 			add_string_setting_actions (l_key_file_prop, s_msil_key_file_name, "")
 			if not l_il_generation then
 				l_key_file_prop.enable_readonly
@@ -557,7 +555,7 @@ feature {NONE} -- Inheritance handling
 			end
 		end
 
-	update_inheritance_root (a_dummy: CONF_ROOT; a_property: PROPERTY)
+	update_inheritance_root (a_dummy: detachable CONF_ROOT; a_property: PROPERTY)
 			-- Enable inheritance/override on `a_property' depending on if the root value is set in the current_target.
 		require
 			a_property_not_void: a_property /= Void
@@ -572,7 +570,7 @@ feature {NONE} -- Inheritance handling
 			end
 		end
 
-	update_inheritance_version (a_dummy: CONF_VERSION; a_property: PROPERTY)
+	update_inheritance_version (a_dummy: detachable CONF_VERSION; a_property: PROPERTY)
 			-- Enable inheritance/override on `a_property' depending on if the version value is set in the current_target.
 		require
 			a_property_not_void: a_property /= Void
@@ -587,7 +585,7 @@ feature {NONE} -- Inheritance handling
 			end
 		end
 
-	update_inheritance_file_rule (a_dummy: ARRAYED_LIST [CONF_FILE_RULE]; a_property: PROPERTY)
+	update_inheritance_file_rule (a_dummy: detachable ARRAYED_LIST [CONF_FILE_RULE]; a_property: PROPERTY)
 			-- Enable inheritance/override on `a_property' depending on if there are file rules in the `current_target'.
 		require
 			a_property_not_void: a_property /= Void

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Dialog to display output of iron external process."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -151,14 +151,14 @@ feature {NONE} -- Implementation
 	mutex: MUTEX
 			-- Mutex for updating text from an other thread.
 
-	process: PROCESS
+	process: detachable PROCESS
 			-- Process to terminate if the action is canceled.
 
 invariant
 	initialized: text_field /= Void and mutex /= Void and action_queue /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

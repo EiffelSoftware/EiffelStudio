@@ -1,5 +1,4 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -30,9 +29,6 @@ feature -- Element update
 	remove_group
 			-- Remove `Current' and all children from the configuration and from the tree where it is displayed.
 			-- Also remove the parent node if it is empty and is not a cluster.
-		local
-			l_parent: like group
-			l_cs: like Current
 		do
 				-- remove children
 			from
@@ -40,22 +36,21 @@ feature -- Element update
 			until
 				after
 			loop
-				l_cs ?= item
-				check cluster_section: l_cs /= Void end
-				l_cs.remove_group
+				if attached {like Current} item as c then
+					c.remove_group
+				end
 				forth
 			end
 
 				-- remove current
 			target.remove_cluster (group.name)
-			l_parent := group.parent
-			if l_parent /= Void then
-				l_parent.remove_child (group)
+			if attached group.parent as p then
+				p.remove_child (group)
 			end
 			Precursor
 		end
 
-	set_children (a_children: ARRAYED_LIST [like group])
+	set_children (a_children: detachable ARRAYED_LIST [like group])
 			-- Set child clusters.
 		local
 			l_cluster: like group
@@ -80,17 +75,14 @@ feature -- Element update
 			-- Add a subcluster.
 		local
 			l_dial: like add_dialog_type
-			l_group: like group
 			l_group_sec: like Current
 		do
 			create l_dial.make (target, configuration_window.conf_factory)
 			l_dial.set_parent_cluster (group)
 			l_dial.show_modal_to_window (configuration_window)
-			if l_dial.is_ok then
-				l_group := l_dial.last_group
-
+			if attached l_dial.last_group as g then
 					-- create and select the section
-				create l_group_sec.make (l_group, target, configuration_window)
+				create l_group_sec.make (g, target, configuration_window)
 				extend (l_group_sec)
 				expand
 				l_group_sec.enable_select
@@ -131,11 +123,17 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Type anchors
 
-	add_dialog_type: CREATE_CLUSTER_DIALOG;
+	add_dialog_type: detachable CREATE_CLUSTER_DIALOG
 			-- Type of the add dialog
+		require
+			is_executable: False
+		do
+		ensure
+			is_executable: False
+		end
 
-note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+;note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -159,10 +157,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

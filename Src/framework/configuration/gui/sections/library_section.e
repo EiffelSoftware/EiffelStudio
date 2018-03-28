@@ -1,5 +1,4 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -62,15 +61,15 @@ feature -- Basic operations
 				l_load.retrieve_configuration (l_config)
 				if l_load.is_error then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_load.last_error.text, configuration_window, Void)
-				elseif l_load.last_system.library_target = Void then
+				elseif not attached l_load.last_system as system or else not attached l_load.last_system.library_target then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {CONF_ERROR_NOLIB}.make (group.name)).text, configuration_window, Void)
 				else
-					if l_load.is_warning then
+					if l_load.is_warning and then attached l_load.last_warning_messages as w then
 							-- add warnings
-						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (l_load.last_warning_messages, configuration_window, Void)
+						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (w, configuration_window, Void)
 					end
 
-					create l_lib_conf.make_for_target (l_load.last_system, l_load.last_system.library_target.name, configuration_window.conf_factory, create {ARRAYED_LIST [STRING]}.make (0), conf_pixmaps, configuration_window.external_editor_command)
+					create l_lib_conf.make_for_target (system, system.library_target.name, configuration_window.conf_factory, create {ARRAYED_LIST [STRING]}.make (0), conf_pixmaps, configuration_window.external_editor_command)
 
 					l_lib_conf.set_size (configuration_window.width, configuration_window.height)
 					l_lib_conf.set_position (configuration_window.x_position, configuration_window.y_position)
@@ -119,7 +118,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {IRON_PACKAGE_WIDGET}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -261,7 +260,9 @@ feature -- Element change
 
 							txt.append_text (":")
 							i := txt.text_length + 1
-							txt.append_text (ic.item)
+							if attached ic.item as s then
+								txt.append_text (s)
+							end
 							txt.append_text ("%N")
 							j := txt.text_length + 1
 							txt.format_region (i, j, description_text_format)
@@ -273,7 +274,7 @@ feature -- Element change
 					if attached l_api.projects_from_installed_package (p) as l_projects then
 						l_inst_path := l_api.package_installation_path (p)
 						txt.append_text ("%N")
-						txt.append_text (conf_interface_names.iron_box_package_installed_message (l_inst_path, l_projects))
+						txt.append_text (conf_interface_names.iron_box_package_installed_message (if attached l_inst_path then l_inst_path else create {PATH}.make_empty end, l_projects))
 						txt.append_text ("%N")
 					end
 				else
@@ -383,7 +384,7 @@ feature -- Element change
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

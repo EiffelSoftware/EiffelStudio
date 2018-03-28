@@ -1,5 +1,4 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -63,12 +62,21 @@ feature {NONE} -- Type anchors
 
 	add_dialog_type: CREATE_OVERRIDE_DIALOG
 			-- Type of the dialog to create a new item.
+		do
+			check from_precondition: False then end
+		end
 
 	conf_item_type: CONF_OVERRIDE
 			-- Type of configuration objects represented.
+		do
+			check from_precondition: False then end
+		end
 
-	section_item_type: OVERRIDE_SECTION;
+	section_item_type: OVERRIDE_SECTION
 			-- Type of sections contained.
+		do
+			check from_precondition: False then end
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2018, Eiffel Software"

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Dialog to choose visible classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,7 +9,7 @@ class
 	VISIBLE_DIALOG
 
 inherit
-	PROPERTY_DIALOG [STRING_TABLE [TUPLE [class_renamed: READABLE_STRING_32; features: STRING_TABLE [READABLE_STRING_32]]]]
+	PROPERTY_DIALOG [STRING_TABLE [TUPLE [class_renamed: READABLE_STRING_32; features: detachable STRING_TABLE [READABLE_STRING_32]]]]
 		redefine
 			initialize
 		end
@@ -155,21 +155,23 @@ feature {NONE} -- Agents
 
 	remove
 			-- Remove `current_class' or `current_feature'.
-		local
-			l_features: STRING_TABLE [READABLE_STRING_32]
 		do
-			if value /= Void then
-				if current_feature /= Void then
-					l_features := value.item (current_class).features
-					l_features.remove (current_feature)
-					if l_features.is_empty then
-						value.item (current_class).features := Void
+			if
+				attached value as v and then
+				attached current_class as c
+			then
+				if not attached current_feature as f then
+						-- No feature is selected.
+					v.remove (c)
+					if v.is_empty then
+						value := Void
 					end
 					refresh
-				elseif current_class /= Void then
-					value.remove (current_class)
-					if value.is_empty then
-						value := Void
+				elseif attached v.item (c).features as fs then
+						-- A feature is selected.
+					fs.remove (f)
+					if fs.is_empty then
+						v.item (c).features := Void
 					end
 					refresh
 				end
@@ -208,17 +210,17 @@ feature {NONE} -- Agents
 			l_name, l_vis_name: READABLE_STRING_32
 			l_feats: STRING_TABLE [READABLE_STRING_32]
 		do
-			if current_class /= Void and then value /= Void and then value.has (current_class) then
+			if attached current_class as c and then value /= Void and then value.has (c) then
 				l_name := original_name.text.as_lower
 				l_vis_name := renamed_name.text.as_lower
 				if l_vis_name.is_empty then
 					l_vis_name := l_name
 				end
-				l_feats := value.item (current_class).features
+				l_feats := value.item (c).features
 				if is_valid_feature_name (l_name) and then is_valid_feature_name (l_vis_name) and then (l_feats = Void or else not l_feats.has (l_name)) then
 					if l_feats = Void then
 						create l_feats.make_equal (1)
-						value.item (current_class).features := l_feats
+						value.item (c).features := l_feats
 					end
 
 					l_feats.force (l_vis_name, l_name)
@@ -232,10 +234,10 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
-	current_class: STRING_32
+	current_class: detachable STRING_32
 			-- Currently displayed class.
 
-	current_feature: STRING_32
+	current_feature: detachable STRING_32
 			-- Currently displayed feature.
 
 	refresh
@@ -243,8 +245,6 @@ feature {NONE} -- Implementation
 		local
 			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_class_item, l_feat_item: EV_TREE_ITEM
-			l_rena: TUPLE [class_renamed: READABLE_STRING_32; features: STRING_TABLE [READABLE_STRING_32]]
-			l_feat: STRING_TABLE [READABLE_STRING_32]
 			l_class: READABLE_STRING_GENERAL
 			l_vis_name: READABLE_STRING_32
 			l_feat_name: READABLE_STRING_GENERAL
@@ -282,7 +282,6 @@ feature {NONE} -- Implementation
 					l_class_item.select_actions.extend (agent show_class (l_class))
 
 					tree.extend (l_class_item)
-					l_rena := value.item (l_class)
 					if current_class /= Void and then current_class.same_string_general (l_class) then
 						if current_feature = Void then
 							l_class_item.enable_select
@@ -290,8 +289,10 @@ feature {NONE} -- Implementation
 							l_cur_class := True
 						end
 					end
-					if l_rena /= Void and then l_rena.features /= Void then
-						l_feat := l_rena.features
+					if
+						attached value.item (l_class) as l_rena and then
+						attached l_rena.features as l_feat
+					then
 						from
 							l_feat.start
 						until

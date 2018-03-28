@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Dialog that allows to choose a list of groups."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	conf_target: CONF_TARGET
+	conf_target: detachable CONF_TARGET
 			-- Configuration target.
 
 feature {NONE} -- GUI elements
@@ -71,7 +71,7 @@ feature {NONE} -- Agents
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

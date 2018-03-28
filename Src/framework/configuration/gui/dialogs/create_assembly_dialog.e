@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Dialog to create a new assembly."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,6 +11,7 @@ class
 inherit
 	ADD_GROUP_DIALOG
 		redefine
+			create_interface_objects,
 			initialize,
 			last_group
 		end
@@ -37,6 +38,15 @@ create
 	make
 
 feature {NONE} -- Initialization
+
+	create_interface_objects
+			--<Precursor>
+		do
+			Precursor
+			create assemblies
+			create location
+			create name
+		end
 
 	initialize
 			-- Initialize.
@@ -73,8 +83,7 @@ feature {NONE} -- Initialization
 			vb3.set_border_width (1)
 			vb3.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 
-			create l_assemblies
-			assemblies := l_assemblies
+			l_assemblies := assemblies
 			vb3.extend (l_assemblies)
 			l_assemblies.set_minimum_height (200)
 			l_assemblies.set_minimum_width (600)
@@ -105,7 +114,6 @@ feature {NONE} -- Initialization
 			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
 
-			create name
 			vb2.extend (name)
 			vb2.disable_item_expand (name)
 
@@ -126,7 +134,6 @@ feature {NONE} -- Initialization
 			vb2.disable_item_expand (hb2)
 			hb2.set_padding (layout_constants.small_padding_size)
 
-			create location
 			hb2.extend (location)
 
 			create l_btn.make_with_text_and_action (conf_interface_names.browse, agent browse)
@@ -190,7 +197,7 @@ feature {NONE} -- GUI elements
 
 feature -- Access
 
-	last_group: CONF_ASSEMBLY
+	last_group: detachable CONF_ASSEMBLY
 			-- Last created assembly.
 
 feature {NONE} -- Actions
@@ -362,6 +369,7 @@ feature {NONE} -- Actions
 			-- Add group and close the dialog.
 		local
 			l_local: STRING_32
+			g: like last_group
 		do
 			if not name.text.is_empty then
 				l_local := location.text
@@ -373,11 +381,10 @@ feature {NONE} -- Actions
 				elseif l_local.is_empty then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (conf_interface_names.assembly_no_location, Current, Void)
 				else
-					last_group := factory.new_assembly (name.text, location.text, target)
-					last_group.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
-					target.add_assembly (last_group)
-
-					is_ok := True
+					g := factory.new_assembly (name.text, location.text, target)
+					last_group := g
+					g.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
+					target.add_assembly (g)
 					destroy
 				end
 			end
@@ -386,7 +393,7 @@ feature {NONE} -- Actions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

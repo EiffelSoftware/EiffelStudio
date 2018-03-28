@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Edit the version."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -114,22 +114,22 @@ feature {NONE} -- Agents
 		require
 			initialized: is_initialized
 		do
-			if value /= Void then
-				major.set_text (value.major.out)
-				minor.set_text (value.minor.out)
-				release.set_text (value.release.out)
-				build.set_text (value.build.out)
-				if value.product /= Void then
-					product.set_text (value.product)
+			if attached value as v then
+				major.set_text (v.major.out)
+				minor.set_text (v.minor.out)
+				release.set_text (v.release.out)
+				build.set_text (v.build.out)
+				if attached v.product as s then
+					product.set_text (s)
 				end
-				if value.company /= Void then
-					company.set_text (value.company)
+				if attached v.company as s then
+					company.set_text (s)
 				end
-				if value.copyright /= Void then
-					copyright.set_text (value.copyright)
+				if attached v.copyright as s then
+					copyright.set_text (s)
 				end
-				if value.trademark /= Void then
-					trademark.set_text (value.trademark)
+				if attached v.trademark as s then
+					trademark.set_text (s)
 				end
 			end
 		end
@@ -164,7 +164,7 @@ invariant
 			product /= Void and company /= Void and copyright /= Void and trademark /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -177,21 +177,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

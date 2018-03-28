@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tab page to edit condition."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -499,10 +499,10 @@ feature {NONE} -- Actions
 			end
 
 			if (l_min /= Void and then l_min.is_error) or (l_max /= Void and then l_max.is_error) then
-				fill_compiler_version;
+				fill_compiler_version
 				prompts.show_error_prompt (conf_interface_names.version_valid_format, parent_window (Current), Void)
-			elseif l_min /= Void and l_max /= Void and l_min > l_max then
-				fill_compiler_version;
+			elseif l_min /= Void and l_max /= Void and then l_min > l_max then
+				fill_compiler_version
 				prompts.show_error_prompt (conf_interface_names.version_min_max, parent_window (Current), Void)
 			elseif l_min /= Void or l_max /= Void then
 				data.add_version (l_min, l_max, v_compiler)
@@ -527,10 +527,10 @@ feature {NONE} -- Actions
 			end
 
 			if (l_min /= Void and then l_min.is_error) or (l_max /= Void and then l_max.is_error) then
-				fill_msil_clr_version;
+				fill_msil_clr_version
 				prompts.show_error_prompt (conf_interface_names.version_valid_format, parent_window (Current), Void)
-			elseif l_min /= Void and l_max /= Void and l_min > l_max then
-				fill_msil_clr_version;
+			elseif l_min /= Void and l_max /= Void and then l_min > l_max then
+				fill_msil_clr_version
 				prompts.show_error_prompt (conf_interface_names.version_min_max, parent_window (Current), Void)
 			elseif l_min /= Void or l_max /= Void then
 				data.add_version (l_min, l_max, v_msil_clr)
@@ -580,8 +580,6 @@ feature {NONE} -- Actions
 			a_old_value_ok: a_old_value /= Void and then attached data.custom.item (a_key.as_lower) as l_item and then l_item.has (a_old_value)
 			a_value_not_void: a_value /= Void
 		local
-			l_invert: BOOLEAN
-			l_is_regexp: BOOLEAN
 			d: CONF_CONDITION_CUSTOM_ATTRIBUTES
 		do
 			if not a_value.is_empty then
@@ -612,9 +610,11 @@ feature {NONE} -- Actions
 				l_row := custom.selected_rows.first
 				if
 					attached {TEXT_PROPERTY [READABLE_STRING_GENERAL]} l_row.item (1) as l_key and then
-					attached {TEXT_PROPERTY [READABLE_STRING_GENERAL]} l_row.item (3) as l_value
+					attached l_key.value as ks and then
+					attached {TEXT_PROPERTY [READABLE_STRING_GENERAL]} l_row.item (3) as l_value and then
+					attached l_value.value as vs
 				then
-					data.remove_custom (l_key.value, l_value.value)
+					data.remove_custom (ks, vs)
 				end
 				fill_custom
 			end
@@ -635,7 +635,7 @@ feature {NONE} -- Implementation
 	fill_compiler_version
 			-- Fill fields with the constraints for the compiler version.
 		local
-			l_version: TUPLE [min: CONF_VERSION; max: CONF_VERSION]
+			l_version: TUPLE [min: detachable CONF_VERSION; max: detachable CONF_VERSION]
 		do
 			l_version := data.version.item (v_compiler)
 			if l_version = Void then
@@ -658,7 +658,7 @@ feature {NONE} -- Implementation
 	fill_msil_clr_version
 			-- Fill fields with the constraints for the msil clr version.
 		local
-			l_version: TUPLE [min: CONF_VERSION; max: CONF_VERSION]
+			l_version: TUPLE [min: detachable CONF_VERSION; max: detachable CONF_VERSION]
 		do
 			l_version := data.version.item (v_msil_clr)
 			if l_version = Void then
@@ -715,7 +715,7 @@ feature {NONE} -- Implementation
 						l_text.pointer_button_press_actions.wipe_out
 						l_text.activate_when_pointer_is_double_pressed
 						l_text.set_value (l_key)
-						l_text.change_value_actions.extend (agent update_variable ({like {STRING_PROPERTY}.value} ?, l_key, l_values.key_for_iteration))
+						l_text.change_value_actions.extend (agent update_variable ({READABLE_STRING_32} ?, l_key, l_values.key_for_iteration))
 						custom.set_item (1, i, l_text)
 						create l_choice.make_with_choices ("", create {ARRAYED_LIST [READABLE_STRING_32]}.make_from_array ({ARRAY [READABLE_STRING_32]} <<"=", "/=", "caseless-match", "caseless-mismatch", "regexp-match", "regexp-mismatch", "wildcard-match", "wildcard-mismatch">>))
 						l_custom_item := l_values.item_for_iteration
@@ -740,13 +740,13 @@ feature {NONE} -- Implementation
 								l_choice.set_value ("=")
 							end
 						end
-						l_choice.change_value_actions.extend (agent update_invert ({like {STRING_CHOICE_PROPERTY}.value} ?, l_values.key_for_iteration, l_key))
+						l_choice.change_value_actions.extend (agent update_invert ({READABLE_STRING_32} ?, l_values.key_for_iteration, l_key))
 						custom.set_item (2, i, l_choice)
 						create l_text.make ("")
 						l_text.pointer_button_press_actions.wipe_out
 						l_text.activate_when_pointer_is_double_pressed
 						l_text.set_value (l_values.key_for_iteration)
-						l_text.change_value_actions.extend (agent update_value ({like {STRING_PROPERTY}.value} ?, l_values.key_for_iteration , l_key))
+						l_text.change_value_actions.extend (agent update_value ({READABLE_STRING_32} ?, l_values.key_for_iteration , l_key))
 						custom.set_item (3, i, l_text)
 						i := i + 1
 						l_values.forth

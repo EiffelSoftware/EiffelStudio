@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 			l_mapping_prop: DIALOG_PROPERTY [STRING_TABLE [READABLE_STRING_32]]
 			l_class_opt_prop: DIALOG_PROPERTY [STRING_TABLE [CONF_OPTION]]
 			l_class_opt_dial: CLASS_OPTION_DIALOG
-			l_vis_prop: DIALOG_PROPERTY [STRING_TABLE [TUPLE [class_renamed: READABLE_STRING_32; features: STRING_TABLE [READABLE_STRING_32]]]]
+			l_vis_prop: DIALOG_PROPERTY [STRING_TABLE [TUPLE [class_renamed: READABLE_STRING_32; features: detachable STRING_TABLE [READABLE_STRING_32]]]]
 			l_vis_dial: VISIBLE_DIALOG
 			l_visible: CONF_VISIBLE
 			l_precompile: CONF_PRECOMPILE
@@ -80,9 +80,9 @@ feature {NONE} -- Implementation
 				if l_library.library_target = Void then
 					create l_load.make (create {CONF_PARSE_FACTORY})
 					l_load.retrieve_configuration (l_library.path)
-					if not l_load.is_error and then l_load.last_system.library_target /= Void then
+					if not l_load.is_error and then attached l_load.last_system.library_target as t then
 						l_load.last_system.set_application_target (l_library.target)
-						l_library.set_library_target (l_load.last_system.library_target)
+						l_library.set_library_target (t)
 					end
 				end
 			elseif attached {CONF_ASSEMBLY} a_group as a then
@@ -119,8 +119,7 @@ feature {NONE} -- Implementation
 
 				-- Location.
 			if a_group.is_cluster then
-				create l_dir_prop.make (conf_interface_names.group_location_name)
-				l_dir_prop.set_target (a_target)
+				create l_dir_prop.make (conf_interface_names.group_location_name, a_target)
 				l_dir_prop.set_description (conf_interface_names.group_location_description)
 				l_dir_prop.set_value (a_group.location.original_path)
 				l_dir_prop.validate_value_actions.extend (agent is_not_void ({READABLE_STRING_32}?))
@@ -128,8 +127,7 @@ feature {NONE} -- Implementation
 				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (True)))
 				properties.add_property (l_dir_prop)
 			else
-				create l_file_prop.make (conf_interface_names.group_location_name)
-				l_file_prop.set_target (a_target)
+				create l_file_prop.make (conf_interface_names.group_location_name, a_target)
 				l_file_prop.set_description (conf_interface_names.group_location_description)
 				l_file_prop.set_value (a_group.location.original_path)
 				l_file_prop.validate_value_actions.extend (agent is_not_void ({READABLE_STRING_32}?))
@@ -147,8 +145,7 @@ feature {NONE} -- Implementation
 
 				-- EIFGENs location for precompile.
 			if l_precompile /= Void then
-				create l_dir_prop.make (conf_interface_names.group_eifgens_location_name)
-				l_dir_prop.set_target (a_target)
+				create l_dir_prop.make (conf_interface_names.group_eifgens_location_name, a_target)
 				l_dir_prop.set_description (conf_interface_names.group_eifgens_location_description)
 				if l_precompile.eifgens_location /= Void then
 					l_dir_prop.set_value (l_precompile.eifgens_location.original_path)
@@ -191,8 +188,7 @@ feature {NONE} -- Implementation
 
 				-- Class options.
 			if not a_group.is_assembly then
-				create l_class_opt_dial.make (conf_factory)
-				l_class_opt_dial.set_group_options (a_group.options)
+				create l_class_opt_dial.make (conf_factory, a_group.options)
 				l_class_opt_dial.set_debugs (debug_clauses)
 				create l_class_opt_prop.make_with_dialog (conf_interface_names.group_class_option_name, l_class_opt_dial)
 				l_class_opt_prop.set_description (conf_interface_names.group_class_option_description)
@@ -408,12 +404,14 @@ feature {NONE} -- Configuration settings
 			if a_location /= Void then
 				if a_group.is_cluster then
 					create {CONF_DIRECTORY_LOCATION}l_location.make (a_location, a_target)
+					a_group.set_location (l_location)
 				elseif a_group.is_assembly then
 					create {CONF_FILE_LOCATION}l_location.make (a_location, a_target)
+					a_group.set_location (l_location)
 				elseif a_group.is_library then
 					create {CONF_FILE_LOCATION}l_location.make (a_location, a_target)
+					a_group.set_location (l_location)
 				end
-				a_group.set_location (l_location)
 			end
 		end
 
@@ -448,7 +446,9 @@ feature {NONE} -- Configuration settings
 				until
 					a_dependencies.after
 				loop
-					a_cluster.add_dependency (l_grps.item (a_dependencies.item))
+					if attached l_grps.item (a_dependencies.item) as g then
+						a_cluster.add_dependency (g)
+					end
 					a_dependencies.forth
 				end
 			end
@@ -469,7 +469,9 @@ feature {NONE} -- Configuration settings
 				until
 					an_overriding.after
 				loop
-					an_override.add_override (l_grps.item (an_overriding.item))
+					if attached l_grps.item (an_overriding.item) as g then
+						an_override.add_override (g)
+					end
 					an_overriding.forth
 				end
 			end
@@ -567,7 +569,7 @@ feature {NONE} -- Validation and warning generation
 
 feature {NONE} -- Inheritance handling
 
-	update_inheritance_file_rule_cluster (a_dummy: ARRAYED_LIST [CONF_FILE_RULE]; a_property: PROPERTY; a_group: CONF_GROUP)
+	update_inheritance_file_rule_cluster (a_dummy: detachable ARRAYED_LIST [CONF_FILE_RULE]; a_property: PROPERTY; a_group: CONF_GROUP)
 			-- Enable inheritance/override on `a_property' depending on if there are file rules in the `a_group'.
 		require
 			a_property_not_void: a_property /= Void

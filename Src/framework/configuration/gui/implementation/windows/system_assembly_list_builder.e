@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A class to perform a system search for all assemblies registered as locatable.
 		Locatable does not refer to the Globabl Assembly Cache but assemblies that are found
@@ -256,11 +256,11 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Internal Implementation Cache
 
-	internal_assembly_folders: ARRAYED_LIST [STRING_32]
+	internal_assembly_folders: detachable ARRAYED_LIST [STRING_32]
 			-- Cached version of `assembly_folders'
 			-- Note: Do not use directly!
 
-	internal_versioned_registry_root_path: like versioned_registry_root_path
+	internal_versioned_registry_root_path: detachable like versioned_registry_root_path
 			-- Cached version of `versioned_registry_root_path'
 			-- Note: Do not use directly!
 
@@ -272,7 +272,7 @@ invariant
 	clr_version_has_v_prefix: (clr_version.item (1)).as_lower = 'v'
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -303,4 +303,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {SYSTEM_ASSEMBLY_LIST_BUILDER}
+end

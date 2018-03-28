@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Add an override cluster."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_group: CONF_OVERRIDE
+	last_group: detachable CONF_OVERRIDE
 			-- Last added override cluster.
 
 feature {NONE} -- Actions
@@ -40,6 +40,7 @@ feature {NONE} -- Actions
 			-- Add group and close the dialog.
 		local
 			l_loc: CONF_DIRECTORY_LOCATION
+			g: like last_group
 		do
 			if not name.text.is_empty and not location.text.is_empty then
 				if not is_valid_group_name (name.text) then
@@ -48,22 +49,22 @@ feature {NONE} -- Actions
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (conf_interface_names.group_already_exists (name.text), Current, Void)
 				else
 					l_loc := factory.new_location_from_path (location.text, target)
-					last_group := factory.new_override (name.text, l_loc, target)
+					g := factory.new_override (name.text, l_loc, target)
+					last_group := g
 					if parent_cluster /= Void then
-						last_group.set_parent (parent_cluster)
-						last_group.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
-						parent_cluster.add_child (last_group)
+						g.set_parent (parent_cluster)
+						g.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
+						parent_cluster.add_child (g)
 					end
-					last_group.set_recursive (True)
-					target.add_override (last_group)
-					is_ok := True
+					g.set_recursive (True)
+					target.add_override (g)
 					destroy
 				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

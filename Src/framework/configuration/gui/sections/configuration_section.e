@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represent a configuration section."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -86,10 +86,13 @@ feature -- Simple operations
 
 	show_context_menu
 			-- Show the context menu.
+		local
+			m: like open_menu
 		do
-			create open_menu
-			open_menu.append (context_menu)
-			open_menu.show
+			create m
+			open_menu := m
+			m.append (context_menu)
+			m.show
 		end
 
 	update_toolbar_sensitivity
@@ -106,8 +109,8 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	open_menu: EV_MENU
-			-- Context menu as class attribut that it doesn't get collected.
+	open_menu: detachable EV_MENU
+			-- Context menu as class attribute that it doesn't get collected.
 
 feature {NONE} -- Implementation helper
 

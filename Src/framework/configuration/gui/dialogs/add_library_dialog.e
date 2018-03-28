@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Dialog to add a library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -149,7 +149,7 @@ feature {NONE} -- Initialization
 				-- Create grid
 			create search_results_box.make (target)
 			search_results_box.set_minimum_size (600, 200)
-			search_results_box.on_item_selected_actions.extend (agent on_search_item_selected)
+			search_results_box.on_item_selected_actions.extend (agent on_search_item_selected ({ES_LIBRARY_PROVIDER_ITEM}?))
 
 				-- Create border for the grid
 			create l_padding
@@ -276,7 +276,9 @@ feature {NONE} -- Initialization
 				loop
 					create cb.make_with_text (ic.key)
 					cb.enable_select
-					cb.set_tooltip (ic.item.description)
+					if attached ic.item.description as d then
+						cb.set_tooltip (d)
+					end
 					hb1cb.extend (cb)
 					hb1cb.disable_item_expand (cb)
 					l_checkboxes.put (cb, ic.key)
@@ -301,7 +303,9 @@ feature {NONE} -- Initialization
 				loop
 					create cb.make_with_text (ic.key)
 					cb.enable_select
-					cb.set_tooltip (ic.item.description)
+					if attached ic.item.description as d then
+						cb.set_tooltip (d)
+					end
 					hb2cb.extend (cb)
 					hb2cb.disable_item_expand (cb)
 					l_checkboxes.put (cb, ic.key)
@@ -502,7 +506,7 @@ feature {NONE} -- GUI elements
 
 feature -- Access
 
-	last_group: CONF_LIBRARY
+	last_group: detachable CONF_LIBRARY
 			-- Last created group.
 
 feature {NONE} -- Callback
@@ -662,7 +666,7 @@ feature {NONE} -- Action handlers
 
 	on_search_item_selected (a_search_item: detachable ES_LIBRARY_PROVIDER_ITEM)
 		local
-			cl_item: detachable EV_WIDGET
+			cl_item: EV_WIDGET
 			w: EV_WIDGET
 		do
 			if not selection_cell.is_empty then
@@ -701,6 +705,7 @@ feature {NONE} -- Action handlers
 			l_sys: CONF_SYSTEM
 			l_name: READABLE_STRING_32
 			l_location: READABLE_STRING_32
+			g: like last_group
 		do
 				-- library choosen?
 			if filter.has_focus then
@@ -714,14 +719,14 @@ feature {NONE} -- Action handlers
 					elseif group_exists (l_name, target) then
 						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (conf_interface_names.group_already_exists (l_name), Current, Void)
 					else
-						last_group := factory.new_library (l_name, l_location, target)
+						g := factory.new_library (l_name, l_location, target)
+						last_group := g
 							-- add an empty classes list that it get's displayed in the classes tree
-						last_group.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
+						g.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
 						l_sys := factory.new_system_generate_uuid_with_file_name ("dummy_location", "dummy")
 						l_sys.set_application_target (target)
-						last_group.set_library_target (factory.new_target ("dummy", l_sys))
-						target.add_library (last_group)
-						is_ok := True
+						g.set_library_target (factory.new_target ("dummy", l_sys))
+						target.add_library (g)
 						destroy
 					end
 				end
@@ -843,7 +848,7 @@ invariant
 	target_set_in_boxes: search_results_box.target = target
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

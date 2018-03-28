@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Dialog to add a precompile library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_group: CONF_PRECOMPILE
+	last_group: detachable CONF_PRECOMPILE
 			-- <Precursor>
 
 	search_in_manager: ES_LIBRARY_PROVIDER_SERVICE
@@ -82,11 +82,11 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Action handlers
 
-	on_library_selected (a_library: CONF_SYSTEM_VIEW)
+	on_library_selected (a_library: detachable CONF_SYSTEM_VIEW)
 			-- <Precursor>
 		do
 			library_widget.set_library (a_library)
-			library_widget.set_name (a_library.library_target_name + "_precompile")
+			library_widget.set_name (if attached a_library.library_target_name as n then n else {STRING_32} "Unknown" end + "_precompile")
 		end
 
 	on_ok (w: ADD_LIBRARY_WIDGET)
@@ -105,14 +105,13 @@ feature {NONE} -- Action handlers
 				else
 					last_group := factory.new_precompile (l_name, l_location, target)
 					target.set_precompile (last_group)
-					is_ok := True
 					destroy
 				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

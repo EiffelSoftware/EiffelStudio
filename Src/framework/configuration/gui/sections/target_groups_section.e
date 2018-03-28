@@ -1,5 +1,4 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -26,40 +25,40 @@ feature -- Access
 	clusters: like internal_clusters
 			-- Clusters.
 		do
-			if internal_clusters /= Void and then has (internal_clusters) then
-				Result := internal_clusters
+			if attached internal_clusters as c and then has (c) then
+				Result := c
 			end
 		end
 
 	overrides: like internal_overrides
 			-- Overrides.
 		do
-			if internal_overrides /= Void and then has (internal_overrides) then
-				Result := internal_overrides
+			if attached internal_overrides as o and then has (o) then
+				Result := o
 			end
 		end
 
 	assemblies: like internal_assemblies
 			-- Assemblies.
 		do
-			if internal_assemblies /= Void and then has (internal_assemblies) then
-				Result := internal_assemblies
+			if attached internal_assemblies as a and then has (a) then
+				Result := a
 			end
 		end
 
 	libraries: like internal_libraries
 			-- Libraries.
 		do
-			if internal_libraries /= Void and then has (internal_libraries) then
-				Result := internal_libraries
+			if attached internal_libraries as l and then has (l) then
+				Result := l
 			end
 		end
 
 	precompile: like internal_precompile
 			-- Precompile.
 		do
-			if internal_precompile /= Void and then has (internal_precompile) then
-				Result := internal_precompile
+			if attached internal_precompile as p and then has (p) then
+				Result := p
 			end
 		end
 
@@ -107,125 +106,143 @@ feature -- Element update
 
 	add_cluster
 			-- Add a new cluster.
+		local
+			c: like clusters
 		do
-			if clusters = Void then
-				create internal_clusters.make (target, configuration_window)
-				extend (internal_clusters)
+			c := clusters
+			if not attached c then
+				create c.make (target, configuration_window)
+				internal_clusters := c
+				extend (c)
 			end
-			internal_clusters.add_group
-
+			c.add_group
 			order_headers
 		end
 
 	add_override
 			-- Add a new override.
+		local
+			o: like overrides
 		do
-			if overrides = Void then
-				create internal_overrides.make (target, configuration_window)
-				extend (internal_overrides)
+			o := overrides
+			if not attached o then
+				create o.make (target, configuration_window)
+				internal_overrides := o
+				extend (o)
 			end
-			internal_overrides.add_group
-
+			o.add_group
 			order_headers
 		end
 
 	add_assembly
 			-- Add a new assembly.
+		local
+			a: like assemblies
 		do
-			if assemblies = Void then
-				create internal_assemblies.make (target, configuration_window)
-				extend (internal_assemblies)
+			a := assemblies
+			if not attached a then
+				create a.make (target, configuration_window)
+				internal_assemblies := a
+				extend (a)
 			end
-			internal_assemblies.add_group
-
+			a.add_group
 			order_headers
 		end
 
 	add_library
 			-- Add a new library.
+		local
+			l: like libraries
 		do
-			if libraries = Void then
-				create internal_libraries.make (target, configuration_window)
-				extend (internal_libraries)
+			l := libraries
+			if not attached l then
+				create l.make (target, configuration_window)
+				internal_libraries := l
+				extend (l)
 			end
-			internal_libraries.add_group
-
+			l.add_group
 			order_headers
 		end
 
 	add_precompile
 			-- Add a new precompile.
+		local
+			p: like precompile
 		do
-			if precompile = Void then
-				create internal_precompile.make (target, configuration_window)
-				extend (internal_precompile)
+			p := precompile
+			if not attached p then
+				create p.make (target, configuration_window)
+				internal_precompile := p
+				extend (p)
 			end
-			internal_precompile.add_group
-
+			p.add_group
 			order_headers
 		end
 
 	set_clusters (a_groups: STRING_TABLE [CONF_CLUSTER])
 			-- Set groups.
+		local
+			c: like clusters
 		do
 			if a_groups /= Void and then not a_groups.is_empty then
-				create internal_clusters.make (target, configuration_window)
-
-				internal_clusters.set_groups (a_groups)
-
+				create c.make (target, configuration_window)
+				internal_clusters := c
+				c.set_groups (a_groups)
 				order_headers
 			end
 		end
 
 	set_overrides (a_groups: STRING_TABLE [CONF_OVERRIDE])
 			-- Set overrides.
+		local
+			o: like overrides
 		do
 			if a_groups /= Void and then not a_groups.is_empty then
-				create internal_overrides.make (target, configuration_window)
-
-				internal_overrides.set_groups (a_groups)
-
+				create o.make (target, configuration_window)
+				internal_overrides := o
+				o.set_groups (a_groups)
 				order_headers
 			end
 		end
 
 	set_assemblies (a_groups: STRING_TABLE [CONF_ASSEMBLY])
 			-- Set assemblies.
+		local
+			a: like assemblies
 		do
 			if a_groups /= Void and then not a_groups.is_empty then
-				create internal_assemblies.make (target, configuration_window)
-
-				internal_assemblies.set_groups (a_groups)
-
+				create a.make (target, configuration_window)
+				internal_assemblies := a
+				a.set_groups (a_groups)
 				order_headers
 			end
 		end
 
 	set_libraries (a_groups: STRING_TABLE [CONF_LIBRARY])
 			-- Set libraries.
+		local
+			l: like libraries
 		do
 			if a_groups /= Void and then not a_groups.is_empty then
-				create internal_libraries.make (target, configuration_window)
-
-				internal_libraries.set_groups (a_groups)
-
+				create l.make (target, configuration_window)
+				internal_libraries := l
+				l.set_groups (a_groups)
 				order_headers
 			end
 		end
 
-	set_precompile (a_group: CONF_PRECOMPILE)
+	set_precompile (a_group: detachable CONF_PRECOMPILE)
 			-- Set precompile.
 		local
 			l_ht: STRING_TABLE [CONF_PRECOMPILE]
+			p: like precompile
 		do
 			if a_group /= Void then
-				create internal_precompile.make (target, configuration_window)
-
+				create p.make (target, configuration_window)
+				internal_precompile := p
 				create l_ht.make (1)
 				l_ht.force (a_group, a_group.name)
-
-				internal_precompile.set_groups (l_ht)
-
+				p.set_groups (l_ht)
 				order_headers
 			end
 		end
@@ -263,19 +280,19 @@ feature -- Element update
 
 feature {NONE} -- Implementation
 
-	internal_clusters: TARGET_CLUSTERS_SECTION
+	internal_clusters: detachable TARGET_CLUSTERS_SECTION
 			-- Clusters (Could still be present even if it removed from Current)
 
-	internal_overrides: TARGET_OVERRIDES_SECTION
+	internal_overrides: detachable TARGET_OVERRIDES_SECTION
 			-- Overrides (Could still be present even if it removed from Current)
 
-	internal_assemblies: TARGET_ASSEMBLIES_SECTION
+	internal_assemblies: detachable TARGET_ASSEMBLIES_SECTION
 			-- Assemblies (Could still be present even if it removed from Current)
 
-	internal_libraries: TARGET_LIBRARIES_SECTION
+	internal_libraries: detachable TARGET_LIBRARIES_SECTION
 			-- Libraries (Could still be present even if it removed from Current)
 
-	internal_precompile: TARGET_PRECOMPILES_SECTION
+	internal_precompile: detachable TARGET_PRECOMPILES_SECTION
 			-- Precompile (Could still be present even if it removed from Current)
 
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -290,52 +307,52 @@ feature {NONE} -- Implementation
 		local
 			l_cl, l_ov, l_as, l_lib, l_pre: BOOLEAN
 		do
-			if internal_clusters /= Void then
-				l_cl := internal_clusters.is_expanded
+			if attached internal_clusters as c then
+				l_cl := c.is_expanded
 			end
-			if internal_overrides /= Void then
-				l_ov := internal_overrides.is_expanded
+			if attached internal_overrides as o then
+				l_ov := o.is_expanded
 			end
-			if internal_assemblies /= Void then
-				l_as := internal_assemblies.is_expanded
+			if attached internal_assemblies as a then
+				l_as := a.is_expanded
 			end
-			if internal_libraries /= Void then
-				l_lib := internal_libraries.is_expanded
+			if attached internal_libraries as l then
+				l_lib := l.is_expanded
 			end
-			if internal_precompile /= Void then
-				l_pre := internal_precompile.is_expanded
+			if attached internal_precompile as p then
+				l_pre := p.is_expanded
 			end
 
 			wipe_out
 
-			if internal_clusters /= Void and then not internal_clusters.is_empty then
-				extend (internal_clusters)
+			if attached internal_clusters as c and then not c.is_empty then
+				extend (c)
 				if l_cl then
-					internal_clusters.expand
+					c.expand
 				end
 			end
-			if internal_overrides /= Void and then not internal_overrides.is_empty then
-				extend (internal_overrides)
+			if attached internal_overrides as o and then not o.is_empty then
+				extend (o)
 				if l_ov then
-					internal_overrides.expand
+					o.expand
 				end
 			end
-			if internal_assemblies /= Void and then not internal_assemblies.is_empty then
-				extend (internal_assemblies)
+			if attached internal_assemblies as a and then not a.is_empty then
+				extend (a)
 				if l_as then
-					internal_assemblies.expand
+					a.expand
 				end
 			end
-			if internal_libraries /= Void and then not internal_libraries.is_empty then
-				extend (internal_libraries)
+			if attached internal_libraries as l and then not l.is_empty then
+				extend (l)
 				if l_lib then
-					internal_libraries.expand
+					l.expand
 				end
 			end
-			if internal_precompile /= Void and then not internal_precompile.is_empty then
-				extend (internal_precompile)
+			if attached internal_precompile as p and then not p.is_empty then
+				extend (p)
 				if l_pre then
-					internal_precompile.expand
+					p.expand
 				end
 			end
 		end

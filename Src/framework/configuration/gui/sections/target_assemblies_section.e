@@ -66,12 +66,21 @@ feature {NONE} -- Type anchors
 
 	add_dialog_type: CREATE_ASSEMBLY_DIALOG
 			-- Type of the dialog to create a new item.
+		do
+			check from_precondition: False then end
+		end
 
 	conf_item_type: CONF_ASSEMBLY
 			-- Type of configuration objects represented.
+		do
+			check from_precondition: False then end
+		end
 
-	section_item_type: ASSEMBLY_SECTION;
+	section_item_type: ASSEMBLY_SECTION
 			-- Type of sections contained.
+		do
+			check from_precondition: False then end
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2018, Eiffel Software"

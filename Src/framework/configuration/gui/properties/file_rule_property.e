@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Property for file rules."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -71,11 +71,11 @@ feature -- Display
 
 feature {NONE} -- Dialog
 
-	dialog: FILE_RULE_DIALOG;
+	dialog: detachable FILE_RULE_DIALOG
 			-- Dialog to edit the value.
 
-note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+;note
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

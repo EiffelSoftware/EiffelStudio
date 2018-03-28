@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Box containing the list of available iron package, 
 			with name, location, repository and available extra informations.
@@ -537,7 +537,7 @@ feature -- Actions
 
 feature -- Access
 
-	parent_window_of (w: EV_WIDGET): EV_WINDOW
+	parent_window_of (w: EV_WIDGET): detachable EV_WINDOW
 			-- Parent for all dialogs shown.
 		do
 			if attached w.parent as p then
@@ -589,10 +589,8 @@ feature -- Events
 			end
 		end
 
-invariant
-
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -13,7 +13,9 @@ inherit
 		export
 			{ANY} is_initialized
 		redefine
-			initialize, is_in_default_state,
+			create_interface_objects,
+			initialize,
+			is_in_default_state,
 			destroy
 		end
 
@@ -107,13 +109,15 @@ feature {NONE}-- Initialization
 			else
 				debug_clauses := a_debugs
 			end
-			window := Current
+			current_target := a_factory.new_target ({STRING_32} "*", a_system)
+			refresh_current := agent do_nothing
 			selected_target := a_target
 			set_pixmaps (a_pixmaps)
 			conf_system := a_system
 			conf_factory := a_factory
 			external_editor_command := a_editor
 			default_create
+			window := Current
 			config_windows.force (Current, conf_system.file_name)
 		ensure
 			system_set: conf_system = a_system
@@ -135,6 +139,16 @@ feature {NONE}-- Initialization
 			system_set: conf_system = a_system
 			factory_set: conf_factory = a_factory
 			debug_clauses_set: a_debugs /= Void implies debug_clauses = a_debugs
+		end
+
+	create_interface_objects
+		do
+			Precursor
+			create toolbar.make
+			create section_tree
+			create configuration_space
+			create split_area
+			create ok_button.make_with_text (names.b_ok)
 		end
 
 	initialize
@@ -165,24 +179,20 @@ feature {NONE}-- Initialization
 			vb.set_border_width (layout_constants.default_border_size)
 
 				-- toolbar
-			create toolbar.make
 			vb.extend (toolbar)
 			vb.disable_item_expand (toolbar)
 			toolbar.edit_manually_button.select_actions.extend (agent open_text_editor)
 			toolbar.edit_manually_button.enable_sensitive
 			accelerators.append (toolbar.accelerators)
 
-			create split_area
 			vb.extend (split_area)
 
 					-- section tree
-			create section_tree
 			section_tree.set_minimum_size (220, 230)
 			initialize_section_tree
 			split_area.set_first (section_tree)
 
 				-- configuration space_g
-			create configuration_space
 			split_area.set_second (configuration_space)
 			configuration_space.set_padding (layout_constants.default_padding_size)
 
@@ -194,7 +204,7 @@ feature {NONE}-- Initialization
 			hb.extend (create {EV_CELL})
 			hb.set_padding (layout_constants.default_padding_size)
 
-			create ok_button.make_with_text_and_action (names.b_ok, agent on_ok)
+			ok_button.select_actions.extend (agent on_ok)
 			layout_constants.set_default_width_for_button (ok_button)
 			hb.extend (ok_button)
 			hb.disable_item_expand (ok_button)
@@ -317,13 +327,13 @@ feature {NONE} -- Layout components
 	section_tree: EV_TREE
 			-- Tree to select what information to display.
 
-	grid: ES_GRID
+	grid: detachable ES_GRID
 			-- Grid for variables and type mappings.
 
-	add_button: EV_BUTTON
+	add_button: detachable EV_BUTTON
 			-- Button to add an item to `grid'.
 
-	remove_button: EV_BUTTON
+	remove_button: detachable EV_BUTTON
 			-- Button to remove an item from `grid'.
 
 	configuration_space: EV_VERTICAL_BOX
@@ -336,21 +346,23 @@ feature {NONE} -- Element initialization
 		local
 			l_frame: EV_FRAME
 			l_description_area: ES_SCROLLABLE_LABEL
+			p: like properties
 		do
 				-- Property grid.
 			create l_frame
 			container.extend (l_frame)
 			l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
 
-			create properties
-			l_frame.extend (properties)
-			properties.focus_in_actions.extend (agent
+			create p
+			properties := p
+			l_frame.extend (p)
+			p.focus_in_actions.extend (agent
 				do
 					if default_push_button /= Void then
 						remove_default_push_button
 					end
 				end)
-			properties.focus_out_actions.extend (agent set_default_push_button (ok_button))
+			p.focus_out_actions.extend (agent set_default_push_button (ok_button))
 
 				-- property grid description field
 			create l_frame
@@ -412,6 +424,8 @@ feature {NONE} -- Element initialization
 			vb_grid: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
 			l_column_width1, l_column_width2: INTEGER_32
+			b: EV_BUTTON
+			g: ES_GRID
 		do
 			if grid = Void then
 				configuration_space.wipe_out
@@ -423,18 +437,19 @@ feature {NONE} -- Element initialization
 				configuration_space.extend (vb_grid)
 
 					-- grid
-				create grid
-				vb_grid.extend (grid)
-				grid.set_column_count_to (2)
-				grid.column (1).set_width (200)
-				grid.column (2).set_width (200)
-				grid.focus_in_actions.extend (agent
+				create g
+				grid := g
+				vb_grid.extend (g)
+				g.set_column_count_to (2)
+				g.column (1).set_width (200)
+				g.column (2).set_width (200)
+				g.focus_in_actions.extend (agent
 					do
 						if default_push_button /= Void then
 							remove_default_push_button
 						end
 					end)
-				grid.focus_out_actions.extend (agent set_default_push_button (ok_button))
+				g.focus_out_actions.extend (agent set_default_push_button (ok_button))
 
 					-- add add and remove buttons
 				create hb
@@ -442,16 +457,20 @@ feature {NONE} -- Element initialization
 				configuration_space.extend (hb)
 				configuration_space.disable_item_expand (hb)
 				hb.extend (create {EV_CELL})
-				create add_button.make_with_text (conf_interface_names.general_add)
-				add_button.set_pixmap (conf_pixmaps.general_add_icon)
-				layout_constants.set_default_width_for_button (add_button)
-				hb.extend (add_button)
-				hb.disable_item_expand (add_button)
-				create remove_button.make_with_text (conf_interface_names.general_remove)
-				remove_button.set_pixmap (conf_pixmaps.general_remove_icon)
-				layout_constants.set_default_width_for_button (remove_button)
-				hb.extend (remove_button)
-				hb.disable_item_expand (remove_button)
+
+				create b.make_with_text (conf_interface_names.general_add)
+				add_button := b
+				b.set_pixmap (conf_pixmaps.general_add_icon)
+				layout_constants.set_default_width_for_button (b)
+				hb.extend (b)
+				hb.disable_item_expand (b)
+
+				create b.make_with_text (conf_interface_names.general_remove)
+				remove_button := b
+				b.set_pixmap (conf_pixmaps.general_remove_icon)
+				layout_constants.set_default_width_for_button (b)
+				hb.extend (b)
+				hb.disable_item_expand (b)
 
 					-- remove properties
 				if properties /= Void then
@@ -1715,8 +1734,7 @@ feature {NONE} -- Implementation
 			properties.add_property (l_mls_prop)
 
 				-- working directory
-			create l_dir_prop.make (conf_interface_names.task_working_directory_name)
-			l_dir_prop.set_target (current_target)
+			create l_dir_prop.make (conf_interface_names.task_working_directory_name, current_target)
 			l_dir_prop.set_description (conf_interface_names.task_working_directory_description)
 			if attached a_task.working_directory as wd then
 				l_dir_prop.set_value (wd.original_path)

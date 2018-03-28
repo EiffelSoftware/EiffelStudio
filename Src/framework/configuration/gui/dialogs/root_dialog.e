@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Dialog to edit the root of a target."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,19 @@ inherit
 			default_create, copy
 		end
 
+create
+	make
+
 feature {NONE} -- Initialization
+
+	make (t: like target)
+			-- Initialize a dialog with a target `t`.
+		do
+			target := t
+			default_create
+		ensure
+			target_set: target = t
+		end
 
 	initialize
 			-- Initialization
@@ -76,16 +88,6 @@ feature -- Access
 	target: CONF_TARGET
 			-- Target that has the root.
 
-feature -- Update
-
-	set_target (a_target: like target)
-			-- Set `target' to `a_target'.
-		do
-			target := a_target
-		ensure
-			target_set: target = a_target
-		end
-
 feature {NONE} -- Gui elements
 
 	cluster_name: EV_TEXT_FIELD
@@ -107,17 +109,17 @@ feature {NONE} -- Agents
 		require
 			initialized: is_initialized
 		do
-			if value /= Void then
-				if value.is_all_root then
+			if attached value as v then
+				if v.is_all_root then
 					all_classes.enable_select
 				else
 					all_classes.disable_select
-					if value.cluster_name /= Void then
-						cluster_name.set_text (value.cluster_name)
+					if attached v.cluster_name as s then
+						cluster_name.set_text (s)
 					end
-					class_name.set_text (value.class_type_name)
-					if value.feature_name /= Void then
-						feature_name.set_text (value.feature_name)
+					class_name.set_text (v.class_type_name)
+					if attached v.feature_name as s then
+						feature_name.set_text (s)
 					end
 				end
 			end
@@ -150,9 +152,7 @@ feature {NONE} -- Agents
 			else
 				l_cluster := cluster_name.text
 				l_class := class_name.text
-				if attached feature_name.text as l_f then
-					l_feature := l_f
-				end
+				l_feature := feature_name.text
 
 					-- Check validity of l_cluster, l_class and l_feature.
 				create l_checker
@@ -190,7 +190,7 @@ invariant
 	elements: is_initialized implies cluster_name /= Void and class_name /= Void and feature_name /= Void and all_classes /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

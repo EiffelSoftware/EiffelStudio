@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Dialog to create a new group."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,10 +45,15 @@ feature -- Status
 
 	is_ok: BOOLEAN
 			-- Was the dialog closed with ok?
+		do
+			Result := attached last_group
+		ensure
+			last_group_attached: Result implies attached last_group
+		end
 
 feature -- Access
 
-	last_group: CONF_GROUP;
+	last_group: detachable CONF_GROUP
 			-- Last added group.
 
 feature {NONE} -- Implementation
@@ -78,7 +83,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

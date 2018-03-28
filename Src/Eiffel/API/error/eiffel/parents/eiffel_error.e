@@ -62,6 +62,9 @@ feature -- Output
 				a_text_formatter.add_new_line
 			end
 			build_explain (a_text_formatter)
+			if is_class_defined and line > 0 then
+				print_context_of_error (class_c, a_text_formatter)
+			end
 		end
 
 	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
@@ -92,7 +95,7 @@ feature {NONE} -- Typing
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

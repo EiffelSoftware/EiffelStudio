@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Summary description for {SHARED_TEST_SERVICE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -98,19 +97,10 @@ feature {NONE} -- Basic operations
 			a_type_attached: a_type /= Void
 		do
 			perform_with_test_suite (agent (a_ts: TEST_SUITE_S; a_t: TYPE [TEST_SESSION_I]; a_p: detachable PROCEDURE [TEST_SESSION_I])
-				local
-					l_tuple: TUPLE [TEST_SESSION_I]
 				do
 					if attached a_ts.new_session (a_t, is_gui) as l_session then
-						if a_p /= Void then
-							l_tuple := a_p.empty_operands
-							check
-								valid_operands: l_tuple.count = 1 and then
-									l_tuple.valid_type_for_index (l_session, 1) and then
-									l_tuple.is_reference_item (1)
-							end
-							l_tuple.put_reference (l_session, 1)
-							a_p.call (l_tuple)
+						if attached a_p then
+							a_p (l_session)
 						end
 						a_ts.launch_session (l_session)
 					end
@@ -491,7 +481,7 @@ feature {NONE} -- Internationalization
 	e_unkonwn_error: STRING = "Unable to launch processor"
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

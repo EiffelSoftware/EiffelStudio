@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Base class for configuration groups."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -624,7 +624,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in conf
 	internal_class_options: detachable STRING_TABLE [CONF_OPTION]
 			-- Classes with specific options of this group itself.
 
-	changeable_internal_options: like internal_options
+	changeable_internal_options: attached like internal_options
 			-- A possibility to change settings without knowing if we have some options already set.
 		local
 			l_internal_options: like internal_options

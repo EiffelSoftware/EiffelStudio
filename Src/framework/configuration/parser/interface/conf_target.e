@@ -526,7 +526,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			version_set: internal_version = a_version
 		end
 
-	set_precompile (a_precompile: CONF_PRECOMPILE)
+	set_precompile (a_precompile: like precompile)
 			-- Set `a_precompile'.
 		do
 			internal_precompile := a_precompile
@@ -1127,7 +1127,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 	internal_version: detachable CONF_VERSION
 			-- The version of this target itself.
 
-	internal_precompile: detachable like precompile
+	internal_precompile: like precompile
 			-- Precompile of this target itself.
 
 	internal_libraries: like libraries

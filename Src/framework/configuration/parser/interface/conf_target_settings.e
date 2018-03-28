@@ -390,7 +390,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: internal_settings.item (a_name) = a_value
 		end
 
-	update_setting (a_name, a_value: READABLE_STRING_32)
+	update_setting (a_name: READABLE_STRING_32; a_value: detachable READABLE_STRING_32)
 			-- Update/add/remove a setting.
 		require
 			a_name_valid: a_name /= Void and then is_setting_known (a_name)

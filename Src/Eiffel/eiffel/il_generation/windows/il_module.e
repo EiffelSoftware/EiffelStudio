@@ -3,7 +3,7 @@
 		Entity that generates IL code into one module file. Stores only
 		module specific data such as tokens. Delegate most of the work to
 		IL_CODE_GENERATOR.
-		]"
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -1392,7 +1392,7 @@ feature -- Metadata description
 			from
 				create l_list.make (parents.count)
 				parents.start
-				create l_parents.make (0, parents.count)
+				create l_parents.make_filled (0, 0, parents.count)
 				l_single_inheritance_parent_id := 0
 			until
 				parents.after
@@ -2438,7 +2438,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			result_not_void: Result /= Void
 		end
 
-	table_token (a_table: ARRAY [HASH_TABLE [INTEGER, INTEGER]];
+	table_token (a_table: ARRAY [detachable HASH_TABLE [INTEGER, INTEGER]];
 			a_type_id, a_feature_id: INTEGER): INTEGER
 
 			-- Given a `a_feature_id' in `a_type_id' return associated
@@ -2529,44 +2529,44 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			dbg_pragma_documents_not_void: Result /= Void
 		end
 
-	internal_dbg_documents: ARRAY [DBG_DOCUMENT_WRITER]
+	internal_dbg_documents: ARRAY [detachable DBG_DOCUMENT_WRITER]
 			-- Array indexed by class ID containing all DBG_DOCUMENTS.
 
 	internal_dbg_pragma_documents: HASH_TABLE [DBG_DOCUMENT_WRITER, STRING]
 			-- Item: Document writer used for pragma debug generation
 			-- Key: Path to document defined by pragma clause
 
-	internal_implementation_features: ARRAY [HASH_TABLE [INTEGER, INTEGER]]
+	internal_implementation_features: ARRAY [detachable HASH_TABLE [INTEGER, INTEGER]]
 			-- Array of features for implementation indexed by their `type_id'.
 			-- For each type, there is an HASH_TABLE where keys are `feature_id'
 			-- and elements are `token'.
 
-	internal_features: ARRAY [HASH_TABLE [INTEGER, INTEGER]]
+	internal_features: ARRAY [detachable HASH_TABLE [INTEGER, INTEGER]]
 			-- Array of features indexed by their `type_id'.
 			-- For each type, there is an HASH_TABLE where keys are `feature_id'
 			-- and elements are `token'.
 
-	internal_setters: ARRAY [HASH_TABLE [INTEGER, INTEGER]]
+	internal_setters: ARRAY [detachable HASH_TABLE [INTEGER, INTEGER]]
 			-- Array of attributes setter indexed by their `type_id'.
 			-- For each type, there is an HASH_TABLE where keys are `feature_id'
 			-- and elements are `token'.
 
-	internal_property_setters: ARRAY [HASH_TABLE [INTEGER, INTEGER]]
+	internal_property_setters: ARRAY [detachable HASH_TABLE [INTEGER, INTEGER]]
 			-- Array of property setter indexed by their `type_id'.
 			-- For each type, there is an HASH_TABLE where keys are `feature_id'
 			-- and elements are `token'.
 
-	internal_property_getters: ARRAY [HASH_TABLE [INTEGER, INTEGER]]
+	internal_property_getters: ARRAY [detachable HASH_TABLE [INTEGER, INTEGER]]
 			-- Array of property getter indexed by their `type_id'.
 			-- For each type, there is an HASH_TABLE where keys are `feature_id'
 			-- and elements are `token'.
 
-	internal_attributes: ARRAY [HASH_TABLE [INTEGER, INTEGER]]
+	internal_attributes: ARRAY [detachable HASH_TABLE [INTEGER, INTEGER]]
 			-- Array of attributes indexed by their `type_id'.
 			-- For each type, there is an HASH_TABLE where keys are `feature_id'
 			-- and elements are `token'.
 
-	internal_signatures, internal_implementation_signatures: ARRAY [HASH_TABLE [like signature, INTEGER]]
+	internal_signatures, internal_implementation_signatures: ARRAY [detachable HASH_TABLE [like signature, INTEGER]]
 			-- Array of signatures indexed by their `type_id'.
 			-- For each type, there is an HASH_TABLE where keys are `feature_id'
 			-- and elements are an array of type id representation signature of
@@ -2883,21 +2883,21 @@ feature {NONE} -- Once per modules being generated.
 			create internal_external_token_mapping.make (a_type_count)
 			create internal_invariant_token.make_filled (0, 0, a_type_count)
 			create internal_constructor_token.make_filled (0, 0, a_type_count)
-			create internal_constructors.make (0, a_type_count)
+			create internal_constructors.make_filled (Void, 0, a_type_count)
 			create internal_assemblies.make_filled (0, 0, a_type_count)
 			create internal_module_references.make (10)
 			create defined_assemblies.make (10)
-			create internal_features.make (0, a_type_count)
-			create internal_setters.make (0, a_type_count)
-			create internal_property_setters.make (0, a_type_count)
-			create internal_property_getters.make (0, a_type_count)
-			create internal_attributes.make (0, a_type_count)
-			create internal_implementation_features.make (0, a_type_count)
-			create internal_signatures.make (0, a_type_count)
-			create internal_implementation_signatures.make (0, a_type_count)
+			create internal_features.make_filled (Void, 0, a_type_count)
+			create internal_setters.make_filled (Void, 0, a_type_count)
+			create internal_property_setters.make_filled (Void, 0, a_type_count)
+			create internal_property_getters.make_filled (Void, 0, a_type_count)
+			create internal_attributes.make_filled (Void, 0, a_type_count)
+			create internal_implementation_features.make_filled (Void, 0, a_type_count)
+			create internal_signatures.make_filled (Void, 0, a_type_count)
+			create internal_implementation_signatures.make_filled (Void, 0, a_type_count)
 
 				-- Debug data structure.
-			create internal_dbg_documents.make (0, a_type_count)
+			create internal_dbg_documents.make_filled (Void, 0, a_type_count)
 			create internal_dbg_pragma_documents.make (a_type_count)
 			create method_sequence_points.make (1000)
 			create local_info.make (1000)

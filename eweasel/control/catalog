@@ -539,7 +539,7 @@ test	assigner-wrong-vbac					valid250 tcf pass assigner validity
 test	bogus-veen-on-object-test-local		valid251 tcf fail used_to_pass validity
 test	undetected-vuot-error			valid252 tcf pass used_to_pass validity
 test	equality-of-conforming-classes		valid253 tcf pass validity equality conformance attached_types
-test	missing-vhpr-with-different-generic-derivation	valid255 tcf fail used_to_pass validity
+test	missing-vhpr-with-different-generic-derivation	valid255 tcf fail used_to_pass validity incrementality
 test	wrong-vdpr-errors			valid256 tcf fail used_to_pass validity
 test	wrong-manifest-array-attached-type	valid257 tcf pass validity
 test	select-stable-attribute		valid258 tcf pass validity stable attribute
@@ -994,7 +994,7 @@ test	function-to-attribute-refinalize	incr322	tcf pass incrementality
 test	change-obsolete-syntax-to-transitional	incr323	tcf pass incrementality
 test	vd71-called-syntax-error		incr324	tcf pass incrementality
 test	c-syntax-error				incr325	tcf pass incrementality
-test	override-checkin-crash		incr326	tcf pass termination
+test	override-checkin-crash		incr326	tcf pass incrementality termination
 test	bogus-vfav			incr327	tcf fail used_to_pass incrementality
 test	vfav-sneak			incr328	tcf fail used_to_pass incrementality
 test	add-class-then-make-expanded	incr329	tcf pass incrementality

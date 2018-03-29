@@ -1,7 +1,7 @@
 expanded class X
 inherit
 	B[ANY, STRING]
-	C[STRING]
+	C[ANY]
 		rename
 			f as h
 		select

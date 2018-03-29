@@ -1,9 +1,7 @@
-note
-	description: "[
-		Used to read assemblies and extract basic metadata information.
-	]"
-	date:        "$Date$"
-	revision:    "$Revision$"
+﻿note
+	description: "Used to read assemblies and extract basic metadata information."
+	date: "$Date$"
+	revision: "$Revision$"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -46,7 +44,7 @@ feature -- Basic operations
 			a_file_name_is_pe_file: (create {PE_FILE_INFO}).is_com2_pe_file (a_file_name)
 			exists: exists
 		do
-			check False end
+			check False then end
 		end
 
 feature -- Status report
@@ -58,7 +56,7 @@ feature -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -89,4 +87,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ASSEMBLY_PROPERTIES_READER
+end

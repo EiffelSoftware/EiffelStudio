@@ -1,9 +1,7 @@
-note
-	description: "[
-		A C/C++ interop structure corresponding to ASSEMBYMETADATA in cor.h
-	]"
-	date:        "$Date$"
-	revision:    "$Revision$"
+﻿note
+	description: "A C/C++ interop structure corresponding to ASSEMBYMETADATA in cor.h"
+	date: "$Date$"
+	revision: "$Revision$"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -66,7 +64,7 @@ feature -- Access
 	locales: LIST [STRING_32]
 			-- A list of locale names conforming to the RFC1766 specification specifying the locales.
 		do
-			check False end
+			check False then end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
@@ -86,7 +84,7 @@ feature {NONE} -- Implementation
 			-- Pointer to allocated ASSEMBLYMETADATA struct
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -117,4 +115,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {ASSEMBLY_METADATA}
+end

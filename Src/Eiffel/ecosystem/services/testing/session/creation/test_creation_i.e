@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Abstract interface of a test session which is capable of creating new tests.
 		
@@ -16,13 +16,18 @@ inherit
 	TEST_SESSION_I
 		redefine
 			new_record
-		select
-			connection
 		end
 
-	EVENT_CONNECTION_POINT_I [TEST_CREATION_OBSERVER, TEST_CREATION_I]
-		rename
-			connection as creation_connection
+feature -- Access
+
+	creation_connection: EVENT_CONNECTION_I [TEST_CREATION_OBSERVER, TEST_CREATION_I]
+			-- Connection point.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: attached Result
+			result_is_interface_usable: Result.is_interface_usable
 		end
 
 feature {NONE} -- Access
@@ -53,7 +58,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

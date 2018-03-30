@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 
 		Objects that manage a tree structure based on the hierarchical tags stored in a {TAG_SERVER}.
@@ -42,11 +42,7 @@ inherit
 			add_tag,
 			remove_tag,
 			is_valid_tag_for_item
-		select
-			server_connection
 		end
-
-	EVENT_CONNECTION_POINT_I [TAG_TREE_OBSERVER [G], TAG_TREE [G]]
 
 create
 	make
@@ -153,7 +149,6 @@ feature -- Element change
 	remove_tag (an_item: G; a_tag: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
-			l_tree_tag: READABLE_STRING_GENERAL
 			l_found: like find_node
 			l_node, l_remove: detachable TAG_TREE_NODE [G]
 			l_token: STRING_32
@@ -165,9 +160,8 @@ feature -- Element change
 			create l_token.make (an_item.name.count + l_formatter.item_prefix.count)
 			l_token.append (l_formatter.item_prefix)
 			l_token.append_string_general (an_item.name)
-			l_tree_tag := formatter.join_tags (a_tag, l_token)
 
-			l_found := find_node (l_tree_tag)
+			l_found := find_node (formatter.join_tags (a_tag, l_token))
 
 			check
 					-- Check making sure there was a node representing `a_tag'
@@ -207,23 +201,19 @@ feature -- Basic operations
 			a_prefix_valid: validator.is_valid_tag (a_prefix) or else a_prefix.is_empty
 			an_item_tagged: has_item (an_item)
 		local
-			l_table: like tags_of_item
 			l_tag: READABLE_STRING_GENERAL
 			l_formatter: like formatter
 		do
 			Result := new_tag_set
+			across
+				item_to_tags_table.item (an_item) as ts
 			from
-				l_table := item_to_tags_table.item (an_item)
-				l_table.start
 				l_formatter := formatter
-			until
-				l_table.after
 			loop
-				l_tag := l_table.item_for_iteration
+				l_tag := ts.item
 				if l_formatter.is_prefix (a_prefix, l_tag) then
 					Result.force (l_formatter.suffix (a_prefix, l_tag))
 				end
-				l_table.forth
 			end
 		end
 
@@ -237,21 +227,24 @@ feature -- Events
 
 	connection: EVENT_CHAINED_CONNECTION [TAG_TREE_OBSERVER [G], TAG_TREE [G], TAG_SERVER_OBSERVER [G], TAG_SERVER [G]]
 			-- <Precursor>
-		local
-			l_cache: like connection_cache
+			-- Connection point.
+		require
+			is_interface_usable: is_interface_usable
 		do
-			l_cache := connection_cache
-			if l_cache = Void then
-				create l_cache.make (agent (a_observer: TAG_TREE_OBSERVER [G]): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE]]
+			Result := connection_cache
+			if not attached Result then
+				create Result.make (agent (a_observer: TAG_TREE_OBSERVER [G]): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE]]
 					do
 						Result := <<
 								[node_added_event, agent a_observer.on_node_added],
 								[node_remove_event, agent a_observer.on_node_remove]
 							>>
 					end, server_connection)
-				connection_cache := l_cache
+				connection_cache := Result
 			end
-			Result := l_cache
+		ensure
+			result_attached: attached Result
+			result_is_interface_usable: Result.is_interface_usable
 		end
 
 feature {NONE} -- Implementation
@@ -295,7 +288,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -325,6 +318,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class TAG_TREE
-
-
+end

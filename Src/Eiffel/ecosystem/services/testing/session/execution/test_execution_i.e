@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Sessions which obtains new testing results by executing tests through {TEST_EXECUTOR_I} instances.
 	]"
@@ -13,13 +13,6 @@ inherit
 	TEST_SESSION_I
 		redefine
 			new_record
-		select
-			connection
-		end
-
-	EVENT_CONNECTION_POINT_I [TEST_EXECUTION_OBSERVER, TEST_EXECUTION_I]
-		rename
-			connection as execution_connection
 		end
 
 feature -- Access
@@ -50,6 +43,16 @@ feature -- Access
 			usable: is_interface_usable
 			running: has_next_step
 		deferred
+		end
+
+	execution_connection: EVENT_CONNECTION_I [TEST_EXECUTION_OBSERVER, TEST_EXECUTION_I]
+			-- Connection point.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+			result_is_interface_usable: Result.is_interface_usable
 		end
 
 feature {NONE} -- Access
@@ -211,7 +214,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

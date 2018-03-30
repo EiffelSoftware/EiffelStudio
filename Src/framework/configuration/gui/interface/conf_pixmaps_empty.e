@@ -29,6 +29,7 @@ feature -- Pixel buffers
 	new_reference_icon_buffer,
 	new_resource_icon_buffer,
 	new_target_icon_buffer,
+	new_remote_target_icon_buffer,
 	project_settings_edit_library_icon_buffer: EV_PIXEL_BUFFER
 			-- <Precursor>
 		do
@@ -78,6 +79,7 @@ feature -- Pixmaps
 	new_reference_icon,
 	new_resource_icon,
 	new_target_icon,
+	new_remote_target_icon,
 	project_settings_advanced_icon,
 	project_settings_assertions_icon,
 	project_settings_cflag_icon,
@@ -105,7 +107,8 @@ feature -- Pixmaps
 	top_level_folder_overrides_icon,
 	top_level_folder_precompiles_icon,
 	top_level_folder_references_icon,
-	top_level_folder_targets_icon: EV_PIXMAP
+	top_level_folder_targets_icon,
+	top_level_folder_remote_targets_icon: EV_PIXMAP
 			-- <Precursor>
 		do
 			create Result

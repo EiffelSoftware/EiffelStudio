@@ -98,6 +98,28 @@ feature -- Element update
 			end
 		end
 
+	add_remote_target
+			-- Add a new remote target.
+		local
+			dlg: ADD_REMOTE_TARGET_DIALOG
+		do
+			create dlg.make (configuration_window.current_target, configuration_window.conf_factory)
+			dlg.show_modal_to_window (configuration_window)
+			if dlg.is_ok then
+				if
+					attached dlg.last_target as tgt and then
+					attached parent as p
+				then
+					if attached configuration_window.remote_target_section_from (tgt, p) as l_section then
+						l_section.enable_select
+					else
+						configuration_window.add_target_sections (tgt, p)
+						p.last.enable_select
+					end
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
@@ -105,10 +127,14 @@ feature {NONE} -- Implementation
 		local
 			l_item: EV_MENU_ITEM
 		do
-			create Result.make (2)
+			create Result.make (3)
 			create l_item.make_with_text_and_action (conf_interface_names.add_target, agent add_target)
 			Result.extend (l_item)
 			l_item.set_pixmap (conf_pixmaps.new_target_icon)
+
+			create l_item.make_with_text_and_action (conf_interface_names.add_remote_target, agent add_remote_target)
+			Result.extend (l_item)
+			l_item.set_pixmap (conf_pixmaps.new_remote_target_icon)
 
 			create l_item.make_with_text_and_action (conf_interface_names.menu_properties, agent enable_select)
 			Result.extend (l_item)
@@ -128,6 +154,9 @@ feature {NONE} -- Implementation
 			toolbar.add_target_button.select_actions.wipe_out
 			toolbar.add_target_button.select_actions.extend (agent add_target)
 			toolbar.add_target_button.enable_sensitive
+			toolbar.add_remote_target_button.select_actions.wipe_out
+			toolbar.add_remote_target_button.select_actions.extend (agent add_remote_target)
+			toolbar.add_remote_target_button.enable_sensitive
 		end
 
 invariant

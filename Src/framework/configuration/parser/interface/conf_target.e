@@ -81,11 +81,14 @@ feature -- Access, stored in configuration file
 	extends: detachable CONF_TARGET
 			-- If we extend another target, this is the other target.
 
-	extends_location: detachable READABLE_STRING_32
-			-- An optional location of a configuration with the target specified by `extends` or with a default remote target.
+	remote_parent: detachable CONF_REMOTE_TARGET
+			-- Optional remote target as parent.
 
 	is_library_parent: BOOLEAN
-			-- Does `extends` refer to a library target corresponding to `extends_location` rather than to a specific target?
+			-- Does `extends` refer to a library target corresponding to `parent_target_location` rather than to a specific target?
+		do
+			Result := remote_parent /= Void
+		end
 
 	system: CONF_SYSTEM
 			-- The associated system
@@ -465,7 +468,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			description_set: description = a_description
 		end
 
-	set_parent (a_target: like extends)
+	set_parent (a_target: CONF_TARGET)
 			-- Set `extends' to `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -475,22 +478,9 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			parent_set: extends = a_target
 		end
 
-	set_parent_location (a_target_location: like extends_location)
-			-- Set `extends_location` to `a_target_location`.
-		require
-			a_target_location_not_void: attached a_target_location
+	set_remote_parent (a_remote: like remote_parent)
 		do
-			extends_location := a_target_location
-		ensure
-			parent_location_set: extends_location = a_target_location
-		end
-
-	set_is_library_parent (value: like is_library_parent)
-			-- Set `is_library_parent` to `value`.
-		do
-			is_library_parent := value
-		ensure
-			is_library_parent_set: is_library_parent = value
+			remote_parent := a_remote
 		end
 
 	set_parent_by_name (a_target: STRING)
@@ -510,12 +500,10 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Remove the parent of the target (if any).
 		do
 			extends := Void
-			extends_location := Void
-			is_library_parent := False
+			remote_parent := Void
 		ensure
-			extends_unset: not attached extends
-			extends_location_unset: not attached extends_location
-			not_is_library_parent: not is_library_parent
+			extends_unset: extends = Void
+			remote_parent_unset: remote_parent = Void
 		end
 
 	set_version (a_version: like version)
@@ -1008,6 +996,23 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 		end
 
 feature -- Equality
+
+	same_as (a_target: detachable CONF_TARGET): BOOLEAN
+			-- Do `a_target` and `Current` represent the same target?
+		do
+			if a_target /= Void then
+				if a_target = Current then
+					Result := True
+				elseif a_target.name.is_case_insensitive_equal_general (name) then
+					if attached system as s1 and attached a_target.system as s2 then
+						Result := (s1 = s2) or (s1.uuid ~ s2.uuid)
+					else
+							-- Assume this is target of same system
+						Result := True
+					end
+				end
+			end
+		end
 
 	is_group_equivalent (other: like Current): BOOLEAN
 			-- Is `other' and `Current' the same with respect to the group layout?

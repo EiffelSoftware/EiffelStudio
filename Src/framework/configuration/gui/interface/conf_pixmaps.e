@@ -142,6 +142,18 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+	new_remote_target_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	new_remote_target_icon_buffer: EV_PIXEL_BUFFER
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	new_cluster_icon: EV_PIXMAP
 		deferred
 		ensure
@@ -497,6 +509,12 @@ feature -- Access
 		end
 
 	top_level_folder_targets_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	top_level_folder_remote_targets_icon: EV_PIXMAP
 		deferred
 		ensure
 			Result_not_void: Result /= Void

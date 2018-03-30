@@ -56,7 +56,7 @@ inherit
 
 	TARGET_PROPERTIES
 		export
-			{ANY} conf_system
+			{ANY} conf_system, current_target
 		undefine
 			default_create, copy
 		redefine
@@ -605,13 +605,136 @@ feature {NONE} -- Element initialization
 			section_tree.extend (create {SYSTEM_SECTION}.make (conf_system, Current))
 
 				-- recursively add targets
-			conf_system.target_order.do_if (agent add_target_sections (?, section_tree), agent (a_target: CONF_TARGET): BOOLEAN
-				do
-					Result := a_target.extends = Void
-				end
-			)
+			across
+				top_targets (True) as ic
+			loop
+				add_target_sections (ic.item, section_tree)
+			end
 		ensure
 			section_tree_not_void: section_tree /= Void
+		end
+
+feature -- Access / targets
+
+	container_has_target (a_container: ITERABLE [CONF_TARGET]; a_target: CONF_TARGET): BOOLEAN
+			-- Is `a_target` in `a_container`?
+		do
+			Result := across a_container as ic some a_target.same_as (ic.item) end
+		end
+
+	top_targets (a_remotes_targets_included: BOOLEAN): ARRAYED_LIST [CONF_TARGET]
+			-- Top target in the chain or parent target.
+			-- Include one level of remote target if any.
+		local
+			t: CONF_TARGET
+		do
+			create Result.make (0)
+			across
+				conf_system.target_order as ic
+			loop
+				t := top_parent (ic.item)
+				if container_has_target (Result, t) then
+						-- Skip
+				else
+					Result.force (t)
+				end
+			end
+		ensure
+			across Result as ic all (ic.item.extends = Void or is_remote_target (ic.item)) end
+		end
+
+	top_parent (a_target: CONF_TARGET): CONF_TARGET
+			-- Top parent, and at most one level of remote target (i.e outside current system).
+		do
+			if is_remote_target (a_target) then
+				Result := a_target
+			elseif attached a_target.extends as l_parent then
+				Result := top_parent (l_parent)
+			else
+				Result := a_target
+			end
+		end
+
+	ordered_parents_until (a_target, a_top_parent: CONF_TARGET): detachable LIST [CONF_TARGET]
+			-- Ordered list of parent for `a_target, until `a_top_parent`.
+		require
+			not_same_targets: not a_target.same_as (a_top_parent)
+		local
+			t: detachable CONF_TARGET
+		do
+			create {ARRAYED_LIST [CONF_TARGET]} Result.make (0)
+			from
+				t := a_target.extends
+			until
+				t = Void or a_top_parent.same_as (t)
+			loop
+				Result.extend (t)
+				t := t.extends
+			end
+			if Result.is_empty or not a_top_parent.same_as (t) then
+				Result := Void
+			end
+		end
+
+	child_targets_of (a_target: CONF_TARGET): LIST [CONF_TARGET]
+			-- Child target of `a_target`.
+		local
+			t: CONF_TARGET
+		do
+			if is_remote_target (a_target) then
+					-- This is a remote target, i.e from another conf system.
+				create {ARRAYED_LIST [CONF_TARGET]} Result.make (0)
+				across
+					conf_system.target_order as ic
+				loop
+					t := ic.item
+					if a_target.same_as (t.extends) then
+						Result.force (t)
+					elseif attached ordered_parents_until (t, a_target) as lst then
+						t := lst.last
+						if container_has_target (Result, t) then
+								-- Already included
+						else
+							Result.force (t)
+						end
+					end
+				end
+			else
+				Result := a_target.child_targets
+			end
+		ensure
+			all_child_of_target: across Result as ic all a_target.same_as (ic.item.extends) end
+		end
+
+	is_remote_target (a_target: CONF_TARGET): BOOLEAN
+			-- Is `a_target` outside current `conf_system`?
+		do
+			if attached a_target.system as sys then
+				if sys = conf_system then
+					Result := False
+				else
+					Result := not (sys.name.is_case_insensitive_equal (conf_system.name) and then (sys.uuid ~ conf_system.uuid))
+				end
+			else
+				Result := conf_system /= Void
+			end
+		end
+
+	remote_target_section_from (a_target: CONF_TARGET; a_root: EV_TREE_NODE_LIST): detachable REMOTE_TARGET_SECTION
+			-- Section associated with `a_target` if any.
+		do
+			across
+				a_root as ic
+			until
+				Result /= Void
+			loop
+				if
+					attached {REMOTE_TARGET_SECTION} ic.item as l_remote and then
+					l_remote.target.same_as (a_target)
+				then
+					Result := l_remote
+				end
+			end
 		end
 
 feature {NONE} -- Choice options
@@ -955,7 +1078,7 @@ feature {NONE} -- Choice options
 			update_action.call
 		end
 
-feature {TARGET_SECTION, SYSTEM_SECTION} -- Target creation
+feature {REMOTE_TARGET_SECTION, TARGET_SECTION, SYSTEM_SECTION} -- Target creation
 
 	add_target_sections (a_target: CONF_TARGET; a_root: EV_TREE_NODE_LIST)
 			-- Add sections for `a_target' under `a_root'.
@@ -963,6 +1086,8 @@ feature {TARGET_SECTION, SYSTEM_SECTION} -- Target creation
 			a_target_not_void: a_target /= Void
 			a_root_ok: a_root /= Void and then not a_root.is_destroyed and a_root.extendible
 		local
+			l_parent: EV_TREE_NODE_LIST
+			l_remote_target: REMOTE_TARGET_SECTION
 			l_target: TARGET_SECTION
 			l_target_tasks: TARGET_TASKS_SECTION
 			l_target_externals: TARGET_EXTERNALS_SECTION
@@ -970,69 +1095,83 @@ feature {TARGET_SECTION, SYSTEM_SECTION} -- Target creation
 			l_target_groups: TARGET_GROUPS_SECTION
 			l_list: EV_TREE_NODE_LIST
 		do
-				-- target
-			create l_target.make (a_target, Current)
-			a_root.extend (l_target)
+			if is_remote_target (a_target) then
+					-- target
+				create l_remote_target.make (a_target, Void, Current)
+				a_root.extend (l_remote_target)
 
-				-- assertions section
-			l_target.extend (create {TARGET_ASSERTIONS_SECTION}.make (a_target, Current))
+				l_parent := l_remote_target
+			else
+					-- target
+				create l_target.make (a_target, Current)
+				a_root.extend (l_target)
 
-				-- groups section
-			create l_target_groups.make (a_target, Current)
-			l_target.extend (l_target_groups)
-			l_target_groups.set_clusters (a_target.internal_clusters)
-			l_target_groups.set_overrides (a_target.internal_overrides)
-			l_target_groups.set_assemblies (a_target.internal_assemblies)
-			l_target_groups.set_libraries (a_target.internal_libraries)
-			l_target_groups.set_precompile (a_target.internal_precompile)
+					-- assertions section
+				l_target.extend (create {TARGET_ASSERTIONS_SECTION}.make (a_target, Current))
 
-				-- advanced section
-			create l_target_advanced.make (a_target, Current)
-			l_target.extend (l_target_advanced)
+					-- groups section
+				create l_target_groups.make (a_target, Current)
+				l_target.extend (l_target_groups)
+				l_target_groups.set_clusters (a_target.internal_clusters)
+				l_target_groups.set_overrides (a_target.internal_overrides)
+				l_target_groups.set_assemblies (a_target.internal_assemblies)
+				l_target_groups.set_libraries (a_target.internal_libraries)
+				l_target_groups.set_precompile (a_target.internal_precompile)
 
-				-- advanced warning section
-			l_target_advanced.extend (create {TARGET_WARNINGS_SECTION}.make (a_target, Current))
+					-- advanced section
+				create l_target_advanced.make (a_target, Current)
+				l_target.extend (l_target_advanced)
 
-				-- advanced debug section
-			l_target_advanced.extend (create {TARGET_DEBUG_SECTION}.make (a_target, Current))
+					-- advanced warning section
+				l_target_advanced.extend (create {TARGET_WARNINGS_SECTION}.make (a_target, Current))
 
-				-- advanced external section
-			create l_target_externals.make (a_target, Current)
-			l_target_advanced.extend (l_target_externals)
-			l_target_externals.set_includes (a_target.internal_external_include)
-			l_target_externals.set_cflag (a_target.internal_external_cflag)
-			l_target_externals.set_objects (a_target.internal_external_object)
-			l_target_externals.set_libraries (a_target.internal_external_library)
-			l_target_externals.set_resources (a_target.internal_external_resource)
-			l_target_externals.set_linker_flag (a_target.internal_external_linker_flag)
-			l_target_externals.set_makefiles (a_target.internal_external_make)
+					-- advanced debug section
+				l_target_advanced.extend (create {TARGET_DEBUG_SECTION}.make (a_target, Current))
 
-				-- advanced tasks section
-			create l_target_tasks.make (a_target, Current)
-			l_target_advanced.extend (l_target_tasks)
-			l_target_tasks.set_pre_compilation (a_target.internal_pre_compile_action)
-			l_target_tasks.set_post_compilation (a_target.internal_post_compile_action)
+					-- advanced external section
+				create l_target_externals.make (a_target, Current)
+				l_target_advanced.extend (l_target_externals)
+				l_target_externals.set_includes (a_target.internal_external_include)
+				l_target_externals.set_cflag (a_target.internal_external_cflag)
+				l_target_externals.set_objects (a_target.internal_external_object)
+				l_target_externals.set_libraries (a_target.internal_external_library)
+				l_target_externals.set_resources (a_target.internal_external_resource)
+				l_target_externals.set_linker_flag (a_target.internal_external_linker_flag)
+				l_target_externals.set_makefiles (a_target.internal_external_make)
 
-				-- advanced variables section
-			l_target_advanced.extend (create {TARGET_VARIABLES_SECTION}.make (a_target, Current))
+					-- advanced tasks section
+				create l_target_tasks.make (a_target, Current)
+				l_target_advanced.extend (l_target_tasks)
+				l_target_tasks.set_pre_compilation (a_target.internal_pre_compile_action)
+				l_target_tasks.set_post_compilation (a_target.internal_post_compile_action)
 
-				-- advanced mapping section
-			l_target_advanced.extend (create {TARGET_MAPPING_SECTION}.make (a_target, Current))
+					-- advanced variables section
+				l_target_advanced.extend (create {TARGET_VARIABLES_SECTION}.make (a_target, Current))
 
-				-- expand if this is the selected target
-			if a_target.name.is_equal (selected_target) then
-				from
-					l_list := l_target
-				until
-					not attached {EV_TREE_NODE} l_list as l_node
-				loop
-					l_node.expand
-					l_list := l_node.parent
+					-- advanced mapping section
+				l_target_advanced.extend (create {TARGET_MAPPING_SECTION}.make (a_target, Current))
+
+					-- expand if this is the selected target
+				if a_target.name.is_case_insensitive_equal_general (selected_target) then
+					from
+						l_list := l_target
+					until
+						not attached {EV_TREE_NODE} l_list as l_node
+					loop
+						l_node.expand
+						l_list := l_node.parent
+					end
+				end
+				l_parent := l_target
+			end
+				-- add child targets
+			across
+				child_targets_of (a_target) as ic
+			loop
+				if not is_remote_target (ic.item) then
+					add_target_sections (ic.item, l_parent)
 				end
 			end
-
-				-- add child targets
-			a_target.child_targets.do_all (agent add_target_sections (?, l_target))
 		end
 
 feature {CONFIGURATION_SECTION} -- Section tree selection agents
@@ -1094,6 +1233,31 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			initialize_properties
 
 			initialize_properties_system
+
+			unlock_update
+			is_refreshing := False
+		ensure
+			properties_ok: properties /= Void and then not properties.is_destroyed
+			not_refreshing: not is_refreshing
+		end
+
+	show_properties_remote_target_general (a_target: CONF_TARGET)
+			-- Show general properties for `a_target'.
+		require
+			is_initialized: is_initialized
+			not_refreshing: not is_refreshing
+			a_target_not_void: a_target /= Void
+			is_remote_target: is_remote_target (a_target)
+		do
+			is_refreshing := True
+			refresh_current := agent show_properties_remote_target_general (a_target)
+			lock_update
+
+			initialize_properties
+
+			current_target := a_target
+
+			add_remote_target_properties
 
 			unlock_update
 			is_refreshing := False

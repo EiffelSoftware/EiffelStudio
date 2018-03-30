@@ -93,6 +93,12 @@ feature -- Access, stored in configuration file
 	targets: STRING_TABLE [CONF_TARGET]
 			-- The configuration targets.
 
+	target (a_name: READABLE_STRING_GENERAL): detachable CONF_TARGET
+			-- Configuration target named `a_name`, if any.
+		do
+			Result := targets.item (a_name.as_lower)
+		end
+
 	library_target: detachable CONF_TARGET
 			-- The target to use if this is used as a library.
 

@@ -2,6 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" name="test">
 	<target name="parent" abstract="true">
 		<root class="TEST" feature="make"/>
+		<option warning="true"/>
 		<setting name="console_application" value="true"/>
 		<capability>
 			<concurrency support="none"/>

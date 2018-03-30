@@ -1,8 +1,7 @@
 class TEST
 inherit
-	TEST1 [STRING]
-
-	$PARENT
+	$PARENT1
+	$PARENT2
 
 create
 	make

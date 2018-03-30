@@ -1,25 +1,65 @@
 test_name 	missing-vhpr-with-different-generic-derivation
 test_description A class that inherits twice from the same generic class directly with two different generic derivations will be flagged with an ECMA-VHPR(5) error, but the same scenario with an indirection won't be properly detected.
 
-define PARENT	"TEST1 [INTEGER]"
-
 copy_sub 	Ace $TEST Ace
+copy_raw	g1.e $CLUSTER g1.e
+copy_raw	g4.e $CLUSTER g4.e
+
+define PARENT1	"G1 [STRING]"
+define PARENT2	"G1 [INTEGER]"
+define PARENTA	"G1 [CHARACTER]"
+define PARENTB	"G1 [STRING]"
 copy_sub 	test.e $CLUSTER test.e
-copy_raw	test1.e $CLUSTER test1.e
-copy_raw	test2.e $CLUSTER test2.e
-
+copy_sub	a.e $CLUSTER a.e
+copy_sub	b.e $CLUSTER b.e
 compile_melted
-compile_result 	validity_error TEST ECMA-VHPR(5)
+compile_result 	validity_error TEST ECMA-VHPR(5):4
 
-define PARENT "TEST2"
+define PARENT2	"A"
 copy_sub	test.e $CLUSTER test.e
-
 resume_compile
 compile_result	validity_error TEST ECMA-VHPR(5)
 
-define PARENT ""
+define PARENT1	"B"
 copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result	validity_error TEST ECMA-VHPR(5)
 
+define PARENT2	"G1 [STRING]"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result	ok
+
+define PARENT2	"A"
+copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result	validity_error TEST ECMA-VHPR(5)
+
+define PARENTB	"G4 [ANY, ANY, ANY, ANY]"
+copy_sub	b.e $CLUSTER b.e
+
+define PARENTA	"G4 [STRING, ANY, ANY, ANY]"
+copy_sub	a.e $CLUSTER a.e
+resume_compile
+compile_result	validity_error TEST ECMA-VHPR(5)
+
+define PARENTA	"G4 [ANY, STRING, ANY, ANY]"
+copy_sub	a.e $CLUSTER a.e
+resume_compile
+compile_result	validity_error TEST ECMA-VHPR(5)
+
+define PARENTA	"G4 [ANY, ANY, STRING, ANY]"
+copy_sub	a.e $CLUSTER a.e
+resume_compile
+compile_result	validity_error TEST ECMA-VHPR(5)
+
+define PARENTA	"G4 [ANY, ANY, ANY, STRING]"
+copy_sub	a.e $CLUSTER a.e
+resume_compile
+compile_result	validity_error TEST ECMA-VHPR(5)
+
+define PARENTB	"G4 [ANY, ANY, ANY, STRING]"
+copy_sub	b.e $CLUSTER b.e
 resume_compile
 compile_result	ok
 

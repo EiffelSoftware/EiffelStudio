@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "[
 		Checked entity that describes a checked .NET type's member, require implementation by decendents.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author     : "$Author$"
-	date       : "$Date$"
-	revision   : "$Revision$"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EC_CHECKED_ABSTRACT_TYPE
@@ -112,39 +112,42 @@ feature {NONE} -- Basic Operations
 			has_been_checked: has_been_checked
 			not_has_interface_been_checked: not has_interface_been_checked
 		local
-			l_members: detachable NATIVE_ARRAY [detachable MEMBER_INFO]
-			l_checked_member: detachable EC_CHECKED_MEMBER
+			l_checked_member: EC_CHECKED_MEMBER
 			l_compliant: BOOLEAN
 			l_eiffel_compliant: BOOLEAN
 			i: INTEGER
 		do
 			l_compliant := True
 			l_eiffel_compliant := True
-			l_members := type.get_members
-			check l_members_attached: l_members /= Void end
-			i := l_members.count - 1
-			if i > 0 then
-				from
-				until
-					i < 0 or
-					(not l_compliant and not l_eiffel_compliant)
-				loop
-					if attached l_members.item (i) as l_member and then is_applicable_member (l_member) then
-						l_checked_member := checked_member (l_member)
-						if l_checked_member /= Void then
-							if l_compliant then
-								l_compliant := l_checked_member.is_compliant
-								if not l_compliant then
-									l_compliant := l_checked_member.is_marked
+			if attached type.get_members as l_members then
+				i := l_members.count - 1
+				if i > 0 then
+					from
+					until
+						i < 0 or
+						(not l_compliant and not l_eiffel_compliant)
+					loop
+						if attached l_members.item (i) as l_member and then is_applicable_member (l_member) then
+							l_checked_member := checked_member (l_member)
+							if l_checked_member /= Void then
+								if l_compliant then
+									l_compliant := l_checked_member.is_compliant
+									if not l_compliant then
+										l_compliant := l_checked_member.is_marked
+									end
+								end
+								if l_eiffel_compliant then
+									l_eiffel_compliant := l_checked_member.is_eiffel_compliant
 								end
 							end
-							if l_eiffel_compliant then
-								l_eiffel_compliant := l_checked_member.is_eiffel_compliant
-							end
 						end
-					end
 
-					i := i - 1
+						i := i - 1
+					end
+				end
+			else
+				check
+					from_documentation_get_memebers_attached: False
 				end
 			end
 			internal_is_compliant_interface := l_compliant
@@ -164,11 +167,8 @@ feature {NONE} -- Implementation
 			-- Is `a_member' an applicable member to check?
 		require
 			a_member_not_void: a_member /= Void
-		local
-			l_method: detachable METHOD_INFO
 		do
-			l_method ?= a_member
-			if l_method /= Void and then not l_method.is_constructor then
+			if attached {METHOD_INFO} a_member as l_method and then not l_method.is_constructor then
 				Result := l_method.is_abstract and (l_method.is_public or l_method.is_family or l_method.is_family_or_assembly)
 			end
 		end
@@ -180,7 +180,7 @@ invariant
 	type_need_implementing: type.is_abstract or type.is_interface
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -210,4 +210,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class EC_CHECKED_ABSTRACT_TYPE
+
+end

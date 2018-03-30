@@ -1,14 +1,14 @@
-note
+﻿note
 	description : "[
 		Shared cache of checked entities.
 		
 		Threading Note: Default exported interface is thread-safe.
-		]"
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EC_CHECKED_CACHE
@@ -73,81 +73,42 @@ feature {NONE} -- Implementation
 			-- Predefined checked entities.
 		require
 			a_table_not_void: a_table /= Void
-		local
-			l_type: detachable SYSTEM_TYPE
 		do
-			l_type := {SYSTEM_TYPE}.get_type ("System.Byte")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-
-			l_type := {SYSTEM_TYPE}.get_type ("System.Int16")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-
-			l_type := {SYSTEM_TYPE}.get_type ("System.Int32")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-
-			l_type := {SYSTEM_TYPE}.get_type ("System.Int64")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-
-			l_type := {SYSTEM_TYPE}.get_type ("System.IntPtr")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-
-			l_type := {SYSTEM_TYPE}.get_type ("System.Single")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-
-			l_type := {SYSTEM_TYPE}.get_type ("System.Double")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-
-			l_type := {SYSTEM_TYPE}.get_type ("System.Char")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-
-			l_type := {SYSTEM_TYPE}.get_type ("System.Boolean")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-
-			l_type := {SYSTEM_TYPE}.get_type ("System.String")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-
-			l_type := {SYSTEM_TYPE}.get_type ("System.SByte")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, False, True))
-
-			l_type := {SYSTEM_TYPE}.get_type ("System.UInt16")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, False, True))
-
-			l_type := {SYSTEM_TYPE}.get_type ("System.UInt32")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, False, True))
-
-			l_type := {SYSTEM_TYPE}.get_type ("System.UInt64")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, False, True))
-
-			l_type := {SYSTEM_TYPE}.get_type ("System.UIntPtr")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, False, False))
-
-			l_type := {SYSTEM_TYPE}.get_type ("System.Void")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
-
-			l_type := {SYSTEM_TYPE}.get_type ("System.TypedReference")
-			check l_type_attached: l_type /= Void end
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, False, False))
+			add_predefind_type ("System.SByte", False, True, a_table)
+			add_predefind_type ("System.Int16", True, True, a_table)
+			add_predefind_type ("System.Int32", True, True, a_table)
+			add_predefind_type ("System.Int64", True, True, a_table)
+			add_predefind_type ("System.Single", True, True, a_table)
+			add_predefind_type ("System.Double", True, True, a_table)
+			add_predefind_type ("System.Char", True, True, a_table)
+			add_predefind_type ("System.Boolean", True, True, a_table)
+			add_predefind_type ("System.String", True, True, a_table)
+			add_predefind_type ("System.Byte" , True, True, a_table)
+			add_predefind_type ("System.UInt16", False, True, a_table)
+			add_predefind_type ("System.UInt32", False, True, a_table)
+			add_predefind_type ("System.UInt64", False, True, a_table)
+			add_predefind_type ("System.IntPtr", True, True, a_table)
+			add_predefind_type ("System.UIntPtr", False, False, a_table)
+			add_predefind_type ("System.Void", True, True, a_table)
+			add_predefind_type ("System.TypedReference", False, False, a_table)
 		end
 
+	add_predefind_type (name: SYSTEM_STRING; is_compliant, is_eiffel_compliant: BOOLEAN; table: HASHTABLE)
+			-- Add a predefined type of name `name`
+			-- that is compliant and Eiffel-compliant according to values of `is_compliant` and `is_eiffel_compliant`
+			-- to the table `table`.
+		do
+			if attached {SYSTEM_TYPE}.get_type (name) as t then
+				table.add (t, create {EC_STATIC_CHECKED_TYPE}.make (t, is_compliant, is_eiffel_compliant))
+			else
+				check
+					is_type_predefined: False
+				end
+			end
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -178,4 +139,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EC_CHECKED_CACHE
+end

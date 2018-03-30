@@ -165,27 +165,30 @@ feature {NONE} -- Query
 		require
 			a_member_not_void: a_member /= Void
 		local
-			l_name: detachable NATIVE_ARRAY [CHARACTER]
 			l_count: INTEGER
 			i: INTEGER
 			c: CHARACTER
-			l_string: detachable SYSTEM_STRING
 		do
-			l_string := a_member.name
-			check l_string_attached: l_string /= Void end
-			l_name := l_string.to_char_array
-			check l_name_attached: l_name /= Void end
-			l_count := l_name.count
-			if l_count > 0 then
-				Result := l_name.item (0).is_alpha
-				from
-					i := 1
-				until
-					i = l_count or not Result
-				loop
-					c := l_name.item (0)
-					Result := c.is_alpha_numeric or c = '_'
-					i := i + 1
+			if
+				attached a_member.name as l_string and then
+				attached l_string.to_char_array as l_name
+			then
+				l_count := l_name.count
+				if l_count > 0 then
+					Result := l_name.item (0).is_alpha
+					from
+						i := 1
+					until
+						i = l_count or not Result
+					loop
+						c := l_name.item (0)
+						Result := c.is_alpha_numeric or c = '_'
+						i := i + 1
+					end
+				end
+			else
+				check
+					from_documentation_name_attached: False
 				end
 			end
 		end
@@ -215,20 +218,22 @@ feature {NONE} -- Implementation
 		require
 			a_provider_not_void: a_provider /= Void
 		local
-			l_attributes: detachable NATIVE_ARRAY [detachable SYSTEM_OBJECT]
-			l_cls_comp_attr: detachable CLS_COMPLIANT_ATTRIBUTE
-			l_eiffel_attr: detachable EIFFEL_CONSUMABLE_ATTRIBUTE
+			l_cls_comp_attr: CLS_COMPLIANT_ATTRIBUTE
+			l_eiffel_attr: EIFFEL_CONSUMABLE_ATTRIBUTE
 			l_compliant: BOOLEAN
 		do
 			l_compliant := True
-			l_attributes := {RT_CUSTOM_ATTRIBUTE_DATA}.get_eiffel_custom_attributes ({CLS_COMPLIANT_ATTRIBUTE}, a_provider)
-			if l_attributes /= Void and then l_attributes.count > 0 and then attached l_attributes.get_enumerator as l_enum then
+			if
+				attached {RT_CUSTOM_ATTRIBUTE_DATA}.get_eiffel_custom_attributes ({CLS_COMPLIANT_ATTRIBUTE}, a_provider) as l_attributes and then
+				l_attributes.count > 0 and then
+				attached l_attributes.get_enumerator as l_enum
+			then
 				from
 				until
 					not l_enum.move_next or else
 					l_cls_comp_attr /= Void
 				loop
-					l_cls_comp_attr ?= l_enum.current_
+					l_cls_comp_attr := {CLS_COMPLIANT_ATTRIBUTE} / l_enum.current_
 					if l_cls_comp_attr /= Void then
 						l_compliant := l_cls_comp_attr.is_compliant
 						internal_is_marked := True
@@ -237,14 +242,17 @@ feature {NONE} -- Implementation
 			end
 			internal_is_compliant := l_compliant
 
-			l_attributes := {RT_CUSTOM_ATTRIBUTE_DATA}.get_eiffel_custom_attributes ({EIFFEL_CONSUMABLE_ATTRIBUTE}, a_provider)
-			if l_attributes /= Void and then l_attributes.count > 0  and then attached l_attributes.get_enumerator as l_enum then
+			if
+				attached {RT_CUSTOM_ATTRIBUTE_DATA}.get_eiffel_custom_attributes ({EIFFEL_CONSUMABLE_ATTRIBUTE}, a_provider) as l_attributes and then
+				 l_attributes.count > 0  and then
+				 attached l_attributes.get_enumerator as l_enum
+			then
 				from
 				until
 					not l_enum.move_next or else
 					l_eiffel_attr /= Void
 				loop
-					l_eiffel_attr ?= l_enum.current_
+					l_eiffel_attr := {EIFFEL_CONSUMABLE_ATTRIBUTE} / l_enum.current_
 					if l_eiffel_attr /= Void then
 						l_compliant := l_eiffel_attr.consumable
 							-- Explict attribute, skip Eiffel checking
@@ -259,7 +267,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

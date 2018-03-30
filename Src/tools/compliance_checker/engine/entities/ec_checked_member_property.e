@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "[
 		Checked entity that describes and examines an assembly type.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author     : "$Author$"
-	date       : "$Date$"
-	revision   : "$Revision$"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EC_CHECKED_MEMBER_PROPERTY
@@ -31,12 +31,15 @@ feature -- Access
 
 	checked_property_type: EC_CHECKED_TYPE
 			-- `member' property type checked type.
-		local
-			l_type: detachable SYSTEM_TYPE
 		do
-			l_type := member.property_type
-			check l_type_attached: l_type /= Void end
-			Result := checked_type (l_type)
+			if attached member.property_type as l_type then
+				Result := checked_type (l_type)
+			else
+				check
+					from_documentation_property_type_attached: False
+				then
+				end
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -85,7 +88,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -115,4 +118,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class EC_CHECKED_MEMBER_PROPERTY
+
+end

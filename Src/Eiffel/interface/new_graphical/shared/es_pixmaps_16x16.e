@@ -4,7 +4,7 @@
 	]"
 	generator: "Eiffel Matrix Generator"
 	command_line: "[
-		emcgen C:\DEV\trunk\Src\Delivery\studio\bitmaps\png\16x16.ini -f C:\DEV\trunk\Src\tools\eiffel_matrix_code_generator\frames\studio.e.frame --output_file C:\DEV\trunk\Src\Eiffel\interface\new_graphical\shared\es_pixmaps_16x16.e
+		emcgen C:\DEV\eiffelstudio\trunk\Src\Delivery\studio\bitmaps\png\16x16.ini -f C:\DEV\eiffelstudio\trunk\Src\tools\eiffel_matrix_code_generator\frames\studio.e.frame --output_file C:\DEV\eiffelstudio\trunk\Src\Eiffel\interface\new_graphical\shared\es_pixmaps_16x16.e
 		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -1562,6 +1562,26 @@ feature -- Icons
 			Result := named_icon_buffer (top_level_folder_targets_name)
 		ensure
 			top_level_folder_targets_icon_buffer_attached: Result /= Void
+		end
+
+	frozen top_level_folder_remote_targets_icon: EV_PIXMAP
+			-- Access to 'remote_targets' pixmap.
+		require
+			has_named_icon: has_named_icon (top_level_folder_remote_targets_name)
+		once
+			Result := named_icon (top_level_folder_remote_targets_name)
+		ensure
+			top_level_folder_remote_targets_icon_attached: Result /= Void
+		end
+
+	frozen top_level_folder_remote_targets_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'remote_targets' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (top_level_folder_remote_targets_name)
+		once
+			Result := named_icon_buffer (top_level_folder_remote_targets_name)
+		ensure
+			top_level_folder_remote_targets_icon_buffer_attached: Result /= Void
 		end
 
 	frozen folder_features_all_icon: EV_PIXMAP
@@ -5864,6 +5884,26 @@ feature -- Icons
 			new_target_icon_buffer_attached: Result /= Void
 		end
 
+	frozen new_remote_target_icon: EV_PIXMAP
+			-- Access to 'remote_target' pixmap.
+		require
+			has_named_icon: has_named_icon (new_remote_target_name)
+		once
+			Result := named_icon (new_remote_target_name)
+		ensure
+			new_remote_target_icon_attached: Result /= Void
+		end
+
+	frozen new_remote_target_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'remote_target' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (new_remote_target_name)
+		once
+			Result := named_icon_buffer (new_remote_target_name)
+		ensure
+			new_remote_target_icon_buffer_attached: Result /= Void
+		end
+
 	frozen new_cflag_icon: EV_PIXMAP
 			-- Access to 'cflag' pixmap.
 		require
@@ -9344,6 +9384,186 @@ feature -- Icons
 			information_affected_resource_icon_buffer_attached: Result /= Void
 		end
 
+	frozen testing_new_unit_test_icon: EV_PIXMAP
+			-- Access to 'new_unit_test' pixmap.
+		require
+			has_named_icon: has_named_icon (testing_new_unit_test_name)
+		once
+			Result := named_icon (testing_new_unit_test_name)
+		ensure
+			testing_new_unit_test_icon_attached: Result /= Void
+		end
+
+	frozen testing_new_unit_test_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'new_unit_test' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (testing_new_unit_test_name)
+		once
+			Result := named_icon_buffer (testing_new_unit_test_name)
+		ensure
+			testing_new_unit_test_icon_buffer_attached: Result /= Void
+		end
+
+	frozen testing_failure_icon: EV_PIXMAP
+			-- Access to 'failure' pixmap.
+		require
+			has_named_icon: has_named_icon (testing_failure_name)
+		once
+			Result := named_icon (testing_failure_name)
+		ensure
+			testing_failure_icon_attached: Result /= Void
+		end
+
+	frozen testing_failure_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'failure' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (testing_failure_name)
+		once
+			Result := named_icon_buffer (testing_failure_name)
+		ensure
+			testing_failure_icon_buffer_attached: Result /= Void
+		end
+
+	frozen testing_run_last_tests_icon: EV_PIXMAP
+			-- Access to 'run_last_tests' pixmap.
+		require
+			has_named_icon: has_named_icon (testing_run_last_tests_name)
+		once
+			Result := named_icon (testing_run_last_tests_name)
+		ensure
+			testing_run_last_tests_icon_attached: Result /= Void
+		end
+
+	frozen testing_run_last_tests_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'run_last_tests' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (testing_run_last_tests_name)
+		once
+			Result := named_icon_buffer (testing_run_last_tests_name)
+		ensure
+			testing_run_last_tests_icon_buffer_attached: Result /= Void
+		end
+
+	frozen testing_run_last_failed_tests_first_icon: EV_PIXMAP
+			-- Access to 'run_last_failed_tests_first' pixmap.
+		require
+			has_named_icon: has_named_icon (testing_run_last_failed_tests_first_name)
+		once
+			Result := named_icon (testing_run_last_failed_tests_first_name)
+		ensure
+			testing_run_last_failed_tests_first_icon_attached: Result /= Void
+		end
+
+	frozen testing_run_last_failed_tests_first_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'run_last_failed_tests_first' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (testing_run_last_failed_tests_first_name)
+		once
+			Result := named_icon_buffer (testing_run_last_failed_tests_first_name)
+		ensure
+			testing_run_last_failed_tests_first_icon_buffer_attached: Result /= Void
+		end
+
+	frozen testing_all_test_runs_icon: EV_PIXMAP
+			-- Access to 'all_test_runs' pixmap.
+		require
+			has_named_icon: has_named_icon (testing_all_test_runs_name)
+		once
+			Result := named_icon (testing_all_test_runs_name)
+		ensure
+			testing_all_test_runs_icon_attached: Result /= Void
+		end
+
+	frozen testing_all_test_runs_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'all_test_runs' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (testing_all_test_runs_name)
+		once
+			Result := named_icon_buffer (testing_all_test_runs_name)
+		ensure
+			testing_all_test_runs_icon_buffer_attached: Result /= Void
+		end
+
+	frozen testing_see_failure_trace_icon: EV_PIXMAP
+			-- Access to 'see_failure_trace' pixmap.
+		require
+			has_named_icon: has_named_icon (testing_see_failure_trace_name)
+		once
+			Result := named_icon (testing_see_failure_trace_name)
+		ensure
+			testing_see_failure_trace_icon_attached: Result /= Void
+		end
+
+	frozen testing_see_failure_trace_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'see_failure_trace' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (testing_see_failure_trace_name)
+		once
+			Result := named_icon_buffer (testing_see_failure_trace_name)
+		ensure
+			testing_see_failure_trace_icon_buffer_attached: Result /= Void
+		end
+
+	frozen testing_compare_with_expected_result_icon: EV_PIXMAP
+			-- Access to 'compare_with_expected_result' pixmap.
+		require
+			has_named_icon: has_named_icon (testing_compare_with_expected_result_name)
+		once
+			Result := named_icon (testing_compare_with_expected_result_name)
+		ensure
+			testing_compare_with_expected_result_icon_attached: Result /= Void
+		end
+
+	frozen testing_compare_with_expected_result_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'compare_with_expected_result' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (testing_compare_with_expected_result_name)
+		once
+			Result := named_icon_buffer (testing_compare_with_expected_result_name)
+		ensure
+			testing_compare_with_expected_result_icon_buffer_attached: Result /= Void
+		end
+
+	frozen testing_tool_icon: EV_PIXMAP
+			-- Access to 'tool' pixmap.
+		require
+			has_named_icon: has_named_icon (testing_tool_name)
+		once
+			Result := named_icon (testing_tool_name)
+		ensure
+			testing_tool_icon_attached: Result /= Void
+		end
+
+	frozen testing_tool_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'tool' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (testing_tool_name)
+		once
+			Result := named_icon_buffer (testing_tool_name)
+		ensure
+			testing_tool_icon_buffer_attached: Result /= Void
+		end
+
+	frozen testing_result_tool_icon: EV_PIXMAP
+			-- Access to 'result_tool' pixmap.
+		require
+			has_named_icon: has_named_icon (testing_result_tool_name)
+		once
+			Result := named_icon (testing_result_tool_name)
+		ensure
+			testing_result_tool_icon_attached: Result /= Void
+		end
+
+	frozen testing_result_tool_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'result_tool' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (testing_result_tool_name)
+		once
+			Result := named_icon_buffer (testing_result_tool_name)
+		ensure
+			testing_result_tool_icon_buffer_attached: Result /= Void
+		end
+
 feature -- Icons: Animations
 	
 	frozen compile_animation_anim: ARRAY [EV_PIXMAP]
@@ -9482,6 +9702,7 @@ feature -- Constants: Icon names
 	top_level_folder_precompiles_name: STRING = "top level folder precompiles"
 	top_level_folder_references_name: STRING = "top level folder references"
 	top_level_folder_targets_name: STRING = "top level folder targets"
+	top_level_folder_remote_targets_name: STRING = "top level folder remote_targets"
 	folder_features_all_name: STRING = "folder features all"
 	folder_features_some_name: STRING = "folder features some"
 	folder_features_none_name: STRING = "folder features none"
@@ -9697,6 +9918,7 @@ feature -- Constants: Icon names
 	new_pre_compilation_task_name: STRING = "new pre compilation task"
 	new_post_compilation_task_name: STRING = "new post compilation task"
 	new_target_name: STRING = "new target"
+	new_remote_target_name: STRING = "new remote_target"
 	new_cflag_name: STRING = "new cflag"
 	new_linker_flag_name: STRING = "new linker flag"
 	feature_callers_name: STRING = "feature callers"
@@ -9871,6 +10093,15 @@ feature -- Constants: Icon names
 	information_edit_auto_node_name: STRING = "information edit auto node"
 	information_with_info_sign_name: STRING = "information with info sign"
 	information_affected_resource_name: STRING = "information affected resource"
+	testing_new_unit_test_name: STRING = "testing new_unit_test"
+	testing_failure_name: STRING = "testing failure"
+	testing_run_last_tests_name: STRING = "testing run_last_tests"
+	testing_run_last_failed_tests_first_name: STRING = "testing run_last_failed_tests_first"
+	testing_all_test_runs_name: STRING = "testing all_test_runs"
+	testing_see_failure_trace_name: STRING = "testing see_failure_trace"
+	testing_compare_with_expected_result_name: STRING = "testing compare_with_expected_result"
+	testing_tool_name: STRING = "testing tool"
+	testing_result_tool_name: STRING = "testing result_tool"
 
 feature {NONE} -- Basic operations
 
@@ -9953,30 +10184,31 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 4, {NATURAL_8} 5], top_level_folder_precompiles_name)
 			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 5], top_level_folder_references_name)
 			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 5], top_level_folder_targets_name)
-			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 5], folder_features_all_name)
-			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 5], folder_features_some_name)
-			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 5], folder_features_none_name)
-			a_table.put ([{NATURAL_8} 10, {NATURAL_8} 5], folder_cluster_name)
-			a_table.put ([{NATURAL_8} 11, {NATURAL_8} 5], folder_cluster_readonly_name)
-			a_table.put ([{NATURAL_8} 12, {NATURAL_8} 5], folder_blank_name)
-			a_table.put ([{NATURAL_8} 13, {NATURAL_8} 5], folder_blank_readonly_name)
-			a_table.put ([{NATURAL_8} 14, {NATURAL_8} 5], folder_library_name)
-			a_table.put ([{NATURAL_8} 15, {NATURAL_8} 5], folder_library_readonly_name)
-			a_table.put ([{NATURAL_8} 16, {NATURAL_8} 5], folder_precompiled_library_name)
-			a_table.put ([{NATURAL_8} 17, {NATURAL_8} 5], folder_precompiled_library_readonly_name)
-			a_table.put ([{NATURAL_8} 18, {NATURAL_8} 5], folder_assembly_name)
-			a_table.put ([{NATURAL_8} 19, {NATURAL_8} 5], folder_namespace_name)
-			a_table.put ([{NATURAL_8} 20, {NATURAL_8} 5], folder_preference_name)
-			a_table.put ([{NATURAL_8} 21, {NATURAL_8} 5], folder_config_name)
-			a_table.put ([{NATURAL_8} 22, {NATURAL_8} 5], folder_target_name)
-			a_table.put ([{NATURAL_8} 23, {NATURAL_8} 5], folder_hidden_cluster_name)
-			a_table.put ([{NATURAL_8} 24, {NATURAL_8} 5], folder_hidden_cluster_readonly_name)
-			a_table.put ([{NATURAL_8} 25, {NATURAL_8} 5], folder_hidden_blank_name)
-			a_table.put ([{NATURAL_8} 26, {NATURAL_8} 5], folder_hidden_blank_readonly_name)
-			a_table.put ([{NATURAL_8} 27, {NATURAL_8} 5], folder_override_cluster_name)
-			a_table.put ([{NATURAL_8} 28, {NATURAL_8} 5], folder_override_cluster_readonly_name)
-			a_table.put ([{NATURAL_8} 29, {NATURAL_8} 5], folder_override_blank_name)
-			a_table.put ([{NATURAL_8} 30, {NATURAL_8} 5], folder_override_blank_readonly_name)
+			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 5], top_level_folder_remote_targets_name)
+			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 5], folder_features_all_name)
+			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 5], folder_features_some_name)
+			a_table.put ([{NATURAL_8} 10, {NATURAL_8} 5], folder_features_none_name)
+			a_table.put ([{NATURAL_8} 11, {NATURAL_8} 5], folder_cluster_name)
+			a_table.put ([{NATURAL_8} 12, {NATURAL_8} 5], folder_cluster_readonly_name)
+			a_table.put ([{NATURAL_8} 13, {NATURAL_8} 5], folder_blank_name)
+			a_table.put ([{NATURAL_8} 14, {NATURAL_8} 5], folder_blank_readonly_name)
+			a_table.put ([{NATURAL_8} 15, {NATURAL_8} 5], folder_library_name)
+			a_table.put ([{NATURAL_8} 16, {NATURAL_8} 5], folder_library_readonly_name)
+			a_table.put ([{NATURAL_8} 17, {NATURAL_8} 5], folder_precompiled_library_name)
+			a_table.put ([{NATURAL_8} 18, {NATURAL_8} 5], folder_precompiled_library_readonly_name)
+			a_table.put ([{NATURAL_8} 19, {NATURAL_8} 5], folder_assembly_name)
+			a_table.put ([{NATURAL_8} 20, {NATURAL_8} 5], folder_namespace_name)
+			a_table.put ([{NATURAL_8} 21, {NATURAL_8} 5], folder_preference_name)
+			a_table.put ([{NATURAL_8} 22, {NATURAL_8} 5], folder_config_name)
+			a_table.put ([{NATURAL_8} 23, {NATURAL_8} 5], folder_target_name)
+			a_table.put ([{NATURAL_8} 24, {NATURAL_8} 5], folder_hidden_cluster_name)
+			a_table.put ([{NATURAL_8} 25, {NATURAL_8} 5], folder_hidden_cluster_readonly_name)
+			a_table.put ([{NATURAL_8} 26, {NATURAL_8} 5], folder_hidden_blank_name)
+			a_table.put ([{NATURAL_8} 27, {NATURAL_8} 5], folder_hidden_blank_readonly_name)
+			a_table.put ([{NATURAL_8} 28, {NATURAL_8} 5], folder_override_cluster_name)
+			a_table.put ([{NATURAL_8} 29, {NATURAL_8} 5], folder_override_cluster_readonly_name)
+			a_table.put ([{NATURAL_8} 30, {NATURAL_8} 5], folder_override_blank_name)
+			a_table.put ([{NATURAL_8} 31, {NATURAL_8} 5], folder_override_blank_readonly_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 6], tool_features_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 6], tool_clusters_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 6], tool_class_name)
@@ -10168,8 +10400,9 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 22, {NATURAL_8} 14], new_pre_compilation_task_name)
 			a_table.put ([{NATURAL_8} 23, {NATURAL_8} 14], new_post_compilation_task_name)
 			a_table.put ([{NATURAL_8} 24, {NATURAL_8} 14], new_target_name)
-			a_table.put ([{NATURAL_8} 25, {NATURAL_8} 14], new_cflag_name)
-			a_table.put ([{NATURAL_8} 26, {NATURAL_8} 14], new_linker_flag_name)
+			a_table.put ([{NATURAL_8} 25, {NATURAL_8} 14], new_remote_target_name)
+			a_table.put ([{NATURAL_8} 26, {NATURAL_8} 14], new_cflag_name)
+			a_table.put ([{NATURAL_8} 27, {NATURAL_8} 14], new_linker_flag_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 15], feature_callers_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 15], feature_callees_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 15], feature_assigners_name)
@@ -10333,15 +10566,24 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 23], errors_and_warnings_expand_errors_name)
 			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 23], errors_and_warnings_fix_ignore_name)
 			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 23], errors_and_warnings_fix_apply_name)
-			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 25], information_tag_name)
-			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 25], information_tags_name)
-			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 25], information_no_tag_name)
-			a_table.put ([{NATURAL_8} 4, {NATURAL_8} 25], information_affected_target_name)
-			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 25], information_auto_sweeping_name)
-			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 25], information_sweep_now_name)
-			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 25], information_edit_auto_node_name)
-			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 25], information_with_info_sign_name)
-			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 25], information_affected_resource_name)
+			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 24], information_tag_name)
+			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 24], information_tags_name)
+			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 24], information_no_tag_name)
+			a_table.put ([{NATURAL_8} 4, {NATURAL_8} 24], information_affected_target_name)
+			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 24], information_auto_sweeping_name)
+			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 24], information_sweep_now_name)
+			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 24], information_edit_auto_node_name)
+			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 24], information_with_info_sign_name)
+			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 24], information_affected_resource_name)
+			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 25], testing_new_unit_test_name)
+			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 25], testing_failure_name)
+			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 25], testing_run_last_tests_name)
+			a_table.put ([{NATURAL_8} 4, {NATURAL_8} 25], testing_run_last_failed_tests_first_name)
+			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 25], testing_all_test_runs_name)
+			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 25], testing_see_failure_trace_name)
+			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 25], testing_compare_with_expected_result_name)
+			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 25], testing_tool_name)
+			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 25], testing_result_tool_name)
 		end
 
 ;note

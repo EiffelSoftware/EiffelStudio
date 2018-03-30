@@ -17,29 +17,29 @@ feature -- Status
 		end
 
 	is_safe_preferred: BOOLEAN
-			-- Are safe versions of libraries taken instead of reguslar ones?
+			-- Are safe versions of libraries taken instead of regular ones?
 		do
 			Result := is_safe_preferred_cell.item
 		end
 
 feature -- Access
 
-	resolved_library_path (path: READABLE_STRING_32): READABLE_STRING_32
-			-- Library path computed under current conditions.
+	resolved_location_path (a_location: READABLE_STRING_32): READABLE_STRING_32
+			-- Location path computed under current conditions.
 		local
 			extension: STRING_32
 			file: RAW_FILE
 			l_result: detachable STRING_32
 		do
 				-- Check if "-safe" may need to be added.
-			if is_safe_preferred and then path.count > 4 then
-				extension := path.substring (path.count - 3, path.count)
+			if is_safe_preferred and then a_location.count > 4 then
+				extension := a_location.substring (a_location.count - 3, a_location.count)
 					-- Apply translation only for "*.ecf" files.
 				if extension.is_case_insensitive_equal_general (".ecf") then
-					create file.make_with_name (path)
+					create file.make_with_name (a_location)
 						-- Check if the original file really exists.
 					if file.exists and then file.is_readable then
-						create l_result.make_from_string (path.substring (1, path.count - 4))
+						create l_result.make_from_string (a_location.substring (1, a_location.count - 4))
 						l_result.append_string_general ("-safe")
 						l_result.append_string (extension)
 						file.reset (l_result)
@@ -52,10 +52,16 @@ feature -- Access
 				end
 			end
 			if l_result = Void then
-				Result := path
+				Result := a_location
 			else
 				Result := l_result
 			end
+		end
+
+	resolved_library_path (path: READABLE_STRING_32): READABLE_STRING_32
+			-- Library path computed under current conditions.
+		do
+			Result := resolved_location_path (path)
 		end
 
 feature -- Update
@@ -95,7 +101,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

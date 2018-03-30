@@ -62,6 +62,7 @@ feature -- Section actions
 	menu_properties: STRING_32 do Result := locale.translation ("Properties")	end
 	menu_edit_config: STRING_32 do Result := locale.translation ("Edit Configuration")	end
 	add_target: STRING_32 do Result := locale.translation ("Add Target")	end
+	add_remote_target: STRING_32 do Result := locale.translation ("Add Remote Target")	end
 
 feature -- General names and descriptions
 
@@ -87,6 +88,8 @@ feature -- Target names and descriptions
 
 	target_name_name: STRING_32 do Result := locale.translation ("Name")	end
 	target_name_description: STRING_32 do Result := locale.translation ("Name of the target.")	end
+	target_location_name: STRING_32 do Result := locale.translation ("Location") end
+	target_location_description: STRING_32 do Result := locale.translation ("Location of the target system.")	end
 	target_description_name: STRING_32 do Result := locale.translation ("Description")	end
 	target_description_description: STRING_32 do Result := locale.translation ("Description of the target.")	end
 	target_abstract_name: STRING_32 do Result := locale.translation ("Abstract")	end
@@ -501,6 +504,10 @@ feature -- Misc
 		do
 			Result := locale.formatted_string (locale.translation ("Are you sure you want to remove $1?"), [a_target])
 		end
+	remove_remote_target (a_target, a_location: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("Are you sure you want to remove remote $1 ($2)?"), [a_target, a_location])
+		end
 
 	target_remove_group (a_group: READABLE_STRING_GENERAL): STRING_32
 		do
@@ -582,6 +589,12 @@ feature -- Create task dialog
 feature -- Create external dialog
 
 	dialog_external_add: STRING_32 do Result := locale.translation ("Add new external")	end
+
+feature -- Create remote target dialog
+
+	dialog_create_remote_target_title: STRING_32 do Result := locale.translation ("Add Remote Target")	end
+	dialog_create_remote_target_name: STRING_32 do Result := locale.translation ("Target Name") end
+	dialog_create_remote_target_location: STRING_32 do Result := locale.translation ("Location") end
 
 feature -- Create library dialog
 
@@ -795,6 +808,7 @@ feature -- Validation warnings
 	target_add_duplicate: STRING_32 do Result := locale.translation ("Cannot add target because there is already a target with the same name.") end
 	target_remove_library_target: STRING_32 do Result := locale.translation ("Target cannot be removed because it is the library target.") end
 	target_remove_last: STRING_32 do Result := locale.translation ("Target cannot be removed because it is the last target.") end
+	target_remove_impossible: STRING_32 do Result := locale.translation ("Target cannot be removed.") end
 	target_remove_extends (other_target: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Target cannot be removed because $1 extends it."), [other_target])
@@ -813,6 +827,7 @@ feature -- Validation warnings
 	root_invalid_feature: STRING_32 do Result := locale.translation ("Root procedure name is invalid.") end
 	cluster_dependency_group_not_exist: STRING_32 do Result := locale.translation ("Cannot add dependency. There is no group with this name.") end
 	override_group_not_exist: STRING_32 do Result := locale.translation ("Cannot add override. There is no group with this name.") end
+	invalid_target_name: STRING_32 do Result := locale.translation ("The name of the target is invalid.") end
 	invalid_assembly_name: STRING_32 do Result := locale.translation ("The name of the assembly is invalid.") end
 	invalid_cluster_name: STRING_32 do Result := locale.translation ("The name of the cluster is invalid.") end
 	invalid_library_name: STRING_32 do Result := locale.translation ("The name of the library is invalid.") end
@@ -878,6 +893,14 @@ feature -- Parse errors
 	e_parse_incorrect_target_parent (a_parent, a_target: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Missing parent target: $1 in target $2"), [a_parent, a_target])
+		end
+	e_parse_incorrect_remote_target_parent (a_parent: detachable READABLE_STRING_GENERAL; a_target: READABLE_STRING_GENERAL; a_location: READABLE_STRING_GENERAL): STRING_32
+		do
+			if a_parent = Void then
+				Result := locale.formatted_string (locale.translation ("Missing remote parent target: no library target from $1 in target $2"), [a_location, a_target])
+			else
+				Result := locale.formatted_string (locale.translation ("Missing remote parent target: $1 from $2 in target $3"), [a_parent, a_location, a_target])
+			end
 		end
 	e_parse_incorrect_target_no_name: STRING_32 do Result := locale.translation ("Target without a name specified.") end
 	e_parse_incorrect_target_invalid_name (a_target: READABLE_STRING_GENERAL): STRING_32

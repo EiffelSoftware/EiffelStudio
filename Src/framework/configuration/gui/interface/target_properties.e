@@ -19,6 +19,35 @@ feature {NONE} -- Implementation
 	conf_system: CONF_SYSTEM
 			-- Configuration system.
 
+	add_remote_target_properties
+			-- Add remote target properties.
+		require
+			properties_not_void: properties /= Void
+			current_target_not_void: current_target /= Void
+			conf_system_not_void: conf_system /= Void
+		local
+			l_string_prop: STRING_PROPERTY
+			l_file_prop: FILE_LOCATION_PROPERTY
+		do
+				-- Does `current_target' extend something?
+			properties.add_section ("Information")
+				-- Name.
+			create l_string_prop.make (conf_interface_names.target_name_name)
+			l_string_prop.set_description (conf_interface_names.target_name_description)
+			l_string_prop.set_value (current_target.name)
+			properties.add_property (l_string_prop)
+
+				-- Name.
+			create l_file_prop.make (conf_interface_names.target_location_name, current_target)
+			l_string_prop.set_description (conf_interface_names.target_location_description)
+			l_file_prop.set_value (current_target.system.file_name)
+			properties.add_property (l_file_prop)
+
+			properties.current_section.expand
+		ensure
+			properties_not_void: properties /= Void
+		end
+
 	add_general_properties
 			-- Add general properties.
 		require

@@ -180,12 +180,14 @@ feature -- Visit nodes
 			current_target := a_target
 			append_tag_open ({STRING_32} "target")
 			append_text_attribute (ta_name, a_target.name)
-			if attached a_target.extends as l_extends and then not a_target.is_library_parent then
+			if attached a_target.remote_parent as l_remote_parent and then includes_this_or_after (namespace_1_18_0) then
+				if attached l_remote_parent.name as l_remote_parent_name then
+					append_text_attribute (ta_extends, l_remote_parent_name)
+				end
+				append_text_attribute (ta_extends_location, l_remote_parent.location)
+			elseif attached a_target.extends as l_extends then
 					-- Ignore the target if it is a library one (i.e. not explicitly specified in the configuration).
 				append_text_attribute (ta_extends, l_extends.name)
-			end
-			if attached a_target.extends_location as l and then includes_this_or_after (namespace_1_18_0) then
-				append_text_attribute (ta_extends_location, l)
 			end
 			if a_target.is_abstract then
 				append_text_attribute (ta_abstract, configuration_value_true)

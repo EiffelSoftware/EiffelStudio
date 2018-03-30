@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			create add_target_button.make
+			create add_remote_target_button.make
 			create add_cluster_button.make
 			create add_override_button.make
 			create add_assembly_button.make
@@ -69,6 +70,12 @@ feature {NONE} -- Initialization
 			l_ac.actions.extend (agent press_button (add_target_button))
 			accelerators.extend (l_ac)
 			add_target_button.set_tooltip (name_with_key (conf_interface_names.add_target, l_ac))
+
+			add_remote_target_button.set_pixmap (conf_pixmaps.new_remote_target_icon)
+			add_remote_target_button.set_pixel_buffer (conf_pixmaps.new_remote_target_icon_buffer)
+			extend (add_remote_target_button)
+			add_remote_target_button.set_tooltip (name_with_key (conf_interface_names.add_remote_target, l_ac))
+
 
 			extend (create {SD_TOOL_BAR_SEPARATOR}.make)
 
@@ -225,6 +232,9 @@ feature -- Buttons
 	add_target_button: SD_TOOL_BAR_BUTTON
 			-- Button for adding a new target.
 
+	add_remote_target_button: SD_TOOL_BAR_BUTTON
+			-- Button for adding a new remote target.
+
 	add_cluster_button: SD_TOOL_BAR_BUTTON
 			-- Button for adding a new cluster.
 
@@ -354,6 +364,7 @@ invariant
 	accelerators_not_void: accelerators /= Void
 	edit_manually_button: edit_manually_button /= Void
 	add_target_button: add_target_button /= Void
+	add_remote_target_button: add_remote_target_button /= Void
 	add_cluster_button: add_cluster_button /= Void
 	add_override_button: add_override_button /= Void
 	add_assembly_button: add_assembly_button /= Void

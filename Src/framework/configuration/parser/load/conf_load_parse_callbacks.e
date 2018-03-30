@@ -707,10 +707,11 @@ feature {NONE} -- Implementation attribute processing
 		require
 			last_system_not_void: last_system /= Void
 		local
-			l_target: detachable CONF_TARGET
+			l_parent_target: detachable CONF_TARGET
 			l_lower_name: STRING_32
 			l_current_target: like current_target
-			l_parent_system: CONF_SYSTEM
+			l_extends, l_extends_location: detachable READABLE_STRING_32
+			l_parent_system: detachable CONF_SYSTEM
 		do
 			if attached last_system as l_last_system then
 				if attached current_attributes.item (at_name) as l_name then
@@ -737,31 +738,41 @@ feature {NONE} -- Implementation attribute processing
 						current_library_target := Void
 					end
 					l_last_system.add_target (l_current_target)
-					if attached current_attributes.item (at_extends_location) as l_extends_location then
+
+						-- Parent target ?
+					l_extends_location := current_attributes.item (at_extends_location)
+					l_extends := current_attributes.item (at_extends)
+					if l_extends_location /= Void then
 						if includes_this_or_after (namespace_1_18_0) then
-							l_current_target.set_parent_location (l_extends_location)
-								-- TODO: Load the configuration specified by `l_extends_location` and set `l_parent_system`. Report an error otherwise.
+							if l_last_system.file_path.same_as ((create {CONF_FILE_LOCATION}.make (l_extends_location, l_current_target)).evaluated_path) then
+									-- This is not a remote system, it is current one!
+								l_extends_location := Void
+							else
+								l_current_target.set_remote_parent (create {CONF_REMOTE_TARGET}.make (l_extends, l_extends_location))
+							end
 						else
 							report_unknown_attribute (ta_extends_location)
 						end
-					end
-					if attached current_attributes.item (at_extends) as l_extends then
-						if not attached l_parent_system then
+					elseif l_extends /= Void then
+						if l_parent_system = Void then
 								-- Use the current system if a parent one is not specified
 							l_parent_system := l_last_system
 						end
 							-- Target are known internally in lower case,
 							-- so we should respect this (see bug#12698).
-						l_target := l_parent_system.targets.item (l_extends.as_lower)
-						if l_target /= Void and then l_target /= l_current_target then
-							l_current_target.set_parent (l_target)
-							group_list := l_target.groups
-						else
-							set_parse_error_message (conf_interface_names.e_parse_incorrect_target_parent (l_extends, l_name))
+						l_parent_target := l_parent_system.target (l_extends)
+						if l_parent_target = Void or else l_parent_target = l_current_target then
+							if l_extends_location /= Void then
+									-- No target `l_extends` on remote location!
+								set_parse_error_message (conf_interface_names.e_parse_incorrect_remote_target_parent (l_extends, l_name, l_extends_location))
+							else
+								set_parse_error_message (conf_interface_names.e_parse_incorrect_target_parent (l_extends, l_name))
+							end
 						end
-					elseif attached l_parent_system then
-							-- TODO: initialize `l_current_target.extends` with the library target of `l_extends_location`, report an error otherwise.
-						l_current_target.set_is_library_parent (True)
+					end
+					if l_parent_target /= Void then
+						l_current_target.set_parent (l_parent_target)
+						group_list := l_parent_target.groups
 					end
 				else
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_target_no_name)

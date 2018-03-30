@@ -14,5 +14,5 @@ copy_raw test1.e $CLUSTER test1.e
 copy_raw test2.e $CLUSTER test2.e
 copy_raw repeated.e $CLUSTER repeated.e
 compile_melted
-compile_result ok
+compile_result validity_error TEST ECMA-VHPR(5)
 test_end

@@ -1,10 +1,9 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author     : "$Author$"
-	date       : "$Date$"
-	revision   : "$Revision$"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EC_CHECKED_TYPE
@@ -26,19 +25,24 @@ feature {NONE} -- Initialization
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_element: detachable EC_CHECKED_TYPE
-			l_elm_type: detachable SYSTEM_TYPE
+			l_element: EC_CHECKED_TYPE
 		do
 			init_reasons
 			type := a_type
 			if a_type.has_element_type then
-				l_elm_type := a_type.get_element_type
-				check l_elm_type_attached: l_elm_type /= Void end
-				l_element ?= checked_entities.item (l_elm_type)
-				if l_element = Void then
-					create l_element.make (l_elm_type)
+				if attached a_type.get_element_type as l_elm_type then
+					if attached {EC_CHECKED_TYPE} checked_entities.item (l_elm_type) as e then
+						l_element := e
+					else
+						create l_element.make (l_elm_type)
+					end
+					element_checked_type := l_element
+				else
+					check
+						from_documentation_get_element_type_attached: False
+					then
+					end
 				end
-				element_checked_type := l_element
 			end
 		ensure
 			type_set: type = a_type
@@ -73,8 +77,6 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 		local
 			l_type: like type
 			l_checked_asm: EC_CHECKED_ASSEMBLY
-			l_asm: detachable ASSEMBLY
-			l_element: like element_checked_type
 			l_compliant: BOOLEAN
 		do
 			l_type := type
@@ -83,9 +85,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 				internal_is_marked := True
 				internal_is_compliant := False
 				non_compliant_reason := non_compliant_reasons.reason_type_marked_non_cls_compliant
-			elseif has_element_checked_type then
-				l_element := element_checked_type
-				check l_element_attached: l_element /= Void end
+			elseif attached element_checked_type as l_element then
 				internal_is_marked := l_element.is_marked
 				l_compliant := l_element.is_compliant
 				if l_compliant then
@@ -98,15 +98,19 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 					-- type was not marked with CLS-compliant attribute, but it might be marked on an
 					-- assembly level.
 					if type.is_visible then
-						l_asm := type.assembly
-						check l_asm_attached: l_asm /= Void end
-						l_checked_asm := checked_assembly (l_asm)
-						internal_is_marked := l_checked_asm.is_marked
-						l_compliant := l_checked_asm.is_compliant
-						if l_compliant then
-							internal_is_compliant := True
+						if attached type.assembly as l_asm then
+							l_checked_asm := checked_assembly (l_asm)
+							internal_is_marked := l_checked_asm.is_marked
+							l_compliant := l_checked_asm.is_compliant
+							if l_compliant then
+								internal_is_compliant := True
+							else
+								non_compliant_reason := non_compliant_reasons.reason_assembly_marked_non_cls_compliant
+							end
 						else
-							non_compliant_reason := non_compliant_reasons.reason_assembly_marked_non_cls_compliant
+							check
+								from_documentation_assembly_attached: False
+							end
 						end
 					else
 						non_eiffel_compliant_reason := non_compliant_reasons.reason_type_is_not_visible
@@ -124,43 +128,42 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 		local
 			l_compliant: BOOLEAN
 			l_type: SYSTEM_TYPE
-			l_element_type: like element_checked_type
 			l_checked_asm: EC_CHECKED_ASSEMBLY
-			l_asm: detachable ASSEMBLY
 			retried: BOOLEAN
 		do
 			if not retried then
 				if type.is_visible then
-					l_asm := type.assembly
-					check l_asm_attached: l_asm /= Void end
-					l_checked_asm := checked_assembly (l_asm)
-					internal_is_marked := l_checked_asm.is_marked
-					l_compliant := l_checked_asm.is_eiffel_compliant
-					if l_compliant then
-						l_type := type
-						l_compliant := attached l_type.full_name as l_full_name and then not (l_full_name.index_of_character ('`') >= 0)
+					if attached type.assembly as l_asm then
+						l_checked_asm := checked_assembly (l_asm)
+						internal_is_marked := l_checked_asm.is_marked
+						l_compliant := l_checked_asm.is_eiffel_compliant
 						if l_compliant then
-							l_compliant := not l_type.is_pointer
+							l_type := type
+							l_compliant := attached l_type.full_name as l_full_name and then not (l_full_name.index_of_character ('`') >= 0)
 							if l_compliant then
-								if has_element_checked_type then
-									l_element_type := element_checked_type
-									check l_element_type_attached: l_element_type /= Void end
-									l_compliant := l_element_type.is_eiffel_compliant
-									if not l_compliant then
-										non_eiffel_compliant_reason := l_element_type.non_eiffel_compliant_reason
+								l_compliant := not l_type.is_pointer
+								if l_compliant then
+									if attached element_checked_type as l_element_type then
+										l_compliant := l_element_type.is_eiffel_compliant
+										if not l_compliant then
+											non_eiffel_compliant_reason := l_element_type.non_eiffel_compliant_reason
+										end
 									end
+								else
+									non_eiffel_compliant_reason := non_compliant_reasons.reason_type_marked_non_cls_compliant
 								end
-
 							else
-								non_eiffel_compliant_reason := non_compliant_reasons.reason_type_marked_non_cls_compliant
+								non_eiffel_compliant_reason := non_compliant_reasons.reason_type_is_generic
 							end
 						else
-							non_eiffel_compliant_reason := non_compliant_reasons.reason_type_is_generic
+							non_eiffel_compliant_reason := non_compliant_reasons.reason_assembly_marked_non_eiffel_consumable
 						end
+						internal_is_eiffel_compliant := l_compliant
 					else
-						non_eiffel_compliant_reason := non_compliant_reasons.reason_assembly_marked_non_eiffel_consumable
+						check
+							from_documentation_assembly_attached: False
+						end
 					end
-					internal_is_eiffel_compliant := l_compliant
 				else
 					internal_is_eiffel_compliant := False
 					non_eiffel_compliant_reason := non_compliant_reasons.reason_type_is_not_visible
@@ -184,7 +187,7 @@ invariant
 	element_checked_type_not_void: type.has_element_type implies element_checked_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -214,4 +217,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class EC_CHECKED_TYPE
+
+end

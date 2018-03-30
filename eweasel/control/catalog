@@ -539,7 +539,7 @@ test	assigner-wrong-vbac					valid250 tcf pass assigner validity
 test	bogus-veen-on-object-test-local		valid251 tcf fail used_to_pass validity
 test	undetected-vuot-error			valid252 tcf pass used_to_pass validity
 test	equality-of-conforming-classes		valid253 tcf pass validity equality conformance attached_types
-test	missing-vhpr-with-different-generic-derivation	valid255 tcf fail used_to_pass validity incrementality
+test	missing-vhpr-with-different-generic-derivation	valid255 tcf pass validity incrementality
 test	wrong-vdpr-errors			valid256 tcf fail used_to_pass validity
 test	wrong-manifest-array-attached-type	valid257 tcf pass validity
 test	select-stable-attribute		valid258 tcf pass validity stable attribute
@@ -623,7 +623,7 @@ test	svalid-redefined-precursor-not-checked	svalid026 tcf fail system-validity
 test	svalid-conversion-forget		svalid027 tcf fail system-validity conversion
 test	svalid-generic-rename-with-alias	svalid028 tcf pass system-validity generic rename
 test	svalid-inherited-renamed-prefix		svalid029 tcf pass system-validity rename
-test	svalid-generic-creation			svalid030 tcf fail system-validity generic
+test	svalid-generic-creation			svalid030 tcf pass system-validity generic
 test	svalid-remove-bracket-alias-via-rename	svalid031 tcf pass system-validity bracket_expression
 test	svalid-inherit-like-argument	svalid032 tcf fail system-validity anchored_type
 

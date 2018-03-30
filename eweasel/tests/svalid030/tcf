@@ -9,20 +9,18 @@ copy_raw 	test2.e $CLUSTER test2.e
 copy_raw 	test3.e $CLUSTER test3.e
 
 compile_melted
-compile_result	ok
-
-execute_work 	NONE 	exec_output_1
-execute_result 	ok
-compare		exec_output_1 output
+compile_result	validity_error TEST ECMA-VHPR(5)
+-- execute_work 	NONE 	exec_output_1
+-- execute_result 	ok
+-- compare		exec_output_1 output
 
 define		PARENTS "TEST3 [DOUBLE]; TEST2 [STRING]"
 copy_sub 	test.e $CLUSTER test.e
-
-compile_melted
-compile_result	ok
-
-execute_work 	NONE 	exec_output_2
-execute_result 	ok
-compare		exec_output_2 output
+resume_compile
+compile_result	validity_error TEST ECMA-VHPR(5)
+-- execute_work 	NONE 	exec_output_2
+-- execute_result 	ok
+-- compare		exec_output_2 output
+abort_compile
 
 test_end

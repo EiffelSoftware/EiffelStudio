@@ -1,6 +1,8 @@
-note
-	description: "Cache for storing polymorphic status of call to a certain feature%
-		%with a routine id in the context of a class type id for final mode generation"
+﻿note
+	description: "[
+			Cache for storing polymorphic status of call to a certain feature
+			with a routine id in the context of a class type id for final mode generation.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -52,8 +54,8 @@ feature -- Process
 	start_degree_minus_3 (count: INTEGER)
 			-- Create the data structures which are going to be used at degree -3.
 		do
-			create is_polymorphic_table.make (0, count)
-			create min_id_table.make (0, count)
+			create is_polymorphic_table.make_filled (Void, 0, count)
+			create min_id_table.make_filled (0, 0, count)
 		end
 
 feature -- Status
@@ -213,7 +215,7 @@ feature -- Element change
 
 feature -- Implementation
 
-	is_polymorphic_table: ARRAY [PACKED_BOOLEANS]
+	is_polymorphic_table: ARRAY [detachable PACKED_BOOLEANS]
 			-- Array of arrays which knows if a certain
 			-- routine id in a certain type id is polymorphic or not.
 			--| They are created on the fly during the degree -5.
@@ -291,7 +293,7 @@ invariant
 	used_for_types_not_void: used_for_types /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

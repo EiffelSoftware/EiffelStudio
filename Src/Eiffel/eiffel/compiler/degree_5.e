@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description: "Degree 5 during Eiffel compilation"
 	legal: "See notice at end of class."
@@ -61,7 +61,8 @@ feature -- Processing
 			l_error_handler := error_handler
 			l_classes := l_system.classes
 				-- We do not process more than once classes that had an error.
-			create l_classes_with_error.make (l_classes.lower, l_classes.lower - 1)
+			create l_classes_with_error.make_empty
+			l_classes_with_error.rebase (l_classes.lower)
 			Workbench.set_compilation_started
 				-- We loop until we reached the number of classes with an error or found more errors
 				-- than classes to process.
@@ -266,7 +267,7 @@ feature -- Removal
 		end
 
 note
- 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+ 	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -297,5 +298,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class DEGREE_5
-
+end

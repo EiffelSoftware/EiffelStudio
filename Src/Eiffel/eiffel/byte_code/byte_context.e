@@ -679,7 +679,7 @@ feature {NONE} -- Access: once manifest strings
 			-- Number of once manifest strings to be allocated for the given routine body index;
 			-- actual for the whole system
 
-	once_manifest_string_table: HASH_TABLE [ARRAY [like once_manifest_string_value], INTEGER]
+	once_manifest_string_table: HASH_TABLE [ARRAY [detachable like once_manifest_string_value], INTEGER]
 			-- Once manifest strings to be created for the given routine body index;
 			-- actual for the current class
 
@@ -910,7 +910,7 @@ feature -- Access: once manifest strings
 			index := original_body_index
 			routine_once_manifest_strings := once_manifest_string_table.item (index)
 			if routine_once_manifest_strings = Void then
-				create routine_once_manifest_strings.make (1, once_manifest_string_count)
+				create routine_once_manifest_strings.make_filled (Void, 1, once_manifest_string_count)
 				once_manifest_string_table.force (routine_once_manifest_strings, index)
 			end
 			routine_once_manifest_strings.put ([value, is_string_32], number)
@@ -3155,7 +3155,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

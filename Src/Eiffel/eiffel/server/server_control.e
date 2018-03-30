@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Server file controler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,14 +15,14 @@ feature {NONE} -- Initialization
 	make
 		do
 			create cache.make
-			create files.make (0, Chunk)
+			create files.make_filled (Void, 0, Chunk)
 			create removed_files.make (Chunk)
 			create file_counter.make
 		end
 
 feature {SERVER_CONTROL} -- Status report
 
-	files: ARRAY [SERVER_FILE]
+	files: ARRAY [detachable SERVER_FILE]
 			-- Table of all the files under the control of the
 			-- current object
 
@@ -126,7 +126,7 @@ feature -- File operations
 			end
 		end
 
-	file_of_id (i: INTEGER): SERVER_FILE
+	file_of_id (i: INTEGER): detachable SERVER_FILE
 			-- File of id `i'.
 		require
 			i_positive: i > 0
@@ -245,7 +245,7 @@ invariant
 	file_counter_not_void: file_counter /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -276,4 +276,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class SERVER_CONTROL
+end

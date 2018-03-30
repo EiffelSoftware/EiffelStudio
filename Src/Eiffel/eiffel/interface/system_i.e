@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 			server_make
 
 				-- Creation of the system hash table
-			create class_types.make (1, System_chunk)
+			create class_types.make_filled (Void, 1, System_chunk)
 			create new_classes.make
 
 				-- Creation of a topological sorter
@@ -128,8 +128,8 @@ feature {NONE} -- Initialization
 			create degree_minus_1.make
 
 				-- Body index table creation
-			create body_index_table.make (0, System_chunk)
-			create original_body_index_table.make (1, 0)
+			create body_index_table.make_filled (0, 0, System_chunk)
+			create original_body_index_table.make_empty
 
 				-- Run-time table creation
 			create execution_table.make
@@ -3113,7 +3113,7 @@ feature -- Final mode generation
 				create skeleton_table.make (400)
 				if not il_generation then
 					internal_retrieved_finalized_type_mapping := Void
-					create l_type_id_mapping.make (0, static_type_id_counter.count)
+					create l_type_id_mapping.make_filled (0, 0, static_type_id_counter.count)
 					l_old_type_id_counter := type_id_counter.value
 					process_dynamic_types (False, l_type_id_mapping, 0)
 				end
@@ -3133,7 +3133,7 @@ feature -- Final mode generation
 				byte_context.set_final_mode
 
 				if il_generation then
-					create l_type_id_mapping.make (0, static_type_id_counter.count)
+					create l_type_id_mapping.make_filled (0, 0, static_type_id_counter.count)
 					process_optimized_single_types (False, l_type_id_mapping)
 				end
 
@@ -3456,6 +3456,11 @@ feature {NONE} -- Implementation
 						supplier_clients.remove
 					end
 
+					if supplier.has_dep_class (a_class) then
+							-- Remove the dependecies recursively.
+							-- (See test#incr381 that fails of the removal is not done recursively.)
+						remove_dependencies (supplier, a_class)
+					end
 					if
 						supplier_clients.is_empty and then
 							-- The root class is not removed
@@ -3471,18 +3476,38 @@ feature {NONE} -- Implementation
 					then
 							-- Recursively remove class.
 						internal_remove_class (supplier, a_depth + 1)
-					elseif supplier.has_dep_class (a_class) then
-							-- Is it enough to remove the dependecies only on a class
-							-- which is still in the system, or should we do it for
-							-- all the classes even the ones that we just removed from
-							-- the system? In the last case, we should put the previous
-							-- test one level up.
-						supplier.remove_dep_class (a_class)
 					end
 
 					related_classes.forth
 				end
 			end
+		end
+
+	remove_dependencies (supplier, dependant: CLASS_C)
+		require
+			has_dependency: supplier.has_dep_class (dependant)
+		do
+			supplier.remove_dep_class (dependant)
+			if attached supplier.conforming_parents_classes as cs then
+				across
+					cs as c
+				loop
+					if c.item.has_dep_class (dependant) then
+						remove_dependencies (c.item, dependant)
+					end
+				end
+			end
+			if attached supplier.non_conforming_parents_classes as cs then
+				across
+					cs as c
+				loop
+					if c.item.has_dep_class (dependant) then
+						remove_dependencies (c.item, dependant)
+					end
+				end
+			end
+		ensure
+			has_no_dependency: not supplier.has_dep_class (dependant)
 		end
 
 feature {NONE} -- Finalization implementation
@@ -3905,7 +3930,7 @@ feature -- Generation
 			from
 				class_array := classes
 				nb := class_counter.count
-				create l_new_old_mapping.make (a_backup.lower, a_backup.upper)
+				create l_new_old_mapping.make_filled (0, a_backup.lower, a_backup.upper)
 				i := 1
 			until
 				i > nb
@@ -3977,7 +4002,7 @@ feature -- Generation
 			valid_counter_value: is_restoring implies a_type_id_counter_value > 0
 		local
 			class_array: ARRAY [CLASS_C]
-			class_list: ARRAY [CLASS_C]
+			class_list: ARRAY [detachable CLASS_C]
 			a_class: CLASS_C
 			types: TYPE_LIST
 			i, nb: INTEGER
@@ -4013,7 +4038,7 @@ feature -- Generation
 					-- and then traverse the list and reset the dynamic type id.
 
 					-- Sort the class_list by type id in `class_list'.
-				create class_list.make (1, max_class_id)
+				create class_list.make_filled (Void, 1, max_class_id)
 				class_array := classes
 				nb := class_counter.count
 				from i := 1 until i > nb loop
@@ -4430,31 +4455,31 @@ feature -- Generation
 			buffer := generation_buffer
 			buffer.clear_all
 
-			final_mode := byte_context.final_mode;
+			final_mode := byte_context.final_mode
 
-			buffer.put_string ("#include %"eif_eiffel.h%"");
+			buffer.put_string ("#include %"eif_eiffel.h%"")
 
 			buffer.start_c_specific_code
 
 			from
-				i := 1;
-				max_id := 0;
-				nb := Type_id_counter.value;
-				create used_ids.make (0, nb);
+				i := 1
+				max_id := 0
+				nb := Type_id_counter.value
+				create used_ids.make_filled (False, 0, nb)
 			until
 				i > nb
 			loop
-				cl_type := class_types.item (i);
+				cl_type := class_types.item (i)
 				if cl_type /= Void then
-					cl_type.generate_parent_table (buffer, final_mode);
-					cid := cl_type.type.generated_id (final_mode, Void);
-					used_ids.force (True, cid);
+					cl_type.generate_parent_table (buffer, final_mode)
+					cid := cl_type.type.generated_id (final_mode, Void)
+					used_ids.force (True, cid)
 					if cid > max_id then
-						max_id := cid;
+						max_id := cid
 					end
-				end;
-				i := i + 1;
-			end;
+				end
+				i := i + 1
+			end
 
 			buffer.put_new_line
 			buffer.put_string ("int egc_partab_size_init = ")
@@ -4493,9 +4518,6 @@ feature -- Generation
 			a_class: CLASS_C
 			final_mode: BOOLEAN
 			types: TYPE_LIST
-				-- cltype_array is indexed by `id' not by `type_id'
-				-- as `class_types'
-			cltype_array: ARRAY [CLASS_TYPE]
 			skeleton_file: INDENT_FILE
 			buffer: GENERATION_BUFFER
 		do
@@ -4540,8 +4562,6 @@ feature -- Generation
 					i := i + 1
 				end
 				buffer.put_new_line
-
-				create cltype_array.make (1, static_type_id_counter.count)
 			else
 				buffer.start_c_specific_code
 			end
@@ -4558,9 +4578,6 @@ feature -- Generation
 					-- Classes could be removed
 				if cl_type /= Void then
 					cl_type.generate_skeleton1 (buffer)
-					if not final_mode then
-						cltype_array.put (cl_type, cl_type.static_type_id)
-					end
 				end
 				i := i + 1
 			end
@@ -6178,7 +6195,7 @@ feature {NONE} -- External features
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

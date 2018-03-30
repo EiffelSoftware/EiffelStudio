@@ -1,13 +1,12 @@
-note
+﻿note
 	description: "[
-						This class encapsualtes functionality and data needed to produce a proper
-						info report for feature lookup on multi constraint (MC) formal generic type
-						parameters.
-						G -> {A, B, C} would be an example for our targeted construct.
-				]"
+			This class encapsualtes functionality and data needed to produce a proper
+			info report for feature lookup on multi constraint (MC) formal generic type
+			parameters.
+			G -> {A, B, C} would be an example for our targeted construct.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -134,12 +133,12 @@ feature -- Command
 
 					forth
 				end
-				a_text_formatter.add_new_line
 			else
 				l_output := "The feature `" + feature_name + "' does not occur in any constraint of the following formal:%N"
 				a_text_formatter.add (l_output)
 				a_text_formatter.process_generic_text (context_class.generics.i_th (formal_position).name.name_32)
 			end
+			a_text_formatter.add_new_line
 		end
 
 feature {NONE} -- Implementation
@@ -159,7 +158,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

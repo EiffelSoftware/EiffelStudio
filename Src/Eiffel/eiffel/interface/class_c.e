@@ -1398,7 +1398,7 @@ feature -- Parent checking
 									then
 											-- Different generic derivations are used in Parent parts.
 										error_handler.insert_error (create {VHPR5_ECMA}.make
-											(Current, l_parent_type, parents.i_th (l_parents_classes.index), l_parent_as.start_location))
+											(Current, l_parent_type, Current, parents.i_th (l_parents_classes.index), Current, l_parent_as.start_location))
 									end
 									l_parents_classes.forth
 								end
@@ -1479,6 +1479,10 @@ feature -- Parent checking
 				end
 			else
 					-- First compilation of the class
+					-- Set `changed3a` to ensure the descendants are recompiled if something goes wrong at the first compilation.
+					-- See test#valid255.
+				set_changed (True)
+				set_changed3a (True)
 				System.set_update_sort (True)
 			end
 		ensure
@@ -4282,16 +4286,6 @@ feature {COMPILER_EXPORTER} -- Setting
 			generics_set: generics = g
 		end
 
-	set_generic_features (f: like generic_features)
-			-- Set `generic_features' to `f'.
-		require
-			f_not_void: f /= Void
-		do
-			generic_features := f
-		ensure
-			generic_features_set: generic_features = f
-		end
-
 	set_encoding_and_bom (a_encoding: like ENCODING; a_bom: like bom)
 			-- Set `encoding' with `a_encoding'.
 			-- Set `bom' with `a_bom'.
@@ -4444,8 +4438,7 @@ feature -- Genericity
 						l_formal.set_type (l_formal.type.instantiated_in (l_parents.item), 0)
 						l_formal.set_is_origin (False)
 						if l_old /= Void and then l_old.has (l_formal.rout_id_set.first) then
-							l_formal.set_feature_id (
-								l_old.item (l_formal.rout_id_set.first).feature_id)
+							l_formal.set_feature_id (l_old.item (l_formal.rout_id_set.first).feature_id)
 						else
 							l_formal.set_feature_id (feature_id_counter.next)
 						end
@@ -4555,6 +4548,7 @@ feature {NONE} -- Genericity
 			l_generic_features: like generic_features
 			l_rout_id_set: ROUT_ID_SET
 			l_rout_id, i, nb: INTEGER
+			g1, g2: ARRAYED_LIST [TYPE_A]
 		do
 			l_generic_features := generic_features
 			if l_generic_features = Void then
@@ -4570,12 +4564,26 @@ feature {NONE} -- Genericity
 				i > nb
 			loop
 				l_rout_id := l_rout_id_set.item (i)
-				if not l_generic_features.has (l_rout_id) then
+				if not attached l_generic_features [l_rout_id] as other_actual then
 					l_generic_features.put (an_item, l_rout_id)
-				else
-						-- Should we report an error in this case, as it is not
-						-- well implemented by compiler? Meaning that we have
-						-- some repeated inheritance of generic parameters.
+				elseif not other_actual.same_signature (an_item) then
+						-- Two ancestors are different generic derivations of the same class.
+					if
+						attached system.class_of_id (an_item.origin_class_id) as c and then
+						attached c.generics as g
+					then
+						create g1.make_from_array (create {ARRAY [TYPE_A]}.make_filled (create {UNKNOWN_TYPE_A}, 1, g.count))
+						g2 := g1.twin
+						g1 [an_item.position] := an_item.type
+						g2 [an_item.position] := other_actual.type
+						error_handler.insert_error (create {VHPR5_ECMA}.make
+							(Current,
+							create {GEN_TYPE_A}.make (an_item.origin_class_id, g1),
+							an_item.written_class,
+							create {GEN_TYPE_A}.make (an_item.origin_class_id, g2),
+							other_actual.written_class,
+							Void))
+					end
 				end
 
 				i := i + 1

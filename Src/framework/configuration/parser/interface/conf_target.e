@@ -468,7 +468,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			description_set: description = a_description
 		end
 
-	set_parent (a_target: CONF_TARGET)
+	set_parent (a_target: like extends)
 			-- Set `extends' to `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -489,8 +489,12 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			system: system /= Void
 			a_target_ok: a_target /= Void and then not a_target.is_empty implies system.targets.has (a_target)
 		do
-			if a_target /= Void and then not a_target.is_empty then
-				set_parent (system.targets.item (a_target))
+			if
+				a_target /= Void and then
+				not a_target.is_empty and then
+				attached system.target (a_target) as par
+			then
+				set_parent (par)
 			else
 				extends := Void
 			end

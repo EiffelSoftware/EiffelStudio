@@ -88,17 +88,20 @@ feature -- Basic operations
 			else
 				create l_load.make (configuration_window.conf_factory)
 				l_load.retrieve_configuration (l_config)
-				if l_load.is_error then
+				if l_load.is_error or else not attached l_load.last_system as l_last_system then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_load.last_error.text, configuration_window, Void)
-				elseif l_load.last_system.library_target = Void then
+				elseif l_last_system.library_target = Void then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {CONF_ERROR_NOLIB}.make (name)).text, configuration_window, Void)
 				else
-					if l_load.is_warning then
+					if
+						l_load.is_warning and then
+						attached l_load.last_warning_messages as l_last_warning_messages
+					then
 							-- add warnings
-						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (l_load.last_warning_messages, configuration_window, Void)
+						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (l_last_warning_messages, configuration_window, Void)
 					end
 
-					create l_conf_window.make_for_target (l_load.last_system, l_load.last_system.library_target.name, configuration_window.conf_factory, create {ARRAYED_LIST [STRING]}.make (0), conf_pixmaps, configuration_window.external_editor_command)
+					create l_conf_window.make_for_target (l_last_system, l_last_system.library_target.name, configuration_window.conf_factory, create {ARRAYED_LIST [STRING]}.make (0), conf_pixmaps, configuration_window.external_editor_command)
 
 					l_conf_window.set_size (configuration_window.width, configuration_window.height)
 					l_conf_window.set_position (configuration_window.x_position, configuration_window.y_position)

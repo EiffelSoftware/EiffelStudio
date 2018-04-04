@@ -58,6 +58,8 @@ feature -- Visit nodes
 			l_libs: HASH_TABLE [CONF_TARGET, UUID]
 		do
 			if not is_error then
+					-- TODO: check if it makes sense to set the application target for a remote parent target.
+
 					-- set application target
 				a_target.system.set_application_target (application_target)
 
@@ -65,7 +67,13 @@ feature -- Visit nodes
 					p.process (Current)
 				end
 
-				a_target.libraries.linear_representation.do_if (agent {CONF_LIBRARY}.process (Current), agent {CONF_LIBRARY}.is_enabled (state))
+				across
+					a_target.libraries as ic
+				loop
+					if ic.item.is_enabled (state) then
+						ic.item.process (Current)
+					end
+				end
 
 					-- set `all_libraries' from `libraries' but discarding the
 					-- parent information which is only used internally to report nice errors.
@@ -74,6 +82,14 @@ feature -- Visit nodes
 					l_libs.put (l_library.item.base, l_library.key)
 				end
 				a_target.system.set_all_libraries (l_libs)
+
+					-- Also parse remaining info for remote parents (such as libraries...)!
+				if
+					attached a_target.remote_parent as l_remote_parent and then
+					attached a_target.extends as l_extends
+				then
+					l_extends.process (Current)
+				end
 			end
 		ensure then
 			all_libraries_set: not is_error implies a_target.system.all_libraries /= Void

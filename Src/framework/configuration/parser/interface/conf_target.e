@@ -87,7 +87,7 @@ feature -- Access, stored in configuration file
 	is_library_parent: BOOLEAN
 			-- Does `extends` refer to a library target corresponding to `parent_target_location` rather than to a specific target?
 		do
-			Result := remote_parent /= Void
+			Result := attached remote_parent as p and then p.name = Void
 		end
 
 	system: CONF_SYSTEM

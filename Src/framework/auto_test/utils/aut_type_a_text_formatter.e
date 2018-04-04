@@ -50,8 +50,8 @@ feature -- Process
 			type_name.append (text.as_string_8)
 		end
 
-	process_cluster_name_text (text: READABLE_STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
-			-- Process cluster name of `a_cluster'.
+	process_cluster_name_text (text: READABLE_STRING_GENERAL; a_group: CONF_GROUP; a_quote: BOOLEAN)
+			-- Process group name of `a_group'.
 		do
 		end
 
@@ -159,7 +159,7 @@ invariant
 	type_name_attached: type_name /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

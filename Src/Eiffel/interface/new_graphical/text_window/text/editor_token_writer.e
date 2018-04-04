@@ -236,7 +236,7 @@ feature -- Text processing
 			append_token (tok)
 		end
 
-	process_cluster_name_text (text: READABLE_STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
+	process_cluster_name_text (text: READABLE_STRING_GENERAL; a_group: CONF_GROUP; a_quote: BOOLEAN)
 			-- Process class name text `t'.
 		local
 			tok: EDITOR_TOKEN_CLUSTER
@@ -249,7 +249,7 @@ feature -- Text processing
 				l_text := text.as_string_32
 			end
 			create tok.make (l_text)
-			create stone.make (a_cluster)
+			create stone.make (a_group)
 			tok.set_pebble (stone)
 			append_token (tok)
 		end;
@@ -719,7 +719,7 @@ feature {NONE} -- Initialisations and File status
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

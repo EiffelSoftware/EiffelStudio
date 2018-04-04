@@ -227,7 +227,6 @@ feature -- Access
 			-- Selected domain
 		local
 			l_row_index: INTEGER
-			l_scope_row: EB_METRIC_DOMAIN_ITEM
 			l_grid: like grid
 			l_row_count: INTEGER
 		do
@@ -240,8 +239,9 @@ feature -- Access
 				until
 					l_row_index > l_row_count
 				loop
-					l_scope_row ?= l_grid.row (l_row_index).data
-					Result.extend (l_scope_row)
+					if attached {EB_METRIC_DOMAIN_ITEM} l_grid.row (l_row_index).data as l_scope_row then
+						Result.extend (l_scope_row)
+					end
 					l_row_index := l_row_index + 1
 				end
 			end
@@ -371,33 +371,20 @@ feature -- Actions
 
 	on_drop (a_any: ANY)
 			-- Invoke when dropping a pebble to add an item to the scope.
-		local
-			l_bunch_stone: DATA_STONE
-			l_stone: STONE
-			l_groups: LIST [CONF_GROUP]
-			l_cursor: CURSOR
 		do
-			l_stone ?= a_any
-			l_bunch_stone ?= a_any
-			if l_stone /= Void then
-				if l_bunch_stone = Void then
-					drop_stone (a_any)
-				else
-					l_groups ?= l_bunch_stone.data
-					if l_groups /= Void then
-						l_cursor := l_groups.cursor
-						from
-							l_groups.start
-						until
-							l_groups.after
+			if attached {STONE} a_any as l_stone then
+				if attached {DATA_STONE} a_any as l_bunch_stone then
+					if attached {LIST [CONF_GROUP]} l_bunch_stone.data as l_groups then
+						across
+							l_groups as ic
 						loop
-							if l_groups.item /= Void then
-								drop_stone (create {CLUSTER_STONE}.make (l_groups.item))
+							if attached ic.item as l_groups_item then
+								drop_stone (create {CLUSTER_STONE}.make (l_groups_item))
 							end
-							l_groups.forth
 						end
-						l_groups.go_to (l_cursor)
 					end
+				else
+					drop_stone (a_any)
 				end
 				on_domain_change
 			end
@@ -406,29 +393,25 @@ feature -- Actions
 	drop_stone (a_any: ANY)
 			-- Drop `a_any' in Current.
 		local
-			l_classi_stone: CLASSI_STONE
-			l_cluster_stone: CLUSTER_STONE
-			l_feature_stone: FEATURE_STONE
-			l_target_stone: TARGET_STONE
-			l_stone: STONE
 			l_domain: like domain
-			l_domain_item: EB_METRIC_DOMAIN_ITEM
 		do
-			l_stone ?= a_any
-			l_classi_stone ?= a_any
-			l_cluster_stone ?= a_any
-			l_feature_stone ?= a_any
-			l_target_stone ?= a_any
 			l_domain := domain
 			if
-				(l_classi_stone /= Void or else l_cluster_stone /= Void or else l_feature_stone /= Void or else l_target_stone /= Void) and then
+				attached {STONE} a_any as l_stone and then
+				(
+					attached {CLASSI_STONE} a_any
+					or else attached {CLUSTER_STONE} a_any
+					or else attached {FEATURE_STONE} a_any
+					or else attached {TARGET_STONE} a_any
+				) and then
 				not l_domain.has_delayed_domain_item
 			then
-				l_domain_item := metric_domain_item_from_stone (l_stone)
-				if l_domain_item /= Void and then not domain_has (l_domain, l_domain_item) then
+				if
+					attached metric_domain_item_from_stone (l_stone) as l_domain_item and then
+					not domain_has (l_domain, l_domain_item)
+				then
 					insert_domain_item (metric_domain_item_from_stone (l_stone))
 				end
-
 			end
 		end
 
@@ -605,7 +588,6 @@ feature{NONE} -- Implementation/Data
 			l_grid: like grid
 			l_row_index: INTEGER
 			l_row_count: INTEGER
-			l_scope_row: EB_METRIC_DOMAIN_ITEM
 		do
 			create {ARRAYED_LIST [EB_METRIC_DOMAIN_ITEM]}Result.make (grid.row_count)
 			l_grid := grid
@@ -616,9 +598,11 @@ feature{NONE} -- Implementation/Data
 				until
 					l_row_index > l_row_count
 				loop
-					l_scope_row ?= l_grid.row (l_row_index).data
-					check l_scope_row /= Void end
-					Result.force (l_scope_row)
+					if attached {EB_METRIC_DOMAIN_ITEM} l_grid.row (l_row_index).data as l_scope_row then
+						Result.force (l_scope_row)
+					else
+						check is_metric_domain_item: False end
+					end
 					l_row_index := l_row_index + 1
 				end
 			end
@@ -662,33 +646,26 @@ feature{NONE} -- Implementation/Data
 	veto_pebble_function (a_pebble: ANY): BOOLEAN
 			-- Function to decide if `a_pebble' can be dropped into current		
 		local
-			l_classi_stone: CLASSI_STONE
-			l_cluster_stone: CLUSTER_STONE
-			l_feature_stone: FEATURE_STONE
-			l_target_stone: TARGET_STONE
-			l_stone: STONE
 			l_domain: like domain
-			l_bunch_stone: DATA_STONE
 			l_domain_item: EB_METRIC_DOMAIN_ITEM
 		do
-			l_stone ?= a_pebble
-			l_bunch_stone ?= a_pebble
-			if l_bunch_stone /= Void then
+			if attached {DATA_STONE} a_pebble as l_bunch_stone then
 				Result := True
 			else
 				l_domain := domain
 				if
-					l_stone /= Void and then l_stone.is_valid and then
+					attached {STONE} a_pebble as l_stone and then l_stone.is_valid and then
 					not l_domain.has_delayed_domain_item
 				then
 					l_domain_item := metric_domain_item_from_stone (l_stone)
-					if l_domain_item /= Void and then not domain_has (l_domain,
-					l_domain_item) then
-						l_classi_stone ?= a_pebble
-						l_cluster_stone ?= a_pebble
-						l_feature_stone ?= a_pebble
-						l_target_stone ?= a_pebble
-						Result := l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void or l_target_stone /= Void
+					if
+						l_domain_item /= Void and then
+						not domain_has (l_domain,l_domain_item)
+					then
+						Result := attached {CLASSI_STONE} a_pebble
+							or attached {CLUSTER_STONE} a_pebble
+							or attached {FEATURE_STONE} a_pebble
+							or attached {TARGET_STONE} a_pebble
 					end
 				end
 			end
@@ -756,16 +733,13 @@ feature{NONE} -- Implementation/Sorting
 			-- Tooltip of current scope
 		require
 			a_domain_item_attached: a_domain_item /= Void
-		local
-			l_folder: EB_METRIC_FOLDER_DOMAIN_ITEM
 		do
 			if not a_domain_item.is_valid then
 				Result := metric_names.f_domain_item_invalid
+			elseif a_domain_item.is_folder_item and attached {EB_METRIC_FOLDER_DOMAIN_ITEM} a_domain_item as l_folder then
+				Result := l_folder.group.name + l_folder.folder.path
 			else
-				if a_domain_item.is_folder_item then
-					l_folder ?= a_domain_item
-					Result := l_folder.group.name + l_folder.folder.path
-				end
+				Result := ""
 			end
 		end
 
@@ -803,7 +777,7 @@ invariant
 	grid_support_attached: grid_support /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2018, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

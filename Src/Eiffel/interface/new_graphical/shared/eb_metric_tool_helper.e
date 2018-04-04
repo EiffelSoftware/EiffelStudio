@@ -216,12 +216,8 @@ feature -- Domain item
 			-- Metric domain item from `a_stone'
 		require
 			a_stone_attached: a_stone /= Void
-		local
-			l_domain_item: EB_DOMAIN_ITEM
-			l_target_stone: TARGET_STONE
 		do
-			l_domain_item := domain_item_from_stone (a_stone)
-			if l_domain_item /= Void then
+			if attached domain_item_from_stone (a_stone) as l_domain_item then
 				if l_domain_item.is_feature_item then
 					create {EB_METRIC_FEATURE_DOMAIN_ITEM} Result.make (l_domain_item.id)
 				elseif l_domain_item.is_class_item then
@@ -231,12 +227,14 @@ feature -- Domain item
 				elseif l_domain_item.is_group_item then
 					create {EB_METRIC_GROUP_DOMAIN_ITEM} Result.make (l_domain_item.id)
 				elseif l_domain_item.is_target_item then
-					l_target_stone ?= a_stone
-					check l_target_stone /= Void end
-					if l_target_stone.is_delayed_application_target then
-						create {EB_METRIC_TARGET_DOMAIN_ITEM} Result.make ("")
+					if attached {TARGET_STONE} a_stone as l_target_stone then
+						if l_target_stone.is_delayed_application_target then
+							create {EB_METRIC_TARGET_DOMAIN_ITEM} Result.make ("")
+						else
+							create {EB_METRIC_TARGET_DOMAIN_ITEM} Result.make (l_domain_item.id)
+						end
 					else
-						create {EB_METRIC_TARGET_DOMAIN_ITEM} Result.make (l_domain_item.id)
+						check is_target_item: False end
 					end
 				end
 				if l_domain_item.library_target_uuid /= Void then
@@ -319,7 +317,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -332,22 +330,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

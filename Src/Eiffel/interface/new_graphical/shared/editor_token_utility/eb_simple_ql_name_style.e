@@ -56,41 +56,23 @@ feature{NONE} -- Implementation
 			a_item_attached: a_item /= Void
 			a_writer_attached: a_writer /= Void
 		local
-			l_group: QL_GROUP
-			l_class: QL_CLASS
-			l_real_feature: QL_REAL_FEATURE
-			l_invariant: QL_INVARIANT
-			l_feature: QL_FEATURE
-			l_target: QL_TARGET
-			l_ql_code_item: QL_CODE_STRUCTURE_ITEM
-			l_line: QL_LINE
 			l_cursors: like cursors_for_item
-			l_class_c: CLASS_C
+			l_class_c: detachable CLASS_C
+			l_ql_code_item: QL_CODE_STRUCTURE_ITEM
 		do
-			if a_item.is_class then
-				l_class ?= a_item
+			if a_item.is_class and then attached {QL_CLASS} a_item as l_class then
 				a_writer.add_class (l_class.class_i)
-			elseif a_item.is_feature then
-				if a_item.is_real_feature then
-					l_real_feature ?= a_item
-					l_feature := l_real_feature
-				else
-					l_invariant ?= a_item
-					l_feature := l_invariant
-				end
-				if l_feature.is_real_feature then
+			elseif a_item.is_feature and then attached {QL_FEATURE} a_item as l_feature then
+				if a_item.is_real_feature and then attached {QL_REAL_FEATURE} a_item as l_real_feature then
 					a_writer.add_sectioned_feature_name (l_real_feature.e_feature)
 				else
 					a_writer.add_string (l_feature.name)
 				end
-			elseif a_item.is_group then
-				l_group ?= a_item
+			elseif a_item.is_group and then attached {QL_GROUP} a_item as l_group then
 				a_writer.add_group (l_group.group, l_group.name)
-			elseif a_item.is_target then
-				l_target ?= a_item
+			elseif a_item.is_target and then attached {QL_TARGET} a_item as l_target then
 				a_writer.process_target_name_text (l_target.name, l_target.target)
-			elseif a_item.is_line then
-				l_line ?= a_item
+			elseif a_item.is_line and then attached {QL_LINE} a_item as l_line then
 				l_ql_code_item := l_line.code_structure
 				if l_ql_code_item.is_compiled then
 					l_class_c := l_ql_code_item.class_c
@@ -100,10 +82,9 @@ feature{NONE} -- Implementation
 				else
 					a_writer.process_uncompiled_line (l_line.name, l_line.line_in_file, l_ql_code_item.class_i, False)
 				end
-			elseif a_item.is_code_structure then
-				l_ql_code_item ?= a_item
+			elseif a_item.is_code_structure and then attached {QL_CODE_STRUCTURE_ITEM} a_item as l_ql_code_structure_item then
 				l_cursors := cursors_for_item (a_item)
-				a_writer.process_ast (l_ql_code_item.name, l_ql_code_item.ast, l_ql_code_item.written_class, appearance_for_item (a_item), False, l_cursors.cursor, l_cursors.x_cursor)
+				a_writer.process_ast (l_ql_code_structure_item.name, l_ql_code_structure_item.ast, l_ql_code_structure_item.written_class, appearance_for_item (a_item), False, l_cursors.cursor, l_cursors.x_cursor)
 			else
 				a_writer.add_string (a_item.name)
 			end
@@ -144,7 +125,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -157,22 +138,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

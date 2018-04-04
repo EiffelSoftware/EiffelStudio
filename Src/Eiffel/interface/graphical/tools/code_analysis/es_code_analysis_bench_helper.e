@@ -55,9 +55,10 @@ feature -- Basic operations
 		local
 			l_item: EV_MENU_ITEM
 		do
-			create l_item.make_with_text_and_action
-				(ca_messages.cluster_context_menu_caption (a_stone.cluster_i.cluster_name),
-				agent analyze_cmd.execute_with_stone (a_stone))
+			create l_item.make_with_text_and_action (
+					ca_messages.cluster_context_menu_caption (a_stone.group.name),
+					agent analyze_cmd.execute_with_stone (a_stone)
+				)
 			l_item.set_pixmap (icon_pixmaps.analyzer_analyze_cluster_icon)
 
 			if code_analyzer.is_running then
@@ -80,7 +81,7 @@ feature -- Shared instances
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

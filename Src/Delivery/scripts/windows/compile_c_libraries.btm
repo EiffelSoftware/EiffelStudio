@@ -38,8 +38,6 @@ iff not defined NO_COMPILE then
 	remtrace net
 	cd %1\library\net\Clib
 	specific_make %2
-	remtrace obsolete\net
-	cd %1\library\obsolete\net\Clib
 	specific_make %2
 	remtrace store
 	cd %1\library\store\dbms\rdbms\odbc\clib
@@ -64,7 +62,6 @@ else
 	fullrd %1\library\com\Clib
 	fullrd %1\library\com\Clib_runtime
 	quick_move /s library\net\spec
-	quick_move /s library\obsolete\net\spec
 	quick_move /s library\store\spec
 	quick_move /s library\vision2\spec
 	quick_move /s library\wel\spec

@@ -1,5 +1,9 @@
 ﻿note
-	description: "Stone representing a cluster"
+	description: "[
+		Stone representing a group.
+		
+		Warning: it could be a cluster, a library, ...
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Christophe Bonnard"

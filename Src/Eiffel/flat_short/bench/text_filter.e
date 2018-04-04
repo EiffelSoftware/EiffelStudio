@@ -459,7 +459,7 @@ feature -- Text processing
 			end
 		end
 
-	process_cluster_name_text (text: READABLE_STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
+	process_cluster_name_text (text: READABLE_STRING_GENERAL; a_group: CONF_GROUP; a_quote: BOOLEAN)
 		local
 			format: CELL2 [STRING_32, STRING_32]
 			cluster_generated: BOOLEAN
@@ -472,11 +472,11 @@ feature -- Text processing
 				l_string := text.to_string_32
 			end
 			if not skipping then
-				cluster_generated := doc_universe.is_group_generated (a_cluster)
+				cluster_generated := doc_universe.is_group_generated (a_group)
 				if cluster_generated then
 					if format_table.has_key (f_Cluster_name) then
 						format := format_table.found_item
-						path_pre := path_representation (file_separator, a_cluster.name, a_cluster, False)
+						path_pre := path_representation (file_separator, a_group.name, a_group, False)
 						set_keyword (kw_File, relative_to_base (path_pre + file_separator + "index") + "." + file_suffix)
 					end
 				else
@@ -1217,7 +1217,7 @@ invariant
 	image_not_void: image /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

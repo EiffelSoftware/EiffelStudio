@@ -815,6 +815,7 @@ feature -- Element change
 		local
 			l_shared: SD_SHARED
 			l_name: like {FILED_STONE}.file_name
+			s32: STRING_32
 		do
 			if a_content /= Void then
 				if attached {CLASSI_STONE} a_stone as l_class_stone then
@@ -827,7 +828,11 @@ feature -- Element change
 
 					if attached l_cluster_stone.group.location.evaluated_path as l_path then
 						if attached l_cluster_stone.path as l_cluster_path and then not l_cluster_path.is_empty then
-							l_name := l_path.extended (l_cluster_stone.path).name
+							s32 := l_cluster_stone.path
+							from until not s32.starts_with_general ("/") loop
+								s32.remove_head (1)
+							end
+							l_name := l_path.extended (s32).name
 						else
 							l_name := l_path.name
 						end
@@ -1804,7 +1809,7 @@ feature {NONE} -- Implementation
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

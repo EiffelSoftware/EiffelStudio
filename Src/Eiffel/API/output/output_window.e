@@ -40,13 +40,13 @@ feature -- Text processing
 			put_quoted_comment (text)
 		end
 
-	process_cluster_name_text (text: READABLE_STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
-			-- Process class name text `t'.
+	process_cluster_name_text (text: READABLE_STRING_GENERAL; a_group: CONF_GROUP; a_quote: BOOLEAN)
+			-- <Precursor>
 		do
 			if a_quote then
-				put_cluster (a_cluster, text_quoted (text))
+				put_group (a_group, text_quoted (text))
 			else
-				put_cluster (a_cluster, text)
+				put_group (a_group, text)
 			end
 		end
 
@@ -239,13 +239,22 @@ feature -- Output
 			put_string (str)
 		end
 
+	put_group (a_group: CONF_GROUP; str: READABLE_STRING_GENERAL)
+			-- Put `a_group' with string representation
+			-- `str' at current position.
+		require
+			valid_str: str /= Void
+		do
+			put_string (str)
+		end
+
 	put_cluster (e_cluster: CONF_GROUP; str: READABLE_STRING_GENERAL)
 			-- Put `e_cluster' with string representation
 			-- `str' at current position.
 		require
 			valid_str: str /= Void
 		do
-			put_string (str)
+			put_group (e_cluster, str)
 		end
 
 	put_class (e_class: CLASS_C; str: READABLE_STRING_GENERAL)
@@ -401,7 +410,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

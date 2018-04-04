@@ -176,11 +176,11 @@ feature -- Process
 		deferred
 		end
 
-	process_cluster_name_text (text: READABLE_STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
-			-- Process cluster name of `a_cluster'.
+	process_cluster_name_text (text: READABLE_STRING_GENERAL; a_group: CONF_GROUP; a_quote: BOOLEAN)
+			-- Process cluster name of `a_group'.
 		require
 			text_not_void: text /= Void
-			a_cluster_not_void: a_cluster /= Void
+			a_group_not_void: a_group /= Void
 		deferred
 		end
 
@@ -443,11 +443,11 @@ feature -- Text operator
 			process_number_text (i.out)
 		end
 
-	add_group (e_cluster: CONF_GROUP; str: READABLE_STRING_GENERAL)
-			-- Put `e_cluster' with string representation
+	add_group (a_group: CONF_GROUP; str: READABLE_STRING_GENERAL)
+			-- Put `a_group' with string representation
 			-- `str' at current position.
 		do
-			process_cluster_name_text (str, e_cluster, false)
+			process_cluster_name_text (str, a_group, False)
 		end
 
 	add_before_class (e_class: CLASS_C)
@@ -658,7 +658,7 @@ feature {NONE} -- Implementation
 			-- Internal context group
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

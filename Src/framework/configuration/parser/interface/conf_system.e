@@ -50,6 +50,12 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
+	same_as (cfg: CONF_SYSTEM): BOOLEAN
+			-- Are `Current` and `cfg` same system?
+		do
+			Result := (Current = cfg) or else (uuid ~ cfg.uuid)
+		end
+
 	is_fully_parsed: BOOLEAN
 			-- Has the complete system (incl. all libraries) been parsed?
 		do

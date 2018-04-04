@@ -28,51 +28,44 @@ feature -- Access
 		require
 			a_stone_attached: a_stone /= Void
 		local
-			l_classi_stone: CLASSI_STONE
-			l_cluster_stone: CLUSTER_STONE
-			l_feature_stone: FEATURE_STONE
-			l_target_stone: TARGET_STONE
 			l_folder: EB_FOLDER
 			done: BOOLEAN
-			l_library: CONF_LIBRARY
 			l_target: CONF_TARGET
 		do
 			if workbench.system_defined and then workbench.is_already_compiled then
-				l_feature_stone ?= a_stone
-				if l_feature_stone/= Void then
+				if attached {FEATURE_STONE} a_stone as l_feature_stone then
 					create {EB_FEATURE_DOMAIN_ITEM} Result.make (id_of_feature (l_feature_stone.e_feature))
 					done := True
 				end
 				if not done then
-					l_classi_stone ?= a_stone
-					if l_classi_stone /= Void then
+					if attached {CLASSI_STONE} a_stone as l_classi_stone then
 						create {EB_CLASS_DOMAIN_ITEM} Result.make (id_of_class (l_classi_stone.class_i.config_class))
 						done := True
 					end
 				end
 				if not done then
-					l_cluster_stone ?= a_stone
-					if l_cluster_stone /= Void then
-						if not l_cluster_stone.path.is_empty then
+					if attached {CLUSTER_STONE} a_stone as l_cluster_stone then
+						if attached {CLUSTER_I} l_cluster_stone.group as l_cluster_i and not l_cluster_stone.path.is_empty then
 								-- For a folder
-							create l_folder.make_with_name (l_cluster_stone.cluster_i, l_cluster_stone.path, l_cluster_stone.folder_name)
+							create l_folder.make_with_name (l_cluster_i, l_cluster_stone.path, l_cluster_stone.folder_name)
 							create {EB_FOLDER_DOMAIN_ITEM} Result.make (id_of_folder (l_folder))
 						else
 								-- For a group
 							create {EB_GROUP_DOMAIN_ITEM} Result.make (id_of_group (l_cluster_stone.group))
-							if l_cluster_stone.group.is_library then
-								l_library ?= l_cluster_stone.group
+							if l_cluster_stone.group.is_library and then attached {CONF_LIBRARY} l_cluster_stone.group as l_library then
 								l_target := target_of_id (Result.id)
-								if l_target.system.uuid.is_equal (universe.target.system.uuid) and then l_library.library_target /= Void then
-									Result.set_library_target_uuid (l_library.library_target.system.uuid.out)
+								if
+									l_target /= Void and then
+									l_target.system.same_as (universe.target.system) and then
+									attached l_library.library_target as l_lib_target then
+									Result.set_library_target_uuid (l_lib_target.system.uuid.out)
 								end
 							end
 						end
 					end
 				end
 				if not done then
-					l_target_stone ?= a_stone
-					if l_target_stone /= Void then
+					if attached {TARGET_STONE} a_stone as l_target_stone then
 						create {EB_TARGET_DOMAIN_ITEM} Result.make (id_of_target (l_target_stone.target))
 					end
 				end
@@ -84,7 +77,6 @@ feature -- Access
 		local
 			l_group: CONF_GROUP
 			l_folder: EB_FOLDER
-			l_class: CLASS_I
 			l_feature: E_FEATURE
 		do
 			if a_item.is_valid then
@@ -96,9 +88,7 @@ feature -- Access
 				elseif a_item.is_folder_item then
 					l_folder := folder_of_id (a_item.id)
 					Result := pixmap_from_group_path (l_folder.cluster, l_folder.path)
-				elseif a_item.is_class_item then
-					l_class ?= class_of_id (a_item.id)
-					check l_class /= Void end
+				elseif a_item.is_class_item and then attached {CLASS_I} class_of_id (a_item.id) as l_class then
 					Result := pixmap_from_class_i (l_class)
 				elseif a_item.is_feature_item then
 					l_feature := feature_of_id (a_item.id)
@@ -135,8 +125,6 @@ feature -- Access
 			a_item_attached: a_item /= Void
 		local
 			l_writer: like token_writer
-			l_feature: QL_FEATURE
-			l_folder: EB_FOLDER_DOMAIN_ITEM
 			l_pebble_function: FUNCTION [ANY]
 		do
 			if a_item.is_valid then
@@ -145,18 +133,19 @@ feature -- Access
 						-- For class item
 					ql_name_style.set_item (a_item.query_language_item)
 					Result := ql_name_style.text
-				elseif a_item.is_feature_item then
+				elseif a_item.is_feature_item and then attached {QL_FEATURE} a_item.query_language_item as l_feature then
 						-- For feature item
-					l_feature ?= a_item.query_language_item
 					feature_with_class_style.set_ql_feature (l_feature)
 					Result := feature_with_class_style.text
 				elseif a_item.is_folder_item then
 						-- For folder item
 					l_writer := token_writer
 					l_writer.new_line
-					l_folder ?= a_item
-					if l_folder.folder.cluster /= Void then
-						l_writer.add_group (l_folder.folder.cluster, a_item.string_representation)
+					if
+						attached {EB_FOLDER_DOMAIN_ITEM} a_item as l_folder and then
+						attached l_folder.folder.cluster as l_clu
+					then
+						l_writer.add_group (l_clu, a_item.string_representation)
 					else
 						l_writer.add_string (a_item.string_representation)
 					end
@@ -200,7 +189,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

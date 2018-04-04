@@ -46,6 +46,10 @@ feature -- Access
 					-- `l_dir' contains a windows separator which could not be
 					-- understood as a separator on Unix.
 				update_path_to_unix (l_dir)
+					-- Make sure, it does not start with a slash '/' !
+				from until not l_dir.starts_with_general ("/") loop
+					l_dir.remove_head (1)
+				end
 				Result := Result.extended (l_dir)
 			end
 			if not a_file.is_empty then

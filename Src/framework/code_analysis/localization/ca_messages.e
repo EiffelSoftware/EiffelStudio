@@ -310,8 +310,17 @@ feature -- Rule Violations
 			% argument, or an%Nobject test local. Thus the object test is not in %
 			%need of the object test%Nlocal '", once "code_analyzer.violation") end
 
-	empty_if_violation_1: STRING_32
-		do Result := translation_in_context ("An empty if instruction is useless and should be removed.", once "code_analyzer.violation") end
+	empty_if_violation_if: STRING_32
+		do Result := translation_in_context ("A conditional instruction without any compound part can be removed.", once "code_analyzer.violation") end
+
+	empty_if_violation_if_else: STRING_32
+		do Result := translation_in_context ("A condition of the branch without compound can be inverted and the empty branch can be removed.", once "code_analyzer.violation") end
+
+	empty_if_violation_elseif: STRING_32
+		do Result := translation_in_context ("A branch without compound part and subsequent branches can be removed.", once "code_analyzer.violation") end
+
+	empty_if_violation_else: STRING_32
+		do Result := translation_in_context ("An empty alternative branch can be removed.", once "code_analyzer.violation") end
 
 	nested_complexity_violation_1: STRING_32
 		do Result := translation_in_context ("In routine '", once "code_analyzer.violation") end

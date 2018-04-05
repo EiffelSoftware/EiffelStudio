@@ -117,7 +117,7 @@ feature -- Access
 		do
 			Result := Cursors.cur_Cluster
 			if group.is_cluster then
-				Result := cursors.cur_cluster
+				-- Already set.
 			elseif group.is_library then
 				Result := cursors.cur_library
 			elseif group.is_assembly then
@@ -131,9 +131,9 @@ feature -- Access
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
-			Result := Cursors.cur_Cluster
+			Result := Cursors.cur_x_cluster
 			if group.is_cluster then
-				Result := cursors.cur_x_cluster
+				-- Already set.
 			elseif group.is_library then
 				Result := cursors.cur_x_library
 			elseif group.is_assembly then
@@ -143,7 +143,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
- 	synchronized_stone: STONE
+ 	synchronized_stone: detachable STONE
  			-- Return a valid stone representing the same object after a recompilation.
  		local
  			l_group: like group
@@ -169,16 +169,17 @@ feature -- Access
  		end
 
 	stone_name: READABLE_STRING_32
-			-- Name of Current stone
+			-- Name of Current stone.
 		do
 			if is_valid then
-				if not path.is_empty then
-						-- For a folder
-					Result := folder_name.twin
-				else
-						-- For a group
-					Result := group.name.twin
-				end
+				create {STRING_32} Result.make_from_string
+					(if not path.is_empty and then attached folder_name as n then
+							-- For a folder.
+						n
+					else
+							-- For a group.
+						group.name
+					end)
 			else
 				Result := Precursor
 			end

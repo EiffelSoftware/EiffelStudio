@@ -1,0 +1,10 @@
+test_name 	 ca-empty-compound-in-conditional
+test_description A warning about empty part of a conditional instruction.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+analyze_code rule "CA017"
+analyze_code_result violation "TEST CA017:15 CA017:24 CA017:30 CA017:32 CA017:48 CA017:50 CA017:70 CA017:78 CA017:81 CA017:88 CA017:92 CA017:93 CA017:95 CA017:124 CA017:134 CA017:139 CA017:141 CA017:176 CA017:186 CA017:198 CA017:207 CA017:212 CA017:221 CA017:227 CA017:228 CA017:232 CA017:240 CA017:245 CA017:246 CA017:251 CA017:252 CA017:254"
+
+test_end

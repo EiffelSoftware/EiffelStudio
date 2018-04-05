@@ -294,7 +294,7 @@ feature -- Rules
 		do Result := translation_in_context ("Minimum NPath threshold", once "code_analyzer") end
 
 	empty_if_title: STRING_32
-		do Result := translation_in_context ("Empty if instruction", once "code_analyzer") end
+		do Result := translation_in_context ("Empty branch in conditional instruction", once "code_analyzer") end
 
 	empty_if_description: STRING_32
 		do Result := translation_in_context ("An empty conditional instruction is useless and should be removed.", once "code_analyzer") end

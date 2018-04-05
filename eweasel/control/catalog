@@ -37,7 +37,7 @@ test	ca-query-in-agent-failure			codeanalysis025 tcf fail code_analysis ca045
 test	ca-local-only-initializes-result		codeanalysis026 tcf pass code_analysis ca050
 test	ca-self-comparison				codeanalysis027 tcf pass code_analysis ca071
 test	ca-inequality-in-conditional			codeanalysis028 tcf pass code_analysis ca046
-test	ca-empty-compound-in-conditional		codeanalysis029 tcf fail code_analysis ca017
+test	ca-empty-compound-in-conditional		codeanalysis029 tcf pass code_analysis ca017
 
 -- EiffelTime tests
 

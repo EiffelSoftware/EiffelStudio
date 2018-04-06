@@ -112,44 +112,35 @@ feature {NONE} -- Rule Checking
 		local
 			stamp: like date
 			expires_in: INTEGER
-			violation: CA_RULE_VIOLATION
 		do
 			if attached r.obsolete_message as m then
 				stamp := date (m.value)
 				expires_in := stamp.date.relative_duration (create {DATE}.make_now_utc).days_count
 				if attached feature_names as names then
 					if not stamp.is_specified then
-						create violation.make_formatted
-							(agent format
-								(?,
-								ca_messages.obsolete_feature_invalid_date_title (names.count),
-								<<element_list (create {ITERABLE_MAP [FEATURE_NAME, PROCEDURE [TEXT_FORMATTER]]}.make
+						put_formattable_violation
+							(ca_messages.obsolete_feature_invalid_date_title (names.count),
+							<<element_list (create {ITERABLE_MAP [FEATURE_NAME, PROCEDURE [TEXT_FORMATTER]]}.make
 								(agent (feature_name: FEATURE_NAME; feature_class: CLASS_C): PROCEDURE [TEXT_FORMATTER] do
 									Result := agent {TEXT_FORMATTER}.add_feature_name (feature_name.visual_name_32, feature_class)
-								end (?, current_context.checking_class), names))>>),
-							agent format_elements (?, ca_messages.obsolete_feature_invalid_date_violation,
-								<<agent {TEXT_FORMATTER}.add (default_date.formatted_out (date_code))>>),
-							Current)
-						violation.set_location (r.first_token (current_context.matchlist))
-						violations.extend (violation)
+								end (?, current_context.checking_class), names))>>,
+							ca_messages.obsolete_feature_invalid_date_violation,
+							<<element (agent {TEXT_FORMATTER}.add (default_date.formatted_out (date_code)))>>,
+							Void,
+							m.index)
 					end
 					expires_in := expires_in + feature_call_expiration.value
 					if expires_in <= 0 then
-						create violation.make_formatted
-							(agent format
-								(?,
-								ca_messages.obsolete_feature_title (names.count),
-								<<element_list (create {ITERABLE_MAP [FEATURE_NAME, PROCEDURE [TEXT_FORMATTER]]}.make
+						put_formattable_violation
+							(ca_messages.obsolete_feature_title (names.count),
+							<<element_list (create {ITERABLE_MAP [FEATURE_NAME, PROCEDURE [TEXT_FORMATTER]]}.make
 								(agent (feature_name: FEATURE_NAME; feature_class: CLASS_C): PROCEDURE [TEXT_FORMATTER] do
 									Result := agent {TEXT_FORMATTER}.add_feature_name (feature_name.visual_name_32, feature_class)
-								end (?, current_context.checking_class), names))>>),
-							agent {TEXT_FORMATTER}.add (ca_messages.obsolete_feature_violation),
-							Current)
-						if expires_in + feature_expiration.value <= 0 then
-							violation.set_severity (severity_error)
-						end
-						violation.set_location (r.first_token (current_context.matchlist))
-						violations.extend (violation)
+								end (?, current_context.checking_class), names))>>,
+							ca_messages.obsolete_feature_violation,
+							<<>>,
+							if expires_in + feature_expiration.value <= 0 then severity_error else Void end,
+							m.index)
 					end
 				end
 			end

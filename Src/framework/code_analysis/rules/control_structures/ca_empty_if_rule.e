@@ -62,8 +62,6 @@ feature {NONE} -- Rule Checking
 
 	process_if (a: IF_AS)
 			-- Check if Then_part or Elseif_part of `a` has an empty compound and there is no Elseif_part chained.
-		local
-			v: CA_RULE_VIOLATION
 		do
 			if
 				not attached a.compound and then
@@ -71,50 +69,39 @@ feature {NONE} -- Rule Checking
 				(a.else_keyword_index > 0 implies not attached a.else_part)
 			then
 					-- All parts of the conditional instruction are empty, it can be removed completely.
-				create v.make_formatted
-					(agent format (?, ca_messages.locale.translation_in_context ("All parts of conditional instruction are empty.", once "code_analyzer.violation"), <<>>),
-					agent format (?, ca_messages.empty_if_violation_if, <<>>),
-					Current)
-				v.set_location (current_context.matchlist [a.then_keyword_index])
-				violations.extend (v)
+				put_violation
+					(ca_messages.locale.translation_in_context ("All parts of conditional instruction are empty.", once "code_analyzer.violation"), <<>>,
+					ca_messages.empty_if_violation_if, <<>>,
+					a.then_keyword_index)
 			else
 				if not attached a.compound and then not attached a.elsif_list then
-					create v.make_formatted
-						(agent format (?,
-							ca_messages.locale.translation_in_context ("Empty compound after {1} part of {2}.", once "code_analyzer.violation"),
-							<<element (agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_then_keyword, Void)),
-							element (agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_if_keyword, Void))>>),
-						agent format (?, ca_messages.empty_if_violation_if_else, <<>>),
-						Current)
-					v.set_location (current_context.matchlist [a.then_keyword_index])
-					violations.extend (v)
+					put_violation
+						(ca_messages.locale.translation_in_context ("Empty compound after {1} part of {2}.", once "code_analyzer.violation"),
+						<<agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_then_keyword, Void),
+							agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_if_keyword, Void)>>,
+						ca_messages.empty_if_violation_if_else, <<>>,
+						a.then_keyword_index)
 				end
 				if attached a.elsif_list as e and then not attached e.last.compound then
-					create v.make_formatted
-						(agent format (?,
-							ca_messages.locale.translation_in_context ("Empty compound after {1} part of {2}.", once "code_analyzer.violation"),
-							<<element (agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_then_keyword, Void)),
-							element (agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_elseif_keyword, Void))>>),
-						agent format (?,
-							if attached a.else_part as else_part and then not else_part.is_empty then
-								ca_messages.empty_if_violation_if_else
-							else
-								ca_messages.empty_if_violation_elseif
-							end,
-							<<>>),
-						Current)
-					v.set_location (current_context.matchlist [e.last.then_keyword_index])
-					violations.extend (v)
+					put_violation
+						(ca_messages.locale.translation_in_context ("Empty compound after {1} part of {2}.", once "code_analyzer.violation"),
+						<<agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_then_keyword, Void),
+							agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_elseif_keyword, Void)>>,
+						if attached a.else_part as else_part and then not else_part.is_empty then
+							ca_messages.empty_if_violation_if_else
+						else
+							ca_messages.empty_if_violation_elseif
+						end,
+						<<>>,
+						e.last.then_keyword_index)
 				end
 				if a.else_keyword_index > 0 and then not attached a.else_part then
-					create v.make_formatted
-						(agent format (?,
-							ca_messages.locale.translation_in_context ("Empty compound after {1} part.", once "code_analyzer.violation"),
-							<<element (agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_else_keyword, Void))>>),
-						agent format (?, ca_messages.empty_if_violation_else, <<>>),
-						Current)
-					v.set_location (current_context.matchlist [a.else_keyword_index])
-					violations.extend (v)
+					put_violation
+						(ca_messages.locale.translation_in_context ("Empty compound after {1} part.", once "code_analyzer.violation"),
+						<<agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_else_keyword, Void)>>,
+						ca_messages.empty_if_violation_else,
+						<<>>,
+						a.else_keyword_index)
 				end
 			end
 		end

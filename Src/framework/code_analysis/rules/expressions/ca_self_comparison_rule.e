@@ -73,7 +73,6 @@ feature {NONE} -- Context analysis
 	process_comparison (a: BINARY_AS)
 			-- Checks `a' for rule violations.
 		local
-			violation: CA_RULE_VIOLATION
 			value: PROCEDURE [TEXT_FORMATTER]
 		do
 			if
@@ -116,16 +115,12 @@ feature {NONE} -- Context analysis
 					value := agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_precursor_keyword, f.e_feature)
 				end
 				if attached value then
-					create violation.make_formatted (
-						agent format (?,
-							ca_messages.locale.translation_in_context ("{1} is compared to itself.", once "code_analysis.violation"),
-							<<element (value)>>),
-						agent format (?,
-							ca_messages.locale.translation_in_context ("Self-comparison: {1} compared to itself always evaluates to the same boolean value.", once "code_analysis.violation"),
-							<<element (value)>>),
-						Current)
-					violation.set_location (current_context.matchlist [a.operator_index])
-					violations.extend (violation)
+					put_violation
+						(ca_messages.locale.translation_in_context ("{1} is compared to itself.", once "code_analysis.violation"),
+						<<value>>,
+						ca_messages.locale.translation_in_context ("Self-comparison: {1} compared to itself always evaluates to the same boolean value.", once "code_analysis.violation"),
+						<<value>>,
+						a.operator_index)
 				end
 			end
 		end

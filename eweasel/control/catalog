@@ -33,7 +33,7 @@ test	ca-obsolete-assigner-query			codeanalysis021 tcf pass code_analysis ca069 o
 test	ca-obsolete-assigner-command			codeanalysis022 tcf pass code_analysis ca069 obsolete_call
 test	ca-obsolete-feature-call-date			codeanalysis023 tcf pass code_analysis ca069 obsolete_call
 test	ca-obsolete-feature-date			codeanalysis024 tcf pass code_analysis ca070 obsolete_call
-test	ca-query-in-agent-failure			codeanalysis025 tcf fail code_analysis ca045
+test	ca-query-in-agent-failure			codeanalysis025 tcf pass code_analysis ca045
 test	ca-local-only-initializes-result		codeanalysis026 tcf pass code_analysis ca050
 test	ca-self-comparison				codeanalysis027 tcf pass code_analysis ca071
 test	ca-inequality-in-conditional			codeanalysis028 tcf pass code_analysis ca046

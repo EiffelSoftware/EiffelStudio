@@ -79,8 +79,6 @@ feature {NONE} -- Rule checking
 
 	check_condition (e: EXPR_AS)
 			-- Check if `e` is inquality and report an issue in that case.
-		local
-			v: CA_RULE_VIOLATION
 		do
 			if
 				attached {BIN_NE_AS} e as c and then
@@ -89,14 +87,12 @@ feature {NONE} -- Rule checking
 					-- The if condition is of the form 'a /= b' or 'a /~ b'. Comparing to Void, however, is ignored
 					-- for the sake of intuition: "if c /= Void then" is preferrable (note: the 'attached' syntax
 					-- will not be discussed here and is not part of this rule).
-				create v.make_formatted (
-					agent format (?,
-						ca_messages.locale.translation_in_context ("{1} used in if-then-else.", once "code_analyzer.violation"),
-						<<element (agent {TEXT_FORMATTER}.process_symbol_text (c.op_name.name_32))>>),
-					agent format (?, ca_messages.if_else_not_equal_violation, <<>>),
-					Current)
-				v.set_location (current_context.matchlist [c.operator_index])
-				violations.extend (v)
+				put_violation
+					(ca_messages.locale.translation_in_context ("{1} used in if-then-else.", once "code_analyzer.violation"),
+					<<agent {TEXT_FORMATTER}.process_symbol_text (c.op_name.name_32)>>,
+					ca_messages.if_else_not_equal_violation,
+					<<>>,
+					c.operator_index)
 			end
 		end
 

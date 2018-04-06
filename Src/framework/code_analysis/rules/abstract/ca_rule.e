@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A rule that will be used by the Code Analyzer."
 	author: "Stefan Zurfluh"
 	revised_by: "Alexander Kogtenkov"
@@ -160,6 +160,57 @@ feature -- Results
 
 	violations: LINKED_LIST [CA_RULE_VIOLATION]
 			-- The violations this rule has found.
+
+feature {NONE} -- Violations: modification
+
+	put_violation
+		(violation_title: READABLE_STRING_32; title_arguments: ITERABLE [PROCEDURE [TEXT_FORMATTER]];
+		violation_description: READABLE_STRING_32; description_arguments: ITERABLE [PROCEDURE [TEXT_FORMATTER]];
+		location_index: like {AST_EIFFEL}.index)
+			-- Add a violation with the specified title `violation_title` with arguments `title_arguments`
+			-- and description `violation_description` with arguments `description_arguments`
+			-- at position with `location_index` if this is a valid index, or no position otherwise.
+		local
+			v: CA_RULE_VIOLATION
+			m: LEAF_AS_LIST
+		do
+			create v.make_formatted
+				(agent format_elements (?, violation_title, title_arguments),
+				agent format_elements (?, violation_description, description_arguments),
+				Current)
+			m := current_context.matchlist
+			if m.valid_index (location_index) then
+				v.set_location (m [location_index])
+			end
+			violations.extend (v)
+		end
+
+	put_formattable_violation
+		(violation_title: READABLE_STRING_32; title_arguments: ITERABLE [like formattable];
+		violation_description: READABLE_STRING_32; description_arguments: ITERABLE [like formattable];
+		violation_severity: detachable like severity;
+		location_index: like {AST_EIFFEL}.index)
+			-- Add a violation with the specified title `violation_title` with arguments `title_arguments`
+			-- and description `violation_description` with arguments `description_arguments`
+			-- with optional explicit severity `violation_severity` (if it is attached)
+			-- at position with `location_index` if this is a valid index, or no position otherwise.
+		local
+			v: CA_RULE_VIOLATION
+			m: LEAF_AS_LIST
+		do
+			create v.make_formatted
+				(agent format (?, violation_title, title_arguments),
+				agent format (?, violation_description, description_arguments),
+				Current)
+			if attached violation_severity then
+				v.set_severity (violation_severity)
+			end
+			m := current_context.matchlist
+			if m.valid_index (location_index) then
+				v.set_location (m [location_index])
+			end
+			violations.extend (v)
+		end
 
 feature -- Hash Code
 

@@ -633,10 +633,7 @@ feature -- Third pass: byte code production and type check
 
 							-- No type check for constants and attributes.
 							-- [It is done in second pass.]
-						if
-							feature_i.is_routine or else
-							(feature_i.is_attribute and then attached {ATTRIBUTE_I} feature_i as a and then a.has_body)
-						then
+						if feature_i.has_code then
 							if
 								feature_changed
 								or else
@@ -713,13 +710,7 @@ feature -- Third pass: byte code production and type check
 								check_local_names_needed := True
 							end
 						else
-								-- The content is not going to be checked.
-							if feature_i.is_class and then feature_i.is_attribute then
-								error_handler.insert_error (create {VUCR_ATTRIBUTE}.make (feature_i, Current, ast.feature_with_name (feature_i.feature_name_id).feature_names.first.internal_name))
-								type_check_error := True
-							else
-								record_suppliers (feature_i, dependances)
-							end
+							record_suppliers (feature_i, dependances)
 						end
 
 						if
@@ -768,7 +759,7 @@ feature -- Third pass: byte code production and type check
 						type_check_error := False
 						byte_code_generated := False
 
-						if not type_checked and then changed3 and then feature_i.is_routine then
+						if not type_checked and then changed3 and then (feature_i.has_code or else feature_i.has_class_postcondition) then
 								-- Record warning level for the case when the warnings should be discarded.
 							warning_level := error_handler.warning_level
 								-- Forced type check on the feature
@@ -803,7 +794,7 @@ feature -- Third pass: byte code production and type check
 						then
 							;(create {AST_LOCAL_IDENTIFIER_CHECKER}.make (b, feature_table)).do_nothing
 						end
-					elseif not feature_i.is_routine then
+					elseif not feature_i.has_code and then not feature_i.has_class_postcondition then
 						record_suppliers (feature_i, dependances)
 					elseif is_safe_to_check_ancestor and then (is_full_class_checking or else (need_type_check and then replicated_features_list /= Void and then replicated_features_list.count > 0)) then
 							-- We check inherited routines in the context of current class only

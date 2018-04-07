@@ -1,5 +1,5 @@
 test_name 	 instance_free-merging
-test_description Certain features such as attributes or object-relative onces cannot be merged with instance-free features.
+test_description Certain features such as attributes or object-relative onces cannot become class features due to merging.
 
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 a.e $CLUSTER a.e
@@ -7,6 +7,6 @@ copy_raw 	 b.e $CLUSTER b.e
 copy_raw 	 test.e $CLUSTER test.e
 
 compile_melted
-compile_result 	 validity_error TEST ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5)
+compile_result 	 validity_error TEST VUCR:5 VUCR:7 VUCR:11 VUCR:13 VUCR:45 VUCR:49
 
 test_end

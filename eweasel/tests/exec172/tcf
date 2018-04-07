@@ -1,5 +1,4 @@
-
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2018 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -15,16 +14,16 @@ copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_frozen
-compile_result 	 ok
+compile_result 	 validity_error TEST VUNO:13
 
 define		 FROZEN "frozen"
 copy_sub 	 test1.e  $CLUSTER test1.e
-compile_frozen
-compile_result 	 ok
+resume_compile
+compile_result 	 validity_error TEST VUNO:13
 
 define		 ASSERTION ""
 copy_sub 	 test1.e  $CLUSTER test1.e
-compile_frozen
+resume_compile
 compile_result 	 ok
 
 c_compile_work

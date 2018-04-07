@@ -14,11 +14,10 @@ inherit
 			duplicate,
 			equiv,
 			extension,
-			generate,
-			is_external,
 			external_name_id,
+			generate,
 			init_arg,
-			is_class,
+			is_external,
 			is_target_free,
 			new_deferred,
 			set_renamed_name_id,
@@ -146,15 +145,6 @@ feature
 	is_external: BOOLEAN = True
 			-- Is the feature an external one?
 
-	is_class: BOOLEAN
-			-- <Precursor>
-		local
-			e: like extension
-		do
-			e := extension
-			Result := e.is_built_in implies e.is_static
-		end
-
 	is_target_free: BOOLEAN
 			-- <Precursor>
 		do
@@ -163,9 +153,9 @@ feature
 						-- External IL static features do not need a target.
 					e.is_static
 				else
-						-- External features without assertions have no unqualified calls.
+						-- Empty assertions guarantee no unqualified calls, and, therefore, no dependency on the target type.
 					not has_combined_assertion and then
-						-- And they cannot access Current if they are class features.
+						-- External features that are class features do not need a target.
 					is_class
 				end
 		end

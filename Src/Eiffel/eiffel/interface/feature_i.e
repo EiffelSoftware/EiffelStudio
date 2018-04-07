@@ -1364,6 +1364,12 @@ feature -- Conveniences
 			validity: Result implies (is_constant or is_attribute or is_function)
 		end
 
+	has_code: BOOLEAN
+			-- Does the feature has its own or inherited code (in the form of assertions or body)?
+		do
+				-- False by default.
+		end
+
 	frozen is_il_external: BOOLEAN
 			-- Is current feature a C external one?
 		do
@@ -1458,14 +1464,15 @@ feature -- Conveniences
 		do
 			Result :=
 				has_immediate_class_postcondition or else
-				attached assert_id_set as a and then a.has_class_postcondition
+				attached assert_id_set as a and then a.has_class_postcondition or else
+				attached extension as e and then e.is_static and then not has_combined_assertion
 		end
 
-	is_class: BOOLEAN
+	frozen is_class: BOOLEAN
 			-- Is feature declared as a class one?
 			-- See also: `has_class_postcondition`, `is_instance_free`.
 		do
-				-- By default a feature is a class one if it has a class postcondition.
+				-- A feature is a class one if it has a class postcondition.
 			Result := has_class_postcondition
 		end
 
@@ -1473,29 +1480,17 @@ feature -- Conveniences
 			-- Can Current be access in a static manner?
 			-- See also: `is_class`, `is_instance_free`, `is_target_free`.
 		do
-			Result :=
-				is_class or else
-				is_constant and then not has_combined_assertion or else
-					 -- Static access only if it is a C external (IL_EXTENSION_I = Void)
-					 -- or if IL external does not need an object.
-				if System.il_generation and attached {IL_EXTENSION_I} extension as e then
-					e.is_static
-				else
-					is_external and not has_combined_assertion
-				end
+			Result := is_instance_free
 		ensure
 			true_if_is_instance_free: is_instance_free implies Result
 			true_if_is_target_free: is_target_free implies Result
 		end
 
 	is_instance_free: BOOLEAN
-			-- Is feature instance-free (as specified in the standard)?
+			-- Is feature instance-free, i.e. does not require a target object?
 			-- See also: `is_class`, `has_static_access`, `is_target_free`.
 		do
-			Result :=
-				is_class or else
-					-- IL externals are instance-free if they are static.
-				System.il_generation and attached {IL_EXTENSION_I} extension as e and then e.is_static
+			Result := is_class or else is_target_free
 		ensure
 			true_if_class: is_class implies Result
 			true_if_safe_constant: (is_constant and then not has_combined_assertion) implies Result

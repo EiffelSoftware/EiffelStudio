@@ -18,8 +18,8 @@ inherit
 			extension,
 			generate,
 			generate_il,
+			has_class_postcondition,
 			is_constant,
-			is_instance_free,
 			is_once,
 			is_target_free,
 			melt,
@@ -41,8 +41,8 @@ inherit
 			extension,
 			generate,
 			generate_il,
+			has_class_postcondition,
 			is_constant,
-			is_instance_free,
 			is_once,
 			is_target_free,
 			melt,
@@ -102,10 +102,10 @@ feature -- Status report
 	redefinable: BOOLEAN = False
 			-- Is a constant redefinable?
 
-	is_instance_free: BOOLEAN
+	has_class_postcondition: BOOLEAN
 			-- <Precursor>
 		do
-			Result := not has_combined_assertion
+			Result := Precursor or else not has_combined_assertion
 		end
 
 	is_target_free: BOOLEAN
@@ -541,7 +541,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

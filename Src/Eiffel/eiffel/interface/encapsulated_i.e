@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract representation of a feature that can be encapsulated"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,8 +11,16 @@ deferred class
 inherit
 	FEATURE_I
 		redefine
-			can_be_encapsulated, generation_class_id, new_deferred_anchor,
-			to_melt_in, to_generate_in, transfer_to, transfer_from
+			assert_id_set,
+			can_be_encapsulated,
+			generation_class_id,
+			has_code,
+			new_deferred_anchor,
+			set_assert_id_set,
+			to_melt_in,
+			to_generate_in,
+			transfer_to,
+			transfer_from
 		end
 
 feature {NONE} -- Initialization
@@ -22,6 +30,14 @@ feature {NONE} -- Initialization
 		do
 			set_is_require_else (True)
 			set_is_ensure_then (True)
+		end
+
+feature -- Status report
+
+	has_code: BOOLEAN
+			-- <Precursor>
+		do
+			Result := has_combined_assertion
 		end
 
 feature -- Access
@@ -37,12 +53,14 @@ feature -- Access
 	generation_class_id: INTEGER
 			-- Id of the class where the feature has to be generated in
 		do
-			if generate_in /= 0 then
-				Result := generate_in
-			else
+			Result := generate_in
+			if Result = 0 then
 				Result := written_in
 			end
 		end
+
+	assert_id_set: ASSERT_ID_SET
+			-- Assertions
 
 feature -- Status
 
@@ -68,10 +86,17 @@ feature -- Undefinition
 
 feature -- Element change
 
+	set_assert_id_set (set: like assert_id_set)
+			-- Assign `set' to `assert_id_set'.
+		do
+			assert_id_set := set
+		end
+
 	transfer_to (other: like Current)
 			-- Transfer data from `Current' to `other'.
 		do
-			Precursor {FEATURE_I} (other)
+			Precursor (other)
+			other.set_assert_id_set (assert_id_set)
 			if generate_in > 0 then
 				other.set_generate_in (generate_in)
 			end
@@ -80,7 +105,8 @@ feature -- Element change
 	transfer_from (other: like Current)
 			-- Transfer data from `Current' to `other'.
 		do
-			Precursor {FEATURE_I} (other)
+			Precursor (other)
+			assert_id_set := other.assert_id_set
 			if other.generate_in > 0 then
 				set_generate_in (other.generate_in)
 			end
@@ -99,7 +125,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -130,4 +156,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ENCAPSULATED_I
+end

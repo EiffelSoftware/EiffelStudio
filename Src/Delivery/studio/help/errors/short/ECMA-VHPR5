@@ -1,4 +1,4 @@
-Error: different generic derivations of the same class are used in Parent
-  parts.
-What to do: ensure the derivations are identical or remove offending Parent
-  part.
+Error: different generic derivations of the same class are ancestors
+  of the same class.
+What to do: ensure the derivations are identical or remove offending
+  inheritance links.

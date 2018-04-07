@@ -862,7 +862,7 @@ test	redefine-to-rename-refreeze	incr186  tcf pass incrementality
 test	env-in-braces-bogus-vd01	incr187  tcf pass incrementality
 test	constant-variable-constant	incr188  tcf pass incrementality
 test	freeze-print-int64-array	incr189  tcf pass incrementality
-test	vsta-sneak			incr190  tcf pass incrementality
+test	vsta-sneak			incr190  tcf pass incrementality instance_free
 test	refinalize-with-assertions	incr191  tcf pass incrementality
 test	freeze-const-freeze-finalize	incr192  tcf pass incrementality
 test	move-class-bogus-vd16		incr193  tcf pass incrementality
@@ -898,7 +898,7 @@ test	vdpr-weasel			incr224  tcf pass incrementality
 test	change-anchor-type-finalize	incr225  tcf pass incrementality
 test	precompile-again		incr226  tcf fail incrementality
 test	remove-ace-object-clause	incr227  tcf fail incrementality
-test	add-del-static-ext-assertion	incr228  tcf pass incrementality
+test	add-del-static-ext-assertion	incr228  tcf pass incrementality instance_free
 test	generic-agent-add-constraint	incr229  tcf fail incrementality agents
 test	remove-vtcg-still-complains	incr230  tcf pass incrementality
 test	vncp-sneak			incr231  tcf fail incrementality
@@ -1058,7 +1058,7 @@ test	deep-twin-agent-infinite-loop		incr385 tcf pass incrementality manual agent
 test	conform-to-precondition-violation	incr386 tcf pass incrementality
 test	disk-item-io-error-2			incr387 tcf pass incrementality
 test	static-type-id-crash-2			incr388 tcf pass incrementality
-test	remove-occurrence-precondition-violation	incr389 tcf pass incrementality
+test	remove-occurrence-precondition-violation	incr389 tcf pass incrementality instance_free
 test	constant-suppliers-crash		incr390 tcf fail incrementality
 test	rout-entry-crash-2			incr391 tcf pass incrementality
 test	is-less-equal-postcondition-violation	incr392 tcf pass incrementality

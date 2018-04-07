@@ -37,6 +37,7 @@ feature -- Basic properties, usually fix
 		deferred
 		ensure
 			attached_result: attached Result
+			is_class: class
 		end
 
 	title: STRING_32

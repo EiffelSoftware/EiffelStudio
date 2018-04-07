@@ -5677,9 +5677,9 @@ feature {NONE} -- Visitor
 			l_error_level := error_level
 			if current_feature.is_class then
 				if current_feature.is_attribute then
-					error_handler.insert_error (create {VUCR_ATTRIBUTE}.make (current_feature, context.current_class, l_as.feature_name))
+					report_vucr (create {VUCR_ATTRIBUTE}.make (current_feature, context.current_class, l_as.feature_name))
 				elseif current_feature.is_object_relative_once then
-					error_handler.insert_error (create {VUCR_ONCE}.make (current_feature, context.current_class, l_as.feature_name))
+					report_vucr (create {VUCR_ONCE}.make (current_feature, context.current_class, l_as.feature_name))
 				end
 			end
 			reset_for_unqualified_call_checking
@@ -11723,24 +11723,12 @@ feature {NONE} -- Implementation: catcall check
 feature {NONE} -- Instance-free checks
 
 	report_vucr (e: VUCR)
-			-- Report a VUCR error `e` taking into account the possibility of compiling old code
-			-- not adpated to the new rule that an external feature is automatically a class one.
+			-- Report a VUCR error `e`.
 		require
 			current_feature_is_class: current_feature.is_class
 		do
-				-- TODO: Report only errors after 18.01 release.
-			if
-				{EIFFEL_CONSTANTS}.major_version >18 or else
-				{EIFFEL_CONSTANTS}.major_version = 18 and then
-				{EIFFEL_CONSTANTS}.minor_version >= 3 or else
-				current_feature.has_class_postcondition
-			then
-					-- Report an error after 18.01 release or if the feature is internal.
-				error_handler.insert_error (e)
-			else
-					-- Report a warning for the external feature in 18.01 release.
-				error_handler.insert_warning (e)
-			end
+			e.set_written_class (context.written_class)
+			error_handler.insert_error (e)
 		end
 
 	check_instance_free (f: FEATURE_I; c: CLASS_C; e: PROCEDURE; l: LOCATION_AS)

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Data structure for checking feature adaptation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,14 +9,12 @@ deferred class
 	FEATURE_ADAPTATION
 
 inherit
-	ANY
+	INTERNAL_COMPILER_STRING_EXPORTER
 
 	SHARED_ORIGIN_TABLE
 		export
 			{NONE} all
 		end
-
-	INTERNAL_COMPILER_STRING_EXPORTER
 
 feature {NONE} -- Initialization
 
@@ -89,7 +87,7 @@ invariant
 	deferred_to_join: is_valid_old_features (old_features)
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

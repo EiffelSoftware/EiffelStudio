@@ -345,6 +345,10 @@ feature
 				error_handler.raise_error
 			end
 
+				-- Update the assert_id_set of redefined features.
+				-- This should be done before `check_validity3` that uses `{FEATURE_I}.assert_id_set`.
+			update_inherited_assertions
+
 				-- Check the adaptations
 			check_validity3 (resulting_table)
 
@@ -478,9 +482,6 @@ end;
 			pass3_control.set_removed_features (pass2_control.removed_features);
 			pass3_control.set_invariant_changed (invariant_changed);
 			pass3_control.set_invariant_removed (invariant_removed);
-
-				-- Update the assert_id_set of redefined features.
-			update_inherited_assertions;
 
 				-- Process patterns of origin features
 			process_pattern (resulting_table);
@@ -2036,7 +2037,7 @@ feature {NONE} -- Temporary body index
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

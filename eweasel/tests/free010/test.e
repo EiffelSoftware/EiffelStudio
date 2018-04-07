@@ -23,6 +23,14 @@ feature {NONE} -- Tests
 		do
 		end
 
+	i1
+		do
+		end
+
+	i2
+		do
+		end
+
 	o1
 		do
 		end
@@ -40,6 +48,18 @@ feature {NONE} -- Tests
 		end
 
 	p3
+		do
+		end
+
+	q1
+		do
+		end
+
+	q2
+		do
+		end
+
+	q3
 		do
 		end
 

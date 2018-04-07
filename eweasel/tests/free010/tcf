@@ -1,5 +1,5 @@
 test_name 	 instance_free-joining
-test_description Joined features should have the same instance-free status.
+test_description Joined features should either be class ones or have no assertions if one of them is a class feature.
 
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 a.e $CLUSTER a.e
@@ -8,6 +8,6 @@ copy_raw 	 c.e $CLUSTER c.e
 copy_raw 	 test.e $CLUSTER test.e
 
 compile_melted
-compile_result 	 validity_error C ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5) ECMA-VDJR(5)
+compile_result 	 ok
 
 test_end

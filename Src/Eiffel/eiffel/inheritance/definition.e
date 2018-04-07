@@ -97,18 +97,15 @@ feature -- Checking
 			f: FEATURE_I
 			g: FEATURE_I
 			has_class: BOOLEAN
-			has_class_internal: BOOLEAN
 			has_object: BOOLEAN
 		do
 			f := new_feature
 			if f.is_class then
-					-- One of the features has a class postcondition.
+					-- One of the features is a class feature.
 				has_class := True
-				has_class_internal := f.has_class_postcondition
-			elseif not f.is_instance_free then
+			else
 					-- If this a redeclaration, the class status can be taken from one of the precursors.
-					-- So, the feature may be instance-free even if it is not declared so explicitly.
-					-- For inherited features the (non-)instance-free status cannot change., so it is recorder here.
+					-- For inherited features the (non-)instance-free status cannot change, so it is recorded here.
 				has_object := is_inherited
 			end
 			from
@@ -124,9 +121,8 @@ feature -- Checking
 				if g.is_class then
 						-- One of the features is a class one.
 					has_class := True
-					has_class_internal := has_class_internal or else g.has_class_postcondition
-				elseif not g.is_instance_free then
-						-- One of the features is not instance-free.
+				elseif g.has_combined_assertion then
+						-- One of the features has non-empty combined assertion.
 					has_object := True
 				end
 				f.delayed_check_signature (g, tbl)
@@ -135,50 +131,27 @@ feature -- Checking
 				-- It's an error to mix both, class features and non-instance-free ones.
 			if has_class and has_object then
 				if is_inherited then
-						-- A join error.
 						-- Find a class feature.
 					across
 						feats as h
 					until
-						f.is_class and then (has_class_internal implies f.has_class_postcondition)
+						f.is_class
 					loop
 						f := h.item.internal_a_feature
 					end
-						-- Report an error.
-					across
-						feats as h
-					loop
-						if not h.item.internal_a_feature.is_instance_free then
-								-- TODO: Report only errors after 18.01 release.
-							if
-								{EIFFEL_CONSTANTS}.major_version >18 or else
-								{EIFFEL_CONSTANTS}.major_version = 18 and then
-								{EIFFEL_CONSTANTS}.minor_version >= 3 or else
-								has_class_internal
-							then
-								error_handler.insert_error (create {VDJR5_NEW}.make (system.current_class, f, h.item.internal_a_feature))
-							else
-								error_handler.insert_warning (create {VDJR5_NEW}.make (system.current_class, f, h.item.internal_a_feature))
-							end
-						end
-					end
-				else
-						-- A redeclaration error.
-					across
-						feats as h
-					loop
-						if not h.item.internal_a_feature.is_instance_free then
-								-- TODO: Report only errors after 18.01 release.
-							if
-								{EIFFEL_CONSTANTS}.major_version >18 or else
-								{EIFFEL_CONSTANTS}.major_version = 18 and then
-								{EIFFEL_CONSTANTS}.minor_version >= 3 or else
-								has_class_internal
-							then
-								error_handler.insert_error (create {VDRD9_NEW}.make (system.current_class, f, h.item.internal_a_feature))
-							else
-								error_handler.insert_warning (create {VDRD9_NEW}.make (system.current_class, f, h.item.internal_a_feature))
-							end
+				end
+					-- Report an error.
+				across
+					feats as h
+				loop
+					g := h.item.internal_a_feature
+					if not g.is_class and then g.has_combined_assertion then
+						if is_inherited then
+								-- A join error.
+							error_handler.insert_error (create {VDJR5_NEW}.make (system.current_class, f, g))
+						else
+								-- A redeclaration error.
+							error_handler.insert_error (create {VDRD9_NEW}.make (system.current_class, f, g))
 						end
 					end
 				end

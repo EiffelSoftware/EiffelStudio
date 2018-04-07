@@ -37,8 +37,8 @@ feature -- Checking
 			info: INHERIT_INFO
 			feature_with_assigner: FEATURE_I
 			f: FEATURE_I
+			g: FEATURE_I
 			has_class: BOOLEAN
-			has_class_internal: BOOLEAN
 			has_object: BOOLEAN
 		do
 				-- The signature of the chosen feature in the
@@ -49,7 +49,6 @@ feature -- Checking
 			if f.is_class then
 					-- One of the features is a class one.
 				has_class := True
-				has_class_internal := f.has_class_postcondition
 			else
 					-- One of the features is not instance-free.
 				has_object := not f.is_instance_free
@@ -78,8 +77,7 @@ feature -- Checking
 				if old_feat.is_class then
 						-- One of the features has a class postcondition.
 					has_class := True
-					has_class_internal := has_class_internal or else old_feat.has_class_postcondition
-				elseif not old_feat.is_instance_free then
+				elseif old_feat.has_combined_assertion then
 						-- One of the features is not instance-free.
 					has_object := True
 				end
@@ -98,7 +96,6 @@ feature -- Checking
 							(create {VDJR3_NEW}.make (system.current_class, feature_with_assigner, old_feat))
 					end
 				end
-
 				deferred_features.forth
 			end
 				-- It's an error to mix both, features with class postconditions and non-instance-free ones.
@@ -108,7 +105,7 @@ feature -- Checking
 				across
 					deferred_features as h
 				until
-					f.is_class and then (has_class_internal implies f.has_class_postcondition)
+					f.is_class
 				loop
 					f := h.item.internal_a_feature
 				end
@@ -116,18 +113,9 @@ feature -- Checking
 				across
 					deferred_features as h
 				loop
-					if not h.item.internal_a_feature.is_instance_free then
-							-- TODO: Report only errors after 18.01 release.
-						if
-							{EIFFEL_CONSTANTS}.major_version >18 or else
-							{EIFFEL_CONSTANTS}.major_version = 18 and then
-							{EIFFEL_CONSTANTS}.minor_version >= 3 or else
-							has_class_internal
-						then
-							error_handler.insert_error (create {VDJR5_NEW}.make (system.current_class, f, h.item.internal_a_feature))
-						else
-							error_handler.insert_warning (create {VDJR5_NEW}.make (system.current_class, f, h.item.internal_a_feature))
-						end
+					g := h.item.internal_a_feature
+					if not g.is_class and then g.has_combined_assertion then
+						error_handler.insert_error (create {VDJR5_NEW}.make (system.current_class, f, g))
 					end
 				end
 			end

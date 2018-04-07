@@ -10,10 +10,17 @@ deferred class PROCEDURE_I
 inherit
 	FEATURE_I
 		redefine
-			transfer_to, transfer_from, duplicate,
-			is_routine, arguments,
-			obsolete_message, assert_id_set, set_assert_id_set,
-			duplicate_arguments, set_arguments
+			arguments,
+			assert_id_set,
+			duplicate,
+			duplicate_arguments,
+			has_code,
+			is_routine,
+			obsolete_message,
+			set_arguments,
+			set_assert_id_set,
+			transfer_from,
+			transfer_to
 		end
 
 feature -- Access
@@ -40,6 +47,9 @@ feature -- Status report
 
 	is_routine: BOOLEAN = True
 			-- Current is a procedure.
+
+	has_code: BOOLEAN = True
+			-- <Precursor>
 
 feature -- Settings
 
@@ -248,7 +258,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

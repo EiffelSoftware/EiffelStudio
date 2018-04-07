@@ -10,11 +10,11 @@ class ATTRIBUTE_I
 inherit
 	ENCAPSULATED_I
 		redefine
-			assert_id_set,
 			assigner_name_id,
 			check_expanded,
 			extension,
 			generate,
+			has_code,
 			is_attribute,
 			is_hidden,
 			is_transient,
@@ -23,7 +23,6 @@ inherit
 			new_rout_entry,
 			new_rout_id,
 			obsolete_message,
-			set_assert_id_set,
 			set_type,
 			transfer_from,
 			transfer_to,
@@ -100,9 +99,6 @@ feature -- Access
 			-- Do nothing
 		end
 
-	assert_id_set: ASSERT_ID_SET
-			-- Assertions
-
 	obsolete_message_id: INTEGER
 			-- Id of `obsolete_message' in `names_heap' table.
 
@@ -118,6 +114,12 @@ feature -- Status report
 
 	is_attribute: BOOLEAN = True
 			-- Is the feature an attribute?
+
+	has_code: BOOLEAN
+			-- <Precursor>
+		do
+			Result := has_body or else Precursor
+		end
 
 	has_function_origin: BOOLEAN
 			-- Flag for detecting a redefinition of a function into an
@@ -201,12 +203,6 @@ feature -- Element Change
 			set_has_precondition (content.has_precondition)
 			set_has_postcondition (content.has_postcondition)
 			set_has_false_postcondition (content.has_false_postcondition)
-		end
-
-	set_assert_id_set (set: like assert_id_set)
-			-- Assign `set' to `assert_id_set'.
-		do
-			assert_id_set := set
 		end
 
 	set_extension (an_extension: like extension)
@@ -559,7 +555,7 @@ feature -- Element Change
 	transfer_to (other: like Current)
 			-- Transfer data from `Current' to `other'.
 		do
-			Precursor {ENCAPSULATED_I} (other)
+			Precursor (other)
 			other.set_type (type, assigner_name_id)
 			other.set_has_function_origin (has_function_origin)
 			other.set_extension (extension)
@@ -569,7 +565,6 @@ feature -- Element Change
 			other.set_has_precondition (has_precondition)
 			other.set_has_postcondition (has_postcondition)
 			other.set_has_false_postcondition (has_false_postcondition)
-			other.set_assert_id_set (assert_id_set)
 			other.set_has_rescue_clause (has_rescue_clause)
 			other.set_is_transient (is_transient)
 			other.set_obsolete_message_id (obsolete_message_id)
@@ -578,13 +573,12 @@ feature -- Element Change
 	transfer_from (other: like Current)
 			-- Transfer data from `Current' to `other'.
 		do
-			Precursor {ENCAPSULATED_I} (other)
+			Precursor (other)
 			type := other.type
 			assigner_name_id := other.assigner_name_id
 				-- `has_function_origin' is set in FEATURE_I
 			set_has_function_origin (other.has_function_origin)
 			obsolete_message_id := other.obsolete_message_id
-			assert_id_set := other.assert_id_set
 			extension := other.extension
 			set_is_transient (other.is_transient)
 		end

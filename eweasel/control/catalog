@@ -436,7 +436,7 @@ test	precompiled-vdcn-sneak		valid146 tcf pass validity
 test	cluster-include-std-class-file	valid147 tcf pass validity
 test	nested-manifest-array-vuar	valid148 tcf pass validity
 test	undefine-external-vdus2		valid149 tcf pass validity
-test	static-ext-inherit-assertion	valid150 tcf fail validity
+test	static-ext-inherit-assertion	valid150 tcf pass validity instance_free
 test	deferred-change-signature	valid151 tcf fail validity
 test	agent-open-operand-generic	valid152 tcf fail validity agents
 test	prefix-at-not-equal		valid153 tcf pass validity
@@ -1663,7 +1663,7 @@ test	external-infix-feature		exec168  tcf pass execution
 test	multithreaded-memory-leak	exec169  tcf pass execution multithreaded
 test	external-precursor		exec170  tcf pass execution
 test	very-big-gc-chunk-size		exec171  tcf fail execution skip
-test	external-static-access		exec172  tcf pass execution
+test	external-static-access		exec172  tcf pass execution instance_free
 test	static-access-generic-function	exec173  tcf pass execution
 test	inherit-create-like-attr	exec174  tcf pass execution
 test	generating-type-of-any		exec175  tcf pass execution

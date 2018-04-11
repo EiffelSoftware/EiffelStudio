@@ -95,10 +95,10 @@ feature {NONE} -- Helpers
 			-- Access to the event list service
 		once
 			create Result
-			if Result.is_service_available then
+			if attached Result.service as s then
 					-- Subscribe to the remove action so we know when to remove an entry from the managed
 					-- syntax errors.
-				Result.service.item_removed_event.subscribe (agent (ia_sender: EVENT_LIST_S; ia_item: EVENT_LIST_ITEM_I)
+				s.item_removed_event.subscribe (agent (ia_sender: EVENT_LIST_S; ia_item: EVENT_LIST_ITEM_I)
 						-- Agent used to remove the syntax error
 					local
 						l_errors: like syntax_errors
@@ -389,7 +389,7 @@ feature {NONE} -- Basic operations
 	force_display
 			-- <Precursor>
 		do
-			if event_list.is_service_available then
+			if attached event_list.service then
 					-- Only force the display if the service is available, else there is
 					-- nothing to display in the window
 				window_manager.for_all_development_windows (agent show_errors_and_warnings_tool)
@@ -515,7 +515,7 @@ invariant
 	window_manager_attached: window_manager /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

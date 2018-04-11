@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Support class for permitting overriding of discardable prompt options.
 	]"
@@ -26,7 +26,7 @@ feature -- Status setting
 			-- `a_discardable': True to set prompts as non-discardable; False otherwise.
 		do
 			internal_is_non_discardable.put (a_non_discardable)
-			if session_manager.is_service_available then
+			if attached session_manager.service then
 				session_data [non_discardable_id] := a_non_discardable
 			end
 		ensure
@@ -46,7 +46,7 @@ feature {NONE} -- Helpers
 	session_data: SESSION_I
 			-- Environment session data.
 		require
-			session_manager_is_service_available: session_manager.is_service_available
+			session_manager_is_service_available: attached session_manager.service
 		once
 			Result := session_manager.service.retrieve (False)
 		ensure
@@ -60,10 +60,11 @@ feature {NONE} -- Implementation
 			-- to control globally discardable prompts.
 		once
 			create Result.put (False)
-			if session_manager.is_service_available then
-				if attached {BOOLEAN_REF} session_data [non_discardable_id] as l_non_discardable then
-					Result.put (l_non_discardable.item)
-				end
+			if
+				attached session_manager.service and then
+				attached {BOOLEAN_REF} session_data [non_discardable_id] as l_non_discardable
+			then
+				Result.put (l_non_discardable.item)
 			end
 		ensure
 			result_attached: attached Result
@@ -74,7 +75,7 @@ feature {NONE} -- Constants
 	non_discardable_id: STRING = "com.eiffel.prompts.non-discardable"
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

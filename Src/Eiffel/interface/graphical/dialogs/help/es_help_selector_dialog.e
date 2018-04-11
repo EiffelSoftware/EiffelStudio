@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A help link selection dialog for displaying a choice of help document links to navigate to.
 	]"
@@ -273,10 +273,12 @@ feature {NONE} -- Action handlers
 		local
 			l_enable: BOOLEAN
 		do
-			if a_row /= Void then
-				if help_providers.is_service_available and then attached {HELP_CONTEXT_I} a_row.data as l_context then
-					l_enable := help_providers.service.is_provider_available (l_context.help_provider)
-				end
+			if
+				attached a_row and then
+				attached help_providers.service as s and then
+				attached {HELP_CONTEXT_I} a_row.data as l_context
+			then
+				l_enable := s.is_provider_available (l_context.help_provider)
 			end
 			if l_enable then
 				dialog_window_buttons.item (dialog_buttons.ok_button).enable_sensitive
@@ -304,18 +306,15 @@ feature {NONE} -- Action handlers
 		local
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]
 			l_cursor: CURSOR
-			l_service: HELP_PROVIDERS_S
 			l_error: ES_ERROR_PROMPT
 		do
-			if help_providers.is_service_available then
-				l_service := help_providers.service
-
+			if attached help_providers.service as s then
 				l_rows := help_documents_grid.selected_rows
 				l_cursor := l_rows.cursor
 				from l_rows.start until l_rows.after loop
 					if attached {HELP_CONTEXT_I} l_rows.item.data as l_context then
 							-- Launch help
-						l_service.show_help (l_context)
+						s.show_help (l_context)
 					else
 						check False end -- This is set in `populate_help_document_row'
 					end
@@ -394,7 +393,7 @@ invariant
 	links_contains_valid_items: is_initializing and is_interface_usable implies not links.for_all (agent is_context_valid)
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

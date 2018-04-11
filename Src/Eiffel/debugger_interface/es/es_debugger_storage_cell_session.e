@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represents a debugger"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -173,14 +173,11 @@ feature {NONE} -- Access: session
 
 	session_data: SESSION_I
 			-- Session data
-		local
-			cons: like session_manager
 		do
 			Result := internal_session_data
 			if Result = Void then
-				cons := session_manager
-				if cons.is_service_available then
-					Result := cons.service.retrieve_extended (True, once "dbg")
+				if attached session_manager.service as s then
+					Result := s.retrieve_extended (True, once "dbg")
 					internal_session_data := Result
 
 						-- Load debugger data when first access the session
@@ -191,14 +188,11 @@ feature {NONE} -- Access: session
 
 	profiles_session_data: SESSION_I
 			-- Session data
-		local
-			cons: like session_manager
 		do
 			Result := internal_profiles_session_data
 			if Result = Void then
-				cons := session_manager
-				if cons.is_service_available then
-					Result := cons.service.retrieve_extended (True, once "dbg-profiles")
+				if attached session_manager.service as s then
+					Result := s.retrieve_extended (True, once "dbg-profiles")
 					internal_profiles_session_data := Result
 
 						-- Load debugger data when first access the session
@@ -226,12 +220,9 @@ feature {NONE} -- Element change: session
 
 	force_save_session_data (a_session_data: SESSION_I)
 			-- Force storing of `a_session_data'
-		local
-			cons: like session_manager
 		do
-			cons := session_manager
-			if cons.is_service_available then
-				cons.service.store (a_session_data)
+			if attached session_manager.service as s then
+				s.store (a_session_data)
 			end
 		end
 
@@ -241,7 +232,7 @@ feature {NONE} -- Implementation
 			-- Cached cell session data.
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

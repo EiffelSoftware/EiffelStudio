@@ -199,8 +199,6 @@ feature {NONE} -- Clean up
 
     internal_recycle
             -- <Precursor>
-        local
-            l_site: SITE [EB_DEVELOPMENT_WINDOW]
         do
         	check
         			-- Be sure to recycle using the tool descriptor and not the tool panel.
@@ -227,10 +225,9 @@ feature {NONE} -- Clean up
                 internal_right_tool_bar_widget.item.destroy
             end
 
-            l_site ?= internal_user_widget
-            if l_site /= Void then
+            if attached {SITE [EB_DEVELOPMENT_WINDOW]} internal_user_widget as s then
                     -- Invalidated site.
-                l_site.set_site (Void)
+                s.set_site (Void)
             end
 
             Precursor
@@ -342,7 +339,7 @@ feature {NONE} -- Access
 	frozen window_session_data: SESSION_I
 			-- Provides access to the hosted window session data
 		require
-			is_session_manager_available: session_manager.is_service_available
+			is_session_manager_available: attached session_manager.service
 			develop_window_attached: develop_window /= Void
 		do
 			Result := develop_window.session_data
@@ -354,7 +351,7 @@ feature {NONE} -- Access
 	frozen project_window_session_data: SESSION_I
 			-- Provides access to the environment session data
 		require
-			is_session_manager_available: session_manager.is_service_available
+			is_session_manager_available: attached session_manager.service
 		do
 			Result := session_manager.service.retrieve_per_window (develop_window, True)
 		ensure
@@ -1073,7 +1070,7 @@ feature {NONE} -- Factory
 	create_help_button: SD_TOOL_BAR_BUTTON
 			-- Creates a help tool bar button for use in the mini tool bar
 		require
-			is_help_providers_service_available: help_providers.is_service_available
+			is_help_providers_service_available: attached help_providers.service
 		do
 			create Result.make
 			Result.set_pixel_buffer (stock_mini_pixmaps.callstack_send_to_external_editor_icon_buffer)
@@ -1121,7 +1118,7 @@ invariant
     not_is_initialized: is_initializing implies not is_initialized
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

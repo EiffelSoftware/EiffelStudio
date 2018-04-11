@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		A service for logging interal messages in EiffelStudio.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	LOGGER
@@ -213,7 +213,7 @@ feature {NONE} -- Factory
 			not_a_msg_is_empty: not a_msg.is_empty
 			a_cat_is_empty_is_valid_category: is_valid_category (a_cat)
 			a_level_is_valid_severity_level: is_valid_severity_level (a_level)
-			is_event_list_service_available: event_list_service.is_service_available
+			is_event_list_service_available: attached event_list_service.service
 		do
 			create {attached EVENT_LIST_LOG_ITEM} Result.make (a_cat, a_msg, a_level)
 		ensure
@@ -224,7 +224,7 @@ invariant
 	log_cache_count_small_enought: log_cache.count <= log_cache_length
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

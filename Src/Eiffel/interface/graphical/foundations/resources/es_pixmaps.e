@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Base class for all EiffelStudio pixmap matrix accessor classes.
 	]"
@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 			if attached {EV_PIXEL_BUFFER} resource_handler.retrieve_matrix (a_name) as l_loaded_buffer then
 				l_buffer := l_loaded_buffer
 			else
-				if logger.is_service_available then
-					logger.service.put_message_with_severity (
+				if attached logger.service as s then
+					s.put_message_with_severity (
 						locale_formatter.formatted_translation (w_could_not_load_matrix, [a_name]),
 						{ENVIRONMENT_CATEGORIES}.none,
 						{PRIORITY_LEVELS}.high
@@ -65,8 +65,8 @@ feature {NONE} -- Initialization
 			if attached {EV_PIXEL_BUFFER} resource_handler.matrix_file_name (a_path) as l_loaded_buffer then
 				l_buffer := l_loaded_buffer
 			else
-				if logger.is_service_available then
-					logger.service.put_message_with_severity (
+				if attached logger.service as s then
+					s.put_message_with_severity (
 						locale_formatter.formatted_translation (w_could_not_load_matrix, [a_path]),
 						{ENVIRONMENT_CATEGORIES}.none,
 						{PRIORITY_LEVELS}.high
@@ -365,7 +365,7 @@ invariant
 	matrix_buffer_height_big_enough: matrix_buffer.height.to_natural_32 >= matrix_pixel_height
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

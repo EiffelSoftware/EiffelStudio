@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Information (EIS) tool UI."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 				eis_manager.add_observer (lt_observer)
 			end
 
-			if session_manager.is_service_available then
+			if attached session_manager.service then
 					-- Retrieve session data and set button states
 				if attached {BOOLEAN_REF} session_data.value_or_default (auto_sweep_session_id, False) as l_toggle then
 					if l_toggle.item then
@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
 
-			if session_manager.is_service_available then
+			if attached session_manager.service then
 				session_data.session_connection.connect_events (Current)
 			end
 
@@ -95,12 +95,12 @@ feature {NONE} -- Clean up
 	internal_recycle
 			-- <Precursor>
 		do
-			if is_initialized then
-				if session_manager.is_service_available then
-					if session_data.session_connection.is_connected (Current) then
-						session_data.session_connection.disconnect_events (Current)
-					end
-				end
+			if
+				is_initialized and then
+				attached session_manager.service as s and then
+				session_data.session_connection.is_connected (Current)
+			then
+				session_data.session_connection.disconnect_events (Current)
 			end
 			if attached {PROGRESS_OBSERVER} user_widget as lt_observer then
 				eis_manager.remove_observer (lt_observer)
@@ -187,7 +187,7 @@ feature {NONE} -- Basic operations
         local
         	l_session: like session_data
 		do
-			if session_manager.is_service_available and then workbench.universe_defined then
+			if attached session_manager.service and then workbench.universe_defined then
 				l_session := session_data
 				if attached {BOOLEAN_REF} l_session.value_or_default (auto_sweep_session_id, False) as lt_auto then
 					if lt_auto.item then
@@ -267,7 +267,7 @@ feature {ES_EIS_TOOL_WIDGET} -- Actions handlers
         local
         	l_session: like session_data
 		do
-			if session_manager.is_service_available then
+			if attached session_manager.service then
 				l_session := session_data
 				if a_button.is_selected then
 					l_session.set_value (True, auto_sweep_session_id)

@@ -79,18 +79,16 @@ feature {NONE} -- User interface initialization
 	on_after_initialized
 			-- <Precursor>
 		local
-			l_output_manager: like output_manager
 			l_active_outputs: attached DS_LINEAR [OUTPUT_I]
 			l_first_output: ES_OUTPUT_PANE_I
 		do
 			Precursor
 
 				-- Hook up the output manager connection.
-			l_output_manager := output_manager
-			if l_output_manager.is_service_available then
-				l_output_manager.service.output_manager_event_connection.connect_events (Current)
+			if attached output_manager.service as s then
+				s.output_manager_event_connection.connect_events (Current)
 					-- Add all already activated outputs
-				l_active_outputs := l_output_manager.service.active_outputs
+				l_active_outputs := s.active_outputs
 				from l_active_outputs.start until l_active_outputs.after loop
 					if attached {ES_OUTPUT_PANE_I} l_active_outputs.item_for_iteration as l_output_pane then
 						if l_first_output = Void then
@@ -105,7 +103,7 @@ feature {NONE} -- User interface initialization
 						-- No output is currently been set.
 
 						-- Set best output
-					if attached {ES_OUTPUT_PANE_I} l_output_manager.service.general_output as l_active_output then
+					if attached {ES_OUTPUT_PANE_I} s.general_output as l_active_output then
 							-- The general output is a EiffelStudio output pane.
 						set_output (l_active_output)
 					else
@@ -125,14 +123,12 @@ feature {NONE} -- Clean up
 
 	internal_recycle
 			-- <Precursor>
-		local
-			l_output_manager: like output_manager
 		do
-			l_output_manager := output_manager
-			if l_output_manager.is_service_available then
-				if l_output_manager.service.output_manager_event_connection.is_connected (Current) then
-					l_output_manager.service.output_manager_event_connection.disconnect_events (Current)
-				end
+			if
+				attached output_manager.service as s and then
+				s.output_manager_event_connection.is_connected (Current)
+			then
+				s.output_manager_event_connection.disconnect_events (Current)
 			end
 			Precursor
 		end
@@ -996,7 +992,7 @@ feature {NONE} -- Internationalization
 	tt_show_modified_output_1: STRING = "Show the modified $1 output"
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

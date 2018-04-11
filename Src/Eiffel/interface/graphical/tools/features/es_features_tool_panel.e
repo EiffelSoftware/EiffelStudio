@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Tool for viewing the active editor's list of feature clauses and features.
 	]"
@@ -64,7 +64,7 @@ feature {NONE} -- User interface initialization
 		do
 			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
 
-			if session_manager.is_service_available then
+			if attached session_manager.service then
 					-- Hook up events
 				l_session := session_data
 
@@ -100,12 +100,12 @@ feature {NONE} -- Clean up
 	internal_recycle
 			-- <Precursor>
 		do
-			if is_initialized then
-				if session_manager.is_service_available then
-					if session_data.session_connection.is_connected (Current) then
-						session_data.session_connection.disconnect_events (Current)
-					end
-				end
+			if
+				is_initialized and then
+				attached session_manager.service as s and then
+				session_data.session_connection.is_connected (Current)
+			then
+				session_data.session_connection.disconnect_events (Current)
 			end
 			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
 		end
@@ -252,7 +252,7 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 		do
 				-- Set session data
-			if session_manager.is_service_available then
+			if attached session_manager.service then
 				session_data.set_value (show_alias_button.is_selected, show_alias_session_id)
 			end
 			features_tree.update_all
@@ -265,7 +265,7 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 		do
 				-- Set session data
-			if session_manager.is_service_available then
+			if attached session_manager.service then
 				session_data.set_value (show_assigners_button.is_selected, show_assigners_session_id)
 			end
 			features_tree.update_all
@@ -278,7 +278,7 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 		do
 				-- Set session data
-			if session_manager.is_service_available then
+			if attached session_manager.service then
 				session_data.set_value (show_signatures_button.is_selected, show_signatures_session_id)
 			end
 			features_tree.update_all
@@ -432,7 +432,7 @@ invariant
 		show_signatures_button /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

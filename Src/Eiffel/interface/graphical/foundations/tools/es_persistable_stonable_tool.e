@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A specialized stonable tool shim for persisting and resurecting set stones.
 	]"
@@ -64,11 +64,11 @@ feature {NONE} -- Access
 			-- The session data object used to store and retrieve stone information
 		require
 			is_interface_usable: is_interface_usable
-			service_available: session_manager.is_service_available
+			service_available: attached session_manager.service
 		do
 			Result := internal_stone_session
 			if Result = Void then
-				Result ?= session_manager.service.retrieve_per_window (window, True)
+				Result := session_manager.service.retrieve_per_window (window, True)
 				internal_stone_session := Result
 			end
 		ensure
@@ -114,9 +114,9 @@ feature {NONE} -- Status report
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result := session_manager.is_service_available and then stone_session /= Void
+			Result := attached session_manager.service and then stone_session /= Void
 		ensure
-			service_available: Result implies session_manager.is_service_available
+			service_available: Result implies attached session_manager.service
 			stone_session_attached: Result implies stone_session /= Void
 		end
 
@@ -283,7 +283,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

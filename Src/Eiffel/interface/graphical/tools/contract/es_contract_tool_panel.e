@@ -126,15 +126,15 @@ feature {NONE} -- Initialization
 			Precursor {ES_DOCKABLE_STONABLE_TOOL_PANEL}
 			propagate_drop_actions (Void)
 
-			if session_manager.is_service_available then
+			if attached session_manager.service then
 					-- Connect session observer.
 				project_window_session_data.session_connection.connect_events (Current)
 			end
 
 
-			if code_template_catalog.is_service_available then
+			if attached code_template_catalog.service as s then
 					-- Connect code template catalog observer, to receive change notifications.
-				code_template_catalog.service.code_template_catalog_connection.connect_events (Current)
+				s.code_template_catalog_connection.connect_events (Current)
 
 					-- Update the menu
 				update_code_template_list
@@ -164,10 +164,9 @@ feature {NONE} -- Clean up
 			-- Note: It's recommended that you do not detach objects here.
 		local
 			l_session: SESSION_I
-			l_catalog: CODE_TEMPLATE_CATALOG_S
 		do
 			if is_initialized then
-				if session_manager.is_service_available then
+				if attached session_manager.service then
 					l_session := project_window_session_data
 					if l_session.session_connection.is_connected (Current) then
 							-- Disconnect session value change observer.
@@ -175,11 +174,10 @@ feature {NONE} -- Clean up
 					end
 				end
 
-				if code_template_catalog.is_service_available then
-					l_catalog := code_template_catalog.service
-					if l_catalog.code_template_catalog_connection.is_connected (Current) then
+				if attached code_template_catalog.service as s then
+					if s.code_template_catalog_connection.is_connected (Current) then
 							-- Disconnect catalog change observer.
-						l_catalog.code_template_catalog_connection.disconnect_events (Current)
+						s.code_template_catalog_connection.disconnect_events (Current)
 					end
 				end
 			end
@@ -194,7 +192,7 @@ feature {NONE} -- Access
 			-- Contract edition mode.
 			-- See {ES_CONTRACT_TOOL_EDIT_MODE} for applicable modes.
 		do
-			if session_manager.is_service_available then
+			if attached session_manager.service then
 				if attached {NATURAL_8_REF} project_window_session_data.value (contract_mode_session_id) as l_mode and then (create {ES_CONTRACT_TOOL_EDIT_MODE}).is_valid_mode (l_mode.item) then
 					Result := l_mode.item
 				else
@@ -220,7 +218,7 @@ feature {NONE} -- Access
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 			has_stone: has_stone
-			code_template_catalog_is_service_available: code_template_catalog.is_service_available
+			code_template_catalog_is_service_available: attached code_template_catalog.service
 		local
 			l_categories: DS_ARRAYED_LIST [attached STRING]
 		do
@@ -259,7 +257,7 @@ feature {NONE} -- Element change
 				invaraints_menu_item.enable_select
 			end
 
-			if session_manager.is_service_available then
+			if attached session_manager.service then
 				project_window_session_data.value_changed_event.perform_suspended_action (agent (ia_mode: like contract_mode)
 					do
 						project_window_session_data.set_value (ia_mode, contract_mode_session_id)
@@ -473,11 +471,11 @@ feature {NONE} -- Basic operations
 		do
 			if has_stone and then context.has_stone then
 				if
-					file_notifier.is_service_available and then
+					attached file_notifier.service as s and then
 					attached context.context_class.file_name as l_file_name
 				then
 						-- Poll for modifications, which will call `on_file_modified' if have occurred.
-					file_notifier.service.poll_modifications (l_file_name).do_nothing
+					s.poll_modifications (l_file_name).do_nothing
 				end
 
 				if not is_dirty then
@@ -674,7 +672,7 @@ feature {NONE} -- User interface manipulation
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-			code_template_catalog_is_service_available: code_template_catalog.is_service_available
+			code_template_catalog_is_service_available: attached code_template_catalog.service
 		local
 			l_templates: like contract_code_templates
 			l_cursor: DS_BILINEAR_CURSOR [attached CODE_TEMPLATE_DEFINITION]
@@ -840,7 +838,7 @@ feature {NONE} -- Tool action handlers
 
 				-- Update session.
 				-- This is done here because it only needs to be persisted when there is a stone change.
-			if session_manager.is_service_available then
+			if attached session_manager.service then
 				project_window_session_data.set_value (contract_mode, contract_mode_session_id)
 			end
 		end
@@ -1584,7 +1582,7 @@ invariant
 	contract_editor_attached: (is_initialized and is_interface_usable) implies contract_editor /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

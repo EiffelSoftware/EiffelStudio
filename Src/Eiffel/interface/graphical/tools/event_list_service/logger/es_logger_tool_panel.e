@@ -94,14 +94,11 @@ feature {NONE} -- Action handlers
 
 	on_clear_log
 			-- Call when a request is made to clear the log
-		local
-			l_service: SERVICE_CONSUMER [LOGGER_S]
 		do
-			create l_service
-			if l_service.is_service_available then
+			if attached (create {SERVICE_CONSUMER [LOGGER_S]}).service as s then
 					-- Should never be Void if we have log items, but we have to
 					-- respect the service might not exist.
-				l_service.service.clear_log
+				s.clear_log
 			end
 		end
 
@@ -200,7 +197,7 @@ feature {NONE} -- Constants
 	message_column: INTEGER = 3
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

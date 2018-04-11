@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EIS tooltip handler"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -216,15 +216,10 @@ feature {NONE} -- Implementation
 
 	show_help (a_context: HELP_CONTEXT_I)
 			-- Show help
-		local
-			l_providers: SERVICE_CONSUMER [HELP_PROVIDERS_S]
-			l_service: HELP_PROVIDERS_S
 		do
 			hide_tooltip
-			create l_providers
-			if l_providers.is_service_available then
-				l_service := l_providers.service
-				l_service.show_help (a_context)
+			if attached (create {SERVICE_CONSUMER [HELP_PROVIDERS_S]}).service as s then
+				s.show_help (a_context)
 			end
 		end
 
@@ -266,7 +261,7 @@ feature {NONE} -- Implementation
 			-- Last context to show the tooltip
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

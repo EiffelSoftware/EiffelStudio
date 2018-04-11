@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Provides access to help functionality through inheritance.
 		
@@ -81,7 +81,7 @@ feature {NONE} -- Basic operations
 		require
 			is_interface_usable: is_interface_usable
 		do
-			if help_providers.is_service_available then
+			if attached help_providers.service then
 					-- Add a help button, if help is available
 				if attached {HELP_CONTEXT_I} Current as l_help_context and then l_help_context.is_help_available then
 					on_help_requested (l_help_context)
@@ -99,13 +99,13 @@ feature {NONE} -- Action handlers
 			is_interface_usable: is_interface_usable
 			a_context_is_interface_usable: a_context.is_interface_usable
 			a_context_is_help_available: a_context.is_help_available
-			is_help_providers_service_available: help_providers.is_service_available
+			is_help_providers_service_available: attached help_providers.service
 		do
 			help_providers.service.show_help (a_context)
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

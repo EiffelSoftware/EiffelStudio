@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Converter from/to UTF-8, UTF-16 and UTF-32 encodings.
 
@@ -163,36 +163,32 @@ feature -- Status report
 			-- Is `s' a valid UTF-16 Unicode sequence?
 		local
 			i, n: INTEGER
-			c1, c2: NATURAL_32
+			c: NATURAL_16
 		do
 			from
 				i := 0
 				n := s.count
 				Result := True
 			until
-				i > n or not Result
+				i >= n or not Result
 			loop
-				c1 := s.item (i)
-				if c1 = 0 then
-						-- We hit our null terminating character, we can stop
-					i := n + 1
-				else
-					if c1 < 0xD800 or c1 >= 0xE000 then
+				c := s.item (i)
+				if c < 0xD800 or c >= 0xE000 then
 						-- Codepoint from Basic Multilingual Plane: one 16-bit code unit, this is valid Unicode.
-					elseif c1 <= 0xDBFF then
-						i := i + 1
-						if i <= n then
-							c2 := s.item (i)
-							Result := 0xDC00 <= c2 and c2 <= 0xDFF
-						else
-								-- Surrogate pair is incomplete, clearly not a valid UTF-16 sequence.
-							Result := False
-						end
+				elseif c <= 0xDBFF then
+					i := i + 1
+					if i < n then
+						c := s.item (i)
+						Result := 0xDC00 <= c and c <= 0xDFF
 					else
-							-- Invalid starting surrogate pair which should be between 0xD800 and 0xDBFF.
+							-- Surrogate pair is incomplete, clearly not a valid UTF-16 sequence.
 						Result := False
 					end
+				else
+						-- Invalid starting surrogate pair which should be between 0xD800 and 0xDBFF.
+					Result := False
 				end
+				i := i + 1
 			end
 		end
 
@@ -2123,7 +2119,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

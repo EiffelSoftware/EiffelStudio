@@ -2356,6 +2356,7 @@ test	library-arguments-command-line-start	lib046 tcf pass library arguments comm
 
 test	utf-16-basics			utf001	tcf pass library unicode
 test	utf-8-basics			utf002	tcf pass library unicode
+test	library-utf_converter-is_valid_utf_16	utf003 tcf pass library unicode
 
 
 -- TUPLE tests

@@ -222,8 +222,8 @@ feature {NONE} -- Initialization: User interface
 				-- Enable copying to clipboard.
 			enable_copy_to_clipboard
 
---				-- Bind redirecting pick and drop actions.
---			stone_director.bind (grid_events, Current)
+				-- Bind redirecting pick and drop actions.
+			stone_director.bind (grid_events, Current)
 
 				-- Configure expand errors based con preferece
 				-- 'tools.error_list.expand_n_errors'.
@@ -1561,6 +1561,8 @@ feature {NONE} -- Action handlers
 				a_key.code = {EV_KEY_CONSTANTS}.key_delete
 			then
 				remove_all_selected_event_list_rows
+				update_message_counters
+				update_content_applicable_navigation_buttons
 				Result := True
 			else
 				Result := Precursor (a_key, a_alt, a_ctrl, a_shift, a_released)
@@ -1687,6 +1689,7 @@ feature {NONE} -- Action handlers
 		do
 			remove_all_selected_event_list_rows
 			update_message_counters
+			update_content_applicable_navigation_buttons
 		end
 
 	on_select_error_info
@@ -1831,12 +1834,6 @@ feature {NONE} -- Factory
 			l_button: SD_TOOL_BAR_BUTTON
 		do
 			create Result.make (17)
-
-				-- Use drop actions of code analyzer for the whole panel.
-			content.drop_actions.extend (agent analyze_cmd.execute_with_stone)
-			grid_events.drop_actions.extend (agent analyze_cmd.execute_with_stone)
-			content.drop_actions.set_veto_pebble_function (agent analyze_cmd.droppable)
-			grid_events.drop_actions.set_veto_pebble_function (agent analyze_cmd.droppable)
 
 				-- Fix buttons.
 			l_button := apply_fix_command.new_sd_toolbar_item (True)

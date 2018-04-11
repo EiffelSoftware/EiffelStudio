@@ -1,0 +1,13 @@
+test_name	 library-utf_converter-is_valid_utf_16
+test_description The function `is_valid_utf_16` should not enter an infinite loop, stop at the first 0 character, access items at invalid indexes.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

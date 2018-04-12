@@ -516,7 +516,7 @@ feature -- File input/output
 	cwin_read_file (file_handle: POINTER; buffer: POINTER; number_of_bytes_to_read: NATURAL_32; number_of_bytes_read: TYPED_POINTER [NATURAL_32]; overlapped: POINTER): BOOLEAN
 			-- SDK ReadFile.
 		external
-			"C [macro <winbase.h>] (HANDLE, LPVOID, DWORD, LPDWORD, LPOVERLAPPED): BOOL"
+			"C blocking macro signature (HANDLE, LPVOID, DWORD, LPDWORD, LPOVERLAPPED): BOOL use <winbase.h>"
 		alias
 			"ReadFile"
 		ensure
@@ -526,7 +526,7 @@ feature -- File input/output
 	cwin_write_file (file_handle: POINTER; buffer: POINTER; number_of_bytes_to_write: NATURAL_32; number_of_bytes_written: TYPED_POINTER [NATURAL_32]; overlapped: POINTER): BOOLEAN
 			-- SDK WriteFile.
 		external
-			"C [macro <winbase.h>] (HANDLE, LPCVOID, DWORD, LPDWORD, LPOVERLAPPED): BOOL"
+			"C blocking macro signature (HANDLE, LPCVOID, DWORD, LPDWORD, LPOVERLAPPED): BOOL use <winbase.h>"
 		alias
 			"WriteFile"
 		ensure

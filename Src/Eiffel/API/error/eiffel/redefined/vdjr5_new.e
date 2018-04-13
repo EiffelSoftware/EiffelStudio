@@ -30,10 +30,10 @@ feature {NONE} -- Output
 			t.add_new_line
 			format_elements (t, locale.translation_in_context
 					({STRING_32} "[
-						A class feature {1} from class {3} is joined with a feature {2} from class {4} that is not instance-free.
+						The class feature {1} from the class {3} is joined with the feature {2} from the class {4} that is not a class feature and has a contract.
 						
 						What to do:
-							• make sure that if one of joined features has a class postcondition, the other one is instance-free or
+							• make sure that if one of joined features is a class feature, the other one is a class feature or has no contract
 							• avoid joining them.
 					]",
 					"eiffel.error"),
@@ -52,7 +52,7 @@ feature {NONE} -- Output
 			-- <Precursor>
 		do
 			format_elements (t, locale.translation_in_context
-					("Class feature {1} from {3} is joined with a non-instance-free feature {2} from {4}.",
+					("Class feature {1} from {3} is joined with non-class feature {2} with a contract from {4}.",
 					"eiffel.error"),
 				<<
 					agent feature_1.append_name,
@@ -73,7 +73,7 @@ feature {NONE} -- Output
 				>>)
 			t.add_new_line
 			format_elements (t, locale.translation_in_context
-					("{1} from class {2} is not an instance-free feature.", "eiffel.error"),
+					("{1} from class {2} is not a class feature and has a contract.", "eiffel.error"),
 				<<
 					agent feature_2.append_name,
 					agent (feature_2.written_class).append_name

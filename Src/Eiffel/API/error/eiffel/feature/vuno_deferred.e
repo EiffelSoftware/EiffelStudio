@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (t: CLASS_C; f: FEATURE_I; c, w: CLASS_C; l: LOCATION_AS)
+	make (t: CLASS_C; f: FEATURE_I; c: CLASS_C; w: detachable CLASS_C; l: LOCATION_AS)
 			-- Create an error for a non-object call on a deferred type with the base class `t` in feature `f` of class `c` in the code from class `w` at location `l`.
 		require
 			t_attached: attached t
@@ -28,7 +28,7 @@ feature {NONE} -- Creation
 		ensure
 			target_class_set: target_class = t
 			class_c_set: class_c = c
-			written_class_set: attached written_class
+			written_class_set: attached written_class and (attached w implies written_class = w)
 			feature_set: attached e_feature
 			line_set: line = l.line
 			column_set: column = l.column
@@ -59,7 +59,7 @@ feature {NONE} -- Output
 			-- <Precursor>
 		do
 			format_elements (t, locale.translation_in_context
-				("Non-object call on a type with deferred base class {1}.", "compiler.error"),
+				("Non-object call on a type with a deferred base class {1}.", "compiler.error"),
 				<<agent target_class.append_name>>)
 		end
 
@@ -67,7 +67,7 @@ note
 	ca_ignore: "CA011", "CA011 – too many arguments"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

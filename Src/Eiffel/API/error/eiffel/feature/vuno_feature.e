@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (t: FEATURE_I; f: FEATURE_I; c, w: CLASS_C; l: LOCATION_AS)
+	make (t: FEATURE_I; f: FEATURE_I; c: CLASS_C; w: detachable CLASS_C; l: LOCATION_AS)
 			-- Create an error for a non-object call to a feature `t` in feature `f` of class `c` in the code from class `w` at location `l`.
 		require
 			t_attached: attached t
@@ -27,7 +27,7 @@ feature {NONE} -- Creation
 		ensure
 			callee_set: attached callee
 			class_c_set: class_c = c
-			written_class_set: attached written_class
+			written_class_set: attached written_class and (attached w implies written_class = w)
 			feature_set: attached e_feature
 			line_set: line = l.line
 			column_set: column = l.column
@@ -45,9 +45,9 @@ feature {NONE} -- Output
 		do
 			t.add_new_line
 			format_elements (t, locale.translation_in_context ("[
-						Non-instance-free feature {1} cannot be used in a non-object call.
+						{1} used in the non-object call is not a class feature.
 						
-						What to do: Make sure the feature used the non-object call is instance-free.
+						What to do: Make sure the non-object call uses a class feature or replace it with an object call.
 					]", "compiler.error"),
 				<<agent callee.append_name>>)
 			t.add_new_line
@@ -66,7 +66,7 @@ note
 	ca_ignore: "CA011", "CA011 – too many arguments"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

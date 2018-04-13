@@ -25,16 +25,12 @@ feature {NONE} -- Creation
 			l_attached: attached l
 		do
 			class_c := c
-			written_class := if attached w then
-				w
-			else
-				f.written_class
-			end
+			written_class := if attached w then w else f.written_class end
 			set_feature (f)
 			set_location (l)
 		ensure
 			class_c_set: class_c = c
-			written_class_set: attached written_class
+			written_class_set: attached written_class and (attached w implies written_class = w)
 			e_feature_set: attached e_feature
 			line_set: line = l.line
 			column_set: column = l.column
@@ -48,7 +44,7 @@ feature -- Properties
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

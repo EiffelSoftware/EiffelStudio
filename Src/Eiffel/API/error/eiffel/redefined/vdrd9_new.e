@@ -30,11 +30,12 @@ feature {NONE} -- Output
 			t.add_new_line
 			format_elements (t, locale.translation_in_context
 					({STRING_32} "[
-						Class routine {1} has precursor {2} from class {4} that is not instance-free.
+						The class feature {1} has the precursor {2} from the class {4} that is not a class feature and has a contract.
 						
 						What to do:
-							• make sure the precursor is instance-free or
-							• make sure the redeclaration is not a class routine or
+							• make sure the precursor is a class feature or
+							• make sure the precursor has no contract or
+							• make sure the redeclaration is not a class feature or
 							• remove the redeclaration.
 					]",
 					"eiffel.error"),
@@ -53,7 +54,7 @@ feature {NONE} -- Output
 			-- <Precursor>
 		do
 			format_elements (t, locale.translation_in_context
-					("Precursor {2} from class {4} of class routine {1} is not instance-free.",
+					("Precursor {2} from class {4} of class feature {1} is not a class feature and has a contract.",
 					"eiffel.error"),
 				<<
 					agent feature_1.append_name,
@@ -74,7 +75,7 @@ feature {NONE} -- Output
 				>>)
 			t.add_new_line
 			format_elements (t, locale.translation_in_context
-					("{1} from class {2} is not an instance-free feature.", "eiffel.error"),
+					("{1} from class {2} is not a class feature and has a contract.", "eiffel.error"),
 				<<
 					agent feature_2.append_name,
 					agent (feature_2.written_class).append_name

@@ -17,7 +17,7 @@ feature {NONE} -- Output
 		do
 			t.add_new_line
 			format_elements (t, locale.translation_in_context ({STRING_32} "[
-					Error: object-relative once routine {1} cannot be a class routine.
+					Error: object-relative once routine {1} cannot be a class feature.
 					What to do:
 						• remove the class postcondition or
 						• remove the key "OBJECT" from the list of once keys.
@@ -30,7 +30,7 @@ feature {NONE} -- Output
 			-- <Precursor>
 		do
 			format_elements (t, locale.translation_in_context
-				("Object-relative once routine {1} is declared as a class routine.", "compiler.error"),
+				("Object-relative once routine {1} is declared as a class feature.", "compiler.error"),
 				<<agent e_feature.append_name>>)
 		end
 

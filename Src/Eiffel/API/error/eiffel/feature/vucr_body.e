@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (f: FEATURE_I; c, w: CLASS_C; l: LOCATION_AS)
+	make (f: FEATURE_I; c: CLASS_C; w: detachable CLASS_C; l: LOCATION_AS)
 			-- Create an error for feature `f` of class `c` in the code in class `w` at location `l`.
 		require
 			f_attached: attached f
@@ -30,7 +30,7 @@ feature {NONE} -- Creation
 			written_class := if attached w then w else f.written_class end
 		ensure
 			class_c_set: class_c = c
-			written_class_set: attached written_class
+			written_class_set: attached written_class and (attached w implies written_class = w)
 			feature_set: attached e_feature
 			line_set: line = l.line
 			column_set: column = l.column
@@ -46,7 +46,7 @@ feature {NONE} -- Creation
 			not_is_precursor: not is_precursor
 			callee_unset: not attached callee
 			class_c_set: class_c = c
-			written_class_set: attached written_class
+			written_class_set: attached written_class and (attached w implies written_class = w)
 			feature_set: attached e_feature
 			line_set: line = l.line
 			column_set: column = l.column
@@ -64,7 +64,7 @@ feature {NONE} -- Creation
 			not_is_precursor: not is_precursor
 			callee_set: attached callee
 			class_c_set: class_c = c
-			written_class_set: attached written_class
+			written_class_set: attached written_class and (attached w implies written_class = w)
 			feature_set: attached e_feature
 			line_set: line = l.line
 			column_set: column = l.column
@@ -81,7 +81,7 @@ feature {NONE} -- Creation
 			not_is_precursor: not is_precursor
 			callee_set: attached callee
 			class_c_set: class_c = c
-			written_class_set: attached written_class
+			written_class_set: attached written_class and (attached w implies written_class = w)
 			feature_set: attached e_feature
 			line_set: line = l.line
 			column_set: column = l.column
@@ -99,7 +99,7 @@ feature {NONE} -- Creation
 			is_precursor: is_precursor
 			callee_set: attached callee
 			class_c_set: class_c = c
-			written_class_set: attached written_class
+			written_class_set: attached written_class and (attached w implies written_class = w)
 			feature_set: attached e_feature
 			line_set: line = l.line
 			column_set: column = l.column
@@ -116,7 +116,7 @@ feature {NONE} -- Creation
 			not_is_precursor: not is_precursor
 			callee_unset: not attached callee
 			class_c_set: class_c = c
-			written_class_set: attached written_class
+			written_class_set: attached written_class and (attached w implies written_class = w)
 			feature_set: attached e_feature
 			line_set: line = l.line
 			column_set: column = l.column
@@ -134,7 +134,7 @@ feature {NONE} -- Creation
 			not_is_precursor: not is_precursor
 			callee_set: attached callee
 			class_c_set: class_c = c
-			written_class_set: attached written_class
+			written_class_set: attached written_class and (attached w implies written_class = w)
 			feature_set: attached e_feature
 			line_set: line = l.line
 			column_set: column = l.column
@@ -166,14 +166,14 @@ feature {NONE} -- Output
 					-- Erroneous use of an agent.
 				if attached callee as a then
 					format_elements (t, locale.translation_in_context ("[
-								Implementation contraint: The instance-free feature {1} uses the agent {2} of the unqualified form.
-								What to do: Remove the agent from the code or the instance-free mark from the feature declaration.
+								Implementation contraint: The class feature {1} uses the agent {2} of an unqualified form.
+								What to do: Remove the agent from the code or make the feature a non-class one.
 							]", "compiler.error"),
 						<<agent e_feature.append_name, agent a.append_name>>)
 				else
 					format_elements (t, locale.translation_in_context ("[
-								Implementation contraint: The instance-free feature {1} uses an inline agent.
-								What to do: Remove the inline agent from the code or the instance-free mark from the feature declaration.
+								Implementation contraint: The class feature {1} uses an inline agent.
+								What to do: Remove the inline agent from the code or make the feature a non-class one.
 							]", "compiler.error"),
 						<<agent e_feature.append_name>>)
 				end
@@ -181,18 +181,18 @@ feature {NONE} -- Output
 				if is_attribute then
 						-- Erroneous use of an attribute.
 					format_elements (t, locale.translation_in_context ("[
-								Error: The instance-free feature {1} uses the attribute {2}.
-								What to do: Remove the attribute {2} from the code or the instance-free mark from the feature declaration.
+								Error: The class feature {1} uses the attribute {2}.
+								What to do: Remove the attribute {2} from the code or make the feature a non-class one.
 							]", "compiler.error"),
 						<<agent e_feature.append_name, agent a.append_name>>)
 				elseif is_precursor then
 						-- Erroneous use of a non-instance-free precursor.
 					format_elements (t, locale.translation_in_context ("[
-								Error: The instance-free feature {1} calls the non-instance free {2}.
+								Error: The class feature {1} calls the non-class feature {2}.
 								What to do:
-									- remove the call to the {2} from the code or
-									- remove the instance-free mark from the feature declaration of {1} or
-									- mark the precursor feature {3} as instance-free.
+									- remove the call to {2} from the code or
+									- make {1} a non-class feature or
+									- make the precursor {3} a class feature.
 							]", "compiler.error"),
 						<<
 							agent e_feature.append_name,
@@ -202,19 +202,19 @@ feature {NONE} -- Output
 				else
 						-- Erroneous use of a non-instance-free feature.
 					format_elements (t, locale.translation_in_context ("[
-								Error: The instance-free feature {1} calls the non-instance free feature {2}.
+								Error: The class feature {1} calls the non-class feature {2}.
 								What to do:
-									- remove the call to the non-instance-free feature {2} from the code or
-									- remove the instance-free mark from the feature declaration of {1} or
-									- mark the feature {2} as instance-free.
+									- remove the call to {2} from the code or
+									- make {1} a non-class feature or
+									- make {2} a class feature.
 							]", "compiler.error"),
 						<<agent e_feature.append_name, agent a.append_name>>)
 				end
 			else
 					-- Erroneous use of Current.
 				format_elements (t, locale.translation_in_context ("[
-							Error: The instance-free feature {1} uses {2}.
-							What to do: Remove {2} from the code or the instance-free mark from the feature declaration.
+							Error: The class feature {1} uses {2}.
+							What to do: Remove {2} from the code or make the feature a non-class one.
 						]", "compiler.error"),
 					<<agent e_feature.append_name, agent {TEXT_FORMATTER}.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_current, Void)>>)
 			end
@@ -226,25 +226,25 @@ feature {NONE} -- Output
 		do
 			if is_agent then
 				if attached callee as a then
-					format_elements (t, locale.translation_in_context ("The instance-free feature {1} uses the agent {2} of the unqualified form.", "compiler.error"),
+					format_elements (t, locale.translation_in_context ("The class feature {1} uses the agent {2} of the unqualified form.", "compiler.error"),
 						<<agent e_feature.append_name, agent a.append_name>>)
 				else
-					format_elements (t, locale.translation_in_context ("The instance-free feature {1} uses an inline agent.", "compiler.error"),
+					format_elements (t, locale.translation_in_context ("The class feature {1} uses an inline agent.", "compiler.error"),
 						<<agent e_feature.append_name>>)
 				end
 			elseif attached callee as a then
 				if is_attribute then
-					format_elements (t, locale.translation_in_context ("The instance-free feature {1} uses the attribute {2}.", "compiler.error"),
+					format_elements (t, locale.translation_in_context ("The class feature {1} uses the attribute {2}.", "compiler.error"),
 						<<agent e_feature.append_name, agent a.append_name>>)
 				elseif is_precursor then
-					format_elements (t, locale.translation_in_context ("The instance-free feature {1} calls the non-instance-free {2}.", "compiler.error"),
+					format_elements (t, locale.translation_in_context ("The class feature {1} calls the non-class feature {2}.", "compiler.error"),
 						<<agent e_feature.append_name, agent {TEXT_FORMATTER}.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_precursor_keyword, a)>>)
 				else
-					format_elements (t, locale.translation_in_context ("The instance-free feature {1} uses the non-instance-free feature {2}.", "compiler.error"),
+					format_elements (t, locale.translation_in_context ("The class feature {1} uses the non-class feature {2}.", "compiler.error"),
 						<<agent e_feature.append_name, agent a.append_name>>)
 				end
 			else
-				format_elements (t, locale.translation_in_context ("The instance-free feature {1} uses {2}.", "compiler.error"),
+				format_elements (t, locale.translation_in_context ("The class feature {1} uses {2}.", "compiler.error"),
 					<<agent e_feature.append_name, agent {TEXT_FORMATTER}.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_current, Void)>>)
 			end
 		end
@@ -260,7 +260,7 @@ note
 	ca_ignore: "CA011", "CA011 – too many arguments"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

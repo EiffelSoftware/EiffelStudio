@@ -1,11 +1,10 @@
-note
-
+﻿note
 	description:
 		"Command to display instance-free routines of `current_class'."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class E_SHOW_INSTANCE_FREE_ROUTINES
 
@@ -26,11 +25,11 @@ feature -- Access
 			l_factory: like feature_criterion_factory
 		do
 			l_factory := feature_criterion_factory
-			Result := l_factory.simple_criterion_with_index (l_factory.c_is_instance_free)
+			Result := l_factory.simple_criterion_with_index (l_factory.c_is_class)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -61,4 +60,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class E_SHOW_ONCES
+end

@@ -682,6 +682,7 @@ feature {NONE} -- Implementation
 			Result.set_type (type, assigner_name)
 			Result.set_is_attribute_with_body (has_body)
 			Result.set_obsolete_message (obsolete_message)
+			Result.set_class (is_class)
 		end
 
 note

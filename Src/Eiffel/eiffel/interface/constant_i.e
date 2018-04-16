@@ -538,6 +538,7 @@ feature {NONE} -- Implementation
 			create Result.make (feature_name_id, alias_name, has_convert_mark, feature_id)
 			Result.set_type (type, assigner_name)
 			Result.set_value (value.string_value)
+			Result.set_class (is_class)
 		end
 
 note

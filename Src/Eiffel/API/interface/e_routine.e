@@ -17,7 +17,6 @@ inherit
 			is_deferred,
 			is_external,
 			is_inline_agent,
-			is_instance_free,
 			is_invariant,
 			locals,
 			object_test_locals,
@@ -40,9 +39,6 @@ feature -- Properties
 
 	has_postcondition: BOOLEAN
 			-- Is the routine declaring some postcondition?
-
-	is_instance_free: BOOLEAN
-			-- <Precursor>
 
 	is_deferred: BOOLEAN
 			-- Is the routine deferred?
@@ -161,14 +157,6 @@ feature {NONE} -- Implementation
 
 feature {FEATURE_I} -- Setting
 
-	set_instance_free (value: BOOLEAN)
-			-- Set `is_instance_free` to `value`.
-		do
-			is_instance_free := value
-		ensure
-			is_instance_free_set: is_instance_free = value
-		end
-
 	set_deferred (b: like is_deferred)
 			-- Set `is_deferred' to `b'.
 		do
@@ -253,7 +241,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represent the data of a objects grid row."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 			r: like row
 		do
 			if cse /= Void then
-				if attached cse.routine as l_routine and then l_routine.is_instance_free then
+				if attached cse.routine as l_routine and then l_routine.is_class then
 						-- Do not show Current object for instance free call!
 				elseif debugger_manager.is_dotnet_project then
 					app := debugger_manager.application
@@ -96,7 +96,7 @@ feature -- Query
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

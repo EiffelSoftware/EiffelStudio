@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Class containing features for retrieving pixmaps for Clusters, Classes and Features"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -114,7 +114,7 @@ feature -- Query (Pixmap)
 			l_name: STRING_32
 			l_is_instance_free: BOOLEAN
 		do
-			l_is_instance_free := a_feature.is_instance_free
+			l_is_instance_free := a_feature.is_class
 			l_name := a_feature.assigner_name_32
 			if l_name = Void or else l_name.is_empty then
 				if a_feature.is_attribute then
@@ -518,7 +518,7 @@ feature -- Query (Pixel buffer)
 			l_name: STRING_32
 			l_is_instance_free: BOOLEAN
 		do
-			l_is_instance_free := a_feature.is_instance_free
+			l_is_instance_free := a_feature.is_class
 			l_name := a_feature.assigner_name_32
 			if l_name = Void or else l_name.is_empty then
 				if a_feature.is_attribute then
@@ -888,7 +888,7 @@ feature {NONE} -- Implementation
 		-- Class icon state flags		
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -127,7 +127,7 @@ feature -- Properties
 			end
 		end
 
-	feature_id: INTEGER;
+	feature_id: INTEGER
 			-- Unique identification for a feature in `associated_class_id'.
 
 	written_feature_id: INTEGER
@@ -136,30 +136,30 @@ feature -- Properties
 	written_in: INTEGER
 			-- Class id where feature is written in
 
-	body_index: INTEGER;
+	body_index: INTEGER
 			-- Identification of the body
 			-- (Two features can have the same body_index if
 			-- they are shared through replication)
 
-	rout_id_set: ROUT_ID_SET;
+	rout_id_set: ROUT_ID_SET
 			-- Routine table to which the feature belongs to.
 
-	export_status: EXPORT_I;
+	export_status: EXPORT_I
 			-- Export status of the feature
 
-	is_origin: BOOLEAN;
+	is_origin: BOOLEAN
 			-- Is feature an origin ?
 
-	is_frozen: BOOLEAN;
+	is_frozen: BOOLEAN
 			-- Is feature frozen ?
 			-- Notes from Arnaud: it has nothing to do with
 			-- melted/frozen feature but refers to the keyword
 			-- frozen you can add before a feature name
 
-	is_infix: BOOLEAN;
+	is_infix: BOOLEAN
 			-- Is feature an infixed one ?
 
-	is_prefix: BOOLEAN;
+	is_prefix: BOOLEAN
 			-- Is feature a prefixed one ?
 
 	obsolete_message_32: STRING_32
@@ -175,19 +175,19 @@ feature -- Properties
 			-- Is current feature a procedure ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_function: BOOLEAN
 			-- Is current feature a function ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_attribute: BOOLEAN
 			-- Is current feature an attribute ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_attribute_with_body: BOOLEAN
 			-- Is current feature an attribute with body?
@@ -195,23 +195,20 @@ feature -- Properties
 			-- Do nothing
 		end
 
-	is_instance_free: BOOLEAN
-			-- Is current feature instance-free, i.e. can be called on a class type rather than on object?
-		do
-			-- False by default
-		end
+	is_class: BOOLEAN
+			-- Is current feature a class one, i.e. can be called on a class type rather than on object?
 
 	is_constant: BOOLEAN
 			-- Is current feature a constant ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_once: BOOLEAN
 			-- Is current feature a once one ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_process_or_thread_relative_once: BOOLEAN
 		do
@@ -1238,6 +1235,14 @@ feature {FEATURE_I} -- Setting
 			body_index := i;
 		end;
 
+	set_class (value: BOOLEAN)
+			-- Set `is_class` to `value`.
+		do
+			is_class := value
+		ensure
+			is_class_set: is_class = value
+		end
+
 	set_is_origin (b: BOOLEAN)
 			-- Assign `b' to `is_origin'.
 		do
@@ -1305,7 +1310,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

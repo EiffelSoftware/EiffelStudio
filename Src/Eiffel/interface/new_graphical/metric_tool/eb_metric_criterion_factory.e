@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "Metric criterion factory"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -409,7 +409,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_invariant_feature), query_language_names.ql_cri_is_invariant_feature)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_obsolete), query_language_names.ql_cri_is_obsolete)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_once), query_language_names.ql_cri_is_once)
-			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_instance_free), query_language_names.ql_cri_is_instance_free)
+			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_class), query_language_names.ql_cri_is_class)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_origin), query_language_names.ql_cri_is_origin)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_prefix), query_language_names.ql_cri_is_prefix)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_procedure), query_language_names.ql_cri_is_procedure)
@@ -559,7 +559,7 @@ invariant
 	criterion_table_attached: criterion_table /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2018, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

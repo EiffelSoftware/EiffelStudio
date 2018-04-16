@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			f.set_has_precondition (has_precondition)
 			f.set_has_postcondition (has_postcondition)
 			f.set_obsolete_message (obsolete_message)
-			f.set_instance_free (is_class)
+			f.set_class (is_class)
 		end
 
 note

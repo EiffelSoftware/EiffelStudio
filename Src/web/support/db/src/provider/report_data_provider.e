@@ -146,6 +146,7 @@ feature -- Access
 			-- Filtered category `a_category' and status `a_status'
 			-- Order by column `a_column' in a DESC or ASC.
 			-- by the default the order by is done on Number.
+			-- Reports are searched by Username or FirstName or LastName.
 		local
 			l_parameters: STRING_TABLE [ANY]
 			l_query: STRING
@@ -166,7 +167,7 @@ feature -- Access
 			create l_query.make_from_string (Select_problem_reports_responsibles_template)
 			if not a_username.is_empty then
 				l_parameters.put (l_encode.encode (string_parameter (a_username, 50)), {DATA_PARAMETERS_NAMES}.Username_param)
-				l_query.replace_substring_all ("$Submitter", "Username = :Username AND")
+				l_query.replace_substring_all ("$Submitter", "(Username = :Username or FirstName = :Username or LastName = :Username) AND")
 			else
 				l_query.replace_substring_all ("$Submitter", "")
 			end
@@ -935,6 +936,7 @@ feature -- Basic Operations
 	row_count_problem_report_responsible (a_category: INTEGER; a_severity: INTEGER; a_priority: INTEGER; a_responsible: INTEGER; a_status: READABLE_STRING_32; a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_content: INTEGER_32): INTEGER
 			-- Number of problems reports for responsible users.
 			-- Could be filtered by category, serverity, priority, responsible, and username.
+			-- Updated to search for Username, LastName or FirstName.
 		local
 			l_parameters: STRING_TABLE [ANY]
 			l_query: STRING
@@ -953,7 +955,7 @@ feature -- Basic Operations
 			end
 			create l_query.make_from_string (select_row_count_problem_reports_responsibles)
 			if not a_username.is_empty then
-				l_query.replace_substring_all ("$Submitter", "Username = :Username AND")
+				l_query.replace_substring_all ("$Submitter", "(Username = :Username or FirstName = :Username or LastName = :Username) AND")
 			else
 				l_query.replace_substring_all ("$Submitter", "")
 			end

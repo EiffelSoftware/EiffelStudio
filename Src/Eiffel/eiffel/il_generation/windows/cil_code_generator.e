@@ -7666,7 +7666,7 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 			loop
 				f := l.item
 				if
-					not f.has_static_access and then
+					not f.is_class and then
 					f.argument_count = 1 and then
 					f.arguments.first.same_as (c.actual_type)
 				then

@@ -115,3 +115,16 @@ $>echo	If you have an already installed OpenSSL library remove it using
 $>sudo apt-get remove libssl-dev
 ```
 
+
+
+#How to use the latest Openssl on Mac
+======================================
+For Mac users check the following link
+
+http://mac-dev-env.patrickbougie.com/openssl/
+
+
+Using home-brew package manager
+
+`brew install openssl@1.1`
+

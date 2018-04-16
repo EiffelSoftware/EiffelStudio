@@ -1,11 +1,11 @@
-note
-	description	: "Location to enter the name of a class and the name of a feature.%
+﻿note
+	description: "Location to enter the name of a class and the name of a feature.%
 				  % Manage the history of the parent as well."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr] "
+	date: "$Date$"
+	revision: "$Revision$"
+	author: "Arnaud PICHERY [ aranud@mail.dotcom.fr] "
 
 class
 	EB_ADDRESS_MANAGER
@@ -1196,7 +1196,7 @@ feature {NONE} -- Implementation
 			class_names: ARRAYED_LIST [STRING_32]
 			class_pixmaps: ARRAYED_LIST [EV_PIXMAP]
 			classi, last_class: CLASS_I
-			cname, last_name: STRING
+			cname, last_name: STRING_32
 			first_ambiguous: BOOLEAN
 		do
 				-- First remove all overriden classes if any before display the choice.
@@ -1217,10 +1217,10 @@ feature {NONE} -- Implementation
 			create class_pixmaps.make (class_list.count)
 			from class_list.start until class_list.after loop
 				classi := class_list.item
-				cname := classi.name.twin
+				create cname.make_from_string_general (classi.name)
 				if
 					last_class /= Void and then
-					last_class.name.is_equal (cname)
+					last_class.name.same_string_general (cname)
 				then
 					if not first_ambiguous then
 						first_ambiguous := True
@@ -2688,7 +2688,7 @@ feature {NONE} -- Choice Positioning
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -2719,4 +2719,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_ADDRESS_MANAGER
+end

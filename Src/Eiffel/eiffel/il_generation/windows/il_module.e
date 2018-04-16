@@ -1494,7 +1494,7 @@ feature -- Metadata description
 						interface_class_type := class_c.types.search_item (Void, class_type.type.reference_type)
 						l_parents.force (actual_class_type_token (interface_class_type.static_type_id), i)
 						i := i + 1
-						if class_c.is_generic and attached {GEN_TYPE_A} interface_class_type.type as gen_type then
+						if class_c.is_generic and then attached {GEN_TYPE_A} interface_class_type.type as gen_type then
 							create parent_count.put (i)
 							gen_type.enumerate_interfaces (
 								agent (c: CLASS_TYPE; p: ARRAY [INTEGER]; k: CELL [INTEGER])
@@ -1510,10 +1510,11 @@ feature -- Metadata description
 							i := parent_count.item
 						end
 					else
+						interface_class_type := class_c.types.search_item (Void, class_type.type)
 						if not for_interface then
 							l_parents.force (actual_class_type_token (class_type.static_type_id), i)
 							i := i + 1
-						elseif class_c.is_generic and attached {GEN_TYPE_A} interface_class_type.type as gen_type then
+						elseif class_c.is_generic and then attached {GEN_TYPE_A} interface_class_type.type as gen_type then
 							create parent_count.put (i)
 							gen_type.enumerate_interfaces (
 								agent (c: CLASS_TYPE; p: ARRAY [INTEGER]; k: CELL [INTEGER])
@@ -1789,7 +1790,7 @@ feature -- Metadata description
 						else
 							l_sig := default_sig
 						end
-						if l_feature.is_il_external and attached {IL_EXTENSION_I} l_feature.extension as l_il_extension then
+						if l_feature.is_il_external and then attached {IL_EXTENSION_I} l_feature.extension as l_il_extension then
 							if l_eiffel_constructor then
 								define_constructor (class_type, l_sig, is_reference, l_il_extension.token, feature_token (class_type.static_type_id, l_feature.feature_id), l_feature.feature_id)
 							else

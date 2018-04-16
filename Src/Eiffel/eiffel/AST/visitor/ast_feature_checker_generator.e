@@ -1544,7 +1544,7 @@ feature {NONE} -- Implementation
 							-- A feature is found.
 						l_found_feature := l_feature
 						if is_static then
-							if not l_feature.has_static_access then
+							if not l_feature.is_class then
 									-- Not a valid feature for static access.
 								check_instance_free (l_feature, l_last_class,
 									agent error_handler.insert_error (create {VUNO_FEATURE}.make
@@ -1563,7 +1563,7 @@ feature {NONE} -- Implementation
 							if error_level /= l_error_level then
 								reset_types
 							end
-						elseif not is_qualified_call and then current_feature.is_class and then not l_feature.has_static_access then
+						elseif not is_qualified_call and then current_feature.is_class and then not l_feature.is_class then
 								-- The error for agents is reported elsewhere.
 							if not is_agent then
 								w := error_handler.warning_level
@@ -1624,14 +1624,14 @@ feature {NONE} -- Implementation
 							end
 						end
 						if error_level = l_error_level then
-							if is_static and then not l_feature.is_instance_free then
+							if is_static and then not l_feature.is_class then
 									-- The instance-free call is OK, but the called feature is not instance-free.
 								error_handler.insert_warning (create {VUNO_NOT_INSTANCE_FREE}.make (l_feature, current_feature, context.current_class, context.written_class, l_feature_name))
 							elseif
 								not has_vucr and then
 								not is_qualified_call and then
 								current_feature.is_class and then
-								not l_feature.is_instance_free and then
+								not l_feature.is_class and then
 								not is_agent
 							then
 									-- The unqualified call is OK, but the called feature is not instance-free.
@@ -2042,7 +2042,7 @@ feature {NONE} -- Implementation
 							last_calls_target_type := l_last_constrained
 							if l_feature.is_attribute then
 								last_access_writable := True
-								if not is_qualified and then current_feature.is_class then
+								if not is_qualified and then current_feature.is_class and then not l_feature.is_class then
 									report_vucr (create {VUCR_BODY}.make_attribute (l_feature, current_feature, context.current_class, context.written_class, a_name))
 								end
 							else
@@ -9747,7 +9747,7 @@ feature {NONE} -- Overloading
 				l_feature := a_features.item
 				if
 					l_feature /= Void and then l_feature.argument_count = count and then
-					(not is_static_access or else l_feature.has_static_access)
+					(not is_static_access or else l_feature.is_class)
 				then
 					Result.extend (l_feature)
 				end

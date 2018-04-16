@@ -51,7 +51,7 @@ feature -- Checking
 				has_class := True
 			else
 					-- One of the features is not instance-free.
-				has_object := not f.is_instance_free
+				has_object := not f.is_class
 			end
 			from
 				deferred_features := old_features.deferred_features

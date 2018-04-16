@@ -108,7 +108,7 @@ feature {NONE} -- Validation
 					is_object := object.found_item
 				elseif current_class.is_precompiled then
 						-- Precompiled features are not subject to static analysis.
-					is_object := not g.has_static_access
+					is_object := not g.is_class
 						-- Record object status of the feature.
 					object.put (is_object, i)
 				elseif not has_index (i) then

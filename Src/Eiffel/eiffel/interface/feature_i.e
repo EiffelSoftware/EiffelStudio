@@ -1470,46 +1470,27 @@ feature -- Conveniences
 
 	frozen is_class: BOOLEAN
 			-- Is feature declared as a class one?
-			-- See also: `has_class_postcondition`, `is_instance_free`.
+			-- See also: `has_class_postcondition`, `is_target_free`.
 		do
 				-- A feature is a class one if it has a class postcondition.
 			Result := has_class_postcondition
-		end
-
-	has_static_access: BOOLEAN
-			-- Can Current be access in a static manner?
-			-- See also: `is_class`, `is_instance_free`, `is_target_free`.
-		do
-			Result := is_instance_free
 		ensure
-			true_if_is_instance_free: is_instance_free implies Result
-			true_if_is_target_free: is_target_free implies Result
-		end
-
-	is_instance_free: BOOLEAN
-			-- Is feature instance-free, i.e. does not require a target object?
-			-- See also: `is_class`, `has_static_access`, `is_target_free`.
-		do
-			Result := is_class or else is_target_free
-		ensure
-			true_if_class: is_class implies Result
-			true_if_safe_constant: (is_constant and then not has_combined_assertion) implies Result
-			true_if_static_member: (System.il_generation and attached {IL_EXTENSION_I} extension as e and then e.is_static) implies Result
+			true_if_has_immediate_class_postcondition: has_immediate_class_postcondition implies Result
+			true_if_has_inherited_class_postcondition: attached assert_id_set as a and then a.has_class_postcondition implies Result
+			true_if_safe_constant: is_constant and then not has_combined_assertion implies Result
+			true_if_safe_static_external: attached extension as e and then e.is_static and not has_combined_assertion implies Result
 		end
 
 	is_target_free: BOOLEAN
 			-- Does the feature depend on the target type of the call?
-			-- (It can be instance-free, but depend on the target type.)
-			-- See also: `is_class`, `has_static_access`, `is_instance_free`.
+			-- (It can be a class feature, but depend on the target type.)
+			-- See also: `is_class`.
 		do
 				-- IL externals have no unqualified calls if they do not need current object.
-			Result := System.il_generation and attached {IL_EXTENSION_I} extension as e and then e.is_static
+			Result := attached extension as e and then e.is_static and then not has_combined_assertion
 		ensure
-			true_if_safe_constant: (is_constant and then not has_combined_assertion) implies Result
-			true_if_static_member: (System.il_generation and attached {IL_EXTENSION_I} extension as e and then e.is_static) implies Result
-			true_if_safe_external:
-				(is_external and not has_combined_assertion and
-				not (System.il_generation and attached {IL_EXTENSION_I} extension)) implies Result
+			true_if_safe_constant: is_constant and then not has_combined_assertion implies Result
+			true_if_safe_static_external: attached extension as e and then e.is_static and not has_combined_assertion implies Result
 		end
 
 	frozen has_precondition: BOOLEAN
@@ -3329,7 +3310,7 @@ feature -- Byte code access
 		require
 			access_type_not_void: access_type /= Void
 			-- is_separate_meaningful: is_separate implies (is_qualified or is_creation) -- Creation calls are not marked as qualified.
-			valid_is_instance_free_call: is_free implies (has_static_access or else system.absent_explicit_assertion)
+			valid_is_instance_free_call: is_free implies (is_class or else system.absent_explicit_assertion)
 		local
 			is_in_op: BOOLEAN
 			l_type: TYPE_A

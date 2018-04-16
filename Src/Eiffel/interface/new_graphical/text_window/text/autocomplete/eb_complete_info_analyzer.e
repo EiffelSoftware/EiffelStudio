@@ -881,7 +881,7 @@ feature {NONE} -- Implementation
 					ft.after
 				loop
 					feat := ft.item_for_iteration
-					if feat.has_static_access then
+					if feat.is_class then
 						Result.extend (feat.api_feature (ft.feat_tbl_id))
 					end
 					ft.forth

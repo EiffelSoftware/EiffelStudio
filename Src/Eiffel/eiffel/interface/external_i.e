@@ -18,7 +18,6 @@ inherit
 			generate,
 			init_arg,
 			is_external,
-			is_target_free,
 			new_deferred,
 			set_renamed_name_id,
 			transfer_from,
@@ -144,21 +143,6 @@ feature
 
 	is_external: BOOLEAN = True
 			-- Is the feature an external one?
-
-	is_target_free: BOOLEAN
-			-- <Precursor>
-		do
-			Result :=
-				if System.il_generation and attached {IL_EXTENSION_I} extension as e then
-						-- External IL static features do not need a target.
-					e.is_static
-				else
-						-- Empty assertions guarantee no unqualified calls, and, therefore, no dependency on the target type.
-					not has_combined_assertion and then
-						-- External features that are class features do not need a target.
-					is_class
-				end
-		end
 
 	external_name_id: INTEGER
 			-- External_name ID.

@@ -64,6 +64,9 @@ feature -- Basic operations
 						end
 					else
 							-- URL is the default solution.
+						if {PLATFORM}.is_windows then
+							lt_src.prepend (windows_file_protocol)
+						end
 						append_acrobat_url_arguments (lt_src, lt_entry)
 						launch_uri (lt_src)
 					end
@@ -176,7 +179,7 @@ feature {NONE} -- Constants
 	acrobat_nameddest: STRING_32 = "nameddest";
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

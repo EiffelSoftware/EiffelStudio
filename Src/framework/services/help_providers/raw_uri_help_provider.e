@@ -142,7 +142,7 @@ feature {NONE} -- Basic operations
 			uri_launcher: URI_LAUNCHER
 			l_path_uri: STRING_32
 		do
-			l_path_uri := {STRING_32} "file:///" + a_uri
+			l_path_uri := a_uri
 			create uri_launcher
 			if attached default_uri_browser as l_default_browser and then not l_default_browser.is_empty then
 				is_launched := uri_launcher.launch_with_default_app (l_path_uri, l_default_browser)

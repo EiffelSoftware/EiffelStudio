@@ -5677,7 +5677,10 @@ feature {NONE} -- Visitor
 			l_error_level := error_level
 			if current_feature.is_class then
 				if current_feature.is_attribute then
-					report_vucr (create {VUCR_ATTRIBUTE}.make (current_feature, context.current_class, l_as.feature_name))
+						-- Ignore static external attributes.
+					if attached current_feature.extension as e implies not e.is_static then
+						report_vucr (create {VUCR_ATTRIBUTE}.make (current_feature, context.current_class, l_as.feature_name))
+					end
 				elseif current_feature.is_object_relative_once then
 					report_vucr (create {VUCR_ONCE}.make (current_feature, context.current_class, l_as.feature_name))
 				end
@@ -5686,14 +5689,17 @@ feature {NONE} -- Visitor
 			l_as.body.process (Current)
 			if error_level = l_error_level then
 				if is_byte_node_enabled then
-					l_byte_code ?= last_byte_node
-					if l_byte_code = Void then
+					if attached {BYTE_CODE} last_byte_node as b then
+						l_byte_code := b
+					elseif not attached {IL_EXTENSION_I} current_feature.extension then
 						create {ATTRIBUTE_BYTE_CODE} l_byte_code
 						context.init_byte_code (l_byte_code)
 						l_byte_code.set_end_location (l_as.end_location)
 					end
-					l_byte_code.set_start_line_number (l_as.start_location.line)
-					l_byte_code.set_has_loop (has_loop)
+					if attached l_byte_code then
+						l_byte_code.set_start_line_number (l_as.start_location.line)
+						l_byte_code.set_has_loop (has_loop)
+					end
 				end
 					-- For the moment, there is no point in checking custom attributes in non-dotnet mode.
 					-- This fixes eweasel test#incr207.
@@ -5701,7 +5707,7 @@ feature {NONE} -- Visitor
 					l_custom_attributes := l_as.custom_attributes
 					if l_custom_attributes /= Void then
 						l_custom_attributes.process (Current)
-						if is_byte_node_enabled then
+						if attached l_byte_code then
 							l_list ?= last_byte_node
 							l_byte_code.set_custom_attributes (l_list)
 						end
@@ -5709,7 +5715,7 @@ feature {NONE} -- Visitor
 					l_custom_attributes := l_as.class_custom_attributes
 					if l_custom_attributes /= Void then
 						l_custom_attributes.process (Current)
-						if is_byte_node_enabled then
+						if attached l_byte_code then
 							l_list ?= last_byte_node
 							l_byte_code.set_class_custom_attributes (l_list)
 						end
@@ -5717,7 +5723,7 @@ feature {NONE} -- Visitor
 					l_custom_attributes := l_as.interface_custom_attributes
 					if l_custom_attributes /= Void then
 						l_custom_attributes.process (Current)
-						if is_byte_node_enabled then
+						if attached l_byte_code then
 							l_list ?= last_byte_node
 							l_byte_code.set_interface_custom_attributes (l_list)
 						end
@@ -5725,14 +5731,14 @@ feature {NONE} -- Visitor
 				end
 				l_property_name := l_as.property_name
 				if l_property_name /= Void then
-					if is_byte_node_enabled then
+					if attached l_byte_code then
 						l_byte_code.set_property_name (l_property_name)
 					end
 					l_custom_attributes := l_as.property_custom_attributes
 						-- See above comments for why it is only done in .NET mode.
 					if l_custom_attributes /= Void and system.il_generation then
 						l_custom_attributes.process (Current)
-						if is_byte_node_enabled then
+						if attached l_byte_code then
 							l_list ?= last_byte_node
 							l_byte_code.set_property_custom_attributes (l_list)
 						end

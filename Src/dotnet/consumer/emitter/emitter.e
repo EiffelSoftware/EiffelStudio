@@ -1,11 +1,11 @@
 note
-	description	: "Emitter's root class"
+	description: "Emitter's root class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	assembly_metadata:
 		create {COM_VISIBLE_ATTRIBUTE}.make (False) end,
 		create {ASSEMBLY_COMPANY_ATTRIBUTE}.make ("Eiffel Software") end,
-		create {ASSEMBLY_COPYRIGHT_ATTRIBUTE}.make ("Copyright Eiffel Software 1985-2006") end
+		create {ASSEMBLY_COPYRIGHT_ATTRIBUTE}.make ("Copyright Eiffel Software 1985-2018") end
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -98,7 +98,7 @@ invariant
 	non_void_cache_writer: cache_writer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -130,4 +130,5 @@ note
 		]"
 
 
-end -- class EMITTER
+end
+

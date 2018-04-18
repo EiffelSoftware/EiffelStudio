@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="data_grid" uuid="AFCC5545-31F0-4BEF-91C9-E4CE1789643B">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="data_grid" uuid="AFCC5545-31F0-4BEF-91C9-E4CE1789643B">
 	<target name="data_grid_vision2">
 		<root cluster="root_cluster" class="APPLICATION" feature="make_and_launch"/>
-		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
+		<option warning="true">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="false"/>
 		<setting name="msil_generation" value="true"/>
 		<capability>
 			<concurrency support="none"/>
-			<void_safety support="none"/>
 		</capability>
-		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>
+		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<library name="vision2_extensions" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf"/>

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Eiffel interface class for EiffelSoftware.MetadataConsumer.exe or EiffelSoftware.MetadataConsumer.dll assemblies
 		Encapsulates the COM_CACHE_MANAGER class
@@ -135,8 +135,6 @@ feature -- Basic Oprtations
 			else
 				last_call_success := c_consume_assembly_from_path (item, bstr_path.item, a_info_only, default_pointer)
 			end
-		ensure
-			success: last_call_success = 0
 		end
 
 	unload
@@ -215,7 +213,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

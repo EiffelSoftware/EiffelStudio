@@ -204,7 +204,6 @@ feature {NONE} -- Implementation
 			p_not_void: p /= Void
 		local
 			l_is_new_attribute: BOOLEAN
-			l_attribute: ATTRIBUTE_I
 			l_class_c: CLASS_C
 			l_parent_classes: FIXED_LIST [CLASS_C]
 			l_feats: SELECT_TABLE
@@ -213,8 +212,11 @@ feature {NONE} -- Implementation
 			l_old_feat: FEATURE_I
 			found: BOOLEAN
 		do
-			if feat.is_attribute and then feat.written_in = class_id then
-				l_attribute ?= feat
+			if
+				feat.is_attribute and then
+				attached {ATTRIBUTE_I} feat as l_attribute and then
+				feat.written_in = class_id
+			then
 					-- The following line ensures that the attribute has no
 					-- precursor feature in the attribute form.
 					-- It could also be written as
@@ -346,7 +348,6 @@ feature {NONE} -- Implementation
 			-- a static routine or a static field of an external class should
 			-- not be added, the same for a .NET IL external which is frozen.
 		local
-			l_ext: IL_EXTENSION_I
 			l_type: INTEGER
 		do
 			Result :=
@@ -356,8 +357,7 @@ feature {NONE} -- Implementation
 					(inh_feat.written_in /= new_feat.written_in or else inh_feat.written_feature_id /= new_feat.written_feature_id)) and then
 					not new_feat.rout_id_set.has (inh_feat.rout_id_set.first)
 			if Result then
-				l_ext ?= new_feat.extension
-				if l_ext /= Void then
+				if attached {IL_EXTENSION_I} new_feat.extension as l_ext then
 					l_type := l_ext.type
 					Result := l_type /= {SHARED_IL_CONSTANTS}.Creator_type and
 						l_type /= {SHARED_IL_CONSTANTS}.Static_type and
@@ -381,7 +381,7 @@ invariant
 	il_generation: system.il_generation
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

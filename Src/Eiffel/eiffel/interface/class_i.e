@@ -112,7 +112,9 @@ feature -- Access
 	assertion_level: ASSERTION_I
 			-- Assertion checking level
 		do
-			Result ?= options.assertions
+			check attached {ASSERTION_I} options.assertions as l_assertion_i then
+				Result := l_assertion_i
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -364,13 +366,12 @@ feature -- Access
 			file_date_valid: Result >= -1
 		end
 
-	compiled_representation: CLASS_C
+	compiled_representation: detachable CLASS_C
 			-- Compiled representation of `Current'
 			-- same as `compiled_class' for normal classes
 			-- Void for classes that are overriden
 			-- The first compiled class of an override if it is an overrider.
 		local
-			l_classi: CLASS_I
 			l_classc: CLASS_C
 			l_overrides: ARRAYED_LIST [CONF_CLASS]
 		do
@@ -384,11 +385,11 @@ feature -- Access
 					l_classc /= Void or l_overrides.after
 				loop
 					if l_overrides.item.is_compiled then
-						l_classi ?= l_overrides.item
-						check
-							class_i: l_classi /= Void
+						if attached {CLASS_I} l_overrides.item as l_classi then
+							l_classc := l_classi.compiled_class
+						else
+							check is_class_i: False end
 						end
-						l_classc := l_classi.compiled_class
 					end
 					l_overrides.forth
 				end
@@ -422,13 +423,11 @@ feature -- Status report
 			compiled_class: is_compiled
 		local
 			l_path: like path
-			l_cluster: CLUSTER_I
 		do
 			if compiled_class.is_precompiled then
 				Result := internal_namespace
 			else
-				l_cluster ?= group
-				if l_cluster /= Void then
+				if attached {CLUSTER_I} group as l_cluster then
 					Result := l_cluster.actual_namespace.twin
 				end
 

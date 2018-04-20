@@ -567,7 +567,6 @@ feature -- Comparison
 			other_is_computed: other.is_computed
 		local
 			f1, f2: FEATURE_I
-			ext_i: EXTERNAL_I
 			c: CLASS_C
 			is_freeze_requested: BOOLEAN
 		do
@@ -609,11 +608,13 @@ feature -- Comparison
 		io.error.put_string (f2.feature_name)
 		io.error.put_string (" is not equiv.%N")
 	end
-							if f1.is_external then
+							if
+								f1.is_external and then
+								attached {EXTERNAL_I} fl as ext_i
+							then
 									-- `f1' and `f2' can be "not equiv" because of the
 									-- export status. We need to freeze only if the
 									-- information specific to EXTERNAL_I is not equiv
-								ext_i ?= f1
 								if not is_freeze_requested and then
 									(f1.is_type_evaluation_delayed or else
 									f2.is_type_evaluation_delayed or else
@@ -737,8 +738,11 @@ end
 					end
 						-- Delete one occurrence of an external feature. Freeze is taken
 						-- care by EXTERNALS.is_equivalent queried by SYSTEM_I.
-					external_i ?= old_feature_i
-					pass_control.remove_external (external_i)
+					if attached {EXTERNAL_I} old_feature_i as external_i then
+						pass_control.remove_external (external_i)
+					else
+						check old_is_external_i: False end
+					end
 				end
 
 				if old_feature_i.written_in = feat_tbl_id or else old_feature_i.is_replicated_directly then

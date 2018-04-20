@@ -89,7 +89,11 @@ feature {NONE} -- Initialization
 		do
 			l_system := system
 			l_static_type_id_counter := static_type_id_counter
-			basic_type ?= t
+			if attached {like basic_type} t as l_basic_type then
+				basic_type := l_basic_type
+			else
+				basic_type := Void
+			end
 			type := t.generic_derivation
 				-- Set creation info as if the type is used as "like Current".
 			if type = t then
@@ -2025,7 +2029,7 @@ invariant
 	valid_implementation_id: System.il_generation implies implementation_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -604,7 +604,7 @@ feature -- Expanded rules validity
 			-- (the creators must be up to date)
 		local
 			l_constraint_types: TYPE_SET_A
-			l_formal_dec: FORMAL_CONSTRAINT_AS
+			l_actual_type: TYPE_SET_A
 		do
 debug ("CHECK_EXPANDED")
 io.error.put_string ("Checking expanded for: ")
@@ -630,18 +630,21 @@ end
 				until
 					generics.after
 				loop
-					l_formal_dec ?= generics.item
-					check l_formal_dec_not_void: l_formal_dec /= Void end
-					l_constraint_types := l_formal_dec.constraint_types (Current)
-					from
-						l_constraint_types.start
-					until
-						l_constraint_types.after
-					loop
-						if l_constraint_types.item.type.has_generics then
-							System.expanded_checker.check_actual_type (l_constraint_types.item.type)
+					if attached {FORMAL_CONSTRAINT_AS} generics.item as l_formal_dec then
+						l_constraint_types := l_formal_dec.constraint_types (Current)
+						from
+							l_constraint_types.start
+						until
+							l_constraint_types.after
+						loop
+							l_actual_type := l_constraint_types.item.type
+							if l_actual_type.has_generics then
+								System.expanded_checker.check_actual_type (l_actual_type)
+							end
+							l_constraint_types.forth
 						end
-						l_constraint_types.forth
+					else
+						check is_formal_constraint: False end
 					end
 					generics.forth
 				end
@@ -1657,18 +1660,17 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Supplier checking
 		local
 			l_creation_proc: FEATURE_I
 			l_error: BOOLEAN
-			l_arg_type: TYPE_A
 			l_vd27: VD27
 			l_feat_tbl: like feature_table
 		do
-			if creators /= Void and not a_creator.is_empty then
+			if creators /= Void and then not a_creator.is_empty then
 				l_feat_tbl := feature_table
 				from
 					creators.start
 				until
 					creators.after
 				loop
-					if a_creator.is_equal (creators.key_for_iteration) then
+					if a_creator.same_string (creators.key_for_iteration) then
 							-- `creators.key_for_iteration' contains the creation_name
 						l_creation_proc := l_feat_tbl.item (creators.key_for_iteration)
 
@@ -1677,9 +1679,13 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Supplier checking
 						when 0 then
 							l_error := False
 						when 1 then
-							l_arg_type ?= l_creation_proc.arguments.first
-							l_arg_type := l_arg_type.instantiation_in (a_type, class_id).actual_type
-							l_error := not array_of_string.conform_to (Current, l_arg_type)
+							if attached l_creation_proc.arguments.first as l_arg_type then
+								l_arg_type := l_arg_type.instantiation_in (a_type, class_id).actual_type
+								l_error := not array_of_string.conform_to (Current, l_arg_type)
+							else
+								check has_one_argument: False end
+								l_error := True
+							end
 						else
 							l_error := True
 						end
@@ -2411,12 +2417,12 @@ end
 			generics_exists: is_generic
 			valid_index: generics.valid_index (i)
 			not_is_multi_constraint: not generics.i_th (i).has_multi_constraints
-		local
-			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
-			l_formal_dec ?= generics.i_th (i)
-			check l_formal_dec_not_void: l_formal_dec /= Void end
-			Result := l_formal_dec.constraint_type (Current).type
+			if attached {FORMAL_CONSTRAINT_AS} generics.i_th (i) as l_formal_dec then
+				Result := l_formal_dec.constraint_type (Current).type
+			else
+				check is_formal_constraint: False end
+			end
 		ensure
 			constraint_not_void: Result /= Void
 		end
@@ -2428,14 +2434,15 @@ end
 			valid_index: generics.valid_index (i)
 			not_is_multi_constraint: not generics.i_th (i).has_multi_constraints
 		local
-			l_formal_dec: FORMAL_CONSTRAINT_AS
-			l_result: RENAMED_TYPE_A
+			l_result: detachable RENAMED_TYPE_A
 		do
-			l_formal_dec ?= generics.i_th (i)
-			check l_formal_dec_not_void: l_formal_dec /= Void end
-			l_result := l_formal_dec.constraint_type_if_possible (Current)
-			if l_result /= Void then
-				Result := l_result.type
+			if attached {FORMAL_CONSTRAINT_AS} generics.i_th (i) as l_formal_dec then
+				l_result := l_formal_dec.constraint_type_if_possible (Current)
+				if l_result /= Void then
+					Result := l_result.type
+				end
+			else
+				check is_formal_constraint: False end
 			end
 		end
 
@@ -2448,9 +2455,11 @@ end
 			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
 				-- Fixme: Should we store computation of `constraint_types'?
-			l_formal_dec ?= generics.i_th (i)
-			check l_formal_dec_not_void: l_formal_dec /= Void end
-			Result := l_formal_dec.constraint_types (Current)
+			if attached {FORMAL_CONSTRAINT_AS} generics.i_th (i) as l_formal_dec then
+				Result := l_formal_dec.constraint_types (Current)
+			else
+				check is_formal_constraint: False end
+			end
 		ensure
 			constraint_not_void: Result /= Void
 		end
@@ -2487,9 +2496,11 @@ end
 			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
 				-- Fixme: Should we store computation of `constraint_types_if_possible'?
-			l_formal_dec ?= generics.i_th (i)
-			check l_formal_dec_not_void: l_formal_dec /= Void end
-			Result := l_formal_dec.constraint_types_if_possible (Current)
+			if attached {FORMAL_CONSTRAINT_AS} generics.i_th (i) as l_formal_dec then
+				Result := l_formal_dec.constraint_types_if_possible (Current)
+			else
+				check is_formal_constraint: False end
+			end
 		ensure
 			constraint_not_void: Result /= Void
 		end
@@ -2504,7 +2515,6 @@ end
 			valid_formal_position: is_valid_formal_position (a_formal_position)
 			not_multi_constraint: not generics [a_formal_position].is_multi_constrained (generics)
 		local
-			l_formal_type: FORMAL_A
 			l_recursion_break: SPECIAL [BOOLEAN]
 			l_break: BOOLEAN
 			l_formal_type_position: INTEGER
@@ -2517,13 +2527,15 @@ end
 				until
 					not Result.is_formal or l_break
 				loop
-					l_formal_type ?= Result
-					check l_formal_type_not_void: l_formal_type /= Void end
-					l_formal_type_position := l_formal_type.position
-					check valid_formal_position: is_valid_formal_position (l_formal_type_position) end
-					l_break := l_recursion_break [l_formal_type_position]
-					l_recursion_break [l_formal_type_position] := True
-					Result := constraint (l_formal_type_position)
+					if attached {FORMAL_A} Result as l_formal_type then
+						l_formal_type_position := l_formal_type.position
+						check valid_formal_position: is_valid_formal_position (l_formal_type_position) end
+						l_break := l_recursion_break [l_formal_type_position]
+						l_recursion_break [l_formal_type_position] := True
+						Result := constraint (l_formal_type_position)
+					else
+						check is_formal_type: False end
+					end
 				end
 				if l_break then
 					Result := any_type
@@ -2676,13 +2688,14 @@ feature {NONE} -- Incrementality
 			-- return the associated class type.
 		require
 			data_not_void: data /= Void
-		local
-			g: GEN_TYPE_A
 		do
 			if data.generics /= Void then
 					-- Register this generic type and other required types.
-				g ?= data
-				Result := register_generic_type (g, g.generics.count)
+				if attached {GEN_TYPE_A} data as g then
+					Result := register_generic_type (g, g.generics.count)
+				else
+					check data_is_gen_type_a: False end
+				end
 			elseif types.has_type (Void, data) then
 				Result := types.found_item
 			else
@@ -2729,43 +2742,42 @@ end
 			g: GEN_TYPE_A
 			t: ARRAYED_LIST [TYPE_A]
 			p: TYPE_A
-			c: CL_TYPE_A
 			i: INTEGER
-			a: NATIVE_ARRAY_TYPE_A
-			r: GEN_TYPE_A
 		do
 			if types.has_type (Void, data) then
 				Result := types.found_item
 			else
 					-- Found a new type for the class
 				Result := register_new_type (data)
-				r ?= Result.type
-				check
-					r_attached: r /= Void
-				end
-				a ?= r
-					-- TODO: see GEN_TYPE_A.enumerate_interfaces
-				if a = Void and then system.is_precompiled then
-						-- Register all types where expanded parameters are replaced with reference ones.
-					t := r.generics
-					from
-						i := n
-					until
-						i <= 0
-					loop
-						p := t [i]
-						if p.is_expanded then
-							g := r.duplicate
-							c ?= p
-							check
-								c_attached: c /= Void
+				if attached {GEN_TYPE_A} Result.type as r then
+						-- TODO: see GEN_TYPE_A.enumerate_interfaces
+					if
+						not attached {NATIVE_ARRAY_TYPE_A} r and then
+						system.is_precompiled
+					then
+							-- Register all types where expanded parameters are replaced with reference ones.
+						t := r.generics
+						from
+							i := n
+						until
+							i <= 0
+						loop
+							p := t [i]
+							if p.is_expanded then
+								g := r.duplicate
+								if attached {CL_TYPE_A} p as c then
+									g.generics [i] := c.reference_type
+									register_generic_type (g, i - 1).do_nothing
+									update_types (g)
+								else
+									check is_cl_type_a: False end
+								end
 							end
-							g.generics [i] := c.reference_type
-							register_generic_type (g, i - 1).do_nothing
-							update_types (g)
+							i := i - 1
 						end
-						i := i - 1
 					end
+				else
+					check is_gen_type_a: False end
 				end
 			end
 		end
@@ -2877,14 +2889,17 @@ feature -- Meta-type
 					-- General instantiation of the actual class type where
 					-- the feature is written in the context of the actual
 					-- type of the base class of `class_type'.
-				written_actual_type ?= actual_type.instantiation_in
-											(actual_class_type, class_id)
-				if written_actual_type.is_expanded then
-						-- Ancestors are always reference types.
-					written_actual_type := written_actual_type.reference_type
+				if attached {CL_TYPE_A} actual_type.instantiation_in (actual_class_type, class_id) as l_cl_type_a then
+					written_actual_type := l_cl_type_a
+					if written_actual_type.is_expanded then
+							-- Ancestors are always reference types.
+						written_actual_type := written_actual_type.reference_type
+					end
+						-- Ask for the meta-type
+					Result := written_actual_type.associated_class_type (class_type.type)
+				else
+					check is_cl_type_a: False end
 				end
-					-- Ask for the meta-type
-				Result := written_actual_type.associated_class_type (class_type.type)
 			end
 		ensure
 			meta_type_not_void: Result /= Void
@@ -3646,12 +3661,12 @@ feature -- Access
 			-- Does i-th generic parameter have multiple constraints?
 		require
 			has_generics: generics /= Void
-		local
-			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
-			l_formal_dec ?= generics.i_th (i)
-			check l_formal_dec_not_void: l_formal_dec /= Void end
-			Result := l_formal_dec.has_multi_constraints
+			if attached {FORMAL_CONSTRAINT_AS} generics.i_th (i) as l_formal_dec then
+				Result := l_formal_dec.has_multi_constraints
+			else
+				check is_formal_constraint: False end
+			end
 		end
 
 	is_fully_deferred: BOOLEAN
@@ -4375,7 +4390,6 @@ feature -- Genericity
 		local
 			l_parents: like parents
 			l_formal, l_parent_formal: TYPE_FEATURE_I
-			l_formal_type: FORMAL_A
 			l_generic_features, l_old: like generic_features
 			l_inherited_formals: SEARCH_TABLE [INTEGER]
 			l_rout_id_set: ROUT_ID_SET
@@ -4400,12 +4414,13 @@ feature -- Genericity
 						-- We check that the previous formal was written in the Current class and that
 						-- it is still makes sense. A case where it does not make sense is when the Current
 						-- class has less generics than before.
-					l_formal_type ?= l_old.item_for_iteration.type
 					if
-						l_formal_type /= Void and then
-						(not l_formal_type.has_attached_mark and not l_formal_type.has_detachable_mark and
-						l_old.item_for_iteration.origin_class_id = class_id and
-						l_formals.valid_index (l_formal_type.position))
+						attached {FORMAL_A} l_old.item_for_iteration.type as l_formal_type and then
+						(
+							not l_formal_type.has_attached_mark and not l_formal_type.has_detachable_mark and
+							l_old.item_for_iteration.origin_class_id = class_id and
+							l_formals.valid_index (l_formal_type.position)
+						)
 					then
 						check
 							not_inserted: l_formals.item (l_formal_type.position) = Void
@@ -4477,9 +4492,15 @@ feature -- Genericity
 					loop
 						l_formal := l_generic_features.item_for_iteration
 						if l_formal.is_formal then
-							l_formal_type ?= l_formal.type
-							if not l_formal_type.has_attached_mark and not l_formal_type.has_detachable_mark then
-								l_inherited_formals.put (l_formal_type.position)
+							if attached {FORMAL_A} l_formal.type as l_formal_type then
+								if
+									not l_formal_type.has_attached_mark and not
+									l_formal_type.has_detachable_mark
+								then
+									l_inherited_formals.put (l_formal_type.position)
+								end
+							else
+								check is_formal_a: False end
 							end
 						end
 						l_generic_features.forth
@@ -5210,7 +5231,6 @@ feature {NONE} -- Implementation
 		require
 			non_void_st: a_text_formatter /= Void
 		local
-			formal_dec: FORMAL_CONSTRAINT_AS
 			old_group: CONF_GROUP
 			gens: like generics
 		do
@@ -5229,9 +5249,11 @@ feature {NONE} -- Implementation
 				until
 					gens.after
 				loop
-					formal_dec ?= gens.item
-					check formal_dec_not_void: formal_dec /= Void end
-					formal_dec.append_signature (a_text_formatter, a_short, Current)
+					if attached {FORMAL_CONSTRAINT_AS} gens.item as l_formal_dec then
+						l_formal_dec.append_signature (a_text_formatter, a_short, Current)
+					else
+						check is_formal_constraint: False end
+					end
 					gens.forth
 					if not gens.after then
 						a_text_formatter.process_symbol_text (ti_Comma)

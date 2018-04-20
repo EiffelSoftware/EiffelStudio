@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 					%%T" + root_class_name + "%N%
 					%%N%
 					%inherit%N%
-					%%TARGUMENTS%N%
+					%%TARGUMENTS_32%N%
 					%%N%
 					%create%N%
 					%%T" + root_feature_name + "%N%
@@ -226,7 +226,7 @@ feature {NONE} -- Private attributes
 			-- Location of the project to build.
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

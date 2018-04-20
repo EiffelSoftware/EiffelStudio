@@ -610,7 +610,7 @@ feature -- Comparison
 	end
 							if
 								f1.is_external and then
-								attached {EXTERNAL_I} fl as ext_i
+								attached {EXTERNAL_I} f1 as ext_i
 							then
 									-- `f1' and `f2' can be "not equiv" because of the
 									-- export status. We need to freeze only if the
@@ -657,7 +657,6 @@ end
 			propagators, melted_propagators: TWO_WAY_SORTED_SET [DEPEND_UNIT]
 			removed_features: SEARCH_TABLE [INTEGER]
 			depend_unit: DEPEND_UNIT
-			external_i: EXTERNAL_I
 			propagate_feature: BOOLEAN
 			same_interface, has_same_type: BOOLEAN
 			is_anchor_changed: BOOLEAN

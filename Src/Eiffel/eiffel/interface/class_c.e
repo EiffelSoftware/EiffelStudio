@@ -604,7 +604,7 @@ feature -- Expanded rules validity
 			-- (the creators must be up to date)
 		local
 			l_constraint_types: TYPE_SET_A
-			l_actual_type: TYPE_SET_A
+			l_actual_type: TYPE_A
 		do
 debug ("CHECK_EXPANDED")
 io.error.put_string ("Checking expanded for: ")
@@ -1680,8 +1680,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Supplier checking
 							l_error := False
 						when 1 then
 							if attached l_creation_proc.arguments.first as l_arg_type then
-								l_arg_type := l_arg_type.instantiation_in (a_type, class_id).actual_type
-								l_error := not array_of_string.conform_to (Current, l_arg_type)
+								l_error := not array_of_string.conform_to (Current, l_arg_type.instantiation_in (a_type, class_id).actual_type)
 							else
 								check has_one_argument: False end
 								l_error := True
@@ -2451,8 +2450,6 @@ end
 		require
 			generics_exists: is_generic
 			valid_index: generics.valid_index (i)
-		local
-			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
 				-- Fixme: Should we store computation of `constraint_types'?
 			if attached {FORMAL_CONSTRAINT_AS} generics.i_th (i) as l_formal_dec then
@@ -2492,8 +2489,6 @@ end
 		require
 			generics_exists: is_generic
 			valid_index: generics.valid_index (i)
-		local
-			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
 				-- Fixme: Should we store computation of `constraint_types_if_possible'?
 			if attached {FORMAL_CONSTRAINT_AS} generics.i_th (i) as l_formal_dec then
@@ -4396,6 +4391,7 @@ feature -- Genericity
 			i, nb: INTEGER
 			l_formal_dec: FORMAL_DEC_AS
 			l_formals: SPECIAL [detachable TYPE_FEATURE_I]
+			l_formal_type: FORMAL_A
 		do
 				-- Clean previously stored information.
 			l_old := generic_features
@@ -4415,17 +4411,17 @@ feature -- Genericity
 						-- it is still makes sense. A case where it does not make sense is when the Current
 						-- class has less generics than before.
 					if
-						attached {FORMAL_A} l_old.item_for_iteration.type as l_formal_type and then
+						attached {FORMAL_A} l_old.item_for_iteration.type as l_item_formal_type and then
 						(
-							not l_formal_type.has_attached_mark and not l_formal_type.has_detachable_mark and
+							not l_item_formal_type.has_attached_mark and not l_item_formal_type.has_detachable_mark and
 							l_old.item_for_iteration.origin_class_id = class_id and
-							l_formals.valid_index (l_formal_type.position)
+							l_formals.valid_index (l_item_formal_type.position)
 						)
 					then
 						check
-							not_inserted: l_formals.item (l_formal_type.position) = Void
+							not_inserted: l_formals.item (l_item_formal_type.position) = Void
 						end
-						l_formals.put (l_old.item_for_iteration, l_formal_type.position)
+						l_formals.put (l_old.item_for_iteration, l_item_formal_type.position)
 					end
 					l_old.forth
 				end
@@ -4492,12 +4488,12 @@ feature -- Genericity
 					loop
 						l_formal := l_generic_features.item_for_iteration
 						if l_formal.is_formal then
-							if attached {FORMAL_A} l_formal.type as l_formal_type then
+							if attached {FORMAL_A} l_formal.type as l_item_formal_type then
 								if
-									not l_formal_type.has_attached_mark and not
-									l_formal_type.has_detachable_mark
+									not l_item_formal_type.has_attached_mark and not
+									l_item_formal_type.has_detachable_mark
 								then
-									l_inherited_formals.put (l_formal_type.position)
+									l_inherited_formals.put (l_item_formal_type.position)
 								end
 							else
 								check is_formal_a: False end
@@ -4515,8 +4511,7 @@ feature -- Genericity
 				loop
 					if not l_inherited_formals.has (i) then
 						l_formal_dec := generics.i_th (i)
-						create l_formal_type.make (l_formal_dec.is_reference,
-							l_formal_dec.is_expanded, i)
+						create l_formal_type.make (l_formal_dec.is_reference, l_formal_dec.is_expanded, i)
 
 						create l_formal
 						l_formal.set_feature_name ("_" + name + "_Formal#" + i.out)

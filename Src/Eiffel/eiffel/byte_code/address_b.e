@@ -121,7 +121,6 @@ feature -- C code generation
 		local
 			internal_name: STRING
 			table_name: STRING
-			rout_table: ROUT_TABLE
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
 			class_type: CLASS_TYPE
@@ -155,17 +154,21 @@ feature -- C code generation
 						-- Remember extern declarations
 					Extern_declarations.add_routine (feature_type, table_name)
 				else
-					rout_table ?= Eiffel_table.poly_table (l_rout_id)
-					rout_table.goto_implemented (class_type.type, class_type)
-					if rout_table.is_implemented then
-						internal_name := rout_table.feature_name
-						buf.put_string ("(EIF_POINTER) ")
-						buf.put_string (internal_name)
+					if attached {ROUT_TABLE} Eiffel_table.poly_table (l_rout_id) as rout_table then
+						rout_table.goto_implemented (class_type.type, class_type)
+						if rout_table.is_implemented then
+							internal_name := rout_table.feature_name
+							buf.put_string ("(EIF_POINTER) ")
+							buf.put_string (internal_name)
 
-						shared_include_queue_put (
-							System.class_type_of_id (rout_table.item.access_type_id).header_filename)
+							shared_include_queue_put (
+								System.class_type_of_id (rout_table.item.access_type_id).header_filename)
+						else
+								-- Call to a deferred feature without implementation
+							buf.put_string ("NULL")
+						end
 					else
-							-- Call to a deferred feature without implementation
+						check has_rout_table: False end
 						buf.put_string ("NULL")
 					end
 				end
@@ -193,7 +196,7 @@ feature {NONE} -- Address table
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -266,8 +266,6 @@ feature -- Access
 		require
 			a_context_class_attached: a_context_class /= Void
 			not_multi_constraint: not is_multi_constrained (a_context_class)
-		local
-			l_formal_type: FORMAL_A
 		do
 			from
 					-- Unfold the chain of formal generics
@@ -275,8 +273,11 @@ feature -- Access
 			until
 				Result = Void or else not Result.is_formal
 			loop
-				l_formal_type ?= Result
-				Result := a_context_class.constraint_if_possible (l_formal_type.position)
+				if attached {FORMAL_A} Result as l_formal_type then
+					Result := a_context_class.constraint_if_possible (l_formal_type.position)
+				else
+					check result_is_formal_a: False end
+				end
 			end
 		end
 
@@ -755,7 +756,7 @@ feature {NONE} -- Status adaptation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

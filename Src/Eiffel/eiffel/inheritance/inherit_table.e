@@ -544,7 +544,6 @@ end;
 			resulting_table_attached: resulting_table /= Void
 		local
 			f: FEATURE_I
-			a: ATTRIBUTE_I
 			l_attribute_count, l_attribute_counter: INTEGER
 		do
 			from
@@ -558,11 +557,11 @@ end;
 						-- We have an attribute so increase the counter
 					l_attribute_counter := l_attribute_counter + 1
 					if f.is_origin and then f.rout_id_set.count = 1 then
-						a ?= f
-						check
-							a_attached: a /= Void
+						if attached {ATTRIBUTE_I} f as a then
+							a.set_generate_in (f.written_in)
+						else
+							check f_is_attribute: False end
 						end
-						a.set_generate_in (f.written_in)
 					end
 				end
 				if l_attribute_counter < l_attribute_count then
@@ -1328,21 +1327,20 @@ end;
 		require
 			syntactically_changed: a_class.changed;
 		local
-			old_feature_i: FEATURE_I;
-			unique_feature: UNIQUE_I;
+			old_feature_i: FEATURE_I
+			unique_feature: UNIQUE_I
 				-- Feature coming from a previous recompilation
-			body_index: INTEGER;
+			body_index: INTEGER
 				-- Body index of a previous compiled feature
-			old_description, old_tmp_description: FEATURE_AS;
+			old_description, old_tmp_description: FEATURE_AS
 				-- Abstract representation of a previous compiled feature
-			is_the_same: BOOLEAN;
+			is_the_same: BOOLEAN
 				-- Is the parsed feature the same than a previous
 				-- compiled one ?
-			feature_name_id: INTEGER;
-			integer_value: INTEGER_CONSTANT;
+			feature_name_id: INTEGER
+			integer_value: INTEGER_CONSTANT
 				-- Internal name of the feature
-			vffd4: VFFD4;
-			external_i: EXTERNAL_I;
+			vffd4: VFFD4
 		do
 			feature_name_id := feat.internal_name.name_id
 debug ("ACTIVITY")
@@ -1363,9 +1361,9 @@ end;
 			Result.set_is_unary (feat.is_unary)
 			Result.set_has_convert_mark (feat.has_convert_mark)
 
-			if Result.is_unique then
+			if Result.is_unique and attached {UNIQUE_I} Result as l_unique_i then
+				unique_feature := l_unique_i
 					-- Unique value processing
-				unique_feature ?= Result;
 				create integer_value.make_with_value (a_unique_counter.next)
 				if integer_value.valid_type (unique_feature.type) then
 					integer_value.set_real_type (unique_feature.type)
@@ -1374,10 +1372,9 @@ end;
 					error_handler.insert_error (create {VQUI2}.make (a_class, Result.feature_name, Result.type))
 				end
 				unique_feature.set_value (integer_value)
-			elseif Result.is_c_external then
+			elseif Result.is_c_external and attached {EXTERNAL_I} Result as external_i then
 					-- Track new externals introduced in the class. Freeze is taken care by
 					-- EXTERNALS.is_equivalent queried by SYSTEM_I.
-				external_i ?= Result
 				pass2_control.add_external (external_i)
 			end
 

@@ -883,7 +883,6 @@ feature {BYTE_NODE} -- Visitor
 		local
 			fi: detachable FEATURE_I
 			cl: CLASS_C
---			l_basic_i: BASIC_A
 			params: ARRAYED_LIST [DUMP_VALUE]
 		do
 			if tmp_target_dump_value /= Void then
@@ -902,8 +901,7 @@ feature {BYTE_NODE} -- Visitor
 --					--| Check if a_node is not built-in
 --				if cl.is_basic then
 --					check cl.types /= Void and then cl.types.first /= Void end
---					l_basic_i ?= cl.types.first.type
---					if l_basic_i /= Void and then a_node.is_feature_special (False, l_basic_i) then
+--					if attached {BASIC_A} cl.types.first.type as l_basic_i  and then a_node.is_feature_special (False, l_basic_i) then
 --						dbg_error_handler.notify_error_expression ("Evaluation of %"built-in%" feature %""
 --							+ "{" + cl.name_in_upper + "}." + a_node.feature_name
 --							+ "%" is not yet available")
@@ -1770,42 +1768,33 @@ feature {NONE} -- Visitor: implementation
 		require
 			a_value_i_not_void: a_value_i /= Void
 		local
-			l_integer: INTEGER_CONSTANT
-			l_char: CHAR_VALUE_I
-			l_real: REAL_VALUE_I
-			l_string: STRING_VALUE_I
 			l_cl: CLASS_C
 			d_fact: DUMP_VALUE_FACTORY
 			comp_data: DEBUGGER_DATA_FROM_COMPILER
 			dv: DUMP_VALUE
 		do
-			if a_value_i.is_integer then
-				l_integer ?= a_value_i
-				check is_integer: l_integer /= Void end
+			if a_value_i.is_integer and attached {INTEGER_CONSTANT} a_value_i as l_integer then
 				process_integer_constant (l_integer)
 			else
 				d_fact := Debugger_manager.Dump_value_factory
 				comp_data := debugger_manager.compiler_data
 				l_cl := cl
-				if a_value_i.is_string then
-					l_string ?= a_value_i
+				if a_value_i.is_string and attached {STRING_VALUE_I} a_value_i as l_string then
 					if l_cl = Void then
 						l_cl := comp_data.string_8_class_c
 					end
 					dv := d_fact.new_manifest_string_value (l_string.string_value, l_cl)
-				elseif a_value_i.is_string_32 then
-					l_string ?= a_value_i
+				elseif a_value_i.is_string_32 and attached {STRING_VALUE_I} a_value_i as l_string_32 then
 					if l_cl = Void then
 						l_cl := comp_data.string_32_class_c
 					end
-					dv := d_fact.new_manifest_string_32_value (l_string.string_value, l_cl)
+					dv := d_fact.new_manifest_string_32_value (l_string_32.string_value, l_cl)
 				elseif a_value_i.is_boolean then
 					if l_cl = Void then
 						l_cl := comp_data.boolean_class_c
 					end
 					dv := d_fact.new_boolean_value (a_value_i.boolean_value, l_cl)
-				elseif a_value_i.is_character then
-					l_char ?= a_value_i
+				elseif a_value_i.is_character and attached {CHAR_VALUE_I} a_value_i as l_char then
 					if l_char.is_character_32 then
 						if l_cl = Void then
 							l_cl := comp_data.character_32_class_c
@@ -1817,8 +1806,7 @@ feature {NONE} -- Visitor: implementation
 						end
 						dv := d_fact.new_character_value (l_char.character_value.to_character_8, l_cl)
 					end
-				elseif a_value_i.is_real then
-					l_real ?= a_value_i
+				elseif a_value_i.is_real and attached {REAL_VALUE_I} a_value_i as l_real then
 					if l_real.is_real_32 then
 						if l_cl = Void then
 							l_cl := comp_data.real_32_class_c
@@ -1854,7 +1842,6 @@ feature {NONE} -- Visitor: implementation
 			l_tmp_target_backup: like tmp_target
 			l_target_value: DBG_EVALUATED_VALUE
 			l_message_value: DBG_EVALUATED_VALUE
-			l_boolean_value: DUMP_VALUE_BASIC
 		do
 			l_tmp_target_backup := tmp_target
 
@@ -1862,19 +1849,21 @@ feature {NONE} -- Visitor: implementation
 
 			if not error_occurred then
 				check is_boolean_value: l_target_value.value.is_type_boolean end
-				l_boolean_value ?= l_target_value.value
-				check is_boolean_dump_value: l_boolean_value /= Void end
-				if
-					a_is_lazy and then l_boolean_value.value_boolean = a_lazy_value
-				then
-					tmp_result := l_target_value
-				else
-					tmp_target := l_target_value
-					l_message_value := standalone_evaluation_expr_b (a_node.message)
+				if attached {DUMP_VALUE_BASIC} l_target_value.value as l_boolean_value then
+					if
+						a_is_lazy and then l_boolean_value.value_boolean = a_lazy_value
+					then
+						tmp_result := l_target_value
+					else
+						tmp_target := l_target_value
+						l_message_value := standalone_evaluation_expr_b (a_node.message)
 
-					if not error_occurred then
-						tmp_result := l_message_value
+						if not error_occurred then
+							tmp_result := l_message_value
+						end
 					end
+				else
+					check is_boolean_dump_value: False end
 				end
 			end
 			tmp_target := l_tmp_target_backup
@@ -2542,7 +2531,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

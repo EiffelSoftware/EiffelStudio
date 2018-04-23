@@ -42,11 +42,11 @@ feature {NONE} -- Implementation
 			create l_storage.make_versioned (l_versions.version_2_0)
 			create Result.put (create {COMPILER_PREFERENCES}.make (create {PREFERENCES}.make_with_storage (l_storage)))
 		ensure
-			preferences_cell_not_void: Result /= Void
+			preferences_cell_not_void: Result /= Void and then Result.item /= Void
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

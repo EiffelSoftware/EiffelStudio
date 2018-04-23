@@ -49,23 +49,18 @@ feature -- Basic operations
 					from l_pool.start until l_pool.after loop
 						create l_recycled.make (0)
 						(agent (a_item: ANY; a_recycled: ARRAYED_LIST [EB_RECYCLABLE])
-							local
-								l_entity: ANY
-								l_recycable: EB_RECYCLABLE
-								l_ev: EV_ANY
 							do
 								if a_item /= Void then
-									l_entity := reveal_recyclable_item (a_item)
-									if l_entity /= Void then
-										l_recycable ?= l_entity
-										if l_recycable /= Void and then (not l_recycable.is_recycled and not l_recycable.is_recycling) then
+									if attached reveal_recyclable_item (a_item) as l_entity then
+										if
+											attached {EB_RECYCLABLE} l_entity as l_recycable and then
+											(not l_recycable.is_recycled and not l_recycable.is_recycling)
+										then
 												-- Perform recycle
 											l_recycable.recycle
 											a_recycled.extend (l_recycable)
 										end
-
-										l_ev ?= l_entity
-										if l_ev /= Void and not l_ev.is_destroyed then
+										if attached {EV_ANY} l_entity as l_ev and then not l_ev.is_destroyed then
 												-- Destory EiffelVision 2 object
 											l_ev.destroy
 										end
@@ -154,20 +149,20 @@ feature {NONE} -- Basic operations
 			l_count, i: INTEGER
 			l_any: EV_ANY
 			l_skip_implementation: BOOLEAN
-			l_actions: ACTION_SEQUENCE [TUPLE]
 		do
 			debug ("recycle_and_detach")
 					-- Because of the need to destroy EiffelVision2 widgets, we need to detect
 					-- and skip the detachment of {EV_ANY}.implementation.
-				l_any ?= a_recyclable
-				l_skip_implementation:= l_any /= Void
+				l_skip_implementation:= attached {EV_ANY} a_recyclable
 
 				create l_internal
 				l_count := l_internal.field_count (a_recyclable)
 				from i := 1 until i > l_count loop
-					if l_internal.field_type (i, a_recyclable) = l_internal.reference_type and then (not l_skip_implementation or else not l_internal.field_name (i, a_recyclable).is_equal (once "implementation")) then
-						l_actions ?= l_internal.field (i, a_recyclable)
-						if l_actions /= Void then
+					if
+						l_internal.field_type (i, a_recyclable) = l_internal.reference_type and then
+						(not l_skip_implementation or else not l_internal.field_name (i, a_recyclable).same_string (once "implementation"))
+					then
+						if attached {ACTION_SEQUENCE [TUPLE]} l_internal.field (i, a_recyclable) as l_actions then
 							l_actions.wipe_out
 						end
 
@@ -188,16 +183,13 @@ feature {ANY} -- Extension
 		require
 			is_interface_usable: is_interface_usable
 			a_object_attached: a_object /= Void
-		local
-			l_recyclable: EB_RECYCLABLE
 		do
 			check
 				not_recycle_pool_has_a_object: not recycle_pool.has (a_object)
 			end
 
 			recycle_pool.extend (a_object)
-			l_recyclable ?= a_object
-			if l_recyclable /= Void then
+			if attached {EB_RECYCLABLE} a_object as l_recyclable then
 				l_recyclable.set_recycler (Current)
 			end
 		ensure
@@ -284,16 +276,13 @@ feature {EB_RECYCLABLE} -- Removal
 		require
 			is_interface_usable: is_interface_usable
 			a_object_attached: a_object /= Void
-		local
-			l_recyclable: EB_RECYCLABLE
 		do
 			check
 				recycle_pool_has_a_object: recycle_pool.has (a_object)
 			end
 			recycle_pool.start
 			recycle_pool.prune (a_object)
-			l_recyclable ?= a_object
-			if l_recyclable /= Void then
+			if attached {EB_RECYCLABLE} a_object as l_recyclable then
 				l_recyclable.set_recycler (Void)
 			end
 		ensure
@@ -384,11 +373,8 @@ feature {NONE} -- Query
 			-- `Result': A object that could potentially be recycled.
 		require
 			a_object_attached: a_object /= Void
-		local
-			l_action: FUNCTION [ANY]
 		do
-			l_action ?= a_object
-			if l_action /= Void then
+			if attached {FUNCTION [ANY]} a_object as l_action then
 				Result := l_action.item ([])
 			else
 				Result := a_object
@@ -424,7 +410,7 @@ invariant
 	not_is_recycled: is_recycling implies not is_recycled
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

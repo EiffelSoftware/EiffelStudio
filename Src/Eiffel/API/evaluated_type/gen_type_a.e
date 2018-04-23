@@ -64,7 +64,6 @@ feature -- Properties
 		local
 			i, nb: INTEGER
 			l_generics: like generics
-			l_cl_type: CL_TYPE_A
 		do
 			from
 				l_generics := generics
@@ -73,8 +72,10 @@ feature -- Properties
 			until
 				i > nb
 			loop
-				l_cl_type ?= l_generics.i_th (i)
-				if l_cl_type /= Void and then (l_cl_type.same_as (type) or else l_cl_type.has_actual (type)) then
+				if
+					attached {CL_TYPE_A} l_generics.i_th (i) as l_cl_type and then
+					(l_cl_type.same_as (type) or else l_cl_type.has_actual (type))
+				then
 					Result := True
 					i := nb + 1
 				else
@@ -100,8 +101,7 @@ feature -- Comparison
 				until
 					i > nb or else not Result
 				loop
-					Result := equivalent (generics.i_th (i),
-							other_generics.i_th (i))
+					Result := equivalent (generics.i_th (i), other_generics.i_th (i))
 					i := i + 1
 				end
 			end
@@ -110,16 +110,14 @@ feature -- Comparison
 	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		local
-			other_gen_type: like Current
 			i, nb: INTEGER
 			other_generics: like generics
 		do
-			other_gen_type ?= other
 			if
-				other_gen_type /= Void
-				and then other_gen_type.class_id = class_id
-				and then is_expanded = other_gen_type.is_expanded
-				and then has_same_marks (other_gen_type)
+				attached {like Current} other as other_gen_type and then
+				other_gen_type.class_id = class_id and then
+				is_expanded = other_gen_type.is_expanded and then
+				has_same_marks (other_gen_type)
 			then
 				from
 					i := 1
@@ -251,7 +249,6 @@ feature -- Status Report
 		local
 			i, nb: INTEGER
 			l_generics: like generics
-			l_type: CL_TYPE_A
 		do
 			from
 				i := 1
@@ -261,10 +258,12 @@ feature -- Status Report
 			until
 				i > nb
 			loop
-				l_type ?= l_generics.i_th (i)
 					-- If type is still expanded, we do the recursion in case it has a generic parameter which is
 					-- itself generic and needs to be checked as well.
-				if l_type /= Void and then (not l_type.is_expanded or else not l_type.has_associated_class_type (Void)) then
+				if
+					attached {CL_TYPE_A} l_generics.i_th (i) as l_type and then
+					(not l_type.is_expanded or else not l_type.has_associated_class_type (Void))
+				then
 					Result := False
 					i := nb + 1
 				else
@@ -641,12 +640,10 @@ feature {TYPE_A} -- Helpers
 			-- Check generic parameters
 		local
 			i, count: INTEGER
-			gen_type: GEN_TYPE_A
 			gen_type_generics: like generics
 		do
 			if class_id = type.class_id then
-				gen_type ?= type
-				if gen_type /= Void then
+				if attached {GEN_TYPE_A} type as gen_type then
 					from
 						i := 1
 						gen_type_generics := gen_type.generics
@@ -705,10 +702,10 @@ feature {TYPE_A} -- Helpers
 			processor_attached: processor /= Void
 			valid_n: 1 <= n and n <= generics.count
 		local
-			gen_type: GEN_TYPE_A
 			parameter: TYPE_A
 			other_parameter: TYPE_A
 			cl_type: CL_TYPE_A
+			gen_type: GEN_TYPE_A
 			l_types: TYPE_LIST
 			cursor: ARRAYED_LIST_CURSOR
 			i: INTEGER
@@ -727,19 +724,17 @@ feature {TYPE_A} -- Helpers
 					cl_type := l_types.item.type
 						-- Check only types that differ from current one.
 					if cl_type /= Current then
-						gen_type ?= cl_type
-						check
-							gen_type_attached: gen_type /= Void
-						end
-							-- Ensure the type is reference.
-						if gen_type.is_reference then
+						if
+							attached {GEN_TYPE_A} cl_type as l_gen_type and then
+							l_gen_type.is_reference -- Ensure the type is reference.
+						then
 							from
 								i := generics.count
 							until
 								i <= 0
 							loop
 								parameter := generics.i_th (i)
-								other_parameter := gen_type.generics.i_th (i)
+								other_parameter := l_gen_type.generics.i_th (i)
 								if
 									parameter.same_as (other_parameter) or else
 									parameter.is_expanded and then other_parameter.is_formal
@@ -754,6 +749,8 @@ feature {TYPE_A} -- Helpers
 							if i = 0 then
 								processor.call ([l_types.item])
 							end
+						else
+							check is_gen_type: False end
 						end
 					end
 					l_types.forth
@@ -844,7 +841,6 @@ feature {TYPE_A} -- Helpers
 			i, nb: INTEGER
 			l_generics, l_other_generics: like generics
 			l_type: TYPE_A
-			l_formal: FORMAL_A
 		do
 			if
 				same_type (other) and then attached {like Current} other as l_gen_type_i and then
@@ -873,8 +869,9 @@ feature {TYPE_A} -- Helpers
 							-- the class type of A [G] in the context of B [INTEGER], thus
 							-- G is INTEGER. If we were not doing that, we would have to
 							-- create additional objects.
-						l_formal ?= l_type.actual_type
-						l_type := current_type.generics.i_th (l_formal.position)
+						if attached {FORMAL_A} l_type.actual_type as l_formal then
+							l_type := current_type.generics.i_th (l_formal.position)
+						end
 					end
 					if current_type /= Void and then attached {LIKE_CURRENT} l_type.actual_type as l_like_current then
 						l_type := l_like_current.conformance_type
@@ -1375,14 +1372,10 @@ feature -- Primitives
 			good_argument: type /= Void
 		local
 			i, count: INTEGER
-			gen_type: GEN_TYPE_A
 			gen_type_generics: like generics
 			l_old_generic, l_new_generic: TYPE_A
-			formal_type: FORMAL_A
-			l_like_type: LIKE_TYPE_A
 		do
-			formal_type ?= type
-			if formal_type /= Void then
+			if attached {FORMAL_A} type as formal_type then
 					-- Instantiation of a formal generic
 				Result := generics.i_th (formal_type.position).actual_type
 			elseif type.is_like then
@@ -1390,15 +1383,14 @@ feature -- Primitives
 					-- as otherwise we would break eweasel test exec206, but we
 					-- still need to adapt its actual_type to the current context
 					-- otherwise we would break valid168.
-				l_like_type ?= type.duplicate
-				check
-					l_like_type_not_void: l_like_type /= Void
+				if attached {LIKE_TYPE_A} type.duplicate as l_like_type then
+					l_like_type.set_actual_type (instantiate (l_like_type.conformance_type))
+					Result := l_like_type
+				else
+					check type_duplicate_is_like_type: False end
 				end
-				l_like_type.set_actual_type (instantiate (l_like_type.conformance_type))
-				Result := l_like_type
-			elseif type.has_generics then
+			elseif type.has_generics and then attached {GEN_TYPE_A} type as gen_type then
 					-- Instantiation of the generic parameter of `type'
-				gen_type ?= type
 				from
 					i := 1
 					gen_type_generics := gen_type.generics
@@ -1607,14 +1599,11 @@ feature -- Primitives
 			l_class: CLASS_C
 			l_constraints: TYPE_SET_A
 			l_constraint_item: TYPE_A
-			l_formal_constraint: FORMAL_A
-			l_generic_constraint: GEN_TYPE_A
 			l_generic_parameters: like generics
 			l_formal_generic_parameter: FORMAL_A
 			l_generic_parameter: TYPE_A
 			l_conform: BOOLEAN
 			l_formal_as: FORMAL_AS
-			l_formal_dec_as: FORMAL_CONSTRAINT_AS
 			l_check_creation_readiness: BOOLEAN
 			l_wrapped_into_tuple: BOOLEAN
 			wrapped_actuals: ARRAYED_LIST [TYPE_A]
@@ -1632,17 +1621,18 @@ feature -- Primitives
 				l_constraints.after
 			loop
 				l_constraint_item := l_constraints.item.type
-				if l_constraint_item.is_formal then
-					l_formal_constraint ?= l_constraint_item
-					check l_formal_constraint /= Void end
+				if l_constraint_item.is_formal and attached {FORMAL_A} l_constraint_item as l_formal_constraint then
 						-- Replace the formal with its 'instantiation' of the current generic derivation.
 						--| `l_constraint_item' can indeed still be a formal, but now has to be resolved by using `a_type_context'
 					l_constraint_item := l_generic_parameters.i_th (l_formal_constraint.position)
 				elseif l_constraint_item.has_generics and then not l_constraint_item.generics.is_empty then
 						-- We substitude all occurrences of formals in the constraint with the instantiation of the corresponding formal in our generic derivation.
-					l_generic_constraint ?= l_constraint_item.deep_twin
-					l_generic_constraint.substitute (l_generic_parameters)
-					l_constraint_item := l_generic_constraint
+					if attached {GEN_TYPE_A} l_constraint_item.deep_twin as l_generic_constraint then
+						l_generic_constraint.substitute (l_generic_parameters)
+						l_constraint_item := l_generic_constraint
+					else
+						check is_generic_constraint: False end
+					end
 				end
 					--| Knowing that formals (FORMAL_A) just take of their "layers" and fall back to their constraints and ask and ask again until they match.
 					--| Example: [G -> H, H -> I, I -> J] Question: Is G conform to J? Answer of `conform_to' is yes.
@@ -1698,27 +1688,35 @@ feature -- Primitives
 					-- Check now for the validity of the creation constraint clause if
 					-- there is one which can be checked, i.e. when `to_check' conforms
 					-- to `constraint_type'.
-				l_formal_dec_as ?= l_class.generics.i_th (i)
-				check l_formal_dec_as_not_void: l_formal_dec_as /= Void end
-				if l_formal_dec_as.has_creation_constraint and (system.check_generic_creation_constraint and a_check_creation_readiness) then
-						-- If we are not in degree 3 (i.e. 4), we cannot have a
-						-- complete check since if we are currently checking an attribute
-						-- of TEST declared as A [TOTO], maybe TOTO has not yet been recompiled?
-						-- So we store all the needed information and we will do a check at the
-						-- end of the degree 4 (look at PASS2 for the code which does the checking).								
-					l_formal_generic_parameter ?= l_generic_parameter.conformance_type
-						-- We have a creation constraint so in case a check was requested we have to continue checking it.
-					l_check_creation_readiness := a_check_creation_readiness
-					if System.in_pass3 then
-						creation_constraint_check (
-								l_formal_dec_as, l_constraints, a_type_context,
-								l_generic_parameter, i, l_formal_generic_parameter)
+				if attached {FORMAL_CONSTRAINT_AS} l_class.generics.i_th (i) as l_formal_dec_as then
+					if l_formal_dec_as.has_creation_constraint and (system.check_generic_creation_constraint and a_check_creation_readiness) then
+							-- If we are not in degree 3 (i.e. 4), we cannot have a
+							-- complete check since if we are currently checking an attribute
+							-- of TEST declared as A [TOTO], maybe TOTO has not yet been recompiled?
+							-- So we store all the needed information and we will do a check at the
+							-- end of the degree 4 (look at PASS2 for the code which does the checking).								
+						if attached {FORMAL_A} l_generic_parameter.conformance_type as l_gen_param then
+							l_formal_generic_parameter := l_gen_param
+						else
+							l_formal_generic_parameter := Void
+						end
+							-- We have a creation constraint so in case a check was requested we have to continue checking it.
+						l_check_creation_readiness := a_check_creation_readiness
+						if System.in_pass3 then
+							creation_constraint_check (
+									l_formal_dec_as, l_constraints, a_type_context,
+									l_generic_parameter, i, l_formal_generic_parameter)
+						else
+							add_future_checking (a_type_context,
+								agent delayed_creation_constraint_check (a_type_context, a_context_feature,
+								l_generic_parameter, l_constraints, i, l_formal_generic_parameter))
+						end
 					else
-						add_future_checking (a_type_context,
-							agent delayed_creation_constraint_check (a_type_context, a_context_feature,
-							l_generic_parameter, l_constraints, i, l_formal_generic_parameter))
+							-- We do not have a creation constraint, so stop checking for it.
+						l_check_creation_readiness := False
 					end
 				else
+					check is_formal_constraint: False end
 						-- We do not have a creation constraint, so stop checking for it.
 					l_check_creation_readiness := False
 				end
@@ -1737,8 +1735,6 @@ feature -- Primitives
 		local
 			i, count, pos: INTEGER
 			constraint_type: TYPE_A
-			formal_type: FORMAL_A
-			gen_type: GEN_TYPE_A
 		do
 			from
 				i := 1
@@ -1748,12 +1744,10 @@ feature -- Primitives
 			loop
 				constraint_type := generics.i_th (i)
 
-				if constraint_type.is_formal then
-					formal_type ?= constraint_type
+				if constraint_type.is_formal and then attached {FORMAL_A} constraint_type as formal_type then
 					pos := formal_type.position
 					generics.put_i_th (new_generics.i_th (pos), i)
-				elseif constraint_type.generics /= Void then
-					gen_type ?= constraint_type
+				elseif constraint_type.generics /= Void and then attached {GEN_TYPE_A} constraint_type as gen_type then
 					gen_type.substitute (new_generics)
 				end
 				i := i + 1
@@ -1771,8 +1765,6 @@ feature -- Primitives
 				-- defined creation constraint in delayed mode.
 		require
 			to_check_is_formal_implies_formal_type_not_void: to_check.conformance_type.is_formal implies formal_type /= Void
-		local
-			l_formal_dec_as: FORMAL_CONSTRAINT_AS
 		do
 			reset_constraint_error_list
 				-- Some delay checks involves classes that are not in the system anymore,
@@ -1781,11 +1773,13 @@ feature -- Primitives
 				is_valid and then context_class.is_valid and then to_check /= Void and then to_check.is_valid and then
 				base_class.generics.valid_index (i)
 			then
-				l_formal_dec_as ?= base_class.generics.i_th (i)
-				check l_formal_dec_as_not_void: l_formal_dec_as /= Void end
-				if l_formal_dec_as.has_creation_constraint then
-					creation_constraint_check (l_formal_dec_as, constraint_type, context_class, to_check, i, formal_type)
-					generate_error_from_creation_constraint_list (context_class, a_context_feature, l_formal_dec_as.start_location )
+				if attached {FORMAL_CONSTRAINT_AS} base_class.generics.i_th (i) as l_formal_dec_as then
+					if l_formal_dec_as.has_creation_constraint then
+						creation_constraint_check (l_formal_dec_as, constraint_type, context_class, to_check, i, formal_type)
+						generate_error_from_creation_constraint_list (context_class, a_context_feature, l_formal_dec_as.start_location )
+					end
+				else
+					check is_formal_dec_as: False end
 				end
 			end
 		end
@@ -1804,7 +1798,6 @@ feature -- Primitives
 			creation_constraint_exists: formal_dec_as.has_creation_constraint
 			is_valid: is_valid
 		local
-			formal_type_dec_as: FORMAL_CONSTRAINT_AS
 			formal_crc_list, crc_list: LINKED_LIST [TUPLE [type_item: RENAMED_TYPE_A; feature_item: FEATURE_I]];
 			creators_table: HASH_TABLE [EXPORT_I, STRING]
 			matched: BOOLEAN
@@ -1933,8 +1926,10 @@ feature -- Primitives
 				end
 			else
 					-- Check if there is a creation constraint clause
-				formal_type_dec_as ?= context_class.generics.i_th (formal_type.position)
-				if formal_type_dec_as /= Void and then formal_type_dec_as.has_creation_constraint then
+				if
+					attached {FORMAL_CONSTRAINT_AS} context_class.generics.i_th (formal_type.position) as formal_type_dec_as and then
+					formal_type_dec_as.has_creation_constraint
+				then
 						-- Check if we have m >= n as specified above.
 					formal_crc_list := formal_type_dec_as.constraint_creation_list (context_class)
 					if formal_crc_list.count >= crc_list.count then
@@ -1961,7 +1956,7 @@ feature -- Primitives
 								-- If not matched save the feature to report a proper error.
 							if not matched then
 								if l_unmatched_features = Void then
-									create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make
+									create {LINKED_LIST [FEATURE_I]} l_unmatched_features.make
 								end
 								l_unmatched_features.extend (feature_i)
 							end
@@ -2030,7 +2025,7 @@ invariant
 	generics_not_void: generics /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

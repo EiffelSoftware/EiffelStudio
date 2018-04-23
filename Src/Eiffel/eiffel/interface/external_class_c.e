@@ -686,7 +686,6 @@ feature {NONE} -- Initialization
 			a_features_not_void: a_features /= Void
 		local
 			l_member: CONSUMED_ENTITY
-			l_consumed_member: CONSUMED_MEMBER
 			l_literal: CONSUMED_LITERAL_FIELD
 			l_constructor: CONSUMED_CONSTRUCTOR
 			l_args: ARRAY [CONSUMED_ARGUMENT]
@@ -697,7 +696,6 @@ feature {NONE} -- Initialization
 			l_return_type, l_external_type, l_written_type: CL_TYPE_A
 			l_feat: FEATURE_I
 			l_attribute: ATTRIBUTE_I
-			l_proc: PROCEDURE_I
 			l_deferred: DEF_PROC_I
 			l_external: EXTERNAL_I
 			l_constant: CONSTANT_I
@@ -743,9 +741,11 @@ feature {NONE} -- Initialization
 
 				if l_member.is_attribute then
 					if l_member.is_literal then
-						l_literal ?= l_member
-						check
-							l_literal_not_void: l_literal /= Void
+						if attached {CONSUMED_LITERAL_FIELD} l_member as l_literal_field then
+							l_literal := l_literal_field
+						else
+							check is_literal_filed: False end
+							l_literal := Void
 						end
 						if l_return_type.base_class.is_enum then
 								-- Too bad here we just discarded newly created extension
@@ -797,7 +797,11 @@ feature {NONE} -- Initialization
 				end
 
 					-- Check if this is a constructor
-				l_constructor ?= l_member
+				if attached {CONSUMED_CONSTRUCTOR} l_member as l_construct then
+					l_constructor := l_construct
+				else
+					l_constructor := Void
+				end
 
 				if l_member.is_static then
 					if l_member.is_attribute then
@@ -829,8 +833,10 @@ feature {NONE} -- Initialization
 				end
 
 					-- Special override of external type in case we handle an attribute setter routine.
-				l_consumed_member ?= l_member
-				if l_consumed_member /= Void and then l_consumed_member.is_attribute_setter then
+				if
+					attached {CONSUMED_MEMBER} l_member as l_consumed_member and then
+					l_consumed_member.is_attribute_setter
+				then
 					if l_consumed_member.is_static then
 						l_ext.set_type ({SHARED_IL_CONSTANTS}.set_static_field_type)
 					else
@@ -863,6 +869,7 @@ feature {NONE} -- Initialization
 							l_underlying_enum_type := "System.Int32"
 						end
 					end
+					check l_literal_attached: l_literal /= Void end
 					if l_literal.value.item (1) = '-' then
 						create l_enum_value.make_from_string (Void, True, l_literal.value.substring (2, l_literal.value.count))
 					else
@@ -943,12 +950,12 @@ feature {NONE} -- Initialization
 						l := l + 1
 						j := j + 1
 					end
-					l_proc ?= l_feat
-					check
-						is_procedure: l_proc /= Void
-					end
 					l_ext.set_argument_types (l_arg_ids)
-					l_proc.set_arguments (l_feat_arg)
+					if attached {PROCEDURE_I} l_feat as l_proc then
+						l_proc.set_arguments (l_feat_arg)
+					else
+						check is_procedure: False end
+					end
 				end
 
 				l_feat.set_is_frozen (l_member.is_frozen)
@@ -1050,11 +1057,9 @@ feature {NONE} -- Initialization
 			l_property: CONSUMED_PROPERTY
 			l_fields: ARRAYED_LIST [CONSUMED_FIELD]
 			l_getter, l_setter: CONSUMED_ENTITY
-			l_feat: FEATURE_I
 			l_extrn_func_i: EXTERNAL_FUNC_I
 			l_def_func_i: DEF_FUNC_I
 			l_feat_i: FEATURE_I
-			l_attr_i: ATTRIBUTE_I
 			l_inherited: ARRAYED_LIST [CONSUMED_ENTITY]
 			l_setter_name: STRING
 		do
@@ -1076,28 +1081,36 @@ feature {NONE} -- Initialization
 						l_getter := l_property.getter
 						if l_getter /= Void then
 							l_feat_i := a_feat_tbl.item (l_getter.eiffel_name)
-							l_extrn_func_i ?= l_feat_i
-							if l_extrn_func_i = Void then
-								l_def_func_i ?= l_feat_i
+							l_extrn_func_i := Void
+							l_def_func_i := Void
+
+							if attached {EXTERNAL_FUNC_I} l_feat_i as l_external_func_i  then
+								l_extrn_func_i := l_external_func_i
+							elseif attached {DEF_FUNC_I} l_feat_i as l_def_function_i then
+								l_def_func_i := l_def_function_i
 							end
 							check func_attached: l_extrn_func_i /= Void or l_def_func_i /= Void end
+
 							l_setter_name := l_setter.eiffel_name
 							if l_inherited /= Void and then l_inherited.has (l_property) then
 									-- property is inherited so use inherit setter name (fixes test#dotnet043)
-								l_feat := l_feat_i.written_class.feature_named (l_getter.eiffel_name)
-								if l_feat /= Void and then l_feat.assigner_name /= Void then
+								if
+									attached {FEATURE_I} l_feat_i.written_class.feature_named (l_getter.eiffel_name) as l_feat and then
+									l_feat.assigner_name /= Void
+								then
 									l_setter_name := l_feat.assigner_name
 								end
 							end
 							check l_setter_name_attached: l_setter_name /= Void end
 							l_feat_i := a_feat_tbl.item (l_setter_name)
-							check l_feat_i_attached: l_feat_i /= Void end
 							if l_feat_i /= Void then
 								if l_extrn_func_i /= Void then
 									l_extrn_func_i.set_type (l_extrn_func_i.type, l_feat_i.feature_name_id)
 								elseif l_def_func_i /= Void then
 									l_def_func_i.set_type (l_def_func_i.type, l_feat_i.feature_name_id)
 								end
+							else
+								check has_feature_setter: False end
 							end
 						end
 					end
@@ -1116,13 +1129,16 @@ feature {NONE} -- Initialization
 					if l_getter /= Void and then not l_inherited.has (l_getter) then
 						l_setter := l_fields.item.setter
 						if l_setter /= Void then
-							l_attr_i ?= a_feat_tbl.item (l_getter.eiffel_name)
-							check l_attr_i_attached: l_attr_i /= Void end
-
-							l_feat_i := a_feat_tbl.item (l_setter.eiffel_name)
-							check l_feat_i_attached: l_feat_i /= Void end
-							if l_feat_i /= Void and l_attr_i /= Void then
-								l_attr_i.set_type (l_attr_i.type, l_feat_i.feature_name_id)
+							if
+								attached {ATTRIBUTE_I} a_feat_tbl.item (l_getter.eiffel_name) as l_attr_i and
+								attached {FEATURE_I} a_feat_tbl.item (l_setter.eiffel_name) as l_feat
+							then
+								l_attr_i.set_type (l_attr_i.type, l_feat.feature_name_id)
+							else
+								check
+									getter_is_attribute_i: False
+									setter_is_feature_i: False
+								end
 							end
 						end
 					end
@@ -1137,24 +1153,19 @@ feature {NONE} -- Initialization
 			is_enum: is_enum
 			a_feat_tbl_attached: a_feat_tbl /= Void
 			convert_to_unattached: convert_to = Void
-		local
-			l_feat: FEATURE_I
-			l_type: DEANCHORED_TYPE_A
 		do
-			l_feat := a_feat_tbl.item_id ({NAMES_HEAP}.to_integer_name_id)
-			check
-				l_feat_attached: l_feat /= Void
-			end
-			if l_feat /= Void then
-				l_type ?= l_feat.type
-				check
-					l_type_attached: l_type /= Void
-					l_type_is_integer_or_natural: l_type.is_integer or l_type.is_natural
-				end
-				if l_type /= Void then
+			if attached a_feat_tbl.item_id ({NAMES_HEAP}.to_integer_name_id) as l_feat then
+				if attached {DEANCHORED_TYPE_A} l_feat.type as l_type then
+					check
+						l_type_is_integer_or_natural: l_type.is_integer or l_type.is_natural
+					end
 					create {HASH_TABLE_EX [INTEGER, DEANCHORED_TYPE_A]} convert_to.make_with_key_tester (1, create {CONVERTIBILITY_CHECKER})
 					convert_to.force ({NAMES_HEAP}.to_integer_name_id, l_type)
+				else
+					check is_deanchored_type_a: False end
 				end
+			else
+				check has_item_id: False end
 			end
 		end
 
@@ -1164,11 +1175,9 @@ feature {NONE} -- Initialization
 		require
 			external_class_not_void: external_class /= Void
 		local
-			l_nested: CONSUMED_NESTED_TYPE
 			l_enclosing_type: CL_TYPE_A
 		do
-			l_nested ?= external_class
-			if l_nested /= Void then
+			if attached {CONSUMED_NESTED_TYPE} external_class as l_nested then
 				l_enclosing_type := internal_type_from_consumed_type (True, l_nested.enclosing_type)
 				is_nested := True
 				enclosing_class := l_enclosing_type.base_class
@@ -1296,11 +1305,8 @@ feature {NONE} -- Implementation
 			l_feat: FEATURE_I
 			l_found: BOOLEAN
 			i, nb: INTEGER
-			l_other_ext, l_feat_ext: IL_EXTENSION_I
 		do
-			l_feat_ext ?= a_feat.extension
-
-			if l_feat_ext = Void then
+			if not attached {IL_EXTENSION_I} a_feat.extension as l_feat_ext then
 					-- If it does not have an extension is either means that `a_feat' is either:
 					-- 1 - a constant
 					-- 2 - an artificially added feature such as `from_integer', `infix "|"' and
@@ -1321,7 +1327,6 @@ feature {NONE} -- Implementation
 					l_feat_tbl.after or else Result /= Void
 				loop
 					l_feat := l_feat_tbl.item_for_iteration
-					l_other_ext ?= l_feat.extension
 						-- We only analyze an inherited routine `l_feat' when it makes sense:
 						-- 1 - `l_feat' should be defined in a class that is an ancestor of the
 						--      class where `a_feat' is defined.
@@ -1332,7 +1337,7 @@ feature {NONE} -- Implementation
 						--     able to redefine a frozen feature.
 					if
 						a_feat.written_class.simple_conform_to (l_feat.written_class) and then
-						l_other_ext /= Void and then
+						attached {IL_EXTENSION_I} l_feat.extension as l_other_ext and then
 						l_other_ext.alias_name_id = l_feat_ext.alias_name_id and then
 						(a_feat.written_class = l_feat.written_class or else not l_feat.is_frozen)
 					then
@@ -1391,9 +1396,7 @@ feature {NONE} -- Implementation
 		local
 			l_result: CLASS_I
 			l_class: CLASS_C
-			l_is_array: BOOLEAN
 			l_generics: ARRAYED_LIST [TYPE_A]
-			l_array_type: CONSUMED_ARRAY_TYPE
 			l_type_a: CL_TYPE_A
 			vtct: VTCT
 			l_type_name: STRING
@@ -1403,9 +1406,7 @@ feature {NONE} -- Implementation
 			else
 				l_type_name := c.name
 			end
-			l_array_type ?= c
-			l_is_array := l_array_type /= Void
-			if l_is_array then
+			if attached {CONSUMED_ARRAY_TYPE} c as l_array_type then
 				l_type_a := internal_type_from_consumed_type (force_compilation, l_array_type.element_type)
 				if l_type_a /= Void then
 					create l_generics.make (1)
@@ -1414,8 +1415,9 @@ feature {NONE} -- Implementation
 						System.native_array_class.compiled_class.class_id, l_generics)
 				end
 			else
-				l_result ?= assembly.class_by_dotnet_name (l_type_name, c.assembly_id)
-				if l_result = Void then
+				if attached {CLASS_I} assembly.class_by_dotnet_name (l_type_name, c.assembly_id) as l_class_i then
+					l_result := l_class_i
+				else
 						-- Case where this is a class from `mscorlib' that is in fact
 						-- written as an Eiffel class, e.g. INTEGER, ....
 					l_result := lace_class.basic_type_mapping.item (l_type_name)
@@ -1620,7 +1622,6 @@ feature {NONE} -- Implementation
 			l_emitter: IL_EMITTER
 			l_man: CONF_CONSUMER_MANAGER
 			l_assemblies: STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE]
-			l_assembly: CONF_PHYSICAL_ASSEMBLY
 			l_path: STRING_32
 		do
 				-- Create message
@@ -1632,13 +1633,13 @@ feature {NONE} -- Implementation
 					-- Note: All system assemblies are required because they are needed by the consumer
 					-- to resolve dependencies.
 				from l_assemblies.start until l_assemblies.after loop
-					l_assembly ?= l_assemblies.item_for_iteration
-					check
-						physical_assembly: l_assembly /= Void
-					end
-					if not l_assembly.is_dependency then
-						l_path.append_character (';')
-						l_path.append (l_assembly.consumed_assembly.location.name)
+					if attached {CONF_PHYSICAL_ASSEMBLY} l_assemblies.item_for_iteration as l_assembly then
+						if not l_assembly.is_dependency then
+							l_path.append_character (';')
+							l_path.append (l_assembly.consumed_assembly.location.name)
+						end
+					else
+						check is_physical_assembly: False end
 					end
 					l_assemblies.forth
 				end
@@ -1678,7 +1679,7 @@ invariant
 	valid_enclosing_class: is_nested implies enclosing_class /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

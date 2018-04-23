@@ -137,7 +137,6 @@ feature -- Basic operations
 			menu: EV_MENU
 			item: EV_MENU_ITEM
 			cmi: EV_CHECK_MENU_ITEM
-			conv_dev: EB_DEVELOPMENT_WINDOW
 			bpm: BREAKPOINTS_MANAGER
 			bp: BREAKPOINT
 		do
@@ -233,8 +232,7 @@ feature -- Basic operations
 			end
 
 				--| Run to this point
-			conv_dev ?= window_manager.last_focused_window
-			if conv_dev /= Void then
+			if attached {EB_DEVELOPMENT_WINDOW} window_manager.last_focused_window as conv_dev then
 					-- `conv_dev = Void' should never happen.
 				menu.extend (create {EV_MENU_SEPARATOR})
 
@@ -424,7 +422,7 @@ feature {NONE} -- Internationalization
 	e_break_point_in: STRING = "Breakpoint in "
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

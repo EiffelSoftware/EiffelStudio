@@ -411,7 +411,6 @@ feature {NONE} -- Conversion
 			l_internal: like internal
 			l_codes: like type_codes
 			l_id: INTEGER
-			l_cell: CELL [ANY]
 		do
 			if a_value /= Void then
 				l_codes := type_codes
@@ -449,8 +448,7 @@ feature {NONE} -- Conversion
 						create {CELL [POINTER]} Result.put ({POINTER} / a_value)
 					end
 				else
-					l_cell ?= a_value
-					if l_cell /= Void then
+					if attached {CELL [ANY]} a_value as l_cell then
 							-- Need to box, to ensure unboxing performs correct unboxing. See `unbox_value' implementation
 							-- for information.
 						create {CELL [CELL [ANY]]} Result.put (l_cell)
@@ -519,7 +517,7 @@ invariant
 	data_compared_objects: data.object_comparison
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

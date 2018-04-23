@@ -30,11 +30,9 @@ feature -- Access
 			-- Dump_value corresponding to `Current'.
 		local
 			val: ANY
-			cval: CHARACTER_32_REF
 		do
 			val := value
-			cval ?= val
-			if cval /= Void then
+			if attached {CHARACTER_32_REF} val as cval then
 				Result := Debugger_manager.Dump_value_factory.new_character_32_value (cval.item, Dynamic_class)
 			end
 		end
@@ -67,7 +65,7 @@ feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

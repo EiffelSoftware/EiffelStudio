@@ -767,6 +767,7 @@ feature -- Status setting
 			hwnd_const: POINTER
 			swp_const: INTEGER
 			l_success: BOOLEAN
+			l_dpi: INTEGER
 		do
 			if flag_set (new_ex_style, Ws_ex_topmost) then
 					-- The new style specify "Top most",
@@ -784,7 +785,8 @@ feature -- Status setting
 				end
 			end
 			swp_const := swp_const | swp_nomove | swp_nosize | swp_framechanged | swp_noactivate
-			l_success := {WEL_API}.set_window_pos (item, hwnd_const, 0, 0, 0, 0, swp_const)
+			l_dpi := cwin_get_dpi_for_window (item)
+			l_success := {WEL_API}.set_window_pos (item, hwnd_const, cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), swp_const)
 		end
 
 feature -- Element change
@@ -1004,16 +1006,22 @@ feature -- Basic operations
 			-- Move the window to `a_x', `a_y'.
 		require
 			exists: exists
+		local
+			l_dpi: INTEGER
 		do
-			move_and_resize_internal (a_x, a_y, 0, 0, True, Swp_nosize)
+			l_dpi := cwin_get_dpi_for_window (item)
+			move_and_resize_internal (cwin_mul_div (a_x, l_dpi, 96), cwin_mul_div (a_y, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), True, Swp_nosize)
 		end
 
 	resize (a_width, a_height: INTEGER)
 			-- Resize the window with `a_width', `a_height'.
 		require
 			exists: exists
+		local
+			l_dpi: INTEGER
 		do
-			move_and_resize_internal (0, 0, a_width, a_height, True, Swp_nomove)
+			l_dpi := cwin_get_dpi_for_window (item)
+			move_and_resize_internal (cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), cwin_mul_div (a_width, l_dpi, 96), cwin_mul_div (a_height, l_dpi, 96), True, Swp_nomove)
 		end
 
 	set_z_order (z_order: POINTER)
@@ -1024,9 +1032,11 @@ feature -- Basic operations
 			valid_hwnd_constant: valid_hwnd_constant (z_order)
 		local
 			l_success: BOOLEAN
+			l_dpi: INTEGER
 		do
+			l_dpi := cwin_get_dpi_for_window (item)
 			l_success := {WEL_API}.set_window_pos (item, z_order,
-				0, 0, 0, 0, Swp_nosize + Swp_nomove +
+				cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), Swp_nosize + Swp_nomove +
 				Swp_noactivate)
 		end
 
@@ -1054,8 +1064,10 @@ feature -- Basic operations
 			a_window_exists: a_window.exists
 		local
 			l_success: BOOLEAN
+			l_dpi: INTEGER
 		do
-			l_success := {WEL_API}.set_window_pos (item, a_window.item, 0, 0, 0, 0,
+			l_dpi := cwin_get_dpi_for_window (item)
+			l_success := {WEL_API}.set_window_pos (item, a_window.item, cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96),
 				Swp_nosize + Swp_nomove + Swp_noactivate)
 		end
 
@@ -2773,6 +2785,24 @@ feature {WEL_INPUT_EVENT} -- Externals
 		alias
 			"InvalidateRect"
 		end
+
+feature -- Externals DPI
+
+	cwin_get_dpi_for_window (hwnd: POINTER): INTEGER
+		external
+			"C [macro %"wel.h%"] (HWND): EIF_INTEGER"
+		alias
+			"GetDpiForWindow"
+		end
+
+	cwin_mul_div (a_init_value, a_dpi, a_val: INTEGER): INTEGER
+		external
+			"C [macro %"wel.h%"] (int, int, int): EIF_INTEGER"
+		alias
+			"MulDiv"
+		end
+
+
 
 note
 	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"

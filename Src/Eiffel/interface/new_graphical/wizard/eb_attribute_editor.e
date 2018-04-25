@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			hb.extend (new_tab (1))
 			hb.disable_item_expand (hb.last)
 			create feature_name_field.make_with_text ("new")
-			feature_name_field.change_actions.force_extend (agent on_declaration_change)
+			feature_name_field.change_actions.extend (agent on_declaration_change)
 
 
 			hb.extend (feature_name_field)
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 			-- generated preconditions or type her own.
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

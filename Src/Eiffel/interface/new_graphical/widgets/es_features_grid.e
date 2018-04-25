@@ -951,29 +951,29 @@ feature {NONE} -- Tree item factory
 		end
 
 	update_tree_item_for_e_feature (a_row: EV_GRID_ROW; ef: E_FEATURE)
-			--
-		local
-			lab: EV_GRID_LABEL_ITEM
-			gf: EB_GRID_EDITOR_TOKEN_ITEM
 		do
 			if a_row.count > 0 then
-				gf ?= a_row.item (1)
-				lab ?= a_row.item (1)
 				if is_editor_token_enabled then
-					if gf = Void then
-						check lab /= Void end
+					if not attached {EB_GRID_EDITOR_TOKEN_ITEM} a_row.item (1) then
 						a_row.clear
-						add_tree_item_for_e_feature (a_row, ef, lab.pixmap)
+						if attached {EV_GRID_LABEL_ITEM} a_row.item (1) as lab then
+							add_tree_item_for_e_feature (a_row, ef, lab.pixmap)
+						else
+							check is_label_item: False end
+						end
 					else
 						-- nothing to change
 					end
 				else
-					if lab /= Void then
+					if attached {EV_GRID_LABEL_ITEM} a_row.item (1) as lab then
 						lab.set_text (feature_name (ef))
 					else
-						check gf /= Void end
 						a_row.clear
-						add_tree_item_for_e_feature (a_row, ef, gf.pixmap)
+						if attached {EB_GRID_EDITOR_TOKEN_ITEM} a_row.item (1) as gf then
+							add_tree_item_for_e_feature (a_row, ef, gf.pixmap)
+						else
+							check is_editor_item: False end
+						end
 					end
 				end
 			end
@@ -1063,7 +1063,11 @@ feature {NONE} -- Tree item factory
 			lab.set_pixmap (pix)
 			lab.set_data (a_text)
 			if is_clickable and ffn /= Void then
-				lab.pointer_button_press_actions.force_extend (agent navigate_to_feature_by_name (ffn))
+				lab.pointer_button_press_actions.extend (agent (i_ffn: STRING_32; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+						do
+							navigate_to_feature_by_name (i_ffn)
+						end (ffn, ?,?,?,?,?,?,?,?)
+					)
 			end
 			a_row.set_item (1, lab)
 		end
@@ -1094,7 +1098,7 @@ feature {NONE} -- Tree item factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

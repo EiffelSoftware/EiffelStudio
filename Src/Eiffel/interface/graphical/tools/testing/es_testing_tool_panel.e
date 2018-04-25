@@ -279,15 +279,15 @@ feature {NONE} -- Status setting: stones
 	on_stone_changed (a_old_stone: detachable like stone)
 			-- <Precursor>
 		local
-			l_filter_text: STRING
+			l_filter_text: detachable STRING_32
 		do
 			if not is_in_stone_synchronization then
 				if attached {CLASSI_STONE} stone as l_class_stone and then attached {EIFFEL_CLASS_I} l_class_stone.class_i as l_class then
 					create l_filter_text.make (40)
 					l_filter_text.append ({EC_TAG_TREE_CONSTANTS}.class_prefix)
-					l_filter_text.append (l_class_stone.class_name)
+					l_filter_text.append_string_general (l_class_stone.class_name)
 					if attached {FEATURE_STONE} stone as l_feature_stone then
-						l_filter_text.append ("/.*")
+						l_filter_text.append_string_general ("/.*")
 						l_filter_text.append (l_feature_stone.feature_name)
 					end
 				elseif attached {CLUSTER_STONE} stone as l_cluster then
@@ -768,7 +768,7 @@ feature {NONE} -- Internationalization
 	tt_debug_selected: STRING = "Run selected tests"
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

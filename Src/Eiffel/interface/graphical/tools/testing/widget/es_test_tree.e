@@ -163,7 +163,7 @@ feature {NONE} -- Status report
 
 feature -- Status setting
 
-	set_filter (an_expression: STRING_GENERAL)
+	set_filter (an_expression: READABLE_STRING_GENERAL)
 			-- Set expression for filtering tags.
 		do
 			filter_box.set_text (an_expression)
@@ -302,7 +302,7 @@ invariant
 	predefined_view_count_correct: view_template_descriptions.count = view_templates.count
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

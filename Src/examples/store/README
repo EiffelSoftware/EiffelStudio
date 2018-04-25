@@ -30,3 +30,6 @@ the following:
 
 
 Don't forget to check the Readme file of each example before testing them.
+
+Note: If ever you copy an example directory to another location, make sure to also copy the "Utilities" directory to be in the parent of the new location.
+

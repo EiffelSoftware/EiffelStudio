@@ -767,7 +767,6 @@ feature -- Status setting
 			hwnd_const: POINTER
 			swp_const: INTEGER
 			l_success: BOOLEAN
-			l_dpi: INTEGER
 		do
 			if flag_set (new_ex_style, Ws_ex_topmost) then
 					-- The new style specify "Top most",
@@ -785,8 +784,7 @@ feature -- Status setting
 				end
 			end
 			swp_const := swp_const | swp_nomove | swp_nosize | swp_framechanged | swp_noactivate
-			l_dpi := cwin_get_dpi_for_window (item)
-			l_success := {WEL_API}.set_window_pos (item, hwnd_const, cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), swp_const)
+			l_success := {WEL_API}.set_window_pos (item, hwnd_const, 0, 0, 0, 0, swp_const)
 		end
 
 feature -- Element change
@@ -1006,22 +1004,16 @@ feature -- Basic operations
 			-- Move the window to `a_x', `a_y'.
 		require
 			exists: exists
-		local
-			l_dpi: INTEGER
 		do
-			l_dpi := cwin_get_dpi_for_window (item)
-			move_and_resize_internal (cwin_mul_div (a_x, l_dpi, 96), cwin_mul_div (a_y, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), True, Swp_nosize)
+			move_and_resize_internal (a_x, a_y, 0, 0, True, Swp_nosize)
 		end
 
 	resize (a_width, a_height: INTEGER)
 			-- Resize the window with `a_width', `a_height'.
 		require
 			exists: exists
-		local
-			l_dpi: INTEGER
 		do
-			l_dpi := cwin_get_dpi_for_window (item)
-			move_and_resize_internal (cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), cwin_mul_div (a_width, l_dpi, 96), cwin_mul_div (a_height, l_dpi, 96), True, Swp_nomove)
+			move_and_resize_internal (0, 0, a_width, a_height, True, Swp_nomove)
 		end
 
 	set_z_order (z_order: POINTER)
@@ -1032,11 +1024,9 @@ feature -- Basic operations
 			valid_hwnd_constant: valid_hwnd_constant (z_order)
 		local
 			l_success: BOOLEAN
-			l_dpi: INTEGER
 		do
-			l_dpi := cwin_get_dpi_for_window (item)
 			l_success := {WEL_API}.set_window_pos (item, z_order,
-				cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), Swp_nosize + Swp_nomove +
+				0, 0, 0, 0, Swp_nosize + Swp_nomove +
 				Swp_noactivate)
 		end
 
@@ -1064,10 +1054,8 @@ feature -- Basic operations
 			a_window_exists: a_window.exists
 		local
 			l_success: BOOLEAN
-			l_dpi: INTEGER
 		do
-			l_dpi := cwin_get_dpi_for_window (item)
-			l_success := {WEL_API}.set_window_pos (item, a_window.item, cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96), cwin_mul_div (0, l_dpi, 96),
+			l_success := {WEL_API}.set_window_pos (item, a_window.item, 0, 0, 0, 0,
 				Swp_nosize + Swp_nomove + Swp_noactivate)
 		end
 
@@ -2264,12 +2252,16 @@ feature {WEL_WINDOW} -- Windows bug workaround
 			-- This is a limitation that the windows kernel imposes on the messaging system
 			-- so that the callstack is not too deep. To circumvent this we simply call
 			-- `PostMessage' when it fails to resize the window.
+			-- The current approach use the Per-Monitor DPI-aware variant.
 		require
 			exists: exists
 		local
 			l_diff: BOOLEAN
 			l_flags: INTEGER
 			l_pos: WEL_WINDOW_POS
+			l_dpi: INTEGER
+			l_x, l_y: INTEGER
+			l_width, l_height: INTEGER
 		do
 				-- Reset `internal_wm_size_called'. It is set to True in `process_message'
 				-- when receiving a WM_SIZE message.
@@ -2284,8 +2276,14 @@ feature {WEL_WINDOW} -- Windows bug workaround
 				-- Find out if a size change was requested.
 			l_diff := ((l_flags & swp_nosize) = 0) and then (a_width /= width or a_height /= height)
 
+			l_dpi := {WEL_API}.cwin_get_dpi_for_window (item)
+			l_x := {WEL_API}.cwin_mul_div (a_x, l_dpi, {WEL_API}.Default_dpi)
+			l_y := {WEL_API}.cwin_mul_div (a_y, l_dpi, {WEL_API}.Default_dpi)
+			l_width := {WEL_API}.cwin_mul_div (a_width, l_dpi, {WEL_API}.Default_dpi)
+			l_height := {WEL_API}.cwin_mul_div (a_height, l_dpi, {WEL_API}.Default_dpi)
+
 				 -- Perform call to `SetWindowPos'.
-			if not {WEL_API}.set_window_pos (item, default_pointer, a_x, a_y,  a_width, a_height, l_flags) then
+			if not {WEL_API}.set_window_pos (item, default_pointer, l_x, l_y,  l_width, l_height, l_flags) then
 					-- An error occurred, what can we do then?
 				do_nothing
 			end
@@ -2308,10 +2306,10 @@ feature {WEL_WINDOW} -- Windows bug workaround
 					-- Store the various arguments of the call.
 				create l_pos.make
 				l_pos.set_hwnd (item)
-				l_pos.set_x (a_x)
-				l_pos.set_y (a_y)
-				l_pos.set_width (a_width)
-				l_pos.set_height (a_height)
+				l_pos.set_x (l_x)
+				l_pos.set_y (l_y)
+				l_pos.set_width (l_width)
+				l_pos.set_height (l_height)
 				l_pos.set_flags (l_flags)
 					-- The receiver of the message will free the allocated memory for `l_pos'.
 				l_pos.set_shared
@@ -2786,31 +2784,6 @@ feature {WEL_INPUT_EVENT} -- Externals
 			"InvalidateRect"
 		end
 
-feature -- Externals DPI
-
-	cwin_get_dpi_for_window (hwnd: POINTER): INTEGER
-				-- Returns the dots per inch (dpi) value for the associated window.
-				-- `hwnd` The window you want to get information about.
-		note
-			EIS:"name=GetDpiForWindow", "src=https://msdn.microsoft.com/en-us/library/windows/desktop/mt748624(v=vs.85).aspx", "protocol=uri"
-		external
-			"C [macro %"wel.h%"] (HWND): EIF_INTEGER"
-		alias
-			"GetDpiForWindow"
-		end
-
-	cwin_mul_div (a_number, a_numerator, a_denominator: INTEGER): INTEGER
-				-- Multiplies two 32-bit values and then divides the 64-bit result by a third 32-bit value. The final result is rounded to the nearest integer.
-				-- `a_number`: The multiplicand.
-				-- `a_numerator`: The multiplier
-				-- `a_denominator`: The number by which the result of the multiplication operation is to be divided
-		note
-			EIS: "name=MulDiv", "src=https://msdn.microsoft.com/en-us/library/windows/desktop/aa383718(v=vs.85).aspx", "protocol=uri"
-		external
-			"C [macro %"wel.h%"] (int, int, int): EIF_INTEGER"
-		alias
-			"MulDiv"
-		end
 
 note
 	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"

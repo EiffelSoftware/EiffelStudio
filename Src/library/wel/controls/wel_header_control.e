@@ -232,6 +232,9 @@ feature -- Element change
 			l_success: BOOLEAN
 			l_window_pos: WEL_WINDOW_POS
 			l_window: detachable WEL_WINDOW
+			l_dpi: INTEGER
+			l_x, l_y: INTEGER
+			l_width, l_height: INTEGER
 		do
 			l_window_pos := retrieved_window_position (parent_client_rect)
 
@@ -251,10 +254,17 @@ feature -- Element change
 				a_window_style := set_flag (a_window_style, Swp_showwindow)
 			end
 
+			l_dpi := {WEL_API}.cwin_get_dpi_for_window (item)
+			l_x := {WEL_API}.cwin_mul_div (l_window_pos.x, l_dpi, {WEL_API}.Default_dpi)
+			l_y := {WEL_API}.cwin_mul_div (l_window_pos.y, l_dpi, {WEL_API}.Default_dpi)
+			l_width := {WEL_API}.cwin_mul_div (l_window_pos.width, l_dpi, {WEL_API}.Default_dpi)
+			l_height := {WEL_API}.cwin_mul_div (l_window_pos.height, l_dpi, {WEL_API}.Default_dpi)
+
+
 				-- Set the initial window position				
 			l_success := {WEL_API}.set_window_pos (item, window_handle_insert_after,
-										l_window_pos.x, l_window_pos.y,
-										l_window_pos.width, l_window_pos.height,
+										l_x, l_y,
+										l_width, l_height,
 										a_window_style)
 		end
 
@@ -426,14 +436,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

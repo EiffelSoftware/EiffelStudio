@@ -2789,20 +2789,28 @@ feature {WEL_INPUT_EVENT} -- Externals
 feature -- Externals DPI
 
 	cwin_get_dpi_for_window (hwnd: POINTER): INTEGER
+				-- Returns the dots per inch (dpi) value for the associated window.
+				-- `hwnd` The window you want to get information about.
+		note
+			EIS:"name=GetDpiForWindow", "src=https://msdn.microsoft.com/en-us/library/windows/desktop/mt748624(v=vs.85).aspx", "protocol=uri"
 		external
 			"C [macro %"wel.h%"] (HWND): EIF_INTEGER"
 		alias
 			"GetDpiForWindow"
 		end
 
-	cwin_mul_div (a_init_value, a_dpi, a_val: INTEGER): INTEGER
+	cwin_mul_div (a_number, a_numerator, a_denominator: INTEGER): INTEGER
+				-- Multiplies two 32-bit values and then divides the 64-bit result by a third 32-bit value. The final result is rounded to the nearest integer.
+				-- `a_number`: The multiplicand.
+				-- `a_numerator`: The multiplier
+				-- `a_denominator`: The number by which the result of the multiplication operation is to be divided
+		note
+			EIS: "name=MulDiv", "src=https://msdn.microsoft.com/en-us/library/windows/desktop/aa383718(v=vs.85).aspx", "protocol=uri"
 		external
 			"C [macro %"wel.h%"] (int, int, int): EIF_INTEGER"
 		alias
 			"MulDiv"
 		end
-
-
 
 note
 	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"

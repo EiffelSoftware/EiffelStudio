@@ -215,12 +215,25 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 			Result := new_shortcut ({EV_KEY_CONSTANTS}.key_end, True, False, False)
 		end
 
+	auto_import_debugger_profiles_enabled: BOOLEAN
+		do
+			Result := auto_import_debugger_profiles_enabled_preference.value
+		end
+
+	auto_export_debugger_profiles_enabled: BOOLEAN
+		do
+			Result := auto_export_debugger_profiles_enabled_preference.value
+		end
+
 feature -- Preference
 
 	edit_bp_here_shortcut_preference: SHORTCUT_PREFERENCE
 	enable_remove_bp_here_shortcut_preference: SHORTCUT_PREFERENCE
 	enable_disable_bp_here_shortcut_preference: SHORTCUT_PREFERENCE
 	run_to_this_point_shortcut_preference: SHORTCUT_PREFERENCE
+
+	auto_import_debugger_profiles_enabled_preference: BOOLEAN_PREFERENCE
+	auto_export_debugger_profiles_enabled_preference: BOOLEAN_PREFERENCE
 
 feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 
@@ -343,6 +356,8 @@ feature -- Preference Strings
 	enable_remove_here_shortcut_string: STRING = "debugger.shortcuts.enable_remove_here"
 	enable_disable_bp_here_shortcut_string: STRING = "debugger.shortcuts.enable_disable_bp_here"
 	run_to_this_point_shortcut_string: STRING = "debugger.shortcuts.run_to_this_point"
+	auto_import_debugger_profiles_enabled_string: STRING = "debugger.parameters.auto_import"
+	auto_export_debugger_profiles_enabled_string: STRING = "debugger.parameters.auto_export"
 
 feature {NONE} -- Visibility control
 
@@ -412,6 +427,9 @@ feature {NONE} -- Implementation
 			enable_remove_bp_here_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, enable_remove_here_shortcut_string,  [False, False, False, "F9"])
 			enable_disable_bp_here_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, enable_disable_bp_here_shortcut_string,  [False, False, True, "F9"])
 			run_to_this_point_shortcut_preference := l_manager.new_shortcut_preference_value (l_manager, run_to_this_point_shortcut_string,  [False, True, False, "F10"])
+
+			auto_import_debugger_profiles_enabled_preference := l_manager.new_boolean_preference_value (l_manager, auto_import_debugger_profiles_enabled_string, True)
+			auto_export_debugger_profiles_enabled_preference := l_manager.new_boolean_preference_value (l_manager, auto_export_debugger_profiles_enabled_string, False)
 		end
 
 	new_shortcut (a_key: INTEGER; a_ctrl, a_alt, a_shift: BOOLEAN): ES_KEY_SHORTCUT
@@ -451,9 +469,11 @@ invariant
 	run_to_this_point_shortcut_preference_not_void: run_to_this_point_shortcut_preference /= Void
 	display_agent_details_preference_not_void: display_agent_details_preference /= Void
 	always_show_callstack_tool_when_stopping_preference_not_void: always_show_callstack_tool_when_stopping_preference /= Void
+	auto_import_debugger_profiles_enabled_preference_not_void: auto_import_debugger_profiles_enabled_preference /= Void
+	auto_export_debugger_profiles_enabled_preference_not_void: auto_export_debugger_profiles_enabled_preference /= Void
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

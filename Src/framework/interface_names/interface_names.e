@@ -481,8 +481,10 @@ feature -- Accelerator, focus label and menu name
 	f_expand_all: STRING_32				do Result := locale.translation ("Expand all rows in grid") end
 	f_export_watch_tool_expressions_to_file: STRING_32	do Result := locale.translation ("Export Expressions To File") end
 	f_import_watch_tool_expressions_from_file: STRING_32	do Result := locale.translation ("Import Expressions From File") end
-	m_import_debugger_profiles: STRING_32	do Result := locale.translation ("Import from ..") end
-	m_export_debugger_profiles: STRING_32	do Result := locale.translation ("Export to ..") end
+	m_import_debugger_profiles: STRING_32	do Result := locale.translation ("Import parameters ...") end
+	m_export_debugger_profiles: STRING_32	do Result := locale.translation ("Export parameters ...") end
+	m_auto_import_debugger_profiles: STRING_32	do Result := locale.translation ("Auto import parameters") end
+	m_auto_export_debugger_profiles: STRING_32	do Result := locale.translation ("Auto export parameters") end
 
 	t_import_debugger_profiles_from_file: STRING_32	do Result := locale.translation ("Import parameters from file ..") end
 	t_export_debugger_profiles_to_file: STRING_32	do Result := locale.translation ("Export parameters into file ..") end
@@ -3025,7 +3027,7 @@ feature -- String escape
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

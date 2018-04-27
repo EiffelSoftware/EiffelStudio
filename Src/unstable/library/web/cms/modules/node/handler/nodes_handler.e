@@ -88,7 +88,7 @@ feature -- HTTP Methods
 				l_size := 25
 			end
 
-			l_feed := node_api.feed (a_content_type, l_size, req.path_info)
+			l_feed := node_api.feed (a_content_type, l_size, req.percent_encoded_path_info)
 
 			create l_payload.make (2_048)
 			l_feed.accept (create {ATOM_FEED_GENERATOR}.make (l_payload))

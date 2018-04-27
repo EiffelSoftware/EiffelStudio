@@ -324,6 +324,14 @@ feature -- Debugger data change
 			else
 				-- Issue !
 			end
+			if
+				profiles.count = 0 and
+				auto_import_debugger_profiles_enabled and
+				attached profiles_file_location_suggestion as p
+			then
+					-- If there is no profile yet, try to import associated default profiles file.
+				import_profiles_data_from (p)
+			end
 		rescue
 			rescued := True
 			retry
@@ -397,6 +405,12 @@ feature -- Debugger data change
 			else
 				set_error_message ("Unable to save debugger's profiles%N")
 			end
+			if
+				auto_export_debugger_profiles_enabled and then
+				attached profiles_file_location_suggestion as p
+			then
+				export_profiles_data_to (p)
+			end
 		rescue
 			retried := True
 			retry
@@ -410,6 +424,7 @@ feature -- Debugger data change
 			if not retried then
 				dbg_storage.profiles_data_to_file (profiles, a_path)
 			else
+					-- It may failed if associated directory is read-only.
 				set_error_message ("Unable to save debugger's profiles%N")
 			end
 		rescue
@@ -438,6 +453,30 @@ feature -- Debugger data change
 			-- Restore debugger data
 		do
 			breakpoints_manager.restore
+		end
+
+	profiles_file_location_suggestion: PATH
+			-- Suggested location for profiles exportation file.
+		local
+			dn: PATH
+			sys_name, tgt_name: READABLE_STRING_GENERAL
+			l_name: STRING_32
+		do
+			if eiffel_project.system_defined then
+				sys_name := eiffel_system.name
+				tgt_name := eiffel_system.workbench.lace.target_name
+				create dn.make_from_string (eiffel_system.workbench.lace.directory_name)
+				create l_name.make_from_string_general (sys_name)
+				l_name.append_character ('.')
+				if not tgt_name.same_string (sys_name) then
+					l_name.append_string_general (tgt_name)
+					l_name.append_character ('.')
+				end
+				l_name.append_string_general ("dbg")
+				l_name.append_character ('.')
+				l_name.append_string_general ("profiles.xml")
+				Result := dn.extended (l_name)
+			end
 		end
 
 feature -- Breakpoints management
@@ -1001,6 +1040,18 @@ feature -- Settings
 
 	is_true_boolean_value (a_string: STRING): BOOLEAN
 			-- Boolean preferences associated to `a_string'
+		do
+			Result := False
+		end
+
+	auto_export_debugger_profiles_enabled: BOOLEAN
+			-- Auto export debugger profiles if needed?
+		do
+			Result := False
+		end
+
+	auto_import_debugger_profiles_enabled: BOOLEAN
+			-- Auto import debugger profiles?
 		do
 			Result := False
 		end
@@ -1793,7 +1844,7 @@ invariant
 	application_associated_to_current: application /= Void implies application.debugger_manager = Current
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

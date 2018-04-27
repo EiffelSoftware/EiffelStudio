@@ -302,6 +302,7 @@ feature {NONE} -- Display profiles impl
 					local
 						m: EV_MENU
 						mi: EV_MENU_ITEM
+						mci: EV_CHECK_MENU_ITEM
 					do
 						create m.make_with_text ("...")
 						create mi.make_with_text_and_action (interface_names.b_reset, agent reset_changes)
@@ -316,6 +317,22 @@ feature {NONE} -- Display profiles impl
 						m.extend (mi)
 						create mi.make_with_text_and_action (interface_names.m_export_debugger_profiles, agent do_export_to)
 						m.extend (mi)
+
+						m.extend (create {EV_MENU_SEPARATOR})
+						create mci.make_with_text (interface_names.m_auto_import_debugger_profiles)
+						if auto_import_debugger_profiles_enabled then
+							mci.enable_select
+						end
+						mci.select_actions.extend (agent update_auto_import_debugger_profiles_behavior (mci))
+						m.extend (mci)
+
+						create mci.make_with_text (interface_names.m_auto_export_debugger_profiles)
+						if auto_export_debugger_profiles_enabled then
+							mci.enable_select
+						end
+						mci.select_actions.extend (agent update_auto_export_debugger_profiles_behavior (mci))
+						m.extend (mci)
+
 
 						m.show_at (w, 5, 5)
 					end(but)
@@ -353,8 +370,8 @@ feature {NONE} -- Display profiles impl
 			g.pointer_double_press_item_actions.extend (agent on_item_double_clicked)
 			g.key_press_actions.extend (agent on_profiles_grid_key_pressed)
 
-			g.row_expand_actions.force_extend (agent profiles_grid.request_columns_auto_resizing)
-			g.row_collapse_actions.force_extend (agent profiles_grid.request_columns_auto_resizing)
+			g.row_expand_actions.extend (agent (i_row: EV_GRID_ROW) do profiles_grid.request_columns_auto_resizing end)
+			g.row_collapse_actions.extend (agent (i_row: EV_GRID_ROW) do profiles_grid.request_columns_auto_resizing end)
 
 			create l_border_box
 			l_border_box.set_border_width (1)
@@ -742,37 +759,13 @@ feature -- Data change
 
 feature {EB_EXECUTION_PARAMETERS_DIALOG} -- Status change
 
-	import_export_file_location_suggestion: detachable PATH
-		local
-			dn: PATH
-			sys_name, tgt_name: READABLE_STRING_GENERAL
-			l_name: STRING_32
-		do
-			if workbench.system_defined then
-				sys_name := workbench.lace.system.name
-				tgt_name := workbench.lace.target_name
-
-				create dn.make_from_string (workbench.lace.directory_name)
-				create l_name.make_from_string_general (sys_name)
-				l_name.append_character ('.')
-				if not tgt_name.same_string (sys_name) then
-					l_name.append_string_general (tgt_name)
-					l_name.append_character ('.')
-				end
-				l_name.append ("dbg")
-				l_name.append_character ('.')
-				l_name.append ("profiles.xml")
-				Result := dn.extended (l_name)
-			end
-		end
-
 	do_import_from
 			-- Import profiles from file ...
 		local
 			dlg: EV_FILE_OPEN_DIALOG
 		do
 			create dlg.make_with_title (interface_names.t_import_debugger_profiles_from_file)
-			if attached import_export_file_location_suggestion as l_suggested_path then
+			if attached debugger_manager.profiles_file_location_suggestion as l_suggested_path then
 				dlg.set_full_file_path (l_suggested_path)
 			end
 			dlg.open_actions.extend (agent (i_dlg: EV_FILE_OPEN_DIALOG)
@@ -792,7 +785,7 @@ feature {EB_EXECUTION_PARAMETERS_DIALOG} -- Status change
 			dlg: EV_FILE_SAVE_DIALOG
 		do
 			create dlg.make_with_title (interface_names.t_export_debugger_profiles_to_file)
-			if attached import_export_file_location_suggestion as l_suggested_path then
+			if attached debugger_manager.profiles_file_location_suggestion as l_suggested_path then
 				dlg.set_full_file_path (l_suggested_path)
 			end
 			dlg.save_actions.extend (agent (i_dlg: EV_FILE_SAVE_DIALOG)
@@ -803,6 +796,34 @@ feature {EB_EXECUTION_PARAMETERS_DIALOG} -- Status change
 					i_dlg.destroy
 				end(dlg))
 			dlg.show_modal_to_window (window)
+		end
+
+	auto_import_debugger_profiles_enabled: BOOLEAN
+		do
+			if attached preferences.debug_tool_data.auto_import_debugger_profiles_enabled_preference as pref then
+				Result := pref.value
+			end
+		end
+
+	update_auto_import_debugger_profiles_behavior (s: EV_SELECTABLE)
+		do
+			if attached preferences.debug_tool_data.auto_import_debugger_profiles_enabled_preference as pref then
+				pref.set_value (s.is_selected)
+			end
+		end
+
+	auto_export_debugger_profiles_enabled: BOOLEAN
+		do
+			if attached preferences.debug_tool_data.auto_export_debugger_profiles_enabled_preference as pref then
+				Result := pref.value
+			end
+		end
+
+	update_auto_export_debugger_profiles_behavior (s: EV_SELECTABLE)
+		do
+			if attached preferences.debug_tool_data.auto_export_debugger_profiles_enabled_preference as pref then
+				pref.set_value (s.is_selected)
+			end
 		end
 
 	apply_changes
@@ -1093,7 +1114,7 @@ feature {NONE} -- Profile actions
 				gi.pointer_double_press_actions.extend (agent safe_activate_editing (gli, ?,?,?,?,?,?,?,?))
 				gli.set_tooltip (interface_names.f_add_a_new_variable)
 
-				gli.pointer_button_press_actions.force_extend (agent on_environment_variables_row_clicked (srow, ?,?,?))
+				gli.pointer_button_press_actions.extend (agent on_environment_variables_row_clicked (srow, ?,?,?,?,?,?,?,?))
 				gli.set_font (Operation_font)
 				srow.set_item (2, gli)
 				create ctrler
@@ -1104,9 +1125,9 @@ feature {NONE} -- Profile actions
 									inspect k.code
 									when {EV_KEY_CONSTANTS}.key_enter then
 										if ev_application.ctrl_pressed then
-											on_environment_variables_row_clicked (r, 0,0,3)
+											on_environment_variables_row_clicked (r, 0,0,3, 0,0,0,0,0)
 										else
-											on_new_environ_event (r)
+											on_new_environ_event (r, 0,0,0,0,0,0,0,0)
 										end
 									else
 									end
@@ -1114,7 +1135,7 @@ feature {NONE} -- Profile actions
 							end(srow, ?)
 						)
 				srow.set_data (ctrler)
-				gli.pointer_double_press_actions.force_extend (agent on_new_environ_event (srow))
+				gli.pointer_double_press_actions.extend (agent on_new_environ_event (srow, ?,?,?,?,?,?,?,?))
 
 				if was_expanded and then a_row.is_expandable then
 					a_row.expand
@@ -1148,7 +1169,7 @@ feature {NONE} -- Profile actions
 			l_master_item.set_editable_background_color (profiles_grid.background_color)
 			l_master_item.set_editable_foreground_color (profiles_grid.foreground_color)
 
-			l_master_item.pointer_button_press_actions.force_extend (agent on_profile_title_clicked (a_row, ?,?,?))
+			l_master_item.pointer_button_press_actions.extend (agent on_profile_title_clicked (a_row, ?,?,?,?,?,?,?,?))
 
 			a_row.set_item (1, l_master_item)
 
@@ -1162,7 +1183,7 @@ feature {NONE} -- Profile actions
 				-- DEBUG --
 				l_master_item.set_tooltip (p.debug_output)
 
-				a_row.item (1).pointer_double_press_actions.force_extend (agent l_master_item.activate)
+				a_row.item (1).pointer_double_press_actions.extend (agent activate_grid_item (l_master_item, ?,?,?,?,?,?,?,?))
 				l_master_item.deactivate_actions.extend (agent (ia_master_item: EV_GRID_EDITABLE_SPAN_LABEL_ITEM)
 						do
 							if
@@ -1173,7 +1194,7 @@ feature {NONE} -- Profile actions
 							end
 						end(l_master_item)
 					)
-				a_row.item (2).pointer_double_press_actions.force_extend (agent l_master_item.activate)
+				a_row.item (2).pointer_double_press_actions.extend (agent activate_grid_item (l_master_item, ?,?,?,?,?,?,?,?))
 				a_row.ensure_expandable
 			end
 			set_changed (p, True)
@@ -1234,7 +1255,7 @@ feature {NONE} -- Profile actions
 			end
 		end
 
-	on_profile_title_clicked (a_row: EV_GRID_ROW; ax,ay, abut:INTEGER_32)
+	on_profile_title_clicked (a_row: EV_GRID_ROW; ax,ay, abut:INTEGER_32; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Profile title row clicked.
 		require
 			a_row /= Void
@@ -1261,6 +1282,11 @@ feature {NONE} -- Profile actions
 				m.extend (mi)
 				m.show
 			end
+		end
+
+	activate_grid_item (a_item: EV_GRID_ITEM; ax,ay, abut:INTEGER_32; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
+		do
+			a_item.activate
 		end
 
 feature {NONE} -- Environment queries
@@ -1364,8 +1390,8 @@ feature {NONE} -- Environment actions
 			gti.change_actions.extend (agent change_environment_entry_from_row (srow, False))
 			gti.deactivate_actions.extend (agent change_environment_entry_from_row (srow, False))
 
-			gei.pointer_button_press_actions.force_extend (agent on_environment_variable_clicked (srow, ?,?,?))
-			gti.pointer_button_press_actions.force_extend (agent on_environment_variable_clicked (srow, ?,?,?))
+			gei.pointer_button_press_actions.extend (agent on_environment_variable_clicked (srow, ?,?,?,?,?,?,?,?))
+			gti.pointer_button_press_actions.extend (agent on_environment_variable_clicked (srow, ?,?,?,?,?,?,?,?))
 
 			srow.set_item (1, gei)
 			srow.set_item (2, gti)
@@ -1464,7 +1490,7 @@ feature {NONE} -- Environment actions
 			end
 		end
 
-	on_new_environ_event (a_row: EV_GRID_ROW)
+	on_new_environ_event (a_row: EV_GRID_ROW; ax,ay, abut:INTEGER_32; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- New environ variable event on a_row
 		require
 			a_row /= Void
@@ -1472,7 +1498,7 @@ feature {NONE} -- Environment actions
 			add_env_to_row (a_row, Void, Void, 1) --"name_" + (a_row.subrow_count + 1).out, "enter value", True)
 		end
 
-	on_environment_variables_row_clicked (a_row: EV_GRID_ROW; ax,ay, abut:INTEGER_32)
+	on_environment_variables_row_clicked (a_row: EV_GRID_ROW; ax,ay, abut:INTEGER_32; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 		local
 			m: EV_MENU
 			malpha: EV_MENU
@@ -1521,7 +1547,7 @@ feature {NONE} -- Environment actions
 			end
 		end
 
-	on_environment_variable_clicked (a_row: EV_GRID_ROW; ax,ay, abut:INTEGER_32)
+	on_environment_variable_clicked (a_row: EV_GRID_ROW; ax,ay, abut:INTEGER_32; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Environment variable row is clicked
 		require
 			a_row /= Void
@@ -1586,7 +1612,7 @@ feature {NONE} -- Environment actions
 
 				m.extend (create {EV_MENU_SEPARATOR})
 				create mi.make_with_text (interface_names.m_add_new_variable)
-				mi.select_actions.extend (agent on_new_environ_event (a_row.parent_row))
+				mi.select_actions.extend (agent on_new_environ_event (a_row.parent_row, ?,?,?,?,?,?,?,?))
 				mi.select_actions.extend (agent change_environment_entry_from_row (a_row, True))
 				m.extend (mi)
 
@@ -1836,7 +1862,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -102,7 +102,7 @@ feature -- Conversion
 	to_embedded_video_code (a_text: STRING_GENERAL; a_lower, a_upper: INTEGER): detachable STRING_GENERAL
 		require
 			a_lower < a_upper
-			a_text.substring (a_lower, a_lower + 7).same_string ("[video:")
+			a_text.substring (a_lower, a_lower + 6).same_string ("[video:")
 			a_text.ends_with ("]")
 		local
 			i,j,n: INTEGER

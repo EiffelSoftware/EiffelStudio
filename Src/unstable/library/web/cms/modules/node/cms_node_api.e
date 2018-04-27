@@ -304,6 +304,87 @@ feature -- Access: Node
 			Result := node_storage.nodes_of_type_with_title (a_node_type, a_title)
 		end
 
+feature -- Access: feeds
+
+	feed (a_node_type: CMS_CONTENT_TYPE; a_feed_size: NATURAL_64; a_feed_path: detachable READABLE_STRING_8): FEED
+		local
+			l_feed_item: FEED_ITEM
+			l_params: CMS_DATA_QUERY_PARAMETERS
+			n: CMS_NODE
+			pg, nb: NATURAL_64
+			l_size: NATURAL_64
+			l_exhausted: BOOLEAN
+			lnk: FEED_LINK
+			mesg: CMS_CUSTOM_RESPONSE_MESSAGE
+			l_payload: STRING
+			l_feed_name: STRING_32
+		do
+			create l_feed_name.make_from_string (cms_api.setup.site_name)
+			l_feed_name.append_string ({STRING_32} " : ")
+			l_feed_name.append_string_general (a_node_type.name)
+			create Result.make (l_feed_name)
+			if a_feed_path /= Void then
+				Result.set_id (cms_api.absolute_url (a_feed_path, Void))
+			end
+			Result.set_date (create {DATE_TIME}.make_now_utc)
+
+			if a_feed_size = 0 then
+				l_size := 25
+			else
+				l_size := a_feed_size
+			end
+
+			from
+				nb := 0
+				pg := 0
+			until
+				nb = l_size or l_exhausted
+			loop
+				create l_params.make (pg * 25, 25)
+				if attached recent_published_nodes_of_type (a_node_type, l_params) as lst then
+					l_exhausted := True
+					across
+						lst as ic
+					until
+						nb = l_size
+					loop
+						l_exhausted := False
+						n := ic.item
+						if n.is_published then
+							create l_feed_item.make (n.title)
+							if attached n.author as u then
+								l_feed_item.set_author (create {FEED_AUTHOR}.make (cms_api.user_api.real_user_display_name (u)))
+							end
+							l_feed_item.set_date (n.publication_date)
+							l_feed_item.set_id (n.content_type + ":id" + n.id.out + "-rev" + n.revision.out)
+							create lnk.make (cms_api.absolute_url ("/" + node_link (n).location, Void))
+							l_feed_item.links.force (lnk, "")
+							if attached n.summary as l_summary and then not l_summary.is_whitespace then
+								l_feed_item.set_description (l_summary)
+	--						elseif attached n.content as l_content then
+	--							l_feed_item.set_content (l_content, Void)
+							end
+							if attached {CMS_TAXONOMY_API} cms_api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxonomy_api then
+								if attached l_taxonomy_api.terms_of_content (n, Void) as coll then
+									across
+										coll as coll_ic
+									loop
+										l_feed_item.set_category (coll_ic.item.text)
+									end
+								end
+							end
+							nb := nb + 1
+							Result.extend (l_feed_item)
+						end
+					end
+				else
+					l_exhausted := True
+				end
+				pg := pg + 1
+			end
+		end
+
+
 feature -- Permission Scope: Node
 
 	has_permission_for_action_on_node (a_action: READABLE_STRING_8; a_node: CMS_NODE; a_user: detachable CMS_USER; ): BOOLEAN

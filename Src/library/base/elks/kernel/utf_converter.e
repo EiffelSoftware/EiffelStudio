@@ -81,6 +81,8 @@ feature -- Status report
 					Result := False
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_valid_utf_16le_string_8 (s: READABLE_STRING_8): BOOLEAN
@@ -116,6 +118,8 @@ feature -- Status report
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_valid_utf_16_subpointer (p: MANAGED_POINTER; start_pos, end_pos: INTEGER; a_stop_at_null: BOOLEAN): BOOLEAN
@@ -157,6 +161,8 @@ feature -- Status report
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_valid_utf_16 (s: SPECIAL [NATURAL_16]): BOOLEAN
@@ -190,6 +196,8 @@ feature -- Status report
 				end
 				i := i + 1
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Measurement
@@ -229,6 +237,8 @@ feature -- Measurement
 				end
 				i := i + 1
 			end
+		ensure
+			instance_free: class
 		end
 
 	utf_16_characters_count_form_pointer (m: MANAGED_POINTER; start_pos, end_pos: INTEGER): INTEGER
@@ -260,6 +270,8 @@ feature -- Measurement
 				end
 				Result := Result + 1
 			end
+		ensure
+			instance_free: class
 		end
 
 	utf_16_bytes_count (s: READABLE_STRING_GENERAL; start_pos, end_pos: INTEGER): INTEGER
@@ -289,6 +301,8 @@ feature -- Measurement
 				end
 				i := i + 1
 			end
+		ensure
+			instance_free: class
 		end
 
 	utf_8_to_string_32_count (s: SPECIAL [CHARACTER]; start_pos, end_pos: INTEGER): INTEGER
@@ -333,6 +347,8 @@ feature -- Measurement
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- UTF-32 to UTF-8
@@ -342,6 +358,7 @@ feature -- UTF-32 to UTF-8
 		do
 			Result := utf_32_string_to_utf_8_string_8 (s)
 		ensure
+			instance_free: class
 			roundtrip: utf_8_string_8_to_string_32 (Result).same_string (s)
 		end
 
@@ -350,6 +367,7 @@ feature -- UTF-32 to UTF-8
 		do
 			utf_32_string_into_utf_8_string_8 (s, a_result)
 		ensure
+			instance_free: class
 			roundtrip: utf_8_string_8_to_string_32 (a_result.substring (old a_result.count + 1, a_result.count)).same_string (s)
 		end
 
@@ -359,6 +377,7 @@ feature -- UTF-32 to UTF-8
 			create Result.make (s.count)
 			utf_32_string_into_utf_8_string_8 (s, Result)
 		ensure
+			instance_free: class
 			roundtrip: utf_8_string_8_to_string_32 (Result).same_string_general (s)
 		end
 
@@ -400,6 +419,7 @@ feature -- UTF-32 to UTF-8
 				end
 			end
 		ensure
+			instance_free: class
 			roundtrip: utf_8_string_8_to_string_32 (a_result.substring (old a_result.count + 1, a_result.count)).same_string_general (s)
 		end
 
@@ -534,6 +554,7 @@ feature -- UTF-32 to UTF-8
 				a_new_upper.put (m)
 			end
 		ensure
+			instance_free: class
 			roundtrip: a_new_upper /= Void implies utf_8_0_subpointer_to_escaped_string_32 (p, p_offset, a_new_upper.item - 1, False).same_string_general (s.substring (start_pos, end_pos))
 			roundtrip: (a_new_upper = Void and then not s.substring (start_pos, end_pos).has ('%U')) implies
 				 utf_8_0_subpointer_to_escaped_string_32 (p, p_offset, p.count, True).same_string_general (s.substring (start_pos, end_pos))
@@ -550,6 +571,7 @@ feature -- UTF-32 to UTF-8
 			create Result.make (s.count)
 			escaped_utf_32_string_into_utf_8_string_8 (s, Result)
 		ensure
+			instance_free: class
 			roundtrip: utf_8_string_8_to_escaped_string_32 (Result).same_string_general (s)
 		end
 
@@ -633,6 +655,7 @@ feature -- UTF-32 to UTF-8
 				end
 			end
 		ensure
+			instance_free: class
 			roundtrip: utf_8_string_8_to_escaped_string_32 (a_result.substring (old a_result.count + 1, a_result.count)).same_string_general (s)
 		end
 
@@ -647,6 +670,7 @@ feature -- UTF-32 to UTF-8
 		do
 			utf_32_string_into_utf_8_0_pointer (s, p, p_offset, a_new_upper)
 		ensure
+			instance_free: class
 			roundtrip: a_new_upper /= Void implies utf_8_0_subpointer_to_escaped_string_32 (p, p_offset, a_new_upper.item - 1, False).same_string (s)
 			roundtrip: (a_new_upper = Void and then not s.has ('%U')) implies
 				 utf_8_0_subpointer_to_escaped_string_32 (p, p_offset, p.count, True).same_string_general (s)
@@ -738,6 +762,7 @@ feature -- UTF-32 to UTF-8
 				a_new_upper.put (m)
 			end
 		ensure
+			instance_free: class
 			roundtrip: a_new_upper /= Void implies utf_8_0_subpointer_to_escaped_string_32 (p, p_offset, a_new_upper.item - 1, False).same_string_general (s)
 			roundtrip: (a_new_upper = Void and then not s.has ('%U')) implies
 				 utf_8_0_subpointer_to_escaped_string_32 (p, p_offset, p.count, True).same_string_general (s)
@@ -750,6 +775,7 @@ feature -- UTF-32 to UTF-8
 			Result := utf_32_string_to_utf_8_0 (s)
 			Result := Result.aliased_resized_area_with_default (0, Result.count - 1)
 		ensure
+			instance_free: class
 			roundtrip: attached utf_32_string_to_utf_8_string_8 (s) as l_ref and then
 				across Result as l_spec all l_spec.item = l_ref.code (l_spec.target_index + 1) end
 		end
@@ -804,6 +830,7 @@ feature -- UTF-32 to UTF-8
 			end
 			Result.put (0, m)
 		ensure
+			instance_free: class
 			attached_utf_8_string: attached utf_32_string_to_utf_8_string_8 (s) as l_ref
 			count: Result.count = l_ref.count + 1
 			roundtrip: across l_ref as ic all ic.item = Result [ic.target_index - 1].to_character_8	end
@@ -820,6 +847,7 @@ feature -- UTF-8 to UTF-32
 			create Result.make (p.count)
 			utf_8_0_pointer_into_escaped_string_32 (p, Result)
 		ensure
+			instance_free: class
 			roundtrip: attached escaped_utf_32_string_to_utf_8_string_8 (Result) as l_str and then
 				across l_str as l_char all l_char.item = p.read_natural_8 (l_char.target_index - 1).to_character_8 end
 		end
@@ -830,6 +858,7 @@ feature -- UTF-8 to UTF-32
 		do
 			utf_8_0_subpointer_into_escaped_string_32 (p, 0, p.count - 1, True, a_result)
 		ensure
+			instance_free: class
 			roundtrip: attached escaped_utf_32_string_to_utf_8_string_8 (a_result.substring (old a_result.count + 1, a_result.count)) as l_str and then
 				across l_str as l_char all l_char.item = p.read_natural_8 (l_char.target_index - 1).to_character_8 end
 		end
@@ -847,6 +876,7 @@ feature -- UTF-8 to UTF-32
 			create Result.make (p.count)
 			utf_8_0_subpointer_into_escaped_string_32 (p, start_pos, end_pos, a_stop_at_null, Result)
 		ensure
+			instance_free: class
 			roundtrip: attached escaped_utf_32_string_to_utf_8_string_8 (Result) as l_str and then
 				across l_str as l_char all l_char.item = p.read_natural_8 (start_pos + l_char.target_index - 1).to_character_8 end
 		end
@@ -961,6 +991,7 @@ feature -- UTF-8 to UTF-32
 				end
 			end
 		ensure
+			instance_free: class
 			roundtrip: attached escaped_utf_32_string_to_utf_8_string_8 (a_result.substring (old a_result.count + 1, a_result.count)) as l_str and then
 				across l_str as l_char all l_char.item = p.read_natural_8 (start_pos + l_char.target_index - 1).to_character_8 end
 		end
@@ -971,6 +1002,7 @@ feature -- UTF-8 to UTF-32
 			create Result.make (s.count)
 			utf_8_string_8_into_string_32 (s, Result)
 		ensure
+			instance_free: class
 			roundtrip: is_valid_utf_8_string_8 (s) implies utf_32_string_to_utf_8_string_8 (Result).same_string (s)
 		end
 
@@ -1025,6 +1057,7 @@ feature -- UTF-8 to UTF-32
 				end
 			end
 		ensure
+			instance_free: class
 			roundtrip: is_valid_utf_8_string_8 (s) implies utf_32_string_to_utf_8_string_8 (a_result.substring (old a_result.count + 1, a_result.count)).same_string (s)
 		end
 
@@ -1034,6 +1067,7 @@ feature -- UTF-8 to UTF-32
 			create Result.make (s.count)
 			utf_8_string_8_into_escaped_string_32 (s, Result)
 		ensure
+			instance_free: class
 			roundtrip: escaped_utf_32_string_to_utf_8_string_8 (Result).same_string (s)
 		end
 
@@ -1133,6 +1167,7 @@ feature -- UTF-8 to UTF-32
 				end
 			end
 		ensure
+			instance_free: class
 			roundtrip: escaped_utf_32_string_to_utf_8_string_8 (a_result.substring (old a_result.count + 1, a_result.count)).same_string (s)
 		end
 
@@ -1144,6 +1179,7 @@ feature -- UTF-32 to UTF-16
 		do
 			Result := utf_32_string_to_utf_16 (s)
 		ensure
+			instance_free: class
 			roundtrip: attached utf_32_string_to_utf_16le_string_8 (s) as l_ref and then
 				across Result as l_spec all l_spec.item = (l_ref.code (l_spec.target_index * 2 + 1) | (l_ref.code ((l_spec.target_index + 1) * 2) |<< 16)) end
 		end
@@ -1155,6 +1191,7 @@ feature -- UTF-32 to UTF-16
 			Result := utf_32_string_to_utf_16_0 (s)
 			Result := Result.aliased_resized_area_with_default (0, Result.count - 1)
 		ensure
+			instance_free: class
 			roundtrip: attached utf_32_string_to_utf_16le_string_8 (s) as l_ref and then
 				across Result as l_spec all l_spec.item = (l_ref.code (l_spec.target_index * 2 + 1) | (l_ref.code ((l_spec.target_index + 1) * 2) |<< 8)) end
 		end
@@ -1164,6 +1201,7 @@ feature -- UTF-32 to UTF-16
 		do
 			Result := utf_32_string_to_utf_16_0 (s)
 		ensure
+			instance_free: class
 			roundtrip: attached utf_32_string_to_utf_16le_string_8 (s) as l_ref and then
 				across Result.resized_area_with_default (0, Result.count - 1) as l_spec all
 					l_spec.item = (l_ref.code (l_spec.target_index * 2 + 1) | ((l_ref.code ((l_spec.target_index + 1) * 2)) |<< 8))
@@ -1211,6 +1249,7 @@ feature -- UTF-32 to UTF-16
 			end
 			Result.extend (0)
 		ensure
+			instance_free: class
 			roundtrip: attached utf_32_string_to_utf_16le_string_8 (s) as l_ref and then
 				across Result.resized_area_with_default (0, Result.count - 1) as l_spec all
 					l_spec.item = (l_ref.code (l_spec.target_index * 2 + 1) | ((l_ref.code ((l_spec.target_index + 1) * 2)) |<< 8))
@@ -1229,6 +1268,7 @@ feature -- UTF-32 to UTF-16
 		do
 			utf_32_substring_into_utf_16_pointer (s, 1, s.count, p, p_offset, a_new_upper)
 		ensure
+			instance_free: class
 			roundtrip: a_new_upper /= Void implies utf_16_0_subpointer_to_string_32 (p, p_offset // 2, (a_new_upper.item // 2) - 1, False).same_string (s)
 			roundtrip: (a_new_upper = Void and then not s.has ('%U')) implies utf_16_0_subpointer_to_string_32 (p, p_offset // 2, (p.count // 2) - 1, True).same_string (s)
 		end
@@ -1245,6 +1285,7 @@ feature -- UTF-32 to UTF-16
 		do
 			utf_32_substring_into_utf_16_0_pointer (s, 1, s.count, p, p_offset, a_new_upper)
 		ensure
+			instance_free: class
 			roundtrip: a_new_upper /= Void implies utf_16_0_subpointer_to_string_32 (p, p_offset // 2, (a_new_upper.item // 2) - 1, False).same_string (s)
 			roundtrip: (a_new_upper = Void and then not s.has ('%U')) implies utf_16_0_subpointer_to_string_32 (p, p_offset // 2, (p.count // 2) - 1, True).same_string (s)
 		end
@@ -1279,6 +1320,7 @@ feature -- UTF-32 to UTF-16
 				end
 			end
 		ensure
+			instance_free: class
 			p_count_may_increase: p.count >= old p.count
 			roundtrip: a_new_upper /= Void implies utf_16_0_subpointer_to_string_32 (p, p_offset // 2, (a_new_upper.item // 2) - 1, False).same_string_general (s)
 			roundtrip: (a_new_upper = Void and then not s.has ('%U')) implies utf_16_0_subpointer_to_string_32 (p, p_offset // 2, (p.count // 2) - 1, True).same_string_general (s)
@@ -1361,6 +1403,7 @@ feature -- UTF-32 to UTF-16
 				a_new_upper.put (m)
 			end
 		ensure
+			instance_free: class
 			p_count_may_increase: p.count >= old p.count
 			roundtrip: a_new_upper /= Void implies utf_16_0_subpointer_to_string_32 (p, p_offset // 2, (a_new_upper.item // 2) - 1, False).same_string_general (s)
 			roundtrip: (a_new_upper = Void and then not s.has ('%U')) implies utf_16_0_subpointer_to_string_32 (p, p_offset // 2, (p.count // 2) - 1, True).same_string_general (s)
@@ -1373,6 +1416,7 @@ feature -- UTF-32 to UTF-16
 			create Result.make (s.count * 2)
 			utf_32_string_into_utf_16le_string_8 (s, Result)
 		ensure
+			instance_free: class
 			roundtrip: utf_16le_string_8_to_string_32 (Result).same_string_general (s)
 		end
 
@@ -1411,6 +1455,7 @@ feature -- UTF-32 to UTF-16
 				end
 			end
 		ensure
+			instance_free: class
 			roundtrip: utf_16le_string_8_to_string_32 (a_result.substring (old a_result.count + 1, a_result.count)).same_string_general (s)
 		end
 
@@ -1535,6 +1580,7 @@ feature -- UTF-32 to UTF-16
 				a_new_upper.put (m)
 			end
 		ensure
+			instance_free: class
 			p_count_may_increase: p.count >= old p.count
 			roundtrip: a_new_upper /= Void implies utf_16_0_subpointer_to_escaped_string_32 (p, p_offset // 2, (a_new_upper.item // 2) - 1, False).same_string_general (s.substring (start_pos, end_pos))
 			roundtrip: (a_new_upper = Void and then not s.substring (start_pos, end_pos).has ('%U')) implies
@@ -1553,6 +1599,7 @@ feature -- UTF-32 to UTF-16
 			create Result.make (s.count * 2)
 			escaped_utf_32_string_into_utf_16le_string_8 (s, Result)
 		ensure
+			instance_free: class
 			roundtrip: utf_16le_string_8_to_escaped_string_32 (Result).same_string_general (s)
 		end
 
@@ -1640,6 +1687,7 @@ feature -- UTF-32 to UTF-16
 				end
 			end
 		ensure
+			instance_free: class
 			roundtrip: utf_16le_string_8_to_escaped_string_32 (a_result.substring (old a_result.count + 1, a_result.count)).same_string_general (s)
 		end
 
@@ -1655,6 +1703,7 @@ feature -- UTF-16 to UTF-32
 			create Result.make (p.count)
 			utf_16_0_pointer_into_string_32 (p, Result)
 		ensure
+			instance_free: class
 			roundtrip: is_valid_utf_16_subpointer (p, 0, p.count // 2, True) implies
 				across string_32_to_utf_16 (Result) as l_spec all l_spec.item = p.read_natural_16 ((l_spec.target_index + 1) * 2) end
 		end
@@ -1668,6 +1717,7 @@ feature -- UTF-16 to UTF-32
 		do
 			utf_16_0_subpointer_into_string_32 (p, 0, p.count // 2 - 1, True, a_result)
 		ensure
+			instance_free: class
 			roundtrip: is_valid_utf_16_subpointer (p, 0, p.count // 2, True) implies
 				across string_32_to_utf_16 (a_result.substring (old a_result.count + 1, a_result.count)) as l_spec all l_spec.item = p.read_natural_16 (l_spec.target_index * 2) end
 		end
@@ -1684,6 +1734,7 @@ feature -- UTF-16 to UTF-32
 			create Result.make (p.count)
 			utf_16_0_subpointer_into_string_32 (p, start_pos, end_pos, a_stop_at_null, Result)
 		ensure
+			instance_free: class
 			roundtrip: is_valid_utf_16_subpointer (p, start_pos, end_pos, a_stop_at_null) implies
 				across string_32_to_utf_16 (Result) as l_spec all l_spec.item = p.read_natural_16 (l_spec.target_index * 2) end
 		end
@@ -1727,6 +1778,7 @@ feature -- UTF-16 to UTF-32
 				end
 			end
 		ensure
+			instance_free: class
 			roundtrip: is_valid_utf_16_subpointer (p, start_pos, end_pos, a_stop_at_null) implies
 				across string_32_to_utf_16 (a_result.substring (old a_result.count + 1, a_result.count)) as l_spec all l_spec.item = p.read_natural_16 (l_spec.target_index * 2) end
 		end
@@ -1742,6 +1794,7 @@ feature -- UTF-16 to UTF-32
 			create Result.make (p.count)
 			utf_16_0_pointer_into_escaped_string_32 (p, Result)
 		ensure
+			instance_free: class
 			roundtrip: attached escaped_utf_32_string_to_utf_16le_string_8 (Result) as l_utf and then
 				across l_utf.new_cursor.incremented (1) as l_str all
 					(l_str.item.natural_32_code | (l_utf.code (l_str.target_index + 1) |<< 8)) = p.read_natural_16 (l_str.target_index - 1)
@@ -1757,6 +1810,7 @@ feature -- UTF-16 to UTF-32
 		do
 			utf_16_0_subpointer_into_escaped_string_32 (p, 0, p.count // 2 - 1, True, a_result)
 		ensure
+			instance_free: class
 			roundtrip: attached escaped_utf_32_string_to_utf_16le_string_8 (a_result.substring (old a_result.count + 1, a_result.count)) as l_utf and then
 				across l_utf.new_cursor.incremented (1) as l_str all
 					(l_str.item.natural_32_code | (l_utf.code (l_str.target_index + 1) |<< 8)) = p.read_natural_16 (l_str.target_index - 1)
@@ -1776,6 +1830,7 @@ feature -- UTF-16 to UTF-32
 			create Result.make (end_pos - start_pos + 1)
 			utf_16_0_subpointer_into_escaped_string_32 (p, start_pos, end_pos, a_stop_at_null, Result)
 		ensure
+			instance_free: class
 			roundtrip: attached escaped_utf_32_string_to_utf_16le_string_8 (Result) as l_utf and then
 				across l_utf.new_cursor.incremented (1) as l_str all
 					(l_str.item.natural_32_code | (l_utf.code (l_str.target_index + 1) |<< 8)) = p.read_natural_16 (start_pos * 2 + l_str.target_index - 1)
@@ -1831,6 +1886,7 @@ feature -- UTF-16 to UTF-32
 				end
 			end
 		ensure
+			instance_free: class
 			roundtrip: attached escaped_utf_32_string_to_utf_16le_string_8 (a_result.substring (old a_result.count + 1, a_result.count)) as l_utf and then
 				across l_utf.new_cursor.incremented (1) as l_str all
 					(l_str.item.natural_32_code | (l_utf.code (l_str.target_index + 1) |<< 8)) = p.read_natural_16 (start_pos * 2 + l_str.target_index - 1)
@@ -1843,6 +1899,7 @@ feature -- UTF-16 to UTF-32
 			create Result.make (s.count)
 			utf_16_into_string_32 (s, Result)
 		ensure
+			instance_free: class
 			roundtrip: is_valid_utf_16 (s) implies string_32_to_utf_16 (Result).is_equal (s)
 		end
 
@@ -1874,6 +1931,7 @@ feature -- UTF-16 to UTF-32
 				end
 			end
 		ensure
+			instance_free: class
 			roundtrip: is_valid_utf_16 (s) implies string_32_to_utf_16 (a_result.substring (old a_result.count + 1, a_result.count)).is_equal (s)
 		end
 
@@ -1884,6 +1942,7 @@ feature -- UTF-16 to UTF-32
 			create Result.make (s.count |>> 1)
 			utf_16le_string_8_into_string_32 (s, Result)
 		ensure
+			instance_free: class
 			roundtrip: is_valid_utf_16le_string_8 (s) implies escaped_utf_32_string_to_utf_16le_string_8 (Result).same_string (s)
 		end
 
@@ -1915,6 +1974,7 @@ feature -- UTF-16 to UTF-32
 				end
 			end
 		ensure
+			instance_free: class
 			roundtrip: is_valid_utf_16le_string_8 (s) implies escaped_utf_32_string_to_utf_16le_string_8 (a_result.substring (old a_result.count + 1, a_result.count)).same_string (s)
 		end
 
@@ -1926,6 +1986,7 @@ feature -- UTF-16 to UTF-32
 			create Result.make (s.count |>> 1)
 			utf_16le_string_8_into_escaped_string_32 (s, Result)
 		ensure
+			instance_free: class
 			roundtrip: escaped_utf_32_string_to_utf_16le_string_8 (Result).same_string (s)
 		end
 
@@ -1967,6 +2028,7 @@ feature -- UTF-16 to UTF-32
 				end
 			end
 		ensure
+			instance_free: class
 			roundtrip: escaped_utf_32_string_to_utf_16le_string_8 (a_result.substring (old a_result.count + 1, a_result.count)).same_string (s)
 		end
 
@@ -1980,6 +2042,7 @@ feature -- UTF-16 to UTF-8
 			end
 			Result := string_32_to_utf_8_string_8 (utf_16_to_string_32 (s))
 		ensure
+			instance_free: class
 			roundtrip: is_valid_utf_16 (s) implies string_32_to_utf_16 (utf_8_string_8_to_string_32 (Result)).is_equal (s)
 		end
 
@@ -1991,6 +2054,7 @@ feature -- UTF-16 to UTF-8
 			end
 			string_32_into_utf_8_string_8 (utf_16_to_string_32 (s), a_result)
 		ensure
+			instance_free: class
 			roundtrip: is_valid_utf_16 (s) implies string_32_to_utf_16 (utf_8_string_8_to_string_32 (a_result.substring (old a_result.count + 1, a_result.count))).is_equal (s)
 		end
 
@@ -2000,6 +2064,7 @@ feature -- UTF-16 to UTF-8
 			create Result.make (s.count)
 			utf_16le_string_8_into_utf_8_string_8 (s, Result)
 		ensure
+			instance_free: class
 			roundtrip: is_valid_utf_16le_string_8 (s) implies utf_32_string_to_utf_16le_string_8 (utf_8_string_8_to_string_32 (Result)).same_string (s)
 		end
 
@@ -2026,6 +2091,7 @@ feature -- UTF-16 to UTF-8
 			end
 			utf_16_into_utf_8_string_8 (v, a_result)
 		ensure
+			instance_free: class
 			roundtrip: is_valid_utf_16le_string_8 (s) implies utf_32_string_to_utf_16le_string_8 (utf_8_string_8_to_string_32 (a_result.substring (old a_result.count + 1, a_result.count))).same_string (s)
 		end
 
@@ -2039,6 +2105,7 @@ feature -- UTF-8 to UTF-16
 			end
 			Result := string_32_to_utf_16 (utf_8_string_8_to_string_32 (s))
 		ensure
+			instance_free: class
 			roundtrip: is_valid_utf_8_string_8 (s) implies utf_16_to_utf_8_string_8 (Result).same_string (s)
 		end
 
@@ -2048,6 +2115,7 @@ feature -- UTF-8 to UTF-16
 			Result := utf_8_string_8_to_utf_16 (s)
 			Result := Result.aliased_resized_area_with_default (0, Result.count + 1)
 		ensure
+			instance_free: class
 			roundtrip: is_valid_utf_8_string_8 (s) implies utf_16_to_utf_8_string_8 (Result).same_string (s)
 		end
 
@@ -2083,6 +2151,8 @@ feature {NONE} -- Implementation
 				a_string.append_character ('u')
 				a_string.append_string_general (a_code.to_hex_string)
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_hexa_decimal (a_string: READABLE_STRING_GENERAL): BOOLEAN
@@ -2094,6 +2164,8 @@ feature {NONE} -- Implementation
 			l_convertor.reset ({NUMERIC_INFORMATION}.type_natural_32)
 			l_convertor.parse_string_with_type (a_string, {NUMERIC_INFORMATION}.type_natural_32)
 			Result := l_convertor.is_integral_integer
+		ensure
+			instance_free: class
 		end
 
 	to_natural_32 (a_hex_string: READABLE_STRING_GENERAL): NATURAL_32
@@ -2106,6 +2178,8 @@ feature {NONE} -- Implementation
 			l_convertor := ctoi_convertor
 			l_convertor.parse_string_with_type (a_hex_string, {NUMERIC_INFORMATION}.type_no_limitation)
 			Result := l_convertor.parsed_natural_32
+		ensure
+			instance_free: class
 		end
 
 	ctoi_convertor: HEXADECIMAL_STRING_TO_INTEGER_CONVERTER
@@ -2115,6 +2189,7 @@ feature {NONE} -- Implementation
 			Result.set_leading_separators_acceptable (False)
 			Result.set_trailing_separators_acceptable (False)
 		ensure
+			instance_free: class
 			ctoi_convertor_not_void: Result /= Void
 		end
 

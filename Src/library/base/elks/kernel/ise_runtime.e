@@ -22,7 +22,7 @@ feature -- Feature specific to ISE runtime.
 		alias
 			"return c_generator_of_type(eif_decoded_type($a_type_id));"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen check_assert (b: BOOLEAN): BOOLEAN
@@ -31,14 +31,14 @@ feature -- Feature specific to ISE runtime.
 		alias
 			"c_check_assert"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
  	frozen generating_type_of_type (a_type_id: INTEGER): STRING
  		external
  			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
  		end
 
 	frozen in_assertion: BOOLEAN
@@ -51,7 +51,7 @@ feature -- Feature specific to ISE runtime.
 				return EIF_TEST(in_assertion!=0);
 			]"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen once_objects (a_result_type_id: INTEGER): SPECIAL [ANY]
@@ -62,7 +62,7 @@ feature -- Feature specific to ISE runtime.
 		alias
 			"return eif_once_objects_of_result_type(eif_decoded_type($a_result_type_id));"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 feature -- Internal C routines
@@ -74,7 +74,7 @@ feature -- Internal C routines
 		alias
 			"return eif_gen_conf($a_type_id_1, $a_type_id_2);"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen type_id_from_name (s: POINTER): INTEGER
@@ -84,7 +84,7 @@ feature -- Internal C routines
 		alias
 			"eif_type_id"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen dynamic_type (object: separate ANY): INTEGER
@@ -92,7 +92,7 @@ feature -- Internal C routines
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen pre_ecma_mapping_status: BOOLEAN
@@ -102,7 +102,7 @@ feature -- Internal C routines
 		alias
 			"return eif_pre_ecma_mapping();"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_pre_ecma_mapping (v: BOOLEAN)
@@ -112,7 +112,7 @@ feature -- Internal C routines
 		alias
 			"eif_set_pre_ecma_mapping($v)"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen is_attached_type (a_type_id: INTEGER): BOOLEAN
@@ -122,7 +122,7 @@ feature -- Internal C routines
 		alias
 			"return eif_is_attached_type($a_type_id)"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen detachable_type (a_type_id: INTEGER): INTEGER
@@ -132,7 +132,7 @@ feature -- Internal C routines
 		alias
 			"return eif_non_attached_type($a_type_id)"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen attached_type (a_type_id: INTEGER): INTEGER
@@ -142,7 +142,7 @@ feature -- Internal C routines
 		alias
 			"return eif_attached_type($a_type_id)"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen is_field_transient_of_type (i: INTEGER; a_type_id: INTEGER): BOOLEAN
@@ -152,7 +152,7 @@ feature -- Internal C routines
 		alias
 			"return EIF_IS_TRANSIENT_ATTRIBUTE(System(To_dtype(eif_decoded_type($a_type_id).id)), $i - 1);"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen is_field_expanded_of_type (i: INTEGER; a_type_id: INTEGER): BOOLEAN
@@ -162,7 +162,7 @@ feature -- Internal C routines
 		alias
 			"return ((System(To_dtype(eif_decoded_type($a_type_id).id)).cn_types[$i - 1] & SK_HEAD) == SK_EXP);"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen persistent_field_count_of_type (a_type_id: INTEGER): INTEGER
@@ -172,7 +172,7 @@ feature -- Internal C routines
 		alias
 			"return (System(To_dtype(eif_decoded_type($a_type_id).id)).cn_persistent_nbattr);"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen storable_version_of_type (a_type_id: INTEGER): detachable STRING
@@ -188,7 +188,7 @@ feature -- Internal C routines
 				}
 			]"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	compiler_version: INTEGER
@@ -197,7 +197,7 @@ feature -- Internal C routines
 		alias
 			"egc_compiler_tag"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 feature -- Internal support
@@ -207,7 +207,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen raw_reference_field_at_offset (a_enclosing: POINTER; a_physical_offset: INTEGER): POINTER
@@ -215,7 +215,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen dynamic_type_at_offset (a_enclosing: POINTER; a_physical_offset: INTEGER): INTEGER_32
@@ -223,7 +223,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen is_copy_semantics_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): BOOLEAN
@@ -231,7 +231,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen is_special_copy_semantics_item (i: INTEGER; a_object: POINTER): BOOLEAN
@@ -239,7 +239,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen field_count_of_type (a_type_id: INTEGER): INTEGER
@@ -249,7 +249,7 @@ feature -- Internal support
 		alias
 			"ei_count_field_of_type"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen field_offset_of_type (i: INTEGER; a_type_id: INTEGER): INTEGER
@@ -259,7 +259,7 @@ feature -- Internal support
 		alias
 			"ei_offset_of_type"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen object_size (a_object: POINTER): NATURAL_64
@@ -267,7 +267,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen field_name_of_type (i: INTEGER; a_type_id: INTEGER): POINTER
@@ -275,7 +275,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen field_type_of_type (i: INTEGER; a_type_id: INTEGER): INTEGER
@@ -283,7 +283,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen field_static_type_of_type (i: INTEGER; a_type_id: INTEGER): INTEGER
@@ -291,7 +291,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen reference_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): detachable ANY
@@ -299,7 +299,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen character_8_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): CHARACTER_8
@@ -307,7 +307,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen character_32_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): CHARACTER_32
@@ -315,7 +315,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen boolean_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): BOOLEAN
@@ -323,7 +323,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen natural_8_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): NATURAL_8
@@ -331,7 +331,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen natural_16_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): NATURAL_16
@@ -339,7 +339,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen natural_32_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): NATURAL_32
@@ -347,7 +347,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen natural_64_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): NATURAL_64
@@ -355,7 +355,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen integer_8_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): INTEGER_8
@@ -363,7 +363,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen integer_16_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): INTEGER_16
@@ -371,7 +371,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen integer_32_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): INTEGER
@@ -379,7 +379,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen integer_64_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): INTEGER_64
@@ -387,7 +387,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen real_32_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): REAL_32
@@ -395,7 +395,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen pointer_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): POINTER
@@ -403,7 +403,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen real_64_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): REAL_64
@@ -411,7 +411,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen reference_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): detachable ANY
@@ -419,7 +419,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen character_8_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): CHARACTER_8
@@ -427,7 +427,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen character_32_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): CHARACTER_32
@@ -435,7 +435,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen boolean_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): BOOLEAN
@@ -443,7 +443,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen natural_8_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): NATURAL_8
@@ -451,7 +451,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen natural_16_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): NATURAL_16
@@ -459,7 +459,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen natural_32_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): NATURAL_32
@@ -467,7 +467,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen natural_64_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): NATURAL_64
@@ -475,7 +475,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen integer_8_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): INTEGER_8
@@ -483,7 +483,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen integer_16_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): INTEGER_16
@@ -491,7 +491,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen integer_32_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): INTEGER
@@ -499,7 +499,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen integer_64_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): INTEGER_64
@@ -507,7 +507,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen real_32_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): REAL_32
@@ -515,7 +515,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen pointer_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): POINTER
@@ -523,7 +523,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen real_64_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): REAL_64
@@ -531,7 +531,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen is_special (a_object: POINTER): BOOLEAN
@@ -539,7 +539,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen is_special_of_expanded (a_object: POINTER): BOOLEAN
@@ -548,7 +548,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen is_special_of_reference (a_object: POINTER): BOOLEAN
@@ -557,7 +557,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen is_expanded (a_object: POINTER): BOOLEAN
@@ -565,7 +565,7 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen is_tuple (object: POINTER): BOOLEAN
@@ -573,217 +573,217 @@ feature -- Internal support
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_reference_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: detachable ANY)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_real_64_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: REAL_64)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_character_8_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: CHARACTER_8)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_character_32_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: CHARACTER_32)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_boolean_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: BOOLEAN)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_natural_8_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: NATURAL_8)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_natural_16_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: NATURAL_16)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_natural_32_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: NATURAL_32)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_natural_64_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: NATURAL_64)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_integer_8_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: INTEGER_8)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_integer_16_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: INTEGER_16)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_integer_32_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: INTEGER)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_integer_64_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: INTEGER_64)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_real_32_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: REAL_32)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_pointer_field (i: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: POINTER)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_reference_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: detachable ANY)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_real_64_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: REAL_64)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_character_8_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: CHARACTER_8)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_character_32_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: CHARACTER_32)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_boolean_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: BOOLEAN)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_natural_8_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: NATURAL_8)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_natural_16_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: NATURAL_16)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_natural_32_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: NATURAL_32)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_natural_64_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: NATURAL_64)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_integer_8_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: INTEGER_8)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_integer_16_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: INTEGER_16)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_integer_32_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: INTEGER)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_integer_64_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: INTEGER_64)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_real_32_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: REAL_32)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen set_pointer_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER; value: POINTER)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen generic_parameter_count (a_type_id: INTEGER): INTEGER
@@ -793,7 +793,7 @@ feature -- Internal support
 		alias
 			"return eif_gen_count_with_dftype(eif_decoded_type($a_type_id).id);"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen eif_gen_param_id (a_type_id: INTEGER; i: INTEGER): INTEGER
@@ -803,7 +803,7 @@ feature -- Internal support
 		alias
 			"return eif_gen_param_id($a_type_id, $i);"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 feature -- Object marking
@@ -816,7 +816,7 @@ feature -- Object marking
 		alias
 			"eif_lock_marking"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen unlock_marking
@@ -827,32 +827,32 @@ feature -- Object marking
 		alias
 			"eif_unlock_marking"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen is_object_marked (obj: POINTER): BOOLEAN
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen unmark_object (obj: POINTER)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	frozen mark_object (obj: POINTER)
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

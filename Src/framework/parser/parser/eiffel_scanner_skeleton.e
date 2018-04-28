@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description: "Eiffel scanner skeletons"
 	legal: "See notice at end of class."
@@ -21,9 +21,6 @@ inherit
 		export
 			{NONE} all
 		end
-
-	BASIC_ROUTINES
-		export {NONE} all end
 
 	SHARED_ERROR_HANDLER
 		export {NONE} all end
@@ -896,7 +893,7 @@ invariant
 	filename_not_void: filename /= Void
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -926,5 +923,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class EIFFEL_SCANNER_SKELETON
 
+end

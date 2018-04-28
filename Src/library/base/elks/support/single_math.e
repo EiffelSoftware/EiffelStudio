@@ -3,7 +3,6 @@
 			Basic mathematical operations, single-precision.
 			This class may be used as ancestor by classes needing its facilities
 		]"
-
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -22,6 +21,8 @@ feature -- Access
 			-- Base 2 logarithm of `v'
 		do
 			Result := log (v) / log ({REAL_32} 2.0)
+		ensure
+			instance_free: class
 		end
 
 	cosine (v: REAL_32): REAL_32
@@ -32,7 +33,7 @@ feature -- Access
 		alias
 			"cos"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	arc_cosine (v: REAL_32): REAL_32
@@ -43,7 +44,7 @@ feature -- Access
 		alias
 			"acos"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	sine (v: REAL_32): REAL_32
@@ -54,7 +55,7 @@ feature -- Access
 		alias
 			"sin"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	arc_sine (v: REAL_32): REAL_32
@@ -65,7 +66,7 @@ feature -- Access
 		alias
 			"asin"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	tangent (v: REAL_32): REAL_32
@@ -76,7 +77,7 @@ feature -- Access
 		alias
 			"tan"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	arc_tangent (v: REAL_32): REAL_32
@@ -87,7 +88,7 @@ feature -- Access
 		alias
 			"atan"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	sqrt (v: REAL_32): REAL_32
@@ -95,7 +96,7 @@ feature -- Access
 		external
 			"C signature (double): double use <math.h>"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	exp (x: REAL_32): REAL_32
@@ -103,7 +104,7 @@ feature -- Access
 		external
 			"C signature (double): double use <math.h>"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	log (v: REAL_32): REAL_32
@@ -111,7 +112,7 @@ feature -- Access
 		external
 			"C signature (double): double use <math.h>"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	log10 (v: REAL_32): REAL_32
@@ -119,7 +120,7 @@ feature -- Access
 		external
 			"C signature (double): double use <math.h>"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	floor (v: REAL_32): REAL_32
@@ -127,7 +128,7 @@ feature -- Access
 		external
 			"C signature (double): double use <math.h>"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	ceiling (v: REAL_32): REAL_32
@@ -137,7 +138,7 @@ feature -- Access
 		alias
 			"ceil"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	rabs (v: REAL_32): REAL_32
@@ -147,11 +148,11 @@ feature -- Access
 		alias
 			"fabs"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

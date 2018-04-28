@@ -31,6 +31,8 @@ feature -- Access
 			medium_supports_storable: medium.support_storable
 		do
 			Result := medium.retrieved
+		ensure
+			instance_free: class
 		end
 
 	retrieve_by_name (file_name: READABLE_STRING_GENERAL): detachable ANY
@@ -55,6 +57,8 @@ feature -- Access
 				Result := file.retrieved
 				file.close
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Setting

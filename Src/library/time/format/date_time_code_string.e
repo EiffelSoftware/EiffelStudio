@@ -37,7 +37,7 @@ feature -- Creation
 			loop
 				pos2 := find_separator (s, pos1)
 				l_substrgs := extracted_substrings (s, pos1, pos2)
-				pos2 := abs (pos2)
+				pos2 := pos2.abs
 				l_substrg := l_substrgs.substrg
 				l_substrg.to_lower
 				if l_substrg.count > 0 then
@@ -177,7 +177,7 @@ feature -- Interface
 						pos2 := (pos1 + code.count_max - 1) * -1
 					end
 					l_substrgs := extracted_substrings (s, pos1, pos2)
-					pos2 := abs (pos2)
+					pos2 := pos2.abs
 					l_substrg := l_substrgs.substrg
 					if l_substrg.count > 0 then
 						Result := l_substrg.count <= code.count_max and
@@ -634,7 +634,7 @@ feature {NONE} -- Implementation
 			-- Cached instance of date-time string parser
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -644,9 +644,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DATE_TIME_CODE_STRING
-
-
+end

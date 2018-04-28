@@ -9,11 +9,6 @@ class
 	FIND_SEPARATOR_FACILITY
 
 inherit
-	BASIC_ROUTINES
-		export
-			{NONE} all
-		end
-
 	CODE_VALIDITY_CHECKER
 		export
 			{NONE} all
@@ -89,7 +84,7 @@ feature {NONE} -- Implementation
 			-- range `pos1'..`pos2'.
 		require
 			string_exists: s /= Void
-			range_correct: pos1 <= abs (pos2)
+			range_correct: pos1 <= pos2.abs
 		local
 			l_substrg, l_substrg2: STRING
 		do
@@ -124,7 +119,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

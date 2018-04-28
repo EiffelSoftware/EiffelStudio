@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="precomp_dotnet_vision2-mt-safe" uuid="B49AE40E-561D-45BB-A2F0-73E430F4F9A9" library_target="vision2-mt-safe">
 	<target name="vision2-mt-safe">
 		<description>Vision2 library in MT mode</description>
-		<root class="ANY"/>
+		<root all_classes="true"/>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<setting name="executable_name" value="EiffelSoftware.Library.Vision2Mt"/>
 		<setting name="msil_generation" value="true"/>
@@ -12,8 +12,8 @@
 			<concurrency support="thread" use="thread"/>
 		</capability>
 		<precompile name="precompile" location="$ISE_PRECOMP\wel-mt-safe.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 	</target>
 </system>

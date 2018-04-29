@@ -2,7 +2,7 @@
 	description: "Declarations for `built_in' externals."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2018, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -70,8 +70,8 @@ extern "C" {
 #define eif_builtin_ANY_deep_twin(object)				edclone ((object))
 
 /* ARGUMENTS class */
-#define eif_builtin_ARGUMENTS_32_i_th_argument_pointer(some,i)	(eif_arg_item(i))
-#define eif_builtin_ARGUMENTS_32_argument_count(some)		(eif_arg_count() - 1)
+#define eif_builtin_ARGUMENTS_32_i_th_argument_pointer(i)	(eif_arg_item(i))
+#define eif_builtin_ARGUMENTS_32_argument_count			(eif_arg_count() - 1)
 
 /* EV_ANY_IMP class */
 #define eif_builtin_EV_ANY_IMP_eif_current_object_id(object)	eif_reference_id(object)

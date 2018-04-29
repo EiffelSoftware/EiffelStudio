@@ -309,7 +309,7 @@ feature -- Measurement
 			-- Number of arguments given to command that started
 			-- system execution (command name does not count).
 		external
-			"built_in"
+			"built_in static"
 		ensure
 			instance_free: class
 			argument_count_positive: Result >= 0
@@ -387,7 +387,7 @@ feature {NONE} -- Implementation
 			index_large_enough: i >= 0
 			index_small_enough: i <= argument_count
 		external
-			"built_in"
+			"built_in static"
 		ensure
 			instance_free: class
 		end
@@ -400,7 +400,7 @@ feature {NONE} -- Implementation
 			index_large_enough: i >= 0
 			index_small_enough: i <= argument_count
 		external
-			"built_in"
+			"built_in static"
 		ensure
 			instance_free: class
 		end

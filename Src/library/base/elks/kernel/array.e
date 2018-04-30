@@ -362,7 +362,7 @@ feature -- Element change
 			-- Assign item `v' to `i'-th entry.
 			-- Resize the array if `i' falls out of currently defined bounds; preserve existing items.
 			-- In void-safe mode, if ({G}).has_default does not hold, then you can only insert between
-			-- `lower - 1' or `upper + 1' position in the ARRAY.
+			-- `lower - 1' and `upper + 1' positions in the ARRAY.
 		require
 			has_default_if_too_low:
 				(i < lower - 1 and lower /= {like lower}.min_value) implies ({G}).has_default
@@ -881,7 +881,7 @@ invariant
 --				(index_set.upper = lower + count - 1))
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

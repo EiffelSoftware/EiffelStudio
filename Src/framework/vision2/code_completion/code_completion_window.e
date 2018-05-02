@@ -79,7 +79,10 @@ feature {NONE} -- Initialization
 			extend (vbox)
 			choice_list.focus_out_actions.extend (agent on_lose_focus)
 			focus_out_actions.extend (agent on_lose_focus)
-			resize_actions.force_extend (agent resize_column_to_window_width)
+			resize_actions.extend (agent (i_x, i_y, i_width, i_height: INTEGER)
+					do
+						resize_column_to_window_width
+					end)
 		end
 
 feature -- Initialization
@@ -155,6 +158,12 @@ feature -- Access
 	code_template_label: EVS_LINK_LABEL
 			-- Label code  template.
 
+feature -- Settings
+
+	show_bypassed_for_single_choice: BOOLEAN assign set_show_bypassed_for_single_choice
+			-- For single choice case, bypass the window? (i.e not shown).
+			-- note: by default, the Window is shown even for single choice.
+
 feature -- Status report
 
 	show_needed: BOOLEAN
@@ -194,6 +203,11 @@ feature -- Status Setting
 			choice_list.set_focus
 			select_closest_match
 			ev_application.do_once_on_idle (agent resize_column_to_window_width)
+		end
+
+	set_show_bypassed_for_single_choice (b: BOOLEAN)
+		do
+			show_bypassed_for_single_choice := b
 		end
 
 feature -- Query
@@ -1147,7 +1161,7 @@ feature {NONE} -- Implementation
 								if l_list.row (1).is_expandable and then l_list.row (1).subrow_count > 1 then
 									show_needed := True
 								else
-									show_needed := False
+									show_needed := not show_bypassed_for_single_choice
 								end
 							elseif l_list.row_count = 2 then
 								if l_list.row (1).is_expandable and then l_list.row (2).is_selected then
@@ -1180,7 +1194,7 @@ feature {NONE} -- Implementation
 						-- then there is no need to show list.
 					show_needed := not user_completion
 				else
-						-- Mulitple items are avialable so show completion list
+						-- Multiple items are available so show completion list
 					show_needed := True
 				end
 			end
@@ -1483,7 +1497,7 @@ invariant
 	choice_list_attached: choice_list /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

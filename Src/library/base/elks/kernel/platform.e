@@ -15,7 +15,7 @@ feature -- Platform
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	is_scoop_capable: BOOLEAN
@@ -23,7 +23,7 @@ feature -- Platform
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	is_dotnet: BOOLEAN
@@ -31,7 +31,7 @@ feature -- Platform
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	is_windows: BOOLEAN
@@ -39,7 +39,7 @@ feature -- Platform
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	is_unix: BOOLEAN
@@ -47,7 +47,7 @@ feature -- Platform
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	is_vms: BOOLEAN
@@ -55,7 +55,7 @@ feature -- Platform
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	is_mac: BOOLEAN
@@ -63,7 +63,7 @@ feature -- Platform
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	is_vxworks: BOOLEAN
@@ -71,7 +71,7 @@ feature -- Platform
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	is_little_endian: BOOLEAN
@@ -86,7 +86,7 @@ feature -- Platform
 			($l_first).memory_copy ($l_nat16, 1)
 			Result := l_first = l_nat8
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	is_64_bits: BOOLEAN
@@ -94,7 +94,7 @@ feature -- Platform
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 feature -- Access bytes size
@@ -104,7 +104,7 @@ feature -- Access bytes size
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	character_8_bytes: INTEGER = 1
@@ -148,7 +148,7 @@ feature -- Access bytes size
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 feature -- Access bits size
@@ -158,7 +158,7 @@ feature -- Access bits size
 		do
 			Result := boolean_bytes * 8
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	character_8_bits: INTEGER = 8
@@ -202,7 +202,7 @@ feature -- Access bits size
 		do
 			Result := pointer_bytes * 8
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 feature -- Obsoletes
@@ -214,7 +214,7 @@ feature -- Obsoletes
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	wide_character_bytes: INTEGER
@@ -224,7 +224,7 @@ feature -- Obsoletes
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	integer_bytes: INTEGER
@@ -234,7 +234,7 @@ feature -- Obsoletes
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	real_bytes: INTEGER
@@ -244,7 +244,7 @@ feature -- Obsoletes
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	double_bytes: INTEGER
@@ -254,7 +254,7 @@ feature -- Obsoletes
 		external
 			"built_in static"
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	character_bits: INTEGER
@@ -264,7 +264,7 @@ feature -- Obsoletes
 		do
 			Result := 8
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	integer_bits: INTEGER
@@ -274,7 +274,7 @@ feature -- Obsoletes
 		do
 			Result := 32
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	real_bits: INTEGER
@@ -284,7 +284,7 @@ feature -- Obsoletes
 		do
 			Result := 32
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	double_bits: INTEGER
@@ -294,7 +294,7 @@ feature -- Obsoletes
 		do
 			Result := 64
 		ensure
-			is_class: class
+			instance_free: class
 		end
 
 	maximum_character_code: INTEGER
@@ -304,7 +304,7 @@ feature -- Obsoletes
 		do
 			Result := {CHARACTER}.max_value
 		ensure
-			is_class: class
+			instance_free: class
 			meaningful: Result >= 127
 		end
 
@@ -315,7 +315,7 @@ feature -- Obsoletes
 		do
 			Result := {INTEGER}.max_value
 		ensure
-			is_class: class
+			instance_free: class
 			meaningful: Result >= 0
 		end
 
@@ -326,7 +326,7 @@ feature -- Obsoletes
 		do
 			Result := {CHARACTER}.min_value
 		ensure
-			is_class: class
+			instance_free: class
 			meaningful: Result <= 0
 		end
 
@@ -337,12 +337,12 @@ feature -- Obsoletes
 		do
 			Result := {INTEGER}.min_value
 		ensure
-			is_class: class
+			instance_free: class
 			meaningful: Result <= 0
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -33,7 +33,8 @@ inherit
 			display_application_status, display_system_info, display_debugger_info,
 			set_error_message,
 			display_ignore_contract_violation_dialog,
-			enable_ignore_contract_violation_if_possible
+			enable_ignore_contract_violation_if_possible,
+			auto_import_debugger_profiles_enabled, auto_export_debugger_profiles_enabled
 		select
 			preferences
 		end
@@ -365,6 +366,18 @@ feature -- Settings
 					end
 				end
 			end
+		end
+
+	auto_export_debugger_profiles_enabled: BOOLEAN
+			-- Auto export debugger profiles if needed?
+		do
+			Result := debug_tool_data.auto_export_debugger_profiles_enabled
+		end
+
+	auto_import_debugger_profiles_enabled: BOOLEAN
+			-- Auto import debugger profiles?
+		do
+			Result := debug_tool_data.auto_import_debugger_profiles_enabled
 		end
 
 feature -- Access
@@ -2599,7 +2612,7 @@ feature {NONE} -- MSIL system implementation
 			-- DLL type constant for MSIL system
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

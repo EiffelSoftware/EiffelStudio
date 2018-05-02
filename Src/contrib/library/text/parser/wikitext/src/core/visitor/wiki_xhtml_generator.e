@@ -303,6 +303,7 @@ feature -- Processing
 			curr, prev: NATURAL_8
 			l_is_horizontal: BOOLEAN
 			l_list_tag: STRING
+			l_css_class: STRING
 		do
 			if attached current_page as pg and then attached pg.structure as l_structure then
 				create it.make
@@ -324,13 +325,22 @@ feature -- Processing
 						or else it.has_auto_generated_toc
 					)
 				then
+					create l_css_class.make_empty
+					l_css_class.append ("wiki-toc")
 					if l_is_horizontal then
 						l_list_tag := "ul"
-						output ("%N<" + l_list_tag + " class=%"wiki-toc horizontal%">")
+						l_css_class.append (" horizontal")
 					else
 						l_list_tag := "ol"
-						output ("%N<" + l_list_tag + " class=%"wiki-toc%">")
 					end
+					if is_auto_toc then
+						l_css_class.append (" wiki-toc-auto")
+					end
+					output ("%N<" + l_list_tag + " class=%"" + l_css_class + "%"")
+					if attached it.style as l_css_style then
+						output (" style=%"" + l_css_style + "%"")
+					end
+					output (">")
 					if is_auto_toc or not it.has_auto_generated_toc then
 						output ("<a name=%"toc%"></a>")
 					end
@@ -669,7 +679,6 @@ feature -- Template
 		local
 			witem: WIKI_ITEM
 			s: STRING
-			wstr: WIKI_STRING
 			l_is_first: BOOLEAN
 		do
 			if

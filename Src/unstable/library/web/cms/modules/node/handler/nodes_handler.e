@@ -82,67 +82,13 @@ feature -- HTTP Methods
 			l_payload: STRING
 			l_feed_name: STRING_32
 		do
-			create l_feed_name.make_from_string (api.setup.site_name)
-			l_feed_name.append_string ({STRING_32} " : ")
-			l_feed_name.append_string_general (a_content_type.name)
-			create l_feed.make (l_feed_name)
-			l_feed.set_id (api.absolute_url (req.path_info, Void))
-			l_feed.set_date (create {DATE_TIME}.make_now_utc)
-
 			if attached {WSF_STRING} req.query_parameter ("size") as p_size and then p_size.is_integer then
 				l_size := p_size.integer_value.to_natural_64
 			else
 				l_size := 25
 			end
 
-			from
-				nb := 0
-				pg := 0
-			until
-				nb = l_size or l_exhausted
-			loop
-				create l_params.make (pg * 25, 25)
-				if attached node_api.recent_published_nodes_of_type (a_content_type, l_params) as lst then
-					l_exhausted := True
-					across
-						lst as ic
-					until
-						nb = l_size
-					loop
-						l_exhausted := False
-						n := ic.item
-						if n.is_published then
-							create l_feed_item.make (n.title)
-							if attached n.author as u then
-								l_feed_item.set_author (create {FEED_AUTHOR}.make (api.user_api.real_user_display_name (u)))
-							end
-							l_feed_item.set_date (n.publication_date)
-							l_feed_item.set_id (n.content_type + ":id" + n.id.out + "-rev" + n.revision.out)
-							create lnk.make (req.absolute_script_url ("/" + node_api.node_link (n).location))
-							l_feed_item.links.force (lnk, "")
-							if attached n.summary as l_summary and then not l_summary.is_whitespace then
-								l_feed_item.set_description (l_summary)
-	--						elseif attached n.content as l_content then
-	--							l_feed_item.set_content (l_content, Void)
-							end
-							if attached {CMS_TAXONOMY_API} api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxonomy_api then
-								if attached l_taxonomy_api.terms_of_content (n, Void) as coll then
-									across
-										coll as coll_ic
-									loop
-										l_feed_item.set_category (coll_ic.item.text)
-									end
-								end
-							end
-							nb := nb + 1
-							l_feed.extend (l_feed_item)
-						end
-					end
-				else
-					l_exhausted := True
-				end
-				pg := pg + 1
-			end
+			l_feed := node_api.feed (a_content_type, l_size, req.percent_encoded_path_info)
 
 			create l_payload.make (2_048)
 			l_feed.accept (create {ATOM_FEED_GENERATOR}.make (l_payload))

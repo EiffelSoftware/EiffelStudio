@@ -4,7 +4,7 @@
 		"news": {
 			"title": "News", 
 			"expiration": 21600,
-			"size": 5,
+			"size": 7,
 			"locations": {
 				"blog": "https://www.eiffel.org/nodes/blog/feed",
 				"bm": "https://bertrandmeyer.com/feed/"
@@ -15,9 +15,9 @@
 		"forum": {
 			"title": "Forum",
 			"expiration": 21600,
-			"size": 5,
+			"size": 7,
 			"locations": {
-				"eiffelusers": "https://groups.google.com/forum/feed/eiffel-users/msgs/atom.xml?num=10",
+				"eiffelusers": "https://groups.google.com/forum/feed/eiffel-users/msgs/atom.xml?num=25",
 				"stackoverflow": "http://stackoverflow.com/feeds/tag?tagnames=eiffel&sort=newest"
 			}
 			,"option_description": "enabled"
@@ -30,15 +30,15 @@
 				"blog": "https://www.eiffel.org/nodes/blog/feed",
 				"bm": "https://bertrandmeyer.com/feed/"
 			}
-			, "bm_categories": ["Eiffel"]
+			,"categories": {"bm": ["Eiffel"]}
 			,"option_description": "enabled"
 		},
 		"forum_page": {
 			"title": "Forum", 
-			"expiration": 3600,
+			"expiration": 1800,
 			"size": 25,
 			"locations": {
-				"eiffelusers": "https://groups.google.com/forum/feed/eiffel-users/msgs/atom.xml?num=10",
+				"eiffelusers": "https://groups.google.com/forum/feed/eiffel-users/msgs/atom.xml?num=30",
 				"stackoverflow": "http://stackoverflow.com/feeds/tag?tagnames=eiffel&sort=newest"
 			}
 			,"option_description": "enabled"

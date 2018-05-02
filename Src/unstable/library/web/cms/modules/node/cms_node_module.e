@@ -25,6 +25,8 @@ inherit
 
 	CMS_RECENT_CHANGES_HOOK
 
+	FEED_PROVIDER_HOOK
+
 	CMS_SITEMAP_HOOK
 
 	CMS_TAXONOMY_HOOK
@@ -42,6 +44,7 @@ feature {NONE} -- Initialization
 			package := "core"
 				-- Optional dependencies, mainly for information.
 			put_dependency ({CMS_RECENT_CHANGES_MODULE}, False)
+			put_dependency ({FEED_AGGREGATOR_MODULE}, False)
 			put_dependency ({CMS_SITEMAP_MODULE}, False)
 			put_dependency ({CMS_TAXONOMY_MODULE}, False)
 		end
@@ -221,6 +224,7 @@ feature -- Hooks
 			a_hooks.subscribe_to_hook (Current, {CMS_RECENT_CHANGES_HOOK})
 			a_hooks.subscribe_to_hook (Current, {CMS_SITEMAP_HOOK})
 			a_hooks.subscribe_to_hook (Current, {CMS_TAXONOMY_HOOK})
+			a_hooks.subscribe_to_hook (Current, {FEED_PROVIDER_HOOK})
 		end
 
 	response_alter (a_response: CMS_RESPONSE)
@@ -414,6 +418,28 @@ feature -- Hooks
 					n := ic.item
 					create i.make (l_node_api.node_link (n), n.modification_date)
 					a_sitemap.force (i)
+				end
+			end
+		end
+
+feature -- Feed hook
+
+	feed (a_location: READABLE_STRING_8): detachable FEED
+			-- Feed associated with `a_location`.
+		local
+			l_path, s: READABLE_STRING_8
+		do
+			if
+				attached node_api as l_node_api and then
+				attached l_node_api.cms_api.site_url as l_site_url and then
+				a_location.starts_with (l_site_url)
+			then
+				l_path := a_location.substring (l_site_url.count, a_location.count) -- Keep the first slash.
+				if l_path.starts_with_general ("/nodes/") and l_path.ends_with ("/feed") then
+					s := l_path.substring (8, l_path.count - 5)
+					if attached l_node_api.node_type (s) as l_node_type then
+						Result := l_node_api.feed (l_node_type, 0, l_path)
+					end
 				end
 			end
 		end

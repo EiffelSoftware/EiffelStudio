@@ -56,7 +56,6 @@ feature -- Page processing
 
 	visit_page (a_page: WIKI_PAGE)
 		local
-			utf: UTF_CONVERTER
 			b: like is_html_encoded_output
 		do
 			current_page := a_page

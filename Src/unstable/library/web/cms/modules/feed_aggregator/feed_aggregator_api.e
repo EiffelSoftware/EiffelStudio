@@ -143,10 +143,23 @@ feature -- Operation
 			fac: FEED_DEFAULT_PARSERS
 			ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT
 		do
-			create fac
-			if attached new_http_client_session (a_location).get ("", ctx) as res then
-				if attached res.body as l_content then
-					Result := fac.feed_from_string (l_content)
+			if attached cms_api.hooks.subscribers ({FEED_PROVIDER_HOOK}) as l_feed_providers then
+				across
+					l_feed_providers as ic
+				until
+					Result /= Void
+				loop
+					if attached {FEED_PROVIDER_HOOK} ic.item as h then
+						Result := h.feed (a_location)
+					end
+				end
+			end
+			if Result = Void then
+				create fac
+				if attached new_http_client_session (a_location).get ("", ctx) as res then
+					if attached res.body as l_content then
+						Result := fac.feed_from_string (l_content)
+					end
 				end
 			end
 		end

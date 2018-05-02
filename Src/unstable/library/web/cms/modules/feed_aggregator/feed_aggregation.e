@@ -151,7 +151,7 @@ feature -- Status report
 		do
 			Result := True
 			if attached e.categories as e_cats then
-				if attached included_categories as lst then
+				if attached included_categories as lst and then not lst.is_empty then
 					Result := across lst as ic some
 							across e_cats as e_ic some
 								e_ic.item.same_string (ic.item)
@@ -172,7 +172,8 @@ feature -- Status report
 			if Result and attached e.categories as e_cats then
 				if
 					attached included_categories_per_feed as tb and then
-					attached tb.item (a_location) as lst
+					attached tb.item (a_location) as lst and then
+					not lst.is_empty
 				then
 					Result := across lst as ic some
 								across e_cats as e_ic some

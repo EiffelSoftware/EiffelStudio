@@ -160,6 +160,8 @@ feature -- Allocation/free
 			valid_size: a_size > 0
 		do
 			Result := c_malloc (a_size)
+		ensure
+			instance_free: class
 		end
 
 	memory_calloc (a_count, a_element_size: INTEGER): POINTER
@@ -169,6 +171,8 @@ feature -- Allocation/free
 			valid_element_size: a_element_size > 0
 		do
 			Result := c_calloc (a_count, a_element_size)
+		ensure
+			instance_free: class
 		end
 
 	memory_realloc (a_size: INTEGER): POINTER
@@ -261,7 +265,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

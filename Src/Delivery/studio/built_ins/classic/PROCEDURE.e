@@ -3,9 +3,14 @@ class PROCEDURE [OPEN_ARGS -> detachable TUPLE create default_create end]
 feature -- Calls
 
 	call alias "()" (args: detachable separate OPEN_ARGS)
+		local
+			closed_arguments_count: like closed_count
 		do
+				-- Avoid making any calls that may trigger GC when passing pointers to reference variables
+				-- and use temporary locals to record results of the calls (this fixes test#thread024).
+			closed_arguments_count := closed_count
 			fast_call (encaps_rout_disp, calc_rout_addr, $closed_operands, $args, routine_id,
-				       is_basic, written_type_id_inline_agent, closed_count, open_count, $open_map)
+				       is_basic, written_type_id_inline_agent, closed_arguments_count, open_count, $open_map)
 		end
 
 feature {NONE} -- Implementation

@@ -17,6 +17,8 @@ feature -- Status report
 			-- Redefine in descendants of REFLECTOR to modify the behavior of inspection queries of REFLECTOR.
 		do
 			Result := False
+		ensure
+			instance_free: class
 		end
 
 	is_valid_type_string (s: READABLE_STRING_GENERAL): BOOLEAN
@@ -69,6 +71,8 @@ feature -- Status report
 					Result := is_valid_identifier (l_class_type_name)
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	mapped_type (a_type: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
@@ -90,6 +94,7 @@ feature -- Status report
 				Result := a_type
 			end
 		ensure
+			instance_free: class
 			mapped_type_not_void: Result /= Void
 		end
 
@@ -141,6 +146,8 @@ feature {NONE} -- Implementation: status report
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Decompose string type
@@ -187,6 +194,8 @@ feature {NONE} -- Decompose string type
 			else
 				Result := Void
 			end
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- ECMA mapping helper
@@ -207,6 +216,7 @@ feature {NONE} -- ECMA mapping helper
 			Result.put ("REAL_64", "DOUBLE")
 			Result.put ("REAL_64_REF", "DOUBLE_REF")
 		ensure
+			instance_free: class
 			pre_ecma_type_mapping_not_void: Result /= Void
 		end
 

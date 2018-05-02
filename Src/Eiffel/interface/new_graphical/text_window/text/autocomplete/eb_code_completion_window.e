@@ -98,6 +98,8 @@ feature {NONE} -- Initialization
 			choice_list.set_configurable_target_menu_handler (agent context_menu_handler)
 			choice_list.enable_single_row_selection
 			register_action (choice_list.row_select_actions, agent on_row_selected)
+			register_action (choice_list.pointer_motion_item_actions, agent (i_x, i_y: INTEGER; i_item: detachable EV_GRID_ITEM) do on_pointer_hovering_item (i_item) end)
+			register_action (choice_list.pointer_button_press_actions, agent mouse_selection)
 			register_action (resize_actions, agent on_window_resize)
 			set_title (Interface_names.t_Autocomplete_window)
 			setup_option_buttons
@@ -489,13 +491,10 @@ feature -- Query
 
 	is_applicable_item (a_item: like name_type): BOOLEAN
 			-- Determines if `a_item' is an applicable item to show in the completion list
-		local
-			l_eb_name: EB_NAME_FOR_COMPLETION
 		do
 			Result := Precursor {CODE_COMPLETION_WINDOW} (a_item)
 			if Result then
-				l_eb_name ?= a_item
-				if l_eb_name /= Void then
+				if attached {EB_NAME_FOR_COMPLETION} a_item as l_eb_name then
 					if not show_obsolete_items then
 						Result := not l_eb_name.is_obsolete
 					end
@@ -672,7 +671,7 @@ feature {NONE} -- Option behaviour
 			l_list := choice_list
 				-- Save selected item
 			if l_list.has_selected_row then
-				local_name ?= l_list.selected_rows.first.data
+				local_name := {like name_type} / l_list.selected_rows.first.data
 				check
 					local_name_not_void: local_name /= Void
 				end
@@ -682,7 +681,9 @@ feature {NONE} -- Option behaviour
 
 				-- Try to selected saved item
 				-- If does not exist any more, we call `ensure_item_selection'
-			local_index := grid_row_by_data (local_name)
+			if local_name /= Void then
+				local_index := grid_row_by_data (local_name)
+			end
 			if local_index = 0 then
 				ensure_item_selection
 			else
@@ -825,6 +826,18 @@ feature {NONE} -- Recyclable
 	setup_accelerators_agent: PROCEDURE
 
 feature {NONE} -- Action handlers
+
+	on_pointer_hovering_item (a_item: detachable EV_GRID_ITEM)
+			-- Mouse is hovering `a_item`.
+		do
+			if
+				a_item /= Void and then
+				not a_item.is_destroyed and then
+				attached a_item.row as l_row
+			then
+				l_row.enable_select
+			end
+		end
 
 	on_row_selected (a_row: EV_GRID_ROW)
 			-- Selected grid row
@@ -1315,8 +1328,6 @@ feature {NONE} -- Implementation
 	complete_feature
 			-- Complete feature name
 		local
-			local_feature: EB_FEATURE_FOR_COMPLETION
-			l_name_item: like name_type
 			local_name: STRING_GENERAL
 			l_row: EV_GRID_ROW
 		do
@@ -1331,36 +1342,35 @@ feature {NONE} -- Implementation
 						l_row := l_row.subrow (1)
 					end
 				end
-				l_name_item ?= l_row.data
-				check
-					l_name_item_not_void: l_name_item /= Void
-				end
-				if attached {EB_TEMPLATE_FOR_COMPLETION} l_name_item as l_code_complete then
-						-- Complete template
+				if attached {like name_type} l_row.data as l_name_item then
+					if attached {EB_TEMPLATE_FOR_COMPLETION} l_name_item as l_code_complete then
+							-- Complete template
 
-					code_completable.complete_code_template_from_window (l_code_complete)
+						code_completable.complete_code_template_from_window (l_code_complete)
+					else
+						-- Complete feature
+						if ev_application.ctrl_pressed or else show_completion_disambiguated_name then
+							if l_name_item.has_dot then
+								local_name := l_name_item.full_insert_name
+							else
+								local_name := (" ").as_string_32 + l_name_item.full_insert_name
+							end
+						else
+							if l_name_item.has_dot then
+								local_name := l_name_item.insert_name
+							else
+								local_name := (" ").as_string_32 + l_name_item.insert_name
+							end
+						end
+						code_completable.complete_feature_from_window (local_name, True, character_to_append, remainder, continue_completion)
+						if attached {EB_FEATURE_FOR_COMPLETION} l_name_item as local_feature then
+							last_completed_feature_had_arguments := local_feature.has_arguments
+						else
+							last_completed_feature_had_arguments := False
+						end
+					end
 				else
-					-- Complete feature
-					if ev_application.ctrl_pressed or else show_completion_disambiguated_name then
-						if l_name_item.has_dot then
-							local_name := l_name_item.full_insert_name
-						else
-							local_name := (" ").as_string_32 + l_name_item.full_insert_name
-						end
-					else
-						if l_name_item.has_dot then
-							local_name := l_name_item.insert_name
-						else
-							local_name := (" ").as_string_32 + l_name_item.insert_name
-						end
-					end
-					code_completable.complete_feature_from_window (local_name, True, character_to_append, remainder, continue_completion)
-					local_feature ?= l_name_item
-					if local_feature /= Void then
-						last_completed_feature_had_arguments := local_feature.has_arguments
-					else
-						last_completed_feature_had_arguments := False
-					end
+					check row_data_is_name_type: False end
 				end
 			end
 		end
@@ -1369,21 +1379,18 @@ feature {NONE} -- Implementation
 			-- Complete class name
 		local
 			l_row: EV_GRID_ROW
-			l_name_item: NAME_FOR_COMPLETION
 			local_name: STRING_GENERAL
 		do
 			if choice_list.has_selected_row then
 				l_row := choice_list.selected_rows.first
-				l_name_item ?= l_row.data
-				check
-					l_name_item_not_void: l_name_item /= Void
+				if attached {NAME_FOR_COMPLETION} choice_list.selected_rows.first as l_name_item then
+					local_name := l_name_item.insert_name
+					code_completable.complete_class_from_window (local_name, '%U', remainder)
+				else
+					check has_name_item: False end
 				end
-				local_name := l_name_item.insert_name
-				code_completable.complete_class_from_window (local_name, '%U', remainder)
-			else
-				if not buffered_input.is_empty then
-					code_completable.complete_class_from_window (buffered_input, character_to_append, remainder)
-				end
+			elseif not buffered_input.is_empty then
+				code_completable.complete_class_from_window (buffered_input, character_to_append, remainder)
 			end
 		end
 
@@ -1427,7 +1434,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

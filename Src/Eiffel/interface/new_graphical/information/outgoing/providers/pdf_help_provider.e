@@ -63,26 +63,21 @@ feature -- Basic operations
 							launch_command (l_str)
 						end
 					else
-							-- URL is the default solution.
-						if {PLATFORM}.is_windows then
-							lt_src.prepend (windows_file_protocol)
+						if attached acrobat_version_from_settings as l_acrobat then
+							create l_str.make (10)
+							append_acrobat_command_arguments_2 (l_acrobat, lt_src, lt_entry)
+							l_str.prepend (lt_src)
+							launch_command_with_cmd (l_str)
+						else
+								-- URL is the default solution.
+							if {PLATFORM}.is_windows then
+								lt_src.prepend (windows_file_protocol)
+							end
+							append_acrobat_url_arguments (lt_src, lt_entry)
+							launch_uri (lt_src)
 						end
-						append_acrobat_url_arguments (lt_src, lt_entry)
-						launch_uri (lt_src)
 					end
 				end
-			end
-		end
-
-	append_acrobat_url_arguments (a_string: STRING_32; a_entry: EIS_ENTRY)
-			-- Append acrobat url arguments to `a_string'.
-		require
-			a_string_not_void: a_string /= Void
-			a_entry_not_void: a_entry /= Void
-		do
-			if attached pdf_arguments_from_entry (a_entry) as l_args then
-				a_string.append (acrobat_url_sep)
-				a_string.append (l_args)
 			end
 		end
 
@@ -98,6 +93,35 @@ feature -- Basic operations
 				a_string.append (quoted_string (l_args))
 				a_string.append_character (' ')
 			end
+		end
+
+	append_acrobat_url_arguments (a_string: STRING_32; a_entry: EIS_ENTRY)
+			-- Append acrobat url arguments to `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+			a_entry_not_void: a_entry /= Void
+		do
+			if attached pdf_arguments_from_entry (a_entry) as l_args then
+				a_string.append (acrobat_url_sep)
+				a_string.append (l_args)
+			end
+		end
+
+	append_acrobat_command_arguments_2 (a_acrobat: STRING_32; a_string: STRING_32; a_entry: EIS_ENTRY)
+			-- Append acrobat command arguments to `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+			a_entry_not_void: a_entry /= Void
+		local
+			l_string: STRING_32
+		do
+			create l_string.make_from_string (a_acrobat)
+			if attached pdf_arguments_from_entry (a_entry) as l_args then
+				l_string.append (acrobat_action_string)
+				l_string.append (quoted_string (l_args))
+				l_string.append_character (' ')
+			end
+			a_string.prepend (l_string)
 		end
 
 	pdf_arguments_from_entry (a_entry: EIS_ENTRY): detachable STRING_32
@@ -153,6 +177,47 @@ feature -- Basic operations
 			if attached (create {PROCESS_FACTORY}).process_launcher (a_command, Void, Void) as l_process then
 				l_process.set_hidden (True)
 				l_process.launch
+			end
+		end
+
+	launch_command_with_cmd (a_command: READABLE_STRING_32)
+			-- Launches a commdand
+		require
+			a_command_not_void: a_command /= Void
+		do
+			if attached (create {PROCESS_FACTORY}).process_launcher_with_command_line (a_command, Void) as l_process then
+				l_process.set_hidden (True)
+				l_process.launch
+			end
+		end
+
+
+feature {NONE} -- Implementation
+
+	acrobat_version_from_settings : detachable STRING_32
+			-- Programmatically determine whether Reader or Acrobat is installed and return the path to it, if any.
+		local
+			l_reg: WEL_REGISTRY
+			l_key: detachable WEL_REGISTRY_KEY_VALUE
+			l_acrobat: STRING_32
+			l_acrobat_reader: STRING_32
+			l_lowered_var: READABLE_STRING_GENERAL
+		do
+			l_acrobat := {STRING_32} "\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Acrobat.exe"
+			create l_reg
+				-- Lookup Acrobat installation
+			l_key := l_reg.open_key_value (l_acrobat, "Path")
+			if l_key /= Void then
+				create Result.make_from_string (l_key.string_value)
+				Result.append ("Acrobat ")
+			else
+					-- Lookup Acrobat Reader.
+				l_acrobat_reader := {STRING_32} "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\AcroRd32.exe"
+				l_key := l_reg.open_key_value (l_acrobat_reader, "Path")
+				if l_key /= Void then
+					create Result.make_from_string (l_key.string_value)
+					Result.append ("AcroRd32 ")
+				end
 			end
 		end
 

@@ -219,8 +219,8 @@ feature -- Access: cache system
 			-- Clear all existing wdocs related caches.
 		local
 			retried: BOOLEAN
-			p: PATH
-			d: DIRECTORY
+--			p: PATH
+--			d: DIRECTORY
 		do
 			if not retried then
 				internal_available_versions := Void

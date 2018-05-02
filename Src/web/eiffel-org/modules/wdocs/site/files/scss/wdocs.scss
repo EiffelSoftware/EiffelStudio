@@ -11,8 +11,10 @@
 	border: solid 1px #ccc;
 	font-size: smaller;
 
-	float: right;
-	clear: right;
+	&.wiki-toc-auto {
+		float: right;
+		clear: right;
+	}
 	list-style-position: inside;
 
 	span.title {

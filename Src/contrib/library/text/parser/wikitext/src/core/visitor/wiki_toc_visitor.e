@@ -54,6 +54,9 @@ feature -- Access
 			-- Limit the depth of the TOC.
 			-- Applied only if > 0.
 
+	style: detachable IMMUTABLE_STRING_8
+			-- Optional style.
+
 feature -- Settings
 
 	is_horizontal: BOOLEAN
@@ -154,6 +157,9 @@ feature -- Visit
 						l_limit.is_natural_8
 					then
 						depth_limit := l_limit.to_natural_8
+					end
+					if attached a_template.parameter ("style") as l_style then
+						create style.make_from_string (l_style)
 					end
 					is_horizontal := a_template.name.is_case_insensitive_equal_general ("Horizontal TOC")
 				end

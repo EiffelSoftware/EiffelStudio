@@ -197,28 +197,10 @@ feature {NONE} -- Implementation
 	acrobat_version_from_settings : detachable STRING_32
 			-- Programmatically determine whether Reader or Acrobat is installed and return the path to it, if any.
 		local
-			l_reg: WEL_REGISTRY
-			l_key: detachable WEL_REGISTRY_KEY_VALUE
-			l_acrobat: STRING_32
-			l_acrobat_reader: STRING_32
-			l_lowered_var: READABLE_STRING_GENERAL
+			l_pdf_engine_helper: PDF_ENGINE_HELPER
 		do
-			l_acrobat := {STRING_32} "\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Acrobat.exe"
-			create l_reg
-				-- Lookup Acrobat installation
-			l_key := l_reg.open_key_value (l_acrobat, "Path")
-			if l_key /= Void then
-				create Result.make_from_string (l_key.string_value)
-				Result.append ("Acrobat ")
-			else
-					-- Lookup Acrobat Reader.
-				l_acrobat_reader := {STRING_32} "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\AcroRd32.exe"
-				l_key := l_reg.open_key_value (l_acrobat_reader, "Path")
-				if l_key /= Void then
-					create Result.make_from_string (l_key.string_value)
-					Result.append ("AcroRd32 ")
-				end
-			end
+			create {PDF_ENGINE_HELPER_IMP} l_pdf_engine_helper
+			Result := l_pdf_engine_helper.acrobat_version_from_settings
 		end
 
 feature {NONE} -- Constants

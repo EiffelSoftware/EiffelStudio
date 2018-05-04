@@ -3801,6 +3801,20 @@ feature -- Access
 			end
 		end
 
+	frozen feature_with_rout_id_set (rout_id_set: ROUT_ID_SET): E_FEATURE
+			-- Feature with routine ID in `rout_id_set'.
+		require
+			rout_id_set_not_void: rout_id_set /= Void
+			has_feature_table: has_feature_table
+		local
+			feat: FEATURE_I
+		do
+			feat := feature_of_rout_id_set (rout_id_set)
+			if feat /= Void then
+				Result := feat.api_feature (class_id)
+			end
+		end
+
 	frozen feature_with_body_index (a_body_index: INTEGER): E_FEATURE
 			-- Feature whose body index is `a_body_index'.
 		require

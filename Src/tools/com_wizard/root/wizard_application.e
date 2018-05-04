@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Root class of EiffelCOM Wizard, process arguments and run accordingly."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -174,11 +174,9 @@ feature {NONE} -- Implementation
 		require
 			non_void_event: a_event /= Void
 		local
-			l_output_event: WIZARD_OUTPUT_EVENT
 			l_underline: STRING
 		do
-			l_output_event ?= a_event
-			if l_output_event /= Void then
+			if attached {WIZARD_OUTPUT_EVENT} a_event as l_output_event then
 				inspect
 					l_output_event.id
 				when {WIZARD_OUTPUT_EVENT_ID}.Display_error then

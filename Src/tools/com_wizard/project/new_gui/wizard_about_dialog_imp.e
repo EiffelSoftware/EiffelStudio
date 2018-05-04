@@ -102,7 +102,7 @@ feature {NONE}-- Initialization
 			internal_font.set_height_in_points (12)
 			internal_font.preferred_families.extend ("Trebuchet MS")
 			title_label.set_font (internal_font)
-			title_label.set_text ({ARGUMENT_PARSER}.name)
+			title_label.set_text ((create {ARGUMENT_PARSER}.make).name)
 			version_box.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			version_box.disable_item_expand (version_title)
 			version_title.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
@@ -114,7 +114,7 @@ feature {NONE}-- Initialization
 			content_box.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			content_box.set_padding_width (5)
 			copyright_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			copyright_label.set_text ({ARGUMENT_PARSER}.copyright)
+			copyright_label.set_text ((create {ARGUMENT_PARSER}.make).copyright)
 			copyright_label.align_text_left
 			web_address_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			web_address_label.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (64, 0, 128))

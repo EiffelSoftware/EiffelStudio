@@ -1,10 +1,9 @@
-note
+﻿note
 	description: "Wizard Array Data Type names generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-			
 
 class
 	WIZARD_ARRAY_DATA_TYPE_GENERATOR
@@ -53,7 +52,7 @@ feature -- Basic operations
 			l_size := a_array_descriptor.array_size.twin
 			need_generate_ce := True
 			need_generate_ec := True
-			
+
 			l_call_generated_ec := l_visitor.vt_type /= Vt_record
 
 			from
@@ -86,13 +85,13 @@ feature -- Basic operations
 				else
 					eiffel_type.append (Ecom_array_type)
 				end
-				
+
 				eiffel_type.append (Open_bracket)
 				eiffel_type.append (l_visitor.eiffel_type)
 				eiffel_type.append (Close_bracket)
-				
+
 				ce_function_signature.append (c_type)
-				ce_function_signature.append ("* an_array, EIF_OBJECT an_object")			
+				ce_function_signature.append ("* an_array, EIF_OBJECT an_object")
 				ce_function_body := ce_array_function_body_non_automation (l_visitor, l_count, l_size)
 				ec_function_signature.append ("EIF_REFERENCE a_ref, ")
 				ec_function_signature.append (c_type)
@@ -100,7 +99,7 @@ feature -- Basic operations
 				ec_function_body := ec_array_function_body_non_automation (l_visitor, l_count, l_size)
 				ec_function_return_type.append (l_visitor.c_type)
 				ec_function_return_type.append ("*")
-			else 
+			else
 				is_array_basic_type := l_visitor.is_basic_type
 				ce_function_name.append ("ccom_ce_array_")
 				ce_function_name.append (l_visitor.c_type)
@@ -146,7 +145,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	ce_array_function_body_automation (rt_function_name: STRING; dim_count: INTEGER; 
+	ce_array_function_body_automation (rt_function_name: STRING; dim_count: INTEGER;
 					element_count: ARRAY [INTEGER];
 					is_basic_array: BOOLEAN): STRING
 			-- C to Eiffel function body for ARRAY (of automation data type elements).
@@ -165,8 +164,6 @@ feature {NONE} -- Implementation
 			Result.append ("];%N%N%T")
 			from
 				i := 1
-			variant
-				dim_count - i + 1
 			until
 				i > dim_count
 			loop
@@ -181,6 +178,8 @@ feature {NONE} -- Implementation
 				Result.append_integer (element_count.item (i))
 				Result.append (";%N%T")
 				i := i + 1
+			variant
+				dim_count - i + 1
 			end
 			Result.append ("%N%T")
 
@@ -233,8 +232,6 @@ feature {NONE} -- Implementation
 			Result.append (" an_array_element = 0;%N%N%T")
 			from
 				i := 1
-			variant
-				a_dim_count - i + 1
 			until
 				i > a_dim_count
 			loop
@@ -244,6 +241,8 @@ feature {NONE} -- Implementation
 				Result.append_integer (a_elements_count.item (i))
 				Result.append (";%N%T")
 				i := i + 1
+			variant
+				a_dim_count - i + 1
 			end
 			Result.append ("type_id = eif_type_id (%"ARRAY [")
 			l_eiffel_type := a_visitor.eiffel_type
@@ -375,7 +374,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (2000)
 			Result.append ("%TEIF_OBJECT eif_array = 0;%N%T")
-			Result.append ("EIF_TYPE_ID type_id = -1;%N%T")			
+			Result.append ("EIF_TYPE_ID type_id = -1;%N%T")
 			Result.append ("EIF_REFERENCE_FUNCTION item = 0;%N%T")
 			Result.append ("EIF_INTEGER_FUNCTION count = 0;%N%T")
 			l_c_type := a_visitor.c_type
@@ -440,7 +439,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -453,23 +452,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_ARRAY_DATA_TYPE_GENERATOR
 
-
+end

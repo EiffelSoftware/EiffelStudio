@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Wizard name mapper"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -96,8 +96,6 @@ feature -- Basic Operations
 			from
 				i := 1
 				previous_upper := True
-			variant
-				a_name.count - i + 1
 			until
 				i > a_name.count
 			loop
@@ -107,8 +105,10 @@ feature -- Basic Operations
 				Result.extend (a_name.item (i))
 				previous_upper := (a_name.item (i).is_upper or (a_name.item (i) = '_'))
 				i := i + 1
+			variant
+				a_name.count - i + 1
 			end
-			if (Result.item (1) = '_') then
+			if Result.item (1) = '_' then
 				Result.prepend ("x")
 			end
 			if Result.item (1).is_digit then
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 			-- Registration class suffix
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -301,23 +301,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_VARIABLE_NAME_MAPPER
 
-
+end

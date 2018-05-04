@@ -132,8 +132,6 @@ feature -- Basic operations
 			create {ARRAYED_LIST [WIZARD_PARAM_DESCRIPTOR]} Result.make (count)
 			from
 				i := 2
-			variant
-				count - i + 2
 			until
 				i > count + 1
 			loop
@@ -148,6 +146,8 @@ feature -- Basic operations
 						parameters.item (i - 1), system_descriptor)
 				Result.force (l_descriptor)
 				i := i + 1
+			variant
+				count - i + 2
 			end
 		ensure
 			valid_arguments: Result /= Void and then Result.count = count

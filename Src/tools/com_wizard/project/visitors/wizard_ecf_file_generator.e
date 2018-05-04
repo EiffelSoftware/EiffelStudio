@@ -62,12 +62,17 @@ feature {NONE} -- Implementation
 			end
 			create l_dest_dir.make_from_string (environment.destination_folder.substring (1, environment.destination_folder.count - 1))
 
+			create l_fn.make_from_string (environment.destination_folder)
+			l_fn := l_fn.extended (l_name).extended_path (environment.ecf_file_name)
+
 				-- system, target, root, settings
-			if environment.is_client then
-				l_system := new_system (environment.project_name + "_client")
-			else
-				l_system := new_system (environment.project_name)
-			end
+			l_system := new_system
+				(if environment.is_client then
+					environment.project_name + "_client"
+				else
+					environment.project_name
+				end,
+				l_fn)
 			if environment.is_eiffel_interface then
 				l_target := l_system.targets.item (environment.eiffel_target)
 				l_target.set_name ("default")
@@ -145,8 +150,6 @@ feature {NONE} -- Implementation
 			add_libs (l_target, server, True)
 
 				-- store it
-			create l_fn.make_from_string (environment.destination_folder)
-			l_fn := l_fn.extended (l_name).extended_path (environment.ecf_file_name)
 			l_system.set_file_name (l_fn.name)
 			l_system.store
 		end
@@ -219,8 +222,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_system (a_name: STRING): CONF_SYSTEM
-			-- Create a new configuration system with `a_name'.
+	new_system (a_name: STRING; p: PATH): CONF_SYSTEM
+			-- Create a new configuration system with `a_name' and path `p`.
 			-- If we are building from an eiffel interface, use the old project as source.
 		local
 			l_load: CONF_LOAD
@@ -228,15 +231,14 @@ feature {NONE} -- Implementation
 			if environment.is_eiffel_interface then
 				create l_load.make (conf_factory)
 				l_load.retrieve_configuration (environment.source_ecf_file_name)
-				if l_load.is_error then
-					Result := conf_factory.new_system_generate_uuid (a_name)
-				else
+				if not l_load.is_error then
 					Result := l_load.last_system
 					Result.set_name (a_name)
 					Result.set_uuid (conf_factory.uuid_generator.generate_uuid)
 				end
-			else
-				Result := conf_factory.new_system_generate_uuid (a_name)
+			end
+			if not attached Result then
+				Result := conf_factory.new_system_generate_uuid_with_file_name (p.name, a_name)
 			end
 		end
 

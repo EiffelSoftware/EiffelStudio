@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Creator of Record Descriptors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -101,14 +101,14 @@ feature -- Basic operations
 			from
 				i := 0
 				create fields.make
-			variant
-				count - i
 			until
 				i = count
 			loop
 				field_descriptor := record_field_descriptor_factory.create_descriptor (a_type_info, i, system_descriptor)
 				fields.force (field_descriptor)
 				i := i + 1
+			variant
+				count - i
 			end
 		ensure
 			fields_created: a_type_info.type_attr.count_variables > 0 implies
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			-- Is union?
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -161,23 +161,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_RECORD_DESCRIPTOR_CREATOR
 
-
+end

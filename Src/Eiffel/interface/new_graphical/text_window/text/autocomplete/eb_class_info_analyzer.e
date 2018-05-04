@@ -203,12 +203,10 @@ feature {NONE} -- Click ast exploration
 			pos, i, j, pos_in_txt, c: INTEGER
 			a_click_ast: CLICK_AST
 			clickable: CLICKABLE_AST
-			l_precursor: PRECURSOR_AS
 			clickable_position: EB_CLICKABLE_POSITION
 			ast_list: CLICK_LIST
 			a_class: CLASS_I
 			prov_list: LINKED_LIST [EB_CLICKABLE_POSITION]
-			f_name: FEATURE_NAME
 			inherit_clauses: SORTABLE_ARRAY [INTEGER]
 			parents: EIFFEL_LIST [PARENT_AS]
 			class_name: STRING
@@ -250,17 +248,16 @@ feature {NONE} -- Click ast exploration
 								create clickable_position.make (a_click_ast.character_start_position, a_click_ast.character_end_position)
 								if clickable.is_class then
 									clickable_position.set_class (clickable.class_name.name_8)
-								else
-									l_precursor ?= clickable
-									check l_precursor_not_void: l_precursor /= Void end
+								elseif attached {PRECURSOR_AS} clickable as l_precursor then
 									clickable_position.set_class (l_precursor.parent_base_class.class_name.name_8)
+								else
+									check is_precursor: False end
 								end
 								prov_list.extend (clickable_position)
 							end
 						elseif clickable.is_feature then
-							f_name ?= clickable
 							class_name := Void
-							if f_name /= Void and has_parents then
+							if attached {FEATURE_NAME} clickable and has_parents then
 								pos_in_txt := a_click_ast.character_start_position
 								if pos_in_txt < inherit_clauses @ i then
 									from
@@ -316,18 +313,19 @@ feature {NONE} -- Click ast exploration
 		require
 			c_not_void: c /= Void
 		local
-			l_eiffel_class: EIFFEL_CLASS_C
 			retried: BOOLEAN
 		do
 			if not retried then
 				if not c.is_precompiled and c.file_is_readable then
 					last_syntax_error := Void
-					l_eiffel_class ?= c
 					check
-						l_eiffel_class_not_void: l_eiffel_class /= Void
 						not_error_handler_has_error: not error_handler.has_error
 					end
-					current_class_as := l_eiffel_class.parsed_ast (after_save)
+					if attached {EIFFEL_CLASS_C} c as l_eiffel_class then
+						current_class_as := l_eiffel_class.parsed_ast (after_save)
+					else
+						check is_eiffel_class: False end
+					end
 					if current_class_as = Void then
 							-- If a syntax error occurred, we retrieve the old ast.
 						current_class_as := c.ast
@@ -420,6 +418,7 @@ feature {NONE}-- Clickable/Editable implementation
 			vn: READABLE_STRING_32
 			vn_id: INTEGER
 			td: detachable AST_EIFFEL
+			l_precursor_feat: detachable E_FEATURE
 		do
 			if is_ok_for_completion then
 				initialize_context
@@ -440,60 +439,77 @@ feature {NONE}-- Clickable/Editable implementation
 						l_type := type_from (token, line)
 						is_for_feature := False
 						if attached last_feature as feat then
-							vn := token.wide_image
-							if vn /= Void and then vn.same_string (feat.name_32) then
+							if token_image_is_same_as_word (token, "precursor") then
 								Result := [feat, Void]
+							else
+								vn := token.wide_image
+								if vn /= Void and then vn.same_string (feat.name_32) then
+									Result := [feat, Void]
+								end
 							end
 						elseif attached token.previous as l_prev and then l_prev.wide_image.same_string_general (".") then
 								-- Ignore nested expression.
 						elseif cl.has_feature_table and then attached cl.feature_with_name_32 (ft.feature_names.first.visual_name_32) as feat then
-
-								-- Search for locals, arguments, ... in current feature.
-								-- TODO: check if there is a simpler solution [2017-04-15].			
-							vn := token.wide_image
-							vn_id := feat.names_heap.id_of_32 (vn) --FIXME: try to reuse existing lookup if possible.
-							td := Void
-							if vn_id > 0 then
-								if attached feat.locals as l_feat_locals then
-									across
-										l_feat_locals as ic
-									until
-										td /= Void
-									loop
-										if attached {TYPE_DEC_AS} ic.item as l_type_dec then
-											across
-												l_type_dec.id_list as id_ic
-											until
-												td /= Void
-											loop
-												if vn_id = id_ic.item then
-													td := l_type_dec
+							if token_image_is_same_as_word (token, "precursor") then
+								l_precursor_feat := Void
+								across
+									feat.precursors as l_precursors
+								until
+									l_precursor_feat /= Void
+								loop
+									l_precursor_feat := l_precursors.item.feature_with_rout_id_set (feat.rout_id_set)
+								end
+								if l_precursor_feat /= Void then
+									Result := [l_precursor_feat, Void]
+								end
+							else
+									-- Search for locals, arguments, ... in current feature.
+									-- TODO: check if there is a simpler solution [2017-04-15].			
+								vn := token.wide_image
+								vn_id := feat.names_heap.id_of_32 (vn) --FIXME: try to reuse existing lookup if possible.
+								td := Void
+								if vn_id > 0 then
+									if attached feat.locals as l_feat_locals then
+										across
+											l_feat_locals as ic
+										until
+											td /= Void
+										loop
+											if attached {TYPE_DEC_AS} ic.item as l_type_dec then
+												across
+													l_type_dec.id_list as id_ic
+												until
+													td /= Void
+												loop
+													if vn_id = id_ic.item then
+														td := l_type_dec
+													end
 												end
 											end
 										end
 									end
-								end
-								if td = Void and attached feat.argument_names as l_feat_args then
-									across
-										l_feat_args as ic
-									until
-										td /= Void
-									loop
-										if vn.same_string (ic.item) then
-											td := feat.ast
+									if td = Void and attached feat.argument_names as l_feat_args then
+										across
+											l_feat_args as ic
+										until
+											td /= Void
+										loop
+											if vn.same_string (ic.item) then
+												td := feat.ast
+											end
 										end
 									end
+									if td = Void then
+											-- TODO: implement solution for reminding locals [2017-04-15].
+											-- + object test locals
+											-- + inline agent locals + args
+											-- + across iteration local variables
+											-- + separate local variables
+									end
 								end
-								if td = Void then
-										-- TODO: implement solution for reminding locals [2017-04-15].
-										-- + object test locals
-										-- + inline agent locals + args
-										-- + across iteration local variables
-										-- + separate local variables
+								if td /= Void then
+									Result := [feat, td]
 								end
-							end
-							if td /= Void then
-								Result := [feat, td]
 							end
 						end
 					end
@@ -803,10 +819,13 @@ feature {NONE} -- Implementation (`type_from')
 				check
 					Result_has_associated_class: last_target_type.has_associated_class
 				end
-				l_named_tuple_type ?= last_target_type
+				l_named_tuple_type := {NAMED_TUPLE_TYPE_A} / last_target_type
 				l_processed_class := last_target_type.base_class
 				written_class := l_processed_class
-				if l_processed_class /= Void and then l_processed_class.has_feature_table or l_named_tuple_type /= Void then
+				if 
+					l_processed_class /= Void and then l_processed_class.has_feature_table 
+					or l_named_tuple_type /= Void 
+				then
 					type := Void
 					if l_named_tuple_type /= Void then
 						l_pos := l_named_tuple_type.label_position (a_name)
@@ -862,7 +881,7 @@ feature {NONE} -- Implementation (`type_from')
 					if last_target_type /= Void and then last_target_type.is_valid then
 						last_target_type := last_target_type.actual_type
 						last_was_constrained := last_target_type.is_formal
-						last_formal ?= last_target_type
+						last_formal := {like last_formal} / last_target_type
 						if last_was_constrained then
 							last_was_multi_constrained := not last_formal.is_single_constraint_without_renaming (l_class)
 							if last_was_multi_constrained then
@@ -1729,7 +1748,6 @@ feature {NONE}-- Implementation
 		local
 			feat: E_FEATURE
 			cls_c: CLASS_C
-			formal: FORMAL_A
 			l_name: STRING_32
 		do
 			if a_name.is_case_insensitive_equal (equal_sign) or a_name.is_case_insensitive_equal (different_sign) then
@@ -1743,8 +1761,11 @@ feature {NONE}-- Implementation
 					if feat /= Void and then feat.type /= Void then
 						Result := feat.type
 						if Result.is_formal then
-							formal ?= Result
-							if formal /= Void and then a_type.has_generics and then a_type.generics.valid_index (formal.position) then
+							if 
+								attached {FORMAL_A} Result as formal and then 
+								a_type.has_generics and then 
+								a_type.generics.valid_index (formal.position) 
+							then
 								Result := a_type.generics [formal.position]
 							end
 						end
@@ -2391,7 +2412,7 @@ invariant
 	current_token_in_current_line: (current_line = Void and current_token = Void) or else (current_line /= Void and then current_line.has_token (current_token))
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

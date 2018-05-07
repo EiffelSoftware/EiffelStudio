@@ -470,7 +470,7 @@ feature {NONE} -- add new expression from the grid
 				grid_cell_set_tooltip (glab, interface_names.f_add_new_expression)
 
 				new_expression_row.set_item (1, glab)
-				glab.pointer_double_press_actions.force_extend (agent glab.activate)
+				glab.pointer_double_press_actions.extend (agent (i_glab: EV_GRID_ITEM; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER) do i_glab.activate end (glab, ?,?,?,?,?,?,?,?))
 				glab.apply_actions.extend (agent add_new_expression_for_context)
 				set_up_complete_possibilities_provider (glab)
 			elseif new_expression_row.index < watches_grid.row_count then
@@ -1957,7 +1957,7 @@ invariant
 	not_void_delete_expression_cmd: mini_toolbar /= Void implies delete_expression_cmd /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

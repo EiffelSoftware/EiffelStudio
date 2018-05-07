@@ -227,12 +227,12 @@ feature -- user change
 			end
 		end
 
-	set_user_text (a_text: STRING_GENERAL)
+	set_user_text (a_text: READABLE_STRING_GENERAL)
 			-- Set `user_text' to `a_text'	
 		do
 			if a_text /= Void then
 				if a_text.is_string_32 then
-					user_text := a_text
+					user_text := a_text.to_string_32
 				else
 					user_text := a_text.as_string_32
 				end
@@ -474,7 +474,7 @@ feature {APPLICATION_EXECUTION} -- Implementation Change
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

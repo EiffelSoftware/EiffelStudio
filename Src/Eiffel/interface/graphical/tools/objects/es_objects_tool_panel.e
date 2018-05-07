@@ -75,10 +75,10 @@ feature {NONE} -- Initialization
 			debugged_objects_grid := objects_grid (second_grid_id)
 
 			create split
-			split.pointer_double_press_actions.force_extend (agent (a_split: EV_SPLIT_AREA)
+			split.pointer_double_press_actions.extend (agent (i_split: EV_SPLIT_AREA; i_x, i_y, i_but: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
 					do
-						a_split.set_proportion ({REAL_32} 0.5)
-					end(split)
+						i_split.set_proportion ({REAL_32} 0.5)
+					end(split, ?,?,?,?,?,?,?,?)
 				)
 
 				-- The `stack_objects_grid' and `debugged_objects_grid' are
@@ -1537,7 +1537,7 @@ invariant
 	objects_grids_not_void: (is_initialized and is_interface_usable) implies objects_grids /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

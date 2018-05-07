@@ -1543,7 +1543,7 @@ feature {NONE} -- Stack grid implementation
 				create glab.make_with_text (Interface_messages.w_dbg_unable_to_get_call_stack_data)
 				glab.set_tooltip (Interface_messages.w_dbg_double_click_to_refresh_call_stack)
 				glab.set_pixmap (pixmaps.icon_pixmaps.general_mini_error_icon)
-				glab.pointer_double_press_actions.force_extend (agent update)
+				glab.pointer_double_press_actions.extend (agent (i_x, i_y, i_but: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER) do update end)
 				l_tooltipable_grid_row.set_item (1, glab)
 			end
 			stack_grid.request_columns_auto_resizing
@@ -2437,7 +2437,7 @@ feature {NONE} -- Implementation, cosmetic
 
 
 ;note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

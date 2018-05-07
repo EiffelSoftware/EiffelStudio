@@ -76,7 +76,6 @@ feature -- Basic operations
 			show_any_features: BOOLEAN
 			l_current_class_c: CLASS_C
 			l_class_as: CLASS_AS
-			l_named_tuple_type: NAMED_TUPLE_TYPE_A
 			l_has_renaming: BOOLEAN
 			l_constraints: TYPE_SET_A
 		do
@@ -134,8 +133,7 @@ feature -- Basic operations
 
 									-- Add named tuple generics.
 									-- A class c should have been found.
-								l_named_tuple_type ?= last_type
-								if l_named_tuple_type /= Void then
+								if attached {NAMED_TUPLE_TYPE_A} last_type as l_named_tuple_type then
 									add_named_tuple_generics (l_named_tuple_type)
 								end
 
@@ -347,7 +345,6 @@ feature -- Class names completion
 			class_name			: EB_CLASS_FOR_COMPLETION
 			name_name			: EB_NAME_FOR_COMPLETION
 			cnt, i				: INTEGER
-			l_class_i			: CLASS_I
 		do
 			create insertion.put ("")
 			is_create := False
@@ -374,30 +371,30 @@ feature -- Class names completion
 			until
 				classes.after
 			loop
-				l_class_i ?= classes.item_for_iteration
-				if show_all then
-					create class_name.make (l_class_i, classes.key_for_iteration)
-				 	class_list.extend (class_name)
-				else
-					if matches (classes.key_for_iteration, cname) then
+				if attached {CLASS_I} classes.item_for_iteration as l_class_i then
+					if show_all then
 						create class_name.make (l_class_i, classes.key_for_iteration)
-					 	class_list.extend (class_name)
+						class_list.extend (class_name)
+					else
+						if matches (classes.key_for_iteration, cname) then
+							create class_name.make (l_class_i, classes.key_for_iteration)
+							class_list.extend (class_name)
+						end
 					end
+				else
+					check is_class_i: False end
 				end
 				classes.forth
 			end
 
 			cnt := class_list.count
-			if current_class_as /= Void and then current_class_as.generics /= Void then
-				create class_completion_possibilities.make (1, current_class_as.generics.count + cnt)
-				from
-					current_class_as.generics.start
-				until
-					current_class_as.generics.after
+			if current_class_as /= Void and then attached current_class_as.generics as l_curr_class_as_generics then
+				create class_completion_possibilities.make (1, l_curr_class_as_generics.count + cnt)
+				across
+					l_curr_class_as_generics as ic
 				loop
-					create name_name.make (current_class_as.generics.item.name.name_32)
+					create name_name.make (ic.item.name.name_32)
 					class_list.put_front (name_name)
-					current_class_as.generics.forth
 				end
 			end
 
@@ -1082,7 +1079,6 @@ feature {NONE} -- Implementation
 			token,
 			par_token: EDITOR_TOKEN
 			par_cnt: INTEGER
-			blnk: EDITOR_TOKEN_BLANK
 			type: TYPE_A
 		do
 			token := a_token
@@ -1104,12 +1100,10 @@ feature {NONE} -- Implementation
 	 			if token /= Void then -- token = "("
 	 				par_token := token
 	 				from
-						blnk ?= token.previous
 					until
-						blnk = Void
+						not attached {EDITOR_TOKEN_BLANK} token.previous as blnk
 					loop
 						token := blnk
-						blnk ?= token.previous
 					end
 						-- token.previous is not blank : either feature name or line or expression beginning
 					if is_beginning_of_expression (token.previous) then
@@ -1456,18 +1450,15 @@ feature {NONE} -- Implementation
 		require
 			a_name_not_void: a_name /= Void
 		local
-			l_class_i: CLASS_I
-			l_class_c: CLASS_C
 			l_list: LINKED_SET [CONF_CLASS]
 		do
 			create Result.make (a_name)
 			l_list := current_class_c.group.class_by_name (a_name, True)
-			if not l_list.is_empty then
-				l_class_i ?= l_list.first
-			end
-			if l_class_i /= Void then
-				l_class_c ?= l_class_i.compiled_representation
-				if l_class_c /= Void then
+			if
+				not l_list.is_empty and then
+				attached {CLASS_I} l_list.first as l_class_i
+			then
+				if attached {CLASS_C} l_class_i.compiled_representation as l_class_c then
 					Result.set_pebble (create {CLASSC_STONE}.make (l_class_c))
 				else
 					Result.set_pebble (create {CLASSI_STONE}.make (l_class_i))

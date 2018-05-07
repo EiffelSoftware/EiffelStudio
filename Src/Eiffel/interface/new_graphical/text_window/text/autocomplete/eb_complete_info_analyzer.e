@@ -81,7 +81,7 @@ feature -- Basic operations
 			l_constraints: TYPE_SET_A
 		do
 			if is_ok_for_completion then
-				create insertion.put ("")
+				create insertion.put ({STRING_32} "")
 				is_create := False
 				is_static := False
 				last_type := Void

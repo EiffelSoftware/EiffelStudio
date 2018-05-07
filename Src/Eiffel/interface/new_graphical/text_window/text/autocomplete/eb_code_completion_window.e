@@ -1353,13 +1353,13 @@ feature {NONE} -- Implementation
 							if l_name_item.has_dot then
 								local_name := l_name_item.full_insert_name
 							else
-								local_name := (" ").as_string_32 + l_name_item.full_insert_name
+								local_name := {STRING_32} " " + l_name_item.full_insert_name
 							end
 						else
 							if l_name_item.has_dot then
 								local_name := l_name_item.insert_name
 							else
-								local_name := (" ").as_string_32 + l_name_item.insert_name
+								local_name := {STRING_32} " " + l_name_item.insert_name
 							end
 						end
 						code_completable.complete_feature_from_window (local_name, True, character_to_append, remainder, continue_completion)
@@ -1383,7 +1383,10 @@ feature {NONE} -- Implementation
 		do
 			if choice_list.has_selected_row then
 				l_row := choice_list.selected_rows.first
-				if attached {NAME_FOR_COMPLETION} choice_list.selected_rows.first as l_name_item then
+				if
+					attached choice_list.selected_rows.first as l_first_row and then
+					attached {NAME_FOR_COMPLETION} l_first_row.data as l_name_item
+				then
 					local_name := l_name_item.insert_name
 					code_completable.complete_class_from_window (local_name, '%U', remainder)
 				else

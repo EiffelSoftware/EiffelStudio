@@ -56,46 +56,49 @@ feature -- Status report
 		local
 			l_token: EDITOR_TOKEN
 			l_image: STRING_32
-			l_comment: EDITOR_TOKEN_COMMENT
-			l_number: EDITOR_TOKEN_NUMBER
-			l_string: EDITOR_TOKEN_STRING
 		do
+			Result := True
 			l_token := cursor_token
 			if l_token /= Void then
 				if l_token.is_text then
 					l_image := l_token.wide_image
 					if l_image.count > 1 and then current_pos_in_token > 1 then
 							-- Will prevent completion of '`.' or '..'
-						Result := is_completable_separator (l_image.item (current_pos_in_token - 1).out)
+						Result := is_completable_separator_character_32 (l_image [current_pos_in_token - 1])
 					end
 				end
 
 				l_token := l_token.previous
 
 				if l_token /= Void then
-					l_comment ?= l_token
-					if l_comment /= Void then
+					if attached {EDITOR_TOKEN_COMMENT} l_token then
 							-- Previous token is a comment so we cannot complete.
 							-- Happens when completing -- A Comment `.|
-						Result := True
+						Result := False
 					elseif l_token.is_text then
 							-- Will prevent completion of '22|'
-						l_number ?= l_token
-						Result := l_number /= Void
+						Result := not attached {EDITOR_TOKEN_NUMBER} l_token
 
-						if not Result then
-							l_string ?= l_token
-							Result := l_string /= Void
-							if not Result then
+						if Result then
+								-- will prevent completion of '"str"|'
+							Result := not attached {EDITOR_TOKEN_STRING} l_token
+							if Result then
 								l_image := l_token.wide_image
 								if l_image.count > 1 then
 										-- Will prevent completion of '|.' or '..'
-									Result := is_completable_separator (l_image.item (l_image.count).out)
+									if is_completable_separator_character_32 (l_image [l_image.count]) then
+										inspect
+											l_image [l_image.count - 1]
+										when ')', '}', ']' then
+											Result := True
+										else
+											Result := False -- Exclude for instance '|.' or '..' or '|..' or '`.' , ...
+										end
+									end
 								elseif not l_image.is_empty and is_completable_separator (l_image) then
-									if l_token.previous /= Void then
+									if attached l_token.previous as prev then
 											-- Will prevent completion of '10.|'
-										l_number ?= l_token.previous
-										Result := l_number /= Void
+										Result := not attached {EDITOR_TOKEN_NUMBER} prev
 									end
 								end
 							end
@@ -103,7 +106,6 @@ feature -- Status report
 					end
 				end
 			end
-			Result := not Result
 		end
 
 feature {CODE_COMPLETABLE} -- Basic operation
@@ -156,7 +158,13 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	is_completable_separator (a_str: STRING): BOOLEAN
+	is_completable_separator_character_32 (ch: CHARACTER_32): BOOLEAN
+			-- Is `ch' a completable character separator?
+		do
+			Result := is_completable_separator (create {STRING_32}.make_filled (ch, 1))
+		end
+
+	is_completable_separator (a_str: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_str' a completable string separator?
 		local
 			i: INTEGER
@@ -169,7 +177,7 @@ feature {NONE} -- Implementation
 				until
 					Result or i > l_seps.upper
 				loop
-					if (l_seps.item (i)).is_equal (a_str) then
+					if a_str.same_string (l_seps [i]) then
 						Result := True
 					else
 						i := i + 1
@@ -179,7 +187,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -192,21 +200,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

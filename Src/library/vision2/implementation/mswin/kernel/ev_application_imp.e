@@ -67,7 +67,12 @@ feature -- Initialization
 		local
 			l_result: INTEGER
 			l_process: POINTER
+			l_res: BOOLEAN
+			l_value: INTEGER
+			l_val_res: INTEGER
 		do
+			l_res := {WEL_API}.cwin_set_process_dpi_awareness ({WEL_API}.process_per_monitor_dpi_aware)
+			l_val_res := {WEL_API}.cwin_get_process_dpi_awareness (default_pointer, $l_value )
 			create reusable_message.make
 			init_instance
 			init_application
@@ -736,7 +741,7 @@ invariant
 	process_handle_valid: not is_destroyed implies process_handle /= default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

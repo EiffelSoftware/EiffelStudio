@@ -955,6 +955,24 @@ feature -- API
 			is_class: class
 		end
 
+feature -- Monitor DPI
+
+	monitor_scale (hwnd: POINTER): TUPLE [scalex: DOUBLE; scaley: DOUBLE]
+		local
+			l_monitor: POINTER
+			l_dpi_x: INTEGER
+			l_dpi_y: INTEGER
+		do
+			Result := [1.0, 1.0]
+			l_monitor := monitor_from_window (get_window (hwnd, {WEL_GW_CONSTANTS}.gw_owner), Monitor_defaulttonearest)
+			if l_monitor /= default_pointer then
+				cwin_get_dpi_for_monitor (l_monitor, Mdt_effective_dpi, $l_dpi_x, $l_dpi_y)
+				Result := [l_dpi_x/default_dpi, l_dpi_y/default_dpi]
+			end
+		ensure
+			is_class: class
+		end
+
 feature -- Externals DPI
 
 	cwin_get_dpi_for_window (hwnd: POINTER): INTEGER
@@ -980,6 +998,52 @@ feature -- Externals DPI
 		alias
 			"MulDiv"
 		end
+
+
+	mul_div (a_number, a_numerator, a_denominator: INTEGER): INTEGER
+			-- Multiplies two 32-bit values and then divides the 64-bit result by a third 32-bit value. The final result is rounded to the nearest integer.
+			-- `a_number`: The multiplicand.
+			-- `a_numerator`: The multiplier
+			-- `a_denominator`: The number by which the result of the multiplication operation is to be divided
+		do
+			Result := (a_number.as_integer_64 * a_numerator / a_denominator).rounded
+		end
+
+	Mdt_effective_dpi: INTEGER  = 0
+
+	Monitor_defaulttonearest: INTEGER = 0x00000002
+
+	cwin_get_dpi_for_monitor (a_hwnd: POINTER; a_flags: INTEGER_32; dpi_x, dpi_y: TYPED_POINTER[INTEGER])
+			-- SDK MonitorFromWindow
+		external
+			"C inline use <wel.h>"
+		alias
+			"GetDpiForMonitor($a_hwnd, $a_flags, $dpi_x, $dpi_y);"
+		ensure
+			is_class: class
+		end
+
+	Process_per_monitor_dpi_aware: INTEGER  = 2
+
+	cwin_set_process_dpi_awareness (a_level: INTEGER): BOOLEAN
+			-- SDK MonitorFromWindow
+		external
+			"C inline use <wel.h>"
+		alias
+			"return (EIF_BOOLEAN) SetProcessDpiAwareness($a_level);"
+		ensure
+			is_class: class
+		end
+
+	cwin_get_process_dpi_awareness	(a_process: POINTER; a_value: TYPED_POINTER [INTEGER]): INTEGER
+		external
+			"C inline use <wel.h>"
+		alias
+			"return (EIF_INTEGER) GetProcessDpiAwareness($a_process, $a_value);"
+		ensure
+			is_class: class
+		end
+
 
 feature -- Constants
 

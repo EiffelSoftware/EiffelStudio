@@ -25,10 +25,10 @@ feature -- Access
 
 	Himetric_per_inch: INTEGER =   2540
 			-- Defined as HIMETRIC_PER_INCH in AtlWin.h
-	
+
 feature -- Basic Operations
 
-	map_pixel_to_loghim (x,ppli: INTEGER): INTEGER   
+	map_pixel_to_loghim (x,ppli: INTEGER): INTEGER
 			-- Defined as MAP_PIX_TO_LOGHIM in AtlWin.h
 		local
 			temp: INTEGER_64
@@ -37,7 +37,7 @@ feature -- Basic Operations
 			Result := integer_64_to_32 (temp // ppli)
 		end
 
-	map_loghim_to_pixel (x,ppli: INTEGER): INTEGER 
+	map_loghim_to_pixel (x,ppli: INTEGER): INTEGER
 			-- Defined as MAP_LOGHIM_TO_PIX in AtlWin.h
 		local
 			temp: INTEGER_64
@@ -45,7 +45,7 @@ feature -- Basic Operations
 			temp := integer_32x32_to_64 (ppli, x) + Himetric_per_inch // 2
 			Result := integer_64_to_32 (temp // Himetric_per_inch)
 		end
-	
+
 	pixel_to_himetric (a_size_in_pixel: WEL_SIZE): WEL_SIZE
 			-- Convert pixels into himetric.
 		require
@@ -58,12 +58,12 @@ feature -- Basic Operations
 		do
 			create screen_dc
 			screen_dc.get
-			
+
 			n_pixels_per_inch_x := get_device_caps (screen_dc.item, logical_pixels_x)
 			n_pixels_per_inch_y := get_device_caps (screen_dc.item, logical_pixels_y)
-			
+
 			screen_dc.release
-			
+
 			create Result
 			Result.set_width (map_pixel_to_loghim (a_size_in_pixel.width, n_pixels_per_inch_x))
 			Result.set_height (map_pixel_to_loghim (a_size_in_pixel.height, n_pixels_per_inch_y))
@@ -83,12 +83,12 @@ feature -- Basic Operations
 		do
 			create screen_dc
 			screen_dc.get
-			
+
 			n_pixels_per_inch_x := get_device_caps (screen_dc.item, logical_pixels_x)
 			n_pixels_per_inch_y := get_device_caps (screen_dc.item, logical_pixels_y)
-			
+
 			screen_dc.release
-			
+
 			create Result
 			Result.set_width (map_loghim_to_pixel (a_size_in_himetric.width, n_pixels_per_inch_x))
 			Result.set_height (map_loghim_to_pixel (a_size_in_himetric.height, n_pixels_per_inch_y))
@@ -101,9 +101,12 @@ feature -- Basic Operations
 		require
 			hdc_not_void: hdc /= Void
 			hdc_exists: hdc.exists
+		local
+			l_scale: TUPLE [x: DOUBLE; y: DOUBLE]
 		do
+			l_scale := {WEL_API}.monitor_scale (hdc.item)
 			Result :=  mul_div (
-				get_device_caps (hdc.item, logical_pixels_y), pt, 72 * divisor)
+				(get_device_caps (hdc.item, logical_pixels_y) * l_scale.y).rounded , pt, 72 * divisor)
 		end
 
 	pixel_to_point (hdc: WEL_DC; pi: INTEGER): INTEGER
@@ -190,7 +193,7 @@ feature {NONE} -- Externals
 		alias
 			"LPtoDP"
 		end
-		
+
 	mul_div (i,j,k: INTEGER): INTEGER
 			-- Does `i * j / k' but in a safe manner where the 64 bits integer
 			-- obtained by `i * j' is not truncated.
@@ -201,8 +204,8 @@ feature {NONE} -- Externals
 		end
 
 	integer_32x32_to_64 (i,j: INTEGER): INTEGER_64
-			-- Multiplies two signed 32-bit integers, returning a 
-			-- signed 64-bit integer result. 
+			-- Multiplies two signed 32-bit integers, returning a
+			-- signed 64-bit integer result.
 		external
 			"C [macro <windows.h>] (LONG , LONG): EIF_INTEGER_64"
 		alias
@@ -226,14 +229,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

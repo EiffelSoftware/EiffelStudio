@@ -40,6 +40,14 @@ feature {NONE} -- Initialization
 		do
 		end
 
+feature -- Status report
+
+	eiffel_system_defined: BOOLEAN
+			-- Is Eiffel system defined?
+		do
+			Result := workbench.system_defined
+		end
+
 feature -- Properties
 
 	target_name: STRING_32
@@ -73,6 +81,7 @@ feature -- Properties
 			-- Current state, according to `a_target', needed for conditioning.
 		require
 			a_target_not_void: a_target /= Void
+			eiffel_system_defined: eiffel_system_defined
 		local
 			l_version: STRING_TABLE [CONF_VERSION]
 			l_ver: STRING_32
@@ -95,19 +104,24 @@ feature -- Properties
 	concurrency: INTEGER
 			-- Type of Concurrency (none, thread, scoop)
 		do
-			inspect
-				system.concurrency_index
-			when {CONF_TARGET_OPTION}.concurrency_index_thread then
-				Result := concurrency_multithreaded
-			when {CONF_TARGET_OPTION}.concurrency_index_scoop then
-				Result := concurrency_scoop
-			else
-					-- Default to no concurrency if none is specified.
-				if system.has_multithreaded then
+			if workbench.system_defined then
+				inspect
+					system.concurrency_index
+				when {CONF_TARGET_OPTION}.concurrency_index_thread then
 					Result := concurrency_multithreaded
+				when {CONF_TARGET_OPTION}.concurrency_index_scoop then
+					Result := concurrency_scoop
 				else
-					Result := concurrency_none
+						-- Default to no concurrency if none is specified.
+					if system.has_multithreaded then
+						Result := concurrency_multithreaded
+					else
+						Result := concurrency_none
+					end
 				end
+			else
+					-- System is not defined!
+				Result := concurrency_none
 			end
 		end
 
@@ -133,7 +147,7 @@ feature -- Properties
 					Result := pf_unix
 				end
 			else
-				if system.platform /= 0 then
+				if workbench.system_defined and then system.platform /= 0 then
 					Result := system.platform
 				else
 					Result := current_platform
@@ -162,7 +176,6 @@ feature -- Properties
 		local
 			l_vis: CONF_ALL_CLASSES_VISITOR
 			l_classes: ARRAYED_LIST [CONF_CLASS]
-			l_cl: CLASS_I
 		do
 			create l_vis.make
 			create Result.make_map (1000)
@@ -175,12 +188,12 @@ feature -- Properties
 			until
 				l_classes.after
 			loop
-				l_cl ?= l_classes.item
-				check
-					class_i: l_cl /= Void
+				if attached {CLASS_I} l_classes.item as l_cl then
+					Result.force (l_cl)
+				else
+					check is_class_i: False end
 				end
 
-				Result.force (l_cl)
 				l_classes.forth
 			end
 		end
@@ -385,20 +398,17 @@ feature -- Access
 			end
 		end
 
-	class_named (a_class_name: STRING; a_group: CONF_GROUP): CLASS_I
+	class_named (a_class_name: STRING; a_group: CONF_GROUP): detachable CLASS_I
 			-- Class named `a_class_name' in cluster `a_cluster'
 		require
 			good_argument: a_class_name /= Void
 			good_group: a_group /= Void
 		local
-			l_cl: LINKED_SET [CONF_CLASS]
 			vscn: VSCN
 		do
-			l_cl := a_group.class_by_name (a_class_name, True)
-
-			if l_cl /= Void then
+			if attached a_group.class_by_name (a_class_name, True) as l_cl then
 				if l_cl.count = 1 then
-					Result ?= l_cl.first
+					Result := {CLASS_I} / l_cl.first
 					check
 						Result_not_void: Result /= Void
 					end
@@ -413,19 +423,15 @@ feature -- Access
 			end
 		end
 
-	safe_class_named (a_class_name: STRING; a_group: CONF_GROUP): CLASS_I
+	safe_class_named (a_class_name: STRING; a_group: CONF_GROUP): detachable CLASS_I
 			-- Class named `a_class_name' in cluster `a_cluster' which doesn't generate {VSCN} errors.
 		require
 			good_argument: a_class_name /= Void
 			good_group: a_group /= Void
-		local
-			l_cl: LINKED_SET [CONF_CLASS]
 		do
-			l_cl := a_group.class_by_name (a_class_name, True)
-
-			if l_cl /= Void then
+			if attached a_group.class_by_name (a_class_name, True) as l_cl then
 				if l_cl.count = 1 then
-					Result ?= l_cl.first
+					Result := {CLASS_I} / l_cl.first
 					check
 						Result_not_void: Result /= Void
 					end
@@ -443,19 +449,19 @@ feature -- Access
 			end
 		end
 
-	group_of_name (group_name: READABLE_STRING_GENERAL): CONF_GROUP
+	group_of_name (group_name: READABLE_STRING_GENERAL): detachable CONF_GROUP
 			-- Group whose name is `group_name' (Void if none)
 		require
 			good_argument: group_name /= Void
 		do
-			if target /= Void then
-				Result := target.clusters.item (group_name)
+			if attached target as l_target then
+				Result := l_target.clusters.item (group_name)
 				if Result = Void then
-					Result := target.libraries.item (group_name)
+					Result := l_target.libraries.item (group_name)
 					if Result = Void then
-						Result := target.assemblies.item (group_name)
+						Result := l_target.assemblies.item (group_name)
 						if Result = Void then
-							Result := target.overrides.item (group_name)
+							Result := l_target.overrides.item (group_name)
 						end
 					end
 				end
@@ -470,11 +476,9 @@ feature -- Access
 			a_group_name_lower: a_group_name.is_equal (a_group_name.as_lower)
 		local
 			l_groups: like groups
-			l_found_item: CONF_GROUP
 		do
 			create {ARRAYED_SET [CONF_GROUP]} Result.make (10)
-			l_found_item := group_of_name (a_group_name)
-			if l_found_item /= Void then
+			if attached group_of_name (a_group_name) as l_found_item then
 				Result.extend (l_found_item)
 			end
 
@@ -511,7 +515,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	class_from_assembly (an_assembly: READABLE_STRING_32; a_dotnet_name: STRING): EXTERNAL_CLASS_I
+	class_from_assembly (an_assembly: READABLE_STRING_32; a_dotnet_name: STRING): detachable EXTERNAL_CLASS_I
 			-- Associated EXTERNAL_CLASS_I instance for `a_dotnet_name' external class name
 			-- from given assembly `an_assembly'. If more than one assembly with
 			-- `an_assembly' as name, look only in first found item.
@@ -536,7 +540,7 @@ feature -- Access
 			until
 				l_assembly /= Void or l_assemblies.after
 			loop
-				l_assembly ?= l_assemblies.item_for_iteration
+				l_assembly := {CONF_PHYSICAL_ASSEMBLY} / l_assemblies.item_for_iteration
 				check
 					physical_assembly: l_assembly /= Void
 				end
@@ -548,12 +552,12 @@ feature -- Access
 			if l_assembly /= Void then
 				l_assembly.dotnet_classes.search (a_dotnet_name)
 				if l_assembly.dotnet_classes.found then
-					Result ?= l_assembly.dotnet_classes.found_item
+					Result := {EXTERNAL_CLASS_I} / l_assembly.dotnet_classes.found_item
 				end
 			end
 		end
 
-	library_of_uuid (a_uuid: attached UUID; a_recursive: BOOLEAN): attached LIST [attached CONF_LIBRARY]
+	library_of_uuid (a_uuid: UUID; a_recursive: BOOLEAN): LIST [CONF_LIBRARY]
 			-- Return list of libraries identified by UUID
 			--
 			-- Note: Since it is possible that multiple libraries share the same UUID, a list of
@@ -575,12 +579,12 @@ feature -- Access
 			Result := l_visitor.found_libraries
 		ensure
 			results_match_uuid: Result.for_all (
-				agent (a_lib: attached CONF_LIBRARY; a_id: attached UUID): BOOLEAN
+				agent (a_lib: CONF_LIBRARY; a_id: UUID): BOOLEAN
 					do
 						Result := a_lib.library_target.system.uuid.is_equal (a_id)
 					end (?, a_uuid))
 			results_match_recursion: not a_recursive implies Result.for_all (
-				agent (a_lib: attached CONF_LIBRARY): BOOLEAN
+				agent (a_lib: CONF_LIBRARY): BOOLEAN
 					local
 						l_target: CONF_TARGET
 					do
@@ -924,7 +928,7 @@ invariant
 	target_in_conf_system: (conf_system /= Void and new_target = Void) implies target.system = conf_system
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1030,7 +1030,7 @@ feature -- Access
 			r: detachable EIFFEL_LIST [INSTRUCTION_AS]; end_loc: detachable KEYWORD_AS;
 			oms_count, a_pos: INTEGER; k_as, r_as: detachable KEYWORD_AS;
 			object_test_locals: detachable ARRAYED_LIST [TUPLE [ID_AS, TYPE_AS]];
-			n, a: BOOLEAN): detachable ROUTINE_AS
+			n, a, u: BOOLEAN): detachable ROUTINE_AS
 			-- <Precursor>
 		do
 		end

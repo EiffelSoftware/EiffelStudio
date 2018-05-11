@@ -77,7 +77,7 @@ feature -- Checking
 				if old_feat.is_class then
 						-- One of the features has a class postcondition.
 					has_class := True
-				elseif old_feat.has_combined_assertion then
+				elseif old_feat.has_unqualified_call_in_assertion then
 						-- One of the features is not instance-free.
 					has_object := True
 				end
@@ -114,7 +114,7 @@ feature -- Checking
 					deferred_features as h
 				loop
 					g := h.item.internal_a_feature
-					if not g.is_class and then g.has_combined_assertion then
+					if not g.is_class and then g.has_unqualified_call_in_assertion then
 						error_handler.insert_error (create {VDJR5_NEW}.make (system.current_class, f, g))
 					end
 				end

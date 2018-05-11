@@ -289,7 +289,7 @@ feature {NONE} -- Implementation: tags
 			i, start: INTEGER
 			l_in_class, l_in_feature: BOOLEAN
 			c: CHARACTER
-			l_final, l_class_name: STRING
+			l_final, l_class_name: STRING_32
 			l_feature_name: detachable STRING
 		do
 			create l_final.make (a_tag.count*2)
@@ -350,7 +350,7 @@ feature {NONE} -- Implementation: tags
 			current_tag_set_increased: current_tag_set.count = old current_tag_set.count + 1
 		end
 
-	add_class_path (a_tag, a_class_name: STRING; a_feature_name: detachable STRING)
+	add_class_path (a_tag: STRING_32; a_class_name: READABLE_STRING_32; a_feature_name: detachable STRING)
 			-- Add cluster/class/feature information to tag
 			--
 			-- `a_tag': Tag to which information should be added
@@ -366,7 +366,7 @@ feature {NONE} -- Implementation: tags
 			l_path: LIST [STRING_32]
 			l_class: EIFFEL_CLASS_I
 			l_uuid: detachable UUID
-			l_dir: detachable STRING
+			l_dir: detachable STRING_32
 			l_test_class: like test_class
 			l_cluster_stack: ARRAYED_STACK [CONF_GROUP]
 		do
@@ -424,7 +424,7 @@ feature {NONE} -- Implementation: tags
 						a_tag.append ({EC_TAG_TREE_CONSTANTS}.library_prefix)
 						a_tag.append (l_group.name)
 						a_tag.append_character ({EC_TAG_TREE_CONSTANTS}.delimiter_symbol)
-						a_tag.append (l_lib.library_target.system.uuid.out)
+						a_tag.append (l_lib.library_target.system.uuid.string)
 					else
 						if l_group.is_override then
 							a_tag.append ({EC_TAG_TREE_CONSTANTS}.override_prefix)
@@ -433,7 +433,7 @@ feature {NONE} -- Implementation: tags
 						end
 						a_tag.append (l_group.name)
 					end
-					a_tag.append_character ('/')
+					a_tag.append_character ({CHARACTER_32} '/')
 					l_cluster_stack.remove
 				end
 				l_cluster_stack.wipe_out
@@ -447,7 +447,7 @@ feature {NONE} -- Implementation: tags
 					if l_dir /= Void and then not l_dir.is_empty then
 						a_tag.append ({EC_TAG_TREE_CONSTANTS}.directory_prefix)
 						a_tag.append (l_dir)
-						a_tag.append_character ('/')
+						a_tag.append_character ({CHARACTER_32} '/')
 					end
 					l_path.forth
 				end
@@ -455,7 +455,7 @@ feature {NONE} -- Implementation: tags
 			a_tag.append ({EC_TAG_TREE_CONSTANTS}.class_prefix)
 			a_tag.append (a_class_name)
 			if a_feature_name /= Void then
-				a_tag.append_character ('/')
+				a_tag.append_character ({CHARACTER_32} '/')
 				a_tag.append ({EC_TAG_TREE_CONSTANTS}.feature_prefix)
 				a_tag.append (a_feature_name)
 			end
@@ -466,7 +466,7 @@ feature {NONE} -- Implementation: AST
 	process_class_as (l_as: CLASS_AS)
 			-- <Precursor>
 		local
-			l_tag: STRING
+			l_tag: STRING_32
 		do
 			if
 				not l_as.is_deferred and
@@ -481,8 +481,8 @@ feature {NONE} -- Implementation: AST
 
 					-- Add default "class/" tag
 				create l_tag.make (100)
-				l_tag.append ("class/")
-				add_class_path (l_tag, l_as.class_name.name, Void)
+				l_tag.append ({STRING_32} "class/")
+				add_class_path (l_tag, l_as.class_name.name_32, Void)
 				class_tags.force (l_tag)
 
 				safe_process (l_as.features)
@@ -637,7 +637,7 @@ invariant
 		attached old_test_map implies attached test_class
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

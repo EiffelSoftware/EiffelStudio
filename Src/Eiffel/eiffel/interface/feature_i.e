@@ -961,6 +961,14 @@ feature -- Setting
 			has_immediate_non_object_call_in_assertion_set: has_immediate_non_object_call_in_assertion = v
 		end
 
+	set_has_immediate_unqualified_call_in_assertion (v: BOOLEAN)
+			-- Set `has_immediate_unqualified_call_in_assertion` to `v`.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (v, has_unqualified_call_in_assertion_mask)
+		ensure
+			has_immediate_unqualified_call_in_assertion_set: has_immediate_unqualified_call_in_assertion = v
+		end
+
 	set_is_hidden_in_debugger_call_stack (v: BOOLEAN)
 			-- Set `is_hidden_in_debugger_call_stack' to `v'.
 		do
@@ -1450,6 +1458,22 @@ feature -- Conveniences
 			Result := feature_flags & has_non_object_call_in_assertion_mask /= 0
 		end
 
+	has_unqualified_call_in_assertion: BOOLEAN
+			-- Is there an unqualified call in the feature assertion?
+			-- See also: `has_immediate_unqualified_call_in_assertion`.
+		do
+			Result :=
+				has_immediate_unqualified_call_in_assertion or else
+				attached assert_id_set as a and then a.has_unqualified_call
+		end
+
+	has_immediate_unqualified_call_in_assertion: BOOLEAN
+			-- Is there an unqualfiied object call in the immediate routine precondition or postcondition?
+			-- See also: `set_has_immediate_unqualified_call_in_assertion`, `has_immediate_non_object_call_in_assertion`.
+		do
+			Result := feature_flags & has_unqualified_call_in_assertion_mask /= 0
+		end
+
 	has_immediate_class_postcondition: BOOLEAN
 			-- Does feature have an immediate class postcondition?
 			-- (There could also be inherited class postconditions not reported by this query.)
@@ -1465,7 +1489,7 @@ feature -- Conveniences
 			Result :=
 				has_immediate_class_postcondition or else
 				attached assert_id_set as a and then a.has_class_postcondition or else
-				attached extension as e and then e.is_static and then not has_combined_assertion
+				attached extension as e and then e.is_static and then not has_unqualified_call_in_assertion
 		end
 
 	frozen is_class: BOOLEAN
@@ -1477,8 +1501,8 @@ feature -- Conveniences
 		ensure
 			true_if_has_immediate_class_postcondition: has_immediate_class_postcondition implies Result
 			true_if_has_inherited_class_postcondition: attached assert_id_set as a and then a.has_class_postcondition implies Result
-			true_if_safe_constant: is_constant and then not has_combined_assertion implies Result
-			true_if_safe_static_external: attached extension as e and then e.is_static and not has_combined_assertion implies Result
+			true_if_safe_constant: is_constant and then not has_unqualified_call_in_assertion implies Result
+			true_if_safe_static_external: attached extension as e and then e.is_static and not has_unqualified_call_in_assertion implies Result
 		end
 
 	is_target_free: BOOLEAN
@@ -1487,10 +1511,10 @@ feature -- Conveniences
 			-- See also: `is_class`.
 		do
 				-- IL externals have no unqualified calls if they do not need current object.
-			Result := attached extension as e and then e.is_static and then not has_combined_assertion
+			Result := attached extension as e and then e.is_static and then not has_unqualified_call_in_assertion
 		ensure
-			true_if_safe_constant: is_constant and then not has_combined_assertion implies Result
-			true_if_safe_static_external: attached extension as e and then e.is_static and not has_combined_assertion implies Result
+			true_if_safe_constant: is_constant and then not has_unqualified_call_in_assertion implies Result
+			true_if_safe_static_external: attached extension as e and then e.is_static and not has_unqualified_call_in_assertion implies Result
 		end
 
 	frozen has_precondition: BOOLEAN
@@ -3042,6 +3066,7 @@ feature -- Undefinition
 			Result.set_has_false_postcondition (has_false_postcondition)
 			Result.set_has_immediate_non_object_call (has_immediate_non_object_call)
 			Result.set_has_immediate_non_object_call_in_assertion (has_immediate_non_object_call_in_assertion)
+			Result.set_has_immediate_unqualified_call_in_assertion (has_immediate_unqualified_call_in_assertion)
 			Result.set_is_bracket (is_bracket)
 			Result.set_is_parentheses (is_parentheses)
 			Result.set_is_binary (is_binary)
@@ -3169,6 +3194,7 @@ feature -- Replication
 			other.set_has_immediate_class_postcondition (has_immediate_class_postcondition)
 			other.set_has_immediate_non_object_call (has_immediate_non_object_call)
 			other.set_has_immediate_non_object_call_in_assertion (has_immediate_non_object_call_in_assertion)
+			other.set_has_immediate_unqualified_call_in_assertion (has_immediate_unqualified_call_in_assertion)
 			other.set_is_hidden_in_debugger_call_stack (is_hidden_in_debugger_call_stack)
 			other.set_body_index (body_index)
 			other.set_is_type_evaluation_delayed (is_type_evaluation_delayed)
@@ -3567,6 +3593,7 @@ feature {FEATURE_I} -- Feature flags
 	has_class_postcondition_mask: NATURAL_64 =				0x0001_0000_0000
 	has_non_object_call_mask: NATURAL_64 =				0x0002_0000_0000
 	has_non_object_call_in_assertion_mask: NATURAL_64 =				0x0004_0000_0000
+	has_unqualified_call_in_assertion_mask: NATURAL_64 =				0x0008_0000_0000
 			-- Mask used for each feature property.
 
 feature {FEATURE_I} -- Implementation

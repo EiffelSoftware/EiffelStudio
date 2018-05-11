@@ -73,6 +73,7 @@ feature {NONE} -- Implementation
 			has_class_postcondition: BOOLEAN
 			has_false_postcondition: BOOLEAN
 			has_non_object_call: BOOLEAN
+			has_unqualified_call: BOOLEAN
 			feat_assert_id_set: ASSERT_ID_SET
 			processed_features: ARRAYED_LIST [INTEGER]
 		do
@@ -97,6 +98,9 @@ feature {NONE} -- Implementation
 
 				-- By default there are non-object calls if the feature makes them.
 			has_non_object_call := new_feat.has_immediate_non_object_call_in_assertion
+
+				-- By default there are unqualified calls if the feature makes them.
+			has_unqualified_call := new_feat.has_immediate_unqualified_call_in_assertion
 
 				-- We will loop twice on the list of features.
 				-- First we will add the inherited assertions of each feature.
@@ -154,6 +158,12 @@ feature {NONE} -- Implementation
 					feat.has_immediate_non_object_call_in_assertion or else
 					(attached feat_assert_id_set and then feat_assert_id_set.has_non_object_call)
 
+					-- A feature makes an unqualified call if it or any ancestor
+					-- makes such a call.
+				has_unqualified_call := has_unqualified_call or else
+					feat.has_immediate_unqualified_call_in_assertion or else
+					(attached feat_assert_id_set and then feat_assert_id_set.has_unqualified_call)
+
 					-- Prepare next iteration.
 				features.forth
 			end
@@ -172,6 +182,9 @@ feature {NONE} -- Implementation
 
 				-- Set the calculated non-object call status.
 			new_assert_id_set.set_has_non_object_call (has_non_object_call)
+
+				-- Set the calculated non-object call status.
+			new_assert_id_set.set_has_unqualified_call (has_unqualified_call)
 
 				-- Second loop: Add the inner assertions.
 			from
@@ -197,7 +210,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

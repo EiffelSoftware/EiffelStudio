@@ -1455,8 +1455,8 @@ feature {NONE} -- Agents for editor
 	editor_complete_feature_name
 			-- Complete feature name in current editor.
 		do
-			if current_editor /= Void then
-				current_editor.complete_feature_name
+			if attached current_editor as e then
+				e.complete_feature_name
 			end
 		end
 
@@ -1640,7 +1640,7 @@ feature -- Docking library menu items
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

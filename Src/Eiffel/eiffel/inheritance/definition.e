@@ -121,7 +121,7 @@ feature -- Checking
 				if g.is_class then
 						-- One of the features is a class one.
 					has_class := True
-				elseif g.has_combined_assertion then
+				elseif g.has_unqualified_call_in_assertion then
 						-- One of the features has non-empty combined assertion.
 					has_object := True
 				end
@@ -145,7 +145,7 @@ feature -- Checking
 					feats as h
 				loop
 					g := h.item.internal_a_feature
-					if not g.is_class and then g.has_combined_assertion then
+					if not g.is_class and then g.has_unqualified_call_in_assertion then
 						if is_inherited then
 								-- A join error.
 							error_handler.insert_error (create {VDJR5_NEW}.make (system.current_class, f, g))

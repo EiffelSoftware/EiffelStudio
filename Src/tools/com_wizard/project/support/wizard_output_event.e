@@ -37,7 +37,7 @@ feature -- Access
 	text: STRING_32
 			-- Associated text if any
 		do
-			Result ?= data
+			Result := {STRING_32} / data
 			check
 				valid_instance: data /= Void implies Result /= Void
 			end

@@ -58,7 +58,7 @@ feature -- Width & height
 						if internal_image @ i = '%T' then
 							Result := ((((position + Result)) + 1 )) - position
 						else
-							Result := Result + font.string_width (internal_image.item (i).out)
+							Result := Result + font.string_width (create {STRING_32}.make_filled (internal_image [i], 1))
 						end
 						i := i + 1
 					end
@@ -202,14 +202,14 @@ feature {MARGIN_WIDGET, MARGIN} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

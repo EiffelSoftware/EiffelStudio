@@ -1,0 +1,12 @@
+test_name 	 instance_free-merging-validity
+test_description Merging with a constant or an external feature can be a class feature in certain conditions. See also: test#free012, test#free009.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 a.e $CLUSTER a.e
+copy_raw 	 b.e $CLUSTER b.e
+copy_raw 	 test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	 ok
+
+test_end

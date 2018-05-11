@@ -179,7 +179,7 @@ feature{NONE} -- Implementation
 			-- Replace current char with `a_char'.
 		do
 			delete_char
-			insert_text (a_char.out)
+			insert_char (a_char)
 		end
 
 	block_focus_in_actions
@@ -318,7 +318,7 @@ feature{NONE} -- Position calculation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -8080,9 +8080,9 @@ end
 					temp_keyword_as := Void
 				end
 				if attached yyvs16.item (yyvsp16) as l_rescue then
-					yyval78 := ast_factory.new_routine_as (temp_string_as1, yyvs75.item (yyvsp75), yyvs126.item (yyvsp126), yyvs77.item (yyvsp77), yyvs44.item (yyvsp44), l_rescue.second, yyvs12.item (yyvsp12), once_manifest_string_counter_value, fbody_pos, temp_keyword_as, l_rescue.first, object_test_locals, has_non_object_call, has_non_object_call_in_assertion)
+					yyval78 := ast_factory.new_routine_as (temp_string_as1, yyvs75.item (yyvsp75), yyvs126.item (yyvsp126), yyvs77.item (yyvsp77), yyvs44.item (yyvsp44), l_rescue.second, yyvs12.item (yyvsp12), once_manifest_string_counter_value, fbody_pos, temp_keyword_as, l_rescue.first, object_test_locals, has_non_object_call, has_non_object_call_in_assertion, has_unqualified_call_in_assertion)
 				else
-					yyval78 := ast_factory.new_routine_as (temp_string_as1, yyvs75.item (yyvsp75), yyvs126.item (yyvsp126), yyvs77.item (yyvsp77), yyvs44.item (yyvsp44), Void, yyvs12.item (yyvsp12), once_manifest_string_counter_value, fbody_pos, temp_keyword_as, Void, object_test_locals, has_non_object_call, has_non_object_call_in_assertion)
+					yyval78 := ast_factory.new_routine_as (temp_string_as1, yyvs75.item (yyvsp75), yyvs126.item (yyvsp126), yyvs77.item (yyvsp77), yyvs44.item (yyvsp44), Void, yyvs12.item (yyvsp12), once_manifest_string_counter_value, fbody_pos, temp_keyword_as, Void, object_test_locals, has_non_object_call, has_non_object_call_in_assertion, has_unqualified_call_in_assertion)
 				end
 				reset_feature_frame
 				object_test_locals := Void
@@ -14408,6 +14408,11 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+			inspect id_level when Precondition_level, Postcondition_level then
+				set_has_unqualified_call_in_assertion (True)
+			else
+				-- Nothing to do.
+			end
 			yyval79 := ast_factory.new_inline_agent_creation_as (
 				ast_factory.new_body_as (yyvs127.item (yyvsp127), Void, Void, yyvs78.item (yyvsp78), Void, Void, Void, Void), yyvs116.item (yyvsp116), yyvs12.item (yyvsp12))
 		
@@ -14482,6 +14487,11 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+			inspect id_level when Precondition_level, Postcondition_level then
+				set_has_unqualified_call_in_assertion (True)
+			else
+				-- Nothing to do.
+			end
 			yyval79 := ast_factory.new_inline_agent_creation_as (
 				ast_factory.new_body_as (yyvs127.item (yyvsp127), yyvs83.item (yyvsp83), Void, yyvs78.item (yyvsp78), yyvs4.item (yyvsp4), Void, Void, Void), yyvs116.item (yyvsp116), yyvs12.item (yyvsp12))
 		
@@ -14558,6 +14568,11 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+			inspect id_level when Precondition_level, Postcondition_level then
+				set_has_unqualified_call_in_assertion (True)
+			else
+				-- Nothing to do.
+			end
 			yyval79 := ast_factory.new_agent_routine_creation_as (
 				Void, yyvs2.item (yyvsp2), yyvs116.item (yyvsp116), False, yyvs12.item (yyvsp12), Void)
 		
@@ -14670,7 +14685,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval22 := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, ast_factory.new_access_id_as (yyvs2.item (yyvsp2), Void), Void)) 
+			inspect id_level when Precondition_level, Postcondition_level then
+				set_has_unqualified_call_in_assertion (True)
+			else
+				-- Nothing to do.
+			end
+			yyval22 := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, ast_factory.new_access_id_as (yyvs2.item (yyvsp2), Void), Void))
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp22 := yyvsp22 + 1
@@ -14750,7 +14771,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval22 := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, yyvs9.item (yyvsp9), Void)) 
+			inspect id_level when Precondition_level, Postcondition_level then
+				set_has_unqualified_call_in_assertion (True)
+			else
+				-- Nothing to do.
+			end
+			yyval22 := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, yyvs9.item (yyvsp9), Void))
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp22 := yyvsp22 + 1
@@ -16638,7 +16665,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval46 := ast_factory.new_address_as (yyvs89.item (yyvsp89), yyvs4.item (yyvsp4)) 
+				inspect id_level when Precondition_level, Postcondition_level then
+					set_has_unqualified_call_in_assertion (True)
+				else
+					-- Nothing to do.
+				end
+				yyval46 := ast_factory.new_address_as (yyvs89.item (yyvsp89), yyvs4.item (yyvsp4))
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp46 := yyvsp46 + 1
@@ -16665,7 +16698,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval46 := ast_factory.new_address_current_as (yyvs9.item (yyvsp9), yyvs4.item (yyvsp4)) 
+				inspect id_level when Precondition_level, Postcondition_level then
+					set_has_unqualified_call_in_assertion (True)
+				else
+					-- Nothing to do.
+				end
+				yyval46 := ast_factory.new_address_current_as (yyvs9.item (yyvsp9), yyvs4.item (yyvsp4))
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp46 := yyvsp46 + 1
@@ -17126,7 +17165,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval32 := ast_factory.new_nested_as (yyvs9.item (yyvsp9), yyvs32.item (yyvsp32), yyvs4.item (yyvsp4)) 
+				inspect id_level when Precondition_level, Postcondition_level then
+					set_has_unqualified_call_in_assertion (True)
+				else
+					-- Nothing to do.
+				end
+				yyval32 := ast_factory.new_nested_as (yyvs9.item (yyvsp9), yyvs32.item (yyvsp32), yyvs4.item (yyvsp4))
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp9 := yyvsp9 -1
@@ -17278,7 +17323,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval71 := ast_factory.new_precursor_as (yyvs12.item (yyvsp12), Void, yyvs99.item (yyvsp99)) 
+				inspect id_level when Precondition_level, Postcondition_level then
+					set_has_unqualified_call_in_assertion (True)
+				else
+					-- Nothing to do.
+				end
+				yyval71 := ast_factory.new_precursor_as (yyvs12.item (yyvsp12), Void, yyvs99.item (yyvsp99))
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp71 := yyvsp71 + 1
@@ -17305,6 +17356,11 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+				inspect id_level when Precondition_level, Postcondition_level then
+					set_has_unqualified_call_in_assertion (True)
+				else
+					-- Nothing to do.
+				end
 				if attached ast_factory.new_class_type_as (yyvs2.item (yyvsp2), Void) as l_temp_class_type_as then
 					l_temp_class_type_as.set_lcurly_symbol (yyvs4.item (yyvsp4 - 1))
 					l_temp_class_type_as.set_rcurly_symbol (yyvs4.item (yyvsp4))
@@ -17631,6 +17687,7 @@ end
 				when Normal_level then
 					yyval23 := ast_factory.new_access_id_as (yyvs2.item (yyvsp2), yyvs99.item (yyvsp99))
 				when Precondition_level, Postcondition_level then
+					set_has_unqualified_call_in_assertion (True)
 					yyval23 := ast_factory.new_access_assert_as (yyvs2.item (yyvsp2), yyvs99.item (yyvsp99))
 				when Invariant_level then
 					yyval23 := ast_factory.new_access_inv_as (yyvs2.item (yyvsp2), yyvs99.item (yyvsp99), Void)
@@ -17758,7 +17815,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval46 := ast_factory.new_expr_call_as (yyvs9.item (yyvsp9)) 
+				inspect id_level when Precondition_level, Postcondition_level then
+					set_has_unqualified_call_in_assertion (True)
+				else
+					-- Nothing to do.
+				end
+				yyval46 := ast_factory.new_expr_call_as (yyvs9.item (yyvsp9))
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp46 := yyvsp46 + 1

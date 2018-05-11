@@ -282,13 +282,13 @@ feature {NONE} -- Implementation
 						from
 							i := 1
 							l_count := l_descriptor.dimension_count
-						variant
-							l_count - i + 1
 						until
 							i > l_count
 						loop
 							array_count := array_count * l_descriptor.array_size.item (i)
 							i := i + 1
+						variant
+							l_count - i + 1
 						end
 					end
 					Result.append ("memcpy (&(((")

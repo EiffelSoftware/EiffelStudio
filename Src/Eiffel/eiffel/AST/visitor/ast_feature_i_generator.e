@@ -366,6 +366,7 @@ feature {NONE} -- Implementation
 				l_result.set_has_immediate_class_postcondition (l_routine.has_class_postcondition)
 				l_result.set_has_immediate_non_object_call (l_routine.has_non_object_call)
 				l_result.set_has_immediate_non_object_call_in_assertion (l_routine.has_non_object_call_in_assertion)
+				l_result.set_has_immediate_unqualified_call_in_assertion (l_routine.has_unqualified_call_in_assertion)
 			else
 				check
 					is_known_feature_content: False
@@ -384,7 +385,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

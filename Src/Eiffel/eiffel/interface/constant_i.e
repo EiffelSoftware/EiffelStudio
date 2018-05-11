@@ -105,13 +105,13 @@ feature -- Status report
 	has_class_postcondition: BOOLEAN
 			-- <Precursor>
 		do
-			Result := Precursor or else not has_combined_assertion
+			Result := Precursor or else not has_unqualified_call_in_assertion
 		end
 
 	is_target_free: BOOLEAN
 			-- <Precursor>
 		do
-			Result := not has_combined_assertion
+			Result := not has_unqualified_call_in_assertion
 		end
 
 feature -- Settings

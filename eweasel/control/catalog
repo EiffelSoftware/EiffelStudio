@@ -2783,6 +2783,9 @@ test	instance_free-redeclaration-of-class	free008 tcf pass instance_free declara
 test	instance_free-merging			free009 tcf pass instance_free declaration adaptation validity
 test	instance_free-joining			free010 tcf pass instance_free declaration adaptation validity
 test	instance_free-redeclaration-to-class	free011 tcf pass instance_free declaration adaptation validity
+test	instance_free-redeclaration-validity	free012 tcf pass instance_free declaration adaptation validity
+test	instance_free-merging-validity		free013 tcf pass instance_free declaration adaptation validity
+test	instance_free-joining-validity		free014 tcf pass instance_free declaration adaptation validity
 
 -- Tests for platform specific results
 test	print-large-pointer				platform001 tcf pass platform

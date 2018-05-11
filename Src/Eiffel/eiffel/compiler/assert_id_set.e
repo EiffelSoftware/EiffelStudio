@@ -95,6 +95,9 @@ feature -- Status report
 	has_non_object_call: BOOLEAN
 			-- Are there non-object calls in preconditions or postconditions (inner or inherited)?
 
+	has_unqualified_call: BOOLEAN
+			-- Are there unqualified object calls in preconditions or postconditions (inner or inherited)?
+
 feature -- Status Setting
 
 	set_has_precondition (b: BOOLEAN)
@@ -135,6 +138,14 @@ feature -- Status Setting
 			has_non_object_call := b
 		ensure
 			has_non_object_call_set: has_non_object_call = b
+		end
+
+	set_has_unqualified_call (b: BOOLEAN)
+			-- Set `has_unqualified_call' to `b'.
+		do
+			has_unqualified_call := b
+		ensure
+			has_unqualified_call_set: has_unqualified_call = b
 		end
 
 feature -- Basic operations
@@ -203,7 +214,7 @@ feature -- Comparison
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

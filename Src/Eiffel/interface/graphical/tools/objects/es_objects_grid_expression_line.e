@@ -363,13 +363,15 @@ feature -- Graphical changes
 		do
 			title := v
 			if is_read_only then
-				glab ?= cell (Col_expression_index)
-				if glab = Void then
+				if attached {EV_GRID_LABEL_ITEM} cell (Col_expression_index) as li then
+					glab := li
+				else
 					glab := new_cell_name
 				end
 			else
-				gedit ?= cell (Col_expression_index)
-				if gedit = Void then
+				if attached {ES_OBJECTS_GRID_EXPRESSION_CELL} cell (Col_expression_index) as gi then
+					glab := gi
+				else
 					dbg := debugger_manager
 					exp := expression
 					gedit := new_cell_expression
@@ -395,8 +397,8 @@ feature -- Graphical changes
 						end
 						gedit.set_completion_possibilities_provider (l_provider)
 					end
+					glab := gedit
 				end
-				glab := gedit
 			end
 
 			apply_cell_expression_text_properties_on (glab)
@@ -504,7 +506,7 @@ feature -- Graphical changes
 			grid_cell_set_pixmap (gi, v)
 		end
 
-	show_error_dialog (txt: STRING_GENERAL)
+	show_error_dialog (txt: READABLE_STRING_GENERAL)
 		local
 			dlg: EB_DEBUGGER_EXCEPTION_DIALOG
 			edv: EXCEPTION_DEBUG_VALUE
@@ -638,7 +640,7 @@ feature -- Graphical changes
 							else
 								create glab
 								grid_cell_set_text (glab, interface_names.l_error_occurred_click)
-								glab.pointer_double_press_actions.force_extend (agent show_error_dialog (l_error_message))
+								glab.pointer_double_press_actions.extend (agent (i_err: READABLE_STRING_GENERAL; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER) do show_error_dialog (i_err) end (l_error_message, ?,?,?,?,?,?,?,?))
 								row.set_item (Col_expression_result_index, glab)
 							end
 
@@ -705,7 +707,7 @@ feature -- Graphical changes
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

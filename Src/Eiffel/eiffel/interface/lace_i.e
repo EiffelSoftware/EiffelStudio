@@ -272,30 +272,40 @@ feature -- Status setting
 			l_factory: CONF_COMP_FACTORY
 			l_project_location: PROJECT_DIRECTORY
 			l_epr: PROJECT_EIFFEL_FILE
+			l_precompile: like precompile
 		do
+			l_precompile := target.precompile
 				-- check if the precompile is valid
-			precompile := target.precompile
-			if precompile /= Void then
+			if
+				l_precompile /= Void and then
+				eiffel_project.initialized and then
+				not l_precompile.is_enabled (conf_state_for_precompile_checking (target))
+			then
+				l_precompile := Void
+			end
+			if l_precompile /= Void then
+				precompile := l_precompile
 				create l_factory
 				create l_load.make (l_factory)
-				l_load.retrieve_configuration (precompile.path)
+				l_load.retrieve_configuration (l_precompile.path)
 				if l_load.is_error then
 					is_precompile_invalid := True
 				else
 					is_precompile_invalid := l_load.last_system.library_target = Void
 				end
-			end
-
-				-- check if it needs to be (re)precompiled
-			if precompile /= Void and then not is_precompile_invalid then
-				if precompile.eifgens_location /= Void then
-					create l_project_location.make (precompile.eifgens_location.evaluated_path, l_load.last_system.library_target.name)
-				else
-					create l_project_location.make (precompile.location.evaluated_path.parent, l_load.last_system.library_target.name)
+					-- check if it needs to be (re)precompiled
+				if not is_precompile_invalid then
+					if l_precompile.eifgens_location /= Void then
+						create l_project_location.make (l_precompile.eifgens_location.evaluated_path, l_load.last_system.library_target.name)
+					else
+						create l_project_location.make (l_precompile.location.evaluated_path.parent, l_load.last_system.library_target.name)
+					end
+					create l_epr.make (l_project_location.target_path.extended (project_file_name))
+					l_epr.check_version_number (0)
+					is_precompilation_needed := l_epr.has_error
 				end
-				create l_epr.make (l_project_location.target_path.extended (project_file_name))
-				l_epr.check_version_number (0)
-				is_precompilation_needed := l_epr.has_error
+			else
+				precompile := Void
 			end
 		ensure
 			compilation_need_implies_ok: is_precompilation_needed implies precompile /= Void and not is_precompile_invalid
@@ -645,8 +655,11 @@ feature {NONE} -- Implementation
 			if sys = Void then
 				l_first := True
 					-- do we have a precompile?
-				if l_new_target.precompile /= Void then
-						--  load precompile as system
+				if
+					attached l_new_target.precompile as l_precompile and then
+					l_precompile.is_enabled (conf_state_for_precompile_checking (l_new_target))
+				then
+						-- load precompile as system
 					retrieve_precompile (l_new_target)
 					sys := workbench.system
 				else
@@ -1490,6 +1503,17 @@ feature {NONE} -- Implementation
 			Error_handler.checksum
 		end
 
+	conf_state_for_precompile_checking (a_target: CONF_TARGET): CONF_STATE
+			-- State needed during `check_precompile` to check if precompile is enabled.
+			-- note: at this point, the system is not yet defined, then platform, concurrency, ... values are not relevant.
+		local
+			l_version: STRING_TABLE [CONF_VERSION]
+		do
+			create l_version.make (1)
+			l_version.force (compiler_version_number, v_compiler)
+			create Result.make (universe.platform, universe.build, concurrency_none, False, False, a_target.variables, l_version)
+		end
+
 	retrieve_precompile (a_target: CONF_TARGET)
 			-- Load the precompile as the system.
 		require
@@ -1507,6 +1531,7 @@ feature {NONE} -- Implementation
 			l_old_target: CONF_TARGET
 			l_factory: CONF_COMP_FACTORY
 			l_project_location: PROJECT_DIRECTORY
+			l_system_name: READABLE_STRING_GENERAL
 		do
 			create l_factory
 			l_pre := a_target.precompile
@@ -1569,9 +1594,15 @@ feature {NONE} -- Implementation
 
 				-- Update the system name
 			if not a_target.setting_executable_name.is_empty then
-				system.set_name (a_target.setting_executable_name.as_string_8_conversion)
+				l_system_name := a_target.setting_executable_name
 			else
-				system.set_name (a_target.system.name.as_string_8_conversion)
+				l_system_name := a_target.system.name
+			end
+			if l_system_name.is_valid_as_string_8 then
+				system.set_name (l_system_name.to_string_8)
+			else
+					-- FIXME: invalid system name!
+				system.set_name (l_system_name.as_string_8_conversion)
 			end
 		ensure
 			valid_system: workbench.system /= Void

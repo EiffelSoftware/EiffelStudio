@@ -1274,7 +1274,7 @@ feature -- Parent checking
 						-- If we have a parents_as list then we must have a non-empty parents list.
 				end
 				if class_id = l_any_id then
-						-- Throw a VHPR1 error is ANY contains any custom inheritance clauses.
+						-- Throw a VHPR1 error if ANY contains any custom inheritance clauses.
 					create l_vhpr1
 					l_vhpr1.set_associated_class (Current)
 					create l_dummy_list.make
@@ -3796,6 +3796,20 @@ feature -- Access
 			feat: FEATURE_I
 		do
 			feat := feature_of_rout_id (rout_id)
+			if feat /= Void then
+				Result := feat.api_feature (class_id)
+			end
+		end
+
+	frozen feature_with_rout_id_set (rout_id_set: ROUT_ID_SET): E_FEATURE
+			-- Feature with routine ID in `rout_id_set'.
+		require
+			rout_id_set_not_void: rout_id_set /= Void
+			has_feature_table: has_feature_table
+		local
+			feat: FEATURE_I
+		do
+			feat := feature_of_rout_id_set (rout_id_set)
 			if feat /= Void then
 				Result := feat.api_feature (class_id)
 			end

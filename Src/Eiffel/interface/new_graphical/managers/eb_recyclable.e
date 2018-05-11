@@ -1,5 +1,5 @@
-note
-	description	: "[
+﻿note
+	description: "[
 		Object recycler for explicit recycling of active objects enabling
 		disconnection between objects/agents that the GC is unable to recognize.
 		
@@ -16,8 +16,8 @@ note
 	doc: "wiki://User Interface Memory Managment"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	EB_RECYCLABLE
@@ -147,7 +147,6 @@ feature {NONE} -- Basic operations
 		local
 			l_internal: INTERNAL
 			l_count, i: INTEGER
-			l_any: EV_ANY
 			l_skip_implementation: BOOLEAN
 		do
 			debug ("recycle_and_detach")
@@ -441,4 +440,4 @@ invariant
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_RECYCLABLE
+end

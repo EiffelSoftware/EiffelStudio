@@ -237,7 +237,7 @@ feature -- Graphical changes
 							gi := value_cell
 							if gi /= Void then
 								gi.set_tooltip (Interface_names.l_exception_double_click_text)
-								gi.pointer_double_press_actions.force_extend (agent show_exception_dialog (excdv))
+								gi.pointer_double_press_actions.extend (agent (i_excdv: EXCEPTION_DEBUG_VALUE; i_x, i_y, i_but: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER) do show_exception_dialog (i_excdv) end (excdv, ?,?,?,?,?,?,?,?))
 							end
 							set_type (debugger_names.l_exception_data)
 							set_pixmap (Icons @ (dv.kind))
@@ -287,7 +287,7 @@ invariant
 	object_not_void: object /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

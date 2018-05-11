@@ -1274,7 +1274,7 @@ feature -- Parent checking
 						-- If we have a parents_as list then we must have a non-empty parents list.
 				end
 				if class_id = l_any_id then
-						-- Throw a VHPR1 error is ANY contains any custom inheritance clauses.
+						-- Throw a VHPR1 error if ANY contains any custom inheritance clauses.
 					create l_vhpr1
 					l_vhpr1.set_associated_class (Current)
 					create l_dummy_list.make

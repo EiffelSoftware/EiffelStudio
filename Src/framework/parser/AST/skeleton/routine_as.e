@@ -22,11 +22,12 @@ feature {NONE} -- Initialization
 		r: like rescue_clause; ek: like end_keyword;
 		oms_count: like once_manifest_string_count; a_pos: like body_start_position; k_as, r_as: like obsolete_keyword;
 		ot_locals: like object_test_locals;
-		n, a: BOOLEAN)
+		n, a, u: BOOLEAN)
 			-- Create a new ROUTINE AST node.
 			-- Arguments:
 			-- 	• `n`	Does routine has a non-object call?
 			-- 	• `a`	Do routine precondition or postcondition have a non-object call?
+			-- 	• `u`	Do routine precondition or postcondition have an unqualified call?
 		require
 			b_not_void: b /= Void
 			ek_not_void: ek /= Void
@@ -51,6 +52,7 @@ feature {NONE} -- Initialization
 			object_test_locals := ot_locals
 			has_non_object_call := n
 			has_non_object_call_in_assertion := a
+			has_unqualified_call_in_assertion := u
 		ensure
 			obsolete_message_set: obsolete_message = o
 			precondition_set: precondition = pr
@@ -66,6 +68,7 @@ feature {NONE} -- Initialization
 			object_test_locals_set: object_test_locals = ot_locals
 			has_non_object_call_set: has_non_object_call = n
 			has_non_object_call_in_assertion_set: has_non_object_call_in_assertion = a
+			has_unqualified_call_in_assertion_set: has_unqualified_call_in_assertion = u
 		end
 
 feature -- Visitor
@@ -295,6 +298,9 @@ feature -- Status report
 
 	has_non_object_call_in_assertion: BOOLEAN
 			-- Is there a non-object call in the routine precondition or postcondition?
+
+	has_unqualified_call_in_assertion: BOOLEAN
+			-- Is there an unqualified object call in the routine precondition or postcondition?
 
 feature -- Access
 

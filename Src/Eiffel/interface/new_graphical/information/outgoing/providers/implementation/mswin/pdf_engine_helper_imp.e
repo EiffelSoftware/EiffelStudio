@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {PDF_ENGINE_HELPER_IMP}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,7 +18,6 @@ feature -- Access
 			l_key: detachable WEL_REGISTRY_KEY_VALUE
 			l_acrobat: STRING_32
 			l_acrobat_reader: STRING_32
-			l_lowered_var: READABLE_STRING_GENERAL
 		do
 			l_acrobat := {STRING_32} "\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Acrobat.exe"
 			create l_reg

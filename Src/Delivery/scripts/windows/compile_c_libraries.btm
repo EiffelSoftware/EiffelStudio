@@ -38,7 +38,6 @@ iff not defined NO_COMPILE then
 	remtrace net
 	cd %1\library\net\Clib
 	specific_make %2
-	specific_make %2
 	remtrace store
 	cd %1\library\store\dbms\rdbms\odbc\clib
 	specific_make %2

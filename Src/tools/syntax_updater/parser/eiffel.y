@@ -221,7 +221,7 @@ create
 %type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 366
+%expect 368
 
 %%
 
@@ -1460,9 +1460,9 @@ Routine:
 					temp_keyword_as := Void
 				end
 				if attached $8 as l_rescue then
-					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $5, $6, $7, l_rescue.second, $9, once_manifest_string_counter_value, fbody_pos, temp_keyword_as, l_rescue.first, object_test_locals, has_non_object_call, has_non_object_call_in_assertion)
+					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $5, $6, $7, l_rescue.second, $9, once_manifest_string_counter_value, fbody_pos, temp_keyword_as, l_rescue.first, object_test_locals, has_non_object_call, has_non_object_call_in_assertion, has_unqualified_call_in_assertion)
 				else
-					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $5, $6, $7, Void, $9, once_manifest_string_counter_value, fbody_pos, temp_keyword_as, Void, object_test_locals, has_non_object_call, has_non_object_call_in_assertion)
+					$$ := ast_factory.new_routine_as (temp_string_as1, $3, $5, $6, $7, Void, $9, once_manifest_string_counter_value, fbody_pos, temp_keyword_as, Void, object_test_locals, has_non_object_call, has_non_object_call_in_assertion, has_unqualified_call_in_assertion)
 				end
 				reset_feature_frame
 				object_test_locals := Void
@@ -2978,16 +2978,31 @@ Creation_clause:
 Agent:
 		TE_AGENT Optional_formal_arguments {add_feature_frame} Routine {remove_feature_frame} Delayed_actuals
 		{
+			inspect id_level when Precondition_level, Postcondition_level then
+				set_has_unqualified_call_in_assertion (True)
+			else
+				-- Nothing to do.
+			end
 			$$ := ast_factory.new_inline_agent_creation_as (
 				ast_factory.new_body_as ($2, Void, Void, $4, Void, Void, Void, Void), $6, $1)
 		}
 	|	TE_AGENT Optional_formal_arguments TE_COLON Type {add_feature_frame} Routine {remove_feature_frame} Delayed_actuals
 		{
+			inspect id_level when Precondition_level, Postcondition_level then
+				set_has_unqualified_call_in_assertion (True)
+			else
+				-- Nothing to do.
+			end
 			$$ := ast_factory.new_inline_agent_creation_as (
 				ast_factory.new_body_as ($2, $4, Void, $6, $3, Void, Void, Void), $8, $1)
 		}
 	|	TE_AGENT Feature_name_for_call Delayed_actuals
 		{
+			inspect id_level when Precondition_level, Postcondition_level then
+				set_has_unqualified_call_in_assertion (True)
+			else
+				-- Nothing to do.
+			end
 			$$ := ast_factory.new_agent_routine_creation_as (
 				Void, $2, $3, False, $1, Void)
 		}
@@ -3014,13 +3029,27 @@ Optional_formal_arguments: -- Empty
 	;
 	
 Agent_target: Identifier_as_lower
-		{ $$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, ast_factory.new_access_id_as ($1, Void), Void)) }
+		{
+			inspect id_level when Precondition_level, Postcondition_level then
+				set_has_unqualified_call_in_assertion (True)
+			else
+				-- Nothing to do.
+			end
+			$$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, ast_factory.new_access_id_as ($1, Void), Void))
+		}
 	|	TE_LPARAN Add_counter Add_counter Expression Remove_counter Remove_counter TE_RPARAN
 		{ $$ := ast_factory.new_agent_target_triple ($1, $7, ast_factory.new_operand_as (Void, Void, $4)) }	
 	|	TE_RESULT
 		{ $$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, $1, Void)) }
 	|	TE_CURRENT
-		{ $$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, $1, Void)) }
+		{
+			inspect id_level when Precondition_level, Postcondition_level then
+				set_has_unqualified_call_in_assertion (True)
+			else
+				-- Nothing to do.
+			end
+			$$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, $1, Void))
+		}
 	|	Typed
 		{ $$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as ($1, Void, Void))}
 	|	TE_QUESTION
@@ -3336,9 +3365,23 @@ Factor: TE_VOID
 	|	TE_STRIP TE_LPARAN Strip_identifier_list TE_RPARAN
 			{ $$ := ast_factory.new_un_strip_as ($3, $1, $2, $4) }
 	|	TE_ADDRESS Feature_name
-			{ $$ := ast_factory.new_address_as ($2, $1) }
+			{
+				inspect id_level when Precondition_level, Postcondition_level then
+					set_has_unqualified_call_in_assertion (True)
+				else
+					-- Nothing to do.
+				end
+				$$ := ast_factory.new_address_as ($2, $1)
+			}
 	|	TE_ADDRESS TE_CURRENT
-			{ $$ := ast_factory.new_address_current_as ($2, $1) }
+			{
+				inspect id_level when Precondition_level, Postcondition_level then
+					set_has_unqualified_call_in_assertion (True)
+				else
+					-- Nothing to do.
+				end
+				$$ := ast_factory.new_address_current_as ($2, $1)
+			}
 	|	TE_ADDRESS TE_RESULT
 			{ $$ := ast_factory.new_address_result_as ($2, $1) }
 	|	Bracket_target
@@ -3402,7 +3445,14 @@ Call_bracket_expression:
 
 Qualified_call:
 		TE_CURRENT TE_DOT Remote_call
-			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
+			{
+				inspect id_level when Precondition_level, Postcondition_level then
+					set_has_unqualified_call_in_assertion (True)
+				else
+					-- Nothing to do.
+				end
+				$$ := ast_factory.new_nested_as ($1, $3, $2)
+			}
 	|	TE_RESULT TE_DOT Remote_call
 			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
 	|	A_feature TE_DOT Remote_call
@@ -3420,9 +3470,21 @@ Qualified_call:
 	;
 
 A_precursor: TE_PRECURSOR Parameters
-			{ $$ := ast_factory.new_precursor_as ($1, Void, $2) }
+			{
+				inspect id_level when Precondition_level, Postcondition_level then
+					set_has_unqualified_call_in_assertion (True)
+				else
+					-- Nothing to do.
+				end
+				$$ := ast_factory.new_precursor_as ($1, Void, $2)
+			}
 	|	TE_PRECURSOR TE_LCURLY Class_identifier TE_RCURLY Parameters
 			{
+				inspect id_level when Precondition_level, Postcondition_level then
+					set_has_unqualified_call_in_assertion (True)
+				else
+					-- Nothing to do.
+				end
 				if attached ast_factory.new_class_type_as ($3, Void) as l_temp_class_type_as then
 					l_temp_class_type_as.set_lcurly_symbol ($2)
 					l_temp_class_type_as.set_rcurly_symbol ($4)
@@ -3506,6 +3568,7 @@ A_feature: Feature_name_for_call Parameters
 				when Normal_level then
 					$$ := ast_factory.new_access_id_as ($1, $2)
 				when Precondition_level, Postcondition_level then
+					set_has_unqualified_call_in_assertion (True)
 					$$ := ast_factory.new_access_assert_as ($1, $2)
 				when Invariant_level then
 					$$ := ast_factory.new_access_inv_as ($1, $2, Void)
@@ -3525,7 +3588,14 @@ Bracket_target:
 	|	Manifest_tuple
 			{ $$ := $1 }
 	|	TE_CURRENT
-			{ $$ := ast_factory.new_expr_call_as ($1) }
+			{
+				inspect id_level when Precondition_level, Postcondition_level then
+					set_has_unqualified_call_in_assertion (True)
+				else
+					-- Nothing to do.
+				end
+				$$ := ast_factory.new_expr_call_as ($1)
+			}
 	|	TE_RESULT
 			{ $$ := ast_factory.new_expr_call_as ($1) }
 	|	Creation_expression

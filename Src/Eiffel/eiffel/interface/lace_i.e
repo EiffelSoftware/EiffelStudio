@@ -654,16 +654,18 @@ feature {NONE} -- Implementation
 			sys := workbench.system
 			if sys = Void then
 				l_first := True
-				create sys.make
-				workbench.set_system (sys)
-
 					-- do we have a precompile?
-				if attached l_new_target.precompile as l_precompile then
-					if l_precompile.is_enabled (universe.conf_state_from_target (l_new_target)) then
-							-- load precompile as system
-						retrieve_precompile (l_new_target)
-						sys := workbench.system
-					end
+				if
+					attached l_new_target.precompile as l_precompile and then
+					l_precompile.is_enabled (conf_state_for_precompile_checking (l_new_target))
+				then
+						-- load precompile as system
+					retrieve_precompile (l_new_target)
+					sys := workbench.system
+				else
+						-- no precompile, create new system
+					create sys.make
+					workbench.set_system (sys)
 				end
 			else
 				date := sys.lace.date
@@ -1503,7 +1505,7 @@ feature {NONE} -- Implementation
 
 	conf_state_for_precompile_checking (a_target: CONF_TARGET): CONF_STATE
 			-- State needed during `check_precompile` to check if precompile is enabled.
-			-- note: at this point, the system is not yet defined, then platform, concurrency, ... value are not relevant.
+			-- note: at this point, the system is not yet defined, then platform, concurrency, ... values are not relevant.
 		local
 			l_version: STRING_TABLE [CONF_VERSION]
 		do

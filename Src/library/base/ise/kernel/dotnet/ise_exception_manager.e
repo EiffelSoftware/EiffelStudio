@@ -289,6 +289,8 @@ feature {NONE} -- Implementation, ignoring
 			-- Ignored exceptions
 		once
 			create Result.make (0)
+		ensure
+			instance_free: class
 		end
 
 	unignorable_exceptions: HASH_TABLE [INTEGER, INTEGER]
@@ -299,6 +301,8 @@ feature {NONE} -- Implementation, ignoring
 			create Result.make (1)
 			l_type := ({VOID_TARGET}).type_id
 			Result.force (l_type, l_type)
+		ensure
+			instance_free: class
 		end
 
 	unraisable_exceptions: HASH_TABLE [INTEGER, INTEGER]
@@ -311,6 +315,8 @@ feature {NONE} -- Implementation, ignoring
 			Result.force (l_type, l_type)
 			l_type := ({OLD_VIOLATION}).type_id
 			Result.force (l_type, l_type)
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation, exception chain
@@ -591,7 +597,7 @@ feature {NONE} -- Exception codes, Implementation of RT_EXCEPTION_MANAGER
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

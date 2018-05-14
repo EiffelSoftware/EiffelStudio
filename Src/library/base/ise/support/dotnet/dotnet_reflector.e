@@ -51,6 +51,8 @@ feature -- Conformance
 					Result := l_system_type2.is_assignable_from (l_system_type1)
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	field_conforms_to (a_source_type, a_field_type: INTEGER): BOOLEAN
@@ -1714,6 +1716,7 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 			create Result.make_filled (Void, min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_eiffel_type_not_void: Result /= Void
+			instance_free: class
 		end
 
 	id_to_eiffel_implementation_type: ARRAY [detachable RT_CLASS_TYPE]
@@ -1842,7 +1845,7 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

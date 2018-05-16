@@ -563,13 +563,13 @@ feature {NONE} -- Actions
 		require
 			a_key_ok: a_key /= Void and then data.custom /= Void and then data.custom.has (a_key)
 			a_value_ok: a_value /= Void and then attached data.custom.item (a_key) as l_item and then l_item.has (a_value)
-			a_invert_value_ok: a_invert_value /= Void and then (a_invert_value.starts_with ("=") or a_invert_value.starts_with ("/="))
+			a_invert_value_ok: a_invert_value /= Void and then (a_invert_value.starts_with ("=") or a_invert_value.starts_with ("/=") or a_invert_value.ends_with ("-match") or a_invert_value.ends_with ("-mismatch"))
 		local
 			d: CONF_CONDITION_CUSTOM_ATTRIBUTES
 		do
 			data.remove_custom (a_key, a_value)
 			create d -- FIXME
-			d.inverted := a_invert_value.starts_with ("/=")
+			d.inverted := a_invert_value.starts_with ("/=") or a_invert_value.ends_with ("-mismatch")
 			data.add_custom (a_key, a_value, d)
 		end
 

@@ -156,6 +156,7 @@ cd $INSTALL_DIR/C_library
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/C_library/curl curl 
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/C_library/libpng libpng
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/C_library/zlib zlib 
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/C_library/openssl openssl 
 cd $INSTALL_DIR
 remtrace root
 exprt -N -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery Delivery

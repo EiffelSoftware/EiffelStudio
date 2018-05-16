@@ -166,7 +166,9 @@ cdd %STUDIO_DIR\C_library
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library/libpng libpng
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library/zlib zlib
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library/curl curl
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library/openssl openssl
+safe_md openssl
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library/openssl/clibs_openssl.ecf openssl
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library/openssl/include openssl/include
 cdd %STUDIO_DIR
 remtrace root
 exprt -N -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery Delivery

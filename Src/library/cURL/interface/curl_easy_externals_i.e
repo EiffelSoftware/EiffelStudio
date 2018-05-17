@@ -265,7 +265,7 @@ feature {NONE} -- C externals
 				#ifdef CURL_STATICLIB
 					return (FUNCTION_CAST(CURL *, ()) $a_api)();
 				#else
-					/* Using the proper calling convention for dynamic module */
+						/* Using the proper calling convention for dynamic module */
 					return (FUNCTION_CAST(CURL *, ()) $a_api)();
 				#endif
 			]"
@@ -378,7 +378,7 @@ feature {NONE} -- C externals
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

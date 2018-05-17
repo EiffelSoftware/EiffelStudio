@@ -152,7 +152,12 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				return (FUNCTION_CAST(CURLM *, ()) $a_api)();
+				#ifdef CURL_STATICLIB
+					return (FUNCTION_CAST(CURLM *, ()) $a_api)();
+				#else
+						/* Using proper calling convention for dynamic module */
+					return (FUNCTION_CAST(CURLM *, ()) $a_api)();
+				#endif
 			]"
 		end
 
@@ -164,8 +169,14 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				return (FUNCTION_CAST(CURLMcode, (CURLM *)) $a_api)
+				#ifdef CURL_STATICLIB
+					return (FUNCTION_CAST(CURLMcode, (CURLM *)) $a_api)
 													((CURLM *)$a_multi_handle);
+				#else
+						/* Using proper calling convention for dynamic module */
+					return (FUNCTION_CAST(CURLMcode, (CURLM *)) $a_api)
+													((CURLM *)$a_multi_handle);
+				#endif
 			]"
 		end
 
@@ -177,9 +188,16 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				(FUNCTION_CAST(void, (CURLM *, CURL *)) $a_api)
+				#ifdef CURL_STATICLIB
+					(FUNCTION_CAST(void, (CURLM *, CURL *)) $a_api)
 											((CURLM *) $a_multi_handle,
 											(CURL *) $a_easy_handle);
+				#else
+						/* Using proper calling convention for dynamic module */
+					(FUNCTION_CAST(void, (CURLM *, CURL *)) $a_api)
+											((CURLM *) $a_multi_handle,
+											(CURL *) $a_easy_handle);
+				#endif
 			]"
 		end
 
@@ -191,9 +209,16 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				(FUNCTION_CAST(void, (CURLM *, CURL *)) $a_api)
+				#ifdef CURL_STATICLIB
+					(FUNCTION_CAST(void, (CURLM *, CURL *)) $a_api)
 											((CURLM *) $a_multi_handle,
 											(CURL *) $a_easy_handle);
+				#else
+						/* Using proper calling convention for dynamic module */
+					(FUNCTION_CAST(void, (CURLM *, CURL *)) $a_api)
+											((CURLM *) $a_multi_handle,
+											(CURL *) $a_easy_handle);
+				#endif
 			]"
 		end
 
@@ -205,9 +230,16 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				return (FUNCTION_CAST(CURLMcode, (CURLM *, int *)) $a_api)
+				#ifdef CURL_STATICLIB
+					return (FUNCTION_CAST(CURLMcode, (CURLM *, int *)) $a_api)
 											((CURLM *) $a_multi_handle,
 											(int *) $a_running_handles);
+				#else
+						/* Using proper calling convention for dynamic module */
+					return (FUNCTION_CAST(CURLMcode, (CURLM *, int *)) $a_api)
+											((CURLM *) $a_multi_handle,
+											(int *) $a_running_handles);
+				#endif
 			]"
 		end
 
@@ -219,14 +251,21 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				return (FUNCTION_CAST(CURLMsg *, (CURLM *, int *)) $a_api)
+				#ifdef CURL_STATICLIB	
+					return (FUNCTION_CAST(CURLMsg *, (CURLM *, int *)) $a_api)
 											((CURLM *) $a_multi_handle,
 											(int *) $a_msgs_in_queue);
+				#else
+						/* Using proper calling convention for dynamic module */
+					return (FUNCTION_CAST(CURLMsg *, (CURLM *, int *)) $a_api)
+											((CURLM *) $a_multi_handle,
+											(int *) $a_msgs_in_queue);
+				#endif
 			]"
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

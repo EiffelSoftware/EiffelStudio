@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 			valid_parent: a_parent /= Void
 		do
 				-- Set up the parent.
-			parent ?= a_parent
+			parent := a_parent
 			set_mode (for_context_tool)
 			parent.history_manager.add_observer (Current)
 			enable_accept_general_group
@@ -147,6 +147,15 @@ feature {NONE} -- Initialization
 			create class_address
 			class_address.set_font (l_font)
 			class_address.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (200))
+			class_address.set_default_key_processing_handler (agent (k: EV_KEY): BOOLEAN
+					do
+						inspect k.code
+						when {EV_KEY_CONSTANTS}.key_up, {EV_KEY_CONSTANTS}.key_down then
+							Result := False
+						else
+							Result := True
+						end
+					end)
 
 			if mode then
 				hbox.extend (class_address)
@@ -181,6 +190,15 @@ feature {NONE} -- Initialization
 			create feature_address
 			feature_address.set_font (l_font)
 			feature_address.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (200))
+			feature_address.set_default_key_processing_handler (agent (k: EV_KEY): BOOLEAN
+					do
+						inspect k.code
+						when {EV_KEY_CONSTANTS}.key_up, {EV_KEY_CONSTANTS}.key_down then
+							Result := False
+						else
+							Result := True
+						end
+					end)
 
 			if mode then
 				hbox.extend (feature_address)
@@ -343,7 +361,7 @@ feature -- Access
 		require
 			not_context_mode: not mode
 		do
-			Result ?= parent
+			Result := {EB_DEVELOPMENT_WINDOW} / parent
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -536,9 +554,6 @@ feature -- Observer management
 	on_update
 			-- The history has changed. Update `Current'.
 		local
-			cluster_stone: CLUSTER_STONE
-			c: CLASSI_STONE
-			f: FEATURE_STONE
 			cell: CELL2 [STONE, INTEGER]
 			list: LIST [CELL2 [STONE, INTEGER]]
 			nitem: EV_LIST_ITEM
@@ -563,8 +578,7 @@ feature -- Observer management
 				list.after
 			loop
 				cell := list.item
-				f ?= cell.item1
-				if f /= Void then
+				if attached {FEATURE_STONE} cell.item1 as f then
 					create nitem.make_with_text (interface_names.l_from (f.feature_name, f.class_i.name))
 					nitem.set_data (cell.item2)
 					if f.e_feature /= Void then
@@ -593,9 +607,8 @@ feature -- Observer management
 				nitem.set_data (cell.item2)
 
 					-- Set the appropriate pixmap for nitem.
-				c ?= cell.item1
-				if c /= Void and then c.class_i /= Void then
-					nitem.set_pixmap (pixmap_from_class_i (c.class_i))
+				if attached {CLASSI_STONE} cell.item1 as c and then attached c.class_i as c_class_i then
+					nitem.set_pixmap (pixmap_from_class_i (c_class_i))
 				end
 
 				class_address.extend (nitem)
@@ -619,9 +632,8 @@ feature -- Observer management
 					nitem.set_data (cell.item2)
 
 					-- Set the appropriate pixmap for nitem.
-					cluster_stone ?= cell.item1
-					if cluster_stone /= Void and then cluster_stone.group /= Void then
-						nitem.set_pixmap (pixmap_from_group_path (cluster_stone.group, cluster_stone.path))
+					if attached {CLUSTER_STONE} cell.item1 as cluster_stone and then attached cluster_stone.group as grp then
+						nitem.set_pixmap (pixmap_from_group_path (grp, cluster_stone.path))
 					end
 					cluster_address.extend (nitem)
 					if cell.item1 = cur_sel then
@@ -666,17 +678,13 @@ feature -- Observer management
 
 	on_new_tab_command
 			-- Handle EB_NEW_TAB_EDITOR_COMMAND.
-		local
-			l_window: EB_DEVELOPMENT_WINDOW
-			l_editor: EB_SMART_EDITOR
 		do
 			if class_address.is_displayed and class_address.is_sensitive then
-				l_window := window_manager.last_focused_development_window
-				if l_window /= Void then
-					l_editor :=  l_window.editors_manager.current_editor
-					if l_editor /= Void and then not l_editor.file_loaded then
-						ev_application.do_once_on_idle (agent class_address.set_focus)
-					end
+				if
+					attached window_manager.last_focused_development_window as l_window and then
+					attached l_window.editors_manager.current_editor as l_editor and then not l_editor.file_loaded
+				then
+					ev_application.do_once_on_idle (agent class_address.set_focus)
 				end
 			end
 		end
@@ -687,8 +695,8 @@ feature -- Memory management
 			-- Recycle `Current' and leave it in an unstable state,
 			-- so that we know whether we're not referenced any longer.
 		do
-			if widget /= Void then
-				widget.destroy
+			if attached widget as w then
+				w.destroy
 				widget := Void
 			end
 			parent := Void
@@ -1433,7 +1441,7 @@ feature {NONE} -- open new class
 									class_address.select_region (at_pos + 1, class_address.text_length)
 								end
 							else
-								class_i ?= cluster.classes.item (cname)
+								class_i := {CLASS_I} / cluster.classes.item (cname)
 								if choosing_class then
 									process_class
 								else
@@ -1562,39 +1570,33 @@ feature {NONE} -- open new class
 
 	change_hist_to_class
 			-- Center the history manager on a different stone.
-		local
-			conv_int: INTEGER_REF
-			item: EV_LIST_ITEM
 		do
-			item := class_address.selected_item
-			if item /= Void then
-				conv_int ?= item.data
+			if
+				attached class_address.selected_item as item and then
+				attached {INTEGER_REF} item.data as conv_int
+			then
 				parent.history_manager.go_i_th (conv_int.item)
 			end
 		end
 
 	change_hist_to_feature
 			-- Center the history manager on a different stone.
-		local
-			conv_int: INTEGER_REF
-			item: EV_LIST_ITEM
 		do
-			item := feature_address.selected_item
-			if item /= Void then
-				conv_int ?= item.data
+			if
+				attached feature_address.selected_item as item and then
+				attached {INTEGER_REF} item.data as conv_int
+			then
 				parent.history_manager.go_i_th (conv_int.item)
 			end
 		end
 
 	change_hist_to_cluster
 			-- Center the history manager on a different stone.
-		local
-			conv_int: INTEGER_REF
-			item: EV_LIST_ITEM
 		do
-			item := cluster_address.selected_item
-			if item /= Void then
-				conv_int ?= item.data
+			if
+				attached cluster_address.selected_item as item and then
+				attached {INTEGER_REF} item.data as conv_int
+			then
 				parent.history_manager.go_i_th (conv_int.item)
 			end
 		end
@@ -1621,18 +1623,50 @@ feature {NONE} -- open new class
 	class_key_up (k: EV_KEY)
 			-- A key was released in the class address.
 			-- If it is return, call execute_with_class.
+		local
+			s: STRING_32
 		do
 			if k /= Void then
-				if k.code = {EV_KEY_CONSTANTS}.key_enter then
+				inspect k.code
+				when {EV_KEY_CONSTANTS}.key_enter then
+					type_class_offset := 0
 					if must_show_choice and choice /= Void and then not choice.is_destroyed then
 						lost_focus_action_enabled := False
 						choice.show
 						lost_focus_action_enabled := True
 					end
-				elseif k.code = {EV_KEY_CONSTANTS}.Key_escape then
+				when {EV_KEY_CONSTANTS}.Key_escape then
+					type_class_offset := 0
 					if mode then
 						address_dialog.hide
 					end
+				when {EV_KEY_CONSTANTS}.key_space then
+					if
+						ev_application.ctrl_pressed and
+						not ev_application.alt_pressed and
+						not ev_application.shift_pressed
+					then
+						if must_show_choice and choice /= Void and then not choice.is_destroyed then
+							lost_focus_action_enabled := False
+							choice.show
+							lost_focus_action_enabled := True
+						end
+					end
+				when {EV_KEY_CONSTANTS}.Key_up, {EV_KEY_CONSTANTS}.Key_down then
+					s := class_address.text
+					if s.count > 1 and class_address.has_selection then
+						if k.code = {EV_KEY_CONSTANTS}.Key_down then
+							type_class_offset := type_class_offset - 1
+						else
+							type_class_offset := type_class_offset + 1
+						end
+						remove_selection_silently (class_address)
+						class_address.change_actions.call (Void)
+					else
+						type_class_offset := 0
+					end
+				else
+					type_class_offset := 0
 				end
 			end
 		end
@@ -1640,18 +1674,50 @@ feature {NONE} -- open new class
 	feature_key_up (k: EV_KEY)
 			-- A key was released in the feature address.
 			-- If it is return, call execute_with_feature.
+		local
+			s: STRING_32
 		do
 			if k /= Void then
-				if k.code = {EV_KEY_CONSTANTS}.key_enter then
+				inspect k.code
+				when {EV_KEY_CONSTANTS}.key_enter then
+					type_feature_offset := 0
 					if must_show_choice and choice /= Void and then not choice.is_destroyed then
 						lost_focus_action_enabled := False
 						choice.show
 						lost_focus_action_enabled := True
 					end
-				elseif k.code = {EV_KEY_CONSTANTS}.Key_escape then
+				when {EV_KEY_CONSTANTS}.Key_escape then
+					type_feature_offset := 0
 					if mode then
 						address_dialog.hide
 					end
+				when {EV_KEY_CONSTANTS}.key_space then
+					if
+						ev_application.ctrl_pressed and
+						not ev_application.alt_pressed and
+						not ev_application.shift_pressed
+					then
+						if must_show_choice and choice /= Void and then not choice.is_destroyed then
+							lost_focus_action_enabled := False
+							choice.show
+							lost_focus_action_enabled := True
+						end
+					end
+				when {EV_KEY_CONSTANTS}.Key_up, {EV_KEY_CONSTANTS}.Key_down then
+					s := feature_address.text
+					if s.count > 1 and feature_address.has_selection then
+						if k.code = {EV_KEY_CONSTANTS}.Key_down then
+							type_feature_offset := type_feature_offset - 1
+						else
+							type_feature_offset := type_feature_offset + 1
+						end
+						remove_selection_silently (feature_address)
+						feature_address.change_actions.call (Void)
+					else
+						type_feature_offset := 0
+					end
+				else
+					type_feature_offset := 0
 				end
 			end
 		end
@@ -1659,24 +1725,43 @@ feature {NONE} -- open new class
 	class_key_down (k: EV_KEY)
 			-- A key was pressed in the class address.
 			-- If it is return, call execute_with_class.
+		local
+			s: STRING_32
 		do
 			if k /= Void then
 				last_key_was_delete := False
 				last_key_was_backspace := False
-				if k.code = {EV_KEY_CONSTANTS}.key_enter then
+				inspect k.code
+				when {EV_KEY_CONSTANTS}.key_enter then
 					execute_with_class
 					if class_address.text_length > 0 then
 						class_address.select_all
 					end
-				elseif k.code = {EV_KEY_CONSTANTS}.Key_delete then
+				when {EV_KEY_CONSTANTS}.Key_space then
+					if
+						ev_application.ctrl_pressed and then
+						not ev_application.alt_pressed and
+						not ev_application.shift_pressed
+					then
+						remove_selection_silently (class_address)
+						class_address.change_actions.block
+						s := class_address.text
+						s.right_adjust
+						s.extend ('*')
+						class_address.set_text (s)
+						class_address.change_actions.resume
+						execute_with_class
+					end
+				when {EV_KEY_CONSTANTS}.Key_delete then
 					last_key_was_delete := True
-				elseif k.code = {EV_KEY_CONSTANTS}.Key_back_space then
+				when {EV_KEY_CONSTANTS}.Key_back_space then
 					last_key_was_backspace := True
 					if class_address.has_selection then
 						had_selection := True
 					else
 						had_selection := False
 					end
+				else
 				end
 			end
 		end
@@ -1709,24 +1794,43 @@ feature {NONE} -- open new class
 	feature_key_down (k: EV_KEY)
 			-- A key was pressed in the feature address.
 			-- If it is return, call execute_with_feature.
+		local
+			s: STRING_32
 		do
 			if k /= Void then
 				last_key_was_delete := False
 				last_key_was_backspace := False
-				if k.code = {EV_KEY_CONSTANTS}.key_enter then
+				inspect k.code
+				when {EV_KEY_CONSTANTS}.key_enter then
 					execute_with_feature
 					if feature_address.text_length > 0 then
 						feature_address.select_all
 					end
-				elseif k.code = {EV_KEY_CONSTANTS}.Key_delete then
+				when {EV_KEY_CONSTANTS}.Key_space then
+					if
+						ev_application.ctrl_pressed and then
+						not ev_application.alt_pressed and
+						not ev_application.shift_pressed
+					then
+						remove_selection_silently (feature_address)
+						feature_address.change_actions.block
+						s := feature_address.text
+						s.right_adjust
+						s.extend ('*')
+						feature_address.set_text (s)
+						feature_address.change_actions.resume
+						execute_with_feature
+					end
+				when {EV_KEY_CONSTANTS}.Key_delete then
 					last_key_was_delete := True
-				elseif k.code = {EV_KEY_CONSTANTS}.Key_back_space then
+				when {EV_KEY_CONSTANTS}.Key_back_space then
 					last_key_was_backspace := True
 					if feature_address.has_selection then
 						feature_had_selection := True
 					else
 						feature_had_selection := False
 					end
+				else
 				end
 			end
 		end
@@ -1736,6 +1840,12 @@ feature {NONE} -- open new class
 
 	last_key_was_backspace: BOOLEAN
 			-- Was the last pressed key `back_space'?
+
+	type_class_offset: INTEGER
+			-- Offset to use in the list of class choices.
+
+	type_feature_offset: INTEGER
+			-- Offset to use in the list of feature choices.
 
 	cluster_had_selection: BOOLEAN
 			-- Did the cluster address had a selection when the user hit the key?
@@ -1784,24 +1894,24 @@ feature {NONE} -- open new class
 			-- Try to complete the class name.
 		local
 			str: STRING
-			nb, minc: INTEGER
+			nb: INTEGER
 			index, j: INTEGER
 			list: CLASS_C_SERVER
 			current_found: STRING
+			l_suggestions: ARRAYED_LIST [TUPLE [entry: STRING; depth: INTEGER]]
 			cname: STRING
 			array_count: INTEGER
 			do_not_complete: BOOLEAN
-			same_st, dif: BOOLEAN
+			same_st: BOOLEAN
 			last_caret_position: INTEGER
-			str_area, current_area, other_area: SPECIAL [CHARACTER]
-			l_class: CLASS_C
+			str_area, other_area: SPECIAL [CHARACTER]
 			truncated: BOOLEAN
 		do
 				-- The text in `class_address' has changed => we don't know what's inside.
 			current_typed_class := Void
 
 			str := class_address.text
-			if not str.is_empty and then (str @ (str.count) /= ' ') then
+			if not str.is_empty and then (str [str.count] /= ' ') then
 				last_caret_position := class_address.caret_position
 				class_address.change_actions.block
 					-- Remove white space from classname
@@ -1833,8 +1943,7 @@ feature {NONE} -- open new class
 					until
 						index > array_count
 					loop
-						l_class := (list @ index)
-						if l_class /= Void then
+						if attached list [index] as l_class then
 							cname := l_class.name
 							other_area := cname.area
 								-- We first check that other_area and str_area have the same start.
@@ -1845,40 +1954,30 @@ feature {NONE} -- open new class
 								until
 									j = nb or not same_st
 								loop
-									same_st := (str_area.item (j)) = (other_area.item (j))
+									same_st := str_area [j] = other_area [j]
 									j := j + 1
 								end
 								if same_st then
-									if current_found = Void then
-										current_found := cname
-										current_area := other_area
-									else
-										from
-											minc := other_area.count.min (current_area.count)
-											dif := False
-										until
-											dif or j = minc
-										loop
-											if (current_area.item (j)) /= (other_area.item (j)) then
-												dif := True
-												if (current_area.item (j)) > (other_area.item (j)) then
-													current_found := cname
-													current_area := other_area
-												end
-											end
-											j := j + 1
-										end
-										if not dif and other_area.count < current_area.count then
-												-- Other and Current have the same characters.
-												-- Return the shorter one.
-											current_found := cname
-											current_area := other_area
-										end
+									if l_suggestions = Void then
+										create l_suggestions.make (1)
 									end
+									l_suggestions.force ([l_class.name, j])
 								end
 							end
 						end
 						index := index + 1
+					end
+					if l_suggestions /= Void and then not l_suggestions.is_empty then
+						sort_suggestions (l_suggestions)
+						if type_class_offset < 0 then
+							type_class_offset := l_suggestions.count + type_class_offset
+						end
+						type_class_offset := type_class_offset \\ l_suggestions.count
+						if l_suggestions.valid_index (1 + type_class_offset) then
+							current_found := l_suggestions [1 + type_class_offset].entry
+						end
+					else
+						current_found := Void
 					end
 					if current_found /= Void then
 						if not last_key_was_backspace then
@@ -1912,21 +2011,22 @@ feature {NONE} -- open new class
 			-- Try to complete the cluster name.
 		local
 			str: STRING
-			nb, minc: INTEGER
+			nb: INTEGER
 			j: INTEGER
 			list: ARRAYED_LIST [CONF_GROUP]
+			l_suggestions: ARRAYED_LIST [TUPLE [entry: STRING; depth: INTEGER]]
 			current_found: STRING
 			cname: STRING
 			do_not_complete: BOOLEAN
 			last_caret_position: INTEGER
-			same_st, dif: BOOLEAN
-			str_area, current_area, other_area: SPECIAL [CHARACTER]
+			same_st: BOOLEAN
+			str_area, other_area: SPECIAL [CHARACTER]
 			truncated: BOOLEAN
 		do
 			cluster_address.change_actions.block
 			last_caret_position := cluster_address.caret_position
 			str := cluster_address.text
-			if workbench.universe_defined and then universe.target /= Void and then not str.is_empty and then (str @ (str.count) /= ' ') then
+			if workbench.universe_defined and then universe.target /= Void and then not str.is_empty and then (str [str.count] /= ' ') then
 				str.left_adjust
 				str.right_adjust
 				str.to_lower
@@ -1962,39 +2062,23 @@ feature {NONE} -- open new class
 							until
 								j = nb or not same_st
 							loop
-								same_st := (str_area.item (j)) = (other_area.item (j))
+								same_st := str_area [j] = other_area [j]
 								j := j + 1
 							end
 							if same_st then
-								if current_found = Void then
-									current_found := cname
-									current_area := other_area
-								else
-									from
-										minc := other_area.count.min (current_area.count)
-										dif := False
-									until
-										dif or j = minc
-									loop
-										if (current_area.item (j)) /= (other_area.item (j)) then
-											dif := True
-											if (current_area.item (j)) > (other_area.item (j)) then
-												current_found := cname
-												current_area := other_area
-											end
-										end
-										j := j + 1
-									end
-									if not dif and other_area.count < current_area.count then
-											-- Other and Current have the same characters.
-											-- Return the shorter one.
-										current_found := cname
-										current_area := other_area
-									end
+								if l_suggestions = Void then
+									create l_suggestions.make (1)
 								end
+								l_suggestions.force ([cname, j])
 							end
 						end
 						list.forth
+					end
+					if l_suggestions /= Void and then not l_suggestions.is_empty then
+						sort_suggestions (l_suggestions)
+						current_found := l_suggestions.first.entry
+					else
+						current_found := Void
 					end
 					if current_found /= Void then
 						if not last_key_was_backspace then
@@ -2026,15 +2110,16 @@ feature {NONE} -- open new class
 			-- Try to complete the feature name.
 		local
 			str: STRING_32
-			nb, minc: INTEGER
+			nb: INTEGER
 			j: INTEGER
 			list: FEATURE_TABLE
+			l_suggestions: ARRAYED_LIST [TUPLE [entry: STRING_32; depth: INTEGER]]
 			current_found: STRING_32
 			cname: STRING_32
 			do_not_complete: BOOLEAN
 			last_caret_position: INTEGER
-			same_st, dif: BOOLEAN
-			str_area, current_area, other_area: SPECIAL [CHARACTER_32]
+			same_st: BOOLEAN
+			str_area, other_area: SPECIAL [CHARACTER_32]
 			truncated: BOOLEAN
 		do
 			feature_address.change_actions.block
@@ -2090,35 +2175,25 @@ feature {NONE} -- open new class
 								j := j + 1
 							end
 							if same_st then
-								if current_found = Void then
-									current_found := cname
-									current_area := other_area
-								else
-									from
-										minc := other_area.count.min (current_area.count)
-										dif := False
-									until
-										dif or j = minc
-									loop
-										if (current_area.item (j)) /= (other_area.item (j)) then
-											dif := True
-											if (current_area.item (j)) > (other_area.item (j)) then
-												current_found := cname
-												current_area := other_area
-											end
-										end
-										j := j + 1
-									end
-									if not dif and other_area.count < current_area.count then
-											-- Other and Current have the same characters.
-											-- Return the shorter one.
-										current_found := cname
-										current_area := other_area
-									end
+								if l_suggestions = Void then
+									create l_suggestions.make (1)
 								end
+								l_suggestions.force ([cname, j])
 							end
 						end
 						list.forth
+					end
+					if l_suggestions /= Void and then not l_suggestions.is_empty then
+						sort_unicode_suggestions (l_suggestions)
+						if type_feature_offset < 0 then
+							type_feature_offset := l_suggestions.count + type_feature_offset
+						end
+						type_feature_offset := type_feature_offset \\ l_suggestions.count
+						if l_suggestions.valid_index (1 + type_feature_offset) then
+							current_found := l_suggestions [1 + type_feature_offset].entry
+						end
+					else
+						current_found := Void
 					end
 					if current_found /= Void then
 						if not last_key_was_backspace then
@@ -2133,7 +2208,10 @@ feature {NONE} -- open new class
 						feature_address.set_text (str)
 						feature_address.set_caret_position (str.count + 1)
 					end
+				elseif str.is_empty then
+					feature_address.remove_text
 				else
+
 					feature_address.set_text (str)
 					if not truncated then
 						feature_address.set_caret_position (last_caret_position)
@@ -2186,6 +2264,95 @@ feature {NONE} -- open new class
 			create st.make (current_feature)
 			parent.set_stone (st)
 		end
+
+feature {NONE} -- Selection removal
+
+	remove_selection_silently (cb: EV_COMBO_BOX)
+		local
+			s: STRING_32
+		do
+			if cb.has_selection then
+				s := cb.text
+				cb.change_actions.block
+				s.remove_tail (cb.selected_text.count)
+				cb.set_text (s)
+				cb.set_caret_position (s.count + 1)
+				cb.change_actions.resume
+			end
+		end
+
+feature {NONE} -- Sorting
+
+	sort_suggestions (a_suggestions: LIST [TUPLE [entry: STRING_8; depth: INTEGER]])
+		local
+			l_suggestion_sorter: QUICK_SORTER [TUPLE [entry: STRING_8; depth: INTEGER]]
+		do
+			create l_suggestion_sorter.make (create {AGENT_EQUALITY_TESTER [TUPLE [entry: STRING_8; depth: INTEGER]]}.make (agent (t1,t2: TUPLE [entry: STRING_8; depth: INTEGER]): BOOLEAN
+				local
+					minc: INTEGER
+					l_index: INTEGER
+					dif: BOOLEAN
+					t1_area, t2_area: SPECIAL [CHARACTER]
+				do
+					t1_area := t1.entry.area
+					t2_area := t2.entry.area
+					from
+						l_index := t1.depth
+						minc := t2_area.count.min (t1_area.count)
+						dif := False
+					until
+						dif or l_index = minc
+					loop
+						if t1_area [l_index] /= t2_area [l_index] then
+							dif := True
+							Result := t1_area [l_index] < t2_area [l_index]
+						end
+						l_index := l_index + 1
+					end
+					if not dif then
+							-- t2 and t1 have the same characters.
+							-- shorter one is less than.
+						Result := t1_area.count < t2_area.count
+					end
+				end))
+			l_suggestion_sorter.sort (a_suggestions)
+		end
+
+	sort_unicode_suggestions (a_suggestions: LIST [TUPLE [entry: STRING_32; depth: INTEGER]])
+		local
+			l_suggestion_sorter: QUICK_SORTER [TUPLE [entry: STRING_32; depth: INTEGER]]
+		do
+			create l_suggestion_sorter.make (create {AGENT_EQUALITY_TESTER [TUPLE [entry: STRING_32; depth: INTEGER]]}.make (agent (t1,t2: TUPLE [entry: STRING_32; depth: INTEGER]): BOOLEAN
+				local
+					minc: INTEGER
+					l_index: INTEGER
+					dif: BOOLEAN
+					t1_area, t2_area: SPECIAL [CHARACTER_32]
+				do
+					t1_area := t1.entry.area
+					t2_area := t2.entry.area
+					from
+						l_index := t1.depth
+						minc := t2_area.count.min (t1_area.count)
+						dif := False
+					until
+						dif or l_index = minc
+					loop
+						if t1_area [l_index] /= t2_area [l_index] then
+							dif := True
+							Result := t1_area [l_index] < t2_area [l_index]
+						end
+						l_index := l_index + 1
+					end
+					if not dif then
+							-- t2 and t1 have the same characters.
+							-- shorter one is less than.
+						Result := t1_area.count < t2_area.count
+					end
+				end))
+			l_suggestion_sorter.sort (a_suggestions)
+		end
+
 
 feature {NONE} -- Implementation of the clickable labels for `header_info'
 
@@ -2346,14 +2513,10 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 	update_combos
 			-- Refresh the text in the combo boxes in order to display the current stone.
 		local
-			conv_clus: CLUSTER_STONE
-			conv_class: CLASSI_STONE
-			conv_f: FEATURE_STONE
 			c_stone: STONE
 		do
 			c_stone := parent.history_manager.active
-			conv_clus ?= c_stone
-			if conv_clus /= Void then
+			if attached {CLUSTER_STONE} c_stone as conv_clus then
 				if mode then
 					cluster_address.set_text (conv_clus.group.name)
 				end
@@ -2361,11 +2524,9 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 				feature_address.remove_text
 			else
 				if not mode then
-					conv_class ?= c_stone
-					if conv_class /= Void then
+					if attached {CLASSI_STONE} c_stone as conv_class then
 						class_address.set_text (conv_class.class_i.name)
-						conv_f ?= c_stone
-						if conv_f /= Void then
+						if attached {FEATURE_STONE} c_stone as conv_f then
 							feature_address.set_text (conv_f.origin_name)
 						else
 							feature_address.remove_text
@@ -2375,14 +2536,12 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 						feature_address.remove_text
 					end
 				else
-					conv_f ?= c_stone
-					if conv_f /= Void then
+					if attached {FEATURE_STONE} c_stone as conv_f then
 						feature_address.set_text (conv_f.feature_name)
 						class_address.set_text (conv_f.e_feature.associated_class.name)
 						cluster_address.set_text (conv_f.e_feature.associated_class.group.name)
 					else
-						conv_class ?= c_stone
-						if conv_class /= Void then
+						if attached {CLASSI_STONE} c_stone as conv_class then
 							cluster_address.set_text (conv_class.group.name)
 							class_address.set_text (conv_class.class_i.name)
 							feature_address.remove_text
@@ -2411,8 +2570,6 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			for_context_tool: mode
 			a_label_attached: a_label /= Void
 			combo_attached: combo /= Void
-		local
-			l_stone: STONE
 		do
 			if b = {EV_POINTER_CONSTANTS}.left then
 				lost_focus_action_enabled := False
@@ -2422,8 +2579,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 				end
 				lost_focus_action_enabled := True
 			elseif b = {EV_POINTER_CONSTANTS}.right and then ev_application.ctrl_pressed then
-				l_stone ?= a_label.data
-				if l_stone /= Void and then l_stone.is_valid then
+				if attached {STONE} a_label.data as l_stone and then l_stone.is_valid then
 					(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
 				end
 			end
@@ -2557,13 +2713,13 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 
 	l_From: STRING = " from "
 
-	associated_stone (a_label: EV_LABEL): STONE
+	associated_stone (a_label: EV_LABEL): detachable STONE
 			-- Associated stone which is `a_stone' for normal pick and drop and Ctrl+Right click.
 		require
 			a_label_attached: a_label /= Void
 		do
 			if not ev_application.ctrl_pressed then
-				Result ?= a_label.data
+				Result := {STONE} / a_label.data
 			end
 		end
 

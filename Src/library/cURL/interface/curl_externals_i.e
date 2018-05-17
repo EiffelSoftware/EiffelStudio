@@ -163,7 +163,8 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				(FUNCTION_CAST(void, (struct curl_httppost **, struct curl_httppost **, int, char *, int, char *, int)) $a_api)
+				#ifdef CURL_STATICLIB
+					(FUNCTION_CAST(void, (struct curl_httppost **, struct curl_httppost **, int, char *, int, char *, int)) $a_api)
 											((struct curl_httppost **)$a_form,
 											(struct curl_httppost **)$a_last_pointer,
 											(int)$a_arg_1,
@@ -171,6 +172,17 @@ feature {NONE} -- C externals
 											(int)$a_arg_2,
 											(char *)$a_arg_2_value,
 											(int)$a_arg_3);
+				#else
+						/* Using the proper calling convention for dynamic module */
+					(FUNCTION_CAST(void, (struct curl_httppost **, struct curl_httppost **, int, char *, int, char *, int)) $a_api)
+														((struct curl_httppost **)$a_form,
+														(struct curl_httppost **)$a_last_pointer,
+														(int)$a_arg_1,
+														(char *)$a_arg_1_value,
+														(int)$a_arg_2,
+														(char *)$a_arg_2_value,
+														(int)$a_arg_3);
+			 	#endif
 			]"
 		end
 
@@ -183,8 +195,14 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				(FUNCTION_CAST(void, (struct curl_httppost *)) $a_api)
+				#ifdef CURL_STATICLIB
+					(FUNCTION_CAST(void, (struct curl_httppost *)) $a_api)
 											((struct curl_httppost *) $a_curl_form);
+				#else
+						/* Using the proper calling convention for dynamic module */
+					(FUNCTION_CAST(void, (struct curl_httppost *)) $a_api)
+											((struct curl_httppost *) $a_curl_form);
+				#endif
 			]"
 		end
 
@@ -197,7 +215,12 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				(FUNCTION_CAST(void, (long)) $a_api)((long) $a_opt);
+				#ifdef CURL_STATICLIB	
+					(FUNCTION_CAST(void, (long)) $a_api)((long) $a_opt);
+				#else
+						/* Using the proper calling convention for dynamic module */
+					(FUNCTION_CAST(void, (long)) $a_api)((long) $a_opt);
+				#endif
 			]"
 		end
 
@@ -209,7 +232,12 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				(FUNCTION_CAST(void, ()) $a_api)();
+				#ifdef CURL_STATICLIB	
+					(FUNCTION_CAST(void, ()) $a_api)();
+				#else
+						/* Using the proper calling convention for dynamic module */
+					(FUNCTION_CAST(void, ()) $a_api)();
+				#endif
 			]"
 		end
 
@@ -221,9 +249,16 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				return (FUNCTION_CAST(void *, (struct curl_slist *, const char *)) $a_api)
+				#ifdef CURL_STATICLIB	
+					return (FUNCTION_CAST(void *, (struct curl_slist *, const char *)) $a_api)
 											((struct curl_slist *)$a_list_pointer, 
 											(const char *)$a_string);
+				#else
+						/* Using the proper calling convention for dynamic module */
+					return (FUNCTION_CAST(void *, (struct curl_slist *, const char *)) $a_api)
+											((struct curl_slist *)$a_list_pointer, 
+											(const char *)$a_string);
+				#endif
 			]"
 		end
 
@@ -235,8 +270,14 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				(FUNCTION_CAST(void *, (struct curl_slist *)) $a_api)
+				#ifdef CURL_STATICLIB	
+					(FUNCTION_CAST(void *, (struct curl_slist *)) $a_api)
 										((struct curl_slist *)$a_list_pointer);
+				#else
+						/* Using the proper calling convention for dynamic module */
+					(FUNCTION_CAST(void *, (struct curl_slist *)) $a_api)
+										((struct curl_slist *)$a_list_pointer);
+				#endif
 			]"
 		end
 
@@ -248,14 +289,20 @@ feature {NONE} -- C externals
 			"C inline use <curl/curl.h>"
 		alias
 			"[
-				return (FUNCTION_CAST(void *, (long)) $a_api)
+				#ifdef CURL_STATICLIB	
+					return (FUNCTION_CAST(void *, (long)) $a_api)
 											((long) $a_code);
+				#else
+						/* Using the proper calling convention for dynamic module */
+					return (FUNCTION_CAST(void *, (long)) $a_api)
+											((long) $a_code);
+				#endif
 			]"
 		end
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

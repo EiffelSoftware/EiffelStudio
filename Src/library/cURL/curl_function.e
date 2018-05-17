@@ -44,10 +44,19 @@ feature -- Interactive with C
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
+				#ifdef CURL_STATICLIB
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
 											((CURL *) $a_curl_handle,
 											(CURLoption)CURLOPT_PROGRESSFUNCTION,
 											curl_progress_function);
+				#else
+						/* Using proper calling convention for dynamic module */
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
+											((CURL *) $a_curl_handle,
+											(CURLoption)CURLOPT_PROGRESSFUNCTION,
+											curl_progress_function);
+				#endif							
+			
 			]"
 		end
 
@@ -61,10 +70,19 @@ feature -- Interactive with C
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
+				#ifdef CURL_STATICLIB
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
 											((CURL *) $a_curl_handle,
 											(CURLoption)CURLOPT_DEBUGFUNCTION,
 											curl_debug_function);
+				#else
+						/* Using proper calling convention for dynamic module */
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
+											((CURL *) $a_curl_handle,
+											(CURLoption)CURLOPT_DEBUGFUNCTION,
+											curl_debug_function);
+				#endif							
+			
 			]"
 		end
 
@@ -77,10 +95,18 @@ feature -- Interactive with C
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
+				#ifdef CURL_STATICLIB
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
 											((CURL *) $a_curl_handle,
 											(CURLoption)CURLOPT_WRITEFUNCTION,
 											curl_write_function);
+				#else
+						/* Using proper calling convention for dynamic module */
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
+											((CURL *) $a_curl_handle,
+											(CURLoption)CURLOPT_WRITEFUNCTION,
+											curl_write_function);
+				#endif
 			]"
 		end
 
@@ -93,10 +119,18 @@ feature -- Interactive with C
 			"C inline use <eiffel_curl.h>"
 		alias
 			"[
-				(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
+				#ifdef CURL_STATICLIB
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
 											((CURL *) $a_curl_handle,
 											(CURLoption)CURLOPT_READFUNCTION,
 											curl_read_function);
+				#else
+						/* Using proper calling convention for dynamic module */
+					(FUNCTION_CAST(void, (CURL *, CURLoption, ...)) $a_setopt_api)
+											((CURL *) $a_curl_handle,
+											(CURLoption)CURLOPT_READFUNCTION,
+											curl_read_function);				
+				#endif
 			]"
 		end
 
@@ -236,7 +270,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

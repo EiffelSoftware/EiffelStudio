@@ -55,8 +55,6 @@ feature -- Status report
 			if is_developer_exception then
 				Result := developer_exception_name ~ name
 			end
-		ensure
-			instance_free: class
 		end
 
 	developer_exception_name: detachable STRING
@@ -67,8 +65,6 @@ feature -- Status report
 			if attached exception_manager.last_exception as l_exception and then attached l_exception.original.description as l_des then
 				Result := l_des.as_string_8
 			end
-		ensure
-			instance_free: class
 		end
 
 	is_signal: BOOLEAN

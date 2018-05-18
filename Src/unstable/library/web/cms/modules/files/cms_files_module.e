@@ -46,11 +46,15 @@ feature -- Access
 			Result.force (admin_files_permission)
 			Result.force (upload_files_permission)
 			Result.force (browse_files_permission)
+			Result.force (delete_file_permission)
+			Result.force (delete_own_file_permission)
 		end
 
 	admin_files_permission: STRING = "admin files"
 	upload_files_permission: STRING = "upload files"
 	browse_files_permission: STRING = "browse files"
+	delete_file_permission: STRING = "delete file"
+	delete_own_file_permission: STRING = "delete own file"
 
 feature {CMS_API} -- Module Initialization
 
@@ -470,25 +474,33 @@ feature -- Handler
 			err: BOOLEAN
 		do
 			if attached files_api as l_files_api then
-				if not api.has_permission (admin_files_permission) then
-					create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make_with_permissions (req, res, api, <<admin_files_permission>>)
-					r.add_error_message ("You are not allowed to remove file!")
-				elseif attached {WSF_STRING} req.path_parameter ("filename") as p_filename then
-					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+				if attached {WSF_STRING} req.path_parameter ("filename") as p_filename then
+					if
+						api.has_permissions (<<admin_files_permission, delete_file_permission>>)
+						or else (
+							l_files_api.is_file_owner (api.user, create {PATH}.make_from_string (p_filename.value)) and then
+							api.has_permission (delete_own_file_permission)
+						)
+					then
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 
-					l_files_api.delete_file (p_filename.value)
-					err := l_files_api.has_error
-					l_files_api.reset_error
-					create body.make_empty
+						l_files_api.delete_file (p_filename.value)
+						err := l_files_api.has_error
+						l_files_api.reset_error
+						create body.make_empty
 
-					if err then
-						body.append ("<h3>The file has been removed successfully!</h3>")
+						if err then
+							body.append ("<h3>The file removal failed!</h3>")
+						else
+							body.append ("<h3>The file has been removed successfully!</h3>")
+						end
+
+						r.add_to_primary_tabs (create {CMS_LOCAL_LINK}.make ("Uploaded files", uploads_location))
+						r.set_main_content (body)
 					else
-						body.append ("<h3>The file removal failed!</h3>")
+						create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make_with_permissions (req, res, api, <<admin_files_permission, delete_file_permission>>)
+						r.add_error_message ("You are not allowed to remove the file!")
 					end
-
-					r.add_to_primary_tabs (create {CMS_LOCAL_LINK}.make ("Uploaded files", uploads_location))
-					r.set_main_content (body)
 				else
 					create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
 					r.add_error_message ("Missing 'filename' parameter!")

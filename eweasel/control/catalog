@@ -68,6 +68,7 @@ test	array-force-precondition	array009 tcf pass array
 test	array-binary-search-overflow	array010 tcf fail array
 test	array-force2				array011 tcf fail array
 test	array-operation-violations		array012 tcf pass array
+test	array-force_and_fill		array013 tcf pass array
 
 test	list-is-equal			list001 tcf pass list
 test	list-put-extend			list002 tcf pass list

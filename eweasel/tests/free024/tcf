@@ -1,0 +1,13 @@
+test_name 	 instance_free-invalid-explicit-joining
+test_description Joining with a class feature is unsafe if unqualified calls in assertions use non-class features. See also: test#free010, test#free014, test#free019, test#free023.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 a.e $CLUSTER a.e
+copy_raw 	 b.e $CLUSTER b.e
+copy_raw 	 c.e $CLUSTER c.e
+copy_raw 	 test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	 validity_error C VUCR:12 VUCR:18
+
+test_end

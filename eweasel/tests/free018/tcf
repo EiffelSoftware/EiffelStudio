@@ -1,0 +1,11 @@
+test_name 	 instance_free-invalid-implicit-redeclaration
+test_description Redeclaration into a constant or an external feature is not a class feature if unqualified calls in (inherited) assertions use non-class features. See also: test#free012, test#free015, test#free016, test#free017.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 a.e $CLUSTER a.e
+copy_raw 	 test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	 validity_error TEST VUNO:19 VUNO:20 VUNO:21 VUNO:22 VUNO:23 VUNO:24
+
+test_end

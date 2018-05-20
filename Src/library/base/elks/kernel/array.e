@@ -454,8 +454,7 @@ feature -- Element change
 		local
 			old_size, new_size: INTEGER
 			new_lower, new_upper: INTEGER
-			l_count, l_offset: INTEGER
-			l_increased_by_one: BOOLEAN
+			l_offset: INTEGER
 		do
 			new_lower := lower.min (i)
 			new_upper := upper.max (i)

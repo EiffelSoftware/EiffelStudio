@@ -37,22 +37,12 @@ feature -- Checking
 			info: INHERIT_INFO
 			feature_with_assigner: FEATURE_I
 			f: FEATURE_I
-			g: FEATURE_I
-			has_class: BOOLEAN
-			has_object: BOOLEAN
 		do
 				-- The signature of the chosen feature in the
 				-- context of `feat_tbl' has ben already evaluated by
 				-- feature `check_types' of FEATURE_TABLE. (See class
 				-- INHERIT_TABLE).
 			f := new_feature
-			if f.is_class then
-					-- One of the features is a class one.
-				has_class := True
-			else
-					-- One of the features is not instance-free.
-				has_object := not f.is_class
-			end
 			from
 				deferred_features := old_features.deferred_features
 					-- The first deferred feature is skipped since it is `new_feature'.
@@ -74,13 +64,6 @@ feature -- Checking
 					info.delayed_instantiate_a_feature
 				end
 				old_feat := info.internal_a_feature
-				if old_feat.is_class then
-						-- One of the features has a class postcondition.
-					has_class := True
-				elseif old_feat.has_unqualified_call_in_assertion then
-						-- One of the features is not instance-free.
-					has_object := True
-				end
 
 					-- Check that the signature of redeclaration is the same.
 				f.delayed_check_same_signature (old_feat, feat_tbl)
@@ -97,27 +80,6 @@ feature -- Checking
 					end
 				end
 				deferred_features.forth
-			end
-				-- It's an error to mix both, features with class postconditions and non-instance-free ones.
-			if has_class and has_object then
-					-- A join error.
-					-- Find a class feature.
-				across
-					deferred_features as h
-				until
-					f.is_class
-				loop
-					f := h.item.internal_a_feature
-				end
-					-- Report an error.
-				across
-					deferred_features as h
-				loop
-					g := h.item.internal_a_feature
-					if not g.is_class and then g.has_unqualified_call_in_assertion then
-						error_handler.insert_error (create {VDJR5_NEW}.make (system.current_class, f, g))
-					end
-				end
 			end
 		end
 

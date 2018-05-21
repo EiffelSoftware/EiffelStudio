@@ -1,8 +1,5 @@
-note
-	description: "[
-		Objects that validate feature names.
-	]"
-	author: ""
+﻿note
+	description: "Objects that validate feature names."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -56,8 +53,9 @@ feature -- Validation
 					end
 				else
 					check
-						error_handler_empty: error_handler.error_list.is_empty and
-								error_handler.warning_list.is_empty
+						error_handler_empty:
+							not error_handler.has_error and
+							not error_handler.has_warning
 					end
 					if attached a_class.text_8 as l_text then
 						create l_wrapper
@@ -86,7 +84,7 @@ feature {NONE} -- Internationalization
 	e_class_file_not_valid: STRING = "Class file {$1} can not be parsed."
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

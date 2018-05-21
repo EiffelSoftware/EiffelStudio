@@ -1,11 +1,11 @@
-note
-	description : "Objects used to evaluate a DBG_EXPRESSION ..."
+﻿note
+	description: "Objects used to evaluate a DBG_EXPRESSION ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date        : "$Date$"
-	revision    : "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 	fixme: "FIXME jfiat [2007/05/07] : factorize code between process_array_const_b and process_tuple_const_b"
-	fixme: "check all case where we do not create a tmp_result .. should we set it to Void? "
+	fixme: "check all case where we do not create a tmp_result ... should we set it to Void? "
 
 class
 	DBG_EXPRESSION_EVALUATOR_B

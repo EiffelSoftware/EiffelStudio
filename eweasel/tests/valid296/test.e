@@ -8,6 +8,7 @@ feature {NONE} -- Creation
 	make
 		do
 			proc
+			proc
 		end
 
 feature {TEST} -- Access

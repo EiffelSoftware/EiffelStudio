@@ -9,21 +9,21 @@ copy_sub	Ace $TEST Ace
 define_date     DATE -1461
 copy_sub	test.e $CLUSTER test.e
 compile_melted
-compile_result 	validity_warning TEST Obsolete:10
+compile_result 	validity_warning TEST Obsolete:10 Obsolete:11
 cleanup_compile
 
 	-- Yerterday: warning.
 define_date     DATE -1
 copy_sub	test.e $CLUSTER test.e
 compile_melted
-compile_result 	validity_warning TEST Obsolete:10
+compile_result 	validity_warning TEST Obsolete:10 Obsolete:11
 cleanup_compile
 
 	-- In a month: hint.
 define_date     DATE 31
 copy_sub	test.e $CLUSTER test.e
 compile_melted
-compile_result 	validity_warning TEST Obsolete:10
+compile_result 	validity_warning TEST Obsolete:10 Obsolete:11
 cleanup_compile
 
 	-- Options: disable warnings.

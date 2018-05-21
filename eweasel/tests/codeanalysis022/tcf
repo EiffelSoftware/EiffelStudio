@@ -1,5 +1,5 @@
 test_name 	 ca-obsolete-assigner-command
-test_description Obsolete assigner commands should be detected. See also test#codeanalysis021.
+test_description Obsolete assigner commands should be detected. See also test#codeanalysis021 and test#valid291.
 
 define_date     YESTERDAY -1
 

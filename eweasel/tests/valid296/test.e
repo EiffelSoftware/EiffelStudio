@@ -9,6 +9,7 @@ feature {NONE} -- Creation
 		do
 			proc
 			proc
+			;(agent do proc end).do_nothing
 		end
 
 feature {TEST} -- Access

@@ -8,10 +8,11 @@ class OBSOLETE_CALL_HANDLER
 
 inherit
 	OBSOLETE_CALL_REPORTER [TUPLE [
-		obsolete_feature: FEATURE_I;
-		obsolete_class: CLASS_C;
-		current_feature: detachable FEATURE_I;
-		current_class: CLASS_C;
+		obsolete_feature: FEATURE_I
+		obsolete_class: CLASS_C
+		current_feature: detachable FEATURE_I
+		current_class: CLASS_C
+		is_warning_enabled: BOOLEAN
 		location: detachable LOCATION_AS]]
 
 	COMPILER_EXPORTER
@@ -35,25 +36,55 @@ feature {NONE} -- Report
 		local
 			issue: OBS_FEAT_WARN
 		do
-			create issue.make_with_class (context.current_class)
-			if attached context.current_feature as current_feature then
-				issue.set_feature (current_feature)
-			end
-			issue.set_obsolete_class (context.obsolete_class)
-			issue.set_obsolete_feature (context.obsolete_feature)
-			if attached context.location as location then
-				issue.set_location (location)
-			end
-			if expiration > 0 then
+			if context.is_warning_enabled then
+					-- Report an obsolete warning for this call.
+				create issue.make_with_class (context.current_class)
+				if attached context.current_feature as current_feature then
+					issue.set_feature (current_feature)
+				end
+				issue.set_obsolete_class (context.obsolete_class)
+				issue.set_obsolete_feature (context.obsolete_feature)
+				if attached context.location as location then
+					issue.set_location (location)
+				end
 					-- TODO: support expiration information in the message.
---				issue.set_expiration (expiration)
-			end
-			if severity = obsolete_call_error then
-				issue.set_error
-				error_handler.insert_error (issue)
-			else
+				-- if expiration > 0 then
+				-- 	issue.set_expiration (expiration)
+				-- end
+				if severity = obsolete_call_error then
+					issue.set_error
+				end
 				error_handler.insert_warning (issue)
+			elseif
+					-- Report only obsolete calls that are considered errors.
+				severity = obsolete_call_error and then
+					-- Avoid reporting obsolete calls more than once.
+				error_handler.warning_level < obsolete_warning_level_cell.item
+			then
+					-- Report that there are obsolete feature calls.
+				error_handler.insert_warning (create {OBSOLETE_FEATURE_CALL_OPTION_WARNING})
+					-- Record current warning level to avoid further reports.
+				obsolete_warning_level_cell.put (error_handler.warning_level)
 			end
+		end
+
+	obsolete_warning_level_cell: CELL [NATURAL_32]
+			-- A cell for least detected warning level with an obsolete call warning.
+		local
+			l: like {ERROR_HANDLER}.warning_level
+		once
+				-- Start without any obsolete warnings.
+			create Result.put (l.max_value)
+				-- Register an agent to clean up obsolete warnings on recompilation.
+			error_handler.set_warning_level_actions.extend
+				(agent (w: like {ERROR_HANDLER}.warning_level)
+						-- Detect if obsolete warning has been discarded at level `w`.
+					do
+						if w < obsolete_warning_level_cell.item then
+								-- Record that no unreported obsolete call warnings are kept in the `error_handler`.
+							obsolete_warning_level_cell.put (w.max_value)
+						end
+					end)
 		end
 
 feature {NONE} -- Processing
@@ -61,9 +92,9 @@ feature {NONE} -- Processing
 	process_cell: CELL
 		[PROCEDURE [TUPLE [obsolete_message: READABLE_STRING_8; is_warning_enabled: BOOLEAN;
 			context:
-				TUPLE [obsolete_feature: FEATURE_I; obsolete_class: CLASS_C; current_feature: detachable FEATURE_I; current_class: CLASS_C; location: detachable LOCATION_AS];
+				TUPLE [obsolete_feature: FEATURE_I; obsolete_class: CLASS_C; current_feature: detachable FEATURE_I; current_class: CLASS_C; is_warning_enabled: BOOLEAN; location: detachable LOCATION_AS];
 			reporter: OBSOLETE_CALL_REPORTER
-				[TUPLE [obsolete_feature: FEATURE_I; obsolete_class: CLASS_C; current_feature: detachable FEATURE_I; current_class: CLASS_C; location: detachable LOCATION_AS]]]]]
+				[TUPLE [obsolete_feature: FEATURE_I; obsolete_class: CLASS_C; current_feature: detachable FEATURE_I; current_class: CLASS_C; is_warning_enabled: BOOLEAN; location: detachable LOCATION_AS]]]]]
 			-- A storage for the value of `process`.
 		once
 			create Result.put
@@ -72,10 +103,8 @@ feature {NONE} -- Processing
 						u: UTF_CONVERTER
 						m: READABLE_STRING_32
 					do
-						if is_warning_enabled then
-							m := u.utf_8_string_8_to_string_32 (obsolete_message)
-							report_obsolete_call (m, m, 0, obsolete_call_warning, context)
-						end
+						m := u.utf_8_string_8_to_string_32 (obsolete_message)
+						report_obsolete_call (m, m, 0, obsolete_call_warning, context)
 					end)
 		end
 
@@ -92,12 +121,12 @@ feature {NONE} -- Processing
 			-- The flag `is_warning_enabled` tells if the corresponding warning message is allowed. Otherwise (i.e., when it is disabled or not a warning), it is suppressed.
 		do
 			if attached obsolete_feature.obsolete_message as m then
-				process (m, is_warning_enabled, [obsolete_feature, obsolete_class, current_feature, current_class, location], Current)
+				process (m, is_warning_enabled, [obsolete_feature, obsolete_class, current_feature, current_class, is_warning_enabled, location], Current)
 			end
 		end
 
-note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+;note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

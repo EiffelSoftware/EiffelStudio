@@ -273,8 +273,12 @@ feature -- Execution (declared in EWB_CMD)
 				end
 			end
 
-			output_window.add ("%NEiffel Inspector%N")
-			output_window.add ("----------------%N")
+			output_window.add ("[
+				
+				Code analysis
+				-------------
+				
+			]")
 
 			if restore_preferences then
 				l_code_analyzer.preferences.restore_defaults
@@ -288,23 +292,21 @@ feature -- Execution (declared in EWB_CMD)
 			l_code_analyzer.analyze
 
 			across l_code_analyzer.rule_violations as l_vlist loop
-
 				if not l_vlist.item.is_empty then
 					l_has_violations := True
-						-- Always sort the rule violations by the class they are referring to.
+						-- Always sort rule violations by the class they are referring to.
 					output_window.add (ca_messages.cmd_class + l_vlist.key.name + "':%N")
-
 						-- See `{CA_RULE_VIOLATION}.is_less' for information on the sorting.
 					across l_vlist.item as ic loop
 						l_rule_name := ic.item.rule.title
 						l_rule_id := ic.item.rule.id
-						if attached ic.item.location as l_loc then
-							output_window.add ({STRING_32} " [" + ic.item.location.line.out + ":" + ic.item.location.column.out + "] "
-								+ ic.item.severity.short_form + ": " + l_rule_id + " - " + l_rule_name + ": ")
-						else
-								-- No location attached. Print without location.
-							output_window.add ({STRING_32} "  "	+ l_rule_name + " (" + l_rule_id + "): ")
-						end
+						output_window.add
+							(if attached ic.item.location as l_loc then
+								{STRING_32} " [" + ic.item.location.line.out + ":" + ic.item.location.column.out + "] "
+							else
+								{STRING_32} " "
+							end
+							+ ic.item.severity.short_form + ": " + l_rule_id + " - " + l_rule_name + ": ")
 						ic.item.format_violation_description (output_window)
 						output_window.add_new_line
 					end
@@ -362,7 +364,7 @@ feature {NONE} -- Implementation
 	is_identifier_character (a_char: CHARACTER_32): BOOLEAN
 			-- Is `a_char' a valid Eiffel identifier character?
 		do
-			Result := (a_char = '_' or (a_char >= 'a' and a_char <= 'z') or (a_char >= 'A' and a_char <= 'Z') or (a_char >= '0' and a_char <= '9'))
+			Result := a_char = '_' or (a_char >= 'a' and a_char <= 'z') or (a_char >= 'A' and a_char <= 'Z') or (a_char >= '0' and a_char <= '9')
 		end
 
 	first_word (a_string: READABLE_STRING_32; a_start_index: INTEGER): READABLE_STRING_32

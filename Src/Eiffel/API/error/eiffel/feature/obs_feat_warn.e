@@ -2,7 +2,7 @@
 	description: "Warning for obsolete features."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision $"
 
 class OBS_FEAT_WARN
@@ -24,15 +24,11 @@ create
 
 feature -- Properties
 
-	code: STRING
-		do
-			Result := "Obsolete Call"
-		end
+	code: STRING = "Obsolete Call"
+			-- <Precursor>
 
-	help_file_name: STRING
-		do
-			Result := "OBS_CALL"
-		end
+	help_file_name: STRING = "OBS_CALL"
+			-- <Precursor>
 
 	obsolete_feature: E_FEATURE
 			-- feature name
@@ -127,7 +123,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

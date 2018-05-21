@@ -1202,7 +1202,7 @@ feature {NONE} -- Implementation
 			l_vtmc1: VTMC1
 			l_error_level: NATURAL_32
 			l_is_in_assignment: BOOLEAN
-			l_warning_count: INTEGER
+			l_warning_level: like {ERROR_HANDLER}.warning_level
 			l_tcat: CAT_CALL_WARNING
 			l_is_controlled: BOOLEAN
 			is_target_known: BOOLEAN
@@ -1434,7 +1434,7 @@ feature {NONE} -- Implementation
 									if attached argument_compatibility_error (l_named_tuple, l_named_tuple, l_arg_type, l_label_pos, l_named_tuple.generics, Void, l_feature_name, l_feature_name) as e then
 										error_handler.insert_error (e)
 									else
-										l_warning_count := error_handler.warning_list.count
+										l_warning_level := error_handler.warning_level
 										if not l_formal_arg_type.backward_conform_to (l_context_current_class, l_arg_type) then
 											if
 												not is_inherited and then
@@ -1457,7 +1457,7 @@ feature {NONE} -- Implementation
 													-- Update `l_arg_type' with the converted type.
 												l_arg_type := l_formal_arg_type
 											end
-										elseif l_warning_count /= error_handler.warning_list.count then
+										elseif l_warning_level /= error_handler.warning_level then
 											error_handler.warning_list.last.set_location (l_feature_name)
 										end
 										if l_needs_byte_node then
@@ -1842,7 +1842,7 @@ feature {NONE} -- Implementation
 											l_tcat.add_covariant_generic_violation
 										end
 
-										l_warning_count := error_handler.warning_list.count
+										l_warning_level := error_handler.warning_level
 										if not l_formal_arg_type.backward_conform_to (l_context_current_class, l_arg_type) then
 											if
 												not is_inherited and then
@@ -1870,7 +1870,7 @@ feature {NONE} -- Implementation
 													-- This fixes eweasel test#freez022.
 												l_arg_types.put_i_th (l_formal_arg_type, i)
 											end
-										elseif l_warning_count /= error_handler.warning_list.count then
+										elseif l_warning_level /= error_handler.warning_level then
 											error_handler.warning_list.last.set_location (l_parameters.i_th (i).start_location)
 										end
 										if l_needs_byte_node then
@@ -2178,7 +2178,7 @@ feature {NONE} -- Type checks
 			like_argument_type: TYPE_A
 			target_base_class: CLASS_C
 			target_base_class_id: INTEGER
-			warning_count: INTEGER
+			warning_level: like {ERROR_HANDLER}.warning_level
 		do
 			actual_target_type := target_type.actual_type
 			target_base_class := target_base_type.base_class
@@ -2201,14 +2201,14 @@ feature {NONE} -- Type checks
 					-- Check that `expression_type' is compatible to its `like argument'.
 					-- Once this is done, then type checking is done on the real
 					-- type of the routine, not the anchor.
-				warning_count := error_handler.warning_list.count
+				warning_level := error_handler.warning_level
 				if
 					not expression_type.conform_to (current_class, like_argument_type) and then
 					(is_inherited or else not expression_type.convert_to (current_class, like_argument_type.deep_actual_type))
 				then
 					create {VUAR2} Result.make (context, callee, name, target_base_class, argument_number, like_argument_type, expression_type, location)
 				end
-				if warning_count /= error_handler.warning_list.count then
+				if warning_level /= error_handler.warning_level then
 					error_handler.warning_list.last.set_location (location)
 				end
 			elseif system.is_scoop and then target_type.is_separate and then expression_type.is_reference and then not formal_type.is_separate then
@@ -2217,7 +2217,7 @@ feature {NONE} -- Type checks
 				create {VUAR4} Result.make (context, callee, name, target_base_class, argument_number, formal_type, expression_type, location)
 			end
 
-			warning_count := error_handler.warning_list.count
+			warning_level := error_handler.warning_level
 			if not formal_type.backward_conform_to (current_class, expression_type) then
 				if
 					not is_inherited and then
@@ -2232,7 +2232,7 @@ feature {NONE} -- Type checks
 				end
 			elseif not is_frozen_type_compatible (expression_type, formal_type, False) then
 				create {VUAR2} Result.make (context, callee, name, target_base_class, argument_number, formal_type, expression_type, location)
-			elseif warning_count /= error_handler.warning_list.count then
+			elseif warning_level /= error_handler.warning_level then
 				error_handler.warning_list.last.set_location (location)
 			end
 		end
@@ -5784,7 +5784,7 @@ feature {NONE} -- Visitor
 			l_source_type, l_target_type: TYPE_A
 			target_attribute: FEATURE_I
 			l_vjar: VJAR
-			l_warning_count: INTEGER
+			l_warning_level: like {ERROR_HANDLER}.warning_level
 			l_reinitialized_variable: like last_reinitialized_variable
 			l_error_level: NATURAL_32
 		do
@@ -5830,7 +5830,7 @@ feature {NONE} -- Visitor
 
 			if l_source_type /= Void and then l_target_type /= Void then
 					-- Type checking
-				l_warning_count := error_handler.warning_list.count
+				l_warning_level := error_handler.warning_level
 				process_type_compatibility (l_target_type)
 				if not is_inherited then
 					if l_target_type.is_like then
@@ -5857,7 +5857,7 @@ feature {NONE} -- Visitor
 				then
 					error_handler.insert_error (create {VBAR2}.make (l_source_type, target_attribute, l_as.start_location, context))
 				else
-					if l_warning_count /= error_handler.warning_list.count then
+					if l_warning_level /= error_handler.warning_level then
 						error_handler.warning_list.last.set_location (l_as.start_location)
 					end
 					if
@@ -6598,7 +6598,7 @@ feature {NONE} -- Visitor
 			l_vgcc7: VGCC7
 			l_needs_byte_node: BOOLEAN
 			l_error_level: NATURAL_32
-			l_warning_count: INTEGER
+			l_warning_level: like {ERROR_HANDLER}.warning_level
 			l_reinitialized_variable: like last_reinitialized_variable
 		do
 			l_error_level := error_level
@@ -6662,7 +6662,7 @@ feature {NONE} -- Visitor
 							l_vgcc3.set_location (l_as.target.start_location)
 							error_handler.insert_error (l_vgcc3)
 						else
-							l_warning_count := error_handler.warning_list.count
+							l_warning_level := error_handler.warning_level
 							if
 								l_explicit_type /= Void and then
 								not l_target_type.backward_conform_to (context.current_class, l_explicit_type)
@@ -6675,7 +6675,7 @@ feature {NONE} -- Visitor
 								l_vgcc31.set_type (l_explicit_type)
 								l_vgcc31.set_location (l_as.type.start_location)
 								error_handler.insert_error (l_vgcc31)
-							elseif l_warning_count /= error_handler.warning_list.count then
+							elseif l_warning_level /= error_handler.warning_level then
 								error_handler.warning_list.last.set_location (l_as.type.start_location)
 							end
 

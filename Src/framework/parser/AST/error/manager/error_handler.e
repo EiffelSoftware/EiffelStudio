@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Error handler that manages warning and error messages."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 		do
 			create error_list.make (0)
 			create warning_list.make (0)
+			create set_warning_level_actions
 		end
 
 feature -- Properties		
@@ -47,6 +48,9 @@ feature -- Properties
 		do
 			Result := warning_list.count.as_natural_32
 		end
+
+	set_warning_level_actions: ACTION_SEQUENCE [like warning_level]
+			-- Actions to be called when the warning level is set.
 
 feature -- Error handling primitives
 
@@ -105,7 +109,7 @@ feature -- Error handling primitives
 			-- Save current errors and warnings for later `restore'.
 		do
 			saved_error_count := error_list.count
-			saved_warning_count := warning_list.count
+			saved_warning_count := warning_level
 		end
 
 	restore
@@ -127,39 +131,38 @@ feature -- Error handling primitives
 					end
 				end
 			end
-			if warning_list.count > saved_warning_count then
-				if saved_warning_count = 0 then
-						-- The list was empty on save, so we simply remove all added items.
-					warning_list.wipe_out
-				else
-					check warning_list.valid_index (saved_warning_count + 1) end
-					warning_list.go_i_th (saved_warning_count + 1)
-					from
-					until
-						warning_list.count = saved_warning_count
-					loop
-						warning_list.remove
-					end
-				end
+			if warning_level > saved_warning_count then
+				set_warning_level (saved_warning_count)
 			end
 		end
 
 feature -- Removal
 
 	set_warning_level (w: like warning_level)
-			-- Discard any warnings that were added after given warning level `w'.
+			-- Discard any warnings that were added after given warning level `w`.
 		require
 			w_in_bounds: w <= warning_level
+		local
+			ws: like warning_list
+			n: like warning_level
 		do
-			from
-			until
-				w = warning_level
-			loop
-				warning_list.remove
-				warning_list.finish
-			variant
-				warning_level.as_integer_64
+			if w = 0 then
+				warning_list.wipe_out
+			else
+				from
+					ws := warning_list
+					n := warning_level - w
+				until
+					n = 0
+				loop
+					ws.finish
+					ws.remove
+					n  := n - 1
+				variant
+					n.as_integer_64
+				end
 			end
+			set_warning_level_actions.call (w)
 		ensure
 			warning_level_set: warning_level = w
 		end
@@ -168,7 +171,7 @@ feature -- Removal
 			-- Empty `error_list' and `warning_list'.
 		do
 			error_list.wipe_out
-			warning_list.wipe_out
+			set_warning_level (0)
 		end
 
 feature -- Status
@@ -245,7 +248,7 @@ feature {COMPILER_EXPORTER} -- Output
 				error_list.wipe_out
 			end
 			if has_warning then
-				warning_list.wipe_out
+				set_warning_level (0)
 			end
 		ensure
 			error_list.is_empty
@@ -259,7 +262,7 @@ feature {COMPILER_EXPORTER} -- Output
 				if attached error_displayer as err_disp then
 					err_disp.trace_warnings (Current)
 				end
-				warning_list.wipe_out
+				set_warning_level (0)
 			end
 		ensure
 			warning_list.is_empty
@@ -279,15 +282,18 @@ feature {COMPILER_EXPORTER} -- Setting
 
 feature {NONE} -- Implementation
 
-	saved_error_count, saved_warning_count: INTEGER
-			-- Number of items in `error_list' and `warning_list' used by `save'/`restore'
+	saved_error_count: INTEGER
+			-- Number of items in `error_list` used by `save`/`restore`.
+
+	saved_warning_count: like warning_level
+			-- Number of items in `warning_list` used by `save`/`restore`.
 
 invariant
 	error_list_exists: error_list /= Void
 	warning_list_exists: warning_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

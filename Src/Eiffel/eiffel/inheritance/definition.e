@@ -95,7 +95,6 @@ feature -- Checking
 		local
 			i: INHERIT_INFO
 			f: FEATURE_I
-			g: FEATURE_I
 		do
 			f := new_feature
 			from
@@ -107,8 +106,7 @@ feature -- Checking
 				if i.a_feature_needs_instantiation then
 					i.delayed_instantiate_a_feature
 				end
-				g := i.internal_a_feature
-				f.delayed_check_signature (g, tbl)
+				f.delayed_check_signature (i.internal_a_feature, tbl)
 				feats.forth
 			end
 		end

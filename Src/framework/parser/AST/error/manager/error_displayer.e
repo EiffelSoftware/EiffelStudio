@@ -1,10 +1,10 @@
-note
+﻿note
 	description:
 		"Displays warning and error messages from Error handler%
 		%during a compilation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
@@ -46,8 +46,8 @@ feature -- Output
 	trace_warnings (handler: ERROR_HANDLER)
 			-- Display warnings messages from `handler'.
 		require
-			non_void_handler: handler /= Void;
-			not_empty_warnings: not handler.warning_list.is_empty
+			non_void_handler: handler /= Void
+			not_empty_warnings: handler.has_warning
 		deferred
 		ensure then
 			warnings_list_unmoved: handler.warning_list.cursor.is_equal (old handler.warning_list.cursor)
@@ -69,7 +69,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,5 +1,5 @@
 test_name 	 ca-obsolete-feature-call-date
-test_description Obsolete feature call should be reported with different severity levels depending on the specified date.
+test_description Obsolete feature call should be reported with different severity levels depending on the specified date. See also test#valid296.
 
 copy_sub	Ace $TEST Ace
 
@@ -8,16 +8,14 @@ define_date     DATE -1461
 copy_sub	test.e $CLUSTER test.e
 
 compile_melted
-compile_result 	validity_error TEST Obsolete
+compile_result 	validity_warning NONE Obsolete
 
---analyze_code rule "CA069"
---analyze_code_result violation "TEST CA069:10-Error"
+analyze_code rule "CA069"
+analyze_code_result violation "TEST CA069:10-Error"
 
 	-- Yerterday: warning.
 define_date     DATE -1
 copy_sub	test.e $CLUSTER test.e
-
-resume_compile
 
 analyze_code rule "CA069"
 analyze_code_result violation "TEST CA069:10-Warning"

@@ -962,7 +962,10 @@ feature -- Monitor DPI
 			l_monitor: POINTER
 			l_dpi_x: INTEGER
 			l_dpi_y: INTEGER
+			l_value: INTEGER
+			l_val_res: INTEGER
 		do
+			l_val_res := {WEL_API}.cwin_get_process_dpi_awareness (default_pointer, $l_value )
 			Result := [1.0, 1.0]
 			l_monitor := monitor_from_window (get_window (hwnd, {WEL_GW_CONSTANTS}.gw_owner), Monitor_defaulttonearest)
 			if l_monitor /= default_pointer then
@@ -1040,6 +1043,15 @@ feature -- Externals DPI
 			"C inline use <wel.h>"
 		alias
 			"return (EIF_INTEGER) GetProcessDpiAwareness($a_process, $a_value);"
+		ensure
+			is_class: class
+		end
+
+	cwin_get_thread_dpi_awareness_context: INTEGER
+		external
+			"C inline use <Winuser.h>"
+		alias
+			"return (EIF_INTEGER) GetThreadDpiAwarenessContext();"
 		ensure
 			is_class: class
 		end

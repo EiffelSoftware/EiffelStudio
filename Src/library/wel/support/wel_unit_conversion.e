@@ -101,12 +101,10 @@ feature -- Basic Operations
 		require
 			hdc_not_void: hdc /= Void
 			hdc_exists: hdc.exists
-		local
-			l_scale: TUPLE [x: DOUBLE; y: DOUBLE]
+
 		do
-			l_scale := {WEL_API}.monitor_scale (hdc.item)
 			Result :=  mul_div (
-				(get_device_caps (hdc.item, logical_pixels_y) * l_scale.y).rounded , pt, 72 * divisor)
+				get_device_caps (hdc.item, logical_pixels_y) , pt, 72 * divisor)
 		end
 
 	pixel_to_point (hdc: WEL_DC; pi: INTEGER): INTEGER

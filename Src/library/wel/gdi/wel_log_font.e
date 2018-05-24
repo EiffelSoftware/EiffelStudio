@@ -233,6 +233,7 @@ feature -- Access
 			Result := cwel_log_font_get_strikeout (item) /= 0
 		end
 
+
 	char_set: INTEGER
 			-- Character set of current font
 		do

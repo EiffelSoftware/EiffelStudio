@@ -365,7 +365,9 @@ feature -- Access
 			cur_width, cur_height: INTEGER
 			screen_dc: WEL_SCREEN_DC
 			l_wel_rect: like wel_rect
+            l_scale: TUPLE [x: REAL_64; y: REAL_64]
 		do
+			l_scale := [1.0, 1.0]
 			if a_string.count = 0 then
 				cur_width := 0
 				cur_height := 0
@@ -379,13 +381,15 @@ feature -- Access
 				screen_dc.draw_text (a_string, l_wel_rect, Dt_calcrect | Dt_expandtabs | Dt_noprefix)
 				cur_width := l_wel_rect.width
 				cur_height := l_wel_rect.height
+				l_scale := {WEL_API}.monitor_scale (screen_dc.item)
+
 
 				screen_dc.unselect_font
 				screen_dc.quick_release
 			end
 			Result := reusable_string_size_tuple
-			Result.width := cur_width
-			Result.height := cur_height
+			Result.width := (cur_width * l_scale.x).rounded
+			Result.height := (cur_height * l_scale.y).rounded
 		end
 
 feature {NONE} -- Implementation (String Size Optimization)

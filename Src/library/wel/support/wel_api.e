@@ -768,6 +768,28 @@ feature -- Code pages
 			is_class: class
 		end
 
+	
+	oem_cp: NATURAL_32
+			-- The current OEM code page identifier for the operating system.
+			-- The OEM code page is used for conversion from MS-DOS-based, text-mode applications.
+		external
+			"C inline use <Winnls.h>"
+		alias
+			"return (EIF_NATURAL_32) GetOEMCP ();"
+		ensure
+			is_class: class
+		end
+
+	a_cp: NATURAL_32
+			-- The current Windows ANSI code page (ACP) identifier for the operating system.
+		external
+			"C inline use <Winnls.h>"
+		alias
+			"return (EIF_NATURAL_32) GetACP ();"
+		ensure
+			is_class: class
+		end
+
 feature -- Metrics
 
 	get_system_metrics (value: INTEGER): INTEGER

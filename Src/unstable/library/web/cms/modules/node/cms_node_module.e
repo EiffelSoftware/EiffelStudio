@@ -43,10 +43,10 @@ feature {NONE} -- Initialization
 			description := "Service to manage content based on 'node'"
 			package := "core"
 				-- Optional dependencies, mainly for information.
-			put_dependency ({CMS_RECENT_CHANGES_MODULE}, False)
-			put_dependency ({FEED_AGGREGATOR_MODULE}, False)
-			put_dependency ({CMS_SITEMAP_MODULE}, False)
-			put_dependency ({CMS_TAXONOMY_MODULE}, False)
+			add_optional_dependency ({CMS_RECENT_CHANGES_MODULE})
+			add_optional_dependency ({FEED_AGGREGATOR_MODULE})
+			add_optional_dependency ({CMS_SITEMAP_MODULE})
+			add_optional_dependency ({CMS_TAXONOMY_MODULE})
 		end
 
 feature -- Access

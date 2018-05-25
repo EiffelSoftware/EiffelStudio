@@ -226,7 +226,7 @@ feature -- Access
 			Result := storage.page_by_title (a_page_title, a_bookid)
 			if Result = Void and a_bookid /= Void then
 					-- Find in other books.
-				Result := page_by_title (a_page_title, Void)
+				Result := storage.page_by_title (a_page_title, Void)
 			end
 		end
 

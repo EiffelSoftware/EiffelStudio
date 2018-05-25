@@ -60,8 +60,8 @@ feature {NONE} -- Initialization
 			default_version_id := "current"
 			cache_duration := 0
 
-			add_dependency ({CMS_RECENT_CHANGES_MODULE})
-			add_dependency ({CMS_SITEMAP_MODULE})
+			add_optional_dependency ({CMS_RECENT_CHANGES_MODULE})
+			add_optional_dependency ({CMS_SITEMAP_MODULE})
 		end
 
 feature -- Access

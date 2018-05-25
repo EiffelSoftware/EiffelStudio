@@ -87,7 +87,7 @@ feature {NONE} -- Creation
 						attached {EIFFEL_SCRIPT_BUILD_PARAMETERS} params as l_build_params and then
 						attached l_build_params.ecf_location as l_ecf
 					then
-						build (l_ecf, l_build_params.ecf_target, l_build_params.executable_path)
+						build (l_ecf, l_build_params.ecf_target, l_build_params.resources, l_build_params.executable_path)
 					else
 						display_usage
 					end
@@ -183,7 +183,7 @@ feature -- Execution
 			end
 		end
 
-	build (a_ecf: READABLE_STRING_GENERAL; a_target_name: detachable READABLE_STRING_GENERAL; a_exec_output_path: detachable PATH)
+	build (a_ecf: READABLE_STRING_GENERAL; a_target_name: detachable READABLE_STRING_GENERAL; a_resources: detachable ITERABLE [PATH]; a_exec_output_path: detachable PATH)
 		require
 			is_ecf: a_ecf.ends_with (".ecf")
 		local
@@ -220,7 +220,7 @@ feature -- Execution
 					else
 						p := executable_name (sys, tgt)
 					end
-					build_executable (sys, tgt, p)
+					build_executable (sys, tgt, a_resources, p)
 					print ({STRING_32} "Executable generated as " + p.name + ".%N")
 				else
 					report_error ("Invalid ecf file or missing target!%N")
@@ -243,14 +243,14 @@ feature {NONE} -- Execution
 				or else (check_level /= {EIFFEL_SCRIPT_LAUNCH_PARAMETERS}.check_level_project and then is_project_more_recent_than (a_system, a_target, p))
 			then
 					-- ecf file is more recent than cached executable
-				build_executable (a_system, a_target, p)
+				build_executable (a_system, a_target, Void, p) -- TODO: check if launch may also want to pass resources...
 			end
 			if ut.file_path_exists (p) then
 				launch_executable (p, args)
 			end
 		end
 
-	build_executable (a_system: CONF_SYSTEM; a_target: CONF_TARGET; a_executable_target_location: PATH)
+	build_executable (a_system: CONF_SYSTEM; a_target: CONF_TARGET; a_resources: detachable ITERABLE [PATH]; a_executable_target_location: PATH)
 		local
 			l_comp_loc: PATH
 			proc: BASE_PROCESS
@@ -262,6 +262,20 @@ feature {NONE} -- Execution
 		do
 			l_comp_loc := compilation_location (a_system, a_target.name)
 			ut.create_directory_path (l_comp_loc)
+				-- Prepare compilation
+			if a_resources /= Void then
+				across
+					a_resources as res
+				loop
+					if ut.file_path_exists (res.item) then
+						if attached res.item.entry as l_entry then
+							ut.copy_file_path (res.item, l_comp_loc.extended_path (l_entry))
+						else
+							check has_entry: False end
+						end
+					end
+				end
+			end
 			create params.make (10)
 			params.extend ("-config")
 			params.extend (a_system.file_name)
@@ -539,10 +553,10 @@ feature -- Usage
 			print ("USAGE:%N")
 			print ("  ")
 			print (cmd)
-			print (" (-v|--verbose) (-h|--help) (-b|--build) (--check class,project) (--target ecf_target_name) <project.ecf> ...%N")
+			print (" (-v|--verbose) (-h|--help) (-b|--build) (--check class,project) (--target ecf_target_name) (--resource file_name)* <project.ecf> ...%N")
 			print ("  ")
 			print (cmd)
-			print (" build (-v|--verbose) (--target ecf_target_name) <project.ecf> <output_executable_path> ...%N")
+			print (" build (-v|--verbose) (--target ecf_target_name) (--resource file_name)* <project.ecf> <output_executable_path> ...%N")
 			print ("%N")
 			print ("[
 COMMANDS:
@@ -551,6 +565,8 @@ COMMANDS:
 
 OPTIONS:
   --target <ecf-target-name>    : optional target name.
+  --resource <file-name>        : optional resource file name to copy in the parent directory of the EIFGENs
+                                : such as *.rc files (multiple occurrences allowed).
   --check <level>               : check level for recompilation, either class (default), or project.
                                 : class   = check timestamp of system class files, 
                                 :           and ecf files for included libraries 

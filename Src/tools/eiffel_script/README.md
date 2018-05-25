@@ -20,8 +20,8 @@ The `eiffel` can also be used to compile the `prog.ecf` and save the generated f
 
 ```
 USAGE:
-  eiffel (-v|--verbose) (-h|--help) (-b|--build) (--check class,project) (--target ecf_target_name) <project.ecf> ...
-  eiffel build (-v|--verbose) (--target ecf_target_name) <project.ecf> <output_executable_path> ...
+  eiffel (-v|--verbose) (-h|--help) (-b|--build) (--check class,project) (--target ecf_target_name) (--resource file_name)* <project.ecf> ...
+  eiffel build (-v|--verbose) (--target ecf_target_name) (--resource file_name)* <project.ecf> <output_executable_path> ...
 
 COMMANDS:
   <project.ecf> ...   : build once and launch <project.ecf> execution.
@@ -29,6 +29,8 @@ COMMANDS:
 
 OPTIONS:
   --target <ecf-target-name>    : optional target name.
+  --resource <file-name>        : optional resource file name to copy in the parent directory of the EIFGENs
+                                : such as *.rc files (multiple occurrences allowed).
   --check <level>               : check level for recompilation, either class (default), or project.
                                 : class   = check timestamp of system class files,
                                 :           and ecf files for included libraries

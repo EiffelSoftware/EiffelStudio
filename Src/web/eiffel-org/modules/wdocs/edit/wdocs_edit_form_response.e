@@ -283,6 +283,7 @@ feature -- Form
 			l_path: detachable PATH
 			l_page: detachable WIKI_BOOK_PAGE
 			l_link_title_value, l_title_value, l_source_value: detachable READABLE_STRING_8
+			l_log_message: detachable READABLE_STRING_32
 			l_content: detachable READABLE_STRING_8
 			l_md_text: WDOCS_METADATA_WIKI_TEXT
 			l_changed: BOOLEAN
@@ -311,6 +312,8 @@ feature -- Form
 				l_title_value := safe_utf_8_string (fd.string_item ("title"))
 				l_link_title_value := safe_utf_8_string (fd.string_item ("link_title"))
 				l_source_value := safe_utf_8_string (fd.string_item ("source"))
+				l_log_message := fd.string_item ("log-msg")
+
 				if l_source_value /= Void then
 					create s.make_from_string (l_source_value)
 					s.prune_all ('%R')
@@ -401,7 +404,11 @@ feature -- Form
 						l_page.update_from_metadata
 						create ctx
 						ctx.set_user (user)
-						ctx.set_log ({STRING_32} "Update wikipage " + l_page.title + ".")
+						if l_log_message /= Void then
+							ctx.set_log (l_log_message + {STRING_32} "%NUpdated wikipage " + l_page.title + ".%N")
+						else
+							ctx.set_log ({STRING_32} "Updated wikipage " + l_page.title + ".")
+						end
 
 						wdocs_api.save_wiki_page (l_page, pg, l_source_value, l_path, a_bookid, a_manager, ctx)
 						if wdocs_api.has_error then
@@ -430,6 +437,9 @@ feature -- Form
 							l_mesg_text.append (".%N%N")
 							l_mesg_text.append ("- Version: " + api.html_encoded (a_manager.version_id) + "%N")
 							l_mesg_text.append ("- Page location: " + api.site_url + view_location + "%N")
+							if l_log_message /= Void then
+								l_mesg_text.append ("- Log message: " + utf_8_string (l_log_message) + "%N")
+							end
 							l_mesg_text.append ("%N%N")
 
 							-- FIXME: hardcoded link to admin wdocs clear-cache ! change that.
@@ -539,6 +549,13 @@ feature -- Form
 					f.extend (th)
 				end
 			end
+			f.extend (tf)
+
+			create tf.make ("log-msg")
+			tf.set_label ("Log message")
+			tf.set_cols (90)
+			tf.set_rows (3)
+			tf.set_description ("Briefly describe the changes you have made.")
 			f.extend (tf)
 
 			create bt_preview.make_with_text ("op", translation ("Preview", Void))

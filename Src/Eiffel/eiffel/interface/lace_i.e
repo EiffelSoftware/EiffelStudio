@@ -1379,7 +1379,13 @@ feature {NONE} -- Implementation
 				system.set_msil_use_optimized_precompile (False)
 			end
 
-			if not workbench.has_compilation_started and then not attached a_target.precompile then
+			if
+				not workbench.has_compilation_started and then
+				not (
+					attached a_target.precompile as p and then
+					p.is_enabled (universe.conf_state_from_target (a_target))
+				)
+			then
 					-- Update concurrency setting on first compilation.
 				system.set_concurrency_index (a_target.options.concurrency_capability.root_index)
 			elseif

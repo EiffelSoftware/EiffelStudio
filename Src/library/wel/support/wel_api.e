@@ -768,8 +768,8 @@ feature -- Code pages
 			is_class: class
 		end
 
-	
-	oem_cp: NATURAL_32
+
+	oem_code_page: NATURAL_32
 			-- The current OEM code page identifier for the operating system.
 			-- The OEM code page is used for conversion from MS-DOS-based, text-mode applications.
 		external
@@ -780,7 +780,7 @@ feature -- Code pages
 			is_class: class
 		end
 
-	a_cp: NATURAL_32
+	ansi_code_page: NATURAL_32
 			-- The current Windows ANSI code page (ACP) identifier for the operating system.
 		external
 			"C inline use <Winnls.h>"
@@ -978,7 +978,7 @@ feature -- API
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

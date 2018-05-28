@@ -36,7 +36,7 @@ feature -- Access
 			if code_page = 0 then
 				code_page := {WEL_API}.console_input_code_page
 				if code_page = 0 then
-					code_page := {WEL_API}.oem_cp
+					code_page := {WEL_API}.oem_code_page
 				end
 			end
 			create Result.make (5)

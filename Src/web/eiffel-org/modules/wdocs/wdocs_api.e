@@ -575,7 +575,8 @@ feature -- Page management
 			end
 		end
 
-	save_wiki_page (a_page: like new_wiki_page; a_parent_page: detachable like new_wiki_page; a_source: detachable READABLE_STRING_8; a_path: detachable PATH; a_book_id: READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_context: detachable WDOCS_CHANGE_CONTEXT)
+	save_wiki_page (a_page: like new_wiki_page; a_parent_page: detachable like new_wiki_page; a_source: detachable READABLE_STRING_8;
+			a_path: detachable PATH; a_book_id: READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_context: detachable WDOCS_CHANGE_CONTEXT)
 			-- Save page `a_page' with source `a_source' into file `a_path' or inside folder `a_path' if `a_path' is a folder.
 		local
 			p: detachable PATH

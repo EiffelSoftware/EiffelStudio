@@ -1,8 +1,8 @@
 ﻿note
 	description: "Warning for obsolete features."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class OBS_CLASS_WARN
@@ -14,8 +14,7 @@ inherit
 			error_string,
 			help_file_name,
 			is_defined,
-			print_single_line_error_message,
-			trace
+			print_single_line_error_message
 		end
 
 	EIFFEL_ERROR
@@ -26,8 +25,7 @@ inherit
 			has_associated_file,
 			help_file_name,
 			is_defined,
-			print_single_line_error_message,
-			trace
+			print_single_line_error_message
 		redefine
 			build_explain,
 			error_string
@@ -136,15 +134,6 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
-	trace (f: TEXT_FORMATTER)
-			-- <Precursor>
-		do
-			Precursor (f)
-			if line > 0 and then attached associated_class as c then
-				print_context_of_error (c, f)
-			end
-		end
-
 feature {NONE} -- Output
 
 	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
@@ -193,7 +182,7 @@ feature {COMPILER_EXPORTER}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

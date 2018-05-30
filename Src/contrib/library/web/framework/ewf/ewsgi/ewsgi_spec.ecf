@@ -10,6 +10,8 @@
 		<option warning="true">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="encoder" location="..\text\encoder\encoder.ecf"/>
+		<library name="http" location="..\..\..\..\network\protocol\http\http.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="specification" location="specification\" recursive="true"/>
 	</target>

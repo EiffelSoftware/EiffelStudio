@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			response := a_execution.response
 		end		
 
-feature {WGI_EXECUTION, WGI_CONNECTOR} -- Access
+feature {WGI_EXECUTION} -- Access
 
 	request: WGI_REQUEST
 			-- Request data.
@@ -42,7 +42,7 @@ feature -- Execution
 			is_valid_end_of_execution: is_valid_end_of_execution
 		end
 
-feature {WGI_EXPORTER} -- Execution: rescue
+feature {WGI_EXPORTER, WGI_CONNECTOR} -- Execution: rescue
 
 	execute_rescue (e: detachable EXCEPTION)
 			-- Execute on rescue.

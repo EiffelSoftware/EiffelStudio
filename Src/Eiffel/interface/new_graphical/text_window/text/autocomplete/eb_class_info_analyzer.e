@@ -443,7 +443,7 @@ feature {NONE}-- Clickable/Editable implementation
 								Result := [feat, Void]
 							else
 								vn := token.wide_image
-								if vn /= Void and then vn.same_string (feat.name_32) then
+								if vn /= Void and then vn.is_case_insensitive_equal (feat.name_32) then
 									Result := [feat, Void]
 								end
 							end
@@ -498,7 +498,7 @@ feature {NONE}-- Clickable/Editable implementation
 										until
 											td /= Void
 										loop
-											if vn.same_string (ic.item) then
+											if vn.is_case_insensitive_equal (ic.item) then
 												td := feat.ast
 											end
 										end

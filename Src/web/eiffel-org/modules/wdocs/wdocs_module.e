@@ -89,6 +89,7 @@ feature {CMS_API} -- Module Initialization
 			-- <Precursor>
 		local
 			l_setup: WDOCS_SETUP
+			l_wdocs_api: attached like wdocs_api
 		do
 			Precursor (api)
 			l_setup:= settings (api)
@@ -96,7 +97,10 @@ feature {CMS_API} -- Module Initialization
 			documentation_dir := l_setup.documentation_dir
 			cache_duration := l_setup.cache_duration
 			get_default_version_id (l_setup)
-			create wdocs_api.make (default_version_id, api, l_setup)
+			create l_wdocs_api.make (default_version_id, api, l_setup)
+			wdocs_api := l_wdocs_api
+
+			api.add_content_type_webform_manager (create {WDOCS_TYPE_WEBFORM_MANAGER}.make (create {CMS_WDOCS_CONTENT_TYPE}, l_wdocs_api))
 		end
 
 	get_default_version_id (cfg: WDOCS_SETUP)

@@ -663,7 +663,7 @@ feature {NONE} -- Queries
 		]"
 
 	sql_select_entity_and_type_by_term: STRING = "[
-			SELECT entity, type FROM taxonomy_index WHERE tid=:tid AND entity > 0
+			SELECT entity, type FROM taxonomy_index WHERE tid=:tid AND entity <> '-1'
 			ORDER BY type ASC, entity ASC
 			;
 		]"
@@ -677,13 +677,13 @@ feature {NONE} -- Queries
 	sql_select_vocabularies_for_type: STRING = "[
 				SELECT tid, entity
 				FROM taxonomy_index
-				WHERE type=:type AND entity <= 0;
+				WHERE type=:type AND entity = '-1';
 			]"
 
 	sql_select_type_associated_with_vocabulary: STRING = "[
 				SELECT type
 				FROM taxonomy_index
-				WHERE tid=:tid AND entity <= 0;
+				WHERE tid=:tid AND entity = '-1';
 			]"
 
 	sql_update_term_index: STRING = "[

@@ -70,6 +70,7 @@ feature -- HTTP Methods
 			l_page: CMS_RESPONSE
 			tid: INTEGER_64
 			s: STRING
+			voc_cl: CMS_VOCABULARY_CLOUD
 		do
 			if attached {WSF_STRING} req.path_parameter ("vocid") as p_vocid then
 				if p_vocid.is_integer then
@@ -80,17 +81,20 @@ feature -- HTTP Methods
 				if attached taxonomy_api.vocabulary (tid) as voc then
 						-- Responding with `main_content_html (l_page)'.
 					create {GENERIC_VIEW_CMS_RESPONSE} l_page.make (req, res, api)
-					l_page.set_title (voc.name)
-					taxonomy_api.fill_vocabularies_with_terms (voc)
+					create voc_cl.make_from_vocabulary (voc)
+					taxonomy_api.fill_vocabularies_with_cloud_of_terms (voc_cl)
 
+					l_page.set_title (voc.name + " (" + voc_cl.terms.count.out + ")")
 					create s.make_empty
-					s.append ("<ul class=%"taxonomy-terms%">")
 					across
-						voc as ic
+						voc_cl as ic
 					loop
 						s.append ("<li>")
 						s.append (l_page.link (ic.item.text, "taxonomy/term/" + ic.item.id.out, Void))
-						if attached ic.item.description as l_desc then
+						s.append (" <span class=%"info%">(")
+						s.append_natural_64 (voc_cl.occurrences_count (ic.item))
+						s.append (")<span>")
+						if attached ic.item.description as l_desc and then not l_desc.is_whitespace then
 							s.append (" : <em>")
 							s.append (api.html_encoded (l_desc))
 							s.append ("</em>")

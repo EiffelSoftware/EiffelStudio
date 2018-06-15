@@ -50,6 +50,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	count: INTEGER
+		do
+			Result := terms.count
+		end
+
 	terms: CMS_TERM_COLLECTION
 			-- Collection of terms.
 
@@ -116,6 +121,11 @@ feature -- Element change
 			-- Add `a_term' to the vocabulary terms `terms'.
 		do
 			terms.force (a_term)
+		end
+
+	wipe_out
+		do
+			terms.wipe_out
 		end
 
 	sort

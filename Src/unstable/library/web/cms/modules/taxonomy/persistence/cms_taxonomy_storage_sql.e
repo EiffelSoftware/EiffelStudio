@@ -103,6 +103,39 @@ feature -- Access
 			sql_finalize
 		end
 
+	cloud_of_terms (a_vocab: CMS_VOCABULARY; a_limit: NATURAL_32; a_offset: NATURAL_32): ARRAYED_LIST [TUPLE [term: CMS_TERM; occurrences: NATURAL_64]]
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+			l_sql: like sql_select_cloud_of_terms
+		do
+			create Result.make (0)
+			error_handler.reset
+
+			create l_parameters.make (3)
+			l_parameters.put (a_vocab.id, "parent_tid")
+			if a_limit > 0 then
+				l_sql := sql_select_cloud_of_terms
+				l_parameters.put (a_limit, "limit")
+				l_parameters.put (a_offset, "offset")
+			else
+				l_sql := sql_select_cloud_of_all_terms
+			end
+			from
+				sql_query (l_sql, l_parameters)
+				sql_start
+			until
+				sql_after or has_error
+			loop
+				if attached fetch_term as l_term then
+					if attached sql_read_natural_64 (5) as l_count then
+						Result.force ([l_term, l_count])
+					end
+				end
+				sql_forth
+			end
+			sql_finalize
+		end
+
 	terms_count: INTEGER_64
 			-- Number of terms.
 		do
@@ -598,6 +631,28 @@ feature {NONE} -- Queries
 				ORDER BY taxonomy_term.weight ASC ;
 			]"
 			-- Terms under :parent_tid.
+
+	sql_select_cloud_of_terms: STRING = "[
+				SELECT taxonomy_term.tid, taxonomy_term.text , taxonomy_term.weight, taxonomy_term.description, count(taxonomy_index.entity) as nb
+				FROM taxonomy_term 
+				INNER JOIN taxonomy_hierarchy ON taxonomy_term.tid = taxonomy_hierarchy.tid
+				INNER JOIN taxonomy_index ON taxonomy_term.tid = taxonomy_index.tid 
+				WHERE taxonomy_hierarchy.parent = :parent_tid
+				GROUP BY taxonomy_term.tid ORDER BY nb DESC 
+				LIMIT :limit OFFSET :offset ;
+								]"
+			-- Cloud of terms under :parent_tid.
+
+	sql_select_cloud_of_all_terms: STRING = "[
+				SELECT taxonomy_term.tid, taxonomy_term.text , taxonomy_term.weight, taxonomy_term.description, count(taxonomy_index.entity) as nb
+				FROM taxonomy_term
+				INNER JOIN taxonomy_hierarchy ON taxonomy_term.tid = taxonomy_hierarchy.tid
+				INNER JOIN taxonomy_index ON taxonomy_term.tid = taxonomy_index.tid
+				WHERE taxonomy_hierarchy.parent = :parent_tid
+				GROUP BY taxonomy_term.tid ORDER BY nb DESC
+				;
+								]"
+			-- Cloud of terms under :parent_tid.			
 
 	sql_select_vocabularies_for_term: STRING = "[
 				SELECT parent 

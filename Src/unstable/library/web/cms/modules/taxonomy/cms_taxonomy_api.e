@@ -91,12 +91,26 @@ feature -- Access node
 			-- Fill `a_vocab' with associated terms.
 		do
 			reset_error
-			a_vocab.terms.wipe_out
+			a_vocab.wipe_out
 			if attached terms (a_vocab, 0, 0) as lst then
 				across
 					lst as ic
 				loop
 					a_vocab.extend (ic.item)
+				end
+			end
+		end
+
+	fill_vocabularies_with_cloud_of_terms (a_vocab: CMS_VOCABULARY_CLOUD)
+			-- Fill `a_vocab' with associated terms.
+		do
+			reset_error
+			a_vocab.wipe_out
+			if attached cloud_of_terms (a_vocab, 0, 0) as lst then
+				across
+					lst as ic
+				loop
+					a_vocab.record (ic.item.term, ic.item.occurrences)
 				end
 			end
 		end
@@ -133,6 +147,14 @@ feature -- Access node
 			has_id: a_vocab.has_id
 		do
 			Result := taxonomy_storage.terms (a_vocab, a_limit, a_offset)
+		end
+
+	cloud_of_terms (a_vocab: CMS_VOCABULARY; a_limit: NATURAL_32; a_offset: NATURAL_32): ARRAYED_LIST [TUPLE [term: CMS_TERM; occurrences: NATURAL_64]]
+			-- List of terms from vocabulary `a_vocab` ordered by number of usages from `a_offset` to `a_offset + a_limit`.
+		require
+			has_id: a_vocab.has_id
+		do
+			Result := taxonomy_storage.cloud_of_terms (a_vocab, a_limit, a_offset)
 		end
 
 	term_by_id (a_tid: INTEGER_64): detachable CMS_TERM

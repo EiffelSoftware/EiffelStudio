@@ -98,7 +98,7 @@ feature -- Hook
 			end
 
 			l_keywords := a_response.keywords
-			if attached api.setup.site_keywords as l_site_keywords then
+			if a_response.is_front and attached api.setup.site_keywords as l_site_keywords then
 				if l_keywords = Void then
 					l_keywords := l_site_keywords
 				else

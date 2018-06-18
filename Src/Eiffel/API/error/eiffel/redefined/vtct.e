@@ -68,19 +68,21 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
-			-- Displays single line help in `a_text_formatter'.
+	print_single_line_error_message (t: TEXT_FORMATTER)
+			-- <Precursor>
 		do
-			Precursor (a_text_formatter)
-			if class_name /= Void then
-				a_text_formatter.add_space
-				a_text_formatter.add ("Unknown class ")
-				if line > 0 then
-					a_text_formatter.add_class_syntax (Current, class_c, class_name)
-				else
-					a_text_formatter.add (class_name)
-				end
-				a_text_formatter.add (".")
+			if attached class_name as n then
+				format (t, locale.translation_in_context ("Type is based on unknown class {1}.", "compiler.error"),
+					<<
+						element
+							(if line > 0 then
+								agent {TEXT_FORMATTER}.add_class_syntax (Current, class_c, n)
+							else
+								agent {TEXT_FORMATTER}.add (n)
+							end)
+					>>)
+			else
+				Precursor (t)
 			end
 		end
 

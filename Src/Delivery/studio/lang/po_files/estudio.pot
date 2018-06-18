@@ -39574,6 +39574,12 @@ msgstr ""
 msgid "Type input data here"
 msgstr ""
 
+#. Source code: format (t, locale.translation_in_context ("Type is based on unknown class {1}.", "compiler.error"),
+#: vtct.e:75
+msgctxt "compiler.error"
+msgid "Type is based on unknown class {1}."
+msgstr ""
+
 #. Source code: target_msil_generation_type_description: STRING_32 do Result := locale.translation ("Type of binary to generate.")	end
 #: conf_interface_names.e:158
 msgid "Type of binary to generate."

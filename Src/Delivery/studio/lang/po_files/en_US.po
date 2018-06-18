@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-05-24 14:38+0300\n"
+"PO-Revision-Date: 2018-06-18 16:48+0300\n"
 "Last-Translator: Alexander Kogtenkov <kwaxer@mail.ru>\n"
 "Language-Team: Eiffel Software and others\n"
 "Language: en\n"
@@ -36473,6 +36473,12 @@ msgstr ""
 #. Source code: f_Input_text_field: STRING_32 			 do Result := locale.translation ("Type input data here") end
 #: eb_external_output_names.e:18
 msgid "Type input data here"
+msgstr ""
+
+#. Source code: format (t, locale.translation_in_context ("Type is based on unknown class {1}.", "compiler.error"),
+#: vtct.e:75
+msgctxt "compiler.error"
+msgid "Type is based on unknown class {1}."
 msgstr ""
 
 #. Source code: target_msil_generation_type_description: STRING_32 do Result := locale.translation ("Type of binary to generate.")	end

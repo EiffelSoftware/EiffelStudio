@@ -643,6 +643,11 @@ feature -- Page management
 					if not a_page.has_metadata ("uuid") then
 						a_page.set_metadata ((create {UUID_GENERATOR}).generate_uuid.out, "uuid")
 					end
+					if not a_page.has_metadata ("publication_date") then
+						a_page.set_metadata (cms_api.date_time_to_string (create {DATE_TIME}.make_now_utc), "publication_date")
+					end
+					a_page.set_metadata (cms_api.date_time_to_string (create {DATE_TIME}.make_now_utc), "modification_date")
+
 					if attached a_page.metadata_table as tb then
 						across
 							tb as ic

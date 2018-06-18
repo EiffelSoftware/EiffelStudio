@@ -1293,7 +1293,19 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 --					s.append (html_encoded (s))
 --					s.append ("</pre>")
 				else
+					if attached pg.metadata ("description") as l_wp_description then
+						r.set_description (l_wp_description)
+					else
+						r.set_description (l_title)
+					end
 					append_wiki_page_xhtml_to (pg, l_title, a_bookid, a_manager, s, req, r)
+
+					if attached pg.metadata ("publication_date") as l_pub_date and then attached date_time_from_string (l_pub_date) as dt then
+						r.set_publication_date (dt)
+					end
+					if attached pg.metadata ("modification_date") as l_mod_date and then attached date_time_from_string (l_mod_date) as dt then
+						r.set_modification_date (dt)
+					end
 
 					if attached {WSF_STRING} req.query_parameter ("debug") as s_debug and then not s_debug.is_case_insensitive_equal ("no") then
 						s.append ("<hr/>")
@@ -1449,6 +1461,7 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 					create f.make_with_path (l_pg_path)
 					if f.exists and then f.is_access_readable then
 						create l_wiki_page_date_time.make_from_epoch (f.date)
+						a_response.set_modification_date (l_wiki_page_date_time)
 					end
 				end
 			end

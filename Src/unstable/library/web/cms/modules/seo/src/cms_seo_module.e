@@ -86,21 +86,29 @@ feature -- Hook
 			end
 			l_title := a_response.title
 			if l_title /= Void then
-				l_props.put (l_title, "title")
+				l_props.force (l_title, "title")
 			end
 
 			l_desc := a_response.description
 			if l_desc = Void then
 				l_desc := api.setup.site_description
-			else
-				l_props.put (l_desc, "description")
 			end
+			if l_desc /= Void then
+				l_props.force (l_desc, "description")
+			end
+
 			l_keywords := a_response.keywords
-			if l_keywords = Void then
-				l_keywords := api.setup.site_keywords
-			else
-				l_props.put (l_keywords, "keywords")
+			if attached api.setup.site_keywords as l_site_keywords then
+				if l_keywords = Void then
+					l_keywords := l_site_keywords
+				else
+					l_keywords := l_keywords + {STRING_32} "," + l_site_keywords
+				end
 			end
+			if l_keywords /= Void then
+				l_props.force (l_keywords, "keywords")
+			end
+
 	        create l_now.make_now_utc
 	        dt := a_response.publication_date
 	        if dt = Void then
@@ -111,7 +119,7 @@ feature -- Hook
 	        if dt = Void then
 				dt := l_now
 	        end
-	        l_props.put (date_to_yyyy_mm_dd_string (dt), "modified_time")
+	        l_props.force (date_to_yyyy_mm_dd_string (dt), "modified_time")
 
 	        a_response.add_additional_head_line ("<link rel=%"profile%" href=%"http://gmpg.org/xfn/11%" />", False)
 	        if l_desc /= Void then

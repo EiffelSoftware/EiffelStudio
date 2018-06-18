@@ -229,6 +229,19 @@ feature -- Element change
 			keywords := s
 		end
 
+	add_keyword (a_keyword: READABLE_STRING_GENERAL)
+			-- Add keyword `keyword` to the existing list of keywords.
+		local
+			s: like keywords
+		do
+			s := keywords
+			if s = Void then
+				keywords := a_keyword.to_string_32
+			else
+				keywords := s + "," + a_keyword.to_string_32
+			end
+		end
+
 	set_publication_date (dt: like publication_date)
 		do
 			publication_date := dt
@@ -371,6 +384,6 @@ feature -- Execution
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

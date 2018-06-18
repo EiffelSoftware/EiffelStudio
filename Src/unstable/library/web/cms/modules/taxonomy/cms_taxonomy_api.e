@@ -537,6 +537,7 @@ feature -- Web forms
 							l_terms as t_ic
 						loop
 							a_output.append ("<li>")
+							a_response.add_keyword (t_ic.item.text)
 							a_response.append_link_to_html (t_ic.item.text, "taxonomy/term/" + t_ic.item.id.out, Void, a_output)
 							a_output.append ("</li>")
 						end

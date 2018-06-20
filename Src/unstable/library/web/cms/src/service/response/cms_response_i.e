@@ -75,7 +75,7 @@ feature -- Settings
 
 feature -- Access: metadata
 
-	keywords: detachable READABLE_STRING_32
+	keywords: detachable ARRAYED_LIST [READABLE_STRING_32]
 
 	publication_date: detachable DATE_TIME
 			-- Optional publication date.
@@ -88,6 +88,39 @@ feature -- Access: metadata
 
 	redirection_delay: NATURAL
 			-- Optional redirection delay in seconds.
+
+	set_metadata (v: READABLE_STRING_32; k: READABLE_STRING_GENERAL)
+			-- Set `v` as metadata `k`, replace any previous occurrences (if any).
+		local
+			md: like metadata
+		do
+			md := metadata
+			if md = Void then
+				create md.make (1)
+				metadata := md
+			end
+			md.put (v, k)
+		end
+
+	add_metadata (v: READABLE_STRING_32; k: READABLE_STRING_GENERAL)
+			-- Add `v` as metadata `k`, allows mutiple occurrences.
+		local
+			md: like metadata
+		do
+			md := metadata
+			if md = Void then
+				create md.make (1)
+				metadata := md
+			end
+			md.add (v, k)
+		end
+
+feature -- Change: metadata
+
+	metadata: detachable CMS_RESPONSE_METADATA
+			-- Optional metadata.
+			-- For instance:
+			--	`type` or `og:type`: Optional public type of the response page (related to http://ogp.me/)
 
 feature -- Access: query
 
@@ -224,22 +257,17 @@ feature -- Permission
 
 feature -- Element change				
 
-	set_keywords (s: like keywords)
-		do
-			keywords := s
-		end
-
 	add_keyword (a_keyword: READABLE_STRING_GENERAL)
 			-- Add keyword `keyword` to the existing list of keywords.
 		local
-			s: like keywords
+			lst: like keywords
 		do
-			s := keywords
-			if s = Void then
-				keywords := a_keyword.to_string_32
-			else
-				keywords := s + "," + a_keyword.to_string_32
+			lst := keywords
+			if lst = Void then
+				create lst.make (1)
+				keywords := lst
 			end
+			lst.force (a_keyword.to_string_32)
 		end
 
 	set_publication_date (dt: like publication_date)

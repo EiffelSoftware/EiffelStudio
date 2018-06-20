@@ -283,6 +283,12 @@ feature -- Access: Site
 			Result := utf.utf_32_string_to_utf_8_string_8 (site_name)
 		end
 
+	site_front_page_properties: detachable STRING_TABLE [READABLE_STRING_32]
+			-- Optional site properties.
+		do
+			Result := text_table_item ("site.front.property")
+		end
+
 	site_properties: detachable STRING_TABLE [READABLE_STRING_32]
 			-- Optional site properties.
 		do
@@ -573,6 +579,6 @@ feature -- Element change
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

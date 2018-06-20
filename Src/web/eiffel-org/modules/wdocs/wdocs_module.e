@@ -1293,10 +1293,9 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 --					s.append (html_encoded (s))
 --					s.append ("</pre>")
 				else
+					r.set_metadata ("article", "type")
 					if attached pg.metadata ("description") as l_wp_description then
 						r.set_description (l_wp_description)
-					else
-						r.set_description (l_title)
 					end
 					append_wiki_page_xhtml_to (pg, l_title, a_bookid, a_manager, s, req, r)
 

@@ -869,7 +869,14 @@ feature -- Links
 			l_css_class: STRING
 		do
 			create l_css_class.make_from_string ("wiki_link")
-			create l_url.make_from_string (a_link.name)
+			if
+				attached link_resolver as r and then
+				attached r.missing_wiki_url (a_link, current_page) as u
+			then
+				create l_url.make_from_string (u)
+			else
+				create l_url.make_from_string (a_link.name)
+			end
 			if attached a_link.fragment as l_fragment then
 				l_url.append_character ('#')
 				l_url.append (l_fragment)

@@ -158,13 +158,10 @@ feature -- Access
 				attached book as wb and then
 				attached wb.pages as l_pages
 			then
-				from
-					l_pages.start
-				until
-					l_pages.after
+				across
+					l_pages as ic
 				loop
-					l_pages.item.get_structure (wb.page_path (l_pages.item))
-					l_pages.forth
+					ic.item.get_structure (wb.page_path (ic.item))
 				end
 			end
 

@@ -9,7 +9,10 @@ class
 inherit
 	WIKI_LINK_RESOLVER
 		rename
-			wiki_url as link_to_wiki_url
+			wiki_url as link_to_wiki_url,
+			missing_wiki_url as link_to_missing_wiki_url
+		redefine
+			link_to_missing_wiki_url
 		end
 
 	WIKI_IMAGE_RESOLVER
@@ -22,6 +25,10 @@ inherit
 		rename
 			content as template_content
 		end
+
+	WIKI_PAGE_TITLE_NORMALIZER
+
+	WDOCS_HELPER
 
 	WIKI_FILE_RESOLVER
 
@@ -186,13 +193,10 @@ feature -- Access
 
 			p := wiki_database_path.extended (a_bookid).extended ("book.index")
 			if ut.file_path_exists (p) then
-				create wi.make (a_bookid.as_string_8, wiki_database_path.extended (a_bookid).extended ("book.index"))
+				create wi.make (a_bookid.as_string_8, p)
 				pg := wi.page_by_id (n)
-			elseif attached book (a_bookid) as wb then
-				pg := wb.page (n)
-				if pg = Void then
-					pg := wb.page_by_key (n)
-				end
+			else
+				pg := storage.page (n, a_bookid)
 			end
 			if attached {WIKI_BOOK_PAGE} pg as l_book_page then
 				p := wiki_database_path.extended (l_book_page.src)
@@ -265,6 +269,18 @@ feature -- Access
 			Result := storage.wiki_text (p)
 		end
 
+feature -- Normalized title
+
+	normalized_title (a_title: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := normalized_fs_text (a_title)
+		end
+
+	url_friendly_wiki_name (wn: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := normalized_title (wn)
+		end
+
 feature -- Access: link
 
 	link_to_wiki_url (a_link: WIKI_LINK; a_page: detachable WIKI_PAGE): detachable STRING
@@ -325,6 +341,12 @@ feature -- Access: link
 			end
 		end
 
+	link_to_missing_wiki_url (a_link: WIKI_LINK; a_page: detachable WIKI_PAGE): detachable STRING
+			-- URL accessing the missing wiki link `a_link' in the context of `a_page'.
+		do
+			Result := url_friendly_wiki_name (a_link.name)
+		end
+
 	wiki_page_uri_path (pg: WIKI_PAGE; a_book_name: detachable READABLE_STRING_GENERAL; a_version_id: detachable READABLE_STRING_GENERAL): STRING
 		local
 			utf: UTF_CONVERTER
@@ -346,8 +368,8 @@ feature -- Access: link
 					l_book_name := book_name (pg)
 				end
 				if l_book_name /= Void then
-					Result.append ("/" + wiki_name_to_url_encoded_string (l_book_name))
-					Result.append ("/" + wiki_name_to_url_encoded_string (pg.title))
+					Result.append ("/" + url_friendly_wiki_name (l_book_name))
+					Result.append ("/" + url_friendly_wiki_name (pg.title))
 				elseif attached {WIKI_BOOK_PAGE} pg as l_book_pg then
 					Result.append ("/" + l_book_pg.src)
 				else
@@ -427,12 +449,12 @@ feature -- Access: File
 				end
 				Result.append_character ('/')
 				if a_page /= Void and then attached book_name (a_page) as l_book_name then
-					Result.append (l_book_name)
+					Result.append (percent_encoder.percent_encoded_string (l_book_name))
 				elseif
 					attached file_path (a_file.name, Void) as p and then
 					attached p.parent.parent.entry as l_book_entry
 				then
-					Result.append (l_book_entry.utf_8_name)
+					Result.append (percent_encoder.percent_encoded_string (l_book_entry.name))
 				end
 				Result.append ("/" + a_file.name)
 			end

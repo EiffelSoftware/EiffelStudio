@@ -589,6 +589,7 @@ feature -- Page management
 			l_storage_layer: like new_storage_layer
 			md_text: WDOCS_METADATA_WIKI_TEXT
 			l_prev_md: detachable STRING_TABLE [READABLE_STRING_32]
+			l_save_succeed, l_commit_succeed: BOOLEAN
 		do
 			reset_error
 
@@ -674,9 +675,11 @@ feature -- Page management
 						prepare_wiki_parent_directory (p.parent, a_parent_page, l_storage_layer)
 						l_storage_layer.new_file (txt, p)
 					end
+					l_save_succeed := not has_error
 					l_storage_layer.commit (a_context, Void)
+					l_commit_succeed := not has_error
 					a_page.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (txt))
-					if not has_error then
+					if l_save_succeed then
 						a_manager.refresh_page_data (a_book_id, a_page)
 						l_storage_layer.update (documentation_dir.extended (a_manager.version_id))
 						cache_for_wiki_page_xhtml (a_manager.version_id, a_book_id, a_page).delete

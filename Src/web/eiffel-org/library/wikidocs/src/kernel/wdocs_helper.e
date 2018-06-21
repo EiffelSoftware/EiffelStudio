@@ -9,7 +9,7 @@ class
 
 feature -- Helper
 
-	normalization_enabled: BOOLEAN = False
+	normalization_enabled: BOOLEAN = True
 			-- For now, normalization is disabled by default.
 
 	normalized_fs_text (a_text: READABLE_STRING_GENERAL): STRING_32
@@ -32,20 +32,21 @@ feature -- Helper
 					i > n
 				loop
 					if a_text[i].is_space then
-						from
-							i := i + 1
-						until
-							not a_text[i].is_space
-						loop
-							i := i + 1
+						if i > 1 and then a_text[i] = '_' then
+							-- already has a '_'
+						else
+							Result.append_character ('_')
 						end
-						Result.append_character ('_')
 					elseif a_text[i] = ':' then
-						Result.append_character ('-')
+						if i > 1 and then a_text [i] = '-' then
+							-- already has a '-'
+						else
+							Result.append_character ('-')
+						end
 					else
 						Result.append_character (a_text[i])
-						i := i + 1
 					end
+					i := i + 1
 				end
 			else
 				create Result.make_from_string_general (a_text)

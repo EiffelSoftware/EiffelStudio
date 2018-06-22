@@ -23,7 +23,7 @@ feature {NONE} -- Creation
 					-- Test #1: read 0 bytes.
 				buffer.fill_with (0, 0, buffer.capacity - 1)
 				io.put_string ("Test output #1: ")
-				p := base_factory.process_launcher (command, arguments (<<output_option, "0">>), Void)
+				p := base_factory.process_launcher (command, arguments ({ARRAY [READABLE_STRING_32]} <<output_option, "0">>), Void)
 				p.redirect_output_to_stream
 				launch (p)
 				p.read_output_to_special (buffer)
@@ -39,7 +39,7 @@ feature {NONE} -- Creation
 					-- Test #2: read less than buffer size.
 				io.put_string ("Test output #2: ")
 				n := 123
-				p := base_factory.process_launcher (command, arguments (<<output_option, n.out>>), Void)
+				p := base_factory.process_launcher (command, arguments ({ARRAY [READABLE_STRING_32]} <<output_option, n.out>>), Void)
 				p.redirect_output_to_stream
 				launch (p)
 				read (agent p.read_output_to_special, agent p.has_output_stream_closed, agent p.has_output_stream_error, n)
@@ -48,7 +48,7 @@ feature {NONE} -- Creation
 					-- Test #3: read more  than buffer size.
 				io.put_string ("Test output #3: ")
 				n := 1234
-				p := base_factory.process_launcher (command, arguments (<<output_option, n.out>>), Void)
+				p := base_factory.process_launcher (command, arguments ({ARRAY [READABLE_STRING_32]} <<output_option, n.out>>), Void)
 				p.redirect_output_to_stream
 				launch (p)
 				read (agent p.read_output_to_special, agent p.has_output_stream_closed, agent p.has_output_stream_error, n)
@@ -59,7 +59,7 @@ feature {NONE} -- Creation
 					-- Test #1: read 0 bytes.
 				buffer.fill_with (0, 0, buffer.capacity - 1)
 				io.put_string ("Test error #1: ")
-				p := base_factory.process_launcher (command, arguments (<<error_option, "0">>), Void)
+				p := base_factory.process_launcher (command, arguments ({ARRAY [READABLE_STRING_32]} <<error_option, "0">>), Void)
 				p.redirect_error_to_stream
 				launch (p)
 				p.read_error_to_special (buffer)
@@ -75,7 +75,7 @@ feature {NONE} -- Creation
 					-- Test #2: read less than buffer size.
 				io.put_string ("Test error #2: ")
 				n := 123
-				p := base_factory.process_launcher (command, arguments (<<error_option, n.out>>), Void)
+				p := base_factory.process_launcher (command, arguments ({ARRAY [READABLE_STRING_32]} <<error_option, n.out>>), Void)
 				p.redirect_error_to_stream
 				launch (p)
 				read (agent p.read_error_to_special, agent p.has_error_stream_closed, agent p.has_error_stream_error, n)
@@ -84,7 +84,7 @@ feature {NONE} -- Creation
 					-- Test #3: read more  than buffer size.
 				io.put_string ("Test error #3: ")
 				n := 1234
-				p := base_factory.process_launcher (command, arguments (<<error_option, n.out>>), Void)
+				p := base_factory.process_launcher (command, arguments ({ARRAY [READABLE_STRING_32]} <<error_option, n.out>>), Void)
 				p.redirect_error_to_stream
 				launch (p)
 				read (agent p.read_error_to_special, agent p.has_error_stream_closed, agent p.has_error_stream_error, n)
@@ -97,7 +97,7 @@ feature {NONE} -- Creation
 						-- Test #1: read 0 bytes.
 					buffer.fill_with (0, 0, buffer.capacity - 1)
 					io.put_string ("Test error->output #1: ")
-					p := base_factory.process_launcher (command, arguments (<<error_option, "0">>), Void)
+					p := base_factory.process_launcher (command, arguments ({ARRAY [READABLE_STRING_32]} <<error_option, "0">>), Void)
 					p.redirect_output_to_stream
 					p.redirect_error_to_same_as_output
 					launch (p)
@@ -114,7 +114,7 @@ feature {NONE} -- Creation
 						-- Test #2: read less than buffer size.
 					io.put_string ("Test error->output #2: ")
 					n := 123
-					p := base_factory.process_launcher (command, arguments (<<error_option, n.out>>), Void)
+					p := base_factory.process_launcher (command, arguments ({ARRAY [READABLE_STRING_32]} <<error_option, n.out>>), Void)
 					p.redirect_output_to_stream
 					p.redirect_error_to_same_as_output
 					launch (p)
@@ -124,7 +124,7 @@ feature {NONE} -- Creation
 						-- Test #3: read more  than buffer size.
 					io.put_string ("Test error->output #3: ")
 					n := 1234
-					p := base_factory.process_launcher (command, arguments (<<error_option, n.out>>), Void)
+					p := base_factory.process_launcher (command, arguments ({ARRAY [READABLE_STRING_32]} <<error_option, n.out>>), Void)
 					p.redirect_output_to_stream
 					p.redirect_error_to_same_as_output
 					launch (p)

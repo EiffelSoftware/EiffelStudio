@@ -14,22 +14,22 @@ feature {NONE} -- Initialization
 			set_a ("TEST")
 		end
 
-	a: attached STRING
-	b: attached ARRAY [STRING]
+	a: STRING
+	b: ARRAY [detachable STRING]
 	det_b: detachable like b
 
-	set_b is
+	set_b
 		do
-			if {l_b: like b} det_b then
+			if attached {like b} det_b as l_b then
 				b := l_b.twin
 				print (b.item (1))
 				io.put_new_line
 			end
 		end
 
-	set_a (an_a: like a) is
+	set_a (an_a: like a)
 		do
-			if {l_a: like a} an_a.twin then
+			if attached {like a} an_a.twin as l_a then
 				a := l_a
 				io.put_string (a)
 				io.put_new_line

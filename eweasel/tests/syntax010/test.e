@@ -1,23 +1,25 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2018 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 	-- To reproduce problem:
-	-- Compile class as is.  Reports syntax error on `<< >>'.
-	
-class 
+	-- Compile class as is.  Reports syntax error on `<< >>`.
+
+class
 	TEST
-creation
+
+create
 	make
+
 feature
-	
-	make is
+
+	make
 		local
-			a: ARRAY [ANY];
+			a: ARRAY [ANY]
 		do
-			a := << >>;
-		end;
+			a := << >>
+		end
 
 end

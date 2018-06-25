@@ -62,7 +62,7 @@ For /f &quot;tokens=1-4 delims=/ &quot; %%a in ('findstr /L /B /C:&quot;Last Cha
 del %EFILE_TMP%
 if .%LASTREV%. == .. set LASTREV=0000 -- Script was unable to set this value
 
-For /f &quot;tokens=1-4 delims=/ &quot; %%a in ('date /t') do (set TODAYDATE=%%c-%%a-%%b)
+For /f &quot;tokens=1-4 delims=/ &quot; %%a in ('date /U /T') do (set TODAYDATE=%%c-%%a-%%b)
 
 echo Set version: LASTREV=%LASTREV%
 svn revert %EFILE%

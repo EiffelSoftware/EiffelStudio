@@ -58,3 +58,9 @@ do_sed "s/\(Copyright Eiffel Software [0-9][0-9][0-9][0-9]-\)[0-9][0-9][0-9][0-9
 # sqlite3 examples
 do_sed "s/\(Copyright Eiffel Software [0-9][0-9][0-9][0-9]-\)[0-9][0-9][0-9][0-9]/\1$curr_year/g" $EIFFEL_SRC/unstable/library/persistency/database/sqlite3/examples/liteterm/argument_parser.e
 
+# esbuilder
+do_sed "s/\(Copyright (C) [0-9][0-9][0-9][0-9]-\)[0-9][0-9][0-9][0-9]/\1$curr_year/g" $EIFFEL_SRC/build/Constants/gb_about_dialog_constants.e
+
+# dotnet consumer
+do_sed "s/\(Copyright Eiffel Software [0-9][0-9][0-9][0-9]-\)[0-9][0-9][0-9][0-9]/\1$curr_year/g" $EIFFEL_SRC/dotnet/consumer/main/argument_parser.e
+

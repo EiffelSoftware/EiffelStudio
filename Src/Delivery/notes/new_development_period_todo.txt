@@ -1,8 +1,9 @@
 New dev period:
 == Files to update to reflect new version ==
 Delivery/VERSION
+$EIFFEL_SRC/C/CONFIGS/* files
 $EIFFEL_SRC/C/ipc/daemon/env.c
-$EIFFEL_SRC/framework/environment/interface/eiffel_environment_constants.e
+$EIFFEL_SRC/framework/environment/interface/eiffel_constants.e
 $EIFFEL_SRC/Eiffel/Ace/ec.rc
 ../../Delivery/scripts/unix/README.unix
 ../../Delivery/scripts/unix/make_for_platform

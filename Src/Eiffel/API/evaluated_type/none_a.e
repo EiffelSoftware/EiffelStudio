@@ -125,7 +125,7 @@ feature {TYPE_A} -- Helpers
 				not l_other_attachable_type.is_void and then
 				(not l_other_attachable_type.is_expanded and then
 				(l_other_attachable_type.is_formal implies l_other_attachable_type.is_reference) or else
-				is_attached)
+				is_implicitly_attached)
 			then
 				Result := True
 				if a_context_class.lace_class.is_void_safe_conformance then
@@ -141,7 +141,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
